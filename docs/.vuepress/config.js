@@ -1,7 +1,7 @@
 module.exports = {
   title: ' English Notebook',
   description: ' Practice and Writing ',
-  base: '/English/',
+  base: '/',
 //  dest: 'public',
   plugins: [
     ['autobar'],
