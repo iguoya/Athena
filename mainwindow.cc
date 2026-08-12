@@ -2,9 +2,69 @@
 #include <iostream>
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
-#include "runner.hpp"
+#include <sstream>
 
 using namespace std;
+
+// ============================================================
+// 章节演示类
+// 每个章节对应一个类，run() 把结果输出到 ostream
+// 按钮点击事件直接绑定这些类的 run() 成员函数
+// ============================================================
+
+// 06_functions: 函数基础 —— 值传递 vs 引用传递
+class Functions06 {
+public:
+    void run(ostream& os) {
+        int x = 5, y = 10;
+
+        swapByValue(x, y);
+        os << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
+
+        swapByRef(x, y);
+        os << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
+    }
+
+private:
+    void swapByValue(int a, int b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+
+    void swapByRef(int& a, int& b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+};
+
+// 章节源码文本（源码框显示用）
+static const char* FUNCTIONS06_SOURCE = R"SNIP(class Functions06 {
+public:
+    void run(ostream& os) {
+        int x = 5, y = 10;
+
+        swapByValue(x, y);
+        os << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
+
+        swapByRef(x, y);
+        os << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
+    }
+
+private:
+    void swapByValue(int a, int b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+
+    void swapByRef(int& a, int& b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+};)SNIP";
 
 // ===================================================================
 //  构造 & 初始化
@@ -212,26 +272,31 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 title_label->set_text(meta->title);
             }
 
-            // 源码显示 + 运行按钮 + 结果框
+            // 源码显示 + 运行按钮 + 结果框（按章节直接绑定对应类）
             auto source_view = builder->get_widget<Gtk::TextView>("source_view");
             auto run_button  = builder->get_widget<Gtk::Button>("run_button");
             auto result_view = builder->get_widget<Gtk::TextView>("result_view");
 
-            // 源码：读取对应源文件内容
-            if (source_view) {
-                string src = chapter_source(meta->id);
-                source_view->get_buffer()->set_text(src.empty() ? "" : src);
-            }
-
-            // 运行按钮：点击后实例化类对象、调 run()，输出到结果框
-            if (run_button && result_view) {
-                string src = chapter_source(meta->id);
-                if (!src.empty()) {
-                    string ch_id = meta->id;
-                    run_button->signal_clicked().connect([result_view, ch_id]() {
-                        result_view->get_buffer()->set_text(run_chapter(ch_id));
+            if (meta->id == "06_functions") {
+                // 源码显示
+                if (source_view) {
+                    source_view->get_buffer()->set_text(FUNCTIONS06_SOURCE);
+                }
+                // 点击事件绑定类成员函数 run()
+                if (run_button && result_view) {
+                    auto demo = make_shared<Functions06>();
+                    run_button->signal_clicked().connect([demo, result_view]() {
+                        ostringstream oss;
+                        demo->run(oss);   // 调用类成员函数
+                        result_view->get_buffer()->set_text(oss.str());
                     });
-                } else {
+                }
+            } else {
+                // 暂无演示类的章节：源码框空，运行按钮禁用
+                if (source_view) {
+                    source_view->get_buffer()->set_text("");
+                }
+                if (run_button) {
                     run_button->set_sensitive(false);
                 }
             }
