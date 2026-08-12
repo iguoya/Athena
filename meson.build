@@ -8,42 +8,67 @@ gnome = import('gnome')
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
 blueprint_compiler = find_program('blueprint-compiler')
-# 步骤 1: 编译 Blueprint 文件
-# 定义一个自定义目标，将所有 .blp 文件编译为 .ui 文件
+python = find_program('python3')
+
+# 本地第三方头文件（nlohmann/json.hpp）
+local_inc = include_directories('include')
+
+# === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
+gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
+chapters_json = meson.project_source_root() / 'resources' / 'chapters.json'
+gresource_xml = meson.current_build_dir() / 'app.gresource.xml'
+
+# 脚本 stdout 格式: "chapter_id|blp_relative_path|ui_filename"
+gen_output = run_command(
+  python, gen_script, chapters_json, meson.project_source_root(), gresource_xml,
+  check: true
+).stdout().strip().split('\n')
+
+# === 编译所有 Blueprint 文件 ===
 compiled_ui = []
-ui_blp_files = files(
-  'resources/ui/window.blp',
-  'resources/ui/chapters/welcome.blp',
-  'resources/ui/chapters/functions.blp',
-  'resources/ui/chapters/basic_syntax.blp',
-)
-foreach blp_file : ui_blp_files
-  ui_file = fs.stem(blp_file) + '.ui'
-  compiled_ui += custom_target(
-    'compile-' + fs.name(blp_file),
-    input: blp_file,
-    output: ui_file,
-    command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-   
-  )
+
+foreach line : gen_output
+  if line != ''
+    # 解析 "id|blp_path|ui_filename"
+    parts = line.split('|')
+    ch_id = parts[0]
+    blp_path = parts[1]
+    ui_name = parts[2]
+    compiled_ui += custom_target(
+      'compile-' + ch_id,
+      input: meson.project_source_root() / blp_path,
+      output: ui_name,
+      command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+    )
+  endif
 endforeach
 
+# 主窗口 .blp（独立于章节目录）
+compiled_ui += custom_target(
+  'compile-window.blp',
+  input: files('resources/ui/window.blp'),
+  output: 'window.ui',
+  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+)
+
+# === 源码 ===
 src_files = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc'
 )
-# 定义要打包的资源列表
-# meson.project_source_root() 确保路径是相对项目根目录的
+
+# === 打包资源 ===
 resources = gnome.compile_resources(
   'app-resources',
-  'resources/app.gresource.xml',
+  gresource_xml,
   dependencies: compiled_ui,
   source_dir: ['resources', '.']
 )
 
 executable('Athena', src_files,
-  sources: resources,  
+  sources: resources,
+  include_directories: local_inc,
   dependencies: [
     gtkmm_dep,
     glib_dep

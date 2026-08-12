@@ -33,17 +33,17 @@ CustomDialog::CustomDialog(AppWindow& parent)
 }
 
 CustomDialog::~CustomDialog() {
-    std::cout << "CustomDialog destroyed" << std::endl;
+    cout << "CustomDialog destroyed" << endl;
 }
 
 void CustomDialog::on_ok() {
-    std::cout << "Dialog OK: " << (m_entry ? m_entry->get_text() : "") << std::endl;
+    cout << "Dialog OK: " << (m_entry ? m_entry->get_text() : "") << endl;
     m_signal_response.emit(GTK_RESPONSE_OK);
     hide();
 }
 
 void CustomDialog::on_cancel() {
-    std::cout << "Dialog Cancel" << std::endl;
+    cout << "Dialog Cancel" << endl;
     m_signal_response.emit(GTK_RESPONSE_CANCEL);
     hide();
 }

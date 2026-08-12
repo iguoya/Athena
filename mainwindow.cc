@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 #include <iostream>
+#include <gio/gio.h>
+#include <nlohmann/json.hpp>
+
+using namespace std;
 
 MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject)
@@ -18,15 +22,18 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     
     // 检查所有必要的UI组件是否成功获取
     if (!m_menu_list || !m_content_container || !m_content_title) {
-        throw std::runtime_error("Failed to get required widgets from main UI");
+        throw runtime_error("Failed to get required widgets from main UI");
     }
     
     // 连接菜单点击事件，当用户点击任意一行时，会触发 on_menu_row_activated
     m_menu_list->signal_row_activated().connect(
         sigc::mem_fun(*this, &MainWindow::on_menu_row_activated));
     
+    // 运行时加载章节元数据（替代硬编码 map）
+    load_chapter_metadata();
+
     load_chapter("welcome");
-    std::cout << "MainWindow initialized successfully" << std::endl;
+    cout << "MainWindow initialized successfully" << endl;
 }
 
 void MainWindow::setup_window_controls() {
@@ -42,13 +49,13 @@ void MainWindow::setup_window_controls() {
 void MainWindow::on_menu_row_activated(Gtk::ListBoxRow* row) {
     if (!row) return;
     
-    // std::string chapter_name;
+    // string chapter_name;
         // 直接使用行的名称（在 Glade UI 文件中设置）作为章节ID
-    std::string chapter_name = row->get_name();
+    string chapter_name = row->get_name();
 
-    // std::string row_name = row->get_name();
+    // string row_name = row->get_name();
     
-    std::cout << "Menu row activated: " << chapter_name << std::endl;
+    cout << "Menu row activated: " << chapter_name << endl;
     
     // 如果章节名称不为空且不是当前章节，则加载新章节
     if (!chapter_name.empty() && chapter_name != m_current_chapter) {
@@ -56,7 +63,38 @@ void MainWindow::on_menu_row_activated(Gtk::ListBoxRow* row) {
     }
 }
 
-void MainWindow::load_chapter(const std::string& chapter_name) {
+void MainWindow::load_chapter_metadata() {
+    // 从 GResource 加载 chapters.json，用 nlohmann/json 解析
+    GBytes* bytes = g_resources_lookup_data(
+        "/app/data/chapters.json",
+        G_RESOURCE_LOOKUP_FLAGS_NONE, nullptr);
+
+    if (!bytes) {
+        cerr << "Warning: chapters.json not found in resources" << endl;
+        return;
+    }
+
+    gsize size;
+    const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
+    auto config = nlohmann::json::parse(string_view(data, size));
+    g_bytes_unref(bytes);
+
+    for (const auto& ch : config["chapters"]) {
+        ChapterMeta meta;
+        meta.id = ch["id"];
+        meta.title = ch["title"];
+        meta.resource_path = ch["ui_resource"];
+        m_chapters[meta.id] = meta;
+
+        cout << "Chapter loaded: " << meta.id
+                  << " -> \"" << meta.title << "\""
+                  << " @ " << meta.resource_path << endl;
+    }
+
+    cout << "Loaded " << m_chapters.size() << " chapter(s) from chapters.json" << endl;
+}
+
+void MainWindow::load_chapter(const string& chapter_name) {
 
         // 移除旧内容
     // 这个步骤至关重要，它确保了在添加新内容前，旧的欢迎页面被移除
@@ -68,42 +106,42 @@ void MainWindow::load_chapter(const std::string& chapter_name) {
 
 
     // 检查章节是否存在
-    auto resource_it = m_chapter_resources.find(chapter_name);
-    if (resource_it == m_chapter_resources.end()) {
-        std::cerr << "Chapter not found: " << chapter_name << std::endl;
+    auto it = m_chapters.find(chapter_name);
+    if (it == m_chapters.end()) {
+        cerr << "Chapter not found: " << chapter_name << endl;
         return;
     }
-    
+
     try {
-        std::cout << "Loading chapter: " << chapter_name << std::endl;
-        
+        cout << "Loading chapter: " << chapter_name << endl;
+
         // // 移除当前章节
         // if (m_current_widget) {
         //     m_content_container->remove(*m_current_widget);
         //     m_current_widget = nullptr;
         // }
-        
+
         // 检查是否已经加载过这个章节的构建器
         auto builder_it = m_chapter_builders.find(chapter_name);
         Glib::RefPtr<Gtk::Builder> chapter_builder;
-        
+
         if (builder_it == m_chapter_builders.end()) {
             // 首次加载，创建新的构建器
-            std::cout << "Creating new builder for: " << chapter_name << std::endl;
-            chapter_builder = Gtk::Builder::create_from_resource(resource_it->second);
+            cout << "Creating new builder for: " << chapter_name << endl;
+            chapter_builder = Gtk::Builder::create_from_resource(it->second.resource_path);
             m_chapter_builders[chapter_name] = chapter_builder;
         } else {
             // 使用已缓存的构建器
-            std::cout << "Using cached builder for: " << chapter_name << std::endl;
+            cout << "Using cached builder for: " << chapter_name << endl;
             chapter_builder = builder_it->second;
         }
         
         // 获取章节根 widget
-        std::string root_widget_name = chapter_name + "_page";
+        string root_widget_name = chapter_name + "_page";
         auto chapter_widget = chapter_builder->get_widget<Gtk::Widget>(root_widget_name);
         
         if (!chapter_widget) {
-            std::cerr << "Failed to get root widget: " << root_widget_name << std::endl;
+            cerr << "Failed to get root widget: " << root_widget_name << endl;
             return;
         }
         
@@ -114,11 +152,8 @@ void MainWindow::load_chapter(const std::string& chapter_name) {
         
         chapter_widget->show();
 
-        // 更新标题
-        auto title_it = m_chapter_titles.find(chapter_name);
-        if (title_it != m_chapter_titles.end()) {
-            m_content_title->set_text(title_it->second);
-        }
+        // 更新标题（已通过 m_chapters 查找，直接使用 it->second.title）
+        m_content_title->set_text(it->second.title);
         
         // 根据章节类型进行特殊初始化
         if (chapter_name == "basic_syntax") {
@@ -127,15 +162,15 @@ void MainWindow::load_chapter(const std::string& chapter_name) {
             initialize_functions_chapter(chapter_builder);
         }
         
-        std::cout << "Chapter loaded successfully: " << chapter_name << std::endl;
+        cout << "Chapter loaded successfully: " << chapter_name << endl;
         
-    } catch (const std::exception& e) {
-        std::cerr << "Error loading chapter " << chapter_name << ": " << e.what() << std::endl;
+    } catch (const exception& e) {
+        cerr << "Error loading chapter " << chapter_name << ": " << e.what() << endl;
     }
 }
 
 void MainWindow::initialize_basic_syntax_chapter(const Glib::RefPtr<Gtk::Builder>& builder) {
-    std::cout << "Initializing basic syntax chapter..." << std::endl;
+    cout << "Initializing basic syntax chapter..." << endl;
     
     // 获取基础语法章节的特定组件
     auto variables_start = builder->get_widget<Gtk::Button>("variables_start");
@@ -177,34 +212,34 @@ int main() {
     // 连接按钮事件
     if (variables_start) {
         variables_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习变量与常量" << std::endl;
+            cout << "开始学习变量与常量" << endl;
             // 这里可以打开详细的变量学习页面
         });
     }
     
     if (datatypes_start) {
         datatypes_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习数据类型" << std::endl;
+            cout << "开始学习数据类型" << endl;
             // 这里可以打开数据类型学习页面
         });
     }
     
     if (operators_start) {
         operators_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习运算符" << std::endl;
+            cout << "开始学习运算符" << endl;
             // 这里可以打开运算符学习页面
         });
     }
     
     if (io_start) {
         io_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习输入输出" << std::endl;
+            cout << "开始学习输入输出" << endl;
         });
     }
     
     if (comments_start) {
         comments_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习注释与风格" << std::endl;
+            cout << "开始学习注释与风格" << endl;
         });
     }
     
@@ -215,33 +250,33 @@ int main() {
                 auto text = buffer->get_text();
                 auto clipboard = Gdk::Display::get_default()->get_clipboard();
                 clipboard->set_text(text);
-                std::cout << "代码已复制到剪贴板" << std::endl;
+                cout << "代码已复制到剪贴板" << endl;
             }
         });
     }
     
     if (practice_button) {
         practice_button->signal_clicked().connect([this]() {
-            std::cout << "打开在线练习平台" << std::endl;
+            cout << "打开在线练习平台" << endl;
         });
     }
     
     if (quiz_button) {
         quiz_button->signal_clicked().connect([this]() {
-            std::cout << "开始章节测验" << std::endl;
+            cout << "开始章节测验" << endl;
         });
     }
     
     if (next_chapter) {
         next_chapter->signal_clicked().connect([this]() {
-            std::cout << "跳转到下一章" << std::endl;
+            cout << "跳转到下一章" << endl;
             load_chapter("control_flow");
         });
     }
 }
 
 void MainWindow::initialize_functions_chapter(const Glib::RefPtr<Gtk::Builder>& builder) {
-    std::cout << "Initializing functions chapter..." << std::endl;
+    cout << "Initializing functions chapter..." << endl;
     
     // 获取函数章节的特定组件
     auto definition_start = builder->get_widget<Gtk::Button>("definition_start");
@@ -310,37 +345,37 @@ int max(int a, int b) {
     // 连接按钮事件
     if (definition_start) {
         definition_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习函数定义" << std::endl;
+            cout << "开始学习函数定义" << endl;
         });
     }
     
     if (parameters_start) {
         parameters_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习参数传递" << std::endl;
+            cout << "开始学习参数传递" << endl;
         });
     }
     
     if (overloading_start) {
         overloading_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习函数重载" << std::endl;
+            cout << "开始学习函数重载" << endl;
         });
     }
     
     if (defaults_start) {
         defaults_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习默认参数" << std::endl;
+            cout << "开始学习默认参数" << endl;
         });
     }
     
     if (inline_start) {
         inline_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习内联函数" << std::endl;
+            cout << "开始学习内联函数" << endl;
         });
     }
     
     if (recursion_start) {
         recursion_start->signal_clicked().connect([this]() {
-            std::cout << "开始学习递归函数" << std::endl;
+            cout << "开始学习递归函数" << endl;
         });
     }
     
@@ -349,7 +384,7 @@ int max(int a, int b) {
             if (exercise_code) {
                 auto buffer = exercise_code->get_buffer();
                 auto code = buffer->get_text();
-                std::cout << "运行代码:\n" << code << std::endl;
+                cout << "运行代码:\n" << code << endl;
                 // 这里可以集成代码执行引擎
             }
         });
@@ -362,11 +397,11 @@ int max(int a, int b) {
                 auto code = buffer->get_text();
                 
                 // 简单的答案检查
-                if (code.find("return") != std::string::npos && 
-                    code.find(">") != std::string::npos) {
-                    std::cout << "答案正确！" << std::endl;
+                if (code.find("return") != string::npos && 
+                    code.find(">") != string::npos) {
+                    cout << "答案正确！" << endl;
                 } else {
-                    std::cout << "答案需要改进，请检查逻辑" << std::endl;
+                    cout << "答案需要改进，请检查逻辑" << endl;
                 }
             }
         });
@@ -374,7 +409,7 @@ int max(int a, int b) {
     
     if (show_hint) {
         show_hint->signal_clicked().connect([exercise_code]() {
-            std::cout << "提示: 使用条件运算符 (a > b) ? a : b" << std::endl;
+            cout << "提示: 使用条件运算符 (a > b) ? a : b" << endl;
             if (exercise_code) {
                 auto buffer = exercise_code->get_buffer();
                 buffer->set_text(R"(// 请编写 max 函数
@@ -388,20 +423,20 @@ int max(int a, int b) {
     
     if (prev_chapter) {
         prev_chapter->signal_clicked().connect([this]() {
-            std::cout << "跳转到上一章: 基础语法" << std::endl;
+            cout << "跳转到上一章: 基础语法" << endl;
             load_chapter("basic_syntax");
         });
     }
     
     if (practice_more) {
         practice_more->signal_clicked().connect([this]() {
-            std::cout << "打开更多函数练习" << std::endl;
+            cout << "打开更多函数练习" << endl;
         });
     }
     
     if (next_chapter_btn) {
         next_chapter_btn->signal_clicked().connect([this]() {
-            std::cout << "跳转到下一章: 指针与引用" << std::endl;
+            cout << "跳转到下一章: 指针与引用" << endl;
             load_chapter("pointers_references");
         });
     }
