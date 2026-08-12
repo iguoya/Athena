@@ -12,7 +12,7 @@ using namespace std;
 // 按钮点击事件直接绑定这些类的 run() 成员函数
 // ============================================================
 
-// 06_functions: 函数基础 —— 值传递 vs 引用传递
+// 03_pointers_references: 指针与引用 —— 值传递 vs 引用传递
 class Functions06 {
 public:
     void run(ostream& os) {
@@ -122,6 +122,13 @@ void MainWindow::load_chapter_metadata() {
 
         meta.resource_path = "/app/chapters/" + stem + ".ui"; // "/app/chapters/welcome.ui"
         meta.widget_name   = stem + "_page";                  // "welcome_page"
+
+        // 子章节标题列表
+        if (ch.contains("subchapters")) {
+            for (const auto& sub : ch["subchapters"]) {
+                meta.subchapters.push_back(sub.get<string>());
+            }
+        }
 
         m_chapters[meta.id] = meta;
 
@@ -276,8 +283,22 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
             auto source_view = builder->get_widget<Gtk::TextView>("source_view");
             auto run_button  = builder->get_widget<Gtk::Button>("run_button");
             auto result_view = builder->get_widget<Gtk::TextView>("result_view");
+            auto subchapters_box = builder->get_widget<Gtk::Box>("subchapters_box");
 
-            if (meta->id == "06_functions") {
+            // 子章节列表显示
+            if (subchapters_box) {
+                if (meta->subchapters.empty()) {
+                    subchapters_box->set_visible(false);
+                } else {
+                    for (const auto& title : meta->subchapters) {
+                        auto label = Gtk::make_managed<Gtk::Label>("• " + title);
+                        label->set_halign(Gtk::Align::START);
+                        subchapters_box->append(*label);
+                    }
+                }
+            }
+
+            if (meta->id == "03_pointers_references") {
                 // 源码显示
                 if (source_view) {
                     source_view->get_buffer()->set_text(FUNCTIONS06_SOURCE);

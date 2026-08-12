@@ -15,6 +15,7 @@ struct ChapterMeta {
     string category;        // "cpp" | "ds_algo" | "design_patterns"
     string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
     string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
+    vector<string> subchapters;  // 子章节标题列表（合并章节的内容）
 };
 
 // 分类信息
