@@ -10,10 +10,11 @@ using std::vector;
 
 // 章节元数据，运行时从 chapters.json 加载
 struct ChapterMeta {
-    string id;
-    string title;
-    string category;       // "cpp" | "ds_algo" | "design_patterns"
-    string resource_path;  // GResource 路径，如 "/app/chapters/welcome.ui"
+    string id;              // "01_welcome"（数字前缀用于排序）
+    string title;           // "欢迎页面"
+    string category;        // "cpp" | "ds_algo" | "design_patterns"
+    string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
+    string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
 };
 
 // 分类信息
@@ -39,11 +40,6 @@ private:
 
     // 章节加载
     void load_chapter(const string& chapter_name);
-    void load_chapter_content(const string& chapter_name);
-
-    // 章节特定的初始化（信号连接等）
-    void initialize_basic_syntax_chapter(const Glib::RefPtr<Gtk::Builder>& builder);
-    void initialize_functions_chapter(const Glib::RefPtr<Gtk::Builder>& builder);
 
     // Builder 缓存
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(const string& chapter_name);

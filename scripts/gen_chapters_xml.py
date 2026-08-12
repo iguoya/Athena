@@ -26,23 +26,23 @@ def main():
     if not chapters:
         print("Warning: no chapters defined in chapters.json", file=sys.stderr)
 
-    # 校验 blp_file 存在，并去重（多个章节可能共用同一个 .blp 模板）
+    # 校验 blp 文件存在，并去重（多个章节可能共用同一个 .blp 模板）
     seen_ui = {}       # ui_name -> blp_file（去重 .ui 条目）
     for ch in chapters:
         ch_id = ch.get("id", "")
-        ui_resource = ch.get("ui_resource", f"/app/chapters/{ch_id}.ui")
-        blp_file = ch.get("blp_file", "")
+        blp_file = ch.get("ui_resource", "")  # ui_resource 直接存 blp 路径
 
         if not blp_file:
-            print(f"Warning: chapter '{ch_id}' has no blp_file, skipping", file=sys.stderr)
+            print(f"Warning: chapter '{ch_id}' has no ui_resource, skipping", file=sys.stderr)
             continue
 
         blp_abs = os.path.join(project_root, blp_file)
         if not os.path.isfile(blp_abs):
-            print(f"Error: blp_file not found for chapter '{ch_id}': {blp_abs}", file=sys.stderr)
+            print(f"Error: blp file not found for chapter '{ch_id}': {blp_abs}", file=sys.stderr)
             sys.exit(1)
 
-        ui_name = os.path.basename(ui_resource)
+        # 从 blp 文件名派生 .ui 文件名: welcome.blp -> welcome.ui
+        ui_name = os.path.basename(blp_file)[:-4] + ".ui"
         if ui_name not in seen_ui:
             seen_ui[ui_name] = blp_file
 
