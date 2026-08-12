@@ -26,15 +26,23 @@ ApplicationWindow window {
       orientation: vertical;
       hexpand: true;
 
-      // 章节标签栏
-      Box tab_bar {
-        name: "tab_bar";
-        orientation: horizontal;
-        spacing: 0;
+      // 章节标签栏（FlowBox 自动换行）
+      ScrolledWindow tab_scroll {
+        hscrollbar-policy: never;
+        vscrollbar-policy: never;
+        vexpand: false;
 
-        StackSwitcher chapter_tabs {
-          name: "chapter_tabs";
-          stack: chapter_stack;
+        FlowBox chapter_tab_box {
+          name: "chapter_tab_box";
+          selection-mode: none;
+          max-children-per-line: 100;
+          homogeneous: false;
+          column-spacing: 6;
+          row-spacing: 6;
+          margin-start: 8;
+          margin-end: 8;
+          margin-top: 6;
+          margin-bottom: 6;
         }
       }
 

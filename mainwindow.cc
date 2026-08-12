@@ -18,9 +18,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // 获取 UI 组件
     m_category_sidebar = m_main_builder->get_widget<Gtk::Box>("category_sidebar");
     m_chapter_stack    = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
-    m_chapter_tabs     = m_main_builder->get_widget<Gtk::StackSwitcher>("chapter_tabs");
+    m_chapter_tab_box  = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
 
-    if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tabs) {
+    if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tab_box) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
 
@@ -133,6 +133,13 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
     }
     m_active_page_names.clear();
 
+    // 移除 FlowBox 中所有旧标签按钮
+    for (auto* btn : m_tab_buttons) {
+        m_chapter_tab_box->remove(*btn);
+    }
+    m_tab_buttons.clear();
+    m_tab_button_map.clear();
+
     // 收集该分类下的章节
     vector<ChapterMeta*> category_chapters;
     for (auto& [id, meta] : m_chapters) {
@@ -145,12 +152,12 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         auto placeholder = Gtk::make_managed<Gtk::Label>("该分类暂无章节");
         placeholder->set_halign(Gtk::Align::CENTER);
         placeholder->set_valign(Gtk::Align::CENTER);
-        auto page = m_chapter_stack->add(*placeholder, "__empty__", "空");
+        m_chapter_stack->add(*placeholder, "__empty__", "空");
         m_active_page_names.insert("__empty__");
         return;
     }
 
-    // 为每个章节加载内容并添加到栈
+    // 为每个章节加载内容并添加到栈 + 创建标签按钮
     for (size_t i = 0; i < category_chapters.size(); ++i) {
         auto* meta = category_chapters[i];
         auto builder = get_chapter_builder(meta->id);
@@ -171,6 +178,22 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
 
         m_chapter_stack->add(*widget, meta->id, meta->title);
         m_active_page_names.insert(meta->id);
+
+        // 创建章节标签按钮（FlowBox 内自动换行，互斥分组）
+        auto tab_btn = Gtk::make_managed<Gtk::ToggleButton>(meta->title);
+        tab_btn->add_css_class("pill");
+        if (!m_tab_buttons.empty()) {
+            tab_btn->set_group(*m_tab_buttons[0]);
+        }
+        tab_btn->signal_toggled().connect([this, id = meta->id, tab_btn]() {
+            if (tab_btn->get_active()) {
+                m_chapter_stack->set_visible_child(id);
+                m_current_chapter = id;
+            }
+        });
+        m_chapter_tab_box->append(*tab_btn);
+        m_tab_buttons.push_back(tab_btn);
+        m_tab_button_map[meta->id] = tab_btn;
 
         // 空模板章节：注入标题 + 连接前后章导航（仅初始化一次）
         if (is_template && m_loaded_chapters.find(meta->id) == m_loaded_chapters.end()) {
@@ -208,9 +231,10 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         }
     }
 
-    // 切换到第一个章节
-    m_chapter_stack->set_visible_child(category_chapters[0]->id);
-    m_current_chapter = category_chapters[0]->id;
+    // 激活第一个标签（触发切换到第一个章节）
+    if (!m_tab_buttons.empty()) {
+        m_tab_buttons[0]->set_active(true);
+    }
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(const string& chapter_name) {
@@ -251,8 +275,14 @@ void MainWindow::load_chapter(const string& chapter_name) {
         }
     }
 
-    // 切换到目标章节标签页
-    m_chapter_stack->set_visible_child(chapter_name);
+    // 激活对应的标签按钮（触发切换 + 高亮同步）
+    auto btn_it = m_tab_button_map.find(chapter_name);
+    if (btn_it != m_tab_button_map.end()) {
+        btn_it->second->set_active(true);
+    } else {
+        // 兜底：按钮不存在时直接切换栈
+        m_chapter_stack->set_visible_child(chapter_name);
+    }
     m_current_chapter = chapter_name;
     cout << "Switched to chapter: " << chapter_name << endl;
 }

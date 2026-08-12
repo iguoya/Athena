@@ -55,10 +55,14 @@ private:
     // 主要 UI 组件
     Gtk::Box* m_category_sidebar;      // 左侧分类导航
     Gtk::Stack* m_chapter_stack;        // 章节内容栈
-    Gtk::StackSwitcher* m_chapter_tabs; // 章节标签切换器
+    Gtk::FlowBox* m_chapter_tab_box;    // 章节标签容器（FlowBox 自动换行）
 
     // 分类按钮（用于互斥分组）
     vector<Gtk::ToggleButton*> m_category_buttons;
+
+    // 章节标签按钮（当前分类，用于互斥分组）
+    vector<Gtk::ToggleButton*> m_tab_buttons;
+    std::map<string, Gtk::ToggleButton*> m_tab_button_map;  // chapter_id -> 标签按钮
 
     // 当前状态
     string m_current_category;
