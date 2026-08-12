@@ -58,15 +58,6 @@ src_files = files(
   'mainwindow.cc'
 )
 
-# === 构建期编译运行代码片段，生成内存结果表 ===
-build_snippets_script = meson.project_source_root() / 'scripts' / 'build_snippets.py'
-gen_snippets = custom_target(
-  'gen-snippets',
-  input: [chapters_json, build_snippets_script],
-  output: 'snippets_data.cpp',
-  command: [python, build_snippets_script, chapters_json, meson.project_source_root(), '@OUTPUT@'],
-)
-
 # === 打包资源 ===
 resources = gnome.compile_resources(
   'app-resources',
@@ -75,7 +66,7 @@ resources = gnome.compile_resources(
   source_dir: ['resources', '.']
 )
 
-executable('Athena', src_files, gen_snippets,
+executable('Athena', src_files,
   sources: resources,
   include_directories: local_inc,
   dependencies: [

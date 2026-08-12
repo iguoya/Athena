@@ -2,7 +2,7 @@
 #include <iostream>
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
-#include "snippets_data.h"
+#include "snippets.hpp"
 
 using namespace std;
 
@@ -217,8 +217,8 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
             auto run_button  = builder->get_widget<Gtk::Button>("run_button");
             auto result_view = builder->get_widget<Gtk::TextView>("result_view");
 
-            auto snippet_it = g_snippets.find(meta->id);
-            bool has_snippet = snippet_it != g_snippets.end();
+            auto snippet_it = g_chapter_snippets.find(meta->id);
+            bool has_snippet = snippet_it != g_chapter_snippets.end();
 
             // 源码直接显示
             if (source_view) {
@@ -229,12 +229,12 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            // 运行按钮：点击后把构建期算好的结果显示到结果框
+            // 运行按钮：点击后实例化类对象、调 run()，把输出显示到结果框
             if (run_button && result_view) {
                 if (has_snippet) {
-                    string result_text = snippet_it->second.result;
-                    run_button->signal_clicked().connect([result_view, result_text]() {
-                        result_view->get_buffer()->set_text(result_text);
+                    auto run_fn = snippet_it->second.run;  // 捕获运行函数
+                    run_button->signal_clicked().connect([result_view, run_fn]() {
+                        result_view->get_buffer()->set_text(run_fn());
                     });
                 } else {
                     run_button->set_sensitive(false);
