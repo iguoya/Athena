@@ -12,7 +12,7 @@ using namespace std;
 // 按钮点击事件直接绑定这些类的 run() 成员函数
 // ============================================================
 
-// 03_pointers_references: 指针与引用 —— 值传递 vs 引用传递
+// 02_pointers_references: 指针与引用 —— 值传递 vs 引用传递
 class Functions06 {
 public:
     void run(ostream& os) {
@@ -301,6 +301,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                         label_box->set_hexpand(true);
                         auto title_label = Gtk::make_managed<Gtk::Label>(title);
                         title_label->set_halign(Gtk::Align::START);
+                        title_label->add_css_class("heading");
                         label_box->append(*title_label);
                         box->append(*label_box);
 
@@ -317,7 +318,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            if (meta->id == "03_pointers_references") {
+            if (meta->id == "02_pointers_references") {
                 // 源码显示
                 if (source_view) {
                     source_view->get_buffer()->set_text(FUNCTIONS06_SOURCE);
