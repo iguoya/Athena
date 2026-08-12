@@ -62,9 +62,9 @@ src_files = files(
 build_snippets_script = meson.project_source_root() / 'scripts' / 'build_snippets.py'
 gen_snippets = custom_target(
   'gen-snippets',
-  input: chapters_json,
+  input: [chapters_json, build_snippets_script],
   output: 'snippets_data.cpp',
-  command: [python, build_snippets_script, '@INPUT@', meson.project_source_root(), '@OUTPUT@'],
+  command: [python, build_snippets_script, chapters_json, meson.project_source_root(), '@OUTPUT@'],
 )
 
 # === 打包资源 ===

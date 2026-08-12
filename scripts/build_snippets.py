@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """构建期：编译并真实运行代码片段，把源码和运行结果生成成 C++ 源文件。
 
-结果不输出到终端，而是作为字符串常量编译进二进制（存内存）。
-运行期通过 g_snippets map 按章节 ID 查表显示。
+片段是纯类定义（约定类名 Demo、入口方法 run()，不含 main/#include）。
+构建脚本自动包裹样板代码：头文件 + using namespace + main() 实例化运行。
+运行结果不输出终端，而是作为字符串常量编译进二进制（存内存）。
 """
 import json, os, subprocess, sys, tempfile
+
+# 包裹在片段前后的样板代码
+WRAPPER_HEADER = "#include <iostream>\nusing namespace std;\n\n"
+WRAPPER_FOOTER = "\n\nint main() {\n    Demo demo;\n    demo.run();\n    return 0;\n}\n"
 
 
 def main():
@@ -33,9 +38,7 @@ def main():
         with open(src_path, encoding="utf-8") as f:
             source = f.read()
 
-        # 编译 + 运行（结果存内存，不打印）
-        result = compile_and_run(src_path)
-
+        result = compile_and_run(source)
         entries.append((ch_id, source, result))
         print(f"  snippet '{ch_id}' -> 运行完成", file=sys.stderr)
 
@@ -52,14 +55,19 @@ def main():
         f.write("};\n")
 
 
-def compile_and_run(src_path):
-    """编译并运行单个 .cpp，返回运行结果字符串。"""
+def compile_and_run(source):
+    """包裹样板代码，编译并运行，返回运行结果字符串。"""
     tmp_dir = tempfile.mkdtemp(prefix="athena_snippet_")
+    wrapper_cpp = os.path.join(tmp_dir, "wrapper.cpp")
     binary = os.path.join(tmp_dir, "snippet")
+
+    wrapper = WRAPPER_HEADER + source + WRAPPER_FOOTER
+    with open(wrapper_cpp, "w", encoding="utf-8") as f:
+        f.write(wrapper)
 
     # 编译
     compile_proc = subprocess.run(
-        ["c++", "-std=c++17", src_path, "-o", binary],
+        ["c++", "-std=c++17", wrapper_cpp, "-o", binary],
         capture_output=True, text=True, timeout=30,
     )
     if compile_proc.returncode != 0:

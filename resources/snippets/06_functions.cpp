@@ -1,26 +1,26 @@
-#include <iostream>
-using namespace std;
+// 值传递 vs 引用传递 演示
+class Demo {
+public:
+    void run() {
+        int x = 5, y = 10;
 
-void swapByValue(int a, int b) {
-    int temp = a;
-    a = b;
-    b = temp;
-}
+        swapByValue(x, y);
+        cout << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
 
-void swapByRef(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
-}
+        swapByRef(x, y);
+        cout << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
+    }
 
-int main() {
-    int x = 5, y = 10;
+private:
+    void swapByValue(int a, int b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
 
-    swapByValue(x, y);
-    cout << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
-
-    swapByRef(x, y);
-    cout << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
-
-    return 0;
-}
+    void swapByRef(int &a, int &b) {
+        int temp = a;
+        a = b;
+        b = temp;
+    }
+};
