@@ -76,6 +76,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 {
     maximize();
 
+    // 加载自定义样式（补回排版体系 + 界面美化）
+    auto css = Gtk::CssProvider::create();
+    css->load_from_resource("/app/style.css");
+    Gtk::StyleContext::add_provider_for_display(
+        get_display(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
     // 获取 UI 组件
     m_category_sidebar = m_main_builder->get_widget<Gtk::Box>("category_sidebar");
     m_chapter_stack    = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
@@ -294,6 +300,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 } else {
                     for (const auto& title : meta->subchapters) {
                         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+                        row->add_css_class("topic-row");
 
                         auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
 

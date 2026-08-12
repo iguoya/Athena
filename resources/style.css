@@ -1,0 +1,35 @@
+/* Athena 自定义样式 —— 补回 libadwaita 排版体系 + 界面美化 */
+
+/* === 排版体系（libadwaita 的 title-1 ~ title-4 等） === */
+.title-1 { font-size: 28pt; font-weight: 800; }
+.title-2 { font-size: 22pt; font-weight: 800; }
+.title-3 { font-size: 18pt; font-weight: 700; }
+.title-4 { font-size: 15pt; font-weight: 700; }
+.heading  { font-size: 13pt; font-weight: 700; }
+.caption  { font-size: 11pt; }
+.dim-label { opacity: 0.7; }
+
+/* === 子章节知识点列表条目 === */
+.topic-row {
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 2px 0;
+    background-color: alpha(@theme_fg_color, 0.05);
+}
+.topic-row:hover {
+    background-color: alpha(@theme_fg_color, 0.10);
+}
+
+/* === 运行按钮：药丸形 === */
+.run-pill {
+    border-radius: 999px;
+    padding: 4px 18px;
+    font-weight: 600;
+}
+
+/* === 源代码 / 运行结果 文本框 === */
+.code-box {
+    border-radius: 10px;
+    background-color: alpha(@theme_fg_color, 0.04);
+    padding: 12px;
+}

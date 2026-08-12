@@ -23,72 +23,104 @@ ScrolledWindow chapter_page {
       ]
     }
 
-    // 本章知识点（子章节列表，无子章节时隐藏）
-    Label topics_label {
-      name: "topics_label";
-      label: "本章知识点";
-      halign: start;
-
-      styles [
-        "heading"
-      ]
-    }
-
-    ListBox topics_list {
-      name: "topics_list";
-      selection-mode: none;
-    }
-
-    // 源代码显示框
-    Label {
-      label: "源代码";
-      halign: start;
-
-      styles [
-        "heading"
-      ]
-    }
-
-    ScrolledWindow {
-      height-request: 200;
+    // 主体：左源码 + 右知识点/结果（约 3:1）
+    Box main_body {
+      orientation: horizontal;
+      spacing: 16;
       hexpand: true;
+      vexpand: true;
 
-      TextView source_view {
-        name: "source_view";
-        editable: false;
-        monospace: true;
+      // 左：源代码（约 3 份宽）
+      Box source_side {
+        orientation: vertical;
+        spacing: 8;
+        hexpand: true;
+        vexpand: true;
+
+        Box {
+          orientation: horizontal;
+          spacing: 12;
+
+          Label {
+            label: "源代码";
+            halign: start;
+            hexpand: true;
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Button run_button {
+            name: "run_button";
+            label: "▶ 运行";
+
+            styles [
+              "suggested-action",
+              "pill"
+            ]
+          }
+        }
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          TextView source_view {
+            name: "source_view";
+            editable: false;
+            monospace: true;
+          }
+        }
       }
-    }
 
-    // 运行按钮
-    Button run_button {
-      name: "run_button";
-      label: "▶ 运行";
-      halign: start;
+      // 右：知识点 + 结果（约 1 份宽）
+      Box right_side {
+        orientation: vertical;
+        spacing: 8;
+        width-request: 420;
+        vexpand: true;
 
-      styles [
-        "suggested-action"
-      ]
-    }
+        // 上：本章知识点（约 1 份高）
+        Label topics_label {
+          name: "topics_label";
+          label: "本章知识点";
+          halign: start;
 
-    // 运行结果框
-    Label {
-      label: "运行结果";
-      halign: start;
+          styles [
+            "heading"
+          ]
+        }
 
-      styles [
-        "heading"
-      ]
-    }
+        ScrolledWindow {
+          vexpand: false;
 
-    ScrolledWindow {
-      height-request: 160;
-      hexpand: true;
+          ListBox topics_list {
+            name: "topics_list";
+            selection-mode: none;
+          }
+        }
 
-      TextView result_view {
-        name: "result_view";
-        editable: false;
-        monospace: true;
+        // 下：运行结果（约 3 份高）
+        Label {
+          label: "运行结果";
+          halign: start;
+
+          styles [
+            "heading"
+          ]
+        }
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          TextView result_view {
+            name: "result_view";
+            editable: false;
+            monospace: true;
+          }
+        }
       }
     }
 

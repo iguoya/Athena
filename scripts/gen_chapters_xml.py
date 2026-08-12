@@ -55,6 +55,7 @@ def main():
 <gresources>
   <gresource prefix="/app">
     <file preprocess="xml-stripblanks">window.ui</file>
+    <file>style.css</file>
   </gresource>
   <gresource prefix="/app/chapters">
 {chr(10).join(ui_entries) if ui_entries else '    <!-- 暂无章节 -->'}
