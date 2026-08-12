@@ -2,6 +2,7 @@
 #include <iostream>
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
+#include "snippets_data.h"
 
 using namespace std;
 
@@ -209,6 +210,35 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
             auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
             if (title_label) {
                 title_label->set_text(meta->title);
+            }
+
+            // 源码显示 + 运行按钮 + 结果框（有 snippet 的章节才有内容）
+            auto source_view = builder->get_widget<Gtk::TextView>("source_view");
+            auto run_button  = builder->get_widget<Gtk::Button>("run_button");
+            auto result_view = builder->get_widget<Gtk::TextView>("result_view");
+
+            auto snippet_it = g_snippets.find(meta->id);
+            bool has_snippet = snippet_it != g_snippets.end();
+
+            // 源码直接显示
+            if (source_view) {
+                if (has_snippet) {
+                    source_view->get_buffer()->set_text(snippet_it->second.source);
+                } else {
+                    source_view->get_buffer()->set_text("");
+                }
+            }
+
+            // 运行按钮：点击后把构建期算好的结果显示到结果框
+            if (run_button && result_view) {
+                if (has_snippet) {
+                    string result_text = snippet_it->second.result;
+                    run_button->signal_clicked().connect([result_view, result_text]() {
+                        result_view->get_buffer()->set_text(result_text);
+                    });
+                } else {
+                    run_button->set_sensitive(false);
+                }
             }
 
             auto prev_btn = builder->get_widget<Gtk::Button>("prev_button");

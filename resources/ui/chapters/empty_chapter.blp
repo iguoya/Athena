@@ -6,37 +6,82 @@ ScrolledWindow chapter_page {
 
   Box {
     orientation: vertical;
-    spacing: 32;
-    halign: center;
-    valign: center;
+    spacing: 16;
     hexpand: true;
     vexpand: true;
-    margin-top: 60;
-    margin-start: 60;
-    margin-end: 60;
+    margin-top: 24;
+    margin-start: 32;
+    margin-end: 32;
+    margin-bottom: 24;
 
     Label chapter_title_label {
       name: "chapter_title_label";
+      halign: start;
 
       styles [
         "title-1"
       ]
     }
 
+    // 源代码显示框
     Label {
-      label: "📝 此章节内容正在完善中...";
+      label: "源代码";
+      halign: start;
 
       styles [
-        "title-4",
-        "dim-label"
+        "heading"
       ]
     }
 
+    ScrolledWindow {
+      height-request: 200;
+      hexpand: true;
+
+      TextView source_view {
+        name: "source_view";
+        editable: false;
+        monospace: true;
+      }
+    }
+
+    // 运行按钮
+    Button run_button {
+      name: "run_button";
+      label: "▶ 运行";
+      halign: start;
+
+      styles [
+        "suggested-action"
+      ]
+    }
+
+    // 运行结果框
+    Label {
+      label: "运行结果";
+      halign: start;
+
+      styles [
+        "heading"
+      ]
+    }
+
+    ScrolledWindow {
+      height-request: 160;
+      hexpand: true;
+
+      TextView result_view {
+        name: "result_view";
+        editable: false;
+        monospace: true;
+      }
+    }
+
+    // 上一章 / 下一章
     Box {
       orientation: horizontal;
       spacing: 12;
-      halign: center;
-      margin-top: 20;
+      halign: start;
+      margin-top: 8;
 
       Button prev_button {
         name: "prev_button";
