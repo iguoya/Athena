@@ -16,7 +16,7 @@ local_inc = include_directories('include')
 # === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
 chapters_json = meson.project_source_root() / 'resources' / 'chapters.json'
-gresource_xml = meson.current_build_dir() / 'app.gresource.xml'
+gresource_xml = meson.project_source_root() / 'resources' / 'app.gresource.xml'
 
 # 脚本 stdout 格式: "chapter_id|blp_relative_path|ui_filename"
 gen_output = run_command(
