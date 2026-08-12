@@ -283,17 +283,36 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
             auto source_view = builder->get_widget<Gtk::TextView>("source_view");
             auto run_button  = builder->get_widget<Gtk::Button>("run_button");
             auto result_view = builder->get_widget<Gtk::TextView>("result_view");
-            auto subchapters_box = builder->get_widget<Gtk::Box>("subchapters_box");
+            auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
+            auto topics_list  = builder->get_widget<Gtk::ListBox>("topics_list");
 
-            // 子章节列表显示
-            if (subchapters_box) {
+            // 本章知识点列表：每个子章节一个条目 + 运行按钮
+            if (topics_label && topics_list) {
                 if (meta->subchapters.empty()) {
-                    subchapters_box->set_visible(false);
+                    topics_label->set_visible(false);
+                    topics_list->set_visible(false);
                 } else {
                     for (const auto& title : meta->subchapters) {
-                        auto label = Gtk::make_managed<Gtk::Label>("• " + title);
-                        label->set_halign(Gtk::Align::START);
-                        subchapters_box->append(*label);
+                        auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+
+                        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
+
+                        auto label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+                        label_box->set_hexpand(true);
+                        auto title_label = Gtk::make_managed<Gtk::Label>(title);
+                        title_label->set_halign(Gtk::Align::START);
+                        label_box->append(*title_label);
+                        box->append(*label_box);
+
+                        auto run_btn = Gtk::make_managed<Gtk::Button>("运行");
+                        run_btn->add_css_class("suggested-action");
+                        run_btn->signal_clicked().connect([result_view, title]() {
+                            result_view->get_buffer()->set_text("【" + title + "】暂无运行示例");
+                        });
+                        box->append(*run_btn);
+
+                        row->set_child(*box);
+                        topics_list->append(*row);
                     }
                 }
             }

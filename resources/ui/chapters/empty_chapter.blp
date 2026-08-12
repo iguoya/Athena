@@ -23,12 +23,20 @@ ScrolledWindow chapter_page {
       ]
     }
 
-    // 子章节列表（合并章节的内容，无子章节时隐藏）
-    Box subchapters_box {
-      name: "subchapters_box";
-      orientation: vertical;
-      spacing: 4;
+    // 本章知识点（子章节列表，无子章节时隐藏）
+    Label topics_label {
+      name: "topics_label";
+      label: "本章知识点";
       halign: start;
+
+      styles [
+        "heading"
+      ]
+    }
+
+    ListBox topics_list {
+      name: "topics_list";
+      selection-mode: none;
     }
 
     // 源代码显示框
