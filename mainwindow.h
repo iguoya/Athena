@@ -1,10 +1,8 @@
 #pragma once
 
 #include <gtkmm.h>
-#include <memory>
 #include <string>
 #include <map>
-#include <iostream>
 using namespace std;
 
 

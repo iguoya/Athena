@@ -7,7 +7,6 @@ gnome = import('gnome')
 
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
-libadwaita_dep = dependency('libadwaita-1', version: '>= 1.2')
 blueprint_compiler = find_program('blueprint-compiler')
 # 步骤 1: 编译 Blueprint 文件
 # 定义一个自定义目标，将所有 .blp 文件编译为 .ui 文件
@@ -47,7 +46,6 @@ executable('Athena', src_files,
   sources: resources,  
   dependencies: [
     gtkmm_dep,
-    libadwaita_dep,
     glib_dep
   ],
   install: true)
