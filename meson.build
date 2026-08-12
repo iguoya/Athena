@@ -12,6 +12,11 @@ python = find_program('python3')
 
 # 本地第三方头文件（nlohmann/json.hpp）
 local_inc = include_directories('include')
+# 片段类头文件 + 运行器
+snippet_inc = include_directories('snippets')
+
+# 定义源码根目录，供运行时读取片段源文件
+add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
 
 # === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
@@ -55,7 +60,8 @@ compiled_ui += custom_target(
 src_files = files(
   'main.cc',
   'athena.cc',
-  'mainwindow.cc'
+  'mainwindow.cc',
+  'snippets/runner.cpp'
 )
 
 # === 打包资源 ===
@@ -68,7 +74,7 @@ resources = gnome.compile_resources(
 
 executable('Athena', src_files,
   sources: resources,
-  include_directories: local_inc,
+  include_directories: [local_inc, snippet_inc],
   dependencies: [
     gtkmm_dep,
     glib_dep
