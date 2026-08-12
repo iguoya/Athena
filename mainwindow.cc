@@ -151,26 +151,59 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
     }
 
     // 为每个章节加载内容并添加到栈
-    for (auto* meta : category_chapters) {
+    for (size_t i = 0; i < category_chapters.size(); ++i) {
+        auto* meta = category_chapters[i];
         auto builder = get_chapter_builder(meta->id);
-        string root_name = meta->id + "_page";
-        auto widget = builder->get_widget<Gtk::Widget>(root_name);
+
+        // 根据资源路径判断：空模板章节用 chapter_page 根控件，否则用 {id}_page
+        bool is_template = meta->resource_path.find("empty_chapter") != string::npos;
+        Gtk::Widget* widget = nullptr;
+        if (is_template) {
+            widget = builder->get_widget<Gtk::Widget>("chapter_page");
+        } else {
+            widget = builder->get_widget<Gtk::Widget>(meta->id + "_page");
+        }
 
         if (!widget) {
-            cerr << "Failed to get root widget: " << root_name << endl;
+            cerr << "Failed to get root widget for: " << meta->id << endl;
             continue;
         }
 
-        auto page = m_chapter_stack->add(*widget, meta->id, meta->title);
+        m_chapter_stack->add(*widget, meta->id, meta->title);
         m_active_page_names.insert(meta->id);
 
-        // 章节特定的信号初始化（仅首次）
-        if (m_loaded_chapters.find(meta->id) == m_loaded_chapters.end()) {
-            if (meta->id == "basic_syntax") {
-                initialize_basic_syntax_chapter(builder);
-            } else if (meta->id == "functions") {
-                initialize_functions_chapter(builder);
+        // 空模板章节：注入标题 + 连接前后章导航（仅初始化一次）
+        if (is_template && m_loaded_chapters.find(meta->id) == m_loaded_chapters.end()) {
+            auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
+            if (title_label) {
+                title_label->set_text(meta->title);
             }
+
+            auto prev_btn = builder->get_widget<Gtk::Button>("prev_button");
+            auto next_btn = builder->get_widget<Gtk::Button>("next_button");
+
+            if (prev_btn) {
+                bool has_prev = i > 0;
+                prev_btn->set_sensitive(has_prev);
+                if (has_prev) {
+                    string prev_id = category_chapters[i - 1]->id;
+                    prev_btn->signal_clicked().connect([this, prev_id]() {
+                        load_chapter(prev_id);
+                    });
+                }
+            }
+
+            if (next_btn) {
+                bool has_next = i < category_chapters.size() - 1;
+                next_btn->set_sensitive(has_next);
+                if (has_next) {
+                    string next_id = category_chapters[i + 1]->id;
+                    next_btn->signal_clicked().connect([this, next_id]() {
+                        load_chapter(next_id);
+                    });
+                }
+            }
+
             m_loaded_chapters.insert(meta->id);
         }
     }

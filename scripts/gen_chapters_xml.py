@@ -26,8 +26,8 @@ def main():
     if not chapters:
         print("Warning: no chapters defined in chapters.json", file=sys.stderr)
 
-    # 校验 blp_file 存在
-    ui_entries = []
+    # 校验 blp_file 存在，并去重（多个章节可能共用同一个 .blp 模板）
+    seen_ui = {}       # ui_name -> blp_file（去重 .ui 条目）
     for ch in chapters:
         ch_id = ch.get("id", "")
         ui_resource = ch.get("ui_resource", f"/app/chapters/{ch_id}.ui")
@@ -43,6 +43,11 @@ def main():
             sys.exit(1)
 
         ui_name = os.path.basename(ui_resource)
+        if ui_name not in seen_ui:
+            seen_ui[ui_name] = blp_file
+
+    ui_entries = []
+    for ui_name in sorted(seen_ui):
         ui_entries.append(f'    <file compressed="true">{ui_name}</file>')
 
     # 写出 gresource.xml
@@ -66,14 +71,10 @@ def main():
     with open(output_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
-    # stdout 供 meson 解析: chapter_id|blp_relative_path|ui_filename
-    for ch in chapters:
-        ch_id = ch.get("id", "")
-        blp_file = ch.get("blp_file", "")
-        ui_resource = ch.get("ui_resource", f"/app/chapters/{ch_id}.ui")
-        ui_name = os.path.basename(ui_resource)
-        if blp_file and ch_id:
-            print(f"{ch_id}|{blp_file}|{ui_name}")
+    # stdout 供 meson 解析: target_id|blp_relative_path|ui_filename（按 .ui 去重）
+    for ui_name, blp_file in seen_ui.items():
+        target_id = os.path.splitext(ui_name)[0]
+        print(f"{target_id}|{blp_file}|{ui_name}")
 
 
 if __name__ == "__main__":

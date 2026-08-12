@@ -1,0 +1,62 @@
+using Gtk 4.0;
+
+ScrolledWindow chapter_page {
+  hexpand: true;
+  vexpand: true;
+
+  Box {
+    orientation: vertical;
+    spacing: 32;
+    halign: center;
+    valign: center;
+    hexpand: true;
+    vexpand: true;
+    margin-top: 60;
+    margin-start: 60;
+    margin-end: 60;
+
+    Label chapter_title_label {
+      name: "chapter_title_label";
+
+      styles [
+        "title-1"
+      ]
+    }
+
+    Label {
+      label: "📝 此章节内容正在完善中...";
+
+      styles [
+        "title-4",
+        "dim-label"
+      ]
+    }
+
+    Box {
+      orientation: horizontal;
+      spacing: 12;
+      halign: center;
+      margin-top: 20;
+
+      Button prev_button {
+        name: "prev_button";
+        label: "← 上一章";
+        sensitive: false;
+
+        styles [
+          "pill"
+        ]
+      }
+
+      Button next_button {
+        name: "next_button";
+        label: "下一章 →";
+        sensitive: false;
+
+        styles [
+          "pill"
+        ]
+      }
+    }
+  }
+}
