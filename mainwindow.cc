@@ -3,7 +3,7 @@
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
 #include <sstream>
-#include "functions06.hpp"
+#include "pointers_references/functions06.hpp"
 
 using namespace std;
 
