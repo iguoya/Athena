@@ -123,33 +123,5 @@ ScrolledWindow chapter_page {
         }
       }
     }
-
-    // 上一章 / 下一章
-    Box {
-      orientation: horizontal;
-      spacing: 12;
-      halign: start;
-      margin-top: 8;
-
-      Button prev_button {
-        name: "prev_button";
-        label: "← 上一章";
-        sensitive: false;
-
-        styles [
-          "pill"
-        ]
-      }
-
-      Button next_button {
-        name: "next_button";
-        label: "下一章 →";
-        sensitive: false;
-
-        styles [
-          "pill"
-        ]
-      }
-    }
   }
 }

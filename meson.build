@@ -12,6 +12,8 @@ python = find_program('python3')
 
 # 本地第三方头文件（nlohmann/json.hpp）
 local_inc = include_directories('include')
+# 业务逻辑类目录
+cc_inc = include_directories('cc')
 
 # === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
@@ -68,7 +70,7 @@ resources = gnome.compile_resources(
 
 executable('Athena', src_files,
   sources: resources,
-  include_directories: local_inc,
+  include_directories: [local_inc, cc_inc],
   dependencies: [
     gtkmm_dep,
     glib_dep

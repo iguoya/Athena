@@ -39,9 +39,6 @@ private:
     void on_category_selected(const string& category_id);
     void build_chapter_tabs(const string& category_id);
 
-    // 章节加载
-    void load_chapter(const string& chapter_name);
-
     // Builder 缓存
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(const string& chapter_name);
 
@@ -59,7 +56,6 @@ private:
 
     // 章节标签按钮（当前分类，用于互斥分组）
     vector<Gtk::ToggleButton*> m_tab_buttons;
-    std::map<string, Gtk::ToggleButton*> m_tab_button_map;  // chapter_id -> 标签按钮
 
     // 当前状态
     string m_current_category;

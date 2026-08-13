@@ -3,68 +3,9 @@
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
 #include <sstream>
+#include "functions06.hpp"
 
 using namespace std;
-
-// ============================================================
-// 章节演示类
-// 每个章节对应一个类，run() 把结果输出到 ostream
-// 按钮点击事件直接绑定这些类的 run() 成员函数
-// ============================================================
-
-// 02_pointers_references: 指针与引用 —— 值传递 vs 引用传递
-class Functions06 {
-public:
-    void run(ostream& os) {
-        int x = 5, y = 10;
-
-        swapByValue(x, y);
-        os << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
-
-        swapByRef(x, y);
-        os << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
-    }
-
-private:
-    void swapByValue(int a, int b) {
-        int temp = a;
-        a = b;
-        b = temp;
-    }
-
-    void swapByRef(int& a, int& b) {
-        int temp = a;
-        a = b;
-        b = temp;
-    }
-};
-
-// 章节源码文本（源码框显示用）
-static const char* FUNCTIONS06_SOURCE = R"SNIP(class Functions06 {
-public:
-    void run(ostream& os) {
-        int x = 5, y = 10;
-
-        swapByValue(x, y);
-        os << "值传递后:  x=" << x << ", y=" << y << "  (未改变)" << endl;
-
-        swapByRef(x, y);
-        os << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << endl;
-    }
-
-private:
-    void swapByValue(int a, int b) {
-        int temp = a;
-        a = b;
-        b = temp;
-    }
-
-    void swapByRef(int& a, int& b) {
-        int temp = a;
-        a = b;
-        b = temp;
-    }
-};)SNIP";
 
 // ===================================================================
 //  构造 & 初始化
@@ -221,7 +162,6 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         m_chapter_tab_box->remove(*btn);
     }
     m_tab_buttons.clear();
-    m_tab_button_map.clear();
 
     // 收集该分类下的章节
     vector<ChapterMeta*> category_chapters;
@@ -276,7 +216,6 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         });
         m_chapter_tab_box->append(*tab_btn);
         m_tab_buttons.push_back(tab_btn);
-        m_tab_button_map[meta->id] = tab_btn;
 
         // 空模板章节：注入标题 + 连接前后章导航（仅初始化一次）
         if (is_template && m_loaded_chapters.find(meta->id) == m_loaded_chapters.end()) {
@@ -349,31 +288,6 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            auto prev_btn = builder->get_widget<Gtk::Button>("prev_button");
-            auto next_btn = builder->get_widget<Gtk::Button>("next_button");
-
-            if (prev_btn) {
-                bool has_prev = i > 0;
-                prev_btn->set_sensitive(has_prev);
-                if (has_prev) {
-                    string prev_id = category_chapters[i - 1]->id;
-                    prev_btn->signal_clicked().connect([this, prev_id]() {
-                        load_chapter(prev_id);
-                    });
-                }
-            }
-
-            if (next_btn) {
-                bool has_next = i < category_chapters.size() - 1;
-                next_btn->set_sensitive(has_next);
-                if (has_next) {
-                    string next_id = category_chapters[i + 1]->id;
-                    next_btn->signal_clicked().connect([this, next_id]() {
-                        load_chapter(next_id);
-                    });
-                }
-            }
-
             m_loaded_chapters.insert(meta->id);
         }
     }
@@ -399,38 +313,5 @@ Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(const string& chapter
     auto builder = Gtk::Builder::create_from_resource(meta_it->second.resource_path);
     m_chapter_builders[chapter_name] = builder;
     return builder;
-}
-
-// ===================================================================
-//  章节切换（供章节内部按钮调用，如"下一章"）
-// ===================================================================
-
-void MainWindow::load_chapter(const string& chapter_name) {
-    auto it = m_chapters.find(chapter_name);
-    if (it == m_chapters.end()) {
-        cerr << "Chapter not found: " << chapter_name << endl;
-        return;
-    }
-
-    // 如果目标章节在不同分类，先切换分类
-    if (it->second.category != m_current_category) {
-        for (size_t i = 0; i < m_categories.size(); ++i) {
-            if (m_categories[i].id == it->second.category) {
-                m_category_buttons[i]->set_active(true);
-                break;
-            }
-        }
-    }
-
-    // 激活对应的标签按钮（触发切换 + 高亮同步）
-    auto btn_it = m_tab_button_map.find(chapter_name);
-    if (btn_it != m_tab_button_map.end()) {
-        btn_it->second->set_active(true);
-    } else {
-        // 兜底：按钮不存在时直接切换栈
-        m_chapter_stack->set_visible_child(chapter_name);
-    }
-    m_current_chapter = chapter_name;
-    cout << "Switched to chapter: " << chapter_name << endl;
 }
 
