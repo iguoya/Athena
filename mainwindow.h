@@ -66,9 +66,9 @@ private:
 
     // 分类定义
     vector<CategoryInfo> m_categories = {
-        {"cpp",              "C++",              "applications-development-symbolic"},
-        {"ds_algo",          "数据结构与算法",    "applications-science-symbolic"},
-        {"design_patterns",  "设计模式",          "applications-development-symbolic"},
+        {"cpp", "C++",            "applications-development-symbolic"},
+        {"da",  "数据结构与算法",  "applications-science-symbolic"},
+        {"dp",  "设计模式",        "applications-development-symbolic"},
     };
 
     // 章节元数据（按 category 命名空间嵌套，id 只在 category 内唯一）

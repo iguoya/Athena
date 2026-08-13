@@ -22,7 +22,10 @@ def main():
     with open(json_path, "r", encoding="utf-8") as f:
         config = json.load(f)
 
-    chapters = config.get("chapters", [])
+    # 顶层按分类分组，扁平化为章节列表
+    chapters = []
+    for category, category_chapters in config.items():
+        chapters.extend(category_chapters)
     if not chapters:
         print("Warning: no chapters defined in chapters.json", file=sys.stderr)
 

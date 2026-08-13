@@ -81,34 +81,36 @@ void MainWindow::load_chapter_metadata() {
     auto config = nlohmann::json::parse(string_view(data, size));
     g_bytes_unref(bytes);
 
-    for (const auto& ch : config["chapters"]) {
-        ChapterMeta meta;
-        meta.id       = ch["id"];
-        meta.order    = ch.value("order", 0);
-        meta.title    = ch["title"];
-        meta.category = ch.value("category", "cpp");
+    for (const auto& [category, chapters] : config.items()) {
+        for (const auto& ch : chapters) {
+            ChapterMeta meta;
+            meta.id       = ch["id"];
+            meta.order    = ch.value("order", 0);
+            meta.title    = ch["title"];
+            meta.category = category;
 
-        // ui_resource 存 blp 路径，派生 GResource 路径和根控件名
-        string blp_path = ch["ui_resource"];                 // "resources/ui/chapters/welcome.blp"
-        size_t slash = blp_path.find_last_of('/');
-        string filename = blp_path.substr(slash + 1);        // "welcome.blp"
-        string stem = filename.substr(0, filename.size() - 4); // "welcome"
+            // ui_resource 存 blp 路径，派生 GResource 路径和根控件名
+            string blp_path = ch["ui_resource"];                 // "resources/ui/chapters/welcome.blp"
+            size_t slash = blp_path.find_last_of('/');
+            string filename = blp_path.substr(slash + 1);        // "welcome.blp"
+            string stem = filename.substr(0, filename.size() - 4); // "welcome"
 
-        meta.resource_path = "/app/chapters/" + stem + ".ui"; // "/app/chapters/welcome.ui"
-        meta.widget_name   = stem + "_page";                  // "welcome_page"
+            meta.resource_path = "/app/chapters/" + stem + ".ui"; // "/app/chapters/welcome.ui"
+            meta.widget_name   = stem + "_page";                  // "welcome_page"
 
-        // 子章节标题列表
-        if (ch.contains("subchapters")) {
-            for (const auto& sub : ch["subchapters"]) {
-                meta.subchapters.push_back(sub.get<string>());
+            // 子章节标题列表
+            if (ch.contains("subchapters")) {
+                for (const auto& sub : ch["subchapters"]) {
+                    meta.subchapters.push_back(sub.get<string>());
+                }
             }
+
+            m_chapters[category][meta.id] = meta;
+
+            cout << "Chapter loaded: " << category << "::" << meta.id
+                 << " -> \"" << meta.title << "\""
+                 << " @ " << meta.resource_path << endl;
         }
-
-        m_chapters[meta.category][meta.id] = meta;
-
-        cout << "Chapter loaded: " << meta.category << "::" << meta.id
-             << " -> \"" << meta.title << "\""
-             << " @ " << meta.resource_path << endl;
     }
 
     size_t total = 0;
