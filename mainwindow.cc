@@ -3,9 +3,33 @@
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
 #include <sstream>
-#include "references/functions06.hpp"
+#include <algorithm>
+#include <functional>
+#include "references/reference.hpp"
 
 using namespace std;
+
+// ============================================================
+// 章节演示注册表
+// 加一个演示：在 language/ 写类 + 这里加一行
+// ============================================================
+
+template<typename Demo>
+string run_demo() {
+    Demo demo;
+    ostringstream oss;
+    demo.run(oss);
+    return oss.str();
+}
+
+struct ChapterDemo {
+    const char* source;          // 源码文本（源码框显示）
+    function<string()> run;      // 运行函数
+};
+
+map<string, ChapterDemo> chapter_demos = {
+    {"pointers_references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
+};
 
 // ===================================================================
 //  构造 & 初始化
@@ -58,6 +82,7 @@ void MainWindow::load_chapter_metadata() {
     for (const auto& ch : config["chapters"]) {
         ChapterMeta meta;
         meta.id       = ch["id"];
+        meta.order    = ch.value("order", 0);
         meta.title    = ch["title"];
         meta.category = ch.value("category", "cpp");
 
@@ -171,6 +196,12 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         }
     }
 
+    // 按 order 序号排序
+    sort(category_chapters.begin(), category_chapters.end(),
+         [](const ChapterMeta* a, const ChapterMeta* b) {
+             return a->order < b->order;
+         });
+
     if (category_chapters.empty()) {
         auto placeholder = Gtk::make_managed<Gtk::Label>("该分类暂无章节");
         placeholder->set_halign(Gtk::Align::CENTER);
@@ -264,22 +295,20 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            if (meta->id == "02_pointers_references") {
-                // 源码显示
+            // 源码显示 + 运行按钮（查演示注册表）
+            auto it = chapter_demos.find(meta->id);
+            if (it != chapter_demos.end()) {
                 if (source_view) {
-                    source_view->get_buffer()->set_text(FUNCTIONS06_SOURCE);
+                    source_view->get_buffer()->set_text(it->second.source);
                 }
-                // 点击事件绑定类成员函数 run()
                 if (run_button && result_view) {
-                    auto demo = make_shared<Functions06>();
-                    run_button->signal_clicked().connect([demo, result_view]() {
-                        ostringstream oss;
-                        demo->run(oss);   // 调用类成员函数
-                        result_view->get_buffer()->set_text(oss.str());
+                    auto run_fn = it->second.run;
+                    run_button->signal_clicked().connect([result_view, run_fn]() {
+                        result_view->get_buffer()->set_text(run_fn());
                     });
                 }
             } else {
-                // 暂无演示类的章节：源码框空，运行按钮禁用
+                // 暂无演示：源码框空，运行按钮禁用
                 if (source_view) {
                     source_view->get_buffer()->set_text("");
                 }

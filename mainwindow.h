@@ -10,8 +10,9 @@ using std::vector;
 
 // 章节元数据，运行时从 chapters.json 加载
 struct ChapterMeta {
-    string id;              // "01_welcome"（数字前缀用于排序）
-    string title;           // "欢迎页面"
+    string id;              // 唯一标识，如 "pointers_references"
+    int order;              // 界面排序序号
+    string title;           // "指针与引用"
     string category;        // "cpp" | "ds_algo" | "design_patterns"
     string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
     string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
