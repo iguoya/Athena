@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include "references/reference.hpp"
+#include "pointers/pointer.hpp"
 
 using namespace std;
 
@@ -29,7 +30,8 @@ struct ChapterDemo {
 
 map<string, map<string, ChapterDemo>> chapter_demos = {
     {"cpp", {
-        {"pointers_references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
+        {"pointers",   {POINTER_SOURCE,   []() { return run_demo<Pointer>(); }}},
+        {"references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
     }},
 };
 
