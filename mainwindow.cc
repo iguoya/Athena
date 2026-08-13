@@ -27,8 +27,10 @@ struct ChapterDemo {
     function<string()> run;      // 运行函数
 };
 
-map<string, ChapterDemo> chapter_demos = {
-    {"pointers_references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
+map<string, map<string, ChapterDemo>> chapter_demos = {
+    {"cpp", {
+        {"pointers_references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
+    }},
 };
 
 // ===================================================================
@@ -102,15 +104,18 @@ void MainWindow::load_chapter_metadata() {
             }
         }
 
-        m_chapters[meta.id] = meta;
+        m_chapters[meta.category][meta.id] = meta;
 
-        cout << "Chapter loaded: " << meta.id
+        cout << "Chapter loaded: " << meta.category << "::" << meta.id
              << " -> \"" << meta.title << "\""
-             << " [" << meta.category << "]"
              << " @ " << meta.resource_path << endl;
     }
 
-    cout << "Loaded " << m_chapters.size() << " chapter(s) from chapters.json" << endl;
+    size_t total = 0;
+    for (const auto& [cat, chapters] : m_chapters) {
+        total += chapters.size();
+    }
+    cout << "Loaded " << total << " chapter(s) from chapters.json" << endl;
 }
 
 // ===================================================================
@@ -190,10 +195,8 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
 
     // 收集该分类下的章节
     vector<ChapterMeta*> category_chapters;
-    for (auto& [id, meta] : m_chapters) {
-        if (meta.category == category_id) {
-            category_chapters.push_back(&meta);
-        }
+    for (auto& [id, meta] : m_chapters[category_id]) {
+        category_chapters.push_back(&meta);
     }
 
     // 按 order 序号排序
@@ -214,7 +217,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
     // 为每个章节加载内容并添加到栈 + 创建标签按钮
     for (size_t i = 0; i < category_chapters.size(); ++i) {
         auto* meta = category_chapters[i];
-        auto builder = get_chapter_builder(meta->id);
+        auto builder = get_chapter_builder(meta->category, meta->id);
 
         // 根据资源路径判断：空模板章节用 chapter_page 根控件，否则用 widget_name
         bool is_template = meta->resource_path.find("empty_chapter") != string::npos;
@@ -295,9 +298,9 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            // 源码显示 + 运行按钮（查演示注册表）
-            auto it = chapter_demos.find(meta->id);
-            if (it != chapter_demos.end()) {
+            // 源码显示 + 运行按钮（查演示注册表，按 category 命名空间）
+            auto it = chapter_demos[meta->category].find(meta->id);
+            if (it != chapter_demos[meta->category].end()) {
                 if (source_view) {
                     source_view->get_buffer()->set_text(it->second.source);
                 }
@@ -327,20 +330,21 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
     }
 }
 
-Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(const string& chapter_name) {
-    auto it = m_chapter_builders.find(chapter_name);
+Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(const string& category, const string& id) {
+    string cache_key = category + "/" + id;
+    auto it = m_chapter_builders.find(cache_key);
     if (it != m_chapter_builders.end()) {
         return it->second;
     }
 
-    auto meta_it = m_chapters.find(chapter_name);
-    if (meta_it == m_chapters.end()) {
-        cerr << "Chapter not found: " << chapter_name << endl;
+    auto meta_it = m_chapters[category].find(id);
+    if (meta_it == m_chapters[category].end()) {
+        cerr << "Chapter not found: " << category << "::" << id << endl;
         return {};
     }
 
     auto builder = Gtk::Builder::create_from_resource(meta_it->second.resource_path);
-    m_chapter_builders[chapter_name] = builder;
+    m_chapter_builders[cache_key] = builder;
     return builder;
 }
 

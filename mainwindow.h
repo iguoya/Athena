@@ -41,7 +41,7 @@ private:
     void build_chapter_tabs(const string& category_id);
 
     // Builder 缓存
-    Glib::RefPtr<Gtk::Builder> get_chapter_builder(const string& chapter_name);
+    Glib::RefPtr<Gtk::Builder> get_chapter_builder(const string& category, const string& id);
 
     // UI 构建器
     Glib::RefPtr<Gtk::Builder> m_main_builder;
@@ -71,6 +71,6 @@ private:
         {"design_patterns",  "设计模式",          "applications-development-symbolic"},
     };
 
-    // 章节元数据（运行时从 chapters.json 加载）
-    std::map<string, ChapterMeta> m_chapters;
+    // 章节元数据（按 category 命名空间嵌套，id 只在 category 内唯一）
+    std::map<string, std::map<string, ChapterMeta>> m_chapters;
 };
