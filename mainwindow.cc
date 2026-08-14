@@ -42,7 +42,7 @@ string group_title(const string& group) {
     if (group == "pointer") return "指针";
     if (group == "reference") return "引用";
     if (group == "raii") return "RAII";
-    if (group == "smart_ptr") return "智能指针";
+    if (group == "smart_pointer") return "智能指针";
     if (group == "move") return "移动语义";
     return group;
 }

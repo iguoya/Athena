@@ -20,19 +20,20 @@
       { "name": "raii", "items": [
         { "method": "basic", "title": "RAII 思想" }
       ] },
-      { "name": "smart_ptr", "items": [
+      { "name": "smart_pointer", "items": [
         { "method": "unique", "title": "独占指针" },
         { "method": "shared", "title": "共享指针" },
         { "method": "weak", "title": "弱引用指针" }
       ] },
       { "name": "move", "items": [
-        { "method": "basic", "title": "移动语义" }
+        { "method": "rvalue", "title": "右值引用" },
+        { "method": "move_", "title": "移动构造与赋值" }
       ] }
     ] },
     { "order": 4, "title": "类与对象", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
       { "name": "", "items": [
         { "method": "class_basic", "title": "类与对象" },
-        { "method": "ctor_dtor", "title": "构造与析构" },
+        { "method": "constructor_destructor", "title": "构造与析构" },
         { "method": "copy_control", "title": "拷贝控制" },
         { "method": "const_correctness", "title": "const 正确性" }
       ] }
@@ -51,8 +52,8 @@
     ] },
     { "order": 7, "title": "STL 容器", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
       { "name": "", "items": [
-        { "method": "seq_container", "title": "顺序容器" },
-        { "method": "assoc_container", "title": "关联容器" },
+        { "method": "sequential_container", "title": "顺序容器" },
+        { "method": "associative_container", "title": "关联容器" },
         { "method": "unordered_container", "title": "无序容器" }
       ] }
     ] },
@@ -81,7 +82,7 @@
     ] },
     { "order": 11, "title": "文件与IO", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
       { "name": "", "items": [
-        { "method": "file_rw", "title": "文件读写" },
+        { "method": "file_read_write", "title": "文件读写" },
         { "method": "string_stream", "title": "字符串与流" }
       ] }
     ] },
