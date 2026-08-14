@@ -21,15 +21,18 @@ resources/chapters.json
         |
         +--> GResource: /app/data/chapters.json
                  |
-                 +--> MainWindow::load_chapter_metadata()
+                 +--> ChapterCatalog（解析、校验和查询）
                           |
-                          +--> 分类侧栏和章节标签
-                          +--> code: 源码、知识点列表和运行结果
-                          |          +--> 手写 subchapter_demos 注册表
-                          +--> article: Markdown + article.css
-                                       |
-                                       +--> md4c-html: HTML + 目录 + 阅读设置
-                                       +--> macOS ArticleView: WKWebView
+                          +--> MainWindow（界面协调）
+                                   |
+                                   +--> 分类侧栏和章节标签
+                                   +--> code: 源码、知识点列表和运行结果
+                                   |          +--> DemoRegistry
+                                   |                    +--> Reference / RAII
+                                   +--> article: Markdown + article.css
+                                                |
+                                                +--> md4c-html: HTML + 目录 + 阅读设置
+                                                +--> macOS ArticleView: WKWebView
 ```
 
 已有的优点：
@@ -41,13 +44,13 @@ resources/chapters.json
 - 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
+- `ChapterCatalog` 和 `DemoRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
+- Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 
 当前的主要问题：
 
-- `MainWindow` 同时承担 JSON 解析、模型存储、动态 UI 创建、演示查找和执行结果展示，职责过多。
-- JSON 中的 `method` 与 `mainwindow.cc` 手写注册表键缺少统一规则。例如 JSON 的 `basic` 与注册表的 `reference_basic` 不能直接匹配。
-- `order` 被用作页面名和加载状态键；不同分类拥有相同 `order` 时可能冲突。
-- 分类标题和图标仍在 C++ 中手写，尚未完全数据驱动。
+- `MainWindow` 仍负责较多动态 GTK 控件创建和文章/代码页面协调，后续可继续提取页面装配器，但当前不需要完整 Presenter 层。
+- 当前 `DemoRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `chapters.json` 自动生成。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 目前只生成 GResource 清单，不生成章节类、成员函数声明或演示注册表。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
@@ -112,12 +115,14 @@ resources/chapters.json
 
 ### 3.3 领域层
 
-建议逐步引入以下不依赖 GTK 的类型：
+当前已经引入以下不依赖 GTK 的类型：
 
 - `ChapterCatalog`：加载并查询分类、章节和知识点元数据。
-- `ChapterId` / `DemoId`：构造和校验稳定复合 ID。
+- `make_demo_id`：从分类、章节和知识点名称构造稳定复合 ID。
 - `DemoRegistry`：由 ID 查找可执行演示。
-- `DemoResult`：承载标准输出、错误或状态。
+
+后续如果运行结果需要区分标准输出、错误和状态，再引入 `DemoResult`；当前直接向
+`ostream` 输出足以覆盖教学实验。
 
 这些类型可以使用普通 C++ 单元测试验证，不需要启动 GTK。
 
@@ -202,14 +207,15 @@ Meson -> Generator outputs
 
 ## 6. 渐进式改造顺序
 
-1. 为现有 JSON 增加稳定分类/章节 ID，并完成校验。
-2. 将知识点注册表从 `mainwindow.cc` 抽成 `DemoRegistry`，统一复合 ID。
-3. 将 JSON 解析和查询抽成 `ChapterCatalog`。
-4. 生成 ID 常量和注册表，消除手写映射。
-5. 支持安全的一次性章节实现骨架生成。
-6. 解决源代码展示的安装后资源策略。
-7. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
-8. 只有当窗口协调仍然明显复杂时，再考虑正式 Presenter/View 接口。
+1. 已完成：稳定分类/章节/知识点名称及运行时语义校验。
+2. 已完成：将注册表抽成 `DemoRegistry`，统一复合 ID。
+3. 已完成：将 JSON 解析和查询抽成 `ChapterCatalog`。
+4. 已完成：为 ChapterCatalog、Markdown、DemoRegistry 和 GTK 资源建立基础测试。
+5. 生成 ID 常量和注册表，消除手写映射。
+6. 支持安全的一次性章节实现骨架生成。
+7. 解决源代码展示的安装后资源策略。
+8. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
+9. 只有当窗口协调仍然明显复杂时，再考虑正式 Presenter/View 接口。
 
 ## 7. MVC/MVP 决策
 

@@ -34,7 +34,8 @@ scripts/gen_chapters_xml.py
 
 - 生成章节类。
 - 生成成员函数声明或实现骨架。
-- 生成 `subchapter_demos` 注册表。
+- 生成 `DemoRegistry` 注册项；当前 Reference 和 RAII 的映射仍在独立的
+  `demo_registry.cc` 中手写维护。
 - 完整校验章节和方法 ID。
 
 因此，本规范后面的 C++ 生成流程属于目标设计，落地时需要同步修改 Meson、测试和文档。

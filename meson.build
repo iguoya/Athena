@@ -10,6 +10,8 @@ glib_dep = dependency('glib-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
 md4c_html_dep = dependency('md4c-html')
+gtest_dep = dependency('gtest')
+gtest_main_dep = dependency('gtest_main')
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
@@ -104,3 +106,33 @@ executable('Athena', src_files,
     md4c_html_dep
   ] + platform_dependencies,
   install: true)
+
+# === 测试 ===
+# 核心测试不依赖 GTK，保证 JSON、Markdown 和注册表可独立验证。
+core_test_exe = executable(
+  'athena-core-tests',
+  files(
+    'tests/chapter_catalog_test.cc',
+    'tests/demo_registry_test.cc',
+    'tests/markdown_renderer_test.cc',
+    'chapter_catalog.cc',
+    'demo_registry.cc',
+    'markdown_renderer.cc',
+    'language/raii/raii_basic.cpp',
+    'language/raii/smart_pointer.cpp',
+    'language/raii/move_semantics.cpp'
+  ),
+  include_directories: [local_inc, language_inc],
+  dependencies: [gtest_main_dep, md4c_dep, md4c_html_dep]
+)
+test('athena-core', core_test_exe)
+
+# GTK 测试只检查 Blueprint/GResource 能否构造关键控件，不启动完整窗口。
+gtk_test_exe = executable(
+  'athena-gtk-tests',
+  files('tests/gtk_resource_test.cc'),
+  sources: resources,
+  include_directories: [local_inc, language_inc],
+  dependencies: [gtest_dep, gtkmm_dep, sourceview_dep]
+)
+test('athena-gtk-resources', gtk_test_exe, is_parallel: false)

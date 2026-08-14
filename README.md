@@ -7,5 +7,16 @@ Markdown 转换为 HTML。macOS 使用系统自带的 WKWebView 和统一的文�
 文章目录、正文和阅读设置由同一个 HTML 页面原生控制；当前不保留 GTK 文章
 阅读回退，Linux 后端将来可以在同一 ArticleView 接口下接入 WebKitGTK 6.0。
 macOS 可通过 Homebrew 安装
-`gtksourceview5 md4c`；Ubuntu 使用开发包
-`libgtksourceview-5-dev libmd4c-dev`。
+`gtksourceview5 md4c googletest`；Ubuntu 使用开发包
+`libgtksourceview-5-dev libmd4c-dev libgtest-dev`。
+
+构建并运行测试：
+
+```sh
+meson setup builddir
+meson compile -C builddir
+meson test -C builddir --print-errorlogs
+```
+
+测试分为两层：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
+`athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口。
