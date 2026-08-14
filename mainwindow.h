@@ -23,10 +23,11 @@ struct SubGroup {
 // 章节元数据，运行时从 chapters.json 加载
 struct ChapterMeta {
     int order;              // 排序序号，兼作 category 内唯一标识
-    string title;           // "指针与引用"
+    string title;           // "引用"
     string category;        // "cpp" | "da" | "dp"
     string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
     string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
+    string source;          // 演示类源文件相对路径（源码框显示用），空表示无源码
     vector<SubGroup> subchapters;  // 子分组列表
 };
 

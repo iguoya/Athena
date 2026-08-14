@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <iostream>
+#include <fstream>
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
 #include <sstream>
@@ -8,6 +9,15 @@
 #include "references/reference.hpp"
 
 using namespace std;
+
+// 读取源文件内容（源码框显示用）
+string read_file(const string& path) {
+    ifstream f(path);
+    if (!f) return "";
+    ostringstream ss;
+    ss << f.rdbuf();
+    return ss.str();
+}
 
 // ============================================================
 // 子章节演示注册表
@@ -95,6 +105,7 @@ void MainWindow::load_chapter_metadata() {
             meta.order    = ch.value("order", 0);
             meta.title    = ch["title"];
             meta.category = category;
+            meta.source   = ch.value("source", "");
 
             // ui_resource 存 blp 路径，派生 GResource 路径和根控件名
             string blp_path = ch["ui_resource"];                 // "resources/ui/chapters/welcome.blp"
@@ -340,12 +351,18 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 }
             }
 
-            // 章节级"运行"按钮：子章节才是运行单元，禁用之；源码框暂空
+            // 章节级"运行"按钮：子章节才是运行单元，隐藏之
             if (run_button) {
                 run_button->set_visible(false);
             }
+            // 源码框：读取演示类源文件
             if (source_view) {
-                source_view->get_buffer()->set_text("");
+                if (meta->source.empty()) {
+                    source_view->get_buffer()->set_text("");
+                } else {
+                    string src = read_file(string(ATHENA_SOURCE_ROOT) + "/" + meta->source);
+                    source_view->get_buffer()->set_text(src);
+                }
             }
 
             m_loaded_chapters.insert(to_string(meta->order));

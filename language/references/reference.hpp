@@ -68,26 +68,3 @@ public:
     }
 };
 
-// 源码文本（源码框显示用）
-inline const char* REFERENCE_SOURCE = R"SNIP(class Reference {
-public:
-    void run(std::ostream& os) {
-        basic(os);
-        const_ref(os);
-        pass_by(os);
-        return_ref(os);
-    }
-
-public:
-    // 引用基础：别名、必须初始化、不能重新绑定
-    void basic(std::ostream& os) { ... }
-
-    // const 引用：可绑定临时对象
-    void const_ref(std::ostream& os) { ... }
-
-    // 值传递 vs 引用传递
-    void pass_by(std::ostream& os) { ... }
-
-    // 引用作为返回值
-    void return_ref(std::ostream& os) { ... }
-};)SNIP";

@@ -15,6 +15,9 @@ local_inc = include_directories('include')
 # 业务逻辑类目录（C++ 语言各章节演示类）
 language_inc = include_directories('language')
 
+# 定义源码根目录，供运行时读取演示类源码（源码框显示）
+add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
+
 # === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
 chapters_json = meson.project_source_root() / 'resources' / 'chapters.json'
