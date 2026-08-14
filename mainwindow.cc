@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "markdown_renderer.h"
+#include "rendering/markdown_renderer.h"
 
 #include <gio/gio.h>
 #include <gtksourceview/gtksource.h>

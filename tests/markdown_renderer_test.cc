@@ -1,4 +1,4 @@
-#include "markdown_renderer.h"
+#include "rendering/markdown_renderer.h"
 
 #include <gtest/gtest.h>
 

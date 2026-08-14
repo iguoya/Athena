@@ -1,8 +1,8 @@
 #pragma once
 
-#include "article_view.h"
-#include "chapter_catalog.h"
 #include "demo_registry.h"
+#include "parsing/chapter_catalog.h"
+#include "rendering/article_view.h"
 
 #include <gtkmm.h>
 
