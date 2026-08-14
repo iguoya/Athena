@@ -1,0 +1,119 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.architecture }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15-intel
+            architecture: x86_64
+          - runner: macos-15
+            architecture: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: >-
+          brew install
+          meson ninja pkg-config
+          gtkmm4 gtksourceview5 md4c googletest
+          blueprint-compiler librsvg
+
+      - name: Read and verify version
+        id: version
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          meson setup build-release --buildtype=release -Dstrip=true
+          project_version=$(meson introspect build-release --projectinfo \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')
+          if [[ "$version" != "$project_version" ]]; then
+            echo "Tag version $version does not match Meson version $project_version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: meson compile -C build-release
+
+      - name: Test
+        run: meson test -C build-release --print-errorlogs
+
+      - name: Package app and DMG
+        run: |
+          python3 scripts/package_macos.py \
+            --project-root . \
+            --binary build-release/Athena \
+            --output-dir dist \
+            --version "${{ steps.version.outputs.version }}"
+
+      - name: Verify architecture and disk image
+        shell: bash
+        run: |
+          file dist/Athena.app/Contents/MacOS/Athena-bin \
+            | grep -q "${{ matrix.architecture }}"
+          codesign --verify --deep --strict dist/Athena.app
+          hdiutil verify \
+            "dist/Athena-${{ steps.version.outputs.version }}-macos-${{ matrix.architecture }}.dmg"
+
+      - name: Upload release asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: Athena-macos-${{ matrix.architecture }}
+          path: dist/Athena-*.dmg
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download release assets
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Athena-macos-*
+          path: dist
+          merge-multiple: true
+
+      - name: Create checksums
+        working-directory: dist
+        run: sha256sum Athena-*.dmg > SHA256SUMS.txt
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            dist/Athena-*.dmg \
+            dist/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --generate-notes \
+            --title "Athena $version"
