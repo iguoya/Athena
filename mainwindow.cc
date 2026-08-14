@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <functional>
 #include "references/reference.hpp"
-#include "pointers/pointer.hpp"
 
 using namespace std;
 
@@ -26,11 +25,6 @@ function<string()> demo(void (T::*method)(ostream&)) {
 }
 
 map<string, function<string()>> subchapter_demos = {
-    {"pointer_basic",      demo<Pointer>(&Pointer::basic)},
-    {"pointer_arithmetic", demo<Pointer>(&Pointer::arithmetic)},
-    {"pointer_array",      demo<Pointer>(&Pointer::array)},
-    {"pointer_null",       demo<Pointer>(&Pointer::null_ptr)},
-    {"pointer_function",   demo<Pointer>(&Pointer::function_ptr)},
     {"reference_basic",    demo<Reference>(&Reference::basic)},
     {"reference_const",    demo<Reference>(&Reference::const_ref)},
     {"reference_pass",     demo<Reference>(&Reference::pass_by)},
