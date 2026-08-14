@@ -68,3 +68,8 @@ private:
     vector<CategoryInfo> m_categories;
     map<string, vector<ChapterMeta>> m_chapters;
 };
+
+// 知识点源码按“知识点 -> 分组 -> 章节”的顺序继承。
+string resolve_source_path(
+    const ChapterMeta& chapter,
+    const SubChapter& subchapter);

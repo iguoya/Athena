@@ -74,6 +74,44 @@ TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
     EXPECT_EQ(organization->widget_name, "article_page");
 }
 
+TEST(ChapterCatalogTest, ResolvesKnowledgePointSourceByPrecedence) {
+    const auto catalog = ChapterCatalog::from_json(
+        read_project_file("resources/athena.json"));
+
+    const auto* raii = catalog.find_chapter("cpp", "RAII");
+    ASSERT_NE(raii, nullptr);
+    ASSERT_EQ(raii->subchapters.size(), 6);
+    EXPECT_EQ(
+        resolve_source_path(*raii, raii->subchapters[0]),
+        "language/raii/raii_basic.cpp");
+    EXPECT_EQ(
+        resolve_source_path(*raii, raii->subchapters[1]),
+        "language/raii/smart_pointer.cpp");
+    EXPECT_EQ(
+        resolve_source_path(*raii, raii->subchapters[4]),
+        "language/raii/move_semantics.cpp");
+
+    const auto* reference = catalog.find_chapter("cpp", "Reference");
+    ASSERT_NE(reference, nullptr);
+    ASSERT_FALSE(reference->subchapters.empty());
+    EXPECT_EQ(
+        resolve_source_path(*reference, reference->subchapters.front()),
+        "language/references/reference.hpp");
+
+    ChapterMeta chapter{.source = "chapter.cpp"};
+    chapter.groups.push_back({.name = "group", .source = "group.cpp"});
+    SubChapter point{
+        .name = "point",
+        .group = "group",
+        .source = "point.cpp",
+    };
+    EXPECT_EQ(resolve_source_path(chapter, point), "point.cpp");
+    point.source.clear();
+    EXPECT_EQ(resolve_source_path(chapter, point), "group.cpp");
+    point.group.clear();
+    EXPECT_EQ(resolve_source_path(chapter, point), "chapter.cpp");
+}
+
 TEST(ChapterCatalogTest, RejectsUnsupportedSchema) {
     string source = minimal_catalog();
     source.replace(source.find("\"schema\": 1"), 11, "\"schema\": 2");

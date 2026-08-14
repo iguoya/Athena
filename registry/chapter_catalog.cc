@@ -196,3 +196,25 @@ size_t ChapterCatalog::chapter_count() const {
     }
     return count;
 }
+
+string resolve_source_path(
+    const ChapterMeta& chapter,
+    const SubChapter& subchapter) {
+    if (!subchapter.source.empty()) {
+        return subchapter.source;
+    }
+
+    if (!subchapter.group.empty()) {
+        const auto group = find_if(
+            chapter.groups.begin(),
+            chapter.groups.end(),
+            [&subchapter](const ChapterGroup& value) {
+                return value.name == subchapter.group;
+            });
+        if (group != chapter.groups.end() && !group->source.empty()) {
+            return group->source;
+        }
+    }
+
+    return chapter.source;
+}

@@ -26,6 +26,52 @@ string read_file(const string& path) {
     return content.str();
 }
 
+void display_source(GtkSourceView* source_view, const string& relative_path) {
+    if (!source_view) {
+        return;
+    }
+
+    string source_text;
+    if (!relative_path.empty()) {
+        source_text = read_file(
+            string(ATHENA_SOURCE_ROOT) + "/" + relative_path);
+    }
+    if (source_text.empty()) {
+        source_text = relative_path.empty()
+            ? "该知识点尚未添加实验源码。"
+            : "无法读取源文件：" + relative_path;
+    }
+
+    auto source_buffer = GTK_SOURCE_BUFFER(
+        gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
+    auto language_manager = gtk_source_language_manager_get_default();
+    auto cpp_language = gtk_source_language_manager_get_language(
+        language_manager,
+        "cpp");
+    if (cpp_language) {
+        gtk_source_buffer_set_language(source_buffer, cpp_language);
+    }
+    gtk_source_buffer_set_highlight_syntax(source_buffer, true);
+    gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
+
+    auto scheme_manager = gtk_source_style_scheme_manager_get_default();
+    auto scheme = gtk_source_style_scheme_manager_get_scheme(
+        scheme_manager,
+        "Adwaita");
+    if (scheme) {
+        gtk_source_buffer_set_style_scheme(source_buffer, scheme);
+    }
+
+    auto text_buffer = GTK_TEXT_BUFFER(source_buffer);
+    gtk_text_buffer_set_text(
+        text_buffer,
+        source_text.c_str(),
+        static_cast<int>(source_text.size()));
+    GtkTextIter source_begin;
+    gtk_text_buffer_get_start_iter(text_buffer, &source_begin);
+    gtk_text_buffer_place_cursor(text_buffer, &source_begin);
+}
+
 string read_resource_file(const string& resource_path) {
     GError* error = nullptr;
     GBytes* bytes = g_resources_lookup_data(
@@ -76,6 +122,11 @@ const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
         [&name](const ChapterGroup& group) { return group.name == name; });
     return found == chapter.groups.end() ? nullptr : &*found;
 }
+
+struct TopicSelection {
+    string description;
+    string source_path;
+};
 
 } // namespace
 
@@ -350,44 +401,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
             run_button->set_visible(false);
         }
 
-        if (source_view) {
-            string source_text;
-            if (!chapter.source.empty()) {
-                source_text = read_file(string(ATHENA_SOURCE_ROOT) + "/" + chapter.source);
-            }
-            if (source_text.empty()) {
-                source_text = "该章节尚未添加实验源码。";
-            }
-
-            auto source_buffer = GTK_SOURCE_BUFFER(
-                gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
-            auto language_manager = gtk_source_language_manager_get_default();
-            auto cpp_language = gtk_source_language_manager_get_language(
-                language_manager,
-                "cpp");
-            if (cpp_language) {
-                gtk_source_buffer_set_language(source_buffer, cpp_language);
-            }
-            gtk_source_buffer_set_highlight_syntax(source_buffer, true);
-            gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
-
-            auto scheme_manager = gtk_source_style_scheme_manager_get_default();
-            auto scheme = gtk_source_style_scheme_manager_get_scheme(
-                scheme_manager,
-                "Adwaita");
-            if (scheme) {
-                gtk_source_buffer_set_style_scheme(source_buffer, scheme);
-            }
-
-            auto text_buffer = GTK_TEXT_BUFFER(source_buffer);
-            gtk_text_buffer_set_text(
-                text_buffer,
-                source_text.c_str(),
-                static_cast<int>(source_text.size()));
-            GtkTextIter source_begin;
-            gtk_text_buffer_get_start_iter(text_buffer, &source_begin);
-            gtk_text_buffer_place_cursor(text_buffer, &source_begin);
-        }
+        display_source(source_view, chapter.source);
 
         if (result_view) {
             auto result_buffer = result_view->get_buffer();
@@ -416,8 +430,8 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     knowledge_description_label->set_text(chapter.description);
                 }
             } else {
-                auto description_by_row =
-                    make_shared<std::map<Gtk::ListBoxRow*, string>>();
+                auto selection_by_row =
+                    make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
                 Gtk::ListBoxRow* first_topic_row = nullptr;
                 string current_group;
                 for (const auto& subchapter : chapter.subchapters) {
@@ -465,7 +479,10 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     row->set_activatable(true);
                     row->add_css_class("topic-row");
 
-                    (*description_by_row)[row] = subchapter.description;
+                    (*selection_by_row)[row] = {
+                        .description = subchapter.description,
+                        .source_path = resolve_source_path(chapter, subchapter),
+                    };
                     if (!first_topic_row) {
                         first_topic_row = row;
                     }
@@ -528,21 +545,24 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     topics_list->append(*row);
                 }
 
-                if (knowledge_description_label) {
-                    topics_list->signal_row_selected().connect(
-                        [description_by_row,
-                         knowledge_description_label](Gtk::ListBoxRow* row) {
-                            auto found = description_by_row->find(row);
-                            if (found == description_by_row->end()) {
-                                return;
-                            }
+                topics_list->signal_row_selected().connect(
+                    [selection_by_row,
+                     knowledge_description_label,
+                     source_view](Gtk::ListBoxRow* row) {
+                        const auto found = selection_by_row->find(row);
+                        if (found == selection_by_row->end()) {
+                            return;
+                        }
 
-                            knowledge_description_label->set_text(found->second);
-                        });
+                        if (knowledge_description_label) {
+                            knowledge_description_label->set_text(
+                                found->second.description);
+                        }
+                        display_source(source_view, found->second.source_path);
+                    });
 
-                    if (first_topic_row) {
-                        topics_list->select_row(*first_topic_row);
-                    }
+                if (first_topic_row) {
+                    topics_list->select_row(*first_topic_row);
                 }
             }
         }
