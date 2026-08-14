@@ -53,6 +53,34 @@ def brew_prefix() -> Path:
     return Path(run(require_tool("brew"), "--prefix", capture=True).strip())
 
 
+def brew_formula_prefix(formula: str) -> Path | None:
+    try:
+        value = run(require_tool("brew"), "--prefix", formula, capture=True).strip()
+    except PackagingError:
+        return None
+    return Path(value) if value else None
+
+
+def homebrew_runtime_path(
+    homebrew_prefix: Path,
+    formula: str,
+    relative: Path,
+    *,
+    directory: bool = True,
+) -> Path:
+    candidates = [homebrew_prefix / relative]
+    formula_prefix = brew_formula_prefix(formula)
+    if formula_prefix:
+        candidates.append(formula_prefix / relative)
+
+    predicate = Path.is_dir if directory else Path.is_file
+    for candidate in candidates:
+        if predicate(candidate):
+            return candidate
+    locations = ", ".join(str(candidate) for candidate in candidates)
+    raise PackagingError(f"Homebrew runtime data not found: {locations}")
+
+
 def architecture_name() -> str:
     machine = platform.machine().lower()
     if machine in {"x86_64", "amd64"}:
@@ -148,26 +176,37 @@ def copy_runtime_libraries(
 
 
 def copy_gtk_runtime(resources_dir: Path, homebrew_prefix: Path) -> list[Path]:
-    share_dir = resources_dir / "share"
-    for relative in (
-        Path("icons/Adwaita"),
-        Path("icons/hicolor"),
-        Path("glib-2.0/schemas"),
+    for formula, relative in (
+        ("adwaita-icon-theme", Path("share/icons/Adwaita")),
+        ("hicolor-icon-theme", Path("share/icons/hicolor")),
+        ("glib", Path("share/glib-2.0/schemas")),
     ):
-        source = homebrew_prefix / "share" / relative
-        if not source.is_dir():
-            raise PackagingError(f"GTK runtime data not found: {source}")
-        shutil.copytree(source, share_dir / relative, symlinks=False)
+        source = homebrew_runtime_path(homebrew_prefix, formula, relative)
+        destination = resources_dir / relative
+        shutil.copytree(source, destination, symlinks=False)
 
-    fonts_source = homebrew_prefix / "etc" / "fonts"
-    if fonts_source.is_dir():
+    try:
+        fonts_source = homebrew_runtime_path(
+            homebrew_prefix, "fontconfig", Path("etc/fonts")
+        )
+    except PackagingError:
+        fonts_source = None
+    if fonts_source:
         shutil.copytree(fonts_source, resources_dir / "etc" / "fonts", symlinks=False)
 
-    loader_root = homebrew_prefix / "lib" / "gdk-pixbuf-2.0" / "2.10.0"
-    loader_cache = loader_root / "loaders.cache"
+    loader_relative = Path("lib/gdk-pixbuf-2.0/2.10.0")
+    loader_root = homebrew_runtime_path(
+        homebrew_prefix, "gdk-pixbuf", loader_relative
+    )
+    loader_cache = homebrew_runtime_path(
+        homebrew_prefix,
+        "gdk-pixbuf",
+        loader_relative / "loaders.cache",
+        directory=False,
+    )
     loaders_dir = loader_root / "loaders"
-    if not loader_cache.is_file() or not loaders_dir.is_dir():
-        raise PackagingError(f"GdkPixbuf loader data not found under {loader_root}")
+    if not loaders_dir.is_dir():
+        raise PackagingError(f"GdkPixbuf loaders not found under {loader_root}")
 
     bundled_loader_dir = (
         resources_dir / "lib" / "gdk-pixbuf-2.0" / "2.10.0" / "loaders"
