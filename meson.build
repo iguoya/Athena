@@ -11,6 +11,7 @@ gio_dep = dependency('gio-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
 md4c_html_dep = dependency('md4c-html')
+nlohmann_json_dep = dependency('nlohmann_json')
 gtest_dep = dependency('gtest')
 gtest_main_dep = dependency('gtest_main')
 blueprint_compiler = find_program('blueprint-compiler')
@@ -29,8 +30,6 @@ else
   article_view_sources += files('render/article_view_unavailable.cc')
 endif
 
-# 本地第三方头文件（nlohmann/json.hpp）
-local_inc = include_directories('include')
 # 业务逻辑类目录（C++ 语言各章节演示类）
 language_inc = include_directories('language')
 
@@ -117,14 +116,14 @@ core_sources = files(
 athena_core_lib = static_library(
   'athena-core',
   core_sources,
-  include_directories: [local_inc, language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep]
+  include_directories: [language_inc],
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
-  include_directories: [local_inc, language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep]
+  include_directories: [language_inc],
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep]
 )
 
 # === 桌面应用源码 ===
@@ -144,7 +143,7 @@ resources = gnome.compile_resources(
 
 executable('Athena', app_sources,
   sources: resources,
-  include_directories: [local_inc, language_inc],
+  include_directories: [language_inc],
   dependencies: [
     gtkmm_dep,
     glib_dep,
@@ -164,7 +163,7 @@ core_test_exe = executable(
     'tests/markdown_renderer_test.cc'
   ),
   sources: resources,
-  include_directories: [local_inc, language_inc],
+  include_directories: [language_inc],
   dependencies: [gtest_main_dep, athena_core_dep]
 )
 test('athena-core', core_test_exe)
@@ -174,7 +173,7 @@ gtk_test_exe = executable(
   'athena-gtk-tests',
   files('tests/gtk_resource_test.cc'),
   sources: resources,
-  include_directories: [local_inc, language_inc],
+  include_directories: [language_inc],
   dependencies: [gtest_dep, gtkmm_dep, sourceview_dep]
 )
 test('athena-gtk-resources', gtk_test_exe, is_parallel: false)
