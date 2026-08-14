@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView 和统一 CSS 完成文章排版，其他平台当前使用 GtkTextView 降级后端。课程结构由 `resources/chapters.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
+Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不再维护 GtkTextView 降级渲染。课程结构由 `resources/chapters.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
 
 项目采用轻量分层和注册表，不以完整 MVC/MVP 为当前目标。核心问题是让课程配置、C++ 演示实现和 GTK 界面之间具有稳定、可校验的连接。
 
@@ -28,9 +28,8 @@ resources/chapters.json
                           |          +--> 手写 subchapter_demos 注册表
                           +--> article: Markdown + article.css
                                        |
-                                       +--> md4c-html: HTML + 标题锚点
+                                       +--> md4c-html: HTML + 目录 + 阅读设置
                                        +--> macOS ArticleView: WKWebView
-                                       +--> fallback ArticleView: GtkTextView
 ```
 
 已有的优点：
@@ -39,7 +38,7 @@ resources/chapters.json
 - 多个章节可以共享 `empty_chapter.blp`。
 - `code` 与 `article` 章节由同一份 JSON 选择不同默认页面。
 - 文章作为 GResource 随应用打包，并可在开发期从源码树回退读取。
-- 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录和正文，页内链接直接完成标题跳转。TextView 降级后端共享相同 Markdown 数据源，并使用 GTK 目录导航。
+- 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 
@@ -51,7 +50,7 @@ resources/chapters.json
 - 分类标题和图标仍在 C++ 中手写，尚未完全数据驱动。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 目前只生成 GResource 清单，不生成章节类、成员函数声明或演示注册表。
-- Linux 尚未接入 WebKitGTK 6.0，当前通过 ArticleView 工厂回退到 GtkTextView。
+- Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
 
 ## 3. 目标架构
 
@@ -148,14 +147,14 @@ void method(std::ostream& output) const;
 
 当演示需要输入、结构化错误或状态时，再统一迁移为 `DemoContext` 和 `DemoResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
-`article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML，注入标题锚点，并生成同页的文章目录。HTML 原生页内链接负责目录跳转，同时保留 GtkTextBuffer 渲染和 GTK 目录用于降级显示。平台 ArticleView 后端只负责加载 HTML 以及管理原生控件生命周期。
+`article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML，注入标题锚点，并生成同页的文章目录与阅读工具栏。HTML 原生页内链接负责目录跳转，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML 以及管理原生控件生命周期。
 
 ### 3.5 表示层
 
 GTK/Blueprint 层负责：
 
 - 为 `code` 显示分类、章节、说明、源码和执行结果。
-- 为 `article` 显示 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录与正文，其他平台当前使用 GtkTextView 和 GTK 目录降级显示。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为 `article` 显示 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 把用户操作转换为稳定 `DemoId`。
 - 调用 `DemoRegistry`，但不感知具体章节类。
 
@@ -189,7 +188,7 @@ cpp.Reference.const_reference
 
 ```text
 GTK UI -> ChapterCatalog / DemoRegistry -> Demo implementations
-GTK UI -> ArticleView -> platform web view / TextView fallback
+GTK UI -> ArticleView -> platform web view
 Generator -> JSON schema and templates
 Meson -> Generator outputs
 ```

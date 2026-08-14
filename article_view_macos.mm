@@ -5,8 +5,6 @@
 #import <AppKit/AppKit.h>
 #import <WebKit/WebKit.h>
 
-#include <utility>
-
 using namespace std;
 using athena::ArticleView;
 
@@ -47,13 +45,9 @@ namespace {
 
 class MacArticleView final : public ArticleView {
 public:
-    MacArticleView(
-        Gtk::DrawingArea& host,
-        Gtk::Window& window,
-        function<void()> on_unavailable)
+    MacArticleView(Gtk::DrawingArea& host, Gtk::Window& window)
         : m_host(host),
           m_window(window),
-          m_on_unavailable(std::move(on_unavailable)),
           m_resize_connection(m_host.signal_resize().connect(
               sigc::mem_fun(*this, &MacArticleView::on_resize))),
           m_map_connection(m_host.signal_map().connect(
@@ -111,7 +105,8 @@ private:
 
         m_native_content_view = native_window.contentView;
         auto* configuration = [[WKWebViewConfiguration alloc] init];
-        configuration.defaultWebpagePreferences.allowsContentJavaScript = NO;
+        // Markdown 原始 HTML 已被解析器禁用；这里只运行应用生成的阅读设置脚本。
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = YES;
 
         m_web_view = [[WKWebView alloc] initWithFrame:NSZeroRect
                                        configuration:configuration];
@@ -140,9 +135,6 @@ private:
 
     void on_map() {
         if (!ensure_web_view()) {
-            if (m_on_unavailable) {
-                m_on_unavailable();
-            }
             return;
         }
         [m_web_view setHidden:NO];
@@ -187,7 +179,6 @@ private:
 
     Gtk::DrawingArea& m_host;
     Gtk::Window& m_window;
-    function<void()> m_on_unavailable;
     sigc::connection m_resize_connection;
     sigc::connection m_map_connection;
     sigc::connection m_unmap_connection;
@@ -205,12 +196,8 @@ namespace athena {
 
 unique_ptr<ArticleView> create_platform_article_view(
     Gtk::DrawingArea& host,
-    Gtk::Window& window,
-    function<void()> on_unavailable) {
-    return make_unique<MacArticleView>(
-        host,
-        window,
-        std::move(on_unavailable));
+    Gtk::Window& window) {
+    return make_unique<MacArticleView>(host, window);
 }
 
 } // namespace athena

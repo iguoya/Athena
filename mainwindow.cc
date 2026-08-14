@@ -411,95 +411,38 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
         const bool uses_article_page = chapter.widget_name == "article_page";
         if (uses_article_page) {
-            auto article_view = builder->get_widget<Gtk::TextView>("article_view");
-            auto article_scroll =
-                builder->get_widget<Gtk::ScrolledWindow>("article_scroll");
-            auto article_renderer_stack =
-                builder->get_widget<Gtk::Stack>("article_renderer_stack");
             auto article_web_host =
                 builder->get_widget<Gtk::DrawingArea>("article_web_host");
-            auto toc_panel = builder->get_widget<Gtk::Box>("article_toc_panel");
-            auto toc_box = builder->get_widget<Gtk::Box>("article_toc_box");
-            auto toc_scroll =
-                builder->get_widget<Gtk::ScrolledWindow>("article_toc_scroll");
 
-            if (!article_view || !article_scroll || !article_renderer_stack ||
-                !article_web_host || !toc_panel || !toc_box) {
-                cerr << "Article page is missing required widgets for "
+            if (!article_web_host) {
+                cerr << "Article page is missing its WebView host for "
                      << page_key << endl;
                 continue;
             }
 
-            article_renderer_stack->set_visible_child(*article_scroll);
-
             const string markdown = read_project_document(chapter.document);
             if (markdown.empty()) {
-                article_view->get_buffer()->set_text(
-                    "无法载入文章：" + chapter.document);
                 cerr << "Failed to load article document for " << page_key
                      << ": " << chapter.document << endl;
             } else {
                 try {
-                    const auto headings = render_markdown(*article_view, markdown);
+                    const auto headings = parse_markdown_headings(markdown);
                     const string stylesheet = read_resource_file("/app/article.css");
-                    if (!stylesheet.empty()) {
-                        auto view = athena::create_platform_article_view(
-                            *article_web_host,
-                            *this,
-                            [article_renderer_stack, article_scroll, toc_panel]() {
-                                toc_panel->set_visible(true);
-                                article_renderer_stack->set_visible_child(
-                                    *article_scroll);
-                            });
-                        if (view) {
-                            view->load_html(
-                                render_markdown_html(markdown, stylesheet, headings),
-                                project_document_directory(chapter.document));
-                            m_article_views[page_key] = std::move(view);
-                            toc_panel->set_visible(false);
-                            article_renderer_stack->set_visible_child(
-                                *article_web_host);
-                        }
+                    if (stylesheet.empty()) {
+                        throw runtime_error("Article stylesheet is unavailable");
                     }
 
-                    for (const auto& heading : headings) {
-                        if (heading.level > 3) {
-                            continue;
-                        }
-
-                        auto button = Gtk::make_managed<Gtk::Button>();
-                        button->add_css_class("article-toc-button");
-                        button->set_focusable(false);
-                        button->set_margin_start(
-                            static_cast<int>((heading.level - 1) * 16));
-
-                        auto label = Gtk::make_managed<Gtk::Label>(heading.title);
-                        label->set_halign(Gtk::Align::START);
-                        label->set_xalign(0);
-                        label->set_wrap(true);
-                        button->set_child(*label);
-
-                        button->signal_clicked().connect(
-                            [article_view, offset = heading.text_offset]() {
-                                auto buffer = article_view->get_buffer();
-                                auto position = buffer->get_iter_at_offset(offset);
-                                buffer->place_cursor(position);
-                                article_view->scroll_to(
-                                    position,
-                                    0.08,
-                                    0.0,
-                                    0.0);
-                            });
-                        toc_box->append(*button);
+                    auto view = athena::create_platform_article_view(
+                        *article_web_host,
+                        *this);
+                    if (!view) {
+                        throw runtime_error("No WebView backend is available");
                     }
-
-                    if (toc_scroll) {
-                        auto adjustment = toc_scroll->get_vadjustment();
-                        adjustment->set_value(adjustment->get_lower());
-                    }
+                    view->load_html(
+                        render_markdown_html(markdown, stylesheet, headings),
+                        project_document_directory(chapter.document));
+                    m_article_views[page_key] = std::move(view);
                 } catch (const exception& error) {
-                    article_view->get_buffer()->set_text(
-                        string("Markdown 解析失败：") + error.what());
                     cerr << "Failed to render article for " << page_key
                          << ": " << error.what() << endl;
                 }

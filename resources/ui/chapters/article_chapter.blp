@@ -2,121 +2,29 @@ using Gtk 4.0;
 
 Box article_page {
   orientation: vertical;
-  spacing: 0;
   hexpand: true;
   vexpand: true;
   margin-top: 16;
-  margin-bottom: 18;
+  margin-start: 20;
+  margin-end: 20;
+  margin-bottom: 20;
 
   styles [
     "article-page"
   ]
 
-  Paned article_body {
-    orientation: horizontal;
-    position: 360;
-    wide-handle: true;
-    resize-start-child: false;
-    resize-end-child: true;
-    shrink-start-child: false;
-    shrink-end-child: false;
+  Frame {
     hexpand: true;
     vexpand: true;
 
-    Box article_toc_panel {
-      name: "article_toc_panel";
-      orientation: vertical;
-      spacing: 12;
-      width-request: 330;
-      margin-start: 20;
-      margin-end: 12;
-      vexpand: true;
+    styles [
+      "article-surface"
+    ]
 
-      Label {
-        label: "本文目录";
-        halign: start;
-
-        styles [
-          "panel-title"
-        ]
-      }
-
-      Frame {
-        hexpand: true;
-        vexpand: true;
-
-        styles [
-          "panel-frame",
-          "article-toc-frame"
-        ]
-
-        ScrolledWindow article_toc_scroll {
-          name: "article_toc_scroll";
-          hscrollbar-policy: never;
-          hexpand: true;
-          vexpand: true;
-
-          Box article_toc_box {
-            name: "article_toc_box";
-            orientation: vertical;
-            spacing: 2;
-            margin-top: 8;
-            margin-start: 8;
-            margin-end: 8;
-            margin-bottom: 8;
-          }
-        }
-      }
-    }
-
-    Frame {
+    DrawingArea article_web_host {
+      name: "article_web_host";
       hexpand: true;
       vexpand: true;
-      margin-start: 12;
-      margin-end: 20;
-      margin-top: 4;
-      margin-bottom: 20;
-
-      styles [
-        "article-surface"
-      ]
-
-      Stack article_renderer_stack {
-        name: "article_renderer_stack";
-        transition-type: none;
-        hexpand: true;
-        vexpand: true;
-
-        ScrolledWindow article_scroll {
-          name: "article_scroll";
-          hscrollbar-policy: never;
-          hexpand: true;
-          vexpand: true;
-
-          TextView article_view {
-            name: "article_view";
-            editable: false;
-            cursor-visible: false;
-            wrap-mode: word_char;
-            left-margin: 54;
-            right-margin: 54;
-            top-margin: 42;
-            bottom-margin: 48;
-            pixels-below-lines: 8;
-            pixels-inside-wrap: 5;
-
-            styles [
-              "article-view"
-            ]
-          }
-        }
-
-        DrawingArea article_web_host {
-          name: "article_web_host";
-          hexpand: true;
-          vexpand: true;
-        }
-      }
     }
   }
 }

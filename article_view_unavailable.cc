@@ -4,8 +4,7 @@ namespace athena {
 
 unique_ptr<ArticleView> create_platform_article_view(
     Gtk::DrawingArea&,
-    Gtk::Window&,
-    function<void()>) {
+    Gtk::Window&) {
     return {};
 }
 

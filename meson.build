@@ -23,7 +23,7 @@ if host_machine.system() == 'darwin'
     dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
   ]
 else
-  article_view_sources += files('article_view_fallback.cc')
+  article_view_sources += files('article_view_unavailable.cc')
 endif
 
 # 本地第三方头文件（nlohmann/json.hpp）

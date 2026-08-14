@@ -16,7 +16,7 @@ Athena 是一个 **C++ 学习桌面应用**，本质是"草稿纸验算"工具�
 ## 技术栈
 
 - C++20、GTK4 / gtkmm4、GtkSourceView 5、MD4C / md4c-html、Meson、Blueprint、nlohmann/json
-- 文章阅读：macOS 使用系统 WKWebView；其他平台保留 GtkTextView 降级后端，Linux 可通过同一 ArticleView 接口接入 WebKitGTK 6.0
+- 文章阅读：macOS 使用系统 WKWebView，不保留 GtkTextView 降级后端；Linux 可通过同一 ArticleView 接口接入 WebKitGTK 6.0
 - 跨 Linux / macOS：已移除 libadwaita 依赖，界面用 GTK 内建样式 + 自定义 `style.css`
 
 ## 架构理解

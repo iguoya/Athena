@@ -18,7 +18,7 @@
 - GTK4 / gtkmm 4
 - GtkSourceView 5（源码语法高亮与行号）
 - MD4C / md4c-html（文章章节的 Markdown 解析与 HTML 转换）
-- macOS WKWebView（文章阅读排版；其他平台保留 TextView 降级后端）
+- macOS WKWebView（文章目录、正文、字号和主题控制；不保留 GTK 文章回退）
 - Meson
 - Blueprint UI
 - nlohmann/json
