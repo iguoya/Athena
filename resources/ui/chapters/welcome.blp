@@ -8,7 +8,7 @@ ScrolledWindow welcome_page {
 
   Box welcome_container {
     orientation: vertical;
-    spacing: 28;
+    spacing: 14;
     halign: center;
     valign: start;
     hexpand: true;
@@ -17,26 +17,6 @@ ScrolledWindow welcome_page {
     styles [
       "welcome-page"
     ]
-
-    // 品牌主视觉
-    Box icon_container {
-      halign: center;
-
-      styles [
-        "hero-icon"
-      ]
-
-      Image welcome_icon {
-        resource: "/app/icons/tiger.svg";
-        pixel-size: 320;
-        width-request: 320;
-        height-request: 320;
-
-        styles [
-          "icon-dropshadow"
-        ]
-      }
-    }
 
     Box text_container {
       orientation: vertical;
@@ -61,14 +41,24 @@ ScrolledWindow welcome_page {
           "dim-label"
         ]
       }
+    }
 
-      Label learning_path {
-        label: "📚 基础入门 → 💻 面向对象 → 🔧 STL → 🚀 现代C++ → 🏗️ 项目实战";
-        wrap: true;
-        justify: center;
+    // 品牌主视觉
+    Box icon_container {
+      halign: center;
+
+      styles [
+        "hero-icon"
+      ]
+
+      Image welcome_icon {
+        resource: "/app/icons/tiger.svg";
+        pixel-size: 560;
+        width-request: 560;
+        height-request: 560;
 
         styles [
-          "body"
+          "icon-dropshadow"
         ]
       }
     }
@@ -106,8 +96,13 @@ ScrolledWindow welcome_page {
           ]
 
           Image {
-            icon-name: "media-playback-start-symbolic";
-            pixel-size: 28;
+            icon-name: "input-keyboard-symbolic";
+            pixel-size: 36;
+
+            styles [
+              "welcome-route-icon",
+              "welcome-route-icon-blue"
+            ]
           }
 
           Label {
@@ -140,8 +135,13 @@ ScrolledWindow welcome_page {
           ]
 
           Image {
-            icon-name: "applications-development-symbolic";
-            pixel-size: 28;
+            icon-name: "applications-engineering-symbolic";
+            pixel-size: 36;
+
+            styles [
+              "welcome-route-icon",
+              "welcome-route-icon-purple"
+            ]
           }
 
           Label {
@@ -174,8 +174,13 @@ ScrolledWindow welcome_page {
           ]
 
           Image {
-            icon-name: "folder-music-symbolic";
-            pixel-size: 28;
+            icon-name: "view-grid-symbolic";
+            pixel-size: 36;
+
+            styles [
+              "welcome-route-icon",
+              "welcome-route-icon-green"
+            ]
           }
 
           Label {
@@ -209,7 +214,12 @@ ScrolledWindow welcome_page {
 
           Image {
             icon-name: "system-run-symbolic";
-            pixel-size: 28;
+            pixel-size: 36;
+
+            styles [
+              "welcome-route-icon",
+              "welcome-route-icon-orange"
+            ]
           }
 
           Label {
@@ -243,7 +253,12 @@ ScrolledWindow welcome_page {
 
           Image {
             icon-name: "folder-documents-symbolic";
-            pixel-size: 28;
+            pixel-size: 36;
+
+            styles [
+              "welcome-route-icon",
+              "welcome-route-icon-red"
+            ]
           }
 
           Label {
@@ -306,19 +321,24 @@ ScrolledWindow welcome_page {
               "stat-card"
             ]
 
-            Label {
-              label: "61";
-
-              styles [
-                "title-2"
-              ]
+            Image {
+              icon-name: "view-grid-symbolic";
+              pixel-size: 48;
             }
 
             Label {
               label: "学习章节";
 
               styles [
-                "body",
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "61 个章节";
+
+              styles [
+                "caption",
                 "dim-label"
               ]
             }
@@ -334,19 +354,24 @@ ScrolledWindow welcome_page {
               "stat-card"
             ]
 
-            Label {
-              label: "5";
-
-              styles [
-                "title-2"
-              ]
+            Image {
+              icon-name: "view-list-symbolic";
+              pixel-size: 48;
             }
 
             Label {
               label: "学习阶段";
 
               styles [
-                "body",
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "5 个阶段";
+
+              styles [
+                "caption",
                 "dim-label"
               ]
             }
@@ -362,19 +387,24 @@ ScrolledWindow welcome_page {
               "stat-card"
             ]
 
-            Label {
-              label: "0%";
-
-              styles [
-                "title-2"
-              ]
+            Image {
+              icon-name: "task-due-symbolic";
+              pixel-size: 48;
             }
 
             Label {
               label: "完成进度";
 
               styles [
-                "body",
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "0%";
+
+              styles [
+                "caption",
                 "dim-label"
               ]
             }
@@ -415,7 +445,7 @@ ScrolledWindow welcome_page {
             ]
 
             Image {
-              icon-name: "media-playbook-symbolic";
+              icon-name: "media-playback-start-symbolic";
               pixel-size: 48;
             }
 
