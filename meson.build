@@ -105,6 +105,7 @@ compiled_ui += custom_target(
 # === 共享核心库 ===
 core_sources = files(
   'content/content_loader.cc',
+  'content/source_locator.cc',
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
   'render/markdown_renderer.cc',
@@ -160,7 +161,8 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
-    'tests/markdown_renderer_test.cc'
+    'tests/markdown_renderer_test.cc',
+    'tests/source_locator_test.cc'
   ),
   sources: resources,
   include_directories: [language_inc],

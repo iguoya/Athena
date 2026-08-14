@@ -45,6 +45,7 @@ resources/athena.json
 - `athena.json` 引用的教学源码随 GResource 打包；开发时优先读取仓库文件，安装后自动使用内置源码。
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
+- `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围；列表选择和运行按钮共用同一激活动作，使知识点行、说明、源码持久高亮和运行结果保持同步。
 - `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
 - Meson 将 Catalog、内容加载、Markdown 转换、函数注册和课程实现统一编译为内部 `athena-core` 静态库，应用与核心测试共同链接该库。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
@@ -122,6 +123,7 @@ resources/athena.json
 - `ChapterCatalog`：加载并查询分类、章节和知识点元数据。
 - `make_function_id`：从分类、章节和知识点名称构造稳定复合 ID。
 - `FunctionRegistry`：由 ID 查找可执行知识点函数。
+- `SourceLocator`：在真实教学源码中定位成员函数定义范围，不依赖 GTK，可独立测试。
 
 后续如果运行结果需要区分标准输出、错误和状态，再引入 `FunctionResult`；当前直接向
 `ostream` 输出足以覆盖教学实验。

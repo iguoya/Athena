@@ -1,8 +1,10 @@
 #include "mainwindow.h"
+#include "content/source_locator.h"
 #include "render/markdown_renderer.h"
 
 #include <gtksourceview/gtksource.h>
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -16,7 +18,8 @@ namespace {
 void display_source(
     GtkSourceView* source_view,
     const ContentLoader& content_loader,
-    const string& relative_path) {
+    const string& relative_path,
+    const string& member_name = "") {
     if (!source_view) {
         return;
     }
@@ -56,9 +59,58 @@ void display_source(
         text_buffer,
         source_text.c_str(),
         static_cast<int>(source_text.size()));
+
     GtkTextIter source_begin;
     gtk_text_buffer_get_start_iter(text_buffer, &source_begin);
     gtk_text_buffer_place_cursor(text_buffer, &source_begin);
+
+    const auto source_range = locate_cpp_member_function(
+        source_text,
+        member_name);
+    if (!source_range) {
+        return;
+    }
+
+    GtkTextIter highlight_begin;
+    GtkTextIter highlight_end;
+    gtk_text_buffer_get_iter_at_offset(
+        text_buffer,
+        &highlight_begin,
+        static_cast<int>(g_utf8_pointer_to_offset(
+            source_text.c_str(),
+            source_text.c_str() + source_range->begin)));
+    gtk_text_buffer_get_iter_at_offset(
+        text_buffer,
+        &highlight_end,
+        static_cast<int>(g_utf8_pointer_to_offset(
+            source_text.c_str(),
+            source_text.c_str() + source_range->end)));
+
+    auto tag_table = gtk_text_buffer_get_tag_table(text_buffer);
+    auto highlight_tag = gtk_text_tag_table_lookup(
+        tag_table,
+        "athena-topic-highlight");
+    if (!highlight_tag) {
+        highlight_tag = gtk_text_buffer_create_tag(
+            text_buffer,
+            "athena-topic-highlight",
+            "background",
+            "#dbeafe",
+            nullptr);
+    }
+    gtk_text_buffer_apply_tag(
+        text_buffer,
+        highlight_tag,
+        &highlight_begin,
+        &highlight_end);
+    gtk_text_buffer_place_cursor(text_buffer, &highlight_begin);
+    gtk_text_view_scroll_to_iter(
+        GTK_TEXT_VIEW(source_view),
+        &highlight_begin,
+        0.15,
+        true,
+        0.0,
+        0.20);
 }
 
 string chapter_key(const string& category_name, const string& chapter_name) {
@@ -76,6 +128,7 @@ const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
 struct TopicSelection {
     string description;
     string source_path;
+    string member_name;
 };
 
 } // namespace
@@ -413,6 +466,31 @@ void MainWindow::populate_topic_list(
 
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
+    auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
+        [this,
+         selection_by_row,
+         knowledge_description_label,
+         source_view](Gtk::ListBoxRow* row) {
+            const auto found = selection_by_row->find(row);
+            if (found == selection_by_row->end()) {
+                return;
+            }
+
+            for (const auto& entry : *selection_by_row) {
+                entry.first->remove_css_class("topic-active");
+            }
+            row->add_css_class("topic-active");
+
+            if (knowledge_description_label) {
+                knowledge_description_label->set_text(
+                    found->second.description);
+            }
+            display_source(
+                source_view,
+                m_content_loader,
+                found->second.source_path,
+                found->second.member_name);
+        });
     Gtk::ListBoxRow* first_topic_row = nullptr;
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {
@@ -463,6 +541,7 @@ void MainWindow::populate_topic_list(
         (*selection_by_row)[row] = {
             .description = subchapter.description,
             .source_path = resolve_source_path(chapter, subchapter),
+            .member_name = subchapter.name,
         };
         if (!first_topic_row) {
             first_topic_row = row;
@@ -508,7 +587,15 @@ void MainWindow::populate_topic_list(
             : "该知识点尚未实现可运行实验");
         if (can_run && result_view) {
             run->signal_clicked().connect(
-                [this, function_id, result_view]() {
+                [this,
+                 function_id,
+                 result_view,
+                 row,
+                 topics_list = &topics_list,
+                 activate_topic]() {
+                    topics_list->select_row(*row);
+                    (*activate_topic)(row);
+
                     ostringstream output;
                     try {
                         m_function_registry.run(function_id, output);
@@ -526,23 +613,8 @@ void MainWindow::populate_topic_list(
     }
 
     topics_list.signal_row_selected().connect(
-        [this,
-         selection_by_row,
-         knowledge_description_label,
-         source_view](Gtk::ListBoxRow* row) {
-            const auto found = selection_by_row->find(row);
-            if (found == selection_by_row->end()) {
-                return;
-            }
-
-            if (knowledge_description_label) {
-                knowledge_description_label->set_text(
-                    found->second.description);
-            }
-            display_source(
-                source_view,
-                m_content_loader,
-                found->second.source_path);
+        [activate_topic](Gtk::ListBoxRow* row) {
+            (*activate_topic)(row);
         });
 
     if (first_topic_row) {

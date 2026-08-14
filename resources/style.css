@@ -329,12 +329,14 @@ textview.code-view > text {
     background-color: @athena_surface_subtle;
 }
 
-.topic-row:selected {
+.topic-row:selected,
+.topic-row.topic-active {
     background-color: @athena_primary_soft;
     color: @athena_primary_text;
 }
 
-.topic-row:selected .dim-label {
+.topic-row:selected .dim-label,
+.topic-row.topic-active .dim-label {
     color: @athena_primary_text;
 }
 
