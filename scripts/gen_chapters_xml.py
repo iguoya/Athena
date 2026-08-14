@@ -22,17 +22,36 @@ def main():
     with open(json_path, "r", encoding="utf-8") as f:
         config = json.load(f)
 
-    # 顶层按分类分组，扁平化为章节列表
+    if config.get("schema") != 1:
+        print(
+            f"Error: unsupported chapters schema: {config.get('schema')!r}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    try:
+        default_blp = config["defaults"]["chapter_ui"]["blueprint"]
+        categories = config["categories"]
+    except (KeyError, TypeError):
+        print("Error: invalid chapters.json root structure", file=sys.stderr)
+        sys.exit(1)
+
+    # 新 schema: category -> chapter。普通章节使用默认 BLP，特殊章节可覆盖。
     chapters = []
-    for category, category_chapters in config.items():
-        chapters.extend(category_chapters)
+    for category in categories:
+        for chapter in category.get("chapters", []):
+            chapter = dict(chapter)
+            chapter["ui_resource"] = chapter.get("ui", {}).get(
+                "blueprint", default_blp
+            )
+            chapters.append(chapter)
     if not chapters:
         print("Warning: no chapters defined in chapters.json", file=sys.stderr)
 
     # 校验 blp 文件存在，并去重（多个章节可能共用同一个 .blp 模板）
     seen_ui = {}       # ui_name -> blp_file（去重 .ui 条目）
     for ch in chapters:
-        ch_id = ch.get("id", "")
+        ch_id = ch.get("name", "")
         blp_file = ch.get("ui_resource", "")  # ui_resource 直接存 blp 路径
 
         if not blp_file:

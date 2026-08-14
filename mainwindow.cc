@@ -1,85 +1,89 @@
 #include "mainwindow.h"
-#include <iostream>
-#include <fstream>
+
 #include <gio/gio.h>
 #include <nlohmann/json.hpp>
-#include <sstream>
+
 #include <algorithm>
-#include <functional>
-#include "references/reference.hpp"
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <string_view>
 
 using namespace std;
 
-// 读取源文件内容（源码框显示用）
+namespace {
+
+using json = nlohmann::json;
+
 string read_file(const string& path) {
-    ifstream f(path);
-    if (!f) return "";
-    ostringstream ss;
-    ss << f.rdbuf();
-    return ss.str();
+    ifstream file(path);
+    if (!file) {
+        return {};
+    }
+
+    ostringstream content;
+    content << file.rdbuf();
+    return content.str();
 }
 
-// ============================================================
-// 子章节演示注册表
-// 加一个演示：在 language/ 写类 + 这里加一行（子章节 id -> 运行函数）
-// ============================================================
+IconSpec parse_icon(const json& value, const IconSpec& fallback = {}) {
+    if (!value.is_object()) {
+        return fallback;
+    }
 
-template<typename T>
-function<string()> demo(void (T::*method)(ostream&)) {
-    return [method]() {
-        T obj;
-        ostringstream oss;
-        (obj.*method)(oss);
-        return oss.str();
-    };
+    IconSpec icon;
+    icon.type = value.value("type", "");
+    icon.name = value.value("name", "");
+    icon.path = value.value("path", "");
+    return icon;
 }
 
-map<string, function<string()>> subchapter_demos = {
-    {"reference_basic",    demo<Reference>(&Reference::basic)},
-    {"reference_const",    demo<Reference>(&Reference::const_ref)},
-    {"reference_pass",     demo<Reference>(&Reference::pass_by)},
-    {"reference_return",   demo<Reference>(&Reference::return_ref)},
-};
-
-// 子分组标题映射（分组名 -> 显示标题）
-string group_title(const string& group) {
-    if (group == "pointer") return "指针";
-    if (group == "reference") return "引用";
-    if (group == "raii") return "RAII";
-    if (group == "smart_pointer") return "智能指针";
-    if (group == "move") return "移动语义";
-    return group;
+string file_stem(const string& path) {
+    auto slash = path.find_last_of('/');
+    auto filename = slash == string::npos ? path : path.substr(slash + 1);
+    auto dot = filename.find_last_of('.');
+    return dot == string::npos ? filename : filename.substr(0, dot);
 }
 
-// ===================================================================
-//  构造 & 初始化
-// ===================================================================
+string chapter_key(const string& category_name, const string& chapter_name) {
+    return category_name + "." + chapter_name;
+}
 
-MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
-    : Gtk::ApplicationWindow(cobject)
-    , m_main_builder(builder)
-{
+const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
+    auto found = find_if(
+        chapter.groups.begin(),
+        chapter.groups.end(),
+        [&name](const ChapterGroup& group) { return group.name == name; });
+    return found == chapter.groups.end() ? nullptr : &*found;
+}
+
+} // namespace
+
+MainWindow::MainWindow(
+    BaseObjectType* cobject,
+    const Glib::RefPtr<Gtk::Builder>& builder)
+    : Gtk::ApplicationWindow(cobject),
+      m_main_builder(builder) {
     maximize();
 
-    // 加载自定义样式（补回排版体系 + 界面美化）
     auto css = Gtk::CssProvider::create();
     css->load_from_resource("/app/style.css");
     Gtk::StyleContext::add_provider_for_display(
-        get_display(), css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        get_display(),
+        css,
+        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    // 获取 UI 组件
     m_category_sidebar = m_main_builder->get_widget<Gtk::Box>("category_sidebar");
-    m_chapter_stack    = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
-    m_chapter_tab_box  = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
+    m_chapter_stack = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
+    m_chapter_tab_box = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
 
     if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tab_box) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
 
-    // 运行时加载章节元数据
     load_chapter_metadata();
-
-    // 构建左侧分类导航
     setup_category_sidebar();
 
     cout << "MainWindow initialized successfully" << endl;
@@ -87,309 +91,486 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
 void MainWindow::load_chapter_metadata() {
     GBytes* bytes = g_resources_lookup_data(
-        "/app/data/chapters.json", G_RESOURCE_LOOKUP_FLAGS_NONE, nullptr);
+        "/app/data/chapters.json",
+        G_RESOURCE_LOOKUP_FLAGS_NONE,
+        nullptr);
 
     if (!bytes) {
-        cerr << "Warning: chapters.json not found in resources" << endl;
-        return;
+        throw runtime_error("chapters.json not found in GResource");
     }
 
-    gsize size;
+    gsize size = 0;
     const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
-    auto config = nlohmann::json::parse(string_view(data, size));
+
+    json config;
+    try {
+        config = json::parse(string_view(data, size));
+    } catch (...) {
+        g_bytes_unref(bytes);
+        throw;
+    }
     g_bytes_unref(bytes);
 
-    for (const auto& [category, chapters] : config.items()) {
-        for (const auto& ch : chapters) {
-            ChapterMeta meta;
-            meta.order    = ch.value("order", 0);
-            meta.title    = ch["title"];
-            meta.category = category;
-            meta.source   = ch.value("source", "");
+    if (config.value("schema", 0) != 1) {
+        throw runtime_error("Unsupported chapters.json schema");
+    }
 
-            // ui_resource 存 blp 路径，派生 GResource 路径和根控件名
-            string blp_path = ch["ui_resource"];                 // "resources/ui/chapters/welcome.blp"
-            size_t slash = blp_path.find_last_of('/');
-            string filename = blp_path.substr(slash + 1);        // "welcome.blp"
-            string stem = filename.substr(0, filename.size() - 4); // "welcome"
+    const auto& defaults = config.at("defaults");
+    m_default_chapter_blueprint =
+        defaults.at("chapter_ui").at("blueprint").get<string>();
+    m_default_chapter_icon = parse_icon(defaults.value("chapter_icon", json::object()));
+    m_default_subchapter_icon =
+        parse_icon(defaults.value("subchapter_icon", json::object()));
 
-            meta.resource_path = "/app/chapters/" + stem + ".ui"; // "/app/chapters/welcome.ui"
-            meta.widget_name   = stem + "_page";                  // "welcome_page"
+    for (const auto& category_value : config.at("categories")) {
+        CategoryInfo category;
+        category.name = category_value.at("name").get<string>();
+        category.title = category_value.at("title").get<string>();
+        category.description = category_value.at("description").get<string>();
+        category.icon = parse_icon(
+            category_value.value("icon", json::object()),
+            m_default_chapter_icon);
+        m_categories.push_back(category);
 
-            // 子分组列表
-            if (ch.contains("subchapters")) {
-                for (const auto& g : ch["subchapters"]) {
-                    SubGroup group;
-                    group.name = g.value("name", "");
-                    for (const auto& item : g["items"]) {
-                        SubChapter sc;
-                        sc.method    = item["method"];
-                        sc.title = item["title"];
-                        group.items.push_back(sc);
-                    }
-                    meta.subchapters.push_back(group);
-                }
+        auto& chapters = m_chapters[category.name];
+        for (const auto& chapter_value : category_value.at("chapters")) {
+            ChapterMeta chapter;
+            chapter.name = chapter_value.at("name").get<string>();
+            chapter.title = chapter_value.at("title").get<string>();
+            chapter.description = chapter_value.at("description").get<string>();
+            chapter.category = category.name;
+            chapter.source = chapter_value.value("source", "");
+            chapter.icon = parse_icon(
+                chapter_value.value("icon", json::object()),
+                m_default_chapter_icon);
+
+            chapter.blueprint = m_default_chapter_blueprint;
+            if (chapter_value.contains("ui")) {
+                chapter.blueprint = chapter_value.at("ui").value(
+                    "blueprint",
+                    m_default_chapter_blueprint);
             }
 
-            m_chapters[category][to_string(meta.order)] = meta;
+            const string stem = file_stem(chapter.blueprint);
+            chapter.resource_path = "/app/chapters/" + stem + ".ui";
+            chapter.widget_name =
+                chapter.blueprint == m_default_chapter_blueprint
+                    ? "chapter_page"
+                    : stem + "_page";
 
-            cout << "Chapter loaded: " << category << "::" << meta.order
-                 << " -> \"" << meta.title << "\""
-                 << " @ " << meta.resource_path << endl;
+            for (const auto& group_value :
+                 chapter_value.value("groups", json::array())) {
+                ChapterGroup group;
+                group.name = group_value.at("name").get<string>();
+                group.title = group_value.at("title").get<string>();
+                group.description = group_value.at("description").get<string>();
+                group.source = group_value.value("source", "");
+                group.icon = parse_icon(
+                    group_value.value("icon", json::object()),
+                    chapter.icon);
+                chapter.groups.push_back(group);
+            }
+
+            for (const auto& subchapter_value : chapter_value.at("subchapters")) {
+                SubChapter subchapter;
+                subchapter.name = subchapter_value.at("name").get<string>();
+                subchapter.title = subchapter_value.at("title").get<string>();
+                subchapter.description =
+                    subchapter_value.at("description").get<string>();
+                subchapter.group = subchapter_value.value("group", "");
+                subchapter.source = subchapter_value.value("source", "");
+                subchapter.icon = parse_icon(
+                    subchapter_value.value("icon", json::object()),
+                    m_default_subchapter_icon);
+                chapter.subchapters.push_back(subchapter);
+            }
+
+            cout << "Chapter loaded: " << category.name << "::" << chapter.name
+                 << " -> \"" << chapter.title << "\"" << endl;
+            chapters.push_back(chapter);
         }
     }
 
-    size_t total = 0;
-    for (const auto& [cat, chapters] : m_chapters) {
-        total += chapters.size();
+    size_t chapter_count = 0;
+    for (const auto& [category_name, chapters] : m_chapters) {
+        chapter_count += chapters.size();
     }
-    cout << "Loaded " << total << " chapter(s) from chapters.json" << endl;
+    cout << "Loaded " << m_categories.size() << " categories and "
+         << chapter_count << " chapters from chapters.json" << endl;
 }
 
-// ===================================================================
-//  左侧分类导航
-// ===================================================================
+void MainWindow::configure_image(
+    Gtk::Image& image,
+    const IconSpec& icon,
+    int pixel_size) const {
+    if (icon.type == "resource" && !icon.path.empty()) {
+        string resource_path = icon.path;
+        constexpr string_view resources_prefix = "resources/";
+        if (resource_path.rfind(resources_prefix, 0) == 0) {
+            resource_path = "/app/" + resource_path.substr(resources_prefix.size());
+        }
+        image.set_from_resource(resource_path);
+    } else if (!icon.name.empty()) {
+        image.set_from_icon_name(icon.name);
+    } else {
+        image.set_visible(false);
+        return;
+    }
+
+    image.set_pixel_size(pixel_size);
+}
+
+Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const {
+    auto image = Gtk::make_managed<Gtk::Image>();
+    configure_image(*image, icon, pixel_size);
+    return image;
+}
 
 void MainWindow::setup_category_sidebar() {
-    for (const auto& cat : m_categories) {
-        auto btn = Gtk::make_managed<Gtk::ToggleButton>();
+    for (const auto& category : m_categories) {
+        auto button = Gtk::make_managed<Gtk::ToggleButton>();
+        button->set_tooltip_text(category.description);
 
-        // 按钮内部布局：图标 + 标签
         auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
         box->set_valign(Gtk::Align::CENTER);
         box->set_margin_top(12);
         box->set_margin_bottom(12);
 
-        auto icon = Gtk::make_managed<Gtk::Image>();
-        icon->set_from_icon_name(cat.icon_name);
-        icon->set_pixel_size(24);
+        box->append(*create_icon(category.icon, 24));
 
-        auto label = Gtk::make_managed<Gtk::Label>(cat.title);
+        auto label = Gtk::make_managed<Gtk::Label>(category.title);
         label->set_wrap(true);
         label->set_justify(Gtk::Justification::CENTER);
-        label->set_max_width_chars(6);
-
-        box->append(*icon);
+        label->set_max_width_chars(7);
         box->append(*label);
-        btn->set_child(*box);
+        button->set_child(*box);
 
-        // 互斥分组
         if (!m_category_buttons.empty()) {
-            btn->set_group(*m_category_buttons[0]);
+            button->set_group(*m_category_buttons.front());
         }
 
-        btn->signal_toggled().connect([this, id = cat.id, btn]() {
-            if (btn->get_active()) {
-                on_category_selected(id);
-            }
-        });
+        button->signal_toggled().connect(
+            [this, category_name = category.name, button]() {
+                if (button->get_active()) {
+                    on_category_selected(category_name);
+                }
+            });
 
-        m_category_sidebar->append(*btn);
-        m_category_buttons.push_back(btn);
+        m_category_sidebar->append(*button);
+        m_category_buttons.push_back(button);
     }
 
-    // 默认选中第一个分类
     if (!m_category_buttons.empty()) {
-        m_category_buttons[0]->set_active(true);
+        m_category_buttons.front()->set_active(true);
     }
 }
 
-void MainWindow::on_category_selected(const string& category_id) {
-    if (category_id == m_current_category) return;
-    m_current_category = category_id;
+void MainWindow::on_category_selected(const string& category_name) {
+    if (category_name == m_current_category) {
+        return;
+    }
 
-    build_chapter_tabs(category_id);
+    m_current_category = category_name;
+    build_chapter_tabs(category_name);
 }
 
-// ===================================================================
-//  章节标签页
-// ===================================================================
-
-void MainWindow::build_chapter_tabs(const string& category_id) {
-    // 移除栈中所有旧页面
+void MainWindow::build_chapter_tabs(const string& category_name) {
     for (const auto& name : m_active_page_names) {
-        auto child = m_chapter_stack->get_child_by_name(name);
-        if (child) {
+        if (auto child = m_chapter_stack->get_child_by_name(name)) {
             m_chapter_stack->remove(*child);
         }
     }
     m_active_page_names.clear();
 
-    // 移除 FlowBox 中所有旧标签按钮
-    for (auto* btn : m_tab_buttons) {
-        m_chapter_tab_box->remove(*btn);
+    for (auto* button : m_tab_buttons) {
+        m_chapter_tab_box->remove(*button);
     }
     m_tab_buttons.clear();
 
-    // 收集该分类下的章节
-    vector<ChapterMeta*> category_chapters;
-    for (auto& [id, meta] : m_chapters[category_id]) {
-        category_chapters.push_back(&meta);
-    }
-
-    // 按 order 序号排序
-    sort(category_chapters.begin(), category_chapters.end(),
-         [](const ChapterMeta* a, const ChapterMeta* b) {
-             return a->order < b->order;
-         });
-
-    if (category_chapters.empty()) {
+    auto category = m_chapters.find(category_name);
+    if (category == m_chapters.end() || category->second.empty()) {
         auto placeholder = Gtk::make_managed<Gtk::Label>("该分类暂无章节");
         placeholder->set_halign(Gtk::Align::CENTER);
         placeholder->set_valign(Gtk::Align::CENTER);
-        m_chapter_stack->add(*placeholder, "__empty__", "空");
-        m_active_page_names.insert("__empty__");
+        const string empty_key = category_name + ".__empty__";
+        m_chapter_stack->add(*placeholder, empty_key, "空");
+        m_active_page_names.insert(empty_key);
         return;
     }
 
-    // 为每个章节加载内容并添加到栈 + 创建标签按钮
-    for (size_t i = 0; i < category_chapters.size(); ++i) {
-        auto* meta = category_chapters[i];
-        auto builder = get_chapter_builder(meta->category, to_string(meta->order));
-
-        // 根据资源路径判断：空模板章节用 chapter_page 根控件，否则用 widget_name
-        bool is_template = meta->resource_path.find("empty_chapter") != string::npos;
-        Gtk::Widget* widget = nullptr;
-        if (is_template) {
-            widget = builder->get_widget<Gtk::Widget>("chapter_page");
-        } else {
-            widget = builder->get_widget<Gtk::Widget>(meta->widget_name);
-        }
-
-        if (!widget) {
-            cerr << "Failed to get root widget for: " << to_string(meta->order) << endl;
+    for (const auto& chapter : category->second) {
+        const string page_key = chapter_key(category_name, chapter.name);
+        auto builder = get_chapter_builder(category_name, chapter.name);
+        if (!builder) {
+            cerr << "Failed to create builder for " << page_key << endl;
             continue;
         }
 
-        m_chapter_stack->add(*widget, to_string(meta->order), meta->title);
-        m_active_page_names.insert(to_string(meta->order));
-
-        // 创建章节标签按钮（FlowBox 内自动换行，互斥分组）
-        auto tab_btn = Gtk::make_managed<Gtk::ToggleButton>(meta->title);
-        tab_btn->add_css_class("pill");
-        if (!m_tab_buttons.empty()) {
-            tab_btn->set_group(*m_tab_buttons[0]);
+        auto widget = builder->get_widget<Gtk::Widget>(chapter.widget_name);
+        if (!widget) {
+            cerr << "Failed to get root widget '" << chapter.widget_name
+                 << "' for " << page_key << endl;
+            continue;
         }
-        tab_btn->signal_toggled().connect([this, id = to_string(meta->order), tab_btn]() {
-            if (tab_btn->get_active()) {
-                m_chapter_stack->set_visible_child(id);
-                m_current_chapter = id;
+
+        m_chapter_stack->add(*widget, page_key, chapter.title);
+        m_active_page_names.insert(page_key);
+
+        auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
+        tab_button->add_css_class("pill");
+        tab_button->set_tooltip_text(chapter.description);
+
+        auto tab_content = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
+        tab_content->append(*create_icon(chapter.icon, 16));
+        tab_content->append(*Gtk::make_managed<Gtk::Label>(chapter.title));
+        tab_button->set_child(*tab_content);
+
+        if (!m_tab_buttons.empty()) {
+            tab_button->set_group(*m_tab_buttons.front());
+        }
+
+        tab_button->signal_toggled().connect(
+            [this, page_key, tab_button, widget]() {
+                if (tab_button->get_active()) {
+                    m_chapter_stack->set_visible_child(*widget);
+                    m_current_chapter = page_key;
+                }
+            });
+
+        m_chapter_tab_box->append(*tab_button);
+        m_tab_buttons.push_back(tab_button);
+
+        const bool uses_default_page = chapter.widget_name == "chapter_page";
+        if (!uses_default_page ||
+            m_loaded_chapters.find(page_key) != m_loaded_chapters.end()) {
+            continue;
+        }
+
+        auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
+        auto description_label =
+            builder->get_widget<Gtk::Label>("chapter_description_label");
+        auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
+        auto source_view = builder->get_widget<Gtk::TextView>("source_view");
+        auto run_button = builder->get_widget<Gtk::Button>("run_button");
+        auto result_view = builder->get_widget<Gtk::TextView>("result_view");
+        auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
+        auto topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
+        auto knowledge_title_label =
+            builder->get_widget<Gtk::Label>("knowledge_title_label");
+        auto knowledge_description_label =
+            builder->get_widget<Gtk::Label>("knowledge_description_label");
+
+        if (title_label) {
+            title_label->set_text(chapter.title);
+        }
+        if (description_label) {
+            description_label->set_text(chapter.description);
+        }
+        if (chapter_icon) {
+            configure_image(*chapter_icon, chapter.icon, 36);
+        }
+        if (run_button) {
+            run_button->set_visible(false);
+        }
+
+        if (source_view) {
+            string source_text;
+            if (!chapter.source.empty()) {
+                source_text = read_file(string(ATHENA_SOURCE_ROOT) + "/" + chapter.source);
             }
-        });
-        m_chapter_tab_box->append(*tab_btn);
-        m_tab_buttons.push_back(tab_btn);
-
-        // 空模板章节：注入标题 + 连接前后章导航（仅初始化一次）
-        if (is_template && m_loaded_chapters.find(to_string(meta->order)) == m_loaded_chapters.end()) {
-            auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
-            if (title_label) {
-                title_label->set_text(meta->title);
+            if (source_text.empty()) {
+                source_text = "该章节尚未添加实验源码。";
             }
+            auto source_buffer = source_view->get_buffer();
+            source_buffer->set_text(source_text);
+            auto source_begin = source_buffer->begin();
+            source_buffer->place_cursor(source_begin);
+        }
 
-            // 源码显示 + 运行按钮 + 结果框（按章节直接绑定对应类）
-            auto source_view = builder->get_widget<Gtk::TextView>("source_view");
-            auto run_button  = builder->get_widget<Gtk::Button>("run_button");
-            auto result_view = builder->get_widget<Gtk::TextView>("result_view");
-            auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
-            auto topics_list  = builder->get_widget<Gtk::ListBox>("topics_list");
+        if (result_view) {
+            auto result_buffer = result_view->get_buffer();
+            result_buffer->set_text(
+                "章节类与运行按钮的映射尚未接入。\n"
+                "当前阶段只验证课程结构与界面展示。");
+            auto result_begin = result_buffer->begin();
+            result_buffer->place_cursor(result_begin);
+        }
 
-            // 本章知识点列表：每个子章节一个条目 + 运行按钮
-            if (topics_label && topics_list) {
-                if (meta->subchapters.empty()) {
-                    topics_label->set_visible(false);
-                    topics_list->set_visible(false);
-                } else {
-                    for (const auto& group : meta->subchapters) {
-                        // 分组标题
-                        if (!group.name.empty()) {
+        if (topics_label && topics_list) {
+            if (chapter.subchapters.empty()) {
+                auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+                row->set_selectable(false);
+                row->set_activatable(false);
+
+                auto label = Gtk::make_managed<Gtk::Label>("知识点框架待补充");
+                label->set_halign(Gtk::Align::START);
+                label->add_css_class("dim-label");
+                label->set_margin_top(12);
+                label->set_margin_bottom(12);
+                label->set_margin_start(12);
+                label->set_margin_end(12);
+                row->set_child(*label);
+                topics_list->append(*row);
+
+                if (knowledge_title_label && knowledge_description_label) {
+                    knowledge_title_label->set_text(chapter.title);
+                    knowledge_description_label->set_text(chapter.description);
+                }
+            } else {
+                auto knowledge_by_row = make_shared<
+                    std::map<Gtk::ListBoxRow*, pair<string, string>>>();
+                Gtk::ListBoxRow* first_topic_row = nullptr;
+                string current_group;
+                for (const auto& subchapter : chapter.subchapters) {
+                    if (!subchapter.group.empty() && subchapter.group != current_group) {
+                        current_group = subchapter.group;
+                        if (const auto* group = find_group(chapter, current_group)) {
                             auto header = Gtk::make_managed<Gtk::ListBoxRow>();
                             header->set_selectable(false);
                             header->set_activatable(false);
-                            auto header_label = Gtk::make_managed<Gtk::Label>(group_title(group.name));
-                            header_label->set_halign(Gtk::Align::START);
-                            header_label->add_css_class("heading");
-                            header_label->set_margin_top(10);
-                            header_label->set_margin_bottom(2);
-                            header->set_child(*header_label);
+                            header->add_css_class("topic-group");
+
+                            auto header_box = Gtk::make_managed<Gtk::Box>(
+                                Gtk::Orientation::HORIZONTAL,
+                                10);
+                            header_box->set_margin_top(12);
+                            header_box->set_margin_bottom(4);
+                            header_box->append(*create_icon(group->icon, 18));
+
+                            auto text_box = Gtk::make_managed<Gtk::Box>(
+                                Gtk::Orientation::VERTICAL,
+                                2);
+                            text_box->set_hexpand(true);
+
+                            auto group_title = Gtk::make_managed<Gtk::Label>(group->title);
+                            group_title->set_halign(Gtk::Align::START);
+                            group_title->add_css_class("heading");
+                            text_box->append(*group_title);
+
+                            auto group_description =
+                                Gtk::make_managed<Gtk::Label>(group->description);
+                            group_description->set_halign(Gtk::Align::START);
+                            group_description->set_xalign(0);
+                            group_description->set_wrap(true);
+                            group_description->add_css_class("dim-label");
+                            text_box->append(*group_description);
+
+                            header_box->append(*text_box);
+                            header->set_child(*header_box);
                             topics_list->append(*header);
                         }
+                    }
 
-                        // 分组下的子章节
-                        for (const auto& sub : group.items) {
-                            auto row = Gtk::make_managed<Gtk::ListBoxRow>();
-                            row->add_css_class("topic-row");
+                    auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+                    row->set_selectable(true);
+                    row->set_activatable(true);
+                    row->add_css_class("topic-row");
 
-                            auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
+                    (*knowledge_by_row)[row] = {
+                        subchapter.title,
+                        subchapter.description};
+                    if (!first_topic_row) {
+                        first_topic_row = row;
+                    }
 
-                            auto label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-                            label_box->set_hexpand(true);
-                            auto title_label = Gtk::make_managed<Gtk::Label>(sub.title);
-                            title_label->set_halign(Gtk::Align::START);
-                            title_label->add_css_class("heading");
-                            label_box->append(*title_label);
-                            box->append(*label_box);
+                    auto row_box = Gtk::make_managed<Gtk::Box>(
+                        Gtk::Orientation::HORIZONTAL,
+                        12);
+                    row_box->append(*create_icon(subchapter.icon, 20));
 
-                            auto run_btn = Gtk::make_managed<Gtk::Button>("运行");
-                            run_btn->add_css_class("suggested-action");
+                    auto text_box = Gtk::make_managed<Gtk::Box>(
+                        Gtk::Orientation::VERTICAL,
+                        4);
+                    text_box->set_hexpand(true);
 
-                            // 查子章节演示，有则绑定，无则禁用
-                            auto demo_it = subchapter_demos.find(sub.method);
-                            if (demo_it != subchapter_demos.end()) {
-                                auto run_fn = demo_it->second;
-                                run_btn->signal_clicked().connect([result_view, run_fn]() {
-                                    result_view->get_buffer()->set_text(run_fn());
-                                });
-                            } else {
-                                run_btn->set_sensitive(false);
+                    auto point_title = Gtk::make_managed<Gtk::Label>(subchapter.title);
+                    point_title->set_halign(Gtk::Align::START);
+                    point_title->add_css_class("heading");
+                    text_box->append(*point_title);
+
+                    auto point_description =
+                        Gtk::make_managed<Gtk::Label>(subchapter.description);
+                    point_description->set_halign(Gtk::Align::START);
+                    point_description->set_xalign(0);
+                    point_description->set_wrap(true);
+                    point_description->add_css_class("dim-label");
+                    text_box->append(*point_description);
+
+                    row_box->append(*text_box);
+
+                    auto run = Gtk::make_managed<Gtk::Button>("运行");
+                    run->add_css_class("suggested-action");
+                    run->add_css_class("topic-run");
+                    run->set_sensitive(false);
+                    run->set_tooltip_text("章节类映射将在后续阶段接入");
+                    row_box->append(*run);
+
+                    row->set_child(*row_box);
+                    topics_list->append(*row);
+                }
+
+                if (knowledge_title_label && knowledge_description_label) {
+                    topics_list->signal_row_selected().connect(
+                        [knowledge_by_row,
+                         knowledge_title_label,
+                         knowledge_description_label](Gtk::ListBoxRow* row) {
+                            auto found = knowledge_by_row->find(row);
+                            if (found == knowledge_by_row->end()) {
+                                return;
                             }
 
-                            box->append(*run_btn);
-                            row->set_child(*box);
-                            topics_list->append(*row);
-                        }
+                            knowledge_title_label->set_text(found->second.first);
+                            knowledge_description_label->set_text(found->second.second);
+                        });
+
+                    if (first_topic_row) {
+                        topics_list->select_row(*first_topic_row);
                     }
                 }
             }
-
-            // 章节级"运行"按钮：子章节才是运行单元，隐藏之
-            if (run_button) {
-                run_button->set_visible(false);
-            }
-            // 源码框：读取演示类源文件
-            if (source_view) {
-                if (meta->source.empty()) {
-                    source_view->get_buffer()->set_text("");
-                } else {
-                    string src = read_file(string(ATHENA_SOURCE_ROOT) + "/" + meta->source);
-                    source_view->get_buffer()->set_text(src);
-                }
-            }
-
-            m_loaded_chapters.insert(to_string(meta->order));
         }
+
+        m_loaded_chapters.insert(page_key);
     }
 
-    // 激活第一个标签（触发切换到第一个章节）
     if (!m_tab_buttons.empty()) {
-        m_tab_buttons[0]->set_active(true);
+        m_tab_buttons.front()->set_active(true);
     }
 }
 
-Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(const string& category, const string& id) {
-    string cache_key = category + "/" + id;
-    auto it = m_chapter_builders.find(cache_key);
-    if (it != m_chapter_builders.end()) {
-        return it->second;
+const ChapterMeta* MainWindow::find_chapter(
+    const string& category_name,
+    const string& chapter_name) const {
+    auto category = m_chapters.find(category_name);
+    if (category == m_chapters.end()) {
+        return nullptr;
     }
 
-    auto meta_it = m_chapters[category].find(id);
-    if (meta_it == m_chapters[category].end()) {
-        cerr << "Chapter not found: " << category << "::" << id << endl;
+    auto chapter = find_if(
+        category->second.begin(),
+        category->second.end(),
+        [&chapter_name](const ChapterMeta& value) {
+            return value.name == chapter_name;
+        });
+    return chapter == category->second.end() ? nullptr : &*chapter;
+}
+
+Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(
+    const string& category_name,
+    const string& chapter_name) {
+    const string key = chapter_key(category_name, chapter_name);
+    if (auto cached = m_chapter_builders.find(key);
+        cached != m_chapter_builders.end()) {
+        return cached->second;
+    }
+
+    const auto* chapter = find_chapter(category_name, chapter_name);
+    if (!chapter) {
+        cerr << "Chapter not found: " << key << endl;
         return {};
     }
 
-    auto builder = Gtk::Builder::create_from_resource(meta_it->second.resource_path);
-    m_chapter_builders[cache_key] = builder;
+    auto builder = Gtk::Builder::create_from_resource(chapter->resource_path);
+    m_chapter_builders[key] = builder;
     return builder;
 }
-

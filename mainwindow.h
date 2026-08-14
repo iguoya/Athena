@@ -1,41 +1,56 @@
 #pragma once
 
 #include <gtkmm.h>
-#include <string>
+
 #include <map>
+#include <set>
+#include <string>
 #include <vector>
 
-using std::string;
-using std::vector;
+using namespace std;
 
-// 子章节：对应一个知识点，可独立运行
+struct IconSpec {
+    string type;
+    string name;
+    string path;
+};
+
 struct SubChapter {
-    string method;  // 函数名（将来生成成员函数），如 "basic"
-    string title;   // 显示标题，如 "指针基础"
-};
-
-// 子分组：若干子章节的集合
-struct SubGroup {
-    string name;                 // 分组名，如 "pointer"/"reference"，空表示无分组标题
-    vector<SubChapter> items;    // 该分组下的子章节
-};
-
-// 章节元数据，运行时从 chapters.json 加载
-struct ChapterMeta {
-    int order;              // 排序序号，兼作 category 内唯一标识
-    string title;           // "引用"
-    string category;        // "cpp" | "da" | "dp"
-    string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
-    string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
-    string source;          // 演示类源文件相对路径（源码框显示用），空表示无源码
-    vector<SubGroup> subchapters;  // 子分组列表
-};
-
-// 分类信息
-struct CategoryInfo {
-    string id;
+    string name;
     string title;
-    string icon_name;
+    string description;
+    string group;
+    string source;
+    IconSpec icon;
+};
+
+struct ChapterGroup {
+    string name;
+    string title;
+    string description;
+    string source;
+    IconSpec icon;
+};
+
+struct ChapterMeta {
+    string name;
+    string title;
+    string description;
+    string category;
+    string blueprint;
+    string resource_path;
+    string widget_name;
+    string source;
+    IconSpec icon;
+    vector<ChapterGroup> groups;
+    vector<SubChapter> subchapters;
+};
+
+struct CategoryInfo {
+    string name;
+    string title;
+    string description;
+    IconSpec icon;
 };
 
 class MainWindow : public Gtk::ApplicationWindow {
@@ -44,45 +59,40 @@ public:
     virtual ~MainWindow() = default;
 
 private:
-    // 初始化
     void load_chapter_metadata();
     void setup_category_sidebar();
+    void on_category_selected(const string& category_name);
+    void build_chapter_tabs(const string& category_name);
 
-    // 分类切换
-    void on_category_selected(const string& category_id);
-    void build_chapter_tabs(const string& category_id);
+    Glib::RefPtr<Gtk::Builder> get_chapter_builder(
+        const string& category_name,
+        const string& chapter_name);
+    const ChapterMeta* find_chapter(
+        const string& category_name,
+        const string& chapter_name) const;
 
-    // Builder 缓存
-    Glib::RefPtr<Gtk::Builder> get_chapter_builder(const string& category, const string& id);
+    void configure_image(Gtk::Image& image, const IconSpec& icon, int pixel_size) const;
+    Gtk::Image* create_icon(const IconSpec& icon, int pixel_size) const;
 
-    // UI 构建器
     Glib::RefPtr<Gtk::Builder> m_main_builder;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
 
-    // 主要 UI 组件
-    Gtk::Box* m_category_sidebar;      // 左侧分类导航
-    Gtk::Stack* m_chapter_stack;        // 章节内容栈
-    Gtk::FlowBox* m_chapter_tab_box;    // 章节标签容器（FlowBox 自动换行）
+    Gtk::Box* m_category_sidebar = nullptr;
+    Gtk::Stack* m_chapter_stack = nullptr;
+    Gtk::FlowBox* m_chapter_tab_box = nullptr;
 
-    // 分类按钮（用于互斥分组）
     vector<Gtk::ToggleButton*> m_category_buttons;
-
-    // 章节标签按钮（当前分类，用于互斥分组）
     vector<Gtk::ToggleButton*> m_tab_buttons;
 
-    // 当前状态
     string m_current_category;
     string m_current_chapter;
-    std::set<string> m_active_page_names;  // 章节栈中的页面名（用于清理）
-    std::set<string> m_loaded_chapters;    // 已初始化信号的章节 ID
+    set<string> m_active_page_names;
+    set<string> m_loaded_chapters;
 
-    // 分类定义
-    vector<CategoryInfo> m_categories = {
-        {"cpp", "C++",            "applications-development-symbolic"},
-        {"da",  "数据结构与算法",  "applications-science-symbolic"},
-        {"dp",  "设计模式",        "applications-development-symbolic"},
-    };
+    string m_default_chapter_blueprint;
+    IconSpec m_default_chapter_icon;
+    IconSpec m_default_subchapter_icon;
 
-    // 章节元数据（按 category 命名空间嵌套，id 只在 category 内唯一）
-    std::map<string, std::map<string, ChapterMeta>> m_chapters;
+    vector<CategoryInfo> m_categories;
+    std::map<string, vector<ChapterMeta>> m_chapters;
 };

@@ -1,146 +1,297 @@
 {
-  "cpp": [
-    { "order": 1, "title": "欢迎页面", "ui_resource": "resources/ui/chapters/welcome.blp" },
-    { "order": 2, "title": "引用", "source": "language/references/reference.hpp", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "basic", "title": "引用基础" },
-        { "method": "const_", "title": "const 引用" },
-        { "method": "pass", "title": "值传递 vs 引用传递" },
-        { "method": "return_", "title": "引用返回值" }
-      ] }
-    ] },
-    { "order": 3, "title": "RAII 与资源管理", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "raii", "items": [
-        { "method": "basic", "title": "RAII 思想" }
-      ] },
-      { "name": "smart_pointer", "items": [
-        { "method": "unique", "title": "独占指针" },
-        { "method": "shared", "title": "共享指针" },
-        { "method": "weak", "title": "弱引用指针" }
-      ] },
-      { "name": "move", "items": [
-        { "method": "rvalue", "title": "右值引用" },
-        { "method": "move_", "title": "移动构造与赋值" }
-      ] }
-    ] },
-    { "order": 4, "title": "类与对象", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "class_basic", "title": "类与对象" },
-        { "method": "constructor_destructor", "title": "构造与析构" },
-        { "method": "copy_control", "title": "拷贝控制" },
-        { "method": "const_correctness", "title": "const 正确性" }
-      ] }
-    ] },
-    { "order": 5, "title": "继承与多态", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "inheritance", "title": "继承" },
-        { "method": "polymorphism", "title": "多态" }
-      ] }
-    ] },
-    { "order": 6, "title": "模板与泛型", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "template_basic", "title": "模板基础" },
-        { "method": "generic_programming", "title": "泛型编程" }
-      ] }
-    ] },
-    { "order": 7, "title": "STL 容器", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "sequential_container", "title": "顺序容器" },
-        { "method": "associative_container", "title": "关联容器" },
-        { "method": "unordered_container", "title": "无序容器" }
-      ] }
-    ] },
-    { "order": 8, "title": "STL 算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "sorting", "title": "排序" },
-        { "method": "finding", "title": "查找" },
-        { "method": "transform", "title": "变换" }
-      ] }
-    ] },
-    { "order": 9, "title": "迭代器", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "basic", "title": "迭代器基础" },
-        { "method": "range_for", "title": "范围 for 循环" },
-        { "method": "with_algorithm", "title": "迭代器与算法" }
-      ] }
-    ] },
-    { "order": 10, "title": "现代 C++ 特性", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "lambda", "title": "Lambda 表达式" },
-        { "method": "compile_time", "title": "编译期编程" },
-        { "method": "type_deduction", "title": "类型推导" },
-        { "method": "cpp14_17", "title": "C++14/17 特性" },
-        { "method": "cpp20", "title": "C++20 特性" }
-      ] }
-    ] },
-    { "order": 11, "title": "文件与IO", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "file_read_write", "title": "文件读写" },
-        { "method": "string_stream", "title": "字符串与流" }
-      ] }
-    ] },
-    { "order": 12, "title": "杂项技术", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "operator_overloading", "title": "运算符重载" },
-        { "method": "exception_handling", "title": "异常处理" }
-      ] }
-    ] },
-    { "order": 13, "title": "并发编程", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "multithreading", "title": "多线程编程" },
-        { "method": "concurrent_patterns", "title": "并发模式" }
-      ] }
-    ] }
-  ],
-
-  "da": [
-    { "order": 1, "title": "线性结构", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 2, "title": "数组进阶", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 3, "title": "链表", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 4, "title": "栈与队列", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 5, "title": "树基础", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 6, "title": "二叉搜索树", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 7, "title": "堆", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 8, "title": "特殊树结构", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 9, "title": "图基础", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 10, "title": "图遍历", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 11, "title": "最短路径", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 12, "title": "最小生成树", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 13, "title": "分治算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 14, "title": "贪心算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 15, "title": "动态规划", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 16, "title": "回溯算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 17, "title": "基础排序", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 18, "title": "高级排序", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 19, "title": "搜索算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 20, "title": "字符串算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 21, "title": "计算几何", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 22, "title": "数论算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" }
-  ],
-
-  "dp": [
-    { "order": 1, "title": "单例模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 2, "title": "工厂方法", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 3, "title": "抽象工厂", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 4, "title": "建造者模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 5, "title": "原型模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 6, "title": "适配器模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 7, "title": "桥接模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 8, "title": "组合模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 9, "title": "装饰器模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 10, "title": "外观模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 11, "title": "享元模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 12, "title": "代理模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 13, "title": "责任链模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 14, "title": "命令模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 15, "title": "解释器模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 16, "title": "迭代器模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 17, "title": "中介者模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 18, "title": "备忘录模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 19, "title": "观察者模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 20, "title": "状态模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 21, "title": "策略模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 22, "title": "模板方法模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "order": 23, "title": "访问者模式", "ui_resource": "resources/ui/chapters/empty_chapter.blp" }
+  "schema": 1,
+  "defaults": {
+    "chapter_ui": {
+      "blueprint": "resources/ui/chapters/empty_chapter.blp"
+    },
+    "chapter_icon": {
+      "type": "theme",
+      "name": "view-grid-symbolic"
+    },
+    "subchapter_icon": {
+      "type": "theme",
+      "name": "media-playback-start-symbolic"
+    }
+  },
+  "categories": [
+    {
+      "name": "cpp",
+      "title": "C++",
+      "description": "以 C++20 为基础，系统学习语言语义、资源管理、面向对象、泛型编程、标准库和并发编程。",
+      "icon": {
+        "type": "theme",
+        "name": "applications-development-symbolic"
+      },
+      "chapters": [
+        {
+          "name": "Welcome",
+          "title": "欢迎页面",
+          "description": "介绍 Athena 的学习方式、章节结构和代码实验流程。",
+          "icon": { "type": "theme", "name": "go-home-symbolic" },
+          "ui": { "blueprint": "resources/ui/chapters/welcome.blp" },
+          "subchapters": []
+        },
+        {
+          "name": "Reference",
+          "title": "引用",
+          "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
+          "icon": { "type": "theme", "name": "insert-link-symbolic" },
+          "source": "language/references/reference.hpp",
+          "subchapters": [
+            { "name": "basic", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。" },
+            { "name": "const_", "title": "const 引用", "description": "学习 const 引用的只读语义、绑定临时对象及其生命周期行为。" },
+            { "name": "pass", "title": "值传递 vs 引用传递", "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。" },
+            { "name": "return_", "title": "引用返回值", "description": "学习返回引用的用法、可修改性、对象生命周期和悬空引用风险。" }
+          ]
+        },
+        {
+          "name": "TypeSemantics",
+          "title": "类型、初始化与值语义",
+          "description": "学习 C++ 类型系统、初始化方式、类型推导和值类别，为对象和资源语义打下基础。",
+          "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
+          "subchapters": [
+            { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化，理解窄化转换与默认初始化。" },
+            { "name": "type_deduction", "title": "类型推导", "description": "学习 auto、decltype、结构化绑定和模板类型推导。" },
+            { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值、将亡值及表达式值类别对重载和生命周期的影响。" },
+            { "name": "cast", "title": "C++ 类型转换", "description": "学习 static_cast、dynamic_cast、const_cast 和 reinterpret_cast 的边界与用途。" },
+            { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的作用域、底层类型和类型安全性。" }
+          ]
+        },
+        {
+          "name": "FunctionCallable",
+          "title": "函数与可调用对象",
+          "description": "学习 C++ 函数接口、重载机制、函数对象、Lambda 和通用回调。",
+          "icon": { "type": "theme", "name": "system-run-symbolic" },
+          "subchapters": [
+            { "name": "overload", "title": "函数重载", "description": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。" },
+            { "name": "function_object", "title": "函数对象", "description": "学习重载调用运算符并用带状态对象表达可调用行为。" },
+            { "name": "lambda", "title": "Lambda 表达式", "description": "学习 Lambda 的捕获、参数、返回类型和调用方式。" },
+            { "name": "function_wrapper", "title": "通用可调用包装", "description": "学习函数指针、std::function 和 std::invoke 对不同可调用对象的统一使用。" },
+            { "name": "callback", "title": "回调函数", "description": "练习设计回调接口并理解捕获对象的所有权和生命周期。" }
+          ]
+        },
+        {
+          "name": "ClassObject",
+          "title": "类、对象与运算符",
+          "description": "学习类的定义、对象生命周期、拷贝控制、const 正确性和运算符重载。",
+          "icon": { "type": "theme", "name": "system-users-symbolic" },
+          "subchapters": [
+            { "name": "class_basic", "title": "类与对象", "description": "理解类、对象、成员变量、成员函数和访问控制。" },
+            { "name": "constructor_destructor", "title": "构造与析构", "description": "学习对象构造、初始化和析构的执行时机。" },
+            { "name": "copy_control", "title": "拷贝控制", "description": "学习拷贝构造、拷贝赋值和资源所有权管理。" },
+            { "name": "const_correctness", "title": "const 正确性", "description": "理解 const 对象、const 成员函数和接口约束。" },
+            { "name": "operator_overloading", "title": "运算符重载", "description": "学习为自定义类型实现语义清晰的运算符。" }
+          ]
+        },
+        {
+          "name": "RAII",
+          "title": "RAII 与资源管理",
+          "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
+          "icon": { "type": "theme", "name": "security-high-symbolic" },
+          "source": "language/raii/raii.hpp",
+          "groups": [
+            { "name": "raii", "title": "RAII", "description": "通过对象生命周期自动管理资源。", "icon": { "type": "theme", "name": "security-high-symbolic" }, "source": "language/raii/raii_basic.cpp" },
+            { "name": "smart_pointer", "title": "智能指针", "description": "使用标准智能指针表达资源所有权。", "icon": { "type": "theme", "name": "user-bookmarks-symbolic" }, "source": "language/raii/smart_pointer.cpp" },
+            { "name": "move", "title": "移动语义", "description": "通过右值引用和移动操作转移资源。", "icon": { "type": "theme", "name": "go-jump-symbolic" }, "source": "language/raii/move_semantics.cpp" }
+          ],
+          "subchapters": [
+            { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "group": "raii" },
+            { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "group": "smart_pointer" },
+            { "name": "shared", "title": "共享指针", "description": "学习 shared_ptr 的共享所有权和引用计数。", "group": "smart_pointer" },
+            { "name": "weak", "title": "弱引用指针", "description": "学习 weak_ptr 的非拥有观察语义以及如何避免循环引用。", "group": "smart_pointer" },
+            { "name": "rvalue", "title": "右值引用", "description": "理解左值、右值、右值引用及其在资源转移中的作用。", "group": "move" },
+            { "name": "move_", "title": "移动构造与赋值", "description": "学习移动构造函数、移动赋值运算符和 std::move。", "group": "move" }
+          ]
+        },
+        {
+          "name": "InheritancePolymorphism",
+          "title": "继承与多态",
+          "description": "学习基类与派生类关系、抽象接口、虚函数和运行时多态。",
+          "icon": { "type": "theme", "name": "view-list-tree-symbolic" },
+          "subchapters": [
+            { "name": "inheritance", "title": "继承", "description": "理解继承关系、访问控制和基类子对象。" },
+            { "name": "polymorphism", "title": "多态", "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。" },
+            { "name": "abstract_interface", "title": "抽象接口", "description": "学习纯虚函数、抽象类和面向接口的设计。" },
+            { "name": "virtual_destructor", "title": "虚析构函数", "description": "理解通过基类指针销毁派生对象时的析构规则。" }
+          ]
+        },
+        {
+          "name": "ProgramOrganization",
+          "title": "程序与源码组织",
+          "description": "学习命名空间、声明与定义、翻译单元、链接规则以及 C++20 模块。",
+          "icon": { "type": "theme", "name": "folder-documents-symbolic" },
+          "subchapters": [
+            { "name": "namespace_", "title": "命名空间", "description": "学习命名空间、名称查找和作用域组织。" },
+            { "name": "declaration_definition", "title": "声明与定义", "description": "区分声明和定义，理解头文件与源文件之间的职责。" },
+            { "name": "translation_unit", "title": "翻译单元与链接", "description": "理解预处理、翻译单元、内部链接和外部链接。" },
+            { "name": "odr", "title": "单一定义规则", "description": "学习 ODR、inline 定义和多文件工程中的常见重复定义问题。" },
+            { "name": "module_", "title": "C++20 模块", "description": "学习 module、import 和模块接口对传统头文件组织方式的改进。" }
+          ]
+        },
+        {
+          "name": "TemplateGeneric",
+          "title": "模板、泛型与编译期",
+          "description": "学习模板、类型约束和编译期计算，建立现代 C++ 泛型程序设计能力。",
+          "icon": { "type": "theme", "name": "application-x-addon-symbolic" },
+          "subchapters": [
+            { "name": "template_basic", "title": "模板基础", "description": "学习函数模板、类模板、实例化和模板参数。" },
+            { "name": "generic_programming", "title": "泛型编程", "description": "理解通过通用接口和类型约束编写可复用算法。" },
+            { "name": "variadic_template", "title": "可变参数模板", "description": "学习参数包、展开表达式和 C++17 折叠表达式。" },
+            { "name": "compile_time", "title": "编译期编程", "description": "学习 constexpr、consteval、常量表达式和基础编译期计算。" },
+            { "name": "concept_", "title": "C++20 Concepts", "description": "学习 concept、requires 和约束重载，使模板接口更明确。" }
+          ]
+        },
+        {
+          "name": "StandardLibrary",
+          "title": "标准库实用类型",
+          "description": "学习字符串、词汇类型和时间工具等不属于容器算法体系的常用标准库设施。",
+          "icon": { "type": "theme", "name": "applications-utilities-symbolic" },
+          "subchapters": [
+            { "name": "string_view", "title": "string 与 string_view", "description": "比较拥有字符串与非拥有字符串视图的接口设计和生命周期。" },
+            { "name": "pair_tuple", "title": "pair 与 tuple", "description": "学习组合多个不同类型的值以及结构化绑定。" },
+            { "name": "optional", "title": "optional", "description": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。" },
+            { "name": "variant", "title": "variant", "description": "使用 variant 和 visit 表达类型安全的多选一值。" },
+            { "name": "any", "title": "any", "description": "理解 any 的类型擦除、运行时取值和适用边界。" },
+            { "name": "chrono", "title": "chrono", "description": "学习时长、时间点、时钟以及类型安全的时间计算。" }
+          ]
+        },
+        {
+          "name": "STLContainer",
+          "title": "STL 容器",
+          "description": "学习标准库顺序容器、关联容器和无序容器的特性与选择。",
+          "icon": { "type": "theme", "name": "view-grid-symbolic" },
+          "subchapters": [
+            { "name": "sequential_container", "title": "顺序容器", "description": "学习 vector、deque、list 等顺序容器的存储和访问特性。" },
+            { "name": "associative_container", "title": "关联容器", "description": "学习 map、set 等有序关联容器及其查找语义。" },
+            { "name": "unordered_container", "title": "无序容器", "description": "学习基于哈希表的 unordered_map 和 unordered_set。" }
+          ]
+        },
+        {
+          "name": "IteratorRange",
+          "title": "迭代器、Range 与视图",
+          "description": "学习迭代器抽象、范围 for 以及 C++20 Ranges 和 Views。",
+          "icon": { "type": "theme", "name": "go-next-symbolic" },
+          "subchapters": [
+            { "name": "basic", "title": "迭代器基础", "description": "理解迭代器的解引用、递增和区间表示。" },
+            { "name": "range_for", "title": "范围 for 循环", "description": "学习范围 for 的语法、引用语义和底层迭代机制。" },
+            { "name": "with_algorithm", "title": "迭代器与算法", "description": "理解标准算法如何通过迭代器操作不同容器。" },
+            { "name": "range_view", "title": "C++20 Range 与 View", "description": "学习 ranges、views、管道组合和惰性求值。" }
+          ]
+        },
+        {
+          "name": "STLAlgorithm",
+          "title": "STL 算法",
+          "description": "学习标准算法的排序、查找和变换操作以及与迭代器和 Range 的配合。",
+          "icon": { "type": "theme", "name": "system-run-symbolic" },
+          "subchapters": [
+            { "name": "sorting", "title": "排序", "description": "学习 sort、stable_sort 及自定义比较规则。" },
+            { "name": "finding", "title": "查找", "description": "学习 find、find_if 和二分查找相关算法。" },
+            { "name": "transform", "title": "变换", "description": "学习 transform 等对序列进行映射和转换的算法。" },
+            { "name": "ranges_algorithm", "title": "C++20 Ranges 算法", "description": "学习通过 Range、投影和约束接口调用标准算法。" }
+          ]
+        },
+        {
+          "name": "ErrorHandling",
+          "title": "错误处理与异常安全",
+          "description": "学习异常、错误值、noexcept 和异常安全保证，建立可恢复的程序边界。",
+          "icon": { "type": "theme", "name": "dialog-warning-symbolic" },
+          "subchapters": [
+            { "name": "exception_handling", "title": "异常处理", "description": "学习异常抛出、捕获、传播以及异常安全。" },
+            { "name": "standard_exception", "title": "标准异常", "description": "学习标准异常层次和根据错误语义选择异常类型。" },
+            { "name": "custom_exception", "title": "自定义异常", "description": "学习定义携带上下文且保持稳定接口的异常类型。" },
+            { "name": "noexcept_", "title": "noexcept", "description": "理解 noexcept 对接口契约、移动操作和程序终止行为的影响。" },
+            { "name": "exception_safety", "title": "异常安全保证", "description": "学习基本保证、强保证和不抛出保证以及它们与 RAII 的关系。" }
+          ]
+        },
+        {
+          "name": "FileIO",
+          "title": "I/O 与文件系统",
+          "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
+          "icon": { "type": "theme", "name": "system-file-manager-symbolic" },
+          "subchapters": [
+            { "name": "file_read_write", "title": "文件读写", "description": "学习使用文件流打开、读取、写入和关闭文件。" },
+            { "name": "string_stream", "title": "字符串与流", "description": "学习 stringstream 的解析、拼接和格式转换用途。" },
+            { "name": "format", "title": "C++20 格式化", "description": "学习 std::format 的占位符、格式说明和类型安全输出。" },
+            { "name": "filesystem", "title": "文件系统", "description": "学习使用 std::filesystem 处理路径、目录和文件属性。" }
+          ]
+        },
+        {
+          "name": "Concurrency",
+          "title": "并发、异步与协程",
+          "description": "学习线程、同步原语、内存模型、异步任务和 C++20 协程。",
+          "icon": { "type": "theme", "name": "network-workgroup-symbolic" },
+          "subchapters": [
+            { "name": "multithreading", "title": "多线程编程", "description": "学习线程创建、连接、共享状态和基本同步。" },
+            { "name": "mutex_lock", "title": "互斥量与锁", "description": "学习 mutex、lock_guard、unique_lock 和无死锁的加锁方式。" },
+            { "name": "condition_variable", "title": "条件变量", "description": "学习线程等待、通知和谓词检查。" },
+            { "name": "atomic_memory_model", "title": "原子操作与内存模型", "description": "理解数据竞争、原子类型、内存顺序和可见性。" },
+            { "name": "asynchronous_task", "title": "异步任务", "description": "学习 future、promise、async 和任务结果传递。" },
+            { "name": "coroutine", "title": "C++20 协程", "description": "理解 coroutine、co_await、co_yield 和可暂停函数的基本结构。" },
+            { "name": "concurrent_patterns", "title": "并发模式", "description": "学习任务队列、生产者消费者等常见并发组织方式。" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "da",
+      "title": "数据结构与算法",
+      "description": "通过可运行实验学习常用数据结构、算法思想及其复杂度。",
+      "icon": { "type": "theme", "name": "applications-science-symbolic" },
+      "chapters": [
+        { "name": "LinearStructure", "title": "线性结构", "description": "学习线性表的逻辑关系、存储方式和基本操作。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
+        { "name": "AdvancedArray", "title": "数组进阶", "description": "学习数组的进阶操作、内存布局和典型应用。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
+        { "name": "LinkedList", "title": "链表", "description": "学习单链表、双向链表和链表操作。", "icon": { "type": "theme", "name": "insert-link-symbolic" }, "subchapters": [] },
+        { "name": "StackQueue", "title": "栈与队列", "description": "学习栈、队列、双端队列及其典型应用。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
+        { "name": "TreeBasics", "title": "树基础", "description": "学习树的术语、表示方法和基本遍历。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "BinarySearchTree", "title": "二叉搜索树", "description": "学习二叉搜索树的查找、插入和删除。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "Heap", "title": "堆", "description": "学习二叉堆、优先队列和堆操作。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
+        { "name": "SpecialTree", "title": "特殊树结构", "description": "学习平衡树、字典树等特殊树结构。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "GraphBasics", "title": "图基础", "description": "学习图的术语、邻接矩阵和邻接表。", "icon": { "type": "theme", "name": "network-workgroup-symbolic" }, "subchapters": [] },
+        { "name": "GraphTraversal", "title": "图遍历", "description": "学习深度优先搜索和广度优先搜索。", "icon": { "type": "theme", "name": "system-run-symbolic" }, "subchapters": [] },
+        { "name": "ShortestPath", "title": "最短路径", "description": "学习常用单源和多源最短路径算法。", "icon": { "type": "theme", "name": "go-jump-symbolic" }, "subchapters": [] },
+        { "name": "MinimumSpanningTree", "title": "最小生成树", "description": "学习 Prim、Kruskal 及最小生成树的应用。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "DivideConquer", "title": "分治算法", "description": "学习问题分解、递归求解和结果合并。", "icon": { "type": "theme", "name": "view-dual-symbolic" }, "subchapters": [] },
+        { "name": "Greedy", "title": "贪心算法", "description": "学习局部最优选择及贪心正确性分析。", "icon": { "type": "theme", "name": "emblem-ok-symbolic" }, "subchapters": [] },
+        { "name": "DynamicProgramming", "title": "动态规划", "description": "学习状态定义、状态转移和空间优化。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
+        { "name": "Backtracking", "title": "回溯算法", "description": "学习选择、约束、撤销和搜索空间剪枝。", "icon": { "type": "theme", "name": "edit-undo-symbolic" }, "subchapters": [] },
+        { "name": "BasicSorting", "title": "基础排序", "description": "学习冒泡、选择和插入排序。", "icon": { "type": "theme", "name": "view-sort-ascending-symbolic" }, "subchapters": [] },
+        { "name": "AdvancedSorting", "title": "高级排序", "description": "学习归并、快速和堆排序。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
+        { "name": "Searching", "title": "搜索算法", "description": "学习顺序查找、二分查找和搜索策略。", "icon": { "type": "theme", "name": "edit-find-symbolic" }, "subchapters": [] },
+        { "name": "StringAlgorithm", "title": "字符串算法", "description": "学习字符串匹配、前缀处理和常用字符串技巧。", "icon": { "type": "theme", "name": "insert-text-symbolic" }, "subchapters": [] },
+        { "name": "ComputationalGeometry", "title": "计算几何", "description": "学习点、线、面关系及基础几何算法。", "icon": { "type": "theme", "name": "applications-graphics-symbolic" }, "subchapters": [] },
+        { "name": "NumberTheory", "title": "数论算法", "description": "学习素数、最大公约数、模运算等数论基础。", "icon": { "type": "theme", "name": "accessories-calculator-symbolic" }, "subchapters": [] }
+      ]
+    },
+    {
+      "name": "dp",
+      "title": "设计模式",
+      "description": "通过小型 C++ 实验理解经典设计模式的动机、结构和适用场景。",
+      "icon": { "type": "theme", "name": "applications-system-symbolic" },
+      "chapters": [
+        { "name": "Singleton", "title": "单例模式", "description": "学习控制单一实例及其生命周期和并发问题。", "icon": { "type": "theme", "name": "object-select-symbolic" }, "subchapters": [] },
+        { "name": "FactoryMethod", "title": "工厂方法", "description": "学习把对象创建延迟到子类或具体工厂。", "icon": { "type": "theme", "name": "document-new-symbolic" }, "subchapters": [] },
+        { "name": "AbstractFactory", "title": "抽象工厂", "description": "学习创建相互关联的对象族而不依赖具体类型。", "icon": { "type": "theme", "name": "folder-new-symbolic" }, "subchapters": [] },
+        { "name": "Builder", "title": "建造者模式", "description": "学习分步骤构建复杂对象并复用构建过程。", "icon": { "type": "theme", "name": "applications-development-symbolic" }, "subchapters": [] },
+        { "name": "Prototype", "title": "原型模式", "description": "学习通过复制已有对象创建新对象。", "icon": { "type": "theme", "name": "edit-copy-symbolic" }, "subchapters": [] },
+        { "name": "Adapter", "title": "适配器模式", "description": "学习转换接口以复用不兼容的现有类型。", "icon": { "type": "theme", "name": "insert-link-symbolic" }, "subchapters": [] },
+        { "name": "Bridge", "title": "桥接模式", "description": "学习分离抽象与实现，使二者能够独立变化。", "icon": { "type": "theme", "name": "network-transmit-receive-symbolic" }, "subchapters": [] },
+        { "name": "Composite", "title": "组合模式", "description": "学习用树形结构统一处理单个对象和对象组合。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "Decorator", "title": "装饰器模式", "description": "学习动态叠加对象职责而不修改原类型。", "icon": { "type": "theme", "name": "emblem-favorite-symbolic" }, "subchapters": [] },
+        { "name": "Facade", "title": "外观模式", "description": "学习为复杂子系统提供统一而简洁的入口。", "icon": { "type": "theme", "name": "go-home-symbolic" }, "subchapters": [] },
+        { "name": "Flyweight", "title": "享元模式", "description": "学习共享细粒度对象以降低内存消耗。", "icon": { "type": "theme", "name": "document-properties-symbolic" }, "subchapters": [] },
+        { "name": "Proxy", "title": "代理模式", "description": "学习通过代理对象控制对真实对象的访问。", "icon": { "type": "theme", "name": "changes-prevent-symbolic" }, "subchapters": [] },
+        { "name": "ChainOfResponsibility", "title": "责任链模式", "description": "学习让多个处理者按链路依次处理请求。", "icon": { "type": "theme", "name": "insert-link-symbolic" }, "subchapters": [] },
+        { "name": "Command", "title": "命令模式", "description": "学习把请求封装为对象并支持排队、撤销和组合。", "icon": { "type": "theme", "name": "system-run-symbolic" }, "subchapters": [] },
+        { "name": "Interpreter", "title": "解释器模式", "description": "学习为简单语言定义语法表示和解释过程。", "icon": { "type": "theme", "name": "accessories-text-editor-symbolic" }, "subchapters": [] },
+        { "name": "IteratorPattern", "title": "迭代器模式", "description": "学习在不暴露内部结构的情况下遍历聚合对象。", "icon": { "type": "theme", "name": "go-next-symbolic" }, "subchapters": [] },
+        { "name": "Mediator", "title": "中介者模式", "description": "学习用中介对象集中管理多个对象之间的交互。", "icon": { "type": "theme", "name": "system-users-symbolic" }, "subchapters": [] },
+        { "name": "Memento", "title": "备忘录模式", "description": "学习保存和恢复对象状态而不破坏封装。", "icon": { "type": "theme", "name": "document-save-symbolic" }, "subchapters": [] },
+        { "name": "Observer", "title": "观察者模式", "description": "学习一对多通知关系和订阅更新机制。", "icon": { "type": "theme", "name": "mail-unread-symbolic" }, "subchapters": [] },
+        { "name": "State", "title": "状态模式", "description": "学习把状态相关行为封装到独立状态对象。", "icon": { "type": "theme", "name": "view-refresh-symbolic" }, "subchapters": [] },
+        { "name": "Strategy", "title": "策略模式", "description": "学习封装可替换算法并在运行时选择策略。", "icon": { "type": "theme", "name": "preferences-system-symbolic" }, "subchapters": [] },
+        { "name": "TemplateMethod", "title": "模板方法模式", "description": "学习在基类中定义算法骨架并允许子类定制步骤。", "icon": { "type": "theme", "name": "text-x-generic-symbolic" }, "subchapters": [] },
+        { "name": "Visitor", "title": "访问者模式", "description": "学习把作用于对象结构的操作与对象类型分离。", "icon": { "type": "theme", "name": "system-users-symbolic" }, "subchapters": [] }
+      ]
+    }
   ]
 }
