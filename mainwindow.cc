@@ -95,7 +95,6 @@ void MainWindow::load_chapter_metadata() {
     for (const auto& [category, chapters] : config.items()) {
         for (const auto& ch : chapters) {
             ChapterMeta meta;
-            meta.id       = ch["id"];
             meta.order    = ch.value("order", 0);
             meta.title    = ch["title"];
             meta.category = category;
@@ -124,9 +123,9 @@ void MainWindow::load_chapter_metadata() {
                 }
             }
 
-            m_chapters[category][meta.id] = meta;
+            m_chapters[category][to_string(meta.order)] = meta;
 
-            cout << "Chapter loaded: " << category << "::" << meta.id
+            cout << "Chapter loaded: " << category << "::" << meta.order
                  << " -> \"" << meta.title << "\""
                  << " @ " << meta.resource_path << endl;
         }
@@ -238,7 +237,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
     // 为每个章节加载内容并添加到栈 + 创建标签按钮
     for (size_t i = 0; i < category_chapters.size(); ++i) {
         auto* meta = category_chapters[i];
-        auto builder = get_chapter_builder(meta->category, meta->id);
+        auto builder = get_chapter_builder(meta->category, to_string(meta->order));
 
         // 根据资源路径判断：空模板章节用 chapter_page 根控件，否则用 widget_name
         bool is_template = meta->resource_path.find("empty_chapter") != string::npos;
@@ -250,12 +249,12 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         }
 
         if (!widget) {
-            cerr << "Failed to get root widget for: " << meta->id << endl;
+            cerr << "Failed to get root widget for: " << to_string(meta->order) << endl;
             continue;
         }
 
-        m_chapter_stack->add(*widget, meta->id, meta->title);
-        m_active_page_names.insert(meta->id);
+        m_chapter_stack->add(*widget, to_string(meta->order), meta->title);
+        m_active_page_names.insert(to_string(meta->order));
 
         // 创建章节标签按钮（FlowBox 内自动换行，互斥分组）
         auto tab_btn = Gtk::make_managed<Gtk::ToggleButton>(meta->title);
@@ -263,7 +262,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         if (!m_tab_buttons.empty()) {
             tab_btn->set_group(*m_tab_buttons[0]);
         }
-        tab_btn->signal_toggled().connect([this, id = meta->id, tab_btn]() {
+        tab_btn->signal_toggled().connect([this, id = to_string(meta->order), tab_btn]() {
             if (tab_btn->get_active()) {
                 m_chapter_stack->set_visible_child(id);
                 m_current_chapter = id;
@@ -273,7 +272,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
         m_tab_buttons.push_back(tab_btn);
 
         // 空模板章节：注入标题 + 连接前后章导航（仅初始化一次）
-        if (is_template && m_loaded_chapters.find(meta->id) == m_loaded_chapters.end()) {
+        if (is_template && m_loaded_chapters.find(to_string(meta->order)) == m_loaded_chapters.end()) {
             auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
             if (title_label) {
                 title_label->set_text(meta->title);
@@ -352,7 +351,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                 source_view->get_buffer()->set_text("");
             }
 
-            m_loaded_chapters.insert(meta->id);
+            m_loaded_chapters.insert(to_string(meta->order));
         }
     }
 

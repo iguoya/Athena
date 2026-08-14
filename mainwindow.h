@@ -22,8 +22,7 @@ struct SubGroup {
 
 // 章节元数据，运行时从 chapters.json 加载
 struct ChapterMeta {
-    string id;              // 唯一标识，如 "pointers_references"
-    int order;              // 界面排序序号
+    int order;              // 排序序号，兼作 category 内唯一标识
     string title;           // "指针与引用"
     string category;        // "cpp" | "da" | "dp"
     string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
