@@ -85,7 +85,7 @@ body {
 
 .article-layout {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: clamp(300px, 18vw, 360px) minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -146,9 +146,9 @@ body {
 }
 
 .athena-article {
-  width: min(100%, 980px);
+  width: min(100%, 1200px);
   margin: 0 auto;
-  padding: 82px 56px 72px;
+  padding: 82px clamp(40px, 5vw, 72px) 72px;
 }
 
 h1,
