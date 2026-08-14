@@ -85,7 +85,7 @@ body {
 
 .article-layout {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 320px minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -122,9 +122,12 @@ body {
   padding: 7px 10px;
   border-radius: 7px;
   color: var(--article-muted);
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.55;
   text-decoration: none;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .article-toc a:hover,
@@ -135,12 +138,13 @@ body {
 }
 
 .article-toc .toc-level-2 {
-  padding-left: 24px;
+  padding-left: 22px;
+  font-weight: 540;
 }
 
 .article-toc .toc-level-3 {
-  padding-left: 38px;
-  font-size: 0.82rem;
+  padding-left: 34px;
+  font-weight: 480;
 }
 
 .athena-article {
