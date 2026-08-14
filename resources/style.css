@@ -9,15 +9,51 @@
 .caption  { font-size: 11pt; }
 .dim-label { opacity: 0.7; }
 
-/* === 子章节知识点列表条目 === */
-.topic-row {
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin: 2px 0;
-    background-color: alpha(@theme_fg_color, 0.05);
+/* === 通用章节面板 === */
+.panel-title {
+    font-size: 14pt;
+    font-weight: 700;
 }
+
+frame.panel-frame > border {
+    border: 1px solid alpha(@theme_fg_color, 0.22);
+    border-radius: 10px;
+    background-color: alpha(@theme_base_color, 0.72);
+}
+
+textview.code-view,
+textview.code-view > text {
+    background-color: transparent;
+}
+
+/* === 子章节知识点列表条目 === */
+.topic-list {
+    background-color: transparent;
+}
+
+.topic-row {
+    border-radius: 0;
+    padding: 10px 12px;
+    margin: 0;
+    background-color: transparent;
+}
+
 .topic-row:hover {
-    background-color: alpha(@theme_fg_color, 0.10);
+    background-color: alpha(@theme_fg_color, 0.06);
+}
+
+.topic-row:selected {
+    background-color: alpha(@theme_selected_bg_color, 0.18);
+}
+
+.topic-group {
+    padding: 10px 12px 6px;
+    background-color: alpha(@theme_fg_color, 0.035);
+}
+
+.topic-run {
+    min-width: 56px;
+    border-radius: 8px;
 }
 
 /* === 运行按钮：药丸形 === */
@@ -25,11 +61,4 @@
     border-radius: 999px;
     padding: 4px 18px;
     font-weight: 600;
-}
-
-/* === 源代码 / 运行结果 文本框 === */
-.code-box {
-    border-radius: 10px;
-    background-color: alpha(@theme_fg_color, 0.04);
-    padding: 12px;
 }

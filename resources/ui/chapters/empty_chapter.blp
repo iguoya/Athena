@@ -1,66 +1,109 @@
 using Gtk 4.0;
 
-ScrolledWindow chapter_page {
+Box chapter_page {
+  orientation: vertical;
+  spacing: 14;
   hexpand: true;
   vexpand: true;
+  margin-top: 16;
+  margin-start: 20;
+  margin-end: 20;
+  margin-bottom: 18;
 
-  Box {
-    orientation: vertical;
-    spacing: 16;
-    hexpand: true;
-    vexpand: true;
-    margin-top: 24;
-    margin-start: 32;
-    margin-end: 32;
-    margin-bottom: 24;
+  // 紧凑章节导语：由 chapter.icon/title/description 驱动。
+  Box chapter_header {
+    orientation: horizontal;
+    spacing: 14;
 
-    Label chapter_title_label {
-      name: "chapter_title_label";
-      halign: start;
-
-      styles [
-        "title-1"
-      ]
+    Image chapter_icon {
+      name: "chapter_icon";
+      pixel-size: 34;
+      valign: center;
     }
 
-    // 主体：左源码 + 右知识点/结果（约 3:1）
-    Box main_body {
-      orientation: horizontal;
-      spacing: 16;
+    Box {
+      orientation: vertical;
+      spacing: 3;
+      hexpand: true;
+
+      Label chapter_title_label {
+        name: "chapter_title_label";
+        halign: start;
+
+        styles [
+          "title-2"
+        ]
+      }
+
+      Label chapter_description_label {
+        name: "chapter_description_label";
+        halign: start;
+        wrap: true;
+        xalign: 0;
+
+        styles [
+          "dim-label"
+        ]
+      }
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  // 主体：左侧真实源码，右侧知识点、说明和运行结果。
+  Paned main_body {
+    orientation: horizontal;
+    position: 1040;
+    wide-handle: true;
+    resize-start-child: true;
+    resize-end-child: true;
+    shrink-start-child: false;
+    shrink-end-child: false;
+    hexpand: true;
+    vexpand: true;
+
+    Box source_panel {
+      orientation: vertical;
+      spacing: 8;
+      width-request: 620;
+      margin-end: 8;
       hexpand: true;
       vexpand: true;
 
-      // 左：源代码（约 3 份宽）
-      Box source_side {
-        orientation: vertical;
-        spacing: 8;
+      Box {
+        orientation: horizontal;
+        spacing: 12;
+
+        Label {
+          label: "源代码";
+          halign: start;
+          hexpand: true;
+
+          styles [
+            "panel-title"
+          ]
+        }
+
+        Button run_button {
+          name: "run_button";
+          label: "运行";
+
+          styles [
+            "suggested-action",
+            "run-pill"
+          ]
+        }
+      }
+
+      Frame {
         hexpand: true;
         vexpand: true;
 
-        Box {
-          orientation: horizontal;
-          spacing: 12;
-
-          Label {
-            label: "源代码";
-            halign: start;
-            hexpand: true;
-
-            styles [
-              "heading"
-            ]
-          }
-
-          Button run_button {
-            name: "run_button";
-            label: "▶ 运行";
-
-            styles [
-              "suggested-action",
-              "pill"
-            ]
-          }
-        }
+        styles [
+          "panel-frame"
+        ]
 
         ScrolledWindow {
           hexpand: true;
@@ -69,56 +112,206 @@ ScrolledWindow chapter_page {
           TextView source_view {
             name: "source_view";
             editable: false;
+            cursor-visible: false;
             monospace: true;
+            left-margin: 14;
+            right-margin: 14;
+            top-margin: 12;
+            bottom-margin: 12;
+
+            styles [
+              "code-view"
+            ]
+          }
+        }
+      }
+    }
+
+    Paned right_side {
+      orientation: vertical;
+      position: 460;
+      wide-handle: true;
+      resize-start-child: true;
+      resize-end-child: true;
+      shrink-start-child: false;
+      shrink-end-child: false;
+      width-request: 460;
+      margin-start: 8;
+      vexpand: true;
+
+      Paned knowledge_side {
+        orientation: vertical;
+        position: 300;
+        wide-handle: true;
+        resize-start-child: true;
+        resize-end-child: true;
+        shrink-start-child: false;
+        shrink-end-child: false;
+        margin-bottom: 8;
+        vexpand: true;
+
+        Box topics_panel {
+          orientation: vertical;
+          spacing: 8;
+          height-request: 210;
+          margin-bottom: 8;
+          vexpand: true;
+
+          Label topics_label {
+            name: "topics_label";
+            label: "本章知识点";
+            halign: start;
+
+            styles [
+              "panel-title"
+            ]
+          }
+
+          Frame {
+            hexpand: true;
+            vexpand: true;
+
+            styles [
+              "panel-frame"
+            ]
+
+            ScrolledWindow {
+              hscrollbar-policy: never;
+              hexpand: true;
+              vexpand: true;
+
+              ListBox topics_list {
+                name: "topics_list";
+                selection-mode: single;
+                show-separators: true;
+
+                styles [
+                  "topic-list"
+                ]
+              }
+            }
+          }
+        }
+
+        Box explanation_panel {
+          orientation: vertical;
+          spacing: 8;
+          height-request: 130;
+          margin-top: 8;
+          vexpand: true;
+
+          Label {
+            label: "知识点说明";
+            halign: start;
+
+            styles [
+              "panel-title"
+            ]
+          }
+
+          Frame {
+            hexpand: true;
+            vexpand: true;
+
+            styles [
+              "panel-frame"
+            ]
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              margin-top: 12;
+              margin-start: 14;
+              margin-end: 14;
+              margin-bottom: 12;
+
+              Label knowledge_title_label {
+                name: "knowledge_title_label";
+                label: "请选择一个知识点";
+                halign: start;
+                xalign: 0;
+
+                styles [
+                  "heading"
+                ]
+              }
+
+              Label knowledge_description_label {
+                name: "knowledge_description_label";
+                label: "选择上方知识点后，这里会显示对应的学习目标和实验提示。";
+                halign: start;
+                valign: start;
+                wrap: true;
+                xalign: 0;
+
+                styles [
+                  "dim-label"
+                ]
+              }
+            }
           }
         }
       }
 
-      // 右：知识点 + 结果（约 1 份宽）
-      Box right_side {
+      Box result_panel {
         orientation: vertical;
         spacing: 8;
-        width-request: 420;
+        height-request: 190;
+        margin-top: 8;
         vexpand: true;
 
-        // 上：本章知识点（约 1 份高）
-        Label topics_label {
-          name: "topics_label";
-          label: "本章知识点";
-          halign: start;
+        Box {
+          orientation: horizontal;
+          spacing: 8;
 
-          styles [
-            "heading"
-          ]
-        }
+          Label {
+            label: "运行结果";
+            halign: start;
+            hexpand: true;
 
-        ScrolledWindow {
-          vexpand: false;
+            styles [
+              "panel-title"
+            ]
+          }
 
-          ListBox topics_list {
-            name: "topics_list";
-            selection-mode: none;
+          Label result_status_label {
+            name: "result_status_label";
+            label: "等待运行";
+            halign: end;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
           }
         }
 
-        // 下：运行结果（约 3 份高）
-        Label {
-          label: "运行结果";
-          halign: start;
-
-          styles [
-            "heading"
-          ]
-        }
-
-        ScrolledWindow {
+        Frame {
           hexpand: true;
           vexpand: true;
 
-          TextView result_view {
-            name: "result_view";
-            editable: false;
-            monospace: true;
+          styles [
+            "panel-frame"
+          ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            TextView result_view {
+              name: "result_view";
+              editable: false;
+              cursor-visible: false;
+              monospace: true;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 12;
+              bottom-margin: 12;
+
+              styles [
+                "code-view"
+              ]
+            }
           }
         }
       }
