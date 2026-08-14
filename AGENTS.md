@@ -84,6 +84,14 @@
 - 共享 Blueprint 模板时，不得假设不同分类的 `order` 全局唯一。
 - Builder、页面缓存和初始化状态使用完整章节 ID 作为键。
 
+## macOS 发行规则
+
+- macOS 可携带包统一通过 `scripts/package_macos.py` 生成，不手工复制单个可执行文件作为 Release。
+- `dist/` 是本地生成目录，不提交 `.app` 或 DMG；GitHub Release 只上传标签构建产生的 DMG。
+- `meson.build`、`Info.plist` 和 Git 标签必须使用一致的语义化版本号。
+- 当前包只允许描述为 ad-hoc 签名、未公证版本；完成 Developer ID 和 notarization 前不得宣称已通过 Gatekeeper 正式发行验证。
+- 修改打包器、macOS 模板或发行工作流后，应至少生成并启动一次本机架构的 `.app`，并验证 DMG 校验和与应用签名结构。
+
 ## 修改流程
 
 1. 阅读相关文档和现有实现。

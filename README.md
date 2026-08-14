@@ -34,3 +34,17 @@ python3 scripts/generate_project.py \
 
 教学源码由 `athena.json` 驱动并随 GResource 打包：开发运行优先显示仓库中的实时
 源码，发行版在没有源码目录时读取应用内置副本。
+
+生成当前 Mac 架构的未公证 `.app` 和 DMG：
+
+```sh
+meson setup build-release --buildtype=release -Dstrip=true
+meson compile -C build-release
+meson test -C build-release --print-errorlogs
+python3 scripts/package_macos.py \
+  --project-root . --binary build-release/Athena \
+  --output-dir dist --version 0.1.0
+```
+
+发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
+Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。

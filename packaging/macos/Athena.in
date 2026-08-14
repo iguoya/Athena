@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+contents_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+resources_dir="$contents_dir/Resources"
+loader_dir="$resources_dir/lib/gdk-pixbuf-2.0/2.10.0/loaders"
+cache_file="${TMPDIR:-/tmp}/com.iguoya.Athena-${UID:-user}-loaders.cache"
+
+sed "s|@LOADER_DIR@|$loader_dir|g" \
+  "$resources_dir/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache.in" \
+  > "$cache_file"
+
+export GDK_PIXBUF_MODULEDIR="$loader_dir"
+export GDK_PIXBUF_MODULE_FILE="$cache_file"
+export GSETTINGS_SCHEMA_DIR="$resources_dir/share/glib-2.0/schemas"
+export XDG_DATA_DIRS="$resources_dir/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"
+export FONTCONFIG_PATH="$resources_dir/etc/fonts"
+
+exec "$contents_dir/MacOS/Athena-bin" "$@"
