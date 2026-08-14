@@ -229,6 +229,7 @@ Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const 
 void MainWindow::setup_category_sidebar() {
     for (const auto& category : m_categories) {
         auto button = Gtk::make_managed<Gtk::ToggleButton>();
+        button->add_css_class("nav-button");
         button->set_tooltip_text(category.description);
 
         auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
@@ -318,6 +319,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
         auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
         tab_button->add_css_class("pill");
+        tab_button->add_css_class("chapter-tab");
         tab_button->set_tooltip_text(chapter.description);
 
         auto tab_content = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
@@ -500,6 +502,8 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
                     auto run = Gtk::make_managed<Gtk::Button>("运行");
                     run->add_css_class("suggested-action");
+                    run->add_css_class("btn-primary");
+                    run->add_css_class("btn-sm");
                     run->add_css_class("topic-run");
                     run->set_sensitive(false);
                     run->set_tooltip_text("章节类映射将在后续阶段接入");

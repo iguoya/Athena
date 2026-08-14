@@ -13,11 +13,19 @@ ScrolledWindow welcome_page {
     valign: center;
     hexpand: true;
     vexpand: true;
+
+    styles [
+      "welcome-page"
+    ]
     
     // 主图标区域
     Box icon_container {
       halign: center;
       margin-bottom: 16;
+
+      styles [
+        "hero-icon"
+      ]
       
       Image welcome_icon {
         icon-name: "applications-development-symbolic";
@@ -77,6 +85,10 @@ ScrolledWindow welcome_page {
         orientation: vertical;
         spacing: 8;
         halign: center;
+
+        styles [
+          "stat-card"
+        ]
         
         Label chapters_number {
           label: "24";
@@ -100,6 +112,10 @@ ScrolledWindow welcome_page {
         orientation: vertical;
         spacing: 8;
         halign: center;
+
+        styles [
+          "stat-card"
+        ]
         
         Label stages_number {
           label: "8";
@@ -123,6 +139,10 @@ ScrolledWindow welcome_page {
         orientation: vertical;
         spacing: 8;
         halign: center;
+
+        styles [
+          "stat-card"
+        ]
         
         Label progress_number {
           label: "0%";
@@ -167,7 +187,8 @@ ScrolledWindow welcome_page {
           
           styles [
             "suggested-action",
-            "pill"
+            "btn-primary",
+            "btn-lg"
           ]
         }
         
@@ -175,7 +196,8 @@ ScrolledWindow welcome_page {
           label: "查看路线图";
           
           styles [
-            "pill"
+            "btn-outline-secondary",
+            "btn-lg"
           ]
         }
         
@@ -183,7 +205,8 @@ ScrolledWindow welcome_page {
           label: "浏览章节";
           
           styles [
-            "pill"
+            "btn-outline-secondary",
+            "btn-lg"
           ]
         }
       }
@@ -194,6 +217,10 @@ ScrolledWindow welcome_page {
       orientation: vertical;
       spacing: 16;
       halign: center;
+
+      styles [
+        "section-card"
+      ]
 
       
       Label roadmap_title {
@@ -355,6 +382,10 @@ ScrolledWindow welcome_page {
       orientation: vertical;
       spacing: 16;
       halign: center;
+
+      styles [
+        "section-card"
+      ]
       
       Label features_title {
         label: "学习特色";
@@ -375,6 +406,10 @@ ScrolledWindow welcome_page {
           spacing: 8;
           halign: center;
           width-request: 150;
+
+          styles [
+            "feature-card"
+          ]
           
           Image {
             icon-name: "media-playbook-symbolic";
@@ -406,6 +441,10 @@ ScrolledWindow welcome_page {
           spacing: 8;
           halign: center;
           width-request: 150;
+
+          styles [
+            "feature-card"
+          ]
           
           Image {
             icon-name: "text-x-generic-symbolic";
@@ -437,6 +476,10 @@ ScrolledWindow welcome_page {
           spacing: 8;
           halign: center;
           width-request: 150;
+
+          styles [
+            "feature-card"
+          ]
           
           Image {
             icon-name: "view-refresh-symbolic";

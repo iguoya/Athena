@@ -1,64 +1,324 @@
-/* Athena 自定义样式 —— 补回 libadwaita 排版体系 + 界面美化 */
+/* Athena UI design system
+ *
+ * Bootstrap-inspired visual rules translated to GTK CSS. GTK CSS is not
+ * browser CSS, so reusable style classes replace Bootstrap's HTML classes.
+ */
 
-/* === 排版体系（libadwaita 的 title-1 ~ title-4 等） === */
-.title-1 { font-size: 28pt; font-weight: 800; }
-.title-2 { font-size: 22pt; font-weight: 800; }
-.title-3 { font-size: 18pt; font-weight: 700; }
-.title-4 { font-size: 15pt; font-weight: 700; }
-.heading  { font-size: 13pt; font-weight: 700; }
-.caption  { font-size: 11pt; }
-.dim-label { opacity: 0.7; }
+/* === Design tokens === */
+@define-color athena_primary #0d6efd;
+@define-color athena_primary_hover #0b5ed7;
+@define-color athena_primary_active #0a58ca;
+@define-color athena_primary_soft #cfe2ff;
+@define-color athena_primary_text #084298;
+@define-color athena_secondary #6c757d;
+@define-color athena_secondary_hover #5c636a;
+@define-color athena_border #dee2e6;
+@define-color athena_border_strong #ced4da;
+@define-color athena_surface #ffffff;
+@define-color athena_surface_subtle #f8f9fa;
+@define-color athena_body_text #212529;
+@define-color athena_muted #6c757d;
+@define-color athena_success #198754;
+@define-color athena_danger #dc3545;
 
-/* === 通用章节面板 === */
+/* === Application shell === */
+.athena-window,
+.app-content {
+    background-color: @athena_surface_subtle;
+    color: @athena_body_text;
+}
+
+.app-sidebar,
+.tab-bar {
+    background-color: @athena_surface;
+}
+
+separator {
+    min-width: 1px;
+    min-height: 1px;
+    background-color: @athena_border;
+}
+
+/* === Typography === */
+.title-1 { font-size: 28pt; font-weight: 800; color: @athena_body_text; }
+.title-2 { font-size: 22pt; font-weight: 800; color: @athena_body_text; }
+.title-3 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
+.title-4 { font-size: 15pt; font-weight: 700; color: @athena_body_text; }
+.heading { font-size: 13pt; font-weight: 700; }
+.caption { font-size: 11pt; }
+.dim-label { color: @athena_muted; opacity: 1; }
+
+/* === Buttons: Bootstrap-like hierarchy === */
+button {
+    min-height: 34px;
+    padding: 6px 14px;
+    border: 1px solid @athena_border_strong;
+    border-radius: 6px;
+    background-image: none;
+    background-color: @athena_surface;
+    color: @athena_body_text;
+    font-weight: 600;
+    box-shadow: 0 1px 2px alpha(#000000, 0.08);
+    text-shadow: none;
+}
+
+button:hover {
+    border-color: #adb5bd;
+    background-color: #f1f3f5;
+}
+
+button:active,
+button:checked {
+    background-color: #e9ecef;
+    box-shadow: inset 0 1px 2px alpha(#000000, 0.10);
+}
+
+button:focus {
+    box-shadow: 0 0 0 3px alpha(@athena_primary, 0.24);
+}
+
+button.btn-primary,
+button.suggested-action {
+    border-color: @athena_primary;
+    background-color: @athena_primary;
+    color: #ffffff;
+    box-shadow: 0 2px 5px alpha(@athena_primary, 0.28);
+}
+
+button.btn-primary:hover,
+button.suggested-action:hover {
+    border-color: @athena_primary_hover;
+    background-color: @athena_primary_hover;
+    color: #ffffff;
+}
+
+button.btn-primary:active,
+button.btn-primary:checked,
+button.suggested-action:active,
+button.suggested-action:checked {
+    border-color: @athena_primary_active;
+    background-color: @athena_primary_active;
+    color: #ffffff;
+    box-shadow: inset 0 1px 2px alpha(#000000, 0.16);
+}
+
+button.btn-outline-primary {
+    border-color: @athena_primary;
+    background-color: @athena_surface;
+    color: @athena_primary;
+}
+
+button.btn-outline-primary:hover,
+button.btn-outline-primary:active {
+    background-color: @athena_primary;
+    color: #ffffff;
+}
+
+button.btn-outline-secondary {
+    border-color: @athena_secondary;
+    background-color: @athena_surface;
+    color: @athena_secondary;
+}
+
+button.btn-outline-secondary:hover,
+button.btn-outline-secondary:active {
+    border-color: @athena_secondary_hover;
+    background-color: @athena_secondary_hover;
+    color: #ffffff;
+}
+
+button:disabled {
+    opacity: 0.56;
+    box-shadow: none;
+}
+
+.btn-sm {
+    min-height: 30px;
+    padding: 4px 10px;
+    font-size: 10pt;
+}
+
+.btn-lg {
+    min-height: 44px;
+    padding: 10px 22px;
+    font-size: 12pt;
+}
+
+.pill,
+.run-pill {
+    border-radius: 999px;
+}
+
+.run-pill {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+/* === Navigation === */
+button.nav-button {
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    color: @athena_muted;
+}
+
+button.nav-button:hover {
+    background-color: @athena_surface_subtle;
+    color: @athena_body_text;
+}
+
+button.nav-button:checked {
+    background-color: @athena_primary_soft;
+    color: @athena_primary_text;
+    box-shadow: inset 4px 0 @athena_primary;
+}
+
+button.chapter-tab {
+    border-color: transparent;
+    background-color: transparent;
+    box-shadow: none;
+    color: @athena_muted;
+}
+
+button.chapter-tab:hover {
+    border-color: @athena_border;
+    background-color: @athena_surface_subtle;
+    color: @athena_body_text;
+}
+
+button.chapter-tab:checked {
+    border-color: alpha(@athena_primary, 0.32);
+    background-color: @athena_primary_soft;
+    color: @athena_primary_text;
+    box-shadow: none;
+}
+
+/* === Cards and framed content === */
 .panel-title {
     font-size: 14pt;
     font-weight: 700;
+    color: @athena_body_text;
 }
 
-frame.panel-frame > border {
-    border: 1px solid alpha(@theme_fg_color, 0.22);
-    border-radius: 10px;
-    background-color: alpha(@theme_base_color, 0.72);
+frame.panel-frame > border,
+frame.card > border {
+    border: 1px solid @athena_border;
+    border-radius: 7px;
+    background-color: @athena_surface;
+    box-shadow: 0 1px 3px alpha(#000000, 0.08);
+}
+
+/* === Welcome page === */
+.welcome-page {
+    padding: 40px;
+}
+
+.hero-icon {
+    color: @athena_primary;
+}
+
+.stat-card {
+    min-width: 104px;
+    padding: 14px 20px;
+    border: 1px solid @athena_border;
+    border-radius: 7px;
+    background-color: @athena_surface;
+    box-shadow: 0 1px 3px alpha(#000000, 0.07);
+}
+
+.section-card {
+    padding: 20px 24px;
+    border: 1px solid @athena_border;
+    border-radius: 7px;
+    background-color: @athena_surface;
+    box-shadow: 0 1px 3px alpha(#000000, 0.07);
+}
+
+.feature-card {
+    min-height: 136px;
+    padding: 16px;
+    border: 1px solid @athena_border;
+    border-radius: 7px;
+    background-color: @athena_surface_subtle;
+}
+
+.card-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid @athena_border;
+    background-color: @athena_surface_subtle;
+    font-weight: 700;
+}
+
+/* === Form controls and code/output surfaces === */
+.form-control {
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 1px solid @athena_border_strong;
+    border-radius: 6px;
+    background-color: @athena_surface;
+    color: @athena_body_text;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 3px alpha(@athena_primary, 0.20);
 }
 
 textview.code-view,
 textview.code-view > text {
-    background-color: transparent;
+    background-color: @athena_surface;
+    color: @athena_body_text;
 }
 
-/* === 子章节知识点列表条目 === */
+/* === Bootstrap-like list group for knowledge points === */
 .topic-list {
-    background-color: transparent;
+    background-color: @athena_surface;
 }
 
 .topic-row {
-    border-radius: 0;
-    padding: 10px 12px;
     margin: 0;
-    background-color: transparent;
+    padding: 10px 12px;
+    border-radius: 0;
+    background-color: @athena_surface;
+    color: @athena_body_text;
 }
 
 .topic-row:hover {
-    background-color: alpha(@theme_fg_color, 0.06);
+    background-color: @athena_surface_subtle;
 }
 
 .topic-row:selected {
-    background-color: alpha(@theme_selected_bg_color, 0.18);
+    background-color: @athena_primary_soft;
+    color: @athena_primary_text;
+}
+
+.topic-row:selected .dim-label {
+    color: @athena_primary_text;
 }
 
 .topic-group {
     padding: 10px 12px 6px;
-    background-color: alpha(@theme_fg_color, 0.035);
+    background-color: @athena_surface_subtle;
+    color: @athena_body_text;
 }
 
 .topic-run {
     min-width: 56px;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
-/* === 运行按钮：药丸形 === */
-.run-pill {
+/* === Small reusable status utilities === */
+.badge {
+    padding: 3px 8px;
     border-radius: 999px;
-    padding: 4px 18px;
-    font-weight: 600;
+    background-color: @athena_secondary;
+    color: #ffffff;
+    font-size: 9pt;
+    font-weight: 700;
 }
+
+.text-primary { color: @athena_primary; }
+.text-success { color: @athena_success; }
+.text-warning { color: #997404; }
+.text-danger { color: @athena_danger; }

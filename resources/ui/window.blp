@@ -5,6 +5,10 @@ ApplicationWindow window {
   default-width: 1920;
   default-height: 1080;
 
+  styles [
+    "athena-window"
+  ]
+
   Box main_container {
     orientation: horizontal;
 
@@ -14,6 +18,10 @@ ApplicationWindow window {
       orientation: vertical;
       width-request: 80;
       spacing: 0;
+
+      styles [
+        "app-sidebar"
+      ]
     }
 
     Separator {
@@ -26,11 +34,19 @@ ApplicationWindow window {
       orientation: vertical;
       hexpand: true;
 
+      styles [
+        "app-content"
+      ]
+
       // 章节标签栏（FlowBox 自动换行）
       ScrolledWindow tab_scroll {
         hscrollbar-policy: never;
         vscrollbar-policy: never;
         vexpand: false;
+
+        styles [
+          "tab-bar"
+        ]
 
         FlowBox chapter_tab_box {
           name: "chapter_tab_box";
