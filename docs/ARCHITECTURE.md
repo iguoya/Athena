@@ -46,6 +46,7 @@ resources/athena.json
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
+- Meson 将 Catalog、内容加载、Markdown 转换、函数注册和课程实现统一编译为内部 `athena-core` 静态库，应用与核心测试共同链接该库。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 
 当前的主要问题：

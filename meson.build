@@ -89,11 +89,8 @@ compiled_ui += custom_target(
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
-# === 源码 ===
-src_files = files(
-  'main.cc',
-  'athena.cc',
-  'mainwindow.cc',
+# === 共享核心库 ===
+core_sources = files(
   'content/content_loader.cc',
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
@@ -101,7 +98,27 @@ src_files = files(
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
-) + article_view_sources + [function_registry_generated]
+) + [function_registry_generated]
+
+athena_core_lib = static_library(
+  'athena-core',
+  core_sources,
+  include_directories: [local_inc, language_inc],
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep]
+)
+
+athena_core_dep = declare_dependency(
+  link_with: athena_core_lib,
+  include_directories: [local_inc, language_inc],
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep]
+)
+
+# === 桌面应用源码 ===
+app_sources = files(
+  'main.cc',
+  'athena.cc',
+  'mainwindow.cc'
+) + article_view_sources
 
 # === 打包资源 ===
 resources = gnome.compile_resources(
@@ -111,15 +128,14 @@ resources = gnome.compile_resources(
   source_dir: ['resources', '.']
 )
 
-executable('Athena', src_files,
+executable('Athena', app_sources,
   sources: resources,
   include_directories: [local_inc, language_inc],
   dependencies: [
     gtkmm_dep,
     glib_dep,
     sourceview_dep,
-    md4c_dep,
-    md4c_html_dep
+    athena_core_dep
   ] + platform_dependencies,
   install: true)
 
@@ -131,17 +147,10 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
-    'tests/markdown_renderer_test.cc',
-    'registry/chapter_catalog.cc',
-    'registry/function_registry.cc',
-    'render/markdown_renderer.cc',
-    'content/content_loader.cc',
-    'language/raii/raii_basic.cpp',
-    'language/raii/smart_pointer.cpp',
-    'language/raii/move_semantics.cpp'
-  ) + [function_registry_generated],
+    'tests/markdown_renderer_test.cc'
+  ),
   include_directories: [local_inc, language_inc],
-  dependencies: [gtest_main_dep, gio_dep, md4c_dep, md4c_html_dep]
+  dependencies: [gtest_main_dep, athena_core_dep]
 )
 test('athena-core', core_test_exe)
 
