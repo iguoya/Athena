@@ -52,7 +52,7 @@ Box chapter_page {
     orientation: horizontal;
   }
 
-  // 主体：左侧真实源码，右侧知识点、说明和运行结果。
+  // 主体：左侧真实源码，右侧知识点和运行结果。
   Paned main_body {
     orientation: horizontal;
     position: 1040;
@@ -130,7 +130,7 @@ Box chapter_page {
 
     Paned right_side {
       orientation: vertical;
-      position: 460;
+      position: 430;
       wide-handle: true;
       resize-start-child: true;
       resize-end-child: true;
@@ -140,21 +140,10 @@ Box chapter_page {
       margin-start: 8;
       vexpand: true;
 
-      Paned knowledge_side {
-        orientation: vertical;
-        position: 300;
-        wide-handle: true;
-        resize-start-child: true;
-        resize-end-child: true;
-        shrink-start-child: false;
-        shrink-end-child: false;
-        margin-bottom: 8;
-        vexpand: true;
-
-        Box topics_panel {
+      Box topics_panel {
           orientation: vertical;
           spacing: 8;
-          height-request: 210;
+          height-request: 260;
           margin-bottom: 8;
           vexpand: true;
 
@@ -192,66 +181,6 @@ Box chapter_page {
               }
             }
           }
-        }
-
-        Box explanation_panel {
-          orientation: vertical;
-          spacing: 8;
-          height-request: 130;
-          margin-top: 8;
-          vexpand: true;
-
-          Label {
-            label: "知识点说明";
-            halign: start;
-
-            styles [
-              "panel-title"
-            ]
-          }
-
-          Frame {
-            hexpand: true;
-            vexpand: true;
-
-            styles [
-              "panel-frame"
-            ]
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              margin-top: 12;
-              margin-start: 14;
-              margin-end: 14;
-              margin-bottom: 12;
-
-              Label knowledge_title_label {
-                name: "knowledge_title_label";
-                label: "请选择一个知识点";
-                halign: start;
-                xalign: 0;
-
-                styles [
-                  "heading"
-                ]
-              }
-
-              Label knowledge_description_label {
-                name: "knowledge_description_label";
-                label: "选择上方知识点后，这里会显示对应的学习目标和实验提示。";
-                halign: start;
-                valign: start;
-                wrap: true;
-                xalign: 0;
-
-                styles [
-                  "dim-label"
-                ]
-              }
-            }
-          }
-        }
       }
 
       Box result_panel {
@@ -314,6 +243,81 @@ Box chapter_page {
               ]
             }
           }
+        }
+      }
+    }
+  }
+
+  // 底部状态栏：跨越整个章节页面，随选中的知识点更新。
+  Frame {
+    height-request: 78;
+    hexpand: true;
+
+    styles [
+      "knowledge-status-bar"
+    ]
+
+    Box {
+      orientation: horizontal;
+      spacing: 14;
+      margin-top: 10;
+      margin-start: 16;
+      margin-end: 16;
+      margin-bottom: 10;
+
+      Image {
+        icon-name: "dialog-information-symbolic";
+        pixel-size: 24;
+        valign: center;
+
+        styles [
+          "knowledge-status-icon"
+        ]
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 3;
+        hexpand: true;
+        valign: center;
+
+        Box {
+          orientation: horizontal;
+          spacing: 10;
+
+          Label {
+            label: "当前知识点";
+            halign: start;
+
+            styles [
+              "knowledge-status-kicker"
+            ]
+          }
+
+          Label knowledge_title_label {
+            name: "knowledge_title_label";
+            label: "请选择一个知识点";
+            halign: start;
+            xalign: 0;
+
+            styles [
+              "heading"
+            ]
+          }
+        }
+
+        Label knowledge_description_label {
+          name: "knowledge_description_label";
+          label: "选择右侧知识点后，这里会显示对应的学习目标和实验提示。";
+          halign: start;
+          valign: center;
+          hexpand: true;
+          wrap: true;
+          xalign: 0;
+
+          styles [
+            "dim-label"
+          ]
         }
       }
     }
