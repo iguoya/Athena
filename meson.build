@@ -19,13 +19,13 @@ article_view_sources = []
 platform_dependencies = []
 if host_machine.system() == 'darwin'
   add_languages('objcpp', native: false)
-  article_view_sources += files('rendering/article_view_macos.mm')
+  article_view_sources += files('render/article_view_macos.mm')
   platform_dependencies += [
     dependency('gtk4-macos'),
     dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
   ]
 else
-  article_view_sources += files('rendering/article_view_unavailable.cc')
+  article_view_sources += files('render/article_view_unavailable.cc')
 endif
 
 # 本地第三方头文件（nlohmann/json.hpp）
@@ -79,9 +79,9 @@ src_files = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
-  'parsing/chapter_catalog.cc',
+  'parser/chapter_catalog.cc',
   'demo_registry.cc',
-  'rendering/markdown_renderer.cc',
+  'render/markdown_renderer.cc',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
@@ -115,9 +115,9 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/demo_registry_test.cc',
     'tests/markdown_renderer_test.cc',
-    'parsing/chapter_catalog.cc',
+    'parser/chapter_catalog.cc',
     'demo_registry.cc',
-    'rendering/markdown_renderer.cc',
+    'render/markdown_renderer.cc',
     'language/raii/raii_basic.cpp',
     'language/raii/smart_pointer.cpp',
     'language/raii/move_semantics.cpp'

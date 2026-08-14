@@ -1,4 +1,4 @@
-#include "parsing/chapter_catalog.h"
+#include "parser/chapter_catalog.h"
 
 #include <gtest/gtest.h>
 

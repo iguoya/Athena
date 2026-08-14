@@ -127,7 +127,7 @@ resources/athena.json
 
 这些类型可以使用普通 C++ 单元测试验证，不需要启动 GTK。
 
-源码按职责分组：`parsing/` 放置项目配置的解析、校验和查询；`rendering/`
+源码按职责分组：`parser/` 放置项目配置的解析、校验和查询；`render/`
 放置 Markdown 到 HTML 的转换以及各平台 ArticleView 后端。窗口协调和演示注册表
 保留在项目根目录，避免把不同职责仅为了减少文件数量而混入上述目录。
 
