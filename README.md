@@ -31,3 +31,6 @@ python3 scripts/generate_project.py \
 
 统一生成器还提供 `resources`、`registry` 和只创建缺失文件的 `scaffold` 子命令，
 具体用法见 `docs/CODE_GENERATION.md`。
+
+教学源码由 `athena.json` 驱动并随 GResource 打包：开发运行优先显示仓库中的实时
+源码，发行版在没有源码目录时读取应用内置副本。

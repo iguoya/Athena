@@ -119,6 +119,7 @@ def build_model(
     seen_code_classes: dict[str, str] = {}
     seen_ui: dict[str, str] = {}
     documents: set[str] = set()
+    source_files: set[str] = set()
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
     chapter_count = 0
@@ -174,12 +175,12 @@ def build_model(
                     )
                 seen_code_classes[chapter_name] = chapter_id
             if "source" in chapter:
-                project_path(
+                source_files.add(project_path(
                     root,
                     chapter["source"],
                     f"chapter {chapter_id}.source",
                     prefix="language",
-                )
+                ))
 
             custom_ui = chapter.get("ui")
             if custom_ui is None:
@@ -246,12 +247,12 @@ def build_model(
                     f"chapter {chapter_id} group {group_name}.icon",
                 )
                 if "source" in group:
-                    project_path(
+                    source_files.add(project_path(
                         root,
                         group["source"],
                         f"chapter {chapter_id} group {group_name}.source",
                         prefix="language",
-                    )
+                    ))
 
             subchapters = require_list(
                 chapter.get("subchapters"), f"chapter {chapter_id}.subchapters"
@@ -299,12 +300,12 @@ def build_model(
                         f"subchapter {chapter_id}.{method} references unknown group {group!r}"
                     )
                 if "source" in subchapter:
-                    project_path(
+                    source_files.add(project_path(
                         root,
                         subchapter["source"],
                         f"chapter {chapter_id} subchapter {method}.source",
                         prefix="language",
-                    )
+                    ))
 
             implementation = chapter.get("implementation")
             if implementation is not None:
@@ -322,14 +323,15 @@ def build_model(
                     prefix="language",
                     must_exist=chapter_id != allow_missing_header_for,
                 )
+                source_files.add(header)
                 if "source" in implementation:
-                    project_path(
+                    source_files.add(project_path(
                         root,
                         implementation["source"],
                         f"chapter {chapter_id}.implementation.source",
                         prefix="language",
                         must_exist=chapter_id != allow_missing_header_for,
-                    )
+                    ))
                 if not methods:
                     raise ProjectError(
                         f"implemented chapter has no subchapters: {chapter_id}"
@@ -358,6 +360,7 @@ def build_model(
         "config": config,
         "ui": seen_ui,
         "documents": documents,
+        "source_files": source_files,
         "bindings": bindings,
         "chapters": chapters_by_id,
         "category_count": len(categories),

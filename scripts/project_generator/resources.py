@@ -20,6 +20,10 @@ def render_resources(model: dict, root: Path) -> str:
         f'    <file compressed="true">{xml_escape(ui_name)}</file>'
         for ui_name in sorted(model["ui"])
     ]
+    source_entries = [
+        f'    <file compressed="true">{xml_escape(source)}</file>'
+        for source in sorted(model["source_files"])
+    ]
     icon_entries = []
     icons_dir = root / "resources" / "icons"
     if icons_dir.is_dir():
@@ -45,6 +49,9 @@ def render_resources(model: dict, root: Path) -> str:
   </gresource>
   <gresource prefix="/app/data">
     <file compressed="true">athena.json</file>
+  </gresource>
+  <gresource prefix="/app/sources">
+{entries_or_comment(source_entries, "暂无教学源码")}
   </gresource>
   <gresource prefix="/app/icons">
 {entries_or_comment(icon_entries, "暂无图标")}

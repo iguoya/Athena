@@ -36,13 +36,13 @@ string ContentLoader::load_project_file(const string& relative_path) const {
     }
 
     ifstream file(m_project_root + "/" + relative_path);
-    if (!file) {
-        return {};
+    if (file) {
+        ostringstream content;
+        content << file.rdbuf();
+        return content.str();
     }
 
-    ostringstream content;
-    content << file.rdbuf();
-    return content.str();
+    return load_resource("/app/sources/" + relative_path);
 }
 
 string ContentLoader::load_document(const string& relative_path) const {

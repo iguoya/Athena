@@ -12,6 +12,15 @@ TEST(ContentLoaderTest, LoadsProjectConfigurationFromDisk) {
     EXPECT_NE(source.find("\"schema\": 1"), string::npos);
 }
 
+TEST(ContentLoaderTest, LoadsTeachingSourceFromBundledResource) {
+    const ContentLoader loader("/path/that/does/not/exist");
+
+    const string source = loader.load_project_file(
+        "language/references/reference.hpp");
+
+    EXPECT_NE(source.find("class Reference"), string::npos);
+}
+
 TEST(ContentLoaderTest, LoadsDocumentWithResourceFallback) {
     const ContentLoader loader(ATHENA_SOURCE_ROOT);
 

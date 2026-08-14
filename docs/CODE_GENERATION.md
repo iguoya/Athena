@@ -51,7 +51,7 @@ python3 scripts/generate_project.py \
 ```
 
 标准输出格式为 `target_id|blueprint_path|ui_filename`。XML 包含主窗口、共享样式、
-文章、章节 UI、`athena.json` 和非隐藏图标资源。`app.gresource.xml` 是构建产物，
+文章、章节 UI、`athena.json`、配置引用的教学源码和非隐藏图标资源。`app.gresource.xml` 是构建产物，
 位于 Meson 构建目录，不提交到 Git，也不手工维护。
 
 ### 2.3 `registry`

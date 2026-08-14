@@ -110,7 +110,9 @@ def main() -> None:
             str(resource_output),
         )
         assert "code|resources/ui/chapters/code.blp|code.ui" in resources.stdout
-        assert "code.ui" in resource_output.read_text(encoding="utf-8")
+        resource_xml = resource_output.read_text(encoding="utf-8")
+        assert "code.ui" in resource_xml
+        assert "language/widget/widget.hpp" in resource_xml
 
         registry_output = root / "build" / "function_registry.generated.cc"
         run(generator, root, "registry", "--output", str(registry_output))

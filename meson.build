@@ -163,6 +163,7 @@ core_test_exe = executable(
     'tests/function_registry_test.cc',
     'tests/markdown_renderer_test.cc'
   ),
+  sources: resources,
   include_directories: [local_inc, language_inc],
   dependencies: [gtest_main_dep, athena_core_dep]
 )

@@ -42,6 +42,7 @@ resources/athena.json
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - 统一生成器会校验完整项目模型，并在临时工程中端到端测试四个子命令。
 - GResource XML 和函数注册表均生成在构建目录，正常配置和构建不会改脏源码树。
+- `athena.json` 引用的教学源码随 GResource 打包；开发时优先读取仓库文件，安装后自动使用内置源码。
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
@@ -52,7 +53,6 @@ resources/athena.json
 
 - `MainWindow` 仍负责动态 GTK 控件创建和页面协调；各页面职责已经拆分为独立方法，只有继续显著增长时才需要提取页面装配类。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
-- 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 骨架生成只适合一个头文件与一个源文件的普通章节；RAII 这类按知识组拆分源文件的章节仍由开发者组织。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
 
