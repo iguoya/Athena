@@ -166,6 +166,7 @@ def main():
   <gresource prefix="/app">
     <file preprocess="xml-stripblanks">window.ui</file>
     <file>style.css</file>
+    <file>article.css</file>
 {chr(10).join(article_entries) if article_entries else '    <!-- 暂无文章 -->'}
   </gresource>
   <gresource prefix="/app/chapters">

@@ -9,8 +9,22 @@ gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
+md4c_html_dep = dependency('md4c-html')
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
+
+article_view_sources = []
+platform_dependencies = []
+if host_machine.system() == 'darwin'
+  add_languages('objcpp', native: false)
+  article_view_sources += files('article_view_macos.mm')
+  platform_dependencies += [
+    dependency('gtk4-macos'),
+    dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
+  ]
+else
+  article_view_sources += files('article_view_fallback.cc')
+endif
 
 # 本地第三方头文件（nlohmann/json.hpp）
 local_inc = include_directories('include')
@@ -67,7 +81,7 @@ src_files = files(
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
-)
+) + article_view_sources
 
 # === 打包资源 ===
 resources = gnome.compile_resources(
@@ -84,6 +98,7 @@ executable('Athena', src_files,
     gtkmm_dep,
     glib_dep,
     sourceview_dep,
-    md4c_dep
-  ],
+    md4c_dep,
+    md4c_html_dep
+  ] + platform_dependencies,
   install: true)

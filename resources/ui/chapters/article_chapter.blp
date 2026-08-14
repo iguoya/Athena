@@ -68,28 +68,29 @@ Box article_page {
       }
     }
 
-    ScrolledWindow article_scroll {
-      name: "article_scroll";
-      hscrollbar-policy: never;
+    Frame {
       hexpand: true;
       vexpand: true;
       margin-start: 12;
       margin-end: 20;
+      margin-top: 4;
+      margin-bottom: 20;
 
-      Box {
-        orientation: vertical;
-        halign: center;
-        width-request: 1080;
-        hexpand: false;
-        margin-top: 4;
-        margin-bottom: 20;
+      styles [
+        "article-surface"
+      ]
 
-        Frame {
+      Stack article_renderer_stack {
+        name: "article_renderer_stack";
+        transition-type: none;
+        hexpand: true;
+        vexpand: true;
+
+        ScrolledWindow article_scroll {
+          name: "article_scroll";
+          hscrollbar-policy: never;
           hexpand: true;
-
-          styles [
-            "article-surface"
-          ]
+          vexpand: true;
 
           TextView article_view {
             name: "article_view";
@@ -107,6 +108,12 @@ Box article_page {
               "article-view"
             ]
           }
+        }
+
+        DrawingArea article_web_host {
+          name: "article_web_host";
+          hexpand: true;
+          vexpand: true;
         }
       }
     }

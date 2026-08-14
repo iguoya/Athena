@@ -17,7 +17,8 @@
 - C++20
 - GTK4 / gtkmm 4
 - GtkSourceView 5（源码语法高亮与行号）
-- MD4C（文章章节的 Markdown 解析）
+- MD4C / md4c-html（文章章节的 Markdown 解析与 HTML 转换）
+- macOS WKWebView（文章阅读排版；其他平台保留 TextView 降级后端）
 - Meson
 - Blueprint UI
 - nlohmann/json
@@ -30,7 +31,7 @@
 - 章节内容分为 `code` 和 `article`：可实验知识点使用代码闭环，理论、原则和工程思想使用 Markdown 阅读页。
 - `code` 章节的核心闭环是“选择知识点 → 查看真实源码 → 运行对应成员函数 → 查看输出结果”。
 - 一个 `code` 课程类对应一个一级主题；一个 public 成员函数对应一个可独立运行的二级知识点。
-- `article` 章节不生成课程类、成员函数、运行按钮或结果区，正文统一放在 `resources/articles/`。
+- `article` 章节不生成课程类、成员函数、运行按钮或结果区，正文统一放在 `resources/articles/`；共享层转换为 HTML，平台 ArticleView 后端负责显示。
 - 教学实验应短小、聚焦且能直接观察结果；通常以 10–30 行方法体为参考，不为满足行数牺牲完整性和可读性。
 - 内容优先覆盖 C++ 特有能力。与 C 语言高度重叠的基础内容只有在理解 C++ 语义确实需要时才加入。
 - 源码框显示真实源文件内容，不在 UI 或 C++ 中维护另一份教学代码字符串。

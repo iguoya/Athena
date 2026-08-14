@@ -1,5 +1,7 @@
 #pragma once
 
+#include "article_view.h"
+
 #include <gtkmm.h>
 
 #include <map>
@@ -78,6 +80,7 @@ private:
 
     Glib::RefPtr<Gtk::Builder> m_main_builder;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
+    std::map<string, std::unique_ptr<athena::ArticleView>> m_article_views;
 
     Gtk::Box* m_category_sidebar = nullptr;
     Gtk::Stack* m_chapter_stack = nullptr;

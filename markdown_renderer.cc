@@ -1,6 +1,7 @@
 #include "markdown_renderer.h"
 
 #include <md4c.h>
+#include <md4c-html.h>
 
 #include <algorithm>
 #include <climits>
@@ -26,6 +27,11 @@ struct RenderState {
     unsigned heading_level = 0;
     int heading_offset = 0;
     bool in_code_block = false;
+    bool failed = false;
+};
+
+struct HtmlRenderState {
+    string body;
     bool failed = false;
 };
 
@@ -207,6 +213,42 @@ string trim_heading(string text) {
     return text;
 }
 
+string heading_anchor(size_t index) {
+    return "athena-heading-" + to_string(index);
+}
+
+string add_heading_anchors(string html) {
+    size_t search_from = 0;
+    size_t heading_index = 0;
+    while (true) {
+        const size_t position = html.find("<h", search_from);
+        if (position == string::npos) {
+            break;
+        }
+
+        if (position + 3 < html.size() &&
+            html[position + 2] >= '1' && html[position + 2] <= '6' &&
+            html[position + 3] == '>') {
+            const string attribute =
+                " id=\"" + heading_anchor(heading_index++) + "\"";
+            html.insert(position + 3, attribute);
+            search_from = position + 3 + attribute.size();
+        } else {
+            search_from = position + 2;
+        }
+    }
+    return html;
+}
+
+void append_html(const MD_CHAR* text, MD_SIZE size, void* userdata) noexcept {
+    auto& state = *static_cast<HtmlRenderState*>(userdata);
+    try {
+        state.body.append(text, size);
+    } catch (...) {
+        state.failed = true;
+    }
+}
+
 int enter_block_impl(MD_BLOCKTYPE type, void* detail, RenderState& state) {
     switch (type) {
     case MD_BLOCK_QUOTE:
@@ -287,7 +329,11 @@ int leave_block_impl(MD_BLOCKTYPE type, void*, RenderState& state) {
         pop_tag(state, heading_tag(state.heading_level));
         const string title = trim_heading(state.heading_text);
         if (!title.empty()) {
-            state.headings.push_back({title, state.heading_level, state.heading_offset});
+            state.headings.push_back({
+                title,
+                heading_anchor(state.headings.size()),
+                state.heading_level,
+                state.heading_offset});
         }
         state.heading_level = 0;
         state.heading_text.clear();
@@ -473,4 +519,40 @@ vector<MarkdownHeading> render_markdown(
     auto begin = buffer->begin();
     buffer->place_cursor(begin);
     return state.headings;
+}
+
+string render_markdown_html(
+    const string& markdown,
+    const string& stylesheet) {
+    if (markdown.size() > UINT_MAX) {
+        throw runtime_error("Markdown document is too large");
+    }
+
+    HtmlRenderState state;
+    const int result = md_html(
+        markdown.data(),
+        static_cast<MD_SIZE>(markdown.size()),
+        append_html,
+        &state,
+        MD_DIALECT_GITHUB | MD_FLAG_NOHTML,
+        MD_HTML_FLAG_SKIP_UTF8_BOM);
+    if (result != 0 || state.failed) {
+        throw runtime_error("Failed to convert Markdown to HTML");
+    }
+
+    const string body = add_heading_anchors(std::move(state.body));
+    return
+        "<!doctype html>\n"
+        "<html lang=\"zh-CN\">\n"
+        "<head>\n"
+        "<meta charset=\"utf-8\">\n"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+        "<meta http-equiv=\"Content-Security-Policy\" "
+        "content=\"default-src 'none'; img-src file: data:; "
+        "style-src 'unsafe-inline'; font-src file: data:;\">\n"
+        "<style>\n" + stylesheet + "\n</style>\n"
+        "</head>\n"
+        "<body><main class=\"athena-article\">\n" + body +
+        "\n</main></body>\n"
+        "</html>\n";
 }
