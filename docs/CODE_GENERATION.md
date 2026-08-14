@@ -3,9 +3,19 @@
 ## 1. 单一入口
 
 `resources/athena.json` 是分类、章节、知识点、实现入口和资源引用的唯一数据源。
-所有校验和派生输出统一由 `scripts/generate_project.py` 完成。脚本先完成相同的结构
-与语义校验、构建同一份内部模型，再执行具体子命令，因此资源清单、函数注册表和
-章节骨架不会各自重新解释 JSON。
+所有校验和派生输出统一由 `scripts/generate_project.py` 进入。命令入口保持很薄，
+实现按职责放在 `scripts/project_generator/`：
+
+```text
+generate_project.py              命令解析与生成文件安全写入
+project_generator/model.py       读取、校验并建立唯一内部模型
+project_generator/resources.py   GResource 与 Blueprint 构建输入
+project_generator/registry.py    FunctionRegistry 生成
+project_generator/scaffold.py    首次章节骨架创建
+```
+
+四个子命令共用 `model.py`，因此资源清单、函数注册表和章节骨架不会各自重新解释
+JSON，也不会重新形成多套数据来源。
 
 所有命令都显式接收项目根目录和配置文件：
 

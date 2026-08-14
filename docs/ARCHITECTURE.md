@@ -13,7 +13,7 @@ Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Bluepri
 ```text
 resources/athena.json
         |
-        +--> scripts/generate_project.py --> 统一结构与语义校验
+        +--> scripts/generate_project.py --> project_generator/model.py 统一校验
         |        |
         |        +--> builddir/app.gresource.xml
         |        +--> Meson Blueprint 编译目标与文章资源
