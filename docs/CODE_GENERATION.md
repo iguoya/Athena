@@ -35,7 +35,7 @@ python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json check
 ```
 
-校验范围包括 schema、必填字段、名称合法性与唯一性、内容类型、分组引用、
+校验范围包括 schema、必填字段、名称合法性与唯一性、跨分类课程类名、内容类型、分组引用、
 Blueprint 输出冲突，以及 Markdown、源码、实现头文件和资源图标路径。失败时输出
 包含章节或字段位置的错误并返回非零退出码。Meson 已把它注册为
 `athena-project-check` 测试。
@@ -67,8 +67,8 @@ python3 scripts/generate_project.py \
 映射完全由现有字段派生：
 
 ```text
-category.name   -> athena::<category.name> 命名空间
-chapter.name    -> C++ 类名
+category.name   -> 函数 ID 的分类部分，不重复生成 C++ 命名空间
+chapter.name    -> 全局 C++ 类名
 subchapter.name -> public 成员函数名
 三者组合        -> category.chapter.subchapter 稳定函数 ID
 ```

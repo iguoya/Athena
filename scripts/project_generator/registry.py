@@ -20,8 +20,7 @@ def render_registry(bindings: list[dict]) -> str:
         category = binding["category"]
         chapter = binding["chapter"]
         variable = f"{category}_{chapter}".lower()
-        class_name = f"athena::{category}::{chapter}"
-        lines.append(f"    auto {variable} = make_shared<{class_name}>();")
+        lines.append(f"    auto {variable} = make_shared<{chapter}>();")
         for method in binding["methods"]:
             lines.append(
                 f'    registry.add(make_function_id("{category}", "{chapter}", "{method}"), '

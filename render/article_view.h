@@ -7,8 +7,6 @@
 
 using namespace std;
 
-namespace athena {
-
 // 文章阅读控件的跨平台边界。Markdown 到 HTML 的转换属于共享层，
 // 具体平台只负责把同一份 HTML 显示出来。
 class ArticleView {
@@ -22,5 +20,3 @@ public:
 unique_ptr<ArticleView> create_platform_article_view(
     Gtk::DrawingArea& host,
     Gtk::Window& window);
-
-} // namespace athena

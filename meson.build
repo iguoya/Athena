@@ -39,6 +39,14 @@ add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '
 
 # === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
 project_generator = meson.project_source_root() / 'scripts' / 'generate_project.py'
+project_generator_sources = files(
+  'scripts/generate_project.py',
+  'scripts/project_generator/__init__.py',
+  'scripts/project_generator/model.py',
+  'scripts/project_generator/registry.py',
+  'scripts/project_generator/resources.py',
+  'scripts/project_generator/scaffold.py'
+)
 athena_json = meson.project_source_root() / 'resources' / 'athena.json'
 gresource_xml = meson.current_build_dir() / 'app.gresource.xml'
 
@@ -56,6 +64,7 @@ gen_output = run_command(
 function_registry_generated = custom_target(
   'generate-function-registry',
   input: athena_json,
+  depend_files: project_generator_sources,
   output: 'function_registry.generated.cc',
   command: [
     python,

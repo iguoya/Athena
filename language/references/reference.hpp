@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-namespace athena::cpp {
-
 // 引用 —— 引用基础 / const 引用 / 值传递 vs 引用传递 / 引用返回值
 class Reference {
 public:
@@ -69,5 +67,3 @@ public:
         return arr[i];
     }
 };
-
-} // namespace athena::cpp

@@ -90,6 +90,9 @@ def main() -> None:
         assert header.is_file() and source.is_file()
 
         sentinel = header.read_text(encoding="utf-8") + "// user implementation\n"
+        assert "class Widget" in sentinel
+        assert "namespace athena" not in sentinel
+        assert "namespace athena" not in source.read_text(encoding="utf-8")
         header.write_text(sentinel, encoding="utf-8")
         second = run(generator, root, "scaffold", "--chapter", "cpp.Widget")
         assert "kept: language/widget/widget.hpp" in second.stdout
@@ -112,7 +115,7 @@ def main() -> None:
         registry_output = root / "build" / "function_registry.generated.cc"
         run(generator, root, "registry", "--output", str(registry_output))
         registry = registry_output.read_text(encoding="utf-8")
-        assert "make_shared<athena::cpp::Widget>()" in registry
+        assert "make_shared<Widget>()" in registry
         assert 'make_function_id("cpp", "Widget", "basics")' in registry
 
 

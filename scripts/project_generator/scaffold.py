@@ -47,7 +47,6 @@ def scaffold(model: dict, root: Path, chapter_id: str) -> None:
     )
     header_path = root / header_rel
     source_path = root / source_rel
-    category = chapter["category"]
     class_name = chapter["name"]
 
     header_lines = [
@@ -57,22 +56,18 @@ def scaffold(model: dict, root: Path, chapter_id: str) -> None:
         "",
         "using namespace std;",
         "",
-        f"namespace athena::{category} {{",
-        "",
         f"class {class_name} {{",
         "public:",
     ]
     header_lines.extend(
         f"    void {method}(ostream& output);" for method in chapter["methods"]
     )
-    header_lines.extend(["};", "", f"}}  // namespace athena::{category}", ""])
+    header_lines.extend(["};", ""])
 
     source_lines = [
         f'#include "{Path(header_rel).name}"',
         "",
         "#include <ostream>",
-        "",
-        f"namespace athena::{category} {{",
         "",
     ]
     subchapters = {item["name"]: item for item in chapter["subchapters"]}
@@ -86,8 +81,6 @@ def scaffold(model: dict, root: Path, chapter_id: str) -> None:
                 "",
             ]
         )
-    source_lines.extend([f"}}  // namespace athena::{category}", ""])
-
     for path, content in (
         (header_path, "\n".join(header_lines)),
         (source_path, "\n".join(source_lines)),

@@ -4,8 +4,6 @@
 
 using namespace std;
 
-namespace athena::cpp {
-
 // RAII 与资源管理
 //
 // 一个 public 成员函数对应 athena.json 中的一个可运行知识点。
@@ -24,5 +22,3 @@ public:
     void rvalue(ostream& output);
     void move_(ostream& output);
 };
-
-} // namespace athena::cpp

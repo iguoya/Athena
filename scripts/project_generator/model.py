@@ -116,6 +116,7 @@ def build_model(
         raise ProjectError("categories must not be empty")
 
     seen_categories: set[str] = set()
+    seen_code_classes: dict[str, str] = {}
     seen_ui: dict[str, str] = {}
     documents: set[str] = set()
     bindings: list[dict] = []
@@ -164,6 +165,14 @@ def build_model(
                 raise ProjectError(
                     f"chapter {chapter_id} has unsupported content {content!r}"
                 )
+            if content == "code":
+                previous_chapter = seen_code_classes.get(chapter_name)
+                if previous_chapter:
+                    raise ProjectError(
+                        f"code chapters {previous_chapter} and {chapter_id} "
+                        f"both generate global class {chapter_name}"
+                    )
+                seen_code_classes[chapter_name] = chapter_id
             if "source" in chapter:
                 project_path(
                     root,

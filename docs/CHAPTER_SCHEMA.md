@@ -145,7 +145,7 @@ resources/ui/chapters/empty_chapter.blp
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
-| `name` | string | 是 | 稳定分类名称，也是目标命名空间名称 |
+| `name` | string | 是 | 稳定分类名称，也是函数 ID 的分类部分 |
 | `title` | string | 是 | 左侧导航显示标题 |
 | `description` | string | 是 | 分类学习范围概要 |
 | `icon` | icon | 是 | 分类导航图标 |
@@ -156,7 +156,7 @@ resources/ui/chapters/empty_chapter.blp
 ```text
 category.name = cpp
     -> 左侧分类键 cpp
-    -> C++ 命名空间 athena::cpp
+    -> 函数 ID 的分类部分 cpp
 ```
 
 分类 `name` 使用小写 ASCII `snake_case`：
@@ -189,10 +189,10 @@ category.name = cpp
 content = code
 chapter.name = Reference
     -> 标签页的稳定名称 Reference
-    -> C++ 类 athena::cpp::Reference
+    -> C++ 类 Reference
 ```
 
-具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。文章章节的 `name` 只是稳定页面名，例如 `ProgramOrganization`，不会生成同名类。
+具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。由于课程类不再放入分类命名空间，所有 `code` 章节的 `name` 必须在整个项目中唯一；生成器会检查跨分类的类名冲突。文章章节的 `name` 只是稳定页面名，例如 `ProgramOrganization`，不会生成同名类。
 
 ### 6.1 C++ 实现入口 `implementation`
 
@@ -207,8 +207,8 @@ chapter.name = Reference
 `header` 是仓库根目录相对路径。构建期生成器据此包含类声明，并完全从现有字段派生绑定：
 
 ```text
-category.name   -> athena::<category.name> 命名空间
-chapter.name    -> C++ 类名
+category.name   -> 稳定函数 ID 的分类部分
+chapter.name    -> 全局 C++ 类名
 subchapter.name -> C++ 成员函数名
 ```
 
@@ -277,7 +277,7 @@ chapter.name = Reference
 subchapter.name = reference_basics
 
 派生查找键：cpp.Reference.reference_basics
-C++ 目标：athena::cpp::Reference::reference_basics(...)
+C++ 目标：Reference::reference_basics(...)
 ```
 
 不再同时保存 `id` 和 `method`。在当前一对一模型中，`name` 同时承担稳定局部名称和成员函数名，避免重复字段发生不一致。

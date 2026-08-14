@@ -47,7 +47,7 @@ private:
     Glib::RefPtr<Gtk::Builder> m_main_builder;
     ContentLoader m_content_loader;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
-    std::map<string, std::unique_ptr<athena::ArticleView>> m_article_views;
+    std::map<string, std::unique_ptr<ArticleView>> m_article_views;
 
     Gtk::Box* m_category_sidebar = nullptr;
     Gtk::Stack* m_chapter_stack = nullptr;

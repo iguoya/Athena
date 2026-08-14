@@ -9,17 +9,21 @@
 命名空间解决的是**名称归属与冲突**。目录解决的是文件存放位置；二者可以采用相似结构，但没有自动对应关系。
 
 ```cpp
-namespace athena::cpp {
+namespace geometry {
 
-class Reference final {
+class Point final {
 public:
-    void reference_basics() const;
+    double distance_to(const Point& other) const;
 };
 
-} // namespace athena::cpp
+} // namespace geometry
 ```
 
-在 Athena 中，公共类型进入 `athena` 命名空间，C++ 课程类进入 `athena::cpp`。这种规则让调用位置一眼看出类型属于哪个领域，也避免把所有名称暴露在全局作用域。
+命名空间应该表达真实的复用边界，而不是机械重复项目名或目录名。Athena 当前是独立
+桌面应用，不作为公共库嵌入其他程序，因此项目类型和课程类直接使用 `Reference`、
+`RAII` 等类名。将来如果某部分成为独立公共库，再为那部分引入有明确领域含义的
+命名空间。`.cpp` 文件中不需要导出的辅助类型和函数，则可以放入匿名命名空间，
+把可见范围限制在当前翻译单元。
 
 ### `using namespace std` 的项目约定
 
@@ -93,12 +97,10 @@ C++20 Modules 使用模块接口和 `import` 表达依赖，目标之一是减�
 ```cpp
 export module athena.reference;
 
-export namespace athena::cpp {
-class Reference final {
+export class Reference final {
 public:
     void reference_basics() const;
 };
-}
 ```
 
 模块并不会自动替你设计合理架构，也不会立刻取代所有头文件。编译器、构建系统和第三方库的模块支持需要共同配合，因此在实际项目中通常采用渐进迁移。先理解翻译单元、可见性和 ODR，再学习 Modules，会更容易看清它解决了什么问题。

@@ -6,7 +6,6 @@
 #import <WebKit/WebKit.h>
 
 using namespace std;
-using athena::ArticleView;
 
 @interface AthenaArticleNavigationDelegate : NSObject <WKNavigationDelegate>
 @end
@@ -192,12 +191,8 @@ private:
 
 } // namespace
 
-namespace athena {
-
 unique_ptr<ArticleView> create_platform_article_view(
     Gtk::DrawingArea& host,
     Gtk::Window& window) {
     return make_unique<MacArticleView>(host, window);
 }
-
-} // namespace athena

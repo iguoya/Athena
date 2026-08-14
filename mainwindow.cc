@@ -316,7 +316,7 @@ bool MainWindow::initialize_article_page(
             throw runtime_error("Article stylesheet is unavailable");
         }
 
-        auto view = athena::create_platform_article_view(
+        auto view = create_platform_article_view(
             *article_web_host,
             *this);
         if (!view) {

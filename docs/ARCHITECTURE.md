@@ -97,10 +97,10 @@ resources/athena.json
 - 分类、章节和知识点的稳定 `name`。
 - 数组表达的显示顺序，以及显示标题和描述。
 - 通用 Blueprint、特殊界面覆盖和各层图标。
-- 由 `name` 直接表达的命名空间、C++ 类名和成员函数名。
+- 由 `name` 直接表达的函数 ID 分类、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
 - 章节内容类型 `code` / `article`；文章章节同时保存 Markdown 文档路径。
-- 已实现 code 章节的 `implementation.header`；命名空间、类名和函数名仍由各层 `name` 派生。
+- 已实现 code 章节的 `implementation.header`；类名和函数名由章节与知识点的 `name` 派生，分类名只进入稳定函数 ID。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
 
@@ -138,8 +138,6 @@ HTML 的转换以及各平台 ArticleView 后端。目录归组不改变 `Chapte
 每个 `code` 章节类负责一个主题，成员函数负责一个可运行知识点。例如：
 
 ```cpp
-namespace athena::cpp {
-
 class Reference final {
 public:
     void reference_basics(std::ostream& output) const;
@@ -147,8 +145,6 @@ public:
     void pass_by_reference(std::ostream& output) const;
     void return_by_reference(std::ostream& output) const;
 };
-
-} // namespace athena::cpp
 ```
 
 初期可以继续使用统一签名：
