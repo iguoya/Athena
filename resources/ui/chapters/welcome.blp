@@ -5,455 +5,464 @@ ScrolledWindow welcome_page {
   vexpand: true;
   hscrollbar-policy: never;
   vscrollbar-policy: automatic;
-  
+
   Box welcome_container {
     orientation: vertical;
     spacing: 28;
     halign: center;
-    valign: center;
+    valign: start;
     hexpand: true;
     vexpand: true;
 
     styles [
       "welcome-page"
     ]
-    
-    // 主图标区域
+
+    // 品牌主视觉
     Box icon_container {
       halign: center;
-      margin-bottom: 4;
 
       styles [
         "hero-icon"
       ]
-      
+
       Image welcome_icon {
         resource: "/app/icons/tiger.svg";
-        pixel-size: 192;
-        width-request: 192;
-        height-request: 192;
-        
+        pixel-size: 320;
+        width-request: 320;
+        height-request: 320;
+
         styles [
           "icon-dropshadow"
         ]
       }
     }
-    
-    // 文本内容区域
+
     Box text_container {
       orientation: vertical;
-      spacing: 12;
+      spacing: 10;
       halign: center;
-      
-      
+
       Label welcome_title {
         label: "C++ 学习之旅";
-        
+
         styles [
           "title-1"
         ]
       }
-      
+
       Label welcome_subtitle {
         label: "从零基础到高级特性，系统性学习 C++ 编程语言";
         wrap: true;
         justify: center;
-        
+
         styles [
           "title-4",
           "dim-label"
         ]
       }
-      
+
       Label learning_path {
         label: "📚 基础入门 → 💻 面向对象 → 🔧 STL → 🚀 现代C++ → 🏗️ 项目实战";
         wrap: true;
         justify: center;
-        
+
         styles [
           "body"
         ]
       }
     }
-    
-    // 统计信息区域
-    Box stats_container {
+
+    // 学习概览与特色横向排列，避免打断品牌主视觉。
+    Box overview_row {
       orientation: horizontal;
-      spacing: 20;
+      spacing: 24;
       halign: center;
-      homogeneous: true;
-      
-      Box chapters_stat {
+
+      Box stats_section {
         orientation: vertical;
-        spacing: 8;
-        halign: center;
+        spacing: 16;
+        width-request: 260;
 
         styles [
-          "stat-card"
+          "section-card"
         ]
-        
-        Label chapters_number {
-          label: "24";
-          
+
+        Label {
+          label: "学习概览";
+
           styles [
-            "title-2"
+            "title-3"
           ]
         }
-        
-        Label chapters_label {
-          label: "学习章节";
-          
-          styles [
-            "caption",
-            "dim-label"
-          ]
+
+        Box stats_container {
+          orientation: vertical;
+          spacing: 12;
+          homogeneous: true;
+
+          Box chapters_stat {
+            orientation: horizontal;
+            spacing: 16;
+
+            styles [
+              "stat-card"
+            ]
+
+            Label {
+              label: "61";
+
+              styles [
+                "title-2"
+              ]
+            }
+
+            Label {
+              label: "学习章节";
+
+              styles [
+                "body",
+                "dim-label"
+              ]
+            }
+          }
+
+          Box stages_stat {
+            orientation: horizontal;
+            spacing: 16;
+
+            styles [
+              "stat-card"
+            ]
+
+            Label {
+              label: "4";
+
+              styles [
+                "title-2"
+              ]
+            }
+
+            Label {
+              label: "学习阶段";
+
+              styles [
+                "body",
+                "dim-label"
+              ]
+            }
+          }
+
+          Box progress_stat {
+            orientation: horizontal;
+            spacing: 16;
+
+            styles [
+              "stat-card"
+            ]
+
+            Label {
+              label: "0%";
+
+              styles [
+                "title-2"
+              ]
+            }
+
+            Label {
+              label: "完成进度";
+
+              styles [
+                "body",
+                "dim-label"
+              ]
+            }
+          }
         }
       }
-      
-      Box stages_stat {
+
+      Box features_section {
         orientation: vertical;
-        spacing: 8;
-        halign: center;
+        spacing: 16;
+        width-request: 720;
 
         styles [
-          "stat-card"
+          "section-card"
         ]
-        
-        Label stages_number {
-          label: "8";
-          
-          styles [
-            "title-2"
-          ]
-        }
-        
-        Label stages_label {
-          label: "学习阶段";
-          
-          styles [
-            "caption",
-            "dim-label"
-          ]
-        }
-      }
-      
-      Box progress_stat {
-        orientation: vertical;
-        spacing: 8;
-        halign: center;
 
-        styles [
-          "stat-card"
-        ]
-        
-        Label progress_number {
-          label: "0%";
-          
+        Label {
+          label: "学习特色";
+
           styles [
-            "title-2"
+            "title-3"
           ]
         }
-        
-        Label progress_label {
-          label: "完成进度";
-          
-          styles [
-            "caption",
-            "dim-label"
-          ]
+
+        Box features_grid {
+          orientation: horizontal;
+          spacing: 18;
+          homogeneous: true;
+
+          Box {
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
+
+            styles [
+              "feature-card"
+            ]
+
+            Image {
+              icon-name: "media-playbook-symbolic";
+              pixel-size: 48;
+            }
+
+            Label {
+              label: "互动练习";
+
+              styles [
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "边学边练，及时验证学习效果";
+              wrap: true;
+              justify: center;
+
+              styles [
+                "caption",
+                "dim-label"
+              ]
+            }
+          }
+
+          Box {
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
+
+            styles [
+              "feature-card"
+            ]
+
+            Image {
+              icon-name: "text-x-generic-symbolic";
+              pixel-size: 48;
+            }
+
+            Label {
+              label: "代码示例";
+
+              styles [
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "丰富的代码实例，直观理解概念";
+              wrap: true;
+              justify: center;
+
+              styles [
+                "caption",
+                "dim-label"
+              ]
+            }
+          }
+
+          Box {
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
+
+            styles [
+              "feature-card"
+            ]
+
+            Image {
+              icon-name: "view-refresh-symbolic";
+              pixel-size: 48;
+            }
+
+            Label {
+              label: "循序渐进";
+
+              styles [
+                "heading"
+              ]
+            }
+
+            Label {
+              label: "从简单到复杂，逐步掌握 C++";
+              wrap: true;
+              justify: center;
+
+              styles [
+                "caption",
+                "dim-label"
+              ]
+            }
+          }
         }
       }
     }
-    
-    // 学习路线预览
+
+    // 学习路线在宽屏下横向展开，减少页面纵向堆叠。
     Box roadmap_preview {
       orientation: vertical;
       spacing: 16;
-      halign: center;
-      width-request: 720;
+      width-request: 1004;
 
       styles [
         "section-card"
       ]
 
-      
-      Label roadmap_title {
+      Label {
         label: "学习路线预览";
-        
+
         styles [
           "title-3"
         ]
       }
-      
+
       Box roadmap_stages {
-        orientation: vertical;
-        spacing: 12;
-        
-        Box stage1 {
-          orientation: horizontal;
-          spacing: 12;
-          
+        orientation: horizontal;
+        spacing: 14;
+        homogeneous: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
           Image {
             icon-name: "media-playback-start-symbolic";
-            icon-size: normal;
+            pixel-size: 28;
           }
-          
-          Box {
-            orientation: vertical;
-            spacing: 4;
-            hexpand: true;
-            
-            Label {
-              label: "第一阶段：基础入门";
-              xalign: 0;
-              
-              styles [
-                "heading"
-              ]
-            }
-            
-            Label {
-              label: "环境搭建、基础语法、流程控制、数组字符串";
-              xalign: 0;
-              
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
+
+          Label {
+            label: "基础入门";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "环境搭建、基础语法、流程控制、数组字符串";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
           }
         }
-        
-        Box stage2 {
-          orientation: horizontal;
-          spacing: 12;
-          
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
           Image {
             icon-name: "system-run-symbolic";
-            icon-size: normal;
+            pixel-size: 28;
           }
-          
-          Box {
-            orientation: vertical;
-            spacing: 4;
-            hexpand: true;
-            
-            Label {
-              label: "第二阶段：函数与指针";
-              xalign: 0;
-              
-              styles [
-                "heading"
-              ]
-            }
-            
-            Label {
-              label: "函数基础、指针引用、动态内存管理";
-              xalign: 0;
-              
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
+
+          Label {
+            label: "函数与指针";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "函数基础、指针引用、动态内存管理";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
           }
         }
-        
-        Box stage3 {
-          orientation: horizontal;
-          spacing: 12;
-          
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
           Image {
             icon-name: "applications-development-symbolic";
-            icon-size: normal;
+            pixel-size: 28;
           }
-          
-          Box {
-            orientation: vertical;
-            spacing: 4;
-            hexpand: true;
-            
-            Label {
-              label: "第三阶段：面向对象";
-              xalign: 0;
-              
-              styles [
-                "heading"
-              ]
-            }
-            
-            Label {
-              label: "类对象、构造析构、继承、多态";
-              xalign: 0;
-              
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
+
+          Label {
+            label: "面向对象";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "类对象、构造析构、继承与多态";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
           }
         }
-        
-        Box stage4 {
-          orientation: horizontal;
-          spacing: 12;
-          
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
           Image {
             icon-name: "folder-music-symbolic";
-            icon-size: normal;
+            pixel-size: 28;
           }
-          
-          Box {
-            orientation: vertical;
-            spacing: 4;
-            hexpand: true;
-            
-            Label {
-              label: "第四阶段：STL标准库";
-              xalign: 0;
-              
-              styles [
-                "heading"
-              ]
-            }
-            
-            Label {
-              label: "容器、算法、迭代器使用";
-              xalign: 0;
-              
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
-          }
-        }
-      }
-    }
-    
-    // 特色功能介绍
-    Box features_section {
-      orientation: vertical;
-      spacing: 16;
-      halign: center;
-      width-request: 720;
 
-      styles [
-        "section-card"
-      ]
-      
-      Label features_title {
-        label: "学习特色";
-        
-        styles [
-          "title-3"
-        ]
-      }
-      
-      Box features_grid {
-        orientation: horizontal;
-        spacing: 24;
-        halign: center;
-        homogeneous: true;
-        
-        Box feature1 {
-          orientation: vertical;
-          spacing: 8;
-          halign: center;
-          width-request: 150;
-
-          styles [
-            "feature-card"
-          ]
-          
-          Image {
-            icon-name: "media-playbook-symbolic";
-            pixel-size: 48;
-          }
-          
           Label {
-            label: "互动练习";
-            
+            label: "STL 标准库";
+
             styles [
               "heading"
             ]
           }
-          
-          Label {
-            label: "边学边练，及时验证学习效果";
-            wrap: true;
-            justify: center;
-            
-            styles [
-              "caption",
-              "dim-label"
-            ]
-          }
-        }
-        
-        Box feature2 {
-          orientation: vertical;
-          spacing: 8;
-          halign: center;
-          width-request: 150;
 
-          styles [
-            "feature-card"
-          ]
-          
-          Image {
-            icon-name: "text-x-generic-symbolic";
-            pixel-size: 48;
-          }
-          
           Label {
-            label: "代码示例";
-            
-            styles [
-              "heading"
-            ]
-          }
-          
-          Label {
-            label: "丰富的代码实例，直观理解概念";
+            label: "容器、算法与迭代器使用";
             wrap: true;
             justify: center;
-            
-            styles [
-              "caption",
-              "dim-label"
-            ]
-          }
-        }
-        
-        Box feature3 {
-          orientation: vertical;
-          spacing: 8;
-          halign: center;
-          width-request: 150;
 
-          styles [
-            "feature-card"
-          ]
-          
-          Image {
-            icon-name: "view-refresh-symbolic";
-            pixel-size: 48;
-          }
-          
-          Label {
-            label: "循序渐进";
-            
-            styles [
-              "heading"
-            ]
-          }
-          
-          Label {
-            label: "从简单到复杂，逐步掌握C++";
-            wrap: true;
-            justify: center;
-            
             styles [
               "caption",
               "dim-label"

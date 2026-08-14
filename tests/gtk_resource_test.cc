@@ -40,7 +40,7 @@ TEST(GtkResourceTest, LoadsTheWelcomeTigerImage) {
         nullptr,
         nullptr));
     EXPECT_TRUE(static_cast<bool>(image->get_paintable()));
-    EXPECT_EQ(image->get_pixel_size(), 192);
+    EXPECT_EQ(image->get_pixel_size(), 320);
 }
 
 } // namespace
