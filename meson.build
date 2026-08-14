@@ -38,6 +38,7 @@ add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '
 
 # === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
+registry_gen_script = meson.project_source_root() / 'scripts' / 'generate_function_registry.py'
 athena_json = meson.project_source_root() / 'resources' / 'athena.json'
 gresource_xml = meson.project_source_root() / 'resources' / 'app.gresource.xml'
 
@@ -46,6 +47,19 @@ gen_output = run_command(
   python, gen_script, athena_json, meson.project_source_root(), gresource_xml,
   check: true
 ).stdout().strip().split('\n')
+
+function_registry_generated = custom_target(
+  'generate-function-registry',
+  input: athena_json,
+  output: 'function_registry.generated.cc',
+  command: [
+    python,
+    registry_gen_script,
+    '@INPUT@',
+    meson.project_source_root(),
+    '@OUTPUT@'
+  ]
+)
 
 # === 编译所有 Blueprint 文件 ===
 compiled_ui = []
@@ -85,7 +99,7 @@ src_files = files(
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
-) + article_view_sources
+) + article_view_sources + [function_registry_generated]
 
 # === 打包资源 ===
 resources = gnome.compile_resources(
@@ -121,7 +135,7 @@ core_test_exe = executable(
     'language/raii/raii_basic.cpp',
     'language/raii/smart_pointer.cpp',
     'language/raii/move_semantics.cpp'
-  ),
+  ) + [function_registry_generated],
   include_directories: [local_inc, language_inc],
   dependencies: [gtest_main_dep, md4c_dep, md4c_html_dep]
 )

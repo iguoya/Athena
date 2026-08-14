@@ -19,20 +19,18 @@ resources/athena.json
         |        +--> Meson Blueprint 编译目标
         |        +--> resources/articles/**/*.md 资源
         |
-        +--> GResource: /app/data/athena.json
-                 |
-                 +--> ChapterCatalog（解析、校验和查询）
-                          |
-                          +--> MainWindow（界面协调）
-                                   |
-                                   +--> 分类侧栏和章节标签
-                                   +--> code: 源码、知识点列表和运行结果
-                                   |          +--> FunctionRegistry
-                                   |                    +--> Reference / RAII
-                                   +--> article: Markdown + article.css
-                                                |
-                                                +--> md4c-html: HTML + 目录 + 阅读设置
-                                                +--> macOS ArticleView: WKWebView
+        +--> scripts/generate_function_registry.py
+        |        |
+        |        +--> builddir/function_registry.generated.cc
+        |                    |
+        |                    +--> FunctionRegistry --> Reference / RAII
+        |
+        +--> GResource: /app/data/athena.json --> ChapterCatalog
+                                                     |
+        FunctionRegistry + ChapterCatalog ----------> MainWindow（界面协调）
+                                                     |
+                                                     +--> code 页面
+                                                     +--> article 页面
 ```
 
 已有的优点：
@@ -51,9 +49,9 @@ resources/athena.json
 当前的主要问题：
 
 - `MainWindow` 仍负责较多动态 GTK 控件创建和文章/代码页面协调，后续可继续提取页面装配器，但当前不需要完整 Presenter 层。
-- 当前 `FunctionRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `athena.json` 自动生成。
+- 注册表已经由 `athena.json` 生成；章节类声明和首次实现骨架仍未自动生成。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
-- 目前只生成 GResource 清单，不生成章节类、成员函数声明或演示注册表。
+- 目前生成 GResource 清单和函数注册表，不生成章节类或成员函数实现骨架。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
 
 ## 3. 目标架构
@@ -100,6 +98,7 @@ resources/athena.json
 - 由 `name` 直接表达的命名空间、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
 - 章节内容类型 `code` / `article`；文章章节同时保存 Markdown 文档路径。
+- 已实现 code 章节的 `implementation.header`；命名空间、类名和函数名仍由各层 `name` 派生。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
 
@@ -217,11 +216,12 @@ Meson -> Generator outputs
 2. 已完成：将注册表抽成 `FunctionRegistry`，统一复合 ID。
 3. 已完成：将 JSON 解析和查询抽成 `ChapterCatalog`。
 4. 已完成：为 ChapterCatalog、Markdown、FunctionRegistry 和 GTK 资源建立基础测试。
-5. 生成 ID 常量和注册表，消除手写映射。
-6. 支持安全的一次性章节实现骨架生成。
-7. 解决源代码展示的安装后资源策略。
-8. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
-9. 只有当窗口协调仍然明显复杂时，再考虑正式 Presenter/View 接口。
+5. 已完成：从 `athena.json` 生成函数注册表，消除手写课程映射。
+6. 生成稳定 ID 常量，供注册表、测试和诊断复用。
+7. 支持安全的一次性章节实现骨架生成。
+8. 解决源代码展示的安装后资源策略。
+9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
+10. 只有当窗口协调仍然明显复杂时，再考虑正式 Presenter/View 接口。
 
 ## 7. MVC/MVP 决策
 

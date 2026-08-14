@@ -20,9 +20,10 @@
 
 ```text
 scripts/gen_chapters_xml.py
+scripts/generate_function_registry.py
 ```
 
-它在 Meson 配置阶段：
+`gen_chapters_xml.py` 在 Meson 配置阶段：
 
 1. 读取 `resources/athena.json`。
 2. 根据 `content` 选择默认 Blueprint，并校验自定义 Blueprint。
@@ -30,15 +31,22 @@ scripts/gen_chapters_xml.py
 4. 更新 `resources/app.gresource.xml`。
 5. 通过标准输出告诉 Meson 需要编译哪些 `.blp` 文件。
 
-它目前不会：
+`generate_function_registry.py` 在构建阶段：
+
+1. 读取 `resources/athena.json`。
+2. 选择声明了 `implementation.header` 的 code 章节。
+3. 从分类、章节和知识点 `name` 派生命名空间、类名、成员函数名和完整 ID。
+4. 在构建目录生成 `function_registry.generated.cc` 并直接参与编译。
+
+手写的 `registry/function_registry.cc` 只实现通用容器，不保存任何课程类或函数 ID。
+
+当前生成流程还不会：
 
 - 生成章节类。
 - 生成成员函数声明或实现骨架。
-- 生成 `FunctionRegistry` 注册项；当前 Reference 和 RAII 的映射仍在独立的
-  `registry/function_registry.cc` 中手写维护。
 - 完整校验章节和方法 ID。
 
-因此，本规范后面的 C++ 生成流程属于目标设计，落地时需要同步修改 Meson、测试和文档。
+因此，本规范后面的类声明、实现骨架、稳定 ID 常量和统一命令入口仍属于目标设计。
 
 ## 3. 推荐生成器接口
 

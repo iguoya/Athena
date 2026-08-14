@@ -41,6 +41,7 @@ struct ChapterMeta {
     string resource_path;
     string widget_name;
     string source;
+    string implementation_header;
     IconSpec icon;
     vector<ChapterGroup> groups;
     vector<SubChapter> subchapters;

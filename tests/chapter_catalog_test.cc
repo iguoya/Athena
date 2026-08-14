@@ -1,9 +1,11 @@
 #include "registry/chapter_catalog.h"
+#include "registry/function_registry.h"
 
 #include <gtest/gtest.h>
 
 #include <fstream>
 #include <sstream>
+#include <set>
 #include <stdexcept>
 
 namespace {
@@ -61,6 +63,9 @@ TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
     ASSERT_NE(reference, nullptr);
     EXPECT_EQ(reference->content, "code");
     EXPECT_EQ(reference->widget_name, "chapter_page");
+    EXPECT_EQ(
+        reference->implementation_header,
+        "language/references/reference.hpp");
     ASSERT_EQ(reference->subchapters.size(), 4);
     EXPECT_EQ(reference->subchapters.front().name, "reference_basics");
 
@@ -72,6 +77,31 @@ TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
         organization->document,
         "resources/articles/cpp/program_organization.md");
     EXPECT_EQ(organization->widget_name, "article_page");
+}
+
+TEST(ChapterCatalogTest, GeneratedRegistryExactlyMatchesImplementedChapters) {
+    const auto catalog = ChapterCatalog::from_json(
+        read_project_file("resources/athena.json"));
+    const auto registry = create_default_function_registry();
+
+    set<string> expected_ids;
+    for (const auto& [category_name, chapters] : catalog.chapters()) {
+        for (const auto& chapter : chapters) {
+            if (chapter.implementation_header.empty()) {
+                continue;
+            }
+            for (const auto& subchapter : chapter.subchapters) {
+                expected_ids.insert(make_function_id(
+                    category_name,
+                    chapter.name,
+                    subchapter.name));
+            }
+        }
+    }
+
+    const auto ids = registry.ids();
+    const set<string> registered_ids(ids.begin(), ids.end());
+    EXPECT_EQ(registered_ids, expected_ids);
 }
 
 TEST(ChapterCatalogTest, ResolvesKnowledgePointSourceByPrecedence) {

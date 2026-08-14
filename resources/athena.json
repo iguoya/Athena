@@ -43,7 +43,7 @@
           "title": "引用",
           "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
           "icon": { "type": "theme", "name": "insert-link-symbolic" },
-          "source": "language/references/reference.hpp",
+          "implementation": { "header": "language/references/reference.hpp" },
           "subchapters": [
             { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。" },
             { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义、绑定临时对象及其生命周期行为。" },
@@ -95,7 +95,7 @@
           "title": "RAII 与资源管理",
           "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
           "icon": { "type": "theme", "name": "security-high-symbolic" },
-          "source": "language/raii/raii.hpp",
+          "implementation": { "header": "language/raii/raii.hpp" },
           "groups": [
             { "name": "raii", "title": "RAII", "description": "通过对象生命周期自动管理资源。", "icon": { "type": "theme", "name": "security-high-symbolic" }, "source": "language/raii/raii_basic.cpp" },
             { "name": "smart_pointer", "title": "智能指针", "description": "使用标准智能指针表达资源所有权。", "icon": { "type": "theme", "name": "user-bookmarks-symbolic" }, "source": "language/raii/smart_pointer.cpp" },

@@ -177,6 +177,7 @@ category.name = cpp
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
 | `source` | string | 否 | `code` 代码框显示的源码路径 |
+| `implementation` | object | 否 | 已有 C++ 实现的 code 章节编译入口；存在时由构建生成函数注册表 |
 | `groups` | array | 否 | `code` 知识点的视觉分组元数据 |
 | `subchapters` | array | 是 | `code` 的有序可运行知识点列表；`article` 使用空数组 |
 
@@ -191,13 +192,36 @@ chapter.name = Reference
 
 具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。文章章节的 `name` 只是稳定页面名，例如 `ProgramOrganization`，不会生成同名类。
 
+### 6.1 C++ 实现入口 `implementation`
+
+已经具有可编译 C++ 类和成员函数的 `code` 章节声明：
+
+```json
+"implementation": {
+  "header": "language/references/reference.hpp"
+}
+```
+
+`header` 是仓库根目录相对路径。构建期生成器据此包含类声明，并完全从现有字段派生绑定：
+
+```text
+category.name   -> athena::<category.name> 命名空间
+chapter.name    -> C++ 类名
+subchapter.name -> C++ 成员函数名
+```
+
+一个章节声明 `implementation` 后，其全部 `subchapters` 都会进入生成的
+`FunctionRegistry`；缺少任何对应类或成员函数都会在编译阶段失败。未声明
+`implementation` 的章节只显示课程框架，不进入注册表。`implementation.header`
+同时作为章节级源码展示的缺省值，因此不需要再重复填写相同的 `source`。
+
 章节名称必须是合法且非关键字的 C++ 类型标识符：
 
 ```regex
 ^[A-Za-z_][A-Za-z0-9_]*$
 ```
 
-### 6.1 `code` 与 `article` 的选择
+### 6.2 `code` 与 `article` 的选择
 
 - 能用短小源码和可观察输出验证的语法、语义或库能力使用 `code`。
 - 理论、原则、设计取舍和跨文件工程思想，如果单次运行结果不足以说明内容，使用 `article`。

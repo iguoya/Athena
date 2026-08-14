@@ -86,7 +86,19 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
             }
 
             chapter.document = chapter_value.value("document", "");
-            chapter.source = chapter_value.value("source", "");
+            if (chapter_value.contains("implementation")) {
+                if (chapter.content != "code") {
+                    throw runtime_error(
+                        "Only code chapters can declare implementation: " +
+                        category.name + "." + chapter.name);
+                }
+                chapter.implementation_header = chapter_value.at("implementation")
+                    .at("header")
+                    .get<string>();
+            }
+            chapter.source = chapter_value.value(
+                "source",
+                chapter.implementation_header);
             chapter.icon = parse_icon(
                 chapter_value.value("icon", json::object()),
                 default_chapter_icon);
