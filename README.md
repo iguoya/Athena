@@ -18,5 +18,16 @@ meson compile -C builddir
 meson test -C builddir --print-errorlogs
 ```
 
-测试分为两层：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
-`athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口。
+测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
+`athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
+两个项目生成器测试分别校验真实配置和四个生成子命令。
+
+项目配置检查：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json check
+```
+
+统一生成器还提供 `resources`、`registry` 和只创建缺失文件的 `scaffold` 子命令，
+具体用法见 `docs/CODE_GENERATION.md`。

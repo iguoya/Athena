@@ -50,15 +50,15 @@
 
 ## 代码生成规则
 
-- 当前仓库已实现 Blueprint/GResource 清单和 `FunctionRegistry` 绑定生成；C++ 章节类声明与首次实现骨架生成仍是目标能力。
+- 当前仓库使用 `scripts/generate_project.py` 统一实现项目校验、Blueprint/GResource 清单、`FunctionRegistry` 绑定和首次章节骨架生成。
 - 生成器必须确定性输出：相同输入产生完全相同的文件内容和顺序。
-- 自动生成文件必须带有 `DO NOT EDIT` 提示，并使用 `.generated.hpp` 或 `.generated.cpp` 后缀。
+- 自动生成文件必须带有 `DO NOT EDIT` 提示，并使用 `.generated.hpp`、`.generated.cpp` 或项目现有的 `.generated.cc` 后缀。
 - 禁止直接修改自动生成文件；应修改 `athena.json`、生成模板或生成器。
 - 生成器可以反复覆盖生成的注册表、ID 常量和声明文件。
 - 生成器不得覆盖已经存在的人工实现文件、教学示例或测试。
 - 首次创建成员函数实现骨架时采用“仅当文件不存在时创建”的策略。
 - 自然语言 `description` 是教学需求，不应由普通模板生成器直接转换成未经审查的 C++ 实现；它可以作为 Codex 编写实现的输入。
-- 在章节类和实现骨架生成器落地前，不得在构建规则或文档中假装相关命令已经可用。
+- `scaffold` 只能显式运行，且只创建不存在的人工实现文件；不得把它加入普通构建副作用。
 
 ## C++ 编码规则
 
@@ -106,6 +106,7 @@
 
 ```sh
 python3 -m json.tool resources/athena.json >/dev/null
+python3 scripts/generate_project.py --project-root . --config resources/athena.json check
 meson setup builddir --reconfigure
 meson compile -C builddir
 meson test -C builddir --print-errorlogs
@@ -118,7 +119,8 @@ meson setup builddir
 meson compile -C builddir
 ```
 
-未来加入统一章节生成器后，还必须提供并运行 `--check` 模式，使 CI 能发现配置与生成文件不同步，但在该命令真正实现前不要把它列为必过命令。
+统一生成器的 `check` 必须通过；GResource XML 和函数注册表只生成到构建目录，
+因此检查工作区时不应出现由正常构建造成的生成文件改动。
 
 ## 代码评审重点
 

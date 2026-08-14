@@ -38,14 +38,18 @@ language_inc = include_directories('language')
 add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
 
 # === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
-gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
-registry_gen_script = meson.project_source_root() / 'scripts' / 'generate_function_registry.py'
+project_generator = meson.project_source_root() / 'scripts' / 'generate_project.py'
 athena_json = meson.project_source_root() / 'resources' / 'athena.json'
-gresource_xml = meson.project_source_root() / 'resources' / 'app.gresource.xml'
+gresource_xml = meson.current_build_dir() / 'app.gresource.xml'
 
 # 脚本 stdout 格式: "chapter_id|blp_relative_path|ui_filename"
 gen_output = run_command(
-  python, gen_script, athena_json, meson.project_source_root(), gresource_xml,
+  python,
+  project_generator,
+  '--project-root', meson.project_source_root(),
+  '--config', athena_json,
+  'resources',
+  '--output', gresource_xml,
   check: true
 ).stdout().strip().split('\n')
 
@@ -55,10 +59,11 @@ function_registry_generated = custom_target(
   output: 'function_registry.generated.cc',
   command: [
     python,
-    registry_gen_script,
-    '@INPUT@',
-    meson.project_source_root(),
-    '@OUTPUT@'
+    project_generator,
+    '--project-root', meson.project_source_root(),
+    '--config', '@INPUT@',
+    'registry',
+    '--output', '@OUTPUT@'
   ]
 )
 
@@ -163,3 +168,25 @@ gtk_test_exe = executable(
   dependencies: [gtest_dep, gtkmm_dep, sourceview_dep]
 )
 test('athena-gtk-resources', gtk_test_exe, is_parallel: false)
+
+# 配置校验不生成文件，保证 athena.json 的结构和所有路径引用有效。
+test(
+  'athena-project-check',
+  python,
+  args: [
+    project_generator,
+    '--project-root', meson.project_source_root(),
+    '--config', athena_json,
+    'check'
+  ]
+)
+
+# 在临时目录端到端验证四个子命令，并检查 scaffold 不覆盖已有文件。
+test(
+  'athena-project-generator',
+  python,
+  args: [
+    meson.project_source_root() / 'tests' / 'generate_project_test.py',
+    project_generator
+  ]
+)

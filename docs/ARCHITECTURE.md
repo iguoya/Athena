@@ -13,17 +13,14 @@ Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Bluepri
 ```text
 resources/athena.json
         |
-        +--> scripts/gen_chapters_xml.py
+        +--> scripts/generate_project.py --> 统一结构与语义校验
         |        |
-        |        +--> resources/app.gresource.xml
-        |        +--> Meson Blueprint 编译目标
-        |        +--> resources/articles/**/*.md 资源
-        |
-        +--> scripts/generate_function_registry.py
-        |        |
+        |        +--> builddir/app.gresource.xml
+        |        +--> Meson Blueprint 编译目标与文章资源
         |        +--> builddir/function_registry.generated.cc
-        |                    |
-        |                    +--> FunctionRegistry --> Reference / RAII
+        |        |             |
+        |        |             +--> FunctionRegistry --> Reference / RAII
+        |        +--> 显式 scaffold：只创建缺失的人工章节骨架
         |
         +--> GResource: /app/data/athena.json --> ChapterCatalog
                                                      |
@@ -43,6 +40,8 @@ resources/athena.json
 - 文章 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
+- 统一生成器会校验完整项目模型，并在临时工程中端到端测试四个子命令。
+- GResource XML 和函数注册表均生成在构建目录，正常配置和构建不会改脏源码树。
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
@@ -52,9 +51,9 @@ resources/athena.json
 当前的主要问题：
 
 - `MainWindow` 仍负责动态 GTK 控件创建和页面协调；各页面职责已经拆分为独立方法，只有继续显著增长时才需要提取页面装配类。
-- 注册表已经由 `athena.json` 生成；章节类声明和首次实现骨架仍未自动生成。
+- 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
-- 目前生成 GResource 清单和函数注册表，不生成章节类或成员函数实现骨架。
+- 骨架生成只适合一个头文件与一个源文件的普通章节；RAII 这类按知识组拆分源文件的章节仍由开发者组织。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
 
 ## 3. 目标架构

@@ -1,309 +1,144 @@
-# Athena 代码生成规范
+# Athena 项目生成规范
 
-## 1. 目标
+## 1. 单一入口
 
-代码生成的目标是把 `resources/athena.json` 中可机器验证的课程结构转换为：
+`resources/athena.json` 是分类、章节、知识点、实现入口和资源引用的唯一数据源。
+所有校验和派生输出统一由 `scripts/generate_project.py` 完成。脚本先完成相同的结构
+与语义校验、构建同一份内部模型，再执行具体子命令，因此资源清单、函数注册表和
+章节骨架不会各自重新解释 JSON。
 
-- Blueprint/GResource 构建输入。
-- 稳定章节和知识点 ID。
-- C++ 章节类声明或声明片段。
-- 演示函数注册表。
-- 新章节的一次性实现骨架。
-
-只有 `content: "code"` 的章节参与 C++ 类、成员函数、演示 ID 和注册表生成。`article` 章节只参与 Blueprint、Markdown 文档和 GResource 输入生成。
-
-生成器不负责根据自然语言自动产出最终教学代码。`description` 可以作为 Codex 或开发者编写实现时的需求，但生成的实现必须经过构建、测试和人工审查。
-
-## 2. 当前状态
-
-仓库现有生成脚本：
-
-```text
-scripts/gen_chapters_xml.py
-scripts/generate_function_registry.py
-```
-
-`gen_chapters_xml.py` 在 Meson 配置阶段：
-
-1. 读取 `resources/athena.json`。
-2. 根据 `content` 选择默认 Blueprint，并校验自定义 Blueprint。
-3. 校验 `article.document` 并把 Markdown 文档加入资源清单。
-4. 更新 `resources/app.gresource.xml`。
-5. 通过标准输出告诉 Meson 需要编译哪些 `.blp` 文件。
-
-`generate_function_registry.py` 在构建阶段：
-
-1. 读取 `resources/athena.json`。
-2. 选择声明了 `implementation.header` 的 code 章节。
-3. 从分类、章节和知识点 `name` 派生命名空间、类名、成员函数名和完整 ID。
-4. 在构建目录生成 `function_registry.generated.cc` 并直接参与编译。
-
-手写的 `registry/function_registry.cc` 只实现通用容器，不保存任何课程类或函数 ID。
-
-当前生成流程还不会：
-
-- 生成章节类。
-- 生成成员函数声明或实现骨架。
-- 完整校验章节和方法 ID。
-
-因此，本规范后面的类声明、实现骨架、稳定 ID 常量和统一命令入口仍属于目标设计。
-
-## 3. 推荐生成器接口
-
-建议新增统一入口：
-
-```text
-scripts/generate_chapters.py
-```
-
-推荐命令：
+所有命令都显式接收项目根目录和配置文件：
 
 ```sh
-# 更新可反复生成的文件
-python3 scripts/generate_chapters.py generate
-
-# 只比较结果，不写文件，供 CI 使用
-python3 scripts/generate_chapters.py check
-
-# 为新增章节创建不存在的人工实现骨架
-python3 scripts/generate_chapters.py scaffold --chapter cpp.Reference
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json check
 ```
 
-如果更喜欢选项式接口，也可以使用 `--check` 和 `--scaffold`，但仓库内必须保持一种稳定形式。
+## 2. 四个子命令
 
-退出码：
+### 2.1 `check`
 
-- `0`：成功，或 `check` 未发现差异。
-- 非 `0`：配置非法、文件缺失、输出不同步或生成失败。
-
-## 4. 生成流程
-
-统一入口按以下顺序工作：
-
-```text
-读取 athena.json
-        |
-        v
-JSON Schema 校验
-        |
-        v
-语义校验（ID、C++ 名称、路径、重复项）
-        |
-        v
-构建内部规范模型
-        |
-        +--> GResource/Blueprint 输入
-        +--> code: chapter_ids.generated.hpp
-        +--> code: function_registry.generated.cpp
-        +--> code: 可选章节声明
-        +--> code scaffold：仅创建不存在的人工文件
-        +--> article: Markdown/GResource 输入
-```
-
-所有输出应先在内存或临时目录生成，校验全部成功后再写入目标位置，避免失败时只更新一部分文件。
-
-## 5. 文件所有权
-
-### 5.1 生成器所有
-
-建议目录：
-
-```text
-generated/
-├── chapter_ids.generated.hpp
-├── chapter_declarations.generated.hpp
-└── function_registry.generated.cpp
-```
-
-也可以放入 Meson 构建目录。无论位置如何，都必须：
-
-- 文件名包含 `.generated.`。
-- 首部包含生成来源和禁止编辑提示。
-- 可以被生成器完整覆盖。
-- 不接受人工业务逻辑。
-
-示例文件头：
-
-```cpp
-// Generated from resources/athena.json by scripts/generate_chapters.py.
-// DO NOT EDIT. Modify the JSON configuration or generator instead.
-```
-
-### 5.2 人工或 Codex 所有
-
-建议目录：
-
-```text
-language/cpp/references.hpp
-language/cpp/references.cpp
-tests/cpp/references_test.cpp
-```
-
-这些文件：
-
-- 包含函数实现、教学示例和测试。
-- 生成器只能在文件不存在时通过 `scaffold` 创建。
-- 文件存在时，即使内容为空，生成器也不得覆盖。
-- 删除知识点时不自动删除对应实现；应报告孤立实现，交由开发者处理。
-
-## 6. 推荐生成内容
-
-### 6.1 稳定 ID
-
-输入：
-
-```json
-{
-  "name": "reference_basics",
-  "title": "引用基础",
-  "description": "理解引用是对象的别名以及引用必须初始化。"
-}
-```
-
-生成：
-
-```cpp
-namespace athena::chapter_ids {
-
-inline constexpr std::string_view cpp_reference_reference_basics =
-    "cpp.Reference.reference_basics";
-
-} // namespace athena::chapter_ids
-```
-
-### 6.2 演示注册表
-
-注册表必须使用完整 ID：
-
-```cpp
-registry.add(
-    "cpp.Reference.reference_basics",
-    bind_function<athena::cpp::Reference>(
-        &athena::cpp::Reference::reference_basics));
-```
-
-函数签名在同一 schema 版本内保持统一。第一阶段建议继续使用：
-
-```cpp
-void method(std::ostream& output) const;
-```
-
-### 6.3 章节骨架
-
-`scaffold --chapter cpp.Reference` 可以首次创建：
-
-```cpp
-#pragma once
-
-#include <iosfwd>
-
-namespace athena::cpp {
-
-class Reference final {
-public:
-    void reference_basics(std::ostream& output) const;
-    void const_reference(std::ostream& output) const;
-    void pass_by_reference(std::ostream& output) const;
-    void return_by_reference(std::ostream& output) const;
-};
-
-} // namespace athena::cpp
-```
-
-对应 `.cpp` 可以生成明确的待实现函数，但下一次运行不得覆盖：
-
-```cpp
-#include "references.hpp"
-
-namespace athena::cpp {
-
-void Reference::reference_basics(std::ostream& output) const {
-    // TODO: Implement the lesson described in athena.json.
-}
-
-} // namespace athena::cpp
-```
-
-## 7. 确定性要求
-
-为了使 Git diff 和 CI 稳定：
-
-- 固定 UTF-8 和 `\n` 换行。
-- 按配置中的分类顺序、章节 `order`、分组顺序和知识点顺序输出。
-- 不写入当前时间、用户名、绝对路径或随机值。
-- 相同输入必须逐字节产生相同输出。
-- 只有内容变化时才替换文件，避免无意义的重新编译。
-- 格式由模板或统一格式化工具控制。
-
-## 8. 安全写入要求
-
-- 生成路径必须解析并确认位于仓库或构建目录内。
-- 拒绝 JSON 中的绝对路径和 `..` 跳转。
-- 写文件前完成所有 schema 和语义校验。
-- 使用临时文件后原子替换生成文件。
-- `scaffold` 遇到已存在文件时报告 `skipped`，不得截断文件。
-- 普通 `generate` 命令不得删除人工文件。
-- 删除过时的生成文件前，必须确认目标带有生成器签名。
-
-## 9. Meson 集成
-
-推荐将职责分开：
-
-- Meson 构建时可以自动生成完全由生成器所有的注册表和 ID 文件。
-- 人工实现骨架只能通过显式 `scaffold` 命令创建，不能作为普通构建副作用。
-- 构建必须依赖 `athena.json`、schema、模板和生成器脚本。
-- 生成输出优先位于 Meson 构建目录，避免污染源码树；需要提交并由 CI 检查的生成文件除外。
-
-概念示例：
-
-```meson
-chapter_codegen = custom_target(
-  'chapter-codegen',
-  input: athena_json,
-  output: [
-    'chapter_ids.generated.hpp',
-    'function_registry.generated.cpp',
-  ],
-  command: [python, generator, 'generate', '--input', '@INPUT@',
-            '--output-dir', meson.current_build_dir()],
-)
-```
-
-实际实现时必须根据脚本接口调整，不能直接复制概念示例并假设可运行。
-
-现有 `gen_chapters_xml.py` 会写入源码树中的 `resources/app.gresource.xml`。重构时建议让统一生成器在构建目录生成 GResource XML，或明确把该文件视为需要提交并由 `check` 验证的生成产物。
-
-## 10. Codex 编写成员函数的流程
-
-当用户要求根据 `description` 实现 `code` 章节时，Codex 应：
-
-1. 读取 `AGENTS.md`、本规范和 `CHAPTER_SCHEMA.md`。
-2. 定位完整演示 ID、章节类和方法名。
-3. 确认生成声明与人工实现文件的所有权。
-4. 只编辑人工实现和测试，不直接编辑 `.generated.*`。
-5. 让输出具有明确、可重复的教学结果。
-6. 添加覆盖主要语义和边界条件的测试。
-7. 运行生成检查、Meson 构建和测试。
-8. 如果 `description` 不足以决定教学行为，先给出合理假设；只有会显著改变课程目标时才请求用户选择。
-
-当用户要求实现 `article` 章节时，应编辑 `document` 指向的人工 Markdown 文件；生成器不得把文章内容转换为 C++ 类或运行入口。
-
-## 11. CI 检查
-
-完整生成器实现后，CI 至少检查：
+只读取和校验，不写文件：
 
 ```sh
-python3 -m json.tool resources/athena.json >/dev/null
-python3 scripts/generate_chapters.py check
-meson setup builddir
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json check
+```
+
+校验范围包括 schema、必填字段、名称合法性与唯一性、内容类型、分组引用、
+Blueprint 输出冲突，以及 Markdown、源码、实现头文件和资源图标路径。失败时输出
+包含章节或字段位置的错误并返回非零退出码。Meson 已把它注册为
+`athena-project-check` 测试。
+
+### 2.2 `resources`
+
+生成 GResource XML，并在标准输出逐行返回 Meson 需要编译的 Blueprint：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json \
+  resources --output builddir/app.gresource.xml
+```
+
+标准输出格式为 `target_id|blueprint_path|ui_filename`。XML 包含主窗口、共享样式、
+文章、章节 UI、`athena.json` 和非隐藏图标资源。`app.gresource.xml` 是构建产物，
+位于 Meson 构建目录，不提交到 Git，也不手工维护。
+
+### 2.3 `registry`
+
+从声明了 `implementation.header` 的 `code` 章节生成注册表：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json \
+  registry --output builddir/function_registry.generated.cc
+```
+
+映射完全由现有字段派生：
+
+```text
+category.name   -> athena::<category.name> 命名空间
+chapter.name    -> C++ 类名
+subchapter.name -> public 成员函数名
+三者组合        -> category.chapter.subchapter 稳定函数 ID
+```
+
+生成文件带有 `DO NOT EDIT` 标记，由构建系统完全拥有。人工代码只实现通用
+`FunctionRegistry` 容器和各课程类，不维护第二份章节映射。
+
+### 2.4 `scaffold`
+
+为一个未来的 `code` 章节首次创建头文件和源文件：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json \
+  scaffold --chapter cpp.TypeSemantics
+```
+
+使用前必须先在 `athena.json` 定义章节及其 `subchapters`，并声明
+`implementation.header`。可以另外声明 `implementation.source`；省略时从头文件
+路径把扩展名替换为 `.cpp`。
+
+骨架包含章节类、每个知识点的 public 成员函数和明确的“待实现”输出。文件使用
+排他创建；任何目标文件已经存在时只报告 `kept`，绝不截断、合并或覆盖人工教学
+代码。分成多个源文件的特殊章节应维护已有实现，不对它运行默认骨架生成。
+
+## 3. 文件所有权
+
+构建系统拥有：
+
+```text
+builddir/app.gresource.xml
+builddir/function_registry.generated.cc
+builddir/*.ui
+```
+
+开发者或 Codex 拥有：
+
+```text
+resources/athena.json
+resources/articles/**/*.md
+resources/ui/**/*.blp
+language/**/*.hpp
+language/**/*.cpp
+tests/**
+```
+
+修改课程结构时先改 JSON；修改教学内容时编辑人工源码、文章和测试；禁止直接修改
+构建目录中的生成文件。
+
+## 4. 确定性与安全
+
+- 生成结果固定使用 UTF-8 和 `\n`，不包含时间、用户名、绝对路径或随机值。
+- 资源、头文件和输出条目使用稳定排序；成员函数保持 JSON 中的教学顺序。
+- JSON 中的项目路径必须是安全相对路径，拒绝绝对路径、`.` 和 `..`。
+- 可覆盖的构建产物先写临时文件再原子替换；内容未变化时不改写。
+- `scaffold` 使用仅新建语义，构建过程不会隐式创建或修改人工课程实现。
+- 自然语言 `description` 是教学需求，不直接转换成未经审查的最终 C++ 代码。
+
+## 5. Meson 和测试
+
+Meson 配置阶段调用 `resources`，取得 Blueprint 目标并在 `builddir` 生成 XML；构建
+阶段通过 `custom_target` 调用 `registry`。`athena.json` 是两个过程的输入依赖。
+`scaffold` 只允许开发者显式执行，不是普通构建副作用。
+
+项目提供两项生成器相关测试：
+
+- `athena-project-check`：校验真实项目配置和全部引用。
+- `athena-project-generator`：在临时工程端到端运行四个子命令，并验证二次
+  `scaffold` 不覆盖已有文件。
+
+修改 `athena.json` 或生成器后至少运行：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json check
+meson setup builddir --reconfigure
 meson compile -C builddir
 meson test -C builddir --print-errorlogs
 ```
 
-`check` 必须覆盖：
-
-- schema 和语义校验。
-- 生成文件与当前 JSON 是否一致。
-- 每个 `code` 可运行知识点是否有注册项。
-- 重复或孤立的完整 ID。
-- 被 JSON 引用的 Blueprint、源码和 Markdown 文档是否存在。
+实现 `code` 章节时，应读取章节和知识点的 `description`，使用骨架作为起点编写
+可观察、可重复的教学实验，并补充测试。实现 `article` 章节时只编辑 `document`
+指向的 Markdown，不创建 C++ 类、运行按钮或注册项。

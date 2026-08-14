@@ -57,7 +57,9 @@ category                     课程分类、左侧导航
             "type": "theme",
             "name": "insert-link-symbolic"
           },
-          "source": "language/references/reference.hpp",
+          "implementation": {
+            "header": "language/references/reference.hpp"
+          },
           "subchapters": [
             {
               "name": "basic",
@@ -214,6 +216,19 @@ subchapter.name -> C++ 成员函数名
 `FunctionRegistry`；缺少任何对应类或成员函数都会在编译阶段失败。未声明
 `implementation` 的章节只显示课程框架，不进入注册表。`implementation.header`
 同时作为章节级源码展示的缺省值，因此不需要再重复填写相同的 `source`。
+
+为普通章节运行 `generate_project.py scaffold` 时，可以额外指定首次创建的源文件：
+
+```json
+"implementation": {
+  "header": "language/type_semantics/type_semantics.hpp",
+  "source": "language/type_semantics/type_semantics.cpp"
+}
+```
+
+省略 `implementation.source` 时，生成器从 `header` 路径派生同目录的 `.cpp`。
+`scaffold` 只创建不存在的文件；已有教学实现不会被覆盖。一个章节拆为多个源文件时，
+应像 RAII 一样通过 `group.source` 或 `subchapter.source` 管理显示文件，并人工维护实现。
 
 章节名称必须是合法且非关键字的 C++ 类型标识符：
 
