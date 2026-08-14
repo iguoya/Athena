@@ -1,6 +1,6 @@
 project('Athena', 'cpp',
   version: '0.1',
-  default_options: ['cpp_std=c++17'])
+  default_options: ['cpp_std=c++20'])
 
 fs = import('fs')
 gnome = import('gnome')
@@ -60,7 +60,10 @@ compiled_ui += custom_target(
 src_files = files(
   'main.cc',
   'athena.cc',
-  'mainwindow.cc'
+  'mainwindow.cc',
+  'language/raii/raii_basic.cpp',
+  'language/raii/smart_pointer.cpp',
+  'language/raii/move_semantics.cpp'
 )
 
 # === 打包资源 ===
