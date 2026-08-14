@@ -357,8 +357,6 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         auto result_view = builder->get_widget<Gtk::TextView>("result_view");
         auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
         auto topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
-        auto knowledge_title_label =
-            builder->get_widget<Gtk::Label>("knowledge_title_label");
         auto knowledge_description_label =
             builder->get_widget<Gtk::Label>("knowledge_description_label");
 
@@ -414,13 +412,12 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                 row->set_child(*label);
                 topics_list->append(*row);
 
-                if (knowledge_title_label && knowledge_description_label) {
-                    knowledge_title_label->set_text(chapter.title);
+                if (knowledge_description_label) {
                     knowledge_description_label->set_text(chapter.description);
                 }
             } else {
-                auto knowledge_by_row = make_shared<
-                    std::map<Gtk::ListBoxRow*, pair<string, string>>>();
+                auto description_by_row =
+                    make_shared<std::map<Gtk::ListBoxRow*, string>>();
                 Gtk::ListBoxRow* first_topic_row = nullptr;
                 string current_group;
                 for (const auto& subchapter : chapter.subchapters) {
@@ -468,9 +465,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     row->set_activatable(true);
                     row->add_css_class("topic-row");
 
-                    (*knowledge_by_row)[row] = {
-                        subchapter.title,
-                        subchapter.description};
+                    (*description_by_row)[row] = subchapter.description;
                     if (!first_topic_row) {
                         first_topic_row = row;
                     }
@@ -513,18 +508,16 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     topics_list->append(*row);
                 }
 
-                if (knowledge_title_label && knowledge_description_label) {
+                if (knowledge_description_label) {
                     topics_list->signal_row_selected().connect(
-                        [knowledge_by_row,
-                         knowledge_title_label,
+                        [description_by_row,
                          knowledge_description_label](Gtk::ListBoxRow* row) {
-                            auto found = knowledge_by_row->find(row);
-                            if (found == knowledge_by_row->end()) {
+                            auto found = description_by_row->find(row);
+                            if (found == description_by_row->end()) {
                                 return;
                             }
 
-                            knowledge_title_label->set_text(found->second.first);
-                            knowledge_description_label->set_text(found->second.second);
+                            knowledge_description_label->set_text(found->second);
                         });
 
                     if (first_topic_row) {

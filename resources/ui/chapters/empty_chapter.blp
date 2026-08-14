@@ -250,7 +250,7 @@ Box chapter_page {
 
   // 底部状态栏：跨越整个章节页面，随选中的知识点更新。
   Frame {
-    height-request: 78;
+    height-request: 58;
     hexpand: true;
 
     styles [
@@ -260,10 +260,10 @@ Box chapter_page {
     Box {
       orientation: horizontal;
       spacing: 14;
-      margin-top: 10;
+      margin-top: 8;
       margin-start: 16;
       margin-end: 16;
-      margin-bottom: 10;
+      margin-bottom: 8;
 
       Image {
         icon-name: "dialog-information-symbolic";
@@ -275,50 +275,19 @@ Box chapter_page {
         ]
       }
 
-      Box {
-        orientation: vertical;
-        spacing: 3;
-        hexpand: true;
+      Label knowledge_description_label {
+        name: "knowledge_description_label";
+        label: "选择右侧知识点后，这里会显示对应的学习目标和实验提示。";
+        halign: start;
         valign: center;
+        hexpand: true;
+        ellipsize: end;
+        single-line-mode: true;
+        xalign: 0;
 
-        Box {
-          orientation: horizontal;
-          spacing: 10;
-
-          Label {
-            label: "当前知识点";
-            halign: start;
-
-            styles [
-              "knowledge-status-kicker"
-            ]
-          }
-
-          Label knowledge_title_label {
-            name: "knowledge_title_label";
-            label: "请选择一个知识点";
-            halign: start;
-            xalign: 0;
-
-            styles [
-              "heading"
-            ]
-          }
-        }
-
-        Label knowledge_description_label {
-          name: "knowledge_description_label";
-          label: "选择右侧知识点后，这里会显示对应的学习目标和实验提示。";
-          halign: start;
-          valign: center;
-          hexpand: true;
-          wrap: true;
-          xalign: 0;
-
-          styles [
-            "dim-label"
-          ]
-        }
+        styles [
+          "knowledge-status-text"
+        ]
       }
     }
   }
