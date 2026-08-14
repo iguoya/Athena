@@ -44,6 +44,7 @@ def main() -> None:
         write(root / "resources" / "window.ui")
         write(root / "resources" / "style.css")
         write(root / "resources" / "article.css")
+        write(root / "resources" / "icons" / "tiger.svg", "<svg/>\n")
         config = {
             "schema": 1,
             "defaults": {
@@ -113,6 +114,8 @@ def main() -> None:
         resource_xml = resource_output.read_text(encoding="utf-8")
         assert "code.ui" in resource_xml
         assert "language/widget/widget.hpp" in resource_xml
+        assert '<file alias="tiger.svg">icons/tiger.svg</file>' in resource_xml
+        assert "/app/icons/icons" not in resource_xml
 
         registry_output = root / "build" / "function_registry.generated.cc"
         run(generator, root, "registry", "--output", str(registry_output))

@@ -27,6 +27,21 @@ TEST(GtkResourceTest, LoadsTheArticleWebViewHost) {
         nullptr);
 }
 
+TEST(GtkResourceTest, LoadsTheWelcomeTigerImage) {
+    const auto builder = Gtk::Builder::create_from_resource(
+        "/app/chapters/welcome.ui");
+    const auto image = builder->get_widget<Gtk::Image>("welcome_icon");
+
+    ASSERT_NE(image, nullptr);
+    EXPECT_TRUE(g_resources_get_info(
+        "/app/icons/tiger.svg",
+        G_RESOURCE_LOOKUP_FLAGS_NONE,
+        nullptr,
+        nullptr,
+        nullptr));
+    EXPECT_TRUE(static_cast<bool>(image->get_paintable()));
+}
+
 } // namespace
 
 int main(int argc, char** argv) {

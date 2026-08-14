@@ -28,7 +28,10 @@ def render_resources(model: dict, root: Path) -> str:
     icons_dir = root / "resources" / "icons"
     if icons_dir.is_dir():
         icon_entries = [
-            f"    <file>{xml_escape(path.relative_to(root / 'resources').as_posix())}</file>"
+            "    <file alias=\"{}\">{}</file>".format(
+                xml_escape(path.relative_to(icons_dir).as_posix()),
+                xml_escape(path.relative_to(root / "resources").as_posix()),
+            )
             for path in sorted(icons_dir.rglob("*"))
             if path.is_file() and not any(part.startswith(".") for part in path.parts)
         ]
