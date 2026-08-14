@@ -29,7 +29,7 @@
 }
 
 .athena-window {
-    font-size: 14pt;
+    font-size: 16pt;
 }
 
 .app-sidebar,
@@ -44,18 +44,18 @@ separator {
 }
 
 /* === Typography === */
-.title-1 { font-size: 28pt; font-weight: 800; color: @athena_body_text; }
-.title-2 { font-size: 22pt; font-weight: 800; color: @athena_body_text; }
-.title-3 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
-.title-4 { font-size: 15pt; font-weight: 700; color: @athena_body_text; }
-.heading { font-size: 13pt; font-weight: 700; }
-.caption { font-size: 11pt; }
+.title-1 { font-size: 32pt; font-weight: 800; color: @athena_body_text; }
+.title-2 { font-size: 26pt; font-weight: 800; color: @athena_body_text; }
+.title-3 { font-size: 22pt; font-weight: 700; color: @athena_body_text; }
+.title-4 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
+.heading { font-size: 17pt; font-weight: 700; }
+.caption { font-size: 14pt; }
 .dim-label { color: @athena_muted; opacity: 1; }
 
 /* === Buttons: Bootstrap-like hierarchy === */
 button {
-    min-height: 34px;
-    padding: 6px 14px;
+    min-height: 42px;
+    padding: 8px 16px;
     border: 1px solid @athena_border_strong;
     border-radius: 6px;
     background-image: none;
@@ -137,15 +137,15 @@ button:disabled {
 }
 
 .btn-sm {
-    min-height: 30px;
-    padding: 4px 10px;
-    font-size: 10pt;
+    min-height: 38px;
+    padding: 6px 12px;
+    font-size: 14pt;
 }
 
 .btn-lg {
-    min-height: 44px;
-    padding: 10px 22px;
-    font-size: 12pt;
+    min-height: 52px;
+    padding: 12px 24px;
+    font-size: 18pt;
 }
 
 .pill,
@@ -165,6 +165,8 @@ button.nav-button {
     background-color: transparent;
     box-shadow: none;
     color: @athena_muted;
+    font-size: 17pt;
+    font-weight: 700;
 }
 
 button.nav-button:hover {
@@ -183,6 +185,8 @@ button.chapter-tab {
     background-color: transparent;
     box-shadow: none;
     color: @athena_muted;
+    font-size: 15pt;
+    font-weight: 600;
 }
 
 button.chapter-tab:hover {
@@ -200,7 +204,7 @@ button.chapter-tab:checked {
 
 /* === Cards and framed content === */
 .panel-title {
-    font-size: 14pt;
+    font-size: 18pt;
     font-weight: 700;
     color: @athena_body_text;
 }
@@ -273,6 +277,7 @@ textview.code-view,
 textview.code-view > text {
     background-color: @athena_surface;
     color: @athena_body_text;
+    font-size: 16pt;
 }
 
 /* === Bootstrap-like list group for knowledge points === */
@@ -282,7 +287,7 @@ textview.code-view > text {
 
 .topic-row {
     margin: 0;
-    padding: 10px 12px;
+    padding: 14px 16px;
     border-radius: 0;
     background-color: @athena_surface;
     color: @athena_body_text;
@@ -301,14 +306,19 @@ textview.code-view > text {
     color: @athena_primary_text;
 }
 
+.topic-row .dim-label,
+.topic-group .dim-label {
+    font-size: 14pt;
+}
+
 .topic-group {
-    padding: 10px 12px 6px;
+    padding: 14px 16px 10px;
     background-color: @athena_surface_subtle;
     color: @athena_body_text;
 }
 
 .topic-run {
-    min-width: 56px;
+    min-width: 70px;
     border-radius: 6px;
 }
 
@@ -326,7 +336,7 @@ frame.knowledge-status-bar > border {
 
 .knowledge-status-text {
     color: @athena_body_text;
-    font-size: 12pt;
+    font-size: 16pt;
     font-weight: 500;
 }
 
@@ -336,7 +346,7 @@ frame.knowledge-status-bar > border {
     border-radius: 999px;
     background-color: @athena_secondary;
     color: #ffffff;
-    font-size: 9pt;
+    font-size: 14pt;
     font-weight: 700;
 }
 
