@@ -36,14 +36,14 @@ language_inc = include_directories('language')
 # 定义源码根目录，供运行时读取演示类源码（源码框显示）
 add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
 
-# === 从 chapters.json 读取章节定义（JSON 为单一数据源） ===
+# === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
 gen_script = meson.project_source_root() / 'scripts' / 'gen_chapters_xml.py'
-chapters_json = meson.project_source_root() / 'resources' / 'chapters.json'
+athena_json = meson.project_source_root() / 'resources' / 'athena.json'
 gresource_xml = meson.project_source_root() / 'resources' / 'app.gresource.xml'
 
 # 脚本 stdout 格式: "chapter_id|blp_relative_path|ui_filename"
 gen_output = run_command(
-  python, gen_script, chapters_json, meson.project_source_root(), gresource_xml,
+  python, gen_script, athena_json, meson.project_source_root(), gresource_xml,
   check: true
 ).stdout().strip().split('\n')
 

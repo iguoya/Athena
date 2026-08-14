@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-代码生成的目标是把 `resources/chapters.json` 中可机器验证的课程结构转换为：
+代码生成的目标是把 `resources/athena.json` 中可机器验证的课程结构转换为：
 
 - Blueprint/GResource 构建输入。
 - 稳定章节和知识点 ID。
@@ -24,7 +24,7 @@ scripts/gen_chapters_xml.py
 
 它在 Meson 配置阶段：
 
-1. 读取 `resources/chapters.json`。
+1. 读取 `resources/athena.json`。
 2. 根据 `content` 选择默认 Blueprint，并校验自定义 Blueprint。
 3. 校验 `article.document` 并把 Markdown 文档加入资源清单。
 4. 更新 `resources/app.gresource.xml`。
@@ -73,7 +73,7 @@ python3 scripts/generate_chapters.py scaffold --chapter cpp.Reference
 统一入口按以下顺序工作：
 
 ```text
-读取 chapters.json
+读取 athena.json
         |
         v
 JSON Schema 校验
@@ -117,7 +117,7 @@ generated/
 示例文件头：
 
 ```cpp
-// Generated from resources/chapters.json by scripts/generate_chapters.py.
+// Generated from resources/athena.json by scripts/generate_chapters.py.
 // DO NOT EDIT. Modify the JSON configuration or generator instead.
 ```
 
@@ -210,7 +210,7 @@ public:
 namespace athena::cpp {
 
 void Reference::reference_basics(std::ostream& output) const {
-    // TODO: Implement the lesson described in chapters.json.
+    // TODO: Implement the lesson described in athena.json.
 }
 
 } // namespace athena::cpp
@@ -243,7 +243,7 @@ void Reference::reference_basics(std::ostream& output) const {
 
 - Meson 构建时可以自动生成完全由生成器所有的注册表和 ID 文件。
 - 人工实现骨架只能通过显式 `scaffold` 命令创建，不能作为普通构建副作用。
-- 构建必须依赖 `chapters.json`、schema、模板和生成器脚本。
+- 构建必须依赖 `athena.json`、schema、模板和生成器脚本。
 - 生成输出优先位于 Meson 构建目录，避免污染源码树；需要提交并由 CI 检查的生成文件除外。
 
 概念示例：
@@ -251,7 +251,7 @@ void Reference::reference_basics(std::ostream& output) const {
 ```meson
 chapter_codegen = custom_target(
   'chapter-codegen',
-  input: chapters_json,
+  input: athena_json,
   output: [
     'chapter_ids.generated.hpp',
     'demo_registry.generated.cpp',
@@ -285,7 +285,7 @@ chapter_codegen = custom_target(
 完整生成器实现后，CI 至少检查：
 
 ```sh
-python3 -m json.tool resources/chapters.json >/dev/null
+python3 -m json.tool resources/athena.json >/dev/null
 python3 scripts/generate_chapters.py check
 meson setup builddir
 meson compile -C builddir

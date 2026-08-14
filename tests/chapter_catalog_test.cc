@@ -52,7 +52,7 @@ string minimal_catalog(
 
 TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
     const auto catalog = ChapterCatalog::from_json(
-        read_project_file("resources/chapters.json"));
+        read_project_file("resources/athena.json"));
 
     EXPECT_EQ(catalog.categories().size(), 3);
     EXPECT_EQ(catalog.chapter_count(), 61);

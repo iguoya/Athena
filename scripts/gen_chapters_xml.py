@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""从 chapters.json 读取章节定义，生成 gresource.xml。
+"""从 athena.json 读取章节定义，生成 gresource.xml。
 
 stdout: 每行 "chapter_id|blp_relative_path|ui_filename" 供 meson 解析。
-不再扫描文件系统——所有元数据以 chapters.json 为单一来源。
+不再扫描文件系统——所有元数据以 athena.json 为单一来源。
 """
 import json
 import os
@@ -25,7 +25,7 @@ def validate_project_path(path, label):
 def main():
     if len(sys.argv) < 4:
         print(
-            "Usage: gen_chapters_xml.py <chapters.json> <project_root> <output_xml>",
+            "Usage: gen_chapters_xml.py <athena.json> <project_root> <output_xml>",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -54,7 +54,7 @@ def main():
         }
         categories = config["categories"]
     except (KeyError, TypeError, AttributeError):
-        print("Error: invalid chapters.json root structure", file=sys.stderr)
+        print("Error: invalid athena.json root structure", file=sys.stderr)
         sys.exit(1)
 
     if default_content not in CONTENT_TYPES:
@@ -92,7 +92,7 @@ def main():
                 sys.exit(1)
             chapters.append(chapter)
     if not chapters:
-        print("Warning: no chapters defined in chapters.json", file=sys.stderr)
+        print("Warning: no chapters defined in athena.json", file=sys.stderr)
 
     # 校验 blp 文件存在，并去重（多个章节可能共用同一个 .blp 模板）
     seen_ui = {}       # ui_name -> blp_file（去重 .ui 条目）
@@ -173,7 +173,7 @@ def main():
 {chr(10).join(ui_entries) if ui_entries else '    <!-- 暂无章节 -->'}
   </gresource>
   <gresource prefix="/app/data">
-    <file compressed="true">chapters.json</file>
+    <file compressed="true">athena.json</file>
   </gresource>
   <gresource prefix="/app/icons">
     <file>icons/tiger.svg</file>

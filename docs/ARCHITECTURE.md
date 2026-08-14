@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不再维护 GtkTextView 降级渲染。课程结构由 `resources/chapters.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
+Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不再维护 GtkTextView 降级渲染。项目结构由 `resources/athena.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
 
 项目采用轻量分层和注册表，不以完整 MVC/MVP 为当前目标。核心问题是让课程配置、C++ 演示实现和 GTK 界面之间具有稳定、可校验的连接。
 
@@ -11,7 +11,7 @@ Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Bluepri
 当前数据流如下：
 
 ```text
-resources/chapters.json
+resources/athena.json
         |
         +--> scripts/gen_chapters_xml.py
         |        |
@@ -19,7 +19,7 @@ resources/chapters.json
         |        +--> Meson Blueprint 编译目标
         |        +--> resources/articles/**/*.md 资源
         |
-        +--> GResource: /app/data/chapters.json
+        +--> GResource: /app/data/athena.json
                  |
                  +--> ChapterCatalog（解析、校验和查询）
                           |
@@ -50,7 +50,7 @@ resources/chapters.json
 当前的主要问题：
 
 - `MainWindow` 仍负责较多动态 GTK 控件创建和文章/代码页面协调，后续可继续提取页面装配器，但当前不需要完整 Presenter 层。
-- 当前 `DemoRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `chapters.json` 自动生成。
+- 当前 `DemoRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `athena.json` 自动生成。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 目前只生成 GResource 清单，不生成章节类、成员函数声明或演示注册表。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
@@ -61,7 +61,7 @@ resources/chapters.json
 
 ```text
                        +------------------------+
-                       | resources/chapters.json|
+                       | resources/athena.json  |
                        +-----------+------------+
                                    |
                        +-----------v------------+
@@ -91,7 +91,7 @@ resources/chapters.json
 
 ### 3.1 配置层
 
-`resources/chapters.json` 保存：
+`resources/athena.json` 保存：
 
 - 分类、章节和知识点的稳定 `name`。
 - 数组表达的显示顺序，以及显示标题和描述。

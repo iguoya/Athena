@@ -110,12 +110,12 @@ MainWindow::MainWindow(
 
 void MainWindow::load_chapter_metadata() {
     GBytes* bytes = g_resources_lookup_data(
-        "/app/data/chapters.json",
+        "/app/data/athena.json",
         G_RESOURCE_LOOKUP_FLAGS_NONE,
         nullptr);
 
     if (!bytes) {
-        throw runtime_error("chapters.json not found in GResource");
+        throw runtime_error("athena.json not found in GResource");
     }
 
     gsize size = 0;
@@ -125,7 +125,7 @@ void MainWindow::load_chapter_metadata() {
     g_bytes_unref(bytes);
     m_catalog = ChapterCatalog::from_json(source);
     cout << "Loaded " << m_catalog.categories().size() << " categories and "
-         << m_catalog.chapter_count() << " chapters from chapters.json" << endl;
+         << m_catalog.chapter_count() << " chapters from athena.json" << endl;
 }
 
 void MainWindow::configure_image(

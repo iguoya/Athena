@@ -7,7 +7,7 @@
 开始设计或修改代码前，按任务范围阅读：
 
 - `docs/ARCHITECTURE.md`：系统边界、依赖方向和目标架构。
-- `docs/CHAPTER_SCHEMA.md`：`resources/chapters.json` 的字段、标识符和校验规则。
+- `docs/CHAPTER_SCHEMA.md`：`resources/athena.json` 的字段、标识符和校验规则。
 - `docs/CODE_GENERATION.md`：代码生成流程、文件所有权和 Meson 集成约束。
 
 若实现与文档不一致，先指出差异；修复代码或更新文档时，保持二者同步。
@@ -38,13 +38,13 @@
 
 ## 架构原则
 
-- `resources/chapters.json` 是分类、章节、分组和知识点元数据的唯一数据源。
+- `resources/athena.json` 是项目配置的唯一数据源，当前承载分类、章节、分组和知识点元数据。
 - UI 层只显示章节、收集用户操作并展示执行结果，不维护重复的章节注册信息。
 - JSON 解析、元数据校验、演示函数注册和 GTK 界面协调应保持职责分离。
 - `code` 章节使用 `category.name`、`chapter.name` 和 `subchapter.name` 派生稳定查找键，例如 `cpp.Reference.reference_basics`。
 - 不使用中文标题或数组位置作为程序内部永久标识；数组位置只决定显示顺序。
 - `code` 章节的 `chapter.name` 是 C++ 类名，`subchapter.name` 是成员函数名；两者必须是机器可校验的 ASCII 标识符，禁止从中文标题自动推导。`article` 的 `chapter.name` 只作为稳定页面名。
-- Schema 先于解析器、注册表和生成器定义；不得为了兼容旧代码而扭曲 `chapters.json`。
+- Schema 先于解析器、注册表和生成器定义；不得为了兼容旧代码而扭曲 `athena.json`。
 - 优先采用“数据模型 + 注册表 + 轻量协调层”，只有复杂度确实需要时才进一步引入 MVC/MVP。
 
 ## 代码生成规则
@@ -52,7 +52,7 @@
 - 当前仓库只实现了 Blueprint/GResource 清单生成；完整的 C++ 章节类和注册表生成仍是目标能力。
 - 生成器必须确定性输出：相同输入产生完全相同的文件内容和顺序。
 - 自动生成文件必须带有 `DO NOT EDIT` 提示，并使用 `.generated.hpp` 或 `.generated.cpp` 后缀。
-- 禁止直接修改自动生成文件；应修改 `chapters.json`、生成模板或生成器。
+- 禁止直接修改自动生成文件；应修改 `athena.json`、生成模板或生成器。
 - 生成器可以反复覆盖生成的注册表、ID 常量和声明文件。
 - 生成器不得覆盖已经存在的人工实现文件、教学示例或测试。
 - 首次创建成员函数实现骨架时采用“仅当文件不存在时创建”的策略。
@@ -87,7 +87,7 @@
 1. 阅读相关文档和现有实现。
 2. 明确改动属于配置、生成器、生成代码、人工实现还是 UI。
 3. 先更新 schema/校验，再依赖新增字段。
-4. 修改 `chapters.json` 后运行 JSON 和资源生成检查。
+4. 修改 `athena.json` 后运行 JSON 和资源生成检查。
 5. 构建并测试受影响部分。
 6. 如果行为或架构边界发生变化，同步更新 `docs/`。
 
@@ -104,7 +104,7 @@
 现阶段至少执行：
 
 ```sh
-python3 -m json.tool resources/chapters.json >/dev/null
+python3 -m json.tool resources/athena.json >/dev/null
 meson setup builddir --reconfigure
 meson compile -C builddir
 meson test -C builddir --print-errorlogs
@@ -125,5 +125,5 @@ meson compile -C builddir
 - 检查分类之间是否因相同 `order` 或方法名发生键冲突。
 - 检查生成器是否可能覆盖人工代码。
 - 检查新增元数据是否在 schema、解析器和文档中同步。
-- 检查 UI 是否重复维护 `chapters.json` 已经提供的数据。
+- 检查 UI 是否重复维护 `athena.json` 已经提供的数据。
 - 检查源文件展示是否依赖不可移植的编译期绝对路径。

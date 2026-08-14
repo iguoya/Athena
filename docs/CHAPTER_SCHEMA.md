@@ -1,8 +1,8 @@
-# chapters.json 配置规范
+# athena.json 配置规范
 
 ## 1. 设计目标
 
-`resources/chapters.json` 是 Athena 课程结构的权威来源。Schema 先于解析器、注册表和代码生成器定义；下游代码必须适配本规范，不能用现有实现反向限制配置结构。
+`resources/athena.json` 是 Athena 项目结构的权威来源。Schema 先于解析器、注册表和代码生成器定义；下游代码必须适配本规范，不能用现有实现反向限制配置结构。
 
 配置表达两个章节形态：
 
@@ -388,10 +388,10 @@ GTK 主题图标：
 错误信息应给出结构路径和派生键，例如：
 
 ```text
-chapters.json categories[0].chapters[1].subchapters[2]:
+athena.json categories[0].chapters[1].subchapters[2]:
 duplicate subchapter name 'basic' in 'cpp.Reference'
 ```
 
 ## 14. 文件所有权
 
-本文件只定义课程数据，不根据当前 `mainwindow.cc`、注册表或生成脚本的实现妥协。修改 schema 后，解析器、资源生成、UI 和代码生成应在后续步骤中统一适配。
+本文件只定义项目课程数据，不根据当前 `mainwindow.cc`、注册表或生成脚本的实现妥协。修改 schema 后，解析器、资源生成、UI 和代码生成应在后续步骤中统一适配。

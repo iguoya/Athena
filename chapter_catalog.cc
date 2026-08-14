@@ -40,7 +40,7 @@ void require_unique(set<string>& names, const string& name, const string& scope)
 ChapterCatalog ChapterCatalog::from_json(string_view source) {
     const json config = json::parse(source);
     if (config.value("schema", 0) != 1) {
-        throw runtime_error("Unsupported chapters.json schema");
+        throw runtime_error("Unsupported athena.json schema");
     }
 
     const auto& defaults = config.at("defaults");
