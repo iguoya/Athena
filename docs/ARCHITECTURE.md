@@ -81,11 +81,11 @@ resources/chapters.json
 
 `resources/chapters.json` 保存：
 
-- 分类、章节和知识点的稳定 ID。
-- 显示标题和顺序。
-- Blueprint 资源位置。
-- C++ 类名、命名空间和成员函数名。
-- 教学说明等运行时元数据。
+- 分类、章节和知识点的稳定 `name`。
+- 数组表达的显示顺序，以及显示标题和描述。
+- 通用 Blueprint、特殊界面覆盖和各层图标。
+- 由 `name` 直接表达的命名空间、C++ 类名和成员函数名。
+- 知识点视觉分组等运行时元数据。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
 
@@ -118,12 +118,12 @@ resources/chapters.json
 ```cpp
 namespace athena::cpp {
 
-class ReferencesChapter final {
+class Reference final {
 public:
     void basic(std::ostream& output) const;
-    void const_reference(std::ostream& output) const;
-    void pass_by_reference(std::ostream& output) const;
-    void return_reference(std::ostream& output) const;
+    void const_(std::ostream& output) const;
+    void pass(std::ostream& output) const;
+    void return_(std::ostream& output) const;
 };
 
 } // namespace athena::cpp
@@ -149,25 +149,25 @@ GTK/Blueprint 层负责：
 
 ## 4. 标识符策略
 
-稳定知识点 ID：
+稳定查找键由配置中的三个 `name` 派生，不在 JSON 中重复保存：
 
 ```text
-<category-id>.<chapter-id>.<method-id>
+<category.name>.<chapter.name>.<subchapter.name>
 ```
 
 示例：
 
 ```text
-cpp.references.basic
-cpp.references.const_reference
+cpp.Reference.basic
+cpp.Reference.const_
 ```
 
 约束：
 
-- 各段使用小写 ASCII `snake_case`。
-- ID 不从显示标题推导。
-- `order` 可以改变，不影响 ID。
-- 注册表、日志、测试和 UI 事件统一使用完整 ID。
+- 分类名和成员函数名使用 ASCII `snake_case`；章节名使用合法 C++ 类型名。
+- 查找键不从显示标题推导。
+- 调整数组顺序不会改变查找键。
+- 注册表、日志、测试和 UI 事件统一使用完整查找键。
 
 ## 5. 依赖方向
 

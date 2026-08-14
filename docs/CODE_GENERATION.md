@@ -54,7 +54,7 @@ python3 scripts/generate_chapters.py generate
 python3 scripts/generate_chapters.py check
 
 # 为新增章节创建不存在的人工实现骨架
-python3 scripts/generate_chapters.py scaffold --chapter cpp.references
+python3 scripts/generate_chapters.py scaffold --chapter cpp.Reference
 ```
 
 如果更喜欢选项式接口，也可以使用 `--check` 和 `--scaffold`，但仓库内必须保持一种稳定形式。
@@ -141,9 +141,9 @@ tests/cpp/references_test.cpp
 
 ```json
 {
-  "id": "basic",
-  "method": "basic",
-  "title": "引用基础"
+  "name": "basic",
+  "title": "引用基础",
+  "description": "理解引用是对象的别名以及引用必须初始化。"
 }
 ```
 
@@ -153,7 +153,7 @@ tests/cpp/references_test.cpp
 namespace athena::chapter_ids {
 
 inline constexpr std::string_view cpp_references_basic =
-    "cpp.references.basic";
+    "cpp.Reference.basic";
 
 } // namespace athena::chapter_ids
 ```
@@ -164,9 +164,9 @@ inline constexpr std::string_view cpp_references_basic =
 
 ```cpp
 registry.add(
-    "cpp.references.basic",
-    bind_demo<athena::cpp::ReferencesChapter>(
-        &athena::cpp::ReferencesChapter::basic));
+    "cpp.Reference.basic",
+    bind_demo<athena::cpp::Reference>(
+        &athena::cpp::Reference::basic));
 ```
 
 函数签名在同一 schema 版本内保持统一。第一阶段建议继续使用：
@@ -177,7 +177,7 @@ void method(std::ostream& output) const;
 
 ### 6.3 章节骨架
 
-`scaffold --chapter cpp.references` 可以首次创建：
+`scaffold --chapter cpp.Reference` 可以首次创建：
 
 ```cpp
 #pragma once
@@ -186,10 +186,10 @@ void method(std::ostream& output) const;
 
 namespace athena::cpp {
 
-class ReferencesChapter final {
+class Reference final {
 public:
     void basic(std::ostream& output) const;
-    void const_reference(std::ostream& output) const;
+    void const_(std::ostream& output) const;
 };
 
 } // namespace athena::cpp
@@ -202,7 +202,7 @@ public:
 
 namespace athena::cpp {
 
-void ReferencesChapter::basic(std::ostream& output) const {
+void Reference::basic(std::ostream& output) const {
     // TODO: Implement the lesson described in chapters.json.
 }
 
