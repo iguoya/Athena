@@ -1,19 +1,90 @@
 {
   "cpp": [
     { "id": "welcome", "order": 1, "title": "欢迎页面", "ui_resource": "resources/ui/chapters/welcome.blp" },
-    { "id": "pointers", "order": 2, "title": "指针", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "id": "references", "order": 3, "title": "引用", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "id": "raii", "order": 4, "title": "RAII 与资源管理", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["RAII 思想", "智能指针", "移动语义"] },
-    { "id": "classes_objects", "order": 5, "title": "类与对象", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["类与对象", "构造与析构", "拷贝控制", "const 正确性"] },
-    { "id": "inheritance_polymorphism", "order": 6, "title": "继承与多态", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["继承", "多态"] },
-    { "id": "templates", "order": 7, "title": "模板与泛型", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["模板基础", "泛型编程"] },
-    { "id": "stl_containers", "order": 8, "title": "STL 容器", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["顺序容器", "关联容器", "无序容器"] },
-    { "id": "stl_algorithms", "order": 9, "title": "STL 算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["排序", "查找", "变换"] },
-    { "id": "iterator", "order": 10, "title": "迭代器", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
-    { "id": "modern_cpp", "order": 11, "title": "现代 C++ 特性", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["Lambda 表达式", "编译期编程", "类型推导", "C++14/17 特性", "C++20 特性"] },
-    { "id": "file_io", "order": 12, "title": "文件与IO", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["文件读写", "字符串与流"] },
-    { "id": "miscellaneous", "order": 13, "title": "杂项技术", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["运算符重载", "异常处理"] },
-    { "id": "concurrency", "order": 14, "title": "并发编程", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": ["多线程编程", "并发模式"] }
+    { "id": "pointers_references", "order": 2, "title": "指针与引用", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "pointer", "items": [
+        { "id": "pointer_basic", "title": "指针基础" },
+        { "id": "pointer_arithmetic", "title": "指针运算" },
+        { "id": "pointer_array", "title": "指针与数组" },
+        { "id": "pointer_null", "title": "空指针与野指针" },
+        { "id": "pointer_function", "title": "函数指针" }
+      ] },
+      { "name": "reference", "items": [
+        { "id": "reference_basic", "title": "引用基础" },
+        { "id": "reference_const", "title": "const 引用" },
+        { "id": "reference_pass", "title": "值传递 vs 引用传递" },
+        { "id": "reference_return", "title": "引用返回值" }
+      ] }
+    ] },
+    { "id": "raii", "order": 3, "title": "RAII 与资源管理", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "raii_idea", "title": "RAII 思想" },
+        { "id": "smart_ptr", "title": "智能指针" },
+        { "id": "move_semantics", "title": "移动语义" }
+      ] }
+    ] },
+    { "id": "classes_objects", "order": 4, "title": "类与对象", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "class_basic", "title": "类与对象" },
+        { "id": "ctor_dtor", "title": "构造与析构" },
+        { "id": "copy_control", "title": "拷贝控制" },
+        { "id": "const_correctness", "title": "const 正确性" }
+      ] }
+    ] },
+    { "id": "inheritance_polymorphism", "order": 5, "title": "继承与多态", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "inheritance", "title": "继承" },
+        { "id": "polymorphism", "title": "多态" }
+      ] }
+    ] },
+    { "id": "templates", "order": 6, "title": "模板与泛型", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "template_basic", "title": "模板基础" },
+        { "id": "generic_programming", "title": "泛型编程" }
+      ] }
+    ] },
+    { "id": "stl_containers", "order": 7, "title": "STL 容器", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "seq_container", "title": "顺序容器" },
+        { "id": "assoc_container", "title": "关联容器" },
+        { "id": "unordered_container", "title": "无序容器" }
+      ] }
+    ] },
+    { "id": "stl_algorithms", "order": 8, "title": "STL 算法", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "sorting", "title": "排序" },
+        { "id": "finding", "title": "查找" },
+        { "id": "transform", "title": "变换" }
+      ] }
+    ] },
+    { "id": "iterator", "order": 9, "title": "迭代器", "ui_resource": "resources/ui/chapters/empty_chapter.blp" },
+    { "id": "modern_cpp", "order": 10, "title": "现代 C++ 特性", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "lambda", "title": "Lambda 表达式" },
+        { "id": "compile_time", "title": "编译期编程" },
+        { "id": "type_deduction", "title": "类型推导" },
+        { "id": "cpp14_17", "title": "C++14/17 特性" },
+        { "id": "cpp20", "title": "C++20 特性" }
+      ] }
+    ] },
+    { "id": "file_io", "order": 11, "title": "文件与IO", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "file_rw", "title": "文件读写" },
+        { "id": "string_stream", "title": "字符串与流" }
+      ] }
+    ] },
+    { "id": "miscellaneous", "order": 12, "title": "杂项技术", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "operator_overloading", "title": "运算符重载" },
+        { "id": "exception_handling", "title": "异常处理" }
+      ] }
+    ] },
+    { "id": "concurrency", "order": 13, "title": "并发编程", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
+      { "name": "", "items": [
+        { "id": "multithreading", "title": "多线程编程" },
+        { "id": "concurrent_patterns", "title": "并发模式" }
+      ] }
+    ] }
   ],
 
   "da": [

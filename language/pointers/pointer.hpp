@@ -12,7 +12,7 @@ public:
         function_ptr(os);
     }
 
-private:
+public:
     // 指针基础：声明、取地址、解引用
     void basic(std::ostream& os) {
         int value = 42;
@@ -71,7 +71,7 @@ public:
         function_ptr(os);
     }
 
-private:
+public:
     // 指针基础：声明、取地址、解引用
     void basic(std::ostream& os) { ... }
 

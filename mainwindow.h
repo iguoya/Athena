@@ -8,15 +8,27 @@
 using std::string;
 using std::vector;
 
+// 子章节：对应一个知识点，可独立运行
+struct SubChapter {
+    string id;      // 唯一标识，如 "pointer_basic"
+    string title;   // 显示标题，如 "指针基础"
+};
+
+// 子分组：若干子章节的集合
+struct SubGroup {
+    string name;                 // 分组名，如 "pointer"/"reference"，空表示无分组标题
+    vector<SubChapter> items;    // 该分组下的子章节
+};
+
 // 章节元数据，运行时从 chapters.json 加载
 struct ChapterMeta {
     string id;              // 唯一标识，如 "pointers_references"
     int order;              // 界面排序序号
     string title;           // "指针与引用"
-    string category;        // "cpp" | "ds_algo" | "design_patterns"
+    string category;        // "cpp" | "da" | "dp"
     string resource_path;   // GResource 路径，如 "/app/chapters/welcome.ui"
     string widget_name;     // 定制布局根控件名，如 "welcome_page"（从 blp 文件名派生）
-    vector<string> subchapters;  // 子章节标题列表（合并章节的内容）
+    vector<SubGroup> subchapters;  // 子分组列表
 };
 
 // 分类信息

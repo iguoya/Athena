@@ -11,7 +11,7 @@ public:
         return_ref(os);
     }
 
-private:
+public:
     // 引用基础：别名、必须初始化、不能重新绑定
     void basic(std::ostream& os) {
         int x = 10;
@@ -78,7 +78,7 @@ public:
         return_ref(os);
     }
 
-private:
+public:
     // 引用基础：别名、必须初始化、不能重新绑定
     void basic(std::ostream& os) { ... }
 

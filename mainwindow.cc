@@ -11,29 +11,38 @@
 using namespace std;
 
 // ============================================================
-// 章节演示注册表
-// 加一个演示：在 language/ 写类 + 这里加一行
+// 子章节演示注册表
+// 加一个演示：在 language/ 写类 + 这里加一行（子章节 id -> 运行函数）
 // ============================================================
 
-template<typename Demo>
-string run_demo() {
-    Demo demo;
-    ostringstream oss;
-    demo.run(oss);
-    return oss.str();
+template<typename T>
+function<string()> demo(void (T::*method)(ostream&)) {
+    return [method]() {
+        T obj;
+        ostringstream oss;
+        (obj.*method)(oss);
+        return oss.str();
+    };
 }
 
-struct ChapterDemo {
-    const char* source;          // 源码文本（源码框显示）
-    function<string()> run;      // 运行函数
+map<string, function<string()>> subchapter_demos = {
+    {"pointer_basic",      demo<Pointer>(&Pointer::basic)},
+    {"pointer_arithmetic", demo<Pointer>(&Pointer::arithmetic)},
+    {"pointer_array",      demo<Pointer>(&Pointer::array)},
+    {"pointer_null",       demo<Pointer>(&Pointer::null_ptr)},
+    {"pointer_function",   demo<Pointer>(&Pointer::function_ptr)},
+    {"reference_basic",    demo<Reference>(&Reference::basic)},
+    {"reference_const",    demo<Reference>(&Reference::const_ref)},
+    {"reference_pass",     demo<Reference>(&Reference::pass_by)},
+    {"reference_return",   demo<Reference>(&Reference::return_ref)},
 };
 
-map<string, map<string, ChapterDemo>> chapter_demos = {
-    {"cpp", {
-        {"pointers",   {POINTER_SOURCE,   []() { return run_demo<Pointer>(); }}},
-        {"references", {REFERENCE_SOURCE, []() { return run_demo<Reference>(); }}},
-    }},
-};
+// 子分组标题映射（pointer/reference -> 指针/引用）
+string group_title(const string& group) {
+    if (group == "pointer") return "指针";
+    if (group == "reference") return "引用";
+    return group;
+}
 
 // ===================================================================
 //  构造 & 初始化
@@ -100,10 +109,18 @@ void MainWindow::load_chapter_metadata() {
             meta.resource_path = "/app/chapters/" + stem + ".ui"; // "/app/chapters/welcome.ui"
             meta.widget_name   = stem + "_page";                  // "welcome_page"
 
-            // 子章节标题列表
+            // 子分组列表
             if (ch.contains("subchapters")) {
-                for (const auto& sub : ch["subchapters"]) {
-                    meta.subchapters.push_back(sub.get<string>());
+                for (const auto& g : ch["subchapters"]) {
+                    SubGroup group;
+                    group.name = g.value("name", "");
+                    for (const auto& item : g["items"]) {
+                        SubChapter sc;
+                        sc.id    = item["id"];
+                        sc.title = item["title"];
+                        group.items.push_back(sc);
+                    }
+                    meta.subchapters.push_back(group);
                 }
             }
 
@@ -275,53 +292,64 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                     topics_label->set_visible(false);
                     topics_list->set_visible(false);
                 } else {
-                    for (const auto& title : meta->subchapters) {
-                        auto row = Gtk::make_managed<Gtk::ListBoxRow>();
-                        row->add_css_class("topic-row");
+                    for (const auto& group : meta->subchapters) {
+                        // 分组标题
+                        if (!group.name.empty()) {
+                            auto header = Gtk::make_managed<Gtk::ListBoxRow>();
+                            header->set_selectable(false);
+                            header->set_activatable(false);
+                            auto header_label = Gtk::make_managed<Gtk::Label>(group_title(group.name));
+                            header_label->set_halign(Gtk::Align::START);
+                            header_label->add_css_class("heading");
+                            header_label->set_margin_top(10);
+                            header_label->set_margin_bottom(2);
+                            header->set_child(*header_label);
+                            topics_list->append(*header);
+                        }
 
-                        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
+                        // 分组下的子章节
+                        for (const auto& sub : group.items) {
+                            auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+                            row->add_css_class("topic-row");
 
-                        auto label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-                        label_box->set_hexpand(true);
-                        auto title_label = Gtk::make_managed<Gtk::Label>(title);
-                        title_label->set_halign(Gtk::Align::START);
-                        title_label->add_css_class("heading");
-                        label_box->append(*title_label);
-                        box->append(*label_box);
+                            auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
 
-                        auto run_btn = Gtk::make_managed<Gtk::Button>("运行");
-                        run_btn->add_css_class("suggested-action");
-                        run_btn->signal_clicked().connect([result_view, title]() {
-                            result_view->get_buffer()->set_text("【" + title + "】暂无运行示例");
-                        });
-                        box->append(*run_btn);
+                            auto label_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+                            label_box->set_hexpand(true);
+                            auto title_label = Gtk::make_managed<Gtk::Label>(sub.title);
+                            title_label->set_halign(Gtk::Align::START);
+                            title_label->add_css_class("heading");
+                            label_box->append(*title_label);
+                            box->append(*label_box);
 
-                        row->set_child(*box);
-                        topics_list->append(*row);
+                            auto run_btn = Gtk::make_managed<Gtk::Button>("运行");
+                            run_btn->add_css_class("suggested-action");
+
+                            // 查子章节演示，有则绑定，无则禁用
+                            auto demo_it = subchapter_demos.find(sub.id);
+                            if (demo_it != subchapter_demos.end()) {
+                                auto run_fn = demo_it->second;
+                                run_btn->signal_clicked().connect([result_view, run_fn]() {
+                                    result_view->get_buffer()->set_text(run_fn());
+                                });
+                            } else {
+                                run_btn->set_sensitive(false);
+                            }
+
+                            box->append(*run_btn);
+                            row->set_child(*box);
+                            topics_list->append(*row);
+                        }
                     }
                 }
             }
 
-            // 源码显示 + 运行按钮（查演示注册表，按 category 命名空间）
-            auto it = chapter_demos[meta->category].find(meta->id);
-            if (it != chapter_demos[meta->category].end()) {
-                if (source_view) {
-                    source_view->get_buffer()->set_text(it->second.source);
-                }
-                if (run_button && result_view) {
-                    auto run_fn = it->second.run;
-                    run_button->signal_clicked().connect([result_view, run_fn]() {
-                        result_view->get_buffer()->set_text(run_fn());
-                    });
-                }
-            } else {
-                // 暂无演示：源码框空，运行按钮禁用
-                if (source_view) {
-                    source_view->get_buffer()->set_text("");
-                }
-                if (run_button) {
-                    run_button->set_sensitive(false);
-                }
+            // 章节级"运行"按钮：子章节才是运行单元，禁用之；源码框暂空
+            if (run_button) {
+                run_button->set_visible(false);
+            }
+            if (source_view) {
+                source_view->get_buffer()->set_text("");
             }
 
             m_loaded_chapters.insert(meta->id);
