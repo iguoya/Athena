@@ -23,4 +23,5 @@ vector<MarkdownHeading> render_markdown(
 // 标题会获得与 MarkdownHeading::anchor 一致的稳定页内锚点。
 string render_markdown_html(
     const string& markdown,
-    const string& stylesheet);
+    const string& stylesheet,
+    const vector<MarkdownHeading>& headings);

@@ -19,6 +19,17 @@ using athena::ArticleView;
     decidePolicyForNavigationAction:(WKNavigationAction*)navigationAction
                     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSURL* url = navigationAction.request.URL;
+    NSString* fragment = url.fragment;
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated &&
+        [fragment hasPrefix:@"athena-heading-"]) {
+        NSString* script = [NSString stringWithFormat:
+            @"document.getElementById('%@')?.scrollIntoView({behavior:'smooth',block:'start'});",
+            fragment];
+        [webView evaluateJavaScript:script completionHandler:nil];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+
     if (navigationAction.navigationType == WKNavigationTypeLinkActivated &&
         ([url.scheme isEqualToString:@"http"] ||
          [url.scheme isEqualToString:@"https"])) {
@@ -71,18 +82,6 @@ public:
         if (ensure_web_view()) {
             load_pending_document();
         }
-    }
-
-    void scroll_to_anchor(const string& anchor) override {
-        if (!ensure_web_view() || anchor.empty()) {
-            return;
-        }
-
-        NSString* value = [NSString stringWithUTF8String:anchor.c_str()];
-        NSString* script = [NSString stringWithFormat:
-            @"document.getElementById('%@')?.scrollIntoView({behavior:'smooth',block:'start'});",
-            value];
-        [m_web_view evaluateJavaScript:script completionHandler:nil];
     }
 
 private:

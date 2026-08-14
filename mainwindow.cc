@@ -418,12 +418,13 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                 builder->get_widget<Gtk::Stack>("article_renderer_stack");
             auto article_web_host =
                 builder->get_widget<Gtk::DrawingArea>("article_web_host");
+            auto toc_panel = builder->get_widget<Gtk::Box>("article_toc_panel");
             auto toc_box = builder->get_widget<Gtk::Box>("article_toc_box");
             auto toc_scroll =
                 builder->get_widget<Gtk::ScrolledWindow>("article_toc_scroll");
 
             if (!article_view || !article_scroll || !article_renderer_stack ||
-                !article_web_host || !toc_box) {
+                !article_web_host || !toc_panel || !toc_box) {
                 cerr << "Article page is missing required widgets for "
                      << page_key << endl;
                 continue;
@@ -440,22 +441,22 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
             } else {
                 try {
                     const auto headings = render_markdown(*article_view, markdown);
-                    athena::ArticleView* platform_view = nullptr;
                     const string stylesheet = read_resource_file("/app/article.css");
                     if (!stylesheet.empty()) {
                         auto view = athena::create_platform_article_view(
                             *article_web_host,
                             *this,
-                            [article_renderer_stack, article_scroll]() {
+                            [article_renderer_stack, article_scroll, toc_panel]() {
+                                toc_panel->set_visible(true);
                                 article_renderer_stack->set_visible_child(
                                     *article_scroll);
                             });
                         if (view) {
                             view->load_html(
-                                render_markdown_html(markdown, stylesheet),
+                                render_markdown_html(markdown, stylesheet, headings),
                                 project_document_directory(chapter.document));
-                            platform_view = view.get();
                             m_article_views[page_key] = std::move(view);
+                            toc_panel->set_visible(false);
                             article_renderer_stack->set_visible_child(
                                 *article_web_host);
                         }
@@ -478,24 +479,17 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                         label->set_wrap(true);
                         button->set_child(*label);
 
-                        if (platform_view) {
-                            button->signal_clicked().connect(
-                                [platform_view, anchor = heading.anchor]() {
-                                    platform_view->scroll_to_anchor(anchor);
-                                });
-                        } else {
-                            button->signal_clicked().connect(
-                                [article_view, offset = heading.text_offset]() {
-                                    auto buffer = article_view->get_buffer();
-                                    auto position = buffer->get_iter_at_offset(offset);
-                                    buffer->place_cursor(position);
-                                    article_view->scroll_to(
-                                        position,
-                                        0.08,
-                                        0.0,
-                                        0.0);
-                                });
-                        }
+                        button->signal_clicked().connect(
+                            [article_view, offset = heading.text_offset]() {
+                                auto buffer = article_view->get_buffer();
+                                auto position = buffer->get_iter_at_offset(offset);
+                                buffer->place_cursor(position);
+                                article_view->scroll_to(
+                                    position,
+                                    0.08,
+                                    0.0,
+                                    0.0);
+                            });
                         toc_box->append(*button);
                     }
 

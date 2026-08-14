@@ -17,7 +17,6 @@ public:
     virtual ~ArticleView() = default;
 
     virtual void load_html(const string& html, const string& base_path) = 0;
-    virtual void scroll_to_anchor(const string& anchor) = 0;
 };
 
 // 当前在 macOS 上返回 WKWebView 后端；没有可用原生后端时返回空指针，

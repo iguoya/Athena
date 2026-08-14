@@ -39,7 +39,7 @@ resources/chapters.json
 - 多个章节可以共享 `empty_chapter.blp`。
 - `code` 与 `article` 章节由同一份 JSON 选择不同默认页面。
 - 文章作为 GResource 随应用打包，并可在开发期从源码树回退读取。
-- 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端和 TextView 降级后端共享相同 Markdown 数据源与目录模型。
+- 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录和正文，页内链接直接完成标题跳转。TextView 降级后端共享相同 Markdown 数据源，并使用 GTK 目录导航。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 
@@ -148,14 +148,14 @@ void method(std::ostream& output) const;
 
 当演示需要输入、结构化错误或状态时，再统一迁移为 `DemoContext` 和 `DemoResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
-`article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML 并注入标题锚点，同时保留 GtkTextBuffer 渲染用于降级显示和目录模型。平台 ArticleView 后端只负责加载 HTML、跳转锚点以及管理原生控件生命周期。
+`article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML，注入标题锚点，并生成同页的文章目录。HTML 原生页内链接负责目录跳转，同时保留 GtkTextBuffer 渲染和 GTK 目录用于降级显示。平台 ArticleView 后端只负责加载 HTML 以及管理原生控件生命周期。
 
 ### 3.5 表示层
 
 GTK/Blueprint 层负责：
 
 - 为 `code` 显示分类、章节、说明、源码和执行结果。
-- 为 `article` 显示 Markdown 正文和可跳转目录；macOS 使用 WKWebView，其他平台当前使用 GtkTextView 降级显示。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为 `article` 显示 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录与正文，其他平台当前使用 GtkTextView 和 GTK 目录降级显示。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 把用户操作转换为稳定 `DemoId`。
 - 调用 `DemoRegistry`，但不感知具体章节类。
 

@@ -249,6 +249,52 @@ void append_html(const MD_CHAR* text, MD_SIZE size, void* userdata) noexcept {
     }
 }
 
+string escape_html(const string& text) {
+    string escaped;
+    escaped.reserve(text.size());
+    for (const char character : text) {
+        switch (character) {
+        case '&':
+            escaped += "&amp;";
+            break;
+        case '<':
+            escaped += "&lt;";
+            break;
+        case '>':
+            escaped += "&gt;";
+            break;
+        case '"':
+            escaped += "&quot;";
+            break;
+        default:
+            escaped += character;
+            break;
+        }
+    }
+    return escaped;
+}
+
+string render_html_toc(const vector<MarkdownHeading>& headings) {
+    string toc;
+    for (const auto& heading : headings) {
+        if (heading.level > 3) {
+            continue;
+        }
+        toc +=
+            "<a class=\"toc-level-" + to_string(heading.level) +
+            "\" href=\"#" + heading.anchor + "\">" +
+            escape_html(heading.title) + "</a>\n";
+    }
+    if (toc.empty()) {
+        return {};
+    }
+    return
+        "<aside class=\"article-toc\">\n"
+        "<div class=\"article-toc-title\">本文目录</div>\n"
+        "<nav>\n" + toc + "</nav>\n"
+        "</aside>\n";
+}
+
 int enter_block_impl(MD_BLOCKTYPE type, void* detail, RenderState& state) {
     switch (type) {
     case MD_BLOCK_QUOTE:
@@ -523,7 +569,8 @@ vector<MarkdownHeading> render_markdown(
 
 string render_markdown_html(
     const string& markdown,
-    const string& stylesheet) {
+    const string& stylesheet,
+    const vector<MarkdownHeading>& headings) {
     if (markdown.size() > UINT_MAX) {
         throw runtime_error("Markdown document is too large");
     }
@@ -541,6 +588,10 @@ string render_markdown_html(
     }
 
     const string body = add_heading_anchors(std::move(state.body));
+    const string toc = render_html_toc(headings);
+    const string layout_class = toc.empty()
+        ? "article-layout article-layout-without-toc"
+        : "article-layout";
     return
         "<!doctype html>\n"
         "<html lang=\"zh-CN\">\n"
@@ -552,7 +603,8 @@ string render_markdown_html(
         "style-src 'unsafe-inline'; font-src file: data:;\">\n"
         "<style>\n" + stylesheet + "\n</style>\n"
         "</head>\n"
-        "<body><main class=\"athena-article\">\n" + body +
-        "\n</main></body>\n"
+        "<body><div class=\"" + layout_class + "\">\n" + toc +
+        "<main class=\"athena-article\">\n" + body +
+        "\n</main></div></body>\n"
         "</html>\n";
 }
