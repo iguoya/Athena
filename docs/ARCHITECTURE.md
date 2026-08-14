@@ -45,11 +45,12 @@ resources/athena.json
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
+- `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 
 当前的主要问题：
 
-- `MainWindow` 仍负责较多动态 GTK 控件创建和文章/代码页面协调，后续可继续提取页面装配器，但当前不需要完整 Presenter 层。
+- `MainWindow` 仍负责动态 GTK 控件创建和页面协调；各页面职责已经拆分为独立方法，只有继续显著增长时才需要提取页面装配类。
 - 注册表已经由 `athena.json` 生成；章节类声明和首次实现骨架仍未自动生成。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 目前生成 GResource 清单和函数注册表，不生成章节类或成员函数实现骨架。

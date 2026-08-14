@@ -6,6 +6,7 @@
 #include "content/content_loader.h"
 
 #include <gtkmm.h>
+#include <gtksourceview/gtksource.h>
 
 #include <set>
 
@@ -21,6 +22,21 @@ private:
     void setup_category_sidebar();
     void on_category_selected(const string& category_name);
     void build_chapter_tabs(const string& category_name);
+    bool initialize_article_page(
+        const string& page_key,
+        const ChapterMeta& chapter,
+        const Glib::RefPtr<Gtk::Builder>& builder);
+    void initialize_code_page(
+        const string& category_name,
+        const ChapterMeta& chapter,
+        const Glib::RefPtr<Gtk::Builder>& builder);
+    void populate_topic_list(
+        const string& category_name,
+        const ChapterMeta& chapter,
+        GtkSourceView* source_view,
+        Gtk::TextView* result_view,
+        Gtk::ListBox& topics_list,
+        Gtk::Label* knowledge_description_label);
 
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(
         const string& category_name,
