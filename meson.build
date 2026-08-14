@@ -77,6 +77,8 @@ src_files = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
+  'chapter_catalog.cc',
+  'demo_registry.cc',
   'markdown_renderer.cc',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',

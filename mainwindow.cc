@@ -3,8 +3,6 @@
 
 #include <gio/gio.h>
 #include <gtksourceview/gtksource.h>
-#include <nlohmann/json.hpp>
-
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -16,8 +14,6 @@
 using namespace std;
 
 namespace {
-
-using json = nlohmann::json;
 
 string read_file(const string& path) {
     ifstream file(path);
@@ -69,25 +65,6 @@ string project_document_directory(const string& path) {
     return string(ATHENA_SOURCE_ROOT) + "/" + directory;
 }
 
-IconSpec parse_icon(const json& value, const IconSpec& fallback = {}) {
-    if (!value.is_object()) {
-        return fallback;
-    }
-
-    IconSpec icon;
-    icon.type = value.value("type", "");
-    icon.name = value.value("name", "");
-    icon.path = value.value("path", "");
-    return icon;
-}
-
-string file_stem(const string& path) {
-    auto slash = path.find_last_of('/');
-    auto filename = slash == string::npos ? path : path.substr(slash + 1);
-    auto dot = filename.find_last_of('.');
-    return dot == string::npos ? filename : filename.substr(0, dot);
-}
-
 string chapter_key(const string& category_name, const string& chapter_name) {
     return category_name + "." + chapter_name;
 }
@@ -106,7 +83,8 @@ MainWindow::MainWindow(
     BaseObjectType* cobject,
     const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject),
-      m_main_builder(builder) {
+      m_main_builder(builder),
+      m_demo_registry(create_default_demo_registry()) {
     maximize();
 
     auto css = Gtk::CssProvider::create();
@@ -143,123 +121,11 @@ void MainWindow::load_chapter_metadata() {
     gsize size = 0;
     const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
 
-    json config;
-    try {
-        config = json::parse(string_view(data, size));
-    } catch (...) {
-        g_bytes_unref(bytes);
-        throw;
-    }
+    const string source(data, size);
     g_bytes_unref(bytes);
-
-    if (config.value("schema", 0) != 1) {
-        throw runtime_error("Unsupported chapters.json schema");
-    }
-
-    const auto& defaults = config.at("defaults");
-    m_default_chapter_content = defaults.value("content", "code");
-    const auto& chapter_ui = defaults.at("chapter_ui");
-    m_default_code_chapter_blueprint =
-        chapter_ui.at("code").at("blueprint").get<string>();
-    m_default_article_chapter_blueprint =
-        chapter_ui.at("article").at("blueprint").get<string>();
-    m_default_chapter_icon = parse_icon(defaults.value("chapter_icon", json::object()));
-    m_default_subchapter_icon =
-        parse_icon(defaults.value("subchapter_icon", json::object()));
-
-    for (const auto& category_value : config.at("categories")) {
-        CategoryInfo category;
-        category.name = category_value.at("name").get<string>();
-        category.title = category_value.at("title").get<string>();
-        category.description = category_value.at("description").get<string>();
-        category.icon = parse_icon(
-            category_value.value("icon", json::object()),
-            m_default_chapter_icon);
-        m_categories.push_back(category);
-
-        auto& chapters = m_chapters[category.name];
-        for (const auto& chapter_value : category_value.at("chapters")) {
-            ChapterMeta chapter;
-            chapter.name = chapter_value.at("name").get<string>();
-            chapter.title = chapter_value.at("title").get<string>();
-            chapter.description = chapter_value.at("description").get<string>();
-            chapter.category = category.name;
-            chapter.content = chapter_value.value(
-                "content",
-                m_default_chapter_content);
-            if (chapter.content != "code" && chapter.content != "article") {
-                throw runtime_error(
-                    "Unsupported chapter content type for " + category.name + "." +
-                    chapter.name + ": " + chapter.content);
-            }
-            chapter.document = chapter_value.value("document", "");
-            chapter.source = chapter_value.value("source", "");
-            chapter.icon = parse_icon(
-                chapter_value.value("icon", json::object()),
-                m_default_chapter_icon);
-
-            chapter.blueprint = chapter.content == "article"
-                ? m_default_article_chapter_blueprint
-                : m_default_code_chapter_blueprint;
-            if (chapter_value.contains("ui")) {
-                chapter.blueprint = chapter_value.at("ui").value(
-                    "blueprint",
-                    chapter.blueprint);
-            } else if (chapter.content == "article" && chapter.document.empty()) {
-                throw runtime_error(
-                    "Article chapter requires document: " + category.name + "." +
-                    chapter.name);
-            }
-
-            const string stem = file_stem(chapter.blueprint);
-            chapter.resource_path = "/app/chapters/" + stem + ".ui";
-            if (chapter.blueprint == m_default_code_chapter_blueprint) {
-                chapter.widget_name = "chapter_page";
-            } else if (chapter.blueprint == m_default_article_chapter_blueprint) {
-                chapter.widget_name = "article_page";
-            } else {
-                chapter.widget_name = stem + "_page";
-            }
-
-            for (const auto& group_value :
-                 chapter_value.value("groups", json::array())) {
-                ChapterGroup group;
-                group.name = group_value.at("name").get<string>();
-                group.title = group_value.at("title").get<string>();
-                group.description = group_value.at("description").get<string>();
-                group.source = group_value.value("source", "");
-                group.icon = parse_icon(
-                    group_value.value("icon", json::object()),
-                    chapter.icon);
-                chapter.groups.push_back(group);
-            }
-
-            for (const auto& subchapter_value : chapter_value.at("subchapters")) {
-                SubChapter subchapter;
-                subchapter.name = subchapter_value.at("name").get<string>();
-                subchapter.title = subchapter_value.at("title").get<string>();
-                subchapter.description =
-                    subchapter_value.at("description").get<string>();
-                subchapter.group = subchapter_value.value("group", "");
-                subchapter.source = subchapter_value.value("source", "");
-                subchapter.icon = parse_icon(
-                    subchapter_value.value("icon", json::object()),
-                    m_default_subchapter_icon);
-                chapter.subchapters.push_back(subchapter);
-            }
-
-            cout << "Chapter loaded: " << category.name << "::" << chapter.name
-                 << " -> \"" << chapter.title << "\"" << endl;
-            chapters.push_back(chapter);
-        }
-    }
-
-    size_t chapter_count = 0;
-    for (const auto& [category_name, chapters] : m_chapters) {
-        chapter_count += chapters.size();
-    }
-    cout << "Loaded " << m_categories.size() << " categories and "
-         << chapter_count << " chapters from chapters.json" << endl;
+    m_catalog = ChapterCatalog::from_json(source);
+    cout << "Loaded " << m_catalog.categories().size() << " categories and "
+         << m_catalog.chapter_count() << " chapters from chapters.json" << endl;
 }
 
 void MainWindow::configure_image(
@@ -290,7 +156,7 @@ Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const 
 }
 
 void MainWindow::setup_category_sidebar() {
-    for (const auto& category : m_categories) {
+    for (const auto& category : m_catalog.categories()) {
         auto button = Gtk::make_managed<Gtk::ToggleButton>();
         button->add_css_class("nav-button");
         button->set_tooltip_text(category.description);
@@ -351,8 +217,9 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
     }
     m_tab_buttons.clear();
 
-    auto category = m_chapters.find(category_name);
-    if (category == m_chapters.end() || category->second.empty()) {
+    const auto& all_chapters = m_catalog.chapters();
+    auto category = all_chapters.find(category_name);
+    if (category == all_chapters.end() || category->second.empty()) {
         auto placeholder = Gtk::make_managed<Gtk::Label>("该分类暂无章节");
         placeholder->set_halign(Gtk::Align::CENTER);
         placeholder->set_valign(Gtk::Align::CENTER);
@@ -524,9 +391,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
         if (result_view) {
             auto result_buffer = result_view->get_buffer();
-            result_buffer->set_text(
-                "章节类与运行按钮的映射尚未接入。\n"
-                "当前阶段只验证课程结构与界面展示。");
+            result_buffer->set_text("请选择知识点并点击“运行”查看实验结果。");
             auto result_begin = result_buffer->begin();
             result_buffer->place_cursor(result_begin);
         }
@@ -635,8 +500,28 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     run->add_css_class("btn-primary");
                     run->add_css_class("btn-sm");
                     run->add_css_class("topic-run");
-                    run->set_sensitive(false);
-                    run->set_tooltip_text("章节类映射将在后续阶段接入");
+                    const string demo_id = make_demo_id(
+                        category_name,
+                        chapter.name,
+                        subchapter.name);
+                    const bool can_run = m_demo_registry.contains(demo_id);
+                    run->set_sensitive(can_run);
+                    run->set_tooltip_text(can_run
+                        ? "运行该知识点的实验代码"
+                        : "该知识点尚未实现可运行实验");
+                    if (can_run && result_view) {
+                        run->signal_clicked().connect(
+                            [this, demo_id, result_view]() {
+                                ostringstream output;
+                                try {
+                                    m_demo_registry.run(demo_id, output);
+                                    result_view->get_buffer()->set_text(output.str());
+                                } catch (const exception& error) {
+                                    result_view->get_buffer()->set_text(
+                                        "运行失败：" + string(error.what()));
+                                }
+                            });
+                    }
                     row_box->append(*run);
 
                     row->set_child(*row_box);
@@ -670,23 +555,6 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
     }
 }
 
-const ChapterMeta* MainWindow::find_chapter(
-    const string& category_name,
-    const string& chapter_name) const {
-    auto category = m_chapters.find(category_name);
-    if (category == m_chapters.end()) {
-        return nullptr;
-    }
-
-    auto chapter = find_if(
-        category->second.begin(),
-        category->second.end(),
-        [&chapter_name](const ChapterMeta& value) {
-            return value.name == chapter_name;
-        });
-    return chapter == category->second.end() ? nullptr : &*chapter;
-}
-
 Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(
     const string& category_name,
     const string& chapter_name) {
@@ -696,7 +564,7 @@ Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(
         return cached->second;
     }
 
-    const auto* chapter = find_chapter(category_name, chapter_name);
+    const auto* chapter = m_catalog.find_chapter(category_name, chapter_name);
     if (!chapter) {
         cerr << "Chapter not found: " << key << endl;
         return {};
