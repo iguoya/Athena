@@ -15,6 +15,10 @@ Athena-0.1.0-macos-arm64.dmg
 
 ## 本机构建
 
+除项目构建依赖外，打包还要求 Homebrew 安装 `librsvg`、
+`adwaita-icon-theme` 和 `hicolor-icon-theme`，用于生成应用图标并收集 GTK
+运行时主题资源。
+
 先构建经过优化和剥离符号的发行版：
 
 ```sh
