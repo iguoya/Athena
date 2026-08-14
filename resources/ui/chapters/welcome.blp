@@ -73,7 +73,202 @@ ScrolledWindow welcome_page {
       }
     }
 
-    // 学习概览与特色横向排列，避免打断品牌主视觉。
+    // 学习路线在宽屏下横向展开，减少页面纵向堆叠。
+    Box roadmap_preview {
+      orientation: vertical;
+      spacing: 16;
+      width-request: 1244;
+
+      styles [
+        "section-card"
+      ]
+
+      Label {
+        label: "学习路线预览";
+
+        styles [
+          "title-3"
+        ]
+      }
+
+      Box roadmap_stages {
+        orientation: horizontal;
+        spacing: 14;
+        homogeneous: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
+          Image {
+            icon-name: "media-playback-start-symbolic";
+            pixel-size: 28;
+          }
+
+          Label {
+            label: "基础入门";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "环境搭建、基础语法、流程控制、数组字符串";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
+          Image {
+            icon-name: "applications-development-symbolic";
+            pixel-size: 28;
+          }
+
+          Label {
+            label: "面向对象";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "类对象、构造析构、继承与多态";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
+          Image {
+            icon-name: "folder-music-symbolic";
+            pixel-size: 28;
+          }
+
+          Label {
+            label: "STL 标准库";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "容器、算法与迭代器使用";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
+          Image {
+            icon-name: "system-run-symbolic";
+            pixel-size: 28;
+          }
+
+          Label {
+            label: "现代 C++";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "RAII、智能指针、并发与新标准特性";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          hexpand: true;
+
+          styles [
+            "roadmap-stage"
+          ]
+
+          Image {
+            icon-name: "folder-documents-symbolic";
+            pixel-size: 28;
+          }
+
+          Label {
+            label: "项目实战";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "工程组织、构建测试与完整项目实践";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
+        }
+      }
+    }
+
+    // 概览与特色作为两个独立分组放在页面最下方。
     Box overview_row {
       orientation: horizontal;
       spacing: 24;
@@ -82,7 +277,7 @@ ScrolledWindow welcome_page {
       Box stats_section {
         orientation: vertical;
         spacing: 16;
-        width-request: 260;
+        width-request: 500;
 
         styles [
           "section-card"
@@ -97,13 +292,15 @@ ScrolledWindow welcome_page {
         }
 
         Box stats_container {
-          orientation: vertical;
-          spacing: 12;
+          orientation: horizontal;
+          spacing: 14;
           homogeneous: true;
 
           Box chapters_stat {
-            orientation: horizontal;
-            spacing: 16;
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
 
             styles [
               "stat-card"
@@ -128,15 +325,17 @@ ScrolledWindow welcome_page {
           }
 
           Box stages_stat {
-            orientation: horizontal;
-            spacing: 16;
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
 
             styles [
               "stat-card"
             ]
 
             Label {
-              label: "4";
+              label: "5";
 
               styles [
                 "title-2"
@@ -154,8 +353,10 @@ ScrolledWindow welcome_page {
           }
 
           Box progress_stat {
-            orientation: horizontal;
-            spacing: 16;
+            orientation: vertical;
+            spacing: 8;
+            halign: center;
+            hexpand: true;
 
             styles [
               "stat-card"
@@ -306,167 +507,6 @@ ScrolledWindow welcome_page {
                 "dim-label"
               ]
             }
-          }
-        }
-      }
-    }
-
-    // 学习路线在宽屏下横向展开，减少页面纵向堆叠。
-    Box roadmap_preview {
-      orientation: vertical;
-      spacing: 16;
-      width-request: 1004;
-
-      styles [
-        "section-card"
-      ]
-
-      Label {
-        label: "学习路线预览";
-
-        styles [
-          "title-3"
-        ]
-      }
-
-      Box roadmap_stages {
-        orientation: horizontal;
-        spacing: 14;
-        homogeneous: true;
-
-        Box {
-          orientation: vertical;
-          spacing: 8;
-          hexpand: true;
-
-          styles [
-            "roadmap-stage"
-          ]
-
-          Image {
-            icon-name: "media-playback-start-symbolic";
-            pixel-size: 28;
-          }
-
-          Label {
-            label: "基础入门";
-
-            styles [
-              "heading"
-            ]
-          }
-
-          Label {
-            label: "环境搭建、基础语法、流程控制、数组字符串";
-            wrap: true;
-            justify: center;
-
-            styles [
-              "caption",
-              "dim-label"
-            ]
-          }
-        }
-
-        Box {
-          orientation: vertical;
-          spacing: 8;
-          hexpand: true;
-
-          styles [
-            "roadmap-stage"
-          ]
-
-          Image {
-            icon-name: "system-run-symbolic";
-            pixel-size: 28;
-          }
-
-          Label {
-            label: "函数与指针";
-
-            styles [
-              "heading"
-            ]
-          }
-
-          Label {
-            label: "函数基础、指针引用、动态内存管理";
-            wrap: true;
-            justify: center;
-
-            styles [
-              "caption",
-              "dim-label"
-            ]
-          }
-        }
-
-        Box {
-          orientation: vertical;
-          spacing: 8;
-          hexpand: true;
-
-          styles [
-            "roadmap-stage"
-          ]
-
-          Image {
-            icon-name: "applications-development-symbolic";
-            pixel-size: 28;
-          }
-
-          Label {
-            label: "面向对象";
-
-            styles [
-              "heading"
-            ]
-          }
-
-          Label {
-            label: "类对象、构造析构、继承与多态";
-            wrap: true;
-            justify: center;
-
-            styles [
-              "caption",
-              "dim-label"
-            ]
-          }
-        }
-
-        Box {
-          orientation: vertical;
-          spacing: 8;
-          hexpand: true;
-
-          styles [
-            "roadmap-stage"
-          ]
-
-          Image {
-            icon-name: "folder-music-symbolic";
-            pixel-size: 28;
-          }
-
-          Label {
-            label: "STL 标准库";
-
-            styles [
-              "heading"
-            ]
-          }
-
-          Label {
-            label: "容器、算法与迭代器使用";
-            wrap: true;
-            justify: center;
-
-            styles [
-              "caption",
-              "dim-label"
-            ]
           }
         }
       }
