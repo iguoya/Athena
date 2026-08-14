@@ -149,7 +149,7 @@ void method(std::ostream& output) const;
 GTK/Blueprint 层负责：
 
 - 为 `code` 显示分类、章节、说明、源码和执行结果。
-- 为 `article` 显示文章标题、概要、正文和可跳转目录，不显示运行按钮与结果区。
+- 为 `article` 显示 Markdown 正文和可跳转目录；标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 把用户操作转换为稳定 `DemoId`。
 - 调用 `DemoRegistry`，但不感知具体章节类。
 

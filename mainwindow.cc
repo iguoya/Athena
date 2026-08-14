@@ -405,26 +405,16 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
         const bool uses_article_page = chapter.widget_name == "article_page";
         if (uses_article_page) {
-            auto title_label =
-                builder->get_widget<Gtk::Label>("article_title_label");
-            auto description_label =
-                builder->get_widget<Gtk::Label>("article_description_label");
-            auto article_icon = builder->get_widget<Gtk::Image>("article_icon");
             auto article_view = builder->get_widget<Gtk::TextView>("article_view");
             auto toc_box = builder->get_widget<Gtk::Box>("article_toc_box");
             auto toc_scroll =
                 builder->get_widget<Gtk::ScrolledWindow>("article_toc_scroll");
 
-            if (!title_label || !description_label || !article_icon ||
-                !article_view || !toc_box) {
+            if (!article_view || !toc_box) {
                 cerr << "Article page is missing required widgets for "
                      << page_key << endl;
                 continue;
             }
-
-            title_label->set_text(chapter.title);
-            description_label->set_text(chapter.description);
-            configure_image(*article_icon, chapter.icon, 36);
 
             const string markdown = read_project_document(chapter.document);
             if (markdown.empty()) {

@@ -2,7 +2,7 @@ using Gtk 4.0;
 
 Box article_page {
   orientation: vertical;
-  spacing: 14;
+  spacing: 0;
   hexpand: true;
   vexpand: true;
   margin-top: 16;
@@ -11,49 +11,6 @@ Box article_page {
   styles [
     "article-page"
   ]
-
-  Box article_header {
-    orientation: horizontal;
-    spacing: 14;
-    margin-start: 24;
-    margin-end: 24;
-
-    Image article_icon {
-      name: "article_icon";
-      pixel-size: 34;
-      valign: center;
-    }
-
-    Box {
-      orientation: vertical;
-      spacing: 3;
-      hexpand: true;
-
-      Label article_title_label {
-        name: "article_title_label";
-        halign: start;
-
-        styles [
-          "title-2"
-        ]
-      }
-
-      Label article_description_label {
-        name: "article_description_label";
-        halign: start;
-        wrap: true;
-        xalign: 0;
-
-        styles [
-          "dim-label"
-        ]
-      }
-    }
-  }
-
-  Separator {
-    orientation: horizontal;
-  }
 
   Paned article_body {
     orientation: horizontal;
