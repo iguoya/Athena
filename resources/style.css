@@ -354,3 +354,42 @@ frame.knowledge-status-bar > border {
 .text-success { color: @athena_success; }
 .text-warning { color: #997404; }
 .text-danger { color: @athena_danger; }
+
+/* === Markdown article reader === */
+.article-page {
+    background-color: @athena_surface_subtle;
+}
+
+frame.article-toc-frame > border,
+frame.article-surface > border {
+    border: 1px solid @athena_border;
+    border-radius: 8px;
+    background-color: @athena_surface;
+    box-shadow: 0 2px 6px alpha(#000000, 0.08);
+}
+
+textview.article-view,
+textview.article-view > text {
+    background-color: @athena_surface;
+    color: @athena_body_text;
+    font-size: 16pt;
+}
+
+button.article-toc-button {
+    min-height: 38px;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: none;
+    color: @athena_body_text;
+    font-size: 14pt;
+    font-weight: 500;
+}
+
+button.article-toc-button:hover,
+button.article-toc-button:focus {
+    background-color: @athena_primary_soft;
+    color: @athena_primary_text;
+    box-shadow: none;
+}

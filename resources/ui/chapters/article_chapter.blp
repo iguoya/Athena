@@ -1,0 +1,157 @@
+using Gtk 4.0;
+
+Box article_page {
+  orientation: vertical;
+  spacing: 14;
+  hexpand: true;
+  vexpand: true;
+  margin-top: 16;
+  margin-bottom: 18;
+
+  styles [
+    "article-page"
+  ]
+
+  Box article_header {
+    orientation: horizontal;
+    spacing: 14;
+    margin-start: 24;
+    margin-end: 24;
+
+    Image article_icon {
+      name: "article_icon";
+      pixel-size: 34;
+      valign: center;
+    }
+
+    Box {
+      orientation: vertical;
+      spacing: 3;
+      hexpand: true;
+
+      Label article_title_label {
+        name: "article_title_label";
+        halign: start;
+
+        styles [
+          "title-2"
+        ]
+      }
+
+      Label article_description_label {
+        name: "article_description_label";
+        halign: start;
+        wrap: true;
+        xalign: 0;
+
+        styles [
+          "dim-label"
+        ]
+      }
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  Paned article_body {
+    orientation: horizontal;
+    position: 360;
+    wide-handle: true;
+    resize-start-child: false;
+    resize-end-child: true;
+    shrink-start-child: false;
+    shrink-end-child: false;
+    hexpand: true;
+    vexpand: true;
+
+    Box article_toc_panel {
+      orientation: vertical;
+      spacing: 12;
+      width-request: 330;
+      margin-start: 20;
+      margin-end: 12;
+      vexpand: true;
+
+      Label {
+        label: "本文目录";
+        halign: start;
+
+        styles [
+          "panel-title"
+        ]
+      }
+
+      Frame {
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame",
+          "article-toc-frame"
+        ]
+
+        ScrolledWindow article_toc_scroll {
+          name: "article_toc_scroll";
+          hscrollbar-policy: never;
+          hexpand: true;
+          vexpand: true;
+
+          Box article_toc_box {
+            name: "article_toc_box";
+            orientation: vertical;
+            spacing: 2;
+            margin-top: 8;
+            margin-start: 8;
+            margin-end: 8;
+            margin-bottom: 8;
+          }
+        }
+      }
+    }
+
+    ScrolledWindow article_scroll {
+      name: "article_scroll";
+      hscrollbar-policy: never;
+      hexpand: true;
+      vexpand: true;
+      margin-start: 12;
+      margin-end: 20;
+
+      Box {
+        orientation: vertical;
+        halign: center;
+        width-request: 1080;
+        hexpand: false;
+        margin-top: 4;
+        margin-bottom: 20;
+
+        Frame {
+          hexpand: true;
+
+          styles [
+            "article-surface"
+          ]
+
+          TextView article_view {
+            name: "article_view";
+            editable: false;
+            cursor-visible: false;
+            wrap-mode: word_char;
+            left-margin: 54;
+            right-margin: 54;
+            top-margin: 42;
+            bottom-margin: 48;
+            pixels-below-lines: 8;
+            pixels-inside-wrap: 5;
+
+            styles [
+              "article-view"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -15,24 +15,24 @@ Athena 是一个 **C++ 学习桌面应用**，本质是"草稿纸验算"工具�
 
 ## 技术栈
 
-- C++20、GTK4 / gtkmm4、Meson、Blueprint、nlohmann/json
+- C++20、GTK4 / gtkmm4、GtkSourceView 5、MD4C、Meson、Blueprint、nlohmann/json
 - 跨 Linux / macOS：已移除 libadwaita 依赖，界面用 GTK 内建样式 + 自定义 `style.css`
 
 ## 架构理解
 
 - `resources/chapters.json` 是分类、章节、分组、知识点元数据的**唯一数据源**。
-- 层级：`category → chapter → [可选 group] → subchapter`；`group` 只负责视觉组织，不生成额外代码层级。
-- 子章节 = 一个知识点 = 一个将来可独立运行的成员函数。
+- 层级：`category → chapter`；`content: code` 继续细分为 `[可选 group] → subchapter`，`group` 只负责视觉组织，不生成额外代码层级。
+- 章节只有 `code` 和 `article` 两种内容类型。`code` 的子章节对应可运行成员函数；`article` 从 `resources/articles/` 载入 Markdown，没有运行和结果概念。
 - UI 只负责显示章节、收集操作、展示结果，不重复维护章节注册信息。
 - 演示源码由运行时读取源文件显示，不在代码中手工复制字符串。
-- 普通章节共享默认 Blueprint 模板并各自创建独立页面实例；只有欢迎页、动画或特殊交互章节才覆盖专用 BLP。
+- `code` 与 `article` 分别共享自己的默认 Blueprint 模板并各自创建独立页面实例；只有欢迎页、动画或特殊交互章节才覆盖专用 BLP。
 - 分类、章节、分组和子章节图标都来自 `chapters.json`，C++ 不按名称手写图标映射。
 
 ## 命名规则（对话中反复确立）
 
 | 字段 | 规则 | 示例 |
 |------|------|------|
-| `chapter.name` | C++ 类名，PascalCase | `Reference`、`SmartPointer` |
+| `chapter.name` | 稳定页面名；在 `code` 中也是 C++ 类名，PascalCase | `Reference`、`ProgramOrganization` |
 | `subchapter.name` | 成员函数名，snake_case | `reference_basics`、`const_reference`、`move_semantics` |
 | `title` / `description` | 中文描述 | `引用基础` |
 

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "markdown_renderer.h"
 
 #include <gio/gio.h>
 #include <gtksourceview/gtksource.h>
@@ -27,6 +28,39 @@ string read_file(const string& path) {
     ostringstream content;
     content << file.rdbuf();
     return content.str();
+}
+
+string read_resource_file(const string& resource_path) {
+    GError* error = nullptr;
+    GBytes* bytes = g_resources_lookup_data(
+        resource_path.c_str(),
+        G_RESOURCE_LOOKUP_FLAGS_NONE,
+        &error);
+    if (!bytes) {
+        if (error) {
+            g_error_free(error);
+        }
+        return {};
+    }
+
+    gsize size = 0;
+    const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
+    string content(data, size);
+    g_bytes_unref(bytes);
+    return content;
+}
+
+string read_project_document(const string& path) {
+    constexpr string_view resources_prefix = "resources/";
+    if (path.rfind(resources_prefix, 0) == 0) {
+        const string resource_path =
+            "/app/" + path.substr(resources_prefix.size());
+        if (string content = read_resource_file(resource_path); !content.empty()) {
+            return content;
+        }
+    }
+
+    return read_file(string(ATHENA_SOURCE_ROOT) + "/" + path);
 }
 
 IconSpec parse_icon(const json& value, const IconSpec& fallback = {}) {
@@ -117,8 +151,12 @@ void MainWindow::load_chapter_metadata() {
     }
 
     const auto& defaults = config.at("defaults");
-    m_default_chapter_blueprint =
-        defaults.at("chapter_ui").at("blueprint").get<string>();
+    m_default_chapter_content = defaults.value("content", "code");
+    const auto& chapter_ui = defaults.at("chapter_ui");
+    m_default_code_chapter_blueprint =
+        chapter_ui.at("code").at("blueprint").get<string>();
+    m_default_article_chapter_blueprint =
+        chapter_ui.at("article").at("blueprint").get<string>();
     m_default_chapter_icon = parse_icon(defaults.value("chapter_icon", json::object()));
     m_default_subchapter_icon =
         parse_icon(defaults.value("subchapter_icon", json::object()));
@@ -140,24 +178,42 @@ void MainWindow::load_chapter_metadata() {
             chapter.title = chapter_value.at("title").get<string>();
             chapter.description = chapter_value.at("description").get<string>();
             chapter.category = category.name;
+            chapter.content = chapter_value.value(
+                "content",
+                m_default_chapter_content);
+            if (chapter.content != "code" && chapter.content != "article") {
+                throw runtime_error(
+                    "Unsupported chapter content type for " + category.name + "." +
+                    chapter.name + ": " + chapter.content);
+            }
+            chapter.document = chapter_value.value("document", "");
             chapter.source = chapter_value.value("source", "");
             chapter.icon = parse_icon(
                 chapter_value.value("icon", json::object()),
                 m_default_chapter_icon);
 
-            chapter.blueprint = m_default_chapter_blueprint;
+            chapter.blueprint = chapter.content == "article"
+                ? m_default_article_chapter_blueprint
+                : m_default_code_chapter_blueprint;
             if (chapter_value.contains("ui")) {
                 chapter.blueprint = chapter_value.at("ui").value(
                     "blueprint",
-                    m_default_chapter_blueprint);
+                    chapter.blueprint);
+            } else if (chapter.content == "article" && chapter.document.empty()) {
+                throw runtime_error(
+                    "Article chapter requires document: " + category.name + "." +
+                    chapter.name);
             }
 
             const string stem = file_stem(chapter.blueprint);
             chapter.resource_path = "/app/chapters/" + stem + ".ui";
-            chapter.widget_name =
-                chapter.blueprint == m_default_chapter_blueprint
-                    ? "chapter_page"
-                    : stem + "_page";
+            if (chapter.blueprint == m_default_code_chapter_blueprint) {
+                chapter.widget_name = "chapter_page";
+            } else if (chapter.blueprint == m_default_article_chapter_blueprint) {
+                chapter.widget_name = "article_page";
+            } else {
+                chapter.widget_name = stem + "_page";
+            }
 
             for (const auto& group_value :
                  chapter_value.value("groups", json::array())) {
@@ -343,9 +399,87 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         m_chapter_tab_box->append(*tab_button);
         m_tab_buttons.push_back(tab_button);
 
-        const bool uses_default_page = chapter.widget_name == "chapter_page";
-        if (!uses_default_page ||
-            m_loaded_chapters.find(page_key) != m_loaded_chapters.end()) {
+        if (m_loaded_chapters.find(page_key) != m_loaded_chapters.end()) {
+            continue;
+        }
+
+        const bool uses_article_page = chapter.widget_name == "article_page";
+        if (uses_article_page) {
+            auto title_label =
+                builder->get_widget<Gtk::Label>("article_title_label");
+            auto description_label =
+                builder->get_widget<Gtk::Label>("article_description_label");
+            auto article_icon = builder->get_widget<Gtk::Image>("article_icon");
+            auto article_view = builder->get_widget<Gtk::TextView>("article_view");
+            auto toc_box = builder->get_widget<Gtk::Box>("article_toc_box");
+            auto toc_scroll =
+                builder->get_widget<Gtk::ScrolledWindow>("article_toc_scroll");
+
+            if (!title_label || !description_label || !article_icon ||
+                !article_view || !toc_box) {
+                cerr << "Article page is missing required widgets for "
+                     << page_key << endl;
+                continue;
+            }
+
+            title_label->set_text(chapter.title);
+            description_label->set_text(chapter.description);
+            configure_image(*article_icon, chapter.icon, 36);
+
+            const string markdown = read_project_document(chapter.document);
+            if (markdown.empty()) {
+                article_view->get_buffer()->set_text(
+                    "无法载入文章：" + chapter.document);
+                cerr << "Failed to load article document for " << page_key
+                     << ": " << chapter.document << endl;
+            } else {
+                try {
+                    const auto headings = render_markdown(*article_view, markdown);
+                    for (const auto& heading : headings) {
+                        if (heading.level > 3) {
+                            continue;
+                        }
+
+                        auto button = Gtk::make_managed<Gtk::Button>();
+                        button->add_css_class("article-toc-button");
+                        button->set_focusable(false);
+                        button->set_margin_start(
+                            static_cast<int>((heading.level - 1) * 16));
+
+                        auto label = Gtk::make_managed<Gtk::Label>(heading.title);
+                        label->set_halign(Gtk::Align::START);
+                        label->set_xalign(0);
+                        label->set_wrap(true);
+                        button->set_child(*label);
+
+                        button->signal_clicked().connect(
+                            [article_view, offset = heading.text_offset]() {
+                                auto buffer = article_view->get_buffer();
+                                auto position = buffer->get_iter_at_offset(offset);
+                                buffer->place_cursor(position);
+                                article_view->scroll_to(position, 0.08, 0.0, 0.0);
+                            });
+                        toc_box->append(*button);
+                    }
+
+                    if (toc_scroll) {
+                        auto adjustment = toc_scroll->get_vadjustment();
+                        adjustment->set_value(adjustment->get_lower());
+                    }
+                } catch (const exception& error) {
+                    article_view->get_buffer()->set_text(
+                        string("Markdown 解析失败：") + error.what());
+                    cerr << "Failed to render article for " << page_key
+                         << ": " << error.what() << endl;
+                }
+            }
+
+            m_loaded_chapters.insert(page_key);
+            continue;
+        }
+
+        const bool uses_code_page = chapter.widget_name == "chapter_page";
+        if (!uses_code_page) {
             continue;
         }
 

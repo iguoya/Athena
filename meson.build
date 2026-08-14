@@ -8,6 +8,7 @@ gnome = import('gnome')
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
 sourceview_dep = dependency('gtksourceview-5')
+md4c_dep = dependency('md4c')
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
@@ -62,6 +63,7 @@ src_files = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
+  'markdown_renderer.cc',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
@@ -81,6 +83,7 @@ executable('Athena', src_files,
   dependencies: [
     gtkmm_dep,
     glib_dep,
-    sourceview_dep
+    sourceview_dep,
+    md4c_dep
   ],
   install: true)

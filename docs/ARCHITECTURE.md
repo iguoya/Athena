@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；课程结构由 `resources/chapters.json` 驱动，用户可以浏览分类和章节，并运行单个知识点对应的 C++ 演示。
+Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C 把文章章节的 Markdown 转换为原生 GTK 富文本。课程结构由 `resources/chapters.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
 
 项目采用轻量分层和注册表，不以完整 MVC/MVP 为当前目标。核心问题是让课程配置、C++ 演示实现和 GTK 界面之间具有稳定、可校验的连接。
 
@@ -17,20 +17,24 @@ resources/chapters.json
         |        |
         |        +--> resources/app.gresource.xml
         |        +--> Meson Blueprint 编译目标
+        |        +--> resources/articles/**/*.md 资源
         |
         +--> GResource: /app/data/chapters.json
                  |
                  +--> MainWindow::load_chapter_metadata()
                           |
                           +--> 分类侧栏和章节标签
-                          +--> 知识点列表
-                          +--> 手写 subchapter_demos 注册表
+                          +--> code: 源码、知识点列表和运行结果
+                          |          +--> 手写 subchapter_demos 注册表
+                          +--> article: Markdown 阅读页和标题目录
 ```
 
 已有的优点：
 
 - 章节菜单和 Blueprint 资源主要由 JSON 驱动。
 - 多个章节可以共享 `empty_chapter.blp`。
+- `code` 与 `article` 章节由同一份 JSON 选择不同默认页面。
+- 文章作为 GResource 随应用打包，并可在开发期从源码树回退读取。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 
@@ -86,6 +90,7 @@ resources/chapters.json
 - 通用 Blueprint、特殊界面覆盖和各层图标。
 - 由 `name` 直接表达的命名空间、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
+- 章节内容类型 `code` / `article`；文章章节同时保存 Markdown 文档路径。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
 
@@ -113,7 +118,7 @@ resources/chapters.json
 
 ### 3.4 演示实现层
 
-每个章节类负责一个主题，成员函数负责一个可运行知识点。例如：
+每个 `code` 章节类负责一个主题，成员函数负责一个可运行知识点。例如：
 
 ```cpp
 namespace athena::cpp {
@@ -137,11 +142,14 @@ void method(std::ostream& output) const;
 
 当演示需要输入、结构化错误或状态时，再统一迁移为 `DemoContext` 和 `DemoResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
+`article` 章节不生成章节类和演示注册项。它的正文属于文档资源，由 Markdown 渲染器转换为 `Gtk::TextBuffer` 的文本和样式标签。
+
 ### 3.5 表示层
 
 GTK/Blueprint 层负责：
 
-- 显示分类、章节、说明、源码和执行结果。
+- 为 `code` 显示分类、章节、说明、源码和执行结果。
+- 为 `article` 显示文章标题、概要、正文和可跳转目录，不显示运行按钮与结果区。
 - 把用户操作转换为稳定 `DemoId`。
 - 调用 `DemoRegistry`，但不感知具体章节类。
 
@@ -149,7 +157,7 @@ GTK/Blueprint 层负责：
 
 ## 4. 标识符策略
 
-稳定查找键由配置中的三个 `name` 派生，不在 JSON 中重复保存：
+可运行知识点的稳定查找键由 `code` 配置中的三个 `name` 派生，不在 JSON 中重复保存：
 
 ```text
 <category.name>.<chapter.name>.<subchapter.name>

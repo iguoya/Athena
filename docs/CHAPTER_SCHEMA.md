@@ -4,15 +4,16 @@
 
 `resources/chapters.json` 是 Athena 课程结构的权威来源。Schema 先于解析器、注册表和代码生成器定义；下游代码必须适配本规范，不能用现有实现反向限制配置结构。
 
-配置表达三个核心层级：
+配置表达两个章节形态：
 
 ```text
-category                     课程分类、左侧导航、C++ 命名空间
-└── chapter                  一级大章节、标签页、C++ 类
-    └── subchapter           可运行知识点、成员函数
+category                     课程分类、左侧导航
+└── chapter                  一级大章节、标签页
+    ├── content: code        C++ 类、可选 group、可运行 subchapter
+    └── content: article     Markdown 文档、文章目录、无运行结果
 ```
 
-`group` 是章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码时的需求输入。
+`group` 是代码章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码或文章时的需求输入。
 
 ## 2. 完整示例
 
@@ -20,8 +21,14 @@ category                     课程分类、左侧导航、C++ 命名空间
 {
   "schema": 1,
   "defaults": {
+    "content": "code",
     "chapter_ui": {
-      "blueprint": "resources/ui/chapters/empty_chapter.blp"
+      "code": {
+        "blueprint": "resources/ui/chapters/empty_chapter.blp"
+      },
+      "article": {
+        "blueprint": "resources/ui/chapters/article_chapter.blp"
+      }
     },
     "chapter_icon": {
       "type": "theme",
@@ -58,6 +65,14 @@ category                     课程分类、左侧导航、C++ 命名空间
               "description": "理解引用是对象的别名以及引用必须初始化。"
             }
           ]
+        },
+        {
+          "name": "ProgramOrganization",
+          "title": "程序与源码组织",
+          "description": "学习多文件 C++ 工程的组织原则。",
+          "content": "article",
+          "document": "resources/articles/cpp/program_organization.md",
+          "subchapters": []
         }
       ]
     }
@@ -70,21 +85,27 @@ category                     课程分类、左侧导航、C++ 命名空间
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
 | `schema` | integer | 是 | Schema 版本；当前为 `1` |
-| `defaults` | object | 是 | 通用界面和图标默认值 |
+| `defaults` | object | 是 | 默认内容类型、两类通用界面和图标默认值 |
 | `categories` | array | 是 | 有序课程分类列表 |
 
 数组顺序就是界面顺序，不再保存冗余的 `order` 字段。
 
 ## 4. 默认值
 
-### 4.1 `defaults.chapter_ui`
+### 4.1 `defaults.content` 与 `defaults.chapter_ui`
 
-所有普通一级章节共享的 Blueprint 模板：
+`defaults.content` 只能是 `code` 或 `article`，当前使用 `code`，因此已有可实验章节无需重复声明。两类章节分别共享默认 Blueprint：
 
 ```json
 {
+  "content": "code",
   "chapter_ui": {
-    "blueprint": "resources/ui/chapters/empty_chapter.blp"
+    "code": {
+      "blueprint": "resources/ui/chapters/empty_chapter.blp"
+    },
+    "article": {
+      "blueprint": "resources/ui/chapters/article_chapter.blp"
+    }
   }
 }
 ```
@@ -99,7 +120,7 @@ resources/ui/chapters/empty_chapter.blp
     -> /app/chapters/empty_chapter.ui
 ```
 
-章节页面模板的根控件统一使用 `chapter_page`，不在每章重复配置根控件 ID。
+代码页面模板的根控件统一使用 `chapter_page`，文章页面模板统一使用 `article_page`，不在每章重复配置根控件 ID。
 
 ### 4.2 默认图标
 
@@ -144,28 +165,31 @@ category.name = cpp
 
 ## 6. 一级章节 `chapter`
 
-一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类。
+一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”和“程序与源码组织”。每个一级章节对应一个标签页；只有 `code` 章节对应同名 C++ 类。
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
 | `name` | string | 是 | 稳定章节名，也是 C++ 类名 |
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
+| `content` | string | 否 | `code` 或 `article`；缺省时继承 `defaults.content` |
+| `document` | string | 条件 | `article` 默认页必填，指向 `resources/articles/` 下的 Markdown |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
-| `source` | string | 否 | 代码框显示的源码路径 |
-| `groups` | array | 否 | 知识点的视觉分组元数据 |
-| `subchapters` | array | 是 | 有序可运行知识点列表，可以为空 |
+| `source` | string | 否 | `code` 代码框显示的源码路径 |
+| `groups` | array | 否 | `code` 知识点的视觉分组元数据 |
+| `subchapters` | array | 是 | `code` 的有序可运行知识点列表；`article` 使用空数组 |
 
 映射示例：
 
 ```text
+content = code
 chapter.name = Reference
     -> 标签页的稳定名称 Reference
     -> C++ 类 athena::cpp::Reference
 ```
 
-具体课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。
+具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。文章章节的 `name` 只是稳定页面名，例如 `ProgramOrganization`，不会生成同名类。
 
 章节名称必须是合法且非关键字的 C++ 类型标识符：
 
@@ -173,9 +197,29 @@ chapter.name = Reference
 ^[A-Za-z_][A-Za-z0-9_]*$
 ```
 
+### 6.1 `code` 与 `article` 的选择
+
+- 能用短小源码和可观察输出验证的语法、语义或库能力使用 `code`。
+- 理论、原则、设计取舍和跨文件工程思想，如果单次运行结果不足以说明内容，使用 `article`。
+- `article` 可以包含 Markdown 代码块，但页面不提供运行按钮和结果区。
+- Word 文档不属于当前 schema；需要时应通过新的文档转换层引入，而不是让运行时直接依赖办公文档格式。
+
+文章示例：
+
+```json
+{
+  "name": "ProgramOrganization",
+  "title": "程序与源码组织",
+  "description": "学习命名空间、翻译单元、ODR 和 Modules。",
+  "content": "article",
+  "document": "resources/articles/cpp/program_organization.md",
+  "subchapters": []
+}
+```
+
 ## 7. 二级知识点 `subchapter`
 
-二级知识点是最小可运行教学单元，每项对应章节类的一个成员函数和界面中的一个运行入口。
+二级知识点只属于 `code` 章节，是最小可运行教学单元；每项对应章节类的一个成员函数和界面中的一个运行入口。
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
@@ -211,7 +255,7 @@ C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
 
 ## 8. 可选视觉分组 `group`
 
-分组用于在同一标签页内组织知识点。例如 RAII 章节中的 `raii`、`smart_pointer` 和 `move`。分组不会生成额外 C++ 类或成员函数。
+分组用于在同一个 `code` 标签页内组织知识点。例如 RAII 章节中的 `raii`、`smart_pointer` 和 `move`。分组不会生成额外 C++ 类或成员函数。
 
 ```json
 {
@@ -286,13 +330,14 @@ GTK 主题图标：
 
 ## 10. 特殊界面覆盖
 
-普通章节省略 `ui`，使用 `defaults.chapter_ui`。只有欢迎页、动画或需要特殊输入控件的章节才覆盖：
+普通章节省略 `ui`，根据 `content` 使用 `defaults.chapter_ui.code` 或 `defaults.chapter_ui.article`。只有欢迎页、动画或需要特殊输入控件的章节才覆盖：
 
 ```json
 {
   "name": "Welcome",
   "title": "欢迎页面",
   "description": "介绍 Athena 的学习方式。",
+  "content": "article",
   "ui": {
     "blueprint": "resources/ui/chapters/welcome.blp"
   },
@@ -308,6 +353,7 @@ GTK 主题图标：
 - `chapter.description`：标签页顶部的章节概要。
 - `group.description`：视觉分组概要。
 - `subchapter.description`：成员函数实验必须覆盖的教学内容。
+- `article.document`：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
 
 `description` 应描述目标和边界，不包含生成器命令，也不粘贴完整实现代码。
 
@@ -333,7 +379,9 @@ GTK 主题图标：
 - 派生键 `category.chapter.subchapter` 全局唯一。
 - C++ 名称是否合法且不是关键字。
 - `group` 引用是否存在。
-- Blueprint、源码和资源图标路径是否有效。
+- `content` 是否只能是 `code` 或 `article`。
+- 默认文章页是否提供 `document`，并位于 `resources/articles/`。
+- Blueprint、源码、Markdown 和资源图标路径是否有效。
 - 所有章节都有可解析图标：自身图标或默认图标。
 - 所有知识点都有可解析图标：自身图标或默认图标。
 

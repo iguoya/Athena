@@ -37,6 +37,8 @@ struct ChapterMeta {
     string title;
     string description;
     string category;
+    string content;
+    string document;
     string blueprint;
     string resource_path;
     string widget_name;
@@ -89,7 +91,9 @@ private:
     set<string> m_active_page_names;
     set<string> m_loaded_chapters;
 
-    string m_default_chapter_blueprint;
+    string m_default_chapter_content;
+    string m_default_code_chapter_blueprint;
+    string m_default_article_chapter_blueprint;
     IconSpec m_default_chapter_icon;
     IconSpec m_default_subchapter_icon;
 

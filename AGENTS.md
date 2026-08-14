@@ -17,6 +17,7 @@
 - C++20
 - GTK4 / gtkmm 4
 - GtkSourceView 5（源码语法高亮与行号）
+- MD4C（文章章节的 Markdown 解析）
 - Meson
 - Blueprint UI
 - nlohmann/json
@@ -26,8 +27,10 @@
 ## 项目定位与学习内容
 
 - Athena 是供个人学习、练习和验证 C++ 知识点的桌面实验工具，不以制作完整教程产品为目标。
-- 核心使用闭环是“选择知识点 → 查看真实源码 → 运行对应成员函数 → 查看输出结果”。
-- 一个具体课程类对应一个一级主题；一个 public 成员函数对应一个可独立运行的二级知识点。
+- 章节内容分为 `code` 和 `article`：可实验知识点使用代码闭环，理论、原则和工程思想使用 Markdown 阅读页。
+- `code` 章节的核心闭环是“选择知识点 → 查看真实源码 → 运行对应成员函数 → 查看输出结果”。
+- 一个 `code` 课程类对应一个一级主题；一个 public 成员函数对应一个可独立运行的二级知识点。
+- `article` 章节不生成课程类、成员函数、运行按钮或结果区，正文统一放在 `resources/articles/`。
 - 教学实验应短小、聚焦且能直接观察结果；通常以 10–30 行方法体为参考，不为满足行数牺牲完整性和可读性。
 - 内容优先覆盖 C++ 特有能力。与 C 语言高度重叠的基础内容只有在理解 C++ 语义确实需要时才加入。
 - 源码框显示真实源文件内容，不在 UI 或 C++ 中维护另一份教学代码字符串。
@@ -37,9 +40,9 @@
 - `resources/chapters.json` 是分类、章节、分组和知识点元数据的唯一数据源。
 - UI 层只显示章节、收集用户操作并展示执行结果，不维护重复的章节注册信息。
 - JSON 解析、元数据校验、演示函数注册和 GTK 界面协调应保持职责分离。
-- 使用 `category.name`、`chapter.name` 和 `subchapter.name` 派生稳定查找键，例如 `cpp.Reference.reference_basics`。
+- `code` 章节使用 `category.name`、`chapter.name` 和 `subchapter.name` 派生稳定查找键，例如 `cpp.Reference.reference_basics`。
 - 不使用中文标题或数组位置作为程序内部永久标识；数组位置只决定显示顺序。
-- `chapter.name` 是 C++ 类名，`subchapter.name` 是成员函数名；两者必须是机器可校验的 ASCII 标识符，禁止从中文标题自动推导。
+- `code` 章节的 `chapter.name` 是 C++ 类名，`subchapter.name` 是成员函数名；两者必须是机器可校验的 ASCII 标识符，禁止从中文标题自动推导。`article` 的 `chapter.name` 只作为稳定页面名。
 - Schema 先于解析器、注册表和生成器定义；不得为了兼容旧代码而扭曲 `chapters.json`。
 - 优先采用“数据模型 + 注册表 + 轻量协调层”，只有复杂度确实需要时才进一步引入 MVC/MVP。
 

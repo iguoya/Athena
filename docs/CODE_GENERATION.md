@@ -10,6 +10,8 @@
 - 演示函数注册表。
 - 新章节的一次性实现骨架。
 
+只有 `content: "code"` 的章节参与 C++ 类、成员函数、演示 ID 和注册表生成。`article` 章节只参与 Blueprint、Markdown 文档和 GResource 输入生成。
+
 生成器不负责根据自然语言自动产出最终教学代码。`description` 可以作为 Codex 或开发者编写实现时的需求，但生成的实现必须经过构建、测试和人工审查。
 
 ## 2. 当前状态
@@ -23,9 +25,10 @@ scripts/gen_chapters_xml.py
 它在 Meson 配置阶段：
 
 1. 读取 `resources/chapters.json`。
-2. 收集并校验 `ui_resource` 指向的 Blueprint 文件。
-3. 更新 `resources/app.gresource.xml`。
-4. 通过标准输出告诉 Meson需要编译哪些 `.blp` 文件。
+2. 根据 `content` 选择默认 Blueprint，并校验自定义 Blueprint。
+3. 校验 `article.document` 并把 Markdown 文档加入资源清单。
+4. 更新 `resources/app.gresource.xml`。
+5. 通过标准输出告诉 Meson 需要编译哪些 `.blp` 文件。
 
 它目前不会：
 
@@ -81,10 +84,11 @@ JSON Schema 校验
 构建内部规范模型
         |
         +--> GResource/Blueprint 输入
-        +--> chapter_ids.generated.hpp
-        +--> demo_registry.generated.cpp
-        +--> 可选章节声明
-        +--> scaffold：仅创建不存在的人工文件
+        +--> code: chapter_ids.generated.hpp
+        +--> code: demo_registry.generated.cpp
+        +--> code: 可选章节声明
+        +--> code scaffold：仅创建不存在的人工文件
+        +--> article: Markdown/GResource 输入
 ```
 
 所有输出应先在内存或临时目录生成，校验全部成功后再写入目标位置，避免失败时只更新一部分文件。
@@ -262,7 +266,7 @@ chapter_codegen = custom_target(
 
 ## 10. Codex 编写成员函数的流程
 
-当用户要求根据 `description` 实现章节时，Codex 应：
+当用户要求根据 `description` 实现 `code` 章节时，Codex 应：
 
 1. 读取 `AGENTS.md`、本规范和 `CHAPTER_SCHEMA.md`。
 2. 定位完整演示 ID、章节类和方法名。
@@ -272,6 +276,8 @@ chapter_codegen = custom_target(
 6. 添加覆盖主要语义和边界条件的测试。
 7. 运行生成检查、Meson 构建和测试。
 8. 如果 `description` 不足以决定教学行为，先给出合理假设；只有会显著改变课程目标时才请求用户选择。
+
+当用户要求实现 `article` 章节时，应编辑 `document` 指向的人工 Markdown 文件；生成器不得把文章内容转换为 C++ 类或运行入口。
 
 ## 11. CI 检查
 
@@ -289,6 +295,6 @@ meson test -C builddir --print-errorlogs
 
 - schema 和语义校验。
 - 生成文件与当前 JSON 是否一致。
-- 每个可运行知识点是否有注册项。
+- 每个 `code` 可运行知识点是否有注册项。
 - 重复或孤立的完整 ID。
-- 被 JSON 引用的 Blueprint 和源码文件是否存在。
+- 被 JSON 引用的 Blueprint、源码和 Markdown 文档是否存在。
