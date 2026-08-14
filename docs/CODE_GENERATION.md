@@ -141,7 +141,7 @@ tests/cpp/references_test.cpp
 
 ```json
 {
-  "name": "basic",
+  "name": "reference_basics",
   "title": "引用基础",
   "description": "理解引用是对象的别名以及引用必须初始化。"
 }
@@ -152,8 +152,8 @@ tests/cpp/references_test.cpp
 ```cpp
 namespace athena::chapter_ids {
 
-inline constexpr std::string_view cpp_references_basic =
-    "cpp.Reference.basic";
+inline constexpr std::string_view cpp_reference_reference_basics =
+    "cpp.Reference.reference_basics";
 
 } // namespace athena::chapter_ids
 ```
@@ -164,9 +164,9 @@ inline constexpr std::string_view cpp_references_basic =
 
 ```cpp
 registry.add(
-    "cpp.Reference.basic",
+    "cpp.Reference.reference_basics",
     bind_demo<athena::cpp::Reference>(
-        &athena::cpp::Reference::basic));
+        &athena::cpp::Reference::reference_basics));
 ```
 
 函数签名在同一 schema 版本内保持统一。第一阶段建议继续使用：
@@ -188,8 +188,10 @@ namespace athena::cpp {
 
 class Reference final {
 public:
-    void basic(std::ostream& output) const;
-    void const_(std::ostream& output) const;
+    void reference_basics(std::ostream& output) const;
+    void const_reference(std::ostream& output) const;
+    void pass_by_reference(std::ostream& output) const;
+    void return_by_reference(std::ostream& output) const;
 };
 
 } // namespace athena::cpp
@@ -202,7 +204,7 @@ public:
 
 namespace athena::cpp {
 
-void Reference::basic(std::ostream& output) const {
+void Reference::reference_basics(std::ostream& output) const {
     // TODO: Implement the lesson described in chapters.json.
 }
 

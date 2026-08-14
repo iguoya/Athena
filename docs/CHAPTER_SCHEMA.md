@@ -191,13 +191,17 @@ chapter.name = Reference
 ```text
 category.name = cpp
 chapter.name = Reference
-subchapter.name = basic
+subchapter.name = reference_basics
 
-派生查找键：cpp.Reference.basic
-C++ 目标：athena::cpp::Reference::basic(...)
+派生查找键：cpp.Reference.reference_basics
+C++ 目标：athena::cpp::Reference::reference_basics(...)
 ```
 
 不再同时保存 `id` 和 `method`。在当前一对一模型中，`name` 同时承担稳定局部名称和成员函数名，避免重复字段发生不一致。
+
+`name` 应优先使用能直接描述实验行为的完整 `snake_case` 短语，例如
+`const_reference`、`pass_by_reference` 和 `return_by_reference`。不要仅为避开
+C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
 
 知识点名称必须是合法且非关键字的 C++ 函数标识符：
 

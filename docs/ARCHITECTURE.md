@@ -120,10 +120,10 @@ namespace athena::cpp {
 
 class Reference final {
 public:
-    void basic(std::ostream& output) const;
-    void const_(std::ostream& output) const;
-    void pass(std::ostream& output) const;
-    void return_(std::ostream& output) const;
+    void reference_basics(std::ostream& output) const;
+    void const_reference(std::ostream& output) const;
+    void pass_by_reference(std::ostream& output) const;
+    void return_by_reference(std::ostream& output) const;
 };
 
 } // namespace athena::cpp
@@ -158,8 +158,8 @@ GTK/Blueprint 层负责：
 示例：
 
 ```text
-cpp.Reference.basic
-cpp.Reference.const_
+cpp.Reference.reference_basics
+cpp.Reference.const_reference
 ```
 
 约束：

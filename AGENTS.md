@@ -37,7 +37,7 @@
 - `resources/chapters.json` 是分类、章节、分组和知识点元数据的唯一数据源。
 - UI 层只显示章节、收集用户操作并展示执行结果，不维护重复的章节注册信息。
 - JSON 解析、元数据校验、演示函数注册和 GTK 界面协调应保持职责分离。
-- 使用 `category.name`、`chapter.name` 和 `subchapter.name` 派生稳定查找键，例如 `cpp.Reference.basic`。
+- 使用 `category.name`、`chapter.name` 和 `subchapter.name` 派生稳定查找键，例如 `cpp.Reference.reference_basics`。
 - 不使用中文标题或数组位置作为程序内部永久标识；数组位置只决定显示顺序。
 - `chapter.name` 是 C++ 类名，`subchapter.name` 是成员函数名；两者必须是机器可校验的 ASCII 标识符，禁止从中文标题自动推导。
 - Schema 先于解析器、注册表和生成器定义；不得为了兼容旧代码而扭曲 `chapters.json`。

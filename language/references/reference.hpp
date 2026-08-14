@@ -5,15 +5,15 @@
 class Reference {
 public:
     void run(std::ostream& os) {
-        basic(os);
-        const_ref(os);
-        pass_by(os);
-        return_ref(os);
+        reference_basics(os);
+        const_reference(os);
+        pass_by_reference(os);
+        return_by_reference(os);
     }
 
 public:
     // 引用基础：别名、必须初始化、不能重新绑定
-    void basic(std::ostream& os) {
+    void reference_basics(std::ostream& os) {
         int x = 10;
         int& ref = x;          // ref 是 x 的别名
         ref = 20;
@@ -22,7 +22,7 @@ public:
     }
 
     // const 引用：可绑定临时对象、延长生命周期
-    void const_ref(std::ostream& os) {
+    void const_reference(std::ostream& os) {
         const int& r = 42;     // const 引用可绑定右值/临时对象
         os << "const 引用绑定字面量: r = " << r << std::endl;
 
@@ -32,18 +32,18 @@ public:
     }
 
     // 值传递 vs 引用传递
-    void pass_by(std::ostream& os) {
+    void pass_by_reference(std::ostream& os) {
         int x = 5, y = 10;
 
-        swapByValue(x, y);
+        swap_by_value(x, y);
         os << "值传递后:   x=" << x << ", y=" << y << "  (未改变)" << std::endl;
 
-        swapByRef(x, y);
+        swap_by_reference(x, y);
         os << "引用传递后: x=" << x << ", y=" << y << "  (已交换)" << std::endl;
     }
 
     // 引用作为返回值
-    void return_ref(std::ostream& os) {
+    void return_by_reference(std::ostream& os) {
         int arr[] = {100, 200, 300};
 
         int& r = element(arr, 1);   // 返回引用，可直接赋值
@@ -51,13 +51,13 @@ public:
         os << "通过引用返回值修改后 arr[1] = " << arr[1] << std::endl;
     }
 
-    void swapByValue(int a, int b) {
+    void swap_by_value(int a, int b) {
         int temp = a;
         a = b;
         b = temp;
     }
 
-    void swapByRef(int& a, int& b) {
+    void swap_by_reference(int& a, int& b) {
         int temp = a;
         a = b;
         b = temp;
@@ -67,4 +67,3 @@ public:
         return arr[i];
     }
 };
-

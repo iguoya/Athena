@@ -33,11 +33,11 @@ Athena 是一个 **C++ 学习桌面应用**，本质是"草稿纸验算"工具�
 | 字段 | 规则 | 示例 |
 |------|------|------|
 | `chapter.name` | C++ 类名，PascalCase | `Reference`、`SmartPointer` |
-| `subchapter.name` | 成员函数名，snake_case | `basic`、`const_`、`move_` |
+| `subchapter.name` | 成员函数名，snake_case | `reference_basics`、`const_reference`、`move_semantics` |
 | `title` / `description` | 中文描述 | `引用基础` |
 
 - **避免缩写**：`ctor`/`dtor`/`ptr`/`seq`/`assoc`/`rw` 等一律写全（`constructor_destructor`、`sequential_container`）。
-- **关键字与标准库名冲突用尾缀下划线**（不是前缀，前缀下划线是保留标识符）：`const_`、`return_`、`array_`、`function_`、`move_`。
+- **优先用完整语义短语避开关键字或标准库名冲突**：使用 `const_reference`、`return_by_reference`、`move_semantics`，避免只有尾缀下划线的 `const_`、`return_`、`move_`。确实无法自然扩展语义时，才使用尾缀下划线；禁止使用保留的前缀下划线形式。
 - 分组名（`group.name`）承载语义时，子章节名不再重复该语义（如 `smart_pointer` 组下的 `unique`/`shared`/`weak`）。
 
 ## 用户的要求与偏好
