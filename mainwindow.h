@@ -3,6 +3,7 @@
 #include "registry/chapter_catalog.h"
 #include "registry/function_registry.h"
 #include "render/article_view.h"
+#include "content/content_loader.h"
 
 #include <gtkmm.h>
 
@@ -28,6 +29,7 @@ private:
     Gtk::Image* create_icon(const IconSpec& icon, int pixel_size) const;
 
     Glib::RefPtr<Gtk::Builder> m_main_builder;
+    ContentLoader m_content_loader;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
     std::map<string, std::unique_ptr<athena::ArticleView>> m_article_views;
 

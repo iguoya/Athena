@@ -7,6 +7,7 @@ gnome = import('gnome')
 
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
+gio_dep = dependency('gio-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
 md4c_html_dep = dependency('md4c-html')
@@ -93,6 +94,7 @@ src_files = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
+  'content/content_loader.cc',
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
   'render/markdown_renderer.cc',
@@ -127,17 +129,19 @@ core_test_exe = executable(
   'athena-core-tests',
   files(
     'tests/chapter_catalog_test.cc',
+    'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
     'tests/markdown_renderer_test.cc',
     'registry/chapter_catalog.cc',
     'registry/function_registry.cc',
     'render/markdown_renderer.cc',
+    'content/content_loader.cc',
     'language/raii/raii_basic.cpp',
     'language/raii/smart_pointer.cpp',
     'language/raii/move_semantics.cpp'
   ) + [function_registry_generated],
   include_directories: [local_inc, language_inc],
-  dependencies: [gtest_main_dep, md4c_dep, md4c_html_dep]
+  dependencies: [gtest_main_dep, gio_dep, md4c_dep, md4c_html_dep]
 )
 test('athena-core', core_test_exe)
 

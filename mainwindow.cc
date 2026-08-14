@@ -1,10 +1,8 @@
 #include "mainwindow.h"
 #include "render/markdown_renderer.h"
 
-#include <gio/gio.h>
 #include <gtksourceview/gtksource.h>
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -15,26 +13,17 @@ using namespace std;
 
 namespace {
 
-string read_file(const string& path) {
-    ifstream file(path);
-    if (!file) {
-        return {};
-    }
-
-    ostringstream content;
-    content << file.rdbuf();
-    return content.str();
-}
-
-void display_source(GtkSourceView* source_view, const string& relative_path) {
+void display_source(
+    GtkSourceView* source_view,
+    const ContentLoader& content_loader,
+    const string& relative_path) {
     if (!source_view) {
         return;
     }
 
     string source_text;
     if (!relative_path.empty()) {
-        source_text = read_file(
-            string(ATHENA_SOURCE_ROOT) + "/" + relative_path);
+        source_text = content_loader.load_project_file(relative_path);
     }
     if (source_text.empty()) {
         source_text = relative_path.empty()
@@ -72,45 +61,6 @@ void display_source(GtkSourceView* source_view, const string& relative_path) {
     gtk_text_buffer_place_cursor(text_buffer, &source_begin);
 }
 
-string read_resource_file(const string& resource_path) {
-    GError* error = nullptr;
-    GBytes* bytes = g_resources_lookup_data(
-        resource_path.c_str(),
-        G_RESOURCE_LOOKUP_FLAGS_NONE,
-        &error);
-    if (!bytes) {
-        if (error) {
-            g_error_free(error);
-        }
-        return {};
-    }
-
-    gsize size = 0;
-    const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
-    string content(data, size);
-    g_bytes_unref(bytes);
-    return content;
-}
-
-string read_project_document(const string& path) {
-    constexpr string_view resources_prefix = "resources/";
-    if (path.rfind(resources_prefix, 0) == 0) {
-        const string resource_path =
-            "/app/" + path.substr(resources_prefix.size());
-        if (string content = read_resource_file(resource_path); !content.empty()) {
-            return content;
-        }
-    }
-
-    return read_file(string(ATHENA_SOURCE_ROOT) + "/" + path);
-}
-
-string project_document_directory(const string& path) {
-    const size_t slash = path.find_last_of('/');
-    const string directory = slash == string::npos ? "" : path.substr(0, slash);
-    return string(ATHENA_SOURCE_ROOT) + "/" + directory;
-}
-
 string chapter_key(const string& category_name, const string& chapter_name) {
     return category_name + "." + chapter_name;
 }
@@ -135,6 +85,7 @@ MainWindow::MainWindow(
     const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject),
       m_main_builder(builder),
+      m_content_loader(ATHENA_SOURCE_ROOT),
       m_function_registry(create_default_function_registry()) {
     maximize();
 
@@ -160,20 +111,10 @@ MainWindow::MainWindow(
 }
 
 void MainWindow::load_chapter_metadata() {
-    GBytes* bytes = g_resources_lookup_data(
-        "/app/data/athena.json",
-        G_RESOURCE_LOOKUP_FLAGS_NONE,
-        nullptr);
-
-    if (!bytes) {
+    const string source = m_content_loader.load_resource("/app/data/athena.json");
+    if (source.empty()) {
         throw runtime_error("athena.json not found in GResource");
     }
-
-    gsize size = 0;
-    const char* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
-
-    const string source(data, size);
-    g_bytes_unref(bytes);
     m_catalog = ChapterCatalog::from_json(source);
     cout << "Loaded " << m_catalog.categories().size() << " categories and "
          << m_catalog.chapter_count() << " chapters from athena.json" << endl;
@@ -338,14 +279,15 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                 continue;
             }
 
-            const string markdown = read_project_document(chapter.document);
+            const string markdown = m_content_loader.load_document(chapter.document);
             if (markdown.empty()) {
                 cerr << "Failed to load article document for " << page_key
                      << ": " << chapter.document << endl;
             } else {
                 try {
                     const auto headings = parse_markdown_headings(markdown);
-                    const string stylesheet = read_resource_file("/app/article.css");
+                    const string stylesheet =
+                        m_content_loader.load_resource("/app/article.css");
                     if (stylesheet.empty()) {
                         throw runtime_error("Article stylesheet is unavailable");
                     }
@@ -358,7 +300,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     }
                     view->load_html(
                         render_markdown_html(markdown, stylesheet, headings),
-                        project_document_directory(chapter.document));
+                        m_content_loader.document_base_directory(chapter.document));
                     m_article_views[page_key] = std::move(view);
                 } catch (const exception& error) {
                     cerr << "Failed to render article for " << page_key
@@ -401,7 +343,7 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
             run_button->set_visible(false);
         }
 
-        display_source(source_view, chapter.source);
+        display_source(source_view, m_content_loader, chapter.source);
 
         if (result_view) {
             auto result_buffer = result_view->get_buffer();
@@ -546,7 +488,8 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                 }
 
                 topics_list->signal_row_selected().connect(
-                    [selection_by_row,
+                    [this,
+                     selection_by_row,
                      knowledge_description_label,
                      source_view](Gtk::ListBoxRow* row) {
                         const auto found = selection_by_row->find(row);
@@ -558,7 +501,10 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                             knowledge_description_label->set_text(
                                 found->second.description);
                         }
-                        display_source(source_view, found->second.source_path);
+                        display_source(
+                            source_view,
+                            m_content_loader,
+                            found->second.source_path);
                     });
 
                 if (first_topic_row) {

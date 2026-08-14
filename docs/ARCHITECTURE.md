@@ -44,6 +44,7 @@ resources/athena.json
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
+- `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 
 当前的主要问题：
@@ -127,8 +128,9 @@ resources/athena.json
 这些类型可以使用普通 C++ 单元测试验证，不需要启动 GTK。
 
 源码按职责分组：`registry/` 放置项目配置的解析、校验、查询以及知识点函数注册；
-`render/` 放置 Markdown 到 HTML 的转换以及各平台 ArticleView 后端。目录归组不改变
-`ChapterCatalog` 与 `FunctionRegistry` 的职责边界，二者只通过稳定 ID 协作。
+`content/` 统一读取 GResource、Markdown 和教学源码；`render/` 放置 Markdown 到
+HTML 的转换以及各平台 ArticleView 后端。目录归组不改变 `ChapterCatalog` 与
+`FunctionRegistry` 的职责边界，二者只通过稳定 ID 协作。
 
 ### 3.4 演示实现层
 
