@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <gio/gio.h>
+#include <gtksourceview/gtksource.h>
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
@@ -352,7 +353,8 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         auto description_label =
             builder->get_widget<Gtk::Label>("chapter_description_label");
         auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
-        auto source_view = builder->get_widget<Gtk::TextView>("source_view");
+        auto source_view = GTK_SOURCE_VIEW(
+            gtk_builder_get_object(builder->gobj(), "source_view"));
         auto run_button = builder->get_widget<Gtk::Button>("run_button");
         auto result_view = builder->get_widget<Gtk::TextView>("result_view");
         auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
@@ -381,10 +383,35 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
             if (source_text.empty()) {
                 source_text = "该章节尚未添加实验源码。";
             }
-            auto source_buffer = source_view->get_buffer();
-            source_buffer->set_text(source_text);
-            auto source_begin = source_buffer->begin();
-            source_buffer->place_cursor(source_begin);
+
+            auto source_buffer = GTK_SOURCE_BUFFER(
+                gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
+            auto language_manager = gtk_source_language_manager_get_default();
+            auto cpp_language = gtk_source_language_manager_get_language(
+                language_manager,
+                "cpp");
+            if (cpp_language) {
+                gtk_source_buffer_set_language(source_buffer, cpp_language);
+            }
+            gtk_source_buffer_set_highlight_syntax(source_buffer, true);
+            gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
+
+            auto scheme_manager = gtk_source_style_scheme_manager_get_default();
+            auto scheme = gtk_source_style_scheme_manager_get_scheme(
+                scheme_manager,
+                "Adwaita");
+            if (scheme) {
+                gtk_source_buffer_set_style_scheme(source_buffer, scheme);
+            }
+
+            auto text_buffer = GTK_TEXT_BUFFER(source_buffer);
+            gtk_text_buffer_set_text(
+                text_buffer,
+                source_text.c_str(),
+                static_cast<int>(source_text.size()));
+            GtkTextIter source_begin;
+            gtk_text_buffer_get_start_iter(text_buffer, &source_begin);
+            gtk_text_buffer_place_cursor(text_buffer, &source_begin);
         }
 
         if (result_view) {

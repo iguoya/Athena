@@ -7,6 +7,7 @@ gnome = import('gnome')
 
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
+sourceview_dep = dependency('gtksourceview-5')
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
@@ -79,6 +80,7 @@ executable('Athena', src_files,
   include_directories: [local_inc, language_inc],
   dependencies: [
     gtkmm_dep,
-    glib_dep
+    glib_dep,
+    sourceview_dep
   ],
   install: true)

@@ -16,6 +16,7 @@
 
 - C++20
 - GTK4 / gtkmm 4
+- GtkSourceView 5（源码语法高亮与行号）
 - Meson
 - Blueprint UI
 - nlohmann/json

@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是一个使用 GTK4、gtkmm、Meson 和 Blueprint 构建的 C++ 学习桌面应用。课程结构由 `resources/chapters.json` 驱动，用户可以浏览分类和章节，并运行单个知识点对应的 C++ 演示。
+Athena 是一个使用 GTK4、gtkmm、GtkSourceView 5、Meson 和 Blueprint 构建的 C++ 学习桌面应用。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；课程结构由 `resources/chapters.json` 驱动，用户可以浏览分类和章节，并运行单个知识点对应的 C++ 演示。
 
 项目采用轻量分层和注册表，不以完整 MVC/MVP 为当前目标。核心问题是让课程配置、C++ 演示实现和 GTK 界面之间具有稳定、可校验的连接。
 
