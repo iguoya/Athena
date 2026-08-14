@@ -34,8 +34,8 @@ scripts/gen_chapters_xml.py
 
 - 生成章节类。
 - 生成成员函数声明或实现骨架。
-- 生成 `DemoRegistry` 注册项；当前 Reference 和 RAII 的映射仍在独立的
-  `demo_registry.cc` 中手写维护。
+- 生成 `FunctionRegistry` 注册项；当前 Reference 和 RAII 的映射仍在独立的
+  `registry/function_registry.cc` 中手写维护。
 - 完整校验章节和方法 ID。
 
 因此，本规范后面的 C++ 生成流程属于目标设计，落地时需要同步修改 Meson、测试和文档。
@@ -86,7 +86,7 @@ JSON Schema 校验
         |
         +--> GResource/Blueprint 输入
         +--> code: chapter_ids.generated.hpp
-        +--> code: demo_registry.generated.cpp
+        +--> code: function_registry.generated.cpp
         +--> code: 可选章节声明
         +--> code scaffold：仅创建不存在的人工文件
         +--> article: Markdown/GResource 输入
@@ -104,7 +104,7 @@ JSON Schema 校验
 generated/
 ├── chapter_ids.generated.hpp
 ├── chapter_declarations.generated.hpp
-└── demo_registry.generated.cpp
+└── function_registry.generated.cpp
 ```
 
 也可以放入 Meson 构建目录。无论位置如何，都必须：
@@ -170,7 +170,7 @@ inline constexpr std::string_view cpp_reference_reference_basics =
 ```cpp
 registry.add(
     "cpp.Reference.reference_basics",
-    bind_demo<athena::cpp::Reference>(
+    bind_function<athena::cpp::Reference>(
         &athena::cpp::Reference::reference_basics));
 ```
 
@@ -254,7 +254,7 @@ chapter_codegen = custom_target(
   input: athena_json,
   output: [
     'chapter_ids.generated.hpp',
-    'demo_registry.generated.cpp',
+    'function_registry.generated.cpp',
   ],
   command: [python, generator, 'generate', '--input', '@INPUT@',
             '--output-dir', meson.current_build_dir()],

@@ -8,22 +8,22 @@
 
 using namespace std;
 
-using DemoFunction = function<void(ostream&)>;
+using RegisteredFunction = function<void(ostream&)>;
 
-string make_demo_id(
+string make_function_id(
     const string& category,
     const string& chapter,
     const string& subchapter);
 
-class DemoRegistry {
+class FunctionRegistry {
 public:
-    void add(string id, DemoFunction function);
+    void add(string id, RegisteredFunction function);
     bool contains(const string& id) const;
     void run(const string& id, ostream& output) const;
     vector<string> ids() const;
 
 private:
-    map<string, DemoFunction> m_functions;
+    map<string, RegisteredFunction> m_functions;
 };
 
-DemoRegistry create_default_demo_registry();
+FunctionRegistry create_default_function_registry();

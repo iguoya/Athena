@@ -1,4 +1,4 @@
-#include "demo_registry.h"
+#include "function_registry.h"
 
 #include "raii/raii.hpp"
 #include "references/reference.hpp"
@@ -7,35 +7,35 @@
 #include <stdexcept>
 #include <utility>
 
-string make_demo_id(
+string make_function_id(
     const string& category,
     const string& chapter,
     const string& subchapter) {
     return category + "." + chapter + "." + subchapter;
 }
 
-void DemoRegistry::add(string id, DemoFunction function) {
+void FunctionRegistry::add(string id, RegisteredFunction function) {
     if (id.empty() || !function) {
-        throw invalid_argument("Demo id and function are required");
+        throw invalid_argument("Function id and callable are required");
     }
     if (!m_functions.emplace(std::move(id), std::move(function)).second) {
-        throw invalid_argument("Duplicate demo id");
+        throw invalid_argument("Duplicate function id");
     }
 }
 
-bool DemoRegistry::contains(const string& id) const {
+bool FunctionRegistry::contains(const string& id) const {
     return m_functions.contains(id);
 }
 
-void DemoRegistry::run(const string& id, ostream& output) const {
+void FunctionRegistry::run(const string& id, ostream& output) const {
     const auto found = m_functions.find(id);
     if (found == m_functions.end()) {
-        throw out_of_range("Unknown demo id: " + id);
+        throw out_of_range("Unknown function id: " + id);
     }
     found->second(output);
 }
 
-vector<string> DemoRegistry::ids() const {
+vector<string> FunctionRegistry::ids() const {
     vector<string> result;
     result.reserve(m_functions.size());
     for (const auto& [id, function] : m_functions) {
@@ -44,8 +44,8 @@ vector<string> DemoRegistry::ids() const {
     return result;
 }
 
-DemoRegistry create_default_demo_registry() {
-    DemoRegistry registry;
+FunctionRegistry create_default_function_registry() {
+    FunctionRegistry registry;
     auto reference = make_shared<Reference>();
     registry.add("cpp.Reference.reference_basics", [reference](ostream& output) {
         reference->reference_basics(output);

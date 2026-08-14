@@ -84,7 +84,7 @@ MainWindow::MainWindow(
     const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject),
       m_main_builder(builder),
-      m_demo_registry(create_default_demo_registry()) {
+      m_function_registry(create_default_function_registry()) {
     maximize();
 
     auto css = Gtk::CssProvider::create();
@@ -500,21 +500,21 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
                     run->add_css_class("btn-primary");
                     run->add_css_class("btn-sm");
                     run->add_css_class("topic-run");
-                    const string demo_id = make_demo_id(
+                    const string function_id = make_function_id(
                         category_name,
                         chapter.name,
                         subchapter.name);
-                    const bool can_run = m_demo_registry.contains(demo_id);
+                    const bool can_run = m_function_registry.contains(function_id);
                     run->set_sensitive(can_run);
                     run->set_tooltip_text(can_run
                         ? "运行该知识点的实验代码"
                         : "该知识点尚未实现可运行实验");
                     if (can_run && result_view) {
                         run->signal_clicked().connect(
-                            [this, demo_id, result_view]() {
+                            [this, function_id, result_view]() {
                                 ostringstream output;
                                 try {
-                                    m_demo_registry.run(demo_id, output);
+                                    m_function_registry.run(function_id, output);
                                     result_view->get_buffer()->set_text(output.str());
                                 } catch (const exception& error) {
                                     result_view->get_buffer()->set_text(

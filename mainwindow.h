@@ -1,7 +1,7 @@
 #pragma once
 
-#include "demo_registry.h"
-#include "parser/chapter_catalog.h"
+#include "registry/chapter_catalog.h"
+#include "registry/function_registry.h"
 #include "render/article_view.h"
 
 #include <gtkmm.h>
@@ -44,5 +44,5 @@ private:
     set<string> m_loaded_chapters;
 
     ChapterCatalog m_catalog;
-    DemoRegistry m_demo_registry;
+    FunctionRegistry m_function_registry;
 };

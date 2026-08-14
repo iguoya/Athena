@@ -27,7 +27,7 @@ resources/athena.json
                                    |
                                    +--> 分类侧栏和章节标签
                                    +--> code: 源码、知识点列表和运行结果
-                                   |          +--> DemoRegistry
+                                   |          +--> FunctionRegistry
                                    |                    +--> Reference / RAII
                                    +--> article: Markdown + article.css
                                                 |
@@ -45,13 +45,13 @@ resources/athena.json
 - 文章 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
-- `ChapterCatalog` 和 `DemoRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
+- `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 
 当前的主要问题：
 
 - `MainWindow` 仍负责较多动态 GTK 控件创建和文章/代码页面协调，后续可继续提取页面装配器，但当前不需要完整 Presenter 层。
-- 当前 `DemoRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `athena.json` 自动生成。
+- 当前 `FunctionRegistry` 是独立的手写注册表，复合 ID 已统一，但尚未由 `athena.json` 自动生成。
 - 源码展示依赖 `ATHENA_SOURCE_ROOT` 编译期绝对路径，安装后的可移植性不足。
 - 目前只生成 GResource 清单，不生成章节类、成员函数声明或演示注册表。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
@@ -76,7 +76,7 @@ resources/athena.json
   +----------+-----------+ +-------+--------+ +----------+-----------+
              |                     |                     |
   +----------v-----------+         |          +----------v-----------+
-  | ChapterCatalog       |<--------+--------->| Demo implementations |
+  | ChapterCatalog       |<--------+--------->| Function implementations |
   +----------+-----------+                    +----------+-----------+
              |                                           |
              +--------------------+----------------------+
@@ -119,17 +119,17 @@ resources/athena.json
 当前已经引入以下不依赖 GTK 的类型：
 
 - `ChapterCatalog`：加载并查询分类、章节和知识点元数据。
-- `make_demo_id`：从分类、章节和知识点名称构造稳定复合 ID。
-- `DemoRegistry`：由 ID 查找可执行演示。
+- `make_function_id`：从分类、章节和知识点名称构造稳定复合 ID。
+- `FunctionRegistry`：由 ID 查找可执行知识点函数。
 
-后续如果运行结果需要区分标准输出、错误和状态，再引入 `DemoResult`；当前直接向
+后续如果运行结果需要区分标准输出、错误和状态，再引入 `FunctionResult`；当前直接向
 `ostream` 输出足以覆盖教学实验。
 
 这些类型可以使用普通 C++ 单元测试验证，不需要启动 GTK。
 
-源码按职责分组：`parser/` 放置项目配置的解析、校验和查询；`render/`
-放置 Markdown 到 HTML 的转换以及各平台 ArticleView 后端。窗口协调和演示注册表
-保留在项目根目录，避免把不同职责仅为了减少文件数量而混入上述目录。
+源码按职责分组：`registry/` 放置项目配置的解析、校验、查询以及知识点函数注册；
+`render/` 放置 Markdown 到 HTML 的转换以及各平台 ArticleView 后端。目录归组不改变
+`ChapterCatalog` 与 `FunctionRegistry` 的职责边界，二者只通过稳定 ID 协作。
 
 ### 3.4 演示实现层
 
@@ -155,7 +155,8 @@ public:
 void method(std::ostream& output) const;
 ```
 
-当演示需要输入、结构化错误或状态时，再统一迁移为 `DemoContext` 和 `DemoResult`，不要让每个 JSON 条目定义任意 C++ 签名。
+当知识点函数需要输入、结构化错误或状态时，再统一迁移为 `FunctionContext` 和
+`FunctionResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
 `article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML，注入标题锚点，并生成同页的文章目录与阅读工具栏。HTML 原生页内链接负责目录跳转，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML 以及管理原生控件生命周期。
 
@@ -165,8 +166,8 @@ GTK/Blueprint 层负责：
 
 - 为 `code` 显示分类、章节、说明、源码和执行结果。
 - 为 `article` 显示 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
-- 把用户操作转换为稳定 `DemoId`。
-- 调用 `DemoRegistry`，但不感知具体章节类。
+- 把用户操作转换为稳定函数 ID。
+- 调用 `FunctionRegistry`，但不感知具体章节类。
 
 `MainWindow` 最终应成为轻量协调者，不直接解析 JSON，也不包含每个章节的手写函数映射。
 
@@ -197,7 +198,7 @@ cpp.Reference.const_reference
 允许的依赖方向：
 
 ```text
-GTK UI -> ChapterCatalog / DemoRegistry -> Demo implementations
+GTK UI -> ChapterCatalog / FunctionRegistry -> Function implementations
 GTK UI -> ArticleView -> platform web view
 Generator -> JSON schema and templates
 Meson -> Generator outputs
@@ -213,9 +214,9 @@ Meson -> Generator outputs
 ## 6. 渐进式改造顺序
 
 1. 已完成：稳定分类/章节/知识点名称及运行时语义校验。
-2. 已完成：将注册表抽成 `DemoRegistry`，统一复合 ID。
+2. 已完成：将注册表抽成 `FunctionRegistry`，统一复合 ID。
 3. 已完成：将 JSON 解析和查询抽成 `ChapterCatalog`。
-4. 已完成：为 ChapterCatalog、Markdown、DemoRegistry 和 GTK 资源建立基础测试。
+4. 已完成：为 ChapterCatalog、Markdown、FunctionRegistry 和 GTK 资源建立基础测试。
 5. 生成 ID 常量和注册表，消除手写映射。
 6. 支持安全的一次性章节实现骨架生成。
 7. 解决源代码展示的安装后资源策略。
