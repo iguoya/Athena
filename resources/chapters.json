@@ -17,10 +17,16 @@
       ] }
     ] },
     { "order": 3, "title": "RAII 与资源管理", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [
-      { "name": "", "items": [
-        { "method": "raii_idea", "title": "RAII 思想" },
-        { "method": "smart_ptr", "title": "智能指针" },
-        { "method": "move_semantics", "title": "移动语义" }
+      { "name": "raii", "items": [
+        { "method": "basic", "title": "RAII 思想" }
+      ] },
+      { "name": "smart_ptr", "items": [
+        { "method": "unique_ptr", "title": "unique_ptr" },
+        { "method": "shared_ptr", "title": "shared_ptr" },
+        { "method": "weak_ptr", "title": "weak_ptr" }
+      ] },
+      { "name": "move", "items": [
+        { "method": "basic", "title": "移动语义" }
       ] }
     ] },
     { "order": 4, "title": "类与对象", "ui_resource": "resources/ui/chapters/empty_chapter.blp", "subchapters": [

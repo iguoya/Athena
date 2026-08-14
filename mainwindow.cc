@@ -37,10 +37,13 @@ map<string, function<string()>> subchapter_demos = {
     {"reference_return",   demo<Reference>(&Reference::return_ref)},
 };
 
-// 子分组标题映射（pointer/reference -> 指针/引用）
+// 子分组标题映射（分组名 -> 显示标题）
 string group_title(const string& group) {
     if (group == "pointer") return "指针";
     if (group == "reference") return "引用";
+    if (group == "raii") return "RAII";
+    if (group == "smart_ptr") return "智能指针";
+    if (group == "move") return "移动语义";
     return group;
 }
 
