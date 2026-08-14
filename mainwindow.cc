@@ -115,7 +115,7 @@ void MainWindow::load_chapter_metadata() {
                     group.name = g.value("name", "");
                     for (const auto& item : g["items"]) {
                         SubChapter sc;
-                        sc.id    = item["id"];
+                        sc.method    = item["method"];
                         sc.title = item["title"];
                         group.items.push_back(sc);
                     }
@@ -325,7 +325,7 @@ void MainWindow::build_chapter_tabs(const string& category_id) {
                             run_btn->add_css_class("suggested-action");
 
                             // 查子章节演示，有则绑定，无则禁用
-                            auto demo_it = subchapter_demos.find(sub.id);
+                            auto demo_it = subchapter_demos.find(sub.method);
                             if (demo_it != subchapter_demos.end()) {
                                 auto run_fn = demo_it->second;
                                 run_btn->signal_clicked().connect([result_view, run_fn]() {

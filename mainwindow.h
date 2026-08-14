@@ -10,7 +10,7 @@ using std::vector;
 
 // 子章节：对应一个知识点，可独立运行
 struct SubChapter {
-    string id;      // 唯一标识，如 "pointer_basic"
+    string method;  // 函数名（将来生成成员函数），如 "basic"
     string title;   // 显示标题，如 "指针基础"
 };
 
