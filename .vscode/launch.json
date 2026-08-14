@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "启动 Athena（构建并调试）",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/builddir/Athena",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Meson: Build"
+        },
+        {
+            "name": "启动 Athena（不重新编译）",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/builddir/Athena",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "附加到 Athena",
+            "type": "lldb",
+            "request": "attach",
+            "pid": "${command:pickMyProcess}"
+        }
+    ]
+}

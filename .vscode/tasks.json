@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Meson: Configure",
+            "type": "shell",
+            "command": "meson setup ${workspaceFolder}/builddir --reconfigure -Dcpp_std=c++20",
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "重新配置 Meson 构建"
+        },
+        {
+            "label": "Meson: Build",
+            "type": "shell",
+            "command": "meson compile -C ${workspaceFolder}/builddir",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "增量编译 Athena"
+        },
+        {
+            "label": "Meson: Full Build",
+            "dependsOn": [
+                "Meson: Configure",
+                "Meson: Build"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "完整重新构建"
+        }
+    ]
+}
