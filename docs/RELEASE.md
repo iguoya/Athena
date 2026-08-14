@@ -2,11 +2,11 @@
 
 ## 当前范围
 
-Athena 0.1.0 支持生成两个独立的 macOS 安装包：
+Athena 1.0.0 支持生成两个独立的 macOS 安装包：
 
 ```text
-Athena-0.1.0-macos-x86_64.dmg
-Athena-0.1.0-macos-arm64.dmg
+Athena-1.0.0-macos-x86_64.dmg
+Athena-1.0.0-macos-arm64.dmg
 ```
 
 当前发行包使用 ad-hoc 签名，尚未接入 Developer ID 和 Apple 公证。首次从网络下载
@@ -34,7 +34,7 @@ python3 scripts/package_macos.py \
   --project-root . \
   --binary build-release/Athena \
   --output-dir dist \
-  --version 0.1.0
+  --version 1.0.0
 ```
 
 打包器会：
@@ -53,7 +53,7 @@ python3 scripts/package_macos.py \
 ```sh
 dist/Athena.app/Contents/MacOS/Athena
 codesign --verify --deep --strict dist/Athena.app
-hdiutil verify dist/Athena-0.1.0-macos-x86_64.dmg
+hdiutil verify dist/Athena-1.0.0-macos-x86_64.dmg
 ```
 
 正式发布前还应挂载 DMG，并从挂载卷中的 `.app` 启动一次。由于当前没有 Apple
@@ -74,8 +74,8 @@ Runner 上分别构建、测试和打包。两个架构任务完成后，发布�
 发布命令：
 
 ```sh
-git tag -a v0.1.0 -m "Athena 0.1.0"
-git push origin v0.1.0
+git tag -a v1.0.0 -m "Athena 1.0.0"
+git push origin v1.0.0
 ```
 
 工作流使用仓库自带的 `GITHUB_TOKEN` 创建 Release，不需要额外 GitHub Token。

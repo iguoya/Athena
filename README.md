@@ -43,7 +43,7 @@ meson compile -C build-release
 meson test -C build-release --print-errorlogs
 python3 scripts/package_macos.py \
   --project-root . --binary build-release/Athena \
-  --output-dir dist --version 0.1.0
+  --output-dir dist --version 1.0.0
 ```
 
 发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
