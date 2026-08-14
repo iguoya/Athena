@@ -42,6 +42,7 @@ resources/athena.json
 - `code` 与 `article` 章节由同一份 JSON 选择不同默认页面。
 - 文章作为 GResource 随应用打包，并可在开发期从源码树回退读取。
 - 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
+- 文章 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - 每个知识点可以独立运行并显示结果。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - `ChapterCatalog` 和 `DemoRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
