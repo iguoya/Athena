@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+
+  <object class="GtkWindow" id="main_window">
+    <property name="title">Hi!</property>
+    <child>
+      <object class="GtkBox">
+        <style>
+          <class name="content"/>
+        </style>
+        <property name="halign">center</property>
+        <property name="valign">center</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">15</property>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="justify">center</property>
+            <property name="label">Hello world!</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel">
+            <property name="justify">center</property>
+            <property name="label">Yay!</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton">
+            <property name="label">Click me!</property>
+          </object>
+        </child>
+
+      </object> <!-- GtkBox -->
+    </child>
+  </object> <!-- GtkWindow -->
+</interface>
