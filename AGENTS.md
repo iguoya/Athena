@@ -88,7 +88,8 @@
 
 - macOS 可携带包统一通过 `scripts/package_macos.py` 生成，不手工复制单个可执行文件作为 Release。
 - `dist/` 是本地生成目录，不提交 `.app` 或 DMG；GitHub Release 只上传标签构建产生的 DMG。
-- `meson.build`、`Info.plist` 和 Git 标签必须使用一致的语义化版本号。
+- `meson.build`、`Info.plist` 和 Git 标签必须使用一致的语义化版本号；版本以 `meson.build` 为单一来源，`package_macos.py` 默认读取它并拒绝不一致的 `--version`。
+- 每次发版在 `CHANGELOG.md` 记录该版本的显著变化。
 - 当前包只允许描述为 ad-hoc 签名、未公证版本；完成 Developer ID 和 notarization 前不得宣称已通过 Gatekeeper 正式发行验证。
 - 修改打包器、macOS 模板或发行工作流后，应至少生成并启动一次本机架构的 `.app`，并验证 DMG 校验和与应用签名结构。
 

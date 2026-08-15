@@ -33,9 +33,11 @@ meson test -C build-release --print-errorlogs
 python3 scripts/package_macos.py \
   --project-root . \
   --binary build-release/Athena \
-  --output-dir dist \
-  --version 1.0.0
+  --output-dir dist
 ```
+
+版本号以 `meson.build` 为单一来源，脚本默认直接读取；显式传入 `--version`
+时必须与 `meson.build` 一致，否则拒绝打包。
 
 打包器会：
 
@@ -67,9 +69,11 @@ Runner 上分别构建、测试和打包。两个架构任务完成后，发布�
 
 发布前要求：
 
-1. `meson.build`、`Info.plist` 和目标标签使用同一个 `MAJOR.MINOR.PATCH` 版本。
-2. `main` 已通过 CI，工作区没有未提交内容。
-3. 标签必须指向准备发布的提交。
+1. `meson.build` 和目标标签使用同一个 `MAJOR.MINOR.PATCH` 版本；`Info.plist`
+   版本由模板按 `meson.build` 生成，打包器与 Release 工作流都会拒绝不一致的版本。
+2. 在 `CHANGELOG.md` 中记录该版本的显著变化。
+3. `main` 已通过 CI，工作区没有未提交内容。
+4. 标签必须指向准备发布的提交。
 
 发布命令：
 

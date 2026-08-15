@@ -17,6 +17,8 @@ from pathlib import Path
 
 SYSTEM_PREFIXES = ("/System/", "/usr/lib/")
 VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+MESON_PROJECT_PATTERN = re.compile(r"^\s*project\s*\(([^)]*)\)", re.MULTILINE | re.DOTALL)
+MESON_VERSION_ARGUMENT = re.compile(r"\bversion:\s*'([^']+)'")
 
 
 class PackagingError(RuntimeError):
@@ -88,6 +90,26 @@ def architecture_name() -> str:
     if machine in {"arm64", "aarch64"}:
         return "arm64"
     raise PackagingError(f"unsupported macOS architecture: {machine}")
+
+
+def read_meson_version(project_root: Path) -> str:
+    """Read the project() version from meson.build, the single version source."""
+    meson_build = project_root / "meson.build"
+    if not meson_build.is_file():
+        raise PackagingError(f"meson.build not found: {meson_build}")
+    content = meson_build.read_text(encoding="utf-8")
+    project_match = MESON_PROJECT_PATTERN.search(content)
+    if not project_match:
+        raise PackagingError("no project() call found in meson.build")
+    version_match = MESON_VERSION_ARGUMENT.search(project_match.group(1))
+    if not version_match:
+        raise PackagingError("no version: argument found in meson.build project()")
+    version = version_match.group(1)
+    if not VERSION_PATTERN.fullmatch(version):
+        raise PackagingError(
+            f"meson.build version must use MAJOR.MINOR.PATCH: {version}"
+        )
+    return version
 
 
 def dylib_dependencies(path: Path) -> list[str]:
@@ -337,7 +359,10 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--binary", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--version", required=True)
+    parser.add_argument(
+        "--version",
+        help="optional; defaults to the meson.build version and must match it",
+    )
     return parser
 
 
@@ -345,10 +370,19 @@ def main() -> int:
     if sys.platform != "darwin":
         raise PackagingError("macOS packaging must run on macOS")
     args = make_parser().parse_args()
-    if not VERSION_PATTERN.fullmatch(args.version):
-        raise PackagingError(f"version must use MAJOR.MINOR.PATCH: {args.version}")
 
     project_root = args.project_root.resolve()
+    meson_version = read_meson_version(project_root)
+    if args.version is None:
+        version = meson_version
+    elif args.version != meson_version:
+        raise PackagingError(
+            f"--version {args.version} does not match meson.build version "
+            f"{meson_version}; update meson.build and the git tag together"
+        )
+    else:
+        version = meson_version
+
     binary = args.binary.resolve()
     output_dir = args.output_dir.resolve()
     if not binary.is_file():
@@ -357,7 +391,7 @@ def main() -> int:
 
     architecture = architecture_name()
     app_path = output_dir / "Athena.app"
-    dmg_path = output_dir / f"Athena-{args.version}-macos-{architecture}.dmg"
+    dmg_path = output_dir / f"Athena-{version}-macos-{architecture}.dmg"
     if app_path.exists():
         shutil.rmtree(app_path)
     if dmg_path.exists():
@@ -373,7 +407,7 @@ def main() -> int:
     executable = macos_dir / "Athena-bin"
     shutil.copy2(binary, executable)
     executable.chmod(0o755)
-    render_templates(project_root, contents_dir, args.version)
+    render_templates(project_root, contents_dir, version)
     create_icon(project_root, resources_dir)
     plugins = copy_gtk_runtime(resources_dir, brew_prefix())
     libraries = copy_runtime_libraries(executable, plugins, frameworks_dir)
