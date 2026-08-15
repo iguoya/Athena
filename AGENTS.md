@@ -111,21 +111,21 @@
 
 ## 验证要求
 
-现阶段至少执行：
+本地与 CI 统一通过同一入口执行验证：
+
+```sh
+scripts/check.sh
+```
+
+脚本依次执行以下步骤；默认构建目录为 `builddir`，可用 `--build-dir` 与
+`--buildtype` 覆盖（CI 使用 `--build-dir build --buildtype debugoptimized`）：
 
 ```sh
 python3 -m json.tool resources/athena.json >/dev/null
 python3 scripts/generate_project.py --project-root . --config resources/athena.json check
-meson setup builddir --reconfigure
+meson setup builddir --reconfigure   # 构建目录不存在时改为 meson setup builddir
 meson compile -C builddir
 meson test -C builddir --print-errorlogs
-```
-
-如果构建目录尚不存在，使用：
-
-```sh
-meson setup builddir
-meson compile -C builddir
 ```
 
 统一生成器的 `check` 必须通过；GResource XML 和函数注册表只生成到构建目录，

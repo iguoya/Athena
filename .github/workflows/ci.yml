@@ -32,11 +32,5 @@ jobs:
           gtkmm4 gtksourceview5 md4c nlohmann-json googletest
           blueprint-compiler librsvg
 
-      - name: Configure
-        run: meson setup build --buildtype=debugoptimized
-
-      - name: Build
-        run: meson compile -C build
-
-      - name: Test
-        run: meson test -C build --print-errorlogs
+      - name: Verify
+        run: scripts/check.sh --build-dir build --buildtype debugoptimized
