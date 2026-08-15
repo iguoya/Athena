@@ -63,7 +63,7 @@ add_executable(c++
 
 #    ${RESOURCE_FILE}
     )
-target_link_libraries(c++ ${GTKMM_LIBRARIES} ${Boost_LIBRARIES} -lmingw32)
+target_link_libraries(c++ ${GTKMM_LIBRARIES} ${Boost_LIBRARIES} )
 #target_compile_options(c++ PRIVATE ${GTKMM_CFLAGS_OTHER})
 #target_link_libraries(
 #    c++
