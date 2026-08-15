@@ -286,6 +286,9 @@ C++ 目标：Reference::reference_basics(...)
 `const_reference`、`pass_by_reference` 和 `return_by_reference`。不要仅为避开
 C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
 
+命名不使用缩写：`ctor`、`dtor`、`ptr`、`seq`、`assoc`、`rw` 等一律写全为
+`constructor_destructor`、`sequential_container` 这类完整语义短语。
+
 知识点名称必须是合法且非关键字的 C++ 函数标识符：
 
 ```regex
@@ -331,6 +334,9 @@ C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
 | `source` | string | 否 | 该分组知识点共享的源码展示文件 |
 
 每个 `subchapter.group` 必须引用同一章节中已经声明的分组。
+
+分组名已经承载的语义不必在子章节名中重复，例如 `smart_pointer` 分组下使用
+`unique`、`shared`、`weak`，而不是 `unique_pointer`、`shared_pointer`。
 
 源码框按以下优先级选择文件：
 

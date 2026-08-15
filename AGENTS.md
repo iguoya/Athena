@@ -1,6 +1,6 @@
 # Athena 项目协作规则
 
-本文档是 Athena 仓库中 Codex 及其他代码代理的项目级指令。修改代码前先理解当前实现，不得把目标设计误认为已经落地的功能。
+本文档是 Athena 仓库的项目级指令，供 ZCode、Codex、Claude Code 等代码代理共同遵循（Claude Code 经 `CLAUDE.md` 导入读取）。修改代码前先理解当前实现，不得把目标设计误认为已经落地的功能。
 
 ## 必读文档
 
@@ -21,6 +21,7 @@
 - GtkSourceView 5（源码语法高亮与行号）
 - MD4C / md4c-html（文章章节的 Markdown 解析与 HTML 转换）
 - macOS WKWebView（文章目录、正文、字号和主题控制；不保留 GTK 文章回退）
+- 界面使用 GTK 内建样式与自定义 `style.css`，不依赖 libadwaita
 - Meson
 - Blueprint UI
 - nlohmann/json
