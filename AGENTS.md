@@ -9,6 +9,8 @@
 - `docs/ARCHITECTURE.md`：系统边界、依赖方向和目标架构。
 - `docs/CHAPTER_SCHEMA.md`：`resources/athena.json` 的字段、标识符和校验规则。
 - `docs/CODE_GENERATION.md`：代码生成流程、文件所有权和 Meson 集成约束。
+- `docs/decisions/`：架构决策记录（ADR），保存重要取舍的背景、决策与后果；
+  影响架构边界或不可逆方向的新决策应先新增 ADR 再动代码。
 
 若实现与文档不一致，先指出差异；修复代码或更新文档时，保持二者同步。
 
