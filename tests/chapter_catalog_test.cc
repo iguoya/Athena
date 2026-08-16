@@ -2,6 +2,7 @@
 #include "registry/function_registry.h"
 
 #include <gtest/gtest.h>
+#include <nlohmann/json.hpp>
 
 #include <fstream>
 #include <sstream>
@@ -53,11 +54,16 @@ string minimal_catalog(
 }
 
 TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
-    const auto catalog = ChapterCatalog::from_json(
-        read_project_file("resources/athena.json"));
+    const auto config = read_project_file("resources/athena.json");
+    const auto catalog = ChapterCatalog::from_json(config);
 
-    EXPECT_EQ(catalog.categories().size(), 3);
-    EXPECT_EQ(catalog.chapter_count(), 61);
+    const auto raw = nlohmann::json::parse(config);
+    EXPECT_EQ(catalog.categories().size(), raw.at("categories").size());
+    size_t expected_chapters = 0;
+    for (const auto& category : raw.at("categories")) {
+        expected_chapters += category.at("chapters").size();
+    }
+    EXPECT_EQ(catalog.chapter_count(), expected_chapters);
 
     const auto* reference = catalog.find_chapter("cpp", "Reference");
     ASSERT_NE(reference, nullptr);

@@ -118,6 +118,9 @@
           "subchapters": [
             { "name": "inheritance", "title": "继承", "description": "理解继承关系、访问控制和基类子对象。" },
             { "name": "polymorphism", "title": "多态", "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。" },
+            { "name": "override_keyword", "title": "override 校验", "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。" },
+            { "name": "final_keyword", "title": "final 密封", "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。" },
+            { "name": "object_slicing", "title": "对象切片", "description": "观察按值传递派生对象时派生部分被切掉的现象，理解多态必须经由指针或引用。" },
             { "name": "abstract_interface", "title": "抽象接口", "description": "学习纯虚函数、抽象类和面向接口的设计。" },
             { "name": "virtual_destructor", "title": "虚析构函数", "description": "理解通过基类指针销毁派生对象时的析构规则。" }
           ]
@@ -129,6 +132,7 @@
           "icon": { "type": "theme", "name": "application-x-addon-symbolic" },
           "subchapters": [
             { "name": "template_basic", "title": "模板基础", "description": "学习函数模板、类模板、实例化和模板参数。" },
+            { "name": "template_specialization", "title": "模板特化", "description": "学习为特定类型提供模板特化实现，理解通用版本与特化版本的分工。" },
             { "name": "generic_programming", "title": "泛型编程", "description": "理解通过通用接口和类型约束编写可复用算法。" },
             { "name": "variadic_template", "title": "可变参数模板", "description": "学习参数包、展开表达式和 C++17 折叠表达式。" },
             { "name": "compile_time", "title": "编译期编程", "description": "学习 constexpr、consteval、常量表达式和基础编译期计算。" },
@@ -241,6 +245,18 @@
       "description": "用 C++ 手写实现经典数据结构与算法，在使用标准库之外掌握其内部原理和算法思想。",
       "icon": { "type": "theme", "name": "applications-science-symbolic" },
       "chapters": [
+        {
+          "name": "ComplexityAnalysis",
+          "title": "复杂度分析",
+          "description": "学习大 O 表示法与时间、空间、摊还复杂度，为手写数据结构与算法建立统一的度量语言。",
+          "icon": { "type": "theme", "name": "accessories-calculator-symbolic" },
+          "subchapters": [
+            { "name": "big_o_notation", "title": "大 O 表示法", "description": "理解渐进符号描述增长趋势的方式和常见复杂度等级的差异。" },
+            { "name": "time_complexity", "title": "时间复杂度", "description": "练习推导常见代码结构的复杂度并区分最好、最坏和平均情况。" },
+            { "name": "space_complexity", "title": "空间复杂度", "description": "学习度量算法的额外内存占用以及时间与空间的权衡。" },
+            { "name": "amortized_analysis", "title": "摊还分析", "description": "通过顺序容器扩容等例子理解少量昂贵操作摊平后的平均成本。" }
+          ]
+        },
         { "name": "LinearStructure", "title": "线性结构", "description": "学习线性表的逻辑关系、存储方式和基本操作。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
         { "name": "AdvancedArray", "title": "数组进阶", "description": "学习数组的进阶操作、内存布局和典型应用。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
         { "name": "LinkedList", "title": "链表", "description": "学习单链表、双向链表和链表操作。", "icon": { "type": "theme", "name": "insert-link-symbolic" }, "subchapters": [] },
