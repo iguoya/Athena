@@ -4,7 +4,9 @@
 
 #include <gtksourceview/gtksource.h>
 #include <algorithm>
+#include <chrono>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -14,6 +16,12 @@
 using namespace std;
 
 namespace {
+
+string format_elapsed(double seconds) {
+    ostringstream stream;
+    stream << fixed << setprecision(2) << seconds << "s";
+    return stream.str();
+}
 
 void display_source(
     GtkSourceView* source_view,
@@ -420,10 +428,15 @@ void MainWindow::initialize_code_page(
 
     if (result_view) {
         auto result_buffer = result_view->get_buffer();
-        result_buffer->set_text("请选择知识点并点击“运行”查看实验结果。");
+        result_buffer->set_text("点击右侧知识点即可运行实验并在此查看结果。");
         auto result_begin = result_buffer->begin();
         result_buffer->place_cursor(result_begin);
     }
+
+    auto experiment_spinner =
+        builder->get_widget<Gtk::Spinner>("experiment_spinner");
+    auto experiment_status_label =
+        builder->get_widget<Gtk::Label>("experiment_status_label");
 
     if (topics_label && topics_list) {
         populate_topic_list(
@@ -432,8 +445,110 @@ void MainWindow::initialize_code_page(
             source_view,
             result_view,
             *topics_list,
-            knowledge_description_label);
+            knowledge_description_label,
+            experiment_spinner,
+            experiment_status_label);
     }
+}
+
+MainWindow::~MainWindow() {
+    m_elapsed_timer.disconnect();
+    if (m_experiment_thread.joinable()) {
+        m_experiment_thread.join();
+    }
+    // 控件即将销毁：已排队但未执行的回传回调检查该标志后直接跳过。
+    m_ui_alive->store(false);
+}
+
+// 在独立工作线程中执行实验：同一时刻只允许一个实验，
+// 运行期间新的运行请求被忽略；结果与耗时经主线程回填。
+void MainWindow::start_experiment(
+    const string& function_id,
+    Gtk::TextView& result_view,
+    Gtk::Spinner* experiment_spinner,
+    Gtk::Label* experiment_status_label) {
+    if (m_experiment_running) {
+        return;
+    }
+    m_experiment_running = true;
+
+    const auto result_buffer = result_view.get_buffer();
+    result_buffer->set_text("运行中…");
+
+    if (experiment_spinner) {
+        experiment_spinner->set_visible(true);
+        experiment_spinner->set_spinning(true);
+    }
+
+    const auto started = chrono::steady_clock::now();
+    if (experiment_status_label) {
+        experiment_status_label->set_visible(true);
+        experiment_status_label->set_text("运行中 · 0.00s");
+    }
+    m_elapsed_timer.disconnect();
+    m_elapsed_timer = Glib::signal_timeout().connect(
+        [this, experiment_status_label, alive = m_ui_alive, started]() -> bool {
+            if (!alive->load() || !experiment_status_label) {
+                return false;
+            }
+            const auto elapsed = chrono::duration<double>(
+                chrono::steady_clock::now() - started);
+            experiment_status_label->set_text(
+                "运行中 · " + format_elapsed(elapsed.count()));
+            return true;
+        },
+        200);
+
+    auto alive = m_ui_alive;
+    auto* registry = &m_function_registry;
+    m_experiment_thread = thread(
+        [this,
+         function_id,
+         result_buffer,
+         experiment_spinner,
+         experiment_status_label,
+         alive,
+         registry,
+         started]() {
+            ostringstream output;
+            string failure;
+            try {
+                registry->run(function_id, output);
+            } catch (const exception& error) {
+                failure = "运行失败：" + string(error.what());
+            }
+            const auto duration = chrono::duration<double>(
+                chrono::steady_clock::now() - started);
+            const string result =
+                (failure.empty() ? output.str() : failure)
+                + "\n—— 耗时 " + format_elapsed(duration.count()) + " ——";
+
+            Glib::signal_idle().connect_once(
+                [this,
+                 result_buffer,
+                 experiment_spinner,
+                 experiment_status_label,
+                 alive,
+                 result]() {
+                    if (!alive->load()) {
+                        return;
+                    }
+                    // 上一个工作线程已结束，join 后才允许启动新实验。
+                    if (m_experiment_thread.joinable()) {
+                        m_experiment_thread.join();
+                    }
+                    m_elapsed_timer.disconnect();
+                    m_experiment_running = false;
+                    result_buffer->set_text(result);
+                    if (experiment_spinner) {
+                        experiment_spinner->set_spinning(false);
+                        experiment_spinner->set_visible(false);
+                    }
+                    if (experiment_status_label) {
+                        experiment_status_label->set_visible(false);
+                    }
+                });
+        });
 }
 
 void MainWindow::populate_topic_list(
@@ -442,7 +557,9 @@ void MainWindow::populate_topic_list(
     GtkSourceView* source_view,
     Gtk::TextView* result_view,
     Gtk::ListBox& topics_list,
-    Gtk::Label* knowledge_description_label) {
+    Gtk::Label* knowledge_description_label,
+    Gtk::Spinner* experiment_spinner,
+    Gtk::Label* experiment_status_label) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -474,7 +591,9 @@ void MainWindow::populate_topic_list(
          source_view,
          result_view,
          category_name,
-         chapter_name](Gtk::ListBoxRow* row) {
+         chapter_name,
+         experiment_spinner,
+         experiment_status_label](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -505,14 +624,11 @@ void MainWindow::populate_topic_list(
             if (!m_function_registry.contains(function_id)) {
                 return;
             }
-            ostringstream output;
-            try {
-                m_function_registry.run(function_id, output);
-                result_view->get_buffer()->set_text(output.str());
-            } catch (const exception& error) {
-                result_view->get_buffer()->set_text(
-                    "运行失败：" + string(error.what()));
-            }
+            start_experiment(
+                function_id,
+                *result_view,
+                experiment_spinner,
+                experiment_status_label);
         });
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {

@@ -8,14 +8,17 @@
 #include <gtkmm.h>
 #include <gtksourceview/gtksource.h>
 
+#include <atomic>
+#include <memory>
 #include <set>
+#include <thread>
 
 using namespace std;
 
 class MainWindow : public Gtk::ApplicationWindow {
 public:
     MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
-    virtual ~MainWindow() = default;
+    ~MainWindow() override;
 
 private:
     void load_chapter_metadata();
@@ -36,7 +39,14 @@ private:
         GtkSourceView* source_view,
         Gtk::TextView* result_view,
         Gtk::ListBox& topics_list,
-        Gtk::Label* knowledge_description_label);
+        Gtk::Label* knowledge_description_label,
+        Gtk::Spinner* experiment_spinner,
+        Gtk::Label* experiment_status_label);
+    void start_experiment(
+        const string& function_id,
+        Gtk::TextView& result_view,
+        Gtk::Spinner* experiment_spinner,
+        Gtk::Label* experiment_status_label);
 
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(
         const string& category_name,
@@ -63,4 +73,13 @@ private:
 
     ChapterCatalog m_catalog;
     FunctionRegistry m_function_registry;
+
+    // 实验执行状态：m_experiment_running 只在主线程读写；
+    // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。
+    // 工作线程在完成回传时和窗口析构时 join。
+    std::shared_ptr<std::atomic_bool> m_ui_alive =
+        std::make_shared<std::atomic_bool>(true);
+    bool m_experiment_running = false;
+    sigc::connection m_elapsed_timer;
+    std::thread m_experiment_thread;
 };
