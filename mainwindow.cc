@@ -256,8 +256,6 @@ MainWindow::MainWindow(
     load_chapter_metadata();
     setup_category_sidebar();
     open_learning_store();
-
-    cout << "MainWindow initialized successfully" << endl;
 }
 
 void MainWindow::load_chapter_metadata() {
@@ -266,8 +264,6 @@ void MainWindow::load_chapter_metadata() {
         throw runtime_error("athena.json not found in GResource");
     }
     m_catalog = ChapterCatalog::from_json(source);
-    cout << "Loaded " << m_catalog.categories().size() << " categories and "
-         << m_catalog.chapter_count() << " chapters from athena.json" << endl;
 }
 
 void MainWindow::configure_image(
@@ -593,7 +589,6 @@ void MainWindow::open_learning_store() {
     try {
         m_learning_store = make_unique<LearningStore>(
             Glib::build_filename(data_dir, "learning.db"));
-        cout << "Learning store opened at " << data_dir << endl;
     } catch (const exception& error) {
         cerr << "Learning store unavailable: " << error.what() << endl;
         m_learning_store.reset();
