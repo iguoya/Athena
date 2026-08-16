@@ -9,7 +9,7 @@ using namespace std;
 struct sqlite3;
 
 struct KnowledgeProgress {
-    int status = 0;  // 0 未学，1 已学，2 需复习
+    int status = 0;  // 位标志：bit0(1) 已理解，bit1(2) 已掌握
     string note;
     long long updated_at = 0;
 };

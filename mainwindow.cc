@@ -1115,52 +1115,71 @@ void MainWindow::populate_topic_list(
         }
         actions->append(*run);
 
-        // 掌握程度：五颗星，点击第 n 颗设为 n 星，再点当前星降一星。
-        int initial_rating = 0;
+        // 理解/掌握两态标记：状态以位标志持久化（bit0 已理解、bit1 已掌握），
+        // 两者齐备后运行按钮置灰，取消任一标记即可恢复运行。
+        int saved_status = 0;
         if (m_learning_store) {
-            initial_rating = clamp(
-                m_learning_store->load_progress(function_id).status, 0, 5);
+            saved_status = clamp(
+                m_learning_store->load_progress(function_id).status, 0, 3);
         }
-        auto rating_value = make_shared<int>(initial_rating);
-        auto star_buttons = make_shared<vector<Gtk::Button*>>();
-        auto apply_rating = [star_buttons](int rating) {
-            for (int index = 0; index < 5; ++index) {
-                auto* image = dynamic_cast<Gtk::Image*>(
-                    (*star_buttons)[index]->get_child());
-                if (image) {
-                    image->set_from_icon_name(
-                        index < rating ? "starred-symbolic"
-                                       : "non-starred-symbolic");
-                }
+        auto understood = make_shared<bool>((saved_status & 1) != 0);
+        auto mastered = make_shared<bool>((saved_status & 2) != 0);
+
+        auto apply_run_state = [run, can_run, understood, mastered]() {
+            if (!can_run) {
+                return;
             }
+            const bool finished = *understood && *mastered;
+            run->set_sensitive(!finished);
+            run->set_tooltip_text(finished
+                ? "已理解并掌握；如需重跑请先取消勾选"
+                : "运行该知识点的实验代码");
         };
-        for (int star_index = 1; star_index <= 5; ++star_index) {
-            auto star = Gtk::make_managed<Gtk::Button>();
-            star->add_css_class("flat");
-            star->add_css_class("star-button");
-            star->set_tooltip_text("掌握程度 " + to_string(star_index) + " 星");
-            auto icon = Gtk::make_managed<Gtk::Image>();
-            icon->set_pixel_size(16);
-            star->set_child(*icon);
-            star->signal_clicked().connect(
-                [this, function_id, rating_value, star_index, apply_rating]() {
-                    *rating_value = (*rating_value == star_index)
-                        ? star_index - 1
-                        : star_index;
-                    apply_rating(*rating_value);
+        auto make_topic_toggle = [this,
+                                     function_id,
+                                     understood,
+                                     mastered,
+                                     apply_run_state](
+                                     const char* label_text,
+                                     const string& tooltip_text,
+                                     const shared_ptr<bool>& flag) {
+            auto toggle = Gtk::make_managed<Gtk::ToggleButton>(label_text);
+            toggle->add_css_class("btn-sm");
+            toggle->add_css_class("topic-toggle");
+            toggle->set_tooltip_text(tooltip_text);
+            toggle->set_active(*flag);
+            toggle->signal_toggled().connect(
+                [this,
+                 function_id,
+                 toggle,
+                 flag,
+                 understood,
+                 mastered,
+                 apply_run_state]() {
+                    *flag = toggle->get_active();
                     if (m_learning_store) {
                         const auto progress =
                             m_learning_store->load_progress(function_id);
+                        const int status =
+                            (*understood ? 1 : 0) | (*mastered ? 2 : 0);
                         m_learning_store->save_progress(
                             function_id,
-                            *rating_value,
+                            status,
                             progress.note);
                     }
+                    apply_run_state();
                 });
-            star_buttons->push_back(star);
-            actions->append(*star);
-        }
-        apply_rating(initial_rating);
+            return toggle;
+        };
+        actions->append(*make_topic_toggle(
+            "理解",
+            "标记该知识点为已理解",
+            understood));
+        actions->append(*make_topic_toggle(
+            "掌握",
+            "标记该知识点为已掌握",
+            mastered));
+        apply_run_state();
 
         row_box->append(*actions);
 
