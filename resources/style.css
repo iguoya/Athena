@@ -21,6 +21,8 @@
 @define-color athena_success #198754;
 @define-color athena_danger #dc3545;
 @define-color athena_orange #fd7e14;
+@define-color athena_teal #20c997;
+@define-color athena_warning #ffc107;
 
 /* === Application shell === */
 .athena-window,
@@ -426,10 +428,33 @@ frame.knowledge-status-bar > border {
     margin: 0;
 }
 
+/* 星星按钮拍平：基础 button 规则自带边框、阴影和最小高度，
+   不单靠 GTK 内建的 flat 语义类去除，这里显式清掉。 */
 .star-button {
     padding: 1px;
     min-width: 0;
     min-height: 0;
+    border: none;
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+}
+
+.star-button:hover {
+    border: none;
+    background-color: alpha(@athena_body_text, 0.06);
+    box-shadow: none;
+}
+
+.star-button:active,
+.star-button:checked {
+    border: none;
+    background-color: alpha(@athena_body_text, 0.10);
+    box-shadow: none;
+}
+
+.star-button:focus {
+    box-shadow: none;
 }
 
 .star-row-mastery image {
@@ -444,12 +469,28 @@ frame.knowledge-status-bar > border {
     color: @athena_success;
 }
 
-/* 重要度：内容作者标注的客观难度，只读徽章，显示在知识点标题旁 */
+/* 重要度：内容作者标注的客观难度，只读徽章 + 星级，显示在知识点标题旁；
+   五个等级各用一种颜色，从简单到极难由冷到暖过渡。 */
 .badge-importance {
-    background-color: @athena_orange;
     font-size: 11pt;
     padding: 1px 8px;
 }
+
+.importance-stars image {
+    -gtk-icon-size: 12px;
+}
+
+.importance-level-1 { background-color: @athena_success; }
+.importance-level-2 { background-color: @athena_teal; }
+.importance-level-3 { background-color: @athena_warning; color: @athena_body_text; }
+.importance-level-4 { background-color: @athena_orange; }
+.importance-level-5 { background-color: @athena_danger; }
+
+.importance-stars.importance-level-1 image { color: @athena_success; }
+.importance-stars.importance-level-2 image { color: @athena_teal; }
+.importance-stars.importance-level-3 image { color: @athena_warning; }
+.importance-stars.importance-level-4 image { color: @athena_orange; }
+.importance-stars.importance-level-5 image { color: @athena_danger; }
 
 /* === Small reusable status utilities === */
 .badge {

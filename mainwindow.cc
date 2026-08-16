@@ -1091,17 +1091,41 @@ void MainWindow::populate_topic_list(
 
         // 重要度：内容作者基于教学与工程实践给出的客观难度判断，只读展示，
         // 用户不可修改；未标注时不显示，避免给未评估内容造成虚假精确感。
+        // 文字徽章 + 星级并列展示，五个等级各用一种颜色区分。
         const int importance = clamp(subchapter.importance, 0, 5);
         if (importance > 0) {
-            auto importance_badge = Gtk::make_managed<Gtk::Label>(
-                importance_levels[static_cast<size_t>(importance)]);
+            const string level_text = importance_levels[static_cast<size_t>(importance)];
+            const string level_class = "importance-level-" + to_string(importance);
+            const string tooltip =
+                "内容难度：" + level_text + "（由内容作者标注，只读）";
+
+            auto importance_group = Gtk::make_managed<Gtk::Box>(
+                Gtk::Orientation::HORIZONTAL, 4);
+            importance_group->set_valign(Gtk::Align::CENTER);
+            importance_group->set_tooltip_text(tooltip);
+
+            auto importance_badge = Gtk::make_managed<Gtk::Label>(level_text);
             importance_badge->add_css_class("badge");
             importance_badge->add_css_class("badge-importance");
-            importance_badge->set_valign(Gtk::Align::CENTER);
-            importance_badge->set_tooltip_text(
-                "内容难度：" + importance_levels[static_cast<size_t>(importance)]
-                + "（由内容作者标注，只读）");
-            title_row->append(*importance_badge);
+            importance_badge->add_css_class(level_class);
+            importance_group->append(*importance_badge);
+
+            auto importance_stars = Gtk::make_managed<Gtk::Box>(
+                Gtk::Orientation::HORIZONTAL, 1);
+            importance_stars->add_css_class("importance-stars");
+            importance_stars->add_css_class(level_class);
+            for (int star_index = 1; star_index <= 5; ++star_index) {
+                auto icon = Gtk::make_managed<Gtk::Image>();
+                icon->set_from_icon_name(
+                    star_index <= importance
+                        ? "starred-symbolic"
+                        : "non-starred-symbolic");
+                icon->set_pixel_size(12);
+                importance_stars->append(*icon);
+            }
+            importance_group->append(*importance_stars);
+
+            title_row->append(*importance_group);
         }
         text_box->append(*title_row);
 
