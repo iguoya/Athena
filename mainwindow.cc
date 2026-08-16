@@ -494,7 +494,6 @@ void MainWindow::initialize_code_page(
     auto source_view = GTK_SOURCE_VIEW(
         gtk_builder_get_object(builder->gobj(), "source_view"));
     auto result_view = builder->get_widget<Gtk::TextView>("result_view");
-    auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
     auto topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
     auto knowledge_description_label =
         builder->get_widget<Gtk::Label>("knowledge_description_label");
@@ -523,7 +522,7 @@ void MainWindow::initialize_code_page(
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
 
-    if (topics_label && topics_list) {
+    if (topics_list) {
         populate_topic_list(
             category_name,
             chapter,

@@ -43,7 +43,7 @@ Box chapter_page {
         xalign: 0;
 
         styles [
-          "dim-label"
+          "header-description"
         ]
       }
     }
@@ -128,22 +128,15 @@ Box chapter_page {
           margin-bottom: 8;
           vexpand: true;
 
-          Label topics_label {
-            name: "topics_label";
-            label: "本章知识点";
-            halign: start;
-
-            styles [
-              "panel-title"
-            ]
-          }
-
           Frame {
+            name: "topics_frame";
+            label: "本章知识点";
             hexpand: true;
             vexpand: true;
 
             styles [
-              "panel-frame"
+              "panel-frame",
+              "group-frame"
             ]
 
             ScrolledWindow {
@@ -171,27 +164,15 @@ Box chapter_page {
         margin-top: 8;
         vexpand: true;
 
-        Box {
-          orientation: horizontal;
-          spacing: 8;
-
-          Label {
-            label: "运行结果";
-            halign: start;
-            hexpand: true;
-
-            styles [
-              "panel-title"
-            ]
-          }
-        }
-
         Frame {
+          name: "result_frame";
+          label: "运行结果";
           hexpand: true;
           vexpand: true;
 
           styles [
-            "panel-frame"
+            "panel-frame",
+            "group-frame"
           ]
 
           ScrolledWindow {
