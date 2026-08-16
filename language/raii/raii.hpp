@@ -20,5 +20,5 @@ public:
 
     // 移动语义
     void rvalue(ostream& output);
-    void move_(ostream& output);
+    void move_semantics(ostream& output);
 };

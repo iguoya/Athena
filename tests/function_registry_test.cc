@@ -18,7 +18,7 @@ TEST(FunctionRegistryTest, RegistersCurrentReferenceAndRaiiExperiments) {
 
     EXPECT_EQ(registry.ids().size(), 10);
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
-    EXPECT_TRUE(registry.contains("cpp.RAII.move_"));
+    EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
 }
 

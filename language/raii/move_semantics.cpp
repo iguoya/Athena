@@ -9,7 +9,7 @@ void RAII::rvalue(ostream& output) {
     output << "[待实现] 右值引用" << '\n';
 }
 
-void RAII::move_(ostream& output) {
+void RAII::move_semantics(ostream& output) {
     // TODO: 演示移动构造、移动赋值和 std::move。
     output << "[待实现] 移动构造与赋值" << '\n';
 }
