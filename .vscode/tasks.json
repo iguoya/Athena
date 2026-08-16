@@ -23,6 +23,16 @@
             "detail": "增量编译 Athena"
         },
         {
+            "label": "Meson: Build (debugoptimized)",
+            "type": "shell",
+            "command": "meson compile -C ${workspaceFolder}/builddir-fast",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "增量编译 debugoptimized 构建（启动与运行更快）"
+        },
+        {
             "label": "Meson: Full Build",
             "dependsOn": [
                 "Meson: Configure",
