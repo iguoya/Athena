@@ -54,6 +54,9 @@ private:
     };
 
     void execute(const string& sql) const;
+    // 把旧版本单一 status 位标志列迁移为 importance/mastery 两列；
+    // CREATE TABLE IF NOT EXISTS 对已存在的旧表是空操作，新列需要显式补齐。
+    void migrate_legacy_status_column();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;
 };

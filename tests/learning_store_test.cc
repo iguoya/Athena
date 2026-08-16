@@ -1,7 +1,10 @@
 #include "storage/learning_store.h"
 
+#include <sqlite3.h>
+
 #include <gtest/gtest.h>
 
+#include <cstdio>
 #include <stdexcept>
 
 namespace {
@@ -61,6 +64,47 @@ TEST(LearningStoreTest, RejectsInvalidDatabasePath) {
     EXPECT_THROW(
         LearningStore("/nonexistent-directory/athena.db"),
         runtime_error);
+}
+
+// 复现旧版本升级场景：旧库的 knowledge_progress 只有位标志 status 列
+// （bit0 已理解、bit1 已掌握），没有 importance/mastery。CREATE TABLE
+// IF NOT EXISTS 对已存在的表是空操作，必须显式迁移，否则后续查询会因
+// "no such column" 抛出异常。
+TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
+    const string db_path = "/tmp/athena-learning-store-legacy-test.db";
+    std::remove(db_path.c_str());
+
+    sqlite3* legacy = nullptr;
+    ASSERT_EQ(sqlite3_open(db_path.c_str(), &legacy), SQLITE_OK);
+    ASSERT_EQ(
+        sqlite3_exec(
+            legacy,
+            "CREATE TABLE knowledge_progress ("
+            "  function_id TEXT PRIMARY KEY,"
+            "  status INTEGER NOT NULL DEFAULT 0,"
+            "  note TEXT NOT NULL DEFAULT '',"
+            "  updated_at INTEGER NOT NULL DEFAULT 0);"
+            "INSERT INTO knowledge_progress(function_id, status, note, updated_at) "
+            "VALUES"
+            "  ('cpp.RAII.weak', 3, '已理解并掌握', 100),"
+            "  ('cpp.RAII.unique', 2, '仅掌握', 100),"
+            "  ('cpp.Reference.cast', 1, '仅理解', 100),"
+            "  ('cpp.Reference.const', 0, '都没标', 100);",
+            nullptr,
+            nullptr,
+            nullptr),
+        SQLITE_OK);
+    sqlite3_close_v2(legacy);
+
+    // 打开旧库不应抛异常，且应能立即按新字段查询——这正是升级后崩溃的场景。
+    LearningStore store(db_path);
+    EXPECT_EQ(store.load_progress("cpp.RAII.weak").mastery, 5);
+    EXPECT_EQ(store.load_progress("cpp.RAII.unique").mastery, 3);
+    EXPECT_EQ(store.load_progress("cpp.Reference.cast").mastery, 1);
+    EXPECT_EQ(store.load_progress("cpp.Reference.const").mastery, 0);
+    EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "已理解并掌握");
+
+    std::remove(db_path.c_str());
 }
 
 } // namespace

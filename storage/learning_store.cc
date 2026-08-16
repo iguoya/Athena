@@ -43,6 +43,18 @@ void bind_text(sqlite3* handle, sqlite3_stmt* statement, int index, const string
     }
 }
 
+bool table_has_column(sqlite3* handle, const string& table, const string& column) {
+    Statement info(handle, "PRAGMA table_info(" + table + ")");
+    while (sqlite3_step(info.raw) == SQLITE_ROW) {
+        const auto* name =
+            reinterpret_cast<const char*>(sqlite3_column_text(info.raw, 1));
+        if (name && column == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // namespace
 
 LearningStore::LearningStore(const string& database_path) {
@@ -61,6 +73,7 @@ LearningStore::LearningStore(const string& database_path) {
         "  mastery INTEGER NOT NULL DEFAULT 0,"
         "  note TEXT NOT NULL DEFAULT '',"
         "  updated_at INTEGER NOT NULL DEFAULT 0)");
+    migrate_legacy_status_column();
     execute(
         "CREATE TABLE IF NOT EXISTS run_history ("
         "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -72,6 +85,36 @@ LearningStore::LearningStore(const string& database_path) {
     execute(
         "CREATE INDEX IF NOT EXISTS idx_run_history_function "
         "ON run_history(function_id, id DESC)");
+}
+
+void LearningStore::migrate_legacy_status_column() {
+    const bool has_status =
+        table_has_column(m_handle.get(), "knowledge_progress", "status");
+    const bool had_importance =
+        table_has_column(m_handle.get(), "knowledge_progress", "importance");
+    const bool had_mastery =
+        table_has_column(m_handle.get(), "knowledge_progress", "mastery");
+
+    if (!had_importance) {
+        execute(
+            "ALTER TABLE knowledge_progress "
+            "ADD COLUMN importance INTEGER NOT NULL DEFAULT 0");
+    }
+    if (!had_mastery) {
+        execute(
+            "ALTER TABLE knowledge_progress "
+            "ADD COLUMN mastery INTEGER NOT NULL DEFAULT 0");
+    }
+    if (has_status && !had_mastery) {
+        // 旧版本以位标志持久化（bit0 已理解、bit1 已掌握）；折算成掌握程度星级，
+        // 避免旧库升级后直接丢弃已记录的学习进度。
+        execute(
+            "UPDATE knowledge_progress SET mastery = "
+            "  CASE WHEN (status & 3) = 3 THEN 5 "
+            "       WHEN (status & 2) = 2 THEN 3 "
+            "       WHEN (status & 1) = 1 THEN 1 "
+            "       ELSE 0 END");
+    }
 }
 
 LearningStore::~LearningStore() = default;

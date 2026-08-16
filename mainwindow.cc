@@ -609,7 +609,13 @@ void MainWindow::show_history_dialog(
     if (!m_learning_store) {
         return;
     }
-    const auto runs = m_learning_store->recent_runs(function_id, 20);
+    vector<RunRecord> runs;
+    try {
+        runs = m_learning_store->recent_runs(function_id, 20);
+    } catch (const exception& error) {
+        cerr << "Failed to load run history for " << function_id << ": "
+             << error.what() << endl;
+    }
     const string current_hash =
         member_source_hash(m_content_loader, source_path, member_name);
 
@@ -801,11 +807,16 @@ void MainWindow::start_experiment(
                     *running_flag = false;
                     result_buffer->set_text(result);
                     if (learning_store) {
-                        learning_store->record_run(
-                            function_id,
-                            raw_output,
-                            duration_ms,
-                            source_hash);
+                        try {
+                            learning_store->record_run(
+                                function_id,
+                                raw_output,
+                                duration_ms,
+                                source_hash);
+                        } catch (const exception& error) {
+                            cerr << "Failed to record run for " << function_id
+                                 << ": " << error.what() << endl;
+                        }
                     }
                     if (experiment_spinner) {
                         experiment_spinner->set_spinning(false);
@@ -870,13 +881,18 @@ void MainWindow::populate_topic_list(
             || current_topic->function_id.empty()) {
             return;
         }
-        const auto progress =
-            m_learning_store->load_progress(current_topic->function_id);
-        m_learning_store->save_progress(
-            current_topic->function_id,
-            progress.importance,
-            progress.mastery,
-            string(note_buffer->get_text().raw()));
+        try {
+            const auto progress =
+                m_learning_store->load_progress(current_topic->function_id);
+            m_learning_store->save_progress(
+                current_topic->function_id,
+                progress.importance,
+                progress.mastery,
+                string(note_buffer->get_text().raw()));
+        } catch (const exception& error) {
+            cerr << "Failed to save note for " << current_topic->function_id
+                 << ": " << error.what() << endl;
+        }
         *note_dirty = false;
     };
     if (note_buffer) {
@@ -1120,7 +1136,12 @@ void MainWindow::populate_topic_list(
         // 掌握程度到 5 星后运行按钮置灰，降低星级即可恢复运行。
         KnowledgeProgress saved_progress;
         if (m_learning_store) {
-            saved_progress = m_learning_store->load_progress(function_id);
+            try {
+                saved_progress = m_learning_store->load_progress(function_id);
+            } catch (const exception& error) {
+                cerr << "Failed to load progress for " << function_id << ": "
+                     << error.what() << endl;
+            }
         }
         auto importance = make_shared<int>(clamp(saved_progress.importance, 0, 5));
         auto mastery = make_shared<int>(clamp(saved_progress.mastery, 0, 5));
@@ -1129,12 +1150,18 @@ void MainWindow::populate_topic_list(
             if (!m_learning_store) {
                 return;
             }
-            const auto note = m_learning_store->load_progress(function_id).note;
-            m_learning_store->save_progress(
-                function_id,
-                *importance,
-                *mastery,
-                note);
+            try {
+                const auto note =
+                    m_learning_store->load_progress(function_id).note;
+                m_learning_store->save_progress(
+                    function_id,
+                    *importance,
+                    *mastery,
+                    note);
+            } catch (const exception& error) {
+                cerr << "Failed to save rating for " << function_id << ": "
+                     << error.what() << endl;
+            }
         };
         auto apply_run_state = [run, can_run, mastery]() {
             if (!can_run) {
