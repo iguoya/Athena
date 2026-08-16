@@ -4,6 +4,7 @@
 #include "registry/function_registry.h"
 #include "render/article_view.h"
 #include "content/content_loader.h"
+#include "storage/learning_store.h"
 
 #include <gtkmm.h>
 #include <gtksourceview/gtksource.h>
@@ -41,9 +42,19 @@ private:
         Gtk::ListBox& topics_list,
         Gtk::Label* knowledge_description_label,
         Gtk::Spinner* experiment_spinner,
-        Gtk::Label* experiment_status_label);
+        Gtk::Label* experiment_status_label,
+        Gtk::Button* history_button);
+    void open_learning_store();
+    void show_note_dialog(const string& function_id, const string& topic_title);
+    void show_history_dialog(
+        const string& function_id,
+        const string& source_path,
+        const string& member_name,
+        const string& topic_title);
     void start_experiment(
         const string& function_id,
+        const string& source_path,
+        const string& member_name,
         Gtk::TextView& result_view,
         Gtk::Spinner* experiment_spinner,
         Gtk::Label* experiment_status_label);
@@ -73,6 +84,7 @@ private:
 
     ChapterCatalog m_catalog;
     FunctionRegistry m_function_registry;
+    unique_ptr<LearningStore> m_learning_store;
 
     // 实验执行状态：m_experiment_running 只在主线程读写；
     // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。

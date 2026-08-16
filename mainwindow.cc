@@ -4,7 +4,9 @@
 
 #include <gtksourceview/gtksource.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
+#include <ctime>
 #include <functional>
 #include <iomanip>
 #include <iostream>
@@ -21,6 +23,44 @@ string format_elapsed(double seconds) {
     ostringstream stream;
     stream << fixed << setprecision(2) << seconds << "s";
     return stream.str();
+}
+
+string format_duration_ms(double milliseconds) {
+    ostringstream stream;
+    if (milliseconds >= 1000.0) {
+        stream << fixed << setprecision(2) << milliseconds / 1000.0 << "s";
+    } else {
+        stream << fixed << setprecision(2) << milliseconds << "ms";
+    }
+    return stream.str();
+}
+
+string format_timestamp(long long seconds) {
+    const auto raw = static_cast<time_t>(seconds);
+    tm local {};
+    localtime_r(&raw, &local);
+    ostringstream stream;
+    stream << put_time(&local, "%m-%d %H:%M:%S");
+    return stream.str();
+}
+
+// 计算知识点成员函数源码的指纹，用于运行历史中标记“代码是否修改过”。
+string member_source_hash(
+    const ContentLoader& loader,
+    const string& source_path,
+    const string& member_name) {
+    try {
+        const string source = loader.load_project_file(source_path);
+        const auto range = locate_cpp_member_function(source, member_name);
+        if (!range) {
+            return "";
+        }
+        const string body =
+            source.substr(range->begin, range->end - range->begin);
+        return to_string(hash<string> {}(body));
+    } catch (const exception&) {
+        return "";
+    }
 }
 
 void display_source(
@@ -137,6 +177,8 @@ struct TopicSelection {
     string description;
     string source_path;
     string member_name;
+    string title;
+    string function_id;
 };
 
 } // namespace
@@ -167,6 +209,7 @@ MainWindow::MainWindow(
 
     load_chapter_metadata();
     setup_category_sidebar();
+    open_learning_store();
 
     cout << "MainWindow initialized successfully" << endl;
 }
@@ -437,6 +480,34 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Spinner>("experiment_spinner");
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
+    auto copy_source_button =
+        builder->get_widget<Gtk::Button>("copy_source_button");
+    auto copy_result_button =
+        builder->get_widget<Gtk::Button>("copy_result_button");
+    auto history_button = builder->get_widget<Gtk::Button>("history_button");
+
+    if (copy_source_button && source_view) {
+        copy_source_button->signal_clicked().connect([source_view]() {
+            auto* buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view));
+            GtkTextIter begin;
+            GtkTextIter end;
+            gtk_text_buffer_get_bounds(buffer, &begin, &end);
+            char* text = gtk_text_buffer_get_text(buffer, &begin, &end, false);
+            gdk_clipboard_set_text(
+                gtk_widget_get_clipboard(GTK_WIDGET(source_view)), text);
+            g_free(text);
+        });
+    }
+    if (copy_result_button && result_view) {
+        copy_result_button->signal_clicked().connect([result_view]() {
+            auto buffer = result_view->get_buffer();
+            Gtk::TextIter begin;
+            Gtk::TextIter end;
+            buffer->get_bounds(begin, end);
+            result_view->get_clipboard()->set_text(
+                buffer->get_text(begin, end, false));
+        });
+    }
 
     if (topics_label && topics_list) {
         populate_topic_list(
@@ -447,7 +518,8 @@ void MainWindow::initialize_code_page(
             *topics_list,
             knowledge_description_label,
             experiment_spinner,
-            experiment_status_label);
+            experiment_status_label,
+            history_button);
     }
 }
 
@@ -460,10 +532,166 @@ MainWindow::~MainWindow() {
     m_ui_alive->store(false);
 }
 
+void MainWindow::open_learning_store() {
+    const string data_dir =
+        Glib::build_filename(Glib::get_user_data_dir(), "Athena");
+    g_mkdir_with_parents(data_dir.c_str(), 0700);
+    try {
+        m_learning_store = make_unique<LearningStore>(
+            Glib::build_filename(data_dir, "learning.db"));
+        cout << "Learning store opened at " << data_dir << endl;
+    } catch (const exception& error) {
+        cerr << "Learning store unavailable: " << error.what() << endl;
+        m_learning_store.reset();
+    }
+}
+
+void MainWindow::show_note_dialog(
+    const string& function_id,
+    const string& topic_title) {
+    if (!m_learning_store) {
+        return;
+    }
+    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    dialog->set_title("笔记：" + topic_title);
+    dialog->set_transient_for(*this);
+    dialog->set_modal(true);
+    dialog->set_default_size(560, 400);
+
+    auto* content = dialog->get_content_area();
+    content->set_spacing(8);
+    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    scrolled->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+    scrolled->set_hexpand(true);
+    scrolled->set_vexpand(true);
+    auto view = Gtk::make_managed<Gtk::TextView>();
+    view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
+    view->get_buffer()->set_text(
+        m_learning_store->load_progress(function_id).note);
+    scrolled->set_child(*view);
+    content->append(*scrolled);
+
+    dialog->add_button("保存", static_cast<int>(Gtk::ResponseType::OK));
+    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+    dialog->signal_response().connect(
+        [this, dialog, view, function_id](int response) {
+            if (response == static_cast<int>(Gtk::ResponseType::OK)
+                && m_learning_store) {
+                const auto progress =
+                    m_learning_store->load_progress(function_id);
+                m_learning_store->save_progress(
+                    function_id,
+                    progress.status,
+                    string(view->get_buffer()->get_text().raw()));
+            }
+            dialog->hide();
+        });
+    dialog->show();
+}
+
+void MainWindow::show_history_dialog(
+    const string& function_id,
+    const string& source_path,
+    const string& member_name,
+    const string& topic_title) {
+    if (!m_learning_store) {
+        return;
+    }
+    const auto runs = m_learning_store->recent_runs(function_id, 20);
+    const string current_hash =
+        member_source_hash(m_content_loader, source_path, member_name);
+
+    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    dialog->set_title("运行历史：" + topic_title);
+    dialog->set_transient_for(*this);
+    dialog->set_modal(true);
+    dialog->set_default_size(780, 520);
+
+    auto* content = dialog->get_content_area();
+    auto paned = Gtk::make_managed<Gtk::Paned>(Gtk::Orientation::VERTICAL);
+    paned->set_position(200);
+    paned->set_hexpand(true);
+    paned->set_vexpand(true);
+    paned->set_shrink_start_child(false);
+    paned->set_shrink_end_child(false);
+
+    auto list_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    list_scrolled->set_policy(
+        Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+    auto list = Gtk::make_managed<Gtk::ListBox>();
+    list->set_selection_mode(Gtk::SelectionMode::SINGLE);
+    list->add_css_class("topic-list");
+    list_scrolled->set_child(*list);
+
+    auto output_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    output_scrolled->set_policy(
+        Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+    auto output_view = Gtk::make_managed<Gtk::TextView>();
+    output_view->set_editable(false);
+    output_view->set_cursor_visible(false);
+    output_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
+    output_view->add_css_class("code-view");
+    output_scrolled->set_child(*output_view);
+
+    if (runs.empty()) {
+        auto empty_row = Gtk::make_managed<Gtk::ListBoxRow>();
+        empty_row->set_selectable(false);
+        auto empty_label =
+            Gtk::make_managed<Gtk::Label>("该知识点还没有运行记录。");
+        empty_label->add_css_class("dim-label");
+        empty_label->set_margin_top(10);
+        empty_label->set_margin_bottom(10);
+        empty_label->set_margin_start(10);
+        empty_label->set_margin_end(10);
+        empty_row->set_child(*empty_label);
+        list->append(*empty_row);
+    } else {
+        auto output_by_row = make_shared<std::map<Gtk::ListBoxRow*, string>>();
+        for (const auto& run : runs) {
+            string code_state = "代码版本未知";
+            if (!run.source_hash.empty() && !current_hash.empty()) {
+                code_state =
+                    run.source_hash == current_hash ? "代码一致" : "代码已修改";
+            }
+            auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+            auto label = Gtk::make_managed<Gtk::Label>(
+                format_timestamp(run.ran_at) + " · "
+                + format_duration_ms(run.duration_ms) + " · " + code_state);
+            label->set_halign(Gtk::Align::START);
+            label->set_margin_top(6);
+            label->set_margin_bottom(6);
+            label->set_margin_start(10);
+            label->set_margin_end(10);
+            row->set_child(*label);
+            (*output_by_row)[row] = run.output;
+            list->append(*row);
+        }
+        list->signal_row_selected().connect(
+            [output_view, output_by_row](Gtk::ListBoxRow* row) {
+                const auto found = output_by_row->find(row);
+                if (found != output_by_row->end()) {
+                    output_view->get_buffer()->set_text(found->second);
+                }
+            });        if (auto* first = list->get_row_at_index(0)) {
+            list->select_row(*first);
+        }
+    }
+
+    paned->set_start_child(*list_scrolled);
+    paned->set_end_child(*output_scrolled);
+    content->append(*paned);
+
+    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
+    dialog->show();
+}
+
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，
 // 运行期间新的运行请求被忽略；结果与耗时经主线程回填。
 void MainWindow::start_experiment(
     const string& function_id,
+    const string& source_path,
+    const string& member_name,
     Gtk::TextView& result_view,
     Gtk::Spinner* experiment_spinner,
     Gtk::Label* experiment_status_label) {
@@ -471,6 +699,9 @@ void MainWindow::start_experiment(
         return;
     }
     m_experiment_running = true;
+
+    const string source_hash =
+        member_source_hash(m_content_loader, source_path, member_name);
 
     const auto result_buffer = result_view.get_buffer();
     result_buffer->set_text("运行中…");
@@ -501,14 +732,23 @@ void MainWindow::start_experiment(
 
     auto alive = m_ui_alive;
     auto* registry = &m_function_registry;
+    // 工作线程与回传回调只接触这些主线程成员的指针，回调本身经 alive 标志保护。
+    auto* experiment_thread = &m_experiment_thread;
+    auto* elapsed_timer = &m_elapsed_timer;
+    auto* running_flag = &m_experiment_running;
+    auto* learning_store = m_learning_store.get();
     m_experiment_thread = thread(
-        [this,
-         function_id,
+        [function_id,
+         source_hash,
          result_buffer,
          experiment_spinner,
          experiment_status_label,
          alive,
          registry,
+         experiment_thread,
+         elapsed_timer,
+         running_flag,
+         learning_store,
          started]() {
             ostringstream output;
             string failure;
@@ -519,27 +759,42 @@ void MainWindow::start_experiment(
             }
             const auto duration = chrono::duration<double>(
                 chrono::steady_clock::now() - started);
+            const string raw_output = failure.empty() ? output.str() : failure;
             const string result =
-                (failure.empty() ? output.str() : failure)
-                + "\n—— 耗时 " + format_elapsed(duration.count()) + " ——";
+                raw_output + "\n—— 耗时 " + format_elapsed(duration.count()) + " ——";
+            const double duration_ms = duration.count() * 1000.0;
 
             Glib::signal_idle().connect_once(
-                [this,
+                [function_id,
+                 source_hash,
+                 raw_output,
+                 duration_ms,
                  result_buffer,
                  experiment_spinner,
                  experiment_status_label,
                  alive,
-                 result]() {
+                 result,
+                 experiment_thread,
+                 elapsed_timer,
+                 running_flag,
+                 learning_store]() {
                     if (!alive->load()) {
                         return;
                     }
                     // 上一个工作线程已结束，join 后才允许启动新实验。
-                    if (m_experiment_thread.joinable()) {
-                        m_experiment_thread.join();
+                    if (experiment_thread->joinable()) {
+                        experiment_thread->join();
                     }
-                    m_elapsed_timer.disconnect();
-                    m_experiment_running = false;
+                    elapsed_timer->disconnect();
+                    *running_flag = false;
                     result_buffer->set_text(result);
+                    if (learning_store) {
+                        learning_store->record_run(
+                            function_id,
+                            raw_output,
+                            duration_ms,
+                            source_hash);
+                    }
                     if (experiment_spinner) {
                         experiment_spinner->set_spinning(false);
                         experiment_spinner->set_visible(false);
@@ -559,7 +814,8 @@ void MainWindow::populate_topic_list(
     Gtk::ListBox& topics_list,
     Gtk::Label* knowledge_description_label,
     Gtk::Spinner* experiment_spinner,
-    Gtk::Label* experiment_status_label) {
+    Gtk::Label* experiment_status_label,
+    Gtk::Button* history_button) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -584,16 +840,31 @@ void MainWindow::populate_topic_list(
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
     const string chapter_name = chapter.name;
+    auto current_topic = make_shared<TopicSelection>();
+    if (history_button) {
+        history_button->signal_clicked().connect(
+            [this, current_topic]() {
+                if (!current_topic->function_id.empty()) {
+                    show_history_dialog(
+                        current_topic->function_id,
+                        current_topic->source_path,
+                        current_topic->member_name,
+                        current_topic->title);
+                }
+            });
+    }
     auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
         [this,
          selection_by_row,
+         current_topic,
          knowledge_description_label,
          source_view,
          result_view,
          category_name,
          chapter_name,
          experiment_spinner,
-         experiment_status_label](Gtk::ListBoxRow* row) {
+         experiment_status_label,
+         history_button](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -614,6 +885,11 @@ void MainWindow::populate_topic_list(
                 found->second.source_path,
                 found->second.member_name);
 
+            *current_topic = found->second;
+            if (history_button) {
+                history_button->set_sensitive(true);
+            }
+
             if (!result_view) {
                 return;
             }
@@ -626,6 +902,8 @@ void MainWindow::populate_topic_list(
             }
             start_experiment(
                 function_id,
+                found->second.source_path,
+                found->second.member_name,
                 *result_view,
                 experiment_spinner,
                 experiment_status_label);
@@ -676,10 +954,16 @@ void MainWindow::populate_topic_list(
         row->set_activatable(true);
         row->add_css_class("topic-row");
 
+        const string function_id = make_function_id(
+            category_name,
+            chapter.name,
+            subchapter.name);
         (*selection_by_row)[row] = {
             .description = subchapter.description,
             .source_path = resolve_source_path(chapter, subchapter),
             .member_name = subchapter.name,
+            .title = subchapter.title,
+            .function_id = function_id,
         };
 
         auto row_box = Gtk::make_managed<Gtk::Box>(
@@ -706,15 +990,59 @@ void MainWindow::populate_topic_list(
         text_box->append(*point_description);
         row_box->append(*text_box);
 
+        if (m_learning_store) {
+            auto note_button = Gtk::make_managed<Gtk::Button>("笔记");
+            note_button->add_css_class("btn-sm");
+            note_button->set_valign(Gtk::Align::CENTER);
+            note_button->set_tooltip_text("编辑该知识点的学习笔记");
+            note_button->signal_clicked().connect(
+                [this, function_id, topic_title = subchapter.title]() {
+                    show_note_dialog(function_id, topic_title);
+                });
+            row_box->append(*note_button);
+
+            auto status_button = Gtk::make_managed<Gtk::Button>();
+            status_button->add_css_class("btn-sm");
+            status_button->set_valign(Gtk::Align::CENTER);
+            status_button->set_tooltip_text(
+                "点击切换掌握状态：未学 → 已学 → 需复习");
+            auto status_text = Gtk::make_managed<Gtk::Label>();
+            status_button->set_child(*status_text);
+            auto apply_status = [status_text](int status) {
+                static const array<pair<const char*, const char*>, 3> meta = {{
+                    {"未学", "topic-status-new"},
+                    {"已学", "topic-status-learned"},
+                    {"需复习", "topic-status-review"},
+                }};
+                for (const auto& entry : meta) {
+                    status_text->remove_css_class(entry.second);
+                }
+                status_text->set_text(meta[status].first);
+                status_text->add_css_class(meta[status].second);
+            };
+            const int initial_status =
+                m_learning_store->load_progress(function_id).status;
+            apply_status(initial_status);
+            auto status_value = make_shared<int>(initial_status);
+            status_button->signal_clicked().connect(
+                [this, function_id, status_value, apply_status]() {
+                    *status_value = (*status_value + 1) % 3;
+                    apply_status(*status_value);
+                    const auto progress =
+                        m_learning_store->load_progress(function_id);
+                    m_learning_store->save_progress(
+                        function_id,
+                        *status_value,
+                        progress.note);
+                });
+            row_box->append(*status_button);
+        }
+
         auto run = Gtk::make_managed<Gtk::Button>("运行");
         run->add_css_class("suggested-action");
         run->add_css_class("btn-primary");
         run->add_css_class("btn-sm");
         run->add_css_class("topic-run");
-        const string function_id = make_function_id(
-            category_name,
-            chapter.name,
-            subchapter.name);
         const bool can_run = m_function_registry.contains(function_id);
         run->set_sensitive(can_run);
         run->set_tooltip_text(can_run
