@@ -44,8 +44,8 @@ string format_timestamp(long long seconds) {
     return stream.str();
 }
 
-// 计算知识点成员函数源码的指纹，用于运行历史中标记“代码是否修改过”。
-string member_source_hash(
+// 提取知识点成员函数的完整源码文本。
+optional<string> member_source_body(
     const ContentLoader& loader,
     const string& source_path,
     const string& member_name) {
@@ -53,13 +53,51 @@ string member_source_hash(
         const string source = loader.load_project_file(source_path);
         const auto range = locate_cpp_member_function(source, member_name);
         if (!range) {
-            return "";
+            return nullopt;
         }
-        const string body =
-            source.substr(range->begin, range->end - range->begin);
-        return to_string(hash<string> {}(body));
+        return source.substr(range->begin, range->end - range->begin);
     } catch (const exception&) {
+        return nullopt;
+    }
+}
+
+// 计算知识点成员函数源码的指纹，用于运行历史中标记“代码是否修改过”。
+string member_source_hash(
+    const ContentLoader& loader,
+    const string& source_path,
+    const string& member_name) {
+    const auto body = member_source_body(loader, source_path, member_name);
+    if (!body) {
         return "";
+    }
+    return to_string(hash<string> {}(*body));
+}
+
+// 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
+// 豆包客户端支持 doubao:// 协议但不支持携带提示词参数，因此采用
+// “剪贴板 + 唤起”的组合；默认命令可用环境变量 ATHENA_AI_COMMAND 覆盖。
+void explain_with_local_ai(
+    const ContentLoader& loader,
+    const string& title,
+    const string& description,
+    const string& source_path,
+    const string& member_name) {
+    string prompt = "请解释 C++ 知识点「" + title + "」：" + description;
+    const auto body = member_source_body(loader, source_path, member_name);
+    if (body && !body->empty()) {
+        prompt += "\n\n参考实现：\n" + *body;
+    }
+    Gdk::Display::get_default()->get_clipboard()->set_text(prompt);
+
+    string command = "open doubao://";
+    if (const char* custom = g_getenv("ATHENA_AI_COMMAND")) {
+        command = custom;
+    }
+    try {
+        Glib::spawn_command_line_async(command);
+    } catch (const exception& error) {
+        cerr << "Failed to launch AI assistant (" << command
+             << "): " << error.what() << endl;
     }
 }
 
@@ -452,7 +490,6 @@ void MainWindow::initialize_code_page(
     auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
     auto source_view = GTK_SOURCE_VIEW(
         gtk_builder_get_object(builder->gobj(), "source_view"));
-    auto run_button = builder->get_widget<Gtk::Button>("run_button");
     auto result_view = builder->get_widget<Gtk::TextView>("result_view");
     auto topics_label = builder->get_widget<Gtk::Label>("topics_label");
     auto topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
@@ -468,9 +505,6 @@ void MainWindow::initialize_code_page(
     if (chapter_icon) {
         configure_image(*chapter_icon, chapter.icon, 36);
     }
-    if (run_button) {
-        run_button->set_visible(false);
-    }
 
     display_source(source_view, m_content_loader, chapter.source);
 
@@ -485,21 +519,6 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Spinner>("experiment_spinner");
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
-    auto copy_source_button =
-        builder->get_widget<Gtk::Button>("copy_source_button");
-
-    if (copy_source_button && source_view) {
-        copy_source_button->signal_clicked().connect([source_view]() {
-            auto* buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view));
-            GtkTextIter begin;
-            GtkTextIter end;
-            gtk_text_buffer_get_bounds(buffer, &begin, &end);
-            char* text = gtk_text_buffer_get_text(buffer, &begin, &end, false);
-            gdk_clipboard_set_text(
-                gtk_widget_get_clipboard(GTK_WIDGET(source_view)), text);
-            g_free(text);
-        });
-    }
 
     if (topics_label && topics_list) {
         populate_topic_list(
@@ -1040,19 +1059,22 @@ void MainWindow::populate_topic_list(
                 });
             actions->append(*history);
 
-            auto copy = Gtk::make_managed<Gtk::Button>("复制");
-            copy->add_css_class("btn-sm");
-            copy->set_tooltip_text("复制该知识点最近一次运行结果");
-            copy->signal_clicked().connect([this, function_id]() {
-                const auto runs =
-                    m_learning_store->recent_runs(function_id, 1);
-                if (!runs.empty()) {
-                    Gdk::Display::get_default()
-                        ->get_clipboard()
-                        ->set_text(runs.front().output);
-                }
-            });
-            actions->append(*copy);
+            auto explain = Gtk::make_managed<Gtk::Button>("解释");
+            explain->add_css_class("btn-sm");
+            explain->set_tooltip_text(
+                "把知识点说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手"
+                "（默认豆包，可用环境变量 ATHENA_AI_COMMAND 自定义命令）");
+            explain->signal_clicked().connect(
+                [row, activate_topic, topic, this]() {
+                    (*activate_topic)(row);
+                    explain_with_local_ai(
+                        m_content_loader,
+                        topic.title,
+                        topic.description,
+                        topic.source_path,
+                        topic.member_name);
+                });
+            actions->append(*explain);
         }
 
         row_box->append(*actions);

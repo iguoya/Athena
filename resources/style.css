@@ -209,12 +209,22 @@ button.chapter-tab:checked {
     color: @athena_body_text;
 }
 
+/* 带 label 的 Frame（GroupBox 形态）：标题嵌在边框上，与内容更紧密 */
+frame.group-frame > label {
+    margin-start: 10px;
+    margin-end: 6px;
+    padding: 0 6px;
+    font-size: 13pt;
+    font-weight: 700;
+    color: @athena_body_text;
+    background-color: @theme_bg_color;
+}
+
 frame.panel-frame > border,
 frame.card > border {
     border: 1px solid @athena_border;
     border-radius: 7px;
-    background-color: @athena_surface;
-    box-shadow: 0 1px 3px alpha(#000000, 0.08);
+    background-color: @athena_surface;    box-shadow: 0 1px 3px alpha(#000000, 0.08);
 }
 
 /* === Welcome page === */

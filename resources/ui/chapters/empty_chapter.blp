@@ -73,48 +73,15 @@ Box chapter_page {
       hexpand: true;
       vexpand: true;
 
-      Box {
-        orientation: horizontal;
-        spacing: 12;
-
-        Label {
-          label: "源代码";
-          halign: start;
-          hexpand: true;
-
-          styles [
-            "panel-title"
-          ]
-        }
-
-        Button run_button {
-          name: "run_button";
-          label: "运行";
-
-          styles [
-            "suggested-action",
-            "btn-primary",
-            "run-pill"
-          ]
-        }
-
-        Button copy_source_button {
-          name: "copy_source_button";
-          label: "复制";
-          tooltip-text: "复制当前显示的全部源码";
-
-          styles [
-            "btn-sm"
-          ]
-        }
-      }
-
-      Frame {
+      Frame source_frame {
+        name: "source_frame";
+        label: "源代码";
         hexpand: true;
         vexpand: true;
 
         styles [
-          "panel-frame"
+          "panel-frame",
+          "group-frame"
         ]
 
         ScrolledWindow {
