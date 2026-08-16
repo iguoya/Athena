@@ -39,19 +39,6 @@
           "subchapters": []
         },
         {
-          "name": "Reference",
-          "title": "引用",
-          "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
-          "icon": { "type": "theme", "name": "insert-link-symbolic" },
-          "implementation": { "header": "language/references/reference.hpp" },
-          "subchapters": [
-            { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。" },
-            { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义、绑定临时对象及其生命周期行为。" },
-            { "name": "pass_by_reference", "title": "值传递 vs 引用传递", "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。" },
-            { "name": "return_by_reference", "title": "引用返回值", "description": "学习返回引用的用法、可修改性、对象生命周期和悬空引用风险。" }
-          ]
-        },
-        {
           "name": "TypeSemantics",
           "title": "类型、初始化与值语义",
           "description": "学习 C++ 类型系统、初始化方式、类型推导和值类别，为对象和资源语义打下基础。",
@@ -62,6 +49,19 @@
             { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值、将亡值及表达式值类别对重载和生命周期的影响。" },
             { "name": "cast", "title": "C++ 类型转换", "description": "学习 static_cast、dynamic_cast、const_cast 和 reinterpret_cast 的边界与用途。" },
             { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的作用域、底层类型和类型安全性。" }
+          ]
+        },
+        {
+          "name": "Reference",
+          "title": "引用",
+          "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
+          "icon": { "type": "theme", "name": "insert-link-symbolic" },
+          "implementation": { "header": "language/references/reference.hpp" },
+          "subchapters": [
+            { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。" },
+            { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义、绑定临时对象及其生命周期行为。" },
+            { "name": "pass_by_reference", "title": "值传递 vs 引用传递", "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。" },
+            { "name": "return_by_reference", "title": "引用返回值", "description": "学习返回引用的用法、可修改性、对象生命周期和悬空引用风险。" }
           ]
         },
         {
@@ -238,7 +238,7 @@
     {
       "name": "da",
       "title": "数据结构与算法",
-      "description": "通过可运行实验学习常用数据结构、算法思想及其复杂度。",
+      "description": "用 C++ 手写实现经典数据结构与算法，在使用标准库之外掌握其内部原理和算法思想。",
       "icon": { "type": "theme", "name": "applications-science-symbolic" },
       "chapters": [
         { "name": "LinearStructure", "title": "线性结构", "description": "学习线性表的逻辑关系、存储方式和基本操作。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
@@ -253,13 +253,13 @@
         { "name": "GraphTraversal", "title": "图遍历", "description": "学习深度优先搜索和广度优先搜索。", "icon": { "type": "theme", "name": "system-run-symbolic" }, "subchapters": [] },
         { "name": "ShortestPath", "title": "最短路径", "description": "学习常用单源和多源最短路径算法。", "icon": { "type": "theme", "name": "go-jump-symbolic" }, "subchapters": [] },
         { "name": "MinimumSpanningTree", "title": "最小生成树", "description": "学习 Prim、Kruskal 及最小生成树的应用。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
+        { "name": "BasicSorting", "title": "基础排序", "description": "学习冒泡、选择和插入排序。", "icon": { "type": "theme", "name": "view-sort-ascending-symbolic" }, "subchapters": [] },
+        { "name": "AdvancedSorting", "title": "高级排序", "description": "学习归并、快速和堆排序。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
+        { "name": "Searching", "title": "搜索算法", "description": "学习顺序查找、二分查找和搜索策略。", "icon": { "type": "theme", "name": "edit-find-symbolic" }, "subchapters": [] },
         { "name": "DivideConquer", "title": "分治算法", "description": "学习问题分解、递归求解和结果合并。", "icon": { "type": "theme", "name": "view-dual-symbolic" }, "subchapters": [] },
         { "name": "Greedy", "title": "贪心算法", "description": "学习局部最优选择及贪心正确性分析。", "icon": { "type": "theme", "name": "emblem-ok-symbolic" }, "subchapters": [] },
         { "name": "DynamicProgramming", "title": "动态规划", "description": "学习状态定义、状态转移和空间优化。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
         { "name": "Backtracking", "title": "回溯算法", "description": "学习选择、约束、撤销和搜索空间剪枝。", "icon": { "type": "theme", "name": "edit-undo-symbolic" }, "subchapters": [] },
-        { "name": "BasicSorting", "title": "基础排序", "description": "学习冒泡、选择和插入排序。", "icon": { "type": "theme", "name": "view-sort-ascending-symbolic" }, "subchapters": [] },
-        { "name": "AdvancedSorting", "title": "高级排序", "description": "学习归并、快速和堆排序。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
-        { "name": "Searching", "title": "搜索算法", "description": "学习顺序查找、二分查找和搜索策略。", "icon": { "type": "theme", "name": "edit-find-symbolic" }, "subchapters": [] },
         { "name": "StringAlgorithm", "title": "字符串算法", "description": "学习字符串匹配、前缀处理和常用字符串技巧。", "icon": { "type": "theme", "name": "insert-text-symbolic" }, "subchapters": [] },
         { "name": "ComputationalGeometry", "title": "计算几何", "description": "学习点、线、面关系及基础几何算法。", "icon": { "type": "theme", "name": "applications-graphics-symbolic" }, "subchapters": [] },
         { "name": "NumberTheory", "title": "数论算法", "description": "学习素数、最大公约数、模运算等数论基础。", "icon": { "type": "theme", "name": "accessories-calculator-symbolic" }, "subchapters": [] }
