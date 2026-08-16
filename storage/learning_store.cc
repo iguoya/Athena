@@ -57,7 +57,8 @@ LearningStore::LearningStore(const string& database_path) {
     execute(
         "CREATE TABLE IF NOT EXISTS knowledge_progress ("
         "  function_id TEXT PRIMARY KEY,"
-        "  status INTEGER NOT NULL DEFAULT 0,"
+        "  importance INTEGER NOT NULL DEFAULT 0,"
+        "  mastery INTEGER NOT NULL DEFAULT 0,"
         "  note TEXT NOT NULL DEFAULT '',"
         "  updated_at INTEGER NOT NULL DEFAULT 0)");
     execute(
@@ -92,37 +93,41 @@ void LearningStore::execute(const string& sql) const {
 KnowledgeProgress LearningStore::load_progress(const string& function_id) const {
     Statement statement(
         m_handle.get(),
-        "SELECT status, note, updated_at FROM knowledge_progress "
+        "SELECT importance, mastery, note, updated_at FROM knowledge_progress "
         "WHERE function_id = ?1");
     bind_text(m_handle.get(), statement.raw, 1, function_id);
 
     KnowledgeProgress progress;
     if (sqlite3_step(statement.raw) == SQLITE_ROW) {
-        progress.status = sqlite3_column_int(statement.raw, 0);
-        if (const auto* note = sqlite3_column_text(statement.raw, 1)) {
+        progress.importance = sqlite3_column_int(statement.raw, 0);
+        progress.mastery = sqlite3_column_int(statement.raw, 1);
+        if (const auto* note = sqlite3_column_text(statement.raw, 2)) {
             progress.note = reinterpret_cast<const char*>(note);
         }
-        progress.updated_at = sqlite3_column_int64(statement.raw, 2);
+        progress.updated_at = sqlite3_column_int64(statement.raw, 3);
     }
     return progress;
 }
 
 void LearningStore::save_progress(
     const string& function_id,
-    int status,
+    int importance,
+    int mastery,
     const string& note) {
     Statement statement(
         m_handle.get(),
-        "INSERT INTO knowledge_progress(function_id, status, note, updated_at) "
-        "VALUES(?1, ?2, ?3, ?4) "
+        "INSERT INTO knowledge_progress(function_id, importance, mastery, note, updated_at) "
+        "VALUES(?1, ?2, ?3, ?4, ?5) "
         "ON CONFLICT(function_id) DO UPDATE SET "
-        "  status = excluded.status,"
+        "  importance = excluded.importance,"
+        "  mastery = excluded.mastery,"
         "  note = excluded.note,"
         "  updated_at = excluded.updated_at");
     bind_text(m_handle.get(), statement.raw, 1, function_id);
-    if (sqlite3_bind_int(statement.raw, 2, status) != SQLITE_OK
-        || sqlite3_bind_text(statement.raw, 3, note.c_str(), -1, SQLITE_TRANSIENT) != SQLITE_OK
-        || sqlite3_bind_int64(statement.raw, 4, unix_seconds()) != SQLITE_OK) {
+    if (sqlite3_bind_int(statement.raw, 2, importance) != SQLITE_OK
+        || sqlite3_bind_int(statement.raw, 3, mastery) != SQLITE_OK
+        || sqlite3_bind_text(statement.raw, 4, note.c_str(), -1, SQLITE_TRANSIENT) != SQLITE_OK
+        || sqlite3_bind_int64(statement.raw, 5, unix_seconds()) != SQLITE_OK) {
         raise_sqlite_error(m_handle.get(), "bind progress parameters");
     }
     if (sqlite3_step(statement.raw) != SQLITE_DONE) {

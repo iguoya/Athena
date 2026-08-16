@@ -420,11 +420,19 @@ frame.knowledge-status-bar > border {
     margin-left: 4px;
 }
 
-/* 理解/掌握两态标记按钮：勾选后以成功色高亮 */
-button.topic-toggle:checked {
-    border-color: @athena_success;
-    background-color: @athena_success;
-    color: #ffffff;
+/* 重要程度／掌握程度：两排五星评分 */
+.star-box {
+    margin-left: 2px;
+}
+
+.star-row {
+    margin: 0;
+}
+
+.star-button {
+    padding: 1px;
+    min-width: 0;
+    min-height: 0;
 }
 
 /* === Small reusable status utilities === */

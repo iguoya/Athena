@@ -9,7 +9,8 @@ using namespace std;
 struct sqlite3;
 
 struct KnowledgeProgress {
-    int status = 0;  // 位标志：bit0(1) 已理解，bit1(2) 已掌握
+    int importance = 0;  // 0-5 星：重要程度/难度，用户自由评分，0 = 未判断
+    int mastery = 0;     // 0-5 星：掌握程度，用户自由评分，0 = 未处理，5 = 完全掌握
     string note;
     long long updated_at = 0;
 };
@@ -36,7 +37,8 @@ public:
     KnowledgeProgress load_progress(const string& function_id) const;
     void save_progress(
         const string& function_id,
-        int status,
+        int importance,
+        int mastery,
         const string& note);
 
     void record_run(

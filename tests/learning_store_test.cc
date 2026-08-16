@@ -10,29 +10,32 @@ TEST(LearningStoreTest, ReturnsDefaultProgressForUnknownKnowledgePoint) {
     const LearningStore store(":memory:");
     const auto progress = store.load_progress("cpp.Reference.reference_basics");
 
-    EXPECT_EQ(progress.status, 0);
+    EXPECT_EQ(progress.importance, 0);
+    EXPECT_EQ(progress.mastery, 0);
     EXPECT_EQ(progress.note, "");
 }
 
 TEST(LearningStoreTest, SavesAndReloadsProgress) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 2, "循环引用要用 weak_ptr 打破");
+    store.save_progress("cpp.RAII.weak", 3, 2, "循环引用要用 weak_ptr 打破");
 
     const auto progress = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(progress.status, 2);
+    EXPECT_EQ(progress.importance, 3);
+    EXPECT_EQ(progress.mastery, 2);
     EXPECT_EQ(progress.note, "循环引用要用 weak_ptr 打破");
     EXPECT_GT(progress.updated_at, 0);
 
-    store.save_progress("cpp.RAII.weak", 1, "已掌握");
+    store.save_progress("cpp.RAII.weak", 3, 5, "已掌握");
     const auto updated = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(updated.status, 1);
+    EXPECT_EQ(updated.importance, 3);
+    EXPECT_EQ(updated.mastery, 5);
     EXPECT_EQ(updated.note, "已掌握");
 }
 
 TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 2, "weak");
-    store.save_progress("cpp.Reference.cast", 1, "cast");
+    store.save_progress("cpp.RAII.weak", 2, 1, "weak");
+    store.save_progress("cpp.Reference.cast", 1, 4, "cast");
 
     EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "weak");
     EXPECT_EQ(store.load_progress("cpp.Reference.cast").note, "cast");
