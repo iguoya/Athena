@@ -25,6 +25,7 @@
 - Meson
 - Blueprint UI
 - nlohmann/json
+- SQLite（掌握状态、笔记和运行历史的本地存储；使用系统自带 libsqlite3，不随包分发，数据在用户数据目录）
 
 除非任务明确要求，不引入新的生产依赖，不更换 UI 技术栈，也不把项目改造成完整 MVC/MVP 框架。
 

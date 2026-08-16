@@ -132,7 +132,8 @@ resources/athena.json
 
 源码按职责分组：`registry/` 放置项目配置的解析、校验、查询以及知识点函数注册；
 `content/` 统一读取 GResource、Markdown 和教学源码；`render/` 放置 Markdown 到
-HTML 的转换以及各平台 ArticleView 后端。目录归组不改变 `ChapterCatalog` 与
+HTML 的转换以及各平台 ArticleView 后端；`storage/` 以 SQLite 持久化掌握状态、
+知识点笔记和运行历史（含成员函数源码指纹）。目录归组不改变 `ChapterCatalog` 与
 `FunctionRegistry` 的职责边界，二者只通过稳定 ID 协作。
 
 ### 3.4 演示实现层
