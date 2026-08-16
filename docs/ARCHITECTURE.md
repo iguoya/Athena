@@ -47,6 +47,7 @@ resources/athena.json
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围；点击知识点行与点击运行按钮执行同一动作：选中行、更新说明、显示源码并运行实验输出结果；章节打开时默认不选中知识点，状态栏保持占位提示，底部状态栏说明支持换行。
 - `MainWindow` 将章节导航、文章页初始化、代码页初始化和知识点列表装配拆为独立方法。
+- 应用窗口默认图标名 `cn.athena.icon`：运行时从 GResource 的图标主题目录解析（不依赖系统安装），Linux `meson install` 同时部署 hicolor 图标与桌面条目，macOS 打包使用 `.app` 内的 icns。
 - Meson 将 Catalog、内容加载、Markdown 转换、函数注册和课程实现统一编译为内部 `athena-core` 静态库，应用与核心测试共同链接该库。
 - Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
 

@@ -199,6 +199,11 @@ MainWindow::MainWindow(
         css,
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
+    // 任务栏/窗口图标：从 GResource 的图标主题结构解析 cn.athena.icon。
+    Gtk::IconTheme::get_for_display(get_display())
+        ->add_resource_path("/app/icons");
+    Gtk::Window::set_default_icon_name("cn.athena.icon");
+
     m_category_sidebar = m_main_builder->get_widget<Gtk::Box>("category_sidebar");
     m_chapter_stack = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_tab_box = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");

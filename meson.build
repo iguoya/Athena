@@ -156,6 +156,17 @@ executable('Athena', app_sources,
   ] + platform_dependencies,
   install: true)
 
+# === 桌面集成（Linux 任务栏图标与启动器条目；macOS 用 .app 内的 icns） ===
+install_data(
+  'resources/icons/scalable/apps/cn.athena.icon.svg',
+  install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
+)
+install_data(
+  'cn.yatiger.athena.desktop.in',
+  rename: 'cn.athena.desktop',
+  install_dir: get_option('datadir') / 'applications'
+)
+
 # === 测试 ===
 # 核心测试不依赖 GTK，保证 JSON、Markdown 和注册表可独立验证。
 core_test_exe = executable(
