@@ -1173,18 +1173,27 @@ void MainWindow::populate_topic_list(
                 ? "已完全掌握；如需重跑请先降低掌握程度"
                 : "运行该知识点的实验代码");
         };
-        // 五星评分行：点击第 n 颗设为 n 星，再点当前星降一星。
+        // 五星评分行：点击第 n 颗设为 n 星，再点当前星降一星；星星右侧
+        // 跟随一个文字标识，随当前星级显示对应含义，星星本身的悬浮提示
+        // 也带上同样的含义说明。
         auto make_star_row = [persist_rating, apply_run_state](
                                   const char* label_prefix,
+                                  const char* theme_class,
+                                  const vector<string>& level_labels,
                                   const shared_ptr<int>& value,
                                   bool affects_run_state) {
             auto row = Gtk::make_managed<Gtk::Box>(
-                Gtk::Orientation::HORIZONTAL, 2);
+                Gtk::Orientation::HORIZONTAL, 6);
             row->add_css_class("star-row");
+            row->add_css_class(theme_class);
+
+            auto level_label = Gtk::make_managed<Gtk::Label>();
+            level_label->add_css_class("star-level-label");
+            level_label->set_halign(Gtk::Align::START);
 
             auto star_buttons = make_shared<vector<Gtk::Button*>>();
             auto refresh = make_shared<function<void()>>();
-            *refresh = [star_buttons, value]() {
+            *refresh = [star_buttons, value, level_label, level_labels]() {
                 for (size_t index = 0; index < star_buttons->size(); ++index) {
                     if (auto* icon = dynamic_cast<Gtk::Image*>(
                             (*star_buttons)[index]->get_child())) {
@@ -1194,13 +1203,17 @@ void MainWindow::populate_topic_list(
                                 : "non-starred-symbolic");
                     }
                 }
+                const size_t level =
+                    static_cast<size_t>(clamp(*value, 0, 5));
+                level_label->set_text(level_labels[level]);
             };
             for (int star_index = 1; star_index <= 5; ++star_index) {
                 auto star = Gtk::make_managed<Gtk::Button>();
                 star->add_css_class("flat");
                 star->add_css_class("star-button");
                 star->set_tooltip_text(
-                    string(label_prefix) + " " + to_string(star_index) + " 星");
+                    string(label_prefix) + " " + to_string(star_index)
+                    + " 星：" + level_labels[static_cast<size_t>(star_index)]);
                 auto icon = Gtk::make_managed<Gtk::Image>();
                 icon->set_pixel_size(14);
                 star->set_child(*icon);
@@ -1223,15 +1236,23 @@ void MainWindow::populate_topic_list(
                 star_buttons->push_back(star);
                 row->append(*star);
             }
+            row->append(*level_label);
             (*refresh)();
             return row;
         };
 
+        static const vector<string> importance_levels = {
+            "未判断", "简单容易理解", "较简单", "中等难度", "较复杂", "很复杂难理解"};
+        static const vector<string> mastery_levels = {
+            "未处理", "初步了解", "部分理解", "基本掌握", "熟练掌握", "已完全掌握理解"};
+
         auto star_box = Gtk::make_managed<Gtk::Box>(
             Gtk::Orientation::VERTICAL, 2);
         star_box->add_css_class("star-box");
-        star_box->append(*make_star_row("重要程度", importance, false));
-        star_box->append(*make_star_row("掌握程度", mastery, true));
+        star_box->append(*make_star_row(
+            "重要程度", "star-row-importance", importance_levels, importance, false));
+        star_box->append(*make_star_row(
+            "掌握程度", "star-row-mastery", mastery_levels, mastery, true));
         actions->append(*star_box);
         apply_run_state();
 

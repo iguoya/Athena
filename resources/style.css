@@ -420,7 +420,7 @@ frame.knowledge-status-bar > border {
     margin-left: 4px;
 }
 
-/* 重要程度／掌握程度：两排五星评分 */
+/* 重要程度／掌握程度：两排五星评分，按主题分别着红/绿色 */
 .star-box {
     margin-left: 2px;
 }
@@ -433,6 +433,26 @@ frame.knowledge-status-bar > border {
     padding: 1px;
     min-width: 0;
     min-height: 0;
+}
+
+.star-row-importance image {
+    color: @athena_danger;
+}
+
+.star-row-mastery image {
+    color: @athena_success;
+}
+
+.star-level-label {
+    font-size: 14pt;
+}
+
+.star-row-importance .star-level-label {
+    color: @athena_danger;
+}
+
+.star-row-mastery .star-level-label {
+    color: @athena_success;
 }
 
 /* === Small reusable status utilities === */
