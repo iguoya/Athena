@@ -44,11 +44,11 @@
           "description": "学习 C++ 类型系统、初始化方式、类型推导和值类别，为对象和资源语义打下基础。",
           "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
           "subchapters": [
-            { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化的语法差异和适用场景；演示列表初始化如何拒绝窄化转换，以及默认初始化的局部变量处于未初始化状态带来的未定义行为风险。" },
-            { "name": "type_deduction", "title": "类型推导", "description": "学习 auto 按值推导时丢弃引用和顶层 const、decltype 保留表达式值类别的差异，以及结构化绑定如何一次解开多个值；理解推导规则对接口设计的影响。" },
-            { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值和将亡值的判别标准：能否取地址、能否被移动；演示值类别如何决定重载解析选择拷贝还是移动，为右值引用和移动语义建立概念基础。" },
-            { "name": "cast", "title": "C++ 类型转换", "description": "学习四种命名的转换及各自的风险边界：static_cast 用于相关类型的明确转换、dynamic_cast 依赖运行时类型信息做安全向下转换、const_cast 只用于去除 const、reinterpret_cast 重新解释位模式；理解为什么不再使用 C 风格强转。" },
-            { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的作用域、底层类型和类型安全性。" }
+            { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化的语法差异和适用场景；演示列表初始化如何拒绝窄化转换，以及默认初始化的局部变量处于未初始化状态带来的未定义行为风险。", "importance": 2 },
+            { "name": "type_deduction", "title": "类型推导", "description": "学习 auto 按值推导时丢弃引用和顶层 const、decltype 保留表达式值类别的差异，以及结构化绑定如何一次解开多个值；理解推导规则对接口设计的影响。", "importance": 4 },
+            { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值和将亡值的判别标准：能否取地址、能否被移动；演示值类别如何决定重载解析选择拷贝还是移动，为右值引用和移动语义建立概念基础。", "importance": 4 },
+            { "name": "cast", "title": "C++ 类型转换", "description": "学习四种命名的转换及各自的风险边界：static_cast 用于相关类型的明确转换、dynamic_cast 依赖运行时类型信息做安全向下转换、const_cast 只用于去除 const、reinterpret_cast 重新解释位模式；理解为什么不再使用 C 风格强转。", "importance": 2 },
+            { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的作用域、底层类型和类型安全性。", "importance": 1 }
           ]
         },
         {
@@ -58,10 +58,10 @@
           "icon": { "type": "theme", "name": "insert-link-symbolic" },
           "implementation": { "header": "language/references/reference.hpp" },
           "subchapters": [
-            { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。" },
-            { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。" },
-            { "name": "pass_by_reference", "title": "值传递 vs 引用传递", "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。" },
-            { "name": "return_by_reference", "title": "引用返回值", "description": "学习返回成员或生命周期更长的对象引用的安全用法；重点演示返回局部变量引用造成的悬空引用，理解为什么这是未定义行为以及编译器警告的局限。" }
+            { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。", "importance": 1 },
+            { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。", "importance": 3 },
+            { "name": "pass_by_reference", "title": "值传递 vs 引用传递", "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。", "importance": 1 },
+            { "name": "return_by_reference", "title": "引用返回值", "description": "学习返回成员或生命周期更长的对象引用的安全用法；重点演示返回局部变量引用造成的悬空引用，理解为什么这是未定义行为以及编译器警告的局限。", "importance": 4 }
           ]
         },
         {
@@ -70,11 +70,11 @@
           "description": "学习 C++ 函数接口、重载机制、函数对象、Lambda 和通用回调。",
           "icon": { "type": "theme", "name": "system-run-symbolic" },
           "subchapters": [
-            { "name": "overload", "title": "函数重载", "description": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。" },
-            { "name": "function_object", "title": "函数对象", "description": "学习重载调用运算符的类类型对象；演示函数对象相比函数指针可以携带状态、更容易被编译器内联，是标准算法和 Lambda 的底层机制。" },
-            { "name": "lambda", "title": "Lambda 表达式", "description": "学习捕获列表的语义差异：按值捕获复制一份快照、按引用捕获共享原对象；演示隐式捕获、mutable 与返回类型推导，以及捕获局部变量后在对象生命周期外使用导致的悬空引用风险。" },
-            { "name": "function_wrapper", "title": "通用可调用包装", "description": "学习 std::function 以类型擦除方式统一存放函数指针、Lambda 和函数对象；理解它带来的间接调用开销，以及调用空包装时抛出 bad_function_call 的行为。" },
-            { "name": "callback", "title": "回调函数", "description": "练习设计携带上下文数据的回调接口；重点观察被回调方持有引用或指针时，提供方对象生命周期结束导致的悬空问题，理解回调设计必须明确所有权约定。" }
+            { "name": "overload", "title": "函数重载", "description": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。", "importance": 2 },
+            { "name": "function_object", "title": "函数对象", "description": "学习重载调用运算符的类类型对象；演示函数对象相比函数指针可以携带状态、更容易被编译器内联，是标准算法和 Lambda 的底层机制。", "importance": 2 },
+            { "name": "lambda", "title": "Lambda 表达式", "description": "学习捕获列表的语义差异：按值捕获复制一份快照、按引用捕获共享原对象；演示隐式捕获、mutable 与返回类型推导，以及捕获局部变量后在对象生命周期外使用导致的悬空引用风险。", "importance": 3 },
+            { "name": "function_wrapper", "title": "通用可调用包装", "description": "学习 std::function 以类型擦除方式统一存放函数指针、Lambda 和函数对象；理解它带来的间接调用开销，以及调用空包装时抛出 bad_function_call 的行为。", "importance": 3 },
+            { "name": "callback", "title": "回调函数", "description": "练习设计携带上下文数据的回调接口；重点观察被回调方持有引用或指针时，提供方对象生命周期结束导致的悬空问题，理解回调设计必须明确所有权约定。", "importance": 2 }
           ]
         },
         {
@@ -83,11 +83,11 @@
           "description": "学习类的定义、对象生命周期、拷贝控制、const 正确性和运算符重载。",
           "icon": { "type": "theme", "name": "system-users-symbolic" },
           "subchapters": [
-            { "name": "class_basic", "title": "类与对象", "description": "理解类、对象、成员变量、成员函数和访问控制。" },
-            { "name": "constructor_destructor", "title": "构造与析构", "description": "学习对象构造与析构的时机和顺序：成员按声明顺序初始化而非初始化列表书写顺序，析构按相反顺序执行；观察局部对象离开作用域和异常栈展开时的自动析构。" },
-            { "name": "copy_control", "title": "拷贝控制", "description": "学习拷贝构造与拷贝赋值的编写约定；演示只按位复制指针造成的浅拷贝双重释放问题，理解三法则：自定义了析构、拷贝构造或拷贝赋值之一时，通常三者都需要。" },
-            { "name": "const_correctness", "title": "const 正确性", "description": "理解 const 对象、const 成员函数和接口约束。" },
-            { "name": "operator_overloading", "title": "运算符重载", "description": "学习为自定义类型实现语义清晰的运算符。" }
+            { "name": "class_basic", "title": "类与对象", "description": "理解类、对象、成员变量、成员函数和访问控制。", "importance": 1 },
+            { "name": "constructor_destructor", "title": "构造与析构", "description": "学习对象构造与析构的时机和顺序：成员按声明顺序初始化而非初始化列表书写顺序，析构按相反顺序执行；观察局部对象离开作用域和异常栈展开时的自动析构。", "importance": 3 },
+            { "name": "copy_control", "title": "拷贝控制", "description": "学习拷贝构造与拷贝赋值的编写约定；演示只按位复制指针造成的浅拷贝双重释放问题，理解三法则：自定义了析构、拷贝构造或拷贝赋值之一时，通常三者都需要。", "importance": 3 },
+            { "name": "const_correctness", "title": "const 正确性", "description": "理解 const 对象、const 成员函数和接口约束。", "importance": 1 },
+            { "name": "operator_overloading", "title": "运算符重载", "description": "学习为自定义类型实现语义清晰的运算符。", "importance": 2 }
           ]
         },
         {
@@ -102,12 +102,12 @@
             { "name": "move", "title": "移动语义", "description": "通过右值引用和移动操作转移资源。", "icon": { "type": "theme", "name": "go-jump-symbolic" }, "source": "language/raii/move_semantics.cpp" }
           ],
           "subchapters": [
-            { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "group": "raii" },
-            { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "group": "smart_pointer" },
-            { "name": "shared", "title": "共享指针", "description": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。", "group": "smart_pointer" },
-            { "name": "weak", "title": "弱引用指针", "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。", "group": "smart_pointer" },
-            { "name": "rvalue", "title": "右值引用", "description": "理解右值引用绑定的是可以被安全掏空的临时对象；演示左值引用、右值引用与 const 引用的重载选择规则，理解为什么右值引用让资源转移成为合法操作。", "group": "move" },
-            { "name": "move_semantics", "title": "移动构造与赋值", "description": "学习移动构造、移动赋值和 std::move 的完整语义；重点观察被移动对象处于有效但未指定状态、std::move 本身只是类型转换而非移动动作，以及移动对容器性能的数量级改善。", "group": "move" }
+            { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "importance": 2, "group": "raii" },
+            { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "importance": 2, "group": "smart_pointer" },
+            { "name": "shared", "title": "共享指针", "description": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。", "importance": 3, "group": "smart_pointer" },
+            { "name": "weak", "title": "弱引用指针", "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。", "importance": 4, "group": "smart_pointer" },
+            { "name": "rvalue", "title": "右值引用", "description": "理解右值引用绑定的是可以被安全掏空的临时对象；演示左值引用、右值引用与 const 引用的重载选择规则，理解为什么右值引用让资源转移成为合法操作。", "importance": 3, "group": "move" },
+            { "name": "move_semantics", "title": "移动构造与赋值", "description": "学习移动构造、移动赋值和 std::move 的完整语义；重点观察被移动对象处于有效但未指定状态、std::move 本身只是类型转换而非移动动作，以及移动对容器性能的数量级改善。", "importance": 4, "group": "move" }
           ]
         },
         {
@@ -116,13 +116,13 @@
           "description": "学习基类与派生类关系、抽象接口、虚函数和运行时多态。",
           "icon": { "type": "theme", "name": "view-list-tree-symbolic" },
           "subchapters": [
-            { "name": "inheritance", "title": "继承", "description": "理解继承关系、访问控制和基类子对象。" },
-            { "name": "polymorphism", "title": "多态", "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。" },
-            { "name": "override_keyword", "title": "override 校验", "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。" },
-            { "name": "final_keyword", "title": "final 密封", "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。" },
-            { "name": "object_slicing", "title": "对象切片", "description": "观察把派生类对象按值赋给基类对象时派生部分被丢弃、虚函数调用退化为基类版本的现象；理解多态必须通过指针或引用实现，按值传递是多态代码的隐蔽错误来源。" },
-            { "name": "abstract_interface", "title": "抽象接口", "description": "学习纯虚函数、抽象类和面向接口的设计。" },
-            { "name": "virtual_destructor", "title": "虚析构函数", "description": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。" }
+            { "name": "inheritance", "title": "继承", "description": "理解继承关系、访问控制和基类子对象。", "importance": 1 },
+            { "name": "polymorphism", "title": "多态", "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。", "importance": 2 },
+            { "name": "override_keyword", "title": "override 校验", "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。", "importance": 1 },
+            { "name": "final_keyword", "title": "final 密封", "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。", "importance": 1 },
+            { "name": "object_slicing", "title": "对象切片", "description": "观察把派生类对象按值赋给基类对象时派生部分被丢弃、虚函数调用退化为基类版本的现象；理解多态必须通过指针或引用实现，按值传递是多态代码的隐蔽错误来源。", "importance": 4 },
+            { "name": "abstract_interface", "title": "抽象接口", "description": "学习纯虚函数、抽象类和面向接口的设计。", "importance": 2 },
+            { "name": "virtual_destructor", "title": "虚析构函数", "description": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。", "importance": 4 }
           ]
         },
         {
@@ -131,12 +131,12 @@
           "description": "学习模板、类型约束和编译期计算，建立现代 C++ 泛型程序设计能力。",
           "icon": { "type": "theme", "name": "application-x-addon-symbolic" },
           "subchapters": [
-            { "name": "template_basic", "title": "模板基础", "description": "学习函数模板、类模板、实例化和模板参数。" },
-            { "name": "template_specialization", "title": "模板特化", "description": "学习为特定类型提供全特化实现覆盖通用模板；理解全特化与偏特化的区别，以及特化版本必须与主模板签名严格对应。" },
-            { "name": "generic_programming", "title": "泛型编程", "description": "理解通过通用接口和类型约束编写可复用算法。" },
-            { "name": "variadic_template", "title": "可变参数模板", "description": "学习参数包的定义、sizeof... 计数和递归展开模式，以及 C++17 折叠表达式如何把递归展开压缩为一行；练习实现类型安全的可变参数转发。" },
-            { "name": "compile_time", "title": "编译期编程", "description": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。" },
-            { "name": "type_constraints", "title": "C++20 Concepts", "description": "学习用 concept 命名类型约束、requires 表达式检查类型能力，以及按约束重载模板；理解约束失败时编译器给出的是缺了什么能力，而不是模板内部的长篇报错。" }
+            { "name": "template_basic", "title": "模板基础", "description": "学习函数模板、类模板、实例化和模板参数。", "importance": 2 },
+            { "name": "template_specialization", "title": "模板特化", "description": "学习为特定类型提供全特化实现覆盖通用模板；理解全特化与偏特化的区别，以及特化版本必须与主模板签名严格对应。", "importance": 3 },
+            { "name": "generic_programming", "title": "泛型编程", "description": "理解通过通用接口和类型约束编写可复用算法。", "importance": 3 },
+            { "name": "variadic_template", "title": "可变参数模板", "description": "学习参数包的定义、sizeof... 计数和递归展开模式，以及 C++17 折叠表达式如何把递归展开压缩为一行；练习实现类型安全的可变参数转发。", "importance": 5 },
+            { "name": "compile_time", "title": "编译期编程", "description": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。", "importance": 4 },
+            { "name": "type_constraints", "title": "C++20 Concepts", "description": "学习用 concept 命名类型约束、requires 表达式检查类型能力，以及按约束重载模板；理解约束失败时编译器给出的是缺了什么能力，而不是模板内部的长篇报错。", "importance": 4 }
           ]
         },
         {
@@ -145,12 +145,12 @@
           "description": "学习字符串、词汇类型和时间工具等不属于容器算法体系的常用标准库设施。",
           "icon": { "type": "theme", "name": "applications-utilities-symbolic" },
           "subchapters": [
-            { "name": "string_view", "title": "string 与 string_view", "description": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。" },
-            { "name": "pair_tuple", "title": "pair 与 tuple", "description": "学习组合多个不同类型的值以及结构化绑定。" },
-            { "name": "optional", "title": "optional", "description": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。" },
-            { "name": "variant", "title": "variant", "description": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。" },
-            { "name": "any", "title": "any", "description": "理解 any 的类型擦除、运行时取值和适用边界。" },
-            { "name": "chrono", "title": "chrono", "description": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。" }
+            { "name": "string_view", "title": "string 与 string_view", "description": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。", "importance": 3 },
+            { "name": "pair_tuple", "title": "pair 与 tuple", "description": "学习组合多个不同类型的值以及结构化绑定。", "importance": 1 },
+            { "name": "optional", "title": "optional", "description": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。", "importance": 1 },
+            { "name": "variant", "title": "variant", "description": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。", "importance": 3 },
+            { "name": "any", "title": "any", "description": "理解 any 的类型擦除、运行时取值和适用边界。", "importance": 2 },
+            { "name": "chrono", "title": "chrono", "description": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。", "importance": 3 }
           ]
         },
         {
@@ -159,9 +159,9 @@
           "description": "学习标准库顺序容器、关联容器和无序容器的特性与选择。",
           "icon": { "type": "theme", "name": "view-grid-symbolic" },
           "subchapters": [
-            { "name": "sequential_container", "title": "顺序容器", "description": "比较 vector、deque、list 的内存布局与随机访问、中间插入的复杂度差异；重点学习迭代器失效规则：vector 扩容使全部迭代器失效，list 插入删除不影响既有迭代器。" },
-            { "name": "associative_container", "title": "关联容器", "description": "学习 map、set 基于红黑树的有序语义：元素按比较器有序、查找为对数复杂度；理解键不可变，以及 operator[] 会在键不存在时默认插入的行为差异。" },
-            { "name": "unordered_container", "title": "无序容器", "description": "学习 unordered_map、unordered_set 的哈希桶结构；理解哈希冲突与负载因子触发重哈希、自定义类型需要同时提供 hash 和相等比较，以及重哈希使迭代器失效的规则。" }
+            { "name": "sequential_container", "title": "顺序容器", "description": "比较 vector、deque、list 的内存布局与随机访问、中间插入的复杂度差异；重点学习迭代器失效规则：vector 扩容使全部迭代器失效，list 插入删除不影响既有迭代器。", "importance": 3 },
+            { "name": "associative_container", "title": "关联容器", "description": "学习 map、set 基于红黑树的有序语义：元素按比较器有序、查找为对数复杂度；理解键不可变，以及 operator[] 会在键不存在时默认插入的行为差异。", "importance": 3 },
+            { "name": "unordered_container", "title": "无序容器", "description": "学习 unordered_map、unordered_set 的哈希桶结构；理解哈希冲突与负载因子触发重哈希、自定义类型需要同时提供 hash 和相等比较，以及重哈希使迭代器失效的规则。", "importance": 3 }
           ]
         },
         {
@@ -170,10 +170,10 @@
           "description": "学习迭代器抽象、范围 for 以及 C++20 Ranges 和 Views。",
           "icon": { "type": "theme", "name": "go-next-symbolic" },
           "subchapters": [
-            { "name": "basic", "title": "迭代器基础", "description": "理解迭代器的解引用、递增和区间表示。" },
-            { "name": "range_for", "title": "范围 for 循环", "description": "学习范围 for 的展开机制和引用语义：循环变量按值会复制每个元素、按引用才能修改原容器；理解遍历过程中修改容器结构导致迭代器失效的风险。" },
-            { "name": "with_algorithm", "title": "迭代器与算法", "description": "理解标准算法如何通过迭代器操作不同容器。" },
-            { "name": "range_view", "title": "C++20 Range 与 View", "description": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。" }
+            { "name": "basic", "title": "迭代器基础", "description": "理解迭代器的解引用、递增和区间表示。", "importance": 1 },
+            { "name": "range_for", "title": "范围 for 循环", "description": "学习范围 for 的展开机制和引用语义：循环变量按值会复制每个元素、按引用才能修改原容器；理解遍历过程中修改容器结构导致迭代器失效的风险。", "importance": 2 },
+            { "name": "with_algorithm", "title": "迭代器与算法", "description": "理解标准算法如何通过迭代器操作不同容器。", "importance": 2 },
+            { "name": "range_view", "title": "C++20 Range 与 View", "description": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。", "importance": 4 }
           ]
         },
         {
@@ -182,10 +182,10 @@
           "description": "学习标准算法的排序、查找和变换操作以及与迭代器和 Range 的配合。",
           "icon": { "type": "theme", "name": "system-run-symbolic" },
           "subchapters": [
-            { "name": "sorting", "title": "排序", "description": "学习 sort、stable_sort 和自定义比较器；理解比较器必须满足严格弱序，违反时排序行为未定义，以及 stable_sort 如何保持相等元素的相对顺序。" },
-            { "name": "finding", "title": "查找", "description": "学习 find、find_if 和二分查找相关算法。" },
-            { "name": "transform", "title": "变换", "description": "学习 transform 等对序列进行映射和转换的算法。" },
-            { "name": "ranges_algorithm", "title": "C++20 Ranges 算法", "description": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。" }
+            { "name": "sorting", "title": "排序", "description": "学习 sort、stable_sort 和自定义比较器；理解比较器必须满足严格弱序，违反时排序行为未定义，以及 stable_sort 如何保持相等元素的相对顺序。", "importance": 3 },
+            { "name": "finding", "title": "查找", "description": "学习 find、find_if 和二分查找相关算法。", "importance": 1 },
+            { "name": "transform", "title": "变换", "description": "学习 transform 等对序列进行映射和转换的算法。", "importance": 1 },
+            { "name": "ranges_algorithm", "title": "C++20 Ranges 算法", "description": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。", "importance": 4 }
           ]
         },
         {
@@ -194,11 +194,11 @@
           "description": "学习异常、错误值、noexcept 和异常安全保证，建立可恢复的程序边界。",
           "icon": { "type": "theme", "name": "dialog-warning-symbolic" },
           "subchapters": [
-            { "name": "exception_handling", "title": "异常处理", "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。" },
-            { "name": "standard_exception", "title": "标准异常", "description": "学习标准异常层次和根据错误语义选择异常类型。" },
-            { "name": "custom_exception", "title": "自定义异常", "description": "学习定义携带上下文且保持稳定接口的异常类型。" },
-            { "name": "noexcept_contract", "title": "noexcept", "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。" },
-            { "name": "exception_safety", "title": "异常安全保证", "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。" }
+            { "name": "exception_handling", "title": "异常处理", "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。", "importance": 4 },
+            { "name": "standard_exception", "title": "标准异常", "description": "学习标准异常层次和根据错误语义选择异常类型。", "importance": 2 },
+            { "name": "custom_exception", "title": "自定义异常", "description": "学习定义携带上下文且保持稳定接口的异常类型。", "importance": 2 },
+            { "name": "noexcept_contract", "title": "noexcept", "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。", "importance": 4 },
+            { "name": "exception_safety", "title": "异常安全保证", "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。", "importance": 5 }
           ]
         },
         {
@@ -207,10 +207,10 @@
           "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
           "icon": { "type": "theme", "name": "system-file-manager-symbolic" },
           "subchapters": [
-            { "name": "file_read_write", "title": "文件读写", "description": "学习使用文件流打开、读取、写入和关闭文件。" },
-            { "name": "string_stream", "title": "字符串与流", "description": "学习 stringstream 的解析、拼接和格式转换用途。" },
-            { "name": "format", "title": "C++20 格式化", "description": "学习 std::format 的占位符、格式说明和类型安全输出。" },
-            { "name": "filesystem", "title": "文件系统", "description": "学习使用 std::filesystem 处理路径、目录和文件属性。" }
+            { "name": "file_read_write", "title": "文件读写", "description": "学习使用文件流打开、读取、写入和关闭文件。", "importance": 1 },
+            { "name": "string_stream", "title": "字符串与流", "description": "学习 stringstream 的解析、拼接和格式转换用途。", "importance": 1 },
+            { "name": "format", "title": "C++20 格式化", "description": "学习 std::format 的占位符、格式说明和类型安全输出。", "importance": 1 },
+            { "name": "filesystem", "title": "文件系统", "description": "学习使用 std::filesystem 处理路径、目录和文件属性。", "importance": 2 }
           ]
         },
         {
@@ -219,13 +219,13 @@
           "description": "学习线程、同步原语、内存模型、异步任务和 C++20 协程。",
           "icon": { "type": "theme", "name": "network-workgroup-symbolic" },
           "subchapters": [
-            { "name": "multithreading", "title": "多线程编程", "description": "学习线程创建、join 与 detach 的生命周期约束；演示多线程无同步读写共享数据产生的数据竞争，引出后续同步原语的必要性。" },
-            { "name": "mutex_lock", "title": "互斥量与锁", "description": "学习 mutex 的持有语义和 lock_guard、unique_lock 的 RAII 加锁差异；观察两个线程以不同顺序获取两把锁造成的死锁，理解锁粒度与性能的权衡。" },
-            { "name": "condition_variable", "title": "条件变量", "description": "学习等待-通知协作模式；重点理解为什么必须配合谓词在循环中等待——既存在虚假唤醒，也存在通知先于等待发生的丢失场景，以及等待为何要求 unique_lock。" },
-            { "name": "atomic_memory_model", "title": "原子操作与内存模型", "description": "理解数据竞争是未定义行为而不是读到旧值那么简单；学习 atomic 的原子性、内存顺序从 relaxed 到 acquire/release 再到 seq_cst 的可见性承诺差异，以及为什么默认 seq_cst 最安全。" },
-            { "name": "asynchronous_task", "title": "异步任务", "description": "学习 future、promise 的任务结果传递和 async 的启动策略差异；理解 future 析构可能阻塞等待任务完成、异常如何经由 future 传递给等待方。" },
-            { "name": "coroutine", "title": "C++20 协程", "description": "理解协程帧保存挂起点状态、co_await 与 co_yield 的挂起恢复机制；对比协程与线程的本质差异：挂起点由代码显式标注，切换不涉及系统调度。" },
-            { "name": "concurrent_patterns", "title": "并发模式", "description": "学习任务队列、生产者消费者等常见并发组织方式。" }
+            { "name": "multithreading", "title": "多线程编程", "description": "学习线程创建、join 与 detach 的生命周期约束；演示多线程无同步读写共享数据产生的数据竞争，引出后续同步原语的必要性。", "importance": 3 },
+            { "name": "mutex_lock", "title": "互斥量与锁", "description": "学习 mutex 的持有语义和 lock_guard、unique_lock 的 RAII 加锁差异；观察两个线程以不同顺序获取两把锁造成的死锁，理解锁粒度与性能的权衡。", "importance": 4 },
+            { "name": "condition_variable", "title": "条件变量", "description": "学习等待-通知协作模式；重点理解为什么必须配合谓词在循环中等待——既存在虚假唤醒，也存在通知先于等待发生的丢失场景，以及等待为何要求 unique_lock。", "importance": 5 },
+            { "name": "atomic_memory_model", "title": "原子操作与内存模型", "description": "理解数据竞争是未定义行为而不是读到旧值那么简单；学习 atomic 的原子性、内存顺序从 relaxed 到 acquire/release 再到 seq_cst 的可见性承诺差异，以及为什么默认 seq_cst 最安全。", "importance": 5 },
+            { "name": "asynchronous_task", "title": "异步任务", "description": "学习 future、promise 的任务结果传递和 async 的启动策略差异；理解 future 析构可能阻塞等待任务完成、异常如何经由 future 传递给等待方。", "importance": 4 },
+            { "name": "coroutine", "title": "C++20 协程", "description": "理解协程帧保存挂起点状态、co_await 与 co_yield 的挂起恢复机制；对比协程与线程的本质差异：挂起点由代码显式标注，切换不涉及系统调度。", "importance": 5 },
+            { "name": "concurrent_patterns", "title": "并发模式", "description": "学习任务队列、生产者消费者等常见并发组织方式。", "importance": 4 }
           ]
         },
         {
@@ -251,10 +251,10 @@
           "description": "学习大 O 表示法与时间、空间、摊还复杂度，为手写数据结构与算法建立统一的度量语言。",
           "icon": { "type": "theme", "name": "accessories-calculator-symbolic" },
           "subchapters": [
-            { "name": "big_o_notation", "title": "大 O 表示法", "description": "理解大 O 刻画的是输入规模增长时耗时的增长趋势而非具体耗时；对比常数、对数、线性、线性对数、平方复杂度对应的典型代码形态。" },
-            { "name": "time_complexity", "title": "时间复杂度", "description": "练习推导嵌套循环和递归调用的复杂度；区分最好、最坏和平均情况各自的适用场景，理解算法分析通常以最坏情况为准。" },
-            { "name": "space_complexity", "title": "空间复杂度", "description": "学习度量算法的额外内存占用以及时间与空间的权衡。" },
-            { "name": "amortized_analysis", "title": "摊还分析", "description": "理解个别昂贵操作被大量廉价操作摊平后的均摊成本：以顺序容器倍增扩容为例，单次插入均摊为常数；体会平均情况和均摊分析的区别。" }
+            { "name": "big_o_notation", "title": "大 O 表示法", "description": "理解大 O 刻画的是输入规模增长时耗时的增长趋势而非具体耗时；对比常数、对数、线性、线性对数、平方复杂度对应的典型代码形态。", "importance": 2 },
+            { "name": "time_complexity", "title": "时间复杂度", "description": "练习推导嵌套循环和递归调用的复杂度；区分最好、最坏和平均情况各自的适用场景，理解算法分析通常以最坏情况为准。", "importance": 3 },
+            { "name": "space_complexity", "title": "空间复杂度", "description": "学习度量算法的额外内存占用以及时间与空间的权衡。", "importance": 2 },
+            { "name": "amortized_analysis", "title": "摊还分析", "description": "理解个别昂贵操作被大量廉价操作摊平后的均摊成本：以顺序容器倍增扩容为例，单次插入均摊为常数；体会平均情况和均摊分析的区别。", "importance": 4 }
           ]
         },
         { "name": "LinearStructure", "title": "线性结构", "description": "学习线性表的逻辑关系、存储方式和基本操作。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },

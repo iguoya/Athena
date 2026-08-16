@@ -299,6 +299,14 @@ def build_model(
                     raise ProjectError(
                         f"subchapter {chapter_id}.{method} references unknown group {group!r}"
                     )
+                if "importance" in subchapter:
+                    importance = subchapter["importance"]
+                    if not isinstance(importance, int) or isinstance(importance, bool) \
+                            or not (0 <= importance <= 5):
+                        raise ProjectError(
+                            f"subchapter {chapter_id}.{method}.importance must be "
+                            f"an integer in [0, 5], got {importance!r}"
+                        )
                 if "source" in subchapter:
                     source_files.add(project_path(
                         root,

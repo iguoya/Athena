@@ -421,11 +421,7 @@ frame.knowledge-status-bar > border {
     margin-left: 4px;
 }
 
-/* 重要度／熟练度：两排五星评分，按主题分别着橙/绿色 */
-.star-box {
-    margin-left: 2px;
-}
-
+/* 熟练度：用户自评的五星评分，绿色主题 */
 .star-row {
     margin: 0;
 }
@@ -436,10 +432,6 @@ frame.knowledge-status-bar > border {
     min-height: 0;
 }
 
-.star-row-importance image {
-    color: @athena_orange;
-}
-
 .star-row-mastery image {
     color: @athena_success;
 }
@@ -448,12 +440,15 @@ frame.knowledge-status-bar > border {
     font-size: 14pt;
 }
 
-.star-row-importance .star-level-label {
-    color: @athena_orange;
-}
-
 .star-row-mastery .star-level-label {
     color: @athena_success;
+}
+
+/* 重要度：内容作者标注的客观难度，只读徽章，显示在知识点标题旁 */
+.badge-importance {
+    background-color: @athena_orange;
+    font-size: 11pt;
+    padding: 1px 8px;
 }
 
 /* === Small reusable status utilities === */

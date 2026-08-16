@@ -13,32 +13,29 @@ TEST(LearningStoreTest, ReturnsDefaultProgressForUnknownKnowledgePoint) {
     const LearningStore store(":memory:");
     const auto progress = store.load_progress("cpp.Reference.reference_basics");
 
-    EXPECT_EQ(progress.importance, 0);
     EXPECT_EQ(progress.mastery, 0);
     EXPECT_EQ(progress.note, "");
 }
 
 TEST(LearningStoreTest, SavesAndReloadsProgress) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 3, 2, "循环引用要用 weak_ptr 打破");
+    store.save_progress("cpp.RAII.weak", 2, "循环引用要用 weak_ptr 打破");
 
     const auto progress = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(progress.importance, 3);
     EXPECT_EQ(progress.mastery, 2);
     EXPECT_EQ(progress.note, "循环引用要用 weak_ptr 打破");
     EXPECT_GT(progress.updated_at, 0);
 
-    store.save_progress("cpp.RAII.weak", 3, 5, "已掌握");
+    store.save_progress("cpp.RAII.weak", 5, "已掌握");
     const auto updated = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(updated.importance, 3);
     EXPECT_EQ(updated.mastery, 5);
     EXPECT_EQ(updated.note, "已掌握");
 }
 
 TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 2, 1, "weak");
-    store.save_progress("cpp.Reference.cast", 1, 4, "cast");
+    store.save_progress("cpp.RAII.weak", 1, "weak");
+    store.save_progress("cpp.Reference.cast", 4, "cast");
 
     EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "weak");
     EXPECT_EQ(store.load_progress("cpp.Reference.cast").note, "cast");
@@ -67,8 +64,8 @@ TEST(LearningStoreTest, RejectsInvalidDatabasePath) {
 }
 
 // 复现旧版本升级场景：旧库的 knowledge_progress 只有位标志 status 列
-// （bit0 已理解、bit1 已掌握），没有 importance/mastery。CREATE TABLE
-// IF NOT EXISTS 对已存在的表是空操作，必须显式迁移，否则后续查询会因
+// （bit0 已理解、bit1 已掌握），没有 mastery。CREATE TABLE IF NOT EXISTS
+// 对已存在的表是空操作，必须显式迁移，否则后续查询会因
 // "no such column" 抛出异常。
 TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
     const string db_path = "/tmp/athena-learning-store-legacy-test.db";

@@ -9,8 +9,7 @@ using namespace std;
 struct sqlite3;
 
 struct KnowledgeProgress {
-    int importance = 0;  // 0-5 星：重要程度/难度，用户自由评分，0 = 未判断
-    int mastery = 0;     // 0-5 星：掌握程度，用户自由评分，0 = 未处理，5 = 完全掌握
+    int mastery = 0;  // 0-5 星：熟练度，用户自由评分，0 = 未处理，5 = 完全掌握
     string note;
     long long updated_at = 0;
 };
@@ -37,7 +36,6 @@ public:
     KnowledgeProgress load_progress(const string& function_id) const;
     void save_progress(
         const string& function_id,
-        int importance,
         int mastery,
         const string& note);
 
@@ -54,8 +52,10 @@ private:
     };
 
     void execute(const string& sql) const;
-    // 把旧版本单一 status 位标志列迁移为 importance/mastery 两列；
-    // CREATE TABLE IF NOT EXISTS 对已存在的旧表是空操作，新列需要显式补齐。
+    // 把旧版本单一 status 位标志列迁移为 mastery 列；CREATE TABLE IF NOT
+    // EXISTS 对已存在的旧表是空操作，新列需要显式补齐。旧版本短暂存在过
+    // 的 importance 列（本会话内引入又移除）如果已经加过，留在表里不再
+    // 使用，不做 DROP COLUMN 迁移。
     void migrate_legacy_status_column();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;

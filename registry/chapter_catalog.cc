@@ -163,6 +163,8 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
                         subchapter.name);
                 }
                 subchapter.source = subchapter_value.value("source", "");
+                subchapter.importance =
+                    clamp(subchapter_value.value("importance", 0), 0, 5);
                 subchapter.icon = parse_icon(
                     subchapter_value.value("icon", json::object()),
                     default_subchapter_icon);

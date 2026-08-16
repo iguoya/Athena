@@ -886,7 +886,6 @@ void MainWindow::populate_topic_list(
                 m_learning_store->load_progress(current_topic->function_id);
             m_learning_store->save_progress(
                 current_topic->function_id,
-                progress.importance,
                 progress.mastery,
                 string(note_buffer->get_text().raw()));
         } catch (const exception& error) {
@@ -1079,10 +1078,32 @@ void MainWindow::populate_topic_list(
             4);
         text_box->set_hexpand(true);
 
+        static const vector<string> importance_levels = {
+            "未评", "简单", "一般", "正常", "复杂", "极难"};
+
+        auto title_row = Gtk::make_managed<Gtk::Box>(
+            Gtk::Orientation::HORIZONTAL, 8);
+
         auto point_title = Gtk::make_managed<Gtk::Label>(subchapter.title);
         point_title->set_halign(Gtk::Align::START);
         point_title->add_css_class("heading");
-        text_box->append(*point_title);
+        title_row->append(*point_title);
+
+        // 重要度：内容作者基于教学与实现给出的客观难度判断，只读展示，
+        // 用户不可修改；未标注时不显示，避免给未评估内容造成虚假精确感。
+        const int importance = clamp(subchapter.importance, 0, 5);
+        if (importance > 0) {
+            auto importance_badge = Gtk::make_managed<Gtk::Label>(
+                importance_levels[static_cast<size_t>(importance)]);
+            importance_badge->add_css_class("badge");
+            importance_badge->add_css_class("badge-importance");
+            importance_badge->set_valign(Gtk::Align::CENTER);
+            importance_badge->set_tooltip_text(
+                "内容难度：" + importance_levels[static_cast<size_t>(importance)]
+                + "（由内容作者标注，只读）");
+            title_row->append(*importance_badge);
+        }
+        text_box->append(*title_row);
 
         auto point_description =
             Gtk::make_managed<Gtk::Label>(subchapter.description);
@@ -1132,8 +1153,9 @@ void MainWindow::populate_topic_list(
         }
         actions->append(*run);
 
-        // 重要度／熟练度：各自独立的五星评分，自由打分并持久化。
-        // 熟练度到 5 星后运行按钮置灰，降低星级即可恢复运行。
+        // 熟练度：用户自评的五星评分，自由打分并持久化；到 5 星后运行
+        // 按钮置灰，降低星级即可恢复运行。重要度不在这里——它是只读的
+        // 客观难度标注，显示在条目标题旁，见上方 title_row。
         KnowledgeProgress saved_progress;
         if (m_learning_store) {
             try {
@@ -1143,21 +1165,16 @@ void MainWindow::populate_topic_list(
                      << error.what() << endl;
             }
         }
-        auto importance = make_shared<int>(clamp(saved_progress.importance, 0, 5));
         auto mastery = make_shared<int>(clamp(saved_progress.mastery, 0, 5));
 
-        auto persist_rating = [this, function_id, importance, mastery]() {
+        auto persist_rating = [this, function_id, mastery]() {
             if (!m_learning_store) {
                 return;
             }
             try {
                 const auto note =
                     m_learning_store->load_progress(function_id).note;
-                m_learning_store->save_progress(
-                    function_id,
-                    *importance,
-                    *mastery,
-                    note);
+                m_learning_store->save_progress(function_id, *mastery, note);
             } catch (const exception& error) {
                 cerr << "Failed to save rating for " << function_id << ": "
                      << error.what() << endl;
@@ -1173,18 +1190,16 @@ void MainWindow::populate_topic_list(
                 ? "已完全掌握；如需重跑请先降低熟练度"
                 : "运行该知识点的实验代码");
         };
-        // 五星评分行：点击第 n 颗设为 n 星，再点当前星降一星；星星右侧
-        // 跟随一个文字标识，随当前星级显示对应含义，星星本身的悬浮提示
-        // 也带上同样的含义说明。
+        // 熟练度五星评分行：点击第 n 颗设为 n 星，再点当前星降一星；
+        // 星星右侧跟随文字标识，随当前星级显示对应含义，悬浮单颗星
+        // 也带同样的含义说明。
         auto make_star_row = [persist_rating, apply_run_state](
-                                  const char* theme_class,
                                   const vector<string>& level_labels,
-                                  const shared_ptr<int>& value,
-                                  bool affects_run_state) {
+                                  const shared_ptr<int>& value) {
             auto row = Gtk::make_managed<Gtk::Box>(
                 Gtk::Orientation::HORIZONTAL, 6);
             row->add_css_class("star-row");
-            row->add_css_class(theme_class);
+            row->add_css_class("star-row-mastery");
 
             auto level_label = Gtk::make_managed<Gtk::Label>();
             level_label->add_css_class("star-level-label");
@@ -1215,20 +1230,13 @@ void MainWindow::populate_topic_list(
                 icon->set_pixel_size(14);
                 star->set_child(*icon);
                 star->signal_clicked().connect(
-                    [value,
-                     star_index,
-                     refresh,
-                     persist_rating,
-                     apply_run_state,
-                     affects_run_state]() {
+                    [value, star_index, refresh, persist_rating, apply_run_state]() {
                         *value = (*value == star_index)
                             ? star_index - 1
                             : star_index;
                         (*refresh)();
                         persist_rating();
-                        if (affects_run_state) {
-                            apply_run_state();
-                        }
+                        apply_run_state();
                     });
                 star_buttons->push_back(star);
                 row->append(*star);
@@ -1238,19 +1246,10 @@ void MainWindow::populate_topic_list(
             return row;
         };
 
-        static const vector<string> importance_levels = {
-            "未评", "简单", "一般", "正常", "复杂", "极难"};
         static const vector<string> mastery_levels = {
             "未学", "了解", "理解", "掌握", "熟练", "精通"};
 
-        auto star_box = Gtk::make_managed<Gtk::Box>(
-            Gtk::Orientation::VERTICAL, 2);
-        star_box->add_css_class("star-box");
-        star_box->append(*make_star_row(
-            "star-row-importance", importance_levels, importance, false));
-        star_box->append(*make_star_row(
-            "star-row-mastery", mastery_levels, mastery, true));
-        actions->append(*star_box);
+        actions->append(*make_star_row(mastery_levels, mastery));
         apply_run_state();
 
         row_box->append(*actions);

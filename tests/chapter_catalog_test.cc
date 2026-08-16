@@ -148,6 +148,40 @@ TEST(ChapterCatalogTest, ResolvesKnowledgePointSourceByPrecedence) {
     EXPECT_EQ(resolve_source_path(chapter, point), "chapter.cpp");
 }
 
+TEST(ChapterCatalogTest, ParsesSubchapterImportanceWithDefault) {
+    const string config = R"JSON({
+      "schema": 1,
+      "defaults": {
+        "content": "code",
+        "chapter_ui": {
+          "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" },
+          "article": { "blueprint": "resources/ui/chapters/article_chapter.blp" }
+        }
+      },
+      "categories": [{
+        "name": "cpp",
+        "title": "C++",
+        "description": "C++ test category",
+        "chapters": [{
+          "name": "Sample",
+          "title": "Sample",
+          "description": "Sample chapter",
+          "subchapters": [
+            { "name": "rated", "title": "Rated", "description": "Has importance", "importance": 4 },
+            { "name": "unrated", "title": "Unrated", "description": "No importance field" }
+          ]
+        }]
+      }]
+    })JSON";
+
+    const auto catalog = ChapterCatalog::from_json(config);
+    const auto* chapter = catalog.find_chapter("cpp", "Sample");
+    ASSERT_NE(chapter, nullptr);
+    ASSERT_EQ(chapter->subchapters.size(), 2u);
+    EXPECT_EQ(chapter->subchapters[0].importance, 4);
+    EXPECT_EQ(chapter->subchapters[1].importance, 0);
+}
+
 TEST(ChapterCatalogTest, RejectsUnsupportedSchema) {
     string source = minimal_catalog();
     source.replace(source.find("\"schema\": 1"), 11, "\"schema\": 2");
