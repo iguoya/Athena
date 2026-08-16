@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "app_icon.h"
 #include "content/source_locator.h"
 #include "render/markdown_renderer.h"
 
@@ -217,6 +218,7 @@ struct TopicSelection {
     string member_name;
     string title;
     string function_id;
+    IconSpec icon;
 };
 
 } // namespace
@@ -229,6 +231,7 @@ MainWindow::MainWindow(
       m_content_loader(ATHENA_SOURCE_ROOT),
       m_function_registry(create_default_function_registry()) {
     maximize();
+    apply_runtime_application_icon();
 
     auto css = Gtk::CssProvider::create();
     css->load_from_resource("/app/style.css");
@@ -529,7 +532,10 @@ void MainWindow::initialize_code_page(
             *topics_list,
             knowledge_description_label,
             experiment_spinner,
-            experiment_status_label);
+            experiment_status_label,
+            title_label,
+            description_label,
+            chapter_icon);
     }
 }
 
@@ -824,7 +830,10 @@ void MainWindow::populate_topic_list(
     Gtk::ListBox& topics_list,
     Gtk::Label* knowledge_description_label,
     Gtk::Spinner* experiment_spinner,
-    Gtk::Label* experiment_status_label) {
+    Gtk::Label* experiment_status_label,
+    Gtk::Label* header_title_label,
+    Gtk::Label* header_description_label,
+    Gtk::Image* header_icon) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -854,7 +863,10 @@ void MainWindow::populate_topic_list(
         [this,
          selection_by_row,
          knowledge_description_label,
-         source_view](Gtk::ListBoxRow* row) {
+         source_view,
+         header_title_label,
+         header_description_label,
+         header_icon](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -868,6 +880,16 @@ void MainWindow::populate_topic_list(
             if (knowledge_description_label) {
                 knowledge_description_label->set_text(
                     found->second.description);
+            }
+            // 章节头部横条随激活的知识点切换为该知识点的标题与描述。
+            if (header_title_label) {
+                header_title_label->set_text(found->second.title);
+            }
+            if (header_description_label) {
+                header_description_label->set_text(found->second.description);
+            }
+            if (header_icon) {
+                configure_image(*header_icon, found->second.icon, 36);
             }
             display_source(
                 source_view,
@@ -931,6 +953,7 @@ void MainWindow::populate_topic_list(
             .member_name = subchapter.name,
             .title = subchapter.title,
             .function_id = function_id,
+            .icon = subchapter.icon,
         };
 
         auto row_box = Gtk::make_managed<Gtk::Box>(
