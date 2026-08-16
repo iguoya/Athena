@@ -14,6 +14,8 @@ md4c_html_dep = dependency('md4c-html')
 nlohmann_json_dep = dependency('nlohmann_json')
 gtest_dep = dependency('gtest')
 gtest_main_dep = dependency('gtest_main')
+cc = meson.get_compiler('cpp')
+sqlite3_dep = cc.find_library('sqlite3', has_headers: ['sqlite3.h'])
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
@@ -109,6 +111,7 @@ core_sources = files(
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
   'render/markdown_renderer.cc',
+  'storage/learning_store.cc',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
@@ -118,13 +121,13 @@ athena_core_lib = static_library(
   'athena-core',
   core_sources,
   include_directories: [language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep]
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
   include_directories: [language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep]
+  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 # === 桌面应用源码 ===
@@ -161,6 +164,7 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
+    'tests/learning_store_test.cc',
     'tests/markdown_renderer_test.cc',
     'tests/source_locator_test.cc'
   ),
