@@ -346,6 +346,53 @@ void MainWindow::on_category_selected(const string& category_name) {
     build_chapter_tabs(category_name);
 }
 
+// 首次激活章节标签时才构建真实页面（含 WKWebView）；
+// 打开分类只挂占位页，避免一次性构建全部章节拖慢启动。
+void MainWindow::ensure_chapter_page(
+    const string& category_name,
+    const ChapterMeta& chapter) {
+    const string page_key = chapter_key(category_name, chapter.name);
+    if (m_loaded_chapters.find(page_key) != m_loaded_chapters.end()) {
+        return;
+    }
+
+    const auto builder = get_chapter_builder(category_name, chapter.name);
+    if (!builder) {
+        cerr << "Failed to create builder for " << page_key << endl;
+        return;
+    }
+
+    auto widget = builder->get_widget<Gtk::Widget>(chapter.widget_name);
+    if (!widget) {
+        cerr << "Failed to get root widget '" << chapter.widget_name
+             << "' for " << page_key << endl;
+        return;
+    }
+
+    if (auto* placeholder = m_chapter_stack->get_child_by_name(page_key)) {
+        m_chapter_stack->remove(*placeholder);
+    }
+    m_chapter_stack->add(*widget, page_key, chapter.title);
+
+    const bool uses_article_page = chapter.widget_name == "article_page";
+    if (uses_article_page) {
+        if (initialize_article_page(page_key, chapter, builder)) {
+            m_loaded_chapters.insert(page_key);
+        }
+        return;
+    }
+
+    const bool uses_code_page = chapter.widget_name == "chapter_page";
+    if (uses_code_page) {
+        initialize_code_page(category_name, chapter, builder);
+        m_loaded_chapters.insert(page_key);
+        return;
+    }
+
+    // 特殊页面（如欢迎页）无需内容初始化，构建控件树即完成。
+    m_loaded_chapters.insert(page_key);
+}
+
 void MainWindow::build_chapter_tabs(const string& category_name) {
     for (const auto& name : m_active_page_names) {
         if (auto child = m_chapter_stack->get_child_by_name(name)) {
@@ -373,20 +420,27 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
     for (const auto& chapter : category->second) {
         const string page_key = chapter_key(category_name, chapter.name);
-        auto builder = get_chapter_builder(category_name, chapter.name);
-        if (!builder) {
-            cerr << "Failed to create builder for " << page_key << endl;
-            continue;
-        }
 
-        auto widget = builder->get_widget<Gtk::Widget>(chapter.widget_name);
-        if (!widget) {
-            cerr << "Failed to get root widget '" << chapter.widget_name
-                 << "' for " << page_key << endl;
-            continue;
+        // 已构建过的页面直接重新挂载（builder 缓存持有控件树）；
+        // 未构建的先挂占位页，首次激活标签时再替换为真实页面。
+        const bool already_built =
+            m_loaded_chapters.find(page_key) != m_loaded_chapters.end();
+        if (already_built) {
+            const auto builder =
+                get_chapter_builder(category_name, chapter.name);
+            auto widget = builder
+                ? builder->get_widget<Gtk::Widget>(chapter.widget_name)
+                : nullptr;
+            if (!widget) {
+                cerr << "Failed to get root widget '" << chapter.widget_name
+                     << "' for " << page_key << endl;
+                continue;
+            }
+            m_chapter_stack->add(*widget, page_key, chapter.title);
+        } else {
+            auto placeholder = Gtk::make_managed<Gtk::Box>();
+            m_chapter_stack->add(*placeholder, page_key, chapter.title);
         }
-
-        m_chapter_stack->add(*widget, page_key, chapter.title);
         m_active_page_names.insert(page_key);
 
         auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
@@ -404,34 +458,19 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         }
 
         tab_button->signal_toggled().connect(
-            [this, page_key, tab_button, widget]() {
-                if (tab_button->get_active()) {
-                    m_chapter_stack->set_visible_child(*widget);
-                    m_current_chapter = page_key;
+            [this, page_key, tab_button, category_name, chapter]() {
+                if (!tab_button->get_active()) {
+                    return;
                 }
+                ensure_chapter_page(category_name, chapter);
+                if (auto* child = m_chapter_stack->get_child_by_name(page_key)) {
+                    m_chapter_stack->set_visible_child(*child);
+                }
+                m_current_chapter = page_key;
             });
 
         m_chapter_tab_box->append(*tab_button);
         m_tab_buttons.push_back(tab_button);
-
-        if (m_loaded_chapters.find(page_key) != m_loaded_chapters.end()) {
-            continue;
-        }
-
-        const bool uses_article_page = chapter.widget_name == "article_page";
-        if (uses_article_page) {
-            if (initialize_article_page(page_key, chapter, builder)) {
-                m_loaded_chapters.insert(page_key);
-            }
-            continue;
-        }
-
-        const bool uses_code_page = chapter.widget_name == "chapter_page";
-        if (!uses_code_page) {
-            continue;
-        }
-        initialize_code_page(category_name, chapter, builder);
-        m_loaded_chapters.insert(page_key);
     }
 
     if (!m_tab_buttons.empty()) {

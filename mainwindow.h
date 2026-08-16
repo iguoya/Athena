@@ -26,6 +26,9 @@ private:
     void setup_category_sidebar();
     void on_category_selected(const string& category_name);
     void build_chapter_tabs(const string& category_name);
+    void ensure_chapter_page(
+        const string& category_name,
+        const ChapterMeta& chapter);
     bool initialize_article_page(
         const string& page_key,
         const ChapterMeta& chapter,
