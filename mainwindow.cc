@@ -467,15 +467,14 @@ void MainWindow::populate_topic_list(
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
     const string chapter_name = chapter.name;
-    auto run_on_activate = make_shared<bool>(true);
-    auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*, bool)>>(
+    auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
         [this,
          selection_by_row,
          knowledge_description_label,
          source_view,
          result_view,
          category_name,
-         chapter_name](Gtk::ListBoxRow* row, bool run_experiment) {
+         chapter_name](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -496,7 +495,7 @@ void MainWindow::populate_topic_list(
                 found->second.source_path,
                 found->second.member_name);
 
-            if (!run_experiment || !result_view) {
+            if (!result_view) {
                 return;
             }
             const string function_id = make_function_id(
@@ -515,7 +514,6 @@ void MainWindow::populate_topic_list(
                     "运行失败：" + string(error.what()));
             }
         });
-    Gtk::ListBoxRow* first_topic_row = nullptr;
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {
         if (!subchapter.group.empty() && subchapter.group != current_group) {
@@ -567,9 +565,6 @@ void MainWindow::populate_topic_list(
             .source_path = resolve_source_path(chapter, subchapter),
             .member_name = subchapter.name,
         };
-        if (!first_topic_row) {
-            first_topic_row = row;
-        }
 
         auto row_box = Gtk::make_managed<Gtk::Box>(
             Gtk::Orientation::HORIZONTAL,
@@ -615,7 +610,7 @@ void MainWindow::populate_topic_list(
                  topics_list = &topics_list,
                  activate_topic]() {
                     topics_list->select_row(*row);
-                    (*activate_topic)(row, true);
+                    (*activate_topic)(row);
                 });
         }
         row_box->append(*run);
@@ -625,16 +620,9 @@ void MainWindow::populate_topic_list(
     }
 
     topics_list.signal_row_selected().connect(
-        [activate_topic, run_on_activate](Gtk::ListBoxRow* row) {
-            (*activate_topic)(row, *run_on_activate);
+        [activate_topic](Gtk::ListBoxRow* row) {
+            (*activate_topic)(row);
         });
-
-    if (first_topic_row) {
-        // 章节打开时的默认选中只展示源码和说明，不自动运行实验。
-        *run_on_activate = false;
-        topics_list.select_row(*first_topic_row);
-        *run_on_activate = true;
-    }
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(
