@@ -476,15 +476,15 @@ frame.knowledge-status-bar > border {
     padding: 1px 8px;
 }
 
-.importance-stars image {
-    -gtk-icon-size: 12px;
+.importance-stars {
+    padding: 1px;
 }
 
-.importance-level-1 { background-color: @athena_success; }
-.importance-level-2 { background-color: @athena_teal; }
-.importance-level-3 { background-color: @athena_warning; color: @athena_body_text; }
-.importance-level-4 { background-color: @athena_orange; }
-.importance-level-5 { background-color: @athena_danger; }
+.badge-importance.importance-level-1 { background-color: @athena_success; }
+.badge-importance.importance-level-2 { background-color: @athena_teal; }
+.badge-importance.importance-level-3 { background-color: @athena_warning; color: @athena_body_text; }
+.badge-importance.importance-level-4 { background-color: @athena_orange; }
+.badge-importance.importance-level-5 { background-color: @athena_danger; }
 
 .importance-stars.importance-level-1 image { color: @athena_success; }
 .importance-stars.importance-level-2 image { color: @athena_teal; }

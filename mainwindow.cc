@@ -1111,7 +1111,7 @@ void MainWindow::populate_topic_list(
             importance_group->append(*importance_badge);
 
             auto importance_stars = Gtk::make_managed<Gtk::Box>(
-                Gtk::Orientation::HORIZONTAL, 1);
+                Gtk::Orientation::HORIZONTAL, 6);
             importance_stars->add_css_class("importance-stars");
             importance_stars->add_css_class(level_class);
             for (int star_index = 1; star_index <= 5; ++star_index) {
@@ -1120,7 +1120,7 @@ void MainWindow::populate_topic_list(
                     star_index <= importance
                         ? "starred-symbolic"
                         : "non-starred-symbolic");
-                icon->set_pixel_size(12);
+                icon->set_pixel_size(14);
                 importance_stars->append(*icon);
             }
             importance_group->append(*importance_stars);
