@@ -20,6 +20,7 @@
 @define-color athena_muted #6c757d;
 @define-color athena_success #198754;
 @define-color athena_danger #dc3545;
+@define-color athena_orange #fd7e14;
 
 /* === Application shell === */
 .athena-window,
@@ -420,7 +421,7 @@ frame.knowledge-status-bar > border {
     margin-left: 4px;
 }
 
-/* 重要程度／熟练度：两排五星评分，按主题分别着红/绿色 */
+/* 重要度／熟练度：两排五星评分，按主题分别着橙/绿色 */
 .star-box {
     margin-left: 2px;
 }
@@ -436,7 +437,7 @@ frame.knowledge-status-bar > border {
 }
 
 .star-row-importance image {
-    color: @athena_danger;
+    color: @athena_orange;
 }
 
 .star-row-mastery image {
@@ -448,7 +449,7 @@ frame.knowledge-status-bar > border {
 }
 
 .star-row-importance .star-level-label {
-    color: @athena_danger;
+    color: @athena_orange;
 }
 
 .star-row-mastery .star-level-label {

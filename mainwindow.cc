@@ -1132,7 +1132,7 @@ void MainWindow::populate_topic_list(
         }
         actions->append(*run);
 
-        // 重要程度／熟练度：各自独立的五星评分，自由打分并持久化。
+        // 重要度／熟练度：各自独立的五星评分，自由打分并持久化。
         // 熟练度到 5 星后运行按钮置灰，降低星级即可恢复运行。
         KnowledgeProgress saved_progress;
         if (m_learning_store) {
