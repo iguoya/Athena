@@ -466,11 +466,16 @@ void MainWindow::populate_topic_list(
 
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
-    auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
+    const string chapter_name = chapter.name;
+    auto run_on_activate = make_shared<bool>(true);
+    auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*, bool)>>(
         [this,
          selection_by_row,
          knowledge_description_label,
-         source_view](Gtk::ListBoxRow* row) {
+         source_view,
+         result_view,
+         category_name,
+         chapter_name](Gtk::ListBoxRow* row, bool run_experiment) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -490,6 +495,25 @@ void MainWindow::populate_topic_list(
                 m_content_loader,
                 found->second.source_path,
                 found->second.member_name);
+
+            if (!run_experiment || !result_view) {
+                return;
+            }
+            const string function_id = make_function_id(
+                category_name,
+                chapter_name,
+                found->second.member_name);
+            if (!m_function_registry.contains(function_id)) {
+                return;
+            }
+            ostringstream output;
+            try {
+                m_function_registry.run(function_id, output);
+                result_view->get_buffer()->set_text(output.str());
+            } catch (const exception& error) {
+                result_view->get_buffer()->set_text(
+                    "运行失败：" + string(error.what()));
+            }
         });
     Gtk::ListBoxRow* first_topic_row = nullptr;
     string current_group;
@@ -587,23 +611,11 @@ void MainWindow::populate_topic_list(
             : "该知识点尚未实现可运行实验");
         if (can_run && result_view) {
             run->signal_clicked().connect(
-                [this,
-                 function_id,
-                 result_view,
-                 row,
+                [row,
                  topics_list = &topics_list,
                  activate_topic]() {
                     topics_list->select_row(*row);
-                    (*activate_topic)(row);
-
-                    ostringstream output;
-                    try {
-                        m_function_registry.run(function_id, output);
-                        result_view->get_buffer()->set_text(output.str());
-                    } catch (const exception& error) {
-                        result_view->get_buffer()->set_text(
-                            "运行失败：" + string(error.what()));
-                    }
+                    (*activate_topic)(row, true);
                 });
         }
         row_box->append(*run);
@@ -613,12 +625,15 @@ void MainWindow::populate_topic_list(
     }
 
     topics_list.signal_row_selected().connect(
-        [activate_topic](Gtk::ListBoxRow* row) {
-            (*activate_topic)(row);
+        [activate_topic, run_on_activate](Gtk::ListBoxRow* row) {
+            (*activate_topic)(row, *run_on_activate);
         });
 
     if (first_topic_row) {
+        // 章节打开时的默认选中只展示源码和说明，不自动运行实验。
+        *run_on_activate = false;
         topics_list.select_row(*first_topic_row);
+        *run_on_activate = true;
     }
 }
 
