@@ -1089,7 +1089,7 @@ void MainWindow::populate_topic_list(
         point_title->add_css_class("heading");
         title_row->append(*point_title);
 
-        // 重要度：内容作者基于教学与实现给出的客观难度判断，只读展示，
+        // 重要度：内容作者基于教学与工程实践给出的客观难度判断，只读展示，
         // 用户不可修改；未标注时不显示，避免给未评估内容造成虚假精确感。
         const int importance = clamp(subchapter.importance, 0, 5);
         if (importance > 0) {

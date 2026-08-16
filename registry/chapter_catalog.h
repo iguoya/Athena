@@ -20,7 +20,7 @@ struct SubChapter {
     string group;
     string source;
     IconSpec icon;
-    // 内容作者基于教学与实现给出的客观难度评分，0-5；0 = 未评。只读，
+    // 内容作者基于教学与工程实践给出的客观难度评分，0-5；0 = 未评。只读，
     // 不是运行时用户数据；用户自评的熟练度存在 LearningStore 里。
     int importance = 0;
 };
