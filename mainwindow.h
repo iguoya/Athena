@@ -48,9 +48,11 @@ private:
         Gtk::Label* experiment_status_label,
         Gtk::Label* header_title_label,
         Gtk::Label* header_description_label,
-        Gtk::Image* header_icon);
+        Gtk::Image* header_icon,
+        Gtk::TextView* note_view,
+        Gtk::Button* history_button,
+        Gtk::Button* explain_button);
     void open_learning_store();
-    void show_note_dialog(const string& function_id, const string& topic_title);
     void show_history_dialog(
         const string& function_id,
         const string& source_path,

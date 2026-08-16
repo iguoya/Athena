@@ -556,6 +556,9 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Spinner>("experiment_spinner");
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
+    auto note_view = builder->get_widget<Gtk::TextView>("note_view");
+    auto history_button = builder->get_widget<Gtk::Button>("history_button");
+    auto explain_button = builder->get_widget<Gtk::Button>("explain_button");
 
     if (topics_list) {
         populate_topic_list(
@@ -569,7 +572,10 @@ void MainWindow::initialize_code_page(
             experiment_status_label,
             title_label,
             description_label,
-            chapter_icon);
+            chapter_icon,
+            note_view,
+            history_button,
+            explain_button);
     }
 }
 
@@ -593,49 +599,6 @@ void MainWindow::open_learning_store() {
         cerr << "Learning store unavailable: " << error.what() << endl;
         m_learning_store.reset();
     }
-}
-
-void MainWindow::show_note_dialog(
-    const string& function_id,
-    const string& topic_title) {
-    if (!m_learning_store) {
-        return;
-    }
-    auto dialog = Gtk::make_managed<Gtk::Dialog>();
-    dialog->set_title("笔记：" + topic_title);
-    dialog->set_transient_for(*this);
-    dialog->set_modal(true);
-    dialog->set_default_size(560, 400);
-
-    auto* content = dialog->get_content_area();
-    content->set_spacing(8);
-    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scrolled->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    scrolled->set_hexpand(true);
-    scrolled->set_vexpand(true);
-    auto view = Gtk::make_managed<Gtk::TextView>();
-    view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
-    view->get_buffer()->set_text(
-        m_learning_store->load_progress(function_id).note);
-    scrolled->set_child(*view);
-    content->append(*scrolled);
-
-    dialog->add_button("保存", static_cast<int>(Gtk::ResponseType::OK));
-    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
-    dialog->signal_response().connect(
-        [this, dialog, view, function_id](int response) {
-            if (response == static_cast<int>(Gtk::ResponseType::OK)
-                && m_learning_store) {
-                const auto progress =
-                    m_learning_store->load_progress(function_id);
-                m_learning_store->save_progress(
-                    function_id,
-                    progress.status,
-                    string(view->get_buffer()->get_text().raw()));
-            }
-            dialog->hide();
-        });
-    dialog->show();
 }
 
 void MainWindow::show_history_dialog(
@@ -866,7 +829,10 @@ void MainWindow::populate_topic_list(
     Gtk::Label* experiment_status_label,
     Gtk::Label* header_title_label,
     Gtk::Label* header_description_label,
-    Gtk::Image* header_icon) {
+    Gtk::Image* header_icon,
+    Gtk::TextView* note_view,
+    Gtk::Button* history_button,
+    Gtk::Button* explain_button) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -890,16 +856,64 @@ void MainWindow::populate_topic_list(
 
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
-    // 激活只负责高亮、说明和源码显示；运行与历史由操作区按钮显式触发，
-    // 条目本身（标题与描述）不响应点击。
+    auto current_topic = make_shared<TopicSelection>();
+    const auto note_buffer =
+        note_view ? note_view->get_buffer() : Glib::RefPtr<Gtk::TextBuffer> {};
+    auto note_loading = make_shared<bool>(false);
+    auto note_dirty = make_shared<bool>(false);
+    auto note_timer = make_shared<sigc::connection>();
+
+    // 笔记自动保存：编辑停止 600ms 后写入；切换知识点前先落盘。
+    auto flush_note = make_shared<function<void()>>();
+    *flush_note = [this, current_topic, note_buffer, note_dirty]() {
+        if (!*note_dirty || !note_buffer || !m_learning_store
+            || current_topic->function_id.empty()) {
+            return;
+        }
+        const auto progress =
+            m_learning_store->load_progress(current_topic->function_id);
+        m_learning_store->save_progress(
+            current_topic->function_id,
+            progress.status,
+            string(note_buffer->get_text().raw()));
+        *note_dirty = false;
+    };
+    if (note_buffer) {
+        note_buffer->signal_changed().connect(
+            [note_loading, note_dirty, note_timer, flush_note]() {
+                if (*note_loading) {
+                    return;
+                }
+                *note_dirty = true;
+                if (note_timer->connected()) {
+                    note_timer->disconnect();
+                }
+                *note_timer = Glib::signal_timeout().connect(
+                    [flush_note]() {
+                        (*flush_note)();
+                        return false;
+                    },
+                    600);
+            });
+    }
+
+    // 激活只负责高亮、头部、说明、笔记加载和源码显示；
+    // 运行由运行按钮显式触发，条目本身（标题与描述）不响应点击。
     auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
         [this,
          selection_by_row,
+         current_topic,
          knowledge_description_label,
          source_view,
          header_title_label,
          header_description_label,
-         header_icon](Gtk::ListBoxRow* row) {
+         header_icon,
+         note_view,
+         note_buffer,
+         note_loading,
+         flush_note,
+         history_button,
+         explain_button](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -924,12 +938,61 @@ void MainWindow::populate_topic_list(
             if (header_icon) {
                 configure_image(*header_icon, found->second.icon, 36);
             }
+
+            (*flush_note)();
+            *current_topic = found->second;
+            if (note_view && note_buffer) {
+                note_view->set_sensitive(true);
+                *note_loading = true;
+                note_buffer->set_text(
+                    m_learning_store
+                        ? m_learning_store
+                              ->load_progress(found->second.function_id)
+                              .note
+                        : "");
+                *note_loading = false;
+            }
+            if (history_button) {
+                history_button->set_sensitive(true);
+            }
+            if (explain_button) {
+                explain_button->set_sensitive(true);
+            }
+
             display_source(
                 source_view,
                 m_content_loader,
                 found->second.source_path,
                 found->second.member_name);
         });
+
+    if (history_button) {
+        history_button->signal_clicked().connect(
+            [this, current_topic]() {
+                if (!current_topic->function_id.empty()) {
+                    show_history_dialog(
+                        current_topic->function_id,
+                        current_topic->source_path,
+                        current_topic->member_name,
+                        current_topic->title);
+                }
+            });
+    }
+    if (explain_button) {
+        explain_button->signal_clicked().connect(
+            [this, current_topic, flush_note]() {
+                if (current_topic->function_id.empty()) {
+                    return;
+                }
+                (*flush_note)();
+                explain_with_local_ai(
+                    m_content_loader,
+                    current_topic->title,
+                    current_topic->description,
+                    current_topic->source_path,
+                    current_topic->member_name);
+            });
+    }
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {
         if (!subchapter.group.empty() && subchapter.group != current_group) {
@@ -1013,54 +1076,6 @@ void MainWindow::populate_topic_list(
         text_box->append(*point_description);
         row_box->append(*text_box);
 
-        if (m_learning_store) {
-            auto note_button = Gtk::make_managed<Gtk::Button>("笔记");
-            note_button->add_css_class("btn-sm");
-            note_button->set_valign(Gtk::Align::CENTER);
-            note_button->set_tooltip_text("编辑该知识点的学习笔记");
-            note_button->signal_clicked().connect(
-                [this, function_id, topic_title = subchapter.title]() {
-                    show_note_dialog(function_id, topic_title);
-                });
-            row_box->append(*note_button);
-
-            auto status_button = Gtk::make_managed<Gtk::Button>();
-            status_button->add_css_class("btn-sm");
-            status_button->set_valign(Gtk::Align::CENTER);
-            status_button->set_tooltip_text(
-                "点击切换掌握状态：未学 → 已学 → 需复习");
-            auto status_text = Gtk::make_managed<Gtk::Label>();
-            status_button->set_child(*status_text);
-            auto apply_status = [status_text](int status) {
-                static const array<pair<const char*, const char*>, 3> meta = {{
-                    {"未学", "topic-status-new"},
-                    {"已学", "topic-status-learned"},
-                    {"需复习", "topic-status-review"},
-                }};
-                for (const auto& entry : meta) {
-                    status_text->remove_css_class(entry.second);
-                }
-                status_text->set_text(meta[status].first);
-                status_text->add_css_class(meta[status].second);
-            };
-            const int initial_status =
-                m_learning_store->load_progress(function_id).status;
-            apply_status(initial_status);
-            auto status_value = make_shared<int>(initial_status);
-            status_button->signal_clicked().connect(
-                [this, function_id, status_value, apply_status]() {
-                    *status_value = (*status_value + 1) % 3;
-                    apply_status(*status_value);
-                    const auto progress =
-                        m_learning_store->load_progress(function_id);
-                    m_learning_store->save_progress(
-                        function_id,
-                        *status_value,
-                        progress.note);
-                });
-            row_box->append(*status_button);
-        }
-
         // 操作区：运行、历史、复制集中在一个 Box 中，与条目文字以分隔线隔离。
         const TopicSelection topic = (*selection_by_row)[row];
         auto actions = Gtk::make_managed<Gtk::Box>(
@@ -1100,38 +1115,52 @@ void MainWindow::populate_topic_list(
         }
         actions->append(*run);
 
+        // 掌握程度：五颗星，点击第 n 颗设为 n 星，再点当前星降一星。
+        int initial_rating = 0;
         if (m_learning_store) {
-            auto history = Gtk::make_managed<Gtk::Button>("历史");
-            history->add_css_class("btn-sm");
-            history->set_tooltip_text("查看该知识点的运行历史");
-            history->signal_clicked().connect(
-                [this, row, activate_topic, topic]() {
-                    (*activate_topic)(row);
-                    show_history_dialog(
-                        topic.function_id,
-                        topic.source_path,
-                        topic.member_name,
-                        topic.title);
-                });
-            actions->append(*history);
-
-            auto explain = Gtk::make_managed<Gtk::Button>("解释");
-            explain->add_css_class("btn-sm");
-            explain->set_tooltip_text(
-                "把知识点说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手"
-                "（默认豆包，可用环境变量 ATHENA_AI_COMMAND 自定义命令）");
-            explain->signal_clicked().connect(
-                [row, activate_topic, topic, this]() {
-                    (*activate_topic)(row);
-                    explain_with_local_ai(
-                        m_content_loader,
-                        topic.title,
-                        topic.description,
-                        topic.source_path,
-                        topic.member_name);
-                });
-            actions->append(*explain);
+            initial_rating = clamp(
+                m_learning_store->load_progress(function_id).status, 0, 5);
         }
+        auto rating_value = make_shared<int>(initial_rating);
+        auto star_buttons = make_shared<vector<Gtk::Button*>>();
+        auto apply_rating = [star_buttons](int rating) {
+            for (int index = 0; index < 5; ++index) {
+                auto* image = dynamic_cast<Gtk::Image*>(
+                    (*star_buttons)[index]->get_child());
+                if (image) {
+                    image->set_from_icon_name(
+                        index < rating ? "starred-symbolic"
+                                       : "non-starred-symbolic");
+                }
+            }
+        };
+        for (int star_index = 1; star_index <= 5; ++star_index) {
+            auto star = Gtk::make_managed<Gtk::Button>();
+            star->add_css_class("flat");
+            star->add_css_class("star-button");
+            star->set_tooltip_text("掌握程度 " + to_string(star_index) + " 星");
+            auto icon = Gtk::make_managed<Gtk::Image>();
+            icon->set_pixel_size(16);
+            star->set_child(*icon);
+            star->signal_clicked().connect(
+                [this, function_id, rating_value, star_index, apply_rating]() {
+                    *rating_value = (*rating_value == star_index)
+                        ? star_index - 1
+                        : star_index;
+                    apply_rating(*rating_value);
+                    if (m_learning_store) {
+                        const auto progress =
+                            m_learning_store->load_progress(function_id);
+                        m_learning_store->save_progress(
+                            function_id,
+                            *rating_value,
+                            progress.note);
+                    }
+                });
+            star_buttons->push_back(star);
+            actions->append(*star);
+        }
+        apply_rating(initial_rating);
 
         row_box->append(*actions);
 

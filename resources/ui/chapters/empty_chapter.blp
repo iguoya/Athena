@@ -157,23 +157,94 @@ Box chapter_page {
           }
       }
 
-      Box result_panel {
+      Box tools_and_result {
         orientation: vertical;
         spacing: 8;
-        height-request: 190;
-        margin-top: 8;
         vexpand: true;
 
         Frame {
-          name: "result_frame";
-          label: "运行结果";
+          name: "note_frame";
+          label: "笔记";
           hexpand: true;
-          vexpand: true;
 
           styles [
             "panel-frame",
             "group-frame"
           ]
+
+          Box {
+            orientation: horizontal;
+            spacing: 8;
+            margin-top: 8;
+            margin-bottom: 8;
+            margin-start: 8;
+            margin-end: 8;
+
+            ScrolledWindow {
+              hscrollbar-policy: never;
+              hexpand: true;
+              vexpand: true;
+              height-request: 92;
+
+              TextView note_view {
+                name: "note_view";
+                editable: false;
+                cursor-visible: false;
+                wrap-mode: word_char;
+                left-margin: 8;
+                right-margin: 8;
+                top-margin: 6;
+                bottom-margin: 6;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              valign: center;
+
+              Button history_button {
+                name: "history_button";
+                label: "历史";
+                tooltip-text: "查看当前知识点的运行记录";
+                sensitive: false;
+
+                styles [
+                  "btn-sm"
+                ]
+              }
+
+              Button explain_button {
+                name: "explain_button";
+                label: "解释";
+                tooltip-text: "把当前知识点的说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手";
+                sensitive: false;
+
+                styles [
+                  "btn-sm"
+                ]
+              }
+            }
+          }
+        }
+
+        Box result_panel {
+          orientation: vertical;
+          spacing: 8;
+          height-request: 190;
+          margin-top: 0;
+          vexpand: true;
+
+          Frame {
+            name: "result_frame";
+            label: "运行结果";
+            hexpand: true;
+            vexpand: true;
+
+            styles [
+              "panel-frame",
+              "group-frame"
+            ]
 
           ScrolledWindow {
             hexpand: true;
@@ -195,6 +266,7 @@ Box chapter_page {
             }
           }
         }
+      }
       }
     }
   }
