@@ -1132,8 +1132,8 @@ void MainWindow::populate_topic_list(
         }
         actions->append(*run);
 
-        // 重要程度／掌握程度：各自独立的五星评分，自由打分并持久化。
-        // 掌握程度到 5 星后运行按钮置灰，降低星级即可恢复运行。
+        // 重要程度／熟练度：各自独立的五星评分，自由打分并持久化。
+        // 熟练度到 5 星后运行按钮置灰，降低星级即可恢复运行。
         KnowledgeProgress saved_progress;
         if (m_learning_store) {
             try {
@@ -1170,14 +1170,13 @@ void MainWindow::populate_topic_list(
             const bool finished = *mastery >= 5;
             run->set_sensitive(!finished);
             run->set_tooltip_text(finished
-                ? "已完全掌握；如需重跑请先降低掌握程度"
+                ? "已完全掌握；如需重跑请先降低熟练度"
                 : "运行该知识点的实验代码");
         };
         // 五星评分行：点击第 n 颗设为 n 星，再点当前星降一星；星星右侧
         // 跟随一个文字标识，随当前星级显示对应含义，星星本身的悬浮提示
         // 也带上同样的含义说明。
         auto make_star_row = [persist_rating, apply_run_state](
-                                  const char* label_prefix,
                                   const char* theme_class,
                                   const vector<string>& level_labels,
                                   const shared_ptr<int>& value,
@@ -1211,9 +1210,7 @@ void MainWindow::populate_topic_list(
                 auto star = Gtk::make_managed<Gtk::Button>();
                 star->add_css_class("flat");
                 star->add_css_class("star-button");
-                star->set_tooltip_text(
-                    string(label_prefix) + " " + to_string(star_index)
-                    + " 星：" + level_labels[static_cast<size_t>(star_index)]);
+                star->set_tooltip_text(level_labels[static_cast<size_t>(star_index)]);
                 auto icon = Gtk::make_managed<Gtk::Image>();
                 icon->set_pixel_size(14);
                 star->set_child(*icon);
@@ -1242,17 +1239,17 @@ void MainWindow::populate_topic_list(
         };
 
         static const vector<string> importance_levels = {
-            "未判断", "简单容易理解", "较简单", "中等难度", "较复杂", "很复杂难理解"};
+            "未评", "简单", "一般", "正常", "复杂", "极难"};
         static const vector<string> mastery_levels = {
-            "未处理", "初步了解", "部分理解", "基本掌握", "熟练掌握", "已完全掌握理解"};
+            "未学", "了解", "理解", "掌握", "熟练", "精通"};
 
         auto star_box = Gtk::make_managed<Gtk::Box>(
             Gtk::Orientation::VERTICAL, 2);
         star_box->add_css_class("star-box");
         star_box->append(*make_star_row(
-            "重要程度", "star-row-importance", importance_levels, importance, false));
+            "star-row-importance", importance_levels, importance, false));
         star_box->append(*make_star_row(
-            "掌握程度", "star-row-mastery", mastery_levels, mastery, true));
+            "star-row-mastery", mastery_levels, mastery, true));
         actions->append(*star_box);
         apply_run_state();
 
