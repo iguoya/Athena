@@ -487,9 +487,6 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Label>("experiment_status_label");
     auto copy_source_button =
         builder->get_widget<Gtk::Button>("copy_source_button");
-    auto copy_result_button =
-        builder->get_widget<Gtk::Button>("copy_result_button");
-    auto history_button = builder->get_widget<Gtk::Button>("history_button");
 
     if (copy_source_button && source_view) {
         copy_source_button->signal_clicked().connect([source_view]() {
@@ -503,16 +500,6 @@ void MainWindow::initialize_code_page(
             g_free(text);
         });
     }
-    if (copy_result_button && result_view) {
-        copy_result_button->signal_clicked().connect([result_view]() {
-            auto buffer = result_view->get_buffer();
-            Gtk::TextIter begin;
-            Gtk::TextIter end;
-            buffer->get_bounds(begin, end);
-            result_view->get_clipboard()->set_text(
-                buffer->get_text(begin, end, false));
-        });
-    }
 
     if (topics_label && topics_list) {
         populate_topic_list(
@@ -523,8 +510,7 @@ void MainWindow::initialize_code_page(
             *topics_list,
             knowledge_description_label,
             experiment_spinner,
-            experiment_status_label,
-            history_button);
+            experiment_status_label);
     }
 }
 
@@ -723,7 +709,7 @@ void MainWindow::start_experiment(
     }
     m_elapsed_timer.disconnect();
     m_elapsed_timer = Glib::signal_timeout().connect(
-        [this, experiment_status_label, alive = m_ui_alive, started]() -> bool {
+        [experiment_status_label, alive = m_ui_alive, started]() -> bool {
             if (!alive->load() || !experiment_status_label) {
                 return false;
             }
@@ -819,8 +805,7 @@ void MainWindow::populate_topic_list(
     Gtk::ListBox& topics_list,
     Gtk::Label* knowledge_description_label,
     Gtk::Spinner* experiment_spinner,
-    Gtk::Label* experiment_status_label,
-    Gtk::Button* history_button) {
+    Gtk::Label* experiment_status_label) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -844,32 +829,13 @@ void MainWindow::populate_topic_list(
 
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
-    const string chapter_name = chapter.name;
-    auto current_topic = make_shared<TopicSelection>();
-    if (history_button) {
-        history_button->signal_clicked().connect(
-            [this, current_topic]() {
-                if (!current_topic->function_id.empty()) {
-                    show_history_dialog(
-                        current_topic->function_id,
-                        current_topic->source_path,
-                        current_topic->member_name,
-                        current_topic->title);
-                }
-            });
-    }
+    // 激活只负责高亮、说明和源码显示；运行与历史由操作区按钮显式触发，
+    // 条目本身（标题与描述）不响应点击。
     auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
         [this,
          selection_by_row,
-         current_topic,
          knowledge_description_label,
-         source_view,
-         result_view,
-         category_name,
-         chapter_name,
-         experiment_spinner,
-         experiment_status_label,
-         history_button](Gtk::ListBoxRow* row) {
+         source_view](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -889,29 +855,6 @@ void MainWindow::populate_topic_list(
                 m_content_loader,
                 found->second.source_path,
                 found->second.member_name);
-
-            *current_topic = found->second;
-            if (history_button) {
-                history_button->set_sensitive(true);
-            }
-
-            if (!result_view) {
-                return;
-            }
-            const string function_id = make_function_id(
-                category_name,
-                chapter_name,
-                found->second.member_name);
-            if (!m_function_registry.contains(function_id)) {
-                return;
-            }
-            start_experiment(
-                function_id,
-                found->second.source_path,
-                found->second.member_name,
-                *result_view,
-                experiment_spinner,
-                experiment_status_label);
         });
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {
@@ -955,8 +898,8 @@ void MainWindow::populate_topic_list(
         }
 
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
-        row->set_selectable(true);
-        row->set_activatable(true);
+        row->set_selectable(false);
+        row->set_activatable(false);
         row->add_css_class("topic-row");
 
         const string function_id = make_function_id(
@@ -1043,35 +986,80 @@ void MainWindow::populate_topic_list(
             row_box->append(*status_button);
         }
 
+        // 操作区：运行、历史、复制集中在一个 Box 中，与条目文字以分隔线隔离。
+        const TopicSelection topic = (*selection_by_row)[row];
+        auto actions = Gtk::make_managed<Gtk::Box>(
+            Gtk::Orientation::HORIZONTAL, 6);
+        actions->set_valign(Gtk::Align::CENTER);
+        actions->add_css_class("topic-actions");
+
         auto run = Gtk::make_managed<Gtk::Button>("运行");
         run->add_css_class("suggested-action");
         run->add_css_class("btn-primary");
         run->add_css_class("btn-sm");
         run->add_css_class("topic-run");
-        const bool can_run = m_function_registry.contains(function_id);
+        const bool can_run =
+            m_function_registry.contains(topic.function_id);
         run->set_sensitive(can_run);
         run->set_tooltip_text(can_run
             ? "运行该知识点的实验代码"
             : "该知识点尚未实现可运行实验");
         if (can_run && result_view) {
             run->signal_clicked().connect(
-                [row,
-                 topics_list = &topics_list,
-                 activate_topic]() {
-                    topics_list->select_row(*row);
+                [this,
+                 row,
+                 activate_topic,
+                 topic,
+                 result_view,
+                 experiment_spinner,
+                 experiment_status_label]() {
                     (*activate_topic)(row);
+                    start_experiment(
+                        topic.function_id,
+                        topic.source_path,
+                        topic.member_name,
+                        *result_view,
+                        experiment_spinner,
+                        experiment_status_label);
                 });
         }
-        row_box->append(*run);
+        actions->append(*run);
+
+        if (m_learning_store) {
+            auto history = Gtk::make_managed<Gtk::Button>("历史");
+            history->add_css_class("btn-sm");
+            history->set_tooltip_text("查看该知识点的运行历史");
+            history->signal_clicked().connect(
+                [this, row, activate_topic, topic]() {
+                    (*activate_topic)(row);
+                    show_history_dialog(
+                        topic.function_id,
+                        topic.source_path,
+                        topic.member_name,
+                        topic.title);
+                });
+            actions->append(*history);
+
+            auto copy = Gtk::make_managed<Gtk::Button>("复制");
+            copy->add_css_class("btn-sm");
+            copy->set_tooltip_text("复制该知识点最近一次运行结果");
+            copy->signal_clicked().connect([this, function_id]() {
+                const auto runs =
+                    m_learning_store->recent_runs(function_id, 1);
+                if (!runs.empty()) {
+                    Gdk::Display::get_default()
+                        ->get_clipboard()
+                        ->set_text(runs.front().output);
+                }
+            });
+            actions->append(*copy);
+        }
+
+        row_box->append(*actions);
 
         row->set_child(*row_box);
         topics_list.append(*row);
     }
-
-    topics_list.signal_row_selected().connect(
-        [activate_topic](Gtk::ListBoxRow* row) {
-            (*activate_topic)(row);
-        });
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::get_chapter_builder(

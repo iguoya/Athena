@@ -186,7 +186,7 @@ Box chapter_page {
 
               ListBox topics_list {
                 name: "topics_list";
-                selection-mode: single;
+                selection-mode: none;
                 show-separators: true;
 
                 styles [
@@ -215,27 +215,6 @@ Box chapter_page {
 
             styles [
               "panel-title"
-            ]
-          }
-
-          Button history_button {
-            name: "history_button";
-            label: "历史";
-            tooltip-text: "查看该知识点最近的运行记录";
-            sensitive: false;
-
-            styles [
-              "btn-sm"
-            ]
-          }
-
-          Button copy_result_button {
-            name: "copy_result_button";
-            label: "复制";
-            tooltip-text: "复制当前运行结果";
-
-            styles [
-              "btn-sm"
             ]
           }
 

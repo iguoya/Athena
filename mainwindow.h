@@ -42,8 +42,7 @@ private:
         Gtk::ListBox& topics_list,
         Gtk::Label* knowledge_description_label,
         Gtk::Spinner* experiment_spinner,
-        Gtk::Label* experiment_status_label,
-        Gtk::Button* history_button);
+        Gtk::Label* experiment_status_label);
     void open_learning_store();
     void show_note_dialog(const string& function_id, const string& topic_title);
     void show_history_dialog(
