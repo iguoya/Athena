@@ -668,8 +668,6 @@ void MainWindow::initialize_code_page(
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
     auto note_view = builder->get_widget<Gtk::TextView>("note_view");
-    auto history_button = builder->get_widget<Gtk::Button>("history_button");
-    auto explain_button = builder->get_widget<Gtk::Button>("explain_button");
     auto chapter_overview_button =
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
@@ -697,9 +695,7 @@ void MainWindow::initialize_code_page(
             title_label,
             description_label,
             chapter_icon,
-            note_view,
-            history_button,
-            explain_button);
+            note_view);
     }
 }
 
@@ -1082,9 +1078,7 @@ void MainWindow::populate_topic_list(
     Gtk::Label* header_title_label,
     Gtk::Label* header_description_label,
     Gtk::Image* header_icon,
-    Gtk::TextView* note_view,
-    Gtk::Button* history_button,
-    Gtk::Button* explain_button) {
+    Gtk::TextView* note_view) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -1168,9 +1162,7 @@ void MainWindow::populate_topic_list(
          note_view,
          note_buffer,
          note_loading,
-         flush_note,
-         history_button,
-         explain_button](Gtk::ListBoxRow* row) {
+         flush_note](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -1209,12 +1201,6 @@ void MainWindow::populate_topic_list(
                         : "");
                 *note_loading = false;
             }
-            if (history_button) {
-                history_button->set_sensitive(true);
-            }
-            if (explain_button) {
-                explain_button->set_sensitive(true);
-            }
 
             display_source(
                 source_view,
@@ -1223,33 +1209,6 @@ void MainWindow::populate_topic_list(
                 found->second.member_name);
         });
 
-    if (history_button) {
-        history_button->signal_clicked().connect(
-            [this, current_topic]() {
-                if (!current_topic->function_id.empty()) {
-                    show_history_dialog(
-                        current_topic->function_id,
-                        current_topic->source_path,
-                        current_topic->member_name,
-                        current_topic->title);
-                }
-            });
-    }
-    if (explain_button) {
-        explain_button->signal_clicked().connect(
-            [this, current_topic, flush_note]() {
-                if (current_topic->function_id.empty()) {
-                    return;
-                }
-                (*flush_note)();
-                explain_with_local_ai(
-                    m_content_loader,
-                    current_topic->title,
-                    current_topic->description,
-                    current_topic->source_path,
-                    current_topic->member_name);
-            });
-    }
     string current_group;
     for (const auto& subchapter : chapter.subchapters) {
         if (!subchapter.group.empty() && subchapter.group != current_group) {
@@ -1417,6 +1376,39 @@ void MainWindow::populate_topic_list(
                 });
         }
         actions->append(*run);
+
+        // 历史与解释依赖具体知识点，各自绑定当前这一条 topic，不再共用
+        // 一对随“当前激活知识点”切换的按钮；点击时先激活本行（高亮、
+        // 头部、笔记与源码随之切换），再执行对应动作。
+        auto history_button = Gtk::make_managed<Gtk::Button>("历史");
+        history_button->add_css_class("btn-sm");
+        history_button->set_tooltip_text("查看该知识点的运行记录");
+        history_button->signal_clicked().connect(
+            [this, row, activate_topic, topic]() {
+                (*activate_topic)(row);
+                show_history_dialog(
+                    topic.function_id,
+                    topic.source_path,
+                    topic.member_name,
+                    topic.title);
+            });
+        actions->append(*history_button);
+
+        auto explain_button = Gtk::make_managed<Gtk::Button>("解释");
+        explain_button->add_css_class("btn-sm");
+        explain_button->set_tooltip_text(
+            "把该知识点的说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手");
+        explain_button->signal_clicked().connect(
+            [this, row, activate_topic, topic]() {
+                (*activate_topic)(row);
+                explain_with_local_ai(
+                    m_content_loader,
+                    topic.title,
+                    topic.description,
+                    topic.source_path,
+                    topic.member_name);
+            });
+        actions->append(*explain_button);
 
         // 熟练度：用户自评的五星评分，自由打分并持久化；到 5 星后运行
         // 按钮置灰，降低星级即可恢复运行。重要度不在这里——它是只读的

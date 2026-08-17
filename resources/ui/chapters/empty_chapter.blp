@@ -178,33 +178,6 @@ Box chapter_page {
         spacing: 8;
         vexpand: true;
 
-        Box note_tools {
-          orientation: horizontal;
-          spacing: 8;
-
-          Button history_button {
-            name: "history_button";
-            label: "历史";
-            tooltip-text: "查看当前知识点的运行记录";
-            sensitive: false;
-
-            styles [
-              "btn-sm"
-            ]
-          }
-
-          Button explain_button {
-            name: "explain_button";
-            label: "解释";
-            tooltip-text: "把当前知识点的说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手";
-            sensitive: false;
-
-            styles [
-              "btn-sm"
-            ]
-          }
-        }
-
         Frame {
           name: "note_frame";
           label: "笔记";
