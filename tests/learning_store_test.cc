@@ -43,15 +43,15 @@ TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
 
 TEST(LearningStoreTest, ReturnsMostRecentRunsFirst) {
     LearningStore store(":memory:");
-    store.record_run("cpp.RAII.unique", "first", 10.0, "hash-a");
-    store.record_run("cpp.RAII.unique", "second", 20.5, "hash-b");
-    store.record_run("cpp.Reference.cast", "other", 1.0, "hash-c");
+    store.record_run("cpp.RAII.unique", "first", 10.0, "void unique() { /* v1 */ }");
+    store.record_run("cpp.RAII.unique", "second", 20.5, "void unique() { /* v2 */ }");
+    store.record_run("cpp.Reference.cast", "other", 1.0, "void cast() {}");
 
     const auto runs = store.recent_runs("cpp.RAII.unique", 10);
     ASSERT_EQ(runs.size(), 2u);
     EXPECT_EQ(runs.front().output, "second");
     EXPECT_DOUBLE_EQ(runs.front().duration_ms, 20.5);
-    EXPECT_EQ(runs.front().source_hash, "hash-b");
+    EXPECT_EQ(runs.front().source_snapshot, "void unique() { /* v2 */ }");
     EXPECT_EQ(runs.back().output, "first");
 
     EXPECT_EQ(store.recent_runs("cpp.Reference.cast", 10).size(), 1u);
@@ -100,6 +100,48 @@ TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
     EXPECT_EQ(store.load_progress("cpp.Reference.cast").mastery, 1);
     EXPECT_EQ(store.load_progress("cpp.Reference.const").mastery, 0);
     EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "已理解并掌握");
+
+    std::remove(db_path.c_str());
+}
+
+// 复现 run_history 的旧结构：只存 source_hash（单向哈希），没有
+// source_snapshot。升级后旧记录的快照读出来应该是空字符串（哈希无法
+// 还原源码），不应抛异常，新记录正常写入 source_snapshot。
+TEST(LearningStoreTest, MigratesLegacyRunHistoryColumnOnUpgrade) {
+    const string db_path = "/tmp/athena-learning-store-run-history-legacy-test.db";
+    std::remove(db_path.c_str());
+
+    sqlite3* legacy = nullptr;
+    ASSERT_EQ(sqlite3_open(db_path.c_str(), &legacy), SQLITE_OK);
+    ASSERT_EQ(
+        sqlite3_exec(
+            legacy,
+            "CREATE TABLE run_history ("
+            "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "  function_id TEXT NOT NULL,"
+            "  output TEXT NOT NULL,"
+            "  duration_ms REAL NOT NULL,"
+            "  source_hash TEXT NOT NULL DEFAULT '',"
+            "  ran_at INTEGER NOT NULL);"
+            "INSERT INTO run_history(function_id, output, duration_ms, source_hash, ran_at) "
+            "VALUES ('cpp.RAII.weak', '旧输出', 5.0, '12345', 100);",
+            nullptr,
+            nullptr,
+            nullptr),
+        SQLITE_OK);
+    sqlite3_close_v2(legacy);
+
+    LearningStore store(db_path);
+    const auto old_runs = store.recent_runs("cpp.RAII.weak", 10);
+    ASSERT_EQ(old_runs.size(), 1u);
+    EXPECT_EQ(old_runs.front().output, "旧输出");
+    EXPECT_EQ(old_runs.front().source_snapshot, "");
+
+    store.record_run("cpp.RAII.weak", "新输出", 8.0, "void weak() { /* new */ }");
+    const auto runs = store.recent_runs("cpp.RAII.weak", 10);
+    ASSERT_EQ(runs.size(), 2u);
+    EXPECT_EQ(runs.front().output, "新输出");
+    EXPECT_EQ(runs.front().source_snapshot, "void weak() { /* new */ }");
 
     std::remove(db_path.c_str());
 }

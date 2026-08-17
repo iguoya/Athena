@@ -18,7 +18,7 @@ struct RunRecord {
     long long id = 0;
     string output;
     double duration_ms = 0.0;
-    string source_hash;
+    string source_snapshot;  // 运行时该知识点成员函数体的完整源码文本
     long long ran_at = 0;
 };
 
@@ -43,7 +43,7 @@ public:
         const string& function_id,
         const string& output,
         double duration_ms,
-        const string& source_hash);
+        const string& source_snapshot);
     vector<RunRecord> recent_runs(const string& function_id, int limit) const;
 
 private:
@@ -54,9 +54,12 @@ private:
     void execute(const string& sql) const;
     // 把旧版本单一 status 位标志列迁移为 mastery 列；CREATE TABLE IF NOT
     // EXISTS 对已存在的旧表是空操作，新列需要显式补齐。旧版本短暂存在过
-    // 的 importance 列（本会话内引入又移除）如果已经加过，留在表里不再
-    // 使用，不做 DROP COLUMN 迁移。
+    // 的 importance 列、run_history 的旧 source_hash 列（本会话内引入又
+    // 废弃）如果已经加过，留在表里不再使用，不做 DROP COLUMN 迁移。
     void migrate_legacy_status_column();
+    // run_history 补齐 source_snapshot 列（曾用 source_hash 只存哈希，
+    // 无法还原源码；现在改存完整快照，供历史对比查看真实源码）。
+    void migrate_legacy_run_history_columns();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;
 };

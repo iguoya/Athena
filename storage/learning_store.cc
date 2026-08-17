@@ -79,8 +79,9 @@ LearningStore::LearningStore(const string& database_path) {
         "  function_id TEXT NOT NULL,"
         "  output TEXT NOT NULL,"
         "  duration_ms REAL NOT NULL,"
-        "  source_hash TEXT NOT NULL DEFAULT '',"
+        "  source_snapshot TEXT NOT NULL DEFAULT '',"
         "  ran_at INTEGER NOT NULL)");
+    migrate_legacy_run_history_columns();
     execute(
         "CREATE INDEX IF NOT EXISTS idx_run_history_function "
         "ON run_history(function_id, id DESC)");
@@ -106,6 +107,16 @@ void LearningStore::migrate_legacy_status_column() {
             "       WHEN (status & 2) = 2 THEN 3 "
             "       WHEN (status & 1) = 1 THEN 1 "
             "       ELSE 0 END");
+    }
+}
+
+void LearningStore::migrate_legacy_run_history_columns() {
+    // 旧版本只存 source_hash（单向哈希，无法还原源码）；补齐
+    // source_snapshot 列即可，旧的 source_hash 列留在表里不再使用。
+    if (!table_has_column(m_handle.get(), "run_history", "source_snapshot")) {
+        execute(
+            "ALTER TABLE run_history "
+            "ADD COLUMN source_snapshot TEXT NOT NULL DEFAULT ''");
     }
 }
 
@@ -170,15 +181,15 @@ void LearningStore::record_run(
     const string& function_id,
     const string& output,
     double duration_ms,
-    const string& source_hash) {
+    const string& source_snapshot) {
     Statement statement(
         m_handle.get(),
-        "INSERT INTO run_history(function_id, output, duration_ms, source_hash, ran_at) "
+        "INSERT INTO run_history(function_id, output, duration_ms, source_snapshot, ran_at) "
         "VALUES(?1, ?2, ?3, ?4, ?5)");
     bind_text(m_handle.get(), statement.raw, 1, function_id);
     bind_text(m_handle.get(), statement.raw, 2, output);
     if (sqlite3_bind_double(statement.raw, 3, duration_ms) != SQLITE_OK
-        || sqlite3_bind_text(statement.raw, 4, source_hash.c_str(), -1, SQLITE_TRANSIENT) != SQLITE_OK
+        || sqlite3_bind_text(statement.raw, 4, source_snapshot.c_str(), -1, SQLITE_TRANSIENT) != SQLITE_OK
         || sqlite3_bind_int64(statement.raw, 5, unix_seconds()) != SQLITE_OK) {
         raise_sqlite_error(m_handle.get(), "bind run parameters");
     }
@@ -192,7 +203,7 @@ vector<RunRecord> LearningStore::recent_runs(
     int limit) const {
     Statement statement(
         m_handle.get(),
-        "SELECT id, output, duration_ms, source_hash, ran_at FROM run_history "
+        "SELECT id, output, duration_ms, source_snapshot, ran_at FROM run_history "
         "WHERE function_id = ?1 ORDER BY id DESC LIMIT ?2");
     bind_text(m_handle.get(), statement.raw, 1, function_id);
     if (sqlite3_bind_int(statement.raw, 2, limit) != SQLITE_OK) {
@@ -207,8 +218,8 @@ vector<RunRecord> LearningStore::recent_runs(
             record.output = reinterpret_cast<const char*>(output);
         }
         record.duration_ms = sqlite3_column_double(statement.raw, 2);
-        if (const auto* hash = sqlite3_column_text(statement.raw, 3)) {
-            record.source_hash = reinterpret_cast<const char*>(hash);
+        if (const auto* snapshot = sqlite3_column_text(statement.raw, 3)) {
+            record.source_snapshot = reinterpret_cast<const char*>(snapshot);
         }
         record.ran_at = sqlite3_column_int64(statement.raw, 4);
         records.push_back(move(record));

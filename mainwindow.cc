@@ -62,18 +62,6 @@ optional<string> member_source_body(
     }
 }
 
-// 计算知识点成员函数源码的指纹，用于运行历史中标记“代码是否修改过”。
-string member_source_hash(
-    const ContentLoader& loader,
-    const string& source_path,
-    const string& member_name) {
-    const auto body = member_source_body(loader, source_path, member_name);
-    if (!body) {
-        return "";
-    }
-    return to_string(hash<string> {}(*body));
-}
-
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
 // 豆包客户端支持 doubao:// 协议但不支持携带提示词参数，因此采用
 // “剪贴板 + 唤起”的组合；默认命令可用环境变量 ATHENA_AI_COMMAND 覆盖。
@@ -198,6 +186,40 @@ void display_source(
         true,
         0.0,
         0.20);
+}
+
+// 为只读 GtkSourceView 配置 C++ 语法高亮并填入整段文本；不做成员函数
+// 定位/高亮，因为运行历史里的快照本来就已经是单个成员函数体的全文。
+void configure_snapshot_source_view(GtkSourceView* source_view, const string& text) {
+    if (!source_view) {
+        return;
+    }
+    auto source_buffer = GTK_SOURCE_BUFFER(
+        gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
+    auto language_manager = gtk_source_language_manager_get_default();
+    auto cpp_language = gtk_source_language_manager_get_language(
+        language_manager,
+        "cpp");
+    if (cpp_language) {
+        gtk_source_buffer_set_language(source_buffer, cpp_language);
+    }
+    gtk_source_buffer_set_highlight_syntax(source_buffer, true);
+    gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
+
+    auto scheme_manager = gtk_source_style_scheme_manager_get_default();
+    auto scheme = gtk_source_style_scheme_manager_get_scheme(
+        scheme_manager,
+        "Adwaita");
+    if (scheme) {
+        gtk_source_buffer_set_style_scheme(source_buffer, scheme);
+    }
+
+    const string display_text =
+        text.empty() ? "（该次运行未保存源码快照）" : text;
+    gtk_text_buffer_set_text(
+        GTK_TEXT_BUFFER(source_buffer),
+        display_text.c_str(),
+        static_cast<int>(display_text.size()));
 }
 
 string chapter_key(const string& category_name, const string& chapter_name) {
@@ -616,18 +638,19 @@ void MainWindow::show_history_dialog(
         cerr << "Failed to load run history for " << function_id << ": "
              << error.what() << endl;
     }
-    const string current_hash =
-        member_source_hash(m_content_loader, source_path, member_name);
+    const string current_snapshot =
+        member_source_body(m_content_loader, source_path, member_name)
+            .value_or("");
 
     auto dialog = Gtk::make_managed<Gtk::Dialog>();
     dialog->set_title("运行历史：" + topic_title);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
-    dialog->set_default_size(780, 520);
+    dialog->set_default_size(1100, 680);
 
     auto* content = dialog->get_content_area();
-    auto paned = Gtk::make_managed<Gtk::Paned>(Gtk::Orientation::VERTICAL);
-    paned->set_position(200);
+    auto paned = Gtk::make_managed<Gtk::Paned>(Gtk::Orientation::HORIZONTAL);
+    paned->set_position(240);
     paned->set_hexpand(true);
     paned->set_vexpand(true);
     paned->set_shrink_start_child(false);
@@ -635,21 +658,22 @@ void MainWindow::show_history_dialog(
 
     auto list_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
     list_scrolled->set_policy(
-        Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+        Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
     auto list = Gtk::make_managed<Gtk::ListBox>();
-    list->set_selection_mode(Gtk::SelectionMode::SINGLE);
+    list->set_selection_mode(Gtk::SelectionMode::NONE);
     list->add_css_class("topic-list");
     list_scrolled->set_child(*list);
 
-    auto output_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
-    output_scrolled->set_policy(
-        Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    auto output_view = Gtk::make_managed<Gtk::TextView>();
-    output_view->set_editable(false);
-    output_view->set_cursor_visible(false);
-    output_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
-    output_view->add_css_class("code-view");
-    output_scrolled->set_child(*output_view);
+    auto compare_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    compare_scrolled->set_policy(
+        Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
+    compare_scrolled->set_hexpand(true);
+    compare_scrolled->set_vexpand(true);
+    auto compare_box = Gtk::make_managed<Gtk::Box>(
+        Gtk::Orientation::HORIZONTAL, 12);
+    compare_box->set_hexpand(true);
+    compare_box->set_vexpand(true);
+    compare_scrolled->set_child(*compare_box);
 
     if (runs.empty()) {
         auto empty_row = Gtk::make_managed<Gtk::ListBoxRow>();
@@ -664,14 +688,20 @@ void MainWindow::show_history_dialog(
         empty_row->set_child(*empty_label);
         list->append(*empty_row);
     } else {
-        auto output_by_row = make_shared<std::map<Gtk::ListBoxRow*, string>>();
+        // 一次最多选中 2 条记录对比，源码（GtkSourceView，只读高亮）和
+        // 输出并排展示；默认选中最近两次运行，省得每次都要手动挑。
+        auto run_by_row = make_shared<std::map<Gtk::ListBoxRow*, RunRecord>>();
+        auto row_order = make_shared<vector<Gtk::ListBoxRow*>>();
         for (const auto& run : runs) {
             string code_state = "代码版本未知";
-            if (!run.source_hash.empty() && !current_hash.empty()) {
-                code_state =
-                    run.source_hash == current_hash ? "代码一致" : "代码已修改";
+            if (!run.source_snapshot.empty() && !current_snapshot.empty()) {
+                code_state = run.source_snapshot == current_snapshot
+                    ? "代码一致"
+                    : "代码已修改";
             }
             auto row = Gtk::make_managed<Gtk::ListBoxRow>();
+            row->set_activatable(true);
+            row->add_css_class("topic-row");
             auto label = Gtk::make_managed<Gtk::Label>(
                 format_timestamp(run.ran_at) + " · "
                 + format_duration_ms(run.duration_ms) + " · " + code_state);
@@ -681,22 +711,122 @@ void MainWindow::show_history_dialog(
             label->set_margin_start(10);
             label->set_margin_end(10);
             row->set_child(*label);
-            (*output_by_row)[row] = run.output;
+            (*run_by_row)[row] = run;
+            row_order->push_back(row);
             list->append(*row);
         }
-        list->signal_row_selected().connect(
-            [output_view, output_by_row](Gtk::ListBoxRow* row) {
-                const auto found = output_by_row->find(row);
-                if (found != output_by_row->end()) {
-                    output_view->get_buffer()->set_text(found->second);
+
+        auto selected = make_shared<vector<Gtk::ListBoxRow*>>();
+
+        auto rebuild_compare = make_shared<function<void()>>();
+        *rebuild_compare = [compare_box, selected, run_by_row, current_snapshot]() {
+            while (auto* child = compare_box->get_first_child()) {
+                compare_box->remove(*child);
+            }
+            if (selected->empty()) {
+                auto hint = Gtk::make_managed<Gtk::Label>(
+                    "在左侧点选 1-2 条记录，查看当时的源码快照和输出。");
+                hint->add_css_class("dim-label");
+                hint->set_valign(Gtk::Align::CENTER);
+                hint->set_hexpand(true);
+                compare_box->append(*hint);
+                return;
+            }
+            for (auto* row : *selected) {
+                const auto found = run_by_row->find(row);
+                if (found == run_by_row->end()) {
+                    continue;
                 }
-            });        if (auto* first = list->get_row_at_index(0)) {
-            list->select_row(*first);
+                const RunRecord& run = found->second;
+
+                auto column = Gtk::make_managed<Gtk::Box>(
+                    Gtk::Orientation::VERTICAL, 8);
+                column->set_hexpand(true);
+                column->set_vexpand(true);
+
+                auto header = Gtk::make_managed<Gtk::Label>(
+                    format_timestamp(run.ran_at) + " · "
+                    + format_duration_ms(run.duration_ms));
+                header->set_halign(Gtk::Align::START);
+                header->add_css_class("heading");
+                column->append(*header);
+
+                auto source_frame = Gtk::make_managed<Gtk::Frame>();
+                source_frame->set_label("源码快照");
+                source_frame->add_css_class("panel-frame");
+                source_frame->add_css_class("group-frame");
+                source_frame->set_vexpand(true);
+                auto source_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+                source_scrolled->set_vexpand(true);
+                auto* raw_source_view = GTK_SOURCE_VIEW(gtk_source_view_new());
+                gtk_text_view_set_editable(
+                    GTK_TEXT_VIEW(raw_source_view), FALSE);
+                gtk_text_view_set_cursor_visible(
+                    GTK_TEXT_VIEW(raw_source_view), FALSE);
+                gtk_text_view_set_monospace(
+                    GTK_TEXT_VIEW(raw_source_view), TRUE);
+                gtk_source_view_set_show_line_numbers(raw_source_view, TRUE);
+                configure_snapshot_source_view(
+                    raw_source_view, run.source_snapshot);
+                auto* source_widget =
+                    Glib::wrap(GTK_WIDGET(raw_source_view));
+                source_widget->add_css_class("code-view");
+                source_scrolled->set_child(*source_widget);
+                source_frame->set_child(*source_scrolled);
+                column->append(*source_frame);
+
+                auto output_frame = Gtk::make_managed<Gtk::Frame>();
+                output_frame->set_label("输出结果");
+                output_frame->add_css_class("panel-frame");
+                output_frame->add_css_class("group-frame");
+                output_frame->set_vexpand(true);
+                auto output_scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+                output_scrolled->set_vexpand(true);
+                auto output_view = Gtk::make_managed<Gtk::TextView>();
+                output_view->set_editable(false);
+                output_view->set_cursor_visible(false);
+                output_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
+                output_view->add_css_class("code-view");
+                output_view->get_buffer()->set_text(run.output);
+                output_scrolled->set_child(*output_view);
+                output_frame->set_child(*output_scrolled);
+                column->append(*output_frame);
+
+                compare_box->append(*column);
+            }
+        };
+
+        auto toggle_row = make_shared<function<void(Gtk::ListBoxRow*)>>();
+        *toggle_row = [selected, rebuild_compare](Gtk::ListBoxRow* row) {
+            auto found = find(selected->begin(), selected->end(), row);
+            if (found != selected->end()) {
+                row->remove_css_class("topic-active");
+                selected->erase(found);
+            } else {
+                if (selected->size() >= 2) {
+                    auto* oldest = selected->front();
+                    oldest->remove_css_class("topic-active");
+                    selected->erase(selected->begin());
+                }
+                row->add_css_class("topic-active");
+                selected->push_back(row);
+            }
+            (*rebuild_compare)();
+        };
+        list->signal_row_activated().connect(
+            [toggle_row](Gtk::ListBoxRow* row) { (*toggle_row)(row); });
+
+        // 默认选中最近两次运行（row_order 按时间倒序排列）。
+        if (!row_order->empty()) {
+            (*toggle_row)(row_order->at(0));
+        }
+        if (row_order->size() > 1) {
+            (*toggle_row)(row_order->at(1));
         }
     }
 
     paned->set_start_child(*list_scrolled);
-    paned->set_end_child(*output_scrolled);
+    paned->set_end_child(*compare_scrolled);
     content->append(*paned);
 
     dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
@@ -718,8 +848,9 @@ void MainWindow::start_experiment(
     }
     m_experiment_running = true;
 
-    const string source_hash =
-        member_source_hash(m_content_loader, source_path, member_name);
+    const string source_snapshot =
+        member_source_body(m_content_loader, source_path, member_name)
+            .value_or("");
 
     const auto result_buffer = result_view.get_buffer();
     result_buffer->set_text("运行中…");
@@ -757,7 +888,7 @@ void MainWindow::start_experiment(
     auto* learning_store = m_learning_store.get();
     m_experiment_thread = thread(
         [function_id,
-         source_hash,
+         source_snapshot,
          result_buffer,
          experiment_spinner,
          experiment_status_label,
@@ -784,7 +915,7 @@ void MainWindow::start_experiment(
 
             Glib::signal_idle().connect_once(
                 [function_id,
-                 source_hash,
+                 source_snapshot,
                  raw_output,
                  duration_ms,
                  result_buffer,
@@ -812,7 +943,7 @@ void MainWindow::start_experiment(
                                 function_id,
                                 raw_output,
                                 duration_ms,
-                                source_hash);
+                                source_snapshot);
                         } catch (const exception& error) {
                             cerr << "Failed to record run for " << function_id
                                  << ": " << error.what() << endl;
