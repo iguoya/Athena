@@ -837,13 +837,20 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
     // 章节总纲不依赖当前选中的知识点，常驻可点，独立于知识点列表接线。
+    // 配置了 DeepSeek Key 时生成理论讲解文档、用文章排版展示；未配置时
+    // 退回原有的剪贴板 + 唤起本机 AI 助手。
     if (chapter_overview_button) {
         chapter_overview_button->signal_clicked().connect(
-            [title = chapter.title,
+            [this,
+             title = chapter.title,
              description = chapter.description,
              subchapters = chapter.subchapters]() {
-                explain_chapter_overview_with_local_ai(
-                    title, description, subchapters);
+                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
+                    show_ai_theory_dialog(title, description, subchapters, api_key);
+                } else {
+                    explain_chapter_overview_with_local_ai(
+                        title, description, subchapters);
+                }
             });
     }
 
@@ -1150,54 +1157,84 @@ void MainWindow::show_history_dialog(
     dialog->show();
 }
 
-// 打开对话框，异步用给定提示词调用 DeepSeek，纯文本展示结果；网络请求在
-// 独立线程执行，结果经主线程回填。dialog_alive 在对话框隐藏时置 false，
-// m_ui_alive 在窗口析构时置 false，回调据此判断是否还能安全更新界面。
-// 知识点讲解和运行历史的“AI 讲解差异”共用这一个对话框，各自只是拼不同
-// 的 prompt。
-void MainWindow::show_ai_response_dialog(
+// 打开对话框，异步用给定提示词调用 DeepSeek，结果当 Markdown 解析后用
+// 跟 article 章节（如“程序与源码组织”）一样的排版显示：md4c 转 HTML、
+// WKWebView（macOS）渲染，代码块、标题、列表都有正常版式，不是纯文本
+// TextView 堆一坨——DeepSeek 的回答经常代码和说明夹杂，纯文本对代码不
+// 友好。网络请求在独立线程执行，HTML 只在主线程构造和加载；
+// article_view 在对话框隐藏时显式 reset，跟对话框同生命周期。知识点
+// 讲解、运行历史的“AI 讲解差异”和章节总纲共用这一个对话框，各自只是
+// 拼不同的 prompt。
+void MainWindow::show_ai_markdown_dialog(
     const string& dialog_title,
     const string& prompt,
-    const string& api_key) {
+    const string& api_key,
+    const string& loading_markdown,
+    int width,
+    int height) {
     auto dialog = Gtk::make_managed<Gtk::Dialog>();
     dialog->set_title(dialog_title);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
-    dialog->set_default_size(640, 480);
+    dialog->set_default_size(width, height);
 
     auto* content = dialog->get_content_area();
-    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scrolled->set_hexpand(true);
-    scrolled->set_vexpand(true);
-    auto text_view = Gtk::make_managed<Gtk::TextView>();
-    text_view->set_editable(false);
-    text_view->set_cursor_visible(false);
-    text_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
-    text_view->add_css_class("code-view");
-    text_view->add_css_class("ai-dialog-text");
-    const auto text_buffer = text_view->get_buffer();
-    text_buffer->set_text("正在请求 DeepSeek，请稍候…");
-    scrolled->set_child(*text_view);
-    content->append(*scrolled);
+    auto article_host = Gtk::make_managed<Gtk::DrawingArea>();
+    article_host->set_hexpand(true);
+    article_host->set_vexpand(true);
+    content->append(*article_host);
 
     append_dialog_action_bar(dialog, content, {});
 
     auto dialog_alive = make_shared<atomic_bool>(true);
-    dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
+    auto article_view = make_shared<unique_ptr<ArticleView>>();
+    dialog->signal_hide().connect([dialog_alive, article_view]() {
+        dialog_alive->store(false);
+        article_view->reset();
+    });
     dialog->show();
 
+    // 只在这几个 AI 对话框里把正文字号调大，不改 resources/article.css
+    // 本身——真正的 article 章节阅读页面用原来的 19px，不受影响。
+    string stylesheet = m_content_loader.load_resource("/app/article.css");
+    if (!stylesheet.empty()) {
+        stylesheet += "\n:root { --article-font-size: 22px; }\n";
+    }
+    *article_view = create_platform_article_view(*article_host, *dialog);
+    if (*article_view && !stylesheet.empty()) {
+        (*article_view)->load_html(
+            render_markdown_html(
+                loading_markdown,
+                stylesheet,
+                parse_markdown_headings(loading_markdown)),
+            ATHENA_SOURCE_ROOT);
+    }
+
     auto alive = m_ui_alive;
-    thread([alive, dialog_alive, text_buffer, api_key, prompt]() {
+    thread([alive, dialog_alive, article_view, stylesheet, api_key, prompt]() {
         const DeepSeekResult result = call_deepseek_chat(api_key, prompt);
         Glib::signal_idle().connect_once(
-            [alive, dialog_alive, text_buffer, result]() {
-                if (!alive->load() || !dialog_alive->load()) {
+            [alive, dialog_alive, article_view, stylesheet, result]() {
+                if (!alive->load() || !dialog_alive->load() || !*article_view
+                    || stylesheet.empty()) {
                     return;
                 }
-                text_buffer->set_text(
-                    result.ok ? result.content : ("请求失败：" + result.error));
+                const string markdown =
+                    result.ok ? result.content : ("# 请求失败\n\n" + result.error);
+                (*article_view)->load_html(
+                    render_markdown_html(
+                        markdown, stylesheet, parse_markdown_headings(markdown)),
+                    ATHENA_SOURCE_ROOT);
             });
     }).detach();
+}
+
+void MainWindow::show_ai_response_dialog(
+    const string& dialog_title,
+    const string& prompt,
+    const string& api_key) {
+    show_ai_markdown_dialog(
+        dialog_title, prompt, api_key, "正在请求 DeepSeek，请稍候…", 760, 620);
 }
 
 // 打开对话框，异步向 DeepSeek 请求针对该知识点具体源码的选择题（JSON
@@ -1440,6 +1477,36 @@ void MainWindow::show_ai_quiz_dialog(
                 }
             });
     }).detach();
+}
+
+// 生成本章理论讲解文档，用 show_ai_markdown_dialog 统一的文章排版展示。
+void MainWindow::show_ai_theory_dialog(
+    const string& chapter_title,
+    const string& description,
+    const vector<SubChapter>& subchapters,
+    const string& api_key) {
+    string prompt =
+        "请为 C++ 章节「" + chapter_title + "」写一份 Markdown 格式的知识点"
+        "理论讲解文档。要求：\n"
+        "- 突出重点和关键概念，不要面面俱到罗列琐碎细节；但也不能语焉不详、"
+        "点到为止——原理、为什么这样设计、怎么用，该讲清楚的都要讲透\n"
+        "- 用二级、三级标题组织内容，方便生成目录\n"
+        "- 覆盖下面列出的全部知识点，但不要逐字复述知识点说明，要用你自己"
+        "的话组织成连贯的讲解，知识点之间有联系的地方要讲出联系\n"
+        "- 直接输出 Markdown 正文本身，不要开场白、不要结束语，不要“希望"
+        "对你有帮助”这类跟内容无关的文字\n\n"
+        "章节简介：" + description + "\n\n包含的知识点：";
+    for (const auto& subchapter : subchapters) {
+        prompt += "\n- " + subchapter.title + "：" + subchapter.description;
+    }
+
+    show_ai_markdown_dialog(
+        "本章总纲：" + chapter_title,
+        prompt,
+        api_key,
+        "# " + chapter_title + "\n\n正在请求 DeepSeek 生成本章理论讲解，请稍候…",
+        900,
+        720);
 }
 
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，

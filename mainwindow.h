@@ -56,6 +56,13 @@ private:
         const string& source_path,
         const string& member_name,
         const string& topic_title);
+    void show_ai_markdown_dialog(
+        const string& dialog_title,
+        const string& prompt,
+        const string& api_key,
+        const string& loading_markdown,
+        int width,
+        int height);
     void show_ai_response_dialog(
         const string& dialog_title,
         const string& prompt,
@@ -65,6 +72,11 @@ private:
         const string& description,
         const string& source_path,
         const string& member_name,
+        const string& api_key);
+    void show_ai_theory_dialog(
+        const string& chapter_title,
+        const string& description,
+        const vector<SubChapter>& subchapters,
         const string& api_key);
     void start_experiment(
         const string& function_id,
