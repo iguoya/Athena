@@ -1187,14 +1187,17 @@ void MainWindow::show_ai_quiz_dialog(
     const string& member_name,
     const string& api_key) {
     string prompt =
-        "请针对 C++ 知识点「" + topic_title + "」出 3 道有针对性的单选自测"
-        "题，题目要结合下面这段具体源码提问，不要问泛泛的定义题。每题给 4 "
-        "个选项，只有一个正确答案，并给出简短解释说明为什么正确、其余选项"
-        "错在哪。只用 JSON 格式返回，形如 {\"questions\":[{\"question\":"
-        "\"...\",\"options\":[\"...\",\"...\",\"...\",\"...\"],"
-        "\"correct_index\":0,\"explanation\":\"...\"}]}，correct_index 是"
-        "从 0 开始的正确选项下标。不要输出 JSON 之外的任何文字。\n\n"
-        "知识点说明：" + description;
+        "请针对 C++ 知识点「" + topic_title + "」出一组有针对性的单选自测"
+        "题，题目要结合下面这段具体源码提问，不要问泛泛的定义题。题目数量"
+        "不要固定，你自己根据这个知识点实际包含的独立考察点客观决定出几"
+        "道：涵盖了这个知识点的所有关键行为和易错点才停，不要为了凑数量"
+        "出太简单或者跟别的题重复考察同一个点的题，也不要漏掉这个知识点"
+        "里真正该测的内容。每题给 4 个选项，只有一个正确答案，并给出简短"
+        "解释说明为什么正确、其余选项错在哪。只用 JSON 格式返回，形如 "
+        "{\"questions\":[{\"question\":\"...\",\"options\":[\"...\",\"...\","
+        "\"...\",\"...\"],\"correct_index\":0,\"explanation\":\"...\"}]}，"
+        "correct_index 是从 0 开始的正确选项下标。不要输出 JSON 之外的任何"
+        "文字。\n\n知识点说明：" + description;
     const auto body = member_source_body(m_content_loader, source_path, member_name);
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
@@ -1876,7 +1879,7 @@ void MainWindow::populate_topic_list(
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
             "需要配置 ATHENA_DEEPSEEK_API_KEY：让 DeepSeek 针对该知识点的"
-            "具体源码出几道自测题，答案默认隐藏");
+            "具体源码出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
         quiz_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
