@@ -56,6 +56,12 @@ private:
         const string& source_path,
         const string& member_name,
         const string& topic_title);
+    void show_ai_explanation_dialog(
+        const string& topic_title,
+        const string& description,
+        const string& source_path,
+        const string& member_name,
+        const string& api_key);
     void start_experiment(
         const string& function_id,
         const string& source_path,

@@ -3,11 +3,14 @@
 #include "content/source_locator.h"
 #include "render/markdown_renderer.h"
 
+#include <glib/gstdio.h>
 #include <gtksourceview/gtksource.h>
+#include <nlohmann/json.hpp>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <ctime>
+#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <iostream>
@@ -109,6 +112,110 @@ GitSourceState query_git_source_state(const string& relative_path) {
         return GitSourceState {};
     }
     return state;
+}
+
+struct DeepSeekResult {
+    bool ok = false;
+    string content;  // 成功时是回答正文
+    string error;    // 失败时是错误说明
+};
+
+// 用一个仅当前用户可读、用完即删的临时文件承载内容，避免敏感信息（这里
+// 是 API Key）以命令行参数形式出现在进程列表里；成功返回文件路径，
+// 失败返回空串。
+string write_secure_temp_file(const string& name_template, const string& content) {
+    gchar* path_raw = nullptr;
+    gint fd = g_file_open_tmp(name_template.c_str(), &path_raw, nullptr);
+    if (fd < 0) {
+        if (path_raw) {
+            g_free(path_raw);
+        }
+        return "";
+    }
+    close(fd);
+    const string path = path_raw;
+    g_free(path_raw);
+
+    ofstream stream(path, ios::binary);
+    if (!stream) {
+        g_remove(path.c_str());
+        return "";
+    }
+    stream << content;
+    stream.close();
+    return path;
+}
+
+// 通过 curl 子进程调用 DeepSeek 的 chat completions 接口；同步阻塞，只应
+// 在工作线程调用，不要在主线程调用。API Key 和请求体都经临时文件传入
+// （curl -K 配置文件 + --data @文件），不出现在 ps 可见的命令行参数里；
+// 两个临时文件用完立即删除。
+DeepSeekResult call_deepseek_chat(const string& api_key, const string& prompt) {
+    DeepSeekResult result;
+
+    const nlohmann::json request_body = {
+        {"model", "deepseek-chat"},
+        {"messages",
+         nlohmann::json::array({{{"role", "user"}, {"content", prompt}}})},
+        {"stream", false},
+    };
+
+    const string config_path = write_secure_temp_file(
+        "athena-deepseek-XXXXXX.cfg",
+        "header = \"Authorization: Bearer " + api_key + "\"\n"
+        "header = \"Content-Type: application/json\"\n");
+    const string body_path =
+        write_secure_temp_file("athena-deepseek-XXXXXX.json", request_body.dump());
+
+    // 无论成功失败都要清理临时文件。
+    struct TempFileGuard {
+        vector<string> paths;
+        ~TempFileGuard() {
+            for (const auto& path : paths) {
+                if (!path.empty()) {
+                    g_remove(path.c_str());
+                }
+            }
+        }
+    } guard {{config_path, body_path}};
+
+    if (config_path.empty() || body_path.empty()) {
+        result.error = "无法创建临时请求文件";
+        return result;
+    }
+
+    string response_body;
+    int exit_status = 0;
+    const string command = "curl -sS --max-time 30 --connect-timeout 10 -K "
+        + Glib::shell_quote(config_path) + " --data @" + Glib::shell_quote(body_path)
+        + " https://api.deepseek.com/chat/completions";
+    try {
+        Glib::spawn_command_line_sync(
+            command, &response_body, nullptr, &exit_status);
+    } catch (const exception& error) {
+        result.error = string("调用 curl 失败：") + error.what();
+        return result;
+    }
+    if (exit_status != 0) {
+        result.error = "curl 请求失败（退出码 " + to_string(exit_status)
+            + "），请确认已安装 curl 且网络可用";
+        return result;
+    }
+
+    try {
+        const auto response = nlohmann::json::parse(response_body);
+        if (response.contains("error")) {
+            result.error = response["error"].value(
+                "message", "DeepSeek 接口返回错误");
+            return result;
+        }
+        result.content =
+            response.at("choices").at(0).at("message").at("content").get<string>();
+        result.ok = true;
+    } catch (const exception& error) {
+        result.error = string("解析 DeepSeek 响应失败：") + error.what();
+    }
+    return result;
 }
 
 // 把提示词放入剪贴板并唤起本机 AI 助手；豆包客户端支持 doubao:// 协议
@@ -935,6 +1042,62 @@ void MainWindow::show_history_dialog(
     dialog->show();
 }
 
+// 打开对话框，异步调用 DeepSeek 讲解该知识点；网络请求在独立线程执行，
+// 结果经主线程回填。dialog_alive 在对话框隐藏时置 false，m_ui_alive 在
+// 窗口析构时置 false，回调据此判断是否还能安全更新界面。
+void MainWindow::show_ai_explanation_dialog(
+    const string& topic_title,
+    const string& description,
+    const string& source_path,
+    const string& member_name,
+    const string& api_key) {
+    string prompt = "请解释 C++ 知识点「" + topic_title + "」：" + description;
+    const auto body = member_source_body(m_content_loader, source_path, member_name);
+    if (body && !body->empty()) {
+        prompt += "\n\n参考实现：\n" + *body;
+    }
+
+    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    dialog->set_title("AI 讲解：" + topic_title);
+    dialog->set_transient_for(*this);
+    dialog->set_modal(true);
+    dialog->set_default_size(640, 480);
+
+    auto* content = dialog->get_content_area();
+    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    scrolled->set_hexpand(true);
+    scrolled->set_vexpand(true);
+    auto text_view = Gtk::make_managed<Gtk::TextView>();
+    text_view->set_editable(false);
+    text_view->set_cursor_visible(false);
+    text_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
+    text_view->add_css_class("code-view");
+    const auto text_buffer = text_view->get_buffer();
+    text_buffer->set_text("正在请求 DeepSeek，请稍候…");
+    scrolled->set_child(*text_view);
+    content->append(*scrolled);
+
+    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+
+    auto dialog_alive = make_shared<atomic_bool>(true);
+    dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
+    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
+    dialog->show();
+
+    auto alive = m_ui_alive;
+    thread([alive, dialog_alive, text_buffer, api_key, prompt]() {
+        const DeepSeekResult result = call_deepseek_chat(api_key, prompt);
+        Glib::signal_idle().connect_once(
+            [alive, dialog_alive, text_buffer, result]() {
+                if (!alive->load() || !dialog_alive->load()) {
+                    return;
+                }
+                text_buffer->set_text(
+                    result.ok ? result.content : ("请求失败：" + result.error));
+            });
+    }).detach();
+}
+
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，
 // 运行期间新的运行请求被忽略；结果与耗时经主线程回填。
 void MainWindow::start_experiment(
@@ -1397,16 +1560,26 @@ void MainWindow::populate_topic_list(
         auto explain_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
         explain_button->add_css_class("btn-sm");
         explain_button->set_tooltip_text(
-            "把该知识点的说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手");
+            "配置了 ATHENA_DEEPSEEK_API_KEY 时在对话框内直接显示 DeepSeek "
+            "的讲解；未配置时退回到复制说明与源码到剪贴板并唤起本机 AI 助手");
         explain_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
-                explain_with_local_ai(
-                    m_content_loader,
-                    topic.title,
-                    topic.description,
-                    topic.source_path,
-                    topic.member_name);
+                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
+                    show_ai_explanation_dialog(
+                        topic.title,
+                        topic.description,
+                        topic.source_path,
+                        topic.member_name,
+                        api_key);
+                } else {
+                    explain_with_local_ai(
+                        m_content_loader,
+                        topic.title,
+                        topic.description,
+                        topic.source_path,
+                        topic.member_name);
+                }
             });
         actions->append(*explain_button);
 
