@@ -11,53 +11,98 @@ Box chapter_page {
   margin-end: 20;
   margin-bottom: 18;
 
-  // 紧凑章节导语：由 chapter.icon/title/description 驱动。
-  Box chapter_header {
-    orientation: horizontal;
-    spacing: 14;
+  // 紧凑章节导语：由 chapter.icon/title/description 驱动；本章总纲
+  // 按钮和笔记框跟标题/简介放在同一个 Frame 里，笔记不再依赖“当前
+  // 激活的知识点”才可见，打开章节就能随手记。
+  Frame chapter_header_frame {
+    hexpand: true;
 
-    Image chapter_icon {
-      name: "chapter_icon";
-      pixel-size: 34;
-      valign: center;
-    }
+    styles [
+      "panel-frame"
+    ]
 
-    Box {
-      orientation: vertical;
-      spacing: 3;
-      hexpand: true;
+    Box chapter_header {
+      orientation: horizontal;
+      spacing: 14;
+      margin-top: 10;
+      margin-bottom: 10;
+      margin-start: 14;
+      margin-end: 14;
 
-      Label chapter_title_label {
-        name: "chapter_title_label";
-        halign: start;
+      Image chapter_icon {
+        name: "chapter_icon";
+        pixel-size: 34;
+        valign: center;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 3;
+        hexpand: true;
+        valign: center;
+
+        Label chapter_title_label {
+          name: "chapter_title_label";
+          halign: start;
+
+          styles [
+            "title-2"
+          ]
+        }
+
+        Label chapter_description_label {
+          name: "chapter_description_label";
+          halign: start;
+          wrap: true;
+          xalign: 0;
+
+          styles [
+            "header-description"
+          ]
+        }
+      }
+
+      Button chapter_overview_button {
+        name: "chapter_overview_button";
+        label: "本章总纲";
+        valign: center;
+        tooltip-text: "把本章标题、简介与全部知识点组成总纲请求放入剪贴板，并唤起本机 AI 助手";
 
         styles [
-          "title-2"
+          "btn-sm",
+          "btn-chapter-overview"
         ]
       }
 
-      Label chapter_description_label {
-        name: "chapter_description_label";
-        halign: start;
-        wrap: true;
-        xalign: 0;
+      Frame {
+        name: "note_frame";
+        label: "笔记";
+        width-request: 320;
+        valign: center;
 
         styles [
-          "header-description"
+          "panel-frame",
+          "group-frame"
         ]
+
+        ScrolledWindow {
+          hscrollbar-policy: never;
+          hexpand: true;
+          height-request: 64;
+
+          TextView note_view {
+            name: "note_view";
+            editable: true;
+            cursor-visible: true;
+            wrap-mode: word_char;
+            sensitive: false;
+            left-margin: 8;
+            right-margin: 8;
+            top-margin: 6;
+            bottom-margin: 6;
+          }
+        }
       }
-    }
-
-    Button chapter_overview_button {
-      name: "chapter_overview_button";
-      label: "本章总纲";
-      valign: center;
-      tooltip-text: "把本章标题、简介与全部知识点组成总纲请求放入剪贴板，并唤起本机 AI 助手";
-
-      styles [
-        "btn-sm",
-        "btn-chapter-overview"
-      ]
     }
   }
 
@@ -173,35 +218,6 @@ Box chapter_page {
         orientation: vertical;
         spacing: 8;
         vexpand: true;
-
-        Frame {
-          name: "note_frame";
-          label: "笔记";
-          hexpand: true;
-
-          styles [
-            "panel-frame",
-            "group-frame"
-          ]
-
-          ScrolledWindow {
-            hscrollbar-policy: never;
-            hexpand: true;
-            height-request: 64;
-
-            TextView note_view {
-              name: "note_view";
-              editable: true;
-              cursor-visible: true;
-              wrap-mode: word_char;
-              sensitive: false;
-              left-margin: 8;
-              right-margin: 8;
-              top-margin: 6;
-              bottom-margin: 6;
-            }
-          }
-        }
 
         Box result_panel {
           orientation: vertical;
