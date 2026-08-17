@@ -236,6 +236,28 @@ void copy_prompt_and_launch_ai(const string& prompt) {
     }
 }
 
+// 在对话框内容区底部居中放一行按钮，不用 GTK 内建 action area（默认
+// 靠右、样式不好单独控制），直接把按钮追加到内容区末尾。extra_buttons
+// 排在“关闭”左边，调用方自己决定颜色（加 css class）和点击行为。
+void append_dialog_action_bar(
+    Gtk::Dialog* dialog,
+    Gtk::Box* content_box,
+    const vector<Gtk::Button*>& extra_buttons) {
+    auto action_bar = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+    action_bar->set_halign(Gtk::Align::CENTER);
+    action_bar->add_css_class("dialog-action-bar");
+
+    for (auto* button : extra_buttons) {
+        action_bar->append(*button);
+    }
+
+    auto close_button = Gtk::make_managed<Gtk::Button>("关闭");
+    close_button->signal_clicked().connect([dialog]() { dialog->hide(); });
+    action_bar->append(*close_button);
+
+    content_box->append(*action_bar);
+}
+
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
 // 讲解请求的提示词：知识点说明 + 参考实现（若能取到源码）。剪贴板方案
 // 和 DeepSeek 对话框方案共用同一份提示词，只是投递方式不同。
@@ -901,6 +923,7 @@ void MainWindow::show_history_dialog(
     if (!deepseek_api_key.empty()) {
         diff_button = Gtk::make_managed<Gtk::Button>("AI 讲解差异");
         diff_button->add_css_class("btn-sm");
+        diff_button->add_css_class("btn-ai-accent");
         diff_button->set_sensitive(false);
         diff_button->set_tooltip_text(
             "选中恰好 2 条记录后可用，让 DeepSeek 解释两次运行的源码与输出差异");
@@ -938,6 +961,7 @@ void MainWindow::show_history_dialog(
                 format_timestamp(run.ran_at) + " · "
                 + format_duration_ms(run.duration_ms) + " · " + code_state
                 + (git_tag.empty() ? "" : " · " + git_tag));
+            label->add_css_class("history-row-label");
             label->set_halign(Gtk::Align::START);
             label->set_margin_top(6);
             label->set_margin_bottom(6);
@@ -986,7 +1010,7 @@ void MainWindow::show_history_dialog(
                     + format_duration_ms(run.duration_ms) + " · "
                     + format_git_summary(run));
                 header->set_halign(Gtk::Align::START);
-                header->add_css_class("heading");
+                header->add_css_class("history-compare-heading");
                 column->append(*header);
 
                 auto source_frame = Gtk::make_managed<Gtk::Frame>();
@@ -1009,6 +1033,7 @@ void MainWindow::show_history_dialog(
                 auto* source_widget =
                     Glib::wrap(GTK_WIDGET(raw_source_view));
                 source_widget->add_css_class("code-view");
+                source_widget->add_css_class("ai-dialog-text");
                 source_scrolled->set_child(*source_widget);
                 source_frame->set_child(*source_scrolled);
                 column->append(*source_frame);
@@ -1025,6 +1050,7 @@ void MainWindow::show_history_dialog(
                 output_view->set_cursor_visible(false);
                 output_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
                 output_view->add_css_class("code-view");
+                output_view->add_css_class("ai-dialog-text");
                 output_view->get_buffer()->set_text(run.output);
                 output_scrolled->set_child(*output_view);
                 output_frame->set_child(*output_scrolled);
@@ -1086,23 +1112,17 @@ void MainWindow::show_history_dialog(
         }
     }
 
-    auto compare_pane = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 8);
-    compare_pane->set_hexpand(true);
-    compare_pane->set_vexpand(true);
-    if (diff_button) {
-        auto compare_toolbar =
-            Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
-        compare_toolbar->append(*diff_button);
-        compare_pane->append(*compare_toolbar);
-    }
-    compare_pane->append(*compare_scrolled);
-
     paned->set_start_child(*list_scrolled);
-    paned->set_end_child(*compare_pane);
+    paned->set_end_child(*compare_scrolled);
     content->append(*paned);
 
-    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
-    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
+    // “AI 讲解差异”跟“关闭”放一组，底部居中；未配置 Key 时 diff_button
+    // 是 nullptr，action bar 里只有“关闭”。两者颜色不同（紫色 vs 默认）
+    // 便于区分，靠 append_dialog_action_bar 统一处理位置。
+    append_dialog_action_bar(
+        dialog,
+        content,
+        diff_button ? vector<Gtk::Button*> {diff_button} : vector<Gtk::Button*> {});
     dialog->show();
 }
 
@@ -1130,16 +1150,16 @@ void MainWindow::show_ai_response_dialog(
     text_view->set_cursor_visible(false);
     text_view->set_wrap_mode(Gtk::WrapMode::WORD_CHAR);
     text_view->add_css_class("code-view");
+    text_view->add_css_class("ai-dialog-text");
     const auto text_buffer = text_view->get_buffer();
     text_buffer->set_text("正在请求 DeepSeek，请稍候…");
     scrolled->set_child(*text_view);
     content->append(*scrolled);
 
-    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+    append_dialog_action_bar(dialog, content, {});
 
     auto dialog_alive = make_shared<atomic_bool>(true);
     dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
-    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
     dialog->show();
 
     auto alive = m_ui_alive;
@@ -1156,8 +1176,9 @@ void MainWindow::show_ai_response_dialog(
     }).detach();
 }
 
-// 打开对话框，异步向 DeepSeek 请求针对该知识点具体源码的自测题（JSON
-// 格式，每题含问题和答案），逐题展示、点击才展开答案。DeepSeek 返回的
+// 打开对话框，异步向 DeepSeek 请求针对该知识点具体源码的选择题（JSON
+// 格式，每题含题干、选项、正确选项下标和解释），逐题展示；每题先选一个
+// 选项，点“提交答案”才判对错、给解释，颜色区分对错。DeepSeek 返回的
 // JSON 解析失败时退化为纯文本展示，不崩溃、不隐藏结果。
 void MainWindow::show_ai_quiz_dialog(
     const string& topic_title,
@@ -1166,11 +1187,14 @@ void MainWindow::show_ai_quiz_dialog(
     const string& member_name,
     const string& api_key) {
     string prompt =
-        "请针对 C++ 知识点「" + topic_title + "」出 3 道有针对性的自测题，"
-        "题目要结合下面这段具体源码提问，不要问泛泛的定义题。每题给出简短"
-        "答案。只用 JSON 格式返回，形如 "
-        "{\"questions\":[{\"question\":\"...\",\"answer\":\"...\"}]}，"
-        "不要输出 JSON 之外的任何文字。\n\n知识点说明：" + description;
+        "请针对 C++ 知识点「" + topic_title + "」出 3 道有针对性的单选自测"
+        "题，题目要结合下面这段具体源码提问，不要问泛泛的定义题。每题给 4 "
+        "个选项，只有一个正确答案，并给出简短解释说明为什么正确、其余选项"
+        "错在哪。只用 JSON 格式返回，形如 {\"questions\":[{\"question\":"
+        "\"...\",\"options\":[\"...\",\"...\",\"...\",\"...\"],"
+        "\"correct_index\":0,\"explanation\":\"...\"}]}，correct_index 是"
+        "从 0 开始的正确选项下标。不要输出 JSON 之外的任何文字。\n\n"
+        "知识点说明：" + description;
     const auto body = member_source_body(m_content_loader, source_path, member_name);
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
@@ -1180,28 +1204,28 @@ void MainWindow::show_ai_quiz_dialog(
     dialog->set_title("知识点自测：" + topic_title);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
-    dialog->set_default_size(640, 480);
+    dialog->set_default_size(680, 560);
 
     auto* content = dialog->get_content_area();
     auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
     scrolled->set_hexpand(true);
     scrolled->set_vexpand(true);
-    auto quiz_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 12);
+    auto quiz_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 16);
     quiz_box->set_margin_top(8);
     quiz_box->set_margin_bottom(8);
     quiz_box->set_margin_start(8);
     quiz_box->set_margin_end(8);
     auto loading_label = Gtk::make_managed<Gtk::Label>("正在生成自测题，请稍候…");
     loading_label->add_css_class("dim-label");
+    loading_label->add_css_class("ai-dialog-option");
     quiz_box->append(*loading_label);
     scrolled->set_child(*quiz_box);
     content->append(*scrolled);
 
-    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+    append_dialog_action_bar(dialog, content, {});
 
     auto dialog_alive = make_shared<atomic_bool>(true);
     dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
-    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
     dialog->show();
 
     auto alive = m_ui_alive;
@@ -1220,6 +1244,7 @@ void MainWindow::show_ai_quiz_dialog(
                         "请求失败：" + result.error);
                     error_label->set_halign(Gtk::Align::START);
                     error_label->set_wrap(true);
+                    error_label->add_css_class("ai-dialog-option");
                     quiz_box->append(*error_label);
                     return;
                 }
@@ -1228,53 +1253,118 @@ void MainWindow::show_ai_quiz_dialog(
                 try {
                     const auto quiz = nlohmann::json::parse(result.content);
                     const auto& questions = quiz.at("questions");
-                    if (!questions.empty()) {
-                        for (const auto& item : questions) {
-                            const string question =
-                                item.value("question", "");
-                            const string answer = item.value("answer", "");
-                            if (question.empty()) {
-                                continue;
-                            }
-
-                            auto item_box = Gtk::make_managed<Gtk::Box>(
-                                Gtk::Orientation::VERTICAL, 6);
-
-                            auto question_label =
-                                Gtk::make_managed<Gtk::Label>(question);
-                            question_label->set_halign(Gtk::Align::START);
-                            question_label->set_wrap(true);
-                            question_label->set_xalign(0);
-                            question_label->add_css_class("heading");
-                            item_box->append(*question_label);
-
-                            auto answer_label =
-                                Gtk::make_managed<Gtk::Label>(answer);
-                            answer_label->set_halign(Gtk::Align::START);
-                            answer_label->set_wrap(true);
-                            answer_label->set_xalign(0);
-                            answer_label->add_css_class("dim-label");
-                            answer_label->set_visible(false);
-                            item_box->append(*answer_label);
-
-                            auto reveal_button =
-                                Gtk::make_managed<Gtk::Button>("显示答案");
-                            reveal_button->add_css_class("btn-sm");
-                            reveal_button->set_halign(Gtk::Align::START);
-                            reveal_button->signal_clicked().connect(
-                                [answer_label, reveal_button]() {
-                                    const bool now_visible =
-                                        !answer_label->get_visible();
-                                    answer_label->set_visible(now_visible);
-                                    reveal_button->set_label(
-                                        now_visible ? "隐藏答案" : "显示答案");
-                                });
-                            item_box->append(*reveal_button);
-
-                            quiz_box->append(*item_box);
-                            quiz_box->append(*Gtk::make_managed<Gtk::Separator>());
-                            parsed_ok = true;
+                    for (const auto& item : questions) {
+                        const string question = item.value("question", "");
+                        const auto options =
+                            item.value("options", vector<string> {});
+                        const int correct_index =
+                            item.value("correct_index", -1);
+                        const string explanation =
+                            item.value("explanation", "");
+                        if (question.empty() || options.empty()
+                            || correct_index < 0
+                            || correct_index >= static_cast<int>(options.size())) {
+                            continue;
                         }
+
+                        auto item_box = Gtk::make_managed<Gtk::Box>(
+                            Gtk::Orientation::VERTICAL, 8);
+
+                        auto question_label =
+                            Gtk::make_managed<Gtk::Label>(question);
+                        question_label->set_halign(Gtk::Align::START);
+                        question_label->set_wrap(true);
+                        question_label->set_xalign(0);
+                        question_label->add_css_class("ai-dialog-question");
+                        item_box->append(*question_label);
+
+                        // 单选：同一题的选项分到同一个 group，只能选一个。
+                        auto option_buttons =
+                            make_shared<vector<Gtk::CheckButton*>>();
+                        Gtk::CheckButton* first_option = nullptr;
+                        for (const auto& option_text : options) {
+                            auto option = Gtk::make_managed<Gtk::CheckButton>(
+                                option_text);
+                            option->add_css_class("ai-dialog-option");
+                            if (first_option) {
+                                option->set_group(*first_option);
+                            } else {
+                                first_option = option;
+                            }
+                            option_buttons->push_back(option);
+                            item_box->append(*option);
+                        }
+
+                        auto feedback_label = Gtk::make_managed<Gtk::Label>();
+                        feedback_label->set_halign(Gtk::Align::START);
+                        feedback_label->set_wrap(true);
+                        feedback_label->set_xalign(0);
+                        feedback_label->add_css_class("ai-dialog-feedback");
+                        feedback_label->set_visible(false);
+
+                        auto explanation_label =
+                            Gtk::make_managed<Gtk::Label>(explanation);
+                        explanation_label->set_halign(Gtk::Align::START);
+                        explanation_label->set_wrap(true);
+                        explanation_label->set_xalign(0);
+                        explanation_label->add_css_class("ai-dialog-explanation");
+                        explanation_label->set_visible(false);
+
+                        auto submit_button =
+                            Gtk::make_managed<Gtk::Button>("提交答案");
+                        submit_button->add_css_class("btn-sm");
+                        submit_button->add_css_class("btn-ai-accent");
+                        submit_button->set_halign(Gtk::Align::START);
+                        submit_button->signal_clicked().connect(
+                            [option_buttons,
+                             correct_index,
+                             options,
+                             feedback_label,
+                             explanation_label,
+                             submit_button]() {
+                                int selected_index = -1;
+                                for (size_t index = 0;
+                                     index < option_buttons->size();
+                                     ++index) {
+                                    if ((*option_buttons)[index]->get_active()) {
+                                        selected_index =
+                                            static_cast<int>(index);
+                                        break;
+                                    }
+                                }
+                                if (selected_index < 0) {
+                                    feedback_label->set_text("请先选一个选项");
+                                    feedback_label->remove_css_class("correct");
+                                    feedback_label->remove_css_class("incorrect");
+                                    feedback_label->set_visible(true);
+                                    return;
+                                }
+                                const bool is_correct =
+                                    selected_index == correct_index;
+                                feedback_label->set_text(
+                                    is_correct
+                                        ? "✓ 回答正确"
+                                        : "✗ 回答错误，正确答案是："
+                                            + options[static_cast<size_t>(
+                                                correct_index)]);
+                                feedback_label->remove_css_class("correct");
+                                feedback_label->remove_css_class("incorrect");
+                                feedback_label->add_css_class(
+                                    is_correct ? "correct" : "incorrect");
+                                feedback_label->set_visible(true);
+                                explanation_label->set_visible(true);
+                                for (auto* option : *option_buttons) {
+                                    option->set_sensitive(false);
+                                }
+                                submit_button->set_sensitive(false);
+                            });
+                        item_box->append(*submit_button);
+                        item_box->append(*feedback_label);
+                        item_box->append(*explanation_label);
+
+                        quiz_box->append(*item_box);
+                        quiz_box->append(*Gtk::make_managed<Gtk::Separator>());
+                        parsed_ok = true;
                     }
                 } catch (const exception&) {
                     parsed_ok = false;
@@ -1287,6 +1377,7 @@ void MainWindow::show_ai_quiz_dialog(
                         Gtk::make_managed<Gtk::Label>(result.content);
                     fallback_label->set_halign(Gtk::Align::START);
                     fallback_label->set_wrap(true);
+                    fallback_label->add_css_class("ai-dialog-option");
                     quiz_box->append(*fallback_label);
                 }
             });

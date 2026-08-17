@@ -354,6 +354,67 @@ textview.code-view > text {
     font-size: 18pt;
 }
 
+/* AI 对话框（讲解/自测/讲解差异/运行历史）正文字号：不改动共享的
+   .code-view 基准（会影响主界面源码框和运行结果框），单独更大一档。 */
+textview.ai-dialog-text,
+textview.ai-dialog-text > text {
+    font-size: 22pt;
+}
+
+.ai-dialog-question {
+    font-size: 20pt;
+    font-weight: 700;
+}
+
+.ai-dialog-option {
+    font-size: 18pt;
+}
+
+.ai-dialog-feedback {
+    font-size: 18pt;
+    font-weight: 600;
+}
+
+.ai-dialog-feedback.correct {
+    color: @athena_success;
+}
+
+.ai-dialog-feedback.incorrect {
+    color: @athena_danger;
+}
+
+.ai-dialog-explanation {
+    font-size: 17pt;
+    color: @athena_muted;
+}
+
+/* 历史对话框：记录列表和对比栏标题也调大一档 */
+.history-row-label {
+    font-size: 16pt;
+}
+
+.history-compare-heading {
+    font-size: 19pt;
+    font-weight: 700;
+}
+
+/* 对话框底部居中按钮行 */
+.dialog-action-bar {
+    margin-top: 4px;
+}
+
+button.btn-ai-accent {
+    border-color: @athena_purple;
+    background-color: @athena_purple;
+    color: #ffffff;
+}
+
+button.btn-ai-accent:hover {
+    border-color: @athena_purple_hover;
+    background-color: @athena_purple_hover;
+    color: #ffffff;
+}
+
 /* === Bootstrap-like list group for knowledge points === */
 .topic-list {
     background-color: @athena_surface;
