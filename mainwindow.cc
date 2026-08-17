@@ -282,6 +282,14 @@ void append_dialog_action_bar(
     content_box->append(*action_bar);
 }
 
+// 讲解类提示词（讲解/自测/理论文档/讲解差异）共用的风格提示：贴近主流
+// 中文 C++ 教程的讲法和术语习惯，不生造术语。这里不是真的联网抓取这些
+// 站点内容——call_deepseek_chat 没有搜索/浏览能力，只是提示 DeepSeek
+// 往这个方向组织语言，权当术语和讲法的锚点。
+const char* kChineseTutorialStyleHint =
+    "讲解风格和术语尽量贴近菜鸟教程、C语言中文网、微软 Learn 中文文档、"
+    "w3cschool 这类主流中文 C++ 教程的习惯讲法，不要生造术语。";
+
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
 // 讲解请求的提示词：知识点说明 + 参考实现（若能取到源码）。剪贴板方案
 // 和 DeepSeek 对话框方案共用同一份提示词，只是投递方式不同。
@@ -291,7 +299,8 @@ string build_explain_prompt(
     const string& description,
     const string& source_path,
     const string& member_name) {
-    string prompt = "请解释 C++ 知识点「" + title + "」：" + description;
+    string prompt = "请解释 C++ 知识点「" + title + "」：" + description
+        + "\n\n" + kChineseTutorialStyleHint;
     const auto body = member_source_body(loader, source_path, member_name);
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
@@ -1130,7 +1139,8 @@ void MainWindow::show_history_dialog(
                     const string prompt =
                         "以下是知识点「" + topic_title + "」两次运行的源码快照"
                         "和输出，请指出源码具体改了什么、这些改动导致了输出上"
-                        "什么变化。\n\n=== 运行 A（"
+                        "什么变化。" + string(kChineseTutorialStyleHint)
+                        + "\n\n=== 运行 A（"
                         + format_timestamp(run_a.ran_at) + "）源码 ===\n"
                         + run_a.source_snapshot + "\n\n=== 运行 A 输出 ===\n"
                         + run_a.output + "\n\n=== 运行 B（"
@@ -1260,8 +1270,9 @@ void MainWindow::show_ai_quiz_dialog(
         "在哪。只用 JSON 格式返回，形如 {\"questions\":[{\"question\":"
         "\"...\",\"options\":[\"...\",\"...\"],\"correct_indices\":[0],"
         "\"explanation\":\"...\"}]}，correct_indices 是从 0 开始的正确"
-        "选项下标数组，单选题这个数组只有一个元素。不要输出 JSON 之外的"
-        "任何文字。\n\n知识点说明：" + description;
+        "选项下标数组，单选题这个数组只有一个元素。解释文字的" +
+        string(kChineseTutorialStyleHint) +
+        " 不要输出 JSON 之外的任何文字。\n\n知识点说明：" + description;
     const auto body = member_source_body(m_content_loader, source_path, member_name);
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
@@ -1494,7 +1505,8 @@ void MainWindow::show_ai_theory_dialog(
         "- 覆盖下面列出的全部知识点，但不要逐字复述知识点说明，要用你自己"
         "的话组织成连贯的讲解，知识点之间有联系的地方要讲出联系\n"
         "- 直接输出 Markdown 正文本身，不要开场白、不要结束语，不要“希望"
-        "对你有帮助”这类跟内容无关的文字\n\n"
+        "对你有帮助”这类跟内容无关的文字\n"
+        "- " + string(kChineseTutorialStyleHint) + "\n\n"
         "章节简介：" + description + "\n\n包含的知识点：";
     for (const auto& subchapter : subchapters) {
         prompt += "\n- " + subchapter.title + "：" + subchapter.description;
