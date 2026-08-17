@@ -237,7 +237,9 @@ void copy_prompt_and_launch_ai(const string& prompt) {
 }
 
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
-void explain_with_local_ai(
+// 讲解请求的提示词：知识点说明 + 参考实现（若能取到源码）。剪贴板方案
+// 和 DeepSeek 对话框方案共用同一份提示词，只是投递方式不同。
+string build_explain_prompt(
     const ContentLoader& loader,
     const string& title,
     const string& description,
@@ -248,7 +250,17 @@ void explain_with_local_ai(
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
     }
-    copy_prompt_and_launch_ai(prompt);
+    return prompt;
+}
+
+void explain_with_local_ai(
+    const ContentLoader& loader,
+    const string& title,
+    const string& description,
+    const string& source_path,
+    const string& member_name) {
+    copy_prompt_and_launch_ai(
+        build_explain_prompt(loader, title, description, source_path, member_name));
 }
 
 // 把章节标题、简介与全部知识点标题/说明组成总纲请求复制到剪贴板，并唤起
@@ -880,6 +892,20 @@ void MainWindow::show_history_dialog(
     compare_box->set_vexpand(true);
     compare_scrolled->set_child(*compare_box);
 
+    // 选中恰好 2 条记录时才可用；只在配置了 DeepSeek Key 时才创建这个
+    // 按钮，未配置就不出现，不留一个必然点不通的死按钮。
+    Gtk::Button* diff_button = nullptr;
+    const char* deepseek_api_key_env = g_getenv("ATHENA_DEEPSEEK_API_KEY");
+    const string deepseek_api_key =
+        deepseek_api_key_env ? deepseek_api_key_env : "";
+    if (!deepseek_api_key.empty()) {
+        diff_button = Gtk::make_managed<Gtk::Button>("AI 讲解差异");
+        diff_button->add_css_class("btn-sm");
+        diff_button->set_sensitive(false);
+        diff_button->set_tooltip_text(
+            "选中恰好 2 条记录后可用，让 DeepSeek 解释两次运行的源码与输出差异");
+    }
+
     if (runs.empty()) {
         auto empty_row = Gtk::make_managed<Gtk::ListBoxRow>();
         empty_row->set_selectable(false);
@@ -926,7 +952,11 @@ void MainWindow::show_history_dialog(
         auto selected = make_shared<vector<Gtk::ListBoxRow*>>();
 
         auto rebuild_compare = make_shared<function<void()>>();
-        *rebuild_compare = [compare_box, selected, run_by_row, current_snapshot]() {
+        *rebuild_compare =
+            [compare_box, selected, run_by_row, current_snapshot, diff_button]() {
+            if (diff_button) {
+                diff_button->set_sensitive(selected->size() == 2);
+            }
             while (auto* child = compare_box->get_first_child()) {
                 compare_box->remove(*child);
             }
@@ -1031,10 +1061,44 @@ void MainWindow::show_history_dialog(
         if (row_order->size() > 1) {
             (*toggle_row)(row_order->at(1));
         }
+
+        if (diff_button) {
+            diff_button->signal_clicked().connect(
+                [this, selected, run_by_row, topic_title, deepseek_api_key]() {
+                    if (selected->size() != 2) {
+                        return;
+                    }
+                    const RunRecord& run_a = run_by_row->at(selected->at(0));
+                    const RunRecord& run_b = run_by_row->at(selected->at(1));
+                    const string prompt =
+                        "以下是知识点「" + topic_title + "」两次运行的源码快照"
+                        "和输出，请指出源码具体改了什么、这些改动导致了输出上"
+                        "什么变化。\n\n=== 运行 A（"
+                        + format_timestamp(run_a.ran_at) + "）源码 ===\n"
+                        + run_a.source_snapshot + "\n\n=== 运行 A 输出 ===\n"
+                        + run_a.output + "\n\n=== 运行 B（"
+                        + format_timestamp(run_b.ran_at) + "）源码 ===\n"
+                        + run_b.source_snapshot + "\n\n=== 运行 B 输出 ===\n"
+                        + run_b.output;
+                    show_ai_response_dialog(
+                        "AI 讲解差异：" + topic_title, prompt, deepseek_api_key);
+                });
+        }
     }
 
+    auto compare_pane = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 8);
+    compare_pane->set_hexpand(true);
+    compare_pane->set_vexpand(true);
+    if (diff_button) {
+        auto compare_toolbar =
+            Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+        compare_toolbar->append(*diff_button);
+        compare_pane->append(*compare_toolbar);
+    }
+    compare_pane->append(*compare_scrolled);
+
     paned->set_start_child(*list_scrolled);
-    paned->set_end_child(*compare_scrolled);
+    paned->set_end_child(*compare_pane);
     content->append(*paned);
 
     dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
@@ -1042,23 +1106,17 @@ void MainWindow::show_history_dialog(
     dialog->show();
 }
 
-// 打开对话框，异步调用 DeepSeek 讲解该知识点；网络请求在独立线程执行，
-// 结果经主线程回填。dialog_alive 在对话框隐藏时置 false，m_ui_alive 在
-// 窗口析构时置 false，回调据此判断是否还能安全更新界面。
-void MainWindow::show_ai_explanation_dialog(
-    const string& topic_title,
-    const string& description,
-    const string& source_path,
-    const string& member_name,
+// 打开对话框，异步用给定提示词调用 DeepSeek，纯文本展示结果；网络请求在
+// 独立线程执行，结果经主线程回填。dialog_alive 在对话框隐藏时置 false，
+// m_ui_alive 在窗口析构时置 false，回调据此判断是否还能安全更新界面。
+// 知识点讲解和运行历史的“AI 讲解差异”共用这一个对话框，各自只是拼不同
+// 的 prompt。
+void MainWindow::show_ai_response_dialog(
+    const string& dialog_title,
+    const string& prompt,
     const string& api_key) {
-    string prompt = "请解释 C++ 知识点「" + topic_title + "」：" + description;
-    const auto body = member_source_body(m_content_loader, source_path, member_name);
-    if (body && !body->empty()) {
-        prompt += "\n\n参考实现：\n" + *body;
-    }
-
     auto dialog = Gtk::make_managed<Gtk::Dialog>();
-    dialog->set_title("AI 讲解：" + topic_title);
+    dialog->set_title(dialog_title);
     dialog->set_transient_for(*this);
     dialog->set_modal(true);
     dialog->set_default_size(640, 480);
@@ -1094,6 +1152,143 @@ void MainWindow::show_ai_explanation_dialog(
                 }
                 text_buffer->set_text(
                     result.ok ? result.content : ("请求失败：" + result.error));
+            });
+    }).detach();
+}
+
+// 打开对话框，异步向 DeepSeek 请求针对该知识点具体源码的自测题（JSON
+// 格式，每题含问题和答案），逐题展示、点击才展开答案。DeepSeek 返回的
+// JSON 解析失败时退化为纯文本展示，不崩溃、不隐藏结果。
+void MainWindow::show_ai_quiz_dialog(
+    const string& topic_title,
+    const string& description,
+    const string& source_path,
+    const string& member_name,
+    const string& api_key) {
+    string prompt =
+        "请针对 C++ 知识点「" + topic_title + "」出 3 道有针对性的自测题，"
+        "题目要结合下面这段具体源码提问，不要问泛泛的定义题。每题给出简短"
+        "答案。只用 JSON 格式返回，形如 "
+        "{\"questions\":[{\"question\":\"...\",\"answer\":\"...\"}]}，"
+        "不要输出 JSON 之外的任何文字。\n\n知识点说明：" + description;
+    const auto body = member_source_body(m_content_loader, source_path, member_name);
+    if (body && !body->empty()) {
+        prompt += "\n\n参考实现：\n" + *body;
+    }
+
+    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    dialog->set_title("知识点自测：" + topic_title);
+    dialog->set_transient_for(*this);
+    dialog->set_modal(true);
+    dialog->set_default_size(640, 480);
+
+    auto* content = dialog->get_content_area();
+    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    scrolled->set_hexpand(true);
+    scrolled->set_vexpand(true);
+    auto quiz_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 12);
+    quiz_box->set_margin_top(8);
+    quiz_box->set_margin_bottom(8);
+    quiz_box->set_margin_start(8);
+    quiz_box->set_margin_end(8);
+    auto loading_label = Gtk::make_managed<Gtk::Label>("正在生成自测题，请稍候…");
+    loading_label->add_css_class("dim-label");
+    quiz_box->append(*loading_label);
+    scrolled->set_child(*quiz_box);
+    content->append(*scrolled);
+
+    dialog->add_button("关闭", static_cast<int>(Gtk::ResponseType::CANCEL));
+
+    auto dialog_alive = make_shared<atomic_bool>(true);
+    dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
+    dialog->signal_response().connect([dialog](int) { dialog->hide(); });
+    dialog->show();
+
+    auto alive = m_ui_alive;
+    thread([alive, dialog_alive, quiz_box, api_key, prompt]() {
+        const DeepSeekResult result = call_deepseek_chat(api_key, prompt);
+        Glib::signal_idle().connect_once(
+            [alive, dialog_alive, quiz_box, result]() {
+                if (!alive->load() || !dialog_alive->load()) {
+                    return;
+                }
+                while (auto* child = quiz_box->get_first_child()) {
+                    quiz_box->remove(*child);
+                }
+                if (!result.ok) {
+                    auto error_label = Gtk::make_managed<Gtk::Label>(
+                        "请求失败：" + result.error);
+                    error_label->set_halign(Gtk::Align::START);
+                    error_label->set_wrap(true);
+                    quiz_box->append(*error_label);
+                    return;
+                }
+
+                bool parsed_ok = false;
+                try {
+                    const auto quiz = nlohmann::json::parse(result.content);
+                    const auto& questions = quiz.at("questions");
+                    if (!questions.empty()) {
+                        for (const auto& item : questions) {
+                            const string question =
+                                item.value("question", "");
+                            const string answer = item.value("answer", "");
+                            if (question.empty()) {
+                                continue;
+                            }
+
+                            auto item_box = Gtk::make_managed<Gtk::Box>(
+                                Gtk::Orientation::VERTICAL, 6);
+
+                            auto question_label =
+                                Gtk::make_managed<Gtk::Label>(question);
+                            question_label->set_halign(Gtk::Align::START);
+                            question_label->set_wrap(true);
+                            question_label->set_xalign(0);
+                            question_label->add_css_class("heading");
+                            item_box->append(*question_label);
+
+                            auto answer_label =
+                                Gtk::make_managed<Gtk::Label>(answer);
+                            answer_label->set_halign(Gtk::Align::START);
+                            answer_label->set_wrap(true);
+                            answer_label->set_xalign(0);
+                            answer_label->add_css_class("dim-label");
+                            answer_label->set_visible(false);
+                            item_box->append(*answer_label);
+
+                            auto reveal_button =
+                                Gtk::make_managed<Gtk::Button>("显示答案");
+                            reveal_button->add_css_class("btn-sm");
+                            reveal_button->set_halign(Gtk::Align::START);
+                            reveal_button->signal_clicked().connect(
+                                [answer_label, reveal_button]() {
+                                    const bool now_visible =
+                                        !answer_label->get_visible();
+                                    answer_label->set_visible(now_visible);
+                                    reveal_button->set_label(
+                                        now_visible ? "隐藏答案" : "显示答案");
+                                });
+                            item_box->append(*reveal_button);
+
+                            quiz_box->append(*item_box);
+                            quiz_box->append(*Gtk::make_managed<Gtk::Separator>());
+                            parsed_ok = true;
+                        }
+                    }
+                } catch (const exception&) {
+                    parsed_ok = false;
+                }
+
+                if (!parsed_ok) {
+                    // DeepSeek 没按要求的 JSON 格式返回时，原样展示文本，
+                    // 至少不丢内容。
+                    auto fallback_label =
+                        Gtk::make_managed<Gtk::Label>(result.content);
+                    fallback_label->set_halign(Gtk::Align::START);
+                    fallback_label->set_wrap(true);
+                    quiz_box->append(*fallback_label);
+                }
             });
     }).detach();
 }
@@ -1566,11 +1761,14 @@ void MainWindow::populate_topic_list(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
                 if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
-                    show_ai_explanation_dialog(
-                        topic.title,
-                        topic.description,
-                        topic.source_path,
-                        topic.member_name,
+                    show_ai_response_dialog(
+                        "AI 讲解：" + topic.title,
+                        build_explain_prompt(
+                            m_content_loader,
+                            topic.title,
+                            topic.description,
+                            topic.source_path,
+                            topic.member_name),
                         api_key);
                 } else {
                     explain_with_local_ai(
@@ -1582,6 +1780,36 @@ void MainWindow::populate_topic_list(
                 }
             });
         actions->append(*explain_button);
+
+        auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
+        quiz_button->add_css_class("btn-sm");
+        quiz_button->set_tooltip_text(
+            "需要配置 ATHENA_DEEPSEEK_API_KEY：让 DeepSeek 针对该知识点的"
+            "具体源码出几道自测题，答案默认隐藏");
+        quiz_button->signal_clicked().connect(
+            [this, row, activate_topic, topic]() {
+                (*activate_topic)(row);
+                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
+                    show_ai_quiz_dialog(
+                        topic.title,
+                        topic.description,
+                        topic.source_path,
+                        topic.member_name,
+                        api_key);
+                } else {
+                    auto notice = Gtk::make_managed<Gtk::MessageDialog>(
+                        *this,
+                        "自测功能需要先配置环境变量 ATHENA_DEEPSEEK_API_KEY",
+                        false,
+                        Gtk::MessageType::INFO,
+                        Gtk::ButtonsType::OK,
+                        true);
+                    notice->signal_response().connect(
+                        [notice](int) { notice->hide(); });
+                    notice->show();
+                }
+            });
+        actions->append(*quiz_button);
 
         // 熟练度：用户自评的五星评分，自由打分并持久化；到 5 星后运行
         // 按钮置灰，降低星级即可恢复运行。重要度不在这里——它是只读的

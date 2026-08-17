@@ -56,7 +56,11 @@ private:
         const string& source_path,
         const string& member_name,
         const string& topic_title);
-    void show_ai_explanation_dialog(
+    void show_ai_response_dialog(
+        const string& dialog_title,
+        const string& prompt,
+        const string& api_key);
+    void show_ai_quiz_dialog(
         const string& topic_title,
         const string& description,
         const string& source_path,

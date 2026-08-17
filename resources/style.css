@@ -22,6 +22,8 @@
 @define-color athena_danger #dc3545;
 @define-color athena_orange #fd7e14;
 @define-color athena_teal #20c997;
+@define-color athena_purple #6f42c1;
+@define-color athena_purple_hover #59359c;
 @define-color athena_warning #ffc107;
 
 /* === Application shell === */
@@ -132,6 +134,25 @@ button.btn-outline-secondary:active {
     border-color: @athena_secondary_hover;
     background-color: @athena_secondary_hover;
     color: #ffffff;
+}
+
+/* 本章总纲：跟运行/成功/危险等既有语义色区分开，单独一个紫色 */
+button.btn-chapter-overview {
+    border-color: @athena_purple;
+    background-color: @athena_purple;
+    color: #ffffff;
+}
+
+button.btn-chapter-overview:hover {
+    border-color: @athena_purple_hover;
+    background-color: @athena_purple_hover;
+    color: #ffffff;
+}
+
+button.btn-chapter-overview:active {
+    background-color: @athena_purple_hover;
+    color: #ffffff;
+    box-shadow: inset 0 1px 2px alpha(#000000, 0.16);
 }
 
 button:disabled {
