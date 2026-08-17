@@ -121,6 +121,22 @@ Box chapter_page {
       margin-start: 8;
       vexpand: true;
 
+      Box chapter_tools {
+        orientation: horizontal;
+        spacing: 8;
+        margin-bottom: 4;
+
+        Button chapter_overview_button {
+          name: "chapter_overview_button";
+          label: "本章总纲";
+          tooltip-text: "把本章标题、简介与全部知识点组成总纲请求放入剪贴板，并唤起本机 AI 助手";
+
+          styles [
+            "btn-sm"
+          ]
+        }
+      }
+
       Box topics_panel {
           orientation: vertical;
           spacing: 8;

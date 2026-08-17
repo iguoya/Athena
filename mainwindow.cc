@@ -111,20 +111,10 @@ GitSourceState query_git_source_state(const string& relative_path) {
     return state;
 }
 
-// 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
-// 豆包客户端支持 doubao:// 协议但不支持携带提示词参数，因此采用
-// “剪贴板 + 唤起”的组合；默认命令可用环境变量 ATHENA_AI_COMMAND 覆盖。
-void explain_with_local_ai(
-    const ContentLoader& loader,
-    const string& title,
-    const string& description,
-    const string& source_path,
-    const string& member_name) {
-    string prompt = "请解释 C++ 知识点「" + title + "」：" + description;
-    const auto body = member_source_body(loader, source_path, member_name);
-    if (body && !body->empty()) {
-        prompt += "\n\n参考实现：\n" + *body;
-    }
+// 把提示词放入剪贴板并唤起本机 AI 助手；豆包客户端支持 doubao:// 协议
+// 但不支持携带提示词参数，因此采用“剪贴板 + 唤起”的组合；默认命令可用
+// 环境变量 ATHENA_AI_COMMAND 自定义。供知识点解释和章节总纲共用。
+void copy_prompt_and_launch_ai(const string& prompt) {
     Gdk::Display::get_default()->get_clipboard()->set_text(prompt);
 
     string command = "open doubao://";
@@ -137,6 +127,37 @@ void explain_with_local_ai(
         cerr << "Failed to launch AI assistant (" << command
              << "): " << error.what() << endl;
     }
+}
+
+// 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
+void explain_with_local_ai(
+    const ContentLoader& loader,
+    const string& title,
+    const string& description,
+    const string& source_path,
+    const string& member_name) {
+    string prompt = "请解释 C++ 知识点「" + title + "」：" + description;
+    const auto body = member_source_body(loader, source_path, member_name);
+    if (body && !body->empty()) {
+        prompt += "\n\n参考实现：\n" + *body;
+    }
+    copy_prompt_and_launch_ai(prompt);
+}
+
+// 把章节标题、简介与全部知识点标题/说明组成总纲请求复制到剪贴板，并唤起
+// 本机 AI 助手；不依赖当前是否选中了具体知识点。
+void explain_chapter_overview_with_local_ai(
+    const string& title,
+    const string& description,
+    const vector<SubChapter>& subchapters) {
+    string prompt = "请给出 C++ 章节「" + title + "」的学习总纲：" + description;
+    if (!subchapters.empty()) {
+        prompt += "\n\n本章知识点：";
+        for (const auto& sub : subchapters) {
+            prompt += "\n- " + sub.title + "：" + sub.description;
+        }
+    }
+    copy_prompt_and_launch_ai(prompt);
 }
 
 void display_source(
@@ -649,6 +670,19 @@ void MainWindow::initialize_code_page(
     auto note_view = builder->get_widget<Gtk::TextView>("note_view");
     auto history_button = builder->get_widget<Gtk::Button>("history_button");
     auto explain_button = builder->get_widget<Gtk::Button>("explain_button");
+    auto chapter_overview_button =
+        builder->get_widget<Gtk::Button>("chapter_overview_button");
+
+    // 章节总纲不依赖当前选中的知识点，常驻可点，独立于知识点列表接线。
+    if (chapter_overview_button) {
+        chapter_overview_button->signal_clicked().connect(
+            [title = chapter.title,
+             description = chapter.description,
+             subchapters = chapter.subchapters]() {
+                explain_chapter_overview_with_local_ai(
+                    title, description, subchapters);
+            });
+    }
 
     if (topics_list) {
         populate_topic_list(
