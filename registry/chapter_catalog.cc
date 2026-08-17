@@ -86,6 +86,8 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
             }
 
             chapter.document = chapter_value.value("document", "");
+            chapter.overview_document =
+                chapter_value.value("overview_document", "");
             if (chapter_value.contains("implementation")) {
                 if (chapter.content != "code") {
                     throw runtime_error(

@@ -214,6 +214,16 @@ def build_model(
             if content == "article" and custom_ui is None and document is None:
                 raise ProjectError(f"article chapter {chapter_id} requires a document")
 
+            overview_document = chapter.get("overview_document")
+            if overview_document is not None:
+                overview_document = project_path(
+                    root,
+                    overview_document,
+                    f"chapter {chapter_id}.overview_document",
+                    prefix="resources/articles",
+                )
+                documents.add(overview_document.removeprefix("resources/"))
+
             groups = require_list(
                 chapter.get("groups", []), f"chapter {chapter_id}.groups"
             )

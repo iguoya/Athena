@@ -73,11 +73,9 @@ private:
         const string& source_path,
         const string& member_name,
         const string& api_key);
-    void show_ai_theory_dialog(
+    void show_theory_document_dialog(
         const string& chapter_title,
-        const string& description,
-        const vector<SubChapter>& subchapters,
-        const string& api_key);
+        const string& overview_document);
     void start_experiment(
         const string& function_id,
         const string& source_path,

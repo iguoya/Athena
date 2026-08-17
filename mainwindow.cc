@@ -260,13 +260,15 @@ void copy_prompt_and_launch_ai(const string& prompt) {
     }
 }
 
-// 在对话框内容区底部居中放一行按钮，不用 GTK 内建 action area（默认
-// 靠右、样式不好单独控制），直接把按钮追加到内容区末尾。extra_buttons
-// 排在“关闭”左边，调用方自己决定颜色（加 css class）和点击行为。
+// 在对话框内容区底部居中放一行按钮；不加"关闭"——系统对话框本身自带
+// 原生标题栏关闭按钮，不需要重复一个。extra_buttons 为空时什么都不做，
+// 调用方自己决定按钮颜色（加 css class）和点击行为。
 void append_dialog_action_bar(
-    Gtk::Dialog* dialog,
     Gtk::Box* content_box,
     const vector<Gtk::Button*>& extra_buttons) {
+    if (extra_buttons.empty()) {
+        return;
+    }
     auto action_bar = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
     action_bar->set_halign(Gtk::Align::CENTER);
     action_bar->add_css_class("dialog-action-bar");
@@ -274,10 +276,6 @@ void append_dialog_action_bar(
     for (auto* button : extra_buttons) {
         action_bar->append(*button);
     }
-
-    auto close_button = Gtk::make_managed<Gtk::Button>("关闭");
-    close_button->signal_clicked().connect([dialog]() { dialog->hide(); });
-    action_bar->append(*close_button);
 
     content_box->append(*action_bar);
 }
@@ -846,16 +844,17 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
     // 章节总纲不依赖当前选中的知识点，常驻可点，独立于知识点列表接线。
-    // 配置了 DeepSeek Key 时生成理论讲解文档、用文章排版展示；未配置时
-    // 退回原有的剪贴板 + 唤起本机 AI 助手。
+    // 有 overview_document 时本地读取展示（人工撰写的静态文档，不联网、
+    // 不调用 AI）；没有时退回复制提示词到剪贴板并唤起本机 AI 助手。
     if (chapter_overview_button) {
         chapter_overview_button->signal_clicked().connect(
             [this,
              title = chapter.title,
              description = chapter.description,
-             subchapters = chapter.subchapters]() {
-                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
-                    show_ai_theory_dialog(title, description, subchapters, api_key);
+             subchapters = chapter.subchapters,
+             overview_document = chapter.overview_document]() {
+                if (!overview_document.empty()) {
+                    show_theory_document_dialog(title, overview_document);
                 } else {
                     explain_chapter_overview_with_local_ai(
                         title, description, subchapters);
@@ -1157,13 +1156,11 @@ void MainWindow::show_history_dialog(
     paned->set_end_child(*compare_scrolled);
     content->append(*paned);
 
-    // “AI 讲解差异”跟“关闭”放一组，底部居中；未配置 Key 时 diff_button
-    // 是 nullptr，action bar 里只有“关闭”。两者颜色不同（紫色 vs 默认）
-    // 便于区分，靠 append_dialog_action_bar 统一处理位置。
-    append_dialog_action_bar(
-        dialog,
-        content,
-        diff_button ? vector<Gtk::Button*> {diff_button} : vector<Gtk::Button*> {});
+    // “AI 讲解差异”底部居中；未配置 Key 时 diff_button 是 nullptr，不
+    // 显示这一行。系统对话框自带原生关闭按钮，不再额外加“关闭”。
+    if (diff_button) {
+        append_dialog_action_bar(content, {diff_button});
+    }
     dialog->show();
 }
 
@@ -1194,7 +1191,6 @@ void MainWindow::show_ai_markdown_dialog(
     article_host->set_vexpand(true);
     content->append(*article_host);
 
-    append_dialog_action_bar(dialog, content, {});
 
     auto dialog_alive = make_shared<atomic_bool>(true);
     auto article_view = make_shared<unique_ptr<ArticleView>>();
@@ -1300,7 +1296,6 @@ void MainWindow::show_ai_quiz_dialog(
     scrolled->set_child(*quiz_box);
     content->append(*scrolled);
 
-    append_dialog_action_bar(dialog, content, {});
 
     auto dialog_alive = make_shared<atomic_bool>(true);
     dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
@@ -1490,35 +1485,48 @@ void MainWindow::show_ai_quiz_dialog(
     }).detach();
 }
 
-// 生成本章理论讲解文档，用 show_ai_markdown_dialog 统一的文章排版展示。
-void MainWindow::show_ai_theory_dialog(
+// 展示章节的静态总纲文档（resources/articles/ 下人工撰写的真实文件），
+// 跟 article 章节完全一样的排版（md4c 转 HTML、WKWebView），本地同步
+// 读取，不发起任何网络或 AI 调用。article_view 在对话框隐藏时显式
+// reset，跟对话框同生命周期，写法上跟 show_ai_markdown_dialog 一致，
+// 只是没有工作线程和 DeepSeek 调用这一段。
+void MainWindow::show_theory_document_dialog(
     const string& chapter_title,
-    const string& description,
-    const vector<SubChapter>& subchapters,
-    const string& api_key) {
-    string prompt =
-        "请为 C++ 章节「" + chapter_title + "」写一份 Markdown 格式的知识点"
-        "理论讲解文档。要求：\n"
-        "- 突出重点和关键概念，不要面面俱到罗列琐碎细节；但也不能语焉不详、"
-        "点到为止——原理、为什么这样设计、怎么用，该讲清楚的都要讲透\n"
-        "- 用二级、三级标题组织内容，方便生成目录\n"
-        "- 覆盖下面列出的全部知识点，但不要逐字复述知识点说明，要用你自己"
-        "的话组织成连贯的讲解，知识点之间有联系的地方要讲出联系\n"
-        "- 直接输出 Markdown 正文本身，不要开场白、不要结束语，不要“希望"
-        "对你有帮助”这类跟内容无关的文字\n"
-        "- " + string(kChineseTutorialStyleHint) + "\n\n"
-        "章节简介：" + description + "\n\n包含的知识点：";
-    for (const auto& subchapter : subchapters) {
-        prompt += "\n- " + subchapter.title + "：" + subchapter.description;
+    const string& overview_document) {
+    const string markdown = m_content_loader.load_document(overview_document);
+    if (markdown.empty()) {
+        cerr << "Failed to load overview document: " << overview_document << endl;
+        return;
     }
 
-    show_ai_markdown_dialog(
-        "本章总纲：" + chapter_title,
-        prompt,
-        api_key,
-        "# " + chapter_title + "\n\n正在请求 DeepSeek 生成本章理论讲解，请稍候…",
-        900,
-        720);
+    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    dialog->set_title("本章总纲：" + chapter_title);
+    dialog->set_transient_for(*this);
+    dialog->set_modal(true);
+    dialog->set_default_size(900, 720);
+
+    auto* content = dialog->get_content_area();
+    auto article_host = Gtk::make_managed<Gtk::DrawingArea>();
+    article_host->set_hexpand(true);
+    article_host->set_vexpand(true);
+    content->append(*article_host);
+
+
+    auto article_view = make_shared<unique_ptr<ArticleView>>();
+    dialog->signal_hide().connect([article_view]() { article_view->reset(); });
+    dialog->show();
+
+    string stylesheet = m_content_loader.load_resource("/app/article.css");
+    if (!stylesheet.empty()) {
+        stylesheet += "\n:root { --article-font-size: 22px; }\n";
+    }
+    *article_view = create_platform_article_view(*article_host, *dialog);
+    if (*article_view && !stylesheet.empty()) {
+        (*article_view)->load_html(
+            render_markdown_html(
+                markdown, stylesheet, parse_markdown_headings(markdown)),
+            m_content_loader.document_base_directory(overview_document));
+    }
 }
 
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，

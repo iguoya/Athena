@@ -40,6 +40,9 @@ struct ChapterMeta {
     string category;
     string content;
     string document;
+    // code 章节“本章总纲”按钮展示的静态理论讲解文档路径，人工撰写、
+    // 不发起运行时 AI 调用；未提供时按钮退回剪贴板 + 唤起本机 AI 助手。
+    string overview_document;
     string blueprint;
     string resource_path;
     string widget_name;
