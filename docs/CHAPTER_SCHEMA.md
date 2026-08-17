@@ -228,7 +228,8 @@ subchapter.name -> C++ 成员函数名
 
 省略 `implementation.source` 时，生成器从 `header` 路径派生同目录的 `.cpp`。
 `scaffold` 只创建不存在的文件；已有教学实现不会被覆盖。一个章节拆为多个源文件时，
-应像 RAII 一样通过 `group.source` 或 `subchapter.source` 管理显示文件，并人工维护实现。
+应像 RAII 一样给每个知识点自己的 `subchapter.source` 指定实际文件，并人工维护实现；
+`group.source`（分组共享源码文件）仍是 schema 支持的能力，但目前没有章节在用。
 
 章节名称必须是合法且非关键字的 C++ 类型标识符：
 
@@ -305,7 +306,7 @@ C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
 
 ## 8. 可选视觉分组 `group`
 
-分组用于在同一个 `code` 标签页内组织知识点。例如 RAII 章节中的 `raii`、`smart_pointer` 和 `move`。分组不会生成额外 C++ 类或成员函数。
+分组用于在同一个 `code` 标签页内组织知识点，不会生成额外 C++ 类或成员函数。当前没有章节在用——RAII 之前用过 `raii`、`smart_pointer`、`move` 三个分组，后来判断意义不大而移除，改成每个知识点用自己的 `subchapter.source` 指向对应源文件，不再分组展示。分组机制本身还是 schema 支持的能力，需要时可以给新章节用。
 
 ```json
 {
