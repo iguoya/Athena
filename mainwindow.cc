@@ -1380,7 +1380,7 @@ void MainWindow::populate_topic_list(
         // 历史与解释依赖具体知识点，各自绑定当前这一条 topic，不再共用
         // 一对随“当前激活知识点”切换的按钮；点击时先激活本行（高亮、
         // 头部、笔记与源码随之切换），再执行对应动作。
-        auto history_button = Gtk::make_managed<Gtk::Button>("历史");
+        auto history_button = Gtk::make_managed<Gtk::Button>("运行历史");
         history_button->add_css_class("btn-sm");
         history_button->set_tooltip_text("查看该知识点的运行记录");
         history_button->signal_clicked().connect(
@@ -1394,7 +1394,7 @@ void MainWindow::populate_topic_list(
             });
         actions->append(*history_button);
 
-        auto explain_button = Gtk::make_managed<Gtk::Button>("解释");
+        auto explain_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
         explain_button->add_css_class("btn-sm");
         explain_button->set_tooltip_text(
             "把该知识点的说明与源码组成解释请求放入剪贴板，并唤起本机 AI 助手");
