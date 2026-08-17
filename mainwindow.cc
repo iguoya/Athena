@@ -218,6 +218,30 @@ DeepSeekResult call_deepseek_chat(const string& api_key, const string& prompt) {
     return result;
 }
 
+// DeepSeek 即使提示词明确要求“只输出 JSON”，有时仍会套一层
+// ```json ... ``` 代码围栏；解析结构化响应（如自测题）前先去掉，
+// 提高解析成功率，不去掉也不影响非 JSON 的纯文本响应。
+string strip_markdown_code_fence(const string& text) {
+    string trimmed = text;
+    const auto not_space = [](unsigned char c) { return !isspace(c); };
+    trimmed.erase(trimmed.begin(), find_if(trimmed.begin(), trimmed.end(), not_space));
+    trimmed.erase(
+        find_if(trimmed.rbegin(), trimmed.rend(), not_space).base(), trimmed.end());
+
+    if (trimmed.rfind("```", 0) != 0) {
+        return trimmed;
+    }
+    const auto first_newline = trimmed.find('\n');
+    if (first_newline == string::npos) {
+        return trimmed;
+    }
+    trimmed = trimmed.substr(first_newline + 1);
+    if (trimmed.size() >= 3 && trimmed.compare(trimmed.size() - 3, 3, "```") == 0) {
+        trimmed = trimmed.substr(0, trimmed.size() - 3);
+    }
+    return trimmed;
+}
+
 // 把提示词放入剪贴板并唤起本机 AI 助手；豆包客户端支持 doubao:// 协议
 // 但不支持携带提示词参数，因此采用“剪贴板 + 唤起”的组合；默认命令可用
 // 环境变量 ATHENA_AI_COMMAND 自定义。供知识点解释和章节总纲共用。
@@ -1187,17 +1211,20 @@ void MainWindow::show_ai_quiz_dialog(
     const string& member_name,
     const string& api_key) {
     string prompt =
-        "请针对 C++ 知识点「" + topic_title + "」出一组有针对性的单选自测"
-        "题，题目要结合下面这段具体源码提问，不要问泛泛的定义题。题目数量"
-        "不要固定，你自己根据这个知识点实际包含的独立考察点客观决定出几"
-        "道：涵盖了这个知识点的所有关键行为和易错点才停，不要为了凑数量"
-        "出太简单或者跟别的题重复考察同一个点的题，也不要漏掉这个知识点"
-        "里真正该测的内容。每题给 4 个选项，只有一个正确答案，并给出简短"
-        "解释说明为什么正确、其余选项错在哪。只用 JSON 格式返回，形如 "
-        "{\"questions\":[{\"question\":\"...\",\"options\":[\"...\",\"...\","
-        "\"...\",\"...\"],\"correct_index\":0,\"explanation\":\"...\"}]}，"
-        "correct_index 是从 0 开始的正确选项下标。不要输出 JSON 之外的任何"
-        "文字。\n\n知识点说明：" + description;
+        "请针对 C++ 知识点「" + topic_title + "」出一组有针对性的自测题，"
+        "题目要结合下面这段具体源码提问，不要问泛泛的定义题。题目数量不要"
+        "固定，你自己根据这个知识点实际包含的独立考察点客观决定出几道："
+        "涵盖了这个知识点的所有关键行为和易错点才停，不要为了凑数量出太"
+        "简单或者跟别的题重复考察同一个点的题，也不要漏掉这个知识点里真"
+        "正该测的内容。每题的选项数量不用固定为 4 个，选项本身合适就好，"
+        "选项数量按题目需要来定；大多数题应该只有一个正确答案，但如果某"
+        "道题确实有不止一个选项都对，就把它做成多选题，correct_indices "
+        "里放全部正确选项的下标。给出简短解释说明为什么正确、其余选项错"
+        "在哪。只用 JSON 格式返回，形如 {\"questions\":[{\"question\":"
+        "\"...\",\"options\":[\"...\",\"...\"],\"correct_indices\":[0],"
+        "\"explanation\":\"...\"}]}，correct_indices 是从 0 开始的正确"
+        "选项下标数组，单选题这个数组只有一个元素。不要输出 JSON 之外的"
+        "任何文字。\n\n知识点说明：" + description;
     const auto body = member_source_body(m_content_loader, source_path, member_name);
     if (body && !body->empty()) {
         prompt += "\n\n参考实现：\n" + *body;
@@ -1254,34 +1281,47 @@ void MainWindow::show_ai_quiz_dialog(
 
                 bool parsed_ok = false;
                 try {
-                    const auto quiz = nlohmann::json::parse(result.content);
+                    const auto quiz = nlohmann::json::parse(
+                        strip_markdown_code_fence(result.content));
                     const auto& questions = quiz.at("questions");
                     for (const auto& item : questions) {
                         const string question = item.value("question", "");
                         const auto options =
                             item.value("options", vector<string> {});
-                        const int correct_index =
-                            item.value("correct_index", -1);
+                        auto correct_indices =
+                            item.value("correct_indices", vector<int> {});
                         const string explanation =
                             item.value("explanation", "");
+                        // 校验每个正确下标都落在选项范围内，过滤掉越界的脏数据。
+                        correct_indices.erase(
+                            remove_if(
+                                correct_indices.begin(),
+                                correct_indices.end(),
+                                [&options](int index) {
+                                    return index < 0
+                                        || index >= static_cast<int>(options.size());
+                                }),
+                            correct_indices.end());
                         if (question.empty() || options.empty()
-                            || correct_index < 0
-                            || correct_index >= static_cast<int>(options.size())) {
+                            || correct_indices.empty()) {
                             continue;
                         }
+                        const bool is_multi_select = correct_indices.size() > 1;
 
                         auto item_box = Gtk::make_managed<Gtk::Box>(
                             Gtk::Orientation::VERTICAL, 8);
 
-                        auto question_label =
-                            Gtk::make_managed<Gtk::Label>(question);
+                        auto question_label = Gtk::make_managed<Gtk::Label>(
+                            question
+                            + (is_multi_select ? "（多选）" : ""));
                         question_label->set_halign(Gtk::Align::START);
                         question_label->set_wrap(true);
                         question_label->set_xalign(0);
                         question_label->add_css_class("ai-dialog-question");
                         item_box->append(*question_label);
 
-                        // 单选：同一题的选项分到同一个 group，只能选一个。
+                        // 单选题的选项分到同一个 group（互斥，radio 行为）；
+                        // 多选题的选项各自独立、可以同时勾选多个。
                         auto option_buttons =
                             make_shared<vector<Gtk::CheckButton*>>();
                         Gtk::CheckButton* first_option = nullptr;
@@ -1289,10 +1329,12 @@ void MainWindow::show_ai_quiz_dialog(
                             auto option = Gtk::make_managed<Gtk::CheckButton>(
                                 option_text);
                             option->add_css_class("ai-dialog-option");
-                            if (first_option) {
-                                option->set_group(*first_option);
-                            } else {
-                                first_option = option;
+                            if (!is_multi_select) {
+                                if (first_option) {
+                                    option->set_group(*first_option);
+                                } else {
+                                    first_option = option;
+                                }
                             }
                             option_buttons->push_back(option);
                             item_box->append(*option);
@@ -1320,36 +1362,49 @@ void MainWindow::show_ai_quiz_dialog(
                         submit_button->set_halign(Gtk::Align::START);
                         submit_button->signal_clicked().connect(
                             [option_buttons,
-                             correct_index,
+                             correct_indices,
                              options,
                              feedback_label,
                              explanation_label,
                              submit_button]() {
-                                int selected_index = -1;
+                                vector<int> selected_indices;
                                 for (size_t index = 0;
                                      index < option_buttons->size();
                                      ++index) {
                                     if ((*option_buttons)[index]->get_active()) {
-                                        selected_index =
-                                            static_cast<int>(index);
-                                        break;
+                                        selected_indices.push_back(
+                                            static_cast<int>(index));
                                     }
                                 }
-                                if (selected_index < 0) {
-                                    feedback_label->set_text("请先选一个选项");
+                                if (selected_indices.empty()) {
+                                    feedback_label->set_text("请先选至少一个选项");
                                     feedback_label->remove_css_class("correct");
                                     feedback_label->remove_css_class("incorrect");
                                     feedback_label->set_visible(true);
                                     return;
                                 }
+                                // 多选题要求选中集合与正确答案集合完全一致
+                                // 才算对，不给部分分。
+                                auto sorted_selected = selected_indices;
+                                auto sorted_correct = correct_indices;
+                                sort(sorted_selected.begin(), sorted_selected.end());
+                                sort(sorted_correct.begin(), sorted_correct.end());
                                 const bool is_correct =
-                                    selected_index == correct_index;
-                                feedback_label->set_text(
-                                    is_correct
-                                        ? "✓ 回答正确"
-                                        : "✗ 回答错误，正确答案是："
-                                            + options[static_cast<size_t>(
-                                                correct_index)]);
+                                    sorted_selected == sorted_correct;
+                                if (is_correct) {
+                                    feedback_label->set_text("✓ 回答正确");
+                                } else {
+                                    string correct_text;
+                                    for (int index : sorted_correct) {
+                                        if (!correct_text.empty()) {
+                                            correct_text += "、";
+                                        }
+                                        correct_text +=
+                                            options[static_cast<size_t>(index)];
+                                    }
+                                    feedback_label->set_text(
+                                        "✗ 回答错误，正确答案是：" + correct_text);
+                                }
                                 feedback_label->remove_css_class("correct");
                                 feedback_label->remove_css_class("incorrect");
                                 feedback_label->add_css_class(

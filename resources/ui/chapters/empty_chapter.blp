@@ -74,11 +74,14 @@ Box chapter_page {
         ]
       }
 
+      // 笔记功能价值不明确，先隐藏（不删除底层存取逻辑，方便以后恢复
+      // 或者确认要不要保留时随时切换 visible）。
       Frame {
         name: "note_frame";
         label: "笔记";
         width-request: 320;
         valign: center;
+        visible: false;
 
         styles [
           "panel-frame",
