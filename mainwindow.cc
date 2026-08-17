@@ -62,6 +62,55 @@ optional<string> member_source_body(
     }
 }
 
+struct GitSourceState {
+    string commit;    // HEAD 短哈希；不在 git 仓库或 git 不可用时为空
+    bool dirty = false;
+};
+
+// 查询源文件在 ATHENA_SOURCE_ROOT 这个 git 仓库中的运行时版本：HEAD 短
+// 哈希，以及该文件相对 HEAD 是否有未提交改动。不在 git 仓库、没装 git
+// 或命令失败时静默返回空结果，调用方据此退回“版本未知”，不影响运行。
+GitSourceState query_git_source_state(const string& relative_path) {
+    GitSourceState state;
+    if (relative_path.empty()) {
+        return state;
+    }
+    try {
+        const string root = ATHENA_SOURCE_ROOT;
+        string commit_output;
+        int exit_status = 0;
+        const string commit_command =
+            "git -C " + Glib::shell_quote(root) + " rev-parse --short HEAD";
+        Glib::spawn_command_line_sync(
+            commit_command, &commit_output, nullptr, &exit_status);
+        if (exit_status != 0) {
+            return state;
+        }
+        while (!commit_output.empty()
+               && (commit_output.back() == '\n' || commit_output.back() == '\r')) {
+            commit_output.pop_back();
+        }
+        if (commit_output.empty()) {
+            return state;
+        }
+        state.commit = commit_output;
+
+        string status_output;
+        exit_status = 0;
+        const string status_command = "git -C " + Glib::shell_quote(root)
+            + " status --porcelain -- " + Glib::shell_quote(relative_path);
+        Glib::spawn_command_line_sync(
+            status_command, &status_output, nullptr, &exit_status);
+        if (exit_status == 0) {
+            state.dirty = !status_output.empty();
+        }
+    } catch (const exception& error) {
+        cerr << "Failed to query git state: " << error.what() << endl;
+        return GitSourceState {};
+    }
+    return state;
+}
+
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
 // 豆包客户端支持 doubao:// 协议但不支持携带提示词参数，因此采用
 // “剪贴板 + 唤起”的组合；默认命令可用环境变量 ATHENA_AI_COMMAND 覆盖。
@@ -220,6 +269,25 @@ void configure_snapshot_source_view(GtkSourceView* source_view, const string& te
         GTK_TEXT_BUFFER(source_buffer),
         display_text.c_str(),
         static_cast<int>(display_text.size()));
+}
+
+// 历史记录行末尾的简短 git 标记，如 "a1b2c3d"（有未提交改动则加 "+"）；
+// 不在 git 仓库中运行时返回空串，调用方按需拼接。
+string format_git_tag(const RunRecord& run) {
+    if (run.git_commit.empty()) {
+        return "";
+    }
+    return run.git_commit + (run.git_dirty ? "+" : "");
+}
+
+// 对比栏标题用的完整 git 版本描述，可配合 `git show <commit>` 之类命令
+// 在仓库里追溯该次运行时的完整提交上下文。
+string format_git_summary(const RunRecord& run) {
+    if (run.git_commit.empty()) {
+        return "未在 git 仓库中运行";
+    }
+    return "commit " + run.git_commit
+        + (run.git_dirty ? "（工作区有未提交改动）" : "");
 }
 
 string chapter_key(const string& category_name, const string& chapter_name) {
@@ -699,12 +767,14 @@ void MainWindow::show_history_dialog(
                     ? "代码一致"
                     : "代码已修改";
             }
+            const string git_tag = format_git_tag(run);
             auto row = Gtk::make_managed<Gtk::ListBoxRow>();
             row->set_activatable(true);
             row->add_css_class("topic-row");
             auto label = Gtk::make_managed<Gtk::Label>(
                 format_timestamp(run.ran_at) + " · "
-                + format_duration_ms(run.duration_ms) + " · " + code_state);
+                + format_duration_ms(run.duration_ms) + " · " + code_state
+                + (git_tag.empty() ? "" : " · " + git_tag));
             label->set_halign(Gtk::Align::START);
             label->set_margin_top(6);
             label->set_margin_bottom(6);
@@ -746,7 +816,8 @@ void MainWindow::show_history_dialog(
 
                 auto header = Gtk::make_managed<Gtk::Label>(
                     format_timestamp(run.ran_at) + " · "
-                    + format_duration_ms(run.duration_ms));
+                    + format_duration_ms(run.duration_ms) + " · "
+                    + format_git_summary(run));
                 header->set_halign(Gtk::Align::START);
                 header->add_css_class("heading");
                 column->append(*header);
@@ -851,6 +922,7 @@ void MainWindow::start_experiment(
     const string source_snapshot =
         member_source_body(m_content_loader, source_path, member_name)
             .value_or("");
+    const GitSourceState git_state = query_git_source_state(source_path);
 
     const auto result_buffer = result_view.get_buffer();
     result_buffer->set_text("运行中…");
@@ -889,6 +961,7 @@ void MainWindow::start_experiment(
     m_experiment_thread = thread(
         [function_id,
          source_snapshot,
+         git_state,
          result_buffer,
          experiment_spinner,
          experiment_status_label,
@@ -916,6 +989,7 @@ void MainWindow::start_experiment(
             Glib::signal_idle().connect_once(
                 [function_id,
                  source_snapshot,
+                 git_state,
                  raw_output,
                  duration_ms,
                  result_buffer,
@@ -943,7 +1017,9 @@ void MainWindow::start_experiment(
                                 function_id,
                                 raw_output,
                                 duration_ms,
-                                source_snapshot);
+                                source_snapshot,
+                                git_state.commit,
+                                git_state.dirty);
                         } catch (const exception& error) {
                             cerr << "Failed to record run for " << function_id
                                  << ": " << error.what() << endl;

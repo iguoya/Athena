@@ -43,16 +43,22 @@ TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
 
 TEST(LearningStoreTest, ReturnsMostRecentRunsFirst) {
     LearningStore store(":memory:");
-    store.record_run("cpp.RAII.unique", "first", 10.0, "void unique() { /* v1 */ }");
-    store.record_run("cpp.RAII.unique", "second", 20.5, "void unique() { /* v2 */ }");
-    store.record_run("cpp.Reference.cast", "other", 1.0, "void cast() {}");
+    store.record_run(
+        "cpp.RAII.unique", "first", 10.0, "void unique() { /* v1 */ }", "a1b2c3d", false);
+    store.record_run(
+        "cpp.RAII.unique", "second", 20.5, "void unique() { /* v2 */ }", "e4f5g6h", true);
+    store.record_run("cpp.Reference.cast", "other", 1.0, "void cast() {}", "", false);
 
     const auto runs = store.recent_runs("cpp.RAII.unique", 10);
     ASSERT_EQ(runs.size(), 2u);
     EXPECT_EQ(runs.front().output, "second");
     EXPECT_DOUBLE_EQ(runs.front().duration_ms, 20.5);
     EXPECT_EQ(runs.front().source_snapshot, "void unique() { /* v2 */ }");
+    EXPECT_EQ(runs.front().git_commit, "e4f5g6h");
+    EXPECT_TRUE(runs.front().git_dirty);
     EXPECT_EQ(runs.back().output, "first");
+    EXPECT_EQ(runs.back().git_commit, "a1b2c3d");
+    EXPECT_FALSE(runs.back().git_dirty);
 
     EXPECT_EQ(store.recent_runs("cpp.Reference.cast", 10).size(), 1u);
 }
@@ -136,11 +142,15 @@ TEST(LearningStoreTest, MigratesLegacyRunHistoryColumnOnUpgrade) {
     ASSERT_EQ(old_runs.size(), 1u);
     EXPECT_EQ(old_runs.front().output, "旧输出");
     EXPECT_EQ(old_runs.front().source_snapshot, "");
+    EXPECT_EQ(old_runs.front().git_commit, "");
+    EXPECT_FALSE(old_runs.front().git_dirty);
 
-    store.record_run("cpp.RAII.weak", "新输出", 8.0, "void weak() { /* new */ }");
+    store.record_run(
+        "cpp.RAII.weak", "新输出", 8.0, "void weak() { /* new */ }", "a1b2c3d", false);
     const auto runs = store.recent_runs("cpp.RAII.weak", 10);
     ASSERT_EQ(runs.size(), 2u);
     EXPECT_EQ(runs.front().output, "新输出");
+    EXPECT_EQ(runs.front().git_commit, "a1b2c3d");
     EXPECT_EQ(runs.front().source_snapshot, "void weak() { /* new */ }");
 
     std::remove(db_path.c_str());

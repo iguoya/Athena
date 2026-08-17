@@ -19,6 +19,8 @@ struct RunRecord {
     string output;
     double duration_ms = 0.0;
     string source_snapshot;  // 运行时该知识点成员函数体的完整源码文本
+    string git_commit;       // 运行时 HEAD 的短哈希；不在 git 仓库中时为空
+    bool git_dirty = false;  // 运行时该源文件相对 git_commit 是否有未提交改动
     long long ran_at = 0;
 };
 
@@ -43,7 +45,9 @@ public:
         const string& function_id,
         const string& output,
         double duration_ms,
-        const string& source_snapshot);
+        const string& source_snapshot,
+        const string& git_commit,
+        bool git_dirty);
     vector<RunRecord> recent_runs(const string& function_id, int limit) const;
 
 private:
@@ -57,8 +61,9 @@ private:
     // 的 importance 列、run_history 的旧 source_hash 列（本会话内引入又
     // 废弃）如果已经加过，留在表里不再使用，不做 DROP COLUMN 迁移。
     void migrate_legacy_status_column();
-    // run_history 补齐 source_snapshot 列（曾用 source_hash 只存哈希，
-    // 无法还原源码；现在改存完整快照，供历史对比查看真实源码）。
+    // run_history 补齐 source_snapshot、git_commit、git_dirty 列（曾用
+    // source_hash 只存哈希，无法还原源码；现在改存完整快照，并额外记录
+    // 运行时的 git 提交与是否有未提交改动，供历史对比追溯到具体提交）。
     void migrate_legacy_run_history_columns();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;
