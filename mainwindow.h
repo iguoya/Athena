@@ -74,8 +74,10 @@ private:
 
     Glib::RefPtr<Gtk::Builder> m_main_builder;
     ContentLoader m_content_loader;
+    // MainWindow 继承自 Gtk::Widget 一系，其自带名为 map 的控件生命周期
+    // 成员，类作用域内裸写 map 会撞名，这里必须显式 std::map。
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
-    std::map<string, std::unique_ptr<ArticleView>> m_article_views;
+    std::map<string, unique_ptr<ArticleView>> m_article_views;
 
     Gtk::Box* m_category_sidebar = nullptr;
     Gtk::Stack* m_chapter_stack = nullptr;
@@ -96,9 +98,8 @@ private:
     // 实验执行状态：m_experiment_running 只在主线程读写；
     // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。
     // 工作线程在完成回传时和窗口析构时 join。
-    std::shared_ptr<std::atomic_bool> m_ui_alive =
-        std::make_shared<std::atomic_bool>(true);
+    shared_ptr<atomic_bool> m_ui_alive = make_shared<atomic_bool>(true);
     bool m_experiment_running = false;
     sigc::connection m_elapsed_timer;
-    std::thread m_experiment_thread;
+    thread m_experiment_thread;
 };
