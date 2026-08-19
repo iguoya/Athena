@@ -114,7 +114,7 @@ GitSourceState query_git_source_state(const string& relative_path) {
     return state;
 }
 
-struct DeepSeekResult {
+struct AiChatResult {
     bool ok = false;
     string content;  // 成功时是回答正文
     string error;    // 失败时是错误说明
@@ -146,26 +146,31 @@ string write_secure_temp_file(const string& name_template, const string& content
     return path;
 }
 
-// 通过 curl 子进程调用 DeepSeek 的 chat completions 接口；同步阻塞，只应
-// 在工作线程调用，不要在主线程调用。API Key 和请求体都经临时文件传入
-// （curl -K 配置文件 + --data @文件），不出现在 ps 可见的命令行参数里；
-// 两个临时文件用完立即删除。
-DeepSeekResult call_deepseek_chat(const string& api_key, const string& prompt) {
-    DeepSeekResult result;
+// 通过 curl 子进程调用某个 OpenAI 兼容的 chat completions 接口（DeepSeek、
+// 火山方舟豆包等都是这个协议）；同步阻塞，只应在工作线程调用，不要在主
+// 线程调用。API Key 和请求体都经临时文件传入（curl -K 配置文件 +
+// --data @文件），不出现在 ps 可见的命令行参数里；两个临时文件用完立即
+// 删除。
+AiChatResult call_llm_chat(
+    const string& endpoint,
+    const string& model,
+    const string& api_key,
+    const string& prompt) {
+    AiChatResult result;
 
     const nlohmann::json request_body = {
-        {"model", "deepseek-chat"},
+        {"model", model},
         {"messages",
          nlohmann::json::array({{{"role", "user"}, {"content", prompt}}})},
         {"stream", false},
     };
 
     const string config_path = write_secure_temp_file(
-        "athena-deepseek-XXXXXX.cfg",
+        "athena-ai-chat-XXXXXX.cfg",
         "header = \"Authorization: Bearer " + api_key + "\"\n"
         "header = \"Content-Type: application/json\"\n");
     const string body_path =
-        write_secure_temp_file("athena-deepseek-XXXXXX.json", request_body.dump());
+        write_secure_temp_file("athena-ai-chat-XXXXXX.json", request_body.dump());
 
     // 无论成功失败都要清理临时文件。
     struct TempFileGuard {
@@ -188,7 +193,7 @@ DeepSeekResult call_deepseek_chat(const string& api_key, const string& prompt) {
     int exit_status = 0;
     const string command = "curl -sS --max-time 30 --connect-timeout 10 -K "
         + Glib::shell_quote(config_path) + " --data @" + Glib::shell_quote(body_path)
-        + " https://api.deepseek.com/chat/completions";
+        + " " + Glib::shell_quote(endpoint);
     try {
         Glib::spawn_command_line_sync(
             command, &response_body, nullptr, &exit_status);
@@ -206,15 +211,48 @@ DeepSeekResult call_deepseek_chat(const string& api_key, const string& prompt) {
         const auto response = nlohmann::json::parse(response_body);
         if (response.contains("error")) {
             result.error = response["error"].value(
-                "message", "DeepSeek 接口返回错误");
+                "message", "接口返回错误");
             return result;
         }
         result.content =
             response.at("choices").at(0).at("message").at("content").get<string>();
         result.ok = true;
     } catch (const exception& error) {
-        result.error = string("解析 DeepSeek 响应失败：") + error.what();
+        result.error = string("解析响应失败：") + error.what();
     }
+    return result;
+}
+
+AiChatResult call_deepseek_chat(const string& api_key, const string& prompt) {
+    return call_llm_chat(
+        "https://api.deepseek.com/chat/completions", "deepseek-chat", api_key, prompt);
+}
+
+AiChatResult call_ark_doubao_chat(const string& api_key, const string& prompt) {
+    return call_llm_chat(
+        "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+        "doubao-seed-2-1-pro-260628", api_key, prompt);
+}
+
+// 优先用火山方舟的豆包模型；未配置豆包 Key，或者豆包请求失败，就退回
+// DeepSeek。两者都未配置的情况由调用方在按钮层面处理（不出现这个按钮），
+// 这里只处理"配置了至少一个但调用失败"的情况。
+AiChatResult call_ai_chat_with_fallback(
+    const string& ark_api_key,
+    const string& deepseek_api_key,
+    const string& prompt) {
+    if (!ark_api_key.empty()) {
+        AiChatResult ark_result = call_ark_doubao_chat(ark_api_key, prompt);
+        if (ark_result.ok || deepseek_api_key.empty()) {
+            return ark_result;
+        }
+        cerr << "豆包请求失败，回退到 DeepSeek：" << ark_result.error << endl;
+    }
+    if (!deepseek_api_key.empty()) {
+        return call_deepseek_chat(deepseek_api_key, prompt);
+    }
+    AiChatResult result;
+    result.error = "未配置任何 AI 服务商的 API Key";
     return result;
 }
 
@@ -282,7 +320,7 @@ void append_dialog_action_bar(
 
 // 讲解类提示词（讲解/自测/理论文档/讲解差异）共用的风格提示：贴近主流
 // 中文 C++ 教程的讲法和术语习惯，不生造术语。这里不是真的联网抓取这些
-// 站点内容——call_deepseek_chat 没有搜索/浏览能力，只是提示 DeepSeek
+// 站点内容——call_ai_chat_with_fallback 没有搜索/浏览能力，只是提示模型
 // 往这个方向组织语言，权当术语和讲法的锚点。
 const char* kChineseTutorialStyleHint =
     "讲解风格和术语尽量贴近菜鸟教程、C语言中文网、微软 Learn 中文文档、"
@@ -290,7 +328,7 @@ const char* kChineseTutorialStyleHint =
 
 // 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
 // 讲解请求的提示词：知识点说明 + 参考实现（若能取到源码）。剪贴板方案
-// 和 DeepSeek 对话框方案共用同一份提示词，只是投递方式不同。
+// 和 AI 对话框方案共用同一份提示词，只是投递方式不同。
 string build_explain_prompt(
     const ContentLoader& loader,
     const string& title,
@@ -953,19 +991,22 @@ void MainWindow::show_history_dialog(
     compare_box->set_vexpand(true);
     compare_scrolled->set_child(*compare_box);
 
-    // 选中恰好 2 条记录时才可用；只在配置了 DeepSeek Key 时才创建这个
-    // 按钮，未配置就不出现，不留一个必然点不通的死按钮。
+    // 选中恰好 2 条记录时才可用；只在配置了至少一个 AI 服务商 Key 时才
+    // 创建这个按钮，未配置就不出现，不留一个必然点不通的死按钮。
     Gtk::Button* diff_button = nullptr;
+    const char* ark_api_key_env = g_getenv("ATHENA_ARK_API_KEY");
+    const string ark_api_key = ark_api_key_env ? ark_api_key_env : "";
     const char* deepseek_api_key_env = g_getenv("ATHENA_DEEPSEEK_API_KEY");
     const string deepseek_api_key =
         deepseek_api_key_env ? deepseek_api_key_env : "";
-    if (!deepseek_api_key.empty()) {
+    if (!ark_api_key.empty() || !deepseek_api_key.empty()) {
         diff_button = Gtk::make_managed<Gtk::Button>("AI 讲解差异");
         diff_button->add_css_class("btn-sm");
         diff_button->add_css_class("btn-ai-accent");
         diff_button->set_sensitive(false);
         diff_button->set_tooltip_text(
-            "选中恰好 2 条记录后可用，让 DeepSeek 解释两次运行的源码与输出差异");
+            "选中恰好 2 条记录后可用，让 AI 解释两次运行的源码与输出差异"
+            "（优先豆包，失败或未配置时用 DeepSeek）");
     }
 
     if (runs.empty()) {
@@ -1129,7 +1170,8 @@ void MainWindow::show_history_dialog(
 
         if (diff_button) {
             diff_button->signal_clicked().connect(
-                [this, selected, run_by_row, topic_title, deepseek_api_key]() {
+                [this, selected, run_by_row, topic_title, ark_api_key,
+                 deepseek_api_key]() {
                     if (selected->size() != 2) {
                         return;
                     }
@@ -1147,7 +1189,8 @@ void MainWindow::show_history_dialog(
                         + run_b.source_snapshot + "\n\n=== 运行 B 输出 ===\n"
                         + run_b.output;
                     show_ai_response_dialog(
-                        "AI 讲解差异：" + topic_title, prompt, deepseek_api_key);
+                        "AI 讲解差异：" + topic_title, prompt, ark_api_key,
+                        deepseek_api_key);
                 });
         }
     }
@@ -1164,18 +1207,19 @@ void MainWindow::show_history_dialog(
     dialog->show();
 }
 
-// 打开对话框，异步用给定提示词调用 DeepSeek，结果当 Markdown 解析后用
-// 跟 article 章节（如“程序与源码组织”）一样的排版显示：md4c 转 HTML、
-// WKWebView（macOS）渲染，代码块、标题、列表都有正常版式，不是纯文本
-// TextView 堆一坨——DeepSeek 的回答经常代码和说明夹杂，纯文本对代码不
-// 友好。网络请求在独立线程执行，HTML 只在主线程构造和加载；
-// article_view 在对话框隐藏时显式 reset，跟对话框同生命周期。知识点
-// 讲解、运行历史的“AI 讲解差异”和章节总纲共用这一个对话框，各自只是
-// 拼不同的 prompt。
+// 打开对话框，异步用给定提示词调用 AI（优先豆包，失败或未配置再退回
+// DeepSeek），结果当 Markdown 解析后用跟 article 章节（如“程序与源码
+// 组织”）一样的排版显示：md4c 转 HTML、WKWebView（macOS）渲染，代码块、
+// 标题、列表都有正常版式，不是纯文本 TextView 堆一坨——AI 的回答经常
+// 代码和说明夹杂，纯文本对代码不友好。网络请求在独立线程执行，HTML 只
+// 在主线程构造和加载；article_view 在对话框隐藏时显式 reset，跟对话框
+// 同生命周期。知识点讲解、运行历史的“AI 讲解差异”和章节总纲共用这一个
+// 对话框，各自只是拼不同的 prompt。
 void MainWindow::show_ai_markdown_dialog(
     const string& dialog_title,
     const string& prompt,
-    const string& api_key,
+    const string& ark_api_key,
+    const string& deepseek_api_key,
     const string& loading_markdown,
     int width,
     int height) {
@@ -1217,8 +1261,10 @@ void MainWindow::show_ai_markdown_dialog(
     }
 
     auto alive = m_ui_alive;
-    thread([alive, dialog_alive, article_view, stylesheet, api_key, prompt]() {
-        const DeepSeekResult result = call_deepseek_chat(api_key, prompt);
+    thread([alive, dialog_alive, article_view, stylesheet, ark_api_key,
+            deepseek_api_key, prompt]() {
+        const AiChatResult result =
+            call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
         Glib::signal_idle().connect_once(
             [alive, dialog_alive, article_view, stylesheet, result]() {
                 if (!alive->load() || !dialog_alive->load() || !*article_view
@@ -1238,21 +1284,25 @@ void MainWindow::show_ai_markdown_dialog(
 void MainWindow::show_ai_response_dialog(
     const string& dialog_title,
     const string& prompt,
-    const string& api_key) {
+    const string& ark_api_key,
+    const string& deepseek_api_key) {
     show_ai_markdown_dialog(
-        dialog_title, prompt, api_key, "正在请求 DeepSeek，请稍候…", 760, 620);
+        dialog_title, prompt, ark_api_key, deepseek_api_key,
+        "正在请求 AI，请稍候…", 760, 620);
 }
 
-// 打开对话框，异步向 DeepSeek 请求针对该知识点具体源码的选择题（JSON
-// 格式，每题含题干、选项、正确选项下标和解释），逐题展示；每题先选一个
-// 选项，点“提交答案”才判对错、给解释，颜色区分对错。DeepSeek 返回的
-// JSON 解析失败时退化为纯文本展示，不崩溃、不隐藏结果。
+// 打开对话框，异步向 AI（优先豆包，失败或未配置再退回 DeepSeek）请求
+// 针对该知识点具体源码的选择题（JSON 格式，每题含题干、选项、正确选项
+// 下标和解释），逐题展示；每题先选一个选项，点“提交答案”才判对错、给
+// 解释，颜色区分对错。返回的 JSON 解析失败时退化为纯文本展示，不崩溃、
+// 不隐藏结果。
 void MainWindow::show_ai_quiz_dialog(
     const string& topic_title,
     const string& description,
     const string& source_path,
     const string& member_name,
-    const string& api_key) {
+    const string& ark_api_key,
+    const string& deepseek_api_key) {
     string prompt =
         "请针对 C++ 知识点「" + topic_title + "」出一组有针对性的自测题，"
         "题目要结合下面这段具体源码提问，不要问泛泛的定义题。题目数量不要"
@@ -1302,8 +1352,9 @@ void MainWindow::show_ai_quiz_dialog(
     dialog->show();
 
     auto alive = m_ui_alive;
-    thread([alive, dialog_alive, quiz_box, api_key, prompt]() {
-        const DeepSeekResult result = call_deepseek_chat(api_key, prompt);
+    thread([alive, dialog_alive, quiz_box, ark_api_key, deepseek_api_key, prompt]() {
+        const AiChatResult result =
+            call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
         Glib::signal_idle().connect_once(
             [alive, dialog_alive, quiz_box, result]() {
                 if (!alive->load() || !dialog_alive->load()) {
@@ -1472,7 +1523,7 @@ void MainWindow::show_ai_quiz_dialog(
                 }
 
                 if (!parsed_ok) {
-                    // DeepSeek 没按要求的 JSON 格式返回时，原样展示文本，
+                    // AI 没按要求的 JSON 格式返回时，原样展示文本，
                     // 至少不丢内容。
                     auto fallback_label =
                         Gtk::make_managed<Gtk::Label>(result.content);
@@ -1489,7 +1540,7 @@ void MainWindow::show_ai_quiz_dialog(
 // 跟 article 章节完全一样的排版（md4c 转 HTML、WKWebView），本地同步
 // 读取，不发起任何网络或 AI 调用。article_view 在对话框隐藏时显式
 // reset，跟对话框同生命周期，写法上跟 show_ai_markdown_dialog 一致，
-// 只是没有工作线程和 DeepSeek 调用这一段。
+// 只是没有工作线程和 AI 调用这一段。
 void MainWindow::show_theory_document_dialog(
     const string& chapter_title,
     const string& overview_document) {
@@ -1991,12 +2042,15 @@ void MainWindow::populate_topic_list(
         auto explain_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
         explain_button->add_css_class("btn-sm");
         explain_button->set_tooltip_text(
-            "配置了 ATHENA_DEEPSEEK_API_KEY 时在对话框内直接显示 DeepSeek "
-            "的讲解；未配置时退回到复制说明与源码到剪贴板并唤起本机 AI 助手");
+            "配置了 ATHENA_ARK_API_KEY 或 ATHENA_DEEPSEEK_API_KEY 时在对话"
+            "框内直接显示讲解（优先豆包，失败或未配置时用 DeepSeek）；两个"
+            "都未配置时退回到复制说明与源码到剪贴板并唤起本机 AI 助手");
         explain_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
-                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
+                const char* ark_key = g_getenv("ATHENA_ARK_API_KEY");
+                const char* deepseek_key = g_getenv("ATHENA_DEEPSEEK_API_KEY");
+                if (ark_key || deepseek_key) {
                     show_ai_response_dialog(
                         "AI 讲解：" + topic.title,
                         build_explain_prompt(
@@ -2005,7 +2059,8 @@ void MainWindow::populate_topic_list(
                             topic.description,
                             topic.source_path,
                             topic.member_name),
-                        api_key);
+                        ark_key ? ark_key : "",
+                        deepseek_key ? deepseek_key : "");
                 } else {
                     explain_with_local_ai(
                         m_content_loader,
@@ -2020,22 +2075,27 @@ void MainWindow::populate_topic_list(
         auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
-            "需要配置 ATHENA_DEEPSEEK_API_KEY：让 DeepSeek 针对该知识点的"
-            "具体源码出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
+            "需要配置 ATHENA_ARK_API_KEY 或 ATHENA_DEEPSEEK_API_KEY：让 AI"
+            "（优先豆包，失败或未配置时用 DeepSeek）针对该知识点的具体源码"
+            "出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
         quiz_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
-                if (const char* api_key = g_getenv("ATHENA_DEEPSEEK_API_KEY")) {
+                const char* ark_key = g_getenv("ATHENA_ARK_API_KEY");
+                const char* deepseek_key = g_getenv("ATHENA_DEEPSEEK_API_KEY");
+                if (ark_key || deepseek_key) {
                     show_ai_quiz_dialog(
                         topic.title,
                         topic.description,
                         topic.source_path,
                         topic.member_name,
-                        api_key);
+                        ark_key ? ark_key : "",
+                        deepseek_key ? deepseek_key : "");
                 } else {
                     auto notice = Gtk::make_managed<Gtk::MessageDialog>(
                         *this,
-                        "自测功能需要先配置环境变量 ATHENA_DEEPSEEK_API_KEY",
+                        "自测功能需要先配置环境变量 ATHENA_ARK_API_KEY 或 "
+                        "ATHENA_DEEPSEEK_API_KEY",
                         false,
                         Gtk::MessageType::INFO,
                         Gtk::ButtonsType::OK,
