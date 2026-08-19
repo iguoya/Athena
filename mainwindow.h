@@ -29,10 +29,8 @@ private:
     void ensure_chapter_page(
         const string& category_name,
         const ChapterMeta& chapter);
-    bool initialize_article_page(
-        const string& page_key,
-        const ChapterMeta& chapter,
-        const Glib::RefPtr<Gtk::Builder>& builder);
+    void ensure_handbook_page();
+    void show_handbook_page(const string& jump_to_document = "");
     void initialize_code_page(
         const string& category_name,
         const ChapterMeta& chapter,
@@ -76,9 +74,6 @@ private:
         const string& member_name,
         const string& ark_api_key,
         const string& deepseek_api_key);
-    void show_theory_document_dialog(
-        const string& chapter_title,
-        const string& overview_document);
     void start_experiment(
         const string& function_id,
         const string& source_path,
@@ -106,11 +101,18 @@ private:
 
     vector<Gtk::ToggleButton*> m_category_buttons;
     vector<Gtk::ToggleButton*> m_tab_buttons;
+    Gtk::ToggleButton* m_handbook_button = nullptr;
 
     string m_current_category;
     string m_current_chapter;
     set<string> m_active_page_names;
     set<string> m_loaded_chapters;
+    // 手册：懒构建一次的常驻全局页面，跟分类/章节切换逻辑解耦；
+    // m_showing_handbook 为真时，重新点击当前分类也要强制走一遍
+    // build_chapter_tabs（否则分类没变，早退不会切回章节页面）。
+    bool m_handbook_built = false;
+    bool m_showing_handbook = false;
+    std::map<string, string> m_handbook_anchor_by_document;
 
     ChapterCatalog m_catalog;
     FunctionRegistry m_function_registry;

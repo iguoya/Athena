@@ -4,16 +4,19 @@
 
 `resources/athena.json` 是 Athena 项目结构的权威来源。Schema 先于解析器、注册表和代码生成器定义；下游代码必须适配本规范，不能用现有实现反向限制配置结构。
 
-配置表达两个章节形态：
+配置表达的章节结构：
 
 ```text
 category                     课程分类、左侧导航
-└── chapter                  一级大章节、标签页
-    ├── content: code        C++ 类、可选 group、可运行 subchapter
-    └── content: article     Markdown 文档、文章目录、无运行结果
+└── chapter                  一级大章节、标签页、对应同名 C++ 类
+    └── subchapter           二级知识点、成员函数、可运行
 ```
 
-`group` 是代码章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码或文章时的需求输入。
+`group` 是章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码时的需求输入。
+
+理论、原则、跨文件工程思想这类不适合用单次运行结果表达的内容，不再对应
+独立的章节标签页，而是作为 Markdown 静态文档收进顶层 `handbook_documents`
+列表（见第 4.3 节），在一个常驻的"手册"页面里统一展示、统一目录。
 
 ## 2. 完整示例
 
@@ -21,13 +24,9 @@ category                     课程分类、左侧导航
 {
   "schema": 1,
   "defaults": {
-    "content": "code",
     "chapter_ui": {
       "code": {
         "blueprint": "resources/ui/chapters/empty_chapter.blp"
-      },
-      "article": {
-        "blueprint": "resources/ui/chapters/article_chapter.blp"
       }
     },
     "chapter_icon": {
@@ -39,6 +38,11 @@ category                     课程分类、左侧导航
       "name": "media-playback-start-symbolic"
     }
   },
+  "handbook_documents": [
+    "resources/articles/cpp/reference_overview.md",
+    "resources/articles/cpp/raii_overview.md",
+    "resources/articles/cpp/program_organization.md"
+  ],
   "categories": [
     {
       "name": "cpp",
@@ -60,6 +64,7 @@ category                     课程分类、左侧导航
           "implementation": {
             "header": "language/references/reference.hpp"
           },
+          "overview_document": "resources/articles/cpp/reference_overview.md",
           "subchapters": [
             {
               "name": "basic",
@@ -67,14 +72,6 @@ category                     课程分类、左侧导航
               "description": "理解引用是对象的别名以及引用必须初始化。"
             }
           ]
-        },
-        {
-          "name": "ProgramOrganization",
-          "title": "程序与源码组织",
-          "description": "学习多文件 C++ 工程的组织原则。",
-          "content": "article",
-          "document": "resources/articles/cpp/program_organization.md",
-          "subchapters": []
         }
       ]
     }
@@ -87,32 +84,29 @@ category                     课程分类、左侧导航
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
 | `schema` | integer | 是 | Schema 版本；当前为 `1` |
-| `defaults` | object | 是 | 默认内容类型、两类通用界面和图标默认值 |
+| `defaults` | object | 是 | 章节通用界面和图标默认值 |
+| `handbook_documents` | array | 否 | 手册收录的静态文档列表，见 4.3 |
 | `categories` | array | 是 | 有序课程分类列表 |
 
 数组顺序就是界面顺序，不再保存冗余的 `order` 字段。
 
 ## 4. 默认值
 
-### 4.1 `defaults.content` 与 `defaults.chapter_ui`
+### 4.1 `defaults.chapter_ui`
 
-`defaults.content` 只能是 `code` 或 `article`，当前使用 `code`，因此已有可实验章节无需重复声明。两类章节分别共享默认 Blueprint：
+所有章节共享同一个默认 Blueprint：
 
 ```json
 {
-  "content": "code",
   "chapter_ui": {
     "code": {
       "blueprint": "resources/ui/chapters/empty_chapter.blp"
-    },
-    "article": {
-      "blueprint": "resources/ui/chapters/article_chapter.blp"
     }
   }
 }
 ```
 
-同一 BLP 可以为不同章节分别创建独立控件树和独立页面状态。章节只有在布局确实不同的时候才使用自己的 `ui` 覆盖。
+同一 BLP 可以为不同章节分别创建独立控件树和独立页面状态。章节只有在布局确实不同的时候才使用自己的 `ui` 覆盖（见第 10 节）。
 
 Blueprint 编译及资源路径按约定派生：
 
@@ -122,7 +116,7 @@ resources/ui/chapters/empty_chapter.blp
     -> /app/chapters/empty_chapter.ui
 ```
 
-代码页面模板的根控件统一使用 `chapter_page`，文章页面模板统一使用 `article_page`，不在每章重复配置根控件 ID。
+默认页面模板的根控件统一使用 `chapter_page`，不在每章重复配置根控件 ID。
 
 ### 4.2 默认图标
 
@@ -140,6 +134,32 @@ resources/ui/chapters/empty_chapter.blp
 ```
 
 章节或知识点没有自己的 `icon` 时继承对应默认值。图标回退由通用 UI 逻辑处理，禁止在 C++ 中按章节名手写图标映射。
+
+### 4.3 手册 `handbook_documents`
+
+顶层数组，列出全部收进"手册"页面的静态 Markdown 文档路径，按数组顺序
+拼接、渲染成一份带完整目录（H1–H3）的常驻页面：
+
+```json
+"handbook_documents": [
+  "resources/articles/cpp/reference_overview.md",
+  "resources/articles/cpp/raii_overview.md",
+  "resources/articles/cpp/program_organization.md"
+]
+```
+
+手册页面复用主窗口里已经验证过的常驻 WKWebView 嵌入方式（跟原来 `article`
+章节标签页是同一套渲染机制），不是每次点击现造一个对话框和一个新的
+WebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局
+分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面。
+
+`handbook_documents` 里的文档不要求对应某个 `chapter`——它是内容的合集，
+跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须
+已经在这个列表里，生成器 `check` 时会校验，缺了会报错而不是静默忽略。
+
+界面上，"手册"是左侧分类按钮上方独立一行的全局入口，跟"选中某个分类
+再看该分类下的章节"是两条不同的路径；手册页面里的每份文档最终会显示
+成一段小节，段与段之间用一条分隔线隔开。
 
 ## 5. 分类 `category`
 
@@ -167,33 +187,30 @@ category.name = cpp
 
 ## 6. 一级章节 `chapter`
 
-一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”和“程序与源码组织”。每个一级章节对应一个标签页；只有 `code` 章节对应同名 C++ 类。
+一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类；理论性、跨文件的工程思想类内容不再放进独立章节标签页，而是走 `handbook_documents`（见 4.3）。
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
 | `name` | string | 是 | 稳定章节名，也是 C++ 类名 |
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
-| `content` | string | 否 | `code` 或 `article`；缺省时继承 `defaults.content` |
-| `document` | string | 条件 | `article` 默认页必填，指向 `resources/articles/` 下的 Markdown |
-| `overview_document` | string | 否 | `code` 章节“本章总纲”按钮展示的静态理论讲解文档，指向 `resources/articles/` 下的 Markdown；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
+| `overview_document` | string | 否 | “本章总纲”按钮跳转目标，必须是 `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
-| `source` | string | 否 | `code` 代码框显示的源码路径 |
-| `implementation` | object | 否 | 已有 C++ 实现的 code 章节编译入口；存在时由构建生成函数注册表 |
-| `groups` | array | 否 | `code` 知识点的视觉分组元数据 |
-| `subchapters` | array | 是 | `code` 的有序可运行知识点列表；`article` 使用空数组 |
+| `source` | string | 否 | 代码框显示的源码路径 |
+| `implementation` | object | 否 | 已有 C++ 实现的编译入口；存在时由构建生成函数注册表 |
+| `groups` | array | 否 | 知识点的视觉分组元数据 |
+| `subchapters` | array | 是 | 有序可运行知识点列表；没有可运行知识点（如仅作导航用途）时用空数组 |
 
 映射示例：
 
 ```text
-content = code
 chapter.name = Reference
     -> 标签页的稳定名称 Reference
     -> C++ 类 Reference
 ```
 
-具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。由于课程类不再放入分类命名空间，所有 `code` 章节的 `name` 必须在整个项目中唯一；生成器会检查跨分类的类名冲突。文章章节的 `name` 只是稳定页面名，例如 `ProgramOrganization`，不会生成同名类。
+具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。由于课程类不再放入分类命名空间，所有章节的 `name` 必须在整个项目中唯一；生成器会检查跨分类的类名冲突。没有 `implementation` 的章节只显示课程框架，`name` 仍然占用一个全局类名位（不会真的生成类），保留这份唯一性检查是为了给未来真正实现时预留位置。
 
 ### 6.1 C++ 实现入口 `implementation`
 
@@ -240,16 +257,17 @@ subchapter.name -> C++ 成员函数名
 
 ### 6.2 本章总纲 `overview_document`
 
-`code` 章节可选提供 `overview_document`，指向一份人工撰写、静态存在于
-`resources/articles/` 下的 Markdown 理论讲解文档：
+章节可选提供 `overview_document`，指向一份人工撰写、静态存在于
+`resources/articles/` 下、并且已经列在顶层 `handbook_documents`（4.3）
+里的 Markdown 理论讲解文档：
 
 ```json
 "overview_document": "resources/articles/cpp/reference_overview.md"
 ```
 
-界面里"本章总纲"按钮点击后直接本地读取并渲染这份文档（跟 `article` 章节
-同一套 md4c 转 HTML、WKWebView 排版），**不发起任何网络或 AI 调用**——内容
-是撰写时一次性确定好、经人工审核过的，不是运行时现场生成的。撰写过程可以
+界面里"本章总纲"按钮点击后跳到手册页面里这份文档对应的位置（该文档
+在手册合集里第一个标题的锚点），**不发起任何网络或 AI 调用**——内容是
+撰写时一次性确定好、经人工审核过的，不是运行时现场生成的。撰写过程可以
 用 AI 辅助起草，但草稿必须经人工审核后才能提交；这是"自然语言 description
 不应由普通模板生成器直接转换成未经审查的实现"这条规则在文档内容上的
 应用，只是这里的"实现"换成了理论讲解文档。
@@ -258,30 +276,10 @@ subchapter.name -> C++ 成员函数名
 全部知识点信息到剪贴板并唤起本机 AI 助手，跟未配置 `implementation` 的
 章节保持骨架框架、不强行生造内容是同一个原则。
 
-`overview_document` 复用 `document` 字段同样的路径校验和 GResource 打包
-流程，但语义不同：`article` 章节的 `document` 是该页面的全部正文；`code`
-章节的 `overview_document`只是补充性的理论文档，不影响 `code` 章节本身
-的知识点列表、源码框和运行结果区。
-
-### 6.3 `code` 与 `article` 的选择
-
-- 能用短小源码和可观察输出验证的语法、语义或库能力使用 `code`。
-- 理论、原则、设计取舍和跨文件工程思想，如果单次运行结果不足以说明内容，使用 `article`。
-- `article` 可以包含 Markdown 代码块，但页面不提供运行按钮和结果区。
-- Word 文档不属于当前 schema；需要时应通过新的文档转换层引入，而不是让运行时直接依赖办公文档格式。
-
-文章示例：
-
-```json
-{
-  "name": "ProgramOrganization",
-  "title": "程序与源码组织",
-  "description": "学习命名空间、翻译单元、ODR 和 Modules。",
-  "content": "article",
-  "document": "resources/articles/cpp/program_organization.md",
-  "subchapters": []
-}
-```
+`overview_document` 只是"这个章节关联手册里的哪份文档"这层指针，不影响
+章节本身的知识点列表、源码框和运行结果区；文档内容本身、它在手册目录
+里出现的顺序，都由 `handbook_documents` 决定，不由 `overview_document`
+决定。
 
 ## 7. 二级知识点 `subchapter`
 
@@ -410,14 +408,13 @@ GTK 主题图标：
 
 ## 10. 特殊界面覆盖
 
-普通章节省略 `ui`，根据 `content` 使用 `defaults.chapter_ui.code` 或 `defaults.chapter_ui.article`。只有欢迎页、动画或需要特殊输入控件的章节才覆盖：
+普通章节省略 `ui`，使用 `defaults.chapter_ui.code`。只有欢迎页、动画或需要特殊输入控件的章节才覆盖：
 
 ```json
 {
   "name": "Welcome",
   "title": "欢迎页面",
   "description": "介绍 Athena 的学习方式。",
-  "content": "article",
   "ui": {
     "blueprint": "resources/ui/chapters/welcome.blp"
   },
@@ -433,7 +430,7 @@ GTK 主题图标：
 - `chapter.description`：标签页顶部的章节概要。
 - `group.description`：视觉分组概要。
 - `subchapter.description`：成员函数实验必须覆盖的教学内容。
-- `article.document`：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
+- `handbook_documents` 里的文档：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
 
 `description` 应描述目标和边界，不包含生成器命令，也不粘贴完整实现代码。
 
@@ -459,8 +456,8 @@ GTK 主题图标：
 - 派生键 `category.chapter.subchapter` 全局唯一。
 - C++ 名称是否合法且不是关键字。
 - `group` 引用是否存在。
-- `content` 是否只能是 `code` 或 `article`。
-- 默认文章页是否提供 `document`，并位于 `resources/articles/`。
+- `overview_document` 是否已经出现在顶层 `handbook_documents` 里。
+- `handbook_documents` 每一项是否位于 `resources/articles/` 下且文件存在。
 - Blueprint、源码、Markdown 和资源图标路径是否有效。
 - 所有章节都有可解析图标：自身图标或默认图标。
 - 所有知识点都有可解析图标：自身图标或默认图标。

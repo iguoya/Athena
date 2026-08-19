@@ -14,6 +14,9 @@ public:
     virtual ~ArticleView() = default;
 
     virtual void load_html(const string& html, const string& base_path) = 0;
+    // 跳到页面内某个标题锚点（如 "athena-heading-3"）；文档还没加载完成
+    // 时应记住这个请求，等加载完成后再执行，不丢失。
+    virtual void scroll_to_anchor(const string& anchor) = 0;
 };
 
 // 当前在 macOS 上返回 WKWebView 后端；其他平台可在此接口下增加实现。

@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <set>
@@ -21,16 +22,12 @@ string read_project_file(const string& relative_path) {
     return content.str();
 }
 
-string minimal_catalog(
-    const string& content = "code",
-    const string& document = "") {
+string minimal_catalog() {
     return R"JSON({
       "schema": 1,
       "defaults": {
-        "content": "code",
         "chapter_ui": {
-          "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" },
-          "article": { "blueprint": "resources/ui/chapters/article_chapter.blp" }
+          "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" }
         }
       },
       "categories": [{
@@ -41,8 +38,6 @@ string minimal_catalog(
           "name": "Sample",
           "title": "Sample",
           "description": "Sample chapter",
-          "content": ")JSON" + content + R"JSON(",
-          "document": ")JSON" + document + R"JSON(",
           "subchapters": [{
             "name": "point",
             "title": "Point",
@@ -67,22 +62,28 @@ TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
 
     const auto* reference = catalog.find_chapter("cpp", "Reference");
     ASSERT_NE(reference, nullptr);
-    EXPECT_EQ(reference->content, "code");
     EXPECT_EQ(reference->widget_name, "chapter_page");
     EXPECT_EQ(
         reference->implementation_header,
         "language/references/reference.hpp");
     ASSERT_EQ(reference->subchapters.size(), 4);
     EXPECT_EQ(reference->subchapters.front().name, "reference_basics");
-
-    const auto* organization =
-        catalog.find_chapter("cpp", "ProgramOrganization");
-    ASSERT_NE(organization, nullptr);
-    EXPECT_EQ(organization->content, "article");
     EXPECT_EQ(
-        organization->document,
-        "resources/articles/cpp/program_organization.md");
-    EXPECT_EQ(organization->widget_name, "article_page");
+        reference->overview_document,
+        "resources/articles/cpp/reference_overview.md");
+
+    // 手册：本地静态文档的合集，跟具体章节解耦；引用/RAII 的
+    // overview_document 必须落在这个列表里（由生成器的 check 强制）。
+    const auto& handbook = catalog.handbook_documents();
+    EXPECT_FALSE(handbook.empty());
+    EXPECT_NE(
+        find(handbook.begin(), handbook.end(),
+             "resources/articles/cpp/reference_overview.md"),
+        handbook.end());
+    EXPECT_NE(
+        find(handbook.begin(), handbook.end(),
+             "resources/articles/cpp/raii_overview.md"),
+        handbook.end());
 }
 
 TEST(ChapterCatalogTest, GeneratedRegistryExactlyMatchesImplementedChapters) {
@@ -152,10 +153,8 @@ TEST(ChapterCatalogTest, ParsesSubchapterImportanceWithDefault) {
     const string config = R"JSON({
       "schema": 1,
       "defaults": {
-        "content": "code",
         "chapter_ui": {
-          "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" },
-          "article": { "blueprint": "resources/ui/chapters/article_chapter.blp" }
+          "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" }
         }
       },
       "categories": [{
@@ -186,16 +185,6 @@ TEST(ChapterCatalogTest, RejectsUnsupportedSchema) {
     string source = minimal_catalog();
     source.replace(source.find("\"schema\": 1"), 11, "\"schema\": 2");
     EXPECT_THROW(ChapterCatalog::from_json(source), runtime_error);
-}
-
-TEST(ChapterCatalogTest, RejectsUnsupportedContentType) {
-    EXPECT_THROW(ChapterCatalog::from_json(minimal_catalog("video")), runtime_error);
-}
-
-TEST(ChapterCatalogTest, RequiresDocumentForDefaultArticlePage) {
-    EXPECT_THROW(ChapterCatalog::from_json(minimal_catalog("article")), runtime_error);
-    EXPECT_NO_THROW(ChapterCatalog::from_json(
-        minimal_catalog("article", "resources/articles/sample.md")));
 }
 
 } // namespace

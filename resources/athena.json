@@ -1,13 +1,9 @@
 {
   "schema": 1,
   "defaults": {
-    "content": "code",
     "chapter_ui": {
       "code": {
         "blueprint": "resources/ui/chapters/empty_chapter.blp"
-      },
-      "article": {
-        "blueprint": "resources/ui/chapters/article_chapter.blp"
       }
     },
     "chapter_icon": {
@@ -19,6 +15,11 @@
       "name": "media-playback-start-symbolic"
     }
   },
+  "handbook_documents": [
+    "resources/articles/cpp/reference_overview.md",
+    "resources/articles/cpp/raii_overview.md",
+    "resources/articles/cpp/program_organization.md"
+  ],
   "categories": [
     {
       "name": "cpp",
@@ -33,7 +34,6 @@
           "name": "Welcome",
           "title": "欢迎页面",
           "description": "介绍 Athena 的学习方式、章节结构和代码实验流程。",
-          "content": "article",
           "icon": { "type": "theme", "name": "go-home-symbolic" },
           "ui": { "blueprint": "resources/ui/chapters/welcome.blp" },
           "subchapters": []
@@ -224,15 +224,6 @@
             { "name": "coroutine", "title": "C++20 协程", "description": "理解协程帧保存挂起点状态、co_await 与 co_yield 的挂起恢复机制；对比协程与线程的本质差异：挂起点由代码显式标注，切换不涉及系统调度。", "importance": 5 },
             { "name": "concurrent_patterns", "title": "并发模式", "description": "学习任务队列、生产者消费者等常见并发组织方式。", "importance": 4 }
           ]
-        },
-        {
-          "name": "ProgramOrganization",
-          "title": "程序与源码组织",
-          "description": "学习命名空间、声明与定义、翻译单元、链接规则以及 C++20 模块。",
-          "content": "article",
-          "document": "resources/articles/cpp/program_organization.md",
-          "icon": { "type": "theme", "name": "folder-documents-symbolic" },
-          "subchapters": []
         }
       ]
     },

@@ -44,18 +44,19 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
     }
 
     const auto& defaults = config.at("defaults");
-    const string default_content = defaults.value("content", "code");
     const auto& chapter_ui = defaults.at("chapter_ui");
     const string default_code_blueprint =
         chapter_ui.at("code").at("blueprint").get<string>();
-    const string default_article_blueprint =
-        chapter_ui.at("article").at("blueprint").get<string>();
     const IconSpec default_chapter_icon =
         parse_icon(defaults.value("chapter_icon", json::object()));
     const IconSpec default_subchapter_icon =
         parse_icon(defaults.value("subchapter_icon", json::object()));
 
     ChapterCatalog catalog;
+    for (const auto& document : config.value("handbook_documents", json::array())) {
+        catalog.m_handbook_documents.push_back(document.get<string>());
+    }
+
     set<string> category_names;
 
     for (const auto& category_value : config.at("categories")) {
@@ -78,22 +79,9 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
             chapter.title = chapter_value.at("title").get<string>();
             chapter.description = chapter_value.at("description").get<string>();
             chapter.category = category.name;
-            chapter.content = chapter_value.value("content", default_content);
-            if (chapter.content != "code" && chapter.content != "article") {
-                throw runtime_error(
-                    "Unsupported chapter content type for " + category.name + "." +
-                    chapter.name + ": " + chapter.content);
-            }
-
-            chapter.document = chapter_value.value("document", "");
             chapter.overview_document =
                 chapter_value.value("overview_document", "");
             if (chapter_value.contains("implementation")) {
-                if (chapter.content != "code") {
-                    throw runtime_error(
-                        "Only code chapters can declare implementation: " +
-                        category.name + "." + chapter.name);
-                }
                 chapter.implementation_header = chapter_value.at("implementation")
                     .at("header")
                     .get<string>();
@@ -104,28 +92,15 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
             chapter.icon = parse_icon(
                 chapter_value.value("icon", json::object()),
                 default_chapter_icon);
-            chapter.blueprint = chapter.content == "article"
-                ? default_article_blueprint
+            chapter.blueprint = chapter_value.contains("ui")
+                ? chapter_value.at("ui").value("blueprint", default_code_blueprint)
                 : default_code_blueprint;
-            if (chapter_value.contains("ui")) {
-                chapter.blueprint = chapter_value.at("ui").value(
-                    "blueprint",
-                    chapter.blueprint);
-            } else if (chapter.content == "article" && chapter.document.empty()) {
-                throw runtime_error(
-                    "Article chapter requires document: " + category.name + "." +
-                    chapter.name);
-            }
 
             const string stem = file_stem(chapter.blueprint);
             chapter.resource_path = "/app/chapters/" + stem + ".ui";
-            if (chapter.blueprint == default_code_blueprint) {
-                chapter.widget_name = "chapter_page";
-            } else if (chapter.blueprint == default_article_blueprint) {
-                chapter.widget_name = "article_page";
-            } else {
-                chapter.widget_name = stem + "_page";
-            }
+            chapter.widget_name = chapter.blueprint == default_code_blueprint
+                ? "chapter_page"
+                : stem + "_page";
 
             set<string> group_names;
             for (const auto& group_value :
@@ -211,6 +186,10 @@ size_t ChapterCatalog::chapter_count() const {
         count += chapters.size();
     }
     return count;
+}
+
+const vector<string>& ChapterCatalog::handbook_documents() const {
+    return m_handbook_documents;
 }
 
 string resolve_source_path(

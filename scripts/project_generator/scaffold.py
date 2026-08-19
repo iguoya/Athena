@@ -24,8 +24,6 @@ def scaffold(model: dict, root: Path, chapter_id: str) -> None:
     chapter = model["chapters"].get(chapter_id)
     if chapter is None:
         raise ProjectError(f"unknown chapter: {chapter_id}")
-    if chapter["content"] != "code":
-        raise ProjectError(f"cannot scaffold article chapter: {chapter_id}")
     implementation = chapter.get("implementation")
     if not isinstance(implementation, dict) or not implementation.get("header"):
         raise ProjectError(

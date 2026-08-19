@@ -40,7 +40,6 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="athena-generator-") as temporary:
         root = Path(temporary)
         write(root / "resources" / "ui" / "chapters" / "code.blp")
-        write(root / "resources" / "ui" / "chapters" / "article.blp")
         write(root / "resources" / "window.ui")
         write(root / "resources" / "style.css")
         write(root / "resources" / "article.css")
@@ -48,10 +47,8 @@ def main() -> None:
         config = {
             "schema": 1,
             "defaults": {
-                "content": "code",
                 "chapter_ui": {
                     "code": {"blueprint": "resources/ui/chapters/code.blp"},
-                    "article": {"blueprint": "resources/ui/chapters/article.blp"},
                 },
             },
             "categories": [

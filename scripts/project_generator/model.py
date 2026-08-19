@@ -7,7 +7,6 @@ import re
 from pathlib import Path
 
 
-CONTENT_TYPES = {"article", "code"}
 CATEGORY_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -95,25 +94,16 @@ def build_model(
         raise ProjectError(f"unsupported athena.json schema: {config.get('schema')!r}")
 
     defaults = require_object(config.get("defaults"), "defaults")
-    default_content = defaults.get("content", "code")
-    if default_content not in CONTENT_TYPES:
-        raise ProjectError(f"unsupported defaults.content: {default_content!r}")
     chapter_ui = require_object(defaults.get("chapter_ui"), "defaults.chapter_ui")
-    default_blueprints = {}
-    for content in sorted(CONTENT_TYPES):
-        ui = require_object(chapter_ui.get(content), f"defaults.chapter_ui.{content}")
-        default_blueprints[content] = project_path(
-            root,
-            ui.get("blueprint"),
-            f"defaults.chapter_ui.{content}.blueprint",
-            prefix="resources/ui",
-        )
+    code_ui = require_object(chapter_ui.get("code"), "defaults.chapter_ui.code")
+    default_blueprint = project_path(
+        root,
+        code_ui.get("blueprint"),
+        "defaults.chapter_ui.code.blueprint",
+        prefix="resources/ui",
+    )
     validate_icon(root, defaults.get("chapter_icon"), "defaults.chapter_icon")
     validate_icon(root, defaults.get("subchapter_icon"), "defaults.subchapter_icon")
-
-    categories = require_list(config.get("categories"), "categories")
-    if not categories:
-        raise ProjectError("categories must not be empty")
 
     seen_categories: set[str] = set()
     seen_code_classes: dict[str, str] = {}
@@ -124,6 +114,27 @@ def build_model(
     chapters_by_id: dict[str, dict] = {}
     chapter_count = 0
     subchapter_count = 0
+
+    # 手册：现有 article 章节和各 code 章节总纲文档的合集，本地静态渲染，
+    # 不依赖任何单个章节存在；顺序即手册目录顺序。overview_document 必须
+    # 落在这个列表里，否则"本章总纲"按钮无处可跳。
+    handbook_documents = require_list(
+        config.get("handbook_documents", []), "handbook_documents"
+    )
+    handbook_document_paths: set[str] = set()
+    for doc_index, doc_value in enumerate(handbook_documents):
+        doc_path = project_path(
+            root,
+            doc_value,
+            f"handbook_documents[{doc_index}]",
+            prefix="resources/articles",
+        )
+        handbook_document_paths.add(doc_path)
+        documents.add(doc_path.removeprefix("resources/"))
+
+    categories = require_list(config.get("categories"), "categories")
+    if not categories:
+        raise ProjectError("categories must not be empty")
 
     for category_index, category_value in enumerate(categories):
         category = require_object(category_value, f"categories[{category_index}]")
@@ -161,19 +172,13 @@ def build_model(
             require_text(chapter.get("title"), f"chapter {chapter_id}.title")
             require_text(chapter.get("description"), f"chapter {chapter_id}.description")
             validate_icon(root, chapter.get("icon"), f"chapter {chapter_id}.icon")
-            content = chapter.get("content", default_content)
-            if content not in CONTENT_TYPES:
+            previous_chapter = seen_code_classes.get(chapter_name)
+            if previous_chapter:
                 raise ProjectError(
-                    f"chapter {chapter_id} has unsupported content {content!r}"
+                    f"code chapters {previous_chapter} and {chapter_id} "
+                    f"both generate global class {chapter_name}"
                 )
-            if content == "code":
-                previous_chapter = seen_code_classes.get(chapter_name)
-                if previous_chapter:
-                    raise ProjectError(
-                        f"code chapters {previous_chapter} and {chapter_id} "
-                        f"both generate global class {chapter_name}"
-                    )
-                seen_code_classes[chapter_name] = chapter_id
+            seen_code_classes[chapter_name] = chapter_id
             if "source" in chapter:
                 source_files.add(project_path(
                     root,
@@ -184,7 +189,7 @@ def build_model(
 
             custom_ui = chapter.get("ui")
             if custom_ui is None:
-                blueprint = default_blueprints[content]
+                blueprint = default_blueprint
             else:
                 custom_ui = require_object(custom_ui, f"chapter {chapter_id}.ui")
                 blueprint = project_path(
@@ -202,18 +207,9 @@ def build_model(
                 )
             seen_ui[ui_name] = blueprint
 
-            document = chapter.get("document")
-            if document is not None:
-                document = project_path(
-                    root,
-                    document,
-                    f"chapter {chapter_id}.document",
-                    prefix="resources/articles",
-                )
-                documents.add(document.removeprefix("resources/"))
-            if content == "article" and custom_ui is None and document is None:
-                raise ProjectError(f"article chapter {chapter_id} requires a document")
-
+            # 本章总纲：必须已经在 handbook_documents 里，"本章总纲"按钮
+            # 跳的是手册里对应文档的锚点，指向一份手册没收录的文档没有
+            # 意义。
             overview_document = chapter.get("overview_document")
             if overview_document is not None:
                 overview_document = project_path(
@@ -222,7 +218,11 @@ def build_model(
                     f"chapter {chapter_id}.overview_document",
                     prefix="resources/articles",
                 )
-                documents.add(overview_document.removeprefix("resources/"))
+                if overview_document not in handbook_document_paths:
+                    raise ProjectError(
+                        f"chapter {chapter_id}.overview_document "
+                        f"{overview_document!r} is not listed in handbook_documents"
+                    )
 
             groups = require_list(
                 chapter.get("groups", []), f"chapter {chapter_id}.groups"
@@ -267,10 +267,6 @@ def build_model(
             subchapters = require_list(
                 chapter.get("subchapters"), f"chapter {chapter_id}.subchapters"
             )
-            if content == "article" and (groups or subchapters):
-                raise ProjectError(
-                    f"article chapter {chapter_id} cannot declare groups or subchapters"
-                )
             seen_methods: set[str] = set()
             methods: list[str] = []
             for sub_index, sub_value in enumerate(subchapters):
@@ -327,10 +323,6 @@ def build_model(
 
             implementation = chapter.get("implementation")
             if implementation is not None:
-                if content != "code":
-                    raise ProjectError(
-                        f"only code chapters can declare implementation: {chapter_id}"
-                    )
                 implementation = require_object(
                     implementation, f"chapter {chapter_id}.implementation"
                 )
@@ -368,7 +360,6 @@ def build_model(
                 {
                     "id": chapter_id,
                     "category": category_name,
-                    "content": content,
                     "methods": methods,
                 }
             )

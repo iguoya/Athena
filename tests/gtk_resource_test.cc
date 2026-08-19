@@ -17,16 +17,6 @@ TEST(GtkResourceTest, LoadsTheCodeChapterWidgetTree) {
         nullptr);
 }
 
-TEST(GtkResourceTest, LoadsTheArticleWebViewHost) {
-    const auto builder = Gtk::Builder::create_from_resource(
-        "/app/chapters/article_chapter.ui");
-
-    EXPECT_NE(builder->get_widget<Gtk::Box>("article_page"), nullptr);
-    EXPECT_NE(
-        builder->get_widget<Gtk::DrawingArea>("article_web_host"),
-        nullptr);
-}
-
 TEST(GtkResourceTest, LoadsTheWelcomeTigerImage) {
     const auto builder = Gtk::Builder::create_from_resource(
         "/app/chapters/welcome.ui");

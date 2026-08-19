@@ -9,6 +9,12 @@
   --article-soft: #f8f9fa;
   --article-code: #f1f3f5;
   --article-code-text: #1f2328;
+  /* 重点（**加粗**）用琥珀色，易错点/难点（***加粗斜体***）用红色，
+     两档颜色区分阅读时最该留意的内容；普通加粗只表达"重要"，不需要
+     额外颜色时保持默认文字色的旧文档不受影响，因为没标记就不会命中
+     下面这两条规则。 */
+  --article-highlight: #b45309;
+  --article-danger: #c0152f;
 }
 
 * {
@@ -218,7 +224,15 @@ a {
 }
 
 strong {
+  color: var(--article-highlight);
   font-weight: 750;
+}
+
+/* ***加粗斜体*** 标记易错点/难点，比普通加粗的重点颜色更醒目。 */
+strong em,
+em strong {
+  color: var(--article-danger);
+  font-style: normal;
 }
 
 blockquote {
@@ -329,6 +343,8 @@ img {
     --article-soft: #2a2e34;
     --article-code: #282c32;
     --article-code-text: #e9ecef;
+    --article-highlight: #f0b429;
+    --article-danger: #ff8a80;
   }
 
   code {
@@ -346,6 +362,8 @@ img {
   --article-soft: #f8f9fa;
   --article-code: #f1f3f5;
   --article-code-text: #1f2328;
+  --article-highlight: #b45309;
+  --article-danger: #c0152f;
 }
 
 :root[data-theme="light"] code {
@@ -362,6 +380,8 @@ img {
   --article-soft: #2a2e34;
   --article-code: #282c32;
   --article-code-text: #e9ecef;
+  --article-highlight: #f0b429;
+  --article-danger: #ff8a80;
 }
 
 :root[data-theme="dark"] code {

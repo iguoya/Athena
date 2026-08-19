@@ -26,18 +26,17 @@ resources/athena.json
                                                      |
         FunctionRegistry + ChapterCatalog ----------> MainWindow（界面协调）
                                                      |
-                                                     +--> code 页面
-                                                     +--> article 页面
+                                                     +--> code 页面（按章节）
+                                                     +--> 手册页面（懒构建一次，跨章节）
 ```
 
 已有的优点：
 
 - 章节菜单和 Blueprint 资源主要由 JSON 驱动。
-- 多个章节可以共享 `empty_chapter.blp`。
-- `code` 与 `article` 章节由同一份 JSON 选择不同默认页面。
-- 文章作为 GResource 随应用打包，并可在开发期从源码树回退读取。
-- 文章 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
-- 文章 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
+- 所有章节共享同一个 `empty_chapter.blp`。
+- 手册文档作为 GResource 随应用打包，并可在开发期从源码树回退读取。
+- 手册 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
+- 手册 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - 每个知识点可以独立运行并显示结果；实验代码在独立工作线程执行（同一时刻只运行一个，运行中的新请求被忽略），状态栏的转圈指示与耗时提示反馈进度，结果和耗时经主线程回填，界面不阻塞。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - 统一生成器会校验完整项目模型，并在临时工程中端到端测试四个子命令。
@@ -46,11 +45,12 @@ resources/athena.json
 - `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
 - `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_SCHEMA.md`）；条目本身（标题与描述）不响应点击。
-- 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 讲解”“AI 自测”按钮与用户自评的“熟练度”五星评分（绿色，0–5 星，自由打分并即时持久化；再点当前星级则降一星；星星右侧带 2 字文字标识随星级变化，悬浮单颗星显示该星级含义）：到 5 星后运行按钮置灰，降低星级即可恢复运行。“运行历史”“AI 讲解”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部、笔记与源码随之切换）再执行。
+- 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 自测”按钮与用户自评的“熟练度”五星评分（绿色，0–5 星，自由打分并即时持久化；再点当前星级则降一星；星星右侧带 2 字文字标识随星级变化，悬浮单颗星显示该星级含义）：到 5 星后运行按钮置灰，降低星级即可恢复运行。“运行历史”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部、笔记与源码随之切换）再执行。曾经有过一个“AI 讲解”按钮（现场调 AI 生成知识点讲解），后来因为体感上不如直接看手册和源码实用而移除，知识点级别的 AI 功能现在只剩“AI 自测”。
 - “运行历史”打开运行记录对话框：左侧是最近运行列表（时间、耗时、与当前源码是否一致、运行时的 git 提交短哈希，工作区有未提交改动时加 `+`），右侧最多同时选中 2 条记录并排对比，每条记录一栏，栏内上方是运行时的源码快照（只读 GtkSourceView，C++ 语法高亮，不做逐行 diff）并在标题带完整 git 版本描述，下方是对应输出，默认选中最近两次运行；git 信息由运行时同步查询 `ATHENA_SOURCE_ROOT` 所在仓库得到，不在 git 仓库或 git 不可用时静默留空，不影响运行。配置了 `ATHENA_ARK_API_KEY` 或 `ATHENA_DEEPSEEK_API_KEY` 时对话框内另有“AI 讲解差异”按钮（选中恰好 2 条才可用，两个 Key 都未配置时这个按钮不出现），把两条记录的源码快照与输出一并发给 AI，请求解释改动和结果变化的关系；不做逐行 diff 高亮，这部分交给 git 自己的工具。
-- “AI 讲解”“AI 自测”“AI 讲解差异”共用同一条 AI 调用链：`call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt)` 优先用火山方舟豆包（`doubao-seed-2-1-pro-260628`，环境变量 `ATHENA_ARK_API_KEY`），未配置或请求失败再退回 DeepSeek（`deepseek-chat`，环境变量 `ATHENA_DEEPSEEK_API_KEY`）；两者都未配置时“AI 讲解”退回复制提示词到剪贴板并唤起本机 AI 助手（默认 `doubao://`，可用环境变量 `ATHENA_AI_COMMAND` 自定义命令），“AI 自测”直接提示需要先配置至少一个 Key，没有剪贴板退路。两家服务商都是 OpenAI 兼容协议，底层共用 `call_llm_chat(endpoint, model, api_key, prompt)`，只是 endpoint/model 不同，不是两套 curl 调用逻辑。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；网络请求在独立线程执行，结果经主线程回填（参见 ADR 0009、ADR 0010）。
-- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向 `resources/articles/` 下人工撰写、经审核提交进 git 的静态 Markdown 文档，点击按钮本地同步读取展示，不发起任何网络请求（参见 `docs/CHAPTER_SCHEMA.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手，行为跟“AI 讲解”未配置 Key 时一致。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
-- “AI 讲解”“AI 讲解差异”共用 `show_ai_markdown_dialog()`，“本章总纲”单独用同构但同步、无网络调用的 `show_theory_document_dialog()`：都是把 Markdown 解析后用跟 article 章节（如“程序与源码组织”）完全一样的排版显示——md4c 转 HTML、WKWebView（macOS）渲染，标题、列表、代码块都有正常版式；AI 的回答经常代码和说明夹杂，早期用纯文本 TextView 展示对代码不友好，改成这个之后代码块能正常保留缩进和等宽字体，不再是纯文本堆一坨。这几个对话框用的 `article.css` 在加载前追加了一段 `:root { --article-font-size: 22px; }` 覆盖，只影响这几个对话框，不改 `resources/article.css` 本身、不影响真正的 article 章节阅读页面（仍是原来的 19px）。
+- “AI 自测”“AI 讲解差异”共用同一条 AI 调用链：`call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt)` 优先用 DeepSeek（`deepseek-chat`，环境变量 `ATHENA_DEEPSEEK_API_KEY`），未配置或请求失败再退回火山方舟豆包（`doubao-seed-2-1-pro-260628`，环境变量 `ATHENA_ARK_API_KEY`）——豆包出题明显更慢，实测下来 DeepSeek 更适合放在优先位置（最初接入时是反过来的，豆包优先，后来改过来）；两者都未配置时“AI 自测”直接提示需要先配置至少一个 Key，没有剪贴板退路。两家服务商都是 OpenAI 兼容协议，底层共用 `call_llm_chat(endpoint, model, api_key, prompt)`，只是 endpoint/model 不同，不是两套 curl 调用逻辑。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；网络请求在独立线程执行，结果经主线程回填（参见 ADR 0009、ADR 0010）。
+- **手册**是现有 article 章节和各章节总纲文档的合集，懒构建一次的常驻页面：入口在左侧分类按钮上方独立一行（跟分类按钮同一个互斥 `ToggleButton` 组），点击 `show_handbook_page()` 首次构建、之后直接复用。构建时按顶层 `handbook_documents`（`docs/CHAPTER_SCHEMA.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录；渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（`MainWindow::ensure_handbook_page()`，该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，跨文档连续编号，帮助区分是手册里的第几章第几节；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
+- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向 `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到手册页面里该文档的起始位置（`MainWindow::show_handbook_page(overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`），不发起任何网络请求（参见 `docs/CHAPTER_SCHEMA.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
+- “AI 讲解差异”用的是 `show_ai_markdown_dialog()`——现场调 AI、内容不落盘，跟手册（本地静态、不调用 AI）是两条完全独立的路径，共用的只是 md4c 转 HTML、WKWebView（macOS）渲染这套底层机制：标题、列表、代码块都有正常版式；AI 的回答经常代码和说明夹杂，早期用纯文本 TextView 展示对代码不友好，改成这个之后代码块能正常保留缩进和等宽字体，不再是纯文本堆一坨。这个对话框用的 `article.css` 在加载前追加了一段 `:root { --article-font-size: 22px; }` 覆盖，只影响这个对话框，不改 `resources/article.css` 本身、不影响手册页面（仍是原来的 19px）。
 - “AI 自测”要求 AI 以 JSON 返回针对该知识点具体源码的自测题（题干、选项数组、正确选项下标数组 `correct_indices`、解释），继续用 GTK 控件（CheckButton + Label）渲染，不是 Markdown/WebView：题目数量、每题选项数量都不固定，由 AI 按该知识点实际包含的独立考察点客观决定，覆盖全部关键行为和易错点、不为凑数出太简单或重复的题；`correct_indices` 只有一个元素时按单选渲染（选项互斥），多个元素时按多选渲染（选项互相独立、可多选，标题标注“多选”），选完点“提交答案”才判对错——多选要求选中集合与正确答案集合完全一致才算对，不给部分分；正确显示绿色“✓ 回答正确”，错误显示红色“✗ 回答错误，正确答案是……”并展开解释，随后选项和提交按钮置灰。解析前先用 `strip_markdown_code_fence()` 去掉 AI 有时会加的 ` ```json ` 代码围栏，仍失败时退化为原样显示文本；正文字号用 `.ai-dialog-question`/`.ai-dialog-option` 等 class（22pt/20pt/18pt 一档），不影响主界面的 `.code-view`（18pt）。
 - 对话框不额外加“关闭”按钮——系统原生标题栏自带关闭按钮，重复一个没有意义。需要额外功能按钮（目前只有运行历史对话框的“AI 讲解差异”，紫色 `btn-ai-accent`，两个 Key 都未配置时不出现）时用 `append_dialog_action_bar()` 手工加在内容区末尾、居中，`extra_buttons` 为空时这个函数什么都不做。运行历史对比的源码/输出仍是 GTK TextView/GtkSourceView（`.ai-dialog-text`，22pt），不是 Markdown/WebView——那里展示的是原始运行记录，不是 AI 生成的说明文字。
 - 源码面板上方是一个统一的 Frame：图标 + 标题/简介（hexpand 占满中间空间）+ “本章总纲”按钮（紫色，跟运行/成功/危险等其他语义色区分开，不依赖当前选中的知识点、常驻可点）+ 笔记框，四者在同一个 Frame 里横排。笔记框价值不明确，当前 `visible: false` 隐藏。
@@ -112,8 +112,8 @@ resources/athena.json
 - 由 `name` 直接表达的函数 ID 分类、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
 - 知识点的 `importance`（0–5，内容作者标注的客观难度，缺省未评）；这是内容数据而不是用户数据，与存在 `LearningStore` 里的用户自评熟练度是两个独立概念。
-- 章节内容类型 `code` / `article`；文章章节同时保存 Markdown 文档路径。
-- 已实现 code 章节的 `implementation.header`；类名和函数名由章节与知识点的 `name` 派生，分类名只进入稳定函数 ID。
+- 顶层 `handbook_documents`：手册收录的静态 Markdown 文档路径，按顺序拼接渲染；章节可选的 `overview_document` 指向其中一条，供“本章总纲”按钮跳转。
+- 已实现章节的 `implementation.header`；类名和函数名由章节与知识点的 `name` 派生，分类名只进入稳定函数 ID。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
 
@@ -172,14 +172,14 @@ void method(std::ostream& output) const;
 当知识点函数需要输入、结构化错误或状态时，再统一迁移为 `FunctionContext` 和
 `FunctionResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
-`article` 章节不生成章节类和演示注册项。它的正文属于文档资源；共享渲染层使用 md4c-html 生成完整 HTML，注入标题锚点，并生成同页的文章目录与阅读工具栏。HTML 原生页内链接负责目录跳转，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML 以及管理原生控件生命周期。
+`handbook_documents` 里的文档不生成章节类和演示注册项。它们的正文属于文档资源；共享渲染层使用 md4c-html 把拼接后的合集 Markdown 生成完整 HTML，注入标题锚点，并生成同页的手册目录与阅读工具栏。HTML 原生页内链接负责目录跳转，`overview_document` 触发的跳转经 `ArticleView::scroll_to_anchor()` 执行同样的锚点滚动，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML、执行锚点跳转，以及管理原生控件生命周期。
 
 ### 3.5 表示层
 
 GTK/Blueprint 层负责：
 
-- 为 `code` 显示分类、章节、说明、源码和执行结果。
-- 为 `article` 显示 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由正文的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为章节显示分类、说明、源码和执行结果。
+- 为手册显示合集 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 把用户操作转换为稳定函数 ID。
 - 调用 `FunctionRegistry`，但不感知具体章节类。
 

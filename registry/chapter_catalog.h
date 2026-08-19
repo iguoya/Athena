@@ -38,10 +38,10 @@ struct ChapterMeta {
     string title;
     string description;
     string category;
-    string content;
-    string document;
-    // code 章节“本章总纲”按钮展示的静态理论讲解文档路径，人工撰写、
-    // 不发起运行时 AI 调用；未提供时按钮退回剪贴板 + 唤起本机 AI 助手。
+    // “本章总纲”按钮跳转目标：手册（见 ChapterCatalog::handbook_documents）
+    // 里某一份文档的路径，必须已经在那份列表里（生成器 check 时校验）；
+    // 未提供时按钮退回剪贴板 + 唤起本机 AI 助手。文档本身人工撰写、经
+    // 审核提交进 git，不发起运行时 AI 调用。
     string overview_document;
     string blueprint;
     string resource_path;
@@ -70,10 +70,14 @@ public:
         const string& category_name,
         const string& chapter_name) const;
     size_t chapter_count() const;
+    // 手册：本地静态文档的合集，按此顺序拼接渲染成一个常驻页面；跟具体
+    // 章节解耦，不要求每份文档都对应一个 chapter。
+    const vector<string>& handbook_documents() const;
 
 private:
     vector<CategoryInfo> m_categories;
     map<string, vector<ChapterMeta>> m_chapters;
+    vector<string> m_handbook_documents;
 };
 
 // 知识点源码按“知识点 -> 分组 -> 章节”的顺序继承。

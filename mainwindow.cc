@@ -234,22 +234,23 @@ AiChatResult call_ark_doubao_chat(const string& api_key, const string& prompt) {
         "doubao-seed-2-1-pro-260628", api_key, prompt);
 }
 
-// 优先用火山方舟的豆包模型；未配置豆包 Key，或者豆包请求失败，就退回
-// DeepSeek。两者都未配置的情况由调用方在按钮层面处理（不出现这个按钮），
-// 这里只处理"配置了至少一个但调用失败"的情况。
+// 优先用 DeepSeek；未配置 DeepSeek Key，或者 DeepSeek 请求失败，就退回
+// 火山方舟豆包——豆包出题速度明显更慢，实测下来 DeepSeek 更适合放在
+// 优先位置。两者都未配置的情况由调用方在按钮层面处理（不出现这个
+// 按钮），这里只处理"配置了至少一个但调用失败"的情况。
 AiChatResult call_ai_chat_with_fallback(
     const string& ark_api_key,
     const string& deepseek_api_key,
     const string& prompt) {
-    if (!ark_api_key.empty()) {
-        AiChatResult ark_result = call_ark_doubao_chat(ark_api_key, prompt);
-        if (ark_result.ok || deepseek_api_key.empty()) {
-            return ark_result;
-        }
-        cerr << "豆包请求失败，回退到 DeepSeek：" << ark_result.error << endl;
-    }
     if (!deepseek_api_key.empty()) {
-        return call_deepseek_chat(deepseek_api_key, prompt);
+        AiChatResult deepseek_result = call_deepseek_chat(deepseek_api_key, prompt);
+        if (deepseek_result.ok || ark_api_key.empty()) {
+            return deepseek_result;
+        }
+        cerr << "DeepSeek 请求失败，回退到豆包：" << deepseek_result.error << endl;
+    }
+    if (!ark_api_key.empty()) {
+        return call_ark_doubao_chat(ark_api_key, prompt);
     }
     AiChatResult result;
     result.error = "未配置任何 AI 服务商的 API Key";
@@ -325,34 +326,6 @@ void append_dialog_action_bar(
 const char* kChineseTutorialStyleHint =
     "讲解风格和术语尽量贴近菜鸟教程、C语言中文网、微软 Learn 中文文档、"
     "w3cschool 这类主流中文 C++ 教程的习惯讲法，不要生造术语。";
-
-// 把知识点说明与源码组成解释请求复制到剪贴板，并唤起本机 AI 助手。
-// 讲解请求的提示词：知识点说明 + 参考实现（若能取到源码）。剪贴板方案
-// 和 AI 对话框方案共用同一份提示词，只是投递方式不同。
-string build_explain_prompt(
-    const ContentLoader& loader,
-    const string& title,
-    const string& description,
-    const string& source_path,
-    const string& member_name) {
-    string prompt = "请解释 C++ 知识点「" + title + "」：" + description
-        + "\n\n" + kChineseTutorialStyleHint;
-    const auto body = member_source_body(loader, source_path, member_name);
-    if (body && !body->empty()) {
-        prompt += "\n\n参考实现：\n" + *body;
-    }
-    return prompt;
-}
-
-void explain_with_local_ai(
-    const ContentLoader& loader,
-    const string& title,
-    const string& description,
-    const string& source_path,
-    const string& member_name) {
-    copy_prompt_and_launch_ai(
-        build_explain_prompt(loader, title, description, source_path, member_name));
-}
 
 // 把章节标题、简介与全部知识点标题/说明组成总纲请求复制到剪贴板，并唤起
 // 本机 AI 助手；不依赖当前是否选中了具体知识点。
@@ -525,6 +498,7 @@ string chapter_key(const string& category_name, const string& chapter_name) {
     return category_name + "." + chapter_name;
 }
 
+
 const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
     auto found = find_if(
         chapter.groups.begin(),
@@ -541,6 +515,7 @@ struct TopicSelection {
     string function_id;
     IconSpec icon;
 };
+
 
 } // namespace
 
@@ -615,6 +590,31 @@ Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const 
 }
 
 void MainWindow::setup_category_sidebar() {
+    // “手册”是跨分类的全局入口，摆在分类按钮上方、独立一行，用分隔线
+    // 隔开；点击它显示的是常驻的合集页面，不走“选中分类 -> 按分类列
+    // 章节”那套逻辑。
+    auto handbook_button = Gtk::make_managed<Gtk::ToggleButton>();
+    handbook_button->add_css_class("nav-button");
+    handbook_button->set_tooltip_text("现有文章章节和各章节总纲文档的合集");
+
+    auto handbook_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+    handbook_box->set_valign(Gtk::Align::CENTER);
+    handbook_box->set_margin_top(12);
+    handbook_box->set_margin_bottom(12);
+    handbook_box->append(*create_icon(
+        {.type = "theme", .name = "accessories-dictionary-symbolic"}, 24));
+    auto handbook_label = Gtk::make_managed<Gtk::Label>("手册");
+    handbook_box->append(*handbook_label);
+    handbook_button->set_child(*handbook_box);
+    handbook_button->signal_toggled().connect([this, handbook_button]() {
+        if (handbook_button->get_active()) {
+            show_handbook_page();
+        }
+    });
+    m_category_sidebar->append(*handbook_button);
+    m_category_sidebar->append(*Gtk::make_managed<Gtk::Separator>());
+    m_handbook_button = handbook_button;
+
     for (const auto& category : m_catalog.categories()) {
         auto button = Gtk::make_managed<Gtk::ToggleButton>();
         button->add_css_class("nav-button");
@@ -634,9 +634,7 @@ void MainWindow::setup_category_sidebar() {
         box->append(*label);
         button->set_child(*box);
 
-        if (!m_category_buttons.empty()) {
-            button->set_group(*m_category_buttons.front());
-        }
+        button->set_group(*handbook_button);
 
         button->signal_toggled().connect(
             [this, category_name = category.name, button]() {
@@ -655,11 +653,12 @@ void MainWindow::setup_category_sidebar() {
 }
 
 void MainWindow::on_category_selected(const string& category_name) {
-    if (category_name == m_current_category) {
+    if (category_name == m_current_category && !m_showing_handbook) {
         return;
     }
 
     m_current_category = category_name;
+    m_showing_handbook = false;
     build_chapter_tabs(category_name);
 }
 
@@ -690,14 +689,6 @@ void MainWindow::ensure_chapter_page(
         m_chapter_stack->remove(*placeholder);
     }
     m_chapter_stack->add(*widget, page_key, chapter.title);
-
-    const bool uses_article_page = chapter.widget_name == "article_page";
-    if (uses_article_page) {
-        if (initialize_article_page(page_key, chapter, builder)) {
-            m_loaded_chapters.insert(page_key);
-        }
-        return;
-    }
 
     const bool uses_code_page = chapter.widget_name == "chapter_page";
     if (uses_code_page) {
@@ -795,48 +786,136 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
     }
 }
 
-bool MainWindow::initialize_article_page(
-    const string& page_key,
-    const ChapterMeta& chapter,
-    const Glib::RefPtr<Gtk::Builder>& builder) {
-    auto article_web_host =
-        builder->get_widget<Gtk::DrawingArea>("article_web_host");
-    if (!article_web_host) {
-        cerr << "Article page is missing its WebView host for "
-             << page_key << endl;
-        return false;
+// 手册页面固定的 Stack 子页面名，不会跟真实分类/章节 ID（都是 ASCII
+// 标识符拼接）冲突。
+const char* kHandbookPageKey = "__handbook__";
+
+void MainWindow::ensure_handbook_page() {
+    if (m_handbook_built) {
+        return;
+    }
+    // 即使渲染失败也标记为已构建，跟其它章节页面初始化失败时的处理一致，
+    // 不重复尝试。
+    m_handbook_built = true;
+
+    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    page->set_hexpand(true);
+    page->set_vexpand(true);
+    page->set_margin_top(16);
+    page->set_margin_start(20);
+    page->set_margin_end(20);
+    page->set_margin_bottom(20);
+    page->add_css_class("article-page");
+
+    auto frame = Gtk::make_managed<Gtk::Frame>();
+    frame->set_hexpand(true);
+    frame->set_vexpand(true);
+    frame->add_css_class("article-surface");
+
+    auto host = Gtk::make_managed<Gtk::DrawingArea>();
+    host->set_hexpand(true);
+    host->set_vexpand(true);
+    frame->set_child(*host);
+    page->append(*frame);
+
+    m_chapter_stack->add(*page, kHandbookPageKey, "手册");
+
+    const auto& documents = m_catalog.handbook_documents();
+    if (documents.empty()) {
+        cerr << "Handbook has no documents configured" << endl;
+        return;
     }
 
-    const string markdown = m_content_loader.load_document(chapter.document);
-    if (markdown.empty()) {
-        cerr << "Failed to load article document for " << page_key
-             << ": " << chapter.document << endl;
-        return true;
+    // 手册是现有 article 章节和各 code 章节总纲文档的合集：按
+    // handbook_documents 顺序拼接，一次性喂给标题解析/渲染函数，生成
+    // 一份跨文档的完整目录；每份文档自己的标题数量决定它在合集里的
+    // 起始锚点（athena-heading-N，N 是它前面所有文档的标题总数），
+    // “本章总纲”按钮据此跳到对应位置，不用整份手册单独存一份。
+    string combined_markdown;
+    size_t heading_count = 0;
+    for (const auto& document : documents) {
+        const string markdown = m_content_loader.load_document(document);
+        if (markdown.empty()) {
+            cerr << "Failed to load handbook document: " << document << endl;
+            continue;
+        }
+        vector<MarkdownHeading> headings;
+        try {
+            headings = parse_markdown_headings(markdown);
+        } catch (const exception& error) {
+            cerr << "Failed to parse handbook document " << document
+                 << ": " << error.what() << endl;
+            continue;
+        }
+        if (!headings.empty()) {
+            m_handbook_anchor_by_document[document] =
+                "athena-heading-" + to_string(heading_count);
+        }
+        heading_count += headings.size();
+
+        if (!combined_markdown.empty()) {
+            combined_markdown += "\n\n---\n\n";
+        }
+        combined_markdown += markdown;
+    }
+
+    if (combined_markdown.empty()) {
+        cerr << "Handbook has no renderable content" << endl;
+        return;
     }
 
     try {
-        const auto headings = parse_markdown_headings(markdown);
+        const auto headings = parse_markdown_headings(combined_markdown);
         const string stylesheet =
             m_content_loader.load_resource("/app/article.css");
         if (stylesheet.empty()) {
             throw runtime_error("Article stylesheet is unavailable");
         }
 
-        auto view = create_platform_article_view(
-            *article_web_host,
-            *this);
+        auto view = create_platform_article_view(*host, *this);
         if (!view) {
             throw runtime_error("No WebView backend is available");
         }
+        // 手册文档目前都在同一个目录下，用第一份文档的目录作为相对资源
+        // （图片等）的基准路径。
         view->load_html(
-            render_markdown_html(markdown, stylesheet, headings),
-            m_content_loader.document_base_directory(chapter.document));
-        m_article_views[page_key] = std::move(view);
+            render_markdown_html(combined_markdown, stylesheet, headings),
+            m_content_loader.document_base_directory(documents.front()));
+        m_article_views[kHandbookPageKey] = std::move(view);
     } catch (const exception& error) {
-        cerr << "Failed to render article for " << page_key
-             << ": " << error.what() << endl;
+        cerr << "Failed to render handbook: " << error.what() << endl;
     }
-    return true;
+}
+
+// 显示手册页面（懒构建，只建一次）；jump_to_document 非空时跳到该文档
+// 在合集里的起始标题——用于章节的“本章总纲”按钮，文档必须已经在
+// handbook_documents 里（生成器 check 时校验），否则跳转是no-op。
+void MainWindow::show_handbook_page(const string& jump_to_document) {
+    ensure_handbook_page();
+
+    if (auto* child = m_chapter_stack->get_child_by_name(kHandbookPageKey)) {
+        m_chapter_stack->set_visible_child(*child);
+    }
+    for (auto* button : m_tab_buttons) {
+        m_chapter_tab_box->remove(*button);
+    }
+    m_tab_buttons.clear();
+    m_showing_handbook = true;
+    if (m_handbook_button && !m_handbook_button->get_active()) {
+        m_handbook_button->set_active(true);
+    }
+
+    if (jump_to_document.empty()) {
+        return;
+    }
+    const auto anchor = m_handbook_anchor_by_document.find(jump_to_document);
+    if (anchor == m_handbook_anchor_by_document.end()) {
+        return;
+    }
+    const auto view = m_article_views.find(kHandbookPageKey);
+    if (view != m_article_views.end() && view->second) {
+        view->second->scroll_to_anchor(anchor->second);
+    }
 }
 
 void MainWindow::initialize_code_page(
@@ -882,8 +961,9 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
     // 章节总纲不依赖当前选中的知识点，常驻可点，独立于知识点列表接线。
-    // 有 overview_document 时本地读取展示（人工撰写的静态文档，不联网、
-    // 不调用 AI）；没有时退回复制提示词到剪贴板并唤起本机 AI 助手。
+    // 有 overview_document 时跳到手册页面里对应位置（人工撰写的静态
+    // 文档，不联网、不调用 AI）；没有时退回复制提示词到剪贴板并唤起
+    // 本机 AI 助手。
     if (chapter_overview_button) {
         chapter_overview_button->signal_clicked().connect(
             [this,
@@ -892,7 +972,7 @@ void MainWindow::initialize_code_page(
              subchapters = chapter.subchapters,
              overview_document = chapter.overview_document]() {
                 if (!overview_document.empty()) {
-                    show_theory_document_dialog(title, overview_document);
+                    show_handbook_page(overview_document);
                 } else {
                     explain_chapter_overview_with_local_ai(
                         title, description, subchapters);
@@ -1006,7 +1086,7 @@ void MainWindow::show_history_dialog(
         diff_button->set_sensitive(false);
         diff_button->set_tooltip_text(
             "选中恰好 2 条记录后可用，让 AI 解释两次运行的源码与输出差异"
-            "（优先豆包，失败或未配置时用 DeepSeek）");
+            "（优先 DeepSeek，失败或未配置时用豆包）");
     }
 
     if (runs.empty()) {
@@ -1207,14 +1287,13 @@ void MainWindow::show_history_dialog(
     dialog->show();
 }
 
-// 打开对话框，异步用给定提示词调用 AI（优先豆包，失败或未配置再退回
-// DeepSeek），结果当 Markdown 解析后用跟 article 章节（如“程序与源码
-// 组织”）一样的排版显示：md4c 转 HTML、WKWebView（macOS）渲染，代码块、
-// 标题、列表都有正常版式，不是纯文本 TextView 堆一坨——AI 的回答经常
-// 代码和说明夹杂，纯文本对代码不友好。网络请求在独立线程执行，HTML 只
-// 在主线程构造和加载；article_view 在对话框隐藏时显式 reset，跟对话框
-// 同生命周期。知识点讲解、运行历史的“AI 讲解差异”和章节总纲共用这一个
-// 对话框，各自只是拼不同的 prompt。
+// 打开对话框，异步用给定提示词调用 AI（优先 DeepSeek，失败或未配置再
+// 退回豆包），结果当 Markdown 解析后用跟手册页面一样的排版显示：md4c
+// 转 HTML、WKWebView（macOS）渲染，代码块、标题、列表都有正常版式，
+// 不是纯文本 TextView 堆一坨——AI 的回答经常代码和说明夹杂，纯文本对
+// 代码不友好。网络请求在独立线程执行，HTML 只在主线程构造和加载；
+// article_view 在对话框隐藏时显式 reset，跟对话框同生命周期。运行历史
+// 的“AI 讲解差异”用这个对话框。
 void MainWindow::show_ai_markdown_dialog(
     const string& dialog_title,
     const string& prompt,
@@ -1291,7 +1370,7 @@ void MainWindow::show_ai_response_dialog(
         "正在请求 AI，请稍候…", 760, 620);
 }
 
-// 打开对话框，异步向 AI（优先豆包，失败或未配置再退回 DeepSeek）请求
+// 打开对话框，异步向 AI（优先 DeepSeek，失败或未配置再退回豆包）请求
 // 针对该知识点具体源码的选择题（JSON 格式，每题含题干、选项、正确选项
 // 下标和解释），逐题展示；每题先选一个选项，点“提交答案”才判对错、给
 // 解释，颜色区分对错。返回的 JSON 解析失败时退化为纯文本展示，不崩溃、
@@ -1534,50 +1613,6 @@ void MainWindow::show_ai_quiz_dialog(
                 }
             });
     }).detach();
-}
-
-// 展示章节的静态总纲文档（resources/articles/ 下人工撰写的真实文件），
-// 跟 article 章节完全一样的排版（md4c 转 HTML、WKWebView），本地同步
-// 读取，不发起任何网络或 AI 调用。article_view 在对话框隐藏时显式
-// reset，跟对话框同生命周期，写法上跟 show_ai_markdown_dialog 一致，
-// 只是没有工作线程和 AI 调用这一段。
-void MainWindow::show_theory_document_dialog(
-    const string& chapter_title,
-    const string& overview_document) {
-    const string markdown = m_content_loader.load_document(overview_document);
-    if (markdown.empty()) {
-        cerr << "Failed to load overview document: " << overview_document << endl;
-        return;
-    }
-
-    auto dialog = Gtk::make_managed<Gtk::Dialog>();
-    dialog->set_title("本章总纲：" + chapter_title);
-    dialog->set_transient_for(*this);
-    dialog->set_modal(true);
-    dialog->set_default_size(900, 720);
-
-    auto* content = dialog->get_content_area();
-    auto article_host = Gtk::make_managed<Gtk::DrawingArea>();
-    article_host->set_hexpand(true);
-    article_host->set_vexpand(true);
-    content->append(*article_host);
-
-
-    auto article_view = make_shared<unique_ptr<ArticleView>>();
-    dialog->signal_hide().connect([article_view]() { article_view->reset(); });
-    dialog->show();
-
-    string stylesheet = m_content_loader.load_resource("/app/article.css");
-    if (!stylesheet.empty()) {
-        stylesheet += "\n:root { --article-font-size: 22px; }\n";
-    }
-    *article_view = create_platform_article_view(*article_host, *dialog);
-    if (*article_view && !stylesheet.empty()) {
-        (*article_view)->load_html(
-            render_markdown_html(
-                markdown, stylesheet, parse_markdown_headings(markdown)),
-            m_content_loader.document_base_directory(overview_document));
-    }
 }
 
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，
@@ -2039,44 +2074,11 @@ void MainWindow::populate_topic_list(
             });
         actions->append(*history_button);
 
-        auto explain_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
-        explain_button->add_css_class("btn-sm");
-        explain_button->set_tooltip_text(
-            "配置了 ATHENA_ARK_API_KEY 或 ATHENA_DEEPSEEK_API_KEY 时在对话"
-            "框内直接显示讲解（优先豆包，失败或未配置时用 DeepSeek）；两个"
-            "都未配置时退回到复制说明与源码到剪贴板并唤起本机 AI 助手");
-        explain_button->signal_clicked().connect(
-            [this, row, activate_topic, topic]() {
-                (*activate_topic)(row);
-                const char* ark_key = g_getenv("ATHENA_ARK_API_KEY");
-                const char* deepseek_key = g_getenv("ATHENA_DEEPSEEK_API_KEY");
-                if (ark_key || deepseek_key) {
-                    show_ai_response_dialog(
-                        "AI 讲解：" + topic.title,
-                        build_explain_prompt(
-                            m_content_loader,
-                            topic.title,
-                            topic.description,
-                            topic.source_path,
-                            topic.member_name),
-                        ark_key ? ark_key : "",
-                        deepseek_key ? deepseek_key : "");
-                } else {
-                    explain_with_local_ai(
-                        m_content_loader,
-                        topic.title,
-                        topic.description,
-                        topic.source_path,
-                        topic.member_name);
-                }
-            });
-        actions->append(*explain_button);
-
         auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
             "需要配置 ATHENA_ARK_API_KEY 或 ATHENA_DEEPSEEK_API_KEY：让 AI"
-            "（优先豆包，失败或未配置时用 DeepSeek）针对该知识点的具体源码"
+            "（优先 DeepSeek，失败或未配置时用豆包）针对该知识点的具体源码"
             "出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
         quiz_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
