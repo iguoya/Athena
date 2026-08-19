@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -40,6 +41,10 @@ public:
         const string& function_id,
         int mastery,
         const string& note);
+    // 学习进度统计页一次性批量读取全部知识点的熟练度，避免逐个
+    // function_id 单独查询；只返回有过记录的条目，未评的知识点不在
+    // 返回结果里（调用方按 0 处理）。
+    map<string, int> load_all_mastery() const;
 
     void record_run(
         const string& function_id,

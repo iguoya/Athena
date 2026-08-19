@@ -25,6 +25,10 @@
 @define-color athena_purple #6f42c1;
 @define-color athena_purple_hover #59359c;
 @define-color athena_warning #ffc107;
+/* 统计图表里表示"未开始/无数据"的中性灰；比 @athena_border_strong 深一
+   档，作为色块能和白底拉开对比。mainwindow.cc 的 kChartNotStarted 是它
+   在 Cairo 侧的副本。 */
+@define-color athena_chart_neutral #9ea6ad;
 
 /* === Application shell === */
 .athena-window,
@@ -599,4 +603,73 @@ frame.article-surface > border {
     border-radius: 8px;
     background-color: @athena_surface;
     box-shadow: 0 2px 6px alpha(#000000, 0.08);
+}
+
+/* === 学习进度统计页 === */
+.progress-page {
+    background-color: @athena_surface_subtle;
+}
+
+/* 顶部统计卡片：仿常见管理后台的 stat tile，深色底 + 大号数字 +
+   说明文字，几张卡片各用一种强调色区分维度，不是章节颜色。 */
+.stat-tile {
+    padding: 16px 20px;
+    border-radius: 10px;
+    color: #ffffff;
+}
+
+.stat-tile-value {
+    font-size: 26pt;
+    font-weight: 800;
+}
+
+.stat-tile-label {
+    font-size: 12pt;
+    opacity: 0.92;
+}
+
+.stat-tile-total { background-color: @athena_primary; }
+.stat-tile-mastered { background-color: @athena_success; }
+.stat-tile-in-progress { background-color: @athena_orange; }
+.stat-tile-average { background-color: @athena_purple; }
+
+.progress-category-frame > label {
+    font-size: 15pt;
+    font-weight: 750;
+}
+
+.progress-chapter-row {
+    padding: 6px 4px;
+}
+
+.progress-chapter-title {
+    font-weight: 650;
+}
+
+.progress-chapter-count {
+    color: @athena_muted;
+    font-size: 11pt;
+}
+
+.progress-subchapter-row {
+    padding: 3px 4px 3px 16px;
+}
+
+.progress-star-filled {
+    color: @athena_warning;
+}
+
+.progress-star-empty {
+    color: @athena_border_strong;
+}
+
+.progress-legend-swatch {
+    border-radius: 3px;
+}
+
+/* 图例的"未开始"必须和环形图里 Cairo 画的同名段一致；Cairo 取不到
+   @define-color，颜色在 mainwindow.cc 的 kChartNotStarted 另有一份，
+   改这里也要改那边。 */
+.progress-legend-not-started {
+    background-color: @athena_chart_neutral;
 }

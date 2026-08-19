@@ -189,6 +189,21 @@ void LearningStore::save_progress(
     }
 }
 
+map<string, int> LearningStore::load_all_mastery() const {
+    Statement statement(
+        m_handle.get(),
+        "SELECT function_id, mastery FROM knowledge_progress");
+
+    map<string, int> mastery_by_id;
+    while (sqlite3_step(statement.raw) == SQLITE_ROW) {
+        if (const auto* function_id = sqlite3_column_text(statement.raw, 0)) {
+            mastery_by_id[reinterpret_cast<const char*>(function_id)] =
+                sqlite3_column_int(statement.raw, 1);
+        }
+    }
+    return mastery_by_id;
+}
+
 void LearningStore::record_run(
     const string& function_id,
     const string& output,

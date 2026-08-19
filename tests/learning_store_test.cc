@@ -156,4 +156,29 @@ TEST(LearningStoreTest, MigratesLegacyRunHistoryColumnOnUpgrade) {
     std::remove(db_path.c_str());
 }
 
+// 学习进度统计页靠这一个查询拿到全部熟练度：只应返回有过记录的知识点，
+// 从没评过星的知识点不出现在结果里（由调用方按 0 处理），否则统计会把
+// 未开始的也算成"学习中"。
+TEST(LearningStoreTest, LoadAllMasteryReturnsOnlyRecordedEntries) {
+    LearningStore store(":memory:");
+    EXPECT_TRUE(store.load_all_mastery().empty());
+
+    store.save_progress("cpp.Reference.reference_basics", 5, "");
+    store.save_progress("cpp.Reference.const_reference", 2, "笔记");
+    store.save_progress("cpp.RAII.raii_basic", 0, "");
+
+    const auto mastery = store.load_all_mastery();
+    EXPECT_EQ(mastery.size(), 3u);
+    EXPECT_EQ(mastery.at("cpp.Reference.reference_basics"), 5);
+    EXPECT_EQ(mastery.at("cpp.Reference.const_reference"), 2);
+    EXPECT_EQ(mastery.at("cpp.RAII.raii_basic"), 0);
+    EXPECT_EQ(mastery.count("cpp.RAII.never_rated"), 0u);
+
+    // 重复评分走的是 upsert，不应该出现同一个 function_id 两条记录。
+    store.save_progress("cpp.Reference.const_reference", 4, "笔记");
+    const auto updated = store.load_all_mastery();
+    EXPECT_EQ(updated.size(), 3u);
+    EXPECT_EQ(updated.at("cpp.Reference.const_reference"), 4);
+}
+
 } // namespace

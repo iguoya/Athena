@@ -498,6 +498,12 @@ string chapter_key(const string& category_name, const string& chapter_name) {
     return category_name + "." + chapter_name;
 }
 
+// 欢迎页的 Blueprint 根控件名；学习进度标签页插在它后面。
+constexpr const char* kWelcomePageWidget = "welcome_page";
+
+// 学习进度页固定的 Stack 子页面名。跟 kHandbookPageKey 一样用双下划线
+// 包起来，不会跟真实章节 ID（都是 ASCII 标识符拼接）冲突。
+constexpr const char* kProgressPageKey = "__progress__";
 
 const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
     auto found = find_if(
@@ -516,6 +522,192 @@ struct TopicSelection {
     IconSpec icon;
 };
 
+// 学习进度页用：单个知识点的熟练度显示成 5 颗星（实心/空心），不复用
+// 主列表那套可点击评分星（那套是交互控件，这里只读展示统计结果）。
+Gtk::Box* build_mastery_stars(int mastery) {
+    auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 1);
+    for (int i = 0; i < 5; ++i) {
+        auto star = Gtk::make_managed<Gtk::Label>(i < mastery ? "★" : "☆");
+        star->add_css_class(
+            i < mastery ? "progress-star-filled" : "progress-star-empty");
+        row->append(*star);
+    }
+    return row;
+}
+
+// 单个章节的学习进度聚合：知识点总数、已掌握（5 星）数量、熟练度总和
+// （用于算平均值）。
+struct ChapterProgressStat {
+    string chapter_title;
+    vector<pair<string, int>> subchapter_mastery;  // title -> mastery（0-5）
+    int total = 0;
+    int mastered = 0;
+    int mastery_sum = 0;
+};
+
+// 图表配色。Cairo 取不到 GTK 的 @define-color 命名颜色，只能各画各的，
+// 因此这里按十六进制集中定义、并标注对应的 style.css 变量：改色时两边
+// 必须一起改，否则会出现图上颜色和图例色块对不上的情况（曾经"未开始"
+// 就是这样漂移过一次）。
+struct ChartColor {
+    double r = 0;
+    double g = 0;
+    double b = 0;
+};
+
+constexpr ChartColor chart_color(unsigned int hex) {
+    return {
+        ((hex >> 16) & 0xFF) / 255.0,
+        ((hex >> 8) & 0xFF) / 255.0,
+        (hex & 0xFF) / 255.0};
+}
+
+constexpr ChartColor kChartMastered = chart_color(0x198754);    // @athena_success
+constexpr ChartColor kChartInProgress = chart_color(0xfd7e14);  // @athena_orange
+constexpr ChartColor kChartNotStarted = chart_color(0x9ea6ad);  // @athena_chart_neutral
+constexpr ChartColor kChartLabelText = chart_color(0x212529);   // @athena_body_text
+
+// 学习进度页的环形图：已掌握/学习中/未开始三段占比，中心显示已掌握
+// 百分比；纯 Cairo 手绘，不引入图表库依赖。
+Gtk::DrawingArea* build_mastery_donut_chart(
+    int mastered, int in_progress, int not_started) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(190);
+    area->set_content_height(190);
+    area->set_draw_func(
+        [mastered, in_progress, not_started](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            const double total = mastered + in_progress + not_started;
+            const double cx = width / 2.0;
+            const double cy = height / 2.0;
+            const double radius = min(width, height) / 2.0 - 12;
+            const double thickness = radius * 0.36;
+
+            cr->set_line_width(thickness);
+            cr->set_line_cap(Cairo::Context::LineCap::BUTT);
+
+            // 底环：未开始/无数据时的占位轨道。
+            cr->set_source_rgba(0, 0, 0, 0.08);
+            cr->arc(cx, cy, radius, 0, 2 * M_PI);
+            cr->stroke();
+
+            if (total > 0) {
+                double angle = -M_PI / 2;
+                const auto draw_segment =
+                    [&](double value, const ChartColor& color) {
+                        if (value <= 0) {
+                            return;
+                        }
+                        const double sweep = (value / total) * 2 * M_PI;
+                        cr->set_source_rgb(color.r, color.g, color.b);
+                        cr->arc(cx, cy, radius, angle, angle + sweep);
+                        cr->stroke();
+                        angle += sweep;
+                    };
+                draw_segment(mastered, kChartMastered);
+                draw_segment(in_progress, kChartInProgress);
+                draw_segment(not_started, kChartNotStarted);
+            }
+
+            const int percent = total > 0
+                ? static_cast<int>(std::lround(mastered / total * 100))
+                : 0;
+            const string text = to_string(percent) + "%";
+            cr->select_font_face(
+                "sans-serif",
+                Cairo::ToyFontFace::Slant::NORMAL,
+                Cairo::ToyFontFace::Weight::BOLD);
+            cr->set_font_size(26);
+            Cairo::TextExtents extents;
+            cr->get_text_extents(text, extents);
+            cr->set_source_rgb(
+                kChartLabelText.r, kChartLabelText.g, kChartLabelText.b);
+            cr->move_to(
+                cx - extents.width / 2 - extents.x_bearing,
+                cy - extents.height / 2 - extents.y_bearing);
+            cr->show_text(text);
+        });
+    return area;
+}
+
+// 环形图的图例：三个色块对应已掌握/学习中/未开始。
+Gtk::Box* build_mastery_legend() {
+    auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 14);
+    row->set_halign(Gtk::Align::CENTER);
+    const auto add_entry =
+        [row](const string& label, const string& css_class) {
+            auto entry = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);
+            auto swatch = Gtk::make_managed<Gtk::Box>();
+            swatch->add_css_class("progress-legend-swatch");
+            swatch->add_css_class(css_class);
+            swatch->set_size_request(11, 11);
+            entry->append(*swatch);
+            auto text = Gtk::make_managed<Gtk::Label>(label);
+            text->add_css_class("progress-chapter-count");
+            entry->append(*text);
+            row->append(*entry);
+        };
+    add_entry("已掌握", "stat-tile-mastered");
+    add_entry("学习中", "stat-tile-in-progress");
+    add_entry("未开始", "progress-legend-not-started");
+    return row;
+}
+
+// 逐章节完成率柱状图：每章一根竖条，高度按“已掌握 / 总数”的占比算，
+// 章节名不在图上写（章节太多会挤在一起），靠下面的 Expander 列表对应
+// 具体是哪一章。
+Gtk::DrawingArea* build_chapter_bar_chart(const vector<ChapterProgressStat>& chapters) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_height(190);
+    area->set_hexpand(true);
+    area->set_draw_func(
+        [chapters](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            if (chapters.empty()) {
+                return;
+            }
+            const double margin_top = 10;
+            const double margin_bottom = 10;
+            const double margin_side = 6;
+            const double gap = 6;
+            const double chart_height = height - margin_top - margin_bottom;
+            const double available_width = width - 2 * margin_side;
+            const double bar_width = max(
+                4.0,
+                (available_width - gap * (chapters.size() - 1)) /
+                    static_cast<double>(chapters.size()));
+
+            double x = margin_side;
+            for (const auto& chapter : chapters) {
+                const double ratio =
+                    chapter.total > 0
+                        ? static_cast<double>(chapter.mastered) / chapter.total
+                        : 0.0;
+                const double bar_height = chart_height * ratio;
+
+                cr->set_source_rgba(0, 0, 0, 0.08);
+                cr->rectangle(x, margin_top, bar_width, chart_height);
+                cr->fill();
+
+                if (bar_height > 0) {
+                    // 完成率越高越偏绿，越低越偏橙，颜色本身也传达进度：
+                    // 在环形图那两个语义色之间线性插值，不另外定义一套。
+                    const auto mix = [ratio](double from, double to) {
+                        return from + (to - from) * ratio;
+                    };
+                    cr->set_source_rgb(
+                        mix(kChartInProgress.r, kChartMastered.r),
+                        mix(kChartInProgress.g, kChartMastered.g),
+                        mix(kChartInProgress.b, kChartMastered.b));
+                    cr->rectangle(
+                        x, margin_top + chart_height - bar_height,
+                        bar_width, bar_height);
+                    cr->fill();
+                }
+                x += bar_width + gap;
+            }
+        });
+    return area;
+}
 
 } // namespace
 
@@ -592,7 +784,8 @@ Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const 
 void MainWindow::setup_category_sidebar() {
     // “手册”是跨分类的全局入口，摆在分类按钮上方、独立一行，用分隔线
     // 隔开；点击它显示的是常驻的合集页面，不走“选中分类 -> 按分类列
-    // 章节”那套逻辑。
+    // 章节”那套逻辑。“学习进度”不在这里——它是 cpp 分类“欢迎页面”
+    // 后面的一个合成标签页，见 build_chapter_tabs()。
     auto handbook_button = Gtk::make_managed<Gtk::ToggleButton>();
     handbook_button->add_css_class("nav-button");
     handbook_button->set_tooltip_text("现有文章章节和各章节总纲文档的合集");
@@ -779,11 +972,57 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 
         m_chapter_tab_box->append(*tab_button);
         m_tab_buttons.push_back(tab_button);
+
+        // 学习进度紧跟在欢迎页后面。欢迎页只有 cpp 分类有，靠根控件名
+        // 识别（跟本文件里判断 code 页面用 "chapter_page" 是同一个惯例），
+        // 不硬编码章节 name。
+        if (chapter.widget_name == kWelcomePageWidget) {
+            append_progress_tab();
+        }
     }
 
     if (!m_tab_buttons.empty()) {
         m_tab_buttons.front()->set_active(true);
     }
+}
+
+// 学习进度是合成标签页：数据来自 LearningStore 与 ChapterCatalog 的交叉
+// 聚合，不对应 athena.json 里的任何章节，因此不走 ensure_chapter_page()
+// 那套 builder 缓存，每次都直接构建控件树。页面名登记进
+// m_active_page_names，切到别的分类时和普通章节页一起被移除，切回来重新
+// 构建，星级变化因此总是最新的。
+void MainWindow::append_progress_tab() {
+    m_chapter_stack->add(
+        *build_progress_page_widget(), kProgressPageKey, "学习进度");
+    m_active_page_names.insert(kProgressPageKey);
+
+    auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
+    tab_button->add_css_class("pill");
+    tab_button->add_css_class("chapter-tab");
+    tab_button->set_tooltip_text("各章节知识点的掌握情况统计");
+
+    auto tab_content = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
+    tab_content->append(*create_icon(
+        {.type = "theme", .name = "utilities-system-monitor-symbolic"}, 16));
+    tab_content->append(*Gtk::make_managed<Gtk::Label>("学习进度"));
+    tab_button->set_child(*tab_content);
+
+    if (!m_tab_buttons.empty()) {
+        tab_button->set_group(*m_tab_buttons.front());
+    }
+
+    tab_button->signal_toggled().connect([this, tab_button]() {
+        if (!tab_button->get_active()) {
+            return;
+        }
+        if (auto* child = m_chapter_stack->get_child_by_name(kProgressPageKey)) {
+            m_chapter_stack->set_visible_child(*child);
+        }
+        m_current_chapter = kProgressPageKey;
+    });
+
+    m_chapter_tab_box->append(*tab_button);
+    m_tab_buttons.push_back(tab_button);
 }
 
 // 手册页面固定的 Stack 子页面名，不会跟真实分类/章节 ID（都是 ASCII
@@ -916,6 +1155,187 @@ void MainWindow::show_handbook_page(const string& jump_to_document) {
     if (view != m_article_views.end() && view->second) {
         view->second->scroll_to_anchor(anchor->second);
     }
+}
+
+// 构建 cpp 分类“欢迎页面”后面的学习进度合成标签页；只统计 cpp 分类
+// （数据结构、设计模式两个分类当前没有实现，暂不接入，等真正有内容
+// 再考虑要不要各自加一份）。每次切回 cpp 分类都重新构建，代价是一次
+// SQLite 查询加上对几十个知识点的遍历，比 WKWebView 那种重量级构建
+// 便宜得多，用重新构建换取数据总是最新，不需要额外的“过没过期”状态。
+Gtk::Widget* MainWindow::build_progress_page_widget() {
+    // MainWindow 继承自 Gtk::Widget 一系，其自带名为 map 的成员，这里
+    // 必须显式 std::map（跟头文件里 m_chapter_builders 一样的原因）。
+    std::map<string, int> mastery_by_id;
+    if (m_learning_store) {
+        try {
+            mastery_by_id = m_learning_store->load_all_mastery();
+        } catch (const exception& error) {
+            cerr << "Failed to load mastery stats: " << error.what() << endl;
+        }
+    }
+
+    vector<ChapterProgressStat> chapter_stats;
+    int total = 0;
+    int mastered = 0;
+    int in_progress = 0;
+    int mastery_sum = 0;
+
+    const auto found = m_catalog.chapters().find("cpp");
+    if (found != m_catalog.chapters().end()) {
+        for (const auto& chapter : found->second) {
+            if (chapter.subchapters.empty()) {
+                continue;
+            }
+            ChapterProgressStat chapter_stat;
+            chapter_stat.chapter_title = chapter.title;
+            for (const auto& sub : chapter.subchapters) {
+                const string function_id =
+                    make_function_id("cpp", chapter.name, sub.name);
+                int mastery = 0;
+                if (const auto entry = mastery_by_id.find(function_id);
+                    entry != mastery_by_id.end()) {
+                    mastery = entry->second;
+                }
+                chapter_stat.subchapter_mastery.emplace_back(sub.title, mastery);
+                chapter_stat.total++;
+                chapter_stat.mastery_sum += mastery;
+                if (mastery >= 5) {
+                    chapter_stat.mastered++;
+                } else if (mastery > 0) {
+                    in_progress++;
+                }
+            }
+            total += chapter_stat.total;
+            mastered += chapter_stat.mastered;
+            mastery_sum += chapter_stat.mastery_sum;
+            chapter_stats.push_back(std::move(chapter_stat));
+        }
+    }
+    const int not_started = total - mastered - in_progress;
+    const double average_mastery =
+        total > 0 ? static_cast<double>(mastery_sum) / total : 0.0;
+
+    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
+    scrolled->set_hexpand(true);
+    scrolled->set_vexpand(true);
+    scrolled->add_css_class("progress-page");
+
+    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 24);
+    page->set_margin_top(28);
+    page->set_margin_bottom(28);
+    page->set_margin_start(32);
+    page->set_margin_end(32);
+    scrolled->set_child(*page);
+
+    auto title = Gtk::make_managed<Gtk::Label>("学习进度 · C++");
+    title->add_css_class("title-2");
+    title->set_halign(Gtk::Align::START);
+    page->append(*title);
+
+    // 顶部统计卡片：四个维度各用一种强调色。
+    auto tiles_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
+    tiles_row->set_homogeneous(true);
+    page->append(*tiles_row);
+
+    const auto add_tile =
+        [tiles_row](const string& value, const string& label, const string& css_class) {
+            auto tile = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
+            tile->add_css_class("stat-tile");
+            tile->add_css_class(css_class);
+            auto value_label = Gtk::make_managed<Gtk::Label>(value);
+            value_label->add_css_class("stat-tile-value");
+            value_label->set_halign(Gtk::Align::START);
+            auto text_label = Gtk::make_managed<Gtk::Label>(label);
+            text_label->add_css_class("stat-tile-label");
+            text_label->set_halign(Gtk::Align::START);
+            tile->append(*value_label);
+            tile->append(*text_label);
+            tiles_row->append(*tile);
+        };
+
+    add_tile(to_string(total), "知识点总数", "stat-tile-total");
+    add_tile(to_string(mastered), "已掌握（5 星）", "stat-tile-mastered");
+    add_tile(to_string(in_progress), "学习中（1–4 星）", "stat-tile-in-progress");
+    ostringstream average_text;
+    average_text << fixed << setprecision(1) << average_mastery;
+    add_tile(average_text.str() + " / 5", "平均熟练度", "stat-tile-average");
+
+    // 图表行：左边一个环形图看整体完成度占比，右边一个柱状图逐章节
+    // 对比完成率；具体知识点数据已经在下面的 Expander 列表里能看到，
+    // 这两张图只是给一个更直观的整体印象，不重复承载文字信息。折线图
+    // 需要时间序列数据（比如每天的掌握趋势），目前没有对应的历史采样，
+    // 暂时不做，等以后真需要再补。
+    auto charts_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 24);
+    page->append(*charts_row);
+
+    auto donut_frame = Gtk::make_managed<Gtk::Frame>();
+    donut_frame->add_css_class("panel-frame");
+    donut_frame->set_label("整体完成度");
+    auto donut_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 10);
+    donut_box->set_margin_top(12);
+    donut_box->set_margin_bottom(12);
+    donut_box->set_margin_start(12);
+    donut_box->set_margin_end(12);
+    donut_box->set_halign(Gtk::Align::CENTER);
+    donut_box->append(*build_mastery_donut_chart(mastered, in_progress, not_started));
+    donut_box->append(*build_mastery_legend());
+    donut_frame->set_child(*donut_box);
+    charts_row->append(*donut_frame);
+
+    auto bar_frame = Gtk::make_managed<Gtk::Frame>();
+    bar_frame->add_css_class("panel-frame");
+    bar_frame->set_label("各章节完成率");
+    bar_frame->set_hexpand(true);
+    auto bar_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    bar_box->set_margin_top(12);
+    bar_box->set_margin_bottom(12);
+    bar_box->set_margin_start(12);
+    bar_box->set_margin_end(12);
+    bar_box->append(*build_chapter_bar_chart(chapter_stats));
+    bar_frame->set_child(*bar_box);
+    charts_row->append(*bar_frame);
+
+    // 逐章节列表：收起显示进度条，点开看每个知识点的星级。
+    for (const auto& chapter_stat : chapter_stats) {
+        auto expander = Gtk::make_managed<Gtk::Expander>();
+        expander->add_css_class("progress-chapter-row");
+
+        auto header = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 10);
+        auto chapter_title = Gtk::make_managed<Gtk::Label>(chapter_stat.chapter_title);
+        chapter_title->add_css_class("progress-chapter-title");
+        header->append(*chapter_title);
+
+        auto chapter_bar = Gtk::make_managed<Gtk::LevelBar>();
+        chapter_bar->set_min_value(0);
+        chapter_bar->set_max_value(chapter_stat.total > 0 ? chapter_stat.total : 1);
+        chapter_bar->set_value(chapter_stat.mastered);
+        chapter_bar->set_hexpand(true);
+        chapter_bar->set_valign(Gtk::Align::CENTER);
+        header->append(*chapter_bar);
+
+        auto chapter_count = Gtk::make_managed<Gtk::Label>(
+            to_string(chapter_stat.mastered) + "/" + to_string(chapter_stat.total));
+        chapter_count->add_css_class("progress-chapter-count");
+        header->append(*chapter_count);
+
+        expander->set_label_widget(*header);
+
+        auto subchapter_list = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
+        for (const auto& [sub_title, mastery] : chapter_stat.subchapter_mastery) {
+            auto sub_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+            sub_row->add_css_class("progress-subchapter-row");
+            auto sub_label = Gtk::make_managed<Gtk::Label>(sub_title);
+            sub_label->set_hexpand(true);
+            sub_label->set_halign(Gtk::Align::START);
+            sub_row->append(*sub_label);
+            sub_row->append(*build_mastery_stars(mastery));
+            subchapter_list->append(*sub_row);
+        }
+        expander->set_child(*subchapter_list);
+        page->append(*expander);
+    }
+
+    return scrolled;
 }
 
 void MainWindow::initialize_code_page(

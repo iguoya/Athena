@@ -31,6 +31,12 @@ private:
         const ChapterMeta& chapter);
     void ensure_handbook_page();
     void show_handbook_page(const string& jump_to_document = "");
+    // cpp 分类“欢迎页面”后面的合成学习进度标签页：它不来自
+    // athena.json，由 build_chapter_tabs() 在欢迎页之后手工插入；每次
+    // 切回 cpp 分类都重新构建（数据量小，重新查库+布局的开销可以忽略），
+    // 保证熟练度星级的变化能反映出来，不需要额外的“数据是否过期”状态。
+    void append_progress_tab();
+    Gtk::Widget* build_progress_page_widget();
     void initialize_code_page(
         const string& category_name,
         const ChapterMeta& chapter,
