@@ -1,0 +1,335 @@
+#include "render/chart_view.h"
+
+#include "render/chart_scale.h"
+
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
+#include <sstream>
+
+namespace {
+
+// 绘制文本的公共入口：Cairo 的 toy text API 够用（图表里只有短刻度标签和
+// 一个中心百分比），不为此引入 Pango 布局。
+void draw_text(
+    const Cairo::RefPtr<Cairo::Context>& cr,
+    const string& text,
+    double x,
+    double y,
+    double size,
+    const ChartColor& color,
+    Cairo::ToyFontFace::Weight weight = Cairo::ToyFontFace::Weight::NORMAL,
+    // 水平对齐：0 左对齐，0.5 居中，1 右对齐。垂直方向统一按基线之上
+    // 居中，调用方传的 y 是文本视觉中心。
+    double align = 0.0) {
+    cr->select_font_face("sans-serif", Cairo::ToyFontFace::Slant::NORMAL, weight);
+    cr->set_font_size(size);
+    Cairo::TextExtents extents;
+    cr->get_text_extents(text, extents);
+    cr->set_source_rgb(color.r, color.g, color.b);
+    cr->move_to(
+        x - extents.width * align - extents.x_bearing,
+        y - extents.height / 2 - extents.y_bearing);
+    cr->show_text(text);
+}
+
+string format_percent(double ratio) {
+    ostringstream text;
+    text << lround(ratio * 100) << "%";
+    return text.str();
+}
+
+// 纵轴 + 网格线的公共绘制：图表区域是 [left, top, right, bottom]，值域是
+// [0, max_value]。返回值转像素的换算交给调用方，这里只画背景。
+struct ChartFrame {
+    double left = 0;
+    double top = 0;
+    double right = 0;
+    double bottom = 0;
+
+    double width() const { return right - left; }
+    double height() const { return bottom - top; }
+};
+
+void draw_value_axis(
+    const Cairo::RefPtr<Cairo::Context>& cr,
+    const ChartFrame& frame,
+    const vector<double>& ticks,
+    double axis_max,
+    bool percent_labels) {
+    if (axis_max <= 0) {
+        return;
+    }
+    cr->set_line_width(1.0);
+    for (const double tick : ticks) {
+        const double y = frame.bottom - frame.height() * (tick / axis_max);
+        // 网格线压在半像素上，避免 1px 线条被反走样糊成 2px 灰线。
+        const double aligned_y = floor(y) + 0.5;
+        cr->set_source_rgb(kChartAxis.r, kChartAxis.g, kChartAxis.b);
+        cr->move_to(frame.left, aligned_y);
+        cr->line_to(frame.right, aligned_y);
+        cr->stroke();
+
+        const string label = percent_labels
+            ? format_percent(tick)
+            : to_string(static_cast<long>(lround(tick)));
+        draw_text(cr, label, frame.left - 6, y, 11, kChartMutedText,
+                  Cairo::ToyFontFace::Weight::NORMAL, 1.0);
+    }
+}
+
+// 柱状图的几何：把第 index 根柱子的横向范围算出来，绘制和鼠标命中测试
+// 共用同一份计算，避免 tooltip 指到隔壁柱子。
+struct BarGeometry {
+    double x = 0;
+    double width = 0;
+};
+
+BarGeometry bar_geometry(const ChartFrame& frame, size_t count, size_t index) {
+    constexpr double gap = 6;
+    const double available = frame.width();
+    const double slot = available / static_cast<double>(count);
+    const double width = max(4.0, slot - gap);
+    return {frame.left + slot * static_cast<double>(index) + (slot - width) / 2,
+            width};
+}
+
+// 图表区域的留白：左侧留给纵轴标签，底部留给横轴标签。
+ChartFrame make_frame(int width, int height, double left_margin, double bottom_margin) {
+    return {left_margin, 10.0, static_cast<double>(width) - 8.0,
+            static_cast<double>(height) - bottom_margin};
+}
+
+} // namespace
+
+Gtk::Box* make_mastery_stars(int mastery) {
+    auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 1);
+    for (int index = 0; index < kMaxMastery; ++index) {
+        auto star = Gtk::make_managed<Gtk::Label>(index < mastery ? "★" : "☆");
+        star->add_css_class(
+            index < mastery ? "progress-star-filled" : "progress-star-empty");
+        row->append(*star);
+    }
+    return row;
+}
+
+Gtk::DrawingArea* make_mastery_donut_chart(
+    int mastered,
+    int in_progress,
+    int not_started) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(190);
+    area->set_content_height(190);
+    area->set_draw_func(
+        [mastered, in_progress, not_started](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            const double total = mastered + in_progress + not_started;
+            const double cx = width / 2.0;
+            const double cy = height / 2.0;
+            const double radius = min(width, height) / 2.0 - 12;
+            const double thickness = radius * 0.36;
+
+            cr->set_line_width(thickness);
+            cr->set_line_cap(Cairo::Context::LineCap::BUTT);
+
+            // 底环：未开始/无数据时的占位轨道。
+            cr->set_source_rgba(0, 0, 0, 0.08);
+            cr->arc(cx, cy, radius, 0, 2 * M_PI);
+            cr->stroke();
+
+            if (total > 0) {
+                double angle = -M_PI / 2;
+                const auto draw_segment =
+                    [&](double value, const ChartColor& color) {
+                        if (value <= 0) {
+                            return;
+                        }
+                        const double sweep = (value / total) * 2 * M_PI;
+                        cr->set_source_rgb(color.r, color.g, color.b);
+                        cr->arc(cx, cy, radius, angle, angle + sweep);
+                        cr->stroke();
+                        angle += sweep;
+                    };
+                draw_segment(mastered, kChartMastered);
+                draw_segment(in_progress, kChartInProgress);
+                draw_segment(not_started, kChartNotStarted);
+            }
+
+            const double ratio = total > 0 ? mastered / total : 0.0;
+            draw_text(cr, format_percent(ratio), cx, cy, 26, kChartLabelText,
+                      Cairo::ToyFontFace::Weight::BOLD, 0.5);
+        });
+    return area;
+}
+
+Gtk::Box* make_mastery_legend() {
+    auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 14);
+    row->set_halign(Gtk::Align::CENTER);
+    const auto add_entry =
+        [row](const string& label, const string& css_class) {
+            auto entry =
+                Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);
+            auto swatch = Gtk::make_managed<Gtk::Box>();
+            swatch->add_css_class("progress-legend-swatch");
+            swatch->add_css_class(css_class);
+            swatch->set_size_request(11, 11);
+            entry->append(*swatch);
+            auto text = Gtk::make_managed<Gtk::Label>(label);
+            text->add_css_class("progress-chapter-count");
+            entry->append(*text);
+            row->append(*entry);
+        };
+    add_entry("已掌握", "stat-tile-mastered");
+    add_entry("学习中", "stat-tile-in-progress");
+    add_entry("未开始", "progress-legend-not-started");
+    return row;
+}
+
+Gtk::DrawingArea* make_chapter_bar_chart(const vector<ChapterProgress>& chapters) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_height(210);
+    area->set_hexpand(true);
+
+    area->set_draw_func(
+        [chapters](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            if (chapters.empty()) {
+                return;
+            }
+            const ChartFrame frame = make_frame(width, height, 42, 18);
+            if (frame.width() <= 0 || frame.height() <= 0) {
+                return;
+            }
+
+            // 纵轴固定 0-100%：完成度本身就是比例，按数据自适应反而会让
+            // 不同时间看到的同一张图不可比。
+            // 要 5 段而不是 4：0-1 取 4 段时原始步长 0.25 会被 1/2/5 规则
+            // 归整成 0.5，轴上只剩 0/50/100%；5 段正好落到 20% 一档。
+            constexpr double axis_max = 1.0;
+            draw_value_axis(cr, frame, nice_ticks(0, axis_max, 5), axis_max, true);
+
+            for (size_t index = 0; index < chapters.size(); ++index) {
+                const auto& chapter = chapters[index];
+                const auto geometry = bar_geometry(frame, chapters.size(), index);
+                const double ratio = chapter.completion_ratio();
+                const double bar_height = frame.height() * ratio;
+
+                cr->set_source_rgba(0, 0, 0, 0.05);
+                cr->rectangle(geometry.x, frame.top, geometry.width, frame.height());
+                cr->fill();
+
+                if (bar_height > 0) {
+                    // 完成度越高越偏绿，越低越偏橙，颜色本身也传达进度。
+                    const ChartColor color =
+                        mix_chart_color(kChartInProgress, kChartMastered, ratio);
+                    cr->set_source_rgb(color.r, color.g, color.b);
+                    cr->rectangle(
+                        geometry.x,
+                        frame.bottom - bar_height,
+                        geometry.width,
+                        bar_height);
+                    cr->fill();
+                }
+            }
+        });
+
+    // 章节名放不下（十几个章节挤在一行会重叠），改成悬浮显示；命中测试
+    // 复用 bar_geometry，保证提示的和画出来的是同一根柱子。
+    area->set_has_tooltip(true);
+    area->signal_query_tooltip().connect(
+        [area, chapters](
+            int x, int y, bool keyboard, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
+            if (keyboard || chapters.empty()) {
+                return false;
+            }
+            const ChartFrame frame =
+                make_frame(area->get_width(), area->get_height(), 42, 18);
+            if (y < frame.top || y > frame.bottom) {
+                return false;
+            }
+            for (size_t index = 0; index < chapters.size(); ++index) {
+                const auto geometry = bar_geometry(frame, chapters.size(), index);
+                if (x < geometry.x || x > geometry.x + geometry.width) {
+                    continue;
+                }
+                const auto& chapter = chapters[index];
+                ostringstream text;
+                text << chapter.chapter_title << "\n完成度 "
+                     << format_percent(chapter.completion_ratio()) << "（已掌握 "
+                     << chapter.mastered << "/" << chapter.total << "，平均 "
+                     << fixed << setprecision(1)
+                     << (chapter.total > 0
+                             ? static_cast<double>(chapter.mastery_sum) / chapter.total
+                             : 0.0)
+                     << " 星）";
+                tooltip->set_text(text.str());
+                return true;
+            }
+            return false;
+        },
+        false);
+
+    return area;
+}
+
+Gtk::DrawingArea* make_mastery_histogram_chart(
+    const array<int, kMasteryLevels>& histogram) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_height(210);
+    area->set_hexpand(true);
+    area->set_draw_func(
+        [histogram](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            const int peak = *max_element(histogram.begin(), histogram.end());
+            const ChartFrame frame = make_frame(width, height, 42, 26);
+            if (frame.width() <= 0 || frame.height() <= 0) {
+                return;
+            }
+
+            // 纵轴按实际最大值取整刻度；全 0 时 nice_ticks 会退化成 0-1，
+            // 图上只剩一条基线，不会除零。
+            const auto ticks = nice_ticks(0, peak, 4);
+            const double axis_max = ticks.back();
+            draw_value_axis(cr, frame, ticks, axis_max, false);
+
+            for (size_t level = 0; level < histogram.size(); ++level) {
+                const auto geometry =
+                    bar_geometry(frame, histogram.size(), level);
+                const double value = histogram[level];
+                const double bar_height =
+                    axis_max > 0 ? frame.height() * (value / axis_max) : 0.0;
+
+                // 星级本身就是进度，用同一条橙→绿的渐变表达，跟章节完成度
+                // 柱状图读起来一致。
+                const ChartColor color = mix_chart_color(
+                    kChartInProgress,
+                    kChartMastered,
+                    static_cast<double>(level) / kMaxMastery);
+                cr->set_source_rgb(color.r, color.g, color.b);
+                cr->rectangle(
+                    geometry.x, frame.bottom - bar_height, geometry.width, bar_height);
+                cr->fill();
+
+                if (value > 0) {
+                    draw_text(
+                        cr,
+                        to_string(static_cast<long>(value)),
+                        geometry.x + geometry.width / 2,
+                        frame.bottom - bar_height - 9,
+                        11,
+                        kChartMutedText,
+                        Cairo::ToyFontFace::Weight::BOLD,
+                        0.5);
+                }
+
+                draw_text(
+                    cr,
+                    to_string(level) + " 星",
+                    geometry.x + geometry.width / 2,
+                    frame.bottom + 12,
+                    11,
+                    kChartMutedText,
+                    Cairo::ToyFontFace::Weight::NORMAL,
+                    0.5);
+            }
+        });
+    return area;
+}

@@ -113,6 +113,8 @@ core_sources = files(
   'content/source_locator.cc',
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
+  'registry/progress_stats.cc',
+  'render/chart_scale.cc',
   'render/markdown_renderer.cc',
   'storage/learning_store.cc',
   'language/raii/raii_basic.cpp',
@@ -137,7 +139,8 @@ athena_core_dep = declare_dependency(
 app_sources = files(
   'main.cc',
   'athena.cc',
-  'mainwindow.cc'
+  'mainwindow.cc',
+  'render/chart_view.cc'
 ) + article_view_sources + app_icon_sources
 
 # === 打包资源 ===
@@ -179,7 +182,9 @@ core_test_exe = executable(
     'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
     'tests/learning_store_test.cc',
+    'tests/chart_scale_test.cc',
     'tests/markdown_renderer_test.cc',
+    'tests/progress_stats_test.cc',
     'tests/source_locator_test.cc'
   ),
   sources: resources,
