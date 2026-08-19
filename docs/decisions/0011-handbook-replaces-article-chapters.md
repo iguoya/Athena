@@ -21,9 +21,17 @@ article 章节和各章节总纲文档的合集，一份带完整目录的常驻
 
 ## 决策
 
-- **新增顶层字段 `handbook_documents`**（数组，元素是 `resources/articles/`
-  下的文档路径）：手册收录的静态文档合集，按数组顺序拼接渲染，语义上
-  和具体章节解耦——不要求每份文档对应一个 chapter。
+- **新增分类级字段 `category.handbook_documents`**（数组，元素是
+  `resources/articles/` 下的文档路径）：**每个分类有自己独立的一部手册**，
+  按数组顺序拼接渲染，语义上和具体章节解耦——不要求每份文档对应一个
+  chapter，也允许为空（该分类暂无手册）。手册不跨分类合并。
+
+  > 修订说明：本 ADR 初版把 `handbook_documents` 放在**顶层**，做成一部
+  > 跨全部分类的合集。落地后判断这个划分不对——C++、数据结构与算法、
+  > 设计模式三个分类的理论内容彼此独立，混进同一本手册后目录会互相干扰，
+  > 章节编号也无法各自连续。因此改为分类级，三个分类各一部手册。生成器
+  > 显式拒绝顶层 `handbook_documents`（报错而不是静默忽略），避免旧配置
+  > 升级后手册毫无提示地空掉。
 - **手册页面复用主窗口已经验证过稳定的常驺 WKWebView 嵌入方式**（跟原来
   `article` 类型章节标签页是同一套渲染机制：`Gtk::DrawingArea` 常驻在
   `Gtk::Stack` 里，`create_platform_article_view` 一次性创建、经历过多次
@@ -39,23 +47,29 @@ article 章节和各章节总纲文档的合集，一份带完整目录的常驻
   行为没有任何实际影响（自定义 blueprint 已经绕开了 content 相关的全部
   分支），去掉后行为不变。
 - **`chapter.overview_document` 语义改变**：从"指向一份单独展示的文档"
-  变成"指向 `handbook_documents` 里已收录的一份文档"，"本章总纲"按钮从
-  "弹一个新 Dialog"变成"跳到手册页面里这份文档的起始锚点"
-  （`MainWindow::show_handbook_page(overview_document)`）。生成器 `check`
-  校验 `overview_document` 必须已经在 `handbook_documents` 列表里，缺了
-  报错而不是静默忽略。
+  变成"指向**本分类** `handbook_documents` 里已收录的一份文档"，"本章总纲"
+  按钮从"弹一个新 Dialog"变成"跳到本分类手册页面里这份文档的起始锚点"
+  （`MainWindow::show_handbook_page(category_name, overview_document)`）。
+  生成器 `check` 校验 `overview_document` 必须已经在**同一个分类**的
+  `handbook_documents` 列表里，缺了报错而不是静默忽略。
 - **锚点计算**：`parse_markdown_headings()` 的标题锚点（`athena-heading-N`）
   按文档内出现顺序编号，天然在整个拼接后的合集里保持跨文档唯一，不需要
   额外的去重/加前缀逻辑；每份文档在合集里的起始锚点 = 它前面所有文档的
   标题总数，构建手册时顺带算出、存进
-  `MainWindow::m_handbook_anchor_by_document`。
+  `MainWindow::m_handbook_anchors_by_category`（按分类分开存，不同分类的
+  手册各自从 0 开始编号）。
 - **`ArticleView` 接口新增 `scroll_to_anchor()`**：页面还没加载完成时记住
   这次跳转请求，等 `didFinishNavigation` 触发后再执行，不丢失。
-- **导航位置**：手册入口在左侧分类按钮上方独立一行，跟分类按钮共用同一个
-  互斥 `ToggleButton` 组；点击分类时如果当前正显示手册，即使目标分类跟
-  `m_current_category` 相同也要强制重新走一遍 `build_chapter_tabs`（用
-  `m_showing_handbook` 标记），否则会出现"点了分类按钮但页面停在手册"的
-  死角。
+- **导航位置**：手册是**该分类标签行里的一个合成标签页**，跟"学习进度"
+  同类——不来自 `athena.json` 的任何章节，由 `build_chapter_tabs()` 手工
+  插入。有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有
+  欢迎页的分类排在最前。侧边栏只剩分类按钮，**没有跨分类的全局手册入口**。
+- **手册页面不登记进 `m_active_page_names`**：它由 `make_managed` 直接建出，
+  没有 builder 持有引用，一旦从 `Gtk::Stack` 移除就会连控件带 WKWebView
+  一起析构，而 `m_article_views` 里的 `ArticleView` 还指着里面的宿主控件。
+  因此切分类时把手册页留在 Stack 里（只是没有标签按钮指向它），每个分类
+  最多留一页、懒构建一次。这也正是本 ADR 选常驻页面而非临时 Dialog 的
+  同一条理由的延续。
 
 ## 后果
 
@@ -67,11 +81,19 @@ article 章节和各章节总纲文档的合集，一份带完整目录的常驻
 - `content` 字段和"article 章节"这个概念从 schema、生成器、`ChapterCatalog`
   到 `MainWindow` 全部移除；以后任何"整篇静态 Markdown 内容"的需求都应该
   走 `handbook_documents`，不要重新引入一个独立的章节类型。
-- 手册目前只有 3 份文档、都在同一个目录下，`document_base_directory` 用
-  第一份文档的目录作为相对资源（图片等）的公共基准路径；如果以后手册
-  文档分布在不同目录、其中确实引用了相对路径的图片，这个假设需要重新
-  考虑（比如改成按文档单独设置 base_path，或统一约定手册文档不引用相对
-  资源）。
+- 手册目前只有 cpp 一部有内容（3 份文档、都在同一个目录下），
+  `document_base_directory` 用第一份文档的目录作为相对资源（图片等）的
+  公共基准路径；如果以后手册文档分布在不同目录、其中确实引用了相对路径
+  的图片，这个假设需要重新考虑（比如改成按文档单独设置 base_path，或
+  统一约定手册文档不引用相对资源）。
+- 数据结构与算法、设计模式两个分类目前一份文档都没有，它们的手册标签页
+  显示一句占位说明而不是空白 WebView——既不谎称有内容，也不为空文档白起
+  一个 WKWebView。等这两个分类真正开始写内容时直接往各自的
+  `handbook_documents` 里加即可，不需要再改代码。
+- 手册文档的一级、二级标题带"第 N 章"/"N.M"编号，改成分类级之后这些编号
+  的范围也收敛到各自分类内部，跨分类不再需要协调；但**现有 cpp 三份文档
+  的编号是按原来的跨分类合集排的，如果以后 da/dp 开始写手册，各自从第 1
+  章重新起编即可，不要沿用 cpp 的序号**。
 - "AI 讲解"" AI 自测""AI 讲解差异"三个功能（ADR 0009、0010）继续用独立的
   Dialog + 现场 AI 调用路径，跟手册是两条完全不相关的路径，共用的只是
   底层 Markdown → HTML 渲染函数；这些对话框仍然是"一次性创建"，如果未来

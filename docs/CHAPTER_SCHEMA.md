@@ -15,8 +15,9 @@ category                     课程分类、左侧导航
 `group` 是章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码时的需求输入。
 
 理论、原则、跨文件工程思想这类不适合用单次运行结果表达的内容，不再对应
-独立的章节标签页，而是作为 Markdown 静态文档收进顶层 `handbook_documents`
-列表（见第 4.3 节），在一个常驻的"手册"页面里统一展示、统一目录。
+独立的章节标签页，而是作为 Markdown 静态文档收进**所属分类**的
+`handbook_documents` 列表（见第 4.3 节）。每个分类有自己独立的一部手册，
+在该分类的"手册"标签页里统一展示、统一目录；手册不跨分类合并。
 
 ## 2. 完整示例
 
@@ -38,16 +39,16 @@ category                     课程分类、左侧导航
       "name": "media-playback-start-symbolic"
     }
   },
-  "handbook_documents": [
-    "resources/articles/cpp/reference_overview.md",
-    "resources/articles/cpp/raii_overview.md",
-    "resources/articles/cpp/program_organization.md"
-  ],
   "categories": [
     {
       "name": "cpp",
       "title": "C++",
       "description": "系统学习 C++ 语言和标准库。",
+      "handbook_documents": [
+        "resources/articles/cpp/reference_overview.md",
+        "resources/articles/cpp/raii_overview.md",
+        "resources/articles/cpp/program_organization.md"
+      ],
       "icon": {
         "type": "theme",
         "name": "applications-development-symbolic"
@@ -85,8 +86,11 @@ category                     课程分类、左侧导航
 |---|---|---:|---|
 | `schema` | integer | 是 | Schema 版本；当前为 `1` |
 | `defaults` | object | 是 | 章节通用界面和图标默认值 |
-| `handbook_documents` | array | 否 | 手册收录的静态文档列表，见 4.3 |
 | `categories` | array | 是 | 有序课程分类列表 |
+
+顶层**没有** `handbook_documents`：手册按分类各自独立，文档列表写在各个
+分类里（见 4.3）。配置里出现顶层 `handbook_documents` 会被生成器判为错误，
+而不是静默忽略。
 
 数组顺序就是界面顺序，不再保存冗余的 `order` 字段。
 
@@ -135,10 +139,12 @@ resources/ui/chapters/empty_chapter.blp
 
 章节或知识点没有自己的 `icon` 时继承对应默认值。图标回退由通用 UI 逻辑处理，禁止在 C++ 中按章节名手写图标映射。
 
-### 4.3 手册 `handbook_documents`
+### 4.3 手册 `category.handbook_documents`
 
-顶层数组，列出全部收进"手册"页面的静态 Markdown 文档路径，按数组顺序
-拼接、渲染成一份带完整目录（H1–H3）的常驻页面：
+分类级数组，列出该分类"手册"标签页收录的静态 Markdown 文档路径，按数组
+顺序拼接、渲染成一份带完整目录（H1–H3）的页面。每个分类各有一部手册，
+互不合并；某个分类可以不写这个字段（暂无手册），标签页会显示一句占位
+说明：
 
 ```json
 "handbook_documents": [
@@ -153,13 +159,17 @@ resources/ui/chapters/empty_chapter.blp
 WebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局
 分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面。
 
-`handbook_documents` 里的文档不要求对应某个 `chapter`——它是内容的合集，
+`handbook_documents` 里的文档不要求对应某个 `chapter`——它是该分类内容的合集，
 跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须
 已经在这个列表里，生成器 `check` 时会校验，缺了会报错而不是静默忽略。
 
-界面上，"手册"是左侧分类按钮上方独立一行的全局入口，跟"选中某个分类
-再看该分类下的章节"是两条不同的路径；手册页面里的每份文档最终会显示
-成一段小节，段与段之间用一条分隔线隔开。
+界面上，"手册"是该分类标签行里的一个标签页（跟"学习进度"一样，是不来自
+本配置的合成标签页）：有欢迎页的分类排在"欢迎页面 → 学习进度"之后，没有
+欢迎页的分类排在最前。**没有跨分类的全局手册入口**。手册页面里的每份
+文档最终会显示成一段小节，段与段之间用一条分隔线隔开。
+
+各分类手册的标题编号（"第 N 章"/"N.M"）各自独立，从第 1 章起编，不跨
+分类连续。
 
 ## 5. 分类 `category`
 
@@ -169,6 +179,7 @@ WebView——后者在实测中出现过对话框刚弹出时宿主控件还没�
 | `title` | string | 是 | 左侧导航显示标题 |
 | `description` | string | 是 | 分类学习范围概要 |
 | `icon` | icon | 是 | 分类导航图标 |
+| `handbook_documents` | array | 否 | 该分类手册收录的静态文档列表，见 4.3 |
 | `chapters` | array | 是 | 有序一级章节列表 |
 
 示例映射：
@@ -187,14 +198,14 @@ category.name = cpp
 
 ## 6. 一级章节 `chapter`
 
-一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类；理论性、跨文件的工程思想类内容不再放进独立章节标签页，而是走 `handbook_documents`（见 4.3）。
+一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类；理论性、跨文件的工程思想类内容不再放进独立章节标签页，而是走所属分类的 `handbook_documents`（见 4.3）。
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
 | `name` | string | 是 | 稳定章节名，也是 C++ 类名 |
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
-| `overview_document` | string | 否 | “本章总纲”按钮跳转目标，必须是 `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
+| `overview_document` | string | 否 | “本章总纲”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
 | `source` | string | 否 | 代码框显示的源码路径 |
@@ -258,7 +269,7 @@ subchapter.name -> C++ 成员函数名
 ### 6.2 本章总纲 `overview_document`
 
 章节可选提供 `overview_document`，指向一份人工撰写、静态存在于
-`resources/articles/` 下、并且已经列在顶层 `handbook_documents`（4.3）
+`resources/articles/` 下、并且已经列在**本分类**的 `handbook_documents`（4.3）
 里的 Markdown 理论讲解文档：
 
 ```json
@@ -278,7 +289,7 @@ subchapter.name -> C++ 成员函数名
 
 `overview_document` 只是"这个章节关联手册里的哪份文档"这层指针，不影响
 章节本身的知识点列表、源码框和运行结果区；文档内容本身、它在手册目录
-里出现的顺序，都由 `handbook_documents` 决定，不由 `overview_document`
+里出现的顺序，都由本分类的 `handbook_documents` 决定，不由 `overview_document`
 决定。
 
 ## 7. 二级知识点 `subchapter`
@@ -430,7 +441,7 @@ GTK 主题图标：
 - `chapter.description`：标签页顶部的章节概要。
 - `group.description`：视觉分组概要。
 - `subchapter.description`：成员函数实验必须覆盖的教学内容。
-- `handbook_documents` 里的文档：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
+- 分类 `handbook_documents` 里的文档：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
 
 `description` 应描述目标和边界，不包含生成器命令，也不粘贴完整实现代码。
 
@@ -456,8 +467,9 @@ GTK 主题图标：
 - 派生键 `category.chapter.subchapter` 全局唯一。
 - C++ 名称是否合法且不是关键字。
 - `group` 引用是否存在。
-- `overview_document` 是否已经出现在顶层 `handbook_documents` 里。
-- `handbook_documents` 每一项是否位于 `resources/articles/` 下且文件存在。
+- `overview_document` 是否已经出现在**同一个分类**的 `handbook_documents` 里。
+- 分类的 `handbook_documents` 每一项是否位于 `resources/articles/` 下且文件存在，同一分类内不重复。
+- 配置里是否残留顶层 `handbook_documents`（已废弃，应报错）。
 - Blueprint、源码、Markdown 和资源图标路径是否有效。
 - 所有章节都有可解析图标：自身图标或默认图标。
 - 所有知识点都有可解析图标：自身图标或默认图标。

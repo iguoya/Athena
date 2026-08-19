@@ -53,10 +53,6 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
         parse_icon(defaults.value("subchapter_icon", json::object()));
 
     ChapterCatalog catalog;
-    for (const auto& document : config.value("handbook_documents", json::array())) {
-        catalog.m_handbook_documents.push_back(document.get<string>());
-    }
-
     set<string> category_names;
 
     for (const auto& category_value : config.at("categories")) {
@@ -68,6 +64,10 @@ ChapterCatalog ChapterCatalog::from_json(string_view source) {
         category.icon = parse_icon(
             category_value.value("icon", json::object()),
             default_chapter_icon);
+        for (const auto& document :
+             category_value.value("handbook_documents", json::array())) {
+            category.handbook_documents.push_back(document.get<string>());
+        }
         catalog.m_categories.push_back(category);
 
         auto& chapters = catalog.m_chapters[category.name];
@@ -188,8 +188,17 @@ size_t ChapterCatalog::chapter_count() const {
     return count;
 }
 
-const vector<string>& ChapterCatalog::handbook_documents() const {
-    return m_handbook_documents;
+const vector<string>& ChapterCatalog::handbook_documents(
+    const string& category_name) const {
+    // 分类不存在或没配手册时统一返回同一个空 vector，调用方不必区分。
+    static const vector<string> empty;
+    const auto found = find_if(
+        m_categories.begin(),
+        m_categories.end(),
+        [&category_name](const CategoryInfo& category) {
+            return category.name == category_name;
+        });
+    return found == m_categories.end() ? empty : found->handbook_documents;
 }
 
 string resolve_source_path(

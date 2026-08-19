@@ -782,32 +782,10 @@ Gtk::Image* MainWindow::create_icon(const IconSpec& icon, int pixel_size) const 
 }
 
 void MainWindow::setup_category_sidebar() {
-    // “手册”是跨分类的全局入口，摆在分类按钮上方、独立一行，用分隔线
-    // 隔开；点击它显示的是常驻的合集页面，不走“选中分类 -> 按分类列
-    // 章节”那套逻辑。“学习进度”不在这里——它是 cpp 分类“欢迎页面”
-    // 后面的一个合成标签页，见 build_chapter_tabs()。
-    auto handbook_button = Gtk::make_managed<Gtk::ToggleButton>();
-    handbook_button->add_css_class("nav-button");
-    handbook_button->set_tooltip_text("现有文章章节和各章节总纲文档的合集");
-
-    auto handbook_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-    handbook_box->set_valign(Gtk::Align::CENTER);
-    handbook_box->set_margin_top(12);
-    handbook_box->set_margin_bottom(12);
-    handbook_box->append(*create_icon(
-        {.type = "theme", .name = "accessories-dictionary-symbolic"}, 24));
-    auto handbook_label = Gtk::make_managed<Gtk::Label>("手册");
-    handbook_box->append(*handbook_label);
-    handbook_button->set_child(*handbook_box);
-    handbook_button->signal_toggled().connect([this, handbook_button]() {
-        if (handbook_button->get_active()) {
-            show_handbook_page();
-        }
-    });
-    m_category_sidebar->append(*handbook_button);
-    m_category_sidebar->append(*Gtk::make_managed<Gtk::Separator>());
-    m_handbook_button = handbook_button;
-
+    // 侧边栏只有分类按钮。手册和学习进度都不在这里：它们是分类内部的
+    // 合成标签页，见 build_chapter_tabs()——手册按分类各自独立，没有
+    // 跨分类的全局入口。
+    Gtk::ToggleButton* group_owner = nullptr;
     for (const auto& category : m_catalog.categories()) {
         auto button = Gtk::make_managed<Gtk::ToggleButton>();
         button->add_css_class("nav-button");
@@ -827,7 +805,11 @@ void MainWindow::setup_category_sidebar() {
         box->append(*label);
         button->set_child(*box);
 
-        button->set_group(*handbook_button);
+        if (group_owner) {
+            button->set_group(*group_owner);
+        } else {
+            group_owner = button;
+        }
 
         button->signal_toggled().connect(
             [this, category_name = category.name, button]() {
@@ -846,12 +828,11 @@ void MainWindow::setup_category_sidebar() {
 }
 
 void MainWindow::on_category_selected(const string& category_name) {
-    if (category_name == m_current_category && !m_showing_handbook) {
+    if (category_name == m_current_category) {
         return;
     }
 
     m_current_category = category_name;
-    m_showing_handbook = false;
     build_chapter_tabs(category_name);
 }
 
@@ -906,6 +887,8 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         m_chapter_tab_box->remove(*button);
     }
     m_tab_buttons.clear();
+    // 按钮随上面的 remove 一起销毁，记录的指针必须同时作废。
+    m_handbook_tab_buttons.clear();
 
     const auto& all_chapters = m_catalog.chapters();
     auto category = all_chapters.find(category_name);
@@ -917,6 +900,18 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         m_chapter_stack->add(*placeholder, empty_key, "空");
         m_active_page_names.insert(empty_key);
         return;
+    }
+
+    // 没有欢迎页的分类（数据结构与算法、设计模式）把手册排在最前面；
+    // 有欢迎页的分类则排在欢迎页和学习进度之后，见下面的循环。
+    const bool has_welcome_page = any_of(
+        category->second.begin(),
+        category->second.end(),
+        [](const ChapterMeta& chapter) {
+            return chapter.widget_name == kWelcomePageWidget;
+        });
+    if (!has_welcome_page) {
+        append_handbook_tab(category_name);
     }
 
     for (const auto& chapter : category->second) {
@@ -973,11 +968,12 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
         m_chapter_tab_box->append(*tab_button);
         m_tab_buttons.push_back(tab_button);
 
-        // 学习进度紧跟在欢迎页后面。欢迎页只有 cpp 分类有，靠根控件名
-        // 识别（跟本文件里判断 code 页面用 "chapter_page" 是同一个惯例），
-        // 不硬编码章节 name。
+        // 学习进度和手册紧跟在欢迎页后面。欢迎页只有 cpp 分类有，靠根
+        // 控件名识别（跟本文件里判断 code 页面用 "chapter_page" 是同一个
+        // 惯例），不硬编码章节 name。
         if (chapter.widget_name == kWelcomePageWidget) {
             append_progress_tab();
+            append_handbook_tab(category_name);
         }
     }
 
@@ -1025,17 +1021,72 @@ void MainWindow::append_progress_tab() {
     m_tab_buttons.push_back(tab_button);
 }
 
-// 手册页面固定的 Stack 子页面名，不会跟真实分类/章节 ID（都是 ASCII
-// 标识符拼接）冲突。
-const char* kHandbookPageKey = "__handbook__";
+// 手册也是合成标签页，但页面本身懒构建且常驻 Stack（原因见
+// ensure_handbook_page）；这里每次重建的只是标签按钮。按钮指针按分类记
+// 下来，"本章总纲"跳转时要靠它同步标签栏的选中态。
+void MainWindow::append_handbook_tab(const string& category_name) {
+    auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
+    tab_button->add_css_class("pill");
+    tab_button->add_css_class("chapter-tab");
+    tab_button->set_tooltip_text("本分类的手册：理论、原则与工程思想");
 
-void MainWindow::ensure_handbook_page() {
-    if (m_handbook_built) {
+    auto tab_content = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
+    tab_content->append(*create_icon(
+        {.type = "theme", .name = "accessories-dictionary-symbolic"}, 16));
+    tab_content->append(*Gtk::make_managed<Gtk::Label>("手册"));
+    tab_button->set_child(*tab_content);
+
+    if (!m_tab_buttons.empty()) {
+        tab_button->set_group(*m_tab_buttons.front());
+    }
+
+    tab_button->signal_toggled().connect(
+        [this, tab_button, category_name]() {
+            if (!tab_button->get_active()) {
+                return;
+            }
+            show_handbook_page(category_name);
+        });
+
+    m_chapter_tab_box->append(*tab_button);
+    m_tab_buttons.push_back(tab_button);
+    m_handbook_tab_buttons[category_name] = tab_button;
+}
+
+// 手册页面的 Stack 子页面名：每个分类一部手册，各自一个页面。分类名是
+// ASCII 标识符，加上双下划线后缀不会跟真实章节 ID 冲突。
+string handbook_page_key(const string& category_name) {
+    return category_name + ".__handbook__";
+}
+
+// 手册页面**不登记进 m_active_page_names**：它由 make_managed 直接建出，
+// 没有 builder 持有引用，一旦从 Stack 移除控件就会析构，而
+// m_article_views 里的 ArticleView 还指着里面的宿主控件。所以切分类时把
+// 它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页，
+// WKWebView 常驻——这也正是 ADR 0011 选常驻页面而非临时 Dialog 的理由。
+void MainWindow::ensure_handbook_page(const string& category_name) {
+    if (m_handbook_built_categories.count(category_name) > 0) {
         return;
     }
     // 即使渲染失败也标记为已构建，跟其它章节页面初始化失败时的处理一致，
     // 不重复尝试。
-    m_handbook_built = true;
+    m_handbook_built_categories.insert(category_name);
+
+    const string page_key = handbook_page_key(category_name);
+    const auto& documents = m_catalog.handbook_documents(category_name);
+
+    // 还没收录文档的分类（当前是数据结构与算法、设计模式）也给一个手册
+    // 标签页，但用一句占位说明代替 WebView：既不谎称有内容，也不为空文档
+    // 白起一个 WKWebView。
+    if (documents.empty()) {
+        auto placeholder = Gtk::make_managed<Gtk::Label>(
+            "本分类的手册还没有收录文档。");
+        placeholder->set_halign(Gtk::Align::CENTER);
+        placeholder->set_valign(Gtk::Align::CENTER);
+        placeholder->add_css_class("dim-label");
+        m_chapter_stack->add(*placeholder, page_key, "手册");
+        return;
+    }
 
     auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     page->set_hexpand(true);
@@ -1057,19 +1108,14 @@ void MainWindow::ensure_handbook_page() {
     frame->set_child(*host);
     page->append(*frame);
 
-    m_chapter_stack->add(*page, kHandbookPageKey, "手册");
+    m_chapter_stack->add(*page, page_key, "手册");
 
-    const auto& documents = m_catalog.handbook_documents();
-    if (documents.empty()) {
-        cerr << "Handbook has no documents configured" << endl;
-        return;
-    }
-
-    // 手册是现有 article 章节和各 code 章节总纲文档的合集：按
+    // 一部手册是该分类下各份静态文档的合集：按本分类的
     // handbook_documents 顺序拼接，一次性喂给标题解析/渲染函数，生成
     // 一份跨文档的完整目录；每份文档自己的标题数量决定它在合集里的
     // 起始锚点（athena-heading-N，N 是它前面所有文档的标题总数），
     // “本章总纲”按钮据此跳到对应位置，不用整份手册单独存一份。
+    auto& anchor_by_document = m_handbook_anchors_by_category[category_name];
     string combined_markdown;
     size_t heading_count = 0;
     for (const auto& document : documents) {
@@ -1087,7 +1133,7 @@ void MainWindow::ensure_handbook_page() {
             continue;
         }
         if (!headings.empty()) {
-            m_handbook_anchor_by_document[document] =
+            anchor_by_document[document] =
                 "athena-heading-" + to_string(heading_count);
         }
         heading_count += headings.size();
@@ -1120,38 +1166,47 @@ void MainWindow::ensure_handbook_page() {
         view->load_html(
             render_markdown_html(combined_markdown, stylesheet, headings),
             m_content_loader.document_base_directory(documents.front()));
-        m_article_views[kHandbookPageKey] = std::move(view);
+        m_article_views[page_key] = std::move(view);
     } catch (const exception& error) {
-        cerr << "Failed to render handbook: " << error.what() << endl;
+        cerr << "Failed to render handbook for " << category_name << ": "
+             << error.what() << endl;
     }
 }
 
-// 显示手册页面（懒构建，只建一次）；jump_to_document 非空时跳到该文档
-// 在合集里的起始标题——用于章节的“本章总纲”按钮，文档必须已经在
-// handbook_documents 里（生成器 check 时校验），否则跳转是no-op。
-void MainWindow::show_handbook_page(const string& jump_to_document) {
-    ensure_handbook_page();
+// 切到某个分类的手册标签页（懒构建，每个分类只建一次）；
+// jump_to_document 非空时跳到该文档在本分类手册里的起始标题——用于章节
+// 的“本章总纲”按钮，文档必须已经在本分类的 handbook_documents 里（生成器
+// check 时校验），否则跳转是 no-op。
+void MainWindow::show_handbook_page(
+    const string& category_name,
+    const string& jump_to_document) {
+    ensure_handbook_page(category_name);
 
-    if (auto* child = m_chapter_stack->get_child_by_name(kHandbookPageKey)) {
+    const string page_key = handbook_page_key(category_name);
+    if (auto* child = m_chapter_stack->get_child_by_name(page_key)) {
         m_chapter_stack->set_visible_child(*child);
     }
-    for (auto* button : m_tab_buttons) {
-        m_chapter_tab_box->remove(*button);
+    // 手册是本分类标签行里的一个标签页，切过去要让对应按钮跟着选中，
+    // 否则标签栏的高亮和实际显示的页面对不上。
+    if (auto* button = m_handbook_tab_buttons[category_name]) {
+        if (!button->get_active()) {
+            button->set_active(true);
+        }
     }
-    m_tab_buttons.clear();
-    m_showing_handbook = true;
-    if (m_handbook_button && !m_handbook_button->get_active()) {
-        m_handbook_button->set_active(true);
-    }
+    m_current_chapter = page_key;
 
     if (jump_to_document.empty()) {
         return;
     }
-    const auto anchor = m_handbook_anchor_by_document.find(jump_to_document);
-    if (anchor == m_handbook_anchor_by_document.end()) {
+    const auto anchors = m_handbook_anchors_by_category.find(category_name);
+    if (anchors == m_handbook_anchors_by_category.end()) {
         return;
     }
-    const auto view = m_article_views.find(kHandbookPageKey);
+    const auto anchor = anchors->second.find(jump_to_document);
+    if (anchor == anchors->second.end()) {
+        return;
+    }
+    const auto view = m_article_views.find(page_key);
     if (view != m_article_views.end() && view->second) {
         view->second->scroll_to_anchor(anchor->second);
     }
@@ -1381,18 +1436,19 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
     // 章节总纲不依赖当前选中的知识点，常驻可点，独立于知识点列表接线。
-    // 有 overview_document 时跳到手册页面里对应位置（人工撰写的静态
-    // 文档，不联网、不调用 AI）；没有时退回复制提示词到剪贴板并唤起
-    // 本机 AI 助手。
+    // 有 overview_document 时跳到**本分类**手册页面里对应位置（人工撰写
+    // 的静态文档，不联网、不调用 AI）；没有时退回复制提示词到剪贴板并
+    // 唤起本机 AI 助手。
     if (chapter_overview_button) {
         chapter_overview_button->signal_clicked().connect(
             [this,
+             category_name,
              title = chapter.title,
              description = chapter.description,
              subchapters = chapter.subchapters,
              overview_document = chapter.overview_document]() {
                 if (!overview_document.empty()) {
-                    show_handbook_page(overview_document);
+                    show_handbook_page(category_name, overview_document);
                 } else {
                     explain_chapter_overview_with_local_ai(
                         title, description, subchapters);

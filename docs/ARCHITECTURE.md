@@ -27,7 +27,7 @@ resources/athena.json
         FunctionRegistry + ChapterCatalog ----------> MainWindow（界面协调）
                                                      |
                                                      +--> code 页面（按章节）
-                                                     +--> 手册页面（懒构建一次，跨章节）
+                                                     +--> 手册页面（每分类一部，懒构建一次）
 ```
 
 已有的优点：
@@ -48,8 +48,8 @@ resources/athena.json
 - 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 自测”按钮与用户自评的“熟练度”五星评分（绿色，0–5 星，自由打分并即时持久化；再点当前星级则降一星；星星右侧带 2 字文字标识随星级变化，悬浮单颗星显示该星级含义）：到 5 星后运行按钮置灰，降低星级即可恢复运行。“运行历史”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部、笔记与源码随之切换）再执行。曾经有过一个“AI 讲解”按钮（现场调 AI 生成知识点讲解），后来因为体感上不如直接看手册和源码实用而移除，知识点级别的 AI 功能现在只剩“AI 自测”。
 - “运行历史”打开运行记录对话框：左侧是最近运行列表（时间、耗时、与当前源码是否一致、运行时的 git 提交短哈希，工作区有未提交改动时加 `+`），右侧最多同时选中 2 条记录并排对比，每条记录一栏，栏内上方是运行时的源码快照（只读 GtkSourceView，C++ 语法高亮，不做逐行 diff）并在标题带完整 git 版本描述，下方是对应输出，默认选中最近两次运行；git 信息由运行时同步查询 `ATHENA_SOURCE_ROOT` 所在仓库得到，不在 git 仓库或 git 不可用时静默留空，不影响运行。配置了 `ATHENA_ARK_API_KEY` 或 `ATHENA_DEEPSEEK_API_KEY` 时对话框内另有“AI 讲解差异”按钮（选中恰好 2 条才可用，两个 Key 都未配置时这个按钮不出现），把两条记录的源码快照与输出一并发给 AI，请求解释改动和结果变化的关系；不做逐行 diff 高亮，这部分交给 git 自己的工具。
 - “AI 自测”“AI 讲解差异”共用同一条 AI 调用链：`call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt)` 优先用 DeepSeek（`deepseek-chat`，环境变量 `ATHENA_DEEPSEEK_API_KEY`），未配置或请求失败再退回火山方舟豆包（`doubao-seed-2-1-pro-260628`，环境变量 `ATHENA_ARK_API_KEY`）——豆包出题明显更慢，实测下来 DeepSeek 更适合放在优先位置（最初接入时是反过来的，豆包优先，后来改过来）；两者都未配置时“AI 自测”直接提示需要先配置至少一个 Key，没有剪贴板退路。两家服务商都是 OpenAI 兼容协议，底层共用 `call_llm_chat(endpoint, model, api_key, prompt)`，只是 endpoint/model 不同，不是两套 curl 调用逻辑。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；网络请求在独立线程执行，结果经主线程回填（参见 ADR 0009、ADR 0010）。
-- **手册**是现有 article 章节和各章节总纲文档的合集，懒构建一次的常驻页面：入口在左侧分类按钮上方独立一行（跟分类按钮同一个互斥 `ToggleButton` 组），点击 `show_handbook_page()` 首次构建、之后直接复用。构建时按顶层 `handbook_documents`（`docs/CHAPTER_SCHEMA.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录；渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（`MainWindow::ensure_handbook_page()`，该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，跨文档连续编号，帮助区分是手册里的第几章第几节；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
-- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向 `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到手册页面里该文档的起始位置（`MainWindow::show_handbook_page(overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`），不发起任何网络请求（参见 `docs/CHAPTER_SCHEMA.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
+- **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。构建时按该分类 `handbook_documents`（`docs/CHAPTER_SCHEMA.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录（`MainWindow::ensure_handbook_page(category_name)`）。渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。**手册页面不进 `m_active_page_names`**：它由 `make_managed` 建出、没有 builder 持有引用，一旦从 Stack 移除就会连 WKWebView 一起析构，而 `m_article_views` 还指着里面的宿主控件；所以切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次。还没收录文档的分类（当前是 da、dp）显示一句占位说明，不为空文档白起一个 WebView。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
+- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_SCHEMA.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
 - “AI 讲解差异”用的是 `show_ai_markdown_dialog()`——现场调 AI、内容不落盘，跟手册（本地静态、不调用 AI）是两条完全独立的路径，共用的只是 md4c 转 HTML、WKWebView（macOS）渲染这套底层机制：标题、列表、代码块都有正常版式；AI 的回答经常代码和说明夹杂，早期用纯文本 TextView 展示对代码不友好，改成这个之后代码块能正常保留缩进和等宽字体，不再是纯文本堆一坨。这个对话框用的 `article.css` 在加载前追加了一段 `:root { --article-font-size: 22px; }` 覆盖，只影响这个对话框，不改 `resources/article.css` 本身、不影响手册页面（仍是原来的 19px）。
 - **学习进度**跟手册不同，不是全局常驻页面，而是 cpp 分类里紧跟"欢迎页面"之后的一个**合成标签页**：它不对应 `athena.json` 里的任何章节，由 `MainWindow::build_chapter_tabs()` 在遍历到欢迎页（按 Blueprint 根控件名 `welcome_page` 识别，不硬编码章节 `name`）之后调用 `append_progress_tab()` 手工插入，因此只统计 cpp 分类（数据结构与算法、设计模式两个分类当前没有实现内容，等真有内容再决定要不要各自加一份）。页面不用 WebView，是纯 GTK 控件搭的统计仪表盘（`MainWindow::build_progress_page_widget()`）：顶部四张统计卡片（知识点总数/已掌握/学习中/平均熟练度，各用一种强调色，仿常见管理后台的 stat tile），中间一行两张 Cairo 手绘图表（左边环形图看整体完成度占比，右边柱状图逐章节对比完成率，不引入图表库依赖），下面按章节用 `Gtk::Expander` 列出（收起显示章节名 + `Gtk::LevelBar` 进度条 + "已掌握/总数"，展开显示每个知识点的星级只读展示）。统计口径是"5 星 = 已掌握"，数据来自 `LearningStore::load_all_mastery()`（一次性批量读取全部 `knowledge_progress`，不是按知识点逐个查询）与 `ChapterCatalog` 交叉。页面名登记进 `m_active_page_names`，切到别的分类时和普通章节页一起被移除，**切回 cpp 时重新构建**——数据量小，重新查库加布局的开销可以忽略，用重建换取星级变化立即反映，不需要额外的"数据是否过期"状态（这一点跟懒构建一次的手册相反）。
 - 图表配色是独立于 `style.css` 的一份副本：Cairo 取不到 GTK 的 `@define-color` 命名颜色，所以 `mainwindow.cc` 里用 `kChartMastered` / `kChartInProgress` / `kChartNotStarted` 等常量按十六进制集中定义，并在注释里标注各自对应的 `@athena_*` 变量。改配色时两边必须一起改；曾经"未开始"这一段就因为只改了一边，出现过图上颜色和图例色块对不上的情况。
@@ -114,7 +114,7 @@ resources/athena.json
 - 由 `name` 直接表达的函数 ID 分类、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
 - 知识点的 `importance`（0–5，内容作者标注的客观难度，缺省未评）；这是内容数据而不是用户数据，与存在 `LearningStore` 里的用户自评熟练度是两个独立概念。
-- 顶层 `handbook_documents`：手册收录的静态 Markdown 文档路径，按顺序拼接渲染；章节可选的 `overview_document` 指向其中一条，供“本章总纲”按钮跳转。
+- 分类级 `handbook_documents`：该分类手册收录的静态 Markdown 文档路径，按顺序拼接渲染；手册按分类各自独立，不跨分类合并。章节可选的 `overview_document` 指向**本分类**列表里的一条，供“本章总纲”按钮跳转。
 - 已实现章节的 `implementation.header`；类名和函数名由章节与知识点的 `name` 派生，分类名只进入稳定函数 ID。
 
 它不保存 C++ 函数体，也不负责表达 GTK 对象的运行时状态。
@@ -174,7 +174,7 @@ void method(std::ostream& output) const;
 当知识点函数需要输入、结构化错误或状态时，再统一迁移为 `FunctionContext` 和
 `FunctionResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
-`handbook_documents` 里的文档不生成章节类和演示注册项。它们的正文属于文档资源；共享渲染层使用 md4c-html 把拼接后的合集 Markdown 生成完整 HTML，注入标题锚点，并生成同页的手册目录与阅读工具栏。HTML 原生页内链接负责目录跳转，`overview_document` 触发的跳转经 `ArticleView::scroll_to_anchor()` 执行同样的锚点滚动，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML、执行锚点跳转，以及管理原生控件生命周期。
+各分类 `handbook_documents` 里的文档不生成章节类和演示注册项。它们的正文属于文档资源；共享渲染层使用 md4c-html 把拼接后的合集 Markdown 生成完整 HTML，注入标题锚点，并生成同页的手册目录与阅读工具栏。HTML 原生页内链接负责目录跳转，`overview_document` 触发的跳转经 `ArticleView::scroll_to_anchor()` 执行同样的锚点滚动，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML、执行锚点跳转，以及管理原生控件生命周期。
 
 ### 3.5 表示层
 

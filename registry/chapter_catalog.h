@@ -58,6 +58,10 @@ struct CategoryInfo {
     string title;
     string description;
     IconSpec icon;
+    // 该分类自己的手册：本地静态文档，按此顺序拼接渲染成分类内的一个
+    // 手册标签页。手册按分类各自独立，不跨分类合并；跟具体章节解耦，
+    // 不要求每份文档都对应一个 chapter，也允许为空（该分类暂无手册）。
+    vector<string> handbook_documents;
 };
 
 class ChapterCatalog {
@@ -70,14 +74,12 @@ public:
         const string& category_name,
         const string& chapter_name) const;
     size_t chapter_count() const;
-    // 手册：本地静态文档的合集，按此顺序拼接渲染成一个常驻页面；跟具体
-    // 章节解耦，不要求每份文档都对应一个 chapter。
-    const vector<string>& handbook_documents() const;
+    // 某个分类的手册文档；分类不存在或没有配手册时返回空 vector。
+    const vector<string>& handbook_documents(const string& category_name) const;
 
 private:
     vector<CategoryInfo> m_categories;
     map<string, vector<ChapterMeta>> m_chapters;
-    vector<string> m_handbook_documents;
 };
 
 // 知识点源码按“知识点 -> 分组 -> 章节”的顺序继承。

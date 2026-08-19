@@ -29,8 +29,13 @@ private:
     void ensure_chapter_page(
         const string& category_name,
         const ChapterMeta& chapter);
-    void ensure_handbook_page();
-    void show_handbook_page(const string& jump_to_document = "");
+    // 手册按分类各自独立，每个分类一部，作为该分类标签行里的合成标签页；
+    // 没有跨分类的全局手册入口（见 ADR 0011）。
+    void ensure_handbook_page(const string& category_name);
+    void show_handbook_page(
+        const string& category_name,
+        const string& jump_to_document = "");
+    void append_handbook_tab(const string& category_name);
     // cpp 分类“欢迎页面”后面的合成学习进度标签页：它不来自
     // athena.json，由 build_chapter_tabs() 在欢迎页之后手工插入；每次
     // 切回 cpp 分类都重新构建（数据量小，重新查库+布局的开销可以忽略），
@@ -107,18 +112,19 @@ private:
 
     vector<Gtk::ToggleButton*> m_category_buttons;
     vector<Gtk::ToggleButton*> m_tab_buttons;
-    Gtk::ToggleButton* m_handbook_button = nullptr;
+    // 分类名 -> 该分类手册标签按钮；按钮随标签栏重建而重建，指针在
+    // build_chapter_tabs() 里同步作废。
+    std::map<string, Gtk::ToggleButton*> m_handbook_tab_buttons;
 
     string m_current_category;
     string m_current_chapter;
     set<string> m_active_page_names;
     set<string> m_loaded_chapters;
-    // 手册：懒构建一次的常驻全局页面，跟分类/章节切换逻辑解耦；
-    // m_showing_handbook 为真时，重新点击当前分类也要强制走一遍
-    // build_chapter_tabs（否则分类没变，早退不会切回章节页面）。
-    bool m_handbook_built = false;
-    bool m_showing_handbook = false;
-    std::map<string, string> m_handbook_anchor_by_document;
+    // 手册页面每个分类懒构建一次，之后常驻 Stack（不进
+    // m_active_page_names，否则切分类会连控件带 WebView 一起销毁）。
+    set<string> m_handbook_built_categories;
+    // 分类名 -> （文档路径 -> 该文档在本分类手册里的起始锚点）。
+    std::map<string, std::map<string, string>> m_handbook_anchors_by_category;
 
     ChapterCatalog m_catalog;
     FunctionRegistry m_function_registry;

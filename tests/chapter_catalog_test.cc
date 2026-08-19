@@ -72,18 +72,47 @@ TEST(ChapterCatalogTest, LoadsTheProjectCatalog) {
         reference->overview_document,
         "resources/articles/cpp/reference_overview.md");
 
-    // 手册：本地静态文档的合集，跟具体章节解耦；引用/RAII 的
-    // overview_document 必须落在这个列表里（由生成器的 check 强制）。
-    const auto& handbook = catalog.handbook_documents();
-    EXPECT_FALSE(handbook.empty());
+    // 手册按分类各自独立：cpp 有自己的一部，引用/RAII 的
+    // overview_document 必须落在**本分类**的列表里（由生成器的 check
+    // 强制）。
+    const auto& cpp_handbook = catalog.handbook_documents("cpp");
+    EXPECT_FALSE(cpp_handbook.empty());
     EXPECT_NE(
-        find(handbook.begin(), handbook.end(),
+        find(cpp_handbook.begin(), cpp_handbook.end(),
              "resources/articles/cpp/reference_overview.md"),
-        handbook.end());
+        cpp_handbook.end());
     EXPECT_NE(
-        find(handbook.begin(), handbook.end(),
+        find(cpp_handbook.begin(), cpp_handbook.end(),
              "resources/articles/cpp/raii_overview.md"),
-        handbook.end());
+        cpp_handbook.end());
+
+    // 还没收录文档的分类返回空列表；不存在的分类同样返回空而不是抛异常，
+    // 调用方（手册标签页）不必区分这两种情况。
+    EXPECT_TRUE(catalog.handbook_documents("da").empty());
+    EXPECT_TRUE(catalog.handbook_documents("dp").empty());
+    EXPECT_TRUE(catalog.handbook_documents("no_such_category").empty());
+}
+
+// 手册文档挂在分类下，不再有顶层 handbook_documents；旧配置应该报错而
+// 不是被静默忽略，否则升级时手册会毫无提示地空掉。
+TEST(ChapterCatalogTest, TopLevelHandbookDocumentsAreNotReadAsCategoryHandbook) {
+    const auto catalog = ChapterCatalog::from_json(R"({
+      "schema": 1,
+      "defaults": {
+        "chapter_ui": { "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" } }
+      },
+      "handbook_documents": ["resources/articles/cpp/reference_overview.md"],
+      "categories": [
+        {
+          "name": "cpp",
+          "title": "C++",
+          "description": "测试用分类",
+          "chapters": []
+        }
+      ]
+    })");
+
+    EXPECT_TRUE(catalog.handbook_documents("cpp").empty());
 }
 
 TEST(ChapterCatalogTest, GeneratedRegistryExactlyMatchesImplementedChapters) {

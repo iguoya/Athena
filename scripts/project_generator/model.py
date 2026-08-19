@@ -115,22 +115,11 @@ def build_model(
     chapter_count = 0
     subchapter_count = 0
 
-    # 手册：现有 article 章节和各 code 章节总纲文档的合集，本地静态渲染，
-    # 不依赖任何单个章节存在；顺序即手册目录顺序。overview_document 必须
-    # 落在这个列表里，否则"本章总纲"按钮无处可跳。
-    handbook_documents = require_list(
-        config.get("handbook_documents", []), "handbook_documents"
-    )
-    handbook_document_paths: set[str] = set()
-    for doc_index, doc_value in enumerate(handbook_documents):
-        doc_path = project_path(
-            root,
-            doc_value,
-            f"handbook_documents[{doc_index}]",
-            prefix="resources/articles",
+    if "handbook_documents" in config:
+        raise ProjectError(
+            "handbook_documents moved from the top level into each category; "
+            "手册按分类各自独立，见 docs/CHAPTER_SCHEMA.md"
         )
-        handbook_document_paths.add(doc_path)
-        documents.add(doc_path.removeprefix("resources/"))
 
     categories = require_list(config.get("categories"), "categories")
     if not categories:
@@ -149,6 +138,29 @@ def build_model(
         require_text(category.get("title"), f"category {category_name}.title")
         require_text(category.get("description"), f"category {category_name}.description")
         validate_icon(root, category.get("icon"), f"category {category_name}.icon")
+
+        # 该分类自己的手册：本地静态文档，顺序即手册目录顺序。手册按分类
+        # 各自独立，不跨分类合并；本分类章节的 overview_document 必须落在
+        # 本分类的这个列表里，否则"本章总纲"按钮无处可跳。
+        handbook_documents = require_list(
+            category.get("handbook_documents", []),
+            f"category {category_name}.handbook_documents",
+        )
+        handbook_document_paths: set[str] = set()
+        for doc_index, doc_value in enumerate(handbook_documents):
+            doc_path = project_path(
+                root,
+                doc_value,
+                f"category {category_name}.handbook_documents[{doc_index}]",
+                prefix="resources/articles",
+            )
+            if doc_path in handbook_document_paths:
+                raise ProjectError(
+                    f"duplicate handbook document in category {category_name}: "
+                    f"{doc_path}"
+                )
+            handbook_document_paths.add(doc_path)
+            documents.add(doc_path.removeprefix("resources/"))
 
         seen_chapters: set[str] = set()
         chapters = require_list(
@@ -207,9 +219,9 @@ def build_model(
                 )
             seen_ui[ui_name] = blueprint
 
-            # 本章总纲：必须已经在 handbook_documents 里，"本章总纲"按钮
-            # 跳的是手册里对应文档的锚点，指向一份手册没收录的文档没有
-            # 意义。
+            # 本章总纲：必须已经在**本分类**的 handbook_documents 里，
+            # "本章总纲"按钮跳的是本分类手册里对应文档的锚点，指向别的
+            # 分类或没收录的文档都跳不过去。
             overview_document = chapter.get("overview_document")
             if overview_document is not None:
                 overview_document = project_path(
@@ -221,7 +233,8 @@ def build_model(
                 if overview_document not in handbook_document_paths:
                     raise ProjectError(
                         f"chapter {chapter_id}.overview_document "
-                        f"{overview_document!r} is not listed in handbook_documents"
+                        f"{overview_document!r} is not listed in "
+                        f"category {category_name}.handbook_documents"
                     )
 
             groups = require_list(
