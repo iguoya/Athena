@@ -303,9 +303,12 @@ void display_source(
         &highlight_begin,
         &highlight_end);
     gtk_text_buffer_place_cursor(text_buffer, &highlight_begin);
-    gtk_text_view_scroll_to_iter(
+    // 通过插入光标的持久 TextMark 滚动。长源码刚替换进 Buffer 时布局尚未
+    // 完成，直接传临时 TextIter 偶尔会保留旧的滚动值，导致高亮函数仍在
+    // 视口外；TextView 会在布局完成后继续兑现 mark 对应的滚动请求。
+    gtk_text_view_scroll_to_mark(
         GTK_TEXT_VIEW(source_view),
-        &highlight_begin,
+        gtk_text_buffer_get_insert(text_buffer),
         0.15,
         true,
         0.0,
