@@ -132,6 +132,7 @@ core_sources = files(
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
   'render/markdown_renderer.cc',
+  'services/ai_service.cc',
   'storage/learning_store.cc',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
@@ -142,13 +143,13 @@ athena_core_lib = static_library(
   'athena-core',
   core_sources,
   include_directories: [language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
   include_directories: [language_inc],
-  dependencies: [gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 # === 桌面应用源码 ===
@@ -195,6 +196,7 @@ core_test_exe = executable(
   'athena-core-tests',
   files(
     'tests/chapter_catalog_test.cc',
+    'tests/ai_service_test.cc',
     'tests/content_loader_test.cc',
     'tests/function_registry_test.cc',
     'tests/learning_store_test.cc',
@@ -232,7 +234,7 @@ test(
   ]
 )
 
-# 在临时目录端到端验证四个子命令，并检查 scaffold 不覆盖已有文件。
+# 在临时目录端到端验证五个子命令，并检查 scaffold 不覆盖已有文件。
 test(
   'athena-project-generator',
   python,

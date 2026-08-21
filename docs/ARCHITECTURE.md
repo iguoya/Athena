@@ -52,7 +52,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_CONFIG.md`）；条目本身（标题与描述）不响应点击。
 - 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 自测”按钮与用户自评的“熟练度”五星评分（绿色，0–5 星，自由打分并即时持久化；再点当前星级则降一星；星星右侧带 2 字文字标识随星级变化，悬浮单颗星显示该星级含义）：到 5 星后运行按钮置灰，降低星级即可恢复运行。“运行历史”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部、笔记与源码随之切换）再执行。曾经有过一个“AI 讲解”按钮（现场调 AI 生成知识点讲解），后来因为体感上不如直接看手册和源码实用而移除，知识点级别的 AI 功能现在只剩“AI 自测”。
 - “运行历史”打开运行记录对话框：左侧是最近运行列表（时间、耗时、与当前源码是否一致、运行时的 git 提交短哈希，工作区有未提交改动时加 `+`），右侧最多同时选中 2 条记录并排对比，每条记录一栏，栏内上方是运行时的源码快照（只读 GtkSourceView，C++ 语法高亮，不做逐行 diff）并在标题带完整 git 版本描述，下方是对应输出，默认选中最近两次运行；git 信息由运行时同步查询 `ATHENA_SOURCE_ROOT` 所在仓库得到，不在 git 仓库或 git 不可用时静默留空，不影响运行。配置了 `ATHENA_ARK_API_KEY` 或 `ATHENA_DEEPSEEK_API_KEY` 时对话框内另有“AI 讲解差异”按钮（选中恰好 2 条才可用，两个 Key 都未配置时这个按钮不出现），把两条记录的源码快照与输出一并发给 AI，请求解释改动和结果变化的关系；不做逐行 diff 高亮，这部分交给 git 自己的工具。
-- “AI 自测”“AI 讲解差异”共用同一条 AI 调用链：`call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt)` 优先用火山方舟豆包（`doubao-seed-2-1-pro-260628`），未配置或请求失败再退回 DeepSeek（`deepseek-chat`）；两者都未配置时“AI 自测”直接提示需要先配置至少一个 Key，没有剪贴板退路。Key 优先从侧边栏“设置”读取，未保存时回退到 `ATHENA_ARK_API_KEY`/`ATHENA_DEEPSEEK_API_KEY` 环境变量。两家服务商都是 OpenAI 兼容协议，底层共用 `call_llm_chat(endpoint, model, api_key, prompt)`，只是 endpoint/model 不同，不是两套 curl 调用逻辑。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；网络请求在独立线程执行，结果经主线程回填（参见 ADR 0010、ADR 0011）。
+- “AI 自测”“AI 讲解差异”共用非 GTK 的 `AiService`：优先用火山方舟豆包（`doubao-seed-2-1-pro-260628`），未配置或请求失败再退回 DeepSeek（`deepseek-chat`）；两者都未配置时直接返回明确错误。Key 优先从侧边栏“设置”读取，未保存时回退到 `ATHENA_ARK_API_KEY`/`ATHENA_DEEPSEEK_API_KEY` 环境变量。两家服务商都是 OpenAI 兼容协议，底层共用同一个可替换的请求通道，只是 endpoint/model 不同。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；`AiService` 只返回普通数据，不更新 GTK，窗口仍负责工作线程与主线程之间的结果交接。服务商顺序、回答解析、代码围栏清理和自测题解码都有不访问网络的单元测试（参见 ADR 0010、ADR 0011、ADR 0014）。
 - **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。构建时按该分类 `handbook_documents`（`docs/CHAPTER_CONFIG.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录（`MainWindow::ensure_handbook_page(category_name)`）。渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。**手册页面不进 `m_active_page_names`**：它由 `make_managed` 建出、没有 builder 持有引用，一旦从 Stack 移除就会连 WKWebView 一起析构，而 `m_article_views` 还指着里面的宿主控件；所以切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次。还没收录文档的分类（当前是 da、dp）显示一句占位说明，不为空文档白起一个 WebView。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
 - “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_CONFIG.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
 - “AI 讲解差异”用的是 `show_ai_markdown_dialog()`——现场调 AI、内容不落盘，跟手册（本地静态、不调用 AI）是两条完全独立的路径，共用的只是 md4c 转 HTML、WKWebView（macOS）渲染这套底层机制：标题、列表、代码块都有正常版式；AI 的回答经常代码和说明夹杂，早期用纯文本 TextView 展示对代码不友好，改成这个之后代码块能正常保留缩进和等宽字体，不再是纯文本堆一坨。这个对话框用的 `article.css` 在加载前追加了一段 `:root { --article-font-size: 22px; }` 覆盖，只影响这个对话框，不改 `resources/article.css` 本身、不影响手册页面（仍是原来的 19px）。
@@ -60,7 +60,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 学习进度的聚合口径和绘图各自独立成模块，不再堆在 `mainwindow.cc` 里：`registry/progress_stats.h`（`ChapterProgress`/`CategoryProgress`/`aggregate_category_progress`）不依赖 GTK，负责"哪些算已掌握、完成度怎么算"，可以用 gtest 单独覆盖；`render/chart_view.h`（`make_mastery_donut_chart`/`make_chapter_bar_chart`/`make_mastery_histogram_chart` 等）是 Cairo 绘制，依赖 GTK 但不含统计口径；`render/chart_scale.h`（`nice_ticks`/配色常量）是两者共用的纯计算部分，同样可独立测试。**完成度用的是平均熟练度占满分的比例（`ChapterProgress::completion_ratio()`），不是"5 星知识点占比"**：后者是二值口径，评到 4 星在图上和完全没学过没有任何区别，实际数据里 5 星知识点稀少时整张柱状图会看起来像没渲染出来。柱状图和逐章节列表的 `Gtk::LevelBar` 用的是同一个口径，两处显示不会对不上。
 - 三张图表都带坐标轴、网格线和悬浮提示（`Gtk::Widget::signal_query_tooltip()`），不再是没有刻度的纯示意图；柱状图和直方图的悬浮命中测试复用同一份 `bar_geometry()` 几何计算，保证提示指向的和画出来的是同一根柱子。图表配色集中在 `render/chart_scale.h` 的 `kChartMastered`/`kChartInProgress`/`kChartNotStarted` 等常量，按十六进制定义并在注释里标注各自对应的 `style.css` `@athena_*` 变量——Cairo 取不到 GTK 的 `@define-color` 命名颜色，只能维护这一份独立副本，改配色时两边必须一起改（曾经"未开始"这一段就因为只改了一边，出现过图上颜色和图例色块对不上的情况）。
 - 没有引入图表库：GTK 生态里成熟的图表库全部绑定 Qt（Qwt、QCustomPlot、Qt Charts），ImPlot 是立即模式、要接 OpenGL 帧循环，PLplot 虽然能画进现有 Cairo 上下文但 API 老旧、面向科研出版图，都不适合这几张小图；GNOME 自家应用（系统监视器、Health）遇到同样问题也是直接手绘。这个决定的前提是数据规模小（几十个知识点、十几个章节，一个 0-5 的标量）——如果统计维度显著变复杂或需要真正的下钻交互，再重新评估。
-- “AI 自测”要求 AI 以 JSON 返回针对该知识点具体源码的自测题（题干、选项数组、正确选项下标数组 `correct_indices`、解释），继续用 GTK 控件（CheckButton + Label）渲染，不是 Markdown/WebView：题目数量、每题选项数量都不固定，由 AI 按该知识点实际包含的独立考察点客观决定，覆盖全部关键行为和易错点、不为凑数出太简单或重复的题；`correct_indices` 只有一个元素时按单选渲染（选项互斥），多个元素时按多选渲染（选项互相独立、可多选，标题标注“多选”），选完点“提交答案”才判对错——多选要求选中集合与正确答案集合完全一致才算对，不给部分分；正确显示绿色“✓ 回答正确”，错误显示红色“✗ 回答错误，正确答案是……”并展开解释，随后选项和提交按钮置灰。解析前先用 `strip_markdown_code_fence()` 去掉 AI 有时会加的 ` ```json ` 代码围栏，仍失败时退化为原样显示文本；正文字号用 `.ai-dialog-question`/`.ai-dialog-option` 等 class（22pt/20pt/18pt 一档），不影响主界面的 `.code-view`（18pt）。
+- “AI 自测”要求 AI 以 JSON 返回针对该知识点具体源码的自测题（题干、选项数组、正确选项下标数组 `correct_indices`、解释），继续用 GTK 控件（CheckButton + Label）渲染，不是 Markdown/WebView：题目数量、每题选项数量都不固定，由 AI 按该知识点实际包含的独立考察点客观决定，覆盖全部关键行为和易错点、不为凑数出太简单或重复的题；`correct_indices` 只有一个元素时按单选渲染（选项互斥），多个元素时按多选渲染（选项互相独立、可多选，标题标注“多选”），选完点“提交答案”才判对错——多选要求选中集合与正确答案集合完全一致才算对，不给部分分；正确显示绿色“✓ 回答正确”，错误显示红色“✗ 回答错误，正确答案是……”并展开解释，随后选项和提交按钮置灰。`AiService` 解码前会去掉 AI 偶尔添加的 JSON 代码围栏，过滤无效题目和越界答案下标；整体无法解码时，界面退化为原样显示文本，不丢失回答。正文字号用 `.ai-dialog-question`/`.ai-dialog-option` 等 class（22pt/20pt/18pt 一档），不影响主界面的 `.code-view`（18pt）。
 - 对话框不额外加“关闭”按钮——系统原生标题栏自带关闭按钮，重复一个没有意义。需要额外功能按钮（目前只有运行历史对话框的“AI 讲解差异”，紫色 `btn-ai-accent`，两个 Key 都未配置时不出现）时用 `append_dialog_action_bar()` 手工加在内容区末尾、居中，`extra_buttons` 为空时这个函数什么都不做。运行历史对比的源码/输出仍是 GTK TextView/GtkSourceView（`.ai-dialog-text`，22pt），不是 Markdown/WebView——那里展示的是原始运行记录，不是 AI 生成的说明文字。
 - 源码面板上方是一个统一的 Frame：图标 + 标题/简介（hexpand 占满中间空间）+ “本章总纲”按钮（紫色，跟运行/成功/危险等其他语义色区分开，不依赖当前选中的知识点、常驻可点）+ 笔记框，四者在同一个 Frame 里横排。笔记框价值不明确，当前 `visible: false` 隐藏。
 - 笔记编辑区固定约两行高度，作用于当前激活的知识点，停止输入后自动保存；价值不明确，当前 `visible: false` 隐藏（`note_frame` 控件和 `LearningStore` 的存取逻辑都还在，没删数据层，方便随时恢复或彻底移除前再确认）。章节打开时默认无激活条目，状态栏保持占位提示并支持换行；源码面板使用带标题的 Frame（GroupBox 形态）组合标题与源码框。
@@ -198,10 +198,10 @@ GTK/Blueprint 层负责：
 
 ### 3.6 MainWindow 模块化边界
 
-本节描述**目标结构**，不是当前已全部落地的文件清单。当前已经完成的是：作者配置
-校验和规范化在 Python，`ChapterCatalog` 只解码生成产物，统计、源码定位、内容加载、
-函数注册和图表比例计算已有独立模块。代码页、手册页、进度页、AI/历史对话框和后台
-运行的界面协调仍主要位于 `MainWindow`。
+本节同时记录目标结构和已完成边界。作者配置校验和规范化在 Python，
+`ChapterCatalog` 只解码生成产物；统计、源码定位、内容加载、函数注册、图表比例计算，
+以及 AI 服务商回退/响应解码已经是独立模块。代码页、手册页、进度页、AI/历史对话框
+和后台运行的界面协调仍主要位于 `MainWindow`。
 
 目标层次：
 
@@ -276,8 +276,8 @@ Meson -> Generator outputs
 7. 已完成：支持安全的一次性章节实现骨架生成。
 8. 已完成：解决源代码展示的安装后资源策略。
 9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
-10. 按 ADR 0014 从低风险到高风险提取 AI 服务、进度页、对话框、手册页和代码页，
-    让 `MainWindow` 只保留顶层导航与生命周期协调。
+10. 进行中：按 ADR 0014 从低风险到高风险拆分 `MainWindow`；非 GTK 的 `AiService`
+    已完成，后续依次提取进度页、对话框、手册页和代码页。
 11. 只有出现多前端或大量界面行为必须脱离 GTK 测试时，再考虑正式 Presenter/View
     接口。
 

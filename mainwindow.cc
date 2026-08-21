@@ -3,15 +3,13 @@
 #include "content/source_locator.h"
 #include "render/chart_view.h"
 #include "render/markdown_renderer.h"
+#include "services/ai_service.h"
 
-#include <glib/gstdio.h>
 #include <gtksourceview/gtksource.h>
-#include <nlohmann/json.hpp>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <ctime>
-#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <iostream>
@@ -115,180 +113,10 @@ GitSourceState query_git_source_state(const string& relative_path) {
     return state;
 }
 
-struct AiChatResult {
-    bool ok = false;
-    string content;  // 成功时是回答正文
-    string error;    // 失败时是错误说明
-};
-
-// 用一个仅当前用户可读、用完即删的临时文件承载内容，避免敏感信息（这里
-// 是 API Key）以命令行参数形式出现在进程列表里；成功返回文件路径，
-// 失败返回空串。
-string write_secure_temp_file(const string& name_template, const string& content) {
-    gchar* path_raw = nullptr;
-    gint fd = g_file_open_tmp(name_template.c_str(), &path_raw, nullptr);
-    if (fd < 0) {
-        if (path_raw) {
-            g_free(path_raw);
-        }
-        return "";
-    }
-    close(fd);
-    const string path = path_raw;
-    g_free(path_raw);
-
-    ofstream stream(path, ios::binary);
-    if (!stream) {
-        g_remove(path.c_str());
-        return "";
-    }
-    stream << content;
-    stream.close();
-    return path;
-}
-
-// 通过 curl 子进程调用某个 OpenAI 兼容的 chat completions 接口（DeepSeek、
-// 火山方舟豆包等都是这个协议）；同步阻塞，只应在工作线程调用，不要在主
-// 线程调用。API Key 和请求体都经临时文件传入（curl -K 配置文件 +
-// --data @文件），不出现在 ps 可见的命令行参数里；两个临时文件用完立即
-// 删除。
-AiChatResult call_llm_chat(
-    const string& endpoint,
-    const string& model,
-    const string& api_key,
-    const string& prompt) {
-    AiChatResult result;
-
-    const nlohmann::json request_body = {
-        {"model", model},
-        {"messages",
-         nlohmann::json::array({{{"role", "user"}, {"content", prompt}}})},
-        {"stream", false},
-    };
-
-    const string config_path = write_secure_temp_file(
-        "athena-ai-chat-XXXXXX.cfg",
-        "header = \"Authorization: Bearer " + api_key + "\"\n"
-        "header = \"Content-Type: application/json\"\n");
-    const string body_path =
-        write_secure_temp_file("athena-ai-chat-XXXXXX.json", request_body.dump());
-
-    // 无论成功失败都要清理临时文件。
-    struct TempFileGuard {
-        vector<string> paths;
-        ~TempFileGuard() {
-            for (const auto& path : paths) {
-                if (!path.empty()) {
-                    g_remove(path.c_str());
-                }
-            }
-        }
-    } guard {{config_path, body_path}};
-
-    if (config_path.empty() || body_path.empty()) {
-        result.error = "无法创建临时请求文件";
-        return result;
-    }
-
-    string response_body;
-    int exit_status = 0;
-    const string command = "curl -sS --max-time 30 --connect-timeout 10 -K "
-        + Glib::shell_quote(config_path) + " --data @" + Glib::shell_quote(body_path)
-        + " " + Glib::shell_quote(endpoint);
-    try {
-        Glib::spawn_command_line_sync(
-            command, &response_body, nullptr, &exit_status);
-    } catch (const exception& error) {
-        result.error = string("调用 curl 失败：") + error.what();
-        return result;
-    }
-    if (exit_status != 0) {
-        result.error = "curl 请求失败（退出码 " + to_string(exit_status)
-            + "），请确认已安装 curl 且网络可用";
-        return result;
-    }
-
-    try {
-        const auto response = nlohmann::json::parse(response_body);
-        if (response.contains("error")) {
-            result.error = response["error"].value(
-                "message", "接口返回错误");
-            return result;
-        }
-        result.content =
-            response.at("choices").at(0).at("message").at("content").get<string>();
-        result.ok = true;
-    } catch (const exception& error) {
-        result.error = string("解析响应失败：") + error.what();
-    }
-    return result;
-}
-
-AiChatResult call_deepseek_chat(const string& api_key, const string& prompt) {
-    return call_llm_chat(
-        "https://api.deepseek.com/chat/completions", "deepseek-chat", api_key, prompt);
-}
-
-AiChatResult call_ark_doubao_chat(const string& api_key, const string& prompt) {
-    return call_llm_chat(
-        "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
-        "doubao-seed-2-1-pro-260628", api_key, prompt);
-}
-
-// 优先用火山方舟豆包；未配置豆包 Key，或者豆包请求失败，就退回
-// DeepSeek。两者都未配置的情况由调用方在按钮层面处理（不出现这个
-// 按钮），这里只处理"配置了至少一个但调用失败"的情况。
-//
-// 这条优先级顺序反复过一次：最初接入时豆包优先，中途以"豆包出题明显
-// 更慢"为由改成 DeepSeek 优先，现在改回豆包优先。速度差异仍然存在，
-// 但不再作为排序依据——按用户的选择为准。
-AiChatResult call_ai_chat_with_fallback(
-    const string& ark_api_key,
-    const string& deepseek_api_key,
-    const string& prompt) {
-    if (!ark_api_key.empty()) {
-        AiChatResult ark_result = call_ark_doubao_chat(ark_api_key, prompt);
-        if (ark_result.ok || deepseek_api_key.empty()) {
-            return ark_result;
-        }
-        cerr << "豆包请求失败，回退到 DeepSeek：" << ark_result.error << endl;
-    }
-    if (!deepseek_api_key.empty()) {
-        return call_deepseek_chat(deepseek_api_key, prompt);
-    }
-    AiChatResult result;
-    result.error = "未配置任何 AI 服务商的 API Key";
-    return result;
-}
-
 // AI 服务商 Key 在 LearningStore.app_settings 里的存储键；应用内设置面板
 // 写入，四处需要 Key 的地方统一从这里读，不再各自散落地读环境变量。
 const char* kSettingArkApiKey = "ai_provider_key_ark";
 const char* kSettingDeepseekApiKey = "ai_provider_key_deepseek";
-
-// DeepSeek 即使提示词明确要求“只输出 JSON”，有时仍会套一层
-// ```json ... ``` 代码围栏；解析结构化响应（如自测题）前先去掉，
-// 提高解析成功率，不去掉也不影响非 JSON 的纯文本响应。
-string strip_markdown_code_fence(const string& text) {
-    string trimmed = text;
-    const auto not_space = [](unsigned char c) { return !isspace(c); };
-    trimmed.erase(trimmed.begin(), find_if(trimmed.begin(), trimmed.end(), not_space));
-    trimmed.erase(
-        find_if(trimmed.rbegin(), trimmed.rend(), not_space).base(), trimmed.end());
-
-    if (trimmed.rfind("```", 0) != 0) {
-        return trimmed;
-    }
-    const auto first_newline = trimmed.find('\n');
-    if (first_newline == string::npos) {
-        return trimmed;
-    }
-    trimmed = trimmed.substr(first_newline + 1);
-    if (trimmed.size() >= 3 && trimmed.compare(trimmed.size() - 3, 3, "```") == 0) {
-        trimmed = trimmed.substr(0, trimmed.size() - 3);
-    }
-    return trimmed;
-}
 
 // 把提示词放入剪贴板并唤起本机 AI 助手；豆包客户端支持 doubao:// 协议
 // 但不支持携带提示词参数，因此采用“剪贴板 + 唤起”的组合；默认命令可用
@@ -364,7 +192,7 @@ void lock_for_modal_dialog(Gtk::Window& main_window, Gtk::Dialog& dialog) {
 
 // 讲解类提示词（讲解/自测/理论文档/讲解差异）共用的风格提示：贴近主流
 // 中文 C++ 教程的讲法和术语习惯，不生造术语。这里不是真的联网抓取这些
-// 站点内容——call_ai_chat_with_fallback 没有搜索/浏览能力，只是提示模型
+// 站点内容——AiService 没有搜索/浏览能力，只是提示模型
 // 往这个方向组织语言，权当术语和讲法的锚点。
 const char* kChineseTutorialStyleHint =
     "讲解风格和术语尽量贴近菜鸟教程、C语言中文网、微软 Learn 中文文档、"
@@ -1500,7 +1328,7 @@ void MainWindow::show_history_dialog(
         diff_button->set_sensitive(false);
         diff_button->set_tooltip_text(
             "选中恰好 2 条记录后可用，让 AI 解释两次运行的源码与输出差异"
-            "（优先 DeepSeek，失败或未配置时用豆包）");
+            "（优先豆包，失败或未配置时用 DeepSeek）");
     }
 
     if (runs.empty()) {
@@ -1701,8 +1529,8 @@ void MainWindow::show_history_dialog(
     lock_for_modal_dialog(*this, *dialog);
 }
 
-// 打开对话框，异步用给定提示词调用 AI（优先 DeepSeek，失败或未配置再
-// 退回豆包），结果当 Markdown 解析后用跟手册页面一样的排版显示：md4c
+// 打开对话框，异步用给定提示词调用 AI（优先火山方舟豆包，失败或未配置
+// 再退回 DeepSeek），结果当 Markdown 解析后用跟手册页面一样的排版显示：md4c
 // 转 HTML、WKWebView（macOS）渲染，代码块、标题、列表都有正常版式，
 // 不是纯文本 TextView 堆一坨——AI 的回答经常代码和说明夹杂，纯文本对
 // 代码不友好。网络请求在独立线程执行，HTML 只在主线程构造和加载；
@@ -1754,8 +1582,10 @@ void MainWindow::show_ai_markdown_dialog(
     auto alive = m_ui_alive;
     thread([alive, dialog_alive, article_view, stylesheet, ark_api_key,
             deepseek_api_key, prompt, dialog]() {
-        const AiChatResult result =
-            call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
+        const AiChatResult result = AiService().chat(
+            {.ark_api_key = ark_api_key,
+             .deepseek_api_key = deepseek_api_key},
+            prompt);
         Glib::signal_idle().connect_once(
             [alive, dialog_alive, article_view, stylesheet, result, dialog]() {
                 if (!alive->load() || !dialog_alive->load() || !*article_view
@@ -1785,7 +1615,7 @@ void MainWindow::show_ai_response_dialog(
         "正在请求 AI，请稍候…", 760, 620);
 }
 
-// 打开对话框，异步向 AI（优先 DeepSeek，失败或未配置再退回豆包）请求
+// 打开对话框，异步向 AI（优先火山方舟豆包，失败或未配置再退回 DeepSeek）请求
 // 针对该知识点具体源码的选择题（JSON 格式，每题含题干、选项、正确选项
 // 下标和解释），逐题展示；每题先选一个选项，点“提交答案”才判对错、给
 // 解释，颜色区分对错。返回的 JSON 解析失败时退化为纯文本展示，不崩溃、
@@ -1846,8 +1676,10 @@ void MainWindow::show_ai_quiz_dialog(
     auto alive = m_ui_alive;
     thread([alive, dialog_alive, quiz_box, ark_api_key, deepseek_api_key, prompt,
             dialog]() {
-        const AiChatResult result =
-            call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
+        const AiChatResult result = AiService().chat(
+            {.ark_api_key = ark_api_key,
+             .deepseek_api_key = deepseek_api_key},
+            prompt);
         Glib::signal_idle().connect_once(
             [alive, dialog_alive, quiz_box, result, dialog]() {
                 if (!alive->load() || !dialog_alive->load()) {
@@ -1870,33 +1702,14 @@ void MainWindow::show_ai_quiz_dialog(
                     return;
                 }
 
-                bool parsed_ok = false;
-                try {
-                    const auto quiz = nlohmann::json::parse(
-                        strip_markdown_code_fence(result.content));
-                    const auto& questions = quiz.at("questions");
-                    for (const auto& item : questions) {
-                        const string question = item.value("question", "");
-                        const auto options =
-                            item.value("options", vector<string> {});
-                        auto correct_indices =
-                            item.value("correct_indices", vector<int> {});
-                        const string explanation =
-                            item.value("explanation", "");
-                        // 校验每个正确下标都落在选项范围内，过滤掉越界的脏数据。
-                        correct_indices.erase(
-                            remove_if(
-                                correct_indices.begin(),
-                                correct_indices.end(),
-                                [&options](int index) {
-                                    return index < 0
-                                        || index >= static_cast<int>(options.size());
-                                }),
-                            correct_indices.end());
-                        if (question.empty() || options.empty()
-                            || correct_indices.empty()) {
-                            continue;
-                        }
+                const auto quiz = parse_ai_quiz_response(result.content);
+                bool parsed_ok = quiz.has_value();
+                if (quiz) {
+                    for (const auto& item : quiz->questions) {
+                        const string question = item.question;
+                        const vector<string> options = item.options;
+                        const vector<int> correct_indices = item.correct_indices;
+                        const string explanation = item.explanation;
                         const bool is_multi_select = correct_indices.size() > 1;
 
                         auto item_box = Gtk::make_managed<Gtk::Box>(
@@ -2013,10 +1826,7 @@ void MainWindow::show_ai_quiz_dialog(
 
                         quiz_box->append(*item_box);
                         quiz_box->append(*Gtk::make_managed<Gtk::Separator>());
-                        parsed_ok = true;
                     }
-                } catch (const exception&) {
-                    parsed_ok = false;
                 }
 
                 if (!parsed_ok) {
