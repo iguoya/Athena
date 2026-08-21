@@ -38,10 +38,12 @@ private:
         const string& jump_to_document = "");
     void append_handbook_tab(const string& category_name);
     // cpp 分类“欢迎页面”后面的合成学习进度标签页：它不来自
-    // athena.json，由 build_chapter_tabs() 在欢迎页之后手工插入；每次
-    // 切回 cpp 分类都重新构建（数据量小，重新查库+布局的开销可以忽略），
-    // 保证 AI 自测更新的熟练度能反映出来，不需要额外的“数据是否过期”状态。
+    // athena.json，由 build_chapter_tabs() 在欢迎页之后手工插入。页面
+    // 初次进入、AI 成绩保存成功和再次激活标签时都从 LearningStore 重建，
+    // 避免统计停留在进入分类时的旧快照。
+    Gtk::Widget* create_progress_page();
     void append_progress_tab();
+    void refresh_progress_page();
     void initialize_code_page(
         const string& category_name,
         const ChapterMeta& chapter,

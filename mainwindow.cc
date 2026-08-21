@@ -677,12 +677,9 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
     }
 }
 
-// 学习进度是合成标签页：数据来自 LearningStore 与 ChapterCatalog 的交叉
-// 聚合，不对应 athena.json 里的任何章节，因此不走 ensure_chapter_page()
-// 那套 builder 缓存，每次都直接构建控件树。页面名登记进
-// m_active_page_names，切到别的分类时和普通章节页一起被移除，切回来重新
-// 构建，星级变化因此总是最新的。
-void MainWindow::append_progress_tab() {
+// 学习进度是合成页面：每次创建都从 LearningStore 批量读取最新熟练度，
+// 再与 ChapterCatalog 交叉聚合；不走章节 builder 缓存。
+Gtk::Widget* MainWindow::create_progress_page() {
     std::map<string, int> mastery_by_id;
     if (m_learning_store) {
         try {
@@ -693,8 +690,14 @@ void MainWindow::append_progress_tab() {
     }
     const CategoryProgress progress =
         aggregate_category_progress(m_catalog, "cpp", mastery_by_id);
+    return make_progress_page("C++", progress);
+}
+
+// 页面名登记进 m_active_page_names，切到别的分类时和普通章节页一起被
+// 移除；切回来时重新创建。标签按钮只创建一次，页面内容可独立替换。
+void MainWindow::append_progress_tab() {
     m_chapter_stack->add(
-        *make_progress_page("C++", progress), kProgressPageKey, "学习进度");
+        *create_progress_page(), kProgressPageKey, "学习进度");
     m_active_page_names.insert(kProgressPageKey);
 
     auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
@@ -716,6 +719,7 @@ void MainWindow::append_progress_tab() {
         if (!tab_button->get_active()) {
             return;
         }
+        refresh_progress_page();
         if (auto* child = m_chapter_stack->get_child_by_name(kProgressPageKey)) {
             m_chapter_stack->set_visible_child(*child);
         }
@@ -724,6 +728,28 @@ void MainWindow::append_progress_tab() {
 
     m_chapter_tab_box->append(*tab_button);
     m_tab_buttons.push_back(tab_button);
+}
+
+void MainWindow::refresh_progress_page() {
+    if (!m_chapter_stack
+        || m_active_page_names.find(kProgressPageKey)
+            == m_active_page_names.end()) {
+        return;
+    }
+
+    auto* old_page =
+        m_chapter_stack->get_child_by_name(kProgressPageKey);
+    const bool was_visible =
+        old_page && m_chapter_stack->get_visible_child() == old_page;
+    if (old_page) {
+        m_chapter_stack->remove(*old_page);
+    }
+
+    auto* page = create_progress_page();
+    m_chapter_stack->add(*page, kProgressPageKey, "学习进度");
+    if (was_visible) {
+        m_chapter_stack->set_visible_child(*page);
+    }
 }
 
 // 手册也是合成标签页，但页面本身懒构建且常驻 Stack（原因见
@@ -2218,6 +2244,7 @@ void MainWindow::populate_topic_list(
                 }
                 try {
                     m_learning_store->save_mastery(function_id, *mastery);
+                    refresh_progress_page();
                     return true;
                 } catch (const exception& error) {
                     cerr << "Failed to save quiz score for " << function_id
