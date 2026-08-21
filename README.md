@@ -10,19 +10,20 @@ macOS 可通过 Homebrew 安装
 `gtksourceview5 md4c nlohmann-json googletest`；Ubuntu 使用开发包
 `libgtksourceview-5-dev libmd4c-dev nlohmann-json3-dev libgtest-dev`。
 
-构建并运行测试：
+统一校验、构建并运行测试：
 
 ```sh
-meson setup builddir
-meson compile -C builddir
-meson test -C builddir --print-errorlogs
+scripts/check.sh
 ```
+
+该脚本依次执行 JSON 校验、项目生成器检查、Meson 配置、构建和测试；可用
+`--build-dir` 与 `--buildtype` 覆盖默认构建目录和构建类型。
 
 测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
 `athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
 两个项目生成器测试分别校验真实配置和四个生成子命令。
 
-项目配置检查：
+只检查项目配置而不构建：
 
 ```sh
 python3 scripts/generate_project.py \

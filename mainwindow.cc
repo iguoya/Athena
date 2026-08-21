@@ -929,7 +929,7 @@ string handbook_page_key(const string& category_name) {
 // 没有 builder 持有引用，一旦从 Stack 移除控件就会析构，而
 // m_article_views 里的 ArticleView 还指着里面的宿主控件。所以切分类时把
 // 它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页，
-// WKWebView 常驻——这也正是 ADR 0011 选常驻页面而非临时 Dialog 的理由。
+// WKWebView 常驻——这也正是 ADR 0012 选常驻页面而非临时 Dialog 的理由。
 void MainWindow::ensure_handbook_page(const string& category_name) {
     if (m_handbook_built_categories.count(category_name) > 0) {
         return;

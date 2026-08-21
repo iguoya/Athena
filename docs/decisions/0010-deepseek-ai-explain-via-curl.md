@@ -1,4 +1,4 @@
-# ADR 0009：知识点讲解可选接入 DeepSeek API，经 curl 子进程调用
+# ADR 0010：知识点讲解可选接入 DeepSeek API，经 curl 子进程调用
 
 - 日期：2026-08-17
 - 状态：已接受

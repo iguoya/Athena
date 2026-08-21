@@ -20,8 +20,8 @@
 - 数据库文件位于 `Glib::get_user_data_dir()/Athena/learning.db`
   （macOS 即 `~/Library/Application Support/Athena/`）。
 - 打开失败时应用降级运行：状态、笔记、历史相关控件功能失效，其余不受影响。
-- 运行历史记录附带成员函数源码指纹（SourceLocator 提取的函数体哈希），
-  用于标记"代码已修改/代码一致"。
+- 运行历史记录保存 SourceLocator 提取的成员函数源码快照、运行时 Git 提交
+  和工作区脏标记，用于回看与并排比较两次实验的源码和输出。
 
 ## 后果
 
