@@ -909,6 +909,21 @@ void MainWindow::show_about_dialog() {
             "为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一："
             "把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。");
         m_about_dialog->set_logo_icon_name("cn.athena.icon");
+        m_about_dialog->set_copyright("Copyright (c) 2026 tiger");
+        // 木兰宽松许可证第二版不在 Gtk::License 的预置枚举里，用 CUSTOM
+        // 附上官方建议的简明声明；完整条款见仓库根目录 LICENSE 文件。
+        m_about_dialog->set_license_type(Gtk::License::CUSTOM);
+        m_about_dialog->set_license(
+            "Athena is licensed under Mulan PSL v2.\n"
+            "You can use this software according to the terms and "
+            "conditions of the Mulan PSL v2.\n"
+            "You may obtain a copy of Mulan PSL v2 at:\n"
+            "    http://license.coscl.org.cn/MulanPSL2\n\n"
+            "THIS SOFTWARE IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT "
+            "WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING "
+            "BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT "
+            "FOR A PARTICULAR PURPOSE.\n"
+            "See the Mulan PSL v2 for more details.");
         m_about_dialog->set_transient_for(*this);
         m_about_dialog->set_modal(true);
         m_about_dialog->set_hide_on_close(true);

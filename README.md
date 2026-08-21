@@ -51,3 +51,7 @@ python3 scripts/package_macos.py \
 
 发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
 Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
+
+## 许可证
+
+本项目基于[木兰宽松许可证第二版](https://license.coscl.org.cn/MulanPSL2)（Mulan PSL v2）授权，完整条款见 [LICENSE](LICENSE)。
