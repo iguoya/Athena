@@ -289,8 +289,11 @@ Meson -> Generator outputs
 8. 已完成：解决源代码展示的安装后资源策略。
 9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
 10. 进行中：按 ADR 0014 从低风险到高风险拆分 `MainWindow`；非 GTK 的 `AiService`、
-    只接收聚合数据的 `ProgressPage` 和叶子对话框 `LearningDialogs` 已完成，
-    后续依次提取手册页和代码页（含 `ExperimentRunner`）。
+    只接收聚合数据的 `ProgressPage` 和叶子对话框 `LearningDialogs` 已完成。
+    `HandbookPage` 暂缓：手册不是产出知识点的主业务模块，现状（WKWebView 生命周期
+    规则已验证、常驻 Stack 懒构建一次）没有实际维护痛点，拆分收益暂时不足以排优先级；
+    等它真正成为瓶颈（改动频繁、状态纠缠、或明确要接 Linux WebKitGTK）再启动。
+    代码页（含 `ExperimentRunner`）状态最多、优先级最高，仍是下一步的第一候选。
 11. 只有出现多前端或大量界面行为必须脱离 GTK 测试时，再考虑正式 Presenter/View
     接口。
 
