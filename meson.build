@@ -157,7 +157,8 @@ app_sources = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
-  'render/chart_view.cc'
+  'render/chart_view.cc',
+  'ui/progress_page.cc'
 ) + article_view_sources + app_icon_sources
 
 # === 打包资源 ===
@@ -215,10 +216,15 @@ test('athena-core', core_test_exe)
 # GTK 测试只检查 Blueprint/GResource 能否构造关键控件，不启动完整窗口。
 gtk_test_exe = executable(
   'athena-gtk-tests',
-  files('tests/gtk_resource_test.cc'),
+  files(
+    'tests/gtk_resource_test.cc',
+    'tests/progress_page_test.cc',
+    'render/chart_view.cc',
+    'ui/progress_page.cc'
+  ),
   sources: resources,
   include_directories: [language_inc],
-  dependencies: [gtest_dep, gtkmm_dep, sourceview_dep]
+  dependencies: [gtest_dep, gtkmm_dep, sourceview_dep, athena_core_dep]
 )
 test('athena-gtk-resources', gtk_test_exe, is_parallel: false)
 

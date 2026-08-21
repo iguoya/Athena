@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include "app_icon.h"
 #include "content/source_locator.h"
-#include "render/chart_view.h"
 #include "render/markdown_renderer.h"
 #include "services/ai_service.h"
+#include "ui/progress_page.h"
 
 #include <gtksourceview/gtksource.h>
 #include <algorithm>
@@ -683,8 +683,18 @@ void MainWindow::build_chapter_tabs(const string& category_name) {
 // m_active_page_names，切到别的分类时和普通章节页一起被移除，切回来重新
 // 构建，星级变化因此总是最新的。
 void MainWindow::append_progress_tab() {
+    std::map<string, int> mastery_by_id;
+    if (m_learning_store) {
+        try {
+            mastery_by_id = m_learning_store->load_all_mastery();
+        } catch (const exception& error) {
+            cerr << "Failed to load mastery stats: " << error.what() << endl;
+        }
+    }
+    const CategoryProgress progress =
+        aggregate_category_progress(m_catalog, "cpp", mastery_by_id);
     m_chapter_stack->add(
-        *build_progress_page_widget(), kProgressPageKey, "学习进度");
+        *make_progress_page("C++", progress), kProgressPageKey, "学习进度");
     m_active_page_names.insert(kProgressPageKey);
 
     auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
@@ -905,168 +915,6 @@ void MainWindow::show_handbook_page(
     if (view != m_article_views.end() && view->second) {
         view->second->scroll_to_anchor(anchor->second);
     }
-}
-
-// 构建 cpp 分类“欢迎页面”后面的学习进度合成标签页；只统计 cpp 分类
-// （数据结构、设计模式两个分类当前没有实现，暂不接入，等真正有内容
-// 再考虑要不要各自加一份）。每次切回 cpp 分类都重新构建，代价是一次
-// SQLite 查询加上对几十个知识点的遍历，比 WKWebView 那种重量级构建
-// 便宜得多，用重新构建换取数据总是最新，不需要额外的“过没过期”状态。
-Gtk::Widget* MainWindow::build_progress_page_widget() {
-    // MainWindow 继承自 Gtk::Widget 一系，其自带名为 map 的成员，这里
-    // 必须显式 std::map（跟头文件里 m_chapter_builders 一样的原因）。
-    std::map<string, int> mastery_by_id;
-    if (m_learning_store) {
-        try {
-            mastery_by_id = m_learning_store->load_all_mastery();
-        } catch (const exception& error) {
-            cerr << "Failed to load mastery stats: " << error.what() << endl;
-        }
-    }
-
-    // 聚合口径（哪些算已掌握、完成度怎么算）放在 registry/progress_stats，
-    // 不依赖 GTK，可以单独测；这里只负责把结果摆成控件。
-    const CategoryProgress progress =
-        aggregate_category_progress(m_catalog, "cpp", mastery_by_id);
-
-    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scrolled->set_hexpand(true);
-    scrolled->set_vexpand(true);
-    scrolled->add_css_class("progress-page");
-
-    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 24);
-    page->set_margin_top(28);
-    page->set_margin_bottom(28);
-    page->set_margin_start(32);
-    page->set_margin_end(32);
-    scrolled->set_child(*page);
-
-    auto title = Gtk::make_managed<Gtk::Label>("学习进度 · C++");
-    title->add_css_class("title-2");
-    title->set_halign(Gtk::Align::START);
-    page->append(*title);
-
-    // 顶部统计卡片：四个维度各用一种强调色。
-    auto tiles_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
-    tiles_row->set_homogeneous(true);
-    page->append(*tiles_row);
-
-    const auto add_tile =
-        [tiles_row](const string& value, const string& label, const string& css_class) {
-            auto tile = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-            tile->add_css_class("stat-tile");
-            tile->add_css_class(css_class);
-            auto value_label = Gtk::make_managed<Gtk::Label>(value);
-            value_label->add_css_class("stat-tile-value");
-            value_label->set_halign(Gtk::Align::START);
-            auto text_label = Gtk::make_managed<Gtk::Label>(label);
-            text_label->add_css_class("stat-tile-label");
-            text_label->set_halign(Gtk::Align::START);
-            tile->append(*value_label);
-            tile->append(*text_label);
-            tiles_row->append(*tile);
-        };
-
-    add_tile(to_string(progress.total), "知识点总数", "stat-tile-total");
-    add_tile(to_string(progress.mastered), "已掌握（5 星）", "stat-tile-mastered");
-    add_tile(
-        to_string(progress.in_progress), "学习中（1–4 星）", "stat-tile-in-progress");
-    ostringstream average_text;
-    average_text << fixed << setprecision(1) << progress.average_mastery();
-    add_tile(average_text.str() + " / 5", "平均熟练度", "stat-tile-average");
-
-    // 图表行：左边环形图看整体三档占比，右边柱状图逐章节对比完成度
-    // （悬浮看具体数字）。下面单独一行是熟练度分布直方图。具体到每个
-    // 知识点的星级在最下面的 Expander 列表里，图表不重复承载这些文字。
-    // 学习活跃度折线/热力图需要按天聚合 run_history.ran_at，数据其实已经
-    // 在库里，等这一版稳定后再补。
-    auto charts_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 24);
-    page->append(*charts_row);
-
-    auto donut_frame = Gtk::make_managed<Gtk::Frame>();
-    donut_frame->add_css_class("panel-frame");
-    donut_frame->set_label("整体完成度");
-    auto donut_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 10);
-    donut_box->set_margin_top(12);
-    donut_box->set_margin_bottom(12);
-    donut_box->set_margin_start(12);
-    donut_box->set_margin_end(12);
-    donut_box->set_halign(Gtk::Align::CENTER);
-    donut_box->append(*make_mastery_donut_chart(
-        progress.mastered, progress.in_progress, progress.not_started));
-    donut_box->append(*make_mastery_legend());
-    donut_frame->set_child(*donut_box);
-    charts_row->append(*donut_frame);
-
-    auto bar_frame = Gtk::make_managed<Gtk::Frame>();
-    bar_frame->add_css_class("panel-frame");
-    bar_frame->set_label("各章节完成度");
-    bar_frame->set_hexpand(true);
-    auto bar_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    bar_box->set_margin_top(12);
-    bar_box->set_margin_bottom(12);
-    bar_box->set_margin_start(12);
-    bar_box->set_margin_end(12);
-    bar_box->append(*make_chapter_bar_chart(progress.chapters));
-    bar_frame->set_child(*bar_box);
-    charts_row->append(*bar_frame);
-
-    auto histogram_frame = Gtk::make_managed<Gtk::Frame>();
-    histogram_frame->add_css_class("panel-frame");
-    histogram_frame->set_label("熟练度分布");
-    auto histogram_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    histogram_box->set_margin_top(12);
-    histogram_box->set_margin_bottom(12);
-    histogram_box->set_margin_start(12);
-    histogram_box->set_margin_end(12);
-    histogram_box->append(
-        *make_mastery_histogram_chart(progress.mastery_histogram()));
-    histogram_frame->set_child(*histogram_box);
-    page->append(*histogram_frame);
-
-    // 逐章节列表：收起显示进度条，点开看每个知识点的星级。
-    for (const auto& chapter_stat : progress.chapters) {
-        auto expander = Gtk::make_managed<Gtk::Expander>();
-        expander->add_css_class("progress-chapter-row");
-
-        auto header = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 10);
-        auto chapter_title = Gtk::make_managed<Gtk::Label>(chapter_stat.chapter_title);
-        chapter_title->add_css_class("progress-chapter-title");
-        header->append(*chapter_title);
-
-        // 进度条跟柱状图用同一个完成度口径（平均熟练度占满分的比例），
-        // 否则同一章在两处显示会对不上。
-        auto chapter_bar = Gtk::make_managed<Gtk::LevelBar>();
-        chapter_bar->set_min_value(0);
-        chapter_bar->set_max_value(1.0);
-        chapter_bar->set_value(chapter_stat.completion_ratio());
-        chapter_bar->set_hexpand(true);
-        chapter_bar->set_valign(Gtk::Align::CENTER);
-        header->append(*chapter_bar);
-
-        auto chapter_count = Gtk::make_managed<Gtk::Label>(
-            to_string(chapter_stat.mastered) + "/" + to_string(chapter_stat.total));
-        chapter_count->add_css_class("progress-chapter-count");
-        header->append(*chapter_count);
-
-        expander->set_label_widget(*header);
-
-        auto subchapter_list = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-        for (const auto& [sub_title, mastery] : chapter_stat.subchapter_mastery) {
-            auto sub_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
-            sub_row->add_css_class("progress-subchapter-row");
-            auto sub_label = Gtk::make_managed<Gtk::Label>(sub_title);
-            sub_label->set_hexpand(true);
-            sub_label->set_halign(Gtk::Align::START);
-            sub_row->append(*sub_label);
-            sub_row->append(*make_mastery_stars(mastery));
-            subchapter_list->append(*sub_row);
-        }
-        expander->set_child(*subchapter_list);
-        page->append(*expander);
-    }
-
-    return scrolled;
 }
 
 void MainWindow::initialize_code_page(

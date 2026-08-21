@@ -41,7 +41,6 @@ private:
     // 切回 cpp 分类都重新构建（数据量小，重新查库+布局的开销可以忽略），
     // 保证熟练度星级的变化能反映出来，不需要额外的“数据是否过期”状态。
     void append_progress_tab();
-    Gtk::Widget* build_progress_page_widget();
     void initialize_code_page(
         const string& category_name,
         const ChapterMeta& chapter,

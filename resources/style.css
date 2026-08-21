@@ -668,7 +668,7 @@ frame.article-surface > border {
 }
 
 /* 图例的"未开始"必须和环形图里 Cairo 画的同名段一致；Cairo 取不到
-   @define-color，颜色在 mainwindow.cc 的 kChartNotStarted 另有一份，
+   @define-color，颜色在 render/chart_scale.h 的 kChartNotStarted 另有一份，
    改这里也要改那边。 */
 .progress-legend-not-started {
     background-color: @athena_chart_neutral;
