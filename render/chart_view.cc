@@ -6,7 +6,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iomanip>
 #include <sstream>
 
 namespace {
@@ -83,8 +82,7 @@ void draw_value_axis(
     }
 }
 
-// 柱状图的几何：把第 index 根柱子的横向范围算出来，绘制和鼠标命中测试
-// 共用同一份计算，避免 tooltip 指到隔壁柱子。
+// 直方图柱子的几何：把第 index 根柱子的横向范围算出来。
 struct BarGeometry {
     double x = 0;
     double width = 0;
@@ -194,92 +192,6 @@ Gtk::Box* make_mastery_legend() {
     return row;
 }
 
-Gtk::DrawingArea* make_chapter_bar_chart(const vector<ChapterProgress>& chapters) {
-    auto area = Gtk::make_managed<Gtk::DrawingArea>();
-    area->set_content_height(210);
-    area->set_hexpand(true);
-
-    area->set_draw_func(
-        [chapters](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-            if (chapters.empty()) {
-                return;
-            }
-            const ChartFrame frame = make_frame(width, height, 42, 18);
-            if (frame.width() <= 0 || frame.height() <= 0) {
-                return;
-            }
-
-            // 纵轴固定 0-100%：完成度本身就是比例，按数据自适应反而会让
-            // 不同时间看到的同一张图不可比。
-            // 要 5 段而不是 4：0-1 取 4 段时原始步长 0.25 会被 1/2/5 规则
-            // 归整成 0.5，轴上只剩 0/50/100%；5 段正好落到 20% 一档。
-            constexpr double axis_max = 1.0;
-            draw_value_axis(cr, frame, nice_ticks(0, axis_max, 5), axis_max, true);
-
-            for (size_t index = 0; index < chapters.size(); ++index) {
-                const auto& chapter = chapters[index];
-                const auto geometry = bar_geometry(frame, chapters.size(), index);
-                const double ratio = chapter.completion_ratio();
-                const double bar_height = frame.height() * ratio;
-
-                cr->set_source_rgba(0, 0, 0, 0.05);
-                cr->rectangle(geometry.x, frame.top, geometry.width, frame.height());
-                cr->fill();
-
-                if (bar_height > 0) {
-                    // 完成度越高越偏绿，越低越偏橙，颜色本身也传达进度。
-                    const ChartColor color =
-                        mix_chart_color(kChartInProgress, kChartMastered, ratio);
-                    cr->set_source_rgb(color.r, color.g, color.b);
-                    cr->rectangle(
-                        geometry.x,
-                        frame.bottom - bar_height,
-                        geometry.width,
-                        bar_height);
-                    cr->fill();
-                }
-            }
-        });
-
-    // 章节名放不下（十几个章节挤在一行会重叠），改成悬浮显示；命中测试
-    // 复用 bar_geometry，保证提示的和画出来的是同一根柱子。
-    area->set_has_tooltip(true);
-    area->signal_query_tooltip().connect(
-        [area, chapters](
-            int x, int y, bool keyboard, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
-            if (keyboard || chapters.empty()) {
-                return false;
-            }
-            const ChartFrame frame =
-                make_frame(area->get_width(), area->get_height(), 42, 18);
-            if (y < frame.top || y > frame.bottom) {
-                return false;
-            }
-            for (size_t index = 0; index < chapters.size(); ++index) {
-                const auto geometry = bar_geometry(frame, chapters.size(), index);
-                if (x < geometry.x || x > geometry.x + geometry.width) {
-                    continue;
-                }
-                const auto& chapter = chapters[index];
-                ostringstream text;
-                text << chapter.chapter_title << "\n完成度 "
-                     << format_percent(chapter.completion_ratio()) << "（已掌握 "
-                     << chapter.mastered << "/" << chapter.total << "，平均 "
-                     << fixed << setprecision(1)
-                     << (chapter.total > 0
-                             ? static_cast<double>(chapter.mastery_sum) / chapter.total
-                             : 0.0)
-                     << " 星）";
-                tooltip->set_text(text.str());
-                return true;
-            }
-            return false;
-        },
-        false);
-
-    return area;
-}
-
 Gtk::DrawingArea* make_mastery_histogram_chart(
     const array<int, kMasteryLevels>& histogram) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
@@ -306,8 +218,7 @@ Gtk::DrawingArea* make_mastery_histogram_chart(
                 const double bar_height =
                     axis_max > 0 ? frame.height() * (value / axis_max) : 0.0;
 
-                // 星级本身就是进度，用同一条橙→绿的渐变表达，跟章节完成度
-                // 柱状图读起来一致。
+                // 星级越高越偏绿，越低越偏橙，颜色本身也传达进度。
                 const ChartColor color = mix_chart_color(
                     kChartInProgress,
                     kChartMastered,

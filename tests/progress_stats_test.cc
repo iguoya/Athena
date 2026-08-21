@@ -95,8 +95,8 @@ TEST(ProgressStatsTest, CrossesCatalogWithRecordedMastery) {
     EXPECT_DOUBLE_EQ(progress.average_mastery(), 12.0 / 5.0);
 }
 
-// 完成度必须是平均熟练度占满分的比例，不是"5 星占比"：后者在没有任何
-// 5 星时恒为 0，柱状图会整张空白，看起来像图表没渲染出来。
+// 完成度必须是平均熟练度占满分的比例，不是"5 星占比"：否则没有任何
+// 5 星时章节进度条会恒为 0，无法反映 1-4 星的学习进展。
 TEST(ProgressStatsTest, CompletionRatioUsesAverageMasteryNotFiveStarCount) {
     const auto catalog = MakeCatalog();
     const map<string, int> mastery = {

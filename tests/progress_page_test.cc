@@ -32,6 +32,20 @@ Gtk::Expander* find_expander(Gtk::Widget& root) {
     return nullptr;
 }
 
+Gtk::Frame* find_frame(Gtk::Widget& root, const string& label) {
+    if (auto* frame = dynamic_cast<Gtk::Frame*>(&root);
+        frame && frame->get_label() == label) {
+        return frame;
+    }
+    for (auto* child = root.get_first_child(); child;
+         child = child->get_next_sibling()) {
+        if (auto* frame = find_frame(*child, label)) {
+            return frame;
+        }
+    }
+    return nullptr;
+}
+
 TEST(ProgressPageTest, RendersAggregatedDataWithoutReadingStorage) {
     const CategoryProgress progress {
         .chapters = {
@@ -60,6 +74,9 @@ TEST(ProgressPageTest, RendersAggregatedDataWithoutReadingStorage) {
     EXPECT_NE(find_label(*page, "4.0 / 5"), nullptr);
     EXPECT_NE(find_label(*page, "RAII"), nullptr);
     EXPECT_NE(find_label(*page, "1/2"), nullptr);
+    EXPECT_NE(find_frame(*page, "整体完成度"), nullptr);
+    EXPECT_NE(find_frame(*page, "熟练度分布"), nullptr);
+    EXPECT_EQ(find_frame(*page, "各章节完成度"), nullptr);
     auto* chapter = find_expander(*page);
     ASSERT_NE(chapter, nullptr);
     ASSERT_NE(chapter->get_child(), nullptr);

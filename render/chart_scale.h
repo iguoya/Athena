@@ -29,8 +29,8 @@ inline constexpr ChartColor kChartLabelText = chart_color(0x212529);   // @athen
 inline constexpr ChartColor kChartAxis = chart_color(0xced4da);        // @athena_border_strong
 inline constexpr ChartColor kChartMutedText = chart_color(0x6c757d);   // @athena_muted
 
-// 在两个颜色之间线性插值，t 会被夹到 [0, 1]。柱状图用它表达"完成度越高
-// 越偏绿、越低越偏橙"，不另外定义一套渐变色。
+// 在两个颜色之间线性插值，t 会被夹到 [0, 1]。熟练度直方图用它表达
+// "星级越高越偏绿、越低越偏橙"，不另外定义一套渐变色。
 ChartColor mix_chart_color(const ChartColor& from, const ChartColor& to, double t);
 
 // 计算"好看"的坐标轴刻度值：步长取 1/2/5 × 10^n，返回一组等距刻度，

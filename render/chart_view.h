@@ -25,12 +25,6 @@ Gtk::DrawingArea* make_mastery_donut_chart(
 // 环形图的图例：三个色块对应已掌握/学习中/未开始。
 Gtk::Box* make_mastery_legend();
 
-// 逐章节完成度柱状图：每章一根竖条，高度按平均熟练度占满分的比例算
-// （见 ChapterProgress::completion_ratio），带纵轴刻度和网格线。
-// 章节名不写在图上（章节太多会挤成一团），改为悬浮在柱子上显示章节名和
-// 具体数字。
-Gtk::DrawingArea* make_chapter_bar_chart(const vector<ChapterProgress>& chapters);
-
 // 熟练度分布直方图：横轴是 0-5 星，纵轴是该星级的知识点数量。
 Gtk::DrawingArea* make_mastery_histogram_chart(
     const array<int, kMasteryLevels>& histogram);

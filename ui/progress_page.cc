@@ -73,22 +73,10 @@ Gtk::Widget* make_progress_page(
     donut_frame->set_child(*donut_box);
     charts_row->append(*donut_frame);
 
-    auto bar_frame = Gtk::make_managed<Gtk::Frame>();
-    bar_frame->add_css_class("panel-frame");
-    bar_frame->set_label("各章节完成度");
-    bar_frame->set_hexpand(true);
-    auto bar_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    bar_box->set_margin_top(12);
-    bar_box->set_margin_bottom(12);
-    bar_box->set_margin_start(12);
-    bar_box->set_margin_end(12);
-    bar_box->append(*make_chapter_bar_chart(progress.chapters));
-    bar_frame->set_child(*bar_box);
-    charts_row->append(*bar_frame);
-
     auto histogram_frame = Gtk::make_managed<Gtk::Frame>();
     histogram_frame->add_css_class("panel-frame");
     histogram_frame->set_label("熟练度分布");
+    histogram_frame->set_hexpand(true);
     auto histogram_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     histogram_box->set_margin_top(12);
     histogram_box->set_margin_bottom(12);
@@ -97,7 +85,7 @@ Gtk::Widget* make_progress_page(
     histogram_box->append(
         *make_mastery_histogram_chart(progress.mastery_histogram()));
     histogram_frame->set_child(*histogram_box);
-    page->append(*histogram_frame);
+    charts_row->append(*histogram_frame);
 
     for (const auto& chapter_stat : progress.chapters) {
         auto expander = Gtk::make_managed<Gtk::Expander>();
