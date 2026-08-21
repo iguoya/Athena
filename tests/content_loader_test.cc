@@ -9,7 +9,7 @@ TEST(ContentLoaderTest, LoadsProjectConfigurationFromDisk) {
 
     const string source = loader.load_project_file("resources/athena.json");
 
-    EXPECT_NE(source.find("\"schema\": 1"), string::npos);
+    EXPECT_NE(source.find("\"format_version\": 1"), string::npos);
 }
 
 TEST(ContentLoaderTest, LoadsTeachingSourceFromBundledResource) {

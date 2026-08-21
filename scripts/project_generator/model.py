@@ -23,7 +23,7 @@ CXX20_KEYWORDS = frozenset(
     """.split()
 )
 
-ROOT_FIELDS = frozenset({"schema", "defaults", "categories"})
+ROOT_FIELDS = frozenset({"format_version", "defaults", "categories"})
 DEFAULT_FIELDS = frozenset({"chapter_ui", "chapter_icon", "subchapter_icon"})
 CHAPTER_UI_FIELDS = frozenset({"code"})
 CODE_UI_FIELDS = frozenset({"blueprint"})
@@ -136,10 +136,7 @@ def load_json(config_path: Path) -> dict:
     return require_object(config, "athena.json")
 
 
-def validate_icon(root: Path, value: object, label: str) -> dict | None:
-    if value is None:
-        return None
-
+def validate_icon(root: Path, value: object, label: str) -> dict:
     icon = require_object(value, label)
     icon_type = require_text(icon.get("type"), f"{label}.type")
     if icon_type == "theme":
@@ -183,14 +180,21 @@ def build_model(
         ROOT_FIELDS,
         "athena.json",
         deprecated={
+            "schema": "rename this old version field to format_version",
             "handbook_documents": (
                 "move it into the owning category; handbooks are category-local"
             )
         },
     )
-    schema = config.get("schema")
-    if not isinstance(schema, int) or isinstance(schema, bool) or schema != 1:
-        raise ProjectError(f"unsupported athena.json schema: {schema!r}")
+    format_version = config.get("format_version")
+    if (
+        not isinstance(format_version, int)
+        or isinstance(format_version, bool)
+        or format_version != 1
+    ):
+        raise ProjectError(
+            f"unsupported athena.json format_version: {format_version!r}"
+        )
 
     defaults = require_object(config.get("defaults"), "athena.json.defaults")
     reject_unknown_fields(
@@ -219,13 +223,23 @@ def build_model(
         code_ui.get("blueprint"),
         "athena.json.defaults.chapter_ui.code.blueprint",
     )
-    default_chapter_icon = validate_icon(
-        root, defaults.get("chapter_icon"), "athena.json.defaults.chapter_icon"
+    default_chapter_icon = (
+        validate_icon(
+            root,
+            defaults["chapter_icon"],
+            "athena.json.defaults.chapter_icon",
+        )
+        if "chapter_icon" in defaults
+        else None
     )
-    default_subchapter_icon = validate_icon(
-        root,
-        defaults.get("subchapter_icon"),
-        "athena.json.defaults.subchapter_icon",
+    default_subchapter_icon = (
+        validate_icon(
+            root,
+            defaults["subchapter_icon"],
+            "athena.json.defaults.subchapter_icon",
+        )
+        if "subchapter_icon" in defaults
+        else None
     )
 
     seen_categories: set[str] = set()
@@ -265,9 +279,9 @@ def build_model(
         category_description = require_text(
             category.get("description"), f"{category_path}.description"
         )
-        category_icon = validate_icon(root, category.get("icon"), f"{category_path}.icon")
-        if category_icon is None:
-            raise ProjectError(f"{category_path}.icon must be provided")
+        category_icon = validate_icon(
+            root, category.get("icon"), f"{category_path}.icon"
+        )
 
         handbook_values = require_list(
             category.get("handbook_documents", []),
@@ -319,8 +333,10 @@ def build_model(
             chapter_description = require_text(
                 chapter.get("description"), f"{chapter_path}.description"
             )
-            own_chapter_icon = validate_icon(
-                root, chapter.get("icon"), f"{chapter_path}.icon"
+            own_chapter_icon = (
+                validate_icon(root, chapter["icon"], f"{chapter_path}.icon")
+                if "icon" in chapter
+                else None
             )
             chapter_icon = resolve_icon(
                 own_chapter_icon, default_chapter_icon, f"{chapter_path}.icon"
@@ -335,7 +351,7 @@ def build_model(
 
             implementation = chapter.get("implementation")
             implementation_header = ""
-            if implementation is not None:
+            if "implementation" in chapter:
                 implementation = require_object(
                     implementation, f"{chapter_path}.implementation"
                 )
@@ -374,7 +390,7 @@ def build_model(
                 source_files.add(chapter_source)
 
             custom_ui = chapter.get("ui")
-            if custom_ui is None:
+            if "ui" not in chapter:
                 blueprint = default_blueprint
             else:
                 custom_ui = require_object(custom_ui, f"{chapter_path}.ui")
@@ -436,8 +452,10 @@ def build_model(
                 group_description = require_text(
                     group.get("description"), f"{group_path}.description"
                 )
-                own_group_icon = validate_icon(
-                    root, group.get("icon"), f"{group_path}.icon"
+                own_group_icon = (
+                    validate_icon(root, group["icon"], f"{group_path}.icon")
+                    if "icon" in group
+                    else None
                 )
                 group_source = ""
                 if "source" in group:
@@ -502,12 +520,18 @@ def build_model(
                 subchapter_description = require_text(
                     subchapter.get("description"), f"{subchapter_path}.description"
                 )
-                own_subchapter_icon = validate_icon(
-                    root, subchapter.get("icon"), f"{subchapter_path}.icon"
+                own_subchapter_icon = (
+                    validate_icon(
+                        root, subchapter["icon"], f"{subchapter_path}.icon"
+                    )
+                    if "icon" in subchapter
+                    else None
                 )
-                group_name = subchapter.get("group", "")
-                if group_name:
-                    group_name = require_text(group_name, f"{subchapter_path}.group")
+                group_name = ""
+                if "group" in subchapter:
+                    group_name = require_text(
+                        subchapter["group"], f"{subchapter_path}.group"
+                    )
                     if group_name not in group_names:
                         raise ProjectError(
                             f"{subchapter_path}.group references unknown group "
@@ -609,7 +633,7 @@ def build_model(
     return {
         "config": config,
         "runtime_catalog": {
-            "runtime_schema": 1,
+            "catalog_version": 1,
             "categories": runtime_categories,
         },
         "ui": seen_ui,

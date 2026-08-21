@@ -1,51 +1,73 @@
 #include "registry/progress_stats.h"
 
 #include <gtest/gtest.h>
+#include <nlohmann/json.hpp>
 
 namespace {
 
 // 两章：Alpha 有 3 个知识点，Beta 有 2 个；Empty 没有知识点，应当整章跳过。
 ChapterCatalog MakeCatalog() {
-    return ChapterCatalog::from_json(R"({
-      "schema": 1,
-      "defaults": {
-        "chapter_ui": { "code": { "blueprint": "resources/ui/chapters/empty_chapter.blp" } }
-      },
-      "categories": [
-        {
-          "name": "cpp",
-          "title": "C++",
-          "description": "测试用分类",
-          "chapters": [
+    using json = nlohmann::json;
+    const json icon = {{"type", "theme"}, {"name", "test"}, {"path", ""}};
+    auto make_point = [&icon](
+                          const string& chapter,
+                          const string& name,
+                          const string& title) {
+        return json{
+            {"function_id", "cpp." + chapter + "." + name},
+            {"name", name},
+            {"title", title},
+            {"description", "d"},
+            {"group", ""},
+            {"source", ""},
+            {"importance", 0},
+            {"icon", icon},
+        };
+    };
+    auto make_chapter = [&icon](
+                            const string& name,
+                            const string& title,
+                            json subchapters) {
+        return json{
+            {"name", name},
+            {"title", title},
+            {"description", "测试章节"},
+            {"overview_document", ""},
+            {"resource_path", "/app/chapters/code.ui"},
+            {"widget_name", "chapter_page"},
+            {"source", ""},
+            {"implementation_header", ""},
+            {"icon", icon},
+            {"groups", json::array()},
+            {"subchapters", std::move(subchapters)},
+        };
+    };
+
+    const json source = {
+        {"catalog_version", 1},
+        {"categories", json::array({
             {
-              "name": "Empty",
-              "title": "无知识点章节",
-              "description": "只作导航用途",
-              "subchapters": []
+                {"name", "cpp"},
+                {"title", "C++"},
+                {"description", "测试用分类"},
+                {"icon", icon},
+                {"handbook_documents", json::array()},
+                {"chapters", json::array({
+                    make_chapter("Empty", "无知识点章节", json::array()),
+                    make_chapter("Alpha", "甲章", json::array({
+                        make_point("Alpha", "one", "知识点一"),
+                        make_point("Alpha", "two", "知识点二"),
+                        make_point("Alpha", "three", "知识点三"),
+                    })),
+                    make_chapter("Beta", "乙章", json::array({
+                        make_point("Beta", "four", "知识点四"),
+                        make_point("Beta", "five", "知识点五"),
+                    })),
+                })},
             },
-            {
-              "name": "Alpha",
-              "title": "甲章",
-              "description": "测试章节",
-              "subchapters": [
-                { "name": "one", "title": "知识点一", "description": "d" },
-                { "name": "two", "title": "知识点二", "description": "d" },
-                { "name": "three", "title": "知识点三", "description": "d" }
-              ]
-            },
-            {
-              "name": "Beta",
-              "title": "乙章",
-              "description": "测试章节",
-              "subchapters": [
-                { "name": "four", "title": "知识点四", "description": "d" },
-                { "name": "five", "title": "知识点五", "description": "d" }
-              ]
-            }
-          ]
-        }
-      ]
-    })");
+        })},
+    };
+    return ChapterCatalog::from_runtime_json(source.dump());
 }
 
 TEST(ProgressStatsTest, CrossesCatalogWithRecordedMastery) {

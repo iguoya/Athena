@@ -49,8 +49,7 @@ CategoryProgress aggregate_category_progress(
         ChapterProgress chapter_progress;
         chapter_progress.chapter_title = chapter.title;
         for (const auto& subchapter : chapter.subchapters) {
-            const string function_id =
-                make_function_id(category_name, chapter.name, subchapter.name);
+            const string& function_id = subchapter.function_id;
             int mastery = 0;
             if (const auto entry = mastery_by_id.find(function_id);
                 entry != mastery_by_id.end()) {

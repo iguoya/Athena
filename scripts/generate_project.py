@@ -9,6 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from project_generator.catalog import render_catalog
 from project_generator.model import ProjectError, build_model
 from project_generator.registry import render_registry
 from project_generator.resources import blueprint_entries, render_resources
@@ -41,7 +42,10 @@ def write_generated(path: Path, content: str) -> None:
 
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate Athena and generate resources, registry, or chapter skeletons."
+        description=(
+            "Validate Athena and generate resources, runtime catalog, registry, "
+            "or chapter skeletons."
+        )
     )
     parser.add_argument("--project-root", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True)
@@ -49,6 +53,8 @@ def make_parser() -> argparse.ArgumentParser:
 
     resources = commands.add_parser("resources", help="generate GResource XML")
     resources.add_argument("--output", type=Path, required=True)
+    catalog = commands.add_parser("catalog", help="generate normalized runtime Catalog")
+    catalog.add_argument("--output", type=Path, required=True)
     registry = commands.add_parser("registry", help="generate FunctionRegistry C++")
     registry.add_argument("--output", type=Path, required=True)
     commands.add_parser("check", help="validate the project without writing files")
@@ -75,6 +81,8 @@ def main(argv: list[str] | None = None) -> int:
         write_generated(args.output, render_resources(model, root))
         for target_id, blueprint, ui_name in blueprint_entries(model):
             print(f"{target_id}|{blueprint}|{ui_name}")
+    elif args.command == "catalog":
+        write_generated(args.output, render_catalog(model))
     elif args.command == "registry":
         write_generated(args.output, render_registry(model["bindings"]))
     elif args.command == "check":

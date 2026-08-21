@@ -12,7 +12,7 @@
 ## 决策
 
 - `resources/athena.json` 是项目配置的唯一数据源，承载分类、章节、分组和
-  知识点元数据；Schema 先于解析器、注册表和生成器定义。
+  知识点元数据；配置契约先于解析器、注册表和生成器定义。
 - `scripts/generate_project.py` 统一实现校验、GResource 清单、Blueprint 目标
   与 `FunctionRegistry` 绑定，输出必须确定性（相同输入产生相同内容与顺序）。
 - 生成文件带 `DO NOT EDIT` 提示与 `.generated` 后缀，可反复覆盖；`scaffold`

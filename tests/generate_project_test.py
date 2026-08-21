@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""End-to-end smoke test for generate_project.py's four commands."""
+"""End-to-end smoke test for generate_project.py's five commands."""
 
 from __future__ import annotations
 
@@ -57,6 +57,19 @@ def main() -> None:
     if len(sys.argv) != 2:
         raise SystemExit("usage: generate_project_test.py <generate_project.py>")
     generator = Path(sys.argv[1]).resolve()
+    sys.path.insert(0, str(generator.parent))
+    from project_generator.model import (  # pylint: disable=import-outside-toplevel
+        CXX20_KEYWORDS,
+        ProjectError,
+        validate_cpp_identifier,
+    )
+
+    for keyword in CXX20_KEYWORDS:
+        try:
+            validate_cpp_identifier(keyword, "test.name", "generated name")
+        except ProjectError:
+            continue
+        raise AssertionError(f"C++20 keyword was accepted: {keyword}")
 
     with tempfile.TemporaryDirectory(prefix="athena-generator-") as temporary:
         root = Path(temporary)
@@ -66,7 +79,7 @@ def main() -> None:
         write(root / "resources" / "article.css")
         write(root / "resources" / "icons" / "tiger.svg", "<svg/>\n")
         config = {
-            "schema": 1,
+            "format_version": 1,
             "defaults": {
                 "chapter_ui": {
                     "code": {"blueprint": "resources/ui/chapters/code.blp"},
@@ -146,12 +159,76 @@ def main() -> None:
         assert "language/widget/widget.hpp" in resource_xml
         assert '<file alias="tiger.svg">icons/tiger.svg</file>' in resource_xml
         assert "/app/icons/icons" not in resource_xml
+        assert 'alias="chapter_catalog.json"' in resource_xml
+        assert ">athena.json<" not in resource_xml
+
+        catalog_output = root / "build" / "chapter_catalog.generated.json"
+        run(generator, root, "catalog", "--output", str(catalog_output))
+        catalog = json.loads(catalog_output.read_text(encoding="utf-8"))
+        assert catalog["catalog_version"] == 1
+        assert "DO NOT EDIT" in catalog["generated_notice"]
+        runtime_chapter = catalog["categories"][0]["chapters"][0]
+        assert runtime_chapter["resource_path"] == "/app/chapters/code.ui"
+        assert runtime_chapter["widget_name"] == "chapter_page"
+        assert runtime_chapter["source"] == "language/widget/widget.hpp"
+        assert runtime_chapter["icon"]["name"] == "view-grid-symbolic"
+        runtime_point = runtime_chapter["subchapters"][0]
+        assert runtime_point["function_id"] == "cpp.Widget.basics"
+        assert runtime_point["source"] == "language/widget/widget.hpp"
+        assert runtime_point["importance"] == 0
+        assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
+
+        write(root / "language" / "widget" / "chapter.cpp")
+        write(root / "language" / "widget" / "group.cpp")
+        write(root / "language" / "widget" / "point.cpp")
+        source_inheritance = copy.deepcopy(config)
+        source_chapter = source_inheritance["categories"][0]["chapters"][0]
+        source_chapter["source"] = "language/widget/chapter.cpp"
+        source_chapter["groups"] = [
+            {
+                "name": "ownership",
+                "title": "Ownership",
+                "description": "fixture group",
+                "source": "language/widget/group.cpp",
+            }
+        ]
+        source_chapter["subchapters"][0]["group"] = "ownership"
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(source_inheritance, ensure_ascii=False, indent=2) + "\n",
+        )
+        run(generator, root, "catalog", "--output", str(catalog_output))
+        inherited = json.loads(catalog_output.read_text(encoding="utf-8"))
+        inherited_point = inherited["categories"][0]["chapters"][0][
+            "subchapters"
+        ][0]
+        assert inherited_point["source"] == "language/widget/group.cpp"
+
+        source_inheritance["categories"][0]["chapters"][0]["subchapters"][0][
+            "source"
+        ] = "language/widget/point.cpp"
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(source_inheritance, ensure_ascii=False, indent=2) + "\n",
+        )
+        run(generator, root, "catalog", "--output", str(catalog_output))
+        explicit = json.loads(catalog_output.read_text(encoding="utf-8"))
+        explicit_point = explicit["categories"][0]["chapters"][0][
+            "subchapters"
+        ][0]
+        assert explicit_point["source"] == "language/widget/point.cpp"
+
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(config, ensure_ascii=False, indent=2) + "\n",
+        )
 
         registry_output = root / "build" / "function_registry.generated.cc"
         run(generator, root, "registry", "--output", str(registry_output))
         registry = registry_output.read_text(encoding="utf-8")
         assert "make_shared<Widget>()" in registry
-        assert 'make_function_id("cpp", "Widget", "basics")' in registry
+        assert 'registry.add("cpp.Widget.basics"' in registry
+        assert "make_function_id" not in registry
 
         class_keyword = copy.deepcopy(config)
         class_keyword["categories"][0]["chapters"][0]["name"] = "class"
@@ -189,6 +266,16 @@ def main() -> None:
             root,
             deprecated_field,
             "athena.json.handbook_documents is deprecated",
+        )
+
+        old_version_field = copy.deepcopy(config)
+        del old_version_field["format_version"]
+        old_version_field["schema"] = 1
+        assert_rejected(
+            generator,
+            root,
+            old_version_field,
+            "rename this old version field to format_version",
         )
 
         invalid_importance = copy.deepcopy(config)

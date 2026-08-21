@@ -51,7 +51,7 @@ def render_resources(model: dict, root: Path) -> str:
 {entries_or_comment(ui_entries, "暂无章节")}
   </gresource>
   <gresource prefix="/app/data">
-    <file compressed="true">athena.json</file>
+    <file alias="chapter_catalog.json" compressed="true">chapter_catalog.generated.json</file>
   </gresource>
   <gresource prefix="/app/sources">
 {entries_or_comment(source_entries, "暂无教学源码")}

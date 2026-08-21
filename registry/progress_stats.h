@@ -1,7 +1,6 @@
 #pragma once
 
 #include "registry/chapter_catalog.h"
-#include "registry/function_registry.h"
 
 #include <array>
 #include <map>

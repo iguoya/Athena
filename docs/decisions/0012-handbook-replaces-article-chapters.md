@@ -78,7 +78,7 @@ article 章节和各章节总纲文档的合集，一份带完整目录的常驻
   到 GTK/WKWebView 层面那个时序 bug 的根因**——如果以后还要在 Dialog 里
   嵌入原生 WebView（不经过手册这条常驻路径），同样的坑可能会再次出现，
   应该优先复用手册验证过的常驻页面模式，而不是重新造一次性对话框。
-- `content` 字段和"article 章节"这个概念从 schema、生成器、`ChapterCatalog`
+- `content` 字段和"article 章节"这个概念从配置格式、生成器、`ChapterCatalog`
   到 `MainWindow` 全部移除；以后任何"整篇静态 Markdown 内容"的需求都应该
   走 `handbook_documents`，不要重新引入一个独立的章节类型。
 - 手册目前只有 cpp 一部有内容（3 份文档、都在同一个目录下），

@@ -44,7 +44,7 @@ python3 scripts/package_macos.py \
 - 创建标准 `Athena.app/Contents` 结构和 `Info.plist`。
 - 从 `tiger.svg` 生成多尺寸 `Athena.icns`。
 - 递归收集非系统动态库并改写为 `@executable_path` 相对引用。
-- 打包 GTK 图标主题、GSettings Schema、Fontconfig 配置和 GdkPixbuf 加载器。
+- 打包 GTK 图标主题、GSettings 配置定义、Fontconfig 配置和 GdkPixbuf 加载器。
 - 生成运行启动器，根据应用实际位置设置 GTK 运行环境。
 - 对全部嵌套 Mach-O 文件和 `.app` 执行 ad-hoc 签名。
 - 拒绝仍引用 `/usr/local` 或 `/opt/homebrew` 的不完整应用包。

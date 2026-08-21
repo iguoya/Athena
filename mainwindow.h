@@ -47,7 +47,6 @@ private:
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder);
     void populate_topic_list(
-        const string& category_name,
         const ChapterMeta& chapter,
         GtkSourceView* source_view,
         Gtk::TextView* result_view,

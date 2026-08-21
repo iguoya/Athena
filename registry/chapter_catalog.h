@@ -14,6 +14,7 @@ struct IconSpec {
 };
 
 struct SubChapter {
+    string function_id;
     string name;
     string title;
     string description;
@@ -43,7 +44,6 @@ struct ChapterMeta {
     // 未提供时按钮退回剪贴板 + 唤起本机 AI 助手。文档本身人工撰写、经
     // 审核提交进 git，不发起运行时 AI 调用。
     string overview_document;
-    string blueprint;
     string resource_path;
     string widget_name;
     string source;
@@ -66,7 +66,8 @@ struct CategoryInfo {
 
 class ChapterCatalog {
 public:
-    static ChapterCatalog from_json(string_view source);
+    // 只解码生成器产出的受信任 Catalog；作者配置校验由 Python 独占。
+    static ChapterCatalog from_runtime_json(string_view source);
 
     const vector<CategoryInfo>& categories() const;
     const map<string, vector<ChapterMeta>>& chapters() const;
@@ -81,8 +82,3 @@ private:
     vector<CategoryInfo> m_categories;
     map<string, vector<ChapterMeta>> m_chapters;
 };
-
-// 知识点源码按“知识点 -> 分组 -> 章节”的顺序继承。
-string resolve_source_path(
-    const ChapterMeta& chapter,
-    const SubChapter& subchapter);

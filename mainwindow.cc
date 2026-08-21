@@ -613,11 +613,12 @@ MainWindow::MainWindow(
 }
 
 void MainWindow::load_chapter_metadata() {
-    const string source = m_content_loader.load_resource("/app/data/athena.json");
+    const string source =
+        m_content_loader.load_resource("/app/data/chapter_catalog.json");
     if (source.empty()) {
-        throw runtime_error("athena.json not found in GResource");
+        throw runtime_error("generated chapter Catalog not found in GResource");
     }
-    m_catalog = ChapterCatalog::from_json(source);
+    m_catalog = ChapterCatalog::from_runtime_json(source);
 }
 
 void MainWindow::configure_image(
@@ -1305,7 +1306,6 @@ void MainWindow::initialize_code_page(
 
     if (topics_list) {
         populate_topic_list(
-            category_name,
             chapter,
             source_view,
             result_view,
@@ -2165,7 +2165,6 @@ void MainWindow::start_experiment(
 }
 
 void MainWindow::populate_topic_list(
-    const string& category_name,
     const ChapterMeta& chapter,
     GtkSourceView* source_view,
     Gtk::TextView* result_view,
@@ -2353,13 +2352,10 @@ void MainWindow::populate_topic_list(
         row->set_activatable(false);
         row->add_css_class("topic-row");
 
-        const string function_id = make_function_id(
-            category_name,
-            chapter.name,
-            subchapter.name);
+        const string& function_id = subchapter.function_id;
         (*selection_by_row)[row] = {
             .description = subchapter.description,
-            .source_path = resolve_source_path(chapter, subchapter),
+            .source_path = subchapter.source,
             .member_name = subchapter.name,
             .title = subchapter.title,
             .function_id = function_id,

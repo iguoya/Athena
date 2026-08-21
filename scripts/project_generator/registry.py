@@ -21,9 +21,11 @@ def render_registry(bindings: list[dict]) -> str:
         chapter = binding["chapter"]
         variable = f"{category}_{chapter}".lower()
         lines.append(f"    auto {variable} = make_shared<{chapter}>();")
-        for method in binding["methods"]:
+        for method, function_id in zip(
+            binding["methods"], binding["function_ids"], strict=True
+        ):
             lines.append(
-                f'    registry.add(make_function_id("{category}", "{chapter}", "{method}"), '
+                f'    registry.add("{function_id}", '
                 f"[{variable}](ostream& output) {{"
             )
             lines.append(f"        {variable}->{method}(output);")

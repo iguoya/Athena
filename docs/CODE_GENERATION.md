@@ -9,13 +9,14 @@
 ```text
 generate_project.py              命令解析与生成文件安全写入
 project_generator/model.py       读取、校验并建立唯一内部模型
+project_generator/catalog.py     规范化运行时 Catalog 生成
 project_generator/resources.py   GResource 与 Blueprint 构建输入
 project_generator/registry.py    FunctionRegistry 生成
 project_generator/scaffold.py    首次章节骨架创建
 ```
 
-四个子命令共用 `model.py`，因此资源清单、函数注册表和章节骨架不会各自重新解释
-JSON，也不会重新形成多套数据来源。
+五个子命令共用 `model.py`，因此运行时 Catalog、资源清单、函数注册表和章节骨架
+不会各自重新解释作者 JSON，也不会重新形成多套数据来源。
 
 所有命令都显式接收项目根目录和配置文件：
 
@@ -24,7 +25,7 @@ python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json check
 ```
 
-## 2. 四个子命令
+## 2. 五个子命令
 
 ### 2.1 `check`
 
@@ -35,7 +36,7 @@ python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json check
 ```
 
-校验范围包括 schema、必填字段、名称合法性与唯一性、跨分类课程类名、内容类型、分组引用、
+校验范围包括配置格式版本、必填字段、名称合法性与唯一性、跨分类课程类名、分组引用、
 Blueprint 输出冲突，以及 Markdown、源码、实现头文件和资源图标路径。失败时输出
 包含章节或字段位置的错误并返回非零退出码。Meson 已把它注册为
 `athena-project-check` 测试。
@@ -51,10 +52,24 @@ python3 scripts/generate_project.py \
 ```
 
 标准输出格式为 `target_id|blueprint_path|ui_filename`。XML 包含主窗口、共享样式、
-文章、章节 UI、`athena.json`、配置引用的教学源码和非隐藏图标资源。`app.gresource.xml` 是构建产物，
-位于 Meson 构建目录，不提交到 Git，也不手工维护。
+文章、章节 UI、生成的运行时 Catalog、配置引用的教学源码和非隐藏图标资源。
+原始 `athena.json` 不进入应用资源。`app.gresource.xml` 是构建产物，位于 Meson
+构建目录，不提交到 Git，也不手工维护。
 
-### 2.3 `registry`
+### 2.3 `catalog`
+
+从唯一内部模型生成 C++ 使用的规范化运行时数据：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json \
+  catalog --output builddir/chapter_catalog.generated.json
+```
+
+Catalog 已包含完整函数 ID、最终图标、最终源码路径、UI 资源路径和根控件名，使用
+独立的 `catalog_version`。C++ 只解码这些字段，不再重新解释默认值和继承规则。
+
+### 2.4 `registry`
 
 从声明了 `implementation.header` 的 `code` 章节生成注册表：
 
@@ -76,7 +91,7 @@ subchapter.name -> public 成员函数名
 生成文件带有 `DO NOT EDIT` 标记，由构建系统完全拥有。人工代码只实现通用
 `FunctionRegistry` 容器和各课程类，不维护第二份章节映射。
 
-### 2.4 `scaffold`
+### 2.5 `scaffold`
 
 为一个未来的 `code` 章节首次创建头文件和源文件：
 
@@ -100,6 +115,7 @@ python3 scripts/generate_project.py \
 
 ```text
 builddir/app.gresource.xml
+builddir/chapter_catalog.generated.json
 builddir/function_registry.generated.cc
 builddir/*.ui
 ```
@@ -130,13 +146,14 @@ tests/**
 ## 5. Meson 和测试
 
 Meson 配置阶段调用 `resources`，取得 Blueprint 目标并在 `builddir` 生成 XML；构建
-阶段通过 `custom_target` 调用 `registry`。`athena.json` 是两个过程的输入依赖。
+阶段通过两个 `custom_target` 分别调用 `catalog` 和 `registry`。`athena.json` 是
+三个过程的输入依赖，生成的 Catalog 以 `/app/data/chapter_catalog.json` 打包。
 `scaffold` 只允许开发者显式执行，不是普通构建副作用。
 
 项目提供两项生成器相关测试：
 
 - `athena-project-check`：校验真实项目配置和全部引用。
-- `athena-project-generator`：在临时工程端到端运行四个子命令，并验证二次
+- `athena-project-generator`：在临时工程端到端运行五个子命令，并验证二次
   `scaffold` 不覆盖已有文件。
 
 修改 `athena.json` 或生成器后至少运行：
@@ -149,6 +166,6 @@ meson compile -C builddir
 meson test -C builddir --print-errorlogs
 ```
 
-实现 `code` 章节时，应读取章节和知识点的 `description`，使用骨架作为起点编写
-可观察、可重复的教学实验，并补充测试。实现 `article` 章节时只编辑 `document`
-指向的 Markdown，不创建 C++ 类、运行按钮或注册项。
+实现代码章节时，应读取章节和知识点的 `description`，使用骨架作为起点编写
+可观察、可重复的教学实验，并补充测试。理论内容写入分类自己的
+`handbook_documents`，不创建 C++ 类、运行按钮或注册项。

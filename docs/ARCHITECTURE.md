@@ -13,17 +13,21 @@ Athena 是为快速渐进学习和掌握 C++ 而开发的自用软件平台，�
 ```text
 resources/athena.json
         |
-        +--> scripts/generate_project.py --> project_generator/model.py 统一校验
-        |        |
-        |        +--> builddir/app.gresource.xml
-        |        +--> Meson Blueprint 编译目标与文章资源
-        |        +--> builddir/function_registry.generated.cc
-        |        |             |
-        |        |             +--> FunctionRegistry --> Reference / RAII
-        |        +--> 显式 scaffold：只创建缺失的人工章节骨架
         |
-        +--> GResource: /app/data/athena.json --> ChapterCatalog
-                                                     |
+        v
+project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
+        |
+        +--> builddir/app.gresource.xml + Blueprint/文章/源码资源
+        +--> builddir/function_registry.generated.cc --> FunctionRegistry
+        +--> builddir/chapter_catalog.generated.json
+        |                 |
+        |                 v
+        |      GResource: /app/data/chapter_catalog.json
+        |                 |
+        |                 v
+        |          ChapterCatalog（只解码）
+        +--> 显式 scaffold：只创建缺失的人工章节骨架
+                          |
         FunctionRegistry + ChapterCatalog ----------> MainWindow（界面协调）
                                                      |
                                                      +--> code 页面（按章节）
@@ -39,17 +43,18 @@ resources/athena.json
 - 手册 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - 每个知识点可以独立运行并显示结果；实验代码在独立工作线程执行（同一时刻只运行一个，运行中的新请求被忽略），状态栏的转圈指示与耗时提示反馈进度，结果和耗时经主线程回填，界面不阻塞。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
-- 统一生成器会校验完整项目模型，并在临时工程中端到端测试四个子命令。
+- 统一生成器会校验完整项目模型，并在临时工程中端到端测试五个子命令。
 - GResource XML 和函数注册表均生成在构建目录，正常配置和构建不会改脏源码树。
 - `athena.json` 引用的教学源码随 GResource 打包；开发时优先读取仓库文件，安装后自动使用内置源码。
-- `ChapterCatalog` 和 `FunctionRegistry` 已与 GTK 解耦，可使用 Google Test 单独验证。
+- `ChapterCatalog` 只解码构建生成的规范化 Catalog，不再解析作者配置、计算默认值
+  或修正数据；它和 `FunctionRegistry` 均与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
-- `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_SCHEMA.md`）；条目本身（标题与描述）不响应点击。
+- `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_CONFIG.md`）；条目本身（标题与描述）不响应点击。
 - 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 自测”按钮与用户自评的“熟练度”五星评分（绿色，0–5 星，自由打分并即时持久化；再点当前星级则降一星；星星右侧带 2 字文字标识随星级变化，悬浮单颗星显示该星级含义）：到 5 星后运行按钮置灰，降低星级即可恢复运行。“运行历史”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部、笔记与源码随之切换）再执行。曾经有过一个“AI 讲解”按钮（现场调 AI 生成知识点讲解），后来因为体感上不如直接看手册和源码实用而移除，知识点级别的 AI 功能现在只剩“AI 自测”。
 - “运行历史”打开运行记录对话框：左侧是最近运行列表（时间、耗时、与当前源码是否一致、运行时的 git 提交短哈希，工作区有未提交改动时加 `+`），右侧最多同时选中 2 条记录并排对比，每条记录一栏，栏内上方是运行时的源码快照（只读 GtkSourceView，C++ 语法高亮，不做逐行 diff）并在标题带完整 git 版本描述，下方是对应输出，默认选中最近两次运行；git 信息由运行时同步查询 `ATHENA_SOURCE_ROOT` 所在仓库得到，不在 git 仓库或 git 不可用时静默留空，不影响运行。配置了 `ATHENA_ARK_API_KEY` 或 `ATHENA_DEEPSEEK_API_KEY` 时对话框内另有“AI 讲解差异”按钮（选中恰好 2 条才可用，两个 Key 都未配置时这个按钮不出现），把两条记录的源码快照与输出一并发给 AI，请求解释改动和结果变化的关系；不做逐行 diff 高亮，这部分交给 git 自己的工具。
 - “AI 自测”“AI 讲解差异”共用同一条 AI 调用链：`call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt)` 优先用火山方舟豆包（`doubao-seed-2-1-pro-260628`），未配置或请求失败再退回 DeepSeek（`deepseek-chat`）；两者都未配置时“AI 自测”直接提示需要先配置至少一个 Key，没有剪贴板退路。Key 优先从侧边栏“设置”读取，未保存时回退到 `ATHENA_ARK_API_KEY`/`ATHENA_DEEPSEEK_API_KEY` 环境变量。两家服务商都是 OpenAI 兼容协议，底层共用 `call_llm_chat(endpoint, model, api_key, prompt)`，只是 endpoint/model 不同，不是两套 curl 调用逻辑。Key 与请求体经临时文件传入、用后即删，不出现在进程参数里；网络请求在独立线程执行，结果经主线程回填（参见 ADR 0010、ADR 0011）。
-- **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。构建时按该分类 `handbook_documents`（`docs/CHAPTER_SCHEMA.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录（`MainWindow::ensure_handbook_page(category_name)`）。渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。**手册页面不进 `m_active_page_names`**：它由 `make_managed` 建出、没有 builder 持有引用，一旦从 Stack 移除就会连 WKWebView 一起析构，而 `m_article_views` 还指着里面的宿主控件；所以切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次。还没收录文档的分类（当前是 da、dp）显示一句占位说明，不为空文档白起一个 WebView。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
-- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_SCHEMA.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
+- **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。构建时按该分类 `handbook_documents`（`docs/CHAPTER_CONFIG.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录（`MainWindow::ensure_handbook_page(category_name)`）。渲染复用主窗口里原来给 article 类型章节用的那套常驻 WKWebView 嵌入方式（该章节类型现已废弃），不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。**手册页面不进 `m_active_page_names`**：它由 `make_managed` 建出、没有 builder 持有引用，一旦从 Stack 移除就会连 WKWebView 一起析构，而 `m_article_views` 还指着里面的宿主控件；所以切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次。还没收录文档的分类（当前是 da、dp）显示一句占位说明，不为空文档白起一个 WebView。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
+- “本章总纲”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_CONFIG.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前只有 Reference、RAII 两个已实现章节写了总纲文档，其余章节还没有。
 - “AI 讲解差异”用的是 `show_ai_markdown_dialog()`——现场调 AI、内容不落盘，跟手册（本地静态、不调用 AI）是两条完全独立的路径，共用的只是 md4c 转 HTML、WKWebView（macOS）渲染这套底层机制：标题、列表、代码块都有正常版式；AI 的回答经常代码和说明夹杂，早期用纯文本 TextView 展示对代码不友好，改成这个之后代码块能正常保留缩进和等宽字体，不再是纯文本堆一坨。这个对话框用的 `article.css` 在加载前追加了一段 `:root { --article-font-size: 22px; }` 覆盖，只影响这个对话框，不改 `resources/article.css` 本身、不影响手册页面（仍是原来的 19px）。
 - **学习进度**跟手册不同，不是全局常驻页面，而是 cpp 分类里紧跟"欢迎页面"之后的一个**合成标签页**：它不对应 `athena.json` 里的任何章节，由 `MainWindow::build_chapter_tabs()` 在遍历到欢迎页（按 Blueprint 根控件名 `welcome_page` 识别，不硬编码章节 `name`）之后调用 `append_progress_tab()` 手工插入，因此只统计 cpp 分类（数据结构与算法、设计模式两个分类当前没有实现内容，等真有内容再决定要不要各自加一份）。页面不用 WebView，是纯 GTK 控件搭的统计仪表盘（`MainWindow::build_progress_page_widget()`）：顶部四张统计卡片（知识点总数/已掌握/学习中/平均熟练度，各用一种强调色，仿常见管理后台的 stat tile），中间一行三张 Cairo 手绘图表（环形图看整体三档占比、柱状图逐章节对比完成度、直方图看熟练度分布），下面按章节用 `Gtk::Expander` 列出（收起显示章节名 + `Gtk::LevelBar` 进度条 + "已掌握/总数"，展开显示每个知识点的星级只读展示）。统计口径是"5 星 = 已掌握"，数据来自 `LearningStore::load_all_mastery()`（一次性批量读取全部 `knowledge_progress`，不是按知识点逐个查询）与 `ChapterCatalog` 交叉。页面名登记进 `m_active_page_names`，切到别的分类时和普通章节页一起被移除，**切回 cpp 时重新构建**——数据量小，重新查库加布局的开销可以忽略，用重建换取星级变化立即反映，不需要额外的"数据是否过期"状态（这一点跟懒构建一次的手册相反）。构造函数里 `open_learning_store()` 必须排在 `setup_category_sidebar()` 之前：后者第一个分类按钮的 `set_active()` 会立刻触发学习进度页构建，学习存储还没打开的话首屏统计会恒为全 0（这是真实出现过的症状，不是假设）。
 - 学习进度的聚合口径和绘图各自独立成模块，不再堆在 `mainwindow.cc` 里：`registry/progress_stats.h`（`ChapterProgress`/`CategoryProgress`/`aggregate_category_progress`）不依赖 GTK，负责"哪些算已掌握、完成度怎么算"，可以用 gtest 单独覆盖；`render/chart_view.h`（`make_mastery_donut_chart`/`make_chapter_bar_chart`/`make_mastery_histogram_chart` 等）是 Cairo 绘制，依赖 GTK 但不含统计口径；`render/chart_scale.h`（`nice_ticks`/配色常量）是两者共用的纯计算部分，同样可独立测试。**完成度用的是平均熟练度占满分的比例（`ChapterProgress::completion_ratio()`），不是"5 星知识点占比"**：后者是二值口径，评到 4 星在图上和完全没学过没有任何区别，实际数据里 5 星知识点稀少时整张柱状图会看起来像没渲染出来。柱状图和逐章节列表的 `Gtk::LevelBar` 用的是同一个口径，两处显示不会对不上。
@@ -82,7 +87,7 @@ resources/athena.json
                        +-----------+------------+
                                    |
                        +-----------v------------+
-                       | Schema + semantic check |
+                       | Format + semantic check |
                        +-----------+------------+
                                    |
              +---------------------+---------------------+
@@ -125,9 +130,10 @@ resources/athena.json
 
 生成器负责：
 
-- 根据 JSON Schema 校验基本结构。
-- 校验 ID 唯一性、C++ 标识符和资源文件存在性。
-- 生成稳定的复合 ID。
+- 根据项目配置契约校验基本结构。
+- 校验 ID 唯一性、C++ 标识符、C++20 关键字和资源文件存在性。
+- 生成稳定的复合 ID、最终图标、源码路径和 UI 资源路径。
+- 生成 C++ 只需解码的规范化运行时 Catalog。
 - 生成演示注册表和必要的声明。
 - 生成或更新 GResource 输入。
 - 对新章节提供不会覆盖人工代码的实现骨架。
@@ -136,8 +142,9 @@ resources/athena.json
 
 当前已经引入以下不依赖 GTK 的类型：
 
-- `ChapterCatalog`：加载并查询分类、章节和知识点元数据。
-- `make_function_id`：从分类、章节和知识点名称构造稳定复合 ID。
+- `ChapterCatalog`：解码并查询生成的分类、章节和知识点元数据。
+- `make_function_id`：需要显式构造 ID 的测试和辅助代码使用；正常运行时直接读取
+  Catalog 中已生成的完整 ID。
 - `FunctionRegistry`：由 ID 查找可执行知识点函数。
 - `SourceLocator`：在真实教学源码中定位成员函数定义范围，不依赖 GTK，可独立测试。
 
@@ -218,7 +225,7 @@ cpp.Reference.const_reference
 ```text
 GTK UI -> ChapterCatalog / FunctionRegistry -> Function implementations
 GTK UI -> ArticleView -> platform web view
-Generator -> JSON schema and templates
+Generator -> config contract and templates
 Meson -> Generator outputs
 ```
 
@@ -233,10 +240,10 @@ Meson -> Generator outputs
 
 1. 已完成：稳定分类/章节/知识点名称及运行时语义校验。
 2. 已完成：将注册表抽成 `FunctionRegistry`，统一复合 ID。
-3. 已完成：将 JSON 解析和查询抽成 `ChapterCatalog`。
+3. 已完成：将作者 JSON 的严格校验集中到 Python，`ChapterCatalog` 只解码规范化产物。
 4. 已完成：为 ChapterCatalog、Markdown、FunctionRegistry 和 GTK 资源建立基础测试。
 5. 已完成：从 `athena.json` 生成函数注册表，消除手写课程映射。
-6. 生成稳定 ID 常量，供注册表、测试和诊断复用。
+6. 已完成：生成稳定完整 ID，供 Catalog、注册表、测试和诊断复用。
 7. 已完成：支持安全的一次性章节实现骨架生成。
 8. 已完成：解决源代码展示的安装后资源策略。
 9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。

@@ -20,23 +20,25 @@ Athena 的配置随应用一起构建，不支持在运行时加载任意外部�
 
 ## 决策
 
-- `resources/athena.json` 继续作为唯一的**作者配置**；作者格式使用 `schema`
-  版本号。
+- `resources/athena.json` 继续作为唯一的**作者配置**；作者格式使用直白的
+  `format_version` 版本号。仓库使用 Python 实现自己的字段与语义校验，不暗示
+  存在另一套标准校验文件或工具。
 - `scripts/project_generator/model.py` 是唯一严格的作者侧校验与规范化入口，负责：
   必填字段和类型、允许字段、废弃字段、C++ 关键字、唯一性、引用关系、路径存在性、
   默认值、稳定函数 ID、源码继承以及 UI 资源路径派生。
 - 构建时从已验证的内部模型生成 `chapter_catalog.generated.json`，以
   `/app/data/chapter_catalog.json` 打包进 GResource。该文件是构建产物，不提交，
-  带独立的 `runtime_schema` 版本号。
+  带独立的 `catalog_version` 版本号。
 - C++ `ChapterCatalog` 只解码这份受信任的规范化 Catalog，不再读取
   `/app/data/athena.json`，也不再重复作者语义校验、默认值计算、路径派生、引用解析
   或数值修正。
-- C++ 仍保留 JSON 语法、`runtime_schema` 和必需运行时字段的最小检查。这类失败表示
+- C++ 仍保留 JSON 语法、`catalog_version` 和必需运行时字段的最小检查。这类失败表示
   构建产物损坏或生成器与二进制版本不匹配，不作为作者配置错误提示。
 - 作者配置出现未知字段时一律报错，防止拼写错误被静默忽略；已废弃字段给出带迁移
   说明的专门错误。
-- `schema` 只在作者格式发生不兼容变化时升级；新增可选字段是否升级由兼容性决定。
-  `runtime_schema` 只由生成器和 C++ 解码器共同维护，不对作者公开承诺稳定性。
+- `format_version` 平时保持不变；只有维护者重新组织字段时，才同步修改这个数字、
+  生成器和配置参考文档。`catalog_version` 由生成器和 C++ 解码器一起维护，内容
+  作者不需要填写或修改。
 
 ## 后果
 

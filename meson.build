@@ -46,6 +46,7 @@ project_generator = meson.project_source_root() / 'scripts' / 'generate_project.
 project_generator_sources = files(
   'scripts/generate_project.py',
   'scripts/project_generator/__init__.py',
+  'scripts/project_generator/catalog.py',
   'scripts/project_generator/model.py',
   'scripts/project_generator/registry.py',
   'scripts/project_generator/resources.py',
@@ -76,6 +77,21 @@ function_registry_generated = custom_target(
     '--project-root', meson.project_source_root(),
     '--config', '@INPUT@',
     'registry',
+    '--output', '@OUTPUT@'
+  ]
+)
+
+runtime_catalog_generated = custom_target(
+  'generate-runtime-catalog',
+  input: athena_json,
+  depend_files: project_generator_sources,
+  output: 'chapter_catalog.generated.json',
+  command: [
+    python,
+    project_generator,
+    '--project-root', meson.project_source_root(),
+    '--config', '@INPUT@',
+    'catalog',
     '--output', '@OUTPUT@'
   ]
 )
@@ -147,8 +163,8 @@ app_sources = files(
 resources = gnome.compile_resources(
   'app-resources',
   gresource_xml,
-  dependencies: compiled_ui,
-  source_dir: ['resources', '.']
+  dependencies: compiled_ui + [runtime_catalog_generated],
+  source_dir: ['resources', '.', meson.current_build_dir()]
 )
 
 executable('Athena', app_sources,
