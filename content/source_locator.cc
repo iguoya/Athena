@@ -1,6 +1,9 @@
 #include "source_locator.h"
 
+#include "content_loader.h"
+
 #include <cctype>
+#include <exception>
 
 using namespace std;
 
@@ -136,4 +139,20 @@ optional<SourceRange> locate_cpp_member_function(
     }
 
     return nullopt;
+}
+
+optional<string> load_member_source_text(
+    const ContentLoader& loader,
+    const string& source_path,
+    const string& member_name) {
+    try {
+        const string source = loader.load_project_file(source_path);
+        const auto range = locate_cpp_member_function(source, member_name);
+        if (!range) {
+            return nullopt;
+        }
+        return source.substr(range->begin, range->end - range->begin);
+    } catch (const exception&) {
+        return nullopt;
+    }
 }

@@ -159,6 +159,7 @@ app_sources = files(
   'athena.cc',
   'mainwindow.cc',
   'render/chart_view.cc',
+  'ui/learning_dialogs.cc',
   'ui/progress_page.cc'
 ) + article_view_sources + app_icon_sources
 

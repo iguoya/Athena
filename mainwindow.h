@@ -5,6 +5,7 @@
 #include "render/article_view.h"
 #include "content/content_loader.h"
 #include "storage/learning_store.h"
+#include "ui/learning_dialogs.h"
 
 #include <gtkmm.h>
 #include <gtksourceview/gtksource.h>
@@ -60,38 +61,6 @@ private:
         Gtk::Label* header_description_label,
         Gtk::Image* header_icon);
     void open_learning_store();
-    // AI 服务商 Key 的统一读取入口：应用内设置（SQLite）优先，读不到再
-    // 退回同名环境变量（保留给终端直接启动、还没在设置面板填过的场景）。
-    // 四处需要 Key 的调用点都应该走这里，不再各自散落地读环境变量。
-    string resolve_ai_api_key(const string& setting_key, const char* env_var_name) const;
-    void show_settings_dialog();
-    void show_history_dialog(
-        const string& function_id,
-        const string& source_path,
-        const string& member_name,
-        const string& topic_title);
-    void show_ai_markdown_dialog(
-        const string& dialog_title,
-        const string& prompt,
-        const string& ark_api_key,
-        const string& deepseek_api_key,
-        const string& loading_markdown,
-        int width,
-        int height);
-    void show_ai_response_dialog(
-        const string& dialog_title,
-        const string& prompt,
-        const string& ark_api_key,
-        const string& deepseek_api_key);
-    void show_ai_quiz_dialog(
-        const string& function_id,
-        const string& topic_title,
-        const string& description,
-        const string& source_path,
-        const string& member_name,
-        const string& ark_api_key,
-        const string& deepseek_api_key,
-        function<bool(int)> on_mastery_changed);
     void start_experiment(
         const string& function_id,
         const string& source_path,
@@ -136,6 +105,10 @@ private:
     ChapterCatalog m_catalog;
     FunctionRegistry m_function_registry;
     unique_ptr<LearningStore> m_learning_store;
+    // 设置、运行历史和 AI 自测对话框；在 open_learning_store() 之后建立，
+    // 之后与窗口同生命周期。窗口只负责在按钮回调里把当前知识点交给它，
+    // 不再自己装配对话框控件树（ADR 0014 第 3 步）。
+    unique_ptr<LearningDialogs> m_dialogs;
 
     // 实验执行状态：m_experiment_running 只在主线程读写；
     // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。
