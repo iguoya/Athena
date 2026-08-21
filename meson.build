@@ -133,11 +133,7 @@ core_sources = files(
   'render/chart_scale.cc',
   'render/markdown_renderer.cc',
   'services/ai_service.cc',
-  'storage/learning_store.cc',
-  'language/type_semantics/type_semantics.cpp',
-  'language/raii/raii_basic.cpp',
-  'language/raii/smart_pointer.cpp',
-  'language/raii/move_semantics.cpp'
+  'storage/learning_store.cc'
 ) + [function_registry_generated]
 
 athena_core_lib = static_library(

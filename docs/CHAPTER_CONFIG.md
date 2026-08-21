@@ -263,12 +263,13 @@ subchapter.name -> C++ 成员函数名
 默认约定的参考实现。
 
 只有当函数体确实必须分处不同的独立编译单元时才例外使用 `.cpp`（教学演示代码几乎不会
-遇到这种情况）。这种情况下可以额外指定首次创建的源文件：
+遇到这种情况；当前所有已实现章节都是单文件 `.hpp`，下面只是格式示例）。这种情况下可以
+额外指定首次创建的源文件：
 
 ```json
 "implementation": {
-  "header": "language/type_semantics/type_semantics.hpp",
-  "source": "language/type_semantics/type_semantics.cpp"
+  "header": "language/example_chapter/example_chapter.hpp",
+  "source": "language/example_chapter/example_chapter.cpp"
 }
 ```
 

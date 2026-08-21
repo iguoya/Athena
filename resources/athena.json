@@ -45,10 +45,8 @@
           "description": "学习 C++ 类型系统、初始化方式、类型推导和值类别，为对象和资源语义打下基础。",
           "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
           "implementation": {
-            "header": "language/type_semantics/type_semantics.hpp",
-            "source": "language/type_semantics/type_semantics.cpp"
+            "header": "language/type_semantics/type_semantics.hpp"
           },
-          "source": "language/type_semantics/type_semantics.cpp",
           "overview_document": "resources/articles/cpp/type_semantics_overview.md",
           "subchapters": [
             { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化的语法差异和适用场景；演示列表初始化如何拒绝窄化转换，以及默认初始化的局部变量处于未初始化状态带来的未定义行为风险。", "importance": 2 },
@@ -107,12 +105,12 @@
           "implementation": { "header": "language/raii/raii.hpp" },
           "overview_document": "resources/articles/cpp/raii_overview.md",
           "subchapters": [
-            { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "importance": 2, "source": "language/raii/raii_basic.cpp" },
-            { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "importance": 2, "source": "language/raii/smart_pointer.cpp" },
-            { "name": "shared", "title": "共享指针", "description": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。", "importance": 3, "source": "language/raii/smart_pointer.cpp" },
-            { "name": "weak", "title": "弱引用指针", "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。", "importance": 4, "source": "language/raii/smart_pointer.cpp" },
-            { "name": "rvalue", "title": "右值引用", "description": "理解右值引用绑定的是可以被安全掏空的临时对象；演示左值引用、右值引用与 const 引用的重载选择规则，理解为什么右值引用让资源转移成为合法操作。", "importance": 3, "source": "language/raii/move_semantics.cpp" },
-            { "name": "move_semantics", "title": "移动构造与赋值", "description": "学习移动构造、移动赋值和 std::move 的完整语义；重点观察被移动对象处于有效但未指定状态、std::move 本身只是类型转换而非移动动作，以及移动对容器性能的数量级改善。", "importance": 4, "source": "language/raii/move_semantics.cpp" }
+            { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "importance": 2 },
+            { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "importance": 2 },
+            { "name": "shared", "title": "共享指针", "description": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。", "importance": 3 },
+            { "name": "weak", "title": "弱引用指针", "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。", "importance": 4 },
+            { "name": "rvalue", "title": "右值引用", "description": "理解右值引用绑定的是可以被安全掏空的临时对象；演示左值引用、右值引用与 const 引用的重载选择规则，理解为什么右值引用让资源转移成为合法操作。", "importance": 3 },
+            { "name": "move_semantics", "title": "移动构造与赋值", "description": "学习移动构造、移动赋值和 std::move 的完整语义；重点观察被移动对象处于有效但未指定状态、std::move 本身只是类型转换而非移动动作，以及移动对容器性能的数量级改善。", "importance": 4 }
           ]
         },
         {

@@ -136,16 +136,29 @@ TEST(ChapterCatalogTest, GeneratedRegistryExactlyMatchesImplementedChapters) {
     EXPECT_EQ(registered_ids, expected_ids);
 }
 
-TEST(ChapterCatalogTest, SourcePathsAreResolvedBeforeRuntime) {
+TEST(ChapterCatalogTest, SourcePathsFallBackToHeaderForSingleFileChapters) {
     const auto catalog =
         ChapterCatalog::from_runtime_json(read_runtime_catalog());
 
+    // RAII、TypeSemantics、Reference 都是单文件 .hpp 实现（默认约定，见
+    // docs/CHAPTER_CONFIG.md 6.1）：没有任何 subchapter/chapter 级 source
+    // 覆盖，继承链 subchapter.source -> chapter.source 最终退到
+    // implementation.header 本身，所有知识点解析出同一个源码路径。
     const auto* raii = catalog.find_chapter("cpp", "RAII");
     ASSERT_NE(raii, nullptr);
     ASSERT_EQ(raii->subchapters.size(), 6);
-    EXPECT_EQ(raii->subchapters[0].source, "language/raii/raii_basic.cpp");
-    EXPECT_EQ(raii->subchapters[1].source, "language/raii/smart_pointer.cpp");
-    EXPECT_EQ(raii->subchapters[4].source, "language/raii/move_semantics.cpp");
+    for (const auto& subchapter : raii->subchapters) {
+        EXPECT_EQ(subchapter.source, "language/raii/raii.hpp");
+    }
+
+    const auto* type_semantics = catalog.find_chapter("cpp", "TypeSemantics");
+    ASSERT_NE(type_semantics, nullptr);
+    ASSERT_FALSE(type_semantics->subchapters.empty());
+    for (const auto& subchapter : type_semantics->subchapters) {
+        EXPECT_EQ(
+            subchapter.source,
+            "language/type_semantics/type_semantics.hpp");
+    }
 
     const auto* reference = catalog.find_chapter("cpp", "Reference");
     ASSERT_NE(reference, nullptr);
