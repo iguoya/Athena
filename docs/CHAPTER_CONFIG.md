@@ -156,6 +156,7 @@ resources/ui/chapters/empty_chapter.blp
 
 ```json
 "handbook_documents": [
+  "resources/articles/cpp/type_semantics_overview.md",
   "resources/articles/cpp/reference_overview.md",
   "resources/articles/cpp/raii_overview.md",
   "resources/articles/cpp/program_organization.md"

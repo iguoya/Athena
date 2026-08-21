@@ -25,6 +25,7 @@
         "name": "applications-development-symbolic"
       },
       "handbook_documents": [
+        "resources/articles/cpp/type_semantics_overview.md",
         "resources/articles/cpp/reference_overview.md",
         "resources/articles/cpp/raii_overview.md",
         "resources/articles/cpp/program_organization.md"
@@ -43,12 +44,18 @@
           "title": "类型、初始化与值语义",
           "description": "学习 C++ 类型系统、初始化方式、类型推导和值类别，为对象和资源语义打下基础。",
           "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
+          "implementation": {
+            "header": "language/type_semantics/type_semantics.hpp",
+            "source": "language/type_semantics/type_semantics.cpp"
+          },
+          "source": "language/type_semantics/type_semantics.cpp",
+          "overview_document": "resources/articles/cpp/type_semantics_overview.md",
           "subchapters": [
             { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化的语法差异和适用场景；演示列表初始化如何拒绝窄化转换，以及默认初始化的局部变量处于未初始化状态带来的未定义行为风险。", "importance": 2 },
             { "name": "type_deduction", "title": "类型推导", "description": "学习 auto 按值推导时丢弃引用和顶层 const、decltype 保留表达式值类别的差异，以及结构化绑定如何一次解开多个值；理解推导规则对接口设计的影响。", "importance": 4 },
-            { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值和将亡值的判别标准：能否取地址、能否被移动；演示值类别如何决定重载解析选择拷贝还是移动，为右值引用和移动语义建立概念基础。", "importance": 4 },
-            { "name": "cast", "title": "C++ 类型转换", "description": "学习四种命名的转换及各自的风险边界：static_cast 用于相关类型的明确转换、dynamic_cast 依赖运行时类型信息做安全向下转换、const_cast 只用于去除 const、reinterpret_cast 重新解释位模式；理解为什么不再使用 C 风格强转。", "importance": 2 },
-            { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的作用域、底层类型和类型安全性。", "importance": 1 }
+            { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值和将亡值分别表达有身份的对象、临时计算结果和可复用资源的对象；演示值类别如何影响引用绑定和重载选择，为右值引用和移动语义建立基础。", "importance": 4 },
+            { "name": "cast", "title": "C++ 类型转换", "description": "学习四种命名转换及其风险边界：static_cast 表达明确的相关类型转换、dynamic_cast 安全检查多态向下转换、const_cast 只改变 const 访问方式、reinterpret_cast 用于受约束的底层表示转换；理解为什么不使用含义模糊的 C 风格强转。", "importance": 2 },
+            { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的成员作用域、可指定底层类型和禁止隐式整数转换的类型安全性；通过显式转换读取底层值。", "importance": 1 }
           ]
         },
         {

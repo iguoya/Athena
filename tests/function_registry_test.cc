@@ -7,10 +7,11 @@
 
 namespace {
 
-TEST(FunctionRegistryTest, RegistersCurrentReferenceAndRaiiExperiments) {
+TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 10);
+    EXPECT_EQ(registry.ids().size(), 15);
+    EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
@@ -34,6 +35,19 @@ TEST(FunctionRegistryTest, RunsARaiiExperiment) {
 
     EXPECT_NE(output.str().find("所有权转移后原指针为空: 是"), string::npos);
     EXPECT_NE(output.str().find("离开作用域后析构次数: 1"), string::npos);
+    EXPECT_EQ(output.str().find("[待实现]"), string::npos);
+}
+
+TEST(FunctionRegistryTest, RunsATypeSemanticsExperiment) {
+    const auto registry = create_default_function_registry();
+    ostringstream output;
+
+    registry.run("cpp.TypeSemantics.type_deduction", output);
+
+    EXPECT_NE(output.str().find("auto 按值推导得到 int: 是"), string::npos);
+    EXPECT_NE(
+        output.str().find("decltype((左值表达式)) 得到引用: 是"),
+        string::npos);
     EXPECT_EQ(output.str().find("[待实现]"), string::npos);
 }
 

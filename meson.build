@@ -134,6 +134,7 @@ core_sources = files(
   'render/markdown_renderer.cc',
   'services/ai_service.cc',
   'storage/learning_store.cc',
+  'language/type_semantics/type_semantics.cpp',
   'language/raii/raii_basic.cpp',
   'language/raii/smart_pointer.cpp',
   'language/raii/move_semantics.cpp'
@@ -205,6 +206,7 @@ core_test_exe = executable(
     'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
     'tests/raii_content_test.cc',
+    'tests/type_semantics_content_test.cc',
     'tests/source_locator_test.cc'
   ),
   sources: resources,

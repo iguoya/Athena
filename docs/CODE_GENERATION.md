@@ -98,7 +98,7 @@ subchapter.name -> public 成员函数名
 ```sh
 python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json \
-  scaffold --chapter cpp.TypeSemantics
+  scaffold --chapter cpp.NewChapter
 ```
 
 使用前必须先在 `athena.json` 定义章节及其 `subchapters`，并声明
