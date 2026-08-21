@@ -2,6 +2,8 @@
 
 #include "render/chart_scale.h"
 
+#include <pangomm.h>
+
 #include <algorithm>
 #include <cmath>
 #include <iomanip>
@@ -9,8 +11,8 @@
 
 namespace {
 
-// 绘制文本的公共入口：Cairo 的 toy text API 够用（图表里只有短刻度标签和
-// 一个中心百分比），不为此引入 Pango 布局。
+// 绘制文本统一走 Pango。Cairo 的 toy text API 不做字体回退，在 macOS 上
+// 用 sans-serif 绘制“星”等中文时会变成方块；Pango 会选择可用的中文字体。
 void draw_text(
     const Cairo::RefPtr<Cairo::Context>& cr,
     const string& text,
@@ -18,19 +20,23 @@ void draw_text(
     double y,
     double size,
     const ChartColor& color,
-    Cairo::ToyFontFace::Weight weight = Cairo::ToyFontFace::Weight::NORMAL,
+    bool bold = false,
     // 水平对齐：0 左对齐，0.5 居中，1 右对齐。垂直方向统一按基线之上
     // 居中，调用方传的 y 是文本视觉中心。
     double align = 0.0) {
-    cr->select_font_face("sans-serif", Cairo::ToyFontFace::Slant::NORMAL, weight);
-    cr->set_font_size(size);
-    Cairo::TextExtents extents;
-    cr->get_text_extents(text, extents);
+    auto layout = Pango::Layout::create(cr);
+    Pango::FontDescription font;
+    font.set_family("sans-serif");
+    font.set_absolute_size(size * Pango::SCALE);
+    font.set_weight(bold ? Pango::Weight::BOLD : Pango::Weight::NORMAL);
+    layout->set_font_description(font);
+    layout->set_text(text);
+    int text_width = 0;
+    int text_height = 0;
+    layout->get_pixel_size(text_width, text_height);
     cr->set_source_rgb(color.r, color.g, color.b);
-    cr->move_to(
-        x - extents.width * align - extents.x_bearing,
-        y - extents.height / 2 - extents.y_bearing);
-    cr->show_text(text);
+    cr->move_to(x - text_width * align, y - text_height / 2.0);
+    layout->show_in_cairo_context(cr);
 }
 
 string format_percent(double ratio) {
@@ -73,8 +79,7 @@ void draw_value_axis(
         const string label = percent_labels
             ? format_percent(tick)
             : to_string(static_cast<long>(lround(tick)));
-        draw_text(cr, label, frame.left - 6, y, 11, kChartMutedText,
-                  Cairo::ToyFontFace::Weight::NORMAL, 1.0);
+        draw_text(cr, label, frame.left - 6, y, 11, kChartMutedText, false, 1.0);
     }
 }
 
@@ -118,16 +123,20 @@ Gtk::DrawingArea* make_mastery_donut_chart(
     int in_progress,
     int not_started) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
-    area->set_content_width(190);
-    area->set_content_height(190);
+    area->set_content_width(230);
+    area->set_content_height(230);
     area->set_draw_func(
         [mastered, in_progress, not_started](
             const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const double total = mastered + in_progress + not_started;
             const double cx = width / 2.0;
             const double cy = height / 2.0;
-            const double radius = min(width, height) / 2.0 - 12;
-            const double thickness = radius * 0.36;
+            // 先确定外沿，再把线宽的一半扣回圆心半径；旧算法只从半径
+            // 扣固定 12px，却又用约 30px 的线宽，外沿会越过 DrawingArea
+            // 被裁掉。18px 外边距也给高 DPI 下的抗锯齿留出余量。
+            const double outer_radius = min(width, height) / 2.0 - 18;
+            const double thickness = max(8.0, outer_radius * 0.32);
+            const double radius = max(0.0, outer_radius - thickness / 2.0);
 
             cr->set_line_width(thickness);
             cr->set_line_cap(Cairo::Context::LineCap::BUTT);
@@ -156,8 +165,8 @@ Gtk::DrawingArea* make_mastery_donut_chart(
             }
 
             const double ratio = total > 0 ? mastered / total : 0.0;
-            draw_text(cr, format_percent(ratio), cx, cy, 26, kChartLabelText,
-                      Cairo::ToyFontFace::Weight::BOLD, 0.5);
+            draw_text(
+                cr, format_percent(ratio), cx, cy, 26, kChartLabelText, true, 0.5);
         });
     return area;
 }
@@ -316,7 +325,7 @@ Gtk::DrawingArea* make_mastery_histogram_chart(
                         frame.bottom - bar_height - 9,
                         11,
                         kChartMutedText,
-                        Cairo::ToyFontFace::Weight::BOLD,
+                        true,
                         0.5);
                 }
 
@@ -327,7 +336,7 @@ Gtk::DrawingArea* make_mastery_histogram_chart(
                     frame.bottom + 12,
                     11,
                     kChartMutedText,
-                    Cairo::ToyFontFace::Weight::NORMAL,
+                    false,
                     0.5);
             }
         });

@@ -1,4 +1,5 @@
 #include "ui/progress_page.h"
+#include "render/chart_view.h"
 
 #include <gtest/gtest.h>
 
@@ -63,6 +64,13 @@ TEST(ProgressPageTest, RendersAggregatedDataWithoutReadingStorage) {
     ASSERT_NE(chapter, nullptr);
     ASSERT_NE(chapter->get_child(), nullptr);
     EXPECT_NE(find_label(*chapter->get_child(), "资源所有权"), nullptr);
+}
+
+TEST(ProgressPageTest, DonutReservesSpaceForItsFullStroke) {
+    auto* donut = make_mastery_donut_chart(1, 2, 3);
+
+    EXPECT_EQ(donut->get_content_width(), 230);
+    EXPECT_EQ(donut->get_content_height(), 230);
 }
 
 } // namespace
