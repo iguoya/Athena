@@ -62,7 +62,8 @@ TEST(AiServiceTest, ParsesAndNormalizesQuizQuestions) {
     const auto quiz = parse_ai_quiz_response(R"(
 ```json
 {"questions":[
-  {"question":"哪些下标有效？","options":["A","B","C"],
+  {"question":"哪些下标有效？","code":"int values[3] = {};",
+   "options":["A","B","C"],
    "correct_indices":[2,-1,2,0,9],"explanation":"0 和 2"},
   {"question":"缺少正确答案","options":["A"],"correct_indices":[]},
   {"question":7,"options":["A"],"correct_indices":[0]}
@@ -73,6 +74,7 @@ TEST(AiServiceTest, ParsesAndNormalizesQuizQuestions) {
     ASSERT_TRUE(quiz.has_value());
     ASSERT_EQ(quiz->questions.size(), 1u);
     EXPECT_EQ(quiz->questions[0].question, "哪些下标有效？");
+    EXPECT_EQ(quiz->questions[0].code, "int values[3] = {};");
     EXPECT_EQ(quiz->questions[0].options, (vector<string> {"A", "B", "C"}));
     EXPECT_EQ(quiz->questions[0].correct_indices, (vector<int> {0, 2}));
     EXPECT_EQ(quiz->questions[0].explanation, "0 和 2");

@@ -214,6 +214,7 @@ optional<AiQuiz> parse_ai_quiz_response(string_view response_body) {
             try {
                 AiQuizQuestion question {
                     .question = value.at("question").get<string>(),
+                    .code = value.value("code", ""),
                     .options = value.at("options").get<vector<string>>(),
                     .correct_indices =
                         value.at("correct_indices").get<vector<int>>(),

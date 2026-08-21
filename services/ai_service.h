@@ -30,6 +30,8 @@ using AiTransport = function<AiChatResult(const AiChatRequest&)>;
 
 struct AiQuizQuestion {
     string question;
+    // 代码场景题的共享代码片段；为空时按普通文字题展示。
+    string code;
     vector<string> options;
     vector<int> correct_indices;
     string explanation;

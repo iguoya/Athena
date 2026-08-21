@@ -1481,16 +1481,24 @@ void MainWindow::show_ai_quiz_dialog(
         "冷门标准条款、编译器细节或文字陷阱。出题前先在内部列出独立考察"
         "点，确保核心语义、源码中的关键行为以及常见误用或边界情况都至少"
         "被一道题覆盖，但不要输出这份内部列表。题目数量由独立考察点的实际"
-        "数量决定，覆盖完整后立即停止；不要设固定题量，也不要把同一事实换"
-        "一种说法重复出题。整体以基础理解和结合源码的分析应用为主，只在"
-        "知识点本身确有相关内容时考察边界与易错点；"
+        "数量决定，少于 5 道或多于 5 道都可以，覆盖完整后立即停止；不要把"
+        "同一事实换一种说法重复出题。优先使用短小、完整、可以实际分析的"
+        "C++ 代码场景：例如判断输出或编译结果、跟踪对象和资源生命周期、"
+        "识别所有权或异常安全问题、选择正确修改方案。能用代码场景考察的"
+        "内容就不要改成纯定义背诵或措辞辩论；只有确实无法通过短代码表达"
+        "时，才使用少量必要的概念题。只在知识点本身确有相关内容时考察边界"
+        "与易错点；代码场景不得依赖未定义行为、特定编译器偶然表现或题目中"
+        "没有说明的平台差异。"
         "不要用超出当前知识点范围的内容人为提高难度。每道题必须有能够由"
         "源码或明确 C++ 规则支持的答案，干扰项要合理但不能含糊。每题选项"
         "数量按题目需要决定；大多数题只有一个正确答案，确实有多个正确项"
         "时才做成多选题，并在 correct_indices 中列出全部正确选项。解释要"
-        "简短说明正确依据及主要干扰项错在哪里。只用 JSON 格式返回，形如 "
+        "简短说明正确依据及主要干扰项错在哪里。代码场景题把共享代码放进"
+        "code 字段，不加 Markdown 代码围栏；不需要代码的题将 code 省略或"
+        "设为空字符串。只用 JSON 格式返回，形如 "
         "{\"questions\":[{\"question\":"
-        "\"...\",\"options\":[\"...\",\"...\"],\"correct_indices\":[0],"
+        "\"...\",\"code\":\"...\",\"options\":[\"...\",\"...\"],"
+        "\"correct_indices\":[0],"
         "\"explanation\":\"...\"}]}，correct_indices 是从 0 开始的正确"
         "选项下标数组，单选题这个数组只有一个元素。解释文字的" +
         string(kChineseTutorialStyleHint) +
@@ -1573,6 +1581,7 @@ void MainWindow::show_ai_quiz_dialog(
 
                     for (const auto& item : quiz->questions) {
                         const string question = item.question;
+                        const string code = item.code;
                         const vector<string> options = item.options;
                         const vector<int> correct_indices = item.correct_indices;
                         const string explanation = item.explanation;
@@ -1589,6 +1598,30 @@ void MainWindow::show_ai_quiz_dialog(
                         question_label->set_xalign(0);
                         question_label->add_css_class("ai-dialog-question");
                         item_box->append(*question_label);
+
+                        if (!code.empty()) {
+                            auto code_scrolled =
+                                Gtk::make_managed<Gtk::ScrolledWindow>();
+                            code_scrolled->set_policy(
+                                Gtk::PolicyType::AUTOMATIC,
+                                Gtk::PolicyType::NEVER);
+                            const int line_count = static_cast<int>(
+                                count(code.begin(), code.end(), '\n') + 1);
+                            code_scrolled->set_min_content_height(
+                                clamp(line_count * 28 + 20, 76, 272));
+                            code_scrolled->add_css_class("ai-quiz-code-frame");
+
+                            auto code_view =
+                                Gtk::make_managed<Gtk::TextView>();
+                            code_view->set_editable(false);
+                            code_view->set_cursor_visible(false);
+                            code_view->set_monospace(true);
+                            code_view->set_wrap_mode(Gtk::WrapMode::NONE);
+                            code_view->get_buffer()->set_text(code);
+                            code_view->add_css_class("ai-quiz-code");
+                            code_scrolled->set_child(*code_view);
+                            item_box->append(*code_scrolled);
+                        }
 
                         // 单选题的选项分到同一个 group（互斥，radio 行为）；
                         // 多选题的选项各自独立、可以同时勾选多个。
