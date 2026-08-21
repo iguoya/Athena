@@ -5,12 +5,12 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <cerrno>
 #include <cctype>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
-#include <unistd.h>
 
 namespace {
 
@@ -38,22 +38,40 @@ struct TempFileResult {
 TempFileResult write_secure_temp_file(
     const string& name_template,
     const string& content) {
-    gchar* path_raw = nullptr;
+    const char* cache_root = g_get_user_cache_dir();
+    if (!cache_root || !*cache_root) {
+        return {.error = "无法确定用户缓存目录"};
+    }
+
+    gchar* temp_dir = g_build_filename(cache_root, "Athena", "tmp", nullptr);
+    if (g_mkdir_with_parents(temp_dir, 0700) != 0) {
+        const string message = g_strerror(errno);
+        g_free(temp_dir);
+        return {.error = "无法创建 Athena 缓存目录：" + message};
+    }
+
+    gchar* path_raw =
+        g_build_filename(temp_dir, name_template.c_str(), nullptr);
+    g_free(temp_dir);
     GError* file_error = nullptr;
-    const gint fd =
-        g_file_open_tmp(name_template.c_str(), &path_raw, &file_error);
+    const gint fd = g_mkstemp(path_raw);
     if (fd < 0) {
-        const string message = file_error
-            ? file_error->message
-            : "未知文件错误";
-        g_clear_error(&file_error);
+        const string message = g_strerror(errno);
         g_free(path_raw);
         return {.error = message};
     }
-    g_clear_error(&file_error);
-    close(fd);
     const string path = path_raw;
     g_free(path_raw);
+
+    if (!g_close(fd, &file_error)) {
+        const string message = file_error
+            ? file_error->message
+            : "关闭临时文件失败";
+        g_clear_error(&file_error);
+        g_remove(path.c_str());
+        return {.error = message};
+    }
+    g_clear_error(&file_error);
 
     ofstream stream(path, ios::binary);
     stream << content;
@@ -73,8 +91,9 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
         {"stream", false},
     };
 
-    // g_file_open_tmp() 要求模板以六个 X 结尾。扩展名放在 XXXXXX 后面会
-    // 被 GLib 当作非法模板，导致所有 AI 请求在发出前就失败。
+    // g_mkstemp() 要求模板以六个 X 结尾。文件放在 Athena 自己的用户缓存
+    // 目录中，不依赖启动进程传入的 TMPDIR；后者可能指向已经被系统清理的
+    // 安装沙箱目录，使请求在发出前失败。
     const TempFileResult config_file = write_secure_temp_file(
         "athena-ai-chat-cfg-XXXXXX",
         "header = \"Authorization: Bearer " + request.api_key + "\"\n"

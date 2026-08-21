@@ -1,10 +1,35 @@
 #include "services/ai_service.h"
 
+#include <glib.h>
 #include <gtest/gtest.h>
 
+#include <optional>
 #include <stdexcept>
 
 namespace {
+
+class ScopedEnvironment final {
+public:
+    ScopedEnvironment(const string& name, const string& value)
+        : m_name(name) {
+        if (const char* current = g_getenv(m_name.c_str())) {
+            m_original = current;
+        }
+        g_setenv(m_name.c_str(), value.c_str(), true);
+    }
+
+    ~ScopedEnvironment() {
+        if (m_original) {
+            g_setenv(m_name.c_str(), m_original->c_str(), true);
+        } else {
+            g_unsetenv(m_name.c_str());
+        }
+    }
+
+private:
+    string m_name;
+    optional<string> m_original;
+};
 
 TEST(AiServiceTest, ParsesSuccessfulChatResponse) {
     const auto result = parse_ai_chat_response(
@@ -130,6 +155,20 @@ TEST(AiServiceTest, SupportsDeepseekOnlyAndRejectsMissingKeys) {
 
 TEST(AiServiceTest, RejectsEmptyTransport) {
     EXPECT_THROW(AiService(AiTransport {}), invalid_argument);
+}
+
+TEST(AiServiceTest, DefaultTransportIgnoresAnInvalidTmpDir) {
+    const ScopedEnvironment invalid_tmpdir(
+        "TMPDIR", "/path/that/does/not/exist");
+    const ScopedEnvironment missing_curl("PATH", "/path/that/does/not/exist");
+
+    const AiService service;
+    const auto result =
+        service.chat({.deepseek_api_key = "unused-test-key"}, "测试");
+
+    EXPECT_FALSE(result.ok);
+    EXPECT_NE(result.error.find("调用 curl 失败"), string::npos);
+    EXPECT_EQ(result.error.find("无法创建临时请求文件"), string::npos);
 }
 
 } // namespace
