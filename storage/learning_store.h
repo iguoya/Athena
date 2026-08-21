@@ -25,8 +25,14 @@ struct RunRecord {
     long long ran_at = 0;
 };
 
-// 基于 SQLite 的本地学习数据存储：掌握状态、知识点笔记和运行历史。
-// 句柄由 RAII 管理；database_path 传 ":memory:" 可用于测试。
+// 基于 SQLite 的本地学习数据存储：掌握状态、知识点笔记、运行历史，以及
+// 少量应用设置（目前只有 AI 服务商 API Key）。设置数据跟学习数据在概念
+// 上不同源，但数据量很小，复用同一个 SQLite 连接，不为两条 key-value
+// 配置另开一个数据库文件。
+// 句柄由 RAII 管理；database_path 传 ":memory:" 可用于测试。数据库文件
+// （":memory:" 除外）打开后会被设为仅当前用户可读写（0600），降低本机
+// 其他账户或备份/同步工具误把明文 Key 带出去的风险——这不是加密，只挡
+// 最基础的意外泄露；真正的机密应使用系统钥匙串，这里的取舍见调用方。
 // 只在主线程使用；打开或执行失败时抛出 runtime_error。
 class LearningStore {
 public:
@@ -54,6 +60,13 @@ public:
         const string& git_commit,
         bool git_dirty);
     vector<RunRecord> recent_runs(const string& function_id, int limit) const;
+
+    // 通用的应用设置读写（目前只用来存 AI 服务商 API Key）。key 不存在时
+    // get_setting 返回空串，调用方按"未配置"处理，不区分"从未设置"和
+    // "显式设为空"。value 传空串等价于清除这条设置（DELETE 而不是留一行
+    // 空值），避免空字符串和"未配置"在后续查询里产生歧义。
+    string get_setting(const string& key) const;
+    void set_setting(const string& key, const string& value);
 
 private:
     struct Sqlite3Deleter {

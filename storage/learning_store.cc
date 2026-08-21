@@ -2,6 +2,8 @@
 
 #include <sqlite3.h>
 
+#include <sys/stat.h>
+
 #include <chrono>
 #include <stdexcept>
 
@@ -87,6 +89,18 @@ LearningStore::LearningStore(const string& database_path) {
     execute(
         "CREATE INDEX IF NOT EXISTS idx_run_history_function "
         "ON run_history(function_id, id DESC)");
+    execute(
+        "CREATE TABLE IF NOT EXISTS app_settings ("
+        "  key TEXT PRIMARY KEY,"
+        "  value TEXT NOT NULL)");
+
+    // 数据库可能存有 AI 服务商 Key 这类敏感配置；收紧到仅当前用户可读写，
+    // 挡住最基础的意外泄露（同机其他账户、被囫囵打进备份/同步）。
+    // ":memory:" 没有对应的磁盘文件，跳过。chmod 失败（比如文件系统不
+    // 支持权限位）不影响数据库本身可用，不升级为异常。
+    if (database_path != ":memory:") {
+        chmod(database_path.c_str(), S_IRUSR | S_IWUSR);
+    }
 }
 
 void LearningStore::migrate_legacy_status_column() {
@@ -261,4 +275,40 @@ vector<RunRecord> LearningStore::recent_runs(
         records.push_back(std::move(record));
     }
     return records;
+}
+
+string LearningStore::get_setting(const string& key) const {
+    Statement statement(
+        m_handle.get(), "SELECT value FROM app_settings WHERE key = ?1");
+    bind_text(m_handle.get(), statement.raw, 1, key);
+
+    string value;
+    if (sqlite3_step(statement.raw) == SQLITE_ROW) {
+        if (const auto* text = sqlite3_column_text(statement.raw, 0)) {
+            value = reinterpret_cast<const char*>(text);
+        }
+    }
+    return value;
+}
+
+void LearningStore::set_setting(const string& key, const string& value) {
+    if (value.empty()) {
+        Statement statement(
+            m_handle.get(), "DELETE FROM app_settings WHERE key = ?1");
+        bind_text(m_handle.get(), statement.raw, 1, key);
+        if (sqlite3_step(statement.raw) != SQLITE_DONE) {
+            raise_sqlite_error(m_handle.get(), "clear setting");
+        }
+        return;
+    }
+
+    Statement statement(
+        m_handle.get(),
+        "INSERT INTO app_settings(key, value) VALUES(?1, ?2) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value");
+    bind_text(m_handle.get(), statement.raw, 1, key);
+    bind_text(m_handle.get(), statement.raw, 2, value);
+    if (sqlite3_step(statement.raw) != SQLITE_DONE) {
+        raise_sqlite_error(m_handle.get(), "save setting");
+    }
 }

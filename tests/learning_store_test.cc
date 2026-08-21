@@ -181,4 +181,42 @@ TEST(LearningStoreTest, LoadAllMasteryReturnsOnlyRecordedEntries) {
     EXPECT_EQ(updated.at("cpp.Reference.const_reference"), 4);
 }
 
+// AI 服务商 Key 走这组通用 key-value 设置存取；未配置时返回空串，调用方
+// 按"未配置"处理，不应该抛异常或返回哨兵值。
+TEST(LearningStoreTest, GetSettingReturnsEmptyForUnknownKey) {
+    LearningStore store(":memory:");
+    EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "");
+}
+
+TEST(LearningStoreTest, SetSettingPersistsAndOverwrites) {
+    LearningStore store(":memory:");
+    store.set_setting("ai_provider_key_ark", "ark-first");
+    EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "ark-first");
+
+    // 重复写入是 upsert，不产生第二行。
+    store.set_setting("ai_provider_key_ark", "ark-second");
+    EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "ark-second");
+}
+
+TEST(LearningStoreTest, SetSettingKeepsDifferentKeysIndependent) {
+    LearningStore store(":memory:");
+    store.set_setting("ai_provider_key_ark", "ark-value");
+    store.set_setting("ai_provider_key_deepseek", "deepseek-value");
+
+    EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "ark-value");
+    EXPECT_EQ(store.get_setting("ai_provider_key_deepseek"), "deepseek-value");
+}
+
+// 传空串等价于清除这条设置（DELETE），不是留一行空值——否则"曾经配置过
+// 又清空"和"从没配置过"在 get_setting 的返回值上无法区分，但两者本该
+// 一样按"未配置"处理，用 DELETE 直接消掉这个歧义源头。
+TEST(LearningStoreTest, SetSettingWithEmptyValueClearsIt) {
+    LearningStore store(":memory:");
+    store.set_setting("ai_provider_key_ark", "ark-value");
+    ASSERT_EQ(store.get_setting("ai_provider_key_ark"), "ark-value");
+
+    store.set_setting("ai_provider_key_ark", "");
+    EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "");
+}
+
 } // namespace
