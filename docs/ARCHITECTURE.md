@@ -79,7 +79,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
   AI 服务、进度页和三类对话框已经提取为独立模块，剩下的手册页与代码页状态更多、
   风险更高，按 3.6 和 ADR 0014 的顺序继续拆。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
-- 骨架生成只适合一个头文件与一个源文件的普通章节；RAII 这类一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）的章节仍由开发者组织，不使用 `group` 机制。
+- 骨架生成只适合一个头文件与一个源文件的普通章节；RAII 这类一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）的章节仍由开发者组织，不使用 `group` 机制。**这种拆分现在被认定为应当避免的特例，不是推荐路径**——多个 `.cpp` 会导致按知识点切换源码框内容碎片化，看不到类的完整定义；默认约定是整章合并到一个 `.hpp`（`Reference` 是参考实现），详见 `docs/CHAPTER_CONFIG.md` 6.1。RAII、TypeSemantics 是否迁移待评估，见路线图第 11 条。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
 
 ## 3. 目标架构
@@ -294,7 +294,11 @@ Meson -> Generator outputs
     规则已验证、常驻 Stack 懒构建一次）没有实际维护痛点，拆分收益暂时不足以排优先级；
     等它真正成为瓶颈（改动频繁、状态纠缠、或明确要接 Linux WebKitGTK）再启动。
     代码页（含 `ExperimentRunner`）状态最多、优先级最高，仍是下一步的第一候选。
-11. 只有出现多前端或大量界面行为必须脱离 GTK 测试时，再考虑正式 Presenter/View
+11. 待评估：把 `TypeSemantics`（`.hpp`+`.cpp`）和 `RAII`（`.hpp`+ 3 个 `.cpp`）迁移为
+    单文件 `.hpp`，对齐 6.1 的默认约定。`RAII` 收益更明确（消除按知识点切换源码框内容
+    碎片化的问题）；`TypeSemantics` 现有 `.hpp` 只有函数签名、没有实质内容，迁移收益较小。
+    未启动前两个章节继续按现状运行，不影响功能。
+12. 只有出现多前端或大量界面行为必须脱离 GTK 测试时，再考虑正式 Presenter/View
     接口。
 
 ## 7. MVC/MVP 决策
