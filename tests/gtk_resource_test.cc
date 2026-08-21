@@ -42,6 +42,18 @@ TEST(GtkResourceTest, LoadsTheWelcomeTigerImage) {
     EXPECT_EQ(image->get_pixel_size(), 560);
 }
 
+TEST(GtkResourceTest, WelcomePageOmitsTheRedundantLearningOverview) {
+    const auto builder = Gtk::Builder::create_from_resource(
+        "/app/chapters/welcome.ui");
+
+    EXPECT_EQ(
+        gtk_builder_get_object(builder->gobj(), "stats_section"),
+        nullptr);
+    EXPECT_NE(
+        gtk_builder_get_object(builder->gobj(), "features_section"),
+        nullptr);
+}
+
 } // namespace
 
 int main(int argc, char** argv) {

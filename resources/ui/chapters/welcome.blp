@@ -283,260 +283,132 @@ ScrolledWindow welcome_page {
       }
     }
 
-    // 概览与特色作为两个独立分组放在页面最下方。
-    Box overview_row {
-      orientation: horizontal;
-      spacing: 24;
+    // 欢迎页只说明学习方式；实时统计统一放在“学习进度”页。
+    Box features_section {
+      orientation: vertical;
+      spacing: 16;
       halign: center;
+      width-request: 720;
 
-      Box stats_section {
-        orientation: vertical;
-        spacing: 16;
-        width-request: 500;
+      styles [
+        "section-card"
+      ]
+
+      Label {
+        label: "学习特色";
 
         styles [
-          "section-card"
+          "title-3"
         ]
-
-        Label {
-          label: "学习概览";
-
-          styles [
-            "title-3"
-          ]
-        }
-
-        Box stats_container {
-          orientation: horizontal;
-          spacing: 14;
-          homogeneous: true;
-
-          Box chapters_stat {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
-
-            styles [
-              "stat-card"
-            ]
-
-            Image {
-              icon-name: "view-grid-symbolic";
-              pixel-size: 48;
-            }
-
-            Label {
-              label: "学习章节";
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label {
-              label: "61 个章节";
-
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
-          }
-
-          Box stages_stat {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
-
-            styles [
-              "stat-card"
-            ]
-
-            Image {
-              icon-name: "view-list-symbolic";
-              pixel-size: 48;
-            }
-
-            Label {
-              label: "学习阶段";
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label {
-              label: "5 个阶段";
-
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
-          }
-
-          Box progress_stat {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
-
-            styles [
-              "stat-card"
-            ]
-
-            Image {
-              icon-name: "task-due-symbolic";
-              pixel-size: 48;
-            }
-
-            Label {
-              label: "完成进度";
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label {
-              label: "0%";
-
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
-          }
-        }
       }
 
-      Box features_section {
-        orientation: vertical;
-        spacing: 16;
-        width-request: 720;
+      Box features_grid {
+        orientation: horizontal;
+        spacing: 18;
+        homogeneous: true;
 
-        styles [
-          "section-card"
-        ]
-
-        Label {
-          label: "学习特色";
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          halign: center;
+          hexpand: true;
 
           styles [
-            "title-3"
+            "feature-card"
           ]
+
+          Image {
+            icon-name: "media-playback-start-symbolic";
+            pixel-size: 48;
+          }
+
+          Label {
+            label: "互动练习";
+
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "边学边练，及时验证学习效果";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
+          }
         }
 
-        Box features_grid {
-          orientation: horizontal;
-          spacing: 18;
-          homogeneous: true;
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          halign: center;
+          hexpand: true;
 
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
+          styles [
+            "feature-card"
+          ]
 
-            styles [
-              "feature-card"
-            ]
-
-            Image {
-              icon-name: "media-playback-start-symbolic";
-              pixel-size: 48;
-            }
-
-            Label {
-              label: "互动练习";
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label {
-              label: "边学边练，及时验证学习效果";
-              wrap: true;
-              justify: center;
-
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
+          Image {
+            icon-name: "text-x-generic-symbolic";
+            pixel-size: 48;
           }
 
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
+          Label {
+            label: "代码示例";
 
             styles [
-              "feature-card"
+              "heading"
             ]
-
-            Image {
-              icon-name: "text-x-generic-symbolic";
-              pixel-size: 48;
-            }
-
-            Label {
-              label: "代码示例";
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label {
-              label: "丰富的代码实例，直观理解概念";
-              wrap: true;
-              justify: center;
-
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
           }
 
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            halign: center;
-            hexpand: true;
+          Label {
+            label: "丰富的代码实例，直观理解概念";
+            wrap: true;
+            justify: center;
 
             styles [
-              "feature-card"
+              "caption",
+              "dim-label"
             ]
+          }
+        }
 
-            Image {
-              icon-name: "view-refresh-symbolic";
-              pixel-size: 48;
-            }
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          halign: center;
+          hexpand: true;
 
-            Label {
-              label: "循序渐进";
+          styles [
+            "feature-card"
+          ]
 
-              styles [
-                "heading"
-              ]
-            }
+          Image {
+            icon-name: "view-refresh-symbolic";
+            pixel-size: 48;
+          }
 
-            Label {
-              label: "从简单到复杂，逐步掌握 C++";
-              wrap: true;
-              justify: center;
+          Label {
+            label: "循序渐进";
 
-              styles [
-                "caption",
-                "dim-label"
-              ]
-            }
+            styles [
+              "heading"
+            ]
+          }
+
+          Label {
+            label: "从简单到复杂，逐步掌握 C++";
+            wrap: true;
+            justify: center;
+
+            styles [
+              "caption",
+              "dim-label"
+            ]
           }
         }
       }
