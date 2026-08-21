@@ -955,7 +955,6 @@ void MainWindow::initialize_code_page(
         builder->get_widget<Gtk::Spinner>("experiment_spinner");
     auto experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
-    auto note_view = builder->get_widget<Gtk::TextView>("note_view");
     auto chapter_overview_button =
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
@@ -991,8 +990,7 @@ void MainWindow::initialize_code_page(
             experiment_status_label,
             title_label,
             description_label,
-            chapter_icon,
-            note_view);
+            chapter_icon);
     }
 }
 
@@ -1832,8 +1830,7 @@ void MainWindow::populate_topic_list(
     Gtk::Label* experiment_status_label,
     Gtk::Label* header_title_label,
     Gtk::Label* header_description_label,
-    Gtk::Image* header_icon,
-    Gtk::TextView* note_view) {
+    Gtk::Image* header_icon) {
     if (chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -1857,67 +1854,17 @@ void MainWindow::populate_topic_list(
 
     auto selection_by_row =
         make_shared<std::map<Gtk::ListBoxRow*, TopicSelection>>();
-    auto current_topic = make_shared<TopicSelection>();
-    const auto note_buffer =
-        note_view ? note_view->get_buffer() : Glib::RefPtr<Gtk::TextBuffer> {};
-    auto note_loading = make_shared<bool>(false);
-    auto note_dirty = make_shared<bool>(false);
-    auto note_timer = make_shared<sigc::connection>();
 
-    // 笔记自动保存：编辑停止 600ms 后写入；切换知识点前先落盘。
-    auto flush_note = make_shared<function<void()>>();
-    *flush_note = [this, current_topic, note_buffer, note_dirty]() {
-        if (!*note_dirty || !note_buffer || !m_learning_store
-            || current_topic->function_id.empty()) {
-            return;
-        }
-        try {
-            const auto progress =
-                m_learning_store->load_progress(current_topic->function_id);
-            m_learning_store->save_progress(
-                current_topic->function_id,
-                progress.mastery,
-                string(note_buffer->get_text().raw()));
-        } catch (const exception& error) {
-            cerr << "Failed to save note for " << current_topic->function_id
-                 << ": " << error.what() << endl;
-        }
-        *note_dirty = false;
-    };
-    if (note_buffer) {
-        note_buffer->signal_changed().connect(
-            [note_loading, note_dirty, note_timer, flush_note]() {
-                if (*note_loading) {
-                    return;
-                }
-                *note_dirty = true;
-                if (note_timer->connected()) {
-                    note_timer->disconnect();
-                }
-                *note_timer = Glib::signal_timeout().connect(
-                    [flush_note]() {
-                        (*flush_note)();
-                        return false;
-                    },
-                    600);
-            });
-    }
-
-    // 激活只负责高亮、头部、说明、笔记加载和源码显示；
+    // 激活只负责高亮、头部、说明和源码显示；
     // 运行由运行按钮显式触发，条目本身（标题与描述）不响应点击。
     auto activate_topic = make_shared<function<void(Gtk::ListBoxRow*)>>(
         [this,
          selection_by_row,
-         current_topic,
          knowledge_description_label,
          source_view,
          header_title_label,
          header_description_label,
-         header_icon,
-         note_view,
-         note_buffer,
-         note_loading,
-         flush_note](Gtk::ListBoxRow* row) {
+         header_icon](Gtk::ListBoxRow* row) {
             const auto found = selection_by_row->find(row);
             if (found == selection_by_row->end()) {
                 return;
@@ -1941,20 +1888,6 @@ void MainWindow::populate_topic_list(
             }
             if (header_icon) {
                 configure_image(*header_icon, found->second.icon, 36);
-            }
-
-            (*flush_note)();
-            *current_topic = found->second;
-            if (note_view && note_buffer) {
-                note_view->set_sensitive(true);
-                *note_loading = true;
-                note_buffer->set_text(
-                    m_learning_store
-                        ? m_learning_store
-                              ->load_progress(found->second.function_id)
-                              .note
-                        : "");
-                *note_loading = false;
             }
 
             display_source(
@@ -2131,7 +2064,7 @@ void MainWindow::populate_topic_list(
 
         // 历史与解释依赖具体知识点，各自绑定当前这一条 topic，不再共用
         // 一对随“当前激活知识点”切换的按钮；点击时先激活本行（高亮、
-        // 头部、笔记与源码随之切换），再执行对应动作。
+        // 头部与源码随之切换），再执行对应动作。
         auto history_button = Gtk::make_managed<Gtk::Button>("运行历史");
         history_button->add_css_class("btn-sm");
         history_button->set_tooltip_text("查看该知识点的运行记录");
@@ -2186,25 +2119,23 @@ void MainWindow::populate_topic_list(
         // 熟练度：用户自评的五星评分，自由打分并持久化；到 5 星后运行
         // 按钮置灰，降低星级即可恢复运行。重要度不在这里——它是只读的
         // 客观难度标注，显示在条目标题旁，见上方 title_row。
-        KnowledgeProgress saved_progress;
+        int saved_mastery = 0;
         if (m_learning_store) {
             try {
-                saved_progress = m_learning_store->load_progress(function_id);
+                saved_mastery = m_learning_store->load_mastery(function_id);
             } catch (const exception& error) {
                 cerr << "Failed to load progress for " << function_id << ": "
                      << error.what() << endl;
             }
         }
-        auto mastery = make_shared<int>(clamp(saved_progress.mastery, 0, 5));
+        auto mastery = make_shared<int>(clamp(saved_mastery, 0, 5));
 
         auto persist_rating = [this, function_id, mastery]() {
             if (!m_learning_store) {
                 return;
             }
             try {
-                const auto note =
-                    m_learning_store->load_progress(function_id).note;
-                m_learning_store->save_progress(function_id, *mastery, note);
+                m_learning_store->save_mastery(function_id, *mastery);
             } catch (const exception& error) {
                 cerr << "Failed to save rating for " << function_id << ": "
                      << error.what() << endl;

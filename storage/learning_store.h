@@ -9,12 +9,6 @@ using namespace std;
 
 struct sqlite3;
 
-struct KnowledgeProgress {
-    int mastery = 0;  // 0-5 星：熟练度，用户自由评分，0 = 未处理，5 = 完全掌握
-    string note;
-    long long updated_at = 0;
-};
-
 struct RunRecord {
     long long id = 0;
     string output;
@@ -25,7 +19,7 @@ struct RunRecord {
     long long ran_at = 0;
 };
 
-// 基于 SQLite 的本地学习数据存储：掌握状态、知识点笔记、运行历史，以及
+// 基于 SQLite 的本地学习数据存储：熟练度、运行历史，以及
 // 少量应用设置（目前只有 AI 服务商 API Key）。设置数据跟学习数据在概念
 // 上不同源，但数据量很小，复用同一个 SQLite 连接，不为两条 key-value
 // 配置另开一个数据库文件。
@@ -42,11 +36,8 @@ public:
     LearningStore(const LearningStore&) = delete;
     LearningStore& operator=(const LearningStore&) = delete;
 
-    KnowledgeProgress load_progress(const string& function_id) const;
-    void save_progress(
-        const string& function_id,
-        int mastery,
-        const string& note);
+    int load_mastery(const string& function_id) const;
+    void save_mastery(const string& function_id, int mastery);
     // 学习进度统计页一次性批量读取全部知识点的熟练度，避免逐个
     // function_id 单独查询；只返回有过记录的条目，未评的知识点不在
     // 返回结果里（调用方按 0 处理）。
@@ -76,8 +67,8 @@ private:
     void execute(const string& sql) const;
     // 把旧版本单一 status 位标志列迁移为 mastery 列；CREATE TABLE IF NOT
     // EXISTS 对已存在的旧表是空操作，新列需要显式补齐。旧版本短暂存在过
-    // 的 importance 列、run_history 的旧 source_hash 列（本会话内引入又
-    // 废弃）如果已经加过，留在表里不再使用，不做 DROP COLUMN 迁移。
+    // 的 importance/note 列、run_history 的旧 source_hash 列如果已经
+    // 存在，留在表里保全旧数据，但运行时不再读写，不做 DROP COLUMN 迁移。
     void migrate_legacy_status_column();
     // run_history 补齐 source_snapshot、git_commit、git_dirty 列（曾用
     // source_hash 只存哈希，无法还原源码；现在改存完整快照，并额外记录

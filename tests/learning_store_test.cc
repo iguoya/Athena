@@ -9,36 +9,27 @@
 
 namespace {
 
-TEST(LearningStoreTest, ReturnsDefaultProgressForUnknownKnowledgePoint) {
+TEST(LearningStoreTest, ReturnsDefaultMasteryForUnknownKnowledgePoint) {
     const LearningStore store(":memory:");
-    const auto progress = store.load_progress("cpp.Reference.reference_basics");
-
-    EXPECT_EQ(progress.mastery, 0);
-    EXPECT_EQ(progress.note, "");
+    EXPECT_EQ(store.load_mastery("cpp.Reference.reference_basics"), 0);
 }
 
-TEST(LearningStoreTest, SavesAndReloadsProgress) {
+TEST(LearningStoreTest, SavesAndReloadsMastery) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 2, "循环引用要用 weak_ptr 打破");
+    store.save_mastery("cpp.RAII.weak", 2);
+    EXPECT_EQ(store.load_mastery("cpp.RAII.weak"), 2);
 
-    const auto progress = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(progress.mastery, 2);
-    EXPECT_EQ(progress.note, "循环引用要用 weak_ptr 打破");
-    EXPECT_GT(progress.updated_at, 0);
-
-    store.save_progress("cpp.RAII.weak", 5, "已掌握");
-    const auto updated = store.load_progress("cpp.RAII.weak");
-    EXPECT_EQ(updated.mastery, 5);
-    EXPECT_EQ(updated.note, "已掌握");
+    store.save_mastery("cpp.RAII.weak", 5);
+    EXPECT_EQ(store.load_mastery("cpp.RAII.weak"), 5);
 }
 
 TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
     LearningStore store(":memory:");
-    store.save_progress("cpp.RAII.weak", 1, "weak");
-    store.save_progress("cpp.Reference.cast", 4, "cast");
+    store.save_mastery("cpp.RAII.weak", 1);
+    store.save_mastery("cpp.Reference.cast", 4);
 
-    EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "weak");
-    EXPECT_EQ(store.load_progress("cpp.Reference.cast").note, "cast");
+    EXPECT_EQ(store.load_mastery("cpp.RAII.weak"), 1);
+    EXPECT_EQ(store.load_mastery("cpp.Reference.cast"), 4);
 }
 
 TEST(LearningStoreTest, ReturnsMostRecentRunsFirst) {
@@ -101,11 +92,34 @@ TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
 
     // 打开旧库不应抛异常，且应能立即按新字段查询——这正是升级后崩溃的场景。
     LearningStore store(db_path);
-    EXPECT_EQ(store.load_progress("cpp.RAII.weak").mastery, 5);
-    EXPECT_EQ(store.load_progress("cpp.RAII.unique").mastery, 3);
-    EXPECT_EQ(store.load_progress("cpp.Reference.cast").mastery, 1);
-    EXPECT_EQ(store.load_progress("cpp.Reference.const").mastery, 0);
-    EXPECT_EQ(store.load_progress("cpp.RAII.weak").note, "已理解并掌握");
+    EXPECT_EQ(store.load_mastery("cpp.RAII.weak"), 5);
+    EXPECT_EQ(store.load_mastery("cpp.RAII.unique"), 3);
+    EXPECT_EQ(store.load_mastery("cpp.Reference.cast"), 1);
+    EXPECT_EQ(store.load_mastery("cpp.Reference.const"), 0);
+
+    // 笔记功能已从界面和运行时 API 移除，但升级和重新评分不能覆盖旧数据。
+    store.save_mastery("cpp.RAII.weak", 4);
+    sqlite3* verify = nullptr;
+    ASSERT_EQ(sqlite3_open(db_path.c_str(), &verify), SQLITE_OK);
+    sqlite3_stmt* note_query = nullptr;
+    ASSERT_EQ(
+        sqlite3_prepare_v2(
+            verify,
+            "SELECT note FROM knowledge_progress WHERE function_id = ?1",
+            -1,
+            &note_query,
+            nullptr),
+        SQLITE_OK);
+    ASSERT_EQ(
+        sqlite3_bind_text(
+            note_query, 1, "cpp.RAII.weak", -1, SQLITE_TRANSIENT),
+        SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(note_query), SQLITE_ROW);
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(note_query, 0)),
+        "已理解并掌握");
+    sqlite3_finalize(note_query);
+    sqlite3_close_v2(verify);
 
     std::remove(db_path.c_str());
 }
@@ -163,9 +177,9 @@ TEST(LearningStoreTest, LoadAllMasteryReturnsOnlyRecordedEntries) {
     LearningStore store(":memory:");
     EXPECT_TRUE(store.load_all_mastery().empty());
 
-    store.save_progress("cpp.Reference.reference_basics", 5, "");
-    store.save_progress("cpp.Reference.const_reference", 2, "笔记");
-    store.save_progress("cpp.RAII.raii_basic", 0, "");
+    store.save_mastery("cpp.Reference.reference_basics", 5);
+    store.save_mastery("cpp.Reference.const_reference", 2);
+    store.save_mastery("cpp.RAII.raii_basic", 0);
 
     const auto mastery = store.load_all_mastery();
     EXPECT_EQ(mastery.size(), 3u);
@@ -175,7 +189,7 @@ TEST(LearningStoreTest, LoadAllMasteryReturnsOnlyRecordedEntries) {
     EXPECT_EQ(mastery.count("cpp.RAII.never_rated"), 0u);
 
     // 重复评分走的是 upsert，不应该出现同一个 function_id 两条记录。
-    store.save_progress("cpp.Reference.const_reference", 4, "笔记");
+    store.save_mastery("cpp.Reference.const_reference", 4);
     const auto updated = store.load_all_mastery();
     EXPECT_EQ(updated.size(), 3u);
     EXPECT_EQ(updated.at("cpp.Reference.const_reference"), 4);

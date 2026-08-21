@@ -12,8 +12,7 @@ Box chapter_page {
   margin-bottom: 18;
 
   // 紧凑章节导语：由 chapter.icon/title/description 驱动；本章总纲
-  // 按钮和笔记框跟标题/简介放在同一个 Frame 里，笔记不再依赖“当前
-  // 激活的知识点”才可见，打开章节就能随手记。
+  // 按钮跟标题/简介放在同一个 Frame 里。
   Frame chapter_header_frame {
     hexpand: true;
 
@@ -72,39 +71,6 @@ Box chapter_page {
           "btn-sm",
           "btn-chapter-overview"
         ]
-      }
-
-      // 笔记功能价值不明确，先隐藏（不删除底层存取逻辑，方便以后恢复
-      // 或者确认要不要保留时随时切换 visible）。
-      Frame {
-        name: "note_frame";
-        label: "笔记";
-        width-request: 320;
-        valign: center;
-        visible: false;
-
-        styles [
-          "panel-frame",
-          "group-frame"
-        ]
-
-        ScrolledWindow {
-          hscrollbar-policy: never;
-          hexpand: true;
-          height-request: 64;
-
-          TextView note_view {
-            name: "note_view";
-            editable: true;
-            cursor-visible: true;
-            wrap-mode: word_char;
-            sensitive: false;
-            left-margin: 8;
-            right-margin: 8;
-            top-margin: 6;
-            bottom-margin: 6;
-          }
-        }
       }
     }
   }

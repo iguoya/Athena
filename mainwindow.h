@@ -55,8 +55,7 @@ private:
         Gtk::Label* experiment_status_label,
         Gtk::Label* header_title_label,
         Gtk::Label* header_description_label,
-        Gtk::Image* header_icon,
-        Gtk::TextView* note_view);
+        Gtk::Image* header_icon);
     void open_learning_store();
     // AI 服务商 Key 的统一读取入口：应用内设置（SQLite）优先，读不到再
     // 退回同名环境变量（保留给终端直接启动、还没在设置面板填过的场景）。
