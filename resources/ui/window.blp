@@ -12,9 +12,8 @@ ApplicationWindow window {
   Box main_container {
     orientation: horizontal;
 
-    // === 左侧分类导航 ===
-    Box category_sidebar {
-      name: "category_sidebar";
+    // === 左侧导航 ===
+    Box sidebar {
       orientation: vertical;
       width-request: 108;
       spacing: 0;
@@ -22,6 +21,44 @@ ApplicationWindow window {
       styles [
         "app-sidebar"
       ]
+
+      // 分类按钮由 MainWindow 根据 athena.json 动态追加。
+      Box category_sidebar {
+        name: "category_sidebar";
+        orientation: vertical;
+        spacing: 0;
+        vexpand: true;
+      }
+
+      Separator {
+        orientation: horizontal;
+      }
+
+      Button settings_button {
+        name: "settings_button";
+        tooltip-text: "配置 AI 服务商等应用设置";
+
+        styles [
+          "nav-button"
+        ]
+
+        Box {
+          orientation: vertical;
+          spacing: 4;
+          valign: center;
+          margin-top: 10;
+          margin-bottom: 10;
+
+          Image {
+            icon-name: "preferences-system-symbolic";
+            pixel-size: 22;
+          }
+
+          Label {
+            label: "设置";
+          }
+        }
+      }
     }
 
     Separator {

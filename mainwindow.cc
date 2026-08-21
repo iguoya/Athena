@@ -593,10 +593,15 @@ MainWindow::MainWindow(
     m_category_sidebar = m_main_builder->get_widget<Gtk::Box>("category_sidebar");
     m_chapter_stack = m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_tab_box = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
+    auto settings_button =
+        m_main_builder->get_widget<Gtk::Button>("settings_button");
 
-    if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tab_box) {
+    if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tab_box
+        || !settings_button) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
+    settings_button->signal_clicked().connect(
+        sigc::mem_fun(*this, &MainWindow::show_settings_dialog));
 
     load_chapter_metadata();
     // 学习存储必须在建侧边栏之前打开：setup_category_sidebar() 里第一个
@@ -2490,7 +2495,7 @@ void MainWindow::populate_topic_list(
         auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
-            "需要先在菜单栏“设置”里配置至少一个 AI 服务商 Key：让 AI"
+            "需要先在侧边栏底部“设置”里配置至少一个 AI 服务商 Key：让 AI"
             "（优先豆包，失败或未配置时用 DeepSeek）针对该知识点的具体源码"
             "出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
         quiz_button->signal_clicked().connect(
@@ -2511,7 +2516,7 @@ void MainWindow::populate_topic_list(
                 } else {
                     auto notice = Gtk::make_managed<Gtk::MessageDialog>(
                         *this,
-                        "自测功能需要先在菜单栏“设置”里配置至少一个 AI "
+                        "自测功能需要先在侧边栏底部“设置”里配置至少一个 AI "
                         "服务商 Key",
                         false,
                         Gtk::MessageType::INFO,
