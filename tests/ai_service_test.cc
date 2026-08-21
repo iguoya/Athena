@@ -59,6 +59,16 @@ TEST(AiServiceTest, RejectsResponseWithoutUsableQuestions) {
     EXPECT_FALSE(parse_ai_quiz_response(R"({"questions":"wrong type"})").has_value());
 }
 
+TEST(AiServiceTest, ConvertsOnlyCompleteQuizResultsToFiveStars) {
+    EXPECT_EQ(mastery_from_quiz_score(0, 0), 0);
+    EXPECT_EQ(mastery_from_quiz_score(-1, 3), 0);
+    EXPECT_EQ(mastery_from_quiz_score(0, 3), 0);
+    EXPECT_EQ(mastery_from_quiz_score(1, 3), 1);
+    EXPECT_EQ(mastery_from_quiz_score(2, 3), 3);
+    EXPECT_EQ(mastery_from_quiz_score(3, 3), 5);
+    EXPECT_EQ(mastery_from_quiz_score(8, 3), 5);
+}
+
 TEST(AiServiceTest, UsesArkFirstAndStopsAfterSuccess) {
     vector<AiChatRequest> requests;
     AiService service([&requests](const AiChatRequest& request) {

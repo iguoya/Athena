@@ -210,6 +210,14 @@ optional<AiQuiz> parse_ai_quiz_response(string_view response_body) {
     }
 }
 
+int mastery_from_quiz_score(int correct_answers, int total_questions) {
+    if (total_questions <= 0) {
+        return 0;
+    }
+    const int bounded_correct = clamp(correct_answers, 0, total_questions);
+    return bounded_correct * 5 / total_questions;
+}
+
 AiService::AiService()
     : m_transport(perform_ai_request) {}
 

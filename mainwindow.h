@@ -10,6 +10,7 @@
 #include <gtksourceview/gtksource.h>
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <set>
 #include <thread>
@@ -39,7 +40,7 @@ private:
     // cpp 分类“欢迎页面”后面的合成学习进度标签页：它不来自
     // athena.json，由 build_chapter_tabs() 在欢迎页之后手工插入；每次
     // 切回 cpp 分类都重新构建（数据量小，重新查库+布局的开销可以忽略），
-    // 保证熟练度星级的变化能反映出来，不需要额外的“数据是否过期”状态。
+    // 保证 AI 自测更新的熟练度能反映出来，不需要额外的“数据是否过期”状态。
     void append_progress_tab();
     void initialize_code_page(
         const string& category_name,
@@ -81,12 +82,14 @@ private:
         const string& ark_api_key,
         const string& deepseek_api_key);
     void show_ai_quiz_dialog(
+        const string& function_id,
         const string& topic_title,
         const string& description,
         const string& source_path,
         const string& member_name,
         const string& ark_api_key,
-        const string& deepseek_api_key);
+        const string& deepseek_api_key,
+        function<bool(int)> on_mastery_changed);
     void start_experiment(
         const string& function_id,
         const string& source_path,

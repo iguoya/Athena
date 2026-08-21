@@ -1467,23 +1467,29 @@ void MainWindow::show_ai_response_dialog(
 // 解释，颜色区分对错。返回的 JSON 解析失败时退化为纯文本展示，不崩溃、
 // 不隐藏结果。
 void MainWindow::show_ai_quiz_dialog(
+    const string& function_id,
     const string& topic_title,
     const string& description,
     const string& source_path,
     const string& member_name,
     const string& ark_api_key,
-    const string& deepseek_api_key) {
+    const string& deepseek_api_key,
+    function<bool(int)> on_mastery_changed) {
     string prompt =
-        "请针对 C++ 知识点「" + topic_title + "」出一组有针对性的自测题，"
-        "题目要结合下面这段具体源码提问，不要问泛泛的定义题。题目数量不要"
-        "固定，你自己根据这个知识点实际包含的独立考察点客观决定出几道："
-        "涵盖了这个知识点的所有关键行为和易错点才停，不要为了凑数量出太"
-        "简单或者跟别的题重复考察同一个点的题，也不要漏掉这个知识点里真"
-        "正该测的内容。每题的选项数量不用固定为 4 个，选项本身合适就好，"
-        "选项数量按题目需要来定；大多数题应该只有一个正确答案，但如果某"
-        "道题确实有不止一个选项都对，就把它做成多选题，correct_indices "
-        "里放全部正确选项的下标。给出简短解释说明为什么正确、其余选项错"
-        "在哪。只用 JSON 格式返回，形如 {\"questions\":[{\"question\":"
+        "请为 C++ 知识点「" + topic_title + "」生成一次可量化的掌握度自测。"
+        "只能考察下面的知识点说明和参考实现能够支持的内容，不考范围外的"
+        "冷门标准条款、编译器细节或文字陷阱。出题前先在内部列出独立考察"
+        "点，确保核心语义、源码中的关键行为以及常见误用或边界情况都至少"
+        "被一道题覆盖，但不要输出这份内部列表。题目数量由独立考察点的实际"
+        "数量决定，覆盖完整后立即停止；不要设固定题量，也不要把同一事实换"
+        "一种说法重复出题。整体以基础理解和结合源码的分析应用为主，只在"
+        "知识点本身确有相关内容时考察边界与易错点；"
+        "不要用超出当前知识点范围的内容人为提高难度。每道题必须有能够由"
+        "源码或明确 C++ 规则支持的答案，干扰项要合理但不能含糊。每题选项"
+        "数量按题目需要决定；大多数题只有一个正确答案，确实有多个正确项"
+        "时才做成多选题，并在 correct_indices 中列出全部正确选项。解释要"
+        "简短说明正确依据及主要干扰项错在哪里。只用 JSON 格式返回，形如 "
+        "{\"questions\":[{\"question\":"
         "\"...\",\"options\":[\"...\",\"...\"],\"correct_indices\":[0],"
         "\"explanation\":\"...\"}]}，correct_indices 是从 0 开始的正确"
         "选项下标数组，单选题这个数组只有一个元素。解释文字的" +
@@ -1521,13 +1527,14 @@ void MainWindow::show_ai_quiz_dialog(
 
     auto alive = m_ui_alive;
     thread([alive, dialog_alive, quiz_box, ark_api_key, deepseek_api_key, prompt,
-            dialog]() {
+            dialog, function_id, on_mastery_changed]() {
         const AiChatResult result = AiService().chat(
             {.ark_api_key = ark_api_key,
              .deepseek_api_key = deepseek_api_key},
             prompt);
         Glib::signal_idle().connect_once(
-            [alive, dialog_alive, quiz_box, result, dialog]() {
+            [alive, dialog_alive, quiz_box, result, dialog, function_id,
+             on_mastery_changed]() {
                 if (!alive->load() || !dialog_alive->load()) {
                     return;
                 }
@@ -1549,8 +1556,21 @@ void MainWindow::show_ai_quiz_dialog(
                 }
 
                 const auto quiz = parse_ai_quiz_response(result.content);
-                bool parsed_ok = quiz.has_value();
+                const bool parsed_ok = quiz.has_value();
                 if (quiz) {
+                    const int total_questions =
+                        static_cast<int>(quiz->questions.size());
+                    auto answered_questions = make_shared<int>(0);
+                    auto correct_answers = make_shared<int>(0);
+                    auto score_label = Gtk::make_managed<Gtk::Label>(
+                        "完成全部 " + to_string(total_questions)
+                        + " 道题后，将按本次成绩自动更新熟练度");
+                    score_label->set_halign(Gtk::Align::START);
+                    score_label->set_wrap(true);
+                    score_label->set_xalign(0);
+                    score_label->add_css_class("ai-dialog-feedback");
+                    quiz_box->append(*score_label);
+
                     for (const auto& item : quiz->questions) {
                         const string question = item.question;
                         const vector<string> options = item.options;
@@ -1616,7 +1636,13 @@ void MainWindow::show_ai_quiz_dialog(
                              options,
                              feedback_label,
                              explanation_label,
-                             submit_button]() {
+                             submit_button,
+                             answered_questions,
+                             correct_answers,
+                             total_questions,
+                             score_label,
+                             function_id,
+                             on_mastery_changed]() {
                                 vector<int> selected_indices;
                                 for (size_t index = 0;
                                      index < option_buttons->size();
@@ -1642,6 +1668,7 @@ void MainWindow::show_ai_quiz_dialog(
                                 const bool is_correct =
                                     sorted_selected == sorted_correct;
                                 if (is_correct) {
+                                    ++*correct_answers;
                                     feedback_label->set_text("✓ 回答正确");
                                 } else {
                                     string correct_text;
@@ -1665,6 +1692,28 @@ void MainWindow::show_ai_quiz_dialog(
                                     option->set_sensitive(false);
                                 }
                                 submit_button->set_sensitive(false);
+
+                                ++*answered_questions;
+                                if (*answered_questions == total_questions) {
+                                    const int mastery = mastery_from_quiz_score(
+                                        *correct_answers, total_questions);
+                                    const bool saved =
+                                        on_mastery_changed(mastery);
+                                    score_label->set_text(
+                                        "本次成绩：" + to_string(*correct_answers)
+                                        + "/" + to_string(total_questions)
+                                        + "，自动评定为 " + to_string(mastery)
+                                        + " 星。"
+                                        + (saved
+                                               ? "评分已保存到学习进度。"
+                                               : "评分暂时无法保存。"));
+                                    if (mastery >= 5) {
+                                        score_label->add_css_class("correct");
+                                    }
+                                    score_label->set_tooltip_text(
+                                        "知识点 " + function_id
+                                        + "：按正确率 × 5 向下取整；只有全对才是 5 星");
+                                }
                             });
                         item_box->append(*submit_button);
                         item_box->append(*feedback_label);
@@ -2079,14 +2128,79 @@ void MainWindow::populate_topic_list(
             });
         actions->append(*history_button);
 
+        // 熟练度是最近一次完整 AI 自测的量化结果，只读展示。重要度不在
+        // 这里——它是内容作者给出的客观难度标注，见上方 title_row。
+        int saved_mastery = 0;
+        if (m_learning_store) {
+            try {
+                saved_mastery = m_learning_store->load_mastery(function_id);
+            } catch (const exception& error) {
+                cerr << "Failed to load progress for " << function_id << ": "
+                     << error.what() << endl;
+            }
+        }
+        auto mastery = make_shared<int>(clamp(saved_mastery, 0, 5));
+
+        auto mastery_row = Gtk::make_managed<Gtk::Box>(
+            Gtk::Orientation::HORIZONTAL, 4);
+        mastery_row->add_css_class("star-row");
+        mastery_row->add_css_class("star-row-mastery");
+        mastery_row->set_tooltip_text(
+            "熟练度由最近一次完成的 AI 自测成绩自动评定，不能手动修改");
+        auto mastery_caption = Gtk::make_managed<Gtk::Label>("熟练度");
+        mastery_caption->add_css_class("star-caption");
+        mastery_row->append(*mastery_caption);
+
+        auto mastery_stars = make_shared<vector<Gtk::Image*>>();
+        for (int index = 0; index < 5; ++index) {
+            auto star = Gtk::make_managed<Gtk::Image>();
+            star->set_pixel_size(14);
+            mastery_stars->push_back(star);
+            mastery_row->append(*star);
+        }
+        auto mastery_label = Gtk::make_managed<Gtk::Label>();
+        mastery_label->add_css_class("star-level-label");
+        mastery_label->set_halign(Gtk::Align::START);
+        mastery_row->append(*mastery_label);
+
+        auto refresh_mastery = make_shared<function<void()>>();
+        *refresh_mastery = [mastery, mastery_stars, mastery_label]() {
+            const int level = clamp(*mastery, 0, 5);
+            for (size_t index = 0; index < mastery_stars->size(); ++index) {
+                (*mastery_stars)[index]->set_from_icon_name(
+                    static_cast<int>(index) < level
+                        ? "starred-symbolic"
+                        : "non-starred-symbolic");
+            }
+            mastery_label->set_text(to_string(level) + " 星");
+        };
+        (*refresh_mastery)();
+
+        auto update_mastery =
+            [this, function_id, mastery, refresh_mastery](int score) {
+                *mastery = clamp(score, 0, 5);
+                (*refresh_mastery)();
+                if (!m_learning_store) {
+                    return false;
+                }
+                try {
+                    m_learning_store->save_mastery(function_id, *mastery);
+                    return true;
+                } catch (const exception& error) {
+                    cerr << "Failed to save quiz score for " << function_id
+                         << ": " << error.what() << endl;
+                    return false;
+                }
+            };
+
         auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
-            "需要先在侧边栏底部“设置”里配置至少一个 AI 服务商 Key：让 AI"
-            "（优先豆包，失败或未配置时用 DeepSeek）针对该知识点的具体源码"
-            "出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
+            "需要先在侧边栏底部“设置”里配置至少一个 AI 服务商 Key。题目"
+            "依据当前知识点说明和真实源码生成；完成全部题目后由本地规则"
+            "自动评分并更新熟练度");
         quiz_button->signal_clicked().connect(
-            [this, row, activate_topic, topic]() {
+            [this, row, activate_topic, topic, update_mastery]() {
                 (*activate_topic)(row);
                 const string ark_key =
                     resolve_ai_api_key(kSettingArkApiKey, "ATHENA_ARK_API_KEY");
@@ -2094,12 +2208,14 @@ void MainWindow::populate_topic_list(
                     kSettingDeepseekApiKey, "ATHENA_DEEPSEEK_API_KEY");
                 if (!ark_key.empty() || !deepseek_key.empty()) {
                     show_ai_quiz_dialog(
+                        topic.function_id,
                         topic.title,
                         topic.description,
                         topic.source_path,
                         topic.member_name,
                         ark_key,
-                        deepseek_key);
+                        deepseek_key,
+                        update_mastery);
                 } else {
                     auto notice = Gtk::make_managed<Gtk::MessageDialog>(
                         *this,
@@ -2115,103 +2231,7 @@ void MainWindow::populate_topic_list(
                 }
             });
         actions->append(*quiz_button);
-
-        // 熟练度：用户自评的五星评分，自由打分并持久化；到 5 星后运行
-        // 按钮置灰，降低星级即可恢复运行。重要度不在这里——它是只读的
-        // 客观难度标注，显示在条目标题旁，见上方 title_row。
-        int saved_mastery = 0;
-        if (m_learning_store) {
-            try {
-                saved_mastery = m_learning_store->load_mastery(function_id);
-            } catch (const exception& error) {
-                cerr << "Failed to load progress for " << function_id << ": "
-                     << error.what() << endl;
-            }
-        }
-        auto mastery = make_shared<int>(clamp(saved_mastery, 0, 5));
-
-        auto persist_rating = [this, function_id, mastery]() {
-            if (!m_learning_store) {
-                return;
-            }
-            try {
-                m_learning_store->save_mastery(function_id, *mastery);
-            } catch (const exception& error) {
-                cerr << "Failed to save rating for " << function_id << ": "
-                     << error.what() << endl;
-            }
-        };
-        auto apply_run_state = [run, can_run, mastery]() {
-            if (!can_run) {
-                return;
-            }
-            const bool finished = *mastery >= 5;
-            run->set_sensitive(!finished);
-            run->set_tooltip_text(finished
-                ? "已完全掌握；如需重跑请先降低熟练度"
-                : "运行该知识点的实验代码");
-        };
-        // 熟练度五星评分行：点击第 n 颗设为 n 星，再点当前星降一星；
-        // 星星右侧跟随文字标识，随当前星级显示对应含义，悬浮单颗星
-        // 也带同样的含义说明。
-        auto make_star_row = [persist_rating, apply_run_state](
-                                  const vector<string>& level_labels,
-                                  const shared_ptr<int>& value) {
-            auto row = Gtk::make_managed<Gtk::Box>(
-                Gtk::Orientation::HORIZONTAL, 6);
-            row->add_css_class("star-row");
-            row->add_css_class("star-row-mastery");
-
-            auto level_label = Gtk::make_managed<Gtk::Label>();
-            level_label->add_css_class("star-level-label");
-            level_label->set_halign(Gtk::Align::START);
-
-            auto star_buttons = make_shared<vector<Gtk::Button*>>();
-            auto refresh = make_shared<function<void()>>();
-            *refresh = [star_buttons, value, level_label, level_labels]() {
-                for (size_t index = 0; index < star_buttons->size(); ++index) {
-                    if (auto* icon = dynamic_cast<Gtk::Image*>(
-                            (*star_buttons)[index]->get_child())) {
-                        icon->set_from_icon_name(
-                            static_cast<int>(index) < *value
-                                ? "starred-symbolic"
-                                : "non-starred-symbolic");
-                    }
-                }
-                const size_t level =
-                    static_cast<size_t>(clamp(*value, 0, 5));
-                level_label->set_text(level_labels[level]);
-            };
-            for (int star_index = 1; star_index <= 5; ++star_index) {
-                auto star = Gtk::make_managed<Gtk::Button>();
-                star->add_css_class("flat");
-                star->add_css_class("star-button");
-                star->set_tooltip_text(level_labels[static_cast<size_t>(star_index)]);
-                auto icon = Gtk::make_managed<Gtk::Image>();
-                icon->set_pixel_size(14);
-                star->set_child(*icon);
-                star->signal_clicked().connect(
-                    [value, star_index, refresh, persist_rating, apply_run_state]() {
-                        *value = (*value == star_index)
-                            ? star_index - 1
-                            : star_index;
-                        (*refresh)();
-                        persist_rating();
-                        apply_run_state();
-                    });
-                star_buttons->push_back(star);
-                row->append(*star);
-            }
-            row->append(*level_label);
-            (*refresh)();
-            return row;
-        };
-
-        static const vector<string> mastery_levels = {
-            "未学", "了解", "理解", "掌握", "熟练", "精通"};
-
-        actions->append(*make_star_row(mastery_levels, mastery));
-        apply_run_state();
+        actions->append(*mastery_row);
 
         row_box->append(*actions);
 

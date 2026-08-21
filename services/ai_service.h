@@ -43,6 +43,10 @@ AiChatResult parse_ai_chat_response(string_view response_body);
 string strip_markdown_code_fence(string_view text);
 optional<AiQuiz> parse_ai_quiz_response(string_view response_body);
 
+// 把一次完整自测的成绩换算为 0-5 星熟练度。按正确率向下取整，只有
+// 全部答对才会得到 5 星；无有效题目时返回 0。
+int mastery_from_quiz_score(int correct_answers, int total_questions);
+
 class AiService final {
 public:
     AiService();

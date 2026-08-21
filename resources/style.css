@@ -509,38 +509,14 @@ frame.knowledge-status-bar > border {
     margin-left: 4px;
 }
 
-/* 熟练度：用户自评的五星评分，绿色主题 */
+/* 熟练度：最近一次完整 AI 自测的只读结果，绿色主题 */
 .star-row {
     margin: 0;
 }
 
-/* 星星按钮拍平：基础 button 规则自带边框、阴影和最小高度，
-   不单靠 GTK 内建的 flat 语义类去除，这里显式清掉。 */
-.star-button {
-    padding: 1px;
-    min-width: 0;
-    min-height: 0;
-    border: none;
-    background-color: transparent;
-    background-image: none;
-    box-shadow: none;
-}
-
-.star-button:hover {
-    border: none;
-    background-color: alpha(@athena_body_text, 0.06);
-    box-shadow: none;
-}
-
-.star-button:active,
-.star-button:checked {
-    border: none;
-    background-color: alpha(@athena_body_text, 0.10);
-    box-shadow: none;
-}
-
-.star-button:focus {
-    box-shadow: none;
+.star-caption {
+    color: @athena_muted;
+    font-size: 13pt;
 }
 
 .star-row-mastery image {
