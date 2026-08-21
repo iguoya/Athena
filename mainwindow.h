@@ -30,7 +30,7 @@ private:
         const string& category_name,
         const ChapterMeta& chapter);
     // 手册按分类各自独立，每个分类一部，作为该分类标签行里的合成标签页；
-    // 没有跨分类的全局手册入口（见 ADR 0011）。
+    // 没有跨分类的全局手册入口（见 ADR 0012）。
     void ensure_handbook_page(const string& category_name);
     void show_handbook_page(
         const string& category_name,

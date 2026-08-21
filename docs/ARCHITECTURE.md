@@ -145,8 +145,6 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 当前已经引入以下不依赖 GTK 的类型：
 
 - `ChapterCatalog`：解码并查询生成的分类、章节和知识点元数据。
-- `make_function_id`：需要显式构造 ID 的测试和辅助代码使用；正常运行时直接读取
-  Catalog 中已生成的完整 ID。
 - `FunctionRegistry`：由 ID 查找可执行知识点函数。
 - `SourceLocator`：在真实教学源码中定位成员函数定义范围，不依赖 GTK，可独立测试。
 

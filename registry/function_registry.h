@@ -10,11 +10,6 @@ using namespace std;
 
 using RegisteredFunction = function<void(ostream&)>;
 
-string make_function_id(
-    const string& category,
-    const string& chapter,
-    const string& subchapter);
-
 class FunctionRegistry {
 public:
     void add(string id, RegisteredFunction function);

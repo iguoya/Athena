@@ -7,12 +7,6 @@
 
 namespace {
 
-TEST(FunctionRegistryTest, BuildsStableIdsFromJsonNames) {
-    EXPECT_EQ(
-        make_function_id("cpp", "Reference", "const_reference"),
-        "cpp.Reference.const_reference");
-}
-
 TEST(FunctionRegistryTest, RegistersCurrentReferenceAndRaiiExperiments) {
     const auto registry = create_default_function_registry();
 

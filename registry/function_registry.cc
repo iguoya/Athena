@@ -3,13 +3,6 @@
 #include <stdexcept>
 #include <utility>
 
-string make_function_id(
-    const string& category,
-    const string& chapter,
-    const string& subchapter) {
-    return category + "." + chapter + "." + subchapter;
-}
-
 void FunctionRegistry::add(string id, RegisteredFunction function) {
     if (id.empty() || !function) {
         throw invalid_argument("Function id and callable are required");
