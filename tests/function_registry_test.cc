@@ -32,13 +32,15 @@ TEST(FunctionRegistryTest, RunsAReferenceExperiment) {
     EXPECT_NE(output.str().find("引用传递后"), string::npos);
 }
 
-TEST(FunctionRegistryTest, RunsTheCurrentRaiiSkeleton) {
+TEST(FunctionRegistryTest, RunsARaiiExperiment) {
     const auto registry = create_default_function_registry();
     ostringstream output;
 
     registry.run("cpp.RAII.unique", output);
 
-    EXPECT_EQ(output.str(), "[待实现] 独占指针\n");
+    EXPECT_NE(output.str().find("所有权转移后原指针为空: 是"), string::npos);
+    EXPECT_NE(output.str().find("离开作用域后析构次数: 1"), string::npos);
+    EXPECT_EQ(output.str().find("[待实现]"), string::npos);
 }
 
 TEST(FunctionRegistryTest, RejectsDuplicateAndUnknownIds) {

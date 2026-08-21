@@ -185,6 +185,7 @@ core_test_exe = executable(
     'tests/chart_scale_test.cc',
     'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
+    'tests/raii_content_test.cc',
     'tests/source_locator_test.cc'
   ),
   sources: resources,
