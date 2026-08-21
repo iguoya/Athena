@@ -60,6 +60,11 @@ private:
         Gtk::Image* header_icon,
         Gtk::TextView* note_view);
     void open_learning_store();
+    // AI 服务商 Key 的统一读取入口：应用内设置（SQLite）优先，读不到再
+    // 退回同名环境变量（保留给终端直接启动、还没在设置面板填过的场景）。
+    // 四处需要 Key 的调用点都应该走这里，不再各自散落地读环境变量。
+    string resolve_ai_api_key(const string& setting_key, const char* env_var_name) const;
+    void show_settings_dialog();
     void show_history_dialog(
         const string& function_id,
         const string& source_path,

@@ -235,28 +235,36 @@ AiChatResult call_ark_doubao_chat(const string& api_key, const string& prompt) {
         "doubao-seed-2-1-pro-260628", api_key, prompt);
 }
 
-// 优先用 DeepSeek；未配置 DeepSeek Key，或者 DeepSeek 请求失败，就退回
-// 火山方舟豆包——豆包出题速度明显更慢，实测下来 DeepSeek 更适合放在
-// 优先位置。两者都未配置的情况由调用方在按钮层面处理（不出现这个
+// 优先用火山方舟豆包；未配置豆包 Key，或者豆包请求失败，就退回
+// DeepSeek。两者都未配置的情况由调用方在按钮层面处理（不出现这个
 // 按钮），这里只处理"配置了至少一个但调用失败"的情况。
+//
+// 这条优先级顺序反复过一次：最初接入时豆包优先，中途以"豆包出题明显
+// 更慢"为由改成 DeepSeek 优先，现在改回豆包优先。速度差异仍然存在，
+// 但不再作为排序依据——按用户的选择为准。
 AiChatResult call_ai_chat_with_fallback(
     const string& ark_api_key,
     const string& deepseek_api_key,
     const string& prompt) {
-    if (!deepseek_api_key.empty()) {
-        AiChatResult deepseek_result = call_deepseek_chat(deepseek_api_key, prompt);
-        if (deepseek_result.ok || ark_api_key.empty()) {
-            return deepseek_result;
-        }
-        cerr << "DeepSeek 请求失败，回退到豆包：" << deepseek_result.error << endl;
-    }
     if (!ark_api_key.empty()) {
-        return call_ark_doubao_chat(ark_api_key, prompt);
+        AiChatResult ark_result = call_ark_doubao_chat(ark_api_key, prompt);
+        if (ark_result.ok || deepseek_api_key.empty()) {
+            return ark_result;
+        }
+        cerr << "豆包请求失败，回退到 DeepSeek：" << ark_result.error << endl;
+    }
+    if (!deepseek_api_key.empty()) {
+        return call_deepseek_chat(deepseek_api_key, prompt);
     }
     AiChatResult result;
     result.error = "未配置任何 AI 服务商的 API Key";
     return result;
 }
+
+// AI 服务商 Key 在 LearningStore.app_settings 里的存储键；应用内设置面板
+// 写入，四处需要 Key 的地方统一从这里读，不再各自散落地读环境变量。
+const char* kSettingArkApiKey = "ai_provider_key_ark";
+const char* kSettingDeepseekApiKey = "ai_provider_key_deepseek";
 
 // DeepSeek 即使提示词明确要求“只输出 JSON”，有时仍会套一层
 // ```json ... ``` 代码围栏；解析结构化响应（如自测题）前先去掉，
@@ -318,6 +326,40 @@ void append_dialog_action_bar(
     }
 
     content_box->append(*action_bar);
+}
+
+// 打开模态对话框前调用。传入的 dialog 必须是 `new` 出来的普通指针，
+// 不能用 Gtk::make_managed 创建——GTK4 里 GtkWindow 的 hide-on-close
+// 默认是 false，点原生标题栏关闭按钮会直接销毁窗口而不是隐藏它；如果
+// 对话框是 make_managed 出来的，gtkmm 会在底层对象销毁的同时同步
+// delete 这份 C++ 包装。AI 讲解/自测这几个对话框还有一个在等待期间
+// 继续持有对话框指针、异步网络结果回来后要回填内容并重新前置的后台
+// 线程回调——用户在响应还没返回时就把对话框关掉，回调触发时会踩中
+// 已经被 delete 掉的悬空指针，是真实的 use-after-free，不是理论风险。
+//
+// 这里反过来强制 set_hide_on_close(true)：点关闭按钮总是隐藏、不销毁；
+// 对话框改由这里在隐藏之后显式 delete——排到事件循环下一轮再删，不在
+// hide 信号处理函数内部直接删自己（那个调用栈本身还压在这个对象上，
+// 是未定义行为）；调用方自己的 signal_hide 清理逻辑（如翻转
+// dialog_alive、reset article_view）要在 lock_for_modal_dialog 之前
+// 连接，才能保证在这里删除之前先跑到——GTK 信号按连接顺序调用。
+//
+// 同时禁用主窗口自身的输入，隐藏时恢复：观察到过等待期间（网络请求慢
+// 的话有好几秒到十几秒窗口期）用户点回主窗口、主窗口被系统前置盖住
+// 对话框的情况——GTK4 的 set_modal(true) 在这里没能防住。禁用主窗口
+// 输入是应用层能做的、不依赖窗口管理器行为的兜底：即便主窗口的原生
+// 窗口被前置到对话框之上，用户也点不动里面任何控件。present() 保证
+// 首次显示就被前置和聚焦，而不只是 show()。
+void lock_for_modal_dialog(Gtk::Window& main_window, Gtk::Dialog& dialog) {
+    dialog.set_transient_for(main_window);
+    dialog.set_modal(true);
+    dialog.set_hide_on_close(true);
+    main_window.set_sensitive(false);
+    dialog.signal_hide().connect([&main_window, &dialog]() {
+        main_window.set_sensitive(true);
+        Glib::signal_idle().connect_once([&dialog]() { delete &dialog; });
+    });
+    dialog.present();
 }
 
 // 讲解类提示词（讲解/自测/理论文档/讲解差异）共用的风格提示：贴近主流
@@ -1295,6 +1337,100 @@ void MainWindow::open_learning_store() {
     }
 }
 
+string MainWindow::resolve_ai_api_key(
+    const string& setting_key,
+    const char* env_var_name) const {
+    if (m_learning_store) {
+        try {
+            const string stored = m_learning_store->get_setting(setting_key);
+            if (!stored.empty()) {
+                return stored;
+            }
+        } catch (const exception& error) {
+            cerr << "Failed to read AI key setting " << setting_key << ": "
+                 << error.what() << endl;
+        }
+    }
+    const char* env_value = g_getenv(env_var_name);
+    return env_value ? env_value : "";
+}
+
+// 设置面板：目前只有两个 AI 服务商 Key，用 Gtk::PasswordEntry（自带
+// 显示/隐藏切换）承载，预填当前值（应用内设置优先，读不到再显示环境
+// 变量里的值——纯展示用，保存时总是写回应用内设置，不回写环境变量，
+// 环境变量本来就不该被程序改）。保存后旧的对话框实例已经拿到过时 Key
+// 快照的问题不存在——每次点“运行历史”“AI 自测”都会重新调用
+// resolve_ai_api_key()，不缓存。
+void MainWindow::show_settings_dialog() {
+    auto dialog = new Gtk::Dialog();
+    dialog->set_title("设置");
+    dialog->set_default_size(480, 220);
+
+    auto* content = dialog->get_content_area();
+    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 14);
+    page->set_margin_top(20);
+    page->set_margin_bottom(20);
+    page->set_margin_start(24);
+    page->set_margin_end(24);
+    content->append(*page);
+
+    auto heading = Gtk::make_managed<Gtk::Label>("AI 服务商 API Key");
+    heading->add_css_class("title-4");
+    heading->set_halign(Gtk::Align::START);
+    page->append(*heading);
+
+    auto hint = Gtk::make_managed<Gtk::Label>(
+        "用于“AI 自测”“AI 讲解差异”。保存在本机应用数据目录的 SQLite "
+        "文件里（仅当前用户可读写），不上传、不同步。留空等价于未配置。");
+    hint->add_css_class("dim-label");
+    hint->set_wrap(true);
+    hint->set_halign(Gtk::Align::START);
+    page->append(*hint);
+
+    const auto add_key_row =
+        [page](const string& label_text, const string& initial_value) {
+            auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+            auto label = Gtk::make_managed<Gtk::Label>(label_text);
+            label->set_halign(Gtk::Align::START);
+            row->append(*label);
+            auto entry = Gtk::make_managed<Gtk::PasswordEntry>();
+            entry->set_show_peek_icon(true);
+            entry->set_text(initial_value);
+            row->append(*entry);
+            page->append(*row);
+            return entry;
+        };
+
+    auto* ark_entry = add_key_row(
+        "火山方舟豆包（ATHENA_ARK_API_KEY）",
+        resolve_ai_api_key(kSettingArkApiKey, "ATHENA_ARK_API_KEY"));
+    auto* deepseek_entry = add_key_row(
+        "DeepSeek（ATHENA_DEEPSEEK_API_KEY）",
+        resolve_ai_api_key(kSettingDeepseekApiKey, "ATHENA_DEEPSEEK_API_KEY"));
+
+    auto save_button = Gtk::make_managed<Gtk::Button>("保存");
+    save_button->add_css_class("btn-primary");
+    save_button->signal_clicked().connect(
+        [this, dialog, ark_entry, deepseek_entry]() {
+            if (m_learning_store) {
+                try {
+                    m_learning_store->set_setting(
+                        kSettingArkApiKey, string(ark_entry->get_text()));
+                    m_learning_store->set_setting(
+                        kSettingDeepseekApiKey,
+                        string(deepseek_entry->get_text()));
+                } catch (const exception& error) {
+                    cerr << "Failed to save AI key settings: " << error.what()
+                         << endl;
+                }
+            }
+            dialog->close();
+        });
+    append_dialog_action_bar(content, {save_button});
+
+    lock_for_modal_dialog(*this, *dialog);
+}
+
 void MainWindow::show_history_dialog(
     const string& function_id,
     const string& source_path,
@@ -1314,10 +1450,8 @@ void MainWindow::show_history_dialog(
         member_source_body(m_content_loader, source_path, member_name)
             .value_or("");
 
-    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    auto dialog = new Gtk::Dialog();
     dialog->set_title("运行历史：" + topic_title);
-    dialog->set_transient_for(*this);
-    dialog->set_modal(true);
     dialog->set_default_size(1100, 680);
 
     auto* content = dialog->get_content_area();
@@ -1350,11 +1484,10 @@ void MainWindow::show_history_dialog(
     // 选中恰好 2 条记录时才可用；只在配置了至少一个 AI 服务商 Key 时才
     // 创建这个按钮，未配置就不出现，不留一个必然点不通的死按钮。
     Gtk::Button* diff_button = nullptr;
-    const char* ark_api_key_env = g_getenv("ATHENA_ARK_API_KEY");
-    const string ark_api_key = ark_api_key_env ? ark_api_key_env : "";
-    const char* deepseek_api_key_env = g_getenv("ATHENA_DEEPSEEK_API_KEY");
+    const string ark_api_key =
+        resolve_ai_api_key(kSettingArkApiKey, "ATHENA_ARK_API_KEY");
     const string deepseek_api_key =
-        deepseek_api_key_env ? deepseek_api_key_env : "";
+        resolve_ai_api_key(kSettingDeepseekApiKey, "ATHENA_DEEPSEEK_API_KEY");
     if (!ark_api_key.empty() || !deepseek_api_key.empty()) {
         diff_button = Gtk::make_managed<Gtk::Button>("AI 讲解差异");
         diff_button->add_css_class("btn-sm");
@@ -1560,7 +1693,7 @@ void MainWindow::show_history_dialog(
     if (diff_button) {
         append_dialog_action_bar(content, {diff_button});
     }
-    dialog->show();
+    lock_for_modal_dialog(*this, *dialog);
 }
 
 // 打开对话框，异步用给定提示词调用 AI（优先 DeepSeek，失败或未配置再
@@ -1578,10 +1711,8 @@ void MainWindow::show_ai_markdown_dialog(
     const string& loading_markdown,
     int width,
     int height) {
-    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    auto dialog = new Gtk::Dialog();
     dialog->set_title(dialog_title);
-    dialog->set_transient_for(*this);
-    dialog->set_modal(true);
     dialog->set_default_size(width, height);
 
     auto* content = dialog->get_content_area();
@@ -1597,7 +1728,7 @@ void MainWindow::show_ai_markdown_dialog(
         dialog_alive->store(false);
         article_view->reset();
     });
-    dialog->show();
+    lock_for_modal_dialog(*this, *dialog);
 
     // 只在这几个 AI 对话框里把正文字号调大，不改 resources/article.css
     // 本身——真正的 article 章节阅读页面用原来的 19px，不受影响。
@@ -1617,11 +1748,11 @@ void MainWindow::show_ai_markdown_dialog(
 
     auto alive = m_ui_alive;
     thread([alive, dialog_alive, article_view, stylesheet, ark_api_key,
-            deepseek_api_key, prompt]() {
+            deepseek_api_key, prompt, dialog]() {
         const AiChatResult result =
             call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
         Glib::signal_idle().connect_once(
-            [alive, dialog_alive, article_view, stylesheet, result]() {
+            [alive, dialog_alive, article_view, stylesheet, result, dialog]() {
                 if (!alive->load() || !dialog_alive->load() || !*article_view
                     || stylesheet.empty()) {
                     return;
@@ -1632,6 +1763,9 @@ void MainWindow::show_ai_markdown_dialog(
                     render_markdown_html(
                         markdown, stylesheet, parse_markdown_headings(markdown)),
                     ATHENA_SOURCE_ROOT);
+                // 网络请求期间用户可能点过主窗口；结果到达时重新前置一次，
+                // 不指望等待开始时的那次 present() 全程保持有效。
+                dialog->present();
             });
     }).detach();
 }
@@ -1679,10 +1813,8 @@ void MainWindow::show_ai_quiz_dialog(
         prompt += "\n\n参考实现：\n" + *body;
     }
 
-    auto dialog = Gtk::make_managed<Gtk::Dialog>();
+    auto dialog = new Gtk::Dialog();
     dialog->set_title("知识点自测：" + topic_title);
-    dialog->set_transient_for(*this);
-    dialog->set_modal(true);
     dialog->set_default_size(680, 560);
 
     auto* content = dialog->get_content_area();
@@ -1704,17 +1836,22 @@ void MainWindow::show_ai_quiz_dialog(
 
     auto dialog_alive = make_shared<atomic_bool>(true);
     dialog->signal_hide().connect([dialog_alive]() { dialog_alive->store(false); });
-    dialog->show();
+    lock_for_modal_dialog(*this, *dialog);
 
     auto alive = m_ui_alive;
-    thread([alive, dialog_alive, quiz_box, ark_api_key, deepseek_api_key, prompt]() {
+    thread([alive, dialog_alive, quiz_box, ark_api_key, deepseek_api_key, prompt,
+            dialog]() {
         const AiChatResult result =
             call_ai_chat_with_fallback(ark_api_key, deepseek_api_key, prompt);
         Glib::signal_idle().connect_once(
-            [alive, dialog_alive, quiz_box, result]() {
+            [alive, dialog_alive, quiz_box, result, dialog]() {
                 if (!alive->load() || !dialog_alive->load()) {
                     return;
                 }
+                // 网络请求期间用户可能点过主窗口；结果到达时（不管题目
+                // 是否解析成功）重新前置一次，不指望等待开始时的那次
+                // present() 全程保持有效。
+                dialog->present();
                 while (auto* child = quiz_box->get_first_child()) {
                     quiz_box->remove(*child);
                 }
@@ -2353,27 +2490,29 @@ void MainWindow::populate_topic_list(
         auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
         quiz_button->add_css_class("btn-sm");
         quiz_button->set_tooltip_text(
-            "需要配置 ATHENA_ARK_API_KEY 或 ATHENA_DEEPSEEK_API_KEY：让 AI"
-            "（优先 DeepSeek，失败或未配置时用豆包）针对该知识点的具体源码"
+            "需要先在菜单栏“设置”里配置至少一个 AI 服务商 Key：让 AI"
+            "（优先豆包，失败或未配置时用 DeepSeek）针对该知识点的具体源码"
             "出单选自测题，题量按知识点覆盖面客观决定，选完再判对错");
         quiz_button->signal_clicked().connect(
             [this, row, activate_topic, topic]() {
                 (*activate_topic)(row);
-                const char* ark_key = g_getenv("ATHENA_ARK_API_KEY");
-                const char* deepseek_key = g_getenv("ATHENA_DEEPSEEK_API_KEY");
-                if (ark_key || deepseek_key) {
+                const string ark_key =
+                    resolve_ai_api_key(kSettingArkApiKey, "ATHENA_ARK_API_KEY");
+                const string deepseek_key = resolve_ai_api_key(
+                    kSettingDeepseekApiKey, "ATHENA_DEEPSEEK_API_KEY");
+                if (!ark_key.empty() || !deepseek_key.empty()) {
                     show_ai_quiz_dialog(
                         topic.title,
                         topic.description,
                         topic.source_path,
                         topic.member_name,
-                        ark_key ? ark_key : "",
-                        deepseek_key ? deepseek_key : "");
+                        ark_key,
+                        deepseek_key);
                 } else {
                     auto notice = Gtk::make_managed<Gtk::MessageDialog>(
                         *this,
-                        "自测功能需要先配置环境变量 ATHENA_ARK_API_KEY 或 "
-                        "ATHENA_DEEPSEEK_API_KEY",
+                        "自测功能需要先在菜单栏“设置”里配置至少一个 AI "
+                        "服务商 Key",
                         false,
                         Gtk::MessageType::INFO,
                         Gtk::ButtonsType::OK,
