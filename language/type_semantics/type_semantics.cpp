@@ -73,28 +73,45 @@ void TypeSemantics::initialization(ostream& output) const {
     output << "默认初始化的局部 int: 不读取，避免未定义行为\n";
 }
 
-void TypeSemantics::type_deduction(ostream& output) const {
+// auto 的效果靠可观察的运行时行为证明，不借 decltype 验证——auto 面向的是
+// "用编译器推出的类型声明一个新变量"这件事本身，效果应当直接看得见，不需要
+// 先掌握 decltype 这个更进阶的工具才能确认它做了什么。
+void TypeSemantics::auto_deduction(ostream& output) const {
+    int original = 42;
+    int& reference = original;
+
+    auto copy = reference;
+    copy = 100;
+    output << "auto 按值推导得到独立副本，修改副本后原值仍为: " << original
+           << "，副本变为: " << copy << '\n';
+
+    auto& alias = reference;
+    alias = 100;
+    output << "auto& 保留引用语义，修改别名后原值同步变为: " << original << '\n';
+
+    const auto& read_only = original;
+    output << "const auto& 只读别名读到最新值: " << read_only << '\n';
+
+    auto [name, score] = pair{string("Athena"), 5};
+    output << "结构化绑定一次拆出多个值: " << name << "，" << score << '\n';
+}
+
+// decltype 精确复刻表达式的类型和值类别，不丢任何信息；用 is_same_v 直接
+// 断言取到的类型是这里唯一合适的观察手段——decltype 本身就是在回答"这个
+// 表达式的类型是什么"，运行时没有能替代它的可观察行为。
+void TypeSemantics::decltype_deduction(ostream& output) const {
     const int original = 42;
     const int& reference = original;
-
-    auto copied = reference;
-    auto& alias = reference;
     decltype(reference) exact_reference = original;
 
     int mutable_value = 7;
-    auto [name, score] = pair{string("Athena"), 5};
 
-    output << "auto 按值推导得到 int: "
-           << yes_no(is_same_v<decltype(copied), int>) << '\n';
-    output << "auto& 保留 const 引用: "
-           << yes_no(is_same_v<decltype(alias), const int&>) << '\n';
     output << "decltype(变量名) 保留声明类型: "
            << yes_no(is_same_v<decltype(exact_reference), const int&>) << '\n';
     output << "decltype((左值表达式)) 得到引用: "
            << yes_no(is_same_v<decltype((mutable_value)), int&>) << '\n';
     output << "decltype(std::move(value)) 得到右值引用: "
            << yes_no(is_same_v<decltype(std::move(mutable_value)), int&&>) << '\n';
-    output << "结构化绑定拆出的值: " << name << "，" << score << '\n';
 }
 
 void TypeSemantics::value_category(ostream& output) const {

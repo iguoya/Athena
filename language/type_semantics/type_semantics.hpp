@@ -11,7 +11,8 @@ using namespace std;
 class TypeSemantics {
 public:
     void initialization(ostream& output) const;
-    void type_deduction(ostream& output) const;
+    void auto_deduction(ostream& output) const;
+    void decltype_deduction(ostream& output) const;
     void value_category(ostream& output) const;
     void cast(ostream& output) const;
     void enum_class(ostream& output) const;

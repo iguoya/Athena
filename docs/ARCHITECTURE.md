@@ -71,7 +71,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 应用窗口默认图标名 `cn.athena.icon`：运行时从 GResource 的图标主题目录解析（不依赖系统安装），Linux `meson install` 同时部署 hicolor 图标与桌面条目，macOS 打包使用 `.app` 内的 icns。
 - 章节页面按需构建：打开分类只为各章挂占位页，首次激活章节标签才创建真实页面（含 WKWebView），显著加快启动与分类切换；已构建页面由 builder 缓存持有，切回分类直接重挂。
 - Meson 将 Catalog、内容加载、Markdown 转换、函数注册和课程实现统一编译为内部 `athena-core` 静态库，应用与核心测试共同链接该库。
-- TypeSemantics 的 5 个知识点、Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。
+- TypeSemantics 的 6 个知识点、Reference 的 4 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。TypeSemantics 里原来合在一起的"类型推导"已拆成 `auto_deduction`（用可观察的运行时行为证明 auto/auto&/const auto& 的效果和结构化绑定，不借 decltype）和 `decltype_deduction`（专讲 decltype 自己的三条取类型规则）：两者受众和验证手段都不同，合并成一个知识点会强迫初学 auto 的人先学会 decltype 才能确认 auto 做了什么。
 
 当前的主要问题：
 

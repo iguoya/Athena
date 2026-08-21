@@ -28,15 +28,21 @@ TEST(TypeSemanticsContentTest, ComparesInitializationFormsWithoutReadingUndefine
         "默认初始化的局部 int: 不读取，避免未定义行为\n");
 }
 
-TEST(TypeSemanticsContentTest, ShowsWhichQualifiersTypeDeductionPreserves) {
+TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
     EXPECT_EQ(
-        run_experiment(&TypeSemantics::type_deduction),
-        "auto 按值推导得到 int: 是\n"
-        "auto& 保留 const 引用: 是\n"
+        run_experiment(&TypeSemantics::auto_deduction),
+        "auto 按值推导得到独立副本，修改副本后原值仍为: 42，副本变为: 100\n"
+        "auto& 保留引用语义，修改别名后原值同步变为: 100\n"
+        "const auto& 只读别名读到最新值: 100\n"
+        "结构化绑定一次拆出多个值: Athena，5\n");
+}
+
+TEST(TypeSemanticsContentTest, ShowsWhichValueCategoryDecltypePreserves) {
+    EXPECT_EQ(
+        run_experiment(&TypeSemantics::decltype_deduction),
         "decltype(变量名) 保留声明类型: 是\n"
         "decltype((左值表达式)) 得到引用: 是\n"
-        "decltype(std::move(value)) 得到右值引用: 是\n"
-        "结构化绑定拆出的值: Athena，5\n");
+        "decltype(std::move(value)) 得到右值引用: 是\n");
 }
 
 TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {

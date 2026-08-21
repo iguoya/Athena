@@ -10,7 +10,7 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 15);
+    EXPECT_EQ(registry.ids().size(), 16);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
@@ -42,9 +42,9 @@ TEST(FunctionRegistryTest, RunsATypeSemanticsExperiment) {
     const auto registry = create_default_function_registry();
     ostringstream output;
 
-    registry.run("cpp.TypeSemantics.type_deduction", output);
+    registry.run("cpp.TypeSemantics.decltype_deduction", output);
 
-    EXPECT_NE(output.str().find("auto 按值推导得到 int: 是"), string::npos);
+    EXPECT_NE(output.str().find("decltype(变量名) 保留声明类型: 是"), string::npos);
     EXPECT_NE(
         output.str().find("decltype((左值表达式)) 得到引用: 是"),
         string::npos);

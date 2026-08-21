@@ -52,7 +52,8 @@
           "overview_document": "resources/articles/cpp/type_semantics_overview.md",
           "subchapters": [
             { "name": "initialization", "title": "初始化", "description": "比较直接初始化、拷贝初始化和列表初始化的语法差异和适用场景；演示列表初始化如何拒绝窄化转换，以及默认初始化的局部变量处于未初始化状态带来的未定义行为风险。", "importance": 2 },
-            { "name": "type_deduction", "title": "类型推导", "description": "学习 auto 按值推导时丢弃引用和顶层 const、decltype 保留表达式值类别的差异，以及结构化绑定如何一次解开多个值；理解推导规则对接口设计的影响。", "importance": 4 },
+            { "name": "auto_deduction", "title": "auto 推导与结构化绑定", "description": "学习 auto 按值推导会丢弃引用和顶层 const、auto& 保留引用与原对象共享存储、const auto& 提供只读别名；以及结构化绑定如何一次拆出多个值，是否复制仍由 auto/auto&/const auto& 决定。", "importance": 3 },
+            { "name": "decltype_deduction", "title": "decltype 取类型规则", "description": "学习 decltype 精确保留表达式的类型和值类别，不做任何丢弃：对变量名返回声明类型，对加了一层括号的左值表达式返回左值引用，对将亡值表达式返回右值引用；理解它和 auto 是两套独立规则，不能互相替代。", "importance": 4 },
             { "name": "value_category", "title": "值类别", "description": "理解左值、纯右值和将亡值分别表达有身份的对象、临时计算结果和可复用资源的对象；演示值类别如何影响引用绑定和重载选择，为右值引用和移动语义建立基础。", "importance": 4 },
             { "name": "cast", "title": "C++ 类型转换", "description": "学习四种命名转换及其风险边界：static_cast 表达明确的相关类型转换、dynamic_cast 安全检查多态向下转换、const_cast 只改变 const 访问方式、reinterpret_cast 用于受约束的底层表示转换；理解为什么不使用含义模糊的 C 风格强转。", "importance": 2 },
             { "name": "enum_class", "title": "强类型枚举", "description": "学习 enum class 的成员作用域、可指定底层类型和禁止隐式整数转换的类型安全性；通过显式转换读取底层值。", "importance": 1 }
