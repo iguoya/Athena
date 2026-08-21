@@ -61,6 +61,9 @@ private:
         Gtk::Label* header_description_label,
         Gtk::Image* header_icon);
     void open_learning_store();
+    // 惰性创建、常驻复用：内容是静态的（不像运行历史/AI 自测每次点击都要
+    // 拿新数据），不需要每次点击都新建再销毁那一整套。
+    void show_about_dialog();
     void start_experiment(
         const string& function_id,
         const string& source_path,
@@ -109,6 +112,9 @@ private:
     // 之后与窗口同生命周期。窗口只负责在按钮回调里把当前知识点交给它，
     // 不再自己装配对话框控件树（ADR 0014 第 3 步）。
     unique_ptr<LearningDialogs> m_dialogs;
+    // make_managed 持有；显式 set_hide_on_close(true) 后关闭按钮只隐藏不
+    // 销毁，指针在窗口生命周期内始终有效，可以放心惰性创建后反复 present()。
+    Gtk::AboutDialog* m_about_dialog = nullptr;
 
     // 实验执行状态：m_experiment_running 只在主线程读写；
     // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。

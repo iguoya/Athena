@@ -267,9 +267,11 @@ MainWindow::MainWindow(
     m_chapter_tab_box = m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
     auto settings_button =
         m_main_builder->get_widget<Gtk::Button>("settings_button");
+    auto about_button =
+        m_main_builder->get_widget<Gtk::Button>("about_button");
 
     if (!m_category_sidebar || !m_chapter_stack || !m_chapter_tab_box
-        || !settings_button) {
+        || !settings_button || !about_button) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
 
@@ -285,6 +287,8 @@ MainWindow::MainWindow(
         *this, m_content_loader, m_learning_store.get(), m_ui_alive);
     settings_button->signal_clicked().connect(
         [this]() { m_dialogs->show_settings(); });
+    about_button->signal_clicked().connect(
+        sigc::mem_fun(*this, &MainWindow::show_about_dialog));
     setup_category_sidebar();
 }
 
@@ -888,6 +892,31 @@ void MainWindow::open_learning_store() {
         cerr << "Learning store unavailable: " << error.what() << endl;
         m_learning_store.reset();
     }
+}
+
+// 关于对话框：内容是静态的，不像运行历史/AI 自测每次点击都要取新数据，
+// 因此惰性创建一次、之后一直复用，不走“设置”那几个业务对话框每次
+// new + 隐藏后延迟 delete 的模式——那套复杂度是为了防止异步网络回调
+// 踩中已经关闭的对话框，这里没有任何异步操作，用不上。
+// 必须显式 set_hide_on_close(true)：否则点原生标题栏关闭按钮会直接销毁
+// 这个 make_managed 对象，m_about_dialog 就会变成悬空指针。
+void MainWindow::show_about_dialog() {
+    if (!m_about_dialog) {
+        m_about_dialog = Gtk::make_managed<Gtk::AboutDialog>();
+        m_about_dialog->set_program_name("Athena");
+        m_about_dialog->set_version(ATHENA_VERSION);
+        m_about_dialog->set_comments(
+            "为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一："
+            "把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。");
+        m_about_dialog->set_logo_icon_name("cn.athena.icon");
+        m_about_dialog->set_transient_for(*this);
+        m_about_dialog->set_modal(true);
+        m_about_dialog->set_hide_on_close(true);
+        m_about_dialog->signal_hide().connect(
+            [this]() { set_sensitive(true); });
+    }
+    set_sensitive(false);
+    m_about_dialog->present();
 }
 
 // 在独立工作线程中执行实验：同一时刻只允许一个实验，

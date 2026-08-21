@@ -41,6 +41,10 @@ language_inc = include_directories('language')
 # 定义源码根目录，供运行时读取演示类源码（源码框显示）
 add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
 
+# 版本号以 meson.build 为单一来源（见 AGENTS.md macOS 发行规则），关于对话框直接读取，
+# 不在 C++ 里重复写死版本字符串。
+add_project_arguments('-DATHENA_VERSION="' + meson.project_version() + '"', language: 'cpp')
+
 # === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
 project_generator = meson.project_source_root() / 'scripts' / 'generate_project.py'
 project_generator_sources = files(

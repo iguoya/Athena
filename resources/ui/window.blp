@@ -59,6 +59,32 @@ ApplicationWindow window {
           }
         }
       }
+
+      Button about_button {
+        name: "about_button";
+        tooltip-text: "关于 Athena";
+
+        styles [
+          "nav-button"
+        ]
+
+        Box {
+          orientation: vertical;
+          spacing: 4;
+          valign: center;
+          margin-top: 10;
+          margin-bottom: 10;
+
+          Image {
+            icon-name: "help-about-symbolic";
+            pixel-size: 22;
+          }
+
+          Label {
+            label: "关于";
+          }
+        }
+      }
     }
 
     Separator {
