@@ -72,7 +72,9 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 
 当前的主要问题：
 
-- `MainWindow` 仍负责动态 GTK 控件创建和页面协调；各页面职责已经拆分为独立方法，只有继续显著增长时才需要提取页面装配类。
+- `mainwindow.cc` 已约 2650 行，仍同时负责导航、代码页、手册、进度页、运行流程、
+  AI 调用和多种对话框。方法级拆分已经不足以约束状态范围，下一阶段必须按页面与
+  用例渐进提取模块，见 3.6 和 ADR 0014。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
 - 骨架生成只适合一个头文件与一个源文件的普通章节；RAII 这类一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）的章节仍由开发者组织，不使用 `group` 机制。
 - Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
@@ -196,6 +198,33 @@ GTK/Blueprint 层负责：
 
 `MainWindow` 最终应成为轻量协调者，不直接解析 JSON，也不包含每个章节的手写函数映射。
 
+### 3.6 MainWindow 模块化边界
+
+本节描述**目标结构**，不是当前已全部落地的文件清单。当前已经完成的是：作者配置
+校验和规范化在 Python，`ChapterCatalog` 只解码生成产物，统计、源码定位、内容加载、
+函数注册和图表比例计算已有独立模块。代码页、手册页、进度页、AI/历史对话框和后台
+运行的界面协调仍主要位于 `MainWindow`。
+
+目标层次：
+
+```text
+MainWindow（顶层导航、页面切换、模块生命周期）
+├── CodeChapterPage（知识点列表、源码、运行状态与结果）
+│   └── ExperimentRunner（非 GTK：执行、耗时、快照、历史写入）
+├── HandbookPage（手册内容、ArticleView 生命周期、文档跳转）
+├── ProgressPage（CategoryProgress -> GTK 统计页面）
+├── LearningDialogs（设置、历史、AI 回答、自测题）
+└── AiService（非 GTK：服务商回退、请求和回答解码）
+
+数据与基础能力：
+ChapterCatalog / FunctionRegistry / ContentLoader / SourceLocator / LearningStore
+```
+
+依赖只能从上向下：页面模块使用数据与基础能力，后者不能持有窗口或 GTK 控件。
+页面之间不互相调用，跨页面导航由 `MainWindow` 协调。异步服务返回普通数据或通过
+完成回调通知表示层，不直接更新 GTK。详细边界和低风险到高风险的拆分顺序见
+ADR 0014。
+
 ## 4. 标识符策略
 
 可运行知识点的稳定查找键由 `code` 配置中的三个 `name` 派生，不在 JSON 中重复保存：
@@ -225,6 +254,7 @@ cpp.Reference.const_reference
 ```text
 GTK UI -> ChapterCatalog / FunctionRegistry -> Function implementations
 GTK UI -> ArticleView -> platform web view
+MainWindow -> feature pages -> non-GTK services/domain data
 Generator -> config contract and templates
 Meson -> Generator outputs
 ```
@@ -235,6 +265,7 @@ Meson -> Generator outputs
 - 领域模型包含 GTK 控件指针。
 - UI 代码复制章节标题或方法映射。
 - 生成文件反向成为配置的唯一来源。
+- 页面模块互相持有 GTK 控件，或基础服务反向调用 `MainWindow`。
 
 ## 6. 渐进式改造顺序
 
@@ -247,7 +278,10 @@ Meson -> Generator outputs
 7. 已完成：支持安全的一次性章节实现骨架生成。
 8. 已完成：解决源代码展示的安装后资源策略。
 9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
-10. 只有当窗口协调仍然明显复杂时，再考虑正式 Presenter/View 接口。
+10. 按 ADR 0014 从低风险到高风险提取 AI 服务、进度页、对话框、手册页和代码页，
+    让 `MainWindow` 只保留顶层导航与生命周期协调。
+11. 只有出现多前端或大量界面行为必须脱离 GTK 测试时，再考虑正式 Presenter/View
+    接口。
 
 ## 7. MVC/MVP 决策
 
