@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 import sys
@@ -15,7 +16,12 @@ def write(path: Path, content: str = "fixture\n") -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def run(generator: Path, root: Path, *arguments: str) -> subprocess.CompletedProcess:
+def run(
+    generator: Path,
+    root: Path,
+    *arguments: str,
+    check: bool = True,
+) -> subprocess.CompletedProcess:
     return subprocess.run(
         [
             sys.executable,
@@ -26,10 +32,25 @@ def run(generator: Path, root: Path, *arguments: str) -> subprocess.CompletedPro
             str(root / "resources" / "athena.json"),
             *arguments,
         ],
-        check=True,
+        check=check,
         capture_output=True,
         text=True,
     )
+
+
+def assert_rejected(
+    generator: Path,
+    root: Path,
+    config: dict,
+    expected_error: str,
+) -> None:
+    write(
+        root / "resources" / "athena.json",
+        json.dumps(config, ensure_ascii=False, indent=2) + "\n",
+    )
+    result = run(generator, root, "check", check=False)
+    assert result.returncode != 0
+    assert expected_error in result.stderr, result.stderr
 
 
 def main() -> None:
@@ -50,12 +71,24 @@ def main() -> None:
                 "chapter_ui": {
                     "code": {"blueprint": "resources/ui/chapters/code.blp"},
                 },
+                "chapter_icon": {
+                    "type": "theme",
+                    "name": "view-grid-symbolic",
+                },
+                "subchapter_icon": {
+                    "type": "theme",
+                    "name": "media-playback-start-symbolic",
+                },
             },
             "categories": [
                 {
                     "name": "cpp",
                     "title": "C++",
                     "description": "fixture category",
+                    "icon": {
+                        "type": "theme",
+                        "name": "applications-development-symbolic",
+                    },
                     "chapters": [
                         {
                             "name": "Widget",
@@ -119,6 +152,60 @@ def main() -> None:
         registry = registry_output.read_text(encoding="utf-8")
         assert "make_shared<Widget>()" in registry
         assert 'make_function_id("cpp", "Widget", "basics")' in registry
+
+        class_keyword = copy.deepcopy(config)
+        class_keyword["categories"][0]["chapters"][0]["name"] = "class"
+        assert_rejected(
+            generator,
+            root,
+            class_keyword,
+            "athena.json.categories[0].chapters[0].name must not be a C++20 keyword",
+        )
+
+        method_keyword = copy.deepcopy(config)
+        method_keyword["categories"][0]["chapters"][0]["subchapters"][0][
+            "name"
+        ] = "co_await"
+        assert_rejected(
+            generator,
+            root,
+            method_keyword,
+            "subchapters[0].name must not be a C++20 keyword",
+        )
+
+        unknown_field = copy.deepcopy(config)
+        unknown_field["categories"][0]["chapters"][0]["descripton"] = "typo"
+        assert_rejected(
+            generator,
+            root,
+            unknown_field,
+            "contains unknown field 'descripton'",
+        )
+
+        deprecated_field = copy.deepcopy(config)
+        deprecated_field["handbook_documents"] = []
+        assert_rejected(
+            generator,
+            root,
+            deprecated_field,
+            "athena.json.handbook_documents is deprecated",
+        )
+
+        invalid_importance = copy.deepcopy(config)
+        invalid_importance["categories"][0]["chapters"][0]["subchapters"][0][
+            "importance"
+        ] = 6
+        assert_rejected(
+            generator,
+            root,
+            invalid_importance,
+            "subchapters[0].importance must be an integer in [0, 5]",
+        )
+
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(config, ensure_ascii=False, indent=2) + "\n",
+        )
 
 
 if __name__ == "__main__":

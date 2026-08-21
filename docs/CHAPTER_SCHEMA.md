@@ -92,6 +92,14 @@ category                     课程分类、左侧导航
 分类里（见 4.3）。配置里出现顶层 `handbook_documents` 会被生成器判为错误，
 而不是静默忽略。
 
+`schema` 是作者配置格式的版本。删除字段、改变既有字段含义或类型等不兼容
+变化必须升级版本；新增不影响旧配置的可选字段可以继续使用当前版本。生成器只
+接受自己明确支持的版本，不猜测或修复其他版本。
+
+每一层对象都只允许本规范表格列出的字段。未知字段一律报错，避免把
+`description` 误写成 `descripton` 后被静默忽略；已经废弃的字段会给出专门的
+迁移提示。
+
 数组顺序就是界面顺序，不再保存冗余的 `order` 字段。
 
 ## 4. 默认值
@@ -457,7 +465,7 @@ GTK 主题图标：
 
 ## 13. 语义校验
 
-下游解析器和未来的校验器必须检查：
+`scripts/project_generator/model.py` 是作者配置的唯一严格校验器，必须检查：
 
 - `schema` 是否为受支持版本。
 - 必填字段是否存在且类型正确。
@@ -470,6 +478,7 @@ GTK 主题图标：
 - `overview_document` 是否已经出现在**同一个分类**的 `handbook_documents` 里。
 - 分类的 `handbook_documents` 每一项是否位于 `resources/articles/` 下且文件存在，同一分类内不重复。
 - 配置里是否残留顶层 `handbook_documents`（已废弃，应报错）。
+- 每层对象是否包含未知字段或已经废弃的字段。
 - Blueprint、源码、Markdown 和资源图标路径是否有效。
 - 所有章节都有可解析图标：自身图标或默认图标。
 - 所有知识点都有可解析图标：自身图标或默认图标。
@@ -481,6 +490,10 @@ GTK 主题图标：
 athena.json categories[0].chapters[1].subchapters[2]:
 duplicate subchapter name 'basic' in 'cpp.Reference'
 ```
+
+构建期校验通过后，生成器会输出带独立 `runtime_schema` 的规范化运行时 Catalog；
+C++ 只解码该受信任产物，不再重复上述作者语义校验、默认值计算或错误修正。
+`runtime_schema` 是生成器与当前二进制之间的内部契约，不是作者需要填写的字段。
 
 ## 14. 文件所有权
 
