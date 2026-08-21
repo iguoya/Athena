@@ -30,13 +30,27 @@ string shell_quote(const string& value) {
     return result;
 }
 
-string write_secure_temp_file(const string& name_template, const string& content) {
+struct TempFileResult {
+    string path;
+    string error;
+};
+
+TempFileResult write_secure_temp_file(
+    const string& name_template,
+    const string& content) {
     gchar* path_raw = nullptr;
-    const gint fd = g_file_open_tmp(name_template.c_str(), &path_raw, nullptr);
+    GError* file_error = nullptr;
+    const gint fd =
+        g_file_open_tmp(name_template.c_str(), &path_raw, &file_error);
     if (fd < 0) {
+        const string message = file_error
+            ? file_error->message
+            : "未知文件错误";
+        g_clear_error(&file_error);
         g_free(path_raw);
-        return "";
+        return {.error = message};
     }
+    g_clear_error(&file_error);
     close(fd);
     const string path = path_raw;
     g_free(path_raw);
@@ -46,9 +60,9 @@ string write_secure_temp_file(const string& name_template, const string& content
     stream.close();
     if (!stream) {
         g_remove(path.c_str());
-        return "";
+        return {.error = "写入临时文件失败"};
     }
-    return path;
+    return {.path = path};
 }
 
 AiChatResult perform_ai_request(const AiChatRequest& request) {
@@ -59,12 +73,14 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
         {"stream", false},
     };
 
-    const string config_path = write_secure_temp_file(
-        "athena-ai-chat-XXXXXX.cfg",
+    // g_file_open_tmp() 要求模板以六个 X 结尾。扩展名放在 XXXXXX 后面会
+    // 被 GLib 当作非法模板，导致所有 AI 请求在发出前就失败。
+    const TempFileResult config_file = write_secure_temp_file(
+        "athena-ai-chat-cfg-XXXXXX",
         "header = \"Authorization: Bearer " + request.api_key + "\"\n"
         "header = \"Content-Type: application/json\"\n");
-    const string body_path = write_secure_temp_file(
-        "athena-ai-chat-XXXXXX.json", request_body.dump());
+    const TempFileResult body_file = write_secure_temp_file(
+        "athena-ai-chat-json-XXXXXX", request_body.dump());
 
     struct TempFileGuard {
         vector<string> paths;
@@ -75,14 +91,20 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
                 }
             }
         }
-    } guard {{config_path, body_path}};
+    } guard {{config_file.path, body_file.path}};
 
-    if (config_path.empty() || body_path.empty()) {
-        return {.error = "无法创建临时请求文件"};
+    if (config_file.path.empty() || body_file.path.empty()) {
+        const string detail = !config_file.error.empty()
+            ? config_file.error
+            : body_file.error;
+        return {
+            .error = "无法创建临时请求文件：" + detail,
+        };
     }
 
     const string command = "curl -sS --max-time 30 --connect-timeout 10 -K "
-        + shell_quote(config_path) + " --data @" + shell_quote(body_path)
+        + shell_quote(config_file.path) + " --data @"
+        + shell_quote(body_file.path)
         + " " + shell_quote(request.endpoint);
     gchar* output_raw = nullptr;
     gint exit_status = 0;
