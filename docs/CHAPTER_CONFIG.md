@@ -214,7 +214,7 @@ category.name = cpp
 | `name` | string | 是 | 稳定章节名，也是 C++ 类名 |
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
-| `overview_document` | string | 否 | “本章总纲”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
+| `overview_document` | string | 否 | “说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
 | `source` | string | 否 | 代码框显示的源码路径 |
@@ -285,7 +285,7 @@ subchapter.name -> C++ 成员函数名
 ^[A-Za-z_][A-Za-z0-9_]*$
 ```
 
-### 6.2 本章总纲 `overview_document`
+### 6.2 说明文档 `overview_document`
 
 章节可选提供 `overview_document`，指向一份人工撰写、静态存在于
 `resources/articles/` 下、并且已经列在**本分类**的 `handbook_documents`（4.3）
@@ -295,14 +295,14 @@ subchapter.name -> C++ 成员函数名
 "overview_document": "resources/articles/cpp/reference_overview.md"
 ```
 
-界面里"本章总纲"按钮点击后跳到手册页面里这份文档对应的位置（该文档
+界面里"说明文档"按钮点击后跳到手册页面里这份文档对应的位置（该文档
 在手册合集里第一个标题的锚点），**不发起任何网络或 AI 调用**——内容是
 撰写时一次性确定好、经人工审核过的，不是运行时现场生成的。撰写过程可以
 用 AI 辅助起草，但草稿必须经人工审核后才能提交；这是"自然语言 description
 不应由普通模板生成器直接转换成未经审查的实现"这条规则在文档内容上的
 应用，只是这里的"实现"换成了理论讲解文档。
 
-未提供 `overview_document` 的章节，"本章总纲"退回复制章节标题、简介和
+未提供 `overview_document` 的章节，"说明文档"退回复制章节标题、简介和
 全部知识点信息到剪贴板并唤起本机 AI 助手，跟未配置 `implementation` 的
 章节保持骨架框架、不强行生造内容是同一个原则。
 

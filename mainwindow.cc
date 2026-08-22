@@ -644,7 +644,7 @@ void MainWindow::refresh_progress_page() {
 
 // 手册也是合成标签页，但页面本身懒构建且常驻 Stack（原因见
 // ensure_handbook_page）；这里每次重建的只是标签按钮。按钮指针按分类记
-// 下来，"本章总纲"跳转时要靠它同步标签栏的选中态。
+// 下来，"说明文档"跳转时要靠它同步标签栏的选中态。
 void MainWindow::append_handbook_tab(const string& category_name) {
     auto tab_button = Gtk::make_managed<Gtk::ToggleButton>();
     tab_button->add_css_class("pill");
@@ -735,7 +735,7 @@ void MainWindow::ensure_handbook_page(const string& category_name) {
     // handbook_documents 顺序拼接，一次性喂给标题解析/渲染函数，生成
     // 一份跨文档的完整目录；每份文档自己的标题数量决定它在合集里的
     // 起始锚点（athena-heading-N，N 是它前面所有文档的标题总数），
-    // “本章总纲”按钮据此跳到对应位置，不用整份手册单独存一份。
+    // “说明文档”按钮据此跳到对应位置，不用整份手册单独存一份。
     auto& anchor_by_document = m_handbook_anchors_by_category[category_name];
     string combined_markdown;
     size_t heading_count = 0;
@@ -796,7 +796,7 @@ void MainWindow::ensure_handbook_page(const string& category_name) {
 
 // 切到某个分类的手册标签页（懒构建，每个分类只建一次）；
 // jump_to_document 非空时跳到该文档在本分类手册里的起始标题——用于章节
-// 的“本章总纲”按钮，文档必须已经在本分类的 handbook_documents 里（生成器
+// 的“说明文档”按钮，文档必须已经在本分类的 handbook_documents 里（生成器
 // check 时校验），否则跳转是 no-op。
 void MainWindow::show_handbook_page(
     const string& category_name,
@@ -910,7 +910,7 @@ void MainWindow::initialize_code_page(
     }
 }
 
-// “应用实践”类章节（practice_cube.blp 等）：只有标题/简介/本章总纲
+// “应用实践”类章节（practice_cube.blp 等）：只有标题/简介/说明文档
 // 和一个“运行”按钮，没有标准教学页那套知识点列表。目前只有唯一一个
 // 知识点（2 阶魔方的 run），直接绑定第一个 subchapter，不走
 // populate_topic_list 那套“多知识点列表 + 选中态”逻辑；以后这类章节
@@ -959,7 +959,7 @@ void MainWindow::initialize_practice_page(
         net_host->append(*view_net);
     }
 
-    // 跟 initialize_code_page 里本章总纲按钮的接线完全一致：有
+    // 跟 initialize_code_page 里说明文档按钮的接线完全一致：有
     // overview_document 就跳手册对应位置，没有就退回剪贴板 + 唤起
     // 本机 AI 助手。
     if (chapter_overview_button) {

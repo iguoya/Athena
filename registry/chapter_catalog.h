@@ -39,7 +39,7 @@ struct ChapterMeta {
     string title;
     string description;
     string category;
-    // “本章总纲”按钮跳转目标：手册（见 ChapterCatalog::handbook_documents）
+    // “说明文档”按钮跳转目标：手册（见 ChapterCatalog::handbook_documents）
     // 里某一份文档的路径，必须已经在那份列表里（生成器 check 时校验）；
     // 未提供时按钮退回剪贴板 + 唤起本机 AI 助手。文档本身人工撰写、经
     // 审核提交进 git，不发起运行时 AI 调用。
