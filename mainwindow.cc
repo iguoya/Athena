@@ -1000,7 +1000,7 @@ void MainWindow::initialize_practice_page(
             [cube, result_view, status_log, view_3d, view_net]() {
                 append_practice_status(status_log, "运行中…");
                 ostringstream output;
-                cube->turn(output);
+                cube->run(output);
                 result_view->get_buffer()->set_text(output.str());
                 if (view_3d) {
                     view_3d->queue_draw();
