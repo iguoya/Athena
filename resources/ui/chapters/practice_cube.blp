@@ -80,50 +80,99 @@ Box practice_cube_page {
     orientation: horizontal;
   }
 
-  // 空白主体：目前只有一个“运行”按钮和结果显示区，中间大片留白。
+  // 主体分左右两栏：左边运行按钮 + 输出框，右边状态标签 + 3D 绘图
+  // 区域。绘图区域现在只画一个占位的等距视角魔方示意图（固定配色），
+  // 没有跟真实魔方状态联动——状态表示方案还没定。
   Box practice_body {
-    orientation: vertical;
-    spacing: 10;
+    orientation: horizontal;
+    spacing: 14;
     hexpand: true;
     vexpand: true;
 
-    Box {
-      orientation: horizontal;
+    Box practice_left_panel {
+      orientation: vertical;
       spacing: 10;
+      hexpand: true;
+      vexpand: true;
 
-      Button practice_run_button {
-        name: "practice_run_button";
-        label: "运行";
+      Box {
+        orientation: horizontal;
+        spacing: 10;
+
+        Button practice_run_button {
+          name: "practice_run_button";
+          label: "运行";
+
+          styles [
+            "btn-sm",
+            "btn-primary"
+          ]
+        }
+      }
+
+      ScrolledWindow {
+        hexpand: true;
+        vexpand: true;
+        hscrollbar-policy: never;
 
         styles [
-          "btn-sm",
-          "btn-primary"
+          "panel-frame"
         ]
+
+        TextView practice_result_view {
+          name: "practice_result_view";
+          editable: false;
+          cursor-visible: false;
+          wrap-mode: word_char;
+          top-margin: 10;
+          bottom-margin: 10;
+          left-margin: 12;
+          right-margin: 12;
+
+          styles [
+            "code-view"
+          ]
+        }
       }
     }
 
-    ScrolledWindow {
+    Box practice_right_panel {
+      orientation: vertical;
+      spacing: 10;
       hexpand: true;
       vexpand: true;
-      hscrollbar-policy: never;
 
-      styles [
-        "panel-frame"
-      ]
-
-      TextView practice_result_view {
-        name: "practice_result_view";
-        editable: false;
-        cursor-visible: false;
-        wrap-mode: word_char;
-        top-margin: 10;
-        bottom-margin: 10;
-        left-margin: 12;
-        right-margin: 12;
+      Label practice_status_label {
+        name: "practice_status_label";
+        label: "就绪";
+        halign: start;
+        wrap: true;
+        xalign: 0;
 
         styles [
-          "code-view"
+          "dim-label"
         ]
+      }
+
+      Frame {
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        // 空容器，实际的绘图控件（render/cube_view.h 的
+        // make_cube_isometric_view()）在 C++ 侧动态创建后塞进来，
+        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
+        Box practice_cube_canvas_host {
+          name: "practice_cube_canvas_host";
+          orientation: vertical;
+          hexpand: true;
+          vexpand: true;
+          halign: center;
+          valign: center;
+        }
       }
     }
   }

@@ -71,13 +71,17 @@ private:
     // 惰性创建、常驻复用：内容是静态的（不像运行历史/AI 自测每次点击都要
     // 拿新数据），不需要每次点击都新建再销毁那一整套。
     void show_about_dialog();
+    // on_finished 在结果已经写入 result_view、运行历史也已经落库之后
+    // 于主线程调用；默认空，只有需要在运行完成后再做点什么（比如按新
+    // 状态重绘一张图）的调用方才传。
     void start_experiment(
         const string& function_id,
         const string& source_path,
         const string& member_name,
         Gtk::TextView& result_view,
         Gtk::Spinner* experiment_spinner,
-        Gtk::Label* experiment_status_label);
+        Gtk::Label* experiment_status_label,
+        function<void()> on_finished = nullptr);
 
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(
         const string& category_name,

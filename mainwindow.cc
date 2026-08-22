@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "app_icon.h"
 #include "content/source_locator.h"
+#include "render/cube_view.h"
 #include "render/markdown_renderer.h"
 #include "ui/progress_page.h"
 
@@ -898,6 +899,8 @@ void MainWindow::initialize_practice_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
     auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
     auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
+    auto status_label = builder->get_widget<Gtk::Label>("practice_status_label");
+    auto canvas_host = builder->get_widget<Gtk::Box>("practice_cube_canvas_host");
 
     if (title_label) {
         title_label->set_text(chapter.title);
@@ -910,6 +913,11 @@ void MainWindow::initialize_practice_page(
     }
     if (result_view) {
         result_view->get_buffer()->set_text("点击“运行”查看结果。");
+    }
+    // 3D（等距投影）绘图区：现在只是固定配色的占位图，还没有跟真实
+    // 魔方状态联动，见 render/cube_view.h 的说明。
+    if (canvas_host) {
+        canvas_host->append(*make_cube_isometric_view());
     }
 
     // 跟 initialize_code_page 里本章总纲按钮的接线完全一致：有
@@ -944,10 +952,23 @@ void MainWindow::initialize_practice_page(
                  function_id = subchapter.function_id,
                  source_path = subchapter.source,
                  member_name = subchapter.name,
-                 result_view]() {
+                 result_view,
+                 status_label]() {
+                    // status_label 自己管理，不传给 start_experiment 的
+                    // experiment_status_label 参数——那个参数运行完会
+                    // 自动隐藏，这里想要的是“就绪/运行中/已完成”这种
+                    // 会持续记录、常驻可见的运行时状态。
+                    if (status_label) {
+                        status_label->set_text("运行中…");
+                    }
                     start_experiment(
                         function_id, source_path, member_name,
-                        *result_view, nullptr, nullptr);
+                        *result_view, nullptr, nullptr,
+                        [status_label]() {
+                            if (status_label) {
+                                status_label->set_text("已完成");
+                            }
+                        });
                 });
         }
     }
@@ -1023,7 +1044,8 @@ void MainWindow::start_experiment(
     const string& member_name,
     Gtk::TextView& result_view,
     Gtk::Spinner* experiment_spinner,
-    Gtk::Label* experiment_status_label) {
+    Gtk::Label* experiment_status_label,
+    function<void()> on_finished) {
     if (m_experiment_running) {
         return;
     }
@@ -1081,7 +1103,8 @@ void MainWindow::start_experiment(
          elapsed_timer,
          running_flag,
          learning_store,
-         started]() {
+         started,
+         on_finished]() {
             ostringstream output;
             string failure;
             try {
@@ -1110,7 +1133,8 @@ void MainWindow::start_experiment(
                  experiment_thread,
                  elapsed_timer,
                  running_flag,
-                 learning_store]() {
+                 learning_store,
+                 on_finished]() {
                     if (!alive->load()) {
                         return;
                     }
@@ -1141,6 +1165,9 @@ void MainWindow::start_experiment(
                     }
                     if (experiment_status_label) {
                         experiment_status_label->set_visible(false);
+                    }
+                    if (on_finished) {
+                        on_finished();
                     }
                 });
         });
