@@ -26,6 +26,33 @@ string format_elapsed(double seconds) {
     return stream.str();
 }
 
+// “应用实践”类章节的状态日志：把一条新状态插到最上面，超过上限就把
+// 最旧的（最下面的）丢掉，记录“就绪/运行中/已完成”这类运行时状态的
+// 一小段历史，不是只覆盖显示最新一条。
+constexpr size_t kPracticeStatusLogLimit = 5;
+
+void append_practice_status(Gtk::Box* log, const string& text) {
+    if (!log) {
+        return;
+    }
+    auto entry = Gtk::make_managed<Gtk::Label>(text);
+    entry->set_halign(Gtk::Align::START);
+    entry->add_css_class("dim-label");
+    log->prepend(*entry);
+
+    size_t count = 0;
+    for (auto* child = log->get_first_child(); child;
+         child = child->get_next_sibling()) {
+        ++count;
+    }
+    while (count > kPracticeStatusLogLimit) {
+        if (auto* oldest = log->get_last_child()) {
+            log->remove(*oldest);
+        }
+        --count;
+    }
+}
+
 struct GitSourceState {
     string commit;    // HEAD 短哈希；不在 git 仓库或 git 不可用时为空
     bool dirty = false;
@@ -899,7 +926,7 @@ void MainWindow::initialize_practice_page(
         builder->get_widget<Gtk::Button>("chapter_overview_button");
     auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
     auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
-    auto status_label = builder->get_widget<Gtk::Label>("practice_status_label");
+    auto status_log = builder->get_widget<Gtk::Box>("practice_status_log");
     auto canvas_host = builder->get_widget<Gtk::Box>("practice_cube_canvas_host");
 
     if (title_label) {
@@ -914,10 +941,11 @@ void MainWindow::initialize_practice_page(
     if (result_view) {
         result_view->get_buffer()->set_text("点击“运行”查看结果。");
     }
-    // 3D（等距投影）绘图区：现在只是固定配色的占位图，还没有跟真实
+    append_practice_status(status_log, "就绪");
+    // 3D 绘图区：可拖拽旋转，现在只是固定配色的占位图，还没有跟真实
     // 魔方状态联动，见 render/cube_view.h 的说明。
     if (canvas_host) {
-        canvas_host->append(*make_cube_isometric_view());
+        canvas_host->append(*make_cube_3d_view());
     }
 
     // 跟 initialize_code_page 里本章总纲按钮的接线完全一致：有
@@ -953,21 +981,17 @@ void MainWindow::initialize_practice_page(
                  source_path = subchapter.source,
                  member_name = subchapter.name,
                  result_view,
-                 status_label]() {
-                    // status_label 自己管理，不传给 start_experiment 的
+                 status_log]() {
+                    // 状态日志自己管理，不传给 start_experiment 的
                     // experiment_status_label 参数——那个参数运行完会
-                    // 自动隐藏，这里想要的是“就绪/运行中/已完成”这种
-                    // 会持续记录、常驻可见的运行时状态。
-                    if (status_label) {
-                        status_label->set_text("运行中…");
-                    }
+                    // 自动隐藏，这里想要的是能保留最近几条历史的运行时
+                    // 状态记录，不是只覆盖显示的单行文字。
+                    append_practice_status(status_log, "运行中…");
                     start_experiment(
                         function_id, source_path, member_name,
                         *result_view, nullptr, nullptr,
-                        [status_label]() {
-                            if (status_label) {
-                                status_label->set_text("已完成");
-                            }
+                        [status_log]() {
+                            append_practice_status(status_log, "已完成");
                         });
                 });
         }

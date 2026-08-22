@@ -142,16 +142,25 @@ Box practice_cube_page {
       hexpand: true;
       vexpand: true;
 
-      Label practice_status_label {
-        name: "practice_status_label";
-        label: "就绪";
-        halign: start;
-        wrap: true;
-        xalign: 0;
+      // 状态日志：记录运行时各种魔方状态（就绪/运行中/已完成……），
+      // 最新一条在最上面，最多保留几条，超过的自动去掉最旧的（见
+      // MainWindow::append_practice_status()），不是只显示单行文字。
+      Frame {
+        hexpand: true;
 
         styles [
-          "dim-label"
+          "panel-frame"
         ]
+
+        Box practice_status_log {
+          name: "practice_status_log";
+          orientation: vertical;
+          spacing: 2;
+          margin-top: 8;
+          margin-bottom: 8;
+          margin-start: 12;
+          margin-end: 12;
+        }
       }
 
       Frame {
@@ -163,8 +172,8 @@ Box practice_cube_page {
         ]
 
         // 空容器，实际的绘图控件（render/cube_view.h 的
-        // make_cube_isometric_view()）在 C++ 侧动态创建后塞进来，
-        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
+        // make_cube_3d_view()）在 C++ 侧动态创建后塞进来，跟“结构在
+        // Blueprint、内容在 C++”的一贯分工一致。
         Box practice_cube_canvas_host {
           name: "practice_cube_canvas_host";
           orientation: vertical;
