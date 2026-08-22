@@ -131,11 +131,11 @@ compiled_ui += custom_target(
 core_sources = files(
   'content/content_loader.cc',
   'content/source_locator.cc',
+  'practice/pocket_cube/state.cc',
   'registry/chapter_catalog.cc',
   'registry/function_registry.cc',
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
-  'render/cube_state.cc',
   'render/markdown_renderer.cc',
   'services/ai_service.cc',
   'storage/learning_store.cc'
@@ -159,8 +159,8 @@ app_sources = files(
   'main.cc',
   'athena.cc',
   'mainwindow.cc',
+  'practice/pocket_cube/view.cc',
   'render/chart_view.cc',
-  'render/cube_view.cc',
   'ui/learning_dialogs.cc',
   'ui/progress_page.cc'
 ) + article_view_sources + app_icon_sources
@@ -206,7 +206,7 @@ core_test_exe = executable(
     'tests/function_registry_test.cc',
     'tests/learning_store_test.cc',
     'tests/chart_scale_test.cc',
-    'tests/cube_state_test.cc',
+    'tests/pocket_cube_state_test.cc',
     'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
     'tests/raii_content_test.cc',
@@ -225,9 +225,9 @@ gtk_test_exe = executable(
   files(
     'tests/gtk_resource_test.cc',
     'tests/progress_page_test.cc',
-    'tests/cube_view_test.cc',
+    'tests/pocket_cube_view_test.cc',
+    'practice/pocket_cube/view.cc',
     'render/chart_view.cc',
-    'render/cube_view.cc',
     'ui/progress_page.cc'
   ),
   sources: resources,

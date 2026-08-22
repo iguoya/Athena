@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "app_icon.h"
 #include "content/source_locator.h"
-#include "render/cube_view.h"
+#include "practice/pocket_cube/pocket_cube.hpp"
+#include "practice/pocket_cube/view.h"
 #include "render/markdown_renderer.h"
 #include "ui/progress_page.h"
 
@@ -910,11 +911,19 @@ void MainWindow::initialize_code_page(
     }
 }
 
-// “应用实践”类章节（practice_cube.blp 等）：只有标题/简介/说明文档
-// 和一个“运行”按钮，没有标准教学页那套知识点列表。目前只有唯一一个
-// 知识点（2 阶魔方的 run），直接绑定第一个 subchapter，不走
+// “应用实践”类章节（practice_cube.blp 等）：标题/简介/说明文档、一个
+// 源码框和一个“运行”按钮，没有标准教学页那套知识点列表。目前只有
+// 唯一一个知识点（2 阶魔方的 turn），直接绑定第一个 subchapter，不走
 // populate_topic_list 那套“多知识点列表 + 选中态”逻辑；以后这类章节
 // 真的需要多个知识点时再扩展成通用形式。
+//
+// 不走 start_experiment()/FunctionRegistry 这条标准运行路径：那套机制
+// 面向“调用一个无状态的知识点函数、把文本输出记进运行历史”，但这里
+// “运行”驱动的是一个有状态的类实例（转一步要接着上一次转完的状态
+// 继续转，不是每次都从复原状态重新算），运行历史/学习进度这些统计对
+// “点一下看魔方转”这种交互也没有实际意义。页面自己创建并持有一个
+// PocketCube 实例，“运行”按钮直接调用它的方法——源码框里显示的就是
+// 真正被执行的代码，不是界面里另外藏一份逻辑。
 void MainWindow::initialize_practice_page(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder) {
@@ -924,6 +933,8 @@ void MainWindow::initialize_practice_page(
     auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
     auto chapter_overview_button =
         builder->get_widget<Gtk::Button>("chapter_overview_button");
+    auto source_view = GTK_SOURCE_VIEW(
+        gtk_builder_get_object(builder->gobj(), "practice_source_view"));
     auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
     auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
     auto status_log = builder->get_widget<Gtk::Box>("practice_status_log");
@@ -942,20 +953,25 @@ void MainWindow::initialize_practice_page(
     if (result_view) {
         result_view->get_buffer()->set_text("点击“运行”查看结果。");
     }
+    if (!chapter.subchapters.empty()) {
+        display_source(
+            source_view, m_content_loader, chapter.source,
+            chapter.subchapters.front().name);
+    }
     append_practice_status(status_log, "就绪");
 
-    // 魔方状态：page 生命周期内共享的一份可变状态，通过闭包传给两个
-    // 视图和运行按钮——这是 render/cube_view.h 文档里给的样例用法，
-    // 状态变化后手动 queue_draw() 触发重绘，不是自动响应式绑定。
-    auto cube_state = make_shared<CubeState>(make_solved_cube());
+    // 魔方实例：page 生命周期内持有的一份真实状态，“运行”按钮直接调
+    // 它的方法，两个视图从它读取最新状态重绘（见 practice/pocket_cube/
+    // view.h 的样例接口说明：state_provider 拉模型 + 手动 queue_draw()）。
+    auto cube = make_shared<PocketCube>();
     Gtk::Widget* view_3d = nullptr;
     Gtk::Widget* view_net = nullptr;
     if (canvas_host) {
-        view_3d = make_cube_3d_view([cube_state] { return *cube_state; });
+        view_3d = make_cube_3d_view([cube] { return cube->state(); });
         canvas_host->append(*view_3d);
     }
     if (net_host) {
-        view_net = make_cube_net_view([cube_state] { return *cube_state; });
+        view_net = make_cube_net_view([cube] { return cube->state(); });
         net_host->append(*view_net);
     }
 
@@ -979,47 +995,21 @@ void MainWindow::initialize_practice_page(
             });
     }
 
-    if (run_button && result_view && !chapter.subchapters.empty()) {
-        const auto& subchapter = chapter.subchapters.front();
-        const bool can_run = m_function_registry.contains(subchapter.function_id);
-        run_button->set_sensitive(can_run);
-        run_button->set_tooltip_text(
-            can_run ? "运行该知识点的实验代码" : "该知识点尚未实现可运行实验");
-        if (can_run) {
-            run_button->signal_clicked().connect(
-                [this,
-                 function_id = subchapter.function_id,
-                 source_path = subchapter.source,
-                 member_name = subchapter.name,
-                 result_view,
-                 status_log,
-                 cube_state,
-                 view_3d,
-                 view_net]() {
-                    // 状态日志自己管理，不传给 start_experiment 的
-                    // experiment_status_label 参数——那个参数运行完会
-                    // 自动隐藏，这里想要的是能保留最近几条历史的运行时
-                    // 状态记录，不是只覆盖显示的单行文字。
-                    append_practice_status(status_log, "运行中…");
-                    // 示例：点“运行”应用一次 U 顺时针转动，演示
-                    // apply_move() + queue_draw() 这套接口怎么用——真正
-                    // 的求解/打乱逻辑还没接，等状态表示方案之外的算法
-                    // 部分定了再换成真实调用。
-                    *cube_state = apply_move(*cube_state, {Face::U, Turn::Clockwise});
-                    if (view_3d) {
-                        view_3d->queue_draw();
-                    }
-                    if (view_net) {
-                        view_net->queue_draw();
-                    }
-                    start_experiment(
-                        function_id, source_path, member_name,
-                        *result_view, nullptr, nullptr,
-                        [status_log]() {
-                            append_practice_status(status_log, "已完成");
-                        });
-                });
-        }
+    if (run_button && result_view) {
+        run_button->signal_clicked().connect(
+            [cube, result_view, status_log, view_3d, view_net]() {
+                append_practice_status(status_log, "运行中…");
+                ostringstream output;
+                cube->turn(output);
+                result_view->get_buffer()->set_text(output.str());
+                if (view_3d) {
+                    view_3d->queue_draw();
+                }
+                if (view_net) {
+                    view_net->queue_draw();
+                }
+                append_practice_status(status_log, "已完成");
+            });
     }
 }
 

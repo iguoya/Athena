@@ -1,4 +1,4 @@
-#include "render/cube_view.h"
+#include "practice/pocket_cube/view.h"
 
 #include <gtest/gtest.h>
 

@@ -51,6 +51,11 @@ SUBCHAPTER_FIELDS = frozenset(
     {"name", "title", "description", "importance", "icon", "group", "source"}
 )
 
+# 教学/实践源码允许存放的两个顶层目录，互相平级：language/ 按 C++ 语言
+# 特性拆分知识点，practice/ 收纳自成一体的应用实践项目（比如
+# practice/pocket_cube/），不嵌在 language/ 下面。
+SOURCE_PREFIXES = ("language", "practice")
+
 
 class ProjectError(ValueError):
     """A user-facing project configuration error."""
@@ -100,7 +105,7 @@ def project_path(
     value: object,
     label: str,
     *,
-    prefix: str | None = None,
+    prefix: str | tuple[str, ...] | None = None,
     must_exist: bool = True,
 ) -> str:
     path = require_text(value, label)
@@ -109,8 +114,14 @@ def project_path(
     parts = Path(path).parts
     if Path(path).is_absolute() or "." in parts or ".." in parts:
         raise ProjectError(f"{label} must be a safe project-relative path: {path!r}")
-    if prefix and not path.startswith(prefix.rstrip("/") + "/"):
-        raise ProjectError(f"{label} must be stored under {prefix}/: {path}")
+    if prefix:
+        # 允许指定一组候选前缀，只要落在其中一个下面就行——source_files
+        # 既有 language/ 下按语言特性拆分的教学代码，也有 practice/ 下
+        # 自成一体的应用实践项目代码，两者是同级目录，不是前者的子集。
+        prefixes = (prefix,) if isinstance(prefix, str) else prefix
+        if not any(path.startswith(p.rstrip("/") + "/") for p in prefixes):
+            allowed = " or ".join(f"{p}/" for p in prefixes)
+            raise ProjectError(f"{label} must be stored under {allowed}: {path}")
     if must_exist and not (root / path).is_file():
         raise ProjectError(f"{label} not found: {path}")
     return path
@@ -364,7 +375,7 @@ def build_model(
                     root,
                     implementation.get("header"),
                     f"{chapter_path}.implementation.header",
-                    prefix="language",
+                    prefix=SOURCE_PREFIXES,
                     must_exist=chapter_id != allow_missing_header_for,
                 )
                 source_files.add(implementation_header)
@@ -374,7 +385,7 @@ def build_model(
                             root,
                             implementation["source"],
                             f"{chapter_path}.implementation.source",
-                            prefix="language",
+                            prefix=SOURCE_PREFIXES,
                             must_exist=chapter_id != allow_missing_header_for,
                         )
                     )
@@ -385,7 +396,7 @@ def build_model(
                     root,
                     chapter["source"],
                     f"{chapter_path}.source",
-                    prefix="language",
+                    prefix=SOURCE_PREFIXES,
                 )
                 source_files.add(chapter_source)
 
@@ -463,7 +474,7 @@ def build_model(
                         root,
                         group["source"],
                         f"{group_path}.source",
-                        prefix="language",
+                        prefix=SOURCE_PREFIXES,
                     )
                     source_files.add(group_source)
                 group_sources[group_name] = group_source
@@ -553,7 +564,7 @@ def build_model(
                         root,
                         subchapter["source"],
                         f"{subchapter_path}.source",
-                        prefix="language",
+                        prefix=SOURCE_PREFIXES,
                     )
                     source_files.add(resolved_source)
                 runtime_subchapters.append(

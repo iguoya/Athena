@@ -1,4 +1,4 @@
-#include "render/cube_state.h"
+#include "practice/pocket_cube/state.h"
 
 #include <gtest/gtest.h>
 

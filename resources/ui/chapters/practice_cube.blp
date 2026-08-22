@@ -1,9 +1,11 @@
 using Gtk 4.0;
+using GtkSource 5;
 
 // “应用实践”类章节专属布局，不套用标准教学页（chapter_page）那套
 // “知识点列表 + 源码框 + 结果区”三栏结构——实践类内容形态还没定，
-// 先只保留标题/简介/本章总纲这三个跟其它章节一致的通用部分，加一个
-// “运行”按钮和一块结果显示区；具体界面以后再细化。
+// 先只保留标题/简介/说明文档这三个跟其它章节一致的通用部分。左栏是
+// 源码框（运行按钮点击时执行的就是框里这段代码，不是界面代码里另外
+// 藏一份）+ 运行按钮 + 输出框，右栏是状态日志 + 3D 视图/展开图。
 Box practice_cube_page {
   orientation: vertical;
   spacing: 14;
@@ -94,6 +96,41 @@ Box practice_cube_page {
       spacing: 10;
       hexpand: true;
       vexpand: true;
+
+      // 源码框：跟标准教学页左侧的 source_view 同一套写法，展示的是
+      // 真实源文件内容，不是另外维护的教学代码字符串。点“运行”时
+      // 执行的就是这里显示的代码。
+      Frame {
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          GtkSource.View practice_source_view {
+            name: "practice_source_view";
+            editable: false;
+            cursor-visible: false;
+            monospace: true;
+            show-line-numbers: true;
+            highlight-current-line: false;
+            tab-width: 4;
+            left-margin: 14;
+            right-margin: 14;
+            top-margin: 12;
+            bottom-margin: 12;
+
+            styles [
+              "code-view"
+            ]
+          }
+        }
+      }
 
       Box {
         orientation: horizontal;

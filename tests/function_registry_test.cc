@@ -14,7 +14,7 @@ TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
-    EXPECT_TRUE(registry.contains("practice.TwoByTwoCube.run"));
+    EXPECT_TRUE(registry.contains("practice.PocketCube.turn"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
 }
 
