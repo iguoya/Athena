@@ -1,0 +1,130 @@
+using Gtk 4.0;
+
+// “应用实践”类章节专属布局，不套用标准教学页（chapter_page）那套
+// “知识点列表 + 源码框 + 结果区”三栏结构——实践类内容形态还没定，
+// 先只保留标题/简介/本章总纲这三个跟其它章节一致的通用部分，加一个
+// “运行”按钮和一块结果显示区；具体界面以后再细化。
+Box practice_cube_page {
+  orientation: vertical;
+  spacing: 14;
+  hexpand: true;
+  vexpand: true;
+  margin-top: 16;
+  margin-start: 20;
+  margin-end: 20;
+  margin-bottom: 18;
+
+  Frame chapter_header_frame {
+    hexpand: true;
+
+    styles [
+      "panel-frame"
+    ]
+
+    Box chapter_header {
+      orientation: horizontal;
+      spacing: 14;
+      margin-top: 10;
+      margin-bottom: 10;
+      margin-start: 14;
+      margin-end: 14;
+
+      Image chapter_icon {
+        name: "chapter_icon";
+        pixel-size: 34;
+        valign: center;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 3;
+        hexpand: true;
+        valign: center;
+
+        Label chapter_title_label {
+          name: "chapter_title_label";
+          halign: start;
+
+          styles [
+            "title-2"
+          ]
+        }
+
+        Label chapter_description_label {
+          name: "chapter_description_label";
+          halign: start;
+          wrap: true;
+          xalign: 0;
+
+          styles [
+            "header-description"
+          ]
+        }
+      }
+
+      Button chapter_overview_button {
+        name: "chapter_overview_button";
+        label: "本章总纲";
+        valign: center;
+        tooltip-text: "把本章标题、简介与全部知识点组成总纲请求放入剪贴板，并唤起本机 AI 助手";
+
+        styles [
+          "btn-sm",
+          "btn-chapter-overview"
+        ]
+      }
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  // 空白主体：目前只有一个“运行”按钮和结果显示区，中间大片留白。
+  Box practice_body {
+    orientation: vertical;
+    spacing: 10;
+    hexpand: true;
+    vexpand: true;
+
+    Box {
+      orientation: horizontal;
+      spacing: 10;
+
+      Button practice_run_button {
+        name: "practice_run_button";
+        label: "运行";
+
+        styles [
+          "btn-sm",
+          "btn-primary"
+        ]
+      }
+    }
+
+    ScrolledWindow {
+      hexpand: true;
+      vexpand: true;
+      hscrollbar-policy: never;
+
+      styles [
+        "panel-frame"
+      ]
+
+      TextView practice_result_view {
+        name: "practice_result_view";
+        editable: false;
+        cursor-visible: false;
+        wrap-mode: word_char;
+        top-margin: 10;
+        bottom-margin: 10;
+        left-margin: 12;
+        right-margin: 12;
+
+        styles [
+          "code-view"
+        ]
+      }
+    }
+  }
+}

@@ -10,10 +10,11 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 16);
+    EXPECT_EQ(registry.ids().size(), 17);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
+    EXPECT_TRUE(registry.contains("practice.TwoByTwoCube.run"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
 }
 

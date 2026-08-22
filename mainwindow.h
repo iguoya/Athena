@@ -49,6 +49,13 @@ private:
         const string& category_name,
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder);
+    // “应用实践”类章节的专属布局（practice_cube.blp 等），只有标题/
+    // 简介/本章总纲和一个“运行”按钮，没有标准教学页那套知识点列表；
+    // 目前只有 2 阶魔方一个章节在用，暂时按“只有一个知识点”简化处理，
+    // 以后同类章节多了再抽象成通用逻辑。
+    void initialize_practice_page(
+        const ChapterMeta& chapter,
+        const Glib::RefPtr<Gtk::Builder>& builder);
     void populate_topic_list(
         const ChapterMeta& chapter,
         GtkSourceView* source_view,

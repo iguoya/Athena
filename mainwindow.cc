@@ -216,6 +216,10 @@ string chapter_key(const string& category_name, const string& chapter_name) {
 // 欢迎页的 Blueprint 根控件名；学习进度标签页插在它后面。
 constexpr const char* kWelcomePageWidget = "welcome_page";
 
+// “应用实践”类章节专属布局（practice_cube.blp）的根控件名；跟
+// chapter_page/welcome_page 一样按 widget_name 分支识别。
+constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
+
 // 学习进度页固定的 Stack 子页面名。跟 kHandbookPageKey 一样用双下划线
 // 包起来，不会跟真实章节 ID（都是 ASCII 标识符拼接）冲突。
 constexpr const char* kProgressPageKey = "__progress__";
@@ -414,6 +418,12 @@ void MainWindow::ensure_chapter_page(
     const bool uses_code_page = chapter.widget_name == "chapter_page";
     if (uses_code_page) {
         initialize_code_page(category_name, chapter, builder);
+        m_loaded_chapters.insert(page_key);
+        return;
+    }
+
+    if (chapter.widget_name == kPracticeCubePageWidget) {
+        initialize_practice_page(chapter, builder);
         m_loaded_chapters.insert(page_key);
         return;
     }
@@ -869,6 +879,77 @@ void MainWindow::initialize_code_page(
             title_label,
             description_label,
             chapter_icon);
+    }
+}
+
+// “应用实践”类章节（practice_cube.blp 等）：只有标题/简介/本章总纲
+// 和一个“运行”按钮，没有标准教学页那套知识点列表。目前只有唯一一个
+// 知识点（2 阶魔方的 run），直接绑定第一个 subchapter，不走
+// populate_topic_list 那套“多知识点列表 + 选中态”逻辑；以后这类章节
+// 真的需要多个知识点时再扩展成通用形式。
+void MainWindow::initialize_practice_page(
+    const ChapterMeta& chapter,
+    const Glib::RefPtr<Gtk::Builder>& builder) {
+    auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
+    auto description_label =
+        builder->get_widget<Gtk::Label>("chapter_description_label");
+    auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
+    auto chapter_overview_button =
+        builder->get_widget<Gtk::Button>("chapter_overview_button");
+    auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
+    auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
+
+    if (title_label) {
+        title_label->set_text(chapter.title);
+    }
+    if (description_label) {
+        description_label->set_text(chapter.description);
+    }
+    if (chapter_icon) {
+        configure_image(*chapter_icon, chapter.icon, 36);
+    }
+    if (result_view) {
+        result_view->get_buffer()->set_text("点击“运行”查看结果。");
+    }
+
+    // 跟 initialize_code_page 里本章总纲按钮的接线完全一致：有
+    // overview_document 就跳手册对应位置，没有就退回剪贴板 + 唤起
+    // 本机 AI 助手。
+    if (chapter_overview_button) {
+        chapter_overview_button->signal_clicked().connect(
+            [this,
+             category_name = chapter.category,
+             title = chapter.title,
+             description = chapter.description,
+             subchapters = chapter.subchapters,
+             overview_document = chapter.overview_document]() {
+                if (!overview_document.empty()) {
+                    show_handbook_page(category_name, overview_document);
+                } else {
+                    explain_chapter_overview_with_local_ai(
+                        title, description, subchapters);
+                }
+            });
+    }
+
+    if (run_button && result_view && !chapter.subchapters.empty()) {
+        const auto& subchapter = chapter.subchapters.front();
+        const bool can_run = m_function_registry.contains(subchapter.function_id);
+        run_button->set_sensitive(can_run);
+        run_button->set_tooltip_text(
+            can_run ? "运行该知识点的实验代码" : "该知识点尚未实现可运行实验");
+        if (can_run) {
+            run_button->signal_clicked().connect(
+                [this,
+                 function_id = subchapter.function_id,
+                 source_path = subchapter.source,
+                 member_name = subchapter.name,
+                 result_view]() {
+                    start_experiment(
+                        function_id, source_path, member_name,
+                        *result_view, nullptr, nullptr);
+                });
+        }
     }
 }
 
