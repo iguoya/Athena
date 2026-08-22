@@ -192,7 +192,7 @@ string reader_script() {
 (() => {
   const root = document.documentElement;
   const storageKey = 'athena-reader-settings';
-  let settings = { fontSize: 19, theme: 'auto' };
+  let settings = { fontSize: 21, theme: 'auto' };
 
   try {
     settings = { ...settings, ...JSON.parse(localStorage.getItem(storageKey) || '{}') };
@@ -203,7 +203,7 @@ string reader_script() {
   };
 
   const applyFont = () => {
-    settings.fontSize = Math.max(16, Math.min(26, Number(settings.fontSize) || 19));
+    settings.fontSize = Math.max(16, Math.min(26, Number(settings.fontSize) || 21));
     root.style.setProperty('--article-font-size', `${settings.fontSize}px`);
   };
 
@@ -225,7 +225,7 @@ string reader_script() {
     button.addEventListener('click', () => {
       if (button.dataset.font === 'increase') settings.fontSize += 1;
       if (button.dataset.font === 'decrease') settings.fontSize -= 1;
-      if (button.dataset.font === 'reset') settings.fontSize = 19;
+      if (button.dataset.font === 'reset') settings.fontSize = 21;
       applyFont();
       save();
     });

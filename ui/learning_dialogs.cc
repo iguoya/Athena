@@ -563,11 +563,13 @@ void LearningDialogs::show_ai_markdown(
     });
     lock_for_modal_dialog(m_parent, *dialog);
 
-    // 只在这几个 AI 对话框里把正文字号调大，不改 resources/article.css
-    // 本身——手册阅读页面用原来的 19px，不受影响。
+    // 只在这几个 AI 对话框里把正文字号调得比手册基准更大一点，保持
+    // “对话框内容更醒目”这层相对关系；不改 resources/article.css 本身
+    // 的默认值（21px），改了这里也要跟着变，不然手册字号涨了、对话框
+    // 反而失去原有的字号优势。
     string stylesheet = m_content_loader.load_resource("/app/article.css");
     if (!stylesheet.empty()) {
-        stylesheet += "\n:root { --article-font-size: 22px; }\n";
+        stylesheet += "\n:root { --article-font-size: 24px; }\n";
     }
     *article_view = create_platform_article_view(*article_host, *dialog);
     if (*article_view && !stylesheet.empty()) {

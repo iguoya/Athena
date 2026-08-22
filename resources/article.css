@@ -1,6 +1,6 @@
 :root {
   color-scheme: light dark;
-  --article-font-size: 19px;
+  --article-font-size: 21px;
   --article-background: #ffffff;
   --article-text: #212529;
   --article-muted: #5f6872;
@@ -223,16 +223,31 @@ a {
   text-underline-offset: 3px;
 }
 
+/* 重点/易错点不只变文字颜色，配一块浅色背景，扫读时更容易一眼看到；
+   背景色从各自的文字色里按低透明度混出来，同色系不会显得突兀。
+   box-decoration-break 让跨行时每一行都有独立的圆角背景，不加这个
+   属性的话，长句换行处的背景块会在行首/行尾露出直角，很难看——
+   WKWebView 走的是 -webkit- 前缀。 */
 strong {
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--article-highlight) 16%, transparent);
   color: var(--article-highlight);
   font-weight: 750;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* ***加粗斜体*** 标记易错点/难点，比普通加粗的重点颜色更醒目。 */
 strong em,
 em strong {
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--article-danger) 16%, transparent);
   color: var(--article-danger);
   font-style: normal;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 blockquote {
