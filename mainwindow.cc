@@ -928,6 +928,7 @@ void MainWindow::initialize_practice_page(
     auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
     auto status_log = builder->get_widget<Gtk::Box>("practice_status_log");
     auto canvas_host = builder->get_widget<Gtk::Box>("practice_cube_canvas_host");
+    auto net_host = builder->get_widget<Gtk::Box>("practice_cube_net_host");
 
     if (title_label) {
         title_label->set_text(chapter.title);
@@ -942,10 +943,20 @@ void MainWindow::initialize_practice_page(
         result_view->get_buffer()->set_text("点击“运行”查看结果。");
     }
     append_practice_status(status_log, "就绪");
-    // 3D 绘图区：可拖拽旋转，现在只是固定配色的占位图，还没有跟真实
-    // 魔方状态联动，见 render/cube_view.h 的说明。
+
+    // 魔方状态：page 生命周期内共享的一份可变状态，通过闭包传给两个
+    // 视图和运行按钮——这是 render/cube_view.h 文档里给的样例用法，
+    // 状态变化后手动 queue_draw() 触发重绘，不是自动响应式绑定。
+    auto cube_state = make_shared<CubeState>(make_solved_cube());
+    Gtk::Widget* view_3d = nullptr;
+    Gtk::Widget* view_net = nullptr;
     if (canvas_host) {
-        canvas_host->append(*make_cube_3d_view());
+        view_3d = make_cube_3d_view([cube_state] { return *cube_state; });
+        canvas_host->append(*view_3d);
+    }
+    if (net_host) {
+        view_net = make_cube_net_view([cube_state] { return *cube_state; });
+        net_host->append(*view_net);
     }
 
     // 跟 initialize_code_page 里本章总纲按钮的接线完全一致：有
@@ -981,12 +992,26 @@ void MainWindow::initialize_practice_page(
                  source_path = subchapter.source,
                  member_name = subchapter.name,
                  result_view,
-                 status_log]() {
+                 status_log,
+                 cube_state,
+                 view_3d,
+                 view_net]() {
                     // 状态日志自己管理，不传给 start_experiment 的
                     // experiment_status_label 参数——那个参数运行完会
                     // 自动隐藏，这里想要的是能保留最近几条历史的运行时
                     // 状态记录，不是只覆盖显示的单行文字。
                     append_practice_status(status_log, "运行中…");
+                    // 示例：点“运行”应用一次 U 顺时针转动，演示
+                    // apply_move() + queue_draw() 这套接口怎么用——真正
+                    // 的求解/打乱逻辑还没接，等状态表示方案之外的算法
+                    // 部分定了再换成真实调用。
+                    *cube_state = apply_move(*cube_state, {Face::U, Turn::Clockwise});
+                    if (view_3d) {
+                        view_3d->queue_draw();
+                    }
+                    if (view_net) {
+                        view_net->queue_draw();
+                    }
                     start_experiment(
                         function_id, source_path, member_name,
                         *result_view, nullptr, nullptr,

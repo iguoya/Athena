@@ -135,6 +135,7 @@ core_sources = files(
   'registry/function_registry.cc',
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
+  'render/cube_state.cc',
   'render/markdown_renderer.cc',
   'services/ai_service.cc',
   'storage/learning_store.cc'
@@ -205,6 +206,7 @@ core_test_exe = executable(
     'tests/function_registry_test.cc',
     'tests/learning_store_test.cc',
     'tests/chart_scale_test.cc',
+    'tests/cube_state_test.cc',
     'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
     'tests/raii_content_test.cc',

@@ -163,6 +163,26 @@ Box practice_cube_page {
         }
       }
 
+      // 六面展开图：六个面一次性摊开、没有遮挡，精确读状态用这个，
+      // 跟下面能拖拽旋转但一次只看到 3 个面的 3D 视图互补。
+      Frame {
+        hexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        Box practice_cube_net_host {
+          name: "practice_cube_net_host";
+          orientation: vertical;
+          hexpand: true;
+          halign: center;
+          valign: center;
+          margin-top: 8;
+          margin-bottom: 8;
+        }
+      }
+
       Frame {
         hexpand: true;
         vexpand: true;
@@ -172,8 +192,8 @@ Box practice_cube_page {
         ]
 
         // 空容器，实际的绘图控件（render/cube_view.h 的
-        // make_cube_3d_view()）在 C++ 侧动态创建后塞进来，跟“结构在
-        // Blueprint、内容在 C++”的一贯分工一致。
+        // make_cube_3d_view()/make_cube_net_view()）在 C++ 侧动态创建
+        // 后塞进来，跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
         Box practice_cube_canvas_host {
           name: "practice_cube_canvas_host";
           orientation: vertical;

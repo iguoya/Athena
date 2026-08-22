@@ -1,20 +1,33 @@
 #pragma once
 
+#include "render/cube_state.h"
+
 #include <gtkmm.h>
 
 using namespace std;
 
-// 2 阶魔方的可交互 3D 视图：正交投影 + 鼠标拖拽旋转（Gtk::GestureDrag
-// 驱动 yaw/pitch 两个角度，每次拖动重新计算投影并重绘），不是固定角度
-// 的静态等距图。2 阶魔方只有 8 个角块、没有棱块和中心块，每个面正好是
-// 2x2，用画家算法（按旋转后深度排序）处理三个可见面的前后关系，不需要
-// 真正的深度缓冲。
+// 2 阶魔方的两种可视化，都吃同一个 CubeState，都是纯 Cairo 手绘（跟
+// render/chart_view.h 一样，不引入 OpenGL/3D 或图表库）：
 //
-// 六面配色：F 白、L 橙、U 蓝、R 红、B 黄、D 绿。现在还没有跟真实魔方
-// 状态联动（角块位置/朝向的表示方案没定），每个面固定涂本身颜色，相当
-// 于画一个“已复原”的魔方；以后状态定了，应该把 CubeFaceState 之类的
-// 参数加进来，按每个角块的实际朝向渲染。
+// - make_cube_3d_view()：可拖拽旋转的正交投影视图，直觉的立体印象，
+//   但任意时刻最多同时看到 3 个面。
+// - make_cube_net_view()：六面展开图（十字形网格），六个面一次性摊
+//   开、没有遮挡，精确读状态用这个。
 //
-// 跟 render/chart_view.h 一样只用 Cairo 手绘，不引入 OpenGL/3D 库——
-// 2 阶魔方只有 6 个平面、24 个贴纸格，不需要真正的图形管线。
-Gtk::Widget* make_cube_3d_view();
+// state_provider 是“拉”模型：每次重绘时才调用一次取当前状态，不是把
+// 状态值直接传进来存起来——状态会在外部变化（应用了一次转动），视图
+// 自己不知道，需要调用方在状态变了以后主动对返回的 Gtk::Widget*
+// （实际都是 Gtk::DrawingArea*）调用 queue_draw() 触发重绘。
+//
+// 样例用法：
+//   auto state = make_shared<CubeState>(make_solved_cube());
+//   auto* view_3d = make_cube_3d_view([state] { return *state; });
+//   auto* view_net = make_cube_net_view([state] { return *state; });
+//   canvas_host->append(*view_3d);
+//   net_host->append(*view_net);
+//   ...
+//   *state = apply_move(*state, {Face::U, Turn::Clockwise});
+//   view_3d->queue_draw();
+//   view_net->queue_draw();
+Gtk::Widget* make_cube_3d_view(function<CubeState()> state_provider);
+Gtk::Widget* make_cube_net_view(function<CubeState()> state_provider);
