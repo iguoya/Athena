@@ -5,7 +5,8 @@ using GtkSource 5;
 // “知识点列表 + 源码框 + 结果区”三栏结构——实践类内容形态还没定，
 // 先只保留标题/简介/说明文档这三个跟其它章节一致的通用部分。左栏是
 // 源码框（运行按钮点击时执行的就是框里这段代码，不是界面代码里另外
-// 藏一份）+ 运行按钮 + 输出框，右栏是状态日志 + 3D 视图/展开图。
+// 藏一份）+ 运行按钮 + 输出框，右栏是“当前状态”一行 + “未来状态”
+// 九宫格。
 Box practice_cube_page {
   orientation: vertical;
   spacing: 14;
@@ -75,6 +76,39 @@ Box practice_cube_page {
           "btn-chapter-overview"
         ]
       }
+
+      // “运行”紧跟在“说明文档”后面，隔开一点距离（margin-start）+ 用
+      // 跟说明文档不同的颜色（btn-primary vs btn-chapter-overview），
+      // 一眼能区分开两个按钮的不同用途，不会因为挨在一起而混淆。
+      Button practice_run_button {
+        name: "practice_run_button";
+        label: "运行";
+        valign: center;
+        margin-start: 10;
+
+        styles [
+          "btn-sm",
+          "btn-primary"
+        ]
+      }
+
+      // “重置魔方”紧跟在“运行”后面：把魔方重置回初始（已复原）状态，跟
+      // “运行”视觉上区分主次（次要操作用 outline 样式，不跟主操作的
+      // btn-primary 抢视觉焦点），不叫“复原”是为了跟九宫格每格右下角
+      // 那个含义完全不同的“复原”切换按钮（本地展示开关，不改真实状态）
+      // 区分开，避免同名不同义。
+      Button practice_reset_button {
+        name: "practice_reset_button";
+        label: "重置魔方";
+        valign: center;
+        margin-start: 6;
+        tooltip-text: "把魔方重置回初始（已复原）状态，清空转动路径，并把九宫格里被手动切换过的格子一并弹回默认预览";
+
+        styles [
+          "btn-sm",
+          "btn-outline-secondary"
+        ]
+      }
     }
   }
 
@@ -82,9 +116,9 @@ Box practice_cube_page {
     orientation: horizontal;
   }
 
-  // 主体分左右两栏：左边运行按钮 + 输出框，右边状态标签 + 3D 绘图
-  // 区域。绘图区域现在只画一个占位的等距视角魔方示意图（固定配色），
-  // 没有跟真实魔方状态联动——状态表示方案还没定。
+  // 主体分左右两栏：左边源码框 + 运行按钮 + 输出框，右边“当前状态”
+  // 一行 + “未来状态”九宫格，具体绘图控件在 C++ 侧动态创建，见
+  // MainWindow::initialize_practice_page()。
   Box practice_body {
     orientation: horizontal;
     spacing: 14;
@@ -132,21 +166,6 @@ Box practice_cube_page {
         }
       }
 
-      Box {
-        orientation: horizontal;
-        spacing: 10;
-
-        Button practice_run_button {
-          name: "practice_run_button";
-          label: "运行";
-
-          styles [
-            "btn-sm",
-            "btn-primary"
-          ]
-        }
-      }
-
       ScrolledWindow {
         hexpand: true;
         vexpand: true;
@@ -179,39 +198,27 @@ Box practice_cube_page {
       hexpand: true;
       vexpand: true;
 
-      // 状态日志：记录运行时各种魔方状态（就绪/运行中/已完成……），
-      // 最新一条在最上面，最多保留几条，超过的自动去掉最旧的（见
-      // MainWindow::append_practice_status()），不是只显示单行文字。
+      // 当前状态：一行三块——3D 视角（可拖拽旋转）、六面展开图、状态
+      // 摘要文字，各占一列。3D 直觉但一次最多看到 3 个面，展开图精确
+      // 但没有立体感，两者互补；摘要给不看图也能读懂的数字信息（状态
+      // 空间数量、当前路径、是否已复原）。不设 vexpand，高度由内容
+      // 自然撑开，不为了让下面九宫格更大而压缩这一行。
       Frame {
+        label: "当前状态";
         hexpand: true;
 
         styles [
           "panel-frame"
         ]
 
-        Box practice_status_log {
-          name: "practice_status_log";
-          orientation: vertical;
-          spacing: 2;
-          margin-top: 8;
-          margin-bottom: 8;
-          margin-start: 12;
-          margin-end: 12;
-        }
-      }
-
-      // 六面展开图：六个面一次性摊开、没有遮挡，精确读状态用这个，
-      // 跟下面能拖拽旋转但一次只看到 3 个面的 3D 视图互补。
-      Frame {
-        hexpand: true;
-
-        styles [
-          "panel-frame"
-        ]
-
-        Box practice_cube_net_host {
-          name: "practice_cube_net_host";
-          orientation: vertical;
+        // 空容器，实际内容（3D/展开图控件见 practice/pocket_cube/
+        // view.h 的 make_cube_3d_view()/make_cube_net_view()，摘要
+        // Label 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，跟“结构
+        // 在 Blueprint、内容在 C++”的一贯分工一致。
+        Box practice_cube_current_host {
+          name: "practice_cube_current_host";
+          orientation: horizontal;
+          spacing: 14;
           hexpand: true;
           halign: center;
           valign: center;
@@ -220,7 +227,15 @@ Box practice_cube_page {
         }
       }
 
+      // 下一步穷举：3×3 九宫格，分别是 U/R/F 三个面各转顺时针/逆时针/
+      // 180° 后的状态（2 阶魔方没有固定参考系，D/L/B 都等价于先整体转
+      // 半圈再转 U/R/F，是冗余转法，不单独穷举，见
+      // practice/pocket_cube/state.h 的 next_move_set()）；每格同样是
+      // 3D 视角 + 展开图一起画，只读预览，不接受点击。九宫格铺满这块
+      // 区域的整个宽高，充分利用当前状态大块让出来的空间，不再居中挤
+      // 成一小坨。
       Frame {
+        label: "未来状态";
         hexpand: true;
         vexpand: true;
 
@@ -228,16 +243,15 @@ Box practice_cube_page {
           "panel-frame"
         ]
 
-        // 空容器，实际的绘图控件（render/cube_view.h 的
-        // make_cube_3d_view()/make_cube_net_view()）在 C++ 侧动态创建
-        // 后塞进来，跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
-        Box practice_cube_canvas_host {
-          name: "practice_cube_canvas_host";
+        Box practice_cube_next_grid_host {
+          name: "practice_cube_next_grid_host";
           orientation: vertical;
           hexpand: true;
           vexpand: true;
-          halign: center;
-          valign: center;
+          margin-top: 8;
+          margin-bottom: 8;
+          margin-start: 8;
+          margin-end: 8;
         }
       }
     }

@@ -161,6 +161,7 @@ app_sources = files(
   'mainwindow.cc',
   'practice/pocket_cube/view.cc',
   'render/chart_view.cc',
+  'ui/dialog_helpers.cc',
   'ui/learning_dialogs.cc',
   'ui/progress_page.cc'
 ) + article_view_sources + app_icon_sources
@@ -207,6 +208,7 @@ core_test_exe = executable(
     'tests/learning_store_test.cc',
     'tests/chart_scale_test.cc',
     'tests/pocket_cube_state_test.cc',
+    'tests/pocket_cube_test.cc',
     'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
     'tests/raii_content_test.cc',

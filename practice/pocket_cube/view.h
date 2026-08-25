@@ -4,6 +4,8 @@
 
 #include <gtkmm.h>
 
+#include <optional>
+
 using namespace std;
 
 // 2 阶魔方的两种可视化，都吃同一个 CubeState，都是纯 Cairo 手绘（跟
@@ -29,5 +31,23 @@ using namespace std;
 //   *state = apply_move(*state, {Face::U, Turn::Clockwise});
 //   view_3d->queue_draw();
 //   view_net->queue_draw();
-Gtk::Widget* make_cube_3d_view(function<CubeState()> state_provider);
-Gtk::Widget* make_cube_net_view(function<CubeState()> state_provider);
+//
+// 两个函数都带默认尺寸参数，调用方可以按需要缩小——比如同一份状态既要
+// 当“当前状态”大块展示，也要在下一步穷举的九宫格里以小尺寸重复展示
+// 好几份，缩放交给调用方决定，视图本身不关心自己被放在多大的格子里。
+//
+// make_cube_3d_view() 额外带一个可选的 animation_provider（同样是拉
+// 模型）：每次重绘时如果返回非空的 TurnAnimation，就把 state_provider()
+// 给出的状态渲染成“正在转动过程中”的中间画面（那一层的格子按动画角度
+// 临时偏移），而不是 state_provider() 本身的静态离散状态——调用方在
+// 播放一次转动动画时，state_provider 应该继续返回“转动开始前”的旧
+// 状态，animation_provider 返回随时间推进的角度，动画播完后把
+// animation_provider 换回返回 nullopt、state_provider 换成真正的新
+// 状态，最后一帧就能跟真实状态无缝衔接（不会跳一下）。只有 3D 视图
+// 支持动画——展开图没有“转动”的空间概念，做动画反而奇怪，保持瞬间
+// 刷新，精确读结果用这个。
+Gtk::Widget* make_cube_3d_view(
+    function<CubeState()> state_provider, int size = 240,
+    function<optional<TurnAnimation>()> animation_provider = nullptr);
+Gtk::Widget* make_cube_net_view(
+    function<CubeState()> state_provider, int width = 240, int height = 180);
