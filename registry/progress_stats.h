@@ -55,3 +55,21 @@ CategoryProgress aggregate_category_progress(
     const ChapterCatalog& catalog,
     const string& category_name,
     const map<string, int>& mastery_by_id);
+
+// “接下来建议学什么”的一条结果：只是排序后的展示副本（章节标题 + 知识点
+// 标题 + 当前熟练度），不带跳转用的稳定查找键——这是第一版概要功能，
+// 先解决“推荐哪些”的排序问题，暂不接可点击跳转；后续如果要点击直接跳到
+// 对应知识点，再把 `<category>.<chapter>.<subchapter>` 查找键一起带出来。
+struct SuggestedTopic {
+    string chapter_title;
+    string subchapter_title;
+    int mastery = 0;
+};
+
+// 从聚合结果里按本地固定规则挑出最多 max_count 个“建议接下来学”的知识点，
+// 不调用 AI：优先级是“先学完已经在学的（1-4 星），再开始完全没碰过的
+// （0 星）”——已经 5 星的不再推荐。同一优先级内保持 athena.json 里的
+// 声明顺序，不做额外排序。这条规则很朴素，只是先把“有没有推荐”这个功能
+// 立起来，具体策略以后可以替换（比如按 importance 加权），不需要改调用方。
+vector<SuggestedTopic> suggest_next_topics(
+    const CategoryProgress& progress, int max_count = 3);

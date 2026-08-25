@@ -55,6 +55,35 @@ Gtk::Widget* make_progress_page(
     average_text << fixed << setprecision(1) << progress.average_mastery();
     add_tile(average_text.str() + " / 5", "平均熟练度", "stat-tile-average");
 
+    // “接下来建议学习”：第一版概要功能，只做本地规则排序 + 静态展示
+    // （见 suggest_next_topics() 的规则说明），不接可点击跳转——摆在统计
+    // 卡片和图表之间，用户扫一眼统计数字后，紧接着就能看到"接下来干什么"，
+    // 不用先看完下面一整页图表和章节列表再自己判断。全部掌握或者还没有
+    // 任何知识点时不显示这个 Frame，不占地方摆一个空列表。
+    const auto suggestions = suggest_next_topics(progress);
+    if (!suggestions.empty()) {
+        auto suggest_frame = Gtk::make_managed<Gtk::Frame>();
+        suggest_frame->add_css_class("panel-frame");
+        suggest_frame->set_label("建议接下来学习");
+        auto suggest_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 6);
+        suggest_box->set_margin_top(10);
+        suggest_box->set_margin_bottom(10);
+        suggest_box->set_margin_start(12);
+        suggest_box->set_margin_end(12);
+        for (const auto& topic : suggestions) {
+            auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+            auto text = Gtk::make_managed<Gtk::Label>(
+                topic.chapter_title + " · " + topic.subchapter_title);
+            text->set_hexpand(true);
+            text->set_halign(Gtk::Align::START);
+            row->append(*text);
+            row->append(*make_mastery_stars(topic.mastery));
+            suggest_box->append(*row);
+        }
+        suggest_frame->set_child(*suggest_box);
+        page->append(*suggest_frame);
+    }
+
     auto charts_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 24);
     page->append(*charts_row);
 

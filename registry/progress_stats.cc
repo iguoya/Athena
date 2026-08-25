@@ -78,3 +78,35 @@ CategoryProgress aggregate_category_progress(
         progress.total - progress.mastered - progress.in_progress;
     return progress;
 }
+
+vector<SuggestedTopic> suggest_next_topics(
+    const CategoryProgress& progress, int max_count) {
+    vector<SuggestedTopic> in_progress_topics;
+    vector<SuggestedTopic> not_started_topics;
+    for (const auto& chapter : progress.chapters) {
+        for (const auto& [title, mastery] : chapter.subchapter_mastery) {
+            if (mastery >= kMaxMastery) {
+                continue;
+            }
+            SuggestedTopic topic{chapter.chapter_title, title, mastery};
+            if (mastery > 0) {
+                in_progress_topics.push_back(std::move(topic));
+            } else {
+                not_started_topics.push_back(std::move(topic));
+            }
+        }
+    }
+
+    vector<SuggestedTopic> result;
+    const auto fill_from = [&result, max_count](vector<SuggestedTopic>& source) {
+        for (auto& topic : source) {
+            if (static_cast<int>(result.size()) >= max_count) {
+                return;
+            }
+            result.push_back(std::move(topic));
+        }
+    };
+    fill_from(in_progress_topics);
+    fill_from(not_started_topics);
+    return result;
+}
