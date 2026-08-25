@@ -273,23 +273,27 @@ AiService::AiService(AiTransport transport)
 AiChatResult AiService::chat(
     const AiCredentials& credentials,
     const string& prompt) const {
-    if (!credentials.ark_api_key.empty()) {
-        AiChatResult result = m_transport({
-            .endpoint = kArkEndpoint,
-            .model = kArkModel,
-            .api_key = credentials.ark_api_key,
-            .prompt = prompt,
-        });
-        if (result.ok || credentials.deepseek_api_key.empty()) {
-            return result;
-        }
-        cerr << "豆包请求失败，回退到 DeepSeek：" << result.error << endl;
-    }
+    // 默认顺序改成 DeepSeek 优先、火山方舟豆包兜底——2026-08 体感豆包
+    // 响应明显更慢，先换 DeepSeek 试一下速度；两边都是 OpenAI 兼容协议，
+    // 只是 endpoint/model 不同，顺序调换不影响别处的调用方式。如果后续
+    // 要改回来或者做成可配置项，只需要改这一处顺序。
     if (!credentials.deepseek_api_key.empty()) {
-        return m_transport({
+        AiChatResult result = m_transport({
             .endpoint = kDeepseekEndpoint,
             .model = kDeepseekModel,
             .api_key = credentials.deepseek_api_key,
+            .prompt = prompt,
+        });
+        if (result.ok || credentials.ark_api_key.empty()) {
+            return result;
+        }
+        cerr << "DeepSeek 请求失败，回退到豆包：" << result.error << endl;
+    }
+    if (!credentials.ark_api_key.empty()) {
+        return m_transport({
+            .endpoint = kArkEndpoint,
+            .model = kArkModel,
+            .api_key = credentials.ark_api_key,
             .prompt = prompt,
         });
     }

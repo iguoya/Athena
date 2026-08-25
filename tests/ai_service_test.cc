@@ -96,11 +96,11 @@ TEST(AiServiceTest, ConvertsOnlyCompleteQuizResultsToFiveStars) {
     EXPECT_EQ(mastery_from_quiz_score(8, 3), 5);
 }
 
-TEST(AiServiceTest, UsesArkFirstAndStopsAfterSuccess) {
+TEST(AiServiceTest, UsesDeepseekFirstAndStopsAfterSuccess) {
     vector<AiChatRequest> requests;
     AiService service([&requests](const AiChatRequest& request) {
         requests.push_back(request);
-        return AiChatResult {.ok = true, .content = "豆包回答"};
+        return AiChatResult {.ok = true, .content = "DeepSeek 回答"};
     });
 
     const auto result = service.chat(
@@ -109,21 +109,20 @@ TEST(AiServiceTest, UsesArkFirstAndStopsAfterSuccess) {
 
     ASSERT_TRUE(result.ok);
     ASSERT_EQ(requests.size(), 1u);
-    EXPECT_EQ(requests[0].endpoint,
-              "https://ark.cn-beijing.volces.com/api/v3/chat/completions");
-    EXPECT_EQ(requests[0].model, "doubao-seed-2-1-pro-260628");
-    EXPECT_EQ(requests[0].api_key, "ark-key");
+    EXPECT_EQ(requests[0].endpoint, "https://api.deepseek.com/chat/completions");
+    EXPECT_EQ(requests[0].model, "deepseek-chat");
+    EXPECT_EQ(requests[0].api_key, "deepseek-key");
     EXPECT_EQ(requests[0].prompt, "测试提示词");
 }
 
-TEST(AiServiceTest, FallsBackFromArkToDeepseek) {
+TEST(AiServiceTest, FallsBackFromDeepseekToArk) {
     vector<AiChatRequest> requests;
     AiService service([&requests](const AiChatRequest& request) {
         requests.push_back(request);
-        if (request.model == "doubao-seed-2-1-pro-260628") {
-            return AiChatResult {.error = "豆包失败"};
+        if (request.model == "deepseek-chat") {
+            return AiChatResult {.error = "DeepSeek 失败"};
         }
-        return AiChatResult {.ok = true, .content = "DeepSeek 回答"};
+        return AiChatResult {.ok = true, .content = "豆包回答"};
     });
 
     const auto result = service.chat(
@@ -131,11 +130,12 @@ TEST(AiServiceTest, FallsBackFromArkToDeepseek) {
         "提示词");
 
     EXPECT_TRUE(result.ok);
-    EXPECT_EQ(result.content, "DeepSeek 回答");
+    EXPECT_EQ(result.content, "豆包回答");
     ASSERT_EQ(requests.size(), 2u);
-    EXPECT_EQ(requests[1].endpoint, "https://api.deepseek.com/chat/completions");
-    EXPECT_EQ(requests[1].model, "deepseek-chat");
-    EXPECT_EQ(requests[1].api_key, "deepseek-key");
+    EXPECT_EQ(requests[1].endpoint,
+              "https://ark.cn-beijing.volces.com/api/v3/chat/completions");
+    EXPECT_EQ(requests[1].model, "doubao-seed-2-1-pro-260628");
+    EXPECT_EQ(requests[1].api_key, "ark-key");
 }
 
 TEST(AiServiceTest, SupportsDeepseekOnlyAndRejectsMissingKeys) {

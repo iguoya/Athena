@@ -54,7 +54,7 @@ public:
     AiService();
     explicit AiService(AiTransport transport);
 
-    // 优先使用火山方舟豆包；未配置或调用失败时回退 DeepSeek。
+    // 优先使用 DeepSeek；未配置或调用失败时回退火山方舟豆包。
     AiChatResult chat(
         const AiCredentials& credentials,
         const string& prompt) const;
