@@ -125,7 +125,9 @@ private:
     unique_ptr<LearningDialogs> m_dialogs;
     // make_managed 持有；显式 set_hide_on_close(true) 后关闭按钮只隐藏不
     // 销毁，指针在窗口生命周期内始终有效，可以放心惰性创建后反复 present()。
-    Gtk::AboutDialog* m_about_dialog = nullptr;
+    // 手写 Gtk::Dialog（不用 Gtk::AboutDialog），跟“设置”“运行历史”这些
+    // 对话框统一走同一套外观，见 show_about_dialog() 和 ui/dialog_helpers.h。
+    Gtk::Dialog* m_about_dialog = nullptr;
 
     // 实验执行状态：m_experiment_running 只在主线程读写；
     // m_ui_alive 在窗口析构时置 false，供工作线程的回传回调判断控件是否仍然可用。
