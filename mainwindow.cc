@@ -4,6 +4,7 @@
 #include "practice/pocket_cube/pocket_cube.hpp"
 #include "practice/pocket_cube/view.h"
 #include "render/markdown_renderer.h"
+#include "ui/dialog_helpers.h"
 #include "ui/progress_page.h"
 
 #include <gtksourceview/gtksource.h>
@@ -13,6 +14,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string_view>
@@ -27,31 +29,183 @@ string format_elapsed(double seconds) {
     return stream.str();
 }
 
-// “应用实践”类章节的状态日志：把一条新状态插到最上面，超过上限就把
-// 最旧的（最下面的）丢掉，记录“就绪/运行中/已完成”这类运行时状态的
-// 一小段历史，不是只覆盖显示最新一条。
-constexpr size_t kPracticeStatusLogLimit = 5;
-
-void append_practice_status(Gtk::Box* log, const string& text) {
-    if (!log) {
-        return;
-    }
-    auto entry = Gtk::make_managed<Gtk::Label>(text);
-    entry->set_halign(Gtk::Align::START);
-    entry->add_css_class("dim-label");
-    log->prepend(*entry);
-
-    size_t count = 0;
-    for (auto* child = log->get_first_child(); child;
-         child = child->get_next_sibling()) {
+// 千分位格式化，比如 88179840 -> "88,179,840"——只用于展示 2 阶魔方
+// 状态空间数量这类固定的大整数，不需要处理负数或小数。
+string format_thousands(long long value) {
+    string digits = to_string(value);
+    string result;
+    int count = 0;
+    for (auto it = digits.rbegin(); it != digits.rend(); ++it) {
+        if (count != 0 && count % 3 == 0) {
+            result.push_back(',');
+        }
+        result.push_back(*it);
         ++count;
     }
-    while (count > kPracticeStatusLogLimit) {
-        if (auto* oldest = log->get_last_child()) {
-            log->remove(*oldest);
-        }
-        --count;
+    reverse(result.begin(), result.end());
+    return result;
+}
+
+// 播放一次“转动动画”：把 animation_state 描述的进度，用
+// Glib::signal_timeout() 在约 kTurnAnimationMs 毫秒内从 0° 渐变到
+// turn_angle_degrees(move)（reverse 为 true 时反过来，从这个角度渐变
+// 回 0°，给“复原”按钮切换到另一侧用），每帧调用 view_3d->queue_draw()；
+// 播完调用 on_complete()——调用方在这里才真正切换底层状态（cube->run()
+// 或翻转 show_current），因为整个动画期间对应的 state_provider 应该
+// 一直返回同一个旧状态、不能提前跳变，只有 animation 的角度在推进，
+// 这样动画最后一帧才能跟“状态真正跳变后”的画面无缝衔接，不会跳一下。
+//
+// 400ms/60fps 是折中：太快看不出转动过程，太慢会让点击后显得迟钝——
+// 这条路径只用在“运行”按钮驱动的当前状态、“复原”按钮的切换这两处，
+// 用户主动触发、一次只影响一两个视图；九宫格默认展示（“运行”后 9 个
+// 格子批量刷新成新一轮下一步预览）不走这条路径，保持瞬时刷新——同时
+// 播 9 个动画既性能吃紧也容易看花眼，快速运算的场景就该是瞬时的。
+constexpr int kTurnAnimationMs = 400;
+constexpr int kTurnAnimationFrameMs = 16;
+
+void play_turn_animation(
+    Gtk::Widget* view_3d, shared_ptr<optional<TurnAnimation>> animation_state,
+    Move move, bool reverse, function<void()> on_complete) {
+    const FaceLayout layout = face_layout(move.face);
+    const double target_degrees = turn_angle_degrees(move);
+    const double start_degrees = reverse ? target_degrees : 0.0;
+    const double end_degrees = reverse ? 0.0 : target_degrees;
+
+    *animation_state =
+        TurnAnimation{layout.normal_axis, layout.normal_sign, start_degrees};
+    view_3d->queue_draw();
+
+    const auto started = chrono::steady_clock::now();
+    Glib::signal_timeout().connect(
+        [animation_state, view_3d, started, start_degrees, end_degrees,
+         on_complete]() -> bool {
+            const double elapsed_ms = chrono::duration<double, milli>(
+                                           chrono::steady_clock::now() - started)
+                                           .count();
+            const double progress = min(1.0, elapsed_ms / kTurnAnimationMs);
+            if (*animation_state) {
+                (*animation_state)->current_degrees =
+                    start_degrees + (end_degrees - start_degrees) * progress;
+            }
+            view_3d->queue_draw();
+            if (progress >= 1.0) {
+                *animation_state = nullopt;
+                on_complete();
+                return false;
+            }
+            return true;
+        },
+        kTurnAnimationFrameMs);
+}
+
+// “下一步穷举”九宫格里一个格子的绘图组合：3D 视角（可拖拽旋转，直觉
+// 但一次最多看到 3 个面）放左边、六面展开图（没有遮挡，精确对照）放
+// 右边，横向并排——跟“当前状态”那一行同一种视觉逻辑；下面再叠一行
+// caption 标出这一格对应哪一步转法。外面套一层带边框的 Frame（复用
+// “panel-frame”这个已有样式，跟外层大 Frame 是同一种卡片视觉），9 个
+// 格子紧挨着摆在一起时才分得清彼此的边界，不是靠 Grid 间距硬猜。box
+// 和两个子视图都设成 hexpand/vexpand，好让九宫格撑满外层 Frame 时，
+// 格子和里面的图一起被拉伸变大，不是在一块固定大小的画布外面留白。
+//
+// 右下角叠一个“复原”切换按钮（Gtk::Overlay）：默认显示 next_state_
+// provider（这一步转法转完的样子），按下后改成显示 current_state_
+// provider（当前实际状态，不套用这一步转法），方便跟旁边默认显示的
+// “转完的样子”来回切换对比差异；再按一次弹起，切回默认显示。这是个
+// 纯展示开关，不会真的把这步转法应用到 cube 上——真正驱动状态变化
+// 的仍然只有“运行”按钮。切换时播放 play_turn_animation()：按下（切到
+// 当前状态）等于播放这一步转法的反向动画，弹起（切回转完的样子）是
+// 正向动画，缓慢地转过去而不是画面突然一跳，方便看清“这一步到底改变
+// 了什么”。
+//
+// 返回外层 Frame，并把内部两个可重绘的子视图追加进 redraw_targets——
+// 调用方在魔方状态变化后遍历它统一 queue_draw()，不需要为每个格子
+// 单独记两个子视图；“复原”切换按钮本身也追加进 restore_buttons，供
+// 全局“重置魔方”按钮在重置真实状态之后，把每一格手动按过的“复原”
+// 切换也一并弹回默认（显示预览）状态——两个 vector 是同一种“调用方
+// 事后批量处理，不用为每个格子单独记一堆指针”的写法，风格一致。
+Gtk::Widget* make_cube_state_block(
+    function<CubeState()> next_state_provider, int view_3d_size, int net_width,
+    int net_height, const string& caption, vector<Gtk::Widget*>& redraw_targets,
+    vector<Gtk::ToggleButton*>& restore_buttons,
+    function<CubeState()> current_state_provider, Move move) {
+    auto show_current = make_shared<bool>(false);
+    function<CubeState()> effective_provider =
+        [next_state_provider, current_state_provider, show_current]() {
+            return *show_current ? current_state_provider() : next_state_provider();
+        };
+
+    auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+    box->set_hexpand(true);
+    box->set_vexpand(true);
+    box->set_halign(Gtk::Align::FILL);
+    box->set_valign(Gtk::Align::FILL);
+    box->set_margin(6);
+
+    auto views_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 6);
+    views_row->set_hexpand(true);
+    views_row->set_vexpand(true);
+
+    auto cell_animation = make_shared<optional<TurnAnimation>>();
+    auto* view_3d = make_cube_3d_view(
+        effective_provider, view_3d_size,
+        [cell_animation] { return *cell_animation; });
+    auto* view_net = make_cube_net_view(effective_provider, net_width, net_height);
+    view_3d->set_hexpand(true);
+    view_3d->set_vexpand(true);
+    view_net->set_hexpand(true);
+    view_net->set_vexpand(true);
+    views_row->append(*view_3d);
+    views_row->append(*view_net);
+    box->append(*views_row);
+    redraw_targets.push_back(view_3d);
+    redraw_targets.push_back(view_net);
+
+    if (!caption.empty()) {
+        auto label = Gtk::make_managed<Gtk::Label>(caption);
+        label->add_css_class("caption");
+        label->add_css_class("dim-label");
+        label->set_halign(Gtk::Align::CENTER);
+        // caption 现在是完整注解（比如 "U'（上面 逆时针转 90°）"），不
+        // 是单个记号，格子较窄时要能换行，不然会被截断看不全。
+        label->set_wrap(true);
+        label->set_justify(Gtk::Justification::CENTER);
+        box->append(*label);
     }
+
+    auto restore_button = Gtk::make_managed<Gtk::ToggleButton>();
+    restore_button->set_icon_name("view-refresh-symbolic");
+    restore_button->add_css_class("flat");
+    restore_button->set_halign(Gtk::Align::END);
+    restore_button->set_valign(Gtk::Align::END);
+    restore_button->set_margin(4);
+    restore_button->set_tooltip_text("按下：改看当前实际状态；再按一次：切回这一步转完的样子");
+    restore_button->set_sensitive(true);
+    restore_buttons.push_back(restore_button);
+    restore_button->signal_toggled().connect(
+        [show_current, restore_button, view_3d, view_net, cell_animation, move]() {
+            const bool next_show_current = restore_button->get_active();
+            // 动画播放期间按钮先禁用，避免连续点击导致两段动画交叠、
+            // 中途改变 show_current 目标值。
+            restore_button->set_sensitive(false);
+            play_turn_animation(
+                view_3d, cell_animation, move, /*reverse=*/next_show_current,
+                [show_current, next_show_current, view_net, restore_button]() {
+                    *show_current = next_show_current;
+                    view_net->queue_draw();
+                    restore_button->set_sensitive(true);
+                });
+        });
+
+    auto overlay = Gtk::make_managed<Gtk::Overlay>();
+    overlay->set_child(*box);
+    overlay->add_overlay(*restore_button);
+
+    auto frame = Gtk::make_managed<Gtk::Frame>();
+    frame->set_hexpand(true);
+    frame->set_vexpand(true);
+    frame->add_css_class("panel-frame");
+    frame->set_child(*overlay);
+    return frame;
 }
 
 struct GitSourceState {
@@ -936,10 +1090,11 @@ void MainWindow::initialize_practice_page(
     auto source_view = GTK_SOURCE_VIEW(
         gtk_builder_get_object(builder->gobj(), "practice_source_view"));
     auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
+    auto reset_button = builder->get_widget<Gtk::Button>("practice_reset_button");
     auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
-    auto status_log = builder->get_widget<Gtk::Box>("practice_status_log");
-    auto canvas_host = builder->get_widget<Gtk::Box>("practice_cube_canvas_host");
-    auto net_host = builder->get_widget<Gtk::Box>("practice_cube_net_host");
+    auto current_host = builder->get_widget<Gtk::Box>("practice_cube_current_host");
+    auto next_grid_host =
+        builder->get_widget<Gtk::Box>("practice_cube_next_grid_host");
 
     if (title_label) {
         title_label->set_text(chapter.title);
@@ -958,21 +1113,112 @@ void MainWindow::initialize_practice_page(
             source_view, m_content_loader, chapter.source,
             chapter.subchapters.front().name);
     }
-    append_practice_status(status_log, "就绪");
-
     // 魔方实例：page 生命周期内持有的一份真实状态，“运行”按钮直接调
-    // 它的方法，两个视图从它读取最新状态重绘（见 practice/pocket_cube/
-    // view.h 的样例接口说明：state_provider 拉模型 + 手动 queue_draw()）。
+    // 它的方法；下面所有绘图格子都从它（或它套一步转法后）读取状态重
+    // 绘（见 practice/pocket_cube/view.h 的样例接口说明：state_provider
+    // 拉模型 + 手动 queue_draw()）。redraw_targets 收集全部需要在状态
+    // 变化后重绘的子视图，“运行”按钮点击时统一遍历触发。
     auto cube = make_shared<PocketCube>();
-    Gtk::Widget* view_3d = nullptr;
-    Gtk::Widget* view_net = nullptr;
-    if (canvas_host) {
-        view_3d = make_cube_3d_view([cube] { return cube->state(); });
-        canvas_host->append(*view_3d);
+    auto redraw_targets = make_shared<vector<Gtk::Widget*>>();
+
+    // 当前状态：一行三块——3D 视角、展开图、状态摘要文字。摘要里“状态
+    // 空间数量”是固定的教学性事实，构造时写一次；“路径”“是否复原”跟
+    // 着 cube 变化，用 describe_path()/describe_solved() 在这里和
+    // “运行”回调里各生成一次文本，两处保证措辞一致。
+    auto describe_path = [](const vector<Move>& history) {
+        if (history.empty()) {
+            return string("路径：（尚未转动，仍是复原状态）");
+        }
+        string text = "路径：";
+        for (size_t i = 0; i < history.size(); ++i) {
+            if (i != 0) {
+                text += ' ';
+            }
+            text += move_label(history[i]);
+        }
+        return text;
+    };
+    auto describe_solved = [](bool solved) {
+        return string(solved ? "当前已复原" : "当前尚未复原");
+    };
+
+    Gtk::Label* path_label = nullptr;
+    Gtk::Label* solved_label = nullptr;
+    Gtk::Widget* current_view_3d = nullptr;
+    auto current_view_animation = make_shared<optional<TurnAnimation>>();
+    if (current_host) {
+        auto* view_3d = make_cube_3d_view(
+            [cube] { return cube->state(); }, 200,
+            [current_view_animation] { return *current_view_animation; });
+        auto* view_net = make_cube_net_view([cube] { return cube->state(); }, 220, 165);
+        current_host->append(*view_3d);
+        current_host->append(*view_net);
+        redraw_targets->push_back(view_3d);
+        redraw_targets->push_back(view_net);
+        current_view_3d = view_3d;
+
+        auto summary = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 8);
+        summary->set_valign(Gtk::Align::CENTER);
+        summary->set_size_request(220, -1);
+
+        auto space_label = Gtk::make_managed<Gtk::Label>(
+            "状态空间数量：" +
+            format_thousands(kCubeStateSpaceSizeIgnoringOrientation) +
+            " 种\n（不计整体朝向）");
+        space_label->set_halign(Gtk::Align::START);
+        space_label->set_wrap(true);
+        space_label->set_xalign(0);
+        space_label->add_css_class("dim-label");
+        summary->append(*space_label);
+
+        path_label = Gtk::make_managed<Gtk::Label>(describe_path(cube->move_history()));
+        path_label->set_halign(Gtk::Align::START);
+        path_label->set_xalign(0);
+        path_label->set_wrap(true);
+        summary->append(*path_label);
+
+        solved_label =
+            Gtk::make_managed<Gtk::Label>(describe_solved(is_solved(cube->state())));
+        solved_label->set_halign(Gtk::Align::START);
+        solved_label->set_xalign(0);
+        summary->append(*solved_label);
+
+        current_host->append(*summary);
     }
-    if (net_host) {
-        view_net = make_cube_net_view([cube] { return cube->state(); });
-        net_host->append(*view_net);
+
+    // 下一步穷举：PocketCube::next_states() 给出的 9 种非冗余转法，每
+    // 种转法对当前状态套一步、单独画一格，格子本身不接受点击——只是
+    // 穷举展示，真正驱动状态变化的仍然只有“运行”按钮。转法本身（用于
+    // 标签/提示文字）在构建时取一次就够了；每个格子的绘图 provider 每
+    // 次重绘时重新调用 next_states()，跟着 cube 的最新状态重算。九宫格
+    // 设成 homogeneous + hexpand/vexpand，撑满 practice_cube_next_grid_
+    // host 让出来的整块区域，不再居中挤成一小坨。
+    //
+    // restore_buttons 收集每一格“复原”切换按钮，供“重置魔方”按钮把
+    // 用户手动按过的切换一并弹回默认（显示预览）状态；声明在 if 外面，
+    // 跟 redraw_targets 一样在后面“重置”按钮的点击处理里捕获。
+    vector<Gtk::ToggleButton*> restore_buttons;
+    if (next_grid_host) {
+        auto grid = Gtk::make_managed<Gtk::Grid>();
+        grid->set_row_spacing(10);
+        grid->set_column_spacing(10);
+        grid->set_row_homogeneous(true);
+        grid->set_column_homogeneous(true);
+        grid->set_hexpand(true);
+        grid->set_vexpand(true);
+
+        const auto initial_next_states = cube->next_states();
+        for (size_t i = 0; i < initial_next_states.size(); ++i) {
+            const Move move = initial_next_states[i].first;
+            auto* cell = make_cube_state_block(
+                [cube, i] { return cube->next_states()[i].second; },
+                /*view_3d_size=*/90, /*net_width=*/96, /*net_height=*/72,
+                move_description(move), *redraw_targets, restore_buttons,
+                [cube] { return cube->state(); }, move);
+            cell->set_tooltip_text(move_description(move));
+            grid->attach(*cell, static_cast<int>(i % 3), static_cast<int>(i / 3));
+        }
+        next_grid_host->append(*grid);
     }
 
     // 跟 initialize_code_page 里说明文档按钮的接线完全一致：有
@@ -995,20 +1241,76 @@ void MainWindow::initialize_practice_page(
             });
     }
 
+    // “运行”和“复原”都要在状态变化后刷新同一批展示：当前状态大块 + 9
+    // 个下一步穷举格子（每格 3D+展开图两个子视图）统一 queue_draw()——
+    // 快速操作，不跟着播动画；以及“路径”“是否复原”两行摘要文字（不是
+    // 绘图控件，走单独的 set_text()）。两个按钮共用这一份刷新逻辑，不
+    // 各写一份、容易漏改。
+    const auto refresh_cube_display = [cube, redraw_targets, path_label, solved_label,
+                                        describe_path, describe_solved]() {
+        for (auto* widget : *redraw_targets) {
+            widget->queue_draw();
+        }
+        if (path_label) {
+            path_label->set_text(describe_path(cube->move_history()));
+        }
+        if (solved_label) {
+            solved_label->set_text(describe_solved(is_solved(cube->state())));
+        }
+    };
+
     if (run_button && result_view) {
         run_button->signal_clicked().connect(
-            [cube, result_view, status_log, view_3d, view_net]() {
-                append_practice_status(status_log, "运行中…");
-                ostringstream output;
-                cube->run(output);
-                result_view->get_buffer()->set_text(output.str());
-                if (view_3d) {
-                    view_3d->queue_draw();
+            [cube, result_view, refresh_cube_display, current_view_3d,
+             current_view_animation, run_button]() {
+                // 先播“当前状态”3D 视图的转动动画（缓慢、看得清过程），
+                // 播完才真正调用 cube->run() 推进状态、刷新其余 UI——
+                // 动画期间 cube 的状态完全不变，state_provider 一直
+                // 返回同一个旧值，只有 animation 的角度在推进，这样
+                // 最后一帧才能跟“真正跳变后”的画面无缝衔接。“运行”
+                // 按钮在动画播放期间禁用，避免连续点击叠加出好几段
+                // 动画。
+                const auto finish_run = [cube, result_view, refresh_cube_display,
+                                          run_button]() {
+                    ostringstream output;
+                    cube->run(output);
+                    result_view->get_buffer()->set_text(output.str());
+                    refresh_cube_display();
+                    run_button->set_sensitive(true);
+                };
+
+                if (current_view_3d) {
+                    run_button->set_sensitive(false);
+                    play_turn_animation(
+                        current_view_3d, current_view_animation,
+                        cube->next_turn_move(), /*reverse=*/false, finish_run);
+                } else {
+                    finish_run();
                 }
-                if (view_net) {
-                    view_net->queue_draw();
+            });
+    }
+
+    // “重置魔方”：把魔方直接重置回初始（已复原）状态，不经过“运行”那套
+    // 转动动画——重置跳过的往往是好几步转法而不是单次转动，没有一个
+    // 自然的动画终点可以播，保持跟九宫格一致的“快速操作、瞬时刷新”
+    // 观感就够了。按钮不叫“复原”，是为了跟九宫格每格右下角那个含义完全
+    // 不同的“复原”切换按钮区分开，避免同名不同义。
+    //
+    // “未来状态”也要一起恢复成默认样式：cube->reset() 只改真实状态，
+    // 九宫格里已经被用户手动按过“复原”切换（正显示当前实际状态而不是
+    // 预览）的格子，切换本身不会跟着自动弹回去——这里显式把每个
+    // “复原”按钮都设回未按下，弹回去的格子会走它自己已有的过渡动画
+    // （从刚重置的状态转到这一格的预览）；本来就没按过的格子
+    // set_active(false) 是空操作，不会额外触发动画。
+    if (reset_button && result_view) {
+        reset_button->signal_clicked().connect(
+            [cube, result_view, refresh_cube_display, restore_buttons]() {
+                cube->reset();
+                result_view->get_buffer()->set_text("已重置为初始（已复原）状态。");
+                refresh_cube_display();
+                for (auto* button : restore_buttons) {
+                    button->set_active(false);
                 }
-                append_practice_status(status_log, "已完成");
             });
     }
 }
@@ -1035,26 +1337,78 @@ void MainWindow::open_learning_store() {
     }
 }
 
-// 关于对话框：内容是静态的，不像运行历史/AI 自测每次点击都要取新数据，
-// 因此惰性创建一次、之后一直复用，不走“设置”那几个业务对话框每次
-// new + 隐藏后延迟 delete 的模式——那套复杂度是为了防止异步网络回调
-// 踩中已经关闭的对话框，这里没有任何异步操作，用不上。
-// 必须显式 set_hide_on_close(true)：否则点原生标题栏关闭按钮会直接销毁
-// 这个 make_managed 对象，m_about_dialog 就会变成悬空指针。
+// 关于对话框：手写 Gtk::Dialog，不用 Gtk::AboutDialog——GTK 内建的
+// AboutDialog 是一套独立的“品牌展示页”视觉语言（大 Logo 居中、切标签页
+// 看 License），跟“设置”“运行历史”这些自己画的对话框（原生标题栏 + 左
+// 对齐表单式内容 + 底部居中按钮）风格不统一，改成同一套模板，复用
+// ui/dialog_helpers.h 的 append_dialog_action_bar()。
+//
+// 内容是静态的，不像运行历史/AI 自测每次点击都要取新数据，因此惰性
+// 创建一次、之后一直复用，不走“设置”那几个业务对话框每次 new + 隐藏后
+// 延迟 delete 的模式——那套复杂度是为了防止异步网络回调踩中已经关闭的
+// 对话框，这里没有任何异步操作，用不上；但仍然要显式
+// set_hide_on_close(true)，否则点原生标题栏关闭按钮会直接销毁这个
+// make_managed 对象，m_about_dialog 就会变成悬空指针。
 void MainWindow::show_about_dialog() {
     if (!m_about_dialog) {
-        m_about_dialog = Gtk::make_managed<Gtk::AboutDialog>();
-        m_about_dialog->set_program_name("Athena");
-        m_about_dialog->set_version(ATHENA_VERSION);
-        m_about_dialog->set_comments(
+        m_about_dialog = Gtk::make_managed<Gtk::Dialog>();
+        m_about_dialog->set_title("关于 Athena");
+        m_about_dialog->set_default_size(440, 480);
+
+        auto* content = m_about_dialog->get_content_area();
+        auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 14);
+        page->set_margin_top(20);
+        page->set_margin_bottom(20);
+        page->set_margin_start(24);
+        page->set_margin_end(24);
+        content->append(*page);
+
+        // 图标 + 程序名 + 版本号横向排布，跟章节标题头（chapter_header）
+        // 同一种“图标+标题”视觉语言，不是 AboutDialog 那种居中大图标。
+        auto header = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 14);
+        auto icon = Gtk::make_managed<Gtk::Image>();
+        icon->set_from_icon_name("cn.athena.icon");
+        icon->set_pixel_size(48);
+        header->append(*icon);
+
+        auto title_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
+        title_box->set_valign(Gtk::Align::CENTER);
+        auto name_label = Gtk::make_managed<Gtk::Label>("Athena");
+        name_label->add_css_class("title-2");
+        name_label->set_halign(Gtk::Align::START);
+        title_box->append(*name_label);
+        auto version_label =
+            Gtk::make_managed<Gtk::Label>(string("版本 ") + ATHENA_VERSION);
+        version_label->add_css_class("dim-label");
+        version_label->set_halign(Gtk::Align::START);
+        title_box->append(*version_label);
+        header->append(*title_box);
+        page->append(*header);
+
+        auto comments = Gtk::make_managed<Gtk::Label>(
             "为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一："
             "把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。");
-        m_about_dialog->set_logo_icon_name("cn.athena.icon");
-        m_about_dialog->set_copyright("Copyright (c) 2026 tiger");
-        // 木兰宽松许可证第二版不在 Gtk::License 的预置枚举里，用 CUSTOM
-        // 附上官方建议的简明声明；完整条款见仓库根目录 LICENSE 文件。
-        m_about_dialog->set_license_type(Gtk::License::CUSTOM);
-        m_about_dialog->set_license(
+        comments->add_css_class("dim-label");
+        comments->set_wrap(true);
+        comments->set_halign(Gtk::Align::START);
+        page->append(*comments);
+
+        auto copyright_label =
+            Gtk::make_managed<Gtk::Label>("Copyright (c) 2026 tiger");
+        copyright_label->add_css_class("dim-label");
+        copyright_label->set_halign(Gtk::Align::START);
+        page->append(*copyright_label);
+
+        // 许可证全文放进可滚动的 panel-frame，跟源码框/结果框同一种
+        // 容器样式，不用 AboutDialog 那种切标签页的方式。木兰宽松许可证
+        // 第二版没有专门的枚举展示控件，直接放官方建议的简明声明；完整
+        // 条款见仓库根目录 LICENSE 文件。
+        auto license_frame = Gtk::make_managed<Gtk::Frame>();
+        license_frame->add_css_class("panel-frame");
+        license_frame->set_vexpand(true);
+        auto license_scroll = Gtk::make_managed<Gtk::ScrolledWindow>();
+        license_scroll->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
+        auto license_label = Gtk::make_managed<Gtk::Label>(
             "Athena is licensed under Mulan PSL v2.\n"
             "You can use this software according to the terms and "
             "conditions of the Mulan PSL v2.\n"
@@ -1065,6 +1419,20 @@ void MainWindow::show_about_dialog() {
             "BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT "
             "FOR A PARTICULAR PURPOSE.\n"
             "See the Mulan PSL v2 for more details.");
+        license_label->add_css_class("dim-label");
+        license_label->set_wrap(true);
+        license_label->set_halign(Gtk::Align::START);
+        license_label->set_margin(12);
+        license_scroll->set_child(*license_label);
+        license_frame->set_child(*license_scroll);
+        page->append(*license_frame);
+
+        auto close_button = Gtk::make_managed<Gtk::Button>("关闭");
+        close_button->add_css_class("btn-primary");
+        close_button->signal_clicked().connect(
+            [this]() { m_about_dialog->close(); });
+        append_dialog_action_bar(content, {close_button});
+
         m_about_dialog->set_transient_for(*this);
         m_about_dialog->set_modal(true);
         m_about_dialog->set_hide_on_close(true);
@@ -1471,6 +1839,30 @@ void MainWindow::populate_topic_list(
                      .member_name = topic.member_name});
             });
         actions->append(*history_button);
+
+        // 现场调 AI 从整体和局部两个角度讲解这段真实源码——不局限于
+        // “编译器背后做了什么”，那只是局部角度可能覆盖到的一种情况。
+        // 结果按知识点 + 源码快照缓存进 LearningStore，源码没变直接展示
+        // 上次的讲解，不用重新等一次请求；跟“AI 讲解差异”共用同一套
+        // Markdown 对话框。未配置 Key 时点击才提示，不在这里预先判断
+        // （判断逻辑收在 LearningDialogs 里，跟“AI 自测”一致）。
+        auto ai_insight_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
+        ai_insight_button->add_css_class("btn-sm");
+        ai_insight_button->set_tooltip_text(
+            "现场请 AI 从整体和局部两个角度讲解这段源码，结果会缓存、"
+            "源码没变时下次直接展示；需要先在侧边栏底部“设置”里配置"
+            "至少一个 AI 服务商 Key");
+        ai_insight_button->signal_clicked().connect(
+            [this, row, activate_topic, topic]() {
+                (*activate_topic)(row);
+                m_dialogs->show_ai_insight(
+                    {.function_id = topic.function_id,
+                     .title = topic.title,
+                     .description = topic.description,
+                     .source_path = topic.source_path,
+                     .member_name = topic.member_name});
+            });
+        actions->append(*ai_insight_button);
 
         // 熟练度是最近一次完整 AI 自测的量化结果，只读展示。重要度不在
         // 这里——它是内容作者给出的客观难度标注，见上方 title_row。
