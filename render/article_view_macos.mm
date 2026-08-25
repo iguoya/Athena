@@ -216,6 +216,18 @@ private:
 
     void on_resize(int, int) {
         sync_frame();
+        // 交互式拖拽调整窗口/对话框大小时，signal_resize() 可能在 GTK
+        // 这一轮布局分配还没完全定型前就先触发一次（连续拖拽会产生一串
+        // resize 事件），当场算出的 bounds 有时不是最终值，放大对话框后
+        // WKWebView 内容显示不全就是这个时序问题——排一次 idle 回调，等
+        // 这一轮事件处理完、真正的最终分配结果出来后再校正一次，跟
+        // ensure_web_view() 里首次创建时的兜底是同一个套路，只是这里在
+        // 每次 resize 后都补一次，不止首次创建。
+        m_pending_sync_connection.disconnect();
+        m_pending_sync_connection = Glib::signal_idle().connect([this]() {
+            sync_frame();
+            return false;
+        });
     }
 
     void sync_frame() {

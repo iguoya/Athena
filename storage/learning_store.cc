@@ -92,6 +92,12 @@ LearningStore::LearningStore(const string& database_path) {
         "CREATE TABLE IF NOT EXISTS app_settings ("
         "  key TEXT PRIMARY KEY,"
         "  value TEXT NOT NULL)");
+    execute(
+        "CREATE TABLE IF NOT EXISTS ai_insight ("
+        "  function_id TEXT PRIMARY KEY,"
+        "  source_snapshot TEXT NOT NULL DEFAULT '',"
+        "  markdown TEXT NOT NULL DEFAULT '',"
+        "  generated_at INTEGER NOT NULL DEFAULT 0)");
 
     // 数据库可能存有 AI 服务商 Key 这类敏感配置；收紧到仅当前用户可读写，
     // 挡住最基础的意外泄露（同机其他账户、被囫囵打进备份/同步）。
@@ -264,6 +270,49 @@ vector<RunRecord> LearningStore::recent_runs(
         records.push_back(std::move(record));
     }
     return records;
+}
+
+optional<AiInsightRecord> LearningStore::load_ai_insight(
+    const string& function_id) const {
+    Statement statement(
+        m_handle.get(),
+        "SELECT source_snapshot, markdown FROM ai_insight WHERE function_id = ?1");
+    bind_text(m_handle.get(), statement.raw, 1, function_id);
+
+    if (sqlite3_step(statement.raw) != SQLITE_ROW) {
+        return nullopt;
+    }
+    AiInsightRecord record;
+    if (const auto* snapshot = sqlite3_column_text(statement.raw, 0)) {
+        record.source_snapshot = reinterpret_cast<const char*>(snapshot);
+    }
+    if (const auto* markdown = sqlite3_column_text(statement.raw, 1)) {
+        record.markdown = reinterpret_cast<const char*>(markdown);
+    }
+    return record;
+}
+
+void LearningStore::save_ai_insight(
+    const string& function_id,
+    const string& source_snapshot,
+    const string& markdown) {
+    Statement statement(
+        m_handle.get(),
+        "INSERT INTO ai_insight(function_id, source_snapshot, markdown, generated_at) "
+        "VALUES(?1, ?2, ?3, ?4) "
+        "ON CONFLICT(function_id) DO UPDATE SET "
+        "  source_snapshot = excluded.source_snapshot,"
+        "  markdown = excluded.markdown,"
+        "  generated_at = excluded.generated_at");
+    bind_text(m_handle.get(), statement.raw, 1, function_id);
+    bind_text(m_handle.get(), statement.raw, 2, source_snapshot);
+    bind_text(m_handle.get(), statement.raw, 3, markdown);
+    if (sqlite3_bind_int64(statement.raw, 4, unix_seconds()) != SQLITE_OK) {
+        raise_sqlite_error(m_handle.get(), "bind ai insight timestamp");
+    }
+    if (sqlite3_step(statement.raw) != SQLITE_DONE) {
+        raise_sqlite_error(m_handle.get(), "save ai insight");
+    }
 }
 
 string LearningStore::get_setting(const string& key) const {

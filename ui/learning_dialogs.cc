@@ -4,6 +4,7 @@
 #include "render/article_view.h"
 #include "render/markdown_renderer.h"
 #include "services/ai_service.h"
+#include "ui/dialog_helpers.h"
 
 #include <gtksourceview/gtksource.h>
 
@@ -50,60 +51,6 @@ string format_timestamp(long long seconds) {
     ostringstream stream;
     stream << put_time(&local, "%m-%d %H:%M:%S");
     return stream.str();
-}
-
-// 在对话框内容区底部居中放一行按钮；不加“关闭”——系统对话框本身自带
-// 原生标题栏关闭按钮，不需要重复一个。extra_buttons 为空时什么都不做，
-// 调用方自己决定按钮颜色（加 css class）和点击行为。
-void append_dialog_action_bar(
-    Gtk::Box* content_box,
-    const vector<Gtk::Button*>& extra_buttons) {
-    if (extra_buttons.empty()) {
-        return;
-    }
-    auto action_bar = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
-    action_bar->set_halign(Gtk::Align::CENTER);
-    action_bar->add_css_class("dialog-action-bar");
-
-    for (auto* button : extra_buttons) {
-        action_bar->append(*button);
-    }
-
-    content_box->append(*action_bar);
-}
-
-// 打开模态对话框前调用。传入的 dialog 必须是 `new` 出来的普通指针，
-// 不能用 Gtk::make_managed 创建——GTK4 里 GtkWindow 的 hide-on-close
-// 默认是 false，点原生标题栏关闭按钮会直接销毁窗口而不是隐藏它；如果
-// 对话框是 make_managed 出来的，gtkmm 会在底层对象销毁的同时同步
-// delete 这份 C++ 包装。AI 讲解/自测这几个对话框还有一个在等待期间
-// 继续持有对话框指针、异步网络结果回来后要回填内容并重新前置的后台
-// 线程回调——用户在响应还没返回时就把对话框关掉，回调触发时会踩中
-// 已经被 delete 掉的悬空指针，是真实的 use-after-free，不是理论风险。
-//
-// 这里反过来强制 set_hide_on_close(true)：点关闭按钮总是隐藏、不销毁；
-// 对话框改由这里在隐藏之后显式 delete——排到事件循环下一轮再删，不在
-// hide 信号处理函数内部直接删自己（那个调用栈本身还压在这个对象上，
-// 是未定义行为）；调用方自己的 signal_hide 清理逻辑（如翻转
-// dialog_alive、reset article_view）要在 lock_for_modal_dialog 之前
-// 连接，才能保证在这里删除之前先跑到——GTK 信号按连接顺序调用。
-//
-// 同时禁用主窗口自身的输入，隐藏时恢复：观察到过等待期间（网络请求慢
-// 的话有好几秒到十几秒窗口期）用户点回主窗口、主窗口被系统前置盖住
-// 对话框的情况——GTK4 的 set_modal(true) 在这里没能防住。禁用主窗口
-// 输入是应用层能做的、不依赖窗口管理器行为的兜底：即便主窗口的原生
-// 窗口被前置到对话框之上，用户也点不动里面任何控件。present() 保证
-// 首次显示就被前置和聚焦，而不只是 show()。
-void lock_for_modal_dialog(Gtk::Window& main_window, Gtk::Dialog& dialog) {
-    dialog.set_transient_for(main_window);
-    dialog.set_modal(true);
-    dialog.set_hide_on_close(true);
-    main_window.set_sensitive(false);
-    dialog.signal_hide().connect([&main_window, &dialog]() {
-        main_window.set_sensitive(true);
-        Glib::signal_idle().connect_once([&dialog]() { delete &dialog; });
-    });
-    dialog.present();
 }
 
 // 为只读 GtkSourceView 配置 C++ 语法高亮并填入整段文本；不做成员函数
@@ -543,7 +490,8 @@ void LearningDialogs::show_ai_markdown(
     const string& deepseek_api_key,
     const string& loading_markdown,
     int width,
-    int height) {
+    int height,
+    function<void(const string&)> on_success) {
     auto dialog = new Gtk::Dialog();
     dialog->set_title(dialog_title);
     dialog->set_default_size(width, height);
@@ -583,13 +531,14 @@ void LearningDialogs::show_ai_markdown(
 
     auto alive = m_ui_alive;
     thread([alive, dialog_alive, article_view, stylesheet, ark_api_key,
-            deepseek_api_key, prompt, dialog]() {
+            deepseek_api_key, prompt, dialog, on_success]() {
         const AiChatResult result = AiService().chat(
             {.ark_api_key = ark_api_key,
              .deepseek_api_key = deepseek_api_key},
             prompt);
         Glib::signal_idle().connect_once(
-            [alive, dialog_alive, article_view, stylesheet, result, dialog]() {
+            [alive, dialog_alive, article_view, stylesheet, result, dialog,
+             on_success]() {
                 if (!alive->load() || !dialog_alive->load() || !*article_view
                     || stylesheet.empty()) {
                     return;
@@ -603,6 +552,12 @@ void LearningDialogs::show_ai_markdown(
                 // 网络请求期间用户可能点过主窗口；结果到达时重新前置一次，
                 // 不指望等待开始时的那次 present() 全程保持有效。
                 dialog->present();
+                // 只有真正请求成功才回调——失败时 markdown 是错误提示，
+                // 不是讲解内容，不该被调用方（比如 AI 讲解的缓存写入）
+                // 当成结果存起来。
+                if (result.ok && on_success) {
+                    on_success(result.content);
+                }
             });
     }).detach();
 }
@@ -612,9 +567,116 @@ void LearningDialogs::show_ai_response(
     const string& prompt,
     const string& ark_api_key,
     const string& deepseek_api_key) {
+    // 默认尺寸原来是 760x620，偏小；AI 回答经常代码和说明夹杂、篇幅不
+    // 短，跟“运行历史”对话框（1100x680）看齐，放大到 1040x780。
     show_ai_markdown(
         dialog_title, prompt, ark_api_key, deepseek_api_key,
-        "正在请求 AI，请稍候…", 760, 620);
+        "正在请求 AI，请稍候…", 1040, 780);
+}
+
+// 展示一份已经拿在手里的 Markdown——AI 讲解命中缓存时用，跟
+// show_ai_markdown() 共用同一套排版但没有“正在请求”过渡态，也不起
+// 后台线程，打开即所见，不用等一次网络往返。
+void LearningDialogs::show_static_markdown(
+    const string& dialog_title, const string& markdown, int width, int height) {
+    auto dialog = new Gtk::Dialog();
+    dialog->set_title(dialog_title);
+    dialog->set_default_size(width, height);
+
+    auto* content = dialog->get_content_area();
+    auto article_host = Gtk::make_managed<Gtk::DrawingArea>();
+    article_host->set_hexpand(true);
+    article_host->set_vexpand(true);
+    content->append(*article_host);
+
+    auto article_view = make_shared<unique_ptr<ArticleView>>();
+    dialog->signal_hide().connect([article_view]() { article_view->reset(); });
+    lock_for_modal_dialog(m_parent, *dialog);
+
+    string stylesheet = m_content_loader.load_resource("/app/article.css");
+    if (!stylesheet.empty()) {
+        stylesheet += "\n:root { --article-font-size: 24px; }\n";
+    }
+    *article_view = create_platform_article_view(*article_host, *dialog);
+    if (*article_view && !stylesheet.empty()) {
+        (*article_view)->load_html(
+            render_markdown_html(
+                markdown, stylesheet, parse_markdown_headings(markdown)),
+            ATHENA_SOURCE_ROOT);
+    }
+}
+
+// 未配置 Key 时的提示复用“AI 自测”那一份文案结构，只换了功能名字——
+// 两处都是“先去设置里配置再点”，没有必要各写一套不同措辞。
+//
+// 缓存命中判断放在“检查 Key”之前：哪怕当前没配置任何服务商 Key，只要
+// 之前生成过、源码没变，也应该能看到上次的讲解结果，不用被“未配置”
+// 提示挡住——缓存内容不依赖当前是否还能发起新请求。
+void LearningDialogs::show_ai_insight(const DialogTopic& topic) {
+    const string source = load_member_source_text(
+                              m_content_loader, topic.source_path,
+                              topic.member_name)
+                              .value_or("");
+
+    if (m_learning_store) {
+        try {
+            if (const auto cached = m_learning_store->load_ai_insight(topic.function_id);
+                cached && !source.empty() && cached->source_snapshot == source) {
+                show_static_markdown(
+                    "AI 讲解：" + topic.title, cached->markdown, 1040, 780);
+                return;
+            }
+        } catch (const exception& error) {
+            cerr << "Failed to load cached AI insight for " << topic.function_id
+                 << ": " << error.what() << endl;
+        }
+    }
+
+    const string ark_api_key =
+        resolve_api_key(kSettingArkApiKey, "ATHENA_ARK_API_KEY");
+    const string deepseek_api_key =
+        resolve_api_key(kSettingDeepseekApiKey, "ATHENA_DEEPSEEK_API_KEY");
+    if (ark_api_key.empty() && deepseek_api_key.empty()) {
+        auto notice = Gtk::make_managed<Gtk::MessageDialog>(
+            m_parent,
+            "AI 讲解需要先在侧边栏底部“设置”里配置至少一个 AI 服务商 Key",
+            false,
+            Gtk::MessageType::INFO,
+            Gtk::ButtonsType::OK,
+            true);
+        notice->signal_response().connect([notice](int) { notice->hide(); });
+        notice->show();
+        return;
+    }
+
+    const string prompt =
+        "请从整体和局部两个角度讲解 C++ 知识点「" + topic.title + "」下面这段"
+        "真实源码。整体角度：这段代码整体在做什么、为什么这样设计、跟这个"
+        "知识点想教的概念是什么关系、在什么场景下会用到。局部角度：关键"
+        "实现细节、容易被忽略或误解的地方、常见误用；如果这段代码里确实"
+        "存在源码字面看不出来、但运行时真实发生的行为（比如隐式转换、临时"
+        "对象产生和销毁时机、RAII 对象析构时点、编译器可能做的优化或省略），"
+        "也在局部角度里讲，但不要把整篇讲解都局限在这一类细节上，更不要"
+        "为了凑内容而讲跟这段代码无关的语言特性列表。" +
+        string(kChineseTutorialStyleHint) + "\n\n=== 知识点说明 ===\n" +
+        topic.description + "\n\n=== 源码 ===\n" + source;
+
+    auto store = m_learning_store;
+    const string function_id = topic.function_id;
+    show_ai_markdown(
+        "AI 讲解：" + topic.title, prompt, ark_api_key, deepseek_api_key,
+        "正在请求 AI，请稍候…", 1040, 780,
+        [store, function_id, source](const string& markdown) {
+            if (!store) {
+                return;
+            }
+            try {
+                store->save_ai_insight(function_id, source, markdown);
+            } catch (const exception& error) {
+                cerr << "Failed to cache AI insight for " << function_id << ": "
+                     << error.what() << endl;
+            }
+        });
 }
 
 // 打开对话框，异步向 AI（优先火山方舟豆包，失败或未配置再退回 DeepSeek）请求

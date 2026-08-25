@@ -2,12 +2,21 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 using namespace std;
 
 struct sqlite3;
+
+// “AI 讲解”结果缓存：source_snapshot 是生成这份讲解时该知识点成员函数
+// 的完整源码文本——调用方用它跟当前源码比对，源码变了就不该继续信任
+// 缓存内容，而不是无条件展示一份可能已经过时的讲解。
+struct AiInsightRecord {
+    string markdown;
+    string source_snapshot;
+};
 
 struct RunRecord {
     long long id = 0;
@@ -51,6 +60,15 @@ public:
         const string& git_commit,
         bool git_dirty);
     vector<RunRecord> recent_runs(const string& function_id, int limit) const;
+
+    // “AI 讲解”结果缓存，一个知识点只保留最近一次（不像运行历史需要
+    // 保留多条对比），下次打开同一个知识点、源码没变的话直接展示缓存，
+    // 不用再等一次 AI 请求。没有缓存记录时返回 nullopt。
+    optional<AiInsightRecord> load_ai_insight(const string& function_id) const;
+    void save_ai_insight(
+        const string& function_id,
+        const string& source_snapshot,
+        const string& markdown);
 
     // 通用的应用设置读写（目前只用来存 AI 服务商 API Key）。key 不存在时
     // get_setting 返回空串，调用方按"未配置"处理，不区分"从未设置"和

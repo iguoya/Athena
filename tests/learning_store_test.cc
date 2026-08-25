@@ -233,4 +233,41 @@ TEST(LearningStoreTest, SetSettingWithEmptyValueClearsIt) {
     EXPECT_EQ(store.get_setting("ai_provider_key_ark"), "");
 }
 
+// “AI 讲解”缓存：没有记录时返回 nullopt，不是空 markdown——空字符串是
+// 合法但没意义的讲解内容，跟"从没生成过"必须能区分开，调用方才能正确
+// 判断要不要发起一次新请求。
+TEST(LearningStoreTest, LoadAiInsightReturnsNulloptForUnknownKnowledgePoint) {
+    const LearningStore store(":memory:");
+    EXPECT_FALSE(store.load_ai_insight("cpp.RAII.weak").has_value());
+}
+
+TEST(LearningStoreTest, SavesAndReloadsAiInsight) {
+    LearningStore store(":memory:");
+    store.save_ai_insight(
+        "cpp.RAII.weak", "void weak() { /* v1 */ }", "# 讲解 v1");
+
+    const auto record = store.load_ai_insight("cpp.RAII.weak");
+    ASSERT_TRUE(record.has_value());
+    EXPECT_EQ(record->source_snapshot, "void weak() { /* v1 */ }");
+    EXPECT_EQ(record->markdown, "# 讲解 v1");
+
+    // 重复保存是 upsert，覆盖成最新一次结果，不是追加多条记录——一个
+    // 知识点只需要保留最近一次讲解，不像运行历史要支持多条对比。
+    store.save_ai_insight(
+        "cpp.RAII.weak", "void weak() { /* v2 */ }", "# 讲解 v2");
+    const auto updated = store.load_ai_insight("cpp.RAII.weak");
+    ASSERT_TRUE(updated.has_value());
+    EXPECT_EQ(updated->source_snapshot, "void weak() { /* v2 */ }");
+    EXPECT_EQ(updated->markdown, "# 讲解 v2");
+}
+
+TEST(LearningStoreTest, KeepsAiInsightForDifferentKnowledgePointsIndependent) {
+    LearningStore store(":memory:");
+    store.save_ai_insight("cpp.RAII.weak", "void weak() {}", "# weak");
+    store.save_ai_insight("cpp.Reference.cast", "void cast() {}", "# cast");
+
+    EXPECT_EQ(store.load_ai_insight("cpp.RAII.weak")->markdown, "# weak");
+    EXPECT_EQ(store.load_ai_insight("cpp.Reference.cast")->markdown, "# cast");
+}
+
 } // namespace
