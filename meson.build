@@ -7,6 +7,7 @@ gnome = import('gnome')
 
 gtkmm_dep = dependency('gtkmm-4.0')
 glib_dep = dependency('glib-2.0')
+glibmm_dep = dependency('glibmm-2.68')
 gio_dep = dependency('gio-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
@@ -138,6 +139,7 @@ core_sources = files(
   'render/chart_scale.cc',
   'render/markdown_renderer.cc',
   'services/ai_service.cc',
+  'services/experiment_runner.cc',
   'storage/learning_store.cc'
 ) + [function_registry_generated]
 
@@ -145,13 +147,13 @@ athena_core_lib = static_library(
   'athena-core',
   core_sources,
   include_directories: [language_inc],
-  dependencies: [glib_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
   include_directories: [language_inc],
-  dependencies: [glib_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 # === 桌面应用源码 ===
@@ -161,9 +163,24 @@ app_sources = files(
   'mainwindow.cc',
   'practice/pocket_cube/view.cc',
   'render/chart_view.cc',
+  'ui/about_dialog.cc',
+  'ui/ai_insight_dialog.cc',
+  'ui/ai_markdown_dialog.cc',
+  'ui/api_key_store.cc',
+  'ui/chapter_nav_strip.cc',
+  'ui/chapter_overview.cc',
+  'ui/code_chapter_page.cc',
   'ui/dialog_helpers.cc',
+  'ui/handbook_page.cc',
+  'ui/history_dialog.cc',
+  'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',
-  'ui/progress_page.cc'
+  'ui/markdown_fallback.cc',
+  'ui/pocket_cube_page.cc',
+  'ui/progress_page.cc',
+  'ui/quiz_dialog.cc',
+  'ui/settings_dialog.cc',
+  'ui/source_view.cc'
 ) + article_view_sources + app_icon_sources
 
 # === 打包资源 ===
@@ -204,6 +221,7 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/ai_service_test.cc',
     'tests/content_loader_test.cc',
+    'tests/experiment_runner_test.cc',
     'tests/function_registry_test.cc',
     'tests/learning_store_test.cc',
     'tests/chart_scale_test.cc',
