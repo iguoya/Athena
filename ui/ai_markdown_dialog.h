@@ -11,7 +11,8 @@
 
 using namespace std;
 
-// AI 回答的 Markdown 展示通道：md4c 转 HTML + WKWebView（macOS）渲染，
+// AI 回答的 Markdown 展示通道：md4c 转 HTML + 平台 WebView（macOS 的
+// WKWebView、Ubuntu 的 WebKitGTK）渲染，
 // 跟手册页面同一套排版——代码块、标题、列表都有正常版式，不是纯文本
 // TextView 堆一坨。AI 讲解、AI 讲解差异共用它；网络请求在独立线程执行，
 // HTML 只在主线程构造和加载。从 LearningDialogs 提出来，是纯粹的“把一段

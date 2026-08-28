@@ -314,12 +314,12 @@ Parnas《On the Criteria To Be Used in Decomposing Systems into Modules》（197
 | 用哪家 AI、endpoint、模型名、失败了怎么回退 | `services/ai_service.cc` | 窗口完全不知道"豆包"存在，只拿到 `AiChatResult` |
 | 熟练度和运行历史存在哪、表结构长什么样 | `storage/learning_store.cc` | 上层只见 `save_mastery()` / `recent_runs()` |
 | 用哪个 Markdown 库、生成什么 HTML | `render/markdown_renderer.cc` | 调用方只给 Markdown、拿回 HTML |
-| 各平台用哪种 WebView | `render/article_view_macos.mm` / `article_view_unavailable.cc` | 调用方只用 `ArticleView` 抽象接口 |
+| 各平台用哪种 WebView | `render/article_view_macos.mm` / `article_view_webkitgtk.cc` | 调用方只用 `ArticleView` 抽象接口 |
 | 配置格式、校验规则、默认值继承 | `scripts/project_generator/model.py` | C++ 侧只解码规范化后的 Catalog |
 
-平台 WebView 那条最能说明问题：将来接 Linux WebKitGTK 6.0，只需**新增一个实现文件**并
-在 `meson.build` 里换一行，`MainWindow` 和手册逻辑一个字都不用动。边界建对了，
-补一个平台是加法而不是改造。
+平台 WebView 那条最能说明问题：Ubuntu 接入 WebKitGTK 6.0 时只新增平台实现并
+调整 `meson.build`，`MainWindow` 和手册逻辑一个字都不用动。边界建对了，补一个平台
+就是加法而不是改造。
 
 **Athena 的反面例子**：拆分前的 `mainwindow.cc` 里同时住着四个**互不相干的变化原因**
 ——手册排版、进度统计口径、自测题格式、运行流程。任何一个变都要改同一个文件，

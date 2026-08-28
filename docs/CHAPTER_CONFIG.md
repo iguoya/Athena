@@ -163,10 +163,10 @@ resources/ui/chapters/empty_chapter.blp
 ]
 ```
 
-手册页面复用主窗口里已经验证过的常驻 WKWebView 嵌入方式（跟原来 `article`
-章节标签页是同一套渲染机制），不是每次点击现造一个对话框和一个新的
-WebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局
-分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面。
+手册页面复用主窗口里已经验证过的常驻平台 WebView 嵌入方式（macOS 使用
+WKWebView、Ubuntu 使用 WebKitGTK，跟原来 `article` 章节标签页是同一套渲染机制），
+不是每次点击现造一个对话框和一个新的 WebView——后者在实测中出现过对话框刚弹出时
+宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面。
 
 `handbook_documents` 里的文档不要求对应某个 `chapter`——它是该分类内容的合集，
 跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须

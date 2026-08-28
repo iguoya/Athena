@@ -19,7 +19,8 @@ public:
     virtual void scroll_to_anchor(const string& anchor) = 0;
 };
 
-// 当前在 macOS 上返回 WKWebView 后端；其他平台可在此接口下增加实现。
+// macOS 使用系统 WKWebView，Ubuntu 使用 WebKitGTK 6.0；其他平台可在此
+// 接口下增加实现。
 unique_ptr<ArticleView> create_platform_article_view(
     Gtk::DrawingArea& host,
     Gtk::Window& window);

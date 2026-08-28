@@ -14,7 +14,7 @@ using namespace std;
 //
 // 不引入图表库：数据规模很小（几十个知识点、十几个章节、一个 0-5 的标量），
 // 需要的图表种类有限，Cairo 直接画比接一套 JS 图表栈划算，也不用为此让
-// 统计页依赖 WebView（Linux 目前没有 WebView 后端）。
+// 统计页不依赖 WebView。
 
 // 环形图：已掌握/学习中/未开始三段占比，中心显示已掌握百分比。
 Gtk::DrawingArea* make_mastery_donut_chart(

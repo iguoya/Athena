@@ -6,6 +6,7 @@ fs = import('fs')
 gnome = import('gnome')
 
 gtkmm_dep = dependency('gtkmm-4.0')
+gtk4_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 glibmm_dep = dependency('glibmm-2.68')
 gio_dep = dependency('gio-2.0')
@@ -31,6 +32,10 @@ if host_machine.system() == 'darwin'
     dependency('gtk4-macos'),
     dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
   ]
+elif host_machine.system() == 'linux'
+  article_view_sources += files('render/article_view_webkitgtk.cc')
+  app_icon_sources += files('app_icon_other.cc')
+  platform_dependencies += dependency('webkitgtk-6.0')
 else
   article_view_sources += files('render/article_view_unavailable.cc')
   app_icon_sources += files('app_icon_other.cc')
@@ -196,6 +201,7 @@ executable('Athena', app_sources,
   include_directories: [language_inc],
   dependencies: [
     gtkmm_dep,
+    gtk4_dep,
     glib_dep,
     sourceview_dep,
     athena_core_dep
@@ -252,7 +258,7 @@ gtk_test_exe = executable(
   ),
   sources: resources,
   include_directories: [language_inc],
-  dependencies: [gtest_dep, gtkmm_dep, sourceview_dep, athena_core_dep]
+  dependencies: [gtest_dep, gtkmm_dep, gtk4_dep, sourceview_dep, athena_core_dep]
 )
 test('athena-gtk-resources', gtk_test_exe, is_parallel: false)
 

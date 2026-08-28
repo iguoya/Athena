@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。项目使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不再维护 GtkTextView 降级渲染。项目结构由 `resources/athena.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
+Athena 是为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。项目使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView、Ubuntu 通过 WebKitGTK 6.0 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不在受支持平台维护 GtkTextView 降级渲染。项目结构由 `resources/athena.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
 
 项目采用轻量分层和注册表，不以完整 MVC/MVP 为当前目标。核心问题是让课程配置、C++ 演示实现和 GTK 界面之间具有稳定、可校验的连接。重要架构取舍的背景与后果记录在 `docs/decisions/` 的 ADR 中。
 
@@ -89,7 +89,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
   放进对应功能模块，避免把控件树、后台执行或持久化细节重新堆回窗口协调层。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
 - 骨架生成只适合一个头文件与一个源文件的普通章节；一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）曾是 RAII 的做法，现在认定为应当避免的特例，不是推荐路径——多个 `.cpp` 会导致按知识点切换源码框内容碎片化，看不到类的完整定义。默认约定是整章合并到一个 `.hpp`；`TypeSemantics`、`RAII` 已按路线图第 11 条迁移完成，连同 `Reference`、`FunctionCallable` 四个已实现章节现在都是单文件形态，详见 `docs/CHAPTER_CONFIG.md` 6.1。
-- Linux 尚未接入 WebKitGTK 6.0；当前没有 Linux 文章显示后端，也不提供 GtkTextView 回退。
+- macOS 与 Ubuntu 均有文章显示后端：分别为 WKWebView 与 WebKitGTK 6.0，并复用相同 HTML、CSS、锚点和外部链接导航规则。
 
 ## 3. 目标架构
 
@@ -202,7 +202,7 @@ void method(std::ostream& output) const;
 GTK/Blueprint 层负责：
 
 - 为章节显示分类、说明、源码和执行结果。
-- 为手册显示合集 Markdown 正文和可跳转目录；macOS WKWebView 在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为手册显示合集 Markdown 正文和可跳转目录；平台 WebView（macOS WKWebView / Ubuntu WebKitGTK）在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 把用户操作转换为稳定函数 ID。
 - 调用 `FunctionRegistry`，但不感知具体章节类。
 
@@ -307,7 +307,7 @@ Meson -> Generator outputs
 6. 已完成：生成稳定完整 ID，供 Catalog、注册表、测试和诊断复用。
 7. 已完成：支持安全的一次性章节实现骨架生成。
 8. 已完成：解决源代码展示的安装后资源策略。
-9. 在 Linux 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
+9. 已完成：在 Ubuntu 上为 ArticleView 接入 WebKitGTK 6.0，复用现有 HTML、CSS、锚点和导航规则。
 10. 已完成：按 ADR 0014 从低风险到高风险拆分 `MainWindow`。`AiService`、
     `ProgressPage`、`LearningDialogs`、`HandbookPage`、`CodeChapterPage`、非 GTK 的
     `ExperimentRunner`、`PocketCubePage` 与 `AboutDialog` 均已落地；窗口只保留导航、

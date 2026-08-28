@@ -55,8 +55,8 @@ void AiMarkdownDialog::show_request(
     }
     *article_view = create_platform_article_view(*article_host, *dialog);
 
-    // 没有 WebView 后端（当前是 Linux）时，退回纯文本控件显示 Markdown
-    // 原文；请求返回后由 idle 回调把 loading 文本替换成结果。
+    // 没有 WebView 后端的平台退回纯文本控件显示 Markdown 原文；请求返回后
+    // 由 idle 回调把 loading 文本替换成结果。
     auto fallback_text = make_shared<Gtk::TextView*>(nullptr);
     if (!*article_view) {
         article_host->set_visible(false);
@@ -132,7 +132,7 @@ void AiMarkdownDialog::show_static(
     }
     *article_view = create_platform_article_view(*article_host, *dialog);
     if (!*article_view) {
-        // 没有 WebView 后端（当前是 Linux）：退回纯文本显示 Markdown 原文。
+        // 没有 WebView 后端的平台退回纯文本显示 Markdown 原文。
         article_host->set_visible(false);
         content->append(*make_markdown_fallback_view(markdown));
         return;

@@ -81,8 +81,7 @@ HandbookPage::HandbookPage(
 
     m_article_view = create_platform_article_view(*host, parent);
     if (!m_article_view) {
-        // Linux 等平台还没有 WebView 后端：退回纯文本显示 Markdown 原文，
-        // 不留一片空白（见 docs/ARCHITECTURE.md 路线图第 9 条）。
+        // 尚未实现 WebView 后端的平台退回纯文本显示 Markdown 原文，避免留白。
         page->append(*make_markdown_fallback_view(combined_markdown));
         return;
     }
