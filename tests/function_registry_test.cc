@@ -10,9 +10,10 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 17);
+    EXPECT_EQ(registry.ids().size(), 22);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
+    EXPECT_TRUE(registry.contains("cpp.FunctionCallable.overload"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
     EXPECT_TRUE(registry.contains("practice.PocketCube.run"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
@@ -36,6 +37,16 @@ TEST(FunctionRegistryTest, RunsARaiiExperiment) {
 
     EXPECT_NE(output.str().find("所有权转移后原指针为空: 是"), string::npos);
     EXPECT_NE(output.str().find("离开作用域后析构次数: 1"), string::npos);
+    EXPECT_EQ(output.str().find("[待实现]"), string::npos);
+}
+
+TEST(FunctionRegistryTest, RunsAFunctionCallableExperiment) {
+    const auto registry = create_default_function_registry();
+    ostringstream output;
+
+    registry.run("cpp.FunctionCallable.function_wrapper", output);
+
+    EXPECT_NE(output.str().find("bad_function_call"), string::npos);
     EXPECT_EQ(output.str().find("[待实现]"), string::npos);
 }
 

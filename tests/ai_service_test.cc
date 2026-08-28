@@ -80,6 +80,22 @@ TEST(AiServiceTest, ParsesAndNormalizesQuizQuestions) {
     EXPECT_EQ(quiz->questions[0].explanation, "0 和 2");
 }
 
+// AI 偶尔会省略提示词要求的外层 {"questions": [...]} 包装，直接返回题目
+// 数组本身；复现过一次真实崩溃调试场景（root.at("questions") 在 root
+// 是数组时抛异常，被 catch 接住但整份退化成原始文本），两种形状都要
+// 能正常解析出题目，不能只支持带包装的那一种。
+TEST(AiServiceTest, ParsesBareArrayWithoutQuestionsWrapper) {
+    const auto quiz = parse_ai_quiz_response(R"(
+[
+  {"question":"没有外层包装的题目","options":["A","B"],"correct_indices":[0]}
+]
+)");
+
+    ASSERT_TRUE(quiz.has_value());
+    ASSERT_EQ(quiz->questions.size(), 1u);
+    EXPECT_EQ(quiz->questions[0].question, "没有外层包装的题目");
+}
+
 TEST(AiServiceTest, RejectsResponseWithoutUsableQuestions) {
     EXPECT_FALSE(parse_ai_quiz_response("not json").has_value());
     EXPECT_FALSE(parse_ai_quiz_response(R"({"questions":[]})").has_value());

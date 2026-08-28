@@ -126,13 +126,13 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
         + shell_quote(body_file.path)
         + " " + shell_quote(request.endpoint);
     gchar* output_raw = nullptr;
-    gint exit_status = 0;
+    gint wait_status = 0;
     GError* spawn_error = nullptr;
     const gboolean spawned = g_spawn_command_line_sync(
         command.c_str(),
         &output_raw,
         nullptr,
-        &exit_status,
+        &wait_status,
         &spawn_error);
     const string response_body = output_raw ? output_raw : "";
     g_free(output_raw);
@@ -143,9 +143,13 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
         return {.error = "调用 curl 失败：" + message};
     }
     g_clear_error(&spawn_error);
-    if (exit_status != 0) {
+    // g_spawn_command_line_sync() 的 status 是 waitpid 原始状态字（macOS 和
+    // Linux 都是），不能直接当退出码比较；交给 GLib 解析退出码/信号终止。
+    if (!g_spawn_check_wait_status(wait_status, &spawn_error)) {
+        const string message = spawn_error ? spawn_error->message : "未知错误";
+        g_clear_error(&spawn_error);
         return {
-            .error = "curl 请求失败（退出码 " + to_string(exit_status)
+            .error = "curl 请求失败（" + message
                 + "），请确认已安装 curl 且网络可用",
         };
     }
@@ -204,7 +208,12 @@ string strip_markdown_code_fence(string_view text) {
 optional<AiQuiz> parse_ai_quiz_response(string_view response_body) {
     try {
         const auto root = json::parse(strip_markdown_code_fence(response_body));
-        const auto& values = root.at("questions");
+        // 提示词要求外层包一层 {"questions": [...]}，但 AI 偶尔会省略这层包装、
+        // 直接返回题目数组本身；两种形状都接受，避免因为差这一层包装就整份
+        // 退化成原始文本展示。root.at("questions") 在 root 是数组时会抛
+        // out_of_range（数组没有名为 "questions" 的键），被下面的 catch 接住，
+        // 不会导致解析失败之外的任何后果。
+        const auto& values = root.is_array() ? root : root.at("questions");
         if (!values.is_array()) {
             return nullopt;
         }
