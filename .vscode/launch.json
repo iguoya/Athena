@@ -2,36 +2,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "启动 Athena（构建并调试）",
+            "name": "Athena（Ubuntu：构建并用 GDB 调试）",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/builddir/Athena",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "Athena: Build"
+        },
+        {
+            "name": "Athena（macOS：构建并用 LLDB 调试）",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/builddir/Athena",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Meson: Build"
-        },
-        {
-            "name": "启动 Athena（不重新编译）",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/builddir/Athena",
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "启动 Athena（debugoptimized，推荐日常使用）",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/builddir-fast/Athena",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Meson: Build (debugoptimized)"
+            "preLaunchTask": "Athena: Build"
         },
         {
             "name": "附加到 Athena",
-            "type": "lldb",
+            "type": "cppdbg",
             "request": "attach",
-            "pid": "${command:pickMyProcess}"
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }

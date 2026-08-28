@@ -18,6 +18,16 @@ scripts/check.sh
 该脚本依次执行 JSON 校验、项目生成器检查、Meson 配置、构建和测试；可用
 `--build-dir` 与 `--buildtype` 覆盖默认构建目录和构建类型。
 
+## VS Code
+
+仓库内置了 `.vscode/tasks.json` 与 `.vscode/launch.json`。Ubuntu 请安装 VS Code 的
+**C/C++** 扩展和 `gdb`，然后按 `Ctrl+Shift+B` 运行默认的 `Athena: Build` 任务；在
+“运行和调试”中选择“**Athena（Ubuntu：构建并用 GDB 调试）**”即可断点调试。该任务会
+先配置 Meson 再构建，Ubuntu 26.04 会自动补上系统包遗漏的 GTK4 头文件搜索路径。
+
+macOS 的调试配置使用 CodeLLDB 扩展。不要使用 Code Runner 的“Run Code”：它只编译当前
+源文件，无法生成 Athena 所需的全部资源和链接目标。
+
 测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
 `athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
 两个项目生成器测试分别校验真实配置和四个生成子命令。

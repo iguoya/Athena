@@ -2,46 +2,58 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Meson: Configure",
+            "label": "Athena: Configure",
             "type": "shell",
-            "command": "meson setup ${workspaceFolder}/builddir --reconfigure -Dcpp_std=c++20",
+            "command": "bash",
+            "args": [
+                "-lc",
+                "if [ \"$(uname -s)\" = Linux ]; then if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; else meson setup builddir --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; fi; else if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug; else meson setup builddir --buildtype=debug; fi; fi"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "problemMatcher": [],
-            "group": "build",
-            "detail": "重新配置 Meson 构建"
+            "detail": "配置 Debug 构建；Ubuntu 26.04 额外补齐 GTK4 头文件搜索路径"
         },
         {
-            "label": "Meson: Build",
+            "label": "Athena: Build",
             "type": "shell",
-            "command": "meson compile -C ${workspaceFolder}/builddir",
-            "problemMatcher": [
-                "$gcc"
+            "command": "meson",
+            "args": [
+                "compile",
+                "-C",
+                "builddir"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Athena: Configure",
+            "dependsOrder": "sequence",
+            "problemMatcher": "$gcc",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "增量编译 Athena"
+            "detail": "配置后增量编译 Athena"
         },
         {
-            "label": "Meson: Build (debugoptimized)",
+            "label": "Athena: Check",
             "type": "shell",
-            "command": "meson compile -C ${workspaceFolder}/builddir-fast",
-            "problemMatcher": [
-                "$gcc"
+            "command": "scripts/check.sh",
+            "args": [
+                "--build-dir",
+                "builddir",
+                "--buildtype",
+                "debug"
             ],
-            "group": "build",
-            "detail": "增量编译 debugoptimized 构建（启动与运行更快）"
-        },
-        {
-            "label": "Meson: Full Build",
-            "dependsOn": [
-                "Meson: Configure",
-                "Meson: Build"
-            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Athena: Configure",
             "dependsOrder": "sequence",
-            "problemMatcher": [],
-            "group": "build",
-            "detail": "完整重新构建"
+            "problemMatcher": "$gcc",
+            "group": "test",
+            "detail": "执行项目完整校验、构建与测试"
         }
     ]
 }
