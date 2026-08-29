@@ -149,7 +149,9 @@ jobs:
         shell: bash
         run: |
           dpkg-deb --info "dist/athena_${{ steps.version.outputs.version }}_amd64.deb"
-          dpkg-deb --contents "dist/athena_${{ steps.version.outputs.version }}_amd64.deb" | grep -q './usr/bin/Athena'
+          dpkg-deb --contents "dist/athena_${{ steps.version.outputs.version }}_amd64.deb" \
+            > deb-contents.txt
+          grep -q './usr/bin/Athena' deb-contents.txt
           appimage="dist/Athena-${{ steps.version.outputs.version }}-linux-x86_64.AppImage"
           test -x "$appimage"
           offset=$("$appimage" --appimage-offset)
