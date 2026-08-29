@@ -14,7 +14,8 @@ glibmm，导致它无法编译项目在 Ubuntu 26.04 上完全有效的 `Glib::u
 
 ## 决策
 
-- Linux 的 GitHub Release 构建、测试和打包作业使用 `ubuntu-26.04` Runner。
+- Linux 的普通 CI，以及 GitHub Release 构建、测试和打包作业统一使用
+  `ubuntu-26.04` Runner。
 - 撤销仅为旧版 glibmm 增加的字符串转换；测试继续直接表达 GTK 接口返回值与期望文本
   的比较。
 - DEB 和 AppImage 的支持基线调整为 Ubuntu 26.04 及以上相近环境；不再声明 Ubuntu
@@ -24,7 +25,7 @@ glibmm，导致它无法编译项目在 Ubuntu 26.04 上完全有效的 `Glib::u
 
 ## 后果
 
-- CI 的 GTK/WebKitGTK 依赖版本与开发环境一致，避免由旧系统 API 差异引入无意义的
+- 普通 CI 与 Release 的 GTK/WebKitGTK 依赖版本均与开发环境一致，避免由旧系统 API 差异引入无意义的
   兼容性改写。
 - `ubuntu-26.04` 目前是 GitHub Actions 的公开预览 Runner；其镜像变动或可用性应在
   Release 失败时优先检查。
