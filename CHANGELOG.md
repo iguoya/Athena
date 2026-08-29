@@ -3,6 +3,18 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
+## [2.0.1] - 2026-08-29
+
+### 新增
+
+- Ubuntu 文章阅读页接入 WebKitGTK 6，与 macOS 的 WKWebView 使用同一套 HTML
+  渲染、目录跳转、主题和字号控制能力。
+
+### 修复
+
+- VS Code 的 Meson 构建、GDB 调试和 C++ IntelliSense 配置，修复 Ubuntu 下
+  GTK 头文件路径导致的构建失败。
+
 ## [2.0.0] - 2026-08-21
 
 ### 新增
