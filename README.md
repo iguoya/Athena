@@ -64,7 +64,7 @@ Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
 ## Ubuntu 安装包
 
 GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 APT 安装并自动解析
-GTK/WebKitGTK 依赖的 `.deb`，也提供适用于 Ubuntu 24.04 及以上相近环境的 AppImage。
+GTK/WebKitGTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
 
 ```sh
 sudo apt install ./athena_VERSION_amd64.deb

@@ -65,7 +65,7 @@ hdiutil verify dist/Athena-VERSION-macos-x86_64.dmg
 
 ## Ubuntu 本机构建
 
-Ubuntu 24.04 需要构建依赖之外的 `desktop-file-utils`、`squashfs-tools` 和 `curl`。
+Ubuntu 26.04 需要构建依赖之外的 `desktop-file-utils`、`squashfs-tools` 和 `curl`。
 Linux 发行构建必须使用 `/usr` 前缀，保证 DEB 不会把文件装进 `/usr/local`：
 
 ```sh
@@ -99,12 +99,12 @@ python3 scripts/package_linux.py \
 
 DEB 是 Ubuntu 首选：`sudo apt install ./athena_VERSION_amd64.deb` 会解析依赖。AppImage
 内置 Athena 和大多数库，但 WebKitGTK 的多进程辅助程序采用发行版固定路径；它定位为
-Ubuntu 24.04 及以上相近环境的便携下载，不承诺任意 Linux 发行版的完全静态兼容。
+Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意 Linux 发行版的完全静态兼容。
 
 ## GitHub Release
 
 `.github/workflows/release.yml` 由 `v*.*.*` 标签触发：Intel 与 Apple Silicon Runner
-分别构建、测试和打包 DMG；Ubuntu 24.04 Runner 构建、测试并生成 DEB 与 AppImage。
+分别构建、测试和打包 DMG；Ubuntu 26.04 Runner 构建、测试并生成 DEB 与 AppImage。
 三个构建任务完成后，发布任务汇总所有资产、生成 SHA-256 校验和，并创建 GitHub Release
 和自动发行说明。
 
