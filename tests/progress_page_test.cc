@@ -7,7 +7,7 @@ namespace {
 
 Gtk::Label* find_label(Gtk::Widget& root, const string& text) {
     if (auto* label = dynamic_cast<Gtk::Label*>(&root);
-        label && label->get_text() == text) {
+        label && label->get_text().raw() == text) {
         return label;
     }
     for (auto* child = root.get_first_child(); child;
@@ -34,7 +34,7 @@ Gtk::Expander* find_expander(Gtk::Widget& root) {
 
 Gtk::Frame* find_frame(Gtk::Widget& root, const string& label) {
     if (auto* frame = dynamic_cast<Gtk::Frame*>(&root);
-        frame && frame->get_label() == label) {
+        frame && frame->get_label().raw() == label) {
         return frame;
     }
     for (auto* child = root.get_first_child(); child;
