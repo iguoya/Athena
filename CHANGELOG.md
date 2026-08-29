@@ -3,6 +3,13 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
+## [Unreleased]
+
+### 新增
+
+- GitHub Release 新增 Ubuntu x86_64 的 `.deb` 与 AppImage 资产；`.deb` 为推荐的
+  APT 原生安装方式，AppImage 面向 Ubuntu 24.04 及以上相近环境的便携下载。
+
 ## [2.0.1] - 2026-08-29
 
 ### 新增

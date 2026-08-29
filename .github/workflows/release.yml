@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  macos:
     name: Build ${{ matrix.architecture }}
     strategy:
       fail-fast: false
@@ -85,9 +85,89 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  linux:
+    name: Build Linux packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build pkg-config \
+            libgtkmm-4.0-dev libgtksourceview-5-dev \
+            libwebkitgtk-6.0-dev \
+            libmd4c-dev nlohmann-json3-dev libsqlite3-dev \
+            libgtest-dev blueprint-compiler librsvg2-common xvfb \
+            squashfs-tools curl ca-certificates
+
+      - name: Read and verify version
+        id: version
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          meson setup build-linux-release --buildtype=release -Dstrip=true --prefix /usr
+          project_version=$(meson introspect build-linux-release --projectinfo \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["version"])')
+          if [[ "$version" != "$project_version" ]]; then
+            echo "Tag version $version does not match Meson version $project_version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test
+        run: |
+          meson compile -C build-linux-release
+          xvfb-run -a meson test -C build-linux-release --print-errorlogs
+
+      - name: Download pinned AppImage tools
+        shell: bash
+        run: |
+          curl -fL --retry 3 --output linuxdeploy-x86_64.AppImage \
+            https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20251107-1/linuxdeploy-x86_64.AppImage
+          echo "c20cd71e3a4e3b80c3483cef793cda3f4e990aca14014d23c544ca3ce1270b4d  linuxdeploy-x86_64.AppImage" | sha256sum --check
+          chmod +x linuxdeploy-x86_64.AppImage
+          curl -fL --retry 3 --output appimage-runtime-x86_64 \
+            https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64
+          echo "1cc49bcf1e2ccd593c379adb17c9f85a36d619088296504de95b1d06215aebbf  appimage-runtime-x86_64" | sha256sum --check
+
+      - name: Package DEB and AppImage
+        run: |
+          python3 scripts/package_linux.py \
+            --project-root . \
+            --build-dir build-linux-release \
+            --output-dir dist \
+            --linuxdeploy ./linuxdeploy-x86_64.AppImage \
+            --appimage-runtime ./appimage-runtime-x86_64 \
+            --version "${{ steps.version.outputs.version }}"
+
+      - name: Verify Linux packages
+        shell: bash
+        run: |
+          dpkg-deb --info "dist/athena_${{ steps.version.outputs.version }}_amd64.deb"
+          dpkg-deb --contents "dist/athena_${{ steps.version.outputs.version }}_amd64.deb" | grep -q './usr/bin/Athena'
+          appimage="dist/Athena-${{ steps.version.outputs.version }}-linux-x86_64.AppImage"
+          test -x "$appimage"
+          offset=$("$appimage" --appimage-offset)
+          unsquashfs -o "$offset" -l "$appimage" | grep -q 'squashfs-root/usr/bin/Athena'
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: Athena-linux-x86_64
+          path: |
+            dist/athena_*.deb
+            dist/Athena-*-linux-x86_64.AppImage
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish GitHub Release
-    needs: build
+    needs: [macos, linux]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -97,13 +177,13 @@ jobs:
       - name: Download release assets
         uses: actions/download-artifact@v8
         with:
-          pattern: Athena-macos-*
+          pattern: Athena-*
           path: dist
           merge-multiple: true
 
       - name: Create checksums
         working-directory: dist
-        run: sha256sum Athena-*.dmg > SHA256SUMS.txt
+        run: sha256sum Athena-*.dmg Athena-*.AppImage athena_*.deb > SHA256SUMS.txt
 
       - name: Publish release
         env:
@@ -112,7 +192,7 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
-            dist/Athena-*.dmg \
+            dist/Athena-*.dmg dist/Athena-*.AppImage dist/athena_*.deb \
             dist/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \

@@ -61,6 +61,20 @@ python3 scripts/package_macos.py \
 发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
 Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
 
+## Ubuntu 安装包
+
+GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 APT 安装并自动解析
+GTK/WebKitGTK 依赖的 `.deb`，也提供适用于 Ubuntu 24.04 及以上相近环境的 AppImage。
+
+```sh
+sudo apt install ./athena_VERSION_amd64.deb
+chmod +x Athena-VERSION-linux-x86_64.AppImage
+./Athena-VERSION-linux-x86_64.AppImage
+```
+
+AppImage 内置 Athena 及多数 GTK/WebKitGTK 运行时，但 WebKitGTK 的多进程辅助程序仍
+依赖兼容的系统 WebKitGTK 运行时；它不是承诺可在任意 Linux 发行版免依赖运行的静态包。
+
 ## 许可证
 
 本项目基于[木兰宽松许可证第二版](https://license.coscl.org.cn/MulanPSL2)（Mulan PSL v2）授权，完整条款见 [LICENSE](LICENSE)。
