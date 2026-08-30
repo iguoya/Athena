@@ -33,6 +33,7 @@
       "chapters": [
         {
           "name": "TypeSemantics",
+          "prerequisites": [],
           "title": "类型与表达式",
           "description": "从初始化、类型推导和值类别建立阅读 C++ 对象与表达式的基本方法。",
           "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
@@ -54,6 +55,7 @@
         },
         {
           "name": "Reference",
+          "prerequisites": ["TypeSemantics"],
           "title": "引用",
           "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
           "icon": { "type": "theme", "name": "insert-link-symbolic" },
@@ -68,6 +70,7 @@
         },
         {
           "name": "FunctionCallable",
+          "prerequisites": ["TypeSemantics", "Reference"],
           "title": "函数与可调用对象",
           "description": "学习 C++ 函数接口、重载机制、函数对象、Lambda 和通用回调。",
           "icon": { "type": "theme", "name": "system-run-symbolic" },
@@ -82,6 +85,7 @@
         },
         {
           "name": "ClassObject",
+          "prerequisites": ["FunctionCallable", "Reference"],
           "title": "类、对象与运算符",
           "description": "学习类的定义、对象生命周期、拷贝控制、const 正确性和运算符重载。",
           "icon": { "type": "theme", "name": "system-users-symbolic" },
@@ -95,6 +99,7 @@
         },
         {
           "name": "RAII",
+          "prerequisites": ["ClassObject"],
           "title": "RAII 与资源管理",
           "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
           "icon": { "type": "theme", "name": "security-high-symbolic" },
@@ -111,6 +116,7 @@
         },
         {
           "name": "InheritancePolymorphism",
+          "prerequisites": ["ClassObject"],
           "title": "继承与多态",
           "description": "学习基类与派生类关系、抽象接口、虚函数和运行时多态。",
           "icon": { "type": "theme", "name": "view-list-tree-symbolic" },
@@ -126,6 +132,7 @@
         },
         {
           "name": "TemplateGeneric",
+          "prerequisites": ["FunctionCallable", "ClassObject"],
           "title": "模板、泛型与编译期",
           "description": "学习模板、类型约束和编译期计算，建立现代 C++ 泛型程序设计能力。",
           "icon": { "type": "theme", "name": "application-x-addon-symbolic" },
@@ -140,6 +147,7 @@
         },
         {
           "name": "StandardLibrary",
+          "prerequisites": ["RAII", "TemplateGeneric"],
           "title": "标准库实用类型",
           "description": "学习字符串、词汇类型和时间工具等不属于容器算法体系的常用标准库设施。",
           "icon": { "type": "theme", "name": "applications-utilities-symbolic" },
@@ -154,6 +162,7 @@
         },
         {
           "name": "STLContainer",
+          "prerequisites": ["RAII", "TemplateGeneric"],
           "title": "STL 容器",
           "description": "学习标准库顺序容器、关联容器和无序容器的特性与选择。",
           "icon": { "type": "theme", "name": "view-grid-symbolic" },
@@ -165,6 +174,7 @@
         },
         {
           "name": "IteratorRange",
+          "prerequisites": ["STLContainer"],
           "title": "迭代器、Range 与视图",
           "description": "学习迭代器抽象、范围 for 以及 C++20 Ranges 和 Views。",
           "icon": { "type": "theme", "name": "go-next-symbolic" },
@@ -177,6 +187,7 @@
         },
         {
           "name": "STLAlgorithm",
+          "prerequisites": ["IteratorRange", "FunctionCallable"],
           "title": "STL 算法",
           "description": "学习标准算法的排序、查找和变换操作以及与迭代器和 Range 的配合。",
           "icon": { "type": "theme", "name": "system-run-symbolic" },
@@ -189,6 +200,7 @@
         },
         {
           "name": "ErrorHandling",
+          "prerequisites": ["ClassObject", "RAII"],
           "title": "错误处理与异常安全",
           "description": "学习异常、错误值、noexcept 和异常安全保证，建立可恢复的程序边界。",
           "icon": { "type": "theme", "name": "dialog-warning-symbolic" },
@@ -202,6 +214,7 @@
         },
         {
           "name": "FileIO",
+          "prerequisites": ["ErrorHandling", "STLContainer"],
           "title": "I/O 与文件系统",
           "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
           "icon": { "type": "theme", "name": "system-file-manager-symbolic" },
@@ -214,6 +227,7 @@
         },
         {
           "name": "Concurrency",
+          "prerequisites": ["RAII", "StandardLibrary"],
           "title": "并发、异步与协程",
           "description": "学习线程、同步原语、内存模型、异步任务和 C++20 协程。",
           "icon": { "type": "theme", "name": "network-workgroup-symbolic" },

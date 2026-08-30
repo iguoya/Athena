@@ -40,6 +40,7 @@ CHAPTER_FIELDS = frozenset(
         "ui",
         "source",
         "implementation",
+        "prerequisites",
         "groups",
         "subchapters",
     }
@@ -224,6 +225,46 @@ def markdown_heading_titles(path: Path) -> list[str]:
     return titles
 
 
+def validate_prerequisite_graph(
+    prerequisites_by_name: dict[str, list[str]], category_name: str
+) -> None:
+    """Every prerequisite must name a chapter in the same category, and the
+    resulting dependency graph must be acyclic (the knowledge-graph page lays
+    it out in prerequisite layers)."""
+    known = set(prerequisites_by_name)
+    for chapter_name, prerequisites in prerequisites_by_name.items():
+        for pre_name in prerequisites:
+            if pre_name not in known:
+                raise ProjectError(
+                    f"chapter {category_name}.{chapter_name} lists unknown "
+                    f"prerequisite {pre_name!r}; prerequisites must name a "
+                    f"chapter in the same category"
+                )
+
+    # 三色 DFS 找环，报错时给出成环路径便于定位。
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {name: WHITE for name in prerequisites_by_name}
+
+    def visit(name: str, stack: list[str]) -> None:
+        color[name] = GRAY
+        stack.append(name)
+        for pre_name in prerequisites_by_name[name]:
+            if color[pre_name] == GRAY:
+                cycle = stack[stack.index(pre_name):] + [pre_name]
+                raise ProjectError(
+                    f"prerequisite cycle in category {category_name}: "
+                    + " -> ".join(cycle)
+                )
+            if color[pre_name] == WHITE:
+                visit(pre_name, stack)
+        stack.pop()
+        color[name] = BLACK
+
+    for name in prerequisites_by_name:
+        if color[name] == WHITE:
+            visit(name, [])
+
+
 def build_model(
     config_path: Path,
     root: Path,
@@ -364,6 +405,9 @@ def build_model(
 
         runtime_chapters: list[dict] = []
         seen_chapters: set[str] = set()
+        # chapter name -> 它声明的前置章节 name 列表（知识图谱的边）。同分类内
+        # 引用，声明顺序无关；引用合法性和无环由本分类章节全部读完后统一校验。
+        prerequisites_by_name: dict[str, list[str]] = {}
         chapters = require_list(category.get("chapters"), f"{category_path}.chapters")
         for chapter_index, chapter_value in enumerate(chapters):
             chapter_path = f"{category_path}.chapters[{chapter_index}]"
@@ -385,6 +429,30 @@ def build_model(
                 raise ProjectError(f"duplicate chapter name: {chapter_id}")
             seen_chapters.add(chapter_name)
             chapter_count += 1
+
+            prerequisite_names: list[str] = []
+            seen_prerequisites: set[str] = set()
+            for pre_index, pre_value in enumerate(
+                require_list(
+                    chapter.get("prerequisites", []),
+                    f"{chapter_path}.prerequisites",
+                )
+            ):
+                pre_name = require_text(
+                    pre_value, f"{chapter_path}.prerequisites[{pre_index}]"
+                )
+                if pre_name == chapter_name:
+                    raise ProjectError(
+                        f"{chapter_path}.prerequisites lists the chapter itself: "
+                        f"{chapter_name!r}"
+                    )
+                if pre_name in seen_prerequisites:
+                    raise ProjectError(
+                        f"{chapter_path}.prerequisites lists {pre_name!r} twice"
+                    )
+                seen_prerequisites.add(pre_name)
+                prerequisite_names.append(pre_name)
+            prerequisites_by_name[chapter_name] = prerequisite_names
 
             chapter_title = require_text(chapter.get("title"), f"{chapter_path}.title")
             chapter_description = require_text(
@@ -714,6 +782,7 @@ def build_model(
                     "source": chapter_source,
                     "implementation_header": implementation_header,
                     "icon": chapter_icon,
+                    "prerequisites": prerequisite_names,
                     "groups": runtime_groups,
                     "subchapters": runtime_subchapters,
                 }
@@ -729,6 +798,8 @@ def build_model(
                 }
             )
             chapters_by_id[chapter_id] = chapter_model
+
+        validate_prerequisite_graph(prerequisites_by_name, category_name)
 
         runtime_categories.append(
             {

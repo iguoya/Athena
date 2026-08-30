@@ -55,6 +55,14 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                     chapter_value.at("implementation_header").get<string>();
                 chapter.icon = parse_icon(chapter_value.at("icon"));
 
+                if (chapter_value.contains("prerequisites")) {
+                    for (const auto& prerequisite :
+                         chapter_value.at("prerequisites")) {
+                        chapter.prerequisites.push_back(
+                            prerequisite.get<string>());
+                    }
+                }
+
                 for (const auto& group_value : chapter_value.at("groups")) {
                     ChapterGroup group;
                     group.name = group_value.at("name").get<string>();

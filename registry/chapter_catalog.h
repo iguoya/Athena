@@ -59,6 +59,9 @@ struct ChapterMeta {
     string source;
     string implementation_header;
     IconSpec icon;
+    // 本章依赖的前置章节 name（同分类内）。知识图谱页据此分层布局并画依赖
+    // 箭头；生成器已校验引用合法且无环。空表示没有前置（图谱里的起点）。
+    vector<string> prerequisites;
     vector<ChapterGroup> groups;
     vector<SubChapter> subchapters;
 };
