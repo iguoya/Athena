@@ -172,9 +172,10 @@ WKWebView、Ubuntu 使用 WebKitGTK，跟原来 `article` 章节标签页是同�
 跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须
 已经在这个列表里，生成器 `check` 时会校验，缺了会报错而不是静默忽略。
 
-界面上，"手册"是该分类索引页里的一张工具卡片（跟"学习进度"一样，是不来自
-本配置的合成页面），也进顶栏的章节切换器。**没有跨分类的全局手册入口**。
-手册页面里的每份文档最终会显示成一段小节，段与段之间用一条分隔线隔开。
+界面上，"手册"是该分类标签行里的一个标签页（跟"学习进度"一样，是不来自
+本配置的合成标签页）：有欢迎页的分类排在"欢迎页面 → 学习进度"之后，没有
+欢迎页的分类排在最前。**没有跨分类的全局手册入口**。手册页面里的每份
+文档最终会显示成一段小节，段与段之间用一条分隔线隔开。
 
 各分类手册的标题编号（"第 N 章"/"N.M"）各自独立，从第 1 章起编，不跨
 分类连续。
@@ -471,15 +472,15 @@ GTK 主题图标：
 
 ## 10. 特殊界面覆盖
 
-普通章节省略 `ui`，使用 `defaults.chapter_ui.code`。只有动画、文档主导工作台或需要特殊输入控件的章节才覆盖：
+普通章节省略 `ui`，使用 `defaults.chapter_ui.code`。只有欢迎页、动画或需要特殊输入控件的章节才覆盖：
 
 ```json
 {
-  "name": "TypeSemantics",
-  "title": "类型与表达式",
-  "description": "从初始化、类型推导和值类别建立阅读 C++ 对象与表达式的基本方法。",
+  "name": "Welcome",
+  "title": "欢迎页面",
+  "description": "介绍 Athena 的学习方式。",
   "ui": {
-    "blueprint": "resources/ui/chapters/workbench_chapter.blp"
+    "blueprint": "resources/ui/chapters/welcome.blp"
   },
   "subchapters": []
 }
@@ -490,7 +491,7 @@ GTK 主题图标：
 ## 11. 描述字段
 
 - `category.description`：整个课程分类的学习范围。
-- `chapter.description`：章节页顶部与索引页卡片上的章节概要。
+- `chapter.description`：标签页顶部的章节概要。
 - `group.description`：视觉分组概要。
 - `subchapter.description`：成员函数实验必须覆盖的教学内容。
 - 分类 `handbook_documents` 里的文档：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
