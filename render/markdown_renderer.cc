@@ -3,6 +3,7 @@
 #include <md4c-html.h>
 #include <md4c.h>
 
+#include <algorithm>
 #include <climits>
 #include <map>
 #include <stdexcept>
@@ -149,11 +150,9 @@ string add_heading_anchors(string html) {
     return html;
 }
 
-// 在每个匹配小节的标题正下方插入一张可点的实验入口卡片。只在渲染期
-// 发生，操作的是 md_html() 已经产出的 HTML 字符串，不改动 markdown
-// 原文、不依赖自定义 Markdown 语法。跟 add_heading_anchors 同一种手法
-// （按出现顺序扫描裸 <hN> 标签），必须在 add_heading_anchors 往标签里
-// 插 id 属性之前调用，否则标签形状变了，这里的裸标签匹配会失效。
+// 在匹配小节的正文末尾插入实验入口组。讲解先完整展开，读者形成预测后
+// 再进入验证；同一小节的多个实验放在一组里，不重复打断阅读。只在渲染
+// 期操作 md_html() 产出的 HTML，不修改 Markdown 原文。
 string insert_experiment_links(
     string html,
     const vector<MarkdownHeading>& headings,
@@ -171,8 +170,13 @@ string insert_experiment_links(
         link_by_heading[link.heading].push_back(&link);
     }
 
+    struct HtmlHeading {
+        size_t position;
+        unsigned level;
+    };
+    vector<HtmlHeading> html_headings;
+
     size_t search_from = 0;
-    size_t heading_index = 0;
     while (true) {
         const size_t open_pos = html.find("<h", search_from);
         if (open_pos == string::npos) {
@@ -184,34 +188,53 @@ string insert_experiment_links(
             continue;
         }
 
-        const size_t current_index = heading_index++;
-        const string closing_tag = string("</h") + html[open_pos + 2] + ">";
-        const size_t close_pos = html.find(closing_tag, open_pos);
-        if (close_pos == string::npos) {
-            search_from = open_pos + 4;
-            continue;
-        }
-        const size_t after_close = close_pos + closing_tag.size();
+        html_headings.push_back(
+            {open_pos, static_cast<unsigned>(html[open_pos + 2] - '0')});
+        search_from = open_pos + 4;
+    }
 
-        const string heading_title = current_index < headings.size()
-            ? headings[current_index].title
-            : string();
-        const auto found = link_by_heading.find(heading_title);
+    struct Insertion {
+        size_t position;
+        string html;
+    };
+    vector<Insertion> insertions;
+    const size_t count = min(headings.size(), html_headings.size());
+    for (size_t current_index = 0; current_index < count; ++current_index) {
+        const auto& heading = headings[current_index];
+        const auto found = link_by_heading.find(heading.title);
         if (found == link_by_heading.end()) {
-            search_from = after_close;
             continue;
         }
 
-        string card;
-        for (const auto* link : found->second) {
-            card +=
-                "\n<div class=\"athena-experiment-link\">"
-                "<a href=\"athena://knowledge/" + escape_html(link->knowledge_id) +
-                "\">▶ 动手验证：" + escape_html(link->label) + "</a>"
-                "</div>\n";
+        size_t section_end = html.size();
+        for (size_t next = current_index + 1; next < html_headings.size(); ++next) {
+            if (html_headings[next].level <= html_headings[current_index].level) {
+                section_end = html_headings[next].position;
+                break;
+            }
         }
-        html.insert(after_close, card);
-        search_from = after_close + card.size();
+
+        string group =
+            "\n<section class=\"athena-experiment-group\" "
+            "aria-label=\"本节实验\">\n"
+            "<div class=\"athena-experiment-group-title\">"
+            "讲解完成 · 动手验证</div>\n"
+            "<div class=\"athena-experiment-actions\">\n";
+        for (const auto* link : found->second) {
+            group +=
+                "<a class=\"athena-experiment-link\" "
+                "href=\"athena://knowledge/" +
+                escape_html(link->knowledge_id) + "\">▶ " +
+                escape_html(link->label) + "</a>\n";
+        }
+        group += "</div>\n</section>\n";
+        insertions.push_back({section_end, std::move(group)});
+    }
+
+    // 从后向前插入，前面记录的 HTML 位置不会因后面的插入而漂移。
+    for (auto insertion = insertions.rbegin(); insertion != insertions.rend();
+         ++insertion) {
+        html.insert(insertion->position, insertion->html);
     }
     return html;
 }

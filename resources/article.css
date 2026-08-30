@@ -223,15 +223,32 @@ a {
   text-underline-offset: 3px;
 }
 
-/* 渲染期挂载的实验入口卡片：只在配置了 teaches 的小节标题下方出现，
-   .md 源文件里不存在这个元素，见 render/markdown_renderer.cc 的
-   insert_experiment_links()。样式上是文档的自然延伸而不是外来弹窗——
-   跟正文同宽、用文档自己的边框和强调色，不引入新配色。 */
-.athena-experiment-link {
-  margin: -0.3em 0 1.3em;
+/* 渲染期挂载的实验入口组位于小节正文末尾。它提示“现在去验证”，但不在
+   标题后抢走阅读焦点；同一小节的多个实验共享一个容器。 */
+.athena-experiment-group {
+  margin: 1.65em 0 2.1em;
+  padding: 0.9em 1em 1em;
+  border: 1px solid var(--article-border);
+  border-left: 4px solid var(--article-primary);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--article-primary) 5%, transparent);
 }
 
-.athena-experiment-link a {
+.athena-experiment-group-title {
+  margin-bottom: 0.7em;
+  color: var(--article-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.athena-experiment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65em;
+}
+
+.athena-experiment-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
@@ -245,8 +262,8 @@ a {
   text-decoration: none;
 }
 
-.athena-experiment-link a:hover,
-.athena-experiment-link a:focus-visible {
+.athena-experiment-link:hover,
+.athena-experiment-link:focus-visible {
   background: color-mix(in srgb, var(--article-primary) 16%, transparent);
   text-decoration: none;
 }

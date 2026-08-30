@@ -180,6 +180,7 @@ app_sources = files(
   'ui/chapter_overview.cc',
   'ui/code_chapter_page.cc',
   'ui/dialog_helpers.cc',
+  'ui/experiment_dock.cc',
   'ui/handbook_page.cc',
   'ui/history_dialog.cc',
   'ui/icon_utils.cc',

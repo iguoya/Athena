@@ -41,7 +41,11 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
                                                      |
                                                      +--> ChapterNavStrip（标签条 + Stack 子页装配/切换）
                                                      +--> CodeChapterPage
-                                                     |       +--> ExperimentRunner
+                                                     |       +--> ExperimentDock
+                                                     |               +--> ExperimentRunner
+                                                     +--> WorkbenchPage（文档主导原型）
+                                                     |       +--> ArticleView
+                                                     |       +--> ExperimentDock
                                                      +--> PocketCubePage
                                                      +--> HandbookPage（每分类一部，懒构建一次）
                                                      +--> ProgressPage / LearningDialogs
@@ -54,6 +58,11 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 手册文档作为 GResource 随应用打包，并可在开发期从源码树回退读取。
 - 手册 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
 - 手册 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
+- TypeSemantics 已使用学习工作台原型：初始让文档占满阅读区；配置了 `teaches`
+  的小节在正文末尾显示一个或多个实验入口，点击后才展开右侧实验坞。实验坞只显示
+  当前实验、验证目标、真实源码、运行状态和观察结果，不重复全章知识点目录。
+- `ExperimentDock` 是代码章节页与学习工作台共享的控件协调器，负责源码定位、
+  后台运行状态和结果呈现；页面只决定当前选择哪个实验，`MainWindow` 不感知内部控件。
 - 每个知识点可以独立运行并显示结果；实验代码在独立工作线程执行（同一时刻只运行一个，运行中的新请求被忽略），状态栏的转圈指示与耗时提示反馈进度，结果和耗时经主线程回填，界面不阻塞。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - 统一生成器会校验完整项目模型，并在临时工程中端到端测试五个子命令。
@@ -144,6 +153,8 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 由 `name` 直接表达的函数 ID 分类、C++ 类名和成员函数名。
 - 知识点视觉分组等运行时元数据。
 - 知识点的 `importance`（0–5，内容作者标注的客观难度，缺省未评）；这是内容数据而不是用户数据，与存在 `LearningStore` 里的 AI 自测熟练度结果是两个独立概念。
+- 可选的 `subchapter.teaches`：指出实验服务于哪份教学文档的哪一个唯一标题；
+  同一小节可关联多个实验，生成器校验文档归属以及标题存在性和唯一性。
 - 分类级 `handbook_documents`：该分类手册收录的静态 Markdown 文档路径，按顺序拼接渲染；手册按分类各自独立，不跨分类合并。章节可选的 `overview_document` 指向**本分类**列表里的一条，供“说明文档”按钮跳转。
 - 已实现章节的 `implementation.header`；类名和函数名由章节与知识点的 `name` 派生，分类名只进入稳定函数 ID。
 
@@ -212,6 +223,8 @@ GTK/Blueprint 层负责：
 
 - 为章节显示分类、说明、源码和执行结果。
 - 为手册显示合集 Markdown 正文和可跳转目录；平台 WebView（macOS WKWebView / Ubuntu WebKitGTK）在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为学习工作台在小节正文末尾渲染实验入口组，并按需展开从属实验坞；文档决定
+  学习顺序，代码只验证已经讲解的规则，不用全局实验列表反向组织正文。
 - 把用户操作转换为稳定函数 ID。
 - 调用 `FunctionRegistry`，但不感知具体章节类。
 
@@ -240,8 +253,12 @@ GTK/Blueprint 层负责：
 ```text
 MainWindow（顶层导航、页面切换、模块生命周期）
 ├── ChapterNavStrip（章节标签条装配/编组、Stack 子页占位与切换、常驻手册页保留）
-├── CodeChapterPage（知识点列表、源码、运行状态与结果）
-│   └── ExperimentRunner（非 GTK：执行、耗时、快照、历史写入）
+├── CodeChapterPage（保留的标准代码页；知识点列表与附加学习动作）
+│   └── ExperimentDock（当前实验、源码、运行状态与结果）
+│       └── ExperimentRunner（非 GTK：执行、耗时、快照、历史写入）
+├── WorkbenchPage（文档主导；文档实验入口与实验坞的协调）
+│   ├── ArticleView（正文、目录与实验入口组）
+│   └── ExperimentDock（与代码页复用，不拥有章节/文档状态）
 ├── PocketCubePage（有状态实践页、动画与专属控件）
 ├── HandbookPage（手册内容、ArticleView 生命周期、文档跳转）
 ├── ProgressPage（CategoryProgress -> GTK 统计页面）

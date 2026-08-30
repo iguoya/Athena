@@ -60,6 +60,8 @@ SUBCHAPTER_FIELDS = frozenset(
     }
 )
 TEACHES_FIELDS = frozenset({"document", "heading"})
+ATX_HEADING_PATTERN = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)\s*$")
+TRAILING_HEADING_MARKS_PATTERN = re.compile(r"[ \t]+#+[ \t]*$")
 
 # 教学/实践源码允许存放的两个顶层目录，互相平级：language/ 按 C++ 语言
 # 特性拆分知识点，practice/ 收纳自成一体的应用实践项目（比如
@@ -189,6 +191,39 @@ def resolve_icon(icon: dict | None, fallback: dict | None, label: str) -> dict:
     return dict(resolved)
 
 
+def markdown_heading_titles(path: Path) -> list[str]:
+    """Return normalized ATX heading text, ignoring fenced code examples."""
+    titles: list[str] = []
+    fence: str | None = None
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as error:
+        raise ProjectError(f"cannot read handbook document {path}: {error}") from error
+
+    for line in lines:
+        stripped = line.lstrip()
+        if stripped.startswith(("```", "~~~")):
+            marker = stripped[:3]
+            if fence is None:
+                fence = marker
+            elif fence == marker:
+                fence = None
+            continue
+        if fence is not None:
+            continue
+
+        match = ATX_HEADING_PATTERN.match(line)
+        if not match:
+            continue
+        title = TRAILING_HEADING_MARKS_PATTERN.sub("", match.group(2)).strip()
+        # teaches.heading deliberately targets short, plain titles. Removing the
+        # common inline emphasis markers keeps validation aligned with MD4C's
+        # visible heading text while avoiding a second Markdown parser in Python.
+        title = re.sub(r"[`*_~]", "", title)
+        titles.append(" ".join(title.split()))
+    return titles
+
+
 def build_model(
     config_path: Path,
     root: Path,
@@ -270,6 +305,7 @@ def build_model(
     source_files: set[str] = set()
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
+    headings_by_document: dict[str, list[str]] = {}
     runtime_categories: list[dict] = []
     chapter_count = 0
     subchapter_count = 0
@@ -607,6 +643,24 @@ def build_model(
                         teaches_value.get("heading"),
                         f"{subchapter_path}.teaches.heading",
                     )
+                    if teaches_document not in headings_by_document:
+                        headings_by_document[teaches_document] = (
+                            markdown_heading_titles(root / teaches_document)
+                        )
+                    headings = headings_by_document[teaches_document]
+                    heading_count = headings.count(teaches_heading)
+                    if heading_count == 0:
+                        raise ProjectError(
+                            f"{subchapter_path}.teaches.heading "
+                            f"{teaches_heading!r} was not found in "
+                            f"{teaches_document!r}"
+                        )
+                    if heading_count > 1:
+                        raise ProjectError(
+                            f"{subchapter_path}.teaches.heading "
+                            f"{teaches_heading!r} is not unique in "
+                            f"{teaches_document!r}"
+                        )
                     teaches = {
                         "document": teaches_document,
                         "heading": teaches_heading,

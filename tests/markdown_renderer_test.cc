@@ -52,4 +52,30 @@ TEST(MarkdownRendererTest, OmitsTheTocWhenThereAreNoHeadings) {
     EXPECT_NE(html.find("article-layout-without-toc"), string::npos);
 }
 
+TEST(MarkdownRendererTest, GroupsExperimentsAtTheEndOfTheirSection) {
+    const string markdown =
+        "# 第一章\n\n## 类型推导\n\n先讲清规则。\n\n## 值类别\n\n下一节。\n";
+    const auto headings = parse_markdown_headings(markdown);
+    const string html = render_markdown_html(
+        markdown,
+        "",
+        headings,
+        {{"类型推导", "cpp.Type.auto", "auto"},
+         {"类型推导", "cpp.Type.decltype", "decltype"}});
+
+    const size_t explanation = html.find("先讲清规则。");
+    const size_t group = html.find("class=\"athena-experiment-group\"");
+    const size_t next_section = html.find(">值类别</h2>");
+    ASSERT_NE(explanation, string::npos);
+    ASSERT_NE(group, string::npos);
+    ASSERT_NE(next_section, string::npos);
+    EXPECT_LT(explanation, group);
+    EXPECT_LT(group, next_section);
+    EXPECT_EQ(
+        html.find("class=\"athena-experiment-group\"", group + 1),
+        string::npos);
+    EXPECT_NE(html.find(">▶ auto</a>"), string::npos);
+    EXPECT_NE(html.find(">▶ decltype</a>"), string::npos);
+}
+
 } // namespace

@@ -178,6 +178,50 @@ def main() -> None:
         assert runtime_point["importance"] == 0
         assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
 
+        document_path = "resources/articles/cpp/widget.md"
+        write(root / document_path, "# Widget\n\n## 基础\n\n正文。\n")
+        teaches_config = copy.deepcopy(config)
+        teaches_category = teaches_config["categories"][0]
+        teaches_category["handbook_documents"] = [document_path]
+        teaches_chapter = teaches_category["chapters"][0]
+        teaches_chapter["overview_document"] = document_path
+        teaches_chapter["subchapters"][0]["teaches"] = {
+            "document": document_path,
+            "heading": "基础",
+        }
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(teaches_config, ensure_ascii=False, indent=2) + "\n",
+        )
+        run(generator, root, "catalog", "--output", str(catalog_output))
+        teaches_catalog = json.loads(catalog_output.read_text(encoding="utf-8"))
+        runtime_teaches = teaches_catalog["categories"][0]["chapters"][0][
+            "subchapters"
+        ][0]["teaches"]
+        assert runtime_teaches == {"document": document_path, "heading": "基础"}
+
+        missing_heading = copy.deepcopy(teaches_config)
+        missing_heading["categories"][0]["chapters"][0]["subchapters"][0][
+            "teaches"
+        ]["heading"] = "不存在"
+        assert_rejected(
+            generator,
+            root,
+            missing_heading,
+            "teaches.heading '不存在' was not found",
+        )
+
+        write(
+            root / document_path,
+            "# Widget\n\n## 基础\n\n第一处。\n\n## 基础\n\n第二处。\n",
+        )
+        assert_rejected(
+            generator,
+            root,
+            teaches_config,
+            "teaches.heading '基础' is not unique",
+        )
+
         write(root / "language" / "widget" / "chapter.cpp")
         write(root / "language" / "widget" / "group.cpp")
         write(root / "language" / "widget" / "point.cpp")

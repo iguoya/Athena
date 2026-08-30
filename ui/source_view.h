@@ -14,3 +14,7 @@ void display_project_source(
     const ContentLoader& content_loader,
     const string& relative_path,
     const string& member_name = "");
+
+// 在不重载文本、不重建标记的前提下，把当前插入标记带入视口。供隐藏
+// 源码框首次完成布局后补一次滚动。
+void scroll_source_to_cursor(GtkSourceView* source_view);

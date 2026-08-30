@@ -1,12 +1,9 @@
 #include "code_chapter_page.h"
 
 #include "ui/icon_utils.h"
-#include "ui/source_view.h"
 
 #include <algorithm>
-#include <iomanip>
 #include <iostream>
-#include <sstream>
 #include <vector>
 
 using namespace std;
@@ -21,19 +18,13 @@ const ChapterGroup* find_group(const ChapterMeta& chapter, const string& name) {
     return found == chapter.groups.end() ? nullptr : &*found;
 }
 
-string format_elapsed(double seconds) {
-    ostringstream stream;
-    stream << fixed << setprecision(2) << seconds << "s";
-    return stream.str();
-}
-
 DialogTopic make_dialog_topic(const auto& topic) {
     return {
-        .function_id = topic.function_id,
-        .title = topic.title,
-        .description = topic.description,
-        .source_path = topic.source_path,
-        .member_name = topic.member_name,
+        .function_id = topic.experiment.function_id,
+        .title = topic.experiment.title,
+        .description = topic.experiment.description,
+        .source_path = topic.experiment.source_path,
+        .member_name = topic.experiment.member_name,
     };
 }
 
@@ -51,26 +42,24 @@ CodeChapterPage::CodeChapterPage(
     function<void()> on_progress_changed)
     : m_chapter(chapter),
       m_builder(builder),
-      m_content_loader(content_loader),
       m_function_registry(function_registry),
       m_learning_store(learning_store),
       m_dialogs(dialogs),
-      m_experiment_runner(experiment_runner),
       m_on_progress_changed(std::move(on_progress_changed)) {
     m_header_title_label =
         builder->get_widget<Gtk::Label>("chapter_title_label");
     m_header_description_label =
         builder->get_widget<Gtk::Label>("chapter_description_label");
     m_header_icon = builder->get_widget<Gtk::Image>("chapter_icon");
-    m_source_view = GTK_SOURCE_VIEW(
+    auto* source_view = GTK_SOURCE_VIEW(
         gtk_builder_get_object(builder->gobj(), "source_view"));
-    m_result_view = builder->get_widget<Gtk::TextView>("result_view");
+    auto* result_view = builder->get_widget<Gtk::TextView>("result_view");
     m_topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
     m_knowledge_description_label =
         builder->get_widget<Gtk::Label>("knowledge_description_label");
-    m_experiment_spinner =
+    auto* experiment_spinner =
         builder->get_widget<Gtk::Spinner>("experiment_spinner");
-    m_experiment_status_label =
+    auto* experiment_status_label =
         builder->get_widget<Gtk::Label>("experiment_status_label");
     auto overview_button =
         builder->get_widget<Gtk::Button>("chapter_overview_button");
@@ -84,10 +73,18 @@ CodeChapterPage::CodeChapterPage(
     if (m_header_icon) {
         configure_icon_image(*m_header_icon, chapter.icon, 36);
     }
-    display_project_source(m_source_view, m_content_loader, chapter.source);
+    m_experiment_dock = make_unique<ExperimentDock>(
+        content_loader,
+        experiment_runner,
+        source_view,
+        result_view,
+        nullptr,
+        experiment_spinner,
+        experiment_status_label);
+    m_experiment_dock->show_source_file(chapter.source);
 
-    if (m_result_view) {
-        auto buffer = m_result_view->get_buffer();
+    if (result_view) {
+        auto buffer = result_view->get_buffer();
         buffer->set_text("点击右侧知识点即可运行实验并在此查看结果。");
         auto begin = buffer->begin();
         buffer->place_cursor(begin);
@@ -103,61 +100,6 @@ CodeChapterPage::CodeChapterPage(
 
 CodeChapterPage::~CodeChapterPage() {
     m_alive->store(false);
-    m_elapsed_timer.disconnect();
-}
-
-void CodeChapterPage::start_experiment(const TopicSelection& topic) {
-    auto alive = m_alive;
-    const bool started = m_experiment_runner.start(
-        {.function_id = topic.function_id,
-         .source_path = topic.source_path,
-         .member_name = topic.member_name},
-        [this, alive](const ExperimentResult& result) {
-            if (!alive->load()) {
-                return;
-            }
-            m_elapsed_timer.disconnect();
-            if (m_result_view) {
-                m_result_view->get_buffer()->set_text(result.display_output);
-            }
-            if (m_experiment_spinner) {
-                m_experiment_spinner->set_spinning(false);
-                m_experiment_spinner->set_visible(false);
-            }
-            if (m_experiment_status_label) {
-                m_experiment_status_label->set_visible(false);
-            }
-        });
-    if (!started) {
-        return;
-    }
-
-    if (m_result_view) {
-        m_result_view->get_buffer()->set_text("运行中…");
-    }
-    if (m_experiment_spinner) {
-        m_experiment_spinner->set_visible(true);
-        m_experiment_spinner->set_spinning(true);
-    }
-    m_experiment_started = chrono::steady_clock::now();
-    if (m_experiment_status_label) {
-        m_experiment_status_label->set_visible(true);
-        m_experiment_status_label->set_text("运行中 · 0.00s");
-    }
-
-    m_elapsed_timer.disconnect();
-    m_elapsed_timer = Glib::signal_timeout().connect(
-        [this, alive]() -> bool {
-            if (!alive->load() || !m_experiment_status_label) {
-                return false;
-            }
-            const auto elapsed = chrono::duration<double>(
-                chrono::steady_clock::now() - m_experiment_started);
-            m_experiment_status_label->set_text(
-                "运行中 · " + format_elapsed(elapsed.count()));
-            return true;
-        },
-        200);
 }
 
 void CodeChapterPage::populate_topic_list() {
@@ -190,22 +132,20 @@ void CodeChapterPage::populate_topic_list() {
             }
             row->add_css_class("topic-active");
             if (m_knowledge_description_label) {
-                m_knowledge_description_label->set_text(found->second.description);
+                m_knowledge_description_label->set_text(
+                    found->second.experiment.description);
             }
             if (m_header_title_label) {
-                m_header_title_label->set_text(found->second.title);
+                m_header_title_label->set_text(found->second.experiment.title);
             }
             if (m_header_description_label) {
-                m_header_description_label->set_text(found->second.description);
+                m_header_description_label->set_text(
+                    found->second.experiment.description);
             }
             if (m_header_icon) {
                 configure_icon_image(*m_header_icon, found->second.icon, 36);
             }
-            display_project_source(
-                m_source_view,
-                m_content_loader,
-                found->second.source_path,
-                found->second.member_name);
+            m_experiment_dock->select(found->second.experiment);
         });
 
     string current_group;
@@ -249,11 +189,12 @@ void CodeChapterPage::populate_topic_list() {
         row->set_activatable(false);
         row->add_css_class("topic-row");
         (*selection_by_row)[row] = {
-            .description = subchapter.description,
-            .source_path = subchapter.source,
-            .member_name = subchapter.name,
-            .title = subchapter.title,
-            .function_id = subchapter.function_id,
+            .experiment =
+                {.function_id = subchapter.function_id,
+                 .title = subchapter.title,
+                 .description = subchapter.description,
+                 .source_path = subchapter.source,
+                 .member_name = subchapter.name},
             .icon = subchapter.icon,
         };
         const TopicSelection topic = (*selection_by_row)[row];
@@ -326,16 +267,17 @@ void CodeChapterPage::populate_topic_list() {
         run->add_css_class("btn-primary");
         run->add_css_class("btn-sm");
         run->add_css_class("topic-run");
-        const bool can_run = m_function_registry.contains(topic.function_id);
+        const bool can_run =
+            m_function_registry.contains(topic.experiment.function_id);
         run->set_sensitive(can_run);
         run->set_tooltip_text(can_run
             ? "运行该知识点的实验代码"
             : "该知识点尚未实现可运行实验");
-        if (can_run && m_result_view) {
+        if (can_run) {
             run->signal_clicked().connect(
                 [this, row, activate_topic, topic]() {
                     (*activate_topic)(row);
-                    start_experiment(topic);
+                    m_experiment_dock->run_selected();
                 });
         }
         actions->append(*run);
@@ -367,9 +309,10 @@ void CodeChapterPage::populate_topic_list() {
         if (m_learning_store) {
             try {
                 saved_mastery =
-                    m_learning_store->load_mastery(topic.function_id);
+                    m_learning_store->load_mastery(topic.experiment.function_id);
             } catch (const exception& error) {
-                cerr << "Failed to load progress for " << topic.function_id
+                cerr << "Failed to load progress for "
+                     << topic.experiment.function_id
                      << ": " << error.what() << endl;
             }
         }
@@ -413,7 +356,7 @@ void CodeChapterPage::populate_topic_list() {
         auto update_mastery =
             [this,
              page_alive,
-             function_id = topic.function_id,
+             function_id = topic.experiment.function_id,
              mastery,
              refresh_mastery](int score) {
                 if (!page_alive->load()) {
