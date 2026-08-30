@@ -3,6 +3,7 @@
 - 状态：参考提案，尚未实施
 - 平行方案：`docs/LEARNING_WORKSPACE_LOOP_ENGINE.md`（把工作台设计成闭环引擎、作者零新内容的替代出发点，供对照）
 - 平行方案：`docs/LEARNING_WORKSPACE_BENCH.md`（手册主导 + 渲染期挂载：文档不为 Athena 改写，绑定住在配置层，供对照）
+- 界面草图：`docs/LEARNING_WORKSPACE_SKETCH.html`（探索阶段的可视化参考，浏览器直接打开；不是实现规格，已落地的真实原型见 `ui/workbench_page.h/.cc`）
 - 目的：探索如何通过页面布局、内容组织和代码模块共同实现“思想指导行动，行动验证并深化思想”
 - 约束：本文不替代 `AGENTS.md`、`docs/ARCHITECTURE.md` 或已经接受的 ADR；其中的名称、
   字段和交互都只是候选方案，只有经过评审并写入 ADR 后才成为实施方向

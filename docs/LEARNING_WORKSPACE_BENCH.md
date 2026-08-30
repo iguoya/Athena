@@ -3,6 +3,8 @@
 - 状态：参考提案，尚未实施
 - 平行方案：`docs/LEARNING_WORKSPACE_PROPOSAL.md`（提案 A：内容结构）、
   `docs/LEARNING_WORKSPACE_LOOP_ENGINE.md`（方案 B：闭环引擎）
+- 界面草图：`docs/LEARNING_WORKSPACE_SKETCH.html`（探索阶段的可视化参考，浏览器直接打开；
+  不是实现规格，已落地的真实原型见 `ui/workbench_page.h/.cc`）
 - 目的：在 `AGENTS.md`「项目定位与学习内容」已经定义的文档—代码关系**之内**设计工作台，
   而不是另立一套关系模型
 - 约束：同 A、B——不替代 `AGENTS.md`、`docs/ARCHITECTURE.md` 或已接受的 ADR；

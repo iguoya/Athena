@@ -1,6 +1,7 @@
 # Athena 学习工作台：闭环引擎方案
 
 - 状态：参考提案，尚未实施；与 `docs/LEARNING_WORKSPACE_PROPOSAL.md`、`docs/LEARNING_WORKSPACE_BENCH.md` 平行，供对照
+- 界面草图：`docs/LEARNING_WORKSPACE_SKETCH.html`（探索阶段的可视化参考，浏览器直接打开；不是实现规格，已落地的真实原型见 `ui/workbench_page.h/.cc`）
 - 目的：换一个出发点设计"学习工作台"——把它当成一台**闭环引擎**，而不是一种内容格式
 - 约束：同 `LEARNING_WORKSPACE_PROPOSAL.md`——不替代 `AGENTS.md`、`docs/ARCHITECTURE.md`
   或已接受的 ADR；所有名称、字段、交互都是候选，需经原型验证并写入 ADR 才成为实施方向
