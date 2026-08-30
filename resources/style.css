@@ -117,18 +117,19 @@ button.home-tile:hover {
 
 /* === 分类索引页：学习路线预览条（当前仅 cpp） === */
 .roadmap-card {
-    padding: 20px 24px;
+    padding: 24px 28px;
     border: 1px solid @athena_border;
     border-radius: 12px;
-    background-color: alpha(@athena_surface, 0.72);
+    background-color: @athena_surface;
+    box-shadow: 0 1px 3px alpha(#000000, 0.07);
 }
 
 .roadmap-stage {
-    min-height: 128px;
-    padding: 14px 16px;
+    min-height: 140px;
+    padding: 18px 16px;
     border: 1px solid @athena_border;
-    border-radius: 10px;
-    background-color: @athena_surface;
+    border-radius: 8px;
+    background-color: @athena_surface_subtle;
 }
 
 .route-icon-blue { color: #0d6efd; }

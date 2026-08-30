@@ -36,22 +36,27 @@ Gtk::Button* make_tile(
 }
 
 Gtk::Widget* make_roadmap(const vector<ChapterIndexStage>& stages) {
-    auto* card = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 14);
+    auto* card = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 18);
     card->add_css_class("roadmap-card");
+    // 之前欢迎页的路线预览占整页宽（width-request 1244），换到索引页后
+    // 索引页外层是居中列，不给宽度就会被章节网格挤窄、五格显得局促。
+    // 这里显式给一个宽敞的下限，跟旧版观感一致。
+    card->set_size_request(1120, -1);
 
     auto* heading = Gtk::make_managed<Gtk::Label>("学习路线");
-    heading->add_css_class("title-4");
+    heading->add_css_class("title-3");
     heading->set_halign(Gtk::Align::START);
     card->append(*heading);
 
-    auto* row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
+    auto* row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
     row->set_homogeneous(true);
     for (const auto& stage : stages) {
-        auto* cell = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 6);
+        auto* cell = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 10);
         cell->add_css_class("roadmap-stage");
         cell->set_hexpand(true);
 
-        auto* icon = make_icon_image(stage.icon, 32);
+        auto* icon = make_icon_image(stage.icon, 40);
+        icon->set_halign(Gtk::Align::CENTER);
         if (!stage.accent.empty()) {
             icon->add_css_class(stage.accent);
         }
@@ -59,14 +64,15 @@ Gtk::Widget* make_roadmap(const vector<ChapterIndexStage>& stages) {
 
         auto* title = Gtk::make_managed<Gtk::Label>(stage.title);
         title->add_css_class("heading");
-        title->set_halign(Gtk::Align::START);
+        title->set_halign(Gtk::Align::CENTER);
         cell->append(*title);
 
         auto* summary = Gtk::make_managed<Gtk::Label>(stage.summary);
         summary->add_css_class("caption");
         summary->add_css_class("dim-label");
         summary->set_wrap(true);
-        summary->set_xalign(0.0F);
+        summary->set_justify(Gtk::Justification::CENTER);
+        summary->set_halign(Gtk::Align::CENTER);
         cell->append(*summary);
 
         row->append(*cell);
