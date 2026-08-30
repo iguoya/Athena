@@ -9,10 +9,17 @@
 
 using namespace std;
 
+namespace {
+// 只在渲染期插入的链接前缀，不出现在 .md 源文件里，见 article_view.h。
+NSString* const kAthenaKnowledgeLinkPrefix = @"athena://knowledge/";
+} // namespace
+
 @interface AthenaArticleNavigationDelegate : NSObject <WKNavigationDelegate>
 // 页面（含 baseURL 相关资源）加载完成时触发一次；MacArticleView 用它来
 // 把"页面还没加载完就先请求跳锚点"的请求推迟到这个时机再执行。
 @property (nonatomic, copy) void (^didFinishHandler)(void);
+// athena://knowledge/<id> 链接被点击时触发，参数是 <id> 部分。
+@property (nonatomic, copy) void (^linkHandler)(NSString* knowledgeId);
 @end
 
 @implementation AthenaArticleNavigationDelegate
@@ -21,6 +28,17 @@ using namespace std;
     decidePolicyForNavigationAction:(WKNavigationAction*)navigationAction
                     decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSURL* url = navigationAction.request.URL;
+    NSString* absoluteString = url.absoluteString;
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated &&
+        [absoluteString hasPrefix:kAthenaKnowledgeLinkPrefix]) {
+        if (self.linkHandler) {
+            self.linkHandler(
+                [absoluteString substringFromIndex:kAthenaKnowledgeLinkPrefix.length]);
+        }
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
+
     NSString* fragment = url.fragment;
     if (navigationAction.navigationType == WKNavigationTypeLinkActivated &&
         [fragment hasPrefix:@"athena-heading-"]) {
@@ -113,7 +131,32 @@ public:
         }
     }
 
+    void set_link_handler(function<void(const string&)> handler) override {
+        // m_navigation_delegate 只在 ensure_web_view() 里创建，而那要等
+        // 到 load_html() 第一次被调用（甚至要等 host 控件真正 map 到
+        // 屏幕上）才会发生。调用方（WorkbenchPage）在 load_html() 之前
+        // 就设置了这个 handler，此时委托对象还是 nil——ObjC 里给 nil
+        // 发消息是静默空操作，直接赋值会悄悄丢掉这次设置。所以这里存成
+        // 成员，delegate 真正创建出来的那一刻（ensure_web_view()）再补
+        // 应用一次；此处如果 delegate 已经存在也顺带立即生效，两种调用
+        // 顺序都覆盖。
+        m_link_handler = std::move(handler);
+        apply_link_handler();
+    }
+
 private:
+    void apply_link_handler() {
+        if (!m_navigation_delegate) {
+            return;
+        }
+        auto shared_handler =
+            make_shared<function<void(const string&)>>(m_link_handler);
+        m_navigation_delegate.linkHandler = ^(NSString* knowledgeId) {
+            if (*shared_handler) {
+                (*shared_handler)(string(knowledgeId.UTF8String));
+            }
+        };
+    }
     bool ensure_web_view() {
         if (m_web_view) {
             return true;
@@ -151,6 +194,7 @@ private:
         m_navigation_delegate.didFinishHandler = [this]() {
             on_navigation_finished();
         };
+        apply_link_handler();
         [m_native_content_view addSubview:m_web_view];
         sync_frame();
         // 首次创建时 article_host 往往还没经过真正的布局分配，这里立即
@@ -269,6 +313,7 @@ private:
     // m_pending_scroll_anchor，等 on_navigation_finished 里再补跑。
     bool m_navigation_finished = false;
     string m_pending_scroll_anchor;
+    function<void(const string&)> m_link_handler;
     NSView* m_native_content_view = nil;
     WKWebView* m_web_view = nil;
     AthenaArticleNavigationDelegate* m_navigation_delegate = nil;

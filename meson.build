@@ -189,7 +189,8 @@ app_sources = files(
   'ui/progress_page.cc',
   'ui/quiz_dialog.cc',
   'ui/settings_dialog.cc',
-  'ui/source_view.cc'
+  'ui/source_view.cc',
+  'ui/workbench_page.cc'
 ) + article_view_sources + app_icon_sources + menu_bar_platform_sources
 
 # === 打包资源 ===

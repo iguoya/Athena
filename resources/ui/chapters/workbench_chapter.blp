@@ -1,0 +1,247 @@
+using Gtk 4.0;
+using GtkSource 5;
+
+// 学习工作台原型：手册主导、实验坞从属，2:1 宽度比例（见
+// docs/LEARNING_WORKSPACE_BENCH.md）。目前只有"类型、初始化与值语义"
+// 一章用它，独立成自己的一份 Blueprint 和 WorkbenchPage 类，不动
+// empty_chapter.blp / CodeChapterPage 的既有实现——其余章节的布局和
+// 逻辑不受影响。
+Box workbench_chapter_page {
+  orientation: vertical;
+  spacing: 10;
+  hexpand: true;
+  vexpand: true;
+  margin-top: 16;
+  margin-start: 20;
+  margin-end: 20;
+  margin-bottom: 18;
+
+  Frame workbench_header_frame {
+    hexpand: true;
+
+    styles [
+      "panel-frame"
+    ]
+
+    Box {
+      orientation: horizontal;
+      spacing: 14;
+      margin-top: 10;
+      margin-bottom: 10;
+      margin-start: 14;
+      margin-end: 14;
+
+      Image workbench_chapter_icon {
+        name: "workbench_chapter_icon";
+        pixel-size: 34;
+        valign: center;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 3;
+        hexpand: true;
+        valign: center;
+
+        Label workbench_chapter_title_label {
+          name: "workbench_chapter_title_label";
+          halign: start;
+
+          styles [
+            "title-2"
+          ]
+        }
+
+        Label workbench_chapter_description_label {
+          name: "workbench_chapter_description_label";
+          halign: start;
+          wrap: true;
+          xalign: 0;
+
+          styles [
+            "header-description"
+          ]
+        }
+      }
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  // 主体：左手册（文档主导）、右实验坞（代码从属），2:1。
+  Paned workbench_body {
+    name: "workbench_body";
+    orientation: horizontal;
+    position: 1260;
+    wide-handle: true;
+    resize-start-child: true;
+    resize-end-child: true;
+    shrink-start-child: false;
+    shrink-end-child: false;
+    hexpand: true;
+    vexpand: true;
+
+    Box article_panel {
+      orientation: vertical;
+      hexpand: true;
+      vexpand: true;
+      margin-end: 8;
+
+      styles [
+        "article-page"
+      ]
+
+      Frame workbench_article_frame {
+        hexpand: true;
+        vexpand: true;
+        label: "手册";
+
+        styles [
+          "panel-frame",
+          "group-frame",
+          "article-surface"
+        ]
+
+        DrawingArea workbench_article_host {
+          name: "workbench_article_host";
+          hexpand: true;
+          vexpand: true;
+        }
+      }
+    }
+
+    Box dock_panel {
+      orientation: vertical;
+      spacing: 8;
+      width-request: 420;
+      margin-start: 8;
+      vexpand: true;
+
+      Box topics_panel {
+        orientation: vertical;
+        height-request: 190;
+
+        Frame {
+          label: "知识点";
+          hexpand: true;
+          vexpand: true;
+
+          styles [
+            "panel-frame",
+            "group-frame"
+          ]
+
+          ScrolledWindow {
+            hscrollbar-policy: never;
+            hexpand: true;
+            vexpand: true;
+
+            ListBox workbench_topics_list {
+              name: "workbench_topics_list";
+              selection-mode: none;
+              show-separators: true;
+
+              styles [
+                "topic-list"
+              ]
+            }
+          }
+        }
+      }
+
+      Box source_panel {
+        orientation: vertical;
+        vexpand: true;
+
+        Frame {
+          label: "真实源码";
+          hexpand: true;
+          vexpand: true;
+
+          styles [
+            "panel-frame",
+            "group-frame"
+          ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            GtkSource.View workbench_source_view {
+              name: "workbench_source_view";
+              editable: false;
+              cursor-visible: false;
+              monospace: true;
+              show-line-numbers: true;
+              highlight-current-line: false;
+              tab-width: 4;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 12;
+              bottom-margin: 12;
+
+              styles [
+                "code-view"
+              ]
+            }
+          }
+        }
+      }
+
+      Box run_row {
+        orientation: horizontal;
+        spacing: 8;
+        halign: end;
+
+        Button workbench_run_button {
+          name: "workbench_run_button";
+          label: "▶ 运行";
+
+          styles [
+            "btn-sm",
+            "btn-primary"
+          ]
+        }
+      }
+
+      Box result_panel {
+        orientation: vertical;
+        height-request: 160;
+
+        Frame {
+          label: "运行结果";
+          hexpand: true;
+          vexpand: true;
+
+          styles [
+            "panel-frame",
+            "group-frame"
+          ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            TextView workbench_result_view {
+              name: "workbench_result_view";
+              editable: false;
+              cursor-visible: false;
+              monospace: true;
+              wrap-mode: word_char;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 10;
+              bottom-margin: 10;
+
+              styles [
+                "code-view"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -223,6 +223,34 @@ a {
   text-underline-offset: 3px;
 }
 
+/* 渲染期挂载的实验入口卡片：只在配置了 teaches 的小节标题下方出现，
+   .md 源文件里不存在这个元素，见 render/markdown_renderer.cc 的
+   insert_experiment_links()。样式上是文档的自然延伸而不是外来弹窗——
+   跟正文同宽、用文档自己的边框和强调色，不引入新配色。 */
+.athena-experiment-link {
+  margin: -0.3em 0 1.3em;
+}
+
+.athena-experiment-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 1.1em;
+  border: 1px dashed var(--article-primary);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--article-primary) 8%, transparent);
+  color: var(--article-primary);
+  font-weight: 650;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.athena-experiment-link a:hover,
+.athena-experiment-link a:focus-visible {
+  background: color-mix(in srgb, var(--article-primary) 16%, transparent);
+  text-decoration: none;
+}
+
 /* 重点/易错点不只变文字颜色，配一块浅色背景，扫读时更容易一眼看到；
    背景色从各自的文字色里按低透明度混出来，同色系不会显得突兀。
    box-decoration-break 让跨行时每一行都有独立的圆角背景，不加这个

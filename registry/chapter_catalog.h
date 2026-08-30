@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -11,6 +12,14 @@ struct IconSpec {
     string type;
     string name;
     string path;
+};
+
+// 知识点在手册里的位置：哪份文档、哪一节标题讲到了它。知识点自己声明
+// "我在哪一节被讲到"，文档不知道 Athena 存在，不为它改写一个字符；
+// heading 按标题文本而不是位置锚点匹配，标题改了配置就该跟着确认。
+struct SubChapterTeaches {
+    string document;
+    string heading;
 };
 
 struct SubChapter {
@@ -24,6 +33,7 @@ struct SubChapter {
     // 内容作者基于教学与工程实践给出的客观难度评分，0-5；0 = 未评。只读，
     // 不是运行时用户数据；AI 自测得出的熟练度存在 LearningStore 里。
     int importance = 0;
+    optional<SubChapterTeaches> teaches;
 };
 
 struct ChapterGroup {

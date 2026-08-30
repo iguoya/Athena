@@ -81,6 +81,23 @@ void display_project_source(
     gtk_text_buffer_apply_tag(
         text_buffer, highlight_tag, &highlight_begin, &highlight_end);
     gtk_text_buffer_place_cursor(text_buffer, &highlight_begin);
+
+    // GtkTextView 对行高的计算是惰性的：只有滚到过、真正画过的区域才有
+    // 准确的行高数据，没画过的区域一律按未验证状态处理。这个函数每次
+    // 都是刚 set_text 换了全新内容就立刻要跳到某一行，那一行绝大多数
+    // 时候还没被验证过——此时查询它的像素位置会被当成"文档末尾"处理
+    // （因为末尾同样没验证过，两者退化成同一个占位值），滚动因此会
+    // 落到文件尾部，而不是目标行。调用一次 scroll_to_mark 会顺带把
+    // 目标行之前的内容跑一遍验证，所以紧接着再调用第二次，用的就是
+    // 验证过的准确几何了。这是 GtkTextView 广为人知的怪癖，调用两次
+    // 是标准写法，不是本项目独有的问题。
+    gtk_text_view_scroll_to_mark(
+        GTK_TEXT_VIEW(source_view),
+        gtk_text_buffer_get_insert(text_buffer),
+        0.15,
+        true,
+        0.0,
+        0.20);
     gtk_text_view_scroll_to_mark(
         GTK_TEXT_VIEW(source_view),
         gtk_text_buffer_get_insert(text_buffer),

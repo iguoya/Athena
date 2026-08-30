@@ -48,8 +48,18 @@ IMPLEMENTATION_FIELDS = frozenset({"header", "source"})
 UI_FIELDS = frozenset({"blueprint"})
 GROUP_FIELDS = frozenset({"name", "title", "description", "icon", "source"})
 SUBCHAPTER_FIELDS = frozenset(
-    {"name", "title", "description", "importance", "icon", "group", "source"}
+    {
+        "name",
+        "title",
+        "description",
+        "importance",
+        "icon",
+        "group",
+        "source",
+        "teaches",
+    }
 )
+TEACHES_FIELDS = frozenset({"document", "heading"})
 
 # 教学/实践源码允许存放的两个顶层目录，互相平级：language/ 按 C++ 语言
 # 特性拆分知识点，practice/ 收纳自成一体的应用实践项目（比如
@@ -567,22 +577,58 @@ def build_model(
                         prefix=SOURCE_PREFIXES,
                     )
                     source_files.add(resolved_source)
-                runtime_subchapters.append(
-                    {
-                        "function_id": function_id,
-                        "name": method,
-                        "title": subchapter_title,
-                        "description": subchapter_description,
-                        "group": group_name,
-                        "source": resolved_source,
-                        "importance": importance,
-                        "icon": resolve_icon(
-                            own_subchapter_icon,
-                            default_subchapter_icon,
-                            f"{subchapter_path}.icon",
-                        ),
+
+                # 可选：本知识点在哪份手册文档的哪一节被讲到——知识点自己
+                # 声明"我在哪一节被讲到"，文档不知道 Athena 存在，不为它
+                # 改写一个字符。heading 是否真的存在于该文档由运行时按
+                # 标题文本查找，找不到只跳过跳转、不阻断构建（文档处于
+                # 频繁重写期时不应逼着开发者同步改配置）。
+                teaches = None
+                if "teaches" in subchapter:
+                    teaches_value = require_object(
+                        subchapter["teaches"], f"{subchapter_path}.teaches"
+                    )
+                    reject_unknown_fields(
+                        teaches_value, TEACHES_FIELDS, f"{subchapter_path}.teaches"
+                    )
+                    teaches_document = project_path(
+                        root,
+                        teaches_value.get("document"),
+                        f"{subchapter_path}.teaches.document",
+                        prefix="resources/articles",
+                    )
+                    if teaches_document not in handbook_document_paths:
+                        raise ProjectError(
+                            f"{subchapter_path}.teaches.document "
+                            f"{teaches_document!r} is not listed in category "
+                            f"{category_name}.handbook_documents"
+                        )
+                    teaches_heading = require_text(
+                        teaches_value.get("heading"),
+                        f"{subchapter_path}.teaches.heading",
+                    )
+                    teaches = {
+                        "document": teaches_document,
+                        "heading": teaches_heading,
                     }
-                )
+
+                runtime_subchapter = {
+                    "function_id": function_id,
+                    "name": method,
+                    "title": subchapter_title,
+                    "description": subchapter_description,
+                    "group": group_name,
+                    "source": resolved_source,
+                    "importance": importance,
+                    "icon": resolve_icon(
+                        own_subchapter_icon,
+                        default_subchapter_icon,
+                        f"{subchapter_path}.icon",
+                    ),
+                }
+                if teaches is not None:
+                    runtime_subchapter["teaches"] = teaches
+                runtime_subchapters.append(runtime_subchapter)
 
             if implementation is not None:
                 if not methods:

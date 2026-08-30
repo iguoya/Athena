@@ -2,11 +2,15 @@
 
 #include <webkit/webkit.h>
 
+#include <cstring>
 #include <iostream>
 
 using namespace std;
 
 namespace {
+
+// 只在渲染期插入的链接前缀，不出现在 .md 源文件里，见 article_view.h。
+constexpr const char* kAthenaKnowledgeLinkPrefix = "athena://knowledge/";
 
 class WebKitGtkArticleView final : public ArticleView {
 public:
@@ -48,6 +52,10 @@ public:
         }
     }
 
+    void set_link_handler(function<void(const string&)> handler) override {
+        m_link_handler = std::move(handler);
+    }
+
 private:
     static void on_load_changed(
         WebKitWebView*, WebKitLoadEvent event, gpointer user_data) {
@@ -86,6 +94,15 @@ private:
         const gchar* uri = webkit_uri_request_get_uri(request);
         if (!uri) {
             return false;
+        }
+
+        if (g_str_has_prefix(uri, kAthenaKnowledgeLinkPrefix)) {
+            auto* self = static_cast<WebKitGtkArticleView*>(user_data);
+            if (self->m_link_handler) {
+                self->m_link_handler(uri + strlen(kAthenaKnowledgeLinkPrefix));
+            }
+            webkit_policy_decision_ignore(decision);
+            return true;
         }
 
         GError* error = nullptr;
@@ -144,6 +161,7 @@ private:
     WebKitWebView* m_web_view = nullptr;
     bool m_navigation_finished = false;
     string m_pending_scroll_anchor;
+    function<void(const string&)> m_link_handler;
 };
 
 } // namespace

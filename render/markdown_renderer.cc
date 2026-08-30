@@ -4,6 +4,7 @@
 #include <md4c.h>
 
 #include <climits>
+#include <map>
 #include <stdexcept>
 #include <utility>
 
@@ -148,6 +149,73 @@ string add_heading_anchors(string html) {
     return html;
 }
 
+// 在每个匹配小节的标题正下方插入一张可点的实验入口卡片。只在渲染期
+// 发生，操作的是 md_html() 已经产出的 HTML 字符串，不改动 markdown
+// 原文、不依赖自定义 Markdown 语法。跟 add_heading_anchors 同一种手法
+// （按出现顺序扫描裸 <hN> 标签），必须在 add_heading_anchors 往标签里
+// 插 id 属性之前调用，否则标签形状变了，这里的裸标签匹配会失效。
+string insert_experiment_links(
+    string html,
+    const vector<MarkdownHeading>& headings,
+    const vector<HeadingExperimentLink>& experiment_links) {
+    if (experiment_links.empty()) {
+        return html;
+    }
+
+    // 一个小节可能同时讲了不止一个知识点（比如 auto/decltype 类型推导
+    // 常常放在同一节里对比着讲）——用 vector 而不是覆盖式的单值映射，
+    // 否则后一个知识点的卡片会静默吃掉前一个的，界面上却看不出少了
+    // 什么，比找不到卡片更容易被忽略。
+    map<string, vector<const HeadingExperimentLink*>> link_by_heading;
+    for (const auto& link : experiment_links) {
+        link_by_heading[link.heading].push_back(&link);
+    }
+
+    size_t search_from = 0;
+    size_t heading_index = 0;
+    while (true) {
+        const size_t open_pos = html.find("<h", search_from);
+        if (open_pos == string::npos) {
+            break;
+        }
+        if (!(open_pos + 3 < html.size() && html[open_pos + 2] >= '1' &&
+              html[open_pos + 2] <= '6' && html[open_pos + 3] == '>')) {
+            search_from = open_pos + 2;
+            continue;
+        }
+
+        const size_t current_index = heading_index++;
+        const string closing_tag = string("</h") + html[open_pos + 2] + ">";
+        const size_t close_pos = html.find(closing_tag, open_pos);
+        if (close_pos == string::npos) {
+            search_from = open_pos + 4;
+            continue;
+        }
+        const size_t after_close = close_pos + closing_tag.size();
+
+        const string heading_title = current_index < headings.size()
+            ? headings[current_index].title
+            : string();
+        const auto found = link_by_heading.find(heading_title);
+        if (found == link_by_heading.end()) {
+            search_from = after_close;
+            continue;
+        }
+
+        string card;
+        for (const auto* link : found->second) {
+            card +=
+                "\n<div class=\"athena-experiment-link\">"
+                "<a href=\"athena://knowledge/" + escape_html(link->knowledge_id) +
+                "\">▶ 动手验证：" + escape_html(link->label) + "</a>"
+                "</div>\n";
+        }
+        html.insert(after_close, card);
+        search_from = after_close + card.size();
+    }
+    return html;
+}
+
 string render_html_toc(const vector<MarkdownHeading>& headings) {
     string toc;
     for (const auto& heading : headings) {
@@ -276,7 +344,8 @@ vector<MarkdownHeading> parse_markdown_headings(const string& markdown) {
 string render_markdown_html(
     const string& markdown,
     const string& stylesheet,
-    const vector<MarkdownHeading>& headings) {
+    const vector<MarkdownHeading>& headings,
+    const vector<HeadingExperimentLink>& experiment_links) {
     if (markdown.size() > UINT_MAX) {
         throw runtime_error("Markdown document is too large");
     }
@@ -293,7 +362,9 @@ string render_markdown_html(
         throw runtime_error("Failed to convert Markdown to HTML");
     }
 
-    const string body = add_heading_anchors(std::move(state.body));
+    const string linked =
+        insert_experiment_links(std::move(state.body), headings, experiment_links);
+    const string body = add_heading_anchors(std::move(linked));
     const string toc = render_html_toc(headings);
     const string layout_class = toc.empty()
         ? "article-layout article-layout-without-toc"

@@ -80,6 +80,13 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                     subchapter.importance =
                         subchapter_value.at("importance").get<int>();
                     subchapter.icon = parse_icon(subchapter_value.at("icon"));
+                    if (subchapter_value.contains("teaches")) {
+                        const auto& teaches_value = subchapter_value.at("teaches");
+                        subchapter.teaches = SubChapterTeaches{
+                            .document = teaches_value.at("document").get<string>(),
+                            .heading = teaches_value.at("heading").get<string>(),
+                        };
+                    }
                     chapter.subchapters.push_back(std::move(subchapter));
                 }
 
