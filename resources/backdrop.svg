@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 应用底纹：近白底 + 三团极淡的柔光 + 几乎不可见的点阵纹理。
+     纯矢量、无滤镜，由 style.css 的 .app-content / .athena-window 以
+     background-size: cover 铺满。调色取自 style.css 的设计 token。 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="960" viewBox="0 0 1440 960">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="58%" stop-color="#f8f9fa"/>
+      <stop offset="100%" stop-color="#f2f4f6"/>
+    </linearGradient>
+    <radialGradient id="glow-blue" cx="10%" cy="-2%" r="52%">
+      <stop offset="0%" stop-color="#0a58ca" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0a58ca" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-purple" cx="96%" cy="6%" r="48%">
+      <stop offset="0%" stop-color="#6f42c1" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#6f42c1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-teal" cx="82%" cy="104%" r="58%">
+      <stop offset="0%" stop-color="#20c997" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#20c997" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#0a58ca" fill-opacity="0.03"/>
+    </pattern>
+  </defs>
+  <rect width="1440" height="960" fill="url(#base)"/>
+  <rect width="1440" height="960" fill="url(#dots)"/>
+  <rect width="1440" height="960" fill="url(#glow-blue)"/>
+  <rect width="1440" height="960" fill="url(#glow-purple)"/>
+  <rect width="1440" height="960" fill="url(#glow-teal)"/>
+</svg>
