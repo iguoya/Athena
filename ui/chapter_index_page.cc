@@ -43,9 +43,9 @@ Gtk::Widget* make_roadmap(const vector<ChapterIndexStage>& stages) {
     // 这里显式给一个宽敞的下限，跟旧版观感一致。
     card->set_size_request(1120, -1);
 
-    auto* heading = Gtk::make_managed<Gtk::Label>("学习路线");
+    auto* heading = Gtk::make_managed<Gtk::Label>("学习路线预览");
     heading->add_css_class("title-3");
-    heading->set_halign(Gtk::Align::START);
+    heading->set_halign(Gtk::Align::CENTER);
     card->append(*heading);
 
     auto* row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
