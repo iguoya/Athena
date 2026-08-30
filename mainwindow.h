@@ -53,6 +53,13 @@ private:
         const string& category_name,
         const ChapterMeta& chapter);
 
+    // 面包屑：分类名是可点击的链接按钮，其余层级是纯文本。
+    void clear_breadcrumb();
+    void show_category_breadcrumb(const string& category_name);
+    void show_chapter_breadcrumb(
+        const string& category_name,
+        const string& trailing);
+
     // 分类内导航：索引页 ↔ 章节 ↔ 学习工具，统一入口。
     void navigate_to(const string& category_name, const string& page_key);
     void show_category_index(const string& category_name);
@@ -84,7 +91,7 @@ private:
 
     Gtk::FlowBox* m_home_grid = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
-    Gtk::Label* m_breadcrumb_label = nullptr;
+    Gtk::Box* m_breadcrumb_box = nullptr;
     Gtk::MenuButton* m_chapter_switcher = nullptr;
     Glib::RefPtr<Gio::Menu> m_menu_model;
     unique_ptr<ChapterPageStack> m_pages;

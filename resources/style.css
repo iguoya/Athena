@@ -31,9 +31,17 @@
 @define-color athena_chart_neutral #9ea6ad;
 
 /* === Application shell === */
+/* 纯白偏单调，这里叠一层非常淡的浅色渐变作为底纹：两个对角的低透明度
+   光晕 + 一道自上而下的白→浅灰过渡，不引入任何图片资源。顶栏 .app-topbar
+   自己铺的是不透明白，不受影响。项目当前只有浅色一套调色板，没有暗色
+   主题基建，等真正做暗色时这里再补对应的 background-image。 */
 .athena-window,
 .app-content {
     background-color: @athena_surface_subtle;
+    background-image:
+        radial-gradient(circle at 8% -10%, alpha(@athena_primary, 0.07), transparent 42%),
+        radial-gradient(circle at 96% 4%, alpha(@athena_purple, 0.055), transparent 38%),
+        linear-gradient(180deg, #ffffff 0%, @athena_surface_subtle 55%);
     color: @athena_body_text;
 }
 
@@ -105,6 +113,46 @@ button.home-tile:hover {
 .home-tile-desc {
     font-size: 15pt;
     color: @athena_muted;
+}
+
+/* === 首页：C++ 学习路线预览条 === */
+.roadmap-card {
+    padding: 20px 24px;
+    border: 1px solid @athena_border;
+    border-radius: 12px;
+    background-color: alpha(@athena_surface, 0.72);
+}
+
+.roadmap-stage {
+    min-height: 128px;
+    padding: 14px 16px;
+    border: 1px solid @athena_border;
+    border-radius: 10px;
+    background-color: @athena_surface;
+}
+
+.route-icon-blue { color: #0d6efd; }
+.route-icon-purple { color: @athena_purple; }
+.route-icon-green { color: @athena_success; }
+.route-icon-orange { color: @athena_orange; }
+.route-icon-red { color: @athena_danger; }
+
+/* 面包屑里的分类名做成可点击的链接按钮，点回本分类索引页；其余层级
+   仍是纯文本 Label。 */
+button.breadcrumb-link {
+    border: 0;
+    box-shadow: none;
+    background: none;
+    min-height: 0;
+    padding: 2px 4px;
+    color: @athena_primary;
+    font-size: 15pt;
+    font-weight: 600;
+}
+
+button.breadcrumb-link:hover {
+    color: @athena_primary_hover;
+    text-decoration-line: underline;
 }
 
 /* === Typography === */

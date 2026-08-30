@@ -65,8 +65,8 @@ MainWindow::MainWindow(
 
     m_root_stack = m_main_builder->get_widget<Gtk::Stack>("root_stack");
     m_home_grid = m_main_builder->get_widget<Gtk::FlowBox>("home_grid");
-    m_breadcrumb_label =
-        m_main_builder->get_widget<Gtk::Label>("breadcrumb_label");
+    m_breadcrumb_box =
+        m_main_builder->get_widget<Gtk::Box>("breadcrumb_box");
     auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
     auto* content_area = m_main_builder->get_widget<Gtk::Box>("content_area");
     auto* home_button = m_main_builder->get_widget<Gtk::Button>("home_button");
@@ -76,7 +76,7 @@ MainWindow::MainWindow(
         m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_switcher =
         m_main_builder->get_widget<Gtk::MenuButton>("chapter_switcher");
-    if (!m_root_stack || !m_home_grid || !m_breadcrumb_label || !home_page
+    if (!m_root_stack || !m_home_grid || !m_breadcrumb_box || !home_page
         || !content_area || !home_button || !app_menu_bar || !chapter_stack
         || !m_chapter_switcher) {
         throw runtime_error("Failed to get required widgets from main UI");
@@ -206,7 +206,7 @@ void MainWindow::show_settings_dialog() {
 }
 
 void MainWindow::go_home() {
-    m_breadcrumb_label->set_text("");
+    clear_breadcrumb();
     m_chapter_switcher->set_visible(false);
     m_root_stack->set_visible_child("home");
 }
@@ -232,8 +232,35 @@ void MainWindow::enter_category(const string& category_name) {
 
 void MainWindow::show_category_index(const string& category_name) {
     m_pages->show(index_page_key(category_name));
-    m_breadcrumb_label->set_text("›  " + category_title(category_name));
+    show_category_breadcrumb(category_name);
     m_chapter_switcher->set_label("目录");
+}
+
+void MainWindow::clear_breadcrumb() {
+    while (auto* child = m_breadcrumb_box->get_first_child()) {
+        m_breadcrumb_box->remove(*child);
+    }
+}
+
+void MainWindow::show_category_breadcrumb(const string& category_name) {
+    clear_breadcrumb();
+    m_breadcrumb_box->append(*Gtk::make_managed<Gtk::Label>("›"));
+
+    auto* link = Gtk::make_managed<Gtk::Button>(category_title(category_name));
+    link->set_has_frame(false);
+    link->add_css_class("breadcrumb-link");
+    link->set_tooltip_text("返回" + category_title(category_name) + "章节索引");
+    link->signal_clicked().connect(
+        [this, category_name]() { show_category_index(category_name); });
+    m_breadcrumb_box->append(*link);
+}
+
+void MainWindow::show_chapter_breadcrumb(
+    const string& category_name,
+    const string& trailing) {
+    show_category_breadcrumb(category_name);
+    m_breadcrumb_box->append(*Gtk::make_managed<Gtk::Label>("›"));
+    m_breadcrumb_box->append(*Gtk::make_managed<Gtk::Label>(trailing));
 }
 
 const ChapterMeta* MainWindow::find_chapter_by_key(
@@ -272,16 +299,14 @@ void MainWindow::open_chapter(
     ensure_chapter_page(category_name, chapter);
     const string page_key = chapter_key(category_name, chapter.name);
     m_pages->show(page_key);
-    m_breadcrumb_label->set_text(
-        "›  " + category_title(category_name) + "  ›  " + chapter.title);
+    show_chapter_breadcrumb(category_name, chapter.title);
     m_chapter_switcher->set_label(chapter.title);
 }
 
 void MainWindow::open_progress_page() {
     refresh_progress_page();
     m_pages->show(kProgressPageKey);
-    m_breadcrumb_label->set_text(
-        "›  " + category_title(kCppCategory) + "  ›  学习进度");
+    show_chapter_breadcrumb(kCppCategory, "学习进度");
     m_chapter_switcher->set_label("学习进度");
 }
 
@@ -497,8 +522,7 @@ void MainWindow::show_handbook_page(
     const string& jump_to_document) {
     ensure_handbook_page(category_name);
     m_pages->show(handbook_page_key(category_name));
-    m_breadcrumb_label->set_text(
-        "›  " + category_title(category_name) + "  ›  手册");
+    show_chapter_breadcrumb(category_name, "手册");
     m_chapter_switcher->set_label("手册");
 
     if (!jump_to_document.empty()) {
