@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "app_icon.h"
+#include "menu_bar_platform.h"
 #include "services/experiment_runner.h"
 #include "ui/about_dialog.h"
 #include "ui/chapter_nav_strip.h"
@@ -10,6 +11,10 @@
 #include "ui/icon_utils.h"
 #include "ui/pocket_cube_page.h"
 #include "ui/progress_page.h"
+#include "ui/workbench_page.h"
+
+#include <giomm/menu.h>
+#include <giomm/simpleaction.h>
 
 #include <algorithm>
 #include <iostream>
@@ -29,6 +34,9 @@ string handbook_page_key(const string& category_name) {
 
 constexpr const char* kWelcomePageWidget = "welcome_page";
 constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
+// 由 athena.json 的 chapter.ui.blueprint 派生：blueprint 文件名去掉
+// .blp 后缀再加 _page，见 scripts/project_generator/model.py。
+constexpr const char* kWorkbenchPageWidget = "workbench_chapter_page";
 constexpr const char* kProgressPageKey = "__progress__";
 
 } // namespace
@@ -50,25 +58,32 @@ MainWindow::MainWindow(
     Gtk::IconTheme::get_for_display(get_display())->add_resource_path("/app/icons");
     Gtk::Window::set_default_icon_name("cn.athena.icon");
 
-    m_category_sidebar =
-        m_main_builder->get_widget<Gtk::Box>("category_sidebar");
+    m_root_stack = m_main_builder->get_widget<Gtk::Stack>("root_stack");
+    m_home_grid = m_main_builder->get_widget<Gtk::FlowBox>("home_grid");
+    m_breadcrumb_label =
+        m_main_builder->get_widget<Gtk::Label>("breadcrumb_label");
+    auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
+    auto* content_area = m_main_builder->get_widget<Gtk::Box>("content_area");
+    auto* home_button = m_main_builder->get_widget<Gtk::Button>("home_button");
+    auto* app_menu_bar =
+        m_main_builder->get_widget<Gtk::PopoverMenuBar>("app_menu_bar");
     auto* chapter_stack =
         m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     auto* chapter_tab_box =
         m_main_builder->get_widget<Gtk::FlowBox>("chapter_tab_box");
-    auto settings_button =
-        m_main_builder->get_widget<Gtk::Button>("settings_button");
-    auto about_button =
-        m_main_builder->get_widget<Gtk::Button>("about_button");
-    if (!m_category_sidebar || !chapter_stack || !chapter_tab_box
-        || !settings_button || !about_button) {
+    if (!m_root_stack || !m_home_grid || !m_breadcrumb_label || !home_page
+        || !content_area || !home_button || !app_menu_bar || !chapter_stack
+        || !chapter_tab_box) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
+    m_root_stack->add(*home_page, "home", "首页");
+    m_root_stack->add(*content_area, "category", "分类");
+    m_root_stack->set_visible_child("home");
     m_nav = make_unique<ChapterNavStrip>(*chapter_tab_box, *chapter_stack);
 
     load_chapter_metadata();
-    // 首个分类按钮激活时会立即构建进度页，所以存储和依赖它的模块必须
-    // 先完成初始化。
+    // 首次进入分类会立即构建进度页，所以存储和依赖它的模块必须先完成
+    // 初始化。
     open_learning_store();
     m_dialogs = make_unique<LearningDialogs>(
         *this, m_content_loader, m_learning_store.get(), m_ui_alive);
@@ -80,11 +95,14 @@ MainWindow::MainWindow(
         m_ui_alive);
     m_about_dialog = make_unique<AboutDialog>(*this);
 
-    settings_button->signal_clicked().connect(
-        [this]() { m_dialogs->show_settings(); });
-    about_button->signal_clicked().connect(
-        [this]() { m_about_dialog->present(); });
-    setup_category_sidebar();
+    setup_menu();
+    app_menu_bar->set_menu_model(m_menu_model);
+    // macOS 上系统标准菜单栏已经接管同一份菜单模型，窗口内这条菜单栏
+    // 只在没有这层系统集成的平台（目前是 Ubuntu）显示，避免重复。
+    app_menu_bar->set_visible(!platform_has_native_menu_bar());
+
+    home_button->signal_clicked().connect([this]() { go_home(); });
+    build_home_grid();
 }
 
 MainWindow::~MainWindow() {
@@ -114,51 +132,93 @@ void MainWindow::open_learning_store() {
     }
 }
 
-void MainWindow::setup_category_sidebar() {
-    Gtk::ToggleButton* group_owner = nullptr;
-    for (const auto& category : m_catalog.categories()) {
-        auto button = Gtk::make_managed<Gtk::ToggleButton>();
-        button->add_css_class("nav-button");
-        button->set_tooltip_text(category.description);
+void MainWindow::setup_menu() {
+    // 一个子菜单：macOS 的原生菜单栏会把它提升为系统标准的应用菜单
+    // （标题被系统换成应用名），其他平台里它就是窗口内菜单栏上唯一的
+    // 一个下拉项。两条路径共享同一份 win.* 动作，行为完全一致。
+    m_menu_model = Gio::Menu::create();
+    auto app_menu = Gio::Menu::create();
+    app_menu->append("关于 Athena", "win.about");
+    app_menu->append("设置…", "win.settings");
+    auto quit_section = Gio::Menu::create();
+    quit_section->append("退出 Athena", "win.quit");
+    app_menu->append_section("", quit_section);
+    m_menu_model->append_submenu("Athena", app_menu);
 
-        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-        box->set_valign(Gtk::Align::CENTER);
-        box->set_margin_top(12);
-        box->set_margin_bottom(12);
-        box->append(*make_icon_image(category.icon, 24));
-        auto label = Gtk::make_managed<Gtk::Label>(category.title);
-        label->set_wrap(true);
-        label->set_justify(Gtk::Justification::CENTER);
-        label->set_max_width_chars(7);
-        box->append(*label);
-        button->set_child(*box);
-
-        if (group_owner) {
-            button->set_group(*group_owner);
+    add_action("settings", [this]() { m_dialogs->show_settings(); });
+    add_action("about", [this]() { m_about_dialog->present(); });
+    add_action("quit", [this]() {
+        if (auto app = get_application()) {
+            app->quit();
         } else {
-            group_owner = button;
+            close();
         }
-        button->signal_toggled().connect(
-            [this, category_name = category.name, button]() {
-                if (button->get_active()) {
-                    on_category_selected(category_name);
-                }
-            });
-        m_category_sidebar->append(*button);
-        m_category_buttons.push_back(button);
-    }
+    });
 
-    if (!m_category_buttons.empty()) {
-        m_category_buttons.front()->set_active(true);
+    if (auto app = get_application()) {
+        app->set_accel_for_action("win.quit", "<Primary>q");
+        app->set_accel_for_action("win.settings", "<Primary>comma");
     }
 }
 
-void MainWindow::on_category_selected(const string& category_name) {
-    if (category_name == m_current_category) {
-        return;
+void MainWindow::build_home_grid() {
+    for (const auto& category : m_catalog.categories()) {
+        auto tile = Gtk::make_managed<Gtk::Button>();
+        tile->add_css_class("home-tile");
+        tile->set_tooltip_text(category.description);
+
+        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 12);
+        box->set_halign(Gtk::Align::CENTER);
+        box->set_valign(Gtk::Align::CENTER);
+        box->append(*make_icon_image(category.icon, 40));
+
+        auto title = Gtk::make_managed<Gtk::Label>(category.title);
+        title->add_css_class("home-tile-title");
+        box->append(*title);
+
+        auto description = Gtk::make_managed<Gtk::Label>(category.description);
+        description->add_css_class("home-tile-desc");
+        description->set_wrap(true);
+        description->set_justify(Gtk::Justification::CENTER);
+        description->set_max_width_chars(24);
+        box->append(*description);
+
+        tile->set_child(*box);
+        tile->signal_clicked().connect(
+            [this, category_name = category.name]() {
+                enter_category(category_name);
+            });
+        m_home_grid->append(*tile);
     }
-    m_current_category = category_name;
-    build_chapter_tabs(category_name);
+}
+
+void MainWindow::show_about_dialog() {
+    m_about_dialog->present();
+}
+
+void MainWindow::show_settings_dialog() {
+    m_dialogs->show_settings();
+}
+
+void MainWindow::go_home() {
+    m_breadcrumb_label->set_text("");
+    m_root_stack->set_visible_child("home");
+}
+
+void MainWindow::enter_category(const string& category_name) {
+    if (category_name != m_current_category) {
+        m_current_category = category_name;
+        build_chapter_tabs(category_name);
+    }
+    string title = category_name;
+    for (const auto& category : m_catalog.categories()) {
+        if (category.name == category_name) {
+            title = category.title;
+            break;
+        }
+    }
+    m_breadcrumb_label->set_text("›  " + title);
+    m_root_stack->set_visible_child("category");
 }
 
 void MainWindow::ensure_chapter_page(
@@ -199,6 +259,9 @@ void MainWindow::ensure_chapter_page(
     } else if (chapter.widget_name == kPracticeCubePageWidget) {
         m_pocket_cube_pages[page_key] = make_unique<PocketCubePage>(
             chapter, builder, m_content_loader, overview_requested);
+    } else if (chapter.widget_name == kWorkbenchPageWidget) {
+        m_workbench_pages[page_key] = make_unique<WorkbenchPage>(
+            chapter, builder, m_content_loader, *m_experiment_runner, *this);
     }
     // 欢迎页等特殊静态页只需构建 Blueprint 控件树。
     m_loaded_chapters.insert(page_key);

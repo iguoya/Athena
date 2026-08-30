@@ -23,11 +23,13 @@ python = find_program('python3')
 
 article_view_sources = []
 app_icon_sources = []
+menu_bar_platform_sources = []
 platform_dependencies = []
 if host_machine.system() == 'darwin'
   add_languages('objcpp', native: false)
   article_view_sources += files('render/article_view_macos.mm')
   app_icon_sources += files('app_icon_macos.mm')
+  menu_bar_platform_sources += files('menu_bar_platform_macos.cc')
   platform_dependencies += [
     dependency('gtk4-macos'),
     dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
@@ -35,10 +37,12 @@ if host_machine.system() == 'darwin'
 elif host_machine.system() == 'linux'
   article_view_sources += files('render/article_view_webkitgtk.cc')
   app_icon_sources += files('app_icon_other.cc')
+  menu_bar_platform_sources += files('menu_bar_platform_other.cc')
   platform_dependencies += dependency('webkitgtk-6.0')
 else
   article_view_sources += files('render/article_view_unavailable.cc')
   app_icon_sources += files('app_icon_other.cc')
+  menu_bar_platform_sources += files('menu_bar_platform_other.cc')
 endif
 
 # 业务逻辑类目录（C++ 语言各章节演示类）
@@ -186,7 +190,7 @@ app_sources = files(
   'ui/quiz_dialog.cc',
   'ui/settings_dialog.cc',
   'ui/source_view.cc'
-) + article_view_sources + app_icon_sources
+) + article_view_sources + app_icon_sources + menu_bar_platform_sources
 
 # === 打包资源 ===
 resources = gnome.compile_resources(

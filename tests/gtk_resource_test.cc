@@ -7,10 +7,13 @@ namespace {
 TEST(GtkResourceTest, LoadsTheMainWindowNavigationControls) {
     const auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
 
-    EXPECT_NE(builder->get_widget<Gtk::Box>("category_sidebar"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::FlowBox>("home_grid"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Stack>("root_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::FlowBox>("chapter_tab_box"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("chapter_stack"), nullptr);
-    EXPECT_NE(builder->get_widget<Gtk::Button>("settings_button"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Button>("home_button"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::PopoverMenuBar>("app_menu_bar"), nullptr);
 }
 
 TEST(GtkResourceTest, LoadsTheCodeChapterWidgetTree) {

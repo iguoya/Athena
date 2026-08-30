@@ -1,5 +1,87 @@
 using Gtk 4.0;
 
+// 首页：一级大类的入口。FlowBox 按宽度自适应换行，不强行凑满一个固定
+// 宫格数——分类数量以后增加或减少时无需改版式。
+Box home_page {
+  name: "home_page";
+  orientation: vertical;
+  vexpand: true;
+
+  styles [
+    "app-content"
+  ]
+
+  ScrolledWindow {
+    hscrollbar-policy: never;
+    vexpand: true;
+
+    // 分类按钮由 MainWindow 根据 athena.json 动态追加。
+    FlowBox home_grid {
+      name: "home_grid";
+      orientation: horizontal;
+      selection-mode: none;
+      homogeneous: true;
+      min-children-per-line: 2;
+      max-children-per-line: 4;
+      row-spacing: 28;
+      column-spacing: 28;
+      valign: start;
+      halign: center;
+      margin-top: 56;
+      margin-bottom: 56;
+      margin-start: 40;
+      margin-end: 40;
+    }
+  }
+}
+
+// 某一分类内部：章节标签栏 + 章节内容栈。分类切换只影响这里，首页布局
+// 与它互不干扰——两者是 root_stack 里并列的两页。
+Box content_area {
+  name: "content_area";
+  orientation: vertical;
+  vexpand: true;
+
+  styles [
+    "app-content"
+  ]
+
+  ScrolledWindow tab_scroll {
+    hscrollbar-policy: never;
+    vscrollbar-policy: never;
+    vexpand: false;
+
+    styles [
+      "tab-bar"
+    ]
+
+    FlowBox chapter_tab_box {
+      name: "chapter_tab_box";
+      selection-mode: none;
+      max-children-per-line: 100;
+      homogeneous: false;
+      column-spacing: 6;
+      row-spacing: 6;
+      margin-start: 8;
+      margin-end: 8;
+      margin-top: 6;
+      margin-bottom: 6;
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  // 章节内容栈
+  Stack chapter_stack {
+    name: "chapter_stack";
+    transition-type: crossfade;
+    hexpand: true;
+    vexpand: true;
+  }
+}
+
 ApplicationWindow window {
   title: "Athena - C++ 学习指南";
   default-width: 1920;
@@ -10,132 +92,72 @@ ApplicationWindow window {
   ]
 
   Box main_container {
-    orientation: horizontal;
+    orientation: vertical;
 
-    // === 左侧导航 ===
-    Box sidebar {
-      orientation: vertical;
-      width-request: 108;
-      spacing: 0;
+    // === 顶栏：应用菜单、返回首页、当前位置 ===
+    Box top_bar {
+      name: "top_bar";
+      orientation: horizontal;
+      spacing: 4;
 
       styles [
-        "app-sidebar"
+        "app-topbar"
       ]
 
-      // 分类按钮由 MainWindow 根据 athena.json 动态追加。
-      Box category_sidebar {
-        name: "category_sidebar";
-        orientation: vertical;
-        spacing: 0;
-        vexpand: true;
+      // macOS 上系统标准菜单栏已经接管同一份菜单模型，这里保持隐藏；
+      // 其他平台没有这层系统集成，MainWindow 在此显示它并绑定菜单。
+      PopoverMenuBar app_menu_bar {
+        name: "app_menu_bar";
+        visible: false;
       }
 
-      Separator {
-        orientation: horizontal;
-      }
-
-      Button settings_button {
-        name: "settings_button";
-        tooltip-text: "配置 AI 服务商等应用设置";
+      Button home_button {
+        name: "home_button";
+        tooltip-text: "返回首页";
 
         styles [
-          "nav-button"
+          "flat",
+          "home-button"
         ]
 
         Box {
-          orientation: vertical;
-          spacing: 4;
+          orientation: horizontal;
+          spacing: 8;
           valign: center;
-          margin-top: 10;
-          margin-bottom: 10;
 
           Image {
-            icon-name: "preferences-system-symbolic";
-            pixel-size: 22;
+            icon-name: "go-home-symbolic";
+            pixel-size: 18;
           }
 
           Label {
-            label: "设置";
+            label: "首页";
           }
         }
       }
 
-      Button about_button {
-        name: "about_button";
-        tooltip-text: "关于 Athena";
+      Label breadcrumb_label {
+        name: "breadcrumb_label";
+        halign: start;
+        hexpand: true;
+        ellipsize: end;
 
         styles [
-          "nav-button"
+          "breadcrumb"
         ]
-
-        Box {
-          orientation: vertical;
-          spacing: 4;
-          valign: center;
-          margin-top: 10;
-          margin-bottom: 10;
-
-          Image {
-            icon-name: "help-about-symbolic";
-            pixel-size: 22;
-          }
-
-          Label {
-            label: "关于";
-          }
-        }
       }
     }
 
     Separator {
-      orientation: vertical;
+      orientation: horizontal;
     }
 
-    // === 右侧主区域 ===
-    Box content_area {
-      name: "content_area";
-      orientation: vertical;
-      hexpand: true;
-
-      styles [
-        "app-content"
-      ]
-
-      // 章节标签栏（FlowBox 自动换行）
-      ScrolledWindow tab_scroll {
-        hscrollbar-policy: never;
-        vscrollbar-policy: never;
-        vexpand: false;
-
-        styles [
-          "tab-bar"
-        ]
-
-        FlowBox chapter_tab_box {
-          name: "chapter_tab_box";
-          selection-mode: none;
-          max-children-per-line: 100;
-          homogeneous: false;
-          column-spacing: 6;
-          row-spacing: 6;
-          margin-start: 8;
-          margin-end: 8;
-          margin-top: 6;
-          margin-bottom: 6;
-        }
-      }
-
-      Separator {
-        orientation: horizontal;
-      }
-
-      // 章节内容栈
-      Stack chapter_stack {
-        name: "chapter_stack";
-        transition-type: crossfade;
-        hexpand: true;
-        vexpand: true;
-      }
+    // 首页 / 分类内容二选一；MainWindow 运行时把 home_page 和
+    // content_area 加进来，两个页面各自的内部结构与这里无关。
+    Stack root_stack {
+      name: "root_stack";
+      transition-type: crossfade;
+      vexpand: true;
     }
   }
 }
