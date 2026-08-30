@@ -18,7 +18,7 @@
 using namespace std;
 
 class AboutDialog;
-class ChapterNavStrip;
+class ChapterPageStack;
 class CodeChapterPage;
 class ExperimentRunner;
 class HandbookPage;
@@ -48,19 +48,29 @@ private:
     void build_home_grid();
     void go_home();
     void enter_category(const string& category_name);
-    void build_chapter_tabs(const string& category_name);
+    void build_category(const string& category_name);
     void ensure_chapter_page(
         const string& category_name,
         const ChapterMeta& chapter);
 
-    void append_handbook_tab(const string& category_name);
+    // 分类内导航：索引页 ↔ 章节 ↔ 学习工具，统一入口。
+    void navigate_to(const string& category_name, const string& page_key);
+    void show_category_index(const string& category_name);
+    void open_chapter(const string& category_name, const ChapterMeta& chapter);
+    void open_progress_page();
+    void rebuild_chapter_switcher(const string& category_name);
+    Gtk::Widget* create_index_page(const string& category_name);
+    const ChapterMeta* find_chapter_by_key(
+        const string& category_name,
+        const string& page_key) const;
+    string category_title(const string& category_name) const;
+
     void ensure_handbook_page(const string& category_name);
     void show_handbook_page(
         const string& category_name,
         const string& jump_to_document = "");
 
     Gtk::Widget* create_progress_page();
-    void append_progress_tab();
     void refresh_progress_page();
 
     void handle_chapter_overview(const ChapterMeta& chapter);
@@ -75,8 +85,9 @@ private:
     Gtk::FlowBox* m_home_grid = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Label* m_breadcrumb_label = nullptr;
+    Gtk::MenuButton* m_chapter_switcher = nullptr;
     Glib::RefPtr<Gio::Menu> m_menu_model;
-    unique_ptr<ChapterNavStrip> m_nav;
+    unique_ptr<ChapterPageStack> m_pages;
 
     string m_current_category;
     set<string> m_loaded_chapters;

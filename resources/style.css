@@ -48,10 +48,6 @@ window {
     font-size: 16pt;
 }
 
-.tab-bar {
-    background-color: @athena_surface;
-}
-
 separator {
     min-width: 1px;
     min-height: 1px;
@@ -235,37 +231,26 @@ button:disabled {
     font-size: 18pt;
 }
 
-.pill,
-.run-pill {
-    border-radius: 999px;
+/* === 分类索引页与章节切换器 === */
+.chapter-index {
+    padding: 40px 40px 48px;
 }
 
-.run-pill {
-    padding-left: 18px;
-    padding-right: 18px;
+.chapter-switcher-list {
+    padding: 4px;
+    min-width: 220px;
 }
 
-/* === Navigation === */
-button.chapter-tab {
+.chapter-switcher-list button {
+    min-height: 38px;
+    box-shadow: none;
     border-color: transparent;
     background-color: transparent;
-    box-shadow: none;
-    color: @athena_muted;
-    font-size: 15pt;
     font-weight: 600;
 }
 
-button.chapter-tab:hover {
-    border-color: @athena_border;
+.chapter-switcher-list button:hover {
     background-color: @athena_surface_subtle;
-    color: @athena_body_text;
-}
-
-button.chapter-tab:checked {
-    border-color: alpha(@athena_primary, 0.32);
-    background-color: @athena_primary_soft;
-    color: @athena_primary_text;
-    box-shadow: none;
 }
 
 /* === Cards and framed content === */
@@ -299,63 +284,6 @@ frame.card > border {
     border: 1px solid @athena_border;
     border-radius: 7px;
     background-color: @athena_surface;    box-shadow: 0 1px 3px alpha(#000000, 0.08);
-}
-
-/* === Welcome page === */
-.welcome-page {
-    padding: 16px 48px 20px;
-}
-
-.hero-icon {
-    color: @athena_primary;
-}
-
-.section-card {
-    padding: 16px 20px;
-    border: 1px solid @athena_border;
-    border-radius: 7px;
-    background-color: @athena_surface;
-    box-shadow: 0 1px 3px alpha(#000000, 0.07);
-}
-
-.feature-card {
-    min-height: 120px;
-    padding: 12px;
-    border: 1px solid @athena_border;
-    border-radius: 7px;
-    background-color: @athena_surface_subtle;
-}
-
-.roadmap-stage {
-    min-height: 120px;
-    padding: 12px 14px;
-    border: 1px solid @athena_border;
-    border-radius: 7px;
-    background-color: @athena_surface_subtle;
-}
-
-.welcome-route-icon {
-    -gtk-icon-size: 36px;
-}
-
-.welcome-route-icon-blue {
-    color: #0d6efd;
-}
-
-.welcome-route-icon-purple {
-    color: #6f42c1;
-}
-
-.welcome-route-icon-green {
-    color: #198754;
-}
-
-.welcome-route-icon-orange {
-    color: #fd7e14;
-}
-
-.welcome-route-icon-red {
-    color: #dc3545;
 }
 
 .card-header {

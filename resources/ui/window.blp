@@ -35,8 +35,9 @@ Box home_page {
   }
 }
 
-// 某一分类内部：章节标签栏 + 章节内容栈。分类切换只影响这里，首页布局
-// 与它互不干扰——两者是 root_stack 里并列的两页。
+// 某一分类内部：只有章节内容栈。进入分类默认落在生成的索引页（章节网格），
+// 章节之间的横向切换由顶栏的章节切换器承担，不再有常驻标签条（见 ADR 0021）。
+// 分类切换只影响这里，首页布局与它互不干扰——两者是 root_stack 里并列的两页。
 Box content_area {
   name: "content_area";
   orientation: vertical;
@@ -46,34 +47,6 @@ Box content_area {
     "app-content"
   ]
 
-  ScrolledWindow tab_scroll {
-    hscrollbar-policy: never;
-    vscrollbar-policy: never;
-    vexpand: false;
-
-    styles [
-      "tab-bar"
-    ]
-
-    FlowBox chapter_tab_box {
-      name: "chapter_tab_box";
-      selection-mode: none;
-      max-children-per-line: 100;
-      homogeneous: false;
-      column-spacing: 6;
-      row-spacing: 6;
-      margin-start: 8;
-      margin-end: 8;
-      margin-top: 6;
-      margin-bottom: 6;
-    }
-  }
-
-  Separator {
-    orientation: horizontal;
-  }
-
-  // 章节内容栈
   Stack chapter_stack {
     name: "chapter_stack";
     transition-type: crossfade;
@@ -144,6 +117,18 @@ ApplicationWindow window {
 
         styles [
           "breadcrumb"
+        ]
+      }
+
+      // 章节切换器：进入分类后显示，弹出层列出目录 + 本分类各章 + 学习工具。
+      // 只在分类页可见，首页隐藏。内容由 MainWindow 按当前分类重建。
+      MenuButton chapter_switcher {
+        name: "chapter_switcher";
+        visible: false;
+        tooltip-text: "切换章节";
+
+        styles [
+          "flat"
         ]
       }
     }

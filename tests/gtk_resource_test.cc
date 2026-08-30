@@ -9,9 +9,10 @@ TEST(GtkResourceTest, LoadsTheMainWindowNavigationControls) {
 
     EXPECT_NE(builder->get_widget<Gtk::FlowBox>("home_grid"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("root_stack"), nullptr);
-    EXPECT_NE(builder->get_widget<Gtk::FlowBox>("chapter_tab_box"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("chapter_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Button>("home_button"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::MenuButton>("chapter_switcher"), nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::PopoverMenuBar>("app_menu_bar"), nullptr);
 }
@@ -26,34 +27,6 @@ TEST(GtkResourceTest, LoadsTheCodeChapterWidgetTree) {
     EXPECT_NE(builder->get_widget<Gtk::TextView>("result_view"), nullptr);
     EXPECT_NE(
         gtk_builder_get_object(builder->gobj(), "source_view"),
-        nullptr);
-}
-
-TEST(GtkResourceTest, LoadsTheWelcomeTigerImage) {
-    const auto builder = Gtk::Builder::create_from_resource(
-        "/app/chapters/welcome.ui");
-    const auto image = builder->get_widget<Gtk::Image>("welcome_icon");
-
-    ASSERT_NE(image, nullptr);
-    EXPECT_TRUE(g_resources_get_info(
-        "/app/icons/tiger.svg",
-        G_RESOURCE_LOOKUP_FLAGS_NONE,
-        nullptr,
-        nullptr,
-        nullptr));
-    EXPECT_TRUE(static_cast<bool>(image->get_paintable()));
-    EXPECT_EQ(image->get_pixel_size(), 560);
-}
-
-TEST(GtkResourceTest, WelcomePageOmitsTheRedundantLearningOverview) {
-    const auto builder = Gtk::Builder::create_from_resource(
-        "/app/chapters/welcome.ui");
-
-    EXPECT_EQ(
-        gtk_builder_get_object(builder->gobj(), "stats_section"),
-        nullptr);
-    EXPECT_NE(
-        gtk_builder_get_object(builder->gobj(), "features_section"),
         nullptr);
 }
 
