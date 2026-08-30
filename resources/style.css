@@ -37,11 +37,17 @@
     color: @athena_body_text;
 }
 
-.athena-window {
+/* 用类型选择器而不是 .athena-window 类：字号基线要覆盖全部窗口，包括
+   设置、关于、测验、历史这些用 Gtk::Dialog 直接 new 出来的对话框——
+   它们的根控件从来没被加过 .athena-window 这个 CSS class（只有
+   window.blp 里 Blueprint 声明的主窗口才有），此前一直只继承 GTK
+   系统默认字号，明显小于正文，这正是"设置/关于界面字体偏小"的根因。
+   `window` 类型选择器匹配全部 GtkWindow 派生控件，一次性覆盖，以后
+   新增对话框也不会再漏。 */
+window {
     font-size: 16pt;
 }
 
-.app-sidebar,
 .tab-bar {
     background-color: @athena_surface;
 }
@@ -52,13 +58,66 @@ separator {
     background-color: @athena_border;
 }
 
+/* === 顶栏：应用菜单 / 返回首页 / 当前位置 === */
+.app-topbar {
+    background-color: @athena_surface;
+    padding: 6px 10px;
+}
+
+button.home-button {
+    border: 0;
+    border-radius: 8px;
+    background-color: transparent;
+    box-shadow: none;
+    color: @athena_body_text;
+    font-weight: 600;
+    padding: 6px 12px;
+}
+
+button.home-button:hover {
+    background-color: @athena_surface_subtle;
+}
+
+.breadcrumb {
+    color: @athena_muted;
+    font-size: 15pt;
+    margin-left: 4px;
+}
+
+/* === 首页：一级大类入口 === */
+button.home-tile {
+    border-radius: 16px;
+    background-color: @athena_surface;
+    border: 1px solid @athena_border;
+    box-shadow: none;
+    padding: 28px 24px;
+    min-width: 220px;
+    min-height: 160px;
+}
+
+button.home-tile:hover {
+    border-color: @athena_primary;
+    background-color: @athena_primary_soft;
+}
+
+.home-tile-title {
+    font-size: 18pt;
+    font-weight: 700;
+    color: @athena_body_text;
+}
+
+.home-tile-desc {
+    font-size: 15pt;
+    color: @athena_muted;
+}
+
 /* === Typography === */
 .title-1 { font-size: 32pt; font-weight: 800; color: @athena_body_text; }
 .title-2 { font-size: 26pt; font-weight: 800; color: @athena_body_text; }
 .title-3 { font-size: 22pt; font-weight: 700; color: @athena_body_text; }
 .title-4 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
 .heading { font-size: 17pt; font-weight: 700; }
-.caption { font-size: 14pt; }
+.caption { font-size: 15pt; }
 .dim-label { color: @athena_muted; opacity: 1; }
 
 /* === Buttons: Bootstrap-like hierarchy === */
@@ -167,7 +226,7 @@ button:disabled {
 .btn-sm {
     min-height: 38px;
     padding: 6px 12px;
-    font-size: 14pt;
+    font-size: 15pt;
 }
 
 .btn-lg {
@@ -187,27 +246,6 @@ button:disabled {
 }
 
 /* === Navigation === */
-button.nav-button {
-    border: 0;
-    border-radius: 0;
-    background-color: transparent;
-    box-shadow: none;
-    color: @athena_muted;
-    font-size: 17pt;
-    font-weight: 700;
-}
-
-button.nav-button:hover {
-    background-color: @athena_surface_subtle;
-    color: @athena_body_text;
-}
-
-button.nav-button:checked {
-    background-color: @athena_primary_soft;
-    color: @athena_primary_text;
-    box-shadow: inset 4px 0 @athena_primary;
-}
-
 button.chapter-tab {
     border-color: transparent;
     background-color: transparent;
@@ -454,7 +492,7 @@ button.btn-ai-accent:hover {
 
 .topic-row .dim-label,
 .topic-group .dim-label {
-    font-size: 14pt;
+    font-size: 15pt;
 }
 
 .topic-group {
@@ -488,7 +526,7 @@ frame.knowledge-status-bar > border {
 
 .experiment-status-text {
     color: @athena_primary;
-    font-size: 12pt;
+    font-size: 15pt;
     font-weight: 500;
 }
 
@@ -521,7 +559,7 @@ frame.knowledge-status-bar > border {
 
 .star-caption {
     color: @athena_muted;
-    font-size: 13pt;
+    font-size: 15pt;
 }
 
 .star-row-mastery image {
@@ -529,7 +567,7 @@ frame.knowledge-status-bar > border {
 }
 
 .star-level-label {
-    font-size: 14pt;
+    font-size: 15pt;
 }
 
 .star-row-mastery .star-level-label {
@@ -539,7 +577,7 @@ frame.knowledge-status-bar > border {
 /* 重要度：内容作者标注的客观难度，只读徽章 + 星级，显示在知识点标题旁；
    五个等级各用一种颜色，从简单到极难由冷到暖过渡。 */
 .badge-importance {
-    font-size: 11pt;
+    font-size: 15pt;
     padding: 1px 8px;
 }
 
@@ -565,7 +603,7 @@ frame.knowledge-status-bar > border {
     border-radius: 999px;
     background-color: @athena_secondary;
     color: #ffffff;
-    font-size: 14pt;
+    font-size: 15pt;
     font-weight: 700;
 }
 
@@ -605,7 +643,7 @@ frame.article-surface > border {
 }
 
 .stat-tile-label {
-    font-size: 12pt;
+    font-size: 15pt;
     opacity: 0.92;
 }
 
@@ -629,7 +667,7 @@ frame.article-surface > border {
 
 .progress-chapter-count {
     color: @athena_muted;
-    font-size: 11pt;
+    font-size: 15pt;
 }
 
 .progress-subchapter-row {

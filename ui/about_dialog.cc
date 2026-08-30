@@ -1,7 +1,5 @@
 #include "about_dialog.h"
 
-#include "ui/dialog_helpers.h"
-
 #include <string>
 
 using namespace std;
@@ -56,7 +54,14 @@ void AboutDialog::ensure_created() {
         "把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。");
     comments->add_css_class("dim-label");
     comments->set_wrap(true);
-    comments->set_halign(Gtk::Align::START);
+    // 换行的 Label 默认按 Pango 的保守估算给自己要一个偏窄的自然宽度，
+    // 不会主动占满父容器让出的空间——不设 hexpand，拖大窗口时文字不会
+    // 跟着变宽换行，右边会空出一大块。halign(FILL) 让控件占满整行，
+    // xalign(0) 再把行内文字拉回左对齐（halign 只决定控件本身在父容器
+    // 里的位置，不管文字在控件内部怎么对齐）。
+    comments->set_hexpand(true);
+    comments->set_halign(Gtk::Align::FILL);
+    comments->set_xalign(0.0f);
     page->append(*comments);
 
     auto copyright_label =
@@ -84,17 +89,22 @@ void AboutDialog::ensure_created() {
         "See the Mulan PSL v2 for more details.");
     license_label->add_css_class("dim-label");
     license_label->set_wrap(true);
-    license_label->set_halign(Gtk::Align::START);
+    // 理由同上面的 comments：不加 hexpand，拖宽窗口时许可证文字宽度
+    // 冻结在初始自然宽度，框会跟着变大但文字挤在左边一小条，右边一大片
+    // 空白——这正是实际观察到的现象。
+    license_label->set_hexpand(true);
+    license_label->set_halign(Gtk::Align::FILL);
+    license_label->set_xalign(0.0f);
+    // 不设的话，框比文字高很多时文字会垂直居中飘在中间，不像一段
+    // 从顶部往下排的说明文字。
+    license_label->set_valign(Gtk::Align::START);
     license_label->set_margin(12);
     license_scroll->set_child(*license_label);
     license_frame->set_child(*license_scroll);
     page->append(*license_frame);
 
-    auto close_button = Gtk::make_managed<Gtk::Button>("关闭");
-    close_button->add_css_class("btn-primary");
-    close_button->signal_clicked().connect(
-        [dialog = m_dialog.get()]() { dialog->close(); });
-    append_dialog_action_bar(content, {close_button});
+    // 不加"关闭"按钮：系统对话框本身自带原生标题栏关闭按钮，重复一个
+    // 与项目里其他对话框的约定不一致，见 dialog_helpers.h 的说明。
 
     m_dialog->set_transient_for(m_parent);
     m_dialog->set_modal(true);
