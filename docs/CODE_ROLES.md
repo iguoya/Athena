@@ -221,8 +221,8 @@ Athena 最成功的几处设计恰恰是契约驱动的，它们在组织模型�
 - 对话框用 `make_managed` 创建 + 异步回调持有指针 = use-after-free，改为强制
   `set_hide_on_close(true)` 并延迟到事件循环下一轮再 `delete`；
 - 后台线程回传前必须检查 `m_ui_alive`，否则窗口已析构还去更新控件；
-- `open_learning_store()` 必须排在 `setup_category_sidebar()` 之前，否则首屏统计恒为 0；
-- 手册页不能进 `m_active_page_names`，否则切分类会连 WKWebView 一起销毁。
+- `open_learning_store()` 必须排在首次构建 cpp 分类之前，否则首屏统计恒为 0；
+- 手册页在 `ChapterPageStack` 里必须登记为 `Persistent`，否则切分类会连 WKWebView 一起销毁。
 
 > **修正：所有权与时序是独立的第三个维度。** RAII、`unique_ptr`、存活标志、构造顺序，
 > 这些都不是"角色"能覆盖的。
