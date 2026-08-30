@@ -18,64 +18,57 @@ string run_experiment(Experiment experiment) {
 TEST(TypeSemanticsContentTest, ComparesInitializationFormsWithoutReadingUndefinedValues) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::initialization),
-        "直接初始化 int direct(7): 7\n"
-        "拷贝初始化 int copied = 8: 8\n"
-        "列表初始化 int listed{9}: 9\n"
-        "值初始化 int zero{}: 0\n"
-        "直接初始化允许 double 到 int 的窄化结果: 3\n"
-        "列表初始化 int rejected{fractional}: 编译期拒绝窄化\n"
-        "explicit 构造函数可直接初始化: 11\n"
-        "默认初始化的局部 int: 不读取，避免未定义行为\n");
+        "四种初始化: 7, 8, 9, 0\n"
+        "圆括号接受窄化: 3.75 -> 3\n"
+        "花括号拒绝窄化: 编译期错误\n"
+        "explicit 需要显式进入: 11\n"
+        "未初始化局部 int: 不读取\n");
 }
 
 TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::auto_deduction),
-        "auto 按值推导得到独立副本，修改副本后原值仍为: 42，副本变为: 100\n"
-        "auto& 保留引用语义，修改别名后原值同步变为: 100\n"
-        "const auto& 只读别名读到最新值: 100\n"
-        "结构化绑定一次拆出多个值: Athena，5\n");
+        "auto 副本 / 原对象: 7 / 99\n"
+        "auto& 修改原对象: 99\n"
+        "结构化绑定副本 / 原值: Athena 8 / Athena 9\n"
+        "结构化绑定引用共享对象: Athena 9\n");
 }
 
 TEST(TypeSemanticsContentTest, ShowsWhichValueCategoryDecltypePreserves) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::decltype_deduction),
-        "decltype(变量名) 保留声明类型: 是\n"
-        "decltype((左值表达式)) 得到引用: 是\n"
-        "decltype(std::move(value)) 得到右值引用: 是\n");
+        "decltype(value) 是 int: 是\n"
+        "decltype((value)) 是 int&: 是\n"
+        "decltype(std::move(value)) 是 int&&: 是\n");
 }
 
 TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::value_category),
-        "具名对象 named: 左值\n"
-        "临时对象 string(\"临时值\"): 纯右值\n"
-        "std::move(named): 将亡值\n"
-        "具名对象匹配: 可修改左值引用\n"
-        "具名 const 对象匹配: const 左值引用\n"
-        "临时对象匹配: 右值引用\n"
-        "将亡值匹配: 右值引用\n"
-        "std::move 只改变值类别，原内容仍为: Athena\n");
+        "具名对象选择: string&\n"
+        "const 具名对象选择: const string&\n"
+        "临时对象选择: string&&\n"
+        "std::move(named) 选择: string&&\n"
+        "没有接收者时原内容仍是: Athena\n");
 }
 
 TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::cast),
-        "static_cast 明确数值转换 9.8 -> 9\n"
-        "dynamic_cast 匹配真实派生类型: 是\n"
-        "dynamic_cast 不匹配时返回空: 是\n"
-        "const_cast 修改原本非 const 的对象: 9\n"
-        "reinterpret_cast 指针往返仍指向原对象: 是\n");
+        "static_cast 明确接受截断: 9\n"
+        "dynamic_cast 成功 / 失败为空: 是 / 是\n"
+        "const_cast 修改原本可写对象: 9\n"
+        "reinterpret_cast 只验证指针往返: 是\n");
 }
 
 TEST(TypeSemanticsContentTest, KeepsScopedEnumsTypeSafe) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::enum_class),
-        "枚举成员使用作用域: TrafficLight::green\n"
+        "成员必须带作用域: TrafficLight::green\n"
         "可隐式转换为 int: 否\n"
-        "显式转换后的底层值: 3\n"
+        "显式取得底层值: 3\n"
         "底层类型是 unsigned char: 是\n"
-        "不同 enum class 不能直接比较: 编译期拒绝\n");
+        "不同枚举直接比较: 编译期错误\n");
 }
 
 } // namespace

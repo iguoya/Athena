@@ -56,9 +56,9 @@ TEST(FunctionRegistryTest, RunsATypeSemanticsExperiment) {
 
     registry.run("cpp.TypeSemantics.decltype_deduction", output);
 
-    EXPECT_NE(output.str().find("decltype(变量名) 保留声明类型: 是"), string::npos);
+    EXPECT_NE(output.str().find("decltype(value) 是 int: 是"), string::npos);
     EXPECT_NE(
-        output.str().find("decltype((左值表达式)) 得到引用: 是"),
+        output.str().find("decltype((value)) 是 int&: 是"),
         string::npos);
     EXPECT_EQ(output.str().find("[待实现]"), string::npos);
 }
