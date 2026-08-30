@@ -35,6 +35,46 @@ Gtk::Button* make_tile(
     return tile;
 }
 
+Gtk::Widget* make_roadmap(const vector<ChapterIndexStage>& stages) {
+    auto* card = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 14);
+    card->add_css_class("roadmap-card");
+
+    auto* heading = Gtk::make_managed<Gtk::Label>("学习路线");
+    heading->add_css_class("title-4");
+    heading->set_halign(Gtk::Align::START);
+    card->append(*heading);
+
+    auto* row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 12);
+    row->set_homogeneous(true);
+    for (const auto& stage : stages) {
+        auto* cell = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 6);
+        cell->add_css_class("roadmap-stage");
+        cell->set_hexpand(true);
+
+        auto* icon = make_icon_image(stage.icon, 32);
+        if (!stage.accent.empty()) {
+            icon->add_css_class(stage.accent);
+        }
+        cell->append(*icon);
+
+        auto* title = Gtk::make_managed<Gtk::Label>(stage.title);
+        title->add_css_class("heading");
+        title->set_halign(Gtk::Align::START);
+        cell->append(*title);
+
+        auto* summary = Gtk::make_managed<Gtk::Label>(stage.summary);
+        summary->add_css_class("caption");
+        summary->add_css_class("dim-label");
+        summary->set_wrap(true);
+        summary->set_xalign(0.0F);
+        cell->append(*summary);
+
+        row->append(*cell);
+    }
+    card->append(*row);
+    return card;
+}
+
 Gtk::FlowBox* make_grid() {
     auto* grid = Gtk::make_managed<Gtk::FlowBox>();
     grid->set_orientation(Gtk::Orientation::HORIZONTAL);
@@ -61,6 +101,10 @@ Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec) {
     column->add_css_class("chapter-index");
     column->set_halign(Gtk::Align::CENTER);
     column->set_valign(Gtk::Align::START);
+
+    if (!spec.roadmap.empty()) {
+        column->append(*make_roadmap(spec.roadmap));
+    }
 
     auto* heading = Gtk::make_managed<Gtk::Label>(spec.category_title + " · 章节");
     heading->add_css_class("title-2");

@@ -44,6 +44,33 @@ constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 constexpr const char* kWorkbenchPageWidget = "workbench_chapter_page";
 constexpr const char* kProgressPageKey = "__progress__";
 
+// cpp 分类索引页顶部的学习路线预览：五个阶段只表达学习的大致顺序，不是
+// 入口，也不来自 athena.json。其他分类暂不提供。
+vector<ChapterIndexStage> cpp_roadmap_stages() {
+    return {
+        {.icon = {.type = "theme", .name = "input-keyboard-symbolic"},
+         .accent = "route-icon-blue",
+         .title = "基础入门",
+         .summary = "基础语法与流程控制"},
+        {.icon = {.type = "theme", .name = "applications-engineering-symbolic"},
+         .accent = "route-icon-purple",
+         .title = "面向对象",
+         .summary = "类对象、构造析构、继承与多态"},
+        {.icon = {.type = "theme", .name = "view-grid-symbolic"},
+         .accent = "route-icon-green",
+         .title = "STL 标准库",
+         .summary = "容器、算法与迭代器使用"},
+        {.icon = {.type = "theme", .name = "system-run-symbolic"},
+         .accent = "route-icon-orange",
+         .title = "现代 C++",
+         .summary = "RAII、智能指针、并发与新标准特性"},
+        {.icon = {.type = "theme", .name = "folder-documents-symbolic"},
+         .accent = "route-icon-red",
+         .title = "项目实战",
+         .summary = "工程组织、构建测试与完整项目实践"},
+    };
+}
+
 } // namespace
 
 MainWindow::MainWindow(
@@ -396,6 +423,9 @@ void MainWindow::build_category(const string& category_name) {
 Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
     ChapterIndexSpec spec;
     spec.category_title = category_title(category_name);
+    if (category_name == kCppCategory) {
+        spec.roadmap = cpp_roadmap_stages();
+    }
 
     const auto category = m_catalog.chapters().find(category_name);
     if (category != m_catalog.chapters().end()) {
