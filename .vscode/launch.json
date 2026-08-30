@@ -21,7 +21,17 @@
             "program": "${workspaceFolder}/builddir/Athena",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Athena: Build"
+            "preLaunchTask": "Athena: Build",
+            // LLDB 默认把 SIGTERM 当成"需要停下来给用户看"的调试事件，而不是
+            // 放行让进程正常退出——点调试工具栏的停止按钮时 CodeLLDB 正是靠
+            // 发 SIGTERM 结束进程，于是每次停止调试都会先弹一次"发生异常：
+            // Signal SIGTERM"，如果这时候没有手动点"继续"，进程就会永久卡在
+            // 这个被 ptrace 挂起的状态——变成一个不会退出、外部 kill -9 也杀
+            // 不掉的僵尸（父进程还是活的 debugserver）。这里显式告诉 LLDB：
+            // SIGTERM 直接放行、不要停下来问，"停止调试"才能真正杀掉进程。
+            "initCommands": [
+                "process handle SIGTERM --stop false --pass true --notify true"
+            ]
         },
         {
             "name": "附加到 Athena",
