@@ -39,7 +39,10 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
                           |
         FunctionRegistry + ChapterCatalog ----------> MainWindow（导航协调）
                                                      |
-                                                     +--> ChapterNavStrip（标签条 + Stack 子页装配/切换）
+                                                     +--> ChapterPageStack（Stack 子页装配/切换）
+                                                     +--> ChapterIndexPage
+                                                     |       +--> KnowledgeGraph（前置依赖与章节指标聚合）
+                                                     |       +--> KnowledgeGraphView（连线 + GTK 节点卡片）
                                                      +--> CodeChapterPage
                                                      |       +--> ExperimentDock
                                                      |               +--> ExperimentRunner
@@ -74,6 +77,12 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围；`load_member_source_text()`
   在此基础上取出该成员函数的全文，运行历史的源码快照、AI 自测的参考实现共用它，
   不各自再写一遍“读文件 + 定位 + 截取”。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_CONFIG.md`）；条目本身（标题与描述）不响应点击。
+- C++ 分类的默认索引页把章节网格与知识图谱合并：`KnowledgeGraph` 从同分类
+  `chapter.prerequisites` 计算稳定分层和连线，并聚合 `LearningStore` 熟练度；真实 GTK
+  节点卡片保留章节图标、标题和简介，同时用独立色系显示章节重要度（已评知识点
+  `importance` 的平均值）、掌握程度（5 星知识点数）和完成程度（平均熟练度 / 5）。
+  右侧说明栏解释三种口径。返回 C++ 目录时重建图谱，避免 AI 自测后显示旧颜色。
+  其他分类没有成熟依赖数据，继续使用自适应 FlowBox 网格。
 - 知识点行尾操作区以分隔线隔离，依次放置“运行”“运行历史”“AI 讲解”“AI 自测”按钮与只读的“熟练度”五星结果（绿色，0–5 星）。熟练度不能手动修改，只在用户答完一次完整 AI 自测后，按本地固定公式从正确题数换算并持久化；“运行”只由知识点是否已实现决定，满星后仍可重复实验。“运行历史”“AI 讲解”“AI 自测”都依赖具体知识点，各自绑定所在行的 topic（不是随“当前激活知识点”切换的共享按钮），点击时先激活本行（高亮、头部与源码随之切换）再执行。早期版本有过一个“AI 讲解”按钮，因体感上不如直接看手册和源码实用而移除过一段时间；现在的“AI 讲解”是重新设计过的版本（整体+局部双视角、结果按知识点+源码快照缓存进 `LearningStore`），不是简单恢复旧版本。
 - “运行历史”打开运行记录对话框：左侧是最近运行列表（时间、耗时、与当前源码是否一致、运行时的 git 提交短哈希，工作区有未提交改动时加 `+`），右侧最多同时选中 2 条记录并排对比，每条记录一栏，栏内上方是运行时的源码快照（只读 GtkSourceView，C++ 语法高亮，不做逐行 diff）并在标题带完整 git 版本描述，下方是对应输出，默认选中最近两次运行；git 信息由 `ExperimentRunner` 在后台执行路径中查询 `ATHENA_SOURCE_ROOT` 所在仓库得到，不在 git 仓库或 git 不可用时静默留空，不影响运行。配置了 `ATHENA_ARK_API_KEY` 或 `ATHENA_DEEPSEEK_API_KEY` 时对话框内另有“AI 讲解差异”按钮（选中恰好 2 条才可用，两个 Key 都未配置时这个按钮不出现），把两条记录的源码快照与输出一并发给 AI，请求解释改动和结果变化的关系；不做逐行 diff 高亮，这部分交给 git 自己的工具。
 - “AI 自测”“AI 讲解差异”共用非 GTK 的 `AiService`：优先用 DeepSeek（`deepseek-chat`），未配置或请求失败再退回火山方舟豆包（`doubao-seed-2-1-pro-260628`）——2026-08 换成这个顺序是因为豆包体感响应明显更慢，先用 DeepSeek 试一下速度；两者都未配置时直接返回明确错误。Key 优先从侧边栏“设置”读取，未保存时回退到 `ATHENA_ARK_API_KEY`/`ATHENA_DEEPSEEK_API_KEY` 环境变量。两家服务商都是 OpenAI 兼容协议，底层共用同一个可替换的请求通道，只是 endpoint/model 不同。Key 与请求体经权限受限的临时文件传入、用后即删，不出现在进程参数里；临时文件放在 GLib 按操作系统选择的 Athena 用户缓存目录，不依赖启动环境里的 `TMPDIR`，文件名以六个 `X` 结尾，创建失败时把系统给出的具体原因显示出来。`AiService` 只返回普通数据，不更新 GTK，`LearningDialogs` 负责工作线程与主线程之间的结果交接。服务商顺序、回答解析、代码围栏清理和自测题解码都有不访问网络的单元测试（参见 ADR 0010、ADR 0011、ADR 0014）。
@@ -94,16 +103,16 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - **应用实践**（`practice` 分类）章节用专属布局（`practice_cube.blp` 等），不是标准 `chapter_page` 那套“知识点列表 + 源码框 + 结果区”三栏结构——目前只有 2 阶魔方一章，左栏是源码框 + “运行”“重置魔方”两个按钮 + 输出框，右栏是带标题的两个 `Frame`：“当前状态”一行 + “未来状态”九宫格（没有单独的运行状态日志，“就绪/运行中/已完成”这类文字提示价值不大，已经去掉）。“当前状态”那一行横向排三块：3D 视图（可拖拽旋转）、六面展开图（两者互补，一个直觉一个精确无遮挡）、状态摘要文字（`kCubeStateSpaceSizeIgnoringOrientation` 给出的状态空间数量、`PocketCube::move_history()` 拼成的当前路径、`is_solved()` 判断的是否复原），这一行不设 vexpand，高度由内容自然撑开。“未来状态”九宫格设成 homogeneous + hexpand/vexpand，撑满剩余整块区域；每一格是 3D 视图 + 展开图横向并排（跟“当前状态”那一行同一种视觉逻辑）叠一份 caption，对应 `next_move_set()` 给出的 U/R/F 三个面 × 顺时针/逆时针/180° 这 9 种非冗余转法（2 阶魔方没有固定参考系，转 D/L/B 都等价于先整体转半圈再转 U/R/F，是冗余操作，不单独穷举），只读预览、不接受点击；每格右下角叠一个“复原”`Gtk::ToggleButton`（`Gtk::Overlay`），按下后把这一格切换成显示当前实际状态（不套用这一步转法），方便跟默认显示的“转完的样子”来回切换对比，纯展示开关，不会真的把这步转法应用到 `cube` 上。`PocketCubePage` 独占这套控件装配、状态和动画交互；`MainWindow` 只识别页面类型并创建模块。其余动画、重置和九宫格刷新规则保持不变。
 - 教学/实践源码分两个平级顶层目录：`language/` 按 C++ 语言特性拆分知识点（`language/references/`、`language/raii/` 等），`practice/` 收纳自成一体的应用实践项目，一个项目的状态表示、算法、渲染代码都收在自己的子目录里（比如 `practice/pocket_cube/` 同时放 `state.h/.cc`——不依赖 GTK、可脱离渲染层单独测试的魔方状态与转动代数、`view.h/.cc`——3D/展开图的 Cairo 渲染、`pocket_cube.hpp`——真正的知识点实现），不嵌进 `language/` 底下，也不分散到 `render/` 之类别的顶层目录。`scripts/project_generator/model.py` 的 `project_path()` 用 `SOURCE_PREFIXES = ("language", "practice")` 校验 `implementation.header`/`source` 等字段，两个前缀都接受。
 - 曾经实现过知识点笔记，但控件长期隐藏、没有可用入口，却要求代码页维护自动保存定时器、切换时刷新和存储读写，因此已移除界面及运行时 API。旧数据库中的 `note` 列不删除、不覆盖，避免升级时破坏用户历史数据；新数据库不再创建该列。若以后确有记录学习心得的需求，应先重新设计可发现的入口和检索方式，而不是恢复隐藏文本框。
-- `MainWindow` 只保留分类导航、页面懒加载调度、跨页跳转、进度刷新和模块生命周期；代码页、实践页、手册、对话框与实验执行均由独立模块拥有。分类内的**章节标签条**由 `ChapterNavStrip`（`ui/chapter_nav_strip.h`）独占：标签按钮装配、编组、`Gtk::Stack` 子页占位/替换/切换、常驻手册页保留都在这个模块里，`MainWindow::build_chapter_tabs()` 只声明"有哪些标签、激活时做什么"（一个 `TabSpec` + 一个回调），不再直接 `new` ToggleButton 或记账 `m_active_page_names`。窗口构造函数里的 `open_learning_store()`（建目录 + 打开 SQLite）和 `load_chapter_metadata()`（读 GResource + 解码）仍是窗口自己的启动步骤。
+- `MainWindow` 只保留分类导航、页面懒加载调度、跨页跳转、进度刷新和模块生命周期；代码页、实践页、手册、对话框与实验执行均由独立模块拥有。`ChapterPageStack` 只管理 `Gtk::Stack` 子页占位、替换、切换与常驻页；`ChapterIndexPage` 独占分类索引控件树，C++ 图谱的节点和说明由 `KnowledgeGraphView` 装配。窗口只传入 Catalog 派生数据和导航回调。
 - 应用窗口默认图标名 `cn.athena.icon`：运行时从 GResource 的图标主题目录解析（不依赖系统安装），Linux `meson install` 同时部署 hicolor 图标与桌面条目，macOS 打包使用 `.app` 内的 icns。
-- 章节页面按需构建：打开分类只为各章挂占位页，首次激活章节标签才创建真实页面（含 WKWebView），显著加快启动与分类切换；已构建页面由 builder 缓存持有，切回分类直接重挂。
+- 章节页面按需构建：打开分类只为各章挂占位页，首次从索引节点或顶栏切换器进入章节时才创建真实页面（含 WKWebView），显著加快启动与分类切换；已构建页面由 builder 缓存持有，切回分类直接重挂。
 - Meson 将 Catalog、内容加载、Markdown 转换、函数注册和课程实现统一编译为内部 `athena-core` 静态库，应用与核心测试共同链接该库。
 - TypeSemantics 的 6 个知识点、Reference 的 4 个知识点、FunctionCallable 的 5 个知识点和 RAII 的 6 个知识点已接入注册表；未实现的知识点在界面中保持禁用。TypeSemantics 里原来合在一起的"类型推导"已拆成 `auto_deduction`（用可观察的运行时行为证明 auto/auto&/const auto& 的效果和结构化绑定，不借 decltype）和 `decltype_deduction`（专讲 decltype 自己的三条取类型规则）：两者受众和验证手段都不同，合并成一个知识点会强迫初学 auto 的人先学会 decltype 才能确认 auto 做了什么。
 
 当前的主要问题：
 
-- `MainWindow` 模块化已按 ADR 0014 完成，并在其后把章节标签条与 Stack 子页装配抽成
-  `ChapterNavStrip`，窗口协调层不再手搓 tab 按钮或记账活动页；后续新增页面行为应继续
+- `MainWindow` 模块化已按 ADR 0014 完成，并在其后把 Stack 子页装配抽成
+  `ChapterPageStack`、分类入口抽成 `ChapterIndexPage`；窗口协调层不再手搓章节卡片或记账活动页。后续新增页面行为应继续
   放进对应功能模块，避免把控件树、后台执行或持久化细节重新堆回窗口协调层。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
 - 骨架生成只适合一个头文件与一个源文件的普通章节；一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）曾是 RAII 的做法，现在认定为应当避免的特例，不是推荐路径——多个 `.cpp` 会导致按知识点切换源码框内容碎片化，看不到类的完整定义。默认约定是整章合并到一个 `.hpp`；`TypeSemantics`、`RAII` 已按路线图第 11 条迁移完成，连同 `Reference`、`FunctionCallable` 四个已实现章节现在都是单文件形态，详见 `docs/CHAPTER_CONFIG.md` 6.1。
@@ -252,7 +261,9 @@ GTK/Blueprint 层负责：
 
 ```text
 MainWindow（顶层导航、页面切换、模块生命周期）
-├── ChapterNavStrip（章节标签条装配/编组、Stack 子页占位与切换、常驻手册页保留）
+├── ChapterPageStack（Stack 子页占位与切换、常驻手册页保留）
+├── ChapterIndexPage（普通分类网格 / C++ 学习图谱）
+│   └── KnowledgeGraphView（前置连线、章节卡片、指标说明）
 ├── CodeChapterPage（保留的标准代码页；知识点列表与附加学习动作）
 │   └── ExperimentDock（当前实验、源码、运行状态与结果）
 │       └── ExperimentRunner（非 GTK：执行、耗时、快照、历史写入）

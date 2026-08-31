@@ -214,6 +214,7 @@ category.name = cpp
 | `name` | string | 是 | 稳定章节名，也是 C++ 类名 |
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
+| `prerequisites` | array | 否 | 同分类前置章节的 `name` 列表；缺省为空，生成器校验引用存在、无重复、无自引用且整图无环；C++ 分类索引据此生成知识图谱 |
 | `overview_document` | string | 否 | “说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
@@ -231,6 +232,11 @@ chapter.name = Reference
 ```
 
 具体代码课程类直接使用主题名，例如 `Reference`、`RAII`、`STLContainer`，不添加统一的 `Chapter` 后缀。由于课程类不再放入分类命名空间，所有章节的 `name` 必须在整个项目中唯一；生成器会检查跨分类的类名冲突。没有 `implementation` 的章节只显示课程框架，`name` 仍然占用一个全局类名位（不会真的生成类），保留这份唯一性检查是为了给未来真正实现时预留位置。
+
+`prerequisites` 只表达“理解本章前建议先掌握哪些章节”，不表达文件依赖或 C++
+`#include` 关系。数组元素必须使用同分类稳定 `chapter.name`；显示标题改名不影响关系。
+C++ 分类索引按最长前置路径自上而下分层，箭头由前置章节指向后续章节。同层仍保持
+`athena.json` 的声明顺序，避免为了减少连线交叉而悄悄改变课程顺序。
 
 ### 6.1 C++ 实现入口 `implementation`
 

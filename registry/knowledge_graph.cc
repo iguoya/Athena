@@ -3,6 +3,7 @@
 #include "registry/progress_stats.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace {
 
@@ -87,6 +88,8 @@ KnowledgeGraph build_knowledge_graph(
 
         int mastery_sum = 0;
         int mastered = 0;
+        int importance_sum = 0;
+        int importance_count = 0;
         for (const auto& subchapter : chapter.subchapters) {
             int mastery = 0;
             const auto record = mastery_by_id.find(subchapter.function_id);
@@ -97,6 +100,10 @@ KnowledgeGraph build_knowledge_graph(
             if (mastery >= kMaxMastery) {
                 ++mastered;
             }
+            if (subchapter.importance > 0) {
+                importance_sum += subchapter.importance;
+                ++importance_count;
+            }
         }
         const int total = static_cast<int>(chapter.subchapters.size());
         const double completion =
@@ -106,11 +113,17 @@ KnowledgeGraph build_knowledge_graph(
         graph.nodes.push_back({
             .chapter_name = chapter.name,
             .title = chapter.title,
+            .description = chapter.description,
+            .icon = chapter.icon,
             .layer = layer,
             .slot = filled_per_layer[static_cast<size_t>(layer)]++,
             .layer_size = layer_totals[static_cast<size_t>(layer)],
             .total = total,
             .mastered = mastered,
+            .importance = importance_count > 0
+                ? static_cast<int>(lround(
+                      importance_sum / static_cast<double>(importance_count)))
+                : 0,
             .completion = completion,
         });
     }

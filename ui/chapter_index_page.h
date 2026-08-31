@@ -1,10 +1,12 @@
 #pragma once
 
 #include "registry/chapter_catalog.h"
+#include "registry/knowledge_graph.h"
 
 #include <gtkmm.h>
 
 #include <functional>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -37,7 +39,11 @@ struct ChapterIndexSpec {
     vector<ChapterIndexStage> roadmap;
     vector<ChapterIndexEntry> chapters;
     vector<ChapterIndexEntry> tools;
+    // C++ 分类提供时，以带前置关系的知识图谱代替普通章节网格；其他分类
+    // 保持 FlowBox。图谱仍由 catalog/prerequisites 派生，不新增导航数据源。
+    optional<KnowledgeGraph> knowledge_graph;
     function<void(const string& key)> on_open;
+    function<void(const string& chapter_name)> on_open_chapter;
 };
 
 Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec);

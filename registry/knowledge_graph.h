@@ -18,11 +18,16 @@ using namespace std;
 struct KnowledgeNode {
     string chapter_name; // 稳定 name，回调按它定位章节
     string title;
+    string description;
+    IconSpec icon;
     int layer = 0;
     int slot = 0;        // 层内序号，0..layer_size-1，按声明顺序
     int layer_size = 1;  // 所在层的节点总数，供视图居中排布
     int total = 0;       // 本章知识点总数
     int mastered = 0;    // 5 星知识点数
+    // 本章已评知识点 importance 的平均值四舍五入到 1-5；全部未评时为 0。
+    // 这是章节卡片的汇总展示，不在 athena.json 里重复保存章节级字段。
+    int importance = 0;
     double completion = 0.0; // 平均熟练度 / 5，落在 [0, 1]
 };
 

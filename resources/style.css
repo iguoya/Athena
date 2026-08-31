@@ -284,6 +284,138 @@ button:disabled {
     padding: 40px 40px 48px;
 }
 
+/* === C++ 分类目录：章节知识图谱 ===
+ * 重要度、掌握程度、完成程度使用三个独立视觉通道：节点边框、状态徽章、
+ * 蓝色进度条。避免把三个概念都染在整张卡片上，导致颜色含义互相覆盖。 */
+.knowledge-graph-view {
+    margin-top: 4px;
+}
+
+.knowledge-graph-hint {
+    font-size: 14pt;
+    margin-left: 32px;
+}
+
+button.knowledge-graph-node {
+    padding: 0;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 14px;
+    background-color: @athena_surface;
+    box-shadow: 0 2px 7px alpha(#000000, 0.10);
+    color: @athena_body_text;
+}
+
+button.knowledge-graph-node:hover {
+    background-color: @athena_primary_soft;
+    box-shadow: 0 4px 12px alpha(#000000, 0.14);
+}
+
+button.knowledge-graph-node:focus-visible {
+    outline: 3px solid alpha(@athena_primary, 0.35);
+    outline-offset: 2px;
+}
+
+.knowledge-graph-node-icon {
+    color: @athena_primary;
+}
+
+.knowledge-graph-node-title {
+    font-size: 16pt;
+    font-weight: 750;
+}
+
+.knowledge-graph-node-description {
+    min-height: 42px;
+    color: @athena_muted;
+    font-size: 12pt;
+}
+
+.graph-importance-0 { border-color: @athena_chart_neutral; }
+.graph-importance-1 { border-color: @athena_success; }
+.graph-importance-2 { border-color: @athena_teal; }
+.graph-importance-3 { border-color: @athena_warning; }
+.graph-importance-4 { border-color: @athena_orange; }
+.graph-importance-5 { border-color: @athena_danger; }
+
+.graph-metric-badge,
+.graph-importance-scale {
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+.graph-importance-scale {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+}
+
+.graph-importance-badge-0 {
+    background-color: @athena_chart_neutral;
+    color: #ffffff;
+}
+.graph-importance-badge-1 { background-color: @athena_success; color: #ffffff; }
+.graph-importance-badge-2 { background-color: @athena_teal; color: @athena_body_text; }
+.graph-importance-badge-3 { background-color: @athena_warning; color: @athena_body_text; }
+.graph-importance-badge-4 { background-color: @athena_orange; color: #ffffff; }
+.graph-importance-badge-5 { background-color: @athena_danger; color: #ffffff; }
+
+.graph-mastery-none {
+    background-color: @athena_chart_neutral;
+    color: #ffffff;
+}
+.graph-mastery-some {
+    background-color: @athena_orange;
+    color: #ffffff;
+}
+.graph-mastery-all {
+    background-color: @athena_success;
+    color: #ffffff;
+}
+
+progressbar.graph-completion {
+    min-height: 20px;
+    font-size: 10pt;
+    font-weight: 700;
+}
+
+progressbar.graph-completion > trough {
+    min-height: 20px;
+    border-radius: 999px;
+    background-color: #e7edf5;
+}
+
+progressbar.graph-completion > trough > progress {
+    min-height: 20px;
+    border-radius: 999px;
+}
+
+progressbar.graph-completion-0 > trough > progress,
+.graph-completion-swatch-0 { background-color: #b8c9df; }
+progressbar.graph-completion-1 > trough > progress,
+.graph-completion-swatch-1 { background-color: #8fb2dc; }
+progressbar.graph-completion-2 > trough > progress,
+.graph-completion-swatch-2 { background-color: #5f97d5; }
+progressbar.graph-completion-3 > trough > progress,
+.graph-completion-swatch-3 { background-color: #2f78c4; }
+progressbar.graph-completion-4 > trough > progress,
+.graph-completion-swatch-4 { background-color: @athena_primary; }
+
+.knowledge-graph-legend {
+    margin-top: 36px;
+}
+
+.knowledge-graph-legend-note {
+    font-size: 12pt;
+}
+
+.graph-legend-swatch {
+    border-radius: 4px;
+    border: 1px solid alpha(@athena_body_text, 0.12);
+}
+
 .chapter-switcher-list {
     padding: 4px;
     min-width: 220px;

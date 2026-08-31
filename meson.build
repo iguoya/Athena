@@ -173,6 +173,7 @@ app_sources = files(
   'mainwindow.cc',
   'practice/pocket_cube/view.cc',
   'render/chart_view.cc',
+  'render/knowledge_graph_view.cc',
   'ui/about_dialog.cc',
   'ui/ai_insight_dialog.cc',
   'ui/ai_markdown_dialog.cc',
@@ -259,10 +260,12 @@ gtk_test_exe = executable(
   'athena-gtk-tests',
   files(
     'tests/gtk_resource_test.cc',
+    'tests/knowledge_graph_view_test.cc',
     'tests/progress_page_test.cc',
     'tests/pocket_cube_view_test.cc',
     'practice/pocket_cube/view.cc',
     'render/chart_view.cc',
+    'render/knowledge_graph_view.cc',
     'ui/progress_page.cc'
   ),
   sources: resources,

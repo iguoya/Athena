@@ -1,5 +1,6 @@
 #include "chapter_index_page.h"
 
+#include "render/knowledge_graph_view.h"
 #include "ui/icon_utils.h"
 
 using namespace std;
@@ -108,20 +109,28 @@ Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec) {
     column->set_halign(Gtk::Align::CENTER);
     column->set_valign(Gtk::Align::START);
 
-    if (!spec.roadmap.empty()) {
+    if (!spec.roadmap.empty() && !spec.knowledge_graph) {
         column->append(*make_roadmap(spec.roadmap));
     }
 
-    auto* heading = Gtk::make_managed<Gtk::Label>(spec.category_title + " · 章节");
+    const string heading_text = spec.knowledge_graph
+        ? spec.category_title + " · 学习图谱"
+        : spec.category_title + " · 章节";
+    auto* heading = Gtk::make_managed<Gtk::Label>(heading_text);
     heading->add_css_class("title-2");
     heading->set_halign(Gtk::Align::START);
     column->append(*heading);
 
-    auto* chapter_grid = make_grid();
-    for (const auto& entry : spec.chapters) {
-        chapter_grid->append(*make_tile(entry, spec.on_open));
+    if (spec.knowledge_graph) {
+        column->append(*make_knowledge_graph_view(
+            *spec.knowledge_graph, spec.on_open_chapter));
+    } else {
+        auto* chapter_grid = make_grid();
+        for (const auto& entry : spec.chapters) {
+            chapter_grid->append(*make_tile(entry, spec.on_open));
+        }
+        column->append(*chapter_grid);
     }
-    column->append(*chapter_grid);
 
     if (!spec.tools.empty()) {
         auto* tools_heading = Gtk::make_managed<Gtk::Label>("学习工具");

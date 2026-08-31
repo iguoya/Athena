@@ -2,6 +2,7 @@
 
 #include "app_icon.h"
 #include "menu_bar_platform.h"
+#include "registry/knowledge_graph.h"
 #include "services/experiment_runner.h"
 #include "ui/about_dialog.h"
 #include "ui/chapter_index_page.h"
@@ -43,33 +44,6 @@ constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
 constexpr const char* kWorkbenchPageWidget = "workbench_chapter_page";
 constexpr const char* kProgressPageKey = "__progress__";
-
-// cpp 分类索引页顶部的学习路线预览：五个阶段只表达学习的大致顺序，不是
-// 入口，也不来自 athena.json。其他分类暂不提供。
-vector<ChapterIndexStage> cpp_roadmap_stages() {
-    return {
-        {.icon = {.type = "theme", .name = "input-keyboard-symbolic"},
-         .accent = "route-icon-blue",
-         .title = "基础入门",
-         .summary = "基础语法与流程控制"},
-        {.icon = {.type = "theme", .name = "applications-engineering-symbolic"},
-         .accent = "route-icon-purple",
-         .title = "面向对象",
-         .summary = "类对象、构造析构、继承与多态"},
-        {.icon = {.type = "theme", .name = "view-grid-symbolic"},
-         .accent = "route-icon-green",
-         .title = "STL 标准库",
-         .summary = "容器、算法与迭代器使用"},
-        {.icon = {.type = "theme", .name = "system-run-symbolic"},
-         .accent = "route-icon-orange",
-         .title = "现代 C++",
-         .summary = "RAII、智能指针、并发与新标准特性"},
-        {.icon = {.type = "theme", .name = "folder-documents-symbolic"},
-         .accent = "route-icon-red",
-         .title = "项目实战",
-         .summary = "工程组织、构建测试与完整项目实践"},
-    };
-}
 
 } // namespace
 
@@ -258,6 +232,15 @@ void MainWindow::enter_category(const string& category_name) {
 }
 
 void MainWindow::show_category_index(const string& category_name) {
+    // C++ 目录就是实时知识图谱，返回目录时按最新自测成绩重建节点颜色和
+    // 完成进度。其余分类的静态网格无需重复装配。
+    if (category_name == kCppCategory && m_pages &&
+        m_pages->has_page(index_page_key(category_name))) {
+        m_pages->set_page(
+            index_page_key(category_name),
+            *create_index_page(category_name),
+            "学习图谱");
+    }
     m_pages->show(index_page_key(category_name));
     show_category_breadcrumb(category_name);
     m_chapter_switcher->set_label("目录");
@@ -412,7 +395,7 @@ void MainWindow::build_category(const string& category_name) {
         }
     }
 
-    // 学习进度目前只统计 cpp 分类，其余分类还没有实现内容。
+    // 学习进度目前只覆盖 cpp 分类；知识图谱已经与 cpp 分类索引合一。
     if (category_name == kCppCategory) {
         m_pages->set_page(kProgressPageKey, *create_progress_page(), "学习进度");
     }
@@ -423,9 +406,6 @@ void MainWindow::build_category(const string& category_name) {
 Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
     ChapterIndexSpec spec;
     spec.category_title = category_title(category_name);
-    if (category_name == kCppCategory) {
-        spec.roadmap = cpp_roadmap_stages();
-    }
 
     const auto category = m_catalog.chapters().find(category_name);
     if (category != m_catalog.chapters().end()) {
@@ -439,6 +419,17 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
     }
 
     if (category_name == kCppCategory) {
+        std::map<string, int> mastery_by_id;
+        if (m_learning_store) {
+            try {
+                mastery_by_id = m_learning_store->load_all_mastery();
+            } catch (const exception& error) {
+                cerr << "Failed to load mastery stats: " << error.what()
+                     << endl;
+            }
+        }
+        spec.knowledge_graph = build_knowledge_graph(
+            m_catalog, category_name, mastery_by_id);
         spec.tools.push_back(
             {.key = kProgressPageKey,
              .title = "学习进度",
@@ -454,6 +445,12 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
 
     spec.on_open = [this, category_name](const string& page_key) {
         navigate_to(category_name, page_key);
+    };
+    spec.on_open_chapter = [this, category_name](const string& chapter_name) {
+        if (const auto* chapter =
+                m_catalog.find_chapter(category_name, chapter_name)) {
+            open_chapter(category_name, *chapter);
+        }
     };
     return make_chapter_index_page(spec);
 }
