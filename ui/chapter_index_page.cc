@@ -106,7 +106,8 @@ Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec) {
 
     auto* column = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 20);
     column->add_css_class("chapter-index");
-    column->set_halign(Gtk::Align::CENTER);
+    column->set_hexpand(true);
+    column->set_halign(Gtk::Align::FILL);
     column->set_valign(Gtk::Align::START);
 
     if (!spec.roadmap.empty() && !spec.knowledge_graph) {

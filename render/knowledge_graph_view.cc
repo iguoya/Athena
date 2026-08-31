@@ -11,70 +11,19 @@ using namespace std;
 
 namespace {
 
-// 节点保留分类索引卡片的信息密度：图标、标题、两行简介和三种学习指标。
-// C++ 当前最宽一层只有三个节点，因此无需为了塞进一屏牺牲可读性。
-constexpr double kNodeWidth = 244;
-constexpr double kNodeHeight = 168;
-constexpr double kGapX = 42;
-constexpr double kGapY = 54;
-constexpr double kMarginX = 32;
-constexpr double kMarginY = 30;
-
-struct NodePlacement {
-    double x = 0;
-    double y = 0;
-    const KnowledgeNode* node = nullptr;
-};
-
-struct Layout {
-    vector<NodePlacement> placements;
-    double width = 0;
-    double height = 0;
-};
-
-Layout compute_layout(const KnowledgeGraph& graph) {
-    Layout layout;
-    if (graph.empty()) {
-        return layout;
-    }
-
-    vector<double> layer_width(
-        static_cast<size_t>(graph.layer_count), 0.0);
-    for (const auto& node : graph.nodes) {
-        const double width =
-            node.layer_size * kNodeWidth + (node.layer_size - 1) * kGapX;
-        layer_width[static_cast<size_t>(node.layer)] = width;
-    }
-    const double widest =
-        *max_element(layer_width.begin(), layer_width.end());
-
-    layout.width = widest + kMarginX * 2;
-    layout.height = graph.layer_count * kNodeHeight
-        + (graph.layer_count - 1) * kGapY + kMarginY * 2;
-
-    layout.placements.reserve(graph.nodes.size());
-    for (const auto& node : graph.nodes) {
-        const double this_layer_width =
-            layer_width[static_cast<size_t>(node.layer)];
-        const double layer_left =
-            kMarginX + (widest - this_layer_width) / 2.0;
-        layout.placements.push_back({
-            .x = layer_left + node.slot * (kNodeWidth + kGapX),
-            .y = kMarginY + node.layer * (kNodeHeight + kGapY),
-            .node = &node,
-        });
-    }
-    return layout;
-}
+// 2K 是实际使用基线。每层按图谱真实最大并列数划分等宽轨道，节点在轨道内
+// 横向铺满；高度完全交给 GTK 按完整标题、描述和指标自然测量，不设固定卡片框。
+constexpr int kColumnGap = 36;
+constexpr int kLayerGap = 72;
 
 void draw_edge(
     const Cairo::RefPtr<Cairo::Context>& cr,
-    const NodePlacement& from,
-    const NodePlacement& to) {
-    const double x0 = from.x + kNodeWidth / 2.0;
-    const double y0 = from.y + kNodeHeight;
-    const double x1 = to.x + kNodeWidth / 2.0;
-    const double y1 = to.y;
+    const graphene_rect_t& from,
+    const graphene_rect_t& to) {
+    const double x0 = from.origin.x + from.size.width / 2.0;
+    const double y0 = from.origin.y + from.size.height;
+    const double x1 = to.origin.x + to.size.width / 2.0;
+    const double y1 = to.origin.y;
     const double midy = (y0 + y1) / 2.0;
 
     const ChartColor line = chart_color(0x9aa4af);
@@ -125,15 +74,16 @@ Gtk::Button* make_node_button(
     const KnowledgeNode& node,
     const function<void(const string&)>& on_open) {
     auto* button = Gtk::make_managed<Gtk::Button>();
-    button->set_size_request(
-        static_cast<int>(kNodeWidth), static_cast<int>(kNodeHeight));
+    button->set_hexpand(true);
+    button->set_halign(Gtk::Align::FILL);
+    button->set_valign(Gtk::Align::FILL);
     button->add_css_class("knowledge-graph-node");
     button->add_css_class(
         "graph-importance-" + to_string(clamp(node.importance, 0, 5)));
 
     auto* content = Gtk::make_managed<Gtk::Box>(
-        Gtk::Orientation::VERTICAL, 8);
-    content->set_margin(12);
+        Gtk::Orientation::VERTICAL, 12);
+    content->set_margin(18);
 
     auto* heading = Gtk::make_managed<Gtk::Box>(
         Gtk::Orientation::HORIZONTAL, 9);
@@ -146,7 +96,8 @@ Gtk::Button* make_node_button(
     title->set_halign(Gtk::Align::START);
     title->set_hexpand(true);
     title->set_xalign(0.0F);
-    title->set_ellipsize(Pango::EllipsizeMode::END);
+    title->set_wrap(true);
+    title->set_wrap_mode(Pango::WrapMode::WORD_CHAR);
     title->add_css_class("knowledge-graph-node-title");
     heading->append(*title);
     content->append(*heading);
@@ -156,8 +107,6 @@ Gtk::Button* make_node_button(
     description->set_xalign(0.0F);
     description->set_wrap(true);
     description->set_wrap_mode(Pango::WrapMode::WORD_CHAR);
-    description->set_ellipsize(Pango::EllipsizeMode::END);
-    description->set_lines(2);
     description->add_css_class("knowledge-graph-node-description");
     content->append(*description);
 
@@ -210,38 +159,87 @@ Gtk::Button* make_node_button(
 Gtk::Widget* make_canvas(
     const KnowledgeGraph& graph,
     const function<void(const string&)>& on_open) {
-    const Layout layout = compute_layout(graph);
     auto* overlay = Gtk::make_managed<Gtk::Overlay>();
-    overlay->set_size_request(
-        static_cast<int>(ceil(layout.width)),
-        static_cast<int>(ceil(layout.height)));
+    overlay->set_hexpand(true);
+
+    const int column_count = max_element(
+        graph.nodes.begin(),
+        graph.nodes.end(),
+        [](const KnowledgeNode& left, const KnowledgeNode& right) {
+            return left.layer_size < right.layer_size;
+        })->layer_size;
+
+    auto* layers = Gtk::make_managed<Gtk::Box>(
+        Gtk::Orientation::VERTICAL, kLayerGap);
+    layers->set_hexpand(true);
+
+    vector<Gtk::Button*> node_widgets(graph.nodes.size(), nullptr);
+    for (int layer = 0; layer < graph.layer_count; ++layer) {
+        auto* row = Gtk::make_managed<Gtk::Box>(
+            Gtk::Orientation::HORIZONTAL, kColumnGap);
+        row->set_homogeneous(true);
+        row->set_hexpand(true);
+
+        vector<int> node_at_column(static_cast<size_t>(column_count), -1);
+        for (size_t index = 0; index < graph.nodes.size(); ++index) {
+            const auto& node = graph.nodes[index];
+            if (node.layer != layer) {
+                continue;
+            }
+            const int column = node.layer_size == 1
+                ? (column_count - 1) / 2
+                : static_cast<int>(lround(
+                      node.slot * (column_count - 1.0) /
+                      (node.layer_size - 1.0)));
+            node_at_column[static_cast<size_t>(column)] =
+                static_cast<int>(index);
+        }
+
+        for (int column = 0; column < column_count; ++column) {
+            const int index = node_at_column[static_cast<size_t>(column)];
+            if (index < 0) {
+                auto* spacer = Gtk::make_managed<Gtk::Box>();
+                spacer->set_hexpand(true);
+                row->append(*spacer);
+                continue;
+            }
+            auto* button = make_node_button(
+                graph.nodes[static_cast<size_t>(index)], on_open);
+            node_widgets[static_cast<size_t>(index)] = button;
+            row->append(*button);
+        }
+        layers->append(*row);
+    }
+    overlay->set_child(*layers);
 
     auto* edges = Gtk::make_managed<Gtk::DrawingArea>();
-    edges->set_content_width(static_cast<int>(ceil(layout.width)));
-    edges->set_content_height(static_cast<int>(ceil(layout.height)));
+    edges->set_hexpand(true);
+    edges->set_vexpand(true);
+    edges->set_can_target(false);
     edges->set_draw_func(
-        [graph](const Cairo::RefPtr<Cairo::Context>& cr, int, int) {
-            const Layout current = compute_layout(graph);
+        [graph, node_widgets, overlay](
+            const Cairo::RefPtr<Cairo::Context>& cr, int, int) {
             for (const auto& edge : graph.edges) {
-                draw_edge(
-                    cr,
-                    current.placements[static_cast<size_t>(edge.from)],
-                    current.placements[static_cast<size_t>(edge.to)]);
+                graphene_rect_t from{};
+                graphene_rect_t to{};
+                const auto* from_widget =
+                    node_widgets[static_cast<size_t>(edge.from)];
+                const auto* to_widget =
+                    node_widgets[static_cast<size_t>(edge.to)];
+                if (from_widget && to_widget &&
+                    gtk_widget_compute_bounds(
+                        GTK_WIDGET(from_widget->gobj()),
+                        GTK_WIDGET(overlay->gobj()),
+                        &from) &&
+                    gtk_widget_compute_bounds(
+                        GTK_WIDGET(to_widget->gobj()),
+                        GTK_WIDGET(overlay->gobj()),
+                        &to)) {
+                    draw_edge(cr, from, to);
+                }
             }
         });
-    overlay->set_child(*edges);
-
-    auto* nodes = Gtk::make_managed<Gtk::Fixed>();
-    nodes->set_size_request(
-        static_cast<int>(ceil(layout.width)),
-        static_cast<int>(ceil(layout.height)));
-    for (const auto& placement : layout.placements) {
-        nodes->put(
-            *make_node_button(*placement.node, on_open),
-            placement.x,
-            placement.y);
-    }
-    overlay->add_overlay(*nodes);
+    overlay->add_overlay(*edges);
     return overlay;
 }
 
@@ -266,7 +264,7 @@ Gtk::Widget* make_legend() {
     frame->add_css_class("panel-frame");
     frame->add_css_class("group-frame");
     frame->add_css_class("knowledge-graph-legend");
-    frame->set_size_request(286, -1);
+    frame->set_size_request(340, -1);
     frame->set_valign(Gtk::Align::START);
 
     auto* content = Gtk::make_managed<Gtk::Box>(
@@ -333,9 +331,10 @@ Gtk::Widget* make_knowledge_graph_view(
     const KnowledgeGraph& graph,
     function<void(const string& chapter_name)> on_open) {
     auto* body = Gtk::make_managed<Gtk::Box>(
-        Gtk::Orientation::HORIZONTAL, 22);
+        Gtk::Orientation::HORIZONTAL, 36);
     body->add_css_class("knowledge-graph-view");
-    body->set_halign(Gtk::Align::CENTER);
+    body->set_hexpand(true);
+    body->set_halign(Gtk::Align::FILL);
     body->set_valign(Gtk::Align::START);
 
     auto* graph_column = Gtk::make_managed<Gtk::Box>(

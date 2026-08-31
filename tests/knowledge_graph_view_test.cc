@@ -60,7 +60,16 @@ TEST(KnowledgeGraphViewTest, RendersRichChapterNodeAndMetricLegend) {
     ASSERT_NE(view, nullptr);
     auto* node = find_graph_node(*view);
     ASSERT_NE(node, nullptr);
+    const auto size_request = node->get_size_request();
+    EXPECT_EQ(size_request.get_width(), -1);
+    EXPECT_EQ(size_request.get_height(), -1);
+    EXPECT_TRUE(view->get_hexpand());
     EXPECT_NE(find_label(*view, "测试章节"), nullptr);
+    auto* description = find_label(*view, "用于验证节点卡片信息密度");
+    ASSERT_NE(description, nullptr);
+    EXPECT_TRUE(description->get_wrap());
+    EXPECT_EQ(description->get_ellipsize(), Pango::EllipsizeMode::NONE);
+    EXPECT_EQ(description->get_lines(), -1);
     EXPECT_NE(find_label(*view, "重要度 4/5"), nullptr);
     EXPECT_NE(find_label(*view, "掌握 1/2"), nullptr);
     EXPECT_NE(find_label(*view, "完成 70%"), nullptr);
