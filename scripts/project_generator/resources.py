@@ -43,6 +43,7 @@ def render_resources(model: dict, root: Path) -> str:
 <gresources>
   <gresource prefix="/app">
     <file preprocess="xml-stripblanks">window.ui</file>
+    <file preprocess="xml-stripblanks">experiment_dialog.ui</file>
     <file>style.css</file>
     <file>article.css</file>
     <file>backdrop.svg</file>

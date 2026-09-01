@@ -7,6 +7,7 @@
 
 #include <gtkmm.h>
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <string>
@@ -21,8 +22,8 @@ public:
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
         const ContentLoader& content_loader,
-        ExperimentRunner& experiment_runner,
-        Gtk::Window& parent);
+        Gtk::Window& parent,
+        function<void(const ExperimentSelection&, bool)> on_experiment_requested);
     ~WorkbenchPage();
 
     WorkbenchPage(const WorkbenchPage&) = delete;
@@ -31,15 +32,11 @@ public:
 private:
     void load_article();
     void select_by_knowledge_id(const string& knowledge_id);
-    void update_section_position(const SubChapter& selected);
 
     const ChapterMeta& m_chapter;
     const ContentLoader& m_content_loader;
+    function<void(const ExperimentSelection&, bool)> m_on_experiment_requested;
 
     unique_ptr<ArticleView> m_article_view;
-    unique_ptr<ExperimentDock> m_experiment_dock;
     map<string, const SubChapter*> m_topic_by_function_id;
-
-    Gtk::Box* m_dock_panel = nullptr;
-    Gtk::Label* m_experiment_count_label = nullptr;
 };

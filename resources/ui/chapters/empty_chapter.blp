@@ -1,5 +1,4 @@
 using Gtk 4.0;
-using GtkSource 5;
 
 Box chapter_page {
   orientation: vertical;
@@ -79,159 +78,37 @@ Box chapter_page {
     orientation: horizontal;
   }
 
-  // 主体：左侧真实源码，右侧知识点和运行结果。
-  Paned main_body {
-    orientation: horizontal;
-    position: 1040;
-    wide-handle: true;
-    resize-start-child: true;
-    resize-end-child: true;
-    shrink-start-child: false;
-    shrink-end-child: false;
+  // 主体只保留章节知识点导航；源码、运行状态和观察结果迁到进程内
+  // 唯一的非模态实验窗口。
+  Frame {
+    name: "topics_frame";
+    label: "本章知识点";
     hexpand: true;
     vexpand: true;
 
-    Box source_panel {
-      orientation: vertical;
-      spacing: 8;
-      width-request: 620;
-      margin-end: 8;
+    styles [
+      "panel-frame",
+      "group-frame"
+    ]
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
       hexpand: true;
       vexpand: true;
 
-      Frame source_frame {
-        name: "source_frame";
-        label: "源代码";
-        hexpand: true;
-        vexpand: true;
+      ListBox topics_list {
+        name: "topics_list";
+        selection-mode: none;
+        show-separators: true;
 
         styles [
-          "panel-frame",
-          "group-frame"
+          "topic-list"
         ]
-
-        ScrolledWindow {
-          hexpand: true;
-          vexpand: true;
-
-          GtkSource.View source_view {
-            name: "source_view";
-            editable: false;
-            cursor-visible: false;
-            monospace: true;
-            show-line-numbers: true;
-            highlight-current-line: false;
-            tab-width: 4;
-            left-margin: 14;
-            right-margin: 14;
-            top-margin: 12;
-            bottom-margin: 12;
-
-            styles [
-              "code-view"
-            ]
-          }
-        }
-      }
-    }
-
-    Paned right_side {
-      orientation: vertical;
-      position: 430;
-      wide-handle: true;
-      resize-start-child: true;
-      resize-end-child: true;
-      shrink-start-child: false;
-      shrink-end-child: false;
-      width-request: 460;
-      margin-start: 8;
-      vexpand: true;
-
-      Box topics_panel {
-          orientation: vertical;
-          spacing: 8;
-          height-request: 260;
-          margin-bottom: 8;
-          vexpand: true;
-
-          Frame {
-            name: "topics_frame";
-            label: "本章知识点";
-            hexpand: true;
-            vexpand: true;
-
-            styles [
-              "panel-frame",
-              "group-frame"
-            ]
-
-            ScrolledWindow {
-              hscrollbar-policy: never;
-              hexpand: true;
-              vexpand: true;
-
-              ListBox topics_list {
-                name: "topics_list";
-                selection-mode: none;
-                show-separators: true;
-
-                styles [
-                  "topic-list"
-                ]
-              }
-            }
-          }
-      }
-
-      Box tools_and_result {
-        orientation: vertical;
-        spacing: 8;
-        vexpand: true;
-
-        Box result_panel {
-          orientation: vertical;
-          spacing: 8;
-          height-request: 190;
-          margin-top: 0;
-          vexpand: true;
-
-          Frame {
-            name: "result_frame";
-            label: "运行结果";
-            hexpand: true;
-            vexpand: true;
-
-            styles [
-              "panel-frame",
-              "group-frame"
-            ]
-
-          ScrolledWindow {
-            hexpand: true;
-            vexpand: true;
-
-            TextView result_view {
-              name: "result_view";
-              editable: false;
-              cursor-visible: false;
-              monospace: true;
-              left-margin: 14;
-              right-margin: 14;
-              top-margin: 12;
-              bottom-margin: 12;
-
-              styles [
-                "code-view"
-              ]
-            }
-          }
-        }
-      }
       }
     }
   }
 
-  // 底部状态栏：跨越整个章节页面，随选中的知识点更新。
+  // 底部说明只跟随当前激活的知识点，不再承担实验运行状态。
   Frame {
     height-request: 58;
     hexpand: true;
@@ -260,7 +137,7 @@ Box chapter_page {
 
       Label knowledge_description_label {
         name: "knowledge_description_label";
-        label: "选择右侧知识点后，这里会显示对应的学习目标和实验提示。";
+        label: "选择知识点后，这里会显示对应的学习目标和实验提示。";
         halign: start;
         valign: center;
         hexpand: true;
@@ -270,23 +147,6 @@ Box chapter_page {
 
         styles [
           "knowledge-status-text"
-        ]
-      }
-
-      Spinner experiment_spinner {
-        name: "experiment_spinner";
-        visible: false;
-        valign: center;
-      }
-
-      Label experiment_status_label {
-        name: "experiment_status_label";
-        visible: false;
-        valign: center;
-        xalign: 1.0;
-
-        styles [
-          "experiment-status-text"
         ]
       }
     }

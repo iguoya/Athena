@@ -33,11 +33,10 @@ DialogTopic make_dialog_topic(const auto& topic) {
 CodeChapterPage::CodeChapterPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader,
     const FunctionRegistry& function_registry,
     LearningStore* learning_store,
     LearningDialogs& dialogs,
-    ExperimentRunner& experiment_runner,
+    function<void(const ExperimentSelection&, bool)> on_experiment_requested,
     function<void()> on_overview_requested,
     function<void()> on_progress_changed)
     : m_chapter(chapter),
@@ -45,22 +44,16 @@ CodeChapterPage::CodeChapterPage(
       m_function_registry(function_registry),
       m_learning_store(learning_store),
       m_dialogs(dialogs),
+      m_on_experiment_requested(std::move(on_experiment_requested)),
       m_on_progress_changed(std::move(on_progress_changed)) {
     m_header_title_label =
         builder->get_widget<Gtk::Label>("chapter_title_label");
     m_header_description_label =
         builder->get_widget<Gtk::Label>("chapter_description_label");
     m_header_icon = builder->get_widget<Gtk::Image>("chapter_icon");
-    auto* source_view = GTK_SOURCE_VIEW(
-        gtk_builder_get_object(builder->gobj(), "source_view"));
-    auto* result_view = builder->get_widget<Gtk::TextView>("result_view");
     m_topics_list = builder->get_widget<Gtk::ListBox>("topics_list");
     m_knowledge_description_label =
         builder->get_widget<Gtk::Label>("knowledge_description_label");
-    auto* experiment_spinner =
-        builder->get_widget<Gtk::Spinner>("experiment_spinner");
-    auto* experiment_status_label =
-        builder->get_widget<Gtk::Label>("experiment_status_label");
     auto overview_button =
         builder->get_widget<Gtk::Button>("chapter_overview_button");
 
@@ -72,22 +65,6 @@ CodeChapterPage::CodeChapterPage(
     }
     if (m_header_icon) {
         configure_icon_image(*m_header_icon, chapter.icon, 36);
-    }
-    m_experiment_dock = make_unique<ExperimentDock>(
-        content_loader,
-        experiment_runner,
-        source_view,
-        result_view,
-        nullptr,
-        experiment_spinner,
-        experiment_status_label);
-    m_experiment_dock->show_source_file(chapter.source);
-
-    if (result_view) {
-        auto buffer = result_view->get_buffer();
-        buffer->set_text("点击右侧知识点即可运行实验并在此查看结果。");
-        auto begin = buffer->begin();
-        buffer->place_cursor(begin);
     }
     if (overview_button) {
         overview_button->signal_clicked().connect(
@@ -145,7 +122,6 @@ void CodeChapterPage::populate_topic_list() {
             if (m_header_icon) {
                 configure_icon_image(*m_header_icon, found->second.icon, 36);
             }
-            m_experiment_dock->select(found->second.experiment);
         });
 
     string current_group;
@@ -277,7 +253,9 @@ void CodeChapterPage::populate_topic_list() {
             run->signal_clicked().connect(
                 [this, row, activate_topic, topic]() {
                     (*activate_topic)(row);
-                    m_experiment_dock->run_selected();
+                    if (m_on_experiment_requested) {
+                        m_on_experiment_requested(topic.experiment, true);
+                    }
                 });
         }
         actions->append(*run);

@@ -137,6 +137,14 @@ compiled_ui += custom_target(
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
+# 实验窗口 .blp（独立于章节目录）
+compiled_ui += custom_target(
+  'compile-experiment-dialog.blp',
+  input: files('resources/ui/experiment_dialog.blp'),
+  output: 'experiment_dialog.ui',
+  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+)
+
 # === 共享核心库 ===
 core_sources = files(
   'content/content_loader.cc',
@@ -183,6 +191,7 @@ app_sources = files(
   'ui/chapter_page_stack.cc',
   'ui/code_chapter_page.cc',
   'ui/dialog_helpers.cc',
+  'ui/experiment_dialog.cc',
   'ui/experiment_dock.cc',
   'ui/handbook_page.cc',
   'ui/history_dialog.cc',

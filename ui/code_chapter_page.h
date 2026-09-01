@@ -1,9 +1,7 @@
 #pragma once
 
-#include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
 #include "registry/function_registry.h"
-#include "services/experiment_runner.h"
 #include "storage/learning_store.h"
 #include "ui/dialog_topic.h"
 #include "ui/experiment_dock.h"
@@ -26,11 +24,10 @@ public:
     CodeChapterPage(
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader,
         const FunctionRegistry& function_registry,
         LearningStore* learning_store,
         LearningDialogs& dialogs,
-        ExperimentRunner& experiment_runner,
+        function<void(const ExperimentSelection&, bool)> on_experiment_requested,
         function<void()> on_overview_requested,
         function<void()> on_progress_changed);
     ~CodeChapterPage();
@@ -51,6 +48,7 @@ private:
     const FunctionRegistry& m_function_registry;
     LearningStore* m_learning_store = nullptr;
     LearningDialogs& m_dialogs;
+    function<void(const ExperimentSelection&, bool)> m_on_experiment_requested;
     function<void()> m_on_progress_changed;
 
     Gtk::ListBox* m_topics_list = nullptr;
@@ -58,7 +56,5 @@ private:
     Gtk::Label* m_header_title_label = nullptr;
     Gtk::Label* m_header_description_label = nullptr;
     Gtk::Image* m_header_icon = nullptr;
-    unique_ptr<ExperimentDock> m_experiment_dock;
-
     shared_ptr<atomic_bool> m_alive = make_shared<atomic_bool>(true);
 };

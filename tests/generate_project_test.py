@@ -156,6 +156,7 @@ def main() -> None:
         assert "code|resources/ui/chapters/code.blp|code.ui" in resources.stdout
         resource_xml = resource_output.read_text(encoding="utf-8")
         assert "code.ui" in resource_xml
+        assert "experiment_dialog.ui" in resource_xml
         assert "language/widget/widget.hpp" in resource_xml
         assert '<file alias="tiger.svg">icons/tiger.svg</file>' in resource_xml
         assert "/app/icons/icons" not in resource_xml

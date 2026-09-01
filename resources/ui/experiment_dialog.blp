@@ -1,0 +1,185 @@
+using Gtk 4.0;
+using GtkSource 5;
+
+// 非模态实验窗口：左侧完整真实源码，右侧只保留当前实验的目标、
+// 运行状态、运行操作和观察结果。知识点列表与学习类操作仍留在章节页。
+Window experiment_dialog_window {
+  title: "Athena · 实验台";
+  default-width: 1200;
+  default-height: 900;
+
+  styles [
+    "athena-window"
+  ]
+
+  Paned {
+    orientation: horizontal;
+    position: 720;
+    wide-handle: true;
+    resize-start-child: true;
+    resize-end-child: true;
+    shrink-start-child: false;
+    shrink-end-child: false;
+    margin-top: 16;
+    margin-bottom: 16;
+    margin-start: 16;
+    margin-end: 16;
+
+    Box {
+      orientation: vertical;
+      width-request: 680;
+      margin-end: 8;
+      hexpand: true;
+      vexpand: true;
+
+      Frame {
+        label: "真实源码";
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame",
+          "group-frame"
+        ]
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          GtkSource.View experiment_source_view {
+            name: "experiment_source_view";
+            editable: false;
+            cursor-visible: false;
+            monospace: true;
+            show-line-numbers: true;
+            highlight-current-line: false;
+            tab-width: 4;
+            left-margin: 14;
+            right-margin: 14;
+            top-margin: 12;
+            bottom-margin: 12;
+
+            styles [
+              "code-view"
+            ]
+          }
+        }
+      }
+    }
+
+    Box {
+      orientation: vertical;
+      spacing: 10;
+      width-request: 420;
+      margin-start: 8;
+      vexpand: true;
+
+      Frame {
+        hexpand: true;
+
+        styles [
+          "panel-frame",
+          "group-frame"
+        ]
+
+        Box {
+          orientation: vertical;
+          spacing: 8;
+          margin-top: 12;
+          margin-bottom: 12;
+          margin-start: 14;
+          margin-end: 14;
+
+          Label experiment_title_label {
+            name: "experiment_title_label";
+            halign: start;
+            wrap: true;
+            xalign: 0;
+
+            styles [
+              "title-3"
+            ]
+          }
+
+          Label experiment_objective_label {
+            name: "experiment_objective_label";
+            halign: start;
+            wrap: true;
+            wrap-mode: word_char;
+            xalign: 0;
+
+            styles [
+              "dim-label"
+            ]
+          }
+        }
+      }
+
+      Box {
+        orientation: horizontal;
+        spacing: 8;
+
+        Spinner experiment_spinner {
+          name: "experiment_spinner";
+          visible: false;
+          valign: center;
+        }
+
+        Label experiment_status_label {
+          name: "experiment_status_label";
+          visible: false;
+          halign: start;
+          valign: center;
+          hexpand: true;
+
+          styles [
+            "dim-label"
+          ]
+        }
+
+        Button experiment_run_button {
+          name: "experiment_run_button";
+          label: "▶ 运行验证";
+          halign: end;
+
+          styles [
+            "btn-sm",
+            "btn-primary"
+          ]
+        }
+      }
+
+      Frame {
+        label: "观察结果";
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame",
+          "group-frame"
+        ]
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          TextView experiment_result_view {
+            name: "experiment_result_view";
+            editable: false;
+            cursor-visible: false;
+            monospace: true;
+            wrap-mode: word_char;
+            left-margin: 14;
+            right-margin: 14;
+            top-margin: 12;
+            bottom-margin: 12;
+
+            styles [
+              "code-view"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -20,10 +20,12 @@ using namespace std;
 class AboutDialog;
 class ChapterPageStack;
 class CodeChapterPage;
+class ExperimentDialog;
 class ExperimentRunner;
 class HandbookPage;
 class PocketCubePage;
 class WorkbenchPage;
+struct ExperimentSelection;
 
 // 顶层窗口只负责导航、页面切换、跨模块事件与模块生命周期。代码页、
 // 手册、实践页、对话框和实验执行的内部状态分别由功能模块拥有。
@@ -81,6 +83,9 @@ private:
     void refresh_progress_page();
 
     void handle_chapter_overview(const ChapterMeta& chapter);
+    void show_experiment(
+        const ExperimentSelection& experiment,
+        bool run_immediately);
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(
         const string& category_name,
         const string& chapter_name);
@@ -105,6 +110,7 @@ private:
     shared_ptr<atomic_bool> m_ui_alive = make_shared<atomic_bool>(true);
     unique_ptr<LearningDialogs> m_dialogs;
     unique_ptr<ExperimentRunner> m_experiment_runner;
+    unique_ptr<ExperimentDialog> m_experiment_dialog;
     unique_ptr<AboutDialog> m_about_dialog;
 
     // 页面对象必须比其 builder 先销毁；声明在 builder map 之后，成员逆序

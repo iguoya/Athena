@@ -1,8 +1,7 @@
 using Gtk 4.0;
-using GtkSource 5;
 
-// 文档主导的学习工作台。初始只展示文档；读者在小节末尾选择实验后，
-// 右侧实验坞才展开。实验坞不再重复一份全章知识点列表。
+// 文档主导的学习工作台。正文实验入口打开进程内唯一的非模态实验窗口；
+// 页面本身不再保留一份内嵌实验坞。
 Box workbench_chapter_page {
   orientation: vertical;
   spacing: 10;
@@ -67,240 +66,30 @@ Box workbench_chapter_page {
     orientation: horizontal;
   }
 
-  Paned workbench_body {
-    name: "workbench_body";
-    orientation: horizontal;
-    position: 1460;
-    wide-handle: true;
-    resize-start-child: true;
-    resize-end-child: true;
-    shrink-start-child: false;
-    shrink-end-child: false;
+  Box {
+    orientation: vertical;
     hexpand: true;
     vexpand: true;
 
-    Box article_panel {
-      orientation: vertical;
+    styles [
+      "article-page"
+    ]
+
+    Frame workbench_article_frame {
       hexpand: true;
       vexpand: true;
-      margin-end: 8;
+      label: "学习文档";
 
       styles [
-        "article-page"
+        "panel-frame",
+        "group-frame",
+        "article-surface"
       ]
 
-      Frame workbench_article_frame {
+      DrawingArea workbench_article_host {
+        name: "workbench_article_host";
         hexpand: true;
         vexpand: true;
-        label: "学习文档";
-
-        styles [
-          "panel-frame",
-          "group-frame",
-          "article-surface"
-        ]
-
-        DrawingArea workbench_article_host {
-          name: "workbench_article_host";
-          hexpand: true;
-          vexpand: true;
-        }
-      }
-    }
-
-    Box workbench_dock_panel {
-      name: "workbench_dock_panel";
-      orientation: vertical;
-      spacing: 8;
-      width-request: 560;
-      margin-start: 8;
-      vexpand: true;
-
-      Frame {
-        hexpand: true;
-
-        styles [
-          "panel-frame",
-          "group-frame"
-        ]
-
-        Box {
-          orientation: vertical;
-          spacing: 5;
-          margin-top: 10;
-          margin-bottom: 10;
-          margin-start: 12;
-          margin-end: 10;
-
-          Box {
-            orientation: horizontal;
-            spacing: 8;
-
-            Label {
-              label: "实验验证";
-              halign: start;
-
-              styles [
-                "heading"
-              ]
-            }
-
-            Label workbench_experiment_count_label {
-              name: "workbench_experiment_count_label";
-              halign: start;
-              hexpand: true;
-
-              styles [
-                "dim-label"
-              ]
-            }
-
-            Button workbench_collapse_button {
-              name: "workbench_collapse_button";
-              label: "收起";
-
-              styles [
-                "btn-sm"
-              ]
-            }
-          }
-
-          Label workbench_experiment_title_label {
-            name: "workbench_experiment_title_label";
-            halign: start;
-            wrap: true;
-            xalign: 0;
-
-            styles [
-              "title-3"
-            ]
-          }
-        }
-      }
-
-      Frame {
-        label: "验证目标";
-        hexpand: true;
-
-        styles [
-          "panel-frame",
-          "group-frame"
-        ]
-
-        Label workbench_experiment_objective_label {
-          name: "workbench_experiment_objective_label";
-          halign: start;
-          wrap: true;
-          xalign: 0;
-          margin-top: 10;
-          margin-bottom: 10;
-          margin-start: 12;
-          margin-end: 12;
-        }
-      }
-
-      Frame {
-        label: "真实源码";
-        hexpand: true;
-        vexpand: true;
-
-        styles [
-          "panel-frame",
-          "group-frame"
-        ]
-
-        ScrolledWindow {
-          hexpand: true;
-          vexpand: true;
-
-          GtkSource.View workbench_source_view {
-            name: "workbench_source_view";
-            editable: false;
-            cursor-visible: false;
-            monospace: true;
-            show-line-numbers: true;
-            highlight-current-line: false;
-            tab-width: 4;
-            left-margin: 14;
-            right-margin: 14;
-            top-margin: 12;
-            bottom-margin: 12;
-
-            styles [
-              "code-view"
-            ]
-          }
-        }
-      }
-
-      Box run_row {
-        orientation: horizontal;
-        spacing: 8;
-
-        Spinner workbench_experiment_spinner {
-          name: "workbench_experiment_spinner";
-          visible: false;
-        }
-
-        Label workbench_experiment_status_label {
-          name: "workbench_experiment_status_label";
-          visible: false;
-          hexpand: true;
-          halign: start;
-
-          styles [
-            "dim-label"
-          ]
-        }
-
-        Button workbench_run_button {
-          name: "workbench_run_button";
-          label: "▶ 运行验证";
-          halign: end;
-
-          styles [
-            "btn-sm",
-            "btn-primary"
-          ]
-        }
-      }
-
-      Box result_panel {
-        orientation: vertical;
-        height-request: 180;
-        vexpand: false;
-
-        Frame {
-          label: "观察结果";
-          hexpand: true;
-          vexpand: false;
-
-          styles [
-            "panel-frame",
-            "group-frame"
-          ]
-
-          ScrolledWindow {
-            hexpand: true;
-            vexpand: false;
-
-            TextView workbench_result_view {
-              name: "workbench_result_view";
-              editable: false;
-              cursor-visible: false;
-              monospace: true;
-              wrap-mode: word_char;
-              left-margin: 14;
-              right-margin: 14;
-              top-margin: 10;
-              bottom-margin: 10;
-
-              styles [
-                "code-view"
-              ]
-            }
-          }
-        }
       }
     }
   }

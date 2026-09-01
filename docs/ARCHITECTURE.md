@@ -44,11 +44,12 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
                                                      |       +--> KnowledgeGraph（前置依赖与章节指标聚合）
                                                      |       +--> KnowledgeGraphView（连线 + GTK 节点卡片）
                                                      +--> CodeChapterPage
-                                                     |       +--> ExperimentDock
-                                                     |               +--> ExperimentRunner
+                                                     |       +--> ExperimentDialog（共享、非模态）
+                                                     |               +--> ExperimentDock
+                                                     |                       +--> ExperimentRunner
                                                      +--> WorkbenchPage（文档主导原型）
                                                      |       +--> ArticleView
-                                                     |       +--> ExperimentDock
+                                                     |       +--> ExperimentDialog（同一实例）
                                                      +--> PocketCubePage
                                                      +--> HandbookPage（每分类一部，懒构建一次）
                                                      +--> ProgressPage / LearningDialogs
@@ -62,10 +63,12 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 手册 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
 - 手册 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
 - TypeSemantics 已使用学习工作台原型：初始让文档占满阅读区；配置了 `teaches`
-  的小节在正文末尾显示一个或多个实验入口，点击后才展开右侧实验坞。实验坞只显示
-  当前实验、验证目标、真实源码、运行状态和观察结果，不重复全章知识点目录。
-- `ExperimentDock` 是代码章节页与学习工作台共享的控件协调器，负责源码定位、
-  后台运行状态和结果呈现；页面只决定当前选择哪个实验，`MainWindow` 不感知内部控件。
+  的小节在正文末尾显示一个或多个实验入口，点击后打开共享的非模态实验窗口。
+  窗口只显示当前实验、验证目标、真实源码、运行状态和观察结果，不重复全章知识点目录。
+- `ExperimentDialog` 是标准代码页与学习工作台共享的单例窗口，暂时以 `MainWindow`
+  为 transient parent；内部左侧显示完整真实源码，右侧纵向排列当前实验目标、运行操作
+  和观察结果。`ExperimentDock` 继续只负责源码定位、后台运行状态和结果呈现；页面只
+  上报当前选择哪个实验，不接触窗口内部控件。
 - 每个知识点可以独立运行并显示结果；实验代码在独立工作线程执行（同一时刻只运行一个，运行中的新请求被忽略），状态栏的转圈指示与耗时提示反馈进度，结果和耗时经主线程回填，界面不阻塞。
 - Meson 配置阶段会校验配置引用的 Blueprint 文件是否存在。
 - 统一生成器会校验完整项目模型，并在临时工程中端到端测试五个子命令。
@@ -100,7 +103,10 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - “AI 自测”要求 AI 以 JSON 返回针对该知识点具体源码的自测题（题干、可选代码片段 `code`、选项数组、正确选项下标数组 `correct_indices`、解释），继续用 GTK 控件渲染，不是 Markdown/WebView；`code` 单独放在只读等宽代码框中，不和题干挤在普通文字标签里。提示词把 AI 限定为出题者：题目只能依据当前知识点说明和真实源码，覆盖核心语义、代码行为、常见误用，以及与该知识点确实相关的边界情况；能用短代码场景考察时，优先询问输出或编译结果、对象与资源生命周期、所有权、异常安全、错误定位和修改方案，不改成定义背诵或措辞辩论，只有无法通过代码表达时才保留少量概念题。难度以基础理解和源码分析应用为主，不靠范围外冷门细节提高难度，也不使用未定义行为或未说明的平台差异。题量由实际存在的独立考察点决定，少于或多于 5 道都有效，覆盖完整后停止，也不把同一事实换说法重复出题。`correct_indices` 只有一个元素时按单选渲染（选项互斥），多个元素时按多选渲染（选项互相独立、可多选，标题标注“多选”）；本地代码严格比较用户所选集合与标准答案集合，多选不给部分分，AI 不参与评分。用户必须答完全部有效题目才产生总成绩，熟练度按 `floor(答对题数 / 总题数 × 5)` 换算，只有全对才是 5 星；中途关闭不改原成绩，重新完整自测则以最新成绩覆盖。正确显示绿色“✓ 回答正确”，错误显示红色“✗ 回答错误，正确答案是……”并展开解释，随后选项和提交按钮置灰。`AiService` 解码前会去掉 AI 偶尔添加的 JSON 代码围栏，也兼容 AI 偶尔省略提示词要求的外层 `{"questions": [...]}` 包装、直接返回题目数组本身这两种响应形状，并过滤无效题目和越界答案下标；整体无法解码时，界面退化为原样显示文本，不丢失回答。正文字号用 `.ai-dialog-question`/`.ai-dialog-option`/`.ai-quiz-code` 等 class，不影响主界面的 `.code-view`（18pt）（参见 ADR 0015）。
 - 对话框不额外加“关闭”按钮——系统原生标题栏自带关闭按钮，重复一个没有意义。需要额外功能按钮（比如运行历史对话框的“AI 讲解差异”，紫色 `btn-ai-accent`，两个 Key 都未配置时不出现；“关于”对话框的“关闭”）时用 `append_dialog_action_bar()` 手工加在内容区末尾、居中，`extra_buttons` 为空时这个函数什么都不做。这个函数和统一处理模态锁定/生命周期的 `lock_for_modal_dialog()` 都在 `ui/dialog_helpers.h`，由 `LearningDialogs` 和独立的 `AboutDialog` 模块复用。运行历史对比的源码/输出仍是 GTK TextView/GtkSourceView（`.ai-dialog-text`，22pt），不是 Markdown/WebView——那里展示的是原始运行记录，不是 AI 生成的说明文字。
 - **“关于”对话框**是 `AboutDialog` 模块内部手写的 `Gtk::Dialog`，不用 GTK 内建的 `Gtk::AboutDialog`——后者是一套独立的“品牌展示页”视觉语言（大 Logo 居中、切标签页看 License），跟其余自己画的对话框（原生标题栏 + 左对齐表单式内容 + 底部居中按钮）风格不统一。内容完全静态、没有异步操作，惰性创建一次后长期复用；`MainWindow` 只调用 `present()`。
-- 源码面板上方是一个统一的 Frame：图标 + 标题/简介（hexpand 占满中间空间）+ “说明文档”按钮（紫色，跟运行/成功/危险等其他语义色区分开，不依赖当前选中的知识点、常驻可点）。章节打开时默认无激活条目，状态栏保持占位提示并支持换行；源码面板使用带标题的 Frame（GroupBox 形态）组合标题与源码框。
+- 标准章节页上方是一个统一的 Frame：图标 + 标题/简介（hexpand 占满中间空间）+
+  “说明文档”按钮（紫色，跟运行/成功/危险等其他语义色区分开，不依赖当前选中的
+  知识点、常驻可点）。章节打开时默认无激活条目，底部说明栏保持占位提示并支持换行；
+  真实源码和观察结果位于独立实验窗口，不再占用章节知识点列表的宽度。
 - **应用实践**（`practice` 分类）章节用专属布局（`practice_cube.blp` 等），不是标准 `chapter_page` 那套“知识点列表 + 源码框 + 结果区”三栏结构——目前只有 2 阶魔方一章，左栏是源码框 + “运行”“重置魔方”两个按钮 + 输出框，右栏是带标题的两个 `Frame`：“当前状态”一行 + “未来状态”九宫格（没有单独的运行状态日志，“就绪/运行中/已完成”这类文字提示价值不大，已经去掉）。“当前状态”那一行横向排三块：3D 视图（可拖拽旋转）、六面展开图（两者互补，一个直觉一个精确无遮挡）、状态摘要文字（`kCubeStateSpaceSizeIgnoringOrientation` 给出的状态空间数量、`PocketCube::move_history()` 拼成的当前路径、`is_solved()` 判断的是否复原），这一行不设 vexpand，高度由内容自然撑开。“未来状态”九宫格设成 homogeneous + hexpand/vexpand，撑满剩余整块区域；每一格是 3D 视图 + 展开图横向并排（跟“当前状态”那一行同一种视觉逻辑）叠一份 caption，对应 `next_move_set()` 给出的 U/R/F 三个面 × 顺时针/逆时针/180° 这 9 种非冗余转法（2 阶魔方没有固定参考系，转 D/L/B 都等价于先整体转半圈再转 U/R/F，是冗余操作，不单独穷举），只读预览、不接受点击；每格右下角叠一个“复原”`Gtk::ToggleButton`（`Gtk::Overlay`），按下后把这一格切换成显示当前实际状态（不套用这一步转法），方便跟默认显示的“转完的样子”来回切换对比，纯展示开关，不会真的把这步转法应用到 `cube` 上。`PocketCubePage` 独占这套控件装配、状态和动画交互；`MainWindow` 只识别页面类型并创建模块。其余动画、重置和九宫格刷新规则保持不变。
 - 教学/实践源码分两个平级顶层目录：`language/` 按 C++ 语言特性拆分知识点（`language/references/`、`language/raii/` 等），`practice/` 收纳自成一体的应用实践项目，一个项目的状态表示、算法、渲染代码都收在自己的子目录里（比如 `practice/pocket_cube/` 同时放 `state.h/.cc`——不依赖 GTK、可脱离渲染层单独测试的魔方状态与转动代数、`view.h/.cc`——3D/展开图的 Cairo 渲染、`pocket_cube.hpp`——真正的知识点实现），不嵌进 `language/` 底下，也不分散到 `render/` 之类别的顶层目录。`scripts/project_generator/model.py` 的 `project_path()` 用 `SOURCE_PREFIXES = ("language", "practice")` 校验 `implementation.header`/`source` 等字段，两个前缀都接受。
 - 曾经实现过知识点笔记，但控件长期隐藏、没有可用入口，却要求代码页维护自动保存定时器、切换时刷新和存储读写，因此已移除界面及运行时 API。旧数据库中的 `note` 列不删除、不覆盖，避免升级时破坏用户历史数据；新数据库不再创建该列。若以后确有记录学习心得的需求，应先重新设计可发现的入口和检索方式，而不是恢复隐藏文本框。
@@ -266,11 +272,13 @@ MainWindow（顶层导航、页面切换、模块生命周期）
 ├── ChapterIndexPage（普通分类网格 / C++ 学习图谱）
 │   └── KnowledgeGraphView（前置连线、章节卡片、指标说明）
 ├── CodeChapterPage（保留的标准代码页；知识点列表与附加学习动作）
-│   └── ExperimentDock（当前实验、源码、运行状态与结果）
+│   └── 请求 MainWindow 打开共享 ExperimentDialog
+├── ExperimentDialog（左源码 / 右目标、运行与结果；非模态单例）
+│   └── ExperimentDock（当前实验、源码定位、运行状态与结果）
 │       └── ExperimentRunner（非 GTK：执行、耗时、快照、历史写入）
-├── WorkbenchPage（文档主导；文档实验入口与实验坞的协调）
+├── WorkbenchPage（文档主导；文档实验入口请求打开实验窗口）
 │   ├── ArticleView（正文、目录与实验入口组）
-│   └── ExperimentDock（与代码页复用，不拥有章节/文档状态）
+│   └── 请求 MainWindow 打开同一 ExperimentDialog
 ├── PocketCubePage（有状态实践页、动画与专属控件）
 ├── HandbookPage（手册内容、ArticleView 生命周期、文档跳转）
 ├── ProgressPage（CategoryProgress -> GTK 统计页面）

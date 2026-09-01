@@ -9,6 +9,7 @@
 #include "ui/chapter_page_stack.h"
 #include "ui/chapter_overview.h"
 #include "ui/code_chapter_page.h"
+#include "ui/experiment_dialog.h"
 #include "ui/handbook_page.h"
 #include "ui/icon_utils.h"
 #include "ui/pocket_cube_page.h"
@@ -344,15 +345,18 @@ void MainWindow::ensure_chapter_page(
     auto overview_requested = [this, chapter]() {
         handle_chapter_overview(chapter);
     };
+    auto experiment_requested =
+        [this](const ExperimentSelection& experiment, bool run_immediately) {
+            show_experiment(experiment, run_immediately);
+        };
     if (chapter.widget_name == "chapter_page") {
         m_code_pages[page_key] = make_unique<CodeChapterPage>(
             chapter,
             builder,
-            m_content_loader,
             m_function_registry,
             m_learning_store.get(),
             *m_dialogs,
-            *m_experiment_runner,
+            experiment_requested,
             overview_requested,
             [this]() { refresh_progress_page(); });
     } else if (chapter.widget_name == kPracticeCubePageWidget) {
@@ -360,9 +364,22 @@ void MainWindow::ensure_chapter_page(
             chapter, builder, m_content_loader, overview_requested);
     } else if (chapter.widget_name == kWorkbenchPageWidget) {
         m_workbench_pages[page_key] = make_unique<WorkbenchPage>(
-            chapter, builder, m_content_loader, *m_experiment_runner, *this);
+            chapter,
+            builder,
+            m_content_loader,
+            *this,
+            experiment_requested);
     }
     m_loaded_chapters.insert(page_key);
+}
+
+void MainWindow::show_experiment(
+    const ExperimentSelection& experiment, bool run_immediately) {
+    if (!m_experiment_dialog) {
+        m_experiment_dialog = make_unique<ExperimentDialog>(
+            *this, m_content_loader, *m_experiment_runner);
+    }
+    m_experiment_dialog->present(experiment, run_immediately);
 }
 
 void MainWindow::build_category(const string& category_name) {
