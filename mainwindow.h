@@ -47,7 +47,7 @@ private:
     void load_chapter_metadata();
     void open_learning_store();
     void setup_menu();
-    void build_home_grid();
+    void build_home_graph();
     void go_home();
     void enter_category(const string& category_name);
     void build_category(const string& category_name);
@@ -94,7 +94,7 @@ private:
     ContentLoader m_content_loader;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
 
-    Gtk::FlowBox* m_home_grid = nullptr;
+    Gtk::Box* m_home_graph = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Box* m_breadcrumb_box = nullptr;
     Gtk::MenuButton* m_chapter_switcher = nullptr;

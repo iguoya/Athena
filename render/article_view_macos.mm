@@ -292,11 +292,23 @@ private:
             y = NSHeight(m_native_content_view.bounds) - y - bounds.size.height;
         }
 
-        m_web_view.frame = NSMakeRect(
+        const NSRect frame = NSMakeRect(
             bounds.origin.x,
             y,
             bounds.size.width,
             bounds.size.height);
+
+        // GTK 在一轮布局中会先后发出 resize 和 idle 校正；它们若算到同一
+        // 个目标矩形，就不重复要求 WebKit 重排。真正发生尺寸或位置变化时，
+        // 明确让原生视图重绘整块 backing：否则深色文章在右下角偶尔会露出
+        // WebKit 尚未更新的白色底图。
+        if (m_has_synced_frame && NSEqualRects(m_last_synced_frame, frame)) {
+            return;
+        }
+        m_last_synced_frame = frame;
+        m_has_synced_frame = true;
+        m_web_view.frame = frame;
+        [m_web_view setNeedsDisplay:YES];
     }
 
     Gtk::DrawingArea& m_host;
@@ -317,6 +329,8 @@ private:
     NSView* m_native_content_view = nil;
     WKWebView* m_web_view = nil;
     AthenaArticleNavigationDelegate* m_navigation_delegate = nil;
+    NSRect m_last_synced_frame = NSZeroRect;
+    bool m_has_synced_frame = false;
 };
 
 } // namespace

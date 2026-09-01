@@ -48,11 +48,18 @@ HandbookPage::HandbookPage(
     string combined_markdown;
     size_t heading_count = 0;
     for (const auto& document : documents) {
-        const string markdown = content_loader.load_document(document);
-        if (markdown.empty()) {
+        const string raw = content_loader.load_document(document);
+        if (raw.empty()) {
             cerr << "Failed to load handbook document: " << document << endl;
             continue;
         }
+        const auto slash = document.find_last_of('/');
+        const string dir =
+            slash == string::npos ? string() : document.substr(0, slash + 1);
+        const string markdown = inline_markdown_images(
+            raw, [&](const string& relative) {
+                return content_loader.load_document(dir + relative);
+            });
         vector<MarkdownHeading> headings;
         try {
             headings = parse_markdown_headings(markdown);

@@ -1,7 +1,7 @@
 using Gtk 4.0;
 
-// 首页：一级大类的入口。FlowBox 按宽度自适应换行，不强行凑满一个固定
-// 宫格数——分类数量以后增加或减少时无需改版式。
+// 首页：按计算机专业学习脉络铺开的学科知识图谱，取代旧的九宫格入口。
+// MainWindow 运行时把 render/domain_graph_view 生成的视图挂进 home_graph。
 Box home_page {
   name: "home_page";
   orientation: vertical;
@@ -11,23 +11,17 @@ Box home_page {
     "app-content"
   ]
 
+    // 学科图谱的两张图是固定宽度、不压缩的，窄窗口时整页横向滚动查看。
   ScrolledWindow {
-    hscrollbar-policy: never;
+    hscrollbar-policy: automatic;
     vexpand: true;
 
-    // 分类按钮由 MainWindow 根据 athena.json 动态追加。
-    FlowBox home_grid {
-      name: "home_grid";
-      orientation: horizontal;
-      selection-mode: none;
-      homogeneous: true;
-      min-children-per-line: 2;
-      max-children-per-line: 4;
-      row-spacing: 28;
-      column-spacing: 28;
+    Box home_graph {
+      name: "home_graph";
+      orientation: vertical;
       valign: start;
-      halign: center;
-      margin-top: 56;
+      halign: start;
+      margin-top: 40;
       margin-bottom: 56;
       margin-start: 40;
       margin-end: 40;
@@ -56,9 +50,9 @@ Box content_area {
 }
 
 ApplicationWindow window {
-  title: "Athena - C++ 学习指南";
-  default-width: 1920;
-  default-height: 1080;
+  title: "计算机与电子信息学习实验室";
+  default-width: 2160;
+  default-height: 1440;
 
   styles [
     "athena-window"

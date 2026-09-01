@@ -2,12 +2,32 @@
 #include <gtkmm.h>
 #include <gtksourceview/gtksource.h>
 
+#include <regex>
+#include <string>
+
 namespace {
+
+std::string load_text_resource(const char* path) {
+    GError* error = nullptr;
+    GBytes* bytes = g_resources_lookup_data(
+        path, G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+    if (!bytes) {
+        const std::string message = error ? error->message : "unknown error";
+        g_clear_error(&error);
+        ADD_FAILURE() << "Failed to load " << path << ": " << message;
+        return {};
+    }
+    gsize size = 0;
+    const auto* data = static_cast<const char*>(g_bytes_get_data(bytes, &size));
+    std::string text(data, size);
+    g_bytes_unref(bytes);
+    return text;
+}
 
 TEST(GtkResourceTest, LoadsTheMainWindowNavigationControls) {
     const auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
 
-    EXPECT_NE(builder->get_widget<Gtk::FlowBox>("home_grid"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Box>("home_graph"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("root_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("chapter_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Button>("home_button"), nullptr);
@@ -78,6 +98,32 @@ TEST(GtkResourceTest, KeepsTheWorkbenchFocusedOnTheArticle) {
     EXPECT_EQ(
         builder->get_widget<Gtk::TextView>("workbench_result_view"),
         nullptr);
+}
+
+TEST(GtkResourceTest, KeepsGlobalReadableTextAtLeastFourteenPoints) {
+    const std::string stylesheet = load_text_resource("/app/style.css");
+    ASSERT_FALSE(stylesheet.empty());
+
+    const std::regex point_size(R"(font-size:\s*([0-9]+(?:\.[0-9]+)?)pt)");
+    for (std::sregex_iterator match(
+             stylesheet.begin(), stylesheet.end(), point_size),
+         end;
+         match != end;
+         ++match) {
+        EXPECT_GE(std::stod((*match)[1].str()), 14.0)
+            << "Typography rule falls below the global 14pt baseline: "
+            << match->str();
+    }
+
+    EXPECT_NE(stylesheet.find("window {\n    font-size: 16pt;"),
+              std::string::npos);
+
+    const std::string article = load_text_resource("/app/article.css");
+    ASSERT_FALSE(article.empty());
+    EXPECT_NE(article.find("font-size: var(--article-font-size);"),
+              std::string::npos);
+    EXPECT_EQ(article.find("font-size: 14px;"), std::string::npos);
+    EXPECT_EQ(article.find("font-size: 0.82rem;"), std::string::npos);
 }
 
 } // namespace

@@ -32,7 +32,10 @@ ExperimentDialog::ExperimentDialog(
     }
 
     m_window->set_transient_for(m_parent);
-    m_window->set_modal(false);
+    // 模态：运行实验是"专注做一下"的活动，期间不需要同时操作主窗口；
+    // 后续 AI 讲解 / AI 自测按钮要挂进这个窗口，它们本身也是模态对话框，
+    // 统一成模态层级更清晰。见 ADR 0022 的修订记录。
+    m_window->set_modal(true);
     m_window->set_hide_on_close(true);
     if (auto application = m_parent.get_application()) {
         m_window->set_application(application);

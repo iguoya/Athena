@@ -2,6 +2,8 @@
 
 - 日期：2026-08-30
 - 状态：已接受，第一章原型实施中
+- 后续：ADR 0022 已把内嵌实验坞迁到共享的非模态实验窗口；本文保留当时确定的
+  “文档发起、实验响应”和 `ExperimentDock` 职责边界，不再代表当前控件布局。
 - 依据：`docs/LEARNING_WORKSPACE_PROPOSAL.md`、
   `docs/LEARNING_WORKSPACE_LOOP_ENGINE.md`、`docs/LEARNING_WORKSPACE_BENCH.md`
   及 `docs/LEARNING_WORKSPACE_SKETCH.html` 的对照讨论

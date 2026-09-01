@@ -1,8 +1,7 @@
 #include "render/chart_view.h"
 
+#include "render/cairo_text.h"
 #include "render/chart_scale.h"
-
-#include <pangomm.h>
 
 #include <algorithm>
 #include <cmath>
@@ -10,33 +9,8 @@
 
 namespace {
 
-// 绘制文本统一走 Pango。Cairo 的 toy text API 不做字体回退，在 macOS 上
-// 用 sans-serif 绘制“星”等中文时会变成方块；Pango 会选择可用的中文字体。
-void draw_text(
-    const Cairo::RefPtr<Cairo::Context>& cr,
-    const string& text,
-    double x,
-    double y,
-    double size,
-    const ChartColor& color,
-    bool bold = false,
-    // 水平对齐：0 左对齐，0.5 居中，1 右对齐。垂直方向统一按基线之上
-    // 居中，调用方传的 y 是文本视觉中心。
-    double align = 0.0) {
-    auto layout = Pango::Layout::create(cr);
-    Pango::FontDescription font;
-    font.set_family("sans-serif");
-    font.set_absolute_size(size * Pango::SCALE);
-    font.set_weight(bold ? Pango::Weight::BOLD : Pango::Weight::NORMAL);
-    layout->set_font_description(font);
-    layout->set_text(text);
-    int text_width = 0;
-    int text_height = 0;
-    layout->get_pixel_size(text_width, text_height);
-    cr->set_source_rgb(color.r, color.g, color.b);
-    cr->move_to(x - text_width * align, y - text_height / 2.0);
-    layout->show_in_cairo_context(cr);
-}
+// Pango absolute size uses device pixels here; 19px is about 14.25pt at 96dpi.
+constexpr double kChartMinimumTextSize = 19;
 
 string format_percent(double ratio) {
     ostringstream text;
@@ -78,7 +52,15 @@ void draw_value_axis(
         const string label = percent_labels
             ? format_percent(tick)
             : to_string(static_cast<long>(lround(tick)));
-        draw_text(cr, label, frame.left - 6, y, 11, kChartMutedText, false, 1.0);
+        draw_cairo_text(
+            cr,
+            label,
+            frame.left - 8,
+            y,
+            kChartMinimumTextSize,
+            kChartMutedText,
+            false,
+            1.0);
     }
 }
 
@@ -163,7 +145,7 @@ Gtk::DrawingArea* make_mastery_donut_chart(
             }
 
             const double ratio = total > 0 ? mastered / total : 0.0;
-            draw_text(
+            draw_cairo_text(
                 cr, format_percent(ratio), cx, cy, 26, kChartLabelText, true, 0.5);
         });
     return area;
@@ -195,12 +177,12 @@ Gtk::Box* make_mastery_legend() {
 Gtk::DrawingArea* make_mastery_histogram_chart(
     const array<int, kMasteryLevels>& histogram) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
-    area->set_content_height(210);
+    area->set_content_height(240);
     area->set_hexpand(true);
     area->set_draw_func(
         [histogram](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const int peak = *max_element(histogram.begin(), histogram.end());
-            const ChartFrame frame = make_frame(width, height, 42, 26);
+            const ChartFrame frame = make_frame(width, height, 52, 36);
             if (frame.width() <= 0 || frame.height() <= 0) {
                 return;
             }
@@ -229,23 +211,23 @@ Gtk::DrawingArea* make_mastery_histogram_chart(
                 cr->fill();
 
                 if (value > 0) {
-                    draw_text(
+                    draw_cairo_text(
                         cr,
                         to_string(static_cast<long>(value)),
                         geometry.x + geometry.width / 2,
-                        frame.bottom - bar_height - 9,
-                        11,
+                        frame.bottom - bar_height - 13,
+                        kChartMinimumTextSize,
                         kChartMutedText,
                         true,
                         0.5);
                 }
 
-                draw_text(
+                draw_cairo_text(
                     cr,
                     to_string(level) + " 星",
                     geometry.x + geometry.width / 2,
-                    frame.bottom + 12,
-                    11,
+                    frame.bottom + 17,
+                    kChartMinimumTextSize,
                     kChartMutedText,
                     false,
                     0.5);

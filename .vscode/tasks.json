@@ -54,6 +54,21 @@
             "problemMatcher": "$gcc",
             "group": "test",
             "detail": "执行项目完整校验、构建与测试"
+        },
+        {
+            "label": "Athena: Run",
+            "type": "shell",
+            "command": "scripts/dev-run.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc",
+            "presentation": {
+                "clear": true,
+                "panel": "dedicated",
+                "focus": true
+            },
+            "detail": "增量编译后前台运行 Athena（Ctrl+C 退出，不进调试器、不留僵尸）"
         }
     ]
 }

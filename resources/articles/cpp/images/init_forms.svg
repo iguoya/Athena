@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
+  <style>
+    .card { fill: #fbfcfe; stroke: #dfe3ea; stroke-width: 1.5; }
+    .title { fill: #1f2933; font-weight: 700; }
+    .label { fill: #1f2933; }
+    .muted { fill: #5b6472; }
+    .code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; fill: #1f2933; }
+    .pass { fill: #1f9d57; font-weight: 700; }
+    .fail { fill: #e0533d; font-weight: 700; }
+    .chip { fill: #eef1f6; stroke: #dfe3ea; stroke-width: 1; }
+    .arrow { stroke: #9aa4b2; stroke-width: 1.6; fill: none; }
+  </style>
+  <rect x="1" y="1" width="718" height="428" rx="14" class="card"/>
+
+  <text x="28" y="38" class="title" font-size="17">四种初始化写法：外观相近，语言规则不同</text>
+
+  <!-- four forms -->
+  <g font-size="13.5">
+    <rect x="28"  y="58" width="150" height="70" rx="9" class="chip"/>
+    <text x="103" y="84"  text-anchor="middle" class="code" font-size="13">int a(7);</text>
+    <text x="103" y="106" text-anchor="middle" class="muted" font-size="12">直接初始化</text>
+
+    <rect x="192" y="58" width="150" height="70" rx="9" class="chip"/>
+    <text x="267" y="84"  text-anchor="middle" class="code" font-size="13">int a = 8;</text>
+    <text x="267" y="106" text-anchor="middle" class="muted" font-size="12">拷贝初始化</text>
+
+    <rect x="356" y="58" width="150" height="70" rx="9" class="chip"/>
+    <text x="431" y="84"  text-anchor="middle" class="code" font-size="13">int a{9};</text>
+    <text x="431" y="106" text-anchor="middle" class="muted" font-size="12">列表初始化 · 查窄化</text>
+
+    <rect x="520" y="58" width="172" height="70" rx="9" class="chip"/>
+    <text x="606" y="84"  text-anchor="middle" class="code" font-size="13">int a{};</text>
+    <text x="606" y="106" text-anchor="middle" class="pass" font-size="12">值初始化 → 确定为 0</text>
+  </g>
+
+  <line x1="28" y1="150" x2="692" y2="150" stroke="#e6e9ef" stroke-width="1"/>
+
+  <!-- narrowing gate -->
+  <text x="28" y="182" class="title" font-size="15">同一个 double 3.75 进入 int，谁在检查风险</text>
+
+  <rect x="28" y="200" width="160" height="52" rx="9" class="chip"/>
+  <text x="108" y="231" text-anchor="middle" class="code" font-size="13">double s = 3.75;</text>
+
+  <path class="arrow" d="M188 214 H250" marker-end="url(#a)"/>
+  <path class="arrow" d="M188 238 H250" marker-end="url(#a)"/>
+
+  <rect x="252" y="188" width="176" height="36" rx="8" fill="#eaf6ef" stroke="#bfe3cd"/>
+  <text x="268" y="211" class="code" font-size="12.5">int allowed(s);</text>
+  <text x="238" y="211" class="pass" font-size="13" text-anchor="end">✓</text>
+
+  <rect x="252" y="230" width="176" height="36" rx="8" fill="#fdecea" stroke="#f4c7bf"/>
+  <text x="268" y="253" class="code" font-size="12.5">int rejected{s};</text>
+  <text x="238" y="253" class="fail" font-size="13" text-anchor="end">✕</text>
+
+  <path class="arrow" d="M430 206 H472" marker-end="url(#a)"/>
+  <path class="arrow" d="M430 248 H472" marker-end="url(#a)"/>
+  <text x="480" y="203" class="label" font-size="12">圆括号：由程序员</text>
+  <text x="480" y="221" class="label" font-size="12">明确接受截断 → 3</text>
+  <text x="480" y="245" class="label" font-size="12">花括号：把潜在丢失</text>
+  <text x="480" y="263" class="label" font-size="12">提升为编译期错误</text>
+
+  <!-- explicit -->
+  <text x="28" y="308" class="title" font-size="15">explicit：拷贝初始化不能把构造函数当隐式转换路径</text>
+  <rect x="28" y="326" width="300" height="40" rx="8" fill="#eaf6ef" stroke="#bfe3cd"/>
+  <text x="44" y="351" class="code" font-size="12.5">Distance first{10};</text>
+  <text x="250" y="351" class="pass" font-size="12">显式选择</text>
+
+  <rect x="28" y="374" width="300" height="40" rx="8" fill="#fdecea" stroke="#f4c7bf"/>
+  <text x="44" y="399" class="code" font-size="12.5">Distance d = 10;</text>
+  <text x="250" y="399" class="fail" font-size="12">被拒绝</text>
+
+  <text x="352" y="345" class="muted" font-size="12.5">“没有初始化”的普通局部变量</text>
+  <text x="352" y="365" class="muted" font-size="12.5">不能先读后写——那是未定义行为，</text>
+  <text x="352" y="385" class="muted" font-size="12.5">不是可重复的实验。错误留在编译期，</text>
+  <text x="352" y="405" class="muted" font-size="12.5">不带进运行路径。</text>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#9aa4b2"/>
+    </marker>
+  </defs>
+</svg>

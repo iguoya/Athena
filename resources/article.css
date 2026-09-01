@@ -1,5 +1,6 @@
 :root {
   color-scheme: light dark;
+  /* 21px ≈ 15.75pt；阅读器允许缩小时仍由脚本守住 19px（≈14.25pt）。 */
   --article-font-size: 21px;
   --article-background: #ffffff;
   --article-text: #212529;
@@ -9,6 +10,15 @@
   --article-soft: #f8f9fa;
   --article-code: #f1f3f5;
   --article-code-text: #1f2328;
+  /* 语法高亮走编辑器习惯的柔和配色：关键字用紫、类型用靛、字符串用红、
+     数字用蓝。关键字数量多（含各种 alternative token），所以不加粗、不用
+     警示红，避免整段代码看上去被涂满。 */
+  --syntax-keyword: #9223a8;
+  --syntax-type: #3a52c4;
+  --syntax-string: #b42318;
+  --syntax-comment: #6e7781;
+  --syntax-number: #0550ae;
+  --syntax-preprocessor: #8a5a2b;
   /* 重点（**加粗**）用琥珀色，易错点/难点（***加粗斜体***）用红色，
      两档颜色区分阅读时最该留意的内容；普通加粗只表达"重要"，不需要
      额外颜色时保持默认文字色的旧文档不受影响，因为没标记就不会命中
@@ -23,6 +33,7 @@
 
 html {
   background: var(--article-background);
+  font-size: var(--article-font-size);
   scroll-behavior: smooth;
 }
 
@@ -32,7 +43,7 @@ body {
   color: var(--article-text);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
     "Hiragino Sans GB", "Noto Sans CJK SC", "Segoe UI", sans-serif;
-  font-size: var(--article-font-size);
+  font-size: 1rem;
   line-height: 1.78;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -72,7 +83,7 @@ body {
   background: transparent;
   color: var(--article-muted);
   font: inherit;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 650;
   cursor: pointer;
 }
@@ -237,7 +248,7 @@ a {
 .athena-experiment-group-title {
   margin-bottom: 0.7em;
   color: var(--article-muted);
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -258,7 +269,7 @@ a {
   background: color-mix(in srgb, var(--article-primary) 8%, transparent);
   color: var(--article-primary);
   font-weight: 650;
-  font-size: 0.92rem;
+  font-size: 1rem;
   text-decoration: none;
 }
 
@@ -313,7 +324,7 @@ code {
   background: var(--article-code);
   color: #b42318;
   font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 0.89em;
+  font-size: 1em;
 }
 
 pre {
@@ -330,8 +341,33 @@ pre code {
   border-radius: 0;
   background: transparent;
   color: var(--article-code-text);
-  font-size: 0.9em;
+  font-size: 1em;
   line-height: 1.62;
+}
+
+pre code .syntax-keyword {
+  color: var(--syntax-keyword);
+}
+
+pre code .syntax-type {
+  color: var(--syntax-type);
+}
+
+pre code .syntax-string {
+  color: var(--syntax-string);
+}
+
+pre code .syntax-comment {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+pre code .syntax-number {
+  color: var(--syntax-number);
+}
+
+pre code .syntax-preprocessor {
+  color: var(--syntax-preprocessor);
 }
 
 table {
@@ -403,11 +439,17 @@ img {
     --article-soft: #2a2e34;
     --article-code: #282c32;
     --article-code-text: #e9ecef;
+    --syntax-keyword: #d2a8ff;
+    --syntax-type: #9db8ff;
+    --syntax-string: #ff9b91;
+    --syntax-comment: #8b949e;
+    --syntax-number: #79c0ff;
+    --syntax-preprocessor: #e0a878;
     --article-highlight: #f0b429;
     --article-danger: #ff8a80;
   }
 
-  code {
+  :not(pre) > code {
     color: #ff9b91;
   }
 }
@@ -422,11 +464,17 @@ img {
   --article-soft: #f8f9fa;
   --article-code: #f1f3f5;
   --article-code-text: #1f2328;
+  --syntax-keyword: #9223a8;
+  --syntax-type: #3a52c4;
+  --syntax-string: #b42318;
+  --syntax-comment: #6e7781;
+  --syntax-number: #0550ae;
+  --syntax-preprocessor: #8a5a2b;
   --article-highlight: #b45309;
   --article-danger: #c0152f;
 }
 
-:root[data-theme="light"] code {
+:root[data-theme="light"] :not(pre) > code {
   color: #b42318;
 }
 
@@ -440,10 +488,16 @@ img {
   --article-soft: #2a2e34;
   --article-code: #282c32;
   --article-code-text: #e9ecef;
+  --syntax-keyword: #d2a8ff;
+  --syntax-type: #9db8ff;
+  --syntax-string: #ff9b91;
+  --syntax-comment: #8b949e;
+  --syntax-number: #79c0ff;
+  --syntax-preprocessor: #e0a878;
   --article-highlight: #f0b429;
   --article-danger: #ff8a80;
 }
 
-:root[data-theme="dark"] code {
+:root[data-theme="dark"] :not(pre) > code {
   color: #ff9b91;
 }

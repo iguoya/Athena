@@ -1,11 +1,14 @@
 #include "markdown_renderer.h"
 
+#include "cpp_syntax_highlighter.h"
+
 #include <md4c-html.h>
 #include <md4c.h>
 
 #include <algorithm>
 #include <climits>
 #include <map>
+#include <regex>
 #include <stdexcept>
 #include <utility>
 
@@ -110,6 +113,36 @@ void append_html(const MD_CHAR* text, MD_SIZE size, void* userdata) noexcept {
     } catch (...) {
         state.failed = true;
     }
+}
+
+string base64_encode(const string& data) {
+    static constexpr char table[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    string out;
+    out.reserve((data.size() + 2) / 3 * 4);
+    size_t index = 0;
+    for (; index + 2 < data.size(); index += 3) {
+        const unsigned triple =
+            (static_cast<unsigned char>(data[index]) << 16) |
+            (static_cast<unsigned char>(data[index + 1]) << 8) |
+            static_cast<unsigned char>(data[index + 2]);
+        out += table[(triple >> 18) & 63];
+        out += table[(triple >> 12) & 63];
+        out += table[(triple >> 6) & 63];
+        out += table[triple & 63];
+    }
+    if (index < data.size()) {
+        const bool has_second = index + 1 < data.size();
+        unsigned triple = static_cast<unsigned char>(data[index]) << 16;
+        if (has_second) {
+            triple |= static_cast<unsigned char>(data[index + 1]) << 8;
+        }
+        out += table[(triple >> 18) & 63];
+        out += table[(triple >> 12) & 63];
+        out += has_second ? table[(triple >> 6) & 63] : '=';
+        out += '=';
+    }
+    return out;
 }
 
 string escape_html(const string& text) {
@@ -294,7 +327,8 @@ string reader_script() {
   };
 
   const applyFont = () => {
-    settings.fontSize = Math.max(16, Math.min(26, Number(settings.fontSize) || 21));
+    // CSS px 按 96dpi 换算：19px ≈ 14.25pt，不能再缩到全局可读基线以下。
+    settings.fontSize = Math.max(19, Math.min(26, Number(settings.fontSize) || 21));
     root.style.setProperty('--article-font-size', `${settings.fontSize}px`);
   };
 
@@ -364,6 +398,43 @@ vector<MarkdownHeading> parse_markdown_headings(const string& markdown) {
     return state.headings;
 }
 
+string inline_markdown_images(
+    const string& markdown,
+    const function<string(const string&)>& load_relative) {
+    // ![说明](路径.svg)，路径不含空白和右括号。
+    static const regex image_pattern(R"(!\[([^\]]*)\]\(([^)\s]+\.svg)\))");
+
+    string result;
+    result.reserve(markdown.size());
+    size_t last = 0;
+    const auto end = sregex_iterator();
+    for (auto it = sregex_iterator(markdown.begin(), markdown.end(), image_pattern);
+         it != end;
+         ++it) {
+        const smatch& match = *it;
+        const size_t position = static_cast<size_t>(match.position());
+        result.append(markdown, last, position - last);
+        last = position + static_cast<size_t>(match.length());
+
+        const string path = match[2].str();
+        const bool is_local = !path.empty() && path.front() != '/' &&
+                              path.find("://") == string::npos;
+        const string svg = is_local ? load_relative(path) : string();
+        if (svg.empty()) {
+            result.append(match.str()); // 解析失败时原样保留，不阻断渲染
+            continue;
+        }
+
+        result.append("![");
+        result.append(match[1].str());
+        result.append("](data:image/svg+xml;base64,");
+        result.append(base64_encode(svg));
+        result.push_back(')');
+    }
+    result.append(markdown, last, string::npos);
+    return result;
+}
+
 string render_markdown_html(
     const string& markdown,
     const string& stylesheet,
@@ -385,8 +456,9 @@ string render_markdown_html(
         throw runtime_error("Failed to convert Markdown to HTML");
     }
 
-    const string linked =
-        insert_experiment_links(std::move(state.body), headings, experiment_links);
+    const string highlighted = highlight_cpp_code_blocks(std::move(state.body));
+    const string linked = insert_experiment_links(
+        std::move(highlighted), headings, experiment_links);
     const string body = add_heading_anchors(std::move(linked));
     const string toc = render_html_toc(headings);
     const string layout_class = toc.empty()

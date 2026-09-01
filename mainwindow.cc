@@ -2,7 +2,9 @@
 
 #include "app_icon.h"
 #include "menu_bar_platform.h"
+#include "registry/domain_graph.h"
 #include "registry/knowledge_graph.h"
+#include "render/domain_graph_view.h"
 #include "services/experiment_runner.h"
 #include "ui/about_dialog.h"
 #include "ui/chapter_index_page.h"
@@ -11,7 +13,6 @@
 #include "ui/code_chapter_page.h"
 #include "ui/experiment_dialog.h"
 #include "ui/handbook_page.h"
-#include "ui/icon_utils.h"
 #include "ui/pocket_cube_page.h"
 #include "ui/progress_page.h"
 #include "ui/workbench_page.h"
@@ -55,7 +56,10 @@ MainWindow::MainWindow(
       m_main_builder(builder),
       m_content_loader(ATHENA_SOURCE_ROOT),
       m_function_registry(create_default_function_registry()) {
-    maximize();
+    // 用 window.blp 里的 default-width/height（2160×1440）作为初始大小，
+    // 让窗口正常居中出现。此前构造时直接 maximize()，在 GTK4 的 macOS
+    // 后端下窗口会被摆到工作区左上角外（实测 x = -2560），表现为“程序
+    // 启动了但看不到窗口 / 切不过去”。用户需要时自己点最大化即可。
     apply_runtime_application_icon();
 
     auto css = Gtk::CssProvider::create();
@@ -66,7 +70,7 @@ MainWindow::MainWindow(
     Gtk::Window::set_default_icon_name("cn.athena.icon");
 
     m_root_stack = m_main_builder->get_widget<Gtk::Stack>("root_stack");
-    m_home_grid = m_main_builder->get_widget<Gtk::FlowBox>("home_grid");
+    m_home_graph = m_main_builder->get_widget<Gtk::Box>("home_graph");
     m_breadcrumb_box =
         m_main_builder->get_widget<Gtk::Box>("breadcrumb_box");
     auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
@@ -78,7 +82,7 @@ MainWindow::MainWindow(
         m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_switcher =
         m_main_builder->get_widget<Gtk::MenuButton>("chapter_switcher");
-    if (!m_root_stack || !m_home_grid || !m_breadcrumb_box || !home_page
+    if (!m_root_stack || !m_home_graph || !m_breadcrumb_box || !home_page
         || !content_area || !home_button || !app_menu_bar || !chapter_stack
         || !m_chapter_switcher) {
         throw runtime_error("Failed to get required widgets from main UI");
@@ -109,7 +113,7 @@ MainWindow::MainWindow(
     app_menu_bar->set_visible(!platform_has_native_menu_bar());
 
     home_button->signal_clicked().connect([this]() { go_home(); });
-    build_home_grid();
+    build_home_graph();
 }
 
 MainWindow::~MainWindow() {
@@ -168,35 +172,23 @@ void MainWindow::setup_menu() {
     }
 }
 
-void MainWindow::build_home_grid() {
-    for (const auto& category : m_catalog.categories()) {
-        auto tile = Gtk::make_managed<Gtk::Button>();
-        tile->add_css_class("home-tile");
-        tile->set_tooltip_text(category.description);
-
-        auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 12);
-        box->set_halign(Gtk::Align::CENTER);
-        box->set_valign(Gtk::Align::CENTER);
-        box->append(*make_icon_image(category.icon, 40));
-
-        auto title = Gtk::make_managed<Gtk::Label>(category.title);
-        title->add_css_class("home-tile-title");
-        box->append(*title);
-
-        auto description = Gtk::make_managed<Gtk::Label>(category.description);
-        description->add_css_class("home-tile-desc");
-        description->set_wrap(true);
-        description->set_justify(Gtk::Justification::CENTER);
-        description->set_max_width_chars(24);
-        box->append(*description);
-
-        tile->set_child(*box);
-        tile->signal_clicked().connect(
-            [this, category_name = category.name]() {
-                enter_category(category_name);
-            });
-        m_home_grid->append(*tile);
+void MainWindow::build_home_graph() {
+    // 掌握度口径与分类内知识图谱、进度页一致：知识点 ID -> 星级。
+    std::map<string, int> mastery_by_id;
+    if (m_learning_store) {
+        try {
+            mastery_by_id = m_learning_store->load_all_mastery();
+        } catch (const exception& error) {
+            cerr << "Failed to load mastery stats for home graph: "
+                 << error.what() << endl;
+        }
     }
+
+    const DomainGraph graph = build_domain_graph(m_catalog, mastery_by_id);
+    auto* view = make_domain_graph_view(
+        graph,
+        [this](const string& domain_id) { enter_category(domain_id); });
+    m_home_graph->append(*view);
 }
 
 void MainWindow::show_about_dialog() {

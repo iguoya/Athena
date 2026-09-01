@@ -11,8 +11,8 @@
 
 using namespace std;
 
-// 单例、非模态的实验窗口。窗口拥有 Blueprint 控件树，ExperimentDock
-// 继续只负责源码定位、实验执行状态和结果呈现。
+// 单例、模态的实验窗口。窗口拥有 Blueprint 控件树，ExperimentDock
+// 继续只负责源码定位、实验执行状态和结果呈现。模态性见 ADR 0022 修订。
 class ExperimentDialog final {
 public:
     ExperimentDialog(

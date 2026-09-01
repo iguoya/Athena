@@ -55,11 +55,18 @@ void WorkbenchPage::load_article() {
         return;
     }
 
-    const string markdown = m_content_loader.load_document(document);
-    if (markdown.empty()) {
+    const string raw = m_content_loader.load_document(document);
+    if (raw.empty()) {
         cerr << "Failed to load workbench document: " << document << endl;
         return;
     }
+    const auto slash = document.find_last_of('/');
+    const string document_dir =
+        slash == string::npos ? string() : document.substr(0, slash + 1);
+    const string markdown = inline_markdown_images(
+        raw, [&](const string& relative) {
+            return m_content_loader.load_document(document_dir + relative);
+        });
 
     vector<MarkdownHeading> headings;
     try {

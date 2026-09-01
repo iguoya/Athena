@@ -13,6 +13,9 @@ int main(int argc, char* argv[]) {
   // 安装 zh_CN.UTF-8 这个 locale 时 setlocale 静默失败、不影响其他行为，
   // 只是这类控件的内置文本会退回英文。
   setlocale(LC_MESSAGES, "zh_CN.UTF-8");
+  // GNOME 顶栏 / Dash / Alt-Tab 显示的应用名：不设置时会退回应用 ID
+  // （cn.yatiger.athena）的末段，在 Ubuntu 上显示成小写 "athena"。
+  Glib::set_application_name("计算机与电子信息学习实验室");
   gtk_source_init();
   int status = 0;
   {

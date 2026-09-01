@@ -403,6 +403,31 @@ def build_model(
             handbook_documents.append(doc_path)
             documents.add(doc_path.removeprefix("resources/"))
 
+            # 手册插图放在文档同级的 images/ 目录，随手册一起打包进
+            # GResource：渲染层按 ![](images/xxx.svg) 引用，加载后内联成
+            # data: URI，打包后无源码目录也能显示。
+            images_dir = (root / doc_path).parent / "images"
+            if images_dir.is_dir():
+                for image in sorted(images_dir.glob("*.svg")):
+                    documents.add(
+                        image.relative_to(root)
+                        .as_posix()
+                        .removeprefix("resources/")
+                    )
+
+            # 每份手册文档正文末尾必须有一节「小结」/「本章小结」，
+            # 概括要点、易错点和知识点关系（见 AGENTS.md）。
+            doc_headings = headings_by_document.get(doc_path)
+            if doc_headings is None:
+                doc_headings = markdown_heading_titles(root / doc_path)
+                headings_by_document[doc_path] = doc_headings
+            if not any(title.endswith("小结") for title in doc_headings):
+                raise ProjectError(
+                    f"{category_path}.handbook_documents[{doc_index}] "
+                    f"{doc_path!r} 缺少「小结」小节：手册文档正文末尾"
+                    f"必须有一节标题为「小结」或「本章小结」的回顾"
+                )
+
         runtime_chapters: list[dict] = []
         seen_chapters: set[str] = set()
         # chapter name -> 它声明的前置章节 name 列表（知识图谱的边）。同分类内

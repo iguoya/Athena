@@ -180,7 +180,10 @@ def main() -> None:
         assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
 
         document_path = "resources/articles/cpp/widget.md"
-        write(root / document_path, "# Widget\n\n## 基础\n\n正文。\n")
+        write(
+            root / document_path,
+            "# Widget\n\n## 基础\n\n正文。\n\n## 小结\n\n回顾。\n",
+        )
         teaches_config = copy.deepcopy(config)
         teaches_category = teaches_config["categories"][0]
         teaches_category["handbook_documents"] = [document_path]
@@ -214,7 +217,8 @@ def main() -> None:
 
         write(
             root / document_path,
-            "# Widget\n\n## 基础\n\n第一处。\n\n## 基础\n\n第二处。\n",
+            "# Widget\n\n## 基础\n\n第一处。\n\n## 基础\n\n第二处。"
+            "\n\n## 小结\n\n回顾。\n",
         )
         assert_rejected(
             generator,

@@ -64,7 +64,7 @@ def install_tree(build_dir: Path, destination: Path) -> None:
     run(["meson", "install", "-C", str(build_dir), "--destdir", str(destination)])
     required_paths = (
         destination / "usr/bin/Athena",
-        destination / "usr/share/applications/cn.athena.desktop",
+        destination / "usr/share/applications/cn.yatiger.athena.desktop",
         destination / "usr/share/icons/hicolor/scalable/apps/cn.athena.icon.svg",
     )
     missing = [str(path) for path in required_paths if not path.is_file()]
@@ -131,7 +131,7 @@ def build_appimage(
     app_dir = installed_root.parent / "Athena.AppDir"
     shutil.copytree(installed_root / "usr", app_dir / "usr")
 
-    desktop_file = app_dir / "usr/share/applications/cn.athena.desktop"
+    desktop_file = app_dir / "usr/share/applications/cn.yatiger.athena.desktop"
     icon_file = app_dir / "usr/share/icons/hicolor/scalable/apps/cn.athena.icon.svg"
     root_desktop_file = app_dir / desktop_file.name
     root_icon_file = app_dir / icon_file.name

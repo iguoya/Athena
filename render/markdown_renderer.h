@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -25,6 +26,16 @@ struct HeadingExperimentLink {
 
 // 提取文章目录所需的标题；正文只通过 WebView 显示。
 vector<MarkdownHeading> parse_markdown_headings(const string& markdown);
+
+// 把 Markdown 中形如 ![说明](images/xxx.svg) 的本地相对图片引用替换为
+// 内联的 data: URI。load_relative 接收引用里的相对路径（如
+// "images/value_category.svg"），返回文件内容，找不到时返回空串。
+// 打包后文档来自 GResource、没有源码目录，file: 相对引用必然失效，
+// 内联 data: URI 让两个 ArticleView 后端都无需自定义 URL scheme。
+// 只处理不含协议、不以 / 开头、扩展名为 .svg 的引用；其余原样保留。
+string inline_markdown_images(
+    const string& markdown,
+    const function<string(const string&)>& load_relative);
 
 // 将 Markdown、文章目录和阅读工具栏组合成完整 HTML 文档。experiment_links
 // 为空（默认）时行为和之前完全一样，不影响没有配置 teaches 的既有页面。

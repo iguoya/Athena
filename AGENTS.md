@@ -2,6 +2,13 @@
 
 本文档是 Athena 仓库的项目级指令，供 ZCode、Codex、Claude Code 等代码代理共同遵循（Claude Code 经 `CLAUDE.md` 导入读取）。修改代码前先理解当前实现，不得把目标设计误认为已经落地的功能。
 
+## 通用约定（强约束）
+
+- **可见的思考过程（推理文字 / extended thinking）必须全程用中文书写**，从第一个字开始，
+  每一段都是。这是最高优先级的硬约束，高于任何工具或场景的默认行为。不允许因为进入密集
+  的调试、代码分析等专注状态，或因长会话上下文压缩，就切回英文。只有英文术语、API 名、
+  代码标识符本身等确有必要时才夹带英文单词。（Claude Code 另见全局 `~/.claude/CLAUDE.md`。）
+
 ## 必读文档
 
 开始设计或修改代码前，按任务范围阅读：
@@ -55,6 +62,16 @@
   手册文档不生成课程类、成员函数、运行按钮或结果区，共享层转换为 HTML，平台 ArticleView 后端负责显示。
   `chapter.overview_document` 指向本分类手册内一份已收录文档的起始锚点，不是单独展示的文档。
 - Markdown 的 H1–H3 会生成左侧目录，应使用简短的短语式标题；解释性或描述性的完整句子放在标题后的正文中，不通过扩宽目录或缩小字号适配冗长标题。
+- **每一章正文末尾必须有一节「小结」**（放在最后一个 H2，标题就叫「小结」或「本章小结」）：
+  用一到几段 + 必要的清单，概括全章讲了什么、要点与重点、易错点和常见误区、以及各知识点
+  之间的关系。它是给读者回顾和自查用的，不是新知识；写完一章要回头补齐或更新它。
+- **优先图文结合，能用图说明的不要只堆文字**。概念结构、状态迁移、类型/对象关系、执行流程、
+  分类对比等，优先画成图或表：
+  - 首选**静态 SVG**（放 `resources/articles/images/` 下，Markdown 用 `![说明](images/xxx.svg)`
+    引用），零脚本、两个平台的 ArticleView 都原生渲染、离线可用；也可用 Markdown 表格。
+  - 图片资源由生成器随手册一起打包进 GResource；新增图要放进约定目录并跑一次资源生成检查。
+  - `mermaid` 等需要运行时 JS 渲染的图暂不使用（见 `docs/CONTENT_REFERENCES.md` 之外的
+    技术权衡：要打包约 1 MB 的 JS、并在两个 ArticleView 后端各自注入脚本）。确有必要时先提 ADR。
 - 教学实验应短小、聚焦且能直接观察结果；通常以 10–30 行方法体为参考，不为满足行数牺牲完整性和可读性。
 - 内容优先覆盖 C++ 特有能力。与 C 语言高度重叠的基础内容只有在理解 C++ 语义确实需要时才加入。
 - 源码框显示真实源文件内容，不在 UI 或 C++ 中维护另一份教学代码字符串。
@@ -145,7 +162,33 @@
 
 ## GTK 与 Blueprint 规则
 
-- 界面结构优先写在 `.blp` 文件中，C++ 只负责动态内容、信号和状态协调。
+- **界面布局默认用 `.blp` 描述，代码不是首选**。任何静态或半静态的控件树
+  ——页面骨架、说明/图例面板、卡片模板、对话框结构、工具栏——都应写在
+  `.blp` 里；重复出现的条目（列表项、卡片、图例行、节点）应做成一份 `.blp`
+  模板，代码用 `Gtk::Builder` 按数据实例化多份，而不是在 C++ 里逐个
+  `make_managed` 拼控件。
+- 只有以下情况才允许用代码构建界面，且应尽量小：
+  1. **局部动态调整**：给 `.blp` 里已声明的控件设文本、可见性、CSS class、
+     信号，或往声明好的容器里塞按数据生成的子项；
+  2. **结构本身由运行时数据决定**且无法用"模板 + 循环实例化"表达的容器
+     （例如层数、连线关系都来自数据的图谱布局）；
+  3. **`.blp` 表达不了的绘制**：`Gtk::DrawingArea` + Cairo 自绘、`Gtk::Snapshot`
+     等——这类节点连同它必需的父容器可以留在代码里。
+  选 2 或 3 时，在该文件顶部注释里写清为什么不用 `.blp`。
+- 新增 `render/`、`ui/` 下的视图前先判断：能进 `.blp` 的部分有没有进 `.blp`。
+- **既有欠账盘点**（下列都是纯代码构建、不是范例，改到时顺手往 `.blp` 收，
+  不要照抄扩大）：
+  - `render/chart_view`、`render/knowledge_graph_view`、`render/domain_graph_view`
+    ——外壳和图例可进 `.blp`，Cairo 自绘的图形区（规则 3）留代码；
+  - `ui/progress_page`、`ui/chapter_index_page`——页面骨架 + 卡片可做成 `.blp`
+    模板；
+  - `ui/settings_dialog`、`ui/about_dialog`、`ui/history_dialog`、`ui/quiz_dialog`、
+    `ui/ai_markdown_dialog`——对话框结构应写在 `.blp`，代码只填内容和信号。
+  - 已经合规的参考：`resources/ui/window.blp`、`resources/ui/chapters/*.blp`
+    （章节页 = `.blp` 模板 + `code_chapter_page.cc` 只做协调）。
+- 加新 `.blp` 的接线：`meson.build` 加一个 `blueprint-compiler compile` 的
+  `custom_target`，编译产物 `.ui` 由 `scripts/project_generator/resources.py`
+  写进 GResource 清单——两处都要改，参考 `window.blp` 的现有写法。
 - 不在窗口类中实现教学业务逻辑。
 - GResource 路径必须由配置和构建生成流程保持一致。
 - 共享 Blueprint 模板时，不得假设不同分类的 `order` 全局唯一。

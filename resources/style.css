@@ -44,7 +44,8 @@
     color: @athena_body_text;
 }
 
-/* 用类型选择器而不是 .athena-window 类：字号基线要覆盖全部窗口，包括
+/* 全局正常文字不得低于 14pt；这里使用更舒适的 16pt 作为默认值。
+   用类型选择器而不是 .athena-window 类：字号基线要覆盖全部窗口，包括
    设置、关于、测验、历史这些用 Gtk::Dialog 直接 new 出来的对话框——
    它们的根控件从来没被加过 .athena-window 这个 CSS class（只有
    window.blp 里 Blueprint 声明的主窗口才有），此前一直只继承 GTK
@@ -340,7 +341,7 @@ button.knowledge-graph-node:focus-visible {
 .graph-importance-scale {
     padding: 2px 7px;
     border-radius: 999px;
-    font-size: 13pt;
+    font-size: 14pt;
     font-weight: 700;
 }
 
@@ -375,7 +376,7 @@ button.knowledge-graph-node:focus-visible {
 
 progressbar.graph-completion {
     min-height: 24px;
-    font-size: 12pt;
+    font-size: 14pt;
     font-weight: 700;
 }
 
@@ -797,4 +798,179 @@ frame.article-surface > border {
    改这里也要改那边。 */
 .progress-legend-not-started {
     background-color: @athena_chart_neutral;
+}
+
+/* === 首页学科知识图谱 ===
+ * 复用 .knowledge-graph-node / .graph-completion* 的外观，只补充三种领域
+ * 状态的视觉区分：已开放正常显示，规划中和理论参考灰显。 */
+button.domain-graph-node {
+    border-color: @athena_border_strong;
+}
+
+button.domain-graph-node:disabled {
+    opacity: 1; /* 用自定义灰而不是 GTK 默认的整体降透明 */
+}
+
+button.domain-graph-node-planned,
+button.domain-graph-node-reference {
+    background-color: @athena_surface_subtle;
+    border-style: dashed;
+    border-color: @athena_border_strong;
+    box-shadow: none;
+}
+
+button.domain-graph-node-planned .knowledge-graph-node-title,
+button.domain-graph-node-reference .knowledge-graph-node-title {
+    color: @athena_muted;
+    font-weight: 700;
+}
+
+button.domain-graph-node-planned .knowledge-graph-node-icon,
+button.domain-graph-node-reference .knowledge-graph-node-icon {
+    color: @athena_secondary;
+}
+
+.domain-graph-badge-open {
+    background-color: @athena_primary_soft;
+    color: @athena_primary_text;
+}
+
+.domain-graph-badge-planned {
+    background-color: @athena_border;
+    color: @athena_body_text;
+}
+
+.domain-graph-badge-reference {
+    background-color: #e7e0f4;
+    color: @athena_purple_hover;
+}
+
+.domain-graph-badge-note {
+    background-color: transparent;
+    border: 1px solid @athena_border_strong;
+    color: @athena_muted;
+}
+
+.domain-graph-swatch-open { background-color: @athena_primary_soft; }
+.domain-graph-swatch-planned {
+    background-color: @athena_surface_subtle;
+    border: 1px dashed @athena_border_strong;
+}
+.domain-graph-swatch-reference { background-color: #e7e0f4; }
+
+/* 验证方式徽章：图谱的重点通道，用饱和色，规划中节点也不置灰这一枚。 */
+.domain-graph-verify-code {
+    background-color: @athena_primary;
+    color: #ffffff;
+}
+.domain-graph-verify-board {
+    background-color: @athena_orange;
+    color: #ffffff;
+}
+.domain-graph-verify-bench {
+    background-color: @athena_purple;
+    color: #ffffff;
+}
+button.domain-graph-node-planned .domain-graph-verify-code,
+button.domain-graph-node-planned .domain-graph-verify-board,
+button.domain-graph-node-planned .domain-graph-verify-bench {
+    opacity: 1;
+}
+
+.domain-graph-verify-swatch-code { background-color: @athena_primary; }
+.domain-graph-verify-swatch-board { background-color: @athena_orange; }
+.domain-graph-verify-swatch-bench { background-color: @athena_purple; }
+
+/* 优先级徽章：核心主线用实心蓝，建议用描边，可选用中性灰。 */
+.domain-graph-priority-core {
+    background-color: @athena_primary;
+    color: #ffffff;
+}
+.domain-graph-priority-recommended {
+    background-color: transparent;
+    border: 1px solid @athena_success;
+    color: @athena_success;
+}
+.domain-graph-priority-optional {
+    background-color: @athena_surface_subtle;
+    color: @athena_muted;
+}
+.domain-graph-priority-swatch-core { background-color: @athena_primary; }
+.domain-graph-priority-swatch-recommended {
+    background-color: @athena_surface;
+    border: 1px solid @athena_success;
+}
+.domain-graph-priority-swatch-optional { background-color: @athena_chart_neutral; }
+
+/* 节点卡片的"用途 / 难点"字段，比主简介再淡一档。 */
+.domain-graph-field {
+    font-size: 14pt;
+    color: @athena_muted;
+}
+
+/* 全宽的箭头说明表：左侧编号圆和图上编号一致。 */
+.domain-graph-edge-notes,
+.domain-graph-theory {
+    margin-top: 4px;
+}
+.domain-graph-edge-number {
+    min-width: 26px;
+    min-height: 26px;
+    border-radius: 999px;
+    background-color: @athena_primary;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14pt;
+}
+.domain-graph-edge-pair {
+    font-weight: 700;
+    font-size: 14pt;
+}
+
+.domain-graph-theory-card {
+    padding: 14px;
+    border: 1px solid @athena_border;
+    border-radius: 12px;
+    background-color: @athena_surface;
+}
+
+/* 领域分组：节点左侧一条 6px 色条，把同一学习方向的节点在图上聚成一簇。 */
+button.domain-graph-track-language { border-left: 6px solid @athena_primary; }
+button.domain-graph-track-engineering { border-left: 6px solid @athena_success; }
+button.domain-graph-track-systems { border-left: 6px solid @athena_teal; }
+button.domain-graph-track-hardware { border-left: 6px solid @athena_orange; }
+button.domain-graph-track-ai { border-left: 6px solid @athena_purple; }
+button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
+
+.domain-graph-track-swatch-language { background-color: @athena_primary; }
+.domain-graph-track-swatch-engineering { background-color: @athena_success; }
+.domain-graph-track-swatch-systems { background-color: @athena_teal; }
+.domain-graph-track-swatch-hardware { background-color: @athena_orange; }
+.domain-graph-track-swatch-ai { background-color: @athena_purple; }
+.domain-graph-track-swatch-capstone { background-color: @athena_secondary; }
+
+/* 分层条带：交替极淡底色，让"按次序分层"的结构一眼可读。 */
+.domain-graph-layer {
+    padding: 12px 4px;
+    border-radius: 12px;
+}
+.domain-graph-layer-even {
+    background-color: alpha(@athena_primary, 0.04);
+}
+
+.domain-graph-legend-group {
+    min-width: 264px;
+}
+
+.domain-graph-badge-entry {
+    background-color: @athena_success;
+    color: #ffffff;
+}
+
+.domain-graph-edge-number-weak {
+    background-color: @athena_secondary;
+}
+
+.domain-graph-side {
+    margin-top: 4px;
 }

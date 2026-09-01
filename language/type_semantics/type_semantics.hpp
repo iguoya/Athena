@@ -61,13 +61,14 @@ public:
         ExplicitNumber explicit_number{11};
         // ExplicitNumber hidden = 11; // 拷贝初始化不能隐式使用 explicit。
 
-        [[maybe_unused]] int uninitialized;
+        // int uninitialized; 普通局部变量不会清零，先读后写是未定义行为，
+        // 因此这里既不声明也不读取——错误只保留在编译期与注释里。
         output << "四种初始化: " << direct << ", " << copied << ", "
                << listed << ", " << zero << '\n';
+        output << "值初始化 int{} 确定为: " << zero << '\n';
         output << "圆括号接受窄化: " << source << " -> " << narrowed << '\n';
         output << "花括号拒绝窄化: 编译期错误\n";
         output << "explicit 需要显式进入: " << explicit_number.value() << '\n';
-        output << "未初始化局部 int: 不读取\n";
     }
 
     void auto_deduction(ostream& output) const {
@@ -79,6 +80,10 @@ public:
         auto& alias = reference;
         alias = 99;
 
+        const int locked = 1;
+        auto unlocked = locked; // auto 丢弃顶层 const，得到可写的新对象
+        unlocked = 2;
+
         pair record{string("Athena"), 5};
         auto [copied_name, copied_score] = record;
         copied_score = 8;
@@ -87,6 +92,7 @@ public:
 
         output << "auto 副本 / 原对象: " << copy << " / " << original << '\n';
         output << "auto& 修改原对象: " << original << '\n';
+        output << "auto 丢弃顶层 const，副本可改: " << unlocked << '\n';
         output << "结构化绑定副本 / 原值: " << copied_name << ' ' << copied_score
                << " / " << record.first << ' ' << record.second << '\n';
         output << "结构化绑定引用共享对象: " << name_alias << ' ' << score_alias
@@ -101,12 +107,17 @@ public:
             is_same_v<decltype((value)), int&>;
         const bool moved_is_rvalue_reference =
             is_same_v<decltype(std::move(value)), int&&>;
+        const bool prvalue_has_no_reference =
+            is_same_v<decltype(value + 0), int>;
 
-        output << "decltype(value) 是 int: " << yes_no(name_is_int) << '\n';
-        output << "decltype((value)) 是 int&: "
+        output << "decltype(value) 是 int（取声明类型）: "
+               << yes_no(name_is_int) << '\n';
+        output << "decltype((value)) 是 int&（左值表达式）: "
                << yes_no(expression_is_lvalue_reference) << '\n';
-        output << "decltype(std::move(value)) 是 int&&: "
+        output << "decltype(std::move(value)) 是 int&&（将亡值）: "
                << yes_no(moved_is_rvalue_reference) << '\n';
+        output << "decltype(value + 0) 是 int（纯右值不加引用）: "
+               << yes_no(prvalue_has_no_reference) << '\n';
     }
 
     void value_category(ostream& output) const {
@@ -129,6 +140,7 @@ public:
         auto* matched = dynamic_cast<CastDerived*>(polymorphic);
         CastBase plain_base;
         auto* rejected = dynamic_cast<CastDerived*>(&plain_base);
+        // dynamic_cast 要求源类型多态；对没有虚函数的类型使用会编译错误。
 
         int mutable_value = 7;
         const int& readonly_view = mutable_value;
@@ -142,8 +154,9 @@ public:
         output << "dynamic_cast 成功 / 失败为空: " << yes_no(matched != nullptr)
                << " / " << yes_no(rejected == nullptr) << '\n';
         output << "const_cast 修改原本可写对象: " << mutable_value << '\n';
-        output << "reinterpret_cast 只验证指针往返: "
+        output << "reinterpret_cast 指针往返后仍相等: "
                << yes_no(restored == &mutable_value) << '\n';
+        output << "但往返相等不证明按其它类型解读一直安全\n";
     }
 
     void enum_class(ostream& output) const {
