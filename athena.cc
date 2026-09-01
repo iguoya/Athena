@@ -3,6 +3,13 @@
 #include "menu_bar_platform.h"
 
 void Athena::on_activate() {
+  // 单实例：第二次启动只会转到这里再触发一次 activate。已经有窗口时
+  // 直接把它提到前台，不重复建窗口、也不重复注册 app.* 动作。
+  if (auto* existing = get_active_window()) {
+    existing->present();
+    return;
+  }
+
   auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
   // auto window = builder->get_widget<MainWindow>("window");
   auto window = Gtk::Builder::get_widget_derived<MainWindow>(builder, "window");
@@ -22,6 +29,10 @@ void Athena::on_activate() {
       set_menubar(window->menu_model());
     }
 
+    // 启动即进入 macOS 原生全屏。fullscreen() 在 map 前调用即可，GTK 会把
+    // 它作为 pending 状态、映射时应用；这跟构造期直接 maximize() 把窗口甩
+    // 出屏幕的坑不同（见 mainwindow.cc 构造函数注释）。
+    window->fullscreen();
     window->present();
   }
 }
