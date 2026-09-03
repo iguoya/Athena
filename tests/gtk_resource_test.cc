@@ -79,6 +79,10 @@ TEST(GtkResourceTest, LoadsTheExperimentDialogWidgetTree) {
     EXPECT_NE(
         builder->get_widget<Gtk::Label>("experiment_objective_label"),
         nullptr);
+    const auto flow =
+        builder->get_widget<Gtk::Paned>("experiment_flow_paned");
+    ASSERT_NE(flow, nullptr);
+    EXPECT_EQ(flow->get_orientation(), Gtk::Orientation::VERTICAL);
 }
 
 TEST(GtkResourceTest, KeepsTheWorkbenchFocusedOnTheArticle) {
