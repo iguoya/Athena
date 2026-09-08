@@ -29,10 +29,9 @@ void Athena::on_activate() {
       set_menubar(window->menu_model());
     }
 
-    // 启动即进入 macOS 原生全屏。fullscreen() 在 map 前调用即可，GTK 会把
-    // 它作为 pending 状态、映射时应用；这跟构造期直接 maximize() 把窗口甩
-    // 出屏幕的坑不同（见 mainwindow.cc 构造函数注释）。
-    window->fullscreen();
+    // 使用 Blueprint 的常规窗口尺寸启动，保留系统标题栏和关闭/最小化/
+    // 最大化按钮。是否最大化或进入全屏由用户自己决定，不在启动路径中
+    // 强制改变桌面空间。
     window->present();
   }
 }

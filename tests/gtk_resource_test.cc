@@ -27,6 +27,15 @@ std::string load_text_resource(const char* path) {
 TEST(GtkResourceTest, LoadsTheMainWindowNavigationControls) {
     const auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
 
+    auto* window = builder->get_widget<Gtk::ApplicationWindow>("window");
+    ASSERT_NE(window, nullptr);
+    int default_width = 0;
+    int default_height = 0;
+    gtk_window_get_default_size(
+        GTK_WINDOW(window->gobj()), &default_width, &default_height);
+    EXPECT_EQ(default_width, 1440);
+    EXPECT_EQ(default_height, 900);
+
     EXPECT_NE(builder->get_widget<Gtk::Box>("home_graph"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("root_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("chapter_stack"), nullptr);
@@ -55,9 +64,15 @@ TEST(GtkResourceTest, LoadsTheExperimentDialogWidgetTree) {
     const auto builder =
         Gtk::Builder::create_from_resource("/app/experiment_dialog.ui");
 
-    EXPECT_NE(
-        builder->get_widget<Gtk::Window>("experiment_dialog_window"),
-        nullptr);
+    auto* window =
+        builder->get_widget<Gtk::Window>("experiment_dialog_window");
+    ASSERT_NE(window, nullptr);
+    int default_width = 0;
+    int default_height = 0;
+    gtk_window_get_default_size(
+        GTK_WINDOW(window->gobj()), &default_width, &default_height);
+    EXPECT_EQ(default_width, 1120);
+    EXPECT_EQ(default_height, 820);
     EXPECT_NE(
         gtk_builder_get_object(builder->gobj(), "experiment_source_view"),
         nullptr);

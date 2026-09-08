@@ -5,8 +5,8 @@ using GtkSource 5;
 // 运行操作、观察结果。它仍是过渡窗口；后续再迁入主窗口的专注实验页。
 Window experiment_dialog_window {
   title: "Athena · 实验台";
-  default-width: 1200;
-  default-height: 1000;
+  default-width: 1120;
+  default-height: 820;
 
   styles [
     "athena-window"
@@ -64,7 +64,7 @@ Window experiment_dialog_window {
     Paned experiment_flow_paned {
       name: "experiment_flow_paned";
       orientation: vertical;
-      position: 590;
+      position: 470;
       wide-handle: true;
       resize-start-child: true;
       resize-end-child: true;
@@ -75,7 +75,7 @@ Window experiment_dialog_window {
 
       Frame {
         label: "真实源码";
-        height-request: 420;
+        height-request: 320;
         hexpand: true;
         vexpand: true;
 
@@ -151,7 +151,7 @@ Window experiment_dialog_window {
 
         Frame {
           label: "观察结果";
-          height-request: 230;
+          height-request: 190;
           hexpand: true;
           vexpand: true;
 
