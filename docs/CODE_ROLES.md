@@ -131,7 +131,7 @@
 政府条块结构的经典问题，在代码里有精确对应，可以直接拿来当检查项：
 
 - **条块分割**：职能条线之间互不通气，各自造一份轮子。Athena 的小型版本：
-  "读源文件 + 定位成员函数 + 截取全文"这段逻辑，运行历史、AI 自测、实验快照三处都需要，
+  "读源文件 + 定位成员函数 + 截取全文"这段逻辑，AI 讲解和 AI 自测都需要，
   却长期各写各的散在 `mainwindow.cc` 里，2026-08-21 才收敛成 `load_member_source_text()`。
 - **双重领导**：一个部门既受同级政府领导，又受上级对口部门指导。代码里对应一个模块同时
   被两个不同抽象层次约束，往往是循环依赖和"改一处崩两处"的温床。判断方法很简单：
@@ -312,7 +312,7 @@ Parnas《On the Criteria To Be Used in Decomposing Systems into Modules》（197
 | 可能会变的决策 | 被关在哪里 | 上层知不知道 |
 | --- | --- | --- |
 | 用哪家 AI、endpoint、模型名、失败了怎么回退 | `services/ai_service.cc` | 窗口完全不知道"豆包"存在，只拿到 `AiChatResult` |
-| 熟练度和运行历史存在哪、表结构长什么样 | `storage/learning_store.cc` | 上层只见 `save_mastery()` / `recent_runs()` |
+| 熟练度、AI 缓存和应用设置存在哪、表结构长什么样 | `storage/learning_store.cc` | 上层只见各自的窄读写接口 |
 | 用哪个 Markdown 库、生成什么 HTML | `render/markdown_renderer.cc` | 调用方只给 Markdown、拿回 HTML |
 | 各平台用哪种 WebView | `render/article_view_macos.mm` / `article_view_webkitgtk.cc` | 调用方只用 `ArticleView` 抽象接口 |
 | 配置格式、校验规则、默认值继承 | `scripts/project_generator/model.py` | C++ 侧只解码规范化后的 Catalog |

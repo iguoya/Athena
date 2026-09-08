@@ -494,13 +494,6 @@ textview.code-view > text {
     font-size: 18pt;
 }
 
-/* AI 对话框（讲解/自测/讲解差异/运行历史）正文字号：不改动共享的
-   .code-view 基准（会影响主界面源码框和运行结果框），单独更大一档。 */
-textview.ai-dialog-text,
-textview.ai-dialog-text > text {
-    font-size: 22pt;
-}
-
 .ai-dialog-question {
     font-size: 20pt;
     font-weight: 700;
@@ -540,16 +533,6 @@ textview.ai-quiz-code > text {
 .ai-dialog-explanation {
     font-size: 17pt;
     color: @athena_muted;
-}
-
-/* 历史对话框：记录列表和对比栏标题也调大一档 */
-.history-row-label {
-    font-size: 16pt;
-}
-
-.history-compare-heading {
-    font-size: 19pt;
-    font-weight: 700;
 }
 
 /* 对话框底部居中按钮行 */

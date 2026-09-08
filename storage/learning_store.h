@@ -4,7 +4,6 @@
 #include <memory>
 #include <optional>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -18,17 +17,7 @@ struct AiInsightRecord {
     string source_snapshot;
 };
 
-struct RunRecord {
-    long long id = 0;
-    string output;
-    double duration_ms = 0.0;
-    string source_snapshot;  // 运行时该知识点成员函数体的完整源码文本
-    string git_commit;       // 运行时 HEAD 的短哈希；不在 git 仓库中时为空
-    bool git_dirty = false;  // 运行时该源文件相对 git_commit 是否有未提交改动
-    long long ran_at = 0;
-};
-
-// 基于 SQLite 的本地学习数据存储：AI 自测得出的熟练度、运行历史，以及
+// 基于 SQLite 的本地学习数据存储：AI 自测得出的熟练度、AI 讲解缓存，以及
 // 少量应用设置（目前只有 AI 服务商 API Key）。设置数据跟学习数据在概念
 // 上不同源，但数据量很小，复用同一个 SQLite 连接，不为两条 key-value
 // 配置另开一个数据库文件。
@@ -52,17 +41,8 @@ public:
     // 返回结果里（调用方按 0 处理）。
     map<string, int> load_all_mastery() const;
 
-    void record_run(
-        const string& function_id,
-        const string& output,
-        double duration_ms,
-        const string& source_snapshot,
-        const string& git_commit,
-        bool git_dirty);
-    vector<RunRecord> recent_runs(const string& function_id, int limit) const;
-
-    // “AI 讲解”结果缓存，一个知识点只保留最近一次（不像运行历史需要
-    // 保留多条对比），下次打开同一个知识点、源码没变的话直接展示缓存，
+    // “AI 讲解”结果缓存，一个知识点只保留最近一次，下次打开同一个
+    // 知识点、源码没变的话直接展示缓存，
     // 不用再等一次 AI 请求。没有缓存记录时返回 nullopt。
     optional<AiInsightRecord> load_ai_insight(const string& function_id) const;
     void save_ai_insight(
@@ -85,13 +65,10 @@ private:
     void execute(const string& sql) const;
     // 把旧版本单一 status 位标志列迁移为 mastery 列；CREATE TABLE IF NOT
     // EXISTS 对已存在的旧表是空操作，新列需要显式补齐。旧版本短暂存在过
-    // 的 importance/note 列、run_history 的旧 source_hash 列如果已经
-    // 存在，留在表里保全旧数据，但运行时不再读写，不做 DROP COLUMN 迁移。
+    // 的 importance/note 列如果已经存在，留在表里保全旧数据，但运行时
+    // 不再读写，不做 DROP COLUMN 迁移。旧库的 run_history 表也保持原样，
+    // 不删除、不迁移、不再追加。
     void migrate_legacy_status_column();
-    // run_history 补齐 source_snapshot、git_commit、git_dirty 列（曾用
-    // source_hash 只存哈希，无法还原源码；现在改存完整快照，并额外记录
-    // 运行时的 git 提交与是否有未提交改动，供历史对比追溯到具体提交）。
-    void migrate_legacy_run_history_columns();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;
 };

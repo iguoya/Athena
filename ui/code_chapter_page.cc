@@ -260,16 +260,6 @@ void CodeChapterPage::populate_topic_list() {
         }
         actions->append(*run);
 
-        auto history_button = Gtk::make_managed<Gtk::Button>("运行历史");
-        history_button->add_css_class("btn-sm");
-        history_button->set_tooltip_text("查看该知识点的运行记录");
-        history_button->signal_clicked().connect(
-            [this, row, activate_topic, topic]() {
-                (*activate_topic)(row);
-                m_dialogs.show_history(make_dialog_topic(topic));
-            });
-        actions->append(*history_button);
-
         auto insight_button = Gtk::make_managed<Gtk::Button>("AI 讲解");
         insight_button->add_css_class("btn-sm");
         insight_button->set_tooltip_text(

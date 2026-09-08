@@ -99,9 +99,7 @@ bool ExperimentDock::run_selected() {
     const ExperimentSelection requested = *m_selection;
     auto alive = m_alive;
     const bool started = m_experiment_runner.start(
-        {.function_id = requested.function_id,
-         .source_path = requested.source_path,
-         .member_name = requested.member_name},
+        {.function_id = requested.function_id},
         [this, alive, function_id = requested.function_id](
             const ExperimentResult& result) {
             if (!alive->load()) {
@@ -110,8 +108,8 @@ bool ExperimentDock::run_selected() {
             m_elapsed_timer.disconnect();
             set_running(false);
 
-            // 用户可能在后台实验结束前切到了另一个实验。运行历史仍由
-            // ExperimentRunner 保存，但旧结果不应覆盖当前实验的结果区。
+            // 用户可能在后台实验结束前切到了另一个实验；旧结果不应覆盖
+            // 当前实验的结果区。
             if (m_selection && m_selection->function_id == function_id &&
                 m_result_view) {
                 m_result_view->get_buffer()->set_text(result.display_output);

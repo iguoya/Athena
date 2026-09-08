@@ -36,7 +36,7 @@
 - Meson
 - Blueprint UI
 - nlohmann/json
-- SQLite（掌握状态、笔记和运行历史的本地存储；使用系统自带 libsqlite3，不随包分发，数据在用户数据目录）
+- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；使用系统自带 libsqlite3，不随包分发，数据在用户数据目录）
 
 除非任务明确要求，不引入新的生产依赖，不更换 UI 技术栈，也不把项目改造成完整 MVC/MVP 框架。
 
@@ -182,7 +182,7 @@
     ——外壳和图例可进 `.blp`，Cairo 自绘的图形区（规则 3）留代码；
   - `ui/progress_page`、`ui/chapter_index_page`——页面骨架 + 卡片可做成 `.blp`
     模板；
-  - `ui/settings_dialog`、`ui/about_dialog`、`ui/history_dialog`、`ui/quiz_dialog`、
+  - `ui/settings_dialog`、`ui/about_dialog`、`ui/quiz_dialog`、
     `ui/ai_markdown_dialog`——对话框结构应写在 `.blp`，代码只填内容和信号。
   - 已经合规的参考：`resources/ui/window.blp`、`resources/ui/chapters/*.blp`
     （章节页 = `.blp` 模板 + `code_chapter_page.cc` 只做协调）。

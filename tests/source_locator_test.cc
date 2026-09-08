@@ -38,7 +38,7 @@ TEST(SourceLocatorTest, ReturnsNothingForUnknownMember) {
         "missing").has_value());
 }
 
-// 运行历史的源码快照和 AI 自测的参考实现都取自这个函数，因此它必须在
+// AI 讲解的源码快照和 AI 自测的参考实现都取自这个函数，因此它必须在
 // 真实教学源码上取到成员函数全文。
 TEST(SourceLocatorTest, LoadsMemberSourceFromTeachingFile) {
     const ContentLoader loader(ATHENA_SOURCE_ROOT);

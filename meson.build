@@ -198,7 +198,6 @@ app_sources = files(
   'ui/experiment_dialog.cc',
   'ui/experiment_dock.cc',
   'ui/handbook_page.cc',
-  'ui/history_dialog.cc',
   'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',
   'ui/markdown_fallback.cc',

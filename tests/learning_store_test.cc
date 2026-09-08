@@ -32,28 +32,6 @@ TEST(LearningStoreTest, KeepsDifferentKnowledgePointsIndependent) {
     EXPECT_EQ(store.load_mastery("cpp.Reference.cast"), 4);
 }
 
-TEST(LearningStoreTest, ReturnsMostRecentRunsFirst) {
-    LearningStore store(":memory:");
-    store.record_run(
-        "cpp.RAII.unique", "first", 10.0, "void unique() { /* v1 */ }", "a1b2c3d", false);
-    store.record_run(
-        "cpp.RAII.unique", "second", 20.5, "void unique() { /* v2 */ }", "e4f5g6h", true);
-    store.record_run("cpp.Reference.cast", "other", 1.0, "void cast() {}", "", false);
-
-    const auto runs = store.recent_runs("cpp.RAII.unique", 10);
-    ASSERT_EQ(runs.size(), 2u);
-    EXPECT_EQ(runs.front().output, "second");
-    EXPECT_DOUBLE_EQ(runs.front().duration_ms, 20.5);
-    EXPECT_EQ(runs.front().source_snapshot, "void unique() { /* v2 */ }");
-    EXPECT_EQ(runs.front().git_commit, "e4f5g6h");
-    EXPECT_TRUE(runs.front().git_dirty);
-    EXPECT_EQ(runs.back().output, "first");
-    EXPECT_EQ(runs.back().git_commit, "a1b2c3d");
-    EXPECT_FALSE(runs.back().git_dirty);
-
-    EXPECT_EQ(store.recent_runs("cpp.Reference.cast", 10).size(), 1u);
-}
-
 TEST(LearningStoreTest, RejectsInvalidDatabasePath) {
     EXPECT_THROW(
         LearningStore("/nonexistent-directory/athena.db"),
@@ -124,10 +102,9 @@ TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
     std::remove(db_path.c_str());
 }
 
-// 复现 run_history 的旧结构：只存 source_hash（单向哈希），没有
-// source_snapshot。升级后旧记录的快照读出来应该是空字符串（哈希无法
-// 还原源码），不应抛异常，新记录正常写入 source_snapshot。
-TEST(LearningStoreTest, MigratesLegacyRunHistoryColumnOnUpgrade) {
+// 运行历史功能已移除，但旧数据库里的表和记录属于用户数据。打开旧库时
+// 不应删除或改写它；新版本只是不再读取和追加。
+TEST(LearningStoreTest, KeepsLegacyRunHistoryDataUntouched) {
     const string db_path = "/tmp/athena-learning-store-run-history-legacy-test.db";
     std::remove(db_path.c_str());
 
@@ -151,21 +128,62 @@ TEST(LearningStoreTest, MigratesLegacyRunHistoryColumnOnUpgrade) {
         SQLITE_OK);
     sqlite3_close_v2(legacy);
 
-    LearningStore store(db_path);
-    const auto old_runs = store.recent_runs("cpp.RAII.weak", 10);
-    ASSERT_EQ(old_runs.size(), 1u);
-    EXPECT_EQ(old_runs.front().output, "旧输出");
-    EXPECT_EQ(old_runs.front().source_snapshot, "");
-    EXPECT_EQ(old_runs.front().git_commit, "");
-    EXPECT_FALSE(old_runs.front().git_dirty);
+    {
+        LearningStore store(db_path);
+        EXPECT_EQ(store.load_mastery("cpp.RAII.weak"), 0);
+    }
 
-    store.record_run(
-        "cpp.RAII.weak", "新输出", 8.0, "void weak() { /* new */ }", "a1b2c3d", false);
-    const auto runs = store.recent_runs("cpp.RAII.weak", 10);
-    ASSERT_EQ(runs.size(), 2u);
-    EXPECT_EQ(runs.front().output, "新输出");
-    EXPECT_EQ(runs.front().git_commit, "a1b2c3d");
-    EXPECT_EQ(runs.front().source_snapshot, "void weak() { /* new */ }");
+    sqlite3* verify = nullptr;
+    ASSERT_EQ(sqlite3_open(db_path.c_str(), &verify), SQLITE_OK);
+    sqlite3_stmt* query = nullptr;
+    ASSERT_EQ(
+        sqlite3_prepare_v2(
+            verify,
+            "SELECT output, source_hash FROM run_history WHERE function_id = ?1",
+            -1,
+            &query,
+            nullptr),
+        SQLITE_OK);
+    ASSERT_EQ(
+        sqlite3_bind_text(
+            query, 1, "cpp.RAII.weak", -1, SQLITE_TRANSIENT),
+        SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(query), SQLITE_ROW);
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(query, 0)),
+        "旧输出");
+    EXPECT_STREQ(
+        reinterpret_cast<const char*>(sqlite3_column_text(query, 1)),
+        "12345");
+    EXPECT_EQ(sqlite3_step(query), SQLITE_DONE);
+    sqlite3_finalize(query);
+    sqlite3_close_v2(verify);
+
+    std::remove(db_path.c_str());
+}
+
+TEST(LearningStoreTest, DoesNotCreateRunHistoryForNewDatabase) {
+    const string db_path = "/tmp/athena-learning-store-no-run-history-test.db";
+    std::remove(db_path.c_str());
+
+    { LearningStore store(db_path); }
+
+    sqlite3* verify = nullptr;
+    ASSERT_EQ(sqlite3_open(db_path.c_str(), &verify), SQLITE_OK);
+    sqlite3_stmt* query = nullptr;
+    ASSERT_EQ(
+        sqlite3_prepare_v2(
+            verify,
+            "SELECT count(*) FROM sqlite_master "
+            "WHERE type = 'table' AND name = 'run_history'",
+            -1,
+            &query,
+            nullptr),
+        SQLITE_OK);
+    ASSERT_EQ(sqlite3_step(query), SQLITE_ROW);
+    EXPECT_EQ(sqlite3_column_int(query, 0), 0);
+    sqlite3_finalize(query);
+    sqlite3_close_v2(verify);
 
     std::remove(db_path.c_str());
 }
@@ -251,8 +269,7 @@ TEST(LearningStoreTest, SavesAndReloadsAiInsight) {
     EXPECT_EQ(record->source_snapshot, "void weak() { /* v1 */ }");
     EXPECT_EQ(record->markdown, "# 讲解 v1");
 
-    // 重复保存是 upsert，覆盖成最新一次结果，不是追加多条记录——一个
-    // 知识点只需要保留最近一次讲解，不像运行历史要支持多条对比。
+    // 重复保存是 upsert，覆盖成最新一次结果，不是追加多条记录。
     store.save_ai_insight(
         "cpp.RAII.weak", "void weak() { /* v2 */ }", "# 讲解 v2");
     const auto updated = store.load_ai_insight("cpp.RAII.weak");

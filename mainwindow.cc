@@ -56,10 +56,8 @@ MainWindow::MainWindow(
       m_main_builder(builder),
       m_content_loader(ATHENA_SOURCE_ROOT),
       m_function_registry(create_default_function_registry()) {
-    // 用 window.blp 里的 default-width/height（2160×1440）作为初始大小，
-    // 让窗口正常居中出现。此前构造时直接 maximize()，在 GTK4 的 macOS
-    // 后端下窗口会被摆到工作区左上角外（实测 x = -2560），表现为“程序
-    // 启动了但看不到窗口 / 切不过去”。用户需要时自己点最大化即可。
+    // 用 window.blp 里的适中默认尺寸作为初始大小，让窗口正常居中出现并
+    // 保留可见的系统标题栏。最大化和全屏都由用户自己选择。
     apply_runtime_application_icon();
 
     auto css = Gtk::CssProvider::create();
@@ -99,11 +97,7 @@ MainWindow::MainWindow(
     m_dialogs = make_unique<LearningDialogs>(
         *this, m_content_loader, m_learning_store.get(), m_ui_alive);
     m_experiment_runner = make_unique<ExperimentRunner>(
-        m_function_registry,
-        m_content_loader,
-        m_learning_store.get(),
-        ATHENA_SOURCE_ROOT,
-        m_ui_alive);
+        m_function_registry, m_ui_alive);
     m_about_dialog = make_unique<AboutDialog>(*this);
 
     setup_menu();

@@ -33,7 +33,7 @@ void SettingsDialog::show() {
     page->append(*heading);
 
     auto hint = Gtk::make_managed<Gtk::Label>(
-        "用于“AI 自测”“AI 讲解差异”。保存在本机应用数据目录的 SQLite "
+        "用于“AI 自测”和“AI 讲解”。保存在本机应用数据目录的 SQLite "
         "文件里（仅当前用户可读写），不上传、不同步。留空等价于未配置。");
     hint->add_css_class("dim-label");
     hint->set_wrap(true);

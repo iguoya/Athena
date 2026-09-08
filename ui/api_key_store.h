@@ -8,8 +8,8 @@ using namespace std;
 
 // AI 服务商 API Key 的读写：应用内设置（SQLite `app_settings`）优先，
 // 读不到再回退到同名环境变量。保存时总是写回应用内设置，不回写环境变量。
-// 从 LearningDialogs 提出来，因为设置面板、运行历史、AI 讲解、AI 自测
-// 四处都要按同一套顺序取 Key，不该各写一遍、也不该散落地读环境变量。
+// 从 LearningDialogs 提出来，因为设置面板、AI 讲解、AI 自测都要按同一套
+// 顺序取 Key，不该各写一遍、也不该散落地读环境变量。
 class ApiKeyStore final {
 public:
     // learning_store 允许为 nullptr（数据库打开失败时应用仍可运行）：
