@@ -377,3 +377,68 @@ Meson -> Generator outputs
 - 同一课程模型需要支持多个前端。
 - 大量 UI 行为需要无 GTK 单元测试。
 - 窗口类仍包含复杂的导航、过滤、运行状态和错误恢复逻辑。
+
+## 8. 学习内容的界面承载模型
+
+这一节澄清一个反复出现的困惑：草图里“既有说明文字、又有图标、还有运行按钮和
+预测选项”的混合界面，在桌面 GUI 里到底由什么承载、和 Markdown 是什么关系。
+
+### 8.1 桌面 GUI 没有“富文档控件”
+
+一个看起来像文章的交互页面，不是某一个特殊控件，而是**一批标准控件按纵向
+顺序码进一个可滚动容器**：外层 `Gtk::ScrolledWindow`，内层 `Gtk::Box`
+（`orientation: vertical`），里面依次是 `Label`（段落，`use-markup` 支持局部
+加粗、等宽、颜色、链接）、`Image`、`Gtk::Box`（横向排一行按钮）、
+`GtkSourceView`（只读代码）、`Gtk::Grid`（两列对照）等等。
+
+“文档感”是排版的视觉结果，不是控件类型。业界把这种形态叫 *interactive
+document*；notebook（Jupyter / Observable）是它最成熟的形式——交替排列的
+“展示单元”和“交互单元”。
+
+Blueprint（`.blp`）负责描述其中**静态或半静态**的部分：页面骨架、每种卡片的
+模板、说明面板。**结构由运行时数据决定**的部分（有几个知识点、正文有几段、
+几个小节）用代码按数据实例化模板或直接构建，见第 3 节“GTK 与 Blueprint 规则”。
+
+### 8.2 Markdown 的三种角色
+
+| 角色 | 做法 | 能否承载按钮 / 动态 |
+|---|---|---|
+| A 不用 Markdown | 每段文字写成一个 `Label`，控件直接穿插 | 能，控件就是真 widget |
+| B 当富文本渲染 | `.md → HTML → WebView`，只作展示 | 不能，除非向 WebView 注入运行时脚本 |
+| C 当结构化数据解析 | MD4C 解析成 AST，代码决定“普通段落→`Label`，自定义块 `:::experiment`→在该位置放一个原生实验 widget” | 能，自定义块位置换成真 widget |
+
+“Markdown 只能承载文字和图片”这个判断**只在角色 B 成立**。角色 C 里 Markdown
+只是一种内容数据格式，渲染成 HTML 还是控件由代码决定。
+
+### 8.3 Athena 当前的分工
+
+- **成篇理论（分类手册）**：角色 B。`resources/articles/**.md` → MD4C →
+  HTML → `ArticleView`（macOS WKWebView / Ubuntu WebKitGTK 6.0）。纯展示，
+  没有运行按钮，也不注入 JavaScript（`markdown_renderer` 的 C++ 词法着色是
+  在生成 HTML 时完成的，不是运行时脚本）。见 ADR 0003、0012、0017。
+- **可运行知识点（实验页）**：角色 A。`ExperimentPage` 的控件树写在 Blueprint
+  里，`ExperimentDock` 装配 `GtkSourceView` 源码框、`TextView` 结果、运行按钮、
+  `Spinner`。这里**完全不经过 Markdown**。
+- **知识点的短引导句**（核心问题、预测提示、观察点、反思提示）：角色 A。
+  文本来自 `athena.json` 的 `subchapter.learning` 字段（见
+  `docs/CHAPTER_CONFIG.md`），用 `Label` 显示，不是一篇 Markdown 文章。
+
+一句话原则：**短引导句是穿插在控件流里的 `Label`；成篇理论是单独用
+Markdown → WebView 展示的文档；两者不塞进同一个渲染器。**
+
+### 8.4 两条路线的权衡
+
+把成篇内容也改用控件流（角色 A）承载，相对 WebView（角色 B）：
+
+| 维度 | 控件流（角色 A / C） | Markdown + WebView（角色 B） |
+|---|---|---|
+| 交互 | 每个元素是真控件，信号、状态天然 | 静态；要交互需注入脚本并在两个后端各接一次桥 |
+| 内容编写成本 | 高：没有“写纯文本即出版面”，富排版、图文环绕、表格、脚注都要自己实现 | 低：作者写 `.md` 即可 |
+| 跨平台一致性 | 需要在 macOS / Ubuntu 两处调控件样式 | 一份 HTML/CSS 两平台基本一致 |
+| 主题 / 无障碍 / 键盘导航 | 与应用其余部分天然统一 | 需要 WebView 内单独处理 |
+| 图表 / 公式 / 语法高亮 | 代码高亮有 `GtkSourceView`，其余自己画 | HTML 生态成熟 |
+| 依赖 | 去掉 MD4C / WebView 栈 | 保留 MD4C，两个平台各一个 WebView 后端 |
+
+结论：短引导句和实验适合控件流；成篇理论目前仍适合 Markdown + WebView。
+若要把成篇理论也迁到控件流、或解除 WebView 的“不注入运行时脚本”限制，属于
+推翻 ADR 0003 / 0012 / 0017 / 0020 的不可逆方向，必须先新增 ADR。
