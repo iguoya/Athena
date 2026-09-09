@@ -369,10 +369,20 @@ void MainWindow::ensure_chapter_page(
             *this,
             experiment_requested);
     } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
+        std::map<string, int> mastery_by_id;
+        if (m_learning_store) {
+            try {
+                mastery_by_id = m_learning_store->load_all_mastery();
+            } catch (const exception& error) {
+                cerr << "Failed to load mastery stats for lesson tabs: "
+                     << error.what() << endl;
+            }
+        }
         m_type_semantics_lesson_pages[page_key] =
             make_unique<TypeSemanticsLessonPage>(
                 chapter,
                 builder,
+                mastery_by_id,
                 experiment_requested,
                 overview_requested);
     }
@@ -561,6 +571,23 @@ Gtk::Widget* MainWindow::create_progress_page() {
 }
 
 void MainWindow::refresh_progress_page() {
+    // AI 自测写入新熟练度后，已缓存的原生学习页也要跟着给标签重新上色。
+    if (!m_type_semantics_lesson_pages.empty()) {
+        std::map<string, int> mastery_by_id;
+        if (m_learning_store) {
+            try {
+                mastery_by_id = m_learning_store->load_all_mastery();
+            } catch (const exception& error) {
+                cerr << "Failed to reload mastery stats for lesson tabs: "
+                     << error.what() << endl;
+            }
+        }
+        for (const auto& [page_key, lesson_page] :
+             m_type_semantics_lesson_pages) {
+            lesson_page->refresh_progress(mastery_by_id);
+        }
+    }
+
     if (!m_pages || !m_pages->has_page(kProgressPageKey)) {
         return;
     }
