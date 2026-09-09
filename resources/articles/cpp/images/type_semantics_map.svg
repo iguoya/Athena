@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 452" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
+  <style>
+    .frame { fill: #ffffff; stroke: #dee2e6; stroke-width: 1.5; }
+    .title { fill: #212529; font-weight: 700; }
+    .muted { fill: #6c757d; }
+    .lane { fill: #6c757d; font-weight: 700; }
+    .node-title { fill: #212529; font-weight: 700; }
+    .node-sub { fill: #495057; }
+    /* 两条主线各一个色相：创建对象 = primary 蓝，操作对象 = teal 青，
+       enum class 相对独立 = 中性灰。取自 @athena_* 语义变量。 */
+    .n-create { fill: #cfe2ff; stroke: #0a58ca; stroke-width: 1.8; }
+    .n-express { fill: #d5f5ec; stroke: #20c997; stroke-width: 1.8; }
+    .n-aside { fill: #f1f3f5; stroke: #adb5bd; stroke-width: 1.8; }
+    .edge { stroke: #6c757d; stroke-width: 1.8; fill: none; }
+    .edge-label { fill: #495057; }
+  </style>
+  <rect x="1" y="1" width="918" height="450" rx="14" class="frame"/>
+
+  <text x="30" y="36" class="title" font-size="17">类型与表达式：五个小节怎样连成一条线</text>
+  <text x="30" y="58" class="muted" font-size="12.5">全章围绕两件事：创建对象，以及用表达式读取或改变已经存在的对象。</text>
+
+  <!-- 主线标签 -->
+  <text x="46" y="92" class="lane" font-size="13">① 创建对象</text>
+  <text x="360" y="92" class="lane" font-size="13">② 用表达式操作已经存在的对象</text>
+
+  <!-- 初始化 -->
+  <rect x="46" y="104" width="230" height="66" rx="10" class="n-create"/>
+  <text x="161" y="132" text-anchor="middle" class="node-title" font-size="14">初始化</text>
+  <text x="161" y="153" text-anchor="middle" class="node-sub" font-size="11.5">括号的边界、窄化、explicit</text>
+
+  <!-- 类型推导 -->
+  <rect x="360" y="104" width="256" height="66" rx="10" class="n-express"/>
+  <text x="488" y="132" text-anchor="middle" class="node-title" font-size="14">类型推导</text>
+  <text x="488" y="153" text-anchor="middle" class="node-sub" font-size="11.5">auto 声明变量，decltype 取类型</text>
+
+  <!-- 值类别 -->
+  <rect x="360" y="234" width="256" height="66" rx="10" class="n-express"/>
+  <text x="488" y="262" text-anchor="middle" class="node-title" font-size="14">值类别</text>
+  <text x="488" y="283" text-anchor="middle" class="node-sub" font-size="11.5">左值 / 纯右值 / 将亡值</text>
+
+  <!-- 类型转换 -->
+  <rect x="644" y="234" width="248" height="66" rx="10" class="n-express"/>
+  <text x="768" y="262" text-anchor="middle" class="node-title" font-size="14">类型转换</text>
+  <text x="768" y="283" text-anchor="middle" class="node-sub" font-size="11.5">显式表达意图，检查在哪一层</text>
+
+  <!-- enum class -->
+  <rect x="46" y="336" width="248" height="66" rx="10" class="n-aside"/>
+  <text x="170" y="364" text-anchor="middle" class="node-title" font-size="14">enum class</text>
+  <text x="170" y="385" text-anchor="middle" class="node-sub" font-size="11.5">用独立类型表达一组有限状态</text>
+
+  <!-- 边：初始化 -> 类型推导 -->
+  <path class="edge" d="M276 137 H360" marker-end="url(#a)"/>
+  <text x="318" y="128" text-anchor="middle" class="edge-label" font-size="11">先站稳</text>
+
+  <!-- 边：类型推导 -> 值类别 -->
+  <path class="edge" d="M488 170 V234" marker-end="url(#a)"/>
+  <text x="500" y="206" class="edge-label" font-size="11">decltype((x)) 按值类别取类型</text>
+
+  <!-- 边：值类别 -> 类型转换 -->
+  <path class="edge" d="M616 267 H644" marker-end="url(#a)"/>
+  <text x="630" y="322" text-anchor="middle" class="edge-label" font-size="11">值类别决定引用绑定与重载选择</text>
+
+  <!-- enum class 旁注 -->
+  <path class="edge" d="M294 369 C 330 369 330 300 358 292" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <text x="46" y="426" class="edge-label" font-size="11">enum class 和前四节相对独立，但同样遵循“先有类型，再谈能对它做什么”。</text>
+
+  <!-- 图例 -->
+  <rect x="620" y="336" width="272" height="66" rx="10" fill="#f8f9fa" stroke="#dee2e6"/>
+  <rect x="636" y="352" width="16" height="12" rx="3" class="n-create"/>
+  <text x="660" y="363" class="muted" font-size="11.5">蓝框：创建对象</text>
+  <rect x="636" y="374" width="16" height="12" rx="3" class="n-express"/>
+  <text x="660" y="385" class="muted" font-size="11.5">青框：用表达式操作已有对象</text>
+  <text x="636" y="400" class="muted" font-size="10.5">箭头：前一节为后一节做铺垫</text>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6c757d"/>
+    </marker>
+  </defs>
+</svg>
