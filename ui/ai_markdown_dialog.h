@@ -11,13 +11,11 @@
 
 using namespace std;
 
-// AI 回答的 Markdown 展示通道：md4c 转 HTML + 平台 WebView（macOS 的
-// WKWebView、Ubuntu 的 WebKitGTK）渲染，
-// 跟手册页面同一套排版——代码块、标题、列表都有正常版式，不是纯文本
-// TextView 堆一坨。AI 讲解和 AI 自测共用它；网络请求在独立线程执行，
-// HTML 只在主线程构造和加载。从 LearningDialogs 提出来，是纯粹的“把一段
-// Markdown（现成的或异步取回的）显示出来”的能力，不含任何提示词或业务
-// 判断。
+// AI 回答的 Markdown 展示通道：先解析为 DocModel，再由跨平台 GTK 控件
+// 呈现，和手册及学习工作台共享标题、代码块、列表等排版能力。AI 讲解和
+// AI 自测共用它；网络请求在独立线程执行，控件只在主线程更新。从
+// LearningDialogs 提出来，是纯粹的“把一段 Markdown（现成的或异步取回的）
+// 显示出来”的能力，不含任何提示词或业务判断。
 class AiMarkdownDialog final {
 public:
     // ui_alive 由窗口持有并在析构时置 false，供异步回传的 idle 回调判断

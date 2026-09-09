@@ -2,7 +2,7 @@
 
 ## 1. 项目目标
 
-Athena 是为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。项目使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C/md4c-html 把文章章节的 Markdown 转换为 HTML。macOS 通过系统 WKWebView、Ubuntu 通过 WebKitGTK 6.0 和统一 CSS 完成文章排版；文章模式只保留 WebView 路径，不在受支持平台维护 GtkTextView 降级渲染。项目结构由 `resources/athena.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
+Athena 是为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。项目使用 GTK4、gtkmm、GtkSourceView 5、MD4C、Meson 和 Blueprint 构建。GtkSourceView 负责只读源码框的 C++ 语法高亮和行号显示；MD4C 只把文章章节的 Markdown 解析为与 GTK 无关的 `DocModel` 块序列，`DocumentView` 再将其呈现为跨平台 GTK 控件流。文章不再转换为 HTML，也不依赖 macOS WKWebView 或 Ubuntu WebKitGTK。项目结构由 `resources/athena.json` 驱动，用户既可以运行可实验的知识点，也可以阅读不适合用单次运行结果解释的理论、原则和工程思想。
 
 内容设计以 C++ 知识点和学习目标为起点：学习文档负责建立概念体系、语义边界、常见
 误区和思维模型，教学代码负责把这些思想转化为可操作、可观察、可验证的实验。文档不是
@@ -44,12 +44,13 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
                                                      |       +--> KnowledgeGraph（前置依赖与章节指标聚合）
                                                      |       +--> KnowledgeGraphView（连线 + GTK 节点卡片）
                                                      +--> CodeChapterPage
-                                                     |       +--> ExperimentDialog（共享、非模态）
+                                                     |       +--> ExperimentPage（共享专注工作区）
                                                      |               +--> ExperimentDock
                                                      |                       +--> ExperimentRunner
-                                                     +--> WorkbenchPage（文档主导原型）
-                                                     |       +--> ArticleView
-                                                     |       +--> ExperimentDialog（同一实例）
+                                                     +--> TypeSemanticsLessonPage（原生学习场景）
+                                                     |       +--> LearningUnitView / 原生比较图
+                                                     |       +--> ExperimentPage（共享专注工作区）
+                                                     +--> WorkbenchPage（迁移期 Markdown 阅读工作台）
                                                      +--> PocketCubePage
                                                      +--> HandbookPage（每分类一部，懒构建一次）
                                                      +--> ProgressPage / LearningDialogs
@@ -62,9 +63,10 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - 手册文档作为 GResource 随应用打包，并可在开发期从源码树回退读取。
 - 手册 HTML 和 CSS 与平台显示控件分离；macOS 原生后端在同一个 HTML 页面中渲染目录、正文、字号控制和明暗主题，页内链接直接完成标题跳转。
 - 手册 H1–H3 同时作为导航目录，标题保持简短，详细说明由标题后的正文承担。
-- TypeSemantics 已使用学习工作台原型：初始让文档占满阅读区；配置了 `teaches`
-  的小节在正文末尾显示一个或多个实验入口，点击后打开共享的模态实验窗口。
-  窗口只显示当前实验、验证目标、真实源码、运行状态和观察结果，不重复全章知识点目录。
+- TypeSemantics 的主学习页是 `TypeSemanticsLessonPage`：原生 Blueprint 控件直接
+  组织“语义对比 → 预测 → 专注实验 → 反馈”，不解析 `overview_document` 的标题或
+  段落来决定页面结构。`overview_document` 保留给手册和“查看参考资料”入口；它是
+  可回查的知识资产，不是学习流程的布局协议（ADR 0026）。
 - `ExperimentDialog` 是标准代码页与学习工作台共享的单例窗口，暂时以 `MainWindow`
   为 transient parent；ADR 0023 第一阶段把内部调整为“当前目标 → 完整真实源码 →
   运行操作 → 观察结果”的纵向证据链。`ExperimentDock` 继续只负责源码定位、后台运行
@@ -77,11 +79,14 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 - `ChapterCatalog` 只解码构建生成的规范化 Catalog，不再解析作者配置、计算默认值
   或修正数据；它和 `FunctionRegistry` 均与 GTK 解耦，可使用 Google Test 单独验证。
 - `ContentLoader` 统一封装 GResource、开发期源码文件和 Markdown 文档读取。
-- Markdown 中标记为 `cpp`、`c++` 或 `cxx` 的围栏代码块由共享
-  `markdown_renderer` 做轻量 C++ 词法着色，关键字、类型、字符串、注释、数字和
-  预处理行分别使用 CSS token class；标记为 `text` 或未声明语言的围栏保持单色。
-  着色过程不加载运行时 JavaScript，也不改变 Markdown 原文，macOS WKWebView 与
-  Ubuntu WebKitGTK 继续复用同一份 HTML/CSS。
+- Markdown 中标记为 `cpp`、`c++` 或 `cxx` 的围栏代码块由 `DocumentView` 创建
+  只读 `GtkSourceView`，使用 GTK 的 C++ 语法高亮；标记为 `text` 或未声明语言的
+  围栏保持单色。这个过程不加载运行时脚本，也不改变 Markdown 原文。
+- `chapter.learning_units` 让正文在指定小节末尾插入“判断 → 预测 → 反馈 →
+  专注实验验证”的轻量控件单元；其配置、标题目标与实验归属由生成器校验，选择
+  状态只留在当前页面。专注实验使用标签页分别承载验证与观察、真实源码和暂定的
+  探索空间；验证工作台内左侧源码、右侧运行观察，以便日后加入对象图、生命周期时间线
+  或编译诊断，而不挤压正文阅读宽度。
 - `SourceLocator` 按知识点成员函数名定位真实 C++ 定义范围；`load_member_source_text()`
   在此基础上取出该成员函数的全文，AI 讲解的源码快照、AI 自测的参考实现共用它，
   不各自再写一遍“读文件 + 定位 + 截取”。知识点标题旁只读展示“重要度”徽章（橙色，0–5，来自 `athena.json` 的 `subchapter.importance`，由内容作者基于教学与工程实践给出的客观难度判断，不要求已写出实现代码，未评时不显示；用户不可修改，参见 `docs/CHAPTER_CONFIG.md`）；条目本身（标题与描述）不响应点击。
@@ -93,13 +98,13 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
   由完整内容自然测量；右侧说明栏解释三种口径。返回 C++ 目录时重建图谱，避免 AI 自测后显示旧颜色。
   其他分类没有成熟依赖数据，继续使用自适应 FlowBox 网格。
 - 全局正常可读文字以 14pt 为硬下限：GTK 的所有 `GtkWindow` 默认使用 16pt，
-  局部样式不得降到 14pt 以下；Markdown/WKWebView 默认 21px（约 15.75pt），
-  阅读器缩小控制最低停在 19px（约 14.25pt）。图表坐标文字同样遵守这一基线，
+  局部样式不得降到 14pt 以下；`DocumentView` 与原生学习场景继承同一基线。
+  图表坐标文字同样遵守这一基线，
   只有没有文字语义的图标和装饰尺寸可以更小。
 - 知识点行尾操作区以分隔线隔离，依次放置“运行”“AI 讲解”“AI 自测”按钮与只读的“熟练度”五星结果（绿色，0–5 星）。熟练度不能手动修改，只在用户答完一次完整 AI 自测后，按本地固定公式从正确题数换算并持久化；“运行”只由知识点是否已实现决定，满星后仍可重复实验。三个动作都绑定所在行的 topic，点击时先激活本行再执行。运行历史及其双记录比较、git 快照和“AI 讲解差异”已按 ADR 0023 移除；旧数据库中的 `run_history` 表保持原样，不读写也不删除。
 - “AI 自测”和“AI 讲解”共用非 GTK 的 `AiService`：优先用 DeepSeek（`deepseek-chat`），未配置或请求失败再退回火山方舟豆包（`doubao-seed-2-1-pro-260628`）；两者都未配置时直接返回明确错误。Key 优先从侧边栏“设置”读取，未保存时回退到 `ATHENA_ARK_API_KEY`/`ATHENA_DEEPSEEK_API_KEY` 环境变量。两家服务商都是 OpenAI 兼容协议，底层共用同一个可替换的请求通道，只是 endpoint/model 不同。Key 与请求体经权限受限的临时文件传入、用后即删，不出现在进程参数里；临时文件放在 GLib 按操作系统选择的 Athena 用户缓存目录。`AiService` 只返回普通数据，不更新 GTK，`LearningDialogs` 负责工作线程与主线程之间的结果交接。服务商顺序、回答解析、代码围栏清理和自测题解码都有不访问网络的单元测试（参见 ADR 0010、ADR 0011、ADR 0014）。
-- **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。`HandbookPage` 按该分类 `handbook_documents`（`docs/CHAPTER_CONFIG.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），一次性喂给 `parse_markdown_headings`/`render_markdown_html`，生成一份跨文档的完整目录，并独占宿主控件、文档锚点和 `ArticleView` 生命周期。渲染继续使用常驻 WKWebView，不是每次点击现造 Dialog+WKWebView——后者在实测中出现过对话框刚弹出时宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面，因此彻底放弃了这条路径。**手册页面不进 `m_active_page_names`**：切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次；`MainWindow` 只保留对应 `HandbookPage` 模块，不再平行维护 WebView 与锚点缓存。还没收录文档的分类（当前是 da、dp）显示一句占位说明，不为空文档白起一个 WebView。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`resources/article.css` 给 `**加粗**` 配了琥珀色（`--article-highlight`，标一般重点）、给 `***加粗斜体***`（md4c 渲染成 `<em><strong>`）配了红色（`--article-danger`，标真正的易错点/陷阱），两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
-- “说明文档”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，通过 `ArticleView::scroll_to_anchor()` 执行页内 `scrollIntoView`）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_CONFIG.md` 6.2）。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交，跟“自然语言 description 不应由普通模板生成器直接转换成未经审查的实现”是同一条原则在文档内容上的应用。未提供 `overview_document` 的章节，按钮退回复制章节标题/简介/知识点信息到剪贴板并唤起本机 AI 助手。当前 TypeSemantics、Reference、RAII 三个已实现章节写了说明文档，其余章节还没有。
+- **手册**按分类各自独立，一个分类一部，作为该分类标签行里的**合成标签页**（跟"学习进度"同类，不来自 `athena.json` 的任何章节）：有欢迎页的分类（只有 cpp）排在"欢迎页面 → 学习进度"之后，没有欢迎页的分类排在最前；侧边栏只剩分类按钮，没有跨分类的全局手册入口。`HandbookPage` 按该分类 `handbook_documents`（`docs/CHAPTER_CONFIG.md` 4.3）列出的顺序拼接各文档 Markdown（文档间插入 `---` 分隔），交给 `DocModel` 和 `DocumentView` 生成一份跨文档的 GTK 控件流，并独占文档锚点。**手册页面不进 `m_active_page_names`**：切分类时把它留在 Stack 里（只是没有标签按钮指向它），每个分类最多留一页、懒构建一次；`MainWindow` 只保留对应 `HandbookPage` 模块。还没收录文档的分类（当前是 da、dp）显示一句占位说明。手册文档的一级、二级标题手工带"第 N 章"/"N.M"编号，**各分类手册各自从第 1 章起编，不跨分类连续**；`DocumentView` 用 Pango 标记把 `**加粗**` 显示为琥珀色重点、把 `***加粗斜体***` 显示为红色陷阱，两档颜色写文档时按实际内容判断取舍，不是每句话都要标。
+- “说明文档”**不调用 DeepSeek**：`chapter.overview_document` 指向**本分类** `handbook_documents` 里已收录的一份静态 Markdown 文档路径，点击按钮跳到本分类手册页面里该文档的起始位置（`MainWindow::show_handbook_page(category_name, overview_document)`，再由 `DocumentView` 跳转到对应标题）——跳的是**本分类**的手册，不发起任何网络请求（参见 `docs/CHAPTER_CONFIG.md` 6.2）。原生学习场景同样通过这一入口提供参考，而不从文档反向生成页面结构。撰写这份文档时可以用 AI 辅助起草，但必须经人工审核才能提交。未提供 `overview_document` 的章节，按钮退回复制章节标题、简介和知识点信息到剪贴板并唤起本机 AI 助手。
 - **“AI 讲解”**（`LearningDialogs::show_ai_insight()`）现场把该知识点真实源码发给 AI，请它从**整体**（这段代码整体在做什么、为什么这样设计、跟这个知识点想教的概念是什么关系、适用场景）和**局部**（关键实现细节、容易被忽略或误解的地方、常见误用）两个角度讲解。这是跟手册“说明文档”按钮（本地静态、需人工审核、不联网）互补的路径：手册适合覆盖面广、要求内容稳定的原理性说明；AI 讲解适合当前这一段具体源码的即时解释。
 - “AI 讲解”结果按 `(function_id, 源码快照)` 缓存进 `LearningStore` 的 `ai_insight` 表（`load_ai_insight()`/`save_ai_insight()`，一个知识点只保留最近一次，upsert 覆盖）。点击时先查缓存，源码快照与当前 `load_member_source_text()` 读到的内容一致就直接用 `show_static_markdown()` 展示；源码变了或从没生成过，才调用 `show_ai_markdown()` 请求 AI。请求成功后通过 `on_success` 回调把结果和源码快照存回缓存，请求失败的错误提示不缓存。
 - **学习进度**跟手册不同，不是全局常驻页面，而是 cpp 分类里紧跟"欢迎页面"之后的一个**合成标签页**：它不对应 `athena.json` 里的任何章节，由 `MainWindow::build_chapter_tabs()` 在遍历到欢迎页（按 Blueprint 根控件名 `welcome_page` 识别，不硬编码章节 `name`）之后调用 `append_progress_tab()` 手工插入，因此只统计 cpp 分类（数据结构与算法、设计模式两个分类当前没有实现内容，等真有内容再决定要不要各自加一份）。页面不用 WebView，是纯 GTK 控件搭的统计仪表盘（`ui/progress_page.cc`）：顶部四张统计卡片（知识点总数/已掌握/学习中/平均熟练度，各用一种强调色，仿常见管理后台的 stat tile），紧接着是“建议接下来学习”卡片（`suggest_next_topics()`，纯本地规则：优先推荐已经在学的 1–4 星知识点，再推荐完全没碰过的 0 星，5 星不再推荐，同优先级内保持 `athena.json` 声明顺序；不调用 AI，也暂不接可点击跳转，是第一版概要功能，全部掌握或还没有任何知识点时不显示），再往下一行两张 Cairo 手绘图表（环形图看整体三档占比、直方图看熟练度分布），最后按章节用 `Gtk::Expander` 列出（收起显示章节名 + `Gtk::LevelBar` 进度条 + "已掌握/总数"，展开显示每个知识点的星级只读展示）。逐章节完成度已经由这份列表完整表达，因此不再另画一张信息重复、章节名难以清晰排布的柱状图。统计口径是"5 星 = 已掌握"，数据来自 `LearningStore::load_all_mastery()`（一次性批量读取全部 `knowledge_progress`，不是按知识点逐个查询）与 `ChapterCatalog` 交叉。页面名登记进 `m_active_page_names`，切到别的分类时和普通章节页一起被移除；切回 cpp、AI 自测成绩成功写入或用户再次激活“学习进度”标签时，窗口只替换该页面并重新读取、聚合数据，不重建整个分类标签栏。数据量小，重新查库加布局的开销可以忽略，也不需要维护额外的“数据是否过期”状态（这一点跟懒构建一次的手册相反）。构造函数里 `open_learning_store()` 必须排在 `setup_category_sidebar()` 之前：后者第一个分类按钮的 `set_active()` 会立刻触发学习进度页构建，学习存储还没打开的话首屏统计会恒为全 0（这是真实出现过的症状，不是假设）。
@@ -130,7 +135,7 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
   放进对应功能模块，避免把控件树、后台执行或持久化细节重新堆回窗口协调层。
 - 注册表由 `athena.json` 生成；新章节可显式执行 `scaffold` 创建不会覆盖已有文件的首次实现骨架。
 - 骨架生成只适合一个头文件与一个源文件的普通章节；一个类拆到多个源文件（通过各知识点自己的 `subchapter.source` 指定）曾是 RAII 的做法，现在认定为应当避免的特例，不是推荐路径——多个 `.cpp` 会导致按知识点切换源码框内容碎片化，看不到类的完整定义。默认约定是整章合并到一个 `.hpp`；`TypeSemantics`、`RAII` 已按路线图第 11 条迁移完成，连同 `Reference`、`FunctionCallable` 四个已实现章节现在都是单文件形态，详见 `docs/CHAPTER_CONFIG.md` 6.1。
-- macOS 与 Ubuntu 均有文章显示后端：分别为 WKWebView 与 WebKitGTK 6.0，并复用相同 HTML、CSS、锚点和外部链接导航规则。
+- macOS 与 Ubuntu 共用 `DocumentView`，没有文章显示的平台后端；两端复用相同 GTK 控件、锚点和外部链接导航规则。
 
 ## 3. 目标架构
 
@@ -209,8 +214,8 @@ project_generator/model.py：唯一严格校验 + 默认值/路径/ID 规范化
 这些类型可以使用普通 C++ 单元测试验证，不需要启动 GTK。
 
 源码按职责分组：`registry/` 放置项目配置的解析、校验、查询以及知识点函数注册；
-`content/` 统一读取 GResource、Markdown 和教学源码；`render/` 放置 Markdown 到
-HTML 的转换以及各平台 ArticleView 后端；`storage/` 以 SQLite 持久化熟练度、
+`content/` 统一读取 GResource、Markdown 和教学源码，并将 Markdown 解析为 `DocModel`；
+`render/` 放置 GTK `DocumentView`、图表及其纯绘制支持；`storage/` 以 SQLite 持久化熟练度、
 AI 讲解缓存和应用设置。目录归组不改变 `ChapterCatalog` 与
 `FunctionRegistry` 的职责边界，二者只通过稳定 ID 协作。
 
@@ -237,14 +242,14 @@ void method(std::ostream& output) const;
 当知识点函数需要输入、结构化错误或状态时，再统一迁移为 `FunctionContext` 和
 `FunctionResult`，不要让每个 JSON 条目定义任意 C++ 签名。
 
-各分类 `handbook_documents` 里的文档不生成章节类和演示注册项。它们的正文属于文档资源；共享渲染层使用 md4c-html 把拼接后的合集 Markdown 生成完整 HTML，注入标题锚点，并生成同页的手册目录与阅读工具栏。HTML 原生页内链接负责目录跳转，`overview_document` 触发的跳转经 `ArticleView::scroll_to_anchor()` 执行同样的锚点滚动，应用生成的受控脚本负责字号和明暗主题设置。平台 ArticleView 后端只负责加载 HTML、执行锚点跳转，以及管理原生控件生命周期。
+各分类 `handbook_documents` 里的文档不生成章节类和演示注册项。它们的正文属于文档资源；共享层用 MD4C SAX 解析为 `DocModel`，`DocumentView` 将块序列生成标题、段落、列表、代码、表格和图片等 GTK 控件。标题控件登记为目录和 `overview_document` 的锚点，字号、明暗主题与无障碍均直接跟随 GTK 应用设置。
 
 ### 3.5 表示层
 
 GTK/Blueprint 层负责：
 
 - 为章节显示分类、说明、源码和执行结果。
-- 为手册显示合集 Markdown 正文和可跳转目录；平台 WebView（macOS WKWebView / Ubuntu WebKitGTK）在一个 HTML 阅读页面中统一显示目录、正文、字号和明暗主题设置。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
+- 为手册显示合集 Markdown 正文和可跳转目录；`DocumentView` 在一个 GTK 控件流中统一显示目录、正文、字号和明暗主题。标题由每份文档自己的一级标题提供，不重复显示章节头，也不显示运行按钮与结果区。
 - 为学习工作台在小节正文末尾渲染实验入口组，并按需展开从属实验坞；文档决定
   学习顺序，代码只验证已经讲解的规则，不用全局实验列表反向组织正文。
 - 把用户操作转换为稳定函数 ID。
@@ -264,8 +269,8 @@ GTK/Blueprint 层负责：
 `show_quiz()`、`show_ai_insight()`（后两者的参数统一是一个 `DialogTopic`：知识点 ID、
 标题、说明、源码路径、成员函数名）转发给各自独立的 `SettingsDialog`、`QuizDialog`、
 `AiInsightDialog`。共享部分也各自成模块：`ApiKeyStore` 管 Key 的读写（应用内设置优先、
-回退同名环境变量），`AiMarkdownDialog` 是 AI 回答的 Markdown 展示通道（md4c +
-WKWebView）。未配置任何服务商 Key 时由子模块自己提示去“设置”里填。自测评分回写星级和刷新学习进度页
+回退同名环境变量），`AiMarkdownDialog` 是 AI 回答的 Markdown 展示通道（`DocModel` +
+`DocumentView`）。未配置任何服务商 Key 时由子模块自己提示去“设置”里填。自测评分回写星级和刷新学习进度页
 通过调用方传入的 `function<bool(int)>` 回调完成，任何子模块都不反向调用 `MainWindow`。
 
 当前层次：

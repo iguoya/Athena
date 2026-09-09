@@ -21,8 +21,6 @@ DEB_ARCHITECTURE = "amd64"
 RUNTIME_DEPENDENCIES = (
     "libgtkmm-4.0-0",
     "libgtksourceview-5-0",
-    "libwebkitgtk-6.0-4",
-    "libmd4c-html0",
     "libsqlite3-0",
 )
 

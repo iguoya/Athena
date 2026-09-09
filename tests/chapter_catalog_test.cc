@@ -53,6 +53,7 @@ nlohmann::json minimal_catalog() {
           "implementation_header": "",
           "icon": { "type": "theme", "name": "chapter", "path": "" },
           "groups": [],
+          "learning_units": [],
           "subchapters": [{
             "function_id": "cpp.Sample.point",
             "name": "point",
@@ -104,6 +105,11 @@ TEST(ChapterCatalogTest, LoadsTheGeneratedProjectCatalog) {
     EXPECT_EQ(
         reference->overview_document,
         "resources/articles/cpp/reference_overview.md");
+
+    const auto* type_semantics = catalog.find_chapter("cpp", "TypeSemantics");
+    ASSERT_NE(type_semantics, nullptr);
+    EXPECT_EQ(type_semantics->widget_name, "type_semantics_lesson_page");
+    EXPECT_TRUE(type_semantics->learning_units.empty());
 
     const auto& cpp_handbook = catalog.handbook_documents("cpp");
     EXPECT_NE(
@@ -178,6 +184,7 @@ TEST(ChapterCatalogTest, DecodesCanonicalRuntimeFields) {
     EXPECT_EQ(chapter->subchapters[0].importance, 4);
     EXPECT_EQ(chapter->subchapters[1].importance, 0);
     EXPECT_EQ(chapter->icon.name, "chapter");
+    EXPECT_TRUE(chapter->learning_units.empty());
 }
 
 // 作者语义由 Python 保证。受信任解码器既不夹值，也不重新检查 C++ 名称或分组引用。

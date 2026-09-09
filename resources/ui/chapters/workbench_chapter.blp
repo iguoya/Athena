@@ -1,7 +1,7 @@
 using Gtk 4.0;
 
-// 文档主导的学习工作台。正文实验入口打开进程内唯一的模态实验窗口；
-// 页面本身不再保留一份内嵌实验坞。
+// 文档主导的学习工作台。顶层标签按 Markdown H2 学习小节拆分；每页内部
+// 仍是连续的正文、预测与实验入口流，避免把同一概念按函数机械拆散。
 Box workbench_chapter_page {
   orientation: vertical;
   spacing: 10;
@@ -75,22 +75,15 @@ Box workbench_chapter_page {
       "article-page"
     ]
 
-    Frame workbench_article_frame {
+    Notebook workbench_section_notebook {
+      name: "workbench_section_notebook";
       hexpand: true;
       vexpand: true;
-      label: "学习文档";
+      scrollable: true;
 
       styles [
-        "panel-frame",
-        "group-frame",
-        "article-surface"
+        "workbench-section-notebook"
       ]
-
-      DrawingArea workbench_article_host {
-        name: "workbench_article_host";
-        hexpand: true;
-        vexpand: true;
-      }
     }
   }
 }

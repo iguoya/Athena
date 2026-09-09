@@ -2,12 +2,12 @@
 
 为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。基于 GTK4（gtkmm4）、GtkSourceView 5、MD4C、Meson 和 Blueprint。
 
-GtkSourceView 5 用于源码框的 C++ 语法高亮与行号显示，MD4C 用于把文章章节的
-Markdown 转换为 HTML。macOS 使用系统自带的 WKWebView，Ubuntu 使用 WebKitGTK
-6.0；两者复用同一份文章 CSS 与 HTML，因此文章目录、正文和阅读设置保持一致。
+GtkSourceView 5 用于源码框和文档代码块的 C++ 语法高亮与行号显示，MD4C 用于把
+文章章节的 Markdown 解析为结构化内容块，再由跨平台 GTK 控件直接呈现目录、正文和
+阅读交互。
 macOS 可通过 Homebrew 安装
 `gtksourceview5 md4c nlohmann-json googletest`；Ubuntu 使用开发包
-`libgtksourceview-5-dev libwebkitgtk-6.0-dev libmd4c-dev nlohmann-json3-dev libgtest-dev`。
+`libgtksourceview-5-dev libmd4c-dev nlohmann-json3-dev libgtest-dev`。
 
 统一校验、构建并运行测试：
 
@@ -64,7 +64,7 @@ Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
 ## Ubuntu 安装包
 
 GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 APT 安装并自动解析
-GTK/WebKitGTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
+GTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
 
 ```sh
 sudo apt install ./athena_VERSION_amd64.deb
@@ -72,8 +72,8 @@ chmod +x Athena-VERSION-linux-x86_64.AppImage
 ./Athena-VERSION-linux-x86_64.AppImage
 ```
 
-AppImage 内置 Athena 及多数 GTK/WebKitGTK 运行时，但 WebKitGTK 的多进程辅助程序仍
-依赖兼容的系统 WebKitGTK 运行时；它不是承诺可在任意 Linux 发行版免依赖运行的静态包。
+AppImage 内置 Athena 及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
+运行的静态包。
 
 ## 许可证
 

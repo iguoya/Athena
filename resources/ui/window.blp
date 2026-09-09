@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using GtkSource 5;
 
 // 首页：按计算机专业学习脉络铺开的学科知识图谱，取代旧的九宫格入口。
 // MainWindow 运行时把 render/domain_graph_view 生成的视图挂进 home_graph。
@@ -46,6 +47,224 @@ Box content_area {
     transition-type: crossfade;
     hexpand: true;
     vexpand: true;
+  }
+}
+
+// ADR 0025：主窗口内的专注实验工作区。原章节/文档页面仍留在 chapter_stack
+// 中，只在 root_stack 切换时隐藏；标签页为源码、观察和未来的可视化留出空间。
+Box experiment_page {
+  name: "experiment_page";
+  orientation: vertical;
+  spacing: 12;
+  hexpand: true;
+  vexpand: true;
+  margin-top: 16;
+  margin-bottom: 18;
+  margin-start: 20;
+  margin-end: 20;
+
+  styles [
+    "app-content"
+  ]
+
+  Frame {
+    hexpand: true;
+
+    styles [
+      "panel-frame",
+      "group-frame"
+    ]
+
+    Box {
+      orientation: horizontal;
+      spacing: 14;
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 14;
+      margin-end: 14;
+
+      Button experiment_back_button {
+        name: "experiment_back_button";
+        label: "← 返回原文";
+        valign: center;
+
+        styles [
+          "btn-sm"
+        ]
+      }
+
+      Separator {
+        orientation: vertical;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 4;
+        hexpand: true;
+
+        Label experiment_title_label {
+          name: "experiment_title_label";
+          halign: start;
+          wrap: true;
+          xalign: 0;
+
+          styles [
+            "title-3"
+          ]
+        }
+
+        Label experiment_objective_label {
+          name: "experiment_objective_label";
+          halign: start;
+          wrap: true;
+          wrap-mode: word_char;
+          xalign: 0;
+
+          styles [
+            "dim-label"
+          ]
+        }
+      }
+    }
+  }
+
+  Notebook experiment_notebook {
+    name: "experiment_notebook";
+    hexpand: true;
+    vexpand: true;
+
+    [tab]
+    Label { label: "验证工作台"; }
+
+    Paned experiment_workspace_paned {
+      name: "experiment_workspace_paned";
+      orientation: horizontal;
+      // 具体位置在 ExperimentPage 首次获得实际可用宽度后设为一半；不要把
+      // 某个开发机的固定像素宽度当作左右分栏比例。
+      position: 0;
+      wide-handle: true;
+      resize-start-child: true;
+      resize-end-child: true;
+      shrink-start-child: false;
+      shrink-end-child: false;
+      hexpand: true;
+      vexpand: true;
+
+      Frame {
+        label: "真实源码";
+        hexpand: true;
+        vexpand: true;
+
+        styles [ "panel-frame", "group-frame" ]
+
+        ScrolledWindow {
+          hexpand: true;
+          vexpand: true;
+
+          GtkSource.View experiment_source_view {
+            name: "experiment_source_view";
+            editable: false;
+            cursor-visible: false;
+            monospace: true;
+            show-line-numbers: true;
+            highlight-current-line: false;
+            tab-width: 4;
+            left-margin: 14;
+            right-margin: 14;
+            top-margin: 12;
+            bottom-margin: 12;
+
+            styles [ "code-view" ]
+          }
+        }
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 10;
+        margin-start: 12;
+        hexpand: true;
+        vexpand: true;
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Spinner experiment_spinner {
+            name: "experiment_spinner";
+            visible: false;
+            valign: center;
+          }
+
+          Label experiment_status_label {
+            name: "experiment_status_label";
+            visible: false;
+            halign: start;
+            valign: center;
+            hexpand: true;
+
+            styles [ "dim-label" ]
+          }
+
+          Button experiment_run_button {
+            name: "experiment_run_button";
+            label: "▶ 运行验证";
+            halign: end;
+
+            styles [ "btn-sm", "btn-primary" ]
+          }
+        }
+
+        Frame {
+          label: "观察结果";
+          hexpand: true;
+          vexpand: true;
+
+          styles [ "panel-frame", "group-frame" ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            TextView experiment_result_view {
+              name: "experiment_result_view";
+              editable: false;
+              cursor-visible: false;
+              monospace: true;
+              wrap-mode: word_char;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 12;
+              bottom-margin: 12;
+
+              styles [ "code-view" ]
+            }
+          }
+        }
+      }
+    }
+
+    [tab]
+    Label { label: "探索（暂定）"; }
+
+    Box {
+      orientation: vertical;
+      spacing: 12;
+      margin-top: 24;
+      margin-start: 24;
+      margin-end: 24;
+      hexpand: true;
+      vexpand: true;
+
+      Label {
+        label: "这里将承载对象图、生命周期时间线、编译诊断和迁移变体。当前先保留稳定的工作区，不把复杂探索控件挤进正文。";
+        halign: start;
+        wrap: true;
+        xalign: 0;
+
+        styles [ "dim-label" ]
+      }
+    }
   }
 }
 
@@ -135,8 +354,8 @@ ApplicationWindow window {
       orientation: horizontal;
     }
 
-    // 首页 / 分类内容二选一；MainWindow 运行时把 home_page 和
-    // content_area 加进来，两个页面各自的内部结构与这里无关。
+    // 首页 / 分类内容 / 专注实验三选一；MainWindow 运行时把三个页面
+    // 加进来，各页面的内部状态在切换时保持不变。
     Stack root_stack {
       name: "root_stack";
       transition-type: crossfade;

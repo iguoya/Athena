@@ -44,6 +44,20 @@ struct ChapterGroup {
     IconSpec icon;
 };
 
+// 一条嵌在某节叙述之后的微型学习循环（ADR 0025）。它只保存已校验的
+// 内容与稳定实验 ID；选择状态属于 UI，不写回 Catalog 或数据库。
+struct LearningUnit {
+    string id;
+    string heading;
+    string claim;
+    string question;
+    vector<string> choices;
+    size_t correct_choice = 0;
+    string feedback;
+    string follow_up;
+    string experiment_function_id;
+};
+
 struct ChapterMeta {
     string name;
     string title;
@@ -64,6 +78,7 @@ struct ChapterMeta {
     vector<string> prerequisites;
     vector<ChapterGroup> groups;
     vector<SubChapter> subchapters;
+    vector<LearningUnit> learning_units;
 };
 
 struct CategoryInfo {

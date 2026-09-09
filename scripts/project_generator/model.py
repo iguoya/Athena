@@ -43,6 +43,7 @@ CHAPTER_FIELDS = frozenset(
         "prerequisites",
         "groups",
         "subchapters",
+        "learning_units",
     }
 )
 IMPLEMENTATION_FIELDS = frozenset({"header", "source"})
@@ -61,6 +62,9 @@ SUBCHAPTER_FIELDS = frozenset(
     }
 )
 TEACHES_FIELDS = frozenset({"document", "heading"})
+LEARNING_UNIT_FIELDS = frozenset(
+    {"id", "heading", "claim", "question", "choices", "correct_choice", "feedback", "follow_up", "experiment"}
+)
 ATX_HEADING_PATTERN = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)\s*$")
 TRAILING_HEADING_MARKS_PATTERN = re.compile(r"[ \t]+#+[ \t]*$")
 
@@ -777,6 +781,84 @@ def build_model(
                     runtime_subchapter["teaches"] = teaches
                 runtime_subchapters.append(runtime_subchapter)
 
+            runtime_learning_units: list[dict] = []
+            seen_learning_unit_ids: set[str] = set()
+            learning_units = require_list(
+                chapter.get("learning_units", []),
+                f"{chapter_path}.learning_units",
+            )
+            if learning_units and not overview_document:
+                raise ProjectError(
+                    f"{chapter_path}.learning_units requires overview_document"
+                )
+            if overview_document and overview_document not in headings_by_document:
+                headings_by_document[overview_document] = markdown_heading_titles(
+                    root / overview_document
+                )
+            for unit_index, unit_value in enumerate(learning_units):
+                unit_path = f"{chapter_path}.learning_units[{unit_index}]"
+                unit = require_object(unit_value, unit_path)
+                reject_unknown_fields(unit, LEARNING_UNIT_FIELDS, unit_path)
+                unit_id = require_text(unit.get("id"), f"{unit_path}.id")
+                if not IDENTIFIER_PATTERN.fullmatch(unit_id):
+                    raise ProjectError(
+                        f"{unit_path}.id must be an ASCII identifier: {unit_id!r}"
+                    )
+                if unit_id in seen_learning_unit_ids:
+                    raise ProjectError(
+                        f"duplicate learning unit id in {chapter_id}: {unit_id}"
+                    )
+                seen_learning_unit_ids.add(unit_id)
+                heading = require_text(unit.get("heading"), f"{unit_path}.heading")
+                if heading not in headings_by_document[overview_document]:
+                    raise ProjectError(
+                        f"{unit_path}.heading {heading!r} was not found in "
+                        f"{overview_document!r}"
+                    )
+                choices = require_list(unit.get("choices"), f"{unit_path}.choices")
+                if len(choices) < 2:
+                    raise ProjectError(f"{unit_path}.choices needs at least two options")
+                normalized_choices = [
+                    require_text(choice, f"{unit_path}.choices[{choice_index}]")
+                    for choice_index, choice in enumerate(choices)
+                ]
+                correct_choice = unit.get("correct_choice")
+                if (
+                    not isinstance(correct_choice, int)
+                    or isinstance(correct_choice, bool)
+                    or not 0 <= correct_choice < len(normalized_choices)
+                ):
+                    raise ProjectError(
+                        f"{unit_path}.correct_choice must index choices"
+                    )
+                experiment = require_text(
+                    unit.get("experiment"), f"{unit_path}.experiment"
+                )
+                if experiment not in seen_methods:
+                    raise ProjectError(
+                        f"{unit_path}.experiment must name a subchapter in "
+                        f"{chapter_id}: {experiment!r}"
+                    )
+                runtime_learning_units.append(
+                    {
+                        "id": unit_id,
+                        "heading": heading,
+                        "claim": require_text(unit.get("claim"), f"{unit_path}.claim"),
+                        "question": require_text(
+                            unit.get("question"), f"{unit_path}.question"
+                        ),
+                        "choices": normalized_choices,
+                        "correct_choice": correct_choice,
+                        "feedback": require_text(
+                            unit.get("feedback"), f"{unit_path}.feedback"
+                        ),
+                        "follow_up": require_text(
+                            unit.get("follow_up"), f"{unit_path}.follow_up"
+                        ),
+                        "experiment_function_id": f"{chapter_id}.{experiment}",
+                    }
+                )
+
             if implementation is not None:
                 if not methods:
                     raise ProjectError(
@@ -810,6 +892,7 @@ def build_model(
                     "prerequisites": prerequisite_names,
                     "groups": runtime_groups,
                     "subchapters": runtime_subchapters,
+                    "learning_units": runtime_learning_units,
                 }
             )
 

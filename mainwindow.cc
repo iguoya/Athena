@@ -11,11 +11,12 @@
 #include "ui/chapter_page_stack.h"
 #include "ui/chapter_overview.h"
 #include "ui/code_chapter_page.h"
-#include "ui/experiment_dialog.h"
+#include "ui/experiment_page.h"
 #include "ui/handbook_page.h"
 #include "ui/pocket_cube_page.h"
 #include "ui/progress_page.h"
 #include "ui/workbench_page.h"
+#include "ui/type_semantics_lesson_page.h"
 
 #include <giomm/menu.h>
 #include <giomm/simpleaction.h>
@@ -45,6 +46,8 @@ constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // 由 athena.json 的 chapter.ui.blueprint 派生：blueprint 文件名去掉
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
 constexpr const char* kWorkbenchPageWidget = "workbench_chapter_page";
+constexpr const char* kTypeSemanticsLessonPageWidget =
+    "type_semantics_lesson_page";
 constexpr const char* kProgressPageKey = "__progress__";
 
 } // namespace
@@ -73,7 +76,9 @@ MainWindow::MainWindow(
         m_main_builder->get_widget<Gtk::Box>("breadcrumb_box");
     auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
     auto* content_area = m_main_builder->get_widget<Gtk::Box>("content_area");
-    auto* home_button = m_main_builder->get_widget<Gtk::Button>("home_button");
+    m_home_button = m_main_builder->get_widget<Gtk::Button>("home_button");
+    auto* experiment_page =
+        m_main_builder->get_widget<Gtk::Box>("experiment_page");
     auto* app_menu_bar =
         m_main_builder->get_widget<Gtk::PopoverMenuBar>("app_menu_bar");
     auto* chapter_stack =
@@ -81,12 +86,13 @@ MainWindow::MainWindow(
     m_chapter_switcher =
         m_main_builder->get_widget<Gtk::MenuButton>("chapter_switcher");
     if (!m_root_stack || !m_home_graph || !m_breadcrumb_box || !home_page
-        || !content_area || !home_button || !app_menu_bar || !chapter_stack
-        || !m_chapter_switcher) {
+        || !content_area || !experiment_page || !m_home_button || !app_menu_bar
+        || !chapter_stack || !m_chapter_switcher) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
     m_root_stack->add(*home_page, "home", "首页");
     m_root_stack->add(*content_area, "category", "分类");
+    m_root_stack->add(*experiment_page, "experiment", "专注实验");
     m_root_stack->set_visible_child("home");
     m_pages = make_unique<ChapterPageStack>(*chapter_stack);
 
@@ -98,6 +104,11 @@ MainWindow::MainWindow(
         *this, m_content_loader, m_learning_store.get(), m_ui_alive);
     m_experiment_runner = make_unique<ExperimentRunner>(
         m_function_registry, m_ui_alive);
+    m_experiment_page = make_unique<ExperimentPage>(
+        m_main_builder,
+        m_content_loader,
+        *m_experiment_runner,
+        [this]() { return_from_experiment(); });
     m_about_dialog = make_unique<AboutDialog>(*this);
 
     setup_menu();
@@ -106,7 +117,7 @@ MainWindow::MainWindow(
     // 只在没有这层系统集成的平台（目前是 Ubuntu）显示，避免重复。
     app_menu_bar->set_visible(!platform_has_native_menu_bar());
 
-    home_button->signal_clicked().connect([this]() { go_home(); });
+    m_home_button->signal_clicked().connect([this]() { go_home(); });
     build_home_graph();
 }
 
@@ -195,6 +206,7 @@ void MainWindow::show_settings_dialog() {
 
 void MainWindow::go_home() {
     clear_breadcrumb();
+    m_home_button->set_visible(true);
     m_chapter_switcher->set_visible(false);
     m_root_stack->set_visible_child("home");
 }
@@ -214,6 +226,7 @@ void MainWindow::enter_category(const string& category_name) {
         build_category(category_name);
     }
     m_root_stack->set_visible_child("category");
+    m_home_button->set_visible(true);
     m_chapter_switcher->set_visible(true);
     show_category_index(category_name);
 }
@@ -355,17 +368,46 @@ void MainWindow::ensure_chapter_page(
             m_content_loader,
             *this,
             experiment_requested);
+    } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
+        m_type_semantics_lesson_pages[page_key] =
+            make_unique<TypeSemanticsLessonPage>(
+                chapter,
+                builder,
+                experiment_requested,
+                overview_requested);
     }
     m_loaded_chapters.insert(page_key);
 }
 
 void MainWindow::show_experiment(
     const ExperimentSelection& experiment, bool run_immediately) {
-    if (!m_experiment_dialog) {
-        m_experiment_dialog = make_unique<ExperimentDialog>(
-            *this, m_content_loader, *m_experiment_runner);
+    // 第一次进入当前实验时保存来源页。若用户在实验仍运行时已经返回并
+    // 再次点了别的实验，只带回正在运行的实验，不覆盖它原来的返回目标。
+    if (!m_experiment_runner->running()) {
+        m_experiment_return_category = m_current_category;
+        m_experiment_return_page_key = m_pages->current_key();
     }
-    m_experiment_dialog->present(experiment, run_immediately);
+
+    m_root_stack->set_visible_child("experiment");
+    m_home_button->set_visible(false);
+    m_chapter_switcher->set_visible(false);
+    show_chapter_breadcrumb(
+        m_current_category, "专注实验 · " + experiment.title);
+    m_experiment_page->show(experiment, run_immediately);
+}
+
+void MainWindow::return_from_experiment() {
+    if (m_experiment_return_category.empty()
+        || m_experiment_return_page_key.empty()) {
+        go_home();
+        return;
+    }
+
+    m_root_stack->set_visible_child("category");
+    m_home_button->set_visible(true);
+    m_chapter_switcher->set_visible(true);
+    navigate_to(
+        m_experiment_return_category, m_experiment_return_page_key);
 }
 
 void MainWindow::build_category(const string& category_name) {

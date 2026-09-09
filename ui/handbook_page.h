@@ -1,7 +1,7 @@
 #pragma once
 
 #include "content/content_loader.h"
-#include "render/article_view.h"
+#include "render/document_view.h"
 
 #include <gtkmm.h>
 
@@ -12,8 +12,8 @@
 
 using namespace std;
 
-// 一部分类手册的完整页面。它独占自己创建的 ArticleView、宿主控件引用和
-// 文档锚点；MainWindow 只负责把 widget 放进 Stack 并请求文档跳转。
+// 一部分类手册的完整页面。它独占 GTK 文档控件和文档锚点；MainWindow
+// 只负责把 widget 放进 Stack 并请求文档跳转。
 class HandbookPage final {
 public:
     HandbookPage(
@@ -32,6 +32,6 @@ public:
 private:
     string m_category_name;
     Gtk::Widget* m_page = nullptr;
-    map<string, string> m_anchor_by_document;
-    unique_ptr<ArticleView> m_article_view;
+    map<string, size_t> m_heading_by_document;
+    unique_ptr<DocumentView> m_document_view;
 };

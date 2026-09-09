@@ -2,8 +2,9 @@
 
 #include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
-#include "render/article_view.h"
+#include "render/document_view.h"
 #include "ui/experiment_dock.h"
+#include "ui/learning_unit_view.h"
 
 #include <gtkmm.h>
 
@@ -37,6 +38,9 @@ private:
     const ContentLoader& m_content_loader;
     function<void(const ExperimentSelection&, bool)> m_on_experiment_requested;
 
-    unique_ptr<ArticleView> m_article_view;
+    Gtk::Notebook* m_section_notebook = nullptr;
+    string m_resource_base;
+    vector<unique_ptr<DocumentView>> m_document_views;
     map<string, const SubChapter*> m_topic_by_function_id;
+    vector<unique_ptr<LearningUnitView>> m_learning_units;
 };

@@ -30,6 +30,15 @@ TEST(ContentLoaderTest, LoadsDocumentWithResourceFallback) {
     EXPECT_NE(document.find("从语言知识走向程序组织"), string::npos);
 }
 
+TEST(ContentLoaderTest, BundlesArticleSvgAssetsForDocumentView) {
+    const ContentLoader loader("/path/that/does/not/exist");
+
+    const string image = loader.load_resource(
+        "/app/resources/articles/cpp/images/init_forms.svg");
+
+    EXPECT_NE(image.find("<svg"), string::npos);
+}
+
 TEST(ContentLoaderTest, ResolvesDocumentBaseDirectory) {
     const ContentLoader loader("/project");
 

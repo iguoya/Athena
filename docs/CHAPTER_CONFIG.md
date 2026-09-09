@@ -163,10 +163,9 @@ resources/ui/chapters/empty_chapter.blp
 ]
 ```
 
-手册页面复用主窗口里已经验证过的常驻平台 WebView 嵌入方式（macOS 使用
-WKWebView、Ubuntu 使用 WebKitGTK，跟原来 `article` 章节标签页是同一套渲染机制），
-不是每次点击现造一个对话框和一个新的 WebView——后者在实测中出现过对话框刚弹出时
-宿主控件还没经过真正布局分配、WebView 尺寸算成 0 的时序问题，稳定性不如常驻页面。
+手册页面复用常驻的 `DocumentView`：Markdown 先解析为 `DocModel`，再由
+`ScrolledWindow > Box` 的 GTK 控件流承载。它不创建 WebView，也没有平台后端；目录
+与 `overview_document` 跳转通过已登记的标题控件完成。
 
 `handbook_documents` 里的文档不要求对应某个 `chapter`——它是该分类内容的合集，
 跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须
@@ -216,6 +215,7 @@ category.name = cpp
 | `description` | string | 是 | 整章概要 |
 | `prerequisites` | array | 否 | 同分类前置章节的 `name` 列表；缺省为空，生成器校验引用存在、无重复、无自引用且整图无环；C++ 分类索引据此生成知识图谱 |
 | `overview_document` | string | 否 | “说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
+| `learning_units` | array | 否 | 迁移期的可复用预测单元；仅供仍使用 `WorkbenchPage` 的旧式阅读工作台使用，不能作为原生学习场景的内容协议 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
 | `source` | string | 否 | 代码框显示的源码路径 |
@@ -321,6 +321,41 @@ subchapter.name -> C++ 成员函数名
 章节本身的知识点列表、源码框和运行结果区；文档内容本身、它在手册目录
 里出现的顺序，都由本分类的 `handbook_documents` 决定，不由 `overview_document`
 决定。
+
+### 6.3 内联学习单元 `learning_units`
+
+`learning_units` 是原工作台迁移期的可复用“判断 → 预测 → 反馈 → 验证”单元。
+它不再是新增学习内容的首选：原生学习场景遵循 ADR 0026，直接由 Blueprint 与
+对应 GTK 模块组织，既不按 Markdown 标题定位，也不把交互内容塞回 JSON。每项字段如下：
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `id` | ASCII 标识符 | 本章内稳定且唯一的学习单元 ID |
+| `heading` | string | `overview_document` 中唯一存在的 H1–H6 标题；单元插在该节末尾 |
+| `claim` / `question` | string | 要判断的命题与预测题干 |
+| `choices` | string array | 至少两个预测选项 |
+| `correct_choice` | integer | 正确选项的从零开始下标 |
+| `feedback` / `follow_up` | string | 揭示后的原因和迁移问题 |
+| `experiment` | string | 本章已有的 `subchapter.name`，用于打开真实专注实验 |
+
+例如：
+
+```json
+"learning_units": [{
+  "id": "narrowing_boundary",
+  "heading": "1.1 初始化",
+  "claim": "花括号初始化会拒绝窄化。",
+  "question": "int value{3.75}; 能否通过编译？",
+  "choices": ["能", "不能"],
+  "correct_choice": 1,
+  "feedback": "小数部分可能丢失，因此列表初始化在编译期拒绝它。",
+  "follow_up": "比较圆括号初始化的边界。",
+  "experiment": "initialization"
+}]
+```
+
+第一阶段只支持打开已有的运行实验；不能把不存在的“编译失败”假装成已经实际
+执行。编译诊断、对象图和间隔复习将由后续独立能力扩展。
 
 ## 7. 二级知识点 `subchapter`
 

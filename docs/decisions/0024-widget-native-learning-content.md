@@ -1,7 +1,7 @@
 # ADR 0024：学习内容统一由 GTK 控件承载，退出 Markdown/WebView 路线
 
 - 日期：2026-09-08
-- 状态：已接受，分阶段实施中
+- 状态：已接受，已完成内容载体迁移
 - 依据：`docs/ARCHITECTURE.md` 第 8 节「学习内容的界面承载模型」；
   `docs/LEARNING_WORKSPACE_FLOW_SKETCH.html`；对 ADR 0020 / 0022 / 0023
   原型的实际使用反馈
@@ -46,7 +46,7 @@
 
 ### 2. 退出 Markdown/WebView 内容路线
 
-分阶段移除（见「分阶段实施」）：
+已移除：
 
 - `render/article_view.h`、`article_view_macos.mm`、
   `article_view_webkitgtk.cc`、`article_view_unavailable.cc`
@@ -114,14 +114,17 @@ Apple `WebKit`。
 5. 数据结构与算法、设计模式两个分类当前无手册内容，不需要迁移，等有
    内容时直接用新渲染器。
 
-每个阶段单独提交并过验证；前三个阶段 WebView 栈保持可用，第 4 阶段才
-真正不可逆。
+上述迁移已完成：`DocModel` 用 MD4C SAX 解析全部现有手册，`DocumentView`
+在手册、学习工作台和 AI Markdown 对话框中复用；旧 WebView/HTML 路径及其
+构建依赖已经删除。迁移结果由解析全部现有 Markdown 文档的测试、核心测试和
+GTK 构建验证。
 
 ## 后果
 
 - 内容渲染层去掉仅存的平台分支；`ArticleView` 契约、两个平台后端、
   常驻 WKWebView 时序处理（ADR 0012 排查未果的空白弹窗根因）一并消失。
-- 构建依赖减少：`md4c`、`md4c-html`、`webkitgtk-6.0`、Apple `WebKit`。
+- 构建依赖减少：`md4c-html`、`webkitgtk-6.0`、Apple `WebKit`；`md4c` 保留为
+  `DocModel` 的结构化 Markdown 解析器。
 - 文档与实验在同一渲染器下，学习流可以让文档元素直接成为交互控件，
   实验状态可反向影响呈现（例如预测选择高亮对照区）。
 - 字号、主题、无障碍、键盘导航与应用其余部分统一。

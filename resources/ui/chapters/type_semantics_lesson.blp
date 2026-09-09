@@ -1,0 +1,342 @@
+using Gtk 4.0;
+
+// ADR 0026：类型与表达式的第一条原生学习场景。这里的学习顺序和双路径
+// 对比完全由 GUI 控件表达；Markdown 仅经“查看参考资料”按钮按需打开。
+Box type_semantics_lesson_page {
+  name: "type_semantics_lesson_page";
+  orientation: vertical;
+  spacing: 14;
+  hexpand: true;
+  vexpand: true;
+  margin-top: 16;
+  margin-bottom: 20;
+  margin-start: 20;
+  margin-end: 20;
+
+  styles [ "native-lesson-page" ]
+
+  Frame {
+    styles [ "panel-frame", "native-lesson-hero" ]
+
+    Box {
+      orientation: vertical;
+      spacing: 6;
+      margin-top: 16;
+      margin-bottom: 16;
+      margin-start: 18;
+      margin-end: 18;
+
+      Box {
+        orientation: horizontal;
+        spacing: 12;
+
+        Image {
+          icon-name: "text-x-generic-symbolic";
+          pixel-size: 34;
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 3;
+          hexpand: true;
+
+          Label {
+            label: "类型与表达式 · 初始化";
+            halign: start;
+            styles [ "title-2" ]
+          }
+
+          Label {
+            label: "先形成判断，再用真实程序验证；参考资料随时可查，但不决定这一页的学习顺序。";
+            halign: start;
+            wrap: true;
+            xalign: 0;
+            styles [ "header-description" ]
+          }
+        }
+
+        Button type_semantics_reference_button {
+          name: "type_semantics_reference_button";
+          label: "查看参考资料";
+          valign: center;
+          styles [ "btn-outline-secondary", "btn-sm" ]
+        }
+      }
+    }
+  }
+
+  // 标签直接对应课程的子章节，而非 Markdown H2；每页都是可独立扩展的
+  // 原生学习场景，避免一个长页面同时承担所有表达形式。
+  Notebook type_semantics_section_notebook {
+    name: "type_semantics_section_notebook";
+    hexpand: true;
+    vexpand: true;
+    scrollable: true;
+
+    styles [ "native-lesson-section-notebook" ]
+
+    [tab]
+    Label { label: "初始化  ★★"; }
+
+    ScrolledWindow {
+    hscrollbar-policy: never;
+    vexpand: true;
+
+    Box {
+      orientation: vertical;
+      spacing: 18;
+      margin-bottom: 18;
+
+      Frame {
+        label: "核心判断：谁来承担信息丢失的风险？";
+        styles [ "panel-frame", "group-frame" ]
+
+        Box {
+          orientation: vertical;
+          spacing: 12;
+          margin-top: 16;
+          margin-bottom: 16;
+          margin-start: 18;
+          margin-end: 18;
+
+          Label {
+            label: "同一个 double 值 3.75，圆括号允许把风险留给调用者；花括号则在编译期阻止可能丢失小数部分的转换。";
+            halign: start;
+            wrap: true;
+            xalign: 0;
+            styles [ "native-lesson-lead" ]
+          }
+
+          Box {
+            orientation: horizontal;
+            spacing: 14;
+            homogeneous: true;
+
+            Frame {
+              label: "圆括号：允许，但要承担后果";
+              styles [ "native-lesson-lane", "native-lesson-lane-warning" ]
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 14;
+                margin-end: 14;
+
+                Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "↓ 转成 int"; halign: start; styles [ "dim-label" ] }
+                Label { label: "int value(source)  →  3"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "运行可以继续，但小数部分已经被丢弃。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-warning" ] }
+              }
+            }
+
+            Frame {
+              label: "花括号：把边界交给编译器";
+              styles [ "native-lesson-lane", "native-lesson-lane-safe" ]
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 14;
+                margin-end: 14;
+
+                Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "↓ 窄化检查"; halign: start; styles [ "dim-label" ] }
+                Label { label: "int value{source}  →  拒绝编译"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "没有执行结果：这是编译期规则，而非运行时输出。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-safe" ] }
+              }
+            }
+          }
+        }
+      }
+
+      Box type_semantics_learning_unit_host {
+        name: "type_semantics_learning_unit_host";
+        orientation: vertical;
+        hexpand: true;
+      }
+
+      Frame {
+        label: "迁移到真实代码";
+        styles [ "panel-frame", "group-frame" ]
+
+        Box {
+          orientation: horizontal;
+          spacing: 14;
+          margin-top: 14;
+          margin-bottom: 14;
+          margin-start: 18;
+          margin-end: 18;
+
+          Label {
+            label: "接下来在完整源码中比较四种初始化形式，并观察可运行的圆括号版本。";
+            hexpand: true;
+            halign: start;
+            wrap: true;
+            xalign: 0;
+          }
+
+          Button type_semantics_run_button {
+            name: "type_semantics_run_button";
+            label: "打开初始化实验";
+            valign: center;
+            styles [ "btn-primary" ]
+          }
+        }
+      }
+    }
+    }
+
+    [tab]
+    Label { label: "类型推导  ★★★★"; }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 18;
+        margin-bottom: 18;
+
+        Frame {
+          label: "先分清：复制、别名，还是精确保留表达式类型？";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 16;
+            margin-bottom: 16;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label { label: "auto 按初始化表达式推导一个新变量；auto& 明确要求别名；decltype 则用于观察表达式自身携带的类型与值类别。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
+
+            Box {
+              orientation: horizontal;
+              spacing: 12;
+              homogeneous: true;
+
+              Frame {
+                label: "auto / auto&";
+                styles [ "native-lesson-lane", "native-lesson-lane-safe" ]
+                Label { label: "先问：修改新变量时，原对象会不会变？"; wrap: true; xalign: 0; margin-top: 14; margin-bottom: 14; margin-start: 14; margin-end: 14; }
+              }
+
+              Frame {
+                label: "decltype";
+                styles [ "native-lesson-lane", "native-lesson-lane-warning" ]
+                Label { label: "再问：这里是名字本身，还是带括号的左值表达式？"; wrap: true; xalign: 0; margin-top: 14; margin-bottom: 14; margin-start: 14; margin-end: 14; }
+              }
+            }
+          }
+        }
+
+        Box { orientation: horizontal; spacing: 12; halign: end;
+          Button type_semantics_auto_button { name: "type_semantics_auto_button"; label: "验证 auto"; styles [ "btn-primary" ] }
+          Button type_semantics_decltype_button { name: "type_semantics_decltype_button"; label: "验证 decltype"; styles [ "btn-outline-primary" ] }
+        }
+      }
+    }
+
+    [tab]
+    Label { label: "值类别  ★★★★"; }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 18;
+        margin-bottom: 18;
+
+        Frame {
+          label: "值类别决定引用绑定和重载选择";
+          styles [ "panel-frame", "group-frame" ]
+          Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 16;
+            margin-bottom: 16;
+            margin-start: 18;
+            margin-end: 18;
+            Label { label: "不要把“有名字”误当成“可以复制”。先判断表达式是左值、纯右值还是将亡值，再判断它能绑定到哪种引用以及会选择哪个重载。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
+            Label { label: "下一阶段可在此加入引用绑定矩阵和 move 后对象状态时间线；当前实验先验证实际的重载选择。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
+          }
+        }
+        Box { orientation: horizontal; halign: end;
+          Button type_semantics_value_category_button { name: "type_semantics_value_category_button"; label: "验证值类别"; styles [ "btn-primary" ] }
+        }
+      }
+    }
+
+    [tab]
+    Label { label: "类型转换  ★★"; }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 18;
+        margin-bottom: 18;
+
+        Frame {
+          label: "转换不是语法花样，而是意图和检查边界";
+          styles [ "panel-frame", "group-frame" ]
+          Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 16;
+            margin-bottom: 16;
+            margin-start: 18;
+            margin-end: 18;
+            Label { label: "static_cast、const_cast、dynamic_cast 与 reinterpret_cast 分别表达不同前提。先写出你相信的关系，再选能保留最多检查的转换。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
+            Label { label: "实验只展示可观察的合法边界；不会把未定义行为包装成可运行示例。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-safe" ] }
+          }
+        }
+        Box { orientation: horizontal; halign: end;
+          Button type_semantics_cast_button { name: "type_semantics_cast_button"; label: "验证类型转换"; styles [ "btn-primary" ] }
+        }
+      }
+    }
+
+    [tab]
+    Label { label: "enum class  ★"; }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 18;
+        margin-bottom: 18;
+
+        Frame {
+          label: "用类型表达有限状态，而不是裸整数";
+          styles [ "panel-frame", "group-frame" ]
+          Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 16;
+            margin-bottom: 16;
+            margin-start: 18;
+            margin-end: 18;
+            Label { label: "enum class 给枚举值独立作用域，并禁止意外地与整数互相隐式转换。它让函数签名直接表达可取的状态集合。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
+            Label { label: "当确实要和底层协议或数组下标交互时，再在局部做显式转换。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
+          }
+        }
+        Box { orientation: horizontal; halign: end;
+          Button type_semantics_enum_button { name: "type_semantics_enum_button"; label: "验证 enum class"; styles [ "btn-primary" ] }
+        }
+      }
+    }
+  }
+}

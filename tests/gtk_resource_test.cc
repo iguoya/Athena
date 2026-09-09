@@ -60,19 +60,13 @@ TEST(GtkResourceTest, LoadsTheCodeChapterWidgetTree) {
     EXPECT_EQ(gtk_builder_get_object(builder->gobj(), "source_view"), nullptr);
 }
 
-TEST(GtkResourceTest, LoadsTheExperimentDialogWidgetTree) {
-    const auto builder =
-        Gtk::Builder::create_from_resource("/app/experiment_dialog.ui");
+TEST(GtkResourceTest, LoadsTheFocusedExperimentPageWidgetTree) {
+    const auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
 
-    auto* window =
-        builder->get_widget<Gtk::Window>("experiment_dialog_window");
-    ASSERT_NE(window, nullptr);
-    int default_width = 0;
-    int default_height = 0;
-    gtk_window_get_default_size(
-        GTK_WINDOW(window->gobj()), &default_width, &default_height);
-    EXPECT_EQ(default_width, 1120);
-    EXPECT_EQ(default_height, 820);
+    EXPECT_NE(builder->get_widget<Gtk::Box>("experiment_page"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("experiment_back_button"),
+        nullptr);
     EXPECT_NE(
         gtk_builder_get_object(builder->gobj(), "experiment_source_view"),
         nullptr);
@@ -94,28 +88,43 @@ TEST(GtkResourceTest, LoadsTheExperimentDialogWidgetTree) {
     EXPECT_NE(
         builder->get_widget<Gtk::Label>("experiment_objective_label"),
         nullptr);
-    const auto flow =
-        builder->get_widget<Gtk::Paned>("experiment_flow_paned");
-    ASSERT_NE(flow, nullptr);
-    EXPECT_EQ(flow->get_orientation(), Gtk::Orientation::VERTICAL);
+    const auto notebook =
+        builder->get_widget<Gtk::Notebook>("experiment_notebook");
+    ASSERT_NE(notebook, nullptr);
+    EXPECT_EQ(notebook->get_n_pages(), 2);
+    const auto workspace =
+        builder->get_widget<Gtk::Paned>("experiment_workspace_paned");
+    ASSERT_NE(workspace, nullptr);
+    EXPECT_EQ(workspace->get_orientation(), Gtk::Orientation::HORIZONTAL);
 }
 
-TEST(GtkResourceTest, KeepsTheWorkbenchFocusedOnTheArticle) {
+TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     const auto builder = Gtk::Builder::create_from_resource(
-        "/app/chapters/workbench_chapter.ui");
+        "/app/chapters/type_semantics_lesson.ui");
 
     EXPECT_NE(
-        builder->get_widget<Gtk::Box>("workbench_chapter_page"),
+        builder->get_widget<Gtk::Box>("type_semantics_lesson_page"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("type_semantics_learning_unit_host"),
+        nullptr);
+    const auto sections =
+        builder->get_widget<Gtk::Notebook>("type_semantics_section_notebook");
+    ASSERT_NE(sections, nullptr);
+    EXPECT_EQ(sections->get_n_pages(), 5);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("type_semantics_reference_button"),
         nullptr);
     EXPECT_NE(
-        builder->get_widget<Gtk::DrawingArea>("workbench_article_host"),
-        nullptr);
-    EXPECT_EQ(builder->get_widget<Gtk::Box>("workbench_dock_panel"), nullptr);
-    EXPECT_EQ(
-        gtk_builder_get_object(builder->gobj(), "workbench_source_view"),
-        nullptr);
-    EXPECT_EQ(
-        builder->get_widget<Gtk::TextView>("workbench_result_view"),
+        builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
+}
+
+TEST(GtkResourceTest, LoadsTheInlineLearningUnitTemplate) {
+    const auto builder = Gtk::Builder::create_from_resource("/app/learning_unit.ui");
+    EXPECT_NE(builder->get_widget<Gtk::Box>("learning_unit"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("learning_unit_choices"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("learning_unit_verify_button"),
         nullptr);
 }
 

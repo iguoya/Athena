@@ -165,6 +165,131 @@ button.breadcrumb-link:hover {
 .caption { font-size: 15pt; }
 .dim-label { color: @athena_muted; opacity: 1; }
 
+/* ADR 0024：学习文档由 GTK 控件直接呈现。文字、代码、表格与图片同应用
+   共用这一套主题和可访问性语义，不再依赖 WebView 内的独立 CSS。 */
+.document-content {
+    background-color: @athena_surface;
+}
+.document-heading-1 { font-size: 30pt; font-weight: 800; color: @athena_body_text; }
+.document-heading-2 { font-size: 24pt; font-weight: 800; color: @athena_body_text; }
+.document-heading-3 { font-size: 20pt; font-weight: 700; color: @athena_body_text; }
+.document-heading-4,
+.document-heading-5,
+.document-heading-6 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
+.document-paragraph { line-height: 1.55; color: @athena_body_text; }
+.document-list-marker { min-width: 26px; color: @athena_primary; font-weight: 700; }
+frame.document-code-frame > border {
+    border: 1px solid @athena_border_strong;
+    border-radius: 8px;
+    background-color: #f6f8fa;
+}
+textview.document-code,
+textview.document-code > text { font-size: 14pt; }
+frame.document-quote > border {
+    border-left: 4px solid @athena_primary;
+    padding: 10px 14px;
+    background-color: @athena_surface_subtle;
+}
+grid.document-table {
+    border: 1px solid @athena_border_strong;
+    background-color: @athena_border_strong;
+}
+.document-table-header { background-color: @athena_primary_soft; font-weight: 700; }
+.document-table-cell { background-color: @athena_surface; }
+.document-image { margin-top: 6px; margin-bottom: 6px; }
+
+/* ADR 0025：正文内的微型学习循环。它刻意比专注实验轻，保证预测贴近
+   被验证的段落；完整源码和结果仍由独立的实验工作区承载。 */
+.learning-unit {
+    padding: 16px 18px;
+    border: 1px solid @athena_primary;
+    border-radius: 10px;
+    background-color: #f4f8ff;
+}
+.learning-unit-claim { font-weight: 700; color: @athena_primary_text; }
+.learning-unit-question { font-weight: 600; }
+button.learning-unit-choice {
+    min-height: 0;
+    padding: 8px 12px;
+    text-align: left;
+}
+box.learning-unit-feedback {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: @athena_surface;
+}
+
+/* 学习小节标签是概念导航而不是浏览器式页签：激活状态更明确，重要度星级
+   只做辅助提示，避免把全部注意力从正文带走。 */
+notebook.workbench-section-notebook > header {
+    padding: 4px 4px 0;
+    background-color: @athena_surface_subtle;
+    border-bottom: 1px solid @athena_border;
+}
+notebook.workbench-section-notebook > header > tabs > tab {
+    margin: 0 3px;
+    padding: 9px 13px;
+    border: 1px solid transparent;
+    border-radius: 8px 8px 0 0;
+    color: @athena_muted;
+    font-weight: 600;
+}
+notebook.workbench-section-notebook > header > tabs > tab:checked {
+    background-color: @athena_surface;
+    border-color: @athena_border_strong;
+    border-bottom-color: @athena_surface;
+    color: @athena_primary_text;
+}
+.workbench-tab-importance-1 { color: @athena_success; }
+.workbench-tab-importance-2 { color: @athena_teal; }
+.workbench-tab-importance-3 { color: #b7791f; }
+.workbench-tab-importance-4 { color: @athena_orange; }
+.workbench-tab-importance-5 { color: @athena_danger; }
+
+/* ADR 0026：原生学习场景不由 Markdown 标题或段落决定。页面用不同的
+   视觉通道表示“允许但有代价”与“编译期阻止”，而不是伪造一段运行输出。 */
+.native-lesson-page { background-color: transparent; }
+frame.native-lesson-hero > border {
+    background-color: #edf5ff;
+    border: 1px solid #b7d4f7;
+}
+.native-lesson-lead { font-size: 18pt; font-weight: 600; }
+frame.native-lesson-lane > border { border-radius: 10px; }
+frame.native-lesson-lane-warning > border {
+    border: 1px solid #f0b56b;
+    background-color: #fff8eb;
+}
+frame.native-lesson-lane-safe > border {
+    border: 1px solid #77c899;
+    background-color: #effaf3;
+}
+.native-lesson-code {
+    font-family: monospace;
+    font-size: 15pt;
+    font-weight: 650;
+}
+.native-lesson-warning { color: #9a5a00; }
+.native-lesson-safe { color: #177245; }
+notebook.native-lesson-section-notebook > header {
+    padding: 4px 4px 0;
+    background-color: @athena_surface_subtle;
+    border-bottom: 1px solid @athena_border;
+}
+notebook.native-lesson-section-notebook > header > tabs > tab {
+    margin: 0 3px;
+    padding: 10px 14px;
+    border: 1px solid transparent;
+    border-radius: 9px 9px 0 0;
+    color: @athena_muted;
+    font-weight: 700;
+}
+notebook.native-lesson-section-notebook > header > tabs > tab:checked {
+    background-color: @athena_surface;
+    border-color: #b7d4f7;
+    border-bottom-color: @athena_surface;
+    color: @athena_primary_text;
+}
+
 /* === Buttons: Bootstrap-like hierarchy === */
 button {
     min-height: 42px;

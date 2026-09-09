@@ -1,0 +1,97 @@
+using Gtk 4.0;
+
+// ADR 0025：动态内容由 LearningUnitView 填入；此模板只拥有稳定的
+// 预测—反馈—验证骨架，避免每个知识点用 C++ 手写一套卡片层级。
+Box learning_unit {
+  name: "learning_unit";
+  orientation: vertical;
+  spacing: 12;
+  hexpand: true;
+  margin-top: 18;
+  margin-bottom: 20;
+  margin-start: 8;
+  margin-end: 8;
+
+  styles [
+    "learning-unit"
+  ]
+
+  Label learning_unit_claim {
+    name: "learning_unit_claim";
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [
+      "learning-unit-claim"
+    ]
+  }
+
+  Label learning_unit_question {
+    name: "learning_unit_question";
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [
+      "learning-unit-question"
+    ]
+  }
+
+  Box learning_unit_choices {
+    name: "learning_unit_choices";
+    orientation: vertical;
+    spacing: 6;
+    hexpand: true;
+  }
+
+  Button learning_unit_check_button {
+    name: "learning_unit_check_button";
+    label: "确认预测";
+    halign: start;
+    sensitive: false;
+
+    styles [
+      "btn-primary"
+    ]
+  }
+
+  Box learning_unit_feedback_box {
+    name: "learning_unit_feedback_box";
+    orientation: vertical;
+    spacing: 8;
+    visible: false;
+
+    styles [
+      "learning-unit-feedback"
+    ]
+
+    Label learning_unit_feedback {
+      name: "learning_unit_feedback";
+      halign: start;
+      wrap: true;
+      xalign: 0;
+    }
+
+    Label learning_unit_follow_up {
+      name: "learning_unit_follow_up";
+      halign: start;
+      wrap: true;
+      xalign: 0;
+
+      styles [
+        "dim-label"
+      ]
+    }
+
+    Button learning_unit_verify_button {
+      name: "learning_unit_verify_button";
+      label: "前往专注实验验证";
+      halign: start;
+
+      styles [
+        "btn-primary"
+      ]
+    }
+  }
+}

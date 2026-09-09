@@ -31,7 +31,7 @@ void append_dialog_action_bar(
 // 对话框改由这里在隐藏之后显式 delete——排到事件循环下一轮再删，不在
 // hide 信号处理函数内部直接删自己（那个调用栈本身还压在这个对象上，
 // 是未定义行为）；调用方自己的 signal_hide 清理逻辑（如翻转
-// dialog_alive、reset article_view）要在 lock_for_modal_dialog 之前
+// dialog_alive 等异步回调保护状态要在 lock_for_modal_dialog 之前
 // 连接，才能保证在这里删除之前先跑到——GTK 信号按连接顺序调用。
 //
 // 同时禁用主窗口自身的输入，隐藏时恢复：观察到过等待期间（网络请求慢

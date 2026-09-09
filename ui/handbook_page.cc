@@ -1,9 +1,7 @@
 #include "handbook_page.h"
 
-#include "render/markdown_renderer.h"
-#include "ui/markdown_fallback.h"
-
 #include <iostream>
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
@@ -13,7 +11,7 @@ HandbookPage::HandbookPage(
     string category_name,
     const vector<string>& documents,
     const ContentLoader& content_loader,
-    Gtk::Window& parent)
+    Gtk::Window&)
     : m_category_name(std::move(category_name)) {
     if (documents.empty()) {
         auto placeholder = Gtk::make_managed<Gtk::Label>(
@@ -40,11 +38,6 @@ HandbookPage::HandbookPage(
     frame->set_vexpand(true);
     frame->add_css_class("article-surface");
 
-    auto host = Gtk::make_managed<Gtk::DrawingArea>();
-    host->set_hexpand(true);
-    host->set_vexpand(true);
-    frame->set_child(*host);
-
     string combined_markdown;
     size_t heading_count = 0;
     for (const auto& document : documents) {
@@ -53,31 +46,26 @@ HandbookPage::HandbookPage(
             cerr << "Failed to load handbook document: " << document << endl;
             continue;
         }
-        const auto slash = document.find_last_of('/');
-        const string dir =
-            slash == string::npos ? string() : document.substr(0, slash + 1);
-        const string markdown = inline_markdown_images(
-            raw, [&](const string& relative) {
-                return content_loader.load_document(dir + relative);
-            });
-        vector<MarkdownHeading> headings;
         try {
-            headings = parse_markdown_headings(markdown);
+            const auto model = parse_document_blocks(raw);
+            const size_t headings = count_if(
+                model.blocks.begin(), model.blocks.end(), [](const DocBlock& block) {
+                    return block.kind == DocBlockKind::Heading;
+                });
+            if (headings != 0) {
+                m_heading_by_document[document] = heading_count;
+            }
+            heading_count += headings;
         } catch (const exception& error) {
             cerr << "Failed to parse handbook document " << document
-                 << ": " << error.what() << endl;
+             << ": " << error.what() << endl;
             continue;
         }
-        if (!headings.empty()) {
-            m_anchor_by_document[document] =
-                "athena-heading-" + to_string(heading_count);
-        }
-        heading_count += headings.size();
 
         if (!combined_markdown.empty()) {
             combined_markdown += "\n\n---\n\n";
         }
-        combined_markdown += markdown;
+        combined_markdown += raw;
     }
 
     if (combined_markdown.empty()) {
@@ -86,26 +74,18 @@ HandbookPage::HandbookPage(
         return;
     }
 
-    m_article_view = create_platform_article_view(*host, parent);
-    if (!m_article_view) {
-        // 尚未实现 WebView 后端的平台退回纯文本显示 Markdown 原文，避免留白。
-        page->append(*make_markdown_fallback_view(combined_markdown));
-        return;
-    }
     page->append(*frame);
 
     try {
-        const auto headings = parse_markdown_headings(combined_markdown);
-        const string stylesheet =
-            content_loader.load_resource("/app/article.css");
-        if (stylesheet.empty()) {
-            throw runtime_error("Article stylesheet is unavailable");
-        }
-        m_article_view->load_html(
-            render_markdown_html(combined_markdown, stylesheet, headings),
-            content_loader.document_base_directory(documents.front()));
+        const auto slash = documents.front().find_last_of('/');
+        const string resource_base = slash == string::npos
+            ? "/app/"
+            : "/app/" + documents.front().substr(0, slash + 1);
+        m_document_view = make_unique<DocumentView>(resource_base);
+        frame->set_child(m_document_view->widget());
+        m_document_view->set_markdown(combined_markdown);
     } catch (const exception& error) {
-        cerr << "Failed to render handbook for " << m_category_name << ": "
+        cerr << "Failed to render GTK handbook for " << m_category_name << ": "
              << error.what() << endl;
     }
 }
@@ -117,8 +97,8 @@ Gtk::Widget& HandbookPage::widget() const {
 }
 
 void HandbookPage::scroll_to_document(const string& document_path) {
-    const auto anchor = m_anchor_by_document.find(document_path);
-    if (anchor != m_anchor_by_document.end() && m_article_view) {
-        m_article_view->scroll_to_anchor(anchor->second);
+    const auto heading = m_heading_by_document.find(document_path);
+    if (heading != m_heading_by_document.end() && m_document_view) {
+        m_document_view->scroll_to_heading(heading->second);
     }
 }

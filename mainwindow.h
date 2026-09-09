@@ -20,11 +20,12 @@ using namespace std;
 class AboutDialog;
 class ChapterPageStack;
 class CodeChapterPage;
-class ExperimentDialog;
+class ExperimentPage;
 class ExperimentRunner;
 class HandbookPage;
 class PocketCubePage;
 class WorkbenchPage;
+class TypeSemanticsLessonPage;
 struct ExperimentSelection;
 
 // 顶层窗口只负责导航、页面切换、跨模块事件与模块生命周期。代码页、
@@ -86,6 +87,7 @@ private:
     void show_experiment(
         const ExperimentSelection& experiment,
         bool run_immediately);
+    void return_from_experiment();
     Glib::RefPtr<Gtk::Builder> get_chapter_builder(
         const string& category_name,
         const string& chapter_name);
@@ -97,6 +99,7 @@ private:
     Gtk::Box* m_home_graph = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Box* m_breadcrumb_box = nullptr;
+    Gtk::Button* m_home_button = nullptr;
     Gtk::MenuButton* m_chapter_switcher = nullptr;
     Glib::RefPtr<Gio::Menu> m_menu_model;
     unique_ptr<ChapterPageStack> m_pages;
@@ -110,8 +113,11 @@ private:
     shared_ptr<atomic_bool> m_ui_alive = make_shared<atomic_bool>(true);
     unique_ptr<LearningDialogs> m_dialogs;
     unique_ptr<ExperimentRunner> m_experiment_runner;
-    unique_ptr<ExperimentDialog> m_experiment_dialog;
+    unique_ptr<ExperimentPage> m_experiment_page;
     unique_ptr<AboutDialog> m_about_dialog;
+
+    string m_experiment_return_category;
+    string m_experiment_return_page_key;
 
     // 页面对象必须比其 builder 先销毁；声明在 builder map 之后，成员逆序
     // 析构自然满足。手册页常驻 Stack，ArticleView 生命周期由对象独占。
@@ -121,4 +127,6 @@ private:
     // 学习工作台原型：目前只有 TypeSemantics 一章用它，独立于上面几个
     // map，不影响其他章节的构建路径。
     std::map<string, unique_ptr<WorkbenchPage>> m_workbench_pages;
+    std::map<string, unique_ptr<TypeSemanticsLessonPage>>
+        m_type_semantics_lesson_pages;
 };

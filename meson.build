@@ -12,7 +12,6 @@ glibmm_dep = dependency('glibmm-2.68')
 gio_dep = dependency('gio-2.0')
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
-md4c_html_dep = dependency('md4c-html')
 nlohmann_json_dep = dependency('nlohmann_json')
 gtest_dep = dependency('gtest')
 gtest_main_dep = dependency('gtest_main')
@@ -21,26 +20,21 @@ sqlite3_dep = cc.find_library('sqlite3', has_headers: ['sqlite3.h'])
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
-article_view_sources = []
 app_icon_sources = []
 menu_bar_platform_sources = []
 platform_dependencies = []
 if host_machine.system() == 'darwin'
   add_languages('objcpp', native: false)
-  article_view_sources += files('render/article_view_macos.mm')
   app_icon_sources += files('app_icon_macos.mm')
   menu_bar_platform_sources += files('menu_bar_platform_macos.cc')
   platform_dependencies += [
     dependency('gtk4-macos'),
-    dependency('appleframeworks', modules: ['AppKit', 'WebKit'])
+    dependency('appleframeworks', modules: ['AppKit'])
   ]
 elif host_machine.system() == 'linux'
-  article_view_sources += files('render/article_view_webkitgtk.cc')
   app_icon_sources += files('app_icon_other.cc')
   menu_bar_platform_sources += files('menu_bar_platform_other.cc')
-  platform_dependencies += dependency('webkitgtk-6.0')
 else
-  article_view_sources += files('render/article_view_unavailable.cc')
   app_icon_sources += files('app_icon_other.cc')
   menu_bar_platform_sources += files('menu_bar_platform_other.cc')
 endif
@@ -137,17 +131,17 @@ compiled_ui += custom_target(
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
-# 实验窗口 .blp（独立于章节目录）
 compiled_ui += custom_target(
-  'compile-experiment-dialog.blp',
-  input: files('resources/ui/experiment_dialog.blp'),
-  output: 'experiment_dialog.ui',
+  'compile-learning_unit.blp',
+  input: files('resources/ui/learning_unit.blp'),
+  output: 'learning_unit.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
 # === 共享核心库 ===
 core_sources = files(
   'content/content_loader.cc',
+  'content/doc_model.cc',
   'content/source_locator.cc',
   'practice/pocket_cube/state.cc',
   'registry/chapter_catalog.cc',
@@ -157,7 +151,6 @@ core_sources = files(
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
   'render/cpp_syntax_highlighter.cc',
-  'render/markdown_renderer.cc',
   'services/ai_service.cc',
   'services/experiment_runner.cc',
   'storage/learning_store.cc'
@@ -167,13 +160,13 @@ athena_core_lib = static_library(
   'athena-core',
   core_sources,
   include_directories: [language_inc],
-  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
   include_directories: [language_inc],
-  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, md4c_html_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 # === 桌面应用源码 ===
@@ -184,6 +177,7 @@ app_sources = files(
   'practice/pocket_cube/view.cc',
   'render/cairo_text.cc',
   'render/chart_view.cc',
+  'render/document_view.cc',
   'render/domain_graph_view.cc',
   'render/knowledge_graph_view.cc',
   'ui/about_dialog.cc',
@@ -195,19 +189,20 @@ app_sources = files(
   'ui/chapter_page_stack.cc',
   'ui/code_chapter_page.cc',
   'ui/dialog_helpers.cc',
-  'ui/experiment_dialog.cc',
   'ui/experiment_dock.cc',
+  'ui/experiment_page.cc',
   'ui/handbook_page.cc',
   'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',
-  'ui/markdown_fallback.cc',
+  'ui/learning_unit_view.cc',
   'ui/pocket_cube_page.cc',
   'ui/progress_page.cc',
   'ui/quiz_dialog.cc',
   'ui/settings_dialog.cc',
   'ui/source_view.cc',
+  'ui/type_semantics_lesson_page.cc',
   'ui/workbench_page.cc'
-) + article_view_sources + app_icon_sources + menu_bar_platform_sources
+) + app_icon_sources + menu_bar_platform_sources
 
 # === 打包资源 ===
 resources = gnome.compile_resources(
@@ -248,6 +243,7 @@ core_test_exe = executable(
     'tests/chapter_catalog_test.cc',
     'tests/ai_service_test.cc',
     'tests/content_loader_test.cc',
+    'tests/doc_model_test.cc',
     'tests/experiment_runner_test.cc',
     'tests/domain_graph_test.cc',
     'tests/function_registry_test.cc',
@@ -256,7 +252,6 @@ core_test_exe = executable(
     'tests/chart_scale_test.cc',
     'tests/pocket_cube_state_test.cc',
     'tests/pocket_cube_test.cc',
-    'tests/markdown_renderer_test.cc',
     'tests/progress_stats_test.cc',
     'tests/raii_content_test.cc',
     'tests/type_semantics_content_test.cc',

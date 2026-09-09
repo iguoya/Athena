@@ -98,8 +98,8 @@ python3 scripts/package_linux.py \
 ```
 
 DEB 是 Ubuntu 首选：`sudo apt install ./athena_VERSION_amd64.deb` 会解析依赖。AppImage
-内置 Athena 和大多数库，但 WebKitGTK 的多进程辅助程序采用发行版固定路径；它定位为
-Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意 Linux 发行版的完全静态兼容。
+内置 Athena 和大多数库；它定位为 Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意
+Linux 发行版的完全静态兼容。
 
 ## GitHub Release
 
