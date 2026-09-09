@@ -1,103 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
-  <style>
-    /* 不铺底色：步骤和节点只用细线框 + 文字颜色区分，避免成片色块切碎版面。 */
-    .frame { fill: #ffffff; stroke: #dee2e6; stroke-width: 1.5; }
-    .title { fill: #212529; font-weight: 700; }
-    .muted { fill: #6c757d; }
-    .card { fill: none; stroke: #ced4da; stroke-width: 1.3; }
-    .ring { fill: none; stroke: #0a58ca; stroke-width: 1.4; }
-    .num { fill: #0a58ca; font-weight: 700; }
-    .step { fill: #212529; font-weight: 700; }
-    .node { fill: #0a58ca; font-weight: 700; }
-    /* 最后一环用 orange 强调“预期和结果对不上的地方最该记住”，只给文字和边框
-       上色，不铺底。取自 @athena_orange。 */
-    .keep-card { fill: none; stroke: #fd7e14; stroke-width: 1.5; }
-    .keep { fill: #fd7e14; font-weight: 700; }
-    .flow { stroke: #adb5bd; stroke-width: 1.6; fill: none; }
-    .arrow { fill: #adb5bd; }
-    .loop { stroke: #0a58ca; stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; }
-    .loop-head { fill: #0a58ca; }
-  </style>
-  <rect x="1" y="1" width="958" height="398" rx="14" class="frame"/>
-
-  <text x="28" y="36" class="title" font-size="17">拿到一段陌生代码，按这个顺序问自己</text>
-  <text x="28" y="59" class="muted" font-size="13">五步走完得到的是一个预期，不是答案；答案要靠真实程序给。</text>
-
-  <!-- 五步判断链 -->
-  <rect x="28" y="82" width="160" height="90" rx="8" class="card"/>
-  <circle cx="48" cy="106" r="11" class="ring"/>
-  <text x="48" y="111" text-anchor="middle" class="num" font-size="12.5">1</text>
-  <text x="66" y="111" class="step" font-size="13.5">认类型</text>
-  <text x="44" y="136" class="muted" font-size="12">类型是什么；</text>
-  <text x="44" y="156" class="muted" font-size="12">const、引用怎么修饰</text>
-  <line x1="192" y1="127" x2="204" y2="127" class="flow"/>
-  <polygon points="204,123 212,127 204,131" class="arrow"/>
-
-  <rect x="214" y="82" width="160" height="90" rx="8" class="card"/>
-  <circle cx="234" cy="106" r="11" class="ring"/>
-  <text x="234" y="111" text-anchor="middle" class="num" font-size="12.5">2</text>
-  <text x="252" y="111" class="step" font-size="13.5">看初始化</text>
-  <text x="230" y="136" class="muted" font-size="12">值怎么进去的；</text>
-  <text x="230" y="156" class="muted" font-size="12">会丢信息吗、有值吗</text>
-  <line x1="378" y1="127" x2="390" y2="127" class="flow"/>
-  <polygon points="390,123 398,127 390,131" class="arrow"/>
-
-  <rect x="400" y="82" width="160" height="90" rx="8" class="card"/>
-  <circle cx="420" cy="106" r="11" class="ring"/>
-  <text x="420" y="111" text-anchor="middle" class="num" font-size="12.5">3</text>
-  <text x="438" y="111" class="step" font-size="13.5">问生命周期</text>
-  <text x="416" y="136" class="muted" font-size="12">这个对象活多久；</text>
-  <text x="416" y="156" class="muted" font-size="12">引用会比它长命吗</text>
-  <line x1="564" y1="127" x2="576" y2="127" class="flow"/>
-  <polygon points="576,123 584,127 576,131" class="arrow"/>
-
-  <rect x="586" y="82" width="160" height="90" rx="8" class="card"/>
-  <circle cx="606" cy="106" r="11" class="ring"/>
-  <text x="606" y="111" text-anchor="middle" class="num" font-size="12.5">4</text>
-  <text x="624" y="111" class="step" font-size="13.5">判断值类别</text>
-  <text x="602" y="136" class="muted" font-size="12">持久对象还是临时；</text>
-  <text x="602" y="156" class="muted" font-size="12">能不能被搬走</text>
-  <line x1="750" y1="127" x2="762" y2="127" class="flow"/>
-  <polygon points="762,123 770,127 762,131" class="arrow"/>
-
-  <rect x="772" y="82" width="160" height="90" rx="8" class="card"/>
-  <circle cx="792" cy="106" r="11" class="ring"/>
-  <text x="792" y="111" text-anchor="middle" class="num" font-size="12.5">5</text>
-  <text x="810" y="111" class="step" font-size="13.5">找类型变化</text>
-  <text x="788" y="136" class="muted" font-size="12">隐式还是显式；</text>
-  <text x="788" y="156" class="muted" font-size="12">检查落在哪一层</text>
-
-  <!-- 闭环 -->
-  <text x="28" y="204" class="muted" font-size="13">这套判断不是终点——它的用处是先形成预期，再拿真实程序去验证：</text>
-
-  <rect x="40" y="224" width="190" height="82" rx="9" class="card"/>
-  <text x="58" y="250" class="node" font-size="13.5">形成预期</text>
-  <text x="58" y="274" class="muted" font-size="12">按上面的判断，先说出</text>
-  <text x="58" y="294" class="muted" font-size="12">你觉得会发生什么</text>
-  <line x1="234" y1="265" x2="250" y2="265" class="flow"/>
-  <polygon points="250,261 258,265 250,269" class="arrow"/>
-
-  <rect x="270" y="224" width="190" height="82" rx="9" class="card"/>
-  <text x="288" y="250" class="node" font-size="13.5">运行实验</text>
-  <text x="288" y="274" class="muted" font-size="12">打开对应的成员函数，</text>
-  <text x="288" y="294" class="muted" font-size="12">看真实源码与输出</text>
-  <line x1="464" y1="265" x2="480" y2="265" class="flow"/>
-  <polygon points="480,261 488,265 480,269" class="arrow"/>
-
-  <rect x="500" y="224" width="190" height="82" rx="9" class="card"/>
-  <text x="518" y="250" class="node" font-size="13.5">观察结果</text>
-  <text x="518" y="274" class="muted" font-size="12">实际发生了什么，</text>
-  <text x="518" y="294" class="muted" font-size="12">和你说的一样吗</text>
-  <line x1="694" y1="265" x2="710" y2="265" class="flow"/>
-  <polygon points="710,261 718,265 710,269" class="arrow"/>
-
-  <rect x="730" y="224" width="190" height="82" rx="9" class="keep-card"/>
-  <text x="748" y="250" class="keep" font-size="13.5">对照修正</text>
-  <text x="748" y="274" class="keep" font-size="12">对不上的地方，</text>
-  <text x="748" y="294" class="keep" font-size="12">就是最该记住的内容</text>
-
-  <!-- 回到起点 -->
-  <path d="M 920 306 L 920 340 Q 920 348 912 348 L 48 348 Q 40 348 40 340 L 40 316" class="loop"/>
-  <polygon points="35,318 45,318 40,308" class="loop-head"/>
-  <text x="480" y="378" text-anchor="middle" class="muted" font-size="12.5">修正过的理解会让下一次预期更准——这一章要反复做的就是这件事</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
+<!-- 原生 640px 画布，正文 24px（18pt）。填充色表达语义分组，不作纯文字背景。 -->
+<rect width="640" height="640" rx="20" fill="#f8fafc"/>
+<text x="28" y="46" font-size="30" fill="#1e293b" font-weight="700">读代码时的五个检查点</text>
+<rect x="28" y="72" width="584" height="66" rx="14" fill="#e6effa"/>
+<text x="44" y="100" font-size="24" fill="#285a91" font-weight="700">01</text>
+<text x="95" y="100" font-size="24" fill="#1e293b" font-weight="700">认类型</text>
+<text x="95" y="128" font-size="24" fill="#334155" font-weight="400">类型表达什么约束</text>
+<rect x="28" y="148" width="584" height="66" rx="14" fill="#eef2f6"/>
+<text x="44" y="176" font-size="24" fill="#285a91" font-weight="700">02</text>
+<text x="95" y="176" font-size="24" fill="#1e293b" font-weight="700">看初始化</text>
+<text x="95" y="204" font-size="24" fill="#334155" font-weight="400">是否建立了可用的初始状态</text>
+<rect x="28" y="224" width="584" height="66" rx="14" fill="#e6effa"/>
+<text x="44" y="252" font-size="24" fill="#285a91" font-weight="700">03</text>
+<text x="95" y="252" font-size="24" fill="#1e293b" font-weight="700">查有效期</text>
+<text x="95" y="280" font-size="24" fill="#334155" font-weight="400">引用所指的对象是否仍然有效</text>
+<rect x="28" y="300" width="584" height="66" rx="14" fill="#eef2f6"/>
+<text x="44" y="328" font-size="24" fill="#285a91" font-weight="700">04</text>
+<text x="95" y="328" font-size="24" fill="#1e293b" font-weight="700">辨表达式</text>
+<text x="95" y="356" font-size="24" fill="#334155" font-weight="400">类型和值类别怎样参与操作</text>
+<rect x="28" y="376" width="584" height="66" rx="14" fill="#e6effa"/>
+<text x="44" y="404" font-size="24" fill="#285a91" font-weight="700">05</text>
+<text x="95" y="404" font-size="24" fill="#1e293b" font-weight="700">找转换</text>
+<text x="95" y="432" font-size="24" fill="#334155" font-weight="400">哪些信息与含义需要再次确认</text>
+<text x="28" y="498" font-size="24" fill="#27674f" font-weight="700">形成预期 → 编译与运行 → 回查修正</text>
+<path d="M28 521 L612 521" stroke="#94a3b8" stroke-width="2" fill="none"/>
+<text x="28" y="562" font-size="24" fill="#334155" font-weight="400">以语言规则为依据，以实验为证据。</text>
+<text x="28" y="604" font-size="24" fill="#334155" font-weight="400">一次运行正常，不能证明总是正确。</text>
 </svg>

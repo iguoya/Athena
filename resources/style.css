@@ -198,6 +198,17 @@ grid.document-table {
 .document-table-cell { background-color: @athena_surface; }
 .document-image { margin-top: 6px; margin-bottom: 6px; }
 
+/* 教学大纲以 18pt 阅读；图内正文同为 18pt，避免 Picture 缩小后失去可读性。 */
+.lesson-outline-expander .document-paragraph,
+.lesson-outline-expander .document-list-marker { font-size: 18pt; }
+.lesson-outline-expander frame.document-quote > border {
+    background-color: transparent;
+}
+.lesson-outline-expander .document-image {
+    min-width: 640px;
+    min-height: 640px;
+}
+
 /* ADR 0025：正文内的微型学习循环。它刻意比专注实验轻，保证预测贴近
    被验证的段落；完整源码和结果仍由独立的实验工作区承载。 */
 .learning-unit {
