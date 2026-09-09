@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 392" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
+  <style>
+    .frame { fill: #ffffff; stroke: #dee2e6; stroke-width: 1.5; }
+    .title { fill: #212529; font-weight: 700; }
+    .muted { fill: #6c757d; }
+    .axis { stroke: #adb5bd; stroke-width: 2; }
+    .dot { fill: #0a58ca; }
+    .era { fill: #0a58ca; font-weight: 700; }
+    /* 加入的能力 = success 绿，待解决 / 暴露的痛点 = warning 黄，取自
+       @athena_* 语义变量，对齐 Bootstrap alert 配色。 */
+    .gain { fill: #d1e7dd; stroke: #198754; stroke-width: 1.4; }
+    .pain { fill: #fff3cd; stroke: #ffc107; stroke-width: 1.4; }
+    .t-gain { fill: #0f5132; }
+    .t-pain { fill: #664d03; }
+  </style>
+  <rect x="1" y="1" width="958" height="390" rx="14" class="frame"/>
+
+  <text x="28" y="34" class="title" font-size="16">从 C 到现在：类型与表达式相关的能力，每一步都在补一个具体的工程漏洞</text>
+  <text x="28" y="55" class="muted" font-size="11.5">上方绿块是“加入了什么能力”，下方黄块是“它要解决、或因此暴露的痛点”。</text>
+
+  <!-- 能力（上） -->
+  <rect x="252" y="86" width="214" height="70" rx="9" class="gain"/>
+  <text x="264" y="108" class="t-gain" font-size="11.5" font-weight="700">构造函数、引用</text>
+  <text x="264" y="128" class="t-gain" font-size="10.8">创建对象能表达</text>
+  <text x="264" y="145" class="t-gain" font-size="10.8">更多意图</text>
+
+  <rect x="486" y="66" width="308" height="124" rx="9" class="gain"/>
+  <text x="498" y="88" class="t-gain" font-size="11.5" font-weight="700">一次集中整顿</text>
+  <text x="498" y="109" class="t-gain" font-size="10.8">· 新初始化写法：编译期拦住会丢信息的转换</text>
+  <text x="498" y="129" class="t-gain" font-size="10.8">· auto：让编译器替你写类型</text>
+  <text x="498" y="149" class="t-gain" font-size="10.8">· 移动语义：避免大对象反复深拷贝</text>
+  <text x="498" y="169" class="t-gain" font-size="10.8">· enum class：把枚举关进自己的类型</text>
+
+  <rect x="812" y="86" width="134" height="70" rx="9" class="gain"/>
+  <text x="824" y="108" class="t-gain" font-size="11.5" font-weight="700">继续推广</text>
+  <text x="824" y="128" class="t-gain" font-size="10.8">同一套能力用</text>
+  <text x="824" y="145" class="t-gain" font-size="10.8">到更多场合</text>
+
+  <!-- 轴与年代 -->
+  <line x1="48" y1="222" x2="912" y2="222" class="axis"/>
+  <circle cx="120" cy="222" r="5" class="dot"/>
+  <circle cx="360" cy="222" r="5" class="dot"/>
+  <circle cx="610" cy="222" r="5" class="dot"/>
+  <circle cx="860" cy="222" r="5" class="dot"/>
+  <text x="120" y="212" text-anchor="middle" class="era" font-size="13">C</text>
+  <text x="360" y="212" text-anchor="middle" class="era" font-size="13">C++98</text>
+  <text x="610" y="212" text-anchor="middle" class="era" font-size="13">C++11（2011）</text>
+  <text x="860" y="212" text-anchor="middle" class="era" font-size="13">C++14–20</text>
+
+  <!-- 痛点（下） -->
+  <rect x="34" y="240" width="196" height="94" rx="9" class="pain"/>
+  <text x="46" y="262" class="t-pain" font-size="11.5" font-weight="700">起点的代价</text>
+  <text x="46" y="282" class="t-pain" font-size="10.8">不查数值溢出，</text>
+  <text x="46" y="299" class="t-pain" font-size="10.8">变量不保证清零，于是</text>
+  <text x="46" y="316" class="t-pain" font-size="10.8">“精度丢了”“读到垃圾值”</text>
+
+  <rect x="252" y="240" width="214" height="72" rx="9" class="pain"/>
+  <text x="264" y="262" class="t-pain" font-size="11.5" font-weight="700">规矩也变复杂</text>
+  <text x="264" y="282" class="t-pain" font-size="10.8">初始化写法分裂；</text>
+  <text x="264" y="299" class="t-pain" font-size="10.8">一种强转混多种意图</text>
+
+  <rect x="486" y="240" width="308" height="60" rx="9" class="pain"/>
+  <text x="498" y="262" class="t-pain" font-size="11.5" font-weight="700">思路：把问题提前</text>
+  <text x="498" y="282" class="t-pain" font-size="10.8">原来到运行期才暴露的问题，尽量挪到编译期</text>
+
+  <text x="812" y="264" class="muted" font-size="10.8">要建立的</text>
+  <text x="812" y="281" class="muted" font-size="10.8">判断没有变</text>
+</svg>

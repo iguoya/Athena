@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 376" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
+  <style>
+    .frame { fill: #ffffff; stroke: #dee2e6; stroke-width: 1.5; }
+    .title { fill: #212529; font-weight: 700; }
+    .muted { fill: #6c757d; }
+    .axis { stroke: #adb5bd; stroke-width: 2; }
+    .tick { stroke: #ced4da; stroke-width: 1.2; }
+    .dot { fill: #0a58ca; }
+    /* 贯穿全章的三个问题 = primary 蓝，取自 @athena_primary_soft / @athena_primary，
+       对齐 Bootstrap primary 配色。 */
+    .ask { fill: #cfe2ff; stroke: #0a58ca; stroke-width: 1.4; }
+    .t-ask { fill: #052c65; }
+    .stage { fill: #0a58ca; font-weight: 700; }
+    .num { fill: #ffffff; font-weight: 700; }
+    /* 落在这一段上的小节 = 中性白卡，不与上方的问题抢注意力。 */
+    .sect { fill: #ffffff; stroke: #ced4da; stroke-width: 1.3; }
+    .t-sect { fill: #212529; font-weight: 700; }
+  </style>
+  <rect x="1" y="1" width="958" height="374" rx="14" class="frame"/>
+
+  <text x="28" y="34" class="title" font-size="16">五个小节，回答的是同一组问题</text>
+  <text x="28" y="55" class="muted" font-size="11.5">上方蓝框是贯穿全章的三个问题，下方白卡是落在这一段上的小节。</text>
+
+  <!-- 问题（上） -->
+  <rect x="28" y="76" width="280" height="80" rx="9" class="ask"/>
+  <text x="42" y="106" class="t-ask" font-size="11.5">这个对象是什么？</text>
+  <text x="42" y="128" class="t-ask" font-size="11.5">它怎么拿到第一个值？</text>
+
+  <rect x="340" y="76" width="280" height="80" rx="9" class="ask"/>
+  <text x="354" y="96" class="t-ask" font-size="11.5">手上这个表达式，指着一个能长期</text>
+  <text x="354" y="118" class="t-ask" font-size="11.5">存在的对象，还是转瞬即逝的</text>
+  <text x="354" y="140" class="t-ask" font-size="11.5">中间结果？</text>
+
+  <rect x="652" y="76" width="280" height="80" rx="9" class="ask"/>
+  <text x="666" y="106" class="t-ask" font-size="11.5">类型要变的时候，谁来把关、</text>
+  <text x="666" y="128" class="t-ask" font-size="11.5">什么时候把关？</text>
+
+  <!-- 阶段名 -->
+  <circle cx="41" cy="177" r="10" class="dot"/>
+  <text x="41" y="181" text-anchor="middle" class="num" font-size="11">1</text>
+  <text x="60" y="182" class="stage" font-size="14.5">造出对象</text>
+
+  <circle cx="353" cy="177" r="10" class="dot"/>
+  <text x="353" y="181" text-anchor="middle" class="num" font-size="11">2</text>
+  <text x="372" y="182" class="stage" font-size="14.5">读它、改它</text>
+
+  <circle cx="665" cy="177" r="10" class="dot"/>
+  <text x="665" y="181" text-anchor="middle" class="num" font-size="11">3</text>
+  <text x="684" y="182" class="stage" font-size="14.5">类型的边界谁来守</text>
+
+  <!-- 主线 -->
+  <line x1="41" y1="206" x2="932" y2="206" class="axis"/>
+  <line x1="41" y1="192" x2="41" y2="206" class="tick"/>
+  <line x1="353" y1="192" x2="353" y2="206" class="tick"/>
+  <line x1="665" y1="192" x2="665" y2="206" class="tick"/>
+  <circle cx="41" cy="206" r="5" class="dot"/>
+  <circle cx="353" cy="206" r="5" class="dot"/>
+  <circle cx="665" cy="206" r="5" class="dot"/>
+
+  <!-- 小节（下） -->
+  <rect x="28" y="228" width="280" height="46" rx="8" class="sect"/>
+  <text x="42" y="250" class="t-sect" font-size="12">初始化</text>
+  <text x="42" y="266" class="muted" font-size="10.8">值怎么进去，会不会悄悄丢</text>
+
+  <rect x="28" y="284" width="280" height="46" rx="8" class="sect"/>
+  <text x="42" y="306" class="t-sect" font-size="12">类型推导</text>
+  <text x="42" y="322" class="muted" font-size="10.8">类型谁来写；要副本还是别名</text>
+
+  <rect x="340" y="228" width="280" height="102" rx="8" class="sect"/>
+  <text x="354" y="250" class="t-sect" font-size="12">值类别</text>
+  <text x="354" y="272" class="muted" font-size="10.8">一个表达式是持久对象还是临时结果，</text>
+  <text x="354" y="292" class="muted" font-size="10.8">这决定它能绑到哪种引用、</text>
+  <text x="354" y="312" class="muted" font-size="10.8">会选中哪个重载</text>
+
+  <rect x="652" y="228" width="280" height="46" rx="8" class="sect"/>
+  <text x="666" y="250" class="t-sect" font-size="12">类型转换</text>
+  <text x="666" y="266" class="muted" font-size="10.8">跨类型时谁检查、在哪一层</text>
+
+  <rect x="652" y="284" width="280" height="46" rx="8" class="sect"/>
+  <text x="666" y="306" class="t-sect" font-size="12">enum class</text>
+  <text x="666" y="322" class="muted" font-size="10.8">一组固定状态值不值得单独立一个类型</text>
+
+  <text x="28" y="358" class="muted" font-size="11.5">三段问的其实是同一件事：对象怎么来的、这步操作合不合法、该选哪种写法、为什么。</text>
+</svg>
