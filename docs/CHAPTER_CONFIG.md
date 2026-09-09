@@ -214,7 +214,7 @@ category.name = cpp
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
 | `prerequisites` | array | 否 | 同分类前置章节的 `name` 列表；缺省为空，生成器校验引用存在、无重复、无自引用且整图无环；C++ 分类索引据此生成知识图谱 |
-| `overview_document` | string | 否 | “说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
+| `overview_document` | string | 否 | 本章教学大纲文档，也是“说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
 | `learning_units` | array | 否 | 迁移期的可复用预测单元；仅供仍使用 `WorkbenchPage` 的旧式阅读工作台使用，不能作为原生学习场景的内容协议 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
@@ -296,15 +296,22 @@ subchapter.name -> C++ 成员函数名
 ^[A-Za-z_][A-Za-z0-9_]*$
 ```
 
-### 6.2 说明文档 `overview_document`
+### 6.2 教学大纲文档 `overview_document`
 
-章节可选提供 `overview_document`，指向一份人工撰写、静态存在于
-`resources/articles/` 下、并且已经列在**本分类**的 `handbook_documents`（4.3）
-里的 Markdown 理论讲解文档：
+章节可选提供 `overview_document`，指向本章的**教学大纲文档**：一份人工撰写、
+静态存在于 `resources/articles/` 下、并且已经列在**本分类**的 `handbook_documents`
+（4.3）里的 Markdown：
 
 ```json
 "overview_document": "resources/articles/cpp/reference_overview.md"
 ```
+
+按 [ADR 0028](decisions/0028-outline-process-experiment-layering.md)，教学大纲文档
+在学习内容三层分工里处于最上层，**只指引大方向**：知识点的前因后果、发展脉络、
+要解决现实编程里的什么问题、达到什么目的、每一小节对应哪类现实麻烦、与其它章节
+的关系。它**不写**具体语法机制、代码示例、API 用法细节，也不绑定练习或实验——
+细节由原生学习页（教学过程）落实，可观察的体验由成员函数（教学实验）提供。
+鼓励用静态 SVG 等可视化把脉络和分类讲清楚。一章一份。
 
 界面里"说明文档"按钮点击后跳到手册页面里这份文档对应的位置（该文档
 在手册合集里第一个标题的锚点），**不发起任何网络或 AI 调用**——内容是
@@ -317,10 +324,13 @@ subchapter.name -> C++ 成员函数名
 全部知识点信息到剪贴板并唤起本机 AI 助手，跟未配置 `implementation` 的
 章节保持骨架框架、不强行生造内容是同一个原则。
 
-`overview_document` 只是"这个章节关联手册里的哪份文档"这层指针，不影响
-章节本身的知识点列表、源码框和运行结果区；文档内容本身、它在手册目录
-里出现的顺序，都由本分类的 `handbook_documents` 决定，不由 `overview_document`
-决定。
+在配置层面，`overview_document` 只是"这个章节的大纲是手册里的哪份文档"这层
+指针，不影响章节本身的知识点列表、源码框和运行结果区；文档在手册目录里出现的
+顺序由本分类的 `handbook_documents` 决定，不由 `overview_document` 决定。
+
+大纲文档与分类手册的区别：手册是**跨章节**的体系化参考、完整规则与回查；大纲是
+**单章节**的纲领。二者都是 Markdown、都由 `DocumentView` 阅读，实现上大纲文档本身
+也收录在 `handbook_documents` 里（ADR 0012 之后手册合并的结果）。
 
 ### 6.3 内联学习单元 `learning_units`
 
