@@ -98,20 +98,27 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                     chapter.subchapters.push_back(std::move(subchapter));
                 }
 
-                for (const auto& unit_value : chapter_value.at("learning_units")) {
-                    LearningUnit unit;
-                    unit.id = unit_value.at("id").get<string>();
-                    unit.heading = unit_value.at("heading").get<string>();
-                    unit.claim = unit_value.at("claim").get<string>();
-                    unit.question = unit_value.at("question").get<string>();
-                    unit.choices = unit_value.at("choices").get<vector<string>>();
-                    unit.correct_choice =
-                        unit_value.at("correct_choice").get<size_t>();
-                    unit.feedback = unit_value.at("feedback").get<string>();
-                    unit.follow_up = unit_value.at("follow_up").get<string>();
-                    unit.experiment_function_id =
-                        unit_value.at("experiment_function_id").get<string>();
-                    chapter.learning_units.push_back(std::move(unit));
+                // learning_units 是 ADR 0025 之后新增的可选字段：生成器对
+                // 真实配置总会输出（可能为空数组），但测试可以构造不含它的
+                // 精简 Catalog，缺失时按空处理，不抛异常。
+                if (chapter_value.contains("learning_units")) {
+                    for (const auto& unit_value :
+                         chapter_value.at("learning_units")) {
+                        LearningUnit unit;
+                        unit.id = unit_value.at("id").get<string>();
+                        unit.heading = unit_value.at("heading").get<string>();
+                        unit.claim = unit_value.at("claim").get<string>();
+                        unit.question = unit_value.at("question").get<string>();
+                        unit.choices =
+                            unit_value.at("choices").get<vector<string>>();
+                        unit.correct_choice =
+                            unit_value.at("correct_choice").get<size_t>();
+                        unit.feedback = unit_value.at("feedback").get<string>();
+                        unit.follow_up = unit_value.at("follow_up").get<string>();
+                        unit.experiment_function_id =
+                            unit_value.at("experiment_function_id").get<string>();
+                        chapter.learning_units.push_back(std::move(unit));
+                    }
                 }
 
                 chapters.push_back(std::move(chapter));
