@@ -19,10 +19,10 @@ TEST(TypeSemanticsContentTest, ComparesInitializationFormsWithoutReadingUndefine
     EXPECT_EQ(
         run_experiment(&TypeSemantics::initialization),
         "四种初始化: 7, 8, 9, 0\n"
+        "值初始化 int{} 确定为: 0\n"
         "圆括号接受窄化: 3.75 -> 3\n"
         "花括号拒绝窄化: 编译期错误\n"
-        "explicit 需要显式进入: 11\n"
-        "未初始化局部 int: 不读取\n");
+        "explicit 需要显式进入: 11\n");
 }
 
 TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
@@ -30,6 +30,7 @@ TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
         run_experiment(&TypeSemantics::auto_deduction),
         "auto 副本 / 原对象: 7 / 99\n"
         "auto& 修改原对象: 99\n"
+        "auto 丢弃顶层 const，副本可改: 2\n"
         "结构化绑定副本 / 原值: Athena 8 / Athena 9\n"
         "结构化绑定引用共享对象: Athena 9\n");
 }
@@ -37,9 +38,10 @@ TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
 TEST(TypeSemanticsContentTest, ShowsWhichValueCategoryDecltypePreserves) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::decltype_deduction),
-        "decltype(value) 是 int: 是\n"
-        "decltype((value)) 是 int&: 是\n"
-        "decltype(std::move(value)) 是 int&&: 是\n");
+        "decltype(value) 是 int（取声明类型）: 是\n"
+        "decltype((value)) 是 int&（左值表达式）: 是\n"
+        "decltype(std::move(value)) 是 int&&（将亡值）: 是\n"
+        "decltype(value + 0) 是 int（纯右值不加引用）: 是\n");
 }
 
 TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {
@@ -58,7 +60,8 @@ TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {
         "static_cast 明确接受截断: 9\n"
         "dynamic_cast 成功 / 失败为空: 是 / 是\n"
         "const_cast 修改原本可写对象: 9\n"
-        "reinterpret_cast 只验证指针往返: 是\n");
+        "reinterpret_cast 指针往返后仍相等: 是\n"
+        "但往返相等不证明按其它类型解读一直安全\n");
 }
 
 TEST(TypeSemanticsContentTest, KeepsScopedEnumsTypeSafe) {
