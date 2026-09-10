@@ -118,6 +118,15 @@ void close_block(ParseState& state, MD_BLOCKTYPE type) {
     }
     DocBlock block = std::move(state.blocks.back().block);
     state.blocks.pop_back();
+    // MD4C 的紧凑列表不会为列表项正文发送 MD_BLOCK_P：文字会直接写进
+    // ListItem.inlines。DocModel 对 ListItem 的约定则是 children 保存块序列，
+    // 因此在解析边界把这类正文规范化成 Paragraph，渲染器无需猜测两种形态。
+    if (type == MD_BLOCK_LI && !block.inlines.empty()) {
+        DocBlock paragraph;
+        paragraph.kind = DocBlockKind::Paragraph;
+        paragraph.inlines = std::move(block.inlines);
+        block.children.insert(block.children.begin(), std::move(paragraph));
+    }
     if (type == MD_BLOCK_P && block.inlines.size() == 1
         && block.inlines.front().kind == DocInlineKind::Image) {
         block.kind = DocBlockKind::Image;

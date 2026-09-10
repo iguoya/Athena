@@ -32,6 +32,14 @@ TEST(DocModelTest, ParsesCoreBlocksAndInlineMeaning) {
     EXPECT_EQ(document.blocks[2].kind, DocBlockKind::BulletList);
     ASSERT_EQ(document.blocks[2].children.size(), 2u);
     EXPECT_EQ(document.blocks[2].children[0].kind, DocBlockKind::ListItem);
+    ASSERT_EQ(document.blocks[2].children[0].children.size(), 1u);
+    EXPECT_EQ(
+        document.blocks[2].children[0].children[0].kind,
+        DocBlockKind::Paragraph);
+    ASSERT_EQ(document.blocks[2].children[0].children[0].inlines.size(), 1u);
+    EXPECT_EQ(
+        document.blocks[2].children[0].children[0].inlines[0].text,
+        "第一项");
 
     EXPECT_EQ(document.blocks[3].kind, DocBlockKind::BlockQuote);
     EXPECT_EQ(document.blocks[4].kind, DocBlockKind::CodeBlock);
@@ -53,6 +61,12 @@ TEST(DocModelTest, PreservesOrderedListStartAndLineBreakKinds) {
     ASSERT_EQ(document.blocks.size(), 2u);
     EXPECT_EQ(document.blocks[0].kind, DocBlockKind::OrderedList);
     EXPECT_EQ(document.blocks[0].ordered_start, 3u);
+    ASSERT_EQ(document.blocks[0].children.size(), 2u);
+    ASSERT_EQ(document.blocks[0].children[0].children.size(), 1u);
+    ASSERT_EQ(document.blocks[0].children[0].children[0].inlines.size(), 1u);
+    EXPECT_EQ(
+        document.blocks[0].children[0].children[0].inlines[0].text,
+        "第三项");
     ASSERT_EQ(document.blocks[1].inlines.size(), 3u);
     EXPECT_EQ(document.blocks[1].inlines[1].kind, DocInlineKind::LineBreak);
 }
