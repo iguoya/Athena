@@ -256,19 +256,20 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
             [this, topic_name]() { open_experiment(topic_name); });
     }
 
-    // 标签顺序必须与 type_semantics_lesson.blp 中 Notebook 页顺序一致。
-    // 一个标签是一个学习小节，可能覆盖不止一个知识点。
-    // 顺序与 type_semantics_lesson.blp 中 Notebook 的页顺序一致：概念主线
-    // 讲完后，「初始化」作为结合真实源码的动手验证节放在最后。
+    // 标签顺序必须与 type_semantics_lesson.blp 中 Notebook 页顺序一致，
+    // 而两者都服从教学大纲给出的推荐顺序——它就是知识点 requires 关系的拓扑序。
+    // 大纲是方向决策层：页面顺序跟着它改，不是反过来。
     m_section_tabs = {
         {"教学大纲", {}},
         {"本章导览", {}},
-        {"类型推导", {"auto_deduction", "decltype_deduction"}},
-        {"对象生命周期", {"object_lifetime"}},
-        {"值类别", {"value_category"}},
-        {"类型转换", {"cast"}},
-        {"enum class", {"enum_class"}},
         {"初始化", {"initialization"}},
+        {"对象生命周期", {"object_lifetime"}},
+        {"类型推导", {"auto_deduction"}},
+        {"enum class", {"enum_class"}},
+        {"类型转换", {"cast"}},
+        {"值类别", {"value_category"}},
+        // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
+        {"decltype", {"decltype_deduction"}},
     };
     render_overview(builder, content_loader);
     apply_tab_labels(mastery_by_id);
