@@ -28,6 +28,23 @@ cmake --build apps/c/build
 两者任一缺失时会编译成占位实现——能启动、能连学习库、不开窗口，用来验证
 链路是否打通。
 
+## 中文显示
+
+界面中文由 `src/cjk_font.c` 在运行时加载系统字体渲染（LVGL 的 tiny_ttf，内置
+stb_truetype，不需要额外依赖）。候选路径覆盖 macOS 的冬青黑体/苹方/华文黑体和
+Ubuntu 的 Noto Sans CJK、文泉驿，找不到时用 `ATHENA_C_FONT` 指定：
+
+```sh
+ATHENA_C_FONT=/path/to/font.ttf ./build/athena-c
+```
+
+**不要改用 LVGL 内置的 `lv_font_simsun_16_cjk`**。它不是"CJK 全集"，而是生成时用
+`--symbols` 写死的约一千个字，且明显偏日文与繁体——有「應」「經」没有「应」「经」，
+显示简体中文会大面积缺字变方框。它只作为系统字体加载失败时的兜底。
+
+另外 `lv_conf.h` 把内存分配改成了系统 `malloc`：LVGL 默认是 64KB 固定内存池，那是
+给单片机的，光栅化汉字字形时会直接耗尽并让 stb 断言失败退出。
+
 ## 运行
 
 ```sh

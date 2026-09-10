@@ -1,4 +1,5 @@
 #include "../app_window.h"
+#include "../cjk_font.h"
 #include "../progress.h"
 
 #include "lvgl.h"
@@ -10,6 +11,18 @@
 //
 // 界面用代码搭而不是描述文件：LVGL 没有 Blueprint 那样的布局 DSL，主程序
 // 的 .blp 优先规则在这里不适用。
+
+// 整个窗口共用一份中文字体：加载失败时退回 LVGL 内置的汉字子集，
+// 那份字表偏日文与繁体，简体会缺字，但总比不显示强。
+static CjkFont g_font;
+
+static const lv_font_t* body_font(void) {
+    return g_font.body != NULL ? g_font.body : &lv_font_simsun_16_cjk;
+}
+
+static const lv_font_t* title_font(void) {
+    return g_font.title != NULL ? g_font.title : &lv_font_montserrat_28;
+}
 
 static lv_obj_t* make_card(lv_obj_t* parent) {
     lv_obj_t* card = lv_obj_create(parent);
@@ -27,8 +40,7 @@ static lv_obj_t* make_text(lv_obj_t* parent, const char* text, bool muted) {
     lv_label_set_text(label, text);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_obj_set_width(label, LV_PCT(100));
-    // 中文靠 LVGL 自带的常用汉字子集显示；Montserrat 只有西文字形。
-    lv_obj_set_style_text_font(label, &lv_font_simsun_16_cjk, 0);
+    lv_obj_set_style_text_font(label, body_font(), 0);
     if (muted) {
         lv_obj_set_style_text_color(label, lv_color_hex(0x6c757d), 0);
     }
@@ -43,8 +55,8 @@ static void build_ui(struct Progress* progress) {
     lv_obj_set_style_pad_row(screen, 18, 0);
 
     lv_obj_t* title = lv_label_create(screen);
-    lv_label_set_text(title, "Athena  /  C Language");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_28, 0);
+    lv_label_set_text(title, "Athena · C 语言编程");
+    lv_obj_set_style_text_font(title, title_font(), 0);
     lv_obj_set_style_text_color(title, lv_color_hex(0x052c65), 0);
 
     lv_obj_t* intro = make_card(screen);
@@ -97,6 +109,12 @@ int app_window_run(struct Progress* progress) {
     lv_sdl_mousewheel_create();
     lv_sdl_keyboard_create();
 
+    // 字体要在建界面之前准备好：控件创建时就会取字体量文字宽高。
+    g_font = cjk_font_load(17, 30);
+    if (g_font.path != NULL) {
+        printf("中文字体：%s\n", g_font.path);
+    }
+
     build_ui(progress);
 
     // 关掉窗口时 SDL 驱动会 lv_display_delete()，默认 display 随之为空，
@@ -106,6 +124,8 @@ int app_window_run(struct Progress* progress) {
         lv_delay_ms(idle == LV_NO_TIMER_READY || idle > 16 ? 16 : idle);
     }
 
+    // 字体必须在 lv_deinit 之前销毁：控件还引用着它。
+    cjk_font_free(&g_font);
     lv_deinit();
     return 0;
 }

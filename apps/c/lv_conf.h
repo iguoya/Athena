@@ -4,7 +4,11 @@
  *   #if 0 -> #if 1            启用整个配置文件
  *   LV_COLOR_DEPTH 32         SDL 窗口按 32 位色渲染
  *   LV_FONT_MONTSERRAT_20/28  标题用的两档西文字号
- *   LV_FONT_SIMSUN_16_CJK     LVGL 自带的常用汉字子集，正文中文靠它显示
+ *   LV_FONT_SIMSUN_16_CJK     内置汉字子集，只在系统字体加载失败时兜底
+ *   LV_USE_TINY_TTF           运行时加载系统中文字体，见 src/cjk_font.c
+ *   LV_USE_STDLIB_MALLOC      改用系统 malloc。LVGL 默认是 64KB 固定内存池，
+ *                             那是给单片机的；tiny_ttf 光栅化汉字字形时会直接
+ *                             把它耗尽，stb 内部断言失败退出
  *   LV_USE_SDL 1              桌面上用 SDL2 开窗口
  *   LV_SDL_DIRECT_EXIT 0      关窗口时不直接 exit()，交回主循环正常收尾，
  *                             这样学习库连接等资源还能按顺序释放
@@ -54,7 +58,7 @@
  * - LV_STDLIB_RTTHREAD:    RT-Thread implementation
  * - LV_STDLIB_CUSTOM:      Implement the functions externally
  */
-#define LV_USE_STDLIB_MALLOC    LV_STDLIB_BUILTIN
+#define LV_USE_STDLIB_MALLOC    LV_STDLIB_CLIB
 #define LV_USE_STDLIB_STRING    LV_STDLIB_BUILTIN
 #define LV_USE_STDLIB_SPRINTF   LV_STDLIB_BUILTIN
 
@@ -833,7 +837,7 @@
 #endif
 
 /* Built-in TTF decoder */
-#define LV_USE_TINY_TTF 0
+#define LV_USE_TINY_TTF 1
 #if LV_USE_TINY_TTF
     /* Enable loading TTF data from files */
     #define LV_TINY_TTF_FILE_SUPPORT 0
