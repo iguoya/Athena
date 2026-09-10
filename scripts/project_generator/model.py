@@ -66,8 +66,8 @@ SUBCHAPTER_FIELDS = frozenset(
 )
 TEACHES_FIELDS = frozenset({"document", "heading"})
 # 掌握目标：master 需要精通、required 必须掌握、familiar 一般了解；
-# 空串表示尚未评定。评定依据是"日常使用频率 × 用错的代价"——天天要用且写错代价高的
-# 才是需要精通，少见或只在特定场景出现的一般了解（ADR 0029）。
+# 空串表示尚未评定。只按重要性评定，不看出现频率：用错的代价有多硬、是不是后续内容
+# 的地基、能不能靠编译器兜底（ADR 0029）。
 MASTERY_GOALS = frozenset({"", "master", "required", "familiar"})
 # 知识类型决定该用哪种教学动作（ADR 0031）：concept 概念要正反例辨析，
 # skill 程序性技能要示范加变式练习，strategy 条件性知识要情境判断加说明理由。

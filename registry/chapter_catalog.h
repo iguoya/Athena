@@ -42,7 +42,8 @@ string knowledge_type_label(KnowledgeType type);
 KnowledgeType parse_knowledge_type(const string& value);
 
 // 掌握目标：这个知识点要学到什么程度，与难度分开评定。
-// 评定依据是"日常使用频率 × 用错的代价"，频率不单独成一个维度。
+// 只按重要性评定：用错的代价、是不是后续内容的地基、能不能靠编译器兜底。
+// 不看出现频率——低频高危的东西（漏写 virtual 析构）恰恰最该精通。
 enum class MasteryGoal {
     Unrated,  // 未评定（练习类章节）
     Master,   // 需要精通：反复使用，要能解释边界并写对
