@@ -97,7 +97,6 @@ void rounded_box(
 TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader,
     const map<string, int>& mastery_by_id,
     function<void(const ExperimentSelection&, bool)> on_experiment_requested,
     function<void()> on_reference_requested)
@@ -260,7 +259,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     // 而两者都服从教学大纲给出的推荐顺序——它就是知识点 requires 关系的拓扑序。
     // 大纲是方向决策层：页面顺序跟着它改，不是反过来。
     m_section_tabs = {
-        {"教学大纲", {}},
         {"本章导览", {}},
         {"初始化", {"initialization"}},
         {"对象生命周期", {"object_lifetime"}},
@@ -271,57 +269,9 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
         {"decltype", {"decltype_deduction"}},
     };
-    render_overview(builder, content_loader);
     apply_tab_labels(mastery_by_id);
 }
 
-void TypeSemanticsLessonPage::render_overview(
-    const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader) {
-    auto* host = builder->get_widget<Gtk::Box>("type_semantics_overview_host");
-    if (host == nullptr) {
-        cerr << "TypeSemantics lesson: overview host missing from Blueprint"
-             << endl;
-        return;
-    }
-    if (m_chapter.overview_document.empty()) {
-        cerr << "TypeSemantics lesson: chapter has no overview_document" << endl;
-        return;
-    }
-
-    const string markdown =
-        content_loader.load_document(m_chapter.overview_document);
-    if (markdown.empty()) {
-        cerr << "TypeSemantics lesson: failed to load "
-             << m_chapter.overview_document << endl;
-        return;
-    }
-
-    // 与手册一致：图片按大纲所在目录解析，于是 Markdown 里的
-    // images/xxx.svg 落到 /app/articles/cpp/images/xxx.svg。
-    constexpr string_view resources_prefix = "resources/";
-    string relative = m_chapter.overview_document;
-    if (relative.rfind(resources_prefix, 0) == 0) {
-        relative = relative.substr(resources_prefix.size());
-    }
-    const auto slash = relative.find_last_of('/');
-    const string resource_base =
-        slash == string::npos ? "/app/" : "/app/" + relative.substr(0, slash + 1);
-
-    try {
-        m_overview_view = make_unique<DocumentView>(resource_base);
-        auto& view = m_overview_view->widget();
-        // 大纲占用 Notebook 的完整页面，由 DocumentView 自己负责滚动；
-        // 不再嵌入折叠框，也不设置固定高度。
-        view.set_vexpand(true);
-        host->append(view);
-        m_overview_view->set_markdown(markdown);
-    } catch (const exception& error) {
-        cerr << "TypeSemantics lesson: failed to render overview: "
-             << error.what() << endl;
-        m_overview_view.reset();
-    }
-}
 
 LearningUnitView& TypeSemanticsLessonPage::add_learning_unit(
     Gtk::Box& host, LearningUnit data, const string& verify_subchapter) {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
-#include "render/document_view.h"
 #include "ui/experiment_dock.h"
 
 #include <gtkmm.h>
@@ -24,14 +22,13 @@ class LearningUnitView;
 // （Cairo 自绘）→ 预测单元 → 专注实验入口 → 换条件的迁移预测。对象图这类
 // 需要绘制的内容按 AGENTS.md「GTK 与 Blueprint 规则」第 3 条留在代码里。
 //
-// 第一个标签是例外：按 ADR 0028，大纲那一层就是章节的 overview_document，
-// 页面直接用 DocumentView 渲染那一份 Markdown，不另写一份控件树副本。
+// 章节教学大纲（第一层）不在这里渲染：它由顶部 hero 区的按钮跳到手册视图，
+// Notebook 只放这一页自己的教学过程（第二层）。
 class TypeSemanticsLessonPage final {
 public:
     TypeSemanticsLessonPage(
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader,
         const map<string, int>& mastery_by_id,
         function<void(const ExperimentSelection&, bool)> on_experiment_requested,
         function<void()> on_reference_requested);
@@ -51,11 +48,6 @@ private:
     };
 
     void open_experiment(const string& subchapter_name);
-    // 把 overview_document 渲染进「大纲」标签。文档缺失时留空并记日志，
-    // 不影响其余学习标签可用。
-    void render_overview(
-        const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader);
     void apply_tab_labels(const map<string, int>& mastery_by_id);
     Gtk::Widget* build_tab_label(
         const SectionTab& section, const map<string, int>& mastery_by_id) const;
@@ -81,7 +73,6 @@ private:
 
     Gtk::Notebook* m_section_notebook = nullptr;
     vector<SectionTab> m_section_tabs;
-    unique_ptr<DocumentView> m_overview_view;
 
     static constexpr int kDeductionAnimSteps = 6;
     Gtk::DrawingArea* m_deduction_graph = nullptr;

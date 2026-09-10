@@ -1,7 +1,11 @@
 using Gtk 4.0;
 
-// ADR 0026：类型与表达式的第一条原生学习场景。这里的学习顺序和双路径
-// 对比完全由 GUI 控件表达；Markdown 仅经“查看参考资料”按钮按需打开。
+// ADR 0026：类型与表达式的第一条原生学习场景。学习顺序和双路径对比完全由
+// GUI 控件表达。
+//
+// 章节的教学大纲（第一层）不占 Notebook 的学习标签，由顶部 hero 区那个按钮
+// 打开手册视图；Notebook 第一个标签是这一页自己的「本章导览」（第二层的开局
+// 讲解），两者分属 ADR 0028 的不同层，不能互相替换。
 Box type_semantics_lesson_page {
   name: "type_semantics_lesson_page";
   orientation: vertical;
@@ -57,7 +61,7 @@ Box type_semantics_lesson_page {
 
         Button type_semantics_reference_button {
           name: "type_semantics_reference_button";
-          label: "查看参考资料";
+          label: "本章教学大纲";
           valign: center;
           styles [ "btn-outline-secondary", "btn-sm" ]
         }
@@ -69,18 +73,6 @@ Box type_semantics_lesson_page {
   // 标签直接对应课程的子章节，而非 Markdown H2；每页都是可独立扩展的
   // 原生学习场景，避免一个长页面同时承担所有表达形式。
   Notebook type_semantics_section_notebook {
-    [tab]
-    Label { label: "教学大纲"; }
-
-    Box type_semantics_overview_host {
-      name: "type_semantics_overview_host";
-      orientation: vertical;
-      hexpand: true;
-      vexpand: true;
-
-      styles [ "lesson-outline-page" ]
-    }
-
     [tab]
     Label { label: "本章导览"; }
 

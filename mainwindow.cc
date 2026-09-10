@@ -440,7 +440,6 @@ void MainWindow::ensure_chapter_page(
             make_unique<TypeSemanticsLessonPage>(
                 chapter,
                 builder,
-                m_content_loader,
                 mastery_by_id,
                 experiment_requested,
                 overview_requested);
