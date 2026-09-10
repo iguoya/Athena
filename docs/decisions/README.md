@@ -29,7 +29,9 @@
 | [0026](0026-native-learning-scenes-and-reference-material.md) | 原生学习场景与参考资料分离；Markdown 不约束表现形式 | 已接受，第一条纵切实施中 |
 | [0027](0027-self-contained-multimedia-lessons.md) | 学习页自足讲解与多媒体教案 | 已接受，按单元逐步实施 |
 | [0028](0028-outline-process-experiment-layering.md) | 大纲、教学过程、教学实验三层分工 | 已接受，`type_semantics` 已跟进 |
-| [0029](0029-difficulty-and-mastery-goal.md) | 知识点按难度与掌握目标两个维度评级 | 已接受，77 个知识点已评定 |
+| [0029](0029-difficulty-and-mastery-goal.md) | 知识点按难度与掌握目标两个维度评级 | 已接受 |
+| [0030](0030-knowledge-point-prerequisites.md) | 知识点级前置依赖与依赖方向校验 | 已接受，`type_semantics` 已声明 |
+| [0031](0031-knowledge-type-drives-teaching-actions.md) | 知识类型（概念/技能/策略）决定教学动作 | 已接受，`type_semantics` 已标注 |
 
 ## 学习数据与 AI
 

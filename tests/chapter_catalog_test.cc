@@ -63,6 +63,8 @@ nlohmann::json minimal_catalog() {
             "source": "language/sample.cpp",
             "difficulty": 4,
             "mastery_goal": "master",
+            "knowledge_type": "concept",
+            "requires": [],
             "icon": { "type": "theme", "name": "point", "path": "" }
           }, {
             "function_id": "cpp.Sample.unrated",
@@ -73,6 +75,8 @@ nlohmann::json minimal_catalog() {
             "source": "language/sample.cpp",
             "difficulty": 0,
             "mastery_goal": "",
+            "knowledge_type": "",
+            "requires": [],
             "icon": { "type": "theme", "name": "point", "path": "" }
           }]
         }]
@@ -185,6 +189,8 @@ TEST(ChapterCatalogTest, DecodesCanonicalRuntimeFields) {
     EXPECT_EQ(chapter->subchapters[0].function_id, "cpp.Sample.point");
     EXPECT_EQ(chapter->subchapters[0].difficulty, 4);
     EXPECT_EQ(chapter->subchapters[0].mastery_goal, MasteryGoal::Master);
+    EXPECT_EQ(chapter->subchapters[0].knowledge_type, KnowledgeType::Concept);
+    EXPECT_TRUE(chapter->subchapters[0].requires_points.empty());
     EXPECT_EQ(chapter->subchapters[1].difficulty, 0);
     EXPECT_EQ(chapter->subchapters[1].mastery_goal, MasteryGoal::Unrated);
     EXPECT_EQ(chapter->icon.name, "chapter");

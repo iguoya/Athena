@@ -21,6 +21,8 @@ json MakePoint(const string& function_id, const string& name) {
         {"source", ""},
         {"difficulty", 0},
         {"mastery_goal", ""},
+        {"knowledge_type", ""},
+        {"requires", json::array()},
         {"icon", kIcon},
     };
 }

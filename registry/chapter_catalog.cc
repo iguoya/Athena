@@ -33,6 +33,33 @@ string mastery_goal_label(MasteryGoal goal) {
     return "";
 }
 
+string knowledge_type_label(KnowledgeType type) {
+    switch (type) {
+    case KnowledgeType::Concept:
+        return "概念";
+    case KnowledgeType::Skill:
+        return "技能";
+    case KnowledgeType::Strategy:
+        return "策略";
+    case KnowledgeType::Unrated:
+        break;
+    }
+    return "";
+}
+
+KnowledgeType parse_knowledge_type(const string& value) {
+    if (value == "concept") {
+        return KnowledgeType::Concept;
+    }
+    if (value == "skill") {
+        return KnowledgeType::Skill;
+    }
+    if (value == "strategy") {
+        return KnowledgeType::Strategy;
+    }
+    return KnowledgeType::Unrated;
+}
+
 MasteryGoal parse_mastery_goal(const string& value) {
     if (value == "master") {
         return MasteryGoal::Master;
@@ -116,6 +143,21 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                         subchapter_value.at("difficulty").get<int>();
                     subchapter.mastery_goal = parse_mastery_goal(
                         subchapter_value.at("mastery_goal").get<string>());
+                    subchapter.knowledge_type = parse_knowledge_type(
+                        subchapter_value.at("knowledge_type").get<string>());
+                    for (const auto& required :
+                         subchapter_value.at("requires")) {
+                        subchapter.requires_points.push_back(
+                            SubChapterRequirement{
+                                .function_id =
+                                    required.at("function_id").get<string>(),
+                                .title = required.at("title").get<string>(),
+                                .chapter_title =
+                                    required.at("chapter_title").get<string>(),
+                                .same_chapter =
+                                    required.at("same_chapter").get<bool>(),
+                            });
+                    }
                     subchapter.icon = parse_icon(subchapter_value.at("icon"));
                     if (subchapter_value.contains("teaches")) {
                         const auto& teaches_value = subchapter_value.at("teaches");
@@ -205,4 +247,17 @@ const vector<string>& ChapterCatalog::handbook_documents(
             return category.name == category_name;
         });
     return found == m_categories.end() ? empty : found->handbook_documents;
+}
+
+const SubChapter* ChapterCatalog::find_subchapter(const string& function_id) const {
+    for (const auto& [category_name, chapters] : m_chapters) {
+        for (const auto& chapter : chapters) {
+            for (const auto& subchapter : chapter.subchapters) {
+                if (subchapter.function_id == function_id) {
+                    return &subchapter;
+                }
+            }
+        }
+    }
+    return nullptr;
 }

@@ -339,6 +339,41 @@ def main() -> None:
             "subchapters[0].difficulty must be an integer in [0, 5]",
         )
 
+        # 知识点级前置依赖（ADR 0030）：存在性、自引用、环和跨章方向都要拦住。
+        unknown_requirement = copy.deepcopy(config)
+        unknown_requirement["categories"][0]["chapters"][0]["subchapters"][0][
+            "requires"
+        ] = ["no_such_point"]
+        assert_rejected(
+            generator,
+            root,
+            unknown_requirement,
+            "references unknown knowledge point",
+        )
+
+        self_requirement = copy.deepcopy(config)
+        first_point = self_requirement["categories"][0]["chapters"][0][
+            "subchapters"
+        ][0]
+        first_point["requires"] = [first_point["name"]]
+        assert_rejected(
+            generator,
+            root,
+            self_requirement,
+            "requires lists the knowledge point itself",
+        )
+
+        invalid_knowledge_type = copy.deepcopy(config)
+        invalid_knowledge_type["categories"][0]["chapters"][0]["subchapters"][0][
+            "knowledge_type"
+        ] = "habit"
+        assert_rejected(
+            generator,
+            root,
+            invalid_knowledge_type,
+            "knowledge_type must be one of",
+        )
+
         write(
             root / "resources" / "athena.json",
             json.dumps(config, ensure_ascii=False, indent=2) + "\n",

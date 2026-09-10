@@ -22,6 +22,8 @@ json MakePoint(
         {"source", ""},
         {"difficulty", difficulty},
         {"mastery_goal", ""},
+        {"knowledge_type", ""},
+        {"requires", json::array()},
         {"icon", kIcon},
     };
 }

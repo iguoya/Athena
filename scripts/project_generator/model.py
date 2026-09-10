@@ -56,6 +56,8 @@ SUBCHAPTER_FIELDS = frozenset(
         "description",
         "difficulty",
         "mastery_goal",
+        "knowledge_type",
+        "requires",
         "icon",
         "group",
         "source",
@@ -64,8 +66,12 @@ SUBCHAPTER_FIELDS = frozenset(
 )
 TEACHES_FIELDS = frozenset({"document", "heading"})
 # 掌握目标：master 需要精通、required 必须掌握、familiar 一般了解；
-# 空串表示尚未评定（练习类章节可以留空）。
+# 空串表示尚未评定。评定依据是"日常使用频率 × 用错的代价"——天天要用且写错代价高的
+# 才是需要精通，少见或只在特定场景出现的一般了解（ADR 0029）。
 MASTERY_GOALS = frozenset({"", "master", "required", "familiar"})
+# 知识类型决定该用哪种教学动作（ADR 0031）：concept 概念要正反例辨析，
+# skill 程序性技能要示范加变式练习，strategy 条件性知识要情境判断加说明理由。
+KNOWLEDGE_TYPES = frozenset({"", "concept", "skill", "strategy"})
 LEARNING_UNIT_FIELDS = frozenset(
     {"id", "heading", "claim", "question", "choices", "correct_choice", "feedback", "follow_up", "experiment"}
 )
@@ -273,6 +279,62 @@ def validate_prerequisite_graph(
             visit(name, [])
 
 
+def validate_subchapter_requirements(
+    requirements: dict[str, list[str]],
+    locations: dict[str, str],
+    chapter_of: dict[str, str],
+    reachable_chapters: dict[str, set[str]],
+) -> None:
+    """知识点级前置依赖的全局校验（ADR 0030）。
+
+    依赖用完整函数 ID 表示，必须指向真实存在的知识点、不能自引用、整体不能成环。
+    跨章依赖还必须与章节 prerequisites 同向：只能依赖本章，或本章（传递）前置章节里
+    的知识点——否则内容顺序自相矛盾，学习者永远不可能先学到它。
+    """
+    for function_id, required_ids in requirements.items():
+        where = locations[function_id]
+        for required_id in required_ids:
+            if required_id == function_id:
+                raise ProjectError(f"{where}.requires lists the knowledge point itself")
+            if required_id not in requirements:
+                raise ProjectError(
+                    f"{where}.requires references unknown knowledge point "
+                    f"{required_id!r}"
+                )
+            own_chapter = chapter_of[function_id]
+            target_chapter = chapter_of[required_id]
+            if target_chapter != own_chapter and target_chapter not in (
+                reachable_chapters.get(own_chapter, set())
+            ):
+                raise ProjectError(
+                    f"{where}.requires depends on {required_id!r} in chapter "
+                    f"{target_chapter!r}, which is not this chapter nor one of its "
+                    f"prerequisite chapters; knowledge-point dependencies must run "
+                    f"the same direction as chapter prerequisites"
+                )
+
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {function_id: WHITE for function_id in requirements}
+
+    def visit(function_id: str, stack: list[str]) -> None:
+        color[function_id] = GRAY
+        stack.append(function_id)
+        for required_id in requirements[function_id]:
+            if color[required_id] == GRAY:
+                cycle = stack[stack.index(required_id):] + [required_id]
+                raise ProjectError(
+                    "knowledge-point requirement cycle: " + " -> ".join(cycle)
+                )
+            if color[required_id] == WHITE:
+                visit(required_id, stack)
+        stack.pop()
+        color[function_id] = BLACK
+
+    for function_id in requirements:
+        if color[function_id] == WHITE:
+            visit(function_id, [])
+
+
 def build_model(
     config_path: Path,
     root: Path,
@@ -356,6 +418,13 @@ def build_model(
     chapters_by_id: dict[str, dict] = {}
     headings_by_document: dict[str, list[str]] = {}
     runtime_categories: list[dict] = []
+    # 知识点级前置依赖跨章节、跨分类，收齐全部知识点后统一校验并展开成完整 ID。
+    requirements_by_id: dict[str, list[str]] = {}
+    requirement_locations: dict[str, str] = {}
+    chapter_of_function: dict[str, str] = {}
+    titles_by_function: dict[str, tuple[str, str]] = {}
+    raw_requirements: list[tuple[str, str, str, list[str], dict]] = []
+    prerequisites_by_chapter_id: dict[str, list[str]] = {}
     chapter_count = 0
     subchapter_count = 0
 
@@ -486,6 +555,9 @@ def build_model(
                 seen_prerequisites.add(pre_name)
                 prerequisite_names.append(pre_name)
             prerequisites_by_name[chapter_name] = prerequisite_names
+            prerequisites_by_chapter_id[chapter_id] = [
+                f"{category_name}.{pre_name}" for pre_name in prerequisite_names
+            ]
 
             chapter_title = require_text(chapter.get("title"), f"{chapter_path}.title")
             chapter_description = require_text(
@@ -708,6 +780,26 @@ def build_model(
                         f"{subchapter_path}.difficulty must be an integer in [0, 5], "
                         f"got {difficulty!r}"
                     )
+                knowledge_type = subchapter.get("knowledge_type", "")
+                if knowledge_type not in KNOWLEDGE_TYPES:
+                    raise ProjectError(
+                        f"{subchapter_path}.knowledge_type must be one of "
+                        f"{sorted(value for value in KNOWLEDGE_TYPES if value)}, "
+                        f"got {knowledge_type!r}"
+                    )
+                requires_raw = subchapter.get("requires", [])
+                require_list(requires_raw, f"{subchapter_path}.requires")
+                requires_names: list[str] = []
+                for require_index, require_value in enumerate(requires_raw):
+                    require_name = require_text(
+                        require_value,
+                        f"{subchapter_path}.requires[{require_index}]",
+                    )
+                    if require_name in requires_names:
+                        raise ProjectError(
+                            f"{subchapter_path}.requires lists {require_name!r} twice"
+                        )
+                    requires_names.append(require_name)
                 mastery_goal = subchapter.get("mastery_goal", "")
                 if mastery_goal not in MASTERY_GOALS:
                     raise ProjectError(
@@ -786,6 +878,8 @@ def build_model(
                     "source": resolved_source,
                     "difficulty": difficulty,
                     "mastery_goal": mastery_goal,
+                    "knowledge_type": knowledge_type,
+                    "requires": [],
                     "icon": resolve_icon(
                         own_subchapter_icon,
                         default_subchapter_icon,
@@ -795,6 +889,20 @@ def build_model(
                 if teaches is not None:
                     runtime_subchapter["teaches"] = teaches
                 runtime_subchapters.append(runtime_subchapter)
+                # 同章内可以只写知识点名，跨章必须写完整函数 ID；这里统一展开成
+                # 完整 ID，运行时不再需要解析短名。
+                expanded_requires = [
+                    name if "." in name else f"{chapter_id}.{name}"
+                    for name in requires_names
+                ]
+                requirements_by_id[function_id] = expanded_requires
+                requirement_locations[function_id] = subchapter_path
+                chapter_of_function[function_id] = chapter_id
+                titles_by_function[function_id] = (subchapter_title, chapter_title)
+                raw_requirements.append(
+                    (function_id, chapter_id, subchapter_path, expanded_requires,
+                     runtime_subchapter)
+                )
 
             runtime_learning_units: list[dict] = []
             seen_learning_unit_ids: set[str] = set()
@@ -934,6 +1042,45 @@ def build_model(
                 "chapters": runtime_chapters,
             }
         )
+
+    # 章节前置的传递闭包：知识点依赖只能指向本章或（传递）前置章节。
+    reachable_chapters: dict[str, set[str]] = {}
+
+    def collect_reachable(chapter_id: str, seen: set[str]) -> set[str]:
+        if chapter_id in reachable_chapters:
+            return reachable_chapters[chapter_id]
+        if chapter_id in seen:
+            return set()
+        seen.add(chapter_id)
+        result: set[str] = set()
+        for pre_id in prerequisites_by_chapter_id.get(chapter_id, []):
+            result.add(pre_id)
+            result |= collect_reachable(pre_id, seen)
+        reachable_chapters[chapter_id] = result
+        return result
+
+    for chapter_id in prerequisites_by_chapter_id:
+        collect_reachable(chapter_id, set())
+
+    validate_subchapter_requirements(
+        requirements_by_id,
+        requirement_locations,
+        chapter_of_function,
+        reachable_chapters,
+    )
+    # 运行时直接拿到可显示的标题，界面不必反查 Catalog。
+    for function_id, chapter_id, _, expanded_requires, runtime_subchapter in (
+        raw_requirements
+    ):
+        runtime_subchapter["requires"] = [
+            {
+                "function_id": required_id,
+                "title": titles_by_function[required_id][0],
+                "chapter_title": titles_by_function[required_id][1],
+                "same_chapter": chapter_of_function[required_id] == chapter_id,
+            }
+            for required_id in expanded_requires
+        ]
 
     return {
         "config": config,

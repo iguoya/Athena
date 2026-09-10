@@ -22,7 +22,27 @@ struct SubChapterTeaches {
     string heading;
 };
 
+// 一条前置依赖。生成器已把标题一并展开，界面直接显示，不必反查 Catalog。
+struct SubChapterRequirement {
+    string function_id;
+    string title;
+    string chapter_title;
+    bool same_chapter = true;
+};
+
+// 知识类型：决定这个知识点该用哪种教学动作（ADR 0031）。
+enum class KnowledgeType {
+    Unrated,  // 未评定
+    Concept,  // 概念：正反例辨析、边界案例、分类判断
+    Skill,    // 程序性技能：示范 → 模仿 → 变式练习 → 反馈
+    Strategy, // 条件性策略：情境判断、说明依据与代价
+};
+
+string knowledge_type_label(KnowledgeType type);
+KnowledgeType parse_knowledge_type(const string& value);
+
 // 掌握目标：这个知识点要学到什么程度，与难度分开评定。
+// 评定依据是"日常使用频率 × 用错的代价"，频率不单独成一个维度。
 enum class MasteryGoal {
     Unrated,  // 未评定（练习类章节）
     Master,   // 需要精通：反复使用，要能解释边界并写对
@@ -52,6 +72,11 @@ struct SubChapter {
     // mastery_goal：学完本章后要达到什么程度。难度高不代表可以不掌握
     // （移动语义就是），难度低也不代表只需了解。
     MasteryGoal mastery_goal = MasteryGoal::Unrated;
+    // knowledge_type：概念 / 技能 / 策略，学习页据此选择教学动作。
+    KnowledgeType knowledge_type = KnowledgeType::Unrated;
+    // requires：学这个知识点之前应当先掌握的知识点，完整函数 ID。生成器已校验
+    // 存在性、无环，以及跨章依赖与章节 prerequisites 同向（ADR 0030）。
+    vector<SubChapterRequirement> requires_points;
     optional<SubChapterTeaches> teaches;
 };
 
@@ -124,6 +149,8 @@ public:
     size_t chapter_count() const;
     // 某个分类的手册文档；分类不存在或没有配手册时返回空 vector。
     const vector<string>& handbook_documents(const string& category_name) const;
+    // 按完整函数 ID 找知识点，用于解析 requires 里的跨章前置；找不到返回 nullptr。
+    const SubChapter* find_subchapter(const string& function_id) const;
 
 private:
     vector<CategoryInfo> m_categories;

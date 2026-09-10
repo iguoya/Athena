@@ -42,6 +42,10 @@ private:
     };
 
     void populate_topic_list();
+    // 读取某个知识点的熟练度（0-5）；没有学习库或读失败时按 0 处理。
+    int mastery_of(const string& function_id) const;
+    // 把列表滚动并选中到同章的某个知识点，供先修链接跳转。
+    void focus_topic(const string& function_id);
 
     ChapterMeta m_chapter;
     Glib::RefPtr<Gtk::Builder> m_builder;
@@ -52,6 +56,8 @@ private:
     function<void()> m_on_progress_changed;
 
     Gtk::ListBox* m_topics_list = nullptr;
+    // function_id -> 列表行，先修链接据此定位；populate_topic_list 时建立。
+    map<string, Gtk::ListBoxRow*> m_rows_by_function_id;
     Gtk::Label* m_knowledge_description_label = nullptr;
     Gtk::Label* m_header_title_label = nullptr;
     Gtk::Label* m_header_description_label = nullptr;

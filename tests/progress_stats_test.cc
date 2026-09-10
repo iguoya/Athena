@@ -22,6 +22,8 @@ ChapterCatalog MakeCatalog() {
             {"source", ""},
             {"difficulty", 0},
             {"mastery_goal", ""},
+        {"knowledge_type", ""},
+        {"requires", json::array()},
             {"icon", icon},
         };
     };

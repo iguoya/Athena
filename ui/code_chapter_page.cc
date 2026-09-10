@@ -82,6 +82,7 @@ CodeChapterPage::~CodeChapterPage() {
 }
 
 void CodeChapterPage::populate_topic_list() {
+    m_rows_by_function_id.clear();
     if (m_chapter.subchapters.empty()) {
         auto row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_selectable(false);
@@ -251,6 +252,32 @@ void CodeChapterPage::populate_topic_list() {
             goal->set_tooltip_text(style.second);
             title_row->append(*goal);
         }
+
+        // 知识类型决定这一节该用哪种教学动作（ADR 0031），所以要让作者和
+        // 学习者都看得到：概念要辨析、技能要练、策略要在情境里选。
+        const string type_text = knowledge_type_label(subchapter.knowledge_type);
+        if (!type_text.empty()) {
+            static const map<KnowledgeType, pair<const char*, const char*>>
+                type_styles = {
+                    {KnowledgeType::Concept,
+                     {"knowledge-type-concept",
+                      "概念：靠正例、反例和边界案例分辨清楚"}},
+                    {KnowledgeType::Skill,
+                     {"knowledge-type-skill",
+                      "技能：看示范、自己写、换个形状再写一遍"}},
+                    {KnowledgeType::Strategy,
+                     {"knowledge-type-strategy",
+                      "策略：在具体情境里选一个，并说明依据和代价"}},
+                };
+            const auto& style = type_styles.at(subchapter.knowledge_type);
+            auto* type_badge = Gtk::make_managed<Gtk::Label>(type_text);
+            type_badge->set_valign(Gtk::Align::CENTER);
+            type_badge->add_css_class("badge");
+            type_badge->add_css_class("badge-knowledge-type");
+            type_badge->add_css_class(style.first);
+            type_badge->set_tooltip_text(style.second);
+            title_row->append(*type_badge);
+        }
         text_box->append(*title_row);
 
         auto point_description =
@@ -260,6 +287,50 @@ void CodeChapterPage::populate_topic_list() {
         point_description->set_wrap(true);
         point_description->add_css_class("dim-label");
         text_box->append(*point_description);
+
+        if (!subchapter.requires_points.empty()) {
+            // 先修只是提示，不禁用运行按钮：自用平台上跳着学是常态，能看出
+            // "卡住可能是因为哪一步没打牢"就够了。
+            auto* requires_row = Gtk::make_managed<Gtk::Box>(
+                Gtk::Orientation::HORIZONTAL, 6);
+            requires_row->add_css_class("topic-requires");
+            auto* lead = Gtk::make_managed<Gtk::Label>("先修");
+            lead->add_css_class("topic-requires-lead");
+            requires_row->append(*lead);
+
+            bool any_unmet = false;
+            for (const auto& requirement : subchapter.requires_points) {
+                const int mastery = mastery_of(requirement.function_id);
+                const bool met = mastery > 0;
+                any_unmet = any_unmet || !met;
+                const string text =
+                    requirement.same_chapter
+                        ? requirement.title
+                        : requirement.chapter_title + " · " + requirement.title;
+                auto* chip = Gtk::make_managed<Gtk::Button>(text);
+                chip->add_css_class("topic-requires-chip");
+                chip->add_css_class(
+                    met ? "requires-met" : "requires-unmet");
+                chip->set_tooltip_text(
+                    met ? "已经学过：熟练度 " + to_string(mastery) + " / 5"
+                        : "还没有记录到熟练度，建议先看这一节");
+                if (requirement.same_chapter) {
+                    const string target = requirement.function_id;
+                    chip->signal_clicked().connect(
+                        [this, target]() { focus_topic(target); });
+                } else {
+                    chip->set_sensitive(false);
+                }
+                requires_row->append(*chip);
+            }
+            if (any_unmet) {
+                auto* hint = Gtk::make_managed<Gtk::Label>("（可以先补这一步）");
+                hint->add_css_class("dim-label");
+                requires_row->append(*hint);
+            }
+            text_box->append(*requires_row);
+        }
+
         row_box->append(*text_box);
 
         auto actions = Gtk::make_managed<Gtk::Box>(
@@ -393,5 +464,27 @@ void CodeChapterPage::populate_topic_list() {
         row_box->append(*actions);
         row->set_child(*row_box);
         m_topics_list->append(*row);
+        m_rows_by_function_id[subchapter.function_id] = row;
     }
+}
+
+int CodeChapterPage::mastery_of(const string& function_id) const {
+    if (!m_learning_store) {
+        return 0;
+    }
+    try {
+        return clamp(m_learning_store->load_mastery(function_id), 0, 5);
+    } catch (const exception& error) {
+        cerr << "Failed to load progress for " << function_id << ": "
+             << error.what() << endl;
+        return 0;
+    }
+}
+
+void CodeChapterPage::focus_topic(const string& function_id) {
+    const auto found = m_rows_by_function_id.find(function_id);
+    if (found == m_rows_by_function_id.end() || found->second == nullptr) {
+        return;
+    }
+    found->second->grab_focus();
 }

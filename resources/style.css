@@ -1215,3 +1215,49 @@ button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
     padding: 0 6px;
     border-radius: 6px;
 }
+
+/* 知识类型徽章（ADR 0031）：概念紫、技能绿、策略橙——与难度、掌握目标各用
+   一套色，避免看成同一维度的深浅。 */
+.badge-knowledge-type { font-weight: 700; }
+
+.badge-knowledge-type.knowledge-type-concept {
+    color: @athena_purple;
+    background-color: alpha(@athena_purple, 0.12);
+    border: 1px solid alpha(@athena_purple, 0.45);
+}
+
+.badge-knowledge-type.knowledge-type-skill {
+    color: @athena_success;
+    background-color: alpha(@athena_success, 0.12);
+    border: 1px solid alpha(@athena_success, 0.45);
+}
+
+.badge-knowledge-type.knowledge-type-strategy {
+    color: @athena_orange;
+    background-color: alpha(@athena_orange, 0.14);
+    border: 1px solid alpha(@athena_orange, 0.5);
+}
+
+/* 先修链（ADR 0030）：只是提示，不锁住任何入口。 */
+.topic-requires { margin-top: 4px; }
+
+.topic-requires-lead {
+    color: @athena_muted;
+    font-weight: 700;
+}
+
+.topic-requires-chip {
+    padding: 0 8px;
+    min-height: 24px;
+    border-radius: 12px;
+}
+
+.topic-requires-chip.requires-met {
+    color: @athena_success;
+    border: 1px solid alpha(@athena_success, 0.5);
+}
+
+.topic-requires-chip.requires-unmet {
+    color: @athena_orange;
+    border: 1px solid alpha(@athena_orange, 0.55);
+}
