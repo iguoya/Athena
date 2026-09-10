@@ -1,8 +1,6 @@
 #pragma once
 
-#include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
-#include "render/document_view.h"
 #include "ui/experiment_dock.h"
 
 #include <gtkmm.h>
@@ -24,14 +22,13 @@ class LearningUnitView;
 // （Cairo 自绘）→ 预测单元 → 专注实验入口 → 换条件的迁移预测。对象图这类
 // 需要绘制的内容按 AGENTS.md「GTK 与 Blueprint 规则」第 3 条留在代码里。
 //
-// 章节教学大纲（第一层）由顶部按钮切到独立的大纲视图，不占 Notebook 的学习
-// 标签位；Notebook 里放的是这一页自己的教学过程（第二层）。
+// 第一个标签是章节教学大纲（ADR 0028 第一层），用 GTK 控件手写；其余标签是
+// 这一页自己的教学过程（第二层）。两者不能互相替换。
 class TypeSemanticsLessonPage final {
 public:
     TypeSemanticsLessonPage(
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader,
         const map<string, int>& mastery_by_id,
         function<void(const ExperimentSelection&, bool)> on_experiment_requested,
         function<void()> on_reference_requested);
@@ -51,11 +48,6 @@ private:
     };
 
     void open_experiment(const string& subchapter_name);
-    // 把本章的 overview_document 渲染进大纲视图。它只渲染这一份——顶部
-    // 「完整手册」按钮跳转的分类手册串着本分类全部文档，两者不能互相替代。
-    void render_overview(
-        const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader);
     void apply_tab_labels(const map<string, int>& mastery_by_id);
     Gtk::Widget* build_tab_label(
         const SectionTab& section, const map<string, int>& mastery_by_id) const;
@@ -66,6 +58,25 @@ private:
     // 「让变化说明规则」的可控逐步演示（type_deduction 教案第 4 节分镜）。
     // 步骤 0–6：创建 original / 初始化 copy / 绑定 alias / 绑定 view /
     // copy=7 / alias=99 / view=20 的边界。默认静止，读者操作后才推进。
+    // 大纲页的知识点路线图：节点按 requires 的拓扑层排布，连线是先修关系，
+    // 配色是掌握目标，底部细条是当前熟练度。全部来自运行时数据，所以只能
+    // Cairo 自绘——.blp 表达不了「层数与连线由数据决定」的结构。
+    struct RoadmapNode {
+        string name;      // subchapter name
+        string title;
+        MasteryGoal goal = MasteryGoal::Unrated;
+        int mastery = 0;  // 0-5
+        double x = 0.0;
+        double y = 0.0;
+        double width = 0.0;
+        double height = 0.0;
+    };
+
+    void rebuild_roadmap(const map<string, int>& mastery_by_id);
+    void draw_roadmap(
+        const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+    void on_roadmap_pressed(double x, double y);
+
     void draw_deduction_graph(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
     void set_anim_step(int step);
@@ -80,8 +91,10 @@ private:
     vector<unique_ptr<LearningUnitView>> m_unit_views;
 
     Gtk::Notebook* m_section_notebook = nullptr;
-    Gtk::Stack* m_view_stack = nullptr;
-    unique_ptr<DocumentView> m_overview_view;
+    Gtk::DrawingArea* m_roadmap = nullptr;
+    vector<RoadmapNode> m_roadmap_nodes;
+    // 先修边，存的是 m_roadmap_nodes 的下标：from 是先修，to 依赖它。
+    vector<pair<size_t, size_t>> m_roadmap_edges;
     vector<SectionTab> m_section_tabs;
 
     static constexpr int kDeductionAnimSteps = 6;

@@ -1302,3 +1302,35 @@ button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
 
 .home-app-state { color: @athena_primary; }
 .home-app-state-unbuilt { color: @athena_muted; }
+
+/* 教学大纲页（GTK 手写，不渲染 Markdown）：编号、检查点标签、顺序步骤和
+   主次分档。用控件表达是为了让主次与评级一眼可辨，摊平成正文就看不出轻重。 */
+.outline-risk-index {
+    font-weight: 800;
+    color: @athena_primary;
+    min-width: 22px;
+}
+
+.outline-risk-tag {
+    color: @athena_primary_text;
+    background-color: @athena_primary_soft;
+    font-weight: 700;
+}
+
+.outline-step {
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid @athena_border_strong;
+    background-color: @athena_surface;
+    font-weight: 700;
+}
+
+.outline-step-arrow { color: @athena_muted; }
+
+.lesson-callout.outline-tier-master { border-left: 4px solid @athena_primary; }
+.lesson-callout.outline-tier-required { border-left: 4px solid @athena_teal; }
+.lesson-callout.outline-tier-familiar { border-left: 4px solid @athena_secondary; }
+
+.outline-legend-master { color: @athena_primary; font-weight: 700; }
+.outline-legend-required { color: @athena_teal; font-weight: 700; }
+.outline-legend-familiar { color: @athena_secondary; font-weight: 700; }

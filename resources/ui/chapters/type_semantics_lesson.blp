@@ -64,12 +64,6 @@ Box type_semantics_lesson_page {
           spacing: 8;
           valign: center;
 
-          Button type_semantics_overview_button {
-            name: "type_semantics_overview_button";
-            label: "本章教学大纲";
-            styles [ "btn-outline-primary", "btn-sm" ]
-          }
-
           Button type_semantics_reference_button {
             name: "type_semantics_reference_button";
             label: "完整手册";
@@ -81,20 +75,538 @@ Box type_semantics_lesson_page {
     }
   }
 
-  // 标签直接对应课程的子章节，而非 Markdown H2；每页都是可独立扩展的
-  // 原生学习场景，避免一个长页面同时承担所有表达形式。
-  // 章节教学大纲（第一层）独占整页显示，但不占 Notebook 的学习标签位——它和
-  // 「本章导览」分属 ADR 0028 的不同层，顶部按钮在两个视图之间切换。
-  // 注意它渲染的是本章那一份 overview_document；顶部「完整手册」按钮跳转的
-  // 分类手册串着本分类全部四份文档，两者不能互相替代。
-  Stack type_semantics_view_stack {
-    name: "type_semantics_view_stack";
-    vexpand: true;
+  // 标签直接对应课程的子章节。第一个标签是章节教学大纲（ADR 0028 第一层），
+  // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
+  // 卡片一眼可辨，摊平成正文就看不出轻重。Markdown 那份是衍生物，供分类手册用。
+  Notebook type_semantics_section_notebook {
+      [tab]
+      Label { label: "教学大纲"; }
 
-    StackPage {
-      name: "lesson";
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
 
-      child: Notebook type_semantics_section_notebook {
+        Box {
+          orientation: vertical;
+          spacing: 16;
+          margin-bottom: 18;
+
+          // 这一页是 ADR 0028 三层里的第一层：只指方向，不讲语法机制。
+          // 用控件手写而不是渲染 Markdown，因为主次、评级、检查点编号这些
+          // 结构用徽章和卡片一眼可辨，纯正文会把它们摊平。
+          //
+          // 同一份内容另有 Markdown 版（resources/articles/cpp/
+          // type_semantics_overview.md），分类手册在用；两份要一起改，
+          // 改一边会漂移。
+
+          Frame {
+            label: "这一章要解决什么";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "建立判断对象如何初始化、何时有效，以及表达式如何参与传递与转换的基本框架。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+              Label {
+                label: "读 C++ 代码时，只知道「这个变量存着什么」还不够。同一个结果，可能被复制，也可能只是被另一个名字引用；看似普通的一次传递，可能丢失信息，也可能留下失效的引用。本章把这些日常判断背后的语言规则连成一条线。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "五类「看起来没问题」的风险";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "每一条对应后面「判断与代价」里的一个检查点，遇到时可以直接回到那条检查线。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "①"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "不同含义被当成同一种类型"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "枚举、整数和强制转换混在一起时，编译器很难替代码守住边界。"; halign: start; wrap: true; xalign: 0; }
+                }
+                Label { label: "认类型"; valign: start; styles [ "badge", "outline-risk-tag" ] }
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "②"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "读取没有可靠初值的对象"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "代码可能表现不稳定，甚至直接进入未定义行为。"; halign: start; wrap: true; xalign: 0; }
+                }
+                Label { label: "看初始化"; valign: start; styles [ "badge", "outline-risk-tag" ] }
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "③"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "对象已经失效，引用仍被使用"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "表面上还能访问，实际已经越过对象的有效期。"; halign: start; wrap: true; xalign: 0; }
+                }
+                Label { label: "查有效期"; valign: start; styles [ "badge", "outline-risk-tag" ] }
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "④"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "分不清在操作副本还是原对象"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "写法很像，改动却落在不同对象上；反过来没察觉产生了副本时，大对象的复制会变成真实的时间和内存代价。"; halign: start; wrap: true; xalign: 0; }
+                }
+                Label { label: "辨表达式"; valign: start; styles [ "badge", "outline-risk-tag" ] }
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "⑤"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "精度悄悄丢失"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "数值进入范围更小或表达能力不同的类型后，结果可能已经不是原来的值。"; halign: start; wrap: true; xalign: 0; }
+                }
+                Label { label: "找转换"; valign: start; styles [ "badge", "outline-risk-tag" ] }
+              }
+
+              Label {
+                label: "这些风险大多是表达能力增强后留下的选择题。构造函数和引用让对象的建立与使用有了更丰富的表达，也让「这是新对象还是已有对象的别名」成了每次都要判断的事；C++11 的类型推导省掉重复书写，同时把「副本还是别名」的意图交还给你；列表初始化和作用域枚举则是反过来收紧检查，把一部分风险挪到编译期。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "心智模型：对象与表达式";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "对象是程序中具有身份、承载状态的实体；表达式是代码中参与求值的部分，可以指向已有对象，也可以计算出用于后续操作的值。多个表达式可以指向同一个对象，所以「写法不同」不一定意味着「多出了一份对象」。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 14;
+                homogeneous: true;
+
+                Box {
+                  orientation: vertical; spacing: 6;
+                  styles [ "lesson-callout" ]
+                  Label { label: "对象看三个方面"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "类型 —— 它是什么，允许哪些操作，编译器能检查什么"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "状态 —— 是否已正确初始化，此刻承载什么值或资源"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "生命周期 —— 何时开始存在、何时结束，当前访问是否仍有效"; halign: start; wrap: true; xalign: 0; }
+                }
+
+                Box {
+                  orientation: vertical; spacing: 6;
+                  styles [ "lesson-callout" ]
+                  Label { label: "表达式看两个方面"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "类型 —— 它产生或指向什么类型的结果"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "值类别 —— 它怎样参与引用绑定、重载选择等规则"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-figure" ]
+
+                Picture ts_outline_model_figure {
+                  name: "ts_outline_model_figure";
+                  content-fit: contain;
+                  halign: fill;
+                  hexpand: true;
+                  can-shrink: true;
+                  height-request: 420;
+                }
+                Label {
+                  label: "两者通过「指向」和「初始化」联系起来。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-figure-caption" ]
+                }
+              }
+
+              Label {
+                label: "值类别描述表达式怎样参与操作，生命周期描述对象何时有效——二者必须分别判断：不能靠「持久还是临时」直接判定值类别，还要看类型、可用操作和使用场景。这是本章最需要建立的区分。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+          Frame {
+            label: "先看主次与顺序";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "推荐顺序";
+                halign: start;
+                styles [ "lesson-callout-title" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 6;
+                halign: start;
+
+                Label { label: "初始化"; styles [ "outline-step" ] }
+                Label { label: "→"; styles [ "outline-step-arrow" ] }
+                Label { label: "对象生命周期"; styles [ "outline-step" ] }
+                Label { label: "→"; styles [ "outline-step-arrow" ] }
+                Label { label: "auto"; styles [ "outline-step" ] }
+                Label { label: "→"; styles [ "outline-step-arrow" ] }
+                Label { label: "枚举 / 转换"; styles [ "outline-step" ] }
+                Label { label: "→"; styles [ "outline-step-arrow" ] }
+                Label { label: "值类别"; styles [ "outline-step" ] }
+                Label { label: "→"; styles [ "outline-step-arrow" ] }
+                Label { label: "decltype"; styles [ "outline-step" ] }
+              }
+
+              Label {
+                label: "这不是随口排的，它就是知识点之间先修关系的拓扑序——decltype 的规则要用值类别说明，值类别要先知道临时对象何时销毁，跳着学会在后面卡住。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical; spacing: 5;
+                styles [ "lesson-callout", "outline-tier-master" ]
+                Box {
+                  orientation: horizontal; spacing: 8;
+                  Label { label: "先拿下"; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
+                  Label { label: "初中级 · 需要精通"; halign: start; styles [ "dim-label" ] }
+                }
+                Label { label: "初始化的保证、对象生命周期与临时对象、auto 的副本与别名之分。这三样在后面每一章都会用到，判断错的代价最直接。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Box {
+                orientation: vertical; spacing: 5;
+                styles [ "lesson-callout", "outline-tier-required" ]
+                Box {
+                  orientation: horizontal; spacing: 8;
+                  Label { label: "随后掌握"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                  Label { label: "初中级 · 必须掌握"; halign: start; styles [ "dim-label" ] }
+                }
+                Label { label: "枚举的类型边界、转换的意图与检查位置。它们不难，但决定接口能不能替你挡住误用。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Box {
+                orientation: vertical; spacing: 5;
+                styles [ "lesson-callout", "outline-tier-required" ]
+                Box {
+                  orientation: horizontal; spacing: 8;
+                  Label { label: "可以慢一点"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                  Label { label: "进阶 · 必须掌握"; halign: start; styles [ "dim-label" ] }
+                }
+                Label { label: "值类别。规则密度高，第一遍能判断左值／纯右值／将亡值并说明它影响哪种绑定即可，写模板时会再深入。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Box {
+                orientation: vertical; spacing: 5;
+                styles [ "lesson-callout", "outline-tier-familiar" ]
+                Box {
+                  orientation: horizontal; spacing: 8;
+                  Label { label: "可以先跳过"; styles [ "badge", "badge-mastery-goal", "mastery-goal-familiar" ] }
+                  Label { label: "进阶 · 一般了解"; halign: start; styles [ "dim-label" ] }
+                }
+                Label { label: "decltype 的表达式取类型规则。先知道它解决什么问题，等真正写泛型代码时回来补。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Label {
+                label: "贯穿全章、没有独立实验的是静态类型本身：它表达什么意图、限制哪些操作、编译器能检查到哪里。每学完一个方向回头问一次「这里的类型到底约束住了什么」，比单独为它安排一节更有用。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "本章知识点路线图";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "箭头是先修关系，颜色是掌握目标，底部细条是你当前的熟练度。点任意一个方块直接跳到那一节。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              // Cairo 自绘：节点位置、依赖连线和熟练度都来自运行时数据
+              // （requires 拓扑序 + 掌握目标评级 + 学习库里的熟练度），
+              // 不是画好的图片，也不是 .blp 能表达的结构（AGENTS.md GTK 规则第 3 条）。
+              DrawingArea ts_outline_roadmap {
+                name: "ts_outline_roadmap";
+                height-request: 470;
+                hexpand: true;
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 14;
+                halign: start;
+
+                Label { label: "■ 需要精通"; styles [ "outline-legend-master" ] }
+                Label { label: "■ 必须掌握"; styles [ "outline-legend-required" ] }
+                Label { label: "■ 一般了解"; styles [ "outline-legend-familiar" ] }
+              }
+            }
+          }
+
+          Frame {
+            label: "读代码时的五个检查点";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "本章的主脊。实际阅读时允许往返，不必机械地走固定步骤；上面五类风险各自对应这里的一条。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "①"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "认类型"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "对象和表达式分别是什么类型，const 与引用修饰了哪一层。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "②"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "看初始化"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "对象怎样取得初始状态，是否存在信息丢失或未初始化风险。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "③"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "查有效期"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "对象此刻是否仍然存在，引用会不会活得比所指对象更久。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "④"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "辨表达式"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "这个表达式指向已有对象还是产生新值，它的类型和值类别又怎样影响绑定、重载与后续操作。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+              Box {
+                orientation: horizontal; spacing: 10;
+                Label { label: "⑤"; valign: start; styles [ "outline-risk-index" ] }
+                Box {
+                  orientation: vertical; spacing: 2; hexpand: true;
+                  Label { label: "找转换"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "转换在哪里发生，是隐式还是显式，哪些前提仍需程序员保证。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-figure" ]
+
+                Picture ts_outline_loop_figure {
+                  name: "ts_outline_loop_figure";
+                  content-fit: contain;
+                  halign: fill;
+                  hexpand: true;
+                  can-shrink: true;
+                  height-request: 420;
+                }
+                Label {
+                  label: "依据规则形成预期，再用证据修正理解——一次运行正常不能证明代码总是正确，尤其不能据此排除未定义行为。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-figure-caption" ]
+                }
+              }
+            }
+          }
+
+          Frame {
+            label: "反复出现的三组选择";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical; spacing: 4;
+                styles [ "lesson-callout" ]
+                Label { label: "明确类型，还是交给推导？"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "推导减少重复，也能适应复杂类型；明确写出类型能直接表达接口意图。两者都要检查是否保留了所需的只读约束与引用关系。"; halign: start; wrap: true; xalign: 0; }
+              }
+              Box {
+                orientation: vertical; spacing: 4;
+                styles [ "lesson-callout" ]
+                Label { label: "保留副本，还是共享原对象？"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "副本让后续修改相互独立，但可能带来复制代价；引用避免复制，却要求关心原对象的有效期以及修改是否影响其他使用者。"; halign: start; wrap: true; xalign: 0; }
+              }
+              Box {
+                orientation: vertical; spacing: 4;
+                styles [ "lesson-callout" ]
+                Label { label: "接受转换，还是保留类型边界？"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "更严格的初始化与独立枚举类型能拦住一部分误用；与外部数据或旧接口交互时，仍需检查范围、含义和前提。"; halign: start; wrap: true; xalign: 0; }
+              }
+            }
+          }
+
+          Frame {
+            label: "学完这一章，你应该能做到";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "前提只要知道变量、赋值和基本类型；引用与只读约束会在这里建立初步认识。下面每一条都可以拿一段没见过的代码当场检验，顺序与推荐学习顺序一致。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "精通"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
+                Label { label: "面对一次初始化，说明它提供了什么保证、可能在哪里丢失信息、谁来检查。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "精通"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
+                Label { label: "说出一个对象从哪一行开始存在、到哪一行结束，并判断某个引用此刻是否还有效。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "精通"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
+                Label { label: "指出哪些名字指向同一个对象、哪些是各自独立的副本，并说明在一个具体场景里该选哪种：是否要改原对象、复制的代价、原对象的寿命够不够。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "掌握"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                Label { label: "说明一组状态什么时候值得有独立的枚举类型，它挡住了哪些误用。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "掌握"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                Label { label: "看到一次转换，说出它表达什么意图、检查发生在编译期还是运行期、哪些前提仍由自己保证。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "掌握"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                Label { label: "判断一个表达式是左值、纯右值还是将亡值，并据此说明它能绑定到哪种引用。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+              Box { orientation: horizontal; spacing: 10;
+                Label { label: "了解"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-familiar" ] }
+                Label { label: "说明 decltype 解决的是哪一类问题，知道它和 auto 问的不是同一件事。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+              }
+
+              Label {
+                label: "这套判断会继续用于「引用」中的传参与返回、「RAII 与资源管理」中的所有权与资源转移，以及「模板与泛型」中的类型推导。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "回顾时尤其检查这些误区";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "· 值类别不等于对象寿命。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 使用引用不等于对象一定仍然有效。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· std::move 只是把表达式转成将亡值，它自己不移动任何东西——本章的值类别实验里可以直接看到它只改变了重载选择。移动怎样真正发生，留到「RAII 与资源管理」。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 交给编译器推导不等于不再需要表达副本或别名的意图。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 显式转换不等于安全转换。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+
+              Label {
+                label: "先说明意图与前提，再依据规则作出判断，用实验检验并修正理解。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+            }
+          }
+        }
+      }
       [tab]
       Label { label: "本章导览"; }
 
@@ -1894,45 +2406,5 @@ Box type_semantics_lesson_page {
         }
       }
 
-      };
-    }
-
-    StackPage {
-      name: "overview";
-
-      child: Box {
-        orientation: vertical;
-        spacing: 12;
-        vexpand: true;
-
-        Box {
-          orientation: horizontal;
-          spacing: 10;
-
-          Button type_semantics_overview_back_button {
-            name: "type_semantics_overview_back_button";
-            label: "← 返回学习过程";
-            halign: start;
-            styles [ "btn-outline-secondary", "btn-sm" ]
-          }
-
-          Label {
-            label: "这是本章的教学大纲：它指方向，不讲语法细节。具体怎么学在下面各个小节里。";
-            halign: start;
-            wrap: true;
-            xalign: 0;
-            hexpand: true;
-            styles [ "dim-label" ]
-          }
-        }
-
-        // 正文由 TypeSemanticsLessonPage 用 DocumentView 渲染 overview_document
-        Box type_semantics_overview_host {
-          name: "type_semantics_overview_host";
-          orientation: vertical;
-          vexpand: true;
-        }
-      };
-    }
   }
 }

@@ -111,10 +111,9 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     const auto sections =
         builder->get_widget<Gtk::Notebook>("type_semantics_section_notebook");
     ASSERT_NE(sections, nullptr);
-    // 「本章导览」+ 七个知识点小节，顺序服从教学大纲的推荐顺序：初始化 /
-    // 对象生命周期 / 类型推导 / enum class / 类型转换 / 值类别 / decltype。
-    // 章节教学大纲不占标签位，由页面顶部的按钮跳到手册视图。
-    EXPECT_EQ(sections->get_n_pages(), 8);
+    // 「教学大纲」+「本章导览」+ 七个知识点小节，顺序服从大纲的推荐顺序：
+    // 初始化 / 对象生命周期 / 类型推导 / enum class / 类型转换 / 值类别 / decltype。
+    EXPECT_EQ(sections->get_n_pages(), 9);
     // 每一页都必须是可取到的控件：apply_tab_labels 会按下标给每页换标签，
     // 取不到的页会在运行期变成 gtk_notebook_set_tab_label 断言失败。
     for (int index = 0; index < sections->get_n_pages(); ++index) {
@@ -126,15 +125,9 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
         nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
-    // 本章大纲独占一个 Stack 页，不占 Notebook 学习标签位；它渲染的是本章那一份
-    // overview_document，和「完整手册」按钮跳转的分类手册不是一回事。
+    // 章节教学大纲是第一个标签，用 GTK 控件手写而不是渲染 Markdown。
     EXPECT_NE(
-        builder->get_widget<Gtk::Stack>("type_semantics_view_stack"), nullptr);
-    EXPECT_NE(
-        builder->get_widget<Gtk::Box>("type_semantics_overview_host"), nullptr);
-    EXPECT_NE(
-        builder->get_widget<Gtk::Button>("type_semantics_overview_button"),
-        nullptr);
+        builder->get_widget<Gtk::Picture>("ts_outline_model_figure"), nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
     EXPECT_NE(

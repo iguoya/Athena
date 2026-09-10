@@ -97,7 +97,6 @@ void rounded_box(
 TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader,
     const map<string, int>& mastery_by_id,
     function<void(const ExperimentSelection&, bool)> on_experiment_requested,
     function<void()> on_reference_requested)
@@ -111,12 +110,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         "type_semantics_reference_button");
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
-    m_view_stack =
-        builder->get_widget<Gtk::Stack>("type_semantics_view_stack");
-    auto* overview_button =
-        builder->get_widget<Gtk::Button>("type_semantics_overview_button");
-    auto* overview_back =
-        builder->get_widget<Gtk::Button>("type_semantics_overview_back_button");
+    m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
+
     auto* deduction_unit_host = builder->get_widget<Gtk::Box>(
         "type_semantics_deduction_unit_host");
     auto* deduction_variant_host = builder->get_widget<Gtk::Box>(
@@ -139,8 +134,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !reference_button
-        || !m_section_notebook || !m_view_stack || !overview_button
-        || !overview_back || !deduction_unit_host
+        || !m_section_notebook || !m_roadmap || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !m_deduction_graph
         || !m_anim_status
@@ -158,6 +152,10 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
          "/app/articles/cpp/images/auto_selection_flow.svg"},
         {"ts_lifetime_figure",
          "/app/articles/cpp/images/object_lifetime_timeline.svg"},
+        {"ts_outline_model_figure",
+         "/app/articles/cpp/images/type_semantics_model.svg"},
+        {"ts_outline_loop_figure",
+         "/app/articles/cpp/images/type_semantics_loop.svg"},
     };
     for (const auto& [figure_id, resource_path] : lesson_figures) {
         if (auto* figure = builder->get_widget<Gtk::Picture>(figure_id)) {
@@ -317,6 +315,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     // 而两者都服从教学大纲给出的推荐顺序——它就是知识点 requires 关系的拓扑序。
     // 大纲是方向决策层：页面顺序跟着它改，不是反过来。
     m_section_tabs = {
+        {"教学大纲", {}},
         {"本章导览", {}},
         {"初始化", {"initialization"}},
         {"对象生命周期", {"object_lifetime"}},
@@ -327,55 +326,19 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
         {"decltype", {"decltype_deduction"}},
     };
-    overview_button->signal_clicked().connect(
-        [this]() { m_view_stack->set_visible_child("overview"); });
-    overview_back->signal_clicked().connect(
-        [this]() { m_view_stack->set_visible_child("lesson"); });
+    m_roadmap->set_draw_func(
+        [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_roadmap(cr, width, height);
+        });
+    auto roadmap_click = Gtk::GestureClick::create();
+    roadmap_click->signal_pressed().connect(
+        [this](int, double x, double y) { on_roadmap_pressed(x, y); });
+    m_roadmap->add_controller(roadmap_click);
+    rebuild_roadmap(mastery_by_id);
 
-    render_overview(builder, content_loader);
     apply_tab_labels(mastery_by_id);
 }
 
-void TypeSemanticsLessonPage::render_overview(
-    const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader) {
-    auto* host = builder->get_widget<Gtk::Box>("type_semantics_overview_host");
-    if (host == nullptr || m_chapter.overview_document.empty()) {
-        cerr << "TypeSemantics lesson: overview unavailable" << endl;
-        return;
-    }
-
-    const string markdown =
-        content_loader.load_document(m_chapter.overview_document);
-    if (markdown.empty()) {
-        cerr << "TypeSemantics lesson: failed to load "
-             << m_chapter.overview_document << endl;
-        return;
-    }
-
-    // 图片按大纲所在目录解析，Markdown 里的 images/xxx.svg 因此落到
-    // /app/articles/cpp/images/xxx.svg。
-    constexpr string_view resources_prefix = "resources/";
-    string relative = m_chapter.overview_document;
-    if (relative.rfind(resources_prefix, 0) == 0) {
-        relative = relative.substr(resources_prefix.size());
-    }
-    const auto slash = relative.find_last_of('/');
-    const string resource_base =
-        slash == string::npos ? "/app/" : "/app/" + relative.substr(0, slash + 1);
-
-    try {
-        m_overview_view = make_unique<DocumentView>(resource_base);
-        auto& view = m_overview_view->widget();
-        view.set_vexpand(true);
-        host->append(view);
-        m_overview_view->set_markdown(markdown);
-    } catch (const exception& error) {
-        cerr << "TypeSemantics lesson: failed to render overview: "
-             << error.what() << endl;
-        m_overview_view.reset();
-    }
-}
 
 
 LearningUnitView& TypeSemanticsLessonPage::add_learning_unit(
@@ -567,8 +530,161 @@ bool TypeSemanticsLessonPage::on_anim_tick() {
     return true;
 }
 
+void TypeSemanticsLessonPage::rebuild_roadmap(
+    const map<string, int>& mastery_by_id) {
+    m_roadmap_nodes.clear();
+    m_roadmap_edges.clear();
+
+    // 节点顺序就是配置里的顺序，而配置顺序已经是 requires 的拓扑序
+    // （大纲的推荐学习顺序），所以从左上到右下读就是推荐路径。
+    map<string, size_t> index_by_name;
+    for (const auto& subchapter : m_chapter.subchapters) {
+        const auto found = mastery_by_id.find(subchapter.function_id);
+        index_by_name[subchapter.name] = m_roadmap_nodes.size();
+        m_roadmap_nodes.push_back(RoadmapNode{
+            .name = subchapter.name,
+            .title = subchapter.title,
+            .goal = subchapter.mastery_goal,
+            .mastery = found == mastery_by_id.end() ? 0 : found->second,
+        });
+    }
+
+    for (size_t i = 0; i < m_chapter.subchapters.size(); ++i) {
+        for (const auto& requirement : m_chapter.subchapters[i].requires_points) {
+            // 跨章先修不画：这张图只讲本章内部的顺序。
+            if (!requirement.same_chapter) {
+                continue;
+            }
+            for (const auto& [name, index] : index_by_name) {
+                if (m_chapter.subchapters[index].function_id
+                    == requirement.function_id) {
+                    m_roadmap_edges.emplace_back(index, i);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (m_roadmap != nullptr) {
+        m_roadmap->queue_draw();
+    }
+}
+
+void TypeSemanticsLessonPage::draw_roadmap(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    if (m_roadmap_nodes.empty()) {
+        return;
+    }
+
+    // 三列纵向排布：读起来是一条从上到下的推荐路径，同时留出足够横向空间
+    // 让先修连线不互相压住。
+    constexpr double kNodeWidth = 190.0;
+    constexpr double kNodeHeight = 62.0;
+    constexpr double kRowGap = 34.0;
+    const double columns = 3.0;
+    const double usable = static_cast<double>(width) - 24.0;
+    const double column_step = max(kNodeWidth + 20.0, usable / columns);
+    const double left = 12.0 + (usable - column_step * columns) / 2.0;
+
+    for (size_t i = 0; i < m_roadmap_nodes.size(); ++i) {
+        const double column = static_cast<double>(i % 3);
+        const double row = static_cast<double>(i / 3);
+        auto& node = m_roadmap_nodes[i];
+        node.width = kNodeWidth;
+        node.height = kNodeHeight;
+        node.x = left + column * column_step + (column_step - kNodeWidth) / 2.0;
+        node.y = 16.0 + row * (kNodeHeight + kRowGap);
+    }
+
+    // 先画连线，节点压在上面。
+    for (const auto& [from, to] : m_roadmap_edges) {
+        const auto& a = m_roadmap_nodes[from];
+        const auto& b = m_roadmap_nodes[to];
+        const double x1 = a.x + a.width / 2.0;
+        const double y1 = a.y + a.height;
+        const double x2 = b.x + b.width / 2.0;
+        const double y2 = b.y;
+
+        cr->set_source_rgb(kMuted.r, kMuted.g, kMuted.b);
+        cr->set_line_width(1.4);
+        cr->move_to(x1, y1);
+        // 同一行内的依赖走直线，跨行的走一段折线，避免斜穿其它节点。
+        if (abs(y2 - y1) < 4.0) {
+            cr->line_to(x2, y2);
+        } else {
+            const double middle = (y1 + y2) / 2.0;
+            cr->curve_to(x1, middle, x2, middle, x2, y2);
+        }
+        cr->stroke();
+
+        const double angle = atan2(y2 - (y1 + y2) / 2.0, x2 - x1);
+        cr->move_to(x2, y2);
+        cr->line_to(x2 - 6.0 * cos(angle - 0.5), y2 - 6.0 * sin(angle - 0.5));
+        cr->line_to(x2 - 6.0 * cos(angle + 0.5), y2 - 6.0 * sin(angle + 0.5));
+        cr->close_path();
+        cr->fill();
+    }
+
+    for (const auto& node : m_roadmap_nodes) {
+        // 配色只表达掌握目标，不表达难度——两者是独立维度（ADR 0029），
+        // 用同一套视觉编码会让人以为难就等于要精通。
+        ChartColor border = kMuted;
+        ChartColor fill{0.97, 0.98, 0.99};
+        switch (node.goal) {
+        case MasteryGoal::Master:
+            border = {0.039, 0.345, 0.792};
+            fill = {0.878, 0.925, 1.0};
+            break;
+        case MasteryGoal::Required:
+            border = {0.125, 0.788, 0.592};
+            fill = {0.878, 0.973, 0.949};
+            break;
+        case MasteryGoal::Familiar:
+        case MasteryGoal::Unrated:
+            break;
+        }
+        rounded_box(cr, node.x, node.y, node.width, node.height, border, fill);
+        draw_cairo_text(
+            cr, node.title, node.x + node.width / 2.0, node.y + 24.0, 14.0, kInk,
+            true, 0.5);
+
+        // 底部细条：当前熟练度。没有记录时留空槽，一眼看出哪几节还没开始。
+        const double track_x = node.x + 14.0;
+        const double track_w = node.width - 28.0;
+        const double track_y = node.y + node.height - 16.0;
+        cr->set_source_rgb(0.87, 0.89, 0.91);
+        cr->rectangle(track_x, track_y, track_w, 5.0);
+        cr->fill();
+        if (node.mastery > 0) {
+            cr->set_source_rgb(border.r, border.g, border.b);
+            cr->rectangle(
+                track_x, track_y, track_w * clamp(node.mastery, 0, 5) / 5.0, 5.0);
+            cr->fill();
+        }
+    }
+}
+
+void TypeSemanticsLessonPage::on_roadmap_pressed(double x, double y) {
+    for (const auto& node : m_roadmap_nodes) {
+        if (x < node.x || x > node.x + node.width || y < node.y
+            || y > node.y + node.height) {
+            continue;
+        }
+        // 跳到讲这个知识点的那个标签，而不是直接开实验——大纲的作用是指路。
+        for (size_t index = 0; index < m_section_tabs.size(); ++index) {
+            const auto& names = m_section_tabs[index].subchapter_names;
+            if (find(names.begin(), names.end(), node.name) != names.end()) {
+                m_section_notebook->set_current_page(static_cast<int>(index));
+                return;
+            }
+        }
+        return;
+    }
+}
+
 void TypeSemanticsLessonPage::refresh_progress(
     const map<string, int>& mastery_by_id) {
+    rebuild_roadmap(mastery_by_id);
     apply_tab_labels(mastery_by_id);
 }
 
