@@ -1128,22 +1128,263 @@ Box type_semantics_lesson_page {
         spacing: 18;
         margin-bottom: 18;
 
+        // 策略节（ADR 0031）：目标不是记住语法，而是能在具体情境里选，
+        // 并说清依据和代价。所以这一页从一个真实的选择开始，不从定义开始。
+
         Frame {
-          label: "用类型表达有限状态，而不是裸整数";
+          label: "同一组状态，两种写法";
           styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "一个函数要报告文件的打开状态。你有两种写法，它们都能跑，区别在于编译器愿意替你挡住多少错误。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 3;
+
+              Label { label: "// 写法一：整数常量"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "const int kClosed = 0;"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "const int kOpen   = 1;"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "void report(int state);"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: ""; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "// 写法二：作用域枚举"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "enum class FileState : unsigned char { closed, open };"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "void report(FileState state);"; halign: start; styles [ "native-lesson-code" ] }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "写法一放行的三件事"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "report(42) 能编译——42 不是任何一个状态；report(kRed) 能编译——那是另一组常量里的红灯；state + 1 能编译——状态相加没有意义。三件事编译器都不会拦你，因为在它眼里这些都只是 int。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Label {
+              label: "写法二里这三行全都编译不过。函数签名从「给我一个整数」变成了「给我一个文件状态」，可取的值集合写进了类型本身。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "什么时候值得给一组值独立类型";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "三条判据同时成立时，收益最明显；只满足一条时未必值得。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 4;
+              styles [ "lesson-callout" ]
+
+              Label { label: "① 这组值要跨接口传递"; halign: start; styles [ "lesson-callout-title" ] }
+              Label { label: "签名要替你说清「这里只接受这几个值」，调用方才不必回头翻文档。"; halign: start; wrap: true; xalign: 0; }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 4;
+              styles [ "lesson-callout" ]
+
+              Label { label: "② 值本身没有算术意义"; halign: start; styles [ "lesson-callout-title" ] }
+              Label { label: "两个状态相加、状态乘二都不代表任何东西。既然没意义，就该让它编译不过。"; halign: start; wrap: true; xalign: 0; }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 4;
+              styles [ "lesson-callout" ]
+
+              Label { label: "③ 你希望编译器挡住来自别处的同类整数"; halign: start; styles [ "lesson-callout-title" ] }
+              Label { label: "红灯是 3、打开也是 1，裸整数分不出它们属于哪一组；独立类型能。"; halign: start; wrap: true; xalign: 0; }
+            }
+
+            Label {
+              label: "代价也要一起算：拿底层值必须显式写 static_cast，不能直接当数组下标，位运算需要你自己重载运算符。这些不是缺陷，是它换来严格检查所付的价钱。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "换三个情境，自己判断";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "答案不是清一色的「用」。先自己判断，再看后面的说明。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "情境一：协议里的状态字段，要在解析、校验、日志三个模块间传递"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "该用。三条判据全中：跨接口传、没有算术意义、最怕和别处的整数串味。协议编解码那一层做一次显式转换，代价只付在边界上。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "情境二：用状态值直接索引一张查找表"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "可以用，但要想清楚。每次索引都得写 static_cast，如果索引就是这组值的主要用途，收益就被样板代码抵消了一部分。折中做法是保留 enum class，配一个 to_index 函数把转换收在一处。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "情境三：可组合的权限位（读、写、执行，要按位取并）"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "不方便。作用域枚举默认不支持按位运算，要自己重载运算符才能组合；而且「组合出来的值」本来就不在枚举列出的取值里。这正是它的代价所在——不是所有整数常量集合都该改成 enum class。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+          }
+        }
+
+        // 学后确认题，由 TypeSemanticsLessonPage 填入
+        Box type_semantics_enum_unit_host {
+          name: "type_semantics_enum_unit_host";
+          orientation: vertical;
+          hexpand: true;
+        }
+
+        Frame {
+          label: "去实验里核对";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "实验用交通灯和文件状态两个枚举，看四件事：成员必须带作用域限定、不能隐式转成 int、显式 static_cast 才能取底层值、底层类型确实是你指定的 unsigned char。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "最后一行「不同枚举直接比较：编译期错误」是规则说明，不是程序跑出来的——那行代码在源文件里是注释，因为它根本编译不过。这类区别本页一律标明。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-safe" ]
+            }
+            Button type_semantics_enum_button {
+              name: "type_semantics_enum_button";
+              label: "验证 enum class";
+              halign: start;
+              styles [ "btn-primary" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "边界：它挡的是意外，不是错误";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "作用域枚举不保证值域完整"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "static_cast<FileState>(42) 能编译，得到一个不在 closed / open 里的值。之后拿它去 switch、去索引，行为就不再受任何保护。它拦得住隐式转换，拦不住你自己写下的显式转换。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Label {
+              label: "所以从外部数据（协议字节、配置文件、用户输入）转进枚举时，转换点要自己做范围检查——这属于「类型转换」那一节要判断的事。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "小结：先问这组值要不要跨接口";
+          styles [ "panel-frame", "group-frame" ]
+
           Box {
             orientation: vertical;
             spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
+            margin-top: 14;
+            margin-bottom: 14;
             margin-start: 18;
             margin-end: 18;
-            Label { label: "enum class 给枚举值独立作用域，并禁止意外地与整数互相隐式转换。它让函数签名直接表达可取的状态集合。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
-            Label { label: "当确实要和底层协议或数组下标交互时，再在局部做显式转换。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
+
+            Label {
+              label: "要跨接口传递、没有算术意义、怕和别处的整数混淆——三条都占，就给它独立类型；只是函数内部临时区分几个分支，裸整数或普通枚举也够用。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "选择的代价是每次跨越类型边界都要显式转换。把这些转换收在协议解析、表索引这样明确的一两处，比在整个代码库里散着写要划算得多。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
           }
-        }
-        Box { orientation: horizontal; halign: start;
-          Button type_semantics_enum_button { name: "type_semantics_enum_button"; label: "验证 enum class"; styles [ "btn-primary" ] }
         }
       }
     }

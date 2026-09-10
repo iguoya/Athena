@@ -114,6 +114,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         "type_semantics_deduction_unit_host");
     auto* deduction_variant_host = builder->get_widget<Gtk::Box>(
         "type_semantics_deduction_variant_host");
+    auto* enum_unit_host =
+        builder->get_widget<Gtk::Box>("type_semantics_enum_unit_host");
     m_deduction_graph = builder->get_widget<Gtk::DrawingArea>(
         "type_semantics_deduction_graph");
     m_anim_status =
@@ -129,7 +131,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !reference_button
         || !m_section_notebook || !deduction_unit_host
-        || !deduction_variant_host || !m_deduction_graph || !m_anim_status
+        || !deduction_variant_host || !enum_unit_host || !m_deduction_graph
+        || !m_anim_status
         || !m_anim_note || !m_anim_playpause || !anim_prev || !anim_next
         || !anim_reset) {
         throw runtime_error("Failed to load TypeSemantics lesson Blueprint");
@@ -212,6 +215,28 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
                 function_id_of(m_chapter, "auto_deduction"),
         },
         "auto_deduction");
+
+    // enum class 是策略节：正文让读者在三个情境里自己选，这里只用一道确认题
+    // 收住最常被误解的边界——它挡的是隐式转换，不是显式转换。
+    add_learning_unit(
+        *enum_unit_host,
+        LearningUnit{
+            .id = "enum_explicit_cast_boundary",
+            .heading = "",
+            .claim = "作用域枚举挡住的是意外的隐式转换，不是你自己写下的显式转换。",
+            .question =
+                "FileState 只有 closed 和 open。static_cast<FileState>(42) 会怎样？",
+            .choices = {
+                "编译失败，42 不是合法的 FileState",
+                "编译通过，得到一个不在枚举列表里的值",
+                "编译通过，自动截断成 open",
+            },
+            .correct_choice = 1,
+            .feedback = "编译通过。static_cast 是你明确写下的意图，编译器照做；得到的值不在 closed / open 之列，之后拿它 switch 或索引都不再受保护。所以从协议字节、配置文件这类外部数据转进枚举时，范围检查得你自己做。",
+            .follow_up = "实验里的显式转换是反着来的——从枚举取底层值，那个方向永远安全。",
+            .experiment_function_id = function_id_of(m_chapter, "enum_class"),
+        },
+        "enum_class");
 
     m_deduction_graph->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
