@@ -1401,22 +1401,280 @@ Box type_semantics_lesson_page {
         spacing: 18;
         margin-bottom: 18;
 
+        // 策略节（ADR 0031）：四种命名转换不按语法罗列，按"你相信什么"来选。
+        // 主线是"检查发生在哪一层"，不是"记住四个关键字"。
+
         Frame {
-          label: "转换不是语法花样，而是意图和检查边界";
+          label: "选哪种转换，取决于你相信什么";
           styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "四种命名转换不是四种写法，而是四句不同的承诺。写下哪一个，就是在告诉编译器和读代码的人：这次转换的前提由谁来保证。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "static_cast —— 我相信这两个类型之间存在明确定义的转换"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "数值之间、有继承关系的指针之间、有转换构造函数的类型之间。编译器在编译期检查这层关系存不存在；关系本身的后果（比如小数被截断）由你承担。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "dynamic_cast —— 我不确定它到底是不是那个派生类，请运行时告诉我"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "四种里唯一在运行期做检查的。转指针失败得到 nullptr，转引用失败抛 bad_cast。代价是要求源类型是多态类型（有虚函数），并且要付运行期查询的开销。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "const_cast —— 我知道这个对象本来就是可写的"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "它只改变访问路径上的 const，不改变对象本身。如果对象原本就定义为 const，去掉限定再写入是未定义行为——编译器不会拦你，这个前提完全由你保证。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "reinterpret_cast —— 我要按另一种类型重新解读这段位模式"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "编译器几乎什么都不检查，只是让你通过。它常见于协议解析和硬件寄存器访问这类确实需要看原始字节的地方；除此之外出现它，多半说明设计上有更该改的东西。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Label {
+              label: "选择的原则很简单：能用检查更严的就不用更松的。四种的检查强度从严到松是 dynamic_cast、static_cast、const_cast、reinterpret_cast——注意这不是使用频率的顺序。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "检查发生在哪一层";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "这是本节的主线。同样是「转换成功了」，保证的强度完全不同：";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 3;
+
+              Label { label: "编译期检查    static_cast    关系不存在就编译不过"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "运行期检查    dynamic_cast   类型不匹配返回 nullptr"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "完全不检查    const_cast     前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "完全不检查    reinterpret_cast   前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "C 风格的 (int)x 属于哪一层？"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "它会依次尝试上面几种，选第一个说得通的——也就是说读代码的人无法从写法看出这次转换到底属于哪种意图，也无法搜索出代码库里所有的危险转换。四种命名转换分开，正是为了让意图留在代码里。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+          }
+        }
+
+        Frame {
+          label: "换三个片段，自己判断";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "先想清楚你相信什么、谁来检查，再选。其中一个片段的答案不是四选一。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "片段一：拿到 Shape*，想调用 Circle 特有的方法"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "用 dynamic_cast，并检查返回值。你不确定它是不是 Circle，这正是运行期检查存在的理由。用 static_cast 也能编译，但猜错时不会有任何提示，之后的调用直接进入未定义行为。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "片段二：秒数存成 double，要传给只收 int 的旧接口"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "用 static_cast，并在转换点想清楚小数部分怎么办。转换本身是合法的数值转换，编译器会放行；「9.8 变成 9」这个后果不是编译器该管的事，是你要在这一行决定的——四舍五入还是直接截断，取决于业务。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "片段三：一个函数收 const 引用，你却想在里面改它"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "根本不该转换，应该改接口。const_cast 能让它编译通过，但函数签名承诺了「我不改你的东西」，转换只是把违背承诺的事藏起来；而且一旦调用方传来的真是 const 对象，写入就是未定义行为。需要修改就把参数改成非 const 引用，让签名说实话。const_cast 的合理场景很窄——比如调用一个你无法修改的、忘记标 const 的旧 API。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+          }
+        }
+
+        // 学后确认题，由 TypeSemanticsLessonPage 填入
+        Box type_semantics_cast_unit_host {
+          name: "type_semantics_cast_unit_host";
+          orientation: vertical;
+          hexpand: true;
+        }
+
+        Frame {
+          label: "去实验里核对";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "实验跑四件事：static_cast 把 9.8 截成 9、dynamic_cast 对匹配类型成功而对不匹配的返回空、const_cast 修改一个本来就可写的对象、reinterpret_cast 指针转成字节指针再转回来仍然相等。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "注意最后一行「往返相等不证明按其它类型解读一直安全」——指针能转回来是这一次的观察结果，不能推广成「这样解读内存总是安全」。实验只展示可观察的合法边界，不把未定义行为包装成可运行示例。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-safe" ]
+            }
+            Button type_semantics_cast_button {
+              name: "type_semantics_cast_button";
+              label: "验证类型转换";
+              halign: start;
+              styles [ "btn-primary" ]
+            }
+          }
+        }
+
+        Frame {
+          label: "边界：写出了转换，不等于转换安全";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "编译通过只说明关系成立，不说明值合理"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "static_cast<int>(1e18) 编译没问题，结果却超出 int 能表示的范围；上一节那个 static_cast<FileState>(42) 也一样。范围检查从来不在转换里，得你自己在转换点做。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "转换是信号，不是解决方案"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "代码里频繁出现转换，通常说明类型设计没表达清楚意图——该用独立类型的地方用了裸整数，该改接口的地方用了 const_cast。先问「能不能不转」，再问「该用哪种转」。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+          }
+        }
+
+        Frame {
+          label: "小结：先问能不能不转，再问谁来检查";
+          styles [ "panel-frame", "group-frame" ]
+
           Box {
             orientation: vertical;
             spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
+            margin-top: 14;
+            margin-bottom: 14;
             margin-start: 18;
             margin-end: 18;
-            Label { label: "static_cast、const_cast、dynamic_cast 与 reinterpret_cast 分别表达不同前提。先写出你相信的关系，再选能保留最多检查的转换。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
-            Label { label: "实验只展示可观察的合法边界；不会把未定义行为包装成可运行示例。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-safe" ] }
+
+            Label {
+              label: "四种命名转换按「你相信什么」区分：相信数值或继承关系用 static_cast，不确定就交给 dynamic_cast 在运行期查，只想去掉访问路径上的 const 用 const_cast，要重新解读位模式才用 reinterpret_cast。能用检查更严的就不用更松的。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "写下转换就是接手了它的前提：编译期检查只保证关系存在，值是否合理、对象是否真的可写、按新类型解读是否有意义，全都由你保证。所以最该先问的那个问题是——这次转换能不能通过改类型或改接口来避免。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
           }
-        }
-        Box { orientation: horizontal; halign: start;
-          Button type_semantics_cast_button { name: "type_semantics_cast_button"; label: "验证类型转换"; styles [ "btn-primary" ] }
         }
       }
     }

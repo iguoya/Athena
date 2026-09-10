@@ -116,6 +116,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         "type_semantics_deduction_variant_host");
     auto* enum_unit_host =
         builder->get_widget<Gtk::Box>("type_semantics_enum_unit_host");
+    auto* cast_unit_host =
+        builder->get_widget<Gtk::Box>("type_semantics_cast_unit_host");
     m_deduction_graph = builder->get_widget<Gtk::DrawingArea>(
         "type_semantics_deduction_graph");
     m_anim_status =
@@ -131,7 +133,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !reference_button
         || !m_section_notebook || !deduction_unit_host
-        || !deduction_variant_host || !enum_unit_host || !m_deduction_graph
+        || !deduction_variant_host || !enum_unit_host || !cast_unit_host
+        || !m_deduction_graph
         || !m_anim_status
         || !m_anim_note || !m_anim_playpause || !anim_prev || !anim_next
         || !anim_reset) {
@@ -237,6 +240,28 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
             .experiment_function_id = function_id_of(m_chapter, "enum_class"),
         },
         "enum_class");
+
+    // 类型转换同样是策略节：三个片段让读者自己选，这里只收住最容易混的一点
+    // ——const_cast 改的是访问路径，不是对象本身。
+    add_learning_unit(
+        *cast_unit_host,
+        LearningUnit{
+            .id = "const_cast_on_real_const_object",
+            .heading = "",
+            .claim = "const_cast 去掉的是访问路径上的 const，它管不了对象本来是什么。",
+            .question =
+                "const int fixed = 7; 之后用 const_cast 去掉限定再写入，会怎样？",
+            .choices = {
+                "编译失败，编译器会拦住对 const 对象的写入",
+                "编译通过，fixed 被改成新值",
+                "编译通过，但写入是未定义行为，结果不可依赖",
+            },
+            .correct_choice = 2,
+            .feedback = "编译通过——const_cast 就是在告诉编译器「这个前提我担保」，它不再检查。但 fixed 本身定义为 const，写入它是未定义行为：可能改了、可能没改、可能整段代码被优化成别的样子。实验里的 const_cast 之所以安全，是因为那个对象本来就是可写的 int，只是经由一条只读路径访问。",
+            .follow_up = "回到实验源码，确认被改的那个对象是怎么定义的——这个区别决定了同一行代码是安全还是未定义。",
+            .experiment_function_id = function_id_of(m_chapter, "cast"),
+        },
+        "cast");
 
     m_deduction_graph->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
