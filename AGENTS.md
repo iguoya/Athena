@@ -104,7 +104,7 @@
 ## 异构独立应用（`apps/`）
 
 - `apps/<Name>/` 下每个目录是一个**与主程序平级的独立学习应用**（ADR 0032），自带构建
-  系统、依赖、界面技术和内容体系。目录名按领域取（`CLanguage`），不带实现技术名。
+  系统、依赖、界面技术和内容体系。目录名按领域取（`c`、`cplusplus` 这样的语言名），不带实现技术名。
 - 主程序的 `meson.build` 不引用 `apps/` 下任何路径，`scripts/check.sh` 也不构建它们；
   应用不 include 主程序头文件、不读 `resources/athena.json`。
 - 唯一共享的基础设施是 SQLite 学习库：路径由主程序通过 `--store` 传入，表结构 owner 是

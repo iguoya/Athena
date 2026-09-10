@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
         if (strcmp(argument, "--store") == 0 && index + 1 < argc) {
             store_path = argv[++index];
         } else if (strcmp(argument, "--version") == 0) {
-            printf("athena-clanguage 0.1.0\n");
+            printf("athena-c 0.1.0\n");
             return 0;
         } else if (strcmp(argument, "--help") == 0) {
             print_usage(argv[0]);

@@ -1,5 +1,5 @@
-#ifndef ATHENA_CLANGUAGE_APP_WINDOW_H
-#define ATHENA_CLANGUAGE_APP_WINDOW_H
+#ifndef ATHENA_C_APP_WINDOW_H
+#define ATHENA_C_APP_WINDOW_H
 
 struct Progress;
 

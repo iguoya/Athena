@@ -51,7 +51,7 @@ static void build_ui(struct Progress* progress) {
     make_text(intro, "独立学习应用已经启动。", false);
     make_text(
         intro,
-        "这个窗口由 apps/CLanguage 里的独立程序自己画出来，和主程序是两个进程。"
+        "这个窗口由 apps/c 里的独立程序自己画出来，和主程序是两个进程。"
         "它有自己的构建系统和界面技术，主程序只负责把它启动起来。",
         true);
 

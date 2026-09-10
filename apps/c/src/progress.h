@@ -1,5 +1,5 @@
-#ifndef ATHENA_CLANGUAGE_PROGRESS_H
-#define ATHENA_CLANGUAGE_PROGRESS_H
+#ifndef ATHENA_C_PROGRESS_H
+#define ATHENA_C_PROGRESS_H
 
 // 与主程序共用同一个 SQLite 学习库（ADR 0032）。数据库路径由启动方通过
 // --store 传入，本程序不自己推导用户数据目录——那样两边就得各写一套平台

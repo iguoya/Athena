@@ -273,12 +273,12 @@ TEST(DomainGraphTest, PriorityAndTrackAreAssigned) {
 }
 
 TEST(DomainGraphTest, ExternalAppDomainCarriesItsAppId) {
-    // C 语言由 apps/CLanguage 那个独立应用承载：它不是本程序里的一个分类，
+    // C 语言由 apps/c 那个独立应用承载：它不是本程序里的一个分类，
     // 但在图谱上仍是同一个可点的节点，不另开入口（ADR 0032）。
     const auto graph = build_domain_graph(MakeCatalog(), {});
     const auto& node = NodeById(graph, "c_lang");
     EXPECT_EQ(node.kind, DomainKind::ExternalApp);
-    EXPECT_EQ(node.app_id, "CLanguage");
+    EXPECT_EQ(node.app_id, "c");
     // 没有对应分类，所以不参与本程序的进度统计。
     EXPECT_EQ(node.total, 0);
 

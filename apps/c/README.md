@@ -20,8 +20,8 @@ C 语言教学最值钱的部分是"看见内存里发生了什么"，适合用�
 ## 构建
 
 ```sh
-cmake -S apps/CLanguage -B apps/CLanguage/build
-cmake --build apps/CLanguage/build
+cmake -S apps/c -B apps/c/build
+cmake --build apps/c/build
 ```
 
 窗口后端需要 `vendor/lvgl/` 和 SDL2，见 [vendor/README.md](vendor/README.md)。
@@ -31,7 +31,7 @@ cmake --build apps/CLanguage/build
 ## 运行
 
 ```sh
-apps/CLanguage/build/athena-clanguage --store ~/Library/Application\ Support/Athena/learning.db
+apps/c/build/athena-c --store ~/Library/Application\ Support/Athena/learning.db
 ```
 
 主程序首页的「C 语言编程」块就是这么把它启动起来的。直接不带参数运行也可以，

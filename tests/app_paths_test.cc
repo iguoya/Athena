@@ -60,7 +60,7 @@ TEST(AppPathsTest, ExternalAppsRootHoldsAppManifests) {
     const string apps = external_apps_root();
     ASSERT_FALSE(apps.empty());
     EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(apps, "CLanguage", "app.json"),
+        Glib::build_filename(apps, "c", "app.json"),
         Glib::FileTest::EXISTS));
 }
 
