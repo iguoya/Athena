@@ -2,6 +2,7 @@
 
 #include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
+#include "ui/external_app_launcher.h"
 #include "registry/function_registry.h"
 #include "storage/learning_store.h"
 #include "ui/learning_dialogs.h"
@@ -49,6 +50,9 @@ private:
     void open_learning_store();
     void setup_menu();
     void build_home_graph();
+    // 首页上 apps/ 里那些独立学习应用的入口（ADR 0032）。
+    void build_home_apps();
+    void launch_home_app(const struct ExternalApp& app);
     void go_home();
     void enter_category(const string& category_name);
     void build_category(const string& category_name);
@@ -97,6 +101,7 @@ private:
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
 
     Gtk::Box* m_home_graph = nullptr;
+    Gtk::Box* m_home_apps = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Box* m_breadcrumb_box = nullptr;
     Gtk::Button* m_home_button = nullptr;

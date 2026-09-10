@@ -1,0 +1,11 @@
+{
+  "id": "CLanguage",
+  "title": "C 语言编程",
+  "description": "独立的 C 语言学习应用，自带章节、文档与实验；从这里以独立进程启动。",
+  "icon": { "type": "theme", "name": "text-x-script-symbolic" },
+  "executable": "build/athena-clanguage",
+  "build": [
+    "cmake -S apps/CLanguage -B apps/CLanguage/build",
+    "cmake --build apps/CLanguage/build"
+  ]
+}

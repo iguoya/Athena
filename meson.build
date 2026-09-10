@@ -191,6 +191,7 @@ app_sources = files(
   'ui/dialog_helpers.cc',
   'ui/experiment_dock.cc',
   'ui/experiment_page.cc',
+  'ui/external_app_launcher.cc',
   'ui/handbook_page.cc',
   'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',

@@ -1261,3 +1261,33 @@ button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
     color: @athena_orange;
     border: 1px solid alpha(@athena_orange, 0.55);
 }
+
+/* 首页的独立学习应用入口（ADR 0032）：每个是 apps/ 下一个自成体系的程序。 */
+.home-apps-heading {
+    font-weight: 700;
+    color: @athena_muted;
+}
+
+.home-app-card {
+    padding: 14px 18px;
+    border: 1px solid @athena_border_strong;
+    border-radius: 10px;
+    background-color: @athena_surface;
+}
+
+.home-app-card:hover {
+    border-color: @athena_primary;
+    background-color: @athena_primary_soft;
+}
+
+.home-app-card-unbuilt {
+    border-style: dashed;
+}
+
+.home-app-title {
+    font-weight: 700;
+    color: @athena_body_text;
+}
+
+.home-app-state { color: @athena_primary; }
+.home-app-state-unbuilt { color: @athena_muted; }

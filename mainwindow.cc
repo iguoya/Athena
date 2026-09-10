@@ -3,6 +3,7 @@
 #include "app_icon.h"
 #include "menu_bar_platform.h"
 #include "registry/domain_graph.h"
+#include "ui/external_app_launcher.h"
 #include "registry/knowledge_graph.h"
 #include "render/domain_graph_view.h"
 #include "services/experiment_runner.h"
@@ -72,6 +73,7 @@ MainWindow::MainWindow(
 
     m_root_stack = m_main_builder->get_widget<Gtk::Stack>("root_stack");
     m_home_graph = m_main_builder->get_widget<Gtk::Box>("home_graph");
+    m_home_apps = m_main_builder->get_widget<Gtk::Box>("home_apps");
     m_breadcrumb_box =
         m_main_builder->get_widget<Gtk::Box>("breadcrumb_box");
     auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
@@ -85,7 +87,7 @@ MainWindow::MainWindow(
         m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_switcher =
         m_main_builder->get_widget<Gtk::MenuButton>("chapter_switcher");
-    if (!m_root_stack || !m_home_graph || !m_breadcrumb_box || !home_page
+    if (!m_root_stack || !m_home_graph || !m_home_apps || !m_breadcrumb_box || !home_page
         || !content_area || !experiment_page || !m_home_button || !app_menu_bar
         || !chapter_stack || !m_chapter_switcher) {
         throw runtime_error("Failed to get required widgets from main UI");
@@ -119,6 +121,7 @@ MainWindow::MainWindow(
 
     m_home_button->signal_clicked().connect([this]() { go_home(); });
     build_home_graph();
+    build_home_apps();
 }
 
 MainWindow::~MainWindow() {
@@ -194,6 +197,85 @@ void MainWindow::build_home_graph() {
         graph,
         [this](const string& domain_id) { enter_category(domain_id); });
     m_home_graph->append(*view);
+}
+
+void MainWindow::build_home_apps() {
+    // apps/ 下每个自成体系的学习应用在首页给一个入口块。这里只认 app.json
+    // 里的标题、图标和可执行文件位置，不碰它们的内容、构建和界面。
+    const string apps_root =
+        Glib::build_filename(ATHENA_SOURCE_ROOT, "apps");
+    const auto apps = discover_external_apps(apps_root);
+    if (apps.empty()) {
+        m_home_apps->set_visible(false);
+        return;
+    }
+
+    auto* heading = Gtk::make_managed<Gtk::Label>("独立学习应用");
+    heading->set_halign(Gtk::Align::START);
+    heading->add_css_class("home-apps-heading");
+    m_home_apps->append(*heading);
+
+    auto* row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
+    row->set_halign(Gtk::Align::START);
+    for (const auto& app : apps) {
+        auto* button = Gtk::make_managed<Gtk::Button>();
+        button->add_css_class("home-app-card");
+        if (!app.built) {
+            button->add_css_class("home-app-card-unbuilt");
+        }
+
+        auto* card = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 6);
+        auto* title_row =
+            Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
+        if (!app.icon_name.empty()) {
+            auto* icon = Gtk::make_managed<Gtk::Image>();
+            icon->set_from_icon_name(app.icon_name);
+            icon->set_pixel_size(20);
+            title_row->append(*icon);
+        }
+        auto* title = Gtk::make_managed<Gtk::Label>(app.title);
+        title->add_css_class("home-app-title");
+        title_row->append(*title);
+        card->append(*title_row);
+
+        if (!app.description.empty()) {
+            auto* description = Gtk::make_managed<Gtk::Label>(app.description);
+            description->set_wrap(true);
+            description->set_xalign(0);
+            description->set_max_width_chars(34);
+            description->add_css_class("dim-label");
+            card->append(*description);
+        }
+        auto* state = Gtk::make_managed<Gtk::Label>(
+            app.built ? "点击启动独立窗口" : "尚未构建");
+        state->set_xalign(0);
+        state->add_css_class(
+            app.built ? "home-app-state" : "home-app-state-unbuilt");
+        card->append(*state);
+
+        button->set_child(*card);
+        button->signal_clicked().connect(
+            [this, app]() { launch_home_app(app); });
+        row->append(*button);
+    }
+    m_home_apps->append(*row);
+}
+
+void MainWindow::launch_home_app(const ExternalApp& app) {
+    // 学习库的路径由主程序解析一次再传过去，被启动方不必自己推导用户数据目录。
+    string store_path;
+    if (m_learning_store) {
+        store_path = Glib::build_filename(
+            Glib::get_user_data_dir(), "Athena", "learning.db");
+    }
+    if (const auto error = launch_external_app(app, store_path)) {
+        // 未构建或启动失败都只是提示：外部应用是否可用不影响主程序本身。
+        auto* notice = Gtk::make_managed<Gtk::MessageDialog>(
+            *this, *error, false, Gtk::MessageType::INFO,
+            Gtk::ButtonsType::OK, true);
+        notice->signal_response().connect([notice](int) { notice->hide(); });
+        notice->show();
+    }
 }
 
 void MainWindow::show_about_dialog() {

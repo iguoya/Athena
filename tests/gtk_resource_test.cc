@@ -37,6 +37,8 @@ TEST(GtkResourceTest, LoadsTheMainWindowNavigationControls) {
     EXPECT_EQ(default_height, 900);
 
     EXPECT_NE(builder->get_widget<Gtk::Box>("home_graph"), nullptr);
+    // apps/ 下独立学习应用的入口容器（ADR 0032）。
+    EXPECT_NE(builder->get_widget<Gtk::Box>("home_apps"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("root_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Stack>("chapter_stack"), nullptr);
     EXPECT_NE(builder->get_widget<Gtk::Button>("home_button"), nullptr);
