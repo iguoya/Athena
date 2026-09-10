@@ -25,6 +25,21 @@ TEST(TypeSemanticsContentTest, ComparesInitializationFormsWithoutReadingUndefine
         "explicit 需要显式进入: 11\n");
 }
 
+TEST(TypeSemanticsContentTest, ShowsWhenObjectsBeginAndEnd) {
+    EXPECT_EQ(
+        run_experiment(&TypeSemantics::object_lifetime),
+        "构造 块内对象\n"
+        "块内: 块内对象仍然有效\n"
+        "析构 块内对象\n"
+        "构造 语句里的临时对象\n"
+        "析构 语句里的临时对象\n"
+        "临时对象在这条语句的分号处就已经结束\n"
+        "构造 被 const 引用延长的临时对象\n"
+        "延长之后仍然读得到: 被 const 引用延长的临时对象\n"
+        "函数返回前，kept 绑定的那个临时对象才析构\n"
+        "析构 被 const 引用延长的临时对象\n");
+}
+
 TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::auto_deduction),

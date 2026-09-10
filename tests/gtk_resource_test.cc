@@ -110,8 +110,9 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     const auto sections =
         builder->get_widget<Gtk::Notebook>("type_semantics_section_notebook");
     ASSERT_NE(sections, nullptr);
-    // 「教学大纲」+「本章导览」+ 类型推导 / 值类别 / 类型转换 / enum class / 初始化。
-    EXPECT_EQ(sections->get_n_pages(), 7);
+    // 「教学大纲」+「本章导览」+ 类型推导 / 对象生命周期 / 值类别 /
+    // 类型转换 / enum class / 初始化。
+    EXPECT_EQ(sections->get_n_pages(), 8);
     // 每一页都必须是可取到的控件：apply_tab_labels 会按下标给每页换标签，
     // 取不到的页会在运行期变成 gtk_notebook_set_tab_label 断言失败。
     for (int index = 0; index < sections->get_n_pages(); ++index) {
@@ -133,6 +134,11 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
         nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_playpause"),
+        nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Picture>("ts_lifetime_figure"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("type_semantics_lifetime_button"),
         nullptr);
 }
 

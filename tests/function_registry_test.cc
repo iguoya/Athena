@@ -10,8 +10,9 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 22);
+    EXPECT_EQ(registry.ids().size(), 23);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
+    EXPECT_TRUE(registry.contains("cpp.TypeSemantics.object_lifetime"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.FunctionCallable.overload"));
     EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));

@@ -142,6 +142,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         {"ts_init_forms_figure", "/app/articles/cpp/images/init_forms.svg"},
         {"ts_auto_selection_figure",
          "/app/articles/cpp/images/auto_selection_flow.svg"},
+        {"ts_lifetime_figure",
+         "/app/articles/cpp/images/object_lifetime_timeline.svg"},
     };
     for (const auto& [figure_id, resource_path] : lesson_figures) {
         if (auto* figure = builder->get_widget<Gtk::Picture>(figure_id)) {
@@ -238,6 +240,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const vector<pair<const char*, const char*>> experiment_buttons = {
         {"type_semantics_auto_button", "auto_deduction"},
         {"type_semantics_decltype_button", "decltype_deduction"},
+        {"type_semantics_lifetime_button", "object_lifetime"},
         {"type_semantics_value_category_button", "value_category"},
         {"type_semantics_cast_button", "cast"},
         {"type_semantics_enum_button", "enum_class"},
@@ -260,6 +263,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         {"教学大纲", {}},
         {"本章导览", {}},
         {"类型推导", {"auto_deduction", "decltype_deduction"}},
+        {"对象生命周期", {"object_lifetime"}},
         {"值类别", {"value_category"}},
         {"类型转换", {"cast"}},
         {"enum class", {"enum_class"}},

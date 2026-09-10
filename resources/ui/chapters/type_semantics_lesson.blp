@@ -674,6 +674,210 @@ Box type_semantics_lesson_page {
     }
 
     [tab]
+    Label { label: "对象生命周期"; }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 18;
+        margin-bottom: 18;
+
+        // 1. 为什么要判断有效期
+        Frame {
+          label: "引用还在，对象可能已经不在了";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "上一节说过：alias 和 view 都要求 original 在使用期间还活着。这一节回答“还活着”到底由什么决定——对象什么时候开始存在、什么时候结束，以及一个名字能不能比它指向的对象活得更久。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+            Label {
+              label: "这是本章“查有效期”这条检查线的落点。判断错的代价很实际：访问已经结束的对象是未定义行为，程序可能照常运行一次，也可能在别的机器、别的优化级别上给出完全不同的结果。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
+        // 2. 三个时点
+        Frame {
+          label: "同一个函数里，三种结束时点";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Picture ts_lifetime_figure {
+              name: "ts_lifetime_figure";
+              can-shrink: true;
+              content-fit: contain;
+              halign: fill;
+              height-request: 300;
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "① 有名字的局部对象：活到它所在的那对花括号"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "进入声明处开始存在，离开块时按与构造相反的顺序析构。块不一定是函数体——一对花括号就够了，这也是缩短一个对象寿命的常用手段。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "② 没有名字的临时对象：活到这条语句的分号"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "临时对象在完整表达式结束时销毁，也就是分号处。它常常出现在你没写出它的地方：函数返回值、隐式转换、拼接出来的中间结果。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "③ 被 const 引用绑定的临时对象：寿命被延长"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "把一个临时对象直接绑到 const 引用上，它会活到这个引用自己的作用域结束。这条规则让“接住一个临时结果再多用几行”成为可能，但它只对<b>直接绑定</b>的那个临时对象生效。";
+                use-markup: true;
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+          }
+        }
+
+        // 3. 去实验里看真实的构造与析构顺序
+        Frame {
+          label: "去实验里看真实的构造与析构顺序";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测输出顺序：块内对象的“析构”会不会出现在“离开块”那句说明之前？最后一行是什么？";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "这一次的输出是程序真实运行的结果，不是编排好的示意——顺序由语言规则和实际执行共同决定。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-safe" ]
+            }
+            Button type_semantics_lifetime_button {
+              name: "type_semantics_lifetime_button";
+              label: "验证对象生命周期";
+              halign: start;
+              styles [ "btn-primary" ]
+            }
+          }
+        }
+
+        // 4. 边界
+        Frame {
+          label: "边界：延长规则能做什么，不能做什么";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "延长的是那个临时对象本身，不是从它取出的成员"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "绑定一个临时对象的成员引用（例如它内部的字符串），临时对象仍然在分号处结束，引用当场悬垂。实验源码里保留了这样一行注释，但没有放进运行路径——悬垂访问是未定义行为，不能用一次“看起来正常”的运行来演示。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "延长不会跨过函数边界"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "从函数里返回一个指向局部对象的引用，调用方拿到的就是失效引用；返回类型写成引用并不会让局部对象多活一秒。要把结果带出函数，返回值本身即可。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Label {
+              label: "完整的绑定与返回规则在「引用」章展开，这里只要建立“先问对象还在不在”的习惯。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "dim-label" ]
+            }
+          }
+        }
+
+        // 5. 小结
+        Frame {
+          label: "小结：先问对象还在不在，再问能不能改";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "有名字的局部对象活到块结束，临时对象活到分号，const 引用可以把直接绑定的临时对象延长到自己的作用域结束。三者都不受“有没有人还在引用它”影响——引用不会让对象多活。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+            Label {
+              label: "所以选择引用时要同时看两件事：<span bgcolor='#fff3cd'>我要不要改原对象</span>，以及<span bgcolor='#fff3cd'>使用期间原对象还在不在</span>。前者是上一节的意图判断，后者就是这一节的有效期判断。";
+              use-markup: true;
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+      }
+    }
+
+    [tab]
     Label { label: "值类别"; }
 
     ScrolledWindow {

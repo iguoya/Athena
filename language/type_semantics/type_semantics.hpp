@@ -20,6 +20,25 @@ private:
     int m_value;
 };
 
+// object_lifetime 用的探针：构造和析构各写一行，让"对象何时开始、何时结束"
+// 变成可以直接读到的输出。拷贝被删除，避免把"多了一份对象"混进生命周期的观察。
+class LifetimeProbe {
+public:
+    LifetimeProbe(string label, ostream& output)
+        : m_label(std::move(label)), m_output(output) {
+        m_output << "构造 " << m_label << '\n';
+    }
+    LifetimeProbe(const LifetimeProbe&) = delete;
+    LifetimeProbe& operator=(const LifetimeProbe&) = delete;
+    ~LifetimeProbe() { m_output << "析构 " << m_label << '\n'; }
+
+    const string& label() const { return m_label; }
+
+private:
+    string m_label;
+    ostream& m_output;
+};
+
 const char* binding(string&) { return "string&"; }
 const char* binding(const string&) { return "const string&"; }
 const char* binding(string&&) { return "string&&"; }
@@ -69,6 +88,26 @@ public:
         output << "圆括号接受窄化: " << source << " -> " << narrowed << '\n';
         output << "花括号拒绝窄化: 编译期错误\n";
         output << "explicit 需要显式进入: " << explicit_number.value() << '\n';
+    }
+
+    void object_lifetime(ostream& output) const {
+        {
+            const LifetimeProbe scoped{"块内对象", output};
+            output << "块内: " << scoped.label() << "仍然有效\n";
+        } // 块结束，scoped 在这里析构
+
+        LifetimeProbe{"语句里的临时对象", output};
+        output << "临时对象在这条语句的分号处就已经结束\n";
+
+        // const 引用绑定临时对象，把它的寿命延长到引用自己的作用域结束。
+        const LifetimeProbe& kept = LifetimeProbe{"被 const 引用延长的临时对象", output};
+        output << "延长之后仍然读得到: " << kept.label() << '\n';
+
+        // const string& dangling = LifetimeProbe{"x", output}.label();
+        // 上面这行只延长临时对象本身，不延长从它取出的成员引用：语句结束后
+        // dangling 就悬垂了。悬垂是未定义行为，因此只写在注释里，不放进运行路径。
+
+        output << "函数返回前，kept 绑定的那个临时对象才析构\n";
     }
 
     void auto_deduction(ostream& output) const {
