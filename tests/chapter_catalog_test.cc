@@ -49,7 +49,7 @@ nlohmann::json minimal_catalog() {
           "overview_document": "",
           "resource_path": "/app/chapters/code.ui",
           "widget_name": "chapter_page",
-          "source": "language/sample.cpp",
+          "source": "cplusplus/sample.cpp",
           "implementation_header": "",
           "icon": { "type": "theme", "name": "chapter", "path": "" },
           "groups": [],
@@ -60,7 +60,7 @@ nlohmann::json minimal_catalog() {
             "title": "Point",
             "description": "Sample point",
             "group": "",
-            "source": "language/sample.cpp",
+            "source": "cplusplus/sample.cpp",
             "difficulty": 4,
             "mastery_goal": "master",
             "knowledge_type": "concept",
@@ -72,7 +72,7 @@ nlohmann::json minimal_catalog() {
             "title": "Unrated",
             "description": "No author rating",
             "group": "",
-            "source": "language/sample.cpp",
+            "source": "cplusplus/sample.cpp",
             "difficulty": 0,
             "mastery_goal": "",
             "knowledge_type": "",
@@ -103,7 +103,7 @@ TEST(ChapterCatalogTest, LoadsTheGeneratedProjectCatalog) {
     EXPECT_EQ(reference->resource_path, "/app/chapters/empty_chapter.ui");
     EXPECT_EQ(
         reference->implementation_header,
-        "language/references/reference.hpp");
+        "cplusplus/references/reference.hpp");
     ASSERT_EQ(reference->subchapters.size(), 4);
     EXPECT_EQ(
         reference->subchapters.front().function_id,
@@ -160,7 +160,7 @@ TEST(ChapterCatalogTest, SourcePathsFallBackToHeaderForSingleFileChapters) {
     ASSERT_NE(raii, nullptr);
     ASSERT_EQ(raii->subchapters.size(), 6);
     for (const auto& subchapter : raii->subchapters) {
-        EXPECT_EQ(subchapter.source, "language/raii/raii.hpp");
+        EXPECT_EQ(subchapter.source, "cplusplus/raii/raii.hpp");
     }
 
     const auto* type_semantics = catalog.find_chapter("cpp", "TypeSemantics");
@@ -169,7 +169,7 @@ TEST(ChapterCatalogTest, SourcePathsFallBackToHeaderForSingleFileChapters) {
     for (const auto& subchapter : type_semantics->subchapters) {
         EXPECT_EQ(
             subchapter.source,
-            "language/type_semantics/type_semantics.hpp");
+            "cplusplus/type_semantics/type_semantics.hpp");
     }
 
     const auto* reference = catalog.find_chapter("cpp", "Reference");
@@ -177,7 +177,7 @@ TEST(ChapterCatalogTest, SourcePathsFallBackToHeaderForSingleFileChapters) {
     ASSERT_FALSE(reference->subchapters.empty());
     EXPECT_EQ(
         reference->subchapters.front().source,
-        "language/references/reference.hpp");
+        "cplusplus/references/reference.hpp");
 }
 
 TEST(ChapterCatalogTest, DecodesCanonicalRuntimeFields) {

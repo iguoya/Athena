@@ -40,7 +40,7 @@ else
 endif
 
 # 业务逻辑类目录（C++ 语言各章节演示类）
-language_inc = include_directories('language')
+cplusplus_inc = include_directories('cplusplus')
 
 # 定义源码根目录，供运行时读取演示类源码（源码框显示）
 add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
@@ -159,13 +159,13 @@ core_sources = files(
 athena_core_lib = static_library(
   'athena-core',
   core_sources,
-  include_directories: [language_inc],
+  include_directories: [cplusplus_inc],
   dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
-  include_directories: [language_inc],
+  include_directories: [cplusplus_inc],
   dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
@@ -215,7 +215,7 @@ resources = gnome.compile_resources(
 
 executable('Athena', app_sources,
   sources: resources,
-  include_directories: [language_inc],
+  include_directories: [cplusplus_inc],
   dependencies: [
     gtkmm_dep,
     gtk4_dep,
@@ -260,7 +260,7 @@ core_test_exe = executable(
     'tests/source_locator_test.cc'
   ),
   sources: resources,
-  include_directories: [language_inc],
+  include_directories: [cplusplus_inc],
   dependencies: [gtest_main_dep, athena_core_dep]
 )
 test('athena-core', core_test_exe)
@@ -280,7 +280,7 @@ gtk_test_exe = executable(
     'ui/progress_page.cc'
   ),
   sources: resources,
-  include_directories: [language_inc],
+  include_directories: [cplusplus_inc],
   dependencies: [gtest_dep, gtkmm_dep, gtk4_dep, sourceview_dep, athena_core_dep]
 )
 test('athena-gtk-resources', gtk_test_exe, is_parallel: false)

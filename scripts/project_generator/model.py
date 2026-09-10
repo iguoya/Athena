@@ -78,10 +78,10 @@ LEARNING_UNIT_FIELDS = frozenset(
 ATX_HEADING_PATTERN = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)\s*$")
 TRAILING_HEADING_MARKS_PATTERN = re.compile(r"[ \t]+#+[ \t]*$")
 
-# 教学/实践源码允许存放的两个顶层目录，互相平级：language/ 按 C++ 语言
+# 教学/实践源码允许存放的两个顶层目录，互相平级：cplusplus/ 按 C++ 语言
 # 特性拆分知识点，practice/ 收纳自成一体的应用实践项目（比如
-# practice/pocket_cube/），不嵌在 language/ 下面。
-SOURCE_PREFIXES = ("language", "practice")
+# practice/pocket_cube/），不嵌在 cplusplus/ 下面。
+SOURCE_PREFIXES = ("cplusplus", "practice")
 
 
 class ProjectError(ValueError):
@@ -143,7 +143,7 @@ def project_path(
         raise ProjectError(f"{label} must be a safe project-relative path: {path!r}")
     if prefix:
         # 允许指定一组候选前缀，只要落在其中一个下面就行——source_files
-        # 既有 language/ 下按语言特性拆分的教学代码，也有 practice/ 下
+        # 既有 cplusplus/ 下按语言特性拆分的教学代码，也有 practice/ 下
         # 自成一体的应用实践项目代码，两者是同级目录，不是前者的子集。
         prefixes = (prefix,) if isinstance(prefix, str) else prefix
         if not any(path.startswith(p.rstrip("/") + "/") for p in prefixes):

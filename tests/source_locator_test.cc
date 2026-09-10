@@ -44,7 +44,7 @@ TEST(SourceLocatorTest, LoadsMemberSourceFromTeachingFile) {
     const ContentLoader loader(ATHENA_SOURCE_ROOT);
 
     const auto body = load_member_source_text(
-        loader, "language/references/reference.hpp", "reference_basics");
+        loader, "cplusplus/references/reference.hpp", "reference_basics");
 
     ASSERT_TRUE(body.has_value());
     EXPECT_NE(body->find("reference_basics"), string::npos);
@@ -54,11 +54,11 @@ TEST(SourceLocatorTest, ReturnsNothingWhenSourceOrMemberIsMissing) {
     const ContentLoader loader(ATHENA_SOURCE_ROOT);
 
     EXPECT_FALSE(
-        load_member_source_text(loader, "language/missing.hpp", "anything")
+        load_member_source_text(loader, "cplusplus/missing.hpp", "anything")
             .has_value());
     EXPECT_FALSE(load_member_source_text(
                      loader,
-                     "language/references/reference.hpp",
+                     "cplusplus/references/reference.hpp",
                      "not_a_member")
                      .has_value());
 }

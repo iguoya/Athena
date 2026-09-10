@@ -63,7 +63,7 @@ category                     课程分类、左侧导航
             "name": "insert-link-symbolic"
           },
           "implementation": {
-            "header": "language/references/reference.hpp"
+            "header": "cplusplus/references/reference.hpp"
           },
           "overview_document": "resources/articles/cpp/reference_overview.md",
           "subchapters": [
@@ -244,15 +244,15 @@ C++ 分类索引按最长前置路径自上而下分层，箭头由前置章节�
 
 ```json
 "implementation": {
-  "header": "language/references/reference.hpp"
+  "header": "cplusplus/references/reference.hpp"
 }
 ```
 
-`header` 是仓库根目录相对路径，必须落在 `language/` 或 `practice/` 之一
-下面——两者是平级目录，不是包含关系：`language/` 按 C++ 语言特性拆分
-知识点（比如 `language/references/`），`practice/` 收纳自成一体的应用
+`header` 是仓库根目录相对路径，必须落在 `cplusplus/` 或 `practice/` 之一
+下面——两者是平级目录，不是包含关系：`cplusplus/` 按 C++ 语言特性拆分
+知识点（比如 `cplusplus/references/`），`practice/` 收纳自成一体的应用
 实践项目（比如 `practice/pocket_cube/`），一个项目的状态、算法、界面
-代码都收在自己的子目录里，不嵌进 `language/` 底下、也不分散到别的顶层
+代码都收在自己的子目录里，不嵌进 `cplusplus/` 底下、也不分散到别的顶层
 目录（如 `render/`）。构建期生成器据此包含类声明，并完全从现有字段派生绑定：
 
 ```text
@@ -279,8 +279,8 @@ subchapter.name -> C++ 成员函数名
 
 ```json
 "implementation": {
-  "header": "language/example_chapter/example_chapter.hpp",
-  "source": "language/example_chapter/example_chapter.cpp"
+  "header": "cplusplus/example_chapter/example_chapter.hpp",
+  "source": "cplusplus/example_chapter/example_chapter.cpp"
 }
 ```
 

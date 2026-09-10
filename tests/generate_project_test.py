@@ -108,7 +108,7 @@ def main() -> None:
                             "title": "Widget",
                             "description": "fixture chapter",
                             "implementation": {
-                                "header": "language/widget/widget.hpp"
+                                "header": "cplusplus/widget/widget.hpp"
                             },
                             "subchapters": [
                                 {
@@ -128,9 +128,9 @@ def main() -> None:
         )
 
         first = run(generator, root, "scaffold", "--chapter", "cpp.Widget")
-        header = root / "language" / "widget" / "widget.hpp"
-        source = root / "language" / "widget" / "widget.cpp"
-        assert "created: language/widget/widget.hpp" in first.stdout
+        header = root / "cplusplus" / "widget" / "widget.hpp"
+        source = root / "cplusplus" / "widget" / "widget.cpp"
+        assert "created: cplusplus/widget/widget.hpp" in first.stdout
         assert header.is_file() and source.is_file()
 
         sentinel = header.read_text(encoding="utf-8") + "// user implementation\n"
@@ -139,7 +139,7 @@ def main() -> None:
         assert "namespace athena" not in source.read_text(encoding="utf-8")
         header.write_text(sentinel, encoding="utf-8")
         second = run(generator, root, "scaffold", "--chapter", "cpp.Widget")
-        assert "kept: language/widget/widget.hpp" in second.stdout
+        assert "kept: cplusplus/widget/widget.hpp" in second.stdout
         assert header.read_text(encoding="utf-8") == sentinel
 
         checked = run(generator, root, "check")
@@ -157,7 +157,7 @@ def main() -> None:
         resource_xml = resource_output.read_text(encoding="utf-8")
         assert "code.ui" in resource_xml
         assert "experiment_dialog.ui" not in resource_xml
-        assert "language/widget/widget.hpp" in resource_xml
+        assert "cplusplus/widget/widget.hpp" in resource_xml
         assert '<file alias="tiger.svg">icons/tiger.svg</file>' in resource_xml
         assert "/app/icons/icons" not in resource_xml
         assert 'alias="chapter_catalog.json"' in resource_xml
@@ -171,11 +171,11 @@ def main() -> None:
         runtime_chapter = catalog["categories"][0]["chapters"][0]
         assert runtime_chapter["resource_path"] == "/app/chapters/code.ui"
         assert runtime_chapter["widget_name"] == "chapter_page"
-        assert runtime_chapter["source"] == "language/widget/widget.hpp"
+        assert runtime_chapter["source"] == "cplusplus/widget/widget.hpp"
         assert runtime_chapter["icon"]["name"] == "view-grid-symbolic"
         runtime_point = runtime_chapter["subchapters"][0]
         assert runtime_point["function_id"] == "cpp.Widget.basics"
-        assert runtime_point["source"] == "language/widget/widget.hpp"
+        assert runtime_point["source"] == "cplusplus/widget/widget.hpp"
         assert runtime_point["difficulty"] == 0
         assert runtime_point["mastery_goal"] == ""
         assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
@@ -228,18 +228,18 @@ def main() -> None:
             "teaches.heading '基础' is not unique",
         )
 
-        write(root / "language" / "widget" / "chapter.cpp")
-        write(root / "language" / "widget" / "group.cpp")
-        write(root / "language" / "widget" / "point.cpp")
+        write(root / "cplusplus" / "widget" / "chapter.cpp")
+        write(root / "cplusplus" / "widget" / "group.cpp")
+        write(root / "cplusplus" / "widget" / "point.cpp")
         source_inheritance = copy.deepcopy(config)
         source_chapter = source_inheritance["categories"][0]["chapters"][0]
-        source_chapter["source"] = "language/widget/chapter.cpp"
+        source_chapter["source"] = "cplusplus/widget/chapter.cpp"
         source_chapter["groups"] = [
             {
                 "name": "ownership",
                 "title": "Ownership",
                 "description": "fixture group",
-                "source": "language/widget/group.cpp",
+                "source": "cplusplus/widget/group.cpp",
             }
         ]
         source_chapter["subchapters"][0]["group"] = "ownership"
@@ -252,11 +252,11 @@ def main() -> None:
         inherited_point = inherited["categories"][0]["chapters"][0][
             "subchapters"
         ][0]
-        assert inherited_point["source"] == "language/widget/group.cpp"
+        assert inherited_point["source"] == "cplusplus/widget/group.cpp"
 
         source_inheritance["categories"][0]["chapters"][0]["subchapters"][0][
             "source"
-        ] = "language/widget/point.cpp"
+        ] = "cplusplus/widget/point.cpp"
         write(
             root / "resources" / "athena.json",
             json.dumps(source_inheritance, ensure_ascii=False, indent=2) + "\n",
@@ -266,7 +266,7 @@ def main() -> None:
         explicit_point = explicit["categories"][0]["chapters"][0][
             "subchapters"
         ][0]
-        assert explicit_point["source"] == "language/widget/point.cpp"
+        assert explicit_point["source"] == "cplusplus/widget/point.cpp"
 
         write(
             root / "resources" / "athena.json",

@@ -76,7 +76,7 @@ string content_root() {
             parent,                                        // 开发构建目录
         };
         for (const auto& candidate : candidates) {
-            if (has_directory(candidate, "language")) {
+            if (has_directory(candidate, "cplusplus")) {
                 return candidate;
             }
         }
@@ -84,7 +84,7 @@ string content_root() {
 
     // 开发时的保底：从源码树直接运行、或可执行文件被挪到别处时仍能工作。
     const string source_root = ATHENA_SOURCE_ROOT;
-    return has_directory(source_root, "language") ? source_root : string();
+    return has_directory(source_root, "cplusplus") ? source_root : string();
 }
 
 string external_apps_root() {

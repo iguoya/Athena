@@ -38,7 +38,7 @@
           "description": "从初始化、类型推导和值类别建立阅读 C++ 对象与表达式的基本方法。",
           "icon": { "type": "theme", "name": "text-x-generic-symbolic" },
           "implementation": {
-            "header": "language/type_semantics/type_semantics.hpp"
+            "header": "cplusplus/type_semantics/type_semantics.hpp"
           },
           "ui": {
             "blueprint": "resources/ui/chapters/type_semantics_lesson.blp"
@@ -60,7 +60,7 @@
           "title": "引用",
           "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
           "icon": { "type": "theme", "name": "insert-link-symbolic" },
-          "implementation": { "header": "language/references/reference.hpp" },
+          "implementation": { "header": "cplusplus/references/reference.hpp" },
           "overview_document": "resources/articles/cpp/reference_overview.md",
           "subchapters": [
             { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。", "difficulty": 1, "mastery_goal": "master" },
@@ -75,7 +75,7 @@
           "title": "函数与可调用对象",
           "description": "学习 C++ 函数接口、重载机制、函数对象、Lambda 和通用回调。",
           "icon": { "type": "theme", "name": "system-run-symbolic" },
-          "implementation": { "header": "language/function_callable/function_callable.hpp" },
+          "implementation": { "header": "cplusplus/function_callable/function_callable.hpp" },
           "subchapters": [
             { "name": "overload", "title": "函数重载", "description": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。", "difficulty": 2, "mastery_goal": "required" },
             { "name": "function_object", "title": "函数对象", "description": "学习重载调用运算符的类类型对象；演示函数对象相比函数指针可以携带状态、更容易被编译器内联，是标准算法和 Lambda 的底层机制。", "difficulty": 2, "mastery_goal": "required" },
@@ -104,7 +104,7 @@
           "title": "RAII 与资源管理",
           "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
           "icon": { "type": "theme", "name": "security-high-symbolic" },
-          "implementation": { "header": "language/raii/raii.hpp" },
+          "implementation": { "header": "cplusplus/raii/raii.hpp" },
           "overview_document": "resources/articles/cpp/raii_overview.md",
           "subchapters": [
             { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "difficulty": 2, "mastery_goal": "master" },

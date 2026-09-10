@@ -16,7 +16,7 @@ TEST(ContentLoaderTest, LoadsTeachingSourceFromBundledResource) {
     const ContentLoader loader("/path/that/does/not/exist");
 
     const string source = loader.load_project_file(
-        "language/references/reference.hpp");
+        "cplusplus/references/reference.hpp");
 
     EXPECT_NE(source.find("class Reference"), string::npos);
 }

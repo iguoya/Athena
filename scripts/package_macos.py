@@ -200,7 +200,7 @@ def copy_runtime_libraries(
 def copy_teaching_sources(project_root: Path, resources_dir: Path) -> int:
     """把按路径读取的教学内容放进 bundle。
 
-    源码框显示的是 language/ 下的真实源文件（AGENTS.md：不在 UI 里另存一份
+    源码框显示的是 cplusplus/ 下的真实源文件（AGENTS.md：不在 UI 里另存一份
     教学代码字符串），文档和插图同理。这些是运行期按文件路径读的，不走
     GResource，所以必须随包分发——否则装到别的机器上源码框就是空的。
 
@@ -208,7 +208,7 @@ def copy_teaching_sources(project_root: Path, resources_dir: Path) -> int:
     要和源码树保持一致。
     """
     copied = 0
-    for relative in ("language", "practice"):
+    for relative in ("cplusplus", "practice"):
         source = project_root / relative
         if not source.is_dir():
             continue

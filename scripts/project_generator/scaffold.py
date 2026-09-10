@@ -40,7 +40,7 @@ def scaffold(model: dict, root: Path, chapter_id: str) -> None:
         root,
         source_rel,
         f"chapter {chapter_id}.implementation.source",
-        prefix="language",
+        prefix="cplusplus",
         must_exist=False,
     )
     header_path = root / header_rel

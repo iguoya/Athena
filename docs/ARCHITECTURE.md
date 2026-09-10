@@ -40,7 +40,7 @@ resources/athena.json
 |---|---|---|
 | 导航协调 | `MainWindow`、`ChapterPageStack` | 分类与章节切换、懒加载、跨页返回、模块生命周期 |
 | 目录与统计数据 | `ChapterCatalog`、`KnowledgeGraph`、`progress_stats` | 查询元数据、前置依赖与统计计算，不依赖 GTK |
-| 注册与课程实现 | `FunctionRegistry`、`language/` | 通过稳定 ID 执行真实 C++ 成员函数 |
+| 注册与课程实现 | `FunctionRegistry`、`cplusplus/` | 通过稳定 ID 执行真实 C++ 成员函数 |
 | 内容能力 | `ContentLoader`、`SourceLocator`、`DocModel` | 读取资源/源码、定位函数、将 Markdown 解析成结构化块 |
 | 页面 | `ui/` 各 Page/Dialog | 独占对应控件树、页面状态和用户操作 |
 | 呈现 | `DocumentView`、`render/` 图表 | 文档块与图表呈现，不决定课程或评分规则 |

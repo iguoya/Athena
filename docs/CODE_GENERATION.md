@@ -126,8 +126,8 @@ builddir/*.ui
 resources/athena.json
 resources/articles/**/*.md
 resources/ui/**/*.blp
-language/**/*.hpp
-language/**/*.cpp
+cplusplus/**/*.hpp
+cplusplus/**/*.cpp
 tests/**
 ```
 

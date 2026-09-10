@@ -49,11 +49,11 @@ TEST(AppPathsTest, EnvironmentOverridesWin) {
 }
 
 TEST(AppPathsTest, ContentRootHoldsTeachingSources) {
-    // 没有覆盖时应当落到真实的内容根：判定标志就是 language/ 在不在。
+    // 没有覆盖时应当落到真实的内容根：判定标志就是 cplusplus/ 在不在。
     const string root = content_root();
     ASSERT_FALSE(root.empty());
     EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(root, "language"), Glib::FileTest::IS_DIR));
+        Glib::build_filename(root, "cplusplus"), Glib::FileTest::IS_DIR));
 }
 
 TEST(AppPathsTest, ExternalAppsRootHoldsAppManifests) {

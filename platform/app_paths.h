@@ -22,7 +22,7 @@ using namespace std;
 string executable_directory();
 
 // 教学源码、Markdown 文档等按路径读取的内容所在的根目录。
-// 判定标志是该目录下有 language/ 子目录。
+// 判定标志是该目录下有 cplusplus/ 子目录。
 string content_root();
 
 // apps/ 下独立学习应用的根目录（ADR 0032）。

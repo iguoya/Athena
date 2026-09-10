@@ -119,7 +119,7 @@
 - 整个软件架构必须保持**层次化、模块化、低耦合**，这是所有其他架构规则的总纲：
   - **层次化**：配置层 → 校验/生成层 → 领域层（`ChapterCatalog`、`FunctionRegistry`、
     `SourceLocator`、`progress_stats` 等不依赖 GTK）→ 基础能力层（`content/`、`storage/`、
-    `render/`）→ 演示实现层（`language/`、`practice/`）→ 表示层（`ui/`、`MainWindow`）。
+    `render/`）→ 演示实现层（`cplusplus/`、`practice/`）→ 表示层（`ui/`、`MainWindow`）。
     依赖只能自上而下，见 `docs/ARCHITECTURE.md` 第 5 节；下层不得持有窗口或 GTK 控件指针。
   - **模块化**：一个功能边界一个模块，独占自己的控件树、状态与回调；非 GTK 的执行/网络
     逻辑（`ExperimentRunner`、`AiService`）单独成模块并可脱离 GTK 用 Google Test 验证。
