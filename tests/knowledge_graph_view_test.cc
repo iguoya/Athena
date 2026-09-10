@@ -46,6 +46,8 @@ TEST(KnowledgeGraphViewTest, RendersRichChapterNodeAndMetricLegend) {
             .mastered = 1,
             .difficulty = 4,
             .completion = 0.7,
+            .has_implementation = true,
+            .on_main_path = true,
         }},
         .layer_count = 1,
     };
@@ -74,10 +76,12 @@ TEST(KnowledgeGraphViewTest, RendersRichChapterNodeAndMetricLegend) {
     EXPECT_NE(find_label(*view, "掌握 1/2"), nullptr);
     EXPECT_NE(find_label(*view, "完成 70%"), nullptr);
     EXPECT_NE(find_label(*view, "图谱说明"), nullptr);
+    EXPECT_NE(find_label(*view, "节点状态"), nullptr);
     EXPECT_NE(find_label(*view, "章节难度"), nullptr);
     EXPECT_NE(find_label(*view, "掌握程度"), nullptr);
     EXPECT_NE(find_label(*view, "完成程度"), nullptr);
 
+    EXPECT_NE(find_label(*view, "学习主干"), nullptr);
     g_signal_emit_by_name(node->gobj(), "clicked");
     EXPECT_EQ(opened_chapter, "Chapter");
 }

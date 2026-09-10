@@ -33,6 +33,105 @@ int resolve_layer(
     return layer;
 }
 
+// 子树内（含自身）已实现章节数；用于从分叉处选出覆盖实现最多的主干后继。
+int count_implemented_reachable(
+    int index,
+    const vector<vector<int>>& successors,
+    const vector<char>& has_implementation,
+    vector<int>& cache,
+    vector<char>& visiting) {
+    if (cache[index] >= 0) {
+        return cache[index];
+    }
+    if (visiting[index]) {
+        return 0;
+    }
+    visiting[index] = 1;
+    int total = has_implementation[index] ? 1 : 0;
+    for (const int next : successors[index]) {
+        total += count_implemented_reachable(
+            next, successors, has_implementation, cache, visiting);
+    }
+    visiting[index] = 0;
+    cache[index] = total;
+    return total;
+}
+
+void mark_main_path(
+    const vector<vector<int>>& successors,
+    const vector<char>& has_implementation,
+    vector<char>& node_on_path,
+    vector<vector<char>>& edge_on_path) {
+    const int n = static_cast<int>(successors.size());
+    if (n == 0) {
+        return;
+    }
+
+    vector<int> impl_reachable(static_cast<size_t>(n), -1);
+    vector<char> visiting(static_cast<size_t>(n), 0);
+    for (int i = 0; i < n; ++i) {
+        count_implemented_reachable(
+            i, successors, has_implementation, impl_reachable, visiting);
+    }
+
+    // 从入度为 0 的起点里选覆盖已实现章节最多的；没有独立起点时退回全图最大。
+    vector<int> indegree(static_cast<size_t>(n), 0);
+    for (int i = 0; i < n; ++i) {
+        for (const int next : successors[static_cast<size_t>(i)]) {
+            ++indegree[static_cast<size_t>(next)];
+        }
+    }
+    auto better_start = [&](int candidate, int incumbent) {
+        if (incumbent < 0) {
+            return true;
+        }
+        if (impl_reachable[candidate] != impl_reachable[incumbent]) {
+            return impl_reachable[candidate] > impl_reachable[incumbent];
+        }
+        return candidate < incumbent;
+    };
+    int current = -1;
+    for (int i = 0; i < n; ++i) {
+        if (indegree[static_cast<size_t>(i)] == 0 && better_start(i, current)) {
+            current = i;
+        }
+    }
+    if (current < 0) {
+        current = 0;
+        for (int i = 1; i < n; ++i) {
+            if (better_start(i, current)) {
+                current = i;
+            }
+        }
+    }
+
+    vector<char> seen(static_cast<size_t>(n), 0);
+    while (current >= 0 && !seen[static_cast<size_t>(current)]) {
+        seen[static_cast<size_t>(current)] = 1;
+        node_on_path[static_cast<size_t>(current)] = 1;
+
+        int best = -1;
+        for (const int next : successors[static_cast<size_t>(current)]) {
+            // 后方再无已实现章节时，不把主干伸进纯规划支线。
+            if (impl_reachable[next] <= 0) {
+                continue;
+            }
+            if (best < 0
+                || impl_reachable[next] > impl_reachable[best]
+                || (impl_reachable[next] == impl_reachable[best]
+                    && next < best)) {
+                best = next;
+            }
+        }
+        if (best < 0) {
+            break;
+        }
+        edge_on_path[static_cast<size_t>(current)][static_cast<size_t>(best)] =
+            1;
+        current = best;
+    }
+}
+
 } // namespace
 
 KnowledgeGraph build_knowledge_graph(
@@ -53,11 +152,14 @@ KnowledgeGraph build_knowledge_graph(
     }
 
     vector<vector<int>> prerequisites(chapters.size());
+    vector<vector<int>> successors(chapters.size());
     for (size_t i = 0; i < chapters.size(); ++i) {
         for (const auto& name : chapters[i].prerequisites) {
             const auto found = index_by_name.find(name);
             if (found != index_by_name.end()) {
                 prerequisites[i].push_back(found->second);
+                successors[static_cast<size_t>(found->second)].push_back(
+                    static_cast<int>(i));
             }
         }
     }
@@ -80,6 +182,17 @@ KnowledgeGraph build_knowledge_graph(
     for (const int layer : layer_cache) {
         ++layer_totals[static_cast<size_t>(layer)];
     }
+
+    vector<char> has_implementation(chapters.size(), 0);
+    for (size_t i = 0; i < chapters.size(); ++i) {
+        has_implementation[i] =
+            chapters[i].implementation_header.empty() ? 0 : 1;
+    }
+
+    vector<char> node_on_path(chapters.size(), 0);
+    vector<vector<char>> edge_on_path(
+        chapters.size(), vector<char>(chapters.size(), 0));
+    mark_main_path(successors, has_implementation, node_on_path, edge_on_path);
 
     graph.nodes.reserve(chapters.size());
     for (size_t i = 0; i < chapters.size(); ++i) {
@@ -125,13 +238,19 @@ KnowledgeGraph build_knowledge_graph(
                       difficulty_sum / static_cast<double>(difficulty_count)))
                 : 0,
             .completion = completion,
+            .has_implementation = has_implementation[i] != 0,
+            .on_main_path = node_on_path[i] != 0,
         });
     }
 
     for (size_t i = 0; i < chapters.size(); ++i) {
         for (const int prerequisite : prerequisites[i]) {
-            graph.edges.push_back({.from = prerequisite,
-                                   .to = static_cast<int>(i)});
+            graph.edges.push_back({
+                .from = prerequisite,
+                .to = static_cast<int>(i),
+                .on_main_path =
+                    edge_on_path[static_cast<size_t>(prerequisite)][i] != 0,
+            });
         }
     }
 
