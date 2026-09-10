@@ -9,11 +9,15 @@
 
 - 实验窗口改为纵向“当前目标 → 真实源码 → 运行验证 → 观察结果”证据链，减少阅读与
   实验之间的横向视线跳跃。
+- Linux CI / Release 安装依赖与 Meson 对齐：去掉已不再链接的 WebKitGTK、md4c-html；
+  DEB 运行时依赖补上 `libmd4c0`。
 
 ### 移除
 
 - 移除运行历史、双记录比较、git 快照及“AI 讲解差异”，让执行链路只负责当前实验；
   旧数据库中的 `run_history` 表和记录保留原样，不做破坏性删除。
+- 删除仅服务于旧 HTML/WebView 路径的 `cpp_syntax_highlighter`（内容已由 GTK
+  `DocumentView` + GtkSourceView 承载，该模块无调用方）。
 
 ### 修复
 

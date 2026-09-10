@@ -67,7 +67,7 @@
 |---|---|
 | 段落 / 标题 / 行内强调 | `Gtk::Label`（`use-markup`，Pango `<b>` `<tt>` `<span>`） |
 | 无序 / 有序列表、引用块 | `Gtk::Box` 纵向 + 缩进 + 项目符号 `Label` |
-| 代码块 | `GtkSourceView` 只读，复用 `cpp_syntax_highlighter` |
+| 代码块 | `GtkSourceView` 只读（语法高亮由 GtkSourceView 承担，不经 HTML token） |
 | 表格 | `Gtk::Grid`，表头行加 CSS class |
 | 图 | 静态 SVG（`Gtk::Picture` + librsvg）或 `Gtk::DrawingArea` + Cairo；沿用 `AGENTS.md`「优先静态 SVG」约定 |
 | H1–H3 目录 | 侧栏 `Gtk::ListBox`，记录每个标题控件，点击时 `ScrolledWindow` 滚到它 |

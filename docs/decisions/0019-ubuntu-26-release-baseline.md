@@ -25,8 +25,8 @@ glibmm，导致它无法编译项目在 Ubuntu 26.04 上完全有效的 `Glib::u
 
 ## 后果
 
-- 普通 CI 与 Release 的 GTK/WebKitGTK 依赖版本均与开发环境一致，避免由旧系统 API 差异引入无意义的
-  兼容性改写。
+- 普通 CI 与 Release 的 GTK / GtkSourceView / MD4C 等依赖版本均与开发环境一致，
+  避免由旧系统 API 差异引入无意义的兼容性改写。
 - `ubuntu-26.04` 目前是 GitHub Actions 的公开预览 Runner；其镜像变动或可用性应在
   Release 失败时优先检查。
 - 若未来需要正式支持 Ubuntu 24.04，应单独建立该版本的测试/打包矩阵，并在其中修复

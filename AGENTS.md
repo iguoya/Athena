@@ -147,8 +147,13 @@
     第三方状态，不为省事让下层反向穿透到窗口。
 - 跨平台能力同样受上述层次和依赖方向约束。当前支持 macOS 与 Ubuntu，相关改动遵守：
   - 共享层、领域层、教学实现和页面业务逻辑不得包含 `__APPLE__`、Cocoa/WKWebView、
-    `.app` 路径或 macOS 命令；平台差异只允许留在 `render/`、图标/打包适配层，或经
-    已有抽象接口（例如 `DocumentView`）隔离。
+    `.app` 路径或 macOS 命令；平台差异只允许留在 `render/`、`platform/`、图标/打包
+    适配层，或经已有抽象接口（例如 `DocumentView`）隔离。
+  - `platform/` 是平台适配层：取可执行文件路径这类没有跨平台 API 的能力放在这里，
+    分支关在单个 `.cc` 内不外泄。**按路径读取的内容一律经 `platform/app_paths.h`
+    解析**（`content_root()` / `external_apps_root()`），不得再写 `ATHENA_SOURCE_ROOT`
+    ——那是编译期绝对路径，装到别的机器上就失效。新增随包分发的目录要同时更新
+    `scripts/package_macos.py`，否则开发机正常、发行包是空的。
   - Meson 必须按目标平台选择源码和系统依赖；不得为了 Linux 在共享代码里增加平台分支，
     也不得让 Linux 构建链接 `gtk4-macos`、Apple Framework 或 Objective-C++ 源文件。
   - 学习内容的 `DocumentView` 必须在 macOS 与 Ubuntu 履行加载、锚点跳转、字号、

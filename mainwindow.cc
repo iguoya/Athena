@@ -2,6 +2,7 @@
 
 #include "app_icon.h"
 #include "menu_bar_platform.h"
+#include "platform/app_paths.h"
 #include "registry/domain_graph.h"
 #include "ui/external_app_launcher.h"
 #include "registry/knowledge_graph.h"
@@ -58,7 +59,7 @@ MainWindow::MainWindow(
     const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject),
       m_main_builder(builder),
-      m_content_loader(ATHENA_SOURCE_ROOT),
+      m_content_loader(content_root()),
       m_function_registry(create_default_function_registry()) {
     // 用 window.blp 里的适中默认尺寸作为初始大小，让窗口正常居中出现并
     // 保留可见的系统标题栏。最大化和全屏都由用户自己选择。
@@ -214,7 +215,7 @@ void MainWindow::build_home_graph() {
 }
 
 void MainWindow::launch_domain_app(const string& app_id) {
-    const string apps_root = Glib::build_filename(ATHENA_SOURCE_ROOT, "apps");
+    const string apps_root = external_apps_root();
     for (const auto& app : discover_external_apps(apps_root)) {
         if (app.id != app_id) {
             continue;
@@ -237,10 +238,18 @@ void MainWindow::launch_domain_app(const string& app_id) {
         return;
     }
 
+    // 独立应用各自构建，不随 .app 分发，所以两种"找不到"要分开说：
+    // 装好的发行包里根本没有 apps/，让用户去检查 app.json 是误导。
+    const string message = apps_root.empty()
+        ? "「" + app_id + "」是独立应用，不包含在当前发行包里。\n\n"
+              "从源码仓库构建它之后，这个节点就能直接打开："
+              "\n    cmake -S apps/" + app_id + " -B apps/" + app_id + "/build"
+              "\n    cmake --build apps/" + app_id + "/build"
+        : "在 " + apps_root + " 下没有找到独立应用 " + app_id
+              + "，请检查 " + app_id + "/app.json 是否存在。";
     auto* missing = Gtk::make_managed<Gtk::MessageDialog>(
-        *this, "没有找到独立应用 " + app_id + "，请检查 apps/" + app_id
-                   + "/app.json 是否存在。",
-        false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK, true);
+        *this, message, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK,
+        true);
     missing->signal_response().connect([missing](int) { missing->hide(); });
     missing->show();
 }

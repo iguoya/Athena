@@ -21,6 +21,7 @@ DEB_ARCHITECTURE = "amd64"
 RUNTIME_DEPENDENCIES = (
     "libgtkmm-4.0-0",
     "libgtksourceview-5-0",
+    "libmd4c0",
     "libsqlite3-0",
 )
 

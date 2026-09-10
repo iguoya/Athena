@@ -143,6 +143,7 @@ core_sources = files(
   'content/content_loader.cc',
   'content/doc_model.cc',
   'content/source_locator.cc',
+  'platform/app_paths.cc',
   'practice/pocket_cube/state.cc',
   'registry/chapter_catalog.cc',
   'registry/domain_graph.cc',
@@ -150,7 +151,6 @@ core_sources = files(
   'registry/knowledge_graph.cc',
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
-  'render/cpp_syntax_highlighter.cc',
   'services/ai_service.cc',
   'services/experiment_runner.cc',
   'storage/learning_store.cc'
@@ -246,6 +246,7 @@ core_test_exe = executable(
     'tests/content_loader_test.cc',
     'tests/doc_model_test.cc',
     'tests/experiment_runner_test.cc',
+    'tests/app_paths_test.cc',
     'tests/domain_graph_test.cc',
     'tests/function_registry_test.cc',
     'tests/knowledge_graph_test.cc',
