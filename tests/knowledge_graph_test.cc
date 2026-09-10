@@ -12,7 +12,7 @@ using json = nlohmann::json;
 const json kIcon = {{"type", "theme"}, {"name", "test"}, {"path", ""}};
 
 json MakePoint(
-    const string& chapter, const string& name, int importance = 0) {
+    const string& chapter, const string& name, int difficulty = 0) {
     return json{
         {"function_id", "cpp." + chapter + "." + name},
         {"name", name},
@@ -20,7 +20,8 @@ json MakePoint(
         {"description", "d"},
         {"group", ""},
         {"source", ""},
-        {"importance", importance},
+        {"difficulty", difficulty},
+        {"mastery_goal", ""},
         {"icon", kIcon},
     };
 }
@@ -133,7 +134,7 @@ TEST(KnowledgeGraphTest, MasteryAggregatesPerChapter) {
     EXPECT_EQ(a.total, 2);
     EXPECT_EQ(a.mastered, 1);
     EXPECT_NEAR(a.completion, 0.8, 1e-9);
-    EXPECT_EQ(a.importance, 4); // (2 + 5) / 2 = 3.5，四舍五入为 4。
+    EXPECT_EQ(a.difficulty, 4); // (2 + 5) / 2 = 3.5，四舍五入为 4。
     EXPECT_EQ(a.description, "测试章节");
     EXPECT_EQ(a.icon.name, "test");
 

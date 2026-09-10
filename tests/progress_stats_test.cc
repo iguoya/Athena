@@ -20,7 +20,8 @@ ChapterCatalog MakeCatalog() {
             {"description", "d"},
             {"group", ""},
             {"source", ""},
-            {"importance", 0},
+            {"difficulty", 0},
+            {"mastery_goal", ""},
             {"icon", icon},
         };
     };

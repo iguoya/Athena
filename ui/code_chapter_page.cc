@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <iostream>
+#include <map>
+#include <utility>
 #include <vector>
 
 using namespace std;
@@ -188,32 +190,35 @@ void CodeChapterPage::populate_topic_list() {
         point_title->add_css_class("heading");
         title_row->append(*point_title);
 
-        static const vector<string> importance_levels = {
-            "未评", "简单", "一般", "正常", "复杂", "极难"};
-        const int importance = clamp(subchapter.importance, 0, 5);
-        if (importance > 0) {
+        // 难度（1-3 初中级、4-5 高级）和掌握目标是两个独立维度（ADR 0029）：
+        // 难的不一定可以跳过，简单的也不一定只需了解，因此并排显示两个徽章。
+        static const vector<string> difficulty_levels = {
+            "未评", "入门", "简单", "中等", "进阶", "高级"};
+        const int difficulty = clamp(subchapter.difficulty, 0, 5);
+        if (difficulty > 0) {
             const string level_text =
-                importance_levels[static_cast<size_t>(importance)];
+                difficulty_levels[static_cast<size_t>(difficulty)];
             const string level_class =
-                "importance-level-" + to_string(importance);
+                "difficulty-level-" + to_string(difficulty);
             auto group = Gtk::make_managed<Gtk::Box>(
                 Gtk::Orientation::HORIZONTAL, 4);
             group->set_valign(Gtk::Align::CENTER);
             group->set_tooltip_text(
-                "内容难度：" + level_text + "（由内容作者标注，只读）");
+                "内容难度：" + level_text
+                + "（1-3 初中级，4-5 高级，初学者可以先跳过再回来）");
             auto badge = Gtk::make_managed<Gtk::Label>(level_text);
             badge->add_css_class("badge");
-            badge->add_css_class("badge-importance");
+            badge->add_css_class("badge-difficulty");
             badge->add_css_class(level_class);
             group->append(*badge);
             auto stars = Gtk::make_managed<Gtk::Box>(
                 Gtk::Orientation::HORIZONTAL, 6);
-            stars->add_css_class("importance-stars");
+            stars->add_css_class("difficulty-stars");
             stars->add_css_class(level_class);
             for (int star_index = 1; star_index <= 5; ++star_index) {
                 auto icon = Gtk::make_managed<Gtk::Image>();
                 icon->set_from_icon_name(
-                    star_index <= importance
+                    star_index <= difficulty
                         ? "starred-symbolic"
                         : "non-starred-symbolic");
                 icon->set_pixel_size(14);
@@ -221,6 +226,30 @@ void CodeChapterPage::populate_topic_list() {
             }
             group->append(*stars);
             title_row->append(*group);
+        }
+
+        const string goal_text = mastery_goal_label(subchapter.mastery_goal);
+        if (!goal_text.empty()) {
+            static const map<MasteryGoal, pair<const char*, const char*>>
+                goal_styles = {
+                    {MasteryGoal::Master,
+                     {"mastery-goal-master",
+                      "需要精通：反复使用，要能解释边界并写对"}},
+                    {MasteryGoal::Required,
+                     {"mastery-goal-required",
+                      "必须掌握：能正确使用，并说明为什么这样选"}},
+                    {MasteryGoal::Familiar,
+                     {"mastery-goal-familiar",
+                      "一般了解：知道它存在和适用场景，需要时能查"}},
+                };
+            const auto& style = goal_styles.at(subchapter.mastery_goal);
+            auto* goal = Gtk::make_managed<Gtk::Label>(goal_text);
+            goal->set_valign(Gtk::Align::CENTER);
+            goal->add_css_class("badge");
+            goal->add_css_class("badge-mastery-goal");
+            goal->add_css_class(style.first);
+            goal->set_tooltip_text(style.second);
+            title_row->append(*goal);
         }
         text_box->append(*title_row);
 

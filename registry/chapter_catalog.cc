@@ -19,6 +19,33 @@ IconSpec parse_icon(const json& value) {
 
 } // namespace
 
+string mastery_goal_label(MasteryGoal goal) {
+    switch (goal) {
+    case MasteryGoal::Master:
+        return "需要精通";
+    case MasteryGoal::Required:
+        return "必须掌握";
+    case MasteryGoal::Familiar:
+        return "一般了解";
+    case MasteryGoal::Unrated:
+        break;
+    }
+    return "";
+}
+
+MasteryGoal parse_mastery_goal(const string& value) {
+    if (value == "master") {
+        return MasteryGoal::Master;
+    }
+    if (value == "required") {
+        return MasteryGoal::Required;
+    }
+    if (value == "familiar") {
+        return MasteryGoal::Familiar;
+    }
+    return MasteryGoal::Unrated;
+}
+
 ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
     ChapterCatalog catalog;
     try {
@@ -85,8 +112,10 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                         subchapter_value.at("description").get<string>();
                     subchapter.group = subchapter_value.at("group").get<string>();
                     subchapter.source = subchapter_value.at("source").get<string>();
-                    subchapter.importance =
-                        subchapter_value.at("importance").get<int>();
+                    subchapter.difficulty =
+                        subchapter_value.at("difficulty").get<int>();
+                    subchapter.mastery_goal = parse_mastery_goal(
+                        subchapter_value.at("mastery_goal").get<string>());
                     subchapter.icon = parse_icon(subchapter_value.at("icon"));
                     if (subchapter_value.contains("teaches")) {
                         const auto& teaches_value = subchapter_value.at("teaches");

@@ -61,7 +61,8 @@ nlohmann::json minimal_catalog() {
             "description": "Sample point",
             "group": "",
             "source": "language/sample.cpp",
-            "importance": 4,
+            "difficulty": 4,
+            "mastery_goal": "master",
             "icon": { "type": "theme", "name": "point", "path": "" }
           }, {
             "function_id": "cpp.Sample.unrated",
@@ -70,7 +71,8 @@ nlohmann::json minimal_catalog() {
             "description": "No author rating",
             "group": "",
             "source": "language/sample.cpp",
-            "importance": 0,
+            "difficulty": 0,
+            "mastery_goal": "",
             "icon": { "type": "theme", "name": "point", "path": "" }
           }]
         }]
@@ -181,8 +183,10 @@ TEST(ChapterCatalogTest, DecodesCanonicalRuntimeFields) {
     ASSERT_NE(chapter, nullptr);
     ASSERT_EQ(chapter->subchapters.size(), 2u);
     EXPECT_EQ(chapter->subchapters[0].function_id, "cpp.Sample.point");
-    EXPECT_EQ(chapter->subchapters[0].importance, 4);
-    EXPECT_EQ(chapter->subchapters[1].importance, 0);
+    EXPECT_EQ(chapter->subchapters[0].difficulty, 4);
+    EXPECT_EQ(chapter->subchapters[0].mastery_goal, MasteryGoal::Master);
+    EXPECT_EQ(chapter->subchapters[1].difficulty, 0);
+    EXPECT_EQ(chapter->subchapters[1].mastery_goal, MasteryGoal::Unrated);
     EXPECT_EQ(chapter->icon.name, "chapter");
     EXPECT_TRUE(chapter->learning_units.empty());
 }
@@ -193,14 +197,14 @@ TEST(ChapterCatalogTest, DoesNotRepairOrRevalidateTrustedAuthorSemantics) {
     auto& point = source["categories"][0]["chapters"][0]["subchapters"][0];
     point["name"] = "return";
     point["group"] = "not_declared";
-    point["importance"] = 9;
+    point["difficulty"] = 9;
 
     const auto catalog = ChapterCatalog::from_runtime_json(source.dump());
     const auto* chapter = catalog.find_chapter("cpp", "Sample");
     ASSERT_NE(chapter, nullptr);
     EXPECT_EQ(chapter->subchapters[0].name, "return");
     EXPECT_EQ(chapter->subchapters[0].group, "not_declared");
-    EXPECT_EQ(chapter->subchapters[0].importance, 9);
+    EXPECT_EQ(chapter->subchapters[0].difficulty, 9);
 }
 
 TEST(ChapterCatalogTest, RejectsUnsupportedCatalogVersion) {

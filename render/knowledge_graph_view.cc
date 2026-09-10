@@ -79,7 +79,7 @@ Gtk::Button* make_node_button(
     button->set_valign(Gtk::Align::FILL);
     button->add_css_class("knowledge-graph-node");
     button->add_css_class(
-        "graph-importance-" + to_string(clamp(node.importance, 0, 5)));
+        "graph-difficulty-" + to_string(clamp(node.difficulty, 0, 5)));
 
     auto* content = Gtk::make_managed<Gtk::Box>(
         Gtk::Orientation::VERTICAL, 12);
@@ -112,15 +112,15 @@ Gtk::Button* make_node_button(
 
     auto* metrics = Gtk::make_managed<Gtk::Box>(
         Gtk::Orientation::HORIZONTAL, 7);
-    auto* importance = Gtk::make_managed<Gtk::Label>(
-        node.importance > 0
-            ? "重要度 " + to_string(node.importance) + "/5"
-            : "重要度 未评");
-    importance->add_css_class("graph-metric-badge");
-    importance->add_css_class(
-        "graph-importance-badge-" +
-        to_string(clamp(node.importance, 0, 5)));
-    metrics->append(*importance);
+    auto* difficulty = Gtk::make_managed<Gtk::Label>(
+        node.difficulty > 0
+            ? "难度 " + to_string(node.difficulty) + "/5"
+            : "难度 未评");
+    difficulty->add_css_class("graph-metric-badge");
+    difficulty->add_css_class(
+        "graph-difficulty-badge-" +
+        to_string(clamp(node.difficulty, 0, 5)));
+    metrics->append(*difficulty);
 
     const string mastery = node.total > 0
         ? "掌握 " + to_string(node.mastered) + "/" + to_string(node.total)
@@ -144,8 +144,8 @@ Gtk::Button* make_node_button(
 
     button->set_child(*content);
     button->set_tooltip_text(
-        node.title + "\n" + node.description + "\n章节重要度：" +
-        (node.importance > 0 ? to_string(node.importance) + "/5" : "未评") +
+        node.title + "\n" + node.description + "\n章节难度：" +
+        (node.difficulty > 0 ? to_string(node.difficulty) + "/5" : "未评") +
         "\n掌握程度：" + to_string(node.mastered) + "/" +
         to_string(node.total) + "\n完成程度：" +
         to_string(static_cast<int>(lround(node.completion * 100))) + "%");
@@ -291,18 +291,18 @@ Gtk::Widget* make_legend() {
     add_heading("连接关系");
     add_note("箭头从前置章节指向后续章节；点击节点进入对应章节。");
 
-    add_heading("章节重要度");
-    add_note("取本章所有已评知识点 importance 的平均值，四舍五入为 1–5 级。");
-    auto* importance_scale = Gtk::make_managed<Gtk::Box>(
+    add_heading("章节难度");
+    add_note("取本章所有已评知识点 difficulty 的平均值，四舍五入为 1–5 级。");
+    auto* difficulty_scale = Gtk::make_managed<Gtk::Box>(
         Gtk::Orientation::HORIZONTAL, 5);
     for (int level = 1; level <= 5; ++level) {
         auto* badge = Gtk::make_managed<Gtk::Label>(to_string(level));
-        badge->add_css_class("graph-importance-scale");
+        badge->add_css_class("graph-difficulty-scale");
         badge->add_css_class(
-            "graph-importance-badge-" + to_string(level));
-        importance_scale->append(*badge);
+            "graph-difficulty-badge-" + to_string(level));
+        difficulty_scale->append(*badge);
     }
-    content->append(*importance_scale);
+    content->append(*difficulty_scale);
     add_note("冷色表示较低，暖色表示较高；灰色表示尚未评估。");
 
     add_heading("掌握程度");
@@ -341,7 +341,7 @@ Gtk::Widget* make_knowledge_graph_view(
         Gtk::Orientation::VERTICAL, 10);
     graph_column->set_hexpand(true);
     auto* hint = Gtk::make_managed<Gtk::Label>(
-        "自上而下按前置依赖分层；章节节点同时显示重要度、掌握程度和完成程度。");
+        "自上而下按前置依赖分层；章节节点同时显示难度、掌握程度和完成程度。");
     hint->set_halign(Gtk::Align::START);
     hint->add_css_class("dim-label");
     hint->add_css_class("knowledge-graph-hint");

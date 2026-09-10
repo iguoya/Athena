@@ -176,7 +176,8 @@ def main() -> None:
         runtime_point = runtime_chapter["subchapters"][0]
         assert runtime_point["function_id"] == "cpp.Widget.basics"
         assert runtime_point["source"] == "language/widget/widget.hpp"
-        assert runtime_point["importance"] == 0
+        assert runtime_point["difficulty"] == 0
+        assert runtime_point["mastery_goal"] == ""
         assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
 
         document_path = "resources/articles/cpp/widget.md"
@@ -327,15 +328,15 @@ def main() -> None:
             "rename this old version field to format_version",
         )
 
-        invalid_importance = copy.deepcopy(config)
-        invalid_importance["categories"][0]["chapters"][0]["subchapters"][0][
-            "importance"
+        invalid_difficulty = copy.deepcopy(config)
+        invalid_difficulty["categories"][0]["chapters"][0]["subchapters"][0][
+            "difficulty"
         ] = 6
         assert_rejected(
             generator,
             root,
-            invalid_importance,
-            "subchapters[0].importance must be an integer in [0, 5]",
+            invalid_difficulty,
+            "subchapters[0].difficulty must be an integer in [0, 5]",
         )
 
         write(

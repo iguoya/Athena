@@ -25,9 +25,9 @@ struct KnowledgeNode {
     int layer_size = 1;  // 所在层的节点总数，供视图居中排布
     int total = 0;       // 本章知识点总数
     int mastered = 0;    // 5 星知识点数
-    // 本章已评知识点 importance 的平均值四舍五入到 1-5；全部未评时为 0。
+    // 本章已评知识点 difficulty 的平均值四舍五入到 1-5；全部未评时为 0。
     // 这是章节卡片的汇总展示，不在 athena.json 里重复保存章节级字段。
-    int importance = 0;
+    int difficulty = 0;
     double completion = 0.0; // 平均熟练度 / 5，落在 [0, 1]
 };
 

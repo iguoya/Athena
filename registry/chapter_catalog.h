@@ -22,6 +22,19 @@ struct SubChapterTeaches {
     string heading;
 };
 
+// 掌握目标：这个知识点要学到什么程度，与难度分开评定。
+enum class MasteryGoal {
+    Unrated,  // 未评定（练习类章节）
+    Master,   // 需要精通：反复使用，要能解释边界并写对
+    Required, // 必须掌握：能正确使用并说明选择依据
+    Familiar, // 一般了解：知道存在与适用场景，需要时能查
+};
+
+// 界面显示用的中文名，未评定时返回空串。
+string mastery_goal_label(MasteryGoal goal);
+// 配置里的字符串值（master / required / familiar）转枚举，无法识别时为 Unrated。
+MasteryGoal parse_mastery_goal(const string& value);
+
 struct SubChapter {
     string function_id;
     string name;
@@ -30,9 +43,15 @@ struct SubChapter {
     string group;
     string source;
     IconSpec icon;
-    // 内容作者基于教学与工程实践给出的客观难度评分，0-5；0 = 未评。只读，
-    // 不是运行时用户数据；AI 自测得出的熟练度存在 LearningStore 里。
-    int importance = 0;
+    // 内容作者给出的两个独立维度（ADR 0029），都是只读的内容元数据，不是运行时
+    // 用户数据；AI 自测得出的熟练度存在 LearningStore 里。
+    //
+    // difficulty：这个知识点本身有多难，0-5，0 = 未评。1-3 属于初中级，
+    // 4-5 属于高级，初学者可以先跳过再回来。
+    int difficulty = 0;
+    // mastery_goal：学完本章后要达到什么程度。难度高不代表可以不掌握
+    // （移动语义就是），难度低也不代表只需了解。
+    MasteryGoal mastery_goal = MasteryGoal::Unrated;
     optional<SubChapterTeaches> teaches;
 };
 

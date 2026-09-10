@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <map>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -541,12 +542,31 @@ void TypeSemanticsLessonPage::apply_tab_labels(
 
 Gtk::Widget* TypeSemanticsLessonPage::build_tab_label(
     const SectionTab& section, const map<string, int>& mastery_by_id) const {
-    int importance = 0;
+    int difficulty = 0;
+    // 一个标签可能覆盖多个知识点，取其中最高的掌握目标：只要有一个要求精通，
+    // 整个小节就不能按"了解一下"对待。
+    MasteryGoal goal = MasteryGoal::Unrated;
+    const auto goal_rank = [](MasteryGoal value) {
+        switch (value) {
+        case MasteryGoal::Master:
+            return 3;
+        case MasteryGoal::Required:
+            return 2;
+        case MasteryGoal::Familiar:
+            return 1;
+        case MasteryGoal::Unrated:
+            break;
+        }
+        return 0;
+    };
     double mastery_sum = 0.0;
     int mastery_count = 0;
     for (const auto& subchapter_name : section.subchapter_names) {
         const auto& subchapter = topic_by_name(m_chapter, subchapter_name);
-        importance = max(importance, subchapter.importance);
+        difficulty = max(difficulty, subchapter.difficulty);
+        if (goal_rank(subchapter.mastery_goal) > goal_rank(goal)) {
+            goal = subchapter.mastery_goal;
+        }
         const auto found = mastery_by_id.find(subchapter.function_id);
         mastery_sum += found == mastery_by_id.end() ? 0.0 : found->second;
         ++mastery_count;
@@ -561,17 +581,34 @@ Gtk::Widget* TypeSemanticsLessonPage::build_tab_label(
     title->add_css_class("lesson-tab-title");
     row->append(*title);
 
-    // 合成小节（如“教学大纲”“本章导览”）没有知识点，不显示重要度星和掌握度圆点。
+    // 合成小节（如“教学大纲”“本章导览”）没有知识点，不显示难度星和掌握度圆点。
     if (section.subchapter_names.empty()) {
         return row;
     }
 
-    if (importance > 0) {
-        auto* stars = Gtk::make_managed<Gtk::Label>(repeat_star(importance));
+    if (difficulty > 0) {
+        auto* stars = Gtk::make_managed<Gtk::Label>(repeat_star(difficulty));
         stars->add_css_class("lesson-tab-stars");
-        stars->add_css_class("importance-level-" + to_string(importance));
-        stars->set_tooltip_text("知识点重要度 " + to_string(importance) + " / 5");
+        stars->add_css_class("difficulty-level-" + to_string(difficulty));
+        stars->set_tooltip_text(
+            "知识点难度 " + to_string(difficulty)
+            + " / 5（1-3 初中级，4-5 高级）");
         row->append(*stars);
+    }
+
+    if (goal != MasteryGoal::Unrated) {
+        static const map<MasteryGoal, pair<const char*, const char*>> goal_marks =
+            {
+                {MasteryGoal::Master, {"精通", "mastery-goal-master"}},
+                {MasteryGoal::Required, {"掌握", "mastery-goal-required"}},
+                {MasteryGoal::Familiar, {"了解", "mastery-goal-familiar"}},
+            };
+        const auto& mark = goal_marks.at(goal);
+        auto* badge = Gtk::make_managed<Gtk::Label>(mark.first);
+        badge->add_css_class("lesson-tab-goal");
+        badge->add_css_class(mark.second);
+        badge->set_tooltip_text("掌握目标：" + mastery_goal_label(goal));
+        row->append(*badge);
     }
 
     auto* dot = Gtk::make_managed<Gtk::Label>("●");

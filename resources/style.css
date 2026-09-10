@@ -263,11 +263,11 @@ notebook.workbench-section-notebook > header > tabs > tab:checked {
     border-bottom-color: @athena_surface;
     color: @athena_primary_text;
 }
-.workbench-tab-importance-1 { color: @athena_success; }
-.workbench-tab-importance-2 { color: @athena_teal; }
-.workbench-tab-importance-3 { color: #b7791f; }
-.workbench-tab-importance-4 { color: @athena_orange; }
-.workbench-tab-importance-5 { color: @athena_danger; }
+.workbench-tab-difficulty-1 { color: @athena_success; }
+.workbench-tab-difficulty-2 { color: @athena_teal; }
+.workbench-tab-difficulty-3 { color: #b7791f; }
+.workbench-tab-difficulty-4 { color: @athena_orange; }
+.workbench-tab-difficulty-5 { color: @athena_danger; }
 
 /* ADR 0026：原生学习场景不由 Markdown 标题或段落决定。页面用不同的
    视觉通道表示“允许但有代价”与“编译期阻止”，而不是伪造一段运行输出。 */
@@ -381,14 +381,14 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
 
 /* 学习小节标签把“重要度”和“掌握度”做成颜色维度，颜色取项目 @athena_*
    语义变量：重要度星按 1→5 走 success·teal·warning·orange·danger，与 C++
-   学习图谱 importance 色阶一致；掌握度圆点按未开始灰 / 学习中 orange /
+   学习图谱 difficulty 色阶一致；掌握度圆点按未开始灰 / 学习中 orange /
    已掌握 success 三档。 */
 .lesson-tab-title { font-weight: 700; }
-.lesson-tab-stars.importance-level-1 { color: @athena_success; }
-.lesson-tab-stars.importance-level-2 { color: @athena_teal; }
-.lesson-tab-stars.importance-level-3 { color: @athena_warning; }
-.lesson-tab-stars.importance-level-4 { color: @athena_orange; }
-.lesson-tab-stars.importance-level-5 { color: @athena_danger; }
+.lesson-tab-stars.difficulty-level-1 { color: @athena_success; }
+.lesson-tab-stars.difficulty-level-2 { color: @athena_teal; }
+.lesson-tab-stars.difficulty-level-3 { color: @athena_warning; }
+.lesson-tab-stars.difficulty-level-4 { color: @athena_orange; }
+.lesson-tab-stars.difficulty-level-5 { color: @athena_danger; }
 .lesson-tab-dot.mastery-none { color: @athena_chart_neutral; }
 .lesson-tab-dot.mastery-some { color: @athena_orange; }
 .lesson-tab-dot.mastery-all { color: @athena_success; }
@@ -558,36 +558,36 @@ button.knowledge-graph-node:focus-visible {
     font-size: 15pt;
 }
 
-.graph-importance-0 { border-color: @athena_chart_neutral; }
-.graph-importance-1 { border-color: @athena_success; }
-.graph-importance-2 { border-color: @athena_teal; }
-.graph-importance-3 { border-color: @athena_warning; }
-.graph-importance-4 { border-color: @athena_orange; }
-.graph-importance-5 { border-color: @athena_danger; }
+.graph-difficulty-0 { border-color: @athena_chart_neutral; }
+.graph-difficulty-1 { border-color: @athena_success; }
+.graph-difficulty-2 { border-color: @athena_teal; }
+.graph-difficulty-3 { border-color: @athena_warning; }
+.graph-difficulty-4 { border-color: @athena_orange; }
+.graph-difficulty-5 { border-color: @athena_danger; }
 
 .graph-metric-badge,
-.graph-importance-scale {
+.graph-difficulty-scale {
     padding: 2px 7px;
     border-radius: 999px;
     font-size: 14pt;
     font-weight: 700;
 }
 
-.graph-importance-scale {
+.graph-difficulty-scale {
     min-width: 24px;
     min-height: 24px;
     padding: 2px;
 }
 
-.graph-importance-badge-0 {
+.graph-difficulty-badge-0 {
     background-color: @athena_chart_neutral;
     color: #ffffff;
 }
-.graph-importance-badge-1 { background-color: @athena_success; color: #ffffff; }
-.graph-importance-badge-2 { background-color: @athena_teal; color: @athena_body_text; }
-.graph-importance-badge-3 { background-color: @athena_warning; color: @athena_body_text; }
-.graph-importance-badge-4 { background-color: @athena_orange; color: #ffffff; }
-.graph-importance-badge-5 { background-color: @athena_danger; color: #ffffff; }
+.graph-difficulty-badge-1 { background-color: @athena_success; color: #ffffff; }
+.graph-difficulty-badge-2 { background-color: @athena_teal; color: @athena_body_text; }
+.graph-difficulty-badge-3 { background-color: @athena_warning; color: @athena_body_text; }
+.graph-difficulty-badge-4 { background-color: @athena_orange; color: #ffffff; }
+.graph-difficulty-badge-5 { background-color: @athena_danger; color: #ffffff; }
 
 .graph-mastery-none {
     background-color: @athena_chart_neutral;
@@ -894,26 +894,26 @@ frame.knowledge-status-bar > border {
 
 /* 重要度：内容作者标注的客观难度，只读徽章 + 星级，显示在知识点标题旁；
    五个等级各用一种颜色，从简单到极难由冷到暖过渡。 */
-.badge-importance {
+.badge-difficulty {
     font-size: 15pt;
     padding: 1px 8px;
 }
 
-.importance-stars {
+.difficulty-stars {
     padding: 1px;
 }
 
-.badge-importance.importance-level-1 { background-color: @athena_success; }
-.badge-importance.importance-level-2 { background-color: @athena_teal; }
-.badge-importance.importance-level-3 { background-color: @athena_warning; color: @athena_body_text; }
-.badge-importance.importance-level-4 { background-color: @athena_orange; }
-.badge-importance.importance-level-5 { background-color: @athena_danger; }
+.badge-difficulty.difficulty-level-1 { background-color: @athena_success; }
+.badge-difficulty.difficulty-level-2 { background-color: @athena_teal; }
+.badge-difficulty.difficulty-level-3 { background-color: @athena_warning; color: @athena_body_text; }
+.badge-difficulty.difficulty-level-4 { background-color: @athena_orange; }
+.badge-difficulty.difficulty-level-5 { background-color: @athena_danger; }
 
-.importance-stars.importance-level-1 image { color: @athena_success; }
-.importance-stars.importance-level-2 image { color: @athena_teal; }
-.importance-stars.importance-level-3 image { color: @athena_warning; }
-.importance-stars.importance-level-4 image { color: @athena_orange; }
-.importance-stars.importance-level-5 image { color: @athena_danger; }
+.difficulty-stars.difficulty-level-1 image { color: @athena_success; }
+.difficulty-stars.difficulty-level-2 image { color: @athena_teal; }
+.difficulty-stars.difficulty-level-3 image { color: @athena_warning; }
+.difficulty-stars.difficulty-level-4 image { color: @athena_orange; }
+.difficulty-stars.difficulty-level-5 image { color: @athena_danger; }
 
 /* === Small reusable status utilities === */
 .badge {
@@ -1184,4 +1184,34 @@ button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
 
 .domain-graph-side {
     margin-top: 4px;
+}
+
+/* 掌握目标徽章（ADR 0029）：与难度色阶分开——难度用绿→红表示"多难"，
+   掌握目标用蓝 / 青 / 灰表示"要学到什么程度"，两个维度不互相暗示。 */
+.badge-mastery-goal {
+    font-weight: 700;
+}
+
+.badge-mastery-goal.mastery-goal-master {
+    color: @athena_primary_text;
+    background-color: @athena_primary_soft;
+    border: 1px solid @athena_primary;
+}
+
+.badge-mastery-goal.mastery-goal-required {
+    color: @athena_teal;
+    background-color: alpha(@athena_teal, 0.14);
+    border: 1px solid alpha(@athena_teal, 0.55);
+}
+
+.badge-mastery-goal.mastery-goal-familiar {
+    color: @athena_secondary;
+    background-color: alpha(@athena_secondary, 0.12);
+    border: 1px solid alpha(@athena_secondary, 0.45);
+}
+
+.lesson-tab-goal {
+    font-weight: 700;
+    padding: 0 6px;
+    border-radius: 6px;
 }

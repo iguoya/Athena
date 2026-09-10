@@ -50,9 +50,9 @@ vector<DocumentSection> split_document_sections(const DocModel& document) {
     return sections;
 }
 
-string importance_stars(int importance) {
+string difficulty_stars(int difficulty) {
     string stars;
-    for (int index = 0; index < importance; ++index) {
+    for (int index = 0; index < difficulty; ++index) {
         stars += "★";
     }
     return stars;
@@ -69,21 +69,21 @@ Gtk::Widget* make_section_tab(
         return row;
     }
 
-    int max_importance = 0;
+    int max_difficulty = 0;
     string tooltip = section.title + "：";
     for (size_t index = 0; index < topics.size(); ++index) {
         const auto& topic = *topics[index];
-        max_importance = max(max_importance, topic.importance);
+        max_difficulty = max(max_difficulty, topic.difficulty);
         if (index != 0) {
             tooltip += "；";
         }
-        tooltip += topic.title + " " + importance_stars(topic.importance);
+        tooltip += topic.title + " " + difficulty_stars(topic.difficulty);
     }
-    if (max_importance > 0) {
+    if (max_difficulty > 0) {
         auto stars = Gtk::make_managed<Gtk::Label>(
-            importance_stars(max_importance));
+            difficulty_stars(max_difficulty));
         stars->add_css_class(
-            "workbench-tab-importance-" + to_string(max_importance));
+            "workbench-tab-difficulty-" + to_string(max_difficulty));
         row->append(*stars);
     }
     row->set_tooltip_text(tooltip);

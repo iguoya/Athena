@@ -54,7 +54,8 @@ SUBCHAPTER_FIELDS = frozenset(
         "name",
         "title",
         "description",
-        "importance",
+        "difficulty",
+        "mastery_goal",
         "icon",
         "group",
         "source",
@@ -62,6 +63,9 @@ SUBCHAPTER_FIELDS = frozenset(
     }
 )
 TEACHES_FIELDS = frozenset({"document", "heading"})
+# 掌握目标：master 需要精通、required 必须掌握、familiar 一般了解；
+# 空串表示尚未评定（练习类章节可以留空）。
+MASTERY_GOALS = frozenset({"", "master", "required", "familiar"})
 LEARNING_UNIT_FIELDS = frozenset(
     {"id", "heading", "claim", "question", "choices", "correct_choice", "feedback", "follow_up", "experiment"}
 )
@@ -691,15 +695,25 @@ def build_model(
                             f"{subchapter_path}.group references unknown group "
                             f"{group_name!r}"
                         )
-                importance = subchapter.get("importance", 0)
+                # 两个独立维度（ADR 0029）：difficulty 只说这个知识点有多难，
+                # mastery 只说学完要达到什么程度。难不等于可以跳过，简单也不
+                # 等于只需了解，因此两者分别校验、互不推导。
+                difficulty = subchapter.get("difficulty", 0)
                 if (
-                    not isinstance(importance, int)
-                    or isinstance(importance, bool)
-                    or not 0 <= importance <= 5
+                    not isinstance(difficulty, int)
+                    or isinstance(difficulty, bool)
+                    or not 0 <= difficulty <= 5
                 ):
                     raise ProjectError(
-                        f"{subchapter_path}.importance must be an integer in [0, 5], "
-                        f"got {importance!r}"
+                        f"{subchapter_path}.difficulty must be an integer in [0, 5], "
+                        f"got {difficulty!r}"
+                    )
+                mastery_goal = subchapter.get("mastery_goal", "")
+                if mastery_goal not in MASTERY_GOALS:
+                    raise ProjectError(
+                        f"{subchapter_path}.mastery_goal must be one of "
+                        f"{sorted(level for level in MASTERY_GOALS if level)}, "
+                        f"got {mastery_goal!r}"
                     )
                 resolved_source = group_sources.get(group_name, "") or chapter_source
                 if "source" in subchapter:
@@ -770,7 +784,8 @@ def build_model(
                     "description": subchapter_description,
                     "group": group_name,
                     "source": resolved_source,
-                    "importance": importance,
+                    "difficulty": difficulty,
+                    "mastery_goal": mastery_goal,
                     "icon": resolve_icon(
                         own_subchapter_icon,
                         default_subchapter_icon,

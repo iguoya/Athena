@@ -8,11 +8,11 @@
 
 `resources/athena.json` 是项目配置的唯一数据源，但此前 Python 生成器和 C++
 `ChapterCatalog::from_json()` 都直接解释这份作者配置。两套实现分别处理默认图标、
-Blueprint 资源路径、源码继承、重复名称、分组引用和 `importance`，已经出现行为差异：
+Blueprint 资源路径、源码继承、重复名称、分组引用和难度评级（当时叫 `importance`，ADR 0029 起拆为 `difficulty` 与 `mastery_goal`），已经出现行为差异：
 
 - 文档要求 C++ 类名和成员函数名不能是关键字，Python 只检查标识符正则；
 - Python 拒绝废弃的顶层 `handbook_documents`，C++ 会静默忽略；
-- Python 拒绝越界 `importance`，C++ 会把它夹到 0–5；
+- Python 拒绝越界的难度值，C++ 会把它夹到 0–5；
 - 未知字段缺少统一策略，拼写错误可能被某一侧忽略。
 
 Athena 的配置随应用一起构建，不支持在运行时加载任意外部作者配置，因此没有必要

@@ -19,7 +19,8 @@ json MakePoint(const string& function_id, const string& name) {
         {"description", "d"},
         {"group", ""},
         {"source", ""},
-        {"importance", 0},
+        {"difficulty", 0},
+        {"mastery_goal", ""},
         {"icon", kIcon},
     };
 }

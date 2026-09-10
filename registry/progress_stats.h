@@ -70,6 +70,6 @@ struct SuggestedTopic {
 // 不调用 AI：优先级是“先学完已经在学的（1-4 星），再开始完全没碰过的
 // （0 星）”——已经 5 星的不再推荐。同一优先级内保持 athena.json 里的
 // 声明顺序，不做额外排序。这条规则很朴素，只是先把“有没有推荐”这个功能
-// 立起来，具体策略以后可以替换（比如按 importance 加权），不需要改调用方。
+// 立起来，具体策略以后可以替换（比如按 difficulty 加权），不需要改调用方。
 vector<SuggestedTopic> suggest_next_topics(
     const CategoryProgress& progress, int max_count = 3);

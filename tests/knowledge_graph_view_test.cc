@@ -44,7 +44,7 @@ TEST(KnowledgeGraphViewTest, RendersRichChapterNodeAndMetricLegend) {
             .layer_size = 1,
             .total = 2,
             .mastered = 1,
-            .importance = 4,
+            .difficulty = 4,
             .completion = 0.7,
         }},
         .layer_count = 1,
@@ -70,11 +70,11 @@ TEST(KnowledgeGraphViewTest, RendersRichChapterNodeAndMetricLegend) {
     EXPECT_TRUE(description->get_wrap());
     EXPECT_EQ(description->get_ellipsize(), Pango::EllipsizeMode::NONE);
     EXPECT_EQ(description->get_lines(), -1);
-    EXPECT_NE(find_label(*view, "重要度 4/5"), nullptr);
+    EXPECT_NE(find_label(*view, "难度 4/5"), nullptr);
     EXPECT_NE(find_label(*view, "掌握 1/2"), nullptr);
     EXPECT_NE(find_label(*view, "完成 70%"), nullptr);
     EXPECT_NE(find_label(*view, "图谱说明"), nullptr);
-    EXPECT_NE(find_label(*view, "章节重要度"), nullptr);
+    EXPECT_NE(find_label(*view, "章节难度"), nullptr);
     EXPECT_NE(find_label(*view, "掌握程度"), nullptr);
     EXPECT_NE(find_label(*view, "完成程度"), nullptr);
 
