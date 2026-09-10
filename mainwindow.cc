@@ -440,9 +440,8 @@ void MainWindow::ensure_chapter_page(
             make_unique<TypeSemanticsLessonPage>(
                 chapter,
                 builder,
-                m_content_loader,
-                *m_experiment_runner,
                 mastery_by_id,
+                experiment_requested,
                 overview_requested);
     }
     m_loaded_chapters.insert(page_key);

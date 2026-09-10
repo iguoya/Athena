@@ -13,11 +13,6 @@ using namespace std;
 // 最大值 + 1"；同一层内保持 athena.json 的声明顺序。掌握度只用于节点着色，
 // 由调用方传入的熟练度记录聚合得到。
 //
-// 另两套展示权重（不另增配置字段）：
-// - has_implementation：本章是否已有 implementation.header；无实现则视为规划中。
-// - on_main_path：从起点沿“覆盖已实现章节最多的后继”走出的学习主干；
-//   规划中但压在主干上的枢纽（如类与对象）仍标为主干，避免重点落空。
-//
 // 纯计算，不依赖 GTK；渲染在 render/knowledge_graph_view，与 progress_stats
 // / chart_view 的分工一致，可脱离 GTK 用 Google Test 验证。
 struct KnowledgeNode {
@@ -34,14 +29,11 @@ struct KnowledgeNode {
     // 这是章节卡片的汇总展示，不在 athena.json 里重复保存章节级字段。
     int difficulty = 0;
     double completion = 0.0; // 平均熟练度 / 5，落在 [0, 1]
-    bool has_implementation = false;
-    bool on_main_path = false;
 };
 
 struct KnowledgeEdge {
     int from = 0; // nodes 下标：前置章节
     int to = 0;   // nodes 下标：依赖前置的章节
-    bool on_main_path = false;
 };
 
 struct KnowledgeGraph {

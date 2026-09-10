@@ -1,8 +1,6 @@
 #pragma once
 
-#include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
-#include "services/experiment_runner.h"
 #include "ui/experiment_dock.h"
 
 #include <gtkmm.h>
@@ -31,9 +29,8 @@ public:
     TypeSemanticsLessonPage(
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
-        const ContentLoader& content_loader,
-        ExperimentRunner& experiment_runner,
         const map<string, int>& mastery_by_id,
+        function<void(const ExperimentSelection&, bool)> on_experiment_requested,
         function<void()> on_reference_requested);
 
     ~TypeSemanticsLessonPage();
@@ -94,9 +91,7 @@ private:
     bool on_anim_tick();
 
     const ChapterMeta& m_chapter;
-    // 实验就在本页最后一个标签里跑，不跳走——教学过程从头走到底不被打断。
-    unique_ptr<ExperimentDock> m_lab;
-    int m_lab_page_index = 0;
+    function<void(const ExperimentSelection&, bool)> m_on_experiment_requested;
 
     // 每个学习单元的数据必须比它的 View 活得久（View 持有 const 引用）。
     vector<unique_ptr<LearningUnit>> m_unit_data;

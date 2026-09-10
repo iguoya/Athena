@@ -29,10 +29,7 @@ json MakePoint(
 }
 
 json MakeChapter(
-    const string& name,
-    json prerequisites,
-    json subchapters,
-    const string& implementation_header = "") {
+    const string& name, json prerequisites, json subchapters) {
     return json{
         {"name", name},
         {"title", name + " 章"},
@@ -41,7 +38,7 @@ json MakeChapter(
         {"resource_path", "/app/chapters/code.ui"},
         {"widget_name", "chapter_page"},
         {"source", ""},
-        {"implementation_header", implementation_header},
+        {"implementation_header", ""},
         {"icon", kIcon},
         {"prerequisites", std::move(prerequisites)},
         {"groups", json::array()},
@@ -49,8 +46,7 @@ json MakeChapter(
     };
 }
 
-// A（已实现起点）→ B（已实现）、A → C（规划）、B,C → D（已实现）。
-// 主干应走 A → B → D，把覆盖已实现章节最多的分叉留下来。
+// A（起点）→ B、A → C、B,C → D 的菱形依赖。
 ChapterCatalog MakeCatalog() {
     const json source = {
         {"catalog_version", 1},
@@ -65,17 +61,17 @@ ChapterCatalog MakeCatalog() {
                     MakeChapter("A", json::array(), json::array({
                         MakePoint("A", "a1", 2),
                         MakePoint("A", "a2", 5),
-                    }), "a.hpp"),
+                    })),
                     MakeChapter("B", json::array({"A"}), json::array({
                         MakePoint("B", "b1"),
-                    }), "b.hpp"),
+                    })),
                     MakeChapter("C", json::array({"A"}), json::array({
                         MakePoint("C", "c1"),
                     })),
                     MakeChapter(
                         "D", json::array({"B", "C"}), json::array({
                             MakePoint("D", "d1"),
-                        }), "d.hpp"),
+                        })),
                 })},
             },
         })},
@@ -151,31 +147,6 @@ TEST(KnowledgeGraphTest, MasteryAggregatesPerChapter) {
 
 TEST(KnowledgeGraphTest, UnknownCategoryYieldsEmptyGraph) {
     EXPECT_TRUE(build_knowledge_graph(MakeCatalog(), "nope", {}).empty());
-}
-
-TEST(KnowledgeGraphTest, MarksImplementationAndMainPathThroughImplementedFork) {
-    const auto graph = build_knowledge_graph(MakeCatalog(), "cpp", {});
-
-    EXPECT_TRUE(NodeNamed(graph, "A").has_implementation);
-    EXPECT_TRUE(NodeNamed(graph, "B").has_implementation);
-    EXPECT_FALSE(NodeNamed(graph, "C").has_implementation);
-    EXPECT_TRUE(NodeNamed(graph, "D").has_implementation);
-
-    EXPECT_TRUE(NodeNamed(graph, "A").on_main_path);
-    EXPECT_TRUE(NodeNamed(graph, "B").on_main_path);
-    EXPECT_FALSE(NodeNamed(graph, "C").on_main_path);
-    EXPECT_TRUE(NodeNamed(graph, "D").on_main_path);
-
-    int main_edges = 0;
-    for (const auto& edge : graph.edges) {
-        if (!edge.on_main_path) {
-            continue;
-        }
-        ++main_edges;
-        EXPECT_TRUE(graph.nodes[edge.from].on_main_path);
-        EXPECT_TRUE(graph.nodes[edge.to].on_main_path);
-    }
-    EXPECT_EQ(main_edges, 2); // A→B、B→D
 }
 
 } // namespace

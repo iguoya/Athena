@@ -113,8 +113,7 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     ASSERT_NE(sections, nullptr);
     // 「教学大纲」+「本章导览」+ 七个知识点小节，顺序服从大纲的推荐顺序：
     // 初始化 / 对象生命周期 / 类型推导 / enum class / 类型转换 / 值类别 / decltype。
-    // 末尾还有「运行实验」：实验在页内跑，教学过程不被跳页打断。
-    EXPECT_EQ(sections->get_n_pages(), 10);
+    EXPECT_EQ(sections->get_n_pages(), 9);
     // 每一页都必须是可取到的控件：apply_tab_labels 会按下标给每页换标签，
     // 取不到的页会在运行期变成 gtk_notebook_set_tab_label 断言失败。
     for (int index = 0; index < sections->get_n_pages(); ++index) {
@@ -129,10 +128,6 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     // 章节教学大纲是第一个标签，用 GTK 控件手写而不是渲染 Markdown。
     EXPECT_NE(
         builder->get_widget<Gtk::Picture>("ts_outline_model_figure"), nullptr);
-    EXPECT_NE(
-        builder->get_widget<Gtk::TextView>("ts_lab_result_view"), nullptr);
-    EXPECT_NE(
-        builder->get_widget<Gtk::Button>("ts_lab_run_button"), nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
     EXPECT_NE(

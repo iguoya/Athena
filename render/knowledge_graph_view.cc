@@ -6,7 +6,6 @@
 #include <cmath>
 #include <string>
 #include <string_view>
-#include <vector>
 
 using namespace std;
 
@@ -20,29 +19,19 @@ constexpr int kLayerGap = 72;
 void draw_edge(
     const Cairo::RefPtr<Cairo::Context>& cr,
     const graphene_rect_t& from,
-    const graphene_rect_t& to,
-    bool on_main_path,
-    bool planned) {
+    const graphene_rect_t& to) {
     const double x0 = from.origin.x + from.size.width / 2.0;
     const double y0 = from.origin.y + from.size.height;
     const double x1 = to.origin.x + to.size.width / 2.0;
     const double y1 = to.origin.y;
     const double midy = (y0 + y1) / 2.0;
 
-    const ChartColor line = on_main_path
-        ? chart_color(0x1d4ed8)
-        : (planned ? chart_color(0xc5ced6) : chart_color(0x9aa4af));
+    const ChartColor line = chart_color(0x9aa4af);
     cr->set_source_rgb(line.r, line.g, line.b);
-    cr->set_line_width(on_main_path ? 3.2 : 2.0);
-    if (planned && !on_main_path) {
-        cr->set_dash(vector<double>({5.0, 4.0}), 0.0);
-    } else {
-        cr->set_dash(vector<double>(), 0.0);
-    }
+    cr->set_line_width(2.0);
     cr->move_to(x0, y0);
     cr->curve_to(x0, midy, x1, midy, x1, y1 - 7);
     cr->stroke();
-    cr->set_dash(vector<double>(), 0.0);
 
     cr->move_to(x1, y1);
     cr->line_to(x1 - 5.5, y1 - 9);
@@ -91,12 +80,6 @@ Gtk::Button* make_node_button(
     button->add_css_class("knowledge-graph-node");
     button->add_css_class(
         "graph-difficulty-" + to_string(clamp(node.difficulty, 0, 5)));
-    if (node.on_main_path) {
-        button->add_css_class("graph-node-main-path");
-    }
-    if (!node.has_implementation) {
-        button->add_css_class("graph-node-planned");
-    }
 
     auto* content = Gtk::make_managed<Gtk::Box>(
         Gtk::Orientation::VERTICAL, 12);
@@ -118,23 +101,6 @@ Gtk::Button* make_node_button(
     title->add_css_class("knowledge-graph-node-title");
     heading->append(*title);
     content->append(*heading);
-
-    if (node.on_main_path || !node.has_implementation) {
-        string status;
-        if (node.on_main_path && node.has_implementation) {
-            status = "学习主干";
-        } else if (node.on_main_path) {
-            status = "学习主干 · 待写";
-        } else {
-            status = "规划中";
-        }
-        auto* status_badge = Gtk::make_managed<Gtk::Label>(status);
-        status_badge->set_halign(Gtk::Align::START);
-        status_badge->add_css_class("graph-metric-badge");
-        status_badge->add_css_class(
-            node.on_main_path ? "graph-status-main" : "graph-status-planned");
-        content->append(*status_badge);
-    }
 
     auto* description = Gtk::make_managed<Gtk::Label>(node.description);
     description->set_halign(Gtk::Align::START);
@@ -177,20 +143,12 @@ Gtk::Button* make_node_button(
     content->append(*completion);
 
     button->set_child(*content);
-    string tooltip = node.title + "\n" + node.description;
-    if (node.on_main_path) {
-        tooltip += "\n学习主干";
-    }
-    if (!node.has_implementation) {
-        tooltip += "\n状态：规划中（尚无实现）";
-    }
-    tooltip +=
-        "\n章节难度：" +
+    button->set_tooltip_text(
+        node.title + "\n" + node.description + "\n章节难度：" +
         (node.difficulty > 0 ? to_string(node.difficulty) + "/5" : "未评") +
         "\n掌握程度：" + to_string(node.mastered) + "/" +
         to_string(node.total) + "\n完成程度：" +
-        to_string(static_cast<int>(lround(node.completion * 100))) + "%";
-    button->set_tooltip_text(tooltip);
+        to_string(static_cast<int>(lround(node.completion * 100))) + "%");
     button->signal_clicked().connect(
         [on_open, chapter_name = node.chapter_name]() {
             on_open(chapter_name);
@@ -277,12 +235,7 @@ Gtk::Widget* make_canvas(
                         GTK_WIDGET(to_widget->gobj()),
                         GTK_WIDGET(overlay->gobj()),
                         &to)) {
-                    const bool planned =
-                        !graph.nodes[static_cast<size_t>(edge.from)]
-                             .has_implementation
-                        || !graph.nodes[static_cast<size_t>(edge.to)]
-                                .has_implementation;
-                    draw_edge(cr, from, to, edge.on_main_path, planned);
+                    draw_edge(cr, from, to);
                 }
             }
         });
@@ -336,11 +289,7 @@ Gtk::Widget* make_legend() {
     };
 
     add_heading("连接关系");
-    add_note("箭头从前置章节指向后续章节；蓝色实线是学习主干，灰色虚线多属规划中的支线。点击节点进入对应章节。");
-
-    add_heading("节点状态");
-    content->append(*legend_row("graph-status-main", "学习主干（含尚未落地的枢纽）"));
-    content->append(*legend_row("graph-status-planned", "规划中：尚无实现，视觉降权"));
+    add_note("箭头从前置章节指向后续章节；点击节点进入对应章节。");
 
     add_heading("章节难度");
     add_note("取本章所有已评知识点 difficulty 的平均值，四舍五入为 1–5 级。");
@@ -392,8 +341,7 @@ Gtk::Widget* make_knowledge_graph_view(
         Gtk::Orientation::VERTICAL, 10);
     graph_column->set_hexpand(true);
     auto* hint = Gtk::make_managed<Gtk::Label>(
-        "自上而下按前置依赖分层。蓝色加粗为主干（类型 → 引用 → 函数 → 类 → RAII）；"
-        "无实现的章节灰显为规划中，仍可点开查看框架。");
+        "自上而下按前置依赖分层；章节节点同时显示难度、掌握程度和完成程度。");
     hint->set_halign(Gtk::Align::START);
     hint->add_css_class("dim-label");
     hint->add_css_class("knowledge-graph-hint");
