@@ -126,6 +126,15 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
         nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
+    // 本章大纲独占一个 Stack 页，不占 Notebook 学习标签位；它渲染的是本章那一份
+    // overview_document，和「完整手册」按钮跳转的分类手册不是一回事。
+    EXPECT_NE(
+        builder->get_widget<Gtk::Stack>("type_semantics_view_stack"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("type_semantics_overview_host"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("type_semantics_overview_button"),
+        nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
     EXPECT_NE(

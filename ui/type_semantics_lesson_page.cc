@@ -97,6 +97,7 @@ void rounded_box(
 TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
+    const ContentLoader& content_loader,
     const map<string, int>& mastery_by_id,
     function<void(const ExperimentSelection&, bool)> on_experiment_requested,
     function<void()> on_reference_requested)
@@ -110,6 +111,12 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         "type_semantics_reference_button");
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
+    m_view_stack =
+        builder->get_widget<Gtk::Stack>("type_semantics_view_stack");
+    auto* overview_button =
+        builder->get_widget<Gtk::Button>("type_semantics_overview_button");
+    auto* overview_back =
+        builder->get_widget<Gtk::Button>("type_semantics_overview_back_button");
     auto* deduction_unit_host = builder->get_widget<Gtk::Box>(
         "type_semantics_deduction_unit_host");
     auto* deduction_variant_host = builder->get_widget<Gtk::Box>(
@@ -132,7 +139,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !reference_button
-        || !m_section_notebook || !deduction_unit_host
+        || !m_section_notebook || !m_view_stack || !overview_button
+        || !overview_back || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !m_deduction_graph
         || !m_anim_status
@@ -319,7 +327,54 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
         {"decltype", {"decltype_deduction"}},
     };
+    overview_button->signal_clicked().connect(
+        [this]() { m_view_stack->set_visible_child("overview"); });
+    overview_back->signal_clicked().connect(
+        [this]() { m_view_stack->set_visible_child("lesson"); });
+
+    render_overview(builder, content_loader);
     apply_tab_labels(mastery_by_id);
+}
+
+void TypeSemanticsLessonPage::render_overview(
+    const Glib::RefPtr<Gtk::Builder>& builder,
+    const ContentLoader& content_loader) {
+    auto* host = builder->get_widget<Gtk::Box>("type_semantics_overview_host");
+    if (host == nullptr || m_chapter.overview_document.empty()) {
+        cerr << "TypeSemantics lesson: overview unavailable" << endl;
+        return;
+    }
+
+    const string markdown =
+        content_loader.load_document(m_chapter.overview_document);
+    if (markdown.empty()) {
+        cerr << "TypeSemantics lesson: failed to load "
+             << m_chapter.overview_document << endl;
+        return;
+    }
+
+    // 图片按大纲所在目录解析，Markdown 里的 images/xxx.svg 因此落到
+    // /app/articles/cpp/images/xxx.svg。
+    constexpr string_view resources_prefix = "resources/";
+    string relative = m_chapter.overview_document;
+    if (relative.rfind(resources_prefix, 0) == 0) {
+        relative = relative.substr(resources_prefix.size());
+    }
+    const auto slash = relative.find_last_of('/');
+    const string resource_base =
+        slash == string::npos ? "/app/" : "/app/" + relative.substr(0, slash + 1);
+
+    try {
+        m_overview_view = make_unique<DocumentView>(resource_base);
+        auto& view = m_overview_view->widget();
+        view.set_vexpand(true);
+        host->append(view);
+        m_overview_view->set_markdown(markdown);
+    } catch (const exception& error) {
+        cerr << "TypeSemantics lesson: failed to render overview: "
+             << error.what() << endl;
+        m_overview_view.reset();
+    }
 }
 
 

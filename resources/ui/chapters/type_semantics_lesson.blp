@@ -59,11 +59,22 @@ Box type_semantics_lesson_page {
           }
         }
 
-        Button type_semantics_reference_button {
-          name: "type_semantics_reference_button";
-          label: "本章教学大纲";
+        Box {
+          orientation: horizontal;
+          spacing: 8;
           valign: center;
-          styles [ "btn-outline-secondary", "btn-sm" ]
+
+          Button type_semantics_overview_button {
+            name: "type_semantics_overview_button";
+            label: "本章教学大纲";
+            styles [ "btn-outline-primary", "btn-sm" ]
+          }
+
+          Button type_semantics_reference_button {
+            name: "type_semantics_reference_button";
+            label: "完整手册";
+            styles [ "btn-outline-secondary", "btn-sm" ]
+          }
         }
       }
 
@@ -72,1754 +83,746 @@ Box type_semantics_lesson_page {
 
   // 标签直接对应课程的子章节，而非 Markdown H2；每页都是可独立扩展的
   // 原生学习场景，避免一个长页面同时承担所有表达形式。
-  Notebook type_semantics_section_notebook {
-    [tab]
-    Label { label: "本章导览"; }
+  // 章节教学大纲（第一层）独占整页显示，但不占 Notebook 的学习标签位——它和
+  // 「本章导览」分属 ADR 0028 的不同层，顶部按钮在两个视图之间切换。
+  // 注意它渲染的是本章那一份 overview_document；顶部「完整手册」按钮跳转的
+  // 分类手册串着本分类全部四份文档，两者不能互相替代。
+  Stack type_semantics_view_stack {
+    name: "type_semantics_view_stack";
+    vexpand: true;
 
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
+    StackPage {
+      name: "lesson";
 
-      Box {
-        orientation: vertical;
-        spacing: 16;
-        margin-bottom: 18;
+      child: Notebook type_semantics_section_notebook {
+      [tab]
+      Label { label: "本章导览"; }
 
-        Frame {
-          label: "全章围绕两条主线";
-          styles [ "panel-frame", "group-frame" ]
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
 
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "C++ 程序反复做两件事：创建对象，再用表达式读取或改变它们。本章的五个小节，都是这两条主线上的问题。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-figure" ]
-
-              Picture ts_map_figure {
-                name: "ts_map_figure";
-                content-fit: contain;
-                halign: fill;
-                hexpand: true;
-                can-shrink: true;
-                height-request: 460;
-              }
-              Label {
-                label: "箭头表示一节为另一节做铺垫，不是强制的学习顺序——从任意一节进入都可以。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-figure-caption" ]
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-why" ]
-
-              Label { label: "读这一章时，反复问自己四个问题"; halign: start; styles [ "lesson-callout-title" ] }
-              Label { label: "① 对象的类型是什么？"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "② 它怎样获得初始值？"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "③ 当前表达式指向持久对象，还是产生临时结果？"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "④ 类型发生变化时，谁在检查风险？"; halign: start; wrap: true; xalign: 0; }
-            }
-          }
-        }
-
-        Frame {
-          label: "每一节解决的问题";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label { label: "· 初始化 —— 不同写法在什么条件下有不同结果；谁来检查“信息会不会丢”"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-            Label { label: "· 类型推导 —— 编译器补类型时，要值 / 要可写别名 / 要只读访问的意图仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-            Label { label: "· 值类别 —— 表达式的类型和值类别分别告诉我们什么，如何影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-            Label { label: "· 类型转换 —— 为什么要显式表达转换意图；检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-            Label { label: "· enum class —— 为什么一组有限状态值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-          }
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "初始化"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 18;
-        margin-bottom: 18;
-
-        // 1. 动机：为什么初始化值得单独一节
-        Frame {
-          label: "为什么要专门学初始化";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "初始化不是“先把对象创建出来，再赋一个值给它”。对象从生命周期的第一刻起，就按某条语言规则取得初始状态——这条规则由你写下的初始化形式决定，一旦选错，编译器未必会拦你。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "C++ 提供圆括号、等号、花括号等好几种写法，不是历史包袱式的语法冗余。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-why" ]
-
-              Label { label: "一句话抓住重点"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "这几种写法的差别在一个关键问题上：当类型需要转换时，谁来检查“信息会不会丢”。没分清楚，常见代价是——窄化转换悄悄丢精度、本该显式的构造被隐式绕过、读到从未写入的“垃圾值”。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 2. 把四种写法摆出来
-        Frame {
-          label: "四种写法：结果相近，规则不同";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label { label: "int direct(7);    // 直接初始化"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "int copied = 8;   // 拷贝初始化"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "int listed{9};    // 列表初始化"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "int zero{};       // 值初始化"; halign: start; styles [ "native-lesson-code" ] }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-figure" ]
-
-              Picture ts_init_forms_figure {
-                name: "ts_init_forms_figure";
-                content-fit: contain;
-                halign: fill;
-                hexpand: true;
-                can-shrink: true;
-                height-request: 420;
-              }
-              Label {
-                label: "同一个值进入 int：圆括号让程序员承担截断，花括号把丢失提升为编译错误，explicit 阻止隐式转换。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-figure-caption" ]
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-key" ]
-
-              Label { label: "要点"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "四行都得到一个普通的 int。要关注的不是括号长相，而是下面两处边界——它们决定同样的写法遇到风险时是放行还是报错。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 3. 边界一：窄化（保留双路径对比）
-        Frame {
-          label: "边界一：花括号会拦住“窄化”";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "同一个 double 值 3.75 要放进 int：圆括号允许，代价是小数部分被丢掉；花括号在编译期直接拒绝，因为这是一次可能丢信息的窄化转换。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: horizontal;
-              spacing: 14;
-              homogeneous: true;
-
-              Frame {
-                label: "圆括号：允许，但要承担后果";
-                styles [ "native-lesson-lane", "native-lesson-lane-warning" ]
-
-                Box {
-                  orientation: vertical;
-                  spacing: 6;
-                  margin-top: 12;
-                  margin-bottom: 12;
-                  margin-start: 14;
-                  margin-end: 14;
-
-                  Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
-                  Label { label: "↓ 转成 int"; halign: start; styles [ "dim-label" ] }
-                  Label { label: "int value(source)  →  3"; halign: start; styles [ "native-lesson-code" ] }
-                  Label { label: "运行可以继续，但小数部分已经被丢弃。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-warning" ] }
-                }
-              }
-
-              Frame {
-                label: "花括号：把边界交给编译器";
-                styles [ "native-lesson-lane", "native-lesson-lane-safe" ]
-
-                Box {
-                  orientation: vertical;
-                  spacing: 6;
-                  margin-top: 12;
-                  margin-bottom: 12;
-                  margin-start: 14;
-                  margin-end: 14;
-
-                  Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
-                  Label { label: "↓ 窄化检查"; halign: start; styles [ "dim-label" ] }
-                  Label { label: "int value{source}  →  拒绝编译"; halign: start; styles [ "native-lesson-code" ] }
-                  Label { label: "没有执行结果：这是编译期规则，而非运行时输出。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-safe" ] }
-                }
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-key" ]
-
-              Label { label: "怎么选"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "需要表达“这个值必须无损进入目标类型”时用花括号，让编译器替你把关；确实接受截断时用圆括号，把这次决定写在明处。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 4. 边界二：explicit
-        Frame {
-          label: "边界二：explicit 挡住悄悄发生的转换";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "单参数构造函数默认可以当隐式转换用：一个 int 会在你没察觉时变成某个领域类型。给构造函数加 explicit，就是要求这次转换必须由调用者写清楚。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label { label: "class Distance { explicit Distance(int metres); };"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "Distance a{10};      // 可以：直接初始化，显式选择该构造函数"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "Distance b = 10;     // 编译错误：拷贝初始化不走 explicit 构造"; halign: start; styles [ "native-lesson-code" ] }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-use" ]
-
-              Label { label: "什么时候用"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "从数字造一个有含义的类型（距离、金额、ID）时，让构造函数 explicit、调用处写 Distance{10}，隐式转换的口子就关上了。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 5. 零值 vs 未初始化
-        Frame {
-          label: "第三个区分：值初始化为 0，和根本没初始化";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label { label: "int a{};   // 一定是 0（值初始化）"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "int b;     // 局部变量未初始化，先读它就是未定义行为"; halign: start; styles [ "native-lesson-code" ] }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-trap" ]
-
-              Label { label: "别踩这里"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "普通局部变量不会自动清零。读一个没写过的变量“看看它碰巧是几”不是实验，是未定义行为——结果不可复现，也可能随编译选项变化。想要零，就写 int a{}。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 6. 预测单元（由 TypeSemanticsLessonPage 填入 LearningUnitView）
-        Box type_semantics_learning_unit_host {
-          name: "type_semantics_learning_unit_host";
+        Box {
           orientation: vertical;
-          hexpand: true;
-        }
+          spacing: 16;
+          margin-bottom: 18;
 
-        // 7. 常见误区
-        Frame {
-          label: "常见误区";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            styles [ "lesson-callout", "lesson-callout-trap" ]
-
-            Label { label: "· 把花括号和圆括号当成风格偏好——它们在窄化检查上规则不同，不能随意互换。"; halign: start; wrap: true; xalign: 0; }
-            Label { label: "· 以为 int x; 会得到 0——只有 int x{}、静态存储期变量或类内值初始化才保证清零。"; halign: start; wrap: true; xalign: 0; }
-            Label { label: "· 以为 Distance d = 10; 会调用 explicit 构造——拷贝初始化根本不考虑 explicit 构造函数，这行直接编译失败。"; halign: start; wrap: true; xalign: 0; }
-            Label { label: "· 用花括号初始化容器时忘了 initializer_list 优先——vector<int> v{3, 0} 是两个元素，vector<int> v(3, 0) 才是三个 0。"; halign: start; wrap: true; xalign: 0; }
-          }
-        }
-
-        // 8. 怎么选 + 过渡到下一节
-        Frame {
-          label: "什么时候用哪种";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 8;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
+          Frame {
+            label: "全章围绕两条主线";
+            styles [ "panel-frame", "group-frame" ]
 
             Box {
               orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout", "lesson-callout-use" ]
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
 
-              Label { label: "· 值必须无损进入目标类型 → 花括号 {}"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "· 需要调用者明确接受截断或收窄 → 圆括号 ()"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "· 只是想要一个零值 → int x{}"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "· 从数字造一个领域类型 → 构造函数写 explicit，调用处写 Type{n}"; halign: start; wrap: true; xalign: 0; }
-            }
-            Label {
-              label: "下一节“类型推导”里，auto x = expr 不再需要你在括号之间做选择：auto 先按初始化表达式决定 x 的类型，再谈初始化。初始化的这几处边界，是理解 auto 之前要先站稳的地方。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "dim-label" ]
-            }
-          }
-        }
-
-        // 9. 迁移到真实代码
-        Frame {
-          label: "在真实代码里验证";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "initialization() 把四种写法和两处边界写在同一个函数里：圆括号版本能实际运行，越过花括号和 explicit 边界的写法保留成注释。先按上面的规则预测每一行输出，再打开实验逐条对照。";
-              halign: start;
-              wrap: true;
-              xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Button type_semantics_run_button {
-              name: "type_semantics_run_button";
-              label: "打开初始化实验";
-              halign: start;
-              styles [ "btn-primary" ]
-            }
-          }
-        }
-      }
-    }
-    [tab]
-    Label { label: "对象生命周期"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 18;
-        margin-bottom: 18;
-
-        // 1. 为什么要判断有效期
-        Frame {
-          label: "引用还在，对象可能已经不在了";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "上一节说过：alias 和 view 都要求 original 在使用期间还活着。这一节回答“还活着”到底由什么决定——对象什么时候开始存在、什么时候结束，以及一个名字能不能比它指向的对象活得更久。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-            Label {
-              label: "这是本章“查有效期”这条检查线的落点。判断错的代价很实际：访问已经结束的对象是未定义行为，程序可能照常运行一次，也可能在别的机器、别的优化级别上给出完全不同的结果。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        // 2. 三个时点
-        Frame {
-          label: "同一个函数里，三种结束时点";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Picture ts_lifetime_figure {
-              name: "ts_lifetime_figure";
-              can-shrink: true;
-              content-fit: contain;
-              halign: fill;
-              height-request: 300;
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "① 有名字的局部对象：活到它所在的那对花括号"; halign: start; styles [ "lesson-callout-title" ] }
               Label {
-                label: "进入声明处开始存在，离开块时按与构造相反的顺序析构。块不一定是函数体——一对花括号就够了，这也是缩短一个对象寿命的常用手段。";
+                label: "C++ 程序反复做两件事：创建对象，再用表达式读取或改变它们。本章的五个小节，都是这两条主线上的问题。";
                 halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
               }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "② 没有名字的临时对象：活到这条语句的分号"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "临时对象在完整表达式结束时销毁，也就是分号处。它常常出现在你没写出它的地方：函数返回值、隐式转换、拼接出来的中间结果。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "③ 被 const 引用绑定的临时对象：寿命被延长"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "把一个临时对象直接绑到 const 引用上，它会活到这个引用自己的作用域结束。这条规则让“接住一个临时结果再多用几行”成为可能，但它只对<b>直接绑定</b>的那个临时对象生效。";
-                use-markup: true;
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 3. 去实验里看真实的构造与析构顺序
-        Frame {
-          label: "去实验里看真实的构造与析构顺序";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测输出顺序：块内对象的“析构”会不会出现在“离开块”那句说明之前？最后一行是什么？";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "这一次的输出是程序真实运行的结果，不是编排好的示意——顺序由语言规则和实际执行共同决定。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-safe" ]
-            }
-            Button type_semantics_lifetime_button {
-              name: "type_semantics_lifetime_button";
-              label: "验证对象生命周期";
-              halign: start;
-              styles [ "btn-primary" ]
-            }
-          }
-        }
-
-        // 4. 边界
-        Frame {
-          label: "边界：延长规则能做什么，不能做什么";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "延长的是那个临时对象本身，不是从它取出的成员"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "绑定一个临时对象的成员引用（例如它内部的字符串），临时对象仍然在分号处结束，引用当场悬垂。实验源码里保留了这样一行注释，但没有放进运行路径——悬垂访问是未定义行为，不能用一次“看起来正常”的运行来演示。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "延长不会跨过函数边界"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "从函数里返回一个指向局部对象的引用，调用方拿到的就是失效引用；返回类型写成引用并不会让局部对象多活一秒。要把结果带出函数，返回值本身即可。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Label {
-              label: "完整的绑定与返回规则在「引用」章展开，这里只要建立“先问对象还在不在”的习惯。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "dim-label" ]
-            }
-          }
-        }
-
-        // 5. 小结
-        Frame {
-          label: "小结：先问对象还在不在，再问能不能改";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "有名字的局部对象活到块结束，临时对象活到分号，const 引用可以把直接绑定的临时对象延长到自己的作用域结束。三者都不受“有没有人还在引用它”影响——引用不会让对象多活。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "所以选择引用时要同时看两件事：<span bgcolor='#fff3cd'>我要不要改原对象</span>，以及<span bgcolor='#fff3cd'>使用期间原对象还在不在</span>。前者是上一节的意图判断，后者就是这一节的有效期判断。";
-              use-markup: true;
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "类型推导"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 16;
-        margin-bottom: 18;
-
-        // ================= 第一单元：auto 的三种访问意图 =================
-
-        // 1. 为什么需要 auto
-        Frame {
-          label: "为什么需要 auto";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "当初始化表达式已经写出了类型，再手写一遍类型往往没有增加多少信息。容器和泛型代码里的类型还可能很长；改了初始化表达式，手写的类型也要跟着改。auto 让编译器按初始化表达式推导声明里的类型部分，省掉这些重复。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-why" ]
-
-              Label { label: "但这里还有一个问题没回答"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "“编译器知道类型”不等于“你想要什么”：你要的是一份值，还是要继续访问原来的对象？这决定了修改会不会传回原处、有没有复制、访问是否受原对象寿命限制。本节先讲清这项选择，再谈更细的推导规则。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 2. 先分清对象 / 值、名字 / 别名
-        Frame {
-          label: "先分清：对象和值，名字和别名";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "先看一个整数 original，它的值是 42。把这个值用于初始化另一个 int，就得到另一个对象。两个对象此刻数值相等，但此后改其中一个，不会自动改另一个。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              use-markup: true;
-              label: "引用是访问已有对象的另一个名字。alias 不是第二个整数容器；通过它赋值，改的是它绑定的 original。判断会不会互相影响：<span bgcolor='#fff3cd'>先数有几个对象，再看每个名字关联谁</span>。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        // 3. 三种写法，三种访问意图
-        Frame {
-          label: "三种写法，三种访问意图";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label { label: "int original = 42;"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "auto        copy  = original;"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "auto&       alias = original;"; halign: start; styles [ "native-lesson-code" ] }
-            Label { label: "const auto& view  = original;"; halign: start; styles [ "native-lesson-code" ] }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-use" ]
-
-              Label { label: "auto copy = original —— 取值，另建一个整数"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "声明一个新的 int，用 original 当前的值初始化，之后有自己的值。即使右边写的是这个整数的引用名字，按值推导也不会因此把 copy 变成引用。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-note" ]
-
-              Label { label: "auto&amp; alias = original —— 你明确保留的引用意图"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "这次声明的是 int&，没有创建第二个整数。写 alias = 99 时，被改变的是 original。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-why" ]
-
-              Label { label: "const auto&amp; view = original —— 只读的访问路径"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "声明的是 const int&。它同样访问 original，但不允许通过 view 给这个整数赋值。const 限制的是这一条访问路径，不会把 original 整个锁死——original 若经别的可写名字改变，view 再读取时也会看到新值。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 4. 让变化说明规则 —— 对象图 + 可控逐步演示
-        Frame {
-          label: "让变化说明规则";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "下面每次只执行一个动作：先改副本，再通过别名改原对象，最后从只读名字观察。“值相同”和“指向同一个对象”是两件事——数值刚好相同，不能说明对象相同。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "概念演示：按已核对的语言规则编排，矩形表示语义对象，不代表真实内存地址或耗时。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-figure-caption" ]
-            }
-
-            DrawingArea type_semantics_deduction_graph {
-              name: "type_semantics_deduction_graph";
-              height-request: 250;
-              hexpand: true;
-            }
-
-            Box {
-              orientation: horizontal;
-              spacing: 8;
-
-              Button ts_deduction_anim_prev {
-                name: "ts_deduction_anim_prev";
-                label: "上一步";
-                styles [ "btn-outline-secondary", "btn-sm" ]
-              }
-              Button ts_deduction_anim_playpause {
-                name: "ts_deduction_anim_playpause";
-                label: "播放";
-                styles [ "btn-primary", "btn-sm" ]
-              }
-              Button ts_deduction_anim_next {
-                name: "ts_deduction_anim_next";
-                label: "下一步";
-                styles [ "btn-outline-secondary", "btn-sm" ]
-              }
-              Button ts_deduction_anim_reset {
-                name: "ts_deduction_anim_reset";
-                label: "重置";
-                styles [ "btn-outline-secondary", "btn-sm" ]
-              }
-              Label ts_deduction_anim_status {
-                name: "ts_deduction_anim_status";
-                label: "步骤 0 / 6";
-                valign: center;
-                styles [ "lesson-anim-status" ]
-              }
-            }
-
-            Label ts_deduction_anim_note {
-              name: "ts_deduction_anim_note";
-              label: "起点：创建 original，值是 42。点“下一步”或“播放”逐步观察。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-anim-step-note" ]
-            }
-
-            Expander {
-              label: "展开：每一步的静态状态表";
 
               Box {
                 orientation: vertical;
                 spacing: 4;
-                margin-top: 8;
-                margin-start: 6;
+                styles [ "lesson-figure" ]
 
-                Label { label: "0 · 创建 original：一个整数对象，值 42"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "1 · 初始化 copy：出现第二个整数对象 42（用旧对象的值初始化）"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "2 · 绑定 alias：alias 是 original 的名字，不新增整数框"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "3 · 绑定 view：view 是 original 的只读访问路径"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "4 · copy = 7：copy 变 7，original 仍 42（改的是独立副本）"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "5 · alias = 99：original 变 99，view 读到 99，copy 仍 7"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "6 · view = 20 的边界：不能通过 view 赋值，数值不变（规则说明，不是编译器诊断）"; halign: start; wrap: true; xalign: 0; }
+                Picture ts_map_figure {
+                  name: "ts_map_figure";
+                  content-fit: contain;
+                  halign: fill;
+                  hexpand: true;
+                  can-shrink: true;
+                  height-request: 460;
+                }
+                Label {
+                  label: "箭头表示一节为另一节做铺垫，不是强制的学习顺序——从任意一节进入都可以。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-figure-caption" ]
+                }
               }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-note" ]
-
-              Label { label: "走完之后"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "copy 为 7，original 为 99。alias 和 view 都访问 original，所以它们读到 99。copy 与 original 曾经同为 42，只是初始化时复制了数值，并没有建立自动同步关系。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 5. 学后小练习：由 TypeSemanticsLessonPage 填入 LearningUnitView
-        Box type_semantics_deduction_unit_host {
-          name: "type_semantics_deduction_unit_host";
-          orientation: vertical;
-          hexpand: true;
-        }
-
-        // 6. 去真实实验对照
-        Frame {
-          label: "去真实实验里对照";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "进入前先想好看哪里：先确认副本是否独立，再找经别名赋值的位置，最后看 const auto&amp; view 那一行读到多少。注意实验里第一条“副本 / 原对象”输出发生在两次修改之后，不代表初始化那一刻。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "源码里“通过 view 赋值”被保留为注释，并附上实测的编译器诊断：它是编译期就被拒绝的写法，不是运行时能打印出来的现象。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-safe" ]
-            }
-            Button type_semantics_auto_button {
-              name: "type_semantics_auto_button";
-              label: "验证 auto";
-              halign: start;
-              styles [ "btn-primary" ]
-            }
-          }
-        }
-
-        // 7. 怎样用于真实代码 —— 选型流程图
-        Frame {
-          label: "怎样用于真实代码";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "先决定你希望程序做什么，再选择写法。引用把访问联系到原对象，也因此要求使用时原对象仍然存活。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-figure" ]
-
-              Picture ts_auto_selection_figure {
-                name: "ts_auto_selection_figure";
-                content-fit: contain;
-                halign: fill;
-                hexpand: true;
-                can-shrink: true;
-                height-request: 400;
-              }
-              Label {
-                label: "前提写在图上：已存在且在使用期间存活的普通对象、非代理引用。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-figure-caption" ]
-              }
-            }
-
-            Label {
-              label: "这个判断可以带到容器里：要修改一个已存在容器中的元素，就不能误把元素复制出来再改副本；反过来，想得到一份独立数据用于尝试修改，也不应意外地保留可写别名。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-note" ]
-
-              Label { label: "自己说依据（不必再做机械选择题）"; halign: start; styles [ "lesson-callout-title" ] }
-              Label { label: "① 保存当前整数值，供以后比较"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "② 修改已有的那个整数"; halign: start; wrap: true; xalign: 0; }
-              Label { label: "③ 观察已有整数，但禁止在本处对它赋值"; halign: start; wrap: true; xalign: 0; }
-            }
-          }
-        }
-
-        // 8. 必须当场说明的边界
-        Frame {
-          label: "边界：auto 不等于深拷贝，只读引用不保证存活";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-trap" ]
-
-              Label { label: "auto 本身不保证“深拷贝”"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "复制指针或共享所有权对象，仍可能访问同一份底层资源；从临时值初始化也不能一概称为拷贝。这一节的对象图只解释普通 int 这个例子，不推广成所有类型的内存图。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-trap" ]
-
-              Label { label: "只读引用也不自动保证对象永久存活"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "这里引用的是已经存在的 original；临时对象绑定和生命周期延长是另外的规则，学到那些场景时再展开。本例中的引用不能在 original 销毁后继续使用。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 9. 小结 + decltype 引子
-        Frame {
-          label: "小结：类型推导减少书写，意图仍由你表达";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "类型推导减少重复的类型书写，但值、引用与只读访问的意图仍由声明表达。在本例里，copy 是独立整数；alias 与 view 都访问 original，其中 view 不能用于赋值。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              use-markup: true;
-              label: "做选择时按“需要怎样的数据关系 → 是否修改原对象 → 复制与寿命代价”思考。两点别忘：<span bgcolor='#fff3cd'>数值相等不等于同一对象</span>，<span bgcolor='#fff3cd'>只读访问也不等于原对象被冻结</span>。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout", "lesson-callout-why" ]
-
-              Label { label: "接下来：为什么还需要 decltype"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "auto 帮你根据初始化表达式完成声明。有时我们要问的不是“在这里声明怎样的变量”，而是“这个名字或表达式按语言规则具有什么类型”，以便让另一处声明跟随它。decltype 提供这种类型查询；它不会为了取类型而执行其中的表达式。它排在本章最后，因为取类型的规则要用值类别来说明——先学值类别再回来。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-
-        // 换一个条件再判断，由 TypeSemanticsLessonPage 填入
-        Box type_semantics_deduction_variant_host {
-          name: "type_semantics_deduction_variant_host";
-          orientation: vertical;
-          hexpand: true;
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "enum class"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 18;
-        margin-bottom: 18;
-
-        // 策略节（ADR 0031）：目标不是记住语法，而是能在具体情境里选，
-        // 并说清依据和代价。所以这一页从一个真实的选择开始，不从定义开始。
-
-        Frame {
-          label: "同一组状态，两种写法";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "一个函数要报告文件的打开状态。你有两种写法，它们都能跑，区别在于编译器愿意替你挡住多少错误。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 3;
-
-              Label { label: "// 写法一：整数常量"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "const int kClosed = 0;"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "const int kOpen   = 1;"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "void report(int state);"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: ""; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "// 写法二：作用域枚举"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "enum class FileState : unsigned char { closed, open };"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "void report(FileState state);"; halign: start; styles [ "native-lesson-code" ] }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "写法一放行的三件事"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "report(42) 能编译——42 不是任何一个状态；report(kRed) 能编译——那是另一组常量里的红灯；state + 1 能编译——状态相加没有意义。三件事编译器都不会拦你，因为在它眼里这些都只是 int。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Label {
-              label: "写法二里这三行全都编译不过。函数签名从「给我一个整数」变成了「给我一个文件状态」，可取的值集合写进了类型本身。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "什么时候值得给一组值独立类型";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "三条判据同时成立时，收益最明显；只满足一条时未必值得。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout" ]
-
-              Label { label: "① 这组值要跨接口传递"; halign: start; styles [ "lesson-callout-title" ] }
-              Label { label: "签名要替你说清「这里只接受这几个值」，调用方才不必回头翻文档。"; halign: start; wrap: true; xalign: 0; }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout" ]
-
-              Label { label: "② 值本身没有算术意义"; halign: start; styles [ "lesson-callout-title" ] }
-              Label { label: "两个状态相加、状态乘二都不代表任何东西。既然没意义，就该让它编译不过。"; halign: start; wrap: true; xalign: 0; }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 4;
-              styles [ "lesson-callout" ]
-
-              Label { label: "③ 你希望编译器挡住来自别处的同类整数"; halign: start; styles [ "lesson-callout-title" ] }
-              Label { label: "红灯是 3、打开也是 1，裸整数分不出它们属于哪一组；独立类型能。"; halign: start; wrap: true; xalign: 0; }
-            }
-
-            Label {
-              label: "代价也要一起算：拿底层值必须显式写 static_cast，不能直接当数组下标，位运算需要你自己重载运算符。这些不是缺陷，是它换来严格检查所付的价钱。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "换三个情境，自己判断";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "答案不是清一色的「用」。先自己判断，再看后面的说明。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "情境一：协议里的状态字段，要在解析、校验、日志三个模块间传递"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "该用。三条判据全中：跨接口传、没有算术意义、最怕和别处的整数串味。协议编解码那一层做一次显式转换，代价只付在边界上。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "情境二：用状态值直接索引一张查找表"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "可以用，但要想清楚。每次索引都得写 static_cast，如果索引就是这组值的主要用途，收益就被样板代码抵消了一部分。折中做法是保留 enum class，配一个 to_index 函数把转换收在一处。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "情境三：可组合的权限位（读、写、执行，要按位取并）"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "不方便。作用域枚举默认不支持按位运算，要自己重载运算符才能组合；而且「组合出来的值」本来就不在枚举列出的取值里。这正是它的代价所在——不是所有整数常量集合都该改成 enum class。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 学后确认题，由 TypeSemanticsLessonPage 填入
-        Box type_semantics_enum_unit_host {
-          name: "type_semantics_enum_unit_host";
-          orientation: vertical;
-          hexpand: true;
-        }
-
-        Frame {
-          label: "去实验里核对";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "实验用交通灯和文件状态两个枚举，看四件事：成员必须带作用域限定、不能隐式转成 int、显式 static_cast 才能取底层值、底层类型确实是你指定的 unsigned char。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "最后一行「不同枚举直接比较：编译期错误」是规则说明，不是程序跑出来的——那行代码在源文件里是注释，因为它根本编译不过。这类区别本页一律标明。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-safe" ]
-            }
-            Button type_semantics_enum_button {
-              name: "type_semantics_enum_button";
-              label: "验证 enum class";
-              halign: start;
-              styles [ "btn-primary" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "边界：它挡的是意外，不是错误";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "作用域枚举不保证值域完整"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "static_cast<FileState>(42) 能编译，得到一个不在 closed / open 里的值。之后拿它去 switch、去索引，行为就不再受任何保护。它拦得住隐式转换，拦不住你自己写下的显式转换。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Label {
-              label: "所以从外部数据（协议字节、配置文件、用户输入）转进枚举时，转换点要自己做范围检查——这属于「类型转换」那一节要判断的事。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "小结：先问这组值要不要跨接口";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "要跨接口传递、没有算术意义、怕和别处的整数混淆——三条都占，就给它独立类型；只是函数内部临时区分几个分支，裸整数或普通枚举也够用。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "选择的代价是每次跨越类型边界都要显式转换。把这些转换收在协议解析、表索引这样明确的一两处，比在整个代码库里散着写要划算得多。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "类型转换"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 18;
-        margin-bottom: 18;
-
-        // 策略节（ADR 0031）：四种命名转换不按语法罗列，按"你相信什么"来选。
-        // 主线是"检查发生在哪一层"，不是"记住四个关键字"。
-
-        // 大纲「转换与边界」第一条承诺的是隐式转换，它排在显式转换之前：
-        // 你没写转换的地方，转换照样在发生。
-
-        Frame {
-          label: "你没写转换的地方，转换也在发生";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "先说不用写就会发生的那一类。函数传参、赋值、混合类型运算，编译器都会自己插入转换——代码里看不到任何转换的痕迹，值却已经变了。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "范围：目标类型装不下"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "大整数赋给小整数类型时高位被丢掉。无符号类型的结果是良定义的取模（300 存进 unsigned char 得到 44），有符号类型溢出则是未定义行为——同样看不见的一次转换，后果的性质完全不同。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "符号：有符号和无符号混在一起比较"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "-1 < 1u 的结果是 false。比较之前 -1 被转成了一个极大的无符号数——这是循环条件里最经典的一类 bug，写的人以为在比较大小，实际比较的是转换之后的两个值。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "精度：浮点与整数之间"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "浮点转整数直接截断小数部分，不是四舍五入；反过来把大整数转成 float 也可能丢掉低位有效数字，因为 float 的有效位数有限。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Label {
-              label: "花括号初始化能把这三类里的窄化拦在编译期——这是「初始化」那一节讲过的判断，在这里换了个角度：初始化形式的选择，本身就是在决定隐式转换要不要被检查。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "选哪种转换，取决于你相信什么";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "四种命名转换不是四种写法，而是四句不同的承诺。写下哪一个，就是在告诉编译器和读代码的人：这次转换的前提由谁来保证。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "static_cast —— 我相信这两个类型之间存在明确定义的转换"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "数值之间、有继承关系的指针之间、有转换构造函数的类型之间。编译器在编译期检查这层关系存不存在；关系本身的后果（比如小数被截断）由你承担。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "dynamic_cast —— 我不确定它到底是不是那个派生类，请运行时告诉我"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "四种里唯一在运行期做检查的。转指针失败得到 nullptr，转引用失败抛 bad_cast。代价是要求源类型是多态类型（有虚函数），并且要付运行期查询的开销。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "const_cast —— 我知道这个对象本来就是可写的"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "它只改变访问路径上的 const，不改变对象本身。如果对象原本就定义为 const，去掉限定再写入是未定义行为——编译器不会拦你，这个前提完全由你保证。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "reinterpret_cast —— 我要按另一种类型重新解读这段位模式"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "编译器几乎什么都不检查，只是让你通过。它常见于协议解析和硬件寄存器访问这类确实需要看原始字节的地方；除此之外出现它，多半说明设计上有更该改的东西。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Label {
-              label: "选择的原则很简单：能用检查更严的就不用更松的。四种的检查强度从严到松是 dynamic_cast、static_cast、const_cast、reinterpret_cast——注意这不是使用频率的顺序。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "检查发生在哪一层";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "这是本节的主线。同样是「转换成功了」，保证的强度完全不同：";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 3;
-
-              Label { label: "不检查也不显眼  隐式转换      连写都不用写"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "编译期检查    static_cast    关系不存在就编译不过"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "运行期检查    dynamic_cast   类型不匹配返回 nullptr"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "完全不检查    const_cast     前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
-              Label { label: "完全不检查    reinterpret_cast   前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "C 风格的 (int)x 属于哪一层？"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "它会依次尝试上面几种，选第一个说得通的——也就是说读代码的人无法从写法看出这次转换到底属于哪种意图，也无法搜索出代码库里所有的危险转换。四种命名转换分开，正是为了让意图留在代码里。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        Frame {
-          label: "换三个片段，自己判断";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "先想清楚你相信什么、谁来检查，再选。其中一个片段的答案不是四选一。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-lead" ]
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "片段一：拿到 Shape*，想调用 Circle 特有的方法"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "用 dynamic_cast，并检查返回值。你不确定它是不是 Circle，这正是运行期检查存在的理由。用 static_cast 也能编译，但猜错时不会有任何提示，之后的调用直接进入未定义行为。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "片段二：秒数存成 double，要传给只收 int 的旧接口"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "用 static_cast，并在转换点想清楚小数部分怎么办。转换本身是合法的数值转换，编译器会放行；「9.8 变成 9」这个后果不是编译器该管的事，是你要在这一行决定的——四舍五入还是直接截断，取决于业务。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "片段三：一个函数收 const 引用，你却想在里面改它"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "根本不该转换，应该改接口。const_cast 能让它编译通过，但函数签名承诺了「我不改你的东西」，转换只是把违背承诺的事藏起来；而且一旦调用方传来的真是 const 对象，写入就是未定义行为。需要修改就把参数改成非 const 引用，让签名说实话。const_cast 的合理场景很窄——比如调用一个你无法修改的、忘记标 const 的旧 API。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        // 学后确认题，由 TypeSemanticsLessonPage 填入
-        Box type_semantics_cast_unit_host {
-          name: "type_semantics_cast_unit_host";
-          orientation: vertical;
-          hexpand: true;
-        }
-
-        Frame {
-          label: "去实验里核对";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "实验先看不用写的那一类：-1 < 1u 为什么是假、300 存进 unsigned char 变成多少。再看四种命名转换：static_cast 把 9.8 截成 9、dynamic_cast 对匹配类型成功而对不匹配的返回空、const_cast 修改一个本来就可写的对象、reinterpret_cast 指针往返后仍相等。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "注意最后一行「往返相等不证明按其它类型解读一直安全」——指针能转回来是这一次的观察结果，不能推广成「这样解读内存总是安全」。实验只展示可观察的合法边界，不把未定义行为包装成可运行示例。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "native-lesson-safe" ]
-            }
-            Button type_semantics_cast_button {
-              name: "type_semantics_cast_button";
-              label: "验证类型转换";
-              halign: start;
-              styles [ "btn-primary" ]
-            }
-          }
-        }
-
-        Frame {
-          label: "边界：写出了转换，不等于转换安全";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "编译通过只说明关系成立，不说明值合理"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "static_cast<int>(1e18) 编译没问题，结果却超出 int 能表示的范围；上一节那个 static_cast<FileState>(42) 也一样。范围检查从来不在转换里，得你自己在转换点做。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-
-            Box {
-              orientation: vertical;
-              spacing: 6;
-              styles [ "lesson-callout" ]
-
-              Label { label: "转换是信号，不是解决方案"; halign: start; styles [ "lesson-callout-title" ] }
-              Label {
-                label: "代码里频繁出现转换，通常说明类型设计没表达清楚意图——该用独立类型的地方用了裸整数，该改接口的地方用了 const_cast。先问「能不能不转」，再问「该用哪种转」。";
-                halign: start; wrap: true; xalign: 0;
-              }
-            }
-          }
-        }
-
-        Frame {
-          label: "小结：先问能不能不转，再问谁来检查";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 14;
-            margin-bottom: 14;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "四种命名转换按「你相信什么」区分：相信数值或继承关系用 static_cast，不确定就交给 dynamic_cast 在运行期查，只想去掉访问路径上的 const 用 const_cast，要重新解读位模式才用 reinterpret_cast。能用检查更严的就不用更松的。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-            Label {
-              label: "写下转换就是接手了它的前提：编译期检查只保证关系存在，值是否合理、对象是否真的可写、按新类型解读是否有意义，全都由你保证。所以最该先问的那个问题是——这次转换能不能通过改类型或改接口来避免。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-          }
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "值类别"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 18;
-        margin-bottom: 18;
-
-        Frame {
-          label: "值类别决定引用绑定和重载选择";
-          styles [ "panel-frame", "group-frame" ]
-          Box {
-            orientation: vertical;
-            spacing: 10;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-            Label { label: "不要把“有名字”误当成“可以复制”。先判断表达式是左值、纯右值还是将亡值，再判断它能绑定到哪种引用以及会选择哪个重载。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
-            Label { label: "下一阶段可在此加入引用绑定矩阵和 move 后对象状态时间线；当前实验先验证实际的重载选择。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
-          }
-        }
-        Box { orientation: horizontal; halign: start;
-          Button type_semantics_value_category_button { name: "type_semantics_value_category_button"; label: "验证值类别"; styles [ "btn-primary" ] }
-        }
-      }
-    }
-
-    [tab]
-    Label { label: "decltype"; }
-
-    ScrolledWindow {
-      hscrollbar-policy: never;
-      vexpand: true;
-
-      Box {
-        orientation: vertical;
-        spacing: 16;
-        margin-bottom: 18;
-
-        // decltype：本章最后一个方向，先修是 auto 与值类别。
-        Frame {
-          label: "decltype：名字取声明类型，加括号的表达式按值类别";
-          styles [ "panel-frame", "group-frame" ]
-
-          Box {
-            orientation: vertical;
-            spacing: 12;
-            margin-top: 16;
-            margin-bottom: 16;
-            margin-start: 18;
-            margin-end: 18;
-
-            Label {
-              label: "先记住用途：需要让一处声明的类型精确跟随某个名字或表达式时用 decltype，比如泛型代码里的返回类型。它和 auto 的差别在于“取类型”而不是“声明一个变量”。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-prose" ]
-            }
-
-            Box {
-              orientation: horizontal;
-              spacing: 12;
-              homogeneous: true;
 
               Box {
                 orientation: vertical;
                 spacing: 4;
                 styles [ "lesson-callout", "lesson-callout-why" ]
 
-                Label { label: "decltype(value)  →  int"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { label: "未加括号的名字：取这个实体的声明类型。"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "读这一章时，反复问自己四个问题"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "① 对象的类型是什么？"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "② 它怎样获得初始值？"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "③ 当前表达式指向持久对象，还是产生临时结果？"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "④ 类型发生变化时，谁在检查风险？"; halign: start; wrap: true; xalign: 0; }
+              }
+            }
+          }
+
+          Frame {
+            label: "每一节解决的问题";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "· 初始化 —— 不同写法在什么条件下有不同结果；谁来检查“信息会不会丢”"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 类型推导 —— 编译器补类型时，要值 / 要可写别名 / 要只读访问的意图仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 值类别 —— 表达式的类型和值类别分别告诉我们什么，如何影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 类型转换 —— 为什么要显式表达转换意图；检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· enum class —— 为什么一组有限状态值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+            }
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "初始化"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-bottom: 18;
+
+          // 1. 动机：为什么初始化值得单独一节
+          Frame {
+            label: "为什么要专门学初始化";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "初始化不是“先把对象创建出来，再赋一个值给它”。对象从生命周期的第一刻起，就按某条语言规则取得初始状态——这条规则由你写下的初始化形式决定，一旦选错，编译器未必会拦你。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "C++ 提供圆括号、等号、花括号等好几种写法，不是历史包袱式的语法冗余。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-why" ]
+
+                Label { label: "一句话抓住重点"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "这几种写法的差别在一个关键问题上：当类型需要转换时，谁来检查“信息会不会丢”。没分清楚，常见代价是——窄化转换悄悄丢精度、本该显式的构造被隐式绕过、读到从未写入的“垃圾值”。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 2. 把四种写法摆出来
+          Frame {
+            label: "四种写法：结果相近，规则不同";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "int direct(7);    // 直接初始化"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "int copied = 8;   // 拷贝初始化"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "int listed{9};    // 列表初始化"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "int zero{};       // 值初始化"; halign: start; styles [ "native-lesson-code" ] }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-figure" ]
+
+                Picture ts_init_forms_figure {
+                  name: "ts_init_forms_figure";
+                  content-fit: contain;
+                  halign: fill;
+                  hexpand: true;
+                  can-shrink: true;
+                  height-request: 420;
+                }
+                Label {
+                  label: "同一个值进入 int：圆括号让程序员承担截断，花括号把丢失提升为编译错误，explicit 阻止隐式转换。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-figure-caption" ]
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-key" ]
+
+                Label { label: "要点"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "四行都得到一个普通的 int。要关注的不是括号长相，而是下面两处边界——它们决定同样的写法遇到风险时是放行还是报错。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 3. 边界一：窄化（保留双路径对比）
+          Frame {
+            label: "边界一：花括号会拦住“窄化”";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "同一个 double 值 3.75 要放进 int：圆括号允许，代价是小数部分被丢掉；花括号在编译期直接拒绝，因为这是一次可能丢信息的窄化转换。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 14;
+                homogeneous: true;
+
+                Frame {
+                  label: "圆括号：允许，但要承担后果";
+                  styles [ "native-lesson-lane", "native-lesson-lane-warning" ]
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 6;
+                    margin-top: 12;
+                    margin-bottom: 12;
+                    margin-start: 14;
+                    margin-end: 14;
+
+                    Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "↓ 转成 int"; halign: start; styles [ "dim-label" ] }
+                    Label { label: "int value(source)  →  3"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "运行可以继续，但小数部分已经被丢弃。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-warning" ] }
+                  }
+                }
+
+                Frame {
+                  label: "花括号：把边界交给编译器";
+                  styles [ "native-lesson-lane", "native-lesson-lane-safe" ]
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 6;
+                    margin-top: 12;
+                    margin-bottom: 12;
+                    margin-start: 14;
+                    margin-end: 14;
+
+                    Label { label: "double source = 3.75"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "↓ 窄化检查"; halign: start; styles [ "dim-label" ] }
+                    Label { label: "int value{source}  →  拒绝编译"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "没有执行结果：这是编译期规则，而非运行时输出。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-safe" ] }
+                  }
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-key" ]
+
+                Label { label: "怎么选"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "需要表达“这个值必须无损进入目标类型”时用花括号，让编译器替你把关；确实接受截断时用圆括号，把这次决定写在明处。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 4. 边界二：explicit
+          Frame {
+            label: "边界二：explicit 挡住悄悄发生的转换";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "单参数构造函数默认可以当隐式转换用：一个 int 会在你没察觉时变成某个领域类型。给构造函数加 explicit，就是要求这次转换必须由调用者写清楚。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label { label: "class Distance { explicit Distance(int metres); };"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "Distance a{10};      // 可以：直接初始化，显式选择该构造函数"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "Distance b = 10;     // 编译错误：拷贝初始化不走 explicit 构造"; halign: start; styles [ "native-lesson-code" ] }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-use" ]
+
+                Label { label: "什么时候用"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "从数字造一个有含义的类型（距离、金额、ID）时，让构造函数 explicit、调用处写 Distance{10}，隐式转换的口子就关上了。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 5. 零值 vs 未初始化
+          Frame {
+            label: "第三个区分：值初始化为 0，和根本没初始化";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "int a{};   // 一定是 0（值初始化）"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "int b;     // 局部变量未初始化，先读它就是未定义行为"; halign: start; styles [ "native-lesson-code" ] }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "别踩这里"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "普通局部变量不会自动清零。读一个没写过的变量“看看它碰巧是几”不是实验，是未定义行为——结果不可复现，也可能随编译选项变化。想要零，就写 int a{}。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 6. 预测单元（由 TypeSemanticsLessonPage 填入 LearningUnitView）
+          Box type_semantics_learning_unit_host {
+            name: "type_semantics_learning_unit_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+
+          // 7. 常见误区
+          Frame {
+            label: "常见误区";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              styles [ "lesson-callout", "lesson-callout-trap" ]
+
+              Label { label: "· 把花括号和圆括号当成风格偏好——它们在窄化检查上规则不同，不能随意互换。"; halign: start; wrap: true; xalign: 0; }
+              Label { label: "· 以为 int x; 会得到 0——只有 int x{}、静态存储期变量或类内值初始化才保证清零。"; halign: start; wrap: true; xalign: 0; }
+              Label { label: "· 以为 Distance d = 10; 会调用 explicit 构造——拷贝初始化根本不考虑 explicit 构造函数，这行直接编译失败。"; halign: start; wrap: true; xalign: 0; }
+              Label { label: "· 用花括号初始化容器时忘了 initializer_list 优先——vector<int> v{3, 0} 是两个元素，vector<int> v(3, 0) 才是三个 0。"; halign: start; wrap: true; xalign: 0; }
+            }
+          }
+
+          // 8. 怎么选 + 过渡到下一节
+          Frame {
+            label: "什么时候用哪种";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout", "lesson-callout-use" ]
+
+                Label { label: "· 值必须无损进入目标类型 → 花括号 {}"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "· 需要调用者明确接受截断或收窄 → 圆括号 ()"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "· 只是想要一个零值 → int x{}"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "· 从数字造一个领域类型 → 构造函数写 explicit，调用处写 Type{n}"; halign: start; wrap: true; xalign: 0; }
+              }
+              Label {
+                label: "下一节“类型推导”里，auto x = expr 不再需要你在括号之间做选择：auto 先按初始化表达式决定 x 的类型，再谈初始化。初始化的这几处边界，是理解 auto 之前要先站稳的地方。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "dim-label" ]
+              }
+            }
+          }
+
+          // 9. 迁移到真实代码
+          Frame {
+            label: "在真实代码里验证";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "initialization() 把四种写法和两处边界写在同一个函数里：圆括号版本能实际运行，越过花括号和 explicit 边界的写法保留成注释。先按上面的规则预测每一行输出，再打开实验逐条对照。";
+                halign: start;
+                wrap: true;
+                xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Button type_semantics_run_button {
+                name: "type_semantics_run_button";
+                label: "打开初始化实验";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+        }
+      }
+      [tab]
+      Label { label: "对象生命周期"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-bottom: 18;
+
+          // 1. 为什么要判断有效期
+          Frame {
+            label: "引用还在，对象可能已经不在了";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "上一节说过：alias 和 view 都要求 original 在使用期间还活着。这一节回答“还活着”到底由什么决定——对象什么时候开始存在、什么时候结束，以及一个名字能不能比它指向的对象活得更久。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+              Label {
+                label: "这是本章“查有效期”这条检查线的落点。判断错的代价很实际：访问已经结束的对象是未定义行为，程序可能照常运行一次，也可能在别的机器、别的优化级别上给出完全不同的结果。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          // 2. 三个时点
+          Frame {
+            label: "同一个函数里，三种结束时点";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Picture ts_lifetime_figure {
+                name: "ts_lifetime_figure";
+                can-shrink: true;
+                content-fit: contain;
+                halign: fill;
+                height-request: 300;
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "① 有名字的局部对象：活到它所在的那对花括号"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "进入声明处开始存在，离开块时按与构造相反的顺序析构。块不一定是函数体——一对花括号就够了，这也是缩短一个对象寿命的常用手段。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "② 没有名字的临时对象：活到这条语句的分号"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "临时对象在完整表达式结束时销毁，也就是分号处。它常常出现在你没写出它的地方：函数返回值、隐式转换、拼接出来的中间结果。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "③ 被 const 引用绑定的临时对象：寿命被延长"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "把一个临时对象直接绑到 const 引用上，它会活到这个引用自己的作用域结束。这条规则让“接住一个临时结果再多用几行”成为可能，但它只对<b>直接绑定</b>的那个临时对象生效。";
+                  use-markup: true;
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 3. 去实验里看真实的构造与析构顺序
+          Frame {
+            label: "去实验里看真实的构造与析构顺序";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测输出顺序：块内对象的“析构”会不会出现在“离开块”那句说明之前？最后一行是什么？";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "这一次的输出是程序真实运行的结果，不是编排好的示意——顺序由语言规则和实际执行共同决定。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+              Button type_semantics_lifetime_button {
+                name: "type_semantics_lifetime_button";
+                label: "验证对象生命周期";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+
+          // 4. 边界
+          Frame {
+            label: "边界：延长规则能做什么，不能做什么";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "延长的是那个临时对象本身，不是从它取出的成员"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "绑定一个临时对象的成员引用（例如它内部的字符串），临时对象仍然在分号处结束，引用当场悬垂。实验源码里保留了这样一行注释，但没有放进运行路径——悬垂访问是未定义行为，不能用一次“看起来正常”的运行来演示。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "延长不会跨过函数边界"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "从函数里返回一个指向局部对象的引用，调用方拿到的就是失效引用；返回类型写成引用并不会让局部对象多活一秒。要把结果带出函数，返回值本身即可。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "完整的绑定与返回规则在「引用」章展开，这里只要建立“先问对象还在不在”的习惯。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "dim-label" ]
+              }
+            }
+          }
+
+          // 5. 小结
+          Frame {
+            label: "小结：先问对象还在不在，再问能不能改";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "有名字的局部对象活到块结束，临时对象活到分号，const 引用可以把直接绑定的临时对象延长到自己的作用域结束。三者都不受“有没有人还在引用它”影响——引用不会让对象多活。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "所以选择引用时要同时看两件事：<span bgcolor='#fff3cd'>我要不要改原对象</span>，以及<span bgcolor='#fff3cd'>使用期间原对象还在不在</span>。前者是上一节的意图判断，后者就是这一节的有效期判断。";
+                use-markup: true;
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "类型推导"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 16;
+          margin-bottom: 18;
+
+          // ================= 第一单元：auto 的三种访问意图 =================
+
+          // 1. 为什么需要 auto
+          Frame {
+            label: "为什么需要 auto";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "当初始化表达式已经写出了类型，再手写一遍类型往往没有增加多少信息。容器和泛型代码里的类型还可能很长；改了初始化表达式，手写的类型也要跟着改。auto 让编译器按初始化表达式推导声明里的类型部分，省掉这些重复。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-why" ]
+
+                Label { label: "但这里还有一个问题没回答"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "“编译器知道类型”不等于“你想要什么”：你要的是一份值，还是要继续访问原来的对象？这决定了修改会不会传回原处、有没有复制、访问是否受原对象寿命限制。本节先讲清这项选择，再谈更细的推导规则。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 2. 先分清对象 / 值、名字 / 别名
+          Frame {
+            label: "先分清：对象和值，名字和别名";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "先看一个整数 original，它的值是 42。把这个值用于初始化另一个 int，就得到另一个对象。两个对象此刻数值相等，但此后改其中一个，不会自动改另一个。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                use-markup: true;
+                label: "引用是访问已有对象的另一个名字。alias 不是第二个整数容器；通过它赋值，改的是它绑定的 original。判断会不会互相影响：<span bgcolor='#fff3cd'>先数有几个对象，再看每个名字关联谁</span>。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          // 3. 三种写法，三种访问意图
+          Frame {
+            label: "三种写法，三种访问意图";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "int original = 42;"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "auto        copy  = original;"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "auto&       alias = original;"; halign: start; styles [ "native-lesson-code" ] }
+              Label { label: "const auto& view  = original;"; halign: start; styles [ "native-lesson-code" ] }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-use" ]
+
+                Label { label: "auto copy = original —— 取值，另建一个整数"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "声明一个新的 int，用 original 当前的值初始化，之后有自己的值。即使右边写的是这个整数的引用名字，按值推导也不会因此把 copy 变成引用。";
+                  halign: start; wrap: true; xalign: 0;
+                }
               }
 
               Box {
@@ -1827,50 +830,1109 @@ Box type_semantics_lesson_page {
                 spacing: 4;
                 styles [ "lesson-callout", "lesson-callout-note" ]
 
-                Label { label: "decltype((value))  →  int&amp;"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { label: "(value) 是左值表达式：进入表达式规则，按值类别取类型。"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "auto&amp; alias = original —— 你明确保留的引用意图"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "这次声明的是 int&，没有创建第二个整数。写 alias = 99 时，被改变的是 original。";
+                  halign: start; wrap: true; xalign: 0;
+                }
               }
-            }
-
-            Frame {
-              label: "对一般表达式，decltype 用引用类型保留值类别";
-              styles [ "panel-frame", "group-frame" ]
 
               Box {
                 orientation: vertical;
                 spacing: 4;
-                margin-top: 12;
-                margin-bottom: 12;
-                margin-start: 14;
-                margin-end: 14;
+                styles [ "lesson-callout", "lesson-callout-why" ]
 
-                Label { label: "左值表达式               →  T&"; halign: start; styles [ "native-lesson-code" ] }
-                Label { label: "将亡值，如 std::move(x)   →  T&&"; halign: start; styles [ "native-lesson-code" ] }
-                Label { label: "纯右值，如 x + 0          →  T"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "const auto&amp; view = original —— 只读的访问路径"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "声明的是 const int&。它同样访问 original，但不允许通过 view 给这个整数赋值。const 限制的是这一条访问路径，不会把 original 整个锁死——original 若经别的可写名字改变，view 再读取时也会看到新值。";
+                  halign: start; wrap: true; xalign: 0;
+                }
               }
             }
+          }
 
-            Label {
-              label: "结构化绑定等特殊规则在扩展里单列；上面是普通名字与表达式的规则，不是全部情况。";
-              halign: start; wrap: true; xalign: 0;
-              styles [ "lesson-figure-caption" ]
-            }
+          // 4. 让变化说明规则 —— 对象图 + 可控逐步演示
+          Frame {
+            label: "让变化说明规则";
+            styles [ "panel-frame", "group-frame" ]
 
             Box {
-              orientation: horizontal;
-              spacing: 12;
-              halign: start;
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
 
-              Button type_semantics_decltype_button {
-                name: "type_semantics_decltype_button";
-                label: "验证 decltype";
-                styles [ "btn-outline-primary" ]
+              Label {
+                label: "下面每次只执行一个动作：先改副本，再通过别名改原对象，最后从只读名字观察。“值相同”和“指向同一个对象”是两件事——数值刚好相同，不能说明对象相同。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "概念演示：按已核对的语言规则编排，矩形表示语义对象，不代表真实内存地址或耗时。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-figure-caption" ]
+              }
+
+              DrawingArea type_semantics_deduction_graph {
+                name: "type_semantics_deduction_graph";
+                height-request: 250;
+                hexpand: true;
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 8;
+
+                Button ts_deduction_anim_prev {
+                  name: "ts_deduction_anim_prev";
+                  label: "上一步";
+                  styles [ "btn-outline-secondary", "btn-sm" ]
+                }
+                Button ts_deduction_anim_playpause {
+                  name: "ts_deduction_anim_playpause";
+                  label: "播放";
+                  styles [ "btn-primary", "btn-sm" ]
+                }
+                Button ts_deduction_anim_next {
+                  name: "ts_deduction_anim_next";
+                  label: "下一步";
+                  styles [ "btn-outline-secondary", "btn-sm" ]
+                }
+                Button ts_deduction_anim_reset {
+                  name: "ts_deduction_anim_reset";
+                  label: "重置";
+                  styles [ "btn-outline-secondary", "btn-sm" ]
+                }
+                Label ts_deduction_anim_status {
+                  name: "ts_deduction_anim_status";
+                  label: "步骤 0 / 6";
+                  valign: center;
+                  styles [ "lesson-anim-status" ]
+                }
+              }
+
+              Label ts_deduction_anim_note {
+                name: "ts_deduction_anim_note";
+                label: "起点：创建 original，值是 42。点“下一步”或“播放”逐步观察。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-anim-step-note" ]
+              }
+
+              Expander {
+                label: "展开：每一步的静态状态表";
+
+                Box {
+                  orientation: vertical;
+                  spacing: 4;
+                  margin-top: 8;
+                  margin-start: 6;
+
+                  Label { label: "0 · 创建 original：一个整数对象，值 42"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "1 · 初始化 copy：出现第二个整数对象 42（用旧对象的值初始化）"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "2 · 绑定 alias：alias 是 original 的名字，不新增整数框"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "3 · 绑定 view：view 是 original 的只读访问路径"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "4 · copy = 7：copy 变 7，original 仍 42（改的是独立副本）"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "5 · alias = 99：original 变 99，view 读到 99，copy 仍 7"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "6 · view = 20 的边界：不能通过 view 赋值，数值不变（规则说明，不是编译器诊断）"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-note" ]
+
+                Label { label: "走完之后"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "copy 为 7，original 为 99。alias 和 view 都访问 original，所以它们读到 99。copy 与 original 曾经同为 42，只是初始化时复制了数值，并没有建立自动同步关系。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 5. 学后小练习：由 TypeSemanticsLessonPage 填入 LearningUnitView
+          Box type_semantics_deduction_unit_host {
+            name: "type_semantics_deduction_unit_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+
+          // 6. 去真实实验对照
+          Frame {
+            label: "去真实实验里对照";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "进入前先想好看哪里：先确认副本是否独立，再找经别名赋值的位置，最后看 const auto&amp; view 那一行读到多少。注意实验里第一条“副本 / 原对象”输出发生在两次修改之后，不代表初始化那一刻。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "源码里“通过 view 赋值”被保留为注释，并附上实测的编译器诊断：它是编译期就被拒绝的写法，不是运行时能打印出来的现象。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+              Button type_semantics_auto_button {
+                name: "type_semantics_auto_button";
+                label: "验证 auto";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+
+          // 7. 怎样用于真实代码 —— 选型流程图
+          Frame {
+            label: "怎样用于真实代码";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "先决定你希望程序做什么，再选择写法。引用把访问联系到原对象，也因此要求使用时原对象仍然存活。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-figure" ]
+
+                Picture ts_auto_selection_figure {
+                  name: "ts_auto_selection_figure";
+                  content-fit: contain;
+                  halign: fill;
+                  hexpand: true;
+                  can-shrink: true;
+                  height-request: 400;
+                }
+                Label {
+                  label: "前提写在图上：已存在且在使用期间存活的普通对象、非代理引用。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-figure-caption" ]
+                }
+              }
+
+              Label {
+                label: "这个判断可以带到容器里：要修改一个已存在容器中的元素，就不能误把元素复制出来再改副本；反过来，想得到一份独立数据用于尝试修改，也不应意外地保留可写别名。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-note" ]
+
+                Label { label: "自己说依据（不必再做机械选择题）"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "① 保存当前整数值，供以后比较"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "② 修改已有的那个整数"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "③ 观察已有整数，但禁止在本处对它赋值"; halign: start; wrap: true; xalign: 0; }
+              }
+            }
+          }
+
+          // 8. 必须当场说明的边界
+          Frame {
+            label: "边界：auto 不等于深拷贝，只读引用不保证存活";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "auto 本身不保证“深拷贝”"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "复制指针或共享所有权对象，仍可能访问同一份底层资源；从临时值初始化也不能一概称为拷贝。这一节的对象图只解释普通 int 这个例子，不推广成所有类型的内存图。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "只读引用也不自动保证对象永久存活"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "这里引用的是已经存在的 original；临时对象绑定和生命周期延长是另外的规则，学到那些场景时再展开。本例中的引用不能在 original 销毁后继续使用。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 9. 小结 + decltype 引子
+          Frame {
+            label: "小结：类型推导减少书写，意图仍由你表达";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "类型推导减少重复的类型书写，但值、引用与只读访问的意图仍由声明表达。在本例里，copy 是独立整数；alias 与 view 都访问 original，其中 view 不能用于赋值。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                use-markup: true;
+                label: "做选择时按“需要怎样的数据关系 → 是否修改原对象 → 复制与寿命代价”思考。两点别忘：<span bgcolor='#fff3cd'>数值相等不等于同一对象</span>，<span bgcolor='#fff3cd'>只读访问也不等于原对象被冻结</span>。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-why" ]
+
+                Label { label: "接下来：为什么还需要 decltype"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "auto 帮你根据初始化表达式完成声明。有时我们要问的不是“在这里声明怎样的变量”，而是“这个名字或表达式按语言规则具有什么类型”，以便让另一处声明跟随它。decltype 提供这种类型查询；它不会为了取类型而执行其中的表达式。它排在本章最后，因为取类型的规则要用值类别来说明——先学值类别再回来。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+
+          // 换一个条件再判断，由 TypeSemanticsLessonPage 填入
+          Box type_semantics_deduction_variant_host {
+            name: "type_semantics_deduction_variant_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "enum class"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-bottom: 18;
+
+          // 策略节（ADR 0031）：目标不是记住语法，而是能在具体情境里选，
+          // 并说清依据和代价。所以这一页从一个真实的选择开始，不从定义开始。
+
+          Frame {
+            label: "同一组状态，两种写法";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "一个函数要报告文件的打开状态。你有两种写法，它们都能跑，区别在于编译器愿意替你挡住多少错误。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 3;
+
+                Label { label: "// 写法一：整数常量"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "const int kClosed = 0;"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "const int kOpen   = 1;"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "void report(int state);"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: ""; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "// 写法二：作用域枚举"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "enum class FileState : unsigned char { closed, open };"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "void report(FileState state);"; halign: start; styles [ "native-lesson-code" ] }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "写法一放行的三件事"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "report(42) 能编译——42 不是任何一个状态；report(kRed) 能编译——那是另一组常量里的红灯；state + 1 能编译——状态相加没有意义。三件事编译器都不会拦你，因为在它眼里这些都只是 int。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "写法二里这三行全都编译不过。函数签名从「给我一个整数」变成了「给我一个文件状态」，可取的值集合写进了类型本身。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "什么时候值得给一组值独立类型";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "三条判据同时成立时，收益最明显；只满足一条时未必值得。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout" ]
+
+                Label { label: "① 这组值要跨接口传递"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "签名要替你说清「这里只接受这几个值」，调用方才不必回头翻文档。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout" ]
+
+                Label { label: "② 值本身没有算术意义"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "两个状态相加、状态乘二都不代表任何东西。既然没意义，就该让它编译不过。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout" ]
+
+                Label { label: "③ 你希望编译器挡住来自别处的同类整数"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "红灯是 3、打开也是 1，裸整数分不出它们属于哪一组；独立类型能。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Label {
+                label: "代价也要一起算：拿底层值必须显式写 static_cast，不能直接当数组下标，位运算需要你自己重载运算符。这些不是缺陷，是它换来严格检查所付的价钱。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "换三个情境，自己判断";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "答案不是清一色的「用」。先自己判断，再看后面的说明。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "情境一：协议里的状态字段，要在解析、校验、日志三个模块间传递"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "该用。三条判据全中：跨接口传、没有算术意义、最怕和别处的整数串味。协议编解码那一层做一次显式转换，代价只付在边界上。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "情境二：用状态值直接索引一张查找表"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "可以用，但要想清楚。每次索引都得写 static_cast，如果索引就是这组值的主要用途，收益就被样板代码抵消了一部分。折中做法是保留 enum class，配一个 to_index 函数把转换收在一处。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "情境三：可组合的权限位（读、写、执行，要按位取并）"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "不方便。作用域枚举默认不支持按位运算，要自己重载运算符才能组合；而且「组合出来的值」本来就不在枚举列出的取值里。这正是它的代价所在——不是所有整数常量集合都该改成 enum class。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 学后确认题，由 TypeSemanticsLessonPage 填入
+          Box type_semantics_enum_unit_host {
+            name: "type_semantics_enum_unit_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+
+          Frame {
+            label: "去实验里核对";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "实验用交通灯和文件状态两个枚举，看四件事：成员必须带作用域限定、不能隐式转成 int、显式 static_cast 才能取底层值、底层类型确实是你指定的 unsigned char。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "最后一行「不同枚举直接比较：编译期错误」是规则说明，不是程序跑出来的——那行代码在源文件里是注释，因为它根本编译不过。这类区别本页一律标明。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+              Button type_semantics_enum_button {
+                name: "type_semantics_enum_button";
+                label: "验证 enum class";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "边界：它挡的是意外，不是错误";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "作用域枚举不保证值域完整"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "static_cast<FileState>(42) 能编译，得到一个不在 closed / open 里的值。之后拿它去 switch、去索引，行为就不再受任何保护。它拦得住隐式转换，拦不住你自己写下的显式转换。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "所以从外部数据（协议字节、配置文件、用户输入）转进枚举时，转换点要自己做范围检查——这属于「类型转换」那一节要判断的事。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "小结：先问这组值要不要跨接口";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "要跨接口传递、没有算术意义、怕和别处的整数混淆——三条都占，就给它独立类型；只是函数内部临时区分几个分支，裸整数或普通枚举也够用。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "选择的代价是每次跨越类型边界都要显式转换。把这些转换收在协议解析、表索引这样明确的一两处，比在整个代码库里散着写要划算得多。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
               }
             }
           }
         }
       }
+
+      [tab]
+      Label { label: "类型转换"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-bottom: 18;
+
+          // 策略节（ADR 0031）：四种命名转换不按语法罗列，按"你相信什么"来选。
+          // 主线是"检查发生在哪一层"，不是"记住四个关键字"。
+
+          // 大纲「转换与边界」第一条承诺的是隐式转换，它排在显式转换之前：
+          // 你没写转换的地方，转换照样在发生。
+
+          Frame {
+            label: "你没写转换的地方，转换也在发生";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "先说不用写就会发生的那一类。函数传参、赋值、混合类型运算，编译器都会自己插入转换——代码里看不到任何转换的痕迹，值却已经变了。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "范围：目标类型装不下"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "大整数赋给小整数类型时高位被丢掉。无符号类型的结果是良定义的取模（300 存进 unsigned char 得到 44），有符号类型溢出则是未定义行为——同样看不见的一次转换，后果的性质完全不同。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "符号：有符号和无符号混在一起比较"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "-1 < 1u 的结果是 false。比较之前 -1 被转成了一个极大的无符号数——这是循环条件里最经典的一类 bug，写的人以为在比较大小，实际比较的是转换之后的两个值。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "精度：浮点与整数之间"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "浮点转整数直接截断小数部分，不是四舍五入；反过来把大整数转成 float 也可能丢掉低位有效数字，因为 float 的有效位数有限。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "花括号初始化能把这三类里的窄化拦在编译期——这是「初始化」那一节讲过的判断，在这里换了个角度：初始化形式的选择，本身就是在决定隐式转换要不要被检查。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "选哪种转换，取决于你相信什么";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "四种命名转换不是四种写法，而是四句不同的承诺。写下哪一个，就是在告诉编译器和读代码的人：这次转换的前提由谁来保证。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "static_cast —— 我相信这两个类型之间存在明确定义的转换"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "数值之间、有继承关系的指针之间、有转换构造函数的类型之间。编译器在编译期检查这层关系存不存在；关系本身的后果（比如小数被截断）由你承担。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "dynamic_cast —— 我不确定它到底是不是那个派生类，请运行时告诉我"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "四种里唯一在运行期做检查的。转指针失败得到 nullptr，转引用失败抛 bad_cast。代价是要求源类型是多态类型（有虚函数），并且要付运行期查询的开销。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "const_cast —— 我知道这个对象本来就是可写的"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "它只改变访问路径上的 const，不改变对象本身。如果对象原本就定义为 const，去掉限定再写入是未定义行为——编译器不会拦你，这个前提完全由你保证。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "reinterpret_cast —— 我要按另一种类型重新解读这段位模式"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "编译器几乎什么都不检查，只是让你通过。它常见于协议解析和硬件寄存器访问这类确实需要看原始字节的地方；除此之外出现它，多半说明设计上有更该改的东西。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "选择的原则很简单：能用检查更严的就不用更松的。四种的检查强度从严到松是 dynamic_cast、static_cast、const_cast、reinterpret_cast——注意这不是使用频率的顺序。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "检查发生在哪一层";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "这是本节的主线。同样是「转换成功了」，保证的强度完全不同：";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 3;
+
+                Label { label: "不检查也不显眼  隐式转换      连写都不用写"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "编译期检查    static_cast    关系不存在就编译不过"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "运行期检查    dynamic_cast   类型不匹配返回 nullptr"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "完全不检查    const_cast     前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "完全不检查    reinterpret_cast   前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "C 风格的 (int)x 属于哪一层？"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "它会依次尝试上面几种，选第一个说得通的——也就是说读代码的人无法从写法看出这次转换到底属于哪种意图，也无法搜索出代码库里所有的危险转换。四种命名转换分开，正是为了让意图留在代码里。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          Frame {
+            label: "换三个片段，自己判断";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "先想清楚你相信什么、谁来检查，再选。其中一个片段的答案不是四选一。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "片段一：拿到 Shape*，想调用 Circle 特有的方法"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "用 dynamic_cast，并检查返回值。你不确定它是不是 Circle，这正是运行期检查存在的理由。用 static_cast 也能编译，但猜错时不会有任何提示，之后的调用直接进入未定义行为。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "片段二：秒数存成 double，要传给只收 int 的旧接口"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "用 static_cast，并在转换点想清楚小数部分怎么办。转换本身是合法的数值转换，编译器会放行；「9.8 变成 9」这个后果不是编译器该管的事，是你要在这一行决定的——四舍五入还是直接截断，取决于业务。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "片段三：一个函数收 const 引用，你却想在里面改它"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "根本不该转换，应该改接口。const_cast 能让它编译通过，但函数签名承诺了「我不改你的东西」，转换只是把违背承诺的事藏起来；而且一旦调用方传来的真是 const 对象，写入就是未定义行为。需要修改就把参数改成非 const 引用，让签名说实话。const_cast 的合理场景很窄——比如调用一个你无法修改的、忘记标 const 的旧 API。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 学后确认题，由 TypeSemanticsLessonPage 填入
+          Box type_semantics_cast_unit_host {
+            name: "type_semantics_cast_unit_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+
+          Frame {
+            label: "去实验里核对";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "实验先看不用写的那一类：-1 < 1u 为什么是假、300 存进 unsigned char 变成多少。再看四种命名转换：static_cast 把 9.8 截成 9、dynamic_cast 对匹配类型成功而对不匹配的返回空、const_cast 修改一个本来就可写的对象、reinterpret_cast 指针往返后仍相等。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "注意最后一行「往返相等不证明按其它类型解读一直安全」——指针能转回来是这一次的观察结果，不能推广成「这样解读内存总是安全」。实验只展示可观察的合法边界，不把未定义行为包装成可运行示例。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+              Button type_semantics_cast_button {
+                name: "type_semantics_cast_button";
+                label: "验证类型转换";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "边界：写出了转换，不等于转换安全";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "编译通过只说明关系成立，不说明值合理"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "static_cast<int>(1e18) 编译没问题，结果却超出 int 能表示的范围；上一节那个 static_cast<FileState>(42) 也一样。范围检查从来不在转换里，得你自己在转换点做。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "转换是信号，不是解决方案"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "代码里频繁出现转换，通常说明类型设计没表达清楚意图——该用独立类型的地方用了裸整数，该改接口的地方用了 const_cast。先问「能不能不转」，再问「该用哪种转」。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          Frame {
+            label: "小结：先问能不能不转，再问谁来检查";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "四种命名转换按「你相信什么」区分：相信数值或继承关系用 static_cast，不确定就交给 dynamic_cast 在运行期查，只想去掉访问路径上的 const 用 const_cast，要重新解读位模式才用 reinterpret_cast。能用检查更严的就不用更松的。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "写下转换就是接手了它的前提：编译期检查只保证关系存在，值是否合理、对象是否真的可写、按新类型解读是否有意义，全都由你保证。所以最该先问的那个问题是——这次转换能不能通过改类型或改接口来避免。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "值类别"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-bottom: 18;
+
+          Frame {
+            label: "值类别决定引用绑定和重载选择";
+            styles [ "panel-frame", "group-frame" ]
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+              Label { label: "不要把“有名字”误当成“可以复制”。先判断表达式是左值、纯右值还是将亡值，再判断它能绑定到哪种引用以及会选择哪个重载。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
+              Label { label: "下一阶段可在此加入引用绑定矩阵和 move 后对象状态时间线；当前实验先验证实际的重载选择。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
+            }
+          }
+          Box { orientation: horizontal; halign: start;
+            Button type_semantics_value_category_button { name: "type_semantics_value_category_button"; label: "验证值类别"; styles [ "btn-primary" ] }
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "decltype"; }
+
+      ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        Box {
+          orientation: vertical;
+          spacing: 16;
+          margin-bottom: 18;
+
+          // decltype：本章最后一个方向，先修是 auto 与值类别。
+          Frame {
+            label: "decltype：名字取声明类型，加括号的表达式按值类别";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "先记住用途：需要让一处声明的类型精确跟随某个名字或表达式时用 decltype，比如泛型代码里的返回类型。它和 auto 的差别在于“取类型”而不是“声明一个变量”。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 12;
+                homogeneous: true;
+
+                Box {
+                  orientation: vertical;
+                  spacing: 4;
+                  styles [ "lesson-callout", "lesson-callout-why" ]
+
+                  Label { label: "decltype(value)  →  int"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "未加括号的名字：取这个实体的声明类型。"; halign: start; wrap: true; xalign: 0; }
+                }
+
+                Box {
+                  orientation: vertical;
+                  spacing: 4;
+                  styles [ "lesson-callout", "lesson-callout-note" ]
+
+                  Label { label: "decltype((value))  →  int&amp;"; halign: start; styles [ "lesson-callout-title" ] }
+                  Label { label: "(value) 是左值表达式：进入表达式规则，按值类别取类型。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+
+              Frame {
+                label: "对一般表达式，decltype 用引用类型保留值类别";
+                styles [ "panel-frame", "group-frame" ]
+
+                Box {
+                  orientation: vertical;
+                  spacing: 4;
+                  margin-top: 12;
+                  margin-bottom: 12;
+                  margin-start: 14;
+                  margin-end: 14;
+
+                  Label { label: "左值表达式               →  T&"; halign: start; styles [ "native-lesson-code" ] }
+                  Label { label: "将亡值，如 std::move(x)   →  T&&"; halign: start; styles [ "native-lesson-code" ] }
+                  Label { label: "纯右值，如 x + 0          →  T"; halign: start; styles [ "native-lesson-code" ] }
+                }
+              }
+
+              Label {
+                label: "结构化绑定等特殊规则在扩展里单列；上面是普通名字与表达式的规则，不是全部情况。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-figure-caption" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 12;
+                halign: start;
+
+                Button type_semantics_decltype_button {
+                  name: "type_semantics_decltype_button";
+                  label: "验证 decltype";
+                  styles [ "btn-outline-primary" ]
+                }
+              }
+            }
+          }
+        }
+      }
+
+      };
     }
 
+    StackPage {
+      name: "overview";
+
+      child: Box {
+        orientation: vertical;
+        spacing: 12;
+        vexpand: true;
+
+        Box {
+          orientation: horizontal;
+          spacing: 10;
+
+          Button type_semantics_overview_back_button {
+            name: "type_semantics_overview_back_button";
+            label: "← 返回学习过程";
+            halign: start;
+            styles [ "btn-outline-secondary", "btn-sm" ]
+          }
+
+          Label {
+            label: "这是本章的教学大纲：它指方向，不讲语法细节。具体怎么学在下面各个小节里。";
+            halign: start;
+            wrap: true;
+            xalign: 0;
+            hexpand: true;
+            styles [ "dim-label" ]
+          }
+        }
+
+        // 正文由 TypeSemanticsLessonPage 用 DocumentView 渲染 overview_document
+        Box type_semantics_overview_host {
+          name: "type_semantics_overview_host";
+          orientation: vertical;
+          vexpand: true;
+        }
+      };
+    }
   }
 }
