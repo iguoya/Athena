@@ -208,13 +208,16 @@ grid.document-table {
 .document-image { margin-top: 6px; margin-bottom: 6px; }
 
 /* 教学大纲沿用全局 22pt 文档正文，不另行缩小。 */
+.lesson-outline-expander .document-list,
 .lesson-outline-page .document-list {
     margin-top: 4px;
     margin-bottom: 8px;
 }
+.lesson-outline-expander frame.document-quote > border,
 .lesson-outline-page frame.document-quote > border {
     background-color: transparent;
 }
+.lesson-outline-expander .document-image,
 .lesson-outline-page .document-image {
     min-height: 640px;
 }
