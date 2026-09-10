@@ -30,6 +30,8 @@ endif()
 
 if(EXISTS "${LVGL_DIR}/lvgl.h" AND SDL2_FOUND)
     message(STATUS "窗口后端：LVGL + SDL2")
+    # 配置头必须在 add_subdirectory 之前设好，LVGL 的 custom.cmake 会读它。
+    set(LV_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h" CACHE FILEPATH "" FORCE)
     add_subdirectory("${LVGL_DIR}" lvgl_build)
     target_sources(athena-clanguage PRIVATE src/ui/window_lvgl.c)
     target_include_directories(athena-clanguage PRIVATE
