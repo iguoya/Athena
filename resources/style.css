@@ -170,14 +170,19 @@ button.breadcrumb-link:hover {
 .document-content {
     background-color: @athena_surface;
 }
-.document-heading-1 { font-size: 30pt; font-weight: 800; color: @athena_body_text; }
-.document-heading-2 { font-size: 24pt; font-weight: 800; color: @athena_body_text; }
-.document-heading-3 { font-size: 20pt; font-weight: 700; color: @athena_body_text; }
+.document-heading-1 { font-size: 38pt; font-weight: 800; color: @athena_body_text; }
+.document-heading-2 { font-size: 32pt; font-weight: 800; color: @athena_body_text; }
+.document-heading-3 { font-size: 27pt; font-weight: 700; color: @athena_body_text; }
 .document-heading-4,
 .document-heading-5,
-.document-heading-6 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
-.document-paragraph { line-height: 1.55; color: @athena_body_text; }
-.document-list-marker { min-width: 26px; color: @athena_primary; font-weight: 700; }
+.document-heading-6 { font-size: 24pt; font-weight: 700; color: @athena_body_text; }
+.document-paragraph { font-size: 22pt; line-height: 1.55; color: @athena_body_text; }
+.document-list-marker {
+    min-width: 30px;
+    font-size: 22pt;
+    color: @athena_primary;
+    font-weight: 700;
+}
 frame.document-code-frame > border {
     border: 1px solid @athena_border_strong;
     border-radius: 8px;
@@ -194,21 +199,23 @@ grid.document-table {
     border: 1px solid @athena_border_strong;
     background-color: @athena_border_strong;
 }
-.document-table-header { background-color: @athena_primary_soft; font-weight: 700; }
-.document-table-cell { background-color: @athena_surface; }
+.document-table-header {
+    font-size: 22pt;
+    background-color: @athena_primary_soft;
+    font-weight: 700;
+}
+.document-table-cell { font-size: 22pt; background-color: @athena_surface; }
 .document-image { margin-top: 6px; margin-bottom: 6px; }
 
-/* 教学大纲以 18pt 阅读；图内正文同为 18pt，避免 Picture 缩小后失去可读性。 */
-.lesson-outline-expander .document-paragraph,
-.lesson-outline-expander .document-list-marker { font-size: 18pt; }
-.lesson-outline-expander .document-list {
+/* 教学大纲沿用全局 22pt 文档正文，不另行缩小。 */
+.lesson-outline-page .document-list {
     margin-top: 4px;
     margin-bottom: 8px;
 }
-.lesson-outline-expander frame.document-quote > border {
+.lesson-outline-page frame.document-quote > border {
     background-color: transparent;
 }
-.lesson-outline-expander .document-image {
+.lesson-outline-page .document-image {
     min-height: 640px;
 }
 
