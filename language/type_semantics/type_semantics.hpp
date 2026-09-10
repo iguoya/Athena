@@ -80,6 +80,12 @@ public:
         auto& alias = reference;
         alias = 99;
 
+        const auto& view = original;
+        // view = 20; // const auto& 推出 const int&：
+        // clang++ -std=c++20 报 "cannot assign to variable 'view' with
+        // const-qualified type 'const int &'"。只读的是这条访问路径，
+        // 不是 original 本身——它经 alias 改成 99 后，view 读到的就是 99。
+
         const int locked = 1;
         auto unlocked = locked; // auto 丢弃顶层 const，得到可写的新对象
         unlocked = 2;
@@ -92,6 +98,7 @@ public:
 
         output << "auto 副本 / 原对象: " << copy << " / " << original << '\n';
         output << "auto& 修改原对象: " << original << '\n';
+        output << "const auto& 只读别名读到当前值: " << view << '\n';
         output << "auto 丢弃顶层 const，副本可改: " << unlocked << '\n';
         output << "结构化绑定副本 / 原值: " << copied_name << ' ' << copied_score
                << " / " << record.first << ' ' << record.second << '\n';

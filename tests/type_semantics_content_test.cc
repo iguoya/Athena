@@ -30,6 +30,7 @@ TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
         run_experiment(&TypeSemantics::auto_deduction),
         "auto 副本 / 原对象: 7 / 99\n"
         "auto& 修改原对象: 99\n"
+        "const auto& 只读别名读到当前值: 99\n"
         "auto 丢弃顶层 const，副本可改: 2\n"
         "结构化绑定副本 / 原值: Athena 8 / Athena 9\n"
         "结构化绑定引用共享对象: Athena 9\n");
