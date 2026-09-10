@@ -235,7 +235,6 @@ grid.document-table {
 button.learning-unit-choice {
     min-height: 0;
     padding: 8px 12px;
-    text-align: left;
 }
 box.learning-unit-feedback {
     padding: 12px;
@@ -313,6 +312,86 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
     border-bottom-color: @athena_surface;
     color: @athena_primary_text;
 }
+
+/* 教案自足（ADR 0026 原则 0 的落实）：学习页正文段落。比 native-lesson-lead
+   小、比 dim-label 正式，用来承担动机、原理、误区、适用边界的成段讲解，让学习
+   页不打开参考手册也能读懂。 */
+/* 正文跟随全局 16pt，不再自己压小一档：目标显示环境是 27 寸 4K（至少 2K），
+   像素密度高，比全局更小的正文在实际阅读距离下明显吃力。需要层级差异时靠
+   字重、颜色和留白，不靠缩字号。 */
+.lesson-prose {
+    font-size: 16pt;
+}
+
+/* 要点语句用 callout 强调。配色不自定义：背景/边框取 Bootstrap 5 alert 的
+   标准色值，左侧色条取项目已有的 @athena_* 语义变量（本身即 Bootstrap 色板）。
+   语义映射沿用开发者通用认知：why=动机/原理→info 蓝、note=要点/结论→warning
+   黄、trap=误区/陷阱→danger 红、use=适用场景/推荐→success 绿。 */
+.lesson-callout {
+    font-size: 16pt;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid @athena_border_strong;
+    background-color: @athena_surface_subtle;
+}
+.lesson-callout-title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.lesson-callout-why {
+    background-color: #cff4fc;   /* Bootstrap alert-info bg */
+    border-left-color: @athena_primary;
+}
+.lesson-callout-why .lesson-callout-title { color: #055160; }  /* alert-info text */
+.lesson-callout-key,
+.lesson-callout-note {
+    background-color: #fff3cd;   /* Bootstrap alert-warning bg */
+    border-left-color: @athena_warning;
+}
+.lesson-callout-key .lesson-callout-title,
+.lesson-callout-note .lesson-callout-title { color: #664d03; }  /* alert-warning text */
+.lesson-callout-trap {
+    background-color: #f8d7da;   /* Bootstrap alert-danger bg */
+    border-left-color: @athena_danger;
+}
+.lesson-callout-trap .lesson-callout-title { color: #842029; }  /* alert-danger text */
+.lesson-callout-use {
+    background-color: #d1e7dd;   /* Bootstrap alert-success bg */
+    border-left-color: @athena_success;
+}
+.lesson-callout-use .lesson-callout-title { color: #0f5132; }  /* alert-success text */
+
+/* 行内“划重点”：柔和黄底，等同网页 <mark> / 荧光笔的通用约定。 */
+.lesson-mark {
+    background-color: #fff3cd;
+}
+
+.lesson-figure {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+.lesson-figure-caption {
+    font-size: 15pt;
+    color: @athena_muted;
+}
+
+/* 动画步进控制条与“步骤 n / N”指示。 */
+.lesson-anim-status { font-weight: 700; color: @athena_primary_text; }
+.lesson-anim-step-note { font-size: 15pt; }
+
+/* 学习小节标签把“重要度”和“掌握度”做成颜色维度，颜色取项目 @athena_*
+   语义变量：重要度星按 1→5 走 success·teal·warning·orange·danger，与 C++
+   学习图谱 importance 色阶一致；掌握度圆点按未开始灰 / 学习中 orange /
+   已掌握 success 三档。 */
+.lesson-tab-title { font-weight: 700; }
+.lesson-tab-stars.importance-level-1 { color: @athena_success; }
+.lesson-tab-stars.importance-level-2 { color: @athena_teal; }
+.lesson-tab-stars.importance-level-3 { color: @athena_warning; }
+.lesson-tab-stars.importance-level-4 { color: @athena_orange; }
+.lesson-tab-stars.importance-level-5 { color: @athena_danger; }
+.lesson-tab-dot.mastery-none { color: @athena_chart_neutral; }
+.lesson-tab-dot.mastery-some { color: @athena_orange; }
+.lesson-tab-dot.mastery-all { color: @athena_success; }
 
 /* === Buttons: Bootstrap-like hierarchy === */
 button {

@@ -110,12 +110,30 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     const auto sections =
         builder->get_widget<Gtk::Notebook>("type_semantics_section_notebook");
     ASSERT_NE(sections, nullptr);
-    EXPECT_EQ(sections->get_n_pages(), 5);
+    // 「教学大纲」+「本章导览」+ 类型推导 / 值类别 / 类型转换 / enum class / 初始化。
+    EXPECT_EQ(sections->get_n_pages(), 7);
+    // 每一页都必须是可取到的控件：apply_tab_labels 会按下标给每页换标签，
+    // 取不到的页会在运行期变成 gtk_notebook_set_tab_label 断言失败。
+    for (int index = 0; index < sections->get_n_pages(); ++index) {
+        EXPECT_NE(sections->get_nth_page(index), nullptr)
+            << "notebook page " << index << " is not a widget";
+    }
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_reference_button"),
         nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
+    // 教学大纲是 Notebook 的第一个完整页面，正文由 DocumentView 填。
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("type_semantics_overview_host"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::DrawingArea>("type_semantics_deduction_graph"),
+        nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Button>("ts_deduction_anim_playpause"),
+        nullptr);
 }
 
 TEST(GtkResourceTest, LoadsTheInlineLearningUnitTemplate) {
