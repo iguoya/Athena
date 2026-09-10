@@ -534,9 +534,39 @@ button.knowledge-graph-node {
     color: @athena_body_text;
 }
 
+button.knowledge-graph-node.graph-node-main-path {
+    border-width: 3px;
+    border-color: @athena_primary;
+    box-shadow: 0 3px 10px alpha(@athena_primary, 0.22);
+}
+
+button.knowledge-graph-node.graph-node-planned {
+    background-color: @athena_surface_subtle;
+    border-style: dashed;
+    box-shadow: none;
+}
+
+button.knowledge-graph-node.graph-node-planned:not(.graph-node-main-path) {
+    border-color: @athena_border_strong;
+    opacity: 0.82;
+}
+
+button.knowledge-graph-node.graph-node-planned:not(.graph-node-main-path)
+    .knowledge-graph-node-title,
+button.knowledge-graph-node.graph-node-planned:not(.graph-node-main-path)
+    .knowledge-graph-node-description,
+button.knowledge-graph-node.graph-node-planned:not(.graph-node-main-path)
+    .knowledge-graph-node-icon {
+    color: @athena_muted;
+}
+
 button.knowledge-graph-node:hover {
     background-color: @athena_primary_soft;
     box-shadow: 0 4px 12px alpha(#000000, 0.14);
+}
+
+button.knowledge-graph-node.graph-node-planned:hover {
+    opacity: 1;
 }
 
 button.knowledge-graph-node:focus-visible {
@@ -600,6 +630,16 @@ button.knowledge-graph-node:focus-visible {
 .graph-mastery-all {
     background-color: @athena_success;
     color: #ffffff;
+}
+
+.graph-status-main {
+    background-color: alpha(@athena_primary, 0.16);
+    color: @athena_primary;
+}
+
+.graph-status-planned {
+    background-color: alpha(@athena_chart_neutral, 0.45);
+    color: @athena_muted;
 }
 
 progressbar.graph-completion {

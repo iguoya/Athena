@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using GtkSource 5;
 
 // ADR 0026：类型与表达式的第一条原生学习场景。学习顺序和双路径对比完全由
 // GUI 控件表达。
@@ -2593,6 +2594,119 @@ Box type_semantics_lesson_page {
                   label: "验证 decltype";
                   styles [ "btn-outline-primary" ]
                 }
+              }
+            }
+          }
+        }
+      }
+
+      [tab]
+      Label { label: "运行实验"; }
+
+      Box {
+        orientation: vertical;
+        spacing: 12;
+        margin-bottom: 18;
+
+        // 实验放在最后一个标签：教学过程从头走到底，中途不被跳页打断。
+        // 各节的「验证 xxx」按钮切到这里并选中对应实验，不再离开学习页。
+        Box {
+          orientation: vertical;
+          spacing: 4;
+
+          Label ts_lab_title {
+            name: "ts_lab_title";
+            label: "本章实验";
+            halign: start;
+            styles [ "title-4" ]
+          }
+          Label ts_lab_objective {
+            name: "ts_lab_objective";
+            label: "从任意一节点「验证」进来，这里会载入那一节的真实源码；也可以直接运行下面已选中的实验。";
+            halign: start; wrap: true; xalign: 0;
+            styles [ "dim-label" ]
+          }
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+          halign: start;
+
+          Button ts_lab_run_button {
+            name: "ts_lab_run_button";
+            label: "运行";
+            styles [ "btn-primary" ]
+          }
+          Spinner ts_lab_spinner {
+            name: "ts_lab_spinner";
+            valign: center;
+          }
+          Label ts_lab_status {
+            name: "ts_lab_status";
+            label: "";
+            halign: start;
+            styles [ "dim-label" ]
+          }
+        }
+
+        Paned {
+          orientation: vertical;
+          vexpand: true;
+          shrink-start-child: false;
+          shrink-end-child: false;
+          position: 420;
+
+          [start]
+          Frame {
+            label: "真实源码";
+            hexpand: true;
+            vexpand: true;
+            styles [ "panel-frame", "group-frame" ]
+
+            ScrolledWindow {
+              hexpand: true;
+              vexpand: true;
+
+              GtkSource.View ts_lab_source_view {
+                name: "ts_lab_source_view";
+                editable: false;
+                cursor-visible: false;
+                monospace: true;
+                show-line-numbers: true;
+                highlight-current-line: false;
+                tab-width: 4;
+                left-margin: 14;
+                right-margin: 14;
+                top-margin: 12;
+                bottom-margin: 12;
+                styles [ "code-view" ]
+              }
+            }
+          }
+
+          [end]
+          Frame {
+            label: "运行结果";
+            hexpand: true;
+            vexpand: true;
+            styles [ "panel-frame", "group-frame" ]
+
+            ScrolledWindow {
+              hexpand: true;
+              vexpand: true;
+
+              TextView ts_lab_result_view {
+                name: "ts_lab_result_view";
+                editable: false;
+                cursor-visible: false;
+                monospace: true;
+                wrap-mode: word_char;
+                left-margin: 14;
+                right-margin: 14;
+                top-margin: 12;
+                bottom-margin: 12;
+                styles [ "result-view" ]
               }
             }
           }

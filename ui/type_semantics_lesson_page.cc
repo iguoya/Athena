@@ -1,6 +1,7 @@
 #include "type_semantics_lesson_page.h"
 
 #include "render/cairo_text.h"
+#include "ui/experiment_dock.h"
 #include "ui/learning_unit_view.h"
 
 #include <algorithm>
@@ -97,11 +98,11 @@ void rounded_box(
 TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
+    const ContentLoader& content_loader,
+    ExperimentRunner& experiment_runner,
     const map<string, int>& mastery_by_id,
-    function<void(const ExperimentSelection&, bool)> on_experiment_requested,
     function<void()> on_reference_requested)
-    : m_chapter(chapter),
-      m_on_experiment_requested(std::move(on_experiment_requested)) {
+    : m_chapter(chapter) {
     auto* init_unit_host =
         builder->get_widget<Gtk::Box>("type_semantics_learning_unit_host");
     auto* run_button =
@@ -333,7 +334,9 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         {"值类别", {"value_category"}},
         // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
         {"decltype", {"decltype_deduction"}},
+        {"运行实验", {}},
     };
+    m_lab_page_index = static_cast<int>(m_section_tabs.size()) - 1;
     // 四个表达式牵涉同一个对象 value，落在三个不同格子——「同一对象、不同表达式、
     // 不同值类别」是这一节最要紧的对照，所以做成可切换而不是一张静态表。
     const vector<tuple<const char*, ValueCategory, const char*>> value_buttons = {
@@ -376,6 +379,20 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
             .experiment_function_id = function_id_of(m_chapter, "value_category"),
         },
         "value_category");
+
+    // 最后一个标签是实验区：ExperimentDock 只是把这些控件绑成一个运行界面，
+    // 源码从真实文件加载，输出来自实际运行。
+    m_lab = make_unique<ExperimentDock>(
+        content_loader,
+        experiment_runner,
+        GTK_SOURCE_VIEW(
+            builder->get_widget<Gtk::Widget>("ts_lab_source_view")->gobj()),
+        builder->get_widget<Gtk::TextView>("ts_lab_result_view"),
+        builder->get_widget<Gtk::Button>("ts_lab_run_button"),
+        builder->get_widget<Gtk::Spinner>("ts_lab_spinner"),
+        builder->get_widget<Gtk::Label>("ts_lab_status"),
+        builder->get_widget<Gtk::Label>("ts_lab_title"),
+        builder->get_widget<Gtk::Label>("ts_lab_objective"));
 
     m_roadmap->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
@@ -947,13 +964,15 @@ Gtk::Widget* TypeSemanticsLessonPage::build_tab_label(
 
 void TypeSemanticsLessonPage::open_experiment(const string& subchapter_name) {
     const auto& topic = topic_by_name(m_chapter, subchapter_name);
-    if (m_on_experiment_requested) {
-        m_on_experiment_requested(
+    if (m_lab) {
+        m_lab->select(
             {.function_id = topic.function_id,
              .title = topic.title,
              .description = topic.description,
              .source_path = topic.source,
              .member_name = topic.name},
-            false);
+            true);
+        // 选完就切到实验标签：点「验证」的人要的是马上看到源码和结果。
+        m_section_notebook->set_current_page(m_lab_page_index);
     }
 }
