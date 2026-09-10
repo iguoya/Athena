@@ -67,7 +67,9 @@ TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {
         "const 具名对象选择: const string&\n"
         "临时对象选择: string&&\n"
         "std::move(named) 选择: string&&\n"
-        "没有接收者时原内容仍是: Athena\n");
+        "没有接收者时原内容仍是: Athena\n"
+        "具名的右值引用传出去: string&（表达式 r 是左值）\n"
+        "再写一次 std::move 才是右值: string&&\n");
 }
 
 TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {

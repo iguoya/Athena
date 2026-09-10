@@ -73,6 +73,13 @@ private:
     };
 
     void rebuild_roadmap(const map<string, int>& mastery_by_id);
+
+    // 值类别分类器：三类由「有身份 × 可移动」两问决定，点表达式看它落在哪一格。
+    // 概念节需要的是辨析，所以做成可切换的对照，而不是一张静态表格（ADR 0033）。
+    enum class ValueCategory { None, LValue, XValue, PRValue };
+    void select_value_expression(ValueCategory category, const string& expression);
+    void draw_value_matrix(
+        const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
     void draw_roadmap(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
     void on_roadmap_pressed(double x, double y);
@@ -92,6 +99,10 @@ private:
 
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::DrawingArea* m_roadmap = nullptr;
+    Gtk::DrawingArea* m_value_matrix = nullptr;
+    Gtk::Label* m_value_result_title = nullptr;
+    Gtk::Label* m_value_result_detail = nullptr;
+    ValueCategory m_value_selection = ValueCategory::None;
     vector<RoadmapNode> m_roadmap_nodes;
     // 先修边，存的是 m_roadmap_nodes 的下标：from 是先修，to 依赖它。
     vector<pair<size_t, size_t>> m_roadmap_edges;

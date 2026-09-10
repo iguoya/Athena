@@ -175,6 +175,14 @@ public:
         output << "临时对象选择: " << binding(string("temporary")) << '\n';
         output << "std::move(named) 选择: " << binding(std::move(named)) << '\n';
         output << "没有接收者时原内容仍是: " << named << '\n';
+
+        // 「类型是右值引用」不等于「表达式是右值」：r 有名字、能取地址，
+        // 所以表达式 r 是左值。转发时漏掉这一步，右值身份就在这里丢了。
+        string&& moved_ref = std::move(named);
+        output << "具名的右值引用传出去: " << binding(moved_ref)
+               << "（表达式 r 是左值）\n";
+        output << "再写一次 std::move 才是右值: "
+               << binding(std::move(moved_ref)) << '\n';
     }
 
     void cast(ostream& output) const {

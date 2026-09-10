@@ -1,6 +1,6 @@
 # 类型与表达式：学习页子章节设计
 
-- 状态：规划；「初始化」「对象生命周期」「类型推导」「decltype」已实现，其余三节待补。
+- 状态：七节全部实现；后续修订按同一套流程（先摘大纲承诺，再定教学，最后派生实验）。
 - 依据：[ADR 0028](../decisions/0028-outline-process-experiment-layering.md) 三层分工、
   [ADR 0031](../decisions/0031-knowledge-type-drives-teaching-actions.md) 知识类型决定教学动作、
   [LEARNING_DESIGN](../LEARNING_DESIGN.md) 第 3 节。
@@ -18,9 +18,9 @@
 | 2 | 初始化 | `initialization` | 概念 | 需要精通 | 已实现 |
 | 3 | 对象生命周期 | `object_lifetime` | 概念 | 需要精通 | 已实现 |
 | 4 | 类型推导 | `auto_deduction` | 策略 | 需要精通 | 已实现 |
-| 5 | enum class | `enum_class` | 策略 | 必须掌握 | **占位** |
-| 6 | 类型转换 | `cast` | 策略 | 必须掌握 | **占位** |
-| 7 | 值类别 | `value_category` | 概念 | 必须掌握 | **占位** |
+| 5 | enum class | `enum_class` | 策略 | 必须掌握 | 已实现 |
+| 6 | 类型转换 | `cast` | 策略 | 必须掌握 | 已实现 |
+| 7 | 值类别 | `value_category` | 概念 | 必须掌握 | 已实现 |
 | 8 | decltype | `decltype_deduction` | 概念 | 一般了解 | 已实现 |
 
 章节的教学大纲（第一层）不占标签位，由页面顶部按钮跳到手册视图；「本章导览」是这一页

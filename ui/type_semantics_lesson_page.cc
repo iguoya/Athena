@@ -111,6 +111,13 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
     m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
+    m_value_matrix = builder->get_widget<Gtk::DrawingArea>("ts_vc_matrix");
+    m_value_result_title =
+        builder->get_widget<Gtk::Label>("ts_vc_result_title");
+    m_value_result_detail =
+        builder->get_widget<Gtk::Label>("ts_vc_result_detail");
+    auto* value_unit_host =
+        builder->get_widget<Gtk::Box>("type_semantics_value_unit_host");
 
     auto* deduction_unit_host = builder->get_widget<Gtk::Box>(
         "type_semantics_deduction_unit_host");
@@ -134,7 +141,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !reference_button
-        || !m_section_notebook || !m_roadmap || !deduction_unit_host
+        || !m_section_notebook || !m_roadmap || !m_value_matrix
+        || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !m_deduction_graph
         || !m_anim_status
@@ -326,6 +334,49 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         // decltype 取类型的规则要用值类别说明，所以从「类型推导」拆出来排在最后。
         {"decltype", {"decltype_deduction"}},
     };
+    // 四个表达式牵涉同一个对象 value，落在三个不同格子——「同一对象、不同表达式、
+    // 不同值类别」是这一节最要紧的对照，所以做成可切换而不是一张静态表。
+    const vector<tuple<const char*, ValueCategory, const char*>> value_buttons = {
+        {"ts_vc_expr_named", ValueCategory::LValue, "value"},
+        {"ts_vc_expr_move", ValueCategory::XValue, "std::move(value)"},
+        {"ts_vc_expr_calc", ValueCategory::PRValue, "value + 0"},
+        {"ts_vc_expr_named_rref", ValueCategory::LValue, "具名的 r"},
+    };
+    for (const auto& [widget_id, category, expression] : value_buttons) {
+        auto* button = builder->get_widget<Gtk::Button>(widget_id);
+        if (button == nullptr) {
+            throw runtime_error(
+                string("Missing TypeSemantics value button: ") + widget_id);
+        }
+        button->signal_clicked().connect([this, category, expression]() {
+            select_value_expression(category, expression);
+        });
+    }
+    m_value_matrix->set_draw_func(
+        [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_value_matrix(cr, width, height);
+        });
+
+    add_learning_unit(
+        *value_unit_host,
+        LearningUnit{
+            .id = "named_rvalue_reference_is_lvalue",
+            .heading = "",
+            .claim = "「类型是右值引用」和「表达式是什么值类别」是两个问题。",
+            .question =
+                "int&& r = std::move(value); 之后把 r 传给一组重载，选中哪一个？",
+            .choices = {
+                "选中 int&& 那一版，因为 r 的类型是右值引用",
+                "选中 int& 那一版，因为表达式 r 是左值",
+                "有歧义，编译不过",
+            },
+            .correct_choice = 1,
+            .feedback = "选中左值那一版。r 有名字、能取地址、能反复访问同一个对象——它是个左值，尽管它的类型写作 int&&。想让它继续以右值身份传下去，得再写一次 std::move(r)。转发时漏掉这一步，是最常见的一类性能问题。",
+            .follow_up = "回到实验输出，对照具名表达式和 std::move 各自选中了哪一版。",
+            .experiment_function_id = function_id_of(m_chapter, "value_category"),
+        },
+        "value_category");
+
     m_roadmap->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             draw_roadmap(cr, width, height);
@@ -679,6 +730,104 @@ void TypeSemanticsLessonPage::on_roadmap_pressed(double x, double y) {
             }
         }
         return;
+    }
+}
+
+void TypeSemanticsLessonPage::select_value_expression(
+    ValueCategory category, const string& expression) {
+    m_value_selection = category;
+
+    struct Explanation {
+        const char* name;
+        const char* binding;
+        const char* why;
+    };
+    static const map<ValueCategory, Explanation> table = {
+        {ValueCategory::LValue,
+         {"左值",
+          "能绑到 int& 和 const int&，绑不到 int&&",
+          "它有身份：能取地址，后面还能再访问同一个对象；没有任何东西说它可以被搬走。"}},
+        {ValueCategory::XValue,
+         {"将亡值",
+          "能绑到 int&& 和 const int&，绑不到 int&",
+          "std::move 只是把它标成「可以搬走」——身份还在（说的仍是同一个对象），但重载时会优先选右值那一版。对象本身此刻并没有被动过。"}},
+        {ValueCategory::PRValue,
+         {"纯右值",
+          "能绑到 int&& 和 const int&，绑不到 int&",
+          "算出来就没了：没有名字、取不到地址，后面也没法再访问「同一个」它。"}},
+        {ValueCategory::None, {"", "", ""}},
+    };
+
+    const auto& explanation = table.at(category);
+    if (m_value_result_title != nullptr) {
+        m_value_result_title->set_text(
+            expression + " 是" + explanation.name);
+    }
+    if (m_value_result_detail != nullptr) {
+        m_value_result_detail->set_text(
+            string(explanation.binding) + "。" + explanation.why);
+    }
+    if (m_value_matrix != nullptr) {
+        m_value_matrix->queue_draw();
+    }
+}
+
+void TypeSemanticsLessonPage::draw_value_matrix(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const {
+    const double w = static_cast<double>(width);
+    const double cell_w = min(230.0, (w - 150.0) / 2.0);
+    const double cell_h = 74.0;
+    const double left = 130.0;
+    const double top = 54.0;
+
+    // 轴标题：两个问题就是两个维度，先让它们各自可读，再看格子。
+    draw_cairo_text(cr, "可以被移动吗", left + cell_w, 22.0, 13.0, kMuted, true, 0.5);
+    draw_cairo_text(cr, "否", left + cell_w / 2.0, 42.0, 12.5, kMuted, false, 0.5);
+    draw_cairo_text(cr, "是", left + cell_w * 1.5, 42.0, 12.5, kMuted, false, 0.5);
+    draw_cairo_text(cr, "有身份吗", 60.0, top - 14.0, 13.0, kMuted, true, 0.5);
+    draw_cairo_text(cr, "是", 60.0, top + cell_h / 2.0, 12.5, kMuted, false, 0.5);
+    draw_cairo_text(cr, "否", 60.0, top + cell_h * 1.5 + 10.0, 12.5, kMuted, false, 0.5);
+
+    struct Cell {
+        ValueCategory category;
+        const char* label;
+        const char* example;
+        double x;
+        double y;
+    };
+    const vector<Cell> cells = {
+        {ValueCategory::LValue, "左值", "value", left, top},
+        {ValueCategory::XValue, "将亡值", "std::move(value)", left + cell_w, top},
+        {ValueCategory::None, "（没有这一类）", "无身份又不可移动没有意义",
+         left, top + cell_h + 10.0},
+        {ValueCategory::PRValue, "纯右值", "value + 0", left + cell_w,
+         top + cell_h + 10.0},
+    };
+
+    for (const auto& cell : cells) {
+        const bool empty_cell = cell.category == ValueCategory::None;
+        const bool selected = !empty_cell && cell.category == m_value_selection;
+        ChartColor border = empty_cell ? ChartColor{0.85, 0.87, 0.89} : kMuted;
+        ChartColor fill = empty_cell ? ChartColor{0.97, 0.97, 0.98}
+                                     : ChartColor{0.99, 0.99, 1.0};
+        if (selected) {
+            border = kNameStroke;
+            fill = kNameFill;
+        }
+        rounded_box(
+            cr, cell.x, cell.y, cell_w - 10.0, cell_h, border, fill, empty_cell);
+        draw_cairo_text(
+            cr, cell.label, cell.x + (cell_w - 10.0) / 2.0, cell.y + 26.0, 14.0,
+            empty_cell ? kMuted : kInk, !empty_cell, 0.5);
+        draw_cairo_text(
+            cr, cell.example, cell.x + (cell_w - 10.0) / 2.0, cell.y + 50.0, 12.0,
+            kMuted, false, 0.5);
+    }
+
+    if (m_value_selection == ValueCategory::None) {
+        draw_cairo_text(
+            cr, "点上面任意一个表达式，看它落在哪一格", w / 2.0,
+            static_cast<double>(height) - 14.0, 12.5, kMuted, false, 0.5);
     }
 }
 

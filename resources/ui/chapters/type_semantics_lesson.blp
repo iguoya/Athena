@@ -2291,22 +2291,215 @@ Box type_semantics_lesson_page {
           spacing: 18;
           margin-bottom: 18;
 
+          // 概念节（ADR 0031）：目标是辨清边界，主线是正反例并排 + 分类判断。
+          // 值类别天然是「有身份 × 可移动」的二维划分，按 ADR 0033 做成可点击
+          // 切换的分类器——选一个表达式，看它落在哪一格、能绑到哪种引用。
+
           Frame {
-            label: "值类别决定引用绑定和重载选择";
+            label: "表达式有两个属性，类型只是其中一个";
             styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "看一个表达式，先问它是什么类型；但光有类型还不够——同样是 int，有的表达式指向一个你能取地址、能反复访问的对象，有的只是算出来就没了的中间结果。这个区别叫值类别，它决定这个表达式能绑到哪种引用、重载时选中哪一个。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "两个问题定三类"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "① 它有身份吗——能不能取地址、能不能在后面再访问同一个对象？"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "② 它可以被移动吗——它的资源能不能被搬走而不影响别人？"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "有身份不可移动是左值，有身份且可移动是将亡值，无身份可移动是纯右值。第四种组合（无身份又不可移动）没有意义，所以只有三类。"; halign: start; wrap: true; xalign: 0; }
+              }
+
+              Label {
+                label: "关键在于：值类别是表达式的属性，不是对象的属性。同一个对象出现在不同表达式里，值类别可以完全不同——这一点没分清，后面关于引用绑定和重载的判断都会跟着错。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "同一个对象，换个表达式试试";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "下面每个表达式都牵涉同一个对象 value。点一个，看它落在哪一格、能绑到哪种引用。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 8;
+                halign: start;
+
+                Button ts_vc_expr_named { name: "ts_vc_expr_named"; label: "value"; styles [ "btn-outline-primary", "btn-sm" ] }
+                Button ts_vc_expr_move { name: "ts_vc_expr_move"; label: "std::move(value)"; styles [ "btn-outline-primary", "btn-sm" ] }
+                Button ts_vc_expr_calc { name: "ts_vc_expr_calc"; label: "value + 0"; styles [ "btn-outline-primary", "btn-sm" ] }
+                Button ts_vc_expr_named_rref { name: "ts_vc_expr_named_rref"; label: "具名的 int&& r"; styles [ "btn-outline-primary", "btn-sm" ] }
+              }
+
+              // 二维分类矩阵由代码绘制：高亮哪一格由当前选择决定，属于结构随
+              // 运行时状态改变的绘制（AGENTS.md GTK 规则第 2、3 条）。
+              DrawingArea ts_vc_matrix {
+                name: "ts_vc_matrix";
+                height-request: 260;
+                hexpand: true;
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label ts_vc_result_title {
+                  name: "ts_vc_result_title";
+                  label: "先选一个表达式";
+                  halign: start;
+                  styles [ "lesson-callout-title" ]
+                }
+                Label ts_vc_result_detail {
+                  name: "ts_vc_result_detail";
+                  label: "矩阵会高亮它所在的格子，并说明它能绑到哪种引用。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          Frame {
+            label: "边界：三个几乎人人都踩过的地方";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "有名字的右值引用，本身是左值"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "写下 int&& r = std::move(value); 之后，表达式 r 是左值——它有名字、能取地址、能反复用。「r 的类型是右值引用」和「表达式 r 是什么值类别」是两个问题。所以想让它继续以右值身份传下去，必须再写一次 std::move(r)。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "将亡值不等于「马上要销毁」"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "将亡值说的是「这个表达式允许把资源搬走」，不是「这个对象即将消失」。value 在 std::move(value) 之后照样活到作用域结束——资源是否真被搬走，取决于接收它的那个函数做了什么。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout" ]
+
+                Label { label: "std::move 自己不移动任何东西"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "它只是一次类型转换，把表达式变成将亡值——变的是「重载时选哪个」，不是内存里发生了什么。真正的移动怎样发生，留到「RAII 与资源管理」。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 学后确认题，由 TypeSemanticsLessonPage 填入
+          Box type_semantics_value_unit_host {
+            name: "type_semantics_value_unit_host";
+            orientation: vertical;
+            hexpand: true;
+          }
+
+          Frame {
+            label: "去实验里核对";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "实验用一组重载把值类别显示出来：同一个对象，分别以具名表达式、只读表达式、临时对象和 std::move 的形式传进去，看每次选中的是 string&、const string& 还是 string&&。选中的重载不同，就是值类别不同的直接证据。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "重点看两处：std::move 之后选中了 string&&，而对象本身并没有被搬走；以及具名的右值引用再传出去时，选中的是左值那一版。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+              Button type_semantics_value_category_button {
+                name: "type_semantics_value_category_button";
+                label: "验证值类别";
+                halign: start;
+                styles [ "btn-primary" ]
+              }
+            }
+          }
+
+          Frame {
+            label: "小结：先问有没有身份，再问能不能搬走";
+            styles [ "panel-frame", "group-frame" ]
+
             Box {
               orientation: vertical;
               spacing: 10;
-              margin-top: 16;
-              margin-bottom: 16;
+              margin-top: 14;
+              margin-bottom: 14;
               margin-start: 18;
               margin-end: 18;
-              Label { label: "不要把“有名字”误当成“可以复制”。先判断表达式是左值、纯右值还是将亡值，再判断它能绑定到哪种引用以及会选择哪个重载。"; halign: start; wrap: true; xalign: 0; styles [ "native-lesson-lead" ] }
-              Label { label: "下一阶段可在此加入引用绑定矩阵和 move 后对象状态时间线；当前实验先验证实际的重载选择。"; halign: start; wrap: true; xalign: 0; styles [ "dim-label" ] }
+
+              Label {
+                label: "判断一个表达式：能取地址、后面还能再访问同一个对象，就是左值；算出来就没了的中间结果是纯右值；用 std::move 或返回右值引用把一个有身份的对象标成「可以搬走」，得到将亡值。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "这一节到能判断三类、能说明它影响哪种绑定就够了。规则密度高的部分（引用折叠、完美转发）等写模板时再回来——那时你会需要这套判断，而现在不会。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
             }
-          }
-          Box { orientation: horizontal; halign: start;
-            Button type_semantics_value_category_button { name: "type_semantics_value_category_button"; label: "验证值类别"; styles [ "btn-primary" ] }
           }
         }
       }
