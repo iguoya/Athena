@@ -190,9 +190,14 @@ Gtk::Button* make_node_button(
     // 左侧色条按领域分组，把同族节点在图上聚成一眼可辨的簇。
     button->add_css_class(track_style(node.track).css_class);
 
-    const bool interactive = node.kind == DomainKind::Available;
+    // 独立应用承载的领域同样可点，只是点击后启动的是另一个程序（ADR 0032）。
+    const bool interactive = node.kind == DomainKind::Available
+        || node.kind == DomainKind::ExternalApp;
     if (!interactive) {
         button->add_css_class("domain-graph-node-planned");
+    }
+    if (node.kind == DomainKind::ExternalApp) {
+        button->add_css_class("domain-graph-node-app");
     }
     button->set_sensitive(interactive);
 
@@ -264,6 +269,12 @@ Gtk::Button* make_node_button(
         completion->add_css_class(
             "graph-completion-" + to_string(completion_level(node.completion)));
         content->append(*completion);
+    } else if (node.kind == DomainKind::ExternalApp) {
+        auto* row = Gtk::make_managed<Gtk::Box>(
+            Gtk::Orientation::HORIZONTAL, 7);
+        row->set_halign(Gtk::Align::START);
+        row->append(*make_badge("独立应用", "domain-graph-badge-app"));
+        content->append(*row);
     } else {
         auto* planned = Gtk::make_managed<Gtk::Box>(
             Gtk::Orientation::HORIZONTAL, 7);
@@ -283,10 +294,14 @@ Gtk::Button* make_node_button(
         tooltip += "\n需要：" + node.note;
     }
     tooltip += "\n" + ps.full + "\n" + vs.full;
-    tooltip += node.kind == DomainKind::Available
-        ? "\n已开放 " + to_string(node.total) + " 个知识点，完成 " +
-              to_string(static_cast<int>(lround(node.completion * 100))) + "%"
-        : string("\n规划中，尚未开放");
+    if (node.kind == DomainKind::Available) {
+        tooltip += "\n已开放 " + to_string(node.total) + " 个知识点，完成 " +
+            to_string(static_cast<int>(lround(node.completion * 100))) + "%";
+    } else if (node.kind == DomainKind::ExternalApp) {
+        tooltip += "\n由独立应用承载，点击启动它自己的窗口";
+    } else {
+        tooltip += "\n规划中，尚未开放";
+    }
     button->set_tooltip_text(tooltip);
 
     if (interactive) {

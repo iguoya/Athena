@@ -51,8 +51,8 @@ private:
     void setup_menu();
     void build_home_graph();
     // 首页上 apps/ 里那些独立学习应用的入口（ADR 0032）。
-    void build_home_apps();
-    void launch_home_app(const struct ExternalApp& app);
+    // 图谱上由独立应用承载的领域被点开时，按 app.json 启动那个程序。
+    void launch_domain_app(const string& app_id);
     void go_home();
     void enter_category(const string& category_name);
     void build_category(const string& category_name);
@@ -101,7 +101,6 @@ private:
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
 
     Gtk::Box* m_home_graph = nullptr;
-    Gtk::Box* m_home_apps = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Box* m_breadcrumb_box = nullptr;
     Gtk::Button* m_home_button = nullptr;

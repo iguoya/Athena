@@ -53,6 +53,8 @@ struct DomainSpec {
     DomainTrack track;
     const char* note;
     vector<Prereq> prerequisites;
+    // 这个领域由 apps/ 下的独立应用承载时填它的 id，其余节点留空。
+    const char* app_id = nullptr;
 };
 
 const vector<DomainSpec>& domain_specs() {
@@ -141,7 +143,7 @@ const vector<DomainSpec>& domain_specs() {
          "各种语言的运行时几乎都用 C 写成。它是软硬结合方向真正的"
          "枢纽语言。",
          "指针和手动内存管理陷阱多，未定义行为编译器不拦你。",
-         "text-x-csrc-symbolic", DomainKind::Planned, VerifyMode::Code,
+         "text-x-csrc-symbolic", DomainKind::ExternalApp, VerifyMode::Code,
          DomainPriority::Core, DomainTrack::Language, "",
          {{"assembly",
            "历史与概念上 C 都是从汇编演进而来的“可移植汇编”。它保留了"
@@ -151,7 +153,8 @@ const vector<DomainSpec>& domain_specs() {
            "任意规定，落到汇编层面（寄存器、栈帧、寻址方式、编译器"
            "到底生成了什么）才真正讲得通。这属于“知道渊源会更透彻”，"
            "不是入学门槛——完全可以先上手 C，回头再补汇编。",
-           false}}},
+           false}},
+         "CLanguage"},
         {"operating_systems", "操作系统",
          "手写内存分配器、用户态协作式 / 抢占式调度器、"
          "极简内存文件系统、页面替换与缓存算法。",
@@ -714,6 +717,7 @@ DomainGraph build_domain_graph(
         node.side = side;
         node.entry = entry_ids().count(spec.id) > 0;
         node.note = spec.note;
+        node.app_id = spec.app_id != nullptr ? spec.app_id : "";
         node.layer = layer[i];
         node.slot = slot_fill[{s, layer[i]}]++;
         node.layer_size = slot_size[{s, layer[i]}];

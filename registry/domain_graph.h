@@ -15,6 +15,9 @@ using namespace std;
 // 领域分两类：
 //  - Available：athena.json 里真有对应分类，进度由该分类全部知识点聚合，
 //    点击进入该分类；
+//  - ExternalApp：由 apps/ 下一个独立学习应用承载（ADR 0032）。它不是本程序
+//    里的一个分类，进度也不由本程序统计；点击时按 app_id 把那个应用作为独立
+//    进程启动。图谱上仍是同一个节点，不另开入口。
 //  - Planned：规划中的方向，占位"留空"，灰显、不可点，只给出定位和依赖。
 //
 // 图谱只收"能验证的实践科目"，每个节点带 VerifyMode（编程 / 开发板 /
@@ -28,6 +31,7 @@ using namespace std;
 
 enum class DomainKind {
     Available,
+    ExternalApp,
     Planned,
 };
 
@@ -79,6 +83,8 @@ struct DomainNode {
     bool entry = false;
     // 验证方式之外的补充条件，例如"需要逻辑分析仪"、"需要 Linux 环境"；可空。
     string note;
+    // 仅 ExternalApp 有意义：承载这个领域的独立应用 id，对应 apps/<id>/app.json。
+    string app_id;
 
     int layer = 0;      // 在本方向图内的层号
     int slot = 0;       // 本方向同层内的序号，按表中声明顺序

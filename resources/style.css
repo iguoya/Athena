@@ -1046,6 +1046,17 @@ button.domain-graph-node-reference .knowledge-graph-node-icon {
     color: @athena_primary_text;
 }
 
+/* 由 apps/ 下独立应用承载的领域（ADR 0032）：可点，但打开的是另一个程序，
+   所以用 teal 和已开放分类的蓝区分开，不做成"半开放"的深浅差别。 */
+.domain-graph-badge-app {
+    background-color: alpha(@athena_teal, 0.18);
+    color: #0f5132;
+}
+
+button.domain-graph-node-app:hover {
+    border-color: @athena_teal;
+}
+
 .domain-graph-badge-planned {
     background-color: @athena_border;
     color: @athena_body_text;
