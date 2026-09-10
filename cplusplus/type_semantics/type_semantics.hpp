@@ -178,6 +178,17 @@ public:
     }
 
     void cast(ostream& output) const {
+        // 先看不用写就会发生的那一类：代码里没有任何转换的痕迹，值却变了。
+        const int negative = -1;
+        const unsigned int positive = 1u;
+        output << "有符号与无符号比较 -1 < 1u: " << yes_no(negative < positive)
+               << "（比较前 -1 被转成极大的无符号数）\n";
+
+        const int too_large = 300;
+        output << "范围放不下时高位被丢掉: 300 -> "
+               << static_cast<int>(static_cast<unsigned char>(too_large))
+               << "（无符号是良定义的取模，有符号溢出则是未定义行为）\n";
+
         const double fractional = 9.8;
         const int whole = static_cast<int>(fractional);
 
@@ -203,20 +214,36 @@ public:
         output << "reinterpret_cast 指针往返后仍相等: "
                << yes_no(restored == &mutable_value) << '\n';
         output << "但往返相等不证明按其它类型解读一直安全\n";
+
     }
 
     void enum_class(ostream& output) const {
+        // 先看裸整数放行了什么——不先看见这个，就不知道独立类型挡住的是什么。
+        const int closed_flag = 0;
+        const int open_flag = 1;
+        const int red_light = 1; // 另一组常量，值恰好和 open_flag 相同
+        const int loose_state = 42;
+
+        output << "裸整数取组外的值: " << loose_state << "（编译器不过问）\n";
+        output << "裸整数之间可以相加: " << (closed_flag + open_flag)
+               << "（相加没有意义）\n";
+        output << "两组无关常量能直接比较: " << yes_no(open_flag == red_light)
+               << "（红灯和“已打开”被判为相等）\n";
+
         const TrafficLight light = TrafficLight::green;
         [[maybe_unused]] const FileState state = FileState::open;
-        // bool same = light == state; // 不同 enum class 不能直接比较。
+        // FileState wrong = 42;      // 编译期错误：整数不会隐式变成状态。
+        // auto sum = light + light;  // 编译期错误：状态之间没有算术。
+        // bool same = light == state; // 编译期错误：不同枚举不能直接比较。
 
-        output << "成员必须带作用域: TrafficLight::green\n";
+        output << "换成作用域枚举后，上面三件事都编译不过\n";
         output << "可隐式转换为 int: "
                << yes_no(is_convertible_v<TrafficLight, int>) << '\n';
         output << "显式取得底层值: " << static_cast<int>(light) << '\n';
-        output << "底层类型是 unsigned char: "
-               << yes_no(is_same_v<underlying_type_t<TrafficLight>, unsigned char>)
-               << '\n';
-        output << "不同枚举直接比较: 编译期错误\n";
+
+        // 它挡的是意外的隐式转换，不是你自己写下的显式转换。
+        const auto forced = static_cast<FileState>(42);
+        output << "显式转换仍能造出列表外的值: " << static_cast<int>(forced)
+               << "（不在 closed / open 之列）\n";
     }
 };

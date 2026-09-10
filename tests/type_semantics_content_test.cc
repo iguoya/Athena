@@ -73,6 +73,8 @@ TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {
 TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::cast),
+        "有符号与无符号比较 -1 < 1u: 否（比较前 -1 被转成极大的无符号数）\n"
+        "范围放不下时高位被丢掉: 300 -> 44（无符号是良定义的取模，有符号溢出则是未定义行为）\n"
         "static_cast 明确接受截断: 9\n"
         "dynamic_cast 成功 / 失败为空: 是 / 是\n"
         "const_cast 修改原本可写对象: 9\n"
@@ -83,11 +85,13 @@ TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {
 TEST(TypeSemanticsContentTest, KeepsScopedEnumsTypeSafe) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::enum_class),
-        "成员必须带作用域: TrafficLight::green\n"
+        "裸整数取组外的值: 42（编译器不过问）\n"
+        "裸整数之间可以相加: 1（相加没有意义）\n"
+        "两组无关常量能直接比较: 是（红灯和“已打开”被判为相等）\n"
+        "换成作用域枚举后，上面三件事都编译不过\n"
         "可隐式转换为 int: 否\n"
         "显式取得底层值: 3\n"
-        "底层类型是 unsigned char: 是\n"
-        "不同枚举直接比较: 编译期错误\n");
+        "显式转换仍能造出列表外的值: 42（不在 closed / open 之列）\n");
 }
 
 } // namespace

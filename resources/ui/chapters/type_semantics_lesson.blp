@@ -1404,6 +1404,71 @@ Box type_semantics_lesson_page {
         // 策略节（ADR 0031）：四种命名转换不按语法罗列，按"你相信什么"来选。
         // 主线是"检查发生在哪一层"，不是"记住四个关键字"。
 
+        // 大纲「转换与边界」第一条承诺的是隐式转换，它排在显式转换之前：
+        // 你没写转换的地方，转换照样在发生。
+
+        Frame {
+          label: "你没写转换的地方，转换也在发生";
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 12;
+            margin-top: 14;
+            margin-bottom: 14;
+            margin-start: 18;
+            margin-end: 18;
+
+            Label {
+              label: "先说不用写就会发生的那一类。函数传参、赋值、混合类型运算，编译器都会自己插入转换——代码里看不到任何转换的痕迹，值却已经变了。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "native-lesson-lead" ]
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "范围：目标类型装不下"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "大整数赋给小整数类型时高位被丢掉。无符号类型的结果是良定义的取模（300 存进 unsigned char 得到 44），有符号类型溢出则是未定义行为——同样看不见的一次转换，后果的性质完全不同。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "符号：有符号和无符号混在一起比较"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "-1 < 1u 的结果是 false。比较之前 -1 被转成了一个极大的无符号数——这是循环条件里最经典的一类 bug，写的人以为在比较大小，实际比较的是转换之后的两个值。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+              spacing: 6;
+              styles [ "lesson-callout" ]
+
+              Label { label: "精度：浮点与整数之间"; halign: start; styles [ "lesson-callout-title" ] }
+              Label {
+                label: "浮点转整数直接截断小数部分，不是四舍五入；反过来把大整数转成 float 也可能丢掉低位有效数字，因为 float 的有效位数有限。";
+                halign: start; wrap: true; xalign: 0;
+              }
+            }
+
+            Label {
+              label: "花括号初始化能把这三类里的窄化拦在编译期——这是「初始化」那一节讲过的判断，在这里换了个角度：初始化形式的选择，本身就是在决定隐式转换要不要被检查。";
+              halign: start; wrap: true; xalign: 0;
+              styles [ "lesson-prose" ]
+            }
+          }
+        }
+
         Frame {
           label: "选哪种转换，取决于你相信什么";
           styles [ "panel-frame", "group-frame" ]
@@ -1500,6 +1565,7 @@ Box type_semantics_lesson_page {
               orientation: vertical;
               spacing: 3;
 
+              Label { label: "不检查也不显眼  隐式转换      连写都不用写"; halign: start; styles [ "native-lesson-code" ] }
               Label { label: "编译期检查    static_cast    关系不存在就编译不过"; halign: start; styles [ "native-lesson-code" ] }
               Label { label: "运行期检查    dynamic_cast   类型不匹配返回 nullptr"; halign: start; styles [ "native-lesson-code" ] }
               Label { label: "完全不检查    const_cast     前提由你保证"; halign: start; styles [ "native-lesson-code" ] }
@@ -1596,7 +1662,7 @@ Box type_semantics_lesson_page {
             margin-end: 18;
 
             Label {
-              label: "实验跑四件事：static_cast 把 9.8 截成 9、dynamic_cast 对匹配类型成功而对不匹配的返回空、const_cast 修改一个本来就可写的对象、reinterpret_cast 指针转成字节指针再转回来仍然相等。";
+              label: "实验先看不用写的那一类：-1 < 1u 为什么是假、300 存进 unsigned char 变成多少。再看四种命名转换：static_cast 把 9.8 截成 9、dynamic_cast 对匹配类型成功而对不匹配的返回空、const_cast 修改一个本来就可写的对象、reinterpret_cast 指针往返后仍相等。";
               halign: start; wrap: true; xalign: 0;
               styles [ "lesson-prose" ]
             }
