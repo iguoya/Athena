@@ -895,6 +895,32 @@ Box type_semantics_lesson_page {
             }
           }
 
+          Frame {
+            label: "总结：四种写法，同一个问题";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                use-markup: true;
+                label: "四种写法都得到一个普通的 int，差别不在括号长相，而在<span bgcolor='#fff3cd'>谁来检查「信息会不会丢」</span>。圆括号把这个判断交给你，花括号交给编译器；explicit 决定一次转换能不能不写类型名就发生；值初始化决定对象一开始是确定的 0，还是根本没有初值。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "所以读到一次初始化，问的顺序是：这个值进入目标类型会不会丢信息 → 如果会，是我明确接受，还是该让编译器拦住 → 这个对象有没有可靠的初值。三问都有答案，这一行就算读明白了。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
           // 随堂考核挂载点：CheckpointView 由 TypeSemanticsLessonPage 填入。
           Box type_semantics_init_checkpoint_host {
             name: "type_semantics_init_checkpoint_host";
@@ -1077,7 +1103,7 @@ Box type_semantics_lesson_page {
 
           // 5. 小结
           Frame {
-            label: "小结：先问对象还在不在，再问能不能改";
+            label: "总结：先问对象还在不在，再问能不能改";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -1493,9 +1519,48 @@ Box type_semantics_lesson_page {
             }
           }
 
-          // 边界与结论合成一节（AGENTS.md：固定的"边界 + 小结"不是模板）。
           Frame {
-            label: "边界与结论：推导减少书写，意图仍由你表达";
+            label: "边界：两处别推广过头";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "auto 本身不保证「深拷贝」"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "复制指针或共享所有权对象，仍可能访问同一份底层资源。这一节的对象图只解释普通 int 这个例子，不推广成所有类型的内存图。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "只读引用也不保证对象永久存活"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "这里引用的是已经存在的 original；临时对象绑定与寿命延长是「对象生命周期」那一节的规则，本例中的引用不能在 original 销毁后继续使用。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          // 这一节内容最多（三种写法 + 对象图 + 结构化绑定 + 选型流程），
+          // 收束单独成节：随堂考核逐题验证判断，串不起这条线。
+          Frame {
+            label: "总结：推导减少书写，意图仍由你表达";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -1512,17 +1577,10 @@ Box type_semantics_lesson_page {
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
-
-              Box {
-                orientation: vertical;
-                spacing: 4;
-                styles [ "lesson-callout", "lesson-callout-trap" ]
-
-                Label { label: "两处别推广过头"; halign: start; styles [ "lesson-callout-title" ] }
-                Label {
-                  label: "auto 本身不保证「深拷贝」：复制指针或共享所有权对象，仍可能访问同一份底层资源。只读引用也不保证对象永久存活：这一节引用的是已经存在的 original，临时对象绑定与寿命延长是「对象生命周期」那一节的规则。";
-                  halign: start; wrap: true; xalign: 0;
-                }
+              Label {
+                label: "auto、auto&amp;、const auto&amp; 三种写法、容器元素的就地修改、结构化绑定——这一节从头到尾只在回答同一个问题：你要的是一份独立的数据，还是原对象的另一个名字。换了语法它也还是这个问题。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
               }
 
               Box {
@@ -1860,10 +1918,10 @@ Box type_semantics_lesson_page {
             }
           }
 
-          // 边界与结论合成一节：这个知识点难度 1、只要求掌握，收尾不必写成
-          // "边界" + "小结" 两个 Frame（AGENTS.md：篇幅与掌握目标匹配）。
+          // 这一节难度 1、内容最少，总结与边界合在一处够用；标题以结论为主，
+          // 让读者认得出这是落点（AGENTS.md：形式按内容定，不是套模板）。
           Frame {
-            label: "边界与结论：它挡的是意外，不是错误";
+            label: "总结：先问这组值要不要跨接口";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -2252,9 +2310,46 @@ Box type_semantics_lesson_page {
             }
           }
 
-          // 边界与结论合成一节（AGENTS.md：固定的"边界 + 小结"两件套不是模板）。
           Frame {
-            label: "边界与结论：先问能不能不转，再问谁来检查";
+            label: "边界：写出了转换，不等于转换安全";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "编译通过只说明关系成立，不说明值合理"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "static_cast&lt;int&gt;(1e18) 编译没问题，结果却超出 int 能表示的范围；上一节那个 static_cast&lt;FileState&gt;(42) 也一样。范围检查从来不在转换里，得你自己在转换点做。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 6;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "转换是信号，不是解决方案"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "代码里频繁出现转换，通常说明类型设计没表达清楚意图——该用独立类型的地方用了裸整数，该改接口的地方用了 const_cast。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+            }
+          }
+
+          Frame {
+            label: "总结：先问能不能不转，再问谁来检查";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -2270,21 +2365,9 @@ Box type_semantics_lesson_page {
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
-
-              Box {
-                orientation: vertical;
-                spacing: 6;
-                styles [ "lesson-callout", "lesson-callout-trap" ]
-
-                Label { label: "编译通过只说明关系成立，不说明值合理"; halign: start; styles [ "lesson-callout-title" ] }
-                Label {
-                  label: "static_cast<int>(1e18) 编译没问题，结果却超出 int 能表示的范围；上一节那个 static_cast<FileState>(42) 也一样。范围检查从来不在转换里，得你自己在转换点做。";
-                  halign: start; wrap: true; xalign: 0;
-                }
-              }
-
               Label {
-                label: "代码里频繁出现转换，通常说明类型设计没表达清楚意图——该用独立类型的地方用了裸整数，该改接口的地方用了 const_cast。写下转换就是接手了它的全部前提，所以最该先问的是：这次转换能不能通过改类型或改接口来避免。";
+                use-markup: true;
+                label: "写下转换就是接手了它的全部前提：编译期检查只保证关系存在，<span bgcolor='#fff3cd'>值是否合理、对象是否真的可写、按新类型解读是否有意义，全都由你保证</span>。所以两个问题的顺序是——先问这次转换能不能通过改类型或改接口来避免，再问该用哪一种。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -2499,7 +2582,7 @@ Box type_semantics_lesson_page {
           }
 
           Frame {
-            label: "小结：先问有没有身份，再问能不能搬走";
+            label: "总结：先问有没有身份，再问能不能搬走";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -2858,7 +2941,7 @@ Box type_semantics_lesson_page {
           // 一个判断动作"和"学到哪里为止"——那正是这一节掌握目标只到「一般
           // 了解」时最需要说清的东西，所以小结和考核并存，不是二选一。
           Frame {
-            label: "小结：先看括号，再看它问的是谁";
+            label: "总结：先看括号，再看它问的是谁";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
