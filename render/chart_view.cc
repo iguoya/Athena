@@ -4,6 +4,7 @@
 #include "render/chart_scale.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <map>
 #include <cmath>
 #include <sstream>
@@ -263,11 +264,32 @@ ChartColor lighten(const ChartColor& color, double amount) {
 
 } // namespace
 
+string circled_index(size_t one_based) {
+    static const char* circled[] = {
+        "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩",
+        "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳",
+    };
+    constexpr size_t count = sizeof(circled) / sizeof(circled[0]);
+    return one_based >= 1 && one_based <= count ? circled[one_based - 1]
+                                                : to_string(one_based);
+}
+
+string chapter_palette_hex(size_t chapter_index) {
+    const ChartColor& color = chapter_color(chapter_index);
+    char buffer[8];
+    snprintf(
+        buffer, sizeof(buffer), "#%02x%02x%02x",
+        static_cast<int>(color.r * 255 + 0.5),
+        static_cast<int>(color.g * 255 + 0.5),
+        static_cast<int>(color.b * 255 + 0.5));
+    return buffer;
+}
+
 Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
-    // 知识点名竖排在底部：横排放不下十几个中文标签，挤成一团或者互相
-    // 盖住。竖排后每个标签只占一个字的宽度，柱子再密也读得清。
-    area->set_content_height(456);
+    // 横轴只画带圈序号，知识点名在图外的对照表里，所以底部不必留竖排
+    // 标签的空间。
+    area->set_content_height(300);
     area->set_hexpand(true);
     area->set_draw_func(
         [points](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
@@ -280,7 +302,7 @@ Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points
             // （那一行同时充当图例）。这里手工给顶部留 36px。
             const ChartFrame frame{
                 52.0, 36.0, static_cast<double>(width) - 8.0,
-                static_cast<double>(height) - 168.0};
+                static_cast<double>(height) - 40.0};
             if (frame.width() <= 0 || frame.height() <= 0) {
                 return;
             }
@@ -328,16 +350,12 @@ Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points
                     cr->fill();
                 }
 
-                // 竖排：顺时针转 90°，文字沿屏幕向下延伸，第一个字在上——
-                // 标签要能从上往下读。逆时针转会让顺序反过来，得从下往上看。
-                cr->save();
-                cr->translate(
-                    geometry.x + geometry.width / 2, frame.bottom + 10);
-                cr->rotate(M_PI / 2);
+                // 横轴只写序号，对应关系放在图外的对照表里：序号只占一个字
+                // 宽，柱子再密也不会重叠，也就不必纠结竖排该往哪个方向读。
                 draw_cairo_text(
-                    cr, point.title, 0, 0, kChartMinimumTextSize,
-                    kChartMutedText, false, 0.0);
-                cr->restore();
+                    cr, circled_index(index + 1),
+                    geometry.x + geometry.width / 2, frame.bottom + 18,
+                    kChartMinimumTextSize, color, true, 0.5);
 
                 // 章节名横排在图顶，标出这一段属于哪一章；放底下会和竖排的
                 // 知识点名抢位置。
@@ -353,7 +371,7 @@ Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points
                         cr->set_source_rgb(0.87, 0.89, 0.91);
                         cr->set_line_width(1.0);
                         cr->move_to(geometry.x - 6, frame.top - 6);
-                        cr->line_to(geometry.x - 6, frame.bottom + 160);
+                        cr->line_to(geometry.x - 6, frame.bottom + 26);
                         cr->stroke();
                     }
                 }

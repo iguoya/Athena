@@ -2,17 +2,22 @@
 
 #include "render/chart_view.h"
 
-#include <iomanip>
-#include <sstream>
+#include <map>
 
 Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
     auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 16);
     page->set_hexpand(true);
     page->add_css_class("progress-overview");
 
+    // 环形图和统计卡片并排：它们讲的是同一件事（整体进度的两种读法），
+    // 分两行反而要来回看。
+    auto summary_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 24);
+    page->append(*summary_row);
+
     auto tiles_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
     tiles_row->set_homogeneous(true);
-    page->append(*tiles_row);
+    tiles_row->set_hexpand(true);
+    tiles_row->set_valign(Gtk::Align::CENTER);
 
     const auto add_tile =
         [tiles_row](const string& value, const string& label, const string& css_class) {
@@ -36,41 +41,11 @@ Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
         to_string(progress.in_progress),
         "学习中（1–4 星）",
         "stat-tile-in-progress");
-    ostringstream average_text;
-    average_text << fixed << setprecision(1) << progress.average_mastery();
-    add_tile(average_text.str() + " / 5", "平均熟练度", "stat-tile-average");
-
-    // “接下来建议学习”：第一版概要功能，只做本地规则排序 + 静态展示
-    // （见 suggest_next_topics() 的规则说明），不接可点击跳转——摆在统计
-    // 卡片和图表之间，用户扫一眼统计数字后，紧接着就能看到"接下来干什么"，
-    // 不用先看完下面一整页图表和章节列表再自己判断。全部掌握或者还没有
-    // 任何知识点时不显示这个 Frame，不占地方摆一个空列表。
-    const auto suggestions = suggest_next_topics(progress);
-    if (!suggestions.empty()) {
-        auto suggest_frame = Gtk::make_managed<Gtk::Frame>();
-        suggest_frame->add_css_class("panel-frame");
-        suggest_frame->set_label("建议接下来学习");
-        auto suggest_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 6);
-        suggest_box->set_margin_top(10);
-        suggest_box->set_margin_bottom(10);
-        suggest_box->set_margin_start(12);
-        suggest_box->set_margin_end(12);
-        for (const auto& topic : suggestions) {
-            auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
-            auto text = Gtk::make_managed<Gtk::Label>(
-                topic.chapter_title + " · " + topic.subchapter_title);
-            text->set_hexpand(true);
-            text->set_halign(Gtk::Align::START);
-            row->append(*text);
-            row->append(*make_mastery_stars(topic.mastery));
-            suggest_box->append(*row);
-        }
-        suggest_frame->set_child(*suggest_box);
-        page->append(*suggest_frame);
-    }
-
-    auto charts_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 24);
-    page->append(*charts_row);
+    // 第四张卡原来是「平均熟练度 0.6 / 5」：一个被大量未开始知识点拉低的
+    // 平均值，既说不清学得怎么样，也指不出下一步。换成还没碰过的数量，
+    // 和前三张一起正好是「总数 + 三种状态」。
+    add_tile(
+        to_string(progress.not_started), "未涉及（0 星）", "stat-tile-average");
 
     auto donut_frame = Gtk::make_managed<Gtk::Frame>();
     donut_frame->add_css_class("panel-frame");
@@ -85,7 +60,8 @@ Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
         progress.mastered, progress.in_progress, progress.not_started));
     donut_box->append(*make_mastery_legend());
     donut_frame->set_child(*donut_box);
-    charts_row->append(*donut_frame);
+    summary_row->append(*donut_frame);
+    summary_row->append(*tiles_row);
 
     // 逐个知识点的掌握程度，单开一行占满宽度。原来这里是按星级分档的
     // 直方图，只说得出"有几个在 3 星"，说不出是哪几个——看完并不知道
@@ -117,6 +93,45 @@ Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
         points_box->set_margin_start(12);
         points_box->set_margin_end(12);
         points_box->append(*make_mastery_by_point_chart(points));
+
+        // 序号对照表：图上只有 ①②③，名字放在这里。按章节分行，章节名用
+        // 该章在图上的配色，两处编号与颜色必须一致，图例才有意义。
+        map<string, size_t> color_index;
+        for (const auto& point : points) {
+            color_index.emplace(point.chapter_title, color_index.size());
+        }
+        string current_chapter;
+        string line;
+        size_t chapter_slot = 0;
+        const auto flush_line = [&] {
+            if (line.empty()) {
+                return;
+            }
+            auto legend = Gtk::make_managed<Gtk::Label>();
+            legend->set_markup(
+                "<span foreground='" + chapter_palette_hex(chapter_slot)
+                + "' weight='bold'>" + current_chapter + "</span>　" + line);
+            legend->set_halign(Gtk::Align::START);
+            legend->set_wrap(true);
+            legend->set_xalign(0.0);
+            legend->add_css_class("chart-legend-line");
+            points_box->append(*legend);
+            line.clear();
+        };
+        for (size_t index = 0; index < points.size(); ++index) {
+            const auto& point = points[index];
+            if (point.chapter_title != current_chapter) {
+                flush_line();
+                current_chapter = point.chapter_title;
+                chapter_slot = color_index.at(current_chapter);
+            }
+            if (!line.empty()) {
+                line += "　";
+            }
+            line += circled_index(index + 1) + " " + point.title;
+        }
+        flush_line();
+
         points_frame->set_child(*points_box);
         page->append(*points_frame);
     }

@@ -40,7 +40,16 @@ struct MasteryPoint {
     string title;
     int mastery = 0;  // 0-5
 };
+// 横轴用带圈序号标记，知识点名放在图外的对照表里——十几个中文标签横排
+// 必然重叠，竖排又要考虑读的方向。序号只占一个字宽，两个问题一起消掉。
 Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points);
+
+// 序号的显示形式，供图外的对照表复用，保证两处编号一致。
+string circled_index(size_t one_based);
+
+// 章节配色的十六进制值，供图外的对照表复用：同一章在图上和对照表里
+// 必须同色，否则图例就失去意义。
+string chapter_palette_hex(size_t chapter_index);
 
 // 只读的五星展示（实心/空心），用于逐章节列表里的单个知识点。
 Gtk::Box* make_mastery_stars(int mastery);

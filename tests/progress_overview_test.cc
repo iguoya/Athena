@@ -70,7 +70,10 @@ TEST(ProgressOverviewTest, RendersAggregatedDataWithoutReadingStorage) {
     ASSERT_NE(page, nullptr);
     EXPECT_TRUE(page->has_css_class("progress-overview"));
     EXPECT_NE(find_label(*page, "知识点总数"), nullptr);
-    EXPECT_NE(find_label(*page, "4.0 / 5"), nullptr);
+    // 第四张卡是「未涉及」而不是平均熟练度：被大量未开始知识点拉低的平均值
+    // 既说不清学得怎么样，也指不出下一步。
+    EXPECT_NE(find_label(*page, "未涉及（0 星）"), nullptr);
+    EXPECT_EQ(find_label(*page, "平均熟练度"), nullptr);
     EXPECT_NE(find_frame(*page, "整体完成度"), nullptr);
     // 逐个知识点的掌握程度取代了按星级分档的直方图：后者只说得出"有几个
     // 在 3 星"，说不出是哪几个。
