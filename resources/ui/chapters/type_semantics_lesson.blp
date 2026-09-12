@@ -67,6 +67,12 @@ Box type_semantics_lesson_page {
   // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
   // 卡片一眼可辨，摊平成正文就看不出轻重。此章不再维护 Markdown 大纲副本。
   Notebook type_semantics_section_notebook {
+      // 必须 vexpand：不然 Notebook 向父 Box 要的是"最高那一页的自然高度"
+      // （本章约 13600px），窗口只有一千多，GTK 只能强行压缩，页内 Picture 的
+      // height-request 被违反、图被压成一条看不见的白边。vexpand 之后 Notebook
+      // 填满可用空间，页内的 ScrolledWindow 才真正负责滚动。
+      vexpand: true;
+
       [tab]
       Label { label: "本章导览"; }
 
@@ -237,7 +243,8 @@ Box type_semantics_lesson_page {
                 styles [ "native-lesson-lead" ]
               }
               Label {
-                label: "读 C++ 代码时，只知道「这个变量存着什么」还不够。同一个结果，可能被复制，也可能只是被另一个名字引用；看似普通的一次传递，可能丢失信息，也可能留下失效的引用。本章把这些日常判断背后的语言规则连成一条线。";
+                label: "读 C++ 代码时，只知道「这个变量存着什么」还不够。<span foreground='#052c65' weight='bold'>同一个结果，可能被复制，也可能只是被另一个名字引用</span>；看似普通的一次传递，可能丢失信息，也可能留下失效的引用。本章把这些日常判断背后的语言规则连成一条线。";
+                use-markup: true;
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -279,7 +286,7 @@ Box type_semantics_lesson_page {
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
                   Label { label: "读取没有可靠初值的对象"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "代码可能表现不稳定，甚至直接进入未定义行为。"; halign: start; wrap: true; xalign: 0; }
+                  Label { use-markup: true; label: "代码可能表现不稳定，甚至<span foreground='#052c65' weight='bold'>直接进入未定义行为</span>。"; halign: start; wrap: true; xalign: 0; }
                 }
                 Label { label: "看初始化"; valign: start; styles [ "badge", "outline-risk-tag" ] }
               }
@@ -290,7 +297,7 @@ Box type_semantics_lesson_page {
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
                   Label { label: "对象已经失效，引用仍被使用"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "表面上还能访问，实际已经越过对象的有效期。"; halign: start; wrap: true; xalign: 0; }
+                  Label { use-markup: true; label: "表面上还能访问，<span foreground='#052c65' weight='bold'>实际已经越过对象的有效期</span>。"; halign: start; wrap: true; xalign: 0; }
                 }
                 Label { label: "查有效期"; valign: start; styles [ "badge", "outline-risk-tag" ] }
               }
@@ -312,7 +319,7 @@ Box type_semantics_lesson_page {
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
                   Label { label: "精度悄悄丢失"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "数值进入范围更小或表达能力不同的类型后，结果可能已经不是原来的值。"; halign: start; wrap: true; xalign: 0; }
+                  Label { use-markup: true; label: "数值进入范围更小或表达能力不同的类型后，<span foreground='#052c65' weight='bold'>结果可能已经不是原来的值</span>。"; halign: start; wrap: true; xalign: 0; }
                 }
                 Label { label: "找转换"; valign: start; styles [ "badge", "outline-risk-tag" ] }
               }
@@ -338,7 +345,8 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "对象是程序中具有身份、承载状态的实体；表达式是代码中参与求值的部分，可以指向已有对象，也可以计算出用于后续操作的值。多个表达式可以指向同一个对象，所以「写法不同」不一定意味着「多出了一份对象」。";
+                label: "对象是程序中具有身份、承载状态的实体；表达式是代码中参与求值的部分，可以指向已有对象，也可以计算出用于后续操作的值。<span foreground='#052c65' weight='bold'>多个表达式可以指向同一个对象</span>，所以<span background='#fff3cd' weight='bold'>「写法不同」不一定意味着「多出了一份对象」</span>。";
+                use-markup: true;
                 halign: start; wrap: true; xalign: 0;
                 styles [ "native-lesson-lead" ]
               }
@@ -387,7 +395,8 @@ Box type_semantics_lesson_page {
               }
 
               Label {
-                label: "值类别描述表达式怎样参与操作，生命周期描述对象何时有效——二者必须分别判断：不能靠「持久还是临时」直接判定值类别，还要看类型、可用操作和使用场景。这是本章最需要建立的区分。";
+                label: "<span background='#fff3cd' weight='bold'>值类别描述表达式怎样参与操作，生命周期描述对象何时有效</span>——二者必须分别判断：<span foreground='#052c65' weight='bold'>不能靠「持久还是临时」直接判定值类别</span>，还要看类型、可用操作和使用场景。这是本章最需要建立的区分。";
+                use-markup: true;
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -604,7 +613,8 @@ Box type_semantics_lesson_page {
                   height-request: 420;
                 }
                 Label {
-                  label: "依据规则形成预期，再用证据修正理解——一次运行正常不能证明代码总是正确，尤其不能据此排除未定义行为。";
+                  label: "依据规则形成预期，再用证据修正理解——<span foreground='#052c65' weight='bold'>一次运行正常不能证明代码总是正确</span>，尤其不能据此排除未定义行为。";
+                  use-markup: true;
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -634,7 +644,7 @@ Box type_semantics_lesson_page {
                 orientation: vertical; spacing: 4;
                 styles [ "lesson-callout" ]
                 Label { label: "保留副本，还是共享原对象？"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { label: "副本让后续修改相互独立，但可能带来复制代价；引用避免复制，却要求关心原对象的有效期以及修改是否影响其他使用者。"; halign: start; wrap: true; xalign: 0; }
+                Label { use-markup: true; label: "副本让后续修改相互独立，但可能带来复制代价；<span foreground='#052c65' weight='bold'>引用避免复制，却要求关心原对象的有效期</span>以及修改是否影响其他使用者。"; halign: start; wrap: true; xalign: 0; }
               }
               Box {
                 orientation: vertical; spacing: 4;
@@ -714,7 +724,7 @@ Box type_semantics_lesson_page {
 
               Label { label: "· 值类别不等于对象寿命。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 使用引用不等于对象一定仍然有效。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· std::move 只是把表达式转成将亡值，它自己不移动任何东西——本章的值类别实验里可以直接看到它只改变了重载选择。移动怎样真正发生，留到「RAII 与资源管理」。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { use-markup: true; label: "· std::move 只是把表达式转成将亡值，<span background='#fff3cd' weight='bold'>它自己不移动任何东西</span>——本章的值类别实验里可以直接看到它只改变了重载选择。移动怎样真正发生，留到「RAII 与资源管理」。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 交给编译器推导不等于不再需要表达副本或别名的意图。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 显式转换不等于安全转换。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
 
@@ -1154,7 +1164,6 @@ Box type_semantics_lesson_page {
                 Label { label: "③ 被 const 引用绑定的临时对象：寿命被延长"; halign: start; styles [ "lesson-callout-title" ] }
                 Label {
                   label: "把一个临时对象直接绑到 const 引用上，它会活到这个引用自己的作用域结束。这条规则让“接住一个临时结果再多用几行”成为可能，但它只对<b>直接绑定</b>的那个临时对象生效。";
-                  use-markup: true;
                   halign: start; wrap: true; xalign: 0;
                 }
               }
