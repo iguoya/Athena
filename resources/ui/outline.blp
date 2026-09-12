@@ -1,0 +1,99 @@
+using Gtk 4.0;
+
+// 章节教学大纲的结构骨架（ADR 0028 第 6 节的五节范式）。
+//
+// 这是「结构模板」，和「内容模板」配套：内容模板规定五节各回答什么问题
+// （见 docs/CHAPTER_CONFIG.md 6.2），这里规定它们在页面上怎么摆。
+//
+// 固定的只有三样：题注在最前、五节齐全、顺序不变。**每节叫什么名字、里面
+// 放什么，由本章自己定**——type_semantics 把「痛点与来历」写成「五类看起来
+// 没问题的风险」，把「判断与代价」写成「读代码时的五个检查点」，那是它的
+// 知识点性质决定的，不是通用小节名。
+Box outline_root {
+  orientation: vertical;
+  spacing: 16;
+  margin-bottom: 18;
+
+  // 一句题注：这一章承诺解决什么。ADR 0028 要求它在最前面。
+  Label outline_lead {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "native-lesson-lead" ]
+  }
+
+  Frame outline_origin {
+    styles [ "panel-frame", "group-frame" ]
+    Box outline_origin_body {
+      orientation: vertical; spacing: 10;
+      margin-top: 16; margin-bottom: 16; margin-start: 18; margin-end: 18;
+    }
+  }
+
+  Frame outline_model {
+    styles [ "panel-frame", "group-frame" ]
+    Box outline_model_body {
+      orientation: vertical; spacing: 10;
+      margin-top: 16; margin-bottom: 16; margin-start: 18; margin-end: 18;
+    }
+  }
+
+  Frame outline_scope {
+    styles [ "panel-frame", "group-frame" ]
+    Box outline_scope_body {
+      orientation: vertical; spacing: 10;
+      margin-top: 16; margin-bottom: 16; margin-start: 18; margin-end: 18;
+    }
+  }
+
+  Frame outline_tradeoff {
+    styles [ "panel-frame", "group-frame" ]
+    Box outline_tradeoff_body {
+      orientation: vertical; spacing: 10;
+      margin-top: 16; margin-bottom: 16; margin-start: 18; margin-end: 18;
+    }
+  }
+
+  Frame outline_landing {
+    styles [ "panel-frame", "group-frame" ]
+    Box outline_landing_body {
+      orientation: vertical; spacing: 10;
+      margin-top: 16; margin-bottom: 16; margin-start: 18; margin-end: 18;
+    }
+  }
+}
+
+// 「讲什么与边界」里按掌握目标分档的一组条目。档位徽章与成员由配置数据
+// 生成，每档的说明由作者写——前者不该手抄（会和 athena.json 漂移），
+// 后者不该自动编（评定理由是判断，不是数据）。
+Box outline_grade_group {
+  orientation: vertical;
+  spacing: 6;
+
+  Box {
+    orientation: horizontal;
+    spacing: 8;
+
+    Label outline_grade_badge {
+      styles [ "badge", "badge-mastery-goal" ]
+    }
+
+    Label outline_grade_level {
+      halign: start;
+      styles [ "dim-label" ]
+    }
+  }
+
+  Label outline_grade_members {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "lesson-prose" ]
+  }
+
+  Label outline_grade_note {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+  }
+}

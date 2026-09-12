@@ -152,6 +152,13 @@ compiled_ui += custom_target(
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
+compiled_ui += custom_target(
+  'compile-outline.blp',
+  input: files('resources/ui/outline.blp'),
+  output: 'outline.ui',
+  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+)
+
 # === 共享核心库 ===
 core_sources = files(
   'content/content_loader.cc',
@@ -210,6 +217,7 @@ app_sources = files(
   'ui/learning_dialogs.cc',
   'ui/checkpoint_view.cc',
   'ui/lesson_blocks.cc',
+  'ui/outline_blocks.cc',
   'ui/learning_unit_view.cc',
   'ui/pocket_cube_page.cc',
   'ui/progress_page.cc',

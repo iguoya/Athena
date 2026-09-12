@@ -12,6 +12,52 @@
 > 决定教学动作）、[ADR 0033](decisions/0033-live-visuals-and-interaction.md)
 > （数据驱动与互动优先）。
 
+## 0. 两类模板，缺一不可
+
+写一章要用到两套模板，它们管的是不同的事，别混：
+
+| | 管什么 | 在哪 |
+|---|---|---|
+| **内容模板** | 大纲的五节各回答什么问题 | `CHAPTER_CONFIG.md` 6.2、[ADR 0028](decisions/0028-outline-process-experiment-layering.md) 第 6 节 |
+| **结构模板** | 这些内容在页面上怎么摆、哪些由数据生成 | `resources/ui/outline.blp` + `ui/outline_blocks.h`（大纲）<br>`resources/ui/lesson_blocks.blp` + `ui/lesson_blocks.h`（教学过程） |
+
+只有内容模板，每章都要从零搭一遍控件树，两千行里一半是样板；只有结构模板，
+搭得很快但不知道每节该写什么。两套配合才既不重复劳动，又不写跑偏。
+
+**大纲的结构模板固定三样**：题注在最前、五节齐全、顺序不变。其余都自由——
+每节叫什么名字、里面用什么手段，由本章的知识点性质决定。`type_semantics` 把
+「痛点与来历」写成「五类看起来没问题的风险」，把「判断与代价」写成「读代码时
+的五个检查点」，那是它的内容决定的，不是通用小节名。
+
+```cpp
+#include "ui/outline_blocks.h"
+
+auto sections = outline::build(host, "一句题注：这一章承诺解决什么。", {
+    .origin = "没有它之前，代码里出过什么事",   // 痛点与来历
+    .model = "心智模型：两个层次",              // 心智模型
+    .scope = "先看主次与顺序",                  // 讲什么与边界
+    .tradeoff = "写代码时要做的三个判断",       // 判断与代价
+    .landing = "学完能做到什么，以及往后接什么", // 落点
+});
+
+lesson::prose(*sections.origin, "……");
+
+// 分档清单：档位与成员从 athena.json 生成，评定理由由你写
+outline::grade_groups(*sections.scope, chapter, {
+    {MasteryGoal::Master,   "先拿下",     "这几样后面每章都会用到，判断错的代价最直接。"},
+    {MasteryGoal::Required, "随后掌握",   "不难，但决定接口能不能替你挡住误用。"},
+    {MasteryGoal::Familiar, "可以先跳过", "先知道它解决什么问题，真正需要时再回来。"},
+});
+```
+
+**哪些必须由数据生成**（手抄就等着和 `athena.json` 漂移）：知识点的难度、
+掌握目标、先修关系、实时熟练度。知识点路线图的画法见
+`TypeSemanticsLessonPage::draw_roadmap`，新章可以照搬那段绘制——它读的是
+`ChapterCatalog`，换章不用改。
+
+**哪些必须自己写**：每一档为什么这样定、心智模型是什么、有哪些误区。
+这些是判断，数据里没有。
+
 ## 1. 先判断，再选手段
 
 写一节之前，先回答三个问题。答案不同，这一节该有的东西就不同。
