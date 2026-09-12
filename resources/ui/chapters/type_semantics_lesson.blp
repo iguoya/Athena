@@ -113,16 +113,16 @@ Box type_semantics_lesson_page {
                 spacing: 4;
                 styles [ "lesson-figure" ]
 
-                Picture ts_map_figure {
-                  name: "ts_map_figure";
-                  content-fit: contain;
+                // 这张图由 requires 与评级数据实时绘制（ADR 0033），不是静态
+                // 图片：改了 athena.json 的依赖或评级，它立刻跟着变，不会漂移。
+                DrawingArea ts_guide_roadmap {
+                  name: "ts_guide_roadmap";
                   halign: fill;
                   hexpand: true;
-                  can-shrink: true;
-                  height-request: 440;
+                  height-request: 330;
                 }
                 Label {
-                  label: "七个知识点、三条线。顺着箭头学；要知道为什么这样排、为什么定这个程度，进「教学大纲」。";
+                  label: "箭头是先修关系，顺着箭头学；方框配色是掌握目标，方框里标着难度。点任意一个方块直接跳到那一节。要知道为什么这样排、为什么定这个程度，进「教学大纲」。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }

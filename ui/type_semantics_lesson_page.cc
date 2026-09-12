@@ -111,6 +111,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         "type_semantics_section_notebook");
     m_page_title = builder->get_widget<Gtk::Label>("type_semantics_page_title");
     m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
+    m_guide_roadmap =
+        builder->get_widget<Gtk::DrawingArea>("ts_guide_roadmap");
     m_value_matrix = builder->get_widget<Gtk::DrawingArea>("ts_vc_matrix");
     m_value_result_title =
         builder->get_widget<Gtk::Label>("ts_vc_result_title");
@@ -141,7 +143,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !m_page_title
-        || !m_section_notebook || !m_roadmap || !m_value_matrix
+        || !m_section_notebook || !m_roadmap || !m_guide_roadmap || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !m_deduction_graph
@@ -154,7 +156,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     // 教案内嵌的静态 SVG 图与手册共享同一批资产（resources/articles/cpp/images/），
     // 打包进 /app 前缀的 GResource；结构留在 Blueprint，这里只填图源。
     const vector<pair<const char*, const char*>> lesson_figures = {
-        {"ts_map_figure", "/app/articles/cpp/images/type_semantics_map.svg"},
         {"ts_init_forms_figure", "/app/articles/cpp/images/init_forms.svg"},
         {"ts_auto_selection_figure",
          "/app/articles/cpp/images/auto_selection_flow.svg"},
@@ -378,12 +379,22 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
 
     m_roadmap->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-            draw_roadmap(cr, width, height);
+            draw_roadmap(cr, width, height, false);
         });
     auto roadmap_click = Gtk::GestureClick::create();
     roadmap_click->signal_pressed().connect(
         [this](int, double x, double y) { on_roadmap_pressed(x, y); });
     m_roadmap->add_controller(roadmap_click);
+
+    // 导览页画同一批数据的另一组维度：多标难度，供"哪个重哪个难"一眼可读。
+    m_guide_roadmap->set_draw_func(
+        [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_roadmap(cr, width, height, true);
+        });
+    auto guide_click = Gtk::GestureClick::create();
+    guide_click->signal_pressed().connect(
+        [this](int, double x, double y) { on_roadmap_pressed(x, y); });
+    m_guide_roadmap->add_controller(guide_click);
     rebuild_roadmap(mastery_by_id);
 
     m_section_notebook->signal_switch_page().connect(
@@ -1107,6 +1118,7 @@ void TypeSemanticsLessonPage::rebuild_roadmap(
             .name = subchapter.name,
             .title = subchapter.title,
             .goal = subchapter.mastery_goal,
+            .difficulty = subchapter.difficulty,
             .mastery = found == mastery_by_id.end() ? 0 : found->second,
         });
     }
@@ -1133,7 +1145,10 @@ void TypeSemanticsLessonPage::rebuild_roadmap(
 }
 
 void TypeSemanticsLessonPage::draw_roadmap(
-    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    const Cairo::RefPtr<Cairo::Context>& cr,
+    int width,
+    int height,
+    bool show_grade) {
     if (m_roadmap_nodes.empty()) {
         return;
     }
@@ -1141,7 +1156,7 @@ void TypeSemanticsLessonPage::draw_roadmap(
     // 三列纵向排布：读起来是一条从上到下的推荐路径，同时留出足够横向空间
     // 让先修连线不互相压住。
     constexpr double kNodeWidth = 190.0;
-    constexpr double kNodeHeight = 62.0;
+    const double kNodeHeight = show_grade ? 78.0 : 62.0;
     constexpr double kRowGap = 34.0;
     const double columns = 3.0;
     const double usable = static_cast<double>(width) - 24.0;
@@ -1209,6 +1224,22 @@ void TypeSemanticsLessonPage::draw_roadmap(
         draw_cairo_text(
             cr, node.title, node.x + node.width / 2.0, node.y + 24.0, 14.0, kInk,
             true, 0.5);
+
+        if (show_grade) {
+            // 难度走文字、掌握目标走配色：两个维度各占一个通道，不共用
+            // 一套视觉编码（ADR 0029、AGENTS.md）。
+            const char* goal_text = node.goal == MasteryGoal::Master ? "需要精通"
+                                  : node.goal == MasteryGoal::Required ? "必须掌握"
+                                  : node.goal == MasteryGoal::Familiar ? "一般了解"
+                                                                       : "未评定";
+            const string grade =
+                node.difficulty > 0
+                    ? "难度 " + to_string(node.difficulty) + " / 5 · " + goal_text
+                    : string(goal_text);
+            draw_cairo_text(
+                cr, grade, node.x + node.width / 2.0, node.y + 46.0, 11.0, kMuted,
+                false, 0.5);
+        }
 
         // 底部细条：当前熟练度。没有记录时留空槽，一眼看出哪几节还没开始。
         const double track_x = node.x + 14.0;
@@ -1345,6 +1376,9 @@ void TypeSemanticsLessonPage::draw_value_matrix(
 void TypeSemanticsLessonPage::refresh_progress(
     const map<string, int>& mastery_by_id) {
     rebuild_roadmap(mastery_by_id);
+    if (m_guide_roadmap) {
+        m_guide_roadmap->queue_draw();
+    }
     apply_tab_labels(mastery_by_id);
 }
 

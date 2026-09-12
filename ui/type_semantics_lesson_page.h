@@ -78,6 +78,7 @@ private:
         string name;      // subchapter name
         string title;
         MasteryGoal goal = MasteryGoal::Unrated;
+        int difficulty = 0;  // 1-5，0 表示尚未评定
         int mastery = 0;  // 0-5
         double x = 0.0;
         double y = 0.0;
@@ -93,8 +94,13 @@ private:
     void select_value_expression(ValueCategory category, const string& expression);
     void draw_value_matrix(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
+    // show_grade 为真时在节点上标出难度与掌握目标：导览那张图要回答"哪个重
+    // 哪个难"，大纲那张专注掌握目标与实时熟练度，两者维度互补不重复。
     void draw_roadmap(
-        const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+        const Cairo::RefPtr<Cairo::Context>& cr,
+        int width,
+        int height,
+        bool show_grade);
     void on_roadmap_pressed(double x, double y);
 
     void draw_deduction_graph(
@@ -116,6 +122,8 @@ private:
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::Label* m_page_title = nullptr;
     Gtk::DrawingArea* m_roadmap = nullptr;
+    // 导览页那张同源的图：同一批数据，另一组维度。
+    Gtk::DrawingArea* m_guide_roadmap = nullptr;
     Gtk::DrawingArea* m_value_matrix = nullptr;
     Gtk::Label* m_value_result_title = nullptr;
     Gtk::Label* m_value_result_detail = nullptr;
