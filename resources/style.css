@@ -272,6 +272,26 @@ box.learning-unit-feedback {
     background-color: @athena_surface;
 }
 
+/* === 图谱节点里的知识点掌握条 ===================================
+   一格一个知识点，按 requires 拓扑序排。章节卡片原来只有「掌握 1/7」这样的
+   汇总，看不出是哪一个过了；这条把每个知识点的熟练度画出来，悬停看成绩。
+   色阶用主色的不同深浅表示 0-5 星，和「完成程度」进度条同一个语义方向。 */
+.graph-point-strip {
+    margin-top: 6px;
+}
+.graph-point-cell {
+    min-width: 10px;
+    min-height: 8px;
+    border-radius: 3px;
+    background-color: @athena_border;
+}
+.graph-point-level-0 { background-color: #e9ecef; }
+.graph-point-level-1 { background-color: #cfe2ff; }
+.graph-point-level-2 { background-color: #9ec5fe; }
+.graph-point-level-3 { background-color: #6ea8fe; }
+.graph-point-level-4 { background-color: #3d8bfd; }
+.graph-point-level-5 { background-color: @athena_primary; }
+
 /* === 随堂考核 =========================================================
    和学习单元（.learning-unit）刻意不同色：那个是讲解里的单题预测，只影响
    本次阅读；这个是一节末尾的多题小测，成绩要落库。用中性底加左侧色条，

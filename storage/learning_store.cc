@@ -74,6 +74,7 @@ LearningStore::LearningStore(const string& database_path) {
         "  mastery INTEGER NOT NULL DEFAULT 0,"
         "  updated_at INTEGER NOT NULL DEFAULT 0)");
     migrate_legacy_status_column();
+    migrate_assessment_columns();
     execute(
         "CREATE TABLE IF NOT EXISTS app_settings ("
         "  key TEXT PRIMARY KEY,"
@@ -91,6 +92,21 @@ LearningStore::LearningStore(const string& database_path) {
     // 支持权限位）不影响数据库本身可用，不升级为异常。
     if (database_path != ":memory:") {
         chmod(database_path.c_str(), S_IRUSR | S_IWUSR);
+    }
+}
+
+// 记录最近一次评定的原始成绩。只存 mastery 的话，界面上只能显示一个星级，
+// 看不出"这 5 星是 8 题全对还是 2 题蒙对的"——考核结果要能查得到才有说服力。
+void LearningStore::migrate_assessment_columns() {
+    if (!table_has_column(m_handle.get(), "knowledge_progress", "last_correct")) {
+        execute(
+            "ALTER TABLE knowledge_progress "
+            "ADD COLUMN last_correct INTEGER NOT NULL DEFAULT 0");
+    }
+    if (!table_has_column(m_handle.get(), "knowledge_progress", "last_total")) {
+        execute(
+            "ALTER TABLE knowledge_progress "
+            "ADD COLUMN last_total INTEGER NOT NULL DEFAULT 0");
     }
 }
 
@@ -162,6 +178,71 @@ void LearningStore::save_mastery(const string& function_id, int mastery) {
     if (sqlite3_step(statement.raw) != SQLITE_DONE) {
         raise_sqlite_error(m_handle.get(), "save progress");
     }
+}
+
+void LearningStore::save_assessment(
+    const string& function_id, int mastery, int correct, int total) {
+    Statement statement(
+        m_handle.get(),
+        "INSERT INTO knowledge_progress"
+        "(function_id, mastery, last_correct, last_total, updated_at) "
+        "VALUES(?1, ?2, ?3, ?4, ?5) "
+        "ON CONFLICT(function_id) DO UPDATE SET "
+        "  mastery = excluded.mastery,"
+        "  last_correct = excluded.last_correct,"
+        "  last_total = excluded.last_total,"
+        "  updated_at = excluded.updated_at");
+    bind_text(m_handle.get(), statement.raw, 1, function_id);
+    if (sqlite3_bind_int(statement.raw, 2, mastery) != SQLITE_OK
+        || sqlite3_bind_int(statement.raw, 3, correct) != SQLITE_OK
+        || sqlite3_bind_int(statement.raw, 4, total) != SQLITE_OK
+        || sqlite3_bind_int64(statement.raw, 5, unix_seconds()) != SQLITE_OK) {
+        raise_sqlite_error(m_handle.get(), "bind assessment parameters");
+    }
+    if (sqlite3_step(statement.raw) != SQLITE_DONE) {
+        raise_sqlite_error(m_handle.get(), "save assessment");
+    }
+}
+
+LearningStore::Assessment LearningStore::load_assessment(
+    const string& function_id) const {
+    Statement statement(
+        m_handle.get(),
+        "SELECT mastery, last_correct, last_total, updated_at "
+        "FROM knowledge_progress WHERE function_id = ?1");
+    bind_text(m_handle.get(), statement.raw, 1, function_id);
+    if (sqlite3_step(statement.raw) == SQLITE_ROW) {
+        return Assessment{
+            .mastery = sqlite3_column_int(statement.raw, 0),
+            .correct = sqlite3_column_int(statement.raw, 1),
+            .total = sqlite3_column_int(statement.raw, 2),
+            .updated_at = sqlite3_column_int64(statement.raw, 3),
+        };
+    }
+    return {};
+}
+
+map<string, LearningStore::Assessment> LearningStore::load_all_assessments()
+    const {
+    Statement statement(
+        m_handle.get(),
+        "SELECT function_id, mastery, last_correct, last_total, updated_at "
+        "FROM knowledge_progress");
+    map<string, Assessment> result;
+    while (sqlite3_step(statement.raw) == SQLITE_ROW) {
+        const auto* id =
+            reinterpret_cast<const char*>(sqlite3_column_text(statement.raw, 0));
+        if (!id) {
+            continue;
+        }
+        result[id] = Assessment{
+            .mastery = sqlite3_column_int(statement.raw, 1),
+            .correct = sqlite3_column_int(statement.raw, 2),
+            .total = sqlite3_column_int(statement.raw, 3),
+            .updated_at = sqlite3_column_int64(statement.raw, 4),
+        };
+    }
+    return result;
 }
 
 map<string, int> LearningStore::load_all_mastery() const {

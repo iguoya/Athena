@@ -137,7 +137,7 @@ void mark_main_path(
 KnowledgeGraph build_knowledge_graph(
     const ChapterCatalog& catalog,
     const string& category_name,
-    const map<string, int>& mastery_by_id) {
+    const map<string, KnowledgeProgressRecord>& progress) {
     KnowledgeGraph graph;
 
     const auto category = catalog.chapters().find(category_name);
@@ -203,20 +203,31 @@ KnowledgeGraph build_knowledge_graph(
         int mastered = 0;
         int difficulty_sum = 0;
         int difficulty_count = 0;
+        vector<KnowledgePoint> points;
+        points.reserve(chapter.subchapters.size());
         for (const auto& subchapter : chapter.subchapters) {
-            int mastery = 0;
-            const auto record = mastery_by_id.find(subchapter.function_id);
-            if (record != mastery_by_id.end()) {
-                mastery = record->second;
+            KnowledgeProgressRecord record;
+            const auto found = progress.find(subchapter.function_id);
+            if (found != progress.end()) {
+                record = found->second;
             }
-            mastery_sum += mastery;
-            if (mastery >= kMaxMastery) {
+            mastery_sum += record.mastery;
+            if (record.mastery >= kMaxMastery) {
                 ++mastered;
             }
             if (subchapter.difficulty > 0) {
                 difficulty_sum += subchapter.difficulty;
                 ++difficulty_count;
             }
+            points.push_back(KnowledgePoint{
+                .name = subchapter.name,
+                .title = subchapter.title,
+                .difficulty = subchapter.difficulty,
+                .goal = subchapter.mastery_goal,
+                .mastery = record.mastery,
+                .last_correct = record.correct,
+                .last_total = record.total,
+            });
         }
         const int total = static_cast<int>(chapter.subchapters.size());
         const double completion =
@@ -238,6 +249,7 @@ KnowledgeGraph build_knowledge_graph(
                       difficulty_sum / static_cast<double>(difficulty_count)))
                 : 0,
             .completion = completion,
+            .points = std::move(points),
             .has_implementation = has_implementation[i] != 0,
             .on_main_path = node_on_path[i] != 0,
         });

@@ -428,12 +428,16 @@ void MainWindow::ensure_chapter_page(
                 experiment_requested,
                 // 随堂考核的成绩按知识点落库；页面不碰 LearningStore，
                 // 写库连同失败处理都留在这一层。
-                [this](const string& function_id, int mastery) {
+                [this](const string& function_id,
+                       int mastery,
+                       int correct,
+                       int total) {
                     if (!m_learning_store) {
                         return false;
                     }
                     try {
-                        m_learning_store->save_mastery(function_id, mastery);
+                        m_learning_store->save_assessment(
+                            function_id, mastery, correct, total);
                         refresh_progress_page();
                         return true;
                     } catch (const exception& error) {
@@ -531,17 +535,26 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
     }
 
     if (category_name == kCppCategory) {
-        std::map<string, int> mastery_by_id;
+        // 图谱要显示逐个知识点的掌握与考核成绩，所以取完整评定记录，
+        // 不只是熟练度数字。
+        std::map<string, KnowledgeProgressRecord> progress;
         if (m_learning_store) {
             try {
-                mastery_by_id = m_learning_store->load_all_mastery();
+                for (const auto& [function_id, assessment] :
+                     m_learning_store->load_all_assessments()) {
+                    progress[function_id] = KnowledgeProgressRecord{
+                        .mastery = assessment.mastery,
+                        .correct = assessment.correct,
+                        .total = assessment.total,
+                    };
+                }
             } catch (const exception& error) {
                 cerr << "Failed to load mastery stats: " << error.what()
                      << endl;
             }
         }
         spec.knowledge_graph = build_knowledge_graph(
-            m_catalog, category_name, mastery_by_id);
+            m_catalog, category_name, progress);
         spec.tools.push_back(
             {.key = kProgressPageKey,
              .title = "学习进度",

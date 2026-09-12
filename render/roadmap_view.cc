@@ -93,6 +93,9 @@ RoadmapView::RoadmapView(
       m_on_open(std::move(on_open)) {
     m_area = Gtk::make_managed<Gtk::DrawingArea>();
     m_area->set_hexpand(true);
+    // 必须 vexpand：宿主容器用 height-request 定高，DrawingArea 自身的
+    // 自然高度是 0，不撑开就整块空白。
+    m_area->set_vexpand(true);
     m_area->set_draw_func(
         [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             draw(cr, width, height);

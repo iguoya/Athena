@@ -20,6 +20,29 @@ using namespace std;
 //
 // 纯计算，不依赖 GTK；渲染在 render/knowledge_graph_view，与 progress_stats
 // / chart_view 的分工一致，可脱离 GTK 用 Google Test 验证。
+// 章节里单个知识点的当前状态，按配置顺序（已是 requires 的拓扑序）。
+// 章节卡片只给「掌握 1/7」这样的汇总，看不出是哪一个过了、哪几个还没开始；
+// 要判断"这一章我到底学到哪了"，得能看到逐个知识点。
+// 一条评定记录。和 LearningStore::Assessment 同形，但 registry 层不依赖
+// storage，各自定义，由调用方转换。
+struct KnowledgeProgressRecord {
+    int mastery = 0;
+    int correct = 0;
+    int total = 0;
+};
+
+struct KnowledgePoint {
+    string name;   // subchapter.name，回调按它定位
+    string title;
+    int difficulty = 0;  // 1-5，0 未评定
+    MasteryGoal goal = MasteryGoal::Unrated;
+    int mastery = 0;     // 0-5
+    // 最近一次评定的原始成绩，total 为 0 表示还没考过。只显示星级说不清
+    // "这 5 星是 8 题全对还是 2 题蒙的"。
+    int last_correct = 0;
+    int last_total = 0;
+};
+
 struct KnowledgeNode {
     string chapter_name; // 稳定 name，回调按它定位章节
     string title;
@@ -34,6 +57,7 @@ struct KnowledgeNode {
     // 这是章节卡片的汇总展示，不在 athena.json 里重复保存章节级字段。
     int difficulty = 0;
     double completion = 0.0; // 平均熟练度 / 5，落在 [0, 1]
+    vector<KnowledgePoint> points;  // 逐个知识点的明细
     bool has_implementation = false;
     bool on_main_path = false;
 };
@@ -52,11 +76,11 @@ struct KnowledgeGraph {
     bool empty() const { return nodes.empty(); }
 };
 
-// mastery_by_id：function_id -> 熟练度（0-5），只含有过记录的知识点，缺失
-// 按 0 处理（与 aggregate_category_progress 口径一致）。分类不存在或没有
+// progress：function_id -> 该知识点的评定记录，只含有过记录的知识点，缺失
+// 按未开始处理（与 aggregate_category_progress 口径一致）。分类不存在或没有
 // 章节时返回空图。生成器已保证前置引用合法且无环；万一成环，环上节点
 // 按 layer 0 处理，不递归爆栈。
 KnowledgeGraph build_knowledge_graph(
     const ChapterCatalog& catalog,
     const string& category_name,
-    const map<string, int>& mastery_by_id);
+    const map<string, KnowledgeProgressRecord>& progress);

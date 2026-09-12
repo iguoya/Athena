@@ -36,9 +36,10 @@ public:
         const Glib::RefPtr<Gtk::Builder>& builder,
         const map<string, int>& mastery_by_id,
         function<void(const ExperimentSelection&, bool)> on_experiment_requested,
-        // 随堂考核答完后回写熟练度（完整函数 ID，0-5 星），返回是否落库成功。
-        // 页面不持有 LearningStore：写库属于持久化层，这里只交出结果。
-        function<bool(const string&, int)> on_mastery_recorded);
+        // 随堂考核答完后回写评定结果（完整函数 ID、0-5 星、答对数、总题数），
+        // 返回是否落库成功。页面不持有 LearningStore：写库属于持久化层，
+        // 这里只交出结果。
+        CheckpointView::OnScored on_mastery_recorded);
 
     ~TypeSemanticsLessonPage();
 
@@ -100,7 +101,7 @@ private:
     unique_ptr<RoadmapView> m_guide_roadmap;
     vector<unique_ptr<Checkpoint>> m_checkpoint_data;
     vector<unique_ptr<CheckpointView>> m_checkpoint_views;
-    function<bool(const string&, int)> m_on_mastery_recorded;
+    CheckpointView::OnScored m_on_mastery_recorded;
 
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::Label* m_page_title = nullptr;

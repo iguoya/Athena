@@ -43,12 +43,15 @@ struct Checkpoint {
 // 点击不该变成长期掌握度，多题才作数。
 class CheckpointView final {
 public:
-    // on_mastery_changed 在答完全部题目后调用一次，参数是换算出的 0-5 星，
-    // 返回是否成功持久化（写库失败时界面要如实说明，不能假装存上了）。
-    // on_verify_requested 打开对应的专注实验。两个回调都可以为空。
+    // 答完全部题目后调用一次：知识点 ID、换算出的 0-5 星、答对题数、总题数。
+    // 成绩一并回传是因为光存星级说不清"这 5 星是 8 题全对还是 2 题蒙的"，
+    // 图谱和标签都要显示依据。返回是否成功持久化（写库失败时界面要如实
+    // 说明，不能假装存上了）。on_verify_requested 打开对应的专注实验。
+    using OnScored =
+        function<bool(const string& knowledge_id, int mastery, int correct, int total)>;
     CheckpointView(
         const Checkpoint& checkpoint,
-        function<bool(const string&, int)> on_mastery_changed,
+        OnScored on_mastery_changed,
         function<void(const string&)> on_verify_requested);
 
     Gtk::Widget& widget() const;
@@ -62,7 +65,7 @@ private:
     void finish();
 
     const Checkpoint& m_checkpoint;
-    function<bool(const string&, int)> m_on_mastery_changed;
+    OnScored m_on_mastery_changed;
     function<void(const string&)> m_on_verify_requested;
 
     Glib::RefPtr<Gtk::Builder> m_builder;

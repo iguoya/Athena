@@ -36,6 +36,19 @@ public:
 
     int load_mastery(const string& function_id) const;
     void save_mastery(const string& function_id, int mastery);
+
+    // 最近一次评定的原始成绩：correct / total 为 0 表示还没考过。
+    // 光有星级说不清"这 5 星是怎么来的"，界面要能显示依据。
+    struct Assessment {
+        int mastery = 0;
+        int correct = 0;
+        int total = 0;
+        long long updated_at = 0;
+    };
+    Assessment load_assessment(const string& function_id) const;
+    void save_assessment(
+        const string& function_id, int mastery, int correct, int total);
+    map<string, Assessment> load_all_assessments() const;
     // 学习进度统计页一次性批量读取全部知识点的熟练度，避免逐个
     // function_id 单独查询；只返回有过记录的条目，未评的知识点不在
     // 返回结果里（调用方按 0 处理）。
@@ -69,6 +82,7 @@ private:
     // 不再读写，不做 DROP COLUMN 迁移。旧库的 run_history 表也保持原样，
     // 不删除、不迁移、不再追加。
     void migrate_legacy_status_column();
+    void migrate_assessment_columns();
 
     unique_ptr<sqlite3, Sqlite3Deleter> m_handle;
 };

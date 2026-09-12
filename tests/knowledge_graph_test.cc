@@ -127,17 +127,27 @@ TEST(KnowledgeGraphTest, EdgesPointFromPrerequisiteToDependent) {
 
 TEST(KnowledgeGraphTest, MasteryAggregatesPerChapter) {
     const auto catalog = MakeCatalog();
-    // A 的两个知识点：一个 5 星、一个 3 星 → mastered 1，completion 0.8。
-    const map<string, int> mastery = {
-        {"cpp.A.a1", 5},
-        {"cpp.A.a2", 3},
+    // A 的两个知识点：一个 5 星（考核 8/8）、一个 3 星（考核 5/8）
+    // → mastered 1，completion 0.8。
+    const map<string, KnowledgeProgressRecord> progress = {
+        {"cpp.A.a1", {.mastery = 5, .correct = 8, .total = 8}},
+        {"cpp.A.a2", {.mastery = 3, .correct = 5, .total = 8}},
     };
-    const auto graph = build_knowledge_graph(catalog, "cpp", mastery);
+    const auto graph = build_knowledge_graph(catalog, "cpp", progress);
 
     const auto& a = NodeNamed(graph, "A");
     EXPECT_EQ(a.total, 2);
     EXPECT_EQ(a.mastered, 1);
     EXPECT_NEAR(a.completion, 0.8, 1e-9);
+
+    // 汇总之外还要能看到逐个知识点：只给「掌握 1/2」看不出是哪一个过了。
+    ASSERT_EQ(a.points.size(), 2u);
+    EXPECT_EQ(a.points[0].name, "a1");
+    EXPECT_EQ(a.points[0].mastery, 5);
+    EXPECT_EQ(a.points[0].last_correct, 8);
+    EXPECT_EQ(a.points[0].last_total, 8);
+    EXPECT_EQ(a.points[1].mastery, 3);
+    EXPECT_EQ(a.points[1].last_total, 8);
     EXPECT_EQ(a.difficulty, 4); // (2 + 5) / 2 = 3.5，四舍五入为 4。
     EXPECT_EQ(a.description, "测试章节");
     EXPECT_EQ(a.icon.name, "test");

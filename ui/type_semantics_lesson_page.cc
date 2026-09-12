@@ -99,7 +99,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const Glib::RefPtr<Gtk::Builder>& builder,
     const map<string, int>& mastery_by_id,
     function<void(const ExperimentSelection&, bool)> on_experiment_requested,
-    function<bool(const string&, int)> on_mastery_recorded)
+    CheckpointView::OnScored on_mastery_recorded)
     : m_chapter(chapter),
       m_on_experiment_requested(std::move(on_experiment_requested)),
       m_on_mastery_recorded(std::move(on_mastery_recorded)) {

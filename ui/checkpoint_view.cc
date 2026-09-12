@@ -9,7 +9,7 @@ using namespace std;
 
 CheckpointView::CheckpointView(
     const Checkpoint& checkpoint,
-    function<bool(const string&, int)> on_mastery_changed,
+    OnScored on_mastery_changed,
     function<void(const string&)> on_verify_requested)
     : m_checkpoint(checkpoint),
       m_on_mastery_changed(std::move(on_mastery_changed)),
@@ -188,7 +188,8 @@ void CheckpointView::finish() {
     const int mastery = mastery_from_quiz_score(m_correct, total);
     bool saved = false;
     if (m_on_mastery_changed) {
-        saved = m_on_mastery_changed(m_checkpoint.knowledge_id, mastery);
+        saved = m_on_mastery_changed(
+            m_checkpoint.knowledge_id, mastery, m_correct, total);
     }
     m_score->set_text(
         "本次成绩：" + to_string(m_correct) + " / " + to_string(total)

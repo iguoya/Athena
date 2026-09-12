@@ -176,6 +176,39 @@ Gtk::Button* make_node_button(
         "graph-completion-" + to_string(completion_level(node.completion)));
     content->append(*completion);
 
+    // 逐个知识点的掌握条：一格一个知识点，按配置顺序（= requires 拓扑序）。
+    // 只给「掌握 1/7」这样的汇总，看不出是哪一个过了、哪几个还没开始——
+    // 要判断"这一章我学到哪了"，得能看到逐个知识点（ADR 0033：能由数据
+    // 算出来的就画成活的）。
+    if (!node.points.empty()) {
+        auto* strip = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 3);
+        strip->add_css_class("graph-point-strip");
+        for (const auto& point : node.points) {
+            auto* cell = Gtk::make_managed<Gtk::Label>();
+            cell->add_css_class("graph-point-cell");
+            cell->add_css_class(
+                "graph-point-level-" + to_string(clamp(point.mastery, 0, 5)));
+            cell->set_hexpand(true);
+
+            string detail = point.title;
+            if (point.difficulty > 0) {
+                detail += "  难度 " + to_string(point.difficulty) + "/5";
+            }
+            detail += "  " + mastery_goal_label(point.goal);
+            detail += point.mastery > 0
+                ? "\n熟练度 " + to_string(point.mastery) + "/5"
+                : string("\n尚未开始");
+            // 成绩是星级的依据：不写出来就说不清这 5 星是怎么来的。
+            if (point.last_total > 0) {
+                detail += "（最近考核 " + to_string(point.last_correct) + "/"
+                          + to_string(point.last_total) + "）";
+            }
+            cell->set_tooltip_text(detail);
+            strip->append(*cell);
+        }
+        content->append(*strip);
+    }
+
     button->set_child(*content);
     string tooltip = node.title + "\n" + node.description;
     if (node.on_main_path) {
@@ -190,6 +223,16 @@ Gtk::Button* make_node_button(
         "\n掌握程度：" + to_string(node.mastered) + "/" +
         to_string(node.total) + "\n完成程度：" +
         to_string(static_cast<int>(lround(node.completion * 100))) + "%";
+    for (const auto& point : node.points) {
+        tooltip += "\n· " + point.title + "：";
+        tooltip += point.mastery > 0
+            ? to_string(point.mastery) + "/5 星"
+            : string("尚未开始");
+        if (point.last_total > 0) {
+            tooltip += "，考核 " + to_string(point.last_correct) + "/"
+                       + to_string(point.last_total);
+        }
+    }
     button->set_tooltip_text(tooltip);
     button->signal_clicked().connect(
         [on_open, chapter_name = node.chapter_name]() {
@@ -360,6 +403,12 @@ Gtk::Widget* make_legend() {
     content->append(*legend_row("graph-mastery-none", "尚无 5 星知识点"));
     content->append(*legend_row("graph-mastery-some", "已有部分达到 5 星"));
     content->append(*legend_row("graph-mastery-all", "本章知识点全部 5 星"));
+
+    add_heading("逐个知识点");
+    add_note(
+        "卡片底部一格一个知识点，按先修顺序排；越蓝熟练度越高，浅灰是还没"
+        "开始。汇总数字看不出是哪一个过了，这条能。悬停某一格看它的难度、"
+        "掌握目标和最近一次考核成绩。");
 
     add_heading("完成程度");
     add_note("按本章平均熟练度 ÷ 5 计算；1–4 星同样计入进度。蓝色越深，完成度越高。");
