@@ -243,6 +243,29 @@ button.learning-unit-choice {
     min-height: 0;
     padding: 8px 12px;
 }
+
+/* 选中态必须一眼可辨。GTK 默认只给一圈很淡的边框，在这种成排的窄按钮上
+   几乎看不出选了哪项——答题时看不出自己的选择，是很实在的缺陷。
+   这是控件状态反馈，不是给正文文字铺底色。 */
+button.learning-unit-choice:checked {
+    background-color: @athena_primary_soft;
+    border-color: @athena_primary;
+    color: @athena_primary_text;
+    font-weight: 600;
+}
+
+/* 判分后的标注：答错时光说"不对"还不够，得让人直接看到哪个才对。 */
+button.learning-unit-choice.choice-correct {
+    background-color: alpha(@athena_success, 0.16);
+    border-color: @athena_success;
+    color: #0f5132;
+    font-weight: 600;
+}
+button.learning-unit-choice.choice-wrong {
+    background-color: alpha(@athena_danger, 0.12);
+    border-color: @athena_danger;
+    color: #842029;
+}
 box.learning-unit-feedback {
     padding: 12px;
     border-radius: 8px;

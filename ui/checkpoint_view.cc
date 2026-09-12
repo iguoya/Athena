@@ -147,6 +147,16 @@ void CheckpointView::submit() {
         ++m_correct;
     }
 
+    // 标出正确答案；答错时同时标出选错的那一项。只说"不对"而不指出哪个才对，
+    // 读者还得回头自己找，考核的反馈价值就打了折。
+    if (question.correct_choice < m_choice_buttons.size()) {
+        m_choice_buttons[question.correct_choice]->add_css_class(
+            "choice-correct");
+    }
+    if (!right && *m_selected_choice < m_choice_buttons.size()) {
+        m_choice_buttons[*m_selected_choice]->add_css_class("choice-wrong");
+    }
+
     m_verdict->set_text(right ? "答对了" : "不对");
     m_verdict->remove_css_class("correct");
     m_verdict->remove_css_class("incorrect");
