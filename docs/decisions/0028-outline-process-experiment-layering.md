@@ -15,9 +15,9 @@
 `chapter.overview_document`、`category.handbook_documents` 和分类手册。凡提到"Markdown
 文档"「收录在 handbook_documents 内」之处，一律读作"该章原生大纲标签"。
 
-[ADR 0036](0036-lesson-brief.md) 在大纲之前加了一个「简纲」标签。它**不是第四层
-内容**，是第一层的另一种呈现密度——信息同源，只留标签、删掉解释——所以本 ADR 的
-三层分工不变。
+[ADR 0036](0036-chapter-guide-first.md) 把已有的「本章导览」标签提到大纲之前，
+职能是极简概要（以图为主，只给结构不给理由）。它**不是第四层内容**，是第一层的
+另一种呈现密度，信息与大纲同源，所以本 ADR 的三层分工不变。
 
 ## 背景
 

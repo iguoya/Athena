@@ -256,7 +256,7 @@ subchapter.name -> C++ 成员函数名
 ### 6.2 教学大纲（在章节的 `.blp` 里）
 
 章节的**教学大纲**不是配置字段，也不是文档：它是该章 Blueprint 里 Notebook 的一个
-标签，标题就叫「教学大纲」，排在「简纲」（ADR 0036）之后，例如
+标签，标题就叫「教学大纲」，排在「本章导览」（ADR 0036）之后，例如
 `resources/ui/chapters/type_semantics_lesson.blp`。[ADR 0034](decisions/0034-remove-markdown-handbook.md)
 删除了 Markdown 手册整条路线，`category.handbook_documents`、
 `chapter.overview_document`、`subchapter.teaches` 和 `chapter.learning_units`
@@ -284,9 +284,9 @@ API 用法细节，也不绑定练习或实验——细节由学习页的后续�
 `resources/articles/<分类>/images/` 下的静态 SVG。参考实现见
 `resources/ui/chapters/type_semantics_lesson.blp` 的「教学大纲」标签。
 
-按 [ADR 0036](decisions/0036-lesson-brief.md)，大纲之前还有一个「简纲」标签：它是
-大纲的压缩视图，只留标签、删掉解释，一屏看完，每条可点击跳回大纲或对应知识点。
-简纲里的每一条都必须是大纲里已有的标题或标签，不得引入大纲没有的说法。
+按 [ADR 0036](decisions/0036-chapter-guide-first.md)，大纲之前还有一个「本章导览」
+标签：它是极简概要，以图为主，只给结构不给理由——不写为什么这样分、不写难度评定
+理由、不举例。导览里的说法必须与大纲同源，不得引入大纲之外的新判断。
 
 界面里的"说明文档"按钮不再跳转到任何静态文档：它复制章节标题、简介和全部知识点
 信息到剪贴板并唤起本机 AI 助手（`ui/chapter_overview.h`），跟未配置

@@ -319,8 +319,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     // 而两者都服从教学大纲给出的推荐顺序——它就是知识点 requires 关系的拓扑序。
     // 大纲是方向决策层：页面顺序跟着它改，不是反过来。
     m_section_tabs = {
-        {"教学大纲", {}},
         {"本章导览", {}},
+        {"教学大纲", {}},
         {"初始化", {"initialization"}},
         {"对象生命周期", {"object_lifetime"}},
         {"类型推导", {"auto_deduction"}},

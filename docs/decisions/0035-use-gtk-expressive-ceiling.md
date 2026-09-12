@@ -29,26 +29,44 @@ Cairo 画静态图形没有问题，但它没有合成层：要让一条路径�
 要做两种写法的淡入淡出对照，只能自己插值再逐帧重绘。**这不是 GTK 的上限，是我们没有
 用到的那部分。**
 
-## `Snapshot` 到底能给什么——先说清楚，免得误解
+## 先说清楚：这是叠加，不是替代
 
-`Gtk::Snapshot` **不是"更强的 Cairo"**。它是场景图的组装接口：把绘制结果打包成节点树
-交给 GSK 合成，节点不变的部分可以被缓存和复用。它本身**没有路径绘制 API**。
+**现有的可视化一个都不会动。** 静态 SVG 思维导图（`.blp` 里的 `Picture` 引用
+`resources/articles/cpp/images/*.svg`）、Cairo 画的知识图谱和学科图谱、Cairo 画的
+环形图与直方图、`GtkSourceView` 的源码高亮——本 ADR 不碰其中任何一个，它们该怎么画
+还怎么画。
 
-gtkmm 4.22 实际绑定出来的 `append_*` 只有八个：`append_cairo`、`append_color`、
-`append_layout`、`append_texture`、`append_scaled_texture`、`append_inset_shadow`、
-`append_outset_shadow`、`append_paste`。C API 里的渐变和 fill/stroke 路径节点**没有
-C++ 包装**，不要按 C 文档去写。
+`Gtk::Snapshot` 是**在现有绘制之外新增的一层合成能力**，不是替换绘制方式的方案。
+迁移一个视图的意思是：原来的 Cairo 绘制代码几乎原样搬进 `append_cairo()` 里，外面
+套上 `push_opacity` / `push_cross_fade` 这类此前做不到的合成动作。图还是那些图，
+多出来的是"两张图能淡入淡出地换"和"一条路径能亮起来、其余虚化"。
 
-真正的收益在 `push_*` 这一侧：`push_opacity`、`push_blur`、`push_cross_fade`、
-`push_mask`、`push_clip`、`push_rounded_clip`、`push_blend`，以及 `translate` /
-`rotate` / `scale` 变换栈。
+换句话说：
 
-所以结论是：
+```
+现在：   Cairo 画一幅完整的图 → 屏幕
+迁移后： Cairo 画各个部分 → Snapshot 分层组合（可淡入/虚化/变换）→ 屏幕
+```
+
+不存在"要 Snapshot 就得放弃 Cairo"的取舍，也不存在"迁过去图就没了"的风险。
+
+## 它的边界——写清楚免得按 C 文档踩空
+
+`Snapshot` 是场景图的组装接口，本身**没有路径绘制 API**。gtkmm 4.22 实际绑定出来的
+`append_*` 只有八个：`append_cairo`、`append_color`、`append_layout`、`append_texture`、
+`append_scaled_texture`、`append_inset_shadow`、`append_outset_shadow`、`append_paste`。
+C API 里的渐变和 fill/stroke 路径节点**没有 C++ 包装**，照抄 C 文档会写不出来。
+
+真正的能力在 `push_*` 一侧：`push_opacity`、`push_blur`、`push_cross_fade`、`push_mask`、
+`push_clip`、`push_rounded_clip`、`push_blend`，以及 `translate` / `rotate` / `scale`
+变换栈。
+
+所以分工是：
 
 - **画什么**——曲线、贝塞尔边、弧线、渐变，仍然是 Cairo 的活，通过
   `append_cairo(bounds)` 拿到 `Cairo::Context` 照旧画。
 - **怎么合成、怎么动**——透明度、虚化、交叉淡入、遮罩、圆角裁剪、位移与缩放动画，
-  交给 `Snapshot`，不要再自己在 Cairo 里手算。
+  交给 `Snapshot`，不要再自己在 Cairo 里手算离屏合成。
 
 ## 决策
 
