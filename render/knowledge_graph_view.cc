@@ -196,11 +196,24 @@ Gtk::Button* make_node_button(
             name->add_css_class("graph-point-name");
             row->append(*name);
 
-            // 掌握程度写成星级，未开始就直说，不用一个含糊的圆点代替。
+            // 掌握程度用进度条，和章节级的「完成程度」同一种视觉语言：
+            // 一眼能横向比出哪几个知识点落后，比读数字快。
+            auto* bar = Gtk::make_managed<Gtk::ProgressBar>();
+            bar->set_fraction(clamp(point.mastery, 0, 5) / 5.0);
+            bar->set_show_text(false);
+            bar->set_valign(Gtk::Align::CENTER);
+            bar->set_size_request(84, -1);
+            bar->add_css_class("graph-point-bar");
+            bar->add_css_class(
+                "graph-point-level-" + to_string(clamp(point.mastery, 0, 5)));
+            row->append(*bar);
+
+            // 条旁边仍写出数值：进度条看趋势，数字给准确值，未开始就直说。
             auto* level = Gtk::make_managed<Gtk::Label>(
-                point.mastery > 0 ? to_string(point.mastery) + " / 5 星"
+                point.mastery > 0 ? to_string(point.mastery) + "/5"
                                   : string("未开始"));
             level->set_halign(Gtk::Align::END);
+            level->set_size_request(48, -1);
             level->add_css_class("graph-point-level");
             level->add_css_class(
                 "graph-point-level-" + to_string(clamp(point.mastery, 0, 5)));

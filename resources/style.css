@@ -285,6 +285,30 @@ box.learning-unit-feedback {
     font-size: 0.78em;
     color: @athena_body_text;
 }
+/* 知识点进度条：比章节级的「完成程度」细一档，视觉上分出主次。 */
+progressbar.graph-point-bar trough,
+progressbar.graph-point-bar progress {
+    min-height: 6px;
+    border-radius: 3px;
+}
+progressbar.graph-point-bar trough {
+    background-color: #e9ecef;
+}
+progressbar.graph-point-bar.graph-point-level-0 progress {
+    background-color: transparent;
+}
+progressbar.graph-point-bar.graph-point-level-1 progress,
+progressbar.graph-point-bar.graph-point-level-2 progress {
+    background-color: #6ea8fe;
+}
+progressbar.graph-point-bar.graph-point-level-3 progress,
+progressbar.graph-point-bar.graph-point-level-4 progress {
+    background-color: #3d8bfd;
+}
+progressbar.graph-point-bar.graph-point-level-5 progress {
+    background-color: @athena_primary;
+}
+
 .graph-point-level {
     font-size: 0.78em;
     font-weight: 600;
