@@ -2854,6 +2854,40 @@ Box type_semantics_lesson_page {
             }
           }
 
+          // 这一节的收束。随堂考核逐题验证单点判断，给不了"两条规则怎么串成
+          // 一个判断动作"和"学到哪里为止"——那正是这一节掌握目标只到「一般
+          // 了解」时最需要说清的东西，所以小结和考核并存，不是二选一。
+          Frame {
+            label: "小结：先看括号，再看它问的是谁";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 14;
+              margin-bottom: 14;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "拿到一个 decltype，判断分两步：先看有没有多那层括号——没有就是名字，取它的声明类型；有就成了表达式，按值类别取，左值 T&amp;、将亡值 T&amp;&amp;、纯右值 T。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                use-markup: true;
+                label: "和 auto 的分工按你要什么来选：<span bgcolor='#fff3cd'>要一份可以单独动的新数据，用 auto</span>；<span bgcolor='#fff3cd'>要这一处的类型跟着别处走、连引用和 const 一起保留，用 decltype</span>。auto 站在新变量的立场，decltype 站在「它本来是什么」的立场。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+              Label {
+                label: "这一节到此为止：能说出它解决哪类问题、和 auto 分工在哪、两条规则各管什么，就达到了本章对它的要求。引用折叠、完美转发、decltype(auto) 这些要等「模板、泛型与编译期」那一章真正写泛型代码时再回来补——那时你会需要这套判断，现在不会。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
           // 随堂考核挂载点：CheckpointView 由 TypeSemanticsLessonPage 填入。
           Box type_semantics_decltype_checkpoint_host {
             name: "type_semantics_decltype_checkpoint_host";
