@@ -1,0 +1,122 @@
+{
+  "topic_id": "en.intermediate.sentence.clause_and_reference",
+  "kind": "sentence",
+  "items": [
+    {
+      "id": "en.sentence.s1",
+      "kind": "clause_split",
+      "text": "Critics attribute the decline to weaker demand rather than to new technology, which they maintain has been overstated.",
+      "vocab": ["en.vocab.attribute", "en.vocab.decline", "en.vocab.maintain"],
+      "prompt": "which 指的是什么？主句在主张什么？",
+      "choices": [
+        {
+          "label": "which = new technology；主句把下降归因于需求变弱",
+          "ok": true,
+          "why": "rather than 后面的 new technology 是最近、也说得通的先行词；they maintain 是插入的主张。"
+        },
+        {
+          "label": "which = the decline；主句在夸新技术",
+          "ok": false,
+          "why": "decline 离 which 远，而且“下降被夸大”和 rather than 的对比对不上。"
+        },
+        {
+          "label": "which = weaker demand；主句否认有下降",
+          "ok": false,
+          "why": "主句承认有 decline，只是改原因。"
+        },
+        {
+          "label": "which 没有先行词，只是语气词",
+          "ok": false,
+          "why": "这类 which 几乎总有名词先行词。"
+        }
+      ]
+    },
+    {
+      "id": "en.sentence.s2",
+      "kind": "clause_split",
+      "text": "Many graduates still lack access to reliable career advice, even though universities maintain that such support is already substantial.",
+      "vocab": ["en.vocab.access", "en.vocab.maintain", "en.vocab.substantial"],
+      "prompt": "even though 前后两层各说什么？",
+      "choices": [
+        {
+          "label": "前：毕业生仍得不到可靠建议；后：校方坚称支持已经够多",
+          "ok": true,
+          "why": "even though 让步：承认校方说法存在，但不取消前半句的事实。"
+        },
+        {
+          "label": "前：毕业生拒绝建议；后：校方承认支持不够",
+          "ok": false,
+          "why": "lack access 不是拒绝；maintain that … is substantial 是坚称够，不是承认不够。"
+        },
+        {
+          "label": "两层在说同一件事，后半只是换词",
+          "ok": false,
+          "why": "前后立场相反，是让步，不是换述。"
+        },
+        {
+          "label": "substantial 在这里是“固体的”，与建议无关",
+          "ok": false,
+          "why": "support is substantial = 支持的分量够。"
+        }
+      ]
+    },
+    {
+      "id": "en.sentence.s3",
+      "kind": "reference",
+      "text": "A different picture emerges when we look at older workers: they are less likely to change jobs, even when pay is low.",
+      "vocab": ["en.vocab.emerge"],
+      "prompt": "they 指谁？冒号后面和前面是什么关系？",
+      "choices": [
+        {
+          "label": "they = older workers；冒号后具体说明“另一幅图景”",
+          "ok": true,
+          "why": "最近的复数名词是 older workers；冒号常用来展开 picture。"
+        },
+        {
+          "label": "they = jobs；冒号表示转折反对前句",
+          "ok": false,
+          "why": "jobs 不是人，不能 they are less likely to change jobs。"
+        },
+        {
+          "label": "they = we；冒号引出作者自己的经历",
+          "ok": false,
+          "why": "we 是观察者，不是被描述的工人。"
+        },
+        {
+          "label": "they 泛指年轻人",
+          "ok": false,
+          "why": "when we look at older workers 已经限定对象。"
+        }
+      ]
+    },
+    {
+      "id": "en.sentence.s4",
+      "kind": "meaning",
+      "text": "Age remains a significant factor in who gets promoted; nevertheless, training can still open doors that seniority alone cannot.",
+      "vocab": ["en.vocab.significant", "en.vocab.nevertheless"],
+      "prompt": "用自己的话，这句在主张什么？",
+      "choices": [
+        {
+          "label": "年龄仍很要紧，但培训仍能打开资历打不开的门",
+          "ok": true,
+          "why": "nevertheless 承认年龄重要，再补一条不被取消的出路。"
+        },
+        {
+          "label": "年龄已经不重要，培训可以完全取代资历",
+          "ok": false,
+          "why": "remains a significant factor 否定了“已经不重要”。"
+        },
+        {
+          "label": "培训没有用，只有资历决定晋升",
+          "ok": false,
+          "why": "后半句明确说 training can still open doors。"
+        },
+        {
+          "label": "作者在讨论医疗里的年龄因素",
+          "ok": false,
+          "why": "who gets promoted 是职场晋升，不是医疗。"
+        }
+      ]
+    }
+  ]
+}

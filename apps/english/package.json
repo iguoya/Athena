@@ -1,0 +1,24 @@
+{
+  "name": "athena-english",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "build:app": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build && node scripts/install-bin.mjs",
+    "dev:app": "bash scripts/dev.sh"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "typescript": "~5.8.3",
+    "vite": "^6.0.3"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "topic_id": "en.advanced.sentence.passage_logic",
+  "kind": "passage",
+  "title": "工作与选择",
+  "vocab": [
+    "en.vocab.substantial",
+    "en.vocab.access",
+    "en.vocab.emerge",
+    "en.vocab.attribute",
+    "en.vocab.decline",
+    "en.vocab.maintain",
+    "en.vocab.significant",
+    "en.vocab.nevertheless"
+  ],
+  "items": [
+    {
+      "id": "en.passage.work_and_choice.q1",
+      "kind": "main_idea",
+      "prompt": "这篇短文的主旨更接近哪一句？",
+      "choices": [
+        {
+          "label": "职业选择受信息、时机和对风险的看法约束，不只是“追随热情”",
+          "ok": true,
+          "why": "首段破“热情决定论”，末段收在 choice is never made in a vacuum。"
+        },
+        {
+          "label": "年轻人只要敢于换工作就能解决晋升问题",
+          "ok": false,
+          "why": "文中老年人反而不爱换工作；作者也没有把换工作写成万能药。"
+        },
+        {
+          "label": "雇主完全否认市场需求在下降",
+          "ok": false,
+          "why": "雇主 maintain 的是“习惯”，这是对照，不是全文主旨。"
+        },
+        {
+          "label": "培训已经取代了资历",
+          "ok": false,
+          "why": "nevertheless 承认年龄仍重要，培训只是仍能开门。"
+        }
+      ]
+    },
+    {
+      "id": "en.passage.work_and_choice.q2",
+      "kind": "detail",
+      "prompt": "作者认为许多毕业生接受第一份稳定工作，直接原因是？",
+      "choices": [
+        {
+          "label": "他们缺少关于不同工作实际要求的可靠信息",
+          "ok": true,
+          "why": "第一段：lack access to reliable information about what different jobs actually demand。"
+        },
+        {
+          "label": "他们没有野心",
+          "ok": false,
+          "why": "原文写 not because they lack ambition。"
+        },
+        {
+          "label": "雇主拒绝招应届生",
+          "ok": false,
+          "why": "文中没有这条。"
+        },
+        {
+          "label": "培训机会已经被年长员工占满",
+          "ok": false,
+          "why": "培训出现在末段，不是首段的原因。"
+        }
+      ]
+    },
+    {
+      "id": "en.passage.work_and_choice.q3",
+      "kind": "vocab_in_passage",
+      "prompt": "第二段里 maintain 的主语是谁，主张什么？",
+      "choices": [
+        {
+          "label": "Employers；主张真正的问题是习惯，而不是需求",
+          "ok": true,
+          "why": "however 一转，maintain that the real problem is habit。"
+        },
+        {
+          "label": "Critics；主张习惯导致了下降",
+          "ok": false,
+          "why": "Critics attribute … to weaker demand，用的是 attribute，不是 maintain。"
+        },
+        {
+          "label": "Older workers；主张自己不该换工作",
+          "ok": false,
+          "why": "年长员工是被观察对象，不是这个动词的主语。"
+        },
+        {
+          "label": "Young people；主张热情已经过时",
+          "ok": false,
+          "why": "年轻人出现在第一段，不接 maintain。"
+        }
+      ]
+    }
+  ]
+}

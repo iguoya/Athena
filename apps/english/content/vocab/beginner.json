@@ -1,0 +1,64 @@
+{
+  "topic_id": "en.beginner.vocab.core",
+  "kind": "vocab",
+  "items": [
+    {
+      "id": "en.beginner.vocab.provide",
+      "word": "provide",
+      "sentence": "The library provides students with a quiet place to study.",
+      "prompt": "provide students with a quiet place 在说什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "为学生提供安静的学习地点", "ok": true, "why": "provide A with B 表示给 A 提供 B。" },
+        { "label": "要求学生保持安静", "ok": false, "why": "句中没有 require；provide 表示提供。" },
+        { "label": "阻止学生进入图书馆", "ok": false, "why": "句意与 provides 相反。" }
+      ],
+      "variants": [
+        {
+          "sentence": "The course provides beginners with several useful examples.",
+          "prompt": "这句话中被提供的内容是什么？",
+          "choices": [
+            { "label": "several useful examples", "ok": true, "why": "provide beginners with 后面的内容就是所提供的东西。" },
+            { "label": "beginners", "ok": false, "why": "beginners 是接受者。" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.affect",
+      "word": "affect",
+      "sentence": "Sleep can affect how well students remember new words.",
+      "prompt": "affect 在这里表示什么？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "影响", "ok": true, "why": "睡眠会影响学生记忆新词的效果。" },
+        { "label": "证明", "ok": false, "why": "prove 才是证明。" },
+        { "label": "避免", "ok": false, "why": "avoid 才是避免。" }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.result",
+      "word": "result",
+      "sentence": "Regular practice often results in better performance.",
+      "prompt": "result in 在这句话中表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "导致", "ok": true, "why": "result in 后接结果。" },
+        { "label": "起因于", "ok": false, "why": "result from 才表示起因于。" },
+        { "label": "反对", "ok": false, "why": "这里表达因果，不是立场。" }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.opportunity",
+      "word": "opportunity",
+      "sentence": "Online courses give workers an opportunity to learn at home.",
+      "prompt": "an opportunity to learn 指什么？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "学习的机会", "ok": true, "why": "opportunity to do 表示做某事的机会。" },
+        { "label": "学习的义务", "ok": false, "why": "obligation 才是义务。" },
+        { "label": "学习的结果", "ok": false, "why": "result 才是结果。" }
+      ]
+    }
+  ]
+}

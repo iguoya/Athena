@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>英语自学</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <div id="app" class="shell">
+      <header class="masthead">
+        <div class="brand">
+          <span class="sigil">E2</span>
+          <div>
+            <h1 id="app-title">英语自学</h1>
+            <p id="app-trail" class="trail"></p>
+          </div>
+        </div>
+        <nav class="quick">
+          <button type="button" id="btn-due" class="chip">今日复习 <b>0</b></button>
+          <button type="button" id="btn-mistakes" class="chip">错题本 <b>0</b></button>
+          <button type="button" id="btn-continue" class="chip is-primary">继续当前任务</button>
+        </nav>
+      </header>
+
+      <main id="view-route" class="view-route">
+        <aside class="route">
+          <p class="pane-title">能力路线</p>
+          <ol id="stage-list" class="stage-list"></ol>
+          <div class="endpoint">
+            <p class="endpoint-title">终点</p>
+            <p id="endpoint-text" class="endpoint-text"></p>
+          </div>
+        </aside>
+
+        <section class="stage-detail">
+          <div class="stage-head">
+            <div>
+              <h2 id="stage-title"></h2>
+              <p id="stage-goal" class="muted"></p>
+            </div>
+            <span id="stage-badge" class="badge"></span>
+          </div>
+          <div id="exam-strip" class="exam-strip"></div>
+          <div id="track-cards" class="track-cards"></div>
+          <div class="principles">
+            <div class="principle">
+              <p class="principle-title">练习与考核分开</p>
+              <p>练习即时给解析；考核成套作答，交卷后统一反馈。</p>
+            </div>
+            <div class="principle">
+              <p class="principle-title">三项分别过关</p>
+              <p>单词、例句、作文分别判定，不用平均分掩盖短板。</p>
+            </div>
+            <div class="principle">
+              <p class="principle-title">同一素材逐级输出</p>
+              <p>单词进入例句，例句再进入仿写与改写，不另起三套题库。</p>
+            </div>
+          </div>
+          <p id="unlock-note" class="unlock-note"></p>
+        </section>
+      </main>
+
+      <main id="view-drill" class="view-drill is-hidden">
+        <div class="drill-bar">
+          <button type="button" class="back" data-back>← 返回路线</button>
+          <span id="drill-title" class="drill-title"></span>
+          <span id="drill-progress" class="drill-progress"></span>
+        </div>
+        <div class="drill-body">
+          <aside id="drill-rail" class="drill-rail"></aside>
+          <div class="desk">
+            <article id="passage-box" class="folio is-hidden"></article>
+            <div id="card-box" class="drill"></div>
+            <div id="exam-report" class="report is-hidden"></div>
+          </div>
+        </div>
+      </main>
+
+      <main id="view-mistakes" class="view-mistakes is-hidden">
+        <div class="drill-bar">
+          <button type="button" class="back" data-back>← 返回路线</button>
+          <span class="drill-title">错题本</span>
+          <span id="mistake-rule" class="drill-progress">连对两天并做对变式才出库</span>
+        </div>
+        <div id="mistake-list" class="mistake-list"></div>
+      </main>
+    </div>
+  </body>
+</html>

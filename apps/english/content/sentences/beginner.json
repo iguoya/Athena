@@ -1,0 +1,52 @@
+{
+  "topic_id": "en.beginner.sentence.basic_logic",
+  "kind": "sentence",
+  "items": [
+    {
+      "id": "en.beginner.sentence.because",
+      "kind": "cause",
+      "text": "Many students use the library because it provides a quiet place to study.",
+      "prompt": "because 后面说明什么？",
+      "error_tag": "因果关系",
+      "choices": [
+        { "label": "使用图书馆的原因", "ok": true, "why": "because 引出原因：图书馆提供安静的学习地点。" },
+        { "label": "使用图书馆的结果", "ok": false, "why": "结果在前面的 use the library，because 后是原因。" },
+        { "label": "与前句无关的补充", "ok": false, "why": "because 明确连接原因。" }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.but",
+      "kind": "contrast",
+      "text": "The course is demanding, but it gives learners more opportunities to practise.",
+      "prompt": "这句话最终更想强调哪一点？",
+      "error_tag": "转折关系",
+      "choices": [
+        { "label": "课程虽有难度，却提供了更多练习机会", "ok": true, "why": "but 后面是转折后的重点。" },
+        { "label": "课程有难度，所以不值得学习", "ok": false, "why": "后半句给的是积极结果。" },
+        { "label": "练习机会使课程变得更难", "ok": false, "why": "句中没有这个因果关系。" }
+      ],
+      "variants": [
+        {
+          "text": "The job pays less, but it offers better training.",
+          "prompt": "作者转折后强调什么？",
+          "choices": [
+            { "label": "工作提供更好的培训", "ok": true, "why": "but 后是作者补充的优势。" },
+            { "label": "工作收入更低", "ok": false, "why": "这是转折前承认的情况。" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.reference",
+      "kind": "reference",
+      "text": "The school opened a new study room, and it stays open until ten.",
+      "prompt": "it 指什么？",
+      "error_tag": "代词指代",
+      "choices": [
+        { "label": "the new study room", "ok": true, "why": "最近且语义成立的单数事物是 study room。" },
+        { "label": "the school", "ok": false, "why": "学校本身不是“开放到十点”的新设施。" },
+        { "label": "ten", "ok": false, "why": "ten 是时间，不是指代对象。" }
+      ]
+    }
+  ]
+}
