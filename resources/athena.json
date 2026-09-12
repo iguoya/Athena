@@ -24,11 +24,6 @@
         "type": "theme",
         "name": "applications-development-symbolic"
       },
-      "handbook_documents": [
-        "resources/articles/cpp/reference_overview.md",
-        "resources/articles/cpp/raii_overview.md",
-        "resources/articles/cpp/program_organization.md"
-      ],
       "chapters": [
         {
           "name": "TypeSemantics",
@@ -59,7 +54,6 @@
           "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
           "icon": { "type": "theme", "name": "insert-link-symbolic" },
           "implementation": { "header": "cplusplus/references/reference.hpp" },
-          "overview_document": "resources/articles/cpp/reference_overview.md",
           "subchapters": [
             { "name": "reference_basics", "title": "引用基础", "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。", "difficulty": 1, "mastery_goal": "master" },
             { "name": "const_reference", "title": "const 引用", "description": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。", "difficulty": 3, "mastery_goal": "master" },
@@ -103,7 +97,6 @@
           "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
           "icon": { "type": "theme", "name": "security-high-symbolic" },
           "implementation": { "header": "cplusplus/raii/raii.hpp" },
-          "overview_document": "resources/articles/cpp/raii_overview.md",
           "subchapters": [
             { "name": "basic", "title": "RAII 思想", "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。", "difficulty": 2, "mastery_goal": "master" },
             { "name": "unique", "title": "独占指针", "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。", "difficulty": 2, "mastery_goal": "master" },
@@ -320,9 +313,6 @@
       "title": "应用实践",
       "description": "把语言、数据结构和算法知识用在具体的小项目和实际问题上。",
       "icon": { "type": "theme", "name": "applications-games-symbolic" },
-      "handbook_documents": [
-        "resources/articles/practice/pocket_cube_overview.md"
-      ],
       "chapters": [
         {
           "name": "PocketCube",
@@ -331,7 +321,6 @@
           "icon": { "type": "theme", "name": "applications-games-symbolic" },
           "ui": { "blueprint": "resources/ui/chapters/practice_cube.blp" },
           "implementation": { "header": "practice/pocket_cube/pocket_cube.hpp" },
-          "overview_document": "resources/articles/practice/pocket_cube_overview.md",
           "subchapters": [
             { "name": "run", "title": "转动一步", "description": "固定执行一次 U（上层）顺时针转动，演示魔方状态如何驱动 3D 视图和展开图重绘；真正的打乱和求解算法还没做。" }
           ]

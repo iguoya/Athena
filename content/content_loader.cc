@@ -45,23 +45,3 @@ string ContentLoader::load_project_file(const string& relative_path) const {
     return load_resource("/app/sources/" + relative_path);
 }
 
-string ContentLoader::load_document(const string& relative_path) const {
-    constexpr string_view resources_prefix = "resources/";
-    if (relative_path.rfind(resources_prefix, 0) == 0) {
-        const string resource_path =
-            "/app/" + relative_path.substr(resources_prefix.size());
-        if (string content = load_resource(resource_path); !content.empty()) {
-            return content;
-        }
-    }
-
-    return load_project_file(relative_path);
-}
-
-string ContentLoader::document_base_directory(
-    const string& relative_path) const {
-    const size_t slash = relative_path.find_last_of('/');
-    const string directory =
-        slash == string::npos ? "" : relative_path.substr(0, slash);
-    return m_project_root + "/" + directory;
-}

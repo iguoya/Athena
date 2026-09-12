@@ -1,10 +1,19 @@
 # ADR 0028：学习内容的三层分工——大纲、过程、实验
 
 - 日期：2026-09-09（同日补充第 6 节「大纲的写作范式」）
-- 状态：已接受；`type_semantics` 章已按本决策重写大纲，其余章节待跟进
+- 状态：已接受；`type_semantics` 章已按本决策写出原生大纲，其余章节待跟进
+- 修订：2026-09-12，大纲载体由 Markdown 改为 `.blp`（见下方注记与 ADR 0034）
 - 延续：ADR 0024（内容改由 GTK 控件承载）、ADR 0026（Markdown 不约束学习场景）、
   ADR 0027（学习页自足讲解与多媒体）
 - 关联：ADR 0012（分类手册合并，`overview_document` 必须收录在 `handbook_documents` 内）
+
+## 2026-09-12：大纲的载体换成 `.blp`，不再是 Markdown
+
+[ADR 0034](0034-remove-markdown-handbook.md) 删除了 Markdown 手册整条路线。本 ADR 的
+**三层分工与第 6 节的五节写作范式继续有效**，但下文中关于载体的描述已经过时：教学大纲
+现在是章节 `.blp` 里的第一个「教学大纲」标签，不再是 `*_overview.md`，也不再有
+`chapter.overview_document`、`category.handbook_documents` 和分类手册。凡提到"Markdown
+文档"「收录在 handbook_documents 内」之处，一律读作"该章原生大纲标签"。
 
 ## 背景
 

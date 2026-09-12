@@ -23,10 +23,10 @@
 | 编号 | 决策 | 状态 |
 |---|---|---|
 | [0002](0002-cpp-specific-content-scope.md) | 内容聚焦 C++ 特有语义，淡化与 C 重叠的基础 | 已接受 |
-| [0012](0012-handbook-replaces-article-chapters.md) | 静态文档合并为「手册」，废弃 `content: article` 章节类型 | 已接受 |
+| [0012](0012-handbook-replaces-article-chapters.md) | 静态文档合并为「手册」，废弃 `content: article` 章节类型 | 部分失效，手册已由 0034 删除 |
 | [0021](0021-category-index-page-replaces-chapter-tab-strip.md) | 分类索引页取代常驻章节标签条 | 已接受，实施中 |
 | [0024](0024-widget-native-learning-content.md) | 学习内容统一由 GTK 控件承载，退出 Markdown/WebView 路线 | 已接受，载体迁移完成 |
-| [0026](0026-native-learning-scenes-and-reference-material.md) | 原生学习场景与参考资料分离；Markdown 不约束表现形式 | 已接受，第一条纵切实施中 |
+| [0026](0026-native-learning-scenes-and-reference-material.md) | 原生学习场景与参考资料分离；Markdown 不约束表现形式 | 部分失效，参考资料一侧由 0034 删除 |
 | [0027](0027-self-contained-multimedia-lessons.md) | 学习页自足讲解与多媒体教案 | 已接受，按单元逐步实施 |
 | [0028](0028-outline-process-experiment-layering.md) | 大纲、教学过程、教学实验三层分工 | 已接受，`type_semantics` 已跟进 |
 | [0029](0029-difficulty-and-mastery-goal.md) | 知识点按难度与掌握目标两个维度评级 | 已接受 |
@@ -34,6 +34,7 @@
 | [0031](0031-knowledge-type-drives-teaching-actions.md) | 知识类型（概念/技能/策略）决定教学动作 | 已接受，`type_semantics` 已标注 |
 | [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受，`apps/c` 链路已通 |
 | [0033](0033-live-visuals-and-interaction.md) | 大纲与教学过程用活的可视化和互动元素表达 | 已接受，`type_semantics` 大纲已改造 |
+| [0034](0034-remove-markdown-handbook.md) | 删除 Markdown 参考手册，大纲只有原生一份 | 已接受，手册正文与页面已移除 |
 
 ## 学习数据与 AI
 

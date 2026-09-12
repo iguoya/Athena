@@ -7,13 +7,13 @@
 ## 1. 定位与当前阶段
 
 Athena 是自用的 C++ 渐进学习平台：解释原理与用途，借助图示建立理解，穿插真实实验，
-观察并解释结果，再迁移到实际代码。学习页应独立承担这段教学，手册与 AI 是可选补充。
+观察并解释结果，再迁移到实际代码。学习页独立承担这段教学，AI 讲解是可选补充。
 它不以完整教程产品、通用内容编辑器或 IDE 为目标。
 
 当前技术栈是 C++20、GTK4/gtkmm4、Blueprint、GtkSourceView 5、MD4C、nlohmann/json、
 SQLite 和 Meson。macOS、Ubuntu 共用 GTK 内容渲染；没有 WebView 文章后端。
 
-已具备配置生成、真实源码定位与执行、分类索引、手册、进度、自测及原生学习场景入口。
+已具备配置生成、真实源码定位与执行、分类索引、进度、自测及原生学习场景入口。
 类型与表达式使用 `TypeSemanticsLessonPage`；其他语言章节主要使用标准代码页。
 多媒体教案已按 ADR 0027 确定方向，完整讲解与可控动画仍需逐项落地，不能据此宣称已经实现。
 
@@ -41,9 +41,9 @@ resources/athena.json
 | 导航协调 | `MainWindow`、`ChapterPageStack` | 分类与章节切换、懒加载、跨页返回、模块生命周期 |
 | 目录与统计数据 | `ChapterCatalog`、`KnowledgeGraph`、`progress_stats` | 查询元数据、前置依赖与统计计算，不依赖 GTK |
 | 注册与课程实现 | `FunctionRegistry`、`cplusplus/` | 通过稳定 ID 执行真实 C++ 成员函数 |
-| 内容能力 | `ContentLoader`、`SourceLocator`、`DocModel` | 读取资源/源码、定位函数、将 Markdown 解析成结构化块 |
+| 内容能力 | `ContentLoader`、`SourceLocator`、`DocModel` | 读取资源/源码、定位函数、把 AI 返回的 Markdown 解析成结构化块 |
 | 页面 | `ui/` 各 Page/Dialog | 独占对应控件树、页面状态和用户操作 |
-| 呈现 | `DocumentView`、`render/` 图表 | 文档块与图表呈现，不决定课程或评分规则 |
+| 呈现 | `DocumentView`、`render/` 图表 | AI 讲解的文档块与图表呈现，不决定课程或评分规则 |
 | 后台服务 | `ExperimentRunner`、`AiService` | 执行与请求，返回普通数据，不直接更新 GTK 控件 |
 | 持久化 | `LearningStore` | 熟练度、AI 讲解缓存与设置；不持有 UI |
 | 综合实践 | `practice/pocket_cube/`、`PocketCubePage` | 魔方状态、操作与可视化；状态模型可独立测试 |
@@ -56,13 +56,10 @@ resources/athena.json
 ### 学习页面
 
 - `TypeSemanticsLessonPage`：Blueprint 组织原生学习内容，模块填充预测单元与图解。
-  「教学大纲」标签是本章大纲的唯一内容来源；已移除「完整手册」按钮、Markdown
-  大纲副本及其配置引用。教学过程与实验服从原生大纲，见教案规范。
+  第一个「教学大纲」标签是本章大纲的唯一来源，教学过程与实验服从它，见教案规范。
 - `CodeChapterPage`：保留的标准知识点列表，提供实验、AI 讲解与自测等动作。
-- `WorkbenchPage`：旧式 Markdown 分节工作台，仍有代码和配置支持；属于兼容能力，
-  当前课程配置未启用它，不作为新学习页模板。
-- `HandbookPage`：按分类拼接 `handbook_documents`，经 `DocModel → DocumentView`
-  显示。`overview_document` 提供可选回查入口，不决定学习页布局或必修内容。
+- ADR 0034 之后没有 Markdown 内容页：`HandbookPage`（分类手册）与 `WorkbenchPage`
+  （旧式分节工作台）已删除，`DocumentView` 只服务 `ui/ai_markdown_dialog`。
 
 ### 真实实验
 
@@ -100,7 +97,7 @@ GResource 内置副本。函数定位不依赖安装机器上的编译期绝对�
 - 新的专属页面可能需要增加页面装配分支；不借机恢复手写课程注册表。只有实际复用需求
   出现时才增加接口或工厂，不为了模式而引入完整 MVC/MVP。
 - 共享业务代码没有平台分支；平台差异限制在已有适配与打包边界。Ubuntu 不链接 Apple Framework。
-- 手册、学习页、实验可有不同表达，但语义条件一致；不以现有函数数量反推应教授的知识。
+- 大纲、教学过程、实验可有不同表达，但语义条件一致；不以现有函数数量反推应教授的知识。
 
 拆分模块前的简短检查见 [CODE_ROLES](CODE_ROLES.md)。具体编码约束以根目录 AGENTS.md 为准。
 
@@ -114,6 +111,7 @@ CI 使用 `xvfb-run` 提供显示环境。构建通过不能替代实际学习�
 
 - 多数配置章节尚无实现；标准代码页与原生场景并存，不宣称课程全量完成。
 - 预测反馈主要依据预设答案；概念图、实际运行和编译诊断尚未形成统一证据交互。
-- `WorkbenchPage` 与 `learning_units` 是保留的兼容路径，删除前需要独立确认配置与资源引用。
+- 尚未写原生大纲的章节（`Reference`、`RAII`、`PocketCube`）暂时没有大纲页，
+  「说明文档」按钮走本机 AI 退路；补齐时写 `.blp`，不用 Markdown 填补。
 
 发布规则、签名与包验证统一见 [RELEASE](RELEASE.md)，不在本文重复维护发行流程。

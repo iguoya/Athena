@@ -192,7 +192,6 @@ app_sources = files(
   'ui/experiment_dock.cc',
   'ui/experiment_page.cc',
   'ui/external_app_launcher.cc',
-  'ui/handbook_page.cc',
   'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',
   'ui/learning_unit_view.cc',
@@ -202,7 +201,6 @@ app_sources = files(
   'ui/settings_dialog.cc',
   'ui/source_view.cc',
   'ui/type_semantics_lesson_page.cc',
-  'ui/workbench_page.cc'
 ) + app_icon_sources + menu_bar_platform_sources
 
 # === 打包资源 ===

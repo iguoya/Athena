@@ -2,6 +2,7 @@
 
 #include "registry/chapter_catalog.h"
 #include "ui/experiment_dock.h"
+#include "ui/learning_unit_view.h"
 
 #include <gtkmm.h>
 

@@ -32,7 +32,6 @@ json MakeChapter(const string& name, json subchapters) {
         {"name", name},
         {"title", name + " 章"},
         {"description", "章"},
-        {"overview_document", ""},
         {"resource_path", "/app/chapters/code.ui"},
         {"widget_name", "chapter_page"},
         {"source", ""},
@@ -55,7 +54,6 @@ ChapterCatalog MakeCatalog() {
                 {"title", "C++ 真实标题"},
                 {"description", "真实简介"},
                 {"icon", kIcon},
-                {"handbook_documents", json::array()},
                 {"chapters", json::array({
                     MakeChapter("A", json::array({
                         MakePoint("cpp.A.a1", "a1"),

@@ -180,53 +180,24 @@ def main() -> None:
         assert runtime_point["mastery_goal"] == ""
         assert runtime_point["icon"]["name"] == "media-playback-start-symbolic"
 
-        document_path = "resources/articles/cpp/widget.md"
-        write(
-            root / document_path,
-            "# Widget\n\n## 基础\n\n正文。\n\n## 小结\n\n回顾。\n",
-        )
-        teaches_config = copy.deepcopy(config)
-        teaches_category = teaches_config["categories"][0]
-        teaches_category["handbook_documents"] = [document_path]
-        teaches_chapter = teaches_category["chapters"][0]
-        teaches_chapter["overview_document"] = document_path
-        teaches_chapter["subchapters"][0]["teaches"] = {
-            "document": document_path,
-            "heading": "基础",
-        }
-        write(
-            root / "resources" / "athena.json",
-            json.dumps(teaches_config, ensure_ascii=False, indent=2) + "\n",
-        )
-        run(generator, root, "catalog", "--output", str(catalog_output))
-        teaches_catalog = json.loads(catalog_output.read_text(encoding="utf-8"))
-        runtime_teaches = teaches_catalog["categories"][0]["chapters"][0][
-            "subchapters"
-        ][0]["teaches"]
-        assert runtime_teaches == {"document": document_path, "heading": "基础"}
-
-        missing_heading = copy.deepcopy(teaches_config)
-        missing_heading["categories"][0]["chapters"][0]["subchapters"][0][
-            "teaches"
-        ]["heading"] = "不存在"
-        assert_rejected(
-            generator,
-            root,
-            missing_heading,
-            "teaches.heading '不存在' was not found",
-        )
-
-        write(
-            root / document_path,
-            "# Widget\n\n## 基础\n\n第一处。\n\n## 基础\n\n第二处。"
-            "\n\n## 小结\n\n回顾。\n",
-        )
-        assert_rejected(
-            generator,
-            root,
-            teaches_config,
-            "teaches.heading '基础' is not unique",
-        )
+        # ADR 0034：Markdown 手册整条路线已删除，四个承载它的字段一律拒绝，
+        # 防止旧配置或旧习惯把它悄悄带回来。
+        for owner, field, message in [
+            ("category", "handbook_documents", "handbook_documents is deprecated"),
+            ("chapter", "overview_document", "overview_document is deprecated"),
+            ("chapter", "learning_units", "learning_units is deprecated"),
+            ("subchapter", "teaches", "teaches is deprecated"),
+        ]:
+            removed = copy.deepcopy(config)
+            category = removed["categories"][0]
+            chapter = category["chapters"][0]
+            target = {
+                "category": category,
+                "chapter": chapter,
+                "subchapter": chapter["subchapters"][0],
+            }[owner]
+            target[field] = [] if field != "teaches" else {}
+            assert_rejected(generator, root, removed, message)
 
         write(root / "cplusplus" / "widget" / "chapter.cpp")
         write(root / "cplusplus" / "widget" / "group.cpp")

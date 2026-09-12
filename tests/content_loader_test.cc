@@ -21,15 +21,6 @@ TEST(ContentLoaderTest, LoadsTeachingSourceFromBundledResource) {
     EXPECT_NE(source.find("class Reference"), string::npos);
 }
 
-TEST(ContentLoaderTest, LoadsDocumentWithResourceFallback) {
-    const ContentLoader loader(ATHENA_SOURCE_ROOT);
-
-    const string document = loader.load_document(
-        "resources/articles/cpp/program_organization.md");
-
-    EXPECT_NE(document.find("从语言知识走向程序组织"), string::npos);
-}
-
 TEST(ContentLoaderTest, BundlesArticleSvgAssetsForDocumentView) {
     const ContentLoader loader("/path/that/does/not/exist");
 
@@ -39,12 +30,9 @@ TEST(ContentLoaderTest, BundlesArticleSvgAssetsForDocumentView) {
     EXPECT_NE(image.find("<svg"), string::npos);
 }
 
-TEST(ContentLoaderTest, ResolvesDocumentBaseDirectory) {
+TEST(ContentLoaderTest, ReturnsEmptyForMissingProjectFile) {
     const ContentLoader loader("/project");
 
-    EXPECT_EQ(
-        loader.document_base_directory("resources/articles/cpp/lesson.md"),
-        "/project/resources/articles/cpp");
     EXPECT_TRUE(loader.load_project_file("missing.file").empty());
 }
 

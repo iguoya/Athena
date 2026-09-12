@@ -12,20 +12,16 @@ def blueprint_entries(model: dict) -> list[tuple[str, str, str]]:
 
 
 def render_resources(model: dict, root: Path) -> str:
-    article_documents = [
-        f'    <file compressed="true">{xml_escape(document)}</file>'
-        for document in sorted(model["documents"])
-    ]
-    # DocumentView 直接用 resource:/// 路径加载 Markdown 旁的 SVG/位图。旧的
-    # HTML 路线会把图转成 data URI，因此这里若只打包 .md，GTK 页面就会出现
-    # 留白。文章目录中除 Markdown 外的文件都是内容资产，保持原相对路径。
+    # ADR 0034 之后 resources/articles/ 下不再有 Markdown 手册，只剩原生学习页
+    # 引用的插图。`.blp` 里写 images/xxx.svg，页面按 resource:/// 加载，因此
+    # 这些资产要按原相对路径打包进 GResource。
     articles_dir = root / "resources" / "articles"
     article_assets = [
         path.relative_to(root).as_posix()
         for path in sorted(articles_dir.rglob("*"))
         if path.is_file() and path.suffix.lower() not in {".md", ".markdown"}
     ] if articles_dir.is_dir() else []
-    article_entries = article_documents + [
+    article_entries = [
         f'    <file compressed="true">{xml_escape(asset)}</file>'
         for asset in article_assets
     ]

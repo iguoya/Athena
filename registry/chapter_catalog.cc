@@ -87,9 +87,6 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
             category.title = category_value.at("title").get<string>();
             category.description = category_value.at("description").get<string>();
             category.icon = parse_icon(category_value.at("icon"));
-            for (const auto& document : category_value.at("handbook_documents")) {
-                category.handbook_documents.push_back(document.get<string>());
-            }
             catalog.m_categories.push_back(category);
 
             auto& chapters = catalog.m_chapters[category.name];
@@ -99,8 +96,6 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                 chapter.title = chapter_value.at("title").get<string>();
                 chapter.description = chapter_value.at("description").get<string>();
                 chapter.category = category.name;
-                chapter.overview_document =
-                    chapter_value.at("overview_document").get<string>();
                 chapter.resource_path =
                     chapter_value.at("resource_path").get<string>();
                 chapter.widget_name = chapter_value.at("widget_name").get<string>();
@@ -159,37 +154,7 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                             });
                     }
                     subchapter.icon = parse_icon(subchapter_value.at("icon"));
-                    if (subchapter_value.contains("teaches")) {
-                        const auto& teaches_value = subchapter_value.at("teaches");
-                        subchapter.teaches = SubChapterTeaches{
-                            .document = teaches_value.at("document").get<string>(),
-                            .heading = teaches_value.at("heading").get<string>(),
-                        };
-                    }
                     chapter.subchapters.push_back(std::move(subchapter));
-                }
-
-                // learning_units 是 ADR 0025 之后新增的可选字段：生成器对
-                // 真实配置总会输出（可能为空数组），但测试可以构造不含它的
-                // 精简 Catalog，缺失时按空处理，不抛异常。
-                if (chapter_value.contains("learning_units")) {
-                    for (const auto& unit_value :
-                         chapter_value.at("learning_units")) {
-                        LearningUnit unit;
-                        unit.id = unit_value.at("id").get<string>();
-                        unit.heading = unit_value.at("heading").get<string>();
-                        unit.claim = unit_value.at("claim").get<string>();
-                        unit.question = unit_value.at("question").get<string>();
-                        unit.choices =
-                            unit_value.at("choices").get<vector<string>>();
-                        unit.correct_choice =
-                            unit_value.at("correct_choice").get<size_t>();
-                        unit.feedback = unit_value.at("feedback").get<string>();
-                        unit.follow_up = unit_value.at("follow_up").get<string>();
-                        unit.experiment_function_id =
-                            unit_value.at("experiment_function_id").get<string>();
-                        chapter.learning_units.push_back(std::move(unit));
-                    }
                 }
 
                 chapters.push_back(std::move(chapter));
@@ -234,19 +199,6 @@ size_t ChapterCatalog::chapter_count() const {
         count += chapters.size();
     }
     return count;
-}
-
-const vector<string>& ChapterCatalog::handbook_documents(
-    const string& category_name) const {
-    // 分类不存在或没配手册时统一返回同一个空 vector，调用方不必区分。
-    static const vector<string> empty;
-    const auto found = find_if(
-        m_categories.begin(),
-        m_categories.end(),
-        [&category_name](const CategoryInfo& category) {
-            return category.name == category_name;
-        });
-    return found == m_categories.end() ? empty : found->handbook_documents;
 }
 
 const SubChapter* ChapterCatalog::find_subchapter(const string& function_id) const {

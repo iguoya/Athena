@@ -1,7 +1,9 @@
 # ADR 0012：本地静态文档合并为"手册"页面，废弃 `content: article` 章节类型
 
 - 日期：2026-08-19
-- 状态：已接受
+- 状态：部分失效——废弃 `content: article` 的部分仍有效；手册本身已由
+  [ADR 0034](0034-remove-markdown-handbook.md) 整体删除（含 `handbook_documents`
+  与 `overview_document` 两个字段）
 - 依据提交：（本 ADR 与对应实现同批提交）
 
 > 后续：ADR 0023 已移除“AI 讲解差异”和运行历史；本文保留 2026-08-21

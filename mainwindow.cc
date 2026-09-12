@@ -14,10 +14,8 @@
 #include "ui/chapter_overview.h"
 #include "ui/code_chapter_page.h"
 #include "ui/experiment_page.h"
-#include "ui/handbook_page.h"
 #include "ui/pocket_cube_page.h"
 #include "ui/progress_page.h"
-#include "ui/workbench_page.h"
 #include "ui/type_semantics_lesson_page.h"
 
 #include <giomm/menu.h>
@@ -35,10 +33,6 @@ string chapter_key(const string& category_name, const string& chapter_name) {
     return category_name + "." + chapter_name;
 }
 
-string handbook_page_key(const string& category_name) {
-    return category_name + ".__handbook__";
-}
-
 string index_page_key(const string& category_name) {
     return category_name + ".__index__";
 }
@@ -47,7 +41,6 @@ constexpr const char* kCppCategory = "cpp";
 constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // 由 athena.json 的 chapter.ui.blueprint 派生：blueprint 文件名去掉
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
-constexpr const char* kWorkbenchPageWidget = "workbench_chapter_page";
 constexpr const char* kTypeSemanticsLessonPageWidget =
     "type_semantics_lesson_page";
 constexpr const char* kProgressPageKey = "__progress__";
@@ -353,9 +346,7 @@ void MainWindow::navigate_to(
         show_category_index(category_name);
     } else if (page_key == kProgressPageKey) {
         open_progress_page();
-    } else if (page_key == handbook_page_key(category_name)) {
-        show_handbook_page(category_name);
-    } else if (const auto* chapter =
+       } else if (const auto* chapter =
                    find_chapter_by_key(category_name, page_key)) {
         open_chapter(category_name, *chapter);
     }
@@ -419,14 +410,7 @@ void MainWindow::ensure_chapter_page(
     } else if (chapter.widget_name == kPracticeCubePageWidget) {
         m_pocket_cube_pages[page_key] = make_unique<PocketCubePage>(
             chapter, builder, m_content_loader, overview_requested);
-    } else if (chapter.widget_name == kWorkbenchPageWidget) {
-        m_workbench_pages[page_key] = make_unique<WorkbenchPage>(
-            chapter,
-            builder,
-            m_content_loader,
-            *this,
-            experiment_requested);
-    } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
+       } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
         std::map<string, int> mastery_by_id;
         if (m_learning_store) {
             try {
@@ -549,12 +533,6 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
              .icon = {.type = "theme",
                       .name = "utilities-system-monitor-symbolic"}});
     }
-    spec.tools.push_back(
-        {.key = handbook_page_key(category_name),
-         .title = "手册",
-         .description = "本分类的手册：理论、原则与工程思想",
-         .icon = {.type = "theme", .name = "accessories-dictionary-symbolic"}});
-
     spec.on_open = [this, category_name](const string& page_key) {
         navigate_to(category_name, page_key);
     };
@@ -601,7 +579,6 @@ void MainWindow::rebuild_chapter_switcher(const string& category_name) {
     if (category_name == kCppCategory) {
         add_entry(kProgressPageKey, "学习进度");
     }
-    add_entry(handbook_page_key(category_name), "手册");
 
     auto* scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
     scroller->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
@@ -655,42 +632,7 @@ void MainWindow::refresh_progress_page() {
     }
 }
 
-void MainWindow::ensure_handbook_page(const string& category_name) {
-    if (m_handbook_pages.count(category_name) > 0) {
-        return;
-    }
-    auto page = make_unique<HandbookPage>(
-        category_name,
-        m_catalog.handbook_documents(category_name),
-        m_content_loader,
-        *this);
-    // 手册页常驻 Stack：切换分类时不销毁，ArticleView 生命周期由页面对象独占。
-    m_pages->set_page(
-        handbook_page_key(category_name),
-        page->widget(),
-        "手册",
-        ChapterPageStack::Persistence::Persistent);
-    m_handbook_pages[category_name] = std::move(page);
-}
-
-void MainWindow::show_handbook_page(
-    const string& category_name,
-    const string& jump_to_document) {
-    ensure_handbook_page(category_name);
-    m_pages->show(handbook_page_key(category_name));
-    show_chapter_breadcrumb(category_name, "手册");
-    m_chapter_switcher->set_label("手册");
-
-    if (!jump_to_document.empty()) {
-        m_handbook_pages.at(category_name)->scroll_to_document(jump_to_document);
-    }
-}
-
 void MainWindow::handle_chapter_overview(const ChapterMeta& chapter) {
-    if (!chapter.overview_document.empty()) {
-        show_handbook_page(chapter.category, chapter.overview_document);
-        return;
-    }
     launch_local_chapter_overview(chapter);
 }
 

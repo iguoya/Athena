@@ -27,15 +27,12 @@ ROOT_FIELDS = frozenset({"format_version", "defaults", "categories"})
 DEFAULT_FIELDS = frozenset({"chapter_ui", "chapter_icon", "subchapter_icon"})
 CHAPTER_UI_FIELDS = frozenset({"code"})
 CODE_UI_FIELDS = frozenset({"blueprint"})
-CATEGORY_FIELDS = frozenset(
-    {"name", "title", "description", "icon", "handbook_documents", "chapters"}
-)
+CATEGORY_FIELDS = frozenset({"name", "title", "description", "icon", "chapters"})
 CHAPTER_FIELDS = frozenset(
     {
         "name",
         "title",
         "description",
-        "overview_document",
         "icon",
         "ui",
         "source",
@@ -43,7 +40,6 @@ CHAPTER_FIELDS = frozenset(
         "prerequisites",
         "groups",
         "subchapters",
-        "learning_units",
     }
 )
 IMPLEMENTATION_FIELDS = frozenset({"header", "source"})
@@ -61,10 +57,8 @@ SUBCHAPTER_FIELDS = frozenset(
         "icon",
         "group",
         "source",
-        "teaches",
     }
 )
-TEACHES_FIELDS = frozenset({"document", "heading"})
 # 掌握目标：master 需要精通、required 必须掌握、familiar 一般了解；
 # 空串表示尚未评定。只按重要性评定，不看出现频率：用错的代价有多硬、是不是后续内容
 # 的地基、能不能靠编译器兜底（ADR 0029）。
@@ -72,11 +66,6 @@ MASTERY_GOALS = frozenset({"", "master", "required", "familiar"})
 # 知识类型决定该用哪种教学动作（ADR 0031）：concept 概念要正反例辨析，
 # skill 程序性技能要示范加变式练习，strategy 条件性知识要情境判断加说明理由。
 KNOWLEDGE_TYPES = frozenset({"", "concept", "skill", "strategy"})
-LEARNING_UNIT_FIELDS = frozenset(
-    {"id", "heading", "claim", "question", "choices", "correct_choice", "feedback", "follow_up", "experiment"}
-)
-ATX_HEADING_PATTERN = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.+?)\s*$")
-TRAILING_HEADING_MARKS_PATTERN = re.compile(r"[ \t]+#+[ \t]*$")
 
 # 教学/实践源码允许存放的两个顶层目录，互相平级：cplusplus/ 按 C++ 语言
 # 特性拆分知识点，practice/ 收纳自成一体的应用实践项目（比如
@@ -206,39 +195,6 @@ def resolve_icon(icon: dict | None, fallback: dict | None, label: str) -> dict:
     return dict(resolved)
 
 
-def markdown_heading_titles(path: Path) -> list[str]:
-    """Return normalized ATX heading text, ignoring fenced code examples."""
-    titles: list[str] = []
-    fence: str | None = None
-    try:
-        lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError as error:
-        raise ProjectError(f"cannot read handbook document {path}: {error}") from error
-
-    for line in lines:
-        stripped = line.lstrip()
-        if stripped.startswith(("```", "~~~")):
-            marker = stripped[:3]
-            if fence is None:
-                fence = marker
-            elif fence == marker:
-                fence = None
-            continue
-        if fence is not None:
-            continue
-
-        match = ATX_HEADING_PATTERN.match(line)
-        if not match:
-            continue
-        title = TRAILING_HEADING_MARKS_PATTERN.sub("", match.group(2)).strip()
-        # teaches.heading deliberately targets short, plain titles. Removing the
-        # common inline emphasis markers keeps validation aligned with MD4C's
-        # visible heading text while avoiding a second Markdown parser in Python.
-        title = re.sub(r"[`*_~]", "", title)
-        titles.append(" ".join(title.split()))
-    return titles
-
-
 def validate_prerequisite_graph(
     prerequisites_by_name: dict[str, list[str]], category_name: str
 ) -> None:
@@ -349,8 +305,8 @@ def build_model(
         deprecated={
             "schema": "rename this old version field to format_version",
             "handbook_documents": (
-                "move it into the owning category; handbooks are category-local"
-            )
+                "Markdown handbooks were removed (ADR 0034)"
+            ),
         },
     )
     format_version = config.get("format_version")
@@ -368,7 +324,7 @@ def build_model(
         defaults,
         DEFAULT_FIELDS,
         "athena.json.defaults",
-        deprecated={"content": "content types were replaced by category handbooks"},
+        deprecated={"content": "content types were removed (ADR 0012)"},
     )
     chapter_ui = require_object(
         defaults.get("chapter_ui"), "athena.json.defaults.chapter_ui"
@@ -377,7 +333,7 @@ def build_model(
         chapter_ui,
         CHAPTER_UI_FIELDS,
         "athena.json.defaults.chapter_ui",
-        deprecated={"article": "article chapters were replaced by category handbooks"},
+        deprecated={"article": "article chapters were removed (ADR 0012)"},
     )
     code_ui = require_object(
         chapter_ui.get("code"), "athena.json.defaults.chapter_ui.code"
@@ -412,11 +368,9 @@ def build_model(
     seen_categories: set[str] = set()
     seen_code_classes: dict[str, str] = {}
     seen_ui: dict[str, str] = {}
-    documents: set[str] = set()
     source_files: set[str] = set()
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
-    headings_by_document: dict[str, list[str]] = {}
     runtime_categories: list[dict] = []
     # 知识点级前置依赖跨章节、跨分类，收齐全部知识点后统一校验并展开成完整 ID。
     requirements_by_id: dict[str, list[str]] = {}
@@ -439,7 +393,13 @@ def build_model(
             category,
             CATEGORY_FIELDS,
             category_path,
-            deprecated={"order": "array order is the display order"},
+            deprecated={
+                "order": "array order is the display order",
+                "handbook_documents": (
+                    "Markdown handbooks were removed; outlines live in the "
+                    "chapter's native .blp (ADR 0034)"
+                ),
+            },
         )
         category_name = require_text(category.get("name"), f"{category_path}.name")
         if not CATEGORY_PATTERN.fullmatch(category_name):
@@ -458,53 +418,6 @@ def build_model(
             root, category.get("icon"), f"{category_path}.icon"
         )
 
-        handbook_values = require_list(
-            category.get("handbook_documents", []),
-            f"{category_path}.handbook_documents",
-        )
-        handbook_documents: list[str] = []
-        handbook_document_paths: set[str] = set()
-        for doc_index, doc_value in enumerate(handbook_values):
-            doc_path = project_path(
-                root,
-                doc_value,
-                f"{category_path}.handbook_documents[{doc_index}]",
-                prefix="resources/articles",
-            )
-            if doc_path in handbook_document_paths:
-                raise ProjectError(
-                    f"duplicate handbook document in category {category_name}: "
-                    f"{doc_path}"
-                )
-            handbook_document_paths.add(doc_path)
-            handbook_documents.append(doc_path)
-            documents.add(doc_path.removeprefix("resources/"))
-
-            # 手册插图放在文档同级的 images/ 目录，随手册一起打包进
-            # GResource：渲染层按 ![](images/xxx.svg) 引用，加载后内联成
-            # data: URI，打包后无源码目录也能显示。
-            images_dir = (root / doc_path).parent / "images"
-            if images_dir.is_dir():
-                for image in sorted(images_dir.glob("*.svg")):
-                    documents.add(
-                        image.relative_to(root)
-                        .as_posix()
-                        .removeprefix("resources/")
-                    )
-
-            # 每份手册文档正文末尾必须有一节「小结」/「本章小结」，
-            # 概括要点、易错点和知识点关系（见 AGENTS.md）。
-            doc_headings = headings_by_document.get(doc_path)
-            if doc_headings is None:
-                doc_headings = markdown_heading_titles(root / doc_path)
-                headings_by_document[doc_path] = doc_headings
-            if not any(title.endswith("小结") for title in doc_headings):
-                raise ProjectError(
-                    f"{category_path}.handbook_documents[{doc_index}] "
-                    f"{doc_path!r} 缺少「小结」小节：手册文档正文末尾"
-                    f"必须有一节标题为「小结」或「本章小结」的回顾"
-                )
-
         runtime_chapters: list[dict] = []
         seen_chapters: set[str] = set()
         # chapter name -> 它声明的前置章节 name 列表（知识图谱的边）。同分类内
@@ -519,8 +432,16 @@ def build_model(
                 CHAPTER_FIELDS,
                 chapter_path,
                 deprecated={
-                    "content": "article chapters were replaced by category handbooks",
-                    "document": "put the document in category.handbook_documents",
+                    "content": "article chapters were removed (ADR 0012)",
+                    "document": "Markdown handbooks were removed (ADR 0034)",
+                    "overview_document": (
+                        "the outline is the native 教学大纲 tab in the "
+                        "chapter's .blp, not a Markdown file (ADR 0034)"
+                    ),
+                    "learning_units": (
+                        "learning units are placed by the native lesson page "
+                        "itself, not by a Markdown heading (ADR 0034)"
+                    ),
                     "order": "array order is the display order",
                 },
             )
@@ -640,20 +561,6 @@ def build_model(
             seen_ui[ui_name] = blueprint
             stem = Path(blueprint).stem
 
-            overview_document = ""
-            if "overview_document" in chapter:
-                overview_document = project_path(
-                    root,
-                    chapter["overview_document"],
-                    f"{chapter_path}.overview_document",
-                    prefix="resources/articles",
-                )
-                if overview_document not in handbook_document_paths:
-                    raise ProjectError(
-                        f"{chapter_path}.overview_document {overview_document!r} "
-                        f"is not listed in category {category_name}.handbook_documents"
-                    )
-
             runtime_groups: list[dict] = []
             group_names: set[str] = set()
             group_sources: dict[str, str] = {}
@@ -727,6 +634,10 @@ def build_model(
                         "id": "use name as the stable local identifier",
                         "method": "use name as the C++ member function name",
                         "order": "array order is the display order",
+                        "teaches": (
+                            "Markdown handbooks were removed; the native "
+                            "lesson page teaches the point (ADR 0034)"
+                        ),
                     },
                 )
                 method = require_text(
@@ -817,58 +728,6 @@ def build_model(
                     )
                     source_files.add(resolved_source)
 
-                # 可选：本知识点在哪份手册文档的哪一节被讲到——知识点自己
-                # 声明"我在哪一节被讲到"，文档不知道 Athena 存在，不为它
-                # 改写一个字符。heading 是否真的存在于该文档由运行时按
-                # 标题文本查找，找不到只跳过跳转、不阻断构建（文档处于
-                # 频繁重写期时不应逼着开发者同步改配置）。
-                teaches = None
-                if "teaches" in subchapter:
-                    teaches_value = require_object(
-                        subchapter["teaches"], f"{subchapter_path}.teaches"
-                    )
-                    reject_unknown_fields(
-                        teaches_value, TEACHES_FIELDS, f"{subchapter_path}.teaches"
-                    )
-                    teaches_document = project_path(
-                        root,
-                        teaches_value.get("document"),
-                        f"{subchapter_path}.teaches.document",
-                        prefix="resources/articles",
-                    )
-                    if teaches_document not in handbook_document_paths:
-                        raise ProjectError(
-                            f"{subchapter_path}.teaches.document "
-                            f"{teaches_document!r} is not listed in category "
-                            f"{category_name}.handbook_documents"
-                        )
-                    teaches_heading = require_text(
-                        teaches_value.get("heading"),
-                        f"{subchapter_path}.teaches.heading",
-                    )
-                    if teaches_document not in headings_by_document:
-                        headings_by_document[teaches_document] = (
-                            markdown_heading_titles(root / teaches_document)
-                        )
-                    headings = headings_by_document[teaches_document]
-                    heading_count = headings.count(teaches_heading)
-                    if heading_count == 0:
-                        raise ProjectError(
-                            f"{subchapter_path}.teaches.heading "
-                            f"{teaches_heading!r} was not found in "
-                            f"{teaches_document!r}"
-                        )
-                    if heading_count > 1:
-                        raise ProjectError(
-                            f"{subchapter_path}.teaches.heading "
-                            f"{teaches_heading!r} is not unique in "
-                            f"{teaches_document!r}"
-                        )
-                    teaches = {
-                        "document": teaches_document,
-                        "heading": teaches_heading,
-                    }
-
                 runtime_subchapter = {
                     "function_id": function_id,
                     "name": method,
@@ -886,8 +745,6 @@ def build_model(
                         f"{subchapter_path}.icon",
                     ),
                 }
-                if teaches is not None:
-                    runtime_subchapter["teaches"] = teaches
                 runtime_subchapters.append(runtime_subchapter)
                 # 同章内可以只写知识点名，跨章必须写完整函数 ID；这里统一展开成
                 # 完整 ID，运行时不再需要解析短名。
@@ -902,84 +759,6 @@ def build_model(
                 raw_requirements.append(
                     (function_id, chapter_id, subchapter_path, expanded_requires,
                      runtime_subchapter)
-                )
-
-            runtime_learning_units: list[dict] = []
-            seen_learning_unit_ids: set[str] = set()
-            learning_units = require_list(
-                chapter.get("learning_units", []),
-                f"{chapter_path}.learning_units",
-            )
-            if learning_units and not overview_document:
-                raise ProjectError(
-                    f"{chapter_path}.learning_units requires overview_document"
-                )
-            if overview_document and overview_document not in headings_by_document:
-                headings_by_document[overview_document] = markdown_heading_titles(
-                    root / overview_document
-                )
-            for unit_index, unit_value in enumerate(learning_units):
-                unit_path = f"{chapter_path}.learning_units[{unit_index}]"
-                unit = require_object(unit_value, unit_path)
-                reject_unknown_fields(unit, LEARNING_UNIT_FIELDS, unit_path)
-                unit_id = require_text(unit.get("id"), f"{unit_path}.id")
-                if not IDENTIFIER_PATTERN.fullmatch(unit_id):
-                    raise ProjectError(
-                        f"{unit_path}.id must be an ASCII identifier: {unit_id!r}"
-                    )
-                if unit_id in seen_learning_unit_ids:
-                    raise ProjectError(
-                        f"duplicate learning unit id in {chapter_id}: {unit_id}"
-                    )
-                seen_learning_unit_ids.add(unit_id)
-                heading = require_text(unit.get("heading"), f"{unit_path}.heading")
-                if heading not in headings_by_document[overview_document]:
-                    raise ProjectError(
-                        f"{unit_path}.heading {heading!r} was not found in "
-                        f"{overview_document!r}"
-                    )
-                choices = require_list(unit.get("choices"), f"{unit_path}.choices")
-                if len(choices) < 2:
-                    raise ProjectError(f"{unit_path}.choices needs at least two options")
-                normalized_choices = [
-                    require_text(choice, f"{unit_path}.choices[{choice_index}]")
-                    for choice_index, choice in enumerate(choices)
-                ]
-                correct_choice = unit.get("correct_choice")
-                if (
-                    not isinstance(correct_choice, int)
-                    or isinstance(correct_choice, bool)
-                    or not 0 <= correct_choice < len(normalized_choices)
-                ):
-                    raise ProjectError(
-                        f"{unit_path}.correct_choice must index choices"
-                    )
-                experiment = require_text(
-                    unit.get("experiment"), f"{unit_path}.experiment"
-                )
-                if experiment not in seen_methods:
-                    raise ProjectError(
-                        f"{unit_path}.experiment must name a subchapter in "
-                        f"{chapter_id}: {experiment!r}"
-                    )
-                runtime_learning_units.append(
-                    {
-                        "id": unit_id,
-                        "heading": heading,
-                        "claim": require_text(unit.get("claim"), f"{unit_path}.claim"),
-                        "question": require_text(
-                            unit.get("question"), f"{unit_path}.question"
-                        ),
-                        "choices": normalized_choices,
-                        "correct_choice": correct_choice,
-                        "feedback": require_text(
-                            unit.get("feedback"), f"{unit_path}.feedback"
-                        ),
-                        "follow_up": require_text(
-                            unit.get("follow_up"), f"{unit_path}.follow_up"
-                        ),
-                        "experiment_function_id": f"{chapter_id}.{experiment}",
-                    }
                 )
 
             if implementation is not None:
@@ -1002,7 +781,6 @@ def build_model(
                     "name": chapter_name,
                     "title": chapter_title,
                     "description": chapter_description,
-                    "overview_document": overview_document,
                     "resource_path": f"/app/chapters/{stem}.ui",
                     "widget_name": (
                         "chapter_page"
@@ -1015,7 +793,6 @@ def build_model(
                     "prerequisites": prerequisite_names,
                     "groups": runtime_groups,
                     "subchapters": runtime_subchapters,
-                    "learning_units": runtime_learning_units,
                 }
             )
 
@@ -1038,7 +815,6 @@ def build_model(
                 "title": category_title,
                 "description": category_description,
                 "icon": category_icon,
-                "handbook_documents": handbook_documents,
                 "chapters": runtime_chapters,
             }
         )
@@ -1089,7 +865,6 @@ def build_model(
             "categories": runtime_categories,
         },
         "ui": seen_ui,
-        "documents": documents,
         "source_files": source_files,
         "bindings": bindings,
         "chapters": chapters_by_id,

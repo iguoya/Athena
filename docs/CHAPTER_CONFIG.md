@@ -14,10 +14,9 @@ category                     课程分类、左侧导航
 
 `group` 是章节内部可选的视觉分组，不增加代码层级。`description` 是教学概要，也可作为 Codex 编写实验代码时的需求输入。
 
-理论、原则、跨文件工程思想这类不适合用单次运行结果表达的内容，不再对应
-独立的章节标签页，而是作为 Markdown 静态文档收进**所属分类**的
-`handbook_documents` 列表（见第 4.3 节）。每个分类有自己独立的一部手册，
-在该分类的"手册"标签页里统一展示、统一目录；手册不跨分类合并。
+理论、原则、跨文件工程思想这类不适合用单次运行结果表达的内容，不对应独立的
+章节标签页，而是写进所属章节原生学习页的教学大纲与教学过程（见第 6.2 节）。
+ADR 0034 之前它们曾以 Markdown 分类手册的形式存在，该路线已整体删除。
 
 ## 2. 完整示例
 
@@ -44,11 +43,6 @@ category                     课程分类、左侧导航
       "name": "cpp",
       "title": "C++",
       "description": "系统学习 C++ 语言和标准库。",
-      "handbook_documents": [
-        "resources/articles/cpp/reference_overview.md",
-        "resources/articles/cpp/raii_overview.md",
-        "resources/articles/cpp/program_organization.md"
-      ],
       "icon": {
         "type": "theme",
         "name": "applications-development-symbolic"
@@ -65,7 +59,6 @@ category                     课程分类、左侧导航
           "implementation": {
             "header": "cplusplus/references/reference.hpp"
           },
-          "overview_document": "resources/articles/cpp/reference_overview.md",
           "subchapters": [
             {
               "name": "basic",
@@ -88,8 +81,7 @@ category                     课程分类、左侧导航
 | `defaults` | object | 是 | 章节通用界面和图标默认值 |
 | `categories` | array | 是 | 有序课程分类列表 |
 
-顶层**没有** `handbook_documents`：手册按分类各自独立，文档列表写在各个
-分类里（见 4.3）。配置里出现顶层 `handbook_documents` 会被生成器判为错误，
+配置里出现 `handbook_documents`（顶层或分类级）会被生成器判为错误，
 而不是静默忽略。
 
 `format_version` 只用于告诉生成器“这份文件按第几版规则读取”，当前固定写 `1`。
@@ -147,37 +139,6 @@ resources/ui/chapters/empty_chapter.blp
 
 章节或知识点没有自己的 `icon` 时继承对应默认值。图标回退由通用 UI 逻辑处理，禁止在 C++ 中按章节名手写图标映射。
 
-### 4.3 手册 `category.handbook_documents`
-
-分类级数组，列出该分类"手册"标签页收录的静态 Markdown 文档路径，按数组
-顺序拼接、渲染成一份带完整目录（H1–H3）的页面。每个分类各有一部手册，
-互不合并；某个分类可以不写这个字段（暂无手册），标签页会显示一句占位
-说明：
-
-```json
-"handbook_documents": [
-  "resources/articles/cpp/reference_overview.md",
-  "resources/articles/cpp/raii_overview.md",
-  "resources/articles/cpp/program_organization.md"
-]
-```
-
-手册页面复用常驻的 `DocumentView`：Markdown 先解析为 `DocModel`，再由
-`ScrolledWindow > Box` 的 GTK 控件流承载。它不创建 WebView，也没有平台后端；目录
-与 `overview_document` 跳转通过已登记的标题控件完成。
-
-`handbook_documents` 里的文档不要求对应某个 `chapter`——它是该分类内容的合集，
-跟具体章节解耦。章节的 `overview_document`（见 6.2）如果要用，其值必须
-已经在这个列表里，生成器 `check` 时会校验，缺了会报错而不是静默忽略。
-
-界面上，"手册"是该分类标签行里的一个标签页（跟"学习进度"一样，是不来自
-本配置的合成标签页）：有欢迎页的分类排在"欢迎页面 → 学习进度"之后，没有
-欢迎页的分类排在最前。**没有跨分类的全局手册入口**。手册页面里的每份
-文档最终会显示成一段小节，段与段之间用一条分隔线隔开。
-
-各分类手册的标题编号（"第 N 章"/"N.M"）各自独立，从第 1 章起编，不跨
-分类连续。
-
 ## 5. 分类 `category`
 
 | 字段 | 类型 | 必填 | 说明 |
@@ -186,7 +147,6 @@ resources/ui/chapters/empty_chapter.blp
 | `title` | string | 是 | 左侧导航显示标题 |
 | `description` | string | 是 | 分类学习范围概要 |
 | `icon` | icon | 是 | 分类导航图标 |
-| `handbook_documents` | array | 否 | 该分类手册收录的静态文档列表，见 4.3 |
 | `chapters` | array | 是 | 有序一级章节列表 |
 
 示例映射：
@@ -205,7 +165,7 @@ category.name = cpp
 
 ## 6. 一级章节 `chapter`
 
-一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类；理论性、跨文件的工程思想类内容不再放进独立章节标签页，而是走所属分类的 `handbook_documents`（见 4.3）。
+一级章节是课程中的大概念，例如“引用”“RAII 与资源管理”“STL 容器”。每个一级章节对应一个标签页和一个同名 C++ 类；理论性、跨文件的工程思想类内容写进该章原生学习页的教学大纲与教学过程（见 6.2）。
 
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---:|---|
@@ -213,8 +173,6 @@ category.name = cpp
 | `title` | string | 是 | 标签页显示标题 |
 | `description` | string | 是 | 整章概要 |
 | `prerequisites` | array | 否 | 同分类前置章节的 `name` 列表；缺省为空，生成器校验引用存在、无重复、无自引用且整图无环；C++ 分类索引据此生成知识图谱 |
-| `overview_document` | string | 否 | 本章教学大纲文档，也是“说明文档”按钮跳转目标，必须是**本分类** `handbook_documents` 里已有的一条路径；未提供时按钮退回复制提示词到剪贴板并唤起本机 AI 助手 |
-| `learning_units` | array | 否 | 迁移期的可复用预测单元；仅供仍使用 `WorkbenchPage` 的旧式阅读工作台使用，不能作为原生学习场景的内容协议 |
 | `icon` | icon | 否 | 标签页图标；缺省时继承默认章节图标 |
 | `ui` | object | 否 | 特殊 Blueprint 覆盖 |
 | `source` | string | 否 | 代码框显示的源码路径 |
@@ -295,31 +253,24 @@ subchapter.name -> C++ 成员函数名
 ^[A-Za-z_][A-Za-z0-9_]*$
 ```
 
-### 6.2 教学大纲文档 `overview_document`
+### 6.2 教学大纲（在章节的 `.blp` 里）
 
-章节可选提供 `overview_document`，指向本章的**教学大纲文档**：一份人工撰写、
-静态存在于 `resources/articles/` 下、并且已经列在**本分类**的 `handbook_documents`
-（4.3）里的 Markdown：
+章节的**教学大纲**不是配置字段，也不是文档：它是该章 Blueprint 里 Notebook 的
+第一个标签，标题就叫「教学大纲」，例如
+`resources/ui/chapters/type_semantics_lesson.blp`。[ADR 0034](decisions/0034-remove-markdown-handbook.md)
+删除了 Markdown 手册整条路线，`category.handbook_documents`、
+`chapter.overview_document`、`subchapter.teaches` 和 `chapter.learning_units`
+四个字段一并废弃，生成器 `check` 遇到它们会报错。
 
-```json
-"overview_document": "resources/articles/cpp/reference_overview.md"
-```
+按 [ADR 0028](decisions/0028-outline-process-experiment-layering.md)，教学大纲在学习
+内容三层分工里处于最上层，**只指引大方向**。它**不写**具体语法机制、代码示例、
+API 用法细节，也不绑定练习或实验——细节由学习页的后续标签（教学过程）落实，
+可观察的体验由成员函数（教学实验）提供。一章一份。
 
-该字段适用于仍保留 Markdown 参考大纲的章节，不是原生大纲的必填字段。
-「类型与表达式」只维护 `resources/ui/chapters/type_semantics_lesson.blp` 中的原生
-「教学大纲」标签，已删除 Markdown 大纲和本字段，并从分类手册清单移除；
-原生页面也不提供「完整手册」按钮，不触发下述标准章节的说明文档回退行为。
+内容按 ADR 0028 第 6 节的范式组织，每章体例一致：开头一句题注（这一章承诺解决
+什么），然后是**五个固定部分**：
 
-按 [ADR 0028](decisions/0028-outline-process-experiment-layering.md)，教学大纲文档
-在学习内容三层分工里处于最上层，**只指引大方向**。它**不写**具体语法机制、代码
-示例、API 用法细节，也不绑定练习或实验——细节由原生学习页（教学过程）落实，
-可观察的体验由成员函数（教学实验）提供。一章一份，鼓励用静态 SVG 把脉络和分类
-讲清楚。
-
-正文按 ADR 0028 第 6 节的范式组织，每章体例一致：H1 之下用引用块写**一句题注**
-（这一章承诺解决什么），然后是**五个固定小节**：
-
-| 字段 | 回答什么 |
+| 部分 | 回答什么 |
 |---|---|
 | 痛点与来历 | 没有它之前现实工程里出什么事；何时、为解决什么被引入，后来怎么演进 |
 | 心智模型 | 用什么结构去理解它，以及由它派生的 2–4 个贯穿全章的基本问题 |
@@ -327,62 +278,15 @@ subchapter.name -> C++ 成员函数名
 | 判断与代价 | 写代码时它让你做哪些选择，每个选择的代价与边界 |
 | 落点 | 前置知识；它是后面哪些知识的地基；想深入时去哪查 |
 
-五节都要出现且不得为空，节内可用子标题但不再拆出第六个平级节；末尾仍保留
-「小结」。Markdown 参考示例见 `resources/articles/cpp/reference_overview.md`。
+五部分都要出现且不得为空，末尾保留「小结」。按
+[ADR 0033](decisions/0033-live-visuals-and-interaction.md)，能由运行时数据算出来的
+（先修依赖、难度与掌握目标、实时熟练度）要画成活的并配上互动，纯概念示意用
+`resources/articles/<分类>/images/` 下的静态 SVG。参考实现见
+`resources/ui/chapters/type_semantics_lesson.blp` 的「教学大纲」标签。
 
-界面里"说明文档"按钮点击后跳到手册页面里这份文档对应的位置（该文档
-在手册合集里第一个标题的锚点），**不发起任何网络或 AI 调用**——内容是
-撰写时一次性确定好、经人工审核过的，不是运行时现场生成的。撰写过程可以
-用 AI 辅助起草，但草稿必须经人工审核后才能提交；这是"自然语言 description
-不应由普通模板生成器直接转换成未经审查的实现"这条规则在文档内容上的
-应用，只是这里的"实现"换成了理论讲解文档。
-
-未提供 `overview_document` 的章节，"说明文档"退回复制章节标题、简介和
-全部知识点信息到剪贴板并唤起本机 AI 助手，跟未配置 `implementation` 的
-章节保持骨架框架、不强行生造内容是同一个原则。
-
-在配置层面，`overview_document` 只是"这个章节的大纲是手册里的哪份文档"这层
-指针，不影响章节本身的知识点列表、源码框和运行结果区；文档在手册目录里出现的
-顺序由本分类的 `handbook_documents` 决定，不由 `overview_document` 决定。
-
-大纲文档与分类手册的区别：手册是**跨章节**的体系化参考、完整规则与回查；大纲是
-**单章节**的纲领。二者都是 Markdown、都由 `DocumentView` 阅读，实现上大纲文档本身
-也收录在 `handbook_documents` 里（ADR 0012 之后手册合并的结果）。
-
-### 6.3 内联学习单元 `learning_units`
-
-`learning_units` 是原工作台迁移期的可复用“判断 → 预测 → 反馈 → 验证”单元。
-它不再是新增学习内容的首选：原生学习场景遵循 ADR 0026，直接由 Blueprint 与
-对应 GTK 模块组织，既不按 Markdown 标题定位，也不把交互内容塞回 JSON。每项字段如下：
-
-| 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | ASCII 标识符 | 本章内稳定且唯一的学习单元 ID |
-| `heading` | string | `overview_document` 中唯一存在的 H1–H6 标题；单元插在该节末尾 |
-| `claim` / `question` | string | 要判断的命题与预测题干 |
-| `choices` | string array | 至少两个预测选项 |
-| `correct_choice` | integer | 正确选项的从零开始下标 |
-| `feedback` / `follow_up` | string | 揭示后的原因和迁移问题 |
-| `experiment` | string | 本章已有的 `subchapter.name`，用于打开真实专注实验 |
-
-例如：
-
-```json
-"learning_units": [{
-  "id": "narrowing_boundary",
-  "heading": "1.1 初始化",
-  "claim": "花括号初始化会拒绝窄化。",
-  "question": "int value{3.75}; 能否通过编译？",
-  "choices": ["能", "不能"],
-  "correct_choice": 1,
-  "feedback": "小数部分可能丢失，因此列表初始化在编译期拒绝它。",
-  "follow_up": "比较圆括号初始化的边界。",
-  "experiment": "initialization"
-}]
-```
-
-第一阶段只支持打开已有的运行实验；不能把不存在的“编译失败”假装成已经实际
-执行。编译诊断、对象图和间隔复习将由后续独立能力扩展。
+界面里的"说明文档"按钮不再跳转到任何静态文档：它复制章节标题、简介和全部知识点
+信息到剪贴板并唤起本机 AI 助手（`ui/chapter_overview.h`），跟未配置
+`implementation` 的章节保持骨架框架、不强行生造内容是同一个原则。
 
 ## 7. 二级知识点 `subchapter`
 
@@ -396,11 +300,10 @@ subchapter.name -> C++ 成员函数名
 | `difficulty` | integer | 否 | 知识点难度，0–5，见下 |
 | `mastery_goal` | string | 否 | 掌握目标：`master` / `required` / `familiar`，见下 |
 | `knowledge_type` | string | 否 | 知识类型：`concept` / `skill` / `strategy`，决定教学动作，见下 |
-| `requires` | array | 否 | 先修知识点；同章写知识点名，跨章写完整函数 ID，见 7.2 |
+| `requires` | array | 否 | 先修知识点；同章写知识点名，跨章写完整函数 ID，见 7.1 |
 | `icon` | icon | 否 | 知识点图标；缺省时继承默认图标 |
 | `group` | string | 否 | 所属视觉分组的 `name` |
 | `source` | string | 否 | 该知识点专用的源码展示文件 |
-| `teaches` | object | 否 | 文档主导关系：本实验验证哪份文档的哪一小节，见 7.1 |
 
 `difficulty` 和 `mastery_goal` 是**两个互相独立的维度**（ADR 0029），和 `title`、
 `description` 一样在内容撰写时一次性给出，不是运行时数据；不要求该知识点已经写出
@@ -438,7 +341,7 @@ subchapter.name -> C++ 成员函数名
 状态，存在本地数据库中且不能手动修改；`difficulty` 与 `mastery_goal` 是内容作者
 的标注，只存在 `athena.json` 里。
 
-### 7.2 先修知识点 `requires`
+### 7.1 先修知识点 `requires`
 
 `requires` 声明“学这一条之前应当先掌握哪些知识点”，是知识点级的依赖，比章节级
 `prerequisites` 细一层。同一章内直接写知识点名，跨章写完整函数 ID：
@@ -455,60 +358,6 @@ subchapter.name -> C++ 成员函数名
 
 界面把先修显示为可点击的小标签，并按熟练度标出哪些还没学过，但**不禁用运行入口**——
 自用平台上跳着学是常态，这里只需要让“卡住可能是因为哪一步没打牢”看得出来。
-
-### 7.1 文档与实验映射 `teaches`
-
-适合动手验证的知识点可以声明它服务于哪一段教学正文：
-
-```json
-"teaches": {
-  "document": "resources/articles/cpp/reference_overview.md",
-  "heading": "心智模型"
-}
-```
-
-`document` 必须出现在同一分类的 `handbook_documents` 中；`heading` 必须与
-该 Markdown 文档中唯一一个 H1–H6 标题的可见文字完全一致。供 `teaches`
-引用的标题应保持简短、使用普通文字；问题、结论和解释写在标题后的正文中。
-生成器会在构建前检查标题存在且唯一，避免文档改名后留下一个表面可点击、实际
-无法定位的实验入口。
-
-关系方向固定为“文档小节被若干实验验证”：
-
-- 文档小节可以没有实验，理论内容不强行代码化。
-- 一个小节可以关联多个实验；它们在正文讲解结束后合并显示为一组入口。
-- 一个实验只声明一个主要教学位置，避免同一段实现承担含混的多重目标。
-- `teaches` 不改变稳定函数 ID；重写标题时应同步更新映射。
-
-工作台默认只展示文档。ADR 0023 的第一阶段中，读者点击小节末尾的实验入口后，
-打开共享的模态实验窗口；窗口按“当前目标 → 真实源码 → 运行操作 → 观察结果”纵向
-排列，不再重复全章知识点目录。后续阶段会把它迁入主窗口的专注实验页。
-
-映射示例：
-
-```text
-category.name = cpp
-chapter.name = Reference
-subchapter.name = reference_basics
-
-派生查找键：cpp.Reference.reference_basics
-C++ 目标：Reference::reference_basics(...)
-```
-
-不再同时保存 `id` 和 `method`。在当前一对一模型中，`name` 同时承担稳定局部名称和成员函数名，避免重复字段发生不一致。
-
-`name` 应优先使用能直接描述实验行为的完整 `snake_case` 短语，例如
-`const_reference`、`pass_by_reference` 和 `return_by_reference`。不要仅为避开
-C++ 关键字而使用 `const_`、`return_` 这类难以独立理解的名称。
-
-命名不使用缩写：`ctor`、`dtor`、`ptr`、`seq`、`assoc`、`rw` 等一律写全为
-`constructor_destructor`、`sequential_container` 这类完整语义短语。
-
-知识点名称必须是合法且非关键字的 C++ 函数标识符：
-
-```regex
-^[A-Za-z_][A-Za-z0-9_]*$
-```
 
 ## 8. 可选视觉分组 `group`
 
@@ -612,22 +461,21 @@ GTK 主题图标：
 - `chapter.description`：标签页顶部的章节概要。
 - `group.description`：视觉分组概要。
 - `subchapter.description`：成员函数实验必须覆盖的教学内容。
-- 分类 `handbook_documents` 里的文档：不便通过单页实验表达的理论正文；可以使用标题、列表、引用和代码块。
 
 `description` 应描述目标和边界，不包含生成器命令，也不粘贴完整实现代码。
 
-学习内容的定义方向是“C++ 知识点 → 学习文档 → 辅助实验代码”。`description` 和
-`handbook_documents` 必须从学习者需要掌握的概念、语义规则、适用边界、常见误区及
-思维模型出发撰写，而不是按当前 `.hpp`/`.cpp` 的组织和实现细节逐段解释源码。文档中的
-代码只作为理解和验证知识点的例证；课程实现必须服务于已经确认的学习目标，不能反过来
+学习内容的定义方向是“C++ 知识点 → 教学大纲 → 教学过程 → 辅助实验代码”。`description`
+和学习页正文必须从学习者需要掌握的概念、语义规则、适用边界、常见误区及思维模型出发
+撰写，而不是按当前 `.hpp`/`.cpp` 的组织和实现细节逐段解释源码。页面里的代码只作为
+理解和验证知识点的例证；课程实现必须服务于已经确认的学习目标，不能反过来
 把当前实现范围当作文档内容边界。使用 AI 或生成工具起草文档时，输入应是知识点元数据和
-学习目标，生成结果必须人工审核，不得直接把源码摘要当作教学文档。
+学习目标，生成结果必须人工审核，不得直接把源码摘要当作教学内容。
 
-文档不能只是连续陈述概念；对适合实验的知识点，应先提出需要理解、预测或判断的问题，
+学习页不能只是连续陈述概念；对适合实验的知识点，应先提出需要理解、预测或判断的问题，
 再由对应成员函数提供可观察的行为，让学习者比较“原有预期”和“实际结果”。代码也不能
-脱离文档独立堆叠技巧：每个教学实验都应能回答一个明确的知识问题。实验结果如果暴露了
-原有解释的遗漏或边界，应回到文档修正并深化知识体系，形成“思想 → 行动 → 反馈 → 新的
-理解”的循环；不适合单次实验表达的理论内容仍由手册承担，不强行代码化。
+脱离讲解独立堆叠技巧：每个教学实验都应能回答一个明确的知识问题。实验结果如果暴露了
+原有解释的遗漏或边界，应回到教学过程修正并深化知识体系，形成“思想 → 行动 → 反馈 →
+新的理解”的循环；不适合单次实验表达的理论内容由教学大纲与教学过程承担，不强行代码化。
 
 如果未来需要严格列举学习目标，可以通过新的配置格式版本增加 `objectives`，当前版本不预先引入。
 
@@ -651,12 +499,10 @@ GTK 主题图标：
 - 派生键 `category.chapter.subchapter` 全局唯一。
 - C++ 名称是否合法且不是关键字。
 - `group` 引用是否存在。
-- `overview_document` 是否已经出现在**同一个分类**的 `handbook_documents` 里。
-- `teaches.document` 是否属于同一分类的手册，`teaches.heading` 是否在目标文档中存在且唯一。
-- 分类的 `handbook_documents` 每一项是否位于 `resources/articles/` 下且文件存在，同一分类内不重复。
-- 配置里是否残留顶层 `handbook_documents`（已废弃，应报错）。
+- 配置里是否残留 `handbook_documents`、`overview_document`、`teaches` 或
+  `learning_units`（ADR 0034 已废弃，应报错）。
 - 每层对象是否包含未知字段或已经废弃的字段。
-- Blueprint、源码、Markdown 和资源图标路径是否有效。
+- Blueprint、源码和资源图标路径是否有效。
 - 所有章节都有可解析图标：自身图标或默认图标。
 - 所有知识点都有可解析图标：自身图标或默认图标。
 - 知识点 `difficulty` 若存在，必须是 0–5 的整数。

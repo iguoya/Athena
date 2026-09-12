@@ -23,9 +23,7 @@ class ChapterPageStack;
 class CodeChapterPage;
 class ExperimentPage;
 class ExperimentRunner;
-class HandbookPage;
 class PocketCubePage;
-class WorkbenchPage;
 class TypeSemanticsLessonPage;
 struct ExperimentSelection;
 
@@ -79,10 +77,6 @@ private:
         const string& page_key) const;
     string category_title(const string& category_name) const;
 
-    void ensure_handbook_page(const string& category_name);
-    void show_handbook_page(
-        const string& category_name,
-        const string& jump_to_document = "");
 
     Gtk::Widget* create_progress_page();
     void refresh_progress_page();
@@ -127,10 +121,8 @@ private:
     // 析构自然满足。手册页常驻 Stack，ArticleView 生命周期由对象独占。
     std::map<string, unique_ptr<CodeChapterPage>> m_code_pages;
     std::map<string, unique_ptr<PocketCubePage>> m_pocket_cube_pages;
-    std::map<string, unique_ptr<HandbookPage>> m_handbook_pages;
     // 学习工作台原型：目前只有 TypeSemantics 一章用它，独立于上面几个
     // map，不影响其他章节的构建路径。
-    std::map<string, unique_ptr<WorkbenchPage>> m_workbench_pages;
     std::map<string, unique_ptr<TypeSemanticsLessonPage>>
         m_type_semantics_lesson_pages;
 };

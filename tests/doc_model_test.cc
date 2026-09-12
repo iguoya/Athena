@@ -71,21 +71,4 @@ TEST(DocModelTest, PreservesOrderedListStartAndLineBreakKinds) {
     EXPECT_EQ(document.blocks[1].inlines[1].kind, DocInlineKind::LineBreak);
 }
 
-TEST(DocModelTest, ParsesEveryBundledLearningDocument) {
-    const vector<string> documents = {
-        "resources/articles/cpp/reference_overview.md",
-        "resources/articles/cpp/raii_overview.md",
-        "resources/articles/cpp/program_organization.md",
-        "resources/articles/practice/pocket_cube_overview.md",
-    };
-
-    for (const auto& path : documents) {
-        ifstream input(string(ATHENA_SOURCE_ROOT) + "/" + path);
-        ASSERT_TRUE(input) << path;
-        ostringstream content;
-        content << input.rdbuf();
-        EXPECT_FALSE(parse_document_blocks(content.str()).blocks.empty()) << path;
-    }
-}
-
 } // namespace
