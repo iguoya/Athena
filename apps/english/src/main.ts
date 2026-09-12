@@ -877,17 +877,35 @@ function showMistakes(): void {
   if (!mistakes.some((mistake) => mistake.item_id === currentMistakeId)) {
     currentMistakeId = mistakes[0]!.item_id;
   }
-  dom.mistakeList.innerHTML = mistakes
-    .map((mistake) => {
-      const runtime = runtimes.get(mistake.topic_id);
-      return `<button type="button" class="english-item" data-mistake="${esc(mistake.item_id)}" aria-current="${
-        mistake.item_id === currentMistakeId
-      }"><span>${esc(mistake.error_tag)}</span><small>${esc(runtime?.track.title ?? "")} · ${
-        mistake.wrong_count
-      } 次</small></button>`;
+  dom.mistakeList.innerHTML = mistakeGroups()
+    .map((group) => {
+      const runtime = runtimes.get(group.items[0]!.topic_id);
+      const holds = group.items.some((mistake) => mistake.item_id === currentMistakeId);
+      return `<button type="button" class="english-item" data-tag="${esc(group.tag)}" aria-current="${holds}">
+          <span>${esc(group.tag)}</span><small>${esc(runtime?.track.title ?? "")} · ${group.items.length} 次</small>
+        </button>`;
     })
     .join("");
   renderMistakeDetail();
+}
+
+interface MistakeGroup {
+  tag: string;
+  items: Mistake[];
+}
+
+/** 草图的错题本左栏按错因归组：一个错因一行，右边是这一组的题数。 */
+function mistakeGroups(): MistakeGroup[] {
+  const groups = new Map<string, Mistake[]>();
+  for (const mistake of mistakes) {
+    const bucket = groups.get(mistake.error_tag);
+    if (bucket) {
+      bucket.push(mistake);
+    } else {
+      groups.set(mistake.error_tag, [mistake]);
+    }
+  }
+  return [...groups].map(([tag, items]) => ({ tag, items }));
 }
 
 function renderMistakeDetail(): void {
@@ -900,9 +918,12 @@ function renderMistakeDetail(): void {
   const stem = item ? itemStem(item) : undefined;
   const hasVariant = (item?.variants?.length ?? 0) > 0;
 
+  const group = mistakeGroups().find((entry) => entry.tag === mistake.error_tag);
+  const position = (group?.items.findIndex((entry) => entry.item_id === mistake.item_id) ?? 0) + 1;
+  const groupSize = group?.items.length ?? 1;
   dom.mistakeDetail.innerHTML = `<p class="english-crumb">${esc(runtime?.stage.title ?? "")} · ${esc(
     runtime?.track.title ?? "",
-  )} · 错因：${esc(mistake.error_tag)}</p>
+  )} · 错因：${esc(mistake.error_tag)}${groupSize > 1 ? ` · 本组第 ${position} / ${groupSize} 题` : ""}</p>
     <h2>不是重做原题，而是纠正判断</h2>
     <p class="english-practice-goal">保留原题、错误答案和解析，再用同一知识点的变式确认是否真正会了。</p>
     ${stem ? `<blockquote class="english-context">${esc(stem)}</blockquote>` : ""}
@@ -914,24 +935,50 @@ function renderMistakeDetail(): void {
         mistake.correct_answer,
       )}</span></div>
     </div>
-    <div class="english-mistake-rule"><strong>移出规则：</strong>不同日期连续答对原知识点和一道未见变式后自动移出；再次答错则重新累计。当前已连对 ${
+    <div class="english-mistake-rule"><strong>移出规则：</strong>不同日期连续答对原知识点和一道未见变式后，系统自动移出；再次答错则重新累计。当前已连对 ${
       mistake.correct_days
     } 天，变式${mistake.variant_correct ? "已做对" : "还没做对"}。</div>
-    ${mistake.explanation ? `<p class="english-practice-goal">${esc(mistake.explanation)}</p>` : ""}
     <div class="english-mistake-actions">
       <button type="button" data-primary data-act="retry">${hasVariant ? "开始一道变式" : "重做这道题"}</button>
-      <button type="button" data-act="open-track">回到${esc(runtime?.track.title ?? "该轨")}练习</button>
-    </div>`;
+      <button type="button" data-act="explain">查看完整解析</button>
+    </div>
+    <div class="english-feedback" id="mistake-explain"></div>`;
 
   dom.mistakeDetail.querySelector<HTMLButtonElement>('[data-act="retry"]')?.addEventListener("click", () => {
-    if (runtime && item) {
-      startPractice(runtime, [item]);
+    if (!runtime || !item) {
+      return;
     }
+    const sameTrack = (group?.items ?? [])
+      .filter((entry) => entry.topic_id === mistake.topic_id)
+      .map((entry) => runtime.deck.items.find((deckItem) => deckItem.id === entry.item_id))
+      .filter((entry): entry is DeckItem => entry !== undefined);
+    startPractice(runtime, sameTrack.length > 0 ? sameTrack : [item], mistake.item_id);
   });
-  dom.mistakeDetail.querySelector<HTMLButtonElement>('[data-act="open-track"]')?.addEventListener("click", () => {
-    if (runtime) {
-      startPractice(runtime, runtime.deck.items, mistake.item_id);
+  dom.mistakeDetail.querySelector<HTMLButtonElement>('[data-act="explain"]')?.addEventListener("click", () => {
+    const box = document.getElementById("mistake-explain");
+    if (!box) {
+      return;
     }
+    const choices = item?.choices ?? [];
+    const answer = choices.find((choice) => choice.ok);
+    box.innerHTML = `<p>${esc(mistake.explanation || answer?.why || "这道题没有留下解析。")}</p>
+      ${choices
+        .filter((choice) => !choice.ok && choice.why)
+        .map((choice) => `<p>${esc(choice.label)}——${esc(choice.why ?? "")}</p>`)
+        .join("")}
+      ${
+        runtime
+          ? `<button type="button" class="english-feedback-action" data-act="open-track">回到${esc(
+              runtime.track.title,
+            )}练习</button>`
+          : ""
+      }`;
+    box.classList.add("is-visible");
+    box.querySelector<HTMLButtonElement>('[data-act="open-track"]')?.addEventListener("click", () => {
+      if (runtime) {
+        startPractice(runtime, runtime.deck.items, mistake.item_id);
+      }
+    });
   });
 }
 
@@ -1006,9 +1053,10 @@ function bindEvents(): void {
   });
 
   dom.mistakeList.addEventListener("click", (event) => {
-    const id = (event.target as HTMLElement).closest<HTMLElement>("[data-mistake]")?.dataset.mistake;
-    if (id) {
-      currentMistakeId = id;
+    const tag = (event.target as HTMLElement).closest<HTMLElement>("[data-tag]")?.dataset.tag;
+    const group = tag ? mistakeGroups().find((entry) => entry.tag === tag) : undefined;
+    if (group) {
+      currentMistakeId = group.items[0]!.item_id;
       showMistakes();
     }
   });
