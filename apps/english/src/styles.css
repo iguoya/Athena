@@ -2,29 +2,48 @@
    配色遵循通用约定：绿=已通过，橙=待完成，蓝=当前可做的主操作，红=错。 */
 
 :root {
-  --bg: #f4f5f8;
+  color-scheme: light dark;
+
+  /* 色值取自 docs/ui-sketch/english-learning-roadmap.html，未改动。
+     只有蓝、绿、橙三个色相：绿=已通过，橙=待完成/答错，蓝=当前该做的。 */
+  --bg: #eaf0f7;
+  --window: #f7f9fc;
   --card: #ffffff;
-  --line: #e2e5ec;
-  --line-soft: #eef0f4;
-  --ink: #1f2430;
-  --muted: #6b7280;
+  --surface: #f1f5fa;
+  --ink: #192332;
+  --muted: #627184;
+  --line: #d4dde8;
+  --blue: #1769c2;
+  --blue-soft: #dcecff;
+  --green: #18794e;
+  --green-soft: #dff4e9;
+  --orange: #a65509;
+  --orange-soft: #fff0dd;
+  --on-blue: #ffffff;
 
-  --blue: #2563eb;
-  --blue-soft: #eff6ff;
-  --orange: #ea580c;
-  --orange-soft: #fff7ed;
-  --violet: #7c3aed;
-  --violet-soft: #f5f3ff;
-  --green: #16a34a;
-  --green-soft: #ecfdf5;
-  --amber: #b45309;
-  --amber-soft: #fffbeb;
-  --red: #dc2626;
-  --red-soft: #fef2f2;
+  --ui: "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", system-ui,
+    -apple-system, sans-serif;
+  --radius: 0.62em;
+  --radius-card: 0.75em;
+}
 
-  --ui: "PingFang SC", "Source Han Sans SC", "Noto Sans CJK SC", system-ui,
-    -apple-system, "Segoe UI", sans-serif;
-  --radius: 0.55em;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111821;
+    --window: #17212c;
+    --card: #202c38;
+    --surface: #263442;
+    --ink: #edf3f8;
+    --muted: #aebbc8;
+    --line: #3b4b5b;
+    --blue: #6cb4ff;
+    --blue-soft: #203d59;
+    --green: #68d6a0;
+    --green-soft: #1f4437;
+    --orange: #ffb66c;
+    --orange-soft: #4d3522;
+    --on-blue: #102132;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -36,7 +55,7 @@ html, body, #app { height: 100%; margin: 0; }
 body {
   font-family: var(--ui);
   color: var(--ink);
-  background: var(--bg);
+  background: var(--window);
   line-height: 1.55;
 }
 
@@ -53,7 +72,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1em;
-  padding: 0.6em 1.1em;
+  padding: 0.65em 1.15em;
   background: var(--card);
   border-bottom: 1px solid var(--line);
 }
@@ -68,12 +87,12 @@ body {
   border-radius: var(--radius);
   background: var(--blue-soft);
   color: var(--blue);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.92em;
   letter-spacing: 0.02em;
 }
 
-.brand h1 { margin: 0; font-size: 1.08em; font-weight: 650; }
+.brand h1 { margin: 0; font-size: 1.08em; font-weight: 500; }
 
 .trail { margin: 0.1em 0 0; font-size: 0.88em; color: var(--muted); }
 
@@ -83,24 +102,25 @@ body {
   border: 1px solid var(--line);
   background: var(--card);
   color: var(--ink);
-  border-radius: 999px;
+  border-radius: var(--radius);
   padding: 0.3em 0.85em;
   font: inherit;
   font-size: 0.9em;
   cursor: pointer;
 }
 
-.chip b { font-weight: 650; }
+.chip b { font-weight: 500; }
 
 .chip:hover { border-color: var(--blue); color: var(--blue); }
 
 .chip.is-primary {
   background: var(--blue);
   border-color: var(--blue);
-  color: #fff;
+  color: var(--on-blue);
+  font-weight: 500;
 }
 
-.chip.is-primary:hover { background: #1d4ed8; color: #fff; }
+.chip.is-primary:hover { filter: brightness(1.08); color: var(--on-blue); }
 
 .chip:disabled { opacity: 0.45; cursor: default; }
 
@@ -110,19 +130,29 @@ body {
 
 .view-route {
   display: grid;
-  grid-template-columns: minmax(13em, 22%) minmax(0, 1fr);
-  gap: 1.1em;
-  padding: 1.1em 1.2em 1.4em;
+  grid-template-columns: minmax(12em, 15.5em) minmax(0, 1fr);
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
 }
 
-.route { align-self: start; display: grid; gap: 0.8em; }
+.route {
+  overflow: auto;
+  padding: 1em 0.8em;
+  background: var(--card);
+  border-right: 1px solid var(--line);
+}
+
+.stage-detail {
+  overflow: auto;
+  padding: 1.2em 1.3em 1.5em;
+}
+
+
 
 .pane-title {
   margin: 0;
   font-size: 0.88em;
-  font-weight: 650;
+  font-weight: 500;
   color: var(--muted);
 }
 
@@ -135,8 +165,8 @@ body {
   gap: 0.55em;
   align-items: start;
   text-align: left;
-  border: 1px solid var(--line);
-  background: var(--card);
+  border: 1px solid transparent;
+  background: transparent;
   border-radius: var(--radius);
   padding: 0.6em 0.7em;
   font: inherit;
@@ -157,33 +187,32 @@ body {
   background: var(--line-soft);
   color: var(--muted);
   font-size: 0.88em;
-  font-weight: 650;
+  font-weight: 500;
 }
 
 .stage-mark.is-done { background: var(--green-soft); color: var(--green); }
 
-.stage-btn strong { font-weight: 650; }
+.stage-btn strong { font-weight: 500; }
 
 .stage-btn small { display: block; color: var(--muted); font-size: 0.88em; }
 
 .endpoint {
-  border: 1px solid var(--amber);
-  background: var(--amber-soft);
+  background: var(--orange-soft);
   border-radius: var(--radius);
-  padding: 0.6em 0.7em;
+  padding: 0.7em 0.75em;
 }
 
-.endpoint-title { margin: 0 0 0.15em; font-size: 0.88em; font-weight: 650; color: var(--amber); }
+.endpoint-title { margin: 0 0 0.15em; font-size: 0.88em; font-weight: 500; color: var(--orange); }
 
-.endpoint-text { margin: 0; font-size: 0.9em; color: var(--amber); }
+.endpoint-text { margin: 0; font-size: 0.9em; color: var(--orange); }
 
 /* ----------------------------------------------------- 当前等级主区 */
 
-.stage-detail { display: grid; gap: 0.9em; align-content: start; min-width: 0; }
+.stage-detail > * + * { margin-top: 0.9em; }
 
 .stage-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1em; }
 
-.stage-head h2 { margin: 0; font-size: 1.3em; font-weight: 650; }
+.stage-head h2 { margin: 0; font-size: 1.3em; font-weight: 500; }
 
 .muted { color: var(--muted); }
 
@@ -194,7 +223,7 @@ body {
   border-radius: 999px;
   padding: 0.2em 0.7em;
   font-size: 0.88em;
-  font-weight: 650;
+  font-weight: 500;
   border: 1px solid transparent;
 }
 
@@ -206,10 +235,9 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.6em;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--surface);
   border-radius: var(--radius);
-  padding: 0.7em 0.8em;
+  padding: 0.7em 0.9em;
 }
 
 .exam-cell { display: flex; gap: 0.5em; align-items: flex-start; }
@@ -222,13 +250,13 @@ body {
   height: 1.35em;
   border-radius: 50%;
   font-size: 0.88em;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .exam-icon.is-pass { background: var(--green-soft); color: var(--green); }
-.exam-icon.is-todo { background: var(--amber-soft); color: var(--amber); }
+.exam-icon.is-todo { background: var(--orange-soft); color: var(--orange); }
 
-.exam-cell strong { display: block; font-size: 0.95em; font-weight: 650; }
+.exam-cell strong { display: block; font-size: 0.95em; font-weight: 500; }
 
 .exam-cell span { display: block; font-size: 0.88em; color: var(--muted); }
 
@@ -244,34 +272,27 @@ body {
   align-content: start;
   background: var(--card);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   padding: 0.75em 0.85em 0.85em;
 }
 
-.track-card.kind-vocab { border-top-color: var(--blue); }
-.track-card.kind-sentence { border-top-color: var(--orange); }
-.track-card.kind-writing { border-top-color: var(--violet); }
+/* 三张卡一律白底：下一件该做的事靠主按钮的实心蓝区分，不靠卡片底色 */
 
 .track-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5em; }
 
-.track-top h3 { margin: 0; font-size: 1.08em; font-weight: 650; }
+.track-top h3 { margin: 0; font-size: 1.08em; font-weight: 500; }
 
-.track-tag { font-size: 0.88em; font-weight: 650; }
+.track-tag { font-size: 0.88em; font-weight: 500; }
 
-.kind-vocab .track-tag { color: var(--blue); }
-.kind-sentence .track-tag { color: var(--orange); }
-.kind-writing .track-tag { color: var(--violet); }
+.track-tag { color: var(--muted); }
 
 .track-card > p { margin: 0; font-size: 0.92em; color: var(--muted); }
 
-.bar { height: 0.32em; border-radius: 999px; background: var(--line-soft); overflow: hidden; }
+.bar { height: 0.38em; border-radius: 999px; background: var(--line-soft); overflow: hidden; }
 
 .bar > span { display: block; height: 100%; border-radius: 999px; }
 
-.kind-vocab .bar > span { background: var(--blue); }
-.kind-sentence .bar > span { background: var(--orange); }
-.kind-writing .bar > span { background: var(--violet); }
+.bar > span { background: var(--blue); }
 
 .track-stats {
   display: flex;
@@ -297,25 +318,26 @@ body {
 }
 
 .principle {
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--surface);
   border-radius: var(--radius);
-  padding: 0.6em 0.7em;
+  padding: 0.6em 0.75em;
 }
 
 .principle p { margin: 0; font-size: 0.88em; color: var(--muted); }
 
-.principle-title { font-weight: 650; color: var(--ink) !important; margin-bottom: 0.15em !important; }
+.principle-title { font-weight: 500; color: var(--ink) !important; margin-bottom: 0.15em !important; }
 
 .unlock-note {
   margin: 0;
-  border: 1px solid var(--amber);
-  background: var(--amber-soft);
-  color: var(--amber);
+  background: var(--surface);
+  color: var(--muted);
   border-radius: var(--radius);
-  padding: 0.55em 0.75em;
+  padding: 0.6em 0.8em;
   font-size: 0.9em;
 }
+
+/* 草图里这条橙色提示只在未解锁时出现 */
+.unlock-note.is-locked { background: var(--orange-soft); color: var(--orange); }
 
 /* --------------------------------------------------- 练习台 / 错题本 */
 
@@ -329,7 +351,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.8em;
-  padding: 0.55em 1.1em;
+  padding: 0.55em 1.15em;
   background: var(--card);
   border-bottom: 1px solid var(--line);
 }
@@ -347,7 +369,7 @@ body {
 
 .back:hover { border-color: var(--blue); color: var(--blue); }
 
-.drill-title { font-weight: 650; }
+.drill-title { font-weight: 500; }
 
 .drill-progress { margin-left: auto; font-size: 0.9em; color: var(--muted); }
 
@@ -384,11 +406,12 @@ body {
 
 .item-index button:disabled { cursor: default; }
 
-.item-index .is-active button { color: var(--blue); font-weight: 650; }
+.item-index .is-active button { color: var(--blue); font-weight: 500; }
 
 .item-index small { display: block; font-size: 0.88em; color: var(--muted); }
 
 .desk {
+  background: var(--window);
   overflow: auto;
   padding: 1.1em 1.2em 1.6em;
   display: grid;
@@ -401,32 +424,32 @@ body {
   width: min(38em, 100%);
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
 }
 
 .folio { padding: 1em 1.2em 0.4em; }
 
-.folio h1, .folio h2 { font-size: 1.15em; font-weight: 650; margin: 0 0 0.5em; }
+.folio h1, .folio h2 { font-size: 1.15em; font-weight: 500; margin: 0 0 0.5em; }
 
 .folio p { font-size: 1em; line-height: 1.75; margin: 0 0 0.8em; }
 
 .drill { padding: 0.95em 1.1em 1.1em; }
 
-.card-kicker { margin: 0 0 0.4em; font-size: 0.88em; font-weight: 650; color: var(--muted); }
+.card-kicker { margin: 0 0 0.4em; font-size: 0.88em; font-weight: 500; color: var(--muted); }
 
-.word { margin: 0 0 0.15em; font-size: 1.55em; font-weight: 650; }
+.word { margin: 0 0 0.15em; font-size: 1.55em; font-weight: 500; }
 
 .stem {
   margin: 0 0 0.75em;
-  padding: 0.55em 0.75em;
-  border-left: 3px solid var(--line);
-  background: var(--line-soft);
+  padding: 0.6em 0.85em;
+  border-left: 4px solid var(--blue);
+  background: var(--surface);
   border-radius: 0 var(--radius) var(--radius) 0;
   font-size: 1.02em;
   line-height: 1.7;
 }
 
-.prompt { margin: 0 0 0.55em; font-weight: 650; }
+.prompt { margin: 0 0 0.55em; font-weight: 500; }
 
 .choices { display: grid; gap: 0.4em; }
 
@@ -445,9 +468,9 @@ body {
 
 .choice.is-ok { background: var(--green-soft); border-color: var(--green); }
 
-.choice.is-bad { background: var(--red-soft); border-color: var(--red); }
+.choice.is-bad { background: var(--orange-soft); border-color: var(--orange); }
 
-.choice.is-picked { font-weight: 650; }
+.choice.is-picked { font-weight: 500; }
 
 .explain { margin-top: 0.8em; padding-top: 0.7em; border-top: 1px solid var(--line); }
 
@@ -466,7 +489,7 @@ body {
   min-height: 7.5em;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   color: inherit;
   font: inherit;
   line-height: 1.7;
@@ -479,19 +502,19 @@ body {
 .reference {
   font-size: 0.98em;
   line-height: 1.7;
-  background: var(--line-soft);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 0.55em 0.7em;
 }
 
 .report { padding: 0.95em 1.1em 1.1em; }
 
-.report h3 { margin: 0 0 0.5em; font-size: 1.15em; font-weight: 650; }
+.report h3 { margin: 0 0 0.5em; font-size: 1.15em; font-weight: 500; }
 
-.score { font-size: 2em; font-weight: 650; }
+.score { font-size: 2em; font-weight: 500; }
 
 .score.is-pass { color: var(--green); }
-.score.is-fail { color: var(--amber); }
+.score.is-fail { color: var(--orange); }
 
 .report-row {
   display: grid;
@@ -502,15 +525,16 @@ body {
   font-size: 0.92em;
 }
 
-.report-row b { font-weight: 650; }
+.report-row b { font-weight: 500; }
 
-.report-row .ok { color: var(--green); font-weight: 700; }
+.report-row .ok { color: var(--green); font-weight: 500; }
 
-.report-row .bad { color: var(--red); font-weight: 700; }
+.report-row .bad { color: var(--orange); font-weight: 500; }
 
 .report-row .muted { display: block; }
 
 .mistake-list {
+  background: var(--window);
   overflow: auto;
   padding: 1.1em 1.2em 1.6em;
   display: grid;
@@ -524,17 +548,17 @@ body {
   text-align: left;
   background: var(--card);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--red);
-  border-radius: var(--radius);
+  border-left: 4px solid var(--orange);
+  border-radius: var(--radius-card);
   padding: 0.65em 0.8em;
   font: inherit;
   color: inherit;
   cursor: pointer;
 }
 
-.mistake:hover { border-color: var(--blue); border-left-color: var(--red); }
+.mistake:hover { border-color: var(--blue); border-left-color: var(--orange); }
 
-.mistake strong { font-weight: 650; }
+.mistake strong { font-weight: 500; }
 
 .mistake p { margin: 0.15em 0 0; font-size: 0.9em; color: var(--muted); }
 

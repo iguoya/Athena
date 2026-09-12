@@ -1,0 +1,638 @@
+<div id="english-stage-map" aria-label="考研英语二分级学习界面示意" data-view="overview">
+  <style>
+    #english-stage-map {
+      --english-bg: light-dark(#eaf0f7, #111821);
+      --english-window: light-dark(#f7f9fc, #17212c);
+      --english-panel: light-dark(#ffffff, #202c38);
+      --english-panel-soft: light-dark(#f1f5fa, #263442);
+      --english-text: light-dark(#192332, #edf3f8);
+      --english-muted: light-dark(#627184, #aebbc8);
+      --english-line: light-dark(#d4dde8, #3b4b5b);
+      --english-blue: light-dark(#1769c2, #6cb4ff);
+      --english-blue-soft: light-dark(#dcecff, #203d59);
+      --english-green: light-dark(#18794e, #68d6a0);
+      --english-green-soft: light-dark(#dff4e9, #1f4437);
+      --english-orange: light-dark(#a65509, #ffb66c);
+      --english-orange-soft: light-dark(#fff0dd, #4d3522);
+      --english-shadow: 0 18px 50px light-dark(rgba(44, 64, 86, .16), rgba(0, 0, 0, .32));
+      color: var(--english-text);
+      background: transparent;
+      font-family: "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+    }
+    #english-stage-map * { box-sizing: border-box; }
+    #english-stage-map .english-window {
+      min-height: 690px;
+      overflow: hidden;
+      border: 1px solid var(--english-line);
+      border-radius: 20px;
+      background: var(--english-window);
+      box-shadow: var(--english-shadow);
+    }
+    #english-stage-map .english-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--english-line);
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-brand { display: flex; align-items: center; gap: 12px; }
+    #english-stage-map .english-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      color: var(--english-blue);
+      background: var(--english-blue-soft);
+      font-weight: 500;
+    }
+    #english-stage-map h1,
+    #english-stage-map h2,
+    #english-stage-map h3,
+    #english-stage-map p { margin: 0; }
+    #english-stage-map h1 { font-size: 18px; font-weight: 500; }
+    #english-stage-map .english-subtitle { color: var(--english-muted); font-size: 13px; margin-top: 2px; }
+    #english-stage-map .english-actions { display: flex; gap: 10px; align-items: center; }
+    #english-stage-map button {
+      min-height: 38px;
+      border: 1px solid var(--english-line);
+      border-radius: 10px;
+      padding: 8px 13px;
+      color: var(--english-text);
+      background: var(--english-panel);
+      font: inherit;
+      cursor: pointer;
+    }
+    #english-stage-map button[data-primary] {
+      color: light-dark(#ffffff, #102132);
+      border-color: var(--english-blue);
+      background: var(--english-blue);
+      font-weight: 500;
+    }
+    #english-stage-map .english-back-stage { display: none; }
+    #english-stage-map[data-view="practice"] .english-back-stage,
+    #english-stage-map[data-view="mistakes"] .english-back-stage { display: inline-flex; }
+    #english-stage-map[data-view="practice"] .english-overview-action,
+    #english-stage-map[data-view="mistakes"] .english-overview-action { display: none; }
+    #english-stage-map .english-body {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 620px;
+    }
+    #english-stage-map .english-roadmap {
+      padding: 18px 14px;
+      border-right: 1px solid var(--english-line);
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-roadmap-title {
+      padding: 0 8px 12px;
+      color: var(--english-muted);
+      font-size: 13px;
+    }
+    #english-stage-map .english-stage-list { display: grid; gap: 8px; }
+    #english-stage-map .english-stage {
+      position: relative;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      text-align: left;
+      background: transparent;
+      border-color: transparent;
+      padding: 10px 9px;
+    }
+    #english-stage-map .english-stage[aria-pressed="true"] {
+      border-color: var(--english-blue);
+      background: var(--english-blue-soft);
+    }
+    #english-stage-map .english-stage[data-locked="true"] { color: var(--english-muted); }
+    #english-stage-map .english-stage-index {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--english-panel-soft);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    #english-stage-map .english-stage[data-status="passed"] .english-stage-index {
+      color: var(--english-green);
+      background: var(--english-green-soft);
+    }
+    #english-stage-map .english-stage-name { display: block; font-size: 15px; font-weight: 500; }
+    #english-stage-map .english-stage-state { display: block; color: var(--english-muted); font-size: 12px; margin-top: 3px; }
+    #english-stage-map .english-target {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--english-orange-soft);
+      color: var(--english-orange);
+      font-size: 13px;
+    }
+    #english-stage-map .english-main { padding: 22px; }
+    #english-stage-map .english-current-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+    #english-stage-map h2 { font-size: 23px; font-weight: 500; }
+    #english-stage-map .english-goal { color: var(--english-muted); margin-top: 6px; max-width: 680px; }
+    #english-stage-map .english-stage-badge {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 9px;
+      color: var(--english-blue);
+      background: var(--english-blue-soft);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    #english-stage-map .english-gate {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      border-radius: 13px;
+      background: var(--english-panel-soft);
+    }
+    #english-stage-map .english-gate-part { display: flex; align-items: center; gap: 10px; }
+    #english-stage-map .english-check {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: var(--english-green);
+      background: var(--english-green-soft);
+      font-weight: 500;
+    }
+    #english-stage-map .english-wait {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: var(--english-orange);
+      background: var(--english-orange-soft);
+      font-weight: 500;
+    }
+    #english-stage-map .english-tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    #english-stage-map .english-track {
+      padding: 17px;
+      border: 1px solid var(--english-line);
+      border-radius: 15px;
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-track-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    #english-stage-map h3 { font-size: 17px; font-weight: 500; }
+    #english-stage-map .english-track-state { color: var(--english-muted); font-size: 12px; }
+    #english-stage-map .english-track-desc { color: var(--english-muted); font-size: 14px; margin-top: 8px; min-height: 44px; }
+    #english-stage-map .english-meter {
+      height: 8px;
+      margin: 15px 0 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--english-panel-soft);
+    }
+    #english-stage-map .english-meter > span { display: block; height: 100%; background: var(--english-blue); }
+    #english-stage-map .english-measure { display: flex; justify-content: space-between; color: var(--english-muted); font-size: 12px; }
+    #english-stage-map .english-track-actions { display: flex; gap: 9px; margin-top: 17px; }
+    #english-stage-map .english-track-actions button { flex: 1; }
+    #english-stage-map .english-criteria {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    #english-stage-map .english-criterion {
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--english-panel-soft);
+    }
+    #english-stage-map .english-criterion strong { display: block; font-size: 13px; font-weight: 500; }
+    #english-stage-map .english-criterion span { display: block; color: var(--english-muted); font-size: 12px; margin-top: 4px; }
+    #english-stage-map .english-lock-note {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 12px;
+      color: var(--english-orange);
+      background: var(--english-orange-soft);
+    }
+    #english-stage-map .english-practice {
+      display: none;
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 620px;
+    }
+    #english-stage-map[data-view="practice"] .english-body,
+    #english-stage-map[data-view="mistakes"] .english-body { display: none; }
+    #english-stage-map[data-view="practice"] .english-practice { display: grid; }
+    #english-stage-map .english-practice-side {
+      padding: 18px 14px;
+      border-right: 1px solid var(--english-line);
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-practice-summary { padding: 0 8px 12px; }
+    #english-stage-map .english-practice-summary strong { display: block; font-weight: 500; }
+    #english-stage-map .english-practice-summary span { color: var(--english-muted); font-size: 12px; }
+    #english-stage-map .english-item-list { display: grid; gap: 5px; }
+    #english-stage-map .english-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-color: transparent;
+      background: transparent;
+      text-align: left;
+    }
+    #english-stage-map .english-item[aria-current="true"] {
+      border-color: var(--english-blue);
+      background: var(--english-blue-soft);
+    }
+    #english-stage-map .english-item small { color: var(--english-muted); }
+    #english-stage-map .english-practice-main { padding: 22px; }
+    #english-stage-map .english-crumb { color: var(--english-muted); font-size: 13px; margin-bottom: 7px; }
+    #english-stage-map .english-practice-goal { color: var(--english-muted); margin-top: 6px; }
+    #english-stage-map .english-context {
+      margin-top: 18px;
+      padding: 15px 17px;
+      border-left: 4px solid var(--english-blue);
+      border-radius: 0 12px 12px 0;
+      background: var(--english-panel-soft);
+      font-size: 17px;
+    }
+    #english-stage-map .english-question {
+      margin-top: 16px;
+      padding: 18px;
+      border: 1px solid var(--english-line);
+      border-radius: 15px;
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-prompt { font-weight: 500; margin-bottom: 13px; }
+    #english-stage-map .english-choices { display: grid; gap: 8px; }
+    #english-stage-map .english-choice { text-align: left; }
+    #english-stage-map .english-choice[data-result="ok"] {
+      border-color: var(--english-green);
+      background: var(--english-green-soft);
+    }
+    #english-stage-map .english-choice[data-result="bad"] {
+      border-color: var(--english-orange);
+      background: var(--english-orange-soft);
+    }
+    #english-stage-map .english-write-box {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      border: 1px solid var(--english-line);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--english-text);
+      background: var(--english-panel-soft);
+      font: inherit;
+    }
+    #english-stage-map .english-write-action { margin-top: 10px; }
+    #english-stage-map .english-feedback {
+      display: none;
+      margin-top: 15px;
+      padding-top: 14px;
+      border-top: 1px solid var(--english-line);
+    }
+    #english-stage-map .english-feedback.is-visible { display: block; }
+    #english-stage-map .english-feedback p { color: var(--english-muted); }
+    #english-stage-map .english-feedback-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+    #english-stage-map .english-feedback-head strong { color: var(--english-green); font-weight: 500; }
+    #english-stage-map .english-feedback-head strong[data-wrong="true"] { color: var(--english-orange); }
+    #english-stage-map .english-feedback-action { margin-top: 12px; }
+    #english-stage-map .english-mistakes {
+      display: none;
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 620px;
+    }
+    #english-stage-map[data-view="mistakes"] .english-practice { display: none; }
+    #english-stage-map[data-view="mistakes"] .english-mistakes { display: grid; }
+    #english-stage-map .english-mistake-side {
+      padding: 18px 14px;
+      border-right: 1px solid var(--english-line);
+      background: var(--english-panel);
+    }
+    #english-stage-map .english-mistake-main { padding: 22px; }
+    #english-stage-map .english-mistake-rule {
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 12px;
+      color: var(--english-blue);
+      background: var(--english-blue-soft);
+    }
+    #english-stage-map .english-answer-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    #english-stage-map .english-answer-box { padding: 14px; border-radius: 12px; background: var(--english-panel-soft); }
+    #english-stage-map .english-answer-box strong { display: block; margin-bottom: 4px; font-weight: 500; }
+    #english-stage-map .english-answer-box[data-kind="wrong"] strong { color: var(--english-orange); }
+    #english-stage-map .english-answer-box[data-kind="right"] strong { color: var(--english-green); }
+    #english-stage-map .english-mistake-actions { display: flex; gap: 10px; margin-top: 16px; }
+    #english-stage-map[data-compact="true"] .english-criteria { display: none; }
+    @media (max-width: 780px) {
+      #english-stage-map .english-body,
+      #english-stage-map .english-practice,
+      #english-stage-map .english-mistakes { grid-template-columns: 1fr; }
+      #english-stage-map .english-roadmap { border-right: 0; border-bottom: 1px solid var(--english-line); }
+      #english-stage-map .english-practice-side { border-right: 0; border-bottom: 1px solid var(--english-line); }
+      #english-stage-map .english-mistake-side { border-right: 0; border-bottom: 1px solid var(--english-line); }
+      #english-stage-map .english-item-list { grid-template-columns: repeat(4, minmax(120px, 1fr)); overflow-x: auto; }
+      #english-stage-map .english-stage-list { grid-template-columns: repeat(3, minmax(150px, 1fr)); overflow-x: auto; }
+      #english-stage-map .english-target { display: none; }
+      #english-stage-map .english-tracks,
+      #english-stage-map .english-criteria { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      #english-stage-map .english-actions .english-review-button { display: none; }
+      #english-stage-map .english-main { padding: 16px; }
+      #english-stage-map .english-practice-main { padding: 16px; }
+      #english-stage-map .english-mistake-main { padding: 16px; }
+      #english-stage-map .english-answer-compare { grid-template-columns: 1fr; }
+      #english-stage-map .english-current-head,
+      #english-stage-map .english-gate { grid-template-columns: 1fr; display: grid; }
+    }
+  </style>
+
+  <section class="english-window">
+    <header class="english-topbar">
+      <div class="english-brand">
+        <div class="english-mark">E2</div>
+        <div>
+          <h1>英语二过线计划</h1>
+          <p class="english-subtitle">初级 → 中级 → 高级 · 单词、例句与作文共同推进</p>
+        </div>
+      </div>
+      <div class="english-actions">
+        <button type="button" class="english-back-stage" id="english-back-stage">← 返回中级</button>
+        <button type="button" class="english-review-button english-overview-action">今日复习 15</button>
+        <button type="button" class="english-overview-action" id="english-open-mistakes">错题本 6</button>
+        <button type="button" class="english-overview-action" id="english-continue" data-primary>继续当前任务</button>
+      </div>
+    </header>
+
+    <div class="english-body">
+      <aside class="english-roadmap" aria-label="基础阶段路线">
+        <div class="english-roadmap-title">能力路线</div>
+        <div class="english-stage-list">
+          <button class="english-stage" type="button" data-stage="初级" data-status="passed" aria-pressed="false">
+            <span class="english-stage-index">✓</span><span><span class="english-stage-name">初级 · 打牢基础</span><span class="english-stage-state">单词 · 例句 · 作文已通过</span></span>
+          </button>
+          <button class="english-stage" type="button" data-stage="中级" data-status="current" aria-pressed="true">
+            <span class="english-stage-index">2</span><span><span class="english-stage-name">中级 · 建立逻辑</span><span class="english-stage-state">单词已通过 · 例句与作文推进中</span></span>
+          </button>
+          <button class="english-stage" type="button" data-stage="高级" data-status="locked" data-locked="true" aria-pressed="false">
+            <span class="english-stage-index">3</span><span><span class="english-stage-name">高级 · 衔接英语二</span><span class="english-stage-state">三项达到中级后解锁</span></span>
+          </button>
+        </div>
+        <div class="english-target"><strong>终点：英语二题型训练</strong><br>完形、阅读、翻译、写作按基础能力逐步解锁。</div>
+      </aside>
+
+      <main class="english-main">
+        <div class="english-current-head">
+          <div>
+            <h2 id="english-stage-title">中级 · 建立逻辑</h2>
+            <p class="english-goal" id="english-stage-goal">在常见议论语境中认准词义、读清句间逻辑，并写出结构完整的短文。</p>
+          </div>
+          <div class="english-stage-badge" id="english-stage-badge">当前阶段</div>
+        </div>
+
+        <section class="english-gate" aria-label="阶段通过条件">
+          <div class="english-gate-part"><span class="english-check">✓</span><span><strong>词汇考核</strong><br><small>已通过 · 92 分</small></span></div>
+          <div class="english-gate-part"><span class="english-wait">!</span><span><strong>例句考核</strong><br><small>待完成 · 主干与逻辑</small></span></div>
+          <div class="english-gate-part"><span class="english-wait">!</span><span><strong>作文考核</strong><br><small>待完成 · 表达与组织</small></span></div>
+        </section>
+
+        <div class="english-tracks">
+          <section class="english-track">
+            <div class="english-track-top"><h3>单词</h3><span class="english-track-state">考核已通过</span></div>
+            <p class="english-track-desc">先读例句，再判断本句义项、搭配和易混义；不背孤立中文。</p>
+            <div class="english-meter"><span style="width: 92%"></span></div>
+            <div class="english-measure"><span>近期正确率 92%</span><span>到期复习 8</span></div>
+            <div class="english-track-actions"><button type="button" data-open-practice="词汇">复习薄弱词</button><button type="button">查看考核报告</button></div>
+          </section>
+
+          <section class="english-track">
+            <div class="english-track-top"><h3>例句</h3><span class="english-track-state">已具备考核条件</span></div>
+            <p class="english-track-desc">切出主干与从句，找清指代和逻辑，再用自己的话复述句意。</p>
+            <div class="english-meter"><span style="width: 78%"></span></div>
+            <div class="english-measure"><span>练习覆盖 78%</span><span>薄弱：让步关系</span></div>
+            <div class="english-track-actions"><button type="button" data-open-practice="例句">再练 5 句</button><button type="button" data-primary>开始例句考核</button></div>
+          </section>
+
+          <section class="english-track">
+            <div class="english-track-top"><h3>作文</h3><span class="english-track-state">正在学习</span></div>
+            <p class="english-track-desc">从仿写、扩写进入段落组织；只使用本阶段已经学过的词汇和句式。</p>
+            <div class="english-meter"><span style="width: 46%"></span></div>
+            <div class="english-measure"><span>练习覆盖 46%</span><span>薄弱：段落衔接</span></div>
+            <div class="english-track-actions"><button type="button" data-open-practice="作文">继续引导写作</button><button type="button">查看评分维度</button></div>
+          </section>
+        </div>
+
+        <div class="english-criteria" aria-label="考核规则">
+          <div class="english-criterion"><strong>练习与考核分开</strong><span>练习即时解析；考核使用未见材料，交卷后统一反馈。</span></div>
+          <div class="english-criterion"><strong>三项分别过关</strong><span>单词、例句、作文分别判定，不用平均分掩盖短板。</span></div>
+          <div class="english-criterion"><strong>同一素材逐级输出</strong><span>单词进入例句，例句再进入仿写与作文，不建三套孤立题库。</span></div>
+        </div>
+        <div class="english-lock-note" id="english-lock-note" role="status"></div>
+      </main>
+    </div>
+
+    <div class="english-practice" id="english-practice">
+      <aside class="english-practice-side" aria-label="本课条目">
+        <div class="english-practice-summary">
+          <strong id="english-practice-list-title">例句练习</strong>
+          <span id="english-practice-count">3 条到期 / 共 8 条</span>
+        </div>
+        <div class="english-item-list" id="english-item-list"></div>
+      </aside>
+      <main class="english-practice-main">
+        <p class="english-crumb" id="english-practice-crumb">中级 · 例句 · 转折与让步</p>
+        <h2 id="english-practice-title">先找逻辑，再翻译</h2>
+        <p class="english-practice-goal" id="english-practice-goal">本轮只判断转折发生在哪里，以及前后两部分分别在说什么。</p>
+        <blockquote class="english-context" id="english-practice-context">Although the plan appeared costly at first, it eventually reduced the amount of time employees spent on routine tasks.</blockquote>
+        <section class="english-question" id="english-question" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <div class="english-mistakes" id="english-mistakes">
+      <aside class="english-mistake-side" aria-label="错题列表">
+        <div class="english-practice-summary">
+          <strong>错题本</strong>
+          <span>6 题待纠正 · 按错因归组</span>
+        </div>
+        <div class="english-item-list">
+          <button type="button" class="english-item" aria-current="true"><span>让步关系</span><small>例句 · 2 次</small></button>
+          <button type="button" class="english-item"><span>熟词生义</span><small>单词 · 2 次</small></button>
+          <button type="button" class="english-item"><span>段落衔接</span><small>作文 · 1 次</small></button>
+          <button type="button" class="english-item"><span>代词指代</span><small>例句 · 1 次</small></button>
+        </div>
+      </aside>
+      <main class="english-mistake-main">
+        <p class="english-crumb">中级 · 例句 · 错因：让步关系</p>
+        <h2>不是重做原题，而是纠正判断</h2>
+        <p class="english-practice-goal">保留原题、错误答案和解析，再用同一知识点的变式确认是否真正会了。</p>
+        <blockquote class="english-context">Although the plan appeared costly at first, it eventually reduced the amount of time employees spent on routine tasks.</blockquote>
+        <div class="english-answer-compare">
+          <div class="english-answer-box" data-kind="wrong"><strong>当时的错误判断</strong><span>计划因为成本过高而被取消。</span></div>
+          <div class="english-answer-box" data-kind="right"><strong>正确判断</strong><span>计划最终减少了例行任务耗时。</span></div>
+        </div>
+        <div class="english-mistake-rule"><strong>移出规则：</strong>不同日期连续答对原知识点和一道未见变式后，系统自动移出；再次答错则重新累计。</div>
+        <div class="english-mistake-actions"><button type="button" id="english-retry-mistake" data-primary>开始一道变式</button><button type="button">查看完整解析</button></div>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const root = document.getElementById("english-stage-map");
+      const title = document.getElementById("english-stage-title");
+      const goal = document.getElementById("english-stage-goal");
+      const badge = document.getElementById("english-stage-badge");
+      const note = document.getElementById("english-lock-note");
+      const stageTitles = {
+        "初级": "初级 · 打牢基础",
+        "中级": "中级 · 建立逻辑",
+        "高级": "高级 · 衔接英语二"
+      };
+      const goals = {
+        "初级": "稳住高频词义和基础句式，并从仿写过渡到一段意思清楚的短文。",
+        "中级": "在常见议论语境中认准词义、读清句间逻辑，并写出结构完整的短文。",
+        "高级": "处理英语二常见的抽象词义与复杂表达，并独立完成接近考试要求的作文。"
+      };
+      const practiceData = {
+        "词汇": {
+          listTitle: "词汇复习",
+          count: "4 条到期 / 共 12 条",
+          items: ["address", "issue", "approach", "decline"],
+          crumb: "中级 · 单词 · 熟词生义",
+          title: "先看语境，再选义项",
+          goal: "本轮不背孤立中文，只判断单词在当前句子里承担的意思。",
+          context: "The new policy is intended to address concerns raised by small businesses.",
+          prompt: "address 在这句话中的意思最接近哪一项？",
+          choices: ["地址", "处理、应对", "发表演说"],
+          correct: 1,
+          wrongTag: "熟词生义判断错误",
+          feedback: "这里的宾语是 concerns，address 表示着手处理问题，而不是“地址”。"
+        },
+        "例句": {
+          listTitle: "例句练习",
+          count: "3 条到期 / 共 8 条",
+          items: ["转折与让步", "因果关系", "代词指代", "两层从句"],
+          crumb: "中级 · 例句 · 转折与让步",
+          title: "先找逻辑，再翻译",
+          goal: "本轮只判断转折发生在哪里，以及前后两部分分别在说什么。",
+          context: "Although the plan appeared costly at first, it eventually reduced the amount of time employees spent on routine tasks.",
+          prompt: "这句话的主要结论是什么？",
+          choices: ["计划最终减少了例行任务耗时", "员工拒绝执行这项计划", "计划因为成本过高而被取消"],
+          correct: 0,
+          wrongTag: "让步关系识别错误",
+          feedback: "Although 引出让步背景；主句从 it eventually reduced 开始，主要结论在主句。"
+        },
+        "作文": {
+          listTitle: "引导写作",
+          count: "1 条到期 / 共 6 条",
+          items: ["补写理由", "扩写例子", "连接两句", "收束段落"],
+          crumb: "中级 · 作文 · 段落衔接",
+          title: "用学过的句式补出理由",
+          goal: "先完成一个逻辑清楚的段落，再追求表达变化。",
+          context: "Many people prefer flexible working arrangements because they can manage their time more effectively.",
+          prompt: "用 2—3 句补充一个具体理由，并至少使用一个转折或因果连接词。",
+          writing: true,
+          feedback: "提交后先检查：是否回应题意、句间关系是否明确、用词是否来自本阶段所学。"
+        }
+      };
+
+      const showMistakes = () => {
+        root.dataset.view = "mistakes";
+        document.getElementById("english-back-stage").textContent = "← 返回路线";
+      };
+
+      const renderQuestion = (kind) => {
+        const data = practiceData[kind];
+        const box = document.getElementById("english-question");
+        if (data.writing) {
+          box.innerHTML = `<p class="english-prompt">${data.prompt}</p>
+            <textarea class="english-write-box" aria-label="作文练习输入" placeholder="在这里完成这一小段……"></textarea>
+            <button type="button" class="english-write-action" data-primary id="english-submit-writing">提交本段</button>
+            <div class="english-feedback" id="english-feedback"><p>${data.feedback}</p></div>`;
+          document.getElementById("english-submit-writing").addEventListener("click", () => {
+            document.getElementById("english-feedback").classList.add("is-visible");
+          });
+          return;
+        }
+        box.innerHTML = `<p class="english-prompt">${data.prompt}</p>
+          <div class="english-choices">${data.choices.map((choice, index) => `<button type="button" class="english-choice" data-choice="${index}">${choice}</button>`).join("")}</div>
+          <div class="english-feedback" id="english-feedback"></div>`;
+        box.querySelectorAll("[data-choice]").forEach((choice) => {
+          choice.addEventListener("click", () => {
+            box.querySelectorAll("[data-choice]").forEach((item) => {
+              item.disabled = true;
+              if (Number(item.dataset.choice) === data.correct) item.dataset.result = "ok";
+            });
+            const wrong = Number(choice.dataset.choice) !== data.correct;
+            if (wrong) choice.dataset.result = "bad";
+            const feedback = document.getElementById("english-feedback");
+            feedback.innerHTML = wrong
+              ? `<div class="english-feedback-head"><strong data-wrong="true">已自动加入错题本</strong><span>错因：${data.wrongTag}</span></div><p>${data.feedback}</p><button type="button" class="english-feedback-action" id="english-view-mistake">查看这道错题</button>`
+              : `<div class="english-feedback-head"><strong>判断正确</strong><span>不进入错题本</span></div><p>${data.feedback}</p>`;
+            feedback.classList.add("is-visible");
+            if (wrong) document.getElementById("english-view-mistake").addEventListener("click", showMistakes);
+          });
+        });
+      };
+
+      const showPractice = (kind) => {
+        const data = practiceData[kind];
+        root.dataset.view = "practice";
+        document.getElementById("english-back-stage").textContent = "← 返回中级";
+        document.getElementById("english-practice-list-title").textContent = data.listTitle;
+        document.getElementById("english-practice-count").textContent = data.count;
+        document.getElementById("english-practice-crumb").textContent = data.crumb;
+        document.getElementById("english-practice-title").textContent = data.title;
+        document.getElementById("english-practice-goal").textContent = data.goal;
+        document.getElementById("english-practice-context").textContent = data.context;
+        document.getElementById("english-item-list").innerHTML = data.items.map((item, index) => `<button type="button" class="english-item" aria-current="${index === 0}"><span>${item}</span><small>${index < 2 ? "到期" : "后续"}</small></button>`).join("");
+        renderQuestion(kind);
+      };
+
+      root.querySelectorAll(".english-stage").forEach((button) => {
+        button.addEventListener("click", () => {
+          root.querySelectorAll(".english-stage").forEach((item) => item.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          const stage = button.dataset.stage;
+          title.textContent = stageTitles[stage] || stage;
+          goal.textContent = goals[stage] || "";
+          const locked = button.dataset.locked === "true";
+          badge.textContent = locked ? "预览" : button.dataset.status === "passed" ? "已通过" : "当前阶段";
+          note.style.display = locked ? "block" : "none";
+          note.textContent = locked ? `完成前一阶段的单词、例句与作文考核后，${stage}自动解锁。` : "";
+        });
+      });
+      root.querySelectorAll("[data-open-practice]").forEach((button) => {
+        button.addEventListener("click", () => showPractice(button.dataset.openPractice));
+      });
+      document.getElementById("english-continue").addEventListener("click", () => showPractice("例句"));
+      document.getElementById("english-open-mistakes").addEventListener("click", showMistakes);
+      document.getElementById("english-retry-mistake").addEventListener("click", () => showPractice("例句"));
+      document.getElementById("english-back-stage").addEventListener("click", () => {
+        root.dataset.view = "overview";
+      });
+
+      const state = { compact: false };
+      const render = () => root.dataset.compact = String(state.compact);
+      render();
+      if (globalThis.Tweak) {
+        const tweak = new Tweak({ container: root, onChange: render });
+        tweak.addToggle(state, "compact", { label: "隐藏考核规则", reference: "english.criteria" });
+      }
+    })();
+  </script>
+</div>

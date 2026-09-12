@@ -283,7 +283,12 @@ function trackTag(stats: ReturnType<typeof statsOf>): string {
   return stats.fresh === 0 ? "已具备考核条件" : "正在学习";
 }
 
+function focusTrackId(stage: Stage): string | null {
+  return stage.tracks.find((track) => !trackPassed(track))?.id ?? null;
+}
+
 function renderTrackCards(stage: Stage): void {
+  const focus = focusTrackId(stage);
   dom.trackCards.innerHTML = stage.tracks
     .map((track) => {
       const runtime = runtimes.get(track.id);
@@ -298,11 +303,14 @@ function renderTrackCards(stage: Stage): void {
           : track.kind === "vocab"
             ? "复习薄弱词"
             : `再练 ${Math.max(1, Math.min(5, stats.total))} 句`;
+      const isFocus = track.id === focus;
       const right =
         track.kind === "writing"
           ? `<button type="button" class="chip" data-rubric="${esc(track.id)}">查看评分维度</button>`
-          : `<button type="button" class="chip is-primary" data-exam="${esc(track.id)}">开始考核</button>`;
-      return `<article class="track-card kind-${esc(track.kind)}">
+          : `<button type="button" class="chip${isFocus ? " is-primary" : ""}" data-exam="${esc(track.id)}">${
+              stats.passed ? "再考一次" : "开始考核"
+            }</button>`;
+      return `<article class="track-card kind-${esc(track.kind)}${isFocus ? " is-focus" : ""}">
           <div class="track-top">
             <h3>${esc(track.title)}</h3>
             <span class="track-tag">${esc(trackTag(stats))}</span>
@@ -343,6 +351,7 @@ function renderStageDetail(): void {
       ? "这一级三项都已通过，可以推进下一级。"
       : "三项分别达标后，下一级自动解锁。"
     : `完成${requiredTitles(stage)}的单词、例句与作文后，这一级自动解锁。`;
+  dom.unlockNote.className = unlocked ? "unlock-note" : "unlock-note is-locked";
 }
 
 function renderRoute(): void {
