@@ -1,0 +1,78 @@
+using Gtk 4.0;
+
+// 学习页反复出现的内容块模板。
+//
+// 为什么要有这个文件：type_semantics 一章的 .blp 有 2700 行，其中「带标题的
+// 内容区」出现 54 次、「callout」58 次、正文段落 63 次——结构完全同构，差别
+// 只在文字和一个变体类名。后续章节如果照抄这个厚度会失控；该复制的是范式，
+// 不是行数。
+//
+// 用法见 ui/lesson_blocks.h：代码按数据实例化这些模板，往返回的容器里继续
+// 塞内容。真正有教学信息量的部分（对象图、逐步演示、值类别矩阵这些需要
+// Cairo 自绘或由运行时数据决定结构的）仍然各写各的，不强行套模板。
+
+// 一个带标题的内容区：Frame 外壳 + 统一内边距的纵向容器。
+Frame lesson_section {
+  styles [ "panel-frame", "group-frame" ]
+
+  Box lesson_section_body {
+    orientation: vertical;
+    spacing: 10;
+    margin-top: 16;
+    margin-bottom: 16;
+    margin-start: 18;
+    margin-end: 18;
+  }
+}
+
+// 提示框。变体（why / key / note / trap / use）由代码加类名决定，
+// 对应 style.css 里那套 Bootstrap alert 配色。
+Box lesson_callout {
+  orientation: vertical;
+  spacing: 6;
+
+  styles [ "lesson-callout" ]
+
+  Label lesson_callout_title {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "lesson-callout-title" ]
+  }
+
+  Box lesson_callout_body {
+    orientation: vertical;
+    spacing: 4;
+  }
+}
+
+// 正文段落。单独成模板是因为它有四个固定属性要写，散在各处就是 63 组重复。
+Label lesson_prose {
+  halign: start;
+  wrap: true;
+  xalign: 0;
+  styles [ "lesson-prose" ]
+}
+
+// 图 + 图注。图源由代码填，静态 SVG 与数据驱动的 DrawingArea 各用各的，
+// 这里只负责统一外框与图注排版。
+Box lesson_figure {
+  orientation: vertical;
+  spacing: 4;
+
+  styles [ "lesson-figure" ]
+
+  Picture lesson_figure_image {
+    content-fit: contain;
+    halign: fill;
+    hexpand: true;
+    can-shrink: true;
+  }
+
+  Label lesson_figure_caption {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "lesson-figure-caption" ]
+  }
+}

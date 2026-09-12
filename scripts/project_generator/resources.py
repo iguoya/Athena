@@ -56,6 +56,7 @@ def render_resources(model: dict, root: Path) -> str:
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">learning_unit.ui</file>
     <file preprocess="xml-stripblanks">checkpoint.ui</file>
+    <file preprocess="xml-stripblanks">lesson_blocks.ui</file>
     <file>style.css</file>
     <file>backdrop.svg</file>
 {entries_or_comment(article_entries, "暂无文章")}

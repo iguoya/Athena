@@ -18,6 +18,10 @@
 - `docs/CODE_GENERATION.md`：代码生成流程、文件所有权和 Meson 集成约束。
 - `docs/decisions/`：架构决策记录（ADR），保存重要取舍的背景、决策与后果；
   影响架构边界或不可逆方向的新决策应先新增 ADR 再动代码。
+- `docs/LESSON_AUTHORING.md`：写学习页时怎么为一节选择表达手段——按知识类型、
+  能否实验、掌握目标来判断，以及可复用的内容块组件（`ui/lesson_blocks.h`）。
+  它是**范式不是模子**：`type_semantics` 的节结构由那些知识点的性质决定，
+  照抄它的目录只会抄到形状。
 - `docs/CODE_ROLES.md`：借政府组织结构理解代码组织的思维模型与它的边界，说明本文件
   这些规则背后的取舍；属于背景观念，冲突时以本文件和 ADR 为准。
 - `docs/CONTENT_REFERENCES.md`：外部 C++ 教程站点清单，仅供知识点覆盖范围和讲法对照，
