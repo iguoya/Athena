@@ -63,6 +63,12 @@ Box type_semantics_lesson_page {
     }
   }
 
+  // 每个标签页写成"内容在前、[tab] 标签在后"。顺序不能反过来：GtkBuilder 按
+  // XML 顺序处理 child，遇到 <child type="tab"> 就调
+  // gtk_notebook_set_tab_label(notebook, child, label)，而那时对应的 page 还没
+  // 加进 notebook，child 是 NULL，每次加载都会打两条
+  // "gtk_notebook_get/set_tab_label: assertion 'GTK_IS_WIDGET (child)' failed"。
+  //
   // 标签直接对应课程的子章节。第一个标签是章节教学大纲（ADR 0028 第一层），
   // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
   // 卡片一眼可辨，摊平成正文就看不出轻重。此章不再维护 Markdown 大纲副本。
@@ -72,9 +78,6 @@ Box type_semantics_lesson_page {
       // height-request 被违反、图被压成一条看不见的白边。vexpand 之后 Notebook
       // 填满可用空间，页内的 ScrolledWindow 才真正负责滚动。
       vexpand: true;
-
-      [tab]
-      Label { label: "本章导览"; }
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -208,7 +211,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "教学大纲"; }
+      Label { label: "本章导览"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -737,8 +741,9 @@ Box type_semantics_lesson_page {
           }
         }
       }
+
       [tab]
-      Label { label: "初始化"; }
+      Label { label: "教学大纲"; }
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -1073,8 +1078,9 @@ Box type_semantics_lesson_page {
           }
         }
       }
+
       [tab]
-      Label { label: "对象生命周期"; }
+      Label { label: "初始化"; }
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -1277,7 +1283,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "类型推导"; }
+      Label { label: "对象生命周期"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -1694,7 +1701,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "enum class"; }
+      Label { label: "类型推导"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -1967,7 +1975,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "类型转换"; }
+      Label { label: "enum class"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -2323,7 +2332,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "值类别"; }
+      Label { label: "类型转换"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -2548,7 +2558,8 @@ Box type_semantics_lesson_page {
       }
 
       [tab]
-      Label { label: "decltype"; }
+      Label { label: "值类别"; }
+
 
       ScrolledWindow {
         hscrollbar-policy: never;
@@ -2641,6 +2652,10 @@ Box type_semantics_lesson_page {
           }
         }
       }
+
+      [tab]
+      Label { label: "decltype"; }
+
 
   }
 }

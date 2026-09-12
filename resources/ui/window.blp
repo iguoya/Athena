@@ -135,13 +135,12 @@ Box experiment_page {
     }
   }
 
+  // 内容在前、[tab] 在后：反过来写 GtkBuilder 会在 page 尚未加入时就去设
+  // tab label，每次加载打两条 GTK-CRITICAL（详见 chapters/type_semantics_lesson.blp）。
   Notebook experiment_notebook {
     name: "experiment_notebook";
     hexpand: true;
     vexpand: true;
-
-    [tab]
-    Label { label: "验证工作台"; }
 
     Paned experiment_workspace_paned {
       name: "experiment_workspace_paned";
@@ -252,7 +251,8 @@ Box experiment_page {
     }
 
     [tab]
-    Label { label: "探索（暂定）"; }
+    Label { label: "验证工作台"; }
+
 
     Box {
       orientation: vertical;
@@ -272,6 +272,10 @@ Box experiment_page {
         styles [ "dim-label" ]
       }
     }
+
+    [tab]
+    Label { label: "探索（暂定）"; }
+
   }
 }
 
