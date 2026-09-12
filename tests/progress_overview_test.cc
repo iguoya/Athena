@@ -72,7 +72,10 @@ TEST(ProgressOverviewTest, RendersAggregatedDataWithoutReadingStorage) {
     EXPECT_NE(find_label(*page, "知识点总数"), nullptr);
     EXPECT_NE(find_label(*page, "4.0 / 5"), nullptr);
     EXPECT_NE(find_frame(*page, "整体完成度"), nullptr);
-    EXPECT_NE(find_frame(*page, "熟练度分布"), nullptr);
+    // 逐个知识点的掌握程度取代了按星级分档的直方图：后者只说得出"有几个
+    // 在 3 星"，说不出是哪几个。
+    EXPECT_NE(find_frame(*page, "各知识点掌握程度"), nullptr);
+    EXPECT_EQ(find_frame(*page, "熟练度分布"), nullptr);
 
     // 章节与知识点的逐条进度不再在这里重复：它们画在学习图谱的章节卡片上。
     // 概览只留统计、建议和两张图，同一件事不给两个入口。

@@ -4,6 +4,7 @@
 #include "render/chart_scale.h"
 
 #include <algorithm>
+#include <map>
 #include <cmath>
 #include <sstream>
 
@@ -231,6 +232,131 @@ Gtk::DrawingArea* make_mastery_histogram_chart(
                     kChartMutedText,
                     false,
                     0.5);
+            }
+        });
+    return area;
+}
+
+namespace {
+
+// 章节配色：同一章的知识点同色，相邻章换色。颜色在这张图里只表示"属于
+// 哪一章"，掌握程度由柱高表达——一个通道一个维度（AGENTS.md）。
+const ChartColor& chapter_color(size_t index) {
+    static const ChartColor palette[] = {
+        {0.039, 0.345, 0.792},  // primary
+        {0.125, 0.788, 0.592},  // teal
+        {0.992, 0.494, 0.078},  // orange
+        {0.435, 0.259, 0.757},  // purple
+        {0.098, 0.529, 0.329},  // success
+        {0.863, 0.208, 0.271},  // danger
+    };
+    return palette[index % (sizeof(palette) / sizeof(palette[0]))];
+}
+
+ChartColor lighten(const ChartColor& color, double amount) {
+    return ChartColor{
+        color.r + (1.0 - color.r) * amount,
+        color.g + (1.0 - color.g) * amount,
+        color.b + (1.0 - color.b) * amount,
+    };
+}
+
+} // namespace
+
+Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    // 知识点名竖排在底部：横排放不下十几个中文标签，挤成一团或者互相
+    // 盖住。竖排后每个标签只占一个字的宽度，柱子再密也读得清。
+    area->set_content_height(456);
+    area->set_hexpand(true);
+    area->set_draw_func(
+        [points](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            if (points.empty()) {
+                return;
+            }
+            // 纵轴固定 0-5：熟练度的量程是确定的，按数据缩放反而会让
+            // "都才 1 星"看起来像已经过半。
+            // 不走 make_frame：它的顶部留白固定 10px，放不下横排的章节名
+            // （那一行同时充当图例）。这里手工给顶部留 36px。
+            const ChartFrame frame{
+                52.0, 36.0, static_cast<double>(width) - 8.0,
+                static_cast<double>(height) - 168.0};
+            if (frame.width() <= 0 || frame.height() <= 0) {
+                return;
+            }
+            const vector<double> ticks = {0, 1, 2, 3, 4, 5};
+            draw_value_axis(cr, frame, ticks, kMaxMastery, false);
+
+            // 章节按首次出现的顺序分配颜色。
+            map<string, size_t> color_index;
+            for (const auto& point : points) {
+                color_index.emplace(point.chapter_title, color_index.size());
+            }
+
+            string previous_chapter;
+            for (size_t index = 0; index < points.size(); ++index) {
+                const auto& point = points[index];
+                const auto geometry = bar_geometry(frame, points.size(), index);
+                const double value = clamp(point.mastery, 0, kMaxMastery);
+                const double bar_height = frame.height() * (value / kMaxMastery);
+
+                const ChartColor color =
+                    chapter_color(color_index.at(point.chapter_title));
+                if (value > 0) {
+                    cr->set_source_rgb(color.r, color.g, color.b);
+                    cr->rectangle(
+                        geometry.x, frame.bottom - bar_height, geometry.width,
+                        bar_height);
+                    cr->fill();
+                    // 满格柱子顶到绘图区上沿，数字再画在柱子上方就会被裁掉
+                    // （看起来像个横杠）。放不下时改画在柱子内部。
+                    const double above = frame.bottom - bar_height - 13;
+                    const bool fits_above = above >= frame.top + 10;
+                    draw_cairo_text(
+                        cr, to_string(static_cast<long>(value)),
+                        geometry.x + geometry.width / 2,
+                        fits_above ? above : frame.bottom - bar_height + 18,
+                        kChartMinimumTextSize,
+                        fits_above ? kChartMutedText : ChartColor{1.0, 1.0, 1.0},
+                        true, 0.5);
+                } else {
+                    // 未开始画一条空槽：完全不画会让人以为图没渲染出来。
+                    // 用本章颜色的淡版，分组仍然看得出来。
+                    const ChartColor faded = lighten(color, 0.82);
+                    cr->set_source_rgb(faded.r, faded.g, faded.b);
+                    cr->rectangle(geometry.x, frame.bottom - 4, geometry.width, 4);
+                    cr->fill();
+                }
+
+                // 竖排：顺时针转 90°，文字沿屏幕向下延伸，第一个字在上——
+                // 标签要能从上往下读。逆时针转会让顺序反过来，得从下往上看。
+                cr->save();
+                cr->translate(
+                    geometry.x + geometry.width / 2, frame.bottom + 10);
+                cr->rotate(M_PI / 2);
+                draw_cairo_text(
+                    cr, point.title, 0, 0, kChartMinimumTextSize,
+                    kChartMutedText, false, 0.0);
+                cr->restore();
+
+                // 章节名横排在图顶，标出这一段属于哪一章；放底下会和竖排的
+                // 知识点名抢位置。
+                if (point.chapter_title != previous_chapter) {
+                    previous_chapter = point.chapter_title;
+                    // 章节名用本章配色，顶部这一行就是图例，不必另开一块。
+                    draw_cairo_text(
+                        cr, point.chapter_title, geometry.x, frame.top - 14,
+                        kChartMinimumTextSize,
+                        chapter_color(color_index.at(point.chapter_title)),
+                        true, 0.0);
+                    if (index > 0) {
+                        cr->set_source_rgb(0.87, 0.89, 0.91);
+                        cr->set_line_width(1.0);
+                        cr->move_to(geometry.x - 6, frame.top - 6);
+                        cr->line_to(geometry.x - 6, frame.bottom + 160);
+                        cr->stroke();
+                    }
+                }
             }
         });
     return area;

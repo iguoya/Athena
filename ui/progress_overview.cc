@@ -87,19 +87,39 @@ Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
     donut_frame->set_child(*donut_box);
     charts_row->append(*donut_frame);
 
-    auto histogram_frame = Gtk::make_managed<Gtk::Frame>();
-    histogram_frame->add_css_class("panel-frame");
-    histogram_frame->set_label("熟练度分布");
-    histogram_frame->set_hexpand(true);
-    auto histogram_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
-    histogram_box->set_margin_top(12);
-    histogram_box->set_margin_bottom(12);
-    histogram_box->set_margin_start(12);
-    histogram_box->set_margin_end(12);
-    histogram_box->append(
-        *make_mastery_histogram_chart(progress.mastery_histogram()));
-    histogram_frame->set_child(*histogram_box);
-    charts_row->append(*histogram_frame);
+    // 逐个知识点的掌握程度，单开一行占满宽度。原来这里是按星级分档的
+    // 直方图，只说得出"有几个在 3 星"，说不出是哪几个——看完并不知道
+    // 下一步该补哪里。横轴换成知识点本身，落后的是谁一眼可见。
+    //
+    // 只收有熟练度记录或所在章节已经开始学的知识点：把 63 个还没动过的
+    // 规划中知识点也画上，整张图会被空柱淹没。
+    vector<MasteryPoint> points;
+    for (const auto& chapter_stat : progress.chapters) {
+        if (chapter_stat.mastery_sum <= 0) {
+            continue;
+        }
+        for (const auto& [title, mastery] : chapter_stat.subchapter_mastery) {
+            points.push_back(MasteryPoint{
+                .chapter_title = chapter_stat.chapter_title,
+                .title = title,
+                .mastery = mastery,
+            });
+        }
+    }
+    if (!points.empty()) {
+        auto points_frame = Gtk::make_managed<Gtk::Frame>();
+        points_frame->add_css_class("panel-frame");
+        points_frame->set_label("各知识点掌握程度");
+        points_frame->set_hexpand(true);
+        auto points_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+        points_box->set_margin_top(12);
+        points_box->set_margin_bottom(12);
+        points_box->set_margin_start(12);
+        points_box->set_margin_end(12);
+        points_box->append(*make_mastery_by_point_chart(points));
+        points_frame->set_child(*points_box);
+        page->append(*points_frame);
+    }
 
     // 章节与知识点的逐条进度不在这里重复：它们已经画在学习图谱的章节
     // 卡片上（逐个知识点 + 掌握程度 + 考核成绩）。同一件事只留一个入口。

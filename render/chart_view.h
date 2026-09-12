@@ -29,5 +29,18 @@ Gtk::Box* make_mastery_legend();
 Gtk::DrawingArea* make_mastery_histogram_chart(
     const array<int, kMasteryLevels>& histogram);
 
+// 逐个知识点的掌握程度：横轴一个知识点一根柱，纵轴是 0-5 星。
+//
+// 它替代按星级分档的直方图：那张图只说得出"有几个在 3 星"，说不出是哪几个，
+// 学习者看完并不知道下一步该补哪里。这张图一眼看到具体是哪个知识点落后。
+//
+// 只画有教学内容的章节——规划中的章节全是 0 星，画出来是一片空柱。
+struct MasteryPoint {
+    string chapter_title;
+    string title;
+    int mastery = 0;  // 0-5
+};
+Gtk::DrawingArea* make_mastery_by_point_chart(const vector<MasteryPoint>& points);
+
 // 只读的五星展示（实心/空心），用于逐章节列表里的单个知识点。
 Gtk::Box* make_mastery_stars(int mastery);
