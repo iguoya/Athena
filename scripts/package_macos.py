@@ -25,12 +25,12 @@ class PackagingError(RuntimeError):
     """A user-facing packaging failure."""
 
 
-def run(*arguments: str | Path, capture: bool = False) -> str:
+def run(*arguments: str | Path, capture: bool = False, check: bool = True) -> str:
     command = [str(argument) for argument in arguments]
     try:
         result = subprocess.run(
             command,
-            check=True,
+            check=check,
             text=True,
             capture_output=capture,
         )
@@ -122,6 +122,41 @@ def dylib_dependencies(path: Path) -> list[str]:
     return dependencies
 
 
+def rpath_entries(path: Path) -> list[str]:
+    """读二进制的 LC_RPATH 列表。"""
+    output = run(require_tool("otool"), "-l", path, capture=True)
+    entries: list[str] = []
+    lines = output.splitlines()
+    for index, line in enumerate(lines):
+        if "cmd LC_RPATH" not in line:
+            continue
+        for follow in lines[index : index + 4]:
+            stripped = follow.strip()
+            if stripped.startswith("path "):
+                entries.append(stripped[len("path ") :].split(" (offset")[0])
+                break
+    return entries
+
+
+def resolve_rpath_dependency(dependency: str, search_paths: list[str]) -> Path | None:
+    """把 @rpath/libfoo.dylib 解析成真实文件。
+
+    构建期的 LC_RPATH 指向 Homebrew 的 Cellar 目录，@rpath/ 依赖就是在那里
+    找到的。不解析它们的后果不是"漏打一个库"那么轻——bundle 里留着
+    @rpath/librsvg-2.2.dylib，dyld 会顺着可执行文件残留的 Homebrew rpath 去
+    系统里加载那一份，于是同一个进程里出现两份 libgio，GType 互相抢注，
+    librsvg 的 is_input_stream() 断言随机失败，SVG 插图时有时无。
+    """
+    name = Path(dependency).name
+    for base in search_paths:
+        if base.startswith("@"):
+            continue
+        candidate = Path(base) / name
+        if candidate.is_file():
+            return candidate.resolve()
+    return None
+
+
 def is_external_library(value: str) -> bool:
     return value.startswith("/") and not value.startswith(SYSTEM_PREFIXES)
 
@@ -137,6 +172,8 @@ def copy_runtime_libraries(
     source_by_name: dict[str, Path] = {}
     copied_libraries: list[Path] = []
     rewrites: dict[Path, list[tuple[str, str]]] = {}
+    # 构建期的 rpath 就是 @rpath/ 依赖的来源，用它把那些依赖解析成真实文件。
+    search_paths = rpath_entries(executable)
 
     index = 0
     while index < len(targets):
@@ -147,9 +184,15 @@ def copy_runtime_libraries(
         scanned.add(target)
 
         for dependency in dylib_dependencies(target):
-            if not is_external_library(dependency):
+            if dependency.startswith("@rpath/"):
+                resolved = resolve_rpath_dependency(dependency, search_paths)
+                if resolved is None:
+                    continue
+                source = resolved
+            elif is_external_library(dependency):
+                source = Path(dependency).resolve()
+            else:
                 continue
-            source = Path(dependency).resolve()
             if not source.is_file():
                 raise PackagingError(f"dynamic library not found: {dependency}")
             name = source.name
@@ -178,7 +221,7 @@ def copy_runtime_libraries(
             f"@executable_path/../Frameworks/{library.name}",
             library,
         )
-    framework_names = {library.name for library in copied_libraries}
+    framework_names = {path.name for path in frameworks_dir.glob("*.dylib")}
     for target in targets:
         for dependency in dylib_dependencies(target):
             if dependency.startswith("@rpath/"):
@@ -194,6 +237,16 @@ def copy_runtime_libraries(
     for plugin in plugins:
         if plugin.suffix == ".dylib":
             run(install_name_tool, "-id", f"@loader_path/{plugin.name}", plugin)
+
+    # 删掉构建期留下的 Homebrew LC_RPATH。只要它们还在，dyld 解析任何没改写
+    # 干净的 @rpath/ 依赖时就会落到系统库上，于是同一进程加载两份 libgio、
+    # GType 互相抢注，SVG 插图时有时无。删掉之后这类遗漏会变成明确的加载
+    # 失败，而不是随机的静默错误。
+    for target in [*targets, *copied_libraries]:
+        for entry in rpath_entries(target):
+            if entry.startswith("@"):
+                continue
+            run(install_name_tool, "-delete_rpath", entry, target, check=False)
     return copied_libraries
 
 
