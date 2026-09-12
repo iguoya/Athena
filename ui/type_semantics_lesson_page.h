@@ -15,8 +15,8 @@ using namespace std;
 
 class LearningUnitView;
 
-// ADR 0026 的第一条原生学习场景。它不读取或解析 Markdown；参考资料跳转与
-// 专注实验入口都由 MainWindow 注入，因而页面不反向依赖窗口实现。
+// ADR 0026 的第一条原生学习场景。它不读取或解析 Markdown；专注实验入口
+// 由 MainWindow 注入，因而页面不反向依赖窗口实现。
 //
 // 「类型推导」标签是完整学习块的样板：概念对比（.blp）→ 运行时对象图
 // （Cairo 自绘）→ 预测单元 → 专注实验入口 → 换条件的迁移预测。对象图这类
@@ -30,8 +30,7 @@ public:
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
         const map<string, int>& mastery_by_id,
-        function<void(const ExperimentSelection&, bool)> on_experiment_requested,
-        function<void()> on_reference_requested);
+        function<void(const ExperimentSelection&, bool)> on_experiment_requested);
 
     ~TypeSemanticsLessonPage();
 

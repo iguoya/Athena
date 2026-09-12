@@ -156,7 +156,6 @@ resources/ui/chapters/empty_chapter.blp
 
 ```json
 "handbook_documents": [
-  "resources/articles/cpp/type_semantics_overview.md",
   "resources/articles/cpp/reference_overview.md",
   "resources/articles/cpp/raii_overview.md",
   "resources/articles/cpp/program_organization.md"
@@ -306,6 +305,11 @@ subchapter.name -> C++ 成员函数名
 "overview_document": "resources/articles/cpp/reference_overview.md"
 ```
 
+该字段适用于仍保留 Markdown 参考大纲的章节，不是原生大纲的必填字段。
+「类型与表达式」只维护 `resources/ui/chapters/type_semantics_lesson.blp` 中的原生
+「教学大纲」标签，已删除 Markdown 大纲和本字段，并从分类手册清单移除；
+原生页面也不提供「完整手册」按钮，不触发下述标准章节的说明文档回退行为。
+
 按 [ADR 0028](decisions/0028-outline-process-experiment-layering.md)，教学大纲文档
 在学习内容三层分工里处于最上层，**只指引大方向**。它**不写**具体语法机制、代码
 示例、API 用法细节，也不绑定练习或实验——细节由原生学习页（教学过程）落实，
@@ -313,17 +317,18 @@ subchapter.name -> C++ 成员函数名
 讲清楚。
 
 正文按 ADR 0028 第 6 节的范式组织，每章体例一致：H1 之下用引用块写**一句题注**
-（这一章承诺解决什么），然后是**四个固定小节**：
+（这一章承诺解决什么），然后是**五个固定小节**：
 
 | 字段 | 回答什么 |
 |---|---|
 | 痛点与来历 | 没有它之前现实工程里出什么事；何时、为解决什么被引入，后来怎么演进 |
 | 心智模型 | 用什么结构去理解它，以及由它派生的 2–4 个贯穿全章的基本问题 |
+| 讲什么与边界 | 本章覆盖哪些方向、讲到什么深度，哪些相邻内容留到后续 |
 | 判断与代价 | 写代码时它让你做哪些选择，每个选择的代价与边界 |
 | 落点 | 前置知识；它是后面哪些知识的地基；想深入时去哪查 |
 
-四节都要出现且不得为空，节内可用子标题但不再拆出第五个平级节；末尾仍保留
-「小结」。参考实现见 `resources/articles/cpp/type_semantics_overview.md`。
+五节都要出现且不得为空，节内可用子标题但不再拆出第六个平级节；末尾仍保留
+「小结」。Markdown 参考示例见 `resources/articles/cpp/reference_overview.md`。
 
 界面里"说明文档"按钮点击后跳到手册页面里这份文档对应的位置（该文档
 在手册合集里第一个标题的锚点），**不发起任何网络或 AI 调用**——内容是
@@ -457,8 +462,8 @@ subchapter.name -> C++ 成员函数名
 
 ```json
 "teaches": {
-  "document": "resources/articles/cpp/type_semantics_overview.md",
-  "heading": "1.2 类型推导"
+  "document": "resources/articles/cpp/reference_overview.md",
+  "heading": "心智模型"
 }
 ```
 

@@ -98,16 +98,13 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
     const map<string, int>& mastery_by_id,
-    function<void(const ExperimentSelection&, bool)> on_experiment_requested,
-    function<void()> on_reference_requested)
+    function<void(const ExperimentSelection&, bool)> on_experiment_requested)
     : m_chapter(chapter),
       m_on_experiment_requested(std::move(on_experiment_requested)) {
     auto* init_unit_host =
         builder->get_widget<Gtk::Box>("type_semantics_learning_unit_host");
     auto* run_button =
         builder->get_widget<Gtk::Button>("type_semantics_run_button");
-    auto* reference_button = builder->get_widget<Gtk::Button>(
-        "type_semantics_reference_button");
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
     m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
@@ -140,7 +137,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_next");
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
-    if (!init_unit_host || !run_button || !reference_button
+    if (!init_unit_host || !run_button
         || !m_section_notebook || !m_roadmap || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
@@ -299,7 +296,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
 
     run_button->signal_clicked().connect(
         [this]() { open_experiment("initialization"); });
-    reference_button->signal_clicked().connect(std::move(on_reference_requested));
 
     const vector<pair<const char*, const char*>> experiment_buttons = {
         {"type_semantics_auto_button", "auto_deduction"},

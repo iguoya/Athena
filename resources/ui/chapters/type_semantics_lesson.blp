@@ -3,9 +3,8 @@ using Gtk 4.0;
 // ADR 0026：类型与表达式的第一条原生学习场景。学习顺序和双路径对比完全由
 // GUI 控件表达。
 //
-// 章节的教学大纲（第一层）不占 Notebook 的学习标签，由顶部 hero 区那个按钮
-// 打开手册视图；Notebook 第一个标签是这一页自己的「本章导览」（第二层的开局
-// 讲解），两者分属 ADR 0028 的不同层，不能互相替换。
+// Notebook 第一个标签是章节教学大纲（第一层），第二个是「本章导览」
+// （第二层的开局讲解）。大纲只在原生页面维护，两层不能互相替换。
 Box type_semantics_lesson_page {
   name: "type_semantics_lesson_page";
   orientation: vertical;
@@ -59,17 +58,6 @@ Box type_semantics_lesson_page {
           }
         }
 
-        Box {
-          orientation: horizontal;
-          spacing: 8;
-          valign: center;
-
-          Button type_semantics_reference_button {
-            name: "type_semantics_reference_button";
-            label: "完整手册";
-            styles [ "btn-outline-secondary", "btn-sm" ]
-          }
-        }
       }
 
     }
@@ -77,7 +65,7 @@ Box type_semantics_lesson_page {
 
   // 标签直接对应课程的子章节。第一个标签是章节教学大纲（ADR 0028 第一层），
   // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
-  // 卡片一眼可辨，摊平成正文就看不出轻重。Markdown 那份是衍生物，供分类手册用。
+  // 卡片一眼可辨，摊平成正文就看不出轻重。此章不再维护 Markdown 大纲副本。
   Notebook type_semantics_section_notebook {
       [tab]
       Label { label: "教学大纲"; }
@@ -95,9 +83,7 @@ Box type_semantics_lesson_page {
           // 用控件手写而不是渲染 Markdown，因为主次、评级、检查点编号这些
           // 结构用徽章和卡片一眼可辨，纯正文会把它们摊平。
           //
-          // 同一份内容另有 Markdown 版（resources/articles/cpp/
-          // type_semantics_overview.md），分类手册在用；两份要一起改，
-          // 改一边会漂移。
+          // 这里是本章大纲的唯一内容来源，教学过程和实验依据它的目标构建。
 
           Frame {
             label: "这一章要解决什么";

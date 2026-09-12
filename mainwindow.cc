@@ -441,8 +441,7 @@ void MainWindow::ensure_chapter_page(
                 chapter,
                 builder,
                 mastery_by_id,
-                experiment_requested,
-                overview_requested);
+                experiment_requested);
     }
     m_loaded_chapters.insert(page_key);
 }

@@ -121,9 +121,6 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
             << "notebook page " << index << " is not a widget";
     }
     EXPECT_NE(
-        builder->get_widget<Gtk::Button>("type_semantics_reference_button"),
-        nullptr);
-    EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
     // 章节教学大纲是第一个标签，用 GTK 控件手写而不是渲染 Markdown。
     EXPECT_NE(

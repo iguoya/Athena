@@ -56,7 +56,8 @@ resources/athena.json
 ### 学习页面
 
 - `TypeSemanticsLessonPage`：Blueprint 组织原生学习内容，模块填充预测单元与图解。
-  页面顺序不来自 Markdown 标题。后续补齐讲解与多媒体，见教案规范。
+  「教学大纲」标签是本章大纲的唯一内容来源；已移除「完整手册」按钮、Markdown
+  大纲副本及其配置引用。教学过程与实验服从原生大纲，见教案规范。
 - `CodeChapterPage`：保留的标准知识点列表，提供实验、AI 讲解与自测等动作。
 - `WorkbenchPage`：旧式 Markdown 分节工作台，仍有代码和配置支持；属于兼容能力，
   当前课程配置未启用它，不作为新学习页模板。

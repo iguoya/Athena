@@ -4,7 +4,8 @@
 - 依据：[ADR 0028](../decisions/0028-outline-process-experiment-layering.md) 三层分工、
   [ADR 0031](../decisions/0031-knowledge-type-drives-teaching-actions.md) 知识类型决定教学动作、
   [LEARNING_DESIGN](../LEARNING_DESIGN.md) 第 3 节。
-- 方向来自[教学大纲](../../resources/articles/cpp/type_semantics_overview.md)，不反过来。
+- 方向来自[原生页面](../../resources/ui/chapters/type_semantics_lesson.blp)的「教学大纲」标签，
+  不反过来；Markdown 大纲副本已移除。
 
 ## 1. 分节与顺序
 
@@ -23,13 +24,14 @@
 | 7 | 值类别 | `value_category` | 概念 | 必须掌握 | 已实现 |
 | 8 | decltype | `decltype_deduction` | 概念 | 一般了解 | 已实现 |
 
-章节的教学大纲（第一层）不占标签位，由页面顶部按钮跳到手册视图；「本章导览」是这一页
-自己的开局讲解（第二层），两者不能互相替换。
+章节的教学大纲（第一层）占第一个标签位，位于上表的「本章导览」之前；「本章导览」
+是这一页自己的开局讲解（第二层），两者不能互相替换。页面不再提供「完整手册」按钮。
 
 ## 2. 每节的唯一设计输入是大纲
 
-动手写一节之前，先把[教学大纲](../../resources/articles/cpp/type_semantics_overview.md)
-里属于这个知识点的承诺全部摘出来，当成这一节的需求清单：
+动手写一节之前，先把[原生大纲](../../resources/ui/chapters/type_semantics_lesson.blp)
+里属于这个知识点的承诺全部摘出来，当成这一节的需求清单；以下按内容职责核对，
+不以控件标题或当前实验数量代替完整目标：
 
 - 「讲什么与边界」里属于它的那几条，连同难度与掌握目标评级
 - 「落点」里对应的能力项
