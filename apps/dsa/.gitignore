@@ -1,0 +1,9 @@
+# 依赖与构建产物：各自由 npm / cargo / tauri 重新生成
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# bin/ 里只有入口脚本是源码，旁边的可执行产物不入库
+bin/athena-dsa.app/
+bin/*.bin

@@ -1,0 +1,912 @@
+{
+  "id": "dsa",
+  "title": "数据结构与算法",
+  "tagline": "先建立度量与结构直觉，再动手写能跑、能测的 C++ 实现。",
+  "description": "以「会判断用什么结构、代价从哪来」为主线：复杂度 → 线性与哈希 → 树与堆 → 排序查找 → 图 → 算法范式。案例默认 C++20，对照标准库理解取舍。",
+  "spine": [
+    "量规模 —— 输入变大时，时间 / 空间怎么长",
+    "认布局 —— 连续、链接、树形、网状各自擅长什么",
+    "看接口 —— 插入 / 删除 / 查找的摊还与最坏",
+    "选结构 —— 先问访问模式，再选容器",
+    "选策略 —— 分治 / 贪心 / DP / 回溯的适用前提"
+  ],
+  "tracks": [
+    {
+      "id": "foundation",
+      "title": "度量与线性",
+      "color": "#0a58ca"
+    },
+    {
+      "id": "associative",
+      "title": "关联与层次",
+      "color": "#198754"
+    },
+    {
+      "id": "algorithms",
+      "title": "排序与图灵",
+      "color": "#6f42c1"
+    },
+    {
+      "id": "paradigms",
+      "title": "解题范式",
+      "color": "#fd7e14"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "complexity",
+      "title": "复杂度与度量",
+      "track": "foundation",
+      "summary": "全课共用的尺子：大 O、时间、空间、摊还。",
+      "topics": [
+        {
+          "id": "dsa.complexity.big_o",
+          "title": "大 O 表示法",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "track": "foundation",
+          "guide_line": "增长趋势，不是某次运行的毫秒数。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "建立「n 变大时代价怎么长」的共同语言，后面每个结构的取舍都挂在这上面。",
+            "pain": "把大 O 当成分数；把常数、机器速度混进渐近记号。",
+            "model": "丢掉常数与低阶项，只保留随 n 增长占主导的那一项。",
+            "scope": "O(1)/O(log n)/O(n)/O(n log n)/O(n²) 的典型代码形态。",
+            "judgment": "先问规模会不会涨；涨的时候哪一层循环或递归在主导。",
+            "landing": "能指着一段循环说出主导项，并说明为什么丢掉常数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "大 O 回答的是：n 变成 10 倍、100 倍时，耗时大概乘多少——不是「我这台机器跑了 3ms」。"
+              },
+              {
+                "type": "compare",
+                "title": "正例 / 反例",
+                "left": {
+                  "title": "正例：在谈增长趋势",
+                  "body": "「这段双重循环是 O(n²)：n 翻倍，步数大约变四倍。」——在比的是形态，不是某次计时。"
+                },
+                "right": {
+                  "title": "反例：把大 O 当成绩单",
+                  "body": "「O(n) 一定比 O(n log n) 快。」——常数、n 的范围、缓存都会让结论翻盘；大 O 不自动给出快慢排名。"
+                }
+              },
+              {
+                "type": "prose",
+                "text": "常用锚点：下标访问 ≈ O(1)；扫一遍 ≈ O(n)；每次砍半 ≈ O(log n)；两层各扫 n ≈ O(n²)。先认锚点，再合成。"
+              },
+              {
+                "type": "predict",
+                "question": "n 从 1000 增到 2000 时，若算法是 Θ(n²)，步数大约变成原来的几倍？",
+                "expect": "约 4 倍",
+                "explain": "（2n）² / n² = 4。实验里改 n，看 quadratic 一列是否大致翻四倍。"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "落点",
+                "text": "能指着循环说出主导项，并说明为什么丢掉了「×1000」这种常数。"
+              }
+            ]
+          },
+          "lab": {
+            "case": "big_o_growth",
+            "entrypoint": "main.cpp",
+            "hint": "改 n 或循环结构后运行，对照 linear / quadratic 步数怎么涨。"
+          }
+        },
+        {
+          "id": "dsa.complexity.time",
+          "title": "时间复杂度推导",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.complexity.big_o"
+          ],
+          "track": "foundation",
+          "guide_line": "嵌套、递归如何化成主导项；默认报最坏。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "会推导常见循环与简单递归的时间代价，并分清最好 / 最坏 / 平均。",
+            "pain": "漏算内层；把「平均」当成随口一估。",
+            "model": "循环乘法规则；递归树直觉；接口承诺通常看最坏。",
+            "scope": "嵌套循环、二分式递归；主定理细节可后补。",
+            "judgment": "最坏决定接口能不能用；平均要有输入模型才有意义。",
+            "landing": "能对给定代码写出最坏时间，并指出最好何时出现。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "技能目标：看到循环/递归，能按步骤推出最坏时间的主导项。"
+              },
+              {
+                "type": "steps",
+                "title": "示范步骤",
+                "items": [
+                  "标出「基本操作」（比较、赋值、进入循环体一次等），整段分析里保持一致。",
+                  "外层跑多少次 × 内层每次多少次；若内层与外层变量有关，写成求和再估主导项。",
+                  "递归：画递归树或「规模每次如何缩小」，再合成。",
+                  "默认报告最坏情况；最好/平均要另说前提。"
+                ]
+              },
+              {
+                "type": "prose",
+                "text": "示范：for i in 0..n-1: for j in 0..n-1: op → n·n 次 → Θ(n²)。内层 j<=i 时次数是 1+…+n = n(n+1)/2，主导项仍是 n²。"
+              },
+              {
+                "type": "practice",
+                "prompt": "打开实验：先不改代码，预测 square / triangle / halving 三列随 n 翻倍时如何变；运行验证后，自己加一个三层各扫 n 的函数。",
+                "hint": "三层各扫 n → Θ(n³)；halving 翻倍 n 时步数大约 +1。"
+              },
+              {
+                "type": "callout",
+                "tone": "warn",
+                "title": "易错",
+                "text": "漏算内层、或把「平均输入」口头估成平均复杂度——平均需要输入模型。"
+              }
+            ]
+          },
+          "lab": {
+            "case": "time_nested_count",
+            "entrypoint": "main.cpp",
+            "hint": "先预测 triangle / halving 的量级，再运行对照；按提示加三层循环。"
+          }
+        },
+        {
+          "id": "dsa.complexity.space",
+          "title": "空间复杂度",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.complexity.big_o"
+          ],
+          "track": "foundation",
+          "guide_line": "额外内存怎么算；递归栈也占空间。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "会度量算法的额外空间，并做时空权衡。",
+            "pain": "把输入本身算进「额外」；忽略递归深度。",
+            "model": "额外空间 = 算法自己申请的；递归深度计入。",
+            "scope": "数组缓冲、递归栈、原地算法直觉。",
+            "judgment": "内存紧时优先问能否降额外空间。",
+            "landing": "能指出一段代码的额外空间量级。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "问：除了输入输出，算法还「借」了多少工作区？递归调用栈也要算。"
+              },
+              {
+                "type": "compare",
+                "title": "额外空间 vs 输入本身",
+                "left": {
+                  "title": "算额外",
+                  "body": "又开了一个长度 n 的数组、或递归深度到 n 层——这是算法自己要的空间。"
+                },
+                "right": {
+                  "title": "不算额外",
+                  "body": "只读输入数组、原地交换两个元素——输入占用不记进「额外空间」。"
+                }
+              },
+              {
+                "type": "predict",
+                "question": "深度为 n 的单链递归打印（无尾呼优化），额外空间？",
+                "expect": "Θ(n)（调用栈）",
+                "explain": "每层一个栈帧，深度 n → 额外 Θ(n)。很多人只盯着「有没有 new 数组」。"
+              },
+              {
+                "type": "scenario",
+                "situation": "手机上要处理很长的列表，内存紧张。两种写法：A 递归到叶；B 显式栈/迭代。你更倾向？",
+                "options": [
+                  {
+                    "label": "优先迭代或明确限制深度，避免不可控栈深度",
+                    "ok": true,
+                    "why": "额外空间与失败模式更可控。"
+                  },
+                  {
+                    "label": "递归更短，空间可以忽略",
+                    "ok": false,
+                    "why": "深度与输入同阶时，栈空间就是额外 Θ(n)，还可能爆栈。"
+                  }
+                ]
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.complexity.amortized",
+          "title": "摊还分析",
+          "difficulty": 4,
+          "mastery_goal": "familiar",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.complexity.time"
+          ],
+          "track": "foundation",
+          "guide_line": "偶发扩容如何被大量廉价操作摊平。",
+          "weight": "可以慢一点",
+          "outline": {
+            "promise": "理解均摊成本，以动态数组倍增为锚。",
+            "pain": "把均摊当成平均情况的同义词。",
+            "model": "一串操作总代价 / 次数；单次最坏仍可很高。",
+            "scope": "vector 倍增；势能法直觉即可。",
+            "judgment": "接口写摊还 O(1) 时，最坏单次仍可能触发扩容。",
+            "landing": "能解释为何 vector::push_back 均摊常数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "均摊看的是「长期账单」：偶发很贵的一次，被大量便宜的操作摊平。"
+              },
+              {
+                "type": "compare",
+                "title": "均摊 ≠ 平均情况",
+                "left": {
+                  "title": "均摊",
+                  "body": "对任意操作序列，总代价 / 次数有上界。动态数组倍增：n 次 push 总搬移 O(n)，均摊 O(1)。"
+                },
+                "right": {
+                  "title": "平均情况",
+                  "body": "依赖输入概率分布（如快排期望）。没有分布假设就谈「平均」，往往是空话。"
+                }
+              },
+              {
+                "type": "prose",
+                "text": "锚：vector 容量满时扩到约 2 倍并搬迁——单次 push 最坏 O(n)，但均摊仍是常数。"
+              },
+              {
+                "type": "scenario",
+                "situation": "接口写「摊还 O(1) 插入」。实时系统要求每一次插入都 < 1ms。能否直接依赖该接口？",
+                "options": [
+                  {
+                    "label": "不能直接依赖：最坏单次仍可能触发扩容搬迁",
+                    "ok": true,
+                    "why": "均摊不保证每一次的上界。"
+                  },
+                  {
+                    "label": "可以：摊还 O(1) 就是每次都是 O(1)",
+                    "ok": false,
+                    "why": "混淆了均摊与每操作最坏。"
+                  }
+                ]
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "linear",
+      "title": "线性结构",
+      "track": "foundation",
+      "summary": "连续 vs 链接；栈与队列是受限的线性约定。",
+      "topics": [
+        {
+          "id": "dsa.linear.array",
+          "title": "数组与动态数组",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.complexity.big_o"
+          ],
+          "track": "foundation",
+          "guide_line": "随机访问 O(1)；尾插摊还 O(1)；中部插删贵。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "连续布局的代价与局部性，对照 std::vector。",
+            "pain": "忽视扩容与迭代器失效。",
+            "model": "下标映射到地址；容量与 size 分离。",
+            "scope": "静态数组、动态扩容、缓存友好。",
+            "judgment": "要按下标扫、尾部增减 → 优先数组。",
+            "landing": "能说出下标访问、尾插、中部插入的量级。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "数组的超能力是「第 i 个在哪」立刻知道；中间插入则要搬家。"
+              },
+              {
+                "type": "compare",
+                "title": "何时用数组",
+                "left": {
+                  "title": "合适",
+                  "body": "按下标扫描、尾部增减、缓存友好、需要随机访问。"
+                },
+                "right": {
+                  "title": "不合适",
+                  "body": "频繁在「已知位置中间」大段插删，又不愿付搬移成本——更该想链表或其他结构。"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "和 std::vector 对齐的心智步骤",
+                "items": [
+                  "size：逻辑元素个数；capacity：已预留槽位。",
+                  "尾插：多数时候 O(1)，偶发扩容搬迁（均摊 O(1)）。",
+                  "下标访问：O(1)。",
+                  "在中间 insert/erase：O(n) 搬移。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "运行 array_cost：解释为何同样 n 次插入，插到头部的 moves 远大于尾插。",
+                "hint": "第 k 次头插大约搬 k 个元素。"
+              },
+              {
+                "type": "scenario",
+                "situation": "要维护「按时间追加的日志」，偶尔按序号读第 k 条。选结构？",
+                "options": [
+                  {
+                    "label": "动态数组（vector）：追加均摊 O(1)，按序号 O(1)",
+                    "ok": true,
+                    "why": "访问模式正是数组擅长的。"
+                  },
+                  {
+                    "label": "链表：插入永远 O(1)",
+                    "ok": false,
+                    "why": "按序号读第 k 条是 O(n)；且尾部追加还要持有尾指针才方便。"
+                  }
+                ]
+              }
+            ]
+          },
+          "lab": {
+            "case": "array_cost",
+            "entrypoint": "main.cpp",
+            "hint": "对照 head_insert 的 moves 是否接近 n(n+1)/2；再试在中部插入。"
+          }
+        },
+        {
+          "id": "dsa.linear.list",
+          "title": "链表",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.linear.array"
+          ],
+          "track": "foundation",
+          "guide_line": "已知位置插删 O(1)；定位要先走 O(n)。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "单链 / 双链基本操作与边界。",
+            "pain": "丢指针、环、空表、头节点。",
+            "model": "节点 + next（+ prev）。",
+            "scope": "头插、删除、反转；与数组对照。",
+            "judgment": "频繁「在已知结点旁」插删再考虑链表。",
+            "landing": "能手写基本操作且不丢节点。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "链表便宜的是改指针，不是「找到第 k 个」——找到往往才是瓶颈。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.linear.stack_queue",
+          "title": "栈与队列",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.linear.array"
+          ],
+          "track": "foundation",
+          "guide_line": "LIFO / FIFO：用访问约定降低出错面。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "栈 / 队列语义与典型场景。",
+            "pain": "和下标数组混用，失去约束。",
+            "model": "只允许在规定端进出。",
+            "scope": "括号匹配、表达式、BFS 队列。",
+            "judgment": "只要「最近优先」或「先来先到」就用约定结构。",
+            "landing": "能判断场景该用栈还是队列。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "栈和队列首先是纪律，其次才是实现——可以用数组或链表来实现。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "hash",
+      "title": "哈希表",
+      "track": "associative",
+      "summary": "平均 O(1) 查找的工程主力；最坏与哈希质量要心里有数。",
+      "topics": [
+        {
+          "id": "dsa.hash.table",
+          "title": "哈希表",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.linear.array",
+            "dsa.complexity.amortized"
+          ],
+          "track": "associative",
+          "guide_line": "键 → 桶；冲突处理；装载因子。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "理解平均常数查找从哪里来，以及何时退化。",
+            "pain": "当成永远 O(1)；忽略哈希与装载因子。",
+            "model": "哈希函数 + 冲突链 / 开放寻址。",
+            "scope": "unordered_map 直觉；键平等与哈希一致性。",
+            "judgment": "要按键查找且无需有序 → 优先哈希。",
+            "landing": "能说明冲突与扩容对代价的影响。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "哈希表用空间和哈希质量换平均查找速度；它不保持键的顺序。"
+              },
+              {
+                "type": "callout",
+                "tone": "warn",
+                "title": "边界",
+                "text": "最坏可退化到链表——竞赛与对抗输入里要有数。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "tree",
+      "title": "树与堆",
+      "track": "associative",
+      "summary": "层次结构：遍历、有序树、优先队列。",
+      "topics": [
+        {
+          "id": "dsa.tree.basics",
+          "title": "树与遍历",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.linear.stack_queue"
+          ],
+          "track": "associative",
+          "guide_line": "先序 / 中序 / 后序 / 层序各回答什么问题。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "术语与四种遍历的用途。",
+            "pain": "递归边界；遍历顺序背名不背用途。",
+            "model": "根、孩子、深度、高度。",
+            "scope": "递归遍历与层序（队列）。",
+            "judgment": "先问要父子关系还是一层一层看。",
+            "landing": "能手画同一棵树的三种 DFS 结果。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "遍历顺序不是仪式，而是「你想先处理谁」——序列化、求值、打印目录各用各的。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.tree.bst",
+          "title": "二叉搜索树",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.tree.basics",
+            "dsa.complexity.time"
+          ],
+          "track": "associative",
+          "guide_line": "有序树；无平衡时最坏变链。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "查找 / 插入 / 删除与有序性。",
+            "pain": "删除后继；默认当平衡树用。",
+            "model": "左小右大。",
+            "scope": "平均对数、最坏线性；与 map 的关系只点到为止。",
+            "judgment": "需要有序遍历再考虑树；要最坏对数需平衡树（后课）。",
+            "landing": "能说明为何会退化成链。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "BST 的平均好看，建立在「输入不太坏」上——这是和哈希表分工的关键。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.tree.heap",
+          "title": "堆与优先队列",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.linear.array",
+            "dsa.tree.basics"
+          ],
+          "track": "associative",
+          "guide_line": "数组上的完全二叉树；反复取最值。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "堆序、上浮下沉、优先队列接口。",
+            "pain": "父子下标算错。",
+            "model": "堆序 + 完全形态。",
+            "scope": "push/pop；对照 priority_queue。",
+            "judgment": "只要反复要当前最值 → 堆。",
+            "landing": "能说出插入与取最值的量级。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "堆不提供任意键的快速查找；它优化的是「谁最大 / 最小」。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "sorting",
+      "title": "排序与查找",
+      "track": "algorithms",
+      "summary": "有序化与在有序上加速；为图与范式打底。",
+      "topics": [
+        {
+          "id": "dsa.sort.basic",
+          "title": "基础排序",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.linear.array",
+            "dsa.complexity.time"
+          ],
+          "track": "algorithms",
+          "guide_line": "平方级排序：教学与近乎有序的插入。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "冒泡 / 选择 / 插入的对照（稳定、原地、代价）。",
+            "pain": "稳定与原地概念混淆。",
+            "model": "比较次数主导。",
+            "scope": "小 n；插入适合近乎有序。",
+            "judgment": "生产默认别手写平方排序。",
+            "landing": "能写出插入排序并说明稳定。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "基础排序的价值是把「比较—交换」想清楚，不是拿去排序百万数据。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.sort.advanced",
+          "title": "高效排序",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.sort.basic",
+            "dsa.tree.heap",
+            "dsa.complexity.space"
+          ],
+          "track": "algorithms",
+          "guide_line": "归并 / 快速 / 堆排序：稳定、空间、最坏。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "n log n 族的取舍表。",
+            "pain": "快排最坏；归并额外空间。",
+            "model": "分治合并 vs 堆序。",
+            "scope": "平均 / 最坏 / 是否稳定。",
+            "judgment": "要稳定 → 归并；要原地期望快 → 快排；要最坏保证 → 堆排序。",
+            "landing": "能一句话对比三者。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "选排序算法前先问：要不要稳定？能不能接受最坏 O(n²)？有没有额外数组？"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.search.binary",
+          "title": "二分查找",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.linear.array",
+            "dsa.complexity.big_o"
+          ],
+          "track": "algorithms",
+          "guide_line": "有序 + 随机访问 → 对数查找；边界最易错。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "写对闭开区间二分，并理解变体。",
+            "pain": "左右边界写飞；未排序就二分。",
+            "model": "每次砍半有序区间。",
+            "scope": "存在性；下界 / 上界直觉。",
+            "judgment": "无序先排序或换哈希；链表上二分无意义。",
+            "landing": "能写出不错位的二分模板。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "二分的前提写在题面上：有序、可 O(1) 取中点——少一条都不要硬套。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "title": "图",
+      "track": "algorithms",
+      "summary": "关系网：表示、遍历，再到加权路径。",
+      "topics": [
+        {
+          "id": "dsa.graph.basics",
+          "title": "图的表示",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "dsa.linear.list",
+            "dsa.complexity.space"
+          ],
+          "track": "algorithms",
+          "guide_line": "邻接表 vs 邻接矩阵：稀疏与稠密。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "术语与两种表示的空间 / 查询代价。",
+            "pain": "稠密稀疏选错表示。",
+            "model": "顶点、边、有向 / 无向、权。",
+            "scope": "矩阵与邻接表。",
+            "judgment": "边少用表；常问「两点是否相邻」且点不多可用矩阵。",
+            "landing": "能按场景选表示并估算空间。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "图算法的第一行决定往往不是 Dijkstra，而是「用表还是用矩阵」。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.graph.traversal",
+          "title": "图的遍历",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dsa.graph.basics",
+            "dsa.linear.stack_queue"
+          ],
+          "track": "algorithms",
+          "guide_line": "DFS / BFS；最短边数用 BFS。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "深度与广度遍历骨架与用途。",
+            "pain": "漏标 visited；混淆边数最短与权最短。",
+            "model": "栈 / 递归 vs 队列。",
+            "scope": "连通分量、层序距离。",
+            "judgment": "无权最短路径 → BFS；搜路径 / 拓扑直觉 → DFS。",
+            "landing": "能手写两种遍历并说明 visited 的位置。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "BFS 的「最短」是边数最短；一有边权，就要换算法族。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.graph.shortest",
+          "title": "最短路径入门",
+          "difficulty": 4,
+          "mastery_goal": "familiar",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dsa.graph.traversal",
+            "dsa.tree.heap"
+          ],
+          "track": "algorithms",
+          "guide_line": "非负权用 Dijkstra；先问有没有负权。",
+          "weight": "可以慢一点",
+          "outline": {
+            "promise": "知道 Dijkstra 的前提与「松弛」直觉。",
+            "pain": "负权仍套 Dijkstra。",
+            "model": "松弛更新距离。",
+            "scope": "非负权单源；Bellman-Ford 只点名。",
+            "judgment": "先问边权符号，再选算法。",
+            "landing": "能陈述选用前提，不要求默写全实现。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "这一节目标是「选对工具」：实现可以后补，前提必须先对。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    },
+    {
+      "id": "paradigm",
+      "title": "算法范式",
+      "track": "paradigms",
+      "summary": "在结构之上选策略：分治、贪心、DP、回溯。",
+      "topics": [
+        {
+          "id": "dsa.paradigm.divide",
+          "title": "分治",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dsa.sort.advanced"
+          ],
+          "track": "paradigms",
+          "guide_line": "子问题独立：分解、递归、合并。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "分治三步与归并类问题。",
+            "pain": "合并代价被忽略。",
+            "model": "独立子问题 + 合并。",
+            "scope": "与 DP 的分界：有无重叠。",
+            "judgment": "子问题不重叠 → 分治；重叠 → 考虑 DP。",
+            "landing": "能套「分—解—合」写清步骤。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "归并排序就是分治教科书：你已经会了一种，现在要会认出下一种。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.paradigm.greedy",
+          "title": "贪心",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dsa.complexity.big_o"
+          ],
+          "track": "paradigms",
+          "guide_line": "局部最优能否通向全局；先找反例。",
+          "weight": "随后掌握",
+          "outline": {
+            "promise": "贪心适用边界与证明直觉。",
+            "pain": "无反例检验就贪。",
+            "model": "选择性质 / 最优子结构（弱）。",
+            "scope": "活动选择类；与 DP 对照。",
+            "judgment": "能举反例就不要贪；证明前只当猜想。",
+            "landing": "能各举一个该用 / 不该用的例子。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "贪心不是「每步选看起来最好的」口头禅，而是「这种选择性质成立」的命题。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.paradigm.dp",
+          "title": "动态规划",
+          "difficulty": 4,
+          "mastery_goal": "required",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dsa.paradigm.divide",
+            "dsa.complexity.space"
+          ],
+          "track": "paradigms",
+          "guide_line": "重叠子问题 + 最优子结构 → 状态转移。",
+          "weight": "先拿下",
+          "outline": {
+            "promise": "会设状态、写转移、分清与分治。",
+            "pain": "状态维度设错；该记忆化却纯递归。",
+            "model": "状态 = 子问题编号；转移 = 决策。",
+            "scope": "一维 / 二维入门；空间压缩点到为止。",
+            "judgment": "有重叠用 DP；无重叠回到分治。",
+            "landing": "能写出一个经典问题的状态与转移骨架。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "DP 难在「状态是什么」，不在「会不会写 for 循环」。"
+              }
+            ]
+          },
+          "lab": null
+        },
+        {
+          "id": "dsa.paradigm.backtrack",
+          "title": "回溯",
+          "difficulty": 3,
+          "mastery_goal": "familiar",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dsa.graph.traversal"
+          ],
+          "track": "paradigms",
+          "guide_line": "选择—约束—撤销；搜索树剪枝。",
+          "weight": "可以慢一点",
+          "outline": {
+            "promise": "回溯模板与剪枝意识。",
+            "pain": "不撤销；解空间爆炸无剪。",
+            "model": "DFS 枚举决策。",
+            "scope": "排列 / 组合 / 子集。",
+            "judgment": "解空间可枚举且需构造解 → 回溯。",
+            "landing": "能写带撤销的搜索骨架。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "回溯是带撤销的 DFS；剪枝决定它能不能在时限内结束。"
+              }
+            ]
+          },
+          "lab": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据结构与算法</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <div id="app" class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <button type="button" class="home-btn" id="home-btn" title="返回知识图谱">图谱</button>
+          <div>
+            <h1 id="app-title">数据结构与算法</h1>
+            <p id="app-tagline" class="tagline"></p>
+          </div>
+        </div>
+        <div id="app-meta" class="meta"></div>
+      </header>
+
+      <main id="view-map" class="view-map">
+        <section class="graph-wrap card">
+          <div class="graph-head">
+            <div>
+              <div class="pane-title">知识点路线图</div>
+              <p class="graph-note">纵向 = 先修层级，横向同层无先后；颜色 = 所属主线。点节点进入讲解。</p>
+            </div>
+            <div class="track-legend" id="track-legend"></div>
+          </div>
+          <div id="graph" class="graph" aria-label="数据结构知识图谱"></div>
+        </section>
+
+        <aside class="map-side">
+          <section class="hero card">
+            <p class="lead" id="hero-lead"></p>
+            <p class="prose muted" id="hero-desc"></p>
+          </section>
+          <section class="card">
+            <div class="pane-title">进度概览</div>
+            <div class="stat-row" id="stat-row"></div>
+            <ul class="chapter-stats" id="chapter-stats"></ul>
+          </section>
+          <section class="card">
+            <div class="pane-title">读节点</div>
+            <ul class="legend-list" id="legend-list"></ul>
+          </section>
+          <section class="spine card">
+            <div class="pane-title">读题与读实现时的五条脊</div>
+            <ul id="spine-list" class="spine-list"></ul>
+          </section>
+        </aside>
+      </main>
+
+      <main id="view-topic" class="view-topic is-hidden">
+        <aside class="nav" id="nav"></aside>
+        <section class="stage">
+          <div class="topic-head" id="topic-head"></div>
+          <nav class="tabs" id="tabs" role="tablist">
+            <button type="button" data-tab="guide" class="tab is-active">本章导览</button>
+            <button type="button" data-tab="outline" class="tab">教学大纲</button>
+            <button type="button" data-tab="lesson" class="tab">讲解</button>
+            <button type="button" data-tab="lab" class="tab">实验</button>
+          </nav>
+          <div class="panel" id="panel"></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
