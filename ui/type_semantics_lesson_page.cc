@@ -579,13 +579,15 @@ void TypeSemanticsLessonPage::build_checkpoints(
                              "编译错误", "临时对象被复制一份"},
                  .correct_choice = 1,
                  .explain = "这就是寿命延长规则，它让\"接住一个临时结果再多用几行\"成为可能。"
-                            "但要记牢它的适用范围：只对直接绑定的那个临时对象生效。",
+                            "但要记牢它的适用范围：引用要直接绑到临时对象或其子对象。",
                  .difficulty = 3, .goal = QuestionGoal::Master},
-                {.stem = "把临时对象内部的某个成员绑到 const 引用上（不是绑整个临时对象），呢？",
-                 .choices = {"成员也被延长", "临时对象仍在分号处结束，引用当场悬垂",
-                             "编译错误", "整个临时对象被延长"},
+                {.stem = "写 const string& r = Temporary{}.label(); 其中 label() 返回成员的引用。r 会怎样？",
+                 .choices = {"临时对象被延长，r 一直有效",
+                             "临时对象仍在分号处结束，r 当场悬垂",
+                             "编译错误", "r 会保存一份独立的 string 副本"},
                  .correct_choice = 1,
-                 .explain = "延长的是那个临时对象本身，不是从它取出来的成员。"
+                 .explain = "延长只发生在引用直接绑到临时对象或其子对象时。"
+                            "经函数返回的引用不是这两种情况，临时对象照常在分号处结束。"
                             "这条边界很容易被\"const 引用能延长寿命\"这句话盖过去。",
                  .difficulty = 4, .goal = QuestionGoal::Required},
                 {.stem = "函数把返回类型写成引用，返回自己的局部对象，调用方拿到什么？",
