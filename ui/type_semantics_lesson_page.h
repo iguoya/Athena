@@ -26,9 +26,9 @@ class LearningUnitView;
 // （Cairo 自绘）→ 预测单元 → 专注实验入口 → 换条件的迁移预测。对象图这类
 // 需要绘制的内容按 AGENTS.md「GTK 与 Blueprint 规则」第 3 条留在代码里。
 //
-// 第一个标签是「本章导览」（极简概要，ADR 0036），第二个是章节教学大纲
-// （ADR 0028 第一层），都用 GTK 控件手写；其余标签是这一页自己的教学过程
-// （第二层）。三者不能互相替换。
+// 第一个标签是章节教学大纲（ADR 0028 第一层），用 GTK 控件手写；其余标签是
+// 这一页自己的教学过程（第二层）。两者不能互相替换。ADR 0039 撤销了原先排在
+// 最前面的「本章导览」——它那四块内容大纲都有，并存只会漂移。
 class TypeSemanticsLessonPage final {
 public:
     TypeSemanticsLessonPage(
@@ -102,9 +102,9 @@ private:
     // 每个学习单元的数据必须比它的 View 活得久（View 持有 const 引用）。
     vector<unique_ptr<LearningUnit>> m_unit_data;
     vector<unique_ptr<LearningUnitView>> m_unit_views;
-    // 两张路线图：大纲那张配色表达掌握目标，导览那张表达难度。
+    // 大纲页的知识点路线图：配色表达难度，节点文字给掌握目标，底部细条是
+    // 熟练度（ADR 0039 合并导览后只剩这一张）。
     unique_ptr<RoadmapView> m_outline_roadmap;
-    unique_ptr<RoadmapView> m_guide_roadmap;
     vector<unique_ptr<Checkpoint>> m_checkpoint_data;
     vector<unique_ptr<CheckpointView>> m_checkpoint_views;
     CheckpointView::OnScored m_on_mastery_recorded;

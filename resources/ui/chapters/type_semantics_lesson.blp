@@ -3,8 +3,8 @@ using Gtk 4.0;
 // ADR 0026：类型与表达式的第一条原生学习场景。学习顺序和双路径对比完全由
 // GUI 控件表达。
 //
-// Notebook 第一个标签是「本章导览」（极简概要，ADR 0036），第二个是章节
-// 教学大纲（ADR 0028 第一层）。两者只在原生页面维护，不能互相替换。
+// Notebook 第一个标签是章节教学大纲（ADR 0028 第一层），其余标签是这一页
+// 自己的教学过程（第二层）。大纲只在这里维护，没有第二份副本（ADR 0039）。
 Box type_semantics_lesson_page {
   name: "type_semantics_lesson_page";
   orientation: vertical;
@@ -92,9 +92,11 @@ Box type_semantics_lesson_page {
   // 加进 notebook，child 是 NULL，每次加载都会打两条
   // "gtk_notebook_get/set_tab_label: assertion 'GTK_IS_WIDGET (child)' failed"。
   //
-  // 标签直接对应课程的子章节。前两个标签是「本章导览」与章节教学大纲，
+  // 标签直接对应课程的子章节。第一个标签是章节教学大纲（ADR 0028 第一层），
   // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
   // 卡片一眼可辨，摊平成正文就看不出轻重。此章不再维护 Markdown 大纲副本。
+  // ADR 0039 撤销了原先排在它前面的「本章导览」：那四块内容大纲全都有，
+  // 而且更完整，两份并存只会漂移。
   Notebook type_semantics_section_notebook {
       // 必须 vexpand：不然 Notebook 向父 Box 要的是"最高那一页的自然高度"
       // （本章约 13600px），窗口只有一千多，GTK 只能强行压缩，页内 Picture 的
@@ -111,317 +113,28 @@ Box type_semantics_lesson_page {
           spacing: 16;
           margin-bottom: 18;
 
-          Frame {
-            label: "这一章要解决什么";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 12;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label {
-                label: "建立判断对象如何初始化、何时有效，以及表达式如何参与传递与转换的基本框架。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-
-              Box {
-                orientation: vertical;
-                spacing: 4;
-                styles [ "lesson-figure" ]
-
-                // 这张图由 requires 与评级数据实时绘制（ADR 0033），不是静态
-                // 图片：改了 athena.json 的依赖或评级，它立刻跟着变，不会漂移。
-                // 路线图由 render/roadmap_view 按 ChapterCatalog 数据绘制，
-                // 这里只留容器（结构由运行时数据决定，AGENTS.md 例外第 2 条）。
-                Box ts_guide_roadmap_host {
-                  name: "ts_guide_roadmap_host";
-                  orientation: vertical;
-                  height-request: 330;
-                }
-                Label {
-                  label: "箭头是先修关系，顺着箭头学；方框配色是难度，冷色较易、暖色较难，和知识点徽章同一套色阶；框里第二行写着要学到什么程度。点任意一个方块直接跳到那一节。要知道为什么这样排、为什么定这个程度，进「教学大纲」。";
-                  halign: start; wrap: true; xalign: 0;
-                  styles [ "lesson-figure-caption" ]
-                }
-              }
-            }
-          }
-
-          Frame {
-            label: "读代码时的五个检查点";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 8;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label { label: "① 认类型 —— 它是什么类型，const 与引用修饰了哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "② 看初始化 —— 怎样取得初始状态，会不会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "③ 查有效期 —— 此刻是否还存在，引用会不会活得比它更久"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "④ 辨表达式 —— 指向已有对象，还是产生新值"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "⑤ 找转换 —— 在哪里发生，隐式还是显式"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label {
-                label: "实际阅读时允许往返，不必按编号机械地走。";
-                halign: start; wrap: true; xalign: 0; margin-top: 4;
-                styles [ "dim-label" ]
-              }
-            }
-          }
-
-          Frame {
-            label: "每个知识点解决什么，学到什么程度";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 8;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Box {
-                orientation: horizontal; spacing: 8;
-                margin-top: 4;
-                Label { label: "先拿下"; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
-                Label { label: "初中级 · 需要精通"; halign: start; styles [ "dim-label" ] }
-              }
-              Label { label: "· 初始化 —— 不同写法提供什么保证，哪里会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 对象生命周期 —— 从哪一行开始存在、到哪一行结束"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 类型推导 —— auto 替你补类型，要副本还是别名仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-
-              Box {
-                orientation: horizontal; spacing: 8;
-                margin-top: 4;
-                Label { label: "随后掌握"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
-                Label { label: "初中级 · 必须掌握"; halign: start; styles [ "dim-label" ] }
-              }
-              Label { label: "· enum class —— 一组状态什么时候值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 类型转换 —— 转换表达什么意图，检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-
-              Box {
-                orientation: horizontal; spacing: 8;
-                margin-top: 4;
-                Label { label: "可以慢一点"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
-                Label { label: "进阶 · 必须掌握"; halign: start; styles [ "dim-label" ] }
-              }
-              Label { label: "· 值类别 —— 左值 / 纯右值 / 将亡值，怎样影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-
-              Box {
-                orientation: horizontal; spacing: 8;
-                margin-top: 4;
-                Label { label: "可以先跳过"; styles [ "badge", "badge-mastery-goal", "mastery-goal-familiar" ] }
-                Label { label: "进阶 · 一般了解"; halign: start; styles [ "dim-label" ] }
-              }
-              Label { label: "· decltype —— 它和 auto 问的不是同一件事"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-
-              Label {
-                label: "从上往下就是推荐顺序。每一档为什么这样定，见「教学大纲」。";
-                halign: start; wrap: true; xalign: 0; margin-top: 4;
-                styles [ "dim-label" ]
-              }
-            }
-          }
-        }
-      }
-
-      [tab]
-      Label { label: "本章导览"; }
-
-
-      ScrolledWindow {
-        hscrollbar-policy: never;
-        vexpand: true;
-
-        Box {
-          orientation: vertical;
-          spacing: 16;
-          margin-bottom: 18;
-
           // 这一页是 ADR 0028 三层里的第一层：只指方向，不讲语法机制。
           // 用控件手写而不是渲染 Markdown，因为主次、评级、检查点编号这些
           // 结构用徽章和卡片一眼可辨，纯正文会把它们摊平。
           //
-          // 这里是本章大纲的唯一内容来源，教学过程和实验依据它的目标构建。
+          // ADR 0039：这里是本章大纲的唯一一份，前面不再有「本章导览」。
+          // 导览当初是为了解决"大纲太长"，正确的解法是把大纲写短——所以
+          // 地图（主次、顺序、难度）放在最前，细节一律下放到各知识点小节，
+          // 这一页不再重复它们。
 
-          Frame {
-            label: "这一章要解决什么";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 10;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label {
-                label: "建立判断对象如何初始化、何时有效，以及表达式如何参与传递与转换的基本框架。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "native-lesson-lead" ]
-              }
-              Label {
-                label: "读 C++ 代码时，只知道「这个变量存着什么」还不够。<span foreground='#052c65' weight='bold'>同一个结果，可能被复制，也可能只是被另一个名字引用</span>；看似普通的一次传递，可能丢失信息，也可能留下失效的引用。本章把这些日常判断背后的语言规则连成一条线。";
-                use-markup: true;
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-            }
+          Label {
+            label: "建立判断对象如何初始化、何时有效，以及表达式如何参与传递与转换的基本框架。";
+            halign: start; wrap: true; xalign: 0;
+            styles [ "native-lesson-lead" ]
+          }
+          Label {
+            use-markup: true;
+            label: "读 C++ 代码时，只知道「这个变量存着什么」还不够。<span foreground='#052c65' weight='bold'>同一个结果，可能被复制，也可能只是被另一个名字引用</span>；看似普通的一次传递，可能丢失信息，也可能留下失效的引用。本章把这些日常判断背后的语言规则连成一条线。";
+            halign: start; wrap: true; xalign: 0;
+            styles [ "lesson-prose" ]
           }
 
-          Frame {
-            label: "五类「看起来没问题」的风险";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 10;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label {
-                label: "每一条对应后面「判断与代价」里的一个检查点，遇到时可以直接回到那条检查线。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-
-              Box {
-                orientation: horizontal; spacing: 10;
-                Label { label: "①"; valign: start; styles [ "outline-risk-index" ] }
-                Box {
-                  orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "不同含义被当成同一种类型"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "枚举、整数和强制转换混在一起时，编译器很难替代码守住边界。"; halign: start; wrap: true; xalign: 0; }
-                }
-                Label { label: "认类型"; valign: start; styles [ "badge", "outline-risk-tag" ] }
-              }
-
-              Box {
-                orientation: horizontal; spacing: 10;
-                Label { label: "②"; valign: start; styles [ "outline-risk-index" ] }
-                Box {
-                  orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "读取没有可靠初值的对象"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { use-markup: true; label: "代码可能表现不稳定，甚至<span foreground='#052c65' weight='bold'>直接进入未定义行为</span>。"; halign: start; wrap: true; xalign: 0; }
-                }
-                Label { label: "看初始化"; valign: start; styles [ "badge", "outline-risk-tag" ] }
-              }
-
-              Box {
-                orientation: horizontal; spacing: 10;
-                Label { label: "③"; valign: start; styles [ "outline-risk-index" ] }
-                Box {
-                  orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "对象已经失效，引用仍被使用"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { use-markup: true; label: "表面上还能访问，<span foreground='#052c65' weight='bold'>实际已经越过对象的有效期</span>。"; halign: start; wrap: true; xalign: 0; }
-                }
-                Label { label: "查有效期"; valign: start; styles [ "badge", "outline-risk-tag" ] }
-              }
-
-              Box {
-                orientation: horizontal; spacing: 10;
-                Label { label: "④"; valign: start; styles [ "outline-risk-index" ] }
-                Box {
-                  orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "分不清在操作副本还是原对象"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "写法很像，改动却落在不同对象上；反过来没察觉产生了副本时，大对象的复制会变成真实的时间和内存代价。"; halign: start; wrap: true; xalign: 0; }
-                }
-                Label { label: "辨表达式"; valign: start; styles [ "badge", "outline-risk-tag" ] }
-              }
-
-              Box {
-                orientation: horizontal; spacing: 10;
-                Label { label: "⑤"; valign: start; styles [ "outline-risk-index" ] }
-                Box {
-                  orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "精度悄悄丢失"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { use-markup: true; label: "数值进入范围更小或表达能力不同的类型后，<span foreground='#052c65' weight='bold'>结果可能已经不是原来的值</span>。"; halign: start; wrap: true; xalign: 0; }
-                }
-                Label { label: "找转换"; valign: start; styles [ "badge", "outline-risk-tag" ] }
-              }
-
-              Label {
-                label: "这些风险大多是表达能力增强后留下的选择题。构造函数和引用让对象的建立与使用有了更丰富的表达，也让「这是新对象还是已有对象的别名」成了每次都要判断的事；C++11 的类型推导省掉重复书写，同时把「副本还是别名」的意图交还给你；列表初始化和作用域枚举则是反过来收紧检查，把一部分风险挪到编译期。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-            }
-          }
-
-          Frame {
-            label: "心智模型：对象与表达式";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 12;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label {
-                label: "对象是程序中具有身份、承载状态的实体；表达式是代码中参与求值的部分，可以指向已有对象，也可以计算出用于后续操作的值。<span foreground='#052c65' weight='bold'>多个表达式可以指向同一个对象</span>，所以<span background='#fff3cd' weight='bold'>「写法不同」不一定意味着「多出了一份对象」</span>。";
-                use-markup: true;
-                halign: start; wrap: true; xalign: 0;
-                styles [ "native-lesson-lead" ]
-              }
-
-              Box {
-                orientation: horizontal;
-                spacing: 14;
-                homogeneous: true;
-
-                Box {
-                  orientation: vertical; spacing: 6;
-                  styles [ "figure-stance", "figure-stance-decltype" ]
-                  Label { label: "对象 · 承载状态的实体"; halign: start; styles [ "figure-stance-title" ] }
-                  Label { label: "类型 —— 它是什么，允许哪些操作，编译器能检查什么"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "状态 —— 是否已正确初始化，此刻承载什么值或资源"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "生命周期 —— 何时开始存在、何时结束，当前访问是否仍有效"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "三样都要看，缺一样就判断不了这次访问安不安全。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
-                }
-
-                Box {
-                  orientation: vertical; spacing: 6;
-                  styles [ "figure-stance", "figure-stance-auto" ]
-                  Label { label: "表达式 · 参与求值的代码"; halign: start; styles [ "figure-stance-title" ] }
-                  Label { label: "类型 —— 它产生或指向什么类型的结果"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "值类别 —— 左值 / 纯右值 / 将亡值，决定能绑定到哪种引用、选中哪个重载"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "只有两样，没有「生命周期」这一项——那是对象的属性。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
-                }
-              }
-
-              Box {
-                orientation: vertical;
-                spacing: 6;
-                styles [ "lesson-callout" ]
-
-                Label { label: "两者怎么联系起来"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { label: "表达式指向已有对象 —— 名字、下标、解引用都属于这一种"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "表达式提供初始化的值 —— 算出来的结果用于建立一个新对象"; halign: start; wrap: true; xalign: 0; }
-              }
-
-              Label {
-                label: "<span background='#fff3cd' weight='bold'>值类别描述表达式怎样参与操作，生命周期描述对象何时有效</span>——二者必须分别判断：<span foreground='#052c65' weight='bold'>不能靠「持久还是临时」直接判定值类别</span>，还要看类型、可用操作和使用场景。这是本章最需要建立的区分。";
-                use-markup: true;
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-            }
-          }
+          // 1. 地图：先让读者看清轻重缓急，再往下读
           Frame {
             label: "先看主次与顺序";
             styles [ "panel-frame", "group-frame" ]
@@ -434,15 +147,9 @@ Box type_semantics_lesson_page {
               margin-start: 18;
               margin-end: 18;
 
-              Label {
-                label: "推荐顺序";
-                halign: start;
-                styles [ "lesson-callout-title" ]
-              }
-
               Box {
                 orientation: horizontal;
-                spacing: 6;
+                spacing: 8;
                 halign: start;
 
                 Label { label: "初始化"; styles [ "outline-step" ] }
@@ -462,6 +169,20 @@ Box type_semantics_lesson_page {
                 label: "这不是随口排的，它就是知识点之间先修关系的拓扑序——decltype 的规则要用值类别说明，值类别要先知道临时对象何时销毁，跳着学会在后面卡住。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
+              }
+
+              // Cairo 自绘：节点位置、依赖连线、难度配色和熟练度都来自运行时
+              // 数据（requires 拓扑序 + 评级 + 学习库），不是画好的图片，也不是
+              // .blp 能表达的结构（AGENTS.md GTK 规则第 3 条）。
+              Box ts_outline_roadmap_host {
+                name: "ts_outline_roadmap_host";
+                orientation: vertical;
+                height-request: 300;
+              }
+              Label {
+                label: "一张图给出四件事：箭头是先修关系；方框配色是难度，冷色较易、暖色较难，和知识点徽章同一套色阶；框里第二行是要学到什么程度；底部细条是你当前的熟练度。点任意一个方块直接跳到那一节。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-figure-caption" ]
               }
 
               Box {
@@ -516,46 +237,8 @@ Box type_semantics_lesson_page {
             }
           }
 
-          Frame {
-            label: "本章知识点路线图";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 10;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label {
-                label: "箭头是先修关系，颜色是掌握目标，底部细条是你当前的熟练度。点任意一个方块直接跳到那一节。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "lesson-prose" ]
-              }
-
-              // Cairo 自绘：节点位置、依赖连线和熟练度都来自运行时数据
-              // （requires 拓扑序 + 掌握目标评级 + 学习库里的熟练度），
-              // 不是画好的图片，也不是 .blp 能表达的结构（AGENTS.md GTK 规则第 3 条）。
-              // 同上：由 render/roadmap_view 绘制，这里只留容器。
-              Box ts_outline_roadmap_host {
-                name: "ts_outline_roadmap_host";
-                orientation: vertical;
-                height-request: 300;
-              }
-
-              Box {
-                orientation: horizontal;
-                spacing: 14;
-                halign: start;
-
-                Label { label: "■ 需要精通"; styles [ "outline-legend-master" ] }
-                Label { label: "■ 必须掌握"; styles [ "outline-legend-required" ] }
-                Label { label: "■ 一般了解"; styles [ "outline-legend-familiar" ] }
-              }
-            }
-          }
-
+          // 2. 主脊：五个检查点，每条同时说明不检查会怎样（原先拆成「五类风险」
+          //    和「五个检查点」两节，同一组东西写了两遍，ADR 0039 合并）
           Frame {
             label: "读代码时的五个检查点";
             styles [ "panel-frame", "group-frame" ]
@@ -569,9 +252,9 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "本章的主脊。实际阅读时允许往返，不必机械地走固定步骤；上面五类风险各自对应这里的一条。";
+                label: "本章的主脊：每一条都是一个要问的问题，后面跟着不问它会付出的代价。实际阅读时允许往返，不必机械地走固定步骤。";
                 halign: start; wrap: true; xalign: 0;
-                styles [ "native-lesson-lead" ]
+                styles [ "lesson-prose" ]
               }
 
               Box {
@@ -579,45 +262,55 @@ Box type_semantics_lesson_page {
                 Label { label: "①"; valign: start; styles [ "outline-risk-index" ] }
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "认类型"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "对象和表达式分别是什么类型，const 与引用修饰了哪一层。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "认类型 —— 对象和表达式分别是什么类型，const 与引用修饰了哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-callout-title" ] }
+                  Label { label: "不问：枚举、整数和强制转换混在一起，不同含义被当成同一种类型，编译器很难替代码守住边界。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
               }
+
               Box {
                 orientation: horizontal; spacing: 10;
                 Label { label: "②"; valign: start; styles [ "outline-risk-index" ] }
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "看初始化"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "对象怎样取得初始状态，是否存在信息丢失或未初始化风险。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "看初始化 —— 对象怎样取得初始状态，会不会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-callout-title" ] }
+                  Label { use-markup: true; label: "不问：读到没有可靠初值的对象，代码可能表现不稳定，甚至<span foreground='#052c65' weight='bold'>直接进入未定义行为</span>；精度也可能在一次看不见的转换里悄悄丢掉。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
               }
+
               Box {
                 orientation: horizontal; spacing: 10;
                 Label { label: "③"; valign: start; styles [ "outline-risk-index" ] }
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "查有效期"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "对象此刻是否仍然存在，引用会不会活得比所指对象更久。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "查有效期 —— 对象此刻是否仍然存在，引用会不会活得比所指对象更久"; halign: start; wrap: true; xalign: 0; styles [ "lesson-callout-title" ] }
+                  Label { use-markup: true; label: "不问：对象已经失效而引用仍被使用，表面上还能访问，<span foreground='#052c65' weight='bold'>实际已经越过对象的有效期</span>。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
               }
+
               Box {
                 orientation: horizontal; spacing: 10;
                 Label { label: "④"; valign: start; styles [ "outline-risk-index" ] }
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "辨表达式"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "这个表达式指向已有对象还是产生新值，它的类型和值类别又怎样影响绑定、重载与后续操作。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "辨表达式 —— 指向已有对象还是产生新值，它的值类别怎样影响绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-callout-title" ] }
+                  Label { label: "不问：分不清在操作副本还是原对象——写法很像，改动却落在不同对象上；反过来没察觉产生了副本时，大对象的复制会变成真实的时间和内存代价。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
               }
+
               Box {
                 orientation: horizontal; spacing: 10;
                 Label { label: "⑤"; valign: start; styles [ "outline-risk-index" ] }
                 Box {
                   orientation: vertical; spacing: 2; hexpand: true;
-                  Label { label: "找转换"; halign: start; styles [ "lesson-callout-title" ] }
-                  Label { label: "转换在哪里发生，是隐式还是显式，哪些前提仍需程序员保证。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "找转换 —— 在哪里发生，隐式还是显式，哪些前提仍需你保证"; halign: start; wrap: true; xalign: 0; styles [ "lesson-callout-title" ] }
+                  Label { label: "不问：数值进入范围更小或表达能力不同的类型后，结果可能已经不是原来的值，而这次转换在代码里根本搜不到。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
+              }
+
+              Label {
+                label: "这些风险大多是表达能力增强后留下的选择题。构造函数和引用让对象的建立与使用有了更丰富的表达，也让「这是新对象还是已有对象的别名」成了每次都要判断的事；C++11 的类型推导省掉重复书写，同时把「副本还是别名」的意图交还给你；列表初始化和作用域枚举则是反过来收紧检查，把一部分风险挪到编译期。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
               }
 
               Box {
@@ -631,8 +324,8 @@ Box type_semantics_lesson_page {
                   hexpand: true;
                 }
                 Label {
-                  label: "依据规则形成预期，再用证据修正理解——<span foreground='#052c65' weight='bold'>一次运行正常不能证明代码总是正确</span>，尤其不能据此排除未定义行为。";
                   use-markup: true;
+                  label: "依据规则形成预期，再用证据修正理解——<span foreground='#052c65' weight='bold'>一次运行正常不能证明代码总是正确</span>，尤其不能据此排除未定义行为。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -640,6 +333,56 @@ Box type_semantics_lesson_page {
             }
           }
 
+          // 3. 心智模型：全章都要用的那组区分
+          Frame {
+            label: "心智模型：对象与表达式";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 12;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                use-markup: true;
+                label: "对象是程序中具有身份、承载状态的实体；表达式是代码中参与求值的部分，可以指向已有对象，也可以计算出用于后续操作的值。<span foreground='#052c65' weight='bold'>多个表达式可以指向同一个对象</span>，所以<span background='#fff3cd' weight='bold'>「写法不同」不一定意味着「多出了一份对象」</span>。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-lead" ]
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 14;
+                homogeneous: true;
+
+                Box {
+                  orientation: vertical; spacing: 6;
+                  styles [ "figure-stance", "figure-stance-decltype" ]
+                  Label { label: "对象 · 看三样"; halign: start; styles [ "figure-stance-title" ] }
+                  Label { label: "类型、状态、生命周期。缺一样就判断不了这次访问安不安全。"; halign: start; wrap: true; xalign: 0; }
+                }
+
+                Box {
+                  orientation: vertical; spacing: 6;
+                  styles [ "figure-stance", "figure-stance-auto" ]
+                  Label { label: "表达式 · 看两样"; halign: start; styles [ "figure-stance-title" ] }
+                  Label { label: "类型、值类别。没有「生命周期」这一项——那是对象的属性。"; halign: start; wrap: true; xalign: 0; }
+                }
+              }
+
+              Label {
+                use-markup: true;
+                label: "<span background='#fff3cd' weight='bold'>值类别描述表达式怎样参与操作，生命周期描述对象何时有效</span>——二者必须分别判断：<span foreground='#052c65' weight='bold'>不能靠「持久还是临时」直接判定值类别</span>。这是本章最需要建立的区分，具体怎么判断留给「值类别」和「对象生命周期」两节。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+            }
+          }
+
+          // 4. 判断与代价
           Frame {
             label: "反复出现的三组选择";
             styles [ "panel-frame", "group-frame" ]
@@ -662,7 +405,7 @@ Box type_semantics_lesson_page {
                 orientation: vertical; spacing: 4;
                 styles [ "lesson-callout" ]
                 Label { label: "保留副本，还是共享原对象？"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { use-markup: true; label: "副本让后续修改相互独立，但可能带来复制代价；<span foreground='#052c65' weight='bold'>引用避免复制，却要求关心原对象的有效期</span>以及修改是否影响其他使用者。"; halign: start; wrap: true; xalign: 0; }
+                Label { use-markup: true; label: "副本让后续修改相互独立，但可能带来复制代价；<span foreground='#052c65' weight='bold'>引用避免复制，却要求关心原对象的有效期</span>。"; halign: start; wrap: true; xalign: 0; }
               }
               Box {
                 orientation: vertical; spacing: 4;
@@ -673,6 +416,7 @@ Box type_semantics_lesson_page {
             }
           }
 
+          // 5. 落点：学完能做到什么（UbD 逆向设计）
           Frame {
             label: "学完这一章，你应该能做到";
             styles [ "panel-frame", "group-frame" ]
@@ -686,7 +430,7 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "前提只要知道变量、赋值和基本类型；引用与只读约束会在这里建立初步认识。下面每一条都可以拿一段没见过的代码当场检验，顺序与推荐学习顺序一致。";
+                label: "前提只要知道变量、赋值和基本类型。下面每一条都可以拿一段没见过的代码当场检验，顺序与推荐学习顺序一致。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -701,7 +445,7 @@ Box type_semantics_lesson_page {
               }
               Box { orientation: horizontal; spacing: 10;
                 Label { label: "精通"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
-                Label { label: "指出哪些名字指向同一个对象、哪些是各自独立的副本，并说明在一个具体场景里该选哪种：是否要改原对象、复制的代价、原对象的寿命够不够。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
+                Label { label: "指出哪些名字指向同一个对象、哪些是各自独立的副本，并说明在一个具体场景里该选哪种。"; halign: start; wrap: true; xalign: 0; hexpand: true; }
               }
               Box { orientation: horizontal; spacing: 10;
                 Label { label: "掌握"; valign: start; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
@@ -721,35 +465,9 @@ Box type_semantics_lesson_page {
               }
 
               Label {
-                label: "这套判断会继续用于「引用」中的传参与返回、「RAII 与资源管理」中的所有权与资源转移，以及「模板与泛型」中的类型推导。";
+                label: "这套判断会继续用于「引用」中的传参与返回、「RAII 与资源管理」中的所有权与资源转移，以及「模板与泛型」中的类型推导。每一节末尾的随堂考核按这些目标出题，易错点也在各节当场说明——这一页不再重复列一遍。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
-              }
-            }
-          }
-
-          Frame {
-            label: "回顾时尤其检查这些误区";
-            styles [ "panel-frame", "group-frame" ]
-
-            Box {
-              orientation: vertical;
-              spacing: 8;
-              margin-top: 16;
-              margin-bottom: 16;
-              margin-start: 18;
-              margin-end: 18;
-
-              Label { label: "· 值类别不等于对象寿命。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 使用引用不等于对象一定仍然有效。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { use-markup: true; label: "· std::move 只是把表达式转成将亡值，<span background='#fff3cd' weight='bold'>它自己不移动任何东西</span>——本章的值类别实验里可以直接看到它只改变了重载选择。移动怎样真正发生，留到「RAII 与资源管理」。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 交给编译器推导不等于不再需要表达副本或别名的意图。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 显式转换不等于安全转换。"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-
-              Label {
-                label: "先说明意图与前提，再依据规则作出判断，用实验检验并修正理解。";
-                halign: start; wrap: true; xalign: 0;
-                styles [ "native-lesson-lead" ]
               }
             }
           }

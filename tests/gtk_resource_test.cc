@@ -111,9 +111,10 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     const auto sections =
         builder->get_widget<Gtk::Notebook>("type_semantics_section_notebook");
     ASSERT_NE(sections, nullptr);
-    // 「教学大纲」+「本章导览」+ 七个知识点小节，顺序服从大纲的推荐顺序：
-    // 初始化 / 对象生命周期 / 类型推导 / enum class / 类型转换 / 值类别 / decltype。
-    EXPECT_EQ(sections->get_n_pages(), 9);
+    // 「教学大纲」+ 七个知识点小节，顺序服从大纲的推荐顺序：初始化 /
+    // 对象生命周期 / 类型推导 / enum class / 类型转换 / 值类别 / decltype。
+    // ADR 0039 撤销了原先排在最前的「本章导览」，所以是 8 页不是 9 页。
+    EXPECT_EQ(sections->get_n_pages(), 8);
     // 每一页都必须是可取到的控件：apply_tab_labels 会按下标给每页换标签，
     // 取不到的页会在运行期变成 gtk_notebook_set_tab_label 断言失败。
     for (int index = 0; index < sections->get_n_pages(); ++index) {
@@ -122,16 +123,16 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     }
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_run_button"), nullptr);
-    // 「本章导览」与教学大纲都用 GTK 控件手写，不渲染 Markdown。
+    // 教学大纲用 GTK 控件手写，不渲染 Markdown。
     EXPECT_NE(
         builder->get_widget<Gtk::DrawingArea>("ts_outline_loop_figure"), nullptr);
-    // 两张路线图由 render/roadmap_view 按 requires 与评级数据实时绘制，
-    // .blp 里只留容器；换回 Gtk::Picture 就意味着又引入一份会和
-    // athena.json 漂移的副本。
-    EXPECT_NE(
-        builder->get_widget<Gtk::Box>("ts_guide_roadmap_host"), nullptr);
+    // 路线图由 render/roadmap_view 按 requires 与评级数据实时绘制，.blp 里
+    // 只留容器；换回 Gtk::Picture 就意味着又引入一份会和 athena.json 漂移的
+    // 副本。合并导览之后只剩这一张（ADR 0039）。
     EXPECT_NE(
         builder->get_widget<Gtk::Box>("ts_outline_roadmap_host"), nullptr);
+    EXPECT_EQ(
+        builder->get_widget<Gtk::Box>("ts_guide_roadmap_host"), nullptr);
     EXPECT_EQ(builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::DrawingArea>("type_semantics_deduction_graph"),

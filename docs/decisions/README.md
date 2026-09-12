@@ -36,8 +36,9 @@
 | [0033](0033-live-visuals-and-interaction.md) | 大纲与教学过程用活的可视化和互动元素表达 | 已接受，`type_semantics` 大纲已改造 |
 | [0034](0034-remove-markdown-handbook.md) | 删除 Markdown 参考手册，大纲只有原生一份 | 已接受，手册正文与页面已移除 |
 | [0035](0035-use-gtk-expressive-ceiling.md) | 把 GTK 的表达上限用满，自绘层迁向 `Gtk::Snapshot` | 已接受，按收益分批迁移 |
-| [0036](0036-chapter-guide-first.md) | 「本章导览」置于首位，作为极简概要 | 已接受，`type_semantics` 已调整 |
+| [0036](0036-chapter-guide-first.md) | 「本章导览」置于首位，作为极简概要 | **已被 0039 取代** |
 | [0038](0038-figures-as-widgets-and-cairo.md) | 插图改由 GTK 控件与 Cairo 自绘承载，退出 SVG 图片路线 | 已接受，`type_semantics` 先行改造 |
+| [0039](0039-merge-guide-into-outline.md) | 撤销「本章导览」，主旨并入教学大纲并精简 | 已接受，取代 0036 |
 
 ## 学习数据与 AI
 

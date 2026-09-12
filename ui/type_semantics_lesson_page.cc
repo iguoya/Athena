@@ -117,8 +117,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("type_semantics_open_dock_button");
     auto* outline_roadmap_host =
         builder->get_widget<Gtk::Box>("ts_outline_roadmap_host");
-    auto* guide_roadmap_host =
-        builder->get_widget<Gtk::Box>("ts_guide_roadmap_host");
     m_value_matrix = builder->get_widget<Gtk::DrawingArea>("ts_vc_matrix");
     m_value_result_title =
         builder->get_widget<Gtk::Label>("ts_vc_result_title");
@@ -160,8 +158,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !m_page_title || !m_page_subtitle
         || !m_open_dock_button
-        || !m_section_notebook || !outline_roadmap_host
-        || !guide_roadmap_host || !m_value_matrix
+        || !m_section_notebook || !outline_roadmap_host || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !decltype_unit_host || !m_decltype_auto_result
@@ -346,7 +343,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     // 而两者都服从教学大纲给出的推荐顺序——它就是知识点 requires 关系的拓扑序。
     // 大纲是方向决策层：页面顺序跟着它改，不是反过来。
     m_section_tabs = {
-        {"本章导览", {}},
         {"教学大纲", {}},
         {"初始化", {"initialization"}},
         {"对象生命周期", {"object_lifetime"}},
@@ -441,7 +437,6 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         },
         "decltype_deduction");
 
-    // 两张图共用 render/roadmap_view：同一批数据，各自编码不同维度。
     const auto open_section = [this](const string& name) {
         for (size_t index = 0; index < m_section_tabs.size(); ++index) {
             const auto& names = m_section_tabs[index].subchapter_names;
@@ -452,25 +447,18 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
             }
         }
     };
+    // 一张图给出四件事：先修关系（箭头）、难度（配色）、掌握目标（节点文字）、
+    // 当前熟练度（底部细条）。ADR 0039 合并导览之后只剩这一张——原先那张按
+    // 掌握目标配色的图，和「先看主次与顺序」的四档 callout 说的是同一件事。
     m_outline_roadmap = make_unique<RoadmapView>(
-        m_chapter,
-        RoadmapView::Options{
-            .color_by = RoadmapView::ColorBy::MasteryGoal,
-            .show_goal_text = false,
-            .show_progress = true},
-        open_section);
-    outline_roadmap_host->append(m_outline_roadmap->widget());
-
-    m_guide_roadmap = make_unique<RoadmapView>(
         m_chapter,
         RoadmapView::Options{
             .color_by = RoadmapView::ColorBy::Difficulty,
             .show_goal_text = true,
             .show_progress = true},
         open_section);
-    guide_roadmap_host->append(m_guide_roadmap->widget());
+    outline_roadmap_host->append(m_outline_roadmap->widget());
     m_outline_roadmap->set_mastery(mastery_by_id);
-    m_guide_roadmap->set_mastery(mastery_by_id);
 
     m_open_dock_button->signal_clicked().connect([this]() {
         if (!m_dock_topic.empty()) {
@@ -1384,7 +1372,6 @@ void TypeSemanticsLessonPage::draw_value_matrix(
 void TypeSemanticsLessonPage::refresh_progress(
     const map<string, int>& mastery_by_id) {
     m_outline_roadmap->set_mastery(mastery_by_id);
-    m_guide_roadmap->set_mastery(mastery_by_id);
     apply_tab_labels(mastery_by_id);
 }
 
