@@ -76,7 +76,6 @@ def main() -> None:
         write(root / "resources" / "ui" / "chapters" / "code.blp")
         write(root / "resources" / "window.ui")
         write(root / "resources" / "style.css")
-        write(root / "resources" / "article.css")
         write(root / "resources" / "icons" / "tiger.svg", "<svg/>\n")
         config = {
             "format_version": 1,

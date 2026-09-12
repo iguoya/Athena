@@ -44,16 +44,23 @@
     color: @athena_body_text;
 }
 
-/* 全局正常文字不得低于 14pt；这里使用更舒适的 16pt 作为默认值。
+/* === 字号基准 =========================================================
+   全局只有这一个绝对字号，其余一律写 em，相对它缩放。改这一个数字，
+   整个界面按比例跟着走。
+
    用类型选择器而不是 .athena-window 类：字号基线要覆盖全部窗口，包括
    设置、关于、测验、历史这些用 Gtk::Dialog 直接 new 出来的对话框——
-   它们的根控件从来没被加过 .athena-window 这个 CSS class（只有
-   window.blp 里 Blueprint 声明的主窗口才有），此前一直只继承 GTK
-   系统默认字号，明显小于正文，这正是"设置/关于界面字体偏小"的根因。
-   `window` 类型选择器匹配全部 GtkWindow 派生控件，一次性覆盖，以后
-   新增对话框也不会再漏。 */
+   它们的根控件没有 .athena-window 这个 class（只有 window.blp 里
+   Blueprint 声明的主窗口才有），漏掉就会明显小于正文。
+
+   不要用 rem：实测 GTK4 的 rem 相对的是它内部的默认根字号（12pt），
+   不跟这里的 window 走，1.5rem 得到的是 18pt 而不是 33pt。em 相对
+   继承来的父字号，行为才符合预期。
+
+   也不要在别处再写 pt：那等于把一处钉死，基准对它就失效了——这正是
+   以前"改了基准却感觉没生效"的原因。 */
 window {
-    font-size: 16pt;
+    font-size: 20pt;
 }
 
 separator {
@@ -84,7 +91,7 @@ button.home-button:hover {
 
 .breadcrumb {
     color: @athena_muted;
-    font-size: 15pt;
+    font-size: 0.82em;
     margin-left: 4px;
 }
 
@@ -105,13 +112,13 @@ button.home-tile:hover {
 }
 
 .home-tile-title {
-    font-size: 18pt;
+    font-size: 1.1em;
     font-weight: 700;
     color: @athena_body_text;
 }
 
 .home-tile-desc {
-    font-size: 15pt;
+    font-size: 0.82em;
     color: @athena_muted;
 }
 
@@ -147,7 +154,7 @@ button.breadcrumb-link {
     min-height: 0;
     padding: 2px 4px;
     color: @athena_primary;
-    font-size: 15pt;
+    font-size: 0.82em;
     font-weight: 600;
 }
 
@@ -157,12 +164,12 @@ button.breadcrumb-link:hover {
 }
 
 /* === Typography === */
-.title-1 { font-size: 32pt; font-weight: 800; color: @athena_body_text; }
-.title-2 { font-size: 26pt; font-weight: 800; color: @athena_body_text; }
-.title-3 { font-size: 22pt; font-weight: 700; color: @athena_body_text; }
-.title-4 { font-size: 18pt; font-weight: 700; color: @athena_body_text; }
-.heading { font-size: 17pt; font-weight: 700; }
-.caption { font-size: 15pt; }
+.title-1 { font-size: 1.7em; font-weight: 800; color: @athena_body_text; }
+.title-2 { font-size: 1.5em; font-weight: 800; color: @athena_body_text; }
+.title-3 { font-size: 1.3em; font-weight: 700; color: @athena_body_text; }
+.title-4 { font-size: 1.1em; font-weight: 700; color: @athena_body_text; }
+.heading { font-size: 1.05em; font-weight: 700; }
+.caption { font-size: 0.82em; }
 .dim-label { color: @athena_muted; opacity: 1; }
 
 /* ADR 0024：学习文档由 GTK 控件直接呈现。文字、代码、表格与图片同应用
@@ -170,16 +177,16 @@ button.breadcrumb-link:hover {
 .document-content {
     background-color: @athena_surface;
 }
-.document-heading-1 { font-size: 38pt; font-weight: 800; color: @athena_body_text; }
-.document-heading-2 { font-size: 32pt; font-weight: 800; color: @athena_body_text; }
-.document-heading-3 { font-size: 27pt; font-weight: 700; color: @athena_body_text; }
+.document-heading-1 { font-size: 1.9em; font-weight: 800; color: @athena_body_text; }
+.document-heading-2 { font-size: 1.7em; font-weight: 800; color: @athena_body_text; }
+.document-heading-3 { font-size: 1.55em; font-weight: 700; color: @athena_body_text; }
 .document-heading-4,
 .document-heading-5,
-.document-heading-6 { font-size: 24pt; font-weight: 700; color: @athena_body_text; }
-.document-paragraph { font-size: 22pt; line-height: 1.55; color: @athena_body_text; }
+.document-heading-6 { font-size: 1.4em; font-weight: 700; color: @athena_body_text; }
+.document-paragraph { font-size: 1.3em; line-height: 1.55; color: @athena_body_text; }
 .document-list-marker {
     min-width: 30px;
-    font-size: 22pt;
+    font-size: 1.3em;
     color: @athena_primary;
     font-weight: 700;
 }
@@ -189,7 +196,7 @@ frame.document-code-frame > border {
     background-color: #f6f8fa;
 }
 textview.document-code,
-textview.document-code > text { font-size: 14pt; }
+textview.document-code > text { font-size: 0.75em; }
 frame.document-quote > border {
     border-left: 4px solid @athena_primary;
     padding: 10px 14px;
@@ -200,11 +207,11 @@ grid.document-table {
     background-color: @athena_border_strong;
 }
 .document-table-header {
-    font-size: 22pt;
+    font-size: 1.3em;
     background-color: @athena_primary_soft;
     font-weight: 700;
 }
-.document-table-cell { font-size: 22pt; background-color: @athena_surface; }
+.document-table-cell { font-size: 1.3em; background-color: @athena_surface; }
 .document-image { margin-top: 6px; margin-bottom: 6px; }
 
 /* 教学大纲沿用全局 22pt 文档正文，不另行缩小。 */
@@ -276,7 +283,7 @@ frame.native-lesson-hero > border {
     background-color: #edf5ff;
     border: 1px solid #b7d4f7;
 }
-.native-lesson-lead { font-size: 18pt; font-weight: 600; }
+.native-lesson-lead { font-size: 1.1em; font-weight: 600; }
 frame.native-lesson-lane > border { border-radius: 10px; }
 frame.native-lesson-lane-warning > border {
     border: 1px solid #f0b56b;
@@ -288,7 +295,7 @@ frame.native-lesson-lane-safe > border {
 }
 .native-lesson-code {
     font-family: monospace;
-    font-size: 15pt;
+    font-size: 0.82em;
     font-weight: 650;
 }
 .native-lesson-warning { color: #9a5a00; }
@@ -320,7 +327,7 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
    像素密度高，比全局更小的正文在实际阅读距离下明显吃力。需要层级差异时靠
    字重、颜色和留白，不靠缩字号。 */
 .lesson-prose {
-    font-size: 16pt;
+    font-size: 1em;
 }
 
 /* 要点语句用 callout 强调。配色不自定义：背景/边框取 Bootstrap 5 alert 的
@@ -328,7 +335,7 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
    语义映射沿用开发者通用认知：why=动机/原理→info 蓝、note=要点/结论→warning
    黄、trap=误区/陷阱→danger 红、use=适用场景/推荐→success 绿。 */
 .lesson-callout {
-    font-size: 16pt;
+    font-size: 1em;
     padding: 12px 16px;
     border-radius: 8px;
     border-left: 4px solid @athena_border_strong;
@@ -371,13 +378,13 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
     margin-bottom: 4px;
 }
 .lesson-figure-caption {
-    font-size: 15pt;
+    font-size: 0.82em;
     color: @athena_muted;
 }
 
 /* 动画步进控制条与“步骤 n / N”指示。 */
 .lesson-anim-status { font-weight: 700; color: @athena_primary_text; }
-.lesson-anim-step-note { font-size: 15pt; }
+.lesson-anim-step-note { font-size: 0.82em; }
 
 /* 学习小节标签把“重要度”和“掌握度”做成颜色维度，颜色取项目 @athena_*
    语义变量：重要度星按 1→5 走 success·teal·warning·orange·danger，与 C++
@@ -499,13 +506,13 @@ button:disabled {
 .btn-sm {
     min-height: 38px;
     padding: 6px 12px;
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .btn-lg {
     min-height: 52px;
     padding: 12px 24px;
-    font-size: 18pt;
+    font-size: 1.1em;
 }
 
 /* === 分类索引页与章节切换器 === */
@@ -521,7 +528,7 @@ button:disabled {
 }
 
 .knowledge-graph-hint {
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 button.knowledge-graph-node {
@@ -549,13 +556,13 @@ button.knowledge-graph-node:focus-visible {
 }
 
 .knowledge-graph-node-title {
-    font-size: 18pt;
+    font-size: 1.1em;
     font-weight: 750;
 }
 
 .knowledge-graph-node-description {
     color: @athena_muted;
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .graph-difficulty-0 { border-color: @athena_chart_neutral; }
@@ -569,7 +576,7 @@ button.knowledge-graph-node:focus-visible {
 .graph-difficulty-scale {
     padding: 2px 7px;
     border-radius: 999px;
-    font-size: 14pt;
+    font-size: 0.75em;
     font-weight: 700;
 }
 
@@ -604,7 +611,7 @@ button.knowledge-graph-node:focus-visible {
 
 progressbar.graph-completion {
     min-height: 24px;
-    font-size: 14pt;
+    font-size: 0.75em;
     font-weight: 700;
 }
 
@@ -635,7 +642,7 @@ progressbar.graph-completion-4 > trough > progress,
 }
 
 .knowledge-graph-legend-note {
-    font-size: 14pt;
+    font-size: 0.75em;
 }
 
 .graph-legend-swatch {
@@ -662,7 +669,7 @@ progressbar.graph-completion-4 > trough > progress,
 
 /* === Cards and framed content === */
 .panel-title {
-    font-size: 18pt;
+    font-size: 1.1em;
     font-weight: 700;
     color: @athena_body_text;
 }
@@ -672,7 +679,7 @@ frame.group-frame > label {
     margin-left: 10px;
     margin-right: 6px;
     padding: 0 6px;
-    font-size: 18pt;
+    font-size: 1.1em;
     font-weight: 700;
     color: @athena_body_text;
     background-color: @theme_bg_color;
@@ -681,7 +688,7 @@ frame.group-frame > label {
 /* 章节头部条目栏的任务描述：橙红色强调，与标题保持间隔 */
 .header-description {
     color: #d9480f;
-    font-size: 19pt;
+    font-size: 1.15em;
     font-weight: 500;
     margin-top: 4px;
 }
@@ -719,11 +726,11 @@ textview.code-view,
 textview.code-view > text {
     background-color: @athena_surface;
     color: @athena_body_text;
-    font-size: 18pt;
+    font-size: 1.1em;
 }
 
 .ai-dialog-question {
-    font-size: 20pt;
+    font-size: 1.2em;
     font-weight: 700;
 }
 
@@ -738,15 +745,15 @@ textview.ai-quiz-code > text {
     padding: 8px 10px;
     background-color: @athena_surface;
     color: @athena_body_text;
-    font-size: 16pt;
+    font-size: 1em;
 }
 
 .ai-dialog-option {
-    font-size: 18pt;
+    font-size: 1.1em;
 }
 
 .ai-dialog-feedback {
-    font-size: 18pt;
+    font-size: 1.1em;
     font-weight: 600;
 }
 
@@ -759,7 +766,7 @@ textview.ai-quiz-code > text {
 }
 
 .ai-dialog-explanation {
-    font-size: 17pt;
+    font-size: 1.05em;
     color: @athena_muted;
 }
 
@@ -810,7 +817,7 @@ button.btn-ai-accent:hover {
 
 .topic-row .dim-label,
 .topic-group .dim-label {
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .topic-group {
@@ -838,13 +845,13 @@ frame.knowledge-status-bar > border {
 
 .knowledge-status-text {
     color: @athena_body_text;
-    font-size: 16pt;
+    font-size: 1em;
     font-weight: 500;
 }
 
 .experiment-status-text {
     color: @athena_primary;
-    font-size: 15pt;
+    font-size: 0.82em;
     font-weight: 500;
 }
 
@@ -877,7 +884,7 @@ frame.knowledge-status-bar > border {
 
 .star-caption {
     color: @athena_muted;
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .star-row-mastery image {
@@ -885,7 +892,7 @@ frame.knowledge-status-bar > border {
 }
 
 .star-level-label {
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .star-row-mastery .star-level-label {
@@ -895,7 +902,7 @@ frame.knowledge-status-bar > border {
 /* 重要度：内容作者标注的客观难度，只读徽章 + 星级，显示在知识点标题旁；
    五个等级各用一种颜色，从简单到极难由冷到暖过渡。 */
 .badge-difficulty {
-    font-size: 15pt;
+    font-size: 0.82em;
     padding: 1px 8px;
 }
 
@@ -921,7 +928,7 @@ frame.knowledge-status-bar > border {
     border-radius: 999px;
     background-color: @athena_secondary;
     color: #ffffff;
-    font-size: 15pt;
+    font-size: 0.82em;
     font-weight: 700;
 }
 
@@ -956,12 +963,12 @@ frame.article-surface > border {
 }
 
 .stat-tile-value {
-    font-size: 26pt;
+    font-size: 1.5em;
     font-weight: 800;
 }
 
 .stat-tile-label {
-    font-size: 15pt;
+    font-size: 0.82em;
     opacity: 0.92;
 }
 
@@ -971,7 +978,7 @@ frame.article-surface > border {
 .stat-tile-average { background-color: @athena_purple; }
 
 .progress-category-frame > label {
-    font-size: 15pt;
+    font-size: 0.82em;
     font-weight: 750;
 }
 
@@ -985,7 +992,7 @@ frame.article-surface > border {
 
 .progress-chapter-count {
     color: @athena_muted;
-    font-size: 15pt;
+    font-size: 0.82em;
 }
 
 .progress-subchapter-row {
@@ -1126,7 +1133,7 @@ button.domain-graph-node-planned .domain-graph-verify-bench {
 
 /* 节点卡片的"用途 / 难点"字段，比主简介再淡一档。 */
 .domain-graph-field {
-    font-size: 14pt;
+    font-size: 0.75em;
     color: @athena_muted;
 }
 
@@ -1142,11 +1149,11 @@ button.domain-graph-node-planned .domain-graph-verify-bench {
     background-color: @athena_primary;
     color: #ffffff;
     font-weight: 700;
-    font-size: 14pt;
+    font-size: 0.75em;
 }
 .domain-graph-edge-pair {
     font-weight: 700;
-    font-size: 14pt;
+    font-size: 0.75em;
 }
 
 .domain-graph-theory-card {

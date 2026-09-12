@@ -150,30 +150,38 @@ TEST(GtkResourceTest, LoadsTheInlineLearningUnitTemplate) {
         nullptr);
 }
 
-TEST(GtkResourceTest, KeepsGlobalReadableTextAtLeastFourteenPoints) {
+// 字号只有一个绝对基准（window），其余一律 em。这个测试把规则钉住：
+// 再有人写 pt，基准对那一处就失效——那正是改了基准却"感觉没生效"的成因。
+TEST(GtkResourceTest, KeepsASingleAbsoluteFontSizeBaseline) {
     const std::string stylesheet = load_text_resource("/app/style.css");
     ASSERT_FALSE(stylesheet.empty());
 
-    const std::regex point_size(R"(font-size:\s*([0-9]+(?:\.[0-9]+)?)pt)");
+    EXPECT_NE(stylesheet.find("window {\n    font-size: 20pt;"), std::string::npos)
+        << "基准字号应当是 window 上的 20pt";
+
+    const std::regex absolute(R"(font-size:\s*([0-9.]+)(pt|px))");
+    int absolute_count = 0;
     for (std::sregex_iterator match(
-             stylesheet.begin(), stylesheet.end(), point_size),
+             stylesheet.begin(), stylesheet.end(), absolute),
          end;
          match != end;
          ++match) {
-        EXPECT_GE(std::stod((*match)[1].str()), 14.0)
-            << "Typography rule falls below the global 14pt baseline: "
-            << match->str();
+        ++absolute_count;
+        EXPECT_EQ(match->str(), "font-size: 20pt")
+            << "除基准外不得使用绝对字号，改用 em: " << match->str();
     }
+    EXPECT_EQ(absolute_count, 1) << "绝对字号只应出现在基准那一处";
 
-    EXPECT_NE(stylesheet.find("window {\n    font-size: 16pt;"),
-              std::string::npos);
-
-    const std::string article = load_text_resource("/app/article.css");
-    ASSERT_FALSE(article.empty());
-    EXPECT_NE(article.find("font-size: var(--article-font-size);"),
-              std::string::npos);
-    EXPECT_EQ(article.find("font-size: 14px;"), std::string::npos);
-    EXPECT_EQ(article.find("font-size: 0.82rem;"), std::string::npos);
+    // em 值下限：0.75em 配 22pt 基准约合 16.5pt，仍在可读范围内。
+    const std::regex relative(R"(font-size:\s*([0-9.]+)em)");
+    for (std::sregex_iterator match(
+             stylesheet.begin(), stylesheet.end(), relative),
+         end;
+         match != end;
+         ++match) {
+        EXPECT_GE(std::stod((*match)[1].str()), 0.75)
+            << "相对字号过小，低于可读下限: " << match->str();
+    }
 }
 
 } // namespace
