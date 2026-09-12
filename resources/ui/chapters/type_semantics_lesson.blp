@@ -80,7 +80,7 @@ Box type_semantics_lesson_page {
           margin-bottom: 18;
 
           Frame {
-            label: "全章围绕两条主线";
+            label: "这一章要解决什么";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -92,7 +92,7 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "C++ 程序反复做两件事：创建对象，再用表达式读取或改变它们。本章的五个小节，都是这两条主线上的问题。";
+                label: "建立判断对象如何初始化、何时有效，以及表达式如何参与传递与转换的基本框架。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -108,31 +108,19 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 460;
+                  height-request: 440;
                 }
                 Label {
-                  label: "箭头表示一节为另一节做铺垫，不是强制的学习顺序——从任意一节进入都可以。";
+                  label: "七个知识点、三条线。顺着箭头学；要知道为什么这样排、各自该学到什么程度，进「教学大纲」。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
-              }
-
-              Box {
-                orientation: vertical;
-                spacing: 4;
-                styles [ "lesson-callout", "lesson-callout-why" ]
-
-                Label { label: "读这一章时，反复问自己四个问题"; halign: start; styles [ "lesson-callout-title" ] }
-                Label { label: "① 对象的类型是什么？"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "② 它怎样获得初始值？"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "③ 当前表达式指向持久对象，还是产生临时结果？"; halign: start; wrap: true; xalign: 0; }
-                Label { label: "④ 类型发生变化时，谁在检查风险？"; halign: start; wrap: true; xalign: 0; }
               }
             }
           }
 
           Frame {
-            label: "每一节解决的问题";
+            label: "读代码时的五个检查点";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -143,11 +131,33 @@ Box type_semantics_lesson_page {
               margin-start: 18;
               margin-end: 18;
 
-              Label { label: "· 初始化 —— 不同写法在什么条件下有不同结果；谁来检查“信息会不会丢”"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 类型推导 —— 编译器补类型时，要值 / 要可写别名 / 要只读访问的意图仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 值类别 —— 表达式的类型和值类别分别告诉我们什么，如何影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· 类型转换 —— 为什么要显式表达转换意图；检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
-              Label { label: "· enum class —— 为什么一组有限状态值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "① 认类型 —— 它是什么类型，const 与引用修饰了哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "② 看初始化 —— 怎样取得初始状态，会不会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "③ 查有效期 —— 此刻是否还存在，引用会不会活得比它更久"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "④ 辨表达式 —— 指向已有对象，还是产生新值"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "⑤ 找转换 —— 在哪里发生，隐式还是显式"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+            }
+          }
+
+          Frame {
+            label: "每个知识点解决什么";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label { label: "· 初始化 —— 不同写法提供什么保证，哪里会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 对象生命周期 —— 从哪一行开始存在、到哪一行结束"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 类型推导 —— auto 替你补类型，要副本还是别名仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· enum class —— 一组状态什么时候值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 类型转换 —— 转换表达什么意图，检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· 值类别 —— 左值 / 纯右值 / 将亡值，怎样影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+              Label { label: "· decltype —— 它和 auto 问的不是同一件事"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
             }
           }
         }
