@@ -28,9 +28,14 @@ TEST(TypeSemanticsContentTest, ComparesInitializationFormsWithoutReadingUndefine
 TEST(TypeSemanticsContentTest, ShowsWhenObjectsBeginAndEnd) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::object_lifetime),
-        "构造 块内对象\n"
-        "块内: 块内对象仍然有效\n"
-        "析构 块内对象\n"
+        "构造 块内对象 a\n"
+        "构造 块内对象 b\n"
+        "构造 块内对象 c\n"
+        "块内: 块内对象 a、块内对象 b、块内对象 c 都仍然有效\n"
+        // 与构造相反的顺序析构：这几行就是那一节考核题所说的「实验里能直接看到」。
+        "析构 块内对象 c\n"
+        "析构 块内对象 b\n"
+        "析构 块内对象 a\n"
         "构造 语句里的临时对象\n"
         "析构 语句里的临时对象\n"
         "临时对象在这条语句的分号处就已经结束\n"
@@ -81,7 +86,8 @@ TEST(TypeSemanticsContentTest, DemonstratesTheBoundariesOfNamedCasts) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::cast),
         "有符号与无符号比较 -1 < 1u: 否（比较前 -1 被转成极大的无符号数）\n"
-        "范围放不下时高位被丢掉: 300 -> 44（无符号是良定义的取模，有符号溢出则是未定义行为）\n"
+        "范围放不下时高位被丢掉: 300 -> 44（转换本身良定义：无符号按 2^N 取模，"
+        "C++20 起有符号同样按同余取值；未定义的是算术溢出，如 INT_MAX + 1）\n"
         "static_cast 明确接受截断: 9\n"
         "dynamic_cast 成功 / 失败为空: 是 / 是\n"
         "const_cast 修改原本可写对象: 9\n"

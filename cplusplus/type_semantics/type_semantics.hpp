@@ -92,9 +92,14 @@ public:
 
     void object_lifetime(ostream& output) const {
         {
-            const LifetimeProbe scoped{"块内对象", output};
-            output << "块内: " << scoped.label() << "仍然有效\n";
-        } // 块结束，scoped 在这里析构
+            // 三个对象依次构造：离开块时按相反顺序析构，这条顺序是确定的，
+            // 不靠"看起来是这样"——输出里可以逐行对照。
+            const LifetimeProbe first{"块内对象 a", output};
+            const LifetimeProbe second{"块内对象 b", output};
+            const LifetimeProbe third{"块内对象 c", output};
+            output << "块内: " << first.label() << "、" << second.label()
+                   << "、" << third.label() << " 都仍然有效\n";
+        } // 块结束，三个对象按 c、b、a 的顺序析构
 
         LifetimeProbe{"语句里的临时对象", output};
         output << "临时对象在这条语句的分号处就已经结束\n";
@@ -215,7 +220,8 @@ public:
         const int too_large = 300;
         output << "范围放不下时高位被丢掉: 300 -> "
                << static_cast<int>(static_cast<unsigned char>(too_large))
-               << "（无符号是良定义的取模，有符号溢出则是未定义行为）\n";
+               << "（转换本身良定义：无符号按 2^N 取模，C++20 起有符号同样"
+                  "按同余取值；未定义的是算术溢出，如 INT_MAX + 1）\n";
 
         const double fractional = 9.8;
         const int whole = static_cast<int>(fractional);

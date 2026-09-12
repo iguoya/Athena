@@ -1301,7 +1301,7 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测输出顺序：块内对象的“析构”会不会出现在“离开块”那句说明之前？最后一行是什么？";
+                label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测两件事：块里依次构造的 a、b、c 三个对象，离开块时按什么顺序析构？以及最后一行是什么——被 const 引用延长的那个临时对象，会在函数返回前还是返回后析构？";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -1726,6 +1726,82 @@ Box type_semantics_lesson_page {
             }
           }
 
+          // 7.5 结构化绑定：同一套「副本还是别名」的选择，换一个语法出现
+          // athena.json 把它列进这个知识点，实验里也有两行输出，讲解不能缺。
+          Frame {
+            label: "结构化绑定：同一个选择，换个写法又出现一次";
+            styles [ "panel-frame", "group-frame" ]
+
+            Box {
+              orientation: vertical;
+              spacing: 10;
+              margin-top: 16;
+              margin-bottom: 16;
+              margin-start: 18;
+              margin-end: 18;
+
+              Label {
+                label: "把一个 pair、tuple 或结构体的成员一次性取出来，用的是结构化绑定。它看起来是个新语法，其实还是上面那道题：你要的是一份副本，还是原对象的别名？答案同样由 auto 后面跟不跟 &amp; 决定。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "lesson-prose" ]
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 3;
+
+                Label { label: "pair record{string(\"Athena\"), 5};"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: ""; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "auto  [name, score]         = record;   // 先复制整个 record，再绑到副本上"; halign: start; styles [ "native-lesson-code" ] }
+                Label { label: "auto& [name_ref, score_ref] = record;   // 不复制，直接绑到 record 自己的成员"; halign: start; styles [ "native-lesson-code" ] }
+              }
+
+              Box {
+                orientation: horizontal;
+                spacing: 16;
+                homogeneous: true;
+
+                Box {
+                  orientation: vertical;
+                  spacing: 6;
+                  styles [ "figure-stance", "figure-stance-auto" ]
+
+                  Label { label: "auto [name, score]"; halign: start; styles [ "figure-stance-title", "native-lesson-code" ] }
+                  Label { label: "改 score 只改副本，record.second 不动。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "复制的是整个 record，不是逐个成员分别复制——这一点在成员很大时是真实成本。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                }
+
+                Box {
+                  orientation: vertical;
+                  spacing: 6;
+                  styles [ "figure-stance", "figure-stance-decltype" ]
+
+                  Label { label: "auto&amp; [name_ref, score_ref]"; halign: start; styles [ "figure-stance-title", "native-lesson-code" ] }
+                  Label { label: "改 score_ref 就是改 record.second。"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "常用在遍历容器时就地修改元素：for (auto&amp; [key, value] : table)。写成 auto 就变成逐个复制再改副本，改动不会落回容器。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                }
+              }
+
+              Box {
+                orientation: vertical;
+                spacing: 4;
+                styles [ "lesson-callout", "lesson-callout-trap" ]
+
+                Label { label: "name 和 score 不是两个新变量"; halign: start; styles [ "lesson-callout-title" ] }
+                Label {
+                  label: "结构化绑定引入的是这两个成员的**名字**，背后仍是那一个被绑定的对象（副本或原件）。所以「改了 score，name 会不会跟着变」这种问题不成立——它们指向的是同一个对象的两个不同成员。真正要判断的始终是：被绑定的那个对象，是副本还是原件。";
+                  halign: start; wrap: true; xalign: 0;
+                }
+              }
+
+              Label {
+                label: "实验里两种写法都有：先看 auto 那组改完之后 record 的原值有没有变，再看 auto&amp; 那组。判断依据和前面的 copy / alias 完全一样。";
+                halign: start; wrap: true; xalign: 0;
+                styles [ "native-lesson-safe" ]
+              }
+            }
+          }
+
           // 8. 必须当场说明的边界
           Frame {
             label: "边界：auto 不等于深拷贝，只读引用不保证存活";
@@ -2120,12 +2196,12 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "实验用交通灯和文件状态两个枚举，看四件事：成员必须带作用域限定、不能隐式转成 int、显式 static_cast 才能取底层值、底层类型确实是你指定的 unsigned char。";
+                label: "实验分两段。先看裸整数放行了什么：取组外的 42、两个状态相加、红灯和「已打开」被判为相等——三件都没有意义，编译器一件都不拦。再看换成作用域枚举之后，同样三件事全部编译不过，而隐式转成 int 也被挡下，取底层值必须显式写 static_cast。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
               Label {
-                label: "最后一行「不同枚举直接比较：编译期错误」是规则说明，不是程序跑出来的——那行代码在源文件里是注释，因为它根本编译不过。这类区别本页一律标明。";
+                label: "两处要留意：「上面三件事都编译不过」是规则说明，不是程序跑出来的——那三行在源文件里是注释，因为它们根本编译不过；最后一行的 static_cast&lt;FileState&gt;(42) 却真的跑了出来，得到一个不在 closed / open 之列的值，这正是「它挡的是意外，不是错误」。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "native-lesson-safe" ]
               }
@@ -2247,7 +2323,7 @@ Box type_semantics_lesson_page {
 
                 Label { label: "范围：目标类型装不下"; halign: start; styles [ "lesson-callout-title" ] }
                 Label {
-                  label: "大整数赋给小整数类型时高位被丢掉。无符号类型的结果是良定义的取模（300 存进 unsigned char 得到 44），有符号类型溢出则是未定义行为——同样看不见的一次转换，后果的性质完全不同。";
+                  label: "大整数赋给小整数类型时高位被丢掉。这类转换本身是良定义的：无符号类型按 2^N 取模（300 存进 unsigned char 得到 44），C++20 起转换到有符号类型同样良定义（标准要求二进制补码表示，按同余取值）。良定义不等于安全——值已经不是原来那个了，而编译器一声不吭。真正的未定义行为是有符号数的算术溢出，比如 INT_MAX + 1，那是另一回事。";
                   halign: start; wrap: true; xalign: 0;
                 }
               }

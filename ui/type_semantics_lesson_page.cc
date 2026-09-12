@@ -686,6 +686,24 @@ void TypeSemanticsLessonPage::build_checkpoints(
                  .explain = "这正是本节判断带到容器里的样子：要改已有元素就不能把它复制出来，"
                             "该写 auto&；反过来，想要一份独立数据用于试改，也别意外留下可写别名。",
                  .difficulty = 3, .goal = QuestionGoal::Required},
+                {.stem = "for (auto [key, value] : table) 里改 value，容器里的元素会变吗？",
+                 .choices = {"会，结构化绑定拿到的是容器元素的别名",
+                             "不会：auto 先复制了一份元素，绑定落在副本上",
+                             "取决于容器类型"},
+                 .correct_choice = 1,
+                 .explain = "结构化绑定后面那对方括号不改变 auto 的含义：auto 复制整个"
+                            "元素，key 和 value 只是副本成员的名字。要就地修改得写"
+                            "auto&——这和 copy / alias 是同一道选择题。",
+                 .difficulty = 3, .goal = QuestionGoal::Master},
+                {.stem = "auto [name, score] = record; 之后改 score，name 会跟着变吗？",
+                 .choices = {"会，它们绑在同一个对象上",
+                             "不会：它们是同一个对象的两个不同成员，各自独立",
+                             "编译失败"},
+                 .correct_choice = 1,
+                 .explain = "结构化绑定引入的是成员的名字，不是两个新变量。name 和 score "
+                            "指向同一个被绑定对象的不同成员，彼此之间没有关系；要判断的"
+                            "始终是被绑定的那个对象是副本还是原件。",
+                 .difficulty = 2, .goal = QuestionGoal::Required},
                 {.stem = "把类型交给编译器推导之后，还需要自己表达什么？",
                  .choices = {"不用了，编译器全包",
                              "仍要表达意图：要一份值，还是要继续访问原来的对象",
