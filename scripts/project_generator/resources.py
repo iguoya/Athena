@@ -13,11 +13,13 @@ def blueprint_entries(model: dict) -> list[tuple[str, str, str]]:
 
 def render_resources(model: dict, root: Path) -> str:
     # ADR 0034 之后 resources/articles/ 下不再有 Markdown 手册，只剩原生学习页
-    # 引用的插图。`.blp` 里写 images/xxx.svg，页面按 resource:/// 加载，因此
-    # 这些资产要按原相对路径打包进 GResource。
+    # 引用的插图。路径相对 resources/ 而不是项目根：GResource 的 prefix 是 /app，
+    # 全仓库约定是 /app/<类别>/...（见 ui/icon_utils.cc 的同款前缀转换），学习页
+    # 按 /app/articles/cpp/images/xxx.svg 取图。写成 resources/articles/... 也能
+    # 编译通过（source_dir 含项目根），但会发布到 /app/resources/... 而加载不到。
     articles_dir = root / "resources" / "articles"
     article_assets = [
-        path.relative_to(root).as_posix()
+        path.relative_to(root / "resources").as_posix()
         for path in sorted(articles_dir.rglob("*"))
         if path.is_file() and path.suffix.lower() not in {".md", ".markdown"}
     ] if articles_dir.is_dir() else []
