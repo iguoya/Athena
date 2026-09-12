@@ -110,6 +110,10 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
     m_page_title = builder->get_widget<Gtk::Label>("type_semantics_page_title");
+    m_page_subtitle =
+        builder->get_widget<Gtk::Label>("type_semantics_page_subtitle");
+    m_open_dock_button =
+        builder->get_widget<Gtk::Button>("type_semantics_open_dock_button");
     auto* outline_roadmap_host =
         builder->get_widget<Gtk::Box>("ts_outline_roadmap_host");
     auto* guide_roadmap_host =
@@ -153,7 +157,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_next");
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
-    if (!init_unit_host || !run_button || !m_page_title
+    if (!init_unit_host || !run_button || !m_page_title || !m_page_subtitle
+        || !m_open_dock_button
         || !m_section_notebook || !outline_roadmap_host
         || !guide_roadmap_host || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
@@ -470,11 +475,17 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     m_outline_roadmap->set_mastery(mastery_by_id);
     m_guide_roadmap->set_mastery(mastery_by_id);
 
+    m_open_dock_button->signal_clicked().connect([this]() {
+        if (!m_dock_topic.empty()) {
+            open_experiment(m_dock_topic);
+        }
+    });
+
     m_section_notebook->signal_switch_page().connect(
         [this](Gtk::Widget*, guint index) {
-            apply_page_title(static_cast<int>(index));
+            apply_section_header(static_cast<int>(index));
         });
-    apply_page_title(m_section_notebook->get_current_page());
+    apply_section_header(m_section_notebook->get_current_page());
 
     build_checkpoints(builder);
 
@@ -1033,7 +1044,18 @@ void name_link(
 void TypeSemanticsLessonPage::draw_deduction_graph(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const {
     const int step = m_anim_step;
-    const double w = static_cast<double>(width);
+    // 这张图按 720x250 的设计坐标画。画布更大时整体等比放大再居中——几何与
+    // 字号一起长大，宽屏上就不会只在中间留一条小图；放大倍数封顶，免得在
+    // 超宽屏上糊成几个巨大的方块。下面的坐标一律是设计坐标。
+    constexpr double kDesignWidth = 720.0;
+    constexpr double kDesignHeight = 250.0;
+    const double scale = clamp(
+        min(width / kDesignWidth, height / kDesignHeight), 1.0, 1.9);
+    cr->save();
+    cr->translate((width - kDesignWidth * scale) / 2.0, 0.0);
+    cr->scale(scale, scale);
+    const double w = kDesignWidth;
+    const double canvas_height = kDesignHeight;
 
     const double box_w = 150.0;
     const double box_h = 62.0;
@@ -1113,7 +1135,8 @@ void TypeSemanticsLessonPage::draw_deduction_graph(
     draw_cairo_text(
         cr,
         "绿框 = 各自独立的整数对象     蓝标签 = 指向同一个对象的名字",
-        w / 2.0, static_cast<double>(height) - 12.0, 12.0, kMuted, false, 0.5);
+        w / 2.0, canvas_height - 12.0, 12.0, kMuted, false, 0.5);
+    cr->restore();
 }
 
 TypeSemanticsLessonPage::~TypeSemanticsLessonPage() { m_anim_timer.disconnect(); }
@@ -1276,8 +1299,17 @@ void TypeSemanticsLessonPage::select_decltype_expression(size_t index) {
 
 void TypeSemanticsLessonPage::draw_value_matrix(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const {
-    const double w = static_cast<double>(width);
-    const double cell_w = min(230.0, (w - 150.0) / 2.0);
+    // 与对象图同一套做法：按 620x260 的设计坐标画，画布更大就整体放大居中。
+    constexpr double kDesignWidth = 620.0;
+    constexpr double kDesignHeight = 260.0;
+    const double scale = clamp(
+        min(width / kDesignWidth, height / kDesignHeight), 1.0, 1.9);
+    cr->save();
+    cr->translate((width - kDesignWidth * scale) / 2.0, 0.0);
+    cr->scale(scale, scale);
+    const double w = kDesignWidth;
+    const double canvas_height = kDesignHeight;
+    const double cell_w = 230.0;
     const double cell_h = 74.0;
     const double left = 130.0;
     const double top = 54.0;
@@ -1329,8 +1361,9 @@ void TypeSemanticsLessonPage::draw_value_matrix(
     if (m_value_selection == ValueCategory::None) {
         draw_cairo_text(
             cr, "点上面任意一个表达式，看它落在哪一格", w / 2.0,
-            static_cast<double>(height) - 14.0, 12.5, kMuted, false, 0.5);
+            canvas_height - 14.0, 12.5, kMuted, false, 0.5);
     }
+    cr->restore();
 }
 
 void TypeSemanticsLessonPage::refresh_progress(
@@ -1340,18 +1373,43 @@ void TypeSemanticsLessonPage::refresh_progress(
     apply_tab_labels(mastery_by_id);
 }
 
-void TypeSemanticsLessonPage::apply_page_title(int page_index) {
-    // 页头以前写死成「类型与表达式 · 初始化」，切到别的标签也不变，读者会
-    // 以为自己还在第一节。小节名跟着当前标签走，前两个标签不是知识点，
-    // 只显示章节名。
+void TypeSemanticsLessonPage::apply_section_header(int page_index) {
+    // 页头以前写死成「类型与表达式 · 初始化」，副标题也是一句不动的通用话，
+    // 切到别的标签两者都不变，读者会以为自己还在第一节。现在小节名、这一节
+    // 要解决什么、实验台指向哪个知识点，都跟着当前标签走。
     const string base = m_chapter.title;
-    if (page_index < 0
-        || page_index >= static_cast<int>(m_section_tabs.size())) {
-        m_page_title->set_text(base);
+    const SectionTab* section = nullptr;
+    if (page_index >= 0 && page_index < static_cast<int>(m_section_tabs.size())) {
+        section = &m_section_tabs[static_cast<size_t>(page_index)];
+    }
+
+    // 导览与教学大纲不是知识点，用章节自己的描述；知识点小节用它自己的
+    // description——那是 athena.json 的数据，页面不另存一份。
+    const SubChapter* topic = nullptr;
+    if (section != nullptr && !section->subchapter_names.empty()) {
+        topic = &topic_by_name(m_chapter, section->subchapter_names.front());
+    }
+
+    m_page_title->set_text(
+        section == nullptr ? base : base + " · " + section->title);
+    m_page_subtitle->set_text(
+        topic == nullptr ? m_chapter.description : topic->description);
+
+    // 实验台按钮：当前小节有实验就指向它，导览与大纲退回本章第一个知识点，
+    // 由 tooltip 说明这一次打开的是哪一个，避免点下去才发现不是这一节。
+    const SubChapter* target = topic;
+    if (target == nullptr && !m_chapter.subchapters.empty()) {
+        target = &m_chapter.subchapters.front();
+    }
+    if (target == nullptr) {
+        m_dock_topic.clear();
+        m_open_dock_button->set_sensitive(false);
         return;
     }
-    const auto& section = m_section_tabs[static_cast<size_t>(page_index)];
-    m_page_title->set_text(base + " · " + section.title);
+    m_dock_topic = target->name;
+    m_open_dock_button->set_sensitive(true);
+    m_open_dock_button->set_tooltip_text(
+        "打开「" + target->title + "」的实验台：真实源码、运行与输出");
 }
 
 void TypeSemanticsLessonPage::apply_tab_labels(

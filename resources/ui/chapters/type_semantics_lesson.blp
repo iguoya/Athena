@@ -51,12 +51,33 @@ Box type_semantics_lesson_page {
             styles [ "title-2" ]
           }
 
-          Label {
-            label: "先形成判断，再用真实程序验证；参考资料随时可查，但不决定这一页的学习顺序。";
+          // 副标题同样随标签走：显示当前小节要解决什么，取自 athena.json 的
+          // description，不在这里另写一份。
+          Label type_semantics_page_subtitle {
+            name: "type_semantics_page_subtitle";
+            label: "从初始化、类型推导和值类别建立阅读 C++ 对象与表达式的基本方法。";
             halign: start;
             wrap: true;
             xalign: 0;
             styles [ "header-description" ]
+          }
+        }
+
+        // 实验台入口：标题与描述是一个整体，它站在这一整块的右侧。读者在任何
+        // 一节都能直接把专注实验调出来，不必滚到节末尾找按钮。
+        Button type_semantics_open_dock_button {
+          name: "type_semantics_open_dock_button";
+          valign: center;
+          tooltip-text: "打开当前小节的实验台";
+          styles [ "btn-primary", "btn-lg", "lesson-dock-button" ]
+
+          Box {
+            orientation: horizontal;
+            spacing: 10;
+            halign: center;
+
+            Image { icon-name: "utilities-terminal-symbolic"; pixel-size: 22; }
+            Label { label: "实验台"; }
           }
         }
 
@@ -392,7 +413,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 420;
+                  height-request: 520;
                 }
                 Label {
                   label: "两者通过「指向」和「初始化」联系起来。";
@@ -618,7 +639,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 420;
+                  height-request: 760;
                 }
                 Label {
                   label: "依据规则形成预期，再用证据修正理解——<span foreground='#052c65' weight='bold'>一次运行正常不能证明代码总是正确</span>，尤其不能据此排除未定义行为。";
@@ -825,7 +846,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 420;
+                  height-request: 620;
                 }
                 Label {
                   label: "同一个值进入 int：圆括号让程序员承担截断，花括号把丢失提升为编译错误，explicit 阻止隐式转换。";
@@ -1145,7 +1166,7 @@ Box type_semantics_lesson_page {
                 can-shrink: true;
                 content-fit: contain;
                 halign: fill;
-                height-request: 300;
+                height-request: 580;
               }
 
               Box {
@@ -1455,7 +1476,7 @@ Box type_semantics_lesson_page {
 
               DrawingArea type_semantics_deduction_graph {
                 name: "type_semantics_deduction_graph";
-                height-request: 250;
+                height-request: 400;
                 hexpand: true;
               }
 
@@ -1600,7 +1621,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 400;
+                  height-request: 620;
                 }
                 Label {
                   label: "前提写在图上：已存在且在使用期间存活的普通对象、非代理引用。";
@@ -1799,7 +1820,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 420;
+                  height-request: 600;
                 }
                 Label {
                   label: "同样三行代码，左边编译器全部放行，右边全部拦下——差别只在参数类型是 int 还是 FileState。";
@@ -2205,7 +2226,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 500;
+                  height-request: 720;
                 }
                 Label {
                   label: "同样是「转换成功了」，保证的强度按底色从强到弱：只有 dynamic_cast 会在运行期真的查一次。";
@@ -2480,7 +2501,7 @@ Box type_semantics_lesson_page {
               // 运行时状态改变的绘制（AGENTS.md GTK 规则第 2、3 条）。
               DrawingArea ts_vc_matrix {
                 name: "ts_vc_matrix";
-                height-request: 260;
+                height-request: 420;
                 hexpand: true;
               }
 
@@ -2827,7 +2848,7 @@ Box type_semantics_lesson_page {
                   halign: fill;
                   hexpand: true;
                   can-shrink: true;
-                  height-request: 520;
+                  height-request: 720;
                 }
                 Label {
                   label: "上半是两种立场，下半是 decltype 自己的两条规则——一对括号决定走哪一条。";

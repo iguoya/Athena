@@ -56,8 +56,9 @@ private:
     };
 
     void open_experiment(const string& subchapter_name);
-    // 页头的小节名随当前标签更新，避免写死成某一节。
-    void apply_page_title(int page_index);
+    // 页头随当前标签更新：小节名、它要解决什么（取自 athena.json 的
+    // description），以及实验台按钮此刻指向哪个知识点。都不写死成某一节。
+    void apply_section_header(int page_index);
     void apply_tab_labels(const map<string, int>& mastery_by_id);
     Gtk::Widget* build_tab_label(
         const SectionTab& section, const map<string, int>& mastery_by_id) const;
@@ -110,6 +111,11 @@ private:
 
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::Label* m_page_title = nullptr;
+    Gtk::Label* m_page_subtitle = nullptr;
+    Gtk::Button* m_open_dock_button = nullptr;
+    // 实验台按钮当前指向的知识点。导览与教学大纲没有自己的实验，退回本章
+    // 第一个知识点，并由 tooltip 说明打开的是哪一个。
+    string m_dock_topic;
     Gtk::DrawingArea* m_value_matrix = nullptr;
     Gtk::Label* m_value_result_title = nullptr;
     Gtk::Label* m_value_result_detail = nullptr;

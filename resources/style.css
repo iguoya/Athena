@@ -626,6 +626,14 @@ button:disabled {
     font-size: 1.1em;
 }
 
+/* 学习页页头右侧的实验台入口。它是这一页唯一的"去动手"出口，要一眼看见，
+   所以用实心主色加更大的点击区，而不是与正文融为一体的描边按钮。 */
+button.lesson-dock-button {
+    min-width: 150px;
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
 /* === 分类索引页与章节切换器 === */
 .chapter-index {
     padding: 40px 40px 48px;
