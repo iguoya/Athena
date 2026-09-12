@@ -24,7 +24,10 @@
           <div class="graph-head">
             <div>
               <div class="pane-title">知识点路线图</div>
-              <p class="graph-note">纵向 = 先修层级，横向同层无先后；颜色 = 所属主线。点节点进入讲解。</p>
+              <p class="graph-note" id="graph-note">
+                纵向 = 先修层级（同层无先后）；左侧色条 = 主线；粗箭头 = 后继要求精通或「先拿下」。
+                悬停看详情，点击进入导读。完成度由各章「随堂考核」写入。
+              </p>
             </div>
             <div class="track-legend" id="track-legend"></div>
           </div>
@@ -39,10 +42,15 @@
           <section class="card">
             <div class="pane-title">进度概览</div>
             <div class="stat-row" id="stat-row"></div>
+            <div class="progress-viz" id="progress-viz"></div>
             <ul class="chapter-stats" id="chapter-stats"></ul>
           </section>
+          <section class="card" id="node-detail-card">
+            <div class="pane-title">节点详情</div>
+            <div id="node-detail" class="node-detail muted">悬停或点选图谱节点，查看难度、掌握目标、先修、实验与完成度。</div>
+          </section>
           <section class="card">
-            <div class="pane-title">读节点</div>
+            <div class="pane-title">图谱说明</div>
             <ul class="legend-list" id="legend-list"></ul>
           </section>
           <section class="spine card">
@@ -57,10 +65,8 @@
         <section class="stage">
           <div class="topic-head" id="topic-head"></div>
           <nav class="tabs" id="tabs" role="tablist">
-            <button type="button" data-tab="guide" class="tab is-active">本章导览</button>
-            <button type="button" data-tab="outline" class="tab">教学大纲</button>
+            <button type="button" data-tab="brief" class="tab is-active">导读</button>
             <button type="button" data-tab="lesson" class="tab">讲解</button>
-            <button type="button" data-tab="lab" class="tab">实验</button>
           </nav>
           <div class="panel" id="panel"></div>
         </section>

@@ -113,6 +113,55 @@ fn detect_compiler() -> String {
     String::new()
 }
 
+fn detect_clang_format() -> String {
+    for cand in ["clang-format", "clang-format-18", "clang-format-16", "clang-format-15"] {
+        if Command::new(cand)
+            .arg("--version")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
+            return cand.to_string();
+        }
+    }
+    String::new()
+}
+
+/// 有 clang-format 就整理；没有或失败则原样返回，交给前端兜底缩进。
+#[tauri::command]
+fn format_cpp(source: String) -> Result<String, String> {
+    let tool = detect_clang_format();
+    if tool.is_empty() {
+        return Ok(source);
+    }
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis();
+    let work = std::env::temp_dir().join(format!("athena-dsa-fmt-{stamp}"));
+    fs::create_dir_all(&work).map_err(|e| e.to_string())?;
+    let src = work.join("main.cpp");
+    fs::write(&src, &source).map_err(|e| format!("写入待格式化源码失败：{e}"))?;
+    let out = Command::new(&tool)
+        .args([
+            "-style={BasedOnStyle: LLVM, IndentWidth: 4, UseTab: Never, ColumnLimit: 100}",
+            src.to_str().unwrap_or(""),
+        ])
+        .output();
+    let _ = fs::remove_dir_all(&work);
+    match out {
+        Ok(o) if o.status.success() => {
+            let formatted = String::from_utf8_lossy(&o.stdout).to_string();
+            if formatted.trim().is_empty() {
+                Ok(source)
+            } else {
+                Ok(formatted)
+            }
+        }
+        _ => Ok(source),
+    }
+}
+
 fn ensure_own_schema(path: &Path) -> Result<(), String> {
     let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
     conn.execute_batch(
@@ -121,9 +170,45 @@ fn ensure_own_schema(path: &Path) -> Result<(), String> {
            function_id TEXT PRIMARY KEY,
            mastery INTEGER NOT NULL DEFAULT 0,
            updated_at TEXT
+         );
+         CREATE TABLE IF NOT EXISTS lab_progress (
+           lab_key TEXT PRIMARY KEY,
+           status TEXT NOT NULL DEFAULT 'tried',
+           updated_at TEXT
+         );
+         CREATE TABLE IF NOT EXISTS lab_draft (
+           lab_key TEXT PRIMARY KEY,
+           source TEXT NOT NULL,
+           updated_at TEXT
+         );
+         CREATE TABLE IF NOT EXISTS quiz_picks (
+           quiz_key TEXT PRIMARY KEY,
+           picks TEXT NOT NULL,
+           updated_at TEXT
          );",
     )
     .map_err(|e| e.to_string())?;
+
+    // 兼容早期只有 passed 列的库：补 status，并按 passed 回填。
+    let has_status = {
+        let mut stmt = conn
+            .prepare("PRAGMA table_info(lab_progress)")
+            .map_err(|e| e.to_string())?;
+        let cols: Vec<String> = stmt
+            .query_map([], |row| row.get::<_, String>(1))
+            .map_err(|e| e.to_string())?
+            .filter_map(|r| r.ok())
+            .collect();
+        cols.iter().any(|c| c == "status")
+    };
+    if !has_status {
+        let _ = conn.execute("ALTER TABLE lab_progress ADD COLUMN status TEXT", []);
+        let _ = conn.execute(
+            "UPDATE lab_progress SET status = CASE WHEN IFNULL(passed, 0) = 1 THEN 'done' ELSE 'tried' END
+             WHERE status IS NULL OR status = ''",
+            [],
+        );
+    }
     Ok(())
 }
 
@@ -181,21 +266,32 @@ fn save_case_source(
     fs::write(&path, source).map_err(|e| e.to_string())
 }
 
+fn safe_path_segment(raw: &str) -> String {
+    let s: String = raw
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '_' || c == '-' || c == '.' {
+                c
+            } else {
+                '_'
+            }
+        })
+        .collect();
+    if s.is_empty() || s == "." || s == ".." {
+        "_".into()
+    } else {
+        s
+    }
+}
+
 #[tauri::command]
 fn compile_and_run(
-    state: tauri::State<'_, Mutex<AppState>>,
     case_id: String,
     entrypoint: String,
+    source: String,
 ) -> Result<RunResult, String> {
-    let s = state.lock().unwrap();
-    let src = s
-        .content_root
-        .join("content/cases")
-        .join(&case_id)
-        .join(&entrypoint);
-    if !src.is_file() {
-        return Err(format!("找不到源文件 {}", src.display()));
-    }
+    // 用编辑器里的源码写到临时目录再编译，不要回写 content/cases/：
+    // 开发时 Vite 会监视那些文件，一保存就整页刷新，看起来像「运行完跳回主页」。
     let compiler = detect_compiler();
     if compiler.is_empty() {
         return Err("未找到 c++ / clang++ / g++，请先安装本机 C++ 编译器。".into());
@@ -205,8 +301,12 @@ fn compile_and_run(
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis();
-    let work = std::env::temp_dir().join(format!("athena-dsa-{case_id}-{stamp}"));
+    let case_seg = safe_path_segment(&case_id);
+    let entry_seg = safe_path_segment(&entrypoint);
+    let work = std::env::temp_dir().join(format!("athena-dsa-{case_seg}-{stamp}"));
     fs::create_dir_all(&work).map_err(|e| e.to_string())?;
+    let src = work.join(&entry_seg);
+    fs::write(&src, source).map_err(|e| format!("写入临时源码失败：{e}"))?;
     let obj = work.join("a.out");
 
     let started = SystemTime::now();
@@ -325,6 +425,162 @@ fn load_all_mastery(
     Ok(map)
 }
 
+#[tauri::command]
+fn save_lab_status(
+    state: tauri::State<'_, Mutex<AppState>>,
+    lab_key: String,
+    status: String,
+) -> Result<(), String> {
+    let status = match status.as_str() {
+        "done" | "tried" | "started" => status,
+        _ => return Err(format!("非法实验状态：{status}")),
+    };
+    let s = state.lock().unwrap();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT INTO lab_progress(lab_key, status, updated_at)
+         VALUES(?1, ?2, datetime('now'))
+         ON CONFLICT(lab_key) DO UPDATE SET
+           status = excluded.status,
+           updated_at = excluded.updated_at",
+        rusqlite::params![lab_key, status],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn load_all_lab_status(
+    state: tauri::State<'_, Mutex<AppState>>,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    let s = state.lock().unwrap();
+    let mut map = std::collections::HashMap::new();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    let mut stmt = conn
+        .prepare("SELECT lab_key, status FROM lab_progress")
+        .map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map([], |row| {
+            let key: String = row.get(0)?;
+            let status: Option<String> = row.get(1)?;
+            Ok((key, status.unwrap_or_else(|| "tried".into())))
+        })
+        .map_err(|e| e.to_string())?;
+    for row in rows.flatten() {
+        let st = match row.1.as_str() {
+            "done" => "done",
+            "started" => "started",
+            _ => "tried",
+        };
+        map.insert(row.0, st.to_string());
+    }
+    Ok(map)
+}
+
+#[tauri::command]
+fn save_lab_draft(
+    state: tauri::State<'_, Mutex<AppState>>,
+    lab_key: String,
+    source: String,
+) -> Result<(), String> {
+    let s = state.lock().unwrap();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT INTO lab_draft(lab_key, source, updated_at)
+         VALUES(?1, ?2, datetime('now'))
+         ON CONFLICT(lab_key) DO UPDATE SET
+           source = excluded.source,
+           updated_at = excluded.updated_at",
+        rusqlite::params![lab_key, source],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn load_all_lab_drafts(
+    state: tauri::State<'_, Mutex<AppState>>,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    let s = state.lock().unwrap();
+    let mut map = std::collections::HashMap::new();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    let mut stmt = conn
+        .prepare("SELECT lab_key, source FROM lab_draft")
+        .map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))
+        .map_err(|e| e.to_string())?;
+    for row in rows.flatten() {
+        map.insert(row.0, row.1);
+    }
+    Ok(map)
+}
+
+#[tauri::command]
+fn clear_lab_draft(
+    state: tauri::State<'_, Mutex<AppState>>,
+    lab_key: String,
+) -> Result<(), String> {
+    let s = state.lock().unwrap();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    conn.execute("DELETE FROM lab_draft WHERE lab_key = ?1", [lab_key])
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn save_quiz_picks(
+    state: tauri::State<'_, Mutex<AppState>>,
+    quiz_key: String,
+    picks: String,
+) -> Result<(), String> {
+    let s = state.lock().unwrap();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    conn.execute(
+        "INSERT INTO quiz_picks(quiz_key, picks, updated_at)
+         VALUES(?1, ?2, datetime('now'))
+         ON CONFLICT(quiz_key) DO UPDATE SET
+           picks = excluded.picks,
+           updated_at = excluded.updated_at",
+        rusqlite::params![quiz_key, picks],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn load_all_quiz_picks(
+    state: tauri::State<'_, Mutex<AppState>>,
+) -> Result<std::collections::HashMap<String, String>, String> {
+    let s = state.lock().unwrap();
+    let mut map = std::collections::HashMap::new();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    let mut stmt = conn
+        .prepare("SELECT quiz_key, picks FROM quiz_picks")
+        .map_err(|e| e.to_string())?;
+    let rows = stmt
+        .query_map([], |row| Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?)))
+        .map_err(|e| e.to_string())?;
+    for row in rows.flatten() {
+        map.insert(row.0, row.1);
+    }
+    Ok(map)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     parse_cli();
@@ -346,9 +602,17 @@ pub fn run() {
             load_case_source,
             save_case_source,
             compile_and_run,
+            format_cpp,
             load_mastery,
             save_mastery,
-            load_all_mastery
+            load_all_mastery,
+            save_lab_status,
+            load_all_lab_status,
+            save_lab_draft,
+            load_all_lab_drafts,
+            clear_lab_draft,
+            save_quiz_picks,
+            load_all_quiz_picks
         ])
         .run(tauri::generate_context!())
         .expect("error while running athena-dsa");

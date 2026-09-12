@@ -1,0 +1,9 @@
+# 加快日常 `tauri dev` / `cargo check`（首次仍要编依赖，之后增量）。
+[build]
+incremental = true
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "split-debuginfo=unpacked"]
+
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "split-debuginfo=unpacked"]

@@ -20,9 +20,23 @@ serde_json = "1"
 rusqlite = "0.32"
 dirs-next = "2"
 
+[profile.dev]
+# 少带调试信息，链接明显快一截；断到行号仍够用
+debug = 1
+incremental = true
+
 [profile.release]
 codegen-units = 1
 lto = true
 opt-level = 3
 panic = "abort"
 strip = true
+
+# 本地快速打包装：`cargo tauri build -- --profile release-fast`
+# 比完整 release 快，体积/极限优化略逊
+[profile.release-fast]
+inherits = "release"
+lto = "thin"
+codegen-units = 8
+opt-level = 2
+strip = "debuginfo"

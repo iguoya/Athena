@@ -2,13 +2,13 @@
   "id": "dsa",
   "title": "数据结构与算法",
   "tagline": "先建立度量与结构直觉，再动手写能跑、能测的 C++ 实现。",
-  "description": "以「会判断用什么结构、代价从哪来」为主线：复杂度 → 线性与哈希 → 树与堆 → 排序查找 → 图 → 算法范式。案例默认 C++20，对照标准库理解取舍。",
+  "description": "讲解以西科大 823（耿国华、张小艳）为主线：逻辑结构 → 存储结构 → 运算 → 应用。第二档只收仍自主命题且考数据结构的师范（东北师大、山东师大、河南师大、吉林师大、重庆师大、西北师大、四川师大、赣南师大、闽南师大等，教材多为严蔚敏或李春葆）。已改 408 的师范不列入。408 统考第三。四选一打基础，会认、会手算、会写骨架。",
   "spine": [
     "量规模 —— 输入变大时，时间 / 空间怎么长",
     "认布局 —— 连续、链接、树形、网状各自擅长什么",
     "看接口 —— 插入 / 删除 / 查找的摊还与最坏",
     "选结构 —— 先问访问模式，再选容器",
-    "选策略 —— 分治 / 贪心 / DP / 回溯的适用前提"
+    "选策略 —— 分治 / DP（含贪心对照） / 回溯的适用前提"
   ],
   "tracks": [
     {
@@ -23,7 +23,7 @@
     },
     {
       "id": "algorithms",
-      "title": "排序与图灵",
+      "title": "排序与图",
       "color": "#6f42c1"
     },
     {
@@ -37,337 +37,734 @@
       "id": "complexity",
       "title": "复杂度与度量",
       "track": "foundation",
-      "summary": "全课共用的尺子：大 O、时间、空间、摊还。",
+      "summary": "绪论：数据与 ADT、算法五特性与大 O。西科大 / 师范教材开篇。",
       "topics": [
         {
-          "id": "dsa.complexity.big_o",
-          "title": "大 O 表示法",
+          "id": "dsa.complexity.measure",
+          "title": "绪论与复杂度",
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
           "track": "foundation",
-          "guide_line": "增长趋势，不是某次运行的毫秒数。",
+          "guide_line": "先分清逻辑结构与存储结构，再用大 O 量算法。",
           "weight": "先拿下",
           "outline": {
-            "promise": "建立「n 变大时代价怎么长」的共同语言，后面每个结构的取舍都挂在这上面。",
-            "pain": "把大 O 当成分数；把常数、机器速度混进渐近记号。",
-            "model": "丢掉常数与低阶项，只保留随 n 增长占主导的那一项。",
-            "scope": "O(1)/O(log n)/O(n)/O(n log n)/O(n²) 的典型代码形态。",
-            "judgment": "先问规模会不会涨；涨的时候哪一层循环或递归在主导。",
-            "landing": "能指着一段循环说出主导项，并说明为什么丢掉常数。"
+            "promise": "按教材绪论立住三件事：数据怎么组织、ADT 约定什么、算法用什么尺子量。",
+            "pain": "把存储当逻辑；把大 O 当计时；漏算内层或递归栈。",
+            "model": "逻辑四类（集合 / 线性 / 树 / 图）× 存储（顺序 / 链式等）× 运算；算法要有穷、确定、可行。",
+            "scope": "西科大 / 师范绪论全讲。时间合成与额外空间（含栈）是后面每章的尺子。均摊放到数组节。",
+            "judgment": "先问研究的是逻辑还是存储；再问规模涨时谁主导。",
+            "landing": "能说出 ADT 与四大逻辑结构，能指着代码报时间和额外空间。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "大 O 回答的是：n 变成 10 倍、100 倍时，耗时大概乘多少——不是「我这台机器跑了 3ms」。"
+                "text": "西科大与师范教材都从绪论起：先问数据的逻辑结构和存储结构，再谈其上的运算；大 O 是量这些运算的尺子。"
               },
               {
                 "type": "compare",
-                "title": "正例 / 反例",
+                "title": "课在研究什么",
                 "left": {
-                  "title": "正例：在谈增长趋势",
-                  "body": "「这段双重循环是 O(n²)：n 翻倍，步数大约变四倍。」——在比的是形态，不是某次计时。"
+                  "title": "逻辑 + 存储 + 运算",
+                  "body": "逻辑结构通常分集合、线性、树、图。存储是顺序、链式、索引、散列。运算写在 ADT 里，不先绑死数组还是链表。"
                 },
                 "right": {
-                  "title": "反例：把大 O 当成绩单",
-                  "body": "「O(n) 一定比 O(n log n) 快。」——常数、n 的范围、缓存都会让结论翻盘；大 O 不自动给出快慢排名。"
+                  "title": "只背实现细节",
+                  "body": "一上来只记 vector 接口，逻辑结构说不清——换一种存储就不会判断了。"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "算法在教材里要满足",
+                "items": [
+                  "有穷、确定、可行；零个或多个输入，一个或多个输出。",
+                  "性能用时间和空间评价。时间看基本操作次数的增长，空间看算法自己借的工作区。",
+                  "默认报最坏；最好 / 平均要另说前提。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "大 O 在谈什么",
+                "left": {
+                  "title": "增长形态",
+                  "body": "双重循环各扫 n 是 O(n²)：n 翻倍，步数大约 ×4。丢掉常数与低阶。"
+                },
+                "right": {
+                  "title": "当成绩单或计时",
+                  "body": "「O(n) 一定更快」或「跑了 3ms 所以是 O(1)」——常数、n 的范围、机器都会翻盘。"
                 }
               },
               {
                 "type": "prose",
-                "text": "常用锚点：下标访问 ≈ O(1)；扫一遍 ≈ O(n)；每次砍半 ≈ O(log n)；两层各扫 n ≈ O(n²)。先认锚点，再合成。"
+                "text": "常用锚点：下标 O(1)，扫一遍 O(n)，每次折半 O(log n)，两层各扫 n 为 O(n²)。内层 j≤i 时次数是 1+…+n，主导项仍是 n²。"
+              },
+              {
+                "type": "steps",
+                "title": "读代码时怎么量",
+                "items": [
+                  "标出一致的基本操作。",
+                  "外层 × 内层；内层随外层变就先求和再取主导。",
+                  "递归看规模如何缩小，或画递归树。",
+                  "额外空间不含输入本身，但含长度为 n 的辅助数组和深度为 n 的调用栈。"
+                ]
               },
               {
                 "type": "predict",
-                "question": "n 从 1000 增到 2000 时，若算法是 Θ(n²)，步数大约变成原来的几倍？",
-                "expect": "约 4 倍",
-                "explain": "（2n）² / n² = 4。实验里改 n，看 quadratic 一列是否大致翻四倍。"
+                "question": "n 从 1000 到 2000，Θ(n²) 的步数大约几倍？深度 n 的单链递归（无尾呼）额外空间？",
+                "expect": "约 4 倍；额外 Θ(n)（调用栈）",
+                "explain": "（2n）²/n²=4。每层一帧，深度 n。",
+                "open_lab": "count"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「数一层循环」：先对照 demo，再写同构的计数。",
+                "hint": "只改函数体。",
+                "open_lab": "count"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「三角双重循环」：内层走到 i，次数应是 n(n+1)/2。",
+                "hint": "外层 i，内层 j=0..i。",
+                "open_lab": "nested"
               },
               {
                 "type": "callout",
                 "tone": "safe",
-                "title": "落点",
-                "text": "能指着循环说出主导项，并说明为什么丢掉了「×1000」这种常数。"
-              }
-            ]
-          },
-          "lab": {
-            "case": "big_o_growth",
-            "entrypoint": "main.cpp",
-            "hint": "改 n 或循环结构后运行，对照 linear / quadratic 步数怎么涨。"
-          }
-        },
-        {
-          "id": "dsa.complexity.time",
-          "title": "时间复杂度推导",
-          "difficulty": 3,
-          "mastery_goal": "master",
-          "knowledge_type": "skill",
-          "requires": [
-            "dsa.complexity.big_o"
-          ],
-          "track": "foundation",
-          "guide_line": "嵌套、递归如何化成主导项；默认报最坏。",
-          "weight": "先拿下",
-          "outline": {
-            "promise": "会推导常见循环与简单递归的时间代价，并分清最好 / 最坏 / 平均。",
-            "pain": "漏算内层；把「平均」当成随口一估。",
-            "model": "循环乘法规则；递归树直觉；接口承诺通常看最坏。",
-            "scope": "嵌套循环、二分式递归；主定理细节可后补。",
-            "judgment": "最坏决定接口能不能用；平均要有输入模型才有意义。",
-            "landing": "能对给定代码写出最坏时间，并指出最好何时出现。"
-          },
-          "lesson": {
-            "blocks": [
-              {
-                "type": "lead",
-                "text": "技能目标：看到循环/递归，能按步骤推出最坏时间的主导项。"
+                "title": "408 第三（对照）",
+                "text": "统考选择更抠「默认最坏、额外空间含不含栈」。均摊尾插放到数组节，这里不提前展开。"
               },
               {
-                "type": "steps",
-                "title": "示范步骤",
+                "type": "summary",
+                "title": "总结",
+                "text": "绪论先立逻辑 / 存储 / ADT，再用量级尺子读代码。后面每章都按「先结构后运算」往下走。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
                 "items": [
-                  "标出「基本操作」（比较、赋值、进入循环体一次等），整段分析里保持一致。",
-                  "外层跑多少次 × 内层每次多少次；若内层与外层变量有关，写成求和再估主导项。",
-                  "递归：画递归树或「规模每次如何缩小」，再合成。",
-                  "默认报告最坏情况；最好/平均要另说前提。"
-                ]
-              },
-              {
-                "type": "prose",
-                "text": "示范：for i in 0..n-1: for j in 0..n-1: op → n·n 次 → Θ(n²)。内层 j<=i 时次数是 1+…+n = n(n+1)/2，主导项仍是 n²。"
-              },
-              {
-                "type": "practice",
-                "prompt": "打开实验：先不改代码，预测 square / triangle / halving 三列随 n 翻倍时如何变；运行验证后，自己加一个三层各扫 n 的函数。",
-                "hint": "三层各扫 n → Θ(n³)；halving 翻倍 n 时步数大约 +1。"
-              },
-              {
-                "type": "callout",
-                "tone": "warn",
-                "title": "易错",
-                "text": "漏算内层、或把「平均输入」口头估成平均复杂度——平均需要输入模型。"
-              }
-            ]
-          },
-          "lab": {
-            "case": "time_nested_count",
-            "entrypoint": "main.cpp",
-            "hint": "先预测 triangle / halving 的量级，再运行对照；按提示加三层循环。"
-          }
-        },
-        {
-          "id": "dsa.complexity.space",
-          "title": "空间复杂度",
-          "difficulty": 2,
-          "mastery_goal": "required",
-          "knowledge_type": "concept",
-          "requires": [
-            "dsa.complexity.big_o"
-          ],
-          "track": "foundation",
-          "guide_line": "额外内存怎么算；递归栈也占空间。",
-          "weight": "随后掌握",
-          "outline": {
-            "promise": "会度量算法的额外空间，并做时空权衡。",
-            "pain": "把输入本身算进「额外」；忽略递归深度。",
-            "model": "额外空间 = 算法自己申请的；递归深度计入。",
-            "scope": "数组缓冲、递归栈、原地算法直觉。",
-            "judgment": "内存紧时优先问能否降额外空间。",
-            "landing": "能指出一段代码的额外空间量级。"
-          },
-          "lesson": {
-            "blocks": [
-              {
-                "type": "lead",
-                "text": "问：除了输入输出，算法还「借」了多少工作区？递归调用栈也要算。"
-              },
-              {
-                "type": "compare",
-                "title": "额外空间 vs 输入本身",
-                "left": {
-                  "title": "算额外",
-                  "body": "又开了一个长度 n 的数组、或递归深度到 n 层——这是算法自己要的空间。"
-                },
-                "right": {
-                  "title": "不算额外",
-                  "body": "只读输入数组、原地交换两个元素——输入占用不记进「额外空间」。"
-                }
-              },
-              {
-                "type": "predict",
-                "question": "深度为 n 的单链递归打印（无尾呼优化），额外空间？",
-                "expect": "Θ(n)（调用栈）",
-                "explain": "每层一个栈帧，深度 n → 额外 Θ(n)。很多人只盯着「有没有 new 数组」。"
-              },
-              {
-                "type": "scenario",
-                "situation": "手机上要处理很长的列表，内存紧张。两种写法：A 递归到叶；B 显式栈/迭代。你更倾向？",
-                "options": [
                   {
-                    "label": "优先迭代或明确限制深度，避免不可控栈深度",
-                    "ok": true,
-                    "why": "额外空间与失败模式更可控。"
+                    "stem": "常用时间复杂度直觉：下标访问、扫一遍、每次折半、两层各扫 n，依次最接近？",
+                    "choices": [
+                      {
+                        "label": "O(1)、O(n)、O(log n)、O(n²)",
+                        "ok": true,
+                        "why": "这是读代码时的四档锚点。"
+                      },
+                      {
+                        "label": "O(n)、O(1)、O(n²)、O(log n)",
+                        "ok": false,
+                        "why": "下标访问是常数，折半才是对数。"
+                      },
+                      {
+                        "label": "O(1)、O(log n)、O(n²)、O(n)",
+                        "ok": false,
+                        "why": "扫一遍是线性，两层各扫 n 是平方。"
+                      },
+                      {
+                        "label": "四种都是 O(n)",
+                        "ok": false,
+                        "why": "嵌套和折半会改变主导项。"
+                      }
+                    ]
                   },
                   {
-                    "label": "递归更短，空间可以忽略",
-                    "ok": false,
-                    "why": "深度与输入同阶时，栈空间就是额外 Θ(n)，还可能爆栈。"
+                    "stem": "下列关于大 O 的说法，正确的是？",
+                    "choices": [
+                      {
+                        "label": "O(n) 一定比 O(n log n) 跑得快",
+                        "ok": false,
+                        "why": "大 O 不比较具体快慢，常数和 n 的范围都会翻盘。"
+                      },
+                      {
+                        "label": "双重循环各扫 n，主导项是 n²，n 翻倍步数大约变 4 倍",
+                        "ok": true,
+                        "why": "谈的是增长形态。"
+                      },
+                      {
+                        "label": "本机跑了 3ms，所以算法是 O(1)",
+                        "ok": false,
+                        "why": "单次计时不是渐近记号。"
+                      },
+                      {
+                        "label": "大 O 就是精确步数",
+                        "ok": false,
+                        "why": "它丢掉常数和低阶，只保留主导项。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "深度为 n 的单链递归（无尾递归优化）依次处理结点，额外空间主要是？",
+                    "choices": [
+                      {
+                        "label": "O(1)，因为没有 new 数组",
+                        "ok": false,
+                        "why": "调用栈也是额外空间。"
+                      },
+                      {
+                        "label": "Θ(n)，主要来自调用栈",
+                        "ok": true,
+                        "why": "每层一帧，深度与 n 同阶。"
+                      },
+                      {
+                        "label": "把输入本身算进额外空间后的 Θ(n)",
+                        "ok": false,
+                        "why": "输入占用一般不算「额外」。"
+                      },
+                      {
+                        "label": "Θ(n²)，递归一定平方",
+                        "ok": false,
+                        "why": "单链深度是线性。"
+                      }
+                    ]
                   }
                 ]
               }
             ]
           },
-          "lab": null
-        },
-        {
-          "id": "dsa.complexity.amortized",
-          "title": "摊还分析",
-          "difficulty": 4,
-          "mastery_goal": "familiar",
-          "knowledge_type": "concept",
-          "requires": [
-            "dsa.complexity.time"
-          ],
-          "track": "foundation",
-          "guide_line": "偶发扩容如何被大量廉价操作摊平。",
-          "weight": "可以慢一点",
-          "outline": {
-            "promise": "理解均摊成本，以动态数组倍增为锚。",
-            "pain": "把均摊当成平均情况的同义词。",
-            "model": "一串操作总代价 / 次数；单次最坏仍可很高。",
-            "scope": "vector 倍增；势能法直觉即可。",
-            "judgment": "接口写摊还 O(1) 时，最坏单次仍可能触发扩容。",
-            "landing": "能解释为何 vector::push_back 均摊常数。"
-          },
-          "lesson": {
-            "blocks": [
-              {
-                "type": "lead",
-                "text": "均摊看的是「长期账单」：偶发很贵的一次，被大量便宜的操作摊平。"
-              },
-              {
-                "type": "compare",
-                "title": "均摊 ≠ 平均情况",
-                "left": {
-                  "title": "均摊",
-                  "body": "对任意操作序列，总代价 / 次数有上界。动态数组倍增：n 次 push 总搬移 O(n)，均摊 O(1)。"
-                },
-                "right": {
-                  "title": "平均情况",
-                  "body": "依赖输入概率分布（如快排期望）。没有分布假设就谈「平均」，往往是空话。"
-                }
-              },
-              {
-                "type": "prose",
-                "text": "锚：vector 容量满时扩到约 2 倍并搬迁——单次 push 最坏 O(n)，但均摊仍是常数。"
-              },
-              {
-                "type": "scenario",
-                "situation": "接口写「摊还 O(1) 插入」。实时系统要求每一次插入都 < 1ms。能否直接依赖该接口？",
-                "options": [
-                  {
-                    "label": "不能直接依赖：最坏单次仍可能触发扩容搬迁",
-                    "ok": true,
-                    "why": "均摊不保证每一次的上界。"
-                  },
-                  {
-                    "label": "可以：摊还 O(1) 就是每次都是 O(1)",
-                    "ok": false,
-                    "why": "混淆了均摊与每操作最坏。"
-                  }
+          "labs": [
+            {
+              "id": "count",
+              "title": "数一层循环",
+              "case": "count_linear",
+              "entrypoint": "main.cpp",
+              "prompt": "一层 for 从 0 扫到 n-1，基本操作记一次，次数该是多少？先看懂已给的 demo_count，再自己写一个同构的 todo_count。n=5、n=8 时对照打印。",
+              "goal": "补全 todo_count，使 count=5 与 count=8 出现。",
+              "hint": "照着 demo_count 写；只改函数体。",
+              "pass": {
+                "includes": [
+                  "count=5",
+                  "count=8"
                 ]
               }
-            ]
-          },
-          "lab": null
+            },
+            {
+              "id": "nested",
+              "title": "三角双重循环",
+              "case": "time_nested_count",
+              "entrypoint": "main.cpp",
+              "prompt": "方阵双重循环是 n²；若内层只走到 i，次数是 1+…+n。已给方阵和折半，请补三角计数，对照 n=8、16 是否为 n(n+1)/2。",
+              "goal": "补全 todo_triangle，看到 triangle=36 与 triangle=136。",
+              "hint": "外层 i=0..n-1，内层 j=0..i。",
+              "pass": {
+                "includes": [
+                  "triangle=36",
+                  "triangle=136"
+                ]
+              }
+            },
+            {
+              "id": "growth",
+              "title": "立方增长",
+              "case": "big_o_growth",
+              "entrypoint": "main.cpp",
+              "prompt": "线性 / 平方参考已给。补一个三层各扫 n 的计数：n 从 10 到 20 时，步数该大约 ×8。",
+              "goal": "补全 cubic_steps，看到 cubic=1000 与 cubic=8000。",
+              "hint": "三层循环，最内层 ++steps。",
+              "pass": {
+                "includes": [
+                  "cubic=1000",
+                  "cubic=8000"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "算法时间复杂度分析中，大 O 表示的是？",
+            "choices": [
+              {
+                "label": "精确执行毫秒数",
+                "ok": false,
+                "why": "大 O 不是计时。"
+              },
+              {
+                "label": "当输入规模增大时的增长上界（主导项）",
+                "ok": true,
+                "why": "丢掉常数与低阶后的形态。"
+              },
+              {
+                "label": "最好情况下的步数",
+                "ok": false,
+                "why": "默认通常报最坏。"
+              },
+              {
+                "label": "代码行数",
+                "ok": false,
+                "why": "与行数无关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "写大 O 时丢掉常数与低阶，主要因为？",
+            "choices": [
+              {
+                "label": "它们对增长形态不主导",
+                "ok": true,
+                "why": "关心 n 变大时谁决定趋势。"
+              },
+              {
+                "label": "常数在任何 n 下都可以忽略",
+                "ok": false,
+                "why": "小 n 时常数仍可能显眼。"
+              },
+              {
+                "label": "低阶项非法，写上就错",
+                "ok": false,
+                "why": "低阶合法，只是不主导。"
+              },
+              {
+                "label": "编译器会自动消掉循环",
+                "ok": false,
+                "why": "与编译器无关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "分析一段代码的时间复杂度时，默认应报告？",
+            "choices": [
+              {
+                "label": "最好情况",
+                "ok": false,
+                "why": "最好要另说前提。"
+              },
+              {
+                "label": "最坏情况；最好/平均须另附前提",
+                "ok": true,
+                "why": "读接口的默认纪律。"
+              },
+              {
+                "label": "任意一次实测时间",
+                "ok": false,
+                "why": "实测不能代替渐近分析。"
+              },
+              {
+                "label": "循环层数本身",
+                "ok": false,
+                "why": "层数不等于主导项。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "for (int x = n; x > 0; x /= 2) 循环体内为常数工作，时间复杂度是？",
+            "choices": [
+              {
+                "label": "Θ(n)",
+                "ok": false,
+                "why": "不是每次减 1。"
+              },
+              {
+                "label": "Θ(log n)",
+                "ok": true,
+                "why": "每次折半，次数随对数增长。"
+              },
+              {
+                "label": "Θ(1)",
+                "ok": false,
+                "why": "与 n 有关，只是涨得慢。"
+              },
+              {
+                "label": "Θ(n log n)",
+                "ok": false,
+                "why": "只有一层折半循环。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "两层循环：外层 i = 0..n-1，内层 j = 0..i，基本操作在最内层。时间主导项？",
+            "choices": [
+              {
+                "label": "Θ(n)",
+                "ok": false,
+                "why": "次数是 1+…+n = n(n+1)/2。"
+              },
+              {
+                "label": "Θ(n²)",
+                "ok": true,
+                "why": "求和仍是二次。"
+              },
+              {
+                "label": "Θ(n log n)",
+                "ok": false,
+                "why": "没有折半。"
+              },
+              {
+                "label": "Θ(1)",
+                "ok": false,
+                "why": "与 n 有关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "三层循环各扫 n（最内层计一次），n 变为 2n 时，步数大约？",
+            "choices": [
+              {
+                "label": "变为原来的 2 倍",
+                "ok": false,
+                "why": "那是线性。"
+              },
+              {
+                "label": "变为原来的 4 倍",
+                "ok": false,
+                "why": "那是平方。"
+              },
+              {
+                "label": "变为原来的 8 倍",
+                "ok": true,
+                "why": "(2n)³/n³ = 8。"
+              },
+              {
+                "label": "不变",
+                "ok": false,
+                "why": "与 n 有关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "下列哪项通常计入算法的额外空间？",
+            "choices": [
+              {
+                "label": "输入数组本身占用的内存",
+                "ok": false,
+                "why": "一般不算额外。"
+              },
+              {
+                "label": "递归到深度 n 时的调用栈",
+                "ok": true,
+                "why": "算法自己借的工作区。"
+              },
+              {
+                "label": "显示器像素",
+                "ok": false,
+                "why": "与算法无关。"
+              },
+              {
+                "label": "源文件的字节数",
+                "ok": false,
+                "why": "不是运行时工作区。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "算法另外申请了一个长度为 n 的辅助数组，额外空间应记？",
+            "choices": [
+              {
+                "label": "O(1)，因为输入也是 n",
+                "ok": false,
+                "why": "额外问的是自己借的。"
+              },
+              {
+                "label": "Θ(n)",
+                "ok": true,
+                "why": "工作区随 n 线性增长。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "一维长度 n 不是平方。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "没有折半结构。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "语句「这段程序是 O(n²)」更合理的理解是？",
+            "choices": [
+              {
+                "label": "n 增大时，运行步数按平方形态增长",
+                "ok": true,
+                "why": "谈增长，不是某次计时。"
+              },
+              {
+                "label": "一定恰好执行 n² 次",
+                "ok": false,
+                "why": "大 O 不是精确等式。"
+              },
+              {
+                "label": "一定比任何 O(n log n) 算法慢",
+                "ok": false,
+                "why": "不能这样比。"
+              },
+              {
+                "label": "空间也一定是 O(n²)",
+                "ok": false,
+                "why": "时间空间要分开说。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "下列循环的时间复杂度是？ for (i=0;i<n;i++) for (j=0;j<n;j++) x++;",
+            "choices": [
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "内层也扫 n。"
+              },
+              {
+                "label": "O(n log n)",
+                "ok": false,
+                "why": "没有折半。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": true,
+                "why": "两层各 n，共 n² 次。"
+              },
+              {
+                "label": "O(2n)",
+                "ok": false,
+                "why": "2n 仍是线性，这里是平方。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "数据结构课程主要研究数据的？",
+            "choices": [
+              {
+                "label": "逻辑结构与存储结构，以及其上的运算",
+                "ok": true,
+                "why": "教材绪论的标准表述。"
+              },
+              {
+                "label": "只研究如何画内存图",
+                "ok": false,
+                "why": "还有逻辑结构和运算。"
+              },
+              {
+                "label": "只研究数据库的 SQL",
+                "ok": false,
+                "why": "不是这门课。"
+              },
+              {
+                "label": "只研究操作系统进程",
+                "ok": false,
+                "why": "不是这门课。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "抽象数据类型（ADT）强调的是？",
+            "choices": [
+              {
+                "label": "逻辑结构与运算，不绑定具体存储实现",
+                "ok": true,
+                "why": "先约定「能做什么」。"
+              },
+              {
+                "label": "必须用链表实现",
+                "ok": false,
+                "why": "实现可以换。"
+              },
+              {
+                "label": "必须用数组实现",
+                "ok": false,
+                "why": "实现可以换。"
+              },
+              {
+                "label": "只能用 C++ class",
+                "ok": false,
+                "why": "语言无关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "数据的逻辑结构通常分为哪四类？",
+            "choices": [
+              {
+                "label": "集合、线性、树、图",
+                "ok": true,
+                "why": "教材绪论的标准分类。"
+              },
+              {
+                "label": "数组、链表、栈、队列",
+                "ok": false,
+                "why": "那是线性结构的实现，不是四大逻辑结构。"
+              },
+              {
+                "label": "顺序、链式、索引、散列",
+                "ok": false,
+                "why": "那是存储结构。"
+              },
+              {
+                "label": "查找、排序、遍历、递归",
+                "ok": false,
+                "why": "那是运算，不是结构。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          },
+          {
+            "stem": "算法必须具备的性质包括？",
+            "choices": [
+              {
+                "label": "有穷性、确定性、可行性，以及零个或多个输入、一个或多个输出",
+                "ok": true,
+                "why": "教材对算法的基本要求。"
+              },
+              {
+                "label": "必须用递归书写",
+                "ok": false,
+                "why": "迭代也是算法。"
+              },
+              {
+                "label": "必须达到 O(1) 时间",
+                "ok": false,
+                "why": "复杂度是评价，不是定义。"
+              },
+              {
+                "label": "必须用 C 语言实现",
+                "ok": false,
+                "why": "语言无关。"
+              }
+            ],
+            "covers": "dsa.complexity.measure"
+          }
+        ]
+      }
     },
     {
       "id": "linear",
       "title": "线性结构",
       "track": "foundation",
-      "summary": "连续 vs 链接；栈与队列是受限的线性约定。",
+      "summary": "线性表、栈队列、串与数组广义表。师范教材第 2–5 章要会手算。",
       "topics": [
         {
           "id": "dsa.linear.array",
-          "title": "数组与动态数组",
+          "title": "顺序表、数组与串",
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [
-            "dsa.complexity.big_o"
+            "dsa.complexity.measure"
           ],
           "track": "foundation",
-          "guide_line": "随机访问 O(1)；尾插摊还 O(1)；中部插删贵。",
+          "guide_line": "连续存储：按下标 O(1)；插入要搬家。串和矩阵是线性表的延伸。",
           "weight": "先拿下",
           "outline": {
-            "promise": "连续布局的代价与局部性，对照 std::vector。",
-            "pain": "忽视扩容与迭代器失效。",
-            "model": "下标映射到地址；容量与 size 分离。",
-            "scope": "静态数组、动态扩容、缓存友好。",
-            "judgment": "要按下标扫、尾部增减 → 优先数组。",
-            "landing": "能说出下标访问、尾插、中部插入的量级。"
+            "promise": "把顺序表的逻辑与连续存储说清，并能手算插入搬移；带上数组压缩和串。",
+            "pain": "把 size 当 capacity；中间插入当 O(1)；把串当成「另一种数组」说不清长度。",
+            "model": "逻辑上是线性表；物理上按下标算地址。串是字符的有限序列。",
+            "scope": "西科大线性表顺序存储 + 数组广义表 + 串。师范（李春葆 / 严蔚敏）同样要求三元组、广义表长度深度、朴素匹配。稀疏矩阵十字链表了解。",
+            "judgment": "要随机访问就连续存；要按位匹配先认串的定义。",
+            "landing": "能手算顺序表搬移，能说出三元组与广义表长度深度，能估朴素匹配最坏代价。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "数组的超能力是「第 i 个在哪」立刻知道；中间插入则要搬家。"
+                "text": "教材先讲线性表的顺序存储：第 i 个元素地址一次算出来。数组、串、特殊矩阵都建立在这上面。"
               },
               {
                 "type": "compare",
-                "title": "何时用数组",
+                "title": "顺序表擅长什么",
                 "left": {
-                  "title": "合适",
-                  "body": "按下标扫描、尾部增减、缓存友好、需要随机访问。"
+                  "title": "按下标取",
+                  "body": "a[i] 是 O(1)。size 是逻辑个数，capacity 是已预留槽位，二者不必相等。"
                 },
                 "right": {
-                  "title": "不合适",
-                  "body": "频繁在「已知位置中间」大段插删，又不愿付搬移成本——更该想链表或其他结构。"
+                  "title": "中间乱插",
+                  "body": "插入位置 i 要把后面元素右移。长度为 n 时约移 n-i+1 个（以题面约定为准）。头插 n 次总搬移约 n(n+1)/2。"
                 }
               },
               {
                 "type": "steps",
-                "title": "和 std::vector 对齐的心智步骤",
+                "title": "顺序表手算（西科大 / 师范都考）",
                 "items": [
-                  "size：逻辑元素个数；capacity：已预留槽位。",
-                  "尾插：多数时候 O(1)，偶发扩容搬迁（均摊 O(1)）。",
-                  "下标访问：O(1)。",
-                  "在中间 insert/erase：O(n) 搬移。"
+                  "插入：从后往前挪，给新元素腾位。",
+                  "删除：从前往后补洞，约移 n-i 个。",
+                  "尾插多数时候吃 capacity，偶尔扩容——均摊 O(1)，单次仍可能很贵。"
                 ]
               },
               {
                 "type": "practice",
-                "prompt": "运行 array_cost：解释为何同样 n 次插入，插到头部的 moves 远大于尾插。",
-                "hint": "第 k 次头插大约搬 k 个元素。"
+                "prompt": "实验「按下标取值」：连续布局为什么能 O(1) 取第 i 个。",
+                "hint": "return a[i];",
+                "open_lab": "index"
               },
               {
-                "type": "scenario",
-                "situation": "要维护「按时间追加的日志」，偶尔按序号读第 k 条。选结构？",
-                "options": [
-                  {
-                    "label": "动态数组（vector）：追加均摊 O(1)，按序号 O(1)",
-                    "ok": true,
-                    "why": "访问模式正是数组擅长的。"
-                  },
-                  {
-                    "label": "链表：插入永远 O(1)",
-                    "ok": false,
-                    "why": "按序号读第 k 条是 O(n)；且尾部追加还要持有尾指针才方便。"
-                  }
+                "type": "steps",
+                "title": "数组与压缩（教材第 5 章）",
+                "items": [
+                  "二维数组按行优先时，a[i][j] 的偏移能一次算出。",
+                  "n 阶对称 / 下三角只存一半：元素个数 n(n+1)/2。",
+                  "稀疏矩阵用三元组（行、列、值）记非零元。链式表示还可画成十字链表，会认即可。",
+                  "广义表 LS=(a,(b,c))：长度 2（两个表元素），深度 2（最深括号两层）。"
                 ]
+              },
+              {
+                "type": "steps",
+                "title": "串（西科大有专章，师范要掌握）",
+                "items": [
+                  "串是由零个或多个字符组成的有限序列，空串长度 0。",
+                  "朴素模式匹配：主串长 n、模式长 m，最坏 O(n·m)。",
+                  "KMP 用 next 避免主串指针回退，最坏约 O(n+m)；会认即可，不在本节默写 next 表。"
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择常考顺序表搬移次数和对称矩阵下标映射。十字链表存稀疏矩阵、KMP 细节放了解。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "连续存储换随机访问；插入删除付搬移。串、三元组、广义表是同一条线性线上的教材必考点。"
               }
             ]
           },
-          "lab": {
-            "case": "array_cost",
-            "entrypoint": "main.cpp",
-            "hint": "对照 head_insert 的 moves 是否接近 n(n+1)/2；再试在中部插入。"
-          }
+          "labs": [
+            {
+              "id": "index",
+              "title": "按下标取值",
+              "case": "array_index",
+              "entrypoint": "main.cpp",
+              "prompt": "连续布局为什么能 O(1) 取第 i 个？补全 at，对已给数组取 a[0] 与 a[3]。",
+              "goal": "补全 at，看到 at0=10 与 at3=40。",
+              "hint": "return a[i]; 即可。",
+              "pass": {
+                "includes": [
+                  "at0=10",
+                  "at3=40"
+                ]
+              }
+            },
+            {
+              "id": "insert_cost",
+              "title": "头插搬移",
+              "case": "array_cost",
+              "entrypoint": "main.cpp",
+              "prompt": "在头部连续插入时，后面的元素要一次次右移。n=10，手算总搬移约 1+…+10=55，再补全 insert_at 用计数器核对。",
+              "goal": "补全 insert_at，看到 moves=55。",
+              "hint": "先 push_back 占位，再从尾到 index 右移。",
+              "pass": {
+                "includes": [
+                  "moves=55"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.linear.list",
@@ -379,25 +776,160 @@
             "dsa.linear.array"
           ],
           "track": "foundation",
-          "guide_line": "已知位置插删 O(1)；定位要先走 O(n)。",
+          "guide_line": "链式存储：改指针便宜，定位要走路。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "单链 / 双链基本操作与边界。",
-            "pain": "丢指针、环、空表、头节点。",
-            "model": "节点 + next（+ prev）。",
-            "scope": "头插、删除、反转；与数组对照。",
-            "judgment": "频繁「在已知结点旁」插删再考虑链表。",
-            "landing": "能手写基本操作且不丢节点。"
+            "promise": "单链表的逻辑、结点结构和基本运算写对；多项式用系数+指数结点表示。",
+            "pain": "还没找到结点就谈 O(1)；空表与头结点搞混；翻 next 丢结点。",
+            "model": "结点 = 数据 + 指针。头结点让空表与非空表同一套插入删除。",
+            "scope": "西科大 / 师范：单链、带头结点、循环、双链对照。一元多项式是线性表应用。逆置能说三指针。",
+            "judgment": "位置已知 → 改指针；按值 / 按序号 → 先走 O(n)。",
+            "landing": "能后插、能计数、能说出多项式结点里放什么。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "链表便宜的是改指针，不是「找到第 k 个」——找到往往才是瓶颈。"
+                "text": "教材把链式存储与顺序存储对照：链表没有下标映射，便宜的是「已经站在结点旁」时改指针。"
+              },
+              {
+                "type": "compare",
+                "title": "两种存储",
+                "left": {
+                  "title": "链式",
+                  "body": "插入删除在已知结点旁是 O(1)。取第 k 个、按值查找最坏 O(n)。"
+                },
+                "right": {
+                  "title": "顺序",
+                  "body": "取第 k 个 O(1)，中部插入要搬家。"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "单链基本运算",
+                "items": [
+                  "带头结点：空表也有头，插入删除少一种空表分支。",
+                  "后插：新结点 next 先指向 p->next，再让 p->next 指向新结点。",
+                  "计数 / 按序号取：循环条件写 p 而不是 p->next，以免漏尾或踩空。",
+                  "头插建表得到逆序；循环链尾的 next 指回头；双链因有 prev，删除可 O(1)。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「已知位置插入」：在 1 后插入 2，得到 1 2 3。",
+                "hint": "先接 next，再改 p->next。",
+                "open_lab": "insert"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「数结点个数」：空表与三结点表。",
+                "hint": "沿 next 计到空。",
+                "open_lab": "length"
+              },
+              {
+                "type": "prose",
+                "text": "一元多项式（西科大与赣南师大等自命题师范都当线性表应用）：结点通常存系数与指数，按指数有序便于相加。"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "综合题常把「先定位再改指针」写成一题：定位 O(n)，改指针 O(1)。三指针逆置是师范加一档的手写。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先找到，再改指针。多项式、循环链、双链都是同一套指针纪律的变体。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "带头结点的单链表中，在头结点之后插入一个新结点，时间复杂度是？",
+                    "choices": [
+                      {
+                        "label": "O(1)",
+                        "ok": true,
+                        "why": "头指针已知，只改指针。"
+                      },
+                      {
+                        "label": "O(n)",
+                        "ok": false,
+                        "why": "不必扫整表。"
+                      },
+                      {
+                        "label": "O(n log n)",
+                        "ok": false,
+                        "why": "一次插入。"
+                      },
+                      {
+                        "label": "O(n²)",
+                        "ok": false,
+                        "why": "一次插入。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "在长度为 n 的单链表中，按序号取第 k 个结点（1≤k≤n），时间复杂度是？",
+                    "choices": [
+                      {
+                        "label": "O(1)",
+                        "ok": false,
+                        "why": "没有随机访问。"
+                      },
+                      {
+                        "label": "O(k)",
+                        "ok": true,
+                        "why": "必须从头走到第 k 个。"
+                      },
+                      {
+                        "label": "O(log n)",
+                        "ok": false,
+                        "why": "链表不能折半定位。"
+                      },
+                      {
+                        "label": "摊还 O(1)",
+                        "ok": false,
+                        "why": "无此均摊。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "insert",
+              "title": "已知位置插入",
+              "case": "list_insert",
+              "entrypoint": "main.cpp",
+              "prompt": "链表便宜的是改指针。在结点 1 后面插入 2，使链表变成 1 2 3。",
+              "goal": "补全 insert_after，看到 list=1 2 3。",
+              "hint": "新结点 next 指向 p->next，再让 p->next 指向新结点。",
+              "pass": {
+                "includes": [
+                  "list=1 2 3"
+                ]
+              }
+            },
+            {
+              "id": "length",
+              "title": "数结点个数",
+              "case": "list_length",
+              "entrypoint": "main.cpp",
+              "prompt": "「第 k 个在哪」要先走。补全 length：空表与三结点表。",
+              "goal": "补全 length，看到 len0=0 与 len3=3。",
+              "hint": "沿 next 走到空，计一步。",
+              "pass": {
+                "includes": [
+                  "len0=0",
+                  "len3=3"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.linear.stack_queue",
@@ -409,78 +941,1226 @@
             "dsa.linear.array"
           ],
           "track": "foundation",
-          "guide_line": "LIFO / FIFO：用访问约定降低出错面。",
+          "guide_line": "栈只动顶端；队列只从头出、从尾进。",
           "weight": "先拿下",
           "outline": {
-            "promise": "栈 / 队列语义与典型场景。",
-            "pain": "和下标数组混用，失去约束。",
-            "model": "只允许在规定端进出。",
-            "scope": "括号匹配、表达式、BFS 队列。",
-            "judgment": "只要「最近优先」或「先来先到」就用约定结构。",
-            "landing": "能判断场景该用栈还是队列。"
+            "promise": "用 LIFO / FIFO 两条约定，并会循环队列的空满与长度。",
+            "pain": "空满判断不会；出栈序列凭感觉；把递归和工作队列搞混。",
+            "model": "栈后进先出，队列先进先出。顺序或链式都能实现。",
+            "scope": "西科大 / 师范：定义、顺序栈、循环队列、链队、括号与表达式、递归用栈。双端队列了解。",
+            "judgment": "最近优先 → 栈；先来先到 / 一层一层 → 队列。",
+            "landing": "能模拟短出栈序列，能写括号匹配，能写循环队列长度公式。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "栈和队列首先是纪律，其次才是实现——可以用数组或链表来实现。"
+                "text": "栈和队列是限定端点的线性表。教材先给定义和运算，再讲循环队列与应用。"
+              },
+              {
+                "type": "compare",
+                "title": "两条约定",
+                "left": {
+                  "title": "栈 LIFO",
+                  "body": "只在顶端进出。括号配对、函数递归的断点、DFS 显式栈、后缀表达式求值。"
+                },
+                "right": {
+                  "title": "队列 FIFO",
+                  "body": "队头出、队尾进。BFS、按层处理。链式队列持有尾指针则入队 O(1)。"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "循环队列（西科大真题常写公式）",
+                "items": [
+                  "少用一格区分空满时：front==rear 为空，(rear+1)%m==front 为满。",
+                  "front 指队头、rear 指队尾下一格时，长度 = (rear-front+m)%m。",
+                  "后缀表达式：遇数入栈，遇运算弹两个、算完再压。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「弹出栈顶」：[1,2,3] 弹两次，先 3 后 2。",
+                "hint": "记下 back 再 pop_back。",
+                "open_lab": "pop"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「括号匹配」：()[] 合法，([)] 不合法。",
+                "hint": "结束时栈应空。",
+                "open_lab": "brackets"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择常给出栈序列可不可能。双端队列、完整计算器程序放了解。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先守住端点纪律，再手算循环队列。递归在系统里就是栈，BFS 在算法里就是队列。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "栈和队列的进出规则分别是？",
+                    "choices": [
+                      {
+                        "label": "栈先进先出，队列后进先出",
+                        "ok": false,
+                        "why": "说反了。"
+                      },
+                      {
+                        "label": "栈后进先出，队列先进先出",
+                        "ok": true,
+                        "why": "LIFO 与 FIFO。"
+                      },
+                      {
+                        "label": "两者都是随机访问",
+                        "ok": false,
+                        "why": "约定结构不提供任意下标。"
+                      },
+                      {
+                        "label": "两者都必须用链表实现",
+                        "ok": false,
+                        "why": "数组也能实现。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "判断括号序列是否匹配，最合适的结构是？",
+                    "choices": [
+                      {
+                        "label": "队列",
+                        "ok": false,
+                        "why": "配对的是最近的左括号，不是先来先配。"
+                      },
+                      {
+                        "label": "栈",
+                        "ok": true,
+                        "why": "遇左进栈，遇右与栈顶配对。"
+                      },
+                      {
+                        "label": "哈希表",
+                        "ok": false,
+                        "why": "这里要的是配对顺序。"
+                      },
+                      {
+                        "label": "二叉搜索树",
+                        "ok": false,
+                        "why": "与有序树无关。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "pop",
+              "title": "弹出栈顶",
+              "case": "stack_top",
+              "entrypoint": "main.cpp",
+              "prompt": "栈只动顶端。向量 [1,2,3] 连续弹两次，应先得到 3 再得到 2，栈里剩 1 个。",
+              "goal": "补全 pop_top，看到 pop=3、pop=2、left=1。",
+              "hint": "记下 back，再 pop_back。",
+              "pass": {
+                "includes": [
+                  "pop=3",
+                  "pop=2",
+                  "left=1"
+                ]
+              }
+            },
+            {
+              "id": "brackets",
+              "title": "括号匹配",
+              "case": "bracket_match",
+              "entrypoint": "main.cpp",
+              "prompt": "左括号进栈，右括号与栈顶配对。判断 ()[]、([)]、{[]} 三个串。",
+              "goal": "补全 valid，看到 ok1=1、ok2=0、ok3=1。",
+              "hint": "右括号时栈空或对不上即失败；结束时栈应空。",
+              "pass": {
+                "includes": [
+                  "ok1=1",
+                  "ok2=0",
+                  "ok3=1"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "顺序表（动态数组）按下标取第 i 个元素，时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": true,
+                "why": "地址可直接计算。"
+              },
+              {
+                "label": "O(i)",
+                "ok": false,
+                "why": "不必从头走。"
+              },
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "随机访问不是线性。"
+              },
+              {
+                "label": "摊还 O(1)",
+                "ok": false,
+                "why": "只读下标不扩容。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "长度为 n 的顺序表，在表头插入一个元素，需要移动的元素个数是？",
+            "choices": [
+              {
+                "label": "0",
+                "ok": false,
+                "why": "后面元素都要腾位置。"
+              },
+              {
+                "label": "1",
+                "ok": false,
+                "why": "不止移动一个。"
+              },
+              {
+                "label": "n",
+                "ok": true,
+                "why": "原有 n 个都要后移。"
+              },
+              {
+                "label": "n/2",
+                "ok": false,
+                "why": "头插是全部后移。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "关于顺序表的 size 与 capacity，正确的是？",
+            "choices": [
+              {
+                "label": "二者必须始终相等",
+                "ok": false,
+                "why": "capacity 可以更大。"
+              },
+              {
+                "label": "size 是已有元素个数，capacity 是已分配槽位数",
+                "ok": true,
+                "why": "尾插先吃预留。"
+              },
+              {
+                "label": "capacity 只能小于 size",
+                "ok": false,
+                "why": "预留不足会先扩容。"
+              },
+              {
+                "label": "size 是字节数，capacity 是元素个数",
+                "ok": false,
+                "why": "两者都按元素计。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "在单链表中，若已经持有结点 p 的指针，在 p 之后插入新结点，时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": true,
+                "why": "改指针即可。"
+              },
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "位置已知，不必再找头。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "一次插入。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "与折半无关。"
+              }
+            ],
+            "covers": "dsa.linear.list"
+          },
+          {
+            "stem": "在长度为 n 的单链表中查找给定值（最坏），时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": false,
+                "why": "只能沿指针走。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "无序链表不能二分。"
+              },
+              {
+                "label": "O(n)",
+                "ok": true,
+                "why": "最坏扫到表尾。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "一次查找是线性。"
+              }
+            ],
+            "covers": "dsa.linear.list"
+          },
+          {
+            "stem": "栈的操作只允许在？",
+            "choices": [
+              {
+                "label": "任意位置",
+                "ok": false,
+                "why": "那就不是栈。"
+              },
+              {
+                "label": "栈顶",
+                "ok": true,
+                "why": "后进先出。"
+              },
+              {
+                "label": "栈底",
+                "ok": false,
+                "why": "栈底不直接操作。"
+              },
+              {
+                "label": "两端同时",
+                "ok": false,
+                "why": "那是双端队列。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "若入栈序列为 1,2,3，则下列出栈序列不可能的是？",
+            "choices": [
+              {
+                "label": "1,2,3",
+                "ok": false,
+                "why": "每入一个就出，可以。"
+              },
+              {
+                "label": "3,2,1",
+                "ok": false,
+                "why": "先入满再依次出，可以。"
+              },
+              {
+                "label": "2,1,3",
+                "ok": false,
+                "why": "1 入、2 入、2 出、1 出、3 入出，可以。"
+              },
+              {
+                "label": "3,1,2",
+                "ok": true,
+                "why": "3 先出后栈顶是 2，下一个只能是 2 不能是 1。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "广度优先遍历（BFS）使用的辅助结构是？",
+            "choices": [
+              {
+                "label": "栈",
+                "ok": false,
+                "why": "栈对应深度优先。"
+              },
+              {
+                "label": "队列",
+                "ok": true,
+                "why": "先进先出，一层一层。"
+              },
+              {
+                "label": "哈希表",
+                "ok": false,
+                "why": "哈希不管访问顺序。"
+              },
+              {
+                "label": "优先队列",
+                "ok": false,
+                "why": "普通 BFS 用普通队列。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "从空的顺序表开始，连续在表头插入 n 个元素，移动次数之和约为？",
+            "choices": [
+              {
+                "label": "n",
+                "ok": false,
+                "why": "第 k 次头插大约移动 k-1 或 k 个。"
+              },
+              {
+                "label": "n(n+1)/2",
+                "ok": true,
+                "why": "1+2+…+n，主导 Θ(n²)。"
+              },
+              {
+                "label": "log n",
+                "ok": false,
+                "why": "没有折半。"
+              },
+              {
+                "label": "1",
+                "ok": false,
+                "why": "每次都要搬已有元素。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "循环队列中，少用一个单元来区分空与满时，队满的条件通常是？",
+            "choices": [
+              {
+                "label": "front == rear",
+                "ok": false,
+                "why": "这是队空。"
+              },
+              {
+                "label": "(rear + 1) % m == front",
+                "ok": true,
+                "why": "约定空一格时的队满。"
+              },
+              {
+                "label": "rear == 0",
+                "ok": false,
+                "why": "与满无关。"
+              },
+              {
+                "label": "front == 0 且 rear == m-1",
+                "ok": false,
+                "why": "不是通用判满。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "n 阶对称矩阵采用压缩存储（只存下三角含对角线）时，元素个数是？",
+            "choices": [
+              {
+                "label": "n²",
+                "ok": false,
+                "why": "那是不压缩。"
+              },
+              {
+                "label": "n(n+1)/2",
+                "ok": true,
+                "why": "对称只存一半加对角。"
+              },
+              {
+                "label": "n",
+                "ok": false,
+                "why": "太少。"
+              },
+              {
+                "label": "2n",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "稀疏矩阵常用三元组表，每个三元组记录的是？",
+            "choices": [
+              {
+                "label": "行下标、列下标、元素值",
+                "ok": true,
+                "why": "基本压缩方法。"
+              },
+              {
+                "label": "只有元素值",
+                "ok": false,
+                "why": "找不到位置。"
+              },
+              {
+                "label": "只有行下标和值",
+                "ok": false,
+                "why": "缺列。"
+              },
+              {
+                "label": "整行整列的全部零",
+                "ok": false,
+                "why": "压缩的是非零元。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "广义表 LS = (a, (b, c)) 的长度和深度分别是？",
+            "choices": [
+              {
+                "label": "长度 2，深度 2",
+                "ok": true,
+                "why": "两个表元素；最深括号两层。"
+              },
+              {
+                "label": "长度 3，深度 1",
+                "ok": false,
+                "why": "内层 (b,c) 算一个元素。"
+              },
+              {
+                "label": "长度 1，深度 3",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "长度 4，深度 2",
+                "ok": false,
+                "why": "不是 4 个顶层元素。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "用单链表表示一元多项式，结点中通常存放？",
+            "choices": [
+              {
+                "label": "系数与指数",
+                "ok": true,
+                "why": "稀疏多项式的标准结点。"
+              },
+              {
+                "label": "只有系数",
+                "ok": false,
+                "why": "无法区分次数。"
+              },
+              {
+                "label": "只有自变量 x",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "整段多项式字符串",
+                "ok": false,
+                "why": "那不是链表结点。"
+              }
+            ],
+            "covers": "dsa.linear.list"
+          },
+          {
+            "stem": "函数递归调用时，系统用来保存断点和局部量的结构是？",
+            "choices": [
+              {
+                "label": "栈",
+                "ok": true,
+                "why": "后进先出与调用返回一致。"
+              },
+              {
+                "label": "队列",
+                "ok": false,
+                "why": "不是先来先返回。"
+              },
+              {
+                "label": "散列表",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "图的邻接矩阵",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "循环队列中，front 指向队头元素，rear 指向队尾元素的下一个位置，容量为 m。队列长度是？",
+            "choices": [
+              {
+                "label": "rear-front",
+                "ok": false,
+                "why": "未取模，rear 绕回后会错。"
+              },
+              {
+                "label": "(rear-front+m)%m",
+                "ok": true,
+                "why": "教材常用长度公式。"
+              },
+              {
+                "label": "(front-rear+m)%m",
+                "ok": false,
+                "why": "前后指针写反了。"
+              },
+              {
+                "label": "m-1",
+                "ok": false,
+                "why": "那是最多能装的个数（空一格时），不是当前长度。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "串（字符串）在数据结构中首先是？",
+            "choices": [
+              {
+                "label": "由零个或多个字符组成的有限序列",
+                "ok": true,
+                "why": "特殊的线性表，元素是字符。"
+              },
+              {
+                "label": "必须用链表存储",
+                "ok": false,
+                "why": "也可用顺序存储。"
+              },
+              {
+                "label": "只能做模式匹配，没有长度",
+                "ok": false,
+                "why": "空串长度是 0。"
+              },
+              {
+                "label": "与数组是同一种逻辑结构",
+                "ok": false,
+                "why": "数组一般是多维随机访问；串强调字符序列。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "主串长 n、模式长 m，朴素模式匹配最坏时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(n+m)",
+                "ok": false,
+                "why": "那是 KMP 一类的数量级。"
+              },
+              {
+                "label": "O(n·m)",
+                "ok": true,
+                "why": "每次失配后主串和模式都可能回退。"
+              },
+              {
+                "label": "O(1)",
+                "ok": false,
+                "why": "与长度有关。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "朴素匹配不是折半。"
+              }
+            ],
+            "covers": "dsa.linear.array"
+          },
+          {
+            "stem": "用链式存储实现队列，并已持有尾指针时，入队的时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": true,
+                "why": "只在队尾挂结点。"
+              },
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "不必从头扫到尾。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "不是折半。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.linear.stack_queue"
+          },
+          {
+            "stem": "带头结点的双向循环空表，头结点的前驱和后继通常？",
+            "choices": [
+              {
+                "label": "都指向头结点自己",
+                "ok": true,
+                "why": "空表时成环指向自身。"
+              },
+              {
+                "label": "都为空",
+                "ok": false,
+                "why": "循环链一般不靠空指针表示空表。"
+              },
+              {
+                "label": "前驱指向自己、后继为空",
+                "ok": false,
+                "why": "双向循环两侧都应成环。"
+              },
+              {
+                "label": "指向表中第一个数据结点",
+                "ok": false,
+                "why": "空表没有数据结点。"
+              }
+            ],
+            "covers": "dsa.linear.list"
+          },
+          {
+            "stem": "稀疏矩阵除三元组顺序表外，教材还常用哪种链式表示（了解）？",
+            "covers": "dsa.linear.array",
+            "choices": [
+              {
+                "label": "十字链表",
+                "ok": true,
+                "why": "行、列各成链，便于按行或按列走非零元。"
+              },
+              {
+                "label": "只能用邻接矩阵",
+                "ok": false,
+                "why": "那是图，不是稀疏矩阵的标准链式。"
+              },
+              {
+                "label": "必须用栈",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "B+ 树",
+                "ok": false,
+                "why": "那是外存索引。"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "hash",
-      "title": "哈希表",
+      "title": "查找",
       "track": "associative",
-      "summary": "平均 O(1) 查找的工程主力；最坏与哈希质量要心里有数。",
+      "summary": "查找：顺序 / 折半 / 分块，再哈希。西科大与师范都把查找单列一章。",
       "topics": [
         {
           "id": "dsa.hash.table",
-          "title": "哈希表",
+          "title": "查找与哈希",
           "difficulty": 3,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [
-            "dsa.linear.array",
-            "dsa.complexity.amortized"
+            "dsa.linear.array"
           ],
           "track": "associative",
-          "guide_line": "键 → 桶；冲突处理；装载因子。",
+          "guide_line": "先静态表（顺序、折半、分块），再哈希。",
           "weight": "先拿下",
           "outline": {
-            "promise": "理解平均常数查找从哪里来，以及何时退化。",
-            "pain": "当成永远 O(1)；忽略哈希与装载因子。",
-            "model": "哈希函数 + 冲突链 / 开放寻址。",
-            "scope": "unordered_map 直觉；键平等与哈希一致性。",
-            "judgment": "要按键查找且无需有序 → 优先哈希。",
-            "landing": "能说明冲突与扩容对代价的影响。"
+            "promise": "分清静态 / 动态查找，会算顺序 ASL，会选折半与分块，会构造哈希并处理冲突。",
+            "pain": "无序表上硬二分；把除留余数当成冲突处理；装载因子再高也当 O(1)。",
+            "model": "静态表查找时不改集合；动态表可插删。哈希用函数把关键字映射到地址。",
+            "scope": "西科大 / 师范查找章全讲。开放寻址只建立直觉。索引 / 倒排文件会认。",
+            "judgment": "有序且能 O(1) 取中 → 折半；块间有序 → 分块；只要按键平均快、不要顺序 → 哈希。",
+            "landing": "能手算桶号，能说出 ASL=(n+1)/2，能区分构造函数与冲突方法。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "哈希表用空间和哈希质量换平均查找速度；它不保持键的顺序。"
+                "text": "教材把查找单列一章：先静态查找表，再动态表，最后哈希表。不要一上来只记 %。"
+              },
+              {
+                "type": "steps",
+                "title": "静态查找（师范 / 西科大都考）",
+                "items": [
+                  "顺序查找，等概率成功 ASL=(n+1)/2。",
+                  "折半查找：表必须有序，且能 O(1) 取中点；可用判定树分析 ASL。",
+                  "分块（索引顺序）：块间有序、块内可以无序；先定块再在块内找。",
+                  "静态表在查找过程中不插入、不删除。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "哈希两步不要混",
+                "left": {
+                  "title": "构造散列函数",
+                  "body": "除留余数 h(key)=key%m、直接定址、平方取中。目标是地址落在 0..m-1 且尽量均匀。"
+                },
+                "right": {
+                  "title": "处理冲突",
+                  "body": "拉链（链地址）、开放定址。除留余数不是冲突方法。"
+                }
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「键落到几号桶」：10 对 7、12 对 5。",
+                "hint": "return key % m;",
+                "open_lab": "bucket"
+              },
+              {
+                "type": "steps",
+                "title": "装载因子与退化",
+                "items": [
+                  "α 过大则冲突变多，平均查找变慢，往往要扩容。",
+                  "最坏可打成一条链，查找 Θ(n)。",
+                  "哈希不保持关键字顺序；既要按键找又要有序遍历时，应考虑 BST 或先排序。"
+                ]
               },
               {
                 "type": "callout",
-                "tone": "warn",
-                "title": "边界",
-                "text": "最坏可退化到链表——竞赛与对抗输入里要有数。"
+                "tone": "safe",
+                "title": "文件章（了解）",
+                "text": "师范部分教材和西科大耿国华有「文件」：索引文件靠索引定位，倒排文件按关键字找记录。不考 ISAM/VSAM 细节。"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择强调平均 O(1)、冲突与装载因子。分块、文件在 408 里更少单独成大题。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先问表是否静态、是否有序，再决定顺序 / 折半 / 分块 / 哈希。冲突方法和散列函数是两回事。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "散列（哈希）表最适合的操作是？",
+                    "choices": [
+                      {
+                        "label": "按关键字查找，且不要求按关键字有序",
+                        "ok": true,
+                        "why": "平均可达常数时间。"
+                      },
+                      {
+                        "label": "按关键字从小到大输出全部记录",
+                        "ok": false,
+                        "why": "哈希不保持顺序。"
+                      },
+                      {
+                        "label": "求当前最小关键字",
+                        "ok": false,
+                        "why": "应使用堆。"
+                      },
+                      {
+                        "label": "按下标取第 i 个记录",
+                        "ok": false,
+                        "why": "那是数组。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "采用除留余数法，key = 10，表长 m = 7，散列地址是？",
+                    "choices": [
+                      {
+                        "label": "10",
+                        "ok": false,
+                        "why": "要映射到 [0, m)。"
+                      },
+                      {
+                        "label": "7",
+                        "ok": false,
+                        "why": "除数是表长。"
+                      },
+                      {
+                        "label": "3",
+                        "ok": true,
+                        "why": "10 % 7 = 3。"
+                      },
+                      {
+                        "label": "1",
+                        "ok": false,
+                        "why": "余数不是 1。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "bucket",
+              "title": "键落到几号桶",
+              "case": "hash_bucket",
+              "entrypoint": "main.cpp",
+              "prompt": "最简单的哈希：桶号 = key % m。算 10 对 7、12 对 5。",
+              "goal": "补全 bucket，看到 b7=3 与 b5=2。",
+              "hint": "return key % m;",
+              "pass": {
+                "includes": [
+                  "b7=3",
+                  "b5=2"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "散列表按关键字查找，平均时间复杂度在理想情况下是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": true,
+                "why": "哈希质量好、装载因子合适时。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "那是有序树。"
+              },
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "那是顺序查找。"
+              },
+              {
+                "label": "O(n log n)",
+                "ok": false,
+                "why": "查找一次不是排序。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "除留余数法计算散列地址的公式是？",
+            "choices": [
+              {
+                "label": "h(key) = key / m",
+                "ok": false,
+                "why": "应取余。"
+              },
+              {
+                "label": "h(key) = key % m",
+                "ok": true,
+                "why": "映射到 0..m-1。"
+              },
+              {
+                "label": "h(key) = m % key",
+                "ok": false,
+                "why": "除数应是表长。"
+              },
+              {
+                "label": "h(key) = key + m",
+                "ok": false,
+                "why": "不是取模。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "散列表是否按关键字有序存放？",
+            "choices": [
+              {
+                "label": "是，一定升序",
+                "ok": false,
+                "why": "无序哈希不保证。"
+              },
+              {
+                "label": "是，一定按插入序",
+                "ok": false,
+                "why": "标准无序表不保证。"
+              },
+              {
+                "label": "否，遍历顺序与关键字序无关",
+                "ok": true,
+                "why": "这是和 BST 的分工。"
+              },
+              {
+                "label": "装载因子为 1 时有序",
+                "ok": false,
+                "why": "装载因子不管顺序。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "拉链法处理冲突时，同一桶中已有多个关键字，查找该关键字需要？",
+            "choices": [
+              {
+                "label": "一次下标必中，不必再比",
+                "ok": false,
+                "why": "还要在桶内分辨。"
+              },
+              {
+                "label": "沿该桶的链表逐个比较",
+                "ok": true,
+                "why": "冲突把一次定位变成走链。"
+              },
+              {
+                "label": "一定折半查找该桶",
+                "ok": false,
+                "why": "链一般无序。"
+              },
+              {
+                "label": "重新计算哈希直到不冲突",
+                "ok": false,
+                "why": "查找是沿已有链走。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "装载因子过大时，通常会出现？",
+            "choices": [
+              {
+                "label": "冲突增多，平均查找变慢",
+                "ok": true,
+                "why": "链变长或探测变长。"
+              },
+              {
+                "label": "查找一定变为 O(1) 且更快",
+                "ok": false,
+                "why": "更挤通常更慢。"
+              },
+              {
+                "label": "关键字自动按序排列",
+                "ok": false,
+                "why": "与顺序无关。"
+              },
+              {
+                "label": "表长自动变成 1",
+                "ok": false,
+                "why": "扩容是变大不是变 1。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "在最坏情况下，拉链法散列表的查找时间复杂度可以达到？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": false,
+                "why": "最坏不是保证。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "链上没有树结构时不是对数。"
+              },
+              {
+                "label": "O(n)",
+                "ok": true,
+                "why": "全部挤进一个桶就变成顺序查找。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "一次查找最多扫完所有元素。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "既要按关键字查找，又要按关键字有序输出全部记录，更合适的是？",
+            "choices": [
+              {
+                "label": "仅用无序散列表",
+                "ok": false,
+                "why": "不能有序输出。"
+              },
+              {
+                "label": "二叉搜索树（或有序表）",
+                "ok": true,
+                "why": "中序即有序。"
+              },
+              {
+                "label": "仅用栈",
+                "ok": false,
+                "why": "栈不支持按键查找。"
+              },
+              {
+                "label": "仅用队列",
+                "ok": false,
+                "why": "队列不支持按键查找。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "构造散列函数时，下列要求合理的是？",
+            "choices": [
+              {
+                "label": "尽可能让关键字均匀落到各桶",
+                "ok": true,
+                "why": "减少冲突。"
+              },
+              {
+                "label": "让所有关键字映射到同一地址",
+                "ok": false,
+                "why": "冲突最大。"
+              },
+              {
+                "label": "必须保证绝对没有冲突",
+                "ok": false,
+                "why": "一般做不到。"
+              },
+              {
+                "label": "表长必须等于关键字个数",
+                "ok": false,
+                "why": "通常留空位控制装载因子。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "静态查找表与动态查找表的主要区别是？",
+            "choices": [
+              {
+                "label": "动态表在查找过程中可以插入或删除记录",
+                "ok": true,
+                "why": "教材定义。"
+              },
+              {
+                "label": "静态表一定比动态表快",
+                "ok": false,
+                "why": "不一定。"
+              },
+              {
+                "label": "动态表不能用数组实现",
+                "ok": false,
+                "why": "也可以。"
+              },
+              {
+                "label": "静态表只能用哈希",
+                "ok": false,
+                "why": "顺序、折半都是静态查找。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "对长度为 n 的顺序表做顺序查找，等概率下成功查找的平均查找长度 ASL 是？",
+            "choices": [
+              {
+                "label": "(n+1)/2",
+                "ok": true,
+                "why": "标准结论。"
+              },
+              {
+                "label": "n",
+                "ok": false,
+                "why": "那是最坏，不是平均。"
+              },
+              {
+                "label": "log n",
+                "ok": false,
+                "why": "那是折半。"
+              },
+              {
+                "label": "1",
+                "ok": false,
+                "why": "只有第一个就命中才是。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "分块查找（索引顺序查找）的典型组织是？",
+            "choices": [
+              {
+                "label": "块间有序、块内可以无序；先定块再在块内查找",
+                "ok": true,
+                "why": "教材静态查找的第三种。"
+              },
+              {
+                "label": "整表无序，只能从头扫到尾",
+                "ok": false,
+                "why": "那是顺序查找。"
+              },
+              {
+                "label": "整表有序且必须对半切",
+                "ok": false,
+                "why": "那是折半查找。"
+              },
+              {
+                "label": "只能用散列函数定位",
+                "ok": false,
+                "why": "那是哈希。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "下列属于「处理冲突」的方法，而不是构造散列函数的是？",
+            "choices": [
+              {
+                "label": "除留余数法",
+                "ok": false,
+                "why": "这是构造散列函数。"
+              },
+              {
+                "label": "直接定址法",
+                "ok": false,
+                "why": "这也是构造散列函数。"
+              },
+              {
+                "label": "拉链法（链地址法）",
+                "ok": true,
+                "why": "冲突后把同址关键字串起来。"
+              },
+              {
+                "label": "平方取中法",
+                "ok": false,
+                "why": "这也是构造散列函数。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          },
+          {
+            "stem": "相对纯顺序文件，索引文件的主要好处是？",
+            "choices": [
+              {
+                "label": "可借助索引较快定位记录（了解即可）",
+                "ok": true,
+                "why": "耿国华教材「文件」章的基本点。"
+              },
+              {
+                "label": "一定比哈希文件省空间",
+                "ok": false,
+                "why": "索引本身也占空间。"
+              },
+              {
+                "label": "记录必须按关键字无序存放",
+                "ok": false,
+                "why": "顺序文件才常按存放次序扫。"
+              },
+              {
+                "label": "只能顺序读、不能按关键字找",
+                "ok": false,
+                "why": "那是没有索引时的限制。"
+              }
+            ],
+            "covers": "dsa.hash.table"
+          }
+        ]
+      }
     },
     {
       "id": "tree",
       "title": "树与堆",
       "track": "associative",
-      "summary": "层次结构：遍历、有序树、优先队列。",
+      "summary": "二叉树性质与遍历；线索、森林、哈夫曼；BST 与堆。",
       "topics": [
         {
           "id": "dsa.tree.basics",
@@ -492,25 +2172,149 @@
             "dsa.linear.stack_queue"
           ],
           "track": "associative",
-          "guide_line": "先序 / 中序 / 后序 / 层序各回答什么问题。",
+          "guide_line": "性质、四种遍历，再线索、森林与哈夫曼。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "术语与四种遍历的用途。",
-            "pain": "递归边界；遍历顺序背名不背用途。",
-            "model": "根、孩子、深度、高度。",
-            "scope": "递归遍历与层序（队列）。",
-            "judgment": "先问要父子关系还是一层一层看。",
-            "landing": "能手画同一棵树的三种 DFS 结果。"
+            "promise": "二叉树性质和遍历写对；线索、左孩子右兄弟、哈夫曼编码能手算。",
+            "pain": "三种遍历顺序记混；把线索当「必须空指针」；哈夫曼当等长码。",
+            "model": "先序根左右、中序左根右、后序左右根、层序用队列。空指针可以当线索。",
+            "scope": "西科大 / 师范：性质（n0=n2+1、第 i 层至多 2^{i-1}）、遍历、线索、树↔森林、哈夫曼 WPL。满 / 完全要能区分。",
+            "judgment": "要还原树用先序+中序；要编码用哈夫曼；要线索化是为了不用栈找前驱后继。",
+            "landing": "能走通小树的四种顺序，能算一层最多结点数，能说明前缀码。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "遍历顺序不是仪式，而是「你想先处理谁」——序列化、求值、打印目录各用各的。"
+                "text": "教材先给树与二叉树的定义和性质，再讲存储与遍历；线索、森林转换、哈夫曼是同一章的应用，不是附录。"
+              },
+              {
+                "type": "steps",
+                "title": "先认性质",
+                "items": [
+                  "度为 0 的叶数 n0 与度为 2 的结点数 n2：n0=n2+1。",
+                  "根为第 1 层时，第 i 层最多 2^{i-1} 个结点。",
+                  "满二叉树：每层都达到最大。完全二叉树：最后一层靠左连续——堆那一节用数组下标。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "四种走法",
+                "left": {
+                  "title": "先 / 中 / 后序",
+                  "body": "差别只在根相对于左右的时机。先序第一个是根；中序里根左边是左子树——两种序列可还原。"
+                },
+                "right": {
+                  "title": "层序",
+                  "body": "借助队列，一层一层。不是递归先序。"
+                }
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「先序走小树」：根 1 左 2 右 3，打印 1 2 3。",
+                "hint": "先打印再左再右。",
+                "open_lab": "preorder"
+              },
+              {
+                "type": "predict",
+                "question": "先序 1 2 3、中序 2 1 3，根是谁？左子树是谁？",
+                "expect": "根是 1；左是 2；右是 3。",
+                "explain": "先序第一个是根；中序里根左边是左子树。"
+              },
+              {
+                "type": "steps",
+                "title": "线索、森林、哈夫曼（师范掌握，西科大同章）",
+                "items": [
+                  "线索：空的左 / 右指针指向某次遍历下的前驱或后继。",
+                  "森林转二叉树：左孩子、右兄弟。",
+                  "哈夫曼：每次合并权最小的两棵，WPL 最小；编码是前缀码（任一码不是另一码的前缀）。"
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择常考 n0=n2+1、遍历还原、哈夫曼。线索与森林转换在 408 出现较少，师范卷更爱出。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "性质会算、四种顺序会走，再补线索 / 森林 / 前缀码。不要把哈夫曼留到「了解」才看一眼。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "二叉树的先序遍历顺序是？",
+                    "choices": [
+                      {
+                        "label": "左、根、右",
+                        "ok": false,
+                        "why": "那是中序。"
+                      },
+                      {
+                        "label": "根、左、右",
+                        "ok": true,
+                        "why": "先处理根。"
+                      },
+                      {
+                        "label": "左、右、根",
+                        "ok": false,
+                        "why": "那是后序。"
+                      },
+                      {
+                        "label": "按层从左到右",
+                        "ok": false,
+                        "why": "那是层序。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "二叉树的层序遍历通常借助？",
+                    "choices": [
+                      {
+                        "label": "栈",
+                        "ok": false,
+                        "why": "栈对应 DFS。"
+                      },
+                      {
+                        "label": "队列",
+                        "ok": true,
+                        "why": "先进先出，按层推进。"
+                      },
+                      {
+                        "label": "散列表",
+                        "ok": false,
+                        "why": "不管层次。"
+                      },
+                      {
+                        "label": "只需递归，不必辅助结构",
+                        "ok": false,
+                        "why": "递归实现的是 DFS。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "preorder",
+              "title": "先序走小树",
+              "case": "tree_preorder",
+              "entrypoint": "main.cpp",
+              "prompt": "树：根 1，左 2，右 3。先序是根、左、右，应打印 1 2 3。",
+              "goal": "补全 preorder，看到 pre=1 2 3。",
+              "hint": "先打印当前，再左、再右；数字之间空格。",
+              "pass": {
+                "includes": [
+                  "1 2 3"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.tree.bst",
@@ -519,29 +2323,139 @@
           "mastery_goal": "required",
           "knowledge_type": "skill",
           "requires": [
-            "dsa.tree.basics",
-            "dsa.complexity.time"
+            "dsa.tree.basics"
           ],
           "track": "associative",
-          "guide_line": "有序树；无平衡时最坏变链。",
+          "guide_line": "动态查找表：左小右大；输入有序会退化。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "查找 / 插入 / 删除与有序性。",
-            "pain": "删除后继；默认当平衡树用。",
-            "model": "左小右大。",
-            "scope": "平均对数、最坏线性；与 map 的关系只点到为止。",
-            "judgment": "需要有序遍历再考虑树；要最坏对数需平衡树（后课）。",
-            "landing": "能说明为何会退化成链。"
+            "promise": "BST 的查找与插入按有序性走路；知道退化与删除用后继替换。",
+            "pain": "把 BST 当堆；以为一定平衡。",
+            "model": "任一结点左子树关键字更小、右子树更大。中序即有序。",
+            "scope": "西科大 / 师范动态查找表。AVL / 红黑 / B 树作 408 对照，不默写全部旋转。",
+            "judgment": "要有序遍历用 BST；要最坏对数不能只靠裸 BST。",
+            "landing": "能在小树上查找，能说明有序插入为何成链。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "BST 的平均好看，建立在「输入不太坏」上——这是和哈希表分工的关键。"
+                "text": "二叉排序树是教材「动态查找表」的主例子：查找过程中可以插入删除。"
+              },
+              {
+                "type": "steps",
+                "title": "走路规则",
+                "items": [
+                  "比当前小走左，大走右，相等即找到。",
+                  "插入落到空指针处挂上新叶。",
+                  "删除有两棵子树时，常用中序后继（右子树最左）替换。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「BST 里找数」：根 4，左 2 右 6。判断 2、5、4。",
+                "hint": "空则否，相等则是，否则走一边。",
+                "open_lab": "find"
+              },
+              {
+                "type": "compare",
+                "title": "形态取决于输入",
+                "left": {
+                  "title": "较均匀",
+                  "body": "平均查找接近对数。"
+                },
+                "right": {
+                  "title": "依次插入有序序列",
+                  "body": "退化成链，最坏 Θ(n)。口头上的「树」并不保证平衡。"
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "AVL：旋转恢复平衡因子。红黑：黑高、红结点孩子为黑。B / B+：多路，外存索引，B+ 叶成链方便范围查。师范大纲有的也点名平衡树，会认即可。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "BST 用有序性换「走一边」；要最坏对数，得另加平衡或换结构。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "二叉搜索树中，任一结点的左、右子树关键字满足？",
+                    "choices": [
+                      {
+                        "label": "左小右大",
+                        "ok": true,
+                        "why": "中序遍历升序。"
+                      },
+                      {
+                        "label": "左大右小",
+                        "ok": false,
+                        "why": "约定相反。"
+                      },
+                      {
+                        "label": "左右无要求",
+                        "ok": false,
+                        "why": "没有有序性就不是 BST。"
+                      },
+                      {
+                        "label": "左右必须相等",
+                        "ok": false,
+                        "why": "无法区分走向。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "将有序序列依次插入一棵空的二叉搜索树，最坏查找复杂度是？",
+                    "choices": [
+                      {
+                        "label": "O(1)",
+                        "ok": false,
+                        "why": "会退化。"
+                      },
+                      {
+                        "label": "O(log n)",
+                        "ok": false,
+                        "why": "平均才是，最坏不是。"
+                      },
+                      {
+                        "label": "O(n)",
+                        "ok": true,
+                        "why": "树退化成链。"
+                      },
+                      {
+                        "label": "O(n log n)",
+                        "ok": false,
+                        "why": "一次查找不是排序。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "find",
+              "title": "BST 里找数",
+              "case": "bst_find",
+              "entrypoint": "main.cpp",
+              "prompt": "小树：4 为根，左 2 右 6。判断 2、5、4 在不在。",
+              "goal": "补全 contains，看到 has2=1、has5=0、has4=1。",
+              "hint": "空则否；相等则是；否则按大小走一边。",
+              "pass": {
+                "includes": [
+                  "has2=1",
+                  "has5=0",
+                  "has4=1"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.tree.heap",
@@ -554,64 +2468,686 @@
             "dsa.tree.basics"
           ],
           "track": "associative",
-          "guide_line": "数组上的完全二叉树；反复取最值。",
+          "guide_line": "完全二叉树的数组实现：优化取最值。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "堆序、上浮下沉、优先队列接口。",
-            "pain": "父子下标算错。",
-            "model": "堆序 + 完全形态。",
-            "scope": "push/pop；对照 priority_queue。",
-            "judgment": "只要反复要当前最值 → 堆。",
-            "landing": "能说出插入与取最值的量级。"
+            "promise": "会算父子下标，分清堆序和 BST 有序。",
+            "pain": "用堆当字典按任意键查；下标从 0 / 从 1 混用。",
+            "model": "堆序只保证父子，不保证中序有序。下标 0 起：父 (i-1)/2，左 2i+1。",
+            "scope": "西科大选择排序里的堆；师范同样。建堆 O(n) 只记结论。",
+            "judgment": "反复取当前最值 → 堆；按键查找 → 哈希或 BST。",
+            "landing": "能算下标，能说明堆不能当字典。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "堆不提供任意键的快速查找；它优化的是「谁最大 / 最小」。"
+                "text": "堆是完全二叉树，通常用数组存。它出现在教材的选择排序里，也单独当优先队列。"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「堆的父子下标」：i=5 的父、i=1 的左。",
+                "hint": "整数除法 (i-1)/2 与 2i+1。",
+                "open_lab": "index"
+              },
+              {
+                "type": "compare",
+                "title": "堆不是 BST",
+                "left": {
+                  "title": "堆",
+                  "body": "反复取最小 / 最大，push/pop 为 O(log n)。不提供任意键的对数查找。"
+                },
+                "right": {
+                  "title": "BST",
+                  "body": "按键走路，中序有序。不保证根是全局最值以外的堆序。"
+                }
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先把下标写对，再决定要最值还是要按键查。堆排序的最坏 O(n log n) 放到高效排序对照。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "堆（优先队列）主要支持的操作是？",
+                    "choices": [
+                      {
+                        "label": "按任意关键字查找",
+                        "ok": false,
+                        "why": "堆不提供字典查找。"
+                      },
+                      {
+                        "label": "反复取出当前最值",
+                        "ok": true,
+                        "why": "堆序保证根是最值。"
+                      },
+                      {
+                        "label": "按中序输出全部关键字",
+                        "ok": false,
+                        "why": "堆的中序不是有序。"
+                      },
+                      {
+                        "label": "O(1) 在中间插入",
+                        "ok": false,
+                        "why": "插入要上浮，O(log n)。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "数组表示的堆（下标从 0 计），结点 5 的双亲下标是？",
+                    "choices": [
+                      {
+                        "label": "10",
+                        "ok": false,
+                        "why": "那是孩子方向。"
+                      },
+                      {
+                        "label": "2",
+                        "ok": true,
+                        "why": "(5-1)/2 = 2。"
+                      },
+                      {
+                        "label": "5",
+                        "ok": false,
+                        "why": "自己不是双亲。"
+                      },
+                      {
+                        "label": "4",
+                        "ok": false,
+                        "why": "(5-1)/2 是 2 不是 4。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "index",
+              "title": "堆的父子下标",
+              "case": "heap_index",
+              "entrypoint": "main.cpp",
+              "prompt": "数组堆：下标 i 的父是 (i-1)/2，左孩子 2i+1。算 i=5 的父、i=1 的左、i=2 的父。",
+              "goal": "补全 parent_of 与 left_of，看到 p5=2、l1=3、p2=0。",
+              "hint": "整数除法即可。",
+              "pass": {
+                "includes": [
+                  "p5=2",
+                  "l1=3",
+                  "p2=0"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "二叉树先序遍历的顺序是？",
+            "choices": [
+              {
+                "label": "根、左、右",
+                "ok": true,
+                "why": "先处理根。"
+              },
+              {
+                "label": "左、根、右",
+                "ok": false,
+                "why": "中序。"
+              },
+              {
+                "label": "左、右、根",
+                "ok": false,
+                "why": "后序。"
+              },
+              {
+                "label": "按层",
+                "ok": false,
+                "why": "层序。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "对二叉树，若度为 2 的结点数为 n2，则叶结点数 n0 等于？",
+            "choices": [
+              {
+                "label": "n2",
+                "ok": false,
+                "why": "少 1。"
+              },
+              {
+                "label": "n2 + 1",
+                "ok": true,
+                "why": "基本性质。"
+              },
+              {
+                "label": "n2 - 1",
+                "ok": false,
+                "why": "反了。"
+              },
+              {
+                "label": "2 n2",
+                "ok": false,
+                "why": "不是这个关系。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "已知一棵二叉树的先序序列第一个结点是？",
+            "choices": [
+              {
+                "label": "最左叶",
+                "ok": false,
+                "why": "先序先根。"
+              },
+              {
+                "label": "根",
+                "ok": true,
+                "why": "先序第一个必是根。"
+              },
+              {
+                "label": "最右叶",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "中序的第一个",
+                "ok": false,
+                "why": "中序第一个是最左。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "要按层次从左到右访问二叉树，应采用？",
+            "choices": [
+              {
+                "label": "先序递归",
+                "ok": false,
+                "why": "不是按层。"
+              },
+              {
+                "label": "中序递归",
+                "ok": false,
+                "why": "左根右，不是按层。"
+              },
+              {
+                "label": "层序遍历（队列）",
+                "ok": true,
+                "why": "FIFO 按层。"
+              },
+              {
+                "label": "后序递归",
+                "ok": false,
+                "why": "不是按层。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "在二叉搜索树中查找关键字 x，下一步走向？",
+            "choices": [
+              {
+                "label": "一律向左",
+                "ok": false,
+                "why": "会错。"
+              },
+              {
+                "label": "比当前结点小则左，大则右",
+                "ok": true,
+                "why": "左小右大。"
+              },
+              {
+                "label": "左右都要搜，像图的 DFS",
+                "ok": false,
+                "why": "有序性只需走一边。"
+              },
+              {
+                "label": "先层序再判断",
+                "ok": false,
+                "why": "查找沿一条路径即可。"
+              }
+            ],
+            "covers": "dsa.tree.bst"
+          },
+          {
+            "stem": "向空二叉搜索树依次插入 1,2,3,4，树的形态最可能是？",
+            "choices": [
+              {
+                "label": "平衡的完全二叉树",
+                "ok": false,
+                "why": "普通 BST 不旋转。"
+              },
+              {
+                "label": "一条向右的链",
+                "ok": true,
+                "why": "每次都插在最右。"
+              },
+              {
+                "label": "一条向左的链",
+                "ok": false,
+                "why": "递增序列往右挂。"
+              },
+              {
+                "label": "只有根，其余丢失",
+                "ok": false,
+                "why": "都会插入。"
+              }
+            ],
+            "covers": "dsa.tree.bst"
+          },
+          {
+            "stem": "小根堆中，关键字最小的元素一定在？",
+            "choices": [
+              {
+                "label": "最左叶",
+                "ok": false,
+                "why": "最小在根。"
+              },
+              {
+                "label": "根",
+                "ok": true,
+                "why": "堆序：父优于子。"
+              },
+              {
+                "label": "最右叶",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "任意位置",
+                "ok": false,
+                "why": "根必是最值。"
+              }
+            ],
+            "covers": "dsa.tree.heap"
+          },
+          {
+            "stem": "数组堆（下标从 0 计）中，下标 1 的左孩子是？",
+            "choices": [
+              {
+                "label": "2",
+                "ok": false,
+                "why": "右孩子才是 2*1+2=2。"
+              },
+              {
+                "label": "3",
+                "ok": true,
+                "why": "2*1+1=3。"
+              },
+              {
+                "label": "0",
+                "ok": false,
+                "why": "0 是根。"
+              },
+              {
+                "label": "1",
+                "ok": false,
+                "why": "自己不是孩子。"
+              }
+            ],
+            "covers": "dsa.tree.heap"
+          },
+          {
+            "stem": "哈夫曼树（最优二叉树）中，不存在？",
+            "choices": [
+              {
+                "label": "叶结点",
+                "ok": false,
+                "why": "带权的是叶。"
+              },
+              {
+                "label": "度为 2 的结点",
+                "ok": false,
+                "why": "每次合并两个。"
+              },
+              {
+                "label": "度为 1 的结点",
+                "ok": true,
+                "why": "每次选两棵合并，没有单分支。"
+              },
+              {
+                "label": "根结点",
+                "ok": false,
+                "why": "一定有根。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "堆适合、二叉搜索树更适合的分别是？",
+            "choices": [
+              {
+                "label": "堆：反复取最值；BST：按键查找并有序遍历",
+                "ok": true,
+                "why": "分工清楚。"
+              },
+              {
+                "label": "堆：按键字典；BST：只取最值",
+                "ok": false,
+                "why": "说反了。"
+              },
+              {
+                "label": "两者完全一样",
+                "ok": false,
+                "why": "堆序不是中序有序。"
+              },
+              {
+                "label": "两者都不能取最值",
+                "ok": false,
+                "why": "堆的根就是最值。"
+              }
+            ],
+            "covers": "dsa.tree.heap"
+          },
+          {
+            "stem": "线索二叉树中，空的左/右指针用来？",
+            "choices": [
+              {
+                "label": "指向该结点在某次遍历下的前驱或后继",
+                "ok": true,
+                "why": "线索的定义。"
+              },
+              {
+                "label": "指向根结点",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "必须置空，不能指向任何结点",
+                "ok": false,
+                "why": "线索就是利用空指针。"
+              },
+              {
+                "label": "指向双亲，且只能指向双亲",
+                "ok": false,
+                "why": "那是三叉链表一类，不是线索含义。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "森林转换成二叉树时，常用规则是？",
+            "choices": [
+              {
+                "label": "左孩子、右兄弟",
+                "ok": true,
+                "why": "教材标准转换。"
+              },
+              {
+                "label": "右孩子、左兄弟",
+                "ok": false,
+                "why": "左右说反了。"
+              },
+              {
+                "label": "两个孩子都改成兄弟",
+                "ok": false,
+                "why": "会丢层次。"
+              },
+              {
+                "label": "先全部拉成一条链",
+                "ok": false,
+                "why": "不是标准转换。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "哈夫曼编码是一种？",
+            "choices": [
+              {
+                "label": "前缀编码（任一字符编码不是另一字符编码的前缀）",
+                "ok": true,
+                "why": "保证解码唯一。"
+              },
+              {
+                "label": "等长编码",
+                "ok": false,
+                "why": "频度不同则不等长。"
+              },
+              {
+                "label": "必须每位都是 1",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "与字符出现频率无关",
+                "ok": false,
+                "why": "频率正是权。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "若根为第 1 层，二叉树第 i 层最多有多少个结点？",
+            "choices": [
+              {
+                "label": "2^{i-1}",
+                "ok": true,
+                "why": "每层至多翻倍。"
+              },
+              {
+                "label": "2^i",
+                "ok": false,
+                "why": "多算了一倍。"
+              },
+              {
+                "label": "i",
+                "ok": false,
+                "why": "太少。"
+              },
+              {
+                "label": "2i",
+                "ok": false,
+                "why": "不是线性。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          },
+          {
+            "stem": "满二叉树指的是？",
+            "choices": [
+              {
+                "label": "每一层的结点数都达到该层最大值",
+                "ok": true,
+                "why": "最后一层也是满的。"
+              },
+              {
+                "label": "只有左子树的二叉树",
+                "ok": false,
+                "why": "那是斜树。"
+              },
+              {
+                "label": "叶结点可以出现在任何一层",
+                "ok": false,
+                "why": "满二叉树的叶只在最后一层。"
+              },
+              {
+                "label": "结点数必须是偶数",
+                "ok": false,
+                "why": "满二叉树结点数是 2^k-1。"
+              }
+            ],
+            "covers": "dsa.tree.basics"
+          }
+        ]
+      }
     },
     {
       "id": "sorting",
       "title": "排序与查找",
       "track": "algorithms",
-      "summary": "有序化与在有序上加速；为图与范式打底。",
+      "summary": "插入、交换、选择；希尔、快排、堆、归并、基数。对照表要会选。",
       "topics": [
         {
           "id": "dsa.sort.basic",
-          "title": "基础排序",
+          "title": "基础排序与二分",
           "difficulty": 2,
           "mastery_goal": "required",
           "knowledge_type": "skill",
           "requires": [
-            "dsa.linear.array",
-            "dsa.complexity.time"
+            "dsa.linear.array"
           ],
           "track": "algorithms",
-          "guide_line": "平方级排序：教学与近乎有序的插入。",
+          "guide_line": "插入、交换、选择；有序才能折半。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "冒泡 / 选择 / 插入的对照（稳定、原地、代价）。",
-            "pain": "稳定与原地概念混淆。",
-            "model": "比较次数主导。",
-            "scope": "小 n；插入适合近乎有序。",
-            "judgment": "生产默认别手写平方排序。",
-            "landing": "能写出插入排序并说明稳定。"
+            "promise": "三种简单排序能对照；插入一步会写；二分前提说清。",
+            "pain": "无序表上二分；把稳定和原地混成一句话。",
+            "model": "直接插入、冒泡、简单选择都是平方级。稳定指相等键相对次序不变。",
+            "scope": "西科大 / 师范内部排序前半。折半插入：位置二分、移动仍 Θ(n)。",
+            "judgment": "小或近乎有序可用插入；大规模无序不要停在平方排序。",
+            "landing": "能插入一个元素保持有序，能判断能不能二分。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "基础排序的价值是把「比较—交换」想清楚，不是拿去排序百万数据。"
+                "text": "教材把排序按插入、交换、选择、归并、基数分组。本节先拿下简单方法和折半查找的前提。"
+              },
+              {
+                "type": "compare",
+                "title": "稳定与原地",
+                "left": {
+                  "title": "稳定",
+                  "body": "相等关键字的相对次序不变。直接插入、冒泡通常稳定。"
+                },
+                "right": {
+                  "title": "原地",
+                  "body": "额外空间 O(1)。稳定和原地是两件事：归并稳定但常要额外数组。"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "三种平方排序",
+                "items": [
+                  "直接插入：把新元素插入已有序的前缀。近乎有序时移动少。",
+                  "冒泡：相邻逆序就交换，一趟可把最值沉底。",
+                  "简单选择：每趟选最小放到前面，不稳定。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「插入排序的一步」：1,3,7,9 插入 4。",
+                "hint": "从尾把大于 4 的右移。",
+                "open_lab": "insert_one"
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「有序数组二分」：在 1,3,4,7,9 里查 4、5、1。",
+                "hint": "左闭右开，先求存在性。",
+                "open_lab": "bsearch"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考爱考「无序不能二分」。分块查找已在查找节展开，这里只记前提：块间有序。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "简单排序用来建立「比较—移动」直觉；二分只服务于已经有序的顺序表。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "二分查找（折半查找）的前提是？",
+                    "choices": [
+                      {
+                        "label": "记录按关键字有序，且能随机访问（如数组）",
+                        "ok": true,
+                        "why": "链表不能 O(1) 取中点。"
+                      },
+                      {
+                        "label": "记录任意无序即可",
+                        "ok": false,
+                        "why": "无序不能二分。"
+                      },
+                      {
+                        "label": "必须用链表存储",
+                        "ok": false,
+                        "why": "链表不适合二分。"
+                      },
+                      {
+                        "label": "表长必须是 2 的幂",
+                        "ok": false,
+                        "why": "无此要求。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "对基本有序的顺序表，下列排序中通常移动次数较少的是？",
+                    "choices": [
+                      {
+                        "label": "简单选择排序",
+                        "ok": false,
+                        "why": "每轮仍要扫剩余区间。"
+                      },
+                      {
+                        "label": "直接插入排序",
+                        "ok": true,
+                        "why": "近乎有序时插入位置很近。"
+                      },
+                      {
+                        "label": "堆排序",
+                        "ok": false,
+                        "why": "与是否基本有序关系不大。"
+                      },
+                      {
+                        "label": "基数排序",
+                        "ok": false,
+                        "why": "不是比较排序里处理「基本有序」的首选。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "insert_one",
+              "title": "插入排序的一步",
+              "case": "insert_one",
+              "entrypoint": "main.cpp",
+              "prompt": "有序数组 1,3,7,9，把 4 插进去，结果应仍有序。这是插入排序的一次动作。",
+              "goal": "补全 insert_sorted，看到 a=1,3,4,7,9。",
+              "hint": "从尾巴把大于 4 的右移，空位写入 4。",
+              "pass": {
+                "includes": [
+                  "a=1,3,4,7,9"
+                ]
+              }
+            },
+            {
+              "id": "bsearch",
+              "title": "有序数组二分",
+              "case": "binsearch",
+              "entrypoint": "main.cpp",
+              "prompt": "已排序才能砍半。在 1,3,4,7,9 里查 4、5、1。",
+              "goal": "补全 exists，看到 has4=1、has5=0、has1=1。",
+              "hint": "左闭右开，取中点，相等则是，否则收缩一侧。",
+              "pass": {
+                "includes": [
+                  "has4=1",
+                  "has5=0",
+                  "has1=1"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.sort.advanced",
@@ -621,68 +3157,505 @@
           "knowledge_type": "skill",
           "requires": [
             "dsa.sort.basic",
-            "dsa.tree.heap",
-            "dsa.complexity.space"
+            "dsa.tree.heap"
           ],
           "track": "algorithms",
-          "guide_line": "归并 / 快速 / 堆排序：稳定、空间、最坏。",
+          "guide_line": "先问稳定、最坏、额外空间，再选希尔 / 快排 / 堆 / 归并 / 基数。",
           "weight": "先拿下",
           "outline": {
-            "promise": "n log n 族的取舍表。",
-            "pain": "快排最坏；归并额外空间。",
-            "model": "分治合并 vs 堆序。",
-            "scope": "平均 / 最坏 / 是否稳定。",
-            "judgment": "要稳定 → 归并；要原地期望快 → 快排；要最坏保证 → 堆排序。",
-            "landing": "能一句话对比三者。"
+            "promise": "n log n 三问会选；一趟快排和希尔、基数能说清。",
+            "pain": "默认快排一定 n log n；把基数当成比较排序。",
+            "model": "快排期望好、最坏 n²；堆排最坏有保证但不稳定；归并稳定要额外空间。",
+            "scope": "西科大 / 师范后半：希尔、快排、堆、归并、基数对照。外排 / 败者树 408 了解。",
+            "judgment": "要稳定 n log n → 归并；要最坏保证且能不稳 → 堆；要原地期望快 → 快排加护栏。",
+            "landing": "能合并两段有序，能说明一趟快排只保证枢轴就位。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "选排序算法前先问：要不要稳定？能不能接受最坏 O(n²)？有没有额外数组？"
-              }
-            ]
-          },
-          "lab": null
-        },
-        {
-          "id": "dsa.search.binary",
-          "title": "二分查找",
-          "difficulty": 3,
-          "mastery_goal": "master",
-          "knowledge_type": "skill",
-          "requires": [
-            "dsa.linear.array",
-            "dsa.complexity.big_o"
-          ],
-          "track": "algorithms",
-          "guide_line": "有序 + 随机访问 → 对数查找；边界最易错。",
-          "weight": "先拿下",
-          "outline": {
-            "promise": "写对闭开区间二分，并理解变体。",
-            "pain": "左右边界写飞；未排序就二分。",
-            "model": "每次砍半有序区间。",
-            "scope": "存在性；下界 / 上界直觉。",
-            "judgment": "无序先排序或换哈希；链表上二分无意义。",
-            "landing": "能写出不错位的二分模板。"
-          },
-          "lesson": {
-            "blocks": [
+                "text": "选排序前先问三件事：要不要稳定、能不能接受最坏 O(n²)、有没有额外数组。希尔和基数是教材必列、408 较少单独大题。"
+              },
               {
-                "type": "lead",
-                "text": "二分的前提写在题面上：有序、可 O(1) 取中点——少一条都不要硬套。"
+                "type": "steps",
+                "title": "教材后半五种",
+                "items": [
+                  "希尔：按增量分组做插入，不稳定，增量序列影响。",
+                  "快排：一趟后枢轴就位，左不大于、右不小于；平均 O(n log n)，最坏 O(n²)，常用随机枢轴。",
+                  "堆排：最坏 O(n log n)，不稳定，原地。",
+                  "归并：稳定，合两段有序，通常 Θ(n) 额外空间，最坏 O(n log n)。",
+                  "基数：不基于关键字比较，按位分配收集，通常稳定。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「合并两段有序」：1,4,7 与 2,3,8。",
+                "hint": "双指针谁小写谁。",
+                "open_lab": "merge"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择常出对照表。外部排序（多路归并、败者树）会认即可。基于比较的排序最坏下界 Ω(n log n)。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "对照表比背代码重要：稳定、最坏、空间、是否基于比较。基数和希尔按教材写进主线，不藏到了解。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "要求排序稳定且最坏为 O(n log n)，应选？",
+                    "choices": [
+                      {
+                        "label": "快速排序",
+                        "ok": false,
+                        "why": "一般不稳定，最坏可达 n²。"
+                      },
+                      {
+                        "label": "堆排序",
+                        "ok": false,
+                        "why": "最坏 n log n，但不稳定。"
+                      },
+                      {
+                        "label": "二路归并排序",
+                        "ok": true,
+                        "why": "稳定，最坏 n log n。"
+                      },
+                      {
+                        "label": "简单选择排序",
+                        "ok": false,
+                        "why": "O(n²) 且不稳定。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "快速排序在最坏情况下的时间复杂度是？",
+                    "choices": [
+                      {
+                        "label": "O(n)",
+                        "ok": false,
+                        "why": "不是。"
+                      },
+                      {
+                        "label": "O(n log n)",
+                        "ok": false,
+                        "why": "这是平均/最好（均匀划分）。"
+                      },
+                      {
+                        "label": "O(n²)",
+                        "ok": true,
+                        "why": "枢轴极端时退化。"
+                      },
+                      {
+                        "label": "O(log n)",
+                        "ok": false,
+                        "why": "不是。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "merge",
+              "title": "合并两段有序",
+              "case": "merge_runs",
+              "entrypoint": "main.cpp",
+              "prompt": "归并的「合」：1,4,7 与 2,3,8 合成一段有序。",
+              "goal": "补全 merge_sorted，看到 m=1,2,3,4,7,8。",
+              "hint": "双指针，谁小写谁。",
+              "pass": {
+                "includes": [
+                  "m=1,2,3,4,7,8"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "稳定排序的含义是？",
+            "choices": [
+              {
+                "label": "排序后关键字互不相同",
+                "ok": false,
+                "why": "与是否有重复无关。"
+              },
+              {
+                "label": "相等关键字的相对次序不变",
+                "ok": true,
+                "why": "稳定的定义。"
+              },
+              {
+                "label": "必须原地排序",
+                "ok": false,
+                "why": "稳定和原地是两件事。"
+              },
+              {
+                "label": "最坏必须是 O(n log n)",
+                "ok": false,
+                "why": "插入排序稳定但是 O(n²)。"
+              }
+            ],
+            "covers": "dsa.sort.basic"
+          },
+          {
+            "stem": "下列排序方法中，稳定的是？",
+            "choices": [
+              {
+                "label": "简单选择排序",
+                "ok": false,
+                "why": "交换可能跨越相等关键字。"
+              },
+              {
+                "label": "堆排序",
+                "ok": false,
+                "why": "不稳定。"
+              },
+              {
+                "label": "直接插入排序",
+                "ok": true,
+                "why": "相等时插在已有相等之后，稳定。"
+              },
+              {
+                "label": "快速排序",
+                "ok": false,
+                "why": "一般不稳定。"
+              }
+            ],
+            "covers": "dsa.sort.basic"
+          },
+          {
+            "stem": "对无序顺序表直接进行二分查找，结果是？",
+            "choices": [
+              {
+                "label": "仍能正确找到",
+                "ok": false,
+                "why": "无序不能保证中点划分。"
+              },
+              {
+                "label": "不正确；应先排序或改用其他查找",
+                "ok": true,
+                "why": "前提是有序。"
+              },
+              {
+                "label": "比顺序查找更慢但结果对",
+                "ok": false,
+                "why": "结果一般不对。"
+              },
+              {
+                "label": "编译器会自动排序后再查",
+                "ok": false,
+                "why": "不会。"
+              }
+            ],
+            "covers": "dsa.sort.basic"
+          },
+          {
+            "stem": "下列关于直接插入排序的说法，正确的是？",
+            "choices": [
+              {
+                "label": "是稳定排序，最好情况 O(n)",
+                "ok": true,
+                "why": "基本有序时接近线性。"
+              },
+              {
+                "label": "不稳定，最好也是 O(n²)",
+                "ok": false,
+                "why": "它稳定，最好 O(n)。"
+              },
+              {
+                "label": "最坏是 O(n log n)",
+                "ok": false,
+                "why": "最坏仍是 O(n²)。"
+              },
+              {
+                "label": "只能用于链表，不能用于顺序表",
+                "ok": false,
+                "why": "顺序表更常见。"
+              }
+            ],
+            "covers": "dsa.sort.basic"
+          },
+          {
+            "stem": "二路归并排序的额外空间复杂度通常是？",
+            "choices": [
+              {
+                "label": "O(1)",
+                "ok": false,
+                "why": "通常要辅助数组。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "那是递归栈量级，还要 Θ(n) 数组。"
+              },
+              {
+                "label": "Θ(n)",
+                "ok": true,
+                "why": "合并需要线性辅助空间。"
+              },
+              {
+                "label": "Θ(n²)",
+                "ok": false,
+                "why": "不需要平方空间。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "堆排序的最坏时间复杂度是？",
+            "choices": [
+              {
+                "label": "O(n)",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "O(n log n)",
+                "ok": true,
+                "why": "建堆 O(n)，n 次调整各 O(log n)。"
+              },
+              {
+                "label": "O(n²)",
+                "ok": false,
+                "why": "堆排最坏仍是 n log n。"
+              },
+              {
+                "label": "O(log n)",
+                "ok": false,
+                "why": "要处理 n 个元素。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "快速排序平均时间复杂度是 O(n log n)，最坏是 O(n²)。为避免最坏，常用？",
+            "choices": [
+              {
+                "label": "改成冒泡",
+                "ok": false,
+                "why": "变平方且慢。"
+              },
+              {
+                "label": "随机选取枢轴或三数取中",
+                "ok": true,
+                "why": "避免总选到极端值。"
+              },
+              {
+                "label": "去掉划分步骤",
+                "ok": false,
+                "why": "那就不是快排。"
+              },
+              {
+                "label": "只用递归不用划分",
+                "ok": false,
+                "why": "划分是快排核心。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "基于比较的排序，最坏情况下时间下界是？",
+            "choices": [
+              {
+                "label": "Ω(n)",
+                "ok": false,
+                "why": "只看一遍不够区分 n! 种排列。"
+              },
+              {
+                "label": "Ω(n log n)",
+                "ok": true,
+                "why": "决策树高度。"
+              },
+              {
+                "label": "Ω(n²)",
+                "ok": false,
+                "why": "不是下界，可以更快。"
+              },
+              {
+                "label": "没有下界",
+                "ok": false,
+                "why": "有信息论下界。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "归并排序中「合并」一步的作用是？",
+            "choices": [
+              {
+                "label": "把两段有序序列合成一段有序序列",
+                "ok": true,
+                "why": "线性合并。"
+              },
+              {
+                "label": "随机选一个枢轴并交换",
+                "ok": false,
+                "why": "那是快排划分。"
+              },
+              {
+                "label": "对堆进行一次下沉",
+                "ok": false,
+                "why": "那是堆排。"
+              },
+              {
+                "label": "相邻元素两两交换",
+                "ok": false,
+                "why": "那是冒泡。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "要求原地、不稳定也可以、最坏有 O(n log n) 保证，可选？",
+            "choices": [
+              {
+                "label": "归并排序",
+                "ok": false,
+                "why": "通常要额外数组。"
+              },
+              {
+                "label": "堆排序",
+                "ok": true,
+                "why": "原地、最坏 n log n、不稳定。"
+              },
+              {
+                "label": "快速排序",
+                "ok": false,
+                "why": "最坏无保证。"
+              },
+              {
+                "label": "直接插入排序",
+                "ok": false,
+                "why": "最坏 n²。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "基数排序与基于关键字比较的排序相比，正确的是？",
+            "choices": [
+              {
+                "label": "基数排序不基于关键字的比较，按位分配收集",
+                "ok": true,
+                "why": "内部排序比较表的基本点。"
+              },
+              {
+                "label": "基数排序最坏一定是 O(n²)",
+                "ok": false,
+                "why": "复杂度取决于位数和基数。"
+              },
+              {
+                "label": "基数排序不稳定",
+                "ok": false,
+                "why": "通常是稳定的。"
+              },
+              {
+                "label": "基数排序必须先建堆",
+                "ok": false,
+                "why": "与堆无关。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "下列排序中，通常属于稳定排序的是？",
+            "choices": [
+              {
+                "label": "基数排序",
+                "ok": true,
+                "why": "分配收集保持相对次序。"
+              },
+              {
+                "label": "简单选择排序",
+                "ok": false,
+                "why": "不稳定。"
+              },
+              {
+                "label": "堆排序",
+                "ok": false,
+                "why": "不稳定。"
+              },
+              {
+                "label": "快速排序",
+                "ok": false,
+                "why": "一般不稳定。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "希尔排序本质上是？",
+            "choices": [
+              {
+                "label": "按增量分组后做插入排序",
+                "ok": true,
+                "why": "缩小增量插入。"
+              },
+              {
+                "label": "必须先建堆",
+                "ok": false,
+                "why": "那是堆排序。"
+              },
+              {
+                "label": "按位分配收集",
+                "ok": false,
+                "why": "那是基数排序。"
+              },
+              {
+                "label": "只比较相邻元素一次",
+                "ok": false,
+                "why": "那更像一趟冒泡。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          },
+          {
+            "stem": "一趟快速排序完成后，枢轴元素的位置满足？",
+            "choices": [
+              {
+                "label": "已在最终有序位置，左侧都不大于它、右侧都不小于它",
+                "ok": true,
+                "why": "分治的分割结果。"
+              },
+              {
+                "label": "整个序列已经有序",
+                "ok": false,
+                "why": "只保证枢轴就位。"
+              },
+              {
+                "label": "只排出了最大值",
+                "ok": false,
+                "why": "那是选择/堆的一步。"
+              },
+              {
+                "label": "必须使用额外的 n 个单元",
+                "ok": false,
+                "why": "快排通常原地分割。"
+              }
+            ],
+            "covers": "dsa.sort.advanced"
+          }
+        ]
+      }
     },
     {
       "id": "graph",
       "title": "图",
       "track": "algorithms",
-      "summary": "关系网：表示、遍历，再到加权路径。",
+      "summary": "矩阵 / 表 / 十字链表；遍历、MST、最短路、拓扑、关键路径。",
       "topics": [
         {
           "id": "dsa.graph.basics",
@@ -691,33 +3664,136 @@
           "mastery_goal": "required",
           "knowledge_type": "concept",
           "requires": [
-            "dsa.linear.list",
-            "dsa.complexity.space"
+            "dsa.linear.list"
           ],
           "track": "algorithms",
-          "guide_line": "邻接表 vs 邻接矩阵：稀疏与稠密。",
+          "guide_line": "先选存储：矩阵、邻接表，再认十字链表。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "术语与两种表示的空间 / 查询代价。",
-            "pain": "稠密稀疏选错表示。",
-            "model": "顶点、边、有向 / 无向、权。",
-            "scope": "矩阵与邻接表。",
-            "judgment": "边少用表；常问「两点是否相邻」且点不多可用矩阵。",
-            "landing": "能按场景选表示并估算空间。"
+            "promise": "术语和两种常用存储会选；十字链表 / 邻接多重表知道给谁用。",
+            "pain": "稀疏图硬上矩阵；有向图入度出度看错行或列。",
+            "model": "邻接矩阵 Θ(n²)；邻接表约 Θ(n+e)。有向图第 i 行非零个数是出度。",
+            "scope": "西科大 / 师范存储含十字链表（有向、找入出边）和邻接多重表（无向、边操作）。",
+            "judgment": "边少用表；常问两点是否相邻且点不多可用矩阵。",
+            "landing": "能给无向图加边并数度，能说出十字链表的用途。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "图算法的第一行决定往往不是 Dijkstra，而是「用表还是用矩阵」。"
+                "text": "图算法的第一行往往是存储。教材并列邻接矩阵、邻接表，并点名十字链表与邻接多重表。"
+              },
+              {
+                "type": "compare",
+                "title": "表还是矩阵",
+                "left": {
+                  "title": "邻接表",
+                  "body": "稀疏图省空间，约 O(n+e)。遍历邻点顺着链走。"
+                },
+                "right": {
+                  "title": "邻接矩阵",
+                  "body": "空间 Θ(n²)。问两点是否相邻一次下标。有向图第 i 行是出度，第 i 列是入度。"
+                }
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「邻接表加边」：3 点无向图加 0-1、0-2，度数 2,1,1。",
+                "hint": "两端都 push_back。",
+                "open_lab": "edge"
+              },
+              {
+                "type": "prose",
+                "text": "十字链表便于有向图同时找入边和出边；邻接多重表便于无向图处理「一条边的两端」。会认用途即可，不默写全部结点域。"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考默认考矩阵与表。十字 / 邻接多重表出现较少，师范与西科大教材更强调会认。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先数点边、再选存储。入度出度看行还是列，画一次就记住。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "用邻接表存储有 n 个顶点、e 条边的无向图，空间复杂度约为？",
+                    "choices": [
+                      {
+                        "label": "Θ(n²)",
+                        "ok": false,
+                        "why": "那是邻接矩阵。"
+                      },
+                      {
+                        "label": "Θ(n + e)",
+                        "ok": true,
+                        "why": "每个顶点一条链表，边存两次也是 Θ(n+e)。"
+                      },
+                      {
+                        "label": "Θ(e²)",
+                        "ok": false,
+                        "why": "不是。"
+                      },
+                      {
+                        "label": "Θ(1)",
+                        "ok": false,
+                        "why": "与规模有关。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "邻接矩阵适合的情况是？",
+                    "choices": [
+                      {
+                        "label": "顶点很多、边很少，只要省空间",
+                        "ok": false,
+                        "why": "稀疏图更该用表。"
+                      },
+                      {
+                        "label": "顶点不太多，且经常询问两点是否相邻",
+                        "ok": true,
+                        "why": "一次下标即可。"
+                      },
+                      {
+                        "label": "只做遍历、从不查边",
+                        "ok": false,
+                        "why": "表也够用。"
+                      },
+                      {
+                        "label": "必须是有向图",
+                        "ok": false,
+                        "why": "无向图也能用矩阵。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "edge",
+              "title": "邻接表加边",
+              "case": "add_edge",
+              "entrypoint": "main.cpp",
+              "prompt": "3 个点的无向图，加 0-1、0-2。度数应是 2,1,1。",
+              "goal": "补全 add_undirected，看到 deg=2,1,1。",
+              "hint": "两端都 push_back。",
+              "pass": {
+                "includes": [
+                  "deg=2,1,1"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.graph.traversal",
-          "title": "图的遍历",
+          "title": "图的遍历与最短路径",
           "difficulty": 3,
           "mastery_goal": "master",
           "knowledge_type": "skill",
@@ -726,64 +3802,539 @@
             "dsa.linear.stack_queue"
           ],
           "track": "algorithms",
-          "guide_line": "DFS / BFS；最短边数用 BFS。",
+          "guide_line": "DFS / BFS 写对，再手算 MST、最短路、拓扑与关键路径。",
           "weight": "先拿下",
           "outline": {
-            "promise": "深度与广度遍历骨架与用途。",
-            "pain": "漏标 visited；混淆边数最短与权最短。",
-            "model": "栈 / 递归 vs 队列。",
-            "scope": "连通分量、层序距离。",
-            "judgment": "无权最短路径 → BFS；搜路径 / 拓扑直觉 → DFS。",
-            "landing": "能手写两种遍历并说明 visited 的位置。"
+            "promise": "遍历与 visited 写对；四种应用会对号入座并在小图上推一步。",
+            "pain": "漏标 visited；把 BFS 层数当带权最短；把关键路径当最短路径。",
+            "model": "DFS 用栈或递归，BFS 用队列。生成树 n 个顶点有 n-1 条边。关键路径是源到汇的最长路径。",
+            "scope": "西科大 / 师范图的应用全讲。并查集只作 Kruskal 帮手。负权最短只选型。",
+            "judgment": "边数最短 → BFS；非负权 → Dijkstra；要工期 → 关键路径；要施工顺序 → 拓扑。",
+            "landing": "能写出 BFS 顺序，能说明 MST / 拓扑 / 关键路径各自求什么。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "BFS 的「最短」是边数最短；一有边权，就要换算法族。"
-              }
-            ]
-          },
-          "lab": null
-        },
-        {
-          "id": "dsa.graph.shortest",
-          "title": "最短路径入门",
-          "difficulty": 4,
-          "mastery_goal": "familiar",
-          "knowledge_type": "strategy",
-          "requires": [
-            "dsa.graph.traversal",
-            "dsa.tree.heap"
-          ],
-          "track": "algorithms",
-          "guide_line": "非负权用 Dijkstra；先问有没有负权。",
-          "weight": "可以慢一点",
-          "outline": {
-            "promise": "知道 Dijkstra 的前提与「松弛」直觉。",
-            "pain": "负权仍套 Dijkstra。",
-            "model": "松弛更新距离。",
-            "scope": "非负权单源；Bellman-Ford 只点名。",
-            "judgment": "先问边权符号，再选算法。",
-            "landing": "能陈述选用前提，不要求默写全实现。"
-          },
-          "lesson": {
-            "blocks": [
+                "text": "遍历是图的基本运算；最小生成树、最短路径、拓扑排序、关键路径是教材同一章的应用，师范卷常出手算。"
+              },
               {
-                "type": "lead",
-                "text": "这一节目标是「选对工具」：实现可以后补，前提必须先对。"
+                "type": "compare",
+                "title": "两种遍历",
+                "left": {
+                  "title": "DFS",
+                  "body": "走深、回溯。非递归用栈。探连通、路径、拓扑的直觉。"
+                },
+                "right": {
+                  "title": "BFS",
+                  "body": "队列推进。无权图上层号就是边数最短。漏标 visited 会转圈。"
+                }
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「BFS 访问顺序」：0 连 1、2；1 连 3，从 0 应是 0,1,2,3。",
+                "hint": "入队前标记。",
+                "open_lab": "bfs"
+              },
+              {
+                "type": "steps",
+                "title": "应用对号（西科大 / 师范要会手算过程）",
+                "items": [
+                  "连通无向图的生成树有 n-1 条边。MST：Prim 长点、Kruskal 长边；并查集用来避免成环。",
+                  "单源最短：无权用 BFS；非负权用 Dijkstra；有负权不能直接 Dijkstra。任意两点可用 Floyd。",
+                  "拓扑排序：有向无环图，入度为 0 的点依次输出。",
+                  "关键路径：AOE 网里从源到汇的最长路径，决定工期——不是最短路。"
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考选择常问选型与关键路径定义。手算小表是师范 / 西科大加一档，完整板书不要求本节默写。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先把 DFS/BFS 和 visited 写对，再按「生成树 / 最短 / 顺序 / 工期」四问对号。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "无权图上求从起点出发的边数最短路径，应采用？",
+                    "choices": [
+                      {
+                        "label": "深度优先搜索",
+                        "ok": false,
+                        "why": "DFS 不保证边数最短。"
+                      },
+                      {
+                        "label": "广度优先搜索",
+                        "ok": true,
+                        "why": "层号就是边数。"
+                      },
+                      {
+                        "label": "拓扑排序",
+                        "ok": false,
+                        "why": "拓扑不是最短路。"
+                      },
+                      {
+                        "label": "任意遍历均可",
+                        "ok": false,
+                        "why": "只有 BFS 给出边数最短。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "Dijkstra 算法求单源最短路径的前提是？",
+                    "choices": [
+                      {
+                        "label": "图中不能有环",
+                        "ok": false,
+                        "why": "有环也可以，只要边权非负。"
+                      },
+                      {
+                        "label": "所有边权非负",
+                        "ok": true,
+                        "why": "负权不能直接用。"
+                      },
+                      {
+                        "label": "必须是无向图",
+                        "ok": false,
+                        "why": "有向图也能用。"
+                      },
+                      {
+                        "label": "必须用邻接矩阵",
+                        "ok": false,
+                        "why": "邻接表也可以。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "bfs",
+              "title": "BFS 访问顺序",
+              "case": "bfs_order",
+              "entrypoint": "main.cpp",
+              "prompt": "小图：0 连 1、2；1 连 3。从 0 广度优先，访问顺序应是 0,1,2,3。",
+              "goal": "补全 bfs，看到 bfs=0,1,2,3。",
+              "hint": "队列 + visited；入队前标记，避免重复。",
+              "pass": {
+                "includes": [
+                  "bfs=0,1,2,3"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "有 n 个顶点的图用邻接矩阵存储，空间复杂度是？",
+            "choices": [
+              {
+                "label": "Θ(n)",
+                "ok": false,
+                "why": "矩阵是二维。"
+              },
+              {
+                "label": "Θ(n + e)",
+                "ok": false,
+                "why": "那是邻接表。"
+              },
+              {
+                "label": "Θ(n²)",
+                "ok": true,
+                "why": "n×n 矩阵。"
+              },
+              {
+                "label": "Θ(e)",
+                "ok": false,
+                "why": "矩阵与边数无关。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          },
+          {
+            "stem": "边很少的稀疏图，更省空间的存储是？",
+            "choices": [
+              {
+                "label": "邻接矩阵",
+                "ok": false,
+                "why": "仍是 n²。"
+              },
+              {
+                "label": "邻接表",
+                "ok": true,
+                "why": "只存真实边。"
+              },
+              {
+                "label": "十字链表是唯一选择",
+                "ok": false,
+                "why": "了解即可，不是默认必用。"
+              },
+              {
+                "label": "只能用数组堆",
+                "ok": false,
+                "why": "堆不是图的存储。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          },
+          {
+            "stem": "深度优先搜索通常使用的辅助结构是？",
+            "choices": [
+              {
+                "label": "队列",
+                "ok": false,
+                "why": "队列是 BFS。"
+              },
+              {
+                "label": "栈（或系统调用栈）",
+                "ok": true,
+                "why": "后进先出，走深。"
+              },
+              {
+                "label": "散列表",
+                "ok": false,
+                "why": "可用 visited，但推进靠栈。"
+              },
+              {
+                "label": "优先队列",
+                "ok": false,
+                "why": "那是 Dijkstra 一类。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "广度优先搜索使用的辅助结构是？",
+            "choices": [
+              {
+                "label": "栈",
+                "ok": false,
+                "why": "那是 DFS。"
+              },
+              {
+                "label": "队列",
+                "ok": true,
+                "why": "FIFO。"
+              },
+              {
+                "label": "二叉搜索树",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "仅递归、无辅助",
+                "ok": false,
+                "why": "递归是 DFS。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "图的遍历中若不标记已访问顶点，可能出现？",
+            "choices": [
+              {
+                "label": "一定更快结束",
+                "ok": false,
+                "why": "可能陷入环。"
+              },
+              {
+                "label": "在有环图中重复访问甚至无法终止",
+                "ok": true,
+                "why": "必须 visited。"
+              },
+              {
+                "label": "只影响空间，不影响正确性",
+                "ok": false,
+                "why": "正确性先坏。"
+              },
+              {
+                "label": "自动变成最短路算法",
+                "ok": false,
+                "why": "不会。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "无权图（每边长度视为 1）的单源最短路径，选用？",
+            "choices": [
+              {
+                "label": "BFS",
+                "ok": true,
+                "why": "层序距离即边数。"
+              },
+              {
+                "label": "DFS",
+                "ok": false,
+                "why": "不保证最短。"
+              },
+              {
+                "label": "必须 Dijkstra",
+                "ok": false,
+                "why": "无权用 BFS 即可。"
+              },
+              {
+                "label": "必须 Floyd",
+                "ok": false,
+                "why": "大材小用。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "下列情况可以用 Dijkstra 算法的是？",
+            "choices": [
+              {
+                "label": "存在负权边",
+                "ok": false,
+                "why": "前提不满足。"
+              },
+              {
+                "label": "所有边权非负",
+                "ok": true,
+                "why": "单源最短。"
+              },
+              {
+                "label": "只求边数最短且边权任意",
+                "ok": false,
+                "why": "边权任意时 BFS 也不对。"
+              },
+              {
+                "label": "图中必须无环",
+                "ok": false,
+                "why": "有环也可以。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "拓扑排序适用的图是？",
+            "choices": [
+              {
+                "label": "任意无向图",
+                "ok": false,
+                "why": "无向图没有「先后」。"
+              },
+              {
+                "label": "有向无环图（DAG）",
+                "ok": true,
+                "why": "有环则不存在拓扑序。"
+              },
+              {
+                "label": "有向有环图",
+                "ok": false,
+                "why": "有环不能拓扑。"
+              },
+              {
+                "label": "带负权的完全图",
+                "ok": false,
+                "why": "与权无关，关键是有向无环。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "最小生成树问题求的是？",
+            "choices": [
+              {
+                "label": "任意一棵包含全部顶点、边权之和最小的树",
+                "ok": true,
+                "why": "Prim / Kruskal。"
+              },
+              {
+                "label": "两点之间边数最少的路径",
+                "ok": false,
+                "why": "那是最短路（无权）。"
+              },
+              {
+                "label": "有向无环图的一个线性序",
+                "ok": false,
+                "why": "那是拓扑排序。"
+              },
+              {
+                "label": "根到各点的最短路径树",
+                "ok": false,
+                "why": "那是最短路树，一般不是 MST。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "求带权图中任意两点之间的最短路径，常用？",
+            "choices": [
+              {
+                "label": "只做一次 BFS",
+                "ok": false,
+                "why": "BFS 不处理一般边权。"
+              },
+              {
+                "label": "Floyd 算法",
+                "ok": true,
+                "why": "三点循环松弛，基础考点。"
+              },
+              {
+                "label": "拓扑排序",
+                "ok": false,
+                "why": "不是最短路。"
+              },
+              {
+                "label": "先序遍历",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "有 n 个顶点的连通无向图，其生成树的边数是？",
+            "choices": [
+              {
+                "label": "n-1",
+                "ok": true,
+                "why": "树的基本性质。"
+              },
+              {
+                "label": "n",
+                "ok": false,
+                "why": "多一条就有环。"
+              },
+              {
+                "label": "n+1",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "n²",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          },
+          {
+            "stem": "关键路径是指 AOE 网中？",
+            "choices": [
+              {
+                "label": "从源点到汇点的一条最长路径",
+                "ok": true,
+                "why": "决定工期。"
+              },
+              {
+                "label": "从源点到汇点的一条最短路径",
+                "ok": false,
+                "why": "关键路径是最长。"
+              },
+              {
+                "label": "任意一条生成树",
+                "ok": false,
+                "why": "不是。"
+              },
+              {
+                "label": "入度最大的顶点序列",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.graph.traversal"
+          },
+          {
+            "stem": "无向图是连通图，指的是？",
+            "choices": [
+              {
+                "label": "任意两个顶点之间都存在路径",
+                "ok": true,
+                "why": "连通的定义。"
+              },
+              {
+                "label": "一定是完全图",
+                "ok": false,
+                "why": "连通不必每对都有边。"
+              },
+              {
+                "label": "一定是树",
+                "ok": false,
+                "why": "树是连通无环的特例。"
+              },
+              {
+                "label": "一定没有回路",
+                "ok": false,
+                "why": "连通图可以有回路。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          },
+          {
+            "stem": "十字链表这种存储结构，主要用于？",
+            "choices": [
+              {
+                "label": "有向图，便于同时找入边和出边",
+                "ok": true,
+                "why": "教材点名用途。"
+              },
+              {
+                "label": "无向图的唯一标准存法",
+                "ok": false,
+                "why": "无向图更常提邻接多重表。"
+              },
+              {
+                "label": "只能存树",
+                "ok": false,
+                "why": "树不必十字链表。"
+              },
+              {
+                "label": "代替邻接矩阵以省去全部指针",
+                "ok": false,
+                "why": "十字链表仍是链式。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          },
+          {
+            "stem": "有向图用邻接矩阵存储时，第 i 行中非零元（或边标记）的个数等于？",
+            "choices": [
+              {
+                "label": "顶点 i 的出度",
+                "ok": true,
+                "why": "一行对应从 i 出发的边。"
+              },
+              {
+                "label": "顶点 i 的入度",
+                "ok": false,
+                "why": "入度看第 i 列。"
+              },
+              {
+                "label": "图的边数",
+                "ok": false,
+                "why": "边数是全矩阵（或上三角）之和。"
+              },
+              {
+                "label": "连通分量个数",
+                "ok": false,
+                "why": "矩阵一行读不出分量个数。"
+              }
+            ],
+            "covers": "dsa.graph.basics"
+          }
+        ]
+      }
     },
     {
       "id": "paradigm",
       "title": "算法范式",
       "track": "paradigms",
-      "summary": "在结构之上选策略：分治、贪心、DP、回溯。",
+      "summary": "张小艳「经典算法」：分治、DP、贪心、回溯。师范大题常写成算法设计。",
       "topics": [
         {
           "id": "dsa.paradigm.divide",
@@ -792,89 +4343,253 @@
           "mastery_goal": "required",
           "knowledge_type": "strategy",
           "requires": [
-            "dsa.sort.advanced"
+            "dsa.sort.basic"
           ],
           "track": "paradigms",
-          "guide_line": "子问题独立：分解、递归、合并。",
+          "guide_line": "分—解—合；子问题互相独立。",
           "weight": "随后掌握",
           "outline": {
-            "promise": "分治三步与归并类问题。",
-            "pain": "合并代价被忽略。",
-            "model": "独立子问题 + 合并。",
-            "scope": "与 DP 的分界：有无重叠。",
-            "judgment": "子问题不重叠 → 分治；重叠 → 考虑 DP。",
-            "landing": "能套「分—解—合」写清步骤。"
+            "promise": "认出分治三步，并知道合并也有代价。",
+            "pain": "和 DP 分不清；只算分解不算合并。",
+            "model": "子问题独立，解完再合。归并、快排是落地。",
+            "scope": "张小艳经典算法；师范算法设计题常用分治叙述。主定理只对照常见形态。",
+            "judgment": "无重叠 → 分治；有重叠 → DP。",
+            "landing": "能合并两段有序，能说明归并的合是 Θ(n)。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "归并排序就是分治教科书：你已经会了一种，现在要会认出下一种。"
-              }
-            ]
-          },
-          "lab": null
-        },
-        {
-          "id": "dsa.paradigm.greedy",
-          "title": "贪心",
-          "difficulty": 3,
-          "mastery_goal": "required",
-          "knowledge_type": "strategy",
-          "requires": [
-            "dsa.complexity.big_o"
-          ],
-          "track": "paradigms",
-          "guide_line": "局部最优能否通向全局；先找反例。",
-          "weight": "随后掌握",
-          "outline": {
-            "promise": "贪心适用边界与证明直觉。",
-            "pain": "无反例检验就贪。",
-            "model": "选择性质 / 最优子结构（弱）。",
-            "scope": "活动选择类；与 DP 对照。",
-            "judgment": "能举反例就不要贪；证明前只当猜想。",
-            "landing": "能各举一个该用 / 不该用的例子。"
-          },
-          "lesson": {
-            "blocks": [
+                "text": "张小艳教材用「经典算法」收分治。不必先写完整 n log n，先认三步。"
+              },
               {
-                "type": "lead",
-                "text": "贪心不是「每步选看起来最好的」口头禅，而是「这种选择性质成立」的命题。"
+                "type": "steps",
+                "title": "三步",
+                "items": [
+                  "分：缩小规模。",
+                  "解：递归或直接解很小的实例。",
+                  "合：把子解拼成原问题的解——归并这里是线性扫一遍。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「分治的合」：两段有序合成一段。",
+                "hint": "双指针谁小写谁。",
+                "open_lab": "merge"
+              },
+              {
+                "type": "compare",
+                "title": "和 DP 的分界",
+                "left": {
+                  "title": "分治",
+                  "body": "子问题互相独立，不必填表。"
+                },
+                "right": {
+                  "title": "动态规划",
+                  "body": "子问题重叠，纯递归会重复算。"
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考几乎不单独考「范式」名词，但归并 / 快排选择即分治。师范大题会要求写出步骤或伪代码。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先判断独不独立，再写分—解—合。合并的代价不要漏。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "分治策略适用的关键特征是？",
+                    "choices": [
+                      {
+                        "label": "子问题互相独立，再合并结果",
+                        "ok": true,
+                        "why": "如归并排序。"
+                      },
+                      {
+                        "label": "子问题大量重叠",
+                        "ok": false,
+                        "why": "那是动态规划。"
+                      },
+                      {
+                        "label": "每一步局部最优必导致全局最优",
+                        "ok": false,
+                        "why": "那是贪心。"
+                      },
+                      {
+                        "label": "必须枚举全部排列",
+                        "ok": false,
+                        "why": "那是回溯。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "merge",
+              "title": "分治的「合」",
+              "case": "merge_runs",
+              "entrypoint": "main.cpp",
+              "prompt": "分治三步里，合并常常决定代价。把两段有序合成一段。",
+              "goal": "补全 merge_sorted，看到 m=1,2,3,4,7,8。",
+              "hint": "双指针谁小写谁。",
+              "pass": {
+                "includes": [
+                  "m=1,2,3,4,7,8"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.paradigm.dp",
-          "title": "动态规划",
+          "title": "动态规划与贪心",
           "difficulty": 4,
           "mastery_goal": "required",
           "knowledge_type": "strategy",
           "requires": [
-            "dsa.paradigm.divide",
-            "dsa.complexity.space"
+            "dsa.paradigm.divide"
           ],
           "track": "paradigms",
-          "guide_line": "重叠子问题 + 最优子结构 → 状态转移。",
+          "guide_line": "先定状态和转移；贪心要另证。",
           "weight": "先拿下",
           "outline": {
-            "promise": "会设状态、写转移、分清与分治。",
-            "pain": "状态维度设错；该记忆化却纯递归。",
-            "model": "状态 = 子问题编号；转移 = 决策。",
-            "scope": "一维 / 二维入门；空间压缩点到为止。",
-            "judgment": "有重叠用 DP；无重叠回到分治。",
-            "landing": "能写出一个经典问题的状态与转移骨架。"
+            "promise": "用爬楼梯建立重叠子问题；用活动选择对照贪心。",
+            "pain": "无反例就贪；状态漏约束；该填表却纯递归。",
+            "model": "DP：最优子结构 + 重叠子问题。贪心：选择性质必须能辩护。",
+            "scope": "西科大经典算法与师范算法设计。背包 / LCS 会设状态。408 少单独考。",
+            "judgment": "能填表消重复 → DP；每步局部最优有证明 → 贪心。",
+            "landing": "能递推 ways(n)，能说出贪心不是口头禅。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "DP 难在「状态是什么」，不在「会不会写 for 循环」。"
+                "text": "动态规划难在状态怎么编号；贪心难在凭什么这一步通向全局。对照着学。"
+              },
+              {
+                "type": "steps",
+                "title": "DP 先问两句",
+                "items": [
+                  "状态是什么（子问题如何编号）。",
+                  "转移怎么走（小的解如何合成大的）。",
+                  "爬楼梯：ways(n)=ways(n-1)+ways(n-2)，有重叠，从小到大填。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「爬楼梯」：n=1、3、4 应为 1、3、5。",
+                "hint": "先写边界再递推。",
+                "open_lab": "stairs"
+              },
+              {
+                "type": "compare",
+                "title": "贪心对照",
+                "left": {
+                  "title": "可以贪",
+                  "body": "活动选择按结束时间排序再取不相交——有证明路径。"
+                },
+                "right": {
+                  "title": "不能直接贪",
+                  "body": "任意币值找零要最少张数：先找反例，必要时 DP。看起来最好不等于全局最优。"
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "408 几乎不单独出「请用 DP」大题。师范与西科大更常出状态转移或伪代码。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "先定状态，再谈优化。贪心单独成条路，必须能说明选择性质。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "动态规划适用的两个基本性质是？",
+                    "choices": [
+                      {
+                        "label": "最优子结构与重叠子问题",
+                        "ok": true,
+                        "why": "填表消重复。"
+                      },
+                      {
+                        "label": "子问题必须互不重叠",
+                        "ok": false,
+                        "why": "那是分治。"
+                      },
+                      {
+                        "label": "只能用于图论",
+                        "ok": false,
+                        "why": "序列、背包都可以。"
+                      },
+                      {
+                        "label": "必须使用贪心选择",
+                        "ok": false,
+                        "why": "贪心是另一条路。"
+                      }
+                    ]
+                  },
+                  {
+                    "stem": "硬币面额任意、求凑成金额的最少硬币数，能否直接每次都选最大面额？",
+                    "choices": [
+                      {
+                        "label": "能，贪心对任意面额都成立",
+                        "ok": false,
+                        "why": "任意面额贪心可能错。"
+                      },
+                      {
+                        "label": "不能保证；可能需要动态规划",
+                        "ok": true,
+                        "why": "先想反例再决定。"
+                      },
+                      {
+                        "label": "不能用算法解决",
+                        "ok": false,
+                        "why": "可以 DP。"
+                      },
+                      {
+                        "label": "应改用二分查找",
+                        "ok": false,
+                        "why": "不是查找问题。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "stairs",
+              "title": "爬楼梯",
+              "case": "climb_stairs",
+              "entrypoint": "main.cpp",
+              "prompt": "n 阶，每次 1 或 2 阶。这是重叠子问题：ways(n)=ways(n-1)+ways(n-2)。先算 n=1、3、4。",
+              "goal": "补全 ways，看到 w1=1、w3=3、w4=5。",
+              "hint": "先写边界，再从小到大递推。",
+              "pass": {
+                "includes": [
+                  "w1=1",
+                  "w3=3",
+                  "w4=5"
+                ]
+              }
+            }
+          ]
         },
         {
           "id": "dsa.paradigm.backtrack",
@@ -886,27 +4601,313 @@
             "dsa.graph.traversal"
           ],
           "track": "paradigms",
-          "guide_line": "选择—约束—撤销；搜索树剪枝。",
+          "guide_line": "选择、约束、撤销。",
           "weight": "可以慢一点",
           "outline": {
-            "promise": "回溯模板与剪枝意识。",
-            "pain": "不撤销；解空间爆炸无剪。",
-            "model": "DFS 枚举决策。",
-            "scope": "排列 / 组合 / 子集。",
-            "judgment": "解空间可枚举且需构造解 → 回溯。",
-            "landing": "能写带撤销的搜索骨架。"
+            "promise": "回溯是带撤销的 DFS；剪枝决定能否结束。",
+            "pain": "只 push 不 pop；把回溯当多项式算法。",
+            "model": "做出选择 → 递归 → 返回前撤销。",
+            "scope": "子集 / 排列骨架。N 皇后只作剪枝例子。",
+            "judgment": "解空间要枚举且能回退 → 回溯；能 DP 或分治就不要爆搜。",
+            "landing": "能写出选 / 不选两支并 pop。"
           },
           "lesson": {
             "blocks": [
               {
                 "type": "lead",
-                "text": "回溯是带撤销的 DFS；剪枝决定它能不能在时限内结束。"
+                "text": "回溯是教材里「穷举 + 约束」的写法：相对普通 DFS，多了撤销。"
+              },
+              {
+                "type": "steps",
+                "title": "模板",
+                "items": [
+                  "做选择。",
+                  "不满足约束就回（剪枝）。",
+                  "返回前撤销，才能试下一条路。"
+                ]
+              },
+              {
+                "type": "practice",
+                "prompt": "实验「选或不选」：{1,2} 的子集应有 4 个。",
+                "hint": "先 push 再递归再 pop。",
+                "open_lab": "subsets"
+              },
+              {
+                "type": "callout",
+                "tone": "safe",
+                "title": "408 第三（对照）",
+                "text": "统考很少单独考回溯名词。师范算法设计有时要求写递归枚举。"
+              },
+              {
+                "type": "summary",
+                "title": "总结",
+                "text": "能撤销才叫回溯。搜不完时先剪枝，不要去掉撤销来「加速」。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂测验（四选一）",
+                "items": [
+                  {
+                    "stem": "回溯算法相对一般深度优先，关键多了哪一步？",
+                    "choices": [
+                      {
+                        "label": "选择之后要撤销，再试下一条分支",
+                        "ok": true,
+                        "why": "不撤销会污染状态。"
+                      },
+                      {
+                        "label": "不能使用递归",
+                        "ok": false,
+                        "why": "回溯常用递归。"
+                      },
+                      {
+                        "label": "时间一定是 O(1)",
+                        "ok": false,
+                        "why": "解空间可以很大。"
+                      },
+                      {
+                        "label": "必须使用队列",
+                        "ok": false,
+                        "why": "推进仍是 DFS。"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
-          "lab": null
+          "labs": [
+            {
+              "id": "subsets",
+              "title": "选或不选",
+              "case": "subsets_tiny",
+              "entrypoint": "main.cpp",
+              "prompt": "{1,2} 的子集有 4 个。骨架已写到叶子就收集；你补「选这个数」和「不选」两支，选完要 pop。",
+              "goal": "补全 dfs，看到 n=4。",
+              "hint": "先 push 再递归再 pop；另一支直接递归。",
+              "pass": {
+                "includes": [
+                  "n=4"
+                ]
+              }
+            }
+          ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "title": "随堂考核",
+        "intro": "四选一。讲解与范围：西科大 823（耿国华、张小艳）第一；仍自主命题且考数据结构的师范第二（东北师大 876、山东师大 832、河南师大 846、吉林师大 838、重庆师大 819、西北师大 821、四川师大 831、赣南师大、闽南师大 830 等；广西师大 / 曲阜师大等综合卷含数据结构的也按此档）。已改 408 的师范不按第二档。408 统考第三。不出偏难怪题。",
+        "items": [
+          {
+            "stem": "子问题相互独立、合并即可得解，应优先考虑？",
+            "choices": [
+              {
+                "label": "分治",
+                "ok": true,
+                "why": "分—解—合。"
+              },
+              {
+                "label": "动态规划",
+                "ok": false,
+                "why": "没有重叠不必填表。"
+              },
+              {
+                "label": "回溯枚举全部",
+                "ok": false,
+                "why": "能分治就不必爆搜。"
+              },
+              {
+                "label": "贪心每步取最大",
+                "ok": false,
+                "why": "与是否独立无关。"
+              }
+            ],
+            "covers": "dsa.paradigm.divide"
+          },
+          {
+            "stem": "分治算法分析中容易漏掉的是？",
+            "choices": [
+              {
+                "label": "分解次数",
+                "ok": false,
+                "why": "合并也有代价。"
+              },
+              {
+                "label": "合并子问题的代价",
+                "ok": true,
+                "why": "归并的合并是 Θ(n)。"
+              },
+              {
+                "label": "输入是否有序",
+                "ok": false,
+                "why": "不是分治本身。"
+              },
+              {
+                "label": "是否使用指针",
+                "ok": false,
+                "why": "与渐近无关。"
+              }
+            ],
+            "covers": "dsa.paradigm.divide"
+          },
+          {
+            "stem": "爬楼梯：每次 1 或 2 阶，ways(n)=ways(n-1)+ways(n-2)。这属于？",
+            "choices": [
+              {
+                "label": "无重叠的分治",
+                "ok": false,
+                "why": "子问题共享，朴素递归会重复算。"
+              },
+              {
+                "label": "重叠子问题，适合动态规划",
+                "ok": true,
+                "why": "经典入门 DP。"
+              },
+              {
+                "label": "必须贪心每次跨 2 阶",
+                "ok": false,
+                "why": "会漏方案。"
+              },
+              {
+                "label": "必须回溯枚举且不能填表",
+                "ok": false,
+                "why": "可以填表。"
+              }
+            ],
+            "covers": "dsa.paradigm.dp"
+          },
+          {
+            "stem": "设计动态规划时，首先应确定？",
+            "choices": [
+              {
+                "label": "状态（子问题如何编号）和转移",
+                "ok": true,
+                "why": "难在状态。"
+              },
+              {
+                "label": "先写一个哈希表优化常数",
+                "ok": false,
+                "why": "状态不对，优化无用。"
+              },
+              {
+                "label": "先假设贪心成立",
+                "ok": false,
+                "why": "那是另一条路。"
+              },
+              {
+                "label": "先把数据排序",
+                "ok": false,
+                "why": "不是所有 DP 都要排序。"
+              }
+            ],
+            "covers": "dsa.paradigm.dp"
+          },
+          {
+            "stem": "活动选择：按结束时间排序再选不相交活动。这是？",
+            "choices": [
+              {
+                "label": "需要证明的贪心典型例子",
+                "ok": true,
+                "why": "教科书正例。"
+              },
+              {
+                "label": "动态规划的唯一解法",
+                "ok": false,
+                "why": "此题贪心即可。"
+              },
+              {
+                "label": "回溯且无法剪枝",
+                "ok": false,
+                "why": "不必。"
+              },
+              {
+                "label": "分治归并",
+                "ok": false,
+                "why": "不是。"
+              }
+            ],
+            "covers": "dsa.paradigm.dp"
+          },
+          {
+            "stem": "贪心策略可以使用的前提是？",
+            "choices": [
+              {
+                "label": "每步看起来最好就一定全局最优",
+                "ok": false,
+                "why": "需要证明或确认选择性质。"
+              },
+              {
+                "label": "问题具有贪心选择性质（先找反例检验）",
+                "ok": true,
+                "why": "不是口头禅。"
+              },
+              {
+                "label": "只要能写出递归就能贪",
+                "ok": false,
+                "why": "递归更像分治/DP。"
+              },
+              {
+                "label": "数据规模很大就必须贪",
+                "ok": false,
+                "why": "规模大也可能 DP。"
+              }
+            ],
+            "covers": "dsa.paradigm.dp"
+          },
+          {
+            "stem": "用回溯求子集 / 排列时，必须做到？",
+            "choices": [
+              {
+                "label": "做出选择后，返回前撤销该选择",
+                "ok": true,
+                "why": "否则状态错误。"
+              },
+              {
+                "label": "只加入选择、永不撤销",
+                "ok": false,
+                "why": "会脏状态。"
+              },
+              {
+                "label": "改用 Dijkstra",
+                "ok": false,
+                "why": "不是最短路。"
+              },
+              {
+                "label": "禁止使用递归",
+                "ok": false,
+                "why": "常用递归。"
+              }
+            ],
+            "covers": "dsa.paradigm.backtrack"
+          },
+          {
+            "stem": "回溯搜索过大时，首先应考虑？",
+            "choices": [
+              {
+                "label": "去掉撤销以加快",
+                "ok": false,
+                "why": "会得到错误解。"
+              },
+              {
+                "label": "剪枝：不满足约束的分支尽早放弃",
+                "ok": true,
+                "why": "减少指数爆炸。"
+              },
+              {
+                "label": "改成 BFS 就一定是多项式时间",
+                "ok": false,
+                "why": "解空间仍可能很大。"
+              },
+              {
+                "label": "不再标记已选元素",
+                "ok": false,
+                "why": "排列题更会重复。"
+              }
+            ],
+            "covers": "dsa.paradigm.backtrack"
+          }
+        ]
+      }
     }
   ]
 }

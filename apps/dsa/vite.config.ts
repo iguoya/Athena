@@ -19,7 +19,8 @@ export default defineConfig(() => ({
         }
       : undefined,
     watch: {
-      ignored: ["**/src-tauri/**"],
+      // cases 若被「运行」或其它路径写回磁盘，不能触发 HMR/整页刷新
+      ignored: ["**/src-tauri/**", "**/content/cases/**"],
     },
   },
 }));
