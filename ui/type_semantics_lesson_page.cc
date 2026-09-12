@@ -110,9 +110,10 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
     m_page_title = builder->get_widget<Gtk::Label>("type_semantics_page_title");
-    m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
-    m_guide_roadmap =
-        builder->get_widget<Gtk::DrawingArea>("ts_guide_roadmap");
+    auto* outline_roadmap_host =
+        builder->get_widget<Gtk::Box>("ts_outline_roadmap_host");
+    auto* guide_roadmap_host =
+        builder->get_widget<Gtk::Box>("ts_guide_roadmap_host");
     m_value_matrix = builder->get_widget<Gtk::DrawingArea>("ts_vc_matrix");
     m_value_result_title =
         builder->get_widget<Gtk::Label>("ts_vc_result_title");
@@ -143,7 +144,8 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
     if (!init_unit_host || !run_button || !m_page_title
-        || !m_section_notebook || !m_roadmap || !m_guide_roadmap || !m_value_matrix
+        || !m_section_notebook || !outline_roadmap_host
+        || !guide_roadmap_host || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
         || !m_deduction_graph
@@ -377,25 +379,36 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         },
         "value_category");
 
-    m_roadmap->set_draw_func(
-        [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-            draw_roadmap(cr, width, height, false);
-        });
-    auto roadmap_click = Gtk::GestureClick::create();
-    roadmap_click->signal_pressed().connect(
-        [this](int, double x, double y) { on_roadmap_pressed(x, y); });
-    m_roadmap->add_controller(roadmap_click);
+    // 两张图共用 render/roadmap_view：同一批数据，各自编码不同维度。
+    const auto open_section = [this](const string& name) {
+        for (size_t index = 0; index < m_section_tabs.size(); ++index) {
+            const auto& names = m_section_tabs[index].subchapter_names;
+            if (find(names.begin(), names.end(), name) != names.end()) {
+                // 跳到讲这个知识点的标签，而不是直接开实验——图的作用是指路。
+                m_section_notebook->set_current_page(static_cast<int>(index));
+                return;
+            }
+        }
+    };
+    m_outline_roadmap = make_unique<RoadmapView>(
+        m_chapter,
+        RoadmapView::Options{
+            .color_by = RoadmapView::ColorBy::MasteryGoal,
+            .show_goal_text = false,
+            .show_progress = true},
+        open_section);
+    outline_roadmap_host->append(m_outline_roadmap->widget());
 
-    // 导览页画同一批数据的另一组维度：多标难度，供"哪个重哪个难"一眼可读。
-    m_guide_roadmap->set_draw_func(
-        [this](const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
-            draw_roadmap(cr, width, height, true);
-        });
-    auto guide_click = Gtk::GestureClick::create();
-    guide_click->signal_pressed().connect(
-        [this](int, double x, double y) { on_roadmap_pressed(x, y); });
-    m_guide_roadmap->add_controller(guide_click);
-    rebuild_roadmap(mastery_by_id);
+    m_guide_roadmap = make_unique<RoadmapView>(
+        m_chapter,
+        RoadmapView::Options{
+            .color_by = RoadmapView::ColorBy::Difficulty,
+            .show_goal_text = true,
+            .show_progress = true},
+        open_section);
+    guide_roadmap_host->append(m_guide_roadmap->widget());
+    m_outline_roadmap->set_mastery(mastery_by_id);
+    m_guide_roadmap->set_mastery(mastery_by_id);
 
     m_section_notebook->signal_switch_page().connect(
         [this](Gtk::Widget*, guint index) {
@@ -1103,207 +1116,6 @@ bool TypeSemanticsLessonPage::on_anim_tick() {
     return true;
 }
 
-void TypeSemanticsLessonPage::rebuild_roadmap(
-    const map<string, int>& mastery_by_id) {
-    m_roadmap_nodes.clear();
-    m_roadmap_edges.clear();
-
-    // 节点顺序就是配置里的顺序，而配置顺序已经是 requires 的拓扑序
-    // （大纲的推荐学习顺序），所以从左上到右下读就是推荐路径。
-    map<string, size_t> index_by_name;
-    for (const auto& subchapter : m_chapter.subchapters) {
-        const auto found = mastery_by_id.find(subchapter.function_id);
-        index_by_name[subchapter.name] = m_roadmap_nodes.size();
-        m_roadmap_nodes.push_back(RoadmapNode{
-            .name = subchapter.name,
-            .title = subchapter.title,
-            .goal = subchapter.mastery_goal,
-            .difficulty = subchapter.difficulty,
-            .mastery = found == mastery_by_id.end() ? 0 : found->second,
-        });
-    }
-
-    for (size_t i = 0; i < m_chapter.subchapters.size(); ++i) {
-        for (const auto& requirement : m_chapter.subchapters[i].requires_points) {
-            // 跨章先修不画：这张图只讲本章内部的顺序。
-            if (!requirement.same_chapter) {
-                continue;
-            }
-            for (const auto& [name, index] : index_by_name) {
-                if (m_chapter.subchapters[index].function_id
-                    == requirement.function_id) {
-                    m_roadmap_edges.emplace_back(index, i);
-                    break;
-                }
-            }
-        }
-    }
-
-    if (m_roadmap != nullptr) {
-        m_roadmap->queue_draw();
-    }
-}
-
-void TypeSemanticsLessonPage::draw_roadmap(
-    const Cairo::RefPtr<Cairo::Context>& cr,
-    int width,
-    int height,
-    bool show_grade) {
-    if (m_roadmap_nodes.empty()) {
-        return;
-    }
-
-    // 三列纵向排布：读起来是一条从上到下的推荐路径，同时留出足够横向空间
-    // 让先修连线不互相压住。
-    constexpr double kNodeWidth = 190.0;
-    const double kNodeHeight = show_grade ? 78.0 : 62.0;
-    constexpr double kRowGap = 34.0;
-    const double columns = 3.0;
-    const double usable = static_cast<double>(width) - 24.0;
-    const double column_step = max(kNodeWidth + 20.0, usable / columns);
-    const double left = 12.0 + (usable - column_step * columns) / 2.0;
-
-    for (size_t i = 0; i < m_roadmap_nodes.size(); ++i) {
-        const double column = static_cast<double>(i % 3);
-        const double row = static_cast<double>(i / 3);
-        auto& node = m_roadmap_nodes[i];
-        node.width = kNodeWidth;
-        node.height = kNodeHeight;
-        node.x = left + column * column_step + (column_step - kNodeWidth) / 2.0;
-        node.y = 16.0 + row * (kNodeHeight + kRowGap);
-    }
-
-    // 先画连线，节点压在上面。
-    for (const auto& [from, to] : m_roadmap_edges) {
-        const auto& a = m_roadmap_nodes[from];
-        const auto& b = m_roadmap_nodes[to];
-        const double x1 = a.x + a.width / 2.0;
-        const double y1 = a.y + a.height;
-        const double x2 = b.x + b.width / 2.0;
-        const double y2 = b.y;
-
-        cr->set_source_rgb(kMuted.r, kMuted.g, kMuted.b);
-        cr->set_line_width(1.4);
-        cr->move_to(x1, y1);
-        // 同一行内的依赖走直线，跨行的走一段折线，避免斜穿其它节点。
-        if (abs(y2 - y1) < 4.0) {
-            cr->line_to(x2, y2);
-        } else {
-            const double middle = (y1 + y2) / 2.0;
-            cr->curve_to(x1, middle, x2, middle, x2, y2);
-        }
-        cr->stroke();
-
-        const double angle = atan2(y2 - (y1 + y2) / 2.0, x2 - x1);
-        cr->move_to(x2, y2);
-        cr->line_to(x2 - 6.0 * cos(angle - 0.5), y2 - 6.0 * sin(angle - 0.5));
-        cr->line_to(x2 - 6.0 * cos(angle + 0.5), y2 - 6.0 * sin(angle + 0.5));
-        cr->close_path();
-        cr->fill();
-    }
-
-    for (const auto& node : m_roadmap_nodes) {
-        // 一个通道只承载一个维度（AGENTS.md），但哪个维度上色由这张图要回答
-        // 什么问题决定：导览那张问"哪个重哪个难"，难度有天然的冷暖色阶，就让
-        // 配色表达难度、文字表达掌握目标；大纲这张服务于掌握目标分档，配色
-        // 留给掌握目标。两张图各自成立，不必统一。
-        ChartColor border = kMuted;
-        ChartColor fill{0.97, 0.98, 0.99};
-        if (show_grade) {
-            // 与 .badge-difficulty.difficulty-level-N 同一套色阶，徽章和图上
-            // 对同一个难度用同一个颜色。
-            switch (node.difficulty) {
-            case 1:
-                border = {0.098, 0.529, 0.329};  // success
-                fill = {0.847, 0.937, 0.890};
-                break;
-            case 2:
-                border = {0.125, 0.788, 0.592};  // teal
-                fill = {0.878, 0.973, 0.949};
-                break;
-            case 3:
-                border = {0.808, 0.612, 0.024};  // warning
-                fill = {1.0, 0.953, 0.808};
-                break;
-            case 4:
-                border = {0.992, 0.494, 0.078};  // orange
-                fill = {0.996, 0.914, 0.843};
-                break;
-            case 5:
-                border = {0.863, 0.208, 0.271};  // danger
-                fill = {0.973, 0.843, 0.855};
-                break;
-            default:
-                break;
-            }
-        } else {
-            switch (node.goal) {
-            case MasteryGoal::Master:
-                border = {0.039, 0.345, 0.792};
-                fill = {0.878, 0.925, 1.0};
-                break;
-            case MasteryGoal::Required:
-                border = {0.125, 0.788, 0.592};
-                fill = {0.878, 0.973, 0.949};
-                break;
-            case MasteryGoal::Familiar:
-            case MasteryGoal::Unrated:
-                break;
-            }
-        }
-        rounded_box(cr, node.x, node.y, node.width, node.height, border, fill);
-        draw_cairo_text(
-            cr, node.title, node.x + node.width / 2.0, node.y + 24.0, 14.0, kInk,
-            true, 0.5);
-
-        if (show_grade) {
-            // 难度走文字、掌握目标走配色：两个维度各占一个通道，不共用
-            // 一套视觉编码（ADR 0029、AGENTS.md）。
-            const char* goal_text = node.goal == MasteryGoal::Master ? "需要精通"
-                                  : node.goal == MasteryGoal::Required ? "必须掌握"
-                                  : node.goal == MasteryGoal::Familiar ? "一般了解"
-                                                                       : "未评定";
-            // 难度已经由配色表达，这里只写掌握目标，同一维度不重复两遍。
-            const string grade = goal_text;
-            draw_cairo_text(
-                cr, grade, node.x + node.width / 2.0, node.y + 46.0, 11.0, kMuted,
-                false, 0.5);
-        }
-
-        // 底部细条：当前熟练度。没有记录时留空槽，一眼看出哪几节还没开始。
-        const double track_x = node.x + 14.0;
-        const double track_w = node.width - 28.0;
-        const double track_y = node.y + node.height - 16.0;
-        cr->set_source_rgb(0.87, 0.89, 0.91);
-        cr->rectangle(track_x, track_y, track_w, 5.0);
-        cr->fill();
-        if (node.mastery > 0) {
-            cr->set_source_rgb(border.r, border.g, border.b);
-            cr->rectangle(
-                track_x, track_y, track_w * clamp(node.mastery, 0, 5) / 5.0, 5.0);
-            cr->fill();
-        }
-    }
-}
-
-void TypeSemanticsLessonPage::on_roadmap_pressed(double x, double y) {
-    for (const auto& node : m_roadmap_nodes) {
-        if (x < node.x || x > node.x + node.width || y < node.y
-            || y > node.y + node.height) {
-            continue;
-        }
-        // 跳到讲这个知识点的那个标签，而不是直接开实验——大纲的作用是指路。
-        for (size_t index = 0; index < m_section_tabs.size(); ++index) {
-            const auto& names = m_section_tabs[index].subchapter_names;
-            if (find(names.begin(), names.end(), node.name) != names.end()) {
-                m_section_notebook->set_current_page(static_cast<int>(index));
-                return;
-            }
-        }
-        return;
-    }
-}
-
 void TypeSemanticsLessonPage::select_value_expression(
     ValueCategory category, const string& expression) {
     m_value_selection = category;
@@ -1404,10 +1216,8 @@ void TypeSemanticsLessonPage::draw_value_matrix(
 
 void TypeSemanticsLessonPage::refresh_progress(
     const map<string, int>& mastery_by_id) {
-    rebuild_roadmap(mastery_by_id);
-    if (m_guide_roadmap) {
-        m_guide_roadmap->queue_draw();
-    }
+    m_outline_roadmap->set_mastery(mastery_by_id);
+    m_guide_roadmap->set_mastery(mastery_by_id);
     apply_tab_labels(mastery_by_id);
 }
 

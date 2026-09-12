@@ -19,7 +19,7 @@
 | | 管什么 | 在哪 |
 |---|---|---|
 | **内容模板** | 大纲的五节各回答什么问题 | `CHAPTER_CONFIG.md` 6.2、[ADR 0028](decisions/0028-outline-process-experiment-layering.md) 第 6 节 |
-| **结构模板** | 这些内容在页面上怎么摆、哪些由数据生成 | `resources/ui/outline.blp` + `ui/outline_blocks.h`（大纲）<br>`resources/ui/lesson_blocks.blp` + `ui/lesson_blocks.h`（教学过程） |
+| **结构模板** | 这些内容在页面上怎么摆、哪些由数据生成 | `resources/ui/outline.blp` + `ui/outline_blocks.h`（大纲）<br>`resources/ui/lesson_blocks.blp` + `ui/lesson_blocks.h`（教学过程）<br>`render/roadmap_view.h`（数据驱动的知识点路线图） |
 
 只有内容模板，每章都要从零搭一遍控件树，两千行里一半是样板；只有结构模板，
 搭得很快但不知道每节该写什么。两套配合才既不重复劳动，又不写跑偏。
@@ -51,9 +51,23 @@ outline::grade_groups(*sections.scope, chapter, {
 ```
 
 **哪些必须由数据生成**（手抄就等着和 `athena.json` 漂移）：知识点的难度、
-掌握目标、先修关系、实时熟练度。知识点路线图的画法见
-`TypeSemanticsLessonPage::draw_roadmap`，新章可以照搬那段绘制——它读的是
-`ChapterCatalog`，换章不用改。
+掌握目标、先修关系、实时熟练度。知识点路线图用 `render/roadmap_view.h`，
+它读 `ChapterCatalog`，换章不用改一行：
+
+```cpp
+auto roadmap = make_unique<RoadmapView>(
+    chapter,
+    RoadmapView::Options{
+        .color_by = RoadmapView::ColorBy::Difficulty,  // 或 MasteryGoal
+        .show_goal_text = true,
+        .show_progress = true},
+    [this](const string& name) { /* 跳到讲这个知识点的标签 */ });
+host->append(roadmap->widget());
+// 熟练度变化后：roadmap->set_mastery(mastery_by_id);
+```
+
+`color_by` 决定配色表达哪个维度——按这张图要回答什么问题选，同一章的两张图
+可以不同。
 
 **哪些必须自己写**：每一档为什么这样定、心智模型是什么、有哪些误区。
 这些是判断，数据里没有。

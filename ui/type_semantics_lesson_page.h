@@ -2,6 +2,7 @@
 
 #include "registry/chapter_catalog.h"
 #include "ui/experiment_dock.h"
+#include "render/roadmap_view.h"
 #include "ui/checkpoint_view.h"
 #include "ui/learning_unit_view.h"
 
@@ -74,19 +75,6 @@ private:
     // 大纲页的知识点路线图：节点按 requires 的拓扑层排布，连线是先修关系，
     // 配色是掌握目标，底部细条是当前熟练度。全部来自运行时数据，所以只能
     // Cairo 自绘——.blp 表达不了「层数与连线由数据决定」的结构。
-    struct RoadmapNode {
-        string name;      // subchapter name
-        string title;
-        MasteryGoal goal = MasteryGoal::Unrated;
-        int difficulty = 0;  // 1-5，0 表示尚未评定
-        int mastery = 0;  // 0-5
-        double x = 0.0;
-        double y = 0.0;
-        double width = 0.0;
-        double height = 0.0;
-    };
-
-    void rebuild_roadmap(const map<string, int>& mastery_by_id);
 
     // 值类别分类器：三类由「有身份 × 可移动」两问决定，点表达式看它落在哪一格。
     // 概念节需要的是辨析，所以做成可切换的对照，而不是一张静态表格（ADR 0033）。
@@ -94,14 +82,6 @@ private:
     void select_value_expression(ValueCategory category, const string& expression);
     void draw_value_matrix(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
-    // show_grade 为真时在节点上标出难度与掌握目标：导览那张图要回答"哪个重
-    // 哪个难"，大纲那张专注掌握目标与实时熟练度，两者维度互补不重复。
-    void draw_roadmap(
-        const Cairo::RefPtr<Cairo::Context>& cr,
-        int width,
-        int height,
-        bool show_grade);
-    void on_roadmap_pressed(double x, double y);
 
     void draw_deduction_graph(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
@@ -115,22 +95,19 @@ private:
     // 每个学习单元的数据必须比它的 View 活得久（View 持有 const 引用）。
     vector<unique_ptr<LearningUnit>> m_unit_data;
     vector<unique_ptr<LearningUnitView>> m_unit_views;
+    // 两张路线图：大纲那张配色表达掌握目标，导览那张表达难度。
+    unique_ptr<RoadmapView> m_outline_roadmap;
+    unique_ptr<RoadmapView> m_guide_roadmap;
     vector<unique_ptr<Checkpoint>> m_checkpoint_data;
     vector<unique_ptr<CheckpointView>> m_checkpoint_views;
     function<bool(const string&, int)> m_on_mastery_recorded;
 
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::Label* m_page_title = nullptr;
-    Gtk::DrawingArea* m_roadmap = nullptr;
-    // 导览页那张同源的图：同一批数据，另一组维度。
-    Gtk::DrawingArea* m_guide_roadmap = nullptr;
     Gtk::DrawingArea* m_value_matrix = nullptr;
     Gtk::Label* m_value_result_title = nullptr;
     Gtk::Label* m_value_result_detail = nullptr;
     ValueCategory m_value_selection = ValueCategory::None;
-    vector<RoadmapNode> m_roadmap_nodes;
-    // 先修边，存的是 m_roadmap_nodes 的下标：from 是先修，to 依赖它。
-    vector<pair<size_t, size_t>> m_roadmap_edges;
     vector<SectionTab> m_section_tabs;
 
     static constexpr int kDeductionAnimSteps = 6;

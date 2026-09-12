@@ -115,10 +115,11 @@ Box type_semantics_lesson_page {
 
                 // 这张图由 requires 与评级数据实时绘制（ADR 0033），不是静态
                 // 图片：改了 athena.json 的依赖或评级，它立刻跟着变，不会漂移。
-                DrawingArea ts_guide_roadmap {
-                  name: "ts_guide_roadmap";
-                  halign: fill;
-                  hexpand: true;
+                // 路线图由 render/roadmap_view 按 ChapterCatalog 数据绘制，
+                // 这里只留容器（结构由运行时数据决定，AGENTS.md 例外第 2 条）。
+                Box ts_guide_roadmap_host {
+                  name: "ts_guide_roadmap_host";
+                  orientation: vertical;
                   height-request: 330;
                 }
                 Label {
@@ -523,10 +524,11 @@ Box type_semantics_lesson_page {
               // Cairo 自绘：节点位置、依赖连线和熟练度都来自运行时数据
               // （requires 拓扑序 + 掌握目标评级 + 学习库里的熟练度），
               // 不是画好的图片，也不是 .blp 能表达的结构（AGENTS.md GTK 规则第 3 条）。
-              DrawingArea ts_outline_roadmap {
-                name: "ts_outline_roadmap";
-                height-request: 470;
-                hexpand: true;
+              // 同上：由 render/roadmap_view 绘制，这里只留容器。
+              Box ts_outline_roadmap_host {
+                name: "ts_outline_roadmap_host";
+                orientation: vertical;
+                height-request: 300;
               }
 
               Box {

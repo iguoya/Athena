@@ -125,10 +125,13 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     // 「本章导览」与教学大纲都用 GTK 控件手写，不渲染 Markdown。
     EXPECT_NE(
         builder->get_widget<Gtk::Picture>("ts_outline_model_figure"), nullptr);
-    // 导览页那张图由 requires 与评级数据实时绘制，不是静态图片——换回
-    // Gtk::Picture 就意味着又引入了一份会和 athena.json 漂移的副本。
+    // 两张路线图由 render/roadmap_view 按 requires 与评级数据实时绘制，
+    // .blp 里只留容器；换回 Gtk::Picture 就意味着又引入一份会和
+    // athena.json 漂移的副本。
     EXPECT_NE(
-        builder->get_widget<Gtk::DrawingArea>("ts_guide_roadmap"), nullptr);
+        builder->get_widget<Gtk::Box>("ts_guide_roadmap_host"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("ts_outline_roadmap_host"), nullptr);
     EXPECT_EQ(builder->get_widget<Gtk::Picture>("ts_map_figure"), nullptr);
     EXPECT_NE(
         builder->get_widget<Gtk::DrawingArea>("type_semantics_deduction_graph"),

@@ -201,6 +201,7 @@ app_sources = files(
   'render/document_view.cc',
   'render/domain_graph_view.cc',
   'render/knowledge_graph_view.cc',
+  'render/roadmap_view.cc',
   'ui/about_dialog.cc',
   'ui/ai_insight_dialog.cc',
   'ui/ai_markdown_dialog.cc',
