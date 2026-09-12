@@ -25,17 +25,19 @@ private:
 class LifetimeProbe {
 public:
     LifetimeProbe(string label, ostream& output)
-        : m_label(std::move(label)), m_output(output) {
-        m_output << "构造 " << m_label << '\n';
+        : text(std::move(label)), m_output(output) {
+        m_output << "构造 " << text << '\n';
     }
     LifetimeProbe(const LifetimeProbe&) = delete;
     LifetimeProbe& operator=(const LifetimeProbe&) = delete;
-    ~LifetimeProbe() { m_output << "析构 " << m_label << '\n'; }
+    ~LifetimeProbe() { m_output << "析构 " << text << '\n'; }
 
-    const string& label() const { return m_label; }
+    const string& label() const { return text; }
+
+    // 故意公开，供实验直接绑定子对象；label() 则制造经函数返回引用的对照。
+    string text;
 
 private:
-    string m_label;
     ostream& m_output;
 };
 
@@ -108,9 +110,17 @@ public:
         const LifetimeProbe& kept = LifetimeProbe{"被 const 引用延长的临时对象", output};
         output << "延长之后仍然读得到: " << kept.label() << '\n';
 
-        // const string& dangling = LifetimeProbe{"x", output}.label();
-        // 上面这行只延长临时对象本身，不延长从它取出的成员引用：语句结束后
-        // dangling 就悬垂了。悬垂是未定义行为，因此只写在注释里，不放进运行路径。
+        {
+            const string& kept_subobject =
+                LifetimeProbe{"直接绑定子对象的临时对象", output}.text;
+            output << "直接绑定子对象后仍然读得到: " << kept_subobject << '\n';
+        }
+
+        // label() 返回成员的引用，但这条引用绑定到的是函数返回值；外层临时
+        // 对象仍在分号处析构。形成悬垂引用本身不是未定义行为，访问它才是。
+        [[maybe_unused]] const string& dangling =
+            LifetimeProbe{"经成员函数返回引用的临时对象", output}.label();
+        output << "临时对象已经析构；不读取已经悬垂的引用 dangling\n";
 
         output << "函数返回前，kept 绑定的那个临时对象才析构\n";
     }

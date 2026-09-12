@@ -1039,7 +1039,7 @@ Box type_semantics_lesson_page {
               margin-end: 18;
 
               Label {
-                label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测两件事：块里依次构造的 a、b、c 三个对象，离开块时按什么顺序析构？以及最后一行是什么——被 const 引用延长的那个临时对象，会在函数返回前还是返回后析构？";
+                label: "实验里的探针对象在构造和析构时各打印一行。进入前先预测三件事：块里依次构造的 a、b、c，离开块时按什么顺序析构？被 const 引用延长的整个临时对象，会在函数返回前还是返回后析构？直接绑子对象与经 label() 取得成员引用时，外层临时对象又分别何时析构？";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "lesson-prose" ]
               }
@@ -1077,7 +1077,7 @@ Box type_semantics_lesson_page {
 
                 Label { label: "经成员函数返回的引用，不会延长临时对象"; halign: start; styles [ "lesson-callout-title" ] }
                 Label {
-                  label: "直接绑整个临时对象会延长；绑到它的子对象（例如某个成员）也会延长整个临时对象。但经成员函数返回的引用不行：const string&amp; dangling = LifetimeProbe{...}.label(); 绑到的是函数返回值，临时对象仍在分号处结束，dangling 当场悬垂。实验源码里保留了这样一行注释，没有放进运行路径——悬垂访问是未定义行为，不能用一次“看起来正常”的运行来演示。";
+                  label: "直接绑整个临时对象会延长；绑到它的子对象（例如某个成员）也会延长整个临时对象。但经成员函数返回的引用不行：const string&amp; dangling = LifetimeProbe{...}.label(); 绑到的是函数返回值，临时对象仍在分号处结束，dangling 当场悬垂。实验会运行这条声明，并用析构输出证明对象已经结束；但不会读取 dangling，因为访问它才是未定义行为。";
                   halign: start; wrap: true; xalign: 0;
                 }
               }
