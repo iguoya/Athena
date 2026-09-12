@@ -7,84 +7,93 @@
     <script type="module" src="/src/main.ts" defer></script>
   </head>
   <body>
-    <div id="app" class="shell">
-      <header class="masthead">
-        <div class="brand">
-          <span class="sigil">E2</span>
-          <div>
-            <h1 id="app-title">英语自学</h1>
-            <p id="app-trail" class="trail"></p>
-          </div>
-        </div>
-        <nav class="quick">
-          <button type="button" id="btn-due" class="chip">今日复习 <b>0</b></button>
-          <button type="button" id="btn-mistakes" class="chip">错题本 <b>0</b></button>
-          <button type="button" id="btn-continue" class="chip is-primary">继续当前任务</button>
-        </nav>
-      </header>
-
-      <main id="view-route" class="view-route">
-        <aside class="route">
-          <p class="pane-title">能力路线</p>
-          <ol id="stage-list" class="stage-list"></ol>
-          <div class="endpoint">
-            <p class="endpoint-title">终点</p>
-            <p id="endpoint-text" class="endpoint-text"></p>
-          </div>
-        </aside>
-
-        <section class="stage-detail">
-          <div class="stage-head">
+    <!-- 结构照搬 docs/ui-sketch/english-learning-roadmap.html：class 名与层级保持一致，
+         样式表才能原样套用。静态文案留在这里，按数据变化的部分留空容器给 main.ts。 -->
+    <div id="english-stage-map" data-view="overview">
+      <section class="english-window">
+        <header class="english-topbar">
+          <div class="english-brand">
+            <div class="english-mark">E2</div>
             <div>
-              <h2 id="stage-title"></h2>
-              <p id="stage-goal" class="muted"></p>
-            </div>
-            <span id="stage-badge" class="badge"></span>
-          </div>
-          <div id="exam-strip" class="exam-strip"></div>
-          <div id="track-cards" class="track-cards"></div>
-          <div class="principles">
-            <div class="principle">
-              <p class="principle-title">练习与考核分开</p>
-              <p>练习即时给解析；考核成套作答，交卷后统一反馈。</p>
-            </div>
-            <div class="principle">
-              <p class="principle-title">三项分别过关</p>
-              <p>单词、例句、作文分别判定，不用平均分掩盖短板。</p>
-            </div>
-            <div class="principle">
-              <p class="principle-title">同一素材逐级输出</p>
-              <p>单词进入例句，例句再进入仿写与改写，不另起三套题库。</p>
+              <h1 id="app-title">英语自学</h1>
+              <p class="english-subtitle" id="app-subtitle"></p>
             </div>
           </div>
-          <p id="unlock-note" class="unlock-note"></p>
-        </section>
-      </main>
+          <div class="english-actions">
+            <button type="button" class="english-back-stage" id="back-stage">← 返回路线</button>
+            <button type="button" class="english-review-button english-overview-action" id="btn-due">今日复习 0</button>
+            <button type="button" class="english-overview-action" id="btn-mistakes">错题本 0</button>
+            <button type="button" class="english-overview-action" id="btn-continue" data-primary>继续当前任务</button>
+          </div>
+        </header>
 
-      <main id="view-drill" class="view-drill is-hidden">
-        <div class="drill-bar">
-          <button type="button" class="back" data-back>← 返回路线</button>
-          <span id="drill-title" class="drill-title"></span>
-          <span id="drill-progress" class="drill-progress"></span>
-        </div>
-        <div class="drill-body">
-          <aside id="drill-rail" class="drill-rail"></aside>
-          <div class="desk">
-            <article id="passage-box" class="folio is-hidden"></article>
-            <div id="card-box" class="drill"></div>
-            <div id="exam-report" class="report is-hidden"></div>
-          </div>
-        </div>
-      </main>
+        <div class="english-body">
+          <aside class="english-roadmap" aria-label="能力路线">
+            <div class="english-roadmap-title">能力路线</div>
+            <div class="english-stage-list" id="stage-list"></div>
+            <div class="english-target" id="endpoint"></div>
+          </aside>
 
-      <main id="view-mistakes" class="view-mistakes is-hidden">
-        <div class="drill-bar">
-          <button type="button" class="back" data-back>← 返回路线</button>
-          <span class="drill-title">错题本</span>
-          <span id="mistake-rule" class="drill-progress">连对两天并做对变式才出库</span>
+          <main class="english-main">
+            <div class="english-current-head">
+              <div>
+                <h2 id="stage-title"></h2>
+                <p class="english-goal" id="stage-goal"></p>
+              </div>
+              <div class="english-stage-badge" id="stage-badge"></div>
+            </div>
+
+            <section class="english-gate" id="gate" aria-label="阶段通过条件"></section>
+
+            <div class="english-tracks" id="tracks"></div>
+
+            <div class="english-criteria" aria-label="考核规则">
+              <div class="english-criterion">
+                <strong>练习与考核分开</strong>
+                <span>练习即时解析；考核成套作答，交卷后统一反馈。</span>
+              </div>
+              <div class="english-criterion">
+                <strong>三项分别过关</strong>
+                <span>单词、例句、作文分别判定，不用平均分掩盖短板。</span>
+              </div>
+              <div class="english-criterion">
+                <strong>同一素材逐级输出</strong>
+                <span>单词进入例句，例句再进入仿写与作文，不建三套孤立题库。</span>
+              </div>
+            </div>
+
+            <div class="english-lock-note" id="lock-note" role="status"></div>
+          </main>
         </div>
-        <div id="mistake-list" class="mistake-list"></div>
-      </main>
+
+        <div class="english-practice" id="practice">
+          <aside class="english-practice-side" aria-label="本课条目">
+            <div class="english-practice-summary">
+              <strong id="practice-list-title"></strong>
+              <span id="practice-count"></span>
+            </div>
+            <div class="english-item-list" id="item-list"></div>
+          </aside>
+          <main class="english-practice-main">
+            <p class="english-crumb" id="practice-crumb"></p>
+            <h2 id="practice-title"></h2>
+            <p class="english-practice-goal" id="practice-goal"></p>
+            <blockquote class="english-context" id="practice-context"></blockquote>
+            <section class="english-question" id="question" aria-live="polite"></section>
+          </main>
+        </div>
+
+        <div class="english-mistakes" id="mistakes">
+          <aside class="english-mistake-side" aria-label="错题列表">
+            <div class="english-practice-summary">
+              <strong>错题本</strong>
+              <span id="mistake-count"></span>
+            </div>
+            <div class="english-item-list" id="mistake-list"></div>
+          </aside>
+          <main class="english-mistake-main" id="mistake-detail"></main>
+        </div>
+      </section>
     </div>
   </body>
 </html>
