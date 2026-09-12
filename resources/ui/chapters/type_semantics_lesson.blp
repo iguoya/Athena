@@ -3,8 +3,8 @@ using Gtk 4.0;
 // ADR 0026：类型与表达式的第一条原生学习场景。学习顺序和双路径对比完全由
 // GUI 控件表达。
 //
-// Notebook 第一个标签是章节教学大纲（第一层），第二个是「本章导览」
-// （第二层的开局讲解）。大纲只在原生页面维护，两层不能互相替换。
+// Notebook 第一个标签是「本章导览」（极简概要，ADR 0036），第二个是章节
+// 教学大纲（ADR 0028 第一层）。两者只在原生页面维护，不能互相替换。
 Box type_semantics_lesson_page {
   name: "type_semantics_lesson_page";
   orientation: vertical;
@@ -43,8 +43,10 @@ Box type_semantics_lesson_page {
           spacing: 3;
           hexpand: true;
 
-          Label {
-            label: "类型与表达式 · 初始化";
+          // 小节名由 TypeSemanticsLessonPage 随当前标签更新，不写死在这里。
+          Label type_semantics_page_title {
+            name: "type_semantics_page_title";
+            label: "类型与表达式";
             halign: start;
             styles [ "title-2" ]
           }
@@ -69,7 +71,7 @@ Box type_semantics_lesson_page {
   // 加进 notebook，child 是 NULL，每次加载都会打两条
   // "gtk_notebook_get/set_tab_label: assertion 'GTK_IS_WIDGET (child)' failed"。
   //
-  // 标签直接对应课程的子章节。第一个标签是章节教学大纲（ADR 0028 第一层），
+  // 标签直接对应课程的子章节。前两个标签是「本章导览」与章节教学大纲，
   // 用 GTK 控件手写而不是渲染 Markdown——主次、评级、检查点这些结构用徽章和
   // 卡片一眼可辨，摊平成正文就看不出轻重。此章不再维护 Markdown 大纲副本。
   Notebook type_semantics_section_notebook {
@@ -1040,7 +1042,7 @@ Box type_semantics_lesson_page {
                 Label { label: "· 从数字造一个领域类型 → 构造函数写 explicit，调用处写 Type{n}"; halign: start; wrap: true; xalign: 0; }
               }
               Label {
-                label: "下一节“类型推导”里，auto x = expr 不再需要你在括号之间做选择：auto 先按初始化表达式决定 x 的类型，再谈初始化。初始化的这几处边界，是理解 auto 之前要先站稳的地方。";
+                label: "下一节「对象生命周期」接着问：这个取得了初始状态的对象，能活到什么时候。再往后的「类型推导」里，auto x = expr 不再需要你在括号之间做选择——auto 先按初始化表达式决定 x 的类型，再谈初始化。初始化的这几处边界，是理解那两节之前要先站稳的地方。";
                 halign: start; wrap: true; xalign: 0;
                 styles [ "dim-label" ]
               }

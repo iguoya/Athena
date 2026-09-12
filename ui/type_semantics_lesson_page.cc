@@ -109,6 +109,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("type_semantics_run_button");
     m_section_notebook = builder->get_widget<Gtk::Notebook>(
         "type_semantics_section_notebook");
+    m_page_title = builder->get_widget<Gtk::Label>("type_semantics_page_title");
     m_roadmap = builder->get_widget<Gtk::DrawingArea>("ts_outline_roadmap");
     m_value_matrix = builder->get_widget<Gtk::DrawingArea>("ts_vc_matrix");
     m_value_result_title =
@@ -139,7 +140,7 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Button>("ts_deduction_anim_next");
     auto* anim_reset =
         builder->get_widget<Gtk::Button>("ts_deduction_anim_reset");
-    if (!init_unit_host || !run_button
+    if (!init_unit_host || !run_button || !m_page_title
         || !m_section_notebook || !m_roadmap || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
@@ -384,6 +385,12 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         [this](int, double x, double y) { on_roadmap_pressed(x, y); });
     m_roadmap->add_controller(roadmap_click);
     rebuild_roadmap(mastery_by_id);
+
+    m_section_notebook->signal_switch_page().connect(
+        [this](Gtk::Widget*, guint index) {
+            apply_page_title(static_cast<int>(index));
+        });
+    apply_page_title(m_section_notebook->get_current_page());
 
     build_checkpoints(builder);
 
@@ -1339,6 +1346,20 @@ void TypeSemanticsLessonPage::refresh_progress(
     const map<string, int>& mastery_by_id) {
     rebuild_roadmap(mastery_by_id);
     apply_tab_labels(mastery_by_id);
+}
+
+void TypeSemanticsLessonPage::apply_page_title(int page_index) {
+    // 页头以前写死成「类型与表达式 · 初始化」，切到别的标签也不变，读者会
+    // 以为自己还在第一节。小节名跟着当前标签走，前两个标签不是知识点，
+    // 只显示章节名。
+    const string base = m_chapter.title;
+    if (page_index < 0
+        || page_index >= static_cast<int>(m_section_tabs.size())) {
+        m_page_title->set_text(base);
+        return;
+    }
+    const auto& section = m_section_tabs[static_cast<size_t>(page_index)];
+    m_page_title->set_text(base + " · " + section.title);
 }
 
 void TypeSemanticsLessonPage::apply_tab_labels(

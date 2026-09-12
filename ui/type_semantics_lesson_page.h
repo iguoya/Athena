@@ -25,8 +25,9 @@ class LearningUnitView;
 // （Cairo 自绘）→ 预测单元 → 专注实验入口 → 换条件的迁移预测。对象图这类
 // 需要绘制的内容按 AGENTS.md「GTK 与 Blueprint 规则」第 3 条留在代码里。
 //
-// 第一个标签是章节教学大纲（ADR 0028 第一层），用 GTK 控件手写；其余标签是
-// 这一页自己的教学过程（第二层）。两者不能互相替换。
+// 第一个标签是「本章导览」（极简概要，ADR 0036），第二个是章节教学大纲
+// （ADR 0028 第一层），都用 GTK 控件手写；其余标签是这一页自己的教学过程
+// （第二层）。三者不能互相替换。
 class TypeSemanticsLessonPage final {
 public:
     TypeSemanticsLessonPage(
@@ -53,6 +54,8 @@ private:
     };
 
     void open_experiment(const string& subchapter_name);
+    // 页头的小节名随当前标签更新，避免写死成某一节。
+    void apply_page_title(int page_index);
     void apply_tab_labels(const map<string, int>& mastery_by_id);
     Gtk::Widget* build_tab_label(
         const SectionTab& section, const map<string, int>& mastery_by_id) const;
@@ -111,6 +114,7 @@ private:
     function<bool(const string&, int)> m_on_mastery_recorded;
 
     Gtk::Notebook* m_section_notebook = nullptr;
+    Gtk::Label* m_page_title = nullptr;
     Gtk::DrawingArea* m_roadmap = nullptr;
     Gtk::DrawingArea* m_value_matrix = nullptr;
     Gtk::Label* m_value_result_title = nullptr;
