@@ -1,6 +1,7 @@
 #include "chapter_index_page.h"
 
 #include "render/knowledge_graph_view.h"
+#include "ui/progress_overview.h"
 #include "ui/icon_utils.h"
 
 using namespace std;
@@ -121,6 +122,10 @@ Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec) {
     heading->add_css_class("title-2");
     heading->set_halign(Gtk::Align::START);
     column->append(*heading);
+
+    if (spec.progress && spec.progress->total > 0) {
+        column->append(*make_progress_overview(*spec.progress));
+    }
 
     if (spec.knowledge_graph) {
         column->append(*make_knowledge_graph_view(

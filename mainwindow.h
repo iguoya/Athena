@@ -69,7 +69,6 @@ private:
     void navigate_to(const string& category_name, const string& page_key);
     void show_category_index(const string& category_name);
     void open_chapter(const string& category_name, const ChapterMeta& chapter);
-    void open_progress_page();
     void rebuild_chapter_switcher(const string& category_name);
     Gtk::Widget* create_index_page(const string& category_name);
     const ChapterMeta* find_chapter_by_key(
@@ -78,7 +77,6 @@ private:
     string category_title(const string& category_name) const;
 
 
-    Gtk::Widget* create_progress_page();
     void refresh_progress_page();
 
     void handle_chapter_overview(const ChapterMeta& chapter);

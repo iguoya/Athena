@@ -1,4 +1,4 @@
-#include "ui/progress_page.h"
+#include "ui/progress_overview.h"
 #include "render/chart_view.h"
 
 #include <gtest/gtest.h>
@@ -46,7 +46,7 @@ Gtk::Frame* find_frame(Gtk::Widget& root, const string& label) {
     return nullptr;
 }
 
-TEST(ProgressPageTest, RendersAggregatedDataWithoutReadingStorage) {
+TEST(ProgressOverviewTest, RendersAggregatedDataWithoutReadingStorage) {
     const CategoryProgress progress {
         .chapters = {
             {
@@ -65,25 +65,22 @@ TEST(ProgressPageTest, RendersAggregatedDataWithoutReadingStorage) {
         .mastery_sum = 8,
     };
 
-    auto* page = make_progress_page("测试分类", progress);
+    auto* page = make_progress_overview(progress);
 
     ASSERT_NE(page, nullptr);
-    EXPECT_TRUE(page->has_css_class("progress-page"));
-    EXPECT_NE(find_label(*page, "学习进度 · 测试分类"), nullptr);
+    EXPECT_TRUE(page->has_css_class("progress-overview"));
     EXPECT_NE(find_label(*page, "知识点总数"), nullptr);
     EXPECT_NE(find_label(*page, "4.0 / 5"), nullptr);
-    EXPECT_NE(find_label(*page, "RAII"), nullptr);
-    EXPECT_NE(find_label(*page, "1/2"), nullptr);
     EXPECT_NE(find_frame(*page, "整体完成度"), nullptr);
     EXPECT_NE(find_frame(*page, "熟练度分布"), nullptr);
-    EXPECT_EQ(find_frame(*page, "各章节完成度"), nullptr);
-    auto* chapter = find_expander(*page);
-    ASSERT_NE(chapter, nullptr);
-    ASSERT_NE(chapter->get_child(), nullptr);
-    EXPECT_NE(find_label(*chapter->get_child(), "资源所有权"), nullptr);
+
+    // 章节与知识点的逐条进度不再在这里重复：它们画在学习图谱的章节卡片上。
+    // 概览只留统计、建议和两张图，同一件事不给两个入口。
+    EXPECT_EQ(find_expander(*page), nullptr);
+    EXPECT_EQ(find_label(*page, "资源所有权"), nullptr);
 }
 
-TEST(ProgressPageTest, DonutReservesSpaceForItsFullStroke) {
+TEST(ProgressOverviewTest, DonutReservesSpaceForItsFullStroke) {
     auto* donut = make_mastery_donut_chart(1, 2, 3);
 
     EXPECT_EQ(donut->get_content_width(), 230);

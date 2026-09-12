@@ -221,7 +221,7 @@ app_sources = files(
   'ui/outline_blocks.cc',
   'ui/learning_unit_view.cc',
   'ui/pocket_cube_page.cc',
-  'ui/progress_page.cc',
+  'ui/progress_overview.cc',
   'ui/quiz_dialog.cc',
   'ui/settings_dialog.cc',
   'ui/source_view.cc',
@@ -294,13 +294,13 @@ gtk_test_exe = executable(
   files(
     'tests/gtk_resource_test.cc',
     'tests/knowledge_graph_view_test.cc',
-    'tests/progress_page_test.cc',
+    'tests/progress_overview_test.cc',
     'tests/pocket_cube_view_test.cc',
     'practice/pocket_cube/view.cc',
     'render/cairo_text.cc',
     'render/chart_view.cc',
     'render/knowledge_graph_view.cc',
-    'ui/progress_page.cc'
+    'ui/progress_overview.cc'
   ),
   sources: resources,
   include_directories: [cplusplus_inc],

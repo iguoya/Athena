@@ -2,6 +2,7 @@
 
 #include "registry/chapter_catalog.h"
 #include "registry/knowledge_graph.h"
+#include "registry/progress_stats.h"
 
 #include <gtkmm.h>
 
@@ -42,6 +43,10 @@ struct ChapterIndexSpec {
     // C++ 分类提供时，以带前置关系的知识图谱代替普通章节网格；其他分类
     // 保持 FlowBox。图谱仍由 catalog/prerequisites 派生，不新增导航数据源。
     optional<KnowledgeGraph> knowledge_graph;
+    // 与图谱一起提供时，在图谱上方渲染学习进度概览（统计、建议、两张图）。
+    // 进度不再单开一页：章节与知识点的逐条进度画在图谱的章节卡片上，
+    // 概览放在同一页顶部，一个入口看完。
+    optional<CategoryProgress> progress;
     function<void(const string& key)> on_open;
     function<void(const string& chapter_name)> on_open_chapter;
 };

@@ -1,29 +1,14 @@
-#include "progress_page.h"
+#include "progress_overview.h"
 
 #include "render/chart_view.h"
 
 #include <iomanip>
 #include <sstream>
 
-Gtk::Widget* make_progress_page(
-    const string& category_title,
-    const CategoryProgress& progress) {
-    auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scrolled->set_hexpand(true);
-    scrolled->set_vexpand(true);
-    scrolled->add_css_class("progress-page");
-
-    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 24);
-    page->set_margin_top(28);
-    page->set_margin_bottom(28);
-    page->set_margin_start(32);
-    page->set_margin_end(32);
-    scrolled->set_child(*page);
-
-    auto title = Gtk::make_managed<Gtk::Label>("学习进度 · " + category_title);
-    title->add_css_class("title-2");
-    title->set_halign(Gtk::Align::START);
-    page->append(*title);
+Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
+    auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 16);
+    page->set_hexpand(true);
+    page->add_css_class("progress-overview");
 
     auto tiles_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
     tiles_row->set_homogeneous(true);
@@ -116,43 +101,7 @@ Gtk::Widget* make_progress_page(
     histogram_frame->set_child(*histogram_box);
     charts_row->append(*histogram_frame);
 
-    for (const auto& chapter_stat : progress.chapters) {
-        auto expander = Gtk::make_managed<Gtk::Expander>();
-        expander->add_css_class("progress-chapter-row");
-
-        auto header = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 10);
-        auto chapter_title = Gtk::make_managed<Gtk::Label>(chapter_stat.chapter_title);
-        chapter_title->add_css_class("progress-chapter-title");
-        header->append(*chapter_title);
-
-        auto chapter_bar = Gtk::make_managed<Gtk::LevelBar>();
-        chapter_bar->set_min_value(0);
-        chapter_bar->set_max_value(1.0);
-        chapter_bar->set_value(chapter_stat.completion_ratio());
-        chapter_bar->set_hexpand(true);
-        chapter_bar->set_valign(Gtk::Align::CENTER);
-        header->append(*chapter_bar);
-
-        auto chapter_count = Gtk::make_managed<Gtk::Label>(
-            to_string(chapter_stat.mastered) + "/" + to_string(chapter_stat.total));
-        chapter_count->add_css_class("progress-chapter-count");
-        header->append(*chapter_count);
-        expander->set_label_widget(*header);
-
-        auto subchapter_list = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
-        for (const auto& [sub_title, mastery] : chapter_stat.subchapter_mastery) {
-            auto sub_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 8);
-            sub_row->add_css_class("progress-subchapter-row");
-            auto sub_label = Gtk::make_managed<Gtk::Label>(sub_title);
-            sub_label->set_hexpand(true);
-            sub_label->set_halign(Gtk::Align::START);
-            sub_row->append(*sub_label);
-            sub_row->append(*make_mastery_stars(mastery));
-            subchapter_list->append(*sub_row);
-        }
-        expander->set_child(*subchapter_list);
-        page->append(*expander);
-    }
-
-    return scrolled;
+    // 章节与知识点的逐条进度不在这里重复：它们已经画在学习图谱的章节
+    // 卡片上（逐个知识点 + 掌握程度 + 考核成绩）。同一件事只留一个入口。
+    return page;
 }

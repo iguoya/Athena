@@ -15,7 +15,7 @@
 #include "ui/code_chapter_page.h"
 #include "ui/experiment_page.h"
 #include "ui/pocket_cube_page.h"
-#include "ui/progress_page.h"
+#include "ui/progress_overview.h"
 #include "ui/type_semantics_lesson_page.h"
 
 #include <giomm/menu.h>
@@ -43,7 +43,6 @@ constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
 constexpr const char* kTypeSemanticsLessonPageWidget =
     "type_semantics_lesson_page";
-constexpr const char* kProgressPageKey = "__progress__";
 
 } // namespace
 
@@ -344,9 +343,7 @@ void MainWindow::navigate_to(
     const string& page_key) {
     if (page_key == index_page_key(category_name)) {
         show_category_index(category_name);
-    } else if (page_key == kProgressPageKey) {
-        open_progress_page();
-       } else if (const auto* chapter =
+          } else if (const auto* chapter =
                    find_chapter_by_key(category_name, page_key)) {
         open_chapter(category_name, *chapter);
     }
@@ -360,13 +357,6 @@ void MainWindow::open_chapter(
     m_pages->show(page_key);
     show_chapter_breadcrumb(category_name, chapter.title);
     m_chapter_switcher->set_label(chapter.title);
-}
-
-void MainWindow::open_progress_page() {
-    refresh_progress_page();
-    m_pages->show(kProgressPageKey);
-    show_chapter_breadcrumb(kCppCategory, "学习进度");
-    m_chapter_switcher->set_label("学习进度");
 }
 
 void MainWindow::ensure_chapter_page(
@@ -511,11 +501,6 @@ void MainWindow::build_category(const string& category_name) {
         }
     }
 
-    // 学习进度目前只覆盖 cpp 分类；知识图谱已经与 cpp 分类索引合一。
-    if (category_name == kCppCategory) {
-        m_pages->set_page(kProgressPageKey, *create_progress_page(), "学习进度");
-    }
-
     rebuild_chapter_switcher(category_name);
 }
 
@@ -555,12 +540,14 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
         }
         spec.knowledge_graph = build_knowledge_graph(
             m_catalog, category_name, progress);
-        spec.tools.push_back(
-            {.key = kProgressPageKey,
-             .title = "学习进度",
-             .description = "各章节知识点的掌握情况统计",
-             .icon = {.type = "theme",
-                      .name = "utilities-system-monitor-symbolic"}});
+        std::map<string, int> mastery_only;
+        for (const auto& [function_id, record] : progress) {
+            mastery_only[function_id] = record.mastery;
+        }
+        // 进度概览与图谱合一：概览放图谱上方，逐条进度画在章节卡片上，
+        // 不再单开「学习进度」页。
+        spec.progress = aggregate_category_progress(
+            m_catalog, category_name, mastery_only);
     }
     spec.on_open = [this, category_name](const string& page_key) {
         navigate_to(category_name, page_key);
@@ -605,9 +592,6 @@ void MainWindow::rebuild_chapter_switcher(const string& category_name) {
                 chapter_key(category_name, chapter.name), chapter.title);
         }
     }
-    if (category_name == kCppCategory) {
-        add_entry(kProgressPageKey, "学习进度");
-    }
 
     auto* scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
     scroller->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
@@ -620,21 +604,9 @@ void MainWindow::rebuild_chapter_switcher(const string& category_name) {
     m_chapter_switcher->set_popover(*popover);
 }
 
-Gtk::Widget* MainWindow::create_progress_page() {
-    std::map<string, int> mastery_by_id;
-    if (m_learning_store) {
-        try {
-            mastery_by_id = m_learning_store->load_all_mastery();
-        } catch (const exception& error) {
-            cerr << "Failed to load mastery stats: " << error.what() << endl;
-        }
-    }
-    return make_progress_page(
-        "C++", aggregate_category_progress(m_catalog, "cpp", mastery_by_id));
-}
-
+// 熟练度变化后刷新受影响的界面。进度已经不是单独一页：概览在学习图谱页
+// 顶部，逐条进度在图谱的章节卡片上，所以这里重建索引页即可。
 void MainWindow::refresh_progress_page() {
-    // AI 自测写入新熟练度后，已缓存的原生学习页也要跟着给标签重新上色。
     if (!m_type_semantics_lesson_pages.empty()) {
         std::map<string, int> mastery_by_id;
         if (m_learning_store) {
@@ -651,13 +623,15 @@ void MainWindow::refresh_progress_page() {
         }
     }
 
-    if (!m_pages || !m_pages->has_page(kProgressPageKey)) {
+    // 索引页是缓存的，熟练度变了要重建才能反映到概览与章节卡片上。
+    const string key = index_page_key(kCppCategory);
+    if (!m_pages || !m_pages->has_page(key)) {
         return;
     }
-    const bool was_visible = m_pages->current_key() == kProgressPageKey;
-    m_pages->set_page(kProgressPageKey, *create_progress_page(), "学习进度");
+    const bool was_visible = m_pages->current_key() == key;
+    m_pages->set_page(key, *create_index_page(kCppCategory), "学习图谱");
     if (was_visible) {
-        m_pages->show(kProgressPageKey);
+        m_pages->show(key);
     }
 }
 

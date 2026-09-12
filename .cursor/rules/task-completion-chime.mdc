@@ -1,0 +1,65 @@
+---
+description: 任务完成后播放不少于 5 秒的本机提示音
+alwaysApply: true
+---
+
+# 任务完成提示音
+
+每次**完成用户交代的一项任务**（实现改动、排查结论、按要求交付的最终回复）时，在收尾前用 Shell 播放本机提示音，**时长不少于 5 秒**。
+
+## 怎么播（macOS）
+
+用 `required_permissions: ["all"]` 调用 Shell（沙箱里 `afplay` 会失败）。当前音色为
+**欢快大调短句**（约 5.2 秒，跳音节奏），不要用拖沓的长音或刺耳持续蜂鸣：
+
+```bash
+python3 - <<'PY'
+import math, struct, subprocess, tempfile, wave, os
+path = tempfile.mktemp(suffix='.wav')
+rate, seconds = 22050, 5.2
+# C 大调欢快短句，八分音符为主，末尾拖一拍收住
+# (freq_hz, start_s, dur_s)
+melody = [
+    (523.25, 0.00, 0.22), (659.25, 0.22, 0.22), (783.99, 0.44, 0.22), (1046.50, 0.66, 0.36),
+    (783.99, 1.10, 0.18), (880.00, 1.28, 0.18), (987.77, 1.46, 0.18), (1046.50, 1.64, 0.40),
+    (659.25, 2.20, 0.18), (698.46, 2.38, 0.18), (783.99, 2.56, 0.18), (880.00, 2.74, 0.18),
+    (987.77, 2.92, 0.18), (1046.50, 3.10, 0.18), (1174.66, 3.28, 0.22), (1318.51, 3.50, 0.55),
+    (1046.50, 4.20, 0.20), (1318.51, 4.40, 0.20), (1567.98, 4.60, 0.55),
+]
+with wave.open(path, 'w') as w:
+    w.setnchannels(1); w.setsampwidth(2); w.setframerate(rate)
+    nframes = int(rate * seconds)
+    for i in range(nframes):
+        t = i / rate
+        sample = 0.0
+        for freq, start, dur in melody:
+            if not (start <= t < start + dur):
+                continue
+            local = t - start
+            # 跳音包络：起音快、收得利落
+            attack = min(1.0, local * 40)
+            release = max(0.0, 1.0 - max(0.0, local - (dur - 0.06)) / 0.06)
+            env = attack * release * math.exp(-2.2 * local)
+            tone = math.sin(2 * math.pi * freq * local)
+            tone += 0.22 * math.sin(2 * math.pi * freq * 2 * local)
+            sample += env * tone
+        # 很轻的底鼓感点击，加强欢快节奏感
+        for beat in (0.0, 0.44, 0.88, 1.32, 1.76, 2.20, 2.64, 3.08, 3.52, 4.20, 4.60):
+            d = t - beat
+            if 0 <= d < 0.04:
+                sample += (1.0 - d / 0.04) * 0.35 * math.sin(2 * math.pi * 90 * d)
+        sample = int(max(-1.0, min(1.0, sample * 0.32)) * 32767)
+        w.writeframes(struct.pack('<h', sample))
+subprocess.run(['afplay', path], check=False)
+os.remove(path)
+PY
+```
+
+也可改用系统音效循环，但总时长仍须 ≥ 5 秒。
+
+## 何时播 / 不播
+
+- **要播**：该轮已把用户当前任务做完并准备给出最终答复时。
+- **不播**：中途追问、仅确认理解、被打断、任务失败尚未收尾、或用户明确说先别出声时。
+
+不要在回复里解释“正在播放提示音”，播完直接正常收尾即可。

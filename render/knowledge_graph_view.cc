@@ -176,37 +176,49 @@ Gtk::Button* make_node_button(
         "graph-completion-" + to_string(completion_level(node.completion)));
     content->append(*completion);
 
-    // 逐个知识点的掌握条：一格一个知识点，按配置顺序（= requires 拓扑序）。
-    // 只给「掌握 1/7」这样的汇总，看不出是哪一个过了、哪几个还没开始——
-    // 要判断"这一章我学到哪了"，得能看到逐个知识点（ADR 0033：能由数据
-    // 算出来的就画成活的）。
-    if (!node.points.empty()) {
-        auto* strip = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 3);
-        strip->add_css_class("graph-point-strip");
+    // 逐条列出本章知识点及其掌握程度。只给「掌握 1/7」这样的汇总，看不出
+    // 涉及哪些主题、哪一个过了——判断"这一章我学到哪了"需要看到名字。
+    //
+    // 只对已有实现的章节列：规划中的章节列出来全是「未开始」，除了把卡片
+    // 撑高之外没有信息量。
+    if (node.has_implementation && !node.points.empty()) {
+        auto* list = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
+        list->add_css_class("graph-point-list");
         for (const auto& point : node.points) {
-            auto* cell = Gtk::make_managed<Gtk::Label>();
-            cell->add_css_class("graph-point-cell");
-            cell->add_css_class(
+            auto* row = Gtk::make_managed<Gtk::Box>(
+                Gtk::Orientation::HORIZONTAL, 6);
+
+            auto* name = Gtk::make_managed<Gtk::Label>(point.title);
+            name->set_halign(Gtk::Align::START);
+            name->set_hexpand(true);
+            name->set_xalign(0.0);
+            name->set_ellipsize(Pango::EllipsizeMode::END);
+            name->add_css_class("graph-point-name");
+            row->append(*name);
+
+            // 掌握程度写成星级，未开始就直说，不用一个含糊的圆点代替。
+            auto* level = Gtk::make_managed<Gtk::Label>(
+                point.mastery > 0 ? to_string(point.mastery) + " / 5 星"
+                                  : string("未开始"));
+            level->set_halign(Gtk::Align::END);
+            level->add_css_class("graph-point-level");
+            level->add_css_class(
                 "graph-point-level-" + to_string(clamp(point.mastery, 0, 5)));
-            cell->set_hexpand(true);
+            row->append(*level);
 
             string detail = point.title;
             if (point.difficulty > 0) {
                 detail += "  难度 " + to_string(point.difficulty) + "/5";
             }
             detail += "  " + mastery_goal_label(point.goal);
-            detail += point.mastery > 0
-                ? "\n熟练度 " + to_string(point.mastery) + "/5"
-                : string("\n尚未开始");
-            // 成绩是星级的依据：不写出来就说不清这 5 星是怎么来的。
             if (point.last_total > 0) {
-                detail += "（最近考核 " + to_string(point.last_correct) + "/"
-                          + to_string(point.last_total) + "）";
+                detail += "\n最近考核 " + to_string(point.last_correct) + "/"
+                          + to_string(point.last_total);
             }
-            cell->set_tooltip_text(detail);
-            strip->append(*cell);
+            row->set_tooltip_text(detail);
+            list->append(*row);
         }
-        content->append(*strip);
+        content->append(*list);
     }
 
     button->set_child(*content);
