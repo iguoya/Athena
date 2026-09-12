@@ -111,7 +111,7 @@ Box type_semantics_lesson_page {
                   height-request: 440;
                 }
                 Label {
-                  label: "七个知识点、三条线。顺着箭头学；要知道为什么这样排、各自该学到什么程度，进「教学大纲」。";
+                  label: "七个知识点、三条线。顺着箭头学；要知道为什么这样排、为什么定这个程度，进「教学大纲」。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -140,7 +140,7 @@ Box type_semantics_lesson_page {
           }
 
           Frame {
-            label: "每个知识点解决什么";
+            label: "每个知识点解决什么，学到什么程度";
             styles [ "panel-frame", "group-frame" ]
 
             Box {
@@ -151,13 +151,46 @@ Box type_semantics_lesson_page {
               margin-start: 18;
               margin-end: 18;
 
+              Box {
+                orientation: horizontal; spacing: 8;
+                margin-top: 4;
+                Label { label: "先拿下"; styles [ "badge", "badge-mastery-goal", "mastery-goal-master" ] }
+                Label { label: "初中级 · 需要精通"; halign: start; styles [ "dim-label" ] }
+              }
               Label { label: "· 初始化 —— 不同写法提供什么保证，哪里会丢信息"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 对象生命周期 —— 从哪一行开始存在、到哪一行结束"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 类型推导 —— auto 替你补类型，要副本还是别名仍由你决定"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+
+              Box {
+                orientation: horizontal; spacing: 8;
+                margin-top: 4;
+                Label { label: "随后掌握"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                Label { label: "初中级 · 必须掌握"; halign: start; styles [ "dim-label" ] }
+              }
               Label { label: "· enum class —— 一组状态什么时候值得有独立类型"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
               Label { label: "· 类型转换 —— 转换表达什么意图，检查发生在哪一层"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+
+              Box {
+                orientation: horizontal; spacing: 8;
+                margin-top: 4;
+                Label { label: "可以慢一点"; styles [ "badge", "badge-mastery-goal", "mastery-goal-required" ] }
+                Label { label: "进阶 · 必须掌握"; halign: start; styles [ "dim-label" ] }
+              }
               Label { label: "· 值类别 —— 左值 / 纯右值 / 将亡值，怎样影响引用绑定与重载"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+
+              Box {
+                orientation: horizontal; spacing: 8;
+                margin-top: 4;
+                Label { label: "可以先跳过"; styles [ "badge", "badge-mastery-goal", "mastery-goal-familiar" ] }
+                Label { label: "进阶 · 一般了解"; halign: start; styles [ "dim-label" ] }
+              }
               Label { label: "· decltype —— 它和 auto 问的不是同一件事"; halign: start; wrap: true; xalign: 0; styles [ "lesson-prose" ] }
+
+              Label {
+                label: "从上往下就是推荐顺序。每一档为什么这样定，见「教学大纲」。";
+                halign: start; wrap: true; xalign: 0; margin-top: 4;
+                styles [ "dim-label" ]
+              }
             }
           }
         }
