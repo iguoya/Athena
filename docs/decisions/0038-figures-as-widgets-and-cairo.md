@@ -60,6 +60,16 @@ Rust 并依赖 cairo/pango/harfbuzz/gdk-pixbuf，等于引入一条新的构建�
 `utilities-terminal-symbolic` 的 `path` 上带 `font-weight`），选图标时避开
 即可——本次就换掉了一个。
 
+**这条内建路径是留着的。** 被否掉的不是 SVG 本身，而是"把 SVG 交给
+`Gtk::Picture` / `Gdk::Texture`"——那里只内建 PNG/JPEG/TIFF，SVG 必然回退到
+外部 loader。确有 SVG 更合适的场合（图形复杂、由设计工具产出、不需要跟随
+字号与主题），可以把它作为图标资源挂进 icon theme
+（`Gtk::IconTheme::add_resource_path()` + `icon-name`），由 GTK 内建解析器
+渲染，不引入 librsvg；代价是要求 GTK ≥ 4.20，并受图标路径的尺寸与着色语义
+约束。选择顺序是：能用控件就用控件，需要几何就用 Cairo，两者都不合适再考虑
+这条内建 SVG 路径。生成器的校验按这个顺序写：它拦的是解码器依赖那条路，
+不是仓库里存在 `.svg` 文件。
+
 验证方式是把 gdk-pixbuf 的 SVG loader 从 `loaders.cache` 里摘掉再跑一遍应用：
 改造完成后启动零报错。`scripts/package_macos.py` 也相应放宽——cache 里记着
 而文件不在的 loader 整块跳过，不再让打包失败。
