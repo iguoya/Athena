@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="440" viewBox="0 0 900 440" font-family="system-ui, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
+  <style>
+    .title { font-size: 21px; font-weight: 700; fill: #212529; }
+    .head { font-size: 15px; font-weight: 700; fill: #6c757d; }
+    .t { font-size: 16px; fill: #212529; }
+    .s { font-size: 14px; fill: #6c757d; }
+    .code { font-size: 15px; font-family: ui-monospace, Menlo, monospace; fill: #343a40; }
+    .pass { font-size: 15px; font-weight: 700; fill: #842029; }
+    .stop { font-size: 15px; font-weight: 700; fill: #0f5132; }
+  </style>
+  <rect width="900" height="440" fill="#ffffff"/>
+  <text x="32" y="40" class="title">同一组状态，两种写法：编译器替你挡住多少</text>
+
+  <!-- 表头 -->
+  <text x="32" y="78" class="head">写下这一行</text>
+  <text x="392" y="78" class="head">const int 常量</text>
+  <text x="392" y="98" class="code" font-size="13">void report(int);</text>
+  <text x="650" y="78" class="head">enum class FileState</text>
+  <text x="650" y="98" class="code" font-size="13">void report(FileState);</text>
+  <line x1="32" y1="110" x2="868" y2="110" stroke="#dee2e6" stroke-width="1.5"/>
+
+  <!-- 行 1 -->
+  <text x="32" y="148" class="code">report(42);</text>
+  <text x="32" y="172" class="s">42 不是任何一个状态</text>
+  <rect x="384" y="126" width="238" height="52" rx="8" fill="#f8d7da" stroke="#dc3545" stroke-width="1.6"/>
+  <text x="503" y="158" class="pass" text-anchor="middle">放行 · 它只是个 int</text>
+  <rect x="642" y="126" width="226" height="52" rx="8" fill="#d1e7dd" stroke="#198754" stroke-width="1.6"/>
+  <text x="755" y="158" class="stop" text-anchor="middle">编译失败</text>
+
+  <!-- 行 2 -->
+  <text x="32" y="228" class="code">report(kRed);</text>
+  <text x="32" y="252" class="s">那是另一组常量里的红灯</text>
+  <rect x="384" y="206" width="238" height="52" rx="8" fill="#f8d7da" stroke="#dc3545" stroke-width="1.6"/>
+  <text x="503" y="238" class="pass" text-anchor="middle">放行 · 同样是 int</text>
+  <rect x="642" y="206" width="226" height="52" rx="8" fill="#d1e7dd" stroke="#198754" stroke-width="1.6"/>
+  <text x="755" y="238" class="stop" text-anchor="middle">编译失败</text>
+
+  <!-- 行 3 -->
+  <text x="32" y="308" class="code">state + 1;</text>
+  <text x="32" y="332" class="s">状态相加没有意义</text>
+  <rect x="384" y="286" width="238" height="52" rx="8" fill="#f8d7da" stroke="#dc3545" stroke-width="1.6"/>
+  <text x="503" y="318" class="pass" text-anchor="middle">放行 · 算术照做</text>
+  <rect x="642" y="286" width="226" height="52" rx="8" fill="#d1e7dd" stroke="#198754" stroke-width="1.6"/>
+  <text x="755" y="318" class="stop" text-anchor="middle">编译失败</text>
+
+  <line x1="32" y1="360" x2="868" y2="360" stroke="#dee2e6" stroke-width="1.5"/>
+  <text x="32" y="388" class="t">绿 = 编译器替你挡住　　红 = 编译器放行，风险留到运行期</text>
+  <text x="32" y="416" class="s">代价：取底层值必须写 static_cast，不能直接当下标，位运算要自己重载——严格检查的价钱。</text>
+</svg>

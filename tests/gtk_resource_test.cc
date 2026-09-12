@@ -144,6 +144,48 @@ TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
     EXPECT_NE(
         builder->get_widget<Gtk::Button>("type_semantics_lifetime_button"),
         nullptr);
+    // decltype 节的活对照：表达式按钮与两列结果标签都由页面构造函数按 id 取，
+    // 少一个就会在打开这一章时抛异常，所以在这里一并守住。
+    EXPECT_NE(builder->get_widget<Gtk::Button>("ts_dt_expr_paren"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Button>("ts_dt_expr_ref"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("ts_dt_auto_result"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("ts_dt_decltype_result"), nullptr);
+    EXPECT_NE(
+        builder->get_widget<Gtk::Box>("type_semantics_decltype_unit_host"),
+        nullptr);
+}
+
+// 学习页的插图是 SVG，GTK 经 gdk-pixbuf 的 SVG loader（librsvg）解码。缺了它，
+// Gtk::Picture 既不报错也不显示——界面上只是"图没了"，很容易被当成内容没写。
+// 所以这里把打进 GResource 的每一张图真解码一遍：发行包漏带 loader、或开发机
+// 的 librsvg 没 link，都会在 scripts/check.sh 阶段就红，而不是等到看界面。
+TEST(GtkResourceTest, DecodesEveryBundledLessonFigure) {
+    const auto figures = Gio::Resource::enumerate_children_global(
+        "/app/articles/cpp/images/");
+    ASSERT_FALSE(figures.empty()) << "no lesson figures were bundled";
+
+    for (const auto& name : figures) {
+        const std::string path = "/app/articles/cpp/images/" + name;
+        try {
+            // 走 create_from_bytes 而不是 create_from_resource：后者解码失败时
+            // 直接 g_error 终止进程，看不到下面这条提示。
+            GError* error = nullptr;
+            GBytes* raw = g_resources_lookup_data(
+                path.c_str(), G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+            ASSERT_NE(raw, nullptr)
+                << path << ": " << (error ? error->message : "unknown error");
+            const auto bytes = Glib::wrap(raw);
+            const auto texture = Gdk::Texture::create_from_bytes(bytes);
+            ASSERT_TRUE(static_cast<bool>(texture)) << path;
+            EXPECT_GT(texture->get_intrinsic_width(), 0) << path;
+            EXPECT_GT(texture->get_intrinsic_height(), 0) << path;
+        } catch (const Glib::Error& error) {
+            ADD_FAILURE()
+                << "cannot decode " << path << ": " << error.what()
+                << "\n如果每一张图都失败，多半是 gdk-pixbuf 的 SVG loader 没装或"
+                   "没 link（macOS: brew link --overwrite librsvg）。";
+        }
+    }
 }
 
 TEST(GtkResourceTest, LoadsTheInlineLearningUnitTemplate) {

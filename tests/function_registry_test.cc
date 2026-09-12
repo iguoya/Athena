@@ -58,11 +58,9 @@ TEST(FunctionRegistryTest, RunsATypeSemanticsExperiment) {
     registry.run("cpp.TypeSemantics.decltype_deduction", output);
 
     EXPECT_NE(
-        output.str().find("decltype(value) 是 int（取声明类型）: 是"),
-        string::npos);
+        output.str().find("copy = 7 之后 value = 42"), string::npos);
     EXPECT_NE(
-        output.str().find("decltype((value)) 是 int&（左值表达式）: 是"),
-        string::npos);
+        output.str().find("alias = 99 之后 value = 99"), string::npos);
     EXPECT_EQ(output.str().find("[待实现]"), string::npos);
 }
 

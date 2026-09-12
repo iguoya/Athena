@@ -84,6 +84,11 @@ private:
     void draw_value_matrix(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
 
+    // decltype 活对照：同一批声明，五个表达式各问一次 auto 与 decltype。
+    // 两列结果完全由「名字看声明、表达式看值类别」两条规则算出来，所以按
+    // ADR 0033 做成可切换的活对照，而不是一张会和规则说明各说各话的静态表。
+    void select_decltype_expression(size_t index);
+
     void draw_deduction_graph(
         const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) const;
     void set_anim_step(int step);
@@ -109,6 +114,10 @@ private:
     Gtk::Label* m_value_result_title = nullptr;
     Gtk::Label* m_value_result_detail = nullptr;
     ValueCategory m_value_selection = ValueCategory::None;
+    Gtk::Label* m_decltype_auto_result = nullptr;
+    Gtk::Label* m_decltype_result = nullptr;
+    Gtk::Label* m_decltype_result_title = nullptr;
+    Gtk::Label* m_decltype_result_detail = nullptr;
     vector<SectionTab> m_section_tabs;
 
     static constexpr int kDeductionAnimSteps = 6;

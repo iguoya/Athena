@@ -10,6 +10,7 @@ import tempfile
 from pathlib import Path
 
 from project_generator.catalog import render_catalog
+from project_generator.figures import check_figures
 from project_generator.model import ProjectError, build_model
 from project_generator.registry import render_registry
 from project_generator.resources import blueprint_entries, render_resources
@@ -86,6 +87,9 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "registry":
         write_generated(args.output, render_registry(model["bindings"]))
     elif args.command == "check":
+        # 插图链路：.blp 的 Picture、页面代码里的资源路径、磁盘上的文件，
+        # 三者任一缺失都只会在界面上留一块空白，不会报错。
+        check_figures(root)
         print(
             "athena.json is valid: "
             f"{model['category_count']} categories, "

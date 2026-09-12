@@ -1,82 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" font-family="-apple-system, 'PingFang SC', 'Noto Sans CJK SC', 'Segoe UI', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="system-ui, 'PingFang SC', 'Noto Sans CJK SC', sans-serif">
   <style>
-    .card { fill: #fbfcfe; stroke: #dfe3ea; stroke-width: 1.5; }
-    .title { fill: #1f2933; font-weight: 700; }
-    .label { fill: #1f2933; }
-    .muted { fill: #5b6472; }
-    .code { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; fill: #1f2933; }
-    .pass { fill: #1f9d57; font-weight: 700; }
-    .fail { fill: #e0533d; font-weight: 700; }
-    .chip { fill: #eef1f6; stroke: #dfe3ea; stroke-width: 1; }
-    .arrow { stroke: #9aa4b2; stroke-width: 1.6; fill: none; }
+    .title { font-size: 21px; font-weight: 700; fill: #212529; }
+    .head { font-size: 15px; font-weight: 700; fill: #6c757d; }
+    .t { font-size: 15px; fill: #212529; }
+    .s { font-size: 14px; fill: #6c757d; }
+    .code { font-size: 16px; font-family: ui-monospace, Menlo, monospace; fill: #212529; }
+    .verdict { font-size: 15px; font-weight: 700; }
   </style>
-  <rect x="1" y="1" width="718" height="428" rx="14" class="card"/>
+  <rect width="900" height="460" fill="#ffffff"/>
+  <text x="32" y="40" class="title">同一个 3.75 进入 int：谁来检查「信息会不会丢」</text>
 
-  <text x="28" y="38" class="title" font-size="17">四种初始化写法：外观相近，语言规则不同</text>
+  <text x="32" y="78" class="head">写法</text>
+  <text x="330" y="78" class="head">它提供什么保证</text>
+  <text x="638" y="78" class="head">遇到窄化时</text>
+  <line x1="32" y1="90" x2="868" y2="90" stroke="#dee2e6" stroke-width="1.5"/>
 
-  <!-- four forms -->
-  <g font-size="13.5">
-    <rect x="28"  y="58" width="150" height="70" rx="9" class="chip"/>
-    <text x="103" y="84"  text-anchor="middle" class="code" font-size="13">int a(7);</text>
-    <text x="103" y="106" text-anchor="middle" class="muted" font-size="12">直接初始化</text>
+  <!-- 直接初始化 -->
+  <text x="32" y="124" class="code">int direct(7);</text>
+  <text x="32" y="146" class="s">直接初始化</text>
+  <text x="330" y="124" class="t">按参数调用构造，允许有损转换</text>
+  <text x="330" y="146" class="s">截断由你承担</text>
+  <rect x="630" y="102" width="238" height="52" rx="8" fill="#f8d7da" stroke="#dc3545" stroke-width="1.6"/>
+  <text x="749" y="134" class="verdict" fill="#842029" text-anchor="middle">放行 · 3.75 变成 3</text>
 
-    <rect x="192" y="58" width="150" height="70" rx="9" class="chip"/>
-    <text x="267" y="84"  text-anchor="middle" class="code" font-size="13">int a = 8;</text>
-    <text x="267" y="106" text-anchor="middle" class="muted" font-size="12">拷贝初始化</text>
+  <!-- 拷贝初始化 -->
+  <text x="32" y="198" class="code">int copied = 8;</text>
+  <text x="32" y="220" class="s">拷贝初始化</text>
+  <text x="330" y="198" class="t">同样允许有损转换</text>
+  <text x="330" y="220" class="s">还会被 explicit 构造函数拒绝</text>
+  <rect x="630" y="176" width="238" height="52" rx="8" fill="#f8d7da" stroke="#dc3545" stroke-width="1.6"/>
+  <text x="749" y="208" class="verdict" fill="#842029" text-anchor="middle">放行 · 3.75 变成 3</text>
 
-    <rect x="356" y="58" width="150" height="70" rx="9" class="chip"/>
-    <text x="431" y="84"  text-anchor="middle" class="code" font-size="13">int a{9};</text>
-    <text x="431" y="106" text-anchor="middle" class="muted" font-size="12">列表初始化 · 查窄化</text>
+  <!-- 列表初始化 -->
+  <text x="32" y="272" class="code">int listed{9};</text>
+  <text x="32" y="294" class="s">列表初始化</text>
+  <text x="330" y="272" class="t">把「会不会丢信息」交给编译器</text>
+  <text x="330" y="294" class="s">这是它和上面两种的真正区别</text>
+  <rect x="630" y="250" width="238" height="52" rx="8" fill="#d1e7dd" stroke="#198754" stroke-width="1.6"/>
+  <text x="749" y="282" class="verdict" fill="#0f5132" text-anchor="middle">编译失败 · 拒绝窄化</text>
 
-    <rect x="520" y="58" width="172" height="70" rx="9" class="chip"/>
-    <text x="606" y="84"  text-anchor="middle" class="code" font-size="13">int a{};</text>
-    <text x="606" y="106" text-anchor="middle" class="pass" font-size="12">值初始化 → 确定为 0</text>
-  </g>
+  <!-- 值初始化 -->
+  <text x="32" y="346" class="code">int zero{};</text>
+  <text x="32" y="368" class="s">值初始化</text>
+  <text x="330" y="346" class="t">保证得到 0，而不是残留的垃圾值</text>
+  <text x="330" y="368" class="s">对照：int uninit; 读它是未定义行为</text>
+  <rect x="630" y="324" width="238" height="52" rx="8" fill="#cfe2ff" stroke="#0a58ca" stroke-width="1.6"/>
+  <text x="749" y="356" class="verdict" fill="#052c65" text-anchor="middle">不涉及转换 · 值为 0</text>
 
-  <line x1="28" y1="150" x2="692" y2="150" stroke="#e6e9ef" stroke-width="1"/>
-
-  <!-- narrowing gate -->
-  <text x="28" y="182" class="title" font-size="15">同一个 double 3.75 进入 int，谁在检查风险</text>
-
-  <rect x="28" y="200" width="160" height="52" rx="9" class="chip"/>
-  <text x="108" y="231" text-anchor="middle" class="code" font-size="13">double s = 3.75;</text>
-
-  <path class="arrow" d="M188 214 H250" marker-end="url(#a)"/>
-  <path class="arrow" d="M188 238 H250" marker-end="url(#a)"/>
-
-  <rect x="252" y="188" width="176" height="36" rx="8" fill="#eaf6ef" stroke="#bfe3cd"/>
-  <text x="268" y="211" class="code" font-size="12.5">int allowed(s);</text>
-  <text x="238" y="211" class="pass" font-size="13" text-anchor="end">✓</text>
-
-  <rect x="252" y="230" width="176" height="36" rx="8" fill="#fdecea" stroke="#f4c7bf"/>
-  <text x="268" y="253" class="code" font-size="12.5">int rejected{s};</text>
-  <text x="238" y="253" class="fail" font-size="13" text-anchor="end">✕</text>
-
-  <path class="arrow" d="M430 206 H472" marker-end="url(#a)"/>
-  <path class="arrow" d="M430 248 H472" marker-end="url(#a)"/>
-  <text x="480" y="203" class="label" font-size="12">圆括号：由程序员</text>
-  <text x="480" y="221" class="label" font-size="12">明确接受截断 → 3</text>
-  <text x="480" y="245" class="label" font-size="12">花括号：把潜在丢失</text>
-  <text x="480" y="263" class="label" font-size="12">提升为编译期错误</text>
-
-  <!-- explicit -->
-  <text x="28" y="308" class="title" font-size="15">explicit：拷贝初始化不能把构造函数当隐式转换路径</text>
-  <rect x="28" y="326" width="300" height="40" rx="8" fill="#eaf6ef" stroke="#bfe3cd"/>
-  <text x="44" y="351" class="code" font-size="12.5">Distance first{10};</text>
-  <text x="250" y="351" class="pass" font-size="12">显式选择</text>
-
-  <rect x="28" y="374" width="300" height="40" rx="8" fill="#fdecea" stroke="#f4c7bf"/>
-  <text x="44" y="399" class="code" font-size="12.5">Distance d = 10;</text>
-  <text x="250" y="399" class="fail" font-size="12">被拒绝</text>
-
-  <text x="352" y="345" class="muted" font-size="12.5">“没有初始化”的普通局部变量</text>
-  <text x="352" y="365" class="muted" font-size="12.5">不能先读后写——那是未定义行为，</text>
-  <text x="352" y="385" class="muted" font-size="12.5">不是可重复的实验。错误留在编译期，</text>
-  <text x="352" y="405" class="muted" font-size="12.5">不带进运行路径。</text>
-
-  <defs>
-    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" fill="#9aa4b2"/>
-    </marker>
-  </defs>
+  <line x1="32" y1="398" x2="868" y2="398" stroke="#dee2e6" stroke-width="1.5"/>
+  <text x="32" y="428" class="t">四行都得到一个普通的 int。差别不在括号长相，在谁来检查信息丢失。</text>
+  <text x="32" y="452" class="s">第三处边界是 explicit：它只挡住不写类型名的隐式转换，写出 ExplicitNumber{3} 仍然可以。</text>
 </svg>

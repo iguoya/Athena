@@ -54,10 +54,15 @@ TEST(TypeSemanticsContentTest, ShowsAutoBehaviorThroughObservableMutation) {
 TEST(TypeSemanticsContentTest, ShowsWhichValueCategoryDecltypePreserves) {
     EXPECT_EQ(
         run_experiment(&TypeSemantics::decltype_deduction),
-        "decltype(value) 是 int（取声明类型）: 是\n"
-        "decltype((value)) 是 int&（左值表达式）: 是\n"
+        "copy = 7 之后 value = 42（decltype(value) 是 int，改的是副本）\n"
+        "alias = 99 之后 value = 99（decltype((value)) 是 int&，改的是 value "
+        "本身）\n"
+        "auto 从 const int& 推出可写的 int 副本: 8，decltype(ref) 仍是 const "
+        "int&: 是\n"
         "decltype(std::move(value)) 是 int&&（将亡值）: 是\n"
-        "decltype(value + 0) 是 int（纯右值不加引用）: 是\n");
+        "decltype(value + 0) 是 int（纯右值不加引用）: 是\n"
+        "decltype(next_id()) 取到类型 int（id = 0），但 next_id 的调用次数仍是 "
+        "0\n");
 }
 
 TEST(TypeSemanticsContentTest, SelectsReferenceBindingsFromValueCategories) {

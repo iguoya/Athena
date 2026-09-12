@@ -130,6 +130,16 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         builder->get_widget<Gtk::Box>("type_semantics_enum_unit_host");
     auto* cast_unit_host =
         builder->get_widget<Gtk::Box>("type_semantics_cast_unit_host");
+    auto* decltype_unit_host =
+        builder->get_widget<Gtk::Box>("type_semantics_decltype_unit_host");
+    m_decltype_auto_result =
+        builder->get_widget<Gtk::Label>("ts_dt_auto_result");
+    m_decltype_result =
+        builder->get_widget<Gtk::Label>("ts_dt_decltype_result");
+    m_decltype_result_title =
+        builder->get_widget<Gtk::Label>("ts_dt_result_title");
+    m_decltype_result_detail =
+        builder->get_widget<Gtk::Label>("ts_dt_result_detail");
     m_deduction_graph = builder->get_widget<Gtk::DrawingArea>(
         "type_semantics_deduction_graph");
     m_anim_status =
@@ -148,6 +158,9 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         || !guide_roadmap_host || !m_value_matrix
         || !m_value_result_title || !m_value_result_detail || !value_unit_host || !deduction_unit_host
         || !deduction_variant_host || !enum_unit_host || !cast_unit_host
+        || !decltype_unit_host || !m_decltype_auto_result
+        || !m_decltype_result || !m_decltype_result_title
+        || !m_decltype_result_detail
         || !m_deduction_graph
         || !m_anim_status
         || !m_anim_note || !m_anim_playpause || !anim_prev || !anim_next
@@ -167,6 +180,12 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
          "/app/articles/cpp/images/type_semantics_model.svg"},
         {"ts_outline_loop_figure",
          "/app/articles/cpp/images/type_semantics_loop.svg"},
+        {"ts_enum_boundary_figure",
+         "/app/articles/cpp/images/enum_class_boundary.svg"},
+        {"ts_cast_checkpoints_figure",
+         "/app/articles/cpp/images/cast_checkpoints.svg"},
+        {"ts_decltype_stances_figure",
+         "/app/articles/cpp/images/decltype_two_stances.svg"},
     };
     for (const auto& [figure_id, resource_path] : lesson_figures) {
         if (auto* figure = builder->get_widget<Gtk::Picture>(figure_id)) {
@@ -378,6 +397,47 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
             .experiment_function_id = function_id_of(m_chapter, "value_category"),
         },
         "value_category");
+
+    // decltype 活对照：五个表达式按钮对应同一批声明下的五次提问，
+    // 结果由「名字看声明、表达式看值类别」两条规则算出（见
+    // select_decltype_expression 的表）。
+    const array<const char*, 5> decltype_buttons = {
+        "ts_dt_expr_named", "ts_dt_expr_paren", "ts_dt_expr_ref",
+        "ts_dt_expr_prvalue", "ts_dt_expr_xvalue"};
+    for (size_t index = 0; index < decltype_buttons.size(); ++index) {
+        auto* button = builder->get_widget<Gtk::Button>(decltype_buttons[index]);
+        if (button == nullptr) {
+            throw runtime_error(
+                string("Missing TypeSemantics decltype button: ")
+                + decltype_buttons[index]);
+        }
+        button->signal_clicked().connect(
+            [this, index]() { select_decltype_expression(index); });
+    }
+
+    // decltype 是概念节，掌握目标只到「一般了解」，所以预测题不考规则条文，
+    // 考那对括号带来的实际后果——它是本节唯一会改变程序行为的差别。
+    add_learning_unit(
+        *decltype_unit_host,
+        LearningUnit{
+            .id = "decltype_parentheses_change_semantics",
+            .heading = "",
+            .claim = "多一层括号，decltype 给出的是引用类型，声明出来的东西语义完全不同。",
+            .question =
+                "int value = 42; decltype((value)) picked = value; picked = 99; "
+                "之后 value 是多少？",
+            .choices = {
+                "42，picked 是一份独立副本",
+                "99，picked 只是 value 的另一个名字",
+                "编译失败，decltype 不能这样用",
+            },
+            .correct_choice = 1,
+            .feedback = "99。(value) 是左值表达式，按表达式规则取到 int&，picked 因此成了 value 的别名，赋值落回原对象。少写那层括号，decltype(value) 是 int，picked 会是独立副本，value 保持 42——一对括号改的是语义，不是排版。",
+            .follow_up = "去实验里对照两种写法：改动之后 value 变没变，就是它们类型不同的直接证据。",
+            .experiment_function_id =
+                function_id_of(m_chapter, "decltype_deduction"),
+        },
+        "decltype_deduction");
 
     // 两张图共用 render/roadmap_view：同一批数据，各自编码不同维度。
     const auto open_section = [this](const string& name) {
@@ -1152,6 +1212,65 @@ void TypeSemanticsLessonPage::select_value_expression(
     }
     if (m_value_matrix != nullptr) {
         m_value_matrix->queue_draw();
+    }
+}
+
+// 五个表达式共用同一批声明：
+//     int        value = 42;
+//     const int  fixed = 7;
+//     const int& ref   = fixed;
+// auto 一列五次都是 int，decltype 一列给出四种不同答案——这组对照本身就是
+// 「两者问的不是同一个问题」的证据，所以说明里要点明各自套用了哪条规则。
+void TypeSemanticsLessonPage::select_decltype_expression(size_t index) {
+    struct Case {
+        const char* auto_line;
+        const char* decltype_line;
+        const char* title;
+        const char* detail;
+    };
+    static const array<Case, 5> cases = {{
+        {"auto x = value;   →  int",
+         "decltype(value)   →  int",
+         "value —— 名字规则，取声明类型",
+         "未加括号的 value 是实体名，取它声明时写下的 int。两列结果一样，理由却不同："
+         "auto 说的是「复制一份」，decltype 说的是「照抄声明」。碰巧相同，不是通例。"},
+        {"auto x = (value);   →  int",
+         "decltype((value))   →  int&",
+         "(value) —— 表达式规则，按值类别",
+         "多一层括号之后它不再是实体名，而是一个左值表达式，于是走表达式规则，"
+         "左值取 T&，得到 int&。auto 完全不受括号影响，仍然复制出一个独立的 int。"
+         "这对括号改变的是语义。"},
+        {"auto x = ref;   →  int",
+         "decltype(ref)   →  const int&",
+         "ref —— 名字规则，两者在这里分道扬镳",
+         "名字规则如实取 ref 的声明类型 const int&。auto 要声明一个新变量，新变量默认"
+         "独立、可写，于是引用和顶层 const 一并被丢掉。想让 auto 这边留住，只能自己"
+         "写成 const auto&——推导省的是书写，不是意图。"},
+        {"auto x = value + 0;   →  int",
+         "decltype(value + 0)   →  int",
+         "value + 0 —— 表达式规则，纯右值",
+         "算出来就没了，不指向任何已有对象，所以用光秃秃的 T 表示，得到 int。"
+         "两列又一次相同，但 auto 说的是「复制一份」，decltype 说的是「它本来就没有身份」。"},
+        {"auto x = std::move(value);   →  int",
+         "decltype(std::move(value))   →  int&&",
+         "std::move(value) —— 表达式规则，将亡值",
+         "std::move 把表达式标成将亡值，decltype 用 int&& 把这条信息记下来。"
+         "它改的只是值类别记号，value 本身没有被搬走——上一节的实验已经验证过。"
+         "auto 那边照旧复制出一个 int。"},
+    }};
+
+    const auto& picked = cases.at(index);
+    if (m_decltype_auto_result != nullptr) {
+        m_decltype_auto_result->set_text(picked.auto_line);
+    }
+    if (m_decltype_result != nullptr) {
+        m_decltype_result->set_text(picked.decltype_line);
+    }
+    if (m_decltype_result_title != nullptr) {
+        m_decltype_result_title->set_text(picked.title);
+    }
+    if (m_decltype_result_detail != nullptr) {
+        m_decltype_result_detail->set_text(picked.detail);
     }
 }
 

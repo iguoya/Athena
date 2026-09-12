@@ -146,24 +146,44 @@ public:
     }
 
     void decltype_deduction(ostream& output) const {
-        int value = 7;
+        int value = 42;
 
-        const bool name_is_int = is_same_v<decltype(value), int>;
-        const bool expression_is_lvalue_reference =
-            is_same_v<decltype((value)), int&>;
-        const bool moved_is_rvalue_reference =
-            is_same_v<decltype(std::move(value)), int&&>;
-        const bool prvalue_has_no_reference =
-            is_same_v<decltype(value + 0), int>;
+        // 名字规则与表达式规则的差别不停留在类型名上：一个声明出独立副本，
+        // 另一个声明出别名，赋值落到哪里是能直接看见的。
+        decltype(value) copy = value;    // int：未加括号的名字取声明类型
+        decltype((value)) alias = value; // int&：(value) 是左值表达式
+        copy = 7;
+        output << "copy = 7 之后 value = " << value
+               << "（decltype(value) 是 int，改的是副本）\n";
+        alias = 99;
+        output << "alias = 99 之后 value = " << value
+               << "（decltype((value)) 是 int&，改的是 value 本身）\n";
 
-        output << "decltype(value) 是 int（取声明类型）: "
-               << yes_no(name_is_int) << '\n';
-        output << "decltype((value)) 是 int&（左值表达式）: "
-               << yes_no(expression_is_lvalue_reference) << '\n';
+        // 同一个 const 引用，auto 和 decltype 给出不同的回答。
+        const int fixed = 7;
+        const int& ref = fixed;
+        auto copied = ref;          // int：引用与顶层 const 都被丢掉
+        decltype(ref) kept = fixed; // const int&：原样保留
+        copied = 8;
+        // kept = 8; // decltype(ref) 推出 const int&：clang++ -std=c++20 报
+        // "cannot assign to variable 'kept' with const-qualified type
+        // 'const int &'"。这条路径只读，是编译期就被拒绝的写法。
+        output << "auto 从 const int& 推出可写的 int 副本: " << copied
+               << "，decltype(ref) 仍是 const int&: "
+               << yes_no(is_same_v<decltype(kept), const int&>) << '\n';
+
+        // 表达式规则用引用类型编码值类别。
         output << "decltype(std::move(value)) 是 int&&（将亡值）: "
-               << yes_no(moved_is_rvalue_reference) << '\n';
+               << yes_no(is_same_v<decltype(std::move(value)), int&&>) << '\n';
         output << "decltype(value + 0) 是 int（纯右值不加引用）: "
-               << yes_no(prvalue_has_no_reference) << '\n';
+               << yes_no(is_same_v<decltype(value + 0), int>) << '\n';
+
+        // 不求值语境：取类型不会执行里面的表达式，计数器不会前进。
+        int call_count = 0;
+        auto next_id = [&call_count]() { return ++call_count; };
+        decltype(next_id()) id = 0;
+        output << "decltype(next_id()) 取到类型 int（id = " << id
+               << "），但 next_id 的调用次数仍是 " << call_count << '\n';
     }
 
     void value_category(ostream& output) const {
