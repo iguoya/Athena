@@ -212,14 +212,9 @@ void MainWindow::launch_domain_app(const string& app_id) {
         if (app.id != app_id) {
             continue;
         }
-        // 学习库的路径由主程序解析一次再传过去，被启动方不必自己推导用户
-        // 数据目录；它是两个程序之间唯一共享的基础设施。
-        string store_path;
-        if (m_learning_store) {
-            store_path = Glib::build_filename(
-                Glib::get_user_data_dir(), "Athena", "learning.db");
-        }
-        if (const auto error = launch_external_app(app, store_path)) {
+        // 独立应用自己建库、自己迁移（ADR 0037），主程序不传学习库路径，
+        // 也不假设两边的表结构还能对上。
+        if (const auto error = launch_external_app(app)) {
             // 未构建或启动失败都只是提示：外部应用可不可用不影响主程序。
             auto* notice = Gtk::make_managed<Gtk::MessageDialog>(
                 *this, *error, false, Gtk::MessageType::INFO,
@@ -234,9 +229,8 @@ void MainWindow::launch_domain_app(const string& app_id) {
     // 装好的发行包里根本没有 apps/，让用户去检查 app.json 是误导。
     const string message = apps_root.empty()
         ? "「" + app_id + "」是独立应用，不包含在当前发行包里。\n\n"
-              "从源码仓库构建它之后，这个节点就能直接打开："
-              "\n    cmake -S apps/" + app_id + " -B apps/" + app_id + "/build"
-              "\n    cmake --build apps/" + app_id + "/build"
+              "请到源码仓库的 apps/" + app_id
+              + " 目录按该应用自己的 README / AGENTS.md 构建后再从首页打开。"
         : "在 " + apps_root + " 下没有找到独立应用 " + app_id
               + "，请检查 " + app_id + "/app.json 是否存在。";
     auto* missing = Gtk::make_managed<Gtk::MessageDialog>(

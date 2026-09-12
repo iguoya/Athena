@@ -27,8 +27,7 @@ struct ExternalApp {
 // 并记一行日志，不影响其他应用，也不抛出。
 vector<ExternalApp> discover_external_apps(const string& apps_root);
 
-// 以独立进程启动，把共用学习库的路径通过 --store 传过去——路径解析只在
-// 主程序做一次，被启动方不必再写一套平台规则。
+// 以独立进程启动。进度库不再共享——每个应用自建、自管自己的库（ADR 0037），
+// 所以这里除了把进程拉起来不传任何状态。
 // 成功返回 nullopt，失败返回可以直接显示给用户的错误说明。
-optional<string> launch_external_app(
-    const ExternalApp& app, const string& store_path);
+optional<string> launch_external_app(const ExternalApp& app);

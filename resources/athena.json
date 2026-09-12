@@ -236,48 +236,6 @@
       ]
     },
     {
-      "name": "da",
-      "title": "数据结构与算法",
-      "description": "用 C++ 手写实现经典数据结构与算法，在使用标准库之外掌握其内部原理和算法思想。",
-      "icon": { "type": "theme", "name": "applications-science-symbolic" },
-      "chapters": [
-        {
-          "name": "ComplexityAnalysis",
-          "title": "复杂度分析",
-          "description": "学习大 O 表示法与时间、空间、摊还复杂度，为手写数据结构与算法建立统一的度量语言。",
-          "icon": { "type": "theme", "name": "accessories-calculator-symbolic" },
-          "subchapters": [
-            { "name": "big_o_notation", "title": "大 O 表示法", "description": "理解大 O 刻画的是输入规模增长时耗时的增长趋势而非具体耗时；对比常数、对数、线性、线性对数、平方复杂度对应的典型代码形态。", "difficulty": 2, "mastery_goal": "master" },
-            { "name": "time_complexity", "title": "时间复杂度", "description": "练习推导嵌套循环和递归调用的复杂度；区分最好、最坏和平均情况各自的适用场景，理解算法分析通常以最坏情况为准。", "difficulty": 3, "mastery_goal": "master" },
-            { "name": "space_complexity", "title": "空间复杂度", "description": "学习度量算法的额外内存占用以及时间与空间的权衡。", "difficulty": 2, "mastery_goal": "required" },
-            { "name": "amortized_analysis", "title": "摊还分析", "description": "理解个别昂贵操作被大量廉价操作摊平后的均摊成本：以顺序容器倍增扩容为例，单次插入均摊为常数；体会平均情况和均摊分析的区别。", "difficulty": 4, "mastery_goal": "familiar" }
-          ]
-        },
-        { "name": "LinearStructure", "title": "线性结构", "description": "学习线性表的逻辑关系、存储方式和基本操作。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
-        { "name": "AdvancedArray", "title": "数组进阶", "description": "学习数组的进阶操作、内存布局和典型应用。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
-        { "name": "LinkedList", "title": "链表", "description": "学习单链表、双向链表和链表操作。", "icon": { "type": "theme", "name": "insert-link-symbolic" }, "subchapters": [] },
-        { "name": "StackQueue", "title": "栈与队列", "description": "学习栈、队列、双端队列及其典型应用。", "icon": { "type": "theme", "name": "view-list-symbolic" }, "subchapters": [] },
-        { "name": "TreeBasics", "title": "树基础", "description": "学习树的术语、表示方法和基本遍历。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
-        { "name": "BinarySearchTree", "title": "二叉搜索树", "description": "学习二叉搜索树的查找、插入和删除。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
-        { "name": "Heap", "title": "堆", "description": "学习二叉堆、优先队列和堆操作。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
-        { "name": "SpecialTree", "title": "特殊树结构", "description": "学习平衡树、字典树等特殊树结构。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
-        { "name": "GraphBasics", "title": "图基础", "description": "学习图的术语、邻接矩阵和邻接表。", "icon": { "type": "theme", "name": "network-workgroup-symbolic" }, "subchapters": [] },
-        { "name": "GraphTraversal", "title": "图遍历", "description": "学习深度优先搜索和广度优先搜索。", "icon": { "type": "theme", "name": "system-run-symbolic" }, "subchapters": [] },
-        { "name": "ShortestPath", "title": "最短路径", "description": "学习常用单源和多源最短路径算法。", "icon": { "type": "theme", "name": "go-jump-symbolic" }, "subchapters": [] },
-        { "name": "MinimumSpanningTree", "title": "最小生成树", "description": "学习 Prim、Kruskal 及最小生成树的应用。", "icon": { "type": "theme", "name": "view-list-tree-symbolic" }, "subchapters": [] },
-        { "name": "BasicSorting", "title": "基础排序", "description": "学习冒泡、选择和插入排序。", "icon": { "type": "theme", "name": "view-sort-ascending-symbolic" }, "subchapters": [] },
-        { "name": "AdvancedSorting", "title": "高级排序", "description": "学习归并、快速和堆排序。", "icon": { "type": "theme", "name": "view-sort-descending-symbolic" }, "subchapters": [] },
-        { "name": "Searching", "title": "搜索算法", "description": "学习顺序查找、二分查找和搜索策略。", "icon": { "type": "theme", "name": "edit-find-symbolic" }, "subchapters": [] },
-        { "name": "DivideConquer", "title": "分治算法", "description": "学习问题分解、递归求解和结果合并。", "icon": { "type": "theme", "name": "view-dual-symbolic" }, "subchapters": [] },
-        { "name": "Greedy", "title": "贪心算法", "description": "学习局部最优选择及贪心正确性分析。", "icon": { "type": "theme", "name": "emblem-ok-symbolic" }, "subchapters": [] },
-        { "name": "DynamicProgramming", "title": "动态规划", "description": "学习状态定义、状态转移和空间优化。", "icon": { "type": "theme", "name": "view-grid-symbolic" }, "subchapters": [] },
-        { "name": "Backtracking", "title": "回溯算法", "description": "学习选择、约束、撤销和搜索空间剪枝。", "icon": { "type": "theme", "name": "edit-undo-symbolic" }, "subchapters": [] },
-        { "name": "StringAlgorithm", "title": "字符串算法", "description": "学习字符串匹配、前缀处理和常用字符串技巧。", "icon": { "type": "theme", "name": "insert-text-symbolic" }, "subchapters": [] },
-        { "name": "ComputationalGeometry", "title": "计算几何", "description": "学习点、线、面关系及基础几何算法。", "icon": { "type": "theme", "name": "applications-graphics-symbolic" }, "subchapters": [] },
-        { "name": "NumberTheory", "title": "数论算法", "description": "学习素数、最大公约数、模运算等数论基础。", "icon": { "type": "theme", "name": "accessories-calculator-symbolic" }, "subchapters": [] }
-      ]
-    },
-    {
       "name": "dp",
       "title": "设计模式",
       "description": "通过小型 C++ 实验理解经典设计模式的动机、结构和适用场景。",

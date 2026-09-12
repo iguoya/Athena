@@ -106,8 +106,10 @@ TEST(DomainGraphTest, AvailableDomainPullsCatalogMetadataAndProgress) {
 TEST(DomainGraphTest, MissingCategoryDowngradesToPlanned) {
     const auto graph = build_domain_graph(MakeCatalog(), {});
     EXPECT_EQ(NodeById(graph, "practice").kind, DomainKind::Planned);
-    EXPECT_EQ(NodeById(graph, "da").kind, DomainKind::Planned);
     EXPECT_EQ(NodeById(graph, "practice").total, 0);
+    // da 已改为 ExternalApp（apps/dsa），无分类时不降级为 Planned。
+    EXPECT_EQ(NodeById(graph, "da").kind, DomainKind::ExternalApp);
+    EXPECT_EQ(NodeById(graph, "da").app_id, "dsa");
 }
 
 TEST(DomainGraphTest, NodesSplitIntoTwoSideGraphs) {
@@ -271,16 +273,18 @@ TEST(DomainGraphTest, PriorityAndTrackAreAssigned) {
 }
 
 TEST(DomainGraphTest, ExternalAppDomainCarriesItsAppId) {
-    // C 语言由 apps/c 那个独立应用承载：它不是本程序里的一个分类，
-    // 但在图谱上仍是同一个可点的节点，不另开入口（ADR 0032）。
+    // 独立应用在图谱上仍是可点节点，不另开入口（ADR 0032）。
     const auto graph = build_domain_graph(MakeCatalog(), {});
-    const auto& node = NodeById(graph, "c_lang");
-    EXPECT_EQ(node.kind, DomainKind::ExternalApp);
-    EXPECT_EQ(node.app_id, "c");
-    // 没有对应分类，所以不参与本程序的进度统计。
-    EXPECT_EQ(node.total, 0);
+    const auto& c_lang = NodeById(graph, "c_lang");
+    EXPECT_EQ(c_lang.kind, DomainKind::ExternalApp);
+    EXPECT_EQ(c_lang.app_id, "c");
+    EXPECT_EQ(c_lang.total, 0);
 
-    // 其余节点不应该被误标成外部应用。
+    const auto& da = NodeById(graph, "da");
+    EXPECT_EQ(da.kind, DomainKind::ExternalApp);
+    EXPECT_EQ(da.app_id, "dsa");
+    EXPECT_EQ(da.total, 0);
+
     EXPECT_TRUE(NodeById(graph, "cpp").app_id.empty());
     EXPECT_TRUE(NodeById(graph, "python").app_id.empty());
 }

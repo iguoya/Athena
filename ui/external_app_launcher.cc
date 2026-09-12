@@ -87,8 +87,7 @@ vector<ExternalApp> discover_external_apps(const string& apps_root) {
     return apps;
 }
 
-optional<string> launch_external_app(
-    const ExternalApp& app, const string& store_path) {
+optional<string> launch_external_app(const ExternalApp& app) {
     if (!app.built) {
         string message = app.title + " 还没有构建。\n\n在项目根目录执行：";
         for (const auto& command : app.build_commands) {
@@ -97,11 +96,7 @@ optional<string> launch_external_app(
         return message;
     }
 
-    vector<string> argv{app.executable};
-    if (!store_path.empty()) {
-        argv.push_back("--store");
-        argv.push_back(store_path);
-    }
+    const vector<string> argv{app.executable};
 
     try {
         // 异步启动后就不再管它：两个进程各自独立，被启动方崩溃不影响主程序。

@@ -104,14 +104,15 @@ const vector<DomainSpec>& domain_specs() {
          "一个解法”变成能跑、能测的实现——几乎每个真实项目的核心"
          "逻辑都是某种数据结构加某种算法。",
          "从思路到代码的边界处理；复杂度分析和状态设计（尤其动态规划）。",
-         "applications-science-symbolic", DomainKind::Available,
+         "applications-science-symbolic", DomainKind::ExternalApp,
          VerifyMode::Code, DomainPriority::Core, DomainTrack::Engineering, "",
          {{"cpp",
            "本平台的数据结构课是用 C++ 手写实现每一种结构的：链表和"
            "树要用指针和明确的所有权，容器要用模板和 RAII，迭代器要"
            "重载运算符，性能对比要贴着内存布局看。算法思想虽然语言"
            "无关，但要读写这些实现、对照标准库的 vector / map / "
-           "priority_queue，得先掌握 C++ 的类、模板和内存管理。"}}},
+           "priority_queue，得先掌握 C++ 的类、模板和内存管理。"}},
+         "dsa"},
         {"engineering_practice", "工程实践与工具链",
          "构建系统与交叉编译，Git 与协作流程，单元测试与 TDD，"
          "调试器、Sanitizer 与静态分析，持续集成，发布与打包。",
