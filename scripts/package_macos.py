@@ -44,11 +44,28 @@ def run(*arguments: str | Path, capture: bool = False, check: bool = True) -> st
     return result.stdout if capture else ""
 
 
-def require_tool(name: str) -> str:
+def require_tool(name: str, *, formula: str | None = None) -> str:
+    """找一个外部工具；formula 给出它所属的 Homebrew 包名时可以绕过未 link。
+
+    Homebrew 的包没有 brew link（keg-only、被 unlink、或安装时跳过）时，
+    它的 bin 不在 PATH 里，shutil.which 就找不到——但包本身是装好的。
+    这种情况下直接去它自己的 bin 找，比让打包失败要合理：装了就该能用。
+    """
     path = shutil.which(name)
-    if not path:
-        raise PackagingError(f"required tool is unavailable: {name}")
-    return path
+    if path:
+        return path
+    if formula:
+        formula_prefix = brew_formula_prefix(formula)
+        if formula_prefix:
+            candidate = formula_prefix / "bin" / name
+            if candidate.is_file() and os.access(candidate, os.X_OK):
+                return str(candidate)
+        raise PackagingError(
+            f"required tool is unavailable: {name}. "
+            f"装上它：brew install {formula}；"
+            f"已经装了却找不到，多半是没 link：brew link {formula}"
+        )
+    raise PackagingError(f"required tool is unavailable: {name}")
 
 
 def brew_prefix() -> Path:
@@ -323,7 +340,14 @@ def copy_gtk_runtime(resources_dir: Path, homebrew_prefix: Path) -> list[Path]:
             continue
         source = Path(match.group(1)).resolve()
         if not source.is_file():
-            raise PackagingError(f"GdkPixbuf loader not found: {source}")
+            # loaders.cache 记着这个路径，文件却不在——通常是对应的包没有
+            # brew link（或 link 被覆盖掉了），cache 与实际软链不一致。
+            raise PackagingError(
+                f"GdkPixbuf loader not found: {source}. "
+                "loaders.cache 记录了它但文件不在，通常是提供它的包没有 link；"
+                "例如 SVG loader 来自 librsvg，可执行 brew link --overwrite librsvg "
+                "后重试"
+            )
         destination = bundled_loader_dir / source.name
         if not destination.exists():
             shutil.copy2(source, destination)
@@ -348,7 +372,7 @@ def create_icon(project_root: Path, resources_dir: Path) -> None:
     )
     if not source.is_file():
         raise PackagingError(f"application icon source not found: {source}")
-    rsvg_convert = require_tool("rsvg-convert")
+    rsvg_convert = require_tool("rsvg-convert", formula="librsvg")
     iconutil = require_tool("iconutil")
     with tempfile.TemporaryDirectory(prefix="athena-icon-") as temporary:
         iconset = Path(temporary) / "Athena.iconset"

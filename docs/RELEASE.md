@@ -21,6 +21,15 @@ Athena-VERSION-linux-x86_64.AppImage
 `adwaita-icon-theme` 和 `hicolor-icon-theme`，用于生成应用图标并收集 GTK
 运行时主题资源。
 
+`librsvg` 提供两样东西，缺一样打包就会中断，报错都带了修复命令：
+
+- `rsvg-convert`，用来生成图标。它不在 `PATH` 里也没关系——打包器会去
+  `brew --prefix librsvg` 的 `bin` 下找，所以 keg-only 或没 `brew link`
+  都能正常打包；只有真的没安装才会失败。
+- SVG 的 GdkPixbuf 加载器。它必须出现在 `loaders.cache` 记录的位置上，
+  也就是要 `brew link`。如果 cache 记着而文件不在（常见于 link 被覆盖），
+  执行 `brew link --overwrite librsvg` 后重试。
+
 先构建经过优化和剥离符号的发行版：
 
 ```sh
