@@ -1203,22 +1203,53 @@ void TypeSemanticsLessonPage::draw_roadmap(
     }
 
     for (const auto& node : m_roadmap_nodes) {
-        // 配色只表达掌握目标，不表达难度——两者是独立维度（ADR 0029），
-        // 用同一套视觉编码会让人以为难就等于要精通。
+        // 一个通道只承载一个维度（AGENTS.md），但哪个维度上色由这张图要回答
+        // 什么问题决定：导览那张问"哪个重哪个难"，难度有天然的冷暖色阶，就让
+        // 配色表达难度、文字表达掌握目标；大纲这张服务于掌握目标分档，配色
+        // 留给掌握目标。两张图各自成立，不必统一。
         ChartColor border = kMuted;
         ChartColor fill{0.97, 0.98, 0.99};
-        switch (node.goal) {
-        case MasteryGoal::Master:
-            border = {0.039, 0.345, 0.792};
-            fill = {0.878, 0.925, 1.0};
-            break;
-        case MasteryGoal::Required:
-            border = {0.125, 0.788, 0.592};
-            fill = {0.878, 0.973, 0.949};
-            break;
-        case MasteryGoal::Familiar:
-        case MasteryGoal::Unrated:
-            break;
+        if (show_grade) {
+            // 与 .badge-difficulty.difficulty-level-N 同一套色阶，徽章和图上
+            // 对同一个难度用同一个颜色。
+            switch (node.difficulty) {
+            case 1:
+                border = {0.098, 0.529, 0.329};  // success
+                fill = {0.847, 0.937, 0.890};
+                break;
+            case 2:
+                border = {0.125, 0.788, 0.592};  // teal
+                fill = {0.878, 0.973, 0.949};
+                break;
+            case 3:
+                border = {0.808, 0.612, 0.024};  // warning
+                fill = {1.0, 0.953, 0.808};
+                break;
+            case 4:
+                border = {0.992, 0.494, 0.078};  // orange
+                fill = {0.996, 0.914, 0.843};
+                break;
+            case 5:
+                border = {0.863, 0.208, 0.271};  // danger
+                fill = {0.973, 0.843, 0.855};
+                break;
+            default:
+                break;
+            }
+        } else {
+            switch (node.goal) {
+            case MasteryGoal::Master:
+                border = {0.039, 0.345, 0.792};
+                fill = {0.878, 0.925, 1.0};
+                break;
+            case MasteryGoal::Required:
+                border = {0.125, 0.788, 0.592};
+                fill = {0.878, 0.973, 0.949};
+                break;
+            case MasteryGoal::Familiar:
+            case MasteryGoal::Unrated:
+                break;
+            }
         }
         rounded_box(cr, node.x, node.y, node.width, node.height, border, fill);
         draw_cairo_text(
@@ -1232,10 +1263,8 @@ void TypeSemanticsLessonPage::draw_roadmap(
                                   : node.goal == MasteryGoal::Required ? "必须掌握"
                                   : node.goal == MasteryGoal::Familiar ? "一般了解"
                                                                        : "未评定";
-            const string grade =
-                node.difficulty > 0
-                    ? "难度 " + to_string(node.difficulty) + " / 5 · " + goal_text
-                    : string(goal_text);
+            // 难度已经由配色表达，这里只写掌握目标，同一维度不重复两遍。
+            const string grade = goal_text;
             draw_cairo_text(
                 cr, grade, node.x + node.width / 2.0, node.y + 46.0, 11.0, kMuted,
                 false, 0.5);
