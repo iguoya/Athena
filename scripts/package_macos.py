@@ -155,6 +155,25 @@ def rpath_entries(path: Path) -> list[str]:
     return entries
 
 
+def homebrew_library_search_paths(prefix: Path) -> list[str]:
+    """Homebrew 里所有包的 lib 目录。
+
+    没有 brew link 的包（keg-only 或被 unlink）不会出现在 <prefix>/lib 下，
+    但 <prefix>/opt/<formula> 这个软链 brew 总会建。librsvg 就是这种情况：
+    它只被 GdkPixbuf 的 SVG loader 依赖，主程序的 rpath 里没有它的 Cellar
+    路径，只按可执行文件的 rpath 去找必然落空。
+    """
+    paths = [str(prefix / "lib")]
+    opt = prefix / "opt"
+    if opt.is_dir():
+        paths.extend(
+            str(formula / "lib")
+            for formula in sorted(opt.iterdir())
+            if (formula / "lib").is_dir()
+        )
+    return paths
+
+
 def resolve_rpath_dependency(dependency: str, search_paths: list[str]) -> Path | None:
     """把 @rpath/libfoo.dylib 解析成真实文件。
 
@@ -189,8 +208,11 @@ def copy_runtime_libraries(
     source_by_name: dict[str, Path] = {}
     copied_libraries: list[Path] = []
     rewrites: dict[Path, list[tuple[str, str]]] = {}
-    # 构建期的 rpath 就是 @rpath/ 依赖的来源，用它把那些依赖解析成真实文件。
-    search_paths = rpath_entries(executable)
+    # 构建期的 rpath 是 @rpath/ 依赖的主要来源；再补上 Homebrew 各包自己的
+    # lib 目录，否则只被插件依赖、又没 brew link 的库（librsvg）解析不出来。
+    search_paths = rpath_entries(executable) + homebrew_library_search_paths(
+        brew_prefix()
+    )
 
     index = 0
     while index < len(targets):
@@ -264,6 +286,25 @@ def copy_runtime_libraries(
             if entry.startswith("@"):
                 continue
             run(install_name_tool, "-delete_rpath", entry, target, check=False)
+
+    # 收尾自检：删掉 Homebrew rpath 之后，任何残留的 @rpath/ 引用都再也解析
+    # 不到了，dlopen 会失败。这类失败是静默的——GdkPixbuf 加载不到 SVG loader
+    # 只会让图片显示不出来，不报错、不崩溃，光看构建日志根本发现不了。宁可在
+    # 这里把包打失败。
+    unresolved = [
+        (target, dependency)
+        for target in [*targets, *copied_libraries]
+        for dependency in dylib_dependencies(target)
+        if dependency.startswith("@rpath/")
+    ]
+    if unresolved:
+        detail = "; ".join(
+            f"{target.name} -> {dependency}" for target, dependency in unresolved
+        )
+        raise PackagingError(
+            "bundle 内存在无法解析的 @rpath 依赖，运行时 dlopen 会静默失败："
+            f"{detail}"
+        )
     return copied_libraries
 
 
