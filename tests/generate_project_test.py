@@ -76,7 +76,8 @@ def main() -> None:
         write(root / "resources" / "ui" / "chapters" / "code.blp")
         write(root / "resources" / "window.ui")
         write(root / "resources" / "style.css")
-        write(root / "resources" / "icons" / "tiger.svg", "<svg/>\n")
+        # ADR 0038：资源目录不再放 SVG，图标是 PNG。
+        write(root / "resources" / "icons" / "tiger.png", "fake-png\n")
         config = {
             "format_version": 1,
             "defaults": {
@@ -157,7 +158,7 @@ def main() -> None:
         assert "code.ui" in resource_xml
         assert "experiment_dialog.ui" not in resource_xml
         assert "cplusplus/widget/widget.hpp" in resource_xml
-        assert '<file alias="tiger.svg">icons/tiger.svg</file>' in resource_xml
+        assert '<file alias="tiger.png">icons/tiger.png</file>' in resource_xml
         assert "/app/icons/icons" not in resource_xml
         assert 'alias="chapter_catalog.json"' in resource_xml
         assert ">athena.json<" not in resource_xml

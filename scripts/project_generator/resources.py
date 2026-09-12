@@ -59,7 +59,6 @@ def render_resources(model: dict, root: Path) -> str:
     <file preprocess="xml-stripblanks">lesson_blocks.ui</file>
     <file preprocess="xml-stripblanks">outline.ui</file>
     <file>style.css</file>
-    <file>backdrop.svg</file>
 {entries_or_comment(article_entries, "暂无文章")}
   </gresource>
   <gresource prefix="/app/chapters">

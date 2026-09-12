@@ -64,7 +64,7 @@ def install_tree(build_dir: Path, destination: Path) -> None:
     required_paths = (
         destination / "usr/bin/Athena",
         destination / "usr/share/applications/cn.yatiger.athena.desktop",
-        destination / "usr/share/icons/hicolor/scalable/apps/cn.athena.icon.svg",
+        destination / "usr/share/icons/hicolor/256x256/apps/cn.athena.icon.png",
     )
     missing = [str(path) for path in required_paths if not path.is_file()]
     if missing:
@@ -131,7 +131,8 @@ def build_appimage(
     shutil.copytree(installed_root / "usr", app_dir / "usr")
 
     desktop_file = app_dir / "usr/share/applications/cn.yatiger.athena.desktop"
-    icon_file = app_dir / "usr/share/icons/hicolor/scalable/apps/cn.athena.icon.svg"
+    # ADR 0038：图标是 PNG 尺寸集，不再依赖发行版的 SVG 渲染。
+    icon_file = app_dir / "usr/share/icons/hicolor/256x256/apps/cn.athena.icon.png"
     root_desktop_file = app_dir / desktop_file.name
     root_icon_file = app_dir / icon_file.name
     shutil.copy2(desktop_file, root_desktop_file)

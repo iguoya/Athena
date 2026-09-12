@@ -31,16 +31,22 @@
 @define-color athena_chart_neutral #9ea6ad;
 
 /* === Application shell === */
-/* 纯白偏单调，铺一张极淡的矢量底纹 resources/backdrop.svg（近白底 + 三团
-   柔光 + 隐约点阵），cover 铺满。顶栏 .app-topbar 自己是不透明白，不受
-   影响。项目当前只有浅色一套调色板，等做暗色时再换一张深色 backdrop。 */
+/* 纯白偏单调，铺一层极淡的底纹：近白的竖向渐变加三团柔光。ADR 0038 之后
+   这里不再引用 backdrop.svg——图片要经外部解码器，缺 SVG loader 时会静默
+   变成一片纯色；写成 GTK CSS 渐变则由 GSK 直接画，零依赖，还能随
+   @athena_* 变量走。顶栏 .app-topbar 自己是不透明白，不受影响。项目当前
+   只有浅色一套调色板，等做暗色时再调这几段渐变。 */
 .athena-window,
 .app-content {
     background-color: @athena_surface_subtle;
-    background-image: url("resource:///app/backdrop.svg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-image:
+        radial-gradient(ellipse farthest-side at 10% 0%,
+                        alpha(@athena_primary, 0.10), alpha(@athena_primary, 0)),
+        radial-gradient(ellipse farthest-side at 96% 6%,
+                        alpha(@athena_purple, 0.09), alpha(@athena_purple, 0)),
+        radial-gradient(ellipse farthest-side at 82% 100%,
+                        alpha(@athena_teal, 0.08), alpha(@athena_teal, 0)),
+        linear-gradient(to bottom, #ffffff 0%, #f8f9fa 58%, #f2f4f6 100%);
     color: @athena_body_text;
 }
 
@@ -482,6 +488,85 @@ notebook.native-lesson-section-notebook > header > tabs > tab:checked {
 /* 行内“划重点”：柔和黄底，等同网页 <mark> / 荧光笔的通用约定。 */
 .lesson-mark {
     background-color: #fff3cd;
+}
+
+/* === 对照表插图（ADR 0038）===
+   表格、并排对照、带标记的条目不再做成 SVG 图片：那样字会变成像素，选不中、
+   不跟随系统字号、不随主题变。这里用控件排版，配色仍取上面 callout 那套
+   Bootstrap alert 标准色，语义一致：红=放行/无人检查，绿=挡住/运行期真查，
+   蓝=编译期检查，黄=不检查但意图写在代码里。 */
+.figure-table {
+    padding: 4px 2px;
+}
+.figure-head {
+    font-weight: 700;
+    color: @athena_muted;
+}
+.figure-cell {
+    font-size: 1em;
+}
+.figure-note {
+    font-size: 0.88em;
+    color: @athena_muted;
+}
+/* 结论格：小块底色加同色描边，作用等同原来 SVG 里的色块。 */
+.figure-verdict {
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid @athena_border_strong;
+    background-color: @athena_surface_subtle;
+}
+.figure-verdict-pass {
+    background-color: #f8d7da;
+    border-color: @athena_danger;
+    color: #842029;
+}
+.figure-verdict-stop {
+    background-color: #d1e7dd;
+    border-color: @athena_success;
+    color: #0f5132;
+}
+.figure-verdict-compile {
+    background-color: #cfe2ff;
+    border-color: @athena_primary;
+    color: #052c65;
+}
+.figure-verdict-runtime {
+    background-color: #d1e7dd;
+    border-color: @athena_success;
+    color: #0f5132;
+}
+.figure-verdict-unchecked {
+    background-color: #fff3cd;
+    border-color: @athena_warning;
+    color: #664d03;
+}
+/* 两栏立场对照：左右各一块，底色区分立场，不靠画线。 */
+.figure-stance {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid @athena_border_strong;
+}
+.figure-stance-auto {
+    background-color: #fff3cd;
+    border-color: @athena_warning;
+}
+.figure-stance-decltype {
+    background-color: #cfe2ff;
+    border-color: @athena_primary;
+}
+.figure-stance-title {
+    font-weight: 700;
+    font-size: 1.05em;
+}
+.figure-result {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: @athena_surface;
+    border: 1px solid @athena_border_strong;
 }
 
 .lesson-figure {

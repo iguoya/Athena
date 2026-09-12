@@ -1,6 +1,7 @@
 #include "type_semantics_lesson_page.h"
 
 #include "render/cairo_text.h"
+#include "render/lesson_figure.h"
 #include "ui/learning_unit_view.h"
 
 #include <algorithm>
@@ -173,29 +174,25 @@ TypeSemanticsLessonPage::TypeSemanticsLessonPage(
         throw runtime_error("Failed to load TypeSemantics lesson Blueprint");
     }
 
-    // 教案内嵌的静态 SVG 图与手册共享同一批资产（resources/articles/cpp/images/），
-    // 打包进 /app 前缀的 GResource；结构留在 Blueprint，这里只填图源。
-    const vector<pair<const char*, const char*>> lesson_figures = {
-        {"ts_init_forms_figure", "/app/articles/cpp/images/init_forms.svg"},
-        {"ts_auto_selection_figure",
-         "/app/articles/cpp/images/auto_selection_flow.svg"},
-        {"ts_lifetime_figure",
-         "/app/articles/cpp/images/object_lifetime_timeline.svg"},
-        {"ts_outline_model_figure",
-         "/app/articles/cpp/images/type_semantics_model.svg"},
-        {"ts_outline_loop_figure",
-         "/app/articles/cpp/images/type_semantics_loop.svg"},
-        {"ts_enum_boundary_figure",
-         "/app/articles/cpp/images/enum_class_boundary.svg"},
-        {"ts_cast_checkpoints_figure",
-         "/app/articles/cpp/images/cast_checkpoints.svg"},
-        {"ts_decltype_stances_figure",
-         "/app/articles/cpp/images/decltype_two_stances.svg"},
+    // 位置本身带信息的三张图由 render/lesson_figure 自绘（ADR 0038）：时间轴、
+    // 分支流程、回环。它们不再是 SVG 图片，因此不经外部解码器，缺什么都不会
+    // 变成一块静默的空白；结构仍留在 Blueprint，这里只把画笔接上去。
+    const vector<pair<const char*, void (*)(
+        const Cairo::RefPtr<Cairo::Context>&, int, int)>> lesson_figures = {
+        {"ts_lifetime_figure", &lesson_figure::object_lifetime_timeline},
+        {"ts_auto_selection_figure", &lesson_figure::auto_selection_flow},
+        {"ts_outline_loop_figure", &lesson_figure::reading_loop},
     };
-    for (const auto& [figure_id, resource_path] : lesson_figures) {
-        if (auto* figure = builder->get_widget<Gtk::Picture>(figure_id)) {
-            figure->set_resource(resource_path);
+    for (const auto& [figure_id, draw] : lesson_figures) {
+        auto* figure = builder->get_widget<Gtk::DrawingArea>(figure_id);
+        if (figure == nullptr) {
+            throw runtime_error(
+                string("Missing TypeSemantics lesson figure: ") + figure_id);
         }
+        figure->set_draw_func(
+            [draw](const Cairo::RefPtr<Cairo::Context>& cr, int w, int h) {
+                draw(cr, w, h);
+            });
     }
 
     add_learning_unit(

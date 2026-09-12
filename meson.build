@@ -196,9 +196,11 @@ app_sources = files(
   'athena.cc',
   'mainwindow.cc',
   'practice/pocket_cube/view.cc',
+  'render/cairo_shapes.cc',
   'render/cairo_text.cc',
   'render/chart_view.cc',
   'render/document_view.cc',
+  'render/lesson_figure.cc',
   'render/domain_graph_view.cc',
   'render/knowledge_graph_view.cc',
   'render/roadmap_view.cc',
@@ -250,8 +252,32 @@ executable('Athena', app_sources,
 
 # === 桌面集成（Linux 任务栏图标与启动器条目；macOS 用 .app 内的 icns） ===
 install_data(
-  'resources/icons/scalable/apps/cn.athena.icon.svg',
-  install_dir: get_option('datadir') / 'icons/hicolor/scalable/apps'
+  'resources/icons/16x16/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/16x16/apps'
+)
+install_data(
+  'resources/icons/32x32/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/32x32/apps'
+)
+install_data(
+  'resources/icons/64x64/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/64x64/apps'
+)
+install_data(
+  'resources/icons/128x128/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/128x128/apps'
+)
+install_data(
+  'resources/icons/256x256/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/256x256/apps'
+)
+install_data(
+  'resources/icons/512x512/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/512x512/apps'
+)
+install_data(
+  'resources/icons/1024x1024/apps/cn.athena.icon.png',
+  install_dir: get_option('datadir') / 'icons/hicolor/1024x1024/apps'
 )
 install_data(
   'cn.yatiger.athena.desktop.in',

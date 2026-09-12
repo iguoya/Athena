@@ -221,7 +221,7 @@ const vector<DomainSpec>& domain_specs() {
          "与内核态边界”的地方。",
          "错误处理和资源清理繁琐，并发场景下更甚；调试要靠 strace "
          "这类工具。",
-         "utilities-terminal-symbolic", DomainKind::Planned, VerifyMode::Code,
+         "system-run-symbolic", DomainKind::Planned, VerifyMode::Code,
          DomainPriority::Core, DomainTrack::Systems, "Linux 环境 / 虚拟机",
          {{"c_lang",
            "Unix 及其后代 Linux 的系统调用接口从第一天起就是用 C "

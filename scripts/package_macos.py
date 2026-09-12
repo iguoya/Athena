@@ -371,29 +371,42 @@ def copy_gtk_runtime(resources_dir: Path, homebrew_prefix: Path) -> list[Path]:
         resources_dir / "lib" / "gdk-pixbuf-2.0" / "2.10.0" / "loaders"
     )
     bundled_loader_dir.mkdir(parents=True)
-    cache_lines = []
     plugins: list[Path] = []
     module_pattern = re.compile(r'^"([^"]+)"$')
-    for line in loader_cache.read_text(encoding="utf-8").splitlines():
-        match = module_pattern.match(line)
-        if not match:
-            cache_lines.append(line)
+
+    # loaders.cache 是"模块路径行 + 若干描述行"的块，块之间以空行分隔。按块处理
+    # 而不是按行：cache 记着某个 loader 而文件不在时（提供它的包没 link，最常见
+    # 的就是 librsvg），要把整块丢掉，只删模块路径行会留下孤立的描述行。
+    #
+    # ADR 0038 之后应用自己不再加载任何 SVG，所以缺 SVG loader 不再是打包的
+    # 硬错误——跳过它，打出来的包一样能跑。
+    kept_blocks: list[str] = []
+    skipped: list[str] = []
+    for block in loader_cache.read_text(encoding="utf-8").split("\n\n"):
+        lines = block.splitlines()
+        module_index = next(
+            (index for index, line in enumerate(lines)
+             if module_pattern.match(line)),
+            None,
+        )
+        if module_index is None:
+            kept_blocks.append(block)
             continue
-        source = Path(match.group(1)).resolve()
+        source = Path(
+            module_pattern.match(lines[module_index]).group(1)
+        ).resolve()
         if not source.is_file():
-            # loaders.cache 记着这个路径，文件却不在——通常是对应的包没有
-            # brew link（或 link 被覆盖掉了），cache 与实际软链不一致。
-            raise PackagingError(
-                f"GdkPixbuf loader not found: {source}. "
-                "loaders.cache 记录了它但文件不在，通常是提供它的包没有 link；"
-                "例如 SVG loader 来自 librsvg，可执行 brew link --overwrite librsvg "
-                "后重试"
-            )
+            skipped.append(source.name)
+            continue
         destination = bundled_loader_dir / source.name
         if not destination.exists():
             shutil.copy2(source, destination)
             plugins.append(destination)
-        cache_lines.append(f'"@LOADER_DIR@/{destination.name}"')
+        lines[module_index] = f'"@LOADER_DIR@/{destination.name}"'
+        kept_blocks.append("\n".join(lines))
+    if skipped:
+        print(f"Skipped missing GdkPixbuf loaders: {', '.join(sorted(skipped))}")
+    cache_lines = "\n\n".join(kept_blocks).splitlines()
 
     cache_output = bundled_loader_dir.parent / "loaders.cache.in"
     cache_output.write_text("\n".join(cache_lines) + "\n", encoding="utf-8")
@@ -401,46 +414,38 @@ def copy_gtk_runtime(resources_dir: Path, homebrew_prefix: Path) -> list[Path]:
 
 
 def create_icon(project_root: Path, resources_dir: Path) -> None:
-    # 图标在 b9feeb4 迁到了 GTK 的 scalable/apps 布局，这里一直没跟着改，
-    # 打包因此从那次重构起就跑不通了。
-    source = (
-        project_root
-        / "resources"
-        / "icons"
-        / "scalable"
-        / "apps"
-        / "cn.athena.icon.svg"
-    )
-    if not source.is_file():
-        raise PackagingError(f"application icon source not found: {source}")
-    rsvg_convert = require_tool("rsvg-convert", formula="librsvg")
+    # 图标源是仓库里的 PNG 尺寸集（ADR 0038：不再依赖 SVG 渲染）。以前这里用
+    # rsvg-convert 现场把 SVG 渲染成各个尺寸，打包因此要求开发机装着 librsvg；
+    # 现在各尺寸已经提交在 resources/icons/<size>x<size>/apps/ 下，直接取用。
+    icons_root = project_root / "resources" / "icons"
+    # .icns 需要的十个条目由七个实际尺寸拼出来：@2x 与下一档同像素。
+    sizes = {
+        "icon_16x16.png": 16,
+        "icon_16x16@2x.png": 32,
+        "icon_32x32.png": 32,
+        "icon_32x32@2x.png": 64,
+        "icon_128x128.png": 128,
+        "icon_128x128@2x.png": 256,
+        "icon_256x256.png": 256,
+        "icon_256x256@2x.png": 512,
+        "icon_512x512.png": 512,
+        "icon_512x512@2x.png": 1024,
+    }
     iconutil = require_tool("iconutil")
     with tempfile.TemporaryDirectory(prefix="athena-icon-") as temporary:
         iconset = Path(temporary) / "Athena.iconset"
         iconset.mkdir()
-        sizes = {
-            "icon_16x16.png": 16,
-            "icon_16x16@2x.png": 32,
-            "icon_32x32.png": 32,
-            "icon_32x32@2x.png": 64,
-            "icon_128x128.png": 128,
-            "icon_128x128@2x.png": 256,
-            "icon_256x256.png": 256,
-            "icon_256x256@2x.png": 512,
-            "icon_512x512.png": 512,
-            "icon_512x512@2x.png": 1024,
-        }
         for filename, size in sizes.items():
-            run(
-                rsvg_convert,
-                "--width",
-                str(size),
-                "--height",
-                str(size),
-                "--output",
-                iconset / filename,
-                source,
+            source = (
+                icons_root / f"{size}x{size}" / "apps" / "cn.athena.icon.png"
             )
+            if not source.is_file():
+                raise PackagingError(
+                    f"application icon not found: {source}. "
+                    "图标尺寸集提交在 resources/icons/<size>x<size>/apps/ 下，"
+                    "缺哪一档就补哪一档"
+                )
+            shutil.copy2(source, iconset / filename)
         run(iconutil, "--convert", "icns", iconset, "--output", resources_dir / "Athena.icns")
 
 

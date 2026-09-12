@@ -1,12 +1,14 @@
-"""Keep lesson figures, the widgets that show them and the files on disk in sync.
+"""Keep the project off the SVG rendering path, and off empty image widgets.
 
-学习页的插图有三段链路：`.blp` 里声明一个 `Picture` 控件、页面代码给它
-`set_resource("/app/articles/...")`、`resources/articles/` 下真的有那个文件。
-任何一段断掉，GTK 都不会报错，只是画一块空白——界面上看起来就是"图没了"。
-这里把三段对起来，让断链在 `scripts/check.sh` 阶段就失败。
+ADR 0038：插图不再是 SVG 图片。原因不只是"载体选错"，还有一条很实际的：
+`Gtk::Picture` 显示图片要经 `GdkTexture`，它只内建 PNG/JPEG/TIFF，SVG 一律
+回退到 gdk-pixbuf 的外部 loader（librsvg）。那个 loader 缺失时，GTK 既不报错
+也不显示——页面上只剩一块留着高度的空白，排查要一路查到 pixbuf 的 loaders
+缓存。GTK 4.20+ 确实内建了 SVG 解析器，但它只服务图标路径，且 Ubuntu LTS 的
+GTK 还没有，跨平台不能依赖。
 
-它查不到的是第四种断链：运行环境缺 gdk-pixbuf 的 SVG loader（librsvg），
-那时所有图一起变空白。那条由 tests/gtk_resource_test.cc 真解码一遍来守。
+所以这里守三件事：不再出现 SVG 资源、不再引用已废弃的插图目录、`.blp` 里的
+`Picture` 都要有人填资源（声明了没人填同样是一块静默的空白）。
 """
 
 from __future__ import annotations
@@ -16,15 +18,13 @@ from pathlib import Path
 
 from .model import ProjectError
 
-# 插图与引用它的资源前缀。两者必须一起改。
-FIGURE_DIR = Path("resources") / "articles"
-RESOURCE_PREFIX = "/app/articles/"
+# 运行时会被加载的资源目录。图标是 PNG 尺寸集，其余资源不该再有 SVG。
+RESOURCE_DIR = Path("resources")
+# 已废弃的插图目录（ADR 0034 删手册、ADR 0038 删插图之后彻底空了）。
+RETIRED_PREFIX = "/app/articles/"
 
-# 页面代码所在的目录：只有这些算"用上了"。测试里出现的路径不算，
-# 否则删掉最后一处真实用法也不会被发现。
-SOURCE_DIRS = ("ui", "render", "practice")
+SOURCE_DIRS = ("ui", "render", "practice", "registry")
 
-_REFERENCE = re.compile(r'"' + re.escape(RESOURCE_PREFIX) + r'([^"]+)"')
 _PICTURE = re.compile(r"^\s*Picture\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{", re.MULTILINE)
 
 
@@ -40,21 +40,28 @@ def _source_text(root: Path) -> str:
 
 
 def check_figures(root: Path) -> None:
-    """Validate every figure reference, widget and file. Raises ProjectError."""
+    """Reject SVG resources, retired figure paths and unfilled Pictures."""
     sources = _source_text(root)
-    referenced = set(_REFERENCE.findall(sources))
 
-    # 1. 引用的图必须真的在仓库里，否则运行时是一块空白。
-    for relative in sorted(referenced):
-        if not (root / FIGURE_DIR / relative).is_file():
+    # 1. 资源目录里不再放 SVG：它要外部解码器，缺了就是一块静默的空白。
+    resource_root = root / RESOURCE_DIR
+    if resource_root.is_dir():
+        for path in sorted(resource_root.rglob("*.svg")):
             raise ProjectError(
-                f"lesson figure {RESOURCE_PREFIX}{relative} is referenced by page "
-                f"code but {FIGURE_DIR / relative} does not exist"
+                f"{path.relative_to(root)} is an SVG resource; ADR 0038 已经把插图"
+                "迁到 .blp 控件与 Cairo 自绘，图标改用 PNG 尺寸集——"
+                "SVG 要经外部解码器，缺 loader 时只会显示空白"
             )
 
-    # 2. `.blp` 里声明的每个 Picture 都要有人给它设资源。声明了却没人填，
-    #    页面上就是一块留着高度的空白，且不会有任何诊断。
-    blueprint_root = root / "resources" / "ui"
+    # 2. 不再引用已废弃的插图目录。
+    if RETIRED_PREFIX in sources:
+        raise ProjectError(
+            f"page code still references {RETIRED_PREFIX}; 那批插图已按 ADR 0038 "
+            "改成控件与自绘，引用应当一起删掉"
+        )
+
+    # 3. `.blp` 里声明的每个 Picture 都要有人给它设资源（PNG 同样适用）。
+    blueprint_root = root / RESOURCE_DIR / "ui"
     if blueprint_root.is_dir():
         for blueprint in sorted(blueprint_root.rglob("*.blp")):
             text = blueprint.read_text(encoding="utf-8")
@@ -65,17 +72,3 @@ def check_figures(root: Path) -> None:
                         f"{widget_id} but no page code sets its resource; "
                         "add it to the figure table or drop the widget"
                     )
-
-    # 3. 反过来，目录里不留没人引用的图：它们会被打进 GResource，又和页面
-    #    讲法各说各话——ADR 0034 删掉 Markdown 手册后留下的那批就是这样。
-    figure_root = root / FIGURE_DIR
-    if figure_root.is_dir():
-        for path in sorted(figure_root.rglob("*")):
-            if not path.is_file() or path.name.startswith("."):
-                continue
-            relative = path.relative_to(figure_root).as_posix()
-            if relative not in referenced:
-                raise ProjectError(
-                    f"{FIGURE_DIR / relative} is not referenced by any page; "
-                    "reference it from a lesson or delete it"
-                )

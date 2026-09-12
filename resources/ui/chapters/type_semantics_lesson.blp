@@ -76,7 +76,7 @@ Box type_semantics_lesson_page {
             spacing: 10;
             halign: center;
 
-            Image { icon-name: "utilities-terminal-symbolic"; pixel-size: 22; }
+            Image { icon-name: "system-run-symbolic"; pixel-size: 22; }
             Label { label: "实验台"; }
           }
         }
@@ -386,40 +386,32 @@ Box type_semantics_lesson_page {
 
                 Box {
                   orientation: vertical; spacing: 6;
-                  styles [ "lesson-callout" ]
-                  Label { label: "对象看三个方面"; halign: start; styles [ "lesson-callout-title" ] }
+                  styles [ "figure-stance", "figure-stance-decltype" ]
+                  Label { label: "对象 · 承载状态的实体"; halign: start; styles [ "figure-stance-title" ] }
                   Label { label: "类型 —— 它是什么，允许哪些操作，编译器能检查什么"; halign: start; wrap: true; xalign: 0; }
                   Label { label: "状态 —— 是否已正确初始化，此刻承载什么值或资源"; halign: start; wrap: true; xalign: 0; }
                   Label { label: "生命周期 —— 何时开始存在、何时结束，当前访问是否仍有效"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "三样都要看，缺一样就判断不了这次访问安不安全。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
 
                 Box {
                   orientation: vertical; spacing: 6;
-                  styles [ "lesson-callout" ]
-                  Label { label: "表达式看两个方面"; halign: start; styles [ "lesson-callout-title" ] }
+                  styles [ "figure-stance", "figure-stance-auto" ]
+                  Label { label: "表达式 · 参与求值的代码"; halign: start; styles [ "figure-stance-title" ] }
                   Label { label: "类型 —— 它产生或指向什么类型的结果"; halign: start; wrap: true; xalign: 0; }
-                  Label { label: "值类别 —— 它怎样参与引用绑定、重载选择等规则"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "值类别 —— 左值 / 纯右值 / 将亡值，决定能绑定到哪种引用、选中哪个重载"; halign: start; wrap: true; xalign: 0; }
+                  Label { label: "只有两样，没有「生命周期」这一项——那是对象的属性。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
                 }
               }
 
               Box {
                 orientation: vertical;
-                spacing: 4;
-                styles [ "lesson-figure" ]
+                spacing: 6;
+                styles [ "lesson-callout" ]
 
-                Picture ts_outline_model_figure {
-                  name: "ts_outline_model_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
-                  height-request: 520;
-                }
-                Label {
-                  label: "两者通过「指向」和「初始化」联系起来。";
-                  halign: start; wrap: true; xalign: 0;
-                  styles [ "lesson-figure-caption" ]
-                }
+                Label { label: "两者怎么联系起来"; halign: start; styles [ "lesson-callout-title" ] }
+                Label { label: "表达式指向已有对象 —— 名字、下标、解引用都属于这一种"; halign: start; wrap: true; xalign: 0; }
+                Label { label: "表达式提供初始化的值 —— 算出来的结果用于建立一个新对象"; halign: start; wrap: true; xalign: 0; }
               }
 
               Label {
@@ -633,13 +625,10 @@ Box type_semantics_lesson_page {
                 spacing: 4;
                 styles [ "lesson-figure" ]
 
-                Picture ts_outline_loop_figure {
+                DrawingArea ts_outline_loop_figure {
                   name: "ts_outline_loop_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
                   height-request: 760;
+                  hexpand: true;
                 }
                 Label {
                   label: "依据规则形成预期，再用证据修正理解——<span foreground='#052c65' weight='bold'>一次运行正常不能证明代码总是正确</span>，尤其不能据此排除未定义行为。";
@@ -835,21 +824,114 @@ Box type_semantics_lesson_page {
               Label { label: "int listed{9};    // 列表初始化"; halign: start; styles [ "native-lesson-code" ] }
               Label { label: "int zero{};       // 值初始化"; halign: start; styles [ "native-lesson-code" ] }
 
+              // 四种写法的对照表。ADR 0038：表格用控件排版而不是 SVG 图片——
+              // 字还是字，能选中、跟随系统字号与主题，改措辞只改这里。
               Box {
                 orientation: vertical;
-                spacing: 4;
+                spacing: 10;
                 styles [ "lesson-figure" ]
 
-                Picture ts_init_forms_figure {
-                  name: "ts_init_forms_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
-                  height-request: 620;
+                Label {
+                  label: "同一个 3.75 进入 int：谁来检查「信息会不会丢」";
+                  halign: start;
+                  styles [ "lesson-callout-title" ]
+                }
+
+                Grid {
+                  column-spacing: 22;
+                  row-spacing: 12;
+                  styles [ "figure-table" ]
+
+                  Label { label: "写法"; halign: start; styles [ "figure-head" ] layout { column: 0; row: 0; } }
+                  Label { label: "它提供什么保证"; halign: start; styles [ "figure-head" ] layout { column: 1; row: 0; } }
+                  Label { label: "遇到窄化时"; halign: start; styles [ "figure-head" ] layout { column: 2; row: 0; } }
+
+                  Separator { layout { column: 0; row: 1; column-span: 3; } }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 2; }
+                    Label { label: "int direct(7);"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "直接初始化"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 2; }
+                    Label { label: "按参数调用构造，允许有损转换"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "截断由你承担"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "放行 · 3.75 变成 3";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-pass" ]
+                    layout { column: 2; row: 2; }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 3; }
+                    Label { label: "int copied = 8;"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "拷贝初始化"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 3; }
+                    Label { label: "同样允许有损转换"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "还会被 explicit 构造函数拒绝"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "放行 · 3.75 变成 3";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-pass" ]
+                    layout { column: 2; row: 3; }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 4; }
+                    Label { label: "int listed{9};"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "列表初始化"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 4; }
+                    Label { label: "把「会不会丢信息」交给编译器"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "这是它和上面两种的真正区别"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "编译失败 · 拒绝窄化";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-stop" ]
+                    layout { column: 2; row: 4; }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 5; }
+                    Label { label: "int zero{};"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "值初始化"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 5; }
+                    Label { label: "保证得到 0，而不是残留的垃圾值"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "对照：int uninit; 读它是未定义行为"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "不涉及转换 · 值为 0";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-compile" ]
+                    layout { column: 2; row: 5; }
+                  }
+                }
+
+                Label {
+                  label: "四行都得到一个普通的 int。差别不在括号长相，在谁来检查信息丢失。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-prose" ]
                 }
                 Label {
-                  label: "同一个值进入 int：圆括号让程序员承担截断，花括号把丢失提升为编译错误，explicit 阻止隐式转换。";
+                  label: "第三处边界是 explicit：它只挡住不写类型名的隐式转换，写出 ExplicitNumber{3} 仍然可以。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -1161,13 +1243,11 @@ Box type_semantics_lesson_page {
               margin-start: 18;
               margin-end: 18;
 
-              Picture ts_lifetime_figure {
-                name: "ts_lifetime_figure";
-                can-shrink: true;
-                content-fit: contain;
-                halign: fill;
-                height-request: 580;
-              }
+              DrawingArea ts_lifetime_figure {
+                  name: "ts_lifetime_figure";
+                  height-request: 580;
+                  hexpand: true;
+                }
 
               Box {
                 orientation: vertical;
@@ -1615,13 +1695,10 @@ Box type_semantics_lesson_page {
                 spacing: 4;
                 styles [ "lesson-figure" ]
 
-                Picture ts_auto_selection_figure {
+                DrawingArea ts_auto_selection_figure {
                   name: "ts_auto_selection_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
                   height-request: 620;
+                  hexpand: true;
                 }
                 Label {
                   label: "前提写在图上：已存在且在使用期间存活的普通对象、非代理引用。";
@@ -1809,21 +1886,104 @@ Box type_semantics_lesson_page {
                 styles [ "lesson-prose" ]
               }
 
+              // 两种写法的逐行对照（ADR 0038：表格用控件，不做成图片）。
               Box {
                 orientation: vertical;
-                spacing: 4;
+                spacing: 10;
                 styles [ "lesson-figure" ]
 
-                Picture ts_enum_boundary_figure {
-                  name: "ts_enum_boundary_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
-                  height-request: 600;
+                Label {
+                  label: "同一组状态，两种写法：编译器替你挡住多少";
+                  halign: start;
+                  styles [ "lesson-callout-title" ]
+                }
+
+                Grid {
+                  column-spacing: 22;
+                  row-spacing: 12;
+                  styles [ "figure-table" ]
+
+                  Label { label: "写下这一行"; halign: start; styles [ "figure-head" ] layout { column: 0; row: 0; } }
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 1; row: 0; }
+                    Label { label: "const int 常量"; halign: start; styles [ "figure-head" ] }
+                    Label { label: "void report(int);"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 2; row: 0; }
+                    Label { label: "enum class FileState"; halign: start; styles [ "figure-head" ] }
+                    Label { label: "void report(FileState);"; halign: start; styles [ "figure-note" ] }
+                  }
+
+                  Separator { layout { column: 0; row: 1; column-span: 3; } }
+
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 0; row: 2; }
+                    Label { label: "report(42);"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "42 不是任何一个状态"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "放行 · 它只是个 int";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-pass" ]
+                    layout { column: 1; row: 2; }
+                  }
+                  Label {
+                    label: "编译失败";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-stop" ]
+                    layout { column: 2; row: 2; }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 0; row: 3; }
+                    Label { label: "report(kRed);"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "那是另一组常量里的红灯"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "放行 · 同样是 int";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-pass" ]
+                    layout { column: 1; row: 3; }
+                  }
+                  Label {
+                    label: "编译失败";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-stop" ]
+                    layout { column: 2; row: 3; }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 0; row: 4; }
+                    Label { label: "state + 1;"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "状态相加没有意义"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Label {
+                    label: "放行 · 算术照做";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-pass" ]
+                    layout { column: 1; row: 4; }
+                  }
+                  Label {
+                    label: "编译失败";
+                    halign: start; valign: center;
+                    styles [ "figure-verdict", "figure-verdict-stop" ]
+                    layout { column: 2; row: 4; }
+                  }
+                }
+
+                Label {
+                  label: "绿 = 编译器替你挡住　　红 = 编译器放行，风险留到运行期。三行代码一字未改，差别只在参数类型是 int 还是 FileState。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-prose" ]
                 }
                 Label {
-                  label: "同样三行代码，左边编译器全部放行，右边全部拦下——差别只在参数类型是 int 还是 FileState。";
+                  label: "代价：取底层值必须写 static_cast，不能直接当下标，位运算要自己重载——严格检查的价钱。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -2220,16 +2380,140 @@ Box type_semantics_lesson_page {
                 orientation: vertical;
                 spacing: 3;
 
-                Picture ts_cast_checkpoints_figure {
-                  name: "ts_cast_checkpoints_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
-                  height-request: 720;
+                Grid {
+                  column-spacing: 22;
+                  row-spacing: 14;
+                  styles [ "figure-table" ]
+
+                  Label { label: "怎么写出来的"; halign: start; styles [ "figure-head" ] layout { column: 0; row: 0; } }
+                  Label { label: "你在声明什么意图"; halign: start; styles [ "figure-head" ] layout { column: 1; row: 0; } }
+                  Label { label: "谁来检查"; halign: start; styles [ "figure-head" ] layout { column: 2; row: 0; } }
+
+                  Separator { layout { column: 0; row: 1; column-span: 3; } }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 2; }
+                    Label { label: "（不写）"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "隐式转换"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 2; }
+                    Label { label: "你什么也没声明，它自己发生了"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "传参、赋值、算术提升时随处可见"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 4; valign: center;
+                    layout { column: 2; row: 2; }
+                    Label {
+                      label: "不检查，而且不显眼";
+                      halign: start;
+                      styles [ "figure-verdict", "figure-verdict-pass" ]
+                    }
+                    Label { label: "代码里搜不到，最难复查"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 3; }
+                    Label { label: "static_cast"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "最常用的一种"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 3; }
+                    Label { label: "这两个类型确实相关，按规则转过去"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "数值类型之间、继承体系里向上转"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 4; valign: center;
+                    layout { column: 2; row: 3; }
+                    Label {
+                      label: "编译期：类型关系";
+                      halign: start;
+                      styles [ "figure-verdict", "figure-verdict-compile" ]
+                    }
+                    Label { label: "范围与精度仍由你保证"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 4; }
+                    Label { label: "dynamic_cast"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "唯一会真查的一种"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 4; }
+                    Label { label: "我不确定它到底是哪个派生类，帮我查"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "多态类型的向下转换"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 4; valign: center;
+                    layout { column: 2; row: 4; }
+                    Label {
+                      label: "运行期：真实类型";
+                      halign: start;
+                      styles [ "figure-verdict", "figure-verdict-runtime" ]
+                    }
+                    Label { label: "失败给 nullptr 或抛异常，有开销"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 5; }
+                    Label { label: "const_cast"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "改的是访问路径"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 5; }
+                    Label { label: "这条路径上的 const 由我负责去掉"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "对接不带 const 的旧接口"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 4; valign: center;
+                    layout { column: 2; row: 5; }
+                    Label {
+                      label: "不检查：前提你担保";
+                      halign: start;
+                      styles [ "figure-verdict", "figure-verdict-unchecked" ]
+                    }
+                    Label { label: "对象本来是 const 就是未定义行为"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 6; }
+                    Label { label: "reinterpret_cast"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "最后才考虑"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true;
+                    layout { column: 1; row: 6; }
+                    Label { label: "把这段内存按另一种类型重新解释"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "和硬件、协议字节打交道"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                  Box {
+                    orientation: vertical; spacing: 4; valign: center;
+                    layout { column: 2; row: 6; }
+                    Label {
+                      label: "不检查：连关系都不看";
+                      halign: start;
+                      styles [ "figure-verdict", "figure-verdict-unchecked" ]
+                    }
+                    Label { label: "平台相关，最容易出错"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
+                }
+
+                Label {
+                  label: "底色 = 编译器替你把关到哪一步：蓝 编译期查类型关系 · 绿 运行期查真实类型 · 黄 不查但意图写在代码里 · 红 不查且代码里看不见。";
+                  halign: start; wrap: true; xalign: 0;
+                  styles [ "lesson-prose" ]
                 }
                 Label {
-                  label: "同样是「转换成功了」，保证的强度按底色从强到弱：只有 dynamic_cast 会在运行期真的查一次。";
+                  label: "四种命名转换各自写出来，为的就是让意图留在代码里、能被搜索到——C 风格的 (int)x 会自己挑一种，读的人看不出是哪种。";
                   halign: start; wrap: true; xalign: 0;
                   styles [ "lesson-figure-caption" ]
                 }
@@ -2837,23 +3121,86 @@ Box type_semantics_lesson_page {
                 styles [ "lesson-prose" ]
               }
 
+              // 两种立场的并排对照 + 两条规则的分叉（ADR 0038：控件承载，不做成
+              // 图片）。这里没有连线和几何关系，控件足够表达。
               Box {
                 orientation: vertical;
-                spacing: 4;
+                spacing: 12;
                 styles [ "lesson-figure" ]
 
-                Picture ts_decltype_stances_figure {
-                  name: "ts_decltype_stances_figure";
-                  content-fit: contain;
-                  halign: fill;
-                  hexpand: true;
-                  can-shrink: true;
-                  height-request: 720;
-                }
                 Label {
-                  label: "上半是两种立场，下半是 decltype 自己的两条规则——一对括号决定走哪一条。";
-                  halign: start; wrap: true; xalign: 0;
-                  styles [ "lesson-figure-caption" ]
+                  label: "同一个 ref，两种立场，两个答案";
+                  halign: start;
+                  styles [ "lesson-callout-title" ]
+                }
+
+                Box {
+                  orientation: horizontal;
+                  spacing: 16;
+                  homogeneous: true;
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 8;
+                    styles [ "figure-stance", "figure-stance-auto" ]
+
+                    Label { label: "auto copy = ref;"; halign: start; styles [ "figure-stance-title", "native-lesson-code" ] }
+                    Label { label: "问的是：我要声明一个什么样的新变量？"; halign: start; wrap: true; xalign: 0; }
+                    Label { label: "新变量默认独立、可写，所以引用和顶层 const 都被丢掉。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                    Label { label: "int　（独立副本，可写）"; halign: start; styles [ "figure-result" ] }
+                  }
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 8;
+                    styles [ "figure-stance", "figure-stance-decltype" ]
+
+                    Label { label: "decltype(ref)"; halign: start; styles [ "figure-stance-title", "native-lesson-code" ] }
+                    Label { label: "问的是：ref 按语言规则是什么类型？"; halign: start; wrap: true; xalign: 0; }
+                    Label { label: "如实转述这个实体本来的样子，连你不想要的部分也一并带上。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                    Label { label: "const int&　（原样保留）"; halign: start; styles [ "figure-result" ] }
+                  }
+                }
+
+                Separator {}
+
+                Label {
+                  label: "decltype 内部又分两条规则";
+                  halign: start;
+                  styles [ "lesson-callout-title" ]
+                }
+
+                Grid {
+                  column-spacing: 16;
+                  row-spacing: 12;
+                  styles [ "figure-table" ]
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 0; }
+                    Label { label: "decltype(value)"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "未加括号的名字"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Label { label: "→"; valign: center; styles [ "figure-head" ] layout { column: 1; row: 0; } }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true; valign: center;
+                    layout { column: 2; row: 0; }
+                    Label { label: "取它的声明类型 → int"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                  }
+
+                  Box {
+                    orientation: vertical; spacing: 2;
+                    layout { column: 0; row: 1; }
+                    Label { label: "decltype((value))"; halign: start; styles [ "native-lesson-code" ] }
+                    Label { label: "括号让它成为表达式"; halign: start; styles [ "figure-note" ] }
+                  }
+                  Label { label: "→"; valign: center; styles [ "figure-head" ] layout { column: 1; row: 1; } }
+                  Box {
+                    orientation: vertical; spacing: 2; hexpand: true; valign: center;
+                    layout { column: 2; row: 1; }
+                    Label { label: "按值类别取类型：左值 T&　将亡值 T&&　纯右值 T"; halign: start; wrap: true; xalign: 0; styles [ "figure-cell" ] }
+                    Label { label: "所以 decltype((value)) 是 int& —— 一对括号改的是语义，不是排版。"; halign: start; wrap: true; xalign: 0; styles [ "figure-note" ] }
+                  }
                 }
               }
             }
