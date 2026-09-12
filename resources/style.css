@@ -249,6 +249,39 @@ box.learning-unit-feedback {
     background-color: @athena_surface;
 }
 
+/* === 随堂考核 =========================================================
+   和学习单元（.learning-unit）刻意不同色：那个是讲解里的单题预测，只影响
+   本次阅读；这个是一节末尾的多题小测，成绩要落库。用中性底加左侧色条，
+   不铺整片高饱和底色。 */
+.checkpoint {
+    padding: 16px 18px;
+    border: 1px solid @athena_border_strong;
+    border-left: 4px solid @athena_primary;
+    border-radius: 10px;
+    background-color: @athena_surface_subtle;
+}
+.checkpoint-title {
+    font-weight: 700;
+    color: @athena_primary_text;
+}
+.checkpoint-stem {
+    font-weight: 600;
+    margin-top: 4px;
+}
+box.checkpoint-feedback {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: @athena_surface;
+}
+.checkpoint-verdict { font-weight: 700; }
+.checkpoint-verdict.correct { color: @athena_success; }
+.checkpoint-verdict.incorrect { color: @athena_danger; }
+.checkpoint-score {
+    font-weight: 600;
+    margin-top: 4px;
+}
+.checkpoint-score.correct { color: @athena_success; }
+
 /* 学习小节标签是概念导航而不是浏览器式页签：激活状态更明确，重要度星级
    只做辅助提示，避免把全部注意力从正文带走。 */
 notebook.workbench-section-notebook > header {

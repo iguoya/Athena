@@ -425,7 +425,23 @@ void MainWindow::ensure_chapter_page(
                 chapter,
                 builder,
                 mastery_by_id,
-                experiment_requested);
+                experiment_requested,
+                // 随堂考核的成绩按知识点落库；页面不碰 LearningStore，
+                // 写库连同失败处理都留在这一层。
+                [this](const string& function_id, int mastery) {
+                    if (!m_learning_store) {
+                        return false;
+                    }
+                    try {
+                        m_learning_store->save_mastery(function_id, mastery);
+                        refresh_progress_page();
+                        return true;
+                    } catch (const exception& error) {
+                        cerr << "Failed to save checkpoint score for "
+                             << function_id << ": " << error.what() << endl;
+                        return false;
+                    }
+                });
     }
     m_loaded_chapters.insert(page_key);
 }

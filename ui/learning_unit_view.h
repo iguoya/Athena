@@ -26,6 +26,9 @@ struct LearningUnit {
 
 // 单个 ADR 0025 学习单元的 GTK 外壳。它只持有本次阅读的预测状态；不把
 // 一次点击误写成长期掌握度，验证动作仍交给现有专注实验页面。
+//
+// 要把结果计入熟练度的是一节末尾的随堂考核（ui/checkpoint_view.h）：那里是
+// 多题小测，按正确率换算后落库。两者分工不同，别把写库挪到这里来。
 class LearningUnitView final {
 public:
     LearningUnitView(

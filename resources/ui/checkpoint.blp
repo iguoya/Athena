@@ -1,0 +1,146 @@
+using Gtk 4.0;
+
+// 随堂考核的稳定骨架，动态内容由 CheckpointView 填入。
+//
+// 它和 learning_unit.blp 是两件事，别混：学习单元是穿插在讲解里的单题
+// 预测，只影响本次阅读，不写数据库；随堂考核是一节末尾的多题小测，答完
+// 按正确率换算 0-5 星熟练度并落库。一次点击不该变成长期掌握度，多题才作数。
+Box checkpoint {
+  name: "checkpoint";
+  orientation: vertical;
+  spacing: 12;
+  hexpand: true;
+  margin-top: 20;
+  margin-bottom: 12;
+
+  styles [
+    "checkpoint"
+  ]
+
+  Box {
+    orientation: horizontal;
+    spacing: 10;
+
+    Label {
+      label: "随堂考核";
+      halign: start;
+      styles [ "checkpoint-title" ]
+    }
+
+    Label checkpoint_progress {
+      name: "checkpoint_progress";
+      halign: start;
+      hexpand: true;
+      xalign: 0;
+      styles [ "dim-label" ]
+    }
+
+    Button checkpoint_restart {
+      name: "checkpoint_restart";
+      label: "重做";
+      halign: end;
+      visible: false;
+      styles [ "btn-sm" ]
+    }
+  }
+
+  Label checkpoint_intro {
+    name: "checkpoint_intro";
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "dim-label" ]
+  }
+
+  // 每题标出难度与掌握必要性：两个维度分开，难度高不代表可以不掌握。
+  Box {
+    orientation: horizontal;
+    spacing: 8;
+    halign: start;
+    margin-top: 4;
+
+    Label checkpoint_difficulty {
+      name: "checkpoint_difficulty";
+      styles [ "badge", "badge-difficulty" ]
+    }
+
+    Label checkpoint_goal {
+      name: "checkpoint_goal";
+      styles [ "badge", "badge-mastery-goal" ]
+    }
+  }
+
+  Label checkpoint_stem {
+    name: "checkpoint_stem";
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    styles [ "checkpoint-stem" ]
+  }
+
+  Box checkpoint_choice_host {
+    name: "checkpoint_choice_host";
+    orientation: vertical;
+    spacing: 8;
+  }
+
+  Box checkpoint_feedback {
+    name: "checkpoint_feedback";
+    orientation: vertical;
+    spacing: 6;
+    visible: false;
+
+    styles [ "checkpoint-feedback" ]
+
+    Label checkpoint_verdict {
+      name: "checkpoint_verdict";
+      halign: start;
+      wrap: true;
+      xalign: 0;
+      styles [ "checkpoint-verdict" ]
+    }
+
+    Label checkpoint_explain {
+      name: "checkpoint_explain";
+      halign: start;
+      wrap: true;
+      xalign: 0;
+    }
+  }
+
+  Box {
+    orientation: horizontal;
+    spacing: 10;
+    halign: start;
+
+    Button checkpoint_submit {
+      name: "checkpoint_submit";
+      label: "提交本题";
+      sensitive: false;
+      styles [ "btn-sm", "suggested-action" ]
+    }
+
+    Button checkpoint_next {
+      name: "checkpoint_next";
+      label: "下一题";
+      visible: false;
+      styles [ "btn-sm" ]
+    }
+
+    Button checkpoint_verify {
+      name: "checkpoint_verify";
+      label: "运行实验验证";
+      visible: false;
+      styles [ "btn-sm" ]
+    }
+  }
+
+  Label checkpoint_score {
+    name: "checkpoint_score";
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    visible: false;
+    styles [ "checkpoint-score" ]
+  }
+}

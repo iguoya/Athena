@@ -138,6 +138,13 @@ compiled_ui += custom_target(
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
 )
 
+compiled_ui += custom_target(
+  'compile-checkpoint.blp',
+  input: files('resources/ui/checkpoint.blp'),
+  output: 'checkpoint.ui',
+  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+)
+
 # === 共享核心库 ===
 core_sources = files(
   'content/content_loader.cc',
@@ -194,6 +201,7 @@ app_sources = files(
   'ui/external_app_launcher.cc',
   'ui/icon_utils.cc',
   'ui/learning_dialogs.cc',
+  'ui/checkpoint_view.cc',
   'ui/learning_unit_view.cc',
   'ui/pocket_cube_page.cc',
   'ui/progress_page.cc',

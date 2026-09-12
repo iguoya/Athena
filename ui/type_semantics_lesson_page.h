@@ -2,6 +2,7 @@
 
 #include "registry/chapter_catalog.h"
 #include "ui/experiment_dock.h"
+#include "ui/checkpoint_view.h"
 #include "ui/learning_unit_view.h"
 
 #include <gtkmm.h>
@@ -14,6 +15,7 @@
 
 using namespace std;
 
+class CheckpointView;
 class LearningUnitView;
 
 // ADR 0026 的第一条原生学习场景。它不读取或解析 Markdown；专注实验入口
@@ -31,7 +33,10 @@ public:
         const ChapterMeta& chapter,
         const Glib::RefPtr<Gtk::Builder>& builder,
         const map<string, int>& mastery_by_id,
-        function<void(const ExperimentSelection&, bool)> on_experiment_requested);
+        function<void(const ExperimentSelection&, bool)> on_experiment_requested,
+        // 随堂考核答完后回写熟练度（完整函数 ID，0-5 星），返回是否落库成功。
+        // 页面不持有 LearningStore：写库属于持久化层，这里只交出结果。
+        function<bool(const string&, int)> on_mastery_recorded);
 
     ~TypeSemanticsLessonPage();
 
@@ -54,6 +59,11 @@ private:
 
     LearningUnitView& add_learning_unit(
         Gtk::Box& host, LearningUnit data, const string& verify_subchapter);
+
+    // 在某节末尾挂一组随堂考核。data.knowledge_id 用短名（成员函数名），
+    // 这里展开成完整函数 ID 再落库。
+    CheckpointView& add_checkpoint(Gtk::Box& host, Checkpoint data);
+    void build_checkpoints(const Glib::RefPtr<Gtk::Builder>& builder);
 
     // 「让变化说明规则」的可控逐步演示（type_deduction 教案第 4 节分镜）。
     // 步骤 0–6：创建 original / 初始化 copy / 绑定 alias / 绑定 view /
@@ -96,6 +106,9 @@ private:
     // 每个学习单元的数据必须比它的 View 活得久（View 持有 const 引用）。
     vector<unique_ptr<LearningUnit>> m_unit_data;
     vector<unique_ptr<LearningUnitView>> m_unit_views;
+    vector<unique_ptr<Checkpoint>> m_checkpoint_data;
+    vector<unique_ptr<CheckpointView>> m_checkpoint_views;
+    function<bool(const string&, int)> m_on_mastery_recorded;
 
     Gtk::Notebook* m_section_notebook = nullptr;
     Gtk::DrawingArea* m_roadmap = nullptr;
