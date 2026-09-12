@@ -35,6 +35,8 @@
 | [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受，`apps/c` 链路已通 |
 | [0033](0033-live-visuals-and-interaction.md) | 大纲与教学过程用活的可视化和互动元素表达 | 已接受，`type_semantics` 大纲已改造 |
 | [0034](0034-remove-markdown-handbook.md) | 删除 Markdown 参考手册，大纲只有原生一份 | 已接受，手册正文与页面已移除 |
+| [0035](0035-use-gtk-expressive-ceiling.md) | 把 GTK 的表达上限用满，自绘层迁向 `Gtk::Snapshot` | 已接受，按收益分批迁移 |
+| [0036](0036-lesson-brief.md) | 教学简纲：大纲的压缩视图与导航面 | 已接受，`type_semantics` 先行 |
 
 ## 学习数据与 AI
 
