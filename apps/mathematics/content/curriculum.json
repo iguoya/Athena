@@ -10,9 +10,21 @@
     "syllabus": "数学二考试大纲（需每年核对，见 ADR 0007）"
   },
   "tracks": [
-    { "id": "linalg", "title": "线性代数", "color": "#0a58ca" },
-    { "id": "calculus", "title": "高等数学", "color": "#0f7b3f" },
-    { "id": "modeling", "title": "建模线", "color": "#7048e8" }
+    {
+      "id": "linalg",
+      "title": "线性代数",
+      "color": "#0a58ca"
+    },
+    {
+      "id": "calculus",
+      "title": "高等数学",
+      "color": "#0f7b3f"
+    },
+    {
+      "id": "modeling",
+      "title": "建模线",
+      "color": "#7048e8"
+    }
   ],
   "chapters": [
     {
@@ -29,13 +41,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["统一视角", "几何化"],
+          "ideas": [
+            "统一视角",
+            "几何化"
+          ],
           "requires": [],
           "widget": "transform2d",
           "textbook_ref": {
             "kind": "cross_chapter",
             "note": "教材无此独立节，是本应用按线性变换主线重组的导入（ADR 0009 第 2 节）",
-            "covers": ["线性代数 2.1 矩阵的概念", "线性代数 2.2 矩阵的运算"],
+            "covers": [
+              "线性代数 2.1 矩阵的概念",
+              "线性代数 2.2 矩阵的运算"
+            ],
             "prepares": [
               "线性代数 1.x 行列式 —— 面积伸缩比",
               "线性代数 3.x 矩阵的秩 —— 压到几维",
@@ -50,7 +68,7 @@
           },
           "overview": {
             "asks": "一个 2×2 的数字方块，凭什么能代表「把整张平面搬一次」？",
-            "says": "因为只要定下两件事——向右一格的点去哪、向上一格的点去哪——其余每个点的去向就都跟着定了。矩阵的两列写的正是这两个去向。右边四个读数（面积变几倍、翻没翻面、压到几维、哪些方向没被转走），分别是后面行列式、秩、特征向量要回答的问题。",
+            "says": "因为只要定下两件事——向右一格的点去哪、向上一格的点去哪——其余每个点的去向就都跟着定了。矩阵的两列写的正是这两个去向。图上那个空心圆是原点：不管怎么拖，它一动不动，这是线性变换的定义特征之一。右边四个读数（面积变几倍、翻没翻面、压到几维、哪些方向没被转走），分别是后面行列式、秩、特征向量要回答的问题。",
             "why_now": "整条线代主线的起点。后面每一节都是回到这张图上追问一个新问题。",
             "aha": "拖到两个箭头重合时，整张平面塌成一条线——「不可逆」第一次不是一句定义，是你看见的一件事。"
           },
@@ -87,11 +105,18 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["复合", "统一视角"],
-          "requires": ["math.linalg.transform2d"],
+          "ideas": [
+            "复合",
+            "统一视角"
+          ],
+          "requires": [
+            "math.linalg.transform2d"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 2.2 矩阵的运算（乘法）"]
+            "covers": [
+              "线性代数 2.2 矩阵的运算（乘法）"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 矩阵的运算",
           "overview": {
@@ -109,11 +134,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["几何化", "不变量"],
-          "requires": ["math.linalg.transform2d"],
+          "ideas": [
+            "几何化",
+            "不变量"
+          ],
+          "requires": [
+            "math.linalg.transform2d"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 1.1–1.5 行列式的定义与性质", "线性代数 1.6 行列式按行展开"]
+            "covers": [
+              "线性代数 1.1–1.5 行列式的定义与性质",
+              "线性代数 1.6 行列式按行展开"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 行列式",
           "overview": {
@@ -131,11 +164,20 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["可逆", "信息不丢"],
-          "requires": ["math.linalg.compose", "math.linalg.determinant"],
+          "ideas": [
+            "可逆",
+            "信息不丢"
+          ],
+          "requires": [
+            "math.linalg.compose",
+            "math.linalg.determinant"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 2.3 逆矩阵", "线性代数 2.4 克拉默法则"]
+            "covers": [
+              "线性代数 2.3 逆矩阵",
+              "线性代数 2.4 克拉默法则"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 逆矩阵",
           "overview": {
@@ -161,11 +203,18 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["化归", "几何化"],
-          "requires": ["math.linalg.inverse"],
+          "ideas": [
+            "化归",
+            "几何化"
+          ],
+          "requires": [
+            "math.linalg.inverse"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 3.3 线性方程组的解"]
+            "covers": [
+              "线性代数 3.3 线性方程组的解"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 线性方程组",
           "hook": {
@@ -187,11 +236,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["几何化", "不变量"],
-          "requires": ["math.linalg.determinant"],
+          "ideas": [
+            "几何化",
+            "不变量"
+          ],
+          "requires": [
+            "math.linalg.determinant"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 3.1 矩阵的初等变换", "线性代数 3.2 矩阵的秩"]
+            "covers": [
+              "线性代数 3.1 矩阵的初等变换",
+              "线性代数 3.2 矩阵的秩"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 矩阵的秩",
           "overview": {
@@ -209,11 +266,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["生成", "几何化"],
-          "requires": ["math.linalg.rank"],
+          "ideas": [
+            "生成",
+            "几何化"
+          ],
+          "requires": [
+            "math.linalg.rank"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 4.1 向量组的线性相关性", "线性代数 4.2 向量组的秩"]
+            "covers": [
+              "线性代数 4.1 向量组的线性相关性",
+              "线性代数 4.2 向量组的秩"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 向量组的线性相关性",
           "overview": {
@@ -231,11 +296,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["几何化", "解的结构"],
-          "requires": ["math.linalg.solve", "math.linalg.span"],
+          "ideas": [
+            "几何化",
+            "解的结构"
+          ],
+          "requires": [
+            "math.linalg.solve",
+            "math.linalg.span"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 4.3 线性方程组的解的结构"]
+            "covers": [
+              "线性代数 4.3 线性方程组的解的结构"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 齐次线性方程组的基础解系",
           "overview": {
@@ -261,11 +334,18 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["不变量", "几何化"],
-          "requires": ["math.linalg.transform2d"],
+          "ideas": [
+            "不变量",
+            "几何化"
+          ],
+          "requires": [
+            "math.linalg.transform2d"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.2 方阵的特征值与特征向量"]
+            "covers": [
+              "线性代数 5.2 方阵的特征值与特征向量"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 特征值与特征向量",
           "overview": {
@@ -283,14 +363,21 @@
           "mastery_goal": "understand",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["不变量", "长期行为"],
-          "requires": ["math.linalg.eigen"],
+          "ideas": [
+            "不变量",
+            "长期行为"
+          ],
+          "requires": [
+            "math.linalg.eigen"
+          ],
           "track": "modeling",
           "textbook_ref": {
             "kind": "cross_chapter",
             "note": "考纲不直接考迭代的长期行为；本节属建模线，说明特征值在现实中的用途（ADR 0003）",
             "covers": [],
-            "prepares": ["线性代数 5.4 对角化 —— 对角阵的 n 次方"]
+            "prepares": [
+              "线性代数 5.4 对角化 —— 对角阵的 n 次方"
+            ]
           },
           "syllabus_ref": "拓展 · 不计入应试要求",
           "hook": {
@@ -312,11 +399,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["视角变换", "不变量"],
-          "requires": ["math.linalg.eigen", "math.linalg.compose"],
+          "ideas": [
+            "视角变换",
+            "不变量"
+          ],
+          "requires": [
+            "math.linalg.eigen",
+            "math.linalg.compose"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.3 相似矩阵"]
+            "covers": [
+              "线性代数 5.3 相似矩阵"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 相似矩阵",
           "overview": {
@@ -334,11 +429,18 @@
           "mastery_goal": "master",
           "knowledge_type": "skill",
           "idea_leverage": "high",
-          "ideas": ["化归", "视角变换"],
-          "requires": ["math.linalg.similar"],
+          "ideas": [
+            "化归",
+            "视角变换"
+          ],
+          "requires": [
+            "math.linalg.similar"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.4 对角化"]
+            "covers": [
+              "线性代数 5.4 对角化"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 矩阵的对角化",
           "overview": {
@@ -356,11 +458,18 @@
           "mastery_goal": "master",
           "knowledge_type": "skill",
           "idea_leverage": "high",
-          "ideas": ["投影", "化归"],
-          "requires": ["math.linalg.span"],
+          "ideas": [
+            "投影",
+            "化归"
+          ],
+          "requires": [
+            "math.linalg.span"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.1 向量的内积、长度及正交性"]
+            "covers": [
+              "线性代数 5.1 向量的内积、长度及正交性"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 向量的内积与正交规范化",
           "overview": {
@@ -386,11 +495,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["对称性", "几何化"],
-          "requires": ["math.linalg.diagonalize", "math.linalg.orthogonal"],
+          "ideas": [
+            "对称性",
+            "几何化"
+          ],
+          "requires": [
+            "math.linalg.diagonalize",
+            "math.linalg.orthogonal"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.5 对称矩阵的对角化"]
+            "covers": [
+              "线性代数 5.5 对称矩阵的对角化"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 实对称矩阵的对角化",
           "overview": {
@@ -408,11 +525,19 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "idea_leverage": "high",
-          "ideas": ["视角变换", "化归"],
-          "requires": ["math.linalg.symmetric"],
+          "ideas": [
+            "视角变换",
+            "化归"
+          ],
+          "requires": [
+            "math.linalg.symmetric"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.6 二次型及其标准形", "线性代数 5.7 用配方法化二次型成标准形"]
+            "covers": [
+              "线性代数 5.6 二次型及其标准形",
+              "线性代数 5.7 用配方法化二次型成标准形"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 二次型及其标准形",
           "overview": {
@@ -430,11 +555,18 @@
           "mastery_goal": "master",
           "knowledge_type": "strategy",
           "idea_leverage": "high",
-          "ideas": ["判定", "跨学科呼应"],
-          "requires": ["math.linalg.quadratic"],
+          "ideas": [
+            "判定",
+            "跨学科呼应"
+          ],
+          "requires": [
+            "math.linalg.quadratic"
+          ],
           "textbook_ref": {
             "kind": "section",
-            "covers": ["线性代数 5.8 正定二次型"]
+            "covers": [
+              "线性代数 5.8 正定二次型"
+            ]
           },
           "syllabus_ref": "数学二 · 线性代数 · 正定二次型",
           "overview": {

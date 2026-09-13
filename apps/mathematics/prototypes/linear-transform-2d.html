@@ -258,6 +258,16 @@ function draw(){
 
   arrow(a,c,css('--i'),'向右一格');
   arrow(b,d,css('--j'),'向上一格');
+
+  // 原点画在最上层：它是图里唯一不动的点，线性变换总把原点送回原点
+  ctx.beginPath();ctx.arc(ox,oy,16,0,7);
+  ctx.fillStyle=css('--bg');ctx.fill();
+  ctx.beginPath();ctx.arc(ox,oy,13,0,7);
+  ctx.strokeStyle=css('--ink');ctx.lineWidth=5;ctx.stroke();
+  ctx.beginPath();ctx.arc(ox,oy,5.5,0,7);ctx.fillStyle=css('--ink');ctx.fill();
+  ctx.font='600 27px -apple-system,sans-serif';
+  ctx.fillText('原点（不动）',ox-158,oy+40);
+
   readout(det,disc);
 }
 

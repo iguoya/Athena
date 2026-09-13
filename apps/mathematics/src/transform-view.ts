@@ -165,6 +165,36 @@ export class TransformView {
     ctx.fillText(label, px + 16, py - 14);
   }
 
+  /**
+   * 原点。画在最上层并留白一圈，因为它是这张图里唯一不动的点——
+   * 线性变换把直线送成直线、且始终把原点送回原点，能平移的变换矩阵表达不了。
+   */
+  private origin() {
+    const ctx = this.ctx;
+    const [x, y] = this.toPx(0, 0);
+
+    // 先铺一圈底色，把底下的网格线压淡，免得原点混在格子里
+    ctx.beginPath();
+    ctx.arc(x, y, 16, 0, Math.PI * 2);
+    ctx.fillStyle = this.css("--bg");
+    
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 13, 0, Math.PI * 2);
+    ctx.strokeStyle = this.css("--ink");
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = this.css("--ink");
+    ctx.fill();
+
+    ctx.font = '600 27px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillText("原点（不动）", x - 158, y + 40);
+  }
+
   draw() {
     const ctx = this.ctx;
     const { a, b, c, d } = this.m;
@@ -248,6 +278,7 @@ export class TransformView {
 
     this.arrow(a, c, this.css("--basis-i"), "向右一格");
     this.arrow(b, d, this.css("--basis-j"), "向上一格");
+    this.origin();
 
     this.onChange(this.matrix, r);
   }
