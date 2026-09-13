@@ -71,7 +71,9 @@ export type Reach =
 export class TransformView {
   private ctx: CanvasRenderingContext2D;
   private m: Mat2 = { a: 1, b: 0, c: 0, d: 1 };
-  private dragging: "i" | "j" | "t" | null = null;
+  private dragging: "i" | "j" | "t" | "pan" | null = null;
+  /** 平移起点：[鼠标 clientX, clientY, 起始 panX, 起始 panY] */
+  private panFrom: [number, number, number, number] = [0, 0, 0, 0];
   private target: [number, number] | null = null;
   private animToken = 0;
   /** 每格像素。缩放会改它，所以不能是 readonly */
@@ -79,6 +81,9 @@ export class TransformView {
   private readonly baseS: number;
   private readonly ox: number;
   private readonly oy: number;
+  /** 拖空白处平移视图用的偏移 */
+  private panX = 0;
+  private panY = 0;
   private zoom = 1;
 
   constructor(
@@ -143,6 +148,14 @@ export class TransformView {
     return this.zoom;
   }
 
+  resetView() {
+    this.panX = 0;
+    this.panY = 0;
+    this.zoom = 1;
+    this.S = this.baseS;
+    this.draw();
+  }
+
   setZoom(z: number) {
     this.zoom = Math.min(4, Math.max(0.18, z));
     this.S = this.baseS * this.zoom;
@@ -154,6 +167,8 @@ export class TransformView {
    * 图看着一切正常，只是那个最该看的点不在画面里。
    */
   fitPoints(pts: Array<[number, number]>, margin = 1.25) {
+    this.panX = 0;
+    this.panY = 0;
     const all = [...pts, [this.m.a, this.m.c], [this.m.b, this.m.d], [0, 0]] as Array<
       [number, number]
     >;
@@ -215,11 +230,11 @@ export class TransformView {
   }
 
   private toPx(x: number, y: number): [number, number] {
-    return [this.ox + x * this.S, this.oy - y * this.S];
+    return [this.ox + this.panX + x * this.S, this.oy + this.panY - y * this.S];
   }
 
   private toMath(px: number, py: number): [number, number] {
-    return [(px - this.ox) / this.S, (this.oy - py) / this.S];
+    return [(px - this.ox - this.panX) / this.S, (this.oy + this.panY - py) / this.S];
   }
 
   private eventPoint(ev: PointerEvent): [number, number] {
@@ -228,6 +243,9 @@ export class TransformView {
     const py = (ev.clientY - r.top) * (this.canvas.height / r.height);
     return this.toMath(px, py);
   }
+
+  /** 拖了把手（箭头或目标点）才算「开始自己动手」；平移视图不算 */
+  onUserEdit?: () => void;
 
   private bindDrag() {
     this.canvas.addEventListener("pointerdown", (ev) => {
@@ -258,11 +276,20 @@ export class TransformView {
         x = Math.round(x * 4) / 4;
         y = Math.round(y * 4) / 4;
       }
+      if (this.dragging === "pan") {
+        const r = this.canvas.getBoundingClientRect();
+        const k = this.canvas.width / r.width; // CSS 像素 → 画布像素
+        this.panX = this.panFrom[2] + (ev.clientX - this.panFrom[0]) * k;
+        this.panY = this.panFrom[3] + (ev.clientY - this.panFrom[1]) * k;
+        this.draw();
+        return;
+      }
       if (this.dragging === "t") {
         this.target = [x, y];
         this.draw();
         return;
       }
+      this.onUserEdit?.();
       if (this.dragging === "i") {
         this.m.a = x;
         this.m.c = y;

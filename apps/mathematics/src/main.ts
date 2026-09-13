@@ -558,7 +558,8 @@ function renderTopic(id: string) {
             <button type="button" id="z-out" title="缩小">−</button>
             <button type="button" id="z-in" title="放大">＋</button>
             <button type="button" id="z-fit">看全</button>
-            <span class="zoom-hint">也可以在图上滚鼠标滚轮</span>
+            <button type="button" id="z-reset">回到原位</button>
+            <span class="zoom-hint">滚轮缩放，拖空白处平移</span>
           </div>
         </div>
       </div>`
@@ -826,10 +827,12 @@ function mountCanvas(
     { showEigen: readout === "full", target },
   );
 
-  cv.addEventListener("pointerdown", () => stopGuide());
+  // 动手拖箭头时只停动画插值（否则和手打架），语音继续念完——
+  // 边听边试是常态，点一下就掐掉声音太粗暴。
+  v.onUserEdit = () => v.cancelAnimation();
   for (const k of ids) {
     inputs[k].addEventListener("input", () => {
-      stopGuide();
+      v.cancelAnimation();
       const m = { ...v.matrix };
       const val = parseFloat(inputs[k].value);
       if (!Number.isNaN(val)) {
@@ -840,7 +843,7 @@ function mountCanvas(
   }
   document.querySelectorAll<HTMLButtonElement>(".presets button").forEach((b) =>
     b.addEventListener("click", () => {
-      stopGuide();
+      v.cancelAnimation();
       const [a, bb, c, d] = b.dataset.m!.split(",").map(Number);
       v.set({ a, b: bb, c, d });
     }),
@@ -856,6 +859,7 @@ function mountCanvas(
   zin?.addEventListener("click", () => v.setZoom(v.zoomLevel * 1.25));
   zout?.addEventListener("click", () => v.setZoom(v.zoomLevel * 0.8));
   zfit?.addEventListener("click", () => v.fitPoints(target ? [target] : []));
+  document.getElementById("z-reset")?.addEventListener("click", () => v.resetView());
 
   (window as unknown as { __view: TransformView }).__view = v;
 }
