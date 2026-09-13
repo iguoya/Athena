@@ -363,6 +363,47 @@ canvas.dragging { cursor: grabbing; }
 }
 .read div.focus .k { color: var(--ink); font-weight: 600; }
 
+.read[data-mode="arrows"] #r-det-row,
+.read[data-mode="arrows"] #r-flip-row,
+.read[data-mode="arrows"] #r-rank-row,
+.read[data-mode="arrows"] #r-eig-row { display: none; }
+
+.ov-steps {
+  margin: 0.4em 0 0.8em;
+  padding-left: 1.3em;
+}
+.ov-steps li { margin: 0.35em 0; }
+
+.walk {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 0 0 18px;
+}
+.walk-bar { display: flex; gap: 10px; align-items: center; }
+.walk-play {
+  font: inherit;
+  font-weight: 650;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.walk-stop {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.walk-line { margin: 10px 0 0; color: var(--muted); }
+.walk-line.is-on { color: var(--ink); font-weight: 550; }
+
 /* 侧边栏：正在读的那一节，只列它自己的结构 */
 .chapter-title.cur { color: var(--accent); }
 .cur-title {

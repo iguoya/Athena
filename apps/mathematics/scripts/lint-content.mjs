@@ -86,7 +86,14 @@ const BAD_HEAD = /^(是|和|与|也|就|而|但|所以|因此|其实|正是|同�
 let weak = 0;
 for (const ch of cur.chapters) {
   for (const t of ch.topics) {
-    const fields = [t.overview?.asks, t.overview?.says, t.overview?.aha, t.hook?.text];
+    const fields = [
+      t.overview?.asks,
+      t.overview?.says,
+      t.overview?.aha,
+      ...(t.overview?.steps ?? []),
+      t.hook?.text,
+      ...(t.walkthrough?.lines ?? []).map((l) => l.say),
+    ];
     for (const v of fields) {
       if (!v) continue;
       for (const m of v.matchAll(/==(.+?)==/g)) {

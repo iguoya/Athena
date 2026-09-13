@@ -22,3 +22,4 @@
 | [0015](0015-starting-point-and-prerequisites.md) | 显式声明学习者起点；前置基础独立成层并按需诊断 | 已接受（修正 0007 的 scope 与 REFERENCES 第六节） |
 | [0016](0016-building-it-is-studying-it.md) | 编写这个软件本身就是学习动作；但要划清内容与工程的界 | 已接受（撤销 REFERENCES 第六节的「净支出」判断） |
 | [0017](0017-anchor-each-stage-to-a-real-textbook.md) | 每个阶段锚定一份真实教材；严格表述必须可核对 | 已接受（部分作废 0012 第 4 节） |
+| [0018](0018-voice-and-scripted-animation.md) | 概念节可用语音讲解与脚本动画；二者跟课表走 | 已接受 |

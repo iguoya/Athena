@@ -51,10 +51,16 @@ export function readoutOf(m: Mat2): Readout {
   return { det, flipped: det < -EPS, rank, eigenDirs };
 }
 
+export interface TransformViewOptions {
+  /** 第一章先不画特征方向，避免还没讲的绿虚线抢视线 */
+  showEigen?: boolean;
+}
+
 export class TransformView {
   private ctx: CanvasRenderingContext2D;
   private m: Mat2 = { a: 1, b: 0, c: 0, d: 1 };
   private dragging: "i" | "j" | null = null;
+  private animToken = 0;
   private readonly S: number;
   private readonly ox: number;
   private readonly oy: number;
@@ -62,11 +68,13 @@ export class TransformView {
   constructor(
     private canvas: HTMLCanvasElement,
     private onChange: (m: Mat2, r: Readout) => void,
+    private options: TransformViewOptions = {},
   ) {
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("画布不可用");
     this.ctx = ctx;
-    this.S = Math.min(canvas.width, canvas.height) / 11;
+    // 一格大约占画布短边的 1/6.5，箭头和线头跟着格子走，避免缩成针尖
+    this.S = Math.min(canvas.width, canvas.height) / 6.5;
     this.ox = canvas.width / 2;
     this.oy = canvas.height / 2;
     this.bindDrag();
@@ -77,8 +85,40 @@ export class TransformView {
   }
 
   set(m: Mat2) {
+    this.animToken += 1;
     this.m = { ...m };
     this.draw();
+  }
+
+  /** 把当前矩阵平滑搬到目标。离开页面或再次 set 会取消。 */
+  animateTo(target: Mat2, ms = 1100): Promise<void> {
+    const token = ++this.animToken;
+    const from = { ...this.m };
+    return new Promise((resolve) => {
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        if (token !== this.animToken) {
+          resolve();
+          return;
+        }
+        const u = Math.min(1, (now - t0) / ms);
+        const e = 1 - (1 - u) ** 3;
+        this.m = {
+          a: from.a + (target.a - from.a) * e,
+          b: from.b + (target.b - from.b) * e,
+          c: from.c + (target.c - from.c) * e,
+          d: from.d + (target.d - from.d) * e,
+        };
+        this.draw();
+        if (u < 1) requestAnimationFrame(tick);
+        else resolve();
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  cancelAnimation() {
+    this.animToken += 1;
   }
 
   private css(name: string): string {
@@ -105,7 +145,8 @@ export class TransformView {
       const [x, y] = this.eventPoint(ev);
       const di = Math.hypot(x - this.m.a, y - this.m.c);
       const dj = Math.hypot(x - this.m.b, y - this.m.d);
-      if (Math.min(di, dj) > 0.55) return;
+      if (Math.min(di, dj) > 0.42) return;
+      this.animToken += 1;
       this.dragging = di < dj ? "i" : "j";
       this.canvas.setPointerCapture(ev.pointerId);
       this.canvas.classList.add("dragging");
@@ -140,29 +181,32 @@ export class TransformView {
   private arrow(x: number, y: number, color: string, label: string) {
     const ctx = this.ctx;
     const [px, py] = this.toPx(x, y);
+    const shaft = this.S * 0.085;
+    const head = this.S * 0.34;
+    const tip = this.S * 0.16;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineWidth = 5;
+    ctx.lineWidth = shaft;
+    ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(this.ox, this.oy);
     ctx.lineTo(px, py);
     ctx.stroke();
 
     const ang = Math.atan2(py - this.oy, px - this.ox);
-    const h = 22;
     ctx.beginPath();
     ctx.moveTo(px, py);
-    ctx.lineTo(px - h * Math.cos(ang - 0.4), py - h * Math.sin(ang - 0.4));
-    ctx.lineTo(px - h * Math.cos(ang + 0.4), py - h * Math.sin(ang + 0.4));
+    ctx.lineTo(px - head * Math.cos(ang - 0.38), py - head * Math.sin(ang - 0.38));
+    ctx.lineTo(px - head * Math.cos(ang + 0.38), py - head * Math.sin(ang + 0.38));
     ctx.closePath();
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(px, py, 11, 0, Math.PI * 2);
+    ctx.arc(px, py, tip, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.font = '600 30px -apple-system, "PingFang SC", sans-serif';
-    ctx.fillText(label, px + 16, py - 14);
+    ctx.font = `600 ${Math.round(this.S * 0.24)}px -apple-system, "PingFang SC", sans-serif`;
+    ctx.fillText(label, px + tip + 8, py - tip);
   }
 
   /**
@@ -174,25 +218,25 @@ export class TransformView {
     const [x, y] = this.toPx(0, 0);
 
     // 先铺一圈底色，把底下的网格线压淡，免得原点混在格子里
+    const halo = this.S * 0.14;
     ctx.beginPath();
-    ctx.arc(x, y, 16, 0, Math.PI * 2);
+    ctx.arc(x, y, halo, 0, Math.PI * 2);
     ctx.fillStyle = this.css("--bg");
-    
     ctx.fill();
-    
+
     ctx.beginPath();
-    ctx.arc(x, y, 13, 0, Math.PI * 2);
+    ctx.arc(x, y, halo * 0.78, 0, Math.PI * 2);
     ctx.strokeStyle = this.css("--ink");
-    ctx.lineWidth = 5;
+    ctx.lineWidth = this.S * 0.04;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+    ctx.arc(x, y, halo * 0.34, 0, Math.PI * 2);
     ctx.fillStyle = this.css("--ink");
     ctx.fill();
 
-    ctx.font = '600 27px -apple-system, "PingFang SC", sans-serif';
-    ctx.fillText("原点（不动）", x - 158, y + 40);
+    ctx.font = `600 ${Math.round(this.S * 0.2)}px -apple-system, "PingFang SC", sans-serif`;
+    ctx.fillText("原点（不动）", x - this.S * 1.05, y + this.S * 0.28);
   }
 
   draw() {
@@ -201,13 +245,13 @@ export class TransformView {
     const r = readoutOf(this.m);
     const W = this.canvas.width;
     const H = this.canvas.height;
-    const L = 12;
+    const L = 8;
 
     ctx.clearRect(0, 0, W, H);
 
     // 原始网格
     ctx.strokeStyle = this.css("--grid");
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = Math.max(2, this.S * 0.012);
     for (let k = -L; k <= L; k++) {
       let p = this.toPx(k, -L);
       let q = this.toPx(k, L);
@@ -225,7 +269,7 @@ export class TransformView {
 
     // 变换后的网格：原网格线的像
     ctx.strokeStyle = this.css("--grid-image");
-    ctx.lineWidth = 2;
+    ctx.lineWidth = Math.max(2.5, this.S * 0.018);
     for (let k = -L; k <= L; k++) {
       // x = k 的像：过 k·i，方向 j
       let p = this.toPx(k * a - L * b, k * c - L * d);
@@ -252,23 +296,24 @@ export class TransformView {
     ctx.fillStyle = r.flipped ? "rgba(217,72,15,.20)" : "rgba(10,88,202,.17)";
     ctx.fill();
 
-    // 方向不变的方向
-    ctx.strokeStyle = this.css("--eigen");
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([12, 9]);
-    for (const [vx, vy] of r.eigenDirs) {
-      const p = this.toPx(-L * vx, -L * vy);
-      const q = this.toPx(L * vx, L * vy);
-      ctx.beginPath();
-      ctx.moveTo(p[0], p[1]);
-      ctx.lineTo(q[0], q[1]);
-      ctx.stroke();
+    if (this.options.showEigen !== false) {
+      ctx.strokeStyle = this.css("--eigen");
+      ctx.lineWidth = this.S * 0.022;
+      ctx.setLineDash([12, 9]);
+      for (const [vx, vy] of r.eigenDirs) {
+        const p = this.toPx(-L * vx, -L * vy);
+        const q = this.toPx(L * vx, L * vy);
+        ctx.beginPath();
+        ctx.moveTo(p[0], p[1]);
+        ctx.lineTo(q[0], q[1]);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
     }
-    ctx.setLineDash([]);
 
     // 坐标轴
     ctx.strokeStyle = this.css("--line");
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = Math.max(3, this.S * 0.02);
     ctx.beginPath();
     ctx.moveTo(0, this.oy);
     ctx.lineTo(W, this.oy);

@@ -2,7 +2,7 @@
 // 内容驱动：界面按 content/ 下的 JSON 渲染，不为新增知识点或诊断项复制整页。
 
 import { invoke } from "@tauri-apps/api/core";
-import { TransformView, readoutOf, type Mat2, type Readout } from "./transform-view";
+import { TransformView, type Mat2, type Readout } from "./transform-view";
 import { GraphView, type GraphNode } from "./graph-view";
 import {
   renderDiagnostics,
@@ -10,6 +10,7 @@ import {
   type Diagnostics,
   type Answer,
 } from "./diagnostic";
+import { speak, stopSpeech, speechAvailable } from "./speak";
 
 // ── 课表类型（只声明用到的字段）──────────────────
 interface TextbookRef {
@@ -45,12 +46,22 @@ interface Topic {
     note?: string;
   };
   widget?: string;
-  widget_preset?: { m: number[]; focus?: string | null; caption?: string };
+  widget_preset?: {
+    m: number[];
+    focus?: string | null;
+    caption?: string;
+    readout?: "arrows" | "full";
+  };
   overview?: {
     asks: string;
     says: string;
     why_now: string;
     aha?: string;
+    steps?: string[];
+  };
+  walkthrough?: {
+    title: string;
+    lines: Array<{ say: string; m: number[] }>;
   };
   experiments?: Experiment[];
 }
@@ -203,6 +214,7 @@ function renderSide() {
       if (t.sources) secs.push(["s-src", "出处"]);
       if (t.hook) secs.push(["s-hook", "为什么需要它"]);
       if (t.overview) secs.push(["s-ov", "讲什么"]);
+      if (t.walkthrough) secs.push(["s-walk", "先看一遍"]);
       if (t.widget) secs.push(["s-widget", "动手试"]);
       if ((t.experiments ?? []).some((e) => e.answer)) secs.push(["s-ask", "先猜再拖"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
@@ -221,6 +233,7 @@ function renderSide() {
 
   side.querySelectorAll<HTMLButtonElement>(".topic").forEach((b) =>
     b.addEventListener("click", () => {
+      stopGuide();
       view = b.dataset.diag ? { kind: "diag" } : { kind: "graph" };
       render();
       document.getElementById("main")!.scrollTop = 0;
@@ -282,6 +295,7 @@ function milestoneHtml(t: Topic, all: Topic[]): string {
 }
 
 function goTo(id: string) {
+  stopGuide();
   view = { kind: "topic", id };
   render();
   document.getElementById("main")!.scrollTop = 0;
@@ -453,8 +467,24 @@ function renderTopic(id: string) {
     ? `<div id="s-ov" class="ov">
          <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
          <p class="ov-says">${rich(ov.says)}</p>
+         ${
+           ov.steps?.length
+             ? `<ol class="ov-steps">${ov.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol>`
+             : ""
+         }
          ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
          <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
+       </div>`
+    : "";
+
+  const walk = t.walkthrough;
+  const walkHtml = walk
+    ? `<div id="s-walk" class="walk">
+         <div class="walk-bar">
+           <button type="button" class="walk-play" id="walk-play">${walk.title}</button>
+           <button type="button" class="walk-stop" id="walk-stop">停</button>
+         </div>
+         <p class="walk-line" id="walk-line">点上面按钮，图会动、会出声。也可以不听，直接拖。</p>
        </div>`
     : "";
 
@@ -481,11 +511,13 @@ function renderTopic(id: string) {
             第一列 <i class="a">蓝箭头</i>＝向右一格去哪<br>
             第二列 <i class="b">橙箭头</i>＝向上一格去哪
           </div>
-          <div class="read">
-            <div${f("det")}><span class="k">面积变成原来的</span><span class="v" id="r-det">1.00 倍</span></div>
-            <div${f("flip")}><span class="k">翻面了吗</span><span class="v" id="r-flip">没有</span></div>
-            <div${f("rank")}><span class="k">压到几维</span><span class="v" id="r-rank">2</span></div>
-            <div${f("eig")}><span class="k">方向不变的方向</span><span class="v" id="r-eig">绿色虚线</span></div>
+          <div class="read" data-mode="${pre?.readout === "arrows" ? "arrows" : "full"}">
+            <div id="r-i-row"><span class="k">蓝箭头现在在</span><span class="v" id="r-i">(1, 0)</span></div>
+            <div id="r-j-row"><span class="k">橙箭头现在在</span><span class="v" id="r-j">(0, 1)</span></div>
+            <div${f("det")} id="r-det-row"><span class="k">面积变成原来的</span><span class="v" id="r-det">1.00 倍</span></div>
+            <div${f("flip")} id="r-flip-row"><span class="k">翻面了吗</span><span class="v" id="r-flip">没有</span></div>
+            <div${f("rank")} id="r-rank-row"><span class="k">压到几维</span><span class="v" id="r-rank">2</span></div>
+            <div${f("eig")} id="r-eig-row"><span class="k">方向不变的方向</span><span class="v" id="r-eig">绿色虚线</span></div>
           </div>
           <div class="presets">
             <button data-m="1,0,0,1">还原</button>
@@ -532,6 +564,7 @@ function renderTopic(id: string) {
       ${srcHtml}
       ${t.hook ? `<div id="s-hook" class="hook"><p>${rich(t.hook.text)}</p></div>` : ""}
       ${overviewHtml}
+      ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
       ${
@@ -575,12 +608,14 @@ function renderTopic(id: string) {
     b.addEventListener("click", () => goTo(b.dataset.id!)),
   );
   main.querySelector<HTMLButtonElement>(".to-graph")?.addEventListener("click", () => {
+    stopGuide();
     view = { kind: "graph" };
     render();
     document.getElementById("main")!.scrollTop = 0;
   });
 
-  if (t.widget === "transform2d") mountCanvas(pre?.m);
+  if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full");
+  if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
   renderSide();
@@ -606,20 +641,79 @@ function renderPredict(e: Experiment, prev?: PredictionRow): string {
     </div>`;
 }
 
-function mountCanvas(preset?: number[]) {
+let guideToken = 0;
+
+function stopGuide() {
+  guideToken += 1;
+  stopSpeech();
+  const view = (window as unknown as { __view?: TransformView }).__view;
+  view?.cancelAnimation();
+  const line = document.getElementById("walk-line");
+  if (line && !line.dataset.keep) {
+    line.classList.remove("is-on");
+  }
+}
+
+function bindWalkthrough(t: Topic) {
+  const play = document.getElementById("walk-play");
+  const stop = document.getElementById("walk-stop");
+  play?.addEventListener("click", () => {
+    void runWalkthrough(t);
+  });
+  stop?.addEventListener("click", () => {
+    stopGuide();
+    const line = document.getElementById("walk-line");
+    if (line) {
+      line.textContent = "已停。可以自己拖箭头，或再点一次从头看。";
+      line.classList.remove("is-on");
+    }
+  });
+}
+
+async function runWalkthrough(t: Topic) {
+  const lines = t.walkthrough?.lines ?? [];
+  const view = (window as unknown as { __view?: TransformView }).__view;
+  const lineEl = document.getElementById("walk-line");
+  if (!view || !lines.length || !lineEl) return;
+  stopGuide();
+  const token = ++guideToken;
+  document.getElementById("s-widget")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  for (const step of lines) {
+    if (token !== guideToken) return;
+    const [a, b, c, d] = step.m;
+    lineEl.textContent = step.say;
+    lineEl.classList.add("is-on");
+    const motion = view.animateTo({ a, b, c, d });
+    const voice = speechAvailable()
+      ? speak(step.say)
+      : new Promise<void>((r) => setTimeout(r, 1600));
+    await Promise.all([motion, voice]);
+  }
+  if (token !== guideToken) return;
+  lineEl.textContent = "演完了。现在自己拖两根箭头，看格子怎么跟。";
+  lineEl.classList.remove("is-on");
+}
+
+function mountCanvas(preset?: number[], readout: "arrows" | "full" = "full") {
   const cv = document.getElementById("cv") as HTMLCanvasElement;
   const ids = ["a", "b", "c", "d"] as const;
   const inputs = Object.fromEntries(
     ids.map((k) => [k, document.getElementById(`m-${k}`) as HTMLInputElement]),
   ) as Record<(typeof ids)[number], HTMLInputElement>;
 
-  const v = new TransformView(cv, (m, r) => {
-    for (const k of ids) inputs[k].value = String(+m[k].toFixed(2));
-    showReadout(r);
-  });
+  const v = new TransformView(
+    cv,
+    (m, r) => {
+      for (const k of ids) inputs[k].value = String(+m[k].toFixed(2));
+      showReadout(m, r, readout);
+    },
+    { showEigen: readout === "full" },
+  );
 
+  cv.addEventListener("pointerdown", () => stopGuide());
   for (const k of ids) {
     inputs[k].addEventListener("input", () => {
+      stopGuide();
       const m = { ...v.matrix };
       const val = parseFloat(inputs[k].value);
       if (!Number.isNaN(val)) {
@@ -630,6 +724,7 @@ function mountCanvas(preset?: number[]) {
   }
   document.querySelectorAll<HTMLButtonElement>(".presets button").forEach((b) =>
     b.addEventListener("click", () => {
+      stopGuide();
       const [a, bb, c, d] = b.dataset.m!.split(",").map(Number);
       v.set({ a, b: bb, c, d });
     }),
@@ -642,20 +737,29 @@ function mountCanvas(preset?: number[]) {
   (window as unknown as { __view: TransformView }).__view = v;
 }
 
-function showReadout(r: Readout) {
+function fmtPair(x: number, y: number): string {
+  return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
+}
+
+function showReadout(m: Mat2, r: Readout, mode: "arrows" | "full") {
   const set = (id: string, text: string, alert = false) => {
-    const el = document.getElementById(id)!;
+    const el = document.getElementById(id);
+    if (!el) return;
     el.textContent = text;
     el.className = "v" + (alert ? " alert" : "");
   };
-  set("r-det", Math.abs(r.det).toFixed(2) + " 倍", Math.abs(r.det) < 1e-9);
-  set("r-flip", r.flipped ? "翻了" : "没有", r.flipped);
-  set("r-rank", String(r.rank), r.rank < 2);
-  set(
-    "r-eig",
-    r.rank < 2 ? "已压扁" : r.eigenDirs.length ? "绿色虚线" : "一条也没有",
-    r.rank < 2,
-  );
+  set("r-i", fmtPair(m.a, m.c));
+  set("r-j", fmtPair(m.b, m.d));
+  if (mode === "full") {
+    set("r-det", Math.abs(r.det).toFixed(2) + " 倍", Math.abs(r.det) < 1e-9);
+    set("r-flip", r.flipped ? "翻了" : "没有", r.flipped);
+    set("r-rank", String(r.rank), r.rank < 2);
+    set(
+      "r-eig",
+      r.rank < 2 ? "已压扁" : r.eigenDirs.length ? "绿色虚线" : "一条也没有",
+      r.rank < 2,
+    );
+  }
 }
 
 function bindPredict(t: Topic, e: Experiment) {
@@ -669,15 +773,12 @@ function bindPredict(t: Topic, e: Experiment) {
 
       const m: Mat2 = { a: 1, b: 2, c: 2, d: 4 };
       (window as unknown as { __view: TransformView }).__view.set(m);
-      const r = readoutOf(m);
 
       const vd = document.getElementById("verdict")!;
       vd.className = "verdict show " + (correct ? "right" : "wrong");
       vd.innerHTML =
         (correct ? '<b class="right">对了。</b>' : '<b class="wrong">再看图。</b>') +
-        `${e.why ?? ""}<br><br>右边「面积变成原来的」显示 <b>${Math.abs(r.det).toFixed(
-          2,
-        )} 倍</b>：面积没了，因为它已经不是面了。压扁之后回不去——落在同一点上的原像有无穷多个，你没法知道它原来在哪。<b>这就是「行列式为零 ⟺ 不可逆」</b>，先看见，第 1 章再用符号说一遍。`;
+        `${e.why ?? ""}<br><br>右边两根箭头现在指同一方向。格子铺不成面，只剩一条线。后面会给这件事起名字；这一节只要看见。`;
 
       void invoke("save_prediction", {
         topicId: t.id,
