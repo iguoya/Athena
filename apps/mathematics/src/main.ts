@@ -10,7 +10,17 @@ import {
   type Diagnostics,
   type Answer,
 } from "./diagnostic";
-import { speak, stopSpeech, speechAvailable } from "./speak";
+import {
+  speak,
+  stopSpeech,
+  speechAvailable,
+  listVoices,
+  getVoiceName,
+  setVoiceName,
+  getRate,
+  setRate,
+  voicesReady,
+} from "./speak";
 
 // ── 课表类型（只声明用到的字段）──────────────────
 interface TextbookRef {
@@ -144,6 +154,7 @@ async function boot() {
     app.innerHTML = `<div class="err">内容加载失败：${String(e)}</div>`;
     return;
   }
+  await voicesReady();
   render();
   bindKeys();
 }
@@ -492,6 +503,7 @@ function renderTopic(id: string) {
          <div class="walk-bar">
            <button type="button" class="walk-play" id="walk-play">${walk.title}</button>
            <button type="button" class="walk-stop" id="walk-stop">停</button>
+           ${speechAvailable() ? voiceControls() : ""}
          </div>
          <p class="walk-line" id="walk-line">点上面按钮，图会动、会出声。也可以不听，直接拖。</p>
        </div>`
@@ -675,12 +687,64 @@ function stopGuide() {
   }
 }
 
+/**
+ * 语速与音色的现场调节。系统 API 不给性别字段，哪个听着更年轻因人而异，
+ * 所以列表只做排序建议，另给试听——由使用者自己定（ADR 0011 第 4 节第 3 项）。
+ */
+function voiceControls(): string {
+  const vs = listVoices();
+  if (!vs.length) return "";
+  const cur = getVoiceName();
+  const rate = getRate();
+  const rates: Array<[number, string]> = [
+    [1.0, "常速"],
+    [1.25, "快"],
+    [1.45, "更快"],
+    [1.7, "最快"],
+  ];
+  return `<span class="walk-voice">
+      <label>语速
+        <select id="walk-rate">
+          ${rates
+            .map(
+              ([r, label]) =>
+                `<option value="${r}"${Math.abs(r - rate) < 0.01 ? " selected" : ""}>${label}</option>`,
+            )
+            .join("")}
+        </select>
+      </label>
+      <label>声音
+        <select id="walk-vname">
+          ${vs
+            .map(
+              (v) =>
+                `<option value="${v.name}"${v.name === cur ? " selected" : ""}>${v.name}</option>`,
+            )
+            .join("")}
+        </select>
+      </label>
+      <button type="button" id="walk-try">试听</button>
+    </span>`;
+}
+
 function bindWalkthrough(t: Topic) {
   const play = document.getElementById("walk-play");
   const stop = document.getElementById("walk-stop");
   play?.addEventListener("click", () => {
     void runWalkthrough(t);
   });
+  const rateSel = document.getElementById("walk-rate") as HTMLSelectElement | null;
+  const nameSel = document.getElementById("walk-vname") as HTMLSelectElement | null;
+  const tryBtn = document.getElementById("walk-try");
+  rateSel?.addEventListener("change", () => setRate(Number(rateSel.value)));
+  nameSel?.addEventListener("change", () => {
+    setVoiceName(nameSel.value);
+    void speak("这是我的声音，语速是这样。");
+  });
+  tryBtn?.addEventListener("click", () => {
+    void speak("两个箭头一旦指向同一条线，整张格子就塌成一条线。");
+  });
+
   stop?.addEventListener("click", () => {
     stopGuide();
     const line = document.getElementById("walk-line");

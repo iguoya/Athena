@@ -415,3 +415,20 @@ canvas.dragging { cursor: grabbing; }
   padding: 8px 20px 8px 32px; cursor: pointer; color: var(--muted);
 }
 .sec:hover { background: var(--panel-2); color: var(--ink); border-left-color: var(--line); }
+
+/* 语速与音色：就地可调，不必进设置页 */
+.walk-voice {
+  display: inline-flex; align-items: center; gap: 12px; margin-left: auto;
+  font-size: 15px; color: var(--muted);
+}
+.walk-voice label { display: inline-flex; align-items: center; gap: 5px; }
+.walk-voice select {
+  font: inherit; font-size: 15px; padding: 3px 6px; border-radius: 6px;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+}
+.walk-voice button {
+  font: inherit; font-size: 15px; padding: 4px 12px; cursor: pointer; border-radius: 999px;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+}
+.walk-voice button:hover { border-color: var(--accent); color: var(--accent); }
+.walk-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
