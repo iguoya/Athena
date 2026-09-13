@@ -15,7 +15,7 @@ const OLD = /grandma|grandpa/i;
  * 系统 API 不给性别字段，这个次序按已知音色人工排定，听感因人而异——
  * 所以界面上给了试听和切换，不锁死。
  */
-const PREFER = ["Shelley", "Meijia", "Sandy", "Flo", "Tingting", "Sinji", "Eddy", "Reed", "Rocko"];
+const PREFER = ["Shelley", "Meijia", "美嘉", "Sandy", "Flo", "Tingting", "婷婷", "Sinji", "善怡", "Eddy", "Reed", "Rocko"];
 
 export interface VoiceInfo {
   name: string;
@@ -54,7 +54,7 @@ function regionOf(lang: string): string {
 }
 
 /** 名字里带这些词的是系统下载的增强版，音质明显好过默认的压缩版 */
-const BETTER = /premium|enhanced|siri|增强|高级/i;
+const BETTER = /premium|enhanced|siri|增强|高级|高音质|优质|neural/i;
 
 /** 全部中文语音，按「音质更好 → 年轻 → 老年」排序；地区一并标出来 */
 export function listVoices(): VoiceInfo[] {
@@ -87,9 +87,20 @@ export function hasBetterVoice(): boolean {
   return listVoices().some((v) => BETTER.test(v.name));
 }
 
+const UPGRADED_KEY = "math.speech.upgraded";
+
 export function getVoiceName(): string {
-  const saved = load(VOICE_KEY, "");
   const avail = listVoices();
+  const saved = load(VOICE_KEY, "");
+  const best = avail.find((v) => BETTER.test(v.name));
+
+  // 系统里新装了高音质语音时，自动换过去一次——刚装好的人不该还得自己去下拉里翻。
+  // 只做一次，之后他再手动选什么就是什么。
+  if (best && load(UPGRADED_KEY, "") !== "1") {
+    save(UPGRADED_KEY, "1");
+    save(VOICE_KEY, best.name);
+    return best.name;
+  }
   if (saved && avail.some((v) => v.name === saved)) return saved;
   return avail[0]?.name ?? "";
 }
