@@ -118,6 +118,15 @@ for (const t of topics) {
     console.error(`课表：${t.id} 缺 overview 层（ADR 0012 第 1 节）`);
     hits++;
   }
+  // 严格表述必须可核对：每节都要指到具体的外部出处（ADR 0017 第 3 节）
+  const sr = t.sources;
+  if (!sr || (!sr.intuition && !sr.rigorous && !sr.textbook_only)) {
+    console.error(
+      `课表：${t.id} 缺 sources——每节的严格表述都要能指到出处（ADR 0017 第 3 节）；` +
+        `在线来源确实没有的，标 textbook_only 并写明依据哪本教材`,
+    );
+    hits++;
+  }
 }
 
 // 拓扑排序：先修图不能有环，否则路径不可解

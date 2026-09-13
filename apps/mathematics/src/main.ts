@@ -37,7 +37,15 @@ interface Topic {
   textbook_ref: TextbookRef;
   syllabus_ref: string;
   hook?: { text: string };
+  sources?: {
+    intuition?: { site: string; title: string; url: string };
+    rigorous?: { site: string; title: string; url: string };
+    textbook?: string[];
+    textbook_only?: boolean;
+    note?: string;
+  };
   widget?: string;
+  widget_preset?: { m: number[]; focus?: string | null; caption?: string };
   overview?: {
     asks: string;
     says: string;
@@ -147,11 +155,10 @@ function render() {
 
 function renderSide() {
   const side = document.getElementById("side")!;
-  // 进度可见是消除「不知还要多久」这种无效挫折的手段（ADR 0011 第 1 节），
-  // 显示的是走过多少节这个事实，不是分数。
   const all = flatTopics();
   const walked = all.filter((t) => topicSeen(t.id)).length;
   const pct = all.length ? Math.round((walked / all.length) * 100) : 0;
+
   const parts: string[] = [
     `<div class="brand">
        <h1>${curriculum.title}</h1>
@@ -161,24 +168,25 @@ function renderSide() {
      </div>`,
   ];
 
-  // 诊断入口排在最前：先知道哪些要补，再决定路径（ADR 0015 第 4 节）
-  const total = diagnostics.groups.length;
-  const passed = diagnostics.groups.filter(
+  // 顶层只有两个去处：诊断和图谱。知识点之间的关系全部交给图谱表达，
+  // 不在侧边栏重复列表——进了一节还把另外十几节摆在旁边，是纯粹的噪音
+  // （ADR 0011 第 6 节：只暴露当前需要的自由度）。
+  const passedGroups = diagnostics.groups.filter(
     (g) =>
       g.items.every((it) => diagAnswers.has(key(g.id, it.id))) &&
       g.items.every((it) => diagAnswers.get(key(g.id, it.id))!.correct),
   ).length;
-  parts.push(`<div class="chapter-title">开始之前</div>`);
+  parts.push(`<div class="chapter-title">去哪里</div>`);
   parts.push(
     `<button class="topic${view.kind === "diag" ? " active" : ""}" data-diag="1">
        ${diagnostics.title}
        <span class="meta">${
-         passed ? `<span class="dot">✓ ${passed} / ${total} 组已通过</span>` : `共 ${total} 组`
+         passedGroups
+           ? `<span class="dot">✓ ${passedGroups} / ${diagnostics.groups.length} 组已通过</span>`
+           : `共 ${diagnostics.groups.length} 组`
        }</span>
      </button>`,
   );
-
-  parts.push(`<div class="chapter-title">整条线</div>`);
   parts.push(
     `<button class="topic${view.kind === "graph" ? " active" : ""}" data-graph="1">
        线性代数图谱
@@ -186,43 +194,41 @@ function renderSide() {
      </button>`,
   );
 
-  for (const ch of curriculum.chapters) {
-    const w = ch.topics.filter((t) => topicSeen(t.id)).length;
-    parts.push(
-      `<div class="chapter-title">${ch.title}
-         <span class="ch-prog${w === ch.topics.length ? " full" : ""}">${w}/${ch.topics.length}</span>
-       </div>`,
-    );
-    for (const t of ch.topics) {
-      const seen = progress.get(key(t.id, "overview"));
-      // 走过与答对必须是两种记号：overview 层不判对错，标绿会变成虚假激励
-      // （ADR 0011 第 5b 节、ADR 0014 第 2 节的流畅性错觉）
-      const mark = topicPassed(t)
-        ? ' · <span class="dot">✓ 答对</span>'
-        : seen
-          ? ' · <span class="seen">走过</span>'
-          : "";
+  // 正在读某一节时，下面列的是这一节内部的结构
+  if (view.kind === "topic") {
+    const t = findTopic(view.id);
+    if (t) {
+      const at = all.findIndex((x) => x.id === t.id);
+      const secs: Array<[string, string]> = [];
+      if (t.sources) secs.push(["s-src", "出处"]);
+      if (t.hook) secs.push(["s-hook", "为什么需要它"]);
+      if (t.overview) secs.push(["s-ov", "讲什么"]);
+      if (t.widget) secs.push(["s-widget", "动手试"]);
+      if ((t.experiments ?? []).some((e) => e.answer)) secs.push(["s-ask", "先猜再拖"]);
+      if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
+
       parts.push(
-        `<button class="topic${
-          view.kind === "topic" && t.id === view.id ? " active" : ""
-        }${topicPassed(t) ? " passed" : ""}" data-id="${t.id}">
-           ${t.title}
-           <span class="meta">难度 ${t.difficulty} · ${scopeLabel(t.scope)}${mark}</span>
-         </button>`,
+        `<div class="chapter-title cur">正在读 · 第 ${at + 1} / ${all.length} 节</div>`,
       );
+      parts.push(`<div class="cur-title">${t.title}</div>`);
+      for (const [id, label] of secs) {
+        parts.push(`<button class="sec" data-sec="${id}">${label}</button>`);
+      }
     }
   }
+
   side.innerHTML = parts.join("");
 
   side.querySelectorAll<HTMLButtonElement>(".topic").forEach((b) =>
     b.addEventListener("click", () => {
-      view = b.dataset.diag
-        ? { kind: "diag" }
-        : b.dataset.graph
-          ? { kind: "graph" }
-          : { kind: "topic", id: b.dataset.id! };
+      view = b.dataset.diag ? { kind: "diag" } : { kind: "graph" };
       render();
       document.getElementById("main")!.scrollTop = 0;
+    }),
+  );
+  side.querySelectorAll<HTMLButtonElement>(".sec").forEach((b) =>
+    b.addEventListener("click", () => {
+      document.getElementById(b.dataset.sec!)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }),
   );
 }
@@ -413,13 +419,38 @@ function renderTopic(id: string) {
     `<div class="row"><b>大纲坐标</b>　${t.syllabus_ref}</div>`,
   ].join("");
 
+  const src = t.sources;
+  const srcHtml = src
+    ? `<div id="s-src" class="src${src.textbook_only ? " only-book" : ""}">
+        <div class="src-t">这一节的出处</div>
+        ${
+          src.intuition
+            ? `<div class="src-row"><span class="src-k">直觉</span>
+                 <a href="${src.intuition.url}" target="_blank" rel="noreferrer">${src.intuition.site} · ${src.intuition.title}</a></div>`
+            : ""
+        }
+        ${
+          src.rigorous
+            ? `<div class="src-row"><span class="src-k">严格表述</span>
+                 <a href="${src.rigorous.url}" target="_blank" rel="noreferrer">${src.rigorous.site} · ${src.rigorous.title}</a></div>`
+            : ""
+        }
+        ${
+          src.textbook?.length
+            ? `<div class="src-row"><span class="src-k">教材</span><span>${src.textbook.join(" · ")}</span></div>`
+            : ""
+        }
+        ${src.note ? `<div class="src-note">${src.note}</div>` : ""}
+      </div>`
+    : "";
+
   const ov = t.overview;
   const predict = (t.experiments || []).find((e) => e.answer);
   const prev = predict ? predictions.get(key(t.id, predict.id)) : undefined;
 
   // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
   const overviewHtml = ov
-    ? `<div class="ov">
+    ? `<div id="s-ov" class="ov">
          <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
          <p class="ov-says">${rich(ov.says)}</p>
          ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
@@ -427,10 +458,15 @@ function renderTopic(id: string) {
        </div>`
     : "";
 
+  const pre = t.widget_preset;
+  const f = (k: string) => (pre?.focus === k ? ' class="focus"' : "");
   const widgetHtml =
     t.widget === "transform2d"
-      ? `<div class="stage">
+      ? `<div id="s-widget" class="stage">
+        <div>
         <canvas id="cv" width="1360" height="1020"></canvas>
+        ${pre?.caption ? `<p class="cv-cap">${rich(pre.caption)}</p>` : ""}
+        </div>
         <div class="panel">
           <h3>这一次的搬法</h3>
           <div class="mat">
@@ -446,10 +482,10 @@ function renderTopic(id: string) {
             第二列 <i class="b">橙箭头</i>＝向上一格去哪
           </div>
           <div class="read">
-            <div><span class="k">面积变成原来的</span><span class="v" id="r-det">1.00 倍</span></div>
-            <div><span class="k">翻面了吗</span><span class="v" id="r-flip">没有</span></div>
-            <div><span class="k">压到几维</span><span class="v" id="r-rank">2</span></div>
-            <div><span class="k">方向不变的方向</span><span class="v" id="r-eig">绿色虚线</span></div>
+            <div${f("det")}><span class="k">面积变成原来的</span><span class="v" id="r-det">1.00 倍</span></div>
+            <div${f("flip")}><span class="k">翻面了吗</span><span class="v" id="r-flip">没有</span></div>
+            <div${f("rank")}><span class="k">压到几维</span><span class="v" id="r-rank">2</span></div>
+            <div${f("eig")}><span class="k">方向不变的方向</span><span class="v" id="r-eig">绿色虚线</span></div>
           </div>
           <div class="presets">
             <button data-m="1,0,0,1">还原</button>
@@ -493,13 +529,14 @@ function renderTopic(id: string) {
       <div class="coord">${coord}</div>
       <h2 class="title">${t.title}</h2>
       ${reqHtml}
-      ${t.hook ? `<div class="hook"><p>${rich(t.hook.text)}</p></div>` : ""}
+      ${srcHtml}
+      ${t.hook ? `<div id="s-hook" class="hook"><p>${rich(t.hook.text)}</p></div>` : ""}
       ${overviewHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
       ${
         ref.prepares?.length && t.widget
-          ? `<div class="prep"><h3>这一张图，后面每一章都会回来</h3><table>${ref.prepares
+          ? `<div id="s-prep" class="prep"><h3>这一张图，后面每一章都会回来</h3><table>${ref.prepares
               .map((s) => {
                 const [k, v] = s.split(" —— ");
                 return `<tr><td>${k}</td><td>${v ?? ""}</td></tr>`;
@@ -508,7 +545,7 @@ function renderTopic(id: string) {
           : ""
       }
       <div class="foot">
-        <span>难度 ${t.difficulty} · 掌握目标 ${t.mastery_goal}</span>
+        <span>难度 ${t.difficulty} · ${scopeLabel(t.scope)} · 掌握目标 ${t.mastery_goal}</span>
         <span>${t.ideas?.length ? "思想：" + t.ideas.join(" · ") : ""}</span>
       </div>
 
@@ -543,7 +580,7 @@ function renderTopic(id: string) {
     document.getElementById("main")!.scrollTop = 0;
   });
 
-  if (t.widget === "transform2d") mountCanvas();
+  if (t.widget === "transform2d") mountCanvas(pre?.m);
   if (predict) bindPredict(t, predict);
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
   renderSide();
@@ -552,7 +589,7 @@ function renderTopic(id: string) {
 function renderPredict(e: Experiment, prev?: PredictionRow): string {
   const opts = ["还是整张平面，只是被拉斜了", "缩成一条直线", "缩成一个点"];
   return `
-    <div class="ask">
+    <div id="s-ask" class="ask">
       <h3>${e.title}</h3>
       <p class="q">${e.prompt}</p>
       <div class="opts">
@@ -569,7 +606,7 @@ function renderPredict(e: Experiment, prev?: PredictionRow): string {
     </div>`;
 }
 
-function mountCanvas() {
+function mountCanvas(preset?: number[]) {
   const cv = document.getElementById("cv") as HTMLCanvasElement;
   const ids = ["a", "b", "c", "d"] as const;
   const inputs = Object.fromEntries(
@@ -597,7 +634,11 @@ function mountCanvas() {
       v.set({ a, b: bb, c, d });
     }),
   );
-  v.draw();
+  if (preset && preset.length === 4) {
+    v.set({ a: preset[0], b: preset[1], c: preset[2], d: preset[3] });
+  } else {
+    v.draw();
+  }
   (window as unknown as { __view: TransformView }).__view = v;
 }
 

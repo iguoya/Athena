@@ -338,3 +338,39 @@ canvas.dragging { cursor: grabbing; }
 @media (prefers-color-scheme: dark) {
   .ov-aha .hl { background: rgba(78, 201, 127, .20); }
 }
+
+/* ── 出处（ADR 0017 第 3 节：严格表述必须可核对）── */
+.src {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px 16px; margin: 0 0 22px; font-size: 16px;
+}
+.src-t { font-size: 14px; color: var(--muted); font-weight: 600; letter-spacing: .05em; margin-bottom: 6px; }
+.src-row { display: flex; gap: 10px; margin: 4px 0; align-items: baseline; }
+.src-k { color: var(--muted); white-space: nowrap; min-width: 62px; }
+.src a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); }
+.src a:hover { opacity: .8; }
+/* 在线来源没覆盖的，明说，不掩饰 */
+.src.only-book { border-color: var(--basis-j); }
+.src-note { margin-top: 7px; font-size: 15px; color: var(--basis-j); }
+
+/* 画布下方点明这一节要看什么；被 focus 的那行读数加重 */
+.cv-cap {
+  margin: 12px 2px 0; font-size: 17px; color: var(--muted); line-height: 1.6;
+}
+.read div.focus {
+  background: var(--panel-2); border-radius: 6px;
+  margin-left: -8px; margin-right: -8px; padding: 5px 8px;
+}
+.read div.focus .k { color: var(--ink); font-weight: 600; }
+
+/* 侧边栏：正在读的那一节，只列它自己的结构 */
+.chapter-title.cur { color: var(--accent); }
+.cur-title {
+  padding: 2px 20px 10px; font-size: 18px; font-weight: 600; line-height: 1.4;
+}
+.sec {
+  display: block; width: 100%; text-align: left; font: inherit; font-size: 17px;
+  background: none; border: 0; border-left: 3px solid transparent;
+  padding: 8px 20px 8px 32px; cursor: pointer; color: var(--muted);
+}
+.sec:hover { background: var(--panel-2); color: var(--ink); border-left-color: var(--line); }
