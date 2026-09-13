@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>二维线性变换 · 原型</title>
+<style>
+:root{
+  --bg:#ffffff; --panel:#f6f7f9; --line:#d8dce2; --ink:#1a1d21; --muted:#5b6470;
+  --accent:#0a58ca; --i:#0a58ca; --j:#d9480f; --ok:#0f7b3f; --warn:#b02a37;
+  --grid:#e3e7ec; --gridimg:#b9c4d4;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#15181c; --panel:#1e2227; --line:#333b45; --ink:#e8eaed; --muted:#9aa4b0;
+    --accent:#5b9dff; --i:#5b9dff; --j:#ff9153; --ok:#4ec97f; --warn:#ff7b85;
+    --grid:#252b32; --gridimg:#3f4d60;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:20px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 72px}
+
+.coord{font-size:16px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin-bottom:24px}
+.coord b{color:var(--ink);font-weight:600}
+.coord .row{margin:3px 0}
+
+h1{font-size:34px;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:19px;margin:0 0 28px}
+
+.hook{background:var(--panel);border-left:4px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:18px 22px;margin:0 0 28px}
+.hook p{margin:0 0 10px} .hook p:last-child{margin:0}
+
+.stage{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:1fr}}
+canvas{width:100%;height:auto;display:block;background:var(--bg);
+  border:1px solid var(--line);border-radius:10px;cursor:grab;touch-action:none}
+canvas.drag{cursor:grabbing}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+.panel h3{margin:0 0 12px;font-size:17px;color:var(--muted);font-weight:600;
+  letter-spacing:.04em}
+
+.mat{display:flex;align-items:center;gap:10px;justify-content:center;margin:4px 0 16px}
+.brk{font-size:66px;line-height:.82;color:var(--muted);font-weight:200}
+.cells{display:grid;grid-template-columns:repeat(2,62px);gap:8px}
+.cells input{width:62px;padding:7px 4px;text-align:center;font-size:19px;
+  font-variant-numeric:tabular-nums;background:var(--bg);color:var(--ink);
+  border:1px solid var(--line);border-radius:6px}
+.cells input:nth-child(odd){border-bottom:3px solid var(--i)}
+.cells input:nth-child(even){border-bottom:3px solid var(--j)}
+.legend{font-size:15px;color:var(--muted);text-align:center;margin:-8px 0 16px}
+.legend i{font-style:normal;font-weight:600}
+.legend .a{color:var(--i)} .legend .b{color:var(--j)}
+
+.read{border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
+.read div{display:flex;justify-content:space-between;gap:12px;margin:9px 0;font-size:17px}
+.read .k{color:var(--muted)}
+.read .v{font-variant-numeric:tabular-nums;font-weight:600}
+.v.flip{color:var(--warn)} .v.good{color:var(--ok)}
+
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;
+  border-top:1px solid var(--line);padding-top:14px}
+.presets button{font:inherit;font-size:15px;padding:6px 12px;cursor:pointer;
+  background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px}
+.presets button:hover{border-color:var(--accent);color:var(--accent)}
+
+.ask{margin:32px 0 0;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:20px 22px}
+.ask h3{margin:0 0 10px;font-size:21px}
+.ask .q{margin:0 0 14px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.opts button{font:inherit;font-size:18px;padding:9px 16px;cursor:pointer;
+  background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px}
+.opts button:hover{border-color:var(--accent)}
+.opts button.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.verdict{display:none;font-size:18px;padding:14px 16px;border-radius:8px;
+  background:var(--bg);border:1px solid var(--line)}
+.verdict.show{display:block}
+.verdict.right{border-color:var(--ok)} .verdict.wrong{border-color:var(--warn)}
+.verdict b.right{color:var(--ok)} .verdict b.wrong{color:var(--warn)}
+
+.prep{margin:30px 0 0;font-size:18px}
+.prep h3{font-size:21px;margin:0 0 12px}
+.prep table{width:100%;border-collapse:collapse}
+.prep td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.prep td:first-child{color:var(--muted);white-space:nowrap;width:1%}
+.prep code{font-size:17px;background:var(--panel);padding:2px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="coord">
+  <div class="row"><b>教材坐标</b>　跨章导入 · 教材无此独立节（ADR 0009）</div>
+  <div class="row">　覆盖：同济《工程数学·线性代数》2.1 矩阵的概念、2.2 矩阵的运算</div>
+  <div class="row">　预铺：1.x 行列式 · 3.x 向量组的秩 · 5.x 特征值与特征向量</div>
+  <div class="row"><b>大纲坐标</b>　数学二 · 线性代数 · 矩阵（<code>scope: math2</code>）</div>
+</div>
+
+<h1>矩阵就是把平面搬一次</h1>
+<p class="sub">拖动两个箭头的端点，看整张网格跟着变。</p>
+
+<div class="hook">
+  <p>照片编辑器里的「旋转」「拉伸」「倾斜」，游戏里镜头的转动，地图从经纬度换到屏幕像素
+  ——这些都不是对每个点单独下命令的。</p>
+  <p><b>只要规定两件事：原来向右一格的点去哪，原来向上一格的点去哪。</b>
+  整张平面怎么变就定死了。这两个去向并排写下来，就是一个矩阵。</p>
+</div>
+
+<div class="stage">
+  <canvas id="cv" width="1360" height="1020"></canvas>
+
+  <div class="panel">
+    <h3>这一次的搬法</h3>
+    <div class="mat">
+      <span class="brk">[</span>
+      <div class="cells">
+        <input id="a" value="1"><input id="b" value="0">
+        <input id="c" value="0"><input id="d" value="1">
+      </div>
+      <span class="brk">]</span>
+    </div>
+    <div class="legend">
+      第一列 <i class="a">蓝箭头</i>＝向右一格去哪<br>
+      第二列 <i class="b">橙箭头</i>＝向上一格去哪
+    </div>
+
+    <div class="read">
+      <div><span class="k">面积变成原来的</span><span class="v" id="det">1.00</span></div>
+      <div><span class="k">翻面了吗</span><span class="v" id="flip">没有</span></div>
+      <div><span class="k">压到几维</span><span class="v" id="rank">2</span></div>
+      <div><span class="k">方向不变的方向</span><span class="v" id="eig">全都不变</span></div>
+    </div>
+
+    <div class="presets">
+      <button data-m="1,0,0,1">还原</button>
+      <button data-m="0,-1,1,0">旋转 90°</button>
+      <button data-m="2,0,0,2">放大 2 倍</button>
+      <button data-m="1,1,0,1">切变</button>
+      <button data-m="-1,0,0,1">镜像</button>
+      <button data-m="1,2,2,4">压扁</button>
+    </div>
+  </div>
+</div>
+
+<div class="ask">
+  <h3>先猜，再拖</h3>
+  <p class="q">把矩阵设成 <code>[[1,2],[2,4]]</code>（上面的「压扁」）。
+  这时整张平面会变成什么？<b>先选一个，再点按钮验证。</b></p>
+  <div class="opts">
+    <button data-k="0">还是整张平面，只是被拉斜了</button>
+    <button data-k="1">缩成一条直线</button>
+    <button data-k="2">缩成一个点</button>
+  </div>
+  <div class="verdict" id="vd"></div>
+</div>
+
+<div class="prep">
+  <h3>这一张图，后面每一章都会回来</h3>
+  <table>
+    <tr><td>行列式（第 1 章）</td><td>就是右边那行「面积变成原来的」。它等于 0，意味着平面被压扁了——<b>不可逆</b>从此不是一条定义，是你看见过的事。</td></tr>
+    <tr><td>秩（第 3 章）</td><td>「压到几维」。压扁后是 1，压成点是 0。</td></tr>
+    <tr><td>特征向量（第 5 章）</td><td>「方向不变的方向」。拖到某些位置，会有一条线上的点始终待在这条线上，只是被拉长或缩短。</td></tr>
+    <tr><td>二次型（第 6 章）</td><td>对称矩阵的那两条不变方向互相垂直，就是椭圆的两根主轴。试试 <code>[[2,1],[1,2]]</code>。</td></tr>
+  </table>
+</div>
+
+</div>
+
+<script>
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height,S=Math.min(W,H)/11;   // 每格像素
+const ox=W/2,oy=H/2;
+const ids=['a','b','c','d'],inp={};ids.forEach(k=>inp[k]=document.getElementById(k));
+let M={a:1,b:0,c:0,d:1},drag=null;
+
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const toPx=(x,y)=>[ox+x*S,oy-y*S];
+const toMath=(px,py)=>[(px-ox)/S,(oy-py)/S];
+
+function read(){
+  for(const k of ids){const v=parseFloat(inp[k].value);if(!isNaN(v))M[k]=v;}
+}
+function write(){for(const k of ids)inp[k].value=(+M[k].toFixed(2)).toString();}
+
+function arrow(x,y,color,label){
+  const [px,py]=toPx(x,y);
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(px,py);ctx.stroke();
+  const ang=Math.atan2(py-oy,px-ox),h=22;
+  ctx.beginPath();ctx.moveTo(px,py);
+  ctx.lineTo(px-h*Math.cos(ang-0.4),py-h*Math.sin(ang-0.4));
+  ctx.lineTo(px-h*Math.cos(ang+0.4),py-h*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,11,0,7);ctx.fill();
+  ctx.font='600 30px -apple-system,sans-serif';
+  ctx.fillText(label,px+16,py-14);
+}
+
+function draw(){
+  const {a,b,c,d}=M,det=a*d-b*c;
+  ctx.clearRect(0,0,W,H);
+
+  // 原始网格
+  ctx.strokeStyle=css('--grid');ctx.lineWidth=1.5;
+  for(let k=-12;k<=12;k++){
+    let p=toPx(k,-12),q=toPx(k,12);
+    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+    p=toPx(-12,k);q=toPx(12,k);
+    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+  }
+
+  // 变换后的网格（原网格的像）
+  ctx.strokeStyle=css('--gridimg');ctx.lineWidth=2;
+  const L=12;
+  for(let k=-L;k<=L;k++){
+    // x=k 的像：过 k*i，方向 j
+    let p=toPx(k*a-L*b,k*c-L*d),q=toPx(k*a+L*b,k*c+L*d);
+    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+    // y=k 的像：过 k*j，方向 i
+    p=toPx(-L*a+k*b,-L*c+k*d);q=toPx(L*a+k*b,L*c+k*d);
+    ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+  }
+
+  // 单位正方形的像
+  const P=[toPx(0,0),toPx(a,c),toPx(a+b,c+d),toPx(b,d)];
+  ctx.beginPath();ctx.moveTo(P[0][0],P[0][1]);
+  for(let k=1;k<4;k++)ctx.lineTo(P[k][0],P[k][1]);
+  ctx.closePath();
+  ctx.fillStyle=det<0?'rgba(217,72,15,.20)':'rgba(10,88,202,.17)';ctx.fill();
+
+  // 特征方向
+  const tr=a+d,disc=tr*tr-4*det;
+  if(disc>=-1e-9&&Math.abs(det)>1e-9){
+    const s=Math.sqrt(Math.max(disc,0));
+    for(const lam of [(tr+s)/2,(tr-s)/2]){
+      let vx,vy;
+      if(Math.abs(b)>1e-9){vx=b;vy=lam-a;}
+      else if(Math.abs(c)>1e-9){vx=lam-d;vy=c;}
+      else {vx=Math.abs(lam-a)<1e-9?1:0;vy=Math.abs(lam-a)<1e-9?0:1;}
+      const n=Math.hypot(vx,vy);if(n<1e-9)continue;
+      vx/=n;vy/=n;
+      ctx.strokeStyle=css('--ok');ctx.lineWidth=2.5;ctx.setLineDash([12,9]);
+      const p=toPx(-L*vx,-L*vy),q=toPx(L*vx,L*vy);
+      ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // 坐标轴
+  ctx.strokeStyle=css('--line');ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);
+  ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+
+  arrow(a,c,css('--i'),'向右一格');
+  arrow(b,d,css('--j'),'向上一格');
+  readout(det,disc);
+}
+
+function readout(det,disc){
+  document.getElementById('det').textContent=Math.abs(det).toFixed(2)+' 倍';
+  const f=document.getElementById('flip');
+  f.textContent=det<-1e-9?'翻了':'没有';
+  f.className='v'+(det<-1e-9?' flip':'');
+  const r=document.getElementById('rank');
+  const zero=Math.abs(M.a)<1e-9&&Math.abs(M.b)<1e-9&&Math.abs(M.c)<1e-9&&Math.abs(M.d)<1e-9;
+  const rank=zero?0:(Math.abs(det)<1e-9?1:2);
+  r.textContent=rank;r.className='v'+(rank<2?' flip':'');
+  const e=document.getElementById('eig');
+  if(Math.abs(det)<1e-9)      e.textContent='已压扁';
+  else if(disc<-1e-9)         e.textContent='一条也没有';
+  else                        e.textContent='绿色虚线';
+  e.className='v';
+}
+
+// 拖拽
+function pick(ev){
+  const r=cv.getBoundingClientRect();
+  const px=(ev.clientX-r.left)*(W/r.width),py=(ev.clientY-r.top)*(H/r.height);
+  const [x,y]=toMath(px,py);
+  const di=Math.hypot(x-M.a,y-M.c),dj=Math.hypot(x-M.b,y-M.d);
+  if(Math.min(di,dj)>0.55)return null;
+  return di<dj?'i':'j';
+}
+cv.addEventListener('pointerdown',e=>{
+  drag=pick(e);
+  if(drag){cv.setPointerCapture(e.pointerId);cv.classList.add('drag');}
+});
+cv.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const r=cv.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(W/r.width),py=(e.clientY-r.top)*(H/r.height);
+  let [x,y]=toMath(px,py);
+  if(!e.shiftKey){x=Math.round(x*4)/4;y=Math.round(y*4)/4;}
+  if(drag==='i'){M.a=x;M.c=y;}else{M.b=x;M.d=y;}
+  write();draw();
+});
+addEventListener('pointerup',()=>{drag=null;cv.classList.remove('drag');});
+
+for(const k of ids)inp[k].addEventListener('input',()=>{read();draw();});
+document.querySelectorAll('.presets button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const [a,b,c,d]=btn.dataset.m.split(',').map(Number);
+    M={a,b,c,d};write();draw();
+  });
+});
+
+// 预测环节
+let picked=null;
+document.querySelectorAll('.opts button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.opts button').forEach(x=>x.classList.remove('picked'));
+    btn.classList.add('picked');
+    picked=+btn.dataset.k;
+    M={a:1,b:2,c:2,d:4};write();draw();
+    const vd=document.getElementById('vd'),ok=picked===1;
+    vd.className='verdict show '+(ok?'right':'wrong');
+    vd.innerHTML=(ok
+      ?'<b class="right">对了。</b>'
+      :'<b class="wrong">再看图。</b>')+
+      '两个箭头落在了同一条直线上——<code>(1,2)</code> 和 <code>(2,4)</code> 本来就是同方向的，'+
+      '后者是前者的两倍。整张平面被压成了这条线。'+
+      '<br><br>右边「面积变成原来的」显示 <b>0.00 倍</b>：面积没了，因为它已经不是面了。'+
+      '这就是 <code>det = 1×4 − 2×2 = 0</code>。'+
+      '压扁之后回不去了——落在同一点上的原像有无穷多个，你没法知道它原来在哪。'+
+      '<b>这就是「行列式为零 ⟺ 不可逆」</b>，先看见，后面第 1 章再用符号说一遍。';
+  });
+});
+
+write();draw();
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+</script>
+</body>
+</html>

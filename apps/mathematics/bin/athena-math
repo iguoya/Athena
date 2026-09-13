@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export ATHENA_MATH_ROOT="$ROOT"
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  TARGET="$ROOT/bin/athena-math.app/Contents/MacOS/athena-math"
+else
+  TARGET="$ROOT/bin/athena-math.bin"
+fi
+
+if [[ ! -x "$TARGET" ]]; then
+  echo "数学自学应用尚未构建：$TARGET" >&2
+  echo "请在 $ROOT 执行 npm run build:app" >&2
+  exit 1
+fi
+
+exec "$TARGET" "$@"
