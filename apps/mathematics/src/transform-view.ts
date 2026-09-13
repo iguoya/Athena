@@ -172,6 +172,14 @@ export class TransformView {
     const all = [...pts, [this.m.a, this.m.c], [this.m.b, this.m.d], [0, 0]] as Array<
       [number, number]
     >;
+    // 走法的拐点（两条虚线的交点）也得在画面里——它正是「为什么唯一」的证据
+    if (this.target) {
+      all.push(this.target);
+      const r = this.reach();
+      if (r && r.kind !== "none") {
+        all.push([this.m.a * r.x, this.m.c * r.x]);
+      }
+    }
     const maxX = Math.max(...all.map(([x]) => Math.abs(x)), 1);
     const maxY = Math.max(...all.map(([, y]) => Math.abs(y)), 1);
     const needX = this.ox / (maxX * margin);
@@ -261,7 +269,14 @@ export class TransformView {
       }
       const di = Math.hypot(x - this.m.a, y - this.m.c);
       const dj = Math.hypot(x - this.m.b, y - this.m.d);
-      if (Math.min(di, dj) > 0.42) return;
+      if (Math.min(di, dj) > 0.42) {
+        // 没点中任何把手：拖空白处平移整个画面，好看到跑到边缘外的东西
+        this.dragging = "pan";
+        this.panFrom = [ev.clientX, ev.clientY, this.panX, this.panY];
+        this.canvas.setPointerCapture(ev.pointerId);
+        this.canvas.classList.add("dragging");
+        return;
+      }
       this.animToken += 1;
       this.dragging = di < dj ? "i" : "j";
       this.canvas.setPointerCapture(ev.pointerId);
@@ -432,15 +447,19 @@ export class TransformView {
       ctx.stroke();
       ctx.restore();
 
-      // 交点：蓝要走几步，到这里就定死了
+      // 交点：蓝要走几步，到这里就定死了。画大些并标上名字，
+      // 否则它混在折线的拐角里，看不出是「两条线只交于一点」这件事。
       const [mx, my] = this.toPx(mid[0], mid[1]);
       ctx.beginPath();
-      ctx.arc(mx, my, this.S * 0.07, 0, Math.PI * 2);
+      ctx.arc(mx, my, this.S * 0.115, 0, Math.PI * 2);
       ctx.fillStyle = this.css("--bg");
       ctx.fill();
       ctx.strokeStyle = this.css("--ink");
-      ctx.lineWidth = this.S * 0.025;
+      ctx.lineWidth = this.S * 0.035;
       ctx.stroke();
+      ctx.fillStyle = this.css("--ink");
+      ctx.font = `600 ${Math.round(this.S * 0.19)}px -apple-system, "PingFang SC", sans-serif`;
+      ctx.fillText("唯一交点", mx + this.S * 0.17, my + this.S * 0.3);
     }
 
     // 走法路径：原点 → 走 x 步蓝箭头 → 再走 y 步橙箭头 → 到 b
