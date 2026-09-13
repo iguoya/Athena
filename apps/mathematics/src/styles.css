@@ -219,3 +219,23 @@ canvas.dragging { cursor: grabbing; }
 .d-fb b { display: block; margin-bottom: 4px; }
 .d-fb.ok b { color: var(--ok); }
 .d-right { margin-top: 8px; color: var(--muted); }
+
+/* ── overview 层：极薄，一屏内（ADR 0012）────────── */
+.ov { margin: 0 0 26px; }
+.ov-tag {
+  display: block; font-size: 14px; color: var(--muted); font-weight: 600;
+  letter-spacing: .06em; margin-bottom: 6px;
+}
+.ov-asks {
+  font-size: 23px; line-height: 1.5; padding: 18px 22px; margin-bottom: 20px;
+  background: var(--panel); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0;
+}
+.ov-says { font-size: 20px; margin: 0 0 20px; }
+/* 「理解的瞬间」单独给位置——它是本节最该带走的东西（ADR 0011 第 5 节） */
+.ov-aha {
+  font-size: 20px; line-height: 1.6; padding: 18px 22px; margin-bottom: 18px;
+  background: var(--panel); border: 1px solid var(--eigen); border-radius: 8px;
+}
+.ov-aha .ov-tag { color: var(--eigen); }
+.ov-why { font-size: 17px; color: var(--muted); margin: 0; }
+.ov-why b { color: var(--ink); font-weight: 600; }

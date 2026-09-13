@@ -36,12 +36,19 @@ interface Topic {
   textbook_ref: TextbookRef;
   syllabus_ref: string;
   hook?: { text: string };
-  outline?: Record<string, string>;
+  widget?: string;
+  overview?: {
+    asks: string;
+    says: string;
+    why_now: string;
+    aha?: string;
+  };
   experiments?: Experiment[];
 }
 interface Chapter {
   id: string;
   title: string;
+  summary?: string;
   topics: Topic[];
 }
 interface Curriculum {
@@ -215,26 +222,36 @@ function renderTopic(id: string) {
   const ref = t.textbook_ref;
   const coord = [
     `<div class="row"><b>教材坐标</b>　${
-      ref.kind === "cross_chapter" ? "跨章导入 · 教材无此独立节" : ref.note || ""
+      ref.kind === "cross_chapter"
+        ? "跨章导入 · 教材无此独立节"
+        : (ref.covers || []).join(" · ") || ref.note || ""
     }</div>`,
-    ref.covers?.length ? `<div class="row">　覆盖：${ref.covers.join(" · ")}</div>` : "",
+    ref.kind === "cross_chapter" && ref.covers?.length
+      ? `<div class="row">　覆盖：${ref.covers.join(" · ")}</div>`
+      : "",
     ref.prepares?.length
       ? `<div class="row">　预铺：${ref.prepares.map((s) => s.split(" —— ")[0]).join(" · ")}</div>`
       : "",
     `<div class="row"><b>大纲坐标</b>　${t.syllabus_ref}</div>`,
   ].join("");
 
+  const ov = t.overview;
   const predict = (t.experiments || []).find((e) => e.answer);
   const prev = predict ? predictions.get(key(t.id, predict.id)) : undefined;
 
-  main.innerHTML = `
-    <div class="page">
-      <div class="coord">${coord}</div>
-      <h2 class="title">${t.title}</h2>
-      <p class="tagline">${t.outline?.promise ?? ""}</p>
-      ${t.hook ? `<div class="hook"><p>${t.hook.text}</p></div>` : ""}
+  // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
+  const overviewHtml = ov
+    ? `<div class="ov">
+         <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${ov.asks}</div>
+         <p class="ov-says">${ov.says}</p>
+         ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${ov.aha}</div>` : ""}
+         <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
+       </div>`
+    : "";
 
-      <div class="stage">
+  const widgetHtml =
+    t.widget === "transform2d"
+      ? `<div class="stage">
         <canvas id="cv" width="1360" height="1020"></canvas>
         <div class="panel">
           <h3>这一次的搬法</h3>
@@ -265,12 +282,19 @@ function renderTopic(id: string) {
             <button data-m="1,2,2,4">压扁</button>
           </div>
         </div>
-      </div>
+      </div>`
+      : "";
 
+  main.innerHTML = `
+    <div class="page">
+      <div class="coord">${coord}</div>
+      <h2 class="title">${t.title}</h2>
+      ${t.hook ? `<div class="hook"><p>${t.hook.text}</p></div>` : ""}
+      ${overviewHtml}
+      ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
-
       ${
-        ref.prepares?.length
+        ref.prepares?.length && t.widget
           ? `<div class="prep"><h3>这一张图，后面每一章都会回来</h3><table>${ref.prepares
               .map((s) => {
                 const [k, v] = s.split(" —— ");
@@ -279,22 +303,27 @@ function renderTopic(id: string) {
               .join("")}</table></div>`
           : ""
       }
-
       <div class="foot">
-        <span>掌握目标：${t.mastery_goal} · 先修：${
-          t.requires.length ? t.requires.join("、") : "无"
+        <span>难度 ${t.difficulty} · 掌握目标 ${t.mastery_goal} · 先修：${
+          t.requires.length ? t.requires.map(shortName).join("、") : "无"
         }</span>
         <span>${t.ideas?.length ? "思想：" + t.ideas.join(" · ") : ""}</span>
       </div>
     </div>`;
 
-  mountCanvas();
+  if (t.widget === "transform2d") mountCanvas();
   if (predict) bindPredict(t, predict);
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" }).then(
     () => {
       progress.set(key(t.id, "overview"), "seen");
+      renderSide();
     },
   );
+}
+
+/** 先修显示成标题而非 id，省得读一串点号 */
+function shortName(id: string): string {
+  return findTopic(id)?.title ?? id;
 }
 
 function renderPredict(e: Experiment, prev?: PredictionRow): string {
