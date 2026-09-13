@@ -19,13 +19,22 @@ interface TextbookRef {
   covers?: string[];
   prepares?: string[];
 }
+interface PredictOption {
+  text: string;
+  ok?: boolean;
+  /** 选对时补一句它后面用在哪 */
+  why?: string;
+  /** 选错时说明这个选项通常是怎么想的——不是「你错了」（ADR 0014 第 5 节） */
+  misread?: string;
+}
 interface Experiment {
   kind: string;
   id: string;
   title: string;
   prompt: string;
-  answer?: string;
-  why?: string;
+  /** 作答后把画布演到这个矩阵，让人自己看结果 */
+  verify_m?: number[];
+  options?: PredictOption[];
 }
 interface Topic {
   id: string;
@@ -216,7 +225,7 @@ function renderSide() {
       if (t.overview) secs.push(["s-ov", "讲什么"]);
       if (t.walkthrough) secs.push(["s-walk", "先看一遍"]);
       if (t.widget) secs.push(["s-widget", "动手试"]);
-      if ((t.experiments ?? []).some((e) => e.answer)) secs.push(["s-ask", "先猜再拖"]);
+      if ((t.experiments ?? []).some((e) => e.options?.length)) secs.push(["s-ask", "先猜再验"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
 
       parts.push(
@@ -257,7 +266,7 @@ function topicSeen(id: string): boolean {
 
 /** 这一节有判对错的题，且全都答对了。没有这类题的节永远返回 false——不凭「看过」标绿。 */
 function topicPassed(t: Topic): boolean {
-  const judged = (t.experiments ?? []).filter((e) => e.answer);
+  const judged = (t.experiments ?? []).filter((e) => e.options?.length);
   if (!judged.length) return false;
   return judged.every((e) => predictions.get(key(t.id, e.id))?.correct === true);
 }
@@ -459,7 +468,7 @@ function renderTopic(id: string) {
     : "";
 
   const ov = t.overview;
-  const predict = (t.experiments || []).find((e) => e.answer);
+  const predict = (t.experiments || []).find((e) => e.options?.length);
   const prev = predict ? predictions.get(key(t.id, predict.id)) : undefined;
 
   // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
@@ -622,13 +631,25 @@ function renderTopic(id: string) {
 }
 
 function renderPredict(e: Experiment, prev?: PredictionRow): string {
-  const opts = ["还是整张平面，只是被拉斜了", "缩成一条直线", "缩成一个点"];
+  const opts = [...(e.options ?? [])];
+  // 正确答案固定在某个位置会让人按位置选，每次进页面重排一次
+  for (let i = opts.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [opts[i], opts[j]] = [opts[j], opts[i]];
+  }
   return `
     <div id="s-ask" class="ask">
       <h3>${e.title}</h3>
-      <p class="q">${e.prompt}</p>
+      <p class="q">${rich(e.prompt)}</p>
       <div class="opts">
-        ${opts.map((o) => `<button data-pick="${o}">${o}</button>`).join("")}
+        ${opts
+          .map(
+            (o) =>
+              `<button data-pick="${o.text.replace(/"/g, "&quot;")}" data-ok="${
+                o.ok ? 1 : 0
+              }">${o.text}</button>`,
+          )
+          .join("")}
       </div>
       <div class="verdict" id="verdict"></div>
       ${
@@ -769,30 +790,41 @@ function bindPredict(t: Topic, e: Experiment) {
       b.classList.add("picked");
 
       const picked = b.dataset.pick!;
-      const correct = picked === e.answer;
+      const correct = b.dataset.ok === "1";
+      const chosen = (e.options ?? []).find((o) => o.text === picked);
+      const right = (e.options ?? []).find((o) => o.ok);
 
-      const m: Mat2 = { a: 1, b: 2, c: 2, d: 4 };
-      (window as unknown as { __view: TransformView }).__view.set(m);
+      // 选完立刻把画布演到待验的矩阵：让人自己看，而不是只读一段文字
+      if (e.verify_m?.length === 4) {
+        const [a, bb, c, d] = e.verify_m;
+        void (window as unknown as { __view?: TransformView }).__view?.animateTo({
+          a,
+          b: bb,
+          c,
+          d,
+        });
+      }
 
       const vd = document.getElementById("verdict")!;
       vd.className = "verdict show " + (correct ? "right" : "wrong");
-      vd.innerHTML =
-        (correct ? '<b class="right">对了。</b>' : '<b class="wrong">再看图。</b>') +
-        `${e.why ?? ""}<br><br>右边两根箭头现在指同一方向。格子铺不成面，只剩一条线。后面会给这件事起名字；这一节只要看见。`;
+      vd.innerHTML = correct
+        ? `<b class="right">对了。</b>${rich(chosen?.why ?? "")}`
+        : `<b class="wrong">这个选项通常是这么想的：</b>${rich(chosen?.misread ?? "")}` +
+          (right
+            ? `<div class="d-right">正确的是：${rich(right.text)}。${rich(right.why ?? "")}</div>`
+            : "");
 
-      void invoke("save_prediction", {
-        topicId: t.id,
-        expId: e.id,
-        picked,
-        correct,
-      }).then(() => {
-        predictions.set(key(t.id, e.id), {
-          topic_id: t.id,
-          exp_id: e.id,
-          picked,
-          correct,
-        });
-      });
+      void invoke("save_prediction", { topicId: t.id, expId: e.id, picked, correct }).then(
+        () => {
+          predictions.set(key(t.id, e.id), {
+            topic_id: t.id,
+            exp_id: e.id,
+            picked,
+            correct,
+          });
+          renderSide();
+        },
+      );
     }),
   );
 }
