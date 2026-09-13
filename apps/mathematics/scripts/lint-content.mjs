@@ -76,6 +76,31 @@ for (const [k, n] of slots) {
 // ── 课表结构校验（ADR 0008 后果一节要求的构建期检查）──
 const cur = JSON.parse(readFileSync(join(root, "content/curriculum.json"), "utf8"));
 const topics = cur.chapters.flatMap((c) => c.topics);
+
+// ── 正文重点：标的应是语义关键，不是形式强调 ──
+// 判据：把标出来的片段单独抽出来读，能不能拿到这一节的核心？
+// 以指代词或连词开头的片段（「是同一件事」「这三种情况」）离开上下文就没有内容。
+// 只查高亮（==...==）：着色多用于术语，「行列式」「特征值」本来就短，查了全是误报。
+// 开头词也只取真正会丢主语的系动词与连词；「这/那/它」在紧邻上下文里通常成立。
+const BAD_HEAD = /^(是|和|与|也|就|而|但|所以|因此|其实|正是|同样)/;
+let weak = 0;
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    const fields = [t.overview?.asks, t.overview?.says, t.overview?.aha, t.hook?.text];
+    for (const v of fields) {
+      if (!v) continue;
+      for (const m of v.matchAll(/==(.+?)==/g)) {
+        const frag = m[1].trim();
+        if (BAD_HEAD.test(frag) || frag.length < 6) {
+          console.warn(`提示 ${t.id}：重点「${frag}」像是形式强调，单独读拿不到内容`);
+          weak++;
+        }
+      }
+    }
+  }
+}
+if (weak) console.warn(`  ——共 ${weak} 处，见 ADR 0013 第 1 节；这是提示，不阻断构建。\n`);
+
 const ids = new Set(topics.map((t) => t.id));
 
 for (const t of topics) {
