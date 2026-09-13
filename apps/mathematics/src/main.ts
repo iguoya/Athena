@@ -4,6 +4,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { TransformView, type Mat2, type Readout } from "./transform-view";
 import { GraphView, type GraphNode } from "./graph-view";
+import { renderDrills, numberOk, type DrillSet, type DrillState } from "./drills";
 import {
   renderDiagnostics,
   adviceOf,
@@ -11,6 +12,7 @@ import {
   type Answer,
 } from "./diagnostic";
 import {
+  hasBetterVoice,
   speak,
   stopSpeech,
   speechAvailable,
@@ -85,12 +87,16 @@ interface Topic {
     lines: Array<{ say: string; m: number[]; target?: [number, number] }>;
   };
   experiments?: Experiment[];
+  /** 随堂练习：跟着讲解走，检验刚讲的那一点（ADR 0014） */
+  drills?: DrillSet;
 }
 interface Chapter {
   id: string;
   title: string;
   summary?: string;
   topics: Topic[];
+  /** 章末小考：跨节交错，检验整章合起来会不会（ADR 0014 第 4 节） */
+  checkpoint?: DrillSet;
 }
 interface Curriculum {
   title: string;
@@ -115,6 +121,8 @@ let diagnostics: Diagnostics;
 const progress = new Map<string, string>();
 const predictions = new Map<string, PredictionRow>();
 const diagAnswers = new Map<string, Answer>();
+/** 练习作答：键是 `${namespace}::${itemId}` */
+const drillStates = new Map<string, DrillState>();
 
 type View = { kind: "diag" } | { kind: "graph" } | { kind: "topic"; id: string };
 let view: View = { kind: "graph" };
@@ -145,6 +153,13 @@ async function boot() {
     for (const p of await invoke<PredictionRow[]>("load_all_predictions")) {
       predictions.set(key(p.topic_id, p.exp_id), p);
       // 诊断作答与知识点预测共用 predictions 表，按 topic_id 前缀区分
+      if (p.topic_id.startsWith("drill:")) {
+        drillStates.set(key(p.topic_id.slice(6), p.exp_id), {
+          picked: p.picked,
+          value: p.picked,
+          correct: p.correct,
+        });
+      }
       if (p.topic_id.startsWith("math.prereq.")) {
         diagAnswers.set(key(p.topic_id, p.exp_id), {
           picked: p.picked,
@@ -601,6 +616,8 @@ function renderTopic(id: string) {
       ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
+      ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id) : ""}
+      ${chapterCheckpoint(t)}
       ${
         ref.prepares?.length && t.widget
           ? `<div id="s-prep" class="prep"><h3>这一张图，后面每一章都会回来</h3><table>${ref.prepares
@@ -651,8 +668,90 @@ function renderTopic(id: string) {
   if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full", pre?.target);
   if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
+  bindDrills();
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
   renderSide();
+}
+
+/** 取某个命名空间（一节或一章）下的练习状态 */
+function nsStates(ns: string): Map<string, DrillState> {
+  const out = new Map<string, DrillState>();
+  for (const [k, v] of drillStates) {
+    const [a, b] = k.split("::");
+    if (a === ns) out.set(b, v);
+  }
+  return out;
+}
+
+/** 章末小考挂在本章最后一节的末尾 */
+function chapterCheckpoint(t: Topic): string {
+  const ch = curriculum.chapters.find((c) => c.topics.some((x: Topic) => x.id === t.id));
+  if (!ch?.checkpoint) return "";
+  if (ch.topics[ch.topics.length - 1].id !== t.id) return "";
+  return renderDrills(ch.checkpoint, nsStates(ch.id), ch.id);
+}
+
+function bindDrills() {
+  document.querySelectorAll<HTMLButtonElement>("[data-drill]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const ns = b.dataset.ns!;
+      const id = b.dataset.drill!;
+      const set = findDrillSet(ns);
+      const item = set?.items.find((x) => x.id === id);
+      if (!item) return;
+
+      let correct: boolean;
+      let picked: string;
+      if (item.kind === "number") {
+        const input = document.getElementById(`${ns}-in-${id}`) as HTMLInputElement;
+        picked = input?.value ?? "";
+        correct = numberOk(item, picked);
+      } else {
+        picked = b.dataset.pick!;
+        correct = b.dataset.ok === "1";
+      }
+
+      const prev = drillStates.get(key(ns, id));
+      drillStates.set(key(ns, id), {
+        picked,
+        value: picked,
+        correct,
+        // 答错一次之后自动把提示放出来，不必再去点
+        hintShown: prev?.hintShown || !correct,
+      });
+      void invoke("save_prediction", {
+        topicId: `drill:${ns}`,
+        expId: id,
+        picked,
+        correct,
+      });
+      rerenderTopic();
+    }),
+  );
+  document.querySelectorAll<HTMLButtonElement>("[data-hint]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const ns = b.dataset.ns!;
+      const id = b.dataset.hint!;
+      const st = drillStates.get(key(ns, id)) ?? {};
+      drillStates.set(key(ns, id), { ...st, hintShown: true });
+      rerenderTopic();
+    }),
+  );
+}
+
+function findDrillSet(ns: string): DrillSet | undefined {
+  const t = findTopic(ns);
+  if (t?.drills) return t.drills;
+  return curriculum.chapters.find((c) => c.id === ns)?.checkpoint;
+}
+
+/** 练习判完要就地重绘，但不能把画布和正在念的语音一起重置 */
+function rerenderTopic() {
+  if (view.kind !== "topic") return;
+  const main = document.getElementById("main")!;
+  const y = main.scrollTop;
+  renderTopic(view.id);
+  main.scrollTop = y;
 }
 
 function renderPredict(e: Experiment, prev?: PredictionRow): string {
@@ -734,12 +833,19 @@ function voiceControls(): string {
           ${vs
             .map(
               (v) =>
-                `<option value="${v.name}"${v.name === cur ? " selected" : ""}>${v.name}</option>`,
+                `<option value="${v.name}"${v.name === cur ? " selected" : ""}>${v.label ?? v.name}</option>`,
             )
             .join("")}
         </select>
       </label>
       <button type="button" id="walk-try">试听</button>
+      ${
+        hasBetterVoice()
+          ? ""
+          : `<p class="voice-tip">这些都是系统自带的<b>压缩版</b>语音，机械感来自这里。
+             想要自然得多的声音：<b>系统设置 → 辅助功能 → 朗读内容 → 系统声音</b>，
+             在中文声音旁点下载「增强」或「高级」版。装好后回到这里就能选到，会排在最前面。</p>`
+      }
     </div>
   </div>`;
 }

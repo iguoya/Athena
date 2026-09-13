@@ -76,3 +76,20 @@ exec "$TARGET" "$@"
 writeFileSync(join(binDir, "athena-math"), launcher, { mode: 0o755 });
 chmodSync(join(binDir, "athena-math"), 0o755);
 console.log("已安装:", installed);
+
+// 若使用者已经把它拖进了 /Applications，每次构建都同步过去。
+// 否则会出现「我在更新 bin 里那份、他双击的是 /Applications 里的旧版」——
+// 表现为改动看起来完全没生效，且极难察觉。
+if (process.platform === "darwin") {
+  const installed = "/Applications/athena-math.app";
+  if (existsSync(installed)) {
+    try {
+      rmSync(installed, { recursive: true, force: true });
+      cpSync(join(binDir, "athena-math.app"), installed, { recursive: true });
+      chmodSync(join(installed, "Contents/MacOS/athena-math"), 0o755);
+      console.log("已同步:", installed);
+    } catch (e) {
+      console.warn("同步 /Applications 失败（不影响 bin 里的可用）:", e.message);
+    }
+  }
+}

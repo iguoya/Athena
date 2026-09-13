@@ -7,8 +7,8 @@ let gen = 0;
 const RATE_KEY = "math.speech.rate";
 const VOICE_KEY = "math.speech.voice";
 
-/** 系统里这两个是明确的老年音色，不进候选 */
-const EXCLUDE = /grandma|grandpa/i;
+/** 老年音色排到最后，但不再从候选里删掉——多留几个备选，好坏由使用者自己判断 */
+const OLD = /grandma|grandpa/i;
 /**
  * 默认要年轻女声。Flo、Sandy、Shelley 是 macOS 较新的几个女声，比旧版默认的
  * Tingting 年轻；Eddy、Reed、Rocko 是男声，排在后面备选而不是默认。
@@ -20,6 +20,7 @@ const PREFER = ["Shelley", "Meijia", "Sandy", "Flo", "Tingting", "Sinji", "Eddy"
 export interface VoiceInfo {
   name: string;
   lang: string;
+  label?: string;
 }
 
 function load(key: string, fallback: string): string {
@@ -45,21 +46,45 @@ export function setRate(r: number) {
   save(RATE_KEY, String(r));
 }
 
-/** 系统可用的中文语音，已排除老年音色，按「年轻优先」排好序 */
+function regionOf(lang: string): string {
+  const l = lang.toLowerCase();
+  if (l.includes("tw")) return "台湾";
+  if (l.includes("hk")) return "香港";
+  return "大陆";
+}
+
+/** 名字里带这些词的是系统下载的增强版，音质明显好过默认的压缩版 */
+const BETTER = /premium|enhanced|siri|增强|高级/i;
+
+/** 全部中文语音，按「音质更好 → 年轻 → 老年」排序；地区一并标出来 */
 export function listVoices(): VoiceInfo[] {
   if (!window.speechSynthesis) return [];
   const zh = window.speechSynthesis
     .getVoices()
-    .filter((v) => v.lang.toLowerCase().startsWith("zh") && !EXCLUDE.test(v.name));
-  const rank = (n: string) => {
-    const i = PREFER.findIndex((p) => n.toLowerCase().includes(p.toLowerCase()));
-    return i < 0 ? PREFER.length : i;
+    .filter((v) => v.lang.toLowerCase().startsWith("zh"));
+  const rank = (v: SpeechSynthesisVoice) => {
+    if (BETTER.test(v.name)) return -100; // 下载来的增强版一律排最前
+    if (OLD.test(v.name)) return 900;
+    const i = PREFER.findIndex((p) => v.name.toLowerCase().includes(p.toLowerCase()));
+    return i < 0 ? 500 : i;
   };
   const seen = new Set<string>();
   return zh
-    .filter((v) => (seen.has(v.name) ? false : (seen.add(v.name), true)))
-    .sort((a, b) => rank(a.name) - rank(b.name))
-    .map((v) => ({ name: v.name, lang: v.lang }));
+    .filter((v) => {
+      const k = `${v.name}|${v.lang}`;
+      return seen.has(k) ? false : (seen.add(k), true);
+    })
+    .sort((a, b) => rank(a) - rank(b))
+    .map((v) => ({
+      name: v.name,
+      lang: v.lang,
+      label: `${v.name}（${regionOf(v.lang)}${BETTER.test(v.name) ? " · 增强" : ""}）`,
+    }));
+}
+
+/** 系统里有没有装增强版中文语音——没有的话音质就只能是压缩版的水平 */
+export function hasBetterVoice(): boolean {
+  return listVoices().some((v) => BETTER.test(v.name));
 }
 
 export function getVoiceName(): string {
@@ -67,6 +92,10 @@ export function getVoiceName(): string {
   const avail = listVoices();
   if (saved && avail.some((v) => v.name === saved)) return saved;
   return avail[0]?.name ?? "";
+}
+
+export function voiceLangOf(name: string): string {
+  return listVoices().find((v) => v.name === name)?.lang ?? "zh-CN";
 }
 export function setVoiceName(name: string) {
   save(VOICE_KEY, name);
@@ -93,10 +122,10 @@ export function speak(text: string): Promise<void> {
         return;
       }
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = "zh-CN";
+      u.lang = voiceLangOf(getVoiceName());
       u.rate = getRate();
-      // 音高略高于默认，听感更年轻；再高就发尖了
-      u.pitch = 1.08;
+      // 不动音高：抬高只会更像卡通，不会更自然
+      u.pitch = 1;
       const want = getVoiceName();
       const v = window.speechSynthesis.getVoices().find((x) => x.name === want);
       if (v) u.voice = v;
