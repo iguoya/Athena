@@ -93,7 +93,7 @@
 | 用途 | 资源 | 为什么适合这个起点 |
 |---|---|---|
 | **主力** | **可汗学院**（中文版） | 从代数、函数、三角一路到微积分，分块极细，单个视频 5–10 分钟；纯讲解，无话术。**它是主力，不是补漏** |
-| **前置补齐** | Paul's Online Math Notes 的 Algebra / Trig Review | 专为基础不牢者写的复习章，例题详尽 |
+| **前置补齐** | Paul's Online Math Notes 的 Algebra / Trig Review | 专为基础不牢者写的复习章，例题详尽。**注意它没有线性代数**（站上只有 Algebra、Calculus I–III、微分方程），线代请用可汗学院 |
 | **友好的微积分入门** | 《普林斯顿微积分读本》 | 开篇即有预备知识章（函数、三角、极限），语气对初学者极友好，明确写给「觉得微积分难」的人 |
 | **建立大图景（无公式压力）** | 《微积分的力量》（Strogatz） | 叙述性，读完知道微积分在干什么、为什么重要 |
 | **直观骨架** | 3Blue1Brown（线代本质、微积分本质） | 建立图景，不教计算——与上面几项配合，不单独使用 |
@@ -103,6 +103,28 @@
 ① 长篇大论在解题技巧，正是 ADR 0003、0004、0006 摒弃的方向；② 讲课中的 PUA 式
 话术制造「归因于我笨」，是 ADR 0011、0013、0015 第 5 节明令禁止的。
 它们留到第三遍 `exam` 层，只取题型与真题讲解部分。
+
+## 八、实地核对过的目录结构（2026-09，ADR 0017）
+
+下列结构由实际访问页面取得，非凭记忆；每节的 `sources` 字段即指向这里。
+
+**3Blue1Brown《线性代数的本质》** — `3blue1brown.com/topics/linear-algebra`，共 16 课，
+slug 依次为：`vectors` · `span` · `linear-transformations` · `matrix-multiplication` ·
+`3d-transformations` · `determinant` · `inverse-matrices` · `nonsquare-matrices` ·
+`dot-products` · `cross-products` · `cross-products-extended` · `cramers-rule` ·
+`change-of-basis` · `eigenvalues` · `quick-eigen` · `abstract-vector-spaces`。
+
+**可汗学院中文版·线性代数** — `zh.khanacademy.org/math/linear-algebra`，三个单元：
+`vectors-and-spaces`（向量与空间、线性组合与张成、子空间与基、点积叉积、消元法解
+方程组、零空间与列空间）· `matrix-transformations`（函数与线性变换、转换与矩阵乘法、
+反函数与逆变换、寻找逆矩阵及行列式、转置、行空间与左零空间）·
+`alternate-bases`（正交补、正交投影、最小二乘、基变换、格拉姆-施密特、「特征」的一切）。
+
+**两个在线来源都不覆盖的**：实对称矩阵的对角化、二次型与标准形、正定二次型。
+这三节只能依同济《工程数学·线性代数》5.5–5.8，界面上已明确标注。
+
+**核对暴露的本应用缺漏**（ADR 0017 第 5 节）：点积/向量内积、克拉默法则、
+三维线性变换——前两项是数学二考纲内容，待补。
 
 ## 使用约定
 
