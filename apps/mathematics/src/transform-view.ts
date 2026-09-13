@@ -412,8 +412,9 @@ export class TransformView {
       ctx.lineWidth = this.S * 0.03;
       ctx.setLineDash([10, 8]);
       // 解集在「步数平面」上是直线，映射回图上仍沿着同一条列方向
-      const p = this.toPx(bx - L * (a || b), by - L * (c || d));
-      const q = this.toPx(bx + L * (a || b), by + L * (c || d));
+      // 解集沿零空间方向，不是列方向——画错了会让人以为解躺在像空间上
+      const p = this.toPx(res.x - L * res.dirX, res.y - L * res.dirY);
+      const q = this.toPx(res.x + L * res.dirX, res.y + L * res.dirY);
       ctx.beginPath();
       ctx.moveTo(p[0], p[1]);
       ctx.lineTo(q[0], q[1]);

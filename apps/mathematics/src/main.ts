@@ -13,6 +13,7 @@ import {
 } from "./diagnostic";
 import {
   hasBetterVoice,
+  speakable,
   speak,
   stopSpeech,
   speechAvailable,
@@ -133,6 +134,15 @@ const key = (a: string, b: string) => `${a}::${b}`;
  * 正文里的重点标记。**文字** 着强调色，==文字== 加背景高亮。
  * 只标句内的关键处，不给整段铺底色——铺满等于没标。
  */
+/** 放进 HTML 属性里的转义；正文含引号时不转会把标签拆坏 */
+function esc1(src: string): string {
+  return src
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function rich(src: string): string {
   return src
     .replace(/&/g, "&amp;")
@@ -506,14 +516,16 @@ function renderTopic(id: string) {
   // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
   const overviewHtml = ov
     ? `<div id="s-ov" class="ov">
-         <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
-         <p class="ov-says">${rich(ov.says)}</p>
+         <div class="ov-asks" data-read="${esc1(ov.asks)}"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
+         <p class="ov-says" data-read="${esc1(ov.says)}">${rich(ov.says)}</p>
          ${
            ov.steps?.length
-             ? `<ol class="ov-steps">${ov.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol>`
+             ? `<ol class="ov-steps">${ov.steps
+                 .map((s) => `<li data-read="${esc1(s)}">${rich(s)}</li>`)
+                 .join("")}</ol>`
              : ""
          }
-         ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
+         ${ov.aha ? `<div class="ov-aha" data-read="${esc1(ov.aha)}"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
          <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
        </div>`
     : "";
@@ -609,9 +621,18 @@ function renderTopic(id: string) {
       </div>
       <div class="coord">${coord}</div>
       <h2 class="title">${t.title}</h2>
+      ${
+        speechAvailable()
+          ? `<div class="readbar">
+               <button type="button" id="read-play">朗读这一节</button>
+               <button type="button" id="read-stop" hidden>停止朗读</button>
+               <span class="readbar-hint">念到哪里，哪一段会highlight</span>
+             </div>`
+          : ""
+      }
       ${reqHtml}
       ${srcHtml}
-      ${t.hook ? `<div id="s-hook" class="hook"><p>${rich(t.hook.text)}</p></div>` : ""}
+      ${t.hook ? `<div id="s-hook" class="hook"><p data-read="${esc1(t.hook.text)}">${rich(t.hook.text)}</p></div>` : ""}
       ${overviewHtml}
       ${walkHtml}
       ${widgetHtml}
@@ -669,6 +690,7 @@ function renderTopic(id: string) {
   if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
   bindDrills();
+  bindReading();
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
   renderSide();
 }
@@ -689,6 +711,52 @@ function chapterCheckpoint(t: Topic): string {
   if (!ch?.checkpoint) return "";
   if (ch.topics[ch.topics.length - 1].id !== t.id) return "";
   return renderDrills(ch.checkpoint, nsStates(ch.id), ch.id);
+}
+
+let readToken = 0;
+
+function stopReading() {
+  readToken += 1;
+  stopSpeech();
+  document
+    .querySelectorAll(".is-reading")
+    .forEach((el) => el.classList.remove("is-reading"));
+  const play = document.getElementById("read-play");
+  const stop = document.getElementById("read-stop");
+  if (play) play.hidden = false;
+  if (stop) stop.hidden = true;
+}
+
+/**
+ * 把这一节的正文按 DOM 顺序念一遍。没有脚本动画的节也因此有了声音，
+ * 而且不必为每节另写一份讲稿——念的就是页面上写着的那些字（ADR 0018）。
+ */
+async function readSection() {
+  const blocks = Array.from(
+    document.querySelectorAll<HTMLElement>("#main [data-read]"),
+  );
+  if (!blocks.length) return;
+  stopGuide();
+  stopReading();
+  const token = ++readToken;
+  const play = document.getElementById("read-play");
+  const stop = document.getElementById("read-stop");
+  if (play) play.hidden = true;
+  if (stop) stop.hidden = false;
+
+  for (const el of blocks) {
+    if (token !== readToken) return;
+    el.classList.add("is-reading");
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    await speak(speakable(el.dataset.read ?? el.textContent ?? ""));
+    el.classList.remove("is-reading");
+  }
+  if (token === readToken) stopReading();
+}
+
+function bindReading() {
+  document.getElementById("read-play")?.addEventListener("click", () => void readSection());
+  document.getElementById("read-stop")?.addEventListener("click", () => stopReading());
 }
 
 function bindDrills() {
@@ -790,6 +858,8 @@ let guideToken = 0;
 
 function stopGuide() {
   guideToken += 1;
+  readToken += 1;
+  document.querySelectorAll(".is-reading").forEach((el) => el.classList.remove("is-reading"));
   stopSpeech();
   const view = (window as unknown as { __view?: TransformView }).__view;
   view?.cancelAnimation();

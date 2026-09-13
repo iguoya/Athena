@@ -459,3 +459,18 @@ canvas.dragging { cursor: grabbing; }
   padding: 8px 10px; background: var(--panel-2); border-radius: 6px;
 }
 .voice-tip b { color: var(--ink); }
+
+/* 朗读：念到哪一段，哪一段亮起来 */
+.readbar { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; flex-wrap: wrap; }
+.readbar button {
+  font: inherit; font-size: 16px; padding: 6px 16px; cursor: pointer; border-radius: 999px;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--line);
+}
+.readbar button:hover { border-color: var(--accent); color: var(--accent); }
+.readbar-hint { font-size: 14px; color: var(--muted); }
+[data-read] { border-radius: 8px; transition: background .25s, box-shadow .25s; }
+.is-reading {
+  background: var(--panel-2) !important;
+  box-shadow: 0 0 0 3px var(--accent);
+}
+.ov-steps li.is-reading { background: var(--panel-2) !important; }

@@ -92,10 +92,12 @@ for (const ch of cur.chapters) {
       const det = m[0] * m[3] - m[1] * m[2];
       // 「只要面积不是零」是条件句，不是在说这一帧压扁了——否定式要排除，
       // 否则误报会让人整个忽略这项检查（同 ADR 0014 第 5b 节的教训）。
-      const negated = /不是零|不为零|非零|不等于零|不是 0|不为 0/.test(ln.say);
+      // 否定式一律不算断言：「只要面积不是零」「先看没压扁的情形」都在描述反面。
+      // 这一条已经误报过三次，宁可漏报也不要让人整个忽略这项检查。
+      const negated =
+        /不是零|不为零|非零|不等于零|不是 0|不为 0|[没未不]压扁|[没未不]会压扁/.test(ln.say);
       const saysFlat =
-        /压扁|塌成|什么都不剩/.test(ln.say) ||
-        (/读数是零|面积.{0,4}零/.test(ln.say) && !negated);
+        !negated && (/压扁|塌成|什么都不剩|读数是零|面积.{0,4}零/.test(ln.say));
       if (saysFlat && Math.abs(det) > 1e-9) {
         console.error(
           `动画 ${t.id} 第 ${i + 1} 帧：讲稿说压扁/归零，但 det=${det}——演的和念的对不上`,

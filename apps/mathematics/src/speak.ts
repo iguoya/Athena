@@ -165,6 +165,37 @@ export function voicesReady(): Promise<void> {
   });
 }
 
+/**
+ * 把正文转成能听的句子：去掉重点标记，把符号换成中文读法。
+ * 讲解正文不是为朗读写的（walkthrough 的 say 才是），所以要过这一道。
+ */
+export function speakable(src: string): string {
+  return (
+    src
+      // 重点标记与行内代码的包裹符号，念出来是噪音
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/==(.+?)==/g, "$1")
+      // 矩阵写法：[[1,2],[3,4]] → 「矩阵 1 2 3 4」，配合上下文够用了
+      .replace(/`?\[\[([^\]]+)\],\[([^\]]+)\]\]`?/g, (_m, a, b) =>
+        `矩阵 ${a.replace(/,/g, " ")} ${b.replace(/,/g, " ")}`)
+      .replace(/`(.+?)`/g, "$1")
+      // 坐标 (1, 2) 读成「1 逗号 2」会很怪，改读「1 2」
+      .replace(/\((-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)\)/g, "$1 $2")
+      .replace(/([^<>=!])=([^=])/g, "$1 等于 $2")
+      .replace(/×/g, " 乘 ")
+      .replace(/÷/g, " 除以 ")
+      .replace(/≠/g, " 不等于 ")
+      .replace(/⟺/g, " 等价于 ")
+      .replace(/→/g, " 变成 ")
+      .replace(/−/g, "负 ")
+      .replace(/λ/g, "拉姆达")
+      // 原文里多半已经写了「矩阵」二字，上面的替换会再加一个
+      .replace(/矩阵\s*矩阵/g, "矩阵")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+}
+
 export function speechAvailable(): boolean {
   return typeof window !== "undefined" && "speechSynthesis" in window;
 }
