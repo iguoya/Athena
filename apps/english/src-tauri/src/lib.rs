@@ -32,6 +32,13 @@ struct ReviewState {
 }
 
 #[derive(Clone, Serialize)]
+struct MasteryState {
+    mastery: i64,
+    last_correct: i64,
+    last_total: i64,
+}
+
+#[derive(Clone, Serialize)]
 struct MistakeState {
     item_id: String,
     topic_id: String,
@@ -136,6 +143,24 @@ fn ensure_own_schema(path: &Path) -> Result<(), String> {
            correct INTEGER NOT NULL,
            is_variant INTEGER NOT NULL DEFAULT 0,
            answered_at TEXT NOT NULL DEFAULT (datetime('now'))
+         );
+         CREATE TABLE IF NOT EXISTS assessment_attempts (
+           id INTEGER PRIMARY KEY AUTOINCREMENT,
+           assessment_id TEXT NOT NULL,
+           topic_id TEXT NOT NULL,
+           correct INTEGER NOT NULL,
+           total INTEGER NOT NULL,
+           passed INTEGER NOT NULL,
+           answered_at TEXT NOT NULL DEFAULT (datetime('now'))
+         );
+         CREATE TABLE IF NOT EXISTS assessment_progress (
+           topic_id TEXT PRIMARY KEY,
+           mastery INTEGER NOT NULL DEFAULT 0,
+           last_correct INTEGER NOT NULL DEFAULT 0,
+           last_total INTEGER NOT NULL DEFAULT 0,
+           best_score INTEGER NOT NULL DEFAULT 0,
+           passed_at TEXT,
+           updated_at TEXT NOT NULL DEFAULT (datetime('now'))
          );
          CREATE TABLE IF NOT EXISTS mistake_items (
            item_id TEXT PRIMARY KEY,
@@ -265,6 +290,14 @@ struct ReviewInput {
     is_variant: bool,
 }
 
+#[derive(Deserialize)]
+struct AssessmentInput {
+    assessment_id: String,
+    topic_id: String,
+    correct: i64,
+    total: i64,
+}
+
 fn schedule(reps: i64, correct: bool) -> (i64, f64) {
     // 间隔效应只支持“逐步拉开复习”这一方向，不存在适用于所有人的神奇天数。
     // 这里使用可审计的保守阶梯；答错十分钟后到期，答对后按成功次数扩展。
@@ -353,7 +386,6 @@ fn save_answer(
     .map_err(|e| e.to_string())?;
 
     update_mistake(&conn, &input)?;
-    refresh_topic_mastery(&conn, &input.topic_id, input.deck_total)?;
 
     Ok(ReviewState {
         item_id: input.item_id,
@@ -447,48 +479,91 @@ fn update_mistake(conn: &rusqlite::Connection, input: &ReviewInput) -> Result<()
     Ok(())
 }
 
-fn refresh_topic_mastery(
-    conn: &rusqlite::Connection,
-    topic_id: &str,
-    deck_total: i64,
-) -> Result<(), String> {
-    let (good, total): (i64, i64) = conn
-        .query_row(
-            "SELECT
-                COALESCE(SUM(CASE WHEN last_rating >= 3 THEN 1 ELSE 0 END), 0),
-                COUNT(*)
-             FROM review_items WHERE topic_id = ?1",
-            [topic_id],
-            |row| Ok((row.get(0)?, row.get(1)?)),
+fn persist_assessment_result(
+    conn: &mut rusqlite::Connection,
+    input: &AssessmentInput,
+) -> Result<MasteryState, String> {
+    let passed_now = input.correct * 100 >= input.total * 80;
+    let transaction = conn.transaction().map_err(|e| e.to_string())?;
+    transaction
+        .execute(
+            "INSERT INTO assessment_attempts(
+                assessment_id, topic_id, correct, total, passed
+             ) VALUES(?1, ?2, ?3, ?4, ?5)",
+            rusqlite::params![
+                input.assessment_id,
+                input.topic_id,
+                input.correct,
+                input.total,
+                passed_now as i64
+            ],
         )
         .map_err(|e| e.to_string())?;
-    if total == 0 {
-        return Ok(());
-    }
-    let mastery = if total >= deck_total && good * 100 / total >= 80 {
-        1
-    } else {
-        0
-    };
-    conn.execute(
-        "INSERT INTO knowledge_progress(
-            function_id, mastery, last_correct, last_total, updated_at
-         ) VALUES(?1, ?2, ?3, ?4, datetime('now'))
-         ON CONFLICT(function_id) DO UPDATE SET
-           mastery = excluded.mastery,
-           last_correct = excluded.last_correct,
-           last_total = excluded.last_total,
-           updated_at = excluded.updated_at",
-        rusqlite::params![topic_id, mastery, good, total],
+    transaction
+        .execute(
+            "INSERT INTO assessment_progress(
+                topic_id, mastery, last_correct, last_total, best_score, passed_at, updated_at
+             ) VALUES(
+                ?1, ?2, ?3, ?4, ?5,
+                CASE WHEN ?2 = 1 THEN datetime('now') ELSE NULL END,
+                datetime('now')
+             )
+             ON CONFLICT(topic_id) DO UPDATE SET
+               mastery = MAX(assessment_progress.mastery, excluded.mastery),
+               last_correct = excluded.last_correct,
+               last_total = excluded.last_total,
+               best_score = MAX(assessment_progress.best_score, excluded.best_score),
+               passed_at = CASE
+                 WHEN assessment_progress.passed_at IS NOT NULL THEN assessment_progress.passed_at
+                 WHEN excluded.mastery = 1 THEN datetime('now')
+                 ELSE NULL
+               END,
+               updated_at = excluded.updated_at",
+            rusqlite::params![
+                input.topic_id,
+                passed_now as i64,
+                input.correct,
+                input.total,
+                input.correct * 100 / input.total
+            ],
+        )
+        .map_err(|e| e.to_string())?;
+    transaction.commit().map_err(|e| e.to_string())?;
+
+    conn.query_row(
+        "SELECT mastery, last_correct, last_total
+         FROM assessment_progress WHERE topic_id = ?1",
+        [&input.topic_id],
+        |row| {
+            Ok(MasteryState {
+                mastery: row.get(0)?,
+                last_correct: row.get(1)?,
+                last_total: row.get(2)?,
+            })
+        },
     )
-    .map_err(|e| e.to_string())?;
-    Ok(())
+    .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn load_mistakes(
+fn save_assessment_result(
     state: tauri::State<'_, Mutex<AppState>>,
-) -> Result<Vec<MistakeState>, String> {
+    input: AssessmentInput,
+) -> Result<MasteryState, String> {
+    if !input.assessment_id.starts_with("en.assessment.") || !input.topic_id.starts_with("en.") {
+        return Err("考核 id 必须使用 en.assessment. 前缀，轨道 id 必须使用 en. 前缀".into());
+    }
+    if input.total <= 0 || input.correct < 0 || input.correct > input.total {
+        return Err("考核分数范围非法".into());
+    }
+    let s = state.lock().unwrap();
+    ensure_own_schema(&s.store_path)?;
+    let mut conn = rusqlite::Connection::open(&s.store_path).map_err(|e| e.to_string())?;
+    persist_assessment_result(&mut conn, &input)
+}
+
+#[tauri::command]
+fn load_mistakes(state: tauri::State<'_, Mutex<AppState>>) -> Result<Vec<MistakeState>, String> {
     let s = state.lock().unwrap();
     ensure_own_schema(&s.store_path)?;
     let conn = rusqlite::Connection::open(&s.store_path).map_err(|e| e.to_string())?;
@@ -530,8 +605,8 @@ fn load_all_mastery(
     let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
     let mut stmt = conn
         .prepare(
-            "SELECT function_id, mastery, last_correct, last_total
-             FROM knowledge_progress",
+            "SELECT topic_id, mastery, last_correct, last_total
+             FROM assessment_progress",
         )
         .map_err(|e| e.to_string())?;
     let rows = stmt
@@ -580,6 +655,7 @@ pub fn run() {
             load_content_json,
             load_all_review,
             save_answer,
+            save_assessment_result,
             load_mistakes,
             load_all_mastery
         ])
@@ -589,7 +665,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::schedule;
+    use super::{persist_assessment_result, schedule, AssessmentInput};
 
     #[test]
     fn correct_answers_expand_the_interval() {
@@ -604,5 +680,59 @@ mod tests {
         let (reps, interval) = schedule(4, false);
         assert_eq!(reps, 0);
         assert!((interval - 10.0 / 1440.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn assessment_pass_is_not_revoked_by_a_later_failure() {
+        let mut conn = rusqlite::Connection::open_in_memory().unwrap();
+        ensure_own_schema_for_connection(&conn);
+        let passed = persist_assessment_result(
+            &mut conn,
+            &AssessmentInput {
+                assessment_id: "en.assessment.beginner.vocab.v1".into(),
+                topic_id: "en.beginner.vocab.core".into(),
+                correct: 4,
+                total: 5,
+            },
+        )
+        .unwrap();
+        assert_eq!(passed.mastery, 1);
+
+        let later = persist_assessment_result(
+            &mut conn,
+            &AssessmentInput {
+                assessment_id: "en.assessment.beginner.vocab.v1".into(),
+                topic_id: "en.beginner.vocab.core".into(),
+                correct: 2,
+                total: 5,
+            },
+        )
+        .unwrap();
+        assert_eq!(later.mastery, 1);
+        assert_eq!(later.last_correct, 2);
+    }
+
+    fn ensure_own_schema_for_connection(conn: &rusqlite::Connection) {
+        conn.execute_batch(
+            "CREATE TABLE assessment_attempts (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               assessment_id TEXT NOT NULL,
+               topic_id TEXT NOT NULL,
+               correct INTEGER NOT NULL,
+               total INTEGER NOT NULL,
+               passed INTEGER NOT NULL,
+               answered_at TEXT NOT NULL DEFAULT (datetime('now'))
+             );
+             CREATE TABLE assessment_progress (
+               topic_id TEXT PRIMARY KEY,
+               mastery INTEGER NOT NULL DEFAULT 0,
+               last_correct INTEGER NOT NULL DEFAULT 0,
+               last_total INTEGER NOT NULL DEFAULT 0,
+               best_score INTEGER NOT NULL DEFAULT 0,
+               passed_at TEXT,
+               updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+             );",
+        )
+        .unwrap();
     }
 }

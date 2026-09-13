@@ -47,6 +47,8 @@ export interface DeckItem {
 }
 
 export interface Deck {
+  /** 只有独立考核题库使用。 */
+  assessment_id?: string;
   topic_id: string;
   kind: string;
   title?: string;
@@ -60,6 +62,8 @@ export interface Track {
   kind: string;
   goal: string;
   deck: string;
+  /** 与练习题物理分离的平行题，只负责阶段考核。 */
+  assessment: string;
   passage?: string;
 }
 
@@ -129,4 +133,11 @@ export interface ReviewInput {
   explanation: string;
   error_tag: string;
   is_variant: boolean;
+}
+
+export interface AssessmentInput {
+  assessment_id: string;
+  topic_id: string;
+  correct: number;
+  total: number;
 }

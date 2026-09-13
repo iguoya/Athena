@@ -27,8 +27,8 @@ ADR 0003 把主线排成「词 → 句 → 短文」三章。按这个顺序练�
    （`required_any`）。组织、用词、语气由作者对照 `reference` 和 `checklist` 自己
    看，不进掌握度——ADR 0001 第 5 条「禁止手动标记熟练」同样意味着不许把主观
    判断塞进判分。
-5. **界面不出现考试字样**：等级叫初级 / 中级 / 高级，应用叫「英语自学」。考试
-   目标写在 ADR 0001 和 `AGENTS.md`，不写进用户看得见的文案。
+5. **实用主线和考试终点同时可见**：等级叫初级 / 中级 / 高级，应用叫「英语自学」；
+   初中级不使用冲刺班口吻，高级阶段和路线终点如实标出衔接英语二（ADR 0006）。
 
 ## 后果
 
@@ -36,7 +36,7 @@ ADR 0003 把主线排成「词 → 句 → 短文」三章。按这个顺序练�
   `stages[].tracks[]`；前端按 `track.kind`（vocab / sentence / writing）出题，
   `deck.kind` 决定题卡形态。
 - 加一个等级就是加一段 `stages`，加一条轨就是加一个 deck 文件，不改前端。
-- 词表按等级分档：`vocab/beginner.json`、`vocab/core.json`、`vocab/advanced.json`，
-  同一个词可以在不同等级用不同义项出现。
+- 词表按等级分档：`vocab/beginner/core.json`、`vocab/intermediate/core.json`、
+  `vocab/advanced/core.json`；同一个词可以在不同等级用不同义项出现。
 - ADR 0003 里「词、句、短文互相指认」的要求没有放松：`vocab` 字段仍然把句子和
   短文挂回词卡 id。

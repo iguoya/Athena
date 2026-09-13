@@ -1,0 +1,64 @@
+{
+  "assessment_id": "en.assessment.intermediate.writing.v1",
+  "topic_id": "en.intermediate.writing.logical_paragraph",
+  "kind": "writing_decision",
+  "title": "中级作文独立考核",
+  "items": [
+    {
+      "id": "en.assessment.intermediate.writing.topic_sentence",
+      "kind": "writing_choice",
+      "prompt": "题目是“社区是否应延长图书馆开放时间”。哪一句最适合作为明确立场？",
+      "error_tag": "中心句",
+      "choices": [
+        { "label": "The library should stay open later because many residents cannot visit it during working hours.", "ok": true, "why": "有明确立场，也给出可展开的理由。" },
+        { "label": "Libraries have books, desks and lights.", "ok": false, "why": "只是罗列设施，没有回应是否延时。" },
+        { "label": "There are many different opinions in the world.", "ok": false, "why": "过于空泛，没有进入题目。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.writing.support",
+      "kind": "writing_choice",
+      "text": "Flexible hours can improve employees’ daily lives.",
+      "prompt": "哪一项最能直接支持这个中心句？",
+      "error_tag": "理由支持",
+      "choices": [
+        { "label": "For example, parents may start earlier and leave in time to collect their children.", "ok": true, "why": "给出了灵活时间改善生活的具体例子。" },
+        { "label": "Some offices were built twenty years ago.", "ok": false, "why": "办公楼年龄与中心句无关。" },
+        { "label": "Employees use many kinds of computers.", "ok": false, "why": "没有解释灵活时间的好处。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.writing.concession",
+      "kind": "writing_choice",
+      "prompt": "哪句让步既承认限制，又没有放弃“线上课程有价值”的立场？",
+      "error_tag": "让步结构",
+      "choices": [
+        { "label": "Although online courses require self-discipline, they give many learners access to subjects unavailable locally.", "ok": true, "why": "先承认限制，再回到支持线上课程的核心理由。" },
+        { "label": "Online courses are useful because they are online.", "ok": false, "why": "理由循环，没有信息。" },
+        { "label": "Online courses have disadvantages, so no one should use them.", "ok": false, "why": "结论绝对，也没有保留原立场。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.writing.cohesion",
+      "kind": "writing_choice",
+      "prompt": "① The change would cost money. ② It could, however, reduce traffic in the long term. ③ The city is considering cheaper bus tickets. 哪个顺序最自然？",
+      "error_tag": "段落衔接",
+      "choices": [
+        { "label": "③ → ① → ②", "ok": true, "why": "先提出方案，再承认成本，最后用 however 转出长期收益。" },
+        { "label": "② → ③ → ①", "ok": false, "why": "It 在方案出现前没有清楚指代。" },
+        { "label": "① → ② → ③", "ok": false, "why": "change 尚未出现，前两句指代悬空。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.writing.conclusion",
+      "kind": "writing_choice",
+      "prompt": "一段先说明培训成本，再论证培训能减少长期错误。哪一句最适合收束？",
+      "error_tag": "段落收束",
+      "choices": [
+        { "label": "Therefore, the initial cost should be viewed as an investment in more reliable work.", "ok": true, "why": "概括成本与长期收益之间的论证。" },
+        { "label": "Training rooms usually have chairs.", "ok": false, "why": "引入无关细节。" },
+        { "label": "There are costs, costs and more costs.", "ok": false, "why": "只重复问题，没有完成推论。" }
+      ]
+    }
+  ]
+}

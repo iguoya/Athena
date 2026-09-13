@@ -1,0 +1,68 @@
+{
+  "assessment_id": "en.assessment.advanced.vocab.v1",
+  "topic_id": "en.advanced.vocab.argument",
+  "kind": "vocab",
+  "title": "高级单词独立考核",
+  "items": [
+    {
+      "id": "en.assessment.advanced.vocab.address",
+      "word": "address",
+      "sentence": "The proposal addresses the immediate shortage but says little about its underlying causes.",
+      "prompt": "addresses 在这里表示什么？",
+      "error_tag": "熟词生义",
+      "choices": [
+        { "label": "处理、应对", "ok": true, "why": "宾语是 shortage，表示着手解决问题。" },
+        { "label": "写下地址", "ok": false, "why": "address 作地址时通常是名词。" },
+        { "label": "向短缺发表演讲", "ok": false, "why": "address an audience 才可能表示演说。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.vocab.qualify",
+      "word": "qualify",
+      "sentence": "The author later qualifies this optimistic conclusion by noting two practical limits.",
+      "prompt": "qualifies the conclusion 表示什么？",
+      "error_tag": "论证词义",
+      "choices": [
+        { "label": "给乐观结论加上限制条件", "ok": true, "why": "后面的 two practical limits 说明原结论被限定。" },
+        { "label": "证明结论绝对正确", "ok": false, "why": "加限制不是加强到绝对。" },
+        { "label": "使作者获得资格", "ok": false, "why": "宾语是 conclusion，不是人。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.vocab.account",
+      "word": "account",
+      "sentence": "Changes in family size may account for much of the difference between the two surveys.",
+      "prompt": "account for 在这里是什么意思？",
+      "error_tag": "熟词生义",
+      "choices": [
+        { "label": "解释差异的大部分原因", "ok": true, "why": "account for 在分析中表示解释或构成。" },
+        { "label": "为两项调查开设账户", "ok": false, "why": "语境不是金融账户。" },
+        { "label": "把两个调查逐字记录下来", "ok": false, "why": "这里讨论 difference 的来源。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.vocab.assume",
+      "word": "assume",
+      "sentence": "Such estimates assume that people will continue to travel in the same way.",
+      "prompt": "assume that 揭示了什么？",
+      "error_tag": "论证前提",
+      "choices": [
+        { "label": "估算把出行方式不变当作前提", "ok": true, "why": "assume that 引出尚未被证明但被采用的前提。" },
+        { "label": "估算已经证明出行方式不会变", "ok": false, "why": "假设不等于证明。" },
+        { "label": "人们承担了出行责任", "ok": false, "why": "这是对 assume 另一义项的误用。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.vocab.subject",
+      "word": "subject",
+      "sentence": "The figures are subject to revision as more complete data become available.",
+      "prompt": "are subject to revision 表示什么？",
+      "error_tag": "熟词生义",
+      "choices": [
+        { "label": "这些数字可能会被修订", "ok": true, "why": "be subject to 表示受某事影响或可能经历某事。" },
+        { "label": "这些数字是修订课的主题", "ok": false, "why": "subject 在这里不是“科目/主题”。" },
+        { "label": "这些数字禁止修订", "ok": false, "why": "语义相反。" }
+      ]
+    }
+  ]
+}

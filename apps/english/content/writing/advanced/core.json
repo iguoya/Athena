@@ -23,6 +23,17 @@
       "reference": "Dear Alex, I am sorry that I cannot attend the workshop on Friday because I have an important appointment at the same time. Could we meet next Monday to discuss the main points instead? I would also be grateful if you could send me the reading list. Best regards, Li Ming",
       "error_tag": "任务回应不完整",
       "checklist": ["是否说明不能参加", "是否给出原因", "是否提出替代安排", "语气是否得体"]
+    },
+    {
+      "id": "en.advanced.writing.chart_summary",
+      "kind": "guided_writing",
+      "prompt": "根据数据写一个图表说明段：线上预约占比从 2019 年的 28% 升至 2025 年的 64%，电话预约从 52% 降至 21%。概括趋势、比较变化并给出一种可能原因。",
+      "starter": "The figures show a clear shift in how people make appointments.",
+      "min_words": 90,
+      "required_any": ["while", "whereas", "by contrast"],
+      "reference": "The figures show a clear shift in how people make appointments. The share of online bookings rose from 28 percent in 2019 to 64 percent in 2025, while telephone bookings fell from 52 percent to 21 percent. Online booking therefore became the dominant method over the period. One possible reason is that users can choose a time without waiting for an office to open. Nevertheless, services should retain alternatives for people who cannot easily use digital tools.",
+      "error_tag": "图表概括不准确",
+      "checklist": ["是否同时写出两个趋势", "数字和方向是否准确", "是否进行了比较而非逐项抄数", "原因是否标明为可能解释", "是否避免 every、always 等过度概括"]
     }
   ]
 }

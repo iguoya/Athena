@@ -1,0 +1,63 @@
+{
+  "assessment_id": "en.assessment.advanced.writing.v1",
+  "topic_id": "en.advanced.writing.exam_bridge",
+  "kind": "writing_decision",
+  "title": "高级作文独立考核",
+  "items": [
+    {
+      "id": "en.assessment.advanced.writing.task_response",
+      "kind": "writing_choice",
+      "prompt": "邮件任务要求“拒绝邀请、说明原因并提出替代安排”。哪一项完整且得体？",
+      "error_tag": "任务回应",
+      "choices": [
+        { "label": "Thank you for the invitation. I am afraid I cannot attend because I will be away that day. Could we meet online the following week instead?", "ok": true, "why": "回应邀请、拒绝、原因和替代安排都完整，语气得体。" },
+        { "label": "I cannot come. The event is on Friday.", "ok": false, "why": "缺少清楚原因、礼貌表达和替代安排。" },
+        { "label": "Your invitation is wrong, so change the date for me.", "ok": false, "why": "语气生硬，也没有合理说明。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.writing.chart",
+      "kind": "writing_choice",
+      "prompt": "图表显示线上支付从 35% 升到 68%，现金从 50% 降到 22%。哪句概括最准确？",
+      "error_tag": "图表概括",
+      "choices": [
+        { "label": "Online payment rose markedly while the share of cash payments fell by more than half.", "ok": true, "why": "同时准确概括了两个方向和现金降幅。" },
+        { "label": "Every consumer stopped using cash and moved online.", "ok": false, "why": "22% 仍使用现金，every 过度概括。" },
+        { "label": "Online and cash payments both increased at the same rate.", "ok": false, "why": "两者方向相反。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.writing.argument",
+      "kind": "writing_choice",
+      "prompt": "立场是“城市不应只靠修更多道路解决拥堵”。哪组论证最有力？",
+      "error_tag": "论证结构",
+      "choices": [
+        { "label": "More roads may ease traffic briefly; however, they can encourage more driving. Reliable public transport addresses demand without requiring every trip to use a car.", "ok": true, "why": "先让步，再说明反作用，并给出与立场一致的替代方向。" },
+        { "label": "Roads are long, and cities are large. Traffic is a problem.", "ok": false, "why": "只有事实碎片，没有支持立场的因果链。" },
+        { "label": "Cars are bad because roads are bad, and roads are bad because cars are bad.", "ok": false, "why": "循环论证，没有独立理由。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.writing.coherence",
+      "kind": "writing_choice",
+      "prompt": "哪一句最适合接在“Remote work can widen access to jobs.”之后，再转向限制？",
+      "error_tag": "衔接与让步",
+      "choices": [
+        { "label": "People outside major cities may apply for roles that were once too far away. Nevertheless, unequal internet access remains a serious limit.", "ok": true, "why": "先展开 access，再用 nevertheless 转入相关限制。" },
+        { "label": "Major cities have many old buildings. Nevertheless, jobs are jobs.", "ok": false, "why": "信息与远程工作的机会、限制都不连贯。" },
+        { "label": "Remote work is remote because workers are not in the office.", "ok": false, "why": "同义反复，没有推进论证。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.writing.precision",
+      "kind": "writing_choice",
+      "prompt": "哪一句最适合正式议论文，且没有把证据说得过头？",
+      "error_tag": "表达准确性",
+      "choices": [
+        { "label": "The findings suggest that flexible schedules may improve retention in some workplaces.", "ok": true, "why": "suggest、may 和 some 准确保留了证据边界。" },
+        { "label": "The findings prove that flexible schedules always solve every staffing problem.", "ok": false, "why": "prove、always、every 都把有限证据绝对化。" },
+        { "label": "Flexible schedules are totally amazing for everybody.", "ok": false, "why": "口语化且绝对，没有学术准确性。" }
+      ]
+    }
+  ]
+}

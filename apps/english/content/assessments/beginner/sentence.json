@@ -1,0 +1,68 @@
+{
+  "assessment_id": "en.assessment.beginner.sentence.v1",
+  "topic_id": "en.beginner.sentence.basic_logic",
+  "kind": "sentence",
+  "title": "初级例句独立考核",
+  "items": [
+    {
+      "id": "en.assessment.beginner.sentence.cause",
+      "kind": "cause",
+      "text": "Mia took an earlier bus because the roads were busy.",
+      "prompt": "Mia 提前坐公交的原因是什么？",
+      "error_tag": "因果关系",
+      "choices": [
+        { "label": "道路很拥堵", "ok": true, "why": "because 后给出原因。" },
+        { "label": "公交晚点了", "ok": false, "why": "句中没有说公交晚点。" },
+        { "label": "她不喜欢走路", "ok": false, "why": "句中没有这条信息。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.contrast",
+      "kind": "contrast",
+      "text": "The room is small, but it has everything we need.",
+      "prompt": "说话人最终更强调什么？",
+      "error_tag": "转折关系",
+      "choices": [
+        { "label": "房间虽小，但所需物品齐全", "ok": true, "why": "but 后是转折后的重点。" },
+        { "label": "房间太小，完全不能使用", "ok": false, "why": "后半句否定了这个判断。" },
+        { "label": "房间里的东西需要搬走", "ok": false, "why": "句中没有搬走的意思。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reference",
+      "kind": "reference",
+      "text": "Leo put the form beside the printer so that everyone could find it.",
+      "prompt": "it 指什么？",
+      "error_tag": "代词指代",
+      "choices": [
+        { "label": "the form", "ok": true, "why": "能被找到且最近的单数名词是 form。" },
+        { "label": "the printer", "ok": false, "why": "打印机是位置参照，不是被放置的东西。" },
+        { "label": "everyone", "ok": false, "why": "everyone 指人，不能由 it 指代。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation",
+      "kind": "translation",
+      "text": "If you need help, leave a message and I will call you back.",
+      "prompt": "哪项英译汉最准确、完整、自然？",
+      "error_tag": "英译汉",
+      "choices": [
+        { "label": "如果你需要帮助，请留言，我会给你回电话。", "ok": true, "why": "条件、两个动作和先后关系都保留了。" },
+        { "label": "你需要帮助，所以我已经给你打过电话。", "ok": false, "why": "把条件误成因果，也把将来误成过去。" },
+        { "label": "如果我需要帮助，你就给我留言。", "ok": false, "why": "人物关系颠倒。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.short_text",
+      "kind": "main_idea",
+      "text": "Our local market used to close at five. It now stays open until eight on Fridays, so people can shop after work. The change has been popular with both workers and shop owners.",
+      "prompt": "这段短文主要说明什么？",
+      "error_tag": "短文主旨",
+      "choices": [
+        { "label": "周五延长营业时间给顾客和店主带来了便利", "ok": true, "why": "三句围绕延长营业及其积极结果展开。" },
+        { "label": "市场准备永久关闭", "ok": false, "why": "原文说延长营业，不是关闭。" },
+        { "label": "店主不允许工人下班后购物", "ok": false, "why": "语义与原文相反。" }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import type {
   ReviewInput,
   ReviewState,
   MasteryState,
+  AssessmentInput,
 } from "./types";
 
 export const isDesktop =
@@ -22,7 +23,7 @@ async function call<T>(command: string, args?: Record<string, unknown>): Promise
   return invoke<T>(command, args);
 }
 
-const bundled = import.meta.glob("../content/**/*.{json,md}", {
+const bundled = import.meta.glob(["../content/**/*.json", "../content/passages/**/*.md"], {
   query: "?raw",
   import: "default",
 }) as Record<string, () => Promise<string>>;
@@ -70,6 +71,7 @@ export async function loadText(relative: string): Promise<string> {
 /** 浏览器预览用：本次会话答过的题与还没做对的题。 */
 const sessionReview = new Map<string, ReviewState>();
 const sessionMistakes = new Map<string, Mistake>();
+const sessionMastery = new Map<string, MasteryState>();
 
 export async function loadReview(): Promise<Map<string, ReviewState>> {
   if (!isDesktop) {
@@ -81,10 +83,26 @@ export async function loadReview(): Promise<Map<string, ReviewState>> {
 
 export async function loadMastery(): Promise<Map<string, MasteryState>> {
   if (!isDesktop) {
-    return new Map();
+    return new Map(sessionMastery);
   }
   const raw = await call<Record<string, MasteryState>>("load_all_mastery");
   return new Map(Object.entries(raw));
+}
+
+/** 整套独立考核交卷后才写入；练习作答不会调用这里。 */
+export async function saveAssessmentResult(input: AssessmentInput): Promise<MasteryState> {
+  if (isDesktop) {
+    return call<MasteryState>("save_assessment_result", { input });
+  }
+  const previous = sessionMastery.get(input.topic_id);
+  const passedNow = input.total > 0 && input.correct * 100 >= input.total * 80;
+  const next: MasteryState = {
+    mastery: previous?.mastery === 1 || passedNow ? 1 : 0,
+    last_correct: input.correct,
+    last_total: input.total,
+  };
+  sessionMastery.set(input.topic_id, next);
+  return next;
 }
 
 export async function loadMistakes(): Promise<Mistake[]> {

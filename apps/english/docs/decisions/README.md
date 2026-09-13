@@ -10,3 +10,4 @@
 | [0003](0003-content-model-sentences-passages-vocab.md) | 课表驱动；词、句、短文互相指认 | 已接受（主线部分由 0004 取代） |
 | [0004](0004-three-levels-and-writing-track.md) | 课表改成三个等级，每级同练单词、例句和作文 | 已接受 |
 | [0005](0005-route-layout-and-exam-mode.md) | 界面按能力路线组织；练习与考核分开 | 已接受 |
+| [0006](0006-graded-content-and-independent-assessments.md) | 内容按能力递进；阶段考核使用独立平行题库 | 已接受 |

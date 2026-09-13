@@ -13,10 +13,10 @@ import {
   loadReview,
   loadText,
   saveAnswer,
+  saveAssessmentResult,
 } from "./backend";
 import {
   errorTagOf,
-  examItems,
   gradeWriting,
   isDue,
   itemKindLabel,
@@ -84,6 +84,7 @@ interface TrackRuntime {
   stage: Stage;
   track: Track;
   deck: Deck;
+  assessment: Deck;
   passage?: string;
 }
 
@@ -92,6 +93,7 @@ type SessionMode = "practice" | "exam";
 interface SessionItem {
   item: DeckItem;
   runtime: TrackRuntime;
+  deck: Deck;
 }
 
 interface Attempt {
@@ -115,6 +117,7 @@ interface Session {
   inVariant: boolean;
   variantDone: boolean;
   attempts: Attempt[];
+  assessmentId?: string;
 }
 
 const runtimes = new Map<string, TrackRuntime>();
@@ -252,11 +255,17 @@ function renderGate(stage: Stage): void {
         return "";
       }
       const stats = statsOf(runtime);
+      const assessment = mastery.get(track.id);
+      const lastAssessment = assessment && assessment.last_total > 0
+        ? `最近 ${assessment.last_correct}/${assessment.last_total}`
+        : "还未参加独立考核";
       const detail = stats.passed
-        ? `已通过 · 正确率 ${stats.accuracy === null ? "—" : pct(stats.accuracy)}`
-        : stats.done === 0
-          ? "待完成 · 还没开始"
-          : `待完成 · 已练 ${stats.done}/${stats.total}`;
+        ? `已通过 · ${lastAssessment}`
+        : assessment && assessment.last_total > 0
+          ? `待通过 · ${lastAssessment}`
+          : stats.done === 0
+            ? "待完成 · 还没开始"
+            : `待考核 · 已练 ${stats.done}/${stats.total}`;
       return `<div class="english-gate-part">
           <span class="english-${stats.passed ? "check" : "wait"}">${stats.passed ? "✓" : "!"}</span>
           <span><strong>${esc(track.title)}考核</strong><br><small>${esc(detail)}</small></span>
@@ -291,12 +300,13 @@ function renderTracks(stage: Stage): void {
           : track.kind === "vocab"
             ? "复习薄弱词"
             : `再练 ${Math.max(1, Math.min(5, stats.total))} 句`;
+      const examButton = `<button type="button" data-exam="${esc(track.id)}"${isFocus ? " data-primary" : ""}>${
+        stats.passed ? "再考一次" : `开始${track.title}考核`
+      }</button>`;
       const right =
         track.kind === "writing"
-          ? `<button type="button" data-rubric="${esc(track.id)}">查看评分维度</button>`
-          : `<button type="button" data-exam="${esc(track.id)}"${isFocus ? " data-primary" : ""}>${
-              stats.passed ? "再考一次" : `开始${track.title}考核`
-            }</button>`;
+          ? `<button type="button" data-rubric="${esc(track.id)}">评分维度</button>${examButton}`
+          : examButton;
       const measureRight = stats.due > 0 ? `到期复习 ${stats.due}` : stats.weakTag ? `薄弱：${stats.weakTag}` : "暂无薄弱项";
       const measureLeft =
         stats.accuracy === null ? `练习覆盖 ${pct(stats.coverage)}` : `近期正确率 ${pct(stats.accuracy)}`;
@@ -368,14 +378,14 @@ function openSession(next: Session, passage?: string): void {
   renderCard();
 }
 
-function sessionOf(runtime: TrackRuntime, items: DeckItem[], mode: SessionMode, title: string): Session {
+function sessionOf(runtime: TrackRuntime, deck: Deck, items: DeckItem[], mode: SessionMode, title: string): Session {
   return {
     listTitle: `${runtime.track.title}${mode === "exam" ? "考核" : "练习"}`,
     crumb: `${runtime.stage.title} · ${runtime.track.title}`,
     title,
     goal: runtime.track.goal,
     mode,
-    items: items.map((item) => ({ item, runtime })),
+    items: items.map((item) => ({ item, runtime, deck })),
     index: 0,
     answered: false,
     inVariant: false,
@@ -386,17 +396,23 @@ function sessionOf(runtime: TrackRuntime, items: DeckItem[], mode: SessionMode, 
 
 function startPractice(runtime: TrackRuntime, items: DeckItem[], focusId?: string): void {
   const ordered = orderItems(items, review, now());
-  const next = sessionOf(runtime, ordered, "practice", "先判断，再看解析");
+  const next = sessionOf(runtime, runtime.deck, ordered, "practice", "先判断，再看解析");
   const index = focusId ? ordered.findIndex((item) => item.id === focusId) : 0;
   next.index = index >= 0 ? index : 0;
   openSession(next, runtime.passage);
 }
 
 function startExam(runtime: TrackRuntime): void {
-  const items = examItems(runtime.deck, review, now());
-  const next = sessionOf(runtime, items, "exam", "成套作答，交卷后统一反馈");
-  next.goal = "作答期间不给解析，也不显示答案；全部答完一次性出分。";
-  openSession(next, runtime.passage);
+  const next = sessionOf(
+    runtime,
+    runtime.assessment,
+    runtime.assessment.items,
+    "exam",
+    "独立平行材料考核",
+  );
+  next.assessmentId = runtime.assessment.assessment_id;
+  next.goal = "题目与练习材料不同；作答期间不给解析，全部答完后统一提交和反馈。";
+  openSession(next);
 }
 
 function startDueSession(): void {
@@ -406,7 +422,7 @@ function startDueSession(): void {
     for (const item of orderItems(runtime.deck.items, review, stamp)) {
       const state = review.get(item.id);
       if (state && isDue(state, stamp)) {
-        items.push({ item, runtime });
+        items.push({ item, runtime, deck: runtime.deck });
       }
     }
   }
@@ -471,6 +487,12 @@ function renderSide(): void {
 function renderContext(entry: SessionItem, source: DeckItem | Variant): void {
   const passage = entry.runtime.passage;
   const stem = itemStem(source);
+  if (stem) {
+    dom.practiceContext.className = "english-context";
+    dom.practiceContext.textContent = stem;
+    dom.practiceContext.style.display = "block";
+    return;
+  }
   if (passage) {
     dom.practiceContext.className = "english-context english-markdown";
     dom.practiceContext.innerHTML = renderMarkdown(passage);
@@ -478,12 +500,7 @@ function renderContext(entry: SessionItem, source: DeckItem | Variant): void {
     return;
   }
   dom.practiceContext.className = "english-context";
-  if (stem) {
-    dom.practiceContext.textContent = stem;
-    dom.practiceContext.style.display = "block";
-  } else {
-    dom.practiceContext.style.display = "none";
-  }
+  dom.practiceContext.style.display = "none";
 }
 
 function renderCard(): void {
@@ -495,10 +512,10 @@ function renderCard(): void {
   session.inVariant = false;
   session.variantDone = false;
   dom.practiceCrumb.textContent = `${entry.runtime.stage.title} · ${entry.runtime.track.title} · ${
-    errorTagOf(entry.item, entry.runtime.deck.kind)
+    errorTagOf(entry.item, entry.deck.kind)
   }`;
   renderSide();
-  if (entry.runtime.deck.kind === "writing") {
+  if ((entry.item.choices?.length ?? 0) === 0) {
     renderWriting(entry);
   } else {
     renderChoices(entry, entry.item, false);
@@ -568,13 +585,16 @@ async function answerChoice(
     why: answer.why ?? "",
   });
 
-  await recordAnswer(entry, {
-    correct,
-    selected: picked.label,
-    answer: answer.label,
-    explanation: answer.why ?? "",
-    isVariant: inVariant,
-  });
+  let stored = true;
+  if (session.mode === "practice") {
+    stored = await recordAnswer(entry, {
+      correct,
+      selected: picked.label,
+      answer: answer.label,
+      explanation: answer.why ?? "",
+      isVariant: inVariant,
+    });
+  }
 
   if (session.mode === "exam") {
     buttons.forEach((button) => {
@@ -598,7 +618,7 @@ async function answerChoice(
     feedback.innerHTML = correct
       ? `<div class="english-feedback-head"><strong>判断正确</strong><span>不进入错题本</span></div>
          <p>${esc(picked.why ?? answer.why ?? "")}</p>${inVariant ? "" : sensesHtml(entry.item)}${otherWhyHtml(choices, position)}`
-      : `<div class="english-feedback-head"><strong data-wrong="true">已自动加入错题本</strong><span>错因：${esc(
+      : `<div class="english-feedback-head"><strong data-wrong="true">${stored ? "已自动加入错题本" : "错题未能保存"}</strong><span>错因：${esc(
           errorTagOf(entry.item, entry.runtime.deck.kind),
         )}</span></div>
          <p>${esc(answer.why ?? "")}</p>
@@ -712,13 +732,16 @@ async function submitWriting(entry: SessionItem): Promise<void> {
     why: verdict,
   });
 
-  await recordAnswer(entry, {
-    correct: grade.correct,
-    selected: text.slice(0, 500),
-    answer: item.reference ?? "",
-    explanation: verdict,
-    isVariant: false,
-  });
+  let stored = true;
+  if (session.mode === "practice") {
+    stored = await recordAnswer(entry, {
+      correct: grade.correct,
+      selected: text.slice(0, 500),
+      answer: item.reference ?? "",
+      explanation: verdict,
+      isVariant: false,
+    });
+  }
 
   if (session.mode === "exam") {
     await goNext();
@@ -730,7 +753,7 @@ async function submitWriting(entry: SessionItem): Promise<void> {
   if (feedback) {
     feedback.innerHTML = `<div class="english-feedback-head"><strong${
       grade.correct ? "" : ' data-wrong="true"'
-    }>${grade.correct ? "达标" : "还没达标"}</strong><span>${esc(verdict)}</span></div>
+    }>${grade.correct ? "形式要求达到" : stored ? "形式要求未达到，已记入错题本" : "形式要求未达到，保存失败"}</strong><span>${esc(verdict)}</span></div>
       <p>下面是参考写法，用它对照上面的自查项，别逐字抄。</p>
       <blockquote class="english-context">${esc(item.reference ?? "")}</blockquote>`;
     feedback.classList.add("is-visible");
@@ -746,27 +769,29 @@ interface AnswerRecord {
   isVariant: boolean;
 }
 
-async function recordAnswer(entry: SessionItem, record: AnswerRecord): Promise<void> {
+async function recordAnswer(entry: SessionItem, record: AnswerRecord): Promise<boolean> {
   const { runtime, item } = entry;
   try {
     const state = await saveAnswer({
       item_id: item.id,
       topic_id: runtime.track.id,
-      kind: runtime.deck.kind,
+      kind: entry.deck.kind,
       correct: record.correct,
-      deck_total: runtime.deck.items.length,
+      deck_total: entry.deck.items.length,
       selected_answer: record.selected,
       correct_answer: record.answer,
       explanation: record.explanation,
-      error_tag: errorTagOf(item, runtime.deck.kind),
+      error_tag: errorTagOf(item, entry.deck.kind),
       is_variant: record.isVariant,
     });
     review.set(state.item_id, state);
+    return true;
   } catch (error) {
     dom.question.insertAdjacentHTML(
       "beforeend",
       `<p class="english-empty">这次结果没能写进进度库：${esc(String(error))}</p>`,
     );
+    return false;
   }
 }
 
@@ -776,8 +801,20 @@ async function goNext(): Promise<void> {
   }
   if (session.index >= session.items.length - 1) {
     if (session.mode === "exam") {
-      await refreshProgress();
-      renderReport();
+      try {
+        await persistExamResult(session);
+        await refreshProgress();
+        renderReport();
+      } catch (error) {
+        dom.question.innerHTML = `<div class="english-feedback is-visible">
+          <div class="english-feedback-head"><strong data-wrong="true">交卷没有保存</strong></div>
+          <p>${esc(String(error))}</p>
+          <div class="english-mistake-actions"><button type="button" data-primary data-act="retry-submit">重新交卷</button></div>
+        </div>`;
+        dom.question.querySelector<HTMLButtonElement>('[data-act="retry-submit"]')?.addEventListener("click", () => {
+          void goNext();
+        });
+      }
       return;
     }
     await backToOverview();
@@ -785,6 +822,24 @@ async function goNext(): Promise<void> {
   }
   session.index += 1;
   renderCard();
+}
+
+async function persistExamResult(active: Session): Promise<void> {
+  if (!active.assessmentId || active.attempts.length === 0) {
+    throw new Error("独立考核缺少 assessment_id 或作答结果");
+  }
+  const topicId = active.items[0]?.runtime.track.id;
+  if (!topicId) {
+    throw new Error("独立考核缺少轨道 id");
+  }
+  const right = active.attempts.filter((attempt) => attempt.correct).length;
+  const state = await saveAssessmentResult({
+    assessment_id: active.assessmentId,
+    topic_id: topicId,
+    correct: right,
+    total: active.attempts.length,
+  });
+  mastery.set(topicId, state);
 }
 
 function renderReport(): void {
@@ -795,12 +850,18 @@ function renderReport(): void {
   const right = active.attempts.filter((attempt) => attempt.correct).length;
   const score = active.attempts.length === 0 ? 0 : Math.round((right / active.attempts.length) * 100);
   const pass = score >= 80;
+  const topicId = active.items[0]?.runtime.track.id;
+  const qualificationRetained = topicId ? (mastery.get(topicId)?.mastery ?? 0) === 1 : false;
 
   active.index = active.items.length;
   renderSide();
   renderTopBar();
   dom.practiceTitle.textContent = "已交卷";
-  dom.practiceGoal.textContent = "逐题对照解析；答错的已经进了错题本。";
+  dom.practiceGoal.textContent = pass
+    ? "本轨阶段资格已经记录；之后的复习答错不会撤销它。"
+    : qualificationRetained
+      ? "本次没有达到 80%，但既有通过资格保留；可按报告回练习台补强。"
+      : "逐题对照解析，再回练习台补强薄弱点；考核题不混入练习错题本。";
   dom.practiceContext.style.display = "none";
   dom.question.innerHTML = `<div class="english-feedback-head">
       <span class="english-score" data-pass="${pass}">${score} 分</span>
@@ -835,7 +896,7 @@ function showRubric(runtime: TrackRuntime): void {
   dom.practiceCrumb.textContent = `${runtime.stage.title} · ${runtime.track.title}`;
   dom.practiceTitle.textContent = "机器判什么，你自己判什么";
   dom.practiceGoal.textContent =
-    "字数和要求用上的连接方式由机器判定，进掌握度；组织、用词和语气由你对照自查项和参考写法自己看。";
+    "字数和连接方式只给练习反馈，不决定阶段资格；独立写作考核另测任务回应、组织、衔接和语言选择。";
   dom.practiceContext.style.display = "none";
   dom.question.innerHTML =
     runtime.deck.items
@@ -1079,11 +1140,12 @@ async function boot(): Promise<void> {
   await Promise.all(
     curriculum.stages.flatMap((stage) =>
       stage.tracks.map(async (track: Track) => {
-        const [deck, passage] = await Promise.all([
+        const [deck, assessment, passage] = await Promise.all([
           loadDeck(track.deck),
+          loadDeck(track.assessment),
           track.passage ? loadText(track.passage) : Promise.resolve(undefined),
         ]);
-        runtimes.set(track.id, { stage, track, deck, passage });
+        runtimes.set(track.id, { stage, track, deck, assessment, passage });
       }),
     ),
   );

@@ -1,0 +1,68 @@
+{
+  "assessment_id": "en.assessment.advanced.sentence.v1",
+  "topic_id": "en.advanced.sentence.passage_logic",
+  "kind": "passage",
+  "title": "高级例句与短文独立考核",
+  "items": [
+    {
+      "id": "en.assessment.advanced.sentence.main_idea",
+      "kind": "main_idea",
+      "text": "Convenience is often treated as an obvious measure of progress. Yet a service that removes every small difficulty may also remove occasions on which people learn to solve problems for themselves. The point is not that convenience is harmful, but that its value depends partly on what it allows users to retain.",
+      "prompt": "作者的核心观点是什么？",
+      "error_tag": "篇章主旨",
+      "choices": [
+        { "label": "便利的价值还要看它是否保留了使用者的自主能力", "ok": true, "why": "末句用 not...but... 限定了作者真正的判断。" },
+        { "label": "所有便利服务都会伤害使用者", "ok": false, "why": "作者明确说 point is not that convenience is harmful。" },
+        { "label": "进步唯一可靠的标准就是减少困难", "ok": false, "why": "首句只是陈述常见看法，后文对此加以限定。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.sentence.attitude",
+      "kind": "attitude",
+      "text": "The policy has been praised for expanding access. That achievement is real, but it should not prevent us from asking who still remains outside the system.",
+      "prompt": "作者对这项政策的态度最接近哪一项？",
+      "error_tag": "作者态度",
+      "choices": [
+        { "label": "肯定成果，同时要求继续审视遗漏人群", "ok": true, "why": "real 表示肯定，but 后提出限制性追问。" },
+        { "label": "完全否定扩大覆盖面的价值", "ok": false, "why": "作者明确承认 achievement is real。" },
+        { "label": "认为政策已经解决全部问题", "ok": false, "why": "末句正是在追问尚未覆盖的人。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.sentence.structure",
+      "kind": "clause_split",
+      "text": "What appears to be resistance to change may instead reflect uncertainty about whether the promised benefits will reach those expected to bear the cost.",
+      "prompt": "主句最核心的判断是什么？",
+      "error_tag": "长句主干",
+      "choices": [
+        { "label": "看似抵制改变的行为，可能反映的是对收益能否惠及承担成本者的不确定", "ok": true, "why": "主干是 What appears... may reflect uncertainty，后面展开 uncertainty 的内容。" },
+        { "label": "承担成本的人已经得到了承诺的全部收益", "ok": false, "why": "whether 表示尚不确定。" },
+        { "label": "所有改变都会受到无理由的抵制", "ok": false, "why": "原句恰恰给“抵制”提供了另一种解释。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.sentence.translation",
+      "kind": "translation",
+      "text": "Policies designed for the average user can appear efficient while quietly shifting extra costs onto people whose needs do not fit the average.",
+      "prompt": "哪项英译汉最准确、完整、通顺？",
+      "error_tag": "英译汉",
+      "choices": [
+        { "label": "按普通用户设计的政策看似高效，却可能悄悄把额外成本转嫁给需求不符合平均模式的人。", "ok": true, "why": "保留了 designed 修饰、while 对照以及 whose needs 的限定。" },
+        { "label": "普通用户设计政策，是为了让所有人的平均成本更高。", "ok": false, "why": "主被动、目的和比较关系都被改写。" },
+        { "label": "高效政策会安静地帮助那些具有平均需求的人。", "ok": false, "why": "把转嫁成本误成帮助，也遗漏非平均需求。" }
+      ]
+    },
+    {
+      "id": "en.assessment.advanced.sentence.inference",
+      "kind": "inference",
+      "text": "A company reported that most employees preferred working from home. The survey, however, was completed mainly by staff who already worked remotely at least three days a week.",
+      "prompt": "第二句主要在提醒读者注意什么？",
+      "error_tag": "证据边界",
+      "choices": [
+        { "label": "样本可能偏向本来就习惯远程办公的人", "ok": true, "why": "参与者构成会限制结论能否代表全部员工。" },
+        { "label": "公司伪造了所有调查数据", "ok": false, "why": "文本只指出抽样偏向，没有证据证明伪造。" },
+        { "label": "所有员工每周都远程办公三天", "ok": false, "why": "主要作答者如此，不等于所有员工。" }
+      ]
+    }
+  ]
+}

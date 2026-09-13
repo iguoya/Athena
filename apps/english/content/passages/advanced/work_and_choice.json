@@ -1,0 +1,140 @@
+{
+  "topic_id": "en.advanced.sentence.passage_logic",
+  "kind": "passage",
+  "title": "工作与选择",
+  "vocab": [
+    "en.vocab.substantial",
+    "en.vocab.access",
+    "en.vocab.emerge",
+    "en.vocab.attribute",
+    "en.vocab.decline",
+    "en.vocab.maintain",
+    "en.vocab.significant",
+    "en.vocab.nevertheless"
+  ],
+  "items": [
+    {
+      "id": "en.passage.work_and_choice.q1",
+      "kind": "main_idea",
+      "prompt": "这篇短文的主旨更接近哪一句？",
+      "choices": [
+        {
+          "label": "职业选择受信息、时机和对风险的看法约束，不只是“追随热情”",
+          "ok": true,
+          "why": "首段破“热情决定论”，末段收在 choice is never made in a vacuum。"
+        },
+        {
+          "label": "年轻人只要敢于换工作就能解决晋升问题",
+          "ok": false,
+          "why": "文中老年人反而不爱换工作；作者也没有把换工作写成万能药。"
+        },
+        {
+          "label": "雇主完全否认市场需求在下降",
+          "ok": false,
+          "why": "雇主 maintain 的是“习惯”，这是对照，不是全文主旨。"
+        },
+        {
+          "label": "培训已经取代了资历",
+          "ok": false,
+          "why": "nevertheless 承认年龄仍重要，培训只是仍能开门。"
+        }
+      ],
+      "variants": [{ "text": "Public debate often treats speed as the only measure of a good service. Yet a faster process may exclude people who need time or personal help. Efficiency matters, but it should be judged together with access.", "prompt": "这段话的主旨是什么？", "choices": [{ "label": "评价服务不能只看速度，还要看可获得性", "ok": true, "why": "末句把 efficiency 与 access 并列。" }, { "label": "服务越慢越公平", "ok": false, "why": "作者没有把慢本身当作目标。" }] }]
+    },
+    {
+      "id": "en.passage.work_and_choice.q2",
+      "kind": "detail",
+      "prompt": "作者认为许多毕业生接受第一份稳定工作，直接原因是？",
+      "choices": [
+        {
+          "label": "他们缺少关于不同工作实际要求的可靠信息",
+          "ok": true,
+          "why": "第一段：lack access to reliable information about what different jobs actually demand。"
+        },
+        {
+          "label": "他们没有野心",
+          "ok": false,
+          "why": "原文写 not because they lack ambition。"
+        },
+        {
+          "label": "雇主拒绝招应届生",
+          "ok": false,
+          "why": "文中没有这条。"
+        },
+        {
+          "label": "培训机会已经被年长员工占满",
+          "ok": false,
+          "why": "培训出现在末段，不是首段的原因。"
+        }
+      ],
+      "variants": [{ "text": "Many residents did not use the new website because they could not find clear instructions for the registration process.", "prompt": "居民没有使用网站的直接原因是什么？", "choices": [{ "label": "找不到清楚的注册说明", "ok": true, "why": "because 后明确给出原因。" }, { "label": "所有居民都没有网络", "ok": false, "why": "原文没有这样说。" }] }]
+    },
+    {
+      "id": "en.passage.work_and_choice.q3",
+      "kind": "vocab_in_passage",
+      "prompt": "第二段里 maintain 的主语是谁，主张什么？",
+      "choices": [
+        {
+          "label": "Employers；主张真正的问题是习惯，而不是需求",
+          "ok": true,
+          "why": "however 一转，maintain that the real problem is habit。"
+        },
+        {
+          "label": "Critics；主张习惯导致了下降",
+          "ok": false,
+          "why": "Critics attribute … to weaker demand，用的是 attribute，不是 maintain。"
+        },
+        {
+          "label": "Older workers；主张自己不该换工作",
+          "ok": false,
+          "why": "年长员工是被观察对象，不是这个动词的主语。"
+        },
+        {
+          "label": "Young people；主张热情已经过时",
+          "ok": false,
+          "why": "年轻人出现在第一段，不接 maintain。"
+        }
+      ],
+      "variants": [{ "text": "Critics argue that the decline reflects higher costs, while officials maintain that changing habits are mainly responsible.", "prompt": "maintain 的主语和主张是什么？", "choices": [{ "label": "officials；主要原因是习惯变化", "ok": true, "why": "while 后 officials 接 maintain that。" }, { "label": "critics；主要原因是成本下降", "ok": false, "why": "Critics 用 argue，且说 higher costs。" }] }]
+    },
+    {
+      "id": "en.advanced.sentence.qualification",
+      "kind": "attitude",
+      "text": "Training can still open doors. Nevertheless, age remains a significant factor in who gets promoted.",
+      "prompt": "第二句对第一句做了什么？",
+      "error_tag": "论证限定",
+      "choices": [
+        { "label": "承认培训有用，同时限定它不能消除年龄因素", "ok": true, "why": "nevertheless 在肯定之后补充现实限制。" },
+        { "label": "证明培训完全没有用", "ok": false, "why": "第一句仍被保留。" },
+        { "label": "说明年龄只影响培训费用", "ok": false, "why": "原文谈晋升。" }
+      ],
+      "variants": [{ "text": "The programme improved access. Even so, the poorest households remained difficult to reach.", "prompt": "Even so 后面起什么作用？", "choices": [{ "label": "限制前面的积极结论", "ok": true, "why": "有改善，但最困难群体仍未覆盖。" }, { "label": "重复说明所有人都已覆盖", "ok": false, "why": "语义相反。" }] }]
+    },
+    {
+      "id": "en.advanced.sentence.translation",
+      "kind": "translation",
+      "text": "People stay not simply because moving is impossible, but because the information needed to judge a new opportunity is often incomplete.",
+      "prompt": "哪项翻译准确保留了 not simply...but because...？",
+      "error_tag": "英译汉",
+      "choices": [
+        { "label": "人们留下来，不只是因为无法流动，还因为判断新机会所需的信息往往并不完整。", "ok": true, "why": "保留了两层原因和 needed to judge 的修饰关系。" },
+        { "label": "人们留下来的唯一原因是没有新的信息。", "ok": false, "why": "把复合原因缩成唯一原因。" },
+        { "label": "因为流动不可能，所以新机会总是不完整。", "ok": false, "why": "把 information incomplete 误成 opportunity incomplete。" }
+      ],
+      "variants": [{ "text": "The choice is difficult not because the options are few, but because their long-term effects are uncertain.", "prompt": "哪项理解正确？", "choices": [{ "label": "难点不在选择少，而在长期影响不确定", "ok": true, "why": "准确还原 not...but...。" }, { "label": "选项少且长期影响明确", "ok": false, "why": "两处都与原文相反。" }] }]
+    },
+    {
+      "id": "en.advanced.sentence.evidence",
+      "kind": "inference",
+      "text": "A survey found that employees who changed roles reported greater satisfaction. Since the survey asked only people who had remained in their new roles for a year, it tells us less about those who changed roles and quickly left.",
+      "prompt": "作者主要指出哪项证据边界？",
+      "error_tag": "证据边界",
+      "choices": [
+        { "label": "样本遗漏了换岗后很快离开的人", "ok": true, "why": "调查对象限定为在新岗位待满一年者。" },
+        { "label": "所有换岗者都会更满意", "ok": false, "why": "第二句正是在限制这个推广。" },
+        { "label": "调查没有询问任何员工", "ok": false, "why": "调查有样本，只是样本范围受限。" }
+      ],
+      "variants": [{ "text": "The review included only users who completed the course, so it may understate the difficulties faced by those who left early.", "prompt": "这句话提醒什么？", "choices": [{ "label": "只调查完成者可能低估中途退出者的困难", "ok": true, "why": "样本选择影响结论。" }, { "label": "完成者一定夸大困难", "ok": false, "why": "原文谈的是遗漏退出者。" }] }]
+    }
+  ]
+}

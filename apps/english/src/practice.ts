@@ -1,6 +1,6 @@
 // 出题与判定：不碰 DOM，只把内容和进度换算成“这一轮该做什么、这次算不算对”。
 
-import type { Deck, DeckItem, ReviewState, Variant } from "./types";
+import type { DeckItem, ReviewState, Variant } from "./types";
 
 const TRACK_KIND_LABEL: Record<string, string> = {
   vocab: "词",
@@ -18,6 +18,11 @@ const ITEM_KIND_LABEL: Record<string, string> = {
   detail: "细节",
   vocab_in_passage: "文中词",
   guided_writing: "写作",
+  writing_choice: "写作判断",
+  condition: "条件",
+  translation: "英译汉",
+  attitude: "态度",
+  inference: "推断",
 };
 
 export function trackKindLabel(kind: string): string {
@@ -107,7 +112,8 @@ function usesWord(text: string, keyword: string): boolean {
 
 /**
  * 写作只判可机检的两件事：够不够长、有没有用上要求的连接方式。
- * 组织和用词好不好由作者对照 reference 和 checklist 自己看，不进掌握度（ADR 0001 第 5 条）。
+ * 组织和用词好不好由作者对照 reference 和 checklist 自己看；这些形式指标只进入
+ * 练习记录，不决定阶段资格（ADR 0006）。
  */
 export function gradeWriting(item: DeckItem, text: string): WritingGrade {
   const minWords = item.min_words ?? 0;
@@ -159,8 +165,8 @@ export interface TrackStats {
 }
 
 /**
- * 一条轨的现状。达标沿用 Rust 侧按 topic 算出的 mastery——它本来就是每条轨
- * 单独判定（做全 + 近期正确率 ≥ 80%），不是三轨平均，不会用总分掩盖短板。
+ * 一条轨的练习现状。passed 来自独立考核；覆盖率、正确率和到期数只描述练习，
+ * 两者不能互相冒充（ADR 0006）。
  */
 export function trackStats(
   items: DeckItem[],
@@ -212,16 +218,4 @@ export function weakItems(
     const state = review.get(item.id);
     return !state || (state.last_rating !== null && state.last_rating < 3) || isDue(state, nowSeconds);
   });
-}
-
-/**
- * 组一套考核题。写作一次只考一题（写一段就够长了），其余轨最多八题。
- * 优先没做过或上次答错的，凑不满再按原序补——用的是同一份题库，
- * 所以界面上要说清楚这是成套作答、交卷后统一反馈，不是独立的未见题库。
- */
-export function examItems(deck: Deck, review: Map<string, ReviewState>, nowSeconds: number): DeckItem[] {
-  const cap = deck.kind === "writing" ? 1 : Math.min(8, deck.items.length);
-  const priority = weakItems(deck.items, review, nowSeconds);
-  const rest = deck.items.filter((item) => !priority.includes(item));
-  return [...priority, ...rest].slice(0, cap);
 }

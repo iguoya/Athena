@@ -1,0 +1,145 @@
+{
+  "topic_id": "en.beginner.vocab.core",
+  "kind": "vocab",
+  "items": [
+    {
+      "id": "en.beginner.vocab.provide",
+      "word": "provide",
+      "sentence": "The library provides students with a quiet place to study.",
+      "prompt": "provide students with a quiet place 在说什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "为学生提供安静的学习地点", "ok": true, "why": "provide A with B 表示给 A 提供 B。" },
+        { "label": "要求学生保持安静", "ok": false, "why": "句中没有 require；provide 表示提供。" },
+        { "label": "阻止学生进入图书馆", "ok": false, "why": "句意与 provides 相反。" }
+      ],
+      "variants": [
+        {
+          "sentence": "The course provides beginners with several useful examples.",
+          "prompt": "这句话中被提供的内容是什么？",
+          "choices": [
+            { "label": "several useful examples", "ok": true, "why": "provide beginners with 后面的内容就是所提供的东西。" },
+            { "label": "beginners", "ok": false, "why": "beginners 是接受者。" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.affect",
+      "word": "affect",
+      "sentence": "Sleep can affect how well students remember new words.",
+      "prompt": "affect 在这里表示什么？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "影响", "ok": true, "why": "睡眠会影响学生记忆新词的效果。" },
+        { "label": "证明", "ok": false, "why": "prove 才是证明。" },
+        { "label": "避免", "ok": false, "why": "avoid 才是避免。" }
+      ],
+      "variants": [{ "sentence": "Road noise can affect how well people sleep.", "prompt": "affect 在这里表示什么？", "choices": [{ "label": "影响睡眠效果", "ok": true, "why": "表示对睡眠产生影响。" }, { "label": "保证睡得更好", "ok": false, "why": "语义相反。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.result",
+      "word": "result",
+      "sentence": "Regular practice often results in better performance.",
+      "prompt": "result in 在这句话中表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "导致", "ok": true, "why": "result in 后接结果。" },
+        { "label": "起因于", "ok": false, "why": "result from 才表示起因于。" },
+        { "label": "反对", "ok": false, "why": "这里表达因果，不是立场。" }
+      ],
+      "variants": [{ "sentence": "Missing the final bus resulted in an expensive taxi ride.", "prompt": "resulted in 表示什么？", "choices": [{ "label": "导致后来不得不坐昂贵的出租车", "ok": true, "why": "后面是结果。" }, { "label": "起因于出租车太贵", "ok": false, "why": "因果方向反了。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.opportunity",
+      "word": "opportunity",
+      "sentence": "Online courses give workers an opportunity to learn at home.",
+      "prompt": "an opportunity to learn 指什么？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "学习的机会", "ok": true, "why": "opportunity to do 表示做某事的机会。" },
+        { "label": "学习的义务", "ok": false, "why": "obligation 才是义务。" },
+        { "label": "学习的结果", "ok": false, "why": "result 才是结果。" }
+      ],
+      "variants": [{ "sentence": "The trip gave us an opportunity to practise English.", "prompt": "opportunity to practise 指什么？", "choices": [{ "label": "练习英语的机会", "ok": true, "why": "opportunity to do 是做某事的机会。" }, { "label": "练习英语的命令", "ok": false, "why": "不是命令。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.improve",
+      "word": "improve",
+      "sentence": "A short walk can improve your mood after a busy day.",
+      "prompt": "improve your mood 表示什么？",
+      "error_tag": "高频词义",
+      "choices": [
+        { "label": "改善心情", "ok": true, "why": "improve 表示使某事变得更好。" },
+        { "label": "隐藏心情", "ok": false, "why": "hide 才是隐藏。" },
+        { "label": "解释心情", "ok": false, "why": "explain 才是解释。" }
+      ],
+      "variants": [{ "sentence": "Regular feedback helps people improve their work.", "prompt": "improve their work 指什么？", "choices": [{ "label": "把工作做得更好", "ok": true, "why": "仍是改善、提高。" }, { "label": "停止工作", "ok": false, "why": "improve 不表示停止。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.support",
+      "word": "support",
+      "sentence": "The guide supports new users during their first week.",
+      "prompt": "supports new users 更接近哪个意思？",
+      "error_tag": "高频词义",
+      "choices": [
+        { "label": "帮助新用户", "ok": true, "why": "support 在这里表示提供帮助。" },
+        { "label": "测试新用户", "ok": false, "why": "test 才是测试。" },
+        { "label": "替换新用户", "ok": false, "why": "replace 才是替换。" }
+      ],
+      "variants": [{ "sentence": "Good public transport supports local businesses.", "prompt": "support 在这里表示什么？", "choices": [{ "label": "有助于当地商家", "ok": true, "why": "交通为商家提供有利条件。" }, { "label": "反对当地商家", "ok": false, "why": "oppose 才是反对。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.require",
+      "word": "require",
+      "sentence": "This job requires basic computer skills.",
+      "prompt": "requires basic computer skills 表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "这份工作需要基本电脑技能", "ok": true, "why": "require 表示需要、要求具备。" },
+        { "label": "这份工作教授电脑技能", "ok": false, "why": "teach 才是教授。" },
+        { "label": "这份工作禁止使用电脑", "ok": false, "why": "语义相反。" }
+      ],
+      "variants": [{ "sentence": "The form requires your name and phone number.", "prompt": "requires 在这里表示什么？", "choices": [{ "label": "表格要求填写这些信息", "ok": true, "why": "required information 是必须提供的信息。" }, { "label": "表格删除这些信息", "ok": false, "why": "remove 才是删除。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.allow",
+      "word": "allow",
+      "sentence": "The new timetable allows students to leave earlier on Friday.",
+      "prompt": "allows students to leave earlier 表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "允许学生更早离开", "ok": true, "why": "allow someone to do 是允许某人做某事。" },
+        { "label": "迫使学生更早离开", "ok": false, "why": "force 才是迫使。" },
+        { "label": "建议学生迟到", "ok": false, "why": "句中没有 suggest 或 arrive late。" }
+      ],
+      "variants": [{ "sentence": "Online booking allows customers to choose a time.", "prompt": "allow 的作用是什么？", "choices": [{ "label": "让顾客能够选择时间", "ok": true, "why": "表示给予可能或许可。" }, { "label": "替顾客决定时间", "ok": false, "why": "动作主体仍是 customers。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.available",
+      "word": "available",
+      "sentence": "A doctor is available until six this evening.",
+      "prompt": "is available until six 表示什么？",
+      "error_tag": "高频词义",
+      "choices": [
+        { "label": "医生六点前可以接诊", "ok": true, "why": "available 表示有空或可获得。" },
+        { "label": "医生六点前一定离职", "ok": false, "why": "available 不表示离职。" },
+        { "label": "医生六点前无法联系", "ok": false, "why": "语义相反。" }
+      ],
+      "variants": [{ "sentence": "The report is available online for free.", "prompt": "available online 表示什么？", "choices": [{ "label": "可以在网上获得", "ok": true, "why": "这里是可获取。" }, { "label": "只能在线购买", "ok": false, "why": "for free 说明无需购买。" }] }]
+    },
+    {
+      "id": "en.beginner.vocab.reduce",
+      "word": "reduce",
+      "sentence": "Turning off unused lights can reduce energy costs.",
+      "prompt": "reduce energy costs 表示什么？",
+      "error_tag": "高频词义",
+      "choices": [
+        { "label": "降低能源费用", "ok": true, "why": "reduce 表示使数量减少。" },
+        { "label": "记录能源费用", "ok": false, "why": "record 才是记录。" },
+        { "label": "平均分配能源费用", "ok": false, "why": "句中没有分配。" }
+      ],
+      "variants": [{ "sentence": "A clear list reduces the chance of forgetting something.", "prompt": "reduces the chance 表示什么？", "choices": [{ "label": "降低发生的可能", "ok": true, "why": "reduce 仍表示减少。" }, { "label": "保证一定发生", "ok": false, "why": "语义相反。" }] }]
+    }
+  ]
+}

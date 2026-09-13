@@ -1,0 +1,68 @@
+{
+  "assessment_id": "en.assessment.beginner.vocab.v1",
+  "topic_id": "en.beginner.vocab.core",
+  "kind": "vocab",
+  "title": "初级单词独立考核",
+  "items": [
+    {
+      "id": "en.assessment.beginner.vocab.provide",
+      "word": "provide",
+      "sentence": "The hotel provides free breakfast for every guest.",
+      "prompt": "provides free breakfast 表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "酒店为每位客人提供免费早餐", "ok": true, "why": "provide something for someone 表示为某人提供某物。" },
+        { "label": "酒店要求每位客人购买早餐", "ok": false, "why": "句中没有 require 或 buy。" },
+        { "label": "每位客人为酒店准备早餐", "ok": false, "why": "动作方向相反。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.vocab.affect",
+      "word": "affect",
+      "sentence": "Heavy rain may affect the evening train service.",
+      "prompt": "affect 在句中是什么意思？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "影响", "ok": true, "why": "大雨可能影响晚间列车服务。" },
+        { "label": "取消", "ok": false, "why": "affect 不等于 cancel。" },
+        { "label": "改善", "ok": false, "why": "improve 才是改善。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.vocab.result",
+      "word": "result",
+      "sentence": "A small mistake can result in a long delay.",
+      "prompt": "result in 在这里表示什么？",
+      "error_tag": "基础搭配",
+      "choices": [
+        { "label": "导致长时间延误", "ok": true, "why": "result in 后面接产生的结果。" },
+        { "label": "起因于长时间延误", "ok": false, "why": "result from 才表示起因于。" },
+        { "label": "避免长时间延误", "ok": false, "why": "语义相反。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.vocab.opportunity",
+      "word": "opportunity",
+      "sentence": "The volunteer job is a good opportunity to meet local people.",
+      "prompt": "a good opportunity to meet local people 指什么？",
+      "error_tag": "词义辨析",
+      "choices": [
+        { "label": "认识当地人的好机会", "ok": true, "why": "opportunity to do 表示做某事的机会。" },
+        { "label": "必须认识当地人的规定", "ok": false, "why": "opportunity 不是 obligation。" },
+        { "label": "当地人提供的工作结果", "ok": false, "why": "句子没有表达这个关系。" }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.vocab.support",
+      "word": "support",
+      "sentence": "Clear instructions support people who are using the service for the first time.",
+      "prompt": "support 在句中更接近哪个意思？",
+      "error_tag": "高频词义",
+      "choices": [
+        { "label": "帮助", "ok": true, "why": "清楚的说明帮助首次使用服务的人。" },
+        { "label": "怀疑", "ok": false, "why": "doubt 才是怀疑。" },
+        { "label": "替代", "ok": false, "why": "replace 才是替代。" }
+      ]
+    }
+  ]
+}

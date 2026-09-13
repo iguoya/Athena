@@ -29,7 +29,8 @@
           "ok": false,
           "why": "这类 which 几乎总有名词先行词。"
         }
-      ]
+      ],
+      "variants": [{ "text": "The committee preferred local training to an imported system, which it considered too expensive.", "prompt": "which 指什么？主句选择了什么？", "choices": [{ "label": "which 指 imported system；主句选择本地培训", "ok": true, "why": "最近的先行词是 system，prefer A to B 选择 A。" }, { "label": "which 指 local training；主句选择进口系统", "ok": false, "why": "指代和 prefer 方向都反了。" }] }]
     },
     {
       "id": "en.sentence.s2",
@@ -58,7 +59,8 @@
           "ok": false,
           "why": "support is substantial = 支持的分量够。"
         }
-      ]
+      ],
+      "variants": [{ "text": "The service remains difficult to use, although its designers maintain that the instructions are clear.", "prompt": "although 前后各说什么？", "choices": [{ "label": "服务仍难用；设计者却坚持说明很清楚", "ok": true, "why": "主句与让步从句立场相反。" }, { "label": "设计者承认说明不清楚", "ok": false, "why": "maintain that the instructions are clear 是坚持认为清楚。" }] }]
     },
     {
       "id": "en.sentence.s3",
@@ -87,7 +89,8 @@
           "ok": false,
           "why": "when we look at older workers 已经限定对象。"
         }
-      ]
+      ],
+      "variants": [{ "text": "A new pattern appears among younger users: they are more willing to share tools.", "prompt": "they 指谁？冒号后作用是什么？", "choices": [{ "label": "younger users；具体展开新趋势", "ok": true, "why": "复数指代和冒号展开都清楚。" }, { "label": "tools；否定前面的趋势", "ok": false, "why": "tools 不能 be willing，冒号也不是否定。" }] }]
     },
     {
       "id": "en.sentence.s4",
@@ -116,7 +119,34 @@
           "ok": false,
           "why": "who gets promoted 是职场晋升，不是医疗。"
         }
-      ]
+      ],
+      "variants": [{ "text": "Cost remains a serious concern; nevertheless, the long-term benefits may justify the investment.", "prompt": "这句最终主张什么？", "choices": [{ "label": "成本值得担心，但长期收益可能使投入合理", "ok": true, "why": "nevertheless 后是主要推进。" }, { "label": "长期收益已经被成本完全否定", "ok": false, "why": "语义相反。" }] }]
+    },
+    {
+      "id": "en.intermediate.sentence.translation",
+      "kind": "translation",
+      "text": "People are more likely to accept a change when they understand not only what it will achieve but also what it will require from them.",
+      "prompt": "哪项翻译准确保留了 not only...but also...？",
+      "error_tag": "英译汉",
+      "choices": [
+        { "label": "当人们不仅明白改变会带来什么，也明白自己需要为此付出什么时，他们更可能接受改变。", "ok": true, "why": "条件、并列信息和可能性都保留了。" },
+        { "label": "人们只要知道改变的结果，就一定会接受它。", "ok": false, "why": "遗漏付出，也把 more likely 绝对化。" },
+        { "label": "改变要求人们接受他们不理解的结果。", "ok": false, "why": "句法关系被颠倒。" }
+      ],
+      "variants": [{ "text": "The plan matters not only because it saves money but also because it improves access.", "prompt": "哪项理解正确？", "choices": [{ "label": "计划既省钱，也改善获得服务的机会", "ok": true, "why": "两个 because 并列给理由。" }, { "label": "计划改善机会，却不省钱", "ok": false, "why": "原文两个理由都成立。" }] }]
+    },
+    {
+      "id": "en.intermediate.sentence.short_text",
+      "kind": "main_idea",
+      "text": "A neighbourhood café began offering a quiet table for people who needed to complete short online forms. The table brought in few direct sales. It did, however, make older residents more willing to visit, and many later returned with friends. A service can create value in ways that are not immediately visible.",
+      "prompt": "最后一句概括了什么？",
+      "error_tag": "篇章主旨",
+      "choices": [
+        { "label": "一项服务的价值可能通过后续信任和回访体现", "ok": true, "why": "安静桌本身销售少，却带来访问意愿和后续顾客。" },
+        { "label": "咖啡馆应该停止帮助老年人", "ok": false, "why": "短文展示的是积极间接效果。" },
+        { "label": "线上表格是咖啡馆唯一收入来源", "ok": false, "why": "原文说 direct sales 很少。" }
+      ],
+      "variants": [{ "text": "A free repair lesson earned no fees, but customers who attended became more confident buying tools from the shop.", "prompt": "这句话说明什么？", "choices": [{ "label": "免费服务可能带来间接的长期价值", "ok": true, "why": "无直接收费，却增强购买信心。" }, { "label": "免费服务一定让商店亏损", "ok": false, "why": "后半句给出潜在收益。" }] }]
     }
   ]
 }

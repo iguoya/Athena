@@ -1,0 +1,68 @@
+{
+  "assessment_id": "en.assessment.intermediate.vocab.v1",
+  "topic_id": "en.intermediate.vocab.context_senses",
+  "kind": "vocab",
+  "title": "中级单词独立考核",
+  "items": [
+    {
+      "id": "en.assessment.intermediate.vocab.maintain",
+      "word": "maintain",
+      "sentence": "The report maintains that shorter meetings lead to better decisions.",
+      "prompt": "maintains that 在这里表示什么？",
+      "error_tag": "语境义项",
+      "choices": [
+        { "label": "报告主张……", "ok": true, "why": "maintain that 在论证中表示坚持某一看法。" },
+        { "label": "报告维修……", "ok": false, "why": "维修义不接 that 从句。" },
+        { "label": "报告取消……", "ok": false, "why": "maintain 不表示取消。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.vocab.access",
+      "word": "access",
+      "sentence": "Remote lessons give rural students access to courses that their schools cannot offer.",
+      "prompt": "give students access to courses 表示什么？",
+      "error_tag": "抽象搭配",
+      "choices": [
+        { "label": "让学生有机会使用或学习这些课程", "ok": true, "why": "access to 表示获得、使用或接触的机会。" },
+        { "label": "让学生设计这些课程", "ok": false, "why": "句中没有 design。" },
+        { "label": "让学生进入学校建筑", "ok": false, "why": "这里的 access 是抽象机会，不是物理入口。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.vocab.attribute",
+      "word": "attribute",
+      "sentence": "Researchers attribute the improvement partly to better sleep.",
+      "prompt": "这句话建立了什么关系？",
+      "error_tag": "抽象搭配",
+      "choices": [
+        { "label": "研究者把改善部分归因于更好的睡眠", "ok": true, "why": "attribute A to B 表示把 A 归因于 B。" },
+        { "label": "研究者把睡眠归类为一种改善", "ok": false, "why": "原因和结果颠倒。" },
+        { "label": "研究者否认睡眠有作用", "ok": false, "why": "partly to 明确承认其作用。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.vocab.substantial",
+      "word": "substantial",
+      "sentence": "Replacing the old lights produced a substantial reduction in energy use.",
+      "prompt": "substantial reduction 指什么？",
+      "error_tag": "语境义项",
+      "choices": [
+        { "label": "幅度相当大的减少", "ok": true, "why": "在数量变化语境中 substantial 表示规模大。" },
+        { "label": "只有外表变化的减少", "ok": false, "why": "句中强调实际幅度。" },
+        { "label": "由固体造成的减少", "ok": false, "why": "误用了 substantial 的字面联想。" }
+      ]
+    },
+    {
+      "id": "en.assessment.intermediate.vocab.nevertheless",
+      "word": "nevertheless",
+      "sentence": "The first plan was cheaper. Nevertheless, the team chose the safer one.",
+      "prompt": "nevertheless 表达什么逻辑？",
+      "error_tag": "逻辑词",
+      "choices": [
+        { "label": "承认前项后转出相反选择", "ok": true, "why": "便宜本可成为选择理由，但团队仍选择更安全的方案。" },
+        { "label": "后一项是前一项的直接结果", "ok": false, "why": "这里是让步转折，不是 therefore。" },
+        { "label": "后一项只是重复前一项", "ok": false, "why": "两项评价和选择并不相同。" }
+      ]
+    }
+  ]
+}
