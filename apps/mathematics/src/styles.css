@@ -239,3 +239,64 @@ canvas.dragging { cursor: grabbing; }
 .ov-aha .ov-tag { color: var(--eigen); }
 .ov-why { font-size: 17px; color: var(--muted); margin: 0; }
 .ov-why b { color: var(--ink); font-weight: 600; }
+
+/* ── 通过标记（ADR 0011 第 5b 节）──────────────────
+   标绿只用于真的判过对错并且答对的内容；
+   「走过」是中性色，因为 overview 层不判对错，标绿会变成虚假激励。 */
+.topic .seen { color: var(--muted); }
+.topic.passed { border-left-color: var(--ok); }
+.d-group.passed { border-color: var(--ok); }
+.d-group.passed h3 { color: var(--ok); }
+.d-group h3 .tick {
+  display: inline-block; margin-right: 8px; color: var(--ok); font-weight: 700;
+}
+
+/* ── 进度可见（ADR 0011 第 1 节：消除「不知还要多久」）── */
+.bar {
+  height: 5px; background: var(--panel-2); border-radius: 999px;
+  overflow: hidden; margin: 12px 0 6px;
+}
+.bar span { display: block; height: 100%; background: var(--ok); border-radius: 999px; }
+.bar-txt { font-size: 14px; color: var(--muted); }
+.chapter-title { display: flex; align-items: baseline; justify-content: space-between; }
+.ch-prog { font-size: 13px; font-variant-numeric: tabular-nums; opacity: .75; }
+.ch-prog.full { color: var(--ok); opacity: 1; }
+
+.where { font-size: 15px; color: var(--muted); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+
+/* 先修：走过的回指已有的成功，没走过的只提示不阻拦（ADR 0013 第 1 节） */
+.req { font-size: 17px; padding: 10px 14px; border-radius: 8px; margin: 0 0 20px; }
+.req.ok { color: var(--ok); background: var(--panel); border: 1px solid var(--ok); }
+.req.todo { color: var(--muted); background: var(--panel); border: 1px solid var(--line); }
+.jump, .req .jump {
+  font: inherit; font-size: inherit; color: var(--accent); background: none;
+  border: 0; border-bottom: 1px solid var(--accent); padding: 0; cursor: pointer;
+}
+
+/* 下一步一眼可见：回目录找是摩擦，摩擦处就是分心的入口 */
+.stepper {
+  display: flex; justify-content: space-between; gap: 16px; margin-top: 30px;
+}
+.step {
+  font: inherit; text-align: left; cursor: pointer; padding: 14px 18px; max-width: 46%;
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px;
+}
+.step:hover { border-color: var(--accent); }
+.step.next { text-align: right; }
+.step-k { display: block; font-size: 14px; color: var(--muted); margin-bottom: 3px; }
+.step-t { display: block; font-size: 18px; font-weight: 600; }
+.step-end { font-size: 17px; color: var(--ok); align-self: center; }
+.kbd-hint { margin-top: 12px; font-size: 14px; color: var(--muted); text-align: center; }
+
+/* ── 里程碑与具体肯定（ADR 0011 第 4 节）────────── */
+.milestone {
+  margin-top: 30px; padding: 20px 24px; border-radius: 10px;
+  background: var(--panel); border: 1px solid var(--ok);
+}
+.milestone h3 { margin: 0 0 8px; font-size: 22px; color: var(--ok); }
+.milestone p { margin: 0 0 8px; font-size: 18px; }
+.milestone p:last-child { margin: 0; }
+.milestone.big { border-width: 2px; }
+.milestone .next-pass { color: var(--muted); font-size: 17px; }
+.d-traps { margin-top: 10px; font-size: 16px; color: var(--muted); }

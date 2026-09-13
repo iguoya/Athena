@@ -103,6 +103,7 @@ async function boot() {
     return;
   }
   render();
+  bindKeys();
 }
 
 /**
@@ -131,35 +132,59 @@ function render() {
 
 function renderSide() {
   const side = document.getElementById("side")!;
+  // 进度可见是消除「不知还要多久」这种无效挫折的手段（ADR 0011 第 1 节），
+  // 显示的是走过多少节这个事实，不是分数。
+  const all = flatTopics();
+  const walked = all.filter((t) => topicSeen(t.id)).length;
+  const pct = all.length ? Math.round((walked / all.length) * 100) : 0;
   const parts: string[] = [
-    `<div class="brand"><h1>${curriculum.title}</h1>
-     <div class="pass">第一遍 · 走通为准</div></div>`,
+    `<div class="brand">
+       <h1>${curriculum.title}</h1>
+       <div class="pass">第一遍 · 走通为准</div>
+       <div class="bar"><span style="width:${pct}%"></span></div>
+       <div class="bar-txt">${all.length} 节走过 ${walked} 节</div>
+     </div>`,
   ];
 
   // 诊断入口排在最前：先知道哪些要补，再决定路径（ADR 0015 第 4 节）
-  const doneGroups = diagnostics.groups.filter((g) =>
-    g.items.every((it) => diagAnswers.has(key(g.id, it.id))),
+  const total = diagnostics.groups.length;
+  const passed = diagnostics.groups.filter(
+    (g) =>
+      g.items.every((it) => diagAnswers.has(key(g.id, it.id))) &&
+      g.items.every((it) => diagAnswers.get(key(g.id, it.id))!.correct),
   ).length;
   parts.push(`<div class="chapter-title">开始之前</div>`);
   parts.push(
     `<button class="topic${view.kind === "diag" ? " active" : ""}" data-diag="1">
        ${diagnostics.title}
-       <span class="meta">六组 · 已答完 ${doneGroups} 组</span>
+       <span class="meta">${
+         passed ? `<span class="dot">✓ ${passed} / ${total} 组已通过</span>` : `共 ${total} 组`
+       }</span>
      </button>`,
   );
 
   for (const ch of curriculum.chapters) {
-    parts.push(`<div class="chapter-title">${ch.title}</div>`);
+    const w = ch.topics.filter((t) => topicSeen(t.id)).length;
+    parts.push(
+      `<div class="chapter-title">${ch.title}
+         <span class="ch-prog${w === ch.topics.length ? " full" : ""}">${w}/${ch.topics.length}</span>
+       </div>`,
+    );
     for (const t of ch.topics) {
       const seen = progress.get(key(t.id, "overview"));
+      // 走过与答对必须是两种记号：overview 层不判对错，标绿会变成虚假激励
+      // （ADR 0011 第 5b 节、ADR 0014 第 2 节的流畅性错觉）
+      const mark = topicPassed(t)
+        ? ' · <span class="dot">✓ 答对</span>'
+        : seen
+          ? ' · <span class="seen">走过</span>'
+          : "";
       parts.push(
         `<button class="topic${
           view.kind === "topic" && t.id === view.id ? " active" : ""
-        }" data-id="${t.id}">
+        }${topicPassed(t) ? " passed" : ""}" data-id="${t.id}">
            ${t.title}
-           <span class="meta">难度 ${t.difficulty} · ${scopeLabel(t.scope)}${
-             seen ? ' · <span class="dot">看过</span>' : ""
-           }</span>
+           <span class="meta">难度 ${t.difficulty} · ${scopeLabel(t.scope)}${mark}</span>
          </button>`,
       );
     }
@@ -173,6 +198,77 @@ function renderSide() {
       document.getElementById("main")!.scrollTop = 0;
     }),
   );
+}
+
+/** 课表里的全部知识点，按拓扑序（JSON 的书写顺序即拓扑序，由 lint 保证可解） */
+function flatTopics(): Topic[] {
+  return curriculum.chapters.flatMap((c) => c.topics);
+}
+
+function topicSeen(id: string): boolean {
+  return progress.has(key(id, "overview"));
+}
+
+/** 这一节有判对错的题，且全都答对了。没有这类题的节永远返回 false——不凭「看过」标绿。 */
+function topicPassed(t: Topic): boolean {
+  const judged = (t.experiments ?? []).filter((e) => e.answer);
+  if (!judged.length) return false;
+  return judged.every((e) => predictions.get(key(t.id, e.id))?.correct === true);
+}
+
+/**
+ * 里程碑。学习天然缺少「做完了」的时刻，要主动造出来——
+ * 这是成年自学者最受用的一种激励（ADR 0011 第 4 节第 5 项）。
+ * 内容全部来自实际进度，不是撒花动画。
+ */
+function milestoneHtml(t: Topic, all: Topic[]): string {
+  const ch = curriculum.chapters.find((c) => c.topics.some((x) => x.id === t.id));
+  if (!ch) return "";
+  const isChapterEnd = ch.topics[ch.topics.length - 1].id === t.id;
+  const chapterDone = ch.topics.every((x) => topicSeen(x.id));
+  const allDone = all.every((x) => topicSeen(x.id));
+
+  if (allDone && all[all.length - 1].id === t.id) {
+    const passed = all.filter(topicPassed).length;
+    return `<div class="milestone big">
+        <h3>第一遍走完了</h3>
+        <p>${all.length} 节全部走过${passed ? `，其中 ${passed} 节的判断题也答对了` : ""}。
+        这一遍的产物是一张全局地图：矩阵是把平面搬一次，行列式是面积伸缩比，
+        秩是压到几维，特征向量是没被转走的方向，二次型是那个图形自己的轴。</p>
+        <p class="next-pass">下一遍（机制与边界）再回到同样的顺序，
+        每一节都会第二次见面——那时你已经知道它后面连着什么。</p>
+      </div>`;
+  }
+  if (isChapterEnd && chapterDone) {
+    return `<div class="milestone">
+        <h3>「${ch.title}」走完了</h3>
+        <p>${ch.summary ?? ""}这一章的 ${ch.topics.length} 节都走过了。</p>
+      </div>`;
+  }
+  return "";
+}
+
+function goTo(id: string) {
+  view = { kind: "topic", id };
+  render();
+  document.getElementById("main")!.scrollTop = 0;
+}
+
+/** ← → 翻页：少一次找鼠标、找目录，就少一个走神的缺口（ADR 0011 第 6 节） */
+function bindKeys() {
+  document.addEventListener("keydown", (e) => {
+    if (view.kind !== "topic") return;
+    const tag = (e.target as HTMLElement)?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    const all = flatTopics();
+    const at = all.findIndex((x) => x.id === (view as { id: string }).id);
+    const to = e.key === "ArrowLeft" ? all[at - 1] : all[at + 1];
+    if (to) {
+      e.preventDefault();
+      goTo(to.id);
+    }
+  });
 }
 
 function scopeLabel(scope: string): string {
@@ -303,10 +399,34 @@ function renderTopic(id: string) {
       </div>`
       : "";
 
+  // 先乐观记下这一节已走过，下面的里程碑判断才能把它算进去
+  progress.set(key(t.id, "overview"), "seen");
+
+  // 当前在整条线的哪一步——「不知还要多久」的解药（ADR 0011 第 1 节）
+  const all = flatTopics();
+  const at = all.findIndex((x) => x.id === t.id);
+  const prevTopic = at > 0 ? all[at - 1] : undefined;
+  const nextTopic = at >= 0 && at < all.length - 1 ? all[at + 1] : undefined;
+
+  // 先修状态：走过的明确回指，没走过的只提示不阻拦（ADR 0013 第 1 节「回指已有的成功」）
+  const reqs = t.requires.map((r) => ({ t: findTopic(r), done: topicSeen(r) }));
+  const reqHtml = reqs.length
+    ? reqs.every((r) => r.done)
+      ? `<div class="req ok">它依赖的内容你都走过了：${reqs
+          .map((r) => r.t?.title ?? "")
+          .join("、")}</div>`
+      : `<div class="req todo">建议先看：${reqs
+          .filter((r) => !r.done)
+          .map((r) => `<button class="jump" data-id="${r.t?.id}">${r.t?.title ?? ""}</button>`)
+          .join("、")}</div>`
+    : "";
+
   main.innerHTML = `
     <div class="page">
+      <div class="where">第 ${at + 1} 节 / 共 ${all.length} 节</div>
       <div class="coord">${coord}</div>
       <h2 class="title">${t.title}</h2>
+      ${reqHtml}
       ${t.hook ? `<div class="hook"><p>${t.hook.text}</p></div>` : ""}
       ${overviewHtml}
       ${widgetHtml}
@@ -322,26 +442,40 @@ function renderTopic(id: string) {
           : ""
       }
       <div class="foot">
-        <span>难度 ${t.difficulty} · 掌握目标 ${t.mastery_goal} · 先修：${
-          t.requires.length ? t.requires.map(shortName).join("、") : "无"
-        }</span>
+        <span>难度 ${t.difficulty} · 掌握目标 ${t.mastery_goal}</span>
         <span>${t.ideas?.length ? "思想：" + t.ideas.join(" · ") : ""}</span>
       </div>
+
+      ${milestoneHtml(t, all)}
+
+      <nav class="stepper">
+        ${
+          prevTopic
+            ? `<button class="step prev" data-id="${prevTopic.id}">
+                 <span class="step-k">← 上一节</span><span class="step-t">${prevTopic.title}</span>
+               </button>`
+            : "<span></span>"
+        }
+        ${
+          nextTopic
+            ? `<button class="step next" data-id="${nextTopic.id}">
+                 <span class="step-k">下一节 →</span><span class="step-t">${nextTopic.title}</span>
+               </button>`
+            : `<span class="step-end">这是最后一节。第一遍走完了。</span>`
+        }
+      </nav>
+      <div class="kbd-hint">也可以按 ← → 翻页</div>
     </div>`;
+
+  // 读完一节，下一步必须一眼可见。回侧边栏找是摩擦，摩擦处就是分心的入口。
+  main.querySelectorAll<HTMLButtonElement>(".step, .jump").forEach((b) =>
+    b.addEventListener("click", () => goTo(b.dataset.id!)),
+  );
 
   if (t.widget === "transform2d") mountCanvas();
   if (predict) bindPredict(t, predict);
-  void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" }).then(
-    () => {
-      progress.set(key(t.id, "overview"), "seen");
-      renderSide();
-    },
-  );
-}
-
-/** 先修显示成标题而非 id，省得读一串点号 */
-function shortName(id: string): string {
-  return findTopic(id)?.title ?? id;
+  void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
+  renderSide();
 }
 
 function renderPredict(e: Experiment, prev?: PredictionRow): string {

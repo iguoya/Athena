@@ -86,8 +86,21 @@ export function renderDiagnostics(
           let feedback = "";
           if (a) {
             const chosen = it.options.find((o) => o.text === a.picked);
-            if (chosen?.ok && chosen.note) {
-              feedback = `<div class="d-fb ok"><b>这一点后面会用到。</b>${esc(chosen.note)}</div>`;
+            if (chosen?.ok) {
+              // 通用表扬（「答对了」）廉价且可疑；说清你避开了哪些具体误解才有分量
+              const traps = it.options
+                .filter((o) => !o.ok && o.misread)
+                .map((o) => o.misread!.split("。")[0])
+                .join("；");
+              feedback = `<div class="d-fb ok">
+                  ${chosen.note ? `<b>这一点后面会用到。</b>${esc(chosen.note)}` : ""}
+                  ${
+                    traps
+                      ? `<div class="d-traps">另外两个选项是这么想的：${esc(traps)}。
+                         你没往那边走。</div>`
+                      : ""
+                  }
+                </div>`;
             } else if (chosen?.misread) {
               const right = it.options.find((o) => o.ok);
               feedback = `<div class="d-fb re"><b>这个选项通常是这么想的：</b>${esc(
@@ -104,9 +117,10 @@ export function renderDiagnostics(
         })
         .join("");
 
-      return `<section class="d-group${complete ? " done" : ""}">
+      const passed = complete && wrong === 0;
+      return `<section class="d-group${complete ? " done" : ""}${passed ? " passed" : ""}">
           <header>
-            <h3>${esc(g.title)}</h3>
+            <h3>${passed ? '<span class="tick">✓</span>' : ""}${esc(g.title)}</h3>
             ${
               advice
                 ? `<span class="d-advice ${adviceClass(advice)}">${esc(advice)}</span>`
