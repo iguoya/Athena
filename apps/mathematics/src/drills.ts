@@ -56,6 +56,27 @@ export function numberOk(item: DrillItem, raw: string): boolean {
   return Math.abs(v - (item.answer ?? NaN)) <= (item.tol ?? 1e-6);
 }
 
+/**
+ * 用题目 id 做种子的确定性打乱：同一题每次顺序一致（答完重绘不会跳动），
+ * 不同题的正确答案落在不同位置（不能按位置蒙）。
+ * 运行时随机会让已答的选项在重绘时跳位，所以这里要的是确定而非随机。
+ */
+function seededOrder<T>(items: T[], seed: string): T[] {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    const j = Math.abs(h) % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: string): string {
   const done = st?.correct === true;
   const wrong = st?.correct === false;
@@ -68,7 +89,7 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
            <button type="button" data-drill="${it.id}" data-ns="${ns}"${done ? " disabled" : ""}>对一下</button>
          </div>`
       : `<div class="dr-opts">
-           ${(it.options ?? [])
+           ${seededOrder(it.options ?? [], ns + it.id)
              .map(
                (o) =>
                  `<button type="button" data-drill="${it.id}" data-ns="${ns}"

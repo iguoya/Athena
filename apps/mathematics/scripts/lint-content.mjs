@@ -26,6 +26,8 @@ for (const d of ["content"]) {
 }
 
 let hits = 0;
+/** 练习题位置分布的统计文字，最后随通过信息一起打印 */
+let drillStat = "";
 for (const f of files) {
   const text = readFileSync(join(root, f), "utf8");
   const lines = text.split("\n");
@@ -76,6 +78,60 @@ for (const [k, n] of slots) {
 // ── 课表结构校验（ADR 0008 后果一节要求的构建期检查）──
 const cur = JSON.parse(readFileSync(join(root, "content/curriculum.json"), "utf8"));
 const topics = cur.chapters.flatMap((c) => c.topics);
+
+// ── 练习题：正确答案位置不得过于集中（同诊断题那条教训）──
+// 检查的是**渲染之后**的顺序：drills.ts 按题目 id 做确定性打乱，
+// 所以源文件里怎么排不重要，用户看到的那个顺序才重要。这里复刻同一个算法。
+function seededOrder(items, seed) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    const j = Math.abs(h) % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+{
+  const slots = new Map();
+  let total = 0;
+  const sets = [];
+  for (const ch of cur.chapters) {
+    for (const t of ch.topics) if (t.drills) sets.push([t.drills, t.id]);
+    if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
+  }
+  for (const [set, ns] of sets) {
+    for (const it of set.items) {
+      if (!it.options) continue;
+      const k = seededOrder(it.options, ns + it.id).findIndex((o) => o.ok);
+      if (k < 0) {
+        console.error(`练习题：${it.id} 没有标出正确选项`);
+        hits++;
+        continue;
+      }
+      slots.set(k, (slots.get(k) ?? 0) + 1);
+      total++;
+    }
+  }
+  for (const [k, n] of slots) {
+    if (total >= 6 && n > total * 0.5) {
+      console.error(
+        `练习题：渲染后有 ${n}/${total} 道的正确答案落在第 ${k + 1} 位（超过一半），` +
+          `会让人能按位置蒙`,
+      );
+      hits++;
+    }
+  }
+  drillStat = `练习 ${total} 题，渲染后位置分布 ${[...slots.entries()]
+    .sort()
+    .map(([k, n]) => `第${k + 1}位×${n}`)
+    .join(" ")}`;
+}
 
 // ── 脚本动画：讲稿与关键帧必须对得上 ──
 // 念「面积变成零」而矩阵行列式不是 0，是很隐蔽的内容 bug：
@@ -195,5 +251,6 @@ if (hits) {
 console.log(
   `内容检查通过：${files.length} 个文件无禁用表达；` +
     `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）；` +
-    `诊断 ${total} 题，正确答案位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}。`,
+    `诊断 ${total} 题，位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}；` +
+    drillStat + "。",
 );
