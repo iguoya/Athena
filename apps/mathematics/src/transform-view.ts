@@ -74,9 +74,12 @@ export class TransformView {
   private dragging: "i" | "j" | "t" | null = null;
   private target: [number, number] | null = null;
   private animToken = 0;
-  private readonly S: number;
+  /** 每格像素。缩放会改它，所以不能是 readonly */
+  private S: number;
+  private readonly baseS: number;
   private readonly ox: number;
   private readonly oy: number;
+  private zoom = 1;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -87,11 +90,14 @@ export class TransformView {
     if (!ctx) throw new Error("画布不可用");
     this.ctx = ctx;
     // 一格大约占画布短边的 1/6.5，箭头和线头跟着格子走，避免缩成针尖
-    this.S = Math.min(canvas.width, canvas.height) / 6.5;
+    this.baseS = Math.min(canvas.width, canvas.height) / 6.5;
+    this.S = this.baseS;
     this.ox = canvas.width / 2;
     this.oy = canvas.height / 2;
     this.target = options.target ?? null;
     this.bindDrag();
+    // 目标点可能落在默认视野之外——那是最该看的东西，先缩到看得见
+    if (this.target) this.fitPoints([this.target]);
   }
 
   /** 解 Ax = b：两根箭头各走几步能到 b */
@@ -130,6 +136,32 @@ export class TransformView {
     return n > EPS
       ? { kind: "many", x, y, dirX: nx / n, dirY: ny / n }
       : { kind: "many", x, y, dirX: d, dirY: -c };
+  }
+
+  /** 当前缩放倍率（1 = 每格约占画布高度的十一分之一） */
+  get zoomLevel(): number {
+    return this.zoom;
+  }
+
+  setZoom(z: number) {
+    this.zoom = Math.min(4, Math.max(0.18, z));
+    this.S = this.baseS * this.zoom;
+    this.draw();
+  }
+
+  /**
+   * 自动缩到能看见这些点为止。目标点落在画布外是很隐蔽的坑——
+   * 图看着一切正常，只是那个最该看的点不在画面里。
+   */
+  fitPoints(pts: Array<[number, number]>, margin = 1.25) {
+    const all = [...pts, [this.m.a, this.m.c], [this.m.b, this.m.d], [0, 0]] as Array<
+      [number, number]
+    >;
+    const maxX = Math.max(...all.map(([x]) => Math.abs(x)), 1);
+    const maxY = Math.max(...all.map(([, y]) => Math.abs(y)), 1);
+    const needX = this.ox / (maxX * margin);
+    const needY = this.oy / (maxY * margin);
+    this.setZoom(Math.min(needX, needY) / this.baseS);
   }
 
   setTarget(t: [number, number] | null) {
@@ -241,6 +273,15 @@ export class TransformView {
       this.draw();
     });
 
+    this.canvas.addEventListener(
+      "wheel",
+      (ev) => {
+        ev.preventDefault();
+        this.setZoom(this.zoom * (ev.deltaY > 0 ? 0.9 : 1.1));
+      },
+      { passive: false },
+    );
+
     const stop = () => {
       this.dragging = null;
       this.canvas.classList.remove("dragging");
@@ -335,6 +376,44 @@ export class TransformView {
       ctx.lineTo(q[0], q[1]);
       ctx.stroke();
       ctx.restore();
+    }
+
+    // 唯一解为什么唯一：从 b 沿橙方向退回蓝所在的直线，只可能退到一个点。
+    // 把这两条平行辅助线画出来，「只有一个交点」就是看得见的（而不是一句断言）。
+    if (res?.kind === "one") {
+      const L = 20;
+      const mid: [number, number] = [a * res.x, c * res.x];
+      ctx.save();
+      ctx.setLineDash([7, 7]);
+      ctx.lineWidth = this.S * 0.018;
+      ctx.globalAlpha = 0.75;
+      // 过 b 平行于橙箭头
+      ctx.strokeStyle = this.css("--basis-j");
+      let p = this.toPx(bx - L * b, by - L * d);
+      let q = this.toPx(bx + L * b, by + L * d);
+      ctx.beginPath();
+      ctx.moveTo(p[0], p[1]);
+      ctx.lineTo(q[0], q[1]);
+      ctx.stroke();
+      // 蓝箭头所在的整条直线
+      ctx.strokeStyle = this.css("--basis-i");
+      p = this.toPx(-L * a, -L * c);
+      q = this.toPx(L * a, L * c);
+      ctx.beginPath();
+      ctx.moveTo(p[0], p[1]);
+      ctx.lineTo(q[0], q[1]);
+      ctx.stroke();
+      ctx.restore();
+
+      // 交点：蓝要走几步，到这里就定死了
+      const [mx, my] = this.toPx(mid[0], mid[1]);
+      ctx.beginPath();
+      ctx.arc(mx, my, this.S * 0.07, 0, Math.PI * 2);
+      ctx.fillStyle = this.css("--bg");
+      ctx.fill();
+      ctx.strokeStyle = this.css("--ink");
+      ctx.lineWidth = this.S * 0.025;
+      ctx.stroke();
     }
 
     // 走法路径：原点 → 走 x 步蓝箭头 → 再走 y 步橙箭头 → 到 b

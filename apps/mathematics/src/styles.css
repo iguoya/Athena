@@ -432,3 +432,25 @@ canvas.dragging { cursor: grabbing; }
 }
 .walk-voice button:hover { border-color: var(--accent); color: var(--accent); }
 .walk-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* 缩放控件：滚轮之外给可见的按钮，目标点跑到视野外时还能一键看全 */
+.zoombar {
+  display: flex; align-items: center; gap: 8px; margin-top: 12px;
+  border-top: 1px solid var(--line); padding-top: 12px;
+  font-size: 15px; color: var(--muted); flex-wrap: wrap;
+}
+.zoombar button {
+  font: inherit; font-size: 16px; min-width: 34px; padding: 3px 10px; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
+}
+.zoombar button:hover { border-color: var(--accent); color: var(--accent); }
+.zoom-hint { font-size: 13px; opacity: .8; }
+
+/* 朗读设置：侧边栏常驻，任何一节都能就地调 */
+.voice-box { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 6px; }
+.voice-box .walk-voice {
+  display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+  padding: 4px 20px 8px; margin-left: 0;
+}
+.voice-box label { justify-content: space-between; }
+.voice-box select { flex: 1; margin-left: 8px; }

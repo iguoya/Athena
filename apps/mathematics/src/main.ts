@@ -251,8 +251,12 @@ function renderSide() {
     }
   }
 
+  // 语音设置是全局偏好，不该只在带动画的节才露面
+  if (speechAvailable()) parts.push(voiceControls());
+
   side.innerHTML = parts.join("");
 
+  bindVoiceControls();
   side.querySelectorAll<HTMLButtonElement>(".topic").forEach((b) =>
     b.addEventListener("click", () => {
       stopGuide();
@@ -505,7 +509,6 @@ function renderTopic(id: string) {
          <div class="walk-bar">
            <button type="button" class="walk-play" id="walk-play">${walk.title}</button>
            <button type="button" class="walk-stop" id="walk-stop">停</button>
-           ${speechAvailable() ? voiceControls() : ""}
          </div>
          <p class="walk-line" id="walk-line">点上面按钮，图会动、会出声。也可以不听，直接拖。</p>
        </div>`
@@ -549,6 +552,13 @@ function renderTopic(id: string) {
             <button data-m="1,1,0,1">切变</button>
             <button data-m="-1,0,0,1">镜像</button>
             <button data-m="1,2,2,4">压扁</button>
+          </div>
+          <div class="zoombar">
+            <span class="k">缩放</span>
+            <button type="button" id="z-out" title="缩小">−</button>
+            <button type="button" id="z-in" title="放大">＋</button>
+            <button type="button" id="z-fit">看全</button>
+            <span class="zoom-hint">也可以在图上滚鼠标滚轮</span>
           </div>
         </div>
       </div>`
@@ -705,7 +715,9 @@ function voiceControls(): string {
     [1.25, "快"],
     [1.45, "更快"],
   ];
-  return `<span class="walk-voice">
+  return `<div class="voice-box">
+    <div class="chapter-title">朗读</div>
+    <div class="walk-voice">
       <label>语速
         <select id="walk-rate">
           ${rates
@@ -727,7 +739,26 @@ function voiceControls(): string {
         </select>
       </label>
       <button type="button" id="walk-try">试听</button>
-    </span>`;
+    </div>
+  </div>`;
+}
+
+/** 侧边栏每次重绘都要重新绑定 */
+function bindVoiceControls() {
+  const rateSel = document.getElementById("walk-rate") as HTMLSelectElement | null;
+  const nameSel = document.getElementById("walk-vname") as HTMLSelectElement | null;
+  const tryBtn = document.getElementById("walk-try");
+  rateSel?.addEventListener("change", () => {
+    setRate(Number(rateSel.value));
+    void speak("语速调成这样。");
+  });
+  nameSel?.addEventListener("change", () => {
+    setVoiceName(nameSel.value);
+    void speak("换成我了。两根箭头一旦指向同一条线，整张格子就塌成一条线。");
+  });
+  tryBtn?.addEventListener("click", () => {
+    void speak("两根箭头一旦指向同一条线，整张格子就塌成一条线。");
+  });
 }
 
 function bindWalkthrough(t: Topic) {
@@ -736,18 +767,6 @@ function bindWalkthrough(t: Topic) {
   play?.addEventListener("click", () => {
     void runWalkthrough(t);
   });
-  const rateSel = document.getElementById("walk-rate") as HTMLSelectElement | null;
-  const nameSel = document.getElementById("walk-vname") as HTMLSelectElement | null;
-  const tryBtn = document.getElementById("walk-try");
-  rateSel?.addEventListener("change", () => setRate(Number(rateSel.value)));
-  nameSel?.addEventListener("change", () => {
-    setVoiceName(nameSel.value);
-    void speak("这是我的声音，语速是这样。");
-  });
-  tryBtn?.addEventListener("click", () => {
-    void speak("两个箭头一旦指向同一条线，整张格子就塌成一条线。");
-  });
-
   stop?.addEventListener("click", () => {
     stopGuide();
     const line = document.getElementById("walk-line");
@@ -769,7 +788,10 @@ async function runWalkthrough(t: Topic) {
   for (const step of lines) {
     if (token !== guideToken) return;
     // 一帧可以只挪目标点、不动矩阵——解方程组那一节要靠它演「无解 → 无穷多解」
-    if (step.target) view.setTarget(step.target);
+    if (step.target) {
+      view.setTarget(step.target);
+      view.fitPoints([step.target]);
+    }
     const [a, b, c, d] = step.m;
     lineEl.textContent = step.say;
     lineEl.classList.add("is-on");
@@ -828,6 +850,13 @@ function mountCanvas(
   } else {
     v.draw();
   }
+  const zin = document.getElementById("z-in");
+  const zout = document.getElementById("z-out");
+  const zfit = document.getElementById("z-fit");
+  zin?.addEventListener("click", () => v.setZoom(v.zoomLevel * 1.25));
+  zout?.addEventListener("click", () => v.setZoom(v.zoomLevel * 0.8));
+  zfit?.addEventListener("click", () => v.fitPoints(target ? [target] : []));
+
   (window as unknown as { __view: TransformView }).__view = v;
 }
 
