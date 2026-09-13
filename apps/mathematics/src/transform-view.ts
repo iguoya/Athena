@@ -343,11 +343,12 @@ export class TransformView {
     ctx.lineWidth = shaft;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(this.ox, this.oy);
+    const [o0x, o0y] = this.toPx(0, 0);
+    ctx.moveTo(o0x, o0y);
     ctx.lineTo(px, py);
     ctx.stroke();
 
-    const ang = Math.atan2(py - this.oy, px - this.ox);
+    const ang = Math.atan2(py - o0y, px - o0x);
     ctx.beginPath();
     ctx.moveTo(px, py);
     ctx.lineTo(px - head * Math.cos(ang - 0.38), py - head * Math.sin(ang - 0.38));
@@ -582,10 +583,11 @@ export class TransformView {
     ctx.strokeStyle = this.css("--line");
     ctx.lineWidth = Math.max(3, this.S * 0.02);
     ctx.beginPath();
-    ctx.moveTo(0, this.oy);
-    ctx.lineTo(W, this.oy);
-    ctx.moveTo(this.ox, 0);
-    ctx.lineTo(this.ox, H);
+    const [axX, axY] = this.toPx(0, 0);
+    ctx.moveTo(0, axY);
+    ctx.lineTo(W, axY);
+    ctx.moveTo(axX, 0);
+    ctx.lineTo(axX, H);
     ctx.stroke();
 
     this.drawReach();
