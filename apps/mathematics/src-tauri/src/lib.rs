@@ -112,7 +112,7 @@ fn ensure_schema(path: &PathBuf) -> Result<(), String> {
 fn get_app_info(state: tauri::State<'_, Mutex<AppState>>) -> Result<AppInfo, String> {
     let s = state.lock().unwrap();
     Ok(AppInfo {
-        title: "数学自学".into(),
+        title: "数学学习".into(),
         subject: "math2".into(),
         content_root: s.content_root.display().to_string(),
         store_path: s.store_path.display().to_string(),
@@ -126,6 +126,15 @@ fn load_curriculum(state: tauri::State<'_, Mutex<AppState>>) -> Result<serde_jso
     let text = fs::read_to_string(&path)
         .map_err(|e| format!("读取课表失败 {}：{e}", path.display()))?;
     serde_json::from_str(&text).map_err(|e| format!("课表 JSON 解析失败：{e}"))
+}
+
+#[tauri::command]
+fn load_diagnostics(state: tauri::State<'_, Mutex<AppState>>) -> Result<serde_json::Value, String> {
+    let s = state.lock().unwrap();
+    let path = s.content_root.join("content/diagnostics.json");
+    let text = fs::read_to_string(&path)
+        .map_err(|e| format!("读取诊断题失败 {}：{e}", path.display()))?;
+    serde_json::from_str(&text).map_err(|e| format!("诊断题 JSON 解析失败：{e}"))
 }
 
 #[tauri::command]
@@ -232,6 +241,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_app_info,
             load_curriculum,
+            load_diagnostics,
             save_progress,
             load_all_progress,
             save_prediction,

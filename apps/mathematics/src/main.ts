@@ -1,8 +1,14 @@
 // Athena Mathematics — 前端入口。
-// 内容驱动：界面按 content/curriculum.json 渲染，不为新增知识点复制整页。
+// 内容驱动：界面按 content/ 下的 JSON 渲染，不为新增知识点或诊断项复制整页。
 
 import { invoke } from "@tauri-apps/api/core";
 import { TransformView, readoutOf, type Mat2, type Readout } from "./transform-view";
+import {
+  renderDiagnostics,
+  adviceOf,
+  type Diagnostics,
+  type Answer,
+} from "./diagnostic";
 
 // ── 课表类型（只声明用到的字段）──────────────────
 interface TextbookRef {
@@ -18,8 +24,6 @@ interface Experiment {
   prompt: string;
   answer?: string;
   why?: string;
-  prepares?: string;
-  status?: string;
 }
 interface Topic {
   id: string;
@@ -27,7 +31,6 @@ interface Topic {
   scope: string;
   difficulty: number;
   mastery_goal: string;
-  idea_leverage?: string;
   ideas?: string[];
   requires: string[];
   textbook_ref: TextbookRef;
@@ -39,13 +42,10 @@ interface Topic {
 interface Chapter {
   id: string;
   title: string;
-  summary: string;
   topics: Topic[];
 }
 interface Curriculum {
   title: string;
-  subject: string;
-  tagline: string;
   chapters: Chapter[];
 }
 
@@ -63,33 +63,45 @@ interface PredictionRow {
 
 const app = document.getElementById("app")!;
 let curriculum: Curriculum;
-let progress = new Map<string, string>();
-let predictions = new Map<string, PredictionRow>();
-let activeId = "";
+let diagnostics: Diagnostics;
+const progress = new Map<string, string>();
+const predictions = new Map<string, PredictionRow>();
+const diagAnswers = new Map<string, Answer>();
 
-const key = (t: string, d: string) => `${t}::${d}`;
+type View = { kind: "diag" } | { kind: "topic"; id: string };
+let view: View = { kind: "diag" };
+
+const key = (a: string, b: string) => `${a}::${b}`;
 
 async function boot() {
   try {
     curriculum = await invoke<Curriculum>("load_curriculum");
+    diagnostics = await invoke<Diagnostics>("load_diagnostics");
     for (const p of await invoke<ProgressRow[]>("load_all_progress")) {
       progress.set(key(p.topic_id, p.depth), p.status);
     }
     for (const p of await invoke<PredictionRow[]>("load_all_predictions")) {
       predictions.set(key(p.topic_id, p.exp_id), p);
+      // 诊断作答与知识点预测共用 predictions 表，按 topic_id 前缀区分
+      if (p.topic_id.startsWith("math.prereq.")) {
+        diagAnswers.set(key(p.topic_id, p.exp_id), {
+          picked: p.picked,
+          correct: p.correct,
+        });
+      }
     }
   } catch (e) {
-    app.innerHTML = `<div class="err">课表加载失败：${String(e)}</div>`;
+    app.innerHTML = `<div class="err">内容加载失败：${String(e)}</div>`;
     return;
   }
-  activeId = curriculum.chapters[0]?.topics[0]?.id ?? "";
   render();
 }
 
 function render() {
   app.innerHTML = `<nav id="side"></nav><section id="main"></section>`;
   renderSide();
-  renderTopic();
+  if (view.kind === "diag") renderDiagPage();
+  else renderTopic(view.id);
 }
 
 function renderSide() {
@@ -98,12 +110,27 @@ function renderSide() {
     `<div class="brand"><h1>${curriculum.title}</h1>
      <div class="pass">第一遍 · 走通为准</div></div>`,
   ];
+
+  // 诊断入口排在最前：先知道哪些要补，再决定路径（ADR 0015 第 4 节）
+  const doneGroups = diagnostics.groups.filter((g) =>
+    g.items.every((it) => diagAnswers.has(key(g.id, it.id))),
+  ).length;
+  parts.push(`<div class="chapter-title">开始之前</div>`);
+  parts.push(
+    `<button class="topic${view.kind === "diag" ? " active" : ""}" data-diag="1">
+       ${diagnostics.title}
+       <span class="meta">六组 · 已答完 ${doneGroups} 组</span>
+     </button>`,
+  );
+
   for (const ch of curriculum.chapters) {
     parts.push(`<div class="chapter-title">${ch.title}</div>`);
     for (const t of ch.topics) {
-      const seen = progress.get(key(t.id, "overview")) || progress.get(key(t.id, "full"));
+      const seen = progress.get(key(t.id, "overview"));
       parts.push(
-        `<button class="topic${t.id === activeId ? " active" : ""}" data-id="${t.id}">
+        `<button class="topic${
+          view.kind === "topic" && t.id === view.id ? " active" : ""
+        }" data-id="${t.id}">
            ${t.title}
            <span class="meta">难度 ${t.difficulty} · ${scopeLabel(t.scope)}${
              seen ? ' · <span class="dot">看过</span>' : ""
@@ -113,9 +140,10 @@ function renderSide() {
     }
   }
   side.innerHTML = parts.join("");
+
   side.querySelectorAll<HTMLButtonElement>(".topic").forEach((b) =>
     b.addEventListener("click", () => {
-      activeId = b.dataset.id!;
+      view = b.dataset.diag ? { kind: "diag" } : { kind: "topic", id: b.dataset.id! };
       render();
       document.getElementById("main")!.scrollTop = 0;
     }),
@@ -125,9 +153,49 @@ function renderSide() {
 function scopeLabel(scope: string): string {
   if (scope === "math2") return "考纲内";
   if (scope === "beyond") return "拓展";
+  if (scope === "prereq") return "前置";
   return scope;
 }
 
+// ── 诊断页 ─────────────────────────────────────
+function renderDiagPage() {
+  const main = document.getElementById("main")!;
+  main.innerHTML = renderDiagnostics(diagnostics, diagAnswers);
+
+  main.querySelectorAll<HTMLButtonElement>(".d-opt").forEach((b) =>
+    b.addEventListener("click", () => {
+      const g = b.dataset.g!;
+      const i = b.dataset.i!;
+      const picked = b.dataset.text!;
+      const correct = b.dataset.ok === "1";
+
+      diagAnswers.set(key(g, i), { picked, correct });
+      void invoke("save_prediction", { topicId: g, expId: i, picked, correct });
+
+      // 一组答完就把结论写进 progress：只存建议，不存分数（ADR 0015 第 4 节）
+      const group = diagnostics.groups.find((x) => x.id === g)!;
+      if (group.items.every((it) => diagAnswers.has(key(g, it.id)))) {
+        const wrong = group.items.filter(
+          (it) => !diagAnswers.get(key(g, it.id))!.correct,
+        ).length;
+        const advice = adviceOf(diagnostics.advice_rule, wrong);
+        progress.set(key(g, "diagnostic"), advice);
+        void invoke("save_progress", {
+          topicId: g,
+          depth: "diagnostic",
+          status: advice,
+        });
+      }
+
+      const y = main.scrollTop;
+      renderSide();
+      renderDiagPage();
+      main.scrollTop = y;
+    }),
+  );
+}
+
+// ── 知识点页 ────────────────────────────────────
 function findTopic(id: string): Topic | undefined {
   for (const ch of curriculum.chapters) {
     const t = ch.topics.find((x) => x.id === id);
@@ -136,9 +204,9 @@ function findTopic(id: string): Topic | undefined {
   return undefined;
 }
 
-function renderTopic() {
+function renderTopic(id: string) {
   const main = document.getElementById("main")!;
-  const t = findTopic(activeId);
+  const t = findTopic(id);
   if (!t) {
     main.innerHTML = `<div class="err">没有找到这个知识点。</div>`;
     return;
@@ -256,29 +324,29 @@ function mountCanvas() {
     ids.map((k) => [k, document.getElementById(`m-${k}`) as HTMLInputElement]),
   ) as Record<(typeof ids)[number], HTMLInputElement>;
 
-  const view = new TransformView(cv, (m, r) => {
+  const v = new TransformView(cv, (m, r) => {
     for (const k of ids) inputs[k].value = String(+m[k].toFixed(2));
     showReadout(r);
   });
 
   for (const k of ids) {
     inputs[k].addEventListener("input", () => {
-      const m = { ...view.matrix };
-      const v = parseFloat(inputs[k].value);
-      if (!Number.isNaN(v)) {
-        m[k] = v;
-        view.set(m);
+      const m = { ...v.matrix };
+      const val = parseFloat(inputs[k].value);
+      if (!Number.isNaN(val)) {
+        m[k] = val;
+        v.set(m);
       }
     });
   }
   document.querySelectorAll<HTMLButtonElement>(".presets button").forEach((b) =>
     b.addEventListener("click", () => {
       const [a, bb, c, d] = b.dataset.m!.split(",").map(Number);
-      view.set({ a, b: bb, c, d });
+      v.set({ a, b: bb, c, d });
     }),
   );
-  view.draw();
-  (window as unknown as { __view: TransformView }).__view = view;
+  v.draw();
+  (window as unknown as { __view: TransformView }).__view = v;
 }
 
 function showReadout(r: Readout) {

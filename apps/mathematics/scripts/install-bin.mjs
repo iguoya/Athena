@@ -66,7 +66,7 @@ else
 fi
 
 if [[ ! -x "$TARGET" ]]; then
-  echo "数学自学应用尚未构建：$TARGET" >&2
+  echo "数学学习应用尚未构建：$TARGET" >&2
   echo "请在 $ROOT 执行 npm run build:app" >&2
   exit 1
 fi

@@ -172,3 +172,50 @@ canvas.dragging { cursor: grabbing; }
   font-size: 15px; color: var(--muted); display: flex; justify-content: space-between; gap: 16px;
 }
 .err { color: var(--warn); padding: 40px; font-size: 19px; }
+
+/* ── 前置诊断（ADR 0015）──────────────────────── */
+.d-progress { font-size: 16px; color: var(--muted); margin: 0 0 22px; }
+.d-progress b { color: var(--ink); }
+
+.d-group {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 20px 22px; margin-bottom: 20px;
+}
+.d-group.done { border-color: var(--line); }
+.d-group header { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.d-group h3 { margin: 0; font-size: 22px; }
+.d-blocks { font-size: 16px; color: var(--muted); margin: 6px 0 18px; }
+
+/* 建议是三档判断，不是分数（ADR 0015 第 4 节） */
+.d-advice { font-size: 15px; padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+.d-advice.pending { color: var(--muted); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.d-advice.skip   { color: var(--ok);   border: 1px solid var(--ok); }
+.d-advice.glance { color: var(--muted); border: 1px solid var(--line); }
+.d-advice.study  { color: var(--accent); border: 1px solid var(--accent); }
+
+.d-item { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 16px; }
+.d-stem { font-size: 19px; margin-bottom: 12px; }
+.d-no {
+  display: inline-block; min-width: 26px; height: 26px; line-height: 26px; text-align: center;
+  background: var(--panel-2); border-radius: 999px; font-size: 15px; color: var(--muted);
+  margin-right: 10px;
+}
+.d-opts { display: flex; flex-direction: column; gap: 8px; }
+.d-opt {
+  font: inherit; font-size: 18px; text-align: left; padding: 10px 14px; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
+}
+.d-opt:hover { border-color: var(--accent); }
+.d-opt.picked { box-shadow: inset 0 0 0 2px var(--line); }
+.d-opt.picked.right { border-color: var(--ok); box-shadow: inset 0 0 0 2px var(--ok); }
+.d-opt.picked.wrong { border-color: var(--warn); box-shadow: inset 0 0 0 2px var(--warn); }
+
+.d-fb {
+  margin-top: 12px; font-size: 17px; line-height: 1.6; padding: 12px 14px;
+  border-radius: 8px; background: var(--bg); border: 1px solid var(--line);
+}
+.d-fb.ok { border-color: var(--ok); }
+.d-fb.re { border-color: var(--line); }
+.d-fb b { display: block; margin-bottom: 4px; }
+.d-fb.ok b { color: var(--ok); }
+.d-right { margin-top: 8px; color: var(--muted); }
