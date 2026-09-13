@@ -84,6 +84,7 @@ async function boot() {
   try {
     curriculum = await invoke<Curriculum>("load_curriculum");
     diagnostics = await invoke<Diagnostics>("load_diagnostics");
+    shuffleOptions(diagnostics);
     for (const p of await invoke<ProgressRow[]>("load_all_progress")) {
       progress.set(key(p.topic_id, p.depth), p.status);
     }
@@ -102,6 +103,23 @@ async function boot() {
     return;
   }
   render();
+}
+
+/**
+ * 每次打开都重排选项顺序。
+ * 正确答案固定在某个位置会让人按位置选，诊断结果就分不清真懂还是蒙对——
+ * 这正是诊断要避免的。已保存的作答按选项文字匹配，打乱不影响回显。
+ */
+function shuffleOptions(d: Diagnostics) {
+  for (const g of d.groups) {
+    for (const it of g.items) {
+      const o = it.options;
+      for (let i = o.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [o[i], o[j]] = [o[j], o[i]];
+      }
+    }
+  }
 }
 
 function render() {

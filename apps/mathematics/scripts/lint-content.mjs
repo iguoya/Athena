@@ -46,6 +46,33 @@ for (const f of files) {
   });
 }
 
+// ── 诊断题：正确答案的位置不得过于集中 ──
+// 全部落在同一位置时，人会按位置选，诊断就分不清真懂还是蒙对。
+const diag = JSON.parse(readFileSync(join(root, "content/diagnostics.json"), "utf8"));
+const slots = new Map();
+let total = 0;
+for (const g of diag.groups) {
+  for (const it of g.items) {
+    const k = it.options.findIndex((o) => o.ok);
+    if (k < 0) {
+      console.error(`诊断题：${g.id}/${it.id} 没有标出正确选项`);
+      hits++;
+      continue;
+    }
+    slots.set(k, (slots.get(k) ?? 0) + 1);
+    total++;
+  }
+}
+for (const [k, n] of slots) {
+  if (n > total * 0.5) {
+    console.error(
+      `诊断题：${n}/${total} 道题的正确答案都在第 ${k + 1} 个位置（超过一半）。` +
+        `固定位置会让人按位置选，诊断分不清真懂还是蒙对。`,
+    );
+    hits++;
+  }
+}
+
 // ── 课表结构校验（ADR 0008 后果一节要求的构建期检查）──
 const cur = JSON.parse(readFileSync(join(root, "content/curriculum.json"), "utf8"));
 const topics = cur.chapters.flatMap((c) => c.topics);
@@ -90,5 +117,6 @@ if (hits) {
 }
 console.log(
   `内容检查通过：${files.length} 个文件无禁用表达；` +
-    `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）。`,
+    `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）；` +
+    `诊断 ${total} 题，正确答案位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}。`,
 );
