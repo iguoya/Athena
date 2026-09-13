@@ -149,10 +149,20 @@
 ```sh
 cd apps/mathematics
 npm install
-npm run tauri:dev      # 日常开发
-npm run build:app      # 产出 bin 入口可用的本地二进制
+npm run tauri:dev      # 日常开发：改前端秒级热更新，这是默认手段
+npm run build:app      # 只在要交付可运行的包时才跑（release 编译两三分钟）
 ./bin/athena-math
 ```
+
+**验证改动一律走 `tauri:dev`。** 本应用绝大多数改动在前端（TS / CSS /
+`content/*.json`），热更新即时可见；只有动了 `src-tauri/` 才需要重编 Rust。
+把「跑一次 release 构建、装进 `bin/`、再打开」放进改一次看一次的循环里，
+每次要付两三分钟，是不可接受的（主仓库记忆 `dev-loop-not-release-build`）。
+`build:app` 只在这两种时候用：要交付一个能双击运行的包，或要经主程序图谱拉起。
+
+构建会自动把产物同步到 `/Applications/athena-math.app`（若那里已装过一份），
+避免出现「更新了 bin、而使用者双击的是 /Applications 里的旧版」——这个分叉
+极难察觉，表现为改动看起来完全没生效。
 
 环境变量 `ATHENA_MATH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
