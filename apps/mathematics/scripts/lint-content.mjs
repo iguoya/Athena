@@ -77,6 +77,40 @@ for (const [k, n] of slots) {
 const cur = JSON.parse(readFileSync(join(root, "content/curriculum.json"), "utf8"));
 const topics = cur.chapters.flatMap((c) => c.topics);
 
+// ── 脚本动画：讲稿与关键帧必须对得上 ──
+// 念「面积变成零」而矩阵行列式不是 0，是很隐蔽的内容 bug：
+// 动画演的和语音念的不是一回事，而两边单看都正常。
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    for (const [i, ln] of (t.walkthrough?.lines ?? []).entries()) {
+      const m = ln.m;
+      if (!Array.isArray(m) || m.length !== 4) {
+        console.error(`动画 ${t.id} 第 ${i + 1} 帧：m 必须是四个数`);
+        hits++;
+        continue;
+      }
+      const det = m[0] * m[3] - m[1] * m[2];
+      // 「只要面积不是零」是条件句，不是在说这一帧压扁了——否定式要排除，
+      // 否则误报会让人整个忽略这项检查（同 ADR 0014 第 5b 节的教训）。
+      const negated = /不是零|不为零|非零|不等于零|不是 0|不为 0/.test(ln.say);
+      const saysFlat =
+        /压扁|塌成|什么都不剩/.test(ln.say) ||
+        (/读数是零|面积.{0,4}零/.test(ln.say) && !negated);
+      if (saysFlat && Math.abs(det) > 1e-9) {
+        console.error(
+          `动画 ${t.id} 第 ${i + 1} 帧：讲稿说压扁/归零，但 det=${det}——演的和念的对不上`,
+        );
+        hits++;
+      }
+      if (/回到原样/.test(ln.say) && m.join() !== "1,0,0,1") {
+        console.error(`动画 ${t.id} 第 ${i + 1} 帧：讲稿说回到原样，但 m=[${m}]`);
+        hits++;
+      }
+    }
+  }
+}
+
+
 // ── 正文重点：标的应是语义关键，不是形式强调 ──
 // 判据：把标出来的片段单独抽出来读，能不能拿到这一节的核心？
 // 以指代词或连词开头的片段（「是同一件事」「这三种情况」）离开上下文就没有内容。

@@ -15,7 +15,7 @@ const EXCLUDE = /grandma|grandpa/i;
  * 系统 API 不给性别字段，这个次序按已知音色人工排定，听感因人而异——
  * 所以界面上给了试听和切换，不锁死。
  */
-const PREFER = ["Flo", "Sandy", "Shelley", "Meijia", "Tingting", "Sinji", "Eddy", "Reed", "Rocko"];
+const PREFER = ["Sandy", "Shelley", "Flo", "Meijia", "Tingting", "Sinji", "Eddy", "Reed", "Rocko"];
 
 export interface VoiceInfo {
   name: string;
@@ -38,8 +38,8 @@ function save(key: string, value: string) {
 }
 
 export function getRate(): number {
-  const n = Number(load(RATE_KEY, "1.25"));
-  return Number.isFinite(n) && n > 0 ? n : 1.25;
+  const n = Number(load(RATE_KEY, "1.1"));
+  return Number.isFinite(n) && n > 0 ? n : 1.1;
 }
 export function setRate(r: number) {
   save(RATE_KEY, String(r));

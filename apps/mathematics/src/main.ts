@@ -697,10 +697,11 @@ function voiceControls(): string {
   const cur = getVoiceName();
   const rate = getRate();
   const rates: Array<[number, string]> = [
+    [0.9, "慢"],
     [1.0, "常速"],
+    [1.1, "稍快"],
     [1.25, "快"],
     [1.45, "更快"],
-    [1.7, "最快"],
   ];
   return `<span class="walk-voice">
       <label>语速
