@@ -20,3 +20,4 @@
 | [0013](0013-writing-serves-confidence-patience-focus.md) | 编写学习内容时时刻服务信心、耐心、专心 | 已接受（含可 lint 的禁用词表） |
 | [0014](0014-exercises-verify-and-teach.md) | 习题是检验器，也是学习动作本身；梯度按变式与渐隐设计 | 已接受 |
 | [0015](0015-starting-point-and-prerequisites.md) | 显式声明学习者起点；前置基础独立成层并按需诊断 | 已接受（修正 0007 的 scope 与 REFERENCES 第六节） |
+| [0016](0016-building-it-is-studying-it.md) | 编写这个软件本身就是学习动作；但要划清内容与工程的界 | 已接受（撤销 REFERENCES 第六节的「净支出」判断） |
