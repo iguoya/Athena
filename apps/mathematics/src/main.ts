@@ -69,7 +69,9 @@ interface Topic {
     m: number[];
     focus?: string | null;
     caption?: string;
-    readout?: "arrows" | "full";
+    readout?: "arrows" | "full" | "solve";
+    /** 解方程组那一节：画布上放一个可拖的目标点 b */
+    target?: [number, number];
   };
   overview?: {
     asks: string;
@@ -80,7 +82,7 @@ interface Topic {
   };
   walkthrough?: {
     title: string;
-    lines: Array<{ say: string; m: number[] }>;
+    lines: Array<{ say: string; m: number[]; target?: [number, number] }>;
   };
   experiments?: Experiment[];
 }
@@ -635,7 +637,7 @@ function renderTopic(id: string) {
     document.getElementById("main")!.scrollTop = 0;
   });
 
-  if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full");
+  if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full", pre?.target);
   if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
   void invoke("save_progress", { topicId: t.id, depth: "overview", status: "seen" });
@@ -766,6 +768,8 @@ async function runWalkthrough(t: Topic) {
   document.getElementById("s-widget")?.scrollIntoView({ behavior: "smooth", block: "center" });
   for (const step of lines) {
     if (token !== guideToken) return;
+    // 一帧可以只挪目标点、不动矩阵——解方程组那一节要靠它演「无解 → 无穷多解」
+    if (step.target) view.setTarget(step.target);
     const [a, b, c, d] = step.m;
     lineEl.textContent = step.say;
     lineEl.classList.add("is-on");
@@ -780,7 +784,11 @@ async function runWalkthrough(t: Topic) {
   lineEl.classList.remove("is-on");
 }
 
-function mountCanvas(preset?: number[], readout: "arrows" | "full" = "full") {
+function mountCanvas(
+  preset?: number[],
+  readout: "arrows" | "full" | "solve" = "full",
+  target?: [number, number],
+) {
   const cv = document.getElementById("cv") as HTMLCanvasElement;
   const ids = ["a", "b", "c", "d"] as const;
   const inputs = Object.fromEntries(
@@ -793,7 +801,7 @@ function mountCanvas(preset?: number[], readout: "arrows" | "full" = "full") {
       for (const k of ids) inputs[k].value = String(+m[k].toFixed(2));
       showReadout(m, r, readout);
     },
-    { showEigen: readout === "full" },
+    { showEigen: readout === "full", target },
   );
 
   cv.addEventListener("pointerdown", () => stopGuide());
@@ -827,7 +835,30 @@ function fmtPair(x: number, y: number): string {
   return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
 }
 
-function showReadout(m: Mat2, r: Readout, mode: "arrows" | "full") {
+function showSolveReadout() {
+  const v = (window as unknown as { __view?: TransformView }).__view;
+  const el = document.getElementById("r-solve");
+  if (!v || !el) return;
+  const res = v.reach();
+  if (!res) return;
+  const f = (n: number) => (Math.abs(n) < 1e-9 ? "0" : (+n.toFixed(2)).toString());
+  if (res.kind === "none") {
+    el.className = "v alert";
+    el.textContent = "走不到";
+  } else if (res.kind === "many") {
+    el.className = "v";
+    el.textContent = "有无穷多种走法";
+  } else {
+    el.className = "v";
+    el.textContent = `蓝 ${f(res.x)} 步 + 橙 ${f(res.y)} 步`;
+  }
+}
+
+function showReadout(m: Mat2, r: Readout, mode: "arrows" | "full" | "solve") {
+  if (mode === "solve") {
+    showSolveReadout();
+    return;
+  }
   const set = (id: string, text: string, alert = false) => {
     const el = document.getElementById(id);
     if (!el) return;

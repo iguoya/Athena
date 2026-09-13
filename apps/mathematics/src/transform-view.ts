@@ -54,12 +54,25 @@ export function readoutOf(m: Mat2): Readout {
 export interface TransformViewOptions {
   /** 第一章先不画特征方向，避免还没讲的绿虚线抢视线 */
   showEigen?: boolean;
+  /**
+   * 解方程组那一节用：画一个可拖的目标点 b，并把「沿蓝箭头走几步、
+   * 再沿橙箭头走几步才能到它」这条路径画出来。Ax = b 的三种情形
+   * （唯一解 / 无解 / 无穷多解）因此变成看得见的事。
+   */
+  target?: [number, number];
 }
+
+/** 到达目标点的走法：x 步蓝箭头 + y 步橙箭头 */
+export type Reach =
+  | { kind: "one"; x: number; y: number }
+  | { kind: "none" }
+  | { kind: "many"; x: number; y: number; dirX: number; dirY: number };
 
 export class TransformView {
   private ctx: CanvasRenderingContext2D;
   private m: Mat2 = { a: 1, b: 0, c: 0, d: 1 };
-  private dragging: "i" | "j" | null = null;
+  private dragging: "i" | "j" | "t" | null = null;
+  private target: [number, number] | null = null;
   private animToken = 0;
   private readonly S: number;
   private readonly ox: number;
@@ -77,7 +90,51 @@ export class TransformView {
     this.S = Math.min(canvas.width, canvas.height) / 6.5;
     this.ox = canvas.width / 2;
     this.oy = canvas.height / 2;
+    this.target = options.target ?? null;
     this.bindDrag();
+  }
+
+  /** 解 Ax = b：两根箭头各走几步能到 b */
+  reach(): Reach | null {
+    if (!this.target) return null;
+    const { a, b, c, d } = this.m;
+    const [bx, by] = this.target;
+    const det = a * d - b * c;
+    if (Math.abs(det) > EPS) {
+      // 可逆：走法唯一
+      return { kind: "one", x: (d * bx - b * by) / det, y: (-c * bx + a * by) / det };
+    }
+    // 压扁了：两根箭头共线。目标点在那条线上才够得着，且走法有无穷多种
+    const cx = Math.abs(a) > EPS || Math.abs(c) > EPS ? [a, c] : [b, d];
+    if (Math.abs(cx[0]) < EPS && Math.abs(cx[1]) < EPS) {
+      // 两根箭头都塌到原点，只有 b 也在原点才够得着
+      return Math.hypot(bx, by) < EPS
+        ? { kind: "many", x: 0, y: 0, dirX: 1, dirY: 0 }
+        : { kind: "none" };
+    }
+    // b 是否与列方向共线
+    if (Math.abs(cx[0] * by - cx[1] * bx) > 1e-6) return { kind: "none" };
+    // 找一组特解；零空间方向是 (b, -a) 或 (d, -c)
+    let x = 0;
+    let y = 0;
+    if (Math.abs(a) > EPS || Math.abs(c) > EPS) {
+      const t = Math.abs(a) > EPS ? bx / a : by / c;
+      x = t;
+    } else {
+      const t = Math.abs(b) > EPS ? bx / b : by / d;
+      y = t;
+    }
+    const nx = b;
+    const ny = -a;
+    const n = Math.hypot(nx, ny);
+    return n > EPS
+      ? { kind: "many", x, y, dirX: nx / n, dirY: ny / n }
+      : { kind: "many", x, y, dirX: d, dirY: -c };
+  }
+
+  setTarget(t: [number, number] | null) {
+    this.target = t;
+    this.draw();
   }
 
   get matrix(): Mat2 {
@@ -143,6 +200,15 @@ export class TransformView {
   private bindDrag() {
     this.canvas.addEventListener("pointerdown", (ev) => {
       const [x, y] = this.eventPoint(ev);
+      if (this.target) {
+        const dt = Math.hypot(x - this.target[0], y - this.target[1]);
+        if (dt < 0.55) {
+          this.dragging = "t";
+          this.canvas.setPointerCapture(ev.pointerId);
+          this.canvas.classList.add("dragging");
+          return;
+        }
+      }
       const di = Math.hypot(x - this.m.a, y - this.m.c);
       const dj = Math.hypot(x - this.m.b, y - this.m.d);
       if (Math.min(di, dj) > 0.42) return;
@@ -159,6 +225,11 @@ export class TransformView {
       if (!ev.shiftKey) {
         x = Math.round(x * 4) / 4;
         y = Math.round(y * 4) / 4;
+      }
+      if (this.dragging === "t") {
+        this.target = [x, y];
+        this.draw();
+        return;
       }
       if (this.dragging === "i") {
         this.m.a = x;
@@ -237,6 +308,77 @@ export class TransformView {
 
     ctx.font = `600 ${Math.round(this.S * 0.2)}px -apple-system, "PingFang SC", sans-serif`;
     ctx.fillText("原点（不动）", x - this.S * 1.05, y + this.S * 0.28);
+  }
+
+  /** 把「走 x 步蓝箭头、再走 y 步橙箭头到达 b」这条路径画出来 */
+  private drawReach() {
+    if (!this.target) return;
+    const ctx = this.ctx;
+    const { a, b, c, d } = this.m;
+    const [bx, by] = this.target;
+    const res = this.reach();
+    const warn = this.css("--warn");
+    const ok = this.css("--eigen");
+
+    // 无穷多解：所有走法落在一条直线上，把它整条画出来
+    if (res?.kind === "many") {
+      const L = 14;
+      ctx.save();
+      ctx.strokeStyle = ok;
+      ctx.lineWidth = this.S * 0.03;
+      ctx.setLineDash([10, 8]);
+      // 解集在「步数平面」上是直线，映射回图上仍沿着同一条列方向
+      const p = this.toPx(bx - L * (a || b), by - L * (c || d));
+      const q = this.toPx(bx + L * (a || b), by + L * (c || d));
+      ctx.beginPath();
+      ctx.moveTo(p[0], p[1]);
+      ctx.lineTo(q[0], q[1]);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 走法路径：原点 → 走 x 步蓝箭头 → 再走 y 步橙箭头 → 到 b
+    if (res && res.kind !== "none") {
+      const midX = a * res.x;
+      const midY = c * res.x;
+      ctx.save();
+      ctx.lineWidth = this.S * 0.05;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = this.css("--basis-i");
+      ctx.globalAlpha = 0.55;
+      let p = this.toPx(0, 0);
+      let q = this.toPx(midX, midY);
+      ctx.beginPath();
+      ctx.moveTo(p[0], p[1]);
+      ctx.lineTo(q[0], q[1]);
+      ctx.stroke();
+      ctx.strokeStyle = this.css("--basis-j");
+      p = q;
+      q = this.toPx(midX + b * res.y, midY + d * res.y);
+      ctx.beginPath();
+      ctx.moveTo(p[0], p[1]);
+      ctx.lineTo(q[0], q[1]);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 目标点
+    const [tx, ty] = this.toPx(bx, by);
+    const rr = this.S * 0.13;
+    ctx.beginPath();
+    ctx.arc(tx, ty, rr, 0, Math.PI * 2);
+    ctx.fillStyle = res?.kind === "none" ? warn : ok;
+    ctx.fill();
+    ctx.strokeStyle = this.css("--bg");
+    ctx.lineWidth = this.S * 0.03;
+    ctx.stroke();
+    ctx.fillStyle = res?.kind === "none" ? warn : ok;
+    ctx.font = `600 ${Math.round(this.S * 0.21)}px -apple-system, "PingFang SC", sans-serif`;
+    ctx.fillText(
+      res?.kind === "none" ? "b（走不到）" : "b（要到这里）",
+      tx + rr * 1.4,
+      ty - rr * 0.8,
+    );
   }
 
   draw() {
@@ -320,6 +462,8 @@ export class TransformView {
     ctx.moveTo(this.ox, 0);
     ctx.lineTo(this.ox, H);
     ctx.stroke();
+
+    this.drawReach();
 
     this.arrow(a, c, this.css("--basis-i"), "向右一格");
     this.arrow(b, d, this.css("--basis-j"), "向上一格");
