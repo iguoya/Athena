@@ -300,3 +300,41 @@ canvas.dragging { cursor: grabbing; }
 .milestone.big { border-width: 2px; }
 .milestone .next-pass { color: var(--muted); font-size: 17px; }
 .d-traps { margin-top: 10px; font-size: 16px; color: var(--muted); }
+
+/* ── 知识图谱（ADR 0008 的先修图，按数据实时绘制）── */
+.page.wide { max-width: 1460px; }
+#graph {
+  width: 100%; height: auto; display: block; margin-top: 6px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+}
+.g-legend {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  font-size: 16px; color: var(--muted); margin: 18px 0 10px;
+}
+.g-legend i {
+  display: inline-block; width: 26px; height: 13px; border-radius: 4px;
+  margin-right: 7px; vertical-align: -1px; background: var(--panel);
+}
+.g-legend .sw-todo { border: 1.8px solid var(--line); }
+.g-legend .sw-seen { border: 2.4px solid var(--muted); }
+.g-legend .sw-pass { border: 3px solid var(--ok); }
+.g-tip { margin-left: auto; }
+.g-foot { margin-top: 12px; font-size: 15px; color: var(--muted); }
+.to-graph {
+  font: inherit; font-size: 15px; margin-left: 14px; padding: 0; cursor: pointer;
+  background: none; color: var(--accent); border: 0; border-bottom: 1px solid var(--accent);
+}
+
+/* ── 正文重点（只标句内关键处，不给整段铺底色）── */
+.em { color: var(--accent); font-weight: 600; }
+.hl {
+  background: rgba(10, 88, 202, .13); color: inherit;
+  padding: 1px 4px; border-radius: 3px;
+}
+@media (prefers-color-scheme: dark) {
+  .hl { background: rgba(91, 157, 255, .20); }
+}
+.ov-aha .hl { background: rgba(15, 123, 63, .15); }
+@media (prefers-color-scheme: dark) {
+  .ov-aha .hl { background: rgba(78, 201, 127, .20); }
+}

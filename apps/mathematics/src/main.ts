@@ -3,6 +3,7 @@
 
 import { invoke } from "@tauri-apps/api/core";
 import { TransformView, readoutOf, type Mat2, type Readout } from "./transform-view";
+import { GraphView, type GraphNode } from "./graph-view";
 import {
   renderDiagnostics,
   adviceOf,
@@ -75,10 +76,23 @@ const progress = new Map<string, string>();
 const predictions = new Map<string, PredictionRow>();
 const diagAnswers = new Map<string, Answer>();
 
-type View = { kind: "diag" } | { kind: "topic"; id: string };
-let view: View = { kind: "diag" };
+type View = { kind: "diag" } | { kind: "graph" } | { kind: "topic"; id: string };
+let view: View = { kind: "graph" };
 
 const key = (a: string, b: string) => `${a}::${b}`;
+
+/**
+ * 正文里的重点标记。**文字** 着强调色，==文字== 加背景高亮。
+ * 只标句内的关键处，不给整段铺底色——铺满等于没标。
+ */
+function rich(src: string): string {
+  return src
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.+?)\*\*/g, '<b class="em">$1</b>')
+    .replace(/==(.+?)==/g, '<mark class="hl">$1</mark>');
+}
 
 async function boot() {
   try {
@@ -127,6 +141,7 @@ function render() {
   app.innerHTML = `<nav id="side"></nav><section id="main"></section>`;
   renderSide();
   if (view.kind === "diag") renderDiagPage();
+  else if (view.kind === "graph") renderGraphPage();
   else renderTopic(view.id);
 }
 
@@ -163,6 +178,14 @@ function renderSide() {
      </button>`,
   );
 
+  parts.push(`<div class="chapter-title">整条线</div>`);
+  parts.push(
+    `<button class="topic${view.kind === "graph" ? " active" : ""}" data-graph="1">
+       线性代数图谱
+       <span class="meta">${all.length} 节 · 按先修关系连起来</span>
+     </button>`,
+  );
+
   for (const ch of curriculum.chapters) {
     const w = ch.topics.filter((t) => topicSeen(t.id)).length;
     parts.push(
@@ -193,7 +216,11 @@ function renderSide() {
 
   side.querySelectorAll<HTMLButtonElement>(".topic").forEach((b) =>
     b.addEventListener("click", () => {
-      view = b.dataset.diag ? { kind: "diag" } : { kind: "topic", id: b.dataset.id! };
+      view = b.dataset.diag
+        ? { kind: "diag" }
+        : b.dataset.graph
+          ? { kind: "graph" }
+          : { kind: "topic", id: b.dataset.id! };
       render();
       document.getElementById("main")!.scrollTop = 0;
     }),
@@ -278,6 +305,43 @@ function scopeLabel(scope: string): string {
   return scope;
 }
 
+// ── 图谱页 ─────────────────────────────────────
+function renderGraphPage() {
+  const main = document.getElementById("main")!;
+  const all = flatTopics();
+  const walked = all.filter((t) => topicSeen(t.id)).length;
+
+  main.innerHTML = `
+    <div class="page wide">
+      <h2 class="title">线性代数图谱</h2>
+      <p class="tagline">一切从「矩阵就是把平面搬一次」发散出去，最后收敛到二次型。
+      连线是先修关系，由课表算出来，不是画上去的。</p>
+      <div class="g-legend">
+        <span><i class="sw-todo"></i>未走</span>
+        <span><i class="sw-seen"></i>走过</span>
+        <span><i class="sw-pass"></i>答对</span>
+        <span class="g-tip">把鼠标停在任意一节上 → 点亮它全部的先修；点一下进入那一节</span>
+      </div>
+      <canvas id="graph" width="1400" height="1120"></canvas>
+      <div class="g-foot">${all.length} 节走过 ${walked} 节。虚线内框表示考纲外的拓展节。</div>
+    </div>`;
+
+  const nodes: GraphNode[] = all.map((t) => ({
+    id: t.id,
+    title: t.title,
+    requires: t.requires,
+    seen: topicSeen(t.id),
+    passed: topicPassed(t),
+    scope: t.scope,
+  }));
+  const g = new GraphView(
+    document.getElementById("graph") as HTMLCanvasElement,
+    nodes,
+    (id) => goTo(id),
+  );
+  g.draw();
+}
+
 // ── 诊断页 ─────────────────────────────────────
 function renderDiagPage() {
   const main = document.getElementById("main")!;
@@ -356,9 +420,9 @@ function renderTopic(id: string) {
   // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
   const overviewHtml = ov
     ? `<div class="ov">
-         <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${ov.asks}</div>
-         <p class="ov-says">${ov.says}</p>
-         ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${ov.aha}</div>` : ""}
+         <div class="ov-asks"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
+         <p class="ov-says">${rich(ov.says)}</p>
+         ${ov.aha ? `<div class="ov-aha"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
          <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
        </div>`
     : "";
@@ -423,11 +487,13 @@ function renderTopic(id: string) {
 
   main.innerHTML = `
     <div class="page">
-      <div class="where">第 ${at + 1} 节 / 共 ${all.length} 节</div>
+      <div class="where">第 ${at + 1} 节 / 共 ${all.length} 节
+        <button class="to-graph" data-graph="1">在图谱里看它的位置</button>
+      </div>
       <div class="coord">${coord}</div>
       <h2 class="title">${t.title}</h2>
       ${reqHtml}
-      ${t.hook ? `<div class="hook"><p>${t.hook.text}</p></div>` : ""}
+      ${t.hook ? `<div class="hook"><p>${rich(t.hook.text)}</p></div>` : ""}
       ${overviewHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
@@ -471,6 +537,11 @@ function renderTopic(id: string) {
   main.querySelectorAll<HTMLButtonElement>(".step, .jump").forEach((b) =>
     b.addEventListener("click", () => goTo(b.dataset.id!)),
   );
+  main.querySelector<HTMLButtonElement>(".to-graph")?.addEventListener("click", () => {
+    view = { kind: "graph" };
+    render();
+    document.getElementById("main")!.scrollTop = 0;
+  });
 
   if (t.widget === "transform2d") mountCanvas();
   if (predict) bindPredict(t, predict);
