@@ -18,6 +18,11 @@ gtest_main_dep = dependency('gtest_main')
 cc = meson.get_compiler('cpp')
 sqlite3_dep = cc.find_library('sqlite3', has_headers: ['sqlite3.h'])
 blueprint_compiler = find_program('blueprint-compiler')
+# .blp 里有中文，而 blueprint-compiler 打开文件时不指定编码，Windows 上会按
+# 系统代码页解码然后崩掉。PYTHONUTF8=1 让 Python 全程按 UTF-8 读写（ADR 0047：
+# 跨平台在构建规则里解决，不靠使用者自己设环境变量）。
+blueprint_env = environment()
+blueprint_env.set('PYTHONUTF8', '1')
 python = find_program('python3')
 
 # 平台专用源文件已经清空（ADR 0047）：菜单栏按 GTK 设置项判断，
@@ -110,6 +115,7 @@ foreach line : gen_output
       input: meson.project_source_root() / blp_path,
       output: ui_name,
       command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+      env: blueprint_env,
     )
   endif
 endforeach
@@ -120,6 +126,7 @@ compiled_ui += custom_target(
   input: files('resources/ui/window.blp'),
   output: 'window.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+  env: blueprint_env,
 )
 
 compiled_ui += custom_target(
@@ -127,6 +134,7 @@ compiled_ui += custom_target(
   input: files('resources/ui/learning_unit.blp'),
   output: 'learning_unit.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+  env: blueprint_env,
 )
 
 compiled_ui += custom_target(
@@ -134,6 +142,7 @@ compiled_ui += custom_target(
   input: files('resources/ui/checkpoint.blp'),
   output: 'checkpoint.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+  env: blueprint_env,
 )
 
 compiled_ui += custom_target(
@@ -141,6 +150,7 @@ compiled_ui += custom_target(
   input: files('resources/ui/lesson_blocks.blp'),
   output: 'lesson_blocks.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+  env: blueprint_env,
 )
 
 compiled_ui += custom_target(
@@ -148,6 +158,7 @@ compiled_ui += custom_target(
   input: files('resources/ui/outline.blp'),
   output: 'outline.ui',
   command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
+  env: blueprint_env,
 )
 
 # === 共享核心库 ===
