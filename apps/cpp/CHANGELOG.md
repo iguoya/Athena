@@ -3,6 +3,35 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
+## [6.0.0] - 2026-09-14
+
+### 变更
+
+- **跨平台优先升为仓库级强约束（ADR 0047）**，管技术选型、代码编写和构建过程三段。
+  按这条原则把 `apps/cpp` 的平台分支清零：教学内容只从 GResource 读（删掉两套取
+  可执行文件路径的实现和编译期绝对路径）；菜单栏改问 GTK 的 `gtk-shell-shows-menubar`
+  设置项；删掉运行时设 Dock 图标的 Objective-C++ 实现；打开 URI 交给系统默认处理器。
+  现在生产代码里没有 `#ifdef`、没有 `.mm`，Meson 里只剩一条 macOS 依赖。
+- **验证入口从 shell 迁到 Python**（`scripts/check.py`）：验证每天都要跑，不该要求
+  Windows 上先装 Git Bash 或 WSL。步骤、参数、输出与原来一致。
+- 连测试代码也不再依赖 POSIX：`chmod`/`S_IRUSR` 换成 `g_chmod` + 八进制权限位，
+  `setenv`/`unsetenv` 换成 GLib 版本，写死的 `/tmp` 换成 `Glib::get_tmp_dir()`。
+- 三个 Tauri 应用的 `rusqlite` 开 `bundled`，不再要求目标机器上有 libsqlite3；
+  `apps/mathematics` 的 venv 解释器按存在与否在 `bin/python` 和 `Scripts/python.exe`
+  之间挑。
+
+### 新增
+
+- **CI 扩到三个平台**：C++ 教程在 macOS / Ubuntu / Windows（MSYS2 UCRT64）各跑一遍
+  同一条 Python 入口，启动器在三平台矩阵里构建。启动器三平台全绿；C++ 教程的
+  Windows job 标为实验性——它卡在上游（MSYS2 现行 giomm 与 glib 头文件冲突），
+  本仓库这边已无障碍，保留 job 持续探测。
+
+### 修复
+
+- Blueprint 编译在 Windows 上按 UTF-8 读 `.blp`（`PYTHONUTF8=1`），否则遇到中文
+  会按系统代码页解码后崩溃。
+
 ## [5.0.0] - 2026-09-14
 
 ### 变更

@@ -103,6 +103,10 @@
 - `apps/dsa` 的实验编译只找 `c++` / `clang++` / `g++`，没认 MSVC 的 `cl.exe`；
 - 三个 Tauri 应用的 `rusqlite` 没开 `bundled`，现在链系统 sqlite3，Windows 没有；
 - 启动器的窗口前置在 Windows 上未实现（`runner.rs` 里预留了位置）；
+- **`apps/cpp` 在 Windows 上编不过，卡在上游**：MSYS2 现行的 giomm 2.86 与
+  glib 2.90 头文件冲突（`GDBusActionGroupClass` 重复声明）。本仓库这边已经没有
+  障碍——依赖全部找得到，Blueprint 也编得过（给它设了 `PYTHONUTF8=1`），倒在
+  gtkmm 自己的头文件上。CI 里保留这个 job 持续探测，标为实验性、不阻塞整体；
 - **验证入口 `scripts/check.sh` 和各应用的检查脚本是 `.sh`**，Windows 上要靠
   Git Bash 或 WSL 才能跑。每天都要跑的环节不该有这种前提，应迁到 Python
   （三平台自带，仓库里已经在用它写生成器和打包器）。
