@@ -67,6 +67,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
     window.set_apps(ModelRc::from(entries.clone()));
     window.set_status("点一下就打开；已经在跑的只把窗口叫到前面。".into());
+    window.set_links(evolution_links(&apps).into());
 
     // 构建输出从后台线程流回来：界面上要看得见"卡在哪一步"，
     // 沉默几十秒是"慢"的主观放大器。
@@ -220,6 +221,62 @@ fn open_in_file_manager(path: &std::path::Path) {
         "xdg-open"
     };
     let _ = std::process::Command::new(opener).arg(path).spawn();
+}
+
+// 图块的排布，必须和 launcher.slint 里 Tile 的 x / y 算式一致。
+const TILE_STRIDE_X: f32 = 120.0;
+const TILE_STRIDE_Y: f32 = 128.0;
+const TILE_COLUMNS: usize = 3;
+// 图块内那个圆角色块的中心，相对图块左上角：色块 56px 在 116px 宽的图块里
+// 居中，顶部留 10px 内边距。
+const ICON_CENTER_X: f32 = 58.0;
+const ICON_CENTER_Y: f32 = 38.0;
+
+/// 学科之间的历史演进关系画成带箭头的连线（目前只有 C → C++）。
+///
+/// 只画真实存在的演进关系：算法、英语、数学各自独立，就不连——为了画面
+/// 对称去连不存在的关系，是把装饰当成信息。
+fn evolution_links(apps: &[App]) -> String {
+    let center = |index: usize| {
+        let column = (index % TILE_COLUMNS) as f32;
+        let row = (index / TILE_COLUMNS) as f32;
+        (
+            column * TILE_STRIDE_X + ICON_CENTER_X,
+            row * TILE_STRIDE_Y + ICON_CENTER_Y,
+        )
+    };
+
+    let mut commands = String::new();
+    for (index, app) in apps.iter().enumerate() {
+        let Some(origin) = app.evolves_from.as_ref() else {
+            continue;
+        };
+        let Some(from) = apps.iter().position(|other| &other.id == origin) else {
+            continue;
+        };
+        let (x1, y1) = center(from);
+        let (x2, y2) = center(index);
+        // 从色块边缘出发、在边缘收尾，别把线压在图标上。
+        let gap = 32.0;
+        let (dx, dy) = (x2 - x1, y2 - y1);
+        let length = dx.hypot(dy);
+        if length <= gap * 2.0 {
+            continue;
+        }
+        let (ux, uy) = (dx / length, dy / length);
+        let (sx, sy) = (x1 + ux * gap, y1 + uy * gap);
+        let (ex, ey) = (x2 - ux * gap, y2 - uy * gap);
+        // 线，加两笔箭头（都用描边，一条 path 就够）。
+        let head = 5.0;
+        commands.push_str(&format!(
+            "M {sx:.1} {sy:.1} L {ex:.1} {ey:.1}              M {:.1} {:.1} L {ex:.1} {ey:.1} L {:.1} {:.1} ",
+            ex - ux * head - uy * head,
+            ey - uy * head + ux * head,
+            ex - ux * head + uy * head,
+            ey - uy * head - ux * head,
+        ));
+    }
+    commands
 }
 
 /// 应用自带的图标，按图块里的显示尺寸渲染（乘 2 供高分屏用）。

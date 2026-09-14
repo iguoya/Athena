@@ -126,6 +126,8 @@ component Tile inherits Rectangle {
 export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
     in property <string> status;
+    // 关系连线的 SVG path，由 Rust 生成。
+    in property <string> links;
     callback open(string);
     callback stop(string);
 
@@ -146,17 +148,23 @@ export component LauncherWindow inherits Window {
             height: 20px;
         }
 
-        ScrollView {
+        Rectangle {
             vertical-stretch: 1;
-            GridLayout {
-                spacing: 2px;
-                for entry[index] in apps: Tile {
-                    row: floor(index / 3);
-                    col: mod(index, 3);
-                    entry: entry;
-                    open => { root.open(entry.id); }
-                    stop => { root.stop(entry.id); }
-                }
+
+            // 学科之间的历史演进关系（C++ 从 C 长出来）。画在图块下面，
+            // 命令由 Rust 按同一套坐标算好；没有关系时是空串，什么也不画。
+            Path {
+                commands: root.links;
+                stroke: #b9b9c0;
+                stroke-width: 1.5px;
+            }
+
+            for entry[index] in apps: Tile {
+                x: mod(index, 3) * 120px;
+                y: floor(index / 3) * 128px;
+                entry: entry;
+                open => { root.open(entry.id); }
+                stop => { root.stop(entry.id); }
             }
         }
 

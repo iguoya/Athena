@@ -111,6 +111,8 @@ struct RawManifest {
     icon: Option<IconSpec>,
     #[serde(default)]
     dev: Option<DevSpec>,
+    #[serde(default)]
+    evolves_from: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -125,6 +127,9 @@ pub struct App {
     pub icon_file: Option<PathBuf>,
     pub dir: PathBuf,
     pub dev: DevSpec,
+    /// 这个学科是从哪个学科长出来的（C++ 之于 C）。只记真实的历史演进关系；
+    /// 各自独立的知识体系就空着，不为了连线而连线。
+    pub evolves_from: Option<String>,
 }
 
 impl App {
@@ -193,5 +198,6 @@ fn parse(dir: &Path) -> Option<App> {
             .unwrap_or_else(|| "book".to_string()),
         dir: dir.to_path_buf(),
         dev: raw.dev.unwrap_or_default(),
+        evolves_from: raw.evolves_from,
     })
 }
