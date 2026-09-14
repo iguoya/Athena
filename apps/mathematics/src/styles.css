@@ -753,3 +753,13 @@ h2.title .title-plain {
 .fm-steps { margin: 14px 0 0; padding-left: 26px; }
 .fm-steps li { font-size: 18px; line-height: 1.75; margin-bottom: 8px; }
 .fm-steps li::marker { color: var(--muted); font-variant-numeric: tabular-nums; }
+/* 「用在哪」：知识点绑定应用（ADR 0024）。答对之后显示，免得场景本身把答案说了 */
+.dr-ctx {
+  margin-top: 12px; padding: 10px 14px;
+  font-size: 16px; line-height: 1.7;
+  background: var(--panel); border-left: 3px solid var(--eigen); border-radius: 0 6px 6px 0;
+}
+.dr-ctx-k {
+  display: block; margin-bottom: 3px;
+  font-size: 13px; font-weight: 600; letter-spacing: .05em; color: var(--eigen);
+}

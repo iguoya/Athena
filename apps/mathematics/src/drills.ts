@@ -37,6 +37,13 @@ export interface DrillItem {
   answer?: number;
   tol?: number;
   options?: DrillOption[];
+  /**
+   * 这道题对应的现实用法（ADR 0024）。知识点绑定应用越多越好，判断标准是
+   * 有没有帮助理解，不是够不够现实。
+   * 显示在**答对之后**——有些现实场景会直接暗示答案（「面积一点没变」
+   * 「再也还原不回来」），做题前给出来就成了送分。
+   */
+  context?: string;
   /** 出处（ADR 0019 第 1 节）。存量题的豁免名单见 scripts/lint-content.mjs */
   source?: DrillSource;
   /** 卡住时先给方向，不直接给答案（ADR 0011 第 1 节） */
@@ -151,9 +158,11 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
     // 解释一直写在正确选项的 why 上（37 道题全是），此前这里只读题级 it.why，
     // 于是答对之后除了「对。」什么都不显示——最该讲清楚的那一刻是空的。
     const right = (it.options ?? []).find((o) => o.ok);
-    fb = `<div class="dr-fb ok"><b>对。</b>${rich(it.why ?? right?.why ?? "")}${sourceLine(
-      it.source,
-    )}</div>`;
+    fb = `<div class="dr-fb ok"><b>对。</b>${rich(it.why ?? right?.why ?? "")}${
+      it.context
+        ? `<div class="dr-ctx"><span class="dr-ctx-k">用在哪</span>${rich(it.context)}</div>`
+        : ""
+    }${sourceLine(it.source)}</div>`;
   } else if (wrong) {
     const chosen = (it.options ?? []).find((o) => o.text === st?.picked);
     fb = `<div class="dr-fb re">${

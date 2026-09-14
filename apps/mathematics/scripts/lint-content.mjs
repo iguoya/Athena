@@ -407,6 +407,29 @@ for (const ch of cur.chapters) {
 
 const formalStat = `严谨视图 ${formalTopics}/${topics.length} 节（${formalEntries} 条）`;
 
+// ── 题量与导语必须对得上 ──
+// 「三道题」写在 intro 里，后来加到五道，导语就成了假的。这种漂移单看两边都正常，
+// 只有合起来读才发现——正是该机械检查的那类。
+const CN_NUM = { 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 };
+for (const ch of cur.chapters) {
+  const sets = [];
+  for (const t of ch.topics) {
+    if (t.drills) sets.push([t.drills, t.id]);
+    if (t.formal?.drills) sets.push([t.formal.drills, `${t.id}#formal`]);
+  }
+  if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
+  for (const [set, ns] of sets) {
+    const m = (set.intro ?? "").match(/([一二两三四五六七八九十])道题/);
+    if (!m) continue;
+    const said = CN_NUM[m[1]];
+    const real = set.items.length;
+    if (said !== real) {
+      console.error(`练习导语：${ns} 的 intro 说「${m[0]}」，实际有 ${real} 道`);
+      hits++;
+    }
+  }
+}
+
 // ── 标准例题（ADR 0019 第 4 节）──
 let exCount = 0;
 for (const ch of cur.chapters) {
@@ -437,13 +460,25 @@ for (const ch of cur.chapters) {
   }
 }
 
+// 知识点绑定应用，越多越好（ADR 0024）。不设硬错误，但覆盖率低就一直警告着，
+// 免得缺口悄悄地一直空着——ADR 0024 撤销了原先「不强制」背后那条反向判据。
 let withContext = 0;
+let drillTotal = 0;
 for (const ch of cur.chapters) {
   for (const t of ch.topics) {
     for (const set of [t.drills, t.formal?.drills]) {
-      for (const it of set?.items ?? []) if (it.context) withContext++;
+      for (const it of set?.items ?? []) {
+        drillTotal++;
+        if (it.context) withContext++;
+      }
     }
   }
+}
+if (drillTotal && withContext * 2 < drillTotal) {
+  console.warn(
+    `提示：${drillTotal} 道练习里只有 ${withContext} 道标了现实用法（不足一半）。` +
+      `ADR 0024：写不出来时是去找，不是跳过；判断标准是有没有帮助理解，不是够不够现实。\n`,
+  );
 }
 
 const sourceStat =
