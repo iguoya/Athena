@@ -3,6 +3,12 @@
 
 import { ScrollView } from "std-widgets.slint";
 
+/// 一条学科之间的关系：谁从谁长出来的，按 apps 里的下标指。
+export struct LinkSpec {
+    from: int,
+    to: int,
+}
+
 export struct AppEntry {
     id: string,
     title: string,
@@ -126,14 +132,16 @@ component Tile inherits Rectangle {
 export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
     in property <string> status;
-    // 关系连线的 SVG path，由 Rust 生成。
-    in property <string> links;
+    in property <[LinkSpec]> links;
     callback open(string);
     callback stop(string);
 
     title: "Athena 启动器";
-    width: 392px;
-    height: 356px;
+    // 初始大小，不是上限：窗口可以拉大，图块和连线跟着重排。
+    preferred-width: 404px;
+    preferred-height: 372px;
+    min-width: 280px;
+    min-height: 240px;
     background: #fbfbfd;
 
     VerticalLayout {
@@ -148,20 +156,74 @@ export component LauncherWindow inherits Window {
             height: 20px;
         }
 
-        Rectangle {
+        graph := Rectangle {
             vertical-stretch: 1;
 
+            // 一行放得下几个由当前宽度决定，窗口拉大就多排几个。
+            property <int> columns: max(1, floor(self.width / 124px));
+            property <length> stride-x: 124px;
+            property <length> stride-y: 132px;
+            // 图块内那个圆角色块的中心，连线从这里出发、到这里收尾。
+            property <length> hub-x: 58px;
+            property <length> hub-y: 38px;
+
             // 学科之间的历史演进关系（C++ 从 C 长出来）。画在图块下面，
-            // 命令由 Rust 按同一套坐标算好；没有关系时是空串，什么也不画。
-            Path {
-                commands: root.links;
-                stroke: #b9b9c0;
+            // 坐标和图块用同一套算式，窗口一变两边一起动。
+            for link in root.links: Path {
+                x: 0; y: 0;
+                width: parent.width;
+                height: parent.height;
+                viewbox-x: 0;
+                viewbox-y: 0;
+                viewbox-width: parent.width / 1px;
+                viewbox-height: parent.height / 1px;
+                stroke: #a8a8b0;
                 stroke-width: 1.5px;
+
+                property <float> fx: (mod(link.from, graph.columns) * graph.stride-x + graph.hub-x) / 1px;
+                property <float> fy: (floor(link.from / graph.columns) * graph.stride-y + graph.hub-y) / 1px;
+                property <float> tx: (mod(link.to, graph.columns) * graph.stride-x + graph.hub-x) / 1px;
+                property <float> ty: (floor(link.to / graph.columns) * graph.stride-y + graph.hub-y) / 1px;
+                // 单位向量：线从色块边缘起止，不压在图标上；箭头也按它算。
+                property <float> span: max(1, sqrt((tx - fx) * (tx - fx) + (ty - fy) * (ty - fy)));
+                property <float> ux: (tx - fx) / span;
+                property <float> uy: (ty - fy) / span;
+                property <float> gap: 33;
+                property <float> head: 5.5;
+                // 起止点：落在两端色块的边缘，不压住图标。
+                property <float> sx: fx + ux * gap;
+                property <float> sy: fy + uy * gap;
+                property <float> ex: tx - ux * gap;
+                property <float> ey: ty - uy * gap;
+                // 思维导图那种弧：控制点沿法线拱起一点，线就不是硬邦邦的直线。
+                property <float> arc: 13;
+                property <float> nx: -uy * arc;
+                property <float> ny: ux * arc;
+
+                MoveTo { x: parent.sx; y: parent.sy; }
+                CubicTo {
+                    control-1-x: parent.sx + (parent.ex - parent.sx) * 0.35 + parent.nx;
+                    control-1-y: parent.sy + (parent.ey - parent.sy) * 0.35 + parent.ny;
+                    control-2-x: parent.sx + (parent.ex - parent.sx) * 0.65 + parent.nx;
+                    control-2-y: parent.sy + (parent.ey - parent.sy) * 0.65 + parent.ny;
+                    x: parent.ex;
+                    y: parent.ey;
+                }
+                // 箭头：贴着终点，沿进入方向的两笔。
+                MoveTo {
+                    x: parent.ex - parent.ux * parent.head - parent.uy * parent.head * 0.9;
+                    y: parent.ey - parent.uy * parent.head + parent.ux * parent.head * 0.9;
+                }
+                LineTo { x: parent.ex; y: parent.ey; }
+                LineTo {
+                    x: parent.ex - parent.ux * parent.head + parent.uy * parent.head * 0.9;
+                    y: parent.ey - parent.uy * parent.head - parent.ux * parent.head * 0.9;
+                }
             }
 
             for entry[index] in apps: Tile {
-                x: mod(index, 3) * 120px;
-                y: floor(index / 3) * 128px;
+                x: mod(index, graph.columns) * graph.stride-x;
+                y: floor(index / graph.columns) * graph.stride-y;
                 entry: entry;
                 open => { root.open(entry.id); }
                 stop => { root.stop(entry.id); }
