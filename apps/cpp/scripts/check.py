@@ -21,6 +21,18 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
+
+def _force_utf8_output() -> None:
+    """Windows 控制台默认不是 UTF-8，打印中文会抛 UnicodeEncodeError。
+
+    跨平台的做法是在入口处把标准流重设成 UTF-8，而不是把提示改成英文
+    或者只在 CI 里设 PYTHONIOENCODING（ADR 0047）。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
 def run(command: list[str], step: str) -> None:
     print(f"== {step} ==", flush=True)
     # shell=False：参数按列表传，路径里有空格也不会被拆开，Windows 上尤其重要。
@@ -37,6 +49,7 @@ def meson() -> str:
 
 
 def main() -> int:
+    _force_utf8_output()
     parser = argparse.ArgumentParser(description="验证 C++ 教程：校验、构建、测试")
     parser.add_argument("--build-dir", default="build", help="构建目录（默认 build）")
     parser.add_argument("--buildtype", help="传给 meson setup 的 --buildtype")

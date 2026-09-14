@@ -23,6 +23,18 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
+
+def _force_utf8_output() -> None:
+    """Windows 控制台默认不是 UTF-8，打印中文会抛 UnicodeEncodeError。
+
+    跨平台的做法是在入口处把标准流重设成 UTF-8，而不是把提示改成英文
+    或者只在 CI 里设 PYTHONIOENCODING（ADR 0047）。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
 def run_app(app: str, extra: list[str]) -> None:
     entry = REPO_ROOT / "apps" / app / "scripts" / "check.py"
     if not entry.is_file():
@@ -47,6 +59,7 @@ def run_source_check() -> None:
 
 
 def main(argv: list[str]) -> int:
+    _force_utf8_output()
     if argv:
         run_app(argv[0], argv[1:])
         return 0
