@@ -1,4 +1,25 @@
-/** 系统语音。念课表里的原文，不另写讲稿（ADR 0018）。 */
+/**
+ * 朗读（ADR 0018 定教学用途，ADR 0026 定实现手段）。
+ *
+ * **优先走系统 TTS，不用 WebView 的 Web Speech。** 实测 WKWebView 只暴露
+ * Meijia 和 Tingting 两个中文语音，使用者下载的 Premium 全看不见，而同一台机器
+ * `say -v '?'` 有 21 个。Web Speech 只在拿不到原生语音的平台（如 Linux）上兜底。
+ */
+import { invoke } from "@tauri-apps/api/core";
+
+interface NativeVoice {
+  name: string;
+  lang: string;
+  better: boolean;
+}
+
+/** 启动时取一次，缓存住——这样 listVoices() 还能同步用，调用方不必全改成异步 */
+let native: NativeVoice[] = [];
+let useNative = false;
+
+/** 轮询原生进程有没有念完的间隔。100 ms 够跟上段落切换，又不会空转太凶 */
+const DONE_POLL_MS = 100;
+
 
 let current: SpeechSynthesisUtterance | null = null;
 let gen = 0;
@@ -56,8 +77,37 @@ function regionOf(lang: string): string {
 /** 名字里带这些词的是系统下载的增强版，音质明显好过默认的压缩版 */
 const BETTER = /premium|enhanced|siri|增强|高级|高音质|优质|neural/i;
 
+/** 启动时问一次 Rust 要系统语音表。拿到就用原生，拿不到（非 macOS）退回 Web Speech。 */
+export async function initNativeVoices(): Promise<void> {
+  try {
+    const vs = await invoke<NativeVoice[]>("tts_voices");
+    native = vs ?? [];
+    useNative = native.length > 0;
+  } catch {
+    native = [];
+    useNative = false;
+  }
+}
+
+export function usingNativeTts(): boolean {
+  return useNative;
+}
+
 /** 全部中文语音，按「音质更好 → 年轻 → 老年」排序；地区一并标出来 */
 export function listVoices(): VoiceInfo[] {
+  if (useNative) {
+    const rank = (v: NativeVoice) => {
+      if (v.better) return -100;
+      if (OLD.test(v.name)) return 900;
+      const i = PREFER.findIndex((p) => v.name.toLowerCase().includes(p.toLowerCase()));
+      return i < 0 ? 500 : i;
+    };
+    return [...native].sort((a, b) => rank(a) - rank(b)).map((v) => ({
+      name: v.name,
+      lang: v.lang,
+      label: `${v.name}（${regionOf(v.lang)}${v.better ? " · 高音质" : ""}）`,
+    }));
+  }
   if (!window.speechSynthesis) return [];
   const zh = window.speechSynthesis
     .getVoices()
@@ -84,20 +134,31 @@ export function listVoices(): VoiceInfo[] {
 
 /** 系统里有没有装增强版中文语音——没有的话音质就只能是压缩版的水平 */
 export function hasBetterVoice(): boolean {
+  if (useNative) return native.some((v) => v.better);
   return listVoices().some((v) => BETTER.test(v.name));
 }
 
 const UPGRADED_KEY = "math.speech.upgraded";
+/**
+ * 换到系统 TTS 之后要再自动挑一次好语音。
+ * 原因：上面那个 upgraded 标记是走 Web Speech 时设的，而那时能看见的语音只有
+ * 两个老的，「升级」到的多半是 Tingting。现在列表里多了 Premium，不重挑一次
+ * 就会一直用着当初那个将就的选择。用单独的 key，免得和旧标记互相干扰。
+ */
+const NATIVE_UPGRADED_KEY = "math.speech.native-upgraded";
 
 export function getVoiceName(): string {
   const avail = listVoices();
   const saved = load(VOICE_KEY, "");
-  const best = avail.find((v) => BETTER.test(v.name));
+  const best = useNative
+    ? avail.find((v) => native.find((n) => n.name === v.name)?.better)
+    : avail.find((v) => BETTER.test(v.name));
 
   // 系统里新装了高音质语音时，自动换过去一次——刚装好的人不该还得自己去下拉里翻。
   // 只做一次，之后他再手动选什么就是什么。
-  if (best && load(UPGRADED_KEY, "") !== "1") {
-    save(UPGRADED_KEY, "1");
+  const upgradeKey = useNative ? NATIVE_UPGRADED_KEY : UPGRADED_KEY;
+  if (best && load(upgradeKey, "") !== "1") {
+    save(upgradeKey, "1");
     save(VOICE_KEY, best.name);
     return best.name;
   }
@@ -112,10 +173,15 @@ export function setVoiceName(name: string) {
 export function stopSpeech() {
   gen += 1;
   current = null;
+  if (useNative) {
+    void invoke("tts_stop").catch(() => {});
+    return;
+  }
   window.speechSynthesis?.cancel();
 }
 
 export function speak(text: string): Promise<void> {
+  if (useNative) return speakNative(text);
   if (!window.speechSynthesis) {
     return Promise.resolve();
   }
@@ -134,8 +200,7 @@ export function speak(text: string): Promise<void> {
       // 不动音高：抬高只会更像卡通，不会更自然
       u.pitch = 1;
       // 先认语音，再让 lang 跟着它走。反过来先设 lang 的话，WebKit 有按 lang
-      // 重选语音、把显式指定的那个覆盖掉的情况——表现就是「设置里选了高音质，
-      // 听起来还是原来那个」。选不到时才退回按语言让系统挑。
+      // 重选语音、把显式指定的那个覆盖掉的情况。
       const want = getVoiceName();
       const v = want ? window.speechSynthesis.getVoices().find((x) => x.name === want) : undefined;
       if (v) {
@@ -155,6 +220,34 @@ export function speak(text: string): Promise<void> {
       current = u;
       window.speechSynthesis.speak(u);
     }, 40);
+  });
+}
+
+/**
+ * 原生朗读：起一个 say 进程，轮询它退出没有。
+ * 用轮询而不是等命令返回，是因为让 Rust 侧同步等进程结束会把那条命令线程占住，
+ * 期间连「停止朗读」都发不进去。
+ */
+function speakNative(text: string): Promise<void> {
+  const mine = ++gen;
+  return new Promise((resolve) => {
+    void invoke("tts_speak", { text, voice: getVoiceName(), rate: getRate() })
+      .then(() => {
+        const tick = () => {
+          if (mine !== gen) {
+            resolve();
+            return;
+          }
+          void invoke<boolean>("tts_done")
+            .then((done) => {
+              if (done || mine !== gen) resolve();
+              else window.setTimeout(tick, DONE_POLL_MS);
+            })
+            .catch(() => resolve());
+        };
+        window.setTimeout(tick, DONE_POLL_MS);
+      })
+      .catch(() => resolve());
   });
 }
 

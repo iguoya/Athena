@@ -29,6 +29,8 @@ import {
   getRate,
   setRate,
   voicesReady,
+  initNativeVoices,
+  usingNativeTts,
 } from "./speak";
 
 // ── 课表类型（只声明用到的字段）──────────────────
@@ -274,7 +276,9 @@ async function boot() {
     app.innerHTML = `<div class="err">内容加载失败：${String(e)}</div>`;
     return;
   }
-  await voicesReady();
+  // 先问 Rust 要系统语音表；拿不到（非 macOS）才退回 WebView 的那套（ADR 0026）
+  await initNativeVoices();
+  if (!usingNativeTts()) await voicesReady();
   render();
   bindKeys();
 
@@ -283,6 +287,25 @@ async function boot() {
   // 整个不显示，而且列表后来就绪了也没人再渲染一次，于是永远不出现。
   // 这里补一次：系统把表填好时重画侧边栏。
   window.speechSynthesis?.addEventListener("voiceschanged", () => renderSide());
+
+  // 把 WebView 实际看到的语音表报给 Rust 打进日志。开发时手边只有 Chromium，
+  // 而应用跑在 WKWebView 里，两者报的名字不一定一样——不让它自己说一句，
+  // 就只能靠猜（这一节的 bug 已经因此绕过两轮）。
+  reportEnv();
+}
+
+function reportEnv() {
+  try {
+    const vs = listVoices();
+    void invoke("report_env", {
+      info:
+        `${usingNativeTts() ? "系统 TTS" : "Web Speech"}：${vs.length} 个中文语音，` +
+        `${hasBetterVoice() ? "有" : "没有"}高音质；当前「${getVoiceName() || "未选定"}」；` +
+        `全部：${vs.map((v) => `${v.name}[${v.lang}]`).join(" / ")}`,
+    });
+  } catch (e) {
+    void invoke("report_env", { info: `语音枚举失败：${String(e)}` }).catch(() => {});
+  }
 }
 
 /**
@@ -1392,17 +1415,17 @@ function voiceControls(): string {
         </select>
       </label>
       <button type="button" id="walk-try">试听</button>
-      <p class="voice-diag">检测到 ${vs.length} 个中文语音${
-        vs.filter((v) => (v.label ?? "").includes("增强")).length
-          ? `，其中 ${vs.filter((v) => (v.label ?? "").includes("增强")).length} 个高音质`
-          : "，没有高音质的"
-      }；当前用「${cur || "未选定"}」。</p>
+      <p class="voice-diag">${usingNativeTts() ? "系统语音" : "浏览器语音"}：${
+        vs.length
+      } 个中文${hasBetterVoice() ? "，含高音质" : ""}；当前「${cur || "未选定"}」。</p>
       ${
         hasBetterVoice()
           ? ""
-          : `<p class="voice-tip">这些都是系统自带的<b>压缩版</b>语音，机械感来自这里。
-             想要自然得多的声音：<b>系统设置 → 辅助功能 → 朗读内容 → 系统声音</b>，
-             在中文声音旁点下载「增强」或「高级」版。装好后回到这里就能选到，会排在最前面。</p>`
+          : usingNativeTts()
+            ? `<p class="voice-tip">这些都是系统自带的<b>压缩版</b>语音，机械感来自这里。
+               想要自然得多的声音：<b>系统设置 → 辅助功能 → 朗读内容 → 系统声音</b>，
+               在中文声音旁点下载「增强」或「高音质」版。装好后回到这里就能选到，会排在最前面。</p>`
+            : ""
       }
     </div>
   </div>`;

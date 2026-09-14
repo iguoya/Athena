@@ -3,6 +3,7 @@
 // Rust 侧仍然不做数学：它只管一个不做数学的进程的生死（ADR 0025 第 4 节）。
 
 mod engine;
+mod tts;
 
 use serde::Serialize;
 use std::fs;
@@ -226,6 +227,44 @@ fn load_all_predictions(
     Ok(rows.flatten().collect())
 }
 
+/// 系统里的中文语音。WKWebView 的 Web Speech 只看得见两个，所以列表改由这里给
+/// （ADR 0026）。非 macOS 上 `say` 不存在，返回空表，前端据此退回 Web Speech。
+#[tauri::command]
+fn tts_voices() -> Vec<tts::NativeVoice> {
+    tts::list_native_voices()
+}
+
+/// 念一句。立刻返回；念完没有由 tts_done 问。
+#[tauri::command]
+fn tts_speak(
+    text: String,
+    voice: String,
+    rate: f64,
+    state: tauri::State<'_, tts::TtsState>,
+) -> Result<(), String> {
+    state.lock().unwrap().speak(&text, &voice, rate)
+}
+
+#[tauri::command]
+fn tts_stop(state: tauri::State<'_, tts::TtsState>) {
+    state.lock().unwrap().stop();
+}
+
+#[tauri::command]
+fn tts_done(state: tauri::State<'_, tts::TtsState>) -> bool {
+    state.lock().unwrap().finished()
+}
+
+/// 前端把运行环境报回来，打到 stderr。
+///
+/// 存在的理由：应用跑在 WKWebView 里，而开发时手边只有 Chromium 能看。两者
+/// 报的系统语音名字不一样（系统里叫 Lilian (Premium)，网页接口里叫「黎潋（高音质）」），
+/// 隔着屏幕没法判断哪一环出了问题。让它自己说一句，`tauri dev` 的日志里就能看到。
+#[tauri::command]
+fn report_env(info: String) {
+    let _ = writeln!(std::io::stderr(), "[env] {info}");
+}
+
 /// 引擎状态。界面据此决定验算入口显不显示——不可用时要说清楚怎么修。
 #[tauri::command]
 fn engine_status(
@@ -265,6 +304,7 @@ pub fn run() {
         .manage(Mutex::new(state))
         // 引擎不在这里启动：它按需起，起一次常驻（ADR 0025 第 1 节）。
         .manage(engine::EngineState::default())
+        .manage(tts::TtsState::default())
         .invoke_handler(tauri::generate_handler![
             get_app_info,
             load_curriculum,
@@ -274,7 +314,12 @@ pub fn run() {
             save_prediction,
             load_all_predictions,
             engine_status,
-            engine_equiv
+            engine_equiv,
+            report_env,
+            tts_voices,
+            tts_speak,
+            tts_stop,
+            tts_done
         ])
         .run(tauri::generate_context!())
         .expect("error while running athena-math");
