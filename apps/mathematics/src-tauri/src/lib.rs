@@ -1,6 +1,8 @@
-// Athena Mathematics — 独立壳：内容路径与进度库。
+// Athena Mathematics — 独立壳：内容路径、进度库，以及符号引擎子进程。
 // 不依赖主程序头文件或 athena.json（主仓库 ADR 0032）。
-// Rust 侧不做数学：符号计算全在前端（本应用 ADR 0001、0010）。
+// Rust 侧仍然不做数学：它只管一个不做数学的进程的生死（ADR 0025 第 4 节）。
+
+mod engine;
 
 use serde::Serialize;
 use std::fs;
@@ -224,6 +226,29 @@ fn load_all_predictions(
     Ok(rows.flatten().collect())
 }
 
+/// 引擎状态。界面据此决定验算入口显不显示——不可用时要说清楚怎么修。
+#[tauri::command]
+fn engine_status(
+    state: tauri::State<'_, Mutex<AppState>>,
+    eng: tauri::State<'_, engine::EngineState>,
+) -> engine::EngineStatus {
+    let root = state.lock().unwrap().content_root.clone();
+    eng.lock().unwrap().status(&root)
+}
+
+/// 判两个表达式等不等价。**只判不算**：这里永远不会把答案送回前端
+/// （ADR 0001 第 1 节，要加得另开 ADR）。
+#[tauri::command]
+fn engine_equiv(
+    a: String,
+    b: String,
+    state: tauri::State<'_, Mutex<AppState>>,
+    eng: tauri::State<'_, engine::EngineState>,
+) -> engine::EngineReply {
+    let root = state.lock().unwrap().content_root.clone();
+    eng.lock().unwrap().equiv(&root, &a, &b)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let store_path = own_store_path();
@@ -238,6 +263,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(Mutex::new(state))
+        // 引擎不在这里启动：它按需起，起一次常驻（ADR 0025 第 1 节）。
+        .manage(engine::EngineState::default())
         .invoke_handler(tauri::generate_handler![
             get_app_info,
             load_curriculum,
@@ -245,7 +272,9 @@ pub fn run() {
             save_progress,
             load_all_progress,
             save_prediction,
-            load_all_predictions
+            load_all_predictions,
+            engine_status,
+            engine_equiv
         ])
         .run(tauri::generate_context!())
         .expect("error while running athena-math");

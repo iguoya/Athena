@@ -18,11 +18,22 @@ writeFileSync(
     <title>数学学习（预览）</title>
     <script>
       window.__TAURI_INTERNALS__ = {
-        invoke: async (cmd) => {
+        invoke: async (cmd, args) => {
           if (cmd === "load_curriculum") return (await fetch("./content/curriculum.json")).json();
           if (cmd === "load_diagnostics") return (await fetch("./content/diagnostics.json")).json();
           if (cmd === "load_all_progress") return [];
           if (cmd === "load_all_predictions") return [];
+          // 引擎的假回包：只用来核对界面怎么显示三种判定。真实的 Rust↔Python
+          // 链路由 src-tauri/src/engine.rs 的单元测试验证，两段合起来才算覆盖。
+          if (cmd === "engine_status")
+            return { ready: true, detail: "就绪（预览假引擎）", sympy: "1.14.0-fake", import_ms: 0, warmup_ms: 0 };
+          if (cmd === "engine_equiv") {
+            const b = String(args?.b ?? "");
+            if (b.includes("?")) return { ok: false, error: "没看懂：预览假引擎只认几种写法" };
+            if (b.includes("unknown")) return { ok: true, verdict: "unknown", note: "数值处处吻合，但没能化简证明", ms: 42 };
+            if (b.includes("bad")) return { ok: true, verdict: "different", ms: 12 };
+            return { ok: true, verdict: "equal", ms: 8 };
+          }
           return null;
         },
       };

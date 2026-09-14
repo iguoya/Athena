@@ -952,6 +952,21 @@
               ]
             }
           },
+          "derivation": {
+            "title": "自己推一遍",
+            "prompt": "**切变矩阵** `[[1, k], [0, 1]]` 的行列式是多少？不要代具体数字——把 `k` 当成任意实数，按定义一步步推下去，看看结果里还有没有 `k`。",
+            "start": "1*1 - k*0",
+            "goal": "1",
+            "hint": "`k*0` 是多少？不管 `k` 是三、是一百还是负数，乘零都一样。",
+            "context": "这就是上一页那句「剪歪不改变面积」的证明：推到最后 `k` 消失了，说明推多斜都不影响面积。把一段文字排成斜体、把图片拉斜，占的位置都不变。",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Determinants-TwoAndThree 一节的定义 two-by-two-determinant",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+              "note": "按该节的二阶行列式定义推一个带参数的矩阵；原书这一节只给数值例题，带参数的推导是本应用为配合「剪歪不改变面积」加的"
+            }
+          },
           "drills": {
             "title": "随堂练习",
             "intro": "五道题，**每一题只比上一题改一个地方**。前四题都能口算，最后一题反过来问。",

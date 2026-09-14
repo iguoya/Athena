@@ -90,6 +90,23 @@ interface Formal {
   drills?: DrillSet;
 }
 
+/**
+ * 推导验算（ADR 0001 第 1 节的第一类实验，引擎形态见 ADR 0025）。
+ * 用户一步一步写自己的推导，引擎判每步与上一步是否等价，指出第一处断裂。
+ * **它不给答案**——给了就变成计算器了。
+ */
+interface Derivation {
+  title: string;
+  prompt: string;
+  /** 起点表达式，SymPy 语法。它是给定的，用户从第二步开始写 */
+  start: string;
+  /** 推到这里算完成（选填）。用来判断「做完了」，不显示给用户 */
+  goal?: string;
+  hint?: string;
+  source: DrillSource;
+  context?: string;
+}
+
 /** 标准例题（ADR 0019 第 4 节）。总是给出完整解答，它不是题，是给人读的。 */
 interface WorkedExample {
   id: string;
@@ -152,6 +169,8 @@ interface Topic {
   examples?: WorkedExample[];
   /** 严谨视图：与直觉视图逐条对照的准确陈述（ADR 0020） */
   formal?: Formal;
+  /** 推导验算：自己写每一步，引擎判每一步（ADR 0001、0025） */
+  derivation?: Derivation;
   /** 随堂练习：跟着讲解走，检验刚讲的那一点（ADR 0014） */
   drills?: DrillSet;
 }
@@ -343,6 +362,7 @@ function renderSide() {
       if (t.formal) secs.push(["s-formal", "严谨表述"]);
       if (t.formal?.examples?.length) secs.push(["s-ex-formal", "规范例题"]);
       if (t.formal?.drills) secs.push([`s-${t.id}#formal`, "规范练习"]);
+      if (t.derivation) secs.push(["s-deriv", "自己推一遍"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
 
       parts.push(
@@ -754,6 +774,9 @@ function renderTopic(id: string) {
                     currentPass,
                   )
                 : ""
+            }${
+              // 推导验算排在最后：先看定义、再看例题、做完规范练习，最后自己推一遍
+              t.derivation ? renderDerivation(t.derivation, t.id) : ""
             }</div>`
           : ""
       }
@@ -814,6 +837,7 @@ function renderTopic(id: string) {
     b.addEventListener("click", () => revealAnchor(b.dataset.anchor!)),
   );
   if (t.formal) markPairedAnchors(t.formal);
+  if (t.derivation) bindDerivation(t.derivation, t.id);
 
   if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full", pre?.target);
   if (walk) bindWalkthrough(t);
@@ -1016,6 +1040,134 @@ function markPairedAnchors(f: Formal) {
       host.appendChild(tag);
     }
   }
+}
+
+// ── 推导验算（ADR 0001 第 1 节 / ADR 0025）────────────────────────────
+// 引擎只判不算：下面没有任何一条路径会把答案送回界面。
+
+interface EngineStatus {
+  ready: boolean;
+  detail: string;
+  sympy?: string;
+  import_ms?: number;
+  warmup_ms?: number;
+}
+interface EngineReply {
+  ok: boolean;
+  verdict?: "equal" | "different" | "unknown";
+  note?: string;
+  error?: string;
+  ms?: number;
+}
+
+/** 每个知识点自己的推导状态：已被引擎接受的步骤链 */
+const derivSteps = new Map<string, string[]>();
+
+function renderDerivation(d: Derivation, topicId: string): string {
+  const steps = derivSteps.get(topicId) ?? [d.start];
+  return `<div id="s-deriv" class="deriv">
+      <h3>${rich(d.title)}<span class="dv-engine" id="dv-engine">正在唤醒引擎…</span></h3>
+      <p class="dv-prompt" data-read="${esc1(d.prompt)}">${rich(d.prompt)}</p>
+      <ol class="dv-steps" id="dv-steps">
+        ${steps
+          .map(
+            (st, i) =>
+              `<li class="dv-step${i === 0 ? " given" : ""}"><code>${esc1(st)}</code>${
+                i === 0 ? '<span class="dv-tag">给定</span>' : '<span class="dv-ok">✓ 与上一步等价</span>'
+              }</li>`,
+          )
+          .join("")}
+      </ol>
+      <div class="dv-input">
+        <input type="text" id="dv-next" placeholder="写下一步，例如 1 - 0" autocomplete="off">
+        <button type="button" id="dv-check" disabled>对一下</button>
+      </div>
+      <div class="dv-fb" id="dv-fb"></div>
+      <p class="dv-note">写法用 Python 记号：乘号 <code>*</code>、乘方 <code>**</code>。
+        每写一步，引擎只回答「和上一步等不等价」，<b class="em">不会告诉你答案</b>。
+        ${d.hint ? `卡住了看提示：${rich(d.hint)}` : ""}</p>
+    </div>`;
+}
+
+function bindDerivation(d: Derivation, topicId: string) {
+  const input = document.getElementById("dv-next") as HTMLInputElement | null;
+  const btn = document.getElementById("dv-check") as HTMLButtonElement | null;
+  const fb = document.getElementById("dv-fb");
+  const badge = document.getElementById("dv-engine");
+  if (!input || !btn || !fb || !badge) return;
+
+  // 进入这一节就预热，别等到用户写完第一步才开始付 import 的钱（ADR 0001 第 3 节）
+  void invoke<EngineStatus>("engine_status")
+    .then((st) => {
+      if (st.ready) {
+        badge.className = "dv-engine ok";
+        badge.textContent = `引擎就绪 · SymPy ${st.sympy}`;
+        btn.disabled = false;
+      } else {
+        // 不可用时说清楚怎么修，不要让人对着一个没反应的按钮（ADR 0011）
+        badge.className = "dv-engine bad";
+        badge.textContent = "引擎不可用";
+        fb.innerHTML = `<div class="dv-msg bad"><b>验算暂时用不了。</b>${esc1(st.detail)}</div>`;
+      }
+    })
+    .catch((e) => {
+      badge.className = "dv-engine bad";
+      badge.textContent = "引擎不可用";
+      fb.innerHTML = `<div class="dv-msg bad"><b>验算暂时用不了。</b>${esc1(String(e))}</div>`;
+    });
+
+  const check = async () => {
+    const next = input.value.trim();
+    if (!next) return;
+    const steps = derivSteps.get(topicId) ?? [d.start];
+    const prev = steps[steps.length - 1];
+    btn.disabled = true;
+    fb.innerHTML = `<div class="dv-msg">判断中…</div>`;
+
+    let r: EngineReply;
+    try {
+      r = await invoke<EngineReply>("engine_equiv", { a: prev, b: next });
+    } catch (e) {
+      fb.innerHTML = `<div class="dv-msg bad">引擎没能回答：${esc1(String(e))}</div>`;
+      btn.disabled = false;
+      return;
+    }
+
+    if (!r.ok) {
+      fb.innerHTML = `<div class="dv-msg bad"><b>这一步没看懂。</b>${esc1(r.error ?? "")}</div>`;
+    } else if (r.verdict === "equal") {
+      steps.push(next);
+      derivSteps.set(topicId, steps);
+      input.value = "";
+      const done = d.goal ? next.replace(/\s/g, "") === d.goal.replace(/\s/g, "") : false;
+      fb.innerHTML = done
+        ? `<div class="dv-msg done"><b>推到底了。</b>每一步都和上一步等价，这条推导站得住。</div>`
+        : `<div class="dv-msg ok"><b>这一步对。</b>接着写下一步。<span class="dv-ms">${r.ms?.toFixed(0)} ms</span></div>`;
+      const list = document.getElementById("dv-steps");
+      if (list) {
+        const li = document.createElement("li");
+        li.className = "dv-step";
+        li.innerHTML = `<code>${esc1(next)}</code><span class="dv-ok">✓ 与上一步等价</span>`;
+        list.appendChild(li);
+      }
+    } else if (r.verdict === "different") {
+      // 报错落到步骤上，而不是只说「最终答案不对」（ADR 0001 第 1 节第 2 条）
+      fb.innerHTML = `<div class="dv-msg bad"><b>这一步和上一步不等价。</b>
+        上一步是 <code>${esc1(prev)}</code>，再对一遍。</div>`;
+    } else {
+      // 判不出来不等于你错了——这句话必须说出口，否则 unknown 会被当成「错」
+      fb.innerHTML = `<div class="dv-msg unknown"><b>判不出来。</b>
+        ${esc1(r.note ?? "")}——<b class="em">这不代表你写错了</b>，可能是引擎没化开。
+        你可以自己确认后接着往下写。</div>`;
+    }
+    btn.disabled = false;
+    input.focus();
+  };
+
+  btn.addEventListener("click", () => void check());
+  input.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") void check();
+  });
 }
 
 /** 直觉侧锚点 → 人能读懂的名字。跳转提示里要说清「跳到哪」，不能只给个 id。 */

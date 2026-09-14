@@ -7,3 +7,7 @@ src-tauri/gen/schemas/
 # bin/ 里只有入口脚本是源码，旁边的可执行产物不入库
 bin/athena-math.app/
 bin/*.bin
+
+# 符号引擎的 Python 环境，由 scripts/setup-engine.sh 重建
+engine/.venv/
+engine/__pycache__/

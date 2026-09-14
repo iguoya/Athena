@@ -407,6 +407,23 @@ for (const ch of cur.chapters) {
 
 const formalStat = `严谨视图 ${formalTopics}/${topics.length} 节（${formalEntries} 条）`;
 
+// ── 推导验算（ADR 0001 第 1 节 / ADR 0025）──
+// 出处同样必填：这道题让用户推什么、推到哪，得指得到一个真实来源。
+let derivCount = 0;
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    const d = t.derivation;
+    if (!d) continue;
+    derivCount++;
+    const where = `${t.id}::推导`;
+    if (!d.title || !d.prompt || !d.start) {
+      console.error(`推导验算：${where} 缺 title / prompt / start`);
+      hits++;
+    }
+    checkSource(d.source, where, true);
+  }
+}
+
 // ── 题量与导语必须对得上 ──
 // 「三道题」写在 intro 里，后来加到五道，导语就成了假的。这种漂移单看两边都正常，
 // 只有合起来读才发现——正是该机械检查的那类。
@@ -606,5 +623,6 @@ console.log(
   `内容检查通过：${files.length} 个文件无禁用表达；` +
     `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）；` +
     `诊断 ${total} 题，位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}；` +
-    drillStat + "；" + sourceStat + "；" + formalStat + "。",
+    drillStat + "；" + sourceStat + "；" + formalStat +
+    `；推导验算 ${derivCount} 节。`,
 );
