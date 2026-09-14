@@ -29,3 +29,4 @@
 | [0022](0022-plain-sources-first-formalize-later.md) | 参考来源一律选通俗的；严谨不等于形式化 | 已接受（修正 0017 第 2 节、0020 第 2 节） |
 | [0023](0023-two-equal-passes-each-with-its-own-exercises.md) | 每节分对等的两遍讲解，各配各的习题 | 已接受（修正 0020 第 2、4 节；本文第 4 节由 0024 作废） |
 | [0024](0024-bind-every-point-to-applications.md) | 知识点绑定应用，越多越好 | 已接受（作废 0023 第 4 节，澄清 0003 的适用范围） |
+| [0025](0025-native-python-sidecar-engine.md) | 符号引擎改用本机 Python 常驻进程；判据改为教学效果与成本收益 | 已接受（修正 0001 第 2、4 节） |

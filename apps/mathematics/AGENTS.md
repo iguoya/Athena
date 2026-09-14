@@ -130,9 +130,14 @@
 
 - **壳**：Tauri 2（Rust）
 - **界面**：Vite + TypeScript（Web UI，非 GTK）
-- **符号引擎**：**Pyodide + SymPy，随包分发、在前端常驻**（ADR 0001）。
-  不要求用户机器装 Python，也**不**每次验算 fork 子进程——实测冷启动
-  640–980 ms，其中 `import sympy` 独占 508 ms，而运算本身只要 0.2–62 ms。
+- **符号引擎**：**本机 Python 常驻进程 + SymPy**（ADR 0025 改，原为 Pyodide）。
+  Rust 侧按需 spawn 一个长驻解释器，NDJSON 走 stdin/stdout，只付一次 `import`。
+  环境是应用自带的 venv（`engine/.venv`），跑一次 `scripts/setup-engine.sh` 建好。
+  **不**每次验算 fork 子进程——实测 `import sympy` 就要 315–584 ms，而判等本身
+  只要 7–130 ms。**预热不能只 import**：`simplify` 首次调用还要再拉一批子模块，
+  差别是 365 ms 对 11 ms，所以引擎启动时自己先跑一次 `simplify`。
+  引擎**只回答 equal / different / unknown 三种**，`unknown` 不许折叠成
+  `different`——判不出来不等于用户错了，误判比慢更致命。
 - **公式渲染**：KaTeX（本地打包，不走 CDN）
 - **公式输入**：MathLive（所见即所得，输出 LaTeX）。数学应用的核心交互是
   「写下我的下一步」，键盘敲 LaTeX 不可接受。
@@ -146,7 +151,8 @@
   ID 前缀取短名，两者不同是有意为之）。
 
 **不引入**：MATLAB、Octave（授权、启动开销、方向错位三重问题，见 ADR 0001）；
-主程序的 Meson、gtkmm、Blueprint、`athena.json`。
+主程序的 Meson、gtkmm、Blueprint、`athena.json`。**Pyodide 降为备选**，触发条件
+是「本应用要发行给不愿装 Python 的人」，在那之前不实现、不下载、不打包（ADR 0025）。
 
 ## 目录与所有权
 
@@ -155,7 +161,7 @@
 | `content/` | 课表、知识点、题目与推导模板；**唯一内容源** |
 | `src/` | 前端：路线图 / 讲解 / 三类实验 / 错题本 |
 | `src-tauri/` | 窗口、读内容、进度。**不做数学**——符号计算全在前端 |
-| `vendor/pyodide/` | 随包分发的 Pyodide 运行时与 SymPy wheel |
+| `engine/` | 符号引擎：`engine.py`（常驻进程）与自带的 `.venv`（不入库） |
 | `bin/athena-math` | 稳定入口脚本（给可选的主程序 discover） |
 | `app.json` | 仅供主程序发现；本应用不依赖它才能开发或运行 |
 | `docs/decisions/` | 本应用 ADR |
@@ -202,6 +208,7 @@
 ```sh
 cd apps/mathematics
 npm install
+sh scripts/setup-engine.sh   # 只需跑一次：建 engine/.venv 并装 SymPy（验算功能要它）
 npm run tauri:dev      # 日常开发：改前端秒级热更新，这是默认手段
 npm run build:app      # 只在要交付可运行的包时才跑（release 编译两三分钟）
 ./bin/athena-math
