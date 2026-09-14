@@ -46,5 +46,7 @@ meson compile -C "$build_dir"
 pkill -f "vscode-lldb.*debugserver" 2>/dev/null || true
 pkill -f "$project_root/$build_dir/Athena" 2>/dev/null || true
 
+# 用绝对路径 exec：进程的命令行里带着完整路径，上面那条 pkill、以及
+# 菜单栏启动器的状态探测才认得出这是哪一份 Athena。
 echo "== 启动 Athena（Ctrl+C 退出）=="
-exec "$build_dir/Athena"
+exec "$project_root/$build_dir/Athena"

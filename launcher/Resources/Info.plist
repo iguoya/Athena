@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key>
+  <string>Athena Launcher</string>
+  <key>CFBundleDisplayName</key>
+  <string>Athena 启动器</string>
+  <key>CFBundleIdentifier</key>
+  <string>cn.yatiger.athena.launcher</string>
+  <key>CFBundleExecutable</key>
+  <string>AthenaLauncher</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>0.1.0</string>
+  <key>CFBundleVersion</key>
+  <string>1</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>14.0</string>
+  <!-- 只在菜单栏出现，不占 Dock、不抢焦点：启动器的存在感应当趋近于零。 -->
+  <key>LSUIElement</key>
+  <true/>
+  <!-- install.sh 会把实际仓库路径写进这里，运行时据此找到 apps/。 -->
+  <key>AthenaRepositoryRoot</key>
+  <string>@ATHENA_ROOT@</string>
+</dict>
+</plist>
