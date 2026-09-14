@@ -24,6 +24,7 @@
 | [0017](0017-anchor-each-stage-to-a-real-textbook.md) | 每个阶段锚定一份真实教材；严格表述必须可核对 | 已接受（部分作废 0012 第 4 节） |
 | [0018](0018-voice-and-scripted-animation.md) | 概念节可用语音讲解与脚本动画；二者跟课表走 | 已接受 |
 | [0019](0019-exercises-must-be-sourced-and-worked-examples.md) | 练习与测验必须有所本；每节配标准例题 | 已接受（修正 0017 第 1 节，补齐 0014 第 2 节） |
-| [0020](0020-formal-and-intuitive-two-views.md) | 讲解分「直觉」与「严谨」两个视图，逐条对照 | 已接受（让 0017 第 1 节的边界表在界面上显形） |
+| [0020](0020-formal-and-intuitive-two-views.md) | 讲解分「直觉」与「严谨」两个视图，逐条对照 | 已接受（第 2、4 节由 0023 修正） |
 | [0021](0021-terminological-titles-with-plain-subtitles.md) | 标题用规范术语，直觉说法降为副标题 | 已接受 |
 | [0022](0022-plain-sources-first-formalize-later.md) | 参考来源一律选通俗的；严谨不等于形式化 | 已接受（修正 0017 第 2 节、0020 第 2 节） |
+| [0023](0023-two-equal-passes-each-with-its-own-exercises.md) | 每节分对等的两遍讲解，各配各的习题 | 已接受（修正 0020 第 2、4 节） |
