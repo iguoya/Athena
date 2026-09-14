@@ -65,6 +65,26 @@ for (const g of diag.groups) {
     total++;
   }
 }
+// 诊断题也要有出处（主仓库 ADR 0043）。这一页的目的是判断「要不要补」，
+// 答错的人最需要知道去哪里补——没有出处这一页就只剩一个结论。
+for (const g of diag.groups) {
+  for (const it of g.items) {
+    if (!it.source) {
+      console.error(`诊断题：${g.id}/${it.id} 没有出处（主仓库 ADR 0043）`);
+      hits++;
+      continue;
+    }
+    if (!["verbatim", "adapted", "authored"].includes(it.source.kind)) {
+      console.error(`诊断题：${g.id}/${it.id} 的 kind「${it.source.kind}」不合法`);
+      hits++;
+    }
+    if (it.source.kind !== "authored" && !it.source.ref) {
+      console.error(`诊断题：${g.id}/${it.id} 的出处没指到具体章节`);
+      hits++;
+    }
+  }
+}
+
 for (const [k, n] of slots) {
   if (n > total * 0.5) {
     console.error(

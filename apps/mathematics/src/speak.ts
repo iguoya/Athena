@@ -98,7 +98,7 @@ export function listVoices(): VoiceInfo[] {
     return [...native].sort((a, b) => rank(a) - rank(b)).map((v) => ({
       name: v.name,
       lang: v.lang,
-      label: `${v.name}${v.better ? "（高音质）" : ""}`,
+      label: `${v.name}${v.better && !BETTER.test(v.name) ? "（高音质）" : ""}`,
     }));
   }
   if (!window.speechSynthesis) return [];
@@ -121,7 +121,7 @@ export function listVoices(): VoiceInfo[] {
     .map((v) => ({
       name: v.name,
       lang: v.lang,
-      label: `${v.name}${BETTER.test(v.name) ? "（高音质）" : ""}`,
+      label: v.name,
     }));
 }
 

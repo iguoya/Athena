@@ -10,9 +10,19 @@ export interface DiagOption {
   /** 选对时补一句它后面用在哪，建立前置与主线的连接（ADR 0008） */
   note?: string;
 }
+export interface DiagSource {
+  kind: "verbatim" | "adapted" | "authored";
+  site?: string;
+  ref?: string;
+  url?: string;
+  note?: string;
+  why?: string;
+}
 export interface DiagItem {
   id: string;
   stem: string;
+  /** 出处（主仓库 ADR 0043）。答完之后显示，顺着它能去补这一块 */
+  source?: DiagSource;
   options: DiagOption[];
 }
 export interface DiagGroup {
@@ -21,6 +31,20 @@ export interface DiagGroup {
   blocks_what: string;
   items: DiagItem[];
 }
+/**
+ * 出处一行。诊断页答完就显示（不像练习题要等答对）——这一页的目的本来就是
+ * 「看看哪些需要补」，答错的人最需要的正是「去哪里补」。
+ */
+function sourceLine(src?: DiagSource): string {
+  if (!src) return "";
+  if (src.kind === "authored") return "";
+  const who = [src.site, src.ref].filter(Boolean).join(" · ");
+  const link = src.url
+    ? `<a href="${src.url}" target="_blank" rel="noreferrer">${esc(who)}</a>`
+    : esc(who);
+  return `<div class="d-src">要补这一块，看 ${link}</div>`;
+}
+
 export interface Diagnostics {
   title: string;
   intro: string;
@@ -100,12 +124,15 @@ export function renderDiagnostics(
                          你没往那边走。</div>`
                       : ""
                   }
+                  ${sourceLine(it.source)}
                 </div>`;
             } else if (chosen?.misread) {
               const right = it.options.find((o) => o.ok);
               feedback = `<div class="d-fb re"><b>这个选项通常是这么想的：</b>${esc(
                 chosen.misread,
-              )}${right ? `<div class="d-right">正确的是：${esc(right.text)}</div>` : ""}</div>`;
+              )}${right ? `<div class="d-right">正确的是：${esc(right.text)}</div>` : ""}${sourceLine(
+                it.source,
+              )}</div>`;
             }
           }
 
