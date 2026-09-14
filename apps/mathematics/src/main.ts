@@ -277,6 +277,12 @@ async function boot() {
   await voicesReady();
   render();
   bindKeys();
+
+  // voicesReady() 最多等 1.2 秒。WKWebView 填这张表比浏览器慢，超时之后
+  // listVoices() 还是空的，voiceControls() 就返回空串——侧边栏那块「朗读」
+  // 整个不显示，而且列表后来就绪了也没人再渲染一次，于是永远不出现。
+  // 这里补一次：系统把表填好时重画侧边栏。
+  window.speechSynthesis?.addEventListener("voiceschanged", () => renderSide());
 }
 
 /**
@@ -1386,6 +1392,11 @@ function voiceControls(): string {
         </select>
       </label>
       <button type="button" id="walk-try">试听</button>
+      <p class="voice-diag">检测到 ${vs.length} 个中文语音${
+        vs.filter((v) => (v.label ?? "").includes("增强")).length
+          ? `，其中 ${vs.filter((v) => (v.label ?? "").includes("增强")).length} 个高音质`
+          : "，没有高音质的"
+      }；当前用「${cur || "未选定"}」。</p>
       ${
         hasBetterVoice()
           ? ""

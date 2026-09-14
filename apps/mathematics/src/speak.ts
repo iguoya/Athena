@@ -105,9 +105,6 @@ export function getVoiceName(): string {
   return avail[0]?.name ?? "";
 }
 
-export function voiceLangOf(name: string): string {
-  return listVoices().find((v) => v.name === name)?.lang ?? "zh-CN";
-}
 export function setVoiceName(name: string) {
   save(VOICE_KEY, name);
 }
@@ -133,13 +130,20 @@ export function speak(text: string): Promise<void> {
         return;
       }
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = voiceLangOf(getVoiceName());
       u.rate = getRate();
       // 不动音高：抬高只会更像卡通，不会更自然
       u.pitch = 1;
+      // 先认语音，再让 lang 跟着它走。反过来先设 lang 的话，WebKit 有按 lang
+      // 重选语音、把显式指定的那个覆盖掉的情况——表现就是「设置里选了高音质，
+      // 听起来还是原来那个」。选不到时才退回按语言让系统挑。
       const want = getVoiceName();
-      const v = window.speechSynthesis.getVoices().find((x) => x.name === want);
-      if (v) u.voice = v;
+      const v = want ? window.speechSynthesis.getVoices().find((x) => x.name === want) : undefined;
+      if (v) {
+        u.voice = v;
+        u.lang = v.lang;
+      } else {
+        u.lang = "zh-CN";
+      }
       u.onend = () => {
         if (current === u) current = null;
         resolve();
