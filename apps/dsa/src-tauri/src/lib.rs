@@ -286,6 +286,7 @@ fn safe_path_segment(raw: &str) -> String {
 
 #[tauri::command]
 fn compile_and_run(
+    state: tauri::State<'_, Mutex<AppState>>,
     case_id: String,
     entrypoint: String,
     source: String,
@@ -310,16 +311,26 @@ fn compile_and_run(
     let obj = work.join("a.out");
 
     let started = SystemTime::now();
+    // 案例共享头（如 dsa_trace.hpp）放 content/cases/_shared；挂上 include
+    // 路径后案例 `#include "dsa_trace.hpp"` 即可用（ADR 0004）。
+    let shared = {
+        let s = state.lock().unwrap();
+        s.content_root.join("content/cases/_shared")
+    };
+    let mut compile_args: Vec<String> = vec![
+        "-std=c++20".into(),
+        "-O0".into(),
+        "-Wall".into(),
+        "-Wextra".into(),
+        src.to_str().unwrap_or("").to_string(),
+        "-o".into(),
+        obj.to_str().unwrap_or("").to_string(),
+    ];
+    if shared.is_dir() {
+        compile_args.push(format!("-I{}", shared.display()));
+    }
     let compile = Command::new(&compiler)
-        .args([
-            "-std=c++20",
-            "-O0",
-            "-Wall",
-            "-Wextra",
-            src.to_str().unwrap_or(""),
-            "-o",
-            obj.to_str().unwrap_or(""),
-        ])
+        .args(&compile_args)
         .output()
         .map_err(|e| format!("启动编译器失败：{e}"))?;
 

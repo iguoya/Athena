@@ -8,6 +8,11 @@ import {
   mountLabEditor,
   setLabSource,
 } from "./lab-editor";
+import {
+  mountTracePlayer,
+  parseTrace,
+  stopTracePlayback,
+} from "./trace-player";
 import "./styles.css";
 
 /** Vite 打包进前端的案例原文：浏览器预览时可读；保存/编译仍需 Tauri。 */
@@ -1153,7 +1158,13 @@ async function markCheckpointTried(chapter: Chapter) {
 function renderNav() {
   const cur = state.curriculum;
   if (!cur) return;
-  $("nav").innerHTML = cur.chapters
+  const current =
+    findChapter(state.chapterId) ?? findChapterForTopic(state.topicId);
+  if (!current) {
+    $("nav").innerHTML = "";
+    return;
+  }
+  $("nav").innerHTML = [current]
     .map((ch) => {
       const topics = ch.topics
         .map((t) => {
@@ -1788,7 +1799,7 @@ function renderObserveBody(stdout: string): string {
     .filter(Boolean);
   const keyed = lines.filter((l) => /^[\w.]+[=：]/.test(l) || /moves|n=|Θ|O\(|≈/.test(l));
   if (!keyed.length) {
-    return `<div class="body muted">运行后，带 <code>key=value</code> 的输出行会出现在这里，便于对照预期。</div>`;
+    return `<div class="body muted">运行后，带 <code>key=value</code> 的输出行或案例打印的逐步状态会出现在这里，便于对照预期。</div>`;
   }
   const items = keyed
     .map((l) => `<li><code>${escapeHtml(l)}</code></li>`)
@@ -2203,8 +2214,16 @@ async function runLab() {
     const text = parts.join("\n\n");
     setOutputBody(text);
     if (observe) {
+      // 有 #dsa-trace 快照走步进回放器（ADR 0004）；否则保持 key=value 文本模式。
+      stopTracePlayback();
       const title = `<div class="pane-title">观察区</div>`;
-      observe.innerHTML = title + renderObserveBody(result.ok ? result.stdout : "");
+      const frames = result.ok ? parseTrace(result.stdout) : [];
+      if (frames.length) {
+        observe.innerHTML = title;
+        mountTracePlayer(observe, frames);
+      } else {
+        observe.innerHTML = title + renderObserveBody(result.ok ? result.stdout : "");
+      }
     }
 
     if (!result.ok) {

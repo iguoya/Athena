@@ -8,3 +8,4 @@
 | [0001](0001-outline-first-and-visual-authoring.md) | 导读合一；编写章节与大纲须充分使用可视与多媒体 | 已接受 |
 | [0002](0002-inline-quiz-and-chapter-assessment.md) | 随堂测验与章末考核；题量按内容实事求是 | 已接受 |
 | [0003](0003-lab-scaffold-not-blank-slate.md) | 实验提供接口/类骨架，学生补全而非从零编写 | 已接受 |
+| [0004](0004-cpp-trace-navigable-visualization.md) | 步进可视化由 C++ 打印状态快照，前端只回放 | 已接受 |

@@ -1159,6 +1159,119 @@ textarea.code {
   font-family: var(--mono);
   font-size: 0.92em;
 }
+
+/* 步进可视化回放器（ADR 0004）：只回放 C++ 打印的状态快照 */
+.trace-player {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.trace-stage {
+  padding: 0.6em;
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.trace-svg {
+  width: 100%;
+  max-height: 12em;
+  height: auto;
+}
+.trace-svg .list-node rect {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+.trace-svg .list-node.focused rect {
+  fill: var(--primary-soft);
+  stroke: var(--primary);
+  stroke-width: 2.5;
+}
+.trace-svg .list-node text {
+  font-family: var(--mono);
+  font-size: 15px;
+  fill: var(--ink);
+}
+.trace-svg .list-node.focused text {
+  font-weight: 700;
+}
+.trace-svg .list-arrow line,
+.trace-svg .list-arrow polygon {
+  stroke: var(--muted);
+  fill: var(--muted);
+}
+.trace-svg .list-arrow line { stroke-width: 1.6; }
+.trace-svg .list-null rect {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-dasharray: 4 3;
+}
+.trace-svg .list-null text {
+  font-family: var(--mono);
+  font-size: 13px;
+  fill: var(--muted);
+}
+.trace-raw {
+  margin: 0.6em;
+  padding: 0.5em;
+  overflow: auto;
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 0.8em;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--code-bg);
+  border-radius: var(--radius);
+}
+.trace-note {
+  padding: 0.3em 0.7em 0.5em;
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 0.22em solid var(--primary);
+  background: var(--surface-subtle);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  min-height: 2.4em;
+}
+.trace-note:empty { opacity: 0; }
+.trace-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  align-items: center;
+  padding: 0.45em 0.6em 0.6em;
+}
+.trace-controls button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 0.28em 0.65em;
+  font: inherit;
+  font-size: 0.85em;
+  font-weight: 700;
+  cursor: pointer;
+}
+.trace-controls button:disabled { opacity: 0.55; cursor: default; }
+.trace-controls button.trace-play {
+  min-width: 4.4em;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.trace-step {
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.trace-range {
+  flex: 1;
+  min-width: 5em;
+  accent-color: var(--primary);
+}
 .output.is-error pre {
   color: var(--danger);
   background: #fdecea;
