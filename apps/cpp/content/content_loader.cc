@@ -2,13 +2,7 @@
 
 #include <gio/gio.h>
 
-#include <fstream>
-#include <sstream>
 #include <string_view>
-#include <utility>
-
-ContentLoader::ContentLoader(string project_root)
-    : m_project_root(std::move(project_root)) {}
 
 string ContentLoader::load_resource(const string& resource_path) const {
     GError* error = nullptr;
@@ -34,14 +28,6 @@ string ContentLoader::load_project_file(const string& relative_path) const {
     if (relative_path.empty()) {
         return {};
     }
-
-    ifstream file(m_project_root + "/" + relative_path);
-    if (file) {
-        ostringstream content;
-        content << file.rdbuf();
-        return content.str();
-    }
-
     return load_resource("/app/sources/" + relative_path);
 }
 

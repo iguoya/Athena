@@ -32,36 +32,29 @@ private:
     string m_previous;
 };
 
-TEST(AppPathsTest, FindsExecutableDirectory) {
-    const string directory = executable_directory();
-    ASSERT_FALSE(directory.empty());
-    EXPECT_TRUE(Glib::file_test(directory, Glib::FileTest::IS_DIR));
-    // 必须是绝对路径：调用方会拿它拼资源路径，相对路径会随工作目录漂移。
-    EXPECT_TRUE(Glib::path_is_absolute(directory));
-}
+TEST(AppPathsTest, ReadsAppsRootFromEnvironment) {
+    const ScopedEnv apps("ATHENA_APPS_ROOT", ATHENA_SOURCE_ROOT "/../../apps");
 
-TEST(AppPathsTest, EnvironmentOverridesWin) {
-    const ScopedEnv content("ATHENA_CONTENT_ROOT", "/tmp/athena-content");
-    const ScopedEnv apps("ATHENA_APPS_ROOT", "/tmp/athena-apps");
-    // 覆盖值原样返回，不做存在性检查——部署方明确指定了就照做。
-    EXPECT_EQ(content_root(), "/tmp/athena-content");
-    EXPECT_EQ(external_apps_root(), "/tmp/athena-apps");
-}
+    const string root = external_apps_root();
 
-TEST(AppPathsTest, ContentRootHoldsTeachingSources) {
-    // 没有覆盖时应当落到真实的内容根：判定标志就是 cplusplus/ 在不在。
-    const string root = content_root();
     ASSERT_FALSE(root.empty());
     EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(root, "cplusplus"), Glib::FileTest::IS_DIR));
+        Glib::build_filename(root, "c", "app.json"), Glib::FileTest::EXISTS));
 }
 
-TEST(AppPathsTest, ExternalAppsRootHoldsAppManifests) {
-    const string apps = external_apps_root();
-    ASSERT_FALSE(apps.empty());
-    EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(apps, "c", "app.json"),
-        Glib::FileTest::EXISTS));
+TEST(AppPathsTest, EmptyWhenEnvironmentMissing) {
+    // 没人告诉它 apps/ 在哪就返回空，由调用方提示改用启动器（ADR 0047）——
+    // 不自己去猜别的应用住在哪。
+    const ScopedEnv apps("ATHENA_APPS_ROOT", "");
+    unsetenv("ATHENA_APPS_ROOT");
+
+    EXPECT_TRUE(external_apps_root().empty());
+}
+
+TEST(AppPathsTest, EmptyWhenPathIsNotDirectory) {
+    const ScopedEnv apps("ATHENA_APPS_ROOT", "/tmp/athena-apps-does-not-exist");
+
+    EXPECT_TRUE(external_apps_root().empty());
 }
 
 } // namespace

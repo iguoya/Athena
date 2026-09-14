@@ -1,6 +1,5 @@
 #include "ui/mainwindow.h"
 
-#include "platform/app_icon.h"
 #include "platform/menu_bar_platform.h"
 #include "platform/app_paths.h"
 #include "registry/domain_graph.h"
@@ -51,11 +50,10 @@ MainWindow::MainWindow(
     const Glib::RefPtr<Gtk::Builder>& builder)
     : Gtk::ApplicationWindow(cobject),
       m_main_builder(builder),
-      m_content_loader(content_root()),
+      m_content_loader(),
       m_function_registry(create_default_function_registry()) {
     // 用 window.blp 里的适中默认尺寸作为初始大小，让窗口正常居中出现并
     // 保留可见的系统标题栏。最大化和全屏都由用户自己选择。
-    apply_runtime_application_icon();
 
     auto css = Gtk::CssProvider::create();
     css->load_from_resource("/app/style.css");

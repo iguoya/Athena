@@ -1,9 +1,11 @@
 #pragma once
 
-// 应用菜单是否已经被系统接管为标准菜单栏：macOS 上 GTK 的 macOS 后端会把
-// Gtk::Application::set_menubar() 设置的菜单模型接管到系统标准菜单栏，
-// 窗口内没必要再画一条；其他平台没有这层系统集成，菜单模型不会自己出现
-// 在任何地方，MainWindow 因此在窗口内嵌入一个 Gtk::PopoverMenuBar，绑定
-// 同一份菜单模型才能被用到。各平台实现见 menu_bar_platform_macos.cc /
-// menu_bar_platform_other.cc。
+// 系统是否把应用菜单接管成全局菜单栏。
+//
+// 这不是平台问题，是桌面环境的能力问题：macOS 的 GTK 后端会把
+// Gtk::Application::set_menubar() 的菜单模型接管到系统菜单栏，Unity、
+// 某些 KDE 配置也会；普通的 GNOME / Windows 不会，窗口里得自己画一条。
+//
+// GTK 早就把这件事抽象成了设置项 gtk-shell-shows-menubar，运行时问它即可，
+// 不需要按平台编译不同实现（ADR 0047）。
 bool platform_has_native_menu_bar();

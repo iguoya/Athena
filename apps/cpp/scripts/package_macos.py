@@ -308,32 +308,6 @@ def copy_runtime_libraries(
     return copied_libraries
 
 
-def copy_teaching_sources(project_root: Path, resources_dir: Path) -> int:
-    """把按路径读取的教学内容放进 bundle。
-
-    源码框显示的是 cplusplus/ 下的真实源文件（AGENTS.md：不在 UI 里另存一份
-    教学代码字符串），文档和插图同理。这些是运行期按文件路径读的，不走
-    GResource，所以必须随包分发——否则装到别的机器上源码框就是空的。
-
-    platform/app_paths.cc 会把 Contents/Resources 认成内容根，目录结构因此
-    要和源码树保持一致。
-    """
-    copied = 0
-    for relative in ("cplusplus", "practice"):
-        source = project_root / relative
-        if not source.is_dir():
-            continue
-        destination = resources_dir / relative
-        shutil.copytree(
-            source,
-            destination,
-            symlinks=False,
-            ignore=shutil.ignore_patterns("*.o", "__pycache__", ".DS_Store"),
-        )
-        copied += sum(1 for _ in destination.rglob("*") if _.is_file())
-    return copied
-
-
 def copy_gtk_runtime(resources_dir: Path, homebrew_prefix: Path) -> list[Path]:
     for formula, relative in (
         ("adwaita-icon-theme", Path("share/icons/Adwaita")),
@@ -567,7 +541,6 @@ def main() -> int:
     executable.chmod(0o755)
     render_templates(project_root, contents_dir, version)
     create_icon(project_root, resources_dir)
-    teaching_files = copy_teaching_sources(project_root, resources_dir)
     plugins = copy_gtk_runtime(resources_dir, brew_prefix())
     libraries = copy_runtime_libraries(executable, plugins, frameworks_dir)
     verify_bundle(app_path)
@@ -576,7 +549,6 @@ def main() -> int:
 
     print(f"Created {app_path}")
     print(f"Bundled {len(libraries)} dynamic libraries and {len(plugins)} image loaders")
-    print(f"Bundled {teaching_files} teaching source files")
     print(f"Created {dmg_path}")
     return 0
 

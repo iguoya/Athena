@@ -124,11 +124,18 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   - 共享层、领域层、教学实现和页面业务逻辑不得包含 `__APPLE__`、Cocoa/WKWebView、
     `.app` 路径或 macOS 命令；平台差异只允许留在 `render/`、`platform/`、图标/打包
     适配层，或经已有抽象接口（例如 `DocumentView`）隔离。
-  - `platform/` 是平台适配层：取可执行文件路径这类没有跨平台 API 的能力放在这里，
-    分支关在单个 `.cc` 内不外泄。**按路径读取的内容一律经 `platform/app_paths.h`
-    解析**（`content_root()` / `external_apps_root()`），不得再写 `ATHENA_SOURCE_ROOT`
-    ——那是编译期绝对路径，装到别的机器上就失效。新增随包分发的目录要同时更新
-    `scripts/package_macos.py`，否则开发机正常、发行包是空的。
+  - **通用性优先：默认不写平台分支（ADR 0047）。** 想加 `#ifdef`、`.mm` 或按平台
+    挑源文件之前，先回答三个问题：这条分支服务的业务是什么？有没有一条所有平台
+    都走得通的路能达到同样效果？如果有，那条平台特有的路还剩多少价值？
+    绝大多数情况下有通用解：菜单栏问 GTK 的 `gtk-shell-shows-menubar` 设置项，
+    打开 URI 用 `Gio::AppInfo::launch_default_for_uri`，应用图标交给 `.app` 的
+    `Info.plist` 与图标主题，教学内容一律走 GResource。
+  - **教学内容只从 GResource 读**，运行期不按文件路径找任何随程序分发的东西；
+    这样源码框显示的内容和实验跑的代码保证同版本。`ATHENA_SOURCE_ROOT` 只给
+    测试目标用，生产代码不得出现——那是编译期绝对路径，装到别的机器上就失效。
+  - `platform/` 下现在只有 `app_paths`（读一个环境变量）和 `menu_bar_platform`
+    （问一句 GTK 设置），都不含条件编译。真要新增平台代码，得在 ADR 里说明
+    为什么没有通用解。
   - Meson 必须按目标平台选择源码和系统依赖；不得为了 Linux 在共享代码里增加平台分支，
     也不得让 Linux 构建链接 `gtk4-macos`、Apple Framework 或 Objective-C++ 源文件。
   - AI 讲解的 `DocumentView` 必须在 macOS 与 Ubuntu 履行加载、字号、主题和外部

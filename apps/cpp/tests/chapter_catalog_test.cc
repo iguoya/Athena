@@ -24,7 +24,7 @@ string read_project_file(const string& relative_path) {
 }
 
 string read_runtime_catalog() {
-    ContentLoader loader(ATHENA_SOURCE_ROOT);
+    ContentLoader loader;
     const string source =
         loader.load_resource("/app/data/chapter_catalog.json");
     if (source.empty()) {

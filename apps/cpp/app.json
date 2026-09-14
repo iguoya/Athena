@@ -11,6 +11,9 @@
     "file": "icon.svg"
   },
   "dev": {
+    "env": {
+      "ATHENA_APPS_ROOT": "${dir}/.."
+    },
     "prepare": [
       {
         "when_missing": "build",

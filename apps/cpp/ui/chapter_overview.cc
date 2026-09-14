@@ -2,8 +2,8 @@
 
 #include <gdkmm/clipboard.h>
 #include <gdkmm/display.h>
+#include <giomm/appinfo.h>
 #include <glib.h>
-#include <glibmm/spawn.h>
 
 #include <exception>
 #include <iostream>
@@ -23,21 +23,21 @@ void launch_local_chapter_overview(const ChapterMeta& chapter) {
     Gdk::Display::get_default()->get_clipboard()->set_text(prompt);
 
     // 提示词已复制到剪贴板；再尽力唤起一个助手入口方便用户粘贴。
-    // macOS 用 `open` 拉起本机豆包 App 的 doubao:// scheme；其他平台
-    // （Linux）没有这个 scheme 处理器，退回用默认浏览器打开豆包网页版。
-    // 两个平台都可用 ATHENA_AI_COMMAND 覆盖成本机习惯的助手命令。
-#ifdef __APPLE__
-    string command = "open doubao://";
-#else
-    string command = "xdg-open https://www.doubao.com";
-#endif
-    if (const char* custom = g_getenv("ATHENA_AI_COMMAND")) {
-        command = custom;
+    // 交给 GIO 按系统的默认处理器打开：有装豆包 App 的机器会被 doubao://
+    // 接走，没有的退回网页版。两者都不需要知道当前是什么平台——
+    // "用什么打开这个 URI"本来就是系统的事（ADR 0047）。
+    // ATHENA_AI_URI 可以覆盖成自己习惯的助手地址。
+    string uri = "doubao://";
+    if (const char* custom = g_getenv("ATHENA_AI_URI")) {
+        uri = custom;
     }
     try {
-        Glib::spawn_command_line_async(command);
-    } catch (const exception& error) {
-        cerr << "Failed to launch AI assistant (" << command
-             << "): " << error.what() << endl;
+        Gio::AppInfo::launch_default_for_uri(uri);
+    } catch (const Glib::Error&) {
+        try {
+            Gio::AppInfo::launch_default_for_uri("https://www.doubao.com");
+        } catch (const Glib::Error& error) {
+            cerr << "Failed to launch AI assistant: " << error.what() << endl;
+        }
     }
 }

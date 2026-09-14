@@ -20,30 +20,21 @@ sqlite3_dep = cc.find_library('sqlite3', has_headers: ['sqlite3.h'])
 blueprint_compiler = find_program('blueprint-compiler')
 python = find_program('python3')
 
-app_icon_sources = []
-menu_bar_platform_sources = []
+# 平台专用源文件已经清空（ADR 0047）：菜单栏按 GTK 设置项判断，
+# 应用图标交给 .app 的 Info.plist 和图标主题，URI 交给系统默认处理器。
+# 这里只保留 macOS 构建真正需要的依赖。
 platform_dependencies = []
 if host_machine.system() == 'darwin'
-  add_languages('objcpp', native: false)
-  app_icon_sources += files('platform/app_icon_macos.mm')
-  menu_bar_platform_sources += files('platform/menu_bar_platform_macos.cc')
-  platform_dependencies += [
-    dependency('gtk4-macos'),
-    dependency('appleframeworks', modules: ['AppKit'])
-  ]
-elif host_machine.system() == 'linux'
-  app_icon_sources += files('platform/app_icon_other.cc')
-  menu_bar_platform_sources += files('platform/menu_bar_platform_other.cc')
-else
-  app_icon_sources += files('platform/app_icon_other.cc')
-  menu_bar_platform_sources += files('platform/menu_bar_platform_other.cc')
+  platform_dependencies += [dependency('gtk4-macos')]
 endif
 
 # 业务逻辑类目录（C++ 语言各章节演示类）
 cplusplus_inc = include_directories('cplusplus')
 
 # 定义源码根目录，供运行时读取演示类源码（源码框显示）
-add_project_arguments('-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"', language: 'cpp')
+# 测试要按路径读源码树里的原始文件（生成器产物、athena.json），需要知道源码根。
+# 只给测试目标，不进生产代码：编译期绝对路径装到别的机器就失效（ADR 0047）。
+test_source_root_arg = '-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + '"'
 
 # 版本号以 meson.build 为单一来源（见 AGENTS.md macOS 发行规则），关于对话框直接读取，
 # 不在 C++ 里重复写死版本字符串。
@@ -195,6 +186,7 @@ app_sources = files(
   'main.cc',
   'ui/athena.cc',
   'ui/mainwindow.cc',
+  'platform/menu_bar_platform.cc',
   'practice/pocket_cube/view.cc',
   'render/cairo_shapes.cc',
   'render/cairo_text.cc',
@@ -228,7 +220,7 @@ app_sources = files(
   'ui/settings_dialog.cc',
   'ui/source_view.cc',
   'ui/type_semantics_lesson_page.cc',
-) + app_icon_sources + menu_bar_platform_sources
+)
 
 # === 打包资源 ===
 resources = gnome.compile_resources(
@@ -312,6 +304,7 @@ core_test_exe = executable(
   ),
   sources: resources,
   include_directories: [cplusplus_inc],
+  cpp_args: [test_source_root_arg],
   dependencies: [gtest_main_dep, athena_core_dep]
 )
 test('athena-core', core_test_exe)
