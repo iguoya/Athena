@@ -281,6 +281,8 @@ install_data(
 )
 install_data(
   'packaging/cn.yatiger.athena.desktop.in',
+  # 短名。scripts/package_linux.py 按这个名字找它——两处必须一致，
+  # 不一致时只有 Linux 发布会炸，平时的构建和测试都发现不了。
   rename: 'cn.athena.desktop',
   install_dir: get_option('datadir') / 'applications'
 )
