@@ -1,8 +1,7 @@
 #include "storage/learning_store.h"
 
+#include <glib/gstdio.h>
 #include <sqlite3.h>
-
-#include <sys/stat.h>
 
 #include <chrono>
 #include <stdexcept>
@@ -88,10 +87,12 @@ LearningStore::LearningStore(const string& database_path) {
 
     // 数据库可能存有 AI 服务商 Key 这类敏感配置；收紧到仅当前用户可读写，
     // 挡住最基础的意外泄露（同机其他账户、被囫囵打进备份/同步）。
-    // ":memory:" 没有对应的磁盘文件，跳过。chmod 失败（比如文件系统不
-    // 支持权限位）不影响数据库本身可用，不升级为异常。
+    // ":memory:" 没有对应的磁盘文件，跳过。失败（文件系统不支持权限位、
+    // 或 Windows 上只有只读标志可设）不影响数据库本身可用，不升级为异常。
+    // 用 GLib 的 g_chmod 而不是 POSIX 的 chmod：后者在 Windows 上不存在
+    // （ADR 0047）；权限位直接写八进制，避开 S_IRUSR 这些 POSIX 宏。
     if (database_path != ":memory:") {
-        chmod(database_path.c_str(), S_IRUSR | S_IWUSR);
+        g_chmod(database_path.c_str(), 0600);
     }
 }
 

@@ -14,8 +14,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  macos:
-    name: macOS build and test
+  # C++ 教程：GTK4 + Meson。三个平台各装各的依赖，跑的是同一条 Python 入口。
+  cpp-macos:
+    name: C++ 教程（macOS）
     runs-on: macos-15
     timeout-minutes: 30
     env:
@@ -33,10 +34,10 @@ jobs:
           blueprint-compiler librsvg
 
       - name: Verify
-        run: scripts/check.sh cpp --build-dir build --buildtype debugoptimized
+        run: python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
-  ubuntu:
-    name: Ubuntu build and test
+  cpp-ubuntu:
+    name: C++ 教程（Ubuntu）
     runs-on: ubuntu-26.04
     timeout-minutes: 30
 
@@ -56,4 +57,73 @@ jobs:
 
       - name: Verify
         # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
-        run: xvfb-run -a scripts/check.sh cpp --build-dir build --buildtype debugoptimized
+        run: xvfb-run -a python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
+
+  cpp-windows:
+    name: C++ 教程（Windows）
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-meson
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtkmm4
+            mingw-w64-ucrt-x86_64-gtksourceview5
+            mingw-w64-ucrt-x86_64-md4c
+            mingw-w64-ucrt-x86_64-nlohmann-json
+            mingw-w64-ucrt-x86_64-gtest
+            mingw-w64-ucrt-x86_64-sqlite3
+            mingw-w64-ucrt-x86_64-librsvg
+            mingw-w64-ucrt-x86_64-blueprint-compiler
+            mingw-w64-ucrt-x86_64-python
+
+      - name: Verify
+        run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
+
+  # 启动器：纯 Rust，三平台同一套源码。
+  launcher:
+    name: 启动器（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-26.04, windows-latest]
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Linux GUI dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libxkbcommon-dev libwayland-dev libxcb1-dev \
+            libfontconfig1-dev libayatana-appindicator3-dev
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            launcher/target
+          key: launcher-${{ matrix.os }}-${{ hashFiles('launcher/Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --manifest-path launcher/Cargo.toml --all-targets

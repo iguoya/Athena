@@ -209,7 +209,7 @@
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **引擎只判不算**：任何把完整答案直接呈给用户的交互路径都需要 ADR 才能加。
 - **壳要薄**：Rust 侧负责窗口、路径、进度；业务文案、课树和符号计算都不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.sh` 不构建本应用。
+- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
 
 ## 开发与验证
 
@@ -229,7 +229,7 @@ athena-dev open mathematics             # 日常开发：改前端秒级热更�
 环境变量 `ATHENA_MATH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）。
-**不必**为改本应用而跑主仓库 `scripts/check.sh`，除非同时改了主程序 discover。
+**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了主程序 discover。
 
 只想核对**排版与样式**时，可以 `npm run build` 之后跑 `node scripts/make-preview.mjs`，
 它在 `dist/` 里生成一个 `preview.html`，把 Tauri 命令换成读静态 JSON，用任意

@@ -77,7 +77,7 @@
 - **实验逻辑在 C++**：前端不重写一份算法真相；需要步进可视化时由 C++ 打印
   约定事件（如 NDJSON），前端只消费。
 - **壳要薄**：Rust 侧负责路径、进程、进度；业务文案与课树不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.sh` 不构建本应用。
+- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
 
 ## C++ 实验约定
 
@@ -104,7 +104,7 @@ athena-dev open dsa       # 日常开发（热更新）；启动器和图谱走�
 环境变量 `ATHENA_DSA_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）、
-以及至少一个 case 的编译运行。**不必**为改本应用而跑主仓库 `scripts/check.sh`，
+以及至少一个 case 的编译运行。**不必**为改本应用而跑主仓库 `scripts/check.py`，
 除非同时改了主程序里的 discover / 图谱入口。
 
 ## 与 Athena 主程序的关系（可选）

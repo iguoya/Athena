@@ -2,6 +2,7 @@
 
 #include <sqlite3.h>
 
+#include <glibmm.h>
 #include <gtest/gtest.h>
 
 #include <cstdio>
@@ -43,7 +44,8 @@ TEST(LearningStoreTest, RejectsInvalidDatabasePath) {
 // 对已存在的表是空操作，必须显式迁移，否则后续查询会因
 // "no such column" 抛出异常。
 TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
-    const string db_path = "/tmp/athena-learning-store-legacy-test.db";
+    const string db_path =
+        Glib::build_filename(Glib::get_tmp_dir(), "athena-learning-store-legacy-test.db");
     std::remove(db_path.c_str());
 
     sqlite3* legacy = nullptr;
@@ -105,7 +107,8 @@ TEST(LearningStoreTest, MigratesLegacyStatusColumnOnUpgrade) {
 // 运行历史功能已移除，但旧数据库里的表和记录属于用户数据。打开旧库时
 // 不应删除或改写它；新版本只是不再读取和追加。
 TEST(LearningStoreTest, KeepsLegacyRunHistoryDataUntouched) {
-    const string db_path = "/tmp/athena-learning-store-run-history-legacy-test.db";
+    const string db_path =
+        Glib::build_filename(Glib::get_tmp_dir(), "athena-learning-store-run-history-legacy-test.db");
     std::remove(db_path.c_str());
 
     sqlite3* legacy = nullptr;
@@ -163,7 +166,8 @@ TEST(LearningStoreTest, KeepsLegacyRunHistoryDataUntouched) {
 }
 
 TEST(LearningStoreTest, DoesNotCreateRunHistoryForNewDatabase) {
-    const string db_path = "/tmp/athena-learning-store-no-run-history-test.db";
+    const string db_path =
+        Glib::build_filename(Glib::get_tmp_dir(), "athena-learning-store-no-run-history-test.db");
     std::remove(db_path.c_str());
 
     { LearningStore store(db_path); }

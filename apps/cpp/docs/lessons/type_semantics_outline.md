@@ -37,6 +37,6 @@
 
 ## 验证边界
 
-静态 SVG 用 librsvg 渲染检查文字、连线及边界；统一入口 scripts/check.sh 检查资源、
+静态 SVG 用 librsvg 渲染检查文字、连线及边界；统一入口 scripts/check.py 检查资源、
 本机构建与现有测试。实际窗口大小、滚动与主观视觉效果需在应用中确认；原图字号不能
 替代缩放后的字号核对。Ubuntu 构建与 GTK 冒烟需在可用的 Ubuntu 环境执行。

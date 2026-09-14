@@ -24,7 +24,7 @@ apps/<id>/     一个目录一个独立学习应用，彼此完全平级
   mathematics/ 数学学习（Tauri）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
-scripts/       仓库级脚本：统一验证入口 check.sh、跨应用内容出处检查
+scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
 archive/       历史归档，不参与构建
 ```
 
@@ -129,12 +129,12 @@ archive/       历史归档，不参与构建
 仓库根有一个统一入口，本地与 CI 共用（ADR 0007、0045）：
 
 ```sh
-scripts/check.sh            # 跨应用内容出处检查 + 每个应用自己的检查
-scripts/check.sh cpp        # 只跑某个应用，余下参数原样透传给它
+python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
+python3 scripts/check.py cpp        # 只跑某个应用，余下参数原样透传给它
 ```
 
-检查逻辑归各应用自己（`apps/<id>/scripts/check.sh`），根入口只负责依次调用。
-新增应用放一份自己的 `check.sh` 就会被带上，不用改根入口，也不用改 CI。
+检查逻辑归各应用自己（`apps/<id>/scripts/check.py`），根入口只负责依次调用。
+新增应用放一份自己的 `check.py` 就会被带上，不用改根入口，也不用改 CI。
 
 ## 必读文档
 

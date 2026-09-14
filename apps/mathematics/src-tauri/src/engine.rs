@@ -63,8 +63,19 @@ pub struct Engine {
     last_error: Option<String>,
 }
 
+/// venv 里解释器的位置：POSIX 是 `bin/python`，Windows 是 `Scripts\python.exe`。
+/// 按存在与否挑，不按平台编译（ADR 0047）——两条都找不到时返回 POSIX 那条，
+/// 让启动失败的报错里出现一个具体路径，好定位。
 fn venv_python(app_root: &Path) -> PathBuf {
-    app_root.join("engine/.venv/bin/python")
+    let candidates = [
+        app_root.join("engine/.venv/bin/python"),
+        app_root.join("engine/.venv/Scripts/python.exe"),
+    ];
+    candidates
+        .iter()
+        .find(|path| path.is_file())
+        .cloned()
+        .unwrap_or_else(|| candidates[0].clone())
 }
 
 impl Engine {

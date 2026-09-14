@@ -87,7 +87,7 @@
 - **独立可运行**：`athena-dev open english`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **壳要薄**：Rust 侧负责路径、进度；业务文案与课树不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.sh` 不构建本应用。
+- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
 
 ## 开发与验证
 
@@ -102,7 +102,7 @@ athena-dev open english       # 日常开发（热更新）；启动器和图谱
 环境变量 `ATHENA_ENGLISH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）。
-**不必**为改本应用而跑主仓库 `scripts/check.sh`，除非同时改了主程序 discover。
+**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了主程序 discover。
 
 ## 修改流程
 

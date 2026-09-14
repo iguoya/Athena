@@ -254,10 +254,10 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 本应用的检查入口：
 
 ```sh
-apps/cpp/scripts/check.sh
+python3 apps/cpp/scripts/check.py
 ```
 
-仓库根的 `scripts/check.sh cpp [参数...]` 会转发到它，CI 走的就是这条。
+仓库根的 `python3 scripts/check.py cpp [参数...]` 会转发到它，CI 走的就是这条。
 脚本依次执行以下步骤；默认构建目录为 `build`，可用 `--build-dir` 与
 `--buildtype` 覆盖（CI 使用 `--build-dir build --buildtype debugoptimized`）：
 

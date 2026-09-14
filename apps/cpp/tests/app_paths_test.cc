@@ -3,26 +3,25 @@
 #include <glibmm.h>
 #include <gtest/gtest.h>
 
-#include <cstdlib>
-
 namespace {
 
 // 环境变量在测试之间必须复原，否则会串到同一进程里的其他用例。
 class ScopedEnv {
 public:
     ScopedEnv(const char* name, const string& value) : m_name(name) {
-        const char* previous = getenv(name);
+        // 用 GLib 的接口而不是 POSIX 的 setenv：Windows 上没有后者（ADR 0047）。
+        const char* previous = g_getenv(name);
         m_had_previous = previous != nullptr;
         if (m_had_previous) {
             m_previous = previous;
         }
-        setenv(name, value.c_str(), 1);
+        g_setenv(name, value.c_str(), TRUE);
     }
     ~ScopedEnv() {
         if (m_had_previous) {
-            setenv(m_name, m_previous.c_str(), 1);
+            g_setenv(m_name, m_previous.c_str(), TRUE);
         } else {
-            unsetenv(m_name);
+            g_unsetenv(m_name);
         }
     }
 
@@ -46,13 +45,15 @@ TEST(AppPathsTest, EmptyWhenEnvironmentMissing) {
     // 没人告诉它 apps/ 在哪就返回空，由调用方提示改用启动器（ADR 0047）——
     // 不自己去猜别的应用住在哪。
     const ScopedEnv apps("ATHENA_APPS_ROOT", "");
-    unsetenv("ATHENA_APPS_ROOT");
+    g_unsetenv("ATHENA_APPS_ROOT");
 
     EXPECT_TRUE(external_apps_root().empty());
 }
 
 TEST(AppPathsTest, EmptyWhenPathIsNotDirectory) {
-    const ScopedEnv apps("ATHENA_APPS_ROOT", "/tmp/athena-apps-does-not-exist");
+    const ScopedEnv apps(
+        "ATHENA_APPS_ROOT",
+        Glib::build_filename(Glib::get_tmp_dir(), "athena-apps-does-not-exist"));
 
     EXPECT_TRUE(external_apps_root().empty());
 }

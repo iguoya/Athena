@@ -43,8 +43,8 @@ launcher/target/release/athena-dev stop dsa
 ## 验证
 
 ```sh
-scripts/check.sh            # 跨应用内容出处检查 + 每个应用自己的检查
-scripts/check.sh cpp        # 只跑某个应用，余下参数透传给它
+python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
+python3 scripts/check.py cpp        # 只跑某个应用，余下参数透传给它
 ```
 
 ## 文档

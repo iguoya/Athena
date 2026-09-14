@@ -39,8 +39,9 @@
         {
             "label": "Athena: Check",
             "type": "shell",
-            "command": "scripts/check.sh",
+            "command": "python3",
             "args": [
+                "scripts/check.py",
                 "--build-dir",
                 "build",
                 "--buildtype",

@@ -100,6 +100,8 @@ fn parse_cli() {
 }
 
 fn detect_compiler() -> String {
+    // Windows 上装 MSYS2/MinGW 或 LLVM 就有 g++ / clang++；MSVC 的 cl.exe
+    // 命令行参数是另一套，暂不支持（ADR 0047 的已知欠账）。
     for cand in ["c++", "clang++", "g++"] {
         if Command::new(cand)
             .arg("--version")
