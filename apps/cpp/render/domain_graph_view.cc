@@ -24,7 +24,8 @@ constexpr int kNodeWidth = 360;
 constexpr int kColumnGap = 36;
 constexpr int kLayerGap = 72;
 // 图谱下方的说明区块（提示语、图例、关联说明、理论科目）统一按这个宽度
-// 换行，跟两张图的宽度大致对齐，不各自按内容撑到不同宽度。
+// 换行，跟两张图的宽度大致对齐，不各自按内容撑到不同宽度。这是宽度下限：
+// 两张图比它宽时，区块跟着整页宽度一起铺开（见 make_domain_graph_view）。
 constexpr int kBlockWidth = 2200;
 
 // 每条边在图上画一个编号小圆，下方「箭头说明」按同一编号批量解释关联原因。
@@ -720,10 +721,13 @@ Gtk::Widget* make_domain_graph_view(
     side_section("电子信息方向 · 电路与嵌入式", GraphSide::Electronics,
                  graph.electronics_layer_count);
 
+    // 说明区块保持 halign 默认的 FILL，铺满整页宽度：换成 START 会让 GTK 按
+    // 外层分配到的宽度估算高度、却按收窄后的自身宽度排版，行数变多而高度没
+    // 跟着变，换行文字被压掉一截，启动时还会打出 gtk_widget_measure 的尺寸
+    // 告警。宽度下限由 kBlockWidth 保证，不需要再靠对齐方式收窄。
     for (Gtk::Widget* block :
          {make_legend(), make_edge_notes(graph), make_theory_section(graph)}) {
         block->set_size_request(kBlockWidth, -1);
-        block->set_halign(Gtk::Align::START);
         outer->append(*block);
     }
     return outer;
