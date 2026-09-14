@@ -650,6 +650,75 @@
               ]
             }
           ],
+          "formal": {
+            "intro": "左边那一页讲的是「面积变成几倍」。同一件事，教材是这样写的——每条都标了出处，可以拿去核对。",
+            "entries": [
+              {
+                "id": "f1",
+                "kind": "definition",
+                "title": "二阶行列式",
+                "statement": "设二阶矩阵 `A = [[a₁₁, a₁₂], [a₂₁, a₂₂]]`，称数 `a₁₁a₂₂ − a₁₂a₂₁` 为 `A` 的**行列式**，记作 `det A` 或 `|A|`。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "同济《工程数学·线性代数》第六版",
+                  "ref": "1.1–1.2 二阶与三阶行列式",
+                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
+                  "note": "按标准表述整理，未逐字引用；教材位置见 ref，在线可核对处见链接"
+                },
+                "pairs": "ov-says",
+                "plain": "这个数就是左边说的那个「面积变成几倍」。"
+              },
+              {
+                "id": "f2",
+                "kind": "property",
+                "title": "行列式的几何意义",
+                "statement": "`|det A|` 等于 `A` 把单位正方形变成的平行四边形的面积；`det A` 的**符号**表示定向是否改变——为负说明平面被翻了面。这个倍数与所取区域无关，对平面上任何可求面积的区域都一样。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "3Blue1Brown",
+                  "ref": "Essence of Linear Algebra · The determinant",
+                  "url": "https://www.3blue1brown.com/lessons/determinant",
+                  "note": "把视频里的几何解释写成陈述句；同济教材不从这个角度引入行列式"
+                },
+                "pairs": "ov-asks",
+                "plain": "所以「挑哪一块都一样」不是碰巧，是这条性质本身。"
+              },
+              {
+                "id": "f3",
+                "kind": "property",
+                "title": "倍加不改变行列式",
+                "statement": "把矩阵某一行（或某一列）的 `k` 倍加到另一行（或另一列）上，行列式的值不变。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "同济《工程数学·线性代数》第六版",
+                  "ref": "1.5 行列式的性质",
+                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
+                  "note": "按标准表述整理，未逐字引用"
+                },
+                "pairs": "ov-aha",
+                "plain": "这就是「剪歪不改变面积」——底和高都没动。"
+              },
+              {
+                "id": "f4",
+                "kind": "theorem",
+                "title": "行列式为零与可逆",
+                "statement": "`n` 阶方阵 `A` 可逆的**充分必要条件**是 `det A ≠ 0`。此时称 `A` 为非奇异矩阵；`det A = 0` 时称 `A` 为奇异矩阵，它把空间压到更低的维度上。",
+                "conditions": [
+                  "`A` 必须是**方阵**——非方阵没有行列式，这个判据无从谈起。",
+                  "「可逆」指存在方阵 `B` 使 `AB = BA = I`。"
+                ],
+                "source": {
+                  "kind": "adapted",
+                  "site": "同济《工程数学·线性代数》第六版",
+                  "ref": "2.3 逆矩阵（可逆的充要条件）",
+                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
+                  "note": "按标准表述整理，未逐字引用；「压到更低维度」一句是几何解释，出自 3Blue1Brown 那一课"
+                },
+                "pairs": "ov-says",
+                "plain": "面积被压成 0，就再也回不去了——下一节讲的就是这件事。"
+              }
+            ]
+          },
           "drills": {
             "title": "随堂练习",
             "intro": "五道题，**每一题只比上一题改一个地方**。前四题都能口算，最后一题反过来问。",

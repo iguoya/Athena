@@ -636,3 +636,100 @@ canvas.dragging { cursor: grabbing; }
 .dr-src a:hover { opacity: .8; }
 .dr-src .dr-src-n { color: var(--muted); }
 .dr-src.auth { color: var(--basis-j); }
+
+/* ── 两个视图（ADR 0020）─────────────────────────────────────────
+   标签必须一眼可见，不做成折叠或次级入口：知道「严谨的说法在那边、
+   随时可以去核对」本身就消解一部分焦虑。 */
+.views {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 18px 0 22px; padding-bottom: 0;
+  border-bottom: 1px solid var(--line);
+}
+.view-tab {
+  font: inherit; font-size: 18px; font-weight: 600;
+  padding: 10px 20px; margin-bottom: -1px; cursor: pointer;
+  color: var(--muted); background: none;
+  border: 1px solid transparent; border-bottom: 2px solid transparent;
+  border-radius: 8px 8px 0 0;
+}
+.view-tab:hover { color: var(--ink); background: var(--panel); }
+.view-tab[aria-selected="true"] {
+  color: var(--accent); border-bottom-color: var(--accent); background: none;
+}
+.views-hint { margin-left: auto; font-size: 15px; color: var(--muted); }
+
+/* 严谨条目：一条对一段，不是一本塞进标签页的教材 */
+.formal { margin: 0; }
+.fm-intro { font-size: 18px; line-height: 1.75; color: var(--muted); margin: 0 0 20px; }
+.fm {
+  margin: 0 0 20px; padding: 20px 24px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+}
+.fm-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+/* 定义可以直接用，定理要先核对条件——类型要一眼分得开 */
+.fm-kind {
+  flex: none; padding: 3px 12px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; letter-spacing: .04em;
+  color: var(--bg); background: var(--muted);
+}
+.fm-definition { background: var(--accent); }
+.fm-theorem { background: var(--eigen); }
+.fm-property { background: var(--basis-j); }
+.fm-method { background: var(--basis-i); }
+.fm-term { background: var(--muted); }
+.fm-t { font-size: 20px; font-weight: 600; }
+.fm-stmt {
+  font-size: 19px; line-height: 1.8;
+  padding: 14px 18px; background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.fm-cond { margin-top: 14px; }
+.fm-cond-k {
+  display: block; margin-bottom: 6px;
+  font-size: 14px; font-weight: 600; letter-spacing: .05em; color: var(--warn);
+}
+.fm-cond ul { margin: 0; padding-left: 24px; }
+.fm-cond li { font-size: 17px; line-height: 1.7; margin-bottom: 4px; }
+/* 接缝：把这条严谨表述换成直觉侧的话。写不出来说明两侧脱节了 */
+.fm-plain {
+  margin-top: 14px; padding: 12px 18px;
+  font-size: 17px; line-height: 1.7;
+  background: var(--bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+}
+.fm-plain-k {
+  display: block; margin-bottom: 4px;
+  font-size: 14px; font-weight: 600; letter-spacing: .05em; color: var(--accent);
+}
+.fm-foot {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-top: 14px;
+}
+.fm-jump {
+  font: inherit; font-size: 16px; padding: 6px 16px; cursor: pointer;
+  color: var(--accent); background: none;
+  border: 1px dashed var(--accent); border-radius: 999px;
+}
+.fm-jump:hover { background: var(--panel-2); }
+
+/* 直觉侧被配对的段落上的角标，点了跳到那条严谨陈述 */
+.pair-tag {
+  display: inline-block; margin: 10px 0 0; padding: 4px 12px;
+  font: inherit; font-size: 15px; cursor: pointer;
+  color: var(--accent); background: none;
+  border: 1px dashed var(--accent); border-radius: 999px;
+}
+.pair-tag:hover { background: var(--panel-2); }
+.ov-says .pair-tag, .ov-asks .pair-tag { margin-top: 12px; }
+
+/* 跳过去之后停在对应位置并亮一下，让人知道「就是这里」 */
+.is-linked {
+  animation: linkflash 1.8s ease-out;
+  border-radius: 8px;
+}
+@keyframes linkflash {
+  0%, 55% { box-shadow: 0 0 0 3px var(--accent); }
+  100% { box-shadow: 0 0 0 3px transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-linked { animation: none; box-shadow: 0 0 0 3px var(--accent); }
+}

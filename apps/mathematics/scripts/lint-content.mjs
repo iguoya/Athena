@@ -270,6 +270,82 @@ for (const ch of cur.chapters) {
   }
 }
 
+// ── 两个视图必须对得上（ADR 0020）────────────────────────────────
+// 「不要割裂两种关系」不能靠写作时自觉：每条严谨陈述都要指得回直觉侧讲同一件事
+// 的那一段，指到不存在的段落说明两侧内容脱节了。
+const FORMAL_KINDS = new Set(["definition", "theorem", "property", "method", "term"]);
+
+/** 这一节的直觉侧实际有哪些锚点——pairs 只能指向真的存在的那些 */
+function intuitiveAnchors(t) {
+  const a = new Set();
+  if (t.hook) a.add("s-hook");
+  if (t.overview?.asks) a.add("ov-asks");
+  if (t.overview?.says) a.add("ov-says");
+  if (t.overview?.steps?.length) a.add("ov-steps");
+  if (t.overview?.aha) a.add("ov-aha");
+  if (t.walkthrough) a.add("s-walk");
+  if (t.widget) a.add("s-widget");
+  if ((t.experiments ?? []).some((e) => e.options?.length)) a.add("s-ask");
+  return a;
+}
+
+let formalTopics = 0;
+let formalEntries = 0;
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    if (!t.formal) continue;
+    formalTopics++;
+    const anchors = intuitiveAnchors(t);
+    const seen = new Set();
+    for (const e of t.formal.entries ?? []) {
+      formalEntries++;
+      const where = `${t.id}::严谨 ${e.id}`;
+      if (seen.has(e.id)) {
+        console.error(`严谨表述：${where} 的 id 重复`);
+        hits++;
+      }
+      seen.add(e.id);
+      if (!FORMAL_KINDS.has(e.kind)) {
+        console.error(`严谨表述：${where} 的 kind「${e.kind}」不在定义/定理/性质/计算方法/术语之内`);
+        hits++;
+      }
+      if (!e.title || !e.statement) {
+        console.error(`严谨表述：${where} 缺标题或陈述`);
+        hits++;
+      }
+      // 配对：这是「不割裂」的机械保证，缺一不可
+      if (!e.pairs) {
+        console.error(`严谨表述：${where} 没有 pairs——每条都要指回直觉侧讲同一件事的那一段`);
+        hits++;
+      } else if (!anchors.has(e.pairs)) {
+        console.error(
+          `严谨表述：${where} 的 pairs「${e.pairs}」在这一节的直觉侧不存在` +
+            `（本节可用的是 ${[...anchors].join("、") || "无"}）——两侧脱节了`,
+        );
+        hits++;
+      }
+      if (!e.plain) {
+        console.error(
+          `严谨表述：${where} 没有 plain——写不出「换成图上的话怎么说」，` +
+            `说明这条在直觉侧没有对应`,
+        );
+        hits++;
+      } else if (e.plain.length > 80) {
+        // plain 是一句话的接缝，写长了就是在严谨视图里再讲一遍直觉（ADR 0020 第 3 节）
+        console.error(`严谨表述：${where} 的 plain 有 ${e.plain.length} 字，太长了——它是一句话的接缝，不是第二份讲解`);
+        hits++;
+      }
+      checkSource(e.source, where, true);
+    }
+    if (!(t.formal.entries ?? []).length) {
+      console.error(`严谨表述：${t.id} 有 formal 但没有条目`);
+      hits++;
+    }
+  }
+}
+
+const formalStat = `严谨视图 ${formalTopics}/${topics.length} 节（${formalEntries} 条）`;
+
 // ── 标准例题（ADR 0019 第 4 节）──
 let exCount = 0;
 for (const ch of cur.chapters) {
@@ -421,5 +497,5 @@ console.log(
   `内容检查通过：${files.length} 个文件无禁用表达；` +
     `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）；` +
     `诊断 ${total} 题，位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}；` +
-    drillStat + "；" + sourceStat + "。",
+    drillStat + "；" + sourceStat + "；" + formalStat + "。",
 );

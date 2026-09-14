@@ -55,6 +55,32 @@ interface Experiment {
   verify_m?: number[];
   options?: PredictOption[];
 }
+/**
+ * 严谨视图的一条陈述（ADR 0020）。
+ * 它与直觉视图讲的是同一件事，靠 pairs + plain 接起来——两侧各写各的正是本
+ * 决策要防的那种割裂。
+ */
+interface FormalEntry {
+  id: string;
+  /** 定义 / 定理 / 性质 / 计算方法 / 术语对照：用起来的规矩不同，要一眼分得开 */
+  kind: "definition" | "theorem" | "property" | "method" | "term";
+  title: string;
+  statement: string;
+  /** 定理的前提，逐条列。定义通常没有 */
+  conditions?: string[];
+  /** 必填：严谨视图的全部价值就在可核对 */
+  source: DrillSource;
+  /** 指向直觉视图里讲同一件事的那一段的锚点 id */
+  pairs: string;
+  /** 用直觉侧的话把这条复述一遍——写不出来说明两侧脱节了 */
+  plain: string;
+}
+
+interface Formal {
+  intro?: string;
+  entries: FormalEntry[];
+}
+
 /** 标准例题（ADR 0019 第 4 节）。总是给出完整解答，它不是题，是给人读的。 */
 interface WorkedExample {
   id: string;
@@ -112,6 +138,8 @@ interface Topic {
    * （ADR 0019 第 4 节补齐 ADR 0014 第 2 节）。
    */
   examples?: WorkedExample[];
+  /** 严谨视图：与直觉视图逐条对照的准确陈述（ADR 0020） */
+  formal?: Formal;
   /** 随堂练习：跟着讲解走，检验刚讲的那一点（ADR 0014） */
   drills?: DrillSet;
 }
@@ -150,6 +178,12 @@ const diagAnswers = new Map<string, Answer>();
 const drillStates = new Map<string, DrillState>();
 /** 当前在第几遍。侧边栏显示的「第一遍 · 走通为准」说的就是它（ADR 0012） */
 const currentPass: 1 | 2 = 1;
+
+/**
+ * 当前视图（ADR 0020 第 5 节）。默认停在直觉侧——起点假设是不假设学过，
+ * 先给准确定义会把人挡在门外。选择在会话内保持，不必每节点一次。
+ */
+let currentView: "intuitive" | "formal" = "intuitive";
 
 type View = { kind: "diag" } | { kind: "graph" } | { kind: "topic"; id: string };
 let view: View = { kind: "graph" };
@@ -291,6 +325,7 @@ function renderSide() {
       if (t.walkthrough) secs.push(["s-walk", "先看一遍"]);
       if (t.widget) secs.push(["s-widget", "动手试"]);
       if ((t.experiments ?? []).some((e) => e.options?.length)) secs.push(["s-ask", "先猜再验"]);
+      if (t.formal) secs.push(["s-formal", "严谨表述"]);
       if (t.examples?.length) secs.push(["s-ex", "标准例题"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
 
@@ -320,7 +355,8 @@ function renderSide() {
   );
   side.querySelectorAll<HTMLButtonElement>(".sec").forEach((b) =>
     b.addEventListener("click", () => {
-      document.getElementById(b.dataset.sec!)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // 目标可能在另一个视图里（隐藏的元素滚不过去，点了像是坏了）——先切过去
+      revealAnchor(b.dataset.sec!);
     }),
   );
 }
@@ -542,18 +578,19 @@ function renderTopic(id: string) {
   const prev = predict ? predictions.get(key(t.id, predict.id)) : undefined;
 
   // 第一遍只走 overview 层：极薄，走完即可，不设挡路考核（ADR 0012 第 2 节）
+  // 每块都带锚点 id：严谨视图的 pairs 指到这里，两个视图才连得起来（ADR 0020 第 1 节）
   const overviewHtml = ov
     ? `<div id="s-ov" class="ov">
-         <div class="ov-asks" data-read="${esc1(ov.asks)}"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
-         <p class="ov-says" data-read="${esc1(ov.says)}">${rich(ov.says)}</p>
+         <div id="ov-asks" class="ov-asks" data-read="${esc1(ov.asks)}"><span class="ov-tag">这一节问什么</span>${rich(ov.asks)}</div>
+         <p id="ov-says" class="ov-says" data-read="${esc1(ov.says)}">${rich(ov.says)}</p>
          ${
            ov.steps?.length
-             ? `<ol class="ov-steps">${ov.steps
+             ? `<ol id="ov-steps" class="ov-steps">${ov.steps
                  .map((s) => `<li data-read="${esc1(s)}">${rich(s)}</li>`)
                  .join("")}</ol>`
              : ""
          }
-         ${ov.aha ? `<div class="ov-aha" data-read="${esc1(ov.aha)}"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
+         ${ov.aha ? `<div id="ov-aha" class="ov-aha" data-read="${esc1(ov.aha)}"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
          <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
        </div>`
     : "";
@@ -660,11 +697,33 @@ function renderTopic(id: string) {
       }
       ${reqHtml}
       ${srcHtml}
+      ${
+        t.formal
+          ? `<div class="views" role="tablist">
+               <button type="button" class="view-tab" role="tab" data-view="intuitive"
+                 aria-selected="${currentView === "intuitive"}">直觉与图像</button>
+               <button type="button" class="view-tab" role="tab" data-view="formal"
+                 aria-selected="${currentView === "formal"}">严谨表述</button>
+               <span class="views-hint">同一件事的两种说法，随时可以来回对照</span>
+             </div>`
+          : ""
+      }
+      <div class="view" data-pane="intuitive"${
+        t.formal && currentView === "formal" ? " hidden" : ""
+      }>
       ${t.hook ? `<div id="s-hook" class="hook"><p data-read="${esc1(t.hook.text)}">${rich(t.hook.text)}</p></div>` : ""}
       ${overviewHtml}
       ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
+      </div>
+      ${
+        t.formal
+          ? `<div class="view" data-pane="formal"${
+              currentView === "formal" ? "" : " hidden"
+            }>${renderFormal(t.formal)}</div>`
+          : ""
+      }
       ${t.examples?.length ? renderExamples(t.examples) : ""}
       ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id, currentPass) : ""}
       ${chapterCheckpoint(t)}
@@ -715,6 +774,14 @@ function renderTopic(id: string) {
     document.getElementById("main")!.scrollTop = 0;
   });
 
+  main.querySelectorAll<HTMLButtonElement>(".view-tab").forEach((b) =>
+    b.addEventListener("click", () => showView(b.dataset.view as "intuitive" | "formal")),
+  );
+  main.querySelectorAll<HTMLButtonElement>(".fm-jump").forEach((b) =>
+    b.addEventListener("click", () => revealAnchor(b.dataset.anchor!)),
+  );
+  if (t.formal) markPairedAnchors(t.formal);
+
   if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full", pre?.target);
   if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
@@ -762,9 +829,10 @@ function stopReading() {
  * 而且不必为每节另写一份讲稿——念的就是页面上写着的那些字（ADR 0018）。
  */
 async function readSection() {
+  // 只念看得见的：另一个视图是 hidden 的，念它等于凭空插进来一段（ADR 0020）
   const blocks = Array.from(
     document.querySelectorAll<HTMLElement>("#main [data-read]"),
-  );
+  ).filter((el) => el.offsetParent !== null || el.getClientRects().length > 0);
   if (!blocks.length) return;
   stopGuide();
   stopReading();
@@ -850,6 +918,127 @@ function rerenderTopic() {
   const y = main.scrollTop;
   renderTopic(view.id);
   main.scrollTop = y;
+}
+
+/**
+ * 切到某个视图。DOM 已经渲染好，这里只改可见性，不重绘——重绘会让画布重挂、
+ * 练习题的作答状态闪一下。
+ */
+function showView(v: "intuitive" | "formal") {
+  currentView = v;
+  document.querySelectorAll<HTMLElement>("#main .view").forEach((el) => {
+    el.hidden = el.dataset.pane !== v;
+  });
+  document.querySelectorAll<HTMLButtonElement>("#main .view-tab").forEach((b) => {
+    b.setAttribute("aria-selected", String(b.dataset.view === v));
+  });
+}
+
+/**
+ * 滚到某个锚点；它若在另一个视图里，先把那个视图切出来。
+ * 切过去之后停在对应位置并高亮一下——回页首就等于让人重新找一遍，
+ * 两个视图就散了（ADR 0020 第 1 节）。
+ */
+function revealAnchor(anchorId: string) {
+  const el = document.getElementById(anchorId);
+  if (!el) return;
+  const pane = el.closest<HTMLElement>(".view");
+  if (pane?.dataset.pane && pane.dataset.pane !== currentView) {
+    showView(pane.dataset.pane as "intuitive" | "formal");
+  }
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.classList.add("is-linked");
+  window.setTimeout(() => el.classList.remove("is-linked"), 1800);
+}
+
+/**
+ * 把「⇄ 严谨表述」角标挂到直觉侧被配对的那几段上（ADR 0020 第 1 节第 2 条）。
+ * 配对关系来自内容，挂哪几段由运行时数据决定，所以在渲染后注入而不是写死在模板里。
+ */
+function markPairedAnchors(f: Formal) {
+  const byAnchor = new Map<string, FormalEntry[]>();
+  for (const e of f.entries) {
+    if (!byAnchor.has(e.pairs)) byAnchor.set(e.pairs, []);
+    byAnchor.get(e.pairs)!.push(e);
+  }
+  for (const [anchor, entries] of byAnchor) {
+    const host = document.getElementById(anchor);
+    if (!host) continue;
+    const tag = document.createElement("button");
+    tag.type = "button";
+    tag.className = "pair-tag";
+    tag.dataset.target = `fm-${entries[0].id}`;
+    tag.textContent =
+      entries.length > 1
+        ? `严谨表述（${entries.length} 条）→`
+        : `${FORMAL_KIND[entries[0].kind]}：${entries[0].title} →`;
+    tag.addEventListener("click", () => revealAnchor(tag.dataset.target!));
+    // 列表里塞一个非 li 的子节点会把编号和缩进弄乱，这类容器挂到它后面
+    if (host.tagName === "OL" || host.tagName === "UL") {
+      host.insertAdjacentElement("afterend", tag);
+    } else {
+      host.appendChild(tag);
+    }
+  }
+}
+
+/** 直觉侧锚点 → 人能读懂的名字。跳转提示里要说清「跳到哪」，不能只给个 id。 */
+const ANCHOR_LABEL: Record<string, string> = {
+  "s-hook": "为什么需要它",
+  "ov-asks": "这一节问什么",
+  "ov-says": "讲什么",
+  "ov-steps": "几步走",
+  "ov-aha": "值得记住的一点",
+  "s-walk": "先看一遍",
+  "s-widget": "动手试",
+  "s-ask": "先猜再验",
+};
+
+const FORMAL_KIND: Record<FormalEntry["kind"], string> = {
+  definition: "定义",
+  theorem: "定理",
+  property: "性质",
+  method: "计算方法",
+  term: "术语",
+};
+
+/**
+ * 严谨视图（ADR 0020）。
+ * 它不是另写一篇，而是把直觉侧讲过的话换成准确陈述，一条对一段：
+ * 每条都指得回直觉侧（pairs），也都用直觉侧的话复述一遍（plain）。
+ */
+function renderFormal(f: Formal): string {
+  return `<div id="s-formal" class="formal">
+      ${f.intro ? `<p class="fm-intro" data-read="${esc1(f.intro)}">${rich(f.intro)}</p>` : ""}
+      ${f.entries
+        .map(
+          (e) => `<section class="fm" id="fm-${e.id}">
+            <div class="fm-top">
+              <span class="fm-kind fm-${e.kind}">${FORMAL_KIND[e.kind]}</span>
+              <span class="fm-t">${rich(e.title)}</span>
+            </div>
+            <div class="fm-stmt" data-read="${esc1(e.statement)}">${rich(e.statement)}</div>
+            ${
+              e.conditions?.length
+                ? `<div class="fm-cond"><span class="fm-cond-k">成立条件</span>
+                     <ul>${e.conditions
+                       .map((c) => `<li data-read="${esc1(c)}">${rich(c)}</li>`)
+                       .join("")}</ul></div>`
+                : ""
+            }
+            <div class="fm-plain" data-read="${esc1(e.plain)}">
+              <span class="fm-plain-k">换成图上的话</span>${rich(e.plain)}
+            </div>
+            <div class="fm-foot">
+              <button type="button" class="fm-jump" data-anchor="${e.pairs}">
+                去直觉侧看「${ANCHOR_LABEL[e.pairs] ?? e.pairs}」 →
+              </button>
+              ${exampleSource(e.source)}
+            </div>
+          </section>`,
+        )
+        .join("")}
+    </div>`;
 }
 
 /** 例题的出处，随例题一起显示——例题本来就给完整解答，不存在剧透问题 */
