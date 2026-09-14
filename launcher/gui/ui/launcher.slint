@@ -167,57 +167,80 @@ export component LauncherWindow inherits Window {
             property <length> hub-x: 58px;
             property <length> hub-y: 38px;
 
-            // 学科之间的历史演进关系（C++ 从 C 长出来）。画在图块下面，
-            // 坐标和图块用同一套算式，窗口一变两边一起动。
-            for link in root.links: Path {
+            // 学科之间的历史演进关系（C++ 从 C 长出来）。画法照搬 C++ 教程首页
+            // 那张学科图谱（apps/cpp/render/domain_graph_view.cc）：两个控制点
+            // 都落在两个节点之间的中线上，出来就是一条规整的 S 形；箭头是实心
+            // 三角；颜色淡到退成背景，不喧宾夺主。
+            for link in root.links: edge := Rectangle {
                 x: 0; y: 0;
                 width: parent.width;
                 height: parent.height;
-                viewbox-x: 0;
-                viewbox-y: 0;
-                viewbox-width: parent.width / 1px;
-                viewbox-height: parent.height / 1px;
-                stroke: #a8a8b0;
-                stroke-width: 1.5px;
 
-                property <float> fx: (mod(link.from, graph.columns) * graph.stride-x + graph.hub-x) / 1px;
-                property <float> fy: (floor(link.from / graph.columns) * graph.stride-y + graph.hub-y) / 1px;
-                property <float> tx: (mod(link.to, graph.columns) * graph.stride-x + graph.hub-x) / 1px;
-                property <float> ty: (floor(link.to / graph.columns) * graph.stride-y + graph.hub-y) / 1px;
-                // 单位向量：线从色块边缘起止，不压在图标上；箭头也按它算。
-                property <float> span: max(1, sqrt((tx - fx) * (tx - fx) + (ty - fy) * (ty - fy)));
-                property <float> ux: (tx - fx) / span;
-                property <float> uy: (ty - fy) / span;
-                property <float> gap: 33;
-                property <float> head: 5.5;
-                // 起止点：落在两端色块的边缘，不压住图标。
-                property <float> sx: fx + ux * gap;
-                property <float> sy: fy + uy * gap;
-                property <float> ex: tx - ux * gap;
-                property <float> ey: ty - uy * gap;
-                // 思维导图那种弧：控制点沿法线拱起一点，线就不是硬邦邦的直线。
-                property <float> arc: 13;
-                property <float> nx: -uy * arc;
-                property <float> ny: ux * arc;
+                property <int> from-col: mod(link.from, graph.columns);
+                property <int> from-row: floor(link.from / graph.columns);
+                property <int> to-col: mod(link.to, graph.columns);
+                property <int> to-row: floor(link.to / graph.columns);
+                // 同一行就左右连（从色块右缘到左缘），跨行就上下连（底缘到顶缘）
+                // ——和图谱里"上一层指向下一层"是同一个手法，只是转了 90 度。
+                property <bool> sideways: from-row == to-row;
+                property <float> half: 28;
 
-                MoveTo { x: parent.sx; y: parent.sy; }
-                CubicTo {
-                    control-1-x: parent.sx + (parent.ex - parent.sx) * 0.35 + parent.nx;
-                    control-1-y: parent.sy + (parent.ey - parent.sy) * 0.35 + parent.ny;
-                    control-2-x: parent.sx + (parent.ex - parent.sx) * 0.65 + parent.nx;
-                    control-2-y: parent.sy + (parent.ey - parent.sy) * 0.65 + parent.ny;
-                    x: parent.ex;
-                    y: parent.ey;
+                property <float> x0: (from-col * graph.stride-x + graph.hub-x) / 1px
+                    + (sideways ? (to-col > from-col ? half : -half) : 0);
+                property <float> y0: (from-row * graph.stride-y + graph.hub-y) / 1px
+                    + (sideways ? 0 : half);
+                property <float> x1: (to-col * graph.stride-x + graph.hub-x) / 1px
+                    + (sideways ? (to-col > from-col ? -half : half) : 0);
+                property <float> y1: (to-row * graph.stride-y + graph.hub-y) / 1px
+                    + (sideways ? 0 : -half);
+                property <float> mid: sideways ? (x0 + x1) / 2 : (y0 + y1) / 2;
+                // 线在离箭头 7 处收住，剩下的交给三角形，不然线头会从尖端支出来。
+                property <float> tip: 7;
+                property <float> back: sideways ? (x1 > x0 ? -tip : tip) : -tip;
+
+                Path {
+                    x: 0; y: 0;
+                    width: parent.width;
+                    height: parent.height;
+                    viewbox-x: 0;
+                    viewbox-y: 0;
+                    viewbox-width: parent.width / 1px;
+                    viewbox-height: parent.height / 1px;
+                    stroke: #bcc4ce;
+                    stroke-width: 1.6px;
+
+                    MoveTo { x: edge.x0; y: edge.y0; }
+                    CubicTo {
+                        control-1-x: edge.sideways ? edge.mid : edge.x0;
+                        control-1-y: edge.sideways ? edge.y0 : edge.mid;
+                        control-2-x: edge.sideways ? edge.mid : edge.x1;
+                        control-2-y: edge.sideways ? edge.y1 : edge.mid;
+                        x: edge.sideways ? edge.x1 + edge.back : edge.x1;
+                        y: edge.sideways ? edge.y1 : edge.y1 + edge.back;
+                    }
                 }
-                // 箭头：贴着终点，沿进入方向的两笔。
-                MoveTo {
-                    x: parent.ex - parent.ux * parent.head - parent.uy * parent.head * 0.9;
-                    y: parent.ey - parent.uy * parent.head + parent.ux * parent.head * 0.9;
-                }
-                LineTo { x: parent.ex; y: parent.ey; }
-                LineTo {
-                    x: parent.ex - parent.ux * parent.head + parent.uy * parent.head * 0.9;
-                    y: parent.ey - parent.uy * parent.head - parent.ux * parent.head * 0.9;
+
+                // 实心三角：尖端顶在目标色块的边上。
+                Path {
+                    x: 0; y: 0;
+                    width: parent.width;
+                    height: parent.height;
+                    viewbox-x: 0;
+                    viewbox-y: 0;
+                    viewbox-width: parent.width / 1px;
+                    viewbox-height: parent.height / 1px;
+                    fill: #bcc4ce;
+
+                    MoveTo { x: edge.x1; y: edge.y1; }
+                    LineTo {
+                        x: edge.sideways ? edge.x1 + edge.back * 1.15 : edge.x1 - 5;
+                        y: edge.sideways ? edge.y1 - 5 : edge.y1 + edge.back * 1.15;
+                    }
+                    LineTo {
+                        x: edge.sideways ? edge.x1 + edge.back * 1.15 : edge.x1 + 5;
+                        y: edge.sideways ? edge.y1 + 5 : edge.y1 + edge.back * 1.15;
+                    }
+                    Close {}
                 }
             }
 
