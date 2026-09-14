@@ -1,7 +1,7 @@
-#include "mainwindow.h"
+#include "ui/mainwindow.h"
 
-#include "app_icon.h"
-#include "menu_bar_platform.h"
+#include "platform/app_icon.h"
+#include "platform/menu_bar_platform.h"
 #include "platform/app_paths.h"
 #include "registry/domain_graph.h"
 #include "ui/external_app_launcher.h"

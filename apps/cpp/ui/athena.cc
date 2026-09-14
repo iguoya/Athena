@@ -1,6 +1,6 @@
-#include "athena.h"
-#include "mainwindow.h"
-#include "menu_bar_platform.h"
+#include "ui/athena.h"
+#include "ui/mainwindow.h"
+#include "platform/menu_bar_platform.h"
 
 void Athena::on_activate() {
   // 单实例：第二次启动只会转到这里再触发一次 activate。已经有窗口时

@@ -1,4 +1,4 @@
-#include "athena.h"
+#include "ui/athena.h"
 
 #include <gtksourceview/gtksource.h>
 

@@ -25,18 +25,18 @@ menu_bar_platform_sources = []
 platform_dependencies = []
 if host_machine.system() == 'darwin'
   add_languages('objcpp', native: false)
-  app_icon_sources += files('app_icon_macos.mm')
-  menu_bar_platform_sources += files('menu_bar_platform_macos.cc')
+  app_icon_sources += files('platform/app_icon_macos.mm')
+  menu_bar_platform_sources += files('platform/menu_bar_platform_macos.cc')
   platform_dependencies += [
     dependency('gtk4-macos'),
     dependency('appleframeworks', modules: ['AppKit'])
   ]
 elif host_machine.system() == 'linux'
-  app_icon_sources += files('app_icon_other.cc')
-  menu_bar_platform_sources += files('menu_bar_platform_other.cc')
+  app_icon_sources += files('platform/app_icon_other.cc')
+  menu_bar_platform_sources += files('platform/menu_bar_platform_other.cc')
 else
-  app_icon_sources += files('app_icon_other.cc')
-  menu_bar_platform_sources += files('menu_bar_platform_other.cc')
+  app_icon_sources += files('platform/app_icon_other.cc')
+  menu_bar_platform_sources += files('platform/menu_bar_platform_other.cc')
 endif
 
 # 业务逻辑类目录（C++ 语言各章节演示类）
@@ -193,8 +193,8 @@ athena_core_dep = declare_dependency(
 # === 桌面应用源码 ===
 app_sources = files(
   'main.cc',
-  'athena.cc',
-  'mainwindow.cc',
+  'ui/athena.cc',
+  'ui/mainwindow.cc',
   'practice/pocket_cube/view.cc',
   'render/cairo_shapes.cc',
   'render/cairo_text.cc',
@@ -280,7 +280,7 @@ install_data(
   install_dir: get_option('datadir') / 'icons/hicolor/1024x1024/apps'
 )
 install_data(
-  'cn.yatiger.athena.desktop.in',
+  'packaging/cn.yatiger.athena.desktop.in',
   rename: 'cn.athena.desktop',
   install_dir: get_option('datadir') / 'applications'
 )
