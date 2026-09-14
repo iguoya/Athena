@@ -124,6 +124,8 @@ const predictions = new Map<string, PredictionRow>();
 const diagAnswers = new Map<string, Answer>();
 /** 练习作答：键是 `${namespace}::${itemId}` */
 const drillStates = new Map<string, DrillState>();
+/** 当前在第几遍。侧边栏显示的「第一遍 · 走通为准」说的就是它（ADR 0012） */
+const currentPass: 1 | 2 = 1;
 
 type View = { kind: "diag" } | { kind: "graph" } | { kind: "topic"; id: string };
 let view: View = { kind: "graph" };
@@ -637,7 +639,7 @@ function renderTopic(id: string) {
       ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
-      ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id) : ""}
+      ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id, currentPass) : ""}
       ${chapterCheckpoint(t)}
       ${
         ref.prepares?.length && t.widget
@@ -710,7 +712,8 @@ function chapterCheckpoint(t: Topic): string {
   const ch = curriculum.chapters.find((c) => c.topics.some((x: Topic) => x.id === t.id));
   if (!ch?.checkpoint) return "";
   if (ch.topics[ch.topics.length - 1].id !== t.id) return "";
-  return renderDrills(ch.checkpoint, nsStates(ch.id), ch.id);
+  // 章末小考属于强化阶段：第一遍不设挡路考核（ADR 0012 第 2 节）
+  return renderDrills(ch.checkpoint, nsStates(ch.id), ch.id, currentPass);
 }
 
 let readToken = 0;

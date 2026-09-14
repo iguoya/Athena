@@ -82,22 +82,20 @@ const topics = cur.chapters.flatMap((c) => c.topics);
 // ── 练习题：正确答案位置不得过于集中（同诊断题那条教训）──
 // 检查的是**渲染之后**的顺序：drills.ts 按题目 id 做确定性打乱，
 // 所以源文件里怎么排不重要，用户看到的那个顺序才重要。这里复刻同一个算法。
-function seededOrder(items, seed) {
+function orderOptions(options, seed, idx) {
+  const right = options.find((o) => o.ok);
+  if (!right || options.length < 2) return options;
+  const rest = options.filter((o) => o !== right);
   let h = 2166136261;
   for (let i = 0; i < seed.length; i++) {
     h ^= seed.charCodeAt(i);
     h = Math.imul(h, 16777619);
   }
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    h = Math.imul(h ^ (h >>> 15), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    const j = Math.abs(h) % (i + 1);
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
+  const pos = (Math.abs(h) + idx) % options.length;
+  return [...rest.slice(0, pos), right, ...rest.slice(pos)];
 }
-{
+
+for (const pass of [1, 2]) {
   const slots = new Map();
   let total = 0;
   const sets = [];
@@ -106,12 +104,16 @@ function seededOrder(items, seed) {
     if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
   }
   for (const [set, ns] of sets) {
-    for (const it of set.items) {
+    // 序号要按「这一遍实际显示出来的次序」算，与 renderDrills 里一致
+    const shown = set.items.filter((x) => (x.pass ?? 2) <= pass);
+    for (const [idx, it] of shown.entries()) {
       if (!it.options) continue;
-      const k = seededOrder(it.options, ns + it.id).findIndex((o) => o.ok);
+      const k = orderOptions(it.options, ns, idx).findIndex((o) => o.ok);
       if (k < 0) {
-        console.error(`练习题：${it.id} 没有标出正确选项`);
-        hits++;
+        if (pass === 2) {
+          console.error(`练习题：${it.id} 没有标出正确选项`);
+          hits++;
+        }
         continue;
       }
       slots.set(k, (slots.get(k) ?? 0) + 1);
@@ -121,16 +123,17 @@ function seededOrder(items, seed) {
   for (const [k, n] of slots) {
     if (total >= 6 && n > total * 0.5) {
       console.error(
-        `练习题：渲染后有 ${n}/${total} 道的正确答案落在第 ${k + 1} 位（超过一半），` +
-          `会让人能按位置蒙`,
+        `练习题：第 ${pass} 遍可见的 ${total} 道里有 ${n} 道正确答案落在第 ${k + 1} 位` +
+          `（超过一半），会让人能按位置蒙`,
       );
       hits++;
     }
   }
-  drillStat = `练习 ${total} 题，渲染后位置分布 ${[...slots.entries()]
+  const line = `第${pass}遍 ${total} 题 ${[...slots.entries()]
     .sort()
     .map(([k, n]) => `第${k + 1}位×${n}`)
     .join(" ")}`;
+  drillStat = drillStat ? `${drillStat}；${line}` : `练习 ${line}`;
 }
 
 // ── 脚本动画：讲稿与关键帧必须对得上 ──
