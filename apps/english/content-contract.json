@@ -1,0 +1,15 @@
+{
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043）。本应用自己的规范见 docs/decisions/0007-sourced-content-and-four-skills.md 与 0008。",
+  "_blocking": "设为 false：本应用的分级内容扩充正在进行中，先只报告不阻断；那批工作收尾后改成 true。",
+  "contentDir": "content",
+  "sourceField": "source_refs",
+  "relationField": "relation",
+  "sourceIdField": "source_id",
+  "locatorFields": ["locator"],
+  "urlFields": ["locator_url", "url"],
+  "whyFields": ["note", "why"],
+  "itemMarkers": ["prompt"],
+  "catalog": "sources/catalog.json",
+  "blocking": false,
+  "legacyUnsourced": []
+}
