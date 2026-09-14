@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = ["core", "gui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+
+[profile.dev]
+# 启动器自己不需要在 Rust 里下断点，调试信息只留行号表：编译更快、目录更小。
+debug = "line-tables-only"

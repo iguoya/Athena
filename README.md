@@ -5,13 +5,16 @@
 
 ## 应用
 
-| 目录 | 应用 | 技术 | 开发入口 |
-| --- | --- | --- | --- |
-| [`apps/cpp`](apps/cpp) | C++ 教程 | GTK4 / gtkmm、Meson | `scripts/dev-run.sh` |
-| [`apps/c`](apps/c) | C 语言编程 | Qt Quick / QML、CMake | `scripts/dev.sh` |
-| [`apps/dsa`](apps/dsa) | 数据结构与算法 | Tauri + Vite | `scripts/dev.sh` |
-| [`apps/english`](apps/english) | 英语学习 | Tauri + Vite | `scripts/dev.sh` |
-| [`apps/mathematics`](apps/mathematics) | 数学学习 | Tauri + Vite | `scripts/dev.sh` |
+| 目录 | 应用 | 技术 |
+| --- | --- | --- |
+| [`apps/cpp`](apps/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
+| [`apps/c`](apps/c) | C 语言编程 | Qt Quick / QML、CMake |
+| [`apps/dsa`](apps/dsa) | 数据结构与算法 | Tauri + Vite |
+| [`apps/english`](apps/english) | 英语学习 | Tauri + Vite |
+| [`apps/mathematics`](apps/mathematics) | 数学学习 | Tauri + Vite |
+
+每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
+[`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。
 
 C++ 教程曾经占据仓库根、是打开其他应用的必经之路；[ADR 0045](docs/decisions/0045-apps-are-peers.md)
 之后它只是 `apps/` 下的一个应用，没有任何特权。
@@ -22,11 +25,20 @@ C++ 教程曾经占据仓库根、是打开其他应用的必经之路；[ADR 00
 已经在跑的只把窗口提到前面：
 
 ```sh
-launcher/macos/scripts/install.sh     # macOS：装成菜单栏常驻应用，快捷键 ⌃⌥A
+cargo build --release --manifest-path launcher/Cargo.toml   # 先备好编排器与界面
+launcher/target/release/athena-launcher                     # 跨平台：托盘常驻 + 列表窗口
+launcher/macos/scripts/install.sh                           # macOS：菜单栏常驻，⌃⌥A 唤出
 ```
 
-也可以直接跑某个应用的开发入口，例如 `apps/dsa/scripts/dev.sh`。日常一律走这些
-热更新入口，不要启动打包副本——那会让人不知不觉对着旧版本工作。
+终端里也能用同一个编排器：
+
+```sh
+launcher/target/release/athena-dev list        # 谁在跑、谁没跑
+launcher/target/release/athena-dev open dsa    # 打开；已在跑的只把窗口叫到前面
+launcher/target/release/athena-dev stop dsa
+```
+
+一律走这些热更新入口，不要启动打包副本——那会让人不知不觉对着旧版本工作。
 
 ## 验证
 

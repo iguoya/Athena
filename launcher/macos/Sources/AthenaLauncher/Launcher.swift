@@ -63,8 +63,7 @@ enum Launcher {
             supervisor.refresh()
             for app in supervisor.apps {
                 let state = supervisor.states[app.id] ?? .stopped
-                let entry = app.executableExists ? app.executable.path : "缺少启动入口"
-                print("\(app.id)\t\(app.title)\t\(state.label)\t\(entry)")
+                print("\(app.id)\t\(app.title)\t\(state.label)")
             }
             exit(0)
         }

@@ -7,8 +7,45 @@
     "name": "text-x-script-symbolic",
     "symbol": "c.square"
   },
-  "executable": "scripts/dev.sh",
-  "build": [
-    "cd apps/c && ./scripts/dev.sh"
-  ]
+  "dev": {
+    "env": {
+      "ATHENA_C_ROOT": "${dir}",
+      "CMAKE_PREFIX_PATH": {
+        "first_existing": [
+          "/opt/homebrew/opt/qt@6",
+          "/usr/local/opt/qt@6",
+          "/usr/local/opt/qt6"
+        ]
+      }
+    },
+    "prepare": [
+      {
+        "run": [
+          "cmake",
+          "-S",
+          ".",
+          "-B",
+          "build",
+          "-DCMAKE_BUILD_TYPE=Debug"
+        ],
+        "label": "配置 CMake"
+      },
+      {
+        "run": [
+          "cmake",
+          "--build",
+          "build",
+          "--target",
+          "athena-c"
+        ],
+        "label": "编译 athena-c"
+      }
+    ],
+    "run": [
+      "build/athena-c"
+    ],
+    "ready": "process",
+    "match": "build",
+    "binary": "athena-c"
+  }
 }

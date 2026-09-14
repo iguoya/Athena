@@ -3,28 +3,22 @@ import Foundation
 // apps/<id>/app.json 的启动器视角子集。主程序读的是同一份清单（ADR 0032），
 // 这里只多读 icon.symbol 和 dev 两处；未知字段两边都忽略，互不牵制。
 struct LearningApp: Identifiable, Sendable {
-    struct Dev: Sendable {
-        // Tauri 应用的 dev server 地址：能连上就说明这个应用已经就绪。
-        var url: URL?
-        // 没有 dev server 的应用（如 Qt 写的 apps/c）靠进程名判断在不在。
-        var process: String?
-    }
+    /// 怎么构建、怎么启动、怎么算就绪都写在 app.json 的 dev 声明里，由编排器
+    /// 执行（ADR 0046）；菜单栏版不需要理解这些字段。
+    struct Dev: Sendable {}
 
     var id: String
     var title: String
     var summary: String
     var symbol: String
     var directory: URL
-    var executable: URL
     // 判断"这个应用在不在跑"时看的路径前缀。默认就是应用目录；主程序这种
     // 进程落在子目录（builddir/）里的，用 match 指明，免得把仓库里任何
     // 进程都算成它自己。
     var matchPrefix: String
+    /// 窗口进程的可执行文件名，来自 app.json 的 dev.binary。
+    var binary: String
     var dev: Dev
-
-    var executableExists: Bool {
-        FileManager.default.isExecutableFile(atPath: executable.path)
-    }
 }
 
 enum AppCatalog {
@@ -51,29 +45,23 @@ enum AppCatalog {
         guard let data = try? Data(contentsOf: manifest),
               let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let id = root["id"] as? String,
-              let title = root["title"] as? String,
-              let executable = root["executable"] as? String else {
+              let title = root["title"] as? String else {
             return nil
         }
 
         let icon = root["icon"] as? [String: Any]
-        let match = root["match"] as? String
         let dev = root["dev"] as? [String: Any]
-        let urlText = dev?["url"] as? String
-
+        let match = (dev?["match"] as? String) ?? (root["match"] as? String)
         return LearningApp(
             id: id,
             title: title,
             summary: root["description"] as? String ?? "",
             symbol: icon?["symbol"] as? String ?? "book.closed",
             directory: directory,
-            executable: directory.appendingPathComponent(executable),
             matchPrefix: match.map { directory.appendingPathComponent($0).path }
                 ?? directory.path,
-            dev: LearningApp.Dev(
-                url: urlText.flatMap(URL.init(string:)),
-                process: dev?["process"] as? String
-            )
+            binary: dev?["binary"] as? String ?? "",
+            dev: LearningApp.Dev()
         )
     }
 }

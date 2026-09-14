@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vite",
     "check:content": "node scripts/check-content.mjs",
+    "author:beginner": "node scripts/expand-beginner-content.mjs",
     "build": "npm run check:content && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "build:app": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build --bundles app",
-    "dev:app": "bash scripts/dev.sh"
+    "build:app": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build --bundles app"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

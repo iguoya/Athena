@@ -7,8 +7,29 @@
     "name": "applications-science-symbolic",
     "symbol": "point.3.connected.trianglepath.dotted"
   },
-  "executable": "scripts/dev.sh",
-  "build": [
-    "cd apps/dsa && ./scripts/dev.sh"
-  ]
+  "dev": {
+    "env": {
+      "ATHENA_DSA_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "npm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1420"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-dsa"
+  }
 }

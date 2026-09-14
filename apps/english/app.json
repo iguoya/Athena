@@ -7,8 +7,29 @@
     "name": "accessories-dictionary-symbolic",
     "symbol": "a.circle"
   },
-  "executable": "scripts/dev.sh",
-  "build": [
-    "cd apps/english && ./scripts/dev.sh"
-  ]
+  "dev": {
+    "env": {
+      "ATHENA_ENGLISH_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "npm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1422"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-english"
+  }
 }

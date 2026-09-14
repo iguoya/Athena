@@ -1,0 +1,19 @@
+[package]
+name = "athena-dev"
+description = "Athena 各学习应用的统一开发编排器：读 app.json 的 dev 声明，构建、启动、探测状态"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sysinfo = { version = "0.33", default-features = false, features = ["system"] }
+
+[lib]
+name = "athena_dev"
+path = "src/lib.rs"
+
+[[bin]]
+name = "athena-dev"
+path = "src/main.rs"

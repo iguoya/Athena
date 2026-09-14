@@ -36,9 +36,7 @@
 | `content/` | 课表与 C++ 案例；**唯一内容源** |
 | `src/` | 前端：导航、导读 / 讲解 / 实验 |
 | `src-tauri/` | 窗口、读内容、进度、`compile_and_run` |
-| `scripts/dev.sh` | **日常入口**：`tauri:dev` 热更新；主程序图谱也 spawn 这份 |
-| `bin/athena-dsa` | `scripts/dev.sh` 的别名 |
-| `app.json` | 仅供主程序发现；`executable` 指向 `scripts/dev.sh` |
+| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
 | `docs/decisions/` | 本应用 ADR |
 | `AGENTS.md` | 本文；本应用协作规则 |
 
@@ -74,7 +72,7 @@
 
 ## 架构原则
 
-- **独立可运行**：`./scripts/dev.sh`（`tauri:dev`）不经过主程序。不要启动打包 `.app`。
+- **独立可运行**：`athena-dev open dsa`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页硬编码界面。
 - **实验逻辑在 C++**：前端不重写一份算法真相；需要步进可视化时由 C++ 打印
   约定事件（如 NDJSON），前端只消费。
@@ -97,7 +95,7 @@
 
 ```sh
 cd apps/dsa
-./scripts/dev.sh       # 日常开发（热更新）；主程序图谱也走这里
+athena-dev open dsa       # 日常开发（热更新）；启动器和图谱走的也是这条
 ```
 
 `npm run build:app` 只在真正要交付一份可分发的包时才跑，**不是**打开本应用的步骤，
@@ -112,7 +110,7 @@ cd apps/dsa
 ## 与 Athena 主程序的关系（可选）
 
 - 主程序可通过扫描 `apps/dsa/app.json` 把本应用作为独立进程启动（ADR 0041：
-  spawn `scripts/dev.sh`，不启动打包副本），不传任何状态。
+  spawn `app.json` 的 dev 声明，不启动打包副本），不传任何状态。
 - 图谱节点文案、是否挂入口，属于主程序仓库的改动；**本应用功能不依赖该入口**。
 - 禁止为了「和主程序一致」而把课表迁回 `resources/athena.json`。
 

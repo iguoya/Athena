@@ -1,0 +1,25 @@
+[package]
+name = "athena-launcher"
+description = "Athena 跨平台启动器：一张列表列出全部学习应用，点一下就打开"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+athena-dev = { path = "../core" }
+slint = "1.17"
+# 托盘与菜单：三平台同一套 API（macOS NSStatusItem、Windows Shell_NotifyIcon、
+# Linux StatusNotifierItem / AppIndicator）。事件走全局 channel，所以不必和
+# Slint 的事件循环做深度集成，在定时器里 try_recv 就行。
+tray-icon = "0.25"
+muda = "0.20"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+# Linux 的托盘必须活在 GTK 线程里，这层依赖只为那条路径。
+gtk = "0.18"
+
+[build-dependencies]
+slint-build = "1.17"
+# 托盘图标在构建期由 SVG 渲染成位图：换图标只要换 assets/tray-icon.svg，
+# 运行时不带任何图片解码依赖。
+resvg = "0.45"

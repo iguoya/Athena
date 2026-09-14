@@ -25,11 +25,11 @@
 
 ```sh
 cd apps/english
-./scripts/dev.sh
+athena-dev open english
 ```
 
 不要只跑 `npm run dev` 再用浏览器打开：没有进度库，复习写不进去。
-主程序若挂了图谱入口，同样 spawn `scripts/dev.sh`，不要打开 `/Applications` 里的打包副本。
+C++ 教程首页图谱点开它时，走的是同一份 dev 声明，不要打开 `/Applications` 里的打包副本。
 
 `npm run build:app` 只在真正要交付一份可分发的包时才用。
 
@@ -49,8 +49,7 @@ cd apps/english
 | `content/README.md` | 分级、选材来源和练习/考核边界 |
 | `src/` | 前端：书桌与练习台 |
 | `src-tauri/` | Tauri / Rust |
-| `scripts/dev.sh` | 日常入口（`tauri:dev`） |
-| `app.json` | 仅供主程序发现；`executable` 指向 `scripts/dev.sh` |
+| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
 
 `npm run check:content` 检查路线引用、ID、正确选项、练习变式，以及考核材料没有与
 练习原题重复；同时检查来源关系、NGSL 审计词项及每阶段听说读写覆盖。`npm run build`

@@ -1,0 +1,131 @@
+// 启动器的全部界面。声明式写法，和项目里的 .blp（GTK）、.qml（Qt）是同一种思路：
+// 布局写在这里，Rust 只负责填数据和响应回调。
+
+import { ScrollView, VerticalBox } from "std-widgets.slint";
+
+export struct AppEntry {
+    id: string,
+    title: string,
+    summary: string,
+    state: string,
+    // 状态点的颜色：绿=运行中、橙=启动中、灰=未运行，按通行约定。
+    tint: brush,
+    running: bool,
+}
+
+component Row inherits Rectangle {
+    in property <AppEntry> entry;
+    callback open();
+    callback stop();
+
+    height: 62px;
+    background: touch.has-hover ? #00000014 : transparent;
+    border-radius: 8px;
+
+    touch := TouchArea {
+        clicked => { root.open(); }
+
+        HorizontalLayout {
+            padding-left: 14px;
+            padding-right: 12px;
+            spacing: 12px;
+
+            VerticalLayout {
+                alignment: center;
+                spacing: 3px;
+
+                Text {
+                    text: entry.title;
+                    font-size: 15px;
+                    color: #1c1c1e;
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    alignment: start;
+
+                    Rectangle {
+                        width: 7px;
+                        height: 7px;
+                        border-radius: 4px;
+                        background: entry.tint;
+                        y: 5px;
+                    }
+
+                    Text {
+                        text: entry.state;
+                        font-size: 12px;
+                        color: #6b6b70;
+                    }
+                }
+            }
+
+            Rectangle { horizontal-stretch: 1; }
+
+            Rectangle {
+                width: 58px;
+                visible: entry.running && touch.has-hover;
+                background: stop-touch.has-hover ? #00000018 : transparent;
+                border-radius: 6px;
+
+                stop-touch := TouchArea {
+                    clicked => { root.stop(); }
+                    Text {
+                        text: "停止";
+                        font-size: 12px;
+                        color: #6b6b70;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+        }
+    }
+}
+
+export component LauncherWindow inherits Window {
+    in property <[AppEntry]> apps;
+    in property <string> status;
+    callback open(string);
+    callback stop(string);
+
+    title: "Athena 启动器";
+    width: 380px;
+    height: 420px;
+    background: #fbfbfd;
+
+    VerticalLayout {
+        padding: 10px;
+        spacing: 4px;
+
+        Text {
+            text: "学习应用";
+            font-size: 12px;
+            font-weight: 600;
+            color: #8a8a8e;
+            horizontal-alignment: left;
+            height: 22px;
+        }
+
+        ScrollView {
+            vertical-stretch: 1;
+            VerticalLayout {
+                alignment: start;
+                spacing: 2px;
+                for entry in apps: Row {
+                    entry: entry;
+                    open => { root.open(entry.id); }
+                    stop => { root.stop(entry.id); }
+                }
+            }
+        }
+
+        Text {
+            text: status;
+            font-size: 11px;
+            color: #8a8a8e;
+            wrap: word-wrap;
+            height: 30px;
+        }
+    }
+}

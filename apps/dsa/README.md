@@ -9,7 +9,7 @@
 1. **业务自足**：课程内容、进度、实验编译运行全在本目录闭环。
 2. **内容驱动**：`content/curriculum.json` 是唯一课表；UI 只做渲染与互动。
 3. **实验真源码**：`content/cases/` 里是可编辑的 C++；保存后本机编译运行。
-4. **主程序可选**：图谱点击只是 spawn 本目录的 `scripts/dev.sh`；进度写在本应用自己的库里。
+4. **谁都能拉起它**：启动器、终端、C++ 教程首页图谱，走的都是本目录 `app.json` 的 dev 声明；进度写在本应用自己的库里。
 
 ## 架构（与 GTK 主程序无关）
 
@@ -17,8 +17,7 @@
 content/          课表、教案块、C++ 案例（唯一内容源）
 src/              前端：导航 + 导读/讲解/实验
 src-tauri/        壳：读内容、进度库、compile_and_run
-bin/athena-dsa    scripts/dev.sh 的别名
-scripts/dev.sh    日常入口（tauri:dev；主程序图谱也 spawn 这份）
+app.json          启动声明：怎么构建、怎么跑、怎么算就绪
 docs/decisions/   本应用 ADR
 ```
 
@@ -38,7 +37,7 @@ docs/decisions/   本应用 ADR
 
 ```sh
 # 推荐：开发（自动补 PATH，打开 Tauri 窗口——实验依赖此壳）
-./scripts/dev.sh
+athena-dev open dsa
 
 # 或手动
 export PATH="/usr/local/opt/node/bin:/opt/homebrew/bin:$HOME/.cargo/bin:$PATH"
@@ -50,7 +49,7 @@ npm run tauri:dev
 不要只跑 `npm run dev` 再用浏览器打开：那只有前端，没有磁盘读写与本机编译，
 实验页会出现「无法加载案例 / invoke」类错误。
 
-Athena 首页点「数据结构与算法」会 spawn `scripts/dev.sh`（热更新），**不要**
+Athena 首页点「数据结构与算法」会 spawn `app.json` 的 dev 声明（热更新），**不要**
 先 `build:app` 再打开 `bin/` 或 `/Applications` 里的打包副本。
 
 `npm run build:app` 只在真正要交付一份可分发的包时才用。
@@ -76,5 +75,4 @@ Athena 首页点「数据结构与算法」会 spawn `scripts/dev.sh`（热更�
 | `content/cases/` | C++ 实验源码 |
 | `src/` | 前端 |
 | `src-tauri/` | Tauri / Rust 命令 |
-| `scripts/dev.sh` | 日常入口（`tauri:dev`）；主程序图谱也 spawn 这份 |
-| `app.json` | 仅供主程序发现；`executable` 指向 `scripts/dev.sh` |
+| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |

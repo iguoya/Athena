@@ -58,9 +58,13 @@
         {
             "label": "Athena: Run",
             "type": "shell",
-            "command": "scripts/dev-run.sh",
+            "command": "bash",
+            "args": [
+                "-lc",
+                "cargo build -q -p athena-dev --manifest-path launcher/Cargo.toml && launcher/target/debug/athena-dev open cpp"
+            ],
             "options": {
-                "cwd": "${workspaceFolder}/apps/cpp"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": "$gcc",
             "presentation": {
@@ -68,7 +72,7 @@
                 "panel": "dedicated",
                 "focus": true
             },
-            "detail": "增量编译后前台运行 Athena（Ctrl+C 退出，不进调试器、不留僵尸）"
+            "detail": "经编排器构建并启动 C++ 教程（ADR 0046）"
         }
     ]
 }

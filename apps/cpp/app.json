@@ -7,9 +7,33 @@
     "name": "text-x-cpp-symbolic",
     "symbol": "chevron.left.forwardslash.chevron.right"
   },
-  "executable": "scripts/dev-run.sh",
-  "match": "builddir",
-  "build": [
-    "scripts/dev-run.sh"
-  ]
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "builddir",
+        "run": [
+          "meson",
+          "setup",
+          "builddir",
+          "--buildtype=debug"
+        ],
+        "label": "配置构建目录"
+      },
+      {
+        "run": [
+          "meson",
+          "compile",
+          "-C",
+          "builddir"
+        ],
+        "label": "增量编译"
+      }
+    ],
+    "run": [
+      "builddir/Athena"
+    ],
+    "ready": "process",
+    "match": "builddir",
+    "binary": "Athena"
+  }
 }

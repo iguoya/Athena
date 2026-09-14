@@ -132,7 +132,7 @@ private struct AppRow: View {
                 Button("查看启动日志") { supervisor.revealLog(for: app) }
                 Button("在访达中显示") {
                     NSWorkspace.shared.selectFile(
-                        app.executable.path,
+                        nil,
                         inFileViewerRootedAtPath: app.directory.path
                     )
                 }

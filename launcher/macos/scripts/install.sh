@@ -14,7 +14,7 @@ swift build -c release
 rm -rf "$STAGE"
 mkdir -p "$STAGE/Contents/MacOS" "$STAGE/Contents/Resources"
 cp "$ROOT/.build/release/AthenaLauncher" "$STAGE/Contents/MacOS/AthenaLauncher"
-sed "s|@ATHENA_ROOT@|$REPO|" "$ROOT/Resources/Info.plist" > "$STAGE/Contents/Info.plist"
+sed "s|@ATHENA_ROOT@|$REPO|" "$ROOT/packaging/Info.plist" > "$STAGE/Contents/Info.plist"
 
 # ad-hoc 签名：没有签名的 bundle 注册不了登录项，快捷键也会被系统怀疑。
 codesign --force --sign - "$STAGE" >/dev/null

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# 转发给开发入口。主程序 discover 读的是 scripts/dev.sh；这个别名给习惯打 bin/ 的人。
-exec "$(cd "$(dirname "$0")/.." && pwd)/scripts/dev.sh" "$@"

@@ -7,8 +7,29 @@
     "name": "accessories-calculator-symbolic",
     "symbol": "x.squareroot"
   },
-  "executable": "scripts/dev.sh",
-  "build": [
-    "cd apps/mathematics && ./scripts/dev.sh"
-  ]
+  "dev": {
+    "env": {
+      "ATHENA_MATH_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "npm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1430"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-math"
+  }
 }
