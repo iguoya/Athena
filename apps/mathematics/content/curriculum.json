@@ -373,6 +373,13 @@
                 "kind": "choice",
                 "stem": "矩阵 `[[2,1],[0,3]]` 里，蓝箭头（向右一格的去向）指向哪个点？",
                 "hint": "矩阵按**列**读，不是按行。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "The matrix of a linear transformation · 定理 matrix-of-linear-transformation",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Matrix.tex",
+                  "note": "该定理的证明构造里，矩阵的第 i 列取 T(eᵢ)；本题反过来问「第一列是谁的去向」"
+                },
                 "options": [
                   {
                     "text": "(2, 0)",
@@ -395,6 +402,13 @@
                 "kind": "choice",
                 "stem": "蓝箭头指向 (3, 0)，橙箭头指向 (1, 4)。矩阵是哪个？",
                 "varies": "反过来：从两根箭头写出矩阵。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "The matrix of a linear transformation · 定理 matrix-of-linear-transformation",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Matrix.tex",
+                  "note": "同上一题的同一条定理，方向相反：给两根箭头的去向，写出矩阵"
+                },
                 "options": [
                   {
                     "text": "`[[3,0],[1,4]]`",
@@ -418,6 +432,13 @@
                 "stem": "不管矩阵是什么，原点会被搬到哪里？填它的横坐标。",
                 "varies": "换个角度：问那个不动的点。",
                 "hint": "原点是「向右零格、向上零格」。零步乘任何箭头还是零。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Linear transformations · 定义 linear-transformation",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Definition.tex",
+                  "note": "由保持数乘 T(kv)=kT(v) 取 k=0 即得 T(0)=0；本题把这一步问成「原点被搬到哪」"
+                },
                 "options": [
                   {
                     "text": "还是原点",
@@ -608,6 +629,13 @@
                 "kind": "choice",
                 "stem": "把平面**均匀放大 2 倍**、再转 90°；和先转 90°、再均匀放大 2 倍。结果一样吗？",
                 "hint": "均匀放大对每个方向一视同仁，转不转它都一样放大。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of matrix multiplication · 命题 Properties of matrix multiplication",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-Properties.tex",
+                  "note": "该命题列出矩阵乘法满足与不满足的运算律，其中乘法不可交换；本题用两个具体变换问顺序能否调换"
+                },
                 "options": [
                   {
                     "text": "不一样，矩阵乘法不能交换",
@@ -631,6 +659,13 @@
                 "stem": "两次搬动接起来：第一次把面积变成 2 倍，第二次变成 5 倍。合起来面积是原来的几倍？",
                 "varies": "从「形状」转到「面积」看复合。",
                 "hint": "第二次是在第一次的结果上做的。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of determinants · 定理 Determinant of a product",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "det(AB)=det(A)det(B)；本题把两个行列式换成「面积倍数」问合起来是几倍"
+                },
                 "options": [
                   {
                     "text": "10 倍",
@@ -654,6 +689,13 @@
                 "stem": "第一次搬动把平面压扁了。接着再做任何一次搬动，合起来还能把平面恢复成完整的面吗？",
                 "varies": "问的是复合之后还剩几维。",
                 "hint": "压扁之后手上只剩一条线，后面那次搬动的原料就只有这条线。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of determinants · 定理 Determinants and invertible matrices",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "可逆当且仅当行列式非零；压扁即 det=0，故复合后仍不可逆。本题问的是这一点的后果"
+                },
                 "options": [
                   {
                     "text": "不能",
@@ -1129,6 +1171,13 @@
                 "kind": "choice",
                 "stem": "矩阵 `[[3,0],[0,2]]`：面积变成原来的几倍？",
                 "hint": "两根箭头分别沿横竖方向拉长，面积按两个倍数相乘。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Determinants of 2×2- and 3×3-matrices · 定义 two-by-two-determinant",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+                  "note": "照该定义算一个对角矩阵；把 det 的读法换成「面积变成几倍」"
+                },
                 "options": [
                   {
                     "text": "6",
@@ -1152,6 +1201,13 @@
                 "stem": "矩阵 `[[1,5],[0,1]]`：面积变成原来的几倍？",
                 "varies": "把对角改成了切变——右上角多了个 5。",
                 "hint": "这是剪歪。想想平行四边形的底和高有没有变。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定义 two-by-two-determinant",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+                  "note": "同一定义，换成切变矩阵——结果是 1，用来检验「歪斜不吃面积」"
+                },
                 "options": [
                   {
                     "text": "5",
@@ -1175,6 +1231,13 @@
                 "stem": "矩阵 `[[2,0],[0,-3]]`：面积倍数是多少？（带正负号）",
                 "varies": "把第二个方向的倍数改成了负数。",
                 "hint": "负号表示那个方向被翻到了反面。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定义 two-by-two-determinant",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+                  "note": "同一定义，带一个负的对角元，考的是结果的符号"
+                },
                 "options": [
                   {
                     "text": "−6",
@@ -1198,6 +1261,13 @@
                 "stem": "矩阵 `[[2,4],[1,2]]`：面积倍数是多少？",
                 "varies": "四个数都不是 0 了，但两列有关系。",
                 "hint": "先看两根箭头分别指向哪里：(2, 1) 和 (4, 2)。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定义 two-by-two-determinant",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+                  "note": "同一定义，四个数都非零且结果为 0"
+                },
                 "options": [
                   {
                     "text": "8",
@@ -1221,6 +1291,13 @@
                 "stem": "矩阵 `[[4,0],[0,?]]` 的面积倍数是 12。问号处是几？",
                 "varies": "反过来问：给结果，求条件。",
                 "hint": "对角矩阵的面积倍数是两个数相乘。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定义 two-by-two-determinant",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+                  "note": "同一定义的逆用：给出行列式反求缺的那个元素"
+                },
                 "options": [
                   {
                     "text": "3",
@@ -1435,6 +1512,13 @@
                 "kind": "choice",
                 "stem": "一次搬动把面积变成原来的 **5 倍**。撤销它的那次搬动，把面积变成几倍？",
                 "hint": "一来一回要正好抵消，两个倍数乘起来该等于几？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of determinants · 定理 Determinant of a product",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "由 det(A)·det(A⁻¹)=det(I)=1 得逆的行列式是原来的倒数；本题问「撤销那次把面积变成几倍」"
+                },
                 "options": [
                   {
                     "text": "五分之一（0.2）",
@@ -1458,6 +1542,13 @@
                 "stem": "一次搬动的面积倍数是 **−3**。它能撤销吗？",
                 "varies": "把倍数换成了负数。",
                 "hint": "可逆的界线是「是不是 0」。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of determinants · 定理 Determinants and invertible matrices",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "可逆当且仅当行列式非零——负数也非零，所以能撤销。本题考的正是「非零」而不是「为正」"
+                },
                 "options": [
                   {
                     "text": "不能，负数没法撤销",
@@ -1481,6 +1572,13 @@
                 "stem": "矩阵 `[[2,4],[1,2]]` 能撤销吗？",
                 "varies": "这次给的是具体矩阵，要自己判断。",
                 "hint": "先看两根箭头指向哪：(2, 1) 和 (4, 2)。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定理 Determinants and invertible matrices",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "同一判据，换成一个行列式为零的具体矩阵"
+                },
                 "options": [
                   {
                     "text": "能，四个数都不是 0",
@@ -1511,6 +1609,13 @@
             "kind": "choice",
             "stem": "矩阵 `[[2,1],[0,3]]`：面积变成原来的几倍？",
             "hint": "上三角矩阵，算 2×3 − 1×0。",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Determinants of 2×2- and 3×3-matrices · 定义 two-by-two-determinant",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-TwoAndThree.tex",
+              "note": "同行列式一节的定义，章末交错时重新问一次"
+            },
             "options": [
               {
                 "text": "5",
@@ -1532,6 +1637,13 @@
             "id": "c2",
             "kind": "choice",
             "stem": "矩阵 `[[2,1],[0,3]]` 这次搬动，能原样撤销吗？",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Properties of determinants · 定理 Determinants and invertible matrices",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+              "note": "同逆矩阵一节的判据，章末交错时换个矩阵再问"
+            },
             "options": [
               {
                 "text": "能——面积倍数不是 0",
@@ -1553,6 +1665,13 @@
             "id": "c3",
             "kind": "choice",
             "stem": "先把平面转 90°，再横向拉长两倍；和先横向拉长两倍，再转 90°。结果一样吗？",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Properties of matrix multiplication · 命题 Properties of matrix multiplication",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-Properties.tex",
+              "note": "同矩阵乘法一节的不可交换，章末换一对变换再问"
+            },
             "options": [
               {
                 "text": "一样，两个动作都做了",
@@ -1576,6 +1695,13 @@
             "stem": "两次搬动接起来，第一次把面积变成 3 倍，第二次变成 4 倍。合起来面积是原来的几倍？",
             "varies": "这一题要把「接起来」和「面积倍数」两节合着用。",
             "hint": "第二次是在第一次的结果上做的。",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Properties of determinants · 定理 Determinant of a product",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+              "note": "同 det(AB)=det(A)det(B)，章末换一组倍数再问"
+            },
             "options": [
               {
                 "text": "7 倍",
@@ -1781,6 +1907,13 @@
                 "kind": "choice",
                 "stem": "蓝箭头指向 (1, 0)，橙箭头指向 (0, 1)，目标 b = (3, 5)。**蓝箭头要走几步？**",
                 "hint": "这两根箭头就是最普通的向右一格和向上一格。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Multiplying a matrix and a vector · 定义 matrix-times-vector-columns",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-MatrixTimesVector.tex",
+                  "note": "该定义说 x 的分量就是「各列取几份」；本题把它问成「蓝箭头要走几步」"
+                },
                 "options": [
                   {
                     "text": "3 步",
@@ -1804,6 +1937,13 @@
                 "stem": "蓝箭头改成指向 (2, 0)，橙箭头仍是 (0, 1)，目标仍是 b = (6, 5)。**蓝箭头要走几步？**",
                 "varies": "只把蓝箭头拉长了一倍，目标的横坐标也跟着翻倍。",
                 "hint": "一步现在能跨两格了。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · 定义 matrix-times-vector-columns",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-MatrixTimesVector.tex",
+                  "note": "同一定义，把第一列改成 (2,0)，看取的份数怎么跟着变"
+                },
                 "options": [
                   {
                     "text": "3 步",
@@ -1826,6 +1966,13 @@
                 "kind": "choice",
                 "stem": "两根箭头共线，目标点**不在**那条线上。方程组有几个解？",
                 "varies": "从算步数转到判断解的个数。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Geometric view of systems of equations",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SystemsofEquations-Geometric.tex",
+                  "note": "该节按几何讨论方程组无解、唯一解、无穷多解三种情形；本题取无解那种"
+                },
                 "options": [
                   {
                     "text": "无穷多个",
@@ -1848,6 +1995,13 @@
                 "kind": "choice",
                 "stem": "两根箭头共线，目标点**正好落在**那条线上。方程组有几个解？",
                 "varies": "和上一题只差一个字：目标在线内还是线外。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Geometric view of systems of equations",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SystemsofEquations-Geometric.tex",
+                  "note": "同一节，取无穷多解那种"
+                },
                 "options": [
                   {
                     "text": "无穷多个",
@@ -2021,6 +2175,13 @@
                 "id": "r1",
                 "kind": "choice",
                 "stem": "矩阵 `[[1,0],[0,1]]`：压到几维？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Column space, row space, and null space of a matrix",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "该节定义列空间与秩；本题把秩问成「压到几维」，取满秩的情形"
+                },
                 "options": [
                   {
                     "text": "1 维",
@@ -2044,6 +2205,13 @@
                 "stem": "矩阵 `[[1,3],[2,6]]`：压到几维？",
                 "varies": "两列换成了成倍数关系的一对。",
                 "hint": "两根箭头分别指向 (1, 2) 和 (3, 6)。后者是前者的几倍？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Column space, row space, and null space",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "同上，取两列成比例因而秩为 1 的情形"
+                },
                 "options": [
                   {
                     "text": "1 维",
@@ -2066,6 +2234,13 @@
                 "kind": "choice",
                 "stem": "矩阵 `[[0,0],[0,0]]`：压到几维？",
                 "varies": "两根箭头都缩没了。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Column space, row space, and null space",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "同上，取零矩阵"
+                },
                 "options": [
                   {
                     "text": "1 维",
@@ -2089,6 +2264,13 @@
                 "stem": "一个 2×2 矩阵的面积倍数是 0。它的秩一定是 1 吗？",
                 "varies": "反过来问：由面积倍数能不能定出秩。",
                 "hint": "面积为 0 有两种情形，想想上一题。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Properties of determinants · 定理 Determinants and invertible matrices，与 Column space, row space, and null space 合看",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Determinants-Properties.tex",
+                  "note": "det=0 只说明不满秩，秩是 1 还是 0 要看矩阵本身——零矩阵的秩是 0。本题把两节的结论摆在一起考"
+                },
                 "options": [
                   {
                     "text": "不一定，也可能是 0",
@@ -2297,6 +2479,13 @@
                 "kind": "choice",
                 "stem": "两根箭头指向 (1, 2) 和 (2, 4)。它们能拼出平面上所有的点吗？",
                 "hint": "后者是前者的几倍？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Linear independence",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-LinearIndependence.tex",
+                  "note": "该节定义线性相关；本题取两个成比例的向量，问它们能否张成整个平面"
+                },
                 "options": [
                   {
                     "text": "不能",
@@ -2320,6 +2509,13 @@
                 "stem": "两根箭头改成 (1, 2) 和 (2, 5)。现在能拼出所有点吗？",
                 "varies": "只把第二根的纵坐标从 4 改成了 5。",
                 "hint": "(2, 5) 还是 (1, 2) 的整数倍或小数倍吗？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Linear independence",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-LinearIndependence.tex",
+                  "note": "同上，改成不成比例的一对"
+                },
                 "options": [
                   {
                     "text": "能",
@@ -2343,6 +2539,13 @@
                 "stem": "箭头 (3, 6) 是箭头 (1, 2) 的几倍？",
                 "varies": "直接把倍数算出来。",
                 "hint": "横坐标从 1 变成 3，纵坐标从 2 变成 6。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Linear independence",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-LinearIndependence.tex",
+                  "note": "同上，直接问倍数——相关的定义就是「其中一个是另一个的倍数」在二维的情形"
+                },
                 "options": [
                   {
                     "text": "3 倍",
@@ -2512,6 +2715,13 @@
                 "kind": "choice",
                 "stem": "一次搬动**没有**压扁平面。哪些点会被搬到原点？",
                 "hint": "没压扁意味着能原样退回去。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Column space, row space, and null space of a matrix",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "该节定义零空间；本题问可逆时零空间是什么"
+                },
                 "options": [
                   {
                     "text": "只有原点自己",
@@ -2535,6 +2745,13 @@
                 "stem": "平面被压成一条线。被搬到原点的那些点，构成几维的东西？填个数。",
                 "varies": "换成压扁的情形。",
                 "hint": "图上那条绿虚线是几维的？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Column space, row space, and null space",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "同上，问压成一条线时零空间的维数"
+                },
                 "options": [
                   {
                     "text": "0 维",
@@ -2558,6 +2775,13 @@
                 "stem": "矩阵 `[[1,3],[2,6]]`，方向 (3, −1) 被搬到哪里？填结果的横坐标。",
                 "varies": "这次要自己代进去算。",
                 "hint": "横坐标 = 第一行乘这个方向：1×3 + 3×(−1)。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Column space, row space, and null space",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                  "note": "同上，给一个具体矩阵和一个具体向量，验它确实落在零空间里"
+                },
                 "options": [
                   {
                     "text": "原点（横坐标 0）",
@@ -2739,6 +2963,13 @@
                 "kind": "choice",
                 "stem": "「旋转 90°」这次搬动，有几条方向的箭头搬完还留在原来那条线上？填个数。",
                 "hint": "想象任意一条过原点的直线，转 90° 之后它去了哪。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Geometric interpretation of eigenvectors",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Geometric.tex",
+                  "note": "该节讲特征向量是方向不变的方向；本题取旋转 90° 这个实特征向量不存在的例子"
+                },
                 "options": [
                   {
                     "text": "两条，横轴和纵轴",
@@ -2762,6 +2993,13 @@
                 "stem": "矩阵 `[[2,0],[0,3]]`（横向拉 2 倍、纵向拉 3 倍），有几条方向不被转走？",
                 "varies": "换成两个方向各自拉伸。",
                 "hint": "横轴上的箭头转走了吗？纵轴上的呢？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Geometric interpretation of eigenvectors",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Geometric.tex",
+                  "note": "同上，取对角矩阵，两个坐标轴方向都不变"
+                },
                 "options": [
                   {
                     "text": "一条",
@@ -2785,6 +3023,13 @@
                 "stem": "矩阵 `[[3,0],[0,3]]`（每个方向都均匀放大 3 倍），有几条方向不被转走？",
                 "varies": "把两个方向的倍数改成相同的。",
                 "hint": "随便挑一根箭头，放大 3 倍之后它指向哪？",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "同上 · Geometric interpretation of eigenvectors",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Geometric.tex",
+                  "note": "同上，取数量矩阵——每个方向都不变，这是特征方向无穷多的情形"
+                },
                 "options": [
                   {
                     "text": "每一条都是",

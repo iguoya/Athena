@@ -207,41 +207,9 @@ for (const [kind, list] of [
 // 无出处存量题；改动其中任何一道，就要顺手给它补出处并从这里划掉。
 // 新增的题一律不得进这份名单——加进来 lint 就白做了。
 const LEGACY_UNSOURCED = new Set([
-  "math.linalg.transform2d::t1",
-  "math.linalg.transform2d::t2",
-  "math.linalg.transform2d::t3",
-  "math.linalg.compose::c1",
-  "math.linalg.compose::c2",
-  "math.linalg.compose::c3",
-  "math.linalg.determinant::d1",
-  "math.linalg.determinant::d2",
-  "math.linalg.determinant::d3",
-  "math.linalg.determinant::d4",
-  "math.linalg.determinant::d5",
-  "math.linalg.inverse::i1",
-  "math.linalg.inverse::i2",
-  "math.linalg.inverse::i3",
-  "compose_and_undo::c1",
-  "compose_and_undo::c2",
-  "compose_and_undo::c3",
-  "compose_and_undo::c4",
-  "math.linalg.solve::s1",
-  "math.linalg.solve::s2",
-  "math.linalg.solve::s3",
-  "math.linalg.solve::s4",
-  "math.linalg.rank::r1",
-  "math.linalg.rank::r2",
-  "math.linalg.rank::r3",
-  "math.linalg.rank::r4",
-  "math.linalg.span::p1",
-  "math.linalg.span::p2",
-  "math.linalg.span::p3",
-  "math.linalg.kernel::k1",
-  "math.linalg.kernel::k2",
-  "math.linalg.kernel::k3",
-  "math.linalg.eigen::e1",
-  "math.linalg.eigen::e2",
-  "math.linalg.eigen::e3",
+  // 空了。接入检查时的 35 条无出处存量题已全部补上出处（改编自
+  // selinger/linear-algebra 的对应定义与定理）。这份名单只能变短，
+  // 不能变长——新增的题一律当场标出处，不许再往这里加。
 ]);
 
 const SOURCE_KINDS = new Set(["verbatim", "adapted", "authored"]);
