@@ -3,7 +3,7 @@
 # 快捷键都需要一个正经的 bundle。仓库路径在这一步写进 Info.plist。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-REPO="$(cd "$ROOT/.." && pwd)"
+REPO="$(cd "$ROOT/../.." && pwd)"
 APP_NAME="Athena Launcher.app"
 STAGE="$ROOT/dist/$APP_NAME"
 TARGET_DIR="${1:-$HOME/Applications}"

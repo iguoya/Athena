@@ -11,5 +11,5 @@ swift build
 pkill -f "$ROOT/.build/.*/AthenaLauncher" 2>/dev/null || true
 pkill -f "Athena Launcher.app/Contents/MacOS/AthenaLauncher" 2>/dev/null || true
 
-export ATHENA_ROOT="$(cd "$ROOT/.." && pwd)"
+export ATHENA_ROOT="$(cd "$ROOT/../.." && pwd)"
 exec "$ROOT/.build/debug/AthenaLauncher"

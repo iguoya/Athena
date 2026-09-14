@@ -9,7 +9,7 @@
 ## 安装（日常用这个）
 
 ```sh
-launcher/scripts/install.sh
+launcher/macos/scripts/install.sh
 ```
 
 release 编译后装到 `~/Applications/Athena Launcher.app` 并立刻启动。仓库路径在
@@ -33,8 +33,8 @@ release 编译后装到 `~/Applications/Athena Launcher.app` 并立刻启动。�
 ## 终端入口
 
 ```sh
-launcher/.build/debug/AthenaLauncher --list        # 列出各应用和当前状态
-launcher/.build/debug/AthenaLauncher --open dsa    # 等于在菜单里点一下「数据结构与算法」
+launcher/macos/.build/debug/AthenaLauncher --list        # 列出各应用和当前状态
+launcher/macos/.build/debug/AthenaLauncher --open dsa    # 等于在菜单里点一下「数据结构与算法」
 ```
 
 `--open` 可以挂到 Raycast、Alfred 或任何快捷键工具上。
@@ -42,7 +42,7 @@ launcher/.build/debug/AthenaLauncher --open dsa    # 等于在菜单里点一下
 ## 开发
 
 ```sh
-launcher/scripts/dev.sh
+launcher/macos/scripts/dev.sh
 ```
 
 增量编译并直接跑源码产物（会先清掉正在运行的那一份）。这种方式没有 bundle，
@@ -51,7 +51,7 @@ launcher/scripts/dev.sh
 离屏渲染一张菜单的样子，用来检查界面而不必真的点开：
 
 ```sh
-launcher/.build/debug/AthenaLauncher --snapshot /tmp/menu.png
+launcher/macos/.build/debug/AthenaLauncher --snapshot /tmp/menu.png
 ```
 
 ## 清单从哪来
