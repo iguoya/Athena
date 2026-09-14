@@ -136,6 +136,45 @@ for (const pass of [1, 2]) {
   drillStat = drillStat ? `${drillStat}；${line}` : `练习 ${line}`;
 }
 
+// ── 标题：术语作主标题，直觉说法作副标题（ADR 0021）──────────────
+// 一次改完还不够，下次新增又会滑回口语标题——这条必须机械兜住。
+// 判据：主标题是**名词短语**，不是句子。误报时改标题，不放宽规则:
+// 真的需要一个句子当标题，说明那句话属于 plain_title。
+const TITLE_SPOKEN = [
+  /[？?]/, /吗|呢|啦|吧/, /怎么|为什么|哪些|哪个|哪一|什么|多少|几倍|几维/,
+  /能不能|是不是|有没有|会不会/, /了$/, /的$/,
+];
+
+for (const [kind, list] of [
+  ["章", cur.chapters],
+  ["节", topics],
+]) {
+  for (const n of list) {
+    if (!n.plain_title) {
+      console.error(
+        `标题：${kind}「${n.title}」缺 plain_title——只有术语会把人挡在门外（ADR 0021 第 4 节）`,
+      );
+      hits++;
+    }
+    for (const re of TITLE_SPOKEN) {
+      const m = n.title.match(re);
+      if (m) {
+        console.error(
+          `标题：${kind}「${n.title}」里的「${m[0]}」是口语/疑问说法——` +
+            `主标题要用规范术语的名词短语，这句话应该放进 plain_title`,
+        );
+        hits++;
+        break;
+      }
+    }
+    // 术语是名词短语，长到一句话的程度就不是术语了
+    if (n.title.length > 14) {
+      console.error(`标题：${kind}「${n.title}」有 ${n.title.length} 字，术语标题不该这么长`);
+      hits++;
+    }
+  }
+}
+
 // ── 题目出处（ADR 0019）──────────────────────────────────────────
 // 自造题没有难度校准，做对了说明不了什么——检验器本身不可信，反而加固
 // 流畅性错觉。所以每道判分的题都要指得到一个真实出处。

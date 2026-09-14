@@ -96,7 +96,10 @@ interface WorkedExample {
 
 interface Topic {
   id: string;
+  /** 规范术语，名词短语。取自 syllabus_ref / textbook_ref，不另造（ADR 0021） */
   title: string;
+  /** 直觉说法，与术语同时显示——只有术语会把人挡在门外，只有直觉认不出这节叫什么 */
+  plain_title: string;
   scope: string;
   difficulty: number;
   mastery_goal: string;
@@ -146,6 +149,7 @@ interface Topic {
 interface Chapter {
   id: string;
   title: string;
+  plain_title: string;
   summary?: string;
   topics: Topic[];
   /** 章末小考：跨节交错，检验整章合起来会不会（ADR 0014 第 4 节） */
@@ -332,7 +336,9 @@ function renderSide() {
       parts.push(
         `<div class="chapter-title cur">正在读 · 第 ${at + 1} / ${all.length} 节</div>`,
       );
-      parts.push(`<div class="cur-title">${t.title}</div>`);
+      parts.push(
+        `<div class="cur-title">${t.title}<span class="cur-plain">${t.plain_title}</span></div>`,
+      );
       for (const [id, label] of secs) {
         parts.push(`<button class="sec" data-sec="${id}">${label}</button>`);
       }
@@ -566,7 +572,9 @@ function renderTopic(id: string) {
         }
         ${
           src.textbook?.length
-            ? `<div class="src-row"><span class="src-k">教材</span><span>${src.textbook.join(" · ")}</span></div>`
+            ? `<div class="src-row"><span class="src-k">教材坐标</span><span>${src.textbook.join(
+                " · ",
+              )}<span class="src-why">（用来和习题集、别人的进度对齐，不是这一节的讲解来源）</span></span></div>`
             : ""
         }
         ${src.note ? `<div class="src-note">${src.note}</div>` : ""}
@@ -685,7 +693,7 @@ function renderTopic(id: string) {
         <button class="to-graph" data-graph="1">在图谱里看它的位置</button>
       </div>
       <div class="coord">${coord}</div>
-      <h2 class="title">${t.title}</h2>
+      <h2 class="title">${t.title}<span class="title-plain">${rich(t.plain_title)}</span></h2>
       ${
         speechAvailable()
           ? `<div class="readbar">
@@ -749,6 +757,7 @@ function renderTopic(id: string) {
           prevTopic
             ? `<button class="step prev" data-id="${prevTopic.id}">
                  <span class="step-k">← 上一节</span><span class="step-t">${prevTopic.title}</span>
+                 <span class="step-p">${prevTopic.plain_title}</span>
                </button>`
             : "<span></span>"
         }
@@ -756,6 +765,7 @@ function renderTopic(id: string) {
           nextTopic
             ? `<button class="step next" data-id="${nextTopic.id}">
                  <span class="step-k">下一节 →</span><span class="step-t">${nextTopic.title}</span>
+                 <span class="step-p">${nextTopic.plain_title}</span>
                </button>`
             : `<span class="step-end">这是最后一节。第一遍走完了。</span>`
         }

@@ -29,13 +29,15 @@
   "chapters": [
     {
       "id": "linear_transform",
-      "title": "一张图：平面被搬了一次",
+      "title": "线性变换与矩阵",
+      "plain_title": "一张图：平面被搬了一次",
       "track": "linalg",
       "summary": "线代全部内容的入口。后面每一节都是回到这张图上追问一个新问题。",
       "topics": [
         {
           "id": "math.linalg.transform2d",
-          "title": "矩阵就是把平面搬一次",
+          "title": "矩阵与线性变换",
+          "plain_title": "矩阵就是把平面搬一次",
           "scope": "math2",
           "difficulty": 1,
           "mastery_goal": "master",
@@ -267,13 +269,15 @@
     },
     {
       "id": "compose_and_undo",
-      "title": "接起来，再倒回去",
+      "title": "矩阵运算与逆矩阵",
+      "plain_title": "接起来，再倒回去",
       "track": "linalg",
       "summary": "两次搬动合成一次；面积倍数；能不能原样搬回来。",
       "topics": [
         {
           "id": "math.linalg.compose",
-          "title": "两次搬动接起来",
+          "title": "矩阵乘法",
+          "plain_title": "两次搬动接起来",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -499,7 +503,8 @@
         },
         {
           "id": "math.linalg.determinant",
-          "title": "面积变成了几倍",
+          "title": "行列式",
+          "plain_title": "面积变成了几倍",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -538,14 +543,15 @@
               "url": "https://www.3blue1brown.com/lessons/determinant"
             },
             "rigorous": {
-              "site": "可汗学院·矩阵的变换",
-              "title": "寻找逆矩阵及行列式",
-              "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations"
+              "site": "Immersive Math",
+              "title": "第 7 章 行列式（免费在线，图可以拖）",
+              "url": "https://immersivemath.com/ila/ch07_determinants/ch07.html"
             },
             "textbook": [
               "线性代数 1.1–1.5 行列式的定义与性质",
               "线性代数 1.6 行列式按行展开"
-            ]
+            ],
+            "note": "教材坐标只用于和习题集、他人进度对齐；这一节的严谨表述以上面两个免费在线来源为准。"
           },
           "widget": "transform2d",
           "widget_preset": {
@@ -651,7 +657,7 @@
             }
           ],
           "formal": {
-            "intro": "左边那一页讲的是「面积变成几倍」。同一件事，教材是这样写的——每条都标了出处，可以拿去核对。",
+            "intro": "左边那一页讲的是「面积变成几倍」。同一件事，**准确的说法**是下面这样——每条都标了出处，点开就能核对。",
             "entries": [
               {
                 "id": "f1",
@@ -660,10 +666,10 @@
                 "statement": "设二阶矩阵 `A = [[a₁₁, a₁₂], [a₂₁, a₂₂]]`，称数 `a₁₁a₂₂ − a₁₂a₂₁` 为 `A` 的**行列式**，记作 `det A` 或 `|A|`。",
                 "source": {
                   "kind": "adapted",
-                  "site": "同济《工程数学·线性代数》第六版",
-                  "ref": "1.1–1.2 二阶与三阶行列式",
-                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
-                  "note": "按标准表述整理，未逐字引用；教材位置见 ref，在线可核对处见链接"
+                  "site": "Immersive Math《Immersive Linear Algebra》",
+                  "ref": "7.1 The Determinant in 2D",
+                  "url": "https://immersivemath.com/ila/ch07_determinants/ch07.html",
+                  "note": "原文 det(A) = a₁₁a₂₂ − a₁₂a₂₁，这里译成中文并补上记号约定；免费在线、配可拖的交互图"
                 },
                 "pairs": "ov-says",
                 "plain": "这个数就是左边说的那个「面积变成几倍」。"
@@ -675,10 +681,10 @@
                 "statement": "`|det A|` 等于 `A` 把单位正方形变成的平行四边形的面积；`det A` 的**符号**表示定向是否改变——为负说明平面被翻了面。这个倍数与所取区域无关，对平面上任何可求面积的区域都一样。",
                 "source": {
                   "kind": "adapted",
-                  "site": "3Blue1Brown",
-                  "ref": "Essence of Linear Algebra · The determinant",
-                  "url": "https://www.3blue1brown.com/lessons/determinant",
-                  "note": "把视频里的几何解释写成陈述句；同济教材不从这个角度引入行列式"
+                  "site": "可汗学院中文版·矩阵的变换",
+                  "ref": "「行列式与平行四边形的面积」「作为缩放因子的行列式」两课",
+                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
+                  "note": "把两课讲的内容合成一句陈述；面积与定向的说法同见 Immersive Math 7.1"
                 },
                 "pairs": "ov-asks",
                 "plain": "所以「挑哪一块都一样」不是碰巧，是这条性质本身。"
@@ -690,10 +696,10 @@
                 "statement": "把矩阵某一行（或某一列）的 `k` 倍加到另一行（或另一列）上，行列式的值不变。",
                 "source": {
                   "kind": "adapted",
-                  "site": "同济《工程数学·线性代数》第六版",
-                  "ref": "1.5 行列式的性质",
+                  "site": "可汗学院中文版·矩阵的变换",
+                  "ref": "「行加法之后的行列式」「行变换之后的行列式」两课",
                   "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
-                  "note": "按标准表述整理，未逐字引用"
+                  "note": "可汗按行讲，Immersive Math 定理 7.1 按列讲；这里合并成行列都成立的一句"
                 },
                 "pairs": "ov-aha",
                 "plain": "这就是「剪歪不改变面积」——底和高都没动。"
@@ -709,10 +715,10 @@
                 ],
                 "source": {
                   "kind": "adapted",
-                  "site": "同济《工程数学·线性代数》第六版",
-                  "ref": "2.3 逆矩阵（可逆的充要条件）",
-                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
-                  "note": "按标准表述整理，未逐字引用；「压到更低维度」一句是几何解释，出自 3Blue1Brown 那一课"
+                  "site": "Immersive Math《Immersive Linear Algebra》",
+                  "ref": "定理 7.10（7.8 节）；二阶情形另见定理 6.3",
+                  "url": "https://immersivemath.com/ila/ch07_determinants/ch07.html",
+                  "note": "原文为「矩阵可逆当且仅当其行列式非零」；中文对应可汗学院「可逆性的简化条件」一课"
                 },
                 "pairs": "ov-says",
                 "plain": "面积被压成 0，就再也回不去了——下一节讲的就是这件事。"
@@ -842,7 +848,8 @@
         },
         {
           "id": "math.linalg.inverse",
-          "title": "能不能原样搬回去",
+          "title": "逆矩阵",
+          "plain_title": "能不能原样搬回去",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -1196,13 +1203,15 @@
     },
     {
       "id": "solve_and_rank",
-      "title": "解方程组，其实是在找原像",
+      "title": "线性方程组与秩",
+      "plain_title": "解方程组，其实是在找原像",
       "track": "linalg",
       "summary": "把中学就会的消元法接到这张图上，顺便解释它从没解释过的事。",
       "topics": [
         {
           "id": "math.linalg.solve",
-          "title": "哪个点被搬到了这里",
+          "title": "线性方程组",
+          "plain_title": "哪个点被搬到了这里",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -1466,7 +1475,8 @@
         },
         {
           "id": "math.linalg.rank",
-          "title": "压到了几维",
+          "title": "矩阵的秩",
+          "plain_title": "压到了几维",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -1706,7 +1716,8 @@
         },
         {
           "id": "math.linalg.span",
-          "title": "两个箭头能够到多远",
+          "title": "线性相关与张成",
+          "plain_title": "两个箭头能够到多远",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -1959,7 +1970,8 @@
         },
         {
           "id": "math.linalg.kernel",
-          "title": "被压没的那些方向",
+          "title": "零空间与基础解系",
+          "plain_title": "被压没的那些方向",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2175,13 +2187,15 @@
     },
     {
       "id": "eigen_and_frames",
-      "title": "哪些方向没被转走",
+      "title": "特征值与相似对角化",
+      "plain_title": "哪些方向没被转走",
       "track": "linalg",
       "summary": "线代后半段的枢纽。找出不被转走的方向，再换到那副坐标里去看。",
       "topics": [
         {
           "id": "math.linalg.eigen",
-          "title": "方向没变的那些方向",
+          "title": "特征值与特征向量",
+          "plain_title": "方向没变的那些方向",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2398,7 +2412,8 @@
         },
         {
           "id": "math.linalg.iterate",
-          "title": "同一次搬动重复一千次",
+          "title": "矩阵的幂与长期行为",
+          "plain_title": "同一次搬动重复一千次",
           "scope": "beyond",
           "difficulty": 3,
           "mastery_goal": "understand",
@@ -2558,7 +2573,8 @@
         },
         {
           "id": "math.linalg.similar",
-          "title": "换一副坐标看同一次搬动",
+          "title": "相似矩阵",
+          "plain_title": "换一副坐标看同一次搬动",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2614,7 +2630,8 @@
         },
         {
           "id": "math.linalg.diagonalize",
-          "title": "换到最省事的那副坐标",
+          "title": "矩阵的对角化",
+          "plain_title": "换到最省事的那副坐标",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2669,7 +2686,8 @@
         },
         {
           "id": "math.linalg.orthogonal",
-          "title": "把歪的基底扶正",
+          "title": "向量的内积与正交规范化",
+          "plain_title": "把歪的基底扶正",
           "scope": "math2",
           "difficulty": 2,
           "mastery_goal": "master",
@@ -2722,13 +2740,15 @@
     },
     {
       "id": "quadratic",
-      "title": "回到形状：椭圆的主轴",
+      "title": "二次型",
+      "plain_title": "回到形状：椭圆的主轴",
       "track": "linalg",
       "summary": "线代主线的终点，把前面所有东西用上一遍。",
       "topics": [
         {
           "id": "math.linalg.symmetric",
-          "title": "对称矩阵的两条轴互相垂直",
+          "title": "实对称矩阵的对角化",
+          "plain_title": "对称矩阵的两条轴互相垂直",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2776,7 +2796,8 @@
         },
         {
           "id": "math.linalg.quadratic",
-          "title": "交叉项是怎么消掉的",
+          "title": "二次型及其标准形",
+          "plain_title": "交叉项是怎么消掉的",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",
@@ -2825,7 +2846,8 @@
         },
         {
           "id": "math.linalg.definite",
-          "title": "什么时候它永远是正的",
+          "title": "正定二次型",
+          "plain_title": "什么时候它永远是正的",
           "scope": "math2",
           "difficulty": 3,
           "mastery_goal": "master",

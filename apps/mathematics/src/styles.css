@@ -733,3 +733,19 @@ canvas.dragging { cursor: grabbing; }
 @media (prefers-reduced-motion: reduce) {
   .is-linked { animation: none; box-shadow: 0 0 0 3px var(--accent); }
 }
+
+/* ── 术语标题与直觉副标题（ADR 0021）─────────────────────────────
+   两者缺一都不行：只有术语，读者不知道这节在说什么；
+   只有直觉，读者不知道这节叫什么、也搜不到它。 */
+h2.title .title-plain {
+  display: block; margin-top: 6px;
+  font-size: 20px; font-weight: 400; letter-spacing: 0;
+  color: var(--muted);
+}
+.cur-title .cur-plain {
+  display: block; margin-top: 3px;
+  font-size: 15px; font-weight: 400; color: var(--muted);
+}
+.step-p { display: block; margin-top: 3px; font-size: 15px; color: var(--muted); }
+/* 教材坐标只是导航，不是参考书——用途说明跟在后面，免得被当成主要来源（ADR 0022 第 3 节） */
+.src-why { display: block; margin-top: 2px; font-size: 14px; color: var(--muted); }
