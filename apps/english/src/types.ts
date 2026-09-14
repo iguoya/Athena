@@ -7,6 +7,44 @@ export interface Choice {
   why?: string;
 }
 
+export type SourceRelation = "selection_basis" | "quoted" | "adapted" | "exam_alignment";
+
+/** 内容不是只写一个链接：还要说明它与来源是什么关系。 */
+export interface SourceReference {
+  source_id: string;
+  relation: SourceRelation;
+  note: string;
+  /** 具体到句子、篇目或习题页的定位；缺省时使用来源目录中的网址。 */
+  locator_url?: string;
+  locator?: string;
+}
+
+export interface ContentSource {
+  id: string;
+  kind: "corpus" | "course" | "article" | "framework" | "exam_specification";
+  title: string;
+  publisher: string;
+  url: string;
+  license: string;
+  license_url?: string;
+  checked_on: string;
+  usage_note: string;
+  /** 仓库内对照副本，写题时离线打开（ADR 0008）。 */
+  local_path?: string;
+}
+
+export interface SourceCatalog {
+  sources: ContentSource[];
+}
+
+export interface MediaAsset {
+  kind: "audio" | "video";
+  title: string;
+  url: string;
+  source_id: string;
+  transcript?: string;
+}
+
 export interface Sense {
   pos: string;
   gloss: string;
@@ -44,6 +82,11 @@ export interface DeckItem {
   required_any?: string[];
   reference?: string;
   checklist?: string[];
+
+  /** 题目自身直接引用或改写的材料；没有时继承题库的选材依据。 */
+  source_refs?: SourceReference[];
+  /** 只有授权和来源都清楚的真人原声/视频才允许进入。 */
+  media?: MediaAsset[];
 }
 
 export interface Deck {
@@ -53,6 +96,8 @@ export interface Deck {
   kind: string;
   title?: string;
   vocab?: string[];
+  source_refs: SourceReference[];
+  media?: MediaAsset[];
   items: DeckItem[];
 }
 
@@ -61,6 +106,7 @@ export interface Track {
   title: string;
   kind: string;
   goal: string;
+  skills: Array<"listen" | "speak" | "read" | "write">;
   deck: string;
   /** 与练习题物理分离的平行题，只负责阶段考核。 */
   assessment: string;
@@ -140,4 +186,12 @@ export interface AssessmentInput {
   topic_id: string;
   correct: number;
   total: number;
+}
+
+/** 本机作答流水汇总，供首页连续天数和累计次数使用。 */
+export interface AttemptStats {
+  attempts: number;
+  correct: number;
+  active_days: number;
+  streak: number;
 }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>英语自学</title>
+    <title>英语学习</title>
     <script type="module" src="/src/main.ts" defer></script>
   </head>
   <body>
@@ -15,12 +15,19 @@
           <div class="english-brand">
             <div class="english-mark">E2</div>
             <div>
-              <h1 id="app-title">英语自学</h1>
+              <h1 id="app-title">英语学习</h1>
               <p class="english-subtitle" id="app-subtitle"></p>
             </div>
           </div>
           <div class="english-actions">
             <button type="button" class="english-back-stage" id="back-stage">← 返回路线</button>
+            <label class="english-voice-pick english-overview-action">语速
+              <select id="voice-rate" aria-label="朗读语速"></select>
+            </label>
+            <label class="english-voice-pick english-overview-action">美式音色
+              <select id="voice-name" aria-label="美式英语朗读音色"></select>
+            </label>
+            <button type="button" class="english-overview-action" id="voice-try">试听</button>
             <button type="button" class="english-review-button english-overview-action" id="btn-due">今日复习 0</button>
             <button type="button" class="english-overview-action" id="btn-mistakes">错题本 0</button>
             <button type="button" class="english-overview-action" id="btn-continue" data-primary>继续当前任务</button>
@@ -43,22 +50,28 @@
               <div class="english-stage-badge" id="stage-badge"></div>
             </div>
 
+            <section class="english-outcomes" id="outcomes" aria-label="学习成果"></section>
+
             <section class="english-gate" id="gate" aria-label="阶段通过条件"></section>
 
             <div class="english-tracks" id="tracks"></div>
 
-            <div class="english-criteria" aria-label="考核规则">
+            <div class="english-criteria" aria-label="学习约定">
               <div class="english-criterion">
                 <strong>练习与考核分开</strong>
                 <span>练习即时解析；考核使用独立平行材料，交卷后统一反馈。</span>
               </div>
               <div class="english-criterion">
-                <strong>三项分别过关</strong>
-                <span>单词、例句、作文分别判定，不用平均分掩盖短板。</span>
+                <strong>教材综合取用</strong>
+                <span>词频、公开材料和教辅摘录一起权衡，题仍自写。</span>
               </div>
               <div class="english-criterion">
-                <strong>同一素材逐级输出</strong>
-                <span>单词进入例句，例句再进入仿写与作文，不建三套孤立题库。</span>
+                <strong>听说读写协同</strong>
+                <span>听原声或朗读、跟读回听、阅读判断，再口述或写下来。</span>
+              </div>
+              <div class="english-criterion">
+                <strong>看得见成果</strong>
+                <span>连续天数、稳住的条目和徽章都记在上面，不是为了打卡。</span>
               </div>
             </div>
 

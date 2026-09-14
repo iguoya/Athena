@@ -6,6 +6,7 @@
 
 import type {
   AppInfo,
+  AttemptStats,
   Curriculum,
   Deck,
   Mistake,
@@ -13,6 +14,7 @@ import type {
   ReviewState,
   MasteryState,
   AssessmentInput,
+  SourceCatalog,
 } from "./types";
 
 export const isDesktop =
@@ -41,7 +43,7 @@ export async function loadAppInfo(): Promise<AppInfo> {
     return call<AppInfo>("get_app_info");
   }
   return {
-    title: "英语自学",
+    title: "英语学习",
     content_root: "浏览器预览",
     store_path: "未连接进度库：答题结果不会保存",
   };
@@ -52,6 +54,13 @@ export async function loadCurriculum(): Promise<Curriculum> {
     return call<Curriculum>("load_curriculum");
   }
   return JSON.parse(await readBundled("curriculum.json")) as Curriculum;
+}
+
+export async function loadSourceCatalog(): Promise<SourceCatalog> {
+  if (isDesktop) {
+    return call<SourceCatalog>("load_content_json", { relative: "sources/catalog.json" });
+  }
+  return JSON.parse(await readBundled("sources/catalog.json")) as SourceCatalog;
 }
 
 export async function loadDeck(relative: string): Promise<Deck> {
@@ -72,6 +81,26 @@ export async function loadText(relative: string): Promise<string> {
 const sessionReview = new Map<string, ReviewState>();
 const sessionMistakes = new Map<string, Mistake>();
 const sessionMastery = new Map<string, MasteryState>();
+const sessionAttempts = { attempts: 0, correct: 0 };
+
+function emptyAttemptStats(): AttemptStats {
+  return { attempts: 0, correct: 0, active_days: 0, streak: 0 };
+}
+
+export async function loadAttemptStats(): Promise<AttemptStats> {
+  if (!isDesktop) {
+    if (sessionAttempts.attempts === 0) {
+      return emptyAttemptStats();
+    }
+    return {
+      attempts: sessionAttempts.attempts,
+      correct: sessionAttempts.correct,
+      active_days: 1,
+      streak: 1,
+    };
+  }
+  return call<AttemptStats>("load_attempt_stats");
+}
 
 export async function loadReview(): Promise<Map<string, ReviewState>> {
   if (!isDesktop) {
@@ -118,15 +147,21 @@ export async function saveAnswer(input: ReviewInput): Promise<ReviewState> {
   }
 
   const previous = sessionReview.get(input.item_id);
+  const nextReps = input.correct ? (previous?.reps ?? 0) + 1 : 0;
+  const nextInterval = input.correct ? (nextReps === 1 ? 1 : nextReps === 2 ? 3 : 7) : 0;
   const next: ReviewState = {
     item_id: input.item_id,
-    reps: input.correct ? (previous?.reps ?? 0) + 1 : 0,
+    reps: nextReps,
     ease: 2.5,
-    interval_days: 0,
-    due_at: String(Math.floor(Date.now() / 1000)),
+    interval_days: nextInterval,
+    due_at: String(Math.floor(Date.now() / 1000) + Math.round(nextInterval * 86400)),
     last_rating: input.correct ? 4 : 1,
   };
   sessionReview.set(input.item_id, next);
+  sessionAttempts.attempts += 1;
+  if (input.correct) {
+    sessionAttempts.correct += 1;
+  }
 
   if (input.correct) {
     sessionMistakes.delete(input.item_id);

@@ -2,7 +2,7 @@
 // 不依赖主程序头文件或 athena.json。
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -36,6 +36,79 @@ struct MasteryState {
     mastery: i64,
     last_correct: i64,
     last_total: i64,
+}
+
+#[derive(Serialize)]
+struct AttemptStats {
+    attempts: i64,
+    correct: i64,
+    active_days: i64,
+    streak: i64,
+}
+
+fn is_leap(year: i32) -> bool {
+    year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+}
+
+fn days_in_month(year: i32, month: u32) -> u32 {
+    match month {
+        1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
+        4 | 6 | 9 | 11 => 30,
+        2 => {
+            if is_leap(year) {
+                29
+            } else {
+                28
+            }
+        }
+        _ => 31,
+    }
+}
+
+fn prev_ymd(day: &str) -> Option<String> {
+    let mut parts = day.split('-');
+    let year: i32 = parts.next()?.parse().ok()?;
+    let month: u32 = parts.next()?.parse().ok()?;
+    let date: u32 = parts.next()?.parse().ok()?;
+    if month == 0 || month > 12 || date == 0 {
+        return None;
+    }
+    let (year, month, date) = if date > 1 {
+        (year, month, date - 1)
+    } else if month > 1 {
+        let month = month - 1;
+        (year, month, days_in_month(year, month))
+    } else {
+        (year - 1, 12, 31)
+    };
+    Some(format!("{year:04}-{month:02}-{date:02}"))
+}
+
+fn consecutive_streak(today: &str, days: &[String]) -> i64 {
+    let set: HashSet<&str> = days.iter().map(String::as_str).collect();
+    let yesterday = match prev_ymd(today) {
+        Some(day) => day,
+        None => return 0,
+    };
+    let mut cursor = if set.contains(today) {
+        today.to_string()
+    } else if set.contains(yesterday.as_str()) {
+        yesterday
+    } else {
+        return 0;
+    };
+    let mut count = 0;
+    loop {
+        if !set.contains(cursor.as_str()) {
+            break;
+        }
+        count += 1;
+        match prev_ymd(&cursor) {
+            Some(prev) => cursor = prev,
+            None => break,
+        }
+    }
+    count
 }
 
 #[derive(Clone, Serialize)]
@@ -209,7 +282,7 @@ fn iso_from_unix(ts: i64) -> String {
 fn get_app_info(state: tauri::State<'_, Mutex<AppState>>) -> AppInfo {
     let s = state.lock().unwrap();
     AppInfo {
-        title: "英语自学".into(),
+        title: "英语学习".into(),
         content_root: s.content_root.display().to_string(),
         store_path: s.store_path.display().to_string(),
     }
@@ -274,6 +347,45 @@ fn load_all_review(
         map.insert(row.item_id.clone(), row);
     }
     Ok(map)
+}
+
+#[tauri::command]
+fn load_attempt_stats(
+    state: tauri::State<'_, Mutex<AppState>>,
+) -> Result<AttemptStats, String> {
+    let s = state.lock().unwrap();
+    let path = &s.store_path;
+    ensure_own_schema(path)?;
+    let conn = rusqlite::Connection::open(path).map_err(|e| e.to_string())?;
+    let attempts: i64 = conn
+        .query_row("SELECT COUNT(*) FROM answer_attempts", [], |row| row.get(0))
+        .unwrap_or(0);
+    let correct: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM answer_attempts WHERE correct = 1",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap_or(0);
+    let mut stmt = conn
+        .prepare(
+            "SELECT DISTINCT date(answered_at, 'localtime') FROM answer_attempts ORDER BY 1 DESC",
+        )
+        .map_err(|e| e.to_string())?;
+    let days: Vec<String> = stmt
+        .query_map([], |row| row.get(0))
+        .map_err(|e| e.to_string())?
+        .flatten()
+        .collect();
+    let today: String = conn
+        .query_row("SELECT date('now', 'localtime')", [], |row| row.get(0))
+        .unwrap_or_default();
+    Ok(AttemptStats {
+        attempts,
+        correct,
+        active_days: days.len() as i64,
+        streak: consecutive_streak(&today, &days),
+    })
 }
 
 #[derive(Deserialize)]
@@ -654,6 +766,7 @@ pub fn run() {
             load_content_text,
             load_content_json,
             load_all_review,
+            load_attempt_stats,
             save_answer,
             save_assessment_result,
             load_mistakes,
@@ -665,7 +778,26 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::{persist_assessment_result, schedule, AssessmentInput};
+    use super::{consecutive_streak, persist_assessment_result, schedule, AssessmentInput};
+
+    #[test]
+    fn streak_counts_today_and_yesterday() {
+        let days = vec!["2026-09-14".into(), "2026-09-13".into(), "2026-09-12".into()];
+        assert_eq!(consecutive_streak("2026-09-14", &days), 3);
+    }
+
+    #[test]
+    fn streak_still_counts_if_today_is_empty_but_yesterday_is_not() {
+        let days = vec!["2026-09-13".into(), "2026-09-12".into()];
+        assert_eq!(consecutive_streak("2026-09-14", &days), 2);
+    }
+
+    #[test]
+    fn streak_breaks_on_a_gap() {
+        let days = vec!["2026-09-10".into(), "2026-09-08".into()];
+        assert_eq!(consecutive_streak("2026-09-14", &days), 0);
+        assert_eq!(consecutive_streak("2026-09-10", &days), 1);
+    }
 
     #[test]
     fn correct_answers_expand_the_interval() {

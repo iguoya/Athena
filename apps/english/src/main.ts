@@ -6,16 +6,19 @@ import "./styles.css";
 import { renderMarkdown } from "./markdown";
 import {
   loadAppInfo,
+  loadAttemptStats,
   loadCurriculum,
   loadDeck,
   loadMastery,
   loadMistakes,
   loadReview,
+  loadSourceCatalog,
   loadText,
   saveAnswer,
   saveAssessmentResult,
 } from "./backend";
 import {
+  computeOutcomes,
   errorTagOf,
   gradeWriting,
   isDue,
@@ -23,12 +26,32 @@ import {
   itemStem,
   itemSummary,
   orderItems,
+  shuffled,
   trackStats,
+  vocabFormProbe,
   weakItems,
+  wordFormPattern,
   writingVerdict,
 } from "./practice";
+import {
+  canSpeak,
+  getRate,
+  getVoiceName,
+  listEnglishVoices,
+  openExternal,
+  previewVoice,
+  RATE_OPTIONS,
+  setRate,
+  setVoiceName,
+  speakEnglish,
+  stopSpeaking,
+  VoiceRecorder,
+  voicesReady,
+} from "./voice";
 import type {
+  AttemptStats,
   Choice,
+  ContentSource,
   Curriculum,
   Deck,
   DeckItem,
@@ -56,12 +79,16 @@ const dom = {
   btnDue: byId<HTMLButtonElement>("btn-due"),
   btnMistakes: byId<HTMLButtonElement>("btn-mistakes"),
   btnContinue: byId<HTMLButtonElement>("btn-continue"),
+  voiceRate: byId<HTMLSelectElement>("voice-rate"),
+  voiceName: byId<HTMLSelectElement>("voice-name"),
+  voiceTry: byId<HTMLButtonElement>("voice-try"),
 
   stageList: byId("stage-list"),
   endpoint: byId("endpoint"),
   stageTitle: byId("stage-title"),
   stageGoal: byId("stage-goal"),
   stageBadge: byId("stage-badge"),
+  outcomes: byId("outcomes"),
   gate: byId("gate"),
   tracks: byId("tracks"),
   lockNote: byId("lock-note"),
@@ -116,15 +143,26 @@ interface Session {
   answered: boolean;
   inVariant: boolean;
   variantDone: boolean;
+  inFormRecall: boolean;
+  formRecallDone: boolean;
+  pendingVocab?: {
+    meaningCorrect: boolean;
+    picked: string;
+    answer: string;
+    why: string;
+  };
   attempts: Attempt[];
   assessmentId?: string;
 }
 
 const runtimes = new Map<string, TrackRuntime>();
+const sourceCatalog = new Map<string, ContentSource>();
+const voiceRecorder = new VoiceRecorder();
 let curriculum: Curriculum;
 let review = new Map<string, ReviewState>();
 let mastery = new Map<string, MasteryState>();
 let mistakes: Mistake[] = [];
+let attemptStats: AttemptStats = { attempts: 0, correct: 0, active_days: 0, streak: 0 };
 let currentStageId = "";
 let currentMistakeId = "";
 let session: Session | null = null;
@@ -135,6 +173,206 @@ function esc(text: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function plainSpeechText(text: string): string {
+  return text
+    .replace(/[#*_>`]/g, " ")
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function speechText(entry: SessionItem, source: DeckItem | Variant): string {
+  const stem = itemStem(source) || entry.runtime.passage || source.prompt;
+  if (session?.inFormRecall && entry.item.word && stem) {
+    return plainSpeechText(stem.replace(wordFormPattern(entry.item.word), " blank "));
+  }
+  return plainSpeechText(stem);
+}
+
+function formatStem(stem: string, word: string | undefined, mode: "mark" | "cloze"): string {
+  if (!word) {
+    return esc(stem);
+  }
+  const match = wordFormPattern(word).exec(stem);
+  if (!match || match.index === undefined) {
+    return esc(stem);
+  }
+  const end = match.index + match[0].length;
+  const before = esc(stem.slice(0, match.index));
+  const after = esc(stem.slice(end));
+  if (mode === "cloze") {
+    return `${before}<span class="english-cloze" aria-label="空格">______</span>${after}`;
+  }
+  return `${before}<mark class="english-word-mark">${esc(match[0])}</mark>${after}`;
+}
+
+function fillVoicePicker(): void {
+  const voices = listEnglishVoices();
+  const currentVoice = getVoiceName();
+  const currentRate = getRate();
+  dom.voiceRate.innerHTML = RATE_OPTIONS.map(
+    ([rate, label]) =>
+      `<option value="${rate}"${Math.abs(rate - currentRate) < 0.01 ? " selected" : ""}>${label}</option>`,
+  ).join("");
+  if (voices.length === 0) {
+    dom.voiceName.innerHTML = `<option value="">系统还没有美式英语音色</option>`;
+    dom.voiceName.disabled = true;
+    dom.voiceTry.disabled = true;
+    return;
+  }
+  dom.voiceName.disabled = !canSpeak();
+  dom.voiceTry.disabled = !canSpeak();
+  dom.voiceName.innerHTML = voices
+    .map(
+      (voice) =>
+        `<option value="${esc(voice.name)}"${voice.name === currentVoice ? " selected" : ""}>${esc(voice.label)}</option>`,
+    )
+    .join("");
+}
+
+function bindVoicePicker(): void {
+  fillVoicePicker();
+  window.speechSynthesis?.addEventListener("voiceschanged", fillVoicePicker);
+  const hear = () => {
+    try {
+      previewVoice();
+    } catch (error) {
+      dom.voiceTry.title = String(error);
+    }
+  };
+  dom.voiceRate.addEventListener("change", () => {
+    setRate(Number(dom.voiceRate.value));
+    hear();
+  });
+  dom.voiceName.addEventListener("change", () => {
+    setVoiceName(dom.voiceName.value);
+    hear();
+  });
+  dom.voiceTry.addEventListener("click", hear);
+}
+
+const relationLabels = {
+  selection_basis: "选材依据",
+  quoted: "原文节选",
+  adapted: "据原文改写",
+  exam_alignment: "考核对齐",
+} as const;
+
+const skillLabels = {
+  listen: "听",
+  speak: "说",
+  read: "读",
+  write: "写",
+} as const;
+
+function sourcePanelHtml(entry: SessionItem): string {
+  const refs = [...(entry.deck.source_refs ?? []), ...(entry.item.source_refs ?? [])].filter(
+    (ref, index, all) =>
+      all.findIndex((candidate) => candidate.source_id === ref.source_id && candidate.relation === ref.relation) === index,
+  );
+  const rows = refs
+    .map((ref) => {
+      const source = sourceCatalog.get(ref.source_id);
+      if (!source) {
+        return "";
+      }
+      return `<button type="button" class="english-source-link" data-source-url="${esc(ref.locator_url ?? source.url)}">
+          <span>${esc(relationLabels[ref.relation])}</span>
+          <strong>${esc(source.title)}</strong>
+          <small>${esc(source.publisher)} · ${esc(source.license)}${ref.locator ? `<br>定位：${esc(ref.locator)}` : ""}<br>${esc(ref.note)}</small>
+        </button>`;
+    })
+    .join("");
+  const media = (entry.item.media ?? entry.deck.media ?? [])
+    .map((asset) =>
+      asset.kind === "audio"
+        ? `<div class="english-original-media"><strong>真人原声 · ${esc(asset.title)}</strong>
+             <audio controls preload="none" src="${esc(asset.url)}"></audio></div>`
+        : `<details class="english-original-media"><summary>原教材视频 · ${esc(asset.title)}</summary>
+             <video controls playsinline preload="metadata" src="${esc(asset.url)}"></video></details>`,
+    )
+    .join("");
+
+  return `<section class="english-source-panel" aria-label="教材依据与语音练习">
+      <div class="english-source-head"><strong>教材依据</strong><span>点开可核查原教材、发布者和授权说明</span></div>
+      <div class="english-source-list">${rows || "<p class=\"english-source-empty\">这一课还没有对上可核对的来源。</p>"}</div>
+      <div class="english-voice-tools">
+        <button type="button" data-voice="speak"${canSpeak() ? "" : " disabled"}>系统朗读</button>
+        <button type="button" data-voice="stop-speak"${canSpeak() ? "" : " disabled"}>停止朗读</button>
+        <button type="button" data-voice="record"${voiceRecorder.supported() ? "" : " disabled"}>跟读录音</button>
+        <button type="button" data-voice="stop-record" disabled>停止录音</button>
+        <span class="english-voice-status" role="status">录音只在本次页面中回听，不上传、不判分。</span>
+      </div>
+      <audio class="english-recording-playback" controls hidden aria-label="跟读录音回听"></audio>
+      ${media}
+    </section>`;
+}
+
+function bindSourceAndVoice(entry: SessionItem, source: DeckItem | Variant): void {
+  const status = dom.question.querySelector<HTMLElement>(".english-voice-status");
+  const record = dom.question.querySelector<HTMLButtonElement>('[data-voice="record"]');
+  const stopRecord = dom.question.querySelector<HTMLButtonElement>('[data-voice="stop-record"]');
+  const playback = dom.question.querySelector<HTMLAudioElement>(".english-recording-playback");
+  const setStatus = (message: string) => {
+    if (status) status.textContent = message;
+  };
+
+  dom.question.querySelectorAll<HTMLButtonElement>("[data-source-url]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const url = button.dataset.sourceUrl;
+      if (url) {
+        void openExternal(url).catch((error) => setStatus(`原教材链接打开失败：${String(error)}`));
+      }
+    });
+  });
+  dom.question.querySelector<HTMLButtonElement>('[data-voice="speak"]')?.addEventListener("click", () => {
+    try {
+      speakEnglish(speechText(entry, source));
+      setStatus("正在用系统英文语音朗读；真人原声请使用下方教材媒体。");
+    } catch (error) {
+      setStatus(String(error));
+    }
+  });
+  dom.question.querySelector<HTMLButtonElement>('[data-voice="stop-speak"]')?.addEventListener("click", () => {
+    stopSpeaking();
+    setStatus("朗读已停止。");
+  });
+  record?.addEventListener("click", () => {
+    record.disabled = true;
+    if (stopRecord) stopRecord.disabled = true;
+    if (playback) playback.hidden = true;
+    setStatus("正在请求麦克风并录音……");
+    void voiceRecorder
+      .start()
+      .then(() => {
+        if (stopRecord) stopRecord.disabled = false;
+        setStatus("正在录音；读完后点“停止录音”。");
+      })
+      .catch((error) => {
+        record.disabled = false;
+        if (stopRecord) stopRecord.disabled = true;
+        setStatus(`无法录音：${String(error)}`);
+      });
+  });
+  stopRecord?.addEventListener("click", () => {
+    stopRecord.disabled = true;
+    void voiceRecorder
+      .stop()
+      .then((url) => {
+        if (playback) {
+          playback.src = url;
+          playback.hidden = false;
+        }
+        if (record) record.disabled = false;
+        setStatus("录音完成，可在下方回听并与原声或系统朗读对照。");
+      })
+      .catch((error) => {
+        if (record) record.disabled = false;
+        setStatus(`停止录音失败：${String(error)}`);
+      });
+  });
 }
 
 const now = (): number => Math.floor(Date.now() / 1000);
@@ -315,6 +553,9 @@ function renderTracks(stage: Stage): void {
             trackState(stats),
           )}</span></div>
           <p class="english-track-desc">${esc(track.goal)}</p>
+          <div class="english-skill-strip" aria-label="训练动作">${track.skills
+            .map((skill) => `<span data-skill="${skill}">${skillLabels[skill]}</span>`)
+            .join("")}</div>
           <div class="english-meter"><span style="width: ${pct(stats.coverage)}"></span></div>
           <div class="english-measure"><span>${esc(measureLeft)}</span><span>${esc(measureRight)}</span></div>
           <div class="english-track-actions">
@@ -345,11 +586,66 @@ function renderStageDetail(): void {
     : `完成${requiredTitles(stage)}的单词、例句与作文考核后，${stage.title}自动解锁。`;
 }
 
+function renderOutcomes(): void {
+  const outcomes = computeOutcomes({
+    stages: curriculum.stages,
+    tracks: [...runtimes.values()].map((runtime) => ({
+      kind: runtime.track.kind,
+      stageId: runtime.stage.id,
+      items: runtime.deck.items,
+      passed: trackPassed(runtime.track),
+    })),
+    review,
+    mistakeCount: mistakes.length,
+    attempts: attemptStats,
+    nowSeconds: now(),
+  });
+  const earned = outcomes.badges.filter((badge) => badge.earned).length;
+  const accuracy =
+    outcomes.accuracy === null ? "还没有作答记录" : `作答正确率 ${pct(outcomes.accuracy)}`;
+  dom.outcomes.innerHTML = `
+    <p class="english-cheer">${esc(outcomes.cheer)}</p>
+    <div class="english-outcome-stats">
+      <div class="english-outcome-stat"><strong>${outcomes.streak}</strong><span>连续天数</span></div>
+      <div class="english-outcome-stat"><strong>${outcomes.heldItems}</strong><span>已稳住</span></div>
+      <div class="english-outcome-stat"><strong>${outcomes.tracksPassed}/${outcomes.tracksTotal}</strong><span>通过考核</span></div>
+      <div class="english-outcome-stat"><strong>${outcomes.attempts}</strong><span>累计作答</span></div>
+    </div>
+    <div class="english-outcome-kinds">
+      ${outcomes.byKind
+        .map(
+          (kind) => `
+        <div class="english-outcome-kind">
+          <span>${esc(kind.title)}</span>
+          <div class="english-meter" aria-hidden="true"><span style="width:${pct(
+            kind.total === 0 ? 0 : kind.seen / kind.total,
+          )}"></span></div>
+          <small>${kind.seen}/${kind.total} · 稳住 ${kind.held}</small>
+        </div>`,
+        )
+        .join("")}
+    </div>
+    <div class="english-badges">
+      ${outcomes.badges
+        .map(
+          (badge) =>
+            `<span class="english-badge" data-earned="${badge.earned}" title="${esc(
+              badge.hint,
+            )}">${esc(badge.title)}</span>`,
+        )
+        .join("")}
+    </div>
+    <p class="english-outcome-note">${esc(accuracy)} · 已点亮 ${earned} / ${outcomes.badges.length} 枚徽章</p>`;
+}
+
 function showOverview(): void {
+  stopSpeaking();
+  voiceRecorder.reset();
   session = null;
   setView("overview");
   renderTopBar();
   renderStageList();
+  renderOutcomes();
   renderStageDetail();
 }
 
@@ -390,6 +686,8 @@ function sessionOf(runtime: TrackRuntime, deck: Deck, items: DeckItem[], mode: S
     answered: false,
     inVariant: false,
     variantDone: false,
+    inFormRecall: false,
+    formRecallDone: false,
     attempts: [],
   };
 }
@@ -437,6 +735,8 @@ function startDueSession(): void {
     answered: false,
     inVariant: false,
     variantDone: false,
+    inFormRecall: false,
+    formRecallDone: false,
     attempts: [],
   });
 }
@@ -484,12 +784,26 @@ function renderSide(): void {
     .join("");
 }
 
-function renderContext(entry: SessionItem, source: DeckItem | Variant): void {
+function renderContext(entry: SessionItem, source: DeckItem | Variant, revealListening = false): void {
   const passage = entry.runtime.passage;
   const stem = itemStem(source);
   if (stem) {
-    dom.practiceContext.className = "english-context";
-    dom.practiceContext.textContent = stem;
+    if (entry.item.kind === "listening" && !revealListening) {
+      dom.practiceContext.className = "english-context english-listening-hidden";
+      dom.practiceContext.innerHTML = `<span>先播放原声或系统朗读完成听辨，再决定是否查看文本。</span>
+        <button type="button" data-reveal-listening>显示文本</button>`;
+      dom.practiceContext.style.display = "flex";
+      dom.practiceContext
+        .querySelector<HTMLButtonElement>("[data-reveal-listening]")
+        ?.addEventListener("click", () => renderContext(entry, source, true));
+      return;
+    }
+    const vocab = entry.runtime.track.kind === "vocab" && Boolean(entry.item.word);
+    const mode = session?.inFormRecall ? "cloze" : "mark";
+    dom.practiceContext.className = vocab
+      ? "english-context english-vocab-stem"
+      : "english-context";
+    dom.practiceContext.innerHTML = vocab ? formatStem(stem, entry.item.word, mode) : esc(stem);
     dom.practiceContext.style.display = "block";
     return;
   }
@@ -509,8 +823,13 @@ function renderCard(): void {
     return;
   }
   session.answered = false;
+  stopSpeaking();
+  voiceRecorder.reset();
   session.inVariant = false;
   session.variantDone = false;
+  session.inFormRecall = false;
+  session.formRecallDone = false;
+  session.pendingVocab = undefined;
   dom.practiceCrumb.textContent = `${entry.runtime.stage.title} · ${entry.runtime.track.title} · ${
     errorTagOf(entry.item, entry.deck.kind)
   }`;
@@ -522,13 +841,32 @@ function renderCard(): void {
   }
 }
 
-function sensesHtml(item: DeckItem): string {
-  if (!item.senses || item.senses.length === 0) {
+function wordCardHtml(item: DeckItem): string {
+  if (!item.word) {
     return "";
   }
-  return `<ul class="english-senses">${item.senses
-    .map((sense) => `<li>${esc(sense.pos)} ${esc(sense.gloss)}</li>`)
-    .join("")}</ul>`;
+  const gloss =
+    item.senses && item.senses.length > 0
+      ? item.senses.map((sense) => `${sense.pos} ${sense.gloss}`).join("；")
+      : (item.choices?.find((choice) => choice.ok)?.label ?? "");
+  return `<div class="english-word-card"><strong>${esc(item.word)}</strong><span>${esc(gloss)}</span></div>`;
+}
+
+function vocabCue(inFormRecall: boolean): string {
+  return inFormRecall
+    ? "先听或默读挖空后的句子，再把词形提取出来。"
+    : "先听或读原句，再判断标记词在本句的意思；词形先不摊开。";
+}
+
+function needsFormRecall(entry: SessionItem): boolean {
+  return (
+    Boolean(session) &&
+    session!.mode === "practice" &&
+    entry.runtime.track.kind === "vocab" &&
+    Boolean(entry.item.word) &&
+    !session!.formRecallDone &&
+    vocabFormProbe(entry.item, entry.deck.items) !== null
+  );
 }
 
 function renderChoices(entry: SessionItem, source: DeckItem | Variant, inVariant: boolean): void {
@@ -539,21 +877,50 @@ function renderChoices(entry: SessionItem, source: DeckItem | Variant, inVariant
   session.inVariant = inVariant;
   renderContext(entry, source);
 
-  const word = entry.item.word && !inVariant ? `${entry.item.word} — ` : "";
-  const kind = inVariant ? "变式" : itemKindLabel(entry.item.kind);
-  dom.question.innerHTML = `<p class="english-prompt">${esc(word)}${esc(source.prompt)}${
+  const vocab = entry.runtime.track.kind === "vocab" && Boolean(entry.item.word);
+  const kind = session.inFormRecall
+    ? "提取词形"
+    : inVariant
+      ? "变式"
+      : vocab
+        ? "提取义项"
+        : itemKindLabel(entry.item.kind);
+  const cue = vocab ? `<p class="english-task-cue">${esc(vocabCue(session.inFormRecall))}</p>` : "";
+  const choices = shuffled(source.choices ?? []);
+  dom.question.innerHTML = `${sourcePanelHtml(entry)}${cue}<p class="english-prompt">${esc(source.prompt)}${
     kind ? `<span class="english-track-state"> · ${esc(kind)}</span>` : ""
   }</p>
-    <div class="english-choices">${(source.choices ?? [])
-      .map((choice, index) => `<button type="button" class="english-choice" data-choice="${index}">${esc(choice.label)}</button>`)
+    <div class="english-choices">${choices
+      .map(
+        (choice) =>
+          `<button type="button" class="english-choice" data-label="${esc(choice.label)}">${esc(choice.label)}</button>`,
+      )
       .join("")}</div>
     <div class="english-feedback" id="feedback"></div>`;
 
-  dom.question.querySelectorAll<HTMLButtonElement>("[data-choice]").forEach((button) => {
+  bindSourceAndVoice(entry, source);
+
+  dom.question.querySelectorAll<HTMLButtonElement>("[data-label]").forEach((button) => {
     button.addEventListener("click", () => {
-      void answerChoice(entry, source, Number(button.dataset.choice), inVariant);
+      const index = (source.choices ?? []).findIndex((choice) => choice.label === button.dataset.label);
+      void answerChoice(entry, source, index, inVariant);
     });
   });
+}
+
+function renderFormRecall(entry: SessionItem): void {
+  if (!session) {
+    return;
+  }
+  const probe = vocabFormProbe(entry.item, entry.deck.items);
+  if (!probe) {
+    session.formRecallDone = true;
+    void goNext();
+    return;
+  }
+  session.inFormRecall = true;
+  session.formRecallDone = false;
+  renderChoices(entry, probe, true);
 }
 
 async function answerChoice(
@@ -574,19 +941,61 @@ async function answerChoice(
     return;
   }
   const correct = picked.ok;
-  const buttons = Array.from(dom.question.querySelectorAll<HTMLButtonElement>("[data-choice]"));
+  const buttons = Array.from(dom.question.querySelectorAll<HTMLButtonElement>("[data-label]"));
+  if (entry.item.kind === "listening" || session.inFormRecall) {
+    renderContext(entry, source, true);
+  }
 
-  session.attempts.push({
-    item: entry.item,
-    runtime: entry.runtime,
-    correct,
-    picked: picked.label,
-    answer: answer.label,
-    why: answer.why ?? "",
-  });
+  const formRecall = session.inFormRecall;
+  const waitForForm = !formRecall && needsFormRecall(entry);
+
+  if (formRecall) {
+    const pending = session.pendingVocab;
+    const meaningCorrect = pending?.meaningCorrect ?? true;
+    const overall = meaningCorrect && correct;
+    session.attempts.push({
+      item: entry.item,
+      runtime: entry.runtime,
+      correct: overall,
+      picked: `${pending?.picked ?? ""} → ${picked.label}`,
+      answer: `${pending?.answer ?? ""} / ${answer.label}`,
+      why: answer.why ?? pending?.why ?? "",
+    });
+    let stored = true;
+    if (session.mode === "practice") {
+      stored = await recordAnswer(entry, {
+        correct: overall,
+        selected: picked.label,
+        answer: answer.label,
+        explanation: answer.why ?? "",
+        isVariant: correct,
+      });
+    }
+    paintChoiceResult(buttons, source, picked.label);
+    const feedback = document.getElementById("feedback");
+    if (feedback) {
+      feedback.innerHTML = formRecallFeedback(entry, correct, overall, stored, picked, answer, choices, position);
+      feedback.classList.add("is-visible");
+      session.formRecallDone = true;
+      session.inFormRecall = false;
+      appendNextAction(entry, overall, feedback);
+    }
+    return;
+  }
+
+  if (!waitForForm) {
+    session.attempts.push({
+      item: entry.item,
+      runtime: entry.runtime,
+      correct,
+      picked: picked.label,
+      answer: answer.label,
+      why: answer.why ?? "",
+    });
+  }
 
   let stored = true;
-  if (session.mode === "practice") {
+  if (session.mode === "practice" && !waitForForm) {
     stored = await recordAnswer(entry, {
       correct,
       selected: picked.label,
@@ -594,6 +1003,13 @@ async function answerChoice(
       explanation: answer.why ?? "",
       isVariant: inVariant,
     });
+  } else if (waitForForm) {
+    session.pendingVocab = {
+      meaningCorrect: correct,
+      picked: picked.label,
+      answer: answer.label,
+      why: answer.why ?? "",
+    };
   }
 
   if (session.mode === "exam") {
@@ -604,32 +1020,84 @@ async function answerChoice(
     return;
   }
 
-  buttons.forEach((button, index) => {
-    button.disabled = true;
-    if (choices[index]?.ok) {
-      button.dataset.result = "ok";
-    } else if (index === position) {
-      button.dataset.result = "bad";
-    }
-  });
+  paintChoiceResult(buttons, source, picked.label);
 
   const feedback = document.getElementById("feedback");
   if (feedback) {
-    feedback.innerHTML = correct
-      ? `<div class="english-feedback-head"><strong>判断正确</strong><span>不进入错题本</span></div>
-         <p>${esc(picked.why ?? answer.why ?? "")}</p>${inVariant ? "" : sensesHtml(entry.item)}${otherWhyHtml(choices, position)}`
-      : `<div class="english-feedback-head"><strong data-wrong="true">${stored ? "已自动加入错题本" : "错题未能保存"}</strong><span>错因：${esc(
-          errorTagOf(entry.item, entry.runtime.deck.kind),
-        )}</span></div>
-         <p>${esc(answer.why ?? "")}</p>
-         ${picked.why ? `<p>你选的：${esc(picked.why)}</p>` : ""}
-         ${inVariant ? "" : sensesHtml(entry.item)}${otherWhyHtml(choices, position)}`;
+    feedback.innerHTML = meaningFeedback(entry, correct, stored && !waitForForm, picked, answer, choices, position, inVariant);
     feedback.classList.add("is-visible");
     if (inVariant) {
       session.variantDone = true;
     }
     appendNextAction(entry, correct, feedback);
   }
+}
+
+function paintChoiceResult(buttons: HTMLButtonElement[], source: DeckItem | Variant, pickedLabel: string): void {
+  const choices = source.choices ?? [];
+  buttons.forEach((button) => {
+    button.disabled = true;
+    const choice = choices.find((item) => item.label === button.dataset.label);
+    if (choice?.ok) {
+      button.dataset.result = "ok";
+    } else if (button.dataset.label === pickedLabel) {
+      button.dataset.result = "bad";
+    }
+  });
+}
+
+function meaningFeedback(
+  entry: SessionItem,
+  correct: boolean,
+  stored: boolean,
+  picked: Choice,
+  answer: Choice,
+  choices: Choice[],
+  position: number,
+  inVariant: boolean,
+): string {
+  const card = inVariant ? "" : wordCardHtml(entry.item);
+  if (correct) {
+    return `<div class="english-feedback-head"><strong>判断正确</strong><span>${
+      session?.pendingVocab ? "还要把词形填回去" : "不进入错题本"
+    }</span></div>
+         ${card}<p>${esc(picked.why ?? answer.why ?? "")}</p>${otherWhyHtml(choices, position)}`;
+  }
+  return `<div class="english-feedback-head"><strong data-wrong="true">${
+    session?.pendingVocab ? "先看清义项，再提取词形" : stored ? "已自动加入错题本" : "错题未能保存"
+  }</strong><span>错因：${esc(errorTagOf(entry.item, entry.runtime.deck.kind))}</span></div>
+         ${card}<p>${esc(answer.why ?? "")}</p>
+         ${picked.why ? `<p>你选的：${esc(picked.why)}</p>` : ""}
+         ${otherWhyHtml(choices, position)}`;
+}
+
+function formRecallFeedback(
+  entry: SessionItem,
+  formCorrect: boolean,
+  overall: boolean,
+  stored: boolean,
+  picked: Choice,
+  answer: Choice,
+  choices: Choice[],
+  position: number,
+): string {
+  const card = wordCardHtml(entry.item);
+  if (overall) {
+    return `<div class="english-feedback-head"><strong>义项和词形都提取对了</strong><span>不进入错题本</span></div>
+      ${card}<p>${esc(picked.why ?? answer.why ?? "")}</p>${otherWhyHtml(choices, position)}`;
+  }
+  if (!formCorrect) {
+    return `<div class="english-feedback-head"><strong data-wrong="true">${
+      stored ? "已记入错题本" : "结果未能保存"
+    }</strong><span>认得意思还要能把词形提取出来</span></div>
+      ${card}<p>${esc(answer.why ?? "")}</p>
+      ${picked.why ? `<p>你选的：${esc(picked.why)}</p>` : ""}
+      ${otherWhyHtml(choices, position)}`;
+  }
+  return `<div class="english-feedback-head"><strong data-wrong="true">${
+    stored ? "已记入错题本" : "结果未能保存"
+  }</strong><span>词形填对了，但本句义项仍算错过</span></div>
+      ${card}<p>${esc(session?.pendingVocab?.why ?? "")}</p>`;
 }
 
 /** 干扰项的解析一并摊开：知道“不是哪个意思”才算认识这个词。 */
@@ -647,20 +1115,30 @@ function appendNextAction(entry: SessionItem, correct: boolean, feedback: HTMLEl
   if (!session) {
     return;
   }
+  const needForm = needsFormRecall(entry);
   const hasVariant = (entry.item.variants?.length ?? 0) > 0;
-  const needVariant = hasVariant && !session.variantDone;
+  const needVariant =
+    !needForm && entry.runtime.track.kind !== "vocab" && hasVariant && !session.variantDone;
   const last = session.index >= session.items.length - 1;
   const buttons = [
+    needForm
+      ? `<button type="button" class="english-feedback-action" data-act="form" data-primary>下一步：把词填回去</button>`
+      : "",
     needVariant ? `<button type="button" class="english-feedback-action" data-act="variant">换一句再问一次</button>` : "",
-    `<button type="button" class="english-feedback-action" data-act="next"${
-      needVariant ? "" : " data-primary"
-    }>${last ? "练完，回路线" : "下一题"}</button>`,
+    needForm
+      ? ""
+      : `<button type="button" class="english-feedback-action" data-act="next"${
+          needVariant ? "" : " data-primary"
+        }>${last ? "练完，回路线" : "下一题"}</button>`,
   ]
     .filter(Boolean)
     .join(" ");
   feedback.insertAdjacentHTML("beforeend", `<div class="english-mistake-actions">${buttons}</div>`);
   void correct;
 
+  feedback.querySelector<HTMLButtonElement>('[data-act="form"]')?.addEventListener("click", () => {
+    renderFormRecall(entry);
+  });
   feedback.querySelector<HTMLButtonElement>('[data-act="variant"]')?.addEventListener("click", () => {
     const variant = entry.item.variants?.[0];
     if (variant) {
@@ -685,7 +1163,7 @@ function renderWriting(entry: SessionItem): void {
     .filter(Boolean)
     .join("，");
 
-  dom.question.innerHTML = `<p class="english-prompt">${esc(item.prompt)}</p>
+  dom.question.innerHTML = `${sourcePanelHtml(entry)}<p class="english-prompt">${esc(item.prompt)}</p>
     ${demand ? `<p class="english-track-desc">${esc(demand)}</p>` : ""}
     ${
       (item.checklist ?? []).length > 0
@@ -697,6 +1175,8 @@ function renderWriting(entry: SessionItem): void {
       session.mode === "exam" ? "交卷" : "提交本段"
     }</button>
     <div class="english-feedback" id="feedback"></div>`;
+
+  bindSourceAndVoice(entry, item);
 
   const box = dom.question.querySelector<HTMLTextAreaElement>(".english-write-box");
   if (box && item.starter) {
@@ -987,7 +1467,7 @@ function renderMistakeDetail(): void {
   )} · 错因：${esc(mistake.error_tag)}${groupSize > 1 ? ` · 本组第 ${position} / ${groupSize} 题` : ""}</p>
     <h2>不是重做原题，而是纠正判断</h2>
     <p class="english-practice-goal">保留原题、错误答案和解析，再用同一知识点的变式确认是否真正会了。</p>
-    ${stem ? `<blockquote class="english-context">${esc(stem)}</blockquote>` : ""}
+    ${stem ? `<blockquote class="english-context">${item?.word ? formatStem(stem, item.word, "mark") : esc(stem)}</blockquote>` : ""}
     <div class="english-answer-compare">
       <div class="english-answer-box" data-kind="wrong"><strong>当时的错误判断</strong><span>${esc(
         mistake.selected_answer,
@@ -1046,14 +1526,16 @@ function renderMistakeDetail(): void {
 /* --------------------------------------------------------------- 装配 */
 
 async function refreshProgress(): Promise<void> {
-  const [nextReview, nextMastery, nextMistakes] = await Promise.all([
+  const [nextReview, nextMastery, nextMistakes, nextAttempts] = await Promise.all([
     loadReview(),
     loadMastery(),
     loadMistakes(),
+    loadAttemptStats(),
   ]);
   review = nextReview;
   mastery = nextMastery;
   mistakes = nextMistakes;
+  attemptStats = nextAttempts;
 }
 
 function bindEvents(): void {
@@ -1130,8 +1612,11 @@ function fail(error: unknown): void {
 }
 
 async function boot(): Promise<void> {
-  const [info, loaded] = await Promise.all([loadAppInfo(), loadCurriculum()]);
+  const [info, loaded, loadedSources] = await Promise.all([loadAppInfo(), loadCurriculum(), loadSourceCatalog()]);
   curriculum = loaded;
+  for (const source of loadedSources.sources) {
+    sourceCatalog.set(source.id, source);
+  }
   dom.title.textContent = curriculum.title;
   dom.subtitle.textContent = `${curriculum.stages.map((stage) => stage.title).join(" → ")} · ${curriculum.tagline}`;
   dom.endpoint.innerHTML = `<strong>终点</strong><br>${esc(curriculum.endpoint ?? curriculum.description)}`;
@@ -1153,6 +1638,8 @@ async function boot(): Promise<void> {
   await refreshProgress();
   currentStageId = activeStage().id;
   bindEvents();
+  await voicesReady();
+  bindVoicePicker();
   showOverview();
 }
 

@@ -195,6 +195,17 @@
 #english-stage-map h3 { font-size: 17px; font-weight: 500; }
 #english-stage-map .english-track-state { color: var(--english-muted); font-size: 12px; }
 #english-stage-map .english-track-desc { color: var(--english-muted); font-size: 14px; margin-top: 8px; min-height: 44px; }
+#english-stage-map .english-skill-strip { display: flex; gap: 6px; margin-top: 8px; }
+#english-stage-map .english-skill-strip span {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: var(--english-blue);
+  background: var(--english-blue-soft);
+  font-size: 11px;
+}
 #english-stage-map .english-meter {
   height: 8px;
   margin: 15px 0 8px;
@@ -447,3 +458,244 @@ html, body { height: 100%; margin: 0; }
   font-size: 14px;
 }
 
+#english-stage-map .english-source-panel {
+  margin-bottom: 18px;
+  padding: 13px;
+  border: 1px solid var(--english-line);
+  border-radius: 13px;
+  background: var(--english-panel-soft);
+}
+
+#english-stage-map .english-source-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+
+#english-stage-map .english-source-head strong { font-size: 13px; font-weight: 500; }
+#english-stage-map .english-source-head span { color: var(--english-muted); font-size: 12px; }
+#english-stage-map .english-source-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+#english-stage-map .english-source-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 8px;
+  max-width: 100%;
+  text-align: left;
+  background: var(--english-panel);
+}
+
+#english-stage-map .english-source-link span { color: var(--english-blue); font-size: 11px; }
+#english-stage-map .english-source-link strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; }
+#english-stage-map .english-source-link small { grid-column: 1 / -1; color: var(--english-muted); }
+
+#english-stage-map .english-voice-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+#english-stage-map .english-voice-tools button { min-height: 32px; padding: 5px 10px; }
+#english-stage-map .english-voice-status { flex: 1 1 260px; color: var(--english-muted); font-size: 12px; }
+#english-stage-map .english-recording-playback,
+#english-stage-map .english-original-media audio { width: 100%; margin-top: 10px; }
+
+#english-stage-map .english-original-media {
+  display: block;
+  margin-top: 10px;
+  color: var(--english-muted);
+  font-size: 12px;
+}
+
+#english-stage-map details.english-original-media summary { cursor: pointer; color: var(--english-blue); }
+#english-stage-map .english-original-media video { width: min(720px, 100%); max-height: 420px; margin-top: 10px; border-radius: 10px; background: #000; }
+
+#english-stage-map .english-listening-hidden {
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--english-muted);
+  font-style: normal;
+}
+
+#english-stage-map .english-listening-hidden button { flex: 0 0 auto; }
+
+#english-stage-map .english-actions { flex-wrap: wrap; justify-content: flex-end; }
+
+#english-stage-map .english-voice-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--english-muted);
+  font-size: 13px;
+}
+
+#english-stage-map .english-voice-pick select {
+  min-height: 38px;
+  max-width: 220px;
+  border: 1px solid var(--english-line);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: var(--english-text);
+  background: var(--english-panel);
+  font: inherit;
+}
+
+#english-stage-map .english-word-mark {
+  padding: 0 2px;
+  color: var(--english-blue);
+  background: var(--english-blue-soft);
+  font-weight: 600;
+  font-style: normal;
+}
+
+#english-stage-map .english-cloze {
+  display: inline-block;
+  min-width: 4.5em;
+  padding: 0 6px;
+  border-bottom: 2px solid var(--english-blue);
+  color: var(--english-blue);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+#english-stage-map .english-task-cue {
+  margin-bottom: 8px;
+  color: var(--english-muted);
+  font-size: 13px;
+}
+
+#english-stage-map .english-word-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--english-blue);
+  background: var(--english-blue-soft);
+  border-radius: 0 10px 10px 0;
+}
+
+#english-stage-map .english-word-card strong {
+  font-size: 18px;
+  font-family: "Iowan Old Style", "Times New Roman", serif;
+}
+
+#english-stage-map .english-word-card span { color: var(--english-muted); font-size: 13px; }
+
+#english-stage-map .english-context.english-vocab-stem {
+  font-size: 18px;
+  line-height: 1.7;
+  font-style: normal;
+}
+
+#english-stage-map .english-criteria {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+#english-stage-map .english-outcomes {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 13px;
+  background: var(--english-panel-soft);
+}
+
+#english-stage-map .english-cheer {
+  margin: 0;
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+#english-stage-map .english-outcome-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#english-stage-map .english-outcome-stat {
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--english-panel);
+}
+
+#english-stage-map .english-outcome-stat strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+#english-stage-map .english-outcome-stat span {
+  display: block;
+  margin-top: 2px;
+  color: var(--english-muted);
+  font-size: 12px;
+}
+
+#english-stage-map .english-outcome-kinds {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#english-stage-map .english-outcome-kind {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 120px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 11px;
+  background: var(--english-panel);
+  font-size: 13px;
+}
+
+#english-stage-map .english-outcome-kind .english-meter {
+  margin: 0;
+}
+
+#english-stage-map .english-outcome-kind small {
+  color: var(--english-muted);
+  font-size: 12px;
+}
+
+#english-stage-map .english-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#english-stage-map .english-badge {
+  padding: 6px 10px;
+  border: 1px dashed var(--english-line);
+  border-radius: 999px;
+  color: var(--english-muted);
+  background: var(--english-panel);
+  font-size: 12px;
+}
+
+#english-stage-map .english-badge[data-earned="true"] {
+  border-style: solid;
+  border-color: transparent;
+  color: var(--english-green);
+  background: var(--english-green-soft);
+}
+
+#english-stage-map .english-outcome-note {
+  margin: 10px 0 0;
+  color: var(--english-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 780px) {
+  #english-stage-map .english-outcome-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
