@@ -1415,9 +1415,6 @@ function voiceControls(): string {
         </select>
       </label>
       <button type="button" id="walk-try">试听</button>
-      <p class="voice-diag">${usingNativeTts() ? "系统语音" : "浏览器语音"}：${
-        vs.length
-      } 个中文${hasBetterVoice() ? "，含高音质" : ""}；当前「${cur || "未选定"}」。</p>
       ${
         hasBetterVoice()
           ? ""

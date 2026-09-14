@@ -67,13 +67,6 @@ export function setRate(r: number) {
   save(RATE_KEY, String(r));
 }
 
-function regionOf(lang: string): string {
-  const l = lang.toLowerCase();
-  if (l.includes("tw")) return "台湾";
-  if (l.includes("hk")) return "香港";
-  return "大陆";
-}
-
 /** 名字里带这些词的是系统下载的增强版，音质明显好过默认的压缩版 */
 const BETTER = /premium|enhanced|siri|增强|高级|高音质|优质|neural/i;
 
@@ -105,7 +98,7 @@ export function listVoices(): VoiceInfo[] {
     return [...native].sort((a, b) => rank(a) - rank(b)).map((v) => ({
       name: v.name,
       lang: v.lang,
-      label: `${v.name}（${regionOf(v.lang)}${v.better ? " · 高音质" : ""}）`,
+      label: `${v.name}${v.better ? "（高音质）" : ""}`,
     }));
   }
   if (!window.speechSynthesis) return [];
@@ -128,7 +121,7 @@ export function listVoices(): VoiceInfo[] {
     .map((v) => ({
       name: v.name,
       lang: v.lang,
-      label: `${v.name}（${regionOf(v.lang)}${BETTER.test(v.name) ? " · 增强" : ""}）`,
+      label: `${v.name}${BETTER.test(v.name) ? "（高音质）" : ""}`,
     }));
 }
 
