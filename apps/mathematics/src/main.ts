@@ -4,7 +4,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import { TransformView, type Mat2, type Readout } from "./transform-view";
 import { GraphView, type GraphNode } from "./graph-view";
-import { renderDrills, numberOk, type DrillSet, type DrillState } from "./drills";
+import {
+  renderDrills,
+  numberOk,
+  type DrillSet,
+  type DrillState,
+  type DrillSource,
+} from "./drills";
 import {
   renderDiagnostics,
   adviceOf,
@@ -49,6 +55,19 @@ interface Experiment {
   verify_m?: number[];
   options?: PredictOption[];
 }
+/** 标准例题（ADR 0019 第 4 节）。总是给出完整解答，它不是题，是给人读的。 */
+interface WorkedExample {
+  id: string;
+  title: string;
+  /** 出处必填：例题尤其不能自造，它是使用者眼里「标准做法长什么样」 */
+  source: DrillSource;
+  given: string;
+  /** 每一步都要说明「为什么可以这么做」，只给怎么算就退化成了答案 */
+  steps: Array<{ do: string; why: string }>;
+  answer: string;
+  note?: string;
+}
+
 interface Topic {
   id: string;
   title: string;
@@ -88,6 +107,11 @@ interface Topic {
     lines: Array<{ say: string; m: number[]; target?: [number, number] }>;
   };
   experiments?: Experiment[];
+  /**
+   * 标准例题：渐隐完形的第一级——完整解答，读懂即可，不作答、不计掌握度
+   * （ADR 0019 第 4 节补齐 ADR 0014 第 2 节）。
+   */
+  examples?: WorkedExample[];
   /** 随堂练习：跟着讲解走，检验刚讲的那一点（ADR 0014） */
   drills?: DrillSet;
 }
@@ -151,7 +175,8 @@ function rich(src: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/\*\*(.+?)\*\*/g, '<b class="em">$1</b>')
-    .replace(/==(.+?)==/g, '<mark class="hl">$1</mark>');
+    .replace(/==(.+?)==/g, '<mark class="hl">$1</mark>')
+    .replace(/`(.+?)`/g, "<code>$1</code>");
 }
 
 async function boot() {
@@ -266,6 +291,7 @@ function renderSide() {
       if (t.walkthrough) secs.push(["s-walk", "先看一遍"]);
       if (t.widget) secs.push(["s-widget", "动手试"]);
       if ((t.experiments ?? []).some((e) => e.options?.length)) secs.push(["s-ask", "先猜再验"]);
+      if (t.examples?.length) secs.push(["s-ex", "标准例题"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
 
       parts.push(
@@ -639,6 +665,7 @@ function renderTopic(id: string) {
       ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
+      ${t.examples?.length ? renderExamples(t.examples) : ""}
       ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id, currentPass) : ""}
       ${chapterCheckpoint(t)}
       ${
@@ -823,6 +850,57 @@ function rerenderTopic() {
   const y = main.scrollTop;
   renderTopic(view.id);
   main.scrollTop = y;
+}
+
+/** 例题的出处，随例题一起显示——例题本来就给完整解答，不存在剧透问题 */
+function exampleSource(src: DrillSource): string {
+  if (src.kind === "authored") {
+    return `<span class="ex-src auth">本应用自出${src.why ? `——${esc1(src.why)}` : ""}</span>`;
+  }
+  const who = [src.site, src.ref].filter(Boolean).join(" · ");
+  const link = src.url
+    ? `<a href="${src.url}" target="_blank" rel="noreferrer">${esc1(who)}</a>`
+    : esc1(who);
+  return `<span class="ex-src">${src.kind === "verbatim" ? "原题出自" : "改编自"} ${link}</span>`;
+}
+
+/**
+ * 标准例题区（ADR 0019 第 4 节）。
+ * 位置在「先猜再验」之后、随堂练习之前：先玩图建立直观，再猜一下制造预期，
+ * 然后看一遍规范做法长什么样，最后才自己动手。中间这一级此前是空的，
+ * 使用者从讲解直接被推到做题——ADR 0014 第 2 节说的那一跳。
+ */
+function renderExamples(list: WorkedExample[]): string {
+  if (!list.length) return "";
+  return `<div id="s-ex" class="exs">
+      <h3>标准例题<span class="exs-k">看懂就行，不用作答</span></h3>
+      <p class="exs-intro">下面是这一节的典型题和它的完整解法。
+        <b class="em">先读一遍</b>，再去做后面的练习——这比直接开做省力得多。</p>
+      ${list
+        .map(
+          (e) => `<figure class="ex">
+            <figcaption class="ex-top">
+              <span class="ex-t">${rich(e.title)}</span>${exampleSource(e.source)}
+            </figcaption>
+            <div class="ex-given" data-read="${esc1(e.given)}">${rich(e.given)}</div>
+            <ol class="ex-steps">
+              ${e.steps
+                .map(
+                  (st) => `<li>
+                    <div class="ex-do" data-read="${esc1(st.do)}">${rich(st.do)}</div>
+                    <div class="ex-why" data-read="${esc1(st.why)}">${rich(st.why)}</div>
+                  </li>`,
+                )
+                .join("")}
+            </ol>
+            <div class="ex-ans" data-read="${esc1(e.answer)}"><span class="ex-tag">结论</span>${rich(
+              e.answer,
+            )}</div>
+            ${e.note ? `<div class="ex-note" data-read="${esc1(e.note)}">${rich(e.note)}</div>` : ""}
+          </figure>`,
+        )
+        .join("")}
+    </div>`;
 }
 
 function renderPredict(e: Experiment, prev?: PredictionRow): string {

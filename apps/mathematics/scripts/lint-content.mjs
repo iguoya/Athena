@@ -136,6 +136,172 @@ for (const pass of [1, 2]) {
   drillStat = drillStat ? `${drillStat}；${line}` : `练习 ${line}`;
 }
 
+// ── 题目出处（ADR 0019）──────────────────────────────────────────
+// 自造题没有难度校准，做对了说明不了什么——检验器本身不可信，反而加固
+// 流畅性错觉。所以每道判分的题都要指得到一个真实出处。
+//
+// **这份名单只能变短，不能变长。** 它是 ADR 0019 落地时已经存在的 35 道
+// 无出处存量题；改动其中任何一道，就要顺手给它补出处并从这里划掉。
+// 新增的题一律不得进这份名单——加进来 lint 就白做了。
+const LEGACY_UNSOURCED = new Set([
+  "math.linalg.transform2d::t1",
+  "math.linalg.transform2d::t2",
+  "math.linalg.transform2d::t3",
+  "math.linalg.compose::c1",
+  "math.linalg.compose::c2",
+  "math.linalg.compose::c3",
+  "math.linalg.determinant::d1",
+  "math.linalg.determinant::d2",
+  "math.linalg.determinant::d3",
+  "math.linalg.determinant::d4",
+  "math.linalg.determinant::d5",
+  "math.linalg.inverse::i1",
+  "math.linalg.inverse::i2",
+  "math.linalg.inverse::i3",
+  "compose_and_undo::c1",
+  "compose_and_undo::c2",
+  "compose_and_undo::c3",
+  "compose_and_undo::c4",
+  "math.linalg.solve::s1",
+  "math.linalg.solve::s2",
+  "math.linalg.solve::s3",
+  "math.linalg.solve::s4",
+  "math.linalg.rank::r1",
+  "math.linalg.rank::r2",
+  "math.linalg.rank::r3",
+  "math.linalg.rank::r4",
+  "math.linalg.span::p1",
+  "math.linalg.span::p2",
+  "math.linalg.span::p3",
+  "math.linalg.kernel::k1",
+  "math.linalg.kernel::k2",
+  "math.linalg.kernel::k3",
+  "math.linalg.eigen::e1",
+  "math.linalg.eigen::e2",
+  "math.linalg.eigen::e3",
+]);
+
+const SOURCE_KINDS = new Set(["verbatim", "adapted", "authored"]);
+
+/** 一处出处的合法性；`where` 用于报错定位 */
+function checkSource(src, where, required) {
+  if (!src) {
+    if (required) {
+      console.error(`出处：${where} 没有 source——ADR 0019 第 1 节要求每道判分的题都能指到出处`);
+      hits++;
+    }
+    return null;
+  }
+  if (!SOURCE_KINDS.has(src.kind)) {
+    console.error(`出处：${where} 的 kind「${src.kind}」不是 verbatim / adapted / authored`);
+    hits++;
+    return null;
+  }
+  if (src.kind === "authored") {
+    // 自造是例外不是默认，要说得出为什么外部题库覆盖不到
+    if (!src.why) {
+      console.error(`出处：${where} 标了 authored 却没写 why——自造是例外，要说明为什么没有现成的可用`);
+      hits++;
+    }
+  } else {
+    if (!src.site && !src.ref) {
+      console.error(`出处：${where} 是 ${src.kind}，但没说改编自哪里`);
+      hits++;
+    }
+    // 假出处比自造更糟：使用者按图索骥扑一次空，从此不再信任何一条出处
+    if (src.url && !/^https?:\/\//.test(src.url)) {
+      console.error(`出处：${where} 的 url「${src.url}」不是可点开的链接`);
+      hits++;
+    }
+    if (src.kind === "adapted" && !src.note) {
+      console.error(`出处：${where} 是 adapted，要在 note 里写清改了什么`);
+      hits++;
+    }
+  }
+  return src.kind;
+}
+
+let sourced = 0;
+let authored = 0;
+let legacyLeft = 0;
+for (const ch of cur.chapters) {
+  const sets = [];
+  for (const t of ch.topics) if (t.drills) sets.push([t.drills, t.id]);
+  if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
+
+  for (const [set, ns] of sets) {
+    let localAuthored = 0;
+    let localTotal = 0;
+    for (const it of set.items) {
+      const tag = `${ns}::${it.id}`;
+      // 答对那一刻是最该讲清楚的时刻。解释可以写在题级 why，也可以写在正确选项的
+      // why 上（现有内容全用后者）；两处都没有，答对后就只剩一个「对。」
+      // 这一条与出处无关，存量题同样要查，所以放在 legacy 豁免之前。
+      const rightOpt = (it.options ?? []).find((o) => o.ok);
+      if (!it.why && !rightOpt?.why) {
+        console.error(`练习题：${tag} 答对后没有解释——题级 why 与正确选项的 why 都是空的`);
+        hits++;
+      }
+      if (!it.source && LEGACY_UNSOURCED.has(tag)) {
+        legacyLeft++;
+        continue;
+      }
+      if (it.source && LEGACY_UNSOURCED.has(tag)) {
+        console.error(`出处：${tag} 已经补上出处，请把它从 lint 的 LEGACY_UNSOURCED 名单里删掉`);
+        hits++;
+      }
+      const kind = checkSource(it.source, tag, true);
+      if (!kind) continue;
+      localTotal++;
+      sourced++;
+      if (kind === "authored") {
+        localAuthored++;
+        authored++;
+      }
+    }
+    // 配额：自造过半，这一节的练习就整体失去校准（ADR 0019 第 3 节）
+    if (localTotal >= 2 && localAuthored * 2 > localTotal) {
+      console.error(
+        `出处：${ns} 的 ${localTotal} 道题里有 ${localAuthored} 道是自造的（过半）——` +
+          `ADR 0019 第 3 节要求自造不超过半数`,
+      );
+      hits++;
+    }
+  }
+}
+
+// ── 标准例题（ADR 0019 第 4 节）──
+let exCount = 0;
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    for (const e of t.examples ?? []) {
+      exCount++;
+      const where = `${t.id}::例题 ${e.id}`;
+      checkSource(e.source, where, true);
+      if (!e.given || !e.answer) {
+        console.error(`例题：${where} 缺题干或结论`);
+        hits++;
+      }
+      if (!(e.steps ?? []).length) {
+        console.error(`例题：${where} 没有解题步骤——例题的价值就在完整解答`);
+        hits++;
+      }
+      for (const [i, st] of (e.steps ?? []).entries()) {
+        // 只给「怎么算」不给「为什么可以这么算」，例题就退化成了答案
+        if (!st.do || !st.why) {
+          console.error(`例题：${where} 第 ${i + 1} 步缺 do 或 why（ADR 0019 第 4 节要求 why 必填）`);
+          hits++;
+        }
+      }
+    }
+  }
+}
+
+const sourceStat =
+  `出处 ${sourced} 题（自造 ${authored}）` +
+  (legacyLeft ? `，另有 ${legacyLeft} 道存量待补` : "，存量已补完") +
+  `；例题 ${exCount} 道`;
+
 // ── 脚本动画：讲稿与关键帧必须对得上 ──
 // 念「面积变成零」而矩阵行列式不是 0，是很隐蔽的内容 bug：
 // 动画演的和语音念的不是一回事，而两边单看都正常。
@@ -255,5 +421,5 @@ console.log(
   `内容检查通过：${files.length} 个文件无禁用表达；` +
     `课表 ${cur.chapters.length} 章 ${topics.length} 节，先修图拓扑可解（${layers} 层）；` +
     `诊断 ${total} 题，位置分布 ${[...slots.entries()].sort().map(([k, n]) => `第${k + 1}位×${n}`).join(" ")}；` +
-    drillStat + "。",
+    drillStat + "；" + sourceStat + "。",
 );

@@ -2,6 +2,25 @@
 // 与「先猜再验」的预测题分工不同：预测题制造好奇，练习题检验会不会。
 // 这里必须有要动笔算的题型——全是看图选，人可以一次笔不动就「走完」整章。
 
+/**
+ * 题目出处（ADR 0019 第 1 节，必填）。
+ * 自造题没有难度校准，做对了说明不了什么——检验器本身不可信，
+ * 反而会加固流畅性错觉。所以每道判分的题都要指得到一个真实出处。
+ */
+export interface DrillSource {
+  /** verbatim 照用原题；adapted 保留数学内容改写；authored 本应用自造 */
+  kind: "verbatim" | "adapted" | "authored";
+  /** 来源站点或教材，authored 时可省 */
+  site?: string;
+  /** 原题在来源里的位置，要能查到；不得凭印象填（ADR 0019 第 2 节） */
+  ref?: string;
+  url?: string;
+  /** adapted 时说明改了什么 */
+  note?: string;
+  /** authored 时必填：为什么没有现成的可用 */
+  why?: string;
+}
+
 export interface DrillOption {
   text: string;
   ok?: boolean;
@@ -18,6 +37,8 @@ export interface DrillItem {
   answer?: number;
   tol?: number;
   options?: DrillOption[];
+  /** 出处（ADR 0019 第 1 节）。存量题的豁免名单见 scripts/lint-content.mjs */
+  source?: DrillSource;
   /** 卡住时先给方向，不直接给答案（ADR 0011 第 1 节） */
   hint?: string;
   /** 判完之后说明它为什么是这样 */
@@ -81,6 +102,27 @@ function orderOptions(options: DrillOption[], seed: string, idx: number): DrillO
   return [...rest.slice(0, pos), right, ...rest.slice(pos)];
 }
 
+/**
+ * 出处一行。**只在答对之后才显示**——来源链接多半直通原题解答，
+ * 做题前给出来等于给答案（ADR 0014 第 5b 节：不留「不用真懂也能过」的捷径）。
+ * 做完再给，它承担的是另一件事：顺着去原处多做几道。
+ */
+function sourceLine(s?: DrillSource): string {
+  if (!s) return "";
+  if (s.kind === "authored") {
+    return `<div class="dr-src auth">这道题是本应用自己出的${
+      s.why ? `——${esc(s.why)}` : ""
+    }</div>`;
+  }
+  const who = [s.site, s.ref].filter(Boolean).join(" · ");
+  const link = s.url
+    ? `<a href="${s.url}" target="_blank" rel="noreferrer">${esc(who)}</a>`
+    : esc(who);
+  return `<div class="dr-src">${s.kind === "verbatim" ? "原题出自" : "改编自"} ${link}${
+    s.note ? `<span class="dr-src-n">（${esc(s.note)}）</span>` : ""
+  }</div>`;
+}
+
 function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: string): string {
   const done = st?.correct === true;
   const wrong = st?.correct === false;
@@ -106,7 +148,12 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
 
   let fb = "";
   if (done) {
-    fb = `<div class="dr-fb ok"><b>对。</b>${rich(it.why ?? "")}</div>`;
+    // 解释一直写在正确选项的 why 上（37 道题全是），此前这里只读题级 it.why，
+    // 于是答对之后除了「对。」什么都不显示——最该讲清楚的那一刻是空的。
+    const right = (it.options ?? []).find((o) => o.ok);
+    fb = `<div class="dr-fb ok"><b>对。</b>${rich(it.why ?? right?.why ?? "")}${sourceLine(
+      it.source,
+    )}</div>`;
   } else if (wrong) {
     const chosen = (it.options ?? []).find((o) => o.text === st?.picked);
     fb = `<div class="dr-fb re">${
@@ -119,7 +166,9 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
   }
 
   return `<li class="dr-item${done ? " done" : ""}">
-      <div class="dr-stem"><span class="dr-no">${idx + 1}</span>${rich(it.stem)}</div>
+      <div class="dr-stem"><span class="dr-no">${idx + 1}</span><span class="dr-text">${rich(
+        it.stem,
+      )}</span></div>
       ${it.varies ? `<div class="dr-varies">与上一题相比：${rich(it.varies)}</div>` : ""}
       ${body}
       ${fb}

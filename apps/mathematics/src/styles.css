@@ -507,6 +507,9 @@ canvas.dragging { cursor: grabbing; }
   display: flex; align-items: flex-start; gap: 14px;
   font-size: 20px; line-height: 1.65; margin-bottom: 8px;
 }
+/* 题干整段必须是**一个** flex 项。不然题干里的 <code> 会各自成项，
+   一句话被拆成几块并排，题干长一点就读不成句子。 */
+.dr-text { flex: 1; min-width: 0; }
 .dr-no {
   flex: none;
   min-width: 32px; height: 32px; line-height: 30px; text-align: center;
@@ -568,3 +571,68 @@ canvas.dragging { cursor: grabbing; }
   border: 1px dashed var(--line); border-radius: 10px;
 }
 .dr-later b { color: var(--ink); }
+
+/* ── 标准例题（ADR 0019 第 4 节）────────────────────────────────
+   与随堂练习刻意长得不一样：练习是待办，例题是读物。
+   所以这里没有卡片外框的「任务感」，用左侧竖线表示「这是一段被引的示范」。 */
+.exs { margin: 34px 0 0; }
+.exs h3 {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  margin: 0 0 10px; font-size: 24px;
+}
+.exs-k { font-size: 16px; font-weight: 400; color: var(--muted); }
+.exs-intro { font-size: 18px; color: var(--muted); margin: 0 0 22px; line-height: 1.7; }
+
+.ex {
+  margin: 0 0 22px; padding: 20px 24px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); border-radius: 10px;
+}
+.ex:last-child { margin-bottom: 0; }
+.ex-top {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.ex-t { font-size: 20px; font-weight: 600; }
+.ex-src { font-size: 15px; color: var(--muted); }
+.ex-src a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); }
+.ex-src a:hover { opacity: .8; }
+.ex-src.auth { color: var(--basis-j); }
+
+.ex-given {
+  font-size: 18px; line-height: 1.75;
+  padding: 14px 18px; background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.ex-steps { margin: 16px 0 0; padding-left: 26px; }
+.ex-steps li { margin: 0 0 14px; font-size: 18px; line-height: 1.75; }
+.ex-steps li::marker { color: var(--muted); font-variant-numeric: tabular-nums; }
+/* 「怎么算」和「为什么可以这么算」必须分开看得见——只给前者就退化成了答案 */
+.ex-why {
+  margin-top: 5px; padding-left: 12px;
+  font-size: 17px; color: var(--muted);
+  border-left: 2px solid var(--line);
+}
+.ex-ans {
+  margin-top: 16px; padding: 12px 18px;
+  font-size: 18px; line-height: 1.7;
+  background: var(--bg); border: 1px solid var(--ok); border-radius: 8px;
+}
+.ex-tag {
+  display: inline-block; margin-right: 10px;
+  font-size: 14px; font-weight: 600; letter-spacing: .05em; color: var(--ok);
+}
+.ex-note {
+  margin-top: 12px; font-size: 17px; line-height: 1.7; color: var(--muted);
+}
+
+/* 题目出处：答对之后才出现，顺着它能去原处多做几道 */
+.dr-src {
+  margin-top: 12px; padding-top: 10px;
+  font-size: 15px; color: var(--muted);
+  border-top: 1px dashed var(--line);
+}
+.dr-src a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); }
+.dr-src a:hover { opacity: .8; }
+.dr-src .dr-src-n { color: var(--muted); }
+.dr-src.auth { color: var(--basis-j); }
