@@ -100,7 +100,11 @@ for (const pass of [1, 2]) {
   let total = 0;
   const sets = [];
   for (const ch of cur.chapters) {
-    for (const t of ch.topics) if (t.drills) sets.push([t.drills, t.id]);
+    for (const t of ch.topics) {
+      if (t.drills) sets.push([t.drills, t.id]);
+      // 第二部分自己那套题，命名空间带 #formal（ADR 0023）
+      if (t.formal?.drills) sets.push([t.formal.drills, `${t.id}#formal`]);
+    }
     if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
   }
   for (const [set, ns] of sets) {
@@ -265,7 +269,10 @@ let authored = 0;
 let legacyLeft = 0;
 for (const ch of cur.chapters) {
   const sets = [];
-  for (const t of ch.topics) if (t.drills) sets.push([t.drills, t.id]);
+  for (const t of ch.topics) {
+    if (t.drills) sets.push([t.drills, t.id]);
+    if (t.formal?.drills) sets.push([t.formal.drills, `${t.id}#formal`]);
+  }
   if (ch.checkpoint) sets.push([ch.checkpoint, ch.id]);
 
   for (const [set, ns] of sets) {
@@ -380,6 +387,21 @@ for (const ch of cur.chapters) {
       console.error(`严谨表述：${t.id} 有 formal 但没有条目`);
       hits++;
     }
+    // 两遍检验的不是同一件事，共用一份习题只测到了直觉那一侧（ADR 0023 第 2、3 节）
+    if (!t.formal.drills?.items?.length) {
+      console.error(
+        `严谨表述：${t.id} 的第二部分没有自己的习题——只写定义不配习题，` +
+          `教材化那一遍就从来没被检验过（ADR 0023 第 3 节）`,
+      );
+      hits++;
+    }
+    for (const [i, e] of (t.formal.entries ?? []).entries()) {
+      // 计算方法不给步骤，等于没讲怎么做
+      if (e.kind === "method" && !(e.steps ?? []).length) {
+        console.error(`严谨表述：${t.id}::${e.id}（第 ${i + 1} 条）是计算方法却没有 steps`);
+        hits++;
+      }
+    }
   }
 }
 
@@ -389,9 +411,12 @@ const formalStat = `严谨视图 ${formalTopics}/${topics.length} 节（${formal
 let exCount = 0;
 for (const ch of cur.chapters) {
   for (const t of ch.topics) {
-    for (const e of t.examples ?? []) {
+    for (const [e, side] of [
+      ...(t.examples ?? []).map((x) => [x, "例题"]),
+      ...(t.formal?.examples ?? []).map((x) => [x, "规范例题"]),
+    ]) {
       exCount++;
-      const where = `${t.id}::例题 ${e.id}`;
+      const where = `${t.id}::${side} ${e.id}`;
       checkSource(e.source, where, true);
       if (!e.given || !e.answer) {
         console.error(`例题：${where} 缺题干或结论`);
@@ -412,9 +437,19 @@ for (const ch of cur.chapters) {
   }
 }
 
+let withContext = 0;
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    for (const set of [t.drills, t.formal?.drills]) {
+      for (const it of set?.items ?? []) if (it.context) withContext++;
+    }
+  }
+}
+
 const sourceStat =
   `出处 ${sourced} 题（自造 ${authored}）` +
   (legacyLeft ? `，另有 ${legacyLeft} 道存量待补` : "，存量已补完") +
+  `，${withContext} 道标了现实用法` +
   `；例题 ${exCount} 道`;
 
 // ── 脚本动画：讲稿与关键帧必须对得上 ──

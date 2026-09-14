@@ -68,6 +68,8 @@ interface FormalEntry {
   statement: string;
   /** 定理的前提，逐条列。定义通常没有 */
   conditions?: string[];
+  /** 计算方法的步骤（kind: method 用）——教材化那一遍要说清「怎么做」 */
+  steps?: string[];
   /** 必填：严谨视图的全部价值就在可核对 */
   source: DrillSource;
   /** 指向直觉视图里讲同一件事的那一段的锚点 id */
@@ -79,6 +81,13 @@ interface FormalEntry {
 interface Formal {
   intro?: string;
   entries: FormalEntry[];
+  /** 第二部分自己的例题：规范写法的示范（ADR 0023 第 1 节） */
+  examples?: WorkedExample[];
+  /**
+   * 第二部分自己的习题。两遍检验的不是同一件事：第一部分测「图看懂没有」，
+   * 这里测按定义计算与核对条件——必须有要动笔算的题（ADR 0023 第 3 节）。
+   */
+  drills?: DrillSet;
 }
 
 /** 标准例题（ADR 0019 第 4 节）。总是给出完整解答，它不是题，是给人读的。 */
@@ -329,8 +338,11 @@ function renderSide() {
       if (t.walkthrough) secs.push(["s-walk", "先看一遍"]);
       if (t.widget) secs.push(["s-widget", "动手试"]);
       if ((t.experiments ?? []).some((e) => e.options?.length)) secs.push(["s-ask", "先猜再验"]);
-      if (t.formal) secs.push(["s-formal", "严谨表述"]);
       if (t.examples?.length) secs.push(["s-ex", "标准例题"]);
+      if (t.drills) secs.push([`s-${t.id}`, "随堂练习"]);
+      if (t.formal) secs.push(["s-formal", "严谨表述"]);
+      if (t.formal?.examples?.length) secs.push(["s-ex-formal", "规范例题"]);
+      if (t.formal?.drills) secs.push([`s-${t.id}#formal`, "规范练习"]);
       if (t.textbook_ref.prepares?.length && t.widget) secs.push(["s-prep", "后面会回来"]);
 
       parts.push(
@@ -724,16 +736,27 @@ function renderTopic(id: string) {
       ${walkHtml}
       ${widgetHtml}
       ${predict ? renderPredict(predict, prev) : ""}
+      ${t.examples?.length ? renderExamples(t.examples) : ""}
+      ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id, currentPass) : ""}
       </div>
       ${
         t.formal
           ? `<div class="view" data-pane="formal"${
               currentView === "formal" ? "" : " hidden"
-            }>${renderFormal(t.formal)}</div>`
+            }>${renderFormal(t.formal)}${
+              t.formal.examples?.length ? renderExamples(t.formal.examples, "formal") : ""
+            }${
+              t.formal.drills
+                ? renderDrills(
+                    t.formal.drills,
+                    nsStates(`${t.id}#formal`),
+                    `${t.id}#formal`,
+                    currentPass,
+                  )
+                : ""
+            }</div>`
           : ""
       }
-      ${t.examples?.length ? renderExamples(t.examples) : ""}
-      ${t.drills ? renderDrills(t.drills, nsStates(t.id), t.id, currentPass) : ""}
       ${chapterCheckpoint(t)}
       ${
         ref.prepares?.length && t.widget
@@ -916,6 +939,9 @@ function bindDrills() {
 }
 
 function findDrillSet(ns: string): DrillSet | undefined {
+  // 「节id#formal」是第二部分自己的那套题（ADR 0023）；两套题状态互不相干，
+  // 所以命名空间必须分开，否则两边同 id 的题会串。
+  if (ns.endsWith("#formal")) return findTopic(ns.slice(0, -7))?.formal?.drills;
   const t = findTopic(ns);
   if (t?.drills) return t.drills;
   return curriculum.chapters.find((c) => c.id === ns)?.checkpoint;
@@ -1029,6 +1055,13 @@ function renderFormal(f: Formal): string {
             </div>
             <div class="fm-stmt" data-read="${esc1(e.statement)}">${rich(e.statement)}</div>
             ${
+              e.steps?.length
+                ? `<ol class="fm-steps">${e.steps
+                    .map((st) => `<li data-read="${esc1(st)}">${rich(st)}</li>`)
+                    .join("")}</ol>`
+                : ""
+            }
+            ${
               e.conditions?.length
                 ? `<div class="fm-cond"><span class="fm-cond-k">成立条件</span>
                      <ul>${e.conditions
@@ -1069,12 +1102,18 @@ function exampleSource(src: DrillSource): string {
  * 然后看一遍规范做法长什么样，最后才自己动手。中间这一级此前是空的，
  * 使用者从讲解直接被推到做题——ADR 0014 第 2 节说的那一跳。
  */
-function renderExamples(list: WorkedExample[]): string {
+function renderExamples(list: WorkedExample[], side: "plain" | "formal" = "plain"): string {
   if (!list.length) return "";
-  return `<div id="s-ex" class="exs">
-      <h3>标准例题<span class="exs-k">看懂就行，不用作答</span></h3>
-      <p class="exs-intro">下面是这一节的典型题和它的完整解法。
-        <b class="em">先读一遍</b>，再去做后面的练习——这比直接开做省力得多。</p>
+  const formal = side === "formal";
+  return `<div id="s-ex${formal ? "-formal" : ""}" class="exs">
+      <h3>${formal ? "规范例题" : "标准例题"}<span class="exs-k">看懂就行，不用作答</span></h3>
+      <p class="exs-intro">${
+        formal
+          ? `下面是按定义一步步算的样子。<b class="em">对照着左边那一页看</b>——
+             用的是同一个矩阵，只是换了一种说法。`
+          : `下面是这一节的典型题和它的完整解法。
+             <b class="em">先读一遍</b>，再去做后面的练习——这比直接开做省力得多。`
+      }</p>
       ${list
         .map(
           (e) => `<figure class="ex">

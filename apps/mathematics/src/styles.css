@@ -749,3 +749,7 @@ h2.title .title-plain {
 .step-p { display: block; margin-top: 3px; font-size: 15px; color: var(--muted); }
 /* 教材坐标只是导航，不是参考书——用途说明跟在后面，免得被当成主要来源（ADR 0022 第 3 节） */
 .src-why { display: block; margin-top: 2px; font-size: 14px; color: var(--muted); }
+/* 计算方法的步骤：教材化那一遍要说清「怎么做」（ADR 0023） */
+.fm-steps { margin: 14px 0 0; padding-left: 26px; }
+.fm-steps li { font-size: 18px; line-height: 1.75; margin-bottom: 8px; }
+.fm-steps li::marker { color: var(--muted); font-variant-numeric: tabular-nums; }
