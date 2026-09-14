@@ -262,7 +262,7 @@ subchapter.name -> C++ 成员函数名
 `chapter.overview_document`、`subchapter.teaches` 和 `chapter.learning_units`
 四个字段一并废弃，生成器 `check` 遇到它们会报错。
 
-按 [ADR 0028](decisions/0028-outline-process-experiment-layering.md)，教学大纲在学习
+按 [ADR 0028](../../../docs/decisions/0028-outline-process-experiment-layering.md)，教学大纲在学习
 内容三层分工里处于最上层，**只指引大方向**。它**不写**具体语法机制、代码示例、
 API 用法细节，也不绑定练习或实验——细节由学习页的后续标签（教学过程）落实，
 可观察的体验由成员函数（教学实验）提供。一章一份。

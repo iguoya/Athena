@@ -1,8 +1,8 @@
 # 类型与表达式：学习页子章节设计
 
 - 状态：七节全部实现；后续修订按同一套流程（先摘大纲承诺，再定教学，最后派生实验）。
-- 依据：[ADR 0028](../decisions/0028-outline-process-experiment-layering.md) 三层分工、
-  [ADR 0031](../decisions/0031-knowledge-type-drives-teaching-actions.md) 知识类型决定教学动作、
+- 依据：[ADR 0028](../../../../docs/decisions/0028-outline-process-experiment-layering.md) 三层分工、
+  [ADR 0031](../../../../docs/decisions/0031-knowledge-type-drives-teaching-actions.md) 知识类型决定教学动作、
   [LEARNING_DESIGN](../LEARNING_DESIGN.md) 第 3 节。
 - 方向来自[原生页面](../../resources/ui/chapters/type_semantics_lesson.blp)的「教学大纲」标签，
   不反过来；Markdown 大纲副本已移除。

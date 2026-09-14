@@ -5,9 +5,9 @@
             "name": "Athena（Ubuntu：构建并用 GDB 调试）",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/builddir/Athena",
+            "program": "${workspaceFolder}/apps/cpp/builddir/Athena",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/apps/cpp",
             "stopAtEntry": false,
             "externalConsole": false,
             "MIMode": "gdb",
@@ -18,9 +18,9 @@
             "name": "Athena（macOS：构建并用 LLDB 调试）",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/builddir/Athena",
+            "program": "${workspaceFolder}/apps/cpp/builddir/Athena",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/apps/cpp",
             "preLaunchTask": "Athena: Build",
             // LLDB 默认把 SIGTERM 当成"需要停下来给用户看"的调试事件，而不是
             // 放行让进程正常退出——点调试工具栏的停止按钮时 CodeLLDB 正是靠

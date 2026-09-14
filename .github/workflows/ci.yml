@@ -33,7 +33,7 @@ jobs:
           blueprint-compiler librsvg
 
       - name: Verify
-        run: scripts/check.sh --build-dir build --buildtype debugoptimized
+        run: scripts/check.sh cpp --build-dir build --buildtype debugoptimized
 
   ubuntu:
     name: Ubuntu build and test
@@ -56,4 +56,4 @@ jobs:
 
       - name: Verify
         # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
-        run: xvfb-run -a scripts/check.sh --build-dir build --buildtype debugoptimized
+        run: xvfb-run -a scripts/check.sh cpp --build-dir build --buildtype debugoptimized

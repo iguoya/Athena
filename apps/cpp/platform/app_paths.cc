@@ -93,15 +93,22 @@ string external_apps_root() {
         return override_path;
     }
 
-    const string root = content_root();
-    if (!root.empty()) {
-        const string apps = Glib::build_filename(root, "apps");
+    // 本程序自己也住在 apps/ 下（ADR 0045：C++ 教程是 apps/cpp，和别的学习
+    // 应用平级），所以 apps/ 不在内容根里面，而在它上面。从内容根往上找几级：
+    // 源码树里 apps/cpp -> apps 一步就到；发行包里找不到，返回空，
+    // 调用方会说清楚"独立应用不随本包分发"。
+    string directory = content_root();
+    for (int depth = 0; depth < 3 && !directory.empty() && directory != "/";
+         ++depth) {
+        if (Glib::path_get_basename(directory) == "apps"
+            && Glib::file_test(directory, Glib::FileTest::IS_DIR)) {
+            return directory;
+        }
+        const string apps = Glib::build_filename(directory, "apps");
         if (Glib::file_test(apps, Glib::FileTest::IS_DIR)) {
             return apps;
         }
+        directory = Glib::path_get_dirname(directory);
     }
-
-    const string source_apps = Glib::build_filename(ATHENA_SOURCE_ROOT, "apps");
-    return Glib::file_test(source_apps, Glib::FileTest::IS_DIR) ? source_apps
-                                                                : string();
+    return {};
 }

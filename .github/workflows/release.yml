@@ -27,6 +27,9 @@ jobs:
     timeout-minutes: 45
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
+    defaults:
+      run:
+        working-directory: apps/cpp
 
     steps:
       - name: Check out tagged source
@@ -81,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Athena-macos-${{ matrix.architecture }}
-          path: dist/Athena-*.dmg
+          path: apps/cpp/dist/Athena-*.dmg
           if-no-files-found: error
           retention-days: 7
 
@@ -89,6 +92,9 @@ jobs:
     name: Build Linux packages
     runs-on: ubuntu-26.04
     timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: apps/cpp
 
     steps:
       - name: Check out tagged source
@@ -161,8 +167,8 @@ jobs:
         with:
           name: Athena-linux-x86_64
           path: |
-            dist/athena_*.deb
-            dist/Athena-*-linux-x86_64.AppImage
+            apps/cpp/dist/athena_*.deb
+            apps/cpp/dist/Athena-*-linux-x86_64.AppImage
           if-no-files-found: error
           retention-days: 7
 

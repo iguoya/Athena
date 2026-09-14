@@ -22,13 +22,13 @@
 
 ## 2026-09-12：大纲的载体换成 `.blp`，不再是 Markdown
 
-[ADR 0034](0034-remove-markdown-handbook.md) 删除了 Markdown 手册整条路线。本 ADR 的
+[ADR 0034](../../apps/cpp/docs/decisions/0034-remove-markdown-handbook.md) 删除了 Markdown 手册整条路线。本 ADR 的
 **三层分工与第 6 节的五节写作范式继续有效**，但下文中关于载体的描述已经过时：教学大纲
 现在是章节 `.blp` 里的第一个「教学大纲」标签，不再是 `*_overview.md`，也不再有
 `chapter.overview_document`、`category.handbook_documents` 和分类手册。凡提到"Markdown
 文档"「收录在 handbook_documents 内」之处，一律读作"该章原生大纲标签"。
 
-[ADR 0036](0036-chapter-guide-first.md) 把已有的「本章导览」标签提到大纲之前，
+[ADR 0036](../../apps/cpp/docs/decisions/0036-chapter-guide-first.md) 把已有的「本章导览」标签提到大纲之前，
 职能是极简概要（以图为主，只给结构不给理由）。它**不是第四层内容**，是第一层的
 另一种呈现密度，信息与大纲同源，所以本 ADR 的三层分工不变。
 

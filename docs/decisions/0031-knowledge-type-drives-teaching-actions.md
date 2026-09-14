@@ -15,7 +15,7 @@
 
 1. **新增 `subchapter.knowledge_type`**，取值 `concept` 概念、`skill` 程序性技能、
    `strategy` 条件性策略。
-2. **各自的教学动作写进 [LEARNING_DESIGN](../LEARNING_DESIGN.md) 第 3 节**，并列出
+2. **各自的教学动作写进 [LEARNING_DESIGN](../../apps/cpp/docs/LEARNING_DESIGN.md) 第 3 节**，并列出
    反模式：概念只给一个正例、技能缺模仿这一步、策略被做成机械选择题。
 3. **界面显示知识类型徽章**，让作者和学习者都看得见这一节该用什么方式学。
 4. **不引入使用频率维度。** 曾考虑用真实代码统计把频率数据化，来客观化重要性，

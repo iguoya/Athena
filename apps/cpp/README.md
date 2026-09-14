@@ -1,0 +1,80 @@
+# Athena
+
+为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。基于 GTK4（gtkmm4）、GtkSourceView 5、MD4C、Meson 和 Blueprint。
+
+GtkSourceView 5 用于源码框和文档代码块的 C++ 语法高亮与行号显示，MD4C 用于把
+文章章节的 Markdown 解析为结构化内容块，再由跨平台 GTK 控件直接呈现目录、正文和
+阅读交互。
+macOS 可通过 Homebrew 安装
+`gtksourceview5 md4c nlohmann-json googletest`；Ubuntu 使用开发包
+`libgtksourceview-5-dev libmd4c-dev nlohmann-json3-dev libgtest-dev`。
+
+统一校验、构建并运行测试：
+
+```sh
+scripts/check.sh
+```
+
+该脚本依次执行 JSON 校验、项目生成器检查、Meson 配置、构建和测试；可用
+`--build-dir` 与 `--buildtype` 覆盖默认构建目录和构建类型。
+
+## VS Code
+
+仓库内置了 `.vscode/tasks.json` 与 `.vscode/launch.json`。Ubuntu 请安装 VS Code 的
+**C/C++** 扩展和 `gdb`，然后按 `Ctrl+Shift+B` 运行默认的 `Athena: Build` 任务；在
+“运行和调试”中选择“**Athena（Ubuntu：构建并用 GDB 调试）**”即可断点调试。该任务会
+先配置 Meson 再构建，Ubuntu 26.04 会自动补上系统包遗漏的 GTK4 头文件搜索路径。
+
+macOS 的调试配置使用 CodeLLDB 扩展。不要使用 Code Runner 的“Run Code”：它只编译当前
+源文件，无法生成 Athena 所需的全部资源和链接目标。
+
+测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
+`athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
+两个项目生成器测试分别校验真实配置和四个生成子命令。
+
+只检查项目配置而不构建：
+
+```sh
+python3 scripts/generate_project.py \
+  --project-root . --config resources/athena.json check
+```
+
+统一生成器还提供 `resources`、`registry` 和只创建缺失文件的 `scaffold` 子命令，
+具体用法见 `docs/CODE_GENERATION.md`。
+
+教学源码由 `athena.json` 驱动并随 GResource 打包：开发运行优先显示仓库中的实时
+源码，发行版在没有源码目录时读取应用内置副本。
+
+生成当前 Mac 架构的未公证 `.app` 和 DMG：
+
+```sh
+meson setup build-release --buildtype=release -Dstrip=true
+meson compile -C build-release
+meson test -C build-release --print-errorlogs
+python3 scripts/package_macos.py \
+  --project-root . --binary build-release/Athena \
+  --output-dir dist
+```
+
+版本号默认读取 `meson.build`，显式传入不一致的 `--version` 会被拒绝。
+
+发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
+Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
+
+## Ubuntu 安装包
+
+GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 APT 安装并自动解析
+GTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
+
+```sh
+sudo apt install ./athena_VERSION_amd64.deb
+chmod +x Athena-VERSION-linux-x86_64.AppImage
+./Athena-VERSION-linux-x86_64.AppImage
+```
+
+AppImage 内置 Athena 及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
+运行的静态包。
+
+## 许可证
+
+本项目基于[木兰宽松许可证第二版](https://license.coscl.org.cn/MulanPSL2)（Mulan PSL v2）授权，完整条款见 [LICENSE](../../LICENSE)。

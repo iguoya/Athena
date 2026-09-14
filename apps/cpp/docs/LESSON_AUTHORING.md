@@ -7,8 +7,8 @@
 照着它的目录抄一遍，抄到的是形状，不是它为什么长这样。
 
 > 相关约束见 `AGENTS.md`（GTK 与 Blueprint 规则、学习内容分层）、
-> [ADR 0028](decisions/0028-outline-process-experiment-layering.md)（三层分工）、
-> [ADR 0031](decisions/0031-knowledge-type-drives-teaching-actions.md)（知识类型
+> [ADR 0028](../../../docs/decisions/0028-outline-process-experiment-layering.md)（三层分工）、
+> [ADR 0031](../../../docs/decisions/0031-knowledge-type-drives-teaching-actions.md)（知识类型
 > 决定教学动作）、[ADR 0033](decisions/0033-live-visuals-and-interaction.md)
 > （数据驱动与互动优先）。
 
@@ -18,7 +18,7 @@
 
 | | 管什么 | 在哪 |
 |---|---|---|
-| **内容模板** | 大纲的五节各回答什么问题 | `CHAPTER_CONFIG.md` 6.2、[ADR 0028](decisions/0028-outline-process-experiment-layering.md) 第 6 节 |
+| **内容模板** | 大纲的五节各回答什么问题 | `CHAPTER_CONFIG.md` 6.2、[ADR 0028](../../../docs/decisions/0028-outline-process-experiment-layering.md) 第 6 节 |
 | **结构模板** | 这些内容在页面上怎么摆、哪些由数据生成 | `resources/ui/outline.blp` + `ui/outline_blocks.h`（大纲）<br>`resources/ui/lesson_blocks.blp` + `ui/lesson_blocks.h`（教学过程）<br>`render/roadmap_view.h`（数据驱动的知识点路线图） |
 
 只有内容模板，每章都要从零搭一遍控件树，两千行里一半是样板；只有结构模板，

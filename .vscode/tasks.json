@@ -10,7 +10,7 @@
                 "if [ \"$(uname -s)\" = Linux ]; then if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; else meson setup builddir --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; fi; else if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug; else meson setup builddir --buildtype=debug; fi; fi"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/apps/cpp"
             },
             "problemMatcher": [],
             "detail": "配置 Debug 构建；Ubuntu 26.04 额外补齐 GTK4 头文件搜索路径"
@@ -25,7 +25,7 @@
                 "builddir"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/apps/cpp"
             },
             "dependsOn": "Athena: Configure",
             "dependsOrder": "sequence",
@@ -47,7 +47,7 @@
                 "debug"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/apps/cpp"
             },
             "dependsOn": "Athena: Configure",
             "dependsOrder": "sequence",
@@ -60,7 +60,7 @@
             "type": "shell",
             "command": "scripts/dev-run.sh",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/apps/cpp"
             },
             "problemMatcher": "$gcc",
             "presentation": {

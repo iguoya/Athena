@@ -1,80 +1,46 @@
 # Athena
 
-为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。基于 GTK4（gtkmm4）、GtkSourceView 5、MD4C、Meson 和 Blueprint。
+自用的学习软件平台。一个仓库里放**多个彼此平级的学习应用**，每个应用自带界面技术、
+构建系统和内容体系，互不牵制；共用的是教学方法论，不是代码或配置格式。
 
-GtkSourceView 5 用于源码框和文档代码块的 C++ 语法高亮与行号显示，MD4C 用于把
-文章章节的 Markdown 解析为结构化内容块，再由跨平台 GTK 控件直接呈现目录、正文和
-阅读交互。
-macOS 可通过 Homebrew 安装
-`gtksourceview5 md4c nlohmann-json googletest`；Ubuntu 使用开发包
-`libgtksourceview-5-dev libmd4c-dev nlohmann-json3-dev libgtest-dev`。
+## 应用
 
-统一校验、构建并运行测试：
+| 目录 | 应用 | 技术 | 开发入口 |
+| --- | --- | --- | --- |
+| [`apps/cpp`](apps/cpp) | C++ 教程 | GTK4 / gtkmm、Meson | `scripts/dev-run.sh` |
+| [`apps/c`](apps/c) | C 语言编程 | Qt Quick / QML、CMake | `scripts/dev.sh` |
+| [`apps/dsa`](apps/dsa) | 数据结构与算法 | Tauri + Vite | `scripts/dev.sh` |
+| [`apps/english`](apps/english) | 英语学习 | Tauri + Vite | `scripts/dev.sh` |
+| [`apps/mathematics`](apps/mathematics) | 数学学习 | Tauri + Vite | `scripts/dev.sh` |
 
-```sh
-scripts/check.sh
-```
+C++ 教程曾经占据仓库根、是打开其他应用的必经之路；[ADR 0045](docs/decisions/0045-apps-are-peers.md)
+之后它只是 `apps/` 下的一个应用，没有任何特权。
 
-该脚本依次执行 JSON 校验、项目生成器检查、Meson 配置、构建和测试；可用
-`--build-dir` 与 `--buildtype` 覆盖默认构建目录和构建类型。
+## 打开应用
 
-## VS Code
-
-仓库内置了 `.vscode/tasks.json` 与 `.vscode/launch.json`。Ubuntu 请安装 VS Code 的
-**C/C++** 扩展和 `gdb`，然后按 `Ctrl+Shift+B` 运行默认的 `Athena: Build` 任务；在
-“运行和调试”中选择“**Athena（Ubuntu：构建并用 GDB 调试）**”即可断点调试。该任务会
-先配置 Meson 再构建，Ubuntu 26.04 会自动补上系统包遗漏的 GTK4 头文件搜索路径。
-
-macOS 的调试配置使用 CodeLLDB 扩展。不要使用 Code Runner 的“Run Code”：它只编译当前
-源文件，无法生成 Athena 所需的全部资源和链接目标。
-
-测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
-`athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
-两个项目生成器测试分别校验真实配置和四个生成子命令。
-
-只检查项目配置而不构建：
+用 [`launcher/`](launcher) 的启动器，一张列表列出全部应用，点一下就打开，
+已经在跑的只把窗口提到前面：
 
 ```sh
-python3 scripts/generate_project.py \
-  --project-root . --config resources/athena.json check
+launcher/macos/scripts/install.sh     # macOS：装成菜单栏常驻应用，快捷键 ⌃⌥A
 ```
 
-统一生成器还提供 `resources`、`registry` 和只创建缺失文件的 `scaffold` 子命令，
-具体用法见 `docs/CODE_GENERATION.md`。
+也可以直接跑某个应用的开发入口，例如 `apps/dsa/scripts/dev.sh`。日常一律走这些
+热更新入口，不要启动打包副本——那会让人不知不觉对着旧版本工作。
 
-教学源码由 `athena.json` 驱动并随 GResource 打包：开发运行优先显示仓库中的实时
-源码，发行版在没有源码目录时读取应用内置副本。
-
-生成当前 Mac 架构的未公证 `.app` 和 DMG：
+## 验证
 
 ```sh
-meson setup build-release --buildtype=release -Dstrip=true
-meson compile -C build-release
-meson test -C build-release --print-errorlogs
-python3 scripts/package_macos.py \
-  --project-root . --binary build-release/Athena \
-  --output-dir dist
+scripts/check.sh            # 跨应用内容出处检查 + 每个应用自己的检查
+scripts/check.sh cpp        # 只跑某个应用，余下参数透传给它
 ```
 
-版本号默认读取 `meson.build`，显式传入不一致的 `--version` 会被拒绝。
+## 文档
 
-发行包会携带 GTK 和其他非系统动态库，但当前只使用 ad-hoc 签名，尚未完成 Apple
-Developer ID 签名和公证。完整流程见 `docs/RELEASE.md`。
+- [`AGENTS.md`](AGENTS.md)：仓库级协作规则（跨应用教学规范、应用之间的边界）。
+- [`docs/decisions/`](docs/decisions)：跨应用的架构决策记录。
+- `apps/<id>/AGENTS.md` 与 `apps/<id>/docs/`：各应用自己的规则与文档。
 
-## Ubuntu 安装包
+## 许可
 
-GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 APT 安装并自动解析
-GTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
-
-```sh
-sudo apt install ./athena_VERSION_amd64.deb
-chmod +x Athena-VERSION-linux-x86_64.AppImage
-./Athena-VERSION-linux-x86_64.AppImage
-```
-
-AppImage 内置 Athena 及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
-运行的静态包。
-
-## 许可证
-
-本项目基于[木兰宽松许可证第二版](https://license.coscl.org.cn/MulanPSL2)（Mulan PSL v2）授权，完整条款见 [LICENSE](LICENSE)。
+见 [LICENSE](LICENSE)。

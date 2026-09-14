@@ -28,13 +28,11 @@ struct LearningApp: Identifiable, Sendable {
 }
 
 enum AppCatalog {
-    // 仓库根的 app.json 是主程序（C++ 教程）自己那一条，排在最前；
-    // 其余按目录名排序，菜单里的次序才不会随文件系统变。
+    // 所有学习应用都在 apps/ 下，C++ 教程（apps/cpp）也不例外——它没有特权，
+    // 这里没有任何针对某个应用的分支（ADR 0045）。顺序按目录名排，
+    // 菜单里的次序才不会随文件系统变。
     static func discover(in repository: URL) -> [LearningApp] {
         var apps: [LearningApp] = []
-        if let host = parse(directory: repository) {
-            apps.append(host)
-        }
         let appsRoot = repository.appendingPathComponent("apps")
         let entries = (try? FileManager.default.contentsOfDirectory(
             at: appsRoot,
