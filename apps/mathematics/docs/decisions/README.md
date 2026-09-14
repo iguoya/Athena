@@ -23,3 +23,4 @@
 | [0016](0016-building-it-is-studying-it.md) | 编写这个软件本身就是学习动作；但要划清内容与工程的界 | 已接受（撤销 REFERENCES 第六节的「净支出」判断） |
 | [0017](0017-anchor-each-stage-to-a-real-textbook.md) | 每个阶段锚定一份真实教材；严格表述必须可核对 | 已接受（部分作废 0012 第 4 节） |
 | [0018](0018-voice-and-scripted-animation.md) | 概念节可用语音讲解与脚本动画；二者跟课表走 | 已接受 |
+| [0019](0019-exercises-must-be-sourced-and-worked-examples.md) | 练习与测验必须有所本；每节配标准例题 | 已接受（修正 0017 第 1 节，补齐 0014 第 2 节） |
