@@ -1,7 +1,7 @@
 {
-  "title": "英语自学",
-  "tagline": "从实用高频英语逐步衔接英语二",
-  "lead": "每天先完成到期检索，再推进当前等级。答题后立即纠错，答错自动进入错题本。",
+  "title": "英语学习",
+  "tagline": "每天能看见自己多稳住了一些",
+  "lead": "先把到期的清掉，再往前走一小步。首页会记下连续天数、稳住的条目和通过的考核——不是为了打卡，是让你看见自己在前进。",
   "endpoint": "高级阶段衔接英语二阅读、英译汉与限时写作；三条能力线仍分别过关。",
   "description": "三个等级都同时训练单词、例句和作文；短文作为语境贯穿其中，不再成为孤立的一章。",
   "stages": [
@@ -16,7 +16,8 @@
           "id": "en.beginner.vocab.core",
           "title": "单词",
           "kind": "vocab",
-          "goal": "看到基础语境能提取正确词义和常见搭配。",
+          "goal": "先在原句里提取义项和搭配，答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
           "deck": "vocab/beginner/core.json",
           "assessment": "assessments/beginner/vocab.json"
         },
@@ -25,6 +26,7 @@
           "title": "例句",
           "kind": "sentence",
           "goal": "找出句子主干，并判断基本因果、转折和指代。",
+          "skills": ["listen", "speak", "read"],
           "deck": "sentences/beginner/core.json",
           "assessment": "assessments/beginner/sentence.json"
         },
@@ -33,6 +35,7 @@
           "title": "作文",
           "kind": "writing",
           "goal": "用给定词句完成仿写、扩写和一个清楚的短段落。",
+          "skills": ["listen", "speak", "read", "write"],
           "deck": "writing/beginner/core.json",
           "assessment": "assessments/beginner/writing.json"
         }
@@ -51,7 +54,8 @@
           "id": "en.intermediate.vocab.context_senses",
           "title": "单词",
           "kind": "vocab",
-          "goal": "处理一词多义、词族和议论文里常见的抽象搭配。",
+          "goal": "在议论语境里提取义项；答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
           "deck": "vocab/intermediate/core.json",
           "assessment": "assessments/intermediate/vocab.json"
         },
@@ -60,6 +64,7 @@
           "title": "例句",
           "kind": "sentence",
           "goal": "切分一到两层从句，找清指代、让步和因果关系。",
+          "skills": ["listen", "speak", "read"],
           "deck": "sentences/intermediate/core.json",
           "assessment": "assessments/intermediate/sentence.json"
         },
@@ -68,6 +73,7 @@
           "title": "作文",
           "kind": "writing",
           "goal": "围绕一个观点组织理由、例子和收束句。",
+          "skills": ["listen", "speak", "read", "write"],
           "deck": "writing/intermediate/core.json",
           "assessment": "assessments/intermediate/writing.json"
         }
@@ -86,7 +92,8 @@
           "id": "en.advanced.vocab.argument",
           "title": "单词",
           "kind": "vocab",
-          "goal": "辨认熟词生义、立场词和抽象名词搭配。",
+          "goal": "提取熟词生义和立场词；答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
           "deck": "vocab/advanced/core.json",
           "assessment": "assessments/advanced/vocab.json"
         },
@@ -95,6 +102,7 @@
           "title": "例句",
           "kind": "sentence",
           "goal": "在短文中恢复复杂句主干、作者态度和句间关系。",
+          "skills": ["listen", "speak", "read"],
           "passage": "passages/advanced/work_and_choice.md",
           "deck": "passages/advanced/work_and_choice.json",
           "assessment": "assessments/advanced/sentence.json"
@@ -104,6 +112,7 @@
           "title": "作文",
           "kind": "writing",
           "goal": "在限时条件下独立完成任务回应、组织和改写。",
+          "skills": ["listen", "speak", "read", "write"],
           "deck": "writing/advanced/core.json",
           "assessment": "assessments/advanced/writing.json"
         }

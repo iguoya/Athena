@@ -5,141 +5,931 @@
     {
       "id": "en.advanced.vocab.address",
       "word": "address",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "处理；应对"
+        }
+      ],
       "sentence": "The new policy is intended to address concerns raised by small businesses.",
       "prompt": "address 在这里是什么意思？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "处理、应对", "ok": true, "why": "宾语是 concerns，address 表示着手处理问题。" },
-        { "label": "地址", "ok": false, "why": "地址是名词义，与 intended to 后的动词位置不符。" },
-        { "label": "发表正式演说", "ok": false, "why": "address an audience 才可能表示演说，这里的宾语是 concerns。" }
+        {
+          "label": "处理、应对",
+          "ok": true,
+          "why": "宾语是 concerns，address 表示着手处理问题。"
+        },
+        {
+          "label": "地址",
+          "ok": false,
+          "why": "地址是名词义，与 intended to 后的动词位置不符。"
+        },
+        {
+          "label": "发表正式演说",
+          "ok": false,
+          "why": "address an audience 才可能表示演说，这里的宾语是 concerns。"
+        }
       ],
       "variants": [
         {
           "sentence": "Any serious reform must address the reasons why workers leave.",
           "prompt": "address the reasons 表示什么？",
           "choices": [
-            { "label": "认真处理这些原因", "ok": true, "why": "这里仍是处理问题的动词义。" },
-            { "label": "写下这些原因的地址", "ok": false, "why": "reasons 没有物理地址。" }
+            {
+              "label": "认真处理这些原因",
+              "ok": true,
+              "why": "这里仍是处理问题的动词义。"
+            },
+            {
+              "label": "写下这些原因的地址",
+              "ok": false,
+              "why": "reasons 没有物理地址。"
+            }
           ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 9694342 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/9694342",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
         }
       ]
     },
     {
       "id": "en.advanced.vocab.assume",
       "word": "assume",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "假定；把…当作前提"
+        }
+      ],
       "sentence": "The argument assumes that higher pay always leads to greater satisfaction.",
       "prompt": "assumes that 在这里表示什么？",
       "error_tag": "论证词义",
       "choices": [
-        { "label": "把某件事当作前提", "ok": true, "why": "论证在没有先证明的情况下采用了这个前提。" },
-        { "label": "承担一项职位", "ok": false, "why": "assume office 才是就职。" },
-        { "label": "否认一个结论", "ok": false, "why": "assume 在这里不是 deny。" }
+        {
+          "label": "把某件事当作前提",
+          "ok": true,
+          "why": "论证在没有先证明的情况下采用了这个前提。"
+        },
+        {
+          "label": "承担一项职位",
+          "ok": false,
+          "why": "assume office 才是就职。"
+        },
+        {
+          "label": "否认一个结论",
+          "ok": false,
+          "why": "assume 在这里不是 deny。"
+        }
       ],
-      "variants": [{ "sentence": "The forecast assumes that demand will remain stable.", "prompt": "assumes that 表示什么？", "choices": [{ "label": "预测把需求稳定作为前提", "ok": true, "why": "是未经先证实的计算前提。" }, { "label": "预测证明了需求稳定", "ok": false, "why": "assume 不等于 prove。" }] }]
+      "variants": [
+        {
+          "sentence": "The forecast assumes that demand will remain stable.",
+          "prompt": "assumes that 表示什么？",
+          "choices": [
+            {
+              "label": "预测把需求稳定作为前提",
+              "ok": true,
+              "why": "是未经先证实的计算前提。"
+            },
+            {
+              "label": "预测证明了需求稳定",
+              "ok": false,
+              "why": "assume 不等于 prove。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 12288917 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/12288917",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.account",
       "word": "account",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "解释；构成原因（account for）"
+        }
+      ],
       "sentence": "Economic conditions account for only part of the decline.",
       "prompt": "account for 在本句中表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "解释、构成……的原因", "ok": true, "why": "句子说经济状况只能解释下降的一部分。" },
-        { "label": "开设银行账户", "ok": false, "why": "这里是动词短语 account for。" },
-        { "label": "计算精确金额", "ok": false, "why": "句中讨论原因，不是金额。" }
+        {
+          "label": "解释、构成……的原因",
+          "ok": true,
+          "why": "句子说经济状况只能解释下降的一部分。"
+        },
+        {
+          "label": "开设银行账户",
+          "ok": false,
+          "why": "这里是动词短语 account for。"
+        },
+        {
+          "label": "计算精确金额",
+          "ok": false,
+          "why": "句中讨论原因，不是金额。"
+        }
       ],
-      "variants": [{ "sentence": "Online orders now account for half of the shop's sales.", "prompt": "account for half 表示什么？", "choices": [{ "label": "构成销售额的一半", "ok": true, "why": "account for 可表示占比。" }, { "label": "解释为什么商店关闭", "ok": false, "why": "本句谈比例，不谈关闭。" }] }]
+      "variants": [
+        {
+          "sentence": "Online orders now account for half of the shop's sales.",
+          "prompt": "account for half 表示什么？",
+          "choices": [
+            {
+              "label": "构成销售额的一半",
+              "ok": true,
+              "why": "account for 可表示占比。"
+            },
+            {
+              "label": "解释为什么商店关闭",
+              "ok": false,
+              "why": "本句谈比例，不谈关闭。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 8257583 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/8257583",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.qualify",
       "word": "qualify",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "限制；给主张加上限定"
+        }
+      ],
       "sentence": "The final paragraph qualifies the author's earlier claim.",
       "prompt": "qualifies the claim 在这里表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "给原先的主张加上限制", "ok": true, "why": "论证语境中的 qualify 常表示使说法不再绝对。" },
-        { "label": "证明主张完全正确", "ok": false, "why": "限制并不等于完全证明。" },
-        { "label": "取得参加考试的资格", "ok": false, "why": "这是常见义，但宾语 claim 指向论证中的限定义。" }
+        {
+          "label": "给原先的主张加上限制",
+          "ok": true,
+          "why": "论证语境中的 qualify 常表示使说法不再绝对。"
+        },
+        {
+          "label": "证明主张完全正确",
+          "ok": false,
+          "why": "限制并不等于完全证明。"
+        },
+        {
+          "label": "取得参加考试的资格",
+          "ok": false,
+          "why": "这是常见义，但宾语 claim 指向论证中的限定义。"
+        }
       ],
-      "variants": [{ "sentence": "The researchers qualified their conclusion by pointing to the small sample.", "prompt": "qualified their conclusion 表示什么？", "choices": [{ "label": "用小样本这一点限制结论", "ok": true, "why": "说明结论不能无限推广。" }, { "label": "让结论获得研究资格", "ok": false, "why": "不是资格义。" }] }]
+      "variants": [
+        {
+          "sentence": "The researchers qualified their conclusion by pointing to the small sample.",
+          "prompt": "qualified their conclusion 表示什么？",
+          "choices": [
+            {
+              "label": "用小样本这一点限制结论",
+              "ok": true,
+              "why": "说明结论不能无限推广。"
+            },
+            {
+              "label": "让结论获得研究资格",
+              "ok": false,
+              "why": "不是资格义。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 12194809 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/12194809",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.subject",
       "word": "subject",
+      "senses": [
+        {
+          "pos": "adj",
+          "gloss": "易受…影响的（subject to）"
+        }
+      ],
       "sentence": "Early estimates are subject to change as new evidence appears.",
       "prompt": "are subject to change 表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "可能发生变化", "ok": true, "why": "be subject to 表示受……影响或可能经历……。" },
-        { "label": "是变化这一学科", "ok": false, "why": "这里不是“科目”义。" },
-        { "label": "主动控制变化", "ok": false, "why": "原句强调估算受到新证据影响。" }
+        {
+          "label": "可能发生变化",
+          "ok": true,
+          "why": "be subject to 表示受……影响或可能经历……。"
+        },
+        {
+          "label": "是变化这一学科",
+          "ok": false,
+          "why": "这里不是“科目”义。"
+        },
+        {
+          "label": "主动控制变化",
+          "ok": false,
+          "why": "原句强调估算受到新证据影响。"
+        }
       ],
-      "variants": [{ "sentence": "All bookings are subject to availability.", "prompt": "subject to availability 表示什么？", "choices": [{ "label": "能否预订取决于是否有余量", "ok": true, "why": "受到可用情况限制。" }, { "label": "所有预订都保证成功", "ok": false, "why": "语义相反。" }] }]
+      "variants": [
+        {
+          "sentence": "All bookings are subject to availability.",
+          "prompt": "subject to availability 表示什么？",
+          "choices": [
+            {
+              "label": "能否预订取决于是否有余量",
+              "ok": true,
+              "why": "受到可用情况限制。"
+            },
+            {
+              "label": "所有预订都保证成功",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 4601790 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/4601790",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.yield",
       "word": "yield",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "产生；得出"
+        }
+      ],
       "sentence": "The larger survey yielded a more reliable estimate.",
       "prompt": "yielded 在这里表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "产生了", "ok": true, "why": "研究或过程 yield a result 表示产生结果。" },
-        { "label": "向估算屈服", "ok": false, "why": "yield to 才是向……让步。" },
-        { "label": "推迟了", "ok": false, "why": "delay 才是推迟。" }
+        {
+          "label": "产生了",
+          "ok": true,
+          "why": "研究或过程 yield a result 表示产生结果。"
+        },
+        {
+          "label": "向估算屈服",
+          "ok": false,
+          "why": "yield to 才是向……让步。"
+        },
+        {
+          "label": "推迟了",
+          "ok": false,
+          "why": "delay 才是推迟。"
+        }
       ],
-      "variants": [{ "sentence": "The experiment yielded little useful information.", "prompt": "yielded little information 指什么？", "choices": [{ "label": "几乎没有产生有用信息", "ok": true, "why": "yield 是产生。" }, { "label": "隐藏了全部信息", "ok": false, "why": "hide 才是隐藏。" }] }]
+      "variants": [
+        {
+          "sentence": "The experiment yielded little useful information.",
+          "prompt": "yielded little information 指什么？",
+          "choices": [
+            {
+              "label": "几乎没有产生有用信息",
+              "ok": true,
+              "why": "yield 是产生。"
+            },
+            {
+              "label": "隐藏了全部信息",
+              "ok": false,
+              "why": "hide 才是隐藏。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 44638 · contributor CM",
+          "locator_url": "https://tatoeba.org/en/sentences/show/44638",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.bear",
       "word": "bear",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "承担"
+        }
+      ],
       "sentence": "Small firms may bear most of the cost of the new rule.",
       "prompt": "bear most of the cost 表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "承担大部分成本", "ok": true, "why": "bear a cost/burden 表示承担。" },
-        { "label": "像熊一样保护成本", "ok": false, "why": "这里 bear 是动词，不是动物名词。" },
-        { "label": "降低全部成本", "ok": false, "why": "reduce 才是降低。" }
+        {
+          "label": "承担大部分成本",
+          "ok": true,
+          "why": "bear a cost/burden 表示承担。"
+        },
+        {
+          "label": "像熊一样保护成本",
+          "ok": false,
+          "why": "这里 bear 是动词，不是动物名词。"
+        },
+        {
+          "label": "降低全部成本",
+          "ok": false,
+          "why": "reduce 才是降低。"
+        }
       ],
-      "variants": [{ "sentence": "Future users should not bear risks created by poor design.", "prompt": "bear risks 表示什么？", "choices": [{ "label": "承担风险", "ok": true, "why": "bear 在这里是承受。" }, { "label": "发现风险", "ok": false, "why": "identify 才是发现。" }] }]
+      "variants": [
+        {
+          "sentence": "Future users should not bear risks created by poor design.",
+          "prompt": "bear risks 表示什么？",
+          "choices": [
+            {
+              "label": "承担风险",
+              "ok": true,
+              "why": "bear 在这里是承受。"
+            },
+            {
+              "label": "发现风险",
+              "ok": false,
+              "why": "identify 才是发现。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 10553040 · contributor AlanF_US",
+          "locator_url": "https://tatoeba.org/en/sentences/show/10553040",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.conduct",
       "word": "conduct",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "开展；实施"
+        }
+      ],
       "sentence": "The researchers conducted interviews in three cities.",
       "prompt": "conducted interviews 表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "开展了访谈", "ok": true, "why": "conduct research/interviews 表示组织并实施。" },
-        { "label": "通过导线传导访谈", "ok": false, "why": "传导义不适用于 interviews。" },
-        { "label": "取消了访谈", "ok": false, "why": "cancel 才是取消。" }
+        {
+          "label": "开展了访谈",
+          "ok": true,
+          "why": "conduct research/interviews 表示组织并实施。"
+        },
+        {
+          "label": "通过导线传导访谈",
+          "ok": false,
+          "why": "传导义不适用于 interviews。"
+        },
+        {
+          "label": "取消了访谈",
+          "ok": false,
+          "why": "cancel 才是取消。"
+        }
       ],
-      "variants": [{ "sentence": "An independent group will conduct the review.", "prompt": "conduct the review 指什么？", "choices": [{ "label": "实施这项审查", "ok": true, "why": "conduct 表示开展。" }, { "label": "阅读审查结果", "ok": false, "why": "read 不等于 conduct。" }] }]
+      "variants": [
+        {
+          "sentence": "An independent group will conduct the review.",
+          "prompt": "conduct the review 指什么？",
+          "choices": [
+            {
+              "label": "实施这项审查",
+              "ok": true,
+              "why": "conduct 表示开展。"
+            },
+            {
+              "label": "阅读审查结果",
+              "ok": false,
+              "why": "read 不等于 conduct。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11567415 · contributor Amastan",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11567415",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.reflect",
       "word": "reflect",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "反映；体现"
+        }
+      ],
       "sentence": "The price does not always reflect the true cost of production.",
       "prompt": "reflect the true cost 表示什么？",
       "error_tag": "论证词义",
       "choices": [
-        { "label": "反映真实成本", "ok": true, "why": "这里指价格是否准确体现成本。" },
-        { "label": "认真思考成本", "ok": false, "why": "reflect on 才常表示反思。" },
-        { "label": "拒绝支付成本", "ok": false, "why": "句中没有 refuse。" }
+        {
+          "label": "反映真实成本",
+          "ok": true,
+          "why": "这里指价格是否准确体现成本。"
+        },
+        {
+          "label": "认真思考成本",
+          "ok": false,
+          "why": "reflect on 才常表示反思。"
+        },
+        {
+          "label": "拒绝支付成本",
+          "ok": false,
+          "why": "句中没有 refuse。"
+        }
       ],
-      "variants": [{ "sentence": "The final decision should reflect local needs.", "prompt": "reflect local needs 表示什么？", "choices": [{ "label": "体现当地需求", "ok": true, "why": "决策应把需求表现出来。" }, { "label": "改变当地需求", "ok": false, "why": "reflect 不表示改变。" }] }]
+      "variants": [
+        {
+          "sentence": "The final decision should reflect local needs.",
+          "prompt": "reflect local needs 表示什么？",
+          "choices": [
+            {
+              "label": "体现当地需求",
+              "ok": true,
+              "why": "决策应把需求表现出来。"
+            },
+            {
+              "label": "改变当地需求",
+              "ok": false,
+              "why": "reflect 不表示改变。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 24420 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/24420",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.advanced.vocab.concern",
       "word": "concern",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "涉及；关系到"
+        }
+      ],
       "sentence": "The second question concerns how the benefits will be shared.",
       "prompt": "concerns 在这里表示什么？",
       "error_tag": "熟词生义",
       "choices": [
-        { "label": "涉及、关系到", "ok": true, "why": "concern 作动词可表示关于、涉及。" },
-        { "label": "让第二个问题感到担心", "ok": false, "why": "question 不是产生情绪的人。" },
-        { "label": "解决了利益分配", "ok": false, "why": "concern 不等于 solve。" }
+        {
+          "label": "涉及、关系到",
+          "ok": true,
+          "why": "concern 作动词可表示关于、涉及。"
+        },
+        {
+          "label": "让第二个问题感到担心",
+          "ok": false,
+          "why": "question 不是产生情绪的人。"
+        },
+        {
+          "label": "解决了利益分配",
+          "ok": false,
+          "why": "concern 不等于 solve。"
+        }
       ],
-      "variants": [{ "sentence": "This chapter concerns the social effects of automation.", "prompt": "concerns 表示什么？", "choices": [{ "label": "本章讨论自动化的社会影响", "ok": true, "why": "表示主题涉及。" }, { "label": "本章消除了社会影响", "ok": false, "why": "语义不成立。" }] }]
+      "variants": [
+        {
+          "sentence": "This chapter concerns the social effects of automation.",
+          "prompt": "concerns 表示什么？",
+          "choices": [
+            {
+              "label": "本章讨论自动化的社会影响",
+              "ok": true,
+              "why": "表示主题涉及。"
+            },
+            {
+              "label": "本章消除了社会影响",
+              "ok": false,
+              "why": "语义不成立。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 2584302 · contributor FeuDRenais2",
+          "locator_url": "https://tatoeba.org/en/sentences/show/2584302",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.undermine",
+      "word": "undermine",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "逐渐削弱；损害"
+        }
+      ],
+      "sentence": "The continued fighting threatens to undermine efforts to negotiate an agreement.",
+      "prompt": "undermine efforts 表示什么？",
+      "error_tag": "熟词生义",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11768648 · contributor Amastan",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11768648",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "持续战斗可能损害谈判协议的努力",
+          "ok": true,
+          "why": "undermine 是从内部削弱，不是直接打垮一次。"
+        },
+        {
+          "label": "战斗支持了谈判",
+          "ok": false,
+          "why": "threatens to undermine 是负面。"
+        },
+        {
+          "label": "协议已经签署",
+          "ok": false,
+          "why": "还在 negotiate。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Rumours can undermine public trust in a report.",
+          "prompt": "undermine public trust 表示什么？",
+          "choices": [
+            {
+              "label": "谣言会削弱公众对报告的信任",
+              "ok": true,
+              "why": "仍是逐渐损害。"
+            },
+            {
+              "label": "谣言立刻建立信任",
+              "ok": false,
+              "why": "相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.whereas",
+      "word": "whereas",
+      "senses": [
+        {
+          "pos": "conj",
+          "gloss": "然而；而"
+        }
+      ],
+      "sentence": "He had never done anything for them, whereas they had done everything for him.",
+      "prompt": "whereas 连接的是什么关系？",
+      "error_tag": "立场词",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 9149617 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/9149617",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "对比他从未付出和他们为他做了一切",
+          "ok": true,
+          "why": "whereas 引出对照。"
+        },
+        {
+          "label": "说明他付出导致他们付出",
+          "ok": false,
+          "why": "不是因果。"
+        },
+        {
+          "label": "双方做的事情完全一样",
+          "ok": false,
+          "why": "never / everything 形成反差。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Walking is easy to repeat, whereas some gym plans fail after a week.",
+          "prompt": "whereas 强调什么？",
+          "choices": [
+            {
+              "label": "步行容易坚持，而有些健身计划很快放弃",
+              "ok": true,
+              "why": "对照两种习惯。"
+            },
+            {
+              "label": "两种计划没有差别",
+              "ok": false,
+              "why": "whereas 就是为了标出差别。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.constitute",
+      "word": "constitute",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "构成；算作"
+        }
+      ],
+      "sentence": "We must redefine what constitutes a family.",
+      "prompt": "what constitutes a family 在问什么？",
+      "error_tag": "熟词生义",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 10637160 · contributor AlanF_US",
+          "locator_url": "https://tatoeba.org/en/sentences/show/10637160",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "什么才算一个家庭",
+          "ok": true,
+          "why": "constitute 表示由哪些部分构成、算作。"
+        },
+        {
+          "label": "如何解散一个家庭",
+          "ok": false,
+          "why": "redefine 不是解散。"
+        },
+        {
+          "label": "家庭是否违法",
+          "ok": false,
+          "why": "constitute a crime 是另一搭配。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "These three facts constitute the author's main evidence.",
+          "prompt": "constitute 表示什么？",
+          "choices": [
+            {
+              "label": "这三件事实构成作者的主要证据",
+              "ok": true,
+              "why": "部分组成整体。"
+            },
+            {
+              "label": "这三件事实推翻了证据",
+              "ok": false,
+              "why": "相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.paradox",
+      "word": "paradox",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "矛盾现象；似非而是"
+        }
+      ],
+      "sentence": "It's a paradox that in such a rich country there can be so much poverty.",
+      "prompt": "a paradox that 指出什么？",
+      "error_tag": "立场词",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 51633 · contributor AlanF_US",
+          "locator_url": "https://tatoeba.org/en/sentences/show/51633",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "富国仍有大量贫穷，这种并存显得矛盾",
+          "ok": true,
+          "why": "paradox 标出表面冲突。"
+        },
+        {
+          "label": "富国不可能有贫穷",
+          "ok": false,
+          "why": "原句承认两者同时存在。"
+        },
+        {
+          "label": "贫穷已经消失",
+          "ok": false,
+          "why": "so much poverty 否定这一点。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The paradox is that the easiest habit may bring lasting benefits.",
+          "prompt": "这句话里的 paradox 指什么？",
+          "choices": [
+            {
+              "label": "最容易的习惯反而可能带来持久收益",
+              "ok": true,
+              "why": "与“越难越有效”的直觉冲突。"
+            },
+            {
+              "label": "容易的习惯一定无效",
+              "ok": false,
+              "why": "与句意相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.concede",
+      "word": "concede",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "承认（对方有理的一点）"
+        }
+      ],
+      "sentence": "'That's the only possible solution.' 'Yes, I suppose so,' Charles conceded.",
+      "prompt": "conceded 在对话里做什么？",
+      "error_tag": "立场词",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 3194666 · contributor catcher",
+          "locator_url": "https://tatoeba.org/en/sentences/show/3194666",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "查尔斯承认对方这一点说得通",
+          "ok": true,
+          "why": "concede 常用于让步承认。"
+        },
+        {
+          "label": "查尔斯彻底否定了解决方案",
+          "ok": false,
+          "why": "Yes, I suppose so 是承认。"
+        },
+        {
+          "label": "查尔斯宣布比赛胜利",
+          "ok": false,
+          "why": "不是体育认输那一层。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The author concedes that walking is not dramatic, but still defends it.",
+          "prompt": "concedes 在论证里的作用？",
+          "choices": [
+            {
+              "label": "先承认一个限制，再坚持自己的主张",
+              "ok": true,
+              "why": "让步后转折。"
+            },
+            {
+              "label": "放弃全部主张",
+              "ok": false,
+              "why": "but still defends 说明没有放弃。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.vocab.compel",
+      "word": "compel",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "迫使；引起（注意）"
+        }
+      ],
+      "sentence": "His performance compelled the audience's attention.",
+      "prompt": "compelled the audience's attention 表示什么？",
+      "error_tag": "熟词生义",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 12297634 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/12297634",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "演出迫使观众注意，想不看都难",
+          "ok": true,
+          "why": "compel 是迫使发生。"
+        },
+        {
+          "label": "观众被迫离开",
+          "ok": false,
+          "why": "attention 不是离开。"
+        },
+        {
+          "label": "演出没有人看",
+          "ok": false,
+          "why": "相反。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The evidence does not compel us to accept every claim.",
+          "prompt": "does not compel us 表示什么？",
+          "choices": [
+            {
+              "label": "证据还不足以迫使我们接受全部主张",
+              "ok": true,
+              "why": "否定强迫性。"
+            },
+            {
+              "label": "我们必须接受全部主张",
+              "ok": false,
+              "why": "does not 否掉了强迫。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "awl",
+      "relation": "selection_basis",
+      "note": "立场、前提、证据边界类词按学术词表优先级。"
+    },
+    {
+      "source_id": "yz-english-2-outline",
+      "relation": "exam_alignment",
+      "note": "对齐阅读里的熟词生义和态度判断，不复制真题。"
+    },
+    {
+      "source_id": "netem-vocabulary",
+      "relation": "selection_basis",
+      "note": "熟词生义和立场词对照考研词频。"
     }
   ]
 }

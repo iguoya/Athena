@@ -9,11 +9,49 @@
       "prompt": "because 后面说明什么？",
       "error_tag": "因果关系",
       "choices": [
-        { "label": "使用图书馆的原因", "ok": true, "why": "because 引出原因：图书馆提供安静的学习地点。" },
-        { "label": "使用图书馆的结果", "ok": false, "why": "结果在前面的 use the library，because 后是原因。" },
-        { "label": "与前句无关的补充", "ok": false, "why": "because 明确连接原因。" }
+        {
+          "label": "使用图书馆的原因",
+          "ok": true,
+          "why": "because 引出原因：图书馆提供安静的学习地点。"
+        },
+        {
+          "label": "使用图书馆的结果",
+          "ok": false,
+          "why": "结果在前面的 use the library，because 后是原因。"
+        },
+        {
+          "label": "与前句无关的补充",
+          "ok": false,
+          "why": "because 明确连接原因。"
+        }
       ],
-      "variants": [{ "text": "Nora brought lunch because the office café was closed.", "prompt": "because 后面说明什么？", "choices": [{ "label": "Nora 自带午饭的原因", "ok": true, "why": "咖啡馆关门是原因。" }, { "label": "咖啡馆关门的结果", "ok": false, "why": "因果方向反了。" }] }]
+      "variants": [
+        {
+          "text": "Nora brought lunch because the office café was closed.",
+          "prompt": "because 后面说明什么？",
+          "choices": [
+            {
+              "label": "Nora 自带午饭的原因",
+              "ok": true,
+              "why": "咖啡馆关门是原因。"
+            },
+            {
+              "label": "咖啡馆关门的结果",
+              "ok": false,
+              "why": "因果方向反了。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 10131889 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/10131889",
+          "note": "依据该图书馆与 because 的真实句作受控改写，保留原因关系，替换开放时间为学习用途。"
+        }
+      ]
     },
     {
       "id": "en.beginner.sentence.but",
@@ -22,18 +60,47 @@
       "prompt": "这句话最终更想强调哪一点？",
       "error_tag": "转折关系",
       "choices": [
-        { "label": "课程虽有难度，却提供了更多练习机会", "ok": true, "why": "but 后面是转折后的重点。" },
-        { "label": "课程有难度，所以不值得学习", "ok": false, "why": "后半句给的是积极结果。" },
-        { "label": "练习机会使课程变得更难", "ok": false, "why": "句中没有这个因果关系。" }
+        {
+          "label": "课程虽有难度，却提供了更多练习机会",
+          "ok": true,
+          "why": "but 后面是转折后的重点。"
+        },
+        {
+          "label": "课程有难度，所以不值得学习",
+          "ok": false,
+          "why": "后半句给的是积极结果。"
+        },
+        {
+          "label": "练习机会使课程变得更难",
+          "ok": false,
+          "why": "句中没有这个因果关系。"
+        }
       ],
       "variants": [
         {
           "text": "The job pays less, but it offers better training.",
           "prompt": "作者转折后强调什么？",
           "choices": [
-            { "label": "工作提供更好的培训", "ok": true, "why": "but 后是作者补充的优势。" },
-            { "label": "工作收入更低", "ok": false, "why": "这是转折前承认的情况。" }
+            {
+              "label": "工作提供更好的培训",
+              "ok": true,
+              "why": "but 后是作者补充的优势。"
+            },
+            {
+              "label": "工作收入更低",
+              "ok": false,
+              "why": "这是转折前承认的情况。"
+            }
           ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 3194666 · contributor catcher",
+          "locator_url": "https://tatoeba.org/en/sentences/show/3194666",
+          "note": "依据该 but 对照句的结构作受控场景替换；题目只考转折后的信息。"
         }
       ]
     },
@@ -44,11 +111,49 @@
       "prompt": "it 指什么？",
       "error_tag": "代词指代",
       "choices": [
-        { "label": "the new study room", "ok": true, "why": "最近且语义成立的单数事物是 study room。" },
-        { "label": "the school", "ok": false, "why": "学校本身不是“开放到十点”的新设施。" },
-        { "label": "ten", "ok": false, "why": "ten 是时间，不是指代对象。" }
+        {
+          "label": "the new study room",
+          "ok": true,
+          "why": "最近且语义成立的单数事物是 study room。"
+        },
+        {
+          "label": "the school",
+          "ok": false,
+          "why": "学校本身不是“开放到十点”的新设施。"
+        },
+        {
+          "label": "ten",
+          "ok": false,
+          "why": "ten 是时间，不是指代对象。"
+        }
       ],
-      "variants": [{ "text": "The centre added a weekend class, and it quickly became popular.", "prompt": "it 指什么？", "choices": [{ "label": "the weekend class", "ok": true, "why": "最近且能变得受欢迎的单数事物是 class。" }, { "label": "the centre", "ok": false, "why": "动作焦点是新增课程。" }] }]
+      "variants": [
+        {
+          "text": "The centre added a weekend class, and it quickly became popular.",
+          "prompt": "it 指什么？",
+          "choices": [
+            {
+              "label": "the weekend class",
+              "ok": true,
+              "why": "最近且能变得受欢迎的单数事物是 class。"
+            },
+            {
+              "label": "the centre",
+              "ok": false,
+              "why": "动作焦点是新增课程。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 3272314 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/3272314",
+          "note": "依据该真实关系从句和指代语境作受控简化，换成学校设施场景。"
+        }
+      ]
     },
     {
       "id": "en.beginner.sentence.condition",
@@ -57,11 +162,49 @@
       "prompt": "步行去车站需要满足什么条件？",
       "error_tag": "条件关系",
       "choices": [
-        { "label": "天气保持干燥", "ok": true, "why": "if 从句给出条件。" },
-        { "label": "车站保持开放", "ok": false, "why": "句中没有这个条件。" },
-        { "label": "已经到达车站", "ok": false, "why": "walk 是将来的安排。" }
+        {
+          "label": "天气保持干燥",
+          "ok": true,
+          "why": "if 从句给出条件。"
+        },
+        {
+          "label": "车站保持开放",
+          "ok": false,
+          "why": "句中没有这个条件。"
+        },
+        {
+          "label": "已经到达车站",
+          "ok": false,
+          "why": "walk 是将来的安排。"
+        }
       ],
-      "variants": [{ "text": "If you finish early, call me before you leave.", "prompt": "打电话的条件是什么？", "choices": [{ "label": "提前完成", "ok": true, "why": "if 后给出条件。" }, { "label": "已经离开", "ok": false, "why": "电话要在离开前打。" }] }]
+      "variants": [
+        {
+          "text": "If you finish early, call me before you leave.",
+          "prompt": "打电话的条件是什么？",
+          "choices": [
+            {
+              "label": "提前完成",
+              "ok": true,
+              "why": "if 后给出条件。"
+            },
+            {
+              "label": "已经离开",
+              "ok": false,
+              "why": "电话要在离开前打。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 13885733 · contributor tieguy",
+          "locator_url": "https://tatoeba.org/en/sentences/show/13885733",
+          "note": "依据该 if 条件句作受控替换，保留“条件满足后可以行动”的结构。"
+        }
+      ]
     },
     {
       "id": "en.beginner.sentence.result",
@@ -70,24 +213,358 @@
       "prompt": "so 后面说明什么？",
       "error_tag": "因果关系",
       "choices": [
-        { "label": "商店搬迁带来的结果", "ok": true, "why": "so 引出前面变化造成的结果。" },
-        { "label": "商店搬迁的原因", "ok": false, "why": "原因在前，结果在后。" },
-        { "label": "与车站无关的对比", "ok": false, "why": "so 明确表达因果。" }
+        {
+          "label": "商店搬迁带来的结果",
+          "ok": true,
+          "why": "so 引出前面变化造成的结果。"
+        },
+        {
+          "label": "商店搬迁的原因",
+          "ok": false,
+          "why": "原因在前，结果在后。"
+        },
+        {
+          "label": "与车站无关的对比",
+          "ok": false,
+          "why": "so 明确表达因果。"
+        }
       ],
-      "variants": [{ "text": "The instructions were clear, so everyone finished on time.", "prompt": "按时完成是什么？", "choices": [{ "label": "说明清楚带来的结果", "ok": true, "why": "so 引出结果。" }, { "label": "说明变清楚的原因", "ok": false, "why": "因果方向反了。" }] }]
+      "variants": [
+        {
+          "text": "The instructions were clear, so everyone finished on time.",
+          "prompt": "按时完成是什么？",
+          "choices": [
+            {
+              "label": "说明清楚带来的结果",
+              "ok": true,
+              "why": "so 引出结果。"
+            },
+            {
+              "label": "说明变清楚的原因",
+              "ok": false,
+              "why": "因果方向反了。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 681935 · contributor Source_VOA",
+          "locator_url": "https://tatoeba.org/en/sentences/show/681935",
+          "note": "依据该真实因果结果句改写为 so 连接的生活场景，保留原因到结果的方向。"
+        }
+      ]
     },
     {
       "id": "en.beginner.sentence.translation",
       "kind": "translation",
-      "text": "You can collect the package after five, but remember to bring your ID.",
-      "prompt": "哪项翻译保留了完整信息？",
+      "text": "Remember to call Marsha at work. Tell her you’re here.",
+      "prompt": "哪项翻译保留了两个祈使句的完整信息？",
       "error_tag": "英译汉",
       "choices": [
-        { "label": "你可以五点以后取包裹，但记得带身份证件。", "ok": true, "why": "时间、动作和提醒都保留了。" },
-        { "label": "你必须五点前带包裹和身份证。", "ok": false, "why": "把 after 误成 before，也改变了动作。" },
-        { "label": "五点以后身份证会送到。", "ok": false, "why": "主语和内容都被改写。" }
+        {
+          "label": "记得给正在上班的 Marsha 打电话，告诉她你已经到了。",
+          "ok": true,
+          "why": "call Marsha at work 和 tell her you’re here 两个动作都保留了。"
+        },
+        {
+          "label": "记得去 Marsha 的工作地点等她回来。",
+          "ok": false,
+          "why": "原文要求打电话，没有要求去工作地点。"
+        },
+        {
+          "label": "告诉 Marsha 你今天不在这里。",
+          "ok": false,
+          "why": "把 you’re here 的肯定意思说反了。"
+        }
       ],
-      "variants": [{ "text": "The office is closed today, but you can leave the form at the front desk.", "prompt": "哪项理解正确？", "choices": [{ "label": "办公室今天关门，但表格可以留在前台", "ok": true, "why": "完整保留转折和可行安排。" }, { "label": "办公室今天开门，必须当面交表", "ok": false, "why": "与原文相反。" }] }]
+      "variants": [
+        {
+          "text": "I have to go now.",
+          "prompt": "哪项翻译准确表达 have to？",
+          "choices": [
+            {
+              "label": "我现在得走了。",
+              "ok": true,
+              "why": "have to 表示当下有必要离开。"
+            },
+            {
+              "label": "我现在可能不走。",
+              "ok": false,
+              "why": "原句不是可能性。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-lle1-lesson2",
+          "relation": "quoted",
+          "locator": "Conversation transcript",
+          "locator_url": "https://learningenglish.voanews.com/a/lets-learn-english-lesson-2-hello/3113733.html",
+          "note": "题面和变式均逐句节选自 Lesson 2 会话；中文选项用于英语二前置的准确、完整、通顺训练。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.voa_welcome",
+      "kind": "listening",
+      "text": "Pete: Hi! Are you Anna? Anna: Yes! Hi there! Are you Pete?",
+      "prompt": "这段真实对话中，两个人正在完成什么交际任务？",
+      "error_tag": "听辨与会面",
+      "source_refs": [
+        {
+          "source_id": "voa-lle1-welcome",
+          "relation": "quoted",
+          "note": "题面是 VOA 初级课程第 1 课对话的短节选；变式由本项目另写。"
+        }
+      ],
+      "media": [
+        {
+          "kind": "audio",
+          "title": "Lesson 1 对话原声（29 秒）",
+          "url": "https://voa-audio.voanews.eu/vle/2016/02/08/49485bf8-4277-47f6-9abe-617ee2473f8c.mp3?download=1",
+          "source_id": "voa-lle1-welcome"
+        },
+        {
+          "kind": "video",
+          "title": "Lesson 1 原教材视频（240p）",
+          "url": "https://voa-video.voanews.eu/pangeavideo/2021/02/5/5f/5f00c78a-0f84-41e6-949d-bd808bcadf50_240p.mp4",
+          "source_id": "voa-lle1-welcome"
+        }
+      ],
+      "choices": [
+        {
+          "label": "确认彼此姓名并打招呼",
+          "ok": true,
+          "why": "双方用 Are you ...? 和 I am ... 确认身份，属于初次会面的真实表达。"
+        },
+        {
+          "label": "询问去车站的路线",
+          "ok": false,
+          "why": "对话中没有地点或路线信息。"
+        },
+        {
+          "label": "讨论一项工作安排",
+          "ok": false,
+          "why": "两人只在确认姓名和问候。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Maya: Hello, are you Daniel? Daniel: Yes, I am. Nice to meet you.",
+          "prompt": "这段变式的核心任务是什么？",
+          "choices": [
+            {
+              "label": "确认身份并礼貌会面",
+              "ok": true,
+              "why": "先确认姓名，再说 Nice to meet you。"
+            },
+            {
+              "label": "拒绝与对方见面",
+              "ok": false,
+              "why": "Nice to meet you 表达友好会面。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.walking",
+      "kind": "cause",
+      "text": "Walking is an easy activity to add to your day, but it can still improve a person's health.",
+      "prompt": "这句话最终更想强调哪一点？",
+      "error_tag": "转折关系",
+      "source_refs": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "note": "据 VOA Learning English《Walking: The 'Wonder Drug'》的日常步行与健康说法改写；未整段复制原报道。"
+        }
+      ],
+      "media": [
+        {
+          "kind": "audio",
+          "title": "VOA 原报道全文原声（6 分 51 秒）",
+          "url": "https://voa-audio.voanews.eu/vle/2017/05/26/3dee3eea-bac8-4ef6-8973-7c26482afcbb.mp3?download=1",
+          "source_id": "voa-walking-wonder-drug"
+        }
+      ],
+      "choices": [
+        {
+          "label": "步行虽简单，仍能改善健康",
+          "ok": true,
+          "why": "but 后面才是要留下的判断。"
+        },
+        {
+          "label": "步行太简单，所以没有健康价值",
+          "ok": false,
+          "why": "后半句说的是仍能改善健康。"
+        },
+        {
+          "label": "只有高强度运动才对健康有用",
+          "ok": false,
+          "why": "句中没有这个对比。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "A short walk after lunch is easy, but it can still help people stay healthy.",
+          "prompt": "转折后强调什么？",
+          "choices": [
+            {
+              "label": "短时步行仍有助于保持健康",
+              "ok": true,
+              "why": "but 后才是重点。"
+            },
+            {
+              "label": "午饭后不该走路",
+              "ok": false,
+              "why": "与句意相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_hours",
+      "kind": "translation",
+      "text": "The library will remain open after five, but you still need a card to enter.",
+      "prompt": "哪项翻译保留了时间和条件？",
+      "error_tag": "英译汉",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 35428 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/35428",
+          "note": "依据该 remain + 时间边界的真实句改写为开放时间场景，保留 remain 和时间限制。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "图书馆五点以后仍然开放，但进去仍需要证件。",
+          "ok": true,
+          "why": "remain open、after five 和 still need a card 都在。"
+        },
+        {
+          "label": "图书馆五点前关门，所以不必带证件。",
+          "ok": false,
+          "why": "把 remain open after five 说反了。"
+        },
+        {
+          "label": "五点以后证件会自动送到图书馆。",
+          "ok": false,
+          "why": "主语和动作都被改写。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The shop will remain open after lunch, but you still need to bring cash.",
+          "prompt": "哪项理解正确？",
+          "choices": [
+            {
+              "label": "午饭后商店仍然开门，但你仍需要带现金",
+              "ok": true,
+              "why": "remain open、after lunch 和 still need 都保留了。"
+            },
+            {
+              "label": "午饭后商店关门，所以不必带现金",
+              "ok": false,
+              "why": "与原文相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.short_text",
+      "kind": "main_idea",
+      "text": "Jonathan: Hey, Pete! Who’s your friend? Pete: She is Anna. She is new to D.C. Jonathan: Where are you from? Anna: I am from a small town. Jonathan: Well, welcome to D.C.",
+      "prompt": "这段真实会话主要完成了什么交际任务？",
+      "error_tag": "短文主旨",
+      "source_refs": [
+        {
+          "source_id": "voa-lle1-lesson2",
+          "relation": "quoted",
+          "locator": "Conversation transcript",
+          "locator_url": "https://learningenglish.voanews.com/a/lets-learn-english-lesson-2-hello/3113733.html",
+          "note": "题面和变式均为 Lesson 2 会话的短节选；题目与干扰项由项目转成单人判断。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "介绍新朋友，并询问她来自哪里",
+          "ok": true,
+          "why": "Pete 介绍 Anna，Jonathan 随后询问她来自哪里。"
+        },
+        {
+          "label": "讨论图书馆延长开放时间",
+          "ok": false,
+          "why": "会话没有图书馆或开放时间。"
+        },
+        {
+          "label": "安排一项职业培训",
+          "ok": false,
+          "why": "会话是初次见面，不是工作安排。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Jonathan: I am Jonathan. I am in apartment B4. Anna: I am in apartment C2. Marsha is my roommate.",
+          "prompt": "这段变式交换了哪两类信息？",
+          "choices": [
+            {
+              "label": "姓名和住所信息",
+              "ok": true,
+              "why": "两人说了姓名、房间号和室友。"
+            },
+            {
+              "label": "价格和付款方式",
+              "ok": false,
+              "why": "原文没有价格或付款。"
+            }
+          ]
+        }
+      ],
+      "media": [
+        {
+          "kind": "audio",
+          "title": "Lesson 2 会话原声（48 秒）",
+          "url": "https://voa-audio.voanews.eu/vle/2016/02/10/56246d7b-5fa4-42d2-90b0-d403e6b46227_hq.mp3?download=1",
+          "source_id": "voa-lle1-lesson2"
+        },
+        {
+          "kind": "video",
+          "title": "Lesson 2 原教材视频（240p）",
+          "url": "https://voa-video.voanews.eu/pangeavideo/2021/02/4/42/4298a2ba-d665-4b1c-aaa1-502bbcb9b88d_240p.mp4?download=1",
+          "source_id": "voa-lle1-lesson2"
+        }
+      ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "ngsl-1.2",
+      "relation": "selection_basis",
+      "note": "句子里的实词优先用初级高频词。"
+    },
+    {
+      "source_id": "cefr-companion",
+      "relation": "selection_basis",
+      "note": "练条件、因果、转折、指代这些具体关系。"
+    },
+    {
+      "source_id": "voa-learning-english",
+      "relation": "selection_basis",
+      "note": "生活、学习场景的说法方式参考 VOA Learning English 的公开教学语体。"
+    },
+    {
+      "source_id": "netem-vocabulary",
+      "relation": "selection_basis",
+      "note": "句中实词对照考研词频。"
     }
   ]
 }

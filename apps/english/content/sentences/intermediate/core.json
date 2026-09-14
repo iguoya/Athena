@@ -6,7 +6,11 @@
       "id": "en.sentence.s1",
       "kind": "clause_split",
       "text": "Critics attribute the decline to weaker demand rather than to new technology, which they maintain has been overstated.",
-      "vocab": ["en.vocab.attribute", "en.vocab.decline", "en.vocab.maintain"],
+      "vocab": [
+        "en.vocab.attribute",
+        "en.vocab.decline",
+        "en.vocab.maintain"
+      ],
       "prompt": "which 指的是什么？主句在主张什么？",
       "choices": [
         {
@@ -30,13 +34,43 @@
           "why": "这类 which 几乎总有名词先行词。"
         }
       ],
-      "variants": [{ "text": "The committee preferred local training to an imported system, which it considered too expensive.", "prompt": "which 指什么？主句选择了什么？", "choices": [{ "label": "which 指 imported system；主句选择本地培训", "ok": true, "why": "最近的先行词是 system，prefer A to B 选择 A。" }, { "label": "which 指 local training；主句选择进口系统", "ok": false, "why": "指代和 prefer 方向都反了。" }] }]
+      "variants": [
+        {
+          "text": "The committee preferred local training to an imported system, which it considered too expensive.",
+          "prompt": "which 指什么？主句选择了什么？",
+          "choices": [
+            {
+              "label": "which 指 imported system；主句选择本地培训",
+              "ok": true,
+              "why": "最近的先行词是 system，prefer A to B 选择 A。"
+            },
+            {
+              "label": "which 指 local training；主句选择进口系统",
+              "ok": false,
+              "why": "指代和 prefer 方向都反了。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 5744643 · contributor zumley",
+          "locator_url": "https://tatoeba.org/en/sentences/show/5744643",
+          "note": "依据该 attribute...to... 真实句作受控扩写，加入 decline 和 maintain 形成一层归因判断。"
+        }
+      ]
     },
     {
       "id": "en.sentence.s2",
       "kind": "clause_split",
       "text": "Many graduates still lack access to reliable career advice, even though universities maintain that such support is already substantial.",
-      "vocab": ["en.vocab.access", "en.vocab.maintain", "en.vocab.substantial"],
+      "vocab": [
+        "en.vocab.access",
+        "en.vocab.maintain",
+        "en.vocab.substantial"
+      ],
       "prompt": "even though 前后两层各说什么？",
       "choices": [
         {
@@ -60,13 +94,41 @@
           "why": "support is substantial = 支持的分量够。"
         }
       ],
-      "variants": [{ "text": "The service remains difficult to use, although its designers maintain that the instructions are clear.", "prompt": "although 前后各说什么？", "choices": [{ "label": "服务仍难用；设计者却坚持说明很清楚", "ok": true, "why": "主句与让步从句立场相反。" }, { "label": "设计者承认说明不清楚", "ok": false, "why": "maintain that the instructions are clear 是坚持认为清楚。" }] }]
+      "variants": [
+        {
+          "text": "The service remains difficult to use, although its designers maintain that the instructions are clear.",
+          "prompt": "although 前后各说什么？",
+          "choices": [
+            {
+              "label": "服务仍难用；设计者却坚持说明很清楚",
+              "ok": true,
+              "why": "主句与让步从句立场相反。"
+            },
+            {
+              "label": "设计者承认说明不清楚",
+              "ok": false,
+              "why": "maintain that the instructions are clear 是坚持认为清楚。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11190597 · contributor Amastan",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11190597",
+          "note": "依据该 access to education 的真实句扩写为职业建议语境，并加入让步信息。"
+        }
+      ]
     },
     {
       "id": "en.sentence.s3",
       "kind": "reference",
       "text": "A different picture emerges when we look at older workers: they are less likely to change jobs, even when pay is low.",
-      "vocab": ["en.vocab.emerge"],
+      "vocab": [
+        "en.vocab.emerge"
+      ],
       "prompt": "they 指谁？冒号后面和前面是什么关系？",
       "choices": [
         {
@@ -90,13 +152,42 @@
           "why": "when we look at older workers 已经限定对象。"
         }
       ],
-      "variants": [{ "text": "A new pattern appears among younger users: they are more willing to share tools.", "prompt": "they 指谁？冒号后作用是什么？", "choices": [{ "label": "younger users；具体展开新趋势", "ok": true, "why": "复数指代和冒号展开都清楚。" }, { "label": "tools；否定前面的趋势", "ok": false, "why": "tools 不能 be willing，冒号也不是否定。" }] }]
+      "variants": [
+        {
+          "text": "A new pattern appears among younger users: they are more willing to share tools.",
+          "prompt": "they 指谁？冒号后作用是什么？",
+          "choices": [
+            {
+              "label": "younger users；具体展开新趋势",
+              "ok": true,
+              "why": "复数指代和冒号展开都清楚。"
+            },
+            {
+              "label": "tools；否定前面的趋势",
+              "ok": false,
+              "why": "tools 不能 be willing，冒号也不是否定。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 309211 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/309211",
+          "note": "依据该 emerge 的真实时间从句改写为比较不同年龄劳动者的观察。"
+        }
+      ]
     },
     {
       "id": "en.sentence.s4",
       "kind": "meaning",
       "text": "Age remains a significant factor in who gets promoted; nevertheless, training can still open doors that seniority alone cannot.",
-      "vocab": ["en.vocab.significant", "en.vocab.nevertheless"],
+      "vocab": [
+        "en.vocab.significant",
+        "en.vocab.nevertheless"
+      ],
       "prompt": "用自己的话，这句在主张什么？",
       "choices": [
         {
@@ -120,7 +211,33 @@
           "why": "who gets promoted 是职场晋升，不是医疗。"
         }
       ],
-      "variants": [{ "text": "Cost remains a serious concern; nevertheless, the long-term benefits may justify the investment.", "prompt": "这句最终主张什么？", "choices": [{ "label": "成本值得担心，但长期收益可能使投入合理", "ok": true, "why": "nevertheless 后是主要推进。" }, { "label": "长期收益已经被成本完全否定", "ok": false, "why": "语义相反。" }] }]
+      "variants": [
+        {
+          "text": "Cost remains a serious concern; nevertheless, the long-term benefits may justify the investment.",
+          "prompt": "这句最终主张什么？",
+          "choices": [
+            {
+              "label": "成本值得担心，但长期收益可能使投入合理",
+              "ok": true,
+              "why": "nevertheless 后是主要推进。"
+            },
+            {
+              "label": "长期收益已经被成本完全否定",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11690915 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11690915",
+          "note": "依据该 nevertheless 真实句扩写为训练与晋升的对照判断。"
+        }
+      ]
     },
     {
       "id": "en.intermediate.sentence.translation",
@@ -129,24 +246,281 @@
       "prompt": "哪项翻译准确保留了 not only...but also...？",
       "error_tag": "英译汉",
       "choices": [
-        { "label": "当人们不仅明白改变会带来什么，也明白自己需要为此付出什么时，他们更可能接受改变。", "ok": true, "why": "条件、并列信息和可能性都保留了。" },
-        { "label": "人们只要知道改变的结果，就一定会接受它。", "ok": false, "why": "遗漏付出，也把 more likely 绝对化。" },
-        { "label": "改变要求人们接受他们不理解的结果。", "ok": false, "why": "句法关系被颠倒。" }
+        {
+          "label": "当人们不仅明白改变会带来什么，也明白自己需要为此付出什么时，他们更可能接受改变。",
+          "ok": true,
+          "why": "条件、并列信息和可能性都保留了。"
+        },
+        {
+          "label": "人们只要知道改变的结果，就一定会接受它。",
+          "ok": false,
+          "why": "遗漏付出，也把 more likely 绝对化。"
+        },
+        {
+          "label": "改变要求人们接受他们不理解的结果。",
+          "ok": false,
+          "why": "句法关系被颠倒。"
+        }
       ],
-      "variants": [{ "text": "The plan matters not only because it saves money but also because it improves access.", "prompt": "哪项理解正确？", "choices": [{ "label": "计划既省钱，也改善获得服务的机会", "ok": true, "why": "两个 because 并列给理由。" }, { "label": "计划改善机会，却不省钱", "ok": false, "why": "原文两个理由都成立。" }] }]
+      "variants": [
+        {
+          "text": "The plan matters not only because it saves money but also because it improves access.",
+          "prompt": "哪项理解正确？",
+          "choices": [
+            {
+              "label": "计划既省钱，也改善获得服务的机会",
+              "ok": true,
+              "why": "两个 because 并列给理由。"
+            },
+            {
+              "label": "计划改善机会，却不省钱",
+              "ok": false,
+              "why": "原文两个理由都成立。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11090825 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11090825",
+          "note": "依据该 not only...but also... 真实句扩写为变化接受条件，保留并列焦点。"
+        }
+      ]
+    },
+    {
+      "id": "en.intermediate.sentence.voa_career",
+      "kind": "listening",
+      "text": "A career is what people do over a longer period of time. We use the word career to talk about a series of jobs over a person's lifetime.",
+      "prompt": "按这段真实教材，career 与单独一份 job 的关键区别是什么？",
+      "error_tag": "概念边界",
+      "source_refs": [
+        {
+          "source_id": "voa-job-and-career",
+          "relation": "quoted",
+          "note": "题面节选自 Jill Robbins 编写的 Ask a Teacher 教材；题目和变式由本项目编写。"
+        }
+      ],
+      "media": [
+        {
+          "kind": "audio",
+          "title": "Job and Career 原声（3 分 52 秒）",
+          "url": "https://voa-audio.voanews.eu/vle/2020/11/03/6c097e95-6910-46a3-aa91-22e53a821887.mp3?download=1",
+          "source_id": "voa-job-and-career"
+        }
+      ],
+      "choices": [
+        {
+          "label": "career 是较长时期内的一系列工作经历和发展路径",
+          "ok": true,
+          "why": "原文用 longer period 和 a series of jobs 界定 career。"
+        },
+        {
+          "label": "career 只指三周以内的临时工作",
+          "ok": false,
+          "why": "这与 longer period of time 相反。"
+        },
+        {
+          "label": "career 一定要求职业资格证书",
+          "ok": false,
+          "why": "需要专门训练或资质更接近 profession 的边界。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "A job may last only a few months, while a career describes the path someone follows through working life.",
+          "prompt": "这段变式如何区分 job 与 career？",
+          "choices": [
+            {
+              "label": "job 可以短期，career 强调整体职业路径",
+              "ok": true,
+              "why": "对比点是单份工作与长期路径。"
+            },
+            {
+              "label": "两者都只能指无报酬工作",
+              "ok": false,
+              "why": "句中没有这个限制。"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "en.intermediate.sentence.short_text",
       "kind": "main_idea",
-      "text": "A neighbourhood café began offering a quiet table for people who needed to complete short online forms. The table brought in few direct sales. It did, however, make older residents more willing to visit, and many later returned with friends. A service can create value in ways that are not immediately visible.",
-      "prompt": "最后一句概括了什么？",
+      "text": "A “career” is what people do over a longer period of time. We use the word “career” to talk about a series of jobs over a person’s lifetime. Some people plan a career while others simply try for better jobs.",
+      "prompt": "最后一句在前两句定义之后补充了什么？",
       "error_tag": "篇章主旨",
       "choices": [
-        { "label": "一项服务的价值可能通过后续信任和回访体现", "ok": true, "why": "安静桌本身销售少，却带来访问意愿和后续顾客。" },
-        { "label": "咖啡馆应该停止帮助老年人", "ok": false, "why": "短文展示的是积极间接效果。" },
-        { "label": "线上表格是咖啡馆唯一收入来源", "ok": false, "why": "原文说 direct sales 很少。" }
+        {
+          "label": "人们形成职业路径的方式并不相同",
+          "ok": true,
+          "why": "有人规划 career，有人只是尝试找到更好的 jobs。"
+        },
+        {
+          "label": "所有人都会提前规划一生的职业",
+          "ok": false,
+          "why": "原文用 some...while others... 明确区分两种情况。"
+        },
+        {
+          "label": "career 只表示一份短期工作",
+          "ok": false,
+          "why": "前文明确说 over a longer period 和 a series of jobs。"
+        }
       ],
-      "variants": [{ "text": "A free repair lesson earned no fees, but customers who attended became more confident buying tools from the shop.", "prompt": "这句话说明什么？", "choices": [{ "label": "免费服务可能带来间接的长期价值", "ok": true, "why": "无直接收费，却增强购买信心。" }, { "label": "免费服务一定让商店亏损", "ok": false, "why": "后半句给出潜在收益。" }] }]
+      "variants": [
+        {
+          "text": "A “profession” is a kind of occupation that requires special training, knowledge or skills.",
+          "prompt": "这句把 profession 和 occupation 建立了什么关系？",
+          "choices": [
+            {
+              "label": "profession 是需要专门训练、知识或技能的一类 occupation",
+              "ok": true,
+              "why": "a kind of 给出从属关系，that 从句给出限制。"
+            },
+            {
+              "label": "二者毫无关系",
+              "ok": false,
+              "why": "原句明确说 profession is a kind of occupation。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-job-and-career",
+          "relation": "quoted",
+          "locator": "Career and Profession sections",
+          "locator_url": "https://learningenglish.voanews.com/a/job-and-career/5647041.html",
+          "note": "题面与变式均为 Jill Robbins 原文的短节选；题目把定义与对照转成阅读判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.intermediate.sentence.translation_indicate",
+      "kind": "translation",
+      "text": "The study indicates a connection between poverty and crime, but it does not imply that money does not matter.",
+      "prompt": "哪项翻译同时保留了 indicate 和 does not imply？",
+      "error_tag": "英译汉",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11179140 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11179140",
+          "note": "依据该 indicate 推断句扩写，并增加 does not imply 的证据边界。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "研究表明贫穷和犯罪有关联，但这并不意味着钱不重要。",
+          "ok": true,
+          "why": "indicate 是显示关联，does not imply 否定那层暗含结论。"
+        },
+        {
+          "label": "研究证明贫穷就是犯罪，所以钱已经不重要。",
+          "ok": false,
+          "why": "把 connection 绝对化，也把否定说反了。"
+        },
+        {
+          "label": "研究否认贫穷和犯罪有关，并要求不再讨论钱。",
+          "ok": false,
+          "why": "主句方向和后半句都被改写。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The numbers indicate that evening hours are popular; they do not imply that daytime hours should close.",
+          "prompt": "哪项理解正确？",
+          "choices": [
+            {
+              "label": "数据表明晚间受欢迎，但并不意味着白天应当关闭",
+              "ok": true,
+              "why": "indicate 与 do not imply 分层保留。"
+            },
+            {
+              "label": "晚间受欢迎，所以白天必须关闭",
+              "ok": false,
+              "why": "把不意味着误成必须。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.intermediate.sentence.translation_contribute",
+      "kind": "translation",
+      "text": "Clear goals contribute to better writing, even when the first draft still needs substantial work.",
+      "prompt": "哪项翻译保留了 contribute to 和让步？",
+      "error_tag": "英译汉",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 12596641 · contributor rul",
+          "locator_url": "https://tatoeba.org/en/sentences/show/12596641",
+          "note": "依据该 contribute to 真实搭配改写为写作训练语境。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "清楚的目标有助于写得更好，即使初稿仍需要大量修改。",
+          "ok": true,
+          "why": "contribute to 表促成，even when 是让步。"
+        },
+        {
+          "label": "清楚的目标可以代替写作，所以初稿不必再改。",
+          "ok": false,
+          "why": "contribute 不是代替；让步被取消。"
+        },
+        {
+          "label": "初稿已经很好，目标反而没有贡献。",
+          "ok": false,
+          "why": "与句意相反。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The three reports also contribute to the final decision, even though each one is incomplete.",
+          "prompt": "哪项理解正确？",
+          "choices": [
+            {
+              "label": "三份报告仍为最终决定出力，尽管各自并不完整",
+              "ok": true,
+              "why": "contribute 与 even though 都在。"
+            },
+            {
+              "label": "报告不完整，所以对决定没有贡献",
+              "ok": false,
+              "why": "让步没有取消前半句。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "awl",
+      "relation": "selection_basis",
+      "note": "从句和让步句里的抽象词按 AWL 优先级。"
+    },
+    {
+      "source_id": "cefr-companion",
+      "relation": "selection_basis",
+      "note": "一到两层从句、证据与段落主旨。"
+    },
+    {
+      "source_id": "voa-job-and-career",
+      "relation": "selection_basis",
+      "note": "职业词义和真实问答语境参考 VOA Ask a Teacher 原教材。"
+    },
+    {
+      "source_id": "netem-vocabulary",
+      "relation": "selection_basis",
+      "note": "抽象动词按考研词频挑选。"
     }
   ]
 }

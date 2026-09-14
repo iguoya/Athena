@@ -5,141 +5,931 @@
     {
       "id": "en.beginner.vocab.provide",
       "word": "provide",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "提供"
+        }
+      ],
       "sentence": "The library provides students with a quiet place to study.",
       "prompt": "provide students with a quiet place 在说什么？",
       "error_tag": "基础搭配",
       "choices": [
-        { "label": "为学生提供安静的学习地点", "ok": true, "why": "provide A with B 表示给 A 提供 B。" },
-        { "label": "要求学生保持安静", "ok": false, "why": "句中没有 require；provide 表示提供。" },
-        { "label": "阻止学生进入图书馆", "ok": false, "why": "句意与 provides 相反。" }
+        {
+          "label": "为学生提供安静的学习地点",
+          "ok": true,
+          "why": "provide A with B 表示给 A 提供 B。"
+        },
+        {
+          "label": "要求学生保持安静",
+          "ok": false,
+          "why": "句中没有 require；provide 表示提供。"
+        },
+        {
+          "label": "阻止学生进入图书馆",
+          "ok": false,
+          "why": "句意与 provides 相反。"
+        }
       ],
       "variants": [
         {
           "sentence": "The course provides beginners with several useful examples.",
           "prompt": "这句话中被提供的内容是什么？",
           "choices": [
-            { "label": "several useful examples", "ok": true, "why": "provide beginners with 后面的内容就是所提供的东西。" },
-            { "label": "beginners", "ok": false, "why": "beginners 是接受者。" }
+            {
+              "label": "several useful examples",
+              "ok": true,
+              "why": "provide beginners with 后面的内容就是所提供的东西。"
+            },
+            {
+              "label": "beginners",
+              "ok": false,
+              "why": "beginners 是接受者。"
+            }
           ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 49037 · contributor zumley",
+          "locator_url": "https://tatoeba.org/en/sentences/show/49037",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
         }
       ]
     },
     {
       "id": "en.beginner.vocab.affect",
       "word": "affect",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "影响"
+        }
+      ],
       "sentence": "Sleep can affect how well students remember new words.",
       "prompt": "affect 在这里表示什么？",
       "error_tag": "词义辨析",
       "choices": [
-        { "label": "影响", "ok": true, "why": "睡眠会影响学生记忆新词的效果。" },
-        { "label": "证明", "ok": false, "why": "prove 才是证明。" },
-        { "label": "避免", "ok": false, "why": "avoid 才是避免。" }
+        {
+          "label": "影响",
+          "ok": true,
+          "why": "睡眠会影响学生记忆新词的效果。"
+        },
+        {
+          "label": "改善",
+          "ok": false,
+          "why": "improve 才是改善；affect 本身不保证变好。"
+        },
+        {
+          "label": "决定",
+          "ok": false,
+          "why": "decide / determine 才是决定；这里只是产生影响。"
+        }
       ],
-      "variants": [{ "sentence": "Road noise can affect how well people sleep.", "prompt": "affect 在这里表示什么？", "choices": [{ "label": "影响睡眠效果", "ok": true, "why": "表示对睡眠产生影响。" }, { "label": "保证睡得更好", "ok": false, "why": "语义相反。" }] }]
+      "variants": [
+        {
+          "sentence": "Road noise can affect how well people sleep.",
+          "prompt": "affect 在这里表示什么？",
+          "choices": [
+            {
+              "label": "影响睡眠效果",
+              "ok": true,
+              "why": "表示对睡眠产生影响。"
+            },
+            {
+              "label": "保证睡得更好",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 680097 · contributor Source_VOA",
+          "locator_url": "https://tatoeba.org/en/sentences/show/680097",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.result",
       "word": "result",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "导致（result in）"
+        }
+      ],
       "sentence": "Regular practice often results in better performance.",
       "prompt": "result in 在这句话中表示什么？",
       "error_tag": "基础搭配",
       "choices": [
-        { "label": "导致", "ok": true, "why": "result in 后接结果。" },
-        { "label": "起因于", "ok": false, "why": "result from 才表示起因于。" },
-        { "label": "反对", "ok": false, "why": "这里表达因果，不是立场。" }
+        {
+          "label": "导致",
+          "ok": true,
+          "why": "result in 后接结果。"
+        },
+        {
+          "label": "起因于",
+          "ok": false,
+          "why": "result from 才表示起因于。"
+        },
+        {
+          "label": "反对",
+          "ok": false,
+          "why": "这里表达因果，不是立场。"
+        }
       ],
-      "variants": [{ "sentence": "Missing the final bus resulted in an expensive taxi ride.", "prompt": "resulted in 表示什么？", "choices": [{ "label": "导致后来不得不坐昂贵的出租车", "ok": true, "why": "后面是结果。" }, { "label": "起因于出租车太贵", "ok": false, "why": "因果方向反了。" }] }]
+      "variants": [
+        {
+          "sentence": "Missing the final bus resulted in an expensive taxi ride.",
+          "prompt": "resulted in 表示什么？",
+          "choices": [
+            {
+              "label": "导致后来不得不坐昂贵的出租车",
+              "ok": true,
+              "why": "后面是结果。"
+            },
+            {
+              "label": "起因于出租车太贵",
+              "ok": false,
+              "why": "因果方向反了。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 8517184 · contributor ET",
+          "locator_url": "https://tatoeba.org/en/sentences/show/8517184",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.opportunity",
       "word": "opportunity",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "机会"
+        }
+      ],
       "sentence": "Online courses give workers an opportunity to learn at home.",
       "prompt": "an opportunity to learn 指什么？",
       "error_tag": "词义辨析",
       "choices": [
-        { "label": "学习的机会", "ok": true, "why": "opportunity to do 表示做某事的机会。" },
-        { "label": "学习的义务", "ok": false, "why": "obligation 才是义务。" },
-        { "label": "学习的结果", "ok": false, "why": "result 才是结果。" }
+        {
+          "label": "学习的机会",
+          "ok": true,
+          "why": "opportunity to do 表示做某事的机会。"
+        },
+        {
+          "label": "学习的义务",
+          "ok": false,
+          "why": "obligation 才是义务。"
+        },
+        {
+          "label": "学习的结果",
+          "ok": false,
+          "why": "result 才是结果。"
+        }
       ],
-      "variants": [{ "sentence": "The trip gave us an opportunity to practise English.", "prompt": "opportunity to practise 指什么？", "choices": [{ "label": "练习英语的机会", "ok": true, "why": "opportunity to do 是做某事的机会。" }, { "label": "练习英语的命令", "ok": false, "why": "不是命令。" }] }]
+      "variants": [
+        {
+          "sentence": "The trip gave us an opportunity to practise English.",
+          "prompt": "opportunity to practise 指什么？",
+          "choices": [
+            {
+              "label": "练习英语的机会",
+              "ok": true,
+              "why": "opportunity to do 是做某事的机会。"
+            },
+            {
+              "label": "练习英语的命令",
+              "ok": false,
+              "why": "不是命令。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 395263 · contributor CM",
+          "locator_url": "https://tatoeba.org/en/sentences/show/395263",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.improve",
       "word": "improve",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "改善；提高"
+        }
+      ],
       "sentence": "A short walk can improve your mood after a busy day.",
       "prompt": "improve your mood 表示什么？",
       "error_tag": "高频词义",
       "choices": [
-        { "label": "改善心情", "ok": true, "why": "improve 表示使某事变得更好。" },
-        { "label": "隐藏心情", "ok": false, "why": "hide 才是隐藏。" },
-        { "label": "解释心情", "ok": false, "why": "explain 才是解释。" }
+        {
+          "label": "改善心情",
+          "ok": true,
+          "why": "improve 表示使某事变得更好。"
+        },
+        {
+          "label": "保持心情不变",
+          "ok": false,
+          "why": "maintain 才是保持；improve 强调变好。"
+        },
+        {
+          "label": "让心情更糟",
+          "ok": false,
+          "why": "语义相反。"
+        }
       ],
-      "variants": [{ "sentence": "Regular feedback helps people improve their work.", "prompt": "improve their work 指什么？", "choices": [{ "label": "把工作做得更好", "ok": true, "why": "仍是改善、提高。" }, { "label": "停止工作", "ok": false, "why": "improve 不表示停止。" }] }]
+      "variants": [
+        {
+          "sentence": "Regular feedback helps people improve their work.",
+          "prompt": "improve their work 指什么？",
+          "choices": [
+            {
+              "label": "把工作做得更好",
+              "ok": true,
+              "why": "仍是改善、提高。"
+            },
+            {
+              "label": "停止工作",
+              "ok": false,
+              "why": "improve 不表示停止。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 10228283 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/10228283",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.support",
       "word": "support",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "支持；帮助"
+        }
+      ],
       "sentence": "The guide supports new users during their first week.",
       "prompt": "supports new users 更接近哪个意思？",
       "error_tag": "高频词义",
       "choices": [
-        { "label": "帮助新用户", "ok": true, "why": "support 在这里表示提供帮助。" },
-        { "label": "测试新用户", "ok": false, "why": "test 才是测试。" },
-        { "label": "替换新用户", "ok": false, "why": "replace 才是替换。" }
+        {
+          "label": "帮助新用户",
+          "ok": true,
+          "why": "support 在这里表示提供帮助。"
+        },
+        {
+          "label": "测试新用户",
+          "ok": false,
+          "why": "test 才是测试。"
+        },
+        {
+          "label": "替换新用户",
+          "ok": false,
+          "why": "replace 才是替换。"
+        }
       ],
-      "variants": [{ "sentence": "Good public transport supports local businesses.", "prompt": "support 在这里表示什么？", "choices": [{ "label": "有助于当地商家", "ok": true, "why": "交通为商家提供有利条件。" }, { "label": "反对当地商家", "ok": false, "why": "oppose 才是反对。" }] }]
+      "variants": [
+        {
+          "sentence": "Good public transport supports local businesses.",
+          "prompt": "support 在这里表示什么？",
+          "choices": [
+            {
+              "label": "有助于当地商家",
+              "ok": true,
+              "why": "交通为商家提供有利条件。"
+            },
+            {
+              "label": "反对当地商家",
+              "ok": false,
+              "why": "oppose 才是反对。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 7800722 · contributor sharris123",
+          "locator_url": "https://tatoeba.org/en/sentences/show/7800722",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.require",
       "word": "require",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "需要；要求"
+        }
+      ],
       "sentence": "This job requires basic computer skills.",
       "prompt": "requires basic computer skills 表示什么？",
       "error_tag": "基础搭配",
       "choices": [
-        { "label": "这份工作需要基本电脑技能", "ok": true, "why": "require 表示需要、要求具备。" },
-        { "label": "这份工作教授电脑技能", "ok": false, "why": "teach 才是教授。" },
-        { "label": "这份工作禁止使用电脑", "ok": false, "why": "语义相反。" }
+        {
+          "label": "这份工作需要基本电脑技能",
+          "ok": true,
+          "why": "require 表示需要、要求具备。"
+        },
+        {
+          "label": "这份工作教授电脑技能",
+          "ok": false,
+          "why": "teach 才是教授。"
+        },
+        {
+          "label": "这份工作禁止使用电脑",
+          "ok": false,
+          "why": "语义相反。"
+        }
       ],
-      "variants": [{ "sentence": "The form requires your name and phone number.", "prompt": "requires 在这里表示什么？", "choices": [{ "label": "表格要求填写这些信息", "ok": true, "why": "required information 是必须提供的信息。" }, { "label": "表格删除这些信息", "ok": false, "why": "remove 才是删除。" }] }]
+      "variants": [
+        {
+          "sentence": "The form requires your name and phone number.",
+          "prompt": "requires 在这里表示什么？",
+          "choices": [
+            {
+              "label": "表格要求填写这些信息",
+              "ok": true,
+              "why": "required information 是必须提供的信息。"
+            },
+            {
+              "label": "表格删除这些信息",
+              "ok": false,
+              "why": "remove 才是删除。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 13940843 · contributor Zucker_t",
+          "locator_url": "https://tatoeba.org/en/sentences/show/13940843",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.allow",
       "word": "allow",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "允许"
+        }
+      ],
       "sentence": "The new timetable allows students to leave earlier on Friday.",
       "prompt": "allows students to leave earlier 表示什么？",
       "error_tag": "基础搭配",
       "choices": [
-        { "label": "允许学生更早离开", "ok": true, "why": "allow someone to do 是允许某人做某事。" },
-        { "label": "迫使学生更早离开", "ok": false, "why": "force 才是迫使。" },
-        { "label": "建议学生迟到", "ok": false, "why": "句中没有 suggest 或 arrive late。" }
+        {
+          "label": "允许学生更早离开",
+          "ok": true,
+          "why": "allow someone to do 是允许某人做某事。"
+        },
+        {
+          "label": "迫使学生更早离开",
+          "ok": false,
+          "why": "force 才是迫使。"
+        },
+        {
+          "label": "建议学生迟到",
+          "ok": false,
+          "why": "句中没有 suggest 或 arrive late。"
+        }
       ],
-      "variants": [{ "sentence": "Online booking allows customers to choose a time.", "prompt": "allow 的作用是什么？", "choices": [{ "label": "让顾客能够选择时间", "ok": true, "why": "表示给予可能或许可。" }, { "label": "替顾客决定时间", "ok": false, "why": "动作主体仍是 customers。" }] }]
+      "variants": [
+        {
+          "sentence": "Online booking allows customers to choose a time.",
+          "prompt": "allow 的作用是什么？",
+          "choices": [
+            {
+              "label": "让顾客能够选择时间",
+              "ok": true,
+              "why": "表示给予可能或许可。"
+            },
+            {
+              "label": "替顾客决定时间",
+              "ok": false,
+              "why": "动作主体仍是 customers。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 2129925 · contributor AlanF_US",
+          "locator_url": "https://tatoeba.org/en/sentences/show/2129925",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.available",
       "word": "available",
+      "senses": [
+        {
+          "pos": "adj",
+          "gloss": "可获得的；有空的"
+        }
+      ],
       "sentence": "A doctor is available until six this evening.",
       "prompt": "is available until six 表示什么？",
       "error_tag": "高频词义",
       "choices": [
-        { "label": "医生六点前可以接诊", "ok": true, "why": "available 表示有空或可获得。" },
-        { "label": "医生六点前一定离职", "ok": false, "why": "available 不表示离职。" },
-        { "label": "医生六点前无法联系", "ok": false, "why": "语义相反。" }
+        {
+          "label": "医生六点前可以接诊",
+          "ok": true,
+          "why": "available 表示有空或可获得。"
+        },
+        {
+          "label": "医生六点前一定离职",
+          "ok": false,
+          "why": "available 不表示离职。"
+        },
+        {
+          "label": "医生六点前无法联系",
+          "ok": false,
+          "why": "语义相反。"
+        }
       ],
-      "variants": [{ "sentence": "The report is available online for free.", "prompt": "available online 表示什么？", "choices": [{ "label": "可以在网上获得", "ok": true, "why": "这里是可获取。" }, { "label": "只能在线购买", "ok": false, "why": "for free 说明无需购买。" }] }]
+      "variants": [
+        {
+          "sentence": "The report is available online for free.",
+          "prompt": "available online 表示什么？",
+          "choices": [
+            {
+              "label": "可以在网上获得",
+              "ok": true,
+              "why": "这里是可获取。"
+            },
+            {
+              "label": "只能在线购买",
+              "ok": false,
+              "why": "for free 说明无需购买。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 9090408 · contributor Amastan",
+          "locator_url": "https://tatoeba.org/en/sentences/show/9090408",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
     },
     {
       "id": "en.beginner.vocab.reduce",
       "word": "reduce",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "减少"
+        }
+      ],
       "sentence": "Turning off unused lights can reduce energy costs.",
       "prompt": "reduce energy costs 表示什么？",
       "error_tag": "高频词义",
       "choices": [
-        { "label": "降低能源费用", "ok": true, "why": "reduce 表示使数量减少。" },
-        { "label": "记录能源费用", "ok": false, "why": "record 才是记录。" },
-        { "label": "平均分配能源费用", "ok": false, "why": "句中没有分配。" }
+        {
+          "label": "降低能源费用",
+          "ok": true,
+          "why": "reduce 表示使数量减少。"
+        },
+        {
+          "label": "记录能源费用",
+          "ok": false,
+          "why": "record 才是记录。"
+        },
+        {
+          "label": "平均分配能源费用",
+          "ok": false,
+          "why": "句中没有分配。"
+        }
       ],
-      "variants": [{ "sentence": "A clear list reduces the chance of forgetting something.", "prompt": "reduces the chance 表示什么？", "choices": [{ "label": "降低发生的可能", "ok": true, "why": "reduce 仍表示减少。" }, { "label": "保证一定发生", "ok": false, "why": "语义相反。" }] }]
+      "variants": [
+        {
+          "sentence": "A clear list reduces the chance of forgetting something.",
+          "prompt": "reduces the chance 表示什么？",
+          "choices": [
+            {
+              "label": "降低发生的可能",
+              "ok": true,
+              "why": "reduce 仍表示减少。"
+            },
+            {
+              "label": "保证一定发生",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 63538 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/63538",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.consider",
+      "word": "consider",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "考虑；认为"
+        }
+      ],
+      "sentence": "We will have to consider your offer carefully before we reply.",
+      "prompt": "consider your offer 在这里表示什么？",
+      "error_tag": "基础搭配",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 13622335 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/13622335",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "仔细考虑对方的提议",
+          "ok": true,
+          "why": "consider 表示认真想过再决定。"
+        },
+        {
+          "label": "已经接受了提议",
+          "ok": false,
+          "why": "还没 reply，只是在考虑。"
+        },
+        {
+          "label": "拒绝考虑任何提议",
+          "ok": false,
+          "why": "与句意相反。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Many cities now consider walking a cheap way to stay healthy.",
+          "prompt": "consider walking 表示什么？",
+          "choices": [
+            {
+              "label": "把步行看作一种便宜的保健方式",
+              "ok": true,
+              "why": "consider A (to be) B 表示把 A 看作 B。"
+            },
+            {
+              "label": "禁止步行",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.include",
+      "word": "include",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "包括；包含"
+        }
+      ],
+      "sentence": "Does the price include postage?",
+      "prompt": "include postage 在问什么？",
+      "error_tag": "基础搭配",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 13452657 · contributor rul",
+          "locator_url": "https://tatoeba.org/en/sentences/show/13452657",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "这个价格是否包含邮费",
+          "ok": true,
+          "why": "include 表示把某项算进整体。"
+        },
+        {
+          "label": "邮费是否单独增加了",
+          "ok": false,
+          "why": "问的是包不包含，不是另加。"
+        },
+        {
+          "label": "价格是否已经付清",
+          "ok": false,
+          "why": "句中没有付清。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "His job includes looking after new students.",
+          "prompt": "includes 后面是什么关系？",
+          "choices": [
+            {
+              "label": "照顾新生是工作的一部分",
+              "ok": true,
+              "why": "include 列出职责范围。"
+            },
+            {
+              "label": "他不再照顾新生",
+              "ok": false,
+              "why": "与句意相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.offer",
+      "word": "offer",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "提供；提出"
+        }
+      ],
+      "sentence": "A number of groups offer their services free of charge.",
+      "prompt": "offer their services 表示什么？",
+      "error_tag": "基础搭配",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 3660193 · contributor Hybrid",
+          "locator_url": "https://tatoeba.org/en/sentences/show/3660193",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "若干团体免费提供服务",
+          "ok": true,
+          "why": "offer 表示主动提供。"
+        },
+        {
+          "label": "若干团体拒绝收费服务",
+          "ok": false,
+          "why": "free of charge 修饰的是提供方式。"
+        },
+        {
+          "label": "若干团体购买了服务",
+          "ok": false,
+          "why": "动作方向相反。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The school offered extra hours in the library.",
+          "prompt": "offered extra hours 表示什么？",
+          "choices": [
+            {
+              "label": "学校提供了额外的开放时间",
+              "ok": true,
+              "why": "offer 仍是提供。"
+            },
+            {
+              "label": "学校缩短了开放时间",
+              "ok": false,
+              "why": "extra 不是缩短。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.increase",
+      "word": "increase",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "增加；增长"
+        }
+      ],
+      "sentence": "The population increased dramatically in the first half of the century.",
+      "prompt": "increased dramatically 表示什么？",
+      "error_tag": "词义辨析",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 11889850 · contributor Amastan",
+          "locator_url": "https://tatoeba.org/en/sentences/show/11889850",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "人口大幅度增加",
+          "ok": true,
+          "why": "increase 表示数量变大。"
+        },
+        {
+          "label": "人口大幅度减少",
+          "ok": false,
+          "why": "那是 decrease / reduce。"
+        },
+        {
+          "label": "人口保持不变",
+          "ok": false,
+          "why": "dramatically 强调变化大。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Longer opening hours increased the number of evening readers.",
+          "prompt": "increased the number 表示什么？",
+          "choices": [
+            {
+              "label": "晚间读者变多了",
+              "ok": true,
+              "why": "increase 使数量上升。"
+            },
+            {
+              "label": "晚间读者被限制了",
+              "ok": false,
+              "why": "语义相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.remain",
+      "word": "remain",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "保持；仍然是"
+        }
+      ],
+      "sentence": "Please remain seated until all the lights are on.",
+      "prompt": "remain seated 要求什么？",
+      "error_tag": "词义辨析",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 35428 · contributor CK",
+          "locator_url": "https://tatoeba.org/en/sentences/show/35428",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "灯全亮之前请留在座位上",
+          "ok": true,
+          "why": "remain 表示继续处于某种状态。"
+        },
+        {
+          "label": "灯亮之后立刻离开座位",
+          "ok": false,
+          "why": "until 给出的是结束条件。"
+        },
+        {
+          "label": "请把座位搬走",
+          "ok": false,
+          "why": "seated 是坐着，不是搬座位。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "We remained friends after the project ended.",
+          "prompt": "remained friends 表示什么？",
+          "choices": [
+            {
+              "label": "项目结束后我们仍然是朋友",
+              "ok": true,
+              "why": "remain 表示状态延续。"
+            },
+            {
+              "label": "项目结束后我们不再来往",
+              "ok": false,
+              "why": "与句意相反。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.expect",
+      "word": "expect",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "预期；指望"
+        }
+      ],
+      "sentence": "I fully expect that the new hours will help evening students.",
+      "prompt": "fully expect 表示什么？",
+      "error_tag": "词义辨析",
+      "source_refs": [
+        {
+          "source_id": "tatoeba-sentences",
+          "relation": "adapted",
+          "locator": "Sentence 13867700 · contributor zogwarg",
+          "locator_url": "https://tatoeba.org/en/sentences/show/13867700",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "完全预计新时段会帮到晚间学生",
+          "ok": true,
+          "why": "expect 表示预料某事会发生。"
+        },
+        {
+          "label": "要求晚间学生延长开放时间",
+          "ok": false,
+          "why": "expect 不是命令对方。"
+        },
+        {
+          "label": "怀疑新时段毫无帮助",
+          "ok": false,
+          "why": "fully expect 方向相反。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Do not expect too much of a short walk.",
+          "prompt": "expect too much of 表示什么？",
+          "choices": [
+            {
+              "label": "不要对短时步行期望过高",
+              "ok": true,
+              "why": "expect too much of 是期望过高。"
+            },
+            {
+              "label": "短时步行一定无效",
+              "ok": false,
+              "why": "原句只是提醒不要期望过高。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "ngsl-1.2",
+      "relation": "selection_basis",
+      "note": "初级高频通用词按 NGSL 优先级挑选；义项和例句自行编写。"
+    },
+    {
+      "source_id": "cefr-companion",
+      "relation": "selection_basis",
+      "note": "控制在熟悉、具体的短语境里。"
+    },
+    {
+      "source_id": "netem-vocabulary",
+      "relation": "selection_basis",
+      "note": "增补词按考研试卷词频挑选。"
     }
   ]
 }

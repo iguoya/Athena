@@ -11,9 +11,29 @@
       "prompt": "Mia 提前坐公交的原因是什么？",
       "error_tag": "因果关系",
       "choices": [
-        { "label": "道路很拥堵", "ok": true, "why": "because 后给出原因。" },
-        { "label": "公交晚点了", "ok": false, "why": "句中没有说公交晚点。" },
-        { "label": "她不喜欢走路", "ok": false, "why": "句中没有这条信息。" }
+        {
+          "label": "道路很拥堵",
+          "ok": true,
+          "why": "because 后给出原因。"
+        },
+        {
+          "label": "公交晚点了",
+          "ok": false,
+          "why": "句中没有说公交晚点。"
+        },
+        {
+          "label": "她不喜欢走路",
+          "ok": false,
+          "why": "句中没有这条信息。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -23,9 +43,29 @@
       "prompt": "说话人最终更强调什么？",
       "error_tag": "转折关系",
       "choices": [
-        { "label": "房间虽小，但所需物品齐全", "ok": true, "why": "but 后是转折后的重点。" },
-        { "label": "房间太小，完全不能使用", "ok": false, "why": "后半句否定了这个判断。" },
-        { "label": "房间里的东西需要搬走", "ok": false, "why": "句中没有搬走的意思。" }
+        {
+          "label": "房间虽小，但所需物品齐全",
+          "ok": true,
+          "why": "but 后是转折后的重点。"
+        },
+        {
+          "label": "房间太小，完全不能使用",
+          "ok": false,
+          "why": "后半句否定了这个判断。"
+        },
+        {
+          "label": "房间里的东西需要搬走",
+          "ok": false,
+          "why": "句中没有搬走的意思。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -35,9 +75,29 @@
       "prompt": "it 指什么？",
       "error_tag": "代词指代",
       "choices": [
-        { "label": "the form", "ok": true, "why": "能被找到且最近的单数名词是 form。" },
-        { "label": "the printer", "ok": false, "why": "打印机是位置参照，不是被放置的东西。" },
-        { "label": "everyone", "ok": false, "why": "everyone 指人，不能由 it 指代。" }
+        {
+          "label": "the form",
+          "ok": true,
+          "why": "能被找到且最近的单数名词是 form。"
+        },
+        {
+          "label": "the printer",
+          "ok": false,
+          "why": "打印机是位置参照，不是被放置的东西。"
+        },
+        {
+          "label": "everyone",
+          "ok": false,
+          "why": "everyone 指人，不能由 it 指代。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -47,9 +107,29 @@
       "prompt": "哪项英译汉最准确、完整、自然？",
       "error_tag": "英译汉",
       "choices": [
-        { "label": "如果你需要帮助，请留言，我会给你回电话。", "ok": true, "why": "条件、两个动作和先后关系都保留了。" },
-        { "label": "你需要帮助，所以我已经给你打过电话。", "ok": false, "why": "把条件误成因果，也把将来误成过去。" },
-        { "label": "如果我需要帮助，你就给我留言。", "ok": false, "why": "人物关系颠倒。" }
+        {
+          "label": "如果你需要帮助，请留言，我会给你回电话。",
+          "ok": true,
+          "why": "条件、两个动作和先后关系都保留了。"
+        },
+        {
+          "label": "你需要帮助，所以我已经给你打过电话。",
+          "ok": false,
+          "why": "把条件误成因果，也把将来误成过去。"
+        },
+        {
+          "label": "如果我需要帮助，你就给我留言。",
+          "ok": false,
+          "why": "人物关系颠倒。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -59,10 +139,47 @@
       "prompt": "这段短文主要说明什么？",
       "error_tag": "短文主旨",
       "choices": [
-        { "label": "周五延长营业时间给顾客和店主带来了便利", "ok": true, "why": "三句围绕延长营业及其积极结果展开。" },
-        { "label": "市场准备永久关闭", "ok": false, "why": "原文说延长营业，不是关闭。" },
-        { "label": "店主不允许工人下班后购物", "ok": false, "why": "语义与原文相反。" }
+        {
+          "label": "周五延长营业时间给顾客和店主带来了便利",
+          "ok": true,
+          "why": "三句围绕延长营业及其积极结果展开。"
+        },
+        {
+          "label": "市场准备永久关闭",
+          "ok": false,
+          "why": "原文说延长营业，不是关闭。"
+        },
+        {
+          "label": "店主不允许工人下班后购物",
+          "ok": false,
+          "why": "语义与原文相反。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "ngsl-1.2",
+      "relation": "selection_basis",
+      "note": "平行句仍用初级高频词。"
+    },
+    {
+      "source_id": "cefr-companion",
+      "relation": "selection_basis",
+      "note": "考核因果、转折、指代，不复用练习原句。"
+    },
+    {
+      "source_id": "yz-english-2-outline",
+      "relation": "exam_alignment",
+      "note": "逐级对齐英语二阅读中的主旨、细节、逻辑、推断和英译汉。"
     }
   ]
 }

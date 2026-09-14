@@ -10,9 +10,29 @@
       "prompt": "哪一句结构完整，适合作为段落中心句？",
       "error_tag": "完整句",
       "choices": [
-        { "label": "A quiet place helps me study more effectively.", "ok": true, "why": "句子有明确主语和谓语，意思完整。" },
-        { "label": "Because a quiet place near my home.", "ok": false, "why": "because 引出的从句没有主句。" },
-        { "label": "Studying more effectively in the evening.", "ok": false, "why": "只有动名词短语，没有限定谓语。" }
+        {
+          "label": "A quiet place helps me study more effectively.",
+          "ok": true,
+          "why": "句子有明确主语和谓语，意思完整。"
+        },
+        {
+          "label": "Because a quiet place near my home.",
+          "ok": false,
+          "why": "because 引出的从句没有主句。"
+        },
+        {
+          "label": "Studying more effectively in the evening.",
+          "ok": false,
+          "why": "只有动名词短语，没有限定谓语。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -22,9 +42,29 @@
       "prompt": "哪一句最适合作为具体理由？",
       "error_tag": "理由展开",
       "choices": [
-        { "label": "This saves time because I do not need to look for things in the morning.", "ok": true, "why": "直接解释前一行为带来的好处。" },
-        { "label": "Many bags are made in different colours.", "ok": false, "why": "谈颜色，与准备书包的理由无关。" },
-        { "label": "The morning was yesterday.", "ok": false, "why": "语义不通，也不支持中心句。" }
+        {
+          "label": "This saves time because I do not need to look for things in the morning.",
+          "ok": true,
+          "why": "直接解释前一行为带来的好处。"
+        },
+        {
+          "label": "Many bags are made in different colours.",
+          "ok": false,
+          "why": "谈颜色，与准备书包的理由无关。"
+        },
+        {
+          "label": "The morning was yesterday.",
+          "ok": false,
+          "why": "语义不通，也不支持中心句。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -33,9 +73,29 @@
       "prompt": "哪一句正确表达“课程很难，但很有用”？",
       "error_tag": "转折表达",
       "choices": [
-        { "label": "The course is difficult, but it is useful.", "ok": true, "why": "but 正确连接相反的评价。" },
-        { "label": "The course is difficult because it is useful.", "ok": false, "why": "这里不是明确的原因关系。" },
-        { "label": "But the course difficult and useful.", "ok": false, "why": "缺少系动词，结构不完整。" }
+        {
+          "label": "The course is difficult, but it is useful.",
+          "ok": true,
+          "why": "but 正确连接相反的评价。"
+        },
+        {
+          "label": "The course is difficult because it is useful.",
+          "ok": false,
+          "why": "这里不是明确的原因关系。"
+        },
+        {
+          "label": "But the course difficult and useful.",
+          "ok": false,
+          "why": "缺少系动词，结构不完整。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -44,9 +104,29 @@
       "prompt": "哪组顺序最像一个清楚的短段落？① Therefore, I can start work calmly. ② I make a short plan every morning. ③ It tells me which task to do first.",
       "error_tag": "段落顺序",
       "choices": [
-        { "label": "② → ③ → ①", "ok": true, "why": "先给行为，再解释计划作用，最后给结果。" },
-        { "label": "① → ② → ③", "ok": false, "why": "Therefore 不能在原因出现前先给结果。" },
-        { "label": "③ → ① → ②", "ok": false, "why": "It 在 plan 出现前没有清楚指代。" }
+        {
+          "label": "② → ③ → ①",
+          "ok": true,
+          "why": "先给行为，再解释计划作用，最后给结果。"
+        },
+        {
+          "label": "① → ② → ③",
+          "ok": false,
+          "why": "Therefore 不能在原因出现前先给结果。"
+        },
+        {
+          "label": "③ → ① → ②",
+          "ok": false,
+          "why": "It 在 plan 出现前没有清楚指代。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
     },
     {
@@ -55,10 +135,42 @@
       "prompt": "任务要求“说明迟到、给出原因并道歉”。哪项回应最完整？",
       "error_tag": "任务回应",
       "choices": [
-        { "label": "I am sorry that I will be late because my train has been delayed.", "ok": true, "why": "迟到、原因和道歉三项都有。" },
-        { "label": "The train is usually fast and comfortable.", "ok": false, "why": "没有说明迟到，也没有道歉。" },
-        { "label": "I will be late. See you.", "ok": false, "why": "说明了迟到，但缺少原因和道歉。" }
+        {
+          "label": "I am sorry that I will be late because my train has been delayed.",
+          "ok": true,
+          "why": "迟到、原因和道歉三项都有。"
+        },
+        {
+          "label": "The train is usually fast and comfortable.",
+          "ok": false,
+          "why": "没有说明迟到，也没有道歉。"
+        },
+        {
+          "label": "I will be late. See you.",
+          "ok": false,
+          "why": "说明了迟到，但缺少原因和道歉。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "voa-worksheet-nutcracker",
+          "relation": "adapted",
+          "locator": "Exercises 1–4 and Over to You",
+          "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
       ]
+    }
+  ],
+  "source_refs": [
+    {
+      "source_id": "cefr-companion",
+      "relation": "selection_basis",
+      "note": "客观判断任务回应和衔接，不冒充作文分。"
+    },
+    {
+      "source_id": "yz-english-2-outline",
+      "relation": "exam_alignment",
+      "note": "逐级对齐英语二应用文和说明/议论写作的任务回应、组织、衔接与准确表达。"
     }
   ]
 }

@@ -1,7 +1,11 @@
-# 工作与选择
+# 步行：主张、证据与边界
 
-Young people are often told that passion should decide a career. The advice sounds generous. In practice, a **substantial** number of graduates take the first stable offer they receive. They do so not because they lack ambition, but because they still lack **access** to reliable information about what different jobs actually demand.
+If you want to get healthy or stay healthy, there is one easy activity to add to your day – walking.
 
-A different picture **emerges** when we look at older workers. They are less likely to change jobs, even when pay is low. Critics **attribute** this **decline** in mobility to weaker demand for mid-career talent. Employers, however, **maintain** that the real problem is habit: people stay because moving feels riskier than staying put.
+You may think that simply taking a walk is not enough to make a big difference. You might think that you need to do something strenuous like running to stay healthy. Well, a study says that is not true. It finds that walking may be as good for us as running.
 
-Age remains a **significant** factor in who gets promoted. **Nevertheless**, training can still open doors that seniority alone cannot. The practical lesson is modest. Choice is real, but it is never made in a vacuum: information, timing, and the stories we tell about risk all shape what looks possible.
+Researchers studied about 33,000 runners and just over 15,000 walkers over six years. They found that the same energy used for brisk walking and vigorous running resulted in similar reductions in risk for high blood pressure, high cholesterol and diabetes.
+
+The health benefits of walking are not “all or nothing.” If your goal is to walk for 30 minutes a day, you can split that into three 10-minute walks. Walking requires no special skills or equipment, and it fits easily into a daily schedule.
+
+*摘编自 VOA Learning English《Walking: The 'Wonder Drug'》。为控制篇幅删去中间段落，并补全原网页 “need do” 中缺少的 “to”；没有改变论证和数据。*

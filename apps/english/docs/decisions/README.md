@@ -11,3 +11,6 @@
 | [0004](0004-three-levels-and-writing-track.md) | 课表改成三个等级，每级同练单词、例句和作文 | 已接受 |
 | [0005](0005-route-layout-and-exam-mode.md) | 界面按能力路线组织；练习与考核分开 | 已接受 |
 | [0006](0006-graded-content-and-independent-assessments.md) | 内容按能力递进；阶段考核使用独立平行题库 | 已接受 |
+| [0007](0007-sourced-content-and-four-skills.md) | 内容须有出处；听说读写都进训练，不改考试目标 | 已接受（部分作废 0001 第 6 条） |
+| [0008](0008-local-public-references.md) | 有用的公开参考材料落到本地 | 已接受（第 4 条由 0009 放宽） |
+| [0009](0009-mixed-sources-and-visible-progress.md) | 综合取材；学习成果要看得见 | 已接受 |
