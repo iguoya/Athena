@@ -1205,7 +1205,9 @@ function renderFormal(f: Formal): string {
           (e) => `<section class="fm" id="fm-${e.id}">
             <div class="fm-top">
               <span class="fm-kind fm-${e.kind}">${FORMAL_KIND[e.kind]}</span>
-              <span class="fm-t">${rich(e.title)}</span>
+              <span class="fm-t" data-read="${FORMAL_KIND[e.kind]}：${esc1(e.title)}">${rich(
+                e.title,
+              )}</span>
             </div>
             <div class="fm-stmt" data-read="${esc1(e.statement)}">${rich(e.statement)}</div>
             ${
@@ -1272,7 +1274,9 @@ function renderExamples(list: WorkedExample[], side: "plain" | "formal" = "plain
         .map(
           (e) => `<figure class="ex">
             <figcaption class="ex-top">
-              <span class="ex-t">${rich(e.title)}</span>${exampleSource(e.source)}
+              <span class="ex-t" data-read="${esc1(e.title)}">${rich(e.title)}</span>${exampleSource(
+                e.source,
+              )}
             </figcaption>
             <div class="ex-given" data-read="${esc1(e.given)}">${rich(e.given)}</div>
             <ol class="ex-steps">
@@ -1305,7 +1309,7 @@ function renderPredict(e: Experiment, prev?: PredictionRow): string {
   return `
     <div id="s-ask" class="ask">
       <h3>${e.title}</h3>
-      <p class="q">${rich(e.prompt)}</p>
+      <p class="q" data-read="${esc1(e.prompt)}">${rich(e.prompt)}</p>
       <div class="opts">
         ${opts
           .map(

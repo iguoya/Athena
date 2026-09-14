@@ -148,6 +148,7 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
                  `<button type="button" data-drill="${it.id}" data-ns="${ns}"
                     data-pick="${esc(o.text).replace(/"/g, "&quot;")}" data-ok="${o.ok ? 1 : 0}"
                     class="${st?.picked === o.text ? (o.ok ? "picked right" : "picked wrong") : ""}"
+                    data-read="${esc(o.text)}"
                     ${done ? "disabled" : ""}>${rich(o.text)}</button>`,
              )
              .join("")}
@@ -158,9 +159,12 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
     // 解释一直写在正确选项的 why 上（37 道题全是），此前这里只读题级 it.why，
     // 于是答对之后除了「对。」什么都不显示——最该讲清楚的那一刻是空的。
     const right = (it.options ?? []).find((o) => o.ok);
-    fb = `<div class="dr-fb ok"><b>对。</b>${rich(it.why ?? right?.why ?? "")}${
+    const okWhy = it.why ?? right?.why ?? "";
+    fb = `<div class="dr-fb ok" data-read="对。${esc(okWhy)}"><b>对。</b>${rich(okWhy)}${
       it.context
-        ? `<div class="dr-ctx"><span class="dr-ctx-k">用在哪</span>${rich(it.context)}</div>`
+        ? `<div class="dr-ctx" data-read="用在哪：${esc(it.context)}"><span class="dr-ctx-k">用在哪</span>${rich(
+            it.context,
+          )}</div>`
         : ""
     }${sourceLine(it.source)}</div>`;
   } else if (wrong) {
@@ -175,10 +179,16 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
   }
 
   return `<li class="dr-item${done ? " done" : ""}">
-      <div class="dr-stem"><span class="dr-no">${idx + 1}</span><span class="dr-text">${rich(
+      <div class="dr-stem"><span class="dr-no">${idx + 1}</span><span class="dr-text" data-read="${esc(
         it.stem,
-      )}</span></div>
-      ${it.varies ? `<div class="dr-varies">与上一题相比：${rich(it.varies)}</div>` : ""}
+      )}">${rich(it.stem)}</span></div>
+      ${
+        it.varies
+          ? `<div class="dr-varies" data-read="与上一题相比：${esc(it.varies)}">与上一题相比：${rich(
+              it.varies,
+            )}</div>`
+          : ""
+      }
       ${body}
       ${fb}
       ${
@@ -205,7 +215,7 @@ export function renderDrills(
 
   return `<div id="s-${ns}" class="drills">
       <h3>${esc(set.title)}<span class="dr-prog">${done} / ${shown.length}</span></h3>
-      ${set.intro ? `<p class="dr-intro">${rich(set.intro)}</p>` : ""}
+      ${set.intro ? `<p class="dr-intro" data-read="${esc(set.intro)}">${rich(set.intro)}</p>` : ""}
       <ol class="dr-list">
         ${shown
           .map((it, i) =>

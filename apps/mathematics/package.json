@@ -5,13 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/lint-content.mjs && tsc && vite build",
+    "build": "node scripts/lint-content.mjs && node scripts/test-speech.mjs && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "build:app": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build --bundles app && node scripts/install-bin.mjs",
+    "build:app": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build --bundles app",
     "lint:content": "node scripts/lint-content.mjs",
-    "build:dmg": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build && node scripts/install-bin.mjs"
+    "dev:app": "bash scripts/dev.sh",
+    "build:dmg": "LIBSQLITE3_SYS_USE_PKG_CONFIG=1 tauri build --bundles dmg",
+    "test:speech": "node scripts/test-speech.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
