@@ -1,10 +1,10 @@
 {
   "id": "english",
-  "title": "英语自学",
-  "description": "独立的英语自学应用：单词、例句、短文和作文，从初级练到能写清楚一段话；做题在桌面完成，可脱离 Athena 主程序单独使用。",
+  "title": "英语学习",
+  "description": "独立的英语学习应用：单词、例句、短文和作文，从初级练到能写清楚一段话；做题在桌面完成，可脱离 Athena 主程序单独使用。",
   "icon": { "type": "theme", "name": "accessories-dictionary-symbolic" },
-  "executable": "bin/athena-english",
+  "executable": "scripts/dev.sh",
   "build": [
-    "cd apps/english && npm install && npm run build:app"
+    "cd apps/english && ./scripts/dev.sh"
   ]
 }

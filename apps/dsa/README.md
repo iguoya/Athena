@@ -9,7 +9,7 @@
 1. **业务自足**：课程内容、进度、实验编译运行全在本目录闭环。
 2. **内容驱动**：`content/curriculum.json` 是唯一课表；UI 只做渲染与互动。
 3. **实验真源码**：`content/cases/` 里是可编辑的 C++；保存后本机编译运行。
-4. **主程序可选**：有 `--store` 时写入共用学习库；没有则用本应用自己的 SQLite。
+4. **主程序可选**：图谱点击只是 spawn 本目录的 `scripts/dev.sh`；进度写在本应用自己的库里。
 
 ## 架构（与 GTK 主程序无关）
 
@@ -17,7 +17,8 @@
 content/          课表、教案块、C++ 案例（唯一内容源）
 src/              前端：导航 + 导读/讲解/实验
 src-tauri/        壳：读内容、进度库、compile_and_run
-bin/athena-dsa    构建产物入口（给主程序 discover）
+bin/athena-dsa    scripts/dev.sh 的别名
+scripts/dev.sh    日常入口（tauri:dev；主程序图谱也 spawn 这份）
 docs/decisions/   本应用 ADR
 ```
 
@@ -48,19 +49,11 @@ npm run tauri:dev
 
 不要只跑 `npm run dev` 再用浏览器打开：那只有前端，没有磁盘读写与本机编译，
 实验页会出现「无法加载案例 / invoke」类错误。
-发行 / 给 Athena 首页点击用：
 
-```sh
-cd apps/dsa
-npm install
-LIBSQLITE3_SYS_USE_PKG_CONFIG=1 npm run build:app
-./bin/athena-dsa              # 独立窗口；macOS 会保留并启动完整 .app
-```
+Athena 首页点「数据结构与算法」会 spawn `scripts/dev.sh`（热更新），**不要**
+先 `build:app` 再打开 `bin/` 或 `/Applications` 里的打包副本。
 
-构建成功后会生成稳定入口 `bin/athena-dsa`；macOS 入口转发到保留完整上下文的
-`bin/athena-dsa.app/Contents/MacOS/athena-dsa`，其他平台转发到本机可执行文件。
-Athena 首页点「数据结构与算法」会 spawn 这个稳定入口，并透传共用学习库路径
-（需使用已编入 ExternalApp 入口的主程序，例如 `builddir/Athena`）。
+`npm run build:app` 只在真正要交付一份可分发的包时才用。
 
 ## 内容怎么规划（当前课表）
 
@@ -83,4 +76,5 @@ Athena 首页点「数据结构与算法」会 spawn 这个稳定入口，并透
 | `content/cases/` | C++ 实验源码 |
 | `src/` | 前端 |
 | `src-tauri/` | Tauri / Rust 命令 |
-| `app.json` | 仅供主程序发现；本应用不依赖它才能跑 |
+| `scripts/dev.sh` | 日常入口（`tauri:dev`）；主程序图谱也 spawn 这份 |
+| `app.json` | 仅供主程序发现；`executable` 指向 `scripts/dev.sh` |
