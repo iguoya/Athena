@@ -1,0 +1,3000 @@
+{
+  "topic_id": "en.beginner.vocab.core",
+  "kind": "vocab",
+  "source_refs": [
+    {
+      "source_id": "ngsl-1.2",
+      "relation": "selection_basis",
+      "note": "按 NGSL 前 1000 词的频率顺序补足初级核心词。"
+    },
+    {
+      "source_id": "kylebing-kaoyan",
+      "relation": "quoted",
+      "note": "双语例句用于建立词在语境中的核心义。"
+    }
+  ],
+  "items": [
+    {
+      "id": "en.beginner.vocab.care",
+      "word": "care",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "照顾"
+        }
+      ],
+      "sentence": "They shared the care of the children.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "照顾",
+          "ok": true,
+          "why": "care 在本句中取“照顾”这个核心义。整句可理解为：他们共同照顾孩子。"
+        },
+        {
+          "label": "关心",
+          "ok": false,
+          "why": "care 常表示“关心”；放回本句不符合语境。"
+        },
+        {
+          "label": "喜爱",
+          "ok": false,
+          "why": "care 常表示“喜爱”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "high standards of medical care",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "照顾",
+              "ok": true,
+              "why": "care 在本句中取“照顾”这个核心义。整句可理解为：高水平的医疗护理"
+            },
+            {
+              "label": "关心",
+              "ok": false,
+              "why": "care 常表示“关心”；放回本句不符合语境。"
+            },
+            {
+              "label": "喜爱",
+              "ok": false,
+              "why": "care 常表示“喜爱”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “care” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.effect",
+      "word": "effect",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "效果"
+        }
+      ],
+      "sentence": "This ingredient also has the effect of making your skin look younger.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "效果",
+          "ok": true,
+          "why": "effect 在本句中取“效果”这个核心义。整句可理解为：这种成分还有使皮肤看上去更年轻的效果。"
+        },
+        {
+          "label": "结果",
+          "ok": false,
+          "why": "effect 常表示“结果”；放回本句不符合语境。"
+        },
+        {
+          "label": "影响",
+          "ok": false,
+          "why": "effect 常表示“影响”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "the long-term effects of the drug",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "效果",
+              "ok": true,
+              "why": "effect 在本句中取“效果”这个核心义。整句可理解为：这种毒品的长期影响"
+            },
+            {
+              "label": "结果",
+              "ok": false,
+              "why": "effect 常表示“结果”；放回本句不符合语境。"
+            },
+            {
+              "label": "影响",
+              "ok": false,
+              "why": "effect 常表示“影响”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “effect” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.deal",
+      "word": "deal",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "发牌"
+        }
+      ],
+      "sentence": "Whose turn is it to deal?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "发牌",
+          "ok": true,
+          "why": "deal 在本句中取“发牌”这个核心义。整句可理解为：轮到谁发牌了？"
+        },
+        {
+          "label": "处理",
+          "ok": false,
+          "why": "deal 常表示“处理”；放回本句不符合语境。"
+        },
+        {
+          "label": "给予",
+          "ok": false,
+          "why": "deal 常表示“给予”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Many users end up dealing to support their habit.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "发牌",
+              "ok": true,
+              "why": "deal 在本句中取“发牌”这个核心义。整句可理解为：许多吸毒者最后都是靠做毒品买卖来供自己吸毒。"
+            },
+            {
+              "label": "处理",
+              "ok": false,
+              "why": "deal 常表示“处理”；放回本句不符合语境。"
+            },
+            {
+              "label": "给予",
+              "ok": false,
+              "why": "deal 常表示“给予”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “deal” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “deal” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.water",
+      "word": "water",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "水"
+        }
+      ],
+      "sentence": "There’s water all over the bathroom floor.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "水",
+          "ok": true,
+          "why": "water 在本句中取“水”这个核心义。整句可理解为：浴室地面上都是水。"
+        },
+        {
+          "label": "土地",
+          "ok": false,
+          "why": "land 常表示“土地”；放回本句不符合语境。"
+        },
+        {
+          "label": "顾客",
+          "ok": false,
+          "why": "customer 常表示“顾客”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Does anyone want a drink of water?",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "水",
+              "ok": true,
+              "why": "water 在本句中取“水”这个核心义。整句可理解为：有谁想喝杯水吗？"
+            },
+            {
+              "label": "土地",
+              "ok": false,
+              "why": "land 常表示“土地”；放回本句不符合语境。"
+            },
+            {
+              "label": "顾客",
+              "ok": false,
+              "why": "customer 常表示“顾客”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “water” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.past",
+      "word": "past",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "过去"
+        }
+      ],
+      "sentence": "You mustn’t think about it. It’s all in the past now.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "过去",
+          "ok": true,
+          "why": "past 在本句中取“过去”这个核心义。整句可理解为：你千万不要再想那件事，现在一切都过去了。"
+        },
+        {
+          "label": "往事",
+          "ok": false,
+          "why": "past 常表示“往事”；放回本句不符合语境。"
+        },
+        {
+          "label": "教育",
+          "ok": false,
+          "why": "education 常表示“教育”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Judging by her past performance, Jane should do very well.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "过去",
+              "ok": true,
+              "why": "past 在本句中取“过去”这个核心义。整句可理解为：从以往的表现来看，简应该会干得很好。"
+            },
+            {
+              "label": "往事",
+              "ok": false,
+              "why": "past 常表示“往事”；放回本句不符合语境。"
+            },
+            {
+              "label": "教育",
+              "ok": false,
+              "why": "education 常表示“教育”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “past” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “past” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.visit",
+      "word": "visit",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "访问"
+        }
+      ],
+      "sentence": "his first official visit to Britain as Russian President",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "访问",
+          "ok": true,
+          "why": "visit 在本句中取“访问”这个核心义。整句可理解为：他当选俄罗斯总统后的首次正式访问英国"
+        },
+        {
+          "label": "参观",
+          "ok": false,
+          "why": "visit 常表示“参观”；放回本句不符合语境。"
+        },
+        {
+          "label": "标准",
+          "ok": false,
+          "why": "standard 常表示“标准”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "We’re just here on a short visit.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "访问",
+              "ok": true,
+              "why": "visit 在本句中取“访问”这个核心义。整句可理解为：我们只在这儿作短暂逗留。"
+            },
+            {
+              "label": "参观",
+              "ok": false,
+              "why": "visit 常表示“参观”；放回本句不符合语境。"
+            },
+            {
+              "label": "标准",
+              "ok": false,
+              "why": "standard 常表示“标准”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “visit” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.mother",
+      "word": "mother",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "母亲"
+        }
+      ],
+      "sentence": "the relationship between mother and child",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "母亲",
+          "ok": true,
+          "why": "mother 在本句中取“母亲”这个核心义。整句可理解为：母亲和孩子之间的关系"
+        },
+        {
+          "label": "妈妈",
+          "ok": false,
+          "why": "mother 常表示“妈妈”；放回本句不符合语境。"
+        },
+        {
+          "label": "材料",
+          "ok": false,
+          "why": "material 常表示“材料”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "His mother and father are both doctors.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "母亲",
+              "ok": true,
+              "why": "mother 在本句中取“母亲”这个核心义。整句可理解为：他的父母都是医生。"
+            },
+            {
+              "label": "妈妈",
+              "ok": false,
+              "why": "mother 常表示“妈妈”；放回本句不符合语境。"
+            },
+            {
+              "label": "材料",
+              "ok": false,
+              "why": "material 常表示“材料”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “mother” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.walk",
+      "word": "walk",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "走"
+        }
+      ],
+      "sentence": "It’s a long walk. Maybe we should get the bus.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "走",
+          "ok": true,
+          "why": "walk 在本句中取“走”这个核心义。整句可理解为：走着去很远，或许我们应该乘公共汽车。"
+        },
+        {
+          "label": "步行",
+          "ok": false,
+          "why": "walk 常表示“步行”；放回本句不符合语境。"
+        },
+        {
+          "label": "散步",
+          "ok": false,
+          "why": "walk 常表示“散步”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Rosanna and Forbes walked in silence.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "走",
+              "ok": true,
+              "why": "walk 在本句中取“走”这个核心义。整句可理解为：罗莎娜与福布斯默默地走着。"
+            },
+            {
+              "label": "步行",
+              "ok": false,
+              "why": "walk 常表示“步行”；放回本句不符合语境。"
+            },
+            {
+              "label": "散步",
+              "ok": false,
+              "why": "walk 常表示“散步”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “walk” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.matter",
+      "word": "matter",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "要紧"
+        }
+      ],
+      "sentence": "Do you think it matters that the cups and saucers don’t match?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "要紧",
+          "ok": true,
+          "why": "matter 在本句中取“要紧”这个核心义。整句可理解为：你觉得茶杯与杯托不相配要紧吗？"
+        },
+        {
+          "label": "有关系",
+          "ok": false,
+          "why": "matter 常表示“有关系”；放回本句不符合语境。"
+        },
+        {
+          "label": "检查",
+          "ok": false,
+          "why": "check 常表示“检查”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "If I have to stay late at work tonight, it won’t matter because we can go out another night.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "要紧",
+              "ok": true,
+              "why": "matter 在本句中取“要紧”这个核心义。整句可理解为：如果今晚我必须工作到很晚的话，那也没关系，我们可以改天晚上再出去。"
+            },
+            {
+              "label": "有关系",
+              "ok": false,
+              "why": "matter 常表示“有关系”；放回本句不符合语境。"
+            },
+            {
+              "label": "检查",
+              "ok": false,
+              "why": "check 常表示“检查”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “matter” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.value",
+      "word": "value",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "价值"
+        }
+      ],
+      "sentence": "the nutritional value of cereal",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "价值",
+          "ok": true,
+          "why": "value 在本句中取“价值”这个核心义。整句可理解为：谷类食物的营养价值"
+        },
+        {
+          "label": "价格",
+          "ok": false,
+          "why": "value 常表示“价格”；放回本句不符合语境。"
+        },
+        {
+          "label": "实用性",
+          "ok": false,
+          "why": "value 常表示“实用性”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The value of his investment has risen by more than $50,000.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "价值",
+              "ok": true,
+              "why": "value 在本句中取“价值”这个核心义。整句可理解为：他的投资价值已经增长$50000多。"
+            },
+            {
+              "label": "价格",
+              "ok": false,
+              "why": "value 常表示“价格”；放回本句不符合语境。"
+            },
+            {
+              "label": "实用性",
+              "ok": false,
+              "why": "value 常表示“实用性”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “value” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “value” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.office",
+      "word": "office",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "办公室"
+        }
+      ],
+      "sentence": "the increased demand for office space",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "办公室",
+          "ok": true,
+          "why": "office 在本句中取“办公室”这个核心义。整句可理解为：对办公室空间日益增长的需求"
+        },
+        {
+          "label": "办事处",
+          "ok": false,
+          "why": "office 常表示“办事处”；放回本句不符合语境。"
+        },
+        {
+          "label": "职务",
+          "ok": false,
+          "why": "office 常表示“职务”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The department occupies an office just a mile from the White House.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "办公室",
+              "ok": true,
+              "why": "office 在本句中取“办公室”这个核心义。整句可理解为：该部门就在离白宫一英里远的地方有个办公楼。"
+            },
+            {
+              "label": "办事处",
+              "ok": false,
+              "why": "office 常表示“办事处”；放回本句不符合语境。"
+            },
+            {
+              "label": "职务",
+              "ok": false,
+              "why": "office 常表示“职务”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “office” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.record",
+      "word": "record",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "记录"
+        }
+      ],
+      "sentence": "According to official records, five people were killed last year near that road junction.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "记录",
+          "ok": true,
+          "why": "record 在本句中取“记录”这个核心义。整句可理解为：据官方记录，去年有五人在那个路口附近丧生。"
+        },
+        {
+          "label": "记载",
+          "ok": false,
+          "why": "record 常表示“记载”；放回本句不符合语境。"
+        },
+        {
+          "label": "标明",
+          "ok": false,
+          "why": "record 常表示“标明”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Her husband made her record every penny she spent.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "记录",
+              "ok": true,
+              "why": "record 在本句中取“记录”这个核心义。整句可理解为：她丈夫要她把花的每分钱都记下来。"
+            },
+            {
+              "label": "记载",
+              "ok": false,
+              "why": "record 常表示“记载”；放回本句不符合语境。"
+            },
+            {
+              "label": "标明",
+              "ok": false,
+              "why": "record 常表示“标明”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “record” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “record” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.force",
+      "word": "force",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "武力"
+        }
+      ],
+      "sentence": "Peace cannot be imposed by force.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "武力",
+          "ok": true,
+          "why": "force 在本句中取“武力”这个核心义。整句可理解为：和平不能通过武力来实现。"
+        },
+        {
+          "label": "力量",
+          "ok": false,
+          "why": "force 常表示“力量”；放回本句不符合语境。"
+        },
+        {
+          "label": "军队",
+          "ok": false,
+          "why": "force 常表示“军队”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The UN will allow the use of force against aircraft violating the zone.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "武力",
+              "ok": true,
+              "why": "force 在本句中取“武力”这个核心义。整句可理解为：联合国将允许对侵犯这一地区的飞机采取军事行动。"
+            },
+            {
+              "label": "力量",
+              "ok": false,
+              "why": "force 常表示“力量”；放回本句不符合语境。"
+            },
+            {
+              "label": "军队",
+              "ok": false,
+              "why": "force 常表示“军队”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “force” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.light",
+      "word": "light",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "灯"
+        }
+      ],
+      "sentence": "We waited for the lights to change.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "灯",
+          "ok": true,
+          "why": "light 在本句中取“灯”这个核心义。整句可理解为：我们等着红绿灯转换。"
+        },
+        {
+          "label": "光",
+          "ok": false,
+          "why": "light 常表示“光”；放回本句不符合语境。"
+        },
+        {
+          "label": "小孩",
+          "ok": false,
+          "why": "child 常表示“小孩”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Eventually the lights turned green.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "灯",
+              "ok": true,
+              "why": "light 在本句中取“灯”这个核心义。整句可理解为：绿灯终于亮了。"
+            },
+            {
+              "label": "光",
+              "ok": false,
+              "why": "light 常表示“光”；放回本句不符合语境。"
+            },
+            {
+              "label": "小孩",
+              "ok": false,
+              "why": "child 常表示“小孩”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “light” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.develop",
+      "word": "develop",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "发展"
+        }
+      ],
+      "sentence": "Knowledge in the field of genetics has been developing very rapidly.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "发展",
+          "ok": true,
+          "why": "develop 在本句中取“发展”这个核心义。整句可理解为：遗传学领域的知识发展非常迅速。"
+        },
+        {
+          "label": "形成",
+          "ok": false,
+          "why": "develop 常表示“形成”；放回本句不符合语境。"
+        },
+        {
+          "label": "开发",
+          "ok": false,
+          "why": "develop 常表示“开发”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Corsica has developed its economy around the tourist industry.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "发展",
+              "ok": true,
+              "why": "develop 在本句中取“发展”这个核心义。整句可理解为：科西嘉岛的经济是围绕旅游业发展起来的。"
+            },
+            {
+              "label": "形成",
+              "ok": false,
+              "why": "develop 常表示“形成”；放回本句不符合语境。"
+            },
+            {
+              "label": "开发",
+              "ok": false,
+              "why": "develop 常表示“开发”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “develop” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.remember",
+      "word": "remember",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "记得"
+        }
+      ],
+      "sentence": "Do you remember Rosa Davies?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "记得",
+          "ok": true,
+          "why": "remember 在本句中取“记得”这个核心义。整句可理解为：你记得罗莎·戴维斯吗？"
+        },
+        {
+          "label": "牢记",
+          "ok": false,
+          "why": "remember 常表示“牢记”；放回本句不符合语境。"
+        },
+        {
+          "label": "纪念",
+          "ok": false,
+          "why": "remember 常表示“纪念”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "I can’t remember her exact words.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "记得",
+              "ok": true,
+              "why": "remember 在本句中取“记得”这个核心义。整句可理解为：我记不得她的原话了。"
+            },
+            {
+              "label": "牢记",
+              "ok": false,
+              "why": "remember 常表示“牢记”；放回本句不符合语境。"
+            },
+            {
+              "label": "纪念",
+              "ok": false,
+              "why": "remember 常表示“纪念”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “remember” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.answer",
+      "word": "answer",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "回答"
+        }
+      ],
+      "sentence": "She thought for a moment before answering.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "回答",
+          "ok": true,
+          "why": "answer 在本句中取“回答”这个核心义。整句可理解为：她想了一会儿才回答。"
+        },
+        {
+          "label": "响应",
+          "ok": false,
+          "why": "answer 常表示“响应”；放回本句不符合语境。"
+        },
+        {
+          "label": "适应",
+          "ok": false,
+          "why": "answer 常表示“适应”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "He still hadn’t answered my question.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "回答",
+              "ok": true,
+              "why": "answer 在本句中取“回答”这个核心义。整句可理解为：他仍然没有回答我的问题。"
+            },
+            {
+              "label": "响应",
+              "ok": false,
+              "why": "answer 常表示“响应”；放回本句不符合语境。"
+            },
+            {
+              "label": "适应",
+              "ok": false,
+              "why": "answer 常表示“适应”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “answer” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.sit",
+      "word": "sit",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "位于"
+        }
+      ],
+      "sentence": "The parliament building sits in a large square.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "位于",
+          "ok": true,
+          "why": "sit 在本句中取“位于”这个核心义。整句可理解为：议会大楼位于一个大广场上。"
+        },
+        {
+          "label": "坐",
+          "ok": false,
+          "why": "sit 常表示“坐”；放回本句不符合语境。"
+        },
+        {
+          "label": "提出",
+          "ok": false,
+          "why": "raise 常表示“提出”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "He’s got a computer sitting on his desk, but he doesn’t use it.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "位于",
+              "ok": true,
+              "why": "sit 在本句中取“位于”这个核心义。整句可理解为：他有一台电脑放在书桌上，但他不用。"
+            },
+            {
+              "label": "坐",
+              "ok": false,
+              "why": "sit 常表示“坐”；放回本句不符合语境。"
+            },
+            {
+              "label": "提出",
+              "ok": false,
+              "why": "raise 常表示“提出”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “sit” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.figure",
+      "word": "figure",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "人物"
+        }
+      ],
+      "sentence": "the figure in the background",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "人物",
+          "ok": true,
+          "why": "figure 在本句中取“人物”这个核心义。整句可理解为：背景中的人物"
+        },
+        {
+          "label": "数字",
+          "ok": false,
+          "why": "figure 常表示“数字”；放回本句不符合语境。"
+        },
+        {
+          "label": "图形",
+          "ok": false,
+          "why": "figure 常表示“图形”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "A hexagon is a six-sided figure.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "人物",
+              "ok": true,
+              "why": "figure 在本句中取“人物”这个核心义。整句可理解为：六边形是一种有六条边的几何图形。"
+            },
+            {
+              "label": "数字",
+              "ok": false,
+              "why": "figure 常表示“数字”；放回本句不符合语境。"
+            },
+            {
+              "label": "图形",
+              "ok": false,
+              "why": "figure 常表示“图形”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “figure” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “figure” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.decide",
+      "word": "decide",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "决定"
+        }
+      ],
+      "sentence": "Has anything been decided yet?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "决定",
+          "ok": true,
+          "why": "decide 在本句中取“决定”这个核心义。整句可理解为：已经作出什么决定了吗？"
+        },
+        {
+          "label": "下决心",
+          "ok": false,
+          "why": "decide 常表示“下决心”；放回本句不符合语境。"
+        },
+        {
+          "label": "解决",
+          "ok": false,
+          "why": "decide 常表示“解决”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The trainees decide among themselves what programs to take.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "决定",
+              "ok": true,
+              "why": "decide 在本句中取“决定”这个核心义。整句可理解为：受训者自行选择课程。"
+            },
+            {
+              "label": "下决心",
+              "ok": false,
+              "why": "decide 常表示“下决心”；放回本句不符合语境。"
+            },
+            {
+              "label": "解决",
+              "ok": false,
+              "why": "decide 常表示“解决”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “decide” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.language",
+      "word": "language",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "语言"
+        }
+      ],
+      "sentence": "How many languages do you speak?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "语言",
+          "ok": true,
+          "why": "language 在本句中取“语言”这个核心义。整句可理解为：你能说几种语言？"
+        },
+        {
+          "label": "语言课程",
+          "ok": false,
+          "why": "language 常表示“语言课程”；放回本句不符合语境。"
+        },
+        {
+          "label": "走",
+          "ok": false,
+          "why": "walk 常表示“走”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "one of the best-known poems in the English language",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "语言",
+              "ok": true,
+              "why": "language 在本句中取“语言”这个核心义。整句可理解为：最著名的英语诗歌之一"
+            },
+            {
+              "label": "语言课程",
+              "ok": false,
+              "why": "language 常表示“语言课程”；放回本句不符合语境。"
+            },
+            {
+              "label": "走",
+              "ok": false,
+              "why": "walk 常表示“走”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “language” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.subject",
+      "word": "subject",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "主题"
+        }
+      ],
+      "sentence": "The subjects covered in this chapter are exercise and nutrition.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "主题",
+          "ok": true,
+          "why": "subject 在本句中取“主题”这个核心义。整句可理解为：本章涵盖的主题是运动和营养。"
+        },
+        {
+          "label": "学科",
+          "ok": false,
+          "why": "subject 常表示“学科”；放回本句不符合语境。"
+        },
+        {
+          "label": "城镇",
+          "ok": false,
+          "why": "town 常表示“城镇”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Paul has strong opinions on most subjects.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "主题",
+              "ok": true,
+              "why": "subject 在本句中取“主题”这个核心义。整句可理解为：保罗在大多数问题上观点激烈。"
+            },
+            {
+              "label": "学科",
+              "ok": false,
+              "why": "subject 常表示“学科”；放回本句不符合语境。"
+            },
+            {
+              "label": "城镇",
+              "ok": false,
+              "why": "town 常表示“城镇”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “subject” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.town",
+      "word": "town",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "城镇"
+        }
+      ],
+      "sentence": "an industrial town in the Midlands",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "城镇",
+          "ok": true,
+          "why": "town 在本句中取“城镇”这个核心义。整句可理解为：英格兰中部的一座工业城镇"
+        },
+        {
+          "label": "市镇",
+          "ok": false,
+          "why": "town 常表示“市镇”；放回本句不符合语境。"
+        },
+        {
+          "label": "市内商业区",
+          "ok": false,
+          "why": "town 常表示“市内商业区”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "I walked to the nearest town.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "城镇",
+              "ok": true,
+              "why": "town 在本句中取“城镇”这个核心义。整句可理解为：我走到最近的镇上。"
+            },
+            {
+              "label": "市镇",
+              "ok": false,
+              "why": "town 常表示“市镇”；放回本句不符合语境。"
+            },
+            {
+              "label": "市内商业区",
+              "ok": false,
+              "why": "town 常表示“市内商业区”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “town” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.half",
+      "word": "half",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "半"
+        }
+      ],
+      "sentence": "Only half the guests had arrived by seven o’clock.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "半",
+          "ok": true,
+          "why": "half 在本句中取“半”这个核心义。整句可理解为：7点钟前只来了一半客人。"
+        },
+        {
+          "label": "一半",
+          "ok": false,
+          "why": "half 常表示“一半”；放回本句不符合语境。"
+        },
+        {
+          "label": "情况",
+          "ok": false,
+          "why": "situation 常表示“情况”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "If you look at our members, at least half are women.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "半",
+              "ok": true,
+              "why": "half 在本句中取“半”这个核心义。整句可理解为：看看我们的会员，至少有一半是女性。"
+            },
+            {
+              "label": "一半",
+              "ok": false,
+              "why": "half 常表示“一半”；放回本句不符合语境。"
+            },
+            {
+              "label": "情况",
+              "ok": false,
+              "why": "situation 常表示“情况”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “half” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.minute",
+      "word": "minute",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "分"
+        }
+      ],
+      "sentence": "It takes me ten minutes to walk to work.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "分",
+          "ok": true,
+          "why": "minute 在本句中取“分”这个核心义。整句可理解为：我步行上班要用十分钟。"
+        },
+        {
+          "label": "分钟",
+          "ok": false,
+          "why": "minute 常表示“分钟”；放回本句不符合语境。"
+        },
+        {
+          "label": "一会儿",
+          "ok": false,
+          "why": "minute 常表示“一会儿”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The train arrived at four minutes past eight.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "分",
+              "ok": true,
+              "why": "minute 在本句中取“分”这个核心义。整句可理解为：火车于八点零四分到达。"
+            },
+            {
+              "label": "分钟",
+              "ok": false,
+              "why": "minute 常表示“分钟”；放回本句不符合语境。"
+            },
+            {
+              "label": "一会儿",
+              "ok": false,
+              "why": "minute 常表示“一会儿”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “minute” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.food",
+      "word": "food",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "食物"
+        }
+      ],
+      "sentence": "I love Italian food, especially pasta.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "食物",
+          "ok": true,
+          "why": "food 在本句中取“食物”这个核心义。整句可理解为：我喜欢意大利食物，尤其是面食。"
+        },
+        {
+          "label": "食品",
+          "ok": false,
+          "why": "food 常表示“食品”；放回本句不符合语境。"
+        },
+        {
+          "label": "养料",
+          "ok": false,
+          "why": "food 常表示“养料”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The restaurant serves good food at affordable prices.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "食物",
+              "ok": true,
+              "why": "food 在本句中取“食物”这个核心义。整句可理解为：那家餐厅物美价廉。"
+            },
+            {
+              "label": "食品",
+              "ok": false,
+              "why": "food 常表示“食品”；放回本句不符合语境。"
+            },
+            {
+              "label": "养料",
+              "ok": false,
+              "why": "food 常表示“养料”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “food” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.future",
+      "word": "future",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "未来"
+        }
+      ],
+      "sentence": "The islands should have the right to decide their own future.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "未来",
+          "ok": true,
+          "why": "future 在本句中取“未来”这个核心义。整句可理解为：这些岛屿应当有权决定自己的未来。"
+        },
+        {
+          "label": "前途",
+          "ok": false,
+          "why": "future 常表示“前途”；放回本句不符合语境。"
+        },
+        {
+          "label": "期货",
+          "ok": false,
+          "why": "future 常表示“期货”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "a leader who will shape the organization’s future",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "未来",
+              "ok": true,
+              "why": "future 在本句中取“未来”这个核心义。整句可理解为：将决定该组织未来的一位领导者"
+            },
+            {
+              "label": "前途",
+              "ok": false,
+              "why": "future 常表示“前途”；放回本句不符合语境。"
+            },
+            {
+              "label": "期货",
+              "ok": false,
+              "why": "future 常表示“期货”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “future” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.history",
+      "word": "history",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "历史"
+        }
+      ],
+      "sentence": "the early history of Scotland",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "历史",
+          "ok": true,
+          "why": "history 在本句中取“历史”这个核心义。整句可理解为：苏格兰的早期历史"
+        },
+        {
+          "label": "历史学",
+          "ok": false,
+          "why": "history 常表示“历史学”；放回本句不符合语境。"
+        },
+        {
+          "label": "历史记录",
+          "ok": false,
+          "why": "history 常表示“历史记录”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Throughout history the achievements of women have been largely ignored.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "历史",
+              "ok": true,
+              "why": "history 在本句中取“历史”这个核心义。整句可理解为：从古至今，妇女的成就都被大大地忽视了。"
+            },
+            {
+              "label": "历史学",
+              "ok": false,
+              "why": "history 常表示“历史学”；放回本句不符合语境。"
+            },
+            {
+              "label": "历史记录",
+              "ok": false,
+              "why": "history 常表示“历史记录”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “history” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.create",
+      "word": "create",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "创造"
+        }
+      ],
+      "sentence": "Some people believe the universe was created by a big explosion.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "创造",
+          "ok": true,
+          "why": "create 在本句中取“创造”这个核心义。整句可理解为：有些人认为宇宙是通过一次大爆炸创造出来的。"
+        },
+        {
+          "label": "创作",
+          "ok": false,
+          "why": "create 常表示“创作”；放回本句不符合语境。"
+        },
+        {
+          "label": "引起",
+          "ok": false,
+          "why": "create 常表示“引起”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The new factory is expected to create more than 400 new jobs.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "创造",
+              "ok": true,
+              "why": "create 在本句中取“创造”这个核心义。整句可理解为：这家新工厂预计能创造400多个新的就业机会。"
+            },
+            {
+              "label": "创作",
+              "ok": false,
+              "why": "create 常表示“创作”；放回本句不符合语境。"
+            },
+            {
+              "label": "引起",
+              "ok": false,
+              "why": "create 常表示“引起”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “create” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.drive",
+      "word": "drive",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "开车"
+        }
+      ],
+      "sentence": "So when did you learn to drive?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "开车",
+          "ok": true,
+          "why": "drive 在本句中取“开车”这个核心义。整句可理解为：那么你是什么时候学会开车的？"
+        },
+        {
+          "label": "猛击",
+          "ok": false,
+          "why": "drive 常表示“猛击”；放回本句不符合语境。"
+        },
+        {
+          "label": "飞跑",
+          "ok": false,
+          "why": "drive 常表示“飞跑”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "He drives 12 miles to work.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "开车",
+              "ok": true,
+              "why": "drive 在本句中取“开车”这个核心义。整句可理解为：他驾车12英里去上班。"
+            },
+            {
+              "label": "猛击",
+              "ok": false,
+              "why": "drive 常表示“猛击”；放回本句不符合语境。"
+            },
+            {
+              "label": "飞跑",
+              "ok": false,
+              "why": "drive 常表示“飞跑”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “drive” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.eye",
+      "word": "eye",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "眼睛"
+        }
+      ],
+      "sentence": "Ow! I’ve got something in my eye!",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "眼睛",
+          "ok": true,
+          "why": "eye 在本句中取“眼睛”这个核心义。整句可理解为：哎呀！我眼睛里进了什么东西！"
+        },
+        {
+          "label": "眼力",
+          "ok": false,
+          "why": "eye 常表示“眼力”；放回本句不符合语境。"
+        },
+        {
+          "label": "鉴赏力",
+          "ok": false,
+          "why": "eye 常表示“鉴赏力”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "There were tears in her eyes as she listened to the story.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "眼睛",
+              "ok": true,
+              "why": "eye 在本句中取“眼睛”这个核心义。整句可理解为：她听故事时眼里噙着泪水。"
+            },
+            {
+              "label": "眼力",
+              "ok": false,
+              "why": "eye 常表示“眼力”；放回本句不符合语境。"
+            },
+            {
+              "label": "鉴赏力",
+              "ok": false,
+              "why": "eye 常表示“鉴赏力”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “eye” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.music",
+      "word": "music",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "音乐"
+        }
+      ],
+      "sentence": "I often listen to classic music when I’m in the car.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "音乐",
+          "ok": true,
+          "why": "music 在本句中取“音乐”这个核心义。整句可理解为：我在车上经常听古典音乐。"
+        },
+        {
+          "label": "乐曲",
+          "ok": false,
+          "why": "music 常表示“乐曲”；放回本句不符合语境。"
+        },
+        {
+          "label": "乐谱",
+          "ok": false,
+          "why": "music 常表示“乐谱”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "A new piece of music was specially written for the occasion.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "音乐",
+              "ok": true,
+              "why": "music 在本句中取“音乐”这个核心义。整句可理解为：为了这个活动专门写了一首新曲子。"
+            },
+            {
+              "label": "乐曲",
+              "ok": false,
+              "why": "music 常表示“乐曲”；放回本句不符合语境。"
+            },
+            {
+              "label": "乐谱",
+              "ok": false,
+              "why": "music 常表示“乐谱”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “music” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.game",
+      "word": "game",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "游戏"
+        }
+      ],
+      "sentence": "The boys were playing a game in the backyard.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "游戏",
+          "ok": true,
+          "why": "game 在本句中取“游戏”这个核心义。整句可理解为：男孩们在后院里玩游戏。"
+        },
+        {
+          "label": "比赛",
+          "ok": false,
+          "why": "game 常表示“比赛”；放回本句不符合语境。"
+        },
+        {
+          "label": "影响",
+          "ok": false,
+          "why": "influence 常表示“影响”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "He said he's game for a similar challenge next year.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "游戏",
+              "ok": true,
+              "why": "game 在本句中取“游戏”这个核心义。整句可理解为：他说明年他敢尝试一次类似的挑战。"
+            },
+            {
+              "label": "比赛",
+              "ok": false,
+              "why": "game 常表示“比赛”；放回本句不符合语境。"
+            },
+            {
+              "label": "影响",
+              "ok": false,
+              "why": "influence 常表示“影响”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “game” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.moment",
+      "word": "moment",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "时刻"
+        }
+      ],
+      "sentence": "It was one of the most exciting moments in his life.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "时刻",
+          "ok": true,
+          "why": "moment 在本句中取“时刻”这个核心义。整句可理解为：这是他一生中最激动人心的时刻之一。"
+        },
+        {
+          "label": "片刻",
+          "ok": false,
+          "why": "moment 常表示“片刻”；放回本句不符合语境。"
+        },
+        {
+          "label": "瞬间",
+          "ok": false,
+          "why": "moment 常表示“瞬间”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "She may be in trouble at this very moment and trying to call you.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "时刻",
+              "ok": true,
+              "why": "moment 在本句中取“时刻”这个核心义。整句可理解为：此时此刻她可能遇到了麻烦，正想方设法给你打电话。"
+            },
+            {
+              "label": "片刻",
+              "ok": false,
+              "why": "moment 常表示“片刻”；放回本句不符合语境。"
+            },
+            {
+              "label": "瞬间",
+              "ok": false,
+              "why": "moment 常表示“瞬间”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “moment” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.team",
+      "word": "team",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "队"
+        }
+      ],
+      "sentence": "Which team do you support?",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "队",
+          "ok": true,
+          "why": "team 在本句中取“队”这个核心义。整句可理解为：你支持哪个队？"
+        },
+        {
+          "label": "组",
+          "ok": false,
+          "why": "team 常表示“组”；放回本句不符合语境。"
+        },
+        {
+          "label": "车站",
+          "ok": false,
+          "why": "station 常表示“车站”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "black trousers teamed with a bright shirt",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "队",
+              "ok": true,
+              "why": "team 在本句中取“队”这个核心义。整句可理解为：配亮色衬衫的黑裤子"
+            },
+            {
+              "label": "组",
+              "ok": false,
+              "why": "team 常表示“组”；放回本句不符合语境。"
+            },
+            {
+              "label": "车站",
+              "ok": false,
+              "why": "station 常表示“车站”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “team” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “team” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.individual",
+      "word": "individual",
+      "senses": [
+        {
+          "pos": "adj",
+          "gloss": "独特的"
+        }
+      ],
+      "sentence": "a tennis player with a highly individual style",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "独特的",
+          "ok": true,
+          "why": "individual 在本句中取“独特的”这个核心义。整句可理解为：风格非常独特的网球选手"
+        },
+        {
+          "label": "个人的",
+          "ok": false,
+          "why": "individual 常表示“个人的”；放回本句不符合语境。"
+        },
+        {
+          "label": "单独的",
+          "ok": false,
+          "why": "individual 常表示“单独的”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Each individual leaf on the tree is different.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "独特的",
+              "ok": true,
+              "why": "individual 在本句中取“独特的”这个核心义。整句可理解为：树上每片叶子都不相同。"
+            },
+            {
+              "label": "个人的",
+              "ok": false,
+              "why": "individual 常表示“个人的”；放回本句不符合语境。"
+            },
+            {
+              "label": "单独的",
+              "ok": false,
+              "why": "individual 常表示“单独的”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “individual” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “individual” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.full",
+      "word": "full",
+      "senses": [
+        {
+          "pos": "adj",
+          "gloss": "满的"
+        }
+      ],
+      "sentence": "The train was completely full.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "满的",
+          "ok": true,
+          "why": "full 在本句中取“满的”这个核心义。整句可理解为：火车坐得满满的。"
+        },
+        {
+          "label": "完全的",
+          "ok": false,
+          "why": "full 常表示“完全的”；放回本句不符合语境。"
+        },
+        {
+          "label": "可能的",
+          "ok": false,
+          "why": "likely 常表示“可能的”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Don’t talk with your mouth full.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "满的",
+              "ok": true,
+              "why": "full 在本句中取“满的”这个核心义。整句可理解为：嘴里塞满东西时不要说话。"
+            },
+            {
+              "label": "完全的",
+              "ok": false,
+              "why": "full 常表示“完全的”；放回本句不符合语境。"
+            },
+            {
+              "label": "可能的",
+              "ok": false,
+              "why": "likely 常表示“可能的”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “full” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.perhaps",
+      "word": "perhaps",
+      "senses": [
+        {
+          "pos": "adv",
+          "gloss": "也许"
+        }
+      ],
+      "sentence": "It won’t take so long next time, perhaps.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "也许",
+          "ok": true,
+          "why": "perhaps 在本句中取“也许”这个核心义。整句可理解为：也许下次不用那么久。"
+        },
+        {
+          "label": "可能",
+          "ok": false,
+          "why": "perhaps 常表示“可能”；放回本句不符合语境。"
+        },
+        {
+          "label": "多半",
+          "ok": false,
+          "why": "perhaps 常表示“多半”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Perhaps it will snow tomorrow.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "也许",
+              "ok": true,
+              "why": "perhaps 在本句中取“也许”这个核心义。整句可理解为：明天可能会下雪。"
+            },
+            {
+              "label": "可能",
+              "ok": false,
+              "why": "perhaps 常表示“可能”；放回本句不符合语境。"
+            },
+            {
+              "label": "多半",
+              "ok": false,
+              "why": "perhaps 常表示“多半”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “perhaps” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.pass",
+      "word": "pass",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "经过"
+        }
+      ],
+      "sentence": "He gave me a smile as he passed.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "经过",
+          "ok": true,
+          "why": "pass 在本句中取“经过”这个核心义。整句可理解为：他经过时对我微笑了一下。"
+        },
+        {
+          "label": "通过",
+          "ok": false,
+          "why": "pass 常表示“通过”；放回本句不符合语境。"
+        },
+        {
+          "label": "度过",
+          "ok": false,
+          "why": "pass 常表示“度过”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The crowd parted to let the truck pass.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "经过",
+              "ok": true,
+              "why": "pass 在本句中取“经过”这个核心义。整句可理解为：人群分开让卡车通过。"
+            },
+            {
+              "label": "通过",
+              "ok": false,
+              "why": "pass 常表示“通过”；放回本句不符合语境。"
+            },
+            {
+              "label": "度过",
+              "ok": false,
+              "why": "pass 常表示“度过”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “pass” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.produce",
+      "word": "produce",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "引起"
+        }
+      ],
+      "sentence": "a rise in sea level produced by climatic change",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "引起",
+          "ok": true,
+          "why": "produce 在本句中取“引起”这个核心义。整句可理解为：由气候变化引起的海平面升高"
+        },
+        {
+          "label": "生产",
+          "ok": false,
+          "why": "produce 常表示“生产”；放回本句不符合语境。"
+        },
+        {
+          "label": "创作",
+          "ok": false,
+          "why": "produce 常表示“创作”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "As a policy, it did not produce the desired effect.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "引起",
+              "ok": true,
+              "why": "produce 在本句中取“引起”这个核心义。整句可理解为：作为一项政策，它并未产生预期的效果。"
+            },
+            {
+              "label": "生产",
+              "ok": false,
+              "why": "produce 常表示“生产”；放回本句不符合语境。"
+            },
+            {
+              "label": "创作",
+              "ok": false,
+              "why": "produce 常表示“创作”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “produce” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.short",
+      "word": "short",
+      "senses": [
+        {
+          "pos": "adj",
+          "gloss": "短的"
+        }
+      ],
+      "sentence": "Germany achieved spectacular economic success in a relatively short period of time.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "短的",
+          "ok": true,
+          "why": "short 在本句中取“短的”这个核心义。整句可理解为：德国在相对较短的时间里取得了非凡的经济成就。"
+        },
+        {
+          "label": "不足的",
+          "ok": false,
+          "why": "short 常表示“不足的”；放回本句不符合语境。"
+        },
+        {
+          "label": "矮的",
+          "ok": false,
+          "why": "short 常表示“矮的”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Morris gave a short laugh.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "短的",
+              "ok": true,
+              "why": "short 在本句中取“短的”这个核心义。整句可理解为：莫里斯笑了一声。"
+            },
+            {
+              "label": "不足的",
+              "ok": false,
+              "why": "short 常表示“不足的”；放回本句不符合语境。"
+            },
+            {
+              "label": "矮的",
+              "ok": false,
+              "why": "short 常表示“矮的”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “short” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.cover",
+      "word": "cover",
+      "senses": [
+        {
+          "pos": "v",
+          "gloss": "覆盖"
+        }
+      ],
+      "sentence": "Much of the country is covered by snow.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "覆盖",
+          "ok": true,
+          "why": "cover 在本句中取“覆盖”这个核心义。整句可理解为：这个国家的大部分地区都被白雪覆盖。"
+        },
+        {
+          "label": "包括",
+          "ok": false,
+          "why": "cover 常表示“包括”；放回本句不符合语境。"
+        },
+        {
+          "label": "涉及",
+          "ok": false,
+          "why": "cover 常表示“涉及”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Grey mould covered the walls.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "覆盖",
+              "ok": true,
+              "why": "cover 在本句中取“覆盖”这个核心义。整句可理解为：灰色的霉菌布满了墙面。"
+            },
+            {
+              "label": "包括",
+              "ok": false,
+              "why": "cover 常表示“包括”；放回本句不符合语境。"
+            },
+            {
+              "label": "涉及",
+              "ok": false,
+              "why": "cover 常表示“涉及”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “cover” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.paper",
+      "word": "paper",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "纸"
+        }
+      ],
+      "sentence": "I’ll get you a piece of paper so you can write the number down.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "纸",
+          "ok": true,
+          "why": "paper 在本句中取“纸”这个核心义。整句可理解为：我给你找张纸，你好把号码写下来。"
+        },
+        {
+          "label": "官方文件",
+          "ok": false,
+          "why": "paper 常表示“官方文件”；放回本句不符合语境。"
+        },
+        {
+          "label": "文章",
+          "ok": false,
+          "why": "paper 常表示“文章”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Do you have a pen and paper?",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "纸",
+              "ok": true,
+              "why": "paper 在本句中取“纸”这个核心义。整句可理解为：你有笔和纸吗？"
+            },
+            {
+              "label": "官方文件",
+              "ok": false,
+              "why": "paper 常表示“官方文件”；放回本句不符合语境。"
+            },
+            {
+              "label": "文章",
+              "ok": false,
+              "why": "paper 常表示“文章”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “paper” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.position",
+      "word": "position",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "位置"
+        }
+      ],
+      "sentence": "Our hotel was in a superb central position near St Mark’s Square.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "位置",
+          "ok": true,
+          "why": "position 在本句中取“位置”这个核心义。整句可理解为：我们的酒店处于极佳的中心位置，在圣马克广场附近。"
+        },
+        {
+          "label": "职位",
+          "ok": false,
+          "why": "position 常表示“职位”；放回本句不符合语境。"
+        },
+        {
+          "label": "姿势",
+          "ok": false,
+          "why": "position 常表示“姿势”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Lie in a comfortable position.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "位置",
+              "ok": true,
+              "why": "position 在本句中取“位置”这个核心义。整句可理解为：以一个舒服的姿势躺下。"
+            },
+            {
+              "label": "职位",
+              "ok": false,
+              "why": "position 常表示“职位”；放回本句不符合语境。"
+            },
+            {
+              "label": "姿势",
+              "ok": false,
+              "why": "position 常表示“姿势”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “position” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “position” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.near",
+      "word": "near",
+      "senses": [
+        {
+          "pos": "adv",
+          "gloss": "近"
+        }
+      ],
+      "sentence": "I’m sure they live somewhere near here.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "近",
+          "ok": true,
+          "why": "near 在本句中取“近”这个核心义。整句可理解为：我肯定他们就住在这附近。"
+        },
+        {
+          "label": "接近",
+          "ok": false,
+          "why": "near 常表示“接近”；放回本句不符合语境。"
+        },
+        {
+          "label": "晚",
+          "ok": false,
+          "why": "late 常表示“晚”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "They moved house to be nearer the school.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "近",
+              "ok": true,
+              "why": "near 在本句中取“近”这个核心义。整句可理解为：他们把家搬到离学校近一些。"
+            },
+            {
+              "label": "接近",
+              "ok": false,
+              "why": "near 常表示“接近”；放回本句不符合语境。"
+            },
+            {
+              "label": "晚",
+              "ok": false,
+              "why": "late 常表示“晚”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “near” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.human",
+      "word": "human",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "人"
+        }
+      ],
+      "sentence": "There are many different cell types in the human body.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "人",
+          "ok": true,
+          "why": "human 在本句中取“人”这个核心义。整句可理解为：人体中有许多种不同的细胞类型。"
+        },
+        {
+          "label": "教育",
+          "ok": false,
+          "why": "education 常表示“教育”；放回本句不符合语境。"
+        },
+        {
+          "label": "走",
+          "ok": false,
+          "why": "walk 常表示“走”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "the power of the human mind",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "人",
+              "ok": true,
+              "why": "human 在本句中取“人”这个核心义。整句可理解为：人脑的威力"
+            },
+            {
+              "label": "教育",
+              "ok": false,
+              "why": "education 常表示“教育”；放回本句不符合语境。"
+            },
+            {
+              "label": "走",
+              "ok": false,
+              "why": "walk 常表示“走”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “human” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.situation",
+      "word": "situation",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "情况"
+        }
+      ],
+      "sentence": "I explained the situation to everyone.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "情况",
+          "ok": true,
+          "why": "situation 在本句中取“情况”这个核心义。整句可理解为：我向大家介绍了一下情况。"
+        },
+        {
+          "label": "形势",
+          "ok": false,
+          "why": "situation 常表示“形势”；放回本句不符合语境。"
+        },
+        {
+          "label": "处境",
+          "ok": false,
+          "why": "situation 常表示“处境”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "The house is in a charming situation, on a wooded hillside.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "情况",
+              "ok": true,
+              "why": "situation 在本句中取“情况”这个核心义。整句可理解为：房子位于林木茂密的小山坡上，环境十分优美。"
+            },
+            {
+              "label": "形势",
+              "ok": false,
+              "why": "situation 常表示“形势”；放回本句不符合语境。"
+            },
+            {
+              "label": "处境",
+              "ok": false,
+              "why": "situation 常表示“处境”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “situation” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “situation” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.vocab.activity",
+      "word": "activity",
+      "senses": [
+        {
+          "pos": "n",
+          "gloss": "活动"
+        }
+      ],
+      "sentence": "Everyone is free to engage in peaceful political activity.",
+      "prompt": "先看语境：标记词在本句中最接近哪个核心义？",
+      "error_tag": "高频词义",
+      "choices": [
+        {
+          "label": "活动",
+          "ok": true,
+          "why": "activity 在本句中取“活动”这个核心义。整句可理解为：每个人都可以自由参加和平的政治活动。"
+        },
+        {
+          "label": "活性",
+          "ok": false,
+          "why": "activity 常表示“活性”；放回本句不符合语境。"
+        },
+        {
+          "label": "活力",
+          "ok": false,
+          "why": "activity 常表示“活力”；放回本句不符合语境。"
+        }
+      ],
+      "variants": [
+        {
+          "sentence": "Regular physical activity helps to control your weight.",
+          "prompt": "换一个语境，这个词仍最接近哪个核心义？",
+          "choices": [
+            {
+              "label": "活动",
+              "ok": true,
+              "why": "activity 在本句中取“活动”这个核心义。整句可理解为：定期参加体育活动有助于控制体重。"
+            },
+            {
+              "label": "活性",
+              "ok": false,
+              "why": "activity 常表示“活性”；放回本句不符合语境。"
+            },
+            {
+              "label": "活力",
+              "ok": false,
+              "why": "activity 常表示“活力”；放回本句不符合语境。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “activity” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    }
+  ]
+}

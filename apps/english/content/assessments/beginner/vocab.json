@@ -390,6 +390,44 @@
       ]
     },
     {
+      "id": "en.assessment.beginner.vocab.also",
+      "word": "also",
+      "senses": [
+        {
+          "pos": "adv",
+          "gloss": "而且"
+        }
+      ],
+      "sentence": "The system was not only complicated but also ineffective.",
+      "prompt": "在这个新语境中，标记词最接近哪个意思？",
+      "error_tag": "高频词义迁移",
+      "choices": [
+        {
+          "label": "而且",
+          "ok": true,
+          "why": "本句取“而且”这一核心义。整句可理解为：这套系统不仅复杂而且效率低。"
+        },
+        {
+          "label": "亦",
+          "ok": false,
+          "why": "“亦”不符合本句语境。"
+        },
+        {
+          "label": "也",
+          "ok": false,
+          "why": "“也”不符合本句语境。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “also” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
       "id": "en.assessment.beginner.vocab.look",
       "word": "look",
       "senses": [
@@ -413,9 +451,9 @@
           "why": "“显得”不符合本句语境。"
         },
         {
-          "label": "关",
+          "label": "拿",
           "ok": false,
-          "why": "“关”不符合本句语境。"
+          "why": "“拿”不符合本句语境。"
         }
       ],
       "source_refs": [
@@ -484,14 +522,14 @@
           "why": "本句取“需要”这一核心义。整句可理解为：这台摄像机需要一块新电池。"
         },
         {
-          "label": "切",
+          "label": "检查",
           "ok": false,
-          "why": "“切”不符合本句语境。"
+          "why": "“检查”不符合本句语境。"
         },
         {
-          "label": "照顾",
+          "label": "杀死",
           "ok": false,
-          "why": "“照顾”不符合本句语境。"
+          "why": "“杀死”不符合本句语境。"
         }
       ],
       "source_refs": [
@@ -499,6 +537,44 @@
           "source_id": "kylebing-cet4",
           "relation": "quoted",
           "locator": "word “need” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.vocab.how",
+      "word": "how",
+      "senses": [
+        {
+          "pos": "adv",
+          "gloss": "怎么"
+        }
+      ],
+      "sentence": "I’d like to help in some way, but I’m not sure how.",
+      "prompt": "在这个新语境中，标记词最接近哪个意思？",
+      "error_tag": "高频词义迁移",
+      "choices": [
+        {
+          "label": "怎么",
+          "ok": true,
+          "why": "本句取“怎么”这一核心义。整句可理解为：我想帮点忙，可不知道该怎么做。"
+        },
+        {
+          "label": "怎样",
+          "ok": false,
+          "why": "“怎样”不符合本句语境。"
+        },
+        {
+          "label": "多少",
+          "ok": false,
+          "why": "“多少”不符合本句语境。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “how” · examples 3",
           "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
         }
       ]
@@ -542,44 +618,6 @@
       ]
     },
     {
-      "id": "en.assessment.beginner.vocab.may",
-      "word": "may",
-      "senses": [
-        {
-          "pos": "v",
-          "gloss": "可能"
-        }
-      ],
-      "sentence": "There may not be enough money to pay for the repairs.",
-      "prompt": "在这个新语境中，标记词最接近哪个意思？",
-      "error_tag": "高频词义迁移",
-      "choices": [
-        {
-          "label": "可能",
-          "ok": true,
-          "why": "本句取“可能”这一核心义。整句可理解为：可能钱不够支付修理费。"
-        },
-        {
-          "label": "可以",
-          "ok": false,
-          "why": "“可以”不符合本句语境。"
-        },
-        {
-          "label": "祝",
-          "ok": false,
-          "why": "“祝”不符合本句语境。"
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “may” · examples 3",
-          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
-        }
-      ]
-    },
-    {
       "id": "en.assessment.beginner.vocab.here",
       "word": "here",
       "senses": [
@@ -588,7 +626,7 @@
           "gloss": "这里"
         }
       ],
-      "sentence": "Come on. I’m over here .",
+      "sentence": "Come on. I’m over here.",
       "prompt": "在这个新语境中，标记词最接近哪个意思？",
       "error_tag": "高频词义迁移",
       "choices": [
@@ -603,9 +641,9 @@
           "why": "“向这里”不符合本句语境。"
         },
         {
-          "label": "相当",
+          "label": "也许",
           "ok": false,
-          "why": "“相当”不符合本句语境。"
+          "why": "“也许”不符合本句语境。"
         }
       ],
       "source_refs": [
@@ -626,14 +664,14 @@
           "gloss": "公司"
         }
       ],
-      "sentence": "The company directors have awarded themselves a massive pay increase.",
+      "sentence": "The company was set up just after the war.",
       "prompt": "在这个新语境中，标记词最接近哪个意思？",
       "error_tag": "高频词义迁移",
       "choices": [
         {
           "label": "公司",
           "ok": true,
-          "why": "本句取“公司”这一核心义。整句可理解为：公司的董事们给自己大幅加薪。"
+          "why": "本句取“公司”这一核心义。整句可理解为：这家公司是战后不久成立的。"
         },
         {
           "label": "陪伴",
@@ -650,7 +688,7 @@
         {
           "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “company” · examples 4",
+          "locator": "word “company” · examples 3",
           "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
         }
       ]
@@ -788,14 +826,14 @@
           "why": "本句取“自己的”这一核心义。整句可理解为：他的脸离她自己的脸非常近。"
         },
         {
-          "label": "贫穷的",
+          "label": "重大的",
           "ok": false,
-          "why": "“贫穷的”不符合本句语境。"
+          "why": "“重大的”不符合本句语境。"
         },
         {
-          "label": "大的",
+          "label": "短的",
           "ok": false,
-          "why": "“大的”不符合本句语境。"
+          "why": "“短的”不符合本句语境。"
         }
       ],
       "source_refs": [
@@ -854,7 +892,7 @@
           "gloss": "问"
         }
       ],
-      "sentence": "That kid’s always asking awkward questions .",
+      "sentence": "That kid’s always asking awkward questions.",
       "prompt": "在这个新语境中，标记词最接近哪个意思？",
       "error_tag": "高频词义迁移",
       "choices": [
@@ -945,9 +983,9 @@
           "why": "“末端”不符合本句语境。"
         },
         {
-          "label": "问题",
+          "label": "房间",
           "ok": false,
-          "why": "“问题”不符合本句语境。"
+          "why": "“房间”不符合本句语境。"
         }
       ],
       "source_refs": [
@@ -955,44 +993,6 @@
           "source_id": "kylebing-cet6",
           "relation": "quoted",
           "locator": "word “end” · examples 6",
-          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
-        }
-      ]
-    },
-    {
-      "id": "en.assessment.beginner.vocab.must",
-      "word": "must",
-      "senses": [
-        {
-          "pos": "v",
-          "gloss": "必须"
-        }
-      ],
-      "sentence": "We must all be patient.",
-      "prompt": "在这个新语境中，标记词最接近哪个意思？",
-      "error_tag": "高频词义迁移",
-      "choices": [
-        {
-          "label": "必须",
-          "ok": true,
-          "why": "本句取“必须”这一核心义。整句可理解为：我们都必须耐心。"
-        },
-        {
-          "label": "必然要",
-          "ok": false,
-          "why": "“必然要”不符合本句语境。"
-        },
-        {
-          "label": "死亡",
-          "ok": false,
-          "why": "“死亡”不符合本句语境。"
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “must” · examples 3",
           "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
         }
       ]

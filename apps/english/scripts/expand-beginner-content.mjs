@@ -22,6 +22,10 @@ function slug(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 }
 
+function normalizeText(text) {
+  return String(text).replace(/\s+([,.;:!?])/g, "$1").replace(/\s+/g, " ").trim();
+}
+
 function wordPattern(word) {
   return new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}[a-z’']*\\b`, "i");
 }
@@ -70,7 +74,12 @@ function loadSentenceSource(sourceId, relative, merged) {
     if (!word) continue;
     const entry = merged.get(word) ?? { word, translations: [], sentences: [] };
     entry.translations.push(...(raw.translations ?? []));
-    entry.sentences.push(...(raw.sentences ?? []).map((sentence) => ({ ...sentence, source_id: sourceId })));
+    entry.sentences.push(...(raw.sentences ?? []).map((sentence) => ({
+      ...sentence,
+      sentence: normalizeText(sentence.sentence),
+      translation: normalizeText(sentence.translation),
+      source_id: sourceId,
+    })));
     merged.set(word, entry);
   }
 }
@@ -101,6 +110,8 @@ for (const word of ngslOrder) {
   );
   let selected;
   for (const sense of raw.translations.filter((entry) => ["v", "n", "adj", "adv"].includes(entry.type))) {
+    // 助动词用法属于句法轨，不把“已经”等完成体标记冒充词汇核心义。
+    if (/^\s*(?:\([^)]*\)\s*)?aux/i.test(sense.translation)) continue;
     const alternatives = uniqueBy(glossParts(sense.translation), (part) => part);
     for (const gloss of alternatives) {
       const matching = allSentencesForWord.filter((entry) => entry.translation.includes(gloss));
@@ -165,15 +176,24 @@ const generatedVocabItems = generatedWords.map((entry, index) => {
   };
 });
 
-writeJson("vocab/beginner/generated-core.json", {
-  topic_id: "en.beginner.vocab.core",
-  kind: "vocab",
-  source_refs: [
-    { source_id: "ngsl-1.2", relation: "selection_basis", note: "按 NGSL 前 1000 词的频率顺序补足初级核心词。" },
-    { source_id: "kylebing-kaoyan", relation: "quoted", note: "双语例句用于建立词在语境中的核心义。" },
-  ],
-  items: generatedVocabItems,
-});
+const vocabChunkSize = 48;
+const generatedVocabPaths = [];
+for (let offset = 0; offset < generatedVocabItems.length; offset += vocabChunkSize) {
+  const part = Math.floor(offset / vocabChunkSize) + 1;
+  const relative = `vocab/beginner/generated-${String(part).padStart(2, "0")}.json`;
+  generatedVocabPaths.push(relative);
+  writeJson(relative, {
+    topic_id: "en.beginner.vocab.core",
+    kind: "vocab",
+    source_refs: [
+      { source_id: "ngsl-1.2", relation: "selection_basis", note: "按 NGSL 前 1000 词的频率顺序补足初级核心词。" },
+      { source_id: "kylebing-kaoyan", relation: "quoted", note: "双语例句用于建立词在语境中的核心义。" },
+    ],
+    items: generatedVocabItems.slice(offset, offset + vocabChunkSize),
+  });
+}
+const legacyVocabPath = path.join(contentRoot, "vocab/beginner/generated-core.json");
+if (fs.existsSync(legacyVocabPath)) fs.rmSync(legacyVocabPath);
 
 const selectedWords = new Set([...originalWords, ...generatedWords.map((entry) => entry.word)]);
 const translationEntries = entries.filter((entry) => !selectedWords.has(entry.word)).slice(0, 58);
@@ -215,19 +235,30 @@ writeJson("sentences/beginner/translation.json", {
 });
 
 const logicKinds = [
-  { key: "because", pattern: /\bbecause\b/i, kind: "cause", prompt: "because 后面的信息在句中承担什么作用？", answer: "说明前面情况的原因", wrong: ["说明前面情况的结果", "引出与前文无关的话题"] },
-  { key: "but", pattern: /\bbut\b/i, kind: "contrast", prompt: "but 前后两部分是什么关系？", answer: "后半句转折或修正前半句", wrong: ["后半句只重复前半句", "两部分构成时间先后"] },
-  { key: "if", pattern: /\bif\b/i, kind: "condition", prompt: "if 从句在这里给出了什么？", answer: "行动或结果成立的条件", wrong: ["已经发生的结果", "说话人的身份"] },
-  { key: "so", pattern: /\bso\b/i, kind: "cause", prompt: "so 后面的信息在句中承担什么作用？", answer: "说明前面情况带来的结果", wrong: ["说明前面情况的原因", "否定前面的全部内容"] },
-  { key: "although", pattern: /\balthough\b|\bthough\b/i, kind: "contrast", prompt: "although / though 引出的内容有什么作用？", answer: "先承认一种情况，再给出不同结论", wrong: ["列出完全相同的两件事", "只交代动作发生地点"] },
-  { key: "time", pattern: /\b(before|after)\b/i, kind: "clause_split", prompt: "before / after 在这里帮助读者判断什么？", answer: "两个动作或情况发生的先后", wrong: ["两个动作之间的因果方向", "说话人的身份"] },
+  { key: "because", limit: 4, pattern: /\bbecause\s+(?:i|you|he|she|we|they|it|the|a|an|there)\b/i, reject: /\bnot\s+because\b/i, kind: "cause", prompt: "because 后面的信息在句中承担什么作用？", answer: "说明前面情况的原因", wrong: ["说明前面情况的结果", "引出与前文无关的话题"] },
+  { key: "but", limit: 4, pattern: /\bbut\s+(?:i|you|he|she|we|they|it|the|a|an)\b/i, reject: /^(?:[“\"']\s*)?(?:but\b|(?:no|yes),\s*but\b)|\bnot only\b.*\bbut\b|\b(?:nothing|anything)\b.*\bbut\b/i, kind: "contrast", prompt: "but 前后两部分是什么关系？", answer: "后半句转折或修正前半句", wrong: ["后半句只重复前半句", "两部分构成时间先后"] },
+  { key: "if", limit: 4, pattern: /^(?:[“\"']\s*)?if\s+(?:i|you|he|she|we|they|it|the|a|an)\b/i, reject: /\bas if\b|\bif not\b/i, kind: "condition", prompt: "if 从句在这里给出了什么？", answer: "行动或结果成立的条件", wrong: ["已经发生的结果", "说话人的身份"] },
+  { key: "so", limit: 4, pattern: /[,;]\s+so\s+(?:i|you|he|she|we|they|it|the|a|an|don['’]t|do|can|could|would|should|had|was|were)\b/i, reject: /^(?:[“\"']\s*)?but\b/i, kind: "cause", prompt: "so 后面的信息在句中承担什么作用？", answer: "说明前面情况带来的结果", wrong: ["说明前面情况的原因", "只补充动作发生地点"] },
+  { key: "although", limit: 3, pattern: /^(?:[“\"']\s*)?(?:although|even though|though)\b/i, reject: /\b(?:shorn|skeptical|qualms|sanity|admiring)\b/i, kind: "contrast", prompt: "although / though 引出的内容有什么作用？", answer: "先承认一种情况，再给出不同结论", wrong: ["列出完全相同的两件事", "只交代动作发生地点"] },
+  { key: "time", limit: 3, pattern: /\b(?:before|after)\s+(?:i|you|he|she|we|they|it)\b/i, reject: /\b(?:look|looks|looked|looking)\s+after\b/i, kind: "clause_split", prompt: "before / after 在这里帮助读者判断什么？", answer: "两个动作或情况发生的先后", wrong: ["两个动作之间的因果方向", "说话人的身份"] },
+  { key: "when", limit: 3, pattern: /\bwhen\s+(?:i|you|he|she|we|they|it|the)\b/i, reject: /^\.\.\./, kind: "clause_split", prompt: "when 引出的部分帮助读者判断什么？", answer: "动作或情况发生的时间背景", wrong: ["前后内容互相否定", "说话人的身份"] },
 ];
 
-const allSentences = uniqueBy(entries.flatMap((entry) => entry.sentences.map((sentence) => ({ ...sentence, word: entry.word }))), (entry) => entry.sentence.toLowerCase());
+const allSentences = uniqueBy(
+  [...merged.entries()].flatMap(([word, entry]) => entry.sentences
+    .filter((sentence) => sentence.sentence && sentence.translation && sentence.sentence.trim().split(/\s+/).length >= 5 && !sentence.sentence.includes("(="))
+    .map((sentence) => ({ ...sentence, word }))),
+  (entry) => entry.sentence.toLowerCase(),
+);
 const logicItems = [];
 for (const template of logicKinds) {
-  const matches = allSentences.filter((entry) => template.pattern.test(entry.sentence));
-  for (let pair = 0; pair < 6 && pair * 2 + 1 < matches.length; pair += 1) {
+  const matches = allSentences
+    .filter((entry) => {
+      const words = entry.sentence.trim().split(/\s+/).length;
+      return words >= 6 && words <= 32 && template.pattern.test(entry.sentence) && !template.reject?.test(entry.sentence);
+    })
+    .sort((left, right) => left.sentence.split(/\s+/).length - right.sentence.split(/\s+/).length);
+  for (let pair = 0; pair < template.limit && pair * 2 + 1 < matches.length; pair += 1) {
     const base = matches[pair * 2];
     const variant = matches[pair * 2 + 1];
     logicItems.push({
@@ -279,10 +310,11 @@ function sourceParagraphs(relative, sourceId) {
     .map((text) => text.replace(/\n+/g, " ").trim())
     .filter((text) => {
       const words = text.split(/\s+/).length;
-      return words >= 12 && words <= 90 &&
+      return words >= 3 && words <= 90 &&
+        !/[:：]\s*$/.test(text) &&
         !text.startsWith("From VOA") &&
-        !text.startsWith("And that") &&
-        !/ wrote this| was the editor/.test(text);
+        !/^(?:Today we answer|She writes:?|Dear\b|Thank you for asking|I hope this helps|I['’]m\b|And that)/i.test(text) &&
+        !/ wrote this| was the editor|Ask a Teacher/.test(text);
     })
     .map((text) => ({ text, sourceId }));
 }
@@ -292,21 +324,37 @@ const articleParagraphs = [
   ...sourceParagraphs("sources/reference/voa/job-and-career.md", "voa-job-and-career"),
 ];
 const passageChunks = articleParagraphs.map((paragraph, index) => {
-  const sentenceCount = (paragraph.text.match(/[.!?](?:["”'])?(?=\s|$)/g) ?? []).length;
-  if (sentenceCount >= 2) return paragraph;
-  const next = articleParagraphs[index + 1]?.sourceId === paragraph.sourceId
-    ? articleParagraphs[index + 1]
-    : articleParagraphs[index - 1];
-  return next ? { text: `${paragraph.text} ${next.text}`, sourceId: paragraph.sourceId } : paragraph;
+  const parts = [paragraph.text];
+  let nextIndex = index + 1;
+  const sentenceCount = () => (parts.join(" ").match(/[.!?](?:["”'])?(?=\s|$)/g) ?? []).length;
+  while (sentenceCount() < 2 && articleParagraphs[nextIndex]?.sourceId === paragraph.sourceId) {
+    parts.push(articleParagraphs[nextIndex].text);
+    nextIndex += 1;
+  }
+  if (sentenceCount() < 2 && articleParagraphs[index - 1]?.sourceId === paragraph.sourceId) {
+    parts.unshift(articleParagraphs[index - 1].text);
+  }
+  return { text: parts.join(" "), sourceId: paragraph.sourceId };
+}).filter((chunk) => {
+  const words = chunk.text.split(/\s+/).length;
+  const sentences = (chunk.text.match(/[.!?](?:["”'])?(?=\s|$)/g) ?? []).length;
+  return words >= 18 && words <= 120 && sentences >= 2;
 });
 if (passageChunks.length < 30) throw new Error(`短文候选不足 30 段：${passageChunks.length}`);
 function firstStatement(text) {
   return text.match(/^.*?[.!?](?:["”'])?(?=\s|$)/)?.[0] ?? text;
 }
 for (const chunk of passageChunks) chunk.evidence = firstStatement(chunk.text);
+function unrelatedEvidence(chunk, start) {
+  for (let step = 0; step < passageChunks.length; step += 1) {
+    const candidate = passageChunks[(start + step) % passageChunks.length].evidence;
+    if (candidate !== chunk.evidence && !chunk.text.includes(candidate)) return candidate;
+  }
+  throw new Error("无法为初级短文找到不重叠的干扰项");
+}
 const passageItems = passageChunks.slice(0, 30).map((chunk, index) => {
-  const wrongA = passageChunks[(index + 7) % passageChunks.length].evidence;
-  const wrongB = passageChunks[(index + 19) % passageChunks.length].evidence;
+  const wrongA = unrelatedEvidence(chunk, index + 7);
+  const wrongB = unrelatedEvidence(chunk, index + 19);
   const variant = passageChunks[(index + 13) % passageChunks.length];
   return {
     id: `en.beginner.sentence.passage_${String(index + 1).padStart(2, "0")}`,
@@ -352,6 +400,10 @@ originalWriting.items = originalWriting.items.filter((item) => [
   "en.beginner.writing.contrast",
   "en.beginner.writing.practical_note",
 ].includes(item.id));
+const originalPracticalNote = originalWriting.items.find((item) => item.id === "en.beginner.writing.practical_note");
+if (originalPracticalNote && !originalPracticalNote.reference.endsWith("Thank you.")) {
+  originalPracticalNote.reference += " Thank you.";
+}
 const reasonSeeds = [
   ["提前列好第二天的计划", "I make a short plan before I go to bed.", "because it helps me start the next morning calmly"],
   ["晚饭后散步", "I take a short walk after dinner.", "because it helps me relax and sleep better"],
@@ -394,7 +446,7 @@ const generatedWriting = [
     starter,
     min_words: 25,
     required_any: ["because"],
-    reference: `${starter} I do this ${reason}. This small habit makes my day easier.`,
+    reference: `${starter} I do this ${reason}. This small habit makes my day easier, and it is easy to continue.`,
     error_tag: "理由没有展开",
     checklist: ["是否写清具体做法", "because 后是否给出真正原因", "是否用一句结果收束"],
     source_refs: [{ source_id: "voa-writing-speaking-guide", relation: "adapted", locator: "Beginners: personal experience", note: "按初级个人经验活动改成短段落练习；参考写法不是唯一答案。" }],
@@ -406,7 +458,7 @@ const generatedWriting = [
     starter: `${first}, but`,
     min_words: 28,
     required_any: ["but"],
-    reference: `${first}, but ${second}. I decide what to do by thinking about both sides.`,
+    reference: `${first}, but ${second}. I decide what to do by thinking about both sides. For me, the second point matters more in daily life.`,
     error_tag: "转折表达不完整",
     checklist: ["but 前后是否真的形成对照", "两个分句是否都有完整谓语", "结尾是否回到自己的判断"],
     source_refs: [{ source_id: "voa-writing-speaking-guide", relation: "adapted", locator: "Beginners: compare experiences", note: "按初级对比活动改成短段落练习；参考写法用于自查结构。" }],
@@ -418,7 +470,7 @@ const generatedWriting = [
     starter: "Hello,",
     min_words: 28,
     required_any: ["please", "could"],
-    reference,
+    reference: `${reference} Thank you for your help and understanding. I look forward to your reply.`,
     error_tag: "任务回应不完整",
     checklist: ["是否回应了题目中的每项任务", "请求是否清楚且礼貌", "时间、人物和动作是否明确"],
     source_refs: [{ source_id: "voa-writing-speaking-guide", relation: "adapted", locator: "Beginners: practical messages", note: "按初级真实交流活动改成短消息任务；参考写法只示范任务回应。" }],

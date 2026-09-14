@@ -101,6 +101,10 @@ function normalized(text) {
   return text.replace(/\s+/g, " ").trim().toLowerCase();
 }
 
+function wordCount(text) {
+  return String(text).trim().split(/\s+/).filter(Boolean).length;
+}
+
 function materialKeys(item) {
   const contexts = [item.sentence, item.text].filter(Boolean).map(normalized);
   return contexts.length > 0 ? contexts : [normalized(item.prompt)];
@@ -123,15 +127,51 @@ function validateItem(item, relative, assessment, deckRefs) {
     if (!assessment && !item.variants?.length) {
       errors.push(`${relative}: ${item.id} 缺少错题出库所需的未见变式`);
     }
+    if (new Set(item.choices.map((choice) => choice.label)).size !== item.choices.length) {
+      errors.push(`${relative}: ${item.id} 存在重复选项`);
+    }
+    if (item.kind === "passage_detail") {
+      const correctChoice = item.choices.find((choice) => choice.ok === true);
+      if (!correctChoice || !item.text?.includes(correctChoice.label)) {
+        errors.push(`${relative}: ${item.id} 的正确证据不能从短文原文直接定位`);
+      }
+      for (const choice of item.choices.filter((candidate) => candidate.ok !== true)) {
+        if (item.text?.includes(choice.label)) {
+          errors.push(`${relative}: ${item.id} 的错误选项实际出现在短文原文中`);
+        }
+      }
+    }
   } else if (assessment) {
     errors.push(`${relative}: ${item.id} 的独立考核暂不接受无法客观判分的开放题`);
   } else if (!(item.min_words > 0) || !item.reference || !item.checklist?.length) {
     errors.push(`${relative}: ${item.id} 的开放写作字段不完整`);
+  } else {
+    if (relative.includes("/beginner/") && wordCount(item.reference) < item.min_words) {
+      errors.push(`${relative}: ${item.id} 的参考写法少于自己要求的 ${item.min_words} 词`);
+    }
+    const required = item.required_any ?? [];
+    if (relative.includes("/beginner/") && required.length > 0 && !required.some((word) => new RegExp(`(^|[^a-z])${word}([^a-z]|$)`, "i").test(item.reference))) {
+      errors.push(`${relative}: ${item.id} 的参考写法没有示范 required_any`);
+    }
   }
   for (const [index, variant] of (item.variants ?? []).entries()) {
     const correct = (variant.choices ?? []).filter((choice) => choice.ok === true).length;
     if (correct !== 1) {
       errors.push(`${relative}: ${item.id} 变式 ${index + 1} 必须且只能有一个正确选项`);
+    }
+    if (new Set((variant.choices ?? []).map((choice) => choice.label)).size !== (variant.choices ?? []).length) {
+      errors.push(`${relative}: ${item.id} 变式 ${index + 1} 存在重复选项`);
+    }
+    if (item.kind === "passage_detail") {
+      const correctChoice = (variant.choices ?? []).find((choice) => choice.ok === true);
+      if (!correctChoice || !variant.text?.includes(correctChoice.label)) {
+        errors.push(`${relative}: ${item.id} 变式 ${index + 1} 的正确证据不能从短文原文直接定位`);
+      }
+      for (const choice of (variant.choices ?? []).filter((candidate) => candidate.ok !== true)) {
+        if (variant.text?.includes(choice.label)) {
+          errors.push(`${relative}: ${item.id} 变式 ${index + 1} 的错误选项实际出现在短文原文中`);
+        }
+      }
     }
   }
   for (const asset of item.media ?? []) {
@@ -258,9 +298,15 @@ for (const stage of curriculum.stages ?? []) {
       }
       if (track.kind === "sentence") {
         const translations = trackItems.filter((item) => item.kind === "translation").length;
-        const passages = trackItems.filter((item) => item.kind === "passage_detail").length;
+        const passages = trackItems.filter((item) => item.kind === "passage_detail");
         if (translations < 60) errors.push(`curriculum.json: 初级英译汉只有 ${translations} 道，基线为 60`);
-        if (passages < 30) errors.push(`curriculum.json: 初级短文只有 ${passages} 道，基线为 30`);
+        if (passages.length < 30) errors.push(`curriculum.json: 初级短文只有 ${passages.length} 道，基线为 30`);
+        for (const item of passages) {
+          const sentenceCount = (String(item.text).match(/[.!?](?:[\"”'])?(?=\s|$)/g) ?? []).length;
+          if (wordCount(item.text) < 12 || sentenceCount < 2) {
+            errors.push(`curriculum.json: ${item.id} 不是至少两句的连续短文`);
+          }
+        }
       }
     }
     if (track.passage && !fs.existsSync(path.join(contentRoot, track.passage))) {

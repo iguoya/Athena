@@ -25,7 +25,16 @@ async function call<T>(command: string, args?: Record<string, unknown>): Promise
   return invoke<T>(command, args);
 }
 
-const bundled = import.meta.glob(["../content/**/*.json", "../content/passages/**/*.md"], {
+const bundled = import.meta.glob([
+  "../content/curriculum.json",
+  "../content/vocab/**/*.json",
+  "../content/sentences/**/*.json",
+  "../content/passages/**/*.json",
+  "../content/passages/**/*.md",
+  "../content/writing/**/*.json",
+  "../content/assessments/**/*.json",
+  "../content/sources/catalog.json",
+], {
   query: "?raw",
   import: "default",
 }) as Record<string, () => Promise<string>>;

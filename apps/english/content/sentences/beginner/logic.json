@@ -12,14 +12,14 @@
     {
       "id": "en.beginner.sentence.logic_because_1",
       "kind": "cause",
-      "text": "If I have to stay late at work tonight, it won’t matter because we can go out another night.",
+      "text": "I couldn’t go because I had flu.",
       "prompt": "because 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况的原因",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果今晚我必须工作到很晚的话，那也没关系，我们可以改天晚上再出去。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我得了流感，去不了。"
         },
         {
           "label": "说明前面情况的结果",
@@ -34,13 +34,13 @@
       ],
       "variants": [
         {
-          "text": "Some students lose marks simply because they don’t read the question properly.",
+          "text": "We moved here because there was very little crime.",
           "prompt": "because 后面的信息在句中承担什么作用？",
           "choices": [
             {
               "label": "说明前面情况的原因",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：有些学生丢分只是因为没有好好读题目。"
+              "why": "换句后连接关系不变。整句可理解为：我们搬到这里来是因为这里的犯罪率很低。"
             },
             {
               "label": "说明前面情况的结果",
@@ -57,9 +57,9 @@
       ],
       "source_refs": [
         {
-          "source_id": "kylebing-cet4",
+          "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “matter” · connector because",
+          "locator": "word “flu” · connector because",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -67,14 +67,14 @@
     {
       "id": "en.beginner.sentence.logic_because_2",
       "kind": "cause",
-      "text": "For example, we say, “I love you” to our parents or significant other when we hang up the phone, not because we mean it, but out of habit.",
+      "text": "‘Why can’t I go?’ ‘Because you’re not old enough.’",
       "prompt": "because 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况的原因",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：比方说，我们会在电话里和父母或者某个重要的人说“我爱你”，并不因为我们真的想这么说，而是因为习惯。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：“我为什么不能去？”“因为你年纪太小。”"
         },
         {
           "label": "说明前面情况的结果",
@@ -89,13 +89,13 @@
       ],
       "variants": [
         {
-          "text": "It was difficult to treat patients because of a shortage of medicine.",
+          "text": "Because the earth spins, it is not a perfect sphere.",
           "prompt": "because 后面的信息在句中承担什么作用？",
           "choices": [
             {
               "label": "说明前面情况的原因",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：由于缺少药物，很难给病人治病。"
+              "why": "换句后连接关系不变。整句可理解为：因为地球旋转，所以它不是个完完全全的球体。"
             },
             {
               "label": "说明前面情况的结果",
@@ -114,7 +114,7 @@
         {
           "source_id": "kylebing-cet4",
           "relation": "quoted",
-          "locator": "word “significant” · connector because",
+          "locator": "word “because” · connector because",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -122,14 +122,14 @@
     {
       "id": "en.beginner.sentence.logic_because_3",
       "kind": "cause",
-      "text": "He’s lucky because at least he has somewhere to sleep.",
+      "text": "I was angry because he hadn’t told me his plans.",
       "prompt": "because 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况的原因",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：他算是幸运的，至少还有个睡觉的地方。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我很生气，因为他没有告诉我他的计划。"
         },
         {
           "label": "说明前面情况的结果",
@@ -144,13 +144,13 @@
       ],
       "variants": [
         {
-          "text": "Because we need to give profit to the capital, otherwise we get no capital.",
+          "text": "It is good because it is written in friendly, ordinary language.",
           "prompt": "because 后面的信息在句中承担什么作用？",
           "choices": [
             {
               "label": "说明前面情况的原因",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：因为我们需要为了资本来获得利益，否则就得不到资本。"
+              "why": "换句后连接关系不变。整句可理解为：它很不错，因为它是用平易近人的日常语言写的。"
             },
             {
               "label": "说明前面情况的结果",
@@ -169,326 +169,51 @@
         {
           "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “sleep” · connector because",
+          "locator": "word “angry” · connector because",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
     },
     {
-      "id": "en.beginner.sentence.logic_but_1",
-      "kind": "contrast",
-      "text": "He wanted to take me to a disco but I said no.",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
+      "id": "en.beginner.sentence.logic_because_4",
+      "kind": "cause",
+      "text": "We can’t light a fire because the chimney hasn’t been swept.",
+      "prompt": "because 后面的信息在句中承担什么作用？",
+      "error_tag": "因果关系",
       "choices": [
         {
-          "label": "后半句转折或修正前半句",
+          "label": "说明前面情况的原因",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：他想带我去迪斯科舞厅，但是我拒绝了。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：烟囱管没有清扫过，我们生不了火。"
         },
         {
-          "label": "后半句只重复前半句",
+          "label": "说明前面情况的结果",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "两部分构成时间先后",
+          "label": "引出与前文无关的话题",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "The system was not only complicated but also ineffective.",
-          "prompt": "but 前后两部分是什么关系？",
+          "text": "We didn’t enjoy the day because the weather was so awful.",
+          "prompt": "because 后面的信息在句中承担什么作用？",
           "choices": [
             {
-              "label": "后半句转折或修正前半句",
+              "label": "说明前面情况的原因",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：这套系统不仅复杂而且效率低。"
+              "why": "换句后连接关系不变。整句可理解为：那天我们很不尽兴，因为天气实在太糟。"
             },
             {
-              "label": "后半句只重复前半句",
+              "label": "说明前面情况的结果",
               "ok": false,
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "两部分构成时间先后",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “no” · connector but",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_but_2",
-      "kind": "contrast",
-      "text": "I’d like to help in some way, but I’m not sure how.",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
-      "choices": [
-        {
-          "label": "后半句转折或修正前半句",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我想帮点忙，可不知道该怎么做。"
-        },
-        {
-          "label": "后半句只重复前半句",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "两部分构成时间先后",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "I watched the first few episodes, but soon lost interest.",
-          "prompt": "but 前后两部分是什么关系？",
-          "choices": [
-            {
-              "label": "后半句转折或修正前半句",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：我看了前几集，但很快就失去了兴趣。"
-            },
-            {
-              "label": "后半句只重复前半句",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "两部分构成时间先后",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “how” · connector but",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_but_3",
-      "kind": "contrast",
-      "text": "I like her as a person , but not as a boss.",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
-      "choices": [
-        {
-          "label": "后半句转折或修正前半句",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我喜欢她这个人，但作为老板我就不喜欢了。"
-        },
-        {
-          "label": "后半句只重复前半句",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "两部分构成时间先后",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "She tried to keep the door shut but the man forced it open .",
-          "prompt": "but 前后两部分是什么关系？",
-          "choices": [
-            {
-              "label": "后半句转折或修正前半句",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：她不想打开门，但那男人硬是把它推开了。"
-            },
-            {
-              "label": "后半句只重复前半句",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "两部分构成时间先后",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “person” · connector but",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_but_4",
-      "kind": "contrast",
-      "text": "‘Why don’t you just leave?’ ‘I’d like to,’ she answered, ‘but I have nowhere else to go.’",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
-      "choices": [
-        {
-          "label": "后半句转折或修正前半句",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：“你为什么不一走了之？”“我倒是想走，”她回答说，“但是我没有其他地方可去。”"
-        },
-        {
-          "label": "后半句只重复前半句",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "两部分构成时间先后",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "He’s got a computer sitting on his desk, but he doesn’t use it.",
-          "prompt": "but 前后两部分是什么关系？",
-          "choices": [
-            {
-              "label": "后半句转折或修正前半句",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：他有一台电脑放在书桌上，但他不用。"
-            },
-            {
-              "label": "后半句只重复前半句",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "两部分构成时间先后",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “answer” · connector but",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_but_5",
-      "kind": "contrast",
-      "text": "The class is full, but you can register for next term.",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
-      "choices": [
-        {
-          "label": "后半句转折或修正前半句",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：这个班已经满了，不过你可以注册下学期的。"
-        },
-        {
-          "label": "后半句只重复前半句",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "两部分构成时间先后",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "Maybe they’re right, but maybe not .",
-          "prompt": "but 前后两部分是什么关系？",
-          "choices": [
-            {
-              "label": "后半句转折或修正前半句",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：也许他们是对的，但也许不是。"
-            },
-            {
-              "label": "后半句只重复前半句",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "两部分构成时间先后",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “full” · connector but",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_but_6",
-      "kind": "contrast",
-      "text": "I don’t claim to be a feminist, but I’d like to see more women in top jobs.",
-      "prompt": "but 前后两部分是什么关系？",
-      "error_tag": "转折关系",
-      "choices": [
-        {
-          "label": "后半句转折或修正前半句",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我不会自称是女权主义者，但我希望看到更多的女性担任高职。"
-        },
-        {
-          "label": "后半句只重复前半句",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "两部分构成时间先后",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "What we need is not simply a smaller organization, but a more efficient one.",
-          "prompt": "but 前后两部分是什么关系？",
-          "choices": [
-            {
-              "label": "后半句转折或修正前半句",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：我们需要的不仅仅是一个精简的机构，而是一个更有效率的机构。"
-            },
-            {
-              "label": "后半句只重复前半句",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "两部分构成时间先后",
+              "label": "引出与前文无关的话题",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -499,51 +224,51 @@
         {
           "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “claim” · connector but",
+          "locator": "word “chimney” · connector because",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
     },
     {
-      "id": "en.beginner.sentence.logic_if_1",
-      "kind": "condition",
-      "text": "If you’re asking whether I feel the same way about her, the answer is no.",
-      "prompt": "if 从句在这里给出了什么？",
-      "error_tag": "条件关系",
+      "id": "en.beginner.sentence.logic_but_1",
+      "kind": "contrast",
+      "text": "The phone rang, but she ignored it.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "转折关系",
       "choices": [
         {
-          "label": "行动或结果成立的条件",
+          "label": "后半句转折或修正前半句",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果你问的是我对她是否也有相同的感觉，答案是没有。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：电话铃响了，但她只当没听见。"
         },
         {
-          "label": "已经发生的结果",
+          "label": "后半句只重复前半句",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "说话人的身份",
+          "label": "两部分构成时间先后",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "If you look carefully you can see that the painting represents a human figure.",
-          "prompt": "if 从句在这里给出了什么？",
+          "text": "I waved but they took no notice.",
+          "prompt": "but 前后两部分是什么关系？",
           "choices": [
             {
-              "label": "行动或结果成立的条件",
+              "label": "后半句转折或修正前半句",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：如果仔细看，就会看出画上是一个人形。"
+              "why": "换句后连接关系不变。整句可理解为：我挥了挥手，可是他们没有注意到。"
             },
             {
-              "label": "已经发生的结果",
+              "label": "后半句只重复前半句",
               "ok": false,
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "说话人的身份",
+              "label": "两部分构成时间先后",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -554,106 +279,51 @@
         {
           "source_id": "kylebing-cet4",
           "relation": "quoted",
-          "locator": "word “no” · connector if",
+          "locator": "word “ignore” · connector but",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
     },
     {
-      "id": "en.beginner.sentence.logic_if_2",
-      "kind": "condition",
-      "text": "There are penalties if loan repayments are late.",
-      "prompt": "if 从句在这里给出了什么？",
-      "error_tag": "条件关系",
+      "id": "en.beginner.sentence.logic_but_2",
+      "kind": "contrast",
+      "text": "Problems were expected, but they never materialized.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "转折关系",
       "choices": [
         {
-          "label": "行动或结果成立的条件",
+          "label": "后半句转折或修正前半句",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：逾期偿还贷款会被处以罚金。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：估计会有问题，但一直没有发生。"
         },
         {
-          "label": "已经发生的结果",
+          "label": "后半句只重复前半句",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "说话人的身份",
+          "label": "两部分构成时间先后",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "If you need more information, you might try the Internet.",
-          "prompt": "if 从句在这里给出了什么？",
+          "text": "It’s a six-month lease but it’s renewable.",
+          "prompt": "but 前后两部分是什么关系？",
           "choices": [
             {
-              "label": "行动或结果成立的条件",
+              "label": "后半句转折或修正前半句",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：如果你需要更多的信息，可以试试因特网。"
+              "why": "换句后连接关系不变。整句可理解为：租期六个月，但是可以续签。"
             },
             {
-              "label": "已经发生的结果",
+              "label": "后半句只重复前半句",
               "ok": false,
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "说话人的身份",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “late” · connector if",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_if_3",
-      "kind": "condition",
-      "text": "If you could ever figure out how to market this you’d make a fortune.",
-      "prompt": "if 从句在这里给出了什么？",
-      "error_tag": "条件关系",
-      "choices": [
-        {
-          "label": "行动或结果成立的条件",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果能想出办法来推销这个东西，你就发财了。"
-        },
-        {
-          "label": "已经发生的结果",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "说话人的身份",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "Your pension can be affected if you change jobs.",
-          "prompt": "if 从句在这里给出了什么？",
-          "choices": [
-            {
-              "label": "行动或结果成立的条件",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：换工作的话，会影响到你的退休金。"
-            },
-            {
-              "label": "已经发生的结果",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "说话人的身份",
+              "label": "两部分构成时间先后",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -664,7 +334,282 @@
         {
           "source_id": "kylebing-cet6",
           "relation": "quoted",
-          "locator": "word “market” · connector if",
+          "locator": "word “materialize” · connector but",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_but_3",
+      "kind": "contrast",
+      "text": "She asked him to leave, but he refused.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "转折关系",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：她叫他走，但他不肯。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I know you told me, but I forgot.",
+          "prompt": "but 前后两部分是什么关系？",
+          "choices": [
+            {
+              "label": "后半句转折或修正前半句",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：我知道你告诉过我，但是我忘了。"
+            },
+            {
+              "label": "后半句只重复前半句",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "两部分构成时间先后",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “refuse” · connector but",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_but_4",
+      "kind": "contrast",
+      "text": "The food looked horrible, but it tasted OK.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "转折关系",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：那食物看上去很糟，可吃起来还不错。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I’ve washed your shirt but it’s still wet.",
+          "prompt": "but 前后两部分是什么关系？",
+          "choices": [
+            {
+              "label": "后半句转折或修正前半句",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：我把你的衬衫洗过了，不过现在还是湿的。"
+            },
+            {
+              "label": "后半句只重复前半句",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "两部分构成时间先后",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “horrible” · connector but",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_if_1",
+      "kind": "condition",
+      "text": "If it’s fine tomorrow we’ll go out.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "条件关系",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果明天天气晴朗，我们就出门。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "If the mixture seems dry, add water.",
+          "prompt": "if 从句在这里给出了什么？",
+          "choices": [
+            {
+              "label": "行动或结果成立的条件",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：如果混合物看上去干，加点水。"
+            },
+            {
+              "label": "已经发生的结果",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “fine” · connector if",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_if_2",
+      "kind": "condition",
+      "text": "If I didn’t apologize, I’d feel guilty.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "条件关系",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果我不道歉，我会感到内疚。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "If you’re pregnant, you can get free prescriptions.",
+          "prompt": "if 从句在这里给出了什么？",
+          "choices": [
+            {
+              "label": "行动或结果成立的条件",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：要是怀孕的话可以获得免费的处方药。"
+            },
+            {
+              "label": "已经发生的结果",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “if” · connector if",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_if_3",
+      "kind": "condition",
+      "text": "If we hurry, we’ll get there in time.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "条件关系",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：要是赶紧的话，我们能及时到那里。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "If you have any difficulties, give me a call.",
+          "prompt": "if 从句在这里给出了什么？",
+          "choices": [
+            {
+              "label": "行动或结果成立的条件",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：如果你遇到困难，就给我打电话。"
+            },
+            {
+              "label": "已经发生的结果",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “hurry” · connector if",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -672,14 +617,14 @@
     {
       "id": "en.beginner.sentence.logic_if_4",
       "kind": "condition",
-      "text": "She carried on as if nothing had happened.",
+      "text": "If the eyes are affected, seek immediate medical attention.",
       "prompt": "if 从句在这里给出了什么？",
       "error_tag": "条件关系",
       "choices": [
         {
           "label": "行动或结果成立的条件",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：她继续干，似乎什么都未曾发生。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果眼睛感染了要立即就医。"
         },
         {
           "label": "已经发生的结果",
@@ -694,13 +639,13 @@
       ],
       "variants": [
         {
-          "text": "Would you mind if I closed the window?",
+          "text": "If the pain persists, you must see a doctor.",
           "prompt": "if 从句在这里给出了什么？",
           "choices": [
             {
               "label": "行动或结果成立的条件",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：我把窗户关上你不介意吧？"
+              "why": "换句后连接关系不变。整句可理解为：如果一直痛，你就必须去看医生了。"
             },
             {
               "label": "已经发生的结果",
@@ -717,119 +662,9 @@
       ],
       "source_refs": [
         {
-          "source_id": "kylebing-cet4",
+          "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “happen” · connector if",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_if_5",
-      "kind": "condition",
-      "text": "If you wash your hair too often, it can get too dry.",
-      "prompt": "if 从句在这里给出了什么？",
-      "error_tag": "条件关系",
-      "choices": [
-        {
-          "label": "行动或结果成立的条件",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果洗头过勤，头发会变得干枯。"
-        },
-        {
-          "label": "已经发生的结果",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "说话人的身份",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "If food is scarce, the mother will feed the smaller, weaker chicks.",
-          "prompt": "if 从句在这里给出了什么？",
-          "choices": [
-            {
-              "label": "行动或结果成立的条件",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：如果食物稀少，母禽就喂较小、较弱的幼禽。"
-            },
-            {
-              "label": "已经发生的结果",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "说话人的身份",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “often” · connector if",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_if_6",
-      "kind": "condition",
-      "text": "If I have to stay late at work tonight, it won’t matter because we can go out another night.",
-      "prompt": "if 从句在这里给出了什么？",
-      "error_tag": "条件关系",
-      "choices": [
-        {
-          "label": "行动或结果成立的条件",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：如果今晚我必须工作到很晚的话，那也没关系，我们可以改天晚上再出去。"
-        },
-        {
-          "label": "已经发生的结果",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "说话人的身份",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "They had three children, if I remember rightly .",
-          "prompt": "if 从句在这里给出了什么？",
-          "choices": [
-            {
-              "label": "行动或结果成立的条件",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：如果我没记错，他们有三个孩子。"
-            },
-            {
-              "label": "已经发生的结果",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "说话人的身份",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-cet4",
-          "relation": "quoted",
-          "locator": "word “matter” · connector if",
+          "locator": "word “immediate” · connector if",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -837,14 +672,14 @@
     {
       "id": "en.beginner.sentence.logic_so_1",
       "kind": "cause",
-      "text": "He shouldn’t be so selfish.",
+      "text": "It didn’t move, so she pushed harder.",
       "prompt": "so 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况带来的结果",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：他不该这么自私。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：它一动不动，因此她加力去推。"
         },
         {
           "label": "说明前面情况的原因",
@@ -852,7 +687,7 @@
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "否定前面的全部内容",
+          "label": "只补充动作发生地点",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
@@ -873,7 +708,7 @@
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "否定前面的全部内容",
+              "label": "只补充动作发生地点",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -882,9 +717,9 @@
       ],
       "source_refs": [
         {
-          "source_id": "kylebing-cet6",
+          "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “should” · connector so",
+          "locator": "word “push” · connector so",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -892,14 +727,14 @@
     {
       "id": "en.beginner.sentence.logic_so_2",
       "kind": "cause",
-      "text": "The bar was so crowded you could hardly move .",
+      "text": "I dropped a glass earlier, so don’t walk around in bare feet.",
       "prompt": "so 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况带来的结果",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：酒吧很挤，人都难以挪动。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我刚才打破了一个玻璃杯，所以不要光着脚到处走。"
         },
         {
           "label": "说明前面情况的原因",
@@ -907,20 +742,20 @@
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "否定前面的全部内容",
+          "label": "只补充动作发生地点",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "I remember it well ; I’d never seen my mother so angry.",
+          "text": "The woman had a ring on her finger, so I assumed she was married.",
           "prompt": "so 后面的信息在句中承担什么作用？",
           "choices": [
             {
               "label": "说明前面情况带来的结果",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：这件事我记得很清楚；我从未见过母亲这么生气。"
+              "why": "换句后连接关系不变。整句可理解为：那女人手指上戴着戒指，因此我猜想她已经结婚了。"
             },
             {
               "label": "说明前面情况的原因",
@@ -928,7 +763,7 @@
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "否定前面的全部内容",
+              "label": "只补充动作发生地点",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -939,7 +774,7 @@
         {
           "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “move” · connector so",
+          "locator": "word “foot” · connector so",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -947,14 +782,14 @@
     {
       "id": "en.beginner.sentence.logic_so_3",
       "kind": "cause",
-      "text": "So when did you learn to drive ?",
+      "text": "Look, Mister, we know our job, so don't try to tell us what to do.",
       "prompt": "so 后面的信息在句中承担什么作用？",
       "error_tag": "因果关系",
       "choices": [
         {
           "label": "说明前面情况带来的结果",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：那么你是什么时候学会开车的？"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：哎，先生，我们了解自己的工作，所以你不必告诉我们该干什么。"
         },
         {
           "label": "说明前面情况的原因",
@@ -962,20 +797,20 @@
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "否定前面的全部内容",
+          "label": "只补充动作发生地点",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "It won’t take so long next time, perhaps.",
+          "text": "We have two motors, one on each rear wheel, so the control system has to control each motor independently.",
           "prompt": "so 后面的信息在句中承担什么作用？",
           "choices": [
             {
               "label": "说明前面情况带来的结果",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：也许下次不用那么久。"
+              "why": "换句后连接关系不变。整句可理解为：而且我们有两个，每一个后轮都有一个，说以控制系统必须独立地控制每一个电机。"
             },
             {
               "label": "说明前面情况的原因",
@@ -983,62 +818,7 @@
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "否定前面的全部内容",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            }
-          ]
-        }
-      ],
-      "source_refs": [
-        {
-          "source_id": "kylebing-kaoyan",
-          "relation": "quoted",
-          "locator": "word “drive” · connector so",
-          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
-        }
-      ]
-    },
-    {
-      "id": "en.beginner.sentence.logic_so_4",
-      "kind": "cause",
-      "text": "I’ll get you a piece of paper so you can write the number down.",
-      "prompt": "so 后面的信息在句中承担什么作用？",
-      "error_tag": "因果关系",
-      "choices": [
-        {
-          "label": "说明前面情况带来的结果",
-          "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：我给你找张纸，你好把号码写下来。"
-        },
-        {
-          "label": "说明前面情况的原因",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        },
-        {
-          "label": "否定前面的全部内容",
-          "ok": false,
-          "why": "这种关系与原句连接词和上下文不符。"
-        }
-      ],
-      "variants": [
-        {
-          "text": "Frankie shifted his position so that his knees would not become cramped.",
-          "prompt": "so 后面的信息在句中承担什么作用？",
-          "choices": [
-            {
-              "label": "说明前面情况带来的结果",
-              "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：弗朗基换了个姿势，这样他的膝盖就不会老蜷着动弹不得。"
-            },
-            {
-              "label": "说明前面情况的原因",
-              "ok": false,
-              "why": "这种关系与变式句不符。"
-            },
-            {
-              "label": "否定前面的全部内容",
+              "label": "只补充动作发生地点",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -1049,51 +829,51 @@
         {
           "source_id": "kylebing-cet4",
           "relation": "quoted",
-          "locator": "word “paper” · connector so",
+          "locator": "word “mister” · connector so",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
     },
     {
-      "id": "en.beginner.sentence.logic_so_5",
-      "kind": "cause",
-      "text": "Can you raise the lamp so I can see?",
-      "prompt": "so 后面的信息在句中承担什么作用？",
-      "error_tag": "因果关系",
+      "id": "en.beginner.sentence.logic_although_1",
+      "kind": "contrast",
+      "text": "Although in poor health, she continued to carry out her duties.",
+      "prompt": "although / though 引出的内容有什么作用？",
+      "error_tag": "转折关系",
       "choices": [
         {
-          "label": "说明前面情况带来的结果",
+          "label": "先承认一种情况，再给出不同结论",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：你能把灯举高点好让我看清吗？"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：尽管身体不好，她仍继续执行任务。"
         },
         {
-          "label": "说明前面情况的原因",
+          "label": "列出完全相同的两件事",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "否定前面的全部内容",
+          "label": "只交代动作发生地点",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "Progress so far has been very good. We are, therefore, confident that the work will be completed on time.",
-          "prompt": "so 后面的信息在句中承担什么作用？",
+          "text": "Although these were good students, none had a score above 60.",
+          "prompt": "although / though 引出的内容有什么作用？",
           "choices": [
             {
-              "label": "说明前面情况带来的结果",
+              "label": "先承认一种情况，再给出不同结论",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：到目前为止进展十分顺利，所以我们有把握按时完成工作。"
+              "why": "换句后连接关系不变。整句可理解为：虽然这些都是好学生，但是没有一个考到60分以上。"
             },
             {
-              "label": "说明前面情况的原因",
+              "label": "列出完全相同的两件事",
               "ok": false,
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "否定前面的全部内容",
+              "label": "只交代动作发生地点",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -1104,51 +884,51 @@
         {
           "source_id": "kylebing-cet4",
           "relation": "quoted",
-          "locator": "word “raise” · connector so",
+          "locator": "word “although” · connector although",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
     },
     {
-      "id": "en.beginner.sentence.logic_so_6",
-      "kind": "cause",
-      "text": "So far, I’ve saved about £500.",
-      "prompt": "so 后面的信息在句中承担什么作用？",
-      "error_tag": "因果关系",
+      "id": "en.beginner.sentence.logic_although_2",
+      "kind": "contrast",
+      "text": "Although he didn’t say so, it was clear that he was in pain.",
+      "prompt": "although / though 引出的内容有什么作用？",
+      "error_tag": "转折关系",
       "choices": [
         {
-          "label": "说明前面情况带来的结果",
+          "label": "先承认一种情况，再给出不同结论",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：到目前为止，我已存了大约500英镑。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：虽然他没说，但是他明显很痛苦。"
         },
         {
-          "label": "说明前面情况的原因",
+          "label": "列出完全相同的两件事",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         },
         {
-          "label": "否定前面的全部内容",
+          "label": "只交代动作发生地点",
           "ok": false,
           "why": "这种关系与原句连接词和上下文不符。"
         }
       ],
       "variants": [
         {
-          "text": "We speak Danish at home so that the boys don’t lose touch with their language and culture.",
-          "prompt": "so 后面的信息在句中承担什么作用？",
+          "text": "Even though I’ve been acting for years, I still get a thrill out of going on stage.",
+          "prompt": "although / though 引出的内容有什么作用？",
           "choices": [
             {
-              "label": "说明前面情况带来的结果",
+              "label": "先承认一种情况，再给出不同结论",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：我们在家说丹麦语，这样男孩子们就不会脱离他们的语言和文化。"
+              "why": "换句后连接关系不变。整句可理解为：尽管我演了多年戏，走上舞台我仍然感到十分激动。"
             },
             {
-              "label": "说明前面情况的原因",
+              "label": "列出完全相同的两件事",
               "ok": false,
               "why": "这种关系与变式句不符。"
             },
             {
-              "label": "否定前面的全部内容",
+              "label": "只交代动作发生地点",
               "ok": false,
               "why": "这种关系与变式句不符。"
             }
@@ -1157,9 +937,9 @@
       ],
       "source_refs": [
         {
-          "source_id": "kylebing-kaoyan",
+          "source_id": "kylebing-cet4",
           "relation": "quoted",
-          "locator": "word “save” · connector so",
+          "locator": "word “say” · connector although",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -1167,14 +947,14 @@
     {
       "id": "en.beginner.sentence.logic_time_1",
       "kind": "clause_split",
-      "text": "The company was set up just after the war.",
+      "text": "Prick the sausages before you grill them.",
       "prompt": "before / after 在这里帮助读者判断什么？",
       "error_tag": "句子切分",
       "choices": [
         {
           "label": "两个动作或情况发生的先后",
           "ok": true,
-          "why": "连接词在这句话中确实承担这一作用。整句可理解为：这家公司是战后不久成立的。"
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：烤之前把香肠戳孔。"
         },
         {
           "label": "两个动作之间的因果方向",
@@ -1189,13 +969,13 @@
       ],
       "variants": [
         {
-          "text": "His job includes looking after under-21 teams.",
+          "text": "Shake the bottle before you open it.",
           "prompt": "before / after 在这里帮助读者判断什么？",
           "choices": [
             {
               "label": "两个动作或情况发生的先后",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：他的职责包括照管21岁以下球队。"
+              "why": "换句后连接关系不变。整句可理解为：打开瓶子之前先摇一摇。"
             },
             {
               "label": "两个动作之间的因果方向",
@@ -1214,7 +994,7 @@
         {
           "source_id": "kylebing-kaoyan",
           "relation": "quoted",
-          "locator": "word “company” · connector time",
+          "locator": "word “prick” · connector time",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]
@@ -1244,13 +1024,13 @@
       ],
       "variants": [
         {
-          "text": "Paul’s been to Wexford once before.",
+          "text": "It was forty five minutes before she returned.",
           "prompt": "before / after 在这里帮助读者判断什么？",
           "choices": [
             {
               "label": "两个动作或情况发生的先后",
               "ok": true,
-              "why": "换句后连接关系不变。整句可理解为：保罗曾去过韦克斯福德一次。"
+              "why": "换句后连接关系不变。整句可理解为：过了45分钟她才回来。"
             },
             {
               "label": "两个动作之间的因果方向",
@@ -1270,6 +1050,226 @@
           "source_id": "kylebing-cet4",
           "relation": "quoted",
           "locator": "word “read” · connector time",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_time_3",
+      "kind": "clause_split",
+      "text": "He phoned on Tuesday, just before you came.",
+      "prompt": "before / after 在这里帮助读者判断什么？",
+      "error_tag": "句子切分",
+      "choices": [
+        {
+          "label": "两个动作或情况发生的先后",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：他星期二打了电话，刚好在你来之前。"
+        },
+        {
+          "label": "两个动作之间的因果方向",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Zimmerman changed his name after he left Germany.",
+          "prompt": "before / after 在这里帮助读者判断什么？",
+          "choices": [
+            {
+              "label": "两个动作或情况发生的先后",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：齐默尔曼离开德国后改了名字。"
+            },
+            {
+              "label": "两个动作之间的因果方向",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “tuesday” · connector time",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_when_1",
+      "kind": "clause_split",
+      "text": "Everybody cheered when the firemen arrived.",
+      "prompt": "when 引出的部分帮助读者判断什么？",
+      "error_tag": "句子切分",
+      "choices": [
+        {
+          "label": "动作或情况发生的时间背景",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：消防员到达时，大家都欢呼起来。"
+        },
+        {
+          "label": "前后内容互相否定",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "It was midday when she awoke.",
+          "prompt": "when 引出的部分帮助读者判断什么？",
+          "choices": [
+            {
+              "label": "动作或情况发生的时间背景",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：她醒来时已是中午。"
+            },
+            {
+              "label": "前后内容互相否定",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “cheer” · connector when",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_when_2",
+      "kind": "clause_split",
+      "text": "Let me know when they come.",
+      "prompt": "when 引出的部分帮助读者判断什么？",
+      "error_tag": "句子切分",
+      "choices": [
+        {
+          "label": "动作或情况发生的时间背景",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：他们来了就告诉我。"
+        },
+        {
+          "label": "前后内容互相否定",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "When the seedlings sprout, uncover the tray.",
+          "prompt": "when 引出的部分帮助读者判断什么？",
+          "choices": [
+            {
+              "label": "动作或情况发生的时间背景",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：幼苗发芽后，揭开盘上的遮盖物。"
+            },
+            {
+              "label": "前后内容互相否定",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “come” · connector when",
+          "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.logic_when_3",
+      "kind": "clause_split",
+      "text": "Sally was adopted when she was four.",
+      "prompt": "when 引出的部分帮助读者判断什么？",
+      "error_tag": "句子切分",
+      "choices": [
+        {
+          "label": "动作或情况发生的时间背景",
+          "ok": true,
+          "why": "连接词在这句话中确实承担这一作用。整句可理解为：莎莉四岁时被人收养。"
+        },
+        {
+          "label": "前后内容互相否定",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系与原句连接词和上下文不符。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Unfortunately, you were out when we called.",
+          "prompt": "when 引出的部分帮助读者判断什么？",
+          "choices": [
+            {
+              "label": "动作或情况发生的时间背景",
+              "ok": true,
+              "why": "换句后连接关系不变。整句可理解为：很遗憾，我们来的时候你出去了。"
+            },
+            {
+              "label": "前后内容互相否定",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            },
+            {
+              "label": "说话人的身份",
+              "ok": false,
+              "why": "这种关系与变式句不符。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “adopt” · connector when",
           "note": "句子取自仓库内双语句库；题目只把真实句子转换为连接关系判断。"
         }
       ]

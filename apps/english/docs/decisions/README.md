@@ -14,3 +14,4 @@
 | [0007](0007-sourced-content-and-four-skills.md) | 内容须有出处；听说读写都进训练，不改考试目标 | 已接受（部分作废 0001 第 6 条） |
 | [0008](0008-local-public-references.md) | 有用的公开参考材料落到本地 | 已接受（第 4 条由 0009 放宽） |
 | [0009](0009-mixed-sources-and-visible-progress.md) | 综合取材；学习成果要看得见 | 已接受 |
+| [0010](0010-beginner-volume-and-batched-practice.md) | 初级题库达到可持续规模；大题库按短回合加载 | 已接受 |
