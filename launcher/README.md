@@ -30,7 +30,7 @@
 - `ready` 区分"有 dev server"和"进程在就算就绪"。
 - `binary` 是窗口进程的可执行文件名——共享 cargo 缓存之后，Tauri 应用的二进制不在
   应用目录里了，按文件名认最直接。
-- `match`（可选）是判断进程归属的路径前缀，`apps/cpp` 用它指向 `builddir`。
+- `match`（可选）是判断进程归属的路径前缀，`apps/cpp` 用它指向 `build`。
 
 托盘图标来自 `gui/assets/tiger.svg`——Athena 早期欢迎页的主视觉，2026-08-30 随
 欢迎页一起删掉，现在从 git 历史里取回来了。菜单栏只有 22pt 高，整只老虎缩进去

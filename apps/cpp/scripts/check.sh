@@ -5,7 +5,7 @@ set -eu
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 project_root=$(CDPATH= cd -- "$script_dir/.." && pwd)
-build_dir=builddir
+build_dir=build
 setup_extra=
 
 usage() {

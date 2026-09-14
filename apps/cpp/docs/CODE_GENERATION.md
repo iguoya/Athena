@@ -48,7 +48,7 @@ Blueprint 输出冲突，以及 Markdown、源码、实现头文件和资源图�
 ```sh
 python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json \
-  resources --output builddir/app.gresource.xml
+  resources --output build/app.gresource.xml
 ```
 
 标准输出格式为 `target_id|blueprint_path|ui_filename`。XML 包含主窗口、共享样式、
@@ -63,7 +63,7 @@ python3 scripts/generate_project.py \
 ```sh
 python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json \
-  catalog --output builddir/chapter_catalog.generated.json
+  catalog --output build/chapter_catalog.generated.json
 ```
 
 Catalog 已包含完整函数 ID、最终图标、最终源码路径、UI 资源路径和根控件名，使用
@@ -76,7 +76,7 @@ Catalog 已包含完整函数 ID、最终图标、最终源码路径、UI 资源
 ```sh
 python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json \
-  registry --output builddir/function_registry.generated.cc
+  registry --output build/function_registry.generated.cc
 ```
 
 映射完全由现有字段派生：
@@ -114,10 +114,10 @@ python3 scripts/generate_project.py \
 构建系统拥有：
 
 ```text
-builddir/app.gresource.xml
-builddir/chapter_catalog.generated.json
-builddir/function_registry.generated.cc
-builddir/*.ui
+build/app.gresource.xml
+build/chapter_catalog.generated.json
+build/function_registry.generated.cc
+build/*.ui
 ```
 
 开发者或 Codex 拥有：
@@ -151,7 +151,7 @@ tests/**
 
 ## 5. Meson 和测试
 
-Meson 配置阶段调用 `resources`，取得 Blueprint 目标并在 `builddir` 生成 XML；构建
+Meson 配置阶段调用 `resources`，取得 Blueprint 目标并在 `build` 生成 XML；构建
 阶段通过两个 `custom_target` 分别调用 `catalog` 和 `registry`。`athena.json` 是
 三个过程的输入依赖，生成的 Catalog 以 `/app/data/chapter_catalog.json` 打包。
 `scaffold` 只允许开发者显式执行，不是普通构建副作用。
@@ -167,9 +167,9 @@ Meson 配置阶段调用 `resources`，取得 Blueprint 目标并在 `builddir` 
 ```sh
 python3 scripts/generate_project.py \
   --project-root . --config resources/athena.json check
-meson setup builddir --reconfigure
-meson compile -C builddir
-meson test -C builddir --print-errorlogs
+meson setup build --reconfigure
+meson compile -C build
+meson test -C build --print-errorlogs
 ```
 
 编写或生成学习内容时，应先读取章节和知识点的 `description`，围绕学习 C++ 所需的

@@ -251,15 +251,15 @@ apps/cpp/scripts/check.sh
 ```
 
 仓库根的 `scripts/check.sh cpp [参数...]` 会转发到它，CI 走的就是这条。
-脚本依次执行以下步骤；默认构建目录为 `builddir`，可用 `--build-dir` 与
+脚本依次执行以下步骤；默认构建目录为 `build`，可用 `--build-dir` 与
 `--buildtype` 覆盖（CI 使用 `--build-dir build --buildtype debugoptimized`）：
 
 ```sh
 python3 -m json.tool resources/athena.json >/dev/null
 python3 scripts/generate_project.py --project-root . --config resources/athena.json check
-meson setup builddir --reconfigure   # 构建目录不存在时改为 meson setup builddir
-meson compile -C builddir
-meson test -C builddir --print-errorlogs
+meson setup build --reconfigure   # 构建目录不存在时改为 meson setup build
+meson compile -C build
+meson test -C build --print-errorlogs
 ```
 
 统一生成器的 `check` 必须通过；GResource XML 和函数注册表只生成到构建目录，

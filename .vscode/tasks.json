@@ -7,7 +7,7 @@
             "command": "bash",
             "args": [
                 "-lc",
-                "if [ \"$(uname -s)\" = Linux ]; then if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; else meson setup builddir --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; fi; else if [ -d builddir ]; then meson setup builddir --reconfigure --buildtype=debug; else meson setup builddir --buildtype=debug; fi; fi"
+                "if [ \"$(uname -s)\" = Linux ]; then if [ -d build ]; then meson setup build --reconfigure --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; else meson setup build --buildtype=debug -Dcpp_args=-I/usr/include/gtk-4.0; fi; else if [ -d build ]; then meson setup build --reconfigure --buildtype=debug; else meson setup build --buildtype=debug; fi; fi"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/apps/cpp"
@@ -22,7 +22,7 @@
             "args": [
                 "compile",
                 "-C",
-                "builddir"
+                "build"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/apps/cpp"
@@ -42,7 +42,7 @@
             "command": "scripts/check.sh",
             "args": [
                 "--build-dir",
-                "builddir",
+                "build",
                 "--buildtype",
                 "debug"
             ],
