@@ -191,6 +191,179 @@
             "readout": "arrows",
             "caption": "先点「先看一遍」。演完再拖蓝、橙两个箭头。原点始终不动。"
           },
+          "formal": {
+            "intro": "左边那一页说「规定两根箭头的去向，整张平面就定了」。这句话在教材里是**一个定义加一条定理**——下面四条都译自同一本开源教材，点出处可以核对原文。",
+            "entries": [
+              {
+                "id": "f1",
+                "kind": "definition",
+                "title": "线性变换",
+                "statement": "向量函数 `T: Rⁿ → Rᵐ` 称为**线性变换**，如果它满足下面两个条件：\n① **保持加法**：对任意 `v, w ∈ Rⁿ`，有 `T(v + w) = T(v) + T(w)`；\n② **保持数乘**：对任意 `v ∈ Rⁿ` 和数 `k`，有 `T(kv) = k·T(v)`。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "定义 linear-transformation（Linear transformations 一节）",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Definition.tex",
+                  "note": "原文两个条件的忠实翻译，未改写"
+                },
+                "pairs": "ov-says",
+                "plain": "「其余每个点跟着走」靠的就是这两条。"
+              },
+              {
+                "id": "f2",
+                "kind": "definition",
+                "title": "矩阵乘向量（按列）",
+                "statement": "`m×n` 矩阵 `A` 与 `n` 维列向量 `x` 的乘积，定义为 **`A` 各列的线性组合**：\n`Ax = x₁·(第 1 列) + x₂·(第 2 列) + … + xₙ·(第 n 列)`。",
+                "conditions": [
+                  "`A` 的**列数**必须等于 `x` 的分量个数，否则这个乘积没有定义。"
+                ],
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "定义 matrix-times-vector-columns（Multiplying a matrix and a vector 一节）",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-MatrixTimesVector.tex",
+                  "note": "原文定义的忠实翻译；原文另有一句「可以把向量 x 看成一份指令，说明该怎么对 A 的各列取线性组合」，就是左边那张图上「向右走几格、向上走几格」"
+                },
+                "pairs": "ov-says",
+                "plain": "`x` 的两个数就是「取几份蓝箭头、几份橙箭头」。"
+              },
+              {
+                "id": "f3",
+                "kind": "theorem",
+                "title": "线性变换都是矩阵变换",
+                "statement": "设 `T: Rⁿ → Rᵐ` 是任意一个线性变换，则**存在**一个 `m×n` 矩阵 `A`，使得对所有 `v ∈ Rⁿ` 都有 `T(v) = Av`。\n教材的证明给出了这个 `A` 怎么来：取标准基 `e₁, …, eₙ`，令 `uᵢ = T(eᵢ)`，==把 `u₁, …, uₙ` 作为 `A` 的各列==，这个 `A` 就是要找的矩阵。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "定理 matrix-of-linear-transformation（The matrix of a linear transformation 一节）",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Matrix.tex",
+                  "note": "定理陈述与证明构造的忠实翻译；证明的其余步骤（验证对任意 v 成立）未搬运"
+                },
+                "pairs": "ov-asks",
+                "plain": "这就是「凭什么两根箭头定得下整张平面」的答案。"
+              },
+              {
+                "id": "f4",
+                "kind": "property",
+                "title": "矩阵变换是线性变换",
+                "statement": "设 `A` 是 `m×n` 矩阵，按 `T(v) = Av` 定义向量函数 `T: Rⁿ → Rᵐ`，则 `T` 是线性变换。\n教材的证明只用了矩阵乘法的两条运算律：由分配律得 `A(v + w) = Av + Aw`，由数乘相容性得 `A(kv) = k(Av)`。",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "命题 matrix-are-linear（The matrix of a linear transformation 一节）",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Matrix.tex",
+                  "note": "命题陈述与证明思路的忠实翻译"
+                },
+                "pairs": "ov-steps",
+                "plain": "反过来说：你摆出的任何一对箭头，都确实定义了一次合法的搬动。"
+              }
+            ],
+            "examples": [
+              {
+                "id": "fe1",
+                "title": "按列算一次矩阵乘向量",
+                "source": {
+                  "kind": "adapted",
+                  "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                  "ref": "Multiplying a matrix and a vector 一节的例题",
+                  "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-MatrixTimesVector.tex",
+                  "note": "照用原题的矩阵与向量，把一行算式拆成分步并补上每步的理由"
+                },
+                "given": "计算 `[[1, 2, 3], [4, 5, 6]] · (7, 8, 9)`。**这是三列的情形**——左边那张图是它的二维特例，做法一模一样。",
+                "steps": [
+                  {
+                    "do": "按定义把它写成三列的线性组合：`7·(1,4) + 8·(2,5) + 9·(3,6)`。",
+                    "why": "定义说的就是这件事：==向量的每个分量，是对应那一列取几份==。先别急着算数，先把「取几份哪一列」摆出来。"
+                  },
+                  {
+                    "do": "逐列算：`7·(1,4) = (7,28)`，`8·(2,5) = (16,40)`，`9·(3,6) = (27,54)`。",
+                    "why": "数乘是把一列的每个分量都乘那个数，方向不变、长度变。"
+                  },
+                  {
+                    "do": "相加：`(7+16+27, 28+40+54) = (50, 122)`。",
+                    "why": "向量相加是各分量分别相加。到这一步才第一次做加法——**先取份、再相加**，这个顺序就是定义本身。"
+                  }
+                ],
+                "answer": "`[[1, 2, 3], [4, 5, 6]] · (7, 8, 9) = (50, 122)`。",
+                "note": "回头看左边那张图：拖动箭头时你改的是**各列**，而图上任何一个点的去向，都是按它自己的坐标对这些列取份再相加。==图在动的是列，算式在取的也是列==，两边是同一件事。"
+              }
+            ],
+            "drills": {
+              "title": "规范练习",
+              "intro": "三道题都用同一个矩阵 `A = [[1, 2, 0], [-1, 1, 1]]`，**只换右边的向量**。按列的线性组合算，填第二个分量。",
+              "items": [
+                {
+                  "id": "fd1",
+                  "kind": "number",
+                  "stem": "`A · (1, 0, 0)` 等于多少？填它的**第二个分量**。",
+                  "hint": "取 1 份第一列、0 份第二列、0 份第三列。结果就是第一列本身。",
+                  "answer": -1,
+                  "tol": 1e-09,
+                  "why": "`A·(1,0,0) = (1, -1)`，第二个分量是 `-1`。==结果正好就是 `A` 的第一列==——这不是巧合，正是上面定理里 `uᵢ = T(eᵢ)` 那一步：**用标准基向量去乘，取出的就是对应那一列**。",
+                  "context": "这就是左边那张图上「蓝箭头指向哪」的算式版本：蓝箭头是 `(1,0)` 被搬到的地方，也就是矩阵的第一列。",
+                  "source": {
+                    "kind": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "ref": "Exercises 第 1 题 (a)",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex",
+                    "note": "照用原题的矩阵与向量；原题要求算出整个向量，这里只问第二个分量以便填空判分"
+                  },
+                  "pass": 1
+                },
+                {
+                  "id": "fd2",
+                  "kind": "number",
+                  "stem": "`A · (0, 0, 0)` 等于多少？填它的**第二个分量**。",
+                  "varies": "右边换成了零向量。",
+                  "hint": "三列各取零份。",
+                  "answer": 0,
+                  "tol": 1e-09,
+                  "why": "`A·(0,0,0) = (0, 0)`。三列都取零份，加起来是零向量。这正是随堂练习那道「原点被搬到哪」的算式版本——**原点永远不动**，它是线性变换区别于一般变形的地方。",
+                  "context": "图形软件里旋转、缩放都绕原点做；要让图形绕别的点转，得先平移过去——因为线性变换动不了原点。",
+                  "source": {
+                    "kind": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "ref": "Exercises 第 1 题 (d)",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex",
+                    "note": "照用原题；只问第二个分量"
+                  },
+                  "pass": 1
+                },
+                {
+                  "id": "fd3",
+                  "kind": "number",
+                  "stem": "`A · (2, 1, 0)` 等于多少？填它的**第二个分量**。",
+                  "varies": "这次两列都要取，而且第一列取两份。",
+                  "hint": "`2·(1,-1) + 1·(2,1) + 0·(0,1)`。先算两个乘积，再相加。",
+                  "answer": -1,
+                  "tol": 1e-09,
+                  "why": "`2·(1,-1) + 1·(2,1) = (2,-2) + (2,1) = (4, -1)`，第二个分量是 `-1`。==第一个分量和上一题不同，第二个分量却又是 −1==——纯属数字上的巧合，别把它当成规律。",
+                  "source": {
+                    "kind": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "ref": "Exercises 第 1 题 (c)",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex",
+                    "note": "照用原题；只问第二个分量"
+                  }
+                }
+              ]
+            }
+          },
+          "derivation": {
+            "title": "自己推一遍",
+            "prompt": "把上面例题的第一个分量单独推一遍：`[[1, 2, 3], [4, 5, 6]] · (7, 8, 9)` 的**第一个分量**，按「取几份第一行的各列」写下去，一步步推到一个数。",
+            "start": "7*1 + 8*2 + 9*3",
+            "goal": "50",
+            "hint": "先把三个乘积各自算出来，再相加。",
+            "context": "这几步就是图形程序里每渲染一个顶点都要做的事——它一秒钟做上百万次。",
+            "source": {
+              "kind": "adapted",
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "ref": "Multiplying a matrix and a vector 一节的例题",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-MatrixTimesVector.tex",
+              "note": "取该例题结果的第一个分量，拆成可分步验算的形式"
+            }
+          },
           "drills": {
             "title": "随堂练习",
             "intro": "三道题，全都只看图和矩阵的对应关系。**别急着算**，这一节还没到算的时候。",
@@ -526,14 +699,15 @@
           },
           "syllabus_ref": "数学二 · 线性代数 · 行列式",
           "overview": {
-            "asks": "搬完之后，一块面积变成原来的几倍？这个倍数跟你挑哪一块有关吗？",
-            "says": "那个倍数就是**行列式**。它可以是负的——负号表示平面被翻了个面，像照镜子一样左右颠倒。它也可以是 0——==那表示整张平面被压扁了==。教材开篇那个看起来突兀的展开式，算的就是这个倍数。",
-            "why_now": "第一节你看见格子变大、变小、被压扁。那个面积变化的倍数，现在有名字了。下一步用它回答「能不能搬回去」。",
-            "aha": "==剪歪不改变面积==。底和高都没动，只是推斜了——这就是为什么切变矩阵的行列式是 1，虽然它看起来把格子改得很厉害。",
+            "asks": "搬完之后，一块面积变成原来的几倍？**这个倍数能不能只用矩阵那四个数算出来**，不用真的去量？",
+            "says": "能，而且只要一次减法：==蓝箭头和橙箭头「交叉相乘」，再相减==。\n矩阵 `[[a, b], [c, d]]` 的两根箭头是 `(a, c)` 和 `(b, d)`，算出来的那个数叫**行列式**。它可以是负的——负号表示平面被翻了个面，像照镜子一样左右颠倒；也可以是 0——==那表示整张平面被压扁成一条线==。",
+            "why_now": "一个数就回答了「这次搬动有没有把平面压扁」——==压扁了就再也搬不回去==。下一节问的「能不能原样搬回去」，判据就是它。",
+            "aha": "==剪歪不改变面积==。底和高都没动，只是推斜了——切变矩阵 `[[1, k], [0, 1]]` 不管 `k` 多大，算出来都是 `1×1 − k×0 = 1`。**歪斜本身不吃面积，只有两根箭头互相靠拢才吃**。",
             "steps": [
-              "先认出图上那块浅色四边形。没搬动时它是边长 1 的正方形，面积是 1。",
-              "搬动之后它变成平行四边形。右边「面积变成原来的」那一行，读的就是它现在的面积。",
-              "这一节只要能做一件事：看着两根箭头，说出面积是变大了、变小了、翻面了，还是压没了。怎么用公式算，留到强化阶段。"
+              "**先看不歪的情形。** 矩阵 `[[2, 0], [0, 3]]`：横着拉 2 倍、竖着拉 3 倍，边长 1 的正方形变成 2×3 的长方形，面积是 6。==两个方向的倍数相乘==，这就是 `a·d` 那一项。",
+              "**再看歪的情形。** 箭头一歪，它们撑出的平行四边形就比那个长方形**瘦**了一圈，少掉的那部分正好是 `b·c`。所以面积是 `ad` 减去 `bc`，不是加。",
+              "**记法**：把四个数看成一个十字，==左上乘右下，减去右上乘左下==。`[[2, 1], [0, 3]]` 就是 `2×3 − 1×0 = 6`。",
+              "这一节要能做两件事：看着图说出面积是变大、变小、翻面还是压没了；拿到四个数能算出那个倍数。两件事是同一件事的两个面。"
             ]
           },
           "sources": {
@@ -566,7 +740,7 @@
           },
           "hook": {
             "kind": "real_problem",
-            "text": "照片编辑器里拖住图片的角把它拉斜，图片占的面积会变。变成原来的几倍？这个倍数只由那两根箭头决定，**和你挑哪一块区域无关**。"
+            "text": "照片编辑器里拖住图片的角把它拉斜，图片占的面积会变。变成原来的几倍？**这个倍数只由那两根箭头决定**，和你挑图上哪一块区域无关——整张图、一个字、一个像素，放大的倍数都是同一个。"
           },
           "walkthrough": {
             "title": "先看一遍",
@@ -657,7 +831,7 @@
             }
           ],
           "formal": {
-            "intro": "左边那一页讲的是「面积变成几倍」。同一件事，**准确的说法**是下面这样——每条都标了出处，点开就能核对。",
+            "intro": "左边那一页用图和口语讲的，是**同一件事**。这里换成教材的说法：定义、性质、定理各是什么，条件是什么。每条都标了出处，点开能核对原文。",
             "entries": [
               {
                 "id": "f1",
@@ -675,40 +849,19 @@
                 "plain": "这个数就是左边说的那个「面积变成几倍」。"
               },
               {
-                "id": "f5",
-                "kind": "method",
-                "title": "二阶行列式的算法",
-                "statement": "把矩阵写成一个十字：**主对角线**（左上到右下）相乘，减去**副对角线**（右上到左下）相乘。",
-                "steps": [
-                  "写下矩阵 `[[a, b], [c, d]]`，注意 `a` 与 `d` 在主对角线上，`b` 与 `c` 在副对角线上。",
-                  "主对角线相乘：`a × d`。",
-                  "副对角线相乘：`b × c`。",
-                  "**相减**，注意顺序是主减副：`det = ad − bc`。反过来写会差一个负号，而负号在这里是有意义的——它表示翻没翻面。"
-                ],
+                "id": "f2",
+                "kind": "property",
+                "title": "行列式与有符号面积",
+                "statement": "把 `A` 的两列看成向量 `a₁`、`a₂`，则 `det A` 等于这两个向量张成的**平行四边形的有符号面积**：绝对值是面积，符号表示 `a₁` 到 `a₂` 的转向——逆时针为正，顺时针为负。",
                 "source": {
                   "kind": "adapted",
                   "site": "Immersive Math《Immersive Linear Algebra》",
-                  "ref": "7.1 The Determinant in 2D（原文用一个交叉的图示说明这个算法）",
+                  "ref": "7.1 The Determinant in 2D",
                   "url": "https://immersivemath.com/ila/ch07_determinants/ch07.html",
-                  "note": "把原文的图示说明写成四个步骤；「主/副对角线」是中文教材的通行叫法"
-                },
-                "pairs": "ov-steps",
-                "plain": "左边三步是「看图说面积」，这里是「按数算面积」。"
-              },
-              {
-                "id": "f2",
-                "kind": "property",
-                "title": "行列式的几何意义",
-                "statement": "`|det A|` 等于 `A` 把单位正方形变成的平行四边形的面积；`det A` 的**符号**表示定向是否改变——为负说明平面被翻了面。这个倍数与所取区域无关，对平面上任何可求面积的区域都一样。",
-                "source": {
-                  "kind": "adapted",
-                  "site": "可汗学院中文版·矩阵的变换",
-                  "ref": "「行列式与平行四边形的面积」「作为缩放因子的行列式」两课",
-                  "url": "https://zh.khanacademy.org/math/linear-algebra/matrix-transformations",
-                  "note": "把两课讲的内容合成一句陈述；面积与定向的说法同见 Immersive Math 7.1"
+                  "note": "原文作「the determinant is the area (with sign) of the parallelogram spanned by a₁ and a₂」，正负对应逆时针/顺时针；此处为该句的翻译，未添加原文没有的断言"
                 },
                 "pairs": "ov-asks",
-                "plain": "所以「挑哪一块都一样」不是碰巧，是这条性质本身。"
+                "plain": "左边说的「面积变几倍、负号表示翻面」，准确说就是这一句。"
               },
               {
                 "id": "f3",

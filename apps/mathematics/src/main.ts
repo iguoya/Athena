@@ -631,7 +631,9 @@ function renderTopic(id: string) {
              : ""
          }
          ${ov.aha ? `<div id="ov-aha" class="ov-aha" data-read="${esc1(ov.aha)}"><span class="ov-tag">值得记住的一点</span>${rich(ov.aha)}</div>` : ""}
-         <p class="ov-why"><b>它在哪一环：</b>${ov.why_now}</p>
+         <p class="ov-why" data-read="${esc1(ov.why_now)}"><b>它在哪一环：</b>${rich(
+           ov.why_now,
+         )}</p>
        </div>`
     : "";
 

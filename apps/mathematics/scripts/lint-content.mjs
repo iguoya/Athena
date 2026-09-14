@@ -540,6 +540,29 @@ for (const ch of cur.chapters) {
 }
 
 
+// ── 标记语法必须真的被渲染 ──
+// why_now 里写了 ==高亮== 却原样显示出 == 号，是因为那个字段漏过了 rich()。
+// 单看代码正常、单看内容也正常，只有渲染出来才看得见。这里反过来查：
+// 内容里用了标记的字段，必须在 main.ts 里经过 rich()。
+const richFields = readFileSync(join(root, "src/main.ts"), "utf8");
+for (const ch of cur.chapters) {
+  for (const t of ch.topics) {
+    for (const [field, value] of Object.entries(t.overview ?? {})) {
+      if (typeof value !== "string") continue;
+      if (!/==.+?==|\*\*.+?\*\*|`.+?`/.test(value)) continue;
+      // 该字段在渲染代码里必须以 rich(ov.字段) 或 rich(\n  ov.字段\n) 的形式出现
+      const re = new RegExp(`rich\\(\\s*ov\\.${field}\\b`);
+      if (!re.test(richFields)) {
+        console.error(
+          `渲染：overview.${field} 的内容里用了 ** == 或反引号标记，` +
+            `但 src/main.ts 没有把它交给 rich()——标记会原样显示出来`,
+        );
+        hits++;
+      }
+    }
+  }
+}
+
 // ── 正文重点：标的应是语义关键，不是形式强调 ──
 // 判据：把标出来的片段单独抽出来读，能不能拿到这一节的核心？
 // 以指代词或连词开头的片段（「是同一件事」「这三种情况」）离开上下文就没有内容。
