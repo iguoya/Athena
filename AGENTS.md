@@ -152,6 +152,10 @@
 - 入口是首页学科路线图上**原有的领域节点**（`DomainKind::ExternalApp` + `app_id`），
   不在图谱之外另造一套应用入口；主程序按 `apps/*/app.json` spawn 进程，新增应用
   的 discover 不改主程序代码（改 `kind` / `app_id` 除外）。
+- **独立应用的日常入口是各自的 `scripts/dev.sh`**（ADR 0041 / 0042），改源码
+  即时可见。不要用打包 `.app` / DMG、也不要从 `/Applications` 启动。
+  `dsa` / `english` / `mathematics` 跑 `tauri:dev`；`c` 跑 Qt Quick（教案写在
+  QML 里），原 LVGL 小程序留在 `apps/c/playground/`，不作为图谱入口。
 - 共用的是教学**规范**（大纲三层分工、难度与掌握目标、知识类型），不是配置 schema。
 
 ## 架构原则

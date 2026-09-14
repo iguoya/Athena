@@ -18,9 +18,9 @@ struct ExternalApp {
     string description;
     string icon_name;
     string directory;   // 应用根目录的绝对路径
-    string executable;  // 可执行文件的绝对路径
+    string executable;  // 启动入口的绝对路径：Tauri 应用是 scripts/dev.sh（ADR 0041），C 应用是构建产物
     vector<string> build_commands;
-    bool built = false; // 可执行文件此刻是否存在
+    bool built = false; // 启动入口此刻是否存在且可执行
 };
 
 // 扫描 apps_root 下每个子目录的 app.json。读不动或格式不对的目录会被跳过

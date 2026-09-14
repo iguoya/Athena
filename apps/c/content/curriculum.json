@@ -1,0 +1,395 @@
+{
+  "id": "c",
+  "title": "C 语言编程",
+  "tagline": "C 把对象说成「某地址上的一段字节」。章与章按这条脊往下长，不按语法清单摊平。",
+  "chapters": [
+    {
+      "id": "Object",
+      "title": "对象与字节",
+      "description": "名字只是标签。真正存在的是地址、从那里起的连续字节，以及这些位怎么解释。",
+      "difficulty": 1,
+      "on_main_path": true,
+      "prerequisites": [],
+      "summary": "先看见对象在内存里占哪一段，后面的指针、数组、malloc 才有地方挂。",
+      "outline": {
+        "lead": "先看见对象在内存里占哪一段，再谈指针怎么指向它。",
+        "intro": "读 C 代码时，只知道「这个变量叫 x」还不够。机器认的是地址和从那里起连续几格字节。本章把这张图立住。",
+        "titles": {
+          "origin": "没有地址时，变量只是纸上的符号",
+          "model": "对象 = 地址 + 大小 + 位型",
+          "scope": "这一章只建立「看见」",
+          "tradeoff": "读声明时问的两件事",
+          "landing": "下一章是指针；C++ 的对象观从这里接着问寿命"
+        },
+        "origin": "汇编里操作的是寄存器和内存单元。C 把「一段字节」提成对象，但仍要求你随时能回答它从哪开始、占几格。丢掉这张图，&、sizeof、指针就变成要背的符号。",
+        "model": "每个对象三件事：从哪个地址起、连续多少字节、里面的位怎么解释。贯穿本章的问题：它在哪？占几格？",
+        "scope": "覆盖「对象是一段字节」和 sizeof 问的是格子数。指针、数组退化、malloc、对齐，明确不在这里铺开。",
+        "tradeoff": "看到一个声明，先问从哪开始、占几格。跳过这两问直接解引用，野指针和 sizeof(p) 当对象大小都会从这里开始。",
+        "landing": "指针章把「格子里写的是别人的地址」接上。主程序 C++ 的对象生命周期不重讲「字节从哪开始」。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "对象就是一段字节。后面每一章都要用，判断错的代价最直接。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.memory.bytes",
+          "title": "对象就是一段字节",
+          "qml": "lessons/ObjectAsBytes.qml",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "名字只是标签；真正存在的是地址和从那里起的连续字节。"
+        },
+        {
+          "id": "c.memory.sizeof",
+          "title": "sizeof 问的是格子数",
+          "planned": true,
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": ["c.memory.bytes"],
+          "description": "sizeof(x) 是这段对象占几格，不是名字有多重要。"
+        }
+      ]
+    },
+    {
+      "id": "Pointer",
+      "title": "指针",
+      "description": "指针自己也是对象。格子里写的是另一个对象的起点，不是那个对象本身。",
+      "difficulty": 2,
+      "on_main_path": true,
+      "prerequisites": ["Object"],
+      "summary": "C 没有引用这种别名。要碰到别人的对象，手里只能拿着它的地址。",
+      "outline": {
+        "lead": "p 住在自己的地址上；格子里写的才是别人的起点。",
+        "intro": "C++ 用引用做别名。C 没有这条路：要改另一个对象，只能把地址存进指针里再解引用。",
+        "titles": {
+          "origin": "没有别名时，地址是唯一的通行证",
+          "model": "指针是对象，值是地址",
+          "scope": "这一章只讲「存地址」和「顺着走」",
+          "tradeoff": "先问 p 在哪，再问格子指向谁",
+          "landing": "数组、堆、函数传参都把地址当接口"
+        },
+        "origin": "没有引用时，函数要改调用方的对象，只能把地址传进去。指针不是语法糖，是 C 里「指向别人」的唯一办法。",
+        "model": "p 自己有地址和大小；*p 才是顺着格子里的地址去碰另一个对象。两个问题：p 在哪？格子里是数据还是地址？",
+        "scope": "覆盖指针存地址、解引用、空指针。数组退化和指针运算不在这里铺开——没有「p 是对象」这张图，那些只会变成符号。",
+        "tradeoff": "先问 p 在哪、占几格，再问指向谁，最后才解引用。把指针想成装着对象的盒子，p 和 *p 就会混。",
+        "landing": "下一层是数组、结构体、函数传地址、malloc。C++ 的引用章问的是「别名」，不重讲「格子里是地址」。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "指针存的是地址。后面每一章都在用这件事。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.pointer.address",
+          "title": "指针存的是地址",
+          "qml": "lessons/PointerAsAddress.qml",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "p 自己是一块对象；格子里写的是别人的起点，不是那个对象本身。"
+        },
+        {
+          "id": "c.pointer.deref",
+          "title": "解引用顺着地址走",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": ["c.pointer.address"],
+          "description": "*p 去的是 p 格子里记下的那个起点，不是 p 自己的地址。"
+        },
+        {
+          "id": "c.pointer.null",
+          "title": "空指针不是对象",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": ["c.pointer.address"],
+          "description": "NULL 表示「此刻不指向任何人」。解引用它没有对象可碰。"
+        }
+      ]
+    },
+    {
+      "id": "Array",
+      "title": "数组",
+      "description": "数组是连续的一排对象。写成数组的名字，用在表达式里常常变成第一个元素的地址。",
+      "difficulty": 2,
+      "on_main_path": true,
+      "prerequisites": ["Pointer"],
+      "summary": "看起来像一块对象，用起来经常只剩一个地址。",
+      "outline": {
+        "lead": "数组占一长段连续字节；名字在表达式里会退化成指针。",
+        "intro": "声明 int a[4] 时，内存里是四个 int 排成一排。写成 a 的地方，常常拿到的是 &a[0]，不是整块数组。",
+        "titles": {
+          "origin": "下标只是「从起点再走几格」",
+          "model": "一块连续对象，名字常退化成指针",
+          "scope": "连续布局和退化，不讲动态长度",
+          "tradeoff": "问的是 a 还是 &a",
+          "landing": "字符串是以 0 结尾的 char 数组"
+        },
+        "origin": "下标 a[i] 不是魔法：它是从第一个元素的地址再走 i 个对象。没有「连续一排」这张图，指针运算就是要背的公式。",
+        "model": "数组是一块对象；在多数表达式里，数组名变成第一个元素的地址。&a 仍是整块的地址，类型不同。",
+        "scope": "覆盖连续布局和退化。变长数组、多维数组的细节可以后补。malloc 出来的不是数组类型。",
+        "tradeoff": "sizeof(a) 在数组还是数组的地方才是整块大小；一旦退化成指针，sizeof 就变成指针自己的格子数。",
+        "landing": "字符串章把「一排 char + 结尾 0」接上。C++ 的 std::array / vector 用对象管长度，不靠退化。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "连续布局和退化。传数组进函数时几乎总会变成指针。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.array.block",
+          "title": "数组是连续的一排对象",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "int a[4] 是从某个地址起连续四个 int，不是四个互不相干的名字。"
+        },
+        {
+          "id": "c.array.decay",
+          "title": "数组名会退化",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": ["c.array.block"],
+          "description": "写成数组的名字，用在表达式里常常变成「第一个元素的地址」。"
+        }
+      ]
+    },
+    {
+      "id": "Struct",
+      "title": "结构体",
+      "description": "成员按声明顺序排在同一段字节里。对齐会在中间留下空隙。",
+      "difficulty": 3,
+      "on_main_path": false,
+      "prerequisites": ["Object", "Pointer"],
+      "summary": "把几个对象捆成一块，仍然要能回答从哪开始、每个成员在哪一格。",
+      "outline": {
+        "lead": "结构体是一块对象，成员是这块里的偏移。",
+        "intro": "C 没有成员函数。结构体先是布局：按声明顺序排，对齐可能插入填充。",
+        "titles": {
+          "origin": "几个相关对象总被一起传递",
+          "model": "一块字节 + 成员偏移",
+          "scope": "布局和对齐，不讲面向对象",
+          "tradeoff": "按值复制整块，还是传地址",
+          "landing": "C++ 的类在这块布局上再加寿命与函数"
+        },
+        "origin": "相关的几个值总是一起出现时，分开的变量容易传丢。结构体给它们一个共同的起点。",
+        "model": "结构体本身是对象。成员是从起点算的偏移。指针指向结构体，就是指向这块的起点。",
+        "scope": "覆盖声明顺序、填充、指向成员。位域、柔性数组成员先不展开。",
+        "tradeoff": "按值传结构体复制整块；传指针只交地址。选哪一种，问的还是「要副本还是要同一块对象」。",
+        "landing": "主程序 C++ 的类与对象章从这里接着讲成员函数和访问控制，不重讲「按声明顺序排」。",
+        "grades": [
+          {
+            "goal": "required",
+            "label": "随后掌握",
+            "note": "布局和对齐。看不懂填充，sizeof 和对指针的偏移就会对不上。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.struct.layout",
+          "title": "成员按声明顺序排",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "结构体是一块对象，成员从起点按声明顺序排下去。"
+        },
+        {
+          "id": "c.struct.padding",
+          "title": "对齐会留下空隙",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": ["c.struct.layout"],
+          "description": "sizeof 可能比各成员之和更大，中间那些字节不是给你存值的。"
+        }
+      ]
+    },
+    {
+      "id": "Function",
+      "title": "函数与地址",
+      "description": "参数按值进来。要改调用方的对象，传的必须是它的地址。",
+      "difficulty": 2,
+      "on_main_path": false,
+      "prerequisites": ["Pointer"],
+      "summary": "C 的函数默认复制一份。指针参数是把「改哪一块」写进接口。",
+      "outline": {
+        "lead": "按值传进来的是副本；传指针才是同一块对象。",
+        "intro": "C++ 可以用引用参数表达「我改的是你的对象」。C 只能把地址写进参数。",
+        "titles": {
+          "origin": "函数默认看不见调用方的对象",
+          "model": "参数是副本，指针参数是地址",
+          "scope": "传地址和函数指针，不讲回调框架",
+          "tradeoff": "接口写 int 还是 int *",
+          "landing": "堆上的对象也只能靠地址交出去"
+        },
+        "origin": "函数体里的参数是调用方值的副本。要让函数改调用方的 x，必须传入 &x。",
+        "model": "指针参数的格子里是别人的起点。函数指针的格子里是某段代码的入口地址。",
+        "scope": "覆盖传地址才能改调用方、函数指针存入口。可变参数、setjmp 不在这里。",
+        "tradeoff": "参数写成 int * 是在说「我会碰你的对象」。写成 int 就是「给我一份副本」。",
+        "landing": "C++ 的引用传递把这件事收成别名，不再强迫你看见地址，但判断仍是同一问。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "传地址才能改调用方。函数指针可以后补。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.function.pass_pointer",
+          "title": "传地址才能改调用方",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [],
+          "description": "参数默认是副本。要改调用方的对象，接口里必须是它的地址。"
+        },
+        {
+          "id": "c.function.fnptr",
+          "title": "函数指针存入口地址",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "familiar",
+          "knowledge_type": "concept",
+          "requires": ["c.function.pass_pointer"],
+          "description": "函数不是数据对象，但可以把入口地址存进指针里再调用。"
+        }
+      ]
+    },
+    {
+      "id": "Heap",
+      "title": "堆与寿命",
+      "description": "malloc 还给你的只是起点。没有析构，这块活到你 free 为止。",
+      "difficulty": 3,
+      "on_main_path": true,
+      "prerequisites": ["Pointer"],
+      "summary": "堆上的对象没有名字。寿命是你的责任，不是作用域的责任。",
+      "outline": {
+        "lead": "堆上的对象没有名字，手里只有 malloc 还给你的起点。",
+        "intro": "块作用域对象离开大括号就没了。跨过函数还要活着的对象，得自己向堆要一段字节，并记住谁负责还回去。",
+        "titles": {
+          "origin": "作用域装不下「还要再活一会儿」",
+          "model": "起点 + 你负责的寿命",
+          "scope": "malloc / free，不讲分配器实现",
+          "tradeoff": "谁分配，谁释放",
+          "landing": "C++ 的 RAII 把释放绑回对象寿命"
+        },
+        "origin": "返回局部数组是在交一个已经失效的起点。需要活过函数边界时，C 把分配和释放都留给你。",
+        "model": "malloc 返回起点；大小是你当时请求的。free 之后这块不再是对象。泄漏是忘了还，悬空是还了还继续用。",
+        "scope": "覆盖 malloc 得到起点、配对释放。自定义分配器、内存池不在这里。",
+        "tradeoff": "每一次 malloc 都要能回答谁 free。做不到时，宁可把对象留在调用方的数组里。",
+        "landing": "主程序 C++ 的 RAII 章从这里接着讲「析构时自动还」，不重讲「malloc 返回的是地址」。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "起点和配对释放。后面结构体里堆成员都靠这一问。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.heap.malloc",
+          "title": "malloc 还给你的是起点",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "堆上的对象没有名字，手里只有一段字节的起点。"
+        },
+        {
+          "id": "c.heap.free",
+          "title": "谁分配谁释放",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": ["c.heap.malloc"],
+          "description": "free 之后起点失效。漏掉是泄漏，用两次是未定义行为。"
+        }
+      ]
+    },
+    {
+      "id": "String",
+      "title": "字符串",
+      "description": "C 没有字符串类型。它是一排 char，靠结尾的 0 判断到哪结束。",
+      "difficulty": 2,
+      "on_main_path": false,
+      "prerequisites": ["Array"],
+      "summary": "长度不写在对象里，写在最后一个非 0 字节后面那一格。",
+      "outline": {
+        "lead": "字符串是以 0 结尾的 char 数组，不是带长度的对象。",
+        "intro": "C++ 的 std::string 自己记得长度。C 的 \"hi\" 是 'h','i',0 三格。读过 0 就是越界。",
+        "titles": {
+          "origin": "没有长度字段时，只能约定结束符",
+          "model": "一排 char，0 表示到此为止",
+          "scope": "结束符和越界，不讲编码",
+          "tradeoff": "缓冲区够不够放下 0",
+          "landing": "C++ 的 string / string_view 不再靠结束符"
+        },
+        "origin": "库函数要能在不知道长度的情况下停下来，于是约定 0 是结束。这把「长度」从对象里拿掉了，越界也就没有运行时拦住。",
+        "model": "可见字符后面必须有一格 0。strlen 数的是 0 之前的格子，不含 0 自己。",
+        "scope": "覆盖结束符和越界。宽字符、UTF-8 细节不在这里铺开。",
+        "tradeoff": "拷进固定缓冲区时，问的是格数够不够含 0。不够就会写穿。",
+        "landing": "C++ 的 string_view 仍可能悬空，但不再靠 0 判断长度。那边不重讲「结束符是一格字节」。",
+        "grades": [
+          {
+            "goal": "required",
+            "label": "随后掌握",
+            "note": "结束符和越界。会用 char[] 传参之后再来看这一章也来得及。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.string.zero",
+          "title": "以 0 结尾，不是带长度的对象",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "description": "\"hi\" 是三格：h、i、0。少了那一格 0，就不知道到哪停。"
+        },
+        {
+          "id": "c.string.overflow",
+          "title": "越界没有运行时拦住",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": ["c.string.zero"],
+          "description": "写过缓冲区末尾是未定义行为，编译器不一定报。"
+        }
+      ]
+    }
+  ]
+}

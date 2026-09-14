@@ -89,7 +89,7 @@ vector<ExternalApp> discover_external_apps(const string& apps_root) {
 
 optional<string> launch_external_app(const ExternalApp& app) {
     if (!app.built) {
-        string message = app.title + " 还没有构建。\n\n在项目根目录执行：";
+        string message = app.title + " 的启动入口还不在。\n\n在项目根目录执行：";
         for (const auto& command : app.build_commands) {
             message += "\n    " + command;
         }
@@ -100,6 +100,7 @@ optional<string> launch_external_app(const ExternalApp& app) {
 
     try {
         // 异步启动后就不再管它：两个进程各自独立，被启动方崩溃不影响主程序。
+        // Tauri 应用这里拉起的是 scripts/dev.sh（热更新），不是打包 .app（ADR 0041）。
         Glib::spawn_async(
             app.directory, argv, Glib::SpawnFlags::DEFAULT);
         return nullopt;

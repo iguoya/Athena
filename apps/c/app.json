@@ -1,11 +1,10 @@
 {
   "id": "c",
   "title": "C 语言编程",
-  "description": "独立的 C 语言学习应用，自带章节、文档与实验；从这里以独立进程启动。",
+  "description": "用 Qt Quick / QML 写的 C 语言教案：先看见对象在内存里占哪一段，再谈指针。旧的 LVGL 小程序保留在 playground/，不从这里启动。",
   "icon": { "type": "theme", "name": "text-x-script-symbolic" },
-  "executable": "build/athena-c",
+  "executable": "scripts/dev.sh",
   "build": [
-    "cmake -S apps/c -B apps/c/build",
-    "cmake --build apps/c/build"
+    "cd apps/c && ./scripts/dev.sh"
   ]
 }

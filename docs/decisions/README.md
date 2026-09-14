@@ -32,7 +32,7 @@
 | [0029](0029-difficulty-and-mastery-goal.md) | 知识点按难度与掌握目标两个维度评级 | 已接受 |
 | [0030](0030-knowledge-point-prerequisites.md) | 知识点级前置依赖与依赖方向校验 | 已接受，`type_semantics` 已声明 |
 | [0031](0031-knowledge-type-drives-teaching-actions.md) | 知识类型（概念/技能/策略）决定教学动作 | 已接受，`type_semantics` 已标注 |
-| [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受，`apps/c` 链路已通 |
+| [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受；启动路径见 0041 |
 | [0033](0033-live-visuals-and-interaction.md) | 大纲与教学过程用活的可视化和互动元素表达 | 已接受，`type_semantics` 大纲已改造 |
 | [0034](0034-remove-markdown-handbook.md) | 删除 Markdown 参考手册，大纲只有原生一份 | 已接受，手册正文与页面已移除 |
 | [0035](0035-use-gtk-expressive-ceiling.md) | 把 GTK 的表达上限用满，自绘层迁向 `Gtk::Snapshot` | 已接受，按收益分批迁移 |
@@ -40,6 +40,8 @@
 | [0038](0038-figures-as-widgets-and-cairo.md) | 插图改由 GTK 控件与 Cairo 自绘承载，退出 SVG 图片路线 | 已接受，`type_semantics` 先行改造 |
 | [0039](0039-merge-guide-into-outline.md) | 撤销「本章导览」，主旨并入教学大纲并精简 | 已接受，取代 0036 |
 | [0040](0040-lesson-length-matches-mastery-goal.md) | 学习内容拒绝八股，篇幅与掌握目标匹配 | 已接受，第一章已按此精简 |
+| [0041](0041-independent-apps-launch-in-dev-mode.md) | 独立应用从源码以开发模式启动，不经打包副本 | 已接受 |
+| [0042](0042-c-language-qt-qml-lessons.md) | C 语言学习应用用 Qt Quick / QML 写教案 | 已接受 |
 
 ## 学习数据与 AI
 

@@ -225,12 +225,13 @@ void MainWindow::launch_domain_app(const string& app_id) {
         return;
     }
 
-    // 独立应用各自构建，不随 .app 分发，所以两种"找不到"要分开说：
+    // 独立应用不随主程序 .app 分发，所以两种"找不到"要分开说：
     // 装好的发行包里根本没有 apps/，让用户去检查 app.json 是误导。
     const string message = apps_root.empty()
         ? "「" + app_id + "」是独立应用，不包含在当前发行包里。\n\n"
               "请到源码仓库的 apps/" + app_id
-              + " 目录按该应用自己的 README / AGENTS.md 构建后再从首页打开。"
+              + " 目录按该应用自己的 README / AGENTS.md 用开发模式启动"
+                "（Tauri 应用执行 ./scripts/dev.sh），不要打开 /Applications 里的打包副本。"
         : "在 " + apps_root + " 下没有找到独立应用 " + app_id
               + "，请检查 " + app_id + "/app.json 是否存在。";
     auto* missing = Gtk::make_managed<Gtk::MessageDialog>(
