@@ -32,98 +32,111 @@ component Tile inherits Rectangle {
 
     width: 116px;
     height: 124px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: touch.has-hover ? #00000010 : transparent;
+    animate background { duration: 120ms; }
 
-    touch := TouchArea {
-        clicked => { root.open(); }
+    // 图块里的东西全部绝对定位，共用同一条中轴线。交给 VerticalLayout 排的话，
+    // 定宽的色块和整宽居中的标题各按各的算，看着就是散的。
+    property <length> hub: 56px;
+    property <length> hub-top: 10px;
 
-        VerticalLayout {
-            padding: 10px;
-            spacing: 7px;
-            alignment: start;
+    plate := Rectangle {
+        x: (parent.width - self.width) / 2;
+        y: root.hub-top + (root.hub - self.height) / 2;
+        width: touch.has-hover ? root.hub + 3px : root.hub;
+        height: self.width;
+        border-radius: self.width / 3.6;
+        background: entry.accent;
+        opacity: entry.running ? 1.0 : 0.78;
+        // 很淡的一层投影：色块浮起来一点，图标和底色才不像贴在页面上。
+        drop-shadow-blur: touch.has-hover ? 10px : 5px;
+        drop-shadow-offset-y: touch.has-hover ? 3px : 1px;
+        drop-shadow-color: #00000024;
+        animate width, drop-shadow-blur, drop-shadow-offset-y, opacity {
+            duration: 140ms;
+            easing: ease-out;
+        }
 
-            // 图块：圆角方块 + 一到三个字。三个 Tauri 应用的自带图标是同一张
-            // 模板图，区分不了谁是谁，所以按字和配色来认。
-            Rectangle {
-                width: 56px;
-                height: 56px;
-                horizontal-stretch: 0;
-                border-radius: 14px;
-                background: entry.accent;
-                opacity: entry.running ? 1.0 : 0.72;
+        Image {
+            source: entry.icon;
+            visible: entry.has-icon;
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            width: parent.width * 0.56;
+            height: self.width;
+            image-fit: contain;
+        }
 
-                // 图标和文字都铺满图块再居中：只设对齐方式的话，它们按自身
-                // 尺寸定位，看起来会偏。
-                Image {
-                    source: entry.icon;
-                    visible: entry.has-icon;
-                    width: 30px;
-                    height: 30px;
-                    x: (parent.width - self.width) / 2;
-                    y: (parent.height - self.height) / 2;
-                    image-fit: contain;
-                }
-
-                Text {
-                    text: entry.letter;
-                    visible: !entry.has-icon;
-                    color: white;
-                    font-size: entry.letter.character-count > 1 ? 19px : 24px;
-                    font-weight: 600;
-                    width: parent.width;
-                    height: parent.height;
-                    horizontal-alignment: center;
-                    vertical-alignment: center;
-                }
-            }
-
-            Text {
-                text: entry.title;
-                font-size: 12px;
-                color: #1c1c1e;
-                horizontal-alignment: center;
-                overflow: elide;
-            }
-
-            HorizontalLayout {
-                alignment: center;
-                spacing: 5px;
-
-                Rectangle {
-                    width: 6px;
-                    height: 6px;
-                    y: 4px;
-                    border-radius: 3px;
-                    background: entry.tint;
-                }
-
-                Text {
-                    text: entry.state;
-                    font-size: 10px;
-                    color: #6b6b70;
-                }
-            }
+        Text {
+            text: entry.letter;
+            visible: !entry.has-icon;
+            color: white;
+            font-size: entry.letter.character-count > 1 ? 19px : 24px;
+            font-weight: 600;
+            width: parent.width;
+            height: parent.height;
+            horizontal-alignment: center;
+            vertical-alignment: center;
         }
     }
 
+    // 标题紧跟色块，两者当成一组；状态另起一行，离得开一点。
+    Text {
+        x: 4px;
+        y: root.hub-top + root.hub + 8px;
+        width: parent.width - 8px;
+        text: entry.title;
+        font-size: 12px;
+        color: #1c1c1e;
+        horizontal-alignment: center;
+        overflow: elide;
+    }
+
+    HorizontalLayout {
+        x: 0;
+        y: root.hub-top + root.hub + 28px;
+        width: parent.width;
+        alignment: center;
+        spacing: 5px;
+
+        Rectangle {
+            width: 6px;
+            height: 6px;
+            y: (parent.height - self.height) / 2;
+            border-radius: 3px;
+            background: entry.tint;
+        }
+
+        Text {
+            text: entry.state;
+            font-size: 10px;
+            color: #6b6b70;
+            vertical-alignment: center;
+        }
+    }
+
+    touch := TouchArea {
+        clicked => { root.open(); }
+    }
+
     // 悬停时右上角出现停止按钮，只对正在运行的显示。
-    stop-button := Rectangle {
-        x: parent.width - 26px;
-        y: 6px;
+    Rectangle {
+        x: parent.width - 28px;
+        y: 8px;
         width: 20px;
         height: 20px;
         border-radius: 10px;
         visible: entry.running && (touch.has-hover || stop-touch.has-hover);
-        background: stop-touch.has-hover ? #d32f2f : #00000026;
+        background: stop-touch.has-hover ? #d32f2f : #0000002e;
 
         stop-touch := TouchArea {
             clicked => { root.stop(); }
             Rectangle {
                 width: 8px;
                 height: 8px;
-                border-radius: 1px;
-                background: stop-touch.has-hover ? white : #4a4a4f;
+                border-radius: 1.5px;
+                background: white;
             }
         }
     }
