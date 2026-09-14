@@ -63,8 +63,8 @@ fn build(apps: &[(String, String)]) -> Wiring {
     }
 }
 
-/// 托盘图标，由 `assets/tray-icon.svg` 在构建期渲染而来（见 build.rs）。
-/// 换图标就是换那个 SVG，这里不用动。
+/// 托盘图标，由 `assets/tiger.svg` 在构建期裁出虎头渲染而来（见 build.rs）。
+/// 换图标就是换那个 SVG（连带调一下那里的裁剪框），这里不用动。
 fn icon() -> Option<Icon> {
     const SIZE: u32 = 64;
     let rgba = include_bytes!(concat!(env!("OUT_DIR"), "/tray-icon.rgba")).to_vec();

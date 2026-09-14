@@ -32,6 +32,11 @@
   应用目录里了，按文件名认最直接。
 - `match`（可选）是判断进程归属的路径前缀，`apps/cpp` 用它指向 `builddir`。
 
+托盘图标来自 `gui/assets/tiger.svg`——Athena 早期欢迎页的主视觉，2026-08-30 随
+欢迎页一起删掉，现在从 git 历史里取回来了。菜单栏只有 22pt 高，整只老虎缩进去
+只剩一条色块，所以 `gui/build.rs` 在构建期裁出虎头再渲染成位图；换图标就是换那份
+SVG（连带调一下裁剪框）。
+
 编排器统一注入：PATH 补全（node / cargo / meson / Qt 在桌面环境里往往不在 PATH）、
 共享的 `CARGO_TARGET_DIR`（三个 Tauri 应用依赖相同，各编一份是白费 6 GB）、
 以及日志重定向。
