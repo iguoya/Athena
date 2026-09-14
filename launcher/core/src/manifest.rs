@@ -87,8 +87,15 @@ pub struct DevSpec {
 
 #[derive(Debug, Clone, Deserialize)]
 struct IconSpec {
+    /// macOS 菜单栏版用的 SF Symbol 名。
     #[serde(default)]
     symbol: Option<String>,
+    /// 图块里的字，通常一到三个字符（"C++"、"算"）。
+    #[serde(default)]
+    letter: Option<String>,
+    /// 图块底色，取各自技术生态的惯用色，不自造。
+    #[serde(default)]
+    accent: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -109,6 +116,8 @@ pub struct App {
     pub title: String,
     pub summary: String,
     pub symbol: String,
+    pub letter: String,
+    pub accent: String,
     pub dir: PathBuf,
     pub dev: DevSpec,
 }
@@ -154,7 +163,17 @@ fn parse(dir: &Path) -> Option<App> {
             return None;
         }
     };
+    let icon = raw.icon.clone();
     Some(App {
+        // 没写 letter 就取标题第一个字：新增应用不配这两项也能显示。
+        letter: icon
+            .as_ref()
+            .and_then(|icon| icon.letter.clone())
+            .unwrap_or_else(|| raw.title.chars().take(1).collect()),
+        accent: icon
+            .as_ref()
+            .and_then(|icon| icon.accent.clone())
+            .unwrap_or_else(|| "#5A6270".to_string()),
         id: raw.id,
         title: raw.title,
         summary: raw.description,

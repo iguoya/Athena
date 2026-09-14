@@ -14,6 +14,13 @@ slint = "1.17"
 tray-icon = "0.25"
 muda = "0.20"
 
+[target.'cfg(target_os = "macos")'.dependencies]
+# 只为一件事：把窗口带到眼前。macOS 不会自动把别的 Space 上的窗口移过来，
+# 应用不 activate 的话，点了托盘菜单像是没反应。
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", features = ["NSApplication", "NSResponder"] }
+objc2-foundation = "0.3"
+
 [target.'cfg(target_os = "linux")'.dependencies]
 # Linux 的托盘必须活在 GTK 线程里，这层依赖只为那条路径。
 gtk = "0.18"

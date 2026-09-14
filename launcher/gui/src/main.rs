@@ -54,7 +54,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .map(|app| AppEntry {
                 id: app.id.as_str().into(),
                 title: app.title.as_str().into(),
-                summary: app.summary.as_str().into(),
+                letter: app.letter.as_str().into(),
+                accent: parse_color(&app.accent).into(),
                 state: RunState::Stopped.label().into(),
                 tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
                 running: false,
@@ -106,7 +107,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         Action::ShowWindow => {
                             if let Some(window) = handle.upgrade() {
                                 let _ = window.show();
-                                window.window().set_maximized(false);
+                                bring_to_front();
                             }
                         }
                         Action::Quit => slint::quit_event_loop().unwrap_or(()),
@@ -212,6 +213,37 @@ fn open_in_file_manager(path: &std::path::Path) {
         "xdg-open"
     };
     let _ = std::process::Command::new(opener).arg(path).spawn();
+}
+
+/// 把启动器自己拉到前台。
+///
+/// macOS 上光 show() 不够：窗口留在它最初出现的那个 Space，屏幕上正开着全屏
+/// 应用时就等于没反应。activate 之后系统才会把焦点交给它。
+#[cfg(target_os = "macos")]
+fn bring_to_front() {
+    use objc2_app_kit::NSApplication;
+    use objc2_foundation::MainThreadMarker;
+
+    if let Some(marker) = MainThreadMarker::new() {
+        let application = NSApplication::sharedApplication(marker);
+        #[allow(deprecated)]
+        application.activateIgnoringOtherApps(true);
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn bring_to_front() {}
+
+/// app.json 里的 "#RRGGBB"。写错了就用中性灰兜底，不让一个手滑的色值把界面搞崩。
+fn parse_color(text: &str) -> Color {
+    let hex = text.trim_start_matches('#');
+    if hex.len() != 6 {
+        return Color::from_rgb_u8(0x5a, 0x62, 0x70);
+    }
+    let channel = |range: std::ops::Range<usize>| {
+        u8::from_str_radix(&hex[range], 16).unwrap_or(0x5a)
+    };
+    Color::from_rgb_u8(channel(0..2), channel(2..4), channel(4..6))
 }
 
 fn tint(state: RunState) -> Color {
