@@ -6,6 +6,7 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod icon;
 mod tray;
 
 use std::rc::Rc;
@@ -56,6 +57,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 title: app.title.as_str().into(),
                 letter: app.letter.as_str().into(),
                 accent: parse_color(&app.accent).into(),
+                icon: tile_icon(app).unwrap_or_default(),
+                has_icon: tile_icon(app).is_some(),
                 state: RunState::Stopped.label().into(),
                 tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
                 running: false,
@@ -163,6 +166,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
     }
 
+    // 启动时也要 activate：否则窗口留在启动它的那个 Space，屏幕上开着全屏
+    // 应用时就像是没起来。
+    window.show()?;
+    bring_to_front();
     window.run()?;
     Ok(())
 }
@@ -213,6 +220,11 @@ fn open_in_file_manager(path: &std::path::Path) {
         "xdg-open"
     };
     let _ = std::process::Command::new(opener).arg(path).spawn();
+}
+
+/// 应用自带的图标，按图块里的显示尺寸渲染（乘 2 供高分屏用）。
+fn tile_icon(app: &App) -> Option<slint::Image> {
+    icon::render(app.icon_file.as_ref()?, 60)
 }
 
 /// 把启动器自己拉到前台。

@@ -1,0 +1,3298 @@
+{
+  "topic_id": "en.beginner.sentence.basic_logic",
+  "kind": "sentence",
+  "source_refs": [
+    {
+      "source_id": "kylebing-kaoyan",
+      "relation": "quoted",
+      "note": "双语例句提供可核对的英译汉原句和参考译文。"
+    },
+    {
+      "source_id": "yz-english-2-outline",
+      "relation": "exam_alignment",
+      "note": "从短句信息完整性逐步衔接英语二英译汉。"
+    }
+  ],
+  "items": [
+    {
+      "id": "en.beginner.sentence.translation_comment",
+      "kind": "translation",
+      "text": "So far, Mr. Cook has not commented on these reports.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "到目前为止，库克先生还未对这些报告进行过评论。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；comment 在这里是“评论”。"
+        },
+        {
+          "label": "他因谩骂裁判而被罚款。",
+          "ok": false,
+          "why": "这项也包含 comment 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我鞋子上有什么黏糊糊的东西。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "He was fined for making abusive comments to the referee.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "他因谩骂裁判而被罚款。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；comment 在这里是“评论”。"
+            },
+            {
+              "label": "到目前为止，库克先生还未对这些报告进行过评论。",
+              "ok": false,
+              "why": "这项也包含 comment 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "她由她的本区医生治疗。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “comment” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “comment” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_enter",
+      "kind": "translation",
+      "text": "She entered politics in 1996.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "她于1996年进入政界。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；enter 在这里是“进入”。"
+        },
+        {
+          "label": "两个男孩都参了军。",
+          "ok": false,
+          "why": "这项也包含 enter 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我想我们应该用不同的方法再试一次。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Both the boys entered the army.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "两个男孩都参了军。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；enter 在这里是“进入”。"
+            },
+            {
+              "label": "她于1996年进入政界。",
+              "ok": false,
+              "why": "这项也包含 enter 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "建议讨论的话题",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “enter” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_occur",
+      "kind": "translation",
+      "text": "A third of accidental deaths occur in the home.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "有三分之一的意外死亡发生在家里。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；occur 在这里是“发生”。"
+        },
+        {
+          "label": "爆炸发生在清晨5点30分。",
+          "ok": false,
+          "why": "这项也包含 occur 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "工党在2001年选举中以巨大优势获胜。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The explosion occurred at 5.30 a.m.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "爆炸发生在清晨5点30分。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；occur 在这里是“发生”。"
+            },
+            {
+              "label": "有三分之一的意外死亡发生在家里。",
+              "ok": false,
+              "why": "这项也包含 occur 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "路易丝差不多和她母亲一样高。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “occur” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_significant",
+      "kind": "translation",
+      "text": "His most significant political achievement was the abolition of the death penalty.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "他政治上最重大的成就是废除了死刑。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；significant 在这里是“重大的”。"
+        },
+        {
+          "label": "你们的计划如有重大变动，请通知我们。",
+          "ok": false,
+          "why": "这项也包含 significant 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "她由她的本区医生治疗。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Please inform us if there are any significant changes in your plans.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "你们的计划如有重大变动，请通知我们。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；significant 在这里是“重大的”。"
+            },
+            {
+              "label": "他政治上最重大的成就是废除了死刑。",
+              "ok": false,
+              "why": "这项也包含 significant 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "有人给你们俩互相介绍了吗？汤姆，这位是格雷格。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “significant” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_drug",
+      "kind": "translation",
+      "text": "a drug used in the treatment of cancer",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "用于治疗癌症的一种药物",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；drug 在这里是“药”。"
+        },
+        {
+          "label": "许多年轻人上学时开始吸毒。",
+          "ok": false,
+          "why": "这项也包含 drug 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "建议讨论的话题",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "A lot of young people start taking drugs at school.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "许多年轻人上学时开始吸毒。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；drug 在这里是“药”。"
+            },
+            {
+              "label": "用于治疗癌症的一种药物",
+              "ok": false,
+              "why": "这项也包含 drug 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "快点，你还没准备好吗？",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “drug” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “drug” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_series",
+      "kind": "translation",
+      "text": "the series of events that led to the outbreak of war",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "导致战争爆发的一系列事件",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；series 在这里是“系列”。"
+        },
+        {
+          "label": "警方在调查该地区发生的一连串袭击事件。",
+          "ok": false,
+          "why": "这项也包含 series 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "路易丝差不多和她母亲一样高。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The police are investigating a series of attacks in the area.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "警方在调查该地区发生的一连串袭击事件。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；series 在这里是“系列”。"
+            },
+            {
+              "label": "导致战争爆发的一系列事件",
+              "ok": false,
+              "why": "这项也包含 series 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "从这里到波兰边界有40英里。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “series” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_direct",
+      "kind": "translation",
+      "text": "I’m not in direct contact with them.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我和他们没有直接的联系。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；direct 在这里是“直接的”。"
+        },
+        {
+          "label": "一切真知都是从直接经验发源的。",
+          "ok": false,
+          "why": "这项也包含 direct 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "有人给你们俩互相介绍了吗？汤姆，这位是格雷格。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "All genuine knowledge originates in direct experience.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "一切真知都是从直接经验发源的。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；direct 在这里是“直接的”。"
+            },
+            {
+              "label": "我和他们没有直接的联系。",
+              "ok": false,
+              "why": "这项也包含 direct 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "雇员在大门口必须出示自己的身份卡。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “direct” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “direct” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_lack",
+      "kind": "translation",
+      "text": "Alex’s real problem is that he lacks confidence.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "亚历克斯的真正问题是缺乏信心。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；lack 在这里是“缺乏”。"
+        },
+        {
+          "label": "有太多老师得不到尊重。",
+          "ok": false,
+          "why": "这项也包含 lack 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "快点，你还没准备好吗？",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Too many teachers are treated with a lack of respect.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "有太多老师得不到尊重。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；lack 在这里是“缺乏”。"
+            },
+            {
+              "label": "亚历克斯的真正问题是缺乏信心。",
+              "ok": false,
+              "why": "这项也包含 lack 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "在面试时呈递的工作成果样本",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “lack” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “lack” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_review",
+      "kind": "translation",
+      "text": "a journalist who will review the events of the past six months",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "将对过去六个月里所发生的事件进行回顾的记者",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；review 在这里是“回顾”。"
+        },
+        {
+          "label": "我们会研究你的情况，然后决定如何帮助你。",
+          "ok": false,
+          "why": "这项也包含 review 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "从这里到波兰边界有40英里。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "We will review your situation and decide how we can help you.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "我们会研究你的情况，然后决定如何帮助你。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；review 在这里是“回顾”。"
+            },
+            {
+              "label": "将对过去六个月里所发生的事件进行回顾的记者",
+              "ok": false,
+              "why": "这项也包含 review 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "警察逮捕了几个人，后来都释放了。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “review” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “review” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_race",
+      "kind": "translation",
+      "text": "The school welcomes children of all races .",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "该校欢迎各种族的学生就读。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；race 在这里是“种”。"
+        },
+        {
+          "label": "混血儿",
+          "ok": false,
+          "why": "这项也包含 race 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "雇员在大门口必须出示自己的身份卡。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "a person of mixed race",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "混血儿",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；race 在这里是“种”。"
+            },
+            {
+              "label": "该校欢迎各种族的学生就读。",
+              "ok": false,
+              "why": "这项也包含 race 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "在英国，香烟被课以重税。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “race” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_recognize",
+      "kind": "translation",
+      "text": "It was malaria, but Dr Lee hadn’t recognized the symptoms.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "这是疟疾，但李医生没有认出症状。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；recognize 在这里是“认出”。"
+        },
+        {
+          "label": "你穿上制服我认不出你了。",
+          "ok": false,
+          "why": "这项也包含 recognize 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "在面试时呈递的工作成果样本",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I didn’t recognize you in your uniform.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "你穿上制服我认不出你了。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；recognize 在这里是“认出”。"
+            },
+            {
+              "label": "这是疟疾，但李医生没有认出症状。",
+              "ok": false,
+              "why": "这项也包含 recognize 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "咖啡很可能是世界上最受欢迎的饮料。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “recognize” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_gain",
+      "kind": "translation",
+      "text": "Eating too many fatty foods could cause weight gain.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "过多食用高脂食物会导致体重增加。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；gain 在这里是“增加”。"
+        },
+        {
+          "label": "民主党只需要增20张选票。",
+          "ok": false,
+          "why": "这项也包含 gain 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "警察逮捕了几个人，后来都释放了。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The Democratic Party needed a net gain of only 20 votes.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "民主党只需要增20张选票。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；gain 在这里是“增加”。"
+            },
+            {
+              "label": "过多食用高脂食物会导致体重增加。",
+              "ok": false,
+              "why": "这项也包含 gain 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "一束美丽的花",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “gain” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_board",
+      "kind": "translation",
+      "text": "Martha was chopping vegetables on a wooden board.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "玛莎正在用一块木砧板切蔬菜。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；board 在这里是“板”。"
+        },
+        {
+          "label": "有几名学生寄宿在史密斯夫人家里。",
+          "ok": false,
+          "why": "这项也包含 board 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "在英国，香烟被课以重税。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Several students boarded with Mrs. Smith.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "有几名学生寄宿在史密斯夫人家里。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；board 在这里是“板”。"
+            },
+            {
+              "label": "玛莎正在用一块木砧板切蔬菜。",
+              "ok": false,
+              "why": "这项也包含 board 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "江确定了8%至9%的年增长目标。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “board” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “board” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_mark",
+      "kind": "translation",
+      "text": "What do those strange marks at the top mean?",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "顶端那些奇怪的记号是什么意思？",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；mark 在这里是“记号”。"
+        },
+        {
+          "label": "小猫身体基本为白色，背上有黑色斑点。",
+          "ok": false,
+          "why": "这项也包含 mark 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "咖啡很可能是世界上最受欢迎的饮料。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The kitten is mainly white with black marks on her back.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "小猫身体基本为白色，背上有黑色斑点。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；mark 在这里是“记号”。"
+            },
+            {
+              "label": "顶端那些奇怪的记号是什么意思？",
+              "ok": false,
+              "why": "这项也包含 mark 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我喜欢画家在这幅作品中对红色的运用。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “mark” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “mark” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_achieve",
+      "kind": "translation",
+      "text": "Frances achieved very good exam results.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "弗朗西丝考试取得了优异成绩。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；achieve 在这里是“取得”。"
+        },
+        {
+          "label": "威尔逊作为一名艺术家成就斐然。",
+          "ok": false,
+          "why": "这项也包含 achieve 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "一束美丽的花",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Wilson has achieved considerable success as an artist.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "威尔逊作为一名艺术家成就斐然。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；achieve 在这里是“取得”。"
+            },
+            {
+              "label": "弗朗西丝考试取得了优异成绩。",
+              "ok": false,
+              "why": "这项也包含 achieve 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "入口是右边的一扇小门。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “achieve” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_item",
+      "kind": "translation",
+      "text": "I also saw that news item in the Sunday Times.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我在《星期日泰晤士报》上也看到了那条新闻。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；item 在这里是“条”。"
+        },
+        {
+          "label": "他打开纸板箱把里面的物品一一拿出来。",
+          "ok": false,
+          "why": "这项也包含 item 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "江确定了8%至9%的年增长目标。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "He opened the cardboard box and took out each item.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "他打开纸板箱把里面的物品一一拿出来。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；item 在这里是“条”。"
+            },
+            {
+              "label": "我在《星期日泰晤士报》上也看到了那条新闻。",
+              "ok": false,
+              "why": "这项也包含 item 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "经过处理可用作肥料的污水",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “item” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “item” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_floor",
+      "kind": "translation",
+      "text": "a puddle of water on the kitchen floor",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "厨房地面上的一摊水",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；floor 在这里是“地面”。"
+        },
+        {
+          "label": "楼面面积为41万平方英尺的仓库",
+          "ok": false,
+          "why": "这项也包含 floor 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我喜欢画家在这幅作品中对红色的运用。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "a warehouse that has 410,000 square feet of floor space",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "楼面面积为41万平方英尺的仓库",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；floor 在这里是“地面”。"
+            },
+            {
+              "label": "厨房地面上的一摊水",
+              "ok": false,
+              "why": "这项也包含 floor 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "最初的超级市场按现代的标准来看是很小的。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “floor” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_stuff",
+      "kind": "translation",
+      "text": "I’ve got some sticky stuff on my shoe.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我鞋子上有什么黏糊糊的东西。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；stuff 在这里是“东西”。"
+        },
+        {
+          "label": "你说这么多东西你怎么装进车里？",
+          "ok": false,
+          "why": "这项也包含 stuff 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "入口是右边的一扇小门。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "How do you think you’re going to fit all that stuff into the car?",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "你说这么多东西你怎么装进车里？",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；stuff 在这里是“东西”。"
+            },
+            {
+              "label": "我鞋子上有什么黏糊糊的东西。",
+              "ok": false,
+              "why": "这项也包含 stuff 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "他们正在向民众施加压力，要求他们投赞成票。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “stuff” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_method",
+      "kind": "translation",
+      "text": "I think we should try again using a different method.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我想我们应该用不同的方法再试一次。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；method 在这里是“方法”。"
+        },
+        {
+          "label": "信息存储和检索的有效方法",
+          "ok": false,
+          "why": "这项也包含 method 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "经过处理可用作肥料的污水",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "effective methods for the storage and retrieval of information",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "信息存储和检索的有效方法",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；method 在这里是“方法”。"
+            },
+            {
+              "label": "我想我们应该用不同的方法再试一次。",
+              "ok": false,
+              "why": "这项也包含 method 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我乘公共汽车去旧金山。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “method” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_election",
+      "kind": "translation",
+      "text": "The Labour Party won the 2001 election by a huge majority.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "工党在2001年选举中以巨大优势获胜。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；election 在这里是“选举”。"
+        },
+        {
+          "label": "州长选举将于11月25日举行。",
+          "ok": false,
+          "why": "这项也包含 election 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "最初的超级市场按现代的标准来看是很小的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Elections for the state governorship will be on November 25.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "州长选举将于11月25日举行。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；election 在这里是“选举”。"
+            },
+            {
+              "label": "工党在2001年选举中以巨大优势获胜。",
+              "ok": false,
+              "why": "这项也包含 election 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "对自然界的研究",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “election” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_doctor",
+      "kind": "translation",
+      "text": "She was treated by her local doctor.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "她由她的本区医生治疗。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；doctor 在这里是“医生”。"
+        },
+        {
+          "label": "他们窜改了照片，加深皱纹使她尽可能地难看。",
+          "ok": false,
+          "why": "这项也包含 doctor 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "他们正在向民众施加压力，要求他们投赞成票。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "They doctored the prints, deepening the lines to make her look as awful as possible.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "他们窜改了照片，加深皱纹使她尽可能地难看。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；doctor 在这里是“医生”。"
+            },
+            {
+              "label": "她由她的本区医生治疗。",
+              "ok": false,
+              "why": "这项也包含 doctor 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "他最初是在舞蹈班学会通过动作表达情感的。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “doctor” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_discussion",
+      "kind": "translation",
+      "text": "the topics suggested for discussion",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "建议讨论的话题",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；discussion 在这里是“讨论”。"
+        },
+        {
+          "label": "我们就她的法律状况已进行了讨论。",
+          "ok": false,
+          "why": "这项也包含 discussion 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我乘公共汽车去旧金山。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "We have had discussions about her legal situation.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "我们就她的法律状况已进行了讨论。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；discussion 在这里是“讨论”。"
+            },
+            {
+              "label": "建议讨论的话题",
+              "ok": false,
+              "why": "这项也包含 discussion 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "只有12个人出席了会议。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “discussion” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_nearly",
+      "kind": "translation",
+      "text": "Louise is nearly as tall as her mother.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "路易丝差不多和她母亲一样高。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；nearly 在这里是“差不多”。"
+        },
+        {
+          "label": "到这里花了将近两小时。",
+          "ok": false,
+          "why": "这项也包含 nearly 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "对自然界的研究",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "It took nearly two hours to get here.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "到这里花了将近两小时。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；nearly 在这里是“差不多”。"
+            },
+            {
+              "label": "路易丝差不多和她母亲一样高。",
+              "ok": false,
+              "why": "这项也包含 nearly 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "这部电影的配乐是谁谱写的？",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “nearly” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_introduce",
+      "kind": "translation",
+      "text": "Have you two been introduced? Tom, this is Greg.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "有人给你们俩互相介绍了吗？汤姆，这位是格雷格。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；introduce 在这里是“介绍”。"
+        },
+        {
+          "label": "几位参议员提交了针对性骚扰的立法议案。",
+          "ok": false,
+          "why": "这项也包含 introduce 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "他最初是在舞蹈班学会通过动作表达情感的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Several senators introduced legislation aimed at sexual harassment.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "几位参议员提交了针对性骚扰的立法议案。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；introduce 在这里是“介绍”。"
+            },
+            {
+              "label": "有人给你们俩互相介绍了吗？汤姆，这位是格雷格。",
+              "ok": false,
+              "why": "这项也包含 introduce 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "这一课程是由一家培训公司组织的。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “introduce” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “introduce” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_ready",
+      "kind": "translation",
+      "text": "Come on. Aren’t you ready yet?",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "快点，你还没准备好吗？",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；ready 在这里是“准备好”。"
+        },
+        {
+          "label": "门铃响的时候，他已经准备好在等着了。",
+          "ok": false,
+          "why": "这项也包含 ready 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "只有12个人出席了会议。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "When the doorbell rang he was ready and waiting .",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "门铃响的时候，他已经准备好在等着了。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；ready 在这里是“准备好”。"
+            },
+            {
+              "label": "快点，你还没准备好吗？",
+              "ok": false,
+              "why": "这项也包含 ready 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我一般仰卧着睡觉。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “ready” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_mile",
+      "kind": "translation",
+      "text": "It’s 40 miles from here to the Polish border.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "从这里到波兰边界有40英里。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；mile 在这里是“英里”。"
+        },
+        {
+          "label": "一片50英里宽、150英里长的地区",
+          "ok": false,
+          "why": "这项也包含 mile 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "这部电影的配乐是谁谱写的？",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "an area 50 miles wide and 150 miles long",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "一片50英里宽、150英里长的地区",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；mile 在这里是“英里”。"
+            },
+            {
+              "label": "从这里到波兰边界有40英里。",
+              "ok": false,
+              "why": "这项也包含 mile 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "那片礁石周围的水域生活着1,500多种不同的鱼类。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “mile” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_card",
+      "kind": "translation",
+      "text": "Employees must show their identity cards at the gate.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "雇员在大门口必须出示自己的身份卡。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；card 在这里是“卡”。"
+        },
+        {
+          "label": "我还没拿到会员卡。",
+          "ok": false,
+          "why": "这项也包含 card 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "这一课程是由一家培训公司组织的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I haven’t got my membership card yet.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "我还没拿到会员卡。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；card 在这里是“卡”。"
+            },
+            {
+              "label": "雇员在大门口必须出示自己的身份卡。",
+              "ok": false,
+              "why": "这项也包含 card 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "如果你许下一个诺言，你就应该遵守它。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “card” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_interview",
+      "kind": "translation",
+      "text": "a portfolio of work presented at interview",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "在面试时呈递的工作成果样本",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；interview 在这里是“面试”。"
+        },
+        {
+          "label": "当沃德尔接受面试时，他给人印象深刻，因此他被雇用了。",
+          "ok": false,
+          "why": "这项也包含 interview 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我一般仰卧着睡觉。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "When Wardell was interviewed, he was impressive, and on that basis, he was hired.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "当沃德尔接受面试时，他给人印象深刻，因此他被雇用了。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；interview 在这里是“面试”。"
+            },
+            {
+              "label": "在面试时呈递的工作成果样本",
+              "ok": false,
+              "why": "这项也包含 interview 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "该公司已确定了60位潜在的客户。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “interview” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_release",
+      "kind": "translation",
+      "text": "Police arrested several men, who were later released.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "警察逮捕了几个人，后来都释放了。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；release 在这里是“释放”。"
+        },
+        {
+          "label": "这些熊最后被放回野生环境中。",
+          "ok": false,
+          "why": "这项也包含 release 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "那片礁石周围的水域生活着1,500多种不同的鱼类。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The bears are eventually released into the wild.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "这些熊最后被放回野生环境中。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；release 在这里是“释放”。"
+            },
+            {
+              "label": "警察逮捕了几个人，后来都释放了。",
+              "ok": false,
+              "why": "这项也包含 release 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "水是利用太阳能加热的。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “release” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_tax",
+      "kind": "translation",
+      "text": "Cigarettes are heavily taxed in Britain.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "在英国，香烟被课以重税。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；tax 在这里是“税”。"
+        },
+        {
+          "label": "…一个对收入低于一定水平的人不提高税收的承诺。",
+          "ok": false,
+          "why": "这项也包含 tax 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "如果你许下一个诺言，你就应该遵守它。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "...a pledge not to raise taxes on people below a certain income.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "…一个对收入低于一定水平的人不提高税收的承诺。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；tax 在这里是“税”。"
+            },
+            {
+              "label": "在英国，香烟被课以重税。",
+              "ok": false,
+              "why": "这项也包含 tax 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "窗户上钉有铁条的房屋",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “tax” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_popular",
+      "kind": "translation",
+      "text": "Coffee is probably the most popular drink in the world.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "咖啡很可能是世界上最受欢迎的饮料。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；popular 在这里是“受欢迎的”。"
+        },
+        {
+          "label": "希拉里在学校里很受欢迎。",
+          "ok": false,
+          "why": "这项也包含 popular 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "该公司已确定了60位潜在的客户。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Hilary was popular at school.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "希拉里在学校里很受欢迎。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；popular 在这里是“受欢迎的”。"
+            },
+            {
+              "label": "咖啡很可能是世界上最受欢迎的饮料。",
+              "ok": false,
+              "why": "这项也包含 popular 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "她遭受着巨大的痛苦。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “popular” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_beautiful",
+      "kind": "translation",
+      "text": "a beautiful bunch of flowers",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "一束美丽的花",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；beautiful 在这里是“美丽的”。"
+        },
+        {
+          "label": "她比我记忆中更美。",
+          "ok": false,
+          "why": "这项也包含 beautiful 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "水是利用太阳能加热的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "She was even more beautiful than I had remembered.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "她比我记忆中更美。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；beautiful 在这里是“美丽的”。"
+            },
+            {
+              "label": "一束美丽的花",
+              "ok": false,
+              "why": "这项也包含 beautiful 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "索菲娅在卧室里照料她的儿子。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “beautiful” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_target",
+      "kind": "translation",
+      "text": "Jiang set annual growth targets of 8–9%.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "江确定了8%至9%的年增长目标。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；target 在这里是“目标”。"
+        },
+        {
+          "label": "这个新的项目何时完工没有预定日期。",
+          "ok": false,
+          "why": "这项也包含 target 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "窗户上钉有铁条的房屋",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "There is no target date for completion of the new project.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "这个新的项目何时完工没有预定日期。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；target 在这里是“目标”。"
+            },
+            {
+              "label": "江确定了8%至9%的年增长目标。",
+              "ok": false,
+              "why": "这项也包含 target 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "一列美军坦克缓缓前进。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “target” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_red",
+      "kind": "translation",
+      "text": "I like the way the artist uses red in this painting.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我喜欢画家在这幅作品中对红色的运用。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；red 在这里是“红色”。"
+        },
+        {
+          "label": "红黄斑斓，层林尽染",
+          "ok": false,
+          "why": "这项也包含 red 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "她遭受着巨大的痛苦。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "the reds and yellows of the trees",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "红黄斑斓，层林尽染",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；red 在这里是“红色”。"
+            },
+            {
+              "label": "我喜欢画家在这幅作品中对红色的运用。",
+              "ok": false,
+              "why": "这项也包含 red 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "许多小企业在经营的第一年就倒闭了。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “red” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_access",
+      "kind": "translation",
+      "text": "Access is by means of a small door on the right.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "入口是右边的一扇小门。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；access 在这里是“入口”。"
+        },
+        {
+          "label": "用户可以远程获取语音邮件。",
+          "ok": false,
+          "why": "这项也包含 access 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "索菲娅在卧室里照料她的儿子。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Users can access their voice mail remotely.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "用户可以远程获取语音邮件。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；access 在这里是“入口”。"
+            },
+            {
+              "label": "入口是右边的一扇小门。",
+              "ok": false,
+              "why": "这项也包含 access 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我们把柜子刷成绿色，和地毯相配。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “access” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_treat",
+      "kind": "translation",
+      "text": "sewage treated so that it can be used as fertilizer",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "经过处理可用作肥料的污水",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；treat 在这里是“处理”。"
+        },
+        {
+          "label": "由于缺少药物，很难给病人治病。",
+          "ok": false,
+          "why": "这项也包含 treat 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "一列美军坦克缓缓前进。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "It was difficult to treat patients because of a shortage of medicine.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "由于缺少药物，很难给病人治病。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；treat 在这里是“处理”。"
+            },
+            {
+              "label": "经过处理可用作肥料的污水",
+              "ok": false,
+              "why": "这项也包含 treat 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "小孩子受到道路安全知识的教育，以避免交通事故。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “treat” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “treat” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_modern",
+      "kind": "translation",
+      "text": "The original supermarkets were small by modern standards.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "最初的超级市场按现代的标准来看是很小的。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；modern 在这里是“现代的”。"
+        },
+        {
+          "label": "此类公司如果想在现代社会中与别人竞争，就必须有所改变。",
+          "ok": false,
+          "why": "这项也包含 modern 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "许多小企业在经营的第一年就倒闭了。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Such companies must change if they are to compete in the modern world .",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "此类公司如果想在现代社会中与别人竞争，就必须有所改变。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；modern 在这里是“现代的”。"
+            },
+            {
+              "label": "最初的超级市场按现代的标准来看是很小的。",
+              "ok": false,
+              "why": "这项也包含 modern 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "人们在座位上动来动去，看上去不大自在。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “modern” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_pressure",
+      "kind": "translation",
+      "text": "They are putting pressure on people to vote yes.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "他们正在向民众施加压力，要求他们投赞成票。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；pressure 在这里是“压力”。"
+        },
+        {
+          "label": "你绝不能屈从压力。",
+          "ok": false,
+          "why": "这项也包含 pressure 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我们把柜子刷成绿色，和地毯相配。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "You must never give in to pressure .",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "你绝不能屈从压力。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；pressure 在这里是“压力”。"
+            },
+            {
+              "label": "他们正在向民众施加压力，要求他们投赞成票。",
+              "ok": false,
+              "why": "这项也包含 pressure 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "他们有个令人头疼的工作，就是管理国家最危险的监狱。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “pressure” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_bus",
+      "kind": "translation",
+      "text": "I took a bus to San Francisco.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我乘公共汽车去旧金山。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；bus 在这里是“公共汽车”。"
+        },
+        {
+          "label": "公共汽车在每小时的15分和30分时发车。",
+          "ok": false,
+          "why": "这项也包含 bus 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "小孩子受到道路安全知识的教育，以避免交通事故。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Buses run at 15 and 30 minutes past the hour.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "公共汽车在每小时的15分和30分时发车。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；bus 在这里是“公共汽车”。"
+            },
+            {
+              "label": "我乘公共汽车去旧金山。",
+              "ok": false,
+              "why": "这项也包含 bus 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "到目前为止，库克先生还未对这些报告进行过评论。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “bus” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_natural",
+      "kind": "translation",
+      "text": "the study of the natural world ",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "对自然界的研究",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；natural 在这里是“自然界的”。"
+        },
+        {
+          "label": "自然风景秀丽的地区",
+          "ok": false,
+          "why": "这项也包含 natural 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "人们在座位上动来动去，看上去不大自在。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "an area of spectacular natural beauty",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "自然风景秀丽的地区",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；natural 在这里是“自然界的”。"
+            },
+            {
+              "label": "对自然界的研究",
+              "ok": false,
+              "why": "这项也包含 natural 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "她于1996年进入政界。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “natural” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_express",
+      "kind": "translation",
+      "text": "He first learnt to express himself through movement at hisdance classes.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "他最初是在舞蹈班学会通过动作表达情感的。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；express 在这里是“表达”。"
+        },
+        {
+          "label": "父母对自己孩子的安全表示忧虑。",
+          "ok": false,
+          "why": "这项也包含 express 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "他们有个令人头疼的工作，就是管理国家最危险的监狱。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Parents have expressed their concerns about their children’s safety.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "父母对自己孩子的安全表示忧虑。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；express 在这里是“表达”。"
+            },
+            {
+              "label": "他最初是在舞蹈班学会通过动作表达情感的。",
+              "ok": false,
+              "why": "这项也包含 express 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "有三分之一的意外死亡发生在家里。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “express” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_attend",
+      "kind": "translation",
+      "text": "Only 12 people attended the meeting.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "只有12个人出席了会议。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；attend 在这里是“出席”。"
+        },
+        {
+          "label": "如果不能出席，请通知我们。",
+          "ok": false,
+          "why": "这项也包含 attend 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "到目前为止，库克先生还未对这些报告进行过评论。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Please let us know if you are unable to attend.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "如果不能出席，请通知我们。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；attend 在这里是“出席”。"
+            },
+            {
+              "label": "只有12个人出席了会议。",
+              "ok": false,
+              "why": "这项也包含 attend 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "他政治上最重大的成就是废除了死刑。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “attend” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_score",
+      "kind": "translation",
+      "text": "Who wrote the score for the movie?",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "这部电影的配乐是谁谱写的？",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；score 在这里是“配乐”。"
+        },
+        {
+          "label": "当他在比赛的最后一分钟得分时，人群爆发出了雷鸣般的欢呼。",
+          "ok": false,
+          "why": "这项也包含 score 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "她于1996年进入政界。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Great cheers went up when he scored in the final minute of the game.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "当他在比赛的最后一分钟得分时，人群爆发出了雷鸣般的欢呼。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；score 在这里是“配乐”。"
+            },
+            {
+              "label": "这部电影的配乐是谁谱写的？",
+              "ok": false,
+              "why": "这项也包含 score 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "用于治疗癌症的一种药物",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “score” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_organize",
+      "kind": "translation",
+      "text": "The course was organized by a training company.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "这一课程是由一家培训公司组织的。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；organize 在这里是“组织”。"
+        },
+        {
+          "label": "学生要学会如何安排好自己的学习。",
+          "ok": false,
+          "why": "这项也包含 organize 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "有三分之一的意外死亡发生在家里。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Students need to learn how to organize their work.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "学生要学会如何安排好自己的学习。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；organize 在这里是“组织”。"
+            },
+            {
+              "label": "这一课程是由一家培训公司组织的。",
+              "ok": false,
+              "why": "这项也包含 organize 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "导致战争爆发的一系列事件",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “organize” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_sleep",
+      "kind": "translation",
+      "text": "I usually sleep on my back.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我一般仰卧着睡觉。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；sleep 在这里是“睡”。"
+        },
+        {
+          "label": "他算是幸运的，至少还有个睡觉的地方。",
+          "ok": false,
+          "why": "这项也包含 sleep 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "他政治上最重大的成就是废除了死刑。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "He’s lucky because at least he has somewhere to sleep.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "他算是幸运的，至少还有个睡觉的地方。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；sleep 在这里是“睡”。"
+            },
+            {
+              "label": "我一般仰卧着睡觉。",
+              "ok": false,
+              "why": "这项也包含 sleep 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我和他们没有直接的联系。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “sleep” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_fish",
+      "kind": "translation",
+      "text": "Over 1,500 different species of fish inhabit the waters around the reef.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "那片礁石周围的水域生活着1,500多种不同的鱼类。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；fish 在这里是“鱼”。"
+        },
+        {
+          "label": "石鱼是所有鱼类中毒性最强的。",
+          "ok": false,
+          "why": "这项也包含 fish 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "用于治疗癌症的一种药物",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The stonefish is the most deadly of all fishes.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "石鱼是所有鱼类中毒性最强的。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；fish 在这里是“鱼”。"
+            },
+            {
+              "label": "那片礁石周围的水域生活着1,500多种不同的鱼类。",
+              "ok": false,
+              "why": "这项也包含 fish 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "亚历克斯的真正问题是缺乏信心。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “fish” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_promise",
+      "kind": "translation",
+      "text": "If you make a promise, you should keep it.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "如果你许下一个诺言，你就应该遵守它。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；promise 在这里是“诺言”。"
+        },
+        {
+          "label": "邮局已承诺在星期五恢复该地区第一类邮件的递送。",
+          "ok": false,
+          "why": "这项也包含 promise 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "导致战争爆发的一系列事件",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The post office has promised to resume first class mail delivery to the area on Friday.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "邮局已承诺在星期五恢复该地区第一类邮件的递送。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；promise 在这里是“诺言”。"
+            },
+            {
+              "label": "如果你许下一个诺言，你就应该遵守它。",
+              "ok": false,
+              "why": "这项也包含 promise 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "将对过去六个月里所发生的事件进行回顾的记者",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “promise” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_potential",
+      "kind": "translation",
+      "text": "The company has identified 60 potential customers.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "该公司已确定了60位潜在的客户。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；potential 在这里是“潜在的”。"
+        },
+        {
+          "label": "这个男孩有很大的潜力。",
+          "ok": false,
+          "why": "这项也包含 potential 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我和他们没有直接的联系。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The boy has great potential.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "这个男孩有很大的潜力。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；potential 在这里是“潜在的”。"
+            },
+            {
+              "label": "该公司已确定了60位潜在的客户。",
+              "ok": false,
+              "why": "这项也包含 potential 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "该校欢迎各种族的学生就读。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “potential” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_energy",
+      "kind": "translation",
+      "text": "The water is heated using energy from the sun.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "水是利用太阳能加热的。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；energy 在这里是“能”。"
+        },
+        {
+          "label": "核能的问题就是要处理核废料。",
+          "ok": false,
+          "why": "这项也包含 energy 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "亚历克斯的真正问题是缺乏信心。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The problem with nuclear energy is dealing with the waste.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "核能的问题就是要处理核废料。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；energy 在这里是“能”。"
+            },
+            {
+              "label": "水是利用太阳能加热的。",
+              "ok": false,
+              "why": "这项也包含 energy 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "这是疟疾，但李医生没有认出症状。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “energy” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_bar",
+      "kind": "translation",
+      "text": "houses with bars across the windows",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "窗户上钉有铁条的房屋",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；bar 在这里是“条”。"
+        },
+        {
+          "label": "…“魔鬼群”，全城最受欢迎的西部乡村酒吧。",
+          "ok": false,
+          "why": "这项也包含 bar 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "将对过去六个月里所发生的事件进行回顾的记者",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "...Devil's Herd, the city's most popular country and western bar.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "…“魔鬼群”，全城最受欢迎的西部乡村酒吧。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；bar 在这里是“条”。"
+            },
+            {
+              "label": "窗户上钉有铁条的房屋",
+              "ok": false,
+              "why": "这项也包含 bar 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "过多食用高脂食物会导致体重增加。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “bar” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “bar” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_suffer",
+      "kind": "translation",
+      "text": "She’s suffering a lot of pain.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "她遭受着巨大的痛苦。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；suffer 在这里是“遭受”。"
+        },
+        {
+          "label": "至少他死得突然，没有遭罪。",
+          "ok": false,
+          "why": "这项也包含 suffer 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "该校欢迎各种族的学生就读。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "At least he died suddenly and didn’t suffer.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "至少他死得突然，没有遭罪。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；suffer 在这里是“遭受”。"
+            },
+            {
+              "label": "她遭受着巨大的痛苦。",
+              "ok": false,
+              "why": "这项也包含 suffer 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "玛莎正在用一块木砧板切蔬菜。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “suffer” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_tend",
+      "kind": "translation",
+      "text": "Sofia was in the bedroom tending to her son.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "索菲娅在卧室里照料她的儿子。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；tend 在这里是“照料”。"
+        },
+        {
+          "label": "随着年龄的增长，人需要的睡眠通常会减少。",
+          "ok": false,
+          "why": "这项也包含 tend 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "这是疟疾，但李医生没有认出症状。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "People tend to need less sleep as they get older.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "随着年龄的增长，人需要的睡眠通常会减少。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；tend 在这里是“照料”。"
+            },
+            {
+              "label": "索菲娅在卧室里照料她的儿子。",
+              "ok": false,
+              "why": "这项也包含 tend 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "顶端那些奇怪的记号是什么意思？",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “tend” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “tend” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_advance",
+      "kind": "translation",
+      "text": "A line of US tanks slowly advanced.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "一列美军坦克缓缓前进。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；advance 在这里是“前进”。"
+        },
+        {
+          "label": "我要先提醒你，我跳舞不是很好。",
+          "ok": false,
+          "why": "这项也包含 advance 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "过多食用高脂食物会导致体重增加。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I should warn you in advance that I’m not a very good dancer.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "我要先提醒你，我跳舞不是很好。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；advance 在这里是“前进”。"
+            },
+            {
+              "label": "一列美军坦克缓缓前进。",
+              "ok": false,
+              "why": "这项也包含 advance 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "弗朗西丝考试取得了优异成绩。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “advance” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “advance” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_operation",
+      "kind": "translation",
+      "text": "Many small businesses fail in the first year of operation.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "许多小企业在经营的第一年就倒闭了。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；operation 在这里是“经营”。"
+        },
+        {
+          "label": "联合国的救援行动在破晓后不久就开始了。",
+          "ok": false,
+          "why": "这项也包含 operation 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "玛莎正在用一块木砧板切蔬菜。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The UN rescue operation started shortly after dawn.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "联合国的救援行动在破晓后不久就开始了。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；operation 在这里是“经营”。"
+            },
+            {
+              "label": "许多小企业在经营的第一年就倒闭了。",
+              "ok": false,
+              "why": "这项也包含 operation 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我在《星期日泰晤士报》上也看到了那条新闻。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “operation” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “operation” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_match",
+      "kind": "translation",
+      "text": "We painted the cabinets green to match the rug.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "我们把柜子刷成绿色，和地毯相配。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；match 在这里是“相配”。"
+        },
+        {
+          "label": "你认为这套衣服配吗？",
+          "ok": false,
+          "why": "这项也包含 match 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "顶端那些奇怪的记号是什么意思？",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Do you think this outfit matches?",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "你认为这套衣服配吗？",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；match 在这里是“相配”。"
+            },
+            {
+              "label": "我们把柜子刷成绿色，和地毯相配。",
+              "ok": false,
+              "why": "这项也包含 match 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "厨房地面上的一摊水",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “match” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_avoid",
+      "kind": "translation",
+      "text": "Road safety is taught to young children to avoid road accidents.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "小孩子受到道路安全知识的教育，以避免交通事故。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；avoid 在这里是“避免”。"
+        },
+        {
+          "label": "采取措施避免火灾风险很重要。",
+          "ok": false,
+          "why": "这项也包含 avoid 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "弗朗西丝考试取得了优异成绩。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "It is important to take measures to avoid the risk of fire.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "采取措施避免火灾风险很重要。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；avoid 在这里是“避免”。"
+            },
+            {
+              "label": "小孩子受到道路安全知识的教育，以避免交通事故。",
+              "ok": false,
+              "why": "这项也包含 avoid 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我鞋子上有什么黏糊糊的东西。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “avoid” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_seat",
+      "kind": "translation",
+      "text": "People were shifting in their seats, looking uncomfortable.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "人们在座位上动来动去，看上去不大自在。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；seat 在这里是“座位”。"
+        },
+        {
+          "label": "我在后座，乔开车。",
+          "ok": false,
+          "why": "这项也包含 seat 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我在《星期日泰晤士报》上也看到了那条新闻。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "I was in the back seat and Jo was driving.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "我在后座，乔开车。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；seat 在这里是“座位”。"
+            },
+            {
+              "label": "人们在座位上动来动去，看上去不大自在。",
+              "ok": false,
+              "why": "这项也包含 seat 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "我想我们应该用不同的方法再试一次。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “seat” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.beginner.sentence.translation_task",
+      "kind": "translation",
+      "text": "They have the unenviable task of supervising the most dangerous prison in the country.",
+      "prompt": "哪项翻译准确、完整地保留了原句信息？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "他们有个令人头疼的工作，就是管理国家最危险的监狱。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；task 在这里是“工作”。"
+        },
+        {
+          "label": "珍被委以举办一场慈善篮球赛的任务。",
+          "ok": false,
+          "why": "这项也包含 task 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "厨房地面上的一摊水",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "Jen was tasked with running a charity basketball tournament.",
+          "prompt": "换一句再译：哪项表达准确、完整、自然？",
+          "choices": [
+            {
+              "label": "珍被委以举办一场慈善篮球赛的任务。",
+              "ok": true,
+              "why": "时间、对象、动作和语气均与原句对应；task 在这里是“工作”。"
+            },
+            {
+              "label": "他们有个令人头疼的工作，就是管理国家最危险的监狱。",
+              "ok": false,
+              "why": "这项也包含 task 的意思，但人物、动作或限定信息来自另一句。"
+            },
+            {
+              "label": "工党在2001年选举中以巨大优势获胜。",
+              "ok": false,
+              "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+            }
+          ]
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “task” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        },
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “task” · examples 1 / 2",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    }
+  ]
+}

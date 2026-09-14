@@ -1,5 +1,5 @@
 {
-  "assessment_id": "en.assessment.beginner.sentence.v1",
+  "assessment_id": "en.assessment.beginner.sentence.v2",
   "topic_id": "en.beginner.sentence.basic_logic",
   "kind": "sentence",
   "title": "初级例句独立考核",
@@ -161,6 +161,781 @@
           "relation": "adapted",
           "locator": "Exercises 1–4 and Over to You",
           "note": "题面按该真实学生工作表的词汇、主旨、细节或短段落活动转成独立考核；没有复用练习原句。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_enter",
+      "kind": "translation",
+      "text": "He entered the election as the clear favourite.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "他参加竞选时显然最有希望获胜。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；enter 在这里是“进入”。"
+        },
+        {
+          "label": "她于1996年进入政界。",
+          "ok": false,
+          "why": "这项也包含 enter 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "对自然界的研究",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “enter” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_significant",
+      "kind": "translation",
+      "text": "But if they do, it will be significant for a few reasons.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "但是，如果他们真的这样做，这必有几个重要的原因。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；significant 在这里是“重大的”。"
+        },
+        {
+          "label": "他政治上最重大的成就是废除了死刑。",
+          "ok": false,
+          "why": "这项也包含 significant 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "他最初是在舞蹈班学会通过动作表达情感的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “significant” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_drug",
+      "kind": "translation",
+      "text": "Jimi Hendrix died of a drug overdose.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "吉米·亨德里克斯死于吸毒过量。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；drug 在这里是“药”。"
+        },
+        {
+          "label": "用于治疗癌症的一种药物",
+          "ok": false,
+          "why": "这项也包含 drug 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "只有12个人出席了会议。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “drug” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_series",
+      "kind": "translation",
+      "text": "There’s been a whole series of accidents on this road.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "这条路上发生了一连串的交通事故。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；series 在这里是“系列”。"
+        },
+        {
+          "label": "导致战争爆发的一系列事件",
+          "ok": false,
+          "why": "这项也包含 series 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "这部电影的配乐是谁谱写的？",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “series” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_direct",
+      "kind": "translation",
+      "text": "The workers' movement poses a direct threat to their interests.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "工人运动对他们的利益造成了直接威胁。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；direct 在这里是“直接的”。"
+        },
+        {
+          "label": "我和他们没有直接的联系。",
+          "ok": false,
+          "why": "这项也包含 direct 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "这一课程是由一家培训公司组织的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “direct” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_lack",
+      "kind": "translation",
+      "text": "comments based on a total lack of information",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "全无根据的评论",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；lack 在这里是“缺乏”。"
+        },
+        {
+          "label": "亚历克斯的真正问题是缺乏信心。",
+          "ok": false,
+          "why": "这项也包含 lack 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "我一般仰卧着睡觉。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “lack” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_review",
+      "kind": "translation",
+      "text": "The decision will be reviewed by the Supreme Court.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "这个判决将由最高法院复核。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；review 在这里是“回顾”。"
+        },
+        {
+          "label": "将对过去六个月里所发生的事件进行回顾的记者",
+          "ok": false,
+          "why": "这项也包含 review 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "那片礁石周围的水域生活着1,500多种不同的鱼类。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “review” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_race",
+      "kind": "translation",
+      "text": "The law forbids discrimination on the grounds of race or religion.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "法律禁止以种族或宗教信仰为由歧视他人。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；race 在这里是“种”。"
+        },
+        {
+          "label": "该校欢迎各种族的学生就读。",
+          "ok": false,
+          "why": "这项也包含 race 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "如果你许下一个诺言，你就应该遵守它。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “race” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_gain",
+      "kind": "translation",
+      "text": "After gaining independence in 1957, it was renamed ‘Ghana’.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "1957年获得独立后，该国改名为“加纳”。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；gain 在这里是“增加”。"
+        },
+        {
+          "label": "过多食用高脂食物会导致体重增加。",
+          "ok": false,
+          "why": "这项也包含 gain 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "该公司已确定了60位潜在的客户。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “gain” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.translation_board",
+      "kind": "translation",
+      "text": "She always had one or two students boarding with her.",
+      "prompt": "哪项翻译准确、完整、自然？",
+      "error_tag": "英译汉信息完整",
+      "choices": [
+        {
+          "label": "她的家总有一两名寄宿学生。",
+          "ok": true,
+          "why": "时间、对象、动作和语气均与原句对应；board 在这里是“板”。"
+        },
+        {
+          "label": "玛莎正在用一块木砧板切蔬菜。",
+          "ok": false,
+          "why": "这项也包含 board 的意思，但人物、动作或限定信息来自另一句。"
+        },
+        {
+          "label": "水是利用太阳能加热的。",
+          "ok": false,
+          "why": "这项来自另一条真实句子，主语、动作或条件与题面不对应。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “board” · examples 3",
+          "note": "英文例句和对应中文释义取自仓库内双语句库；题干、干扰项和反馈由本项目转换。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_1",
+      "kind": "contrast",
+      "text": "But if they do, it will be significant for a few reasons.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：但是，如果他们真的这样做，这必有几个重要的原因。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “significant”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_2",
+      "kind": "contrast",
+      "text": "But above all, the most significant assessment they will make will be how it affects the subjects psychologically.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：但首先，他们将作出的最重要的评估是，它在心理上将如何影响被试者们。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “significant”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_3",
+      "kind": "contrast",
+      "text": "It’s been a difficult time but, on the positive side , I feel physically fine.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：日子过得不容易，不过从好的方面看，我的身体状况还不错。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “positive”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_4",
+      "kind": "contrast",
+      "text": "I’d say he’s around 50, but I’m only guessing.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：我想他50岁左右，不过也只是猜测。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “guess”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_5",
+      "kind": "contrast",
+      "text": "Robert wanted to go and help him, but judged it best to stay where he was.",
+      "prompt": "but 前后两部分是什么关系？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "后半句转折或修正前半句",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：罗伯特想过去帮他，但考虑之后还是觉得待在原地为妙。"
+        },
+        {
+          "label": "后半句只重复前半句",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "两部分构成时间先后",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-kaoyan",
+          "relation": "quoted",
+          "locator": "word “judge”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_6",
+      "kind": "condition",
+      "text": "You can team up with one other class member if you want.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：例句：如果你愿意的话，可以找一个同学组成一组。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “team”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_7",
+      "kind": "condition",
+      "text": "I’m not sure what I would do if I were in your position .",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：我不知道如果我身在你的处境会怎么办。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet6",
+          "relation": "quoted",
+          "locator": "word “position”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_8",
+      "kind": "condition",
+      "text": "The major aviation companies need to cut prices if they are to compete with budget airlines.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：大航空公司如果想和廉价的航空公司竞争，就需要降低价格。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “cut”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_9",
+      "kind": "condition",
+      "text": "If I can't make a living at painting, at least I can teach someone else to paint.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：如果我不能以画画谋生的话，至少我能教别人画画。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “else”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.logic_10",
+      "kind": "condition",
+      "text": "Raise your hand if you know the right answer.",
+      "prompt": "if 从句在这里给出了什么？",
+      "error_tag": "句间逻辑",
+      "choices": [
+        {
+          "label": "行动或结果成立的条件",
+          "ok": true,
+          "why": "连接词与上下文支持这一判断。整句可理解为：知道正确答案的话，请举手。"
+        },
+        {
+          "label": "已经发生的结果",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        },
+        {
+          "label": "说话人的身份",
+          "ok": false,
+          "why": "这种关系不符合题面。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “raise”",
+          "note": "使用未出现在练习题面的双语例句做独立关系判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reading_1",
+      "kind": "detail",
+      "text": "You were wrong not to inform the police.",
+      "prompt": "哪项中文信息与原句一致？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "你没有通知警方是错误的。",
+          "ok": true,
+          "why": "人物、动作和限定信息均与原句对应。"
+        },
+        {
+          "label": "我很喜欢他们的新专辑。",
+          "ok": false,
+          "why": "这项来自另一句，信息与题面不符。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “not”",
+          "note": "使用未在练习中出现的真实双语例句检查细节理解。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reading_2",
+      "kind": "detail",
+      "text": "I don’t like it when you get angry.",
+      "prompt": "哪项中文信息与原句一致？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "我不喜欢你生气时的样子。",
+          "ok": true,
+          "why": "人物、动作和限定信息均与原句对应。"
+        },
+        {
+          "label": "我们非常喜欢这部影片。",
+          "ok": false,
+          "why": "这项来自另一句，信息与题面不符。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “like”",
+          "note": "使用未在练习中出现的真实双语例句检查细节理解。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reading_3",
+      "kind": "detail",
+      "text": "I quite like their new album.",
+      "prompt": "哪项中文信息与原句一致？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "我很喜欢他们的新专辑。",
+          "ok": true,
+          "why": "人物、动作和限定信息均与原句对应。"
+        },
+        {
+          "label": "我可不想当单亲家长。",
+          "ok": false,
+          "why": "这项来自另一句，信息与题面不符。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “like”",
+          "note": "使用未在练习中出现的真实双语例句检查细节理解。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reading_4",
+      "kind": "detail",
+      "text": "We really liked the film.",
+      "prompt": "哪项中文信息与原句一致？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "我们非常喜欢这部影片。",
+          "ok": true,
+          "why": "人物、动作和限定信息均与原句对应。"
+        },
+        {
+          "label": "你没有通知警方是错误的。",
+          "ok": false,
+          "why": "这项来自另一句，信息与题面不符。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “like”",
+          "note": "使用未在练习中出现的真实双语例句检查细节理解。"
+        }
+      ]
+    },
+    {
+      "id": "en.assessment.beginner.sentence.reading_5",
+      "kind": "detail",
+      "text": "I didn’t like the idea of being a single parent.",
+      "prompt": "哪项中文信息与原句一致？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "我可不想当单亲家长。",
+          "ok": true,
+          "why": "人物、动作和限定信息均与原句对应。"
+        },
+        {
+          "label": "我不喜欢你生气时的样子。",
+          "ok": false,
+          "why": "这项来自另一句，信息与题面不符。"
+        }
+      ],
+      "source_refs": [
+        {
+          "source_id": "kylebing-cet4",
+          "relation": "quoted",
+          "locator": "word “like”",
+          "note": "使用未在练习中出现的真实双语例句检查细节理解。"
         }
       ]
     }

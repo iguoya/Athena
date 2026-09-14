@@ -1,103 +1,138 @@
 {
   "id": "c",
   "title": "C 语言编程",
-  "tagline": "C 把对象说成「某地址上的一段字节」。章与章按这条脊往下长，不按语法清单摊平。",
+  "tagline": "语义以 C23 为准。章序跟 Beej 教程卷，从内存与指针讲起；地址空间分块跟 Dive Into Systems 第 2 章。",
+  "standard": "C23",
+  "standard_iso": "ISO/IEC 9899:2024",
   "chapters": [
     {
-      "id": "Object",
-      "title": "对象与字节",
-      "description": "名字只是标签。真正存在的是地址、从那里起的连续字节，以及这些位怎么解释。",
+      "id": "Memory",
+      "title": "内存与变量",
+      "description": "每个字节有一个整数编号，叫地址。多字节的值占相邻格子，sizeof 告诉你占几格。",
       "difficulty": 1,
       "on_main_path": true,
       "prerequisites": [],
-      "summary": "先看见对象在内存里占哪一段，后面的指针、数组、malloc 才有地方挂。",
+      "source_refs": [
+        { "id": "beej-bgc", "loc": "§5.1 Memory and Variables" },
+        { "id": "dis", "loc": "Ch.2 Parts of program memory" },
+        { "id": "c23", "loc": "6.2.6 Representations of types" }
+      ],
+      "summary": "Beej §5.1：内存是一排编了号的字节。DIS 第 2 章补上代码段、数据段、栈、堆。",
       "outline": {
-        "lead": "先看见对象在内存里占哪一段，再谈指针怎么指向它。",
-        "intro": "读 C 代码时，只知道「这个变量叫 x」还不够。机器认的是地址和从那里起连续几格字节。本章把这张图立住。",
+        "lead": "先看见「变量在编号格子里」，再谈指针怎么记下那个编号。",
+        "intro": "Beej §5.1 把内存说成一排编了号的盒子，每格一字节；类型占几格用 sizeof。Dive Into Systems 第 2 章再把这些格子划成代码、数据、栈、堆。",
         "titles": {
-          "origin": "没有地址时，变量只是纸上的符号",
-          "model": "对象 = 地址 + 大小 + 位型",
-          "scope": "这一章只建立「看见」",
-          "tradeoff": "读声明时问的两件事",
-          "landing": "下一章是指针；C++ 的对象观从这里接着问寿命"
+          "origin": "名字是给人看的，机器认的是编号",
+          "model": "一排编了号的字节",
+          "scope": "编址、sizeof、地址空间分块",
+          "tradeoff": "先问占几格，再问在哪一块",
+          "landing": "下一章指针：变量里写下的是另一个编号"
         },
-        "origin": "汇编里操作的是寄存器和内存单元。C 把「一段字节」提成对象，但仍要求你随时能回答它从哪开始、占几格。丢掉这张图，&、sizeof、指针就变成要背的符号。",
-        "model": "每个对象三件事：从哪个地址起、连续多少字节、里面的位怎么解释。贯穿本章的问题：它在哪？占几格？",
-        "scope": "覆盖「对象是一段字节」和 sizeof 问的是格子数。指针、数组退化、malloc、对齐，明确不在这里铺开。",
-        "tradeoff": "看到一个声明，先问从哪开始、占几格。跳过这两问直接解引用，野指针和 sizeof(p) 当对象大小都会从这里开始。",
-        "landing": "指针章把「格子里写的是别人的地址」接上。主程序 C++ 的对象生命周期不重讲「字节从哪开始」。",
+        "origin": "只记住变量名叫 x，读不到 &x 和 sizeof(x) 在问什么。Beej 从「每个字节有一个整数编号」讲起，就是为了把名字还原成格子。",
+        "model": "内存按字节编址，编号连续增大。int 这类类型占相邻若干格。sizeof 给出格数。DIS 再问：这几格落在代码段、数据段、栈还是堆。",
+        "scope": "覆盖字节编址、sizeof、四块地址空间。指针类型、解引用、数组退化不在这里——那是 Beej §5 起的内容。",
+        "tradeoff": "读一个声明，先问占几格（sizeof）、再问落在哪一块（局部在栈、静态在数据段）。跳过这两问直接解引用，野指针会从这里开始。",
+        "landing": "Beej 下一节是指针类型。主程序 C++ 的对象寿命不重讲「字节有地址」。",
         "grades": [
           {
             "goal": "master",
             "label": "先拿下",
-            "note": "对象就是一段字节。后面每一章都要用，判断错的代价最直接。"
+            "note": "字节有地址、sizeof 是格数。Beej 把这两条当作指针章的前置。"
           }
         ]
       },
       "topics": [
         {
           "id": "c.memory.bytes",
-          "title": "对象就是一段字节",
+          "title": "每个字节有一个地址",
           "qml": "lessons/ObjectAsBytes.qml",
           "difficulty": 1,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
-          "description": "名字只是标签；真正存在的是地址和从那里起的连续字节。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§5.1 Memory and Variables" },
+            { "id": "c23", "loc": "6.2.6 Representations of types" }
+          ],
+          "description": "内存是一排编号的盒子，每格一字节。多字节的值占相邻格子。"
         },
         {
           "id": "c.memory.sizeof",
-          "title": "sizeof 问的是格子数",
+          "title": "sizeof 给出类型占几字节",
           "planned": true,
           "difficulty": 1,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": ["c.memory.bytes"],
-          "description": "sizeof(x) 是这段对象占几格，不是名字有多重要。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§5.1" },
+            { "id": "beej-bgc", "loc": "§5.7 sizeof and Pointers" }
+          ],
+          "description": "sizeof 问的是类型或表达式的宽度，不是名字有多重要。"
+        },
+        {
+          "id": "c.memory.regions",
+          "title": "代码、数据、栈、堆",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": ["c.memory.bytes"],
+          "source_refs": [{ "id": "dis", "loc": "Ch.2 Parts of program memory" }],
+          "description": "局部变量在栈上，全局在数据段，malloc 出来的在堆上。指针变量本身通常在栈上，指向的对象可以在别处。"
         }
       ]
     },
     {
       "id": "Pointer",
       "title": "指针",
-      "description": "指针自己也是对象。格子里写的是另一个对象的起点，不是那个对象本身。",
+      "description": "指针变量保存的是地址。解引用顺着这个地址去碰原来的对象；把指针传进函数，函数才能改调用方。",
       "difficulty": 2,
       "on_main_path": true,
-      "prerequisites": ["Object"],
-      "summary": "C 没有引用这种别名。要碰到别人的对象，手里只能拿着它的地址。",
+      "prerequisites": ["Memory"],
+      "source_refs": [
+        { "id": "beej-bgc", "loc": "§5 Pointers" },
+        { "id": "modern-c", "loc": "Ch.11 Pointers" },
+        { "id": "c23", "loc": "6.3.2.3 Pointers" }
+      ],
+      "summary": "Beej §5：类型、解引用、作为参数传递、空指针。传指针改调用方写在这一章，不另开「函数」章。空指针按 C23 教 nullptr。",
       "outline": {
-        "lead": "p 住在自己的地址上；格子里写的才是别人的起点。",
-        "intro": "C++ 用引用做别名。C 没有这条路：要改另一个对象，只能把地址存进指针里再解引用。",
+        "lead": "指针里写的是地址；*p 才是那个地址上的对象。",
+        "intro": "Beej §5 的顺序是：先取地址，再声明指针类型，再解引用，最后才说为什么要传给函数。空指针放在能用之后当哨兵：C23 写 nullptr，NULL 仍合法。",
         "titles": {
-          "origin": "没有别名时，地址是唯一的通行证",
-          "model": "指针是对象，值是地址",
-          "scope": "这一章只讲「存地址」和「顺着走」",
-          "tradeoff": "先问 p 在哪，再问格子指向谁",
-          "landing": "数组、堆、函数传参都把地址当接口"
+          "origin": "函数参数默认是副本",
+          "model": "指针保存地址，解引用跟过去",
+          "scope": "Beej §5.1–5.5，不含数组退化",
+          "tradeoff": "要改调用方的对象，参数必须是指针",
+          "landing": "下一章数组：下标建立在「从起点再走几格」上"
         },
-        "origin": "没有引用时，函数要改调用方的对象，只能把地址传进去。指针不是语法糖，是 C 里「指向别人」的唯一办法。",
-        "model": "p 自己有地址和大小；*p 才是顺着格子里的地址去碰另一个对象。两个问题：p 在哪？格子里是数据还是地址？",
-        "scope": "覆盖指针存地址、解引用、空指针。数组退化和指针运算不在这里铺开——没有「p 是对象」这张图，那些只会变成符号。",
-        "tradeoff": "先问 p 在哪、占几格，再问指向谁，最后才解引用。把指针想成装着对象的盒子，p 和 *p 就会混。",
-        "landing": "下一层是数组、结构体、函数传地址、malloc。C++ 的引用章问的是「别名」，不重讲「格子里是地址」。",
+        "origin": "Beej §5.4 把指针的用处落在函数参数上：每个实参都会被复制；复制一份地址，双方仍指向同一块对象。没有指针，函数只能改自己的副本。",
+        "model": "& 取出地址，指针变量保存这个编号，* 顺着编号去读写原来的对象。C23 用 nullptr 表示此刻不指向任何人；NULL 仍是空指针常量。解引用空指针是未定义行为。",
+        "scope": "覆盖指针类型、解引用、按指针传参、空指针（nullptr / NULL）。数组名当指针、指针运算是 Beej §6.6 和 §11，不在这里铺开。",
+        "tradeoff": "想让函数改你的 int，就传 int *。想让函数只看书，可以传值。先问 p 指向谁，再解引用。",
+        "landing": "Beej 下一章是数组。K&R 第 5 章把指针和数组写在一起，所以数组紧跟本章。",
         "grades": [
           {
             "goal": "master",
             "label": "先拿下",
-            "note": "指针存的是地址。后面每一章都在用这件事。"
+            "note": "存地址、解引用、传指针改调用方。Beej 把这三件当作指针章的主体。"
           }
         ]
       },
       "topics": [
         {
           "id": "c.pointer.address",
-          "title": "指针存的是地址",
+          "title": "指针保存的是地址",
           "qml": "lessons/PointerAsAddress.qml",
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
-          "description": "p 自己是一块对象；格子里写的是别人的起点，不是那个对象本身。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§5.2 Pointer Types" },
+            { "id": "c23", "loc": "6.3.2.3 Pointers" }
+          ],
+          "description": "int *p 保存的是某个 int 的地址，不是那个 int 自己。"
         },
         {
           "id": "c.pointer.deref",
@@ -107,48 +142,72 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": ["c.pointer.address"],
-          "description": "*p 去的是 p 格子里记下的那个起点，不是 p 自己的地址。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§5.3 Dereferencing" },
+            { "id": "c23", "loc": "6.3.2.3 Pointers" }
+          ],
+          "description": "*p 用的是 p 指向的那个对象，可以当原来的变量用。"
+        },
+        {
+          "id": "c.pointer.pass",
+          "title": "把指针传进函数才能改调用方",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": ["c.pointer.deref"],
+          "source_refs": [{ "id": "beej-bgc", "loc": "§5.4 Passing Pointers as Arguments" }],
+          "description": "参数仍是副本，但复制的是地址；两边解引用碰到同一块对象。"
         },
         {
           "id": "c.pointer.null",
-          "title": "空指针不是对象",
+          "title": "空指针：C23 用 nullptr",
           "planned": true,
           "difficulty": 2,
           "mastery_goal": "required",
           "knowledge_type": "concept",
           "requires": ["c.pointer.address"],
-          "description": "NULL 表示「此刻不指向任何人」。解引用它没有对象可碰。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§5.5 The NULL Pointer" },
+            { "id": "c23", "loc": "6.4.4.6 Predefined constants (nullptr)" }
+          ],
+          "description": "C23 用 nullptr 表示不指向任何人。NULL 仍合法，常见于旧代码。解引用空指针是未定义行为。"
         }
       ]
     },
     {
       "id": "Array",
       "title": "数组",
-      "description": "数组是连续的一排对象。写成数组的名字，用在表达式里常常变成第一个元素的地址。",
+      "description": "数组是连续的一排同类型对象。下标是从起点再走几格；在表达式里，数组名常常变成指向第一个元素的指针。",
       "difficulty": 2,
       "on_main_path": true,
       "prerequisites": ["Pointer"],
-      "summary": "看起来像一块对象，用起来经常只剩一个地址。",
+      "source_refs": [
+        { "id": "beej-bgc", "loc": "§6 Arrays" },
+        { "id": "beej-bgc", "loc": "§6.6 Arrays and Pointers" },
+        { "id": "beej-bgc", "loc": "§11.2 Array/Pointer Equivalence" }
+      ],
+      "summary": "Beej §6 先讲连续存储和越界，§6.6 / §11.2 再讲数组名和指针为什么常常能互换。",
       "outline": {
-        "lead": "数组占一长段连续字节；名字在表达式里会退化成指针。",
-        "intro": "声明 int a[4] 时，内存里是四个 int 排成一排。写成 a 的地方，常常拿到的是 &a[0]，不是整块数组。",
+        "lead": "数组占一长段连续字节；名字在表达式里常退化成指针。",
+        "intro": "K&R 第 5 章把指针和数组写在一起。Beej 拆成 §6 和 §11，但 §6.6 已经点明：数组名在多数表达式里变成指向首元素的指针。",
         "titles": {
-          "origin": "下标只是「从起点再走几格」",
-          "model": "一块连续对象，名字常退化成指针",
-          "scope": "连续布局和退化，不讲动态长度",
-          "tradeoff": "问的是 a 还是 &a",
-          "landing": "字符串是以 0 结尾的 char 数组"
+          "origin": "下标只是从起点再走几格",
+          "model": "连续一排，名字常变成指针",
+          "scope": "一维数组、越界、与指针的关系",
+          "tradeoff": "sizeof(数组) 和 sizeof(指针) 不是一回事",
+          "landing": "字符串就是以 0 结尾的 char 数组"
         },
-        "origin": "下标 a[i] 不是魔法：它是从第一个元素的地址再走 i 个对象。没有「连续一排」这张图，指针运算就是要背的公式。",
-        "model": "数组是一块对象；在多数表达式里，数组名变成第一个元素的地址。&a 仍是整块的地址，类型不同。",
-        "scope": "覆盖连续布局和退化。变长数组、多维数组的细节可以后补。malloc 出来的不是数组类型。",
-        "tradeoff": "sizeof(a) 在数组还是数组的地方才是整块大小；一旦退化成指针，sizeof 就变成指针自己的格子数。",
-        "landing": "字符串章把「一排 char + 结尾 0」接上。C++ 的 std::array / vector 用对象管长度，不靠退化。",
+        "origin": "没有「连续一排」这张图，a[i] 和指针运算都会变成要背的公式。Beej §6.4 单独讲越界：C 不检查下标。",
+        "model": "同一类型的对象紧挨着排。a[i] 等价于从 &a[0] 走 i 个元素。传进函数的数组参数拿到的是这个起点，长度不会跟着传进去。",
+        "scope": "覆盖连续布局、越界、数组名与指针。多维数组、VLA 按 Beej 后置，本章不展开。",
+        "tradeoff": "还是数组的时候 sizeof 是整块；一旦退化成指针，sizeof 变成指针自己的宽度。",
+        "landing": "Beej 下一章是字符串。动态长度的一排对象要等到 malloc。",
         "grades": [
           {
             "goal": "master",
             "label": "先拿下",
-            "note": "连续布局和退化。传数组进函数时几乎总会变成指针。"
+            "note": "连续布局、越界、数组名会变成指针。传数组进函数时几乎总会变成指针。"
           }
         ]
       },
@@ -161,233 +220,223 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
-          "description": "int a[4] 是从某个地址起连续四个 int，不是四个互不相干的名字。"
+          "source_refs": [{ "id": "beej-bgc", "loc": "§6.1–6.3" }],
+          "description": "同类型元素紧挨着排。初始化按声明顺序填进这些格子。"
         },
         {
-          "id": "c.array.decay",
-          "title": "数组名会退化",
+          "id": "c.array.bounds",
+          "title": "下标越界没有运行时检查",
           "planned": true,
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": ["c.array.block"],
-          "description": "写成数组的名字，用在表达式里常常变成「第一个元素的地址」。"
-        }
-      ]
-    },
-    {
-      "id": "Struct",
-      "title": "结构体",
-      "description": "成员按声明顺序排在同一段字节里。对齐会在中间留下空隙。",
-      "difficulty": 3,
-      "on_main_path": false,
-      "prerequisites": ["Object", "Pointer"],
-      "summary": "把几个对象捆成一块，仍然要能回答从哪开始、每个成员在哪一格。",
-      "outline": {
-        "lead": "结构体是一块对象，成员是这块里的偏移。",
-        "intro": "C 没有成员函数。结构体先是布局：按声明顺序排，对齐可能插入填充。",
-        "titles": {
-          "origin": "几个相关对象总被一起传递",
-          "model": "一块字节 + 成员偏移",
-          "scope": "布局和对齐，不讲面向对象",
-          "tradeoff": "按值复制整块，还是传地址",
-          "landing": "C++ 的类在这块布局上再加寿命与函数"
+          "source_refs": [{ "id": "beej-bgc", "loc": "§6.4 Out of Bounds!" }],
+          "description": "C 不拦 a[i] 是否仍在这块里。走出去是未定义行为。"
         },
-        "origin": "相关的几个值总是一起出现时，分开的变量容易传丢。结构体给它们一个共同的起点。",
-        "model": "结构体本身是对象。成员是从起点算的偏移。指针指向结构体，就是指向这块的起点。",
-        "scope": "覆盖声明顺序、填充、指向成员。位域、柔性数组成员先不展开。",
-        "tradeoff": "按值传结构体复制整块；传指针只交地址。选哪一种，问的还是「要副本还是要同一块对象」。",
-        "landing": "主程序 C++ 的类与对象章从这里接着讲成员函数和访问控制，不重讲「按声明顺序排」。",
-        "grades": [
-          {
-            "goal": "required",
-            "label": "随后掌握",
-            "note": "布局和对齐。看不懂填充，sizeof 和对指针的偏移就会对不上。"
-          }
-        ]
-      },
-      "topics": [
         {
-          "id": "c.struct.layout",
-          "title": "成员按声明顺序排",
+          "id": "c.array.decay",
+          "title": "数组名在表达式里变成指针",
           "planned": true,
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
-          "requires": [],
-          "description": "结构体是一块对象，成员从起点按声明顺序排下去。"
-        },
-        {
-          "id": "c.struct.padding",
-          "title": "对齐会留下空隙",
-          "planned": true,
-          "difficulty": 3,
-          "mastery_goal": "required",
-          "knowledge_type": "concept",
-          "requires": ["c.struct.layout"],
-          "description": "sizeof 可能比各成员之和更大，中间那些字节不是给你存值的。"
-        }
-      ]
-    },
-    {
-      "id": "Function",
-      "title": "函数与地址",
-      "description": "参数按值进来。要改调用方的对象，传的必须是它的地址。",
-      "difficulty": 2,
-      "on_main_path": false,
-      "prerequisites": ["Pointer"],
-      "summary": "C 的函数默认复制一份。指针参数是把「改哪一块」写进接口。",
-      "outline": {
-        "lead": "按值传进来的是副本；传指针才是同一块对象。",
-        "intro": "C++ 可以用引用参数表达「我改的是你的对象」。C 只能把地址写进参数。",
-        "titles": {
-          "origin": "函数默认看不见调用方的对象",
-          "model": "参数是副本，指针参数是地址",
-          "scope": "传地址和函数指针，不讲回调框架",
-          "tradeoff": "接口写 int 还是 int *",
-          "landing": "堆上的对象也只能靠地址交出去"
-        },
-        "origin": "函数体里的参数是调用方值的副本。要让函数改调用方的 x，必须传入 &x。",
-        "model": "指针参数的格子里是别人的起点。函数指针的格子里是某段代码的入口地址。",
-        "scope": "覆盖传地址才能改调用方、函数指针存入口。可变参数、setjmp 不在这里。",
-        "tradeoff": "参数写成 int * 是在说「我会碰你的对象」。写成 int 就是「给我一份副本」。",
-        "landing": "C++ 的引用传递把这件事收成别名，不再强迫你看见地址，但判断仍是同一问。",
-        "grades": [
-          {
-            "goal": "master",
-            "label": "先拿下",
-            "note": "传地址才能改调用方。函数指针可以后补。"
-          }
-        ]
-      },
-      "topics": [
-        {
-          "id": "c.function.pass_pointer",
-          "title": "传地址才能改调用方",
-          "planned": true,
-          "difficulty": 2,
-          "mastery_goal": "master",
-          "knowledge_type": "strategy",
-          "requires": [],
-          "description": "参数默认是副本。要改调用方的对象，接口里必须是它的地址。"
-        },
-        {
-          "id": "c.function.fnptr",
-          "title": "函数指针存入口地址",
-          "planned": true,
-          "difficulty": 3,
-          "mastery_goal": "familiar",
-          "knowledge_type": "concept",
-          "requires": ["c.function.pass_pointer"],
-          "description": "函数不是数据对象，但可以把入口地址存进指针里再调用。"
-        }
-      ]
-    },
-    {
-      "id": "Heap",
-      "title": "堆与寿命",
-      "description": "malloc 还给你的只是起点。没有析构，这块活到你 free 为止。",
-      "difficulty": 3,
-      "on_main_path": true,
-      "prerequisites": ["Pointer"],
-      "summary": "堆上的对象没有名字。寿命是你的责任，不是作用域的责任。",
-      "outline": {
-        "lead": "堆上的对象没有名字，手里只有 malloc 还给你的起点。",
-        "intro": "块作用域对象离开大括号就没了。跨过函数还要活着的对象，得自己向堆要一段字节，并记住谁负责还回去。",
-        "titles": {
-          "origin": "作用域装不下「还要再活一会儿」",
-          "model": "起点 + 你负责的寿命",
-          "scope": "malloc / free，不讲分配器实现",
-          "tradeoff": "谁分配，谁释放",
-          "landing": "C++ 的 RAII 把释放绑回对象寿命"
-        },
-        "origin": "返回局部数组是在交一个已经失效的起点。需要活过函数边界时，C 把分配和释放都留给你。",
-        "model": "malloc 返回起点；大小是你当时请求的。free 之后这块不再是对象。泄漏是忘了还，悬空是还了还继续用。",
-        "scope": "覆盖 malloc 得到起点、配对释放。自定义分配器、内存池不在这里。",
-        "tradeoff": "每一次 malloc 都要能回答谁 free。做不到时，宁可把对象留在调用方的数组里。",
-        "landing": "主程序 C++ 的 RAII 章从这里接着讲「析构时自动还」，不重讲「malloc 返回的是地址」。",
-        "grades": [
-          {
-            "goal": "master",
-            "label": "先拿下",
-            "note": "起点和配对释放。后面结构体里堆成员都靠这一问。"
-          }
-        ]
-      },
-      "topics": [
-        {
-          "id": "c.heap.malloc",
-          "title": "malloc 还给你的是起点",
-          "planned": true,
-          "difficulty": 3,
-          "mastery_goal": "master",
-          "knowledge_type": "concept",
-          "requires": [],
-          "description": "堆上的对象没有名字，手里只有一段字节的起点。"
-        },
-        {
-          "id": "c.heap.free",
-          "title": "谁分配谁释放",
-          "planned": true,
-          "difficulty": 3,
-          "mastery_goal": "master",
-          "knowledge_type": "strategy",
-          "requires": ["c.heap.malloc"],
-          "description": "free 之后起点失效。漏掉是泄漏，用两次是未定义行为。"
+          "requires": ["c.array.block"],
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§6.6 Arrays and Pointers" },
+            { "id": "beej-bgc", "loc": "§11.2 Array/Pointer Equivalence" }
+          ],
+          "description": "多数表达式里，数组名变成指向第一个元素的指针。&a 的类型仍是指向整块数组。"
         }
       ]
     },
     {
       "id": "String",
       "title": "字符串",
-      "description": "C 没有字符串类型。它是一排 char，靠结尾的 0 判断到哪结束。",
+      "description": "C 没有字符串类型。它是一排 char，靠结尾的 '\\0' 判断到哪结束。",
       "difficulty": 2,
-      "on_main_path": false,
+      "on_main_path": true,
       "prerequisites": ["Array"],
-      "summary": "长度不写在对象里，写在最后一个非 0 字节后面那一格。",
+      "source_refs": [{ "id": "beej-bgc", "loc": "§7 Strings" }],
+      "summary": "Beej §7：字面量、当作数组、结束符、strlen 不含 0、拷贝必须给 0 留格。",
       "outline": {
-        "lead": "字符串是以 0 结尾的 char 数组，不是带长度的对象。",
-        "intro": "C++ 的 std::string 自己记得长度。C 的 \"hi\" 是 'h','i',0 三格。读过 0 就是越界。",
+        "lead": "字符串是以 0 结尾的 char 数组，长度不写在对象里。",
+        "intro": "Beej §7.6 把结束符单独成节：少了那一格 0，就不知道到哪停。§7.7 拷贝时必须给 0 留位置。",
         "titles": {
-          "origin": "没有长度字段时，只能约定结束符",
+          "origin": "没有长度字段时只能约定结束符",
           "model": "一排 char，0 表示到此为止",
-          "scope": "结束符和越界，不讲编码",
-          "tradeoff": "缓冲区够不够放下 0",
-          "landing": "C++ 的 string / string_view 不再靠结束符"
+          "scope": "结束符、长度、拷贝，不讲 Unicode",
+          "tradeoff": "缓冲区够不够放下那一格 0",
+          "landing": "结构体在 Beej 里是下一章；C++ 的 string 不再靠结束符"
         },
-        "origin": "库函数要能在不知道长度的情况下停下来，于是约定 0 是结束。这把「长度」从对象里拿掉了，越界也就没有运行时拦住。",
-        "model": "可见字符后面必须有一格 0。strlen 数的是 0 之前的格子，不含 0 自己。",
-        "scope": "覆盖结束符和越界。宽字符、UTF-8 细节不在这里铺开。",
-        "tradeoff": "拷进固定缓冲区时，问的是格数够不够含 0。不够就会写穿。",
-        "landing": "C++ 的 string_view 仍可能悬空，但不再靠 0 判断长度。那边不重讲「结束符是一格字节」。",
+        "origin": "库函数要在不知道长度的情况下停下来，于是约定 '\\0'。Beej 把 termination 和 copying 写成两节，就是因为漏 0 和写穿是两件常见事。",
+        "model": "\"hi\" 是三格：h、i、0。strlen 数的是 0 之前的格子。拷进固定缓冲区时，格数必须含 0。",
+        "scope": "覆盖字面量、结束符、strlen、拷贝越界。宽字符和 UTF-8 是 Beej 后置章节，这里不展开。",
+        "tradeoff": "目标数组只按可见字符留格，写 0 时就会写穿。先问「含不含结束符那一格」。",
+        "landing": "Beej 下一章是结构体。C++ 的 string / string_view 不重讲结束符。",
         "grades": [
           {
             "goal": "required",
             "label": "随后掌握",
-            "note": "结束符和越界。会用 char[] 传参之后再来看这一章也来得及。"
+            "note": "结束符和拷贝越界。会用 char 数组之后再来看这一章也来得及。"
           }
         ]
       },
       "topics": [
         {
           "id": "c.string.zero",
-          "title": "以 0 结尾，不是带长度的对象",
+          "title": "以 '\\0' 结尾，不是带长度的对象",
           "planned": true,
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
-          "description": "\"hi\" 是三格：h、i、0。少了那一格 0，就不知道到哪停。"
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§7.1–7.3" },
+            { "id": "beej-bgc", "loc": "§7.6 String Termination" }
+          ],
+          "description": "可见字符后面必须有一格 0。strlen 不含这一格。"
         },
         {
-          "id": "c.string.overflow",
-          "title": "越界没有运行时拦住",
+          "id": "c.string.copy",
+          "title": "拷贝必须给结束符留格",
           "planned": true,
           "difficulty": 3,
           "mastery_goal": "required",
-          "knowledge_type": "concept",
+          "knowledge_type": "skill",
           "requires": ["c.string.zero"],
-          "description": "写过缓冲区末尾是未定义行为，编译器不一定报。"
+          "source_refs": [{ "id": "beej-bgc", "loc": "§7.7 Copying a String" }],
+          "description": "目标缓冲区太短就会写穿。C 不在运行时拦住。"
+        }
+      ]
+    },
+    {
+      "id": "Struct",
+      "title": "结构体",
+      "description": "结构体把若干成员捆成一块对象。用指针时通过箭头取成员；按值传递会复制整块。",
+      "difficulty": 2,
+      "on_main_path": false,
+      "prerequisites": ["Pointer"],
+      "source_refs": [{ "id": "beej-bgc", "loc": "§8 Structs" }],
+      "summary": "Beej §8：声明、初始化、按值传递会复制、箭头运算符、不能直接比较。",
+      "outline": {
+        "lead": "结构体是一块对象，成员是这块里的字段。",
+        "intro": "Beej §8.3 强调传结构体是复制整块；§8.4 用指针时改用 ->。对齐和填充 Modern C / 系统课才会加深，本章先按 Beej 把成员和传递讲清。",
+        "titles": {
+          "origin": "相关的几个值总被一起传递",
+          "model": "一块对象上的若干成员",
+          "scope": "声明、传递、箭头，不讲位域",
+          "tradeoff": "复制整块还是传地址",
+          "landing": "动态分配常常分配的是结构体或结构体数组"
+        },
+        "origin": "几个相关值分开传容易丢。结构体给它们一个共同的起点。Beej 用「传进函数会不会被复制」来区分 . 和 ->。",
+        "model": "结构体本身是对象。p->m 等价于 (*p).m。按值返回也会复制整块。",
+        "scope": "覆盖声明、初始化、按值传递、箭头。Beej §8.6：不能用 == 比较结构体。位域、柔性数组不在这里。",
+        "tradeoff": "按值传是要副本；传指针是要同一块。大结构体按值传的代价是整块复制。",
+        "landing": "主程序 C++ 的类从这里接着讲成员函数，不重讲「成员在一块对象上」。",
+        "grades": [
+          {
+            "goal": "required",
+            "label": "随后掌握",
+            "note": "成员、复制、箭头。malloc 一章会再碰到指向结构体的指针。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.struct.decl",
+          "title": "结构体把成员捆成一块对象",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§8.1 Declaring a Struct" },
+            { "id": "beej-bgc", "loc": "§8.2 Struct Initializers" }
+          ],
+          "description": "成员按声明写在同一块里。初始化按成员顺序填。"
+        },
+        {
+          "id": "c.struct.arrow",
+          "title": "传指针用箭头取成员",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": ["c.struct.decl"],
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§8.3 Passing Structs to Functions" },
+            { "id": "beej-bgc", "loc": "§8.4 The Arrow Operator" }
+          ],
+          "description": "按值传递复制整块。p->m 等价于 (*p).m。"
+        }
+      ]
+    },
+    {
+      "id": "Heap",
+      "title": "动态分配",
+      "description": "malloc 向堆要一段连续字节，返回起点。用完必须 free。指针变量可以在栈上，指向的对象在堆上。",
+      "difficulty": 3,
+      "on_main_path": true,
+      "prerequisites": ["Pointer", "Array"],
+      "source_refs": [
+        { "id": "beej-bgc", "loc": "§12 Manual Memory Allocation" },
+        { "id": "dis", "loc": "Ch.2 Dynamic memory allocation" },
+        { "id": "modern-c", "loc": "Ch.13 Storage" }
+      ],
+      "summary": "Beej §12：malloc / free、失败检查、按数组分配。DIS 说明这块空间在堆上，指针本身仍常在栈上。",
+      "outline": {
+        "lead": "堆上的对象没有名字，手里只有 malloc 还给你的起点。",
+        "intro": "Beej §12.1 成对介绍 malloc 和 free。§12.2 要求检查失败。§12.3 按元素个数乘 sizeof 给数组分配。DIS 把这块标成 heap，和栈上的指针变量分开。",
+        "titles": {
+          "origin": "栈上的数组活不过函数返回",
+          "model": "堆上的连续字节 + 你保存的起点",
+          "scope": "malloc / free / 给数组分配，不讲自定义分配器",
+          "tradeoff": "每一次 malloc 都要能回答谁 free",
+          "landing": "C++ 的 RAII 把释放绑回对象寿命"
+        },
+        "origin": "返回局部数组是在交一个已经失效的起点。需要活过函数边界时，Beej 把分配和释放都留给 malloc / free。",
+        "model": "malloc 返回起点或 NULL。大小是你当时请求的字节数。free 之后这块不再是对象。指针变量可以在栈上，指向堆。",
+        "scope": "覆盖 malloc、free、失败、给数组分配。calloc / realloc 是 Beej §12.4–12.5，本章标成可以后补。",
+        "tradeoff": "忘了 free 是泄漏，free 两次或用已 free 的起点是未定义行为。做不到配对时，宁可把对象留在调用方的数组里。",
+        "landing": "主程序 C++ 的 RAII 章从这里接着讲析构时自动还，不重讲「malloc 返回地址」。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "成对的 malloc / free，以及按 sizeof 给数组要空间。"
+          }
+        ]
+      },
+      "topics": [
+        {
+          "id": "c.heap.malloc",
+          "title": "malloc 返回起点，free 成对出现",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§12.1 malloc() and free()" },
+            { "id": "beej-bgc", "loc": "§12.2 Error Checking" }
+          ],
+          "description": "失败时返回 NULL。free 之后不要再解引用这个起点。"
+        },
+        {
+          "id": "c.heap.array",
+          "title": "按元素个数乘 sizeof 给数组分配",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": ["c.heap.malloc"],
+          "source_refs": [
+            { "id": "beej-bgc", "loc": "§12.3 Allocating Space for an Array" },
+            { "id": "dis", "loc": "Ch.2 Dynamically allocated arrays" }
+          ],
+          "description": "malloc(n * sizeof *p) 要的是 n 个元素的连续字节。指针仍只保存起点。"
         }
       ]
     }

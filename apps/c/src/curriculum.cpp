@@ -243,6 +243,7 @@ void Curriculum::reload() {
         m_chapters.push_back(object_to_map(chapter_value.toObject()));
     }
     rebuild_chapter_graph();
+    load_exercises();
     emit catalogChanged();
 
     if (keep_page == Page::Lesson && !keep_topic.isEmpty()) {
@@ -266,6 +267,7 @@ void Curriculum::goHome() {
     m_selected_id.clear();
     m_selected_topic = {};
     m_lesson_source = QUrl();
+    bind_exercises();
     clear_lab_message();
     emit selectionChanged();
 }
@@ -282,6 +284,7 @@ void Curriculum::openChapter(const QString& chapter_id) {
     m_selected_id.clear();
     m_selected_topic = {};
     m_lesson_source = QUrl();
+    bind_exercises();
     clear_lab_message();
     emit selectionChanged();
 }
@@ -312,6 +315,7 @@ void Curriculum::select(const QString& topic_id) {
         m_selected_topic = topic;
         m_lesson_source =
             QUrl::fromLocalFile(m_root + "/qml/" + topic.value("qml").toString());
+        bind_exercises();
         emit selectionChanged();
         return;
     }
@@ -420,6 +424,45 @@ void Curriculum::rebuild_topic_graph() {
     m_topic_edges = laid.edges;
     m_topic_graph_width = laid.width;
     m_topic_graph_height = laid.height;
+}
+
+void Curriculum::load_exercises() {
+    m_exercise_bank.clear();
+    const QString path = m_root + "/content/exercises.json";
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return;
+    }
+
+    QJsonParseError parse_error;
+    const QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &parse_error);
+    if (parse_error.error != QJsonParseError::NoError || !document.isObject()) {
+        if (!m_error.isEmpty()) {
+            m_error += " ";
+        }
+        m_error += QString("题库 JSON 无效：%1").arg(parse_error.errorString());
+        return;
+    }
+
+    const QJsonObject root = document.object();
+    for (auto it = root.begin(); it != root.end(); ++it) {
+        if (it.value().isObject()) {
+            m_exercise_bank.insert(it.key(), object_to_map(it.value().toObject()));
+        }
+    }
+}
+
+void Curriculum::bind_exercises() {
+    m_exercise_intro.clear();
+    m_in_class.clear();
+    m_homework.clear();
+    if (m_selected_id.isEmpty() || !m_exercise_bank.contains(m_selected_id)) {
+        return;
+    }
+    const QVariantMap pack = m_exercise_bank.value(m_selected_id).toMap();
+    m_exercise_intro = pack.value("intro").toString();
+    m_in_class = pack.value("in_class").toList();
+    m_homework = pack.value("homework").toList();
 }
 
 void Curriculum::set_chapter_by_id(const QString& chapter_id) {

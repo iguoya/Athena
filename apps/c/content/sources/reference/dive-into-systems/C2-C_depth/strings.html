@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dive Into Systems</title>
+    <meta name="generator" content="Antora 2.2.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6C7YGP3BE6"></script>
+    <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','G-6C7YGP3BE6')</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">Dive Into Systems</a>
+      <div class="navbar-item">
+        <input id="search-input" type="text" placeholder="Search book...">
+      </div>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="diveintosystems" data-version="1.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Dive Into Systems</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Dive Into Systems</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../index.html">Authors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../copyright.html">Copyright</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../acknowledgements.html">Acknowledgements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../preface.html">Preface</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">0. Introduction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C1-C_intro/index.html">1. By the C, the Beautiful C</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/getting_started.html">1.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/input_output.html">1.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/conditionals.html">1.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/functions.html">1.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/arrays_strings.html">1.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/structs.html">1.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/summary.html">1.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/exercises.html">1.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">2. A Deeper Dive Into C</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scope_memory.html">2.1. Parts of Program Memory and Scope</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers.html">2.2. C Pointer Variables</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers_functions.html">2.3. Pointers and Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="dynamic_memory.html">2.4. Dynamic Memory Allocation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arrays.html">2.5. Arrays in C</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="strings.html">2.6. Strings and the String Library</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="structs.html">2.7. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="IO.html">2.8. Input / Output in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="advanced.html">2.9. Advanced C Features</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_switch.html">2.9.1. Constants, switch, enum, and typedef</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_cmd_line_args.html">2.9.2. Command Line Arguments</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_voidstar.html">2.9.3. The void* Type</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_pointer_arithmetic.html">2.9.4. Pointer Arithmetic</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_libraries.html">2.9.5. C Libraries: Using, Compiling and Linking</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_writing_libraries.html">2.9.6. Writing and using your own C libraries (and compiling multiple .c and .h files)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_assembly.html">2.9.7. Compiling C to Assembly and Compiling Assembly Code</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="summary.html">2.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="exercises.html">2.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C3-C_debug/index.html">3. C Debugging Tools</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb.html">3.1. Debugging with GDB</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_commands.html">3.2. GDB Commands in Detail</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/valgrind.html">3.3. Debugging Memory with Valgrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_advanced.html">3.4. Advanced GDB Features</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_assembly.html">3.5. Debugging Assembly Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_pthreads.html">3.6. Debugging Multi-threaded Programs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/summary.html">3.7. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/index.html">4. Binary and Data Representation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bases.html">4.1. Number Bases and Unsigned Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/conversion.html">4.2. Converting Between Bases</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/signed.html">4.3. Signed Binary Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/arithmetic.html">4.4. Binary Integer Arithmetic</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_addition.html">4.4.1. Addition</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_subtraction.html">4.4.2. Subtraction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_mult_div.html">4.4.3. Multiplication &amp; Division</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/overflow.html">4.5. Overflow</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bitwise.html">4.6. Bitwise Operators</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/byte_order.html">4.7. Integer Byte Order</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/floating_point.html">4.8. Real Numbers in Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/summary.html">4.9. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/exercises.html">4.10. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/index.html">5. What von Neumann Knew: Computer Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/hist.html">5.1. The Origins of Modern Computing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/von.html">5.2. The von Neumann Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/gates.html">5.3. Logic Gates</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/circuits.html">5.4. Circuits</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/arithlogiccircs.html">5.4.1. Arithmetic and Logic Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/controlcircs.html">5.4.2. Control Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/storagecircs.html">5.4.3. Storage Circuits</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/cpu.html">5.5. Building a Processor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/instrexec.html">5.6. The Processor&#8217;s Execution of Program Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining.html">5.7. Pipelining Instruction Execution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining_advanced.html">5.8. Advanced Pipelining Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/modern.html">5.9. Looking Ahead: CPUs Today</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/summary.html">5.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/exercises.html">5.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C6-asm_intro/index.html">6. Under the C: Dive into Assembly</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/index.html">7. 64-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/basics.html">7.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/common.html">7.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arithmetic.html">7.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/conditional_control_loops.html">7.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/preliminaries.html">7.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/if_statements.html">7.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/loops.html">7.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/functions.html">7.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/recursion.html">7.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arrays.html">7.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/matrices.html">7.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/structs.html">7.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/buffer_overflow.html">7.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/exercises.html">7.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/index.html">8. 32-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/basics.html">8.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/common.html">8.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arithmetic.html">8.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/conditional_control_loops.html">8.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/preliminaries.html">8.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/if_statements.html">8.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/loops.html">8.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/functions.html">8.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/recursion.html">8.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arrays.html">8.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/matrices.html">8.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/structs.html">8.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/buffer_overflow.html">8.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/exercises.html">8.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/index.html">9. ARMv8 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/basics.html">9.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/common.html">9.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arithmetic.html">9.3. Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/conditional_control_loops.html">9.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/preliminaries.html">9.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/if_statements.html">9.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/loops.html">9.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/functions.html">9.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/recursion.html">9.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arrays.html">9.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/matrices.html">9.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/structs.html">9.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/buffer_overflow.html">9.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/exercises.html">9.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C10-asm_takeaways/index.html">10. Key Assembly Takeaways</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C11-MemHierarchy/index.html">11. Storage and the Memory Hierarchy</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/mem_hierarchy.html">11.1. The Memory Hierarchy</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/devices.html">11.2. Storage Devices</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/locality.html">11.3. Locality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/caching.html">11.4. Caching</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/cachegrind.html">11.5. Cache Analysis and Cachegrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/coherency.html">11.6. Looking Ahead: Caching on Multicore Processors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/summary.html">11.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/exercises.html">11.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C12-CodeOpt/index.html">12. Code Optimization</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/basic.html">12.1. First Steps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/loops_functions.html">12.2. Other Compiler Optimizations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/memory_considerations.html">12.3. Memory Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/summary.html">12.4. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/index.html">13. The Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/impl.html">13.1. Booting and Running</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/processes.html">13.2. Processes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/vm.html">13.3. Virtual Memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/ipc.html">13.4. Interprocess Communication</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_signals.html">13.4.1. Signals</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_msging.html">13.4.2. Message Passing</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_shm.html">13.4.3. Shared Memory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/advanced.html">13.5. Summary and Other OS Functionality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/exercises.html">13.6. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/index.html">14. Leveraging Shared Memory in the Multicore Era</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/multicore.html">14.1. Programming Multicore Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/posix.html">14.2. POSIX Threads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/synchronization.html">14.3. Synchronizing Threads</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/mutex.html">14.3.1. Mutual Exclusion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/semaphores.html">14.3.2. Semaphores</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/other_syncs.html">14.3.3. Other Synchronization Constructs</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/performance.html">14.4. Measuring Parallel Performance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_basics.html">14.4.1. Parallel Performance Basics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_advanced.html">14.4.2. Advanced Topics</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/cache_coherence.html">14.5. Cache Coherence</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/thread_safety.html">14.6. Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/openmp.html">14.7. Implicit Threading with OpenMP</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/summary.html">14.8. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/exercises.html">14.9. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C15-Parallel/index.html">15. Looking Ahead: Other Parallel Systems</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/gpu.html">15.1. Hardware Acceleration and CUDA</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/distrmem.html">15.2. Distributed Memory Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/cloud.html">15.3. To Exascale and Beyond</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix1/index.html">16. Appendix 1: Chapter 1 for Java Programmers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/getting_started.html">16.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/input_output.html">16.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/conditionals.html">16.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/functions.html">16.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/arrays_strings.html">16.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/structs.html">16.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/summary.html">16.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/exercises.html">16.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix2/index.html">17. Appendix 2: Using Unix</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/cmdln_basics.html">17.1. Unix Command Line and the Unix File System</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/man.html">17.2. Man and the Unix Manual</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ssh_scp.html">17.3. Remote Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/editors.html">17.4. Unix Editors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/makefiles.html">17.5. make and Makefiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/grep.html">17.6 Searching: grep and find</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/chmod.html">17.7 File Permissions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/tar.html">17.8 Archiving and Compressing Files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pskill.html">17.9 Process Control</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/timing.html">17.10 Timing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/history.html">17.11 Command History</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ioredirect.html">17.12 I/0 Redirection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pipe.html">17.13 Pipes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/dotfiles.html">17.14 Dot Files and .bashrc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/shellprog.html">17.15 Shell Programming</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/sysinfo.html">17.16 Getting System Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Dive Into Systems</span>
+    <span class="version">1.2</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Dive Into Systems</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.2</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Dive Into Systems</a></li>
+    <li><a href="index.html">2. A Deeper Dive Into C</a></li>
+    <li><a href="strings.html">2.6. Strings and the String Library</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_strings_and_the_string_library"><a class="anchor" href="#_strings_and_the_string_library"></a>2.6. Strings and the String Library</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the previous chapter we introduced
+<a href="../C1-C_intro/arrays_strings.html#_arrays_and_strings" class="page">arrays and strings in C</a>.
+In this chapter we discuss dynamically allocated C strings and their use
+with the C string library.  We first give a brief overview
+of statically declared strings.</p>
+</div>
+<div class="sect2">
+<h3 id="_cs_support_for_statically_allocated_strings_arrays_of_char"><a class="anchor" href="#_cs_support_for_statically_allocated_strings_arrays_of_char"></a>2.6.1. C&#8217;s Support for Statically Allocated Strings (Arrays of char)</h3>
+<div class="paragraph">
+<p>C does not support a separate string type, but a string can be implemented in C
+programs using an array of <code>char</code> values that is terminated by a special null
+character value <code>'\0'</code>.  The terminating null character identifies
+the end of the sequence of character values that make up a string.  Not every
+character array is a C string, but every C string is an array of <code>char</code>
+values.</p>
+</div>
+<div class="paragraph">
+<p>Because strings frequently appear in programs, C provides
+libraries with functions for manipulating strings.  Programs that use
+the C string library need to include <code>string.h</code>.   Most string
+library functions require the programmer to allocate space for
+the array of characters that the functions manipulate.
+When printing out the value of a string, use the <code>%s</code> placeholder.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example program that uses strings and some string library functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;   // include the C string library
+
+int main(void) {
+    char str1[10];
+    char str2[10];
+
+    str1[0] = 'h';
+    str1[1] = 'i';
+    str1[2] = '\0';   // explicitly add null terminating character to end
+
+    // strcpy copies the bytes from the source parameter (str1) to the
+    // destination parameter (str2) and null terminates the copy.
+    strcpy(str2, str1);
+    str2[1] = 'o';
+    printf("%s %s\n", str1, str2);  // prints: hi ho
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamically_allocating_strings"><a class="anchor" href="#_dynamically_allocating_strings"></a>2.6.2. Dynamically Allocating Strings</h3>
+<div class="paragraph">
+<p>Arrays of characters can be dynamically allocated (as discussed in the
+<a href="pointers.html#_cs_pointer_variables" class="page">Pointers</a> and
+<a href="arrays.html#_arrays_in_c" class="page">Arrays</a> sections).  When dynamically
+allocating space to store a string, it&#8217;s important to remember to allocate
+space in the array for the terminating <code>'\0'</code> character at the end of the
+string.</p>
+</div>
+<div class="paragraph">
+<p>The following example program demonstrates static and dynamically
+allocated strings (note the value passed to <code>malloc</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+    int size;
+    char str[64];         // statically allocated
+    char *new_str = NULL; // for dynamically allocated
+
+    strcpy(str, "Hello");
+    size = strlen(str);   // returns 5
+
+    new_str = malloc(sizeof(char) * (size+1)); // need space for '\0'
+    if(new_str == NULL) {
+        printf("Error: malloc failed!  exiting.\n");
+        exit(1);
+    }
+    strcpy(new_str, str);
+    printf("%s %s\n", str, new_str);    // prints "Hello Hello"
+
+    strcat(str, " There");  // concatenate " There" to the end of str
+    printf("%s\n", str);    // prints "Hello There"
+
+    free(new_str);  // free malloc'ed space when done
+    new_str = NULL;
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">C String Functions and Destination Memory</div>
+<div class="paragraph">
+<p>Many C string functions (notably <code>strcpy</code> and <code>strcat</code>) store their results by
+following a <em>destination</em> string pointer (<code>char *</code>) parameter and writing to
+the location it points to.  Such functions assume that the destination contains
+enough memory to store the result.  Thus, as a programmer, you must ensure that
+sufficient memory is available at the destination prior to calling these
+functions.</p>
+</div>
+<div class="paragraph">
+<p>Failure to allocate enough memory will yield undefined results that range from
+program crashes to <a href="../C8-IA32/buffer_overflow.html#_real_world_buffer_overflow" class="page">major
+security vulnerabilities</a>.  For example, the following calls to <code>strcpy</code> and
+<code>strcat</code> demonstrate mistakes that novice C programmers often make:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// Attempt to write a 12-byte string into a 5-character array.
+char mystr[5];
+strcpy(mystr, "hello world");
+
+// Attempt to write to a string with a NULL destination.
+char *mystr = NULL;
+strcpy(mystr, "try again");
+
+// Attempt to modify a read-only string literal.
+char *mystr = "string literal value";
+strcat(mystr, "string literals aren't writable");</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_libraries_for_manipulating_c_strings_and_characters"><a class="anchor" href="#_libraries_for_manipulating_c_strings_and_characters"></a>2.6.3. Libraries for Manipulating C Strings and Characters</h3>
+<div class="paragraph">
+<p>C provides several libraries with functions for manipulating strings and
+characters.  The string library (<code>string.h</code>) is particularly useful
+when writing programs that use C strings.  The <code>stdlib.h</code> and <code>stdio.h</code>
+libraries also contain functions for string manipulation, and the <code>ctype.h</code>
+library contains functions for manipulating individual character values.</p>
+</div>
+<div class="paragraph">
+<p>When using C string library functions, it&#8217;s important to remember that most do
+not allocate space for the strings they manipulate, nor do they check that you
+pass in valid strings; your program must allocate space for the strings that
+the C string library will use.  Furthermore, if the library function modifies
+the passed string, the caller needs to ensure that the string is correctly
+formatted (that is, it has a terminating <code>\0</code> character at the end).  Calling
+string library functions with bad array argument values will often cause a
+program to crash.  The documentation (for example, manual pages) for different
+library functions specifies whether the library function allocates space or if
+the caller is responsible for passing in allocated space to the library
+function.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title"><code>char[]</code> and <code>char *</code> Parameters and <code>char *</code> Return Type</div>
+<div class="paragraph">
+<p>Both statically declared and dynamically allocated arrays of characters can be
+passed to a <code>char *</code> parameter because the name of either type of variable
+evaluates to the base address of the array in memory.  Declaring the parameter
+as type <code>char []</code> will also work for both statically and dynamically
+allocated argument values, but <code>char *</code> is more commonly used for specifying
+the type of string (array of <code>char</code>) parameters.</p>
+</div>
+<div class="paragraph">
+<p>If a function returns a string (its return type is a <code>char *</code>), its return
+value can only be assigned to a variable whose type is also <code>char *</code>; it
+cannot be assigned to a statically allocated array variable.
+This restriction exists because the
+name of a statically declared array variable is not a valid <a href="../C1-C_intro/structs.html#_lvalues" class="page">lvalue</a>
+(its base address in memory cannot be changed), so it cannot
+be assigned a <code>char *</code> return value.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_strlen_strcpy_strncpy"><a class="anchor" href="#_strlen_strcpy_strncpy"></a>strlen, strcpy, strncpy</h4>
+<div class="paragraph">
+<p>The string library provides functions for copying strings and finding the
+length of a string:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// returns the number of characters in the string (not including the null character)
+int strlen(char *s);
+
+// copies string src to string dst up until the first '\0' character in src
+// (the caller needs to make sure src is initialized correctly and
+// dst has enough space to store a copy of the src string)
+// returns the address of the dst string
+char *strcpy(char *dst, char *src);
+
+// like strcpy but copies up to the first '\0' or size characters
+// (this provides some safety to not copy beyond the bounds of the dst
+// array if the src string is not well formed or is longer than the
+// space available in the dst array); size_t is an unsigned integer type
+char *strncpy(char *dst, char *src, size_t size);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>strcpy</code> function is unsafe to use in situations when the source string
+might be longer than the total capacity of the destination string.  In this
+case, one should use <code>strncpy</code>.  The <code>size</code> parameter stops <code>strncpy</code> from
+copying more than <code>size</code> characters from the <code>src</code> string into the <code>dst</code>
+string.  When the length of the <code>src</code> string is greater than or equal to
+<code>size</code>, <code>strncpy</code> copies the first <code>size</code> characters from <code>src</code> to <code>dst</code>
+and does not add a null character to the end of the <code>dst</code>.  As a result,
+the programmer should explicitly add a null character to
+the end of <code>dst</code> after calling <code>strncpy</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here are some example uses of these functions in a program:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;   // include the string library
+
+int main(void) {
+    // variable declarations that will be used in examples
+    int len, i, ret;
+    char str[32];
+    char *d_str, *ptr;
+
+    strcpy(str, "Hello There");
+    len = strlen(str);  // len is 11
+
+    d_str = malloc(sizeof(char) * (len+1));
+    if (d_str == NULL) {
+        printf("Error: malloc failed\n");
+        exit(1);
+    }
+
+    strncpy(d_str, str, 5);
+    d_str[5] = '\0';   // explicitly add null terminating character to end
+
+    printf("%d:%s\n", strlen(str), str);      // prints 11:Hello There
+    printf("%d:%s\n", strlen(d_str), d_str);  // prints 5:Hello
+
+    free(d_str);
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title"><code>strlcpy</code></div>
+<div class="paragraph">
+<p>The <code>strlcpy</code> function is similar to <code>strncpy</code>, except it always adds the
+<code>'\0'</code> character to the end of the destination string.  Always terminating the
+string makes it a safer alternative to strncpy because it doesn&#8217;t require the
+programmer to remember to explicitly null terminate the string.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// like strncpy but copies up to the first '\0' or size-1 characters
+// and null terminates the dest string (if size &gt; 0).
+char *strlcpy(char *dest, char *src, size_t size);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Linux&#8217;s GNU C library added <code>strlcpy</code> in a recent version (2.38).  It&#8217;s
+currently only available on some systems, but its availability will increase as
+newer versions of the C library become more widespread.  We recommend using
+<code>strlcpy</code> when it is available.</p>
+</div>
+<div class="paragraph">
+<p>On systems where <code>strlcpy</code> is available, the following call to <code>strncpy</code>
+from the example above:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  // copy up to 5 chars from str to d_str
+  strncpy(d_str, str, 5);
+  d_str[5] = '\0';   // explicitly add null terminating character to end</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>could be replaced with this call to <code>strlcpy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  // copy up to 5 chars from str to d_str
+  strlcpy(d_str, str, 6);  // strlcpy always adds '\0' to the end</pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_strcmp_strncmp"><a class="anchor" href="#_strcmp_strncmp"></a>strcmp, strncmp</h4>
+<div class="paragraph">
+<p>The string library also provides a function to compare two strings.
+Comparing string variables using the <code>==</code> operator <em>does not</em> compare
+the characters in the strings&#8201;&#8212;&#8201;it compares only the base addresses
+of the two strings.  For example, the expression:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">if (d_str == str) { ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>compares the base address of the <code>char</code> array in the heap pointed to by
+<code>d_str</code> to the base address of the <code>str</code> <code>char</code> array allocated on the
+stack.</p>
+</div>
+<div class="paragraph">
+<p>To compare the values of the strings, a programmer needs to
+either write code by hand to compare corresponding element values,
+or use the <code>strcmp</code> or <code>strncmp</code> functions from the string library:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int strcmp(char *s1, char *s2);
+// returns 0 if s1 and s2 are the same strings
+// a value &lt; 0 if s1 is less than s2
+// a value &gt; 0 if s1 is greater than s2
+
+int strncmp(char *s1, char *s2, size_t n);
+// compare s1 and s2 up to at most n characters</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>strcmp</code> function compares strings character by character based on their
+<a href="../C4-Binary/index.html#_binary_and_data_representation" class="page">ASCII representation</a>.  In
+other words, it compares the <code>char</code> values in corresponding positions of the
+two parameter arrays to produce the result of the string comparison, which
+occasionally yields unintuitive results.  For example, the ASCII encoding for
+the <code>char</code> value <code>'a'</code> is <em>larger</em> than the encoding for the <code>char</code> value <code>'Z'</code>.  As
+a result, <code>strcmp("aaa", "Zoo")</code> returns a positive value indicating that
+<code>"aaa"</code> is greater than <code>"Zoo"</code>, and a call to <code>strcmp("aaa", "zoo")</code> returns a
+negative value indicating that <code>"aaa"</code> is less than <code>"zoo"</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here are some string comparison examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">strcpy(str, "alligator");
+strcpy(d_str, "Zebra");
+
+ret =  strcmp(str,d_str);
+if (ret == 0) {
+    printf("%s is equal to %s\n", str, d_str);
+} else if (ret &lt; 0) {
+    printf("%s is less than %s\n", str, d_str);
+} else {
+    printf("%s is greater than %s\n", str, d_str);  // true for these strings
+}
+
+ret = strncmp(str, "all", 3);  // returns 0: they are equal up to first 3 chars</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_strcat_strstr_strchr"><a class="anchor" href="#_strcat_strstr_strchr"></a>strcat, strstr, strchr</h4>
+<div class="paragraph">
+<p>String library functions can concatenate strings (note that it&#8217;s up to the
+caller to ensure that the destination string has enough space to store the
+result):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// append chars from src to end of dst
+// returns ptr to dst and adds '\0' to end
+char *strcat(char *dst, char *src)
+
+// append the first chars from src to end of dst, up to a maximum of size
+// returns ptr to dst and adds '\0' to end
+char *strncat(char *dst, char *src, size_t size);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It also provides functions for finding substrings or character values in
+strings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// locate a substring inside a string
+// (const means that the function doesn't modify string)
+// returns a pointer to the beginning of substr in string
+// returns NULL if substr not in string
+char *strstr(const char *string, const char *substr);
+
+// locate a character (c) in the passed string (s)
+// (const means that the function doesn't modify s)
+// returns a pointer to the first occurrence of the char c in string
+// or NULL if c is not in the string
+char *strchr(const char *s, int c);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here are some examples using these functions (we omit some error handling
+for the sake of readability):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">char str[32];
+char *ptr;
+
+strcpy(str, "Zebra fish");
+strcat(str, " stripes");  // str gets "Zebra fish stripes"
+printf("%s\n", str);     // prints: Zebra fish stripes
+
+strncat(str, " are black.", 8);
+printf("%s\n", str);     // prints: Zebra fish stripes are bla  (spaces count)
+
+ptr = strstr(str, "trip");
+if (ptr != NULL) {
+    printf("%s\n", ptr);   // prints: tripes are bla
+}
+
+ptr = strchr(str, 'e');
+if (ptr != NULL) {
+    printf("%s\n", ptr);   // prints: ebra fish stripes are bla
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Calls to <code>strchr</code> and <code>strstr</code> return the address of the first element in the
+parameter array with a matching character value or a matching
+substring value, respectively.   This element address is the start of an array of <code>char</code>
+values terminated by a <code>\0</code> character.  In other words, <code>ptr</code> points to the
+beginning of a substring inside another string.  When printing the value of
+<code>ptr</code> as a string with <code>printf</code>, the character values starting at the index
+pointed to by <code>ptr</code> are printed, yielding the results listed above.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_strtok_strtok_r"><a class="anchor" href="#_strtok_strtok_r"></a>strtok, strtok_r</h4>
+<div class="paragraph">
+<p>The string library also provides functions that divide a string into tokens.  A
+<strong>token</strong> refers to a subsequence of characters in a string separated by any
+number of delimiter characters of the programmer&#8217;s choosing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">char *strtok(char *str, const char *delim);
+
+// a reentrant version of strtok (reentrant is defined in later chapters):
+char *strtok_r(char *str, const char *delim, char **saveptr);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>strtok</code> (or <code>strtok_r</code>) functions find individual tokens within a larger
+string.  For example, setting <code>strtok</code>'s delimiters to the set of whitespace
+characters yields words in a string that originally contains an English
+sentence.  That is, each word in the sentence is a token in the string.</p>
+</div>
+<div class="paragraph">
+<p>Below is an example program that uses <code>strtok</code> to find individual words as the
+tokens in an input string.  (it can also be copied from here:
+<a href="_attachments/strtokexample.c">strtokexample.c</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/*
+ * Extract whitespace-delimited tokens from a line of input
+ * and print them one per line.
+ *
+ * to compile:
+ *   gcc -g -Wall strtokexample.c
+ *
+ * example run:
+ *   Enter a line of text:        aaaaa             bbbbbbbbb          cccccc
+ *
+ *   The input line is:
+ *         aaaaa             bbbbbbbbb          cccccc
+ *   Next token is aaaaa
+ *   Next token is bbbbbbbbb
+ *   Next token is cccccc
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+     /* whitespace stores the delim string passed to strtok.  The delim
+      * string  is initialized to the set of characters that delimit tokens
+      * We initialize the delim string to the following set of chars:
+      *   ' ': space  '\t': tab  '\f': form feed  '\r': carriage return
+      *   '\v': vertical tab  '\n': new line
+      * (run "man ascii" to list all ASCII characters)
+      *
+      * This line shows one way to statically initialize a string variable
+      * (using this method the string contents are constant, meaning that they
+      *  cannot be modified, which is fine for the way we are using the
+      *  whitespace string in this program).
+      */
+    char *whitespace = " \t\f\r\v\n";  /* Note the space char at beginning */
+
+    char *token;  /* The next token in the line. */
+    char *line;   /* The line of text read in that we will tokenize. */
+
+    /* Allocate some space for the user's string on the heap. */
+    line = malloc(200 * sizeof(char));
+    if (line == NULL) {
+        printf("Error: malloc failed\n");
+        exit(1);
+    }
+
+    /* Read in a line entered by the user from "standard in". */
+    printf("Enter a line of text:\n");
+    line = fgets(line, 200 * sizeof(char), stdin);
+    if (line == NULL) {
+        printf("Error: reading input failed, exiting...\n");
+        exit(1);
+    }
+    printf("The input line is:\n%s\n", line);
+
+    /* Divide the string into tokens. */
+    token = strtok(line, whitespace);       /* get the first token */
+    while (token != NULL) {
+        printf("Next token is %s\n", token);
+        token = strtok(NULL, whitespace);     /* get the next token */
+    }
+
+    free(line);
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sprintf"><a class="anchor" href="#_sprintf"></a>sprintf</h4>
+<div class="paragraph">
+<p>The C <code>stdio</code> library also provides functions that manipulate C strings.
+Perhaps the most useful is the <code>sprintf</code> function, which "prints" into a string
+rather than printing output to a terminal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// like printf(), the format string allows for placeholders like %d, %f, etc.
+// pass parameters after the format string to fill them in
+int sprintf(char *s, const char *format, ...);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>sprintf</code> initializes the contents of a string from values of various types.
+Its parameter <code>format</code> resembles those of <code>printf</code> and <code>scanf</code>.  Here are some
+examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">char str[64];
+float ave = 76.8;
+int num = 2;
+
+// initialize str to format string, filling in each placeholder with
+// a char representation of its arguments' values
+sprintf(str, "%s is %d years old and in grade %d", "Henry", 12, 7);
+printf("%s\n", str);  // prints: Henry is 12 years old and in grade 7
+
+sprintf(str, "The average grade on exam %d is %g", num, ave);
+printf("%s\n", str);  // prints: The average grade on exam 2 is 76.8</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_functions_for_individual_character_values"><a class="anchor" href="#_functions_for_individual_character_values"></a>Functions for Individual Character Values</h4>
+<div class="paragraph">
+<p>The standard C library (<code>stdlib.h</code>) contains a set of functions
+for manipulating and testing individual <code>char</code> values, including:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include &lt;stdlib.h&gt;   // include stdlib and ctypes to use these
+#include &lt;ctype.h&gt;
+
+int islower(ch);
+int isupper(ch);       // these functions return a non-zero value if the
+int isalpha(ch);       // test is TRUE, otherwise they return 0 (FALSE)
+int isdigit(ch);
+int isalnum(ch);
+int ispunct(ch);
+int isspace(ch);
+char tolower(ch);     // returns ASCII value of lower-case of argument
+char toupper(ch);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here are some examples of their use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">char str[64];
+int len, i;
+
+strcpy(str, "I see 20 ZEBRAS, GOATS, and COWS");
+
+if ( islower(str[2]) ){
+    printf("%c is lower case\n", str[2]);   // prints: s is lower case
+}
+
+len = strlen(str);
+for (i = 0; i &lt; len; i++) {
+    if ( isupper(str[i]) ) {
+        str[i] = tolower(str[i]);
+    } else if( isdigit(str[i]) ) {
+        str[i] = 'X';
+    }
+}
+printf("%s\n", str);  // prints: i see XX zebras, goats, and cows</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_functions_to_convert_strings_to_other_types"><a class="anchor" href="#_functions_to_convert_strings_to_other_types"></a>Functions to Convert Strings to Other Types</h4>
+<div class="paragraph">
+<p><code>stdlib.h</code> also contains functions to convert between
+strings and other C types.  For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include &lt;stdlib.h&gt;
+
+int atoi(const char *nptr);     // convert a string to an integer
+double atof(const char *nptr);  // convert a string to a float</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">printf("%d %g\n", atoi("1234"), atof("4.56"));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about these and other C library functions (including
+what they do, their parameter format, what they return, and which
+headers need to be included to use them), see their
+<a href="http://www.cs.swarthmore.edu/~newhall/unixhelp/man.html">man pages</a>.
+For example, to view the <code>strcpy</code> man page, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>$ man strcpy</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2020 Dive into Systems, LLC.</p>
+
+  <p><i>Dive into Systems,</i> is licensed under the Creative Commons <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a> (CC BY-NC-ND 4.0).</p>
+</footer>
+<script src="../_/js/site.js"></script>
+<script src="../_/js/vendor/lunr.js"></script>
+<script>antoraLunr.init("../_/../search_index.json")</script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

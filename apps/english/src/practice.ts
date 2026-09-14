@@ -24,6 +24,7 @@ const ITEM_KIND_LABEL: Record<string, string> = {
   listening: "听辨",
   attitude: "态度",
   inference: "推断",
+  passage_detail: "短文细节",
 };
 
 export function trackKindLabel(kind: string): string {
@@ -172,6 +173,28 @@ export function orderItems(
     .map((item, index) => ({ item, index, rank: rank(item) }))
     .sort((a, b) => a.rank - b.rank || a.index - b.index)
     .map((entry) => entry.item);
+}
+
+/**
+ * 大题库每次只开一个短回合。错题、到期题和新题的优先级仍由 orderItems 决定；
+ * 从错题本定点进入时，把目标题放在本轮第一题，避免先滚过几百条内容。
+ */
+export function practiceBatch(
+  items: DeckItem[],
+  review: Map<string, ReviewState>,
+  nowSeconds: number,
+  limit = 20,
+  focusId?: string,
+): DeckItem[] {
+  const ordered = orderItems(items, review, nowSeconds);
+  if (!focusId) {
+    return ordered.slice(0, limit);
+  }
+  const focused = ordered.find((item) => item.id === focusId);
+  if (!focused) {
+    return ordered.slice(0, limit);
+  }
+  return [focused, ...ordered.filter((item) => item.id !== focusId)].slice(0, limit);
 }
 
 export interface WritingGrade {

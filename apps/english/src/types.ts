@@ -107,7 +107,9 @@ export interface Track {
   kind: string;
   goal: string;
   skills: Array<"listen" | "speak" | "read" | "write">;
-  deck: string;
+  /** 小题库可直接写 deck；内容变大后用 decks 分单元，运行时合并为同一条轨。 */
+  deck?: string;
+  decks?: string[];
   /** 与练习题物理分离的平行题，只负责阶段考核。 */
   assessment: string;
   passage?: string;

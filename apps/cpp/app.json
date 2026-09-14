@@ -7,16 +7,17 @@
     "name": "text-x-cpp-symbolic",
     "symbol": "chevron.left.forwardslash.chevron.right",
     "letter": "C++",
-    "accent": "#00599C"
+    "accent": "#00599C",
+    "file": "icon.svg"
   },
   "dev": {
     "prepare": [
       {
-        "when_missing": "builddir",
+        "when_missing": "build",
         "run": [
           "meson",
           "setup",
-          "builddir",
+          "build",
           "--buildtype=debug"
         ],
         "label": "配置构建目录"
@@ -26,16 +27,16 @@
           "meson",
           "compile",
           "-C",
-          "builddir"
+          "build"
         ],
         "label": "增量编译"
       }
     ],
     "run": [
-      "builddir/Athena"
+      "build/Athena"
     ],
     "ready": "process",
-    "match": "builddir",
+    "match": "build",
     "binary": "Athena"
   }
 }

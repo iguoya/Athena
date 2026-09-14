@@ -31,6 +31,19 @@ Flickable {
             wrapMode: Text.WordWrap
             color: "#212529"
         }
+        Text {
+            visible: (curriculum.chapter.source_refs || []).length > 0
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            color: "#6c757d"
+            text: {
+                const refs = curriculum.chapter.source_refs || []
+                const bits = []
+                for (let i = 0; i < refs.length; ++i)
+                    bits.push(refs[i].id + " " + refs[i].loc)
+                return "本有：" + bits.join(" · ")
+            }
+        }
 
         C.SectionFrame {
             Layout.fillWidth: true

@@ -63,7 +63,7 @@ if (ngslAudit.source_id !== "ngsl-1.2" || !Array.isArray(ngslAudit.words) || ngs
   errors.push("sources/ngsl-1.2-used-words.json: 当前练习词的频率审计不完整");
 }
 for (const entry of ngslAudit.words ?? []) {
-  if (!entry.lemma || !(entry.rank > 0) || !(entry.frequency_per_million > 0)) {
+  if (!entry.lemma || !(entry.rank > 0) || (entry.frequency_per_million !== undefined && !(entry.frequency_per_million > 0))) {
     errors.push(`sources/ngsl-1.2-used-words.json: 非法词项 ${String(entry.lemma)}`);
   }
 }
@@ -185,17 +185,24 @@ for (const stage of curriculum.stages ?? []) {
       stageSkills.add(skill);
     }
     const level = stage.id.split(".").at(-1);
-    if (!track.deck.includes(`/${level}/`)) {
-      errors.push(`curriculum.json: ${track.id} 的练习路径没有落在 ${level} 等级目录`);
+    const deckPaths = Array.isArray(track.decks) && track.decks.length > 0
+      ? track.decks
+      : typeof track.deck === "string" && track.deck
+        ? [track.deck]
+        : [];
+    if (deckPaths.length === 0) {
+      errors.push(`curriculum.json: ${track.id} 没有配置 deck 或 decks`);
+    }
+    for (const deckPath of deckPaths) {
+      if (!deckPath.includes(`/${level}/`)) {
+        errors.push(`curriculum.json: ${track.id} 的练习路径 ${deckPath} 没有落在 ${level} 等级目录`);
+      }
     }
     if (!track.assessment.startsWith(`assessments/${level}/`)) {
       errors.push(`curriculum.json: ${track.id} 的考核路径没有落在 assessments/${level}/`);
     }
-    const practice = readJson(track.deck);
     const assessment = readJson(track.assessment);
-    validateRefs(practice.source_refs, track.deck);
     validateRefs(assessment.source_refs, track.assessment);
-    if (practice.topic_id !== track.id) errors.push(`${track.deck}: topic_id 与 ${track.id} 不一致`);
     if (assessment.topic_id !== track.id) errors.push(`${track.assessment}: topic_id 与 ${track.id} 不一致`);
     if (!assessment.assessment_id?.startsWith("en.assessment.")) {
       errors.push(`${track.assessment}: 缺少 en.assessment. 前缀的 assessment_id`);
@@ -204,28 +211,57 @@ for (const stage of curriculum.stages ?? []) {
     } else {
       assessmentIds.add(assessment.assessment_id);
     }
-    for (const item of practice.items ?? []) {
-      validateItem(item, track.deck, false, practice.source_refs);
-      if (practice.kind === "vocab") {
-        if (!item.word || !item.sentence || !item.senses?.length) {
-          errors.push(`${track.deck}: ${item.id} 必须同时有 word、sentence 和 senses`);
-        }
-        if (item.word && !allowedLemmas.has(String(item.word).toLowerCase())) {
-          errors.push(`${track.deck}: ${item.word} 不在本地 NGSL / NAWL / AWL 或已粘贴的大纲附录中`);
+    const trackItems = [];
+    for (const deckPath of deckPaths) {
+      const practice = readJson(deckPath);
+      validateRefs(practice.source_refs, deckPath);
+      if (practice.topic_id !== track.id) errors.push(`${deckPath}: topic_id 与 ${track.id} 不一致`);
+      if (deckPaths.length > 1 && practice.kind !== track.kind) {
+        errors.push(`${deckPath}: 多单元题库的 kind 必须与轨道 ${track.kind} 一致`);
+      }
+      for (const item of practice.items ?? []) {
+        validateItem(item, deckPath, false, practice.source_refs);
+        trackItems.push(item);
+        if (practice.kind === "vocab") {
+          if (!item.word || !item.sentence || !item.senses?.length) {
+            errors.push(`${deckPath}: ${item.id} 必须同时有 word、sentence 和 senses`);
+          }
+          if (item.word && !allowedLemmas.has(String(item.word).toLowerCase())) {
+            errors.push(`${deckPath}: ${item.word} 不在本地 NGSL / NAWL / AWL 或已粘贴的大纲附录中`);
+          }
         }
       }
-    }
-    for (const asset of practice.media ?? []) {
-      if (!sourceIds.has(asset.source_id) || !asset.url?.startsWith("https://")) {
-        errors.push(`${track.deck}: 题库媒体来源或 HTTPS 地址无效`);
-      }
-      if (!(practice.source_refs ?? []).some((ref) => ref.source_id === asset.source_id)) {
-        errors.push(`${track.deck}: 题库媒体来源 ${asset.source_id} 没有出现在 source_refs`);
+      for (const asset of practice.media ?? []) {
+        if (!sourceIds.has(asset.source_id) || !asset.url?.startsWith("https://")) {
+          errors.push(`${deckPath}: 题库媒体来源或 HTTPS 地址无效`);
+        }
+        if (!(practice.source_refs ?? []).some((ref) => ref.source_id === asset.source_id)) {
+          errors.push(`${deckPath}: 题库媒体来源 ${asset.source_id} 没有出现在 source_refs`);
+        }
       }
     }
     for (const item of assessment.items ?? []) validateItem(item, track.assessment, true, assessment.source_refs);
     if ((assessment.items ?? []).length < 5) {
       errors.push(`${track.assessment}: 独立考核少于 5 题，无法稳定使用 80% 阈值`);
+    }
+    if (level === "beginner") {
+      const minimums = track.kind === "vocab"
+        ? { practice: 300, assessment: 30 }
+        : track.kind === "sentence"
+          ? { practice: 120, assessment: 30 }
+          : { practice: 30, assessment: 20 };
+      if (trackItems.length < minimums.practice) {
+        errors.push(`curriculum.json: ${track.id} 只有 ${trackItems.length} 道练习，初级扩容基线为 ${minimums.practice}`);
+      }
+      if ((assessment.items ?? []).length < minimums.assessment) {
+        errors.push(`${track.assessment}: 只有 ${(assessment.items ?? []).length} 道考核，初级扩容基线为 ${minimums.assessment}`);
+      }
+      if (track.kind === "sentence") {
+        const translations = trackItems.filter((item) => item.kind === "translation").length;
+        const passages = trackItems.filter((item) => item.kind === "passage_detail").length;
+        if (translations < 60) errors.push(`curriculum.json: 初级英译汉只有 ${translations} 道，基线为 60`);
+        if (passages < 30) errors.push(`curriculum.json: 初级短文只有 ${passages} 道，基线为 30`);
+      }
     }
     if (track.passage && !fs.existsSync(path.join(contentRoot, track.passage))) {
       errors.push(`curriculum.json: 缺少短文 content/${track.passage}`);

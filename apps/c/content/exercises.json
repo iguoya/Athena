@@ -1,0 +1,79 @@
+{
+  "c.memory.bytes": {
+    "intro": "核的是 Beej §5.1：字节有地址、多字节类型占相邻格子。字节序平台相关，不考成 C 的保证。",
+    "in_class": [
+      {
+        "stem": "按 Beej §5.1，指针变量里保存的是什么？",
+        "choices": ["它所指数值的一份副本", "一块内存的地址", "变量的名字", "sizeof 的结果"],
+        "correct": 1,
+        "explain": "Beej：指针是保存地址的变量。地址就是那一格（或第一格）在内存里的编号。C23 6.3.2.3 同样把指针定义为保存地址。",
+        "source_refs": [
+          { "id": "beej-bgc", "loc": "§5.1 Memory and Variables" },
+          { "id": "c23", "loc": "6.3.2.3 Pointers" }
+        ],
+        "difficulty": 1,
+        "goal": "master"
+      },
+      {
+        "stem": "一个 int 若占多个字节，这些字节在内存里怎样排？",
+        "choices": ["可以分散在不相邻的格子里", "总是低地址先放最低字节（小端）", "彼此相邻，具体高低字节顺序由平台决定", "由变量名字决定"],
+        "correct": 2,
+        "explain": "Beej：多字节类型的各个字节彼此相邻；C 不保证端序。教案里的 2a 00 00 00 只是本机示意，不是语言规则。C23 6.2.6 规定的是对象表示，不是某一种端序。",
+        "source_refs": [
+          { "id": "beej-bgc", "loc": "§5.1 Memory Fun Facts" },
+          { "id": "c23", "loc": "6.2.6 Representations of types" }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      }
+    ],
+    "homework": [
+      {
+        "stem": "sizeof(int) 问的是什么？",
+        "choices": ["这个变量名有多重要", "int 这种类型占多少字节", "指针里存的地址", "堆上还剩多少空间"],
+        "correct": 1,
+        "explain": "Beej §5.1 用 sizeof 确定某类型占几字节。具体数字因实现而异，常见是 4，但不要写成 C 保证 4。",
+        "source_refs": [{ "id": "beej-bgc", "loc": "§5.1" }],
+        "difficulty": 1,
+        "goal": "master"
+      }
+    ]
+  },
+  "c.pointer.address": {
+    "intro": "核的是 Beej §5.2–5.3、§5.7：指针类型、取地址、解引用，以及 sizeof p 与 sizeof *p。",
+    "in_class": [
+      {
+        "stem": "int i; int *p; p = &i; 之后 p 里是什么？",
+        "choices": ["i 的当前值", "i 的地址", "指针自己的地址", "未定义"],
+        "correct": 1,
+        "explain": "Beej §5.2：对变量取地址，得到指向该类型的指针。赋给 p 之后，p 指向 i。C23 6.3.2.3：指向对象的指针保存该对象的地址。",
+        "source_refs": [
+          { "id": "beej-bgc", "loc": "§5.2 Pointer Types" },
+          { "id": "c23", "loc": "6.3.2.3 Pointers" }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      },
+      {
+        "stem": "同一段声明里，sizeof p 和 sizeof *p 分别量的是？",
+        "choices": ["都是 int", "都是指针", "p 是指针宽度，*p 是 int 宽度", "都未定义"],
+        "correct": 2,
+        "explain": "Beej §5.7：sizeof 看的是表达式的类型。p 的类型是 int *，*p 的类型是 int。",
+        "source_refs": [{ "id": "beej-bgc", "loc": "§5.7 sizeof and Pointers" }],
+        "difficulty": 2,
+        "goal": "master"
+      }
+    ],
+    "homework": [
+      {
+        "stem": "想让函数改调用方的 int i，按 Beej §5.4 应该传什么？",
+        "choices": ["i 本身", "&i（指向 i 的指针）", "sizeof i", "i 的名字字符串"],
+        "correct": 1,
+        "explain": "参数会被复制。复制一份地址，函数解引用后仍碰到原来的 i。这是指针章的内容，不另开「函数」章。",
+        "source_refs": [{ "id": "beej-bgc", "loc": "§5.4 Passing Pointers as Arguments" }],
+        "difficulty": 2,
+        "goal": "master"
+      }
+    ]
+  }
+}

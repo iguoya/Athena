@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dive Into Systems</title>
+    <meta name="generator" content="Antora 2.2.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6C7YGP3BE6"></script>
+    <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','G-6C7YGP3BE6')</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">Dive Into Systems</a>
+      <div class="navbar-item">
+        <input id="search-input" type="text" placeholder="Search book...">
+      </div>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="diveintosystems" data-version="1.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Dive Into Systems</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Dive Into Systems</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../index.html">Authors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../copyright.html">Copyright</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../acknowledgements.html">Acknowledgements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../preface.html">Preface</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">0. Introduction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C1-C_intro/index.html">1. By the C, the Beautiful C</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/getting_started.html">1.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/input_output.html">1.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/conditionals.html">1.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/functions.html">1.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/arrays_strings.html">1.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/structs.html">1.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/summary.html">1.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/exercises.html">1.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">2. A Deeper Dive Into C</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scope_memory.html">2.1. Parts of Program Memory and Scope</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers.html">2.2. C Pointer Variables</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers_functions.html">2.3. Pointers and Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="dynamic_memory.html">2.4. Dynamic Memory Allocation</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="arrays.html">2.5. Arrays in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="strings.html">2.6. Strings and the String Library</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="structs.html">2.7. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="IO.html">2.8. Input / Output in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="advanced.html">2.9. Advanced C Features</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_switch.html">2.9.1. Constants, switch, enum, and typedef</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_cmd_line_args.html">2.9.2. Command Line Arguments</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_voidstar.html">2.9.3. The void* Type</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_pointer_arithmetic.html">2.9.4. Pointer Arithmetic</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_libraries.html">2.9.5. C Libraries: Using, Compiling and Linking</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_writing_libraries.html">2.9.6. Writing and using your own C libraries (and compiling multiple .c and .h files)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_assembly.html">2.9.7. Compiling C to Assembly and Compiling Assembly Code</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="summary.html">2.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="exercises.html">2.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C3-C_debug/index.html">3. C Debugging Tools</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb.html">3.1. Debugging with GDB</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_commands.html">3.2. GDB Commands in Detail</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/valgrind.html">3.3. Debugging Memory with Valgrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_advanced.html">3.4. Advanced GDB Features</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_assembly.html">3.5. Debugging Assembly Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_pthreads.html">3.6. Debugging Multi-threaded Programs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/summary.html">3.7. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/index.html">4. Binary and Data Representation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bases.html">4.1. Number Bases and Unsigned Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/conversion.html">4.2. Converting Between Bases</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/signed.html">4.3. Signed Binary Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/arithmetic.html">4.4. Binary Integer Arithmetic</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_addition.html">4.4.1. Addition</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_subtraction.html">4.4.2. Subtraction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_mult_div.html">4.4.3. Multiplication &amp; Division</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/overflow.html">4.5. Overflow</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bitwise.html">4.6. Bitwise Operators</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/byte_order.html">4.7. Integer Byte Order</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/floating_point.html">4.8. Real Numbers in Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/summary.html">4.9. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/exercises.html">4.10. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/index.html">5. What von Neumann Knew: Computer Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/hist.html">5.1. The Origins of Modern Computing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/von.html">5.2. The von Neumann Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/gates.html">5.3. Logic Gates</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/circuits.html">5.4. Circuits</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/arithlogiccircs.html">5.4.1. Arithmetic and Logic Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/controlcircs.html">5.4.2. Control Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/storagecircs.html">5.4.3. Storage Circuits</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/cpu.html">5.5. Building a Processor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/instrexec.html">5.6. The Processor&#8217;s Execution of Program Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining.html">5.7. Pipelining Instruction Execution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining_advanced.html">5.8. Advanced Pipelining Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/modern.html">5.9. Looking Ahead: CPUs Today</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/summary.html">5.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/exercises.html">5.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C6-asm_intro/index.html">6. Under the C: Dive into Assembly</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/index.html">7. 64-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/basics.html">7.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/common.html">7.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arithmetic.html">7.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/conditional_control_loops.html">7.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/preliminaries.html">7.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/if_statements.html">7.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/loops.html">7.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/functions.html">7.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/recursion.html">7.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arrays.html">7.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/matrices.html">7.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/structs.html">7.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/buffer_overflow.html">7.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/exercises.html">7.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/index.html">8. 32-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/basics.html">8.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/common.html">8.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arithmetic.html">8.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/conditional_control_loops.html">8.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/preliminaries.html">8.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/if_statements.html">8.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/loops.html">8.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/functions.html">8.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/recursion.html">8.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arrays.html">8.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/matrices.html">8.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/structs.html">8.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/buffer_overflow.html">8.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/exercises.html">8.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/index.html">9. ARMv8 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/basics.html">9.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/common.html">9.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arithmetic.html">9.3. Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/conditional_control_loops.html">9.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/preliminaries.html">9.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/if_statements.html">9.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/loops.html">9.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/functions.html">9.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/recursion.html">9.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arrays.html">9.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/matrices.html">9.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/structs.html">9.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/buffer_overflow.html">9.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/exercises.html">9.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C10-asm_takeaways/index.html">10. Key Assembly Takeaways</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C11-MemHierarchy/index.html">11. Storage and the Memory Hierarchy</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/mem_hierarchy.html">11.1. The Memory Hierarchy</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/devices.html">11.2. Storage Devices</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/locality.html">11.3. Locality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/caching.html">11.4. Caching</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/cachegrind.html">11.5. Cache Analysis and Cachegrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/coherency.html">11.6. Looking Ahead: Caching on Multicore Processors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/summary.html">11.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/exercises.html">11.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C12-CodeOpt/index.html">12. Code Optimization</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/basic.html">12.1. First Steps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/loops_functions.html">12.2. Other Compiler Optimizations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/memory_considerations.html">12.3. Memory Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/summary.html">12.4. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/index.html">13. The Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/impl.html">13.1. Booting and Running</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/processes.html">13.2. Processes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/vm.html">13.3. Virtual Memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/ipc.html">13.4. Interprocess Communication</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_signals.html">13.4.1. Signals</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_msging.html">13.4.2. Message Passing</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_shm.html">13.4.3. Shared Memory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/advanced.html">13.5. Summary and Other OS Functionality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/exercises.html">13.6. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/index.html">14. Leveraging Shared Memory in the Multicore Era</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/multicore.html">14.1. Programming Multicore Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/posix.html">14.2. POSIX Threads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/synchronization.html">14.3. Synchronizing Threads</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/mutex.html">14.3.1. Mutual Exclusion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/semaphores.html">14.3.2. Semaphores</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/other_syncs.html">14.3.3. Other Synchronization Constructs</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/performance.html">14.4. Measuring Parallel Performance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_basics.html">14.4.1. Parallel Performance Basics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_advanced.html">14.4.2. Advanced Topics</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/cache_coherence.html">14.5. Cache Coherence</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/thread_safety.html">14.6. Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/openmp.html">14.7. Implicit Threading with OpenMP</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/summary.html">14.8. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/exercises.html">14.9. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C15-Parallel/index.html">15. Looking Ahead: Other Parallel Systems</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/gpu.html">15.1. Hardware Acceleration and CUDA</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/distrmem.html">15.2. Distributed Memory Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/cloud.html">15.3. To Exascale and Beyond</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix1/index.html">16. Appendix 1: Chapter 1 for Java Programmers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/getting_started.html">16.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/input_output.html">16.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/conditionals.html">16.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/functions.html">16.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/arrays_strings.html">16.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/structs.html">16.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/summary.html">16.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/exercises.html">16.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix2/index.html">17. Appendix 2: Using Unix</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/cmdln_basics.html">17.1. Unix Command Line and the Unix File System</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/man.html">17.2. Man and the Unix Manual</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ssh_scp.html">17.3. Remote Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/editors.html">17.4. Unix Editors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/makefiles.html">17.5. make and Makefiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/grep.html">17.6 Searching: grep and find</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/chmod.html">17.7 File Permissions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/tar.html">17.8 Archiving and Compressing Files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pskill.html">17.9 Process Control</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/timing.html">17.10 Timing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/history.html">17.11 Command History</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ioredirect.html">17.12 I/0 Redirection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pipe.html">17.13 Pipes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/dotfiles.html">17.14 Dot Files and .bashrc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/shellprog.html">17.15 Shell Programming</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/sysinfo.html">17.16 Getting System Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Dive Into Systems</span>
+    <span class="version">1.2</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Dive Into Systems</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.2</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Dive Into Systems</a></li>
+    <li><a href="index.html">2. A Deeper Dive Into C</a></li>
+    <li><a href="arrays.html">2.5. Arrays in C</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_arrays_in_c"><a class="anchor" href="#_arrays_in_c"></a>2.5. Arrays in C</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the <a href="../C1-C_intro/arrays_strings.html#_introduction_to_arrays" class="page">previous chapter</a>
+we introduced statically declared one-dimensional C arrays and discussed the
+semantics of passing arrays to functions.  In the
+<a href="pointers.html#_dynamic_memory_allocation" class="page">dynamic memory allocation
+section</a> of this chapter, we introduced dynamically allocated one dimensional
+arrays and discussed the semantics of passing them to functions.</p>
+</div>
+<div class="paragraph">
+<p>In this section, we take a more in-depth look at arrays in C. We describe both
+statically and dynamically allocated arrays in more detail and discuss
+two-dimensional arrays.</p>
+</div>
+<div class="sect2">
+<h3 id="_single_dimensional_arrays"><a class="anchor" href="#_single_dimensional_arrays"></a>2.5.1. Single-Dimensional Arrays</h3>
+<div class="sect3">
+<h4 id="_statically_allocated"><a class="anchor" href="#_statically_allocated"></a>Statically Allocated</h4>
+<div class="paragraph">
+<p>Before jumping into new content, we briefly summarize static arrays with an
+example.  See the <a href="../C1-C_intro/arrays_strings.html#_introduction_to_arrays" class="page">previous
+chapter</a> for more detail on statically declared one-dimensional arrays.</p>
+</div>
+<div class="paragraph">
+<p>Statically declared arrays are allocated either on the stack (for local
+variables) or in the data region of memory (for global variables).  A
+programmer can declare an array variable by specifying its type (the type
+stored at each index) and its total capacity (number of elements).</p>
+</div>
+<div class="paragraph">
+<p>When passing an array to a function, C copies the value of the base address to
+the parameter.  That is, both the parameter and the argument refer to the same
+memory locations&#8201;&#8212;&#8201;the parameter pointer points to the argument&#8217;s array
+elements in memory.  As a result, modifying the values stored in the array
+through an array parameter modifies the values stored in the argument array.</p>
+</div>
+<div class="paragraph">
+<p>Here are some examples of static array declaration and use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// declare arrays specifying their type and total capacity
+float averages[30];   // array of float, 30 elements
+char  name[20];       // array of char, 20 elements
+int i;
+
+// access array elements
+for (i = 0; i &lt; 10; i++) {
+    averages[i] = 0.0 + i;
+    name[i] = 'a' + i;
+}
+name[10] = '\0';    // name is being used for storing a C-style string
+
+// prints: 3 d abcdefghij
+printf("%g %c %s\n", averages[3], name[3], name);
+
+strcpy(name, "Hello");
+printf("%s\n", name);  // prints: Hello</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dynamically_allocated"><a class="anchor" href="#_dynamically_allocated"></a>Dynamically Allocated</h4>
+<div class="paragraph">
+<p>In the <a href="pointers.html#_dynamic_memory_allocation" class="page">Dynamic Memory
+Allocation section</a> of this chapter, we introduced dynamically allocated
+one-dimensional arrays, including their access syntax and the syntax and semantics
+of passing dynamically allocated arrays to functions. Here, we present a short recap
+of that information with an example.</p>
+</div>
+<div class="paragraph">
+<p>Calling the <code>malloc</code> function dynamically allocates an array on the heap at
+runtime.  The address of the allocated heap space can be assigned to a global
+or local pointer variable, which then points to the first element of the array.
+To dynamically allocate space, pass <code>malloc</code> the total number of bytes to
+allocate for the array (using the <code>sizeof</code> operator to get the size of a
+specific type).  A single call to <code>malloc</code> allocates a contiguous chunk of heap
+space of the requested size.  For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// declare a pointer variable to point to allocated heap space
+int    *p_array;
+double *d_array;
+
+// call malloc to allocate the appropriate number of bytes for the array
+
+p_array = malloc(sizeof(int) * 50);      // allocate 50 ints
+d_array = malloc(sizeof(double) * 100);  // allocate 100 doubles
+
+// always CHECK RETURN VALUE of functions and HANDLE ERROR return values
+if ( (p_array == NULL) || (d_array == NULL) ) {
+    printf("ERROR: malloc failed!\n");
+    exit(1);
+}
+
+// use [] notation to access array elements
+for (i = 0; i &lt; 50; i++) {
+    p_array[i] = 0;
+    d_array[i] = 0.0;
+}
+
+// free heap space when done using it
+free(p_array);
+p_array = NULL;
+
+free(d_array);
+d_array = NULL;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_array_memory_layout"><a class="anchor" href="#_array_memory_layout"></a>Array Memory Layout</h4>
+<div class="paragraph">
+<p>Whether an array is statically declared or dynamically allocated
+via a single call to <code>malloc</code>, array elements represent contiguous
+memory locations (addresses):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> array [0]:  base address
+ array [1]:  next address
+ array [2]:  next address
+   ...            ...
+ array [99]: last address</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The location of element <code>i</code> is at an offset <code>i</code> from the base address of the
+array. The exact address of the ith element depends on the number of bytes of
+the type stored in the array.  For example, consider the following array
+declarations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int  iarray[6];  // an array of six ints, each of which is four bytes
+char carray[4];  // an array of four chars, each of which is one byte</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The addresses of their individual array elements might look
+something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> addr   element
+ ----   -------
+ 1230:  iarray[0]
+ 1234:  iarray[1]
+ 1238:  iarray[2]
+ 1242:  iarray[3]
+ 1246:  iarray[4]
+ 1250:  iarray[5]
+     ...
+ 1280:  carray[0]
+ 1281:  carray[1]
+ 1282:  carray[2]
+ 1283:  carray[3]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, <code>1230</code> is the base address of <code>iarray</code> and <code>1280</code> the
+base address of <code>carray</code>.  Note that individual elements of each
+array are allocated to contiguous memory addresses: each element
+of <code>iarray</code> stores a 4-byte <code>int</code> value, so its element addresses differ
+by 4, and each element of <code>carray</code> stores a 1-byte <code>char</code> value, so its
+addresses differ by 1.  There is no guarantee that the set of local
+variables are allocated to contiguous memory locations on the stack
+(hence, there could be a gap in the addresses between the end of
+<code>iarray</code> and the start of <code>carray</code>, as shown in this example.)</p>
+</div>
+<div id="cconstants" class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Constants are often used when defining the total capacity of an array
+rather than using a literal numeric value. Constants are aliases for
+C literal values, and are used instead of literals to make the code
+easier to read and to allow for it to be more easily updated.
+See <a href="advanced_switch.html#_c_constants_" class="page">C Constants</a>
+to learn more about defining and using C constants.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example defining and  using a constant (<code>N</code>) for
+the dimension of the arrays:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#define N   20
+
+int main(void) {
+  int array[N];   // an array of 20 ints
+  int *d_arr, i;
+
+  // dynamically alloc array of 20 ints
+  d_arr = malloc(sizeof(int)*N);
+  if(d_arr == NULL) {
+    exit(1);
+  }
+
+  for(i=0; i &lt; N; i++) {
+    array[i] = i;
+    d_arr[i] = i*2;
+  }
+  ...
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_two_dimensional_arrays"><a class="anchor" href="#_two_dimensional_arrays"></a>2.5.2. Two-Dimensional Arrays</h3>
+<div class="paragraph">
+<p>C supports multidimensional arrays, but we limit our discussion of
+multidimensional arrays to two-dimensional (2D) arrays, since 1D and 2D arrays
+are the most commonly used by C programmers.</p>
+</div>
+<div class="sect3">
+<h4 id="_statically_allocated_2d_arrays"><a class="anchor" href="#_statically_allocated_2d_arrays"></a>Statically Allocated 2D Arrays</h4>
+<div class="paragraph">
+<p>To statically declare a multidimensional array variable, specify the size of
+each dimension. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int   matrix[50][100];
+short little[10][10];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, <code>matrix</code> is a 2D array of <code>int</code> values with 50 rows and 100 columns, and
+<code>little</code> is a 2D array of <code>short</code> values with 10 rows and 10 columns.</p>
+</div>
+<div class="paragraph">
+<p>To access an individual element, indicate both the row and the column index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int   val;
+short num;
+
+val = matrix[3][7];  // get int value in row 3, column 7 of matrix
+num = little[8][4];  // get short value in row 8, column 4 of little</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#FigAccessingMatrix">Figure 1</a> illustrates the 2D array as a matrix of integer values,
+where a specific element in the 2D array is indexed by row and column index
+values.</p>
+</div>
+<div id="FigAccessingMatrix" class="imageblock text-center">
+<div class="content">
+<img src="_images/matrix.png" alt="Accessing matrix[2][3] is like indexing into a grid at row 2 and column 3." width="500">
+</div>
+<div class="title">Figure 1. A two-dimensional array represented as a matrix.  Accessing matrix[2][3] is like indexing into a grid at row 2 and column 3.</div>
+</div>
+<div class="paragraph">
+<p>Programs often access the elements of a 2D array by iterating with
+nested loops.  For example, the following nested loop initializes all elements
+in <code>matrix</code> to 0:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int i, j;
+
+for (i = 0; i &lt; 50; i++) {  // for each row i
+    for (j = 0; j &lt; 100; j++) { // iterate over each column element in row i
+        matrix[i][j] = 0;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_two_dimensional_array_parameters"><a class="anchor" href="#_two_dimensional_array_parameters"></a>Two-Dimensional Array Parameters</h4>
+<div class="paragraph">
+<p>The same rules for passing one-dimensional array arguments to functions apply
+to passing two-dimensional array arguments: the parameter gets the value of the
+base address of the 2D array (<code>&amp;arr[0][0]</code>).  In other words, the parameter
+points to the argument&#8217;s array elements and therefore the function can change
+values stored in the passed array.</p>
+</div>
+<div class="paragraph">
+<p>For multidimensional array parameters, you must indicate that the parameter is
+a multidimensional array, but you can leave the size of the first dimension
+unspecified (for good generic design).  The sizes of other dimensions must be
+fully specified so that the compiler can generate the correct offsets into the
+array.  Here&#8217;s a 2D example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// a C constant definition: COLS is defined to be the value 100
+#define COLS  (100)
+
+/*
+ * init_matrix: initializes the passed matrix elements to the
+ *              product of their index values
+ *   m: a 2D array (the column dimension must be 100)
+ *   rows: the number of rows in the matrix
+ *   return: does not return a value
+ */
+void init_matrix(int m[][COLS], int rows) {
+    int i, j;
+    for (i = 0; i &lt; rows; i++) {
+        for (j = 0; j &lt; COLS; j++) {
+            m[i][j] = i*j;
+        }
+    }
+}
+
+int main(void) {
+    int matrix[50][COLS];
+    int bigger[90][COLS];
+
+    init_matrix(matrix, 50);
+    init_matrix(bigger, 90);
+    ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both the <code>matrix</code> and the <code>bigger</code> arrays can be passed as arguments to the
+<code>init_matrix</code> function because they have the same column dimension as
+the parameter definition.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The column dimension must be specified in the parameter definition of a 2D array
+so that the compiler can calculate the offset from the base address of
+the 2D array to the start of a particular row of elements.  The offset calculation
+follows from the layout of 2D arrays in memory.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_two_dimensional_array_memory_layout"><a class="anchor" href="#_two_dimensional_array_memory_layout"></a>Two-Dimensional Array Memory Layout</h4>
+<div class="paragraph">
+<p>Statically allocated 2D arrays are arranged in memory in <strong>row-major order</strong>,
+meaning that all of row 0&#8217;s elements come first, followed by all of row 1&#8217;s
+elements, and so on.  For example, given the following declaration of a 2D
+array of integers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int arr[3][4];  // int array with 3 rows and 4 columns</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>its layout in memory might look like <a href="#Fig2DMem">Figure 2</a>.</p>
+</div>
+<div id="Fig2DMem" class="imageblock text-center">
+<div class="content">
+<img src="_images/2Dmem.png" alt="Declaring an array as &quot;int arr[3][4]&quot; yields three rows, each of which has four elements.  Row 0 consists of arr[0][0], arr[0][1], arr[0][2], and arr[0][3].  Row 1 consists of arr[1][0], arr[1][1], etc." width="450">
+</div>
+<div class="title">Figure 2. The layout of a two-dimensional array in row-major order.</div>
+</div>
+<div class="paragraph">
+<p>Note that all array elements are allocated to contiguous memory addresses.
+That is, the base address of the 2D array is the memory address of the <code>[0][0]</code>
+element (<code>&amp;arr[0][0]</code>), and subsequent elements are stored contiguously in
+row-major order (e.g., the entirety of row 1 is followed immediately by the entirety
+of row 2, and so on).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dynamically_allocated_2d_arrays"><a class="anchor" href="#_dynamically_allocated_2d_arrays"></a>Dynamically Allocated 2D Arrays</h4>
+<div class="paragraph">
+<p>Dynamically allocated 2D arrays can be allocated in two ways. For an
+<em>N</em>x<em>M</em> 2D array, either:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make a single call to <code>malloc</code>, allocating one large chunk of heap space to
+store all <em>N</em>x<em>M</em> array elements.</p>
+</li>
+<li>
+<p>Make multiple calls to <code>malloc</code>, allocating an array of arrays. First,
+allocate a 1D array of <em>N</em> pointers to the element type, with a 1D array of
+pointers for each row in the 2D array.  Then, allocate <em>N</em> 1D arrays of size
+<em>M</em> to store the set of column values for each row in the 2D array.  Assign
+the addresses of each of these <em>N</em> arrays to the elements of the first array
+of <em>N</em> pointers.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The variable declarations, allocation code, and array element access syntax
+differ depending on which of these two methods a programmer chooses to use.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_method_1_memory_efficient_allocation"><a class="anchor" href="#_method_1_memory_efficient_allocation"></a>Method 1: Memory-Efficient Allocation</h4>
+<div class="paragraph">
+<p>In this method, a single call to <code>malloc</code> allocates the total number of bytes
+needed to store the <em>N</em>x<em>M</em> array of values.  This method has the benefit
+of being more memory efficient because the entire space for all <em>N</em>x<em>M</em>
+elements will be allocated at once, in contiguous memory locations.</p>
+</div>
+<div class="paragraph">
+<p>The call to <code>malloc</code> returns the starting address of the allocated space (the base
+address of the array), which (like a 1D array) should be stored in a pointer
+variable.  In fact, there is no semantic difference between allocating a 1D or
+2D array using this method: the call to <code>malloc</code> returns the starting address of a
+contiguously allocated chunk of heap memory of the requested number of bytes.
+Because allocation of a 2D array using this method looks just like allocation
+for a 1D array, the programmer has to explicitly map 2D row and column indexing
+on top of this single chunk of heap memory space (the compiler has no implicit
+notion of rows or columns and thus cannot interpret double indexing syntax into
+this malloc&#8217;ed space).</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example C code snippet that dynamically allocates a 2D array using
+method 1:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#define N 3
+#define M 4
+
+int main(void) {
+    int *two_d_array;    // the type is a pointer to an int (the element type)
+
+    // allocate in a single malloc of N x M int-sized elements:
+    two_d_array = malloc(sizeof(int) * N * M);
+
+    if (two_d_array == NULL) {
+        printf("ERROR: malloc failed!\n");
+        exit(1);
+    }
+
+    ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#Fig2DOneMalloc">Figure 3</a> shows an example of allocating a 2D array using this method
+and illustrates what memory might look like after the call to <code>malloc</code>.</p>
+</div>
+<div id="Fig2DOneMalloc" class="imageblock">
+<div class="content">
+<img src="_images/2Donemalloc.png" alt="We can allocate an array with malloc(sizeof(int) * (3*4)) and store the base address in a stack pointer variable.  Because malloc returns a contiguous chunk of memory, we can treat the memory as a collection of rows and columns in row-major order like a statically allocated array.">
+</div>
+<div class="title">Figure 3. The results of allocating a 2D array with a single call to malloc.</div>
+</div>
+<div class="paragraph">
+<p>Like 1D dynamically allocated arrays, the pointer variable for a 2D array is
+allocated on the stack.  That pointer is then assigned the value returned by
+the call to <code>malloc</code>, which represents the base address of the contiguous chunk
+of <em>N</em>x<em>M</em> <code>int</code> storage locations in the heap memory.</p>
+</div>
+<div class="paragraph">
+<p>Because this method uses a single chunk of malloc&#8217;ed space for the 2D array,
+the memory allocation is as efficient as possible (it only requires one call to
+<code>malloc</code> for the entire 2D array).  It&#8217;s the more efficient way to access
+memory  due to all elements being located close together in contiguous memory,
+with each access requiring only a single level of indirection from the pointer
+variable.</p>
+</div>
+<div class="paragraph">
+<p>However, the C compiler does not know the difference between a 2D or
+1D array allocation using this method.  As a result,
+the double indexing syntax (<code>[i][j]</code>) of statically declared 2D arrays <em>cannot</em>
+be used when allocating a 2D array using this method.  Instead, the
+programmer must explicitly compute the offset into the contiguous chunk
+of heap memory using a function of row and column index values (<code>[i*M + j]</code>,
+where <code>M</code> is the column dimension).</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of how a programmer would structure code to
+initialize all the elements of a 2D array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// access using [] notation:
+//   cannot use [i][j] syntax because the compiler has no idea where the
+//   next row starts within this chunk of heap space, so the programmer
+//   must explicitly add a function of row and column index values
+//   (i*M+j) to map their 2D view of the space into the 1D chunk of memory
+for (i = 0; i &lt; N; i++) {
+    for (j = 0; j &lt; M; j++) {
+        two_d_array[i*M + j] = 0;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_method_1_single_malloc_and_function_parameters"><a class="anchor" href="#_method_1_single_malloc_and_function_parameters"></a>Method 1 (Single malloc) and Function Parameters</h5>
+<div class="paragraph">
+<p>The base address of an array of <code>int</code> types allocated via a single <code>malloc</code> is
+a pointer to an <code>int</code>, so it can be passed to a function with an (<code>int *</code>)
+parameter.  Additionally, the function must be passed row and column dimensions
+so that it can correctly compute offsets into the 2D array.  For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/*
+ * initialize all elements in a 2D array to 0
+ *  arr: the array
+ *  rows: number of rows
+ *  cols: number of columns
+ */
+void init2D(int *arr, int rows, int cols) {
+    int i, j;
+    for (i = 0; i &lt; rows; i++) {
+        for (j = 0; j &lt; cols; j++) {
+            arr[i*cols + j] = 0;
+        }
+    }
+}
+
+int main(void) {
+    int *array;
+    array = malloc(sizeof(int) * N * M);
+    if (array != NULL) {
+        init2D(array, N, M);
+    }
+    ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_method_2_the_programmer_friendly_way"><a class="anchor" href="#_method_2_the_programmer_friendly_way"></a>Method 2: The Programmer-Friendly Way</h4>
+<div class="paragraph">
+<p>The second method for dynamically allocating a 2D array stores the array as
+an array of <em>N</em> 1D arrays (one 1D array per row).  It requires  <em>N+1</em> calls to
+<code>malloc</code>: one <code>malloc</code> for the array of row arrays, and one <code>malloc</code> for each
+of the <em>N</em> row&#8217;s
+column arrays.  As a result, the element locations <em>within a row</em> are
+contiguous, but elements are not contiguous across rows of the 2D array.
+Allocation and element access are not as efficient as in method 1, and the type
+definitions for variables can be a bit more confusing.  However, using this
+method, a programmer can use double indexing syntax to access individual
+elements of the 2D array (the first index is an index into the array of rows,
+the second index is an index into the array of column elements within that row).</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of allocating a 2D array using method 2 (with the error
+detection and handling code removed for readability):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">// the 2D array variable is declared to be `int **` (a pointer to an int *)
+// a dynamically allocated array of dynamically allocated int arrays
+// (a pointer to pointers to ints)
+int **two_d_array;
+int i;
+
+// allocate an array of N pointers to ints
+// malloc returns the address of this array (a pointer to (int *)'s)
+two_d_array = malloc(sizeof(int *) * N);
+
+// for each row, malloc space for its column elements and add it to
+// the array of arrays
+for (i = 0; i &lt; N; i++) {
+// malloc space for row i's M column elements
+    two_d_array[i] = malloc(sizeof(int) * M);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, note the types of the variables and the sizes passed to the
+calls to <code>malloc</code>.  To refer to the dynamically allocated 2D array, the
+programmer declares a variable (<code>two_d_array</code>) of type <code>int **</code> that will store
+the address of a dynamically allocated array of <code>int *</code> element values.  Each
+element in <code>two_d_array</code> stores the address of a dynamically allocated array of
+<code>int</code> values (the type of <code>two_d_array[i]</code> is <code>int *</code>).</p>
+</div>
+<div class="paragraph">
+<p><a href="#Fig2DNMallocs">Figure 4</a> shows what memory might look like after the above
+example&#8217;s <em>N+1</em> calls to <code>malloc</code>.</p>
+</div>
+<div id="Fig2DNMallocs" class="imageblock">
+<div class="content">
+<img src="_images/2Dnmallocs.png" alt="two_d_array is a stack variable that points to a dynamically allocated array of pointers.  Each of those pointers points to a 1D array of integers.">
+</div>
+<div class="title">Figure 4. The arrangement of memory after allocating a 2D array with N+1 malloc calls.</div>
+</div>
+<div class="paragraph">
+<p>Note that when using this method, only the elements allocated as part of a
+single call to <code>malloc</code> are contiguous in memory.  That is, elements within
+each row are contiguous, but elements from different rows (even neighboring
+rows) are not.</p>
+</div>
+<div class="paragraph">
+<p>Once allocated, individual elements of the 2D array can be accessed using
+double-indexing notation.  The first index specifies an element in the outer
+array of <code>int *</code> pointers (which row), and the second index specifies an
+element in the inner <code>int</code> array (which column within the row).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int i, j;
+
+for (i = 0; i &lt; N; i++) {
+    for (j = 0; j &lt; M; j++) {
+        two_d_array[i][j] = 0;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To understand how double indexing is evaluated,
+consider the type and value of the following parts of the expression:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>       two_d_array: an array of int pointers, it stores the base address of an
+                 array of (int *) values. Its type is int** (a pointer to int *).
+
+    two_d_array[i]: the ith index into the array of arrays, it stores an (int *)
+                 value that represents the base address of an array of (int)
+                 values.  Its type is int*.
+
+ two_d_array[i][j]: the jth element pointed to by the ith element of the array of
+                 arrays, it stores an int value (the value in row i, column j
+                 of the 2D array).  Its type is int.</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_method_2_an_array_of_arrays_and_function_parameters"><a class="anchor" href="#_method_2_an_array_of_arrays_and_function_parameters"></a>Method 2 (An Array of Arrays) and Function Parameters</h5>
+<div class="paragraph">
+<p>The array argument&#8217;s type is <code>int **</code> (a pointer to a pointer to an <code>int</code>), and
+the function parameter matches its argument&#8217;s type.  Additionally, row and
+column sizes should be passed to the function.  Because this is a different
+type from method 1, both array types cannot use a common function (they are not
+the same C type).</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example function that takes a method 2 (array of arrays) 2D array
+as a parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/*
+ * initialize a 2D array
+ * arr: the array
+ * rows: number of rows
+ * cols: number of columns
+ */
+void init2D_Method2(int **arr, int rows, int cols) {
+    int i,j;
+
+    for (i = 0; i &lt; rows; i++) {
+        for (j = 0; j &lt; cols; j++) {
+            arr[i][j] = 0;
+        }
+    }
+}
+
+/*
+ * main: example of calling init2D_Method2
+ */
+int main(void) {
+    int **two_d_array;
+
+    // some code to allocate the row array and multiple col arrays
+    // ...
+
+    init2D_Method2(two_d_array, N, M);
+    ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, the function implementation can use double-indexing syntax.  Unlike
+statically declared 2D arrays, both the row and column dimensions need
+to be passed as parameters: the <code>rows</code> parameter specifies the bounds on
+the outermost array (the array of row arrays), and the <code>cols</code> parameter
+specifies the bounds on the inner arrays (the array column values for each
+row).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2020 Dive into Systems, LLC.</p>
+
+  <p><i>Dive into Systems,</i> is licensed under the Creative Commons <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a> (CC BY-NC-ND 4.0).</p>
+</footer>
+<script src="../_/js/site.js"></script>
+<script src="../_/js/vendor/lunr.js"></script>
+<script>antoraLunr.init("../_/../search_index.json")</script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

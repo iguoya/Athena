@@ -96,6 +96,9 @@ struct IconSpec {
     /// 图块底色，取各自技术生态的惯用色，不自造。
     #[serde(default)]
     accent: Option<String>,
+    /// 图块里的图标，相对应用目录的 SVG。图标跟着应用走，启动器不认识谁是谁。
+    #[serde(default)]
+    file: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -118,6 +121,8 @@ pub struct App {
     pub symbol: String,
     pub letter: String,
     pub accent: String,
+    /// 没有图标文件时退回 `letter`。
+    pub icon_file: Option<PathBuf>,
     pub dir: PathBuf,
     pub dev: DevSpec,
 }
@@ -174,6 +179,11 @@ fn parse(dir: &Path) -> Option<App> {
             .as_ref()
             .and_then(|icon| icon.accent.clone())
             .unwrap_or_else(|| "#5A6270".to_string()),
+        icon_file: icon
+            .as_ref()
+            .and_then(|icon| icon.file.clone())
+            .map(|name| dir.join(name))
+            .filter(|path| path.is_file()),
         id: raw.id,
         title: raw.title,
         summary: raw.description,

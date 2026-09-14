@@ -6,6 +6,9 @@ import { ScrollView } from "std-widgets.slint";
 export struct AppEntry {
     id: string,
     title: string,
+    // 图块里的图标，来自应用自己的 icon.svg；没有图标时用 letter 顶上。
+    icon: image,
+    has-icon: bool,
     // 图块里的字，取自 app.json 的 icon.letter（"C++"、"算"）。
     letter: string,
     // 图块底色，取自 icon.accent，用各自技术生态的惯用色。
@@ -44,11 +47,26 @@ component Tile inherits Rectangle {
                 background: entry.accent;
                 opacity: entry.running ? 1.0 : 0.72;
 
+                // 图标和文字都铺满图块再居中：只设对齐方式的话，它们按自身
+                // 尺寸定位，看起来会偏。
+                Image {
+                    source: entry.icon;
+                    visible: entry.has-icon;
+                    width: 30px;
+                    height: 30px;
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    image-fit: contain;
+                }
+
                 Text {
                     text: entry.letter;
+                    visible: !entry.has-icon;
                     color: white;
                     font-size: entry.letter.character-count > 1 ? 19px : 24px;
                     font-weight: 600;
+                    width: parent.width;
+                    height: parent.height;
                     horizontal-alignment: center;
                     vertical-alignment: center;
                 }

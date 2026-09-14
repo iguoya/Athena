@@ -27,6 +27,9 @@ class Curriculum : public QObject {
     Q_PROPERTY(QString selectedId READ selectedId NOTIFY selectionChanged)
     Q_PROPERTY(QVariantMap selectedTopic READ selectedTopic NOTIFY selectionChanged)
     Q_PROPERTY(QUrl lessonSource READ lessonSource NOTIFY selectionChanged)
+    Q_PROPERTY(QString exerciseIntro READ exerciseIntro NOTIFY selectionChanged)
+    Q_PROPERTY(QVariantList inClassQuestions READ inClassQuestions NOTIFY selectionChanged)
+    Q_PROPERTY(QVariantList homeworkQuestions READ homeworkQuestions NOTIFY selectionChanged)
     Q_PROPERTY(QString error READ error NOTIFY catalogChanged)
     Q_PROPERTY(QString labMessage READ labMessage NOTIFY labMessageChanged)
 
@@ -50,6 +53,9 @@ public:
     QString selectedId() const { return m_selected_id; }
     QVariantMap selectedTopic() const { return m_selected_topic; }
     QUrl lessonSource() const { return m_lesson_source; }
+    QString exerciseIntro() const { return m_exercise_intro; }
+    QVariantList inClassQuestions() const { return m_in_class; }
+    QVariantList homeworkQuestions() const { return m_homework; }
     QString error() const { return m_error; }
     QString labMessage() const { return m_lab_message; }
 
@@ -73,6 +79,8 @@ private:
     void rebuild_chapter_graph();
     void rebuild_topic_graph();
     void set_chapter_by_id(const QString& chapter_id);
+    void load_exercises();
+    void bind_exercises();
     void clear_lab_message();
 
     QString m_root;
@@ -94,6 +102,10 @@ private:
     QString m_selected_id;
     QVariantMap m_selected_topic;
     QUrl m_lesson_source;
+    QVariantMap m_exercise_bank;
+    QString m_exercise_intro;
+    QVariantList m_in_class;
+    QVariantList m_homework;
     QString m_error;
     QString m_lab_message;
 };

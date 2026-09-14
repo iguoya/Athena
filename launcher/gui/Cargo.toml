@@ -13,6 +13,8 @@ slint = "1.17"
 # Slint 的事件循环做深度集成，在定时器里 try_recv 就行。
 tray-icon = "0.25"
 muda = "0.20"
+# 各应用的图标是 SVG，运行时渲染成位图交给界面。
+resvg = "0.45"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 # 只为一件事：把窗口带到眼前。macOS 不会自动把别的 Space 上的窗口移过来，

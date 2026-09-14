@@ -26,6 +26,7 @@ import {
   itemStem,
   itemSummary,
   orderItems,
+  practiceBatch,
   shuffled,
   trackStats,
   vocabFormProbe,
@@ -156,6 +157,8 @@ interface Session {
 }
 
 const runtimes = new Map<string, TrackRuntime>();
+const PRACTICE_SESSION_SIZE = 20;
+const REVIEW_SESSION_SIZE = 30;
 const sourceCatalog = new Map<string, ContentSource>();
 const voiceRecorder = new VoiceRecorder();
 let curriculum: Curriculum;
@@ -693,10 +696,8 @@ function sessionOf(runtime: TrackRuntime, deck: Deck, items: DeckItem[], mode: S
 }
 
 function startPractice(runtime: TrackRuntime, items: DeckItem[], focusId?: string): void {
-  const ordered = orderItems(items, review, now());
-  const next = sessionOf(runtime, runtime.deck, ordered, "practice", "先判断，再看解析");
-  const index = focusId ? ordered.findIndex((item) => item.id === focusId) : 0;
-  next.index = index >= 0 ? index : 0;
+  const batch = practiceBatch(items, review, now(), PRACTICE_SESSION_SIZE, focusId);
+  const next = sessionOf(runtime, runtime.deck, batch, "practice", "先判断，再看解析");
   openSession(next, runtime.passage);
 }
 
@@ -719,7 +720,7 @@ function startDueSession(): void {
   for (const runtime of runtimes.values()) {
     for (const item of orderItems(runtime.deck.items, review, stamp)) {
       const state = review.get(item.id);
-      if (state && isDue(state, stamp)) {
+      if (state && isDue(state, stamp) && items.length < REVIEW_SESSION_SIZE) {
         items.push({ item, runtime, deck: runtime.deck });
       }
     }
@@ -1611,6 +1612,34 @@ function fail(error: unknown): void {
   )}</p></section>`;
 }
 
+async function loadTrackDeck(track: Track): Promise<Deck> {
+  const paths = track.decks?.length ? track.decks : track.deck ? [track.deck] : [];
+  if (paths.length === 0) {
+    throw new Error(`${track.id} 没有配置练习内容`);
+  }
+  const decks = await Promise.all(paths.map(loadDeck));
+  const first = decks[0]!;
+  for (const deck of decks) {
+    if (deck.topic_id !== track.id || (decks.length > 1 && deck.kind !== first.kind)) {
+      throw new Error(`${track.id} 的内容单元 topic_id 或 kind 不一致`);
+    }
+  }
+  const seenRefs = new Set<string>();
+  const sourceRefs = decks.flatMap((deck) => deck.source_refs).filter((ref) => {
+    const key = JSON.stringify(ref);
+    if (seenRefs.has(key)) {
+      return false;
+    }
+    seenRefs.add(key);
+    return true;
+  });
+  return {
+    ...first,
+    source_refs: sourceRefs,
+    items: decks.flatMap((deck) => deck.items),
+  };
+}
+
 async function boot(): Promise<void> {
   const [info, loaded, loadedSources] = await Promise.all([loadAppInfo(), loadCurriculum(), loadSourceCatalog()]);
   curriculum = loaded;
@@ -1626,7 +1655,7 @@ async function boot(): Promise<void> {
     curriculum.stages.flatMap((stage) =>
       stage.tracks.map(async (track: Track) => {
         const [deck, assessment, passage] = await Promise.all([
-          loadDeck(track.deck),
+          loadTrackDeck(track),
           loadDeck(track.assessment),
           track.passage ? loadText(track.passage) : Promise.resolve(undefined),
         ]);

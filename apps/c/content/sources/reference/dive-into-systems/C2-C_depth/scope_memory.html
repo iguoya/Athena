@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dive Into Systems</title>
+    <meta name="generator" content="Antora 2.2.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6C7YGP3BE6"></script>
+    <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','G-6C7YGP3BE6')</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">Dive Into Systems</a>
+      <div class="navbar-item">
+        <input id="search-input" type="text" placeholder="Search book...">
+      </div>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="diveintosystems" data-version="1.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Dive Into Systems</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Dive Into Systems</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../index.html">Authors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../copyright.html">Copyright</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../acknowledgements.html">Acknowledgements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../preface.html">Preface</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">0. Introduction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C1-C_intro/index.html">1. By the C, the Beautiful C</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/getting_started.html">1.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/input_output.html">1.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/conditionals.html">1.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/functions.html">1.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/arrays_strings.html">1.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/structs.html">1.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/summary.html">1.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C1-C_intro/exercises.html">1.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">2. A Deeper Dive Into C</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="scope_memory.html">2.1. Parts of Program Memory and Scope</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers.html">2.2. C Pointer Variables</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="pointers_functions.html">2.3. Pointers and Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="dynamic_memory.html">2.4. Dynamic Memory Allocation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="arrays.html">2.5. Arrays in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="strings.html">2.6. Strings and the String Library</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="structs.html">2.7. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="IO.html">2.8. Input / Output in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="advanced.html">2.9. Advanced C Features</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_switch.html">2.9.1. Constants, switch, enum, and typedef</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_cmd_line_args.html">2.9.2. Command Line Arguments</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_voidstar.html">2.9.3. The void* Type</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_pointer_arithmetic.html">2.9.4. Pointer Arithmetic</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_libraries.html">2.9.5. C Libraries: Using, Compiling and Linking</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_writing_libraries.html">2.9.6. Writing and using your own C libraries (and compiling multiple .c and .h files)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="advanced_assembly.html">2.9.7. Compiling C to Assembly and Compiling Assembly Code</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="summary.html">2.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="exercises.html">2.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C3-C_debug/index.html">3. C Debugging Tools</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb.html">3.1. Debugging with GDB</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_commands.html">3.2. GDB Commands in Detail</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/valgrind.html">3.3. Debugging Memory with Valgrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_advanced.html">3.4. Advanced GDB Features</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_assembly.html">3.5. Debugging Assembly Code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/gdb_pthreads.html">3.6. Debugging Multi-threaded Programs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C3-C_debug/summary.html">3.7. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/index.html">4. Binary and Data Representation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bases.html">4.1. Number Bases and Unsigned Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/conversion.html">4.2. Converting Between Bases</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/signed.html">4.3. Signed Binary Integers</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C4-Binary/arithmetic.html">4.4. Binary Integer Arithmetic</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_addition.html">4.4.1. Addition</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_subtraction.html">4.4.2. Subtraction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C4-Binary/arithmetic_mult_div.html">4.4.3. Multiplication &amp; Division</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/overflow.html">4.5. Overflow</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/bitwise.html">4.6. Bitwise Operators</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/byte_order.html">4.7. Integer Byte Order</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/floating_point.html">4.8. Real Numbers in Binary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/summary.html">4.9. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C4-Binary/exercises.html">4.10. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/index.html">5. What von Neumann Knew: Computer Architecture</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/hist.html">5.1. The Origins of Modern Computing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/von.html">5.2. The von Neumann Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/gates.html">5.3. Logic Gates</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C5-Arch/circuits.html">5.4. Circuits</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/arithlogiccircs.html">5.4.1. Arithmetic and Logic Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/controlcircs.html">5.4.2. Control Circuits</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C5-Arch/storagecircs.html">5.4.3. Storage Circuits</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/cpu.html">5.5. Building a Processor</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/instrexec.html">5.6. The Processor&#8217;s Execution of Program Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining.html">5.7. Pipelining Instruction Execution</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/pipelining_advanced.html">5.8. Advanced Pipelining Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/modern.html">5.9. Looking Ahead: CPUs Today</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/summary.html">5.10. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C5-Arch/exercises.html">5.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C6-asm_intro/index.html">6. Under the C: Dive into Assembly</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/index.html">7. 64-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/basics.html">7.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/common.html">7.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arithmetic.html">7.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C7-x86_64/conditional_control_loops.html">7.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/preliminaries.html">7.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/if_statements.html">7.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C7-x86_64/loops.html">7.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/functions.html">7.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/recursion.html">7.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/arrays.html">7.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/matrices.html">7.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/structs.html">7.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/buffer_overflow.html">7.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C7-x86_64/exercises.html">7.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/index.html">8. 32-bit x86 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/basics.html">8.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/common.html">8.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arithmetic.html">8.3. Additional Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C8-IA32/conditional_control_loops.html">8.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/preliminaries.html">8.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/if_statements.html">8.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C8-IA32/loops.html">8.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/functions.html">8.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/recursion.html">8.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/arrays.html">8.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/matrices.html">8.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/structs.html">8.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/buffer_overflow.html">8.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C8-IA32/exercises.html">8.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/index.html">9. ARMv8 Assembly</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/basics.html">9.1. Assembly Basics</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/common.html">9.2. Common Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arithmetic.html">9.3. Arithmetic Instructions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C9-ARM64/conditional_control_loops.html">9.4. Conditional Control and Loops</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/preliminaries.html">9.4.1. Preliminaries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/if_statements.html">9.4.2. If Statements</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C9-ARM64/loops.html">9.4.3. Loops</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/functions.html">9.5. Functions in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/recursion.html">9.6. Recursion</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/arrays.html">9.7. Arrays in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/matrices.html">9.8. Matrices in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/structs.html">9.9. Structs in Assembly</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/buffer_overflow.html">9.10. Buffer Overflows</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C9-ARM64/exercises.html">9.11. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../C10-asm_takeaways/index.html">10. Key Assembly Takeaways</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C11-MemHierarchy/index.html">11. Storage and the Memory Hierarchy</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/mem_hierarchy.html">11.1. The Memory Hierarchy</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/devices.html">11.2. Storage Devices</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/locality.html">11.3. Locality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/caching.html">11.4. Caching</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/cachegrind.html">11.5. Cache Analysis and Cachegrind</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/coherency.html">11.6. Looking Ahead: Caching on Multicore Processors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/summary.html">11.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C11-MemHierarchy/exercises.html">11.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C12-CodeOpt/index.html">12. Code Optimization</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/basic.html">12.1. First Steps</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/loops_functions.html">12.2. Other Compiler Optimizations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/memory_considerations.html">12.3. Memory Considerations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C12-CodeOpt/summary.html">12.4. Summary</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/index.html">13. The Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/impl.html">13.1. Booting and Running</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/processes.html">13.2. Processes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/vm.html">13.3. Virtual Memory</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C13-OS/ipc.html">13.4. Interprocess Communication</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_signals.html">13.4.1. Signals</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_msging.html">13.4.2. Message Passing</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C13-OS/ipc_shm.html">13.4.3. Shared Memory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/advanced.html">13.5. Summary and Other OS Functionality</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C13-OS/exercises.html">13.6. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/index.html">14. Leveraging Shared Memory in the Multicore Era</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/multicore.html">14.1. Programming Multicore Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/posix.html">14.2. POSIX Threads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/synchronization.html">14.3. Synchronizing Threads</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/mutex.html">14.3.1. Mutual Exclusion</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/semaphores.html">14.3.2. Semaphores</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/other_syncs.html">14.3.3. Other Synchronization Constructs</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C14-SharedMemory/performance.html">14.4. Measuring Parallel Performance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_basics.html">14.4.1. Parallel Performance Basics</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../C14-SharedMemory/performance_advanced.html">14.4.2. Advanced Topics</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/cache_coherence.html">14.5. Cache Coherence</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/thread_safety.html">14.6. Thread Safety</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/openmp.html">14.7. Implicit Threading with OpenMP</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/summary.html">14.8. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C14-SharedMemory/exercises.html">14.9. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../C15-Parallel/index.html">15. Looking Ahead: Other Parallel Systems</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/gpu.html">15.1. Hardware Acceleration and CUDA</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/distrmem.html">15.2. Distributed Memory Systems</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../C15-Parallel/cloud.html">15.3. To Exascale and Beyond</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix1/index.html">16. Appendix 1: Chapter 1 for Java Programmers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/getting_started.html">16.1. Getting Started Programming in C</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/input_output.html">16.2. Input/Output (printf and scanf)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/conditionals.html">16.3. Conditionals and Loops</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/functions.html">16.4. Functions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/arrays_strings.html">16.5. Arrays and Strings</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/structs.html">16.6. Structs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/summary.html">16.7. Summary</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix1/exercises.html">16.8. Exercises</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../Appendix2/index.html">17. Appendix 2: Using Unix</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/cmdln_basics.html">17.1. Unix Command Line and the Unix File System</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/man.html">17.2. Man and the Unix Manual</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ssh_scp.html">17.3. Remote Access</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/editors.html">17.4. Unix Editors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/makefiles.html">17.5. make and Makefiles</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/grep.html">17.6 Searching: grep and find</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/chmod.html">17.7 File Permissions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/tar.html">17.8 Archiving and Compressing Files</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pskill.html">17.9 Process Control</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/timing.html">17.10 Timing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/history.html">17.11 Command History</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/ioredirect.html">17.12 I/0 Redirection</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/pipe.html">17.13 Pipes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/dotfiles.html">17.14 Dot Files and .bashrc</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/shellprog.html">17.15 Shell Programming</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../Appendix2/sysinfo.html">17.16 Getting System Information</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Dive Into Systems</span>
+    <span class="version">1.2</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Dive Into Systems</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.2</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Dive Into Systems</a></li>
+    <li><a href="index.html">2. A Deeper Dive Into C</a></li>
+    <li><a href="scope_memory.html">2.1. Parts of Program Memory and Scope</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<article class="doc">
+<div class="sect1">
+<h2 id="_parts_of_program_memory_and_scope"><a class="anchor" href="#_parts_of_program_memory_and_scope"></a>2.1. Parts of Program Memory and Scope</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following C program shows examples of functions, parameters, and local and
+global variables (function comments are omitted to shorten this code listing):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* An example C program with local and global variables */
+#include &lt;stdio.h&gt;
+
+int max(int n1, int n2); /* function prototypes */
+int change(int amt);
+
+int g_x;  /* global variable: declared outside function bodies */
+
+int main(void) {
+    int x, result;   /* local variables: declared inside function bodies */
+
+    printf("Enter a value: ");
+    scanf("%d", &amp;x);
+    g_x = 10;       /* global variables can be accessed in any function */
+
+    result = max(g_x, x);
+    printf("%d is the largest of %d and %d\n", result, g_x, x);
+
+    result = change(10);
+    printf("g_x's value was %d and now is %d\n", result, g_x);
+
+    return 0;
+}
+
+int max(int n1, int n2) {  /* function with two parameters */
+    int val;    /* local variable */
+
+    val = n1;
+    if ( n2 &gt; n1 ) {
+        val = n2;
+    }
+    return val;
+}
+
+int change(int amt) {
+    int val;
+
+    val = g_x;  /* global variables can be accessed in any function */
+    g_x += amt;
+    return val;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example shows program variables with different scope.
+A variable&#8217;s <strong>scope</strong> defines when its name has meaning.  In other words,
+scope defines the set of program code blocks in which a variable
+is bound to (associated with) a program memory location
+and can be used by program code.</p>
+</div>
+<div class="paragraph">
+<p>Declaring a variable outside of any function body creates a <strong>global variable</strong>.
+Global variables remain permanently in scope and can be used by any code
+in the program because they&#8217;re always bound to one specific memory location.
+Every
+global variable must have a unique name&#8201;&#8212;&#8201;its name uniquely identifies a
+specific storage location in program memory for the entire duration
+of the program.</p>
+</div>
+<div class="paragraph">
+<p><strong>Local variables and parameters</strong> are only in scope inside the function
+in which they are defined.  For example, the <code>amt</code> parameter
+is in scope only inside the <code>change</code> function.  This means that only
+statements within the <code>change</code> function body can access the <code>amt</code>
+parameter, and an instance of the <code>amt</code> parameter is bound to a
+specific memory storage location only within a specific active
+execution of the function.  Space to store a parameter&#8217;s
+value is allocated on the
+stack when the function gets called, and it is deallocated from the stack
+when the function returns.  Each activation of a function gets its own
+bindings for its parameters and local variables.  Thus, for recursive
+function calls, each call (or activation) gets a separate stack
+frame containing space for its parameters and local variables.</p>
+</div>
+<div class="paragraph">
+<p>Because parameters and
+local variables are only in scope inside the function that defines them,
+different functions can use the same names for local variables and
+parameters.  For example, both
+the <code>change</code> and the <code>max</code> functions have a local variable named <code>val</code>.
+When code in the <code>max</code> function refers to <code>val</code> it refers to its
+local variable <code>val</code> and not to the <code>change</code> function&#8217;s local variable
+<code>val</code> (which is not in scope inside the <code>max</code> function.)</p>
+</div>
+<div class="paragraph">
+<p>While there may occasionally be times when using global variables in C programs
+is necessary, we strongly recommend that you <em>avoid programming with global
+variables whenever possible</em>.  Using only local variables and parameters yields
+code that&#8217;s more modular, more general-purpose, and easier to debug.  Also, because
+a function&#8217;s parameters and local variables are only allocated in program memory
+when the function is active, they may result in more space-efficient
+programs.</p>
+</div>
+<div class="paragraph">
+<p>Upon launching a new program, the operating system allocates the new program&#8217;s
+address space.  A program&#8217;s <strong>address space</strong> (or memory space) represents
+storage locations for everything it needs in its execution, namely storage for
+its instructions and data.  A program&#8217;s address space can be thought of as an
+array of addressable bytes; each used address in the program&#8217;s address space
+stores all or part of a program instruction or data value (or some additional
+state necessary for the program&#8217;s execution).</p>
+</div>
+<div id="_memoryparts" class="paragraph">
+<p>A program&#8217;s memory space is divided into several parts, each
+of which is used to store a different kind of entity in the process&#8217;s
+address space.  <a href="#FigMemParts">Figure 1</a> illustrates the parts of a program&#8217;s
+memory space.</p>
+</div>
+<div id="FigMemParts" class="imageblock text-center">
+<div class="content">
+<img src="_images/memparts.png" alt="The parts of program memory arranged into a program&#8217;s address space.  At the top (addresses closer to 0), we have regions for the OS, code (instructions), data (globals), and the heap (dynamically allocated memory).  At the other end of the address space (maximum address), the stack stores local variables and function parameters." width="450">
+</div>
+<div class="title">Figure 1. The parts of a program&#8217;s address space.</div>
+</div>
+<div class="paragraph">
+<p>The top of a program&#8217;s memory is reserved for use by the operating system, but
+the remaining parts are usable by the running program.   The program&#8217;s
+instructions are stored in the <em>code</em> section of the memory.  For example, the
+program listed above stores instructions for the <code>main</code>, <code>max</code>, and <code>change</code>
+functions in this region of memory.</p>
+</div>
+<div class="paragraph">
+<p>Local variables and parameters reside in the portion of memory for the <em>stack</em>.
+Because the amount of stack space grows and shrinks over the program&#8217;s
+execution as functions are called and returned from, the stack part of memory
+is typically allocated near the bottom of memory (at the highest memory
+addresses) to leave space for it to change.  Stack storage space for local
+variables and parameters exists only when the function is active (within the
+stack frame for the function&#8217;s activation on the stack.)</p>
+</div>
+<div class="paragraph">
+<p>Global variables are stored in the <em>data</em> section.  Unlike the stack, the data
+region does not grow or shrink&#8201;&#8212;&#8201;storage space for globals persists for the
+entire run of the program.</p>
+</div>
+<div class="paragraph">
+<p>Finally, the <em>heap</em> portion of memory is the part of a program&#8217;s address space
+associated with dynamic memory allocation.  The heap is typically located far
+from stack memory, and grows into higher addresses as more space is dynamically
+allocated by the running program.</p>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright (C) 2020 Dive into Systems, LLC.</p>
+
+  <p><i>Dive into Systems,</i> is licensed under the Creative Commons <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a> (CC BY-NC-ND 4.0).</p>
+</footer>
+<script src="../_/js/site.js"></script>
+<script src="../_/js/vendor/lunr.js"></script>
+<script>antoraLunr.init("../_/../search_index.json")</script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
