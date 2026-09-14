@@ -145,6 +145,24 @@ Eigenvectors。章节 URL 形如 `ila/ch07_determinants/ch07.html`。已核对�
 **核对暴露的本应用缺漏**（ADR 0017 第 5 节）：点积/向量内积、克拉默法则、
 三维线性变换——前两项是数学二考纲内容，待补。
 
+## 九、GitHub 上的开源教材（ADR 0022 第 2b、2c 节）
+
+使用者表态：**不卡在版权顾虑上，互联网上（特别是 GitHub 上）找得到的资料教材
+都可综合参考引用**。本应用自用、不分发、不商业。实践中仍优先挑**真开源**的，
+理由是工程上更好用——链接稳定、有源码、能精确引用到某条定义或某道习题的编号，
+第三方托管的扫描 PDF 做不到这些。
+
+| 仓库 | 许可 | 用途 | 已核对（2026-09-14 读源码） |
+|---|---|---|---|
+| **`selinger/linear-algebra`** | CC BY 4.0 | **第二部分（教材化）的主力来源**。Selinger 修订自 Lyryx《A First Course in Linear Algebra》←Kuttler《Elementary Linear Algebra》，层次偏应用少抽象。节结构：`outcome`（学习目标）→`definition`→`example`+`solution`，**`baseText/exercises/` 下有一一对应的配套习题** | `content/Determinants-TwoAndThree.tex` 定义 `two-by-two-determinant`：`det(A)=ad−bc`；例题 `[[2,4],[-1,6]]`→16。`exercises/` 同名文件第 1 题四问：`[[1,3],[0,2]]`、`[[0,3],[0,2]]`、`[[4,3],[6,2]]`、`[[-3,4],[-1,2]]` |
+| **`kf-liu/The-Art-of-Linear-Algebra-zh-CN`** | CC0 | **中文 + 图解**，Strang《Linear Algebra for Everyone》的图解笔记；仓库含中文 PDF、LaTeX 源码、PNG 图 | 以五种分解组织：CR / LU / QR / QΛQ' / UΣV'；另有「Map of Eigenvalues」「Matrix World」全局图 |
+| `rbeezer/fcla` | GFDL | 备用的完整开源教材 | 未逐节核对 |
+| `siefkenj/LinearAlgebra` | CC BY-SA 4.0 | IBL 探究式，题目驱动 | 未逐节核对 |
+| `xiesp/IntroductionToLinearAlgebra-Chinese-note`、`zlotus/notes-linear-algebra` 等 | 未标注 | Strang / MIT 18.06 的中文笔记，可作**讲法**对照 | 未逐节核对；笔记类质量参差，引用前须按正确数学语义核对 |
+
+**不采用**：`Yoget/Tongji-University-Linear-algebra` 一类同济配套资料——理由不是
+版权，是 ADR 0022 第 3 节那条分工（同济只作坐标，不作讲解来源）。
+
 ## 使用约定
 
 - 参考的是**该怎么讲、常见误区在哪、机制怎么设计**，不是它们的组织方式。

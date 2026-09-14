@@ -56,6 +56,36 @@ ADR 0020 的严谨视图要的是**准确**，不是形式化。可汗学院讲�
 **中文优先。** 使用者用中文学习且基础薄弱，全英文来源不该作为第一顺位；
 Immersive Math 用在需要一条有编号、可引用的准确陈述时。
 
+### 2b. 来源范围：不卡在版权顾虑上（2026-09-14 追加）
+
+使用者明确表态：**不要考虑版权问题，只要能在互联网平台找到的资料教材，特别是
+GitHub 上找到的，都可以综合参考引用。** 本应用是自用学习软件，不分发、不商业。
+
+据此：
+
+- **不因为「这本书有版权」而拒绝参考它**，也不要反复提示风险——已经表过态的事
+  重提等于不听。
+- 但**仍然坚持「综合参考、按正确数学语义重新组织」，不整段照搬**。这一条与版权
+  无关，是 ADR 0017 早就定下的内容质量要求：照抄别人的话，读者得到的是一本更差的
+  教材复印件，而不是为他这个起点写的内容。
+- **引用一律标出处**，方便他回去核对——这是 ADR 0017 第 3 节的要求，不受本条影响。
+
+**实践建议：优先找真开源的（CC0 / CC BY），理由是工程上更好用，不是法律顾虑。**
+开源教材有稳定链接、有 LaTeX 源码，能精确引用到某条定义、某道习题的编号；第三方
+托管的扫描 PDF 链接易失效、无法精确定位、也无法核对是否被改动过。
+
+### 2c. GitHub 上已核对的开源教材（2026-09-14 实地读取源码确认）
+
+| 仓库 | 许可 | 为什么有用 | 已核对到的内容 |
+|---|---|---|---|
+| **`selinger/linear-algebra`** | **CC BY 4.0** | **最有用的一个。** Peter Selinger 修订自 Lyryx《A First Course in Linear Algebra》，再往上是 Kuttler《Elementary Linear Algebra》——「Elementary」正是偏应用少抽象的层次。每节结构是 `outcome`（学习目标）→ `definition` → `example` + `solution`，**并在 `baseText/exercises/` 下有一一对应的配套习题源码**，直接解决了 ADR 0019 的习题来源问题 | `content/Determinants-TwoAndThree.tex`：定义 `two-by-two-determinant` 给出 `det(A) = ad − bc`；例题 `[[2,4],[-1,6]]`，解为 `2·6 − 4·(−1) = 16`。`exercises/Determinants-TwoAndThree.tex` 第 1 题四问依次为 `[[1,3],[0,2]]`、`[[0,3],[0,2]]`、`[[4,3],[6,2]]`、`[[-3,4],[-1,2]]`，第 2 题为四个三阶行列式，其 (a) 恰是 `|1 2 3; 4 5 6; 7 8 9|` |
+| **`kf-liu/The-Art-of-Linear-Algebra-zh-CN`** | **CC0（公共领域）** | **中文 + 图解**。Gilbert Strang《Linear Algebra for Everyone》的图解笔记中文版，仓库里有中文 PDF、LaTeX 源码与 PNG 图 | 以五种矩阵分解为组织框架：CR、LU、QR、QΛQ'、SVD；另有「Map of Eigenvalues」「Matrix World」两张全局图 |
+| `rbeezer/fcla` | GFDL | Beezer《A First Course in Linear Algebra》，另一份完整开源教材 | 备用，未逐节核对 |
+| `siefkenj/LinearAlgebra` | CC BY-SA 4.0 | IBL 风格（探究式），题目驱动 | 备用，未逐节核对 |
+
+**注意**：`Yoget/Tongji-University-Linear-algebra` 一类同济配套资料**不采用**——
+理由不是版权，是第 3 节那条分工。
+
 ### 3. 同济教材退回「坐标」角色
 
 同济《高等数学》《工程数学·线性代数》**继续作为 `textbook_ref` 的章节坐标**
