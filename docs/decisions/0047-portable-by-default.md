@@ -117,8 +117,8 @@
 
 - **`apps/cpp` 在 Windows 上编不过**：MSYS2 现行的 giomm 2.86 与 glib 2.90 头文件
   冲突（`GDBusActionGroupClass` 重复声明）。本仓库这边没有障碍，倒在 gtkmm 自己的
-  头文件上——**上游问题，成本不由我们控制**。`apps/cpp` 支持 macOS 与 Ubuntu，
-  CI 里不再保留探测 job。
+  头文件上。**这条 2026-09-15 已解决**：四层障碍里三层是我们自己的代码与配置，
+  上游那层用一个编译期垫片绕开，`apps/cpp` 现在三平台全绿（见 ADR 0049 的补记）。
 - **`apps/dsa` 的实验编译不认 MSVC 的 `cl.exe`**：它的命令行参数是另一套，要为它
   单独写一份编译调用。Windows 上装 MSYS2/MinGW 或 LLVM 即可，`g++` / `clang++`
   都认得。

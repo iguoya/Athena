@@ -93,29 +93,14 @@ jobs:
         # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
         run: xvfb-run -a python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
-  # apps/cpp 不支持 Windows：GTK4 在 MSYS2 上卡在 giomm 2.86 与 glib 2.90 的
-  # 头文件冲突，是上游问题、不由我们决定，成本过高就整体排除（ADR 0049）。
-  # 这里不留探测 job——一个永远红着的"实验性"格子不产生决策价值，只让人以为
-  # 我们还在支持 Windows。真要重新评估，那该是一次有意识的决定。
-
-  # 留着当探测位，监测的是一个**具体且预期会变**的条件：MSYS2 把 glibmm 更新到
-  # 2.89+（ADR 0049 实测更正）。
-  #
-  # 属于我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）已经修完。剩下的不是
-  # 我们的问题，也不是上游没修——glib 2.89.2 起若干类型改成 final type，glibmm
-  # 2.89.0（2026-08-10）就已经跟着改了包装方式。卡住的是 MSYS2 仓库里 glib 已到
-  # 2.90、glibmm 还停在 2.86 这个脱节窗口。包一跟上，这一格自己就绿了。
-  #
-  # meson.build 里加了 glib 与 glibmm 的配套检查，所以现在会在**配置期**直接说
-  # 「两者不配套」，而不是到编译期吐一串看不懂的 conflicting declaration。
-  #
-  # 这和 ADR 0049 说的「不留假装在支持的探测位」不冲突：那条针对的是没人读、
-  # 不产生决策价值的格子；这里监测的条件明确，判据也明确。
+  # 2026-09-15 打通并转正。曾经卡住的那三个 conflicting declaration 是 glib 2.90
+  # 与 MSYS2 现有 glibmm 2.86 的名字冲突，由 compat/glib_final_type_shim.h 绕开；
+  # 同批修掉的还有我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）和缺失的
+  # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
   cpp-windows:
-    name: C++ 教程（Windows，探测上游）
+    name: C++ 教程（Windows）
     runs-on: windows-latest
     timeout-minutes: 45
-    continue-on-error: true
     defaults:
       run:
         shell: msys2 {0}
@@ -276,10 +261,10 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py ${{ matrix.app }}
 
-  # 驾驶学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
+  # 驾考学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
   # scripts/check.py（ADR 0007）。
   driving:
-    name: 驾驶学习（${{ matrix.os }}）
+    name: 驾考学习（${{ matrix.os }}）
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:

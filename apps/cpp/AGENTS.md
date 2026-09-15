@@ -120,13 +120,13 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
     不让调用方依赖用不到的方法。
   - **迪米特法则（LoD）**：模块只与直接协作者交谈；不通过持有的对象链式深入访问
     第三方状态，不为省事让下层反向穿透到窗口。
-- 跨平台能力同样受上述层次和依赖方向约束。当前支持 macOS 与 Ubuntu；Windows 暂时
-  卡在一个几天的滚动更新窗口里：MSYS2 2026-09-09 把 glib 升到 2.90，而能配套的
-  glibmm 上游 2026-09-13 才发布稳定版，下游尚未打包（见主仓库 ADR 0049 的时间线）。
-  **既不是 gtkmm 不能用于 Windows，也不是谁做错了**——MSYS2 跟上之后自己就好——代码里属于我们自己的
-  POSIX 专有写法已经清干净，写新代码时继续避开它们（用 `std::numbers::pi` 而不是
-  `M_PI`，用 `LANGUAGE` 环境变量而不是 `LC_MESSAGES`），上游对齐后就能直接跑。
-  相关改动遵守：
+- 跨平台能力同样受上述层次和依赖方向约束。**三个平台都支持**（2026-09-15 打通
+  Windows）。Windows 上有一处临时垫片 `compat/glib_final_type_shim.h`：glib 2.90
+  把几个类型改用 `G_DECLARE_FINAL_TYPE`，而 MSYS2 现有的 glibmm 2.86 还按旧方式
+  前置声明，垫片把 C++ 绑定那三个名字改掉以避开冲突（主仓库 ADR 0049）。MSYS2
+  更新 glibmm 到 2.89+ 后删掉垫片即可。写新代码时继续避开 POSIX 专有写法
+  （用 `std::numbers::pi` 而不是 `M_PI`，用 `LANGUAGE` 环境变量而不是
+  `LC_MESSAGES`），  相关改动遵守：
   - 共享层、领域层、教学实现和页面业务逻辑不得包含 `__APPLE__`、Cocoa/WKWebView、
     `.app` 路径或 macOS 命令；平台差异只允许留在 `render/`、`platform/`、图标/打包
     适配层，或经已有抽象接口（例如 `DocumentView`）隔离。
