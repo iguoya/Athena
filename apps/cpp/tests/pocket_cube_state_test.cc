@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <cmath>
+#include <numbers>
 
 namespace {
 
@@ -149,7 +150,7 @@ TEST(CubeStateTest, TurnAngleDegreesMatchesActualCoordinateChange) {
     const CubeState solved = make_solved_cube();
     for (const Move& move : next_move_set()) {
         const CubeState turned = apply_move(solved, move);
-        const double radians = turn_angle_degrees(move) * M_PI / 180.0;
+        const double radians = turn_angle_degrees(move) * std::numbers::pi / 180.0;
         const FaceLayout layout = face_layout(move.face);
 
         for (size_t i = 0; i < solved.corners.size(); ++i) {

@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <map>
 #include <cmath>
+#include <numbers>
 #include <sstream>
 
 namespace {
@@ -125,17 +126,17 @@ Gtk::DrawingArea* make_mastery_donut_chart(
 
             // 底环：未开始/无数据时的占位轨道。
             cr->set_source_rgba(0, 0, 0, 0.08);
-            cr->arc(cx, cy, radius, 0, 2 * M_PI);
+            cr->arc(cx, cy, radius, 0, 2 * std::numbers::pi);
             cr->stroke();
 
             if (total > 0) {
-                double angle = -M_PI / 2;
+                double angle = -std::numbers::pi / 2;
                 const auto draw_segment =
                     [&](double value, const ChartColor& color) {
                         if (value <= 0) {
                             return;
                         }
-                        const double sweep = (value / total) * 2 * M_PI;
+                        const double sweep = (value / total) * 2 * std::numbers::pi;
                         cr->set_source_rgb(color.r, color.g, color.b);
                         cr->arc(cx, cy, radius, angle, angle + sweep);
                         cr->stroke();

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <numbers>
 
 namespace {
 
@@ -126,7 +127,7 @@ int corner_axis_sign(Face face, int u_sign, int v_sign, Axis axis) {
 // 公式，跟 turn_angle_degrees() 配合使用时，动画播到终点角度正好落在
 // apply_move() 算出的真实坐标上，不会跟状态跳变错位。
 Vec3 rotate_around_axis(const Vec3& p, Axis axis, double degrees) {
-    const double radians = degrees * M_PI / 180.0;
+    const double radians = degrees * std::numbers::pi / 180.0;
     const double c = cos(radians);
     const double s = sin(radians);
     switch (axis) {
@@ -322,8 +323,8 @@ Gtk::Widget* make_cube_3d_view(
     // (0,1,0) 算出的 z 分量正好是 sin(pitch)——pitch 为负会让 U 面转
     // 到背面被剔除、露出对面的 D，看起来就成了仰视（此前这里错写成了
     // 负值，见 review 记录）。
-    auto yaw = make_shared<double>(-M_PI / 4);
-    auto pitch = make_shared<double>(M_PI / 6.5);
+    auto yaw = make_shared<double>(-std::numbers::pi / 4);
+    auto pitch = make_shared<double>(std::numbers::pi / 6.5);
 
     area->set_draw_func(
         [state_provider, animation_provider, yaw, pitch](

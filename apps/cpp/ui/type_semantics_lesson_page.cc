@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <numbers>
 #include <map>
 #include <iostream>
 #include <stdexcept>
@@ -75,10 +76,10 @@ void rounded_box(
     bool dashed = false) {
     const double radius = 8.0;
     cr->begin_new_sub_path();
-    cr->arc(x + width - radius, y + radius, radius, -M_PI / 2, 0);
-    cr->arc(x + width - radius, y + height - radius, radius, 0, M_PI / 2);
-    cr->arc(x + radius, y + height - radius, radius, M_PI / 2, M_PI);
-    cr->arc(x + radius, y + radius, radius, M_PI, 3 * M_PI / 2);
+    cr->arc(x + width - radius, y + radius, radius, -std::numbers::pi / 2, 0);
+    cr->arc(x + width - radius, y + height - radius, radius, 0, std::numbers::pi / 2);
+    cr->arc(x + radius, y + height - radius, radius, std::numbers::pi / 2, std::numbers::pi);
+    cr->arc(x + radius, y + radius, radius, std::numbers::pi, 3 * std::numbers::pi / 2);
     cr->close_path();
     cr->set_source_rgb(fill.r, fill.g, fill.b);
     cr->fill_preserve();

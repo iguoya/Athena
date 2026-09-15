@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -72,7 +73,7 @@ void draw_edge(
     const double cy = y1 - r - 7.0;
     const ChartColor chip = chart_color(strong ? 0x0a58ca : 0x8a94a2);
     cr->set_source_rgb(chip.r, chip.g, chip.b);
-    cr->arc(cx, cy, r, 0.0, 2.0 * M_PI);
+    cr->arc(cx, cy, r, 0.0, 2.0 * std::numbers::pi);
     cr->fill();
 
     const string text = to_string(number);
