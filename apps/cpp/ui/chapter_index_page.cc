@@ -124,7 +124,7 @@ Gtk::Widget* make_chapter_index_page(const ChapterIndexSpec& spec) {
     column->append(*heading);
 
     if (spec.progress && spec.progress->total > 0) {
-        column->append(*make_progress_overview(*spec.progress));
+        column->append(*make_progress_overview(*spec.progress, spec.stats));
     }
 
     if (spec.knowledge_graph) {

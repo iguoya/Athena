@@ -1614,3 +1614,9 @@ button.quiz-wrong:disabled {
     color: @athena_muted;
     border: 1px solid @athena_border;
 }
+
+/* 由作答流水派生的统计卡（仓库 ADR 0052）。与上面四张「会了多少」的卡
+   区分开：这一行讲的是「最近做了多少」，用中性的灰蓝，不抢主色。 */
+.stat-tile-activity {
+    border-left-color: @athena_secondary;
+}

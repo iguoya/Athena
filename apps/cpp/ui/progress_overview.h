@@ -1,6 +1,7 @@
 #pragma once
 
 #include "registry/progress_stats.h"
+#include "storage/learning_store.h"
 
 #include <gtkmm.h>
 
@@ -13,4 +14,8 @@ using namespace std;
 // 本来就画在图谱的章节卡片上，再单开一页会让同一件事有两个入口。
 //
 // 统计口径和数据读取不属于该模块。
-Gtk::Widget* make_progress_overview(const CategoryProgress& progress);
+// stats 是由作答流水派生的量（仓库 ADR 0052）：记了就要给使用者看，
+// 否则等于没记。它与 progress 的区别是——progress 说「会了多少」，
+// stats 说「最近做了多少、坚持了几天」。
+Gtk::Widget* make_progress_overview(
+    const CategoryProgress& progress, const LearningStore::LearningStats& stats);

@@ -3,6 +3,7 @@
 #include "registry/chapter_catalog.h"
 #include "registry/knowledge_graph.h"
 #include "registry/progress_stats.h"
+#include "storage/learning_store.h"
 
 #include <gtkmm.h>
 
@@ -47,6 +48,9 @@ struct ChapterIndexSpec {
     // 进度不再单开一页：章节与知识点的逐条进度画在图谱的章节卡片上，
     // 概览放在同一页顶部，一个入口看完。
     optional<CategoryProgress> progress;
+    // 由作答流水派生的量（ADR 0052）。progress 说「会了多少」，它说
+    // 「最近做了多少、坚持了几天」，两者一起才是完整的回路。
+    LearningStore::LearningStats stats;
     function<void(const string& key)> on_open;
     function<void(const string& chapter_name)> on_open_chapter;
 };

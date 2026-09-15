@@ -65,7 +65,11 @@ TEST(ProgressOverviewTest, RendersAggregatedDataWithoutReadingStorage) {
         .mastery_sum = 8,
     };
 
-    auto* page = make_progress_overview(progress);
+    // 流水统计给一组有代表性的值：今天做过、连续三天、累计十二次。
+    const LearningStore::LearningStats stats{
+        .attempts_today = 2, .correct_today = 7, .answered_today = 9,
+        .streak_days = 3, .attempts_total = 12};
+    auto* page = make_progress_overview(progress, stats);
 
     ASSERT_NE(page, nullptr);
     EXPECT_TRUE(page->has_css_class("progress-overview"));
@@ -91,6 +95,27 @@ TEST(ProgressOverviewTest, DonutReservesSpaceForItsFullStroke) {
 
     EXPECT_EQ(donut->get_content_width(), 230);
     EXPECT_EQ(donut->get_content_height(), 230);
+}
+
+TEST(ProgressOverviewTest, ShowsFiguresDerivedFromTheAttemptLog) {
+    // 记了却不给使用者看，等于没记（仓库 ADR 0052）——这条盯住那一行有没有
+    // 真的显示出来，而不是只落在库里。
+    CategoryProgress progress;
+    progress.total = 10;
+    progress.mastered = 3;
+
+    const LearningStore::LearningStats stats{
+        .attempts_today = 2, .correct_today = 7, .answered_today = 9,
+        .streak_days = 3, .attempts_total = 12};
+
+    auto* page = make_progress_overview(progress, stats);
+    ASSERT_NE(page, nullptr);
+
+    EXPECT_NE(find_label(*page, "今天完成的考核"), nullptr);
+    EXPECT_NE(find_label(*page, "7 / 9"), nullptr) << "今日答对 / 答题没显示";
+    EXPECT_NE(find_label(*page, "3 天"), nullptr) << "连续日没显示";
+    EXPECT_NE(find_label(*page, "12"), nullptr) << "累计次数没显示";
+    EXPECT_NE(find_label(*page, "连续有记录"), nullptr);
 }
 
 } // namespace

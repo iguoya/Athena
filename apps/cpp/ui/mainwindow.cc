@@ -572,6 +572,13 @@ Gtk::Widget* MainWindow::create_index_page(const string& category_name) {
         // 不再单开「学习进度」页。
         spec.progress = aggregate_category_progress(
             m_catalog, category_name, mastery_only);
+        // 由作答流水派生的量（ADR 0052）。读失败不该让整页打不开——
+        // 统计缺了是遗憾，页面没了是故障。
+        try {
+            spec.stats = m_learning_store->load_stats();
+        } catch (const exception& error) {
+            cerr << "Failed to load learning stats: " << error.what() << endl;
+        }
     }
     spec.on_open = [this, category_name](const string& page_key) {
         navigate_to(category_name, page_key);

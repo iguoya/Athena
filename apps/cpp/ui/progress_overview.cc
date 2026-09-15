@@ -4,7 +4,8 @@
 
 #include <map>
 
-Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
+Gtk::Widget* make_progress_overview(
+    const CategoryProgress& progress, const LearningStore::LearningStats& stats) {
     auto page = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 16);
     page->set_hexpand(true);
     page->add_css_class("progress-overview");
@@ -46,6 +47,41 @@ Gtk::Widget* make_progress_overview(const CategoryProgress& progress) {
     // 和前三张一起正好是「总数 + 三种状态」。
     add_tile(
         to_string(progress.not_started), "未涉及（0 星）", "stat-tile-average");
+
+    // 由作答流水派生的一行（ADR 0052）。上面四张卡说「会了多少」，这一行说
+    // 「最近做了多少、坚持了几天」——两者读的是同一份记录的不同切片。
+    // 文案只陈述发生了什么，不做鼓励也不做恐吓；连续日断了就从 1 重新计。
+    auto activity_row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 16);
+    activity_row->set_homogeneous(true);
+    activity_row->set_hexpand(true);
+    page->append(*activity_row);
+
+    const auto add_activity_tile =
+        [activity_row](const string& value, const string& label) {
+            auto tile = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 2);
+            tile->add_css_class("stat-tile");
+            tile->add_css_class("stat-tile-activity");
+            auto value_label = Gtk::make_managed<Gtk::Label>(value);
+            value_label->add_css_class("stat-tile-value");
+            value_label->set_halign(Gtk::Align::START);
+            auto text_label = Gtk::make_managed<Gtk::Label>(label);
+            text_label->add_css_class("stat-tile-label");
+            text_label->set_halign(Gtk::Align::START);
+            tile->append(*value_label);
+            tile->append(*text_label);
+            activity_row->append(*tile);
+        };
+
+    add_activity_tile(to_string(stats.attempts_today), "今天完成的考核");
+    add_activity_tile(
+        stats.answered_today > 0
+            ? to_string(stats.correct_today) + " / " + to_string(stats.answered_today)
+            : "—",
+        "今天答对 / 答题");
+    add_activity_tile(
+        stats.streak_days > 0 ? to_string(stats.streak_days) + " 天" : "—",
+        "连续有记录");
+    add_activity_tile(to_string(stats.attempts_total), "累计完成的考核");
 
     auto donut_frame = Gtk::make_managed<Gtk::Frame>();
     donut_frame->add_css_class("panel-frame");
