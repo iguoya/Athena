@@ -31,7 +31,7 @@ Beej / DIS 的命题，只负责让那条命题能被看见。
 1. **公开教材落到 `content/sources/reference/`。** 登记在 `catalog.json` 的
    `local_path`。Beej 源稿允许私下镜像，进仓库；DIS 原样保存 HTML（NC-ND，
    教案不派生其正文）；c-faq 只供本机查阅、HTML 不进 git；Modern C 的 PDF
-   从官网手动另存。刷新用 `scripts/fetch-sources.sh`。
+   从官网手动另存。刷新用 `scripts/fetch-sources.py`。
 2. **教案、随堂、课后每条都有 `source_refs`。** 题库在 `content/exercises.json`，
    按知识点 ID 分成 `in_class` 与 `homework`。题干用中文改写该节事实，不整段
    复制 NC-ND 正文。对不上节号的题不要写。
@@ -46,4 +46,4 @@ Beej / DIS 的命题，只负责让那条命题能被看见。
 
 - 写新节的顺序是：打开本地教材对应文件 → 核对该讲什么 → 写 QML → 按同一节出题。
 - 「对象是一段字节」这类从 C++ 课类比出来的说法，只在 Beej §5.1 实际覆盖的范围内用。
-- c-faq 的 HTML 被 gitignore；克隆仓库后要跑一次 `fetch-sources.sh` 才能离线翻误区。
+- c-faq 的 HTML 被 gitignore；克隆仓库后要跑一次 `fetch-sources.py` 才能离线翻误区。

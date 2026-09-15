@@ -91,10 +91,10 @@ SVG」的取向一致。
 ### 2. Python 环境：应用自带 venv，不污染系统
 
 - 位置 `apps/mathematics/engine/.venv`，`.gitignore` 忽略。
-- 由 `scripts/setup-engine.sh` 显式创建（`python3 -m venv` + `pip install sympy`）。
+- 由 `scripts/setup-engine.py` 显式创建（`python3 -m venv` + `pip install sympy`）。
   **不在构建里隐式执行**——沿用主仓库「scaffold 只能显式运行」的取向。
 - 应用启动后检测 venv 与 `import sympy`；不可用时在界面上说明「验算功能需要先跑
-  一次 `scripts/setup-engine.sh`」并禁用验算入口，**而不是让用户对着转圈等**
+  一次 `scripts/setup-engine.py`」并禁用验算入口，**而不是让用户对着转圈等**
   （ADR 0001 第 3 节）。
 - 用 venv 而不是系统 `pip install` 的理由与洁癖无关：Python 3.12 起的 PEP 668 会
   直接拒绝往系统环境装包。

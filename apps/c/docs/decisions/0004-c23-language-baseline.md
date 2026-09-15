@@ -36,7 +36,7 @@ Beej 源稿里仍出现 C11 条款号，TODO 里写着 C23 未完成；c-faq 停
    `-std=gnu23`）。
 5. **本地对照用 WG14 公开稿 N3220。** 正式文本需向 ISO 购买，不进 git。
    N3220 与 C23 草案 N3219 几乎只差 Annex K 一条脚注，用来核条款号和用词。
-   PDF 落在 `content/sources/reference/c23/`，gitignore；`fetch-sources.sh`
+   PDF 落在 `content/sources/reference/c23/`，gitignore；`fetch-sources.py`
    负责拉取。`catalog.json` 的 id 是 `c23`。
 
 ## 与已写内容的关系

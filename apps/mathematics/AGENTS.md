@@ -141,7 +141,7 @@
 - **界面**：Vite + TypeScript（Web UI，非 GTK）
 - **符号引擎**：**本机 Python 常驻进程 + SymPy**（ADR 0025 改，原为 Pyodide）。
   Rust 侧按需 spawn 一个长驻解释器，NDJSON 走 stdin/stdout，只付一次 `import`。
-  环境是应用自带的 venv（`engine/.venv`），跑一次 `scripts/setup-engine.sh` 建好。
+  环境是应用自带的 venv（`engine/.venv`），跑一次 `scripts/setup-engine.py` 建好。
   **不**每次验算 fork 子进程——实测 `import sympy` 就要 315–584 ms，而判等本身
   只要 7–130 ms。**预热不能只 import**：`simplify` 首次调用还要再拉一批子模块，
   差别是 365 ms 对 11 ms，所以引擎启动时自己先跑一次 `simplify`。
@@ -215,7 +215,7 @@
 
 ```sh
 cd apps/mathematics
-sh scripts/setup-engine.sh   # 只需跑一次：建 engine/.venv 并装 SymPy（验算功能要它）
+python3 scripts/setup-engine.py   # 只需跑一次：建 engine/.venv 并装 SymPy（验算功能要它）
 athena-dev open mathematics             # 日常开发：改前端秒级热更新；启动器和图谱走的也是这条
 ```
 

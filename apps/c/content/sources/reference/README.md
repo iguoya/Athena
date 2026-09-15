@@ -1,7 +1,7 @@
 # 本地参考资料
 
 公开能查到、写课用得上的教材落到这里，便于离线对照。登记在
-`../catalog.json`。下载脚本：`apps/c/scripts/fetch-sources.sh`。
+`../catalog.json`。下载脚本：`apps/c/scripts/fetch-sources.py`。
 
 | 目录 | 材料 | 许可 | 可否进 git |
 |---|---|---|---|

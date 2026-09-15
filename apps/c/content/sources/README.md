@@ -8,7 +8,7 @@
 写新节前先打开 `reference/` 里对应文件，核对该讲什么、先修是什么；不要按 C++ 课
 的章名类比出一套 C 目录，也不要凭印象出题。
 
-刷新本地副本：`apps/c/scripts/fetch-sources.sh`。
+刷新本地副本：`apps/c/scripts/fetch-sources.py`。
 
 | id | 教材 | 本地 | 在本课表里干什么 |
 |---|---|---|---|

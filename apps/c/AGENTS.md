@@ -52,7 +52,7 @@ C 自己再发挥的是内存条、地址箭头、playground 里真实的 C 程�
 | `content/exercises.json` | 随堂与课后题 |
 | `content/sources/` | 教材目录与本地副本 |
 | `src/` | C++ 壳：读课表、从磁盘加载 QML、监视文件热加载 |
-| `scripts/fetch-sources.sh` | 把公开教材拉到 `content/sources/reference/` |
+| `scripts/fetch-sources.py` | 把公开教材拉到 `content/sources/reference/` |
 | `playground/` | 保留的 LVGL 小程序，不从图谱启动 |
 | `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
 

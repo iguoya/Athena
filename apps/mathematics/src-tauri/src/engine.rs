@@ -87,7 +87,7 @@ impl Engine {
 
         if !py.is_file() {
             return Err(format!(
-                "还没建引擎环境。跑一次 scripts/setup-engine.sh 就好（缺 {}）",
+                "还没建引擎环境。跑一次 scripts/setup-engine.py 就好（缺 {}）",
                 py.display()
             ));
         }
@@ -218,7 +218,7 @@ mod tests {
     fn round_trip_and_symbolic_integral() {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
         if !venv_python(&root).is_file() {
-            eprintln!("跳过：还没跑 scripts/setup-engine.sh");
+            eprintln!("跳过：还没跑 scripts/setup-engine.py");
             return;
         }
         let mut e = Engine::default();

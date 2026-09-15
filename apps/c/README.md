@@ -24,7 +24,7 @@ athena-dev open c
 刷新本地教材：
 
 ```sh
-./scripts/fetch-sources.sh
+python3 scripts/fetch-sources.py
 ```
 
 ## 目录
