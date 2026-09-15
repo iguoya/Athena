@@ -19,7 +19,16 @@ cd apps/c
 athena-dev open c
 ```
 
-依赖：CMake、Qt 6（`brew install qt@6`）。改 `qml/` 或 `content/` 保存即热加载。
+依赖：CMake 与 Qt 6。改 `qml/` 或 `content/` 保存即热加载。
+
+| 平台 | 装 Qt 6 | 找得到吗 |
+|---|---|---|
+| macOS | `brew install qt@6` | `app.json` 的 `CMAKE_PREFIX_PATH` 已列好 Homebrew 的几个位置 |
+| Linux | `apt install qt6-base-dev qt6-declarative-dev` | 装在标准路径，CMake 自己找得到 |
+| Windows | Qt 官方安装器 | 路径带版本号，无法预先枚举，自己设 `CMAKE_PREFIX_PATH` 环境变量 |
+
+`app.json` 里的候选路径一个都不存在时不会注入这个变量，所以自己设的那份不会
+被覆盖。
 
 刷新本地教材：
 

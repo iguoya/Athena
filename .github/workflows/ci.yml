@@ -152,6 +152,32 @@ jobs:
         env:
           CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
 
+  # Windows 上的 Qt 走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
+  # aqtinstall 是个 pip 包，不必引第三方 action。标成实验性持续探测——README
+  # 里说 Windows 要自己设 CMAKE_PREFIX_PATH，那就该有一条流水线替这句话背书
+  # （ADR 0047），但暂时不让它阻塞整体结论。
+  c-windows:
+    name: C 语言教程（Windows，实验性）
+    runs-on: windows-latest
+    timeout-minutes: 45
+    continue-on-error: true
+    env:
+      QT_VERSION: "6.8.1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Qt
+        run: |
+          python -m pip install --quiet aqtinstall
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -m qtdeclarative -O ${{ github.workspace }}\Qt
+
+      - name: Verify
+        run: python scripts/check.py c
+        env:
+          CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
+
   # 三个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
   # 和本地是同一条命令（ADR 0007）。
   tauri:
