@@ -183,9 +183,17 @@ Box lesson_quiz {
   }
 }
 
-// 一个选项。选中后由代码加 correct / wrong 类名。
+// 一个选项。整行可点（点击区域大是对的），但视觉上要轻：文字左对齐、
+// 留白收紧、不用实心按钮的重边框——一排居中的蓝框读起来像命令按钮，
+// 不像选项。选中后由代码加 correct / wrong 类名。
 Button lesson_quiz_option {
   halign: fill;
 
-  styles [ "btn-sm", "btn-outline-primary", "lesson-quiz-option" ]
+  styles [ "lesson-quiz-option" ]
+
+  Label lesson_quiz_option_label {
+    halign: start;
+    xalign: 0;
+    wrap: true;
+  }
 }

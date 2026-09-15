@@ -167,7 +167,10 @@ void quiz(
     for (size_t index = 0; index < options.size(); ++index) {
         const auto option_builder = load();
         auto& button = take<Gtk::Button>(option_builder, "lesson_quiz_option");
-        button.set_label(options[index]);
+        // 填内部的 Label 而不是 set_label()：后者会替换掉模板里的子控件，
+        // 文字又变回居中且不折行。
+        take<Gtk::Label>(option_builder, "lesson_quiz_option_label")
+            .set_text(options[index]);
         buttons->push_back(&button);
         option_box.append(button);
     }
