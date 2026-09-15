@@ -72,49 +72,6 @@ private:
     int& m_destruction_count;
 };
 
-const char* binding_kind(string&) { return "左值引用"; }
-const char* binding_kind(const string&) { return "const 左值引用"; }
-const char* binding_kind(string&&) { return "右值引用"; }
-
-struct TransferStats {
-    int copy_constructions = 0;
-    int move_constructions = 0;
-    int move_assignments = 0;
-};
-
-class MovableBuffer {
-public:
-    MovableBuffer(size_t size, TransferStats& stats)
-        : m_values(size), m_stats(&stats) {}
-
-    MovableBuffer(const MovableBuffer& other)
-        : m_values(other.m_values), m_stats(other.m_stats) {
-        ++m_stats->copy_constructions;
-    }
-
-    MovableBuffer(MovableBuffer&& other) noexcept
-        : m_values(std::move(other.m_values)), m_stats(other.m_stats) {
-        ++m_stats->move_constructions;
-    }
-
-    MovableBuffer& operator=(MovableBuffer&& other) noexcept {
-        if (this != &other) {
-            m_values = std::move(other.m_values);
-            m_stats = other.m_stats;
-            ++m_stats->move_assignments;
-        }
-        return *this;
-    }
-
-    const int* data() const { return m_values.data(); }
-    size_t size() const { return m_values.size(); }
-    void reset(size_t size) { m_values.assign(size, 0); }
-
-private:
-    vector<int> m_values;
-    TransferStats* m_stats;
-};
-
 } // namespace
 
 // RAII 与资源管理
@@ -122,6 +79,27 @@ private:
 // 一个 public 成员函数对应 athena.json 中的一个可运行知识点。
 class RAII {
 public:
+    // 裸指针与所有权
+    void raw_pointer_ownership(ostream& output) const {
+        // 三个变量类型完全相同，含义完全不同——签名上分辨不出来。
+        int on_stack = 42;
+        int* observer = &on_stack;      // 观察者：不拥有，delete 它是灾难
+        int* owner = new int(7);        // 拥有者：不 delete 就泄漏
+        vector<int> numbers{1, 2, 3};
+        int* first = numbers.data();    // 一段数组的起点：容器拥有它
+
+        output << "observer -> 栈上对象: " << *observer << '\n';
+        output << "owner    -> 堆上对象: " << *owner << '\n';
+        output << "first    -> 容器首元素: " << *first << '\n';
+        output << "三个都是 int*，但只有 owner 该被 delete。\n";
+
+        delete owner;
+        output << "delete owner 之后，另外两个仍然有效: "
+               << *observer << ' ' << *first << '\n';
+        output << "类型系统没有记录这个区别，只有注释和约定记着——"
+               << "这正是智能指针要解决的问题。\n";
+    }
+
     // RAII 思想
     void basic(ostream& output) const {
         bool released = false;
@@ -218,45 +196,4 @@ public:
                << '\n';
     }
 
-    // 移动语义
-    void rvalue(ostream& output) const {
-        string named = "Athena";
-        const string readonly = "只读对象";
-
-        output << "具名可修改对象选择: " << binding_kind(named) << '\n';
-        output << "具名 const 对象选择: " << binding_kind(readonly) << '\n';
-        output << "临时对象选择: " << binding_kind(string("临时对象")) << '\n';
-        output << "std::move 后选择: " << binding_kind(std::move(named)) << '\n';
-        output << "只做类型转换后原值仍是: " << named << '\n';
-    }
-
-    void move_semantics(ostream& output) const {
-        TransferStats stats;
-        MovableBuffer original(1024, stats);
-        const int* original_storage = original.data();
-
-        MovableBuffer copied = original;
-        output << "拷贝构造创建独立存储: "
-               << (copied.data() != original_storage ? "是" : "否") << '\n';
-
-        auto&& cast_only = std::move(original);
-        output << "std::move 本身搬运存储: "
-               << (cast_only.data() != original_storage ? "是" : "否") << '\n';
-
-        MovableBuffer moved = std::move(original);
-        output << "移动构造转移原存储: "
-               << (moved.data() == original_storage ? "是" : "否") << '\n';
-
-        const int* copied_storage = copied.data();
-        MovableBuffer assigned(1, stats);
-        assigned = std::move(copied);
-        output << "移动赋值转移拷贝对象的存储: "
-               << (assigned.data() == copied_storage ? "是" : "否") << '\n';
-        output << "统计: 拷贝构造 " << stats.copy_constructions
-               << "，移动构造 " << stats.move_constructions
-               << "，移动赋值 " << stats.move_assignments << '\n';
-
-        original.reset(3);
-        output << "被移动对象重新赋值后元素数: " << original.size() << '\n';
-    }
 };

@@ -23,7 +23,7 @@ CXX20_KEYWORDS = frozenset(
     """.split()
 )
 
-ROOT_FIELDS = frozenset({"format_version", "defaults", "categories"})
+ROOT_FIELDS = frozenset({"format_version", "defaults", "paths", "categories"})
 DEFAULT_FIELDS = frozenset({"chapter_ui", "chapter_icon", "subchapter_icon"})
 CHAPTER_UI_FIELDS = frozenset({"code"})
 CODE_UI_FIELDS = frozenset({"blueprint"})
@@ -60,6 +60,7 @@ SUBCHAPTER_FIELDS = frozenset(
         "source",
         "labs",
         "source_refs",
+        "stage",
     }
 )
 # 内容来源标记（ADR 0054，字段名照仓库 ADR 0043 的统一命名）。
@@ -104,6 +105,11 @@ LESSON_BLOCK_FIELDS = frozenset({
     "items", "head", "rows", "blocks", "answer", "source_refs",
 })
 CALLOUT_KINDS = frozenset({"why", "key", "note", "trap", "use"})
+
+# 知识点在整条学习路径上的位置（ADR 0056 第 3 节）。与 difficulty（这个点多难）
+# 和 mastery_goal（要学到什么程度）正交，三者不要混用。
+STAGES = frozenset({"basic", "intermediate", "advanced"})
+PATH_FIELDS = frozenset({"name", "title", "description", "default", "chapters"})
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
 # goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
 # 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
@@ -345,6 +351,79 @@ def validate_lesson_block(
                 require_text(item, f"{label}.{field}[{index}]")
     for index, child in enumerate(block.get("blocks", [])):
         validate_lesson_block(child, f"{label}.blocks[{index}]", catalog)
+
+
+def validate_paths(
+    raw: object, label: str, chapter_prerequisites: dict[str, list[str]]
+) -> list[dict]:
+    """校验学习路线（ADR 0056 第 5 节）。
+
+    路线只决定推荐顺序，先修关系是硬的——把一章排在它的前置之前，学的人一进去
+    就会卡住。两条路线覆盖的章节必须一致，否则会出现「某个知识点只在一条路线上
+    存在」的悄悄分叉。
+    """
+    entries = require_list(raw, label)
+    if not entries:
+        return []
+    paths: list[dict] = []
+    coverage: dict[str, set[str]] = {}
+    default_count = 0
+    for index, value in enumerate(entries):
+        path_label = f"{label}[{index}]"
+        path = require_object(value, path_label)
+        reject_unknown_fields(path, PATH_FIELDS, path_label)
+        name = require_text(path.get("name"), f"{path_label}.name")
+        require_text(path.get("title"), f"{path_label}.title")
+        require_text(path.get("description"), f"{path_label}.description")
+        if name in coverage:
+            raise ProjectError(f"{label} has two paths named {name!r}")
+        is_default = path.get("default", False)
+        if not isinstance(is_default, bool):
+            raise ProjectError(f"{path_label}.default must be a boolean")
+        default_count += int(is_default)
+
+        chapters = require_list(path.get("chapters"), f"{path_label}.chapters")
+        seen: list[str] = []
+        for order, chapter_value in enumerate(chapters):
+            chapter_name = require_text(
+                chapter_value, f"{path_label}.chapters[{order}]"
+            )
+            if chapter_name not in chapter_prerequisites:
+                raise ProjectError(
+                    f"{path_label}.chapters[{order}] is not a chapter in this "
+                    f"category: {chapter_name!r}"
+                )
+            if chapter_name in seen:
+                raise ProjectError(
+                    f"{path_label} lists {chapter_name!r} twice"
+                )
+            # 先修必须已经出现过，否则这条路线自己就把人带进死路。
+            for required in chapter_prerequisites[chapter_name]:
+                if required not in seen:
+                    raise ProjectError(
+                        f"{path_label} puts {chapter_name!r} before its "
+                        f"prerequisite {required!r}"
+                    )
+            seen.append(chapter_name)
+        coverage[name] = set(seen)
+        paths.append({"name": name, "title": path["title"],
+                      "description": path["description"],
+                      "default": is_default, "chapters": seen})
+
+    if default_count != 1:
+        raise ProjectError(
+            f"{label} must mark exactly one path as default, found {default_count}"
+        )
+    reference_name, reference = next(iter(coverage.items()))
+    for name, covered in coverage.items():
+        if covered != reference:
+            missing = sorted(reference - covered)
+            extra = sorted(covered - reference)
+            raise ProjectError(
+                f"{label}: path {name!r} does not cover the same chapters as "
+                f"{reference_name!r}; missing {missing}, extra {extra}"
+            )
+    return paths
 
 
 def validate_lessons(
@@ -774,6 +853,8 @@ def build_model(
     source_files: set[str] = set()
     case_files: set[str] = set()
     source_catalog = SourceCatalog(root)
+    # 学习路线跨分类校验顺序，需要一份不随分类重置的章节先修表。
+    prerequisites_everywhere: dict[str, list[str]] = {}
     lessons_dir = root / "resources" / LESSONS_DIRNAME
     chapters_with_lessons = (
         {path.stem for path in lessons_dir.glob("*.json")}
@@ -887,6 +968,7 @@ def build_model(
                 seen_prerequisites.add(pre_name)
                 prerequisite_names.append(pre_name)
             prerequisites_by_name[chapter_name] = prerequisite_names
+            prerequisites_everywhere[chapter_name] = prerequisite_names
             prerequisites_by_chapter_id[chapter_id] = [
                 f"{category_name}.{pre_name}" for pre_name in prerequisite_names
             ]
@@ -1129,6 +1211,12 @@ def build_model(
                             f"{subchapter_path}.requires lists {require_name!r} twice"
                         )
                     requires_names.append(require_name)
+                stage = subchapter.get("stage", "")
+                if stage and stage not in STAGES:
+                    raise ProjectError(
+                        f"{subchapter_path}.stage must be one of {sorted(STAGES)}, "
+                        f"got {stage!r}"
+                    )
                 mastery_goal = subchapter.get("mastery_goal", "")
                 if mastery_goal not in MASTERY_GOALS:
                     raise ProjectError(
@@ -1168,6 +1256,7 @@ def build_model(
                     "difficulty": difficulty,
                     "mastery_goal": mastery_goal,
                     "knowledge_type": knowledge_type,
+                    "stage": stage,
                     "labs": labs,
                     "source_refs": subchapter_sources,
                     "requires": [],
@@ -1292,6 +1381,10 @@ def build_model(
 
     # 课文引用的知识点必须存在，所以放在全部章节解析完之后校验。
     lesson_files = validate_lessons(root, set(titles_by_function), source_catalog)
+    # 路线放在全部章节解析完之后校验：它要拿章节先修来检查顺序。
+    learning_paths = validate_paths(
+        config.get("paths", []), "athena.json.paths", prerequisites_everywhere
+    )
 
     return {
         "config": config,
@@ -1303,6 +1396,7 @@ def build_model(
         "source_files": source_files,
         "case_files": case_files,
         "lesson_files": lesson_files,
+        "paths": learning_paths,
         "bindings": bindings,
         "chapters": chapters_by_id,
         "category_count": len(categories),

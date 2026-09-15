@@ -40,6 +40,7 @@
 | [0053](0053-editable-scaffold-experiments.md) | 教学实验改为可编辑的骨架案例，本机编译运行 | 已接受，机制先行 |
 | [0054](0054-sourced-teaching-content.md) | 教学内容与习题一律有据可依，官方规范优先 | 已接受，登记表与校验先行 |
 | [0055](0055-lesson-content-as-data.md) | 学习页内容改由数据驱动，`.blp` 降为块模板 | 已接受，新章走数据、存量不迁 |
+| [0056](0056-chapter-plan-and-staged-unlock.md) | 按多源交叉比对重划章节，知识点分三级并软门禁 | 已接受，结构先行、门禁待题库 |
 
 ## 学习数据与 AI
 

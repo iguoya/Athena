@@ -60,25 +60,15 @@ TEST(RaiiContentTest, UsesWeakOwnershipToBreakTheBackReference) {
         "对象销毁后 lock 返回空: 是\n");
 }
 
-TEST(RaiiContentTest, SelectsReferenceOverloadsByValueCategory) {
-    EXPECT_EQ(
-        run_experiment(&RAII::rvalue),
-        "具名可修改对象选择: 左值引用\n"
-        "具名 const 对象选择: const 左值引用\n"
-        "临时对象选择: 右值引用\n"
-        "std::move 后选择: 右值引用\n"
-        "只做类型转换后原值仍是: Athena\n");
-}
-
-TEST(RaiiContentTest, DistinguishesCopyMoveConstructionAndMoveAssignment) {
-    EXPECT_EQ(
-        run_experiment(&RAII::move_semantics),
-        "拷贝构造创建独立存储: 是\n"
-        "std::move 本身搬运存储: 否\n"
-        "移动构造转移原存储: 是\n"
-        "移动赋值转移拷贝对象的存储: 是\n"
-        "统计: 拷贝构造 1，移动构造 1，移动赋值 1\n"
-        "被移动对象重新赋值后元素数: 3\n");
+TEST(RaiiContentTest, ShowsRawPointerCarriesNoOwnership) {
+    // 三个同类型指针，含义完全不同——这正是智能指针要解决的问题。
+    const string output = run_experiment(&RAII::raw_pointer_ownership);
+    EXPECT_NE(output.find("observer -> 栈上对象: 42"), string::npos);
+    EXPECT_NE(output.find("owner    -> 堆上对象: 7"), string::npos);
+    EXPECT_NE(output.find("first    -> 容器首元素: 1"), string::npos);
+    EXPECT_NE(output.find("只有 owner 该被 delete"), string::npos);
+    // delete 之后另外两个必须还能读——它们本来就不拥有那块内存。
+    EXPECT_NE(output.find("仍然有效: 42 1"), string::npos);
 }
 
 } // namespace
