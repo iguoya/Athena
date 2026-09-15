@@ -38,6 +38,7 @@
 | [0038](0038-figures-as-widgets-and-cairo.md) | 插图改由 GTK 控件与 Cairo 自绘承载，退出 SVG 图片路线 | 已接受，`type_semantics` 先行改造 |
 | [0039](0039-merge-guide-into-outline.md) | 撤销「本章导览」，主旨并入教学大纲并精简 | 已接受，取代 0036 |
 | [0053](0053-editable-scaffold-experiments.md) | 教学实验改为可编辑的骨架案例，本机编译运行 | 已接受，机制先行 |
+| [0054](0054-sourced-teaching-content.md) | 教学内容与习题一律有据可依，官方规范优先 | 已接受，登记表与校验先行 |
 
 ## 学习数据与 AI
 

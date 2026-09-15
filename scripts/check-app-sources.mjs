@@ -108,6 +108,9 @@ for (const app of readdirSync(appsDir).sort()) {
   c.locatorFields ??= ["locator", "ref", "loc"];
   c.whyFields ??= ["why", "note"];
   c.relationField ??= "relation";
+  // 条目的标识字段。默认认 id / stem，但 apps/cpp 的知识点用 name——认不出来
+  // 时每条的 key 都会退化成「(无 id)」，全部撞在一起，豁免名单写了也不生效。
+  c.idFields ??= ["id", "stem"];
 
   const contentDir = join(appDir, c.contentDir ?? "content");
   const catalogIds = new Set();
@@ -135,7 +138,9 @@ for (const app of readdirSync(appsDir).sort()) {
 
     for (const { item, inherited } of collectItems(data, c.itemMarkers, c.sourceField)) {
       total++;
-      const id = item.id ?? item.stem?.slice?.(0, 18) ?? "(无 id)";
+      const id =
+        c.idFields.map((f) => item[f]).find((v) => typeof v === "string")?.slice(0, 18) ??
+        "(无 id)";
       // 一个条目一个 key，报错和豁免都用它。分成两种写法（一处带空格一处不带）
       // 会让豁免名单看着写了却不生效——而且两边单看都正常。
       const key = `${rel} :: ${id}`;

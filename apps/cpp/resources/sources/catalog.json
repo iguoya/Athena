@@ -1,0 +1,64 @@
+{
+  "_": "教学内容与习题的来源登记表（ADR 0054）。字段名沿用跨应用统一的那套（仓库 ADR 0043）。tier 1 是规范性来源，定义、条件、边界、术语以它们为准；tier 2 只用来对照讲法，不作为语义判定的依据。checked_on 是实地打开核对过的日期——凭印象写出处比自造更糟。",
+  "sources": [
+    {
+      "id": "cppreference",
+      "tier": 1,
+      "kind": "reference",
+      "title": "cppreference.com",
+      "publisher": "cppreference.com 社区",
+      "url": "https://en.cppreference.com/",
+      "license": "CC BY-SA 3.0 与 GFDL 双许可",
+      "license_url": "https://en.cppreference.com/Cppreference:Copyright/CC-BY-SA",
+      "checked_on": "2026-09-16",
+      "usage_note": "语言与标准库语义的第一顺位依据。locator 写条目路径，例如 cpp/language/value_category。离线副本可由 github.com/PeterFeicht/cppreference-doc 构建。"
+    },
+    {
+      "id": "iso-cpp-draft",
+      "tier": 1,
+      "kind": "standard",
+      "title": "ISO C++ 标准草案（working draft）",
+      "publisher": "ISO/IEC JTC1/SC22/WG21",
+      "url": "https://github.com/cplusplus/draft",
+      "license": "草案自带版权声明；仓库未标注 SPDX 许可",
+      "license_url": "https://github.com/cplusplus/draft",
+      "checked_on": "2026-09-16",
+      "usage_note": "需要逐字精确的条件时用它，locator 写条款号（例如 [dcl.init.list]/7）。正式标准是收费的，草案与之差别极小且可公开引用；讲解里不整段复制条款原文。"
+    },
+    {
+      "id": "cpp-core-guidelines",
+      "tier": 1,
+      "kind": "guideline",
+      "title": "C++ Core Guidelines",
+      "publisher": "Standard C++ Foundation（Bjarne Stroustrup、Herb Sutter 主编）",
+      "url": "https://github.com/isocpp/CppCoreGuidelines",
+      "license": "Standard C++ Foundation 授权：个人与内部使用可复制、修改并创作衍生作品，须保留版权与许可声明",
+      "license_url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/LICENSE",
+      "checked_on": "2026-09-16",
+      "usage_note": "「该怎么写、为什么」这一类判断的依据，locator 写规则编号（例如 R.1、ES.20、C.21）。它给的是取舍与理由，正合本应用「判断与代价」那一节的需要。"
+    },
+    {
+      "id": "ms-learn-cpp",
+      "tier": 1,
+      "kind": "documentation",
+      "title": "Microsoft Learn C++ 文档",
+      "publisher": "Microsoft",
+      "url": "https://github.com/MicrosoftDocs/cpp-docs",
+      "license": "CC BY 4.0",
+      "license_url": "https://github.com/MicrosoftDocs/cpp-docs/blob/main/LICENSE",
+      "checked_on": "2026-09-16",
+      "usage_note": "现代 C++ 的理念性说明（RAII、智能指针、标准库优先）讲得比规范手册易懂，且有中文版。locator 写文档路径或标题。"
+    },
+    {
+      "id": "cn-cpp-tutorials",
+      "tier": 2,
+      "kind": "tutorial",
+      "title": "中文 C++ 教程站（菜鸟教程 / C 语言中文网 / StudyC++ / W3Cschool）",
+      "publisher": "各站点",
+      "url": "https://c.biancheng.net/cplus/",
+      "license": "各站点自有版权，不复制正文",
+      "checked_on": "2026-09-16",
+      "usage_note": "只用来看「别人怎么讲得明白」「初学者常卡在哪」，不作为语义判定的依据。与一级来源冲突时一律以一级为准（ADR 0054 第 2 节）。"
+    }
+  ]
+}

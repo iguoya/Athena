@@ -45,12 +45,51 @@
               "difficulty": 2,
               "mastery_goal": "master",
               "knowledge_type": "concept",
+              "source_refs": [
+                {
+                  "source_id": "cppreference",
+                  "relation": "adapted",
+                  "locator": "cpp/language/copy_initialization",
+                  "url": "https://en.cppreference.com/cpp/language/copy_initialization",
+                  "note": "拷贝初始化只考虑非 explicit 构造函数与非 explicit 转换函数，直接初始化考虑全部——两种写法的分界以此条为准"
+                },
+                {
+                  "source_id": "cppreference",
+                  "relation": "adapted",
+                  "locator": "cpp/language/list_initialization",
+                  "url": "https://en.cppreference.com/cpp/language/list_initialization",
+                  "note": "花括号拒绝窄化转换的规则"
+                },
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "ES.23",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#res-list",
+                  "note": "「优先用 {} 初始化」这条取舍与它的例外"
+                },
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "selection_basis",
+                  "locator": "ES.20",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#res-always",
+                  "note": "「总是初始化对象」——这一节为什么值得单独讲"
+                }
+              ],
               "labs": [
                 {
                   "case": "initialization_forms",
                   "prompt": "同样带一个等号，Tracer copy = a; 和 Tracer b = 2; 是同一回事吗？后者会不会先建一个临时对象再拷贝给 b？",
                   "goal": "补出 todo_copy_init() 里的那一行，对照两段输出里构造函数的调用次数与种类。",
-                  "hint": "先写下你的预测再跑。如果结果和预测一致，想想为什么 copy = a 那行多了一次拷贝构造。"
+                  "hint": "先写下你的预测再跑。如果结果和预测一致，想想为什么 copy = a 那行多了一次拷贝构造。",
+                  "source_refs": [
+                    {
+                      "source_id": "cppreference",
+                      "relation": "adapted",
+                      "locator": "cpp/language/copy_elision",
+                      "url": "https://en.cppreference.com/w/cpp/language/copy_elision",
+                      "note": "案例要验证的现象——C++17 起用纯右值初始化对象是保证的复制消除，没有临时对象也没有拷贝——依据这一条"
+                    }
+                  ]
                 }
               ]
             },

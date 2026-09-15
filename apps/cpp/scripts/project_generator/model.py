@@ -59,12 +59,21 @@ SUBCHAPTER_FIELDS = frozenset(
         "group",
         "source",
         "labs",
+        "source_refs",
     }
 )
+# 内容来源标记（ADR 0054，字段名照仓库 ADR 0043 的统一命名）。
+SOURCE_REF_FIELDS = frozenset({"source_id", "relation", "locator", "url", "note"})
+# 内容来源：这段内容出自哪。每条 source_refs 至少要有一个。
+CONTENT_RELATIONS = frozenset({"verbatim", "quoted", "adapted", "authored"})
+# 补充说明：可以有，但顶替不了内容来源。
+META_RELATIONS = frozenset({"selection_basis", "see_also"})
+# 来源登记表，相对 resources/。
+CATALOG_RELPATH = "sources/catalog.json"
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
 # goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
 # 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
-LAB_FIELDS = frozenset({"case", "prompt", "goal", "hint"})
+LAB_FIELDS = frozenset({"case", "prompt", "goal", "hint", "source_refs"})
 # 案例骨架的所在目录，相对 resources/。GResource 按 /app/cases/<case>/<file>
 # 发布，运行期只从那里读（AGENTS.md「教学内容只从 GResource 读」）。
 CASES_DIRNAME = "cases"
@@ -118,11 +127,121 @@ def reject_unknown_fields(
         raise ProjectError(f"{label} contains unknown field {field!r}")
 
 
+class SourceCatalog:
+    """来源登记表，惰性加载（ADR 0054）。
+
+    一条 source_refs 都没有的项目（例如刚 scaffold 出来的骨架）不该被强制要求
+    这份文件；一旦要标出处，它就必须存在且条目对得上。
+    """
+
+    def __init__(self, root: Path) -> None:
+        self._root = root
+        self._entries: dict[str, dict] | None = None
+
+    def __contains__(self, source_id: str) -> bool:
+        if self._entries is None:
+            self._entries = load_source_catalog(self._root)
+        return source_id in self._entries
+
+
+def load_source_catalog(root: Path) -> dict[str, dict]:
+    """读来源登记表（ADR 0054）。没有这份文件就等于没人能核对出处。"""
+    path = root / "resources" / CATALOG_RELPATH
+    if not path.is_file():
+        raise ProjectError(f"missing source catalog: resources/{CATALOG_RELPATH}")
+    data = load_json(path)
+    entries = require_list(
+        data.get("sources"), f"resources/{CATALOG_RELPATH}.sources"
+    )
+    catalog: dict[str, dict] = {}
+    for index, value in enumerate(entries):
+        label = f"resources/{CATALOG_RELPATH}.sources[{index}]"
+        entry = require_object(value, label)
+        source_id = require_text(entry.get("id"), f"{label}.id")
+        if source_id in catalog:
+            raise ProjectError(f"{label}.id is duplicated: {source_id!r}")
+        require_text(entry.get("title"), f"{label}.title")
+        require_text(entry.get("url"), f"{label}.url")
+        # 实地核对过的日期。没有它，这条来源和凭印象写的没区别。
+        require_text(entry.get("checked_on"), f"{label}.checked_on")
+        tier = entry.get("tier")
+        if tier not in (1, 2):
+            raise ProjectError(f"{label}.tier must be 1 or 2, got {tier!r}")
+        catalog[source_id] = entry
+    return catalog
+
+
+def validate_source_refs(
+    raw: object,
+    label: str,
+    catalog: SourceCatalog,
+) -> list[dict]:
+    """校验一处内容的来源标记（ADR 0054）。
+
+    要求与仓库 ADR 0043 一致：指得到、可核对、关系分级、自造要说理由。
+    """
+    entries = require_list(raw, label)
+    refs: list[dict] = []
+    has_content_relation = False
+    for index, value in enumerate(entries):
+        ref_path = f"{label}[{index}]"
+        ref = require_object(value, ref_path)
+        reject_unknown_fields(ref, SOURCE_REF_FIELDS, ref_path)
+        source_id = require_text(ref.get("source_id"), f"{ref_path}.source_id")
+        if source_id not in catalog:
+            raise ProjectError(
+                f"{ref_path}.source_id is not in the catalog: {source_id!r}"
+            )
+        relation = require_text(ref.get("relation"), f"{ref_path}.relation")
+        if relation in CONTENT_RELATIONS:
+            has_content_relation = True
+        elif relation not in META_RELATIONS:
+            raise ProjectError(
+                f"{ref_path}.relation must be one of "
+                f"{sorted(CONTENT_RELATIONS)} (content) or "
+                f"{sorted(META_RELATIONS)} (supplementary), got {relation!r}"
+            )
+        locator = ref.get("locator", "")
+        url = ref.get("url", "")
+        note = ref.get("note", "")
+        for name, field in (("locator", locator), ("url", url), ("note", note)):
+            if not isinstance(field, str):
+                raise ProjectError(f"{ref_path}.{name} must be a string")
+        # 可核对：要么指到原文的位置，要么给能打开的链接。两个都没有，
+        # 这条出处就只是一句话。
+        if not locator and not url:
+            raise ProjectError(
+                f"{ref_path} needs a locator or a url so it can be checked"
+            )
+        # 自造是例外，要说明为什么现成材料覆盖不到。
+        if relation == "authored" and not note:
+            raise ProjectError(
+                f"{ref_path} is authored but does not say why no existing "
+                f"material covers it"
+            )
+        refs.append(
+            {
+                "source_id": source_id,
+                "relation": relation,
+                "locator": locator,
+                "url": url,
+                "note": note,
+            }
+        )
+    if refs and not has_content_relation:
+        raise ProjectError(
+            f"{label} has only supplementary relations; at least one content "
+            f"source ({sorted(CONTENT_RELATIONS)}) is required"
+        )
+    return refs
+
+
 def validate_labs(
     root: Path,
     raw: object,
     label: str,
     case_files: set[str],
+    catalog: SourceCatalog,
 ) -> list[dict]:
     """校验一个知识点的可编辑骨架案例（ADR 0053），返回运行时形态。
 
@@ -181,6 +300,9 @@ def validate_labs(
                 "prompt": require_text(lab.get("prompt"), f"{lab_path}.prompt"),
                 "goal": require_text(lab.get("goal"), f"{lab_path}.goal"),
                 "hint": lab.get("hint", ""),
+                "source_refs": validate_source_refs(
+                    lab.get("source_refs", []), f"{lab_path}.source_refs", catalog
+                ),
             }
         )
         if not isinstance(labs[-1]["hint"], str):
@@ -449,6 +571,7 @@ def build_model(
     seen_ui: dict[str, str] = {}
     source_files: set[str] = set()
     case_files: set[str] = set()
+    source_catalog = SourceCatalog(root)
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
     runtime_categories: list[dict] = []
@@ -803,6 +926,12 @@ def build_model(
                     subchapter.get("labs", []),
                     f"{subchapter_path}.labs",
                     case_files,
+                    source_catalog,
+                )
+                subchapter_sources = validate_source_refs(
+                    subchapter.get("source_refs", []),
+                    f"{subchapter_path}.source_refs",
+                    source_catalog,
                 )
                 resolved_source = group_sources.get(group_name, "") or chapter_source
                 if "source" in subchapter:
@@ -825,6 +954,7 @@ def build_model(
                     "mastery_goal": mastery_goal,
                     "knowledge_type": knowledge_type,
                     "labs": labs,
+                    "source_refs": subchapter_sources,
                     "requires": [],
                     "icon": resolve_icon(
                         own_subchapter_icon,
