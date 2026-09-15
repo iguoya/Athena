@@ -150,7 +150,9 @@ TEST(ChapterCatalogTest, SourcePathsFallBackToHeaderForSingleFileChapters) {
     // implementation.header 本身，所有知识点解析出同一个源码路径。
     const auto* raii = catalog.find_chapter("cpp", "RAII");
     ASSERT_NE(raii, nullptr);
-    ASSERT_EQ(raii->subchapters.size(), 6);
+    // rvalue 与 move_semantics 在 ADR 0055 那次调整里移去了 ValueSemantics，
+    // RAII 只剩纯资源管理的四个。
+    ASSERT_EQ(raii->subchapters.size(), 4);
     for (const auto& subchapter : raii->subchapters) {
         EXPECT_EQ(subchapter.source, "cplusplus/raii/raii.hpp");
     }

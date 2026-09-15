@@ -76,6 +76,13 @@ void LessonRenderer::render_block(Gtk::Box& host, const LessonBlock& block) cons
         render_blocks(body, block.blocks);
         return;
     }
+    if (block.type == "quiz" || block.type == "predict") {
+        // predict 是「先猜再验」：不算检验，只为让预期显形，猜错无所谓。
+        lesson::quiz(
+            host, block.text, block.items, block.answer, block.note,
+            block.type == "quiz");
+        return;
+    }
     if (block.type == "figure") {
         Gtk::Widget* widget = m_figures ? m_figures(block.id) : nullptr;
         if (widget != nullptr) {

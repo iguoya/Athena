@@ -1545,3 +1545,37 @@ button.domain-graph-track-capstone { border-left: 6px solid @athena_secondary; }
 .outline-legend-master { color: @athena_primary; font-weight: 700; }
 .outline-legend-required { color: @athena_teal; font-weight: 700; }
 .outline-legend-familiar { color: @athena_secondary; font-weight: 700; }
+
+/* === 随堂题（ADR 0055 块词汇扩充） ===
+   对错用绿 / 红，是网页测验与判题系统的通用约定，不另造一套配色；
+   与上面 callout 的 alert-success / alert-danger 取同一组值。 */
+.lesson-quiz {
+    padding: 12px 14px;
+    border-radius: 6px;
+    background-color: @athena_surface_subtle;
+    border-left: 3px solid @athena_primary;
+}
+
+button.lesson-quiz-option {
+    /* 选项文字左对齐：题目选项不是操作按钮，居中会读成一排命令。 */
+    padding-left: 12px;
+}
+
+button.lesson-quiz-option label {
+    /* 长选项要能折行，不能把一行拉宽到撑破版心。 */
+    padding: 2px 0;
+}
+
+button.quiz-correct,
+button.quiz-correct:disabled {
+    background-color: #d1e7dd;   /* Bootstrap alert-success bg */
+    border-color: @athena_success;
+    color: #0f5132;              /* alert-success text */
+}
+
+button.quiz-wrong,
+button.quiz-wrong:disabled {
+    background-color: #f8d7da;   /* Bootstrap alert-danger bg */
+    border-color: @athena_danger;
+    color: #842029;              /* alert-danger text */
+}

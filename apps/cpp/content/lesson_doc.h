@@ -27,6 +27,8 @@ struct LessonBlock {
     string note;
     // figure 引用的绘制函数 id
     string id;
+    // quiz / predict 的正确选项下标
+    int answer = -1;
     // bullets 与 steps 的条目
     vector<string> items;
     // table 的表头；为空表示没有表头行
@@ -50,6 +52,9 @@ struct LessonDoc {
 struct LessonChapter {
     // 完整章节 ID，例如 cpp.ValueSemantics
     string chapter;
+    // 教学大纲：三层分工的第一层（ADR 0028），章节页的第一个标签。
+    // 它的 topic 是章节 ID 本身。
+    LessonDoc outline;
     vector<LessonDoc> topics;
 };
 

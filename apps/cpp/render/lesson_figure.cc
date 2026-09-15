@@ -79,6 +79,59 @@ void flow_node(
 
 namespace lesson_figure {
 
+void shallow_copy_aliasing(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+    constexpr double kWidth = 880.0;
+    constexpr double kHeight = 340.0;
+    shapes::begin_design_space(cr, width, height, kWidth, kHeight);
+
+    draw_cairo_text(
+        cr, "Buffer b = a; 之后：两个对象，一块内存", 32.0, 34.0, 20.0, kInk, true);
+
+    // 两个对象：各自有独立的 size，data 里装的是同一个地址。
+    const double object_x = 60.0;
+    const double object_width = 250.0;
+    const auto object_box = [&](double y, const char* name, const ChartColor& border,
+                                const ChartColor& fill) {
+        shapes::rounded_box(cr, object_x, y, object_width, 74.0, border, fill);
+        draw_cairo_text(cr, name, object_x + 16.0, y + 24.0, 16.0, kInk, true);
+        draw_cairo_text(cr, "size = 4", object_x + 16.0, y + 50.0, 14.0, kMuted);
+        draw_cairo_text(
+            cr, "data = 0x7f…c0", object_x + 130.0, y + 50.0, 14.0, kDangerText);
+    };
+    object_box(86.0, "a", kPrimary, kPrimarySoft);
+    object_box(196.0, "b（拷贝得到）", kPrimary, kPrimarySoft);
+
+    // 一块堆内存：四个格子。
+    const double heap_x = 520.0;
+    const double heap_y = 128.0;
+    const double cell = 56.0;
+    draw_cairo_text(cr, "堆上的一块 int[4]", heap_x, heap_y - 22.0, 14.0, kMuted);
+    for (int index = 0; index < 4; ++index) {
+        shapes::rounded_box(
+            cr, heap_x + index * cell, heap_y, cell, 52.0, kBorder, kSubtle);
+        draw_cairo_text(
+            cr, "0", heap_x + index * cell + cell / 2.0, heap_y + 26.0, 14.0,
+            kMuted, false, 0.5);
+    }
+
+    // 两根箭头落在同一处——这是整张图的主语。
+    shapes::arrow(cr, object_x + object_width, 136.0, heap_x - 8.0, heap_y + 14.0,
+                  kDanger, true, 2.0);
+    shapes::arrow(cr, object_x + object_width, 246.0, heap_x - 8.0, heap_y + 38.0,
+                  kDanger, true, 2.0);
+
+    // 析构顺序：后构造的先析构，第二次就踩在已释放的内存上。
+    const double note_y = 268.0;
+    shapes::rounded_box(cr, heap_x - 40.0, note_y, 360.0, 46.0, kDanger, kDangerSoft);
+    draw_cairo_text(
+        cr, "b 先析构 delete[] → a 再析构 delete[] 同一地址",
+        heap_x - 24.0, note_y + 20.0, 14.0, kDangerText);
+    draw_cairo_text(
+        cr, "第二次是对已释放内存的操作：未定义行为",
+        heap_x - 24.0, note_y + 38.0, 13.0, kDangerText);
+}
+
 void object_lifetime_timeline(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
     constexpr double kWidth = 880.0;

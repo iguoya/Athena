@@ -10,12 +10,14 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 23);
+    EXPECT_EQ(registry.ids().size(), 21);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.object_lifetime"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
     EXPECT_TRUE(registry.contains("cpp.FunctionCallable.overload"));
-    EXPECT_TRUE(registry.contains("cpp.RAII.move_semantics"));
+    // 移动语义归到了值语义那一章（ADR 0055 那次章节调整）；它还没有实现，
+    // 所以这里只确认 RAII 的实验仍在册。
+    EXPECT_TRUE(registry.contains("cpp.RAII.basic"));
     EXPECT_TRUE(registry.contains("practice.PocketCube.run"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
 }

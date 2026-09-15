@@ -64,6 +64,24 @@ TEST(LessonDocTest, DecodesBlocksAndNesting) {
     EXPECT_EQ(doc.blocks[3].caption, "图注");
 }
 
+// 真实课文：这条同时验证了生成器把 lessons/ 打进了 GResource。
+TEST(LessonDocTest, LoadsTheShippedValueSemanticsChapter) {
+    const LessonChapter chapter = load_lesson_chapter("cpp.ValueSemantics");
+    EXPECT_EQ(chapter.chapter, "cpp.ValueSemantics");
+    // 教学大纲是三层分工的第一层，必须在（ADR 0028）。
+    EXPECT_EQ(chapter.outline.topic, "cpp.ValueSemantics");
+    EXPECT_FALSE(chapter.outline.blocks.empty());
+    ASSERT_EQ(chapter.topics.size(), 5u);
+
+    // 五个知识点各自要有内容，不能有占位的空页。
+    for (const LessonDoc& doc : chapter.topics) {
+        EXPECT_FALSE(doc.title.empty()) << doc.topic;
+        EXPECT_FALSE(doc.blocks.empty()) << doc.topic;
+    }
+    EXPECT_EQ(chapter.topics[0].topic, "cpp.ValueSemantics.copy_control");
+    EXPECT_EQ(chapter.topics[4].topic, "cpp.ValueSemantics.forwarding");
+}
+
 TEST(LessonDocTest, MissingFieldsAreReported) {
     // 缺必填字段时要说清楚，不能解出一个半成品对象继续往下跑。
     EXPECT_THROW(parse_lesson_chapter(R"({"topics": []})"), runtime_error);

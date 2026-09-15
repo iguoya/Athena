@@ -151,3 +151,41 @@ Box lesson_step {
     styles [ "lesson-prose" ]
   }
 }
+
+// 随堂题。讲解里当场检验一次，选完立刻给对错与解析——练习和即时反馈要跟上，
+// 不能只在章末挂一套题（ADR 0055 第一次扩充块词汇的原因）。
+Box lesson_quiz {
+  orientation: vertical;
+  spacing: 8;
+
+  styles [ "lesson-quiz" ]
+
+  Label lesson_quiz_stem {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [ "lesson-callout-title" ]
+  }
+
+  Box lesson_quiz_options {
+    orientation: vertical;
+    spacing: 6;
+  }
+
+  Label lesson_quiz_explain {
+    visible: false;
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [ "figure-note" ]
+  }
+}
+
+// 一个选项。选中后由代码加 correct / wrong 类名。
+Button lesson_quiz_option {
+  halign: fill;
+
+  styles [ "btn-sm", "btn-outline-primary", "lesson-quiz-option" ]
+}

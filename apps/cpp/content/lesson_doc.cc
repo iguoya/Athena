@@ -38,6 +38,10 @@ LessonBlock parse_block(const json& node) {
     block.note = text_or(node, "note");
     block.id = text_or(node, "id");
     block.items = strings_or(node, "items");
+    const auto answer = node.find("answer");
+    if (answer != node.end() && answer->is_number_integer()) {
+        block.answer = answer->get<int>();
+    }
     block.head = strings_or(node, "head");
 
     const auto rows = node.find("rows");
@@ -62,15 +66,24 @@ LessonChapter parse_lesson_chapter(const string& json_text) {
         const json root = json::parse(json_text);
         LessonChapter chapter;
         chapter.chapter = root.at("chapter").get<string>();
-        for (const auto& topic_node : root.at("topics")) {
+
+        const auto parse_topic = [](const json& node) {
             LessonDoc doc;
-            doc.topic = topic_node.at("topic").get<string>();
-            doc.title = topic_node.at("title").get<string>();
-            doc.subtitle = text_or(topic_node, "subtitle");
-            for (const auto& block : topic_node.at("blocks")) {
+            doc.topic = node.at("topic").get<string>();
+            doc.title = node.at("title").get<string>();
+            doc.subtitle = text_or(node, "subtitle");
+            for (const auto& block : node.at("blocks")) {
                 doc.blocks.push_back(parse_block(block));
             }
-            chapter.topics.push_back(std::move(doc));
+            return doc;
+        };
+
+        const auto outline = root.find("outline");
+        if (outline != root.end()) {
+            chapter.outline = parse_topic(*outline);
+        }
+        for (const auto& topic_node : root.at("topics")) {
+            chapter.topics.push_back(parse_topic(topic_node));
         }
         return chapter;
     } catch (const json::exception& error) {

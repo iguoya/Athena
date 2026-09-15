@@ -25,6 +25,11 @@ void object_lifetime_timeline(
 void auto_selection_flow(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 
+// 「逐成员拷贝之后，两个对象共用一块内存」：位置和箭头本身就是这张图要讲的
+// ——两个对象各有自己的 size，但两根 data 箭头落在同一块堆内存上，析构两次。
+void shallow_copy_aliasing(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
+
 // 「读代码时的判断流程」：五个检查点依次推进，形成预期、取得证据，不符合
 // 预期时沿虚线回到起点重查。回环是这张图的主语。
 void reading_loop(

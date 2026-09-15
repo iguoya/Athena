@@ -58,4 +58,22 @@ TEST(AppPathsTest, EmptyWhenPathIsNotDirectory) {
     EXPECT_TRUE(external_apps_root().empty());
 }
 
+TEST(AppPathsTest, ReadsOwnRootFromEnvironment) {
+    const ScopedEnv own("ATHENA_CPP_ROOT", ATHENA_SOURCE_ROOT);
+
+    const string root = own_app_root();
+
+    ASSERT_FALSE(root.empty());
+    EXPECT_TRUE(Glib::file_test(
+        Glib::build_filename(root, "app.json"), Glib::FileTest::EXISTS));
+}
+
+TEST(AppPathsTest, OwnRootEmptyInAReleasePackage) {
+    // 发行包里没人传它，进度库就回到本机用户数据目录（ADR 0053）。
+    const ScopedEnv own("ATHENA_CPP_ROOT", "");
+    g_unsetenv("ATHENA_CPP_ROOT");
+
+    EXPECT_TRUE(own_app_root().empty());
+}
+
 } // namespace

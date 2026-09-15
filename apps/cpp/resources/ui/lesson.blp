@@ -1,0 +1,72 @@
+using Gtk 4.0;
+
+// 数据驱动学习页的骨架（ADR 0055）。
+//
+// 这份 .blp 对所有走数据的章节通用：标题、副标题和标签全部由课文数据填，
+// 每个知识点一页 Notebook。**新增一章不该改动这个文件**——真要改，先想清楚
+// 改的是这一章特有的东西，还是所有章共有的形态。
+Box lesson_page {
+  orientation: vertical;
+  spacing: 0;
+
+  styles [ "native-lesson-page" ]
+
+  Box {
+    orientation: horizontal;
+    spacing: 14;
+    margin-top: 16;
+    margin-bottom: 12;
+    margin-start: 20;
+    margin-end: 20;
+
+    Image lesson_page_icon {
+      pixel-size: 28;
+      valign: start;
+    }
+
+    Box {
+      orientation: vertical;
+      spacing: 4;
+      hexpand: true;
+
+      Label lesson_page_title {
+        halign: start;
+        wrap: true;
+        xalign: 0;
+
+        styles [ "native-lesson-title" ]
+      }
+
+      Label lesson_page_subtitle {
+        halign: start;
+        wrap: true;
+        xalign: 0;
+
+        styles [ "native-lesson-subtitle" ]
+      }
+    }
+  }
+
+  Notebook lesson_page_notebook {
+    // 必须 vexpand：否则 Notebook 只向父容器要「最高那一页的自然高度」，
+    // 内容长的页会被压扁。type_semantics 那边踩过同一个坑。
+    vexpand: true;
+    hexpand: true;
+    scrollable: true;
+  }
+}
+
+// 一个知识点页的内容容器。代码为每个知识点实例化一份，把渲染结果塞进去。
+ScrolledWindow lesson_topic_page {
+  hexpand: true;
+  vexpand: true;
+
+  Box lesson_topic_body {
+    orientation: vertical;
+    spacing: 14;
+    margin-top: 18;
+    margin-bottom: 24;
+    margin-start: 20;
+    margin-end: 20;
+  }
+}

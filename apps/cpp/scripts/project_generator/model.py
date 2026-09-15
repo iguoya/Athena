@@ -72,11 +72,18 @@ META_RELATIONS = frozenset({"selection_basis", "see_also"})
 CATALOG_RELPATH = "sources/catalog.json"
 # 学习页内容（ADR 0055）。一章一份，文件名就是章节 ID，放 resources/lessons/。
 LESSONS_DIRNAME = "lessons"
+# 数据驱动学习页的骨架，对所有写了课文的章节通用。
+# 文件名要与根控件名对得上：生成器按 stem + "_page" 推 widget_name，
+# 所以文件叫 lesson.blp，里面的根控件叫 lesson_page。
+DATA_LESSON_BLUEPRINT = "resources/ui/lesson.blp"
 # 九种块，全部来自 type_semantics 那一章的实际统计，不是设想出来的。
 # 缺什么补什么——写内容时发现某种表达没有对应块，那才是加类型的时机。
 LESSON_BLOCK_TYPES = frozenset({
     "lead", "prose", "bullets", "code", "callout",
     "section", "table", "steps", "figure",
+    # 练习与即时反馈：quiz 当场检验、predict 先猜再验。讲解里就要有地方
+    # 让读者验证自己真的懂了，不能只在章末挂一套题。
+    "quiz", "predict",
 })
 # 每种块的必填字段。callout 的 title 可选（有些提示框只有正文）。
 LESSON_BLOCK_REQUIRED = {
@@ -89,10 +96,12 @@ LESSON_BLOCK_REQUIRED = {
     "table": ("rows",),
     "steps": ("items",),
     "figure": ("id",),
+    "quiz": ("text", "items", "answer"),
+    "predict": ("text", "items", "answer"),
 }
 LESSON_BLOCK_FIELDS = frozenset({
     "type", "text", "title", "kind", "caption", "note", "id",
-    "items", "head", "rows", "blocks",
+    "items", "head", "rows", "blocks", "answer", "source_refs",
 })
 CALLOUT_KINDS = frozenset({"why", "key", "note", "trap", "use"})
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
@@ -261,7 +270,18 @@ def validate_source_refs(
     return refs
 
 
-def validate_lesson_block(value: object, label: str) -> None:
+def collect_quiz_answers(block: dict, into: list[int]) -> None:
+    """收集一章里所有判分题的正确选项下标，用来查位置分布。"""
+    if block.get("type") == "quiz" and isinstance(block.get("answer"), int):
+        into.append(block["answer"])
+    for child in block.get("blocks", []):
+        if isinstance(child, dict):
+            collect_quiz_answers(child, into)
+
+
+def validate_lesson_block(
+    value: object, label: str, catalog: SourceCatalog
+) -> None:
     """校验一个内容块（ADR 0055）。C++ 侧信任数据，把关全在这里（ADR 0013）。"""
     block = require_object(value, label)
     reject_unknown_fields(block, LESSON_BLOCK_FIELDS, label)
@@ -281,6 +301,32 @@ def validate_lesson_block(value: object, label: str) -> None:
             raise ProjectError(
                 f"{label}.kind must be one of {sorted(CALLOUT_KINDS)}, got {kind!r}"
             )
+    if block_type in ("quiz", "predict"):
+        options = require_list(block.get("items"), f"{label}.items")
+        if len(options) < 2:
+            raise ProjectError(f"{label} needs at least two options")
+        answer = block.get("answer")
+        if not isinstance(answer, int) or isinstance(answer, bool):
+            raise ProjectError(f"{label}.answer must be an integer index")
+        if not 0 <= answer < len(options):
+            raise ProjectError(
+                f"{label}.answer is {answer} but there are {len(options)} options"
+            )
+        # 解析不是可选项：只说「错了」帮不上忙，读者需要知道自己哪一步想歪了。
+        if not block.get("note"):
+            raise ProjectError(f"{label} needs a note explaining the answer")
+        # 判分题必须能指到出处（ADR 0054）。**题目本身也不许自造**——
+        # 「内容依据了规范、题目是我编的」不算有出处，那正是自我发挥。
+        # predict 不判分、不计掌握度，不受这条约束。
+        if block_type == "quiz":
+            if not block.get("source_refs"):
+                raise ProjectError(
+                    f"{label} is a scored question and needs source_refs "
+                    f"pointing at the material it is adapted from"
+                )
+            validate_source_refs(
+                block["source_refs"], f"{label}.source_refs", catalog
+            )
     if block_type == "table":
         rows = require_list(block.get("rows"), f"{label}.rows")
         head = block.get("head", [])
@@ -298,10 +344,12 @@ def validate_lesson_block(value: object, label: str) -> None:
             for index, item in enumerate(require_list(block[field], f"{label}.{field}")):
                 require_text(item, f"{label}.{field}[{index}]")
     for index, child in enumerate(block.get("blocks", [])):
-        validate_lesson_block(child, f"{label}.blocks[{index}]")
+        validate_lesson_block(child, f"{label}.blocks[{index}]", catalog)
 
 
-def validate_lessons(root: Path, function_ids: set[str]) -> set[str]:
+def validate_lessons(
+    root: Path, function_ids: set[str], catalog: SourceCatalog
+) -> set[str]:
     """校验 resources/lessons/ 下的全部课文，返回要打进 GResource 的相对路径。
 
     约定优于配置：文件存在就加载，章节不必在 athena.json 里再声明一次
@@ -316,7 +364,9 @@ def validate_lessons(root: Path, function_ids: set[str]) -> set[str]:
         label = f"resources/{LESSONS_DIRNAME}/{path.name}"
         data = load_json(path)
         document = require_object(data, label)
-        reject_unknown_fields(document, frozenset({"chapter", "topics"}), label)
+        reject_unknown_fields(
+            document, frozenset({"chapter", "outline", "topics"}), label
+        )
         chapter_id = require_text(document.get("chapter"), f"{label}.chapter")
         # 文件名就是章节 ID：找课文不必先读一遍文件内容。
         if chapter_id != path.stem:
@@ -324,6 +374,27 @@ def validate_lessons(root: Path, function_ids: set[str]) -> set[str]:
                 f"{label}.chapter is {chapter_id!r} but the file is named "
                 f"{path.stem!r}; they must match"
             )
+        quiz_answers: list[int] = []
+        # 教学大纲是三层分工的第一层（ADR 0028），必填：只有讲解没有方向，
+        # 读者不知道这一章要解决什么、哪里重哪里难。
+        if "outline" not in document:
+            raise ProjectError(f"{label} has no outline; every chapter needs one")
+        outline = require_object(document["outline"], f"{label}.outline")
+        reject_unknown_fields(
+            outline, frozenset({"topic", "title", "subtitle", "blocks"}),
+            f"{label}.outline",
+        )
+        if require_text(outline.get("topic"), f"{label}.outline.topic") != chapter_id:
+            raise ProjectError(
+                f"{label}.outline.topic must be the chapter id {chapter_id!r}"
+            )
+        require_text(outline.get("title"), f"{label}.outline.title")
+        for index, block in enumerate(
+            require_list(outline.get("blocks"), f"{label}.outline.blocks")
+        ):
+            validate_lesson_block(block, f"{label}.outline.blocks[{index}]", catalog)
+            collect_quiz_answers(block, quiz_answers)
+
         topics = require_list(document.get("topics"), f"{label}.topics")
         seen: set[str] = set()
         for index, value in enumerate(topics):
@@ -349,7 +420,20 @@ def validate_lessons(root: Path, function_ids: set[str]) -> set[str]:
             if not blocks:
                 raise ProjectError(f"{topic_path}.blocks is empty")
             for block_index, block in enumerate(blocks):
-                validate_lesson_block(block, f"{topic_path}.blocks[{block_index}]")
+                validate_lesson_block(block, f"{topic_path}.blocks[{block_index}]", catalog)
+                collect_quiz_answers(block, quiz_answers)
+
+        # 正确答案不能总在同一个位置：位置能猜出来，这套题就不再检验理解，
+        # 而是检验记不记得住位置。题量少时不判（样本太小说明不了什么）。
+        if len(quiz_answers) >= 4:
+            top = max(set(quiz_answers), key=quiz_answers.count)
+            share = quiz_answers.count(top) / len(quiz_answers)
+            if share > 0.6:
+                raise ProjectError(
+                    f"{label}: {quiz_answers.count(top)} of {len(quiz_answers)} "
+                    f"quiz answers sit at option {top}; spread them out so the "
+                    f"position cannot be guessed"
+                )
         files.add(f"{LESSONS_DIRNAME}/{path.name}")
     return files
 
@@ -690,6 +774,12 @@ def build_model(
     source_files: set[str] = set()
     case_files: set[str] = set()
     source_catalog = SourceCatalog(root)
+    lessons_dir = root / "resources" / LESSONS_DIRNAME
+    chapters_with_lessons = (
+        {path.stem for path in lessons_dir.glob("*.json")}
+        if lessons_dir.is_dir()
+        else set()
+    )
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
     runtime_categories: list[dict] = []
@@ -863,7 +953,14 @@ def build_model(
 
             custom_ui = chapter.get("ui")
             if "ui" not in chapter:
-                blueprint = default_blueprint
+                # 写了课文的章节自动走数据驱动页面（ADR 0055「新增一章 = 写一份
+                # JSON」）——作者不必再在配置里声明一次页面类型。显式写了 ui 的
+                # 仍然以它为准，type_semantics 那种自定义页面不受影响。
+                blueprint = (
+                    DATA_LESSON_BLUEPRINT
+                    if chapter_id in chapters_with_lessons
+                    else default_blueprint
+                )
             else:
                 custom_ui = require_object(custom_ui, f"{chapter_path}.ui")
                 reject_unknown_fields(custom_ui, UI_FIELDS, f"{chapter_path}.ui")
@@ -1194,7 +1291,7 @@ def build_model(
         ]
 
     # 课文引用的知识点必须存在，所以放在全部章节解析完之后校验。
-    lesson_files = validate_lessons(root, set(titles_by_function))
+    lesson_files = validate_lessons(root, set(titles_by_function), source_catalog)
 
     return {
         "config": config,

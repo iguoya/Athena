@@ -23,6 +23,7 @@ class ChapterPageStack;
 class CodeChapterPage;
 class ExperimentPage;
 class ExperimentRunner;
+class LessonPage;
 class PocketCubePage;
 class TypeSemanticsLessonPage;
 struct ExperimentSelection;
@@ -118,6 +119,8 @@ private:
     // 页面对象必须比其 builder 先销毁；声明在 builder map 之后，成员逆序
     // 析构自然满足。手册页常驻 Stack，ArticleView 生命周期由对象独占。
     std::map<string, unique_ptr<CodeChapterPage>> m_code_pages;
+    // 数据驱动学习页（ADR 0055）：写了课文的章节走这条路。
+    std::map<string, unique_ptr<LessonPage>> m_lesson_pages;
     std::map<string, unique_ptr<PocketCubePage>> m_pocket_cube_pages;
     // 学习工作台原型：目前只有 TypeSemantics 一章用它，独立于上面几个
     // map，不影响其他章节的构建路径。

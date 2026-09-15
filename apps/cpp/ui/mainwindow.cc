@@ -15,6 +15,8 @@
 #include "ui/experiment_page.h"
 #include "ui/pocket_cube_page.h"
 #include "ui/progress_overview.h"
+#include "ui/lesson_figures.h"
+#include "ui/lesson_page.h"
 #include "ui/type_semantics_lesson_page.h"
 
 #include <giomm/menu.h>
@@ -37,6 +39,8 @@ string index_page_key(const string& category_name) {
 }
 
 constexpr const char* kCppCategory = "cpp";
+// 数据驱动学习页的控件名，由 lesson_page.blp 的根控件名派生（ADR 0055）。
+constexpr const char* kDataLessonPageWidget = "lesson_page";
 constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // 由 athena.json 的 chapter.ui.blueprint 派生：blueprint 文件名去掉
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
@@ -129,8 +133,12 @@ void MainWindow::load_chapter_metadata() {
 }
 
 void MainWindow::open_learning_store() {
-    const string data_dir =
-        Glib::build_filename(Glib::get_user_data_dir(), "Athena");
+    // 进度随仓库走（ADR 0053）：工作树里写 apps/cpp/progress/，换一台机器
+    // clone 下来掌握度还在。发行包拿不到仓库路径，退回本机用户数据目录。
+    const string own_root = own_app_root();
+    const string data_dir = own_root.empty()
+        ? Glib::build_filename(Glib::get_user_data_dir(), "Athena")
+        : Glib::build_filename(own_root, "progress");
     g_mkdir_with_parents(data_dir.c_str(), 0700);
     try {
         m_learning_store = make_unique<LearningStore>(
@@ -391,6 +399,11 @@ void MainWindow::ensure_chapter_page(
             experiment_requested,
             overview_requested,
             [this]() { refresh_progress_page(); });
+    } else if (chapter.widget_name == kDataLessonPageWidget) {
+        // 课文里的 figure 块按 id 取控件。本章暂时全用表格与代码块表达，
+        // 需要自绘图时在这里注册，数据只决定它出现在哪一节（ADR 0055）。
+        m_lesson_pages[page_key] = make_unique<LessonPage>(
+            chapter, builder, make_lesson_figure, experiment_requested);
     } else if (chapter.widget_name == kPracticeCubePageWidget) {
         m_pocket_cube_pages[page_key] = make_unique<PocketCubePage>(
             chapter, builder, m_content_loader, overview_requested);

@@ -48,6 +48,17 @@ void table(
 // 一组有序步骤，序号自动编号。
 void steps(Gtk::Box& host, const vector<string>& items);
 
+// 一道随堂题：题干 + 选项，选完当场判对错并展开解析。
+// answer 是正确选项的下标。scored 为 true 时这道题算检验（计入随堂统计），
+// false 表示只是「先猜再验」的预测，猜错不扣什么，重点在于让预期显形。
+void quiz(
+    Gtk::Box& host,
+    const string& stem,
+    const vector<string>& options,
+    int answer,
+    const string& explain,
+    bool scored = true);
+
 // 一张静态插图加图注。数据驱动的图请用 DrawingArea 自己画，别走这里。
 void figure(
     Gtk::Box& host,

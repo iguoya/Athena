@@ -145,6 +145,52 @@ void steps(Gtk::Box& host, const vector<string>& items) {
     }
 }
 
+void quiz(
+    Gtk::Box& host,
+    const string& stem,
+    const vector<string>& options,
+    int answer,
+    const string& explain,
+    bool scored) {
+    const auto builder = load();
+    auto& root = take<Gtk::Box>(builder, "lesson_quiz");
+    auto& stem_label = take<Gtk::Label>(builder, "lesson_quiz_stem");
+    auto& option_box = take<Gtk::Box>(builder, "lesson_quiz_options");
+    auto& explain_label = take<Gtk::Label>(builder, "lesson_quiz_explain");
+
+    stem_label.set_text(scored ? stem : "先猜一下：" + stem);
+    explain_label.set_text(explain);
+
+    // 选完之后所有选项都不能再点：这道题的作用是让「我以为」和「实际是」
+    // 碰一次，反复试到蒙对就失去意义了（记忆 quiz-no-shortcut-to-pass）。
+    auto buttons = make_shared<vector<Gtk::Button*>>();
+    for (size_t index = 0; index < options.size(); ++index) {
+        const auto option_builder = load();
+        auto& button = take<Gtk::Button>(option_builder, "lesson_quiz_option");
+        button.set_label(options[index]);
+        buttons->push_back(&button);
+        option_box.append(button);
+    }
+    for (size_t index = 0; index < buttons->size(); ++index) {
+        (*buttons)[index]->signal_clicked().connect(
+            [buttons, &explain_label, index, answer] {
+                const bool right = static_cast<int>(index) == answer;
+                (*buttons)[index]->add_css_class(right ? "quiz-correct" : "quiz-wrong");
+                if (!right && answer >= 0
+                    && answer < static_cast<int>(buttons->size())) {
+                    // 选错时把正确答案也点亮——只说「错了」帮不上忙。
+                    (*buttons)[answer]->add_css_class("quiz-correct");
+                }
+                for (Gtk::Button* button : *buttons) {
+                    button->set_sensitive(false);
+                }
+                explain_label.set_visible(!explain_label.get_text().empty());
+            });
+    }
+
+    host.append(root);
+}
+
 void figure(
     Gtk::Box& host,
     const string& resource_path,

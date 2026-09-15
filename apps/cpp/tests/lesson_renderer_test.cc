@@ -105,3 +105,30 @@ TEST(LessonRendererTest, UnknownBlockTypeIsVisibleNotSilent) {
     const string shown = label->get_text().raw();
     EXPECT_NE(shown.find("no_such_block"), string::npos);
 }
+
+
+// 真实课文能不能渲染出来——数据驱动这条路的端到端验证。截图只能看一眼，
+// 这条能长期挡住「块类型加了但渲染器没跟上」这类回归。
+TEST(LessonRendererTest, RendersTheShippedChapterEndToEnd) {
+    const LessonChapter chapter = load_lesson_chapter("cpp.ValueSemantics");
+
+    vector<string> asked_figures;
+    LessonRenderer renderer([&](const string& id) -> Gtk::Widget* {
+        asked_figures.push_back(id);
+        return nullptr;
+    });
+
+    Gtk::Box outline_host(Gtk::Orientation::VERTICAL);
+    renderer.render(outline_host, chapter.outline);
+    EXPECT_GT(count_descendants(outline_host), 20);
+
+    for (const LessonDoc& doc : chapter.topics) {
+        Gtk::Box host(Gtk::Orientation::VERTICAL);
+        renderer.render(host, doc);
+        // 每节都该渲染出可观的内容，空壳页要能被这条发现。
+        EXPECT_GT(count_descendants(host), 15) << doc.topic;
+    }
+
+    // 课文里引用的图必须都是注册过的 id，否则页面上只剩图注。
+    EXPECT_EQ(asked_figures, vector<string>{"shallow_copy_aliasing"});
+}
