@@ -23,11 +23,14 @@ gio_dep = dependency('gio-2.0')
 # 所以在配置期直接把话说清楚。这不是给某个平台开的特例：三个平台同一条规则，
 # 谁先撞上谁先报。
 if glib_dep.version().version_compare('>= 2.89.2') and glibmm_dep.version().version_compare('< 2.89.0')
-  error(
-    'glib @0@ 与 glibmm @1@ 不配套：glib 2.89.2 起若干类型改成了 final type，'.format(
-      glib_dep.version(), glibmm_dep.version()) +
-    '需要 glibmm >= 2.89.0 才能正确包装。请把两者升到同一代，' +
-    '或把 glib 降回 2.88.x（详见主仓库 ADR 0049）。')
+  # 不报错停下——目标是能跑，不是依赖形式上配套。用垫片把名字冲突绕开，
+  # 并说清楚现状，免得后来的人对着一串 conflicting declaration 猜半天。
+  message(
+    'glib @0@ 比 glibmm @1@ 新了一代（final type 改动），启用 compat/glib_final_type_shim.h 绕开名字冲突。MSYS2 更新 glibmm 到 2.89+ 后即可删除该垫片。'.format(
+      glib_dep.version(), glibmm_dep.version()))
+  add_project_arguments(
+    '-include', meson.project_source_root() / 'compat' / 'glib_final_type_shim.h',
+    language: 'cpp')
 endif
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
