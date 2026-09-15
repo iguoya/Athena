@@ -1,0 +1,1493 @@
+{
+  "subject_id": "subject1",
+  "questions": [
+    {
+      "id": "drive.s1.license.001",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "驾驶机动车，应当依法取得机动车驾驶证。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "道路交通安全法第19条第一句就是这条义务。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第19条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "驾驶机动车，应当依法取得机动车驾驶证。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.002",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶人应当按照什么驾驶机动车？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驾驶证载明的准驾车型",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "自己熟悉的任意车型",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "单位分配的车型",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "排量接近的车型",
+          "ok": false
+        }
+      ],
+      "explain": "准驾车型写在驾驶证上，串型就是无证驾驶那一类问题。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第19条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "驾驶人应当按照驾驶证载明的准驾车型驾驶机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.003",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "尚未登记的机动车，只要贴上纸质号牌复印件，就可以上道路行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "未登记要取得临时通行牌证，复印件不算。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第8条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "尚未登记的机动车，需要临时上道路行驶的，应当取得临时通行牌证。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.004",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "科目一考试满分和合格分数分别是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "100 分，90 分合格",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "100 分，80 分合格",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "120 分，90 分合格",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "100 分，70 分合格",
+          "ok": false
+        }
+      ],
+      "explain": "公安部令第162号第38条：科目一满分100，90分合格。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "quoted",
+          "locator": "第38条第（一）项",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "科目一考试满分为100分，成绩达到90分的为合格。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.005",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "小型汽车科目一试卷为 100 题，应在 45 分钟内完成。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "GA 1026：其他车型 100 题；申领驾驶证的科目一时长 45 分钟。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "4.1.4 / 5.1.2",
+          "url": "http://jj.ga.zhuhai.gov.cn/ConvenienceGuide/Details/173",
+          "note": "其他车型100题；申领机动车驾驶证应在45min内完成。"
+        },
+        {
+          "source_id": "license-order-162",
+          "relation": "exam_alignment",
+          "locator": "第38条第（一）项",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "合格标准仍是百分制90分。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.006",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "机动车驾驶人初次申领机动车驾驶证后的 12 个月为实习期。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第22条把实习期定为12个月。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车驾驶人初次申领机动车驾驶证后的12个月为实习期。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.007",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "实习期内驾驶机动车，应当在车身后部怎样做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "粘贴或者悬挂统一式样的实习标志",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "只在驾驶证上标注实习即可",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "在前风窗玻璃放实习卡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "无需任何标志",
+          "ok": false
+        }
+      ],
+      "explain": "标志要让后车看得见，所以在车身后部。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "在实习期内驾驶机动车的，应当在车身后部粘贴或者悬挂统一式样的实习标志。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.license.008",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "实习期内可以驾驶执行任务的消防车、救护车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "条例第22条明确实习期内不得驾驶执行任务的警车、消防车、救护车、工程救险车等。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "实习期内不得驾驶公共汽车、营运客车或者执行任务的警车、消防车、救护车、工程救险车以及载有危险物品的机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.001",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "车辆、行人应当按照交通信号通行；遇有交通警察现场指挥时，应当按照交通警察的指挥通行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "现场指挥优先于灯和标志，这是第38条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第38条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "车辆、行人应当按照交通信号通行；遇有交通警察现场指挥时，应当按照交通警察的指挥通行。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.002",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车行经人行横道，遇行人正在通过时，应当怎么做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "停车让行",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "减速绕行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "鸣喇叭催促",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "加速通过以免堵塞",
+          "ok": false
+        }
+      ],
+      "explain": "第47条：遇行人正在通过人行横道，应当停车让行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第47条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车行经人行横道时，应当减速行驶；遇行人正在通过人行横道，应当停车让行。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.003",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "机动车行经没有交通信号的道路时，遇行人横过道路，应当避让。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "没有斑马线也不等于行人必须让车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第47条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车行经没有交通信号的道路时，遇行人横过道路，应当避让。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.004",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "同车道行驶时，后车应当与前车保持什么距离？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "足以采取紧急制动措施的安全距离",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "至少三车身，不论车速",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "跟紧以免加塞",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "与限速牌数字相同的米数",
+          "ok": false
+        }
+      ],
+      "explain": "第43条要求的是「足以采取紧急制动措施」，不是固定车身数。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第43条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "同车道行驶的机动车，后车应当与前车保持足以采取紧急制动措施的安全距离。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.005",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "前车正在左转弯、掉头、超车时，后车不得超车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第43条列举的不得超车情形之一。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第43条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "有下列情形之一的，不得超车：（一）前车正在左转弯、掉头、超车的。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.006",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "行经铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道等没有超车条件的路段，不得超车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这些地点没有超车所需的视距和横向空间。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第43条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "行经铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道、市区交通流量大的路段等没有超车条件的，不得超车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.007",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车上道路行驶，关于最高时速，下列哪项正确？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不得超过限速标志标明的最高时速",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "可以超过限速标志 10% 以内",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "只在高速公路才受限速标志约束",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只要感觉安全就可以超过",
+          "ok": false
+        }
+      ],
+      "explain": "第42条把上限钉在标志上，没有「超一点没关系」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车上道路行驶，不得超过限速标志标明的最高时速。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.008",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "夜间行驶或者遇有雨、雪、雾等气象条件时，应当降低行驶速度。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第42条把能见度和路面条件列为必须降速的情形。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "夜间行驶或者在容易发生危险的路段行驶，以及遇有沙尘、冰雹、雨、雪、雾、结冰等气象条件时，应当降低行驶速度。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.rules.009",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "与对面来车有会车可能时，可以加速完成超车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "第43条：与对面来车有会车可能的，不得超车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第43条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "与对面来车有会车可能的，不得超车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.001",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "judge",
+      "prompt": "饮酒后不得驾驶机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第22条把饮酒列为不得驾驶的情形，没有「少量可以」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "饮酒、服用国家管制的精神药品或者麻醉药品，或者患有妨碍安全驾驶机动车的疾病，或者过度疲劳影响安全驾驶的，不得驾驶机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.002",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "judge",
+      "prompt": "服用国家管制的精神药品或者麻醉药品后，只要自我感觉良好，就可以驾驶机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "法条禁止的是服药本身，不是「感觉不好才禁止」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "服用国家管制的精神药品或者麻醉药品……不得驾驶机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.003",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "judge",
+      "prompt": "过度疲劳影响安全驾驶的，不得驾驶机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "疲劳和饮酒写在同一款里，都是禁止驾驶的条件。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "过度疲劳影响安全驾驶的，不得驾驶机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.004",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "驾驶人驾驶机动车上道路行驶前，应当做什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "对机动车的安全技术性能进行认真检查",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "只检查油量",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "只看外观有没有刮痕",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "把检查交给乘车人",
+          "ok": false
+        }
+      ],
+      "explain": "第21条把检查义务放在上路之前。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第21条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "驾驶人驾驶机动车上道路行驶前，应当对机动车的安全技术性能进行认真检查。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.005",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "judge",
+      "prompt": "不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "隐患车开上路，本身就违法。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第21条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.006",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "judge",
+      "prompt": "任何人不得强迫、指使、纵容驾驶人违反道路交通安全法律、法规和机动车安全驾驶要求驾驶机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "车主、领导、乘客都不能把违法驾驶当成「要求」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第22条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "任何人不得强迫、指使、纵容驾驶人违反道路交通安全法律、法规和机动车安全驾驶要求驾驶机动车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.alcohol.007",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "饮酒后驾驶机动车，除暂扣驾驶证外，还应当并处？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "一千元以上二千元以下罚款",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "只警告一次",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "五百元固定罚款",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只记分不罚款",
+          "ok": false
+        }
+      ],
+      "explain": "第91条对饮酒后驾驶机动车：暂扣六个月驾驶证，并处一千元以上二千元以下罚款。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第91条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.signals.001",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "禁令标志的基本形状通常是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "白底红圈",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "黄底黑边正三角形",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "蓝底圆形或矩形",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "绿底矩形",
+          "ok": false
+        }
+      ],
+      "explain": "禁令用红圈约束「不许做什么」；黄三角是警告。界面里的红圈示意即此类。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "标志分类：禁令标志",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "禁令标志以红色圆圈为显著特征。本题按标准分类改写，不附标准图样。"
+        }
+      ],
+      "sign": "no_entry"
+    },
+    {
+      "id": "drive.s1.signals.002",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "警告标志的基本形状通常是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "黄底黑边正三角形",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "白底红圈",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "蓝底圆形",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "白底黑边菱形",
+          "ok": false
+        }
+      ],
+      "explain": "警告标志提醒前方危险，不是禁止某一行为。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "标志分类：警告标志",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "警告标志以等边三角形、黄底黑边为显著特征。"
+        }
+      ],
+      "sign": "warning_pedestrian"
+    },
+    {
+      "id": "drive.s1.signals.003",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "指示标志的基本颜色通常是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "蓝色",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "红色",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "黄色",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "黑色",
+          "ok": false
+        }
+      ],
+      "explain": "指示告诉你可以走哪条路、用哪种方式，常见蓝底。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "标志分类：指示标志",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "指示标志以蓝色为显著特征。"
+        }
+      ],
+      "sign": "pedestrian"
+    },
+    {
+      "id": "drive.s1.signals.004",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "图中红圈内有白色横杠的标志，表示禁止驶入。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "红圈加横杠是典型的禁止驶入，不是「减速让行」。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "禁止驶入",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "禁止驶入标志为红圈白底加红色横杠。"
+        }
+      ],
+      "sign": "no_entry"
+    },
+    {
+      "id": "drive.s1.signals.005",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "红圈内数字 40，表示最高时速不得超过 40 公里。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "限速是禁令，红圈数字即最高时速。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "限制速度",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "限制速度标志为红圈白底，中间黑色数字为最高时速。"
+        }
+      ],
+      "sign": "speed_40"
+    },
+    {
+      "id": "drive.s1.signals.006",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "向左转弯、向左变更车道、准备超车、驶离停车地点或者掉头时，应当提前开启？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左转向灯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "右转向灯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "危险报警闪光灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "远光灯",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第57条把「向左的动作」都归到左转向灯。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第57条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "向左转弯、向左变更车道、准备超车、驶离停车地点或者掉头时，应当提前开启左转向灯。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.signals.007",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "向右转弯、向右变更车道、超车完毕驶回原车道、靠路边停车时，应当提前开启？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "右转向灯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "左转向灯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "雾灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "倒车灯即可",
+          "ok": false
+        }
+      ],
+      "explain": "和上题对称，向右的动作开右灯。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第57条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "向右转弯、向右变更车道、超车完毕驶回原车道、靠路边停车时，应当提前开启右转向灯。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.signals.008",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "在没有交通信号的道路上，应当在确保安全、畅通的原则下通行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第38条后半句：没灯没警察，安全畅通优先。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第38条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "在没有交通信号的道路上，应当在确保安全、畅通的原则下通行。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.001",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "行人、非机动车不得进入高速公路。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第67条把行人和非机动车排除在高速公路之外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第67条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "行人、非机动车、拖拉机、轮式专用机械车、铰接式客车、全挂拖斗车以及其他设计最高时速低于七十公里的机动车，不得进入高速公路。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.002",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "设计最高时速低于七十公里的机动车，不得进入高速公路。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "和行人、非机动车写在同一句里。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第67条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "设计最高时速低于七十公里的机动车，不得进入高速公路。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.003",
+      "topic_id": "drive.s1.highway",
+      "kind": "single",
+      "prompt": "高速公路限速标志标明的最高时速不得超过？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "一百二十公里",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "一百公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "八十公里",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "一百四十公里",
+          "ok": false
+        }
+      ],
+      "explain": "第67条把高速公路最高时速的上限钉在 120。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第67条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "高速公路限速标志标明的最高时速不得超过一百二十公里。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.004",
+      "topic_id": "drive.s1.highway",
+      "kind": "single",
+      "prompt": "高速公路应当标明车道的行驶速度，最低车速不得低于每小时多少公里？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "60",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "40",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "80",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "50",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第78条：最高不超过 120，最低不低于 60。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第78条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "高速公路应当标明车道的行驶速度，最高车速不得超过每小时120公里，最低车速不得低于每小时60公里。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.005",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "机动车在高速公路上发生故障时，警告标志应当设置在故障车来车方向一百五十米以外。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "高速公路比普通道路更长的后撤距离，给人反应时间。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第68条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "警告标志应当设置在故障车来车方向一百五十米以外。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.006",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "机动车在高速公路上发生故障，车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "人先离开行车道，再报警。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第68条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.007",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "机动车在高速公路上可以倒车、逆行或者穿越中央分隔带掉头。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "实施条例第82条把这些动作全部禁止。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第82条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车在高速公路上行驶，不得倒车、逆行、穿越中央分隔带掉头或者在车道内停车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.highway.008",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "机动车不得在高速公路匝道、加速车道或者减速车道上超车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "加减速车道是用来变速并入的，不是超车道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第82条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "不得在匝道、加速车道或者减速车道上超车。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.001",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第51条把驾驶人和乘坐人员写在一起，后排也不是例外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第51条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.002",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "摩托车驾驶人及乘坐人员应当按规定戴安全头盔。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "和第51条安全带写在同一条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第51条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "摩托车驾驶人及乘坐人员应当按规定戴安全头盔。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.003",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "机动车应当在什么地点停放？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "规定地点",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "人行道上靠右即可",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "路口中心方便离开",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "任意空地",
+          "ok": false
+        }
+      ],
+      "explain": "第56条：应当在规定地点停放。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第56条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车应当在规定地点停放。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.004",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "禁止在人行道上停放机动车；依照规定施划的停车泊位除外。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "人行道不是停车场，划了泊位才例外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第56条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "禁止在人行道上停放机动车；但是，依照本法第三十三条规定施划的停车泊位除外。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.005",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "在道路上临时停车的，不得妨碍其他车辆和行人通行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "临时停也要让路还走得动。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第56条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "在道路上临时停车的，不得妨碍其他车辆和行人通行。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.006",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "驾驶机动车不得拨打接听手持电话、观看电视等妨碍安全驾驶的行为。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第62条把手机和看电视并列禁止。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第62条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "驾驶机动车不得拨打接听手持电话、观看电视等妨碍安全驾驶的行为。"
+        }
+      ]
+    },
+    {
+      "id": "drive.s1.occupants.007",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "驾驶机动车下陡坡时可以熄火或者空挡滑行，以节省燃油。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "条例第62条禁止下陡坡熄火或空挡滑行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第62条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "不得下陡坡时熄火或者空挡滑行。"
+        }
+      ]
+    }
+  ]
+}

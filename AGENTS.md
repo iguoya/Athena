@@ -22,6 +22,7 @@ apps/<id>/     一个目录一个独立学习应用，彼此完全平级
   dsa/         数据结构与算法（Tauri）
   english/     英语学习（Tauri）
   mathematics/ 数学学习（Tauri）
+  driving/     驾驶学习（Flutter 桌面，科目一 / 科目四）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查

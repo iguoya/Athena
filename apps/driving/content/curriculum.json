@@ -1,0 +1,137 @@
+{
+  "id": "driving",
+  "title": "驾驶学习",
+  "plain_title": "把科目一和科目四的规则练到考场够用",
+  "scope_note": "法规里的「科目三安全文明驾驶常识」，学习者口头叫科目四。本应用只做这两门理论，不做场地和上路。",
+  "subjects": [
+    {
+      "id": "subject1",
+      "code": "科目一",
+      "title": "道路交通安全法律、法规和相关知识",
+      "exam": {
+        "question_count": 100,
+        "minutes": 45,
+        "pass_score": 90,
+        "points_per_question": 1
+      },
+      "outline": {
+        "pain": "不会开车先要过闭卷法规：资格、让行、酒驾、标志，考场按全国题库抽 100 题。",
+        "model": "先记住几条硬边界（没证不能开、人行横道停车让行、酒驾不得开），再把它接到具体场景。",
+        "boundary": "本期只收能指到法条或标准的题，不收录商业题库原题。",
+        "judgment": "拿不准时回到条文本身，不要靠口诀硬背例外。",
+        "landing": "按章练习，再用模拟考按 45 分钟、90 分及格检验。"
+      },
+      "topics": [
+        {
+          "id": "drive.s1.license",
+          "title": "驾驶证与准驾",
+          "difficulty": 1,
+          "mastery_goal": "掌握",
+          "knowledge_type": "概念",
+          "requires": []
+        },
+        {
+          "id": "drive.s1.rules",
+          "title": "通行、超车与让行",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "策略",
+          "requires": ["drive.s1.license"]
+        },
+        {
+          "id": "drive.s1.alcohol",
+          "title": "饮酒、疲劳与安全义务",
+          "difficulty": 1,
+          "mastery_goal": "掌握",
+          "knowledge_type": "概念",
+          "requires": ["drive.s1.license"]
+        },
+        {
+          "id": "drive.s1.signals",
+          "title": "交通信号与标志",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "技能",
+          "requires": ["drive.s1.rules"]
+        },
+        {
+          "id": "drive.s1.highway",
+          "title": "高速公路",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "策略",
+          "requires": ["drive.s1.rules"]
+        },
+        {
+          "id": "drive.s1.occupants",
+          "title": "安全带、停放与乘员",
+          "difficulty": 1,
+          "mastery_goal": "掌握",
+          "knowledge_type": "技能",
+          "requires": ["drive.s1.rules"]
+        }
+      ]
+    },
+    {
+      "id": "subject4",
+      "code": "科目四",
+      "title": "安全文明驾驶常识",
+      "official_name": "科目三安全文明驾驶常识",
+      "exam": {
+        "question_count": 50,
+        "minutes": 45,
+        "pass_score": 90,
+        "points_per_question": 2
+      },
+      "outline": {
+        "pain": "会开不等于会处置：灯光、故障、恶劣天气、事故现场，考场用情景题抽 50 题。",
+        "model": "先想「这一刻最大的危险是什么」，再选灯、距离和人该去哪。",
+        "boundary": "不教踩离合、倒库；急救只收法律要求的现场义务，不替代专业救护培训。",
+        "judgment": "能引用条例里的距离和灯光规定，就不要用坊间口诀顶替。",
+        "landing": "按场景练习，模拟考 45 分钟、折合 90 分及格。"
+      },
+      "topics": [
+        {
+          "id": "drive.s4.crash",
+          "title": "事故现场与责任",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "策略",
+          "requires": ["drive.s1.rules"]
+        },
+        {
+          "id": "drive.s4.lights",
+          "title": "灯光与视线",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "技能",
+          "requires": ["drive.s1.signals"]
+        },
+        {
+          "id": "drive.s4.weather",
+          "title": "恶劣气象与复杂道路",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "策略",
+          "requires": ["drive.s1.rules"]
+        },
+        {
+          "id": "drive.s4.emergency",
+          "title": "故障、警告标志与避险",
+          "difficulty": 2,
+          "mastery_goal": "掌握",
+          "knowledge_type": "技能",
+          "requires": ["drive.s1.highway"]
+        },
+        {
+          "id": "drive.s4.aid",
+          "title": "伤员救护义务",
+          "difficulty": 1,
+          "mastery_goal": "掌握",
+          "knowledge_type": "概念",
+          "requires": ["drive.s4.crash"]
+        }
+      ]
+    }
+  ]
+}

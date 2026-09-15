@@ -43,7 +43,7 @@ impl RunState {
     }
 }
 
-/// 一次性把全部进程读出来，再判断每个应用的状态：五个应用只扫一遍进程表。
+/// 一次性把全部进程读出来，再判断每个应用的状态：各应用只扫一遍进程表。
 pub struct ProcessSnapshot {
     system: System,
 }

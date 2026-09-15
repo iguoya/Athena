@@ -12,6 +12,7 @@
 | [`apps/dsa`](apps/dsa) | 数据结构与算法 | Tauri + Vite |
 | [`apps/english`](apps/english) | 英语学习 | Tauri + Vite |
 | [`apps/mathematics`](apps/mathematics) | 数学学习 | Tauri + Vite |
+| [`apps/driving`](apps/driving) | 驾驶学习 | Flutter 桌面 |
 
 每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
 [`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。
@@ -48,7 +49,7 @@ python3 scripts/check.py cpp        # 只跑某个应用，余下参数透传给
 python3 scripts/check.py dsa --skip-rust   # Tauri 应用可以跳过较慢的 Rust 那段
 ```
 
-CI 跑的是同一条命令，五个应用各一个 job。
+CI 跑的是同一条命令，每个应用各一个 job。
 
 ## 文档
 
