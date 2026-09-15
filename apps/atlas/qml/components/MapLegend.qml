@@ -21,5 +21,5 @@ RowLayout {
         }
     }
     Item { Layout.fillWidth: true }
-    Text { text: "验收：最坏延迟 / 抖动　·　吞吐与搬运　·　十七所为重要参考　·　实线强先修　虚线使能"; color: "#5A6D72"; font.pixelSize: 13 }
+    Text { text: "验收：测量　·　基准　·　集成　·　评审　·　实线强先修　虚线使能"; color: "#5A6D72"; font.pixelSize: 13 }
 }

@@ -10,30 +10,20 @@ Rectangle {
     color: "#132B35"
 
     readonly property var groupedMaps: {
-        const trunk = []
-        const support = []
-        const reference = []
-        const adjacent = []
+        // 两组就够：学科入口撑起大方向，方向图落在它们上面。
+        // 分组只读 view_kind，不读地位字段——地位一旦进了分组名，图谱就会被
+        // 某个外部标尺重划一次（这正是要退回的那次改动）。
+        const discipline = []
+        const direction = []
         for (let i = 0; i < maps.length; ++i) {
             const map = maps[i]
-            // 一个能力域一个入口（ADR 0008）：体系图当入口，实操图由内容区的标签页
-            // 进入。以前两者各占一行，同一个能力域被拆到互不相邻的两个分组里。
-            if (map.family !== "system")
-                continue
-            if (map.emphasis === "support") support.push(map)
-            else if (map.emphasis === "reference") reference.push(map)
-            else if (map.emphasis === "adjacent") adjacent.push(map)
-            else trunk.push(map)
+            if (map.view_kind === "academic") discipline.push(map)
+            else direction.push(map)
         }
-        // muted 的分组在视觉上退一层：参考资料不该和主干抢注意力。
         const grouped = []
         const groups = [
-            // 叫「主干」不叫「体系主干」：标签页那边已经有一个「体系」，
-            // 两处用同一个词指不同的东西会打架——这里分的是地位，那里切的是视角。
-            { title: "主干", maps: trunk, muted: false },
-            { title: "助力方向", maps: support, muted: false },
-            { title: "重要参考", maps: reference, muted: false },
-            { title: "相邻参考", maps: adjacent, muted: true }
+            { title: "技术体系", maps: discipline, muted: false },
+            { title: "职业方向", maps: direction, muted: false }
         ]
         for (let g = 0; g < groups.length; ++g) {
             if (groups[g].maps.length === 0)
@@ -46,16 +36,13 @@ Rectangle {
     }
 
     function subtitleFor(map) {
-        if (map.emphasis === "support") return "研制辅助 · 不进飞控"
-        if (map.emphasis === "reference") return "十七所对照 · 不与主干平级"
-        if (map.emphasis === "adjacent") return "相邻领域 · 低于主干"
-        return map.view_kind === "academic" ? "学科视图" : "工程 / 研制投影"
+        if (map.view_kind === "academic") return "学科入口 · 通用技术底盘"
+        if (map.view_kind === "engineering") return "工程系统 · 高阶标尺"
+        return "职业方向"
     }
 
-    // 选中态认配对关系：在实操视角时，侧栏仍要高亮这个能力域，否则切过去就变成
-    // 「谁都没选中」，使用者会以为自己离开了它（ADR 0008）。
     function isCurrent(map) {
-        return root.selectedMapId === map.id || root.selectedMapId === map.companion_map
+        return root.selectedMapId === map.id
     }
 
     ColumnLayout {
@@ -158,7 +145,7 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            text: "主干用实时与高性能从软件调度、硬件通路两侧验收。十七所实时控制放在重要参考，机器人放在相邻参考，都不与主干平级。实线是强先修，虚线是使能。"
+            text: "两张学科入口撑起通用技术底盘，五个方向图落在它上面。每个节点都给出稳定定义、工程角色、动手练习和验收方式。实线是强先修，虚线是使能。"
             color: "#9BB5B0"
             font.pixelSize: 13
             wrapMode: Text.WordWrap

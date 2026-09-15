@@ -38,7 +38,7 @@ Rectangle {
             Text {
                 visible: !root.hasNode
                 Layout.fillWidth: true
-                text: "主干看实时与高性能的软、硬件边界。四院十七所的实时控制总体放在重要参考；机器人放在相邻参考。大模型只在助力方向，不进飞控。"
+                text: "从左侧选一个节点，这里会展开它的稳定定义、工程角色、动手练习和验收方式。两张学科入口是通用底盘，方向图落在它上面。"
                 color: "#52666D"
                 wrapMode: Text.WordWrap
                 font.pixelSize: 16

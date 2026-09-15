@@ -212,19 +212,7 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
     QSet<QString> globalNodeIds;
     for (const QVariant& mapValue : maps) {
         const QVariantMap map = mapValue.toMap();
-        if (!hasNonEmptyStrings(map, {"id", "title", "summary", "view_kind", "family", "companion_map", "emphasis"}, error)) {
-            return false;
-        }
-        const QString family = map.value("family").toString();
-        if (family != "system" && family != "playbook") {
-            *error = QString("地图 %1 的 family 只能是 system 或 playbook。").arg(map.value("id").toString());
-            return false;
-        }
-        const QString emphasis = map.value("emphasis").toString();
-        if (emphasis != "trunk" && emphasis != "support" && emphasis != "reference"
-            && emphasis != "adjacent") {
-            *error = QString("地图 %1 的 emphasis 只能是 trunk、support、reference 或 adjacent。")
-                         .arg(map.value("id").toString());
+        if (!hasNonEmptyStrings(map, {"id", "title", "summary", "view_kind"}, error)) {
             return false;
         }
         const QString mapId = map.value("id").toString();
@@ -275,29 +263,6 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
                     return false;
                 }
             }
-        }
-
-        // 学习取舍不是视觉标签：每个节点必须且只能属于一个投入优先级。
-        const QVariantMap priorityTiers = map.value("priority_tiers").toMap();
-        const QStringList knownTiers {"essential", "growth", "specialist"};
-        QSet<QString> classified;
-        for (const QString& tier : knownTiers) {
-            for (const QString& nodeId : stringList(priorityTiers, tier.toUtf8().constData())) {
-                if (!nodeIds.contains(nodeId)) {
-                    *error = QString("地图 %1 的优先级 %2 引用了不存在节点 %3。")
-                        .arg(mapId, tier, nodeId);
-                    return false;
-                }
-                if (classified.contains(nodeId)) {
-                    *error = QString("地图 %1 的节点 %2 被重复划入优先级。").arg(mapId, nodeId);
-                    return false;
-                }
-                classified.insert(nodeId);
-            }
-        }
-        if (classified != nodeIds) {
-            *error = QString("地图 %1 的 priority_tiers 必须完整划分全部节点。").arg(mapId);
-            return false;
         }
 
         QSet<QString> requiredEdges;
@@ -363,79 +328,6 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
         }
     }
 
-    QHash<QString, QString> mapFamily;
-    QHash<QString, QString> companionOf;
-    QHash<QString, QString> nodeFamily;
-    QHash<QString, QString> mapEmphasis;
-    for (const QVariant& mapValue : maps) {
-        const QVariantMap map = mapValue.toMap();
-        const QString mapId = map.value("id").toString();
-        const QString family = map.value("family").toString();
-        mapFamily.insert(mapId, family);
-        mapEmphasis.insert(mapId, map.value("emphasis").toString());
-        companionOf.insert(mapId, map.value("companion_map").toString());
-        for (const QVariant& nodeValue : map.value("nodes").toList()) {
-            nodeFamily.insert(nodeValue.toMap().value("id").toString(), family);
-        }
-    }
-    if (!mapFamily.values().contains("system") || !mapFamily.values().contains("playbook")) {
-        *error = "体系地图与实操地图必须同时存在。";
-        return false;
-    }
-    for (auto it = companionOf.cbegin(); it != companionOf.cend(); ++it) {
-        if (!mapIds.contains(it.value())) {
-            *error = QString("地图 %1 的 companion_map 不存在：%2").arg(it.key(), it.value());
-            return false;
-        }
-        if (companionOf.value(it.value()) != it.key()) {
-            *error = QString("地图 %1 与 %2 的 companion_map 必须成对互指。").arg(it.key(), it.value());
-            return false;
-        }
-        if (mapFamily.value(it.key()) == mapFamily.value(it.value())) {
-            *error = QString("地图 %1 的 companion_map 必须指向另一类地图。").arg(it.key());
-            return false;
-        }
-        if (mapEmphasis.value(it.key()) != mapEmphasis.value(it.value())) {
-            *error = QString("地图 %1 与其配对图的 emphasis 必须一致。").arg(it.key());
-            return false;
-        }
-    }
-
-    for (const QVariant& mapValue : maps) {
-        const QVariantMap map = mapValue.toMap();
-        const QString family = map.value("family").toString();
-        for (const QVariant& nodeValue : map.value("nodes").toList()) {
-            const QVariantMap node = nodeValue.toMap();
-            const QString nodeId = node.value("id").toString();
-            const QVariantMap kit = node.value("kit").toMap();
-            const QStringList orients = stringList(node, "orients");
-            if (family == "system") {
-                if (!kit.isEmpty() || !orients.isEmpty()) {
-                    *error = QString("体系节点 %1 不得携带 kit 或 orients。").arg(nodeId);
-                    return false;
-                }
-                continue;
-            }
-            if (!hasNonEmptyStrings(kit, {"reading", "tooling", "artifact"}, error)) {
-                *error = QString("实操节点 %1：%2").arg(nodeId, *error);
-                return false;
-            }
-            if (orients.isEmpty()) {
-                *error = QString("实操节点 %1 必须用 orients 指向至少一个体系节点。").arg(nodeId);
-                return false;
-            }
-            for (const QString& target : orients) {
-                if (!globalNodeIds.contains(target)) {
-                    *error = QString("实操节点 %1 的 orients 引用了不存在的节点 %2。").arg(nodeId, target);
-                    return false;
-                }
-                if (nodeFamily.value(target) != "system") {
-                    *error = QString("实操节点 %1 只能指向体系节点，不能指向 %2。").arg(nodeId, target);
-                    return false;
-                }
-            }
-        }
-    }
     return true;
 }
 
@@ -458,10 +350,11 @@ bool AtlasCatalog::reload() {
     m_maps = document.value("maps").toList();
     emit catalogChanged();
 
+    // 默认落在第一张学科入口图上：方向图要先有学科底盘才谈得上选方向。
     QString fallbackMapId = m_maps.first().toMap().value("id").toString();
     for (const QVariant& mapValue : m_maps) {
         const QVariantMap map = mapValue.toMap();
-        if (map.value("family").toString() == "system" && map.value("emphasis").toString() == "trunk") {
+        if (map.value("view_kind").toString() == "academic") {
             fallbackMapId = map.value("id").toString();
             break;
         }

@@ -8,43 +8,50 @@ class AtlasCatalogTest final : public QObject {
 private slots:
     void loadsAllMapsAndLaysOutAcyclicDependencies();
     void preservesStrictMapSelection();
-    void opensPairedPlaybookWithConcreteKit();
-    void keepsRealtimeControlReferenceOffTheDefaultTrunk();
+    void defaultsToAnAcademicEntryMap();
+    void everyNodeCarriesItsOwnPractice();
 };
 
 void AtlasCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
     QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
-    QCOMPARE(catalog.maps().size(), 18);
+    QCOMPARE(catalog.maps().size(), 7);
     QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-practice"));
-    QCOMPARE(catalog.selectedMapFamily(), QStringLiteral("system"));
     QVERIFY(catalog.nodes().size() >= 6);
     QVERIFY(catalog.edges().size() >= 5);
     QVERIFY(catalog.canvasWidth() >= 1280);
     QVERIFY(catalog.canvasHeight() >= 720);
 }
 
-void AtlasCatalogTest::keepsRealtimeControlReferenceOffTheDefaultTrunk() {
+// 两张学科入口是底盘，方向图落在它上面；所以默认不能落在某个方向图上。
+void AtlasCatalogTest::defaultsToAnAcademicEntryMap() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
     QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-practice"));
-    catalog.openMap("control-17");
-    QCOMPARE(catalog.selectedMapId(), QStringLiteral("control-17"));
-    QCOMPARE(catalog.selectedCompanionMapId(), QStringLiteral("control-17-playbook"));
-    catalog.openMap("robot-systems");
-    QCOMPARE(catalog.selectedMapId(), QStringLiteral("robot-systems"));
-    QCOMPARE(catalog.selectedCompanionMapId(), QStringLiteral("robot-playbook"));
+    int academic = 0;
+    for (const QVariant& value : catalog.maps()) {
+        if (value.toMap().value("view_kind").toString() == "academic") {
+            ++academic;
+        }
+    }
+    QCOMPARE(academic, 2);
 }
 
-void AtlasCatalogTest::opensPairedPlaybookWithConcreteKit() {
+// 动手练习属于节点本身，不是另一张地图：把 practice 抽成独立实操图，会让同一个
+// 能力域在侧栏里出现两次。这条断言就是防止再走回那条路。
+void AtlasCatalogTest::everyNodeCarriesItsOwnPractice() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
-    QCOMPARE(catalog.selectedCompanionMapId(), QStringLiteral("computer-playbook"));
-    catalog.openMap("computer-playbook");
-    QCOMPARE(catalog.selectedMapFamily(), QStringLiteral("playbook"));
-    catalog.selectNode("atlas.play.cs.toolchain");
-    const QVariantMap kit = catalog.selectedNode().value("kit").toMap();
-    QVERIFY(!kit.value("reading").toString().isEmpty());
-    QVERIFY(!kit.value("tooling").toString().isEmpty());
-    QVERIFY(!kit.value("artifact").toString().isEmpty());
+    for (const QVariant& mapValue : catalog.maps()) {
+        const QVariantMap map = mapValue.toMap();
+        catalog.openMap(map.value("id").toString());
+        QVERIFY(!catalog.nodes().isEmpty());
+        for (const QVariant& nodeValue : catalog.nodes()) {
+            const QVariantMap node = nodeValue.toMap();
+            QVERIFY2(!node.value("practice").toString().isEmpty(),
+                     qPrintable(QStringLiteral("节点 %1 没有动手练习")
+                                    .arg(node.value("id").toString())));
+            QVERIFY(!node.value("validation").toString().isEmpty());
+        }
+    }
 }
 
 void AtlasCatalogTest::preservesStrictMapSelection() {
@@ -53,7 +60,7 @@ void AtlasCatalogTest::preservesStrictMapSelection() {
     QCOMPARE(catalog.selectedMapId(), QStringLiteral("embedded-realtime"));
     catalog.selectNode("atlas.embedded.bringup");
     QCOMPARE(catalog.selectedNode().value("id").toString(), QStringLiteral("atlas.embedded.bringup"));
-    catalog.openMap("vehicle-engineering");
+    catalog.openMap("aerospace-engineering");
     QVERIFY(catalog.selectedNode().isEmpty());
 }
 
