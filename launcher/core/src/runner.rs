@@ -178,6 +178,9 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
     }
 
     say(&format!("[启动] {}", app.dev.run.join(" ")));
+    // 长驻命令的 stdin 不能继承编排器：`athena-dev open` 返回后父进程退出，
+    // 子进程会读到 EOF。Flutter 的 resident runner 因此整段退出，启动器只能
+    // 每次冷编译。接到 /dev/null，热重载由各应用自己的监视器负责。
     let stdout = log
         .try_clone()
         .map_err(|error| format!("日志复制失败：{error}"))?;
@@ -185,6 +188,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
         .try_clone()
         .map_err(|error| format!("日志复制失败：{error}"))?;
     let child = command(app, repo, &app.dev.run)
+        .stdin(Stdio::null())
         .stdout(Stdio::from(stdout))
         .stderr(Stdio::from(stderr))
         .spawn()
@@ -336,5 +340,65 @@ pub fn activate(app: &App) -> Result<(), String> {
         return Err(format!("{} 已经在运行，但没找到 wmctrl / xdotool", app.title));
     }
 
-    Err(format!("{} 已经在运行", app.title))
+    activate_windows(pid, &app.title)
+}
+
+/// Windows：按 pid 找到它的可见顶层窗口，还原并提到最前。
+///
+/// 没有跨平台库能做这件事——把别人的窗口抢到前台，各系统的策略本就不同
+/// （Wayland 干脆禁止）。所以这里是 ADR 0047 说的「这个平台真的提供了别处没有
+/// 的能力」那一类，分支关在本函数内。
+///
+/// SetForegroundWindow 有前台锁：调用方不在前台时系统可能只闪任务栏图标而不
+/// 真正切换。启动器自己此刻通常是前台（用户刚点了它），所以一般能成；不成也
+/// 只是少切一次窗口，不影响别的。
+#[cfg(windows)]
+fn activate_windows(pid: u32, title: &str) -> Result<(), String> {
+    use windows::core::BOOL;
+    use windows::Win32::Foundation::{HWND, LPARAM};
+    use windows::Win32::UI::WindowsAndMessaging::{
+        EnumWindows, GetWindowThreadProcessId, IsIconic, IsWindowVisible, SetForegroundWindow,
+        ShowWindow, SW_RESTORE,
+    };
+
+    struct Hunt {
+        pid: u32,
+        found: Option<HWND>,
+    }
+
+    // 回调里只做筛选：属于目标进程、且是可见的顶层窗口。找到就停止枚举。
+    unsafe extern "system" fn visit(hwnd: HWND, lparam: LPARAM) -> BOOL {
+        let hunt = unsafe { &mut *(lparam.0 as *mut Hunt) };
+        let mut owner = 0u32;
+        unsafe { GetWindowThreadProcessId(hwnd, Some(&mut owner)) };
+        if owner == hunt.pid && unsafe { IsWindowVisible(hwnd) }.as_bool() {
+            hunt.found = Some(hwnd);
+            return BOOL(0); // 停止枚举
+        }
+        BOOL(1) // 继续找下一个
+    }
+
+    let mut hunt = Hunt { pid, found: None };
+    // EnumWindows 在回调返回 FALSE 时整体返回 Err，那正是「已找到」的正常路径，
+    // 所以这里不看它的返回值，只看 hunt.found。
+    let _ = unsafe { EnumWindows(Some(visit), LPARAM(&mut hunt as *mut Hunt as isize)) };
+
+    let Some(hwnd) = hunt.found else {
+        return Err(format!("{title} 已经在运行，但没找到它的窗口"));
+    };
+    unsafe {
+        if IsIconic(hwnd).as_bool() {
+            let _ = ShowWindow(hwnd, SW_RESTORE);
+        }
+        if SetForegroundWindow(hwnd).as_bool() {
+            Ok(())
+        } else {
+            Err(format!("{title} 已经在运行，但系统没让我们切换窗口"))
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn activate_windows(_pid: u32, title: &str) -> Result<(), String> {
+    Err(format!("{title} 已经在运行"))
 }

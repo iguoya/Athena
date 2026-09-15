@@ -18,3 +18,6 @@ path = "src/lib.rs"
 [[bin]]
 name = "athena-dev"
 path = "src/main.rs"
+
+[target."cfg(windows)".dependencies]
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_System_Threading"] }
