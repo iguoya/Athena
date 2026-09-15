@@ -100,19 +100,19 @@ pub fn detect() -> Option<Compiler> {
     detect_msvc()
 }
 
-/// 找不到编译器时给使用者的话。按平台给**具体**的下一步，而不是
-/// 一句「请先安装本机 C++ 编译器」——后者在 Windows 上等于没说。
+/// 找不到编译器时给使用者的话。
+///
+/// 只写**查起来费事**的那部分：VS 要勾哪个工作负载、MSYS2 的包名叫什么。
+/// 官网地址、「LLVM 带 clang++」这类常识不写——读者是开发者，写进去是把人
+/// 当小白，反而淹没了真正有用的那一行。
 pub fn install_hint() -> &'static str {
     if cfg!(windows) {
-        "没找到可用的 C++ 编译器。三选一：\n\
-         · 装 Visual Studio（勾选「使用 C++ 的桌面开发」），装完本应用会自动找到 cl.exe；\n\
-         · 或装 LLVM（https://github.com/llvm/llvm-project/releases），它带 clang++；\n\
-         · 或装 MSYS2（https://www.msys2.org）后执行 pacman -S mingw-w64-ucrt-x86_64-gcc。"
+        "没找到 C++ 编译器。装 Visual Studio（勾「使用 C++ 的桌面开发」）、LLVM，\
+         或 MSYS2 后 pacman -S mingw-w64-ucrt-x86_64-gcc。"
     } else if cfg!(target_os = "macos") {
-        "没找到可用的 C++ 编译器。执行 xcode-select --install 装上命令行工具即可。"
+        "没找到 C++ 编译器。xcode-select --install"
     } else {
-        "没找到可用的 C++ 编译器。Debian / Ubuntu 上执行 sudo apt install g++，\
-         Fedora 上执行 sudo dnf install gcc-c++。"
+        "没找到 C++ 编译器。apt install g++ 或 dnf install gcc-c++。"
     }
 }
 
