@@ -1,0 +1,940 @@
+{
+  "chapter": "cpp.ValueSemantics",
+  "outline": {
+    "topic": "cpp.ValueSemantics",
+    "title": "教学大纲",
+    "subtitle": "一个对象怎么被复制、被移走、被原样传下去——这一章把这条线走完。",
+    "blocks": [
+      {
+        "type": "lead",
+        "text": "拷贝、移动、转发是同一个问题的三段：当一个对象要出现在另一个地方，它的资源是复制一份、直接搬过去、还是原样传给下一层。三段用的是同一套规则（值类别与重载决议），所以放在一章里讲；拆开会把同一条规则讲三遍。"
+      },
+      {
+        "type": "section",
+        "title": "这一章要解决什么",
+        "blocks": [
+          {
+            "type": "prose",
+            "text": "C++ 默认给每个类生成拷贝操作，规则是逐成员拷贝。对只装 int 和 string 的类这没问题；一旦成员里有裸指针、文件句柄、套接字，逐成员拷贝复制的是那个句柄本身，两个对象于是共同持有一份资源，谁先析构谁就把另一个的资源释放掉。"
+          },
+          {
+            "type": "code",
+            "text": "Buffer a{1024};\nBuffer b = a;      // 逐成员拷贝：b.data 和 a.data 指向同一块内存\n// 作用域结束，b 先析构 delete[] 一次，a 再析构 delete[] 第二次 —— 崩溃",
+            "caption": "这段代码编译没有任何警告，问题只在运行时暴露。"
+          },
+          {
+            "type": "prose",
+            "text": "解决它需要接管拷贝；接管之后会发现另一半代价：临时对象也被完整复制了一遍，而它下一刻就要析构，那份复制纯属浪费。移动语义就是为这一半准备的。再往上一层，写模板函数把参数转交给别人时，还要保住实参原本是左值还是右值——那是完美转发。"
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": "心智模型",
+        "blocks": [
+          {
+            "type": "prose",
+            "text": "把这一章的所有规则挂在一个问题上：**这个对象接下来还会不会被用到**。"
+          },
+          {
+            "type": "table",
+            "head": [
+              "源对象接下来",
+              "该做什么",
+              "语言里的形式"
+            ],
+            "rows": [
+              [
+                "还要继续用",
+                "复制一份，两边独立",
+                "拷贝构造 / 拷贝赋值，参数是 const T&"
+              ],
+              [
+                "马上就没了",
+                "把资源搬过来，源留空壳",
+                "移动构造 / 移动赋值，参数是 T&&"
+              ],
+              [
+                "不知道（我只是中转）",
+                "原样传下去，别替调用方决定",
+                "转发引用 T&& + std::forward"
+              ]
+            ],
+            "note": "第三行是前两行的元问题：转发函数自己不做决定，只负责不丢失信息。"
+          },
+          {
+            "type": "callout",
+            "kind": "key",
+            "title": "值类别是这一章的地基",
+            "blocks": [
+              {
+                "type": "prose",
+                "text": "「马上就没了」在语言里的判据就是值类别：纯右值和将亡值可以被掏空，左值不行。第一章的 value_category 是这一章每条重载规则的依据，卡住的时候回去对一遍。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": "讲什么与边界",
+        "blocks": [
+          {
+            "type": "table",
+            "head": [
+              "知识点",
+              "解决什么",
+              "难度 / 目标"
+            ],
+            "rows": [
+              [
+                "拷贝控制",
+                "接管复制，消灭浅拷贝的双重释放；自赋值与异常安全",
+                "3 / 需要精通"
+              ],
+              [
+                "右值引用",
+                "T&& 到底绑定什么；三个重载之间怎么选",
+                "3 / 需要精通"
+              ],
+              [
+                "移动语义",
+                "把资源搬走而不是复制；std::move 只是类型转换",
+                "4 / 需要精通"
+              ],
+              [
+                "特殊成员函数",
+                "编译器何时生成、抑制、删除；五法则",
+                "4 / 需要精通"
+              ],
+              [
+                "完美转发",
+                "模板里的 T&& 是转发引用；引用折叠与 std::forward",
+                "5 / 必须掌握"
+              ]
+            ],
+            "note": "不讲的：智能指针（它们是这套规则的用户，归 RAII 那一章）、协程与并发里的移动（归各自章节）。"
+          },
+          {
+            "type": "callout",
+            "kind": "note",
+            "title": "为什么不从智能指针讲起",
+            "blocks": [
+              {
+                "type": "prose",
+                "text": "unique_ptr 之所以能转移所有权，靠的正是移动语义。先学工具再学它依赖的规则，会变成背用法；反过来学完这一章，unique_ptr 的行为就是推论而不是新知识。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": "判断与代价",
+        "blocks": [
+          {
+            "type": "bullets",
+            "items": [
+              "能不自己写拷贝和移动就不写——把资源交给已有的 RAII 类型（string、vector、unique_ptr），编译器生成的版本就是对的。这是 Core Guidelines C.20 的「零法则」。",
+              "一旦自己管资源，六个特殊成员函数要一起考虑，不能只写一个（五法则，C.21）。",
+              "移动构造和移动赋值要标 noexcept，否则 vector 扩容时会退回拷贝（C.66）。",
+              "std::move 不移动任何东西，它只是一个到右值的类型转换；真正搬资源的是被它选中的那个重载。"
+            ]
+          },
+          {
+            "type": "callout",
+            "kind": "trap",
+            "title": "最常见的两个误判",
+            "blocks": [
+              {
+                "type": "bullets",
+                "items": [
+                  "以为写了移动构造就一定会被调用——实参是左值时不会，除非 std::move。",
+                  "以为加个析构函数无害——它会抑制移动操作的生成，类型于是悄悄退回按拷贝走，而且编译不报错。"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": "落点",
+        "blocks": [
+          {
+            "type": "prose",
+            "text": "学完这一章，读到任何一个类型的定义，你应该能回答三个问题：复制它贵不贵、移动它会发生什么、把它传进一个模板函数会不会丢失值类别。这三问是后面每一章的前置——RAII 的所有权转移、容器的元素存储、并发里的任务投递，都在这三条规则上。"
+          }
+        ]
+      },
+      {
+        "type": "quiz",
+        "text": "Core Guidelines C.21 的理由是「拷贝、移动、析构的语义密切相关，声明了其中一个，另外几个多半也需要考虑」。按这条，下面哪个做法是对的？",
+        "items": [
+          "只给类加一个析构函数来释放资源，拷贝和移动交给编译器默认生成",
+          "六个特殊成员函数一起考虑：声明了其中任何一个，就要想清楚其余几个该怎么办",
+          "先写拷贝操作，等发现性能问题再补移动操作"
+        ],
+        "answer": 1,
+        "note": "C.21 原文点明：声明任何一个拷贝 / 移动 / 析构函数——哪怕写成 =default 或 =delete——都会抑制移动构造与移动赋值的隐式声明。所以选项一正是这条规则要防的情况：加了析构，移动就悄悄没了，类型退回按拷贝走，而且编译不报错。",
+        "source_refs": [
+          {
+            "source_id": "cpp-core-guidelines",
+            "relation": "adapted",
+            "locator": "C.21",
+            "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-five",
+            "note": "题面与判断依据取自该规则的 Reason 段"
+          }
+        ]
+      }
+    ]
+  },
+  "topics": [
+    {
+      "topic": "cpp.ValueSemantics.copy_control",
+      "title": "拷贝控制",
+      "subtitle": "编译器默认给的是逐成员拷贝；成员里一旦有裸资源，这个默认就是错的。",
+      "blocks": [
+        {
+          "type": "lead",
+          "text": "拷贝控制要回答两件事：复制一个对象时逐成员拷贝够不够，以及不够的时候怎么自己写才不出错。"
+        },
+        {
+          "type": "section",
+          "title": "默认拷贝做了什么",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "没有自己声明拷贝操作时，编译器生成的版本是逐成员拷贝：每个成员各自用自己的拷贝构造。对 int 是复制数值，对 std::string 是调用它的拷贝构造（于是真的复制了字符），对裸指针是复制那个地址。"
+            },
+            {
+              "type": "code",
+              "text": "struct Buffer {\n    size_t size;\n    int* data;          // 裸指针：逐成员拷贝只复制地址\n\n    explicit Buffer(size_t n) : size(n), data(new int[n]{}) {}\n    ~Buffer() { delete[] data; }\n};",
+              "caption": "这个类有析构函数却没有拷贝操作——它已经坏了，只是还没崩。"
+            },
+            {
+              "type": "callout",
+              "kind": "trap",
+              "title": "双重释放",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "Buffer b = a; 之后两个对象的 data 指向同一块内存。谁先析构谁 delete[] 一次，另一个析构时对已释放的内存再 delete[] 一次，是未定义行为——典型表现是崩溃或堆损坏，但也可能一声不响地跑过去，等到几百行之后才炸。"
+                }
+              ]
+            },
+            {
+              "type": "figure",
+              "id": "shallow_copy_aliasing",
+              "caption": "逐成员拷贝之后：两个对象各有自己的 size，但 data 是同一个地址。析构两次，第二次就是对已释放内存的 delete[]。"
+            },
+            {
+              "type": "predict",
+              "text": "Buffer a{4}; Buffer b = a; 这两行执行完，堆上有几块 int 数组？",
+              "items": [
+                "两块，各 4 个 int",
+                "一块，被两个对象共用",
+                "一块，但 b 的 data 是空指针"
+              ],
+              "answer": 1,
+              "note": "逐成员拷贝复制的是 data 这个指针变量的值（一个地址），不是它指向的内容。所以只有一块数组，两个对象都记着它的地址——这正是双重释放的来源。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "自己接管：两个函数，不是一个",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "拷贝构造用于「从无到有」，拷贝赋值用于「已经有了，换成另一份」。后者多两件事要处理：先释放自己原有的资源，以及防住自赋值。"
+            },
+            {
+              "type": "code",
+              "text": "Buffer(const Buffer& other)\n    : size(other.size), data(new int[other.size]) {\n    std::copy(other.data, other.data + size, data);\n}\n\nBuffer& operator=(const Buffer& other) {\n    if (this == &other) { return *this; }   // 少了这行，下一步就把源毁了\n    int* fresh = new int[other.size];       // 先分配，后释放\n    std::copy(other.data, other.data + other.size, fresh);\n    delete[] data;\n    data = fresh;\n    size = other.size;\n    return *this;\n}",
+              "caption": "注意赋值里的顺序：先把新的准备好，再释放旧的。"
+            },
+            {
+              "type": "callout",
+              "kind": "why",
+              "title": "为什么先分配后释放",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "如果先 delete[] data 再 new，new 抛出 bad_alloc 时这个对象已经处在毁坏状态——data 是悬垂指针，析构会再释放一次。先分配则 new 抛出时原对象一点没动，异常安全上称为强保证。"
+                }
+              ]
+            },
+            {
+              "type": "table",
+              "head": [
+                "写法",
+                "自赋值",
+                "分配失败",
+                "代码量"
+              ],
+              "rows": [
+                [
+                  "先判 this == &other",
+                  "靠判断挡住",
+                  "!需要自己排顺序",
+                  "中"
+                ],
+                [
+                  "拷贝并交换（copy-and-swap）",
+                  "天然正确",
+                  "天然强保证",
+                  "小，但要先有 swap"
+                ]
+              ],
+              "note": "拷贝并交换把赋值实现成「复制一份参数，再和自己交换」，正确性由拷贝构造和 swap 保证。缺点是无条件分配一次，对大对象的自赋值不划算。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "三法则：不是三选一",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "如果一个类需要自定义析构函数、拷贝构造、拷贝赋值中的任何一个，那它通常三个都需要。理由很直接：需要自定义析构，说明这个类拥有某种资源；拥有资源，默认的逐成员拷贝就一定是错的。"
+            },
+            {
+              "type": "callout",
+              "kind": "use",
+              "title": "更好的选择是一个都不写",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "把裸资源换成已经管好自己的类型——用 std::vector<int> 替掉 size 加 int*，三个函数一个都不用写，编译器生成的就是对的，而且自带移动。自己写拷贝控制的场合，应该只剩下真正在封装一种新资源的时候。"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "Core Guidelines C.20 叫「能避免定义默认操作就避免」。一个类只有 int count 和 std::vector<int> values 两个成员，按这条规则该怎么做？",
+              "items": [
+                "一个特殊成员函数都不写，编译器生成的对这两个成员都是对的",
+                "至少写一个拷贝构造，显式表达复制语义",
+                "写一个空的析构函数，其余交给编译器"
+              ],
+              "answer": 0,
+              "note": "C.20 的理由是「这样最简单，语义也最干净」。逐成员拷贝会调用 vector 自己的拷贝构造，那是正确的深拷贝。选项三尤其有害：空析构函数会按 C.21 抑制移动操作的生成，白白让这个类失去移动能力。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "C.20",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-zero",
+                  "note": "题面取自该规则的 Reason 与 Example"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "随堂检验",
+          "blocks": [
+            {
+              "type": "quiz",
+              "text": "拷贝赋值里先 delete[] data 再 new int[n]，什么情况下会留下一个坏掉的对象？",
+              "items": [
+                "自赋值时，因为源和目标是同一个对象",
+                "new 抛出 bad_alloc 时，因为旧资源已经释放、新的没拿到",
+                "以上两种都会"
+              ],
+              "answer": 2,
+              "note": "两种都会。自赋值时 delete[] 把源也一起毁了，接下来从已释放的内存复制；new 抛异常时对象的 data 成了悬垂指针，析构会二次释放。先分配后释放能挡住第二种，挡不住第一种——所以自赋值判断和顺序两件事都要做，或者用拷贝并交换一次性解决。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "C.61",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-semantic",
+                  "note": "该规则要求拷贝后两个对象相等且互相独立；题目考的是实现中破坏这一保证的两种情形"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "Core Guidelines C.61 要求「拷贝操作应当产生相等且独立的对象」——x = y 之后 x == y，且两者互不影响。下面哪个类的默认拷贝违反了这条？",
+              "items": [
+                "成员是 int 和 std::string 的类",
+                "成员是 std::vector<int> 的类",
+                "成员是 size_t 和裸 int* 的类"
+              ],
+              "answer": 2,
+              "note": "前两个的成员都能管好自己：逐成员拷贝会调用 string 与 vector 各自的拷贝构造，得到独立的一份。裸指针没有自定义拷贝构造，复制的只是地址值，于是两个对象指向同一块内存——相等但不独立，正是 C.61 说的指针语义混进了值语义。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "C.61",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-semantic",
+                  "note": "题面取自该规则对拷贝语义的要求"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "cpp.ValueSemantics.rvalue",
+      "title": "右值引用",
+      "subtitle": "T&& 绑定的是「接下来不会再被用到」的对象——这是资源可以被搬走的许可。",
+      "blocks": [
+        {
+          "type": "lead",
+          "text": "拷贝控制解决了正确性，代价是临时对象也被完整复制了一遍，而它下一刻就要析构。要省掉这次复制，先得有办法在重载里区分出「这个对象马上就没了」——右值引用就是这个标记。"
+        },
+        {
+          "type": "section",
+          "title": "T&& 绑定什么",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "右值引用只绑定右值：纯右值（字面量、按值返回的临时对象）和将亡值（被 std::move 转换过的表达式）。有名字的变量是左值，绑不上去——即使它的类型写的就是右值引用。"
+            },
+            {
+              "type": "code",
+              "text": "Buffer make();          // 按值返回\n\nBuffer a{4};\nBuffer&& r1 = make();   // 可以：纯右值\nBuffer&& r2 = a;        // 编译错误：a 是左值\nBuffer&& r3 = std::move(a);  // 可以：std::move 把它转成将亡值\n\n// 注意 r1 本身是有名字的变量，所以 r1 是左值——\n// 「右值引用类型的变量」和「右值」是两回事。",
+              "caption": "最后这条注释是初学时最容易绊倒的地方。"
+            },
+            {
+              "type": "callout",
+              "kind": "key",
+              "title": "类型和值类别是两个维度",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "r1 的类型是 Buffer&&，但表达式 r1 的值类别是左值——它有名字，你可以对它取地址、可以反复使用。函数参数同理：void f(Buffer&& b) 里的 b 是左值，要把它继续当右值传下去必须再写一次 std::move。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "三个重载之间怎么选",
+          "blocks": [
+            {
+              "type": "table",
+              "head": [
+                "实参",
+                "f(Buffer&)",
+                "f(const Buffer&)",
+                "f(Buffer&&)"
+              ],
+              "rows": [
+                [
+                  "非 const 左值 a",
+                  "!选它",
+                  "可行但不优先",
+                  "不可行"
+                ],
+                [
+                  "const 左值",
+                  "不可行",
+                  "!选它",
+                  "不可行"
+                ],
+                [
+                  "纯右值 make()",
+                  "不可行",
+                  "可行但不优先",
+                  "!选它"
+                ],
+                [
+                  "std::move(a)",
+                  "不可行",
+                  "可行但不优先",
+                  "!选它"
+                ]
+              ],
+              "note": "关键一行是最后两行：只要有 f(Buffer&&) 在，右值就会走它；没有它时才退回 const Buffer&，那正是「白白复制一次」的老路。"
+            },
+            {
+              "type": "predict",
+              "text": "只声明了 f(const Buffer&) 和 f(Buffer&&) 两个重载，调用 f(a)（a 是非 const 左值）会走哪个？",
+              "items": [
+                "f(const Buffer&)",
+                "f(Buffer&&)",
+                "有歧义，编译不过"
+              ],
+              "answer": 0,
+              "note": "a 是左值，绑不上右值引用，所以 f(Buffer&&) 根本不在候选里，只剩 const Buffer&。这也解释了为什么「加了移动重载性能却没变」——实参是左值时它压根不会被选中。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "拿它做参数意味着什么",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "Core Guidelines F.18 把 X&& 参数的含义定为「这个函数要把实参搬走」。它带来的一个附加好处在调用端：想传左值就必须自己写 std::move，于是「这里会被掏空」这件事在调用处就看得见，而不是藏在函数实现里。"
+            },
+            {
+              "type": "code",
+              "text": "void sink(std::vector<int>&& v) {   // sink 接管 v 的所有权\n    store_somewhere(std::move(v));\n    // 之后不再使用 v：它已经处于被移动状态\n}\n\nstd::vector<int> data{1, 2, 3};\nsink(data);              // 编译错误——挡住了「我没想搬走它」的情况\nsink(std::move(data));   // 明确表态：data 之后我不用了",
+              "caption": "改编自 Core Guidelines F.18 的示例。"
+            },
+            {
+              "type": "quiz",
+              "text": "按 F.18，把参数写成 X&& 而不是 const X&，在调用端带来的主要好处是什么？",
+              "items": [
+                "编译器会自动为调用方插入 std::move，省去手写",
+                "传左值时必须显式写 std::move，「这个对象会被掏空」在调用处就可见",
+                "可以同时接受左值和右值，少写一个重载"
+              ],
+              "answer": 1,
+              "note": "F.18 的原话是：X&& 绑定右值，所以传左值时要求调用点有一个显式的 std::move。这既高效又能消除调用点的 bug——读调用代码的人一眼就知道这个变量之后不能再用了。选项三描述的是转发引用 T&&（模板里），不是具体类型的 X&&。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "F.18",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rf-consume",
+                  "note": "题面与示例取自该规则的 Reason 与 Example"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "随堂检验",
+          "blocks": [
+            {
+              "type": "quiz",
+              "text": "void f(Buffer&& b) 的函数体里，直接写 g(b) 会调用 g 的哪个重载？",
+              "items": [
+                "g(Buffer&&)，因为 b 的类型是右值引用",
+                "g(const Buffer&)，因为 b 有名字，是左值",
+                "取决于 b 是否被 std::move 过"
+              ],
+              "answer": 1,
+              "note": "b 的类型是 Buffer&&，但表达式 b 的值类别是左值——有名字就是左值。要把它继续当右值传下去必须写 g(std::move(b))。这是「类型」与「值类别」两个维度的直接后果，也是移动语义里最常见的漏移动。",
+              "source_refs": [
+                {
+                  "source_id": "cppreference",
+                  "relation": "adapted",
+                  "locator": "cpp/language/reference",
+                  "url": "https://en.cppreference.com/cpp/language/reference",
+                  "note": "右值引用的绑定规则与「具名右值引用是左值」这一点取自该条目"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "cpp.ValueSemantics.move_semantics",
+      "title": "移动语义",
+      "subtitle": "把资源搬过来，源留一个仍然有效的空壳；std::move 本身不移动任何东西。",
+      "blocks": [
+        {
+          "type": "lead",
+          "text": "有了右值引用做标记，就可以给「源马上就没了」这种情况单独写一套实现：不复制资源，直接把指针接过来，再把源置空。这套实现就是移动构造和移动赋值。"
+        },
+        {
+          "type": "section",
+          "title": "移动操作长什么样",
+          "blocks": [
+            {
+              "type": "code",
+              "text": "template<typename T>\nclass Vector {\npublic:\n    Vector(Vector&& a) noexcept : elem{a.elem}, sz{a.sz} {\n        a.elem = nullptr;   // 源置空：它的析构不能再释放这块内存\n        a.sz = 0;\n    }\n    Vector& operator=(Vector&& a) noexcept {\n        if (&a != this) {\n            delete[] elem;\n            elem = a.elem; sz = a.sz;\n            a.elem = nullptr; a.sz = 0;\n        }\n        return *this;\n    }\n    // ...\n};",
+              "caption": "改编自 Core Guidelines C.66 的示例。两个要点：接管指针后必须把源置空，以及 noexcept。"
+            },
+            {
+              "type": "callout",
+              "kind": "why",
+              "title": "为什么必须把源置空",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "移动之后源对象仍然会被析构——它只是「不再被使用」，不是「不存在」。如果不置空，源的析构会释放刚被接管的那块内存，新对象立刻拿到悬垂指针。置空之后 delete[] nullptr 是合法的空操作。"
+                }
+              ]
+            },
+            {
+              "type": "predict",
+              "text": "Vector b = std::move(a); 之后，a 处于什么状态？",
+              "items": [
+                "a 已被销毁，再碰它就是未定义行为",
+                "a 仍然是一个有效对象，只是值未指定；能安全析构、也能重新赋值",
+                "a 和 b 现在共享同一块内存"
+              ],
+              "answer": 1,
+              "note": "这是移动语义里最容易记错的一点。被移动的对象**没有**被销毁，它只是被掏空了：仍然满足类型的不变式，可以析构、可以赋新值，只是具体的值不该被依赖。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "被移动对象的状态：有效但未指定",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "Core Guidelines C.64 把这条定为规则：移动操作应当真的移动，并让源处于有效状态。y = std::move(x) 之后，y 拿到 x 原来的值，而 x 必须仍然是个可以安全使用的对象——只是它的值是什么，标准不保证。"
+            },
+            {
+              "type": "table",
+              "head": [
+                "对被移动的对象",
+                "允许吗"
+              ],
+              "rows": [
+                [
+                  "析构",
+                  "!允许"
+                ],
+                [
+                  "赋一个新值",
+                  "!允许"
+                ],
+                [
+                  "调用 size() / empty() 这类无前置条件的操作",
+                  "允许，但结果不可预期"
+                ],
+                [
+                  "读取它的值并依赖那个值",
+                  "!不允许——未指定"
+                ],
+                [
+                  "调用有前置条件的操作（如 vector::front）",
+                  "!不允许"
+                ]
+              ],
+              "note": "标准库类型通常会被移动成空状态，但那是实现给的保证，不是语言给的。写自己的类型时，把源置成一个明确的空状态是最省心的做法。"
+            },
+            {
+              "type": "quiz",
+              "text": "按 C.64，移动操作对源对象的要求是什么？",
+              "items": [
+                "源对象的析构函数不会再被调用",
+                "源对象的值必须被置为该类型的默认值",
+                "源对象必须仍处于有效状态：能析构、能被赋新值，但值未指定"
+              ],
+              "answer": 2,
+              "note": "C.64 的原话是「移动操作应当移动，并让源处于有效状态」——y = std::move(x) 之后 y 得到 x 的值，x 处于 valid state。它不要求置为默认值（选项二），更不是不再析构（选项一）：源对象的生命周期一点没变，析构照常发生，所以它必须能被安全析构。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "C.64",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-move-semantic",
+                  "note": "题面取自该规则的标题与 Reason 段"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "std::move 不移动",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "std::move 的名字有误导性：它不搬运任何数据，只是一个到右值引用的 static_cast。真正做搬运的是被它选中的那个重载——移动构造或移动赋值。如果类型没有移动操作，std::move 之后调用的仍然是拷贝构造，而且编译器不会有任何提示。"
+            },
+            {
+              "type": "code",
+              "text": "// std::move 的效果等价于一次类型转换\nstatic_cast<Buffer&&>(a)\n\n// 所以这一行什么都没搬：没有人接收这个右值\nstd::move(a);\n\n// 搬运发生在这里——右值被移动构造接住了\nBuffer b = std::move(a);",
+              "caption": "第二行是合法代码，也是彻底的空操作。"
+            },
+            {
+              "type": "callout",
+              "kind": "trap",
+              "title": "对 const 对象用 std::move 会静默退化成拷贝",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "const Buffer a; 之后 std::move(a) 的类型是 const Buffer&&，它绑不到 Buffer&& 参数上，于是重载决议选中 const Buffer&——拷贝。编译通过、运行正确、性能白丢，没有任何警告。这也是为什么不要给返回值加 const。"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "Core Guidelines ES.56 提醒：移动通常会留下一个空对象，这可能出人意料甚至危险。据此，下面哪种情况应当避免？",
+              "items": [
+                "对一个之后还要继续使用的左值调用 std::move",
+                "对函数按值返回的临时对象调用 std::move",
+                "在移动构造函数里把源的指针成员置空"
+              ],
+              "answer": 0,
+              "note": "ES.56 的理由原文就是：移动会留下空对象（见 C.64），这可能令人意外甚至危险，所以要避免从左值移动——因为它们之后可能还会被访问。选项二不仅没必要，还会抑制返回值优化，属于另一个常见错误；选项三正是移动构造该做的事。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "ES.56",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#res-move",
+                  "note": "题面取自该规则的 Reason 段"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "移动操作要标 noexcept",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "C.66 要求移动操作标 noexcept，理由有两层：会抛异常的移动违反大多数人的合理预期；更实际的是，标准库只有在确认移动不抛异常时才会用它。vector 扩容时要把旧元素搬到新内存，如果搬到一半抛异常，它既回不去也进不来——所以移动不是 noexcept 时，vector 会选择复制。"
+            },
+            {
+              "type": "callout",
+              "kind": "key",
+              "title": "一个具体后果",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "给类写了移动构造却忘了 noexcept，push_back 触发扩容时仍然走拷贝，性能和没写移动一样。这个退化不报错、不警告，只能靠记住这条规则或者实测发现。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "cpp.ValueSemantics.special_members",
+      "title": "特殊成员函数",
+      "subtitle": "六个函数是一套；声明其中任何一个，都会改变另外几个的生成规则。",
+      "blocks": [
+        {
+          "type": "lead",
+          "text": "默认构造、析构、拷贝构造、拷贝赋值、移动构造、移动赋值——这六个是编译器可能替你生成的。麻烦在于它们之间互相牵制：你声明了一个，编译器就会停止生成另外几个，而且不给任何提示。"
+        },
+        {
+          "type": "section",
+          "title": "生成规则",
+          "blocks": [
+            {
+              "type": "table",
+              "head": [
+                "你声明了",
+                "拷贝构造 / 拷贝赋值",
+                "移动构造 / 移动赋值"
+              ],
+              "rows": [
+                [
+                  "什么都没声明",
+                  "生成",
+                  "生成"
+                ],
+                [
+                  "析构函数",
+                  "仍然生成（已废弃）",
+                  "!不再生成"
+                ],
+                [
+                  "拷贝构造或拷贝赋值",
+                  "另一个仍生成（已废弃）",
+                  "!不再生成"
+                ],
+                [
+                  "移动构造或移动赋值",
+                  "!被 delete",
+                  "另一个不生成"
+                ]
+              ],
+              "note": "第二行是最危险的一行：加一个析构函数，移动操作就没了，类型退回按拷贝走，编译器一声不吭。「已废弃」指的是标准仍生成但标记为 deprecated，不该依赖。"
+            },
+            {
+              "type": "predict",
+              "text": "一个类原本没有任何特殊成员函数（移动能正常工作）。现在给它加一个析构函数，只写一句日志。这个类的移动操作会怎样？",
+              "items": [
+                "不受影响，移动照常工作",
+                "不再生成，所有「移动」实际都退化成拷贝",
+                "被 delete，凡是移动的地方都编译报错"
+              ],
+              "answer": 1,
+              "note": "不再隐式生成，但拷贝操作还在，于是重载决议退回拷贝构造——代码照常编译、照常运行，只是每次「移动」都变成了完整复制。如果是编译报错（选项三）反而好办，恰恰是它静默退化才难发现。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "五法则",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "C.21 把这件事写成一条规则：如果定义或 =delete 了任何一个拷贝、移动或析构函数，那就把六个都定义或 =delete。理由在它的 Reason 段里说得很直接——拷贝、移动、析构的语义密切相关，声明了一个，其余的多半也需要考虑。"
+            },
+            {
+              "type": "code",
+              "text": "class Handle {\npublic:\n    ~Handle();                                   // 有自定义析构\n    Handle(const Handle&);                       // 那这五个就都要表态\n    Handle& operator=(const Handle&);\n    Handle(Handle&&) noexcept;\n    Handle& operator=(Handle&&) noexcept;\n    // 需要默认构造就再加一个；不需要就 = delete\n};",
+              "caption": "「表态」包括写实现、写 = default、或写 = delete —— 重点是不留给编译器猜。"
+            },
+            {
+              "type": "callout",
+              "kind": "use",
+              "title": "更好的做法仍然是一个都不写",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "C.20 的零法则排在五法则前面：能把资源交给 vector、string、unique_ptr 这些已经管好自己的类型，六个函数一个都不用写。五法则是退路，不是首选——真正需要它的场合，是你在封装一种新资源。"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "按 C.21，下面哪种写法是这条规则明确要防的？",
+              "items": [
+                "六个特殊成员函数全部写成 = default",
+                "只写一个析构函数释放资源，其余交给编译器",
+                "把拷贝操作 = delete，只保留移动操作"
+              ],
+              "answer": 1,
+              "note": "C.21 指出：声明任何一个拷贝 / 移动 / 析构函数——即使是 =default 或 =delete——都会抑制移动构造与移动赋值的隐式声明。选项二正是这条规则针对的情况：加了析构却没管其余五个，移动操作静默消失。选项一和选项三都做到了「一起考虑并明确表态」，符合规则。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "C.21",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-five",
+                  "note": "题面取自该规则的标题与 Reason 段"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "cpp.ValueSemantics.forwarding",
+      "title": "完美转发",
+      "subtitle": "模板里的 T&& 既忽略又保留实参的 const 与值类别——我不关心，但我不能弄丢。",
+      "blocks": [
+        {
+          "type": "lead",
+          "text": "写一个把参数原样交给别人的函数（工厂、包装器、invoke），难点不在调用，而在不丢信息：实参是左值还是右值、是不是 const，都得原样传到下一层。完美转发就是这件事的机制。"
+        },
+        {
+          "type": "section",
+          "title": "T&& 在模板里不是右值引用",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "同样写 T&&，含义取决于 T 是不是需要推导的模板参数。具体类型的 X&& 是右值引用，只绑右值；而模板参数推导中的 T&& 是转发引用，左值右值都能绑——两者写法一样，规则完全不同。"
+            },
+            {
+              "type": "code",
+              "text": "void sink(Buffer&& b);            // 右值引用：只接右值\n\ntemplate<typename T>\nvoid wrapper(T&& x);             // 转发引用：左值右值都接\n\nBuffer a;\nsink(a);                          // 错误\nwrapper(a);                       // 可以：T 推导为 Buffer&\nwrapper(Buffer{});                // 可以：T 推导为 Buffer",
+              "caption": "区别只在 T 是不是正在被推导的模板参数。"
+            },
+            {
+              "type": "table",
+              "head": [
+                "实参",
+                "T 推导为",
+                "参数 T&& 的实际类型"
+              ],
+              "rows": [
+                [
+                  "非 const 左值 Buffer",
+                  "Buffer&",
+                  "Buffer& &&  →  Buffer&"
+                ],
+                [
+                  "const 左值",
+                  "const Buffer&",
+                  "const Buffer&"
+                ],
+                [
+                  "右值 Buffer{}",
+                  "Buffer",
+                  "Buffer&&"
+                ]
+              ],
+              "note": "第一行的 Buffer& && 折叠成 Buffer&，这就是引用折叠：只要有一个左值引用参与，结果就是左值引用；两个都是右值引用才得到右值引用。"
+            },
+            {
+              "type": "predict",
+              "text": "template<typename T> void wrapper(T&& x); 用一个非 const 左值调用它，T 被推导成什么？",
+              "items": [
+                "Buffer",
+                "Buffer&",
+                "Buffer&&"
+              ],
+              "answer": 1,
+              "note": "转发引用遇到左值实参时，T 推导为左值引用类型 Buffer&，参数类型 Buffer& && 经引用折叠成 Buffer&。正是这条规则让「实参原本是左值」这个信息被编码进了 T 里，std::forward 才有东西可依据。"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "title": "std::forward 做的事",
+          "blocks": [
+            {
+              "type": "prose",
+              "text": "std::forward<T>(x) 是一个有条件的转换：T 是左值引用时它原样返回左值，否则转成右值。它必须显式带上模板实参 T——因为参数 x 本身永远是左值，唯一还留着「实参原本是什么」这个信息的地方就是 T。"
+            },
+            {
+              "type": "code",
+              "text": "template<class F, class... Args>\ndecltype(auto) invoke(F&& f, Args&&... args) {\n    return std::forward<F>(f)(std::forward<Args>(args)...);\n}",
+              "caption": "改编自 Core Guidelines F.19 的示例：每条控制流路径上，每个参数恰好转发一次。"
+            },
+            {
+              "type": "callout",
+              "kind": "trap",
+              "title": "用 std::move 代替 std::forward 会掏空调用方的左值",
+              "blocks": [
+                {
+                  "type": "prose",
+                  "text": "std::move 无条件转成右值，不看实参原本是什么。写在转发函数里，调用方传进来的左值就会被下一层搬空——而调用方完全没有表示过同意。这类 bug 的现场在调用方那边，排查起来很费劲。"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "Core Guidelines F.19 说，把参数写成 TP&&（TP 是模板参数）意味着这个函数「既忽略又保留」实参的 const 与右值性。「忽略」和「保留」分别指什么？",
+              "items": [
+                "忽略：函数体内不能读这个参数；保留：类型信息留在 TP 里",
+                "忽略：这个函数自己不关心实参是 const 还是右值；保留：这些信息原样传给真正关心的下一层",
+                "忽略：编译器不做重载决议；保留：实参的生命周期被延长到函数结束"
+              ],
+              "answer": 1,
+              "note": "F.19 的原文是：使用 TP&& 的代码等于声明「我自己不在乎这个变量的 const 性和右值性（因为被忽略了），但我要把值传给真正在乎的下一层（因为被保留了）」。所以它只该用在「转发」这一种场合——函数自己直接使用这个参数时，应该按普通规则选参数类型。",
+              "source_refs": [
+                {
+                  "source_id": "cpp-core-guidelines",
+                  "relation": "adapted",
+                  "locator": "F.19",
+                  "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rf-forward",
+                  "note": "题面取自该规则的 Reason 段原文"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "text": "std::forward<T>(x) 为什么必须显式写出模板实参 T？",
+              "items": [
+                "因为 x 是左值，实参原本的值类别只剩 T 还记着",
+                "因为 std::forward 有多个重载，需要 T 来消歧义",
+                "因为不写 T 会导致引用折叠失效"
+              ],
+              "answer": 0,
+              "note": "函数参数 x 有名字，所以表达式 x 永远是左值，从它身上看不出实参原本是左值还是右值。这个信息在推导时被编码进了 T（左值→T 是左值引用，右值→T 是非引用类型），forward 靠它决定是原样返回还是转成右值。这也是为什么 std::forward(x) 不带 T 是错的。",
+              "source_refs": [
+                {
+                  "source_id": "cppreference",
+                  "relation": "adapted",
+                  "locator": "cpp/utility/forward",
+                  "url": "https://en.cppreference.com/cpp/utility/forward",
+                  "note": "std::forward 的行为与「必须显式指定模板实参」这一约束取自该条目"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

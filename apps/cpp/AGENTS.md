@@ -42,7 +42,11 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - Meson
 - Blueprint UI
 - nlohmann/json
-- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；使用系统自带 libsqlite3，不随包分发，数据在用户数据目录）
+- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；使用系统自带 libsqlite3，不随包分发）。
+  库在 `progress/learning.db`，**随仓库走**（主仓库 ADR 0053）：路径由启动器通过
+  `ATHENA_CPP_ROOT` 传入，`platform/app_paths` 的 `own_app_root()` 读它，拿不到
+  （发行包）就退回用户数据目录。这不放松「教学内容只从 GResource 读」——内容必须与
+  二进制同版本，进度是使用者自己的东西。
 
 除非任务明确要求，不引入新的生产依赖，不更换 UI 技术栈，也不把项目改造成完整 MVC/MVP 框架。
 
