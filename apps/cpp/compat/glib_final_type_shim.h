@@ -20,14 +20,24 @@
 //
 // 这是欠账。MSYS2 把 glibmm 更新到 2.89+ 之后，删掉本文件与 meson.build 里那行
 // -include 即可；删完 cpp-windows 仍然绿，就说明上游已经跟上了。
+// 每个 include 都用 __has_include 兜住：-include 是**项目级**的，会预置到所有
+// C++ 编译单元前面，包括不链接 gtk4 / glib 的那些目标（生成器检查、纯逻辑测试）。
+// 它们的 include 路径里没有这些头文件，不设防就会在无关目标上报
+// "fatal error: gdk/gdk.h: No such file or directory"。
+#if __has_include(<glib.h>)
 #include <glib.h>
 
 #if GLIB_CHECK_VERSION(2, 89, 2)
 // 先包含，让 glib / gdk 自己生成的 typedef 先占住这三个名字
+#if __has_include(<gdk/gdk.h>)
 #include <gdk/gdk.h>
+#endif
+#if __has_include(<gio/gio.h>)
 #include <gio/gio.h>
+#endif
 
 #define GDBusActionGroupClass GDBusActionGroupClass_mm_shim
 #define GEmblemClass GEmblemClass_mm_shim
 #define GdkCursorClass GdkCursorClass_mm_shim
+#endif
 #endif
