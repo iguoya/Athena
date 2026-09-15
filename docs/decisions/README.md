@@ -18,6 +18,7 @@
 | [0031](0031-knowledge-type-drives-teaching-actions.md) | 知识类型（概念/技能/策略）决定教学动作 | 已接受，`type_semantics` 已标注 |
 | [0040](0040-lesson-length-matches-mastery-goal.md) | 学习内容拒绝八股，篇幅与掌握目标匹配 | 已接受，第一章已按此精简 |
 | [0043](0043-sourced-content-across-apps.md) | 「内容必须有出处」跨应用统一规范 | 已接受（统一 mathematics 0019、c 0003、english 0007–0009） |
+| [0052](0052-incentives-and-records-cooperate.md) | 激励与统计是同一条回路，必须互相配合 | 已接受（裁定 mathematics 0011 待定项；对齐 english 0009） |
 
 ## 应用边界与启动
 
@@ -40,4 +41,5 @@
 | [0048](0048-menubar-launcher-stays-macos-only.md) | 菜单栏启动器保留为 macOS 专属，只消费编排器结论 | 已接受 |
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已接受（阶段性，带退出条件） |
-| [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突待决 |
+| [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突已解决 |
+| [0052](0052-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |

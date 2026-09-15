@@ -1503,3 +1503,29 @@ textarea.code {
   .lab-main { grid-template-columns: minmax(0, 1fr); }
   .legend .hint { margin-left: 0; width: 100%; }
 }
+
+/* 需要使用者动手处理的提示（例如缺 clang-format）。用原生 <dialog>：自带
+   模态、焦点管理和 Esc 关闭，不必自己造一套。 */
+#notice {
+  max-width: 34rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--line, #d0d7de);
+  border-radius: 10px;
+  color: var(--fg, #1f2328);
+  background: var(--bg, #fff);
+}
+#notice::backdrop {
+  background: rgb(0 0 0 / 35%);
+}
+#notice h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+}
+#notice p {
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+#notice button {
+  padding: 0.35rem 1.1rem;
+}

@@ -2118,6 +2118,17 @@ async function reloadSource() {
 
 /// 交给 clang-format 排版。没装它就抛错，由调用方决定怎么显示——
 /// 不再退回自写的缩进器：那东西只会按花括号数空格，连字符串里的 `{` 都会数进去。
+/// 需要使用者动手处理的提示。用原生 <dialog>，自带模态与 Esc 关闭。
+function showNotice(title: string, body: string): void {
+  const dialog = document.getElementById("notice") as HTMLDialogElement | null;
+  const h = document.getElementById("notice-title");
+  const p = document.getElementById("notice-body");
+  if (!dialog || !h || !p) return;
+  h.textContent = title;
+  p.textContent = body;
+  if (!dialog.open) dialog.showModal();
+}
+
 async function formatLabSource(): Promise<string> {
   const source = getLabSource();
   // 预览页没有 Tauri 命令（它只用来核对排版，见 AGENTS.md），原样返回。
@@ -2154,7 +2165,10 @@ async function formatLabOnly() {
     persistLabDraftNow(topic.id, lab.id, source);
     setRunStatus("已格式化", "ok");
   } catch (err) {
-    setRunStatus(`格式化失败：${String(err)}`, "bad");
+    // 这类失败多半是本机缺 clang-format，要使用者装一下才能继续——
+    // 塞进状态栏容易被忽略，用对话框说清楚。
+    setRunStatus("格式化没做成", "bad");
+    showNotice("没法格式化", String(err));
   } finally {
     setLabActionsDisabled(false);
   }
