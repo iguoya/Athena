@@ -62,6 +62,12 @@ nlohmann::json minimal_catalog() {
             "mastery_goal": "master",
             "knowledge_type": "concept",
             "requires": [],
+            "labs": [{
+              "case": "sample_case",
+              "prompt": "要验证什么",
+              "goal": "补哪个符号",
+              "hint": "提示"
+            }],
             "icon": { "type": "theme", "name": "point", "path": "" }
           }, {
             "function_id": "cpp.Sample.unrated",
@@ -74,6 +80,7 @@ nlohmann::json minimal_catalog() {
             "mastery_goal": "",
             "knowledge_type": "",
             "requires": [],
+            "labs": [],
             "icon": { "type": "theme", "name": "point", "path": "" }
           }]
         }]
@@ -176,6 +183,13 @@ TEST(ChapterCatalogTest, DecodesCanonicalRuntimeFields) {
     EXPECT_EQ(chapter->subchapters[0].mastery_goal, MasteryGoal::Master);
     EXPECT_EQ(chapter->subchapters[0].knowledge_type, KnowledgeType::Concept);
     EXPECT_TRUE(chapter->subchapters[0].requires_points.empty());
+    // 骨架案例（ADR 0053）：挂着的知识点解出题面，没挂的是空的。
+    ASSERT_EQ(chapter->subchapters[0].labs.size(), 1u);
+    EXPECT_EQ(chapter->subchapters[0].labs[0].case_id, "sample_case");
+    EXPECT_EQ(chapter->subchapters[0].labs[0].prompt, "要验证什么");
+    EXPECT_EQ(chapter->subchapters[0].labs[0].goal, "补哪个符号");
+    EXPECT_EQ(chapter->subchapters[0].labs[0].hint, "提示");
+    EXPECT_TRUE(chapter->subchapters[1].labs.empty());
     EXPECT_EQ(chapter->subchapters[1].difficulty, 0);
     EXPECT_EQ(chapter->subchapters[1].mastery_goal, MasteryGoal::Unrated);
     EXPECT_EQ(chapter->icon.name, "chapter");

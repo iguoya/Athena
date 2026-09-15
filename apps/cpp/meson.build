@@ -10,6 +10,9 @@ gtk4_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 glibmm_dep = dependency('glibmm-2.68')
 gio_dep = dependency('gio-2.0')
+# giomm：GResource 与子进程的 C++ 绑定，骨架案例要用（ADR 0053）。属于 glibmm
+# 同族、不是 GTK，所以 athena-core 用它不破坏 ADR 0004 的「与 GTK 解耦」。
+giomm_dep = dependency('giomm-2.68')
 
 # C 库与它的 C++ 绑定必须**配套**，不能各走各的版本。
 #
@@ -198,6 +201,8 @@ core_sources = files(
   'registry/progress_stats.cc',
   'render/chart_scale.cc',
   'services/ai_service.cc',
+  'services/case_runner.cc',
+  'services/case_workspace.cc',
   'services/experiment_runner.cc',
   'storage/learning_store.cc'
 ) + [function_registry_generated]
@@ -206,13 +211,13 @@ athena_core_lib = static_library(
   'athena-core',
   core_sources,
   include_directories: [cplusplus_inc],
-  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, giomm_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 athena_core_dep = declare_dependency(
   link_with: athena_core_lib,
   include_directories: [cplusplus_inc],
-  dependencies: [glib_dep, glibmm_dep, gio_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
+  dependencies: [glib_dep, glibmm_dep, gio_dep, giomm_dep, md4c_dep, nlohmann_json_dep, sqlite3_dep]
 )
 
 # === 桌面应用源码 ===
@@ -320,6 +325,8 @@ core_test_exe = executable(
   files(
     'tests/chapter_catalog_test.cc',
     'tests/ai_service_test.cc',
+    'tests/case_runner_test.cc',
+    'tests/case_workspace_test.cc',
     'tests/content_loader_test.cc',
     'tests/doc_model_test.cc',
     'tests/experiment_runner_test.cc',

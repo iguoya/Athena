@@ -153,6 +153,14 @@ ChapterCatalog ChapterCatalog::from_runtime_json(string_view source) {
                                     required.at("same_chapter").get<bool>(),
                             });
                     }
+                    for (const auto& lab : subchapter_value.at("labs")) {
+                        subchapter.labs.push_back(LabSpec{
+                            .case_id = lab.at("case").get<string>(),
+                            .prompt = lab.at("prompt").get<string>(),
+                            .goal = lab.at("goal").get<string>(),
+                            .hint = lab.at("hint").get<string>(),
+                        });
+                    }
                     subchapter.icon = parse_icon(subchapter_value.at("icon"));
                     chapter.subchapters.push_back(std::move(subchapter));
                 }

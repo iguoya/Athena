@@ -48,6 +48,21 @@ string mastery_goal_label(MasteryGoal goal);
 // 配置里的字符串值（master / required / familiar）转枚举，无法识别时为 Unrated。
 MasteryGoal parse_mastery_goal(const string& value);
 
+// 可编辑骨架案例（ADR 0053）。案例源码随 GResource 分发，运行期展开成用户
+// 数据目录下的工作副本供学员编辑；这里只带定位信息与题面。
+struct LabSpec {
+    // 案例目录名。仓库里在 resources/cases/<case_id>/，发布后在
+    // GResource 的 /app/cases/<case_id>/ 下。JSON 字段叫 case，
+    // 那是 C++ 关键字，所以这里换个名字。
+    string case_id;
+    // 题干：这道实验要验证或解决什么、观察什么现象。读者第一眼读这个。
+    string prompt;
+    // 动手清单：补哪个符号、对照哪段输出。
+    string goal;
+    // 可选提示；没有就是空串。
+    string hint;
+};
+
 struct SubChapter {
     string function_id;
     string name;
@@ -70,6 +85,10 @@ struct SubChapter {
     // requires：学这个知识点之前应当先掌握的知识点，完整函数 ID。生成器已校验
     // 存在性、无环，以及跨章依赖与章节 prerequisites 同向（ADR 0030）。
     vector<SubChapterRequirement> requires_points;
+    // labs：这个知识点挂的可编辑骨架案例（ADR 0053），可以为空。与
+    // FunctionRegistry 的只读实验并存：只读那条给「看懂它长什么样」，
+    // 案例这条给「自己写一遍」。
+    vector<LabSpec> labs;
 };
 
 struct ChapterGroup {

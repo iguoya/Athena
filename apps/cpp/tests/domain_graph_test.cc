@@ -23,6 +23,7 @@ json MakePoint(const string& function_id, const string& name) {
         {"mastery_goal", ""},
         {"knowledge_type", ""},
         {"requires", json::array()},
+        {"labs", json::array()},
         {"icon", kIcon},
     };
 }

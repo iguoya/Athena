@@ -24,6 +24,7 @@ json MakePoint(
         {"mastery_goal", ""},
         {"knowledge_type", ""},
         {"requires", json::array()},
+        {"labs", json::array()},
         {"icon", kIcon},
     };
 }
