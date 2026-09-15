@@ -42,6 +42,7 @@ CHAPTER_FIELDS = frozenset(
         "subchapters",
     }
 )
+CASE_NAME_PATTERN = re.compile(r"[a-z0-9_]+")
 IMPLEMENTATION_FIELDS = frozenset({"header", "source"})
 UI_FIELDS = frozenset({"blueprint"})
 GROUP_FIELDS = frozenset({"name", "title", "description", "icon", "source"})
@@ -57,8 +58,16 @@ SUBCHAPTER_FIELDS = frozenset(
         "icon",
         "group",
         "source",
+        "labs",
     }
 )
+# 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
+# goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
+# 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
+LAB_FIELDS = frozenset({"case", "prompt", "goal", "hint"})
+# 案例骨架的所在目录，相对 resources/。GResource 按 /app/cases/<case>/<file>
+# 发布，运行期只从那里读（AGENTS.md「教学内容只从 GResource 读」）。
+CASES_DIRNAME = "cases"
 # 掌握目标：master 需要精通、required 必须掌握、familiar 一般了解；
 # 空串表示尚未评定。只按重要性评定，不看出现频率：用错的代价有多硬、是不是后续内容
 # 的地基、能不能靠编译器兜底（ADR 0029）。
@@ -107,6 +116,76 @@ def reject_unknown_fields(
         if field in deprecated:
             raise ProjectError(f"{label}.{field} is deprecated; {deprecated[field]}")
         raise ProjectError(f"{label} contains unknown field {field!r}")
+
+
+def validate_labs(
+    root: Path,
+    raw: object,
+    label: str,
+    case_files: set[str],
+) -> list[dict]:
+    """校验一个知识点的可编辑骨架案例（ADR 0053），返回运行时形态。
+
+    案例源码是教学内容，随 GResource 分发；这里只认 resources/cases/<case>/，
+    校验目录与骨架真的存在，免得配置写错要等到运行期才发现。
+    """
+    entries = require_list(raw, label)
+    labs: list[dict] = []
+    seen: set[str] = set()
+    for index, value in enumerate(entries):
+        lab_path = f"{label}[{index}]"
+        lab = require_object(value, lab_path)
+        reject_unknown_fields(lab, LAB_FIELDS, lab_path)
+        case = require_text(lab.get("case"), f"{lab_path}.case")
+        if not CASE_NAME_PATTERN.fullmatch(case):
+            raise ProjectError(
+                f"{lab_path}.case must be lowercase letters, digits and "
+                f"underscores: {case!r}"
+            )
+        if case in seen:
+            raise ProjectError(f"{label} lists case {case!r} twice")
+        seen.add(case)
+
+        case_dir = root / "resources" / CASES_DIRNAME / case
+        if not case_dir.is_dir():
+            raise ProjectError(
+                f"{lab_path}.case points at a missing directory: "
+                f"resources/{CASES_DIRNAME}/{case}"
+            )
+        sources = sorted(
+            path for path in case_dir.rglob("*")
+            if path.is_file() and not path.name.startswith(".")
+        )
+        if not sources:
+            raise ProjectError(
+                f"{lab_path}.case directory is empty: "
+                f"resources/{CASES_DIRNAME}/{case}"
+            )
+        # 骨架必须自带驱动（ADR 0053 决策第 3 条）：不改任何一行就能编译运行。
+        # 这里只能查到入口在不在——真编译交给本机工具链，那是运行期的事。
+        if not any(
+            "int main" in path.read_text(encoding="utf-8", errors="replace")
+            for path in sources
+            if path.suffix in {".cpp", ".cc", ".cxx"}
+        ):
+            raise ProjectError(
+                f"{lab_path}.case has no int main() driver: "
+                f"resources/{CASES_DIRNAME}/{case}"
+            )
+        for path in sources:
+            case_files.add(path.relative_to(root / "resources").as_posix())
+
+        labs.append(
+            {
+                "case": case,
+                "prompt": require_text(lab.get("prompt"), f"{lab_path}.prompt"),
+                "goal": require_text(lab.get("goal"), f"{lab_path}.goal"),
+                "hint": lab.get("hint", ""),
+            }
+        )
+        if not isinstance(labs[-1]["hint"], str):
+            raise ProjectError(f"{lab_path}.hint must be a string")
+    return labs
 
 
 def validate_cpp_identifier(value: str, label: str, role: str) -> None:
@@ -369,6 +448,7 @@ def build_model(
     seen_code_classes: dict[str, str] = {}
     seen_ui: dict[str, str] = {}
     source_files: set[str] = set()
+    case_files: set[str] = set()
     bindings: list[dict] = []
     chapters_by_id: dict[str, dict] = {}
     runtime_categories: list[dict] = []
@@ -718,6 +798,12 @@ def build_model(
                         f"{sorted(level for level in MASTERY_GOALS if level)}, "
                         f"got {mastery_goal!r}"
                     )
+                labs = validate_labs(
+                    root,
+                    subchapter.get("labs", []),
+                    f"{subchapter_path}.labs",
+                    case_files,
+                )
                 resolved_source = group_sources.get(group_name, "") or chapter_source
                 if "source" in subchapter:
                     resolved_source = project_path(
@@ -738,6 +824,7 @@ def build_model(
                     "difficulty": difficulty,
                     "mastery_goal": mastery_goal,
                     "knowledge_type": knowledge_type,
+                    "labs": labs,
                     "requires": [],
                     "icon": resolve_icon(
                         own_subchapter_icon,
@@ -866,6 +953,7 @@ def build_model(
         },
         "ui": seen_ui,
         "source_files": source_files,
+        "case_files": case_files,
         "bindings": bindings,
         "chapters": chapters_by_id,
         "category_count": len(categories),

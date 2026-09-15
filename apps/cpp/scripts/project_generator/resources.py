@@ -35,6 +35,15 @@ def render_resources(model: dict, root: Path) -> str:
         f'    <file compressed="true">{xml_escape(source)}</file>'
         for source in sorted(model["source_files"])
     ]
+    # 可编辑骨架案例（ADR 0053）。用 alias 去掉 cases/ 前缀，发布成
+    # /app/cases/<case>/<file>；运行期按这个路径把骨架展开成工作副本。
+    case_entries = [
+        '    <file alias="{}" compressed="true">{}</file>'.format(
+            xml_escape(asset.split("/", 1)[1]),
+            xml_escape(asset),
+        )
+        for asset in sorted(model["case_files"])
+    ]
     icon_entries = []
     icons_dir = root / "resources" / "icons"
     if icons_dir.is_dir():
@@ -69,6 +78,9 @@ def render_resources(model: dict, root: Path) -> str:
   </gresource>
   <gresource prefix="/app/sources">
 {entries_or_comment(source_entries, "暂无教学源码")}
+  </gresource>
+  <gresource prefix="/app/cases">
+{entries_or_comment(case_entries, "暂无实验案例")}
   </gresource>
   <gresource prefix="/app/icons">
 {entries_or_comment(icon_entries, "暂无图标")}

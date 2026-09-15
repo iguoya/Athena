@@ -38,7 +38,22 @@
             "blueprint": "resources/ui/chapters/type_semantics_lesson.blp"
           },
           "subchapters": [
-            { "name": "initialization", "title": "初始化", "description": "验证不同初始化形式、列表初始化的窄化检查和 explicit 构造边界。", "difficulty": 2, "mastery_goal": "master", "knowledge_type": "concept" },
+            {
+              "name": "initialization",
+              "title": "初始化",
+              "description": "验证不同初始化形式、列表初始化的窄化检查和 explicit 构造边界。",
+              "difficulty": 2,
+              "mastery_goal": "master",
+              "knowledge_type": "concept",
+              "labs": [
+                {
+                  "case": "initialization_forms",
+                  "prompt": "同样带一个等号，Tracer copy = a; 和 Tracer b = 2; 是同一回事吗？后者会不会先建一个临时对象再拷贝给 b？",
+                  "goal": "补出 todo_copy_init() 里的那一行，对照两段输出里构造函数的调用次数与种类。",
+                  "hint": "先写下你的预测再跑。如果结果和预测一致，想想为什么 copy = a 那行多了一次拷贝构造。"
+                }
+              ]
+            },
             { "name": "object_lifetime", "title": "对象生命周期", "description": "验证块作用域对象何时析构、临时对象在完整表达式末尾结束，以及 const 引用怎样延长临时对象的寿命。", "difficulty": 3, "mastery_goal": "master", "knowledge_type": "concept", "requires": ["initialization"] },
             { "name": "auto_deduction", "title": "auto", "description": "验证 auto 按值产生副本、auto& 保留别名，以及结构化绑定的复制与引用差别。", "difficulty": 3, "mastery_goal": "master", "knowledge_type": "strategy", "requires": ["initialization"] },
             { "name": "enum_class", "title": "enum class", "description": "验证枚举作用域、禁止隐式整数转换和显式读取底层值。", "difficulty": 1, "mastery_goal": "required", "knowledge_type": "strategy" },
