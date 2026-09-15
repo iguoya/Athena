@@ -164,7 +164,10 @@
   （主仓库 ADR 0037）。知识点 ID 前缀一律 `math.`（目录名是 `mathematics`，
   ID 前缀取短名，两者不同是有意为之）。
 
-**不引入**：MATLAB、Octave（授权、启动开销、方向错位三重问题，见 ADR 0001）；
+**MATLAB / Octave**：需要时可以引入——授权与启动开销都不再是拒绝理由（见 ADR 0001
+的 2026-09-15 修订）。只是**符号判等继续用 SymPy**，因为 Octave 的 symbolic 包绕一圈
+还是 SymPy、MATLAB 的强项不在符号推导；数值实验、工程仿真、场与曲面可视化这些是
+它们的强项，用得上就引。**不引入**：
 主程序的 Meson、gtkmm、Blueprint、`athena.json`。**Pyodide 不再是备选**——
 ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的人」，而主仓库
 `AGENTS.md` 已把目标机器的基线定为一台开发机（Python 视为已装），这个条件不会
