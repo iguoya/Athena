@@ -96,20 +96,35 @@
 
 ### 已知的待清理项
 
-按这条原则，下面这些是明确的欠账，动到时顺手改，不要照抄扩大：
+这份清单立在 2026-09-14。2026-09-15 逐条复核的结果记在下面——**判据在
+[ADR 0049](0049-portability-is-a-cost-benefit-call.md) 之后不再是「有没有做到
+三平台对称」，而是成本收益**，所以有几条的结局是「明确排除」而不是「修好」。
 
-- `apps/mathematics` 的 `src-tauri/src/engine.rs` 写死 `engine/.venv/bin/python`，
-  Windows 上是 `Scripts\python.exe`；
-- `apps/dsa` 的实验编译只找 `c++` / `clang++` / `g++`，没认 MSVC 的 `cl.exe`；
-- 三个 Tauri 应用的 `rusqlite` 没开 `bundled`，现在链系统 sqlite3，Windows 没有；
-- 启动器的窗口前置在 Windows 上未实现（`runner.rs` 里预留了位置）；
-- **`apps/cpp` 在 Windows 上编不过，卡在上游**：MSYS2 现行的 giomm 2.86 与
-  glib 2.90 头文件冲突（`GDBusActionGroupClass` 重复声明）。本仓库这边已经没有
-  障碍——依赖全部找得到，Blueprint 也编得过（给它设了 `PYTHONUTF8=1`），倒在
-  gtkmm 自己的头文件上。CI 里保留这个 job 持续探测，标为实验性、不阻塞整体；
-- **验证入口 `scripts/check.sh` 和各应用的检查脚本是 `.sh`**，Windows 上要靠
-  Git Bash 或 WSL 才能跑。每天都要跑的环节不该有这种前提，应迁到 Python
-  （三平台自带，仓库里已经在用它写生成器和打包器）。
+已经做掉的：
+
+- ~~`apps/mathematics` 的 `engine.rs` 写死 `engine/.venv/bin/python`~~ —— 已按
+  POSIX 与 Windows 两种布局各留一个候选；建环境的 `setup-engine.sh` 也改写成
+  Python，改用标准库 `venv.EnvBuilder` 拿解释器路径。
+- ~~三个 Tauri 应用的 `rusqlite` 没开 `bundled`~~ —— 已经是 `bundled`，SQLite
+  源码跟着一起编，不再需要目标机器上有 libsqlite3。
+- ~~验证入口和各应用检查脚本是 `.sh`~~ —— 根入口与五个应用的检查脚本全部是
+  Python，`apps/c` 的 `fetch-sources.sh` 也一并改写。仓库里只剩
+  `launcher/macos/scripts/` 下两个 macOS 专用安装脚本。
+
+明确排除，不再当欠账（ADR 0049）：
+
+- **`apps/cpp` 在 Windows 上编不过**：MSYS2 现行的 giomm 2.86 与 glib 2.90 头文件
+  冲突（`GDBusActionGroupClass` 重复声明）。本仓库这边没有障碍，倒在 gtkmm 自己的
+  头文件上——**上游问题，成本不由我们控制**。`apps/cpp` 支持 macOS 与 Ubuntu，
+  CI 里不再保留探测 job。
+- **`apps/dsa` 的实验编译不认 MSVC 的 `cl.exe`**：它的命令行参数是另一套，要为它
+  单独写一份编译调用。Windows 上装 MSYS2/MinGW 或 LLVM 即可，`g++` / `clang++`
+  都认得。
+
+仍然是欠账：
+
+- 启动器的窗口前置在 Windows 上未实现（`runner.rs` 里预留了位置）。目前的降级是
+  如实返回「已经在运行」，不崩溃也不假装成功。
 
 ## 后果
 

@@ -77,45 +77,10 @@ jobs:
         # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
         run: xvfb-run -a python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
-  # Windows 上的 GTK4 构建目前卡在上游：MSYS2 现行的 giomm 2.86 与 glib 2.90
-  # 头文件冲突（GDBusActionGroupClass 重复声明），和本仓库的代码无关——依赖
-  # 全部找得到，Blueprint 也编得过，倒在 gtkmm 自己的头文件上。保留这个 job
-  # 持续探测，上游修好就会自动变绿；在那之前不让它阻塞整体结论。
-  cpp-windows:
-    name: C++ 教程（Windows，实验性）
-    runs-on: windows-latest
-    timeout-minutes: 45
-    continue-on-error: true
-    defaults:
-      run:
-        shell: msys2 {0}
-
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v7
-
-      - name: Set up MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: >-
-            mingw-w64-ucrt-x86_64-toolchain
-            mingw-w64-ucrt-x86_64-meson
-            mingw-w64-ucrt-x86_64-ninja
-            mingw-w64-ucrt-x86_64-pkgconf
-            mingw-w64-ucrt-x86_64-gtkmm-4.0
-            mingw-w64-ucrt-x86_64-gtksourceview5
-            mingw-w64-ucrt-x86_64-md4c
-            mingw-w64-ucrt-x86_64-nlohmann-json
-            mingw-w64-ucrt-x86_64-gtest
-            mingw-w64-ucrt-x86_64-sqlite3
-            mingw-w64-ucrt-x86_64-librsvg
-            mingw-w64-ucrt-x86_64-blueprint-compiler
-            mingw-w64-ucrt-x86_64-python
-
-      - name: Verify
-        run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
+  # apps/cpp 不支持 Windows：GTK4 在 MSYS2 上卡在 giomm 2.86 与 glib 2.90 的
+  # 头文件冲突，是上游问题、不由我们决定，成本过高就整体排除（ADR 0049）。
+  # 这里不留探测 job——一个永远红着的"实验性"格子不产生决策价值，只让人以为
+  # 我们还在支持 Windows。真要重新评估，那该是一次有意识的决定。
 
   # C 语言教程：Qt Quick + CMake。跑的是应用自己的 scripts/check.py。
   c:
