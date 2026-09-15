@@ -217,10 +217,14 @@ mod tests {
     #[test]
     fn round_trip_and_symbolic_integral() {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
-        if !venv_python(&root).is_file() {
-            eprintln!("跳过：还没跑 scripts/setup-engine.py");
-            return;
-        }
+        let python = venv_python(&root);
+        // 不跳过。这个测试验的是本应用最核心的那条链路，静默放过等于没测；
+        // 环境按仓库基线视为可自行准备，缺了就说清楚怎么补（主仓库 AGENTS.md）。
+        assert!(
+            python.is_file(),
+            "引擎环境还没建：先在 apps/mathematics 跑 python3 scripts/setup-engine.py（缺 {}）",
+            python.display()
+        );
         let mut e = Engine::default();
 
         let st = e.status(&root);

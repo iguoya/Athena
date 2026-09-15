@@ -91,15 +91,16 @@ def main() -> int:
     if not arguments.skip_rust:
         # 不设 CARGO_TARGET_DIR：尊重外部环境。编排器会注入共享目录，
         # 单独跑时就用应用自己的 src-tauri/target。
+        cargo = tool("cargo")
         run(
-            [
-                tool("cargo"),
-                "check",
-                "--manifest-path",
-                "src-tauri/Cargo.toml",
-                "--all-targets",
-            ],
+            [cargo, "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],
             "Rust 侧检查",
+        )
+        # 跑测试，不只是编译。apps/cpp 在 Windows 上那个 CRLF 问题就是测试逮到的
+        # ——只 check 的话它会一路绿到运行时才炸。
+        run(
+            [cargo, "test", "--manifest-path", "src-tauri/Cargo.toml"],
+            "Rust 侧测试",
         )
     return 0
 
