@@ -144,6 +144,23 @@ jobs:
             mingw-w64-ucrt-x86_64-blueprint-compiler
             mingw-w64-ucrt-x86_64-python
 
+      # 钉住 glib 的版本，不跟 pacman 拿最新。
+      #
+      # MSYS2 仓库里 glibmm 停在 2.86，而 pacman 默认会把 glib2 装到 2.90——
+      # 这两代不配套（glib 2.89.2 起若干类型改成 final type，glibmm 2.89.0 才
+      # 跟着改包装方式）。追新在这里没有任何收益，只制造一个下游绕不过的冲突。
+      #
+      # 2.88.3 是 MSYS2 仓库里最新的 2.88.x，与 glibmm 2.86 配套；本地 macOS 用的
+      # 也是 glib 2.88.3，CI Ubuntu 是 2.88.0——钉在这里，三个环境就跑同一代 glib，
+      # 不会再出现「只有一个平台失败」。MSYS2 把 glibmm 更新到 2.89+ 之后，这一步
+      # 连同 meson.build 里的配套检查一起可以放开。
+      - name: Pin glib to the version glibmm is built for
+        run: |
+          pacman -U --noconfirm --needed \
+            https://repo.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-glib2-2.88.3-1-any.pkg.tar.zst
+          echo "glib2: $(pacman -Q mingw-w64-ucrt-x86_64-glib2)"
+          echo "glibmm: $(pacman -Q mingw-w64-ucrt-x86_64-glibmm)"
+
       - name: Verify
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
