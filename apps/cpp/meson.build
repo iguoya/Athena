@@ -370,6 +370,7 @@ gtk_test_exe = executable(
     'render/cairo_text.cc',
     'render/chart_view.cc',
     'render/knowledge_graph_view.cc',
+    'ui/checkpoint_view.cc',
     'ui/lesson_blocks.cc',
     'ui/lesson_figures.cc',
     'ui/lesson_page.cc',

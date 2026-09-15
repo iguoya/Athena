@@ -379,7 +379,52 @@
             }
           ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "答完这几题按正确率评定这个知识点的掌握度，可以重做。",
+        "questions": [
+          {
+            "id": "vs-self-assign",
+            "stem": "Core Guidelines C.62 要求拷贝赋值对自赋值安全，理由是「如果 x = x 改变了 x 的值，人们会感到意外，而且会发生糟糕的错误，常常还伴随泄漏」。下面哪种实现顺序满足这条？",
+            "options": [
+              "先分配并复制出新资源，成功之后再释放旧的",
+              "先释放自己的旧资源，再从 other 复制一份过来",
+              "用 memcpy 把 other 的字节直接覆盖到自己身上"
+            ],
+            "answer": 0,
+            "explain": "自赋值时 other 就是 *this：选项二一释放旧资源，源也同时被毁，接下来是从已释放的内存复制。选项一先把新的准备好再释放旧的，自赋值时最多多做一次无用的复制，不会毁掉数据——而且它顺带解决了分配失败的问题。选项三对含指针成员的类型是直接的浅拷贝。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.62",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-self",
+                "note": "题面取自该规则的 Reason 段"
+              }
+            ]
+          },
+          {
+            "id": "vs-assign-signature",
+            "stem": "C.60 规定拷贝赋值应当非虚、参数取 const&、返回非 const&，并补一句「如果想为右值优化，就提供一个接受 && 的重载」。按这句话，移动赋值在设计上的定位是什么？",
+            "options": [
+              "取代 const& 版本，因为它在所有情况下都更快",
+              "让类型变成只能移动、不能拷贝",
+              "在 const& 版本之外多一个重载，让右值实参走移动而不是拷贝"
+            ],
+            "answer": 2,
+            "explain": "C.60 把移动赋值定位成「优化用的额外重载」，不是替代品——左值实参仍然需要 const& 版本接住。选项二描述的是另一回事：那要靠把拷贝操作 =delete 才能做到，与提供移动重载无关。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.60",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-assignment",
+                "note": "题面取自该规则标题与其后的补充说明"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "topic": "cpp.ValueSemantics.rvalue",
@@ -530,7 +575,52 @@
             }
           ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "答完这几题按正确率评定这个知识点的掌握度，可以重做。",
+        "questions": [
+          {
+            "id": "vs-rvalue-binding",
+            "stem": "一个函数同时有 f(const Buffer&) 和 f(Buffer&&) 两个重载。以下哪种实参会选中 f(Buffer&&)？",
+            "options": [
+              "一个具名的 const Buffer 对象",
+              "一个按值返回 Buffer 的函数调用表达式",
+              "一个具名的非 const Buffer 变量"
+            ],
+            "answer": 1,
+            "explain": "按值返回产生纯右值，能绑定到右值引用。具名变量无论 const 与否都是左值，绑不上 Buffer&&——这正是「加了移动重载但性能没变」的常见原因：实参是左值时它根本不在候选里。",
+            "source_refs": [
+              {
+                "source_id": "cppreference",
+                "relation": "adapted",
+                "locator": "cpp/language/reference",
+                "url": "https://en.cppreference.com/cpp/language/reference",
+                "note": "右值引用的绑定规则取自该条目"
+              }
+            ]
+          },
+          {
+            "id": "vs-const-rvalue",
+            "stem": "一个 const Buffer 对象经 std::move 之后，能绑定到 Buffer&& 参数吗？",
+            "options": [
+              "能，std::move 已经把它转成了右值",
+              "不能——std::move(const Buffer) 的类型是 const Buffer&&，绑不到 Buffer&&",
+              "能，但中途会多一次拷贝"
+            ],
+            "answer": 1,
+            "explain": "std::move 只做类型转换，不去掉 const：结果是 const Buffer&&，它绑不到 Buffer&&，于是重载决议退回 const Buffer&——也就是拷贝。编译通过、运行正确、性能白丢，没有任何警告。这也是「不要给返回值加 const」的原因。",
+            "source_refs": [
+              {
+                "source_id": "cppreference",
+                "relation": "adapted",
+                "locator": "cpp/utility/move",
+                "url": "https://en.cppreference.com/cpp/utility/move",
+                "note": "std::move 保留 const、以及由此导致的重载退化取自该条目"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "topic": "cpp.ValueSemantics.move_semantics",
@@ -702,7 +792,52 @@
           ],
           "tier": "deeper"
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "答完这几题按正确率评定这个知识点的掌握度，可以重做。",
+        "questions": [
+          {
+            "id": "vs-self-move",
+            "stem": "C.65 要求移动赋值对自移动安全，理由里举了一个具体场景：「std::swap 是用移动操作实现的，所以如果不小心写出 swap(a, b) 而 a 和 b 指向同一个对象，没处理自移动就会是个严重而微妙的错误」。这句话说明什么？",
+            "options": [
+              "std::swap 内部会先检查两个参数是不是同一个对象",
+              "自移动在实践中几乎不会发生，可以不管",
+              "自移动很少被直接写出来，但会通过 swap 这类通用代码间接发生"
+            ],
+            "answer": 2,
+            "explain": "这正是 C.65 的价值所在：没人会手写 x = std::move(x)，但泛型代码里 swap(a, b) 完全可能拿到同一个对象（比如自排序、自交换的边界情况）。移动赋值若不处理自移动，会先把自己的资源释放掉再从自己身上搬——数据就没了。选项一不成立：标准并不要求 swap 做这个检查。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.65",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-move-self",
+                "note": "题面与场景取自该规则的 Reason 段"
+              }
+            ]
+          },
+          {
+            "id": "vs-move-noexcept-effect",
+            "stem": "一个类写了移动构造但忘了标 noexcept。它被放进 vector，push_back 触发扩容时会发生什么？",
+            "options": [
+              "编译报错，vector 要求移动构造必须是 noexcept",
+              "元素被逐个拷贝到新内存，移动构造根本不会被调用",
+              "照常移动，只是异常安全性略低"
+            ],
+            "answer": 1,
+            "explain": "vector 扩容要把旧元素搬到新内存，中途抛异常就既回不去也进不来，所以它只在确认移动不抛异常时才用移动，否则退回拷贝。这个退化不报错、不警告，写了移动却没有收益——这是 C.66 要求标 noexcept 的最实际理由。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.66",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-move-noexcept",
+                "note": "题面取自该规则关于标准库设施如何利用 noexcept 移动的说明"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "topic": "cpp.ValueSemantics.special_members",
@@ -807,7 +942,52 @@
             }
           ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "答完这几题按正确率评定这个知识点的掌握度，可以重做。",
+        "questions": [
+          {
+            "id": "vs-polymorphic-copy",
+            "stem": "C.67 说多态类应当抑制公开的拷贝与移动，因为「被意外按值传递时，隐式生成的拷贝会导致切片：派生对象只有基类部分被复制，多态行为被破坏」。对一个有虚函数**且有数据成员**的基类，这条规则建议怎么做？",
+            "options": [
+              "把拷贝与移动操作声明为 protected",
+              "把拷贝与移动操作 =delete 掉",
+              "保持 public，在文档里写明不要按值传递"
+            ],
+            "answer": 0,
+            "explain": "C.67 原文分两种情况：类没有数据成员时 =delete，否则声明为 protected。protected 既挡住了外部的按值传递（切片的来源），又允许派生类在自己的拷贝构造里调用基类版本——直接 =delete 会把派生类的拷贝也一起堵死。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.67",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-virtual",
+                "note": "题面与两种处理方式取自该规则正文"
+              }
+            ]
+          },
+          {
+            "id": "vs-five-suppression",
+            "stem": "一个类原本六个特殊成员函数全由编译器生成。现在给它加一行 `~Widget() = default;`。按 C.21，这一行的后果是什么？",
+            "options": [
+              "没有任何后果，=default 等同于编译器本来就会生成的版本",
+              "拷贝操作被 delete，凡是拷贝的地方都编译报错",
+              "移动构造与移动赋值不再隐式声明，涉及「移动」的地方退回拷贝"
+            ],
+            "answer": 2,
+            "explain": "C.21 原文点明：声明任何一个拷贝 / 移动 / 析构函数——即使写成 =default 或 =delete——都会抑制移动构造与移动赋值的隐式声明。=default 并不等于「什么都没写」，这正是它最容易被误解的地方。拷贝操作仍然生成，所以不报错，只是静默退化。",
+            "source_refs": [
+              {
+                "source_id": "cpp-core-guidelines",
+                "relation": "adapted",
+                "locator": "C.21",
+                "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-five",
+                "note": "题面取自该规则 Reason 段中关于 =default 与 =delete 同样产生抑制的说明"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "topic": "cpp.ValueSemantics.forwarding",
@@ -937,7 +1117,52 @@
             }
           ]
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "答完这几题按正确率评定这个知识点的掌握度，可以重做。",
+        "questions": [
+          {
+            "id": "vs-forwarding-ref",
+            "stem": "下面哪个函数的参数是转发引用（forwarding reference），而不是普通的右值引用？",
+            "options": [
+              "template<class T> void f(std::vector<T>&& v)",
+              "void f(Buffer&& b)",
+              "template<class T> void f(T&& x)"
+            ],
+            "answer": 2,
+            "explain": "转发引用要求参数形如 T&&，且 T 正是这个函数模板自己被推导的参数。选项一是经典陷阱：vector<T>&& 里 T 虽然要推导，但参数类型不是裸的 T&&，所以它只是右值引用，传左值 vector 会编译失败。选项二是具体类型的右值引用。",
+            "source_refs": [
+              {
+                "source_id": "cppreference",
+                "relation": "adapted",
+                "locator": "cpp/language/reference",
+                "url": "https://en.cppreference.com/cpp/language/reference",
+                "note": "转发引用的判定条件取自该条目"
+              }
+            ]
+          },
+          {
+            "id": "vs-ref-collapsing",
+            "stem": "引用折叠的规则是：只要有一个左值引用参与，结果就是左值引用；两个都是右值引用才得到右值引用。按这条，T& && 折叠成什么？",
+            "options": [
+              "T&&",
+              "T&",
+              "编译错误，引用的引用不合法"
+            ],
+            "answer": 1,
+            "explain": "T& && 折叠成 T&。这正是转发引用接住左值时发生的事：T 被推导为 Buffer&，参数类型 Buffer& && 折叠成 Buffer&，于是它绑住了那个左值。选项三是 C++98 的情况——在模板推导与 typedef 的语境里，引用的引用是合法的，规则就是折叠。",
+            "source_refs": [
+              {
+                "source_id": "cppreference",
+                "relation": "adapted",
+                "locator": "cpp/language/reference",
+                "url": "https://en.cppreference.com/cpp/language/reference",
+                "note": "引用折叠规则取自该条目的 Reference collapsing 一节"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

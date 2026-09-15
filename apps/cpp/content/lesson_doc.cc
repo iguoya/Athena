@@ -76,6 +76,19 @@ LessonChapter parse_lesson_chapter(const string& json_text) {
             for (const auto& block : node.at("blocks")) {
                 doc.blocks.push_back(parse_block(block));
             }
+            const auto checkpoint = node.find("checkpoint");
+            if (checkpoint != node.end()) {
+                doc.checkpoint.intro = text_or(*checkpoint, "intro");
+                for (const auto& q : checkpoint->at("questions")) {
+                    doc.checkpoint.questions.push_back(LessonCheckpointQuestion{
+                        .id = q.at("id").get<string>(),
+                        .stem = q.at("stem").get<string>(),
+                        .options = q.at("options").get<vector<string>>(),
+                        .answer = q.at("answer").get<int>(),
+                        .explain = q.at("explain").get<string>(),
+                    });
+                }
+            }
             return doc;
         };
 

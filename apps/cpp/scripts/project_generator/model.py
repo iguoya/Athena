@@ -114,6 +114,13 @@ PATH_FIELDS = frozenset({"name", "title", "description", "default", "chapters"})
 # optional 用到再说。与 stage 不是一回事——stage 说这个知识点在整条路上
 # 排第几段，tier 说这一节内部哪里难。
 SECTION_TIERS = frozenset({"core", "deeper", "optional"})
+
+# 随堂考核（ADR 0054 第 3 条）：掌握度的唯一来源，取代 AI 现场出题。
+# 每题必须能指到出处、必须标出覆盖哪些知识点——否则算不出分组正确率。
+CHECKPOINT_FIELDS = frozenset({"intro", "questions"})
+CHECKPOINT_ITEM_FIELDS = frozenset({
+    "id", "stem", "options", "answer", "explain", "source_refs",
+})
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
 # goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
 # 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
@@ -438,6 +445,70 @@ def validate_paths(
     return paths
 
 
+def validate_checkpoint(
+    raw: object, label: str, catalog: SourceCatalog
+) -> None:
+    """校验一个知识点的随堂考核（ADR 0054 第 3 条）。
+
+    它是掌握度的唯一来源，所以比讲解里的随堂题严格：每题都要有出处，
+    题目本身也不许自造。成绩按所在知识点落库，因此不需要再标 covers。
+    """
+    checkpoint = require_object(raw, label)
+    reject_unknown_fields(checkpoint, CHECKPOINT_FIELDS, label)
+    require_text(checkpoint.get("intro"), f"{label}.intro")
+
+    questions = require_list(checkpoint.get("questions"), f"{label}.questions")
+    if len(questions) < 2:
+        # 一道题的对错不该决定长期掌握度，多题才作数（见 checkpoint_view.h）。
+        raise ProjectError(f"{label}.questions needs at least two questions")
+
+    seen_ids: set[str] = set()
+    answers: list[int] = []
+    for index, value in enumerate(questions):
+        item_path = f"{label}.questions[{index}]"
+        item = require_object(value, item_path)
+        reject_unknown_fields(item, CHECKPOINT_ITEM_FIELDS, item_path)
+        item_id = require_text(item.get("id"), f"{item_path}.id")
+        if item_id in seen_ids:
+            raise ProjectError(f"{label} has two questions with id {item_id!r}")
+        seen_ids.add(item_id)
+
+        require_text(item.get("stem"), f"{item_path}.stem")
+        # 解析不是可选项：只说「错了」帮不上忙。
+        require_text(item.get("explain"), f"{item_path}.explain")
+
+        options = require_list(item.get("options"), f"{item_path}.options")
+        if len(options) < 2:
+            raise ProjectError(f"{item_path} needs at least two options")
+        for option_index, option in enumerate(options):
+            require_text(option, f"{item_path}.options[{option_index}]")
+
+        answer = item.get("answer")
+        if not isinstance(answer, int) or isinstance(answer, bool):
+            raise ProjectError(f"{item_path}.answer must be an integer index")
+        if not 0 <= answer < len(options):
+            raise ProjectError(
+                f"{item_path}.answer is {answer} but there are {len(options)} options"
+            )
+        answers.append(answer)
+
+        # 计入掌握度的题必须有出处，题目本身也不许自造（ADR 0054）。
+        if not item.get("source_refs"):
+            raise ProjectError(
+                f"{item_path} is scored and needs source_refs pointing at the "
+                f"material it is adapted from"
+            )
+        validate_source_refs(item["source_refs"], f"{item_path}.source_refs", catalog)
+
+    if len(answers) >= 4:
+        top = max(set(answers), key=answers.count)
+        if answers.count(top) / len(answers) > 0.6:
+            raise ProjectError(
+                f"{label}: {answers.count(top)} of {len(answers)} answers sit at "
+                f"option {top}; spread them out so the position cannot be guessed"
+            )
+
+
 def validate_lessons(
     root: Path, function_ids: set[str], catalog: SourceCatalog
 ) -> set[str]:
@@ -493,9 +564,14 @@ def validate_lessons(
             topic = require_object(value, topic_path)
             reject_unknown_fields(
                 topic,
-                frozenset({"topic", "title", "subtitle", "blocks"}),
+                frozenset({"topic", "title", "subtitle", "blocks", "checkpoint"}),
                 topic_path,
             )
+            # 随堂考核是这个知识点掌握度的唯一来源；没有它就永远停在 0 星。
+            if "checkpoint" in topic:
+                validate_checkpoint(
+                    topic["checkpoint"], f"{topic_path}.checkpoint", catalog
+                )
             topic_id = require_text(topic.get("topic"), f"{topic_path}.topic")
             # 指向不存在的知识点，页面就是空的——这类错误要在这里挡住。
             if topic_id not in function_ids:
@@ -1392,7 +1468,9 @@ def build_model(
         ]
 
     # 课文引用的知识点必须存在，所以放在全部章节解析完之后校验。
-    lesson_files = validate_lessons(root, set(titles_by_function), source_catalog)
+    lesson_files = validate_lessons(
+        root, set(titles_by_function), source_catalog
+    )
     # 路线放在全部章节解析完之后校验：它要拿章节先修来检查顺序。
     learning_paths = validate_paths(
         config.get("paths", []), "athena.json.paths", prerequisites_everywhere

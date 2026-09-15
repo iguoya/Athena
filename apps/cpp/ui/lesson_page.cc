@@ -24,10 +24,12 @@ LessonPage::LessonPage(
     const ChapterMeta& chapter,
     const Glib::RefPtr<Gtk::Builder>& builder,
     LessonRenderer::FigureFactory figures,
-    ExperimentRequested on_experiment_requested)
+    ExperimentRequested on_experiment_requested,
+    CheckpointView::OnScored on_scored)
     : m_chapter(chapter),
       m_renderer(std::move(figures)),
-      m_on_experiment_requested(std::move(on_experiment_requested)) {
+      m_on_experiment_requested(std::move(on_experiment_requested)),
+      m_on_scored(std::move(on_scored)) {
     m_root = &take<Gtk::Box>(builder, "lesson_page");
     m_notebook = &take<Gtk::Notebook>(builder, "lesson_page_notebook");
     take<Gtk::Label>(builder, "lesson_page_title").set_text(chapter.title);
@@ -64,6 +66,45 @@ void LessonPage::build_tab(const LessonDoc& doc, const string& tab_title) {
         lead.add_css_class("native-lesson-lead");
     }
     m_renderer.render(body, doc);
+
+    // 随堂考核放在最后：读完、动完手，再检验一次（ADR 0054 第 3 条）。
+    // 题目来自课文数据而不是页面代码，新增一节不必改这个类。
+    if (!doc.checkpoint.empty() && m_on_scored) {
+        Checkpoint spec;
+        spec.knowledge_id = doc.topic;
+        spec.intro = doc.checkpoint.intro;
+        for (const LessonCheckpointQuestion& q : doc.checkpoint.questions) {
+            spec.questions.push_back(CheckpointQuestion{
+                .stem = q.stem,
+                .choices = q.options,
+                .correct_choice = static_cast<size_t>(q.answer),
+                .explain = q.explain,
+            });
+        }
+        m_checkpoints.push_back(std::move(spec));
+        auto view = make_unique<CheckpointView>(
+            m_checkpoints.back(), m_on_scored,
+            [this](const string& function_id) {
+                // 「运行实验验证」：把判断交给真实输出去检验。
+                for (const SubChapter& candidate : m_chapter.subchapters) {
+                    if (candidate.function_id == function_id && m_on_experiment_requested) {
+                        m_on_experiment_requested(
+                            ExperimentSelection{
+                                .function_id = candidate.function_id,
+                                .title = candidate.title,
+                                .description = candidate.description,
+                                .source_path = candidate.source,
+                                .member_name = candidate.name,
+                                .labs = candidate.labs,
+                            },
+                            true);
+                        return;
+                    }
+                }
+            });
+        body.append(view->widget());
+        m_checkpoint_views.push_back(std::move(view));
+    }
 
     // 知识点页尾部挂一个进实验台的入口：讲解与实验是同一个知识点的两面
     // （ADR 0028），读完就该能直接动手。大纲页没有对应知识点，不挂。

@@ -403,7 +403,24 @@ void MainWindow::ensure_chapter_page(
         // 课文里的 figure 块按 id 取控件。本章暂时全用表格与代码块表达，
         // 需要自绘图时在这里注册，数据只决定它出现在哪一节（ADR 0055）。
         m_lesson_pages[page_key] = make_unique<LessonPage>(
-            chapter, builder, make_lesson_figure, experiment_requested);
+            chapter, builder, make_lesson_figure, experiment_requested,
+            // 随堂考核的成绩按知识点落库，与 type_semantics 那页同一条路径；
+            // 页面不碰 LearningStore。
+            [this](const string& function_id, int mastery, int correct, int total) {
+                if (!m_learning_store) {
+                    return false;
+                }
+                try {
+                    m_learning_store->save_assessment(
+                        function_id, mastery, correct, total);
+                    refresh_progress_page();
+                    return true;
+                } catch (const exception& error) {
+                    cerr << "Failed to save checkpoint score for " << function_id
+                         << ": " << error.what() << endl;
+                    return false;
+                }
+            });
     } else if (chapter.widget_name == kPracticeCubePageWidget) {
         m_pocket_cube_pages[page_key] = make_unique<PocketCubePage>(
             chapter, builder, m_content_loader, overview_requested);

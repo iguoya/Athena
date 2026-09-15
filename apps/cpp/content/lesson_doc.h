@@ -43,6 +43,28 @@ struct LessonBlock {
     vector<LessonBlock> blocks;
 };
 
+// 随堂考核的一道题（ADR 0054 第 3 条）。它是掌握度的唯一来源——AI 现场出题
+// 不再计入，题目写在课文里、有出处、本地判分，可复核也可回归。
+//
+// 与 ui/checkpoint_view.h 的 CheckpointQuestion 是同一件事的两侧：这里是
+// 数据，那边是控件。题目从代码搬进数据之后，新增一节不必再改页面类。
+struct LessonCheckpointQuestion {
+    string id;
+    string stem;
+    vector<string> options;
+    // 正确选项下标
+    int answer = -1;
+    string explain;
+};
+
+// 一个知识点的随堂考核。成绩按所在知识点落库，所以不必再标覆盖范围。
+struct LessonCheckpoint {
+    string intro;
+    vector<LessonCheckpointQuestion> questions;
+
+    bool empty() const { return questions.empty(); }
+};
+
 // 一个知识点的学习页。
 struct LessonDoc {
     // 完整函数 ID，例如 cpp.ValueSemantics.move_semantics
@@ -50,6 +72,8 @@ struct LessonDoc {
     string title;
     string subtitle;
     vector<LessonBlock> blocks;
+    // 这个知识点的随堂考核，可能为空（那它就还拿不到掌握度）。
+    LessonCheckpoint checkpoint;
 };
 
 // 一章的全部学习页，按知识点排列。
