@@ -24,8 +24,9 @@
 - **壳**：Tauri 2（Rust）
 - **界面**：Vite + TypeScript（Web UI，非 GTK）
 - **内容**：`content/curriculum.json` + `content/cases/**`（本目录唯一课表）
-- **进度**：SQLite；**始终写入本应用自己的库**（用户数据目录下的
-  `AthenaDSA/learning.db`），自建表、自迁移，不共用主程序的学习库，也不依赖
+- **进度**：SQLite；**始终写入本应用自己的库**（`progress/learning.db`，
+  **随仓库走**，换机器 clone 下来进度还在，主仓库 ADR 0053；发行副本退回
+  用户数据目录 `AthenaDSA/`），自建表、自迁移，不共用主程序的学习库，也不依赖
   主程序是否启动过（ADR 0037）。`--store` 仅为兼容旧版主程序而接受并忽略。
   知识点 ID 前缀一律 `dsa.`。
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行

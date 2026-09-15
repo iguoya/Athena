@@ -1,6 +1,6 @@
-# Athena Driving — 项目协作规则
+# 驾考学习 — 项目协作规则
 
-本文档是 **`apps/driving` 独立应用** 的项目级指令。本应用与仓库里其他学习应用
+本文档是 **`apps/driver` 独立应用** 的项目级指令。本应用与仓库里其他学习应用
 **平级、可脱离**：不读别人的配置、不链接别人的代码，不依赖别的进程即可完成
 开发、构建与练习。
 
@@ -10,23 +10,28 @@
 ## 定位
 
 - 目标：把中国机动车理论考里的 **科目一** 和 **科目四** 练到考场规则够用。
-- 科目四在法规里的名字是 **科目三安全文明驾驶常识**；界面用学习者口头称呼，
-  出处写法规名。
+- 科目四是安全文明驾驶常识：单独一卷、单独记分，跟路考不是同一张成绩。出处引用
+  规章时写全称「科目三安全文明驾驶常识」，界面不要反复纠正学习者。
 - 不做科目二场地、科目三上路，也不做手机 App。
 - 题目必须能指到法律、行政法规、部门规章或国家标准（ADR 0003）。不收录商业
-  驾考题库原题。
-- 掌握度只由作答写入，禁止手动标记熟练。
+  驾考题库原题。科目一按难度分四阶段，当前阶段全部掌握才解锁下一阶段的练习
+  和测试；科目一全部掌握后才开放科目四（ADR 0006）。
+- 界面基准字号 **20pt**，正文、选项、侧栏都按这个尺寸走，不要再按手机控件缩小。
+- 掌握度只由作答对错写入，禁止手动标记熟练。练习跳过最近一次答对的题。练习判定后停在当前题，不按秒数自动跳下一题；蓝条解释用系统语音朗读，可停止或再读一遍（ADR 0005）。迟疑只跟自己平时节奏比：样本不够不下结论，必须明显停更久才标；迟疑答对的题练习里还会再出。题目按路上会碰到的场面出，分高频 / 常考 / 常规 / 偏难：高频常考多练多考，常规少出，偏难怪（特种车、冷门数字、几乎遇不到的场面）默认不练不考，也不挡过关。题量以通过机试为标准：科目一约 150–200 道独立考点，科目四约 70–90 道，不堆换皮、不搬商业整库。科目一模拟考在四阶段过关后从日常题抽；科目四模拟考在科目一过关后才开放。激励（今日目标、连续日、连对、里程碑）只展示进度库派生的统计，两者按仓库 ADR 0052 走同一条回路。
 
 ## 技术栈
 
 - **壳**：Flutter 桌面（macOS / Windows / Linux）
-- **界面**：Dart + Material 3；标志用 `CustomPaint` 自绘，不嵌 WebView
+- **界面**：Dart；桌面工作台（侧栏 + 主区），不为手机窄屏折中。标志用
+  `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
-- **进度**：SQLite，用户数据目录 `AthenaDriving/learning.db`，知识点 ID 前缀
-  `drive.`（主仓库 ADR 0037）
+- **进度**：SQLite，`progress/learning.db`——**随仓库走**，换机器 clone 下来
+  掌握度和战绩还在（主仓库 ADR 0053）；拿不到工作树的发行副本退回用户数据目录
+  `AthenaDriver/`。自建表、自迁移，知识点 ID 前缀 `drive.`（主仓库 ADR 0037）
 
-不引入 GTK、Qt、Tauri。开发时内容从 `ATHENA_DRIVING_ROOT` 读磁盘，改 JSON
-热重启即可看到；发行包才走 Flutter assets。
+不引入 GTK、Qt、Tauri。开发时内容从 `ATHENA_DRIVER_ROOT` 读磁盘，改 JSON
+热重启即可看到；发行包才走 Flutter assets。macOS entitlements 关闭 App
+Sandbox，否则读仓库题库和写进度库都会被拒，窗口只剩黑框。
 
 ## 目录
 
@@ -41,21 +46,26 @@
 
 ## 开发与验证
 
-需要 Flutter SDK（stable）。没有放进 PATH 时，脚本会再找 `~/flutter`。
+需要 Flutter SDK（stable）。macOS 要编窗口还需要完整 Xcode，不只是 Command Line Tools。
+若系统 `xcode-select` 仍指向 Command Line Tools，`scripts/run_dev.py` 会在启动时
+把 `DEVELOPER_DIR` 指到 `/Applications/Xcode.app`，不必先 sudo 切换。
 
 ```sh
-cd apps/driving
-athena-dev open driving
+cd apps/driver
+athena-dev open driver
+# 或菜单栏启动器点「驾考学习」；勾预热后登录即编好，点一下窗口现身。
+# 改 lib/ 会热重载；改 content/ JSON 要热重启（大写 R，或保存后点重启）。
+python3 scripts/run_dev.py
 ```
 
-不要启动打包副本。改题库后在运行中的窗口热重启一次。
+不要启动打包副本。已在跑时再点一次只把窗口前置，不会再冷编译。
 
 ```sh
 python3 scripts/check.py              # JSON + analyze + test + 当前桌面 debug 构建
 python3 scripts/check.py --skip-build # 只改了题库时
 ```
 
-仓库根 `python3 scripts/check.py driving` 会转到这里。
+仓库根 `python3 scripts/check.py driver` 会转到这里。
 
 ## 出题
 
@@ -63,6 +73,6 @@ python3 scripts/check.py --skip-build # 只改了题库时
 2. 每题带 `prompt`、恰好能判分的 `choices`、`explain`、`source_refs`。
 3. `relation` 用 `quoted` / `adapted` / `authored`；自造要写 `note`，同一文件
    不得超过一半。
-4. 标志题只描述形状颜色，界面自绘示意，不扫描 GB 5768 图样。
+4. 标志题考看到之后怎么开（让行要不要停、限速能不能超、禁行能不能进），不考认类别、认名字。不强制配图；图只在容易认错、配了更说得清时才用。不扫描 GB 5768 图样。
 5. 模拟考按 GA 1026 的题量与时长组卷；题库不够考场题量时折合百分制，并在结果
-   页说明。
+   页说明。科目一模拟考和科目四入口遵守 ADR 0006 的解锁顺序。

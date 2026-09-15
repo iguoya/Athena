@@ -72,7 +72,13 @@ launcher/target/release/athena-dev list --json # 同上，机器读的格式（�
 launcher/target/release/athena-dev open dsa    # 打开；已在跑的只把窗口叫到前面
 launcher/target/release/athena-dev stop dsa    # 连同构建期拉起的那一串一起收掉
 launcher/target/release/athena-dev logs dsa    # 日志文件路径
+launcher/target/release/athena-dev sync        # 提交并推送学习进度
 ```
+
+`sync` 对应 ADR 0053：进度库跟着仓库走（`apps/<id>/progress/learning.db`），所以
+同步就是一次提交加一次推送。它**只碰 `progress` 路径**，不会连带你手上的代码改动；
+待推送的提交里有不是进度的，它会列出来交回你自己决定，不替你 push。顺带把
+`git diff` 的 sqlite textconv 配好，这样进度库的 diff 不是一句 "Binary files differ"。
 
 `list --json` 里的 `state` 是 `stopped` / `starting` / `ready` 这组固定标识符，
 不是给人看的中文——写脚本认它，别去匹配 `list` 那一列的措辞。

@@ -6,6 +6,7 @@
 //!   athena-dev open <id>        打开：已在跑就把窗口叫到前面，没跑才构建并启动
 //!   athena-dev stop <id>        停止它，连同构建期拉起的那一串
 //!   athena-dev logs <id>        打印日志文件路径
+//!   athena-dev sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
 
 use std::process::ExitCode;
 
@@ -66,6 +67,13 @@ fn main() -> ExitCode {
                 ExitCode::SUCCESS
             }
             Err(code) => code,
+        },
+        Some("sync") => match athena_dev::progress::sync(&repo, &apps, line) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(message) => {
+                eprintln!("{message}");
+                ExitCode::FAILURE
+            }
         },
         Some(other) => {
             eprintln!("不认识的命令：{other}");

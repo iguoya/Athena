@@ -38,3 +38,9 @@ launcher/.build/
 
 # 共享的 cargo 构建缓存（launcher/core 统一注入 CARGO_TARGET_DIR）
 .cache/
+
+# 进度库本身要进版本库（ADR 0053），但 SQLite 的伴生文件不要：
+# -wal / -shm 是未落盘的日志和共享内存，跟着提交会让库在别的机器上打不开。
+apps/*/progress/*.db-wal
+apps/*/progress/*.db-shm
+apps/*/progress/*.db-journal

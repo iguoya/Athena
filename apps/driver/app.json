@@ -1,7 +1,7 @@
 {
-  "id": "driving",
-  "title": "驾驶学习",
-  "description": "独立的驾驶理论学习应用：科目一法规与科目四文明驾驶，做题在桌面完成，可脱离其他应用单独使用。",
+  "id": "driver",
+  "title": "驾考学习",
+  "description": "独立的驾考学习应用：科目一法规与科目四文明驾驶，做题在桌面完成，可脱离其他应用单独使用。",
   "icon": {
     "type": "theme",
     "name": "mark-location-symbolic",
@@ -12,7 +12,7 @@
   },
   "dev": {
     "env": {
-      "ATHENA_DRIVING_ROOT": "${dir}"
+      "ATHENA_DRIVER_ROOT": "${dir}"
     },
     "prepare": [
       {
@@ -24,6 +24,6 @@
     "run": ["python3", "scripts/run_dev.py"],
     "ready": "process",
     "match": "build",
-    "binary": "athena_driving"
+    "binary": "athena_driver"
   }
 }

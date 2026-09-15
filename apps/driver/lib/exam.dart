@@ -10,12 +10,28 @@ class Paper {
   final bool fullBank;
 
   static Paper draw(List<Question> bank, ExamRules rules, Random random) {
-    final copy = [...bank]..shuffle(random);
-    final take = min(rules.questionCount, copy.length);
+    final pool = dailyQuestions(bank);
+    final source = pool.isNotEmpty ? pool : [...bank];
+    final bag = <Question>[
+      for (final question in source)
+        for (var i = 0; i < question.drawWeight; i++) question,
+    ]..shuffle(random);
+    final seen = <String>{};
+    final picked = <Question>[];
+    final take = min(rules.questionCount, source.length);
+    for (final question in bag) {
+      if (!seen.add(question.id)) continue;
+      picked.add(question);
+      if (picked.length >= take) break;
+    }
+    if (picked.length < take) {
+      final rest = [for (final question in source) if (!seen.contains(question.id)) question]..shuffle(random);
+      picked.addAll(rest.take(take - picked.length));
+    }
     return Paper(
-      questions: copy.take(take).toList(growable: false),
+      questions: picked,
       rules: rules,
-      fullBank: bank.length >= rules.questionCount,
+      fullBank: source.length >= rules.questionCount,
     );
   }
 
@@ -26,6 +42,11 @@ class Paper {
   }
 
   bool passed(int correct) => scaledScore(correct) >= rules.passScore;
+}
+
+int phaseTestMinutes(int count) {
+  final minutes = (count * 27 / 60).ceil();
+  return minutes < 8 ? 8 : minutes;
 }
 
 bool answersMatch(Question question, Set<String> selected) {

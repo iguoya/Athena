@@ -26,6 +26,8 @@ Markdown 的设计目标就是 HTML；Tauri 的界面是系统 WebView，和短�
 3. **进度库自建自管**（对齐主仓库 ADR 0037）：
    `<data_dir>/AthenaEnglish/learning.db`，无条件建表。知识点 ID 前缀 `en.`。
    接受并忽略 `--store`，以免旧主程序传来时进程直接退出。
+   > **位置已由主仓库 ADR 0053 修订**：改写 `progress/learning.db` 并随仓库走，
+   > 上面那个用户数据目录只在发行副本里使用。
 4. **与主程序零编译耦合。** 不读 `resources/athena.json`，不链接主程序代码，
    不进主程序 Meson / `scripts/check.sh`。`app.json` 仅供可选的进程发现。
    英语二不是计算机 / 电子信息学科图谱上的实践科目，**本期不往首页路线图挂节点**；

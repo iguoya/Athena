@@ -25,6 +25,17 @@
 *.zst binary
 *.db binary
 
+# 进度库随仓库走（ADR 0053）。存的是 SQLite 二进制，但 diff 不能是一句
+# "Binary files differ"——万一两台机器都动过、要在冲突里二选一，总得看得见
+# 各自记了什么。所以这里用 `-text`（不做换行转换）而不是 `binary`（那个宏
+# 连 diff 一起关掉），再挂一个把库 dump 成 SQL 的 textconv。
+#
+# textconv 是本机配置，不随仓库走；`athena-dev sync` 会在第一次运行时配好。
+#
+# `merge` 保持关着（上一条 `*.db binary` 已经 unset 掉它）：真撞上冲突时按整文件
+# 二选一，不要让 git 去缝合 SQLite 页——缝出来的是一个坏库。
+apps/*/progress/*.db -text diff=sqlite
+
 # Windows 专用的批处理必须是 CRLF，否则某些环境下解析会出错
 *.bat text eol=crlf
 *.cmd text eol=crlf

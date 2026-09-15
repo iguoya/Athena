@@ -75,6 +75,15 @@ fn content_root() -> PathBuf {
 }
 
 fn own_store_path() -> PathBuf {
+    // 进度随仓库走（ADR 0053）：换一台机器 clone 下来，掌握度和战绩要还在。
+    // `app.json` 只存在于工作树，打包副本的 Resources 里没有它——据此区分，
+    // 不必判断路径是否可写，也不必问自己「是不是在仓库里」。
+    let root = content_root();
+    if root.join("app.json").is_file() {
+        let dir = root.join("progress");
+        let _ = fs::create_dir_all(&dir);
+        return dir.join("learning.db");
+    }
     let base = dirs_next::data_dir().unwrap_or_else(|| PathBuf::from("."));
     let dir = base.join("AthenaMath");
     let _ = fs::create_dir_all(&dir);

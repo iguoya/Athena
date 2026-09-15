@@ -1,13 +1,16 @@
-import "package:athena_driving/exam.dart";
-import "package:athena_driving/models.dart";
+import "dart:math";
+
+import "package:athena_driver/exam.dart";
+import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
-Question _q(String id) {
+Question _q(String id, {String band = QuestionBand.regular}) {
   return Question(
     id: id,
     topicId: "drive.s1.license",
     kind: "judge",
     prompt: "x",
+    band: band,
     choices: const [
       Choice(id: "T", label: "正确", ok: true),
       Choice(id: "F", label: "错误", ok: false),
@@ -53,5 +56,33 @@ void main() {
     expect(answersMatch(question, {"A", "B"}), isTrue);
     expect(answersMatch(question, {"A"}), isFalse);
     expect(answersMatch(question, {"A", "B", "C"}), isFalse);
+  });
+
+  test("模拟考不抽偏难怪，高频多于常规", () {
+    final bank = [
+      for (var i = 0; i < 30; i++) _q("hot$i", band: QuestionBand.hot),
+      for (var i = 0; i < 30; i++) _q("reg$i"),
+      for (var i = 0; i < 20; i++) _q("rare$i", band: QuestionBand.rare),
+    ];
+    const small = ExamRules(
+      questionCount: 20,
+      minutes: 10,
+      passScore: 90,
+      pointsPerQuestion: 1,
+    );
+    final paper = Paper.draw(bank, small, Random(7));
+    expect(paper.questions.every((q) => !q.isRare), isTrue);
+    final hot = paper.questions.where((q) => q.isHot).length;
+    final regular = paper.questions.where((q) => q.isRegular).length;
+    expect(hot, greaterThan(regular));
+  });
+
+  test("偏难怪默认不进练习，打错才会再出", () {
+    final rare = _q("r", band: QuestionBand.rare);
+    expect(rare.appearsInPractice(mastered: false, wrong: false), isFalse);
+    expect(rare.appearsInPractice(mastered: false, wrong: true), isTrue);
+    final hot = _q("h", band: QuestionBand.hot);
+    expect(hot.appearsInPractice(mastered: false, wrong: false), isTrue);
+    expect(hot.appearsInPractice(mastered: true, wrong: false), isFalse);
   });
 }

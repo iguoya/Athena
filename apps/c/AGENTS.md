@@ -36,7 +36,8 @@ C 自己再发挥的是内存条、地址箭头、playground 里真实的 C 程�
 - **教案**：`qml/lessons/*.qml` + 共用组件 `qml/components/`
 - **课表**：`content/curriculum.json`（章、先修、难度、指向哪份 QML、`source_refs`）
 - **题库**：`content/exercises.json`（随堂 / 课后，每题带 `source_refs`）
-- **进度**：后续自建库，前缀 `c.`（ADR 0037）；本期考核只当场计分
+- **进度**：后续自建库，前缀 `c.`（ADR 0037），位置按 ADR 0053 放
+  `progress/learning.db` 并随仓库走；本期考核只当场计分
 
 不引入主程序的 Meson、gtkmm、Blueprint。也不用 Tauri。
 

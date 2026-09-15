@@ -1,4 +1,5 @@
-import "package:athena_driving/content.dart";
+import "package:athena_driver/content.dart";
+import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
@@ -15,6 +16,35 @@ void main() {
       expect(topics, contains(question.topicId));
       expect(question.choices.where((c) => c.ok), isNotEmpty);
       expect(question.sourceRefs, isNotEmpty);
+      for (final ref in question.sourceRefs) {
+        expect(ref.locator, isNotEmpty);
+        expect(ref.url, isNotEmpty);
+        expect(ref.sourceId, isNotEmpty);
+      }
     }
+    expect(bank.forSubject("subject1").length, greaterThanOrEqualTo(150));
+    expect(bank.forSubject("subject4").length, greaterThanOrEqualTo(60));
+    expect(bank.curriculum.subject("subject1").phases, hasLength(4));
+    expect({for (final q in bank.forSubject("subject1")) q.phase}, equals({1, 2, 3, 4}));
+    expect(unlockedThrough(bank.forSubject("subject1"), {}), 1);
+    expect(allMastered(bank.forSubject("subject1"), {}), isFalse);
+    expect(bank.byId("drive.s1.signals.020").phase, 3);
+    expect(bank.byId("drive.s1.signals.020").isHot, isTrue);
+    expect(bank.byId("drive.s1.license.008").isRare, isTrue);
+    expect(bank.byId("drive.s1.highway.002").isRare, isTrue);
+    expect(bank.byId("drive.s4.crash.007").isRare, isTrue);
+    expect(dailyQuestions(bank.questions).any((q) => q.isRare), isFalse);
+    expect(
+      bank.questions.any((q) => q.prompt.contains("下图表示？") || q.prompt.contains("下图所示标志属于哪一类")),
+      isFalse,
+      reason: "不靠看图认名字、认类别凑题",
+    );
+    for (final question in bank.questions) {
+      expect(QuestionBand.labels.containsKey(question.band), isTrue, reason: question.id);
+    }
+    final sample = bank.byId("drive.s1.license.001");
+    expect(sample.speakText.startsWith(sample.explain), isTrue);
+    expect(sample.speakText, contains("应当依法取得机动车驾驶证"));
+    expect(sample.speakText.indexOf(sample.explain), lessThan(sample.speakText.indexOf("应当依法取得机动车驾驶证")));
   });
 }

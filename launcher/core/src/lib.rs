@@ -10,6 +10,7 @@
 
 pub mod manifest;
 pub mod paths;
+pub mod progress;
 pub mod runner;
 
 pub use manifest::{discover, App};

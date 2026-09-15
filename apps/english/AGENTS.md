@@ -24,8 +24,9 @@
 - **壳**：Tauri 2（Rust）
 - **界面**：Vite + TypeScript（Web UI，非 GTK，非 Flutter）
 - **内容**：`content/curriculum.json` + 分级练习目录 + `content/assessments/`
-- **进度**：SQLite，写入用户数据目录 `AthenaEnglish/learning.db`，自建表、
-  自迁移（主仓库 ADR 0037）。`--store` 仅为兼容而接受并忽略。
+- **进度**：SQLite，写入 `progress/learning.db`——**随仓库走**，换机器 clone
+  下来连续天数和徽章还在（主仓库 ADR 0053）；发行副本退回用户数据目录
+  `AthenaEnglish/`。自建表、自迁移（主仓库 ADR 0037）。`--store` 仅为兼容而接受并忽略。
   知识点 ID 前缀一律 `en.`。
 
 不引入主程序的 Meson、gtkmm、Blueprint、`athena.json`。
@@ -69,7 +70,7 @@
   `content/sources/reference/textbooks/`。写题时多家综合权衡，不要求一家正确
   （ADR 0009）。练习 JSON 负责把有出处的材料转成学习动作，避免把课表变成书库。
 - 首页要能看见学习成果：连续天数、稳住的条目、通过的考核和徽章。激励是本机
-  统计，不是社交打卡。
+  统计，不是社交打卡（本应用 ADR 0009；仓库 ADR 0052：激励与统计同一条回路）。
 - 听说读写是贯穿三条内容主线的学习动作：原声/系统朗读负责听，跟读录音回听负责说，
   可见原文和题目负责读，仿写/翻译/作文负责写。录音默认只在本次页面内存在，不上传，
   也不以音量、时长冒充发音分数。

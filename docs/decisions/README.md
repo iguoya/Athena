@@ -25,7 +25,7 @@
 | 编号 | 决策 | 状态 |
 |---|---|---|
 | [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受；启动路径见 0041 |
-| [0037](0037-independent-apps-own-their-progress-store.md) | 每个独立应用自建自管自己的进度库 | 已接受 |
+| [0037](0037-independent-apps-own-their-progress-store.md) | 每个独立应用自建自管自己的进度库 | 已接受；库位置由 0053 修订 |
 | [0041](0041-independent-apps-launch-in-dev-mode.md) | 独立应用从源码以开发模式启动，不经打包副本 | 已接受 |
 | [0042](0042-c-language-qt-qml-lessons.md) | C 语言学习应用用 Qt Quick / QML 写教案 | 已接受 |
 | [0044](0044-menubar-launcher.md) | 常驻菜单栏的启动器，主程序也只是其中一项 | 已接受 |
@@ -43,3 +43,4 @@
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已接受（阶段性，带退出条件） |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突已解决 |
 | [0052](0052-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
+| [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条 |

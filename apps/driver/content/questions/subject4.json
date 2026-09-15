@@ -27,7 +27,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.crash.002",
@@ -55,7 +58,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.crash.003",
@@ -83,7 +89,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "因抢救受伤人员变动现场的，应当标明位置。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.crash.004",
@@ -111,7 +120,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "乘车人、过往车辆驾驶人、过往行人应当予以协助。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.crash.005",
@@ -149,7 +161,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "机动车之间发生交通事故的，由有过错的一方承担赔偿责任；双方都有过错的，按照各自过错的比例分担责任。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.crash.006",
@@ -187,7 +202,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "机动车与非机动车驾驶人、行人之间发生交通事故，非机动车驾驶人、行人没有过错的，由机动车一方承担赔偿责任。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.crash.007",
@@ -215,13 +233,16 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "机动车一方没有过错的，承担不超过百分之十的赔偿责任。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "rare"
     },
     {
       "id": "drive.s4.crash.008",
       "topic_id": "drive.s4.crash",
       "kind": "judge",
-      "prompt": "交通事故的损失是由非机动车驾驶人、行人故意碰撞机动车造成的，机动车一方不承担赔偿责任。",
+      "prompt": "行人故意撞车碰瓷造成的损失，机动车一方不承担赔偿责任。",
       "choices": [
         {
           "id": "T",
@@ -243,7 +264,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "交通事故的损失是由非机动车驾驶人、行人故意碰撞机动车造成的，机动车一方不承担赔偿责任。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.crash.009",
@@ -271,7 +295,10 @@
           "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
           "note": "科目三道路驾驶技能和安全文明驾驶常识考试满分分别为100分，成绩分别达到90分的为合格。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.crash.010",
@@ -299,7 +326,10 @@
           "url": "http://jj.ga.zhuhai.gov.cn/ConvenienceGuide/Details/173",
           "note": "试题数量应为50题；考试时长为45min。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.lights.001",
@@ -310,7 +340,8 @@
         {
           "id": "T",
           "label": "正确",
-          "ok": true
+          "ok": true,
+          "sign": "headlights"
         },
         {
           "id": "F",
@@ -328,7 +359,10 @@
           "note": "机动车在夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯。"
         }
       ],
-      "sign": "headlights"
+      "sign": "headlights",
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     },
     {
       "id": "drive.s4.lights.002",
@@ -356,7 +390,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "同方向行驶的后车与前车近距离行驶时，不得使用远光灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.lights.003",
@@ -384,7 +421,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "机动车雾天行驶应当开启雾灯和危险报警闪光灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.lights.004",
@@ -422,7 +462,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "准备超车……应当提前开启左转向灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.lights.005",
@@ -460,7 +503,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "超车完毕驶回原车道……应当提前开启右转向灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.lights.006",
@@ -488,7 +534,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "向左或向右变更车道时，应当提前开启相应转向灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.weather.001",
@@ -516,7 +565,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "遇有沙尘、冰雹、雨、雪、雾、结冰等气象条件时，应当降低行驶速度。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     },
     {
       "id": "drive.s4.weather.002",
@@ -544,7 +596,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "在没有限速标志的路段，应当保持安全车速。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     },
     {
       "id": "drive.s4.weather.003",
@@ -572,7 +627,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "雾天行驶应当开启雾灯和危险报警闪光灯；近距离不得使用远光灯。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.weather.004",
@@ -610,7 +668,10 @@
           "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
           "note": "科目三安全文明驾驶常识考试内容包括：安全文明驾驶操作要求、恶劣气象和复杂道路条件下的安全驾驶知识、爆胎等紧急情况下的临危处置方法、防范次生事故处置知识、伤员急救知识等。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "rare"
     },
     {
       "id": "drive.s4.weather.005",
@@ -638,7 +699,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "夜间行驶或者在容易发生危险的路段行驶……应当降低行驶速度。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     },
     {
       "id": "drive.s4.emergency.001",
@@ -676,7 +740,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "应当持续开启危险报警闪光灯，并在车后50米至100米处设置警告标志。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
     },
     {
       "id": "drive.s4.emergency.002",
@@ -721,7 +788,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "高速公路应当在车后150米外设置警告标志。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.emergency.003",
@@ -749,7 +819,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "无法正常行驶的，应当由救援车、清障车拖曳、牵引。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     },
     {
       "id": "drive.s4.emergency.004",
@@ -777,7 +850,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "不得骑、轧车行道分界线或者在路肩上行驶。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.emergency.005",
@@ -805,7 +881,10 @@
           "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
           "note": "不得在车道内停车。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.emergency.006",
@@ -843,7 +922,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "警告标志 150 米以外；人员转移到右侧路肩或应急车道；迅速报警。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.aid.001",
@@ -871,13 +953,16 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     },
     {
       "id": "drive.s4.aid.002",
       "topic_id": "drive.s4.aid",
       "kind": "single",
-      "prompt": "科目三安全文明驾驶常识考试内容明确包括？",
+      "prompt": "发生交通事故造成人员受伤时，下列哪项属于应当掌握的安全文明驾驶知识？",
       "choices": [
         {
           "id": "A",
@@ -909,7 +994,10 @@
           "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
           "note": "考试内容包括……伤员急救知识等。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s4.aid.003",
@@ -937,7 +1025,10 @@
           "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
           "note": "乘车人、过往车辆驾驶人、过往行人应当予以协助。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
     },
     {
       "id": "drive.s4.aid.004",
@@ -965,7 +1056,1343 @@
           "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
           "note": "科目三安全文明驾驶常识考试不合格的，已通过的道路驾驶技能考试成绩有效。"
         }
-      ]
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "rare"
+    },
+    {
+      "id": "drive.s4.crash.011",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.crash.012",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.crash.013",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "未造成人身伤亡，事实清楚、无争议的，当事人可以先撤离现场再自行协商处理损害赔偿。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条第二款。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "在道路上发生交通事故，未造成人身伤亡，当事人对事实及成因无争议的，可以即行撤离现场，恢复交通，自行协商处理损害赔偿事宜。"
+        }
+      ],
+      "band": "regular"
+    },
+    {
+      "id": "drive.s4.crash.014",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "机动车发生故障难以移动时，应当持续开启危险报警闪光灯，并在来车方向设置警告标志。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第52条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第52条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "难以移动的，应当持续开启危险报警闪光灯，并在来车方向设置警告标志等措施扩大示警距离。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.007",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "向左转弯、向左变更车道、准备超车、驶离停车地点或者掉头时，应当提前开启左转向灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第57条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第57条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "向左转弯、向左变更车道、准备超车、驶离停车地点或者掉头时，应当提前开启左转向灯。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.008",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "向右转弯、向右变更车道、超车完毕驶回原车道、靠路边停车时，应当提前开启右转向灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第57条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第57条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "向右转弯、向右变更车道、超车完毕驶回原车道、靠路边停车时，应当提前开启右转向灯。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.009",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "在雾天行驶，应当开启雾灯、示廓灯、前照灯、危险报警闪光灯和后雾灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第58条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第58条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "在雾天行驶时，应当开启雾灯和危险报警闪光灯。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.010",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "夜间没有路灯、照明不良时，应当开启前照灯、示廓灯和后位灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第58条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第58条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下，应当开启前照灯、示廓灯和后位灯。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.006",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "能见度低时，应当按规定开启灯光并降低行驶速度。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第42条要求根据能见度降低速度；第58条要求开启相应灯光。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车上道路行驶，不得超过限速标志标明的最高时速。在没有限速标志的路段，应当保持安全车速。夜间行驶或者在容易发生危险的路段行驶，以及遇有沙尘、冰雹、雨、雪、雾、结冰、交通拥堵等情形时，应当降低行驶速度。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第58条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "雾、雨、雪、沙尘、冰雹等低能见度情况下应当开启前照灯、示廓灯和后位灯。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.007",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "夜间行驶应当降低行驶速度。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第42条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "夜间行驶或者在容易发生危险的路段行驶……应当降低行驶速度。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.008",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "遇有交通拥堵时，可以不降低行驶速度抢行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "第42条把交通拥堵列为应当降低行驶速度的情形。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "遇有沙尘、冰雹、雨、雪、雾、结冰、交通拥堵等情形时，应当降低行驶速度。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.emergency.007",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第52条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第52条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.emergency.008",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "在道路上发生故障难以移动时，警告标志应设在来车方向。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第52条要求在来车方向设置警告标志。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第52条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "并在来车方向设置警告标志等措施扩大示警距离。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.emergency.009",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "difficulty": 2,
+      "phase": 1,
+      "prompt": "机动车在道路上发生故障或者事故，妨碍交通又难以移动的，应当按照规定开启危险报警闪光灯并在车后50米至100米处设置警告标志。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实施条例第60条（普通道路）。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第60条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车在道路上发生故障或者发生交通事故，妨碍交通又难以移动的，应当按照规定开启危险报警闪光灯并在车后50米至100米处设置警告标志。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.aid.005",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "造成人身伤亡的交通事故，驾驶人应当立即抢救受伤人员。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.aid.006",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "因抢救受伤人员变动现场的，应当标明位置。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "因抢救受伤人员变动现场的，应当标明位置。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.aid.007",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "安全文明驾驶常识考试满分100分，合格标准为90分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "公安部令第162号第38条。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "quoted",
+          "locator": "第38条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "科目三安全文明驾驶常识考试合格标准为90分。"
+        }
+      ],
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.aid.008",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "difficulty": 1,
+      "phase": 1,
+      "prompt": "小型汽车安全文明驾驶常识考试为50道题、45分钟。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "GA 1026。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "安全文明驾驶常识",
+          "url": "http://jj.ga.zhuhai.gov.cn/ConvenienceGuide/Details/173",
+          "note": "小型汽车安全文明驾驶常识 50 题、45 分钟。"
+        }
+      ],
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.crash.015",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "prompt": "造成交通事故后逃逸的，由公安机关交通管理部门吊销机动车驾驶证，且终生不得重新取得机动车驾驶证。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第101条，逃逸不是私事。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第101条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "违反道路交通安全法律、法规的规定，发生重大交通事故，构成犯罪的，依法追究刑事责任，并由公安机关交通管理部门吊销机动车驾驶证。造成交通事故后逃逸的，由公安机关交通管理部门吊销机动车驾驶证，且终生不得重新取得机动车驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.crash.016",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "prompt": "未造成人身伤亡、事实清楚、无争议的事故，当事人应当在现场争吵清楚后再离开。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "可以即行撤离、恢复交通，自行协商赔偿。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "未造成人身伤亡，当事人对事实及成因无争议的，可以即行撤离现场，恢复交通，自行协商处理损害赔偿事宜。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.crash.017",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "prompt": "发生交通事故，仅造成轻微财产损失，并且基本事实清楚的，当事人应当先撤离现场再进行协商处理。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条第三款，轻微财损先挪车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "在道路上发生交通事故，仅造成轻微财产损失，并且基本事实清楚的，当事人应当先撤离现场再进行协商处理。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.lights.011",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "夜间会车应当在距相对方向来车150米以外改用近光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第48条会车用近光，不要用远光晃对方。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第48条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "在没有中心隔离设施或者没有中心线的道路上，机动车遇相对方向来车时应当减速靠右通行，并与其他车辆、行人保持必要的安全距离。夜间会车应当在距相对方向来车150米以外改用近光灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.012",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "在窄路、窄桥与非机动车会车时应当使用近光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第48条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第48条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "在窄路、窄桥与非机动车会车时应当使用近光灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.lights.013",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "机动车驶近急弯、坡道顶端等影响安全视距的路段，应当减速慢行，并鸣喇叭示意。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "看不清对面时先慢、先提醒。禁鸣路段除外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第59条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车驶近急弯、坡道顶端等影响安全视距的路段以及超车或者遇雾、雨、雪、沙尘、冰雹等低能见度情况时，应当减速慢行，并鸣喇叭示意。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.lights.014",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "夜间通过没有交通信号灯控制的路口，应当交替使用远近光灯示意。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "用灯光告诉对面你来了。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第59条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车在夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口时，应当交替使用远近光灯示意。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.015",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "机动车倒车时，应当察明车后情况，确认安全后倒车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "看不清后面就不要倒。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第50条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车倒车时，应当察明车后情况，确认安全后倒车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.009",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "能见度在50米以内的雾、雨、雪、沙尘、冰雹天气，最高行驶速度不得超过每小时30公里。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第46条，普通道路也按30封顶。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第46条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "遇雾、雨、雪、沙尘、冰雹，能见度在50米以内时，最高行驶速度不得超过每小时30公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.weather.010",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "牵引发生故障的机动车时，最高行驶速度不得超过每小时30公里。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第46条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第46条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "牵引发生故障的机动车时，最高行驶速度不得超过每小时30公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s4.weather.011",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "高速公路能见度小于200米时，应当与同车道前车保持100米以上的距离。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第81条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第81条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "能见度小于200米时……与同车道前车保持100米以上的距离。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.weather.012",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "高速公路能见度小于100米时，应当与同车道前车保持50米以上的距离。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第81条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第81条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "能见度小于100米时……与同车道前车保持50米以上的距离。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.013",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "雾天在高速公路上可以开启远光灯以便看清更远。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "雾中远光会被散射，应当开雾灯、近光和双闪。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第81条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "能见度小于200米时，开启雾灯、近光灯、示廓灯和前后位灯。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第58条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "雾天行驶应当开启雾灯和危险报警闪光灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.emergency.010",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "prompt": "机动车不得在铁路道口、交叉路口、单行路、桥梁、急弯、陡坡或者隧道中倒车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第50条。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第50条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "不得在铁路道口、交叉路口、单行路、桥梁、急弯、陡坡或者隧道中倒车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.emergency.012",
+      "topic_id": "drive.s4.emergency",
+      "kind": "single",
+      "prompt": "普通道路上发生故障难以移动时，警告标志应设在车后多少米处？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "10米至20米",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "50米至100米",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "150米以外",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "200米以外",
+          "ok": false
+        }
+      ],
+      "explain": "普通路50到100；150米以外是高速公路。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第60条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车在道路上发生故障或者发生交通事故，妨碍交通又难以移动的，应当按照规定开启危险报警闪光灯并在车后50米至100米处设置警告标志。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.emergency.014",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "prompt": "高速公路发生故障后，车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "人先离开行车道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第68条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.aid.009",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "prompt": "过往车辆驾驶人、过往行人看到事故伤亡，应当予以协助。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第70条写成义务，不是看热闹。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "乘车人、过往车辆驾驶人、过往行人应当予以协助。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.aid.010",
+      "topic_id": "drive.s4.aid",
+      "kind": "judge",
+      "prompt": "抢救受伤人员需要变动现场时，可以不留痕迹直接把车开走。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "变动现场应当标明位置。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第70条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "因抢救受伤人员变动现场的，应当标明位置。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.lights.016",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "超车时应当提前开启左转向灯，变换使用远、近光灯或者鸣喇叭。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "夜间超车用变换灯光提醒前车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第47条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车超车时，应当提前开启左转向灯、变换使用远、近光灯或者鸣喇叭。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.weather.014",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "雨天路面湿滑，应当降低行驶速度，并与前车保持安全距离。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "第42条把雨雪雾列为应当减速的情形。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第42条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "遇有沙尘、冰雹、雨、雪、雾、结冰、交通拥堵等情形时，应当降低行驶速度。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.weather.015",
+      "topic_id": "drive.s4.weather",
+      "kind": "judge",
+      "prompt": "冰雪道路可以沿用干燥路面的车速，只要抓地感觉还好。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "冰雪、泥泞路最高时速30公里。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第46条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "在冰雪、泥泞的道路上行驶时，最高行驶速度不得超过每小时30公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.emergency.015",
+      "topic_id": "drive.s4.emergency",
+      "kind": "judge",
+      "prompt": "车辆发生故障后，可以在行车道内坐在车里等救援。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "人要转移到安全位置并报警，不要停在行车道里等。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第68条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第52条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "难以移动的，应当持续开启危险报警闪光灯，并在来车方向设置警告标志等措施扩大示警距离。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s4.crash.018",
+      "topic_id": "drive.s4.crash",
+      "kind": "judge",
+      "prompt": "机动车之间发生交通事故，双方都有过错的，按照各自过错的比例分担责任。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "不是谁车贵谁有理。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第76条",
+          "url": "https://www.gov.cn/banshi/2005-08/31/content_68700.htm",
+          "note": "机动车之间发生交通事故的，由有过错的一方承担赔偿责任；双方都有过错的，按照各自过错的比例分担责任。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s4.lights.017",
+      "topic_id": "drive.s4.lights",
+      "kind": "judge",
+      "prompt": "夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口，应当交替使用远近光灯示意。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "用变换灯光告诉对面你来了。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第59条",
+          "url": "https://www.gov.cn/zhengce/2020-12/25/content_5574205.htm",
+          "note": "机动车在夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口时，应当交替使用远近光灯示意。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
     }
   ]
 }

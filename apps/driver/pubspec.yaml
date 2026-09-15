@@ -1,5 +1,5 @@
-name: athena_driving
-description: 科目一与科目四学习
+name: athena_driver
+description: 驾考学习（科目一与科目四）
 publish_to: "none"
 version: 0.1.0+1
 
@@ -12,7 +12,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   path: ^1.9.1
-  path_provider: ^2.1.5
   sqflite_common_ffi: ^2.3.6
   sqlite3_flutter_libs: ^0.5.39
   url_launcher: ^6.3.2
@@ -27,5 +26,6 @@ flutter:
   assets:
     - content/curriculum.json
     - content/sources/catalog.json
+    - content/signs.json
     - content/questions/subject1.json
     - content/questions/subject4.json
