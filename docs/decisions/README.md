@@ -34,4 +34,7 @@
 
 | 编号 | 决策 | 状态 |
 |---|---|---|
-| [0007](0007-unified-check-entry.md) | 统一验证入口 `scripts/check.sh` | 已接受 |
+| [0007](0007-unified-check-entry.md) | 统一验证入口（现为 `scripts/check.py`） | 已接受；五个应用均已接入 |
+| [0046](0046-unified-dev-orchestrator.md) | 统一开发编排器，各应用只声明怎么启动 | 已接受 |
+| [0047](0047-portable-by-default.md) | 跨平台优先：选型、代码与构建过程的默认原则 | 已接受 |
+| [0048](0048-menubar-launcher-stays-macos-only.md) | 菜单栏启动器保留为 macOS 专属，只消费编排器结论 | 已接受 |
