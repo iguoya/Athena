@@ -46,6 +46,23 @@ public:
         long long updated_at = 0;
     };
     Assessment load_assessment(const string& function_id) const;
+    // 由作答流水派生的量（仓库 ADR 0052：激励与统计是同一条回路）。
+    // 先记全，再派生——只存「最新一次成绩」算不出这些。
+    struct LearningStats {
+        // 今天完成的考核次数
+        int attempts_today = 0;
+        // 今天答对的题数与总题数
+        int correct_today = 0;
+        int answered_today = 0;
+        // 连续有记录的日历日；今天没记录时算的是截至昨天的
+        int streak_days = 0;
+        // 累计完成的考核次数
+        int attempts_total = 0;
+    };
+
+    // 从 assessment_attempt 流水派生统计。没有记录时全为 0。
+    LearningStats load_stats() const;
+
     void save_assessment(
         const string& function_id, int mastery, int correct, int total);
     map<string, Assessment> load_all_assessments() const;

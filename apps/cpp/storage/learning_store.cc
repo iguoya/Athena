@@ -74,6 +74,19 @@ LearningStore::LearningStore(const string& database_path) {
         "  updated_at INTEGER NOT NULL DEFAULT 0)");
     migrate_legacy_status_column();
     migrate_assessment_columns();
+    // 作答流水（仓库 ADR 0052）：knowledge_progress 只留最新一次成绩，
+    // 今日量、连续日、累计这些都得从流水里算。一次考核一行。
+    execute(
+        "CREATE TABLE IF NOT EXISTS assessment_attempt ("
+        "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  function_id TEXT NOT NULL,"
+        "  mastery INTEGER NOT NULL,"
+        "  correct INTEGER NOT NULL,"
+        "  total INTEGER NOT NULL,"
+        "  answered_at INTEGER NOT NULL)");
+    execute(
+        "CREATE INDEX IF NOT EXISTS assessment_attempt_time "
+        "ON assessment_attempt(answered_at)");
     execute(
         "CREATE TABLE IF NOT EXISTS app_settings ("
         "  key TEXT PRIMARY KEY,"
@@ -181,6 +194,49 @@ void LearningStore::save_mastery(const string& function_id, int mastery) {
     }
 }
 
+LearningStore::LearningStats LearningStore::load_stats() const {
+    LearningStats stats;
+    {
+        // 用本地时区的「今天」：连续日是给人看的日历日，不是 UTC 日。
+        Statement today(
+            m_handle.get(),
+            "SELECT COUNT(*), COALESCE(SUM(correct), 0), COALESCE(SUM(total), 0) "
+            "FROM assessment_attempt "
+            "WHERE date(answered_at, 'unixepoch', 'localtime') = "
+            "      date('now', 'localtime')");
+        if (sqlite3_step(today.raw) == SQLITE_ROW) {
+            stats.attempts_today = sqlite3_column_int(today.raw, 0);
+            stats.correct_today = sqlite3_column_int(today.raw, 1);
+            stats.answered_today = sqlite3_column_int(today.raw, 2);
+        }
+    }
+    {
+        Statement total(m_handle.get(), "SELECT COUNT(*) FROM assessment_attempt");
+        if (sqlite3_step(total.raw) == SQLITE_ROW) {
+            stats.attempts_total = sqlite3_column_int(total.raw, 0);
+        }
+    }
+    {
+        // 连续日：把每个有记录的日期减去它的序号，同一段连续日期会得到
+        // 同一个基准值；取包含今天或昨天的那一段。断了就从 1 重新计。
+        Statement streak(
+            m_handle.get(),
+            "WITH days AS ("
+            "  SELECT DISTINCT date(answered_at, 'unixepoch', 'localtime') AS d"
+            "  FROM assessment_attempt),"
+            " runs AS ("
+            "  SELECT d, date(julianday(d) - ROW_NUMBER() OVER (ORDER BY d)) AS base"
+            "  FROM days)"
+            " SELECT COUNT(*) FROM runs"
+            " WHERE base = (SELECT base FROM runs ORDER BY d DESC LIMIT 1)"
+            "   AND (SELECT MAX(d) FROM days) >= date('now', 'localtime', '-1 day')");
+        if (sqlite3_step(streak.raw) == SQLITE_ROW) {
+            stats.streak_days = sqlite3_column_int(streak.raw, 0);
+        }
+    }
+    return stats;
+}
+
 void LearningStore::save_assessment(
     const string& function_id, int mastery, int correct, int total) {
     Statement statement(
@@ -202,6 +258,26 @@ void LearningStore::save_assessment(
     }
     if (sqlite3_step(statement.raw) != SQLITE_DONE) {
         raise_sqlite_error(m_handle.get(), "save assessment");
+    }
+
+    // 同一次作答再落一条流水。掌握度会被下一次覆盖，流水不会——
+    // 没有它就派生不出今日量、连续日和累计（ADR 0052 第 2 节）。
+    {
+        Statement attempt(
+            m_handle.get(),
+            "INSERT INTO assessment_attempt"
+            "(function_id, mastery, correct, total, answered_at) "
+            "VALUES(?1, ?2, ?3, ?4, ?5)");
+        bind_text(m_handle.get(), attempt.raw, 1, function_id);
+        if (sqlite3_bind_int(attempt.raw, 2, mastery) != SQLITE_OK
+            || sqlite3_bind_int(attempt.raw, 3, correct) != SQLITE_OK
+            || sqlite3_bind_int(attempt.raw, 4, total) != SQLITE_OK
+            || sqlite3_bind_int64(attempt.raw, 5, unix_seconds()) != SQLITE_OK) {
+            raise_sqlite_error(m_handle.get(), "bind attempt parameters");
+        }
+        if (sqlite3_step(attempt.raw) != SQLITE_DONE) {
+            raise_sqlite_error(m_handle.get(), "save attempt");
+        }
     }
 }
 

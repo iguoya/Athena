@@ -291,4 +291,36 @@ TEST(LearningStoreTest, KeepsAiInsightForDifferentKnowledgePointsIndependent) {
     EXPECT_EQ(store.load_ai_insight("cpp.Reference.cast")->markdown, "# cast");
 }
 
+TEST(LearningStoreTest, DerivesStatsFromAttemptLog) {
+    LearningStore db(":memory:");
+
+    EXPECT_EQ(db.load_stats().attempts_total, 0);
+    EXPECT_EQ(db.load_stats().streak_days, 0);
+
+    db.save_assessment("cpp.ValueSemantics.copy_control", 4, 4, 5);
+    db.save_assessment("cpp.ValueSemantics.rvalue", 5, 2, 2);
+
+    const auto stats = db.load_stats();
+    // 今日量与累计都来自流水；knowledge_progress 只留最新一次成绩，算不出这些。
+    EXPECT_EQ(stats.attempts_total, 2);
+    EXPECT_EQ(stats.attempts_today, 2);
+    EXPECT_EQ(stats.correct_today, 6);
+    EXPECT_EQ(stats.answered_today, 7);
+    EXPECT_EQ(stats.streak_days, 1);
+}
+
+TEST(LearningStoreTest, KeepsEveryAttemptWhileMasteryIsOverwritten) {
+    LearningStore db(":memory:");
+
+    // 同一个知识点重做三次：掌握度被覆盖成最后一次，流水三条都在。
+    db.save_assessment("cpp.ValueSemantics.copy_control", 2, 2, 5);
+    db.save_assessment("cpp.ValueSemantics.copy_control", 3, 3, 5);
+    db.save_assessment("cpp.ValueSemantics.copy_control", 5, 5, 5);
+
+    const auto mastery = db.load_all_mastery();
+    EXPECT_EQ(mastery.at("cpp.ValueSemantics.copy_control"), 5);
+    EXPECT_EQ(db.load_stats().attempts_total, 3);
+    EXPECT_EQ(db.load_stats().answered_today, 15);
+}
+
 } // namespace
