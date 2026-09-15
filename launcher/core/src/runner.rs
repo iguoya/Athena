@@ -184,17 +184,8 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
 /// 继承的、编排器统一注入的（PATH、共享 cargo 缓存）、应用自己声明的。
 fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
     let program = &argv[0];
-    // 相对路径按应用目录解析，`build/athena-c` 这种写法才能直接用。
-    let resolved = if program.contains('/') || program.contains('\\') {
-        app.dir.join(program)
-    } else {
-        PathBuf::from(program)
-    };
 
-    let mut command = Command::new(resolved);
-    command.args(&argv[1..]);
-    command.current_dir(&app.dir);
-
+    // PATH 先补齐再用：从桌面环境启动时它很短，下面解析程序名靠的也是这一份。
     let mut path = std::env::var_os("PATH")
         .map(|value| std::env::split_paths(&value).collect::<Vec<_>>())
         .unwrap_or_default();
@@ -203,7 +194,25 @@ fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
             path.insert(0, entry);
         }
     }
-    if let Ok(joined) = std::env::join_paths(path) {
+    let joined = std::env::join_paths(&path).ok();
+
+    // 相对路径按应用目录解析，`build/athena-c` 这种写法才能直接用。
+    let resolved = if program.contains('/') || program.contains('\\') {
+        app.dir.join(program)
+    } else {
+        // 裸名交给 which 解析。Windows 上 npm 实际是 npm.cmd，而 CreateProcess
+        // 只会替没有扩展名的程序补 .exe，直接拿裸名 spawn 会报"找不到程序"——
+        // 三个 Tauri 应用的 dev.run 全在这上面。which 按各平台自己的规则查找
+        // （Windows 走 PATHEXT），不必自己写平台分支（ADR 0047）。
+        which::which_in(program, joined.clone(), &app.dir)
+            .unwrap_or_else(|_| PathBuf::from(program))
+    };
+
+    let mut command = Command::new(resolved);
+    command.args(&argv[1..]);
+    command.current_dir(&app.dir);
+
+    if let Some(joined) = joined {
         command.env("PATH", joined);
     }
 

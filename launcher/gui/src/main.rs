@@ -106,7 +106,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             let _ = sender.send(
                                 paths::log_file(&id).display().to_string(),
                             );
-                            open_in_file_manager(&paths::log_file(&id));
+                            open_log(&paths::log_file(&id));
                         }
                         Action::ShowWindow => {
                             if let Some(window) = handle.upgrade() {
@@ -211,16 +211,13 @@ fn stop_app(apps: &[App], id: &str, sender: &Sender<String>) {
     let _ = sender.send(message);
 }
 
-/// 在系统文件管理器里打开日志，三平台各有各的命令。
-fn open_in_file_manager(path: &std::path::Path) {
-    let opener = if cfg!(target_os = "macos") {
-        "open"
-    } else if cfg!(target_os = "windows") {
-        "explorer"
-    } else {
-        "xdg-open"
-    };
-    let _ = std::process::Command::new(opener).arg(path).spawn();
+/// 用系统默认程序打开日志文件。
+///
+/// 以前这里按平台分叉成 open / explorer / xdg-open。打开一个文件是每个桌面
+/// 系统都有的标准动作，交给把这层差异吃掉的库就行，不该在业务代码里留三条
+/// 分支（ADR 0047）——而且手写的那版还漏了 xdg-open 缺席时的回退。
+fn open_log(path: &std::path::Path) {
+    let _ = opener::open(path);
 }
 
 /// 学科之间的历史演进关系（目前只有 C → C++）。
