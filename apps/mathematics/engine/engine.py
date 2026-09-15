@@ -15,9 +15,10 @@ verdict 三取一：equal / different / unknown。
 误判会摧毁这个工具的可信度，比慢更致命（ADR 0001 第 1 节第 3 条）。
 """
 
+import _thread
 import json
-import signal
 import sys
+import threading
 import time
 
 # import 的钱只付这一次——引擎常驻的全部理由（ADR 0001 第 2 节实测：它占冷启动的九成）
@@ -36,20 +37,47 @@ sympy.simplify(_x**2 - 1 - (_x - 1) * (_x + 1))
 WARMUP_MS = (time.perf_counter() - _t1) * 1000
 
 
-class _Timeout(Exception):
-    pass
-
-
-def _on_alarm(_sig, _frm):
-    raise _Timeout
-
-
-signal.signal(signal.SIGALRM, _on_alarm)
-
 # SymPy 个别调用（某些 integrate、dsolve）会跑很久。卡住比答错好一点，但也只好
 # 一点——超时一律返回 unknown，界面照常往下走，不让人对着转圈等（ADR 0011：
 # 消除无效挫折）。
 EQUIV_TIMEOUT_S = 5.0
+
+
+def _call_with_timeout(seconds, fn):
+    """限时执行 fn，返回 (结果, 是否超时)。
+
+    原来是 signal.setitimer(ITIMER_REAL) + SIGALRM。那套是 POSIX 专有的——
+    Windows 上连 signal.SIGALRM 这个属性都没有，引擎在 import 阶段就
+    AttributeError 崩掉，整条验算链路在那个平台上从来没起来过。
+
+    改用定时器线程向主线程投递 KeyboardInterrupt：三个平台同一套代码，不写
+    平台分支（主仓库 ADR 0047）。SymPy 是纯 Python，会在字节码边界响应中断。
+
+    `fired` 用来区分「我们放的超时」和「使用者真的按了 Ctrl-C」——后者要原样
+    抛回去，不能悄悄吞成一次 unknown。
+
+    **已知局限**：中断在字节码边界生效，打不断 C 层的阻塞调用（`time.sleep`
+    之类）。原来的 SIGALRM 在这点上更强——信号能打断系统调用。但引擎只做符号
+    计算，不阻塞在系统调用上，实测覆盖了真实场景：SymPy 的难积分
+    （`integrate(exp(x**3)*sin(x**2), x)`）1.51 秒准时中断，纯 Python 死循环
+    0.51 秒中断。
+    """
+    fired = threading.Event()
+
+    def _fire():
+        fired.set()
+        _thread.interrupt_main()
+
+    timer = threading.Timer(seconds, _fire)
+    timer.start()
+    try:
+        return fn(), False
+    except KeyboardInterrupt:
+        if fired.is_set():
+            return None, True
+        raise
+    finally:
+        timer.cancel()
 
 
 def _parse(text):
@@ -125,17 +153,16 @@ def _handle(req):
             "warmup_ms": round(WARMUP_MS, 1),
         }
     if op == "equiv":
-        signal.setitimer(signal.ITIMER_REAL, EQUIV_TIMEOUT_S)
-        try:
-            return _equiv(req.get("a", ""), req.get("b", ""))
-        except _Timeout:
+        result, timed_out = _call_with_timeout(
+            EQUIV_TIMEOUT_S, lambda: _equiv(req.get("a", ""), req.get("b", ""))
+        )
+        if timed_out:
             return {
                 "ok": True,
                 "verdict": "unknown",
                 "note": f"超过 {EQUIV_TIMEOUT_S:.0f} 秒还没判出来",
             }
-        finally:
-            signal.setitimer(signal.ITIMER_REAL, 0)
+        return result
     return {"ok": False, "error": f"未知操作 {op!r}"}
 
 
