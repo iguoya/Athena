@@ -31,10 +31,11 @@ ExperimentPage::ExperimentPage(
     m_workspace_paned =
         builder->get_widget<Gtk::Paned>("experiment_workspace_paned");
     m_case_paned = builder->get_widget<Gtk::Paned>("case_workspace_paned");
+    m_notebook = builder->get_widget<Gtk::Notebook>("experiment_notebook");
 
     if (!source_view || !result_view || !run_button || !spinner
         || !status_label || !title_label || !objective_label || !back_button
-        || !m_workspace_paned || !m_case_paned) {
+        || !m_workspace_paned || !m_case_paned || !m_notebook) {
         throw runtime_error("Failed to load the focused experiment page");
     }
 
@@ -51,6 +52,11 @@ ExperimentPage::ExperimentPage(
         objective_label);
     m_case_dock = make_unique<CaseDock>(
         builder, CaseWorkspace(CaseWorkspace::default_root()), std::move(ui_alive));
+
+    // 动手实验那一页初始不可见，Paned 此时没有宽度，show() 里设不了分栏。
+    // 等它第一次真正显示出来再设。
+    m_notebook->signal_switch_page().connect(
+        [this](Gtk::Widget*, guint) { initialize_case_split(); });
 }
 
 void ExperimentPage::show(
@@ -72,7 +78,6 @@ void ExperimentPage::show(
     m_case_paned->set_visible(has_case);
     if (has_case) {
         m_case_dock->show(experiment.labs.front());
-        initialize_case_split();
     }
 }
 

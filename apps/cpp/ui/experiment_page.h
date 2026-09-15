@@ -35,6 +35,7 @@ private:
     ExperimentRunner& m_experiment_runner;
     Gtk::Paned* m_workspace_paned = nullptr;
     Gtk::Paned* m_case_paned = nullptr;
+    Gtk::Notebook* m_notebook = nullptr;
     unique_ptr<ExperimentDock> m_dock;
     unique_ptr<CaseDock> m_case_dock;
     string m_selected_function_id;

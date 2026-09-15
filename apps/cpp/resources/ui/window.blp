@@ -260,9 +260,9 @@ Box experiment_page {
     Paned case_workspace_paned {
       name: "case_workspace_paned";
       orientation: horizontal;
-      // 同 experiment_workspace_paned：实际位置由代码在拿到可用宽度后设成
-      // 一半，不写死某台开发机的像素。
-      position: 0;
+      // 不写 position：这一页初始不可见，拿不到宽度，写 0 会把左边的代码框
+      // 直接压没。先让 GTK 按自然大小分配，代码在这一页真正显示出来之后
+      // （Notebook 的 switch-page）再调成一半。
       wide-handle: true;
       resize-start-child: true;
       resize-end-child: true;
