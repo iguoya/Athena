@@ -56,7 +56,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 id: app.id.as_str().into(),
                 title: app.title.as_str().into(),
                 letter: app.letter.as_str().into(),
-                accent: parse_color(&app.accent).into(),
+                accent: parse_color(&app.accent, &app.id).into(),
                 icon: tile_icon(app).unwrap_or_default(),
                 has_icon: tile_icon(app).is_some(),
                 state: RunState::Stopped.label().into(),
@@ -263,16 +263,28 @@ fn bring_to_front() {
 #[cfg(not(target_os = "macos"))]
 fn bring_to_front() {}
 
-/// app.json 里的 "#RRGGBB"。写错了就用中性灰兜底，不让一个手滑的色值把界面搞崩。
-fn parse_color(text: &str) -> Color {
+/// app.json 里的 `icon.accent`（`#RRGGBB`）。
+///
+/// 解析不了仍然退回中性灰——一个手滑的色值不该让启动器起不来——但**要把是谁、
+/// 哪个值出的问题打出来**。静默吞掉的话，界面上只是多一块莫名其妙的灰，没人会
+/// 想到去查 app.json 里少打了一位。
+///
+/// 整体解析，不再逐通道 `unwrap_or`：三个通道只坏一个时混出来的颜色似是而非，
+/// 比纯灰更难察觉。`is_ascii` 是切片前的必要检查，否则多字节字符会在
+/// `&hex[0..2]` 上 panic。
+fn parse_color(text: &str, app_id: &str) -> Color {
     let hex = text.trim_start_matches('#');
-    if hex.len() != 6 {
-        return Color::from_rgb_u8(0x5a, 0x62, 0x70);
+    if hex.len() == 6 && hex.is_ascii() {
+        if let (Ok(r), Ok(g), Ok(b)) = (
+            u8::from_str_radix(&hex[0..2], 16),
+            u8::from_str_radix(&hex[2..4], 16),
+            u8::from_str_radix(&hex[4..6], 16),
+        ) {
+            return Color::from_rgb_u8(r, g, b);
+        }
     }
-    let channel = |range: std::ops::Range<usize>| {
-        u8::from_str_radix(&hex[range], 16).unwrap_or(0x5a)
-    };
-    Color::from_rgb_u8(channel(0..2), channel(2..4), channel(4..6))
+    eprintln!("{app_id}：icon.accent「{text}」不是 #RRGGBB，暂用中性灰");
+    Color::from_rgb_u8(0x5a, 0x62, 0x70)
 }
 
 fn tint(state: RunState) -> Color {
