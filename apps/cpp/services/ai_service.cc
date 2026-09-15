@@ -205,69 +205,7 @@ string strip_markdown_code_fence(string_view text) {
     return trimmed;
 }
 
-optional<AiQuiz> parse_ai_quiz_response(string_view response_body) {
-    try {
-        const auto root = json::parse(strip_markdown_code_fence(response_body));
-        // 提示词要求外层包一层 {"questions": [...]}，但 AI 偶尔会省略这层包装、
-        // 直接返回题目数组本身；两种形状都接受，避免因为差这一层包装就整份
-        // 退化成原始文本展示。root.at("questions") 在 root 是数组时会抛
-        // out_of_range（数组没有名为 "questions" 的键），被下面的 catch 接住，
-        // 不会导致解析失败之外的任何后果。
-        const auto& values = root.is_array() ? root : root.at("questions");
-        if (!values.is_array()) {
-            return nullopt;
-        }
 
-        AiQuiz quiz;
-        for (const auto& value : values) {
-            try {
-                AiQuizQuestion question {
-                    .question = value.at("question").get<string>(),
-                    .code = value.value("code", ""),
-                    .options = value.at("options").get<vector<string>>(),
-                    .correct_indices =
-                        value.at("correct_indices").get<vector<int>>(),
-                    .explanation = value.value("explanation", ""),
-                };
-                question.correct_indices.erase(
-                    remove_if(
-                        question.correct_indices.begin(),
-                        question.correct_indices.end(),
-                        [&question](int index) {
-                            return index < 0
-                                || index >= static_cast<int>(question.options.size());
-                        }),
-                    question.correct_indices.end());
-                sort(
-                    question.correct_indices.begin(),
-                    question.correct_indices.end());
-                question.correct_indices.erase(
-                    unique(
-                        question.correct_indices.begin(),
-                        question.correct_indices.end()),
-                    question.correct_indices.end());
-                if (question.question.empty() || question.options.empty()
-                    || question.correct_indices.empty()) {
-                    continue;
-                }
-                quiz.questions.push_back(std::move(question));
-            } catch (const json::exception&) {
-                continue;
-            }
-        }
-        return quiz.questions.empty() ? nullopt : optional<AiQuiz>(std::move(quiz));
-    } catch (const json::exception&) {
-        return nullopt;
-    }
-}
-
-int mastery_from_quiz_score(int correct_answers, int total_questions) {
-    if (total_questions <= 0) {
-        return 0;
-    }
-    const int bounded_correct = clamp(correct_answers, 0, total_questions);
-    return bounded_correct * 5 / total_questions;
-}
 
 AiService::AiService()
     : m_transport(perform_ai_request) {}

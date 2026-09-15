@@ -49,7 +49,7 @@
 | [0009](0009-sqlite-learning-store.md) | 学习数据持久化采用 SQLite | 已接受 |
 | [0010](0010-deepseek-ai-explain-via-curl.md) | 知识点讲解经 `curl` 子进程调用 DeepSeek API | 已接受 |
 | [0011](0011-multi-provider-ai-fallback.md) | 多服务商按优先级回退 | 已接受 |
-| [0015](0015-ai-quiz-determines-mastery.md) | 熟练度由完整 AI 自测成绩自动评定 | 已接受 |
+| [0015](0015-ai-quiz-determines-mastery.md) | 熟练度由完整 AI 自测成绩自动评定 | **判分部分已被 0054 取代**，换算规则仍有效 |
 
 ## 打包与发行
 

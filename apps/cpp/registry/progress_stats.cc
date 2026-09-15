@@ -2,6 +2,14 @@
 
 #include <algorithm>
 
+int mastery_from_score(int correct_answers, int total_questions) {
+    if (total_questions <= 0) {
+        return 0;
+    }
+    const int bounded_correct = clamp(correct_answers, 0, total_questions);
+    return bounded_correct * kMaxMastery / total_questions;
+}
+
 double ChapterProgress::completion_ratio() const {
     if (total <= 0) {
         return 0.0;

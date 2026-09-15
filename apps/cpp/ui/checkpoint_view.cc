@@ -1,6 +1,7 @@
 #include "checkpoint_view.h"
 
-#include "services/ai_service.h"
+#include "registry/progress_stats.h"
+
 
 #include <stdexcept>
 #include <utility>
@@ -185,7 +186,7 @@ void CheckpointView::advance() {
 
 void CheckpointView::finish() {
     const int total = static_cast<int>(m_checkpoint.questions.size());
-    const int mastery = mastery_from_quiz_score(m_correct, total);
+    const int mastery = mastery_from_score(m_correct, total);
     bool saved = false;
     if (m_on_mastery_changed) {
         saved = m_on_mastery_changed(

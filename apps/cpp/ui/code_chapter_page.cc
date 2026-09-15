@@ -421,46 +421,6 @@ void CodeChapterPage::populate_topic_list() {
         };
         (*refresh_mastery)();
 
-        auto page_alive = m_alive;
-        auto update_mastery =
-            [this,
-             page_alive,
-             function_id = topic.experiment.function_id,
-             mastery,
-             refresh_mastery](int score) {
-                if (!page_alive->load()) {
-                    return false;
-                }
-                *mastery = clamp(score, 0, 5);
-                (*refresh_mastery)();
-                if (!m_learning_store) {
-                    return false;
-                }
-                try {
-                    m_learning_store->save_mastery(function_id, *mastery);
-                    if (m_on_progress_changed) {
-                        m_on_progress_changed();
-                    }
-                    return true;
-                } catch (const exception& error) {
-                    cerr << "Failed to save quiz score for " << function_id
-                         << ": " << error.what() << endl;
-                    return false;
-                }
-            };
-
-        auto quiz_button = Gtk::make_managed<Gtk::Button>("AI 自测");
-        quiz_button->add_css_class("btn-sm");
-        quiz_button->set_tooltip_text(
-            "需要先在侧边栏底部“设置”里配置至少一个 AI 服务商 Key。题目"
-            "依据当前知识点说明和真实源码生成；完成全部题目后由本地规则"
-            "自动评分并更新熟练度");
-        quiz_button->signal_clicked().connect(
-            [this, row, activate_topic, topic, update_mastery]() {
-                (*activate_topic)(row);
-                m_dialogs.show_quiz(make_dialog_topic(topic), update_mastery);
-            });
-        actions->append(*quiz_button);
         actions->append(*mastery_row);
         row_box->append(*actions);
         row->set_child(*row_box);

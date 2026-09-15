@@ -176,4 +176,19 @@ TEST(ProgressStatsTest, EmptyMasteryMapTreatsEverythingAsNotStarted) {
     EXPECT_DOUBLE_EQ(progress.chapters[0].completion_ratio(), 0.0);
 }
 
+TEST(ProgressStatsTest, ConvertsOnlyPerfectScoresToFiveStars) {
+    // 沿用 ADR 0015 的换算，输入换成了有出处的静态题库（ADR 0054 第 3 条）。
+    EXPECT_EQ(mastery_from_score(5, 5), 5);
+    EXPECT_EQ(mastery_from_score(4, 5), 4);
+    EXPECT_EQ(mastery_from_score(3, 5), 3);
+    EXPECT_EQ(mastery_from_score(0, 5), 0);
+    // 向下取整：答对一半不到不给 3 星。
+    EXPECT_EQ(mastery_from_score(1, 3), 1);
+    EXPECT_EQ(mastery_from_score(2, 3), 3);
+    // 边界：没有题目、越界的答对数都不该算出奇怪的星级。
+    EXPECT_EQ(mastery_from_score(3, 0), 0);
+    EXPECT_EQ(mastery_from_score(9, 5), 5);
+    EXPECT_EQ(mastery_from_score(-1, 5), 0);
+}
+
 } // namespace

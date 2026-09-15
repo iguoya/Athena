@@ -271,8 +271,7 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
     ——外壳和图例可进 `.blp`，Cairo 自绘的图形区（规则 3）留代码；
   - `ui/progress_page`、`ui/chapter_index_page`——页面骨架 + 卡片可做成 `.blp`
     模板；
-  - `ui/settings_dialog`、`ui/about_dialog`、`ui/quiz_dialog`、
-    `ui/ai_markdown_dialog`——对话框结构应写在 `.blp`，代码只填内容和信号。
+  - `ui/settings_dialog`、`ui/about_dialog`、`ui/ai_markdown_dialog`——对话框结构应写在 `.blp`，代码只填内容和信号。
   - 已经合规的参考：`resources/ui/window.blp`、`resources/ui/chapters/*.blp`
     （章节页 = `.blp` 模板 + `code_chapter_page.cc` 只做协调）。
 - 加新 `.blp` 的接线：`meson.build` 加一个 `blueprint-compiler compile` 的

@@ -260,7 +260,6 @@ app_sources = files(
   'ui/learning_unit_view.cc',
   'ui/pocket_cube_page.cc',
   'ui/progress_overview.cc',
-  'ui/quiz_dialog.cc',
   'ui/settings_dialog.cc',
   'ui/source_view.cc',
   'ui/type_semantics_lesson_page.cc',

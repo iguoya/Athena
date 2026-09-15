@@ -6,7 +6,6 @@
 #include "ui/ai_markdown_dialog.h"
 #include "ui/api_key_store.h"
 #include "ui/dialog_topic.h"
-#include "ui/quiz_dialog.h"
 #include "ui/settings_dialog.h"
 
 #include <gtkmm.h>
@@ -36,11 +35,6 @@ public:
     void show_settings() { m_settings.show(); }
     // on_mastery_changed 在用户答完全部题目后被调用一次，参数是本地公式
     // 换算出的 0-5 星熟练度，返回是否成功持久化。
-    void show_quiz(
-        const DialogTopic& topic,
-        function<bool(int)> on_mastery_changed) {
-        m_quiz.show(topic, std::move(on_mastery_changed));
-    }
     void show_ai_insight(const DialogTopic& topic) { m_insight.show(topic); }
 
 private:
@@ -49,6 +43,5 @@ private:
     ApiKeyStore m_api_keys;
     AiMarkdownDialog m_ai_markdown;
     SettingsDialog m_settings;
-    QuizDialog m_quiz;
     AiInsightDialog m_insight;
 };

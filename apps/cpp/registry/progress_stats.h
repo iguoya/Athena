@@ -13,6 +13,11 @@ using namespace std;
 // 熟练度取值范围是 0-5 星，`kMaxMastery` 是满分，`kMasteryLevels` 是直方
 // 图的档数（含 0 星那一档）。
 constexpr int kMaxMastery = 5;
+
+// 把一次随堂考核的成绩换算成 0-5 星。按正确率向下取整，只有全部答对才是
+// 5 星；无有效题目时返回 0。公式沿用 ADR 0015，只是输入换成了有出处的
+// 静态题库（ADR 0054 第 3 条）。
+int mastery_from_score(int correct_answers, int total_questions);
 constexpr size_t kMasteryLevels = kMaxMastery + 1;
 
 // 单个章节的学习进度聚合。
