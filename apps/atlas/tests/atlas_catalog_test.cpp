@@ -38,14 +38,17 @@ void AtlasCatalogTest::defaultsToAnAcademicEntryMap() {
     QCOMPARE(byKind.value("career") + byKind.value("engineering"), 5);
 }
 
-// 界面上不出现具体单位名。这条断言盯着内容文件本身，因为淡化一旦只做在 QML 里，
-// 下一次换渲染方式就会把它漏掉。
+// 界面上不出现具体院所名，一律用「某所」（仓库级 ADR 0055）。这条断言盯着内容
+// 文件本身，因为淡化一旦只做在 QML 里，下一次换渲染方式就会把它漏掉。
+//
+// 禁用词写成 Unicode 转义：直接写字面量，这个文件自己就成了下一个命中点，
+// 全仓扫描（scripts/check.py）会把检查代码误报成违规内容。
 void AtlasCatalogTest::keepsUnitNamesOutOfTheContent() {
     QFile file(QString::fromUtf8(ATLAS_SOURCE_ROOT) + "/content/atlas.json");
     QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Text));
     const QString text = QString::fromUtf8(file.readAll());
-    QVERIFY(!text.contains(QStringLiteral("十七所")));
-    QVERIFY(!text.contains(QStringLiteral("四院")));
+    QVERIFY(!text.contains(QString::fromUtf8("\u5341\u4e03\u6240")));
+    QVERIFY(!text.contains(QString::fromUtf8("\u56db\u9662")));
     QVERIFY(text.contains(QStringLiteral("某所")));
 }
 

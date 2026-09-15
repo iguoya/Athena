@@ -2,8 +2,9 @@
 """仓库统一验证入口（ADR 0007、0045、0047）。
 
 检查逻辑归各应用自己（apps/<id>/scripts/check.py），这里只负责依次调用，
-外加一项跨应用检查：内容必须有出处（ADR 0043）。新增应用放一份自己的
-check.py 就会被带上，不用改这个文件，也不用改 CI。
+外加两项跨应用检查：内容必须有出处（ADR 0043），软件内容不出现具体院所名
+（ADR 0055）。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
+也不用改 CI。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
 或 WSL（ADR 0047）。
@@ -11,7 +12,7 @@ check.py 就会被带上，不用改这个文件，也不用改 CI。
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
-    python3 scripts/check.py --sources-only   只跑跨应用的内容出处检查
+    python3 scripts/check.py --sources-only   只跑跨应用检查（出处 + 院所名）
 """
 
 from __future__ import annotations
@@ -46,6 +47,49 @@ def run_app(app: str, extra: list[str]) -> None:
         raise SystemExit(completed.returncode)
 
 
+# 不参与构建或不是人写的内容，扫了只会制造噪声。
+_SKIP_DIRS = {
+    ".git", "archive", "build", "builddir", "target", ".build",
+    "node_modules", "dist", ".venv", "__pycache__",
+}
+_SKIP_SUFFIXES = {".db", ".png", ".jpg", ".jpeg", ".ico", ".icns", ".pdf", ".lock"}
+
+
+def run_redaction_check() -> None:
+    """软件内容里不许出现具体院所名，一律用「某所」（ADR 0055）。
+
+    禁用词写成 Unicode 转义，不写字面量：这个文件自己会被扫到，写了字面量
+    就等于给检查器留一个永久误报。
+    """
+    print("== 跨应用检查：软件内容不出现具体院所名 ==", flush=True)
+    forbidden = "\u5341\u4e03\u6240"
+    hits: list[tuple[Path, int, str]] = []
+    for path in REPO_ROOT.rglob("*"):
+        if not path.is_file():
+            continue
+        if any(part in _SKIP_DIRS for part in path.relative_to(REPO_ROOT).parts):
+            continue
+        if path.suffix.lower() in _SKIP_SUFFIXES:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        if forbidden not in text:
+            continue
+        for line_no, line in enumerate(text.splitlines(), start=1):
+            if forbidden in line:
+                hits.append((path.relative_to(REPO_ROOT), line_no, line.strip()[:120]))
+
+    if hits:
+        for rel, line_no, line in hits:
+            print(f"  {rel}:{line_no}  {line}", flush=True)
+        raise SystemExit(
+            f"有 {len(hits)} 处写了具体所名。改成「某所」；"
+            "确实要做禁用词检查的代码，把禁用词写成 Unicode 转义。"
+        )
+
+
 def run_source_check() -> None:
     print("== 跨应用检查：内容必须有出处 ==", flush=True)
     node = shutil.which("node")
@@ -66,6 +110,7 @@ def main(argv: list[str]) -> int:
     # CI 把跨应用检查和各应用检查拆成不同的 job 并行跑，需要单独触发前者；
     # 有了它，CI 的每一步都还是走这一个入口（ADR 0007）。
     if argv[:1] == ["--sources-only"]:
+        run_redaction_check()
         run_source_check()
         return 0
 
@@ -73,6 +118,7 @@ def main(argv: list[str]) -> int:
         run_app(argv[0], argv[1:])
         return 0
 
+    run_redaction_check()
     run_source_check()
     apps_root = REPO_ROOT / "apps"
     for entry in sorted(apps_root.iterdir()):
