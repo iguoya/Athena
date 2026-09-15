@@ -44,3 +44,4 @@
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突已解决 |
 | [0052](0052-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条 |
+| [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 atlas ADR 0004、0005 的主干重划 |
