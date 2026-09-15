@@ -4,7 +4,6 @@ import {
   destroyLabEditor,
   getLabSource,
   hasLabEditor,
-  formatCppFallback,
   mountLabEditor,
   setLabSource,
 } from "./lab-editor";
@@ -2117,25 +2116,15 @@ async function reloadSource() {
   }
 }
 
+/// 交给 clang-format 排版。没装它就抛错，由调用方决定怎么显示——
+/// 不再退回自写的缩进器：那东西只会按花括号数空格，连字符串里的 `{` 都会数进去。
 async function formatLabSource(): Promise<string> {
-  let source = getLabSource();
-  try {
-    const formatted = hasTauri()
-      ? await invoke<string>("format_cpp", { source })
-      : formatCppFallback(source);
-    if (formatted && formatted !== source) {
-      source = formatted;
-    } else if (!hasTauri()) {
-      source = formatCppFallback(source);
-    } else if (formatted === source) {
-      const fallback = formatCppFallback(source);
-      if (fallback !== source) source = fallback;
-    }
-  } catch {
-    source = formatCppFallback(source);
-  }
-  if (source !== getLabSource()) setLabSource(source);
-  return source;
+  const source = getLabSource();
+  // 预览页没有 Tauri 命令（它只用来核对排版，见 AGENTS.md），原样返回。
+  if (!hasTauri()) return source;
+  const formatted = await invoke<string>("format_cpp", { source });
+  if (formatted !== source) setLabSource(formatted);
+  return formatted;
 }
 
 function labActionButtons() {
@@ -2194,7 +2183,8 @@ async function runLab() {
 
   setLabActionsDisabled(true);
   setRunFeedback("格式化…", "busy");
-  const source = await formatLabSource();
+  // 排版只是顺手做的，失败（比如没装 clang-format）不该挡住编译运行。
+  const source = await formatLabSource().catch(() => getLabSource());
   persistLabDraftNow(topic.id, lab.id, source);
   setRunFeedback("编译中…", "busy");
 

@@ -282,26 +282,3 @@ export function destroyLabEditor(): void {
 export function hasLabEditor(): boolean {
   return view != null;
 }
-
-/** clang-format 不可用时的缩进兜底：按花括号增减 4 空格，不改语义。 */
-export function formatCppFallback(source: string): string {
-  const lines = source.replace(/\t/g, "    ").replace(/\r\n/g, "\n").split("\n");
-  let indent = 0;
-  const out: string[] = [];
-  for (const raw of lines) {
-    const trimmed = raw.trim();
-    if (!trimmed) {
-      out.push("");
-      continue;
-    }
-    const leadingCloses = /^}+/.exec(trimmed)?.[0].length ?? 0;
-    indent = Math.max(0, indent - leadingCloses);
-    const pad =
-      /^(public|private|protected):/.test(trimmed) && indent > 0 ? indent - 1 : indent;
-    out.push("    ".repeat(pad) + trimmed);
-    const opens = (trimmed.match(/{/g) ?? []).length;
-    const closes = (trimmed.match(/}/g) ?? []).length;
-    indent = Math.max(0, indent + opens - (closes - leadingCloses));
-  }
-  return out.join("\n").replace(/\n{3,}/g, "\n\n");
-}

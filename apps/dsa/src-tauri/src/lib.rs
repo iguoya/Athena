@@ -116,12 +116,21 @@ fn detect_clang_format() -> String {
     String::new()
 }
 
-/// 有 clang-format 就整理；没有或失败则原样返回，交给前端兜底缩进。
+/// 交给 clang-format 排版。没装它就报错说清楚装什么——不自己实现一个劣化版
+/// 缩进器顶替（主仓库 AGENTS.md 的基线：使用者是开发者，工具视为已装）。
 #[tauri::command]
 fn format_cpp(source: String) -> Result<String, String> {
     let tool = detect_clang_format();
     if tool.is_empty() {
-        return Ok(source);
+        return Err(if cfg!(windows) {
+            "没找到 clang-format。装 LLVM，或 MSYS2 后 \
+             pacman -S mingw-w64-ucrt-x86_64-clang-tools-extra。"
+        } else if cfg!(target_os = "macos") {
+            "没找到 clang-format。brew install clang-format"
+        } else {
+            "没找到 clang-format。apt install clang-format 或 dnf install clang-tools-extra。"
+        }
+        .to_string());
     }
     let stamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
