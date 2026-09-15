@@ -1,8 +1,21 @@
 name: CI
 
+# 什么时候跑：**推送即跑**，纯文档改动除外（ADR 0050）。
+#
+# 早跑一次的价值不只是抓 bug，更是对开发过程本身的约束——知道每次提交都会被
+# 十几个平台组合验一遍，写的时候就不会把「先推上去回头再说」当默认选项。
+# 成本确实存在（三个 Tauri 应用各要在三平台编一遍 Rust 壳），但 cargo 缓存之后
+# 只有首次昂贵；真正的纯浪费是改一行 Markdown 也拉起全部 runner，所以用
+# paths-ignore 把那类提交排除掉，其余照跑。
 on:
   push:
     branches: [main]
+    tags: ["v*.*.*"]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".vscode/**"
+      - "LICENSE"
   pull_request:
   workflow_dispatch:
 
@@ -136,9 +149,12 @@ jobs:
       - name: Install Qt and Ninja
         # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
         # 两个平台、和 app.json 的 dev.run 保持同一个位置。
+        #
+        # 不传 -m qtdeclarative：Qt 6 里 Quick/Qml 属于基础包，不是可选 module，
+        # 传了 aqt 会报「packages not found while parsing XML」直接失败。
         run: |
           python -m pip install --quiet aqtinstall ninja
-          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -m qtdeclarative -O ${{ github.workspace }}\Qt
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -O ${{ github.workspace }}\Qt
 
       - name: Verify
         run: python scripts/check.py c
