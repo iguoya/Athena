@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import venv
@@ -46,7 +47,11 @@ def ensure_venv() -> Path:
 
 def run(command: list[str], step: str) -> None:
     print(step, flush=True)
-    completed = subprocess.run(command, cwd=PROJECT_ROOT)
+    # 子进程也要 UTF-8：自检那一步是 `python -c` 打印中文，Windows 上标准流默认
+    # 跟随系统代码页（cp1252），直接抛 UnicodeEncodeError。给自己设了 UTF-8 不够，
+    # 派生出去的进程各有各的编码。
+    env = {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
+    completed = subprocess.run(command, cwd=PROJECT_ROOT, env=env)
     if completed.returncode != 0:
         raise SystemExit(completed.returncode)
 

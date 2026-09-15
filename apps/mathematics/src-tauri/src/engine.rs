@@ -96,9 +96,16 @@ impl Engine {
         }
 
         // -u：关掉 Python 的输出缓冲。少了它，回包会卡在管道里，表现成引擎「没反应」。
+        //
+        // PYTHONUTF8 / PYTHONIOENCODING：Windows 上 Python 的标准流默认跟随系统
+        // 代码页（cp1252 / gbk），而 engine.py 回包用的是 `ensure_ascii=False`
+        // ——一旦结果里带中文就会抛 UnicodeEncodeError 把引擎打死。这条链路此前
+        // 只在 macOS 上跑过，所以一直没暴露（主仓库 ADR 0047）。
         let mut child = Command::new(&py)
             .arg("-u")
             .arg(&script)
+            .env("PYTHONUTF8", "1")
+            .env("PYTHONIOENCODING", "utf-8")
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::inherit())
