@@ -58,13 +58,18 @@ ApplicationWindow {
                         }
                     }
                     Button {
-                        visible: atlas.selectedCompanionMapId.length > 0
-                        text: atlas.selectedMapFamily === "playbook" ? "打开体系地图" : "打开实操地图"
-                        onClicked: atlas.openMap(atlas.selectedCompanionMapId)
-                    }
-                    Button {
                         text: "重置视图"
                         onClicked: routeMap.resetView()
+                    }
+                }
+
+                // 视角切换紧跟在标题下面：切的是同一个能力域的看法，不是换地图，
+                // 所以它属于这块内容区，而不是侧栏（ADR 0008）。
+                Atlas.ViewTabs {
+                    family: atlas.selectedMapFamily
+                    hasCompanion: atlas.selectedCompanionMapId.length > 0
+                    onViewChosen: function(family) {
+                        atlas.openMap(atlas.selectedCompanionMapId)
                     }
                 }
 

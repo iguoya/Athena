@@ -10,25 +10,28 @@ Rectangle {
     color: "#132B35"
 
     readonly property var groupedMaps: {
-        const system = []
+        const trunk = []
         const support = []
-        const playbook = []
         const reference = []
         const adjacent = []
         for (let i = 0; i < maps.length; ++i) {
-            const emphasis = maps[i].emphasis
-            if (emphasis === "reference") reference.push(maps[i])
-            else if (emphasis === "adjacent") adjacent.push(maps[i])
-            else if (emphasis === "support") support.push(maps[i])
-            else if (maps[i].family === "playbook") playbook.push(maps[i])
-            else system.push(maps[i])
+            const map = maps[i]
+            // 一个能力域一个入口（ADR 0008）：体系图当入口，实操图由内容区的标签页
+            // 进入。以前两者各占一行，同一个能力域被拆到互不相邻的两个分组里。
+            if (map.family !== "system")
+                continue
+            if (map.emphasis === "support") support.push(map)
+            else if (map.emphasis === "reference") reference.push(map)
+            else if (map.emphasis === "adjacent") adjacent.push(map)
+            else trunk.push(map)
         }
         // muted 的分组在视觉上退一层：参考资料不该和主干抢注意力。
         const grouped = []
         const groups = [
-            { title: "体系主干", maps: system, muted: false },
+            // 叫「主干」不叫「体系主干」：标签页那边已经有一个「体系」，
+            // 两处用同一个词指不同的东西会打架——这里分的是地位，那里切的是视角。
+            { title: "主干", maps: trunk, muted: false },
             { title: "助力方向", maps: support, muted: false },
-            { title: "实操地图", maps: playbook, muted: false },
             { title: "重要参考", maps: reference, muted: false },
             { title: "相邻参考", maps: adjacent, muted: true }
         ]
@@ -46,8 +49,13 @@ Rectangle {
         if (map.emphasis === "support") return "研制辅助 · 不进飞控"
         if (map.emphasis === "reference") return "十七所对照 · 不与主干平级"
         if (map.emphasis === "adjacent") return "相邻领域 · 低于主干"
-        if (map.family === "playbook") return "书 / 方案 / 可交付练习"
         return map.view_kind === "academic" ? "学科视图" : "工程 / 研制投影"
+    }
+
+    // 选中态认配对关系：在实操视角时，侧栏仍要高亮这个能力域，否则切过去就变成
+    // 「谁都没选中」，使用者会以为自己离开了它（ADR 0008）。
+    function isCurrent(map) {
+        return root.selectedMapId === map.id || root.selectedMapId === map.companion_map
     }
 
     ColumnLayout {
@@ -111,7 +119,7 @@ Rectangle {
                     ItemDelegate {
                         id: entry
                         anchors.fill: parent
-                        highlighted: root.selectedMapId === row.modelData.map.id
+                        highlighted: root.isCurrent(row.modelData.map)
                         text: row.modelData.map.title
                         opacity: row.modelData.muted && !highlighted ? 0.72 : 1
                         onClicked: root.mapChosen(row.modelData.map.id)
