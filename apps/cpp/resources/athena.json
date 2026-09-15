@@ -98,6 +98,27 @@
               "stage": "basic"
             },
             {
+              "name": "enum_class",
+              "title": "enum class",
+              "description": "验证枚举作用域、禁止隐式整数转换和显式读取底层值。",
+              "difficulty": 1,
+              "mastery_goal": "required",
+              "knowledge_type": "strategy",
+              "stage": "basic"
+            },
+            {
+              "name": "cast",
+              "title": "类型转换",
+              "description": "验证四种命名转换分别表达的意图、检查能力与风险边界。",
+              "difficulty": 2,
+              "mastery_goal": "required",
+              "knowledge_type": "strategy",
+              "requires": [
+                "initialization"
+              ],
+              "stage": "basic"
+            },
+            {
               "name": "object_lifetime",
               "title": "对象生命周期",
               "description": "验证块作用域对象何时析构、临时对象在完整表达式末尾结束，以及 const 引用怎样延长临时对象的寿命。",
@@ -120,27 +141,6 @@
                 "initialization"
               ],
               "stage": "intermediate"
-            },
-            {
-              "name": "enum_class",
-              "title": "enum class",
-              "description": "验证枚举作用域、禁止隐式整数转换和显式读取底层值。",
-              "difficulty": 1,
-              "mastery_goal": "required",
-              "knowledge_type": "strategy",
-              "stage": "basic"
-            },
-            {
-              "name": "cast",
-              "title": "类型转换",
-              "description": "验证四种命名转换分别表达的意图、检查能力与风险边界。",
-              "difficulty": 2,
-              "mastery_goal": "required",
-              "knowledge_type": "strategy",
-              "requires": [
-                "initialization"
-              ],
-              "stage": "basic"
             },
             {
               "name": "value_category",
@@ -387,8 +387,8 @@
             "ContainerIterator",
             "FunctionCallable"
           ],
-          "title": "算法与 Ranges",
-          "description": "标准算法怎么通过迭代器与任意容器协作，以及 Ranges 如何把这套协作写成可组合的管道。",
+          "title": "标准算法 · 初阶",
+          "description": "排序、查找、变换这些现成的算法怎么用，以及它们凭什么能作用于任意容器。",
           "icon": {
             "type": "theme",
             "name": "view-sort-ascending-symbolic"
@@ -425,22 +425,6 @@
               "difficulty": 1,
               "mastery_goal": "required",
               "stage": "basic"
-            },
-            {
-              "name": "ranges_algorithm",
-              "title": "C++20 Ranges 算法",
-              "description": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。",
-              "difficulty": 4,
-              "mastery_goal": "familiar",
-              "stage": "advanced"
-            },
-            {
-              "name": "range_view",
-              "title": "C++20 Range 与 View",
-              "description": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。",
-              "difficulty": 4,
-              "mastery_goal": "familiar",
-              "stage": "advanced"
             }
           ]
         },
@@ -449,21 +433,13 @@
           "prerequisites": [
             "ClassObject"
           ],
-          "title": "词汇类型",
-          "description": "在接口之间传递「可能没有值」「多选一」「一段文字」这类意图的标准类型——它们的价值在于让签名自己说清楚含义。",
+          "title": "词汇类型 · 初阶",
+          "description": "optional、pair 与 tuple、any、format——让函数签名自己说清楚「可能没有值」「一次返回多个」。",
           "icon": {
             "type": "theme",
             "name": "applications-utilities-symbolic"
           },
           "subchapters": [
-            {
-              "name": "string_view",
-              "title": "string 与 string_view",
-              "description": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。",
-              "difficulty": 3,
-              "mastery_goal": "required",
-              "stage": "intermediate"
-            },
             {
               "name": "pair_tuple",
               "title": "pair 与 tuple",
@@ -481,28 +457,12 @@
               "stage": "basic"
             },
             {
-              "name": "variant",
-              "title": "variant",
-              "description": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。",
-              "difficulty": 3,
-              "mastery_goal": "familiar",
-              "stage": "intermediate"
-            },
-            {
               "name": "any",
               "title": "any",
               "description": "理解 any 的类型擦除、运行时取值和适用边界。",
               "difficulty": 2,
               "mastery_goal": "familiar",
               "stage": "basic"
-            },
-            {
-              "name": "chrono",
-              "title": "chrono",
-              "description": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。",
-              "difficulty": 3,
-              "mastery_goal": "familiar",
-              "stage": "intermediate"
             },
             {
               "name": "format",
@@ -515,9 +475,133 @@
           ]
         },
         {
-          "name": "ValueSemantics",
+          "name": "ErrorHandling",
           "prerequisites": [
             "ClassObject"
+          ],
+          "title": "异常的使用 · 初阶",
+          "description": "抛出、捕获、标准异常层次与自定义异常——把错误从发生的地方送到能处理的地方。",
+          "icon": {
+            "type": "theme",
+            "name": "dialog-warning-symbolic"
+          },
+          "subchapters": [
+            {
+              "name": "exception_handling",
+              "title": "异常处理",
+              "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。",
+              "difficulty": 2,
+              "mastery_goal": "required",
+              "stage": "basic"
+            },
+            {
+              "name": "standard_exception",
+              "title": "标准异常",
+              "description": "学习标准异常层次和根据错误语义选择异常类型。",
+              "difficulty": 2,
+              "mastery_goal": "required",
+              "stage": "basic"
+            },
+            {
+              "name": "custom_exception",
+              "title": "自定义异常",
+              "description": "学习定义携带上下文且保持稳定接口的异常类型。",
+              "difficulty": 2,
+              "mastery_goal": "familiar",
+              "stage": "basic"
+            }
+          ]
+        },
+        {
+          "name": "InheritancePolymorphism",
+          "prerequisites": [
+            "ClassObject"
+          ],
+          "title": "继承与多态 · 初阶",
+          "description": "继承怎么写、虚函数怎么分派，以及 override 与 final 这两个让编译器替你把关的关键字。",
+          "icon": {
+            "type": "theme",
+            "name": "view-list-tree-symbolic"
+          },
+          "subchapters": [
+            {
+              "name": "inheritance",
+              "title": "继承",
+              "description": "理解继承关系、访问控制和基类子对象。",
+              "difficulty": 1,
+              "mastery_goal": "master",
+              "stage": "basic"
+            },
+            {
+              "name": "polymorphism",
+              "title": "多态",
+              "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。",
+              "difficulty": 2,
+              "mastery_goal": "master",
+              "stage": "basic"
+            },
+            {
+              "name": "override_keyword",
+              "title": "override 校验",
+              "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。",
+              "difficulty": 1,
+              "mastery_goal": "required",
+              "stage": "basic"
+            },
+            {
+              "name": "final_keyword",
+              "title": "final 密封",
+              "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。",
+              "difficulty": 1,
+              "mastery_goal": "familiar",
+              "stage": "basic"
+            }
+          ]
+        },
+        {
+          "name": "FileIO",
+          "prerequisites": [
+            "ErrorHandling",
+            "ContainerIterator"
+          ],
+          "title": "I/O 与文件系统",
+          "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
+          "icon": {
+            "type": "theme",
+            "name": "system-file-manager-symbolic"
+          },
+          "subchapters": [
+            {
+              "name": "file_read_write",
+              "title": "文件读写",
+              "description": "学习使用文件流打开、读取、写入和关闭文件。",
+              "difficulty": 1,
+              "mastery_goal": "required",
+              "stage": "basic"
+            },
+            {
+              "name": "string_stream",
+              "title": "字符串与流",
+              "description": "学习 stringstream 的解析、拼接和格式转换用途。",
+              "difficulty": 1,
+              "mastery_goal": "required",
+              "stage": "basic"
+            },
+            {
+              "name": "filesystem",
+              "title": "文件系统",
+              "description": "学习使用 std::filesystem 处理路径、目录和文件属性。",
+              "difficulty": 2,
+              "mastery_goal": "familiar",
+              "stage": "basic"
+            }
+          ]
+        },
+        {
+          "name": "ValueSemantics",
+          "prerequisites": [
+            "ClassObject",
+            "TypeSemantics"
           ],
           "title": "拷贝、移动与转发",
           "description": "一个对象怎么被复制、被移走、被原样传下去——从拷贝控制到移动语义再到完美转发的完整一条线。",
@@ -839,67 +923,60 @@
           ]
         },
         {
-          "name": "ErrorHandling",
+          "name": "Constness",
           "prerequisites": [
-            "ClassObject",
-            "RAII"
+            "ClassObject"
           ],
-          "title": "错误处理与异常安全",
-          "description": "学习异常、错误值、noexcept 和异常安全保证，建立可恢复的程序边界。",
+          "title": "常量与不可变",
+          "description": "什么时候该让一个东西不可变，以及不可变能推到多早——从 const 正确性到编译期求值。",
           "icon": {
             "type": "theme",
-            "name": "dialog-warning-symbolic"
+            "name": "changes-prevent-symbolic"
           },
           "subchapters": [
             {
-              "name": "exception_handling",
-              "title": "异常处理",
-              "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。",
-              "difficulty": 4,
-              "mastery_goal": "required",
-              "stage": "advanced"
-            },
-            {
-              "name": "standard_exception",
-              "title": "标准异常",
-              "description": "学习标准异常层次和根据错误语义选择异常类型。",
-              "difficulty": 2,
-              "mastery_goal": "required",
+              "name": "const_correctness",
+              "title": "const 正确性",
+              "description": "理解 const 对象、const 成员函数和接口约束。",
+              "difficulty": 1,
+              "mastery_goal": "master",
+              "requires": [
+                "cpp.ClassObject.class_basic"
+              ],
               "stage": "basic"
             },
             {
-              "name": "custom_exception",
-              "title": "自定义异常",
-              "description": "学习定义携带上下文且保持稳定接口的异常类型。",
-              "difficulty": 2,
-              "mastery_goal": "familiar",
-              "stage": "basic"
-            },
-            {
-              "name": "noexcept_contract",
-              "title": "noexcept",
-              "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。",
+              "name": "compile_time",
+              "title": "编译期编程",
+              "description": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。",
               "difficulty": 4,
               "mastery_goal": "familiar",
+              "requires": [
+                "const_correctness"
+              ],
               "stage": "advanced"
             },
             {
-              "name": "exception_safety",
-              "title": "异常安全保证",
-              "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。",
-              "difficulty": 5,
+              "name": "consteval_constinit",
+              "title": "consteval 与 constinit",
+              "description": "区分三个关键字各自强制的是什么：constexpr 允许编译期、consteval 强制编译期调用、constinit 强制静态初始化在编译期完成；理解它们解决的是不同问题。",
+              "difficulty": 4,
               "mastery_goal": "familiar",
+              "knowledge_type": "concept",
+              "requires": [
+                "compile_time"
+              ],
               "stage": "advanced"
             },
             {
-              "name": "expected_errors",
-              "title": "expected 与错误返回",
-              "description": "用 expected 把「可预期的失败」写进返回类型，与异常分工：异常留给真正异常的情况，可预期的失败走返回值；理解两条路线各自的代价。",
+              "name": "immutable_design",
+              "title": "不可变设计",
+              "description": "把不变量放进类型而不是靠约定：不可变对象天然线程安全、不需要防御性拷贝；理解为什么「能 const 就 const」是接口层面的承诺而不只是编译器检查。",
               "difficulty": 3,
               "mastery_goal": "required",
               "knowledge_type": "strategy",
               "requires": [
-                "exception_handling"
+                "const_correctness"
               ],
               "stage": "intermediate"
             }
@@ -980,146 +1057,104 @@
           ]
         },
         {
-          "name": "FileIO",
+          "name": "VocabularyAdvanced",
           "prerequisites": [
-            "ErrorHandling",
-            "ContainerIterator"
+            "StandardLibrary"
           ],
-          "title": "I/O 与文件系统",
-          "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
+          "title": "词汇类型 · 进阶",
+          "description": "string_view、variant 与 chrono：三个都带着明确的使用边界，用错的代价比不用更大。",
           "icon": {
             "type": "theme",
-            "name": "system-file-manager-symbolic"
+            "name": "view-more-symbolic"
           },
           "subchapters": [
             {
-              "name": "file_read_write",
-              "title": "文件读写",
-              "description": "学习使用文件流打开、读取、写入和关闭文件。",
-              "difficulty": 1,
+              "name": "string_view",
+              "title": "string 与 string_view",
+              "description": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。",
+              "difficulty": 3,
               "mastery_goal": "required",
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
-              "name": "string_stream",
-              "title": "字符串与流",
-              "description": "学习 stringstream 的解析、拼接和格式转换用途。",
-              "difficulty": 1,
-              "mastery_goal": "required",
-              "stage": "basic"
-            },
-            {
-              "name": "filesystem",
-              "title": "文件系统",
-              "description": "学习使用 std::filesystem 处理路径、目录和文件属性。",
-              "difficulty": 2,
+              "name": "variant",
+              "title": "variant",
+              "description": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。",
+              "difficulty": 3,
               "mastery_goal": "familiar",
-              "stage": "basic"
+              "stage": "intermediate"
+            },
+            {
+              "name": "chrono",
+              "title": "chrono",
+              "description": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。",
+              "difficulty": 3,
+              "mastery_goal": "familiar",
+              "stage": "intermediate"
             }
           ]
         },
         {
-          "name": "Constness",
+          "name": "ExceptionSafety",
           "prerequisites": [
-            "ClassObject"
+            "ErrorHandling",
+            "RAII"
           ],
-          "title": "常量与不可变",
-          "description": "什么时候该让一个东西不可变，以及不可变能推到多早——从 const 正确性到编译期求值。",
+          "title": "异常安全与错误策略 · 进阶",
+          "description": "写出在异常穿过时仍然正确的代码：noexcept 的承诺、三种异常安全保证，以及什么时候该改用返回值表达失败。",
           "icon": {
             "type": "theme",
-            "name": "changes-prevent-symbolic"
+            "name": "security-medium-symbolic"
           },
           "subchapters": [
             {
-              "name": "const_correctness",
-              "title": "const 正确性",
-              "description": "理解 const 对象、const 成员函数和接口约束。",
-              "difficulty": 1,
-              "mastery_goal": "master",
-              "requires": [
-                "cpp.ClassObject.class_basic"
-              ],
-              "stage": "basic"
-            },
-            {
-              "name": "compile_time",
-              "title": "编译期编程",
-              "description": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。",
+              "name": "noexcept_contract",
+              "title": "noexcept",
+              "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。",
               "difficulty": 4,
               "mastery_goal": "familiar",
-              "requires": [
-                "const_correctness"
-              ],
               "stage": "advanced"
             },
             {
-              "name": "consteval_constinit",
-              "title": "consteval 与 constinit",
-              "description": "区分三个关键字各自强制的是什么：constexpr 允许编译期、consteval 强制编译期调用、constinit 强制静态初始化在编译期完成；理解它们解决的是不同问题。",
-              "difficulty": 4,
+              "name": "exception_safety",
+              "title": "异常安全保证",
+              "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。",
+              "difficulty": 5,
               "mastery_goal": "familiar",
-              "knowledge_type": "concept",
-              "requires": [
-                "compile_time"
-              ],
               "stage": "advanced"
             },
             {
-              "name": "immutable_design",
-              "title": "不可变设计",
-              "description": "把不变量放进类型而不是靠约定：不可变对象天然线程安全、不需要防御性拷贝；理解为什么「能 const 就 const」是接口层面的承诺而不只是编译器检查。",
+              "name": "expected_errors",
+              "title": "expected 与错误返回",
+              "description": "用 expected 把「可预期的失败」写进返回类型，与异常分工：异常留给真正异常的情况，可预期的失败走返回值；理解两条路线各自的代价。",
               "difficulty": 3,
               "mastery_goal": "required",
               "knowledge_type": "strategy",
               "requires": [
-                "const_correctness"
+                "cpp.ErrorHandling.exception_handling"
               ],
               "stage": "intermediate"
             }
           ]
         },
         {
-          "name": "InheritancePolymorphism",
+          "name": "PolymorphismPitfalls",
           "prerequisites": [
-            "ClassObject"
+            "InheritancePolymorphism"
           ],
-          "title": "继承与多态",
-          "description": "学习基类与派生类关系、抽象接口、虚函数和运行时多态。",
+          "title": "多态的边界与代价 · 进阶",
+          "description": "抽象接口该怎么定义，以及多态用错时的两个经典后果——对象切片与漏写虚析构。",
           "icon": {
             "type": "theme",
-            "name": "view-list-tree-symbolic"
+            "name": "dialog-warning-symbolic"
           },
           "subchapters": [
             {
-              "name": "inheritance",
-              "title": "继承",
-              "description": "理解继承关系、访问控制和基类子对象。",
-              "difficulty": 1,
-              "mastery_goal": "master",
-              "stage": "basic"
-            },
-            {
-              "name": "polymorphism",
-              "title": "多态",
-              "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。",
+              "name": "abstract_interface",
+              "title": "抽象接口",
+              "description": "学习纯虚函数、抽象类和面向接口的设计。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "basic"
-            },
-            {
-              "name": "override_keyword",
-              "title": "override 校验",
-              "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。",
-              "difficulty": 1,
-              "mastery_goal": "required",
-              "stage": "basic"
-            },
-            {
-              "name": "final_keyword",
-              "title": "final 密封",
-              "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。",
-              "difficulty": 1,
-              "mastery_goal": "familiar",
               "stage": "basic"
             },
             {
@@ -1131,20 +1166,66 @@
               "stage": "advanced"
             },
             {
-              "name": "abstract_interface",
-              "title": "抽象接口",
-              "description": "学习纯虚函数、抽象类和面向接口的设计。",
-              "difficulty": 2,
-              "mastery_goal": "master",
-              "stage": "basic"
-            },
-            {
               "name": "virtual_destructor",
               "title": "虚析构函数",
               "description": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。",
               "difficulty": 4,
               "mastery_goal": "master",
               "stage": "advanced"
+            }
+          ]
+        },
+        {
+          "name": "RangesViews",
+          "prerequisites": [
+            "AlgorithmRanges"
+          ],
+          "title": "Ranges 与视图 · 进阶",
+          "description": "C++20 把「容器 + 迭代器对」换成可组合的范围：管道式书写、惰性求值，以及它们各自的代价。",
+          "icon": {
+            "type": "theme",
+            "name": "media-playlist-consecutive-symbolic"
+          },
+          "subchapters": [
+            {
+              "name": "ranges_algorithm",
+              "title": "C++20 Ranges 算法",
+              "description": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。",
+              "difficulty": 4,
+              "mastery_goal": "familiar",
+              "stage": "advanced"
+            },
+            {
+              "name": "range_view",
+              "title": "C++20 Range 与 View",
+              "description": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。",
+              "difficulty": 4,
+              "mastery_goal": "familiar",
+              "stage": "advanced"
+            },
+            {
+              "name": "range_adaptor",
+              "title": "适配器与管道组合",
+              "description": "适配器把一个范围变成另一个范围，用 | 串起来读作一条数据流水线；理解组合顺序会影响遍历次数与中间结果。",
+              "difficulty": 4,
+              "mastery_goal": "required",
+              "knowledge_type": "skill",
+              "stage": "advanced",
+              "requires": [
+                "range_view"
+              ]
+            },
+            {
+              "name": "range_projection",
+              "title": "投影",
+              "description": "让算法直接作用于元素的某个成员而不必写比较器；理解投影为什么能同时简化排序、查找与分组。",
+              "difficulty": 4,
+              "mastery_goal": "familiar",
+              "knowledge_type": "skill",
+              "stage": "advanced",
+              "requires": [
+                "ranges_algorithm"
+              ]
             }
           ]
         },
@@ -1324,13 +1405,17 @@
         "ContainerIterator",
         "AlgorithmRanges",
         "StandardLibrary",
+        "ErrorHandling",
+        "InheritancePolymorphism",
+        "FileIO",
         "ValueSemantics",
         "RAII",
-        "ErrorHandling",
-        "InterfaceDesign",
-        "FileIO",
         "Constness",
-        "InheritancePolymorphism",
+        "InterfaceDesign",
+        "VocabularyAdvanced",
+        "ExceptionSafety",
+        "PolymorphismPitfalls",
+        "RangesViews",
         "TemplateGeneric",
         "Concurrency"
       ]
@@ -1349,11 +1434,15 @@
         "RAII",
         "InterfaceDesign",
         "InheritancePolymorphism",
+        "PolymorphismPitfalls",
         "TemplateGeneric",
         "StandardLibrary",
+        "VocabularyAdvanced",
         "ContainerIterator",
         "AlgorithmRanges",
+        "RangesViews",
         "ErrorHandling",
+        "ExceptionSafety",
         "FileIO",
         "Concurrency"
       ]
