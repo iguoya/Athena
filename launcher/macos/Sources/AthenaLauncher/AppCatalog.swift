@@ -1,67 +1,66 @@
 import Foundation
 
-// apps/<id>/app.json 的启动器视角子集。主程序读的是同一份清单（ADR 0032），
-// 这里只多读 icon.symbol 和 dev 两处；未知字段两边都忽略，互不牵制。
+// 应用清单来自编排器的 `athena-dev list --json`（ADR 0046、0048）。
+//
+// 菜单栏版不自己读 app.json。清单里哪些字段可选、默认值是什么，只保留编排器
+// 那一份；两边各解析一遍就会各自漂移——symbol 的兜底曾经一边是 "book"、
+// 一边是 "book.closed"，只是碰巧每个 app.json 都写了才没暴露。
 struct LearningApp: Identifiable, Sendable {
-    /// 怎么构建、怎么启动、怎么算就绪都写在 app.json 的 dev 声明里，由编排器
-    /// 执行（ADR 0046）；菜单栏版不需要理解这些字段。
-    struct Dev: Sendable {}
-
     var id: String
     var title: String
     var summary: String
+    /// 菜单里显示的 SF Symbol。
     var symbol: String
     var directory: URL
-    // 判断"这个应用在不在跑"时看的路径前缀。默认就是应用目录；主程序这种
-    // 进程落在子目录（builddir/）里的，用 match 指明，免得把仓库里任何
-    // 进程都算成它自己。
+    /// 判断「这个应用在不在跑」时看的路径前缀，编排器算好了交过来。
     var matchPrefix: String
-    /// 窗口进程的可执行文件名，来自 app.json 的 dev.binary。
+    /// 窗口进程的可执行文件名。
     var binary: String
-    var dev: Dev
+    /// 启动日志的位置，同样由编排器决定，菜单栏版不再自己拼。
+    var logURL: URL
 }
 
 enum AppCatalog {
-    // 所有学习应用都在 apps/ 下，C++ 教程（apps/cpp）也不例外——它没有特权，
-    // 这里没有任何针对某个应用的分支（ADR 0045）。顺序按目录名排，
-    // 菜单里的次序才不会随文件系统变。
-    static func discover(in repository: URL) -> [LearningApp] {
-        var apps: [LearningApp] = []
-        let appsRoot = repository.appendingPathComponent("apps")
-        let entries = (try? FileManager.default.contentsOfDirectory(
-            at: appsRoot,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        )) ?? []
-
-        apps.append(contentsOf: entries
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
-            .compactMap { parse(directory: $0) })
-        return apps
+    /// 解析 `athena-dev list --json` 的输出。
+    ///
+    /// 少字段的行跳过而不是整张表作废：新增一个还没写全 app.json 的应用时，
+    /// 其余应用照常能打开。
+    static func parse(_ data: Data) -> [LearningApp] {
+        rows(data).compactMap { row in
+            guard let id = row["id"] as? String,
+                  let title = row["title"] as? String,
+                  let directory = row["dir"] as? String else {
+                return nil
+            }
+            return LearningApp(
+                id: id,
+                title: title,
+                summary: row["summary"] as? String ?? "",
+                symbol: row["symbol"] as? String ?? "book",
+                directory: URL(fileURLWithPath: directory),
+                matchPrefix: row["matchPrefix"] as? String ?? directory,
+                binary: row["binary"] as? String ?? "",
+                logURL: URL(fileURLWithPath: row["log"] as? String ?? "")
+            )
+        }
     }
 
-    private static func parse(directory: URL) -> LearningApp? {
-        let manifest = directory.appendingPathComponent("app.json")
-        guard let data = try? Data(contentsOf: manifest),
-              let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let id = root["id"] as? String,
-              let title = root["title"] as? String else {
-            return nil
+    /// 每个应用此刻的状态，按稳定标识读。
+    ///
+    /// 以前这里解析的是给人看的中文（"运行中"/"启动中…"）：编排器改一个字，
+    /// 菜单栏就会静默把所有应用显示成"未运行"，而且没有任何报错（ADR 0048）。
+    static func states(_ data: Data) -> [String: RunState] {
+        var result: [String: RunState] = [:]
+        for row in rows(data) {
+            guard let id = row["id"] as? String, let key = row["state"] as? String else {
+                continue
+            }
+            result[id] = RunState(key: key)
         }
+        return result
+    }
 
-        let icon = root["icon"] as? [String: Any]
-        let dev = root["dev"] as? [String: Any]
-        let match = (dev?["match"] as? String) ?? (root["match"] as? String)
-        return LearningApp(
-            id: id,
-            title: title,
-            summary: root["description"] as? String ?? "",
-            symbol: icon?["symbol"] as? String ?? "book.closed",
-            directory: directory,
-            matchPrefix: match.map { directory.appendingPathComponent($0).path }
-                ?? directory.path,
-            binary: dev?["binary"] as? String ?? "",
-            dev: LearningApp.Dev()
-        )
+    private static func rows(_ data: Data) -> [[String: Any]] {
+        (try? JSONSerialization.jsonObject(with: data)) as? [[String: Any]] ?? []
     }
 }

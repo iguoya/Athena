@@ -8,6 +8,11 @@
 | [`gui/`](gui) | 跨平台启动器（Rust + Slint） | macOS / Ubuntu / Windows：托盘常驻 + 列表窗口 |
 | [`macos/`](macos) | 菜单栏启动器（Swift） | macOS 专用，⌃⌥A 唤出 |
 
+"同一条执行路径"是字面意思：前端都不自己读 `app.json`、不自己判断状态、不自己拼
+日志路径，一律向编排器要（`athena-dev list --json`）。菜单栏版是平台专属的，更要
+守住这条——它为什么值得单独留着、另外两个平台少了什么，见
+[ADR 0048](../docs/decisions/0048-menubar-launcher-stays-macos-only.md)。
+
 背景与取舍见 [ADR 0044](../docs/decisions/0044-menubar-launcher.md)（常驻启动器）
 和 [ADR 0046](../docs/decisions/0046-unified-dev-orchestrator.md)（统一编排器）。
 
@@ -63,10 +68,14 @@ launcher/macos/scripts/install.sh
 
 ```sh
 launcher/target/release/athena-dev list        # 谁在跑、谁没跑
+launcher/target/release/athena-dev list --json # 同上，机器读的格式（前端用它）
 launcher/target/release/athena-dev open dsa    # 打开；已在跑的只把窗口叫到前面
 launcher/target/release/athena-dev stop dsa    # 连同构建期拉起的那一串一起收掉
 launcher/target/release/athena-dev logs dsa    # 日志文件路径
 ```
+
+`list --json` 里的 `state` 是 `stopped` / `starting` / `ready` 这组固定标识符，
+不是给人看的中文——写脚本认它，别去匹配 `list` 那一列的措辞。
 
 `open` 可以挂到 Raycast、GNOME 自定义快捷键或 Windows 快捷方式上。
 
@@ -86,8 +95,10 @@ launcher/target/release/athena-dev logs dsa    # 日志文件路径
   而不是假装成功。
 - **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
   装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
-- **Windows** 目前只保证编得过、跑得起来，没有实际验证过——被启动的应用本身
-  （GTK4 的 `apps/cpp`、Qt 的 `apps/c`）在 Windows 上从没跑过。
+- **Windows** 上启动器本身有 CI 保证编得过；被启动的应用则参差：三个 Tauri 应用
+  已纳入三平台流水线，`apps/c`（Qt）与 `apps/cpp`（GTK4）的 Windows job 还是
+  `continue-on-error` 的探测位，后者卡在 MSYS2 giomm 与 glib 的头文件冲突上。
+  也就是说，Windows 上能不能真的打开某个应用，取决于那个应用自己。
 
 ## 日志
 

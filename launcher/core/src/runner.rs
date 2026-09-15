@@ -22,11 +22,23 @@ pub enum RunState {
 }
 
 impl RunState {
+    /// 给人看的一行字。措辞随时可能改，**不要拿它当跨进程的协议**。
     pub fn label(self) -> &'static str {
         match self {
             RunState::Stopped => "未运行",
             RunState::Starting => "启动中…",
             RunState::Ready => "运行中",
+        }
+    }
+
+    /// 机器读的稳定标识。菜单栏版原来是把 label() 的中文反解析回枚举的，
+    /// 这里改一个字那边就会静默把所有应用显示成"未运行"——接口钉在这一组
+    /// 不会变的值上（ADR 0048）。
+    pub fn key(self) -> &'static str {
+        match self {
+            RunState::Stopped => "stopped",
+            RunState::Starting => "starting",
+            RunState::Ready => "ready",
         }
     }
 }

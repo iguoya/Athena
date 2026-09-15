@@ -2,6 +2,7 @@
 //!
 //! 用法：
 //!   athena-dev list             列出全部应用和当前状态
+//!   athena-dev list --json      同上，机器读的格式；菜单栏版靠它认应用（ADR 0048）
 //!   athena-dev open <id>        打开：已在跑就把窗口叫到前面，没跑才构建并启动
 //!   athena-dev stop <id>        停止它，连同构建期拉起的那一串
 //!   athena-dev logs <id>        打印日志文件路径
@@ -27,6 +28,10 @@ fn main() -> ExitCode {
     match arguments.first().map(String::as_str) {
         None | Some("list") => {
             let snapshot = ProcessSnapshot::take();
+            if arguments.get(1).map(String::as_str) == Some("--json") {
+                line(&listing_json(&apps, &snapshot));
+                return ExitCode::SUCCESS;
+            }
             for app in &apps {
                 let state = snapshot.state(app);
                 let note = if app.is_runnable() {
@@ -67,6 +72,32 @@ fn main() -> ExitCode {
             ExitCode::FAILURE
         }
     }
+}
+
+/// 清单 + 状态的机器可读版本。
+///
+/// 菜单栏版原来自己再解析一遍 app.json，字段默认值在 Rust 和 Swift 各写一份，
+/// 已经开始对不上（symbol 的兜底一边是 "book" 一边是 "book.closed"）。清单怎么
+/// 读只保留这一处，前端消费结论就行（ADR 0046、0048）。
+fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
+    let rows: Vec<serde_json::Value> = apps
+        .iter()
+        .map(|app| {
+            serde_json::json!({
+                "id": app.id,
+                "title": app.title,
+                "summary": app.summary,
+                "symbol": app.symbol,
+                "dir": app.dir,
+                "matchPrefix": app.match_prefix(),
+                "binary": app.dev.binary.clone().unwrap_or_default(),
+                "runnable": app.is_runnable(),
+                "state": snapshot.state(app).key(),
+                "log": paths::log_file(&app.id),
+            })
+        })
+        .collect();
+    serde_json::to_string_pretty(&rows).unwrap_or_else(|_| "[]".to_string())
 }
 
 fn pick<'a>(apps: &'a [App], wanted: Option<&String>) -> Result<&'a App, ExitCode> {

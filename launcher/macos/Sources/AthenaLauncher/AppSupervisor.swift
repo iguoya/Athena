@@ -18,12 +18,13 @@ enum RunState: Equatable {
         }
     }
 
-    // 编排器只报三种状态；"已预热"是菜单栏版自己的概念，靠窗口是否隐藏区分。
-    static func parse(_ text: String) -> RunState {
-        switch text {
-        case "运行中": return .ready
-        case "启动中…": return .starting
-        default: return .stopped
+    // 编排器只报三种状态，用的是不会变的标识符（ADR 0048）；"已预热"是菜单栏版
+    // 自己的概念，靠窗口是否隐藏区分。
+    init(key: String) {
+        switch key {
+        case "ready": self = .ready
+        case "starting": self = .starting
+        default: self = .stopped
         }
     }
 }
@@ -58,11 +59,16 @@ final class AppSupervisor: ObservableObject {
             return
         }
         repository = root
-        apps = AppCatalog.discover(in: root)
         orchestrator = Self.locateOrchestrator(in: root)
-        repositoryProblem = orchestrator == nil
-            ? "还没有编排器可用：先在 launcher/ 执行 cargo build -p athena-dev --release。"
-            : nil
+        guard orchestrator != nil, let listing = runOrchestrator(["list", "--json"]) else {
+            repositoryProblem =
+                "还没有编排器可用：先在 launcher/ 执行 cargo build -p athena-dev --release。"
+            apps = []
+            return
+        }
+        // 清单由编排器给，菜单栏版不自己读 app.json（ADR 0048）。
+        apps = AppCatalog.parse(listing)
+        repositoryProblem = apps.isEmpty ? "编排器没报出任何应用，检查 apps/ 下的 app.json。" : nil
     }
 
     // 优先用 release 产物；开发时 debug 的也认。
@@ -86,13 +92,8 @@ final class AppSupervisor: ObservableObject {
     }
 
     func refresh() {
-        guard let listing = runOrchestrator(["list"]) else { return }
-        var parsed: [String: RunState] = [:]
-        for row in listing.split(separator: "\n") {
-            let columns = row.split(separator: "\t", omittingEmptySubsequences: false)
-            guard columns.count >= 3 else { continue }
-            parsed[String(columns[0])] = RunState.parse(String(columns[2]))
-        }
+        guard let listing = runOrchestrator(["list", "--json"]) else { return }
+        let parsed = AppCatalog.states(listing)
 
         for app in apps {
             var state = parsed[app.id] ?? .stopped
@@ -149,9 +150,9 @@ final class AppSupervisor: ObservableObject {
         }
     }
 
+    // 位置是编排器算的（三个平台各不相同），这里不重复一遍那套规则。
     func logURL(for app: LearningApp) -> URL {
-        FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Logs/Athena/\(app.id).log")
+        app.logURL
     }
 
     func revealLog(for app: LearningApp) {
@@ -176,7 +177,7 @@ final class AppSupervisor: ObservableObject {
     }
 
     @discardableResult
-    private func runOrchestrator(_ arguments: [String]) -> String? {
+    private func runOrchestrator(_ arguments: [String]) -> Data? {
         guard let orchestrator else { return nil }
         let process = Process()
         process.executableURL = orchestrator
@@ -192,7 +193,7 @@ final class AppSupervisor: ObservableObject {
         }
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         process.waitUntilExit()
-        return String(data: data, encoding: .utf8)
+        return data
     }
 
     // 构建可能要几十秒，绝不能卡住菜单。
