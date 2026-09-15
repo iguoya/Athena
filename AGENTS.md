@@ -131,10 +131,17 @@ archive/       历史归档，不参与构建
 ```sh
 python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
 python3 scripts/check.py cpp        # 只跑某个应用，余下参数原样透传给它
+python3 scripts/check.py --sources-only   # 只跑跨应用的内容出处检查
 ```
 
-检查逻辑归各应用自己（`apps/<id>/scripts/check.py`），根入口只负责依次调用。
-新增应用放一份自己的 `check.py` 就会被带上，不用改根入口，也不用改 CI。
+检查逻辑归各应用自己（`apps/<id>/scripts/check.py`），根入口只负责依次调用，
+新增应用放一份自己的 `check.py` 就会被带上。**每个应用都必须有这份脚本**——
+没有它的应用会被根入口静默跳过，等于没人验证。
+
+CI 跑的是同一条入口，每个应用一个 job：依赖各装各的，命令都是
+`python3 scripts/check.py <id>`。三个 Tauri 应用共用一个矩阵，新增同类应用
+时往 `matrix.app` 里加一行；换一种技术栈就新起一组 job，因为要装的依赖不同。
+支持哪个平台就在那个平台上跑，否则支持会悄悄退化（ADR 0047）。
 
 ## 必读文档
 

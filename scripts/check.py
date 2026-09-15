@@ -11,6 +11,7 @@ check.py 就会被带上，不用改这个文件，也不用改 CI。
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
+    python3 scripts/check.py --sources-only   只跑跨应用的内容出处检查
 """
 
 from __future__ import annotations
@@ -60,6 +61,12 @@ def run_source_check() -> None:
 
 def main(argv: list[str]) -> int:
     _force_utf8_output()
+    # CI 把跨应用检查和各应用检查拆成不同的 job 并行跑，需要单独触发前者；
+    # 有了它，CI 的每一步都还是走这一个入口（ADR 0007）。
+    if argv[:1] == ["--sources-only"]:
+        run_source_check()
+        return 0
+
     if argv:
         run_app(argv[0], argv[1:])
         return 0

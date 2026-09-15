@@ -14,6 +14,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # 跨应用的内容出处检查（ADR 0043）：纯文本规则，和平台无关，跑一个就够。
+  sources:
+    name: 内容出处
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify
+        run: python3 scripts/check.py --sources-only
+
   # C++ 教程：GTK4 + Meson。三个平台各装各的依赖，跑的是同一条 Python 入口。
   cpp-macos:
     name: C++ 教程（macOS）
@@ -98,6 +116,87 @@ jobs:
 
       - name: Verify
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
+
+  # C 语言教程：Qt Quick + CMake。跑的是应用自己的 scripts/check.py。
+  c:
+    name: C 语言教程（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-26.04]
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        run: brew install qt@6 cmake ninja
+
+      - name: Install Qt (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            qt6-base-dev qt6-declarative-dev libgl1-mesa-dev
+
+      - name: Verify
+        # Homebrew 的 Qt 是 keg-only，不在默认搜索路径里；CMAKE_PREFIX_PATH
+        # 指过去即可，不必把 Qt 灌进全局 PATH。
+        run: python3 scripts/check.py c
+        env:
+          CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
+
+  # 三个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
+  # 和本地是同一条命令（ADR 0007）。
+  tauri:
+    name: ${{ matrix.app }}（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [dsa, english, mathematics]
+        os: [macos-15, ubuntu-26.04, windows-latest]
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/${{ matrix.app }}/package-lock.json
+
+      - name: Install Tauri system dependencies (Ubuntu)
+        # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
+        # 用系统自带的 WKWebView / WebView2，不需要这一步。
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev librsvg2-dev \
+            libgtk-3-dev libayatana-appindicator3-dev patchelf
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            apps/${{ matrix.app }}/src-tauri/target
+          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('apps/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+
+      - name: Verify
+        run: python3 scripts/check.py ${{ matrix.app }}
 
   # 启动器：纯 Rust，三平台同一套源码。
   launcher:

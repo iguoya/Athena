@@ -45,7 +45,10 @@ launcher/target/release/athena-dev stop dsa
 ```sh
 python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
 python3 scripts/check.py cpp        # 只跑某个应用，余下参数透传给它
+python3 scripts/check.py dsa --skip-rust   # Tauri 应用可以跳过较慢的 Rust 那段
 ```
+
+CI 跑的是同一条命令，五个应用各一个 job。
 
 ## 文档
 
