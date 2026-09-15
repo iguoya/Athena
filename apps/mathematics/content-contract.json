@@ -1,17 +1,16 @@
 {
-  "_": "告诉跨应用检查器（ADR 0043）本应用的来源字段长什么样。scripts/lint-content.mjs 管本应用的细节，这份只管共同规范那五条。",
+  "_": "告诉跨应用检查器（ADR 0043）本应用的来源字段长什么样。字段名用跨应用统一的那套：source_refs / relation / locator / url / note——本应用没有 catalog，来源直接写在 site 里，所以不声明 sourceIdField。scripts/lint-content.mjs 管本应用的细节，这份只管共同规范那五条。",
   "_legacy": "存量豁免已清零：接入检查时的 35 条无出处练习题与 18 道诊断题都已补上出处。这份名单只能变短，不能变长——新写的题一律当场标出处。",
   "contentDir": "content",
-  "sourceField": "source",
-  "relationField": "kind",
+  "sourceField": "source_refs",
+  "relationField": "relation",
   "urlFields": [
     "url"
   ],
   "locatorFields": [
-    "ref"
+    "locator"
   ],
   "whyFields": [
-    "why",
     "note"
   ],
   "itemMarkers": [

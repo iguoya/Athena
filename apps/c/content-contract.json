@@ -1,14 +1,23 @@
 {
-  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043）。本应用自己的规范见 docs/decisions/0003-local-sources-and-sourced-exercises.md。",
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043）。字段名用跨应用统一的那套：source_refs / relation / source_id / locator / url / note。本应用自己的规范见 docs/decisions/0003-local-sources-and-sourced-exercises.md。",
   "_blocking": "设为 false：本应用的 QML 迁移与内容扩充正在进行中，先只报告不阻断；那批工作收尾后改成 true。",
   "contentDir": "content",
   "sourceField": "source_refs",
   "relationField": "relation",
-  "sourceIdField": "id",
-  "locatorFields": ["loc"],
-  "urlFields": ["url"],
-  "whyFields": ["why", "note"],
-  "itemMarkers": ["stem"],
+  "sourceIdField": "source_id",
+  "locatorFields": [
+    "locator"
+  ],
+  "urlFields": [
+    "url"
+  ],
+  "whyFields": [
+    "note",
+    "why"
+  ],
+  "itemMarkers": [
+    "stem"
+  ],
   "catalog": "sources/catalog.json",
   "blocking": false,
   "legacyUnsourced": []

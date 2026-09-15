@@ -36,7 +36,7 @@ Rectangle {
         const refs = (question && question.source_refs) || []
         const bits = []
         for (let i = 0; i < refs.length; ++i)
-            bits.push(refs[i].id + " " + refs[i].loc)
+            bits.push(refs[i].source_id + " " + refs[i].locator)
         return bits.join(" · ")
     }
 

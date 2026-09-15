@@ -73,7 +73,7 @@ interface FormalEntry {
   /** 计算方法的步骤（kind: method 用）——教材化那一遍要说清「怎么做」 */
   steps?: string[];
   /** 必填：严谨视图的全部价值就在可核对 */
-  source: DrillSource;
+  source_refs: DrillSource[];
   /** 指向直觉视图里讲同一件事的那一段的锚点 id */
   pairs: string;
   /** 用直觉侧的话把这条复述一遍——写不出来说明两侧脱节了 */
@@ -105,7 +105,7 @@ interface Derivation {
   /** 推到这里算完成（选填）。用来判断「做完了」，不显示给用户 */
   goal?: string;
   hint?: string;
-  source: DrillSource;
+  source_refs: DrillSource[];
   context?: string;
 }
 
@@ -114,7 +114,7 @@ interface WorkedExample {
   id: string;
   title: string;
   /** 出处必填：例题尤其不能自造，它是使用者眼里「标准做法长什么样」 */
-  source: DrillSource;
+  source_refs: DrillSource[];
   given: string;
   /** 每一步都要说明「为什么可以这么做」，只给怎么算就退化成了答案 */
   steps: Array<{ do: string; why: string }>;
@@ -1261,7 +1261,7 @@ function renderFormal(f: Formal): string {
               <button type="button" class="fm-jump" data-anchor="${e.pairs}">
                 去直觉侧看「${ANCHOR_LABEL[e.pairs] ?? e.pairs}」 →
               </button>
-              ${exampleSource(e.source)}
+              ${exampleSource(e.source_refs?.[0])}
             </div>
           </section>`,
         )
@@ -1270,15 +1270,16 @@ function renderFormal(f: Formal): string {
 }
 
 /** 例题的出处，随例题一起显示——例题本来就给完整解答，不存在剧透问题 */
-function exampleSource(src: DrillSource): string {
-  if (src.kind === "authored") {
-    return `<span class="ex-src auth">本应用自出${src.why ? `——${esc1(src.why)}` : ""}</span>`;
+function exampleSource(src?: DrillSource): string {
+  if (!src) return "";
+  if (src.relation === "authored") {
+    return `<span class="ex-src auth">本应用自出${src.note ? `——${esc1(src.note)}` : ""}</span>`;
   }
-  const who = [src.site, src.ref].filter(Boolean).join(" · ");
+  const who = [src.site, src.locator].filter(Boolean).join(" · ");
   const link = src.url
     ? `<a href="${src.url}" target="_blank" rel="noreferrer">${esc1(who)}</a>`
     : esc1(who);
-  return `<span class="ex-src">${src.kind === "verbatim" ? "原题出自" : "改编自"} ${link}</span>`;
+  return `<span class="ex-src">${src.relation === "verbatim" ? "原题出自" : "改编自"} ${link}</span>`;
 }
 
 /**
@@ -1304,7 +1305,7 @@ function renderExamples(list: WorkedExample[], side: "plain" | "formal" = "plain
           (e) => `<figure class="ex">
             <figcaption class="ex-top">
               <span class="ex-t" data-read="${esc1(e.title)}">${rich(e.title)}</span>${exampleSource(
-                e.source,
+                e.source_refs?.[0],
               )}
             </figcaption>
             <div class="ex-given" data-read="${esc1(e.given)}">${rich(e.given)}</div>

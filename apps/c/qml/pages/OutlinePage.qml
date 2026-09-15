@@ -40,7 +40,7 @@ Flickable {
                 const refs = curriculum.chapter.source_refs || []
                 const bits = []
                 for (let i = 0; i < refs.length; ++i)
-                    bits.push(refs[i].id + " " + refs[i].loc)
+                    bits.push(refs[i].source_id + " " + refs[i].locator)
                 return "本有：" + bits.join(" · ")
             }
         }

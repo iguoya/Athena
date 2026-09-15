@@ -9,16 +9,14 @@
  */
 export interface DrillSource {
   /** verbatim 照用原题；adapted 保留数学内容改写；authored 本应用自造 */
-  kind: "verbatim" | "adapted" | "authored";
+  relation: "verbatim" | "adapted" | "authored";
   /** 来源站点或教材，authored 时可省 */
   site?: string;
   /** 原题在来源里的位置，要能查到；不得凭印象填（ADR 0019 第 2 节） */
-  ref?: string;
+  locator?: string;
   url?: string;
-  /** adapted 时说明改了什么 */
+  /** adapted 时说明改了什么；authored 时必填：为什么没有现成的可用 */
   note?: string;
-  /** authored 时必填：为什么没有现成的可用 */
-  why?: string;
 }
 
 export interface DrillOption {
@@ -45,7 +43,7 @@ export interface DrillItem {
    */
   context?: string;
   /** 出处（ADR 0019 第 1 节）。存量题的豁免名单见 scripts/lint-content.mjs */
-  source?: DrillSource;
+  source_refs?: DrillSource[];
   /** 卡住时先给方向，不直接给答案（ADR 0011 第 1 节） */
   hint?: string;
   /** 判完之后说明它为什么是这样 */
@@ -114,18 +112,21 @@ function orderOptions(options: DrillOption[], seed: string, idx: number): DrillO
  * 做题前给出来等于给答案（ADR 0014 第 5b 节：不留「不用真懂也能过」的捷径）。
  * 做完再给，它承担的是另一件事：顺着去原处多做几道。
  */
-function sourceLine(s?: DrillSource): string {
+function sourceLine(refs?: DrillSource[]): string {
+  // 目前每道题只挂一个来源，渲染第一条。字段名跨应用统一成
+  // source_refs / relation / locator（主仓库 ADR 0043）。
+  const s = refs?.[0];
   if (!s) return "";
-  if (s.kind === "authored") {
+  if (s.relation === "authored") {
     return `<div class="dr-src auth">这道题是本应用自己出的${
-      s.why ? `——${esc(s.why)}` : ""
+      s.note ? `——${esc(s.note)}` : ""
     }</div>`;
   }
-  const who = [s.site, s.ref].filter(Boolean).join(" · ");
+  const who = [s.site, s.locator].filter(Boolean).join(" · ");
   const link = s.url
     ? `<a href="${s.url}" target="_blank" rel="noreferrer">${esc(who)}</a>`
     : esc(who);
-  return `<div class="dr-src">${s.kind === "verbatim" ? "原题出自" : "改编自"} ${link}${
+  return `<div class="dr-src">${s.relation === "verbatim" ? "原题出自" : "改编自"} ${link}${
     s.note ? `<span class="dr-src-n">（${esc(s.note)}）</span>` : ""
   }</div>`;
 }
@@ -166,7 +167,7 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
             it.context,
           )}</div>`
         : ""
-    }${sourceLine(it.source)}</div>`;
+    }${sourceLine(it.source_refs)}</div>`;
   } else if (wrong) {
     const chosen = (it.options ?? []).find((o) => o.text === st?.picked);
     fb = `<div class="dr-fb re">${

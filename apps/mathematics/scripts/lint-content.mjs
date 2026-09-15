@@ -69,16 +69,17 @@ for (const g of diag.groups) {
 // 答错的人最需要知道去哪里补——没有出处这一页就只剩一个结论。
 for (const g of diag.groups) {
   for (const it of g.items) {
-    if (!it.source) {
+    const src = it.source_refs?.[0];
+    if (!src) {
       console.error(`诊断题：${g.id}/${it.id} 没有出处（主仓库 ADR 0043）`);
       hits++;
       continue;
     }
-    if (!["verbatim", "adapted", "authored"].includes(it.source.kind)) {
-      console.error(`诊断题：${g.id}/${it.id} 的 kind「${it.source.kind}」不合法`);
+    if (!["verbatim", "adapted", "authored"].includes(src.relation)) {
+      console.error(`诊断题：${g.id}/${it.id} 的 relation「${src.relation}」不合法`);
       hits++;
     }
-    if (it.source.kind !== "authored" && !it.source.ref) {
+    if (src.relation !== "authored" && !src.locator) {
       console.error(`诊断题：${g.id}/${it.id} 的出处没指到具体章节`);
       hits++;
     }
@@ -212,31 +213,32 @@ const LEGACY_UNSOURCED = new Set([
   // 不能变长——新增的题一律当场标出处，不许再往这里加。
 ]);
 
-const SOURCE_KINDS = new Set(["verbatim", "adapted", "authored"]);
+// 字段名跨应用统一：source_refs / relation / locator（主仓库 ADR 0043）
+const SOURCE_RELATIONS = new Set(["verbatim", "adapted", "authored"]);
 
-/** 一处出处的合法性；`where` 用于报错定位 */
+/** 一处出处的合法性；`where` 用于报错定位。传进来的是 source_refs 里的一条 */
 function checkSource(src, where, required) {
   if (!src) {
     if (required) {
-      console.error(`出处：${where} 没有 source——ADR 0019 第 1 节要求每道判分的题都能指到出处`);
+      console.error(`出处：${where} 没有 source_refs——ADR 0019 第 1 节要求每道判分的题都能指到出处`);
       hits++;
     }
     return null;
   }
-  if (!SOURCE_KINDS.has(src.kind)) {
-    console.error(`出处：${where} 的 kind「${src.kind}」不是 verbatim / adapted / authored`);
+  if (!SOURCE_RELATIONS.has(src.relation)) {
+    console.error(`出处：${where} 的 relation「${src.relation}」不是 verbatim / adapted / authored`);
     hits++;
     return null;
   }
-  if (src.kind === "authored") {
+  if (src.relation === "authored") {
     // 自造是例外不是默认，要说得出为什么外部题库覆盖不到
-    if (!src.why) {
-      console.error(`出处：${where} 标了 authored 却没写 why——自造是例外，要说明为什么没有现成的可用`);
+    if (!src.note) {
+      console.error(`出处：${where} 标了 authored 却没写 note——自造是例外，要说明为什么没有现成的可用`);
       hits++;
     }
   } else {
-    if (!src.site && !src.ref) {
-      console.error(`出处：${where} 是 ${src.kind}，但没说改编自哪里`);
+    if (!src.site && !src.locator) {
+      console.error(`出处：${where} 是 ${src.relation}，但没说改编自哪里`);
       hits++;
     }
     // 假出处比自造更糟：使用者按图索骥扑一次空，从此不再信任何一条出处
@@ -244,12 +246,12 @@ function checkSource(src, where, required) {
       console.error(`出处：${where} 的 url「${src.url}」不是可点开的链接`);
       hits++;
     }
-    if (src.kind === "adapted" && !src.note) {
+    if (src.relation === "adapted" && !src.note) {
       console.error(`出处：${where} 是 adapted，要在 note 里写清改了什么`);
       hits++;
     }
   }
-  return src.kind;
+  return src.relation;
 }
 
 let sourced = 0;
@@ -276,19 +278,19 @@ for (const ch of cur.chapters) {
         console.error(`练习题：${tag} 答对后没有解释——题级 why 与正确选项的 why 都是空的`);
         hits++;
       }
-      if (!it.source && LEGACY_UNSOURCED.has(tag)) {
+      if (!it.source_refs?.[0] && LEGACY_UNSOURCED.has(tag)) {
         legacyLeft++;
         continue;
       }
-      if (it.source && LEGACY_UNSOURCED.has(tag)) {
+      if (it.source_refs?.[0] && LEGACY_UNSOURCED.has(tag)) {
         console.error(`出处：${tag} 已经补上出处，请把它从 lint 的 LEGACY_UNSOURCED 名单里删掉`);
         hits++;
       }
-      const kind = checkSource(it.source, tag, true);
-      if (!kind) continue;
+      const relation = checkSource(it.source_refs?.[0], tag, true);
+      if (!relation) continue;
       localTotal++;
       sourced++;
-      if (kind === "authored") {
+      if (relation === "authored") {
         localAuthored++;
         authored++;
       }
@@ -369,7 +371,7 @@ for (const ch of cur.chapters) {
         console.error(`严谨表述：${where} 的 plain 有 ${e.plain.length} 字，太长了——它是一句话的接缝，不是第二份讲解`);
         hits++;
       }
-      checkSource(e.source, where, true);
+      checkSource(e.source_refs?.[0], where, true);
     }
     if (!(t.formal.entries ?? []).length) {
       console.error(`严谨表述：${t.id} 有 formal 但没有条目`);
@@ -408,7 +410,7 @@ for (const ch of cur.chapters) {
       console.error(`推导验算：${where} 缺 title / prompt / start`);
       hits++;
     }
-    checkSource(d.source, where, true);
+    checkSource(d.source_refs?.[0], where, true);
   }
 }
 
@@ -445,7 +447,7 @@ for (const ch of cur.chapters) {
     ]) {
       exCount++;
       const where = `${t.id}::${side} ${e.id}`;
-      checkSource(e.source, where, true);
+      checkSource(e.source_refs?.[0], where, true);
       if (!e.given || !e.answer) {
         console.error(`例题：${where} 缺题干或结论`);
         hits++;
