@@ -204,7 +204,11 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   优先写在 `resources/style.css` 的 `transition` 里，不写进 C++。`GLArea` 和 shader
   暂不引入，确有具体场景需要时先提 ADR。
   注意 gtkmm 的 `Snapshot` 绑定比 C API 窄（只有八个 `append_*`，没有渐变和
-  fill/stroke 节点），以 `gtkmm/snapshot.h` 为准，不要照抄 C 文档。
+  fill/stroke 节点），写的时候以 `gtkmm/snapshot.h` 为准。**但绑定没暴露不等于
+  做不到、更不等于该放弃那个效果**：需要渐变或路径节点时用
+  `snapshot->gobj()` 拿到 `GtkSnapshot*` 直接调 C API
+  （`gtk_snapshot_append_linear_gradient` 等）。gtkmm 本来就是 C API 的薄封装，
+  混用是正常做法，不是 hack。判据是这个效果对教学有没有价值，不是绑定方不方便。
 - **界面布局默认用 `.blp` 描述，代码不是首选**。任何静态或半静态的控件树
   ——页面骨架、说明/图例面板、卡片模板、对话框结构、工具栏——都应写在
   `.blp` 里；重复出现的条目（列表项、卡片、图例行、节点）应做成一份 `.blp`
