@@ -34,6 +34,20 @@ Gtk::Label& prose(Gtk::Box& host, const string& text);
 // 一组要点，每条前面带「·」。
 void bullets(Gtk::Box& host, const vector<string>& items);
 
+// 一段代码，可带说明。等宽、可选中、不折行。
+void code(Gtk::Box& host, const string& text, const string& caption = "");
+
+// 一张对照表。head 为空表示没有表头行。rows 的每行列数应与 head 一致。
+// 单元格文本以「!」开头表示这是一条判定（用强调配色），显示时去掉该前缀。
+void table(
+    Gtk::Box& host,
+    const vector<string>& head,
+    const vector<vector<string>>& rows,
+    const string& note = "");
+
+// 一组有序步骤，序号自动编号。
+void steps(Gtk::Box& host, const vector<string>& items);
+
 // 一张静态插图加图注。数据驱动的图请用 DrawingArea 自己画，别走这里。
 void figure(
     Gtk::Box& host,

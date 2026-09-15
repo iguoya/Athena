@@ -44,6 +44,15 @@ def render_resources(model: dict, root: Path) -> str:
         )
         for asset in sorted(model["case_files"])
     ]
+    # 学习页内容（ADR 0055）。alias 去掉 lessons/ 前缀，发布成
+    # /app/lessons/<章节 ID>.json，运行期按章节 ID 直接取。
+    lesson_entries = [
+        '    <file alias="{}" compressed="true">{}</file>'.format(
+            xml_escape(asset.split("/", 1)[1]),
+            xml_escape(asset),
+        )
+        for asset in sorted(model["lesson_files"])
+    ]
     icon_entries = []
     icons_dir = root / "resources" / "icons"
     if icons_dir.is_dir():
@@ -78,6 +87,9 @@ def render_resources(model: dict, root: Path) -> str:
   </gresource>
   <gresource prefix="/app/sources">
 {entries_or_comment(source_entries, "暂无教学源码")}
+  </gresource>
+  <gresource prefix="/app/lessons">
+{entries_or_comment(lesson_entries, "暂无学习页内容")}
   </gresource>
   <gresource prefix="/app/cases">
 {entries_or_comment(case_entries, "暂无实验案例")}

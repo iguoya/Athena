@@ -76,3 +76,78 @@ Box lesson_figure {
     styles [ "lesson-figure-caption" ]
   }
 }
+
+// 代码块。教学页里出现 53 次，一直是手写 Label 加四行属性。
+Box lesson_code {
+  orientation: vertical;
+  spacing: 4;
+
+  Label lesson_code_text {
+    halign: fill;
+    xalign: 0;
+    wrap: false;
+    selectable: true;
+
+    styles [ "native-lesson-code" ]
+  }
+
+  Label lesson_code_caption {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [ "lesson-figure-caption" ]
+  }
+}
+
+// 对照表。行列数由数据决定，所以 Grid 的格子由代码填（GTK 规则 2），
+// 这里只固定外壳与表注的排版；单元格用下面那个模板。
+Box lesson_table {
+  orientation: vertical;
+  spacing: 4;
+
+  Grid lesson_table_grid {
+    column-spacing: 14;
+    row-spacing: 6;
+    hexpand: true;
+  }
+
+  Label lesson_table_note {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+
+    styles [ "figure-note" ]
+  }
+}
+
+// 表格单元格。表头 / 普通 / 判定三种语气由代码加类名区分。
+Label lesson_table_cell {
+  halign: start;
+  valign: start;
+  wrap: true;
+  xalign: 0;
+
+  styles [ "figure-cell" ]
+}
+
+// 有序步骤的一条。
+Box lesson_step {
+  orientation: horizontal;
+  spacing: 10;
+
+  Label lesson_step_index {
+    valign: start;
+
+    styles [ "outline-step" ]
+  }
+
+  Label lesson_step_text {
+    halign: start;
+    wrap: true;
+    xalign: 0;
+    hexpand: true;
+
+    styles [ "lesson-prose" ]
+  }
+}

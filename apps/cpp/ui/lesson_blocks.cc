@@ -75,6 +75,76 @@ void bullets(Gtk::Box& host, const vector<string>& items) {
     }
 }
 
+void code(Gtk::Box& host, const string& text, const string& caption) {
+    const auto builder = load();
+    auto& root = take<Gtk::Box>(builder, "lesson_code");
+    auto& body = take<Gtk::Label>(builder, "lesson_code_text");
+    auto& note = take<Gtk::Label>(builder, "lesson_code_caption");
+    body.set_text(text);
+    note.set_text(caption);
+    note.set_visible(!caption.empty());
+    host.append(root);
+}
+
+void table(
+    Gtk::Box& host,
+    const vector<string>& head,
+    const vector<vector<string>>& rows,
+    const string& note) {
+    const auto builder = load();
+    auto& root = take<Gtk::Box>(builder, "lesson_table");
+    auto& grid = take<Gtk::Grid>(builder, "lesson_table_grid");
+    auto& footer = take<Gtk::Label>(builder, "lesson_table_note");
+
+    // 行列数来自数据，格子只能由代码填（AGENTS.md GTK 规则第 2 条）；
+    // 单元格本身仍然是模板实例，不在这里拼属性。
+    const auto cell = [&grid](const string& text, int column, int row,
+                              const char* extra) {
+        const auto cell_builder = load();
+        auto& label = take<Gtk::Label>(cell_builder, "lesson_table_cell");
+        // 「!」前缀表示这格是判定，用强调配色。
+        const bool verdict = !text.empty() && text.front() == '!';
+        label.set_text(verdict ? text.substr(1) : text);
+        if (verdict) {
+            label.add_css_class("figure-verdict");
+        }
+        if (extra != nullptr) {
+            label.add_css_class(extra);
+        }
+        grid.attach(label, column, row);
+    };
+
+    int row_index = 0;
+    if (!head.empty()) {
+        for (size_t column = 0; column < head.size(); ++column) {
+            cell(head[column], static_cast<int>(column), row_index, "figure-head");
+        }
+        ++row_index;
+    }
+    for (const auto& row : rows) {
+        for (size_t column = 0; column < row.size(); ++column) {
+            cell(row[column], static_cast<int>(column), row_index, nullptr);
+        }
+        ++row_index;
+    }
+
+    footer.set_text(note);
+    footer.set_visible(!note.empty());
+    host.append(root);
+}
+
+void steps(Gtk::Box& host, const vector<string>& items) {
+    for (size_t index = 0; index < items.size(); ++index) {
+        const auto builder = load();
+        auto& root = take<Gtk::Box>(builder, "lesson_step");
+        auto& number = take<Gtk::Label>(builder, "lesson_step_index");
+        auto& text = take<Gtk::Label>(builder, "lesson_step_text");
+        number.set_text(to_string(index + 1));
+        text.set_text(items[index]);
+        host.append(root);
+    }
+}
+
 void figure(
     Gtk::Box& host,
     const string& resource_path,

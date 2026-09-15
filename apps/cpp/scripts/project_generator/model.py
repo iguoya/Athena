@@ -70,6 +70,31 @@ CONTENT_RELATIONS = frozenset({"verbatim", "quoted", "adapted", "authored"})
 META_RELATIONS = frozenset({"selection_basis", "see_also"})
 # 来源登记表，相对 resources/。
 CATALOG_RELPATH = "sources/catalog.json"
+# 学习页内容（ADR 0055）。一章一份，文件名就是章节 ID，放 resources/lessons/。
+LESSONS_DIRNAME = "lessons"
+# 九种块，全部来自 type_semantics 那一章的实际统计，不是设想出来的。
+# 缺什么补什么——写内容时发现某种表达没有对应块，那才是加类型的时机。
+LESSON_BLOCK_TYPES = frozenset({
+    "lead", "prose", "bullets", "code", "callout",
+    "section", "table", "steps", "figure",
+})
+# 每种块的必填字段。callout 的 title 可选（有些提示框只有正文）。
+LESSON_BLOCK_REQUIRED = {
+    "lead": ("text",),
+    "prose": ("text",),
+    "bullets": ("items",),
+    "code": ("text",),
+    "callout": ("kind", "blocks"),
+    "section": ("title", "blocks"),
+    "table": ("rows",),
+    "steps": ("items",),
+    "figure": ("id",),
+}
+LESSON_BLOCK_FIELDS = frozenset({
+    "type", "text", "title", "kind", "caption", "note", "id",
+    "items", "head", "rows", "blocks",
+})
+CALLOUT_KINDS = frozenset({"why", "key", "note", "trap", "use"})
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
 # goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
 # 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
@@ -234,6 +259,99 @@ def validate_source_refs(
             f"source ({sorted(CONTENT_RELATIONS)}) is required"
         )
     return refs
+
+
+def validate_lesson_block(value: object, label: str) -> None:
+    """校验一个内容块（ADR 0055）。C++ 侧信任数据，把关全在这里（ADR 0013）。"""
+    block = require_object(value, label)
+    reject_unknown_fields(block, LESSON_BLOCK_FIELDS, label)
+    block_type = require_text(block.get("type"), f"{label}.type")
+    if block_type not in LESSON_BLOCK_TYPES:
+        raise ProjectError(
+            f"{label}.type must be one of {sorted(LESSON_BLOCK_TYPES)}, "
+            f"got {block_type!r}"
+        )
+    for field in LESSON_BLOCK_REQUIRED[block_type]:
+        if field not in block:
+            raise ProjectError(f"{label} is a {block_type} block and needs {field!r}")
+
+    if block_type == "callout":
+        kind = require_text(block.get("kind"), f"{label}.kind")
+        if kind not in CALLOUT_KINDS:
+            raise ProjectError(
+                f"{label}.kind must be one of {sorted(CALLOUT_KINDS)}, got {kind!r}"
+            )
+    if block_type == "table":
+        rows = require_list(block.get("rows"), f"{label}.rows")
+        head = block.get("head", [])
+        require_list(head, f"{label}.head")
+        for row_index, row in enumerate(rows):
+            cells = require_list(row, f"{label}.rows[{row_index}]")
+            # 列数对不上，渲染出来就是错位的表格，而且肉眼很难发现是数据的锅。
+            if head and len(cells) != len(head):
+                raise ProjectError(
+                    f"{label}.rows[{row_index}] has {len(cells)} cells but the "
+                    f"header has {len(head)}"
+                )
+    for field in ("items", "head"):
+        if field in block:
+            for index, item in enumerate(require_list(block[field], f"{label}.{field}")):
+                require_text(item, f"{label}.{field}[{index}]")
+    for index, child in enumerate(block.get("blocks", [])):
+        validate_lesson_block(child, f"{label}.blocks[{index}]")
+
+
+def validate_lessons(root: Path, function_ids: set[str]) -> set[str]:
+    """校验 resources/lessons/ 下的全部课文，返回要打进 GResource 的相对路径。
+
+    约定优于配置：文件存在就加载，章节不必在 athena.json 里再声明一次
+    （ADR 0055「新增一章 = 写一份 JSON」）。
+    """
+    lessons_dir = root / "resources" / LESSONS_DIRNAME
+    if not lessons_dir.is_dir():
+        return set()
+
+    files: set[str] = set()
+    for path in sorted(lessons_dir.glob("*.json")):
+        label = f"resources/{LESSONS_DIRNAME}/{path.name}"
+        data = load_json(path)
+        document = require_object(data, label)
+        reject_unknown_fields(document, frozenset({"chapter", "topics"}), label)
+        chapter_id = require_text(document.get("chapter"), f"{label}.chapter")
+        # 文件名就是章节 ID：找课文不必先读一遍文件内容。
+        if chapter_id != path.stem:
+            raise ProjectError(
+                f"{label}.chapter is {chapter_id!r} but the file is named "
+                f"{path.stem!r}; they must match"
+            )
+        topics = require_list(document.get("topics"), f"{label}.topics")
+        seen: set[str] = set()
+        for index, value in enumerate(topics):
+            topic_path = f"{label}.topics[{index}]"
+            topic = require_object(value, topic_path)
+            reject_unknown_fields(
+                topic,
+                frozenset({"topic", "title", "subtitle", "blocks"}),
+                topic_path,
+            )
+            topic_id = require_text(topic.get("topic"), f"{topic_path}.topic")
+            # 指向不存在的知识点，页面就是空的——这类错误要在这里挡住。
+            if topic_id not in function_ids:
+                raise ProjectError(
+                    f"{topic_path}.topic references an unknown knowledge point: "
+                    f"{topic_id!r}"
+                )
+            if topic_id in seen:
+                raise ProjectError(f"{label} has two entries for {topic_id!r}")
+            seen.add(topic_id)
+            require_text(topic.get("title"), f"{topic_path}.title")
+            blocks = require_list(topic.get("blocks"), f"{topic_path}.blocks")
+            if not blocks:
+                raise ProjectError(f"{topic_path}.blocks is empty")
+            for block_index, block in enumerate(blocks):
+                validate_lesson_block(block, f"{topic_path}.blocks[{block_index}]")
+        files.add(f"{LESSONS_DIRNAME}/{path.name}")
+    return files
 
 
 def validate_labs(
@@ -1075,6 +1193,9 @@ def build_model(
             for required_id in expanded_requires
         ]
 
+    # 课文引用的知识点必须存在，所以放在全部章节解析完之后校验。
+    lesson_files = validate_lessons(root, set(titles_by_function))
+
     return {
         "config": config,
         "runtime_catalog": {
@@ -1084,6 +1205,7 @@ def build_model(
         "ui": seen_ui,
         "source_files": source_files,
         "case_files": case_files,
+        "lesson_files": lesson_files,
         "bindings": bindings,
         "chapters": chapters_by_id,
         "category_count": len(categories),
