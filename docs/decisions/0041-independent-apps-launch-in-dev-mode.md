@@ -1,7 +1,9 @@
 # ADR 0041：独立应用从源码以开发模式启动，不经打包副本
 
 - 日期：2026-09-14
-- 状态：已接受
+- 状态：已接受；「从源码热启动」的结论不变，执行方式已由
+  [ADR 0046](0046-unified-dev-orchestrator.md) 收敛到统一编排器——下文提到的
+  `ui/external_app_launcher` 与各应用的入口脚本都已随之退役
 - 影响：`apps/*/app.json`、`ui/external_app_launcher`、`apps/{dsa,english,mathematics}`
   的入口脚本；修正 ADR 0032 关于「启动打包产物」的后果
 
