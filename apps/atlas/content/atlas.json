@@ -8,20 +8,211 @@
       "view_kind": "academic",
       "summary": "不按抽象理论课罗列，而是从能编译、能观察、能部署的系统作品倒推必要的计算机基础。",
       "nodes": [
-        {"id":"atlas.cs.toolchain","title":"程序构建与调试","track":"software","stable_definition":"用语言、编译器、版本控制和调试器把可复现的程序交付出来。","engineering_role":"是后续系统实验的共同工作台，避免只会写无法定位问题的代码。","practice":"做一个跨平台命令行工具：构建、断点、日志、单元测试和 CI 各跑通一次。","validation":"integration","validation_note":"在全新目录中构建并让测试自动通过。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"nuaa-cs","locator":"课程结构中的程序设计、软件工程与实践环节"}]},
-        {"id":"atlas.cs.data-concurrency","title":"数据结构与并发","track":"software","stable_definition":"选择数据组织、复杂度边界和并发协调方式，让有限资源下的程序可预测。","engineering_role":"支撑缓存、队列、任务分发与数据处理，防止把性能问题误判为“机器不够快”。","practice":"实现有容量上限的生产者/消费者队列，记录吞吐、等待时间和丢弃策略。","validation":"benchmark","validation_note":"用压力输入比较不同队列和锁策略的延迟分位数。","volatility":"stable","requires":["atlas.cs.toolchain"],"source_refs":[{"relation":"adapted","source_id":"nuaa-cs","locator":"数据结构、操作系统与软件工程课程方向"}]},
-        {"id":"atlas.cs.os-network","title":"操作系统与网络接口","track":"software","stable_definition":"理解进程、线程、内存、文件、套接字与协议边界，以系统调用和可观测接口连接真实设备。","engineering_role":"把算法或业务逻辑接入外部服务、设备与网络，而不是停留在单进程演示。","practice":"做一个带超时、重连、结构化日志的 TCP 遥测接收器。","validation":"integration","validation_note":"断网、乱序和错误包注入后仍能恢复并留下完整事件记录。","volatility":"stable","requires":["atlas.cs.toolchain"],"source_refs":[{"relation":"adapted","source_id":"nuaa-cs","locator":"操作系统、计算机网络课程方向"}]},
-        {"id":"atlas.cs.data-pipeline","title":"端到端数据管线","track":"compute","stable_definition":"将采集、队列、计算、存储和展示作为一条有时间边界的数据路径设计。","engineering_role":"把局部代码性能和真实系统的端到端响应区分开，是地面处理、机器人与 AI 工程的共同骨架。","practice":"把模拟传感器、队列、处理器和可视化串成管线，并给每个数据包加时间戳。","validation":"benchmark","validation_note":"报告端到端延迟、吞吐和丢包，而非只报某一个函数耗时。","volatility":"evolving","requires":["atlas.cs.data-concurrency","atlas.cs.os-network"],"source_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端延迟、主机延迟、计算时间与吞吐的测量边界"}]},
-        {"id":"atlas.cs.observability","title":"剖析与可观测性","track":"assurance","stable_definition":"用指标、日志、追踪和性能剖析把系统的资源使用与异常路径变成可检查证据。","engineering_role":"为实时、算力和可靠性优化提供事实，避免依据主观体感改系统。","practice":"为数据管线添加延迟直方图、队列深度和错误分类，并定位一次人为制造的退化。","validation":"measurement","validation_note":"提交包含复现步骤、基线、改动和回归结果的性能报告。","volatility":"evolving","requires":["atlas.cs.data-pipeline"],"source_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端基准、CUDA Events 与剖析的测量方法"}]},
-        {"id":"atlas.cs.integration","title":"系统集成与交付","track":"assurance","stable_definition":"在明确接口、配置、部署脚本和故障边界下集成多个可独立验证的组件。","engineering_role":"让个人练习变成他人可复现、可评审、可维护的工程交付物。","practice":"将前述管线打包为一键启动演示，提供配置样例、健康检查和故障演练说明。","validation":"review","validation_note":"由未参与开发的人按文档完成部署、观察和故障恢复。","volatility":"stable","requires":["atlas.cs.observability"],"source_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"组件接口、构建与单元/集成测试的工程样本"}]}
+        {
+          "id": "atlas.cs.toolchain",
+          "title": "程序构建与调试",
+          "track": "software",
+          "stable_definition": "用语言、编译器、版本控制和调试器把可复现的程序交付出来。",
+          "engineering_role": "是后续系统实验的共同工作台，避免只会写无法定位问题的代码。",
+          "practice": "做一个跨平台命令行工具：构建、断点、日志、单元测试和 CI 各跑通一次。",
+          "validation": "integration",
+          "validation_note": "在全新目录中构建并让测试自动通过。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "课程结构中的程序设计、软件工程与实践环节"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.data-concurrency",
+          "title": "数据结构与并发",
+          "track": "software",
+          "stable_definition": "选择数据组织、复杂度边界和并发协调方式，让有限资源下的程序可预测。",
+          "engineering_role": "支撑缓存、队列、任务分发与数据处理，防止把性能问题误判为“机器不够快”。",
+          "practice": "实现有容量上限的生产者/消费者队列，记录吞吐、等待时间和丢弃策略。",
+          "validation": "benchmark",
+          "validation_note": "用压力输入比较不同队列和锁策略的延迟分位数。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.cs.toolchain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "数据结构、操作系统与软件工程课程方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.os-network",
+          "title": "操作系统与网络接口",
+          "track": "software",
+          "stable_definition": "理解进程、线程、内存、文件、套接字与协议边界，以系统调用和可观测接口连接真实设备。",
+          "engineering_role": "把算法或业务逻辑接入外部服务、设备与网络，而不是停留在单进程演示。",
+          "practice": "做一个带超时、重连、结构化日志的 TCP 遥测接收器。",
+          "validation": "integration",
+          "validation_note": "断网、乱序和错误包注入后仍能恢复并留下完整事件记录。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.cs.toolchain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "操作系统、计算机网络课程方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.data-pipeline",
+          "title": "端到端数据管线",
+          "track": "compute",
+          "stable_definition": "将采集、队列、计算、存储和展示作为一条有时间边界的数据路径设计。",
+          "engineering_role": "把局部代码性能和真实系统的端到端响应区分开，是地面处理、机器人与 AI 工程的共同骨架。",
+          "practice": "把模拟传感器、队列、处理器和可视化串成管线，并给每个数据包加时间戳。",
+          "validation": "benchmark",
+          "validation_note": "报告端到端延迟、吞吐和丢包，而非只报某一个函数耗时。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.cs.data-concurrency",
+            "atlas.cs.os-network"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端延迟、主机延迟、计算时间与吞吐的测量边界"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.observability",
+          "title": "剖析与可观测性",
+          "track": "assurance",
+          "stable_definition": "用指标、日志、追踪和性能剖析把系统的资源使用与异常路径变成可检查证据。",
+          "engineering_role": "为实时、算力和可靠性优化提供事实，避免依据主观体感改系统。",
+          "practice": "为数据管线添加延迟直方图、队列深度和错误分类，并定位一次人为制造的退化。",
+          "validation": "measurement",
+          "validation_note": "提交包含复现步骤、基线、改动和回归结果的性能报告。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.cs.data-pipeline"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端基准、CUDA Events 与剖析的测量方法"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.integration",
+          "title": "系统集成与交付",
+          "track": "assurance",
+          "stable_definition": "在明确接口、配置、部署脚本和故障边界下集成多个可独立验证的组件。",
+          "engineering_role": "让个人练习变成他人可复现、可评审、可维护的工程交付物。",
+          "practice": "将前述管线打包为一键启动演示，提供配置样例、健康检查和故障演练说明。",
+          "validation": "review",
+          "validation_note": "由未参与开发的人按文档完成部署、观察和故障恢复。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.cs.observability"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件接口、构建与单元/集成测试的工程样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.cs.toolchain","to":"atlas.cs.data-concurrency","relation":"requires","rationale":"先能稳定构建、调试和测试，才能观察并发队列的真实行为。","evidence_refs":[{"relation":"adapted","source_id":"nuaa-cs","locator":"程序设计到数据结构的课程序列"}]},
-        {"from":"atlas.cs.toolchain","to":"atlas.cs.os-network","relation":"requires","rationale":"系统接口实验依赖基本的编译、调试和版本控制能力。","evidence_refs":[{"relation":"adapted","source_id":"nuaa-cs","locator":"程序设计、操作系统与网络的课程序列"}]},
-        {"from":"atlas.cs.data-concurrency","to":"atlas.cs.data-pipeline","relation":"requires","rationale":"管线需要有边界的缓存、调度和并发数据交接。","evidence_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端测量包含主机提交、计算和数据传输"}]},
-        {"from":"atlas.cs.os-network","to":"atlas.cs.data-pipeline","relation":"requires","rationale":"真实数据管线必须处理设备/服务 I/O、网络超时和连接状态。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测控网的信息传输、数据交换和计算处理功能"}]},
-        {"from":"atlas.cs.data-pipeline","to":"atlas.cs.observability","relation":"requires","rationale":"没有完整的输入到输出路径，就无法解释一个性能指标的工程含义。","evidence_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端与设备侧计时的边界区分"}]},
-        {"from":"atlas.cs.observability","to":"atlas.cs.integration","relation":"requires","rationale":"可交付系统需要能说明正常、退化和故障时发生了什么。","evidence_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"组件化测试与集成验证样本"}]}
+        {
+          "from": "atlas.cs.toolchain",
+          "to": "atlas.cs.data-concurrency",
+          "relation": "requires",
+          "rationale": "先能稳定构建、调试和测试，才能观察并发队列的真实行为。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "程序设计到数据结构的课程序列"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.toolchain",
+          "to": "atlas.cs.os-network",
+          "relation": "requires",
+          "rationale": "系统接口实验依赖基本的编译、调试和版本控制能力。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "程序设计、操作系统与网络的课程序列"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.data-concurrency",
+          "to": "atlas.cs.data-pipeline",
+          "relation": "requires",
+          "rationale": "管线需要有边界的缓存、调度和并发数据交接。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端测量包含主机提交、计算和数据传输"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.os-network",
+          "to": "atlas.cs.data-pipeline",
+          "relation": "requires",
+          "rationale": "真实数据管线必须处理设备/服务 I/O、网络超时和连接状态。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测控网的信息传输、数据交换和计算处理功能"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.data-pipeline",
+          "to": "atlas.cs.observability",
+          "relation": "requires",
+          "rationale": "没有完整的输入到输出路径，就无法解释一个性能指标的工程含义。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端与设备侧计时的边界区分"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.observability",
+          "to": "atlas.cs.integration",
+          "relation": "requires",
+          "rationale": "可交付系统需要能说明正常、退化和故障时发生了什么。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件化测试与集成验证样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -30,20 +221,211 @@
       "view_kind": "academic",
       "summary": "从测得准、连得上、跑得稳的板级系统出发，把电路、传感、嵌入式和计算接口连成可调试的闭环。",
       "nodes": [
-        {"id":"atlas.ei.measurement","title":"电路测量与故障定位","track":"electronics","stable_definition":"用示波器、万用表、逻辑分析和基础误差判断验证电源、时序和信号是否符合设计预期。","engineering_role":"避免把硬件故障误当成软件缺陷，是所有板级实践的起点。","practice":"搭建稳压与时钟小板，记录纹波、上电时序和三类人为故障的定位过程。","validation":"measurement","validation_note":"保留原始波形、量程/探头设置和判定依据。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"buaa-automation","locator":"电子技术、仪器仪表与工程实践课程方向"}]},
-        {"id":"atlas.ei.mcu-interfaces","title":"MCU 外设与总线","track":"electronics","stable_definition":"用定时器、DMA、GPIO 和串行总线连接芯片、传感器与执行器，并处理时序和错误状态。","engineering_role":"形成从物理引脚到数据帧的最小可控系统。","practice":"用 MCU 采集 IMU，完成中断/DMA 驱动、CAN 或 RS-422 数据帧和掉线诊断。","validation":"integration","validation_note":"用逻辑分析仪对照总线时序，并可重复复现错误帧处理。","volatility":"evolving","requires":["atlas.ei.measurement"],"source_refs":[{"relation":"adapted","source_id":"cnsa-satellite-platform","locator":"卫星平台的测控、数据管理与姿态轨道控制功能"}]},
-        {"id":"atlas.ei.power-signal","title":"PCB、电源与信号完整性","track":"electronics","stable_definition":"在原理图、布局布线和供电回路层面控制噪声、压降、回流路径与高速信号风险。","engineering_role":"让单个芯片能在真实板上长期稳定协作，而不是只在开发板上“偶尔可用”。","practice":"完成一块两层或四层采集控制板，做上电、纹波、热与接口回环测试。","validation":"measurement","validation_note":"对照设计约束测量关键电源和信号，并记录修改前后的差异。","volatility":"stable","requires":["atlas.ei.measurement"],"source_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上综合电子、高效供电与数据传输能力"}]},
-        {"id":"atlas.ei.sensor-chain","title":"传感与数据采集链","track":"control","stable_definition":"理解传感器、模拟前端、ADC、滤波、时间戳和标定如何共同决定观测数据质量。","engineering_role":"为状态估计、控制和设备健康判断提供可信输入，而非只读取一个数值。","practice":"对 IMU 或温度/压力传感器做静态标定、噪声统计和时间戳一致性检查。","validation":"measurement","validation_note":"输出标定参数、误差曲线和可复现的数据采集脚本。","volatility":"stable","requires":["atlas.ei.mcu-interfaces"],"source_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量、遥测、时间统一与计算处理系统"}]},
-        {"id":"atlas.ei.dsp-fpga","title":"DSP / FPGA 数据通路","track":"compute","stable_definition":"把高频、并行或确定时序的处理拆成可综合/可测量的数据通路，并与软件控制面协同。","engineering_role":"在 MCU 不足以满足带宽、延迟或并行度时扩展计算能力。","practice":"实现一个 FPGA 采集或滤波数据通路，测量吞吐、端到端延迟和溢出保护。","validation":"benchmark","validation_note":"以输入向量和逻辑波形验证数值正确性，再以吞吐/延迟验证实现。","volatility":"evolving","requires":["atlas.ei.power-signal","atlas.ei.sensor-chain"],"source_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上综合电子与数据传输能力"}]},
-        {"id":"atlas.ei.board-system","title":"软硬件联调与环境验证","track":"assurance","stable_definition":"把板卡、固件、采集链、上位机和环境约束作为一个系统进行接口与故障验证。","engineering_role":"将原型推进到可部署设备，提前发现电源、温度、总线和软件状态的耦合问题。","practice":"为板卡建立冒烟测试、接口回环、长时运行和失电恢复测试清单。","validation":"integration","validation_note":"在无人工干预的长时运行中记录重启、丢帧、温度和错误恢复。","volatility":"stable","requires":["atlas.ei.dsp-fpga"],"source_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"接口、状态、日志与单元/集成测试样本"}]}
+        {
+          "id": "atlas.ei.measurement",
+          "title": "电路测量与故障定位",
+          "track": "electronics",
+          "stable_definition": "用示波器、万用表、逻辑分析和基础误差判断验证电源、时序和信号是否符合设计预期。",
+          "engineering_role": "避免把硬件故障误当成软件缺陷，是所有板级实践的起点。",
+          "practice": "搭建稳压与时钟小板，记录纹波、上电时序和三类人为故障的定位过程。",
+          "validation": "measurement",
+          "validation_note": "保留原始波形、量程/探头设置和判定依据。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "电子技术、仪器仪表与工程实践课程方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.mcu-interfaces",
+          "title": "MCU 外设与总线",
+          "track": "electronics",
+          "stable_definition": "用定时器、DMA、GPIO 和串行总线连接芯片、传感器与执行器，并处理时序和错误状态。",
+          "engineering_role": "形成从物理引脚到数据帧的最小可控系统。",
+          "practice": "用 MCU 采集 IMU，完成中断/DMA 驱动、CAN 或 RS-422 数据帧和掉线诊断。",
+          "validation": "integration",
+          "validation_note": "用逻辑分析仪对照总线时序，并可重复复现错误帧处理。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.ei.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cnsa-satellite-platform",
+              "locator": "卫星平台的测控、数据管理与姿态轨道控制功能"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.power-signal",
+          "title": "PCB、电源与信号完整性",
+          "track": "electronics",
+          "stable_definition": "在原理图、布局布线和供电回路层面控制噪声、压降、回流路径与高速信号风险。",
+          "engineering_role": "让单个芯片能在真实板上长期稳定协作，而不是只在开发板上“偶尔可用”。",
+          "practice": "完成一块两层或四层采集控制板，做上电、纹波、热与接口回环测试。",
+          "validation": "measurement",
+          "validation_note": "对照设计约束测量关键电源和信号，并记录修改前后的差异。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.ei.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上综合电子、高效供电与数据传输能力"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.sensor-chain",
+          "title": "传感与数据采集链",
+          "track": "control",
+          "stable_definition": "理解传感器、模拟前端、ADC、滤波、时间戳和标定如何共同决定观测数据质量。",
+          "engineering_role": "为状态估计、控制和设备健康判断提供可信输入，而非只读取一个数值。",
+          "practice": "对 IMU 或温度/压力传感器做静态标定、噪声统计和时间戳一致性检查。",
+          "validation": "measurement",
+          "validation_note": "输出标定参数、误差曲线和可复现的数据采集脚本。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.ei.mcu-interfaces"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量、遥测、时间统一与计算处理系统"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.dsp-fpga",
+          "title": "DSP / FPGA 数据通路",
+          "track": "compute",
+          "stable_definition": "把高频、并行或确定时序的处理拆成可综合/可测量的数据通路，并与软件控制面协同。",
+          "engineering_role": "在 MCU 不足以满足带宽、延迟或并行度时扩展计算能力。",
+          "practice": "实现一个 FPGA 采集或滤波数据通路，测量吞吐、端到端延迟和溢出保护。",
+          "validation": "benchmark",
+          "validation_note": "以输入向量和逻辑波形验证数值正确性，再以吞吐/延迟验证实现。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.ei.power-signal",
+            "atlas.ei.sensor-chain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上综合电子与数据传输能力"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.board-system",
+          "title": "软硬件联调与环境验证",
+          "track": "assurance",
+          "stable_definition": "把板卡、固件、采集链、上位机和环境约束作为一个系统进行接口与故障验证。",
+          "engineering_role": "将原型推进到可部署设备，提前发现电源、温度、总线和软件状态的耦合问题。",
+          "practice": "为板卡建立冒烟测试、接口回环、长时运行和失电恢复测试清单。",
+          "validation": "integration",
+          "validation_note": "在无人工干预的长时运行中记录重启、丢帧、温度和错误恢复。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.ei.dsp-fpga"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "接口、状态、日志与单元/集成测试样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.ei.measurement","to":"atlas.ei.mcu-interfaces","relation":"requires","rationale":"没有测量能力就无法区分外设配置错误、供电问题和总线时序问题。","evidence_refs":[{"relation":"adapted","source_id":"buaa-automation","locator":"电子技术与仪器仪表的工程基础"}]},
-        {"from":"atlas.ei.measurement","to":"atlas.ei.power-signal","relation":"requires","rationale":"PCB 和电源设计的约束必须用波形和实测数据闭环。","evidence_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上供电和综合电子的工程能力"}]},
-        {"from":"atlas.ei.mcu-interfaces","to":"atlas.ei.sensor-chain","relation":"requires","rationale":"采集链需要可靠的外设触发、数据搬运和接口错误处理。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量、遥测与时间统一系统功能"}]},
-        {"from":"atlas.ei.power-signal","to":"atlas.ei.dsp-fpga","relation":"requires","rationale":"高速数字通路依赖可工作的供电、时钟、布局和信号回路。","evidence_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上综合电子与数据传输"}]},
-        {"from":"atlas.ei.sensor-chain","to":"atlas.ei.dsp-fpga","relation":"requires","rationale":"加速链必须先明确输入质量、数据格式和时间边界。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量信息的处理和加工"}]},
-        {"from":"atlas.ei.dsp-fpga","to":"atlas.ei.board-system","relation":"requires","rationale":"高性能处理模块必须在整板、固件和上位机环境中验证。","evidence_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"组件接口与集成测试样本"}]}
+        {
+          "from": "atlas.ei.measurement",
+          "to": "atlas.ei.mcu-interfaces",
+          "relation": "requires",
+          "rationale": "没有测量能力就无法区分外设配置错误、供电问题和总线时序问题。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "电子技术与仪器仪表的工程基础"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.measurement",
+          "to": "atlas.ei.power-signal",
+          "relation": "requires",
+          "rationale": "PCB 和电源设计的约束必须用波形和实测数据闭环。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上供电和综合电子的工程能力"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.mcu-interfaces",
+          "to": "atlas.ei.sensor-chain",
+          "relation": "requires",
+          "rationale": "采集链需要可靠的外设触发、数据搬运和接口错误处理。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量、遥测与时间统一系统功能"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.power-signal",
+          "to": "atlas.ei.dsp-fpga",
+          "relation": "requires",
+          "rationale": "高速数字通路依赖可工作的供电、时钟、布局和信号回路。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上综合电子与数据传输"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.sensor-chain",
+          "to": "atlas.ei.dsp-fpga",
+          "relation": "requires",
+          "rationale": "加速链必须先明确输入质量、数据格式和时间边界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量信息的处理和加工"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.dsp-fpga",
+          "to": "atlas.ei.board-system",
+          "relation": "requires",
+          "rationale": "高性能处理模块必须在整板、固件和上位机环境中验证。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件接口与集成测试样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -52,20 +434,231 @@
       "view_kind": "engineering",
       "summary": "核心高阶地图：以卫星平台和测控通信的复杂系统实践抬高要求，但从可模拟、可测量、可复盘的地面工程作品开始。",
       "nodes": [
-        {"id":"atlas.space.mission-interface","title":"任务场景与接口基线","track":"assurance","stable_definition":"把任务目标拆为输入、输出、时限、接口、异常和验收标准，而不是先选框架或芯片。","engineering_role":"建立可协作的系统边界，避免星上、地面、测控和载荷各自假设接口。","practice":"写一份“模拟卫星遥测任务”接口包：遥测字典、遥控命令、状态机、时序和故障清单。","validation":"review","validation_note":"让另一位开发者仅依据接口包实现一个兼容模拟器。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"cmse-ttc-2023","locator":"测控通信系统的跟踪、测轨、遥测、遥控和天地通信职责"}]},
-        {"id":"atlas.space.telemetry-command","title":"遥测、遥控与数据处理","track":"software","stable_definition":"将设备状态可靠编码、传输、解码、显示和审计，并让控制命令具备合法性与可追踪边界。","engineering_role":"连接飞行器/设备与地面运行人员，是任务状态可见、可控、可回放的基础。","practice":"实现本地遥测链路：模拟设备发包、地面解码看板、命令队列和回放文件。","validation":"integration","validation_note":"注入错包、断链和重复命令，验证系统保留证据且不会执行未授权状态迁移。","volatility":"stable","requires":["atlas.space.mission-interface"],"source_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"遥测、遥控、数据交换和监控显示系统"}]},
-        {"id":"atlas.space.time-measurement","title":"统一时间与测量链","track":"control","stable_definition":"用统一时基、时间戳、标定和误差预算把来自不同设备的观测变成可比较信息。","engineering_role":"支撑测轨、状态判断、事件关联和高精度控制，避免“数据都有但对不上时刻”。","practice":"让两台采集端对同一事件打点，比较同步前后误差并产出误差预算表。","validation":"measurement","validation_note":"报告时钟偏差、网络/采集延迟、标定误差及其测量方法。","volatility":"stable","requires":["atlas.space.mission-interface"],"source_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"时间统一系统和测量/计算处理系统"},{"relation":"adapted","source_id":"nist-ptp","locator":"IEEE 1588 用于网络化测量系统的精密同步"}]},
-        {"id":"atlas.space.realtime-control","title":"确定性实时与控制闭环","track":"control","stable_definition":"围绕截止期、最大抖动、优先级和降级策略设计感知—决策—执行闭环。","engineering_role":"让关键控制和监视路径在负载、异常或数据延迟下仍有明确行为边界。","practice":"在 Linux 或 RTOS 上实现 100 Hz 控制/监视循环，记录每周期的截止期、抖动和超时处置。","validation":"measurement","validation_note":"看最大延迟和超期次数，不用平均帧率替代实时性结论。","volatility":"evolving","requires":["atlas.space.telemetry-command","atlas.space.time-measurement"],"source_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"可抢占调度、优先级继承和中断线程化"},{"relation":"adapted","source_id":"ros2-realtime","locator":"截止期、最大抖动和避免非确定操作"}]},
-        {"id":"atlas.space.digital-verification","title":"数字仿真、SIL / HIL 与故障注入","track":"assurance","stable_definition":"在真实设备不可用或风险过高时，用模型、软件在环和硬件在环验证接口、时序、控制和异常处理。","engineering_role":"把“上天前发现问题”的工程原则落实为可重复试验，而非演示视频。","practice":"构建模拟器驱动的地面控制台，并至少注入传感器漂移、链路中断和执行器延迟三类故障。","validation":"simulation","validation_note":"每项故障都有预期、观测、判定和可重复的回归脚本。","volatility":"stable","requires":["atlas.space.realtime-control"],"source_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"仿真、硬件在环和飞控系统概念"},{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测控/计算/显示的系统组成"}]},
-        {"id":"atlas.space.reliability-trace","title":"可靠性、追溯与运行复盘","track":"assurance","stable_definition":"将需求、接口、版本、测试证据、事件和故障处置连接成可复核链路。","engineering_role":"支撑长周期、高代价系统的变更控制与故障定位，避免只依赖个人记忆。","practice":"为模拟任务建立需求到测试的矩阵、版本锁定、故障预案和一次完整回放复盘。","validation":"review","validation_note":"随机抽取一个异常事件，能追到相关命令、版本、测试和处置结果。","volatility":"stable","requires":["atlas.space.digital-verification"],"source_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"组件化接口、线程/队列、单元与集成测试工程样本"},{"relation":"adapted","source_id":"cmse-ttc-2023","locator":"测控通信系统的运行管理、飞控中心和测控站协同"}]}
+        {
+          "id": "atlas.space.mission-interface",
+          "title": "任务场景与接口基线",
+          "track": "assurance",
+          "stable_definition": "把任务目标拆为输入、输出、时限、接口、异常和验收标准，而不是先选框架或芯片。",
+          "engineering_role": "建立可协作的系统边界，避免星上、地面、测控和载荷各自假设接口。",
+          "practice": "写一份“模拟卫星遥测任务”接口包：遥测字典、遥控命令、状态机、时序和故障清单。",
+          "validation": "review",
+          "validation_note": "让另一位开发者仅依据接口包实现一个兼容模拟器。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "测控通信系统的跟踪、测轨、遥测、遥控和天地通信职责"
+            }
+          ]
+        },
+        {
+          "id": "atlas.space.telemetry-command",
+          "title": "遥测、遥控与数据处理",
+          "track": "software",
+          "stable_definition": "将设备状态可靠编码、传输、解码、显示和审计，并让控制命令具备合法性与可追踪边界。",
+          "engineering_role": "连接飞行器/设备与地面运行人员，是任务状态可见、可控、可回放的基础。",
+          "practice": "实现本地遥测链路：模拟设备发包、地面解码看板、命令队列和回放文件。",
+          "validation": "integration",
+          "validation_note": "注入错包、断链和重复命令，验证系统保留证据且不会执行未授权状态迁移。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.space.mission-interface"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "遥测、遥控、数据交换和监控显示系统"
+            }
+          ]
+        },
+        {
+          "id": "atlas.space.time-measurement",
+          "title": "统一时间与测量链",
+          "track": "control",
+          "stable_definition": "用统一时基、时间戳、标定和误差预算把来自不同设备的观测变成可比较信息。",
+          "engineering_role": "支撑测轨、状态判断、事件关联和高精度控制，避免“数据都有但对不上时刻”。",
+          "practice": "让两台采集端对同一事件打点，比较同步前后误差并产出误差预算表。",
+          "validation": "measurement",
+          "validation_note": "报告时钟偏差、网络/采集延迟、标定误差及其测量方法。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.space.mission-interface"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "时间统一系统和测量/计算处理系统"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nist-ptp",
+              "locator": "IEEE 1588 用于网络化测量系统的精密同步"
+            }
+          ]
+        },
+        {
+          "id": "atlas.space.realtime-control",
+          "title": "确定性实时与控制闭环",
+          "track": "control",
+          "stable_definition": "围绕截止期、最大抖动、优先级和降级策略设计感知—决策—执行闭环。",
+          "engineering_role": "让关键控制和监视路径在负载、异常或数据延迟下仍有明确行为边界。",
+          "practice": "在 Linux 或 RTOS 上实现 100 Hz 控制/监视循环，记录每周期的截止期、抖动和超时处置。",
+          "validation": "measurement",
+          "validation_note": "看最大延迟和超期次数，不用平均帧率替代实时性结论。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.space.telemetry-command",
+            "atlas.space.time-measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "可抢占调度、优先级继承和中断线程化"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "截止期、最大抖动和避免非确定操作"
+            }
+          ]
+        },
+        {
+          "id": "atlas.space.digital-verification",
+          "title": "数字仿真、SIL / HIL 与故障注入",
+          "track": "assurance",
+          "stable_definition": "在真实设备不可用或风险过高时，用模型、软件在环和硬件在环验证接口、时序、控制和异常处理。",
+          "engineering_role": "把“上天前发现问题”的工程原则落实为可重复试验，而非演示视频。",
+          "practice": "构建模拟器驱动的地面控制台，并至少注入传感器漂移、链路中断和执行器延迟三类故障。",
+          "validation": "simulation",
+          "validation_note": "每项故障都有预期、观测、判定和可重复的回归脚本。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.space.realtime-control"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "仿真、硬件在环和飞控系统概念"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测控/计算/显示的系统组成"
+            }
+          ]
+        },
+        {
+          "id": "atlas.space.reliability-trace",
+          "title": "可靠性、追溯与运行复盘",
+          "track": "assurance",
+          "stable_definition": "将需求、接口、版本、测试证据、事件和故障处置连接成可复核链路。",
+          "engineering_role": "支撑长周期、高代价系统的变更控制与故障定位，避免只依赖个人记忆。",
+          "practice": "为模拟任务建立需求到测试的矩阵、版本锁定、故障预案和一次完整回放复盘。",
+          "validation": "review",
+          "validation_note": "随机抽取一个异常事件，能追到相关命令、版本、测试和处置结果。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.space.digital-verification"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件化接口、线程/队列、单元与集成测试工程样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "测控通信系统的运行管理、飞控中心和测控站协同"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.space.mission-interface","to":"atlas.space.telemetry-command","relation":"requires","rationale":"遥测字段、命令语义和异常状态必须先有可评审的任务接口。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-2023","locator":"跟踪、遥测、遥控和天地通信的系统职责"}]},
-        {"from":"atlas.space.mission-interface","to":"atlas.space.time-measurement","relation":"requires","rationale":"时间精度和测量误差预算取决于任务的事件、接口和验收定义。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"时间统一与测量系统构成"}]},
-        {"from":"atlas.space.telemetry-command","to":"atlas.space.realtime-control","relation":"requires","rationale":"闭环控制需要可信的状态输入和受控的命令输出路径。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"遥测遥控与监控显示功能"}]},
-        {"from":"atlas.space.time-measurement","to":"atlas.space.realtime-control","relation":"requires","rationale":"不统一时间基就无法定义并测量截止期、抖动和跨设备事件顺序。","evidence_refs":[{"relation":"adapted","source_id":"nist-ptp","locator":"精密时间同步与测量系统"}]},
-        {"from":"atlas.space.realtime-control","to":"atlas.space.digital-verification","relation":"requires","rationale":"要验证实时闭环，必须把时序、延迟和异常置入可重复的仿真环境。","evidence_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"仿真与硬件在环工程样本"}]},
-        {"from":"atlas.space.digital-verification","to":"atlas.space.reliability-trace","relation":"requires","rationale":"追溯链应指向真实的试验输入、版本和结论，而不是只有文档标题。","evidence_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"单元和集成测试工程样本"}]}
+        {
+          "from": "atlas.space.mission-interface",
+          "to": "atlas.space.telemetry-command",
+          "relation": "requires",
+          "rationale": "遥测字段、命令语义和异常状态必须先有可评审的任务接口。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "跟踪、遥测、遥控和天地通信的系统职责"
+            }
+          ]
+        },
+        {
+          "from": "atlas.space.mission-interface",
+          "to": "atlas.space.time-measurement",
+          "relation": "requires",
+          "rationale": "时间精度和测量误差预算取决于任务的事件、接口和验收定义。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "时间统一与测量系统构成"
+            }
+          ]
+        },
+        {
+          "from": "atlas.space.telemetry-command",
+          "to": "atlas.space.realtime-control",
+          "relation": "requires",
+          "rationale": "闭环控制需要可信的状态输入和受控的命令输出路径。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "遥测遥控与监控显示功能"
+            }
+          ]
+        },
+        {
+          "from": "atlas.space.time-measurement",
+          "to": "atlas.space.realtime-control",
+          "relation": "requires",
+          "rationale": "不统一时间基就无法定义并测量截止期、抖动和跨设备事件顺序。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nist-ptp",
+              "locator": "精密时间同步与测量系统"
+            }
+          ]
+        },
+        {
+          "from": "atlas.space.realtime-control",
+          "to": "atlas.space.digital-verification",
+          "relation": "requires",
+          "rationale": "要验证实时闭环，必须把时序、延迟和异常置入可重复的仿真环境。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "仿真与硬件在环工程样本"
+            }
+          ]
+        },
+        {
+          "from": "atlas.space.digital-verification",
+          "to": "atlas.space.reliability-trace",
+          "relation": "requires",
+          "rationale": "追溯链应指向真实的试验输入、版本和结论，而不是只有文档标题。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "单元和集成测试工程样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -74,20 +667,211 @@
       "view_kind": "career",
       "summary": "从数据、评测、部署与成本边界出发，而非把提示词或单一模型 API 当成完整的大模型工程能力。",
       "nodes": [
-        {"id":"atlas.llm.data-evaluation","title":"数据与可复现评测","track":"foundation","stable_definition":"用明确任务集、数据版本、质量规则和指标定义模型是否真的解决目标问题。","engineering_role":"给训练、检索、提示和部署决策建立共同基线，避免只看主观示例。","practice":"为一个垂直问答任务构建小型评测集、数据版本和自动评分脚本。","validation":"benchmark","validation_note":"每次改动输出同一评测集上的质量、延迟和失败案例。","volatility":"evolving","requires":[],"source_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"预训练、后训练、评估与数据方向的岗位能力样本"}]},
-        {"id":"atlas.llm.model-adaptation","title":"模型调用与后训练实验","track":"compute","stable_definition":"理解模型输入输出、上下文、微调/偏好优化等手段的适用边界，并以实验而非猜测选择方案。","engineering_role":"将基础模型调整到具体任务，同时避免把不稳定输出直接交给关键执行路径。","practice":"比较提示、检索增强和小规模微调三种方案，记录质量、成本和失败类型。","validation":"benchmark","validation_note":"固定数据和随机种子，保留配置、模型版本和对比报告。","volatility":"volatile","requires":["atlas.llm.data-evaluation"],"source_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"SFT、偏好/RL、评估与数据方向的岗位能力样本"}]},
-        {"id":"atlas.llm.rag-tools","title":"检索、工具与安全边界","track":"software","stable_definition":"把外部知识和工具调用做成可验证的数据/权限边界，而不是让模型自由拼接指令。","engineering_role":"提高事实可追溯性和任务执行能力，并限制高风险动作。","practice":"实现带引用返回、权限白名单和失败降级的检索/工具服务。","validation":"integration","validation_note":"用缺失资料、冲突资料和越权调用测试系统是否拒绝或降级。","volatility":"volatile","requires":["atlas.llm.model-adaptation"],"source_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"RAG、Agent 与工具工程能力样本"}]},
-        {"id":"atlas.llm.inference-serving","title":"推理部署与资源边界","track":"compute","stable_definition":"把模型、并发、显存、输入形状、缓存和服务协议组合成可测量的在线推理系统。","engineering_role":"将离线实验转换为可用服务，并使延迟、吞吐与资源消耗可解释。","practice":"部署一个模型服务，测量不同并发和上下文长度下的首 token、全程延迟和显存。","validation":"benchmark","validation_note":"分别报告端到端延迟、主机开销、设备计算和数据传输。","volatility":"volatile","requires":["atlas.llm.data-evaluation"],"source_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端延迟、吞吐、主机与 GPU 计时"}]},
-        {"id":"atlas.llm.observability","title":"质量、成本与运行观测","track":"assurance","stable_definition":"持续记录请求、版本、质量信号、延迟、成本和异常，使模型行为能被复盘。","engineering_role":"在模型和数据持续变化时防止静默退化，并为回滚提供证据。","practice":"为服务记录脱敏请求特征、版本、延迟、失败类别和用户反馈，并设置回归阈值。","validation":"measurement","validation_note":"用一次刻意的模型/检索退化验证告警和回滚流程。","volatility":"volatile","requires":["atlas.llm.rag-tools","atlas.llm.inference-serving"],"source_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"性能测量的定义与剖析方法"}]},
-        {"id":"atlas.llm.product-integration","title":"受控业务集成","track":"assurance","stable_definition":"将模型能力置于确定的业务流程、人工确认、审计和降级机制内。","engineering_role":"把“能回答”变成可承担责任的产品能力，尤其避免直连设备或关键控制。","practice":"把模型接到一个低风险知识工作流，加入人工确认、审计记录和非模型备用路径。","validation":"review","validation_note":"通过误答、超时和服务不可用演练检查业务是否仍可安全完成。","volatility":"volatile","requires":["atlas.llm.observability"],"source_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"工程化、评估、数据与服务能力样本"}]}
+        {
+          "id": "atlas.llm.data-evaluation",
+          "title": "数据与可复现评测",
+          "track": "foundation",
+          "stable_definition": "用明确任务集、数据版本、质量规则和指标定义模型是否真的解决目标问题。",
+          "engineering_role": "给训练、检索、提示和部署决策建立共同基线，避免只看主观示例。",
+          "practice": "为一个垂直问答任务构建小型评测集、数据版本和自动评分脚本。",
+          "validation": "benchmark",
+          "validation_note": "每次改动输出同一评测集上的质量、延迟和失败案例。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "预训练、后训练、评估与数据方向的岗位能力样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.llm.model-adaptation",
+          "title": "模型调用与后训练实验",
+          "track": "compute",
+          "stable_definition": "理解模型输入输出、上下文、微调/偏好优化等手段的适用边界，并以实验而非猜测选择方案。",
+          "engineering_role": "将基础模型调整到具体任务，同时避免把不稳定输出直接交给关键执行路径。",
+          "practice": "比较提示、检索增强和小规模微调三种方案，记录质量、成本和失败类型。",
+          "validation": "benchmark",
+          "validation_note": "固定数据和随机种子，保留配置、模型版本和对比报告。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.llm.data-evaluation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "SFT、偏好/RL、评估与数据方向的岗位能力样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.llm.rag-tools",
+          "title": "检索、工具与安全边界",
+          "track": "software",
+          "stable_definition": "把外部知识和工具调用做成可验证的数据/权限边界，而不是让模型自由拼接指令。",
+          "engineering_role": "提高事实可追溯性和任务执行能力，并限制高风险动作。",
+          "practice": "实现带引用返回、权限白名单和失败降级的检索/工具服务。",
+          "validation": "integration",
+          "validation_note": "用缺失资料、冲突资料和越权调用测试系统是否拒绝或降级。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.llm.model-adaptation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "RAG、Agent 与工具工程能力样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.llm.inference-serving",
+          "title": "推理部署与资源边界",
+          "track": "compute",
+          "stable_definition": "把模型、并发、显存、输入形状、缓存和服务协议组合成可测量的在线推理系统。",
+          "engineering_role": "将离线实验转换为可用服务，并使延迟、吞吐与资源消耗可解释。",
+          "practice": "部署一个模型服务，测量不同并发和上下文长度下的首 token、全程延迟和显存。",
+          "validation": "benchmark",
+          "validation_note": "分别报告端到端延迟、主机开销、设备计算和数据传输。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.llm.data-evaluation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端延迟、吞吐、主机与 GPU 计时"
+            }
+          ]
+        },
+        {
+          "id": "atlas.llm.observability",
+          "title": "质量、成本与运行观测",
+          "track": "assurance",
+          "stable_definition": "持续记录请求、版本、质量信号、延迟、成本和异常，使模型行为能被复盘。",
+          "engineering_role": "在模型和数据持续变化时防止静默退化，并为回滚提供证据。",
+          "practice": "为服务记录脱敏请求特征、版本、延迟、失败类别和用户反馈，并设置回归阈值。",
+          "validation": "measurement",
+          "validation_note": "用一次刻意的模型/检索退化验证告警和回滚流程。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.llm.rag-tools",
+            "atlas.llm.inference-serving"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "性能测量的定义与剖析方法"
+            }
+          ]
+        },
+        {
+          "id": "atlas.llm.product-integration",
+          "title": "受控业务集成",
+          "track": "assurance",
+          "stable_definition": "将模型能力置于确定的业务流程、人工确认、审计和降级机制内。",
+          "engineering_role": "把“能回答”变成可承担责任的产品能力，尤其避免直连设备或关键控制。",
+          "practice": "把模型接到一个低风险知识工作流，加入人工确认、审计记录和非模型备用路径。",
+          "validation": "review",
+          "validation_note": "通过误答、超时和服务不可用演练检查业务是否仍可安全完成。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.llm.observability"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "工程化、评估、数据与服务能力样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.llm.data-evaluation","to":"atlas.llm.model-adaptation","relation":"requires","rationale":"没有任务数据与指标，无法判断调整模型是否变好。","evidence_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"评估、数据与后训练能力样本"}]},
-        {"from":"atlas.llm.model-adaptation","to":"atlas.llm.rag-tools","relation":"requires","rationale":"要选择检索或工具策略，先要理解模型能力与失败模式。","evidence_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"RAG、Agent 和模型工程能力样本"}]},
-        {"from":"atlas.llm.data-evaluation","to":"atlas.llm.inference-serving","relation":"requires","rationale":"部署的服务级目标必须由可衡量的任务质量与性能要求驱动。","evidence_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"延迟、吞吐和测量边界"}]},
-        {"from":"atlas.llm.rag-tools","to":"atlas.llm.observability","relation":"requires","rationale":"外部知识和工具调用需要记录版本、证据和失败路径。","evidence_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"RAG、Agent 工程能力样本"}]},
-        {"from":"atlas.llm.inference-serving","to":"atlas.llm.observability","relation":"requires","rationale":"运行观测必须覆盖推理服务的资源、延迟和错误。","evidence_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"端到端与分层性能测量"}]},
-        {"from":"atlas.llm.observability","to":"atlas.llm.product-integration","relation":"requires","rationale":"受控集成需要可审计的行为和可回滚的证据。","evidence_refs":[{"relation":"adapted","source_id":"baidu-llm-role","locator":"工程化和评估能力样本"}]}
+        {
+          "from": "atlas.llm.data-evaluation",
+          "to": "atlas.llm.model-adaptation",
+          "relation": "requires",
+          "rationale": "没有任务数据与指标，无法判断调整模型是否变好。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "评估、数据与后训练能力样本"
+            }
+          ]
+        },
+        {
+          "from": "atlas.llm.model-adaptation",
+          "to": "atlas.llm.rag-tools",
+          "relation": "requires",
+          "rationale": "要选择检索或工具策略，先要理解模型能力与失败模式。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "RAG、Agent 和模型工程能力样本"
+            }
+          ]
+        },
+        {
+          "from": "atlas.llm.data-evaluation",
+          "to": "atlas.llm.inference-serving",
+          "relation": "requires",
+          "rationale": "部署的服务级目标必须由可衡量的任务质量与性能要求驱动。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "延迟、吞吐和测量边界"
+            }
+          ]
+        },
+        {
+          "from": "atlas.llm.rag-tools",
+          "to": "atlas.llm.observability",
+          "relation": "requires",
+          "rationale": "外部知识和工具调用需要记录版本、证据和失败路径。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "RAG、Agent 工程能力样本"
+            }
+          ]
+        },
+        {
+          "from": "atlas.llm.inference-serving",
+          "to": "atlas.llm.observability",
+          "relation": "requires",
+          "rationale": "运行观测必须覆盖推理服务的资源、延迟和错误。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端与分层性能测量"
+            }
+          ]
+        },
+        {
+          "from": "atlas.llm.observability",
+          "to": "atlas.llm.product-integration",
+          "relation": "requires",
+          "rationale": "受控集成需要可审计的行为和可回滚的证据。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "baidu-llm-role",
+              "locator": "工程化和评估能力样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -96,20 +880,216 @@
       "view_kind": "career",
       "summary": "把机器人看作高精度观测、实时控制、异构计算、上位机与实体测试协同的系统，而非只学 ROS 节点。",
       "nodes": [
-        {"id":"atlas.robot.calibration","title":"传感标定与坐标链","track":"control","stable_definition":"用坐标系、外参、时间戳和误差检查把传感数据放入可计算的共同参考系。","engineering_role":"让视觉、IMU、编码器与执行器的数据可融合，避免“算法不准”其实是坐标或时间错误。","practice":"标定相机或 IMU，与编码器数据对齐，输出坐标变换和误差可视化。","validation":"measurement","validation_note":"保留标定板/数据集、残差和复测结果。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"buaa-automation","locator":"控制、仪器、信息处理与计算机技术的交叉培养方向"}]},
-        {"id":"atlas.robot.estimation","title":"状态估计与传感融合","track":"control","stable_definition":"将带噪观测和运动模型结合，持续估计位置、速度、姿态或设备健康状态。","engineering_role":"为规划与控制提供比单一传感器更稳定、可解释的状态输入。","practice":"实现或集成一个 IMU+编码器融合器，比较单传感器与融合后的漂移。","validation":"measurement","validation_note":"用回放数据报告误差、延迟和异常观测时的行为。","volatility":"stable","requires":["atlas.robot.calibration"],"source_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"估计、飞控与传感系统的工程概念"}]},
-        {"id":"atlas.robot.control-planning","title":"规划与控制闭环","track":"control","stable_definition":"在运动约束和安全边界下，从状态生成动作并处理目标变化、超时与不可达情况。","engineering_role":"把“看见环境”转为可安全执行的电机/执行器命令。","practice":"为移动底盘或机械臂仿真实现轨迹跟踪与急停，记录误差和超限处理。","validation":"simulation","validation_note":"用多组初始状态和扰动验证是否满足限定误差与停止条件。","volatility":"evolving","requires":["atlas.robot.estimation"],"source_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"飞控、仿真与硬件在环系统概念"}]},
-        {"id":"atlas.robot.runtime","title":"机器人运行时与通信","track":"software","stable_definition":"用消息、服务、动作、生命周期和资源边界组织感知、控制、日志与上位机组件。","engineering_role":"让多模块系统可独立调试并可观测，减少跨进程接口的隐式耦合。","practice":"搭建传感、控制、记录和上位机四组件系统，定义消息版本和超时策略。","validation":"integration","validation_note":"让一个组件重启或延迟，观察其余组件的恢复和降级。","volatility":"evolving","requires":["atlas.robot.calibration"],"source_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"机器人实时编程的执行路径、内存和调度约束"}]},
-        {"id":"atlas.robot.realtime-compute","title":"实时计算与上位机监控","track":"compute","stable_definition":"将控制优先级、数据队列、GPU/CPU 计算和上位机可视化分开设计并测量端到端时延。","engineering_role":"避免重视觉/AI 计算挤占控制循环，同时让运行人员看见状态和风险。","practice":"在带负载的系统中运行控制循环和视觉/AI 任务，上位机展示延迟、抖动和安全状态。","validation":"benchmark","validation_note":"同时报告控制周期最大抖动、感知时延和上位机刷新时延。","volatility":"evolving","requires":["atlas.robot.control-planning","atlas.robot.runtime"],"source_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"实时调度、优先级继承和可抢占机制"},{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"计算、传输与端到端延迟的区分"}]},
-        {"id":"atlas.robot.field-test","title":"仿真到实体与安全测试","track":"assurance","stable_definition":"通过仿真、台架、限位、急停、日志回放和逐级放权将算法安全地迁移到真实设备。","engineering_role":"处理模型与实体差异，建立每次改动可回归的测试闭环。","practice":"为机器人建立仿真、台架和场地三阶段测试表；每阶段都有通过条件与回退条件。","validation":"simulation","validation_note":"通过断传感、过载、急停和恢复演练验证安全策略。","volatility":"stable","requires":["atlas.robot.realtime-compute"],"source_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"软件在环、硬件在环与实机飞行前验证样本"}]}
+        {
+          "id": "atlas.robot.calibration",
+          "title": "传感标定与坐标链",
+          "track": "control",
+          "stable_definition": "用坐标系、外参、时间戳和误差检查把传感数据放入可计算的共同参考系。",
+          "engineering_role": "让视觉、IMU、编码器与执行器的数据可融合，避免“算法不准”其实是坐标或时间错误。",
+          "practice": "标定相机或 IMU，与编码器数据对齐，输出坐标变换和误差可视化。",
+          "validation": "measurement",
+          "validation_note": "保留标定板/数据集、残差和复测结果。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "控制、仪器、信息处理与计算机技术的交叉培养方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.robot.estimation",
+          "title": "状态估计与传感融合",
+          "track": "control",
+          "stable_definition": "将带噪观测和运动模型结合，持续估计位置、速度、姿态或设备健康状态。",
+          "engineering_role": "为规划与控制提供比单一传感器更稳定、可解释的状态输入。",
+          "practice": "实现或集成一个 IMU+编码器融合器，比较单传感器与融合后的漂移。",
+          "validation": "measurement",
+          "validation_note": "用回放数据报告误差、延迟和异常观测时的行为。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.robot.calibration"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "估计、飞控与传感系统的工程概念"
+            }
+          ]
+        },
+        {
+          "id": "atlas.robot.control-planning",
+          "title": "规划与控制闭环",
+          "track": "control",
+          "stable_definition": "在运动约束和安全边界下，从状态生成动作并处理目标变化、超时与不可达情况。",
+          "engineering_role": "把“看见环境”转为可安全执行的电机/执行器命令。",
+          "practice": "为移动底盘或机械臂仿真实现轨迹跟踪与急停，记录误差和超限处理。",
+          "validation": "simulation",
+          "validation_note": "用多组初始状态和扰动验证是否满足限定误差与停止条件。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.robot.estimation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "飞控、仿真与硬件在环系统概念"
+            }
+          ]
+        },
+        {
+          "id": "atlas.robot.runtime",
+          "title": "机器人运行时与通信",
+          "track": "software",
+          "stable_definition": "用消息、服务、动作、生命周期和资源边界组织感知、控制、日志与上位机组件。",
+          "engineering_role": "让多模块系统可独立调试并可观测，减少跨进程接口的隐式耦合。",
+          "practice": "搭建传感、控制、记录和上位机四组件系统，定义消息版本和超时策略。",
+          "validation": "integration",
+          "validation_note": "让一个组件重启或延迟，观察其余组件的恢复和降级。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.robot.calibration"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "机器人实时编程的执行路径、内存和调度约束"
+            }
+          ]
+        },
+        {
+          "id": "atlas.robot.realtime-compute",
+          "title": "实时计算与上位机监控",
+          "track": "compute",
+          "stable_definition": "将控制优先级、数据队列、GPU/CPU 计算和上位机可视化分开设计并测量端到端时延。",
+          "engineering_role": "避免重视觉/AI 计算挤占控制循环，同时让运行人员看见状态和风险。",
+          "practice": "在带负载的系统中运行控制循环和视觉/AI 任务，上位机展示延迟、抖动和安全状态。",
+          "validation": "benchmark",
+          "validation_note": "同时报告控制周期最大抖动、感知时延和上位机刷新时延。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.robot.control-planning",
+            "atlas.robot.runtime"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时调度、优先级继承和可抢占机制"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "计算、传输与端到端延迟的区分"
+            }
+          ]
+        },
+        {
+          "id": "atlas.robot.field-test",
+          "title": "仿真到实体与安全测试",
+          "track": "assurance",
+          "stable_definition": "通过仿真、台架、限位、急停、日志回放和逐级放权将算法安全地迁移到真实设备。",
+          "engineering_role": "处理模型与实体差异，建立每次改动可回归的测试闭环。",
+          "practice": "为机器人建立仿真、台架和场地三阶段测试表；每阶段都有通过条件与回退条件。",
+          "validation": "simulation",
+          "validation_note": "通过断传感、过载、急停和恢复演练验证安全策略。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.robot.realtime-compute"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "软件在环、硬件在环与实机飞行前验证样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.robot.calibration","to":"atlas.robot.estimation","relation":"requires","rationale":"融合前必须明确各观测的坐标、时间与误差来源。","evidence_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"传感、估计和控制的系统概念"}]},
-        {"from":"atlas.robot.estimation","to":"atlas.robot.control-planning","relation":"requires","rationale":"规划与控制要基于对当前状态的可信估计而不是原始噪声。","evidence_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"飞控闭环和仿真系统概念"}]},
-        {"from":"atlas.robot.calibration","to":"atlas.robot.runtime","relation":"requires","rationale":"运行时消息的坐标、时间和质量字段应从传感接口定义开始。","evidence_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"实时执行路径与非确定性操作"}]},
-        {"from":"atlas.robot.control-planning","to":"atlas.robot.realtime-compute","relation":"requires","rationale":"实时资源分配由控制闭环的截止期和失效策略决定。","evidence_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"实时调度与优先级机制"}]},
-        {"from":"atlas.robot.runtime","to":"atlas.robot.realtime-compute","relation":"requires","rationale":"测量端到端延迟必须覆盖组件通信、队列和上位机观察路径。","evidence_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"实时路径中内存、同步和调度约束"}]},
-        {"from":"atlas.robot.realtime-compute","to":"atlas.robot.field-test","relation":"requires","rationale":"进入实机前要先证明高负载下的时间边界与监控可用。","evidence_refs":[{"relation":"adapted","source_id":"px4-concepts","locator":"仿真与硬件在环验证样本"}]}
+        {
+          "from": "atlas.robot.calibration",
+          "to": "atlas.robot.estimation",
+          "relation": "requires",
+          "rationale": "融合前必须明确各观测的坐标、时间与误差来源。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "传感、估计和控制的系统概念"
+            }
+          ]
+        },
+        {
+          "from": "atlas.robot.estimation",
+          "to": "atlas.robot.control-planning",
+          "relation": "requires",
+          "rationale": "规划与控制要基于对当前状态的可信估计而不是原始噪声。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "飞控闭环和仿真系统概念"
+            }
+          ]
+        },
+        {
+          "from": "atlas.robot.calibration",
+          "to": "atlas.robot.runtime",
+          "relation": "requires",
+          "rationale": "运行时消息的坐标、时间和质量字段应从传感接口定义开始。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "实时执行路径与非确定性操作"
+            }
+          ]
+        },
+        {
+          "from": "atlas.robot.control-planning",
+          "to": "atlas.robot.realtime-compute",
+          "relation": "requires",
+          "rationale": "实时资源分配由控制闭环的截止期和失效策略决定。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时调度与优先级机制"
+            }
+          ]
+        },
+        {
+          "from": "atlas.robot.runtime",
+          "to": "atlas.robot.realtime-compute",
+          "relation": "requires",
+          "rationale": "测量端到端延迟必须覆盖组件通信、队列和上位机观察路径。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "实时路径中内存、同步和调度约束"
+            }
+          ]
+        },
+        {
+          "from": "atlas.robot.realtime-compute",
+          "to": "atlas.robot.field-test",
+          "relation": "requires",
+          "rationale": "进入实机前要先证明高负载下的时间边界与监控可用。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "仿真与硬件在环验证样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -118,20 +1098,216 @@
       "view_kind": "career",
       "summary": "以可测时序、可恢复故障和可联调的设备软件为目标，覆盖 MCU、RTOS、嵌入式 Linux 与驱动边界。",
       "nodes": [
-        {"id":"atlas.embedded.bringup","title":"C/C++ 与板级 Bring-up","track":"software","stable_definition":"用启动日志、寄存器/外设配置、断点和最小驱动确认处理器与板卡处于可控状态。","engineering_role":"建立能定位硬件与软件边界问题的固件起点。","practice":"在一块开发板上完成时钟、串口日志、GPIO 和异常处理的最小启动工程。","validation":"integration","validation_note":"断电重启后能重复输出版本、时钟和外设自检结果。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"buaa-automation","locator":"电子技术、计算机技术与工程实践方向"}]},
-        {"id":"atlas.embedded.bus-drivers","title":"外设、总线与驱动","track":"electronics","stable_definition":"在中断、DMA、缓冲和错误恢复约束下实现设备驱动及 CAN、UART、SPI、I2C 等通信。","engineering_role":"让传感器、执行器和上位机之间形成稳定可诊断的物理/协议接口。","practice":"实现一个带超时、校验和错误计数的传感器驱动，并提供回环测试工具。","validation":"integration","validation_note":"用正常、坏包、拔插和速率变化验证恢复路径。","volatility":"evolving","requires":["atlas.embedded.bringup"],"source_refs":[{"relation":"adapted","source_id":"cnsa-satellite-platform","locator":"测控、数据管理和姿态轨道控制等平台功能"}]},
-        {"id":"atlas.embedded.rtos","title":"RTOS 任务、内存与状态机","track":"software","stable_definition":"用任务优先级、有限队列、静态内存和状态机管理并发设备行为与异常恢复。","engineering_role":"让关键功能在资源受限设备上保持可预测，不依赖偶然的延时循环。","practice":"设计采集、控制、通信三任务系统，记录队列水位、栈余量和异常状态迁移。","validation":"measurement","validation_note":"在压力输入下测量最大执行时间、队列溢出和任务饥饿。","volatility":"stable","requires":["atlas.embedded.bus-drivers"],"source_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"避免动态分配、页故障和无限阻塞的实时实践原则"}]},
-        {"id":"atlas.embedded.linux-driver","title":"嵌入式 Linux 与驱动边界","track":"software","stable_definition":"在用户态服务、内核驱动、设备树、文件/网络接口之间选择合适边界，并建立可诊断的设备路径。","engineering_role":"承接复杂网络、存储和上位机能力，同时保留对硬件的可控访问。","practice":"为一个外设建立用户态采集服务或简易驱动接口，并记录启动、权限和异常恢复。","validation":"integration","validation_note":"在设备重枚举或服务重启后验证数据和状态一致性。","volatility":"evolving","requires":["atlas.embedded.bus-drivers"],"source_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"实时 Linux 的调度、锁和中断上下文"}]},
-        {"id":"atlas.embedded.latency","title":"截止期与抖动测量","track":"control","stable_definition":"为关键执行路径定义周期、最大延迟、抖动、优先级和超时处置，并用数据而非平均值判断。","engineering_role":"把“实时”从宣传语变成系统可验收约束。","practice":"对 MCU 定时任务或 PREEMPT_RT Linux 线程做持续负载测试，采集最大/分位延迟。","validation":"measurement","validation_note":"在 I/O、网络和计算负载同时存在时报告最坏值、而非仅空闲结果。","volatility":"evolving","requires":["atlas.embedded.rtos","atlas.embedded.linux-driver"],"source_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"高优先级任务调度、优先级继承和可抢占路径"},{"relation":"adapted","source_id":"ros2-realtime","locator":"截止期与最大抖动的实时定义"}]},
-        {"id":"atlas.embedded.hil-recovery","title":"台架、故障恢复与版本控制","track":"assurance","stable_definition":"以台架自动化、故障注入、日志和受控升级验证嵌入式设备在长期运行中的恢复能力。","engineering_role":"降低实物调试成本，使现场问题能被复现而非只能重刷固件。","practice":"建立可自动供电循环、模拟总线故障和收集串口日志的小台架。","validation":"simulation","validation_note":"对断电、通信中断、数据异常和升级失败分别演练恢复。","volatility":"stable","requires":["atlas.embedded.latency"],"source_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"状态、日志、单元测试和集成验证工程样本"}]}
+        {
+          "id": "atlas.embedded.bringup",
+          "title": "C/C++ 与板级 Bring-up",
+          "track": "software",
+          "stable_definition": "用启动日志、寄存器/外设配置、断点和最小驱动确认处理器与板卡处于可控状态。",
+          "engineering_role": "建立能定位硬件与软件边界问题的固件起点。",
+          "practice": "在一块开发板上完成时钟、串口日志、GPIO 和异常处理的最小启动工程。",
+          "validation": "integration",
+          "validation_note": "断电重启后能重复输出版本、时钟和外设自检结果。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "电子技术、计算机技术与工程实践方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.embedded.bus-drivers",
+          "title": "外设、总线与驱动",
+          "track": "electronics",
+          "stable_definition": "在中断、DMA、缓冲和错误恢复约束下实现设备驱动及 CAN、UART、SPI、I2C 等通信。",
+          "engineering_role": "让传感器、执行器和上位机之间形成稳定可诊断的物理/协议接口。",
+          "practice": "实现一个带超时、校验和错误计数的传感器驱动，并提供回环测试工具。",
+          "validation": "integration",
+          "validation_note": "用正常、坏包、拔插和速率变化验证恢复路径。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.embedded.bringup"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cnsa-satellite-platform",
+              "locator": "测控、数据管理和姿态轨道控制等平台功能"
+            }
+          ]
+        },
+        {
+          "id": "atlas.embedded.rtos",
+          "title": "RTOS 任务、内存与状态机",
+          "track": "software",
+          "stable_definition": "用任务优先级、有限队列、静态内存和状态机管理并发设备行为与异常恢复。",
+          "engineering_role": "让关键功能在资源受限设备上保持可预测，不依赖偶然的延时循环。",
+          "practice": "设计采集、控制、通信三任务系统，记录队列水位、栈余量和异常状态迁移。",
+          "validation": "measurement",
+          "validation_note": "在压力输入下测量最大执行时间、队列溢出和任务饥饿。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.embedded.bus-drivers"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "避免动态分配、页故障和无限阻塞的实时实践原则"
+            }
+          ]
+        },
+        {
+          "id": "atlas.embedded.linux-driver",
+          "title": "嵌入式 Linux 与驱动边界",
+          "track": "software",
+          "stable_definition": "在用户态服务、内核驱动、设备树、文件/网络接口之间选择合适边界，并建立可诊断的设备路径。",
+          "engineering_role": "承接复杂网络、存储和上位机能力，同时保留对硬件的可控访问。",
+          "practice": "为一个外设建立用户态采集服务或简易驱动接口，并记录启动、权限和异常恢复。",
+          "validation": "integration",
+          "validation_note": "在设备重枚举或服务重启后验证数据和状态一致性。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.embedded.bus-drivers"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时 Linux 的调度、锁和中断上下文"
+            }
+          ]
+        },
+        {
+          "id": "atlas.embedded.latency",
+          "title": "截止期与抖动测量",
+          "track": "control",
+          "stable_definition": "为关键执行路径定义周期、最大延迟、抖动、优先级和超时处置，并用数据而非平均值判断。",
+          "engineering_role": "把“实时”从宣传语变成系统可验收约束。",
+          "practice": "对 MCU 定时任务或 PREEMPT_RT Linux 线程做持续负载测试，采集最大/分位延迟。",
+          "validation": "measurement",
+          "validation_note": "在 I/O、网络和计算负载同时存在时报告最坏值、而非仅空闲结果。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.embedded.rtos",
+            "atlas.embedded.linux-driver"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "高优先级任务调度、优先级继承和可抢占路径"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "截止期与最大抖动的实时定义"
+            }
+          ]
+        },
+        {
+          "id": "atlas.embedded.hil-recovery",
+          "title": "台架、故障恢复与版本控制",
+          "track": "assurance",
+          "stable_definition": "以台架自动化、故障注入、日志和受控升级验证嵌入式设备在长期运行中的恢复能力。",
+          "engineering_role": "降低实物调试成本，使现场问题能被复现而非只能重刷固件。",
+          "practice": "建立可自动供电循环、模拟总线故障和收集串口日志的小台架。",
+          "validation": "simulation",
+          "validation_note": "对断电、通信中断、数据异常和升级失败分别演练恢复。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.embedded.latency"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "状态、日志、单元测试和集成验证工程样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.embedded.bringup","to":"atlas.embedded.bus-drivers","relation":"requires","rationale":"先确认启动、时钟和基本调试路径，才能判断总线驱动问题。","evidence_refs":[{"relation":"adapted","source_id":"cnsa-satellite-platform","locator":"平台的控制、测控和数据管理功能"}]},
-        {"from":"atlas.embedded.bus-drivers","to":"atlas.embedded.rtos","relation":"requires","rationale":"任务设计必须基于设备 I/O 的中断、缓冲和错误语义。","evidence_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"实时路径中的内存和同步约束"}]},
-        {"from":"atlas.embedded.bus-drivers","to":"atlas.embedded.linux-driver","relation":"requires","rationale":"Linux 边界选择仍以设备通信、时序和错误恢复需求为依据。","evidence_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"实时内核的调度和中断处理"}]},
-        {"from":"atlas.embedded.rtos","to":"atlas.embedded.latency","relation":"requires","rationale":"测量周期和抖动前要明确任务优先级、队列和资源上界。","evidence_refs":[{"relation":"adapted","source_id":"ros2-realtime","locator":"截止期、抖动与避免非确定性操作"}]},
-        {"from":"atlas.embedded.linux-driver","to":"atlas.embedded.latency","relation":"requires","rationale":"Linux 实时性结论必须覆盖驱动、中断和用户态路径。","evidence_refs":[{"relation":"adapted","source_id":"linux-preempt-rt","locator":"抢占、锁与中断线程化"}]},
-        {"from":"atlas.embedded.latency","to":"atlas.embedded.hil-recovery","relation":"requires","rationale":"故障台架应同时验证功能恢复和关键时间边界。","evidence_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"状态、日志与集成测试工程样本"}]}
+        {
+          "from": "atlas.embedded.bringup",
+          "to": "atlas.embedded.bus-drivers",
+          "relation": "requires",
+          "rationale": "先确认启动、时钟和基本调试路径，才能判断总线驱动问题。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cnsa-satellite-platform",
+              "locator": "平台的控制、测控和数据管理功能"
+            }
+          ]
+        },
+        {
+          "from": "atlas.embedded.bus-drivers",
+          "to": "atlas.embedded.rtos",
+          "relation": "requires",
+          "rationale": "任务设计必须基于设备 I/O 的中断、缓冲和错误语义。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "实时路径中的内存和同步约束"
+            }
+          ]
+        },
+        {
+          "from": "atlas.embedded.bus-drivers",
+          "to": "atlas.embedded.linux-driver",
+          "relation": "requires",
+          "rationale": "Linux 边界选择仍以设备通信、时序和错误恢复需求为依据。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时内核的调度和中断处理"
+            }
+          ]
+        },
+        {
+          "from": "atlas.embedded.rtos",
+          "to": "atlas.embedded.latency",
+          "relation": "requires",
+          "rationale": "测量周期和抖动前要明确任务优先级、队列和资源上界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "截止期、抖动与避免非确定性操作"
+            }
+          ]
+        },
+        {
+          "from": "atlas.embedded.linux-driver",
+          "to": "atlas.embedded.latency",
+          "relation": "requires",
+          "rationale": "Linux 实时性结论必须覆盖驱动、中断和用户态路径。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "抢占、锁与中断线程化"
+            }
+          ]
+        },
+        {
+          "from": "atlas.embedded.latency",
+          "to": "atlas.embedded.hil-recovery",
+          "relation": "requires",
+          "rationale": "故障台架应同时验证功能恢复和关键时间边界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "状态、日志与集成测试工程样本"
+            }
+          ]
+        }
       ]
     },
     {
@@ -140,21 +1316,2617 @@
       "view_kind": "career",
       "summary": "从可测量的板级和数据通路出发，连接电源/信号、传感采集、FPGA/SoC 和 AI/数值计算加速。",
       "nodes": [
-        {"id":"atlas.hw.measurement","title":"硬件测量与误差预算","track":"electronics","stable_definition":"量化电压、时钟、噪声、温度和采集误差，明确测试方法本身的边界。","engineering_role":"让性能和精度讨论建立在可靠测量之上。","practice":"为一块采集/计算板建立关键电源、时钟和温度的测试记录模板。","validation":"measurement","validation_note":"每项数据都保留仪器、探头、带宽和环境条件。","volatility":"stable","requires":[],"source_refs":[{"relation":"adapted","source_id":"buaa-automation","locator":"电子技术、仪器仪表和工程实践方向"}]},
-        {"id":"atlas.hw.pcb-integrity","title":"PCB、电源与高速接口","track":"electronics","stable_definition":"用布局布线、回流、去耦、阻抗和接口约束控制板级电源与高速数据路径。","engineering_role":"为 FPGA、SoC、传感和高速存储提供能长期稳定工作的物理基础。","practice":"设计包含高速接口或多电源域的小板，并完成上电、回环和热测试。","validation":"measurement","validation_note":"以实测纹波、眼图/误码或回环结果验证关键约束。","volatility":"stable","requires":["atlas.hw.measurement"],"source_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上综合电子、供电和数据传输能力"}]},
-        {"id":"atlas.hw.acquisition-dsp","title":"采集、DSP 与定点实现","track":"compute","stable_definition":"将模拟/数字采集、滤波、频谱或特征计算映射到有限字宽、带宽和延迟的实现。","engineering_role":"在数据进入 CPU/GPU 前控制信号质量、数据率和实时计算量。","practice":"用定点或流式方式实现一个滤波/特征提取模块，并比较误差和吞吐。","validation":"benchmark","validation_note":"同时报告数值误差、数据率和处理延迟。","volatility":"evolving","requires":["atlas.hw.measurement"],"source_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量信息、数据处理和时间统一系统"}]},
-        {"id":"atlas.hw.fpga-pipeline","title":"FPGA 并行数据通路","track":"compute","stable_definition":"把流式计算、缓存、时钟域和背压设计为可综合、可仿真、可测吞吐的硬件流水线。","engineering_role":"满足高数据率或确定延迟需求，并提供给 SoC/上位机明确接口。","practice":"实现带背压的 FPGA 流式处理模块，生成仿真波形和板上吞吐测试。","validation":"benchmark","validation_note":"验证功能向量、时序收敛、最大吞吐和溢出/背压行为。","volatility":"evolving","requires":["atlas.hw.pcb-integrity","atlas.hw.acquisition-dsp"],"source_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"星上综合电子与数据传输能力"}]},
-        {"id":"atlas.hw.heterogeneous","title":"SoC / GPU 异构协同","track":"compute","stable_definition":"在 CPU、FPGA、GPU/NPU 和内存/总线间划分控制、数据搬运与计算任务，并测量真实瓶颈。","engineering_role":"让高算力方案服务端到端约束，而非只追求某个芯片的峰值指标。","practice":"将预处理、加速计算和控制/展示拆到不同处理单元，测量复制、排队和计算时间。","validation":"benchmark","validation_note":"报告端到端延迟与每段占比，比较不同批量/并发的取舍。","volatility":"evolving","requires":["atlas.hw.fpga-pipeline"],"source_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"主机、数据传输、GPU 计算和端到端延迟定义"}]},
-        {"id":"atlas.hw.design-verification","title":"设计验证与环境可靠性","track":"assurance","stable_definition":"通过仿真、边界测试、热/电源/接口压力和版本追溯验证硬件方案的功能与性能余量。","engineering_role":"防止单次实验室成功掩盖环境、批次和集成风险。","practice":"为加速板建立仿真向量、板上自测、温度/供电压力和回归基线。","validation":"simulation","validation_note":"每次硬件或固件版本变化后可自动复跑关键验证集。","volatility":"stable","requires":["atlas.hw.heterogeneous"],"source_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"接口、测试与集成验证工程样本"}]}
+        {
+          "id": "atlas.hw.measurement",
+          "title": "硬件测量与误差预算",
+          "track": "electronics",
+          "stable_definition": "量化电压、时钟、噪声、温度和采集误差，明确测试方法本身的边界。",
+          "engineering_role": "让性能和精度讨论建立在可靠测量之上。",
+          "practice": "为一块采集/计算板建立关键电源、时钟和温度的测试记录模板。",
+          "validation": "measurement",
+          "validation_note": "每项数据都保留仪器、探头、带宽和环境条件。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "电子技术、仪器仪表和工程实践方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.hw.pcb-integrity",
+          "title": "PCB、电源与高速接口",
+          "track": "electronics",
+          "stable_definition": "用布局布线、回流、去耦、阻抗和接口约束控制板级电源与高速数据路径。",
+          "engineering_role": "为 FPGA、SoC、传感和高速存储提供能长期稳定工作的物理基础。",
+          "practice": "设计包含高速接口或多电源域的小板，并完成上电、回环和热测试。",
+          "validation": "measurement",
+          "validation_note": "以实测纹波、眼图/误码或回环结果验证关键约束。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.hw.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上综合电子、供电和数据传输能力"
+            }
+          ]
+        },
+        {
+          "id": "atlas.hw.acquisition-dsp",
+          "title": "采集、DSP 与定点实现",
+          "track": "compute",
+          "stable_definition": "将模拟/数字采集、滤波、频谱或特征计算映射到有限字宽、带宽和延迟的实现。",
+          "engineering_role": "在数据进入 CPU/GPU 前控制信号质量、数据率和实时计算量。",
+          "practice": "用定点或流式方式实现一个滤波/特征提取模块，并比较误差和吞吐。",
+          "validation": "benchmark",
+          "validation_note": "同时报告数值误差、数据率和处理延迟。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.hw.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量信息、数据处理和时间统一系统"
+            }
+          ]
+        },
+        {
+          "id": "atlas.hw.fpga-pipeline",
+          "title": "FPGA 并行数据通路",
+          "track": "compute",
+          "stable_definition": "把流式计算、缓存、时钟域和背压设计为可综合、可仿真、可测吞吐的硬件流水线。",
+          "engineering_role": "满足高数据率或确定延迟需求，并提供给 SoC/上位机明确接口。",
+          "practice": "实现带背压的 FPGA 流式处理模块，生成仿真波形和板上吞吐测试。",
+          "validation": "benchmark",
+          "validation_note": "验证功能向量、时序收敛、最大吞吐和溢出/背压行为。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.hw.pcb-integrity",
+            "atlas.hw.acquisition-dsp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "星上综合电子与数据传输能力"
+            }
+          ]
+        },
+        {
+          "id": "atlas.hw.heterogeneous",
+          "title": "SoC / GPU 异构协同",
+          "track": "compute",
+          "stable_definition": "在 CPU、FPGA、GPU/NPU 和内存/总线间划分控制、数据搬运与计算任务，并测量真实瓶颈。",
+          "engineering_role": "让高算力方案服务端到端约束，而非只追求某个芯片的峰值指标。",
+          "practice": "将预处理、加速计算和控制/展示拆到不同处理单元，测量复制、排队和计算时间。",
+          "validation": "benchmark",
+          "validation_note": "报告端到端延迟与每段占比，比较不同批量/并发的取舍。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.hw.fpga-pipeline"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "主机、数据传输、GPU 计算和端到端延迟定义"
+            }
+          ]
+        },
+        {
+          "id": "atlas.hw.design-verification",
+          "title": "设计验证与环境可靠性",
+          "track": "assurance",
+          "stable_definition": "通过仿真、边界测试、热/电源/接口压力和版本追溯验证硬件方案的功能与性能余量。",
+          "engineering_role": "防止单次实验室成功掩盖环境、批次和集成风险。",
+          "practice": "为加速板建立仿真向量、板上自测、温度/供电压力和回归基线。",
+          "validation": "simulation",
+          "validation_note": "每次硬件或固件版本变化后可自动复跑关键验证集。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.hw.heterogeneous"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "接口、测试与集成验证工程样本"
+            }
+          ]
+        }
       ],
       "edges": [
-        {"from":"atlas.hw.measurement","to":"atlas.hw.pcb-integrity","relation":"requires","rationale":"板级约束必须有可重复的测量方式才能验证。","evidence_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"供电、综合电子与数据传输能力"}]},
-        {"from":"atlas.hw.measurement","to":"atlas.hw.acquisition-dsp","relation":"requires","rationale":"采集和数值误差必须先有时间、电压和噪声测量基线。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量、时间统一和计算处理系统"}]},
-        {"from":"atlas.hw.pcb-integrity","to":"atlas.hw.fpga-pipeline","relation":"requires","rationale":"高速流水线依赖稳定供电、时钟和物理接口。","evidence_refs":[{"relation":"adapted","source_id":"cast-platform","locator":"综合电子与高效供电能力"}]},
-        {"from":"atlas.hw.acquisition-dsp","to":"atlas.hw.fpga-pipeline","relation":"requires","rationale":"硬件流水线的位宽、缓存和吞吐目标来自采集与算法数据特征。","evidence_refs":[{"relation":"adapted","source_id":"cmse-ttc-network","locator":"测量信息的计算处理"}]},
-        {"from":"atlas.hw.fpga-pipeline","to":"atlas.hw.heterogeneous","relation":"requires","rationale":"异构划分要基于已量化的数据通路与接口瓶颈。","evidence_refs":[{"relation":"adapted","source_id":"tensorrt-benchmark","locator":"计算、传输和端到端性能的测量边界"}]},
-        {"from":"atlas.hw.heterogeneous","to":"atlas.hw.design-verification","relation":"requires","rationale":"组合系统的性能与可靠性必须在完整数据搬运和热/电源条件下验证。","evidence_refs":[{"relation":"adapted","source_id":"nasa-fprime","locator":"组件接口和集成测试工程样本"}]}
+        {
+          "from": "atlas.hw.measurement",
+          "to": "atlas.hw.pcb-integrity",
+          "relation": "requires",
+          "rationale": "板级约束必须有可重复的测量方式才能验证。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "供电、综合电子与数据传输能力"
+            }
+          ]
+        },
+        {
+          "from": "atlas.hw.measurement",
+          "to": "atlas.hw.acquisition-dsp",
+          "relation": "requires",
+          "rationale": "采集和数值误差必须先有时间、电压和噪声测量基线。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量、时间统一和计算处理系统"
+            }
+          ]
+        },
+        {
+          "from": "atlas.hw.pcb-integrity",
+          "to": "atlas.hw.fpga-pipeline",
+          "relation": "requires",
+          "rationale": "高速流水线依赖稳定供电、时钟和物理接口。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "综合电子与高效供电能力"
+            }
+          ]
+        },
+        {
+          "from": "atlas.hw.acquisition-dsp",
+          "to": "atlas.hw.fpga-pipeline",
+          "relation": "requires",
+          "rationale": "硬件流水线的位宽、缓存和吞吐目标来自采集与算法数据特征。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量信息的计算处理"
+            }
+          ]
+        },
+        {
+          "from": "atlas.hw.fpga-pipeline",
+          "to": "atlas.hw.heterogeneous",
+          "relation": "requires",
+          "rationale": "异构划分要基于已量化的数据通路与接口瓶颈。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "计算、传输和端到端性能的测量边界"
+            }
+          ]
+        },
+        {
+          "from": "atlas.hw.heterogeneous",
+          "to": "atlas.hw.design-verification",
+          "relation": "requires",
+          "rationale": "组合系统的性能与可靠性必须在完整数据搬运和热/电源条件下验证。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件接口和集成测试工程样本"
+            }
+          ]
+        }
       ]
+    },
+    {
+      "id": "target-realtime-software",
+      "title": "实时软件与数据路径",
+      "view_kind": "target",
+      "summary": "软件侧约束：C/C++、有界队列、最坏延迟、端到端时间预算和工程化；不用平均 QPS 替代周期验收。",
+      "nodes": [
+        {
+          "id": "atlas.target.cs.toolchain",
+          "title": "C/C++ 构建与调试",
+          "track": "software",
+          "stable_definition": "用语言、编译器、版本控制和调试器交付可复现的程序。",
+          "engineering_role": "航天软件岗几乎都以 C/C++ 为工作语言，这是后续飞控、遥测和仿真代码的共同工作台。",
+          "practice": "做一个跨平台命令行工具：构建、断点、日志、单元测试各跑通一次。",
+          "validation": "integration",
+          "validation_note": "在全新目录中构建并让测试自动通过。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "任职要求中的 C/C++ 与 IDE"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "程序设计与软件工程实践"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.cs.data-concurrency",
+          "title": "有界队列与并发调度",
+          "track": "software",
+          "stable_definition": "在有限内存下组织数据与任务，使周期性和突发数据可预测交接。",
+          "engineering_role": "飞控、遥测和地面处理都靠队列与优先级，而不是无限堆内存。",
+          "practice": "实现有容量上限的生产者/消费者队列，记录吞吐、等待和丢弃策略。",
+          "validation": "benchmark",
+          "validation_note": "用压力输入比较锁策略的延迟分位数。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.cs.toolchain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "时序特性设计与任务资源分配"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "线程与队列组件样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.cs.os-network",
+          "title": "地面接口与网络协议",
+          "track": "software",
+          "stable_definition": "用套接字、超时和结构化帧连接模拟设备、地面站或试验台。",
+          "engineering_role": "测控与地面站要把弹上数据变成可显示、可回放、可审计的流。",
+          "practice": "做带超时、重连和日志的 TCP 遥测接收器。",
+          "validation": "integration",
+          "validation_note": "断网、乱序和错包后仍能恢复并留证据。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.cs.toolchain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "数据交换与监控显示"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "地面站通信、解析与回放"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.cs.data-pipeline",
+          "title": "带时标的数据管线",
+          "track": "compute",
+          "stable_definition": "把采集、排队、解算、存储和显示做成有时间边界的路径。",
+          "engineering_role": "地面处理与半实物台架必须报告端到端延迟，而不是只报某个函数。",
+          "practice": "把模拟惯组、队列、解算和显示串起来，每个包打时间戳。",
+          "validation": "benchmark",
+          "validation_note": "报告端到端延迟、吞吐和丢包。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.cs.data-concurrency",
+            "atlas.target.cs.os-network"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "仿真时序、协议与地面应用软件"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量信息的计算处理"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.cs.observability",
+          "title": "试验数据与缺陷定位",
+          "track": "assurance",
+          "stable_definition": "用日志、指标和回放把异常路径变成可检查证据。",
+          "engineering_role": "型号软件出问题必须能追到输入、版本和时序，不能靠口述。",
+          "practice": "为管线加延迟直方图、队列深度和错误分类，并定位一次人为退化。",
+          "validation": "measurement",
+          "validation_note": "提交复现步骤、基线、改动和回归结果。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.cs.data-pipeline"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "日志与单元/集成测试"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "仿真测试与问题定位"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.cs.integration",
+          "title": "软件工程化与配置管理",
+          "track": "assurance",
+          "stable_definition": "把需求、接口、版本、测试和变更连成可复核过程。",
+          "engineering_role": "航天软件岗普遍要求过程素养：版本控制、需求/设计/测试文档，而不是只交可执行文件。",
+          "practice": "为前述管线建立需求-测试对照表、版本标签和变更记录，并让未参与者按文档复现。",
+          "validation": "review",
+          "validation_note": "随机抽一个异常能追到需求、版本和测试。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.cs.observability"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "GJB5000A 与软件工程化管理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "uml-gjb5000a",
+              "locator": "配置管理与需求管理的公开过程素养"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "可复现的组件测试样本"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.cs.toolchain",
+          "to": "atlas.target.cs.data-concurrency",
+          "relation": "requires",
+          "rationale": "没有稳定构建和调试，无法观察队列的真实时序。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "C/C++ 工程实现"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.cs.toolchain",
+          "to": "atlas.target.cs.os-network",
+          "relation": "requires",
+          "rationale": "地面接口实验依赖编译、调试和版本控制。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "飞控与地面站软件开发"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.cs.data-concurrency",
+          "to": "atlas.target.cs.data-pipeline",
+          "relation": "requires",
+          "rationale": "管线需要有界缓存和任务交接。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "任务资源分配"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.cs.os-network",
+          "to": "atlas.target.cs.data-pipeline",
+          "relation": "requires",
+          "rationale": "真实数据路径必须处理连接、超时和错帧。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "数据交换"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.cs.data-pipeline",
+          "to": "atlas.target.cs.observability",
+          "relation": "requires",
+          "rationale": "没有完整输入到输出路径，指标没有工程含义。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "仿真测试"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.cs.observability",
+          "to": "atlas.target.cs.integration",
+          "relation": "requires",
+          "rationale": "工程化过程要指向真实试验证据。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "uml-gjb5000a",
+              "locator": "配置管理建立工作产品完整性"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-avionics-bus",
+      "title": "弹上电子与总线",
+      "view_kind": "target",
+      "summary": "综合电子岗要的是测得准、CAN/RS-422 连得上、惯组数据可信，并能在整板上联调，而不是只会点灯。",
+      "nodes": [
+        {
+          "id": "atlas.target.ei.measurement",
+          "title": "电路测量与故障定位",
+          "track": "electronics",
+          "stable_definition": "用万用表、示波器和逻辑分析判断电源、时序和信号是否符合设计。",
+          "engineering_role": "避免把硬件故障当成飞控软件缺陷。",
+          "practice": "搭建稳压与时钟小板，记录纹波、上电时序和三类人为故障的定位。",
+          "validation": "measurement",
+          "validation_note": "保留波形、量程/探头设置和判定依据。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "电子技术与仪器仪表"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "电气接口与软硬件调试"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ei.mcu-interfaces",
+          "title": "MCU 与现场总线",
+          "track": "electronics",
+          "stable_definition": "用 UART、SPI、I2C、CAN 或 RS-422 连接传感器与执行器，并处理错误帧。",
+          "engineering_role": "航天综合电子和飞控软件岗都把 CAN、RS-422/485 当作日常接口；1553B 是同类命令总线的军用形态。",
+          "practice": "用 MCU 采集 IMU，完成中断/DMA、CAN 或 RS-422 帧和掉线诊断。",
+          "validation": "integration",
+          "validation_note": "用逻辑分析仪对照时序，并可复现错误帧处理。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.ei.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "CAN、RS422/485 总线特性"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "串口、CAN 等常用电气接口"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ei.power-signal",
+          "title": "供电、PCB 与信号完整性",
+          "track": "electronics",
+          "stable_definition": "在布局布线和供电回路上控制噪声、压降和回流。",
+          "engineering_role": "弹上电子必须在真实供电和接地条件下长期稳定，而不是开发板上偶然可用。",
+          "practice": "完成一块两层或四层采集控制板，做上电、纹波和接口回环。",
+          "validation": "measurement",
+          "validation_note": "对照设计约束测量关键电源和信号。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.ei.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "综合电子与高效供电"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "配电与接口硬件设计"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ei.sensor-chain",
+          "title": "惯性与遥测采集链",
+          "track": "control",
+          "stable_definition": "理解传感器、前端、时间戳和标定如何决定观测质量。",
+          "engineering_role": "组合导航和飞控都建立在可信的惯组/测时数据上。",
+          "practice": "对 IMU 做静态标定、噪声统计和时间戳一致性检查。",
+          "validation": "measurement",
+          "validation_note": "输出标定参数、误差曲线和采集脚本。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.ei.mcu-interfaces"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性器件误差建模与标定补偿"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-network",
+              "locator": "测量与时间统一"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ei.dsp-fpga",
+          "title": "DSP / FPGA 数据通路",
+          "track": "compute",
+          "stable_definition": "把确定时序或高数据率处理拆成可综合、可仿真的通路，并与 CPU 软件分界。",
+          "engineering_role": "综合电子和数据链岗把 FPGA/DSP 作为 CPU 不够用时的扩展，不是所有人的第一块板。",
+          "practice": "实现一个滤波或采集通路，测量吞吐、延迟和溢出保护。",
+          "validation": "benchmark",
+          "validation_note": "先用向量/波形证明数值，再报吞吐。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.ei.power-signal",
+            "atlas.target.ei.sensor-chain"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "FPGA 编码、仿真与算法实现"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "FPGA、DSP、ARM 平台"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ei.board-system",
+          "title": "综合电子联调",
+          "track": "assurance",
+          "stable_definition": "把板卡、固件、采集链和上位机作为一个系统做接口与故障验证。",
+          "engineering_role": "综合电子总体要在接口协议确定后把底层驱动和应用层联起来。",
+          "practice": "建立冒烟测试、总线回环、长时运行和失电恢复清单。",
+          "validation": "integration",
+          "validation_note": "无人工干预的长时运行中记录重启、丢帧和恢复。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.ei.sensor-chain",
+            "atlas.target.ei.power-signal"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "综合电子调试、联试与接口落实"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "接口与集成测试样本"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.ei.measurement",
+          "to": "atlas.target.ei.mcu-interfaces",
+          "relation": "requires",
+          "rationale": "没有测量就无法区分配置错误、供电问题和总线时序问题。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "软硬件调试"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.measurement",
+          "to": "atlas.target.ei.power-signal",
+          "relation": "requires",
+          "rationale": "供电和 PCB 约束必须用波形闭环。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "供电与综合电子"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.mcu-interfaces",
+          "to": "atlas.target.ei.sensor-chain",
+          "relation": "requires",
+          "rationale": "采集链需要可靠的触发、搬运和错误处理。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性器件与数据采集"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.power-signal",
+          "to": "atlas.target.ei.dsp-fpga",
+          "relation": "requires",
+          "rationale": "高速通路依赖可工作的供电和时钟。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "FPGA 与硬件平台"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.sensor-chain",
+          "to": "atlas.target.ei.dsp-fpga",
+          "relation": "requires",
+          "rationale": "加速链必须先明确输入质量和时间边界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "底层 FPGA 与应用分界"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.sensor-chain",
+          "to": "atlas.target.ei.board-system",
+          "relation": "requires",
+          "rationale": "整板联调建立在可信采集链上。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "联试"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.power-signal",
+          "to": "atlas.target.ei.board-system",
+          "relation": "requires",
+          "rationale": "整板必须在真实供电下验收。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "配电接口"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ei.dsp-fpga",
+          "to": "atlas.target.ei.board-system",
+          "relation": "enables",
+          "rationale": "有 FPGA/DSP 通路时再把它纳入整板验收，不作为大众联调的闸门。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "FPGA 调试"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-vehicle-engineering",
+      "title": "弹箭与飞航研制",
+      "view_kind": "target",
+      "summary": "对照某所测发控/电气抓总与同族飞航公开研制链：接口、六自由度、动力时序、测发控、半实物。闭环用控制周期最坏值验收。",
+      "nodes": [
+        {
+          "id": "atlas.target.vehicle.mission-interface",
+          "title": "总体、时序与接口基线",
+          "track": "assurance",
+          "stable_definition": "把飞行剖面拆成输入、输出、时限、接口、异常和验收，而不是先选芯片。",
+          "engineering_role": "总体所和控制系统的共同语言是接口和时序，避免弹上、地面、测发控各自假设。",
+          "practice": "写一份模拟运载火箭升空段接口包：遥测字典、时序、状态机和故障清单。",
+          "validation": "review",
+          "validation_note": "另一人仅依据接口包实现兼容模拟器。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "calt-2027",
+              "locator": "航天运输与系统仿真方向"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "接口、需求与验证"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "遥测遥控与天地通信职责"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.vehicle.six-dof",
+          "title": "飞行力学与六自由度仿真",
+          "track": "control",
+          "stable_definition": "用刚体动力学把力、力矩变成可积分的位置、速度和姿态时间史。",
+          "engineering_role": "弹道、控制和半实物岗都要求能建飞行动力学模型，而不是只调 PID。",
+          "practice": "实现或集成一个六自由度质心+姿态模型，输出一条可复现轨迹。",
+          "validation": "simulation",
+          "validation_note": "对照解析重力转弯或公开弹道算例检查残差。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.vehicle.mission-interface"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "jsbsim",
+              "locator": "飞行动力学建模"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "飞行力学与仿真建模"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "飞行器动力学与控制系统仿真"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.vehicle.propulsion-interface",
+          "title": "推进与能源接口",
+          "track": "electronics",
+          "stable_definition": "把推进和供配电看成带时序、状态和遥测的受控对象，而不是化学配方。",
+          "engineering_role": "飞控软件通过指令、阀门状态和压力/电流遥测与动力系统耦合。",
+          "practice": "为模拟发动机写点火/节流/关机时序表，并注入延迟与状态不一致。",
+          "validation": "integration",
+          "validation_note": "非法时序不得进入点火，且留下审计记录。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.vehicle.mission-interface"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "高效供电与平台功能"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "运载火箭飞控与执行机构接口"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.vehicle.ttc-launch",
+          "title": "测发控与遥测遥控",
+          "track": "software",
+          "stable_definition": "把发射流程、遥控指令和遥测监视做成可追踪的命令与数据链。",
+          "engineering_role": "测控网和地面站让飞行状态可见、可控、可回放。",
+          "practice": "实现本地测发控台：模拟器发包、命令队列、状态灯和回放文件。",
+          "validation": "integration",
+          "validation_note": "错包、断链、重复发射指令时不得误动作。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.vehicle.mission-interface"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "遥测、遥控和运行管理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "yamcs-quickstart",
+              "locator": "开源测控框架样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "地面站监控、参数与日志"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.vehicle.hil",
+          "title": "数字仿真与半实物试验",
+          "track": "assurance",
+          "stable_definition": "用模型、软件在环和硬件在环验证接口、时序、控制和故障。",
+          "engineering_role": "航天一院和科工 GNC/仿真岗把半实物当作控制律落地前的主战场。",
+          "practice": "把六自由度模型、飞控软件和总线模拟器闭环，并注入惯组噪声、执行延迟和链路中断。",
+          "validation": "simulation",
+          "validation_note": "每项故障有预期、观测、判定和回归脚本。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.vehicle.six-dof",
+            "atlas.target.vehicle.propulsion-interface",
+            "atlas.target.vehicle.ttc-launch"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "半物理仿真架构、时序与协议"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "硬件在环试验"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "SIL/HIL 工程样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.vehicle.assurance",
+          "title": "产品保证与试验追溯",
+          "track": "assurance",
+          "stable_definition": "把需求、接口、版本、试验记录和故障处置连成可复核链路。",
+          "engineering_role": "长周期高代价系统靠证据链工作，不靠个人记忆。",
+          "practice": "为模拟飞行建立需求-试验矩阵、版本锁定和一次完整复盘。",
+          "validation": "review",
+          "validation_note": "随机抽一个异常能追到命令、版本、试验和处置。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.vehicle.hil"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "验证与技术状态"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "uml-gjb5000a",
+              "locator": "配置管理与质量保证过程素养"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "软件工程化与测试过程"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.vehicle.mission-interface",
+          "to": "atlas.target.vehicle.six-dof",
+          "relation": "requires",
+          "rationale": "没有剖面和接口，弹道仿真没有验收对象。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "需求与验证"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.mission-interface",
+          "to": "atlas.target.vehicle.propulsion-interface",
+          "relation": "requires",
+          "rationale": "推进时序取决于总体规定的事件和禁止条件。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "飞控需求分析"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.mission-interface",
+          "to": "atlas.target.vehicle.ttc-launch",
+          "relation": "requires",
+          "rationale": "遥测字段和发射流程必须先有可评审接口。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "测控通信职责"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.six-dof",
+          "to": "atlas.target.vehicle.hil",
+          "relation": "requires",
+          "rationale": "半实物需要可实时运行的动力学模型。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "动力学建模与仿真平台"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.propulsion-interface",
+          "to": "atlas.target.vehicle.hil",
+          "relation": "requires",
+          "rationale": "闭环试验必须包含动力/能源状态机。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "系统集成"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.ttc-launch",
+          "to": "atlas.target.vehicle.hil",
+          "relation": "requires",
+          "rationale": "台架要验证命令与遥测，而不只是解算。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "yamcs-quickstart",
+              "locator": "测控数据链"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.vehicle.hil",
+          "to": "atlas.target.vehicle.assurance",
+          "relation": "requires",
+          "rationale": "追溯应指向真实试验输入和结论。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "uml-gjb5000a",
+              "locator": "工作产品完整性"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-gnc",
+      "title": "制导导航与控制",
+      "view_kind": "target",
+      "summary": "对照某所全程制导控制：控制周期内完成捷联、姿态、程序制导与组合导航；半实物看最坏抖动，不看平均帧率。",
+      "nodes": [
+        {
+          "id": "atlas.target.gnc.imu",
+          "title": "惯性器件与误差建模",
+          "track": "control",
+          "stable_definition": "用标定、零偏、随机游走和温度项把 IMU 输出变成可补偿观测。",
+          "engineering_role": "组合导航岗把误差建模和标定补偿当作算法入口。",
+          "practice": "对 MEMS IMU 做静态标定，估计零偏和噪声密度。",
+          "validation": "measurement",
+          "validation_note": "保留数据集、残差和复测。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性器件误差建模、标定及补偿"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "仪器与控制交叉"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.gnc.ins",
+          "title": "捷联惯性导航解算",
+          "track": "control",
+          "stable_definition": "把角速度和比力积成姿态、速度和位置，并处理地球自转与圆锥误差到教材深度。",
+          "engineering_role": "没有捷联解算，组合导航和姿态控制都没有状态。",
+          "practice": "实现一个捷联姿态+速度更新器，用转台或仿真轨迹评估漂移。",
+          "validation": "measurement",
+          "validation_note": "报告短时漂移和算法步长影响。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.gnc.imu"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性导航原理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "导航信息与控制仿真"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.gnc.attitude",
+          "title": "姿态稳定与控制分配",
+          "track": "control",
+          "stable_definition": "在执行机构约束下把姿态误差变成舵偏或喷口指令，并处理饱和。",
+          "engineering_role": "飞控软件岗要求控制律能在噪声和延迟下保持稳定。",
+          "practice": "在六自由度仿真里做姿态保持/程序角跟踪，记录超调、稳态误差和饱和次数。",
+          "validation": "simulation",
+          "validation_note": "多组初始姿态和执行延迟下仍满足误差带。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.gnc.ins"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "PID/校正与飞控，噪声时延影响"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "飞行控制核心算法"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.gnc.guidance",
+          "title": "程序制导与重力转弯",
+          "track": "control",
+          "stable_definition": "用公开的程序角和重力转弯把运载火箭送入预定弹道，不涉及末端寻的。",
+          "engineering_role": "运载火箭飞控的制导是时间程序与弹道约束，不是打击链条。",
+          "practice": "在仿真中实现重力转弯或程序转弯，比较落点/入轨残差对风扰的敏感度。",
+          "validation": "simulation",
+          "validation_note": "固定风扰种子，报告弹道偏差和姿态余量。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.gnc.attitude"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "openrocket-docs",
+              "locator": "弹道与稳定的公开模型"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "jsbsim",
+              "locator": "飞行动力学"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "运载火箭飞控算法"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.gnc.fusion",
+          "title": "组合导航与状态估计",
+          "track": "control",
+          "stable_definition": "用卡尔曼或互补滤波融合惯导与卫星/伪距等观测，处理中断与野值。",
+          "engineering_role": "航天科技组合导航岗明确要求 Kalman 与多源融合，以及嵌入式移植。",
+          "practice": "在 IMU+伪 GNSS 仿真上实现误差状态卡尔曼滤波，比较纯惯导与融合后的漂移。",
+          "validation": "measurement",
+          "validation_note": "报告位置/姿态误差、中断后的行为。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.gnc.ins"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "卡尔曼滤波与多源组合融合"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "scipy-signal",
+              "locator": "滤波与状态估计练习"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.gnc.hil",
+          "title": "GNC 数字/半实物闭环",
+          "track": "assurance",
+          "stable_definition": "把导航、制导、控制和动力学放在同一时序上跑，并能注入故障。",
+          "engineering_role": "科工 GNC 仿真岗负责半物理架构、仿真协议和试验实施。",
+          "practice": "把捷联、制导、姿态控制和六自由度模型闭环，记录周期抖动和故障响应。",
+          "validation": "simulation",
+          "validation_note": "惯组掉线、执行延迟和导引中断都有预期。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.gnc.attitude",
+            "atlas.target.gnc.guidance",
+            "atlas.target.gnc.fusion"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "GNC 半物理仿真与试验"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "SIL/HIL 台架样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "控制律的 HIL"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.gnc.imu",
+          "to": "atlas.target.gnc.ins",
+          "relation": "requires",
+          "rationale": "捷联解算必须先有误差模型和时间戳。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "误差建模到导航原理"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.ins",
+          "to": "atlas.target.gnc.attitude",
+          "relation": "requires",
+          "rationale": "姿态控制要基于可解释的姿态估计。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gd-hil",
+              "locator": "传感器噪声对飞控的影响"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.ins",
+          "to": "atlas.target.gnc.fusion",
+          "relation": "requires",
+          "rationale": "组合导航在捷联误差模型上工作。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性与卫星组合"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.attitude",
+          "to": "atlas.target.gnc.guidance",
+          "relation": "requires",
+          "rationale": "程序制导要能把姿态指令交给稳定回路。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "飞控算法与执行机构"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.attitude",
+          "to": "atlas.target.gnc.hil",
+          "relation": "requires",
+          "rationale": "闭环台架必须包含姿态回路。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "控制系统仿真"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.guidance",
+          "to": "atlas.target.gnc.hil",
+          "relation": "requires",
+          "rationale": "台架要验证制导指令而不仅是稳姿态。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "openrocket-docs",
+              "locator": "弹道约束"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.gnc.fusion",
+          "to": "atlas.target.gnc.hil",
+          "relation": "requires",
+          "rationale": "半实物要能切换纯惯导/组合导航并观察降级。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "实际场景问题"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-onboard-computer",
+      "title": "弹上计算机与实时软件",
+      "view_kind": "target",
+      "summary": "对照某所飞控/嵌入式软件：RTOS 优先级、有界内存、截止期与故障恢复；VxWorks 是岗位目标，FreeRTOS 先把最坏延迟做实。",
+      "nodes": [
+        {
+          "id": "atlas.target.embedded.bringup",
+          "title": "板级启动与调试",
+          "track": "software",
+          "stable_definition": "用启动日志、时钟、串口和异常处理确认处理器处于可控状态。",
+          "engineering_role": "飞控计算机软件从能重复启动和打印版本开始。",
+          "practice": "在开发板上完成时钟、串口日志、GPIO 和看门狗最小工程。",
+          "validation": "integration",
+          "validation_note": "断电重启后重复输出版本和自检。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "STM32/Zynq 嵌入式开发"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "嵌入式系统搭建"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.embedded.bus-drivers",
+          "title": "驱动与总线协议",
+          "track": "electronics",
+          "stable_definition": "在中断、DMA 和超时约束下实现 CAN、UART、SPI 等驱动。",
+          "engineering_role": "软件总体岗把总线特性和驱动当作 GNC 软件与设备之间的合同。",
+          "practice": "实现带校验、超时和错误计数的传感器驱动及回环工具。",
+          "validation": "integration",
+          "validation_note": "坏包、拔插和速率变化后可恢复。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.embedded.bringup"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "CAN、RS422/485"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "UART/SPI/I2C/CAN 驱动"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.embedded.rtos",
+          "title": "RTOS 任务、内存与状态机",
+          "track": "software",
+          "stable_definition": "用优先级、有限队列、静态内存和状态机管理并发设备行为。",
+          "engineering_role": "岗位点名 VxWorks、μC/OS；本质是确定性调度，可先在 FreeRTOS 上练会。",
+          "practice": "设计采集、控制、通信三任务，记录水位、栈余量和异常迁移。",
+          "validation": "measurement",
+          "validation_note": "压力下测量最大执行时间、溢出和饥饿。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.embedded.bus-drivers"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "VxWorks、μC/OS 与任务资源"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "freertos-book",
+              "locator": "任务、队列与内存"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.embedded.soc",
+          "title": "Zynq / SoC 软硬分界",
+          "track": "compute",
+          "stable_definition": "在 ARM 与 FPGA 之间划分驱动、数据搬运和控制，并写清寄存器接口。",
+          "engineering_role": "科工嵌入式岗大量要 Zynq；它是增长方向，不是没有 FPGA 就不能做飞控软件。",
+          "practice": "在 Zynq 学习板或仿真流程上打通 PS 侧驱动与 PL 侧寄存器读写。",
+          "validation": "integration",
+          "validation_note": "记录地址映射、中断和一次故障恢复。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.embedded.bus-drivers"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "Zynq ARM 端与外设驱动"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "底层 FPGA 与应用层接口"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.embedded.latency",
+          "title": "截止期与抖动测量",
+          "track": "control",
+          "stable_definition": "为关键路径定义周期、最大延迟、抖动和超时处置，用最坏值验收。",
+          "engineering_role": "飞控软件必须回答 100 Hz 或更高周期是否超期，不能用平均帧率。",
+          "practice": "对 RTOS 任务做持续负载测试，采集最大/分位延迟。",
+          "validation": "measurement",
+          "validation_note": "在 I/O 和计算负载同时存在时看最坏值。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.embedded.rtos"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时调度原理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cyclictest",
+              "locator": "延迟测量方法"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "实时通信延迟"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.embedded.hil-recovery",
+          "title": "台架故障恢复与版本",
+          "track": "assurance",
+          "stable_definition": "以台架自动化、故障注入、日志和受控升级验证长期运行恢复能力。",
+          "engineering_role": "飞控联调要在试验室反复验证，现场问题必须能复现。",
+          "practice": "建立可自动复位、模拟总线故障和收集串口日志的小台架。",
+          "validation": "simulation",
+          "validation_note": "对断电、通信中断和升级失败分别演练。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.embedded.latency"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "试验室联调与高频次验证"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "状态、日志与测试"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.embedded.bringup",
+          "to": "atlas.target.embedded.bus-drivers",
+          "relation": "requires",
+          "rationale": "先确认启动和调试路径，才能判断总线问题。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "系统搭建到驱动"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.embedded.bus-drivers",
+          "to": "atlas.target.embedded.rtos",
+          "relation": "requires",
+          "rationale": "任务设计必须基于设备 I/O 的中断和错误语义。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "总线与 RTOS"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.embedded.bus-drivers",
+          "to": "atlas.target.embedded.soc",
+          "relation": "requires",
+          "rationale": "SoC 分界仍以设备接口为合同。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "底层与应用层接口"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.embedded.rtos",
+          "to": "atlas.target.embedded.latency",
+          "relation": "requires",
+          "rationale": "测抖动前要明确优先级和资源上界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "freertos-book",
+              "locator": "调度与截止期"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.embedded.latency",
+          "to": "atlas.target.embedded.hil-recovery",
+          "relation": "requires",
+          "rationale": "故障台架应同时验证功能恢复和时间边界。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ispace-fc",
+              "locator": "联调验证"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.embedded.soc",
+          "to": "atlas.target.embedded.hil-recovery",
+          "relation": "enables",
+          "rationale": "有 Zynq 时再把 PS/PL 接口纳入台架，不挡住 RTOS 主干。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "Zynq 协同"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-sensing-compute",
+      "title": "探测信号处理与硬件高性能",
+      "view_kind": "target",
+      "summary": "硬件侧约束：时钟/带宽、DSP 定点、FPGA 流水线、Zynq 数据搬运；二院数字后端要的是时限内算完，不是峰值 TOP。",
+      "nodes": [
+        {
+          "id": "atlas.target.hw.measurement",
+          "title": "硬件测量与误差预算",
+          "track": "electronics",
+          "stable_definition": "量化电压、时钟、噪声和采集误差，写明测试方法本身的边界。",
+          "engineering_role": "精度讨论必须建立在可重复测量上。",
+          "practice": "为采集/计算板建立电源、时钟和温度测试记录模板。",
+          "validation": "measurement",
+          "validation_note": "每项数据保留仪器、探头和环境。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "仪器仪表"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "测量检测设备"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.hw.pcb-integrity",
+          "title": "PCB、电源与接口",
+          "track": "electronics",
+          "stable_definition": "用布局、去耦和接口约束控制板级电源与数据路径。",
+          "engineering_role": "为 FPGA/SoC 和传感提供能长期工作的物理基础。",
+          "practice": "设计含多电源域或隔离接口的小板，完成上电和回环。",
+          "validation": "measurement",
+          "validation_note": "以纹波或回环结果验证约束。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.hw.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "综合电子与供电"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "电气接口硬件"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.hw.dsp",
+          "title": "DSP 与定点实现",
+          "track": "compute",
+          "stable_definition": "把滤波或特征计算映射到有限字宽、带宽和延迟。",
+          "engineering_role": "惯导补偿、遥测预处理常在进入 CPU 前完成。",
+          "practice": "用定点或 CMSIS-DSP 实现滤波，比较误差和吞吐。",
+          "validation": "benchmark",
+          "validation_note": "同时报告数值误差、数据率和延迟。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.hw.measurement"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-dsp",
+              "locator": "DSP 库与定点"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "DSP 平台"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.hw.fpga",
+          "title": "FPGA 时序逻辑",
+          "track": "compute",
+          "stable_definition": "把流式计算、缓存和背压做成可仿真、可测吞吐的硬件通路。",
+          "engineering_role": "数据链和综合电子岗要 FPGA 编码与仿真，属于专题能力。",
+          "practice": "用 Verilog 实现带背压的流式模块，产出仿真波形和吞吐测试。",
+          "validation": "benchmark",
+          "validation_note": "验证功能向量、最大吞吐和溢出。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.hw.pcb-integrity",
+            "atlas.target.hw.dsp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "FPGA 编码、仿真与调试"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "verilator",
+              "locator": "开源仿真"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.hw.soc",
+          "title": "Zynq 异构数据搬运",
+          "track": "compute",
+          "stable_definition": "在 CPU 与 FPGA 之间划分控制、搬运和计算，并测量真实瓶颈。",
+          "engineering_role": "Zynq 岗要的是 PS/PL 协同，而不是峰值算力数字。",
+          "practice": "把预处理放到 PL、控制放到 PS，测量复制和排队时间。",
+          "validation": "benchmark",
+          "validation_note": "报告端到端延迟与分段占比。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.hw.fpga"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "Zynq 平台与网口/总线"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "XC7Z 系列"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.hw.design-verification",
+          "title": "计算链验证",
+          "track": "assurance",
+          "stable_definition": "通过仿真向量、板上自测和版本追溯验证功能与性能余量。",
+          "engineering_role": "单次实验室成功不能代替回归。",
+          "practice": "为 DSP 模块建立向量集、板上自测和回归基线。",
+          "validation": "simulation",
+          "validation_note": "版本变化后可复跑关键集。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.hw.pcb-integrity",
+            "atlas.target.hw.dsp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "测试与集成"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "仿真分析"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.hw.measurement",
+          "to": "atlas.target.hw.pcb-integrity",
+          "relation": "requires",
+          "rationale": "板级约束必须有可重复测量。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "检测设备"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.measurement",
+          "to": "atlas.target.hw.dsp",
+          "relation": "requires",
+          "rationale": "数值误差必须先有时间和噪声基线。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-dsp",
+              "locator": "实现与误差"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.pcb-integrity",
+          "to": "atlas.target.hw.fpga",
+          "relation": "requires",
+          "rationale": "FPGA 通路依赖供电和时钟。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "芯片与硬件"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.dsp",
+          "to": "atlas.target.hw.fpga",
+          "relation": "requires",
+          "rationale": "硬件流水线的位宽来自算法数据特征。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "算法实现"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.fpga",
+          "to": "atlas.target.hw.soc",
+          "relation": "requires",
+          "rationale": "异构划分要基于已能量化的通路。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "PS/PL 协同"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.pcb-integrity",
+          "to": "atlas.target.hw.design-verification",
+          "relation": "requires",
+          "rationale": "验证必须包含真实供电和接口。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "调试测试"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.dsp",
+          "to": "atlas.target.hw.design-verification",
+          "relation": "requires",
+          "rationale": "计算链验收以 DSP 功能为最低闭环。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-dsp",
+              "locator": "功能向量"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.fpga",
+          "to": "atlas.target.hw.design-verification",
+          "relation": "enables",
+          "rationale": "有 FPGA 时再把时序收敛纳入回归。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "仿真"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.hw.soc",
+          "to": "atlas.target.hw.design-verification",
+          "relation": "enables",
+          "rationale": "有 Zynq 时再把数据搬运纳入回归。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-zynq",
+              "locator": "平台验证"
+            }
+          ]
+        }
+      ],
+      "standing": "研制主干"
+    },
+    {
+      "id": "target-digital-intelligence",
+      "title": "数智化与大模型",
+      "view_kind": "target",
+      "summary": "二院军事智能、三院数智化的地面助力：评测、检索、受控问答与可测推理性能；隔离飞控实时闭环。",
+      "nodes": [
+        {
+          "id": "atlas.target.llm.eval",
+          "title": "任务数据与可复现评测",
+          "track": "foundation",
+          "stable_definition": "用固定任务集、数据版本和指标判断模型是否解决地面知识问题。",
+          "engineering_role": "助力试验复盘和文档问答，避免只看主观示例。",
+          "practice": "为「读公开接口包并抽取时序事件」建小型评测集和自动评分。",
+          "validation": "benchmark",
+          "validation_note": "每次改动输出同一集合上的质量、延迟和失败案例。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-23-2027",
+              "locator": "军事智能、大数据相关专业需求"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "数智化 / 智能算法与任务管理"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.llm.adapt",
+          "title": "受控调用与对比实验",
+          "track": "compute",
+          "stable_definition": "比较提示、检索和小规模适配，记录质量、成本和失败类型。",
+          "engineering_role": "不把不稳定输出交给执行路径。",
+          "practice": "固定数据与种子，对比三种方案的延迟与错误类别。",
+          "validation": "benchmark",
+          "validation_note": "保留配置、版本和对比表。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.target.llm.eval"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "智能算法"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "huggingface-course",
+              "locator": "评测与微调入门"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.llm.rag",
+          "title": "权限内检索与证据",
+          "track": "software",
+          "stable_definition": "外部知识做成可验证引用和白名单，缺失则拒绝。",
+          "engineering_role": "地面知识库辅助，不是自由拼接指令。",
+          "practice": "实现带引用返回和越权拒绝的检索服务。",
+          "validation": "integration",
+          "validation_note": "冲突资料与越权调用必须降级。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.target.llm.adapt"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "信息化 / 数智化设计师"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "huggingface-course",
+              "locator": "RAG 思路"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.llm.serving",
+          "title": "地面推理性能边界",
+          "track": "compute",
+          "stable_definition": "把模型、并发、显存/内存和协议组成可测量的地面服务。",
+          "engineering_role": "高性能计算在地面：首 token、全程延迟、资源；不上海上实时总线。",
+          "practice": "本地部署小模型，测量不同并发与上下文下的延迟和内存。",
+          "validation": "benchmark",
+          "validation_note": "分别报告端到端、主机开销和计算时间。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.target.llm.eval"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "llama-cpp",
+              "locator": "本地推理样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "端到端延迟与吞吐测量边界"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.llm.observe",
+          "title": "质量与资源观测",
+          "track": "assurance",
+          "stable_definition": "记录版本、延迟、成本和失败，防止静默退化。",
+          "engineering_role": "模型变化快，没有观测就不能回滚。",
+          "practice": "刻意退化一次检索或模型，验证告警。",
+          "validation": "measurement",
+          "validation_note": "退化可被阈值抓住。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.target.llm.rag",
+            "atlas.target.llm.serving"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "测量定义"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "数智化"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.llm.integration",
+          "title": "人工确认的知识工作流",
+          "track": "assurance",
+          "stable_definition": "模型只辅助阅读与起草，关键结论人工确认，并有非模型备用路径。",
+          "engineering_role": "明确禁止写入飞控、点火或发射控制软件。",
+          "practice": "把模型接到接口包问答，输出必须经人确认才能进入文档库。",
+          "validation": "review",
+          "validation_note": "超时或误答时业务仍可手工完成。",
+          "volatility": "volatile",
+          "requires": [
+            "atlas.target.llm.serving"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-23-2027",
+              "locator": "军事智能研究（地面能力）"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "人工验证与技术状态"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.llm.eval",
+          "to": "atlas.target.llm.adapt",
+          "relation": "requires",
+          "rationale": "没有评测集无法判断适配是否变好。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "huggingface-course",
+              "locator": "评测"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.adapt",
+          "to": "atlas.target.llm.rag",
+          "relation": "requires",
+          "rationale": "检索策略依赖对失败模式的理解。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "智能算法"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.eval",
+          "to": "atlas.target.llm.serving",
+          "relation": "requires",
+          "rationale": "部署目标由任务质量与延迟要求驱动。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "测量边界"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.rag",
+          "to": "atlas.target.llm.observe",
+          "relation": "requires",
+          "rationale": "检索路径要记版本和证据。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "信息化"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.serving",
+          "to": "atlas.target.llm.observe",
+          "relation": "requires",
+          "rationale": "观测必须覆盖推理资源与延迟。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "llama-cpp",
+              "locator": "本地服务"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.serving",
+          "to": "atlas.target.llm.integration",
+          "relation": "requires",
+          "rationale": "受控集成建立在可测的地面服务上，不依赖增长链上的观测节点。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "验证"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.llm.observe",
+          "to": "atlas.target.llm.integration",
+          "relation": "enables",
+          "rationale": "有观测后集成更可回滚，但不作为大众主干闸门。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-3-dept",
+              "locator": "数智化"
+            }
+          ]
+        }
+      ],
+      "standing": "地面助力 · 不进飞控"
+    },
+    {
+      "id": "target-realtime-control",
+      "title": "实时控制 · 某所对照",
+      "view_kind": "target",
+      "summary": "某所公开的控制系统总体链：测发控、定位定向、全程制导控制、电气、飞控软件、试验与健康管理。用来对照主干，不与主干平级；不写寻的、射频对抗或配方。",
+      "nodes": [
+        {
+          "id": "atlas.target.ctrl17.launch-test",
+          "title": "测发控与地面测试发射",
+          "track": "software",
+          "stable_definition": "把发射流程做成带时序、联锁、命令队列和遥测监视的地面控制链。",
+          "engineering_role": "某所公开职责含固体运载飞行器地面测试发射抓总；飞控未上电前，地面必须可测、可控、可禁止误动作。",
+          "practice": "实现本地测发控台：时序表、联锁、模拟遥测和禁止非法点火的审计日志。",
+          "validation": "integration",
+          "validation_note": "错包、断链、重复指令不得突破联锁。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "地面测试发射与电气系统抓总"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmse-ttc-2023",
+              "locator": "遥测遥控与运行管理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "yamcs-quickstart",
+              "locator": "开源测控样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ctrl17.alignment",
+          "title": "定位定向与初始对准",
+          "track": "control",
+          "stable_definition": "在发射前把载体坐标系、方位和惯性器件零位纳入可复查的初始状态。",
+          "engineering_role": "某所公开职责含定位定向；对准误差会进入全程制导，必须单独验收。",
+          "practice": "用静止 IMU 数据做粗对准，输出方位/水平残差和复测记录。",
+          "validation": "measurement",
+          "validation_note": "保留数据集、对准时间和复测偏差。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.ctrl17.launch-test"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "定位定向"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "惯性器件标定与误差建模"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ctrl17.electrical",
+          "title": "电气系统与时序配电",
+          "track": "electronics",
+          "stable_definition": "把供配电、电缆网和时序开关看成带状态与遥测的受控对象。",
+          "engineering_role": "某所公开抓总电气系统；没有时序配电，制导控制软件没有合法执行窗口。",
+          "practice": "画模拟箭上配电时序：上电、自检、允许控制、紧急断电，并注入欠压。",
+          "validation": "integration",
+          "validation_note": "非法时序不得给执行机构上电。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.ctrl17.launch-test"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "电气系统研制抓总"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "配电与电气接口"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cast-platform",
+              "locator": "高效供电"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ctrl17.gnc-loop",
+          "title": "全程制导控制闭环",
+          "track": "control",
+          "stable_definition": "在控制周期内完成导航、程序制导和姿态稳定，用最坏抖动验收。",
+          "engineering_role": "某所公开职责含全程制导控制；只写程序转弯/重力转弯与姿态回路，不写末端寻的。",
+          "practice": "把捷联、程序角和姿态回路接到六自由度模型，报告周期内最坏延迟。",
+          "validation": "simulation",
+          "validation_note": "固定风扰种子，报告弹道偏差、姿态余量和超期次数。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.ctrl17.alignment",
+            "atlas.target.ctrl17.electrical"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "全程制导控制"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "控制系统仿真"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17-2027",
+              "locator": "控制科学与航空宇航类需求"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ctrl17.flight-sw",
+          "title": "飞控软件实时调度",
+          "track": "software",
+          "stable_definition": "用优先级、有界队列和静态内存把导航、控制和电气指令放进截止期内。",
+          "engineering_role": "某所校招含嵌入式/飞控软件；软件高性能是周期内搬完算完，不是平均 QPS。",
+          "practice": "三任务：采集、控制、下行；记录 100 Hz 最坏抖动、栈余量和超期处置。",
+          "validation": "measurement",
+          "validation_note": "总线负载和计算负载同时存在时看最大值。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.ctrl17.gnc-loop",
+            "atlas.target.ctrl17.electrical"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17-2027",
+              "locator": "计算机与软件工程类需求"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "VxWorks、总线与任务资源"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "freertos-book",
+              "locator": "任务与队列"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.ctrl17.test-health",
+          "title": "试验、仿真与健康管理",
+          "track": "assurance",
+          "stable_definition": "用半实物、故障注入和状态监视证明闭环可回归，异常可定位。",
+          "engineering_role": "某所公开岗位含仿真与健康管理/故障诊断；试验是控制系统总体的验收场。",
+          "practice": "注入惯组噪声、执行延迟、欠压和断链，输出故障—观测—判定表。",
+          "validation": "simulation",
+          "validation_note": "每项故障可脚本复现，并留下版本。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.ctrl17.flight-sw"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17-intro",
+              "locator": "控制系统总体与试验环境"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "半物理仿真"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "验证与技术状态"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.ctrl17.launch-test",
+          "to": "atlas.target.ctrl17.alignment",
+          "relation": "requires",
+          "rationale": "对准发生在受控的地面测试流程里。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "定位定向"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.launch-test",
+          "to": "atlas.target.ctrl17.electrical",
+          "relation": "requires",
+          "rationale": "电气时序服从测发控联锁。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "电气系统"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.alignment",
+          "to": "atlas.target.ctrl17.gnc-loop",
+          "relation": "requires",
+          "rationale": "全程制导从初始方位和零位开始。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "标定"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.electrical",
+          "to": "atlas.target.ctrl17.gnc-loop",
+          "relation": "requires",
+          "rationale": "控制律只能在合法供电窗口运行。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "配电"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.gnc-loop",
+          "to": "atlas.target.ctrl17.flight-sw",
+          "relation": "requires",
+          "rationale": "控制周期由飞控软件调度兑现。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-flight-software",
+              "locator": "任务资源"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.electrical",
+          "to": "atlas.target.ctrl17.flight-sw",
+          "relation": "requires",
+          "rationale": "软件指令必须对应电气状态。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-4-17",
+              "locator": "电气"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.ctrl17.flight-sw",
+          "to": "atlas.target.ctrl17.test-health",
+          "relation": "requires",
+          "rationale": "健康管理观察的是实时闭环，不是演示动画。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casic-gnc-sim",
+              "locator": "半实物"
+            }
+          ]
+        }
+      ],
+      "standing": "某所对照 · 重要参考"
+    },
+    {
+      "id": "target-robot-systems",
+      "title": "机器人系统",
+      "view_kind": "target",
+      "summary": "相邻领域：标定、估计、控制、运行时与场地安全。可对照 GNC/嵌入式，但不是弹箭研制主干，也不与某所实时控制对照平级。",
+      "nodes": [
+        {
+          "id": "atlas.target.robot.calibration",
+          "title": "传感标定与坐标链",
+          "track": "control",
+          "stable_definition": "用坐标系、外参、时间戳和误差检查把传感数据放入共同参考系。",
+          "engineering_role": "场地机器人里“算法不准”常常是坐标或时间错误；可对照惯组标定，但场景不同。",
+          "practice": "标定相机或 IMU，与编码器对齐，输出变换和残差。",
+          "validation": "measurement",
+          "validation_note": "保留标定板/数据集和复测。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "控制、仪器与信息处理交叉"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "标定补偿"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.robot.estimation",
+          "title": "状态估计与传感融合",
+          "track": "control",
+          "stable_definition": "将带噪观测和运动模型结合，估计位置、速度或姿态。",
+          "engineering_role": "对照组合导航，但通常在地面、低速、可停机重试。",
+          "practice": "IMU+编码器融合，比较单传感器漂移。",
+          "validation": "measurement",
+          "validation_note": "回放数据报告误差和延迟。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.robot.calibration"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "估计与传感系统样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "多源融合"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.robot.control-planning",
+          "title": "规划与控制闭环",
+          "track": "control",
+          "stable_definition": "在运动约束和安全边界下从状态生成动作，处理超时与不可达。",
+          "engineering_role": "对照姿态稳定，但常含路径规划；截止期通常宽于飞控。",
+          "practice": "仿真里做轨迹跟踪与急停。",
+          "validation": "simulation",
+          "validation_note": "多组初值和扰动下满足误差带。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.robot.estimation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "控制与仿真"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "buaa-automation",
+              "locator": "控制"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.robot.runtime",
+          "title": "运行时与通信",
+          "track": "software",
+          "stable_definition": "用消息、生命周期和资源边界组织感知、控制与日志。",
+          "engineering_role": "ROS 2 是可获得样本，不是军工总线的替代定义。",
+          "practice": "传感、控制、记录、上位机四组件，定义超时。",
+          "validation": "integration",
+          "validation_note": "一个组件延迟时其余可降级。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.robot.calibration"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "实时路径与非确定性操作"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "zmq-guide",
+              "locator": "消息与队列"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.robot.realtime-compute",
+          "title": "控制与计算分时",
+          "track": "compute",
+          "stable_definition": "把控制优先级与视觉/推理计算分开，并测量两端延迟。",
+          "engineering_role": "增长向：证明视觉不得挤占控制；不把 GPU 峰值当实时。",
+          "practice": "同时跑控制循环和视觉任务，报告抖动。",
+          "validation": "benchmark",
+          "validation_note": "分别报控制最坏抖动和感知时延。",
+          "volatility": "evolving",
+          "requires": [
+            "atlas.target.robot.control-planning",
+            "atlas.target.robot.runtime"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "实时调度"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "截止期与抖动"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "tensorrt-benchmark",
+              "locator": "分段延迟"
+            }
+          ]
+        },
+        {
+          "id": "atlas.target.robot.field-test",
+          "title": "仿真到实体的安全测试",
+          "track": "assurance",
+          "stable_definition": "仿真、台架、限位、急停和回放，逐级放权。",
+          "engineering_role": "对照半实物，但安全边界是场地急停而不是发射联锁。",
+          "practice": "三阶段测试表：仿真、台架、场地，含回退条件。",
+          "validation": "simulation",
+          "validation_note": "断传感与急停可复现。",
+          "volatility": "stable",
+          "requires": [
+            "atlas.target.robot.control-planning"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "SIL/HIL 样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gazebo-docs",
+              "locator": "仿真到实体"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.target.robot.calibration",
+          "to": "atlas.target.robot.estimation",
+          "relation": "requires",
+          "rationale": "融合前要有坐标与时间。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "casc-ins-fusion",
+              "locator": "标定"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.estimation",
+          "to": "atlas.target.robot.control-planning",
+          "relation": "requires",
+          "rationale": "控制基于估计而非原始噪声。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "控制"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.calibration",
+          "to": "atlas.target.robot.runtime",
+          "relation": "requires",
+          "rationale": "消息字段从传感接口开始。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "执行路径"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.control-planning",
+          "to": "atlas.target.robot.realtime-compute",
+          "relation": "requires",
+          "rationale": "计算分时由控制截止期决定。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "调度"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.runtime",
+          "to": "atlas.target.robot.realtime-compute",
+          "relation": "requires",
+          "rationale": "端到端延迟含通信。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ros2-realtime",
+              "locator": "抖动"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.control-planning",
+          "to": "atlas.target.robot.field-test",
+          "relation": "requires",
+          "rationale": "场地测试验证的是控制闭环。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "验证"
+            }
+          ]
+        },
+        {
+          "from": "atlas.target.robot.realtime-compute",
+          "to": "atlas.target.robot.field-test",
+          "relation": "enables",
+          "rationale": "有分时测量后场地更安全，但不作为入场闸门。",
+          "evidence_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gazebo-docs",
+              "locator": "仿真"
+            }
+          ]
+        }
+      ],
+      "standing": "相邻领域"
     }
   ]
 }

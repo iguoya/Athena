@@ -10,20 +10,23 @@ Rectangle {
     color: "#132B35"
 
     readonly property var groupedMaps: {
-        // 两组就够：学科入口撑起大方向，方向图落在它们上面。
-        // 分组只读 view_kind，不读地位字段——地位一旦进了分组名，图谱就会被
-        // 某个外部标尺重划一次（这正是要退回的那次改动）。
+        // 三层，自下而上：学科入口是通用底盘，职业方向是大方向，职业目标是
+        // 具体落点（某所研制口径那套认知）。分组只读 view_kind——地位一旦进了
+        // 分组名，图谱就会被某个外部标尺重划一次（ADR 0054）。
         const discipline = []
         const direction = []
+        const target = []
         for (let i = 0; i < maps.length; ++i) {
             const map = maps[i]
             if (map.view_kind === "academic") discipline.push(map)
+            else if (map.view_kind === "target") target.push(map)
             else direction.push(map)
         }
         const grouped = []
         const groups = [
             { title: "技术体系", maps: discipline, muted: false },
-            { title: "职业方向", maps: direction, muted: false }
+            { title: "职业方向", maps: direction, muted: false },
+            { title: "职业目标", maps: target, muted: false }
         ]
         for (let g = 0; g < groups.length; ++g) {
             if (groups[g].maps.length === 0)
@@ -36,6 +39,9 @@ Rectangle {
     }
 
     function subtitleFor(map) {
+        // 职业目标层每张图自带定位（研制主干 / 地面助力 / 某所对照 / 相邻领域），
+        // 这些差别是那套认知的一部分，不该在界面上被抹平成一个词。
+        if (map.standing) return map.standing
         if (map.view_kind === "academic") return "学科入口 · 通用技术底盘"
         if (map.view_kind === "engineering") return "工程系统 · 高阶标尺"
         return "职业方向"
@@ -145,7 +151,7 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            text: "两张学科入口撑起通用技术底盘，五个方向图落在它上面。每个节点都给出稳定定义、工程角色、动手练习和验收方式。实线是强先修，虚线是使能。"
+            text: "学科入口是通用底盘，职业方向是大方向，职业目标是具体落点。每个节点都给出稳定定义、工程角色、动手练习和验收方式。实线是强先修，虚线是使能。"
             color: "#9BB5B0"
             font.pixelSize: 13
             wrapMode: Text.WordWrap
