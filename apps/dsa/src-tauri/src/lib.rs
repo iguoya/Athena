@@ -1,6 +1,8 @@
 // Athena DSA — 独立壳：内容路径、进度库、C++ 即时编译运行。
 // 不依赖主程序头文件或 athena.json。
 
+mod compiler;
+
 use serde::Serialize;
 use std::fs;
 use std::io::Write;
@@ -99,21 +101,6 @@ fn parse_cli() {
     }
 }
 
-fn detect_compiler() -> String {
-    // Windows 上装 MSYS2/MinGW 或 LLVM 就有 g++ / clang++；MSVC 的 cl.exe
-    // 命令行参数是另一套，暂不支持（ADR 0047 的已知欠账）。
-    for cand in ["c++", "clang++", "g++"] {
-        if Command::new(cand)
-            .arg("--version")
-            .output()
-            .map(|o| o.status.success())
-            .unwrap_or(false)
-        {
-            return cand.to_string();
-        }
-    }
-    String::new()
-}
 
 fn detect_clang_format() -> String {
     for cand in ["clang-format", "clang-format-18", "clang-format-16", "clang-format-15"] {
@@ -221,7 +208,7 @@ fn get_app_info(state: tauri::State<'_, Mutex<AppState>>) -> AppInfo {
         title: "数据结构与算法".into(),
         content_root: s.content_root.display().to_string(),
         store_path: s.store_path.display().to_string(),
-        compiler: detect_compiler(),
+        compiler: compiler::detect().map(|c| c.label()).unwrap_or_default(),
     }
 }
 
@@ -295,10 +282,7 @@ fn compile_and_run(
 ) -> Result<RunResult, String> {
     // 用编辑器里的源码写到临时目录再编译，不要回写 content/cases/：
     // 开发时 Vite 会监视那些文件，一保存就整页刷新，看起来像「运行完跳回主页」。
-    let compiler = detect_compiler();
-    if compiler.is_empty() {
-        return Err("未找到 c++ / clang++ / g++，请先安装本机 C++ 编译器。".into());
-    }
+    let compiler = compiler::detect().ok_or_else(|| compiler::install_hint().to_string())?;
 
     let stamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -310,7 +294,7 @@ fn compile_and_run(
     fs::create_dir_all(&work).map_err(|e| e.to_string())?;
     let src = work.join(&entry_seg);
     fs::write(&src, source).map_err(|e| format!("写入临时源码失败：{e}"))?;
-    let obj = work.join("a.out");
+    let obj = work.join(compiler.artifact_name());
 
     let started = SystemTime::now();
     // 案例共享头（如 dsa_trace.hpp）放 content/cases/_shared；挂上 include
@@ -319,22 +303,11 @@ fn compile_and_run(
         let s = state.lock().unwrap();
         s.content_root.join("content/cases/_shared")
     };
-    let mut compile_args: Vec<String> = vec![
-        "-std=c++20".into(),
-        "-O0".into(),
-        "-Wall".into(),
-        "-Wextra".into(),
-        src.to_str().unwrap_or("").to_string(),
-        "-o".into(),
-        obj.to_str().unwrap_or("").to_string(),
-    ];
-    if shared.is_dir() {
-        compile_args.push(format!("-I{}", shared.display()));
-    }
-    let compile = Command::new(&compiler)
-        .args(&compile_args)
+    let include = shared.is_dir().then_some(shared.as_path());
+    let compile = compiler
+        .compile_command(&src, &obj, include)
         .output()
-        .map_err(|e| format!("启动编译器失败：{e}"))?;
+        .map_err(|e| format!("启动 {} 失败：{e}", compiler.label()))?;
 
     let mut compile_log = String::new();
     compile_log.push_str(&String::from_utf8_lossy(&compile.stderr));
