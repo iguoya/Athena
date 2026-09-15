@@ -98,6 +98,157 @@ jobs:
   # 这里不留探测 job——一个永远红着的"实验性"格子不产生决策价值，只让人以为
   # 我们还在支持 Windows。真要重新评估，那该是一次有意识的决定。
 
+  # 重新开跑，去实测而不是照抄结论：2026-09-14 那次失败里其实混了两类问题——
+  # 一类是我们自己的代码（main.cc 用了 POSIX 专有的 LC_MESSAGES，MSVC/UCRT
+  # 没有这个宏），已经改成 LANGUAGE 环境变量；另一类是 MSYS2 上 giomm 与
+  # glib 的头文件冲突（G_DECLARE_FINAL_TYPE 生成的 typedef 与 giomm 的
+  # using 声明打架）。后者是不是还在、是不是真的躲不开，要跑一次才知道，
+  # 不能拿一天前的日志当定论。暂时 continue-on-error。
+  cpp-windows:
+    name: C++ 教程（Windows，实验性）
+    runs-on: windows-latest
+    timeout-minutes: 45
+    continue-on-error: true
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-meson
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtkmm-4.0
+            mingw-w64-ucrt-x86_64-gtksourceview5
+            mingw-w64-ucrt-x86_64-md4c
+            mingw-w64-ucrt-x86_64-nlohmann-json
+            mingw-w64-ucrt-x86_64-gtest
+            mingw-w64-ucrt-x86_64-sqlite3
+            mingw-w64-ucrt-x86_64-librsvg
+            mingw-w64-ucrt-x86_64-blueprint-compiler
+            mingw-w64-ucrt-x86_64-python
+
+      - name: Verify
+        run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
+
+  # C 语言教程：Qt Quick + CMake。跑的是应用自己的 scripts/check.py。
+  c:
+    name: C 语言教程（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-26.04]
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Qt (macOS)
+        if: runner.os == 'macOS'
+        run: brew install qt@6 cmake ninja
+
+      - name: Install Qt (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake ninja-build \
+            qt6-base-dev qt6-declarative-dev libgl1-mesa-dev
+
+      - name: Verify
+        # Homebrew 的 Qt 是 keg-only，不在默认搜索路径里；CMAKE_PREFIX_PATH
+        # 指过去即可，不必把 Qt 灌进全局 PATH。
+        run: python3 scripts/check.py c
+        env:
+          CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
+
+  # Windows 上的 Qt 走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
+  # aqtinstall 是个 pip 包，不必引第三方 action。标成实验性持续探测——README
+  # 里说 Windows 要自己设 CMAKE_PREFIX_PATH，那就该有一条流水线替这句话背书
+  # （ADR 0047），但暂时不让它阻塞整体结论。
+  c-windows:
+    name: C 语言教程（Windows，实验性）
+    runs-on: windows-latest
+    timeout-minutes: 45
+    continue-on-error: true
+    env:
+      QT_VERSION: "6.8.1"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install Qt and Ninja
+        # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
+        # 两个平台、和 app.json 的 dev.run 保持同一个位置。
+        run: |
+          python -m pip install --quiet aqtinstall ninja
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -m qtdeclarative -O ${{ github.workspace }}\Qt
+
+      - name: Verify
+        run: python scripts/check.py c
+        env:
+          CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
+
+  # 三个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
+  # 和本地是同一条命令（ADR 0007）。
+  tauri:
+    name: ${{ matrix.app }}（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [dsa, english, mathematics]
+        os: [macos-15, ubuntu-26.04, windows-latest]
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/${{ matrix.app }}/package-lock.json
+
+      - name: Install Tauri system dependencies (Ubuntu)
+        # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
+        # 用系统自带的 WKWebView / WebView2，不需要这一步。
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev librsvg2-dev \
+            libgtk-3-dev libayatana-appindicator3-dev patchelf
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            apps/${{ matrix.app }}/src-tauri/target
+          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('apps/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+
+      - name: Verify
+        run: python3 scripts/check.py ${{ matrix.app }}
+
   # C 语言教程：Qt Quick + CMake。跑的是应用自己的 scripts/check.py。
   c:
     name: C 语言教程（${{ matrix.os }}）
