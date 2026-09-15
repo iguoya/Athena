@@ -144,6 +144,25 @@ jobs:
             mingw-w64-ucrt-x86_64-blueprint-compiler
             mingw-w64-ucrt-x86_64-python
 
+      # 钉住一组**相互配套**的版本，不跟 pacman 拿最新。
+      #
+      # MSYS2 仓库里 glibmm-2.68 最高只到 2.86.0，而 pacman 默认装的 gtkmm 4.20
+      # 期待 glibmm 2.89+（它的 .pc 要求 gio-2.0 >= 2.89.3）——默认组合本身就是
+      # 错配的。gtkmm 4.18 才是配 glibmm 2.86 的那一代，glib 则回到 2.88.3
+      # （本地 macOS 与 CI Ubuntu 用的也是 2.88.x）。
+      #
+      # 一条 pacman -U 同时降，让依赖检查一次过；分两次会在中间态被拒。
+      # MSYS2 把 glibmm-2.68 更新到 2.89+ 之后，这一步可以整个删掉。
+      - name: Pin glib / gtkmm to a matching set
+        run: |
+          base=https://repo.msys2.org/mingw/ucrt64
+          pacman -U --noconfirm \
+            $base/mingw-w64-ucrt-x86_64-glib2-2.88.3-1-any.pkg.tar.zst \
+            $base/mingw-w64-ucrt-x86_64-gtkmm-4.0-4.18.0-3-any.pkg.tar.zst
+          pacman -Q mingw-w64-ucrt-x86_64-glib2 \
+                    mingw-w64-ucrt-x86_64-glibmm-2.68 \
+                    mingw-w64-ucrt-x86_64-gtkmm-4.0
+
       - name: Verify
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
