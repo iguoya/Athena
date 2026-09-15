@@ -46,6 +46,9 @@ struct LauncherView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, 14)
+        // 上下都要留：只给 .bottom 的话，标题会贴着弹窗顶边，而底部有
+        // MenuRow 自己的 .vertical padding 撑着，整块看起来就偏上了。
+        .padding(.top, 4)
         .padding(.bottom, 6)
     }
 
