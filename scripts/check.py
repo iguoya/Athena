@@ -50,8 +50,10 @@ def run_source_check() -> None:
     print("== 跨应用检查：内容必须有出处 ==", flush=True)
     node = shutil.which("node")
     if node is None:
-        print("没有 node，跳过内容出处检查", file=sys.stderr)
-        return
+        # 不跳过。检查器自己的注释就写着「沉默地通过是最坏的结果」，入口更不该
+        # 因为缺个 node 就把整项检查放过去还报通过。node 是开发必备工具，
+        # 按仓库基线视为已装；没有就说清楚装什么（AGENTS.md「基线」一节）。
+        raise SystemExit("没有 node，跨应用出处检查跑不了。装 Node.js 后重试。")
     completed = subprocess.run(
         [node, "scripts/check-app-sources.mjs"], cwd=REPO_ROOT
     )
