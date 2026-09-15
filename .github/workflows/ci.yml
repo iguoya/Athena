@@ -98,14 +98,18 @@ jobs:
   # 这里不留探测 job——一个永远红着的"实验性"格子不产生决策价值，只让人以为
   # 我们还在支持 Windows。真要重新评估，那该是一次有意识的决定。
 
-  # 重新开跑，去实测而不是照抄结论：2026-09-14 那次失败里其实混了两类问题——
-  # 一类是我们自己的代码（main.cc 用了 POSIX 专有的 LC_MESSAGES，MSVC/UCRT
-  # 没有这个宏），已经改成 LANGUAGE 环境变量；另一类是 MSYS2 上 giomm 与
-  # glib 的头文件冲突（G_DECLARE_FINAL_TYPE 生成的 typedef 与 giomm 的
-  # using 声明打架）。后者是不是还在、是不是真的躲不开，要跑一次才知道，
-  # 不能拿一天前的日志当定论。暂时 continue-on-error。
+  # 留着当探测位，监测的是一个**预期会变化**的外部条件（ADR 0049 实测更正）。
+  #
+  # 属于我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）已经修完，现在只剩
+  # 三个错误，全部是 giomm / gdkmm 的 `using XxxClass = struct _XxxClass` 撞上
+  # glib 的 G_DECLARE_FINAL_TYPE。根因是 MSYS2 装的 glib 2.90（通往 3.0 的开发
+  # 系列）跑在了 glibmm / giomm 2.86 前面。上游版本一对齐，这个 job 就会自己
+  # 变绿——那时它就是「可以支持 Windows 了」的信号，所以值得留着。
+  #
+  # 这和 ADR 0049 说的「不留假装在支持的探测位」不冲突：那条针对的是永远红着、
+  # 不产生任何决策价值的格子；这里监测的是一个具体、会变的上游条件。
   cpp-windows:
-    name: C++ 教程（Windows，实验性）
+    name: C++ 教程（Windows，探测上游）
     runs-on: windows-latest
     timeout-minutes: 45
     continue-on-error: true

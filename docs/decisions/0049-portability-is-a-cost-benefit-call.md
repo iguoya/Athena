@@ -57,12 +57,30 @@ ADR 里写清成本、收益与降级；应用文档里写明哪个平台不支�
 
 | 组件 | 排除 | 成本 | 那个平台怎么办 |
 |---|---|---|---|
-| `apps/cpp`（GTK4） | Windows | 卡在 MSYS2 giomm/glib 头文件冲突，**上游问题，不受我们控制** | 不支持；`AGENTS.md` 早已声明只支持 macOS 与 Ubuntu |
+| `apps/cpp`（GTK4） | Windows | MSYS2 当前的 glib 2.90 与 glibmm/giomm 2.86 版本错配，**上游问题，不受我们控制**（详见下方补记） | 暂不支持；`AGENTS.md` 早已声明只支持 macOS 与 Ubuntu |
 | `launcher/macos`（菜单栏） | 非 macOS | 整套 AppKit/SwiftUI 实现，无从移植 | 跨平台 Slint 版功能完整，只少菜单栏常驻、全局热键与预热（ADR 0048） |
 | `apps/dsa` 的实验编译器 | MSVC `cl.exe` | 命令行参数是另一套，要为它单独写一份编译调用 | Windows 上装 MSYS2/MinGW 或 LLVM 即可，`g++` / `clang++` 都认 |
 
 **仍然按三平台对待的**：`launcher/core` 与 `launcher/gui`、三个 Tauri 应用、
 `apps/c`（Qt）、以及全部验证入口。
+
+> **2026-09-15 实测更正。** 此前「`apps/cpp` 在 Windows 上编不过」被笼统记成一句
+> 「卡在上游」，实际跑一遍才发现里面混了三类东西，其中两类是我们自己的代码：
+>
+> 1. `main.cc` 用 `setlocale(LC_MESSAGES, ...)`——`LC_MESSAGES` 是 POSIX 扩展，
+>    MSVC / UCRT 的 `<clocale>` 没有这个宏。已改用 `LANGUAGE` 环境变量。
+> 2. 26 处 `M_PI`——同样是 POSIX / glibc 扩展。已改用 C++20 的
+>    `std::numbers::pi`。日志里那一串 `'yaw' is not captured` 是它的级联报错，
+>    随之消失。
+> 3. 清掉上面两类后**只剩三个**错误，全部是 `giomm` / `gdkmm` 的
+>    `using XxxClass = struct _XxxClass` 撞上 glib 的 `G_DECLARE_FINAL_TYPE`
+>    生成的 typedef。根因是 MSYS2 装的 **glib 2.90.0**——那是通往 3.0 的
+>    **开发系列**，而 glibmm / giomm 停在为 2.84/2.86 稳定版做的 2.86.0，
+>    还没适配。gtkmm 本身在 Windows 上是被支持的（GIMP、Inkscape 都这么发），
+>    卡住的是 MSYS2 仓库此刻的版本搭配，**不是 gtkmm 不能用于 Windows**。
+>
+> 教训：把文档里的记录当成自己验证过的事实来转述，会把「一个临时的版本窗口」
+> 说成「永久的技术障碍」，进而影响选型判断。排除一个平台之前要亲自跑一遍。
 
 > 2026-09-15 补记：[ADR 0051](0051-platform-priority-macos-windows-first.md) 之后
 > Windows 升为优先平台，上表第一行（`apps/cpp` 排除 Windows）因此从「次要平台的
