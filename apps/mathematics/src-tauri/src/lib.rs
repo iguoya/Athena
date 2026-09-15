@@ -230,8 +230,8 @@ fn load_all_predictions(
 /// 系统里的中文语音。WKWebView 的 Web Speech 只看得见两个，所以列表改由这里给
 /// （ADR 0026）。非 macOS 上 `say` 不存在，返回空表，前端据此退回 Web Speech。
 #[tauri::command]
-fn tts_voices() -> Vec<tts::NativeVoice> {
-    tts::list_native_voices()
+fn tts_voices(state: tauri::State<'_, tts::TtsState>) -> Vec<tts::NativeVoice> {
+    state.lock().unwrap().voices()
 }
 
 /// 念一句。立刻返回；念完没有由 tts_done 问。

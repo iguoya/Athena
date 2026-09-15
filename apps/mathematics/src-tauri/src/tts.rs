@@ -2,108 +2,143 @@
 //!
 //! 起因是实测发现 WKWebView 只暴露 Meijia 和 Tingting 两个中文语音，使用者下载
 //! 的 Premium 语音、乃至系统自带的 Shelley/Sandy/Flo 全都看不见；而同一台机器上
-//! `say -v '?'` 有 21 个。这不是配置问题，Web Speech 在那边就是只挂着一小撮内置
-//! 语音，所以只能绕过它。
+//! `say -v '?'` 有 21 个。后来查到 Windows 的 WebView2 有性质相同的毛病：
+//! `speechSynthesis.getVoices()` 拿不到微软的 Natural voices，尽管 Edge 拿得到
+//! （WebView2Feedback #2660）。两个平台撞的是同一堵墙——宿主 WebView 只暴露一小
+//! 撮系统语音。
 //!
-//! 与 `engine.rs` 是同一套做法——Rust 侧管一个不做业务的进程。区别是符号引擎必须
-//! 常驻（`import sympy` 太贵），而 `say` 启动很轻，每句一个进程就够。
+//! 2026-09-15 改用 `tts` crate 这个通用方案，替掉原来直接调 macOS 的 `say`：
+//! 它在 macOS 上走 AVFoundation、Windows 上走 WinRT `SpeechSynthesizer`
+//! （拿得到 Natural voices）、Linux 上走 Speech Dispatcher。一套代码三个平台，
+//! 不写平台分支，正是 ADR 0047 说的「优先选把平台差异自己吃掉的抽象」；顺带把
+//! Linux 从「只能退回 Web Speech」提升到有原生朗读。
 
 use serde::Serialize;
-use std::process::{Child, Command, Stdio};
 use std::sync::Mutex;
 
 #[derive(Serialize, Clone)]
 pub struct NativeVoice {
+    /// 传回给 `speak` 用的标识。macOS 上是语音 id，不是显示名。
     pub name: String,
     pub lang: String,
-    /// 系统下载的增强版。`say -v '?'` 里以 "(Premium)" / "(Enhanced)" 标出
+    /// 系统下载的增强版，音质明显好过默认压缩版。各平台的标记词不同，
+    /// 统一按名字里的关键词认。
     pub better: bool,
 }
 
-#[derive(Default)]
+/// 名字里带这些词的算增强版：macOS 是 Premium / Enhanced，Windows 的高音质
+/// 语音叫 Natural，Linux 各引擎叫法不一，能认多少算多少。
+fn is_better(name: &str) -> bool {
+    let lower = name.to_lowercase();
+    ["premium", "enhanced", "natural", "neural"]
+        .iter()
+        .any(|k| lower.contains(k))
+}
+
 pub struct Tts {
-    /// 同一时刻只留一个朗读进程。新的一句先杀掉上一句，对应 Web Speech 的 cancel()
-    speaking: Option<Child>,
+    inner: Option<tts::Tts>,
+}
+
+impl Default for Tts {
+    fn default() -> Self {
+        // 系统没有可用的 TTS 后端时（例如 Linux 没装 speech-dispatcher）不 panic：
+        // 朗读是锦上添花，前端拿到空语音表会自动退回 Web Speech。
+        Self { inner: tts::Tts::default().ok() }
+    }
 }
 
 impl Tts {
     pub fn stop(&mut self) {
-        if let Some(mut c) = self.speaking.take() {
-            let _ = c.kill();
-            let _ = c.wait();
+        if let Some(t) = self.inner.as_mut() {
+            let _ = t.stop();
         }
     }
 
-    /// 起一句。立刻返回，真正念完由 `wait_done` 等——不然朗读会阻塞整个命令线程。
+    /// 起一句。立刻返回，真正念完由 `finished` 轮询——不然朗读会阻塞命令线程。
     pub fn speak(&mut self, text: &str, voice: &str, rate: f64) -> Result<(), String> {
-        self.stop();
         if text.trim().is_empty() {
             return Ok(());
         }
-        let mut cmd = Command::new("say");
+        let t = self.inner.as_mut().ok_or("这台机器上没有可用的系统语音后端")?;
+
         if !voice.is_empty() {
-            cmd.arg("-v").arg(voice);
+            let wanted = t
+                .voices()
+                .map_err(|e| format!("读语音表失败：{e}"))?
+                .into_iter()
+                .find(|v| v.id() == voice || v.name() == voice);
+            if let Some(v) = wanted {
+                t.set_voice(&v).map_err(|e| format!("选语音失败：{e}"))?;
+            }
         }
-        // Web Speech 的 rate 是倍数，say 的 -r 是每分钟词数（默认约 175）。
-        // 这个系数是估的：中文按字计与英文按词计不同，要实际听过再调（ADR 0026 第 3 节）。
-        let wpm = (175.0 * rate).clamp(90.0, 500.0).round() as i32;
-        cmd.arg("-r").arg(wpm.to_string());
-        cmd.arg("--").arg(text);
-        let child = cmd
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
-            .spawn()
-            .map_err(|e| format!("启动 say 失败：{e}"))?;
-        self.speaking = Some(child);
+
+        // 前端沿用 Web Speech 的语速口径（1.0 是正常，0.9–1.45 常用）。各后端的
+        // 取值范围差别很大（macOS 是词/分钟，WinRT 是 0.5–6.0 的倍数），所以按
+        // 后端自报的 normal/min/max 折算，而不是写死系数。
+        let normal = t.normal_rate();
+        let target = normal * rate as f32;
+        let clamped = target.clamp(t.min_rate(), t.max_rate());
+        let _ = t.set_rate(clamped);
+
+        // 第二个参数是 interrupt：新的一句打断上一句，对应 Web Speech 的 cancel()
+        t.speak(text, true).map_err(|e| format!("朗读失败：{e}"))?;
         Ok(())
     }
 
     /// 当前这句念完了没有。前端轮询它来串起「一段念完再念下一段」。
     pub fn finished(&mut self) -> bool {
-        match self.speaking.as_mut() {
+        match self.inner.as_ref() {
             None => true,
-            Some(c) => match c.try_wait() {
-                Ok(Some(_)) => {
-                    self.speaking = None;
-                    true
-                }
-                Ok(None) => false,
-                // 等不动了就当它结束，否则朗读会卡在这一句上再也走不下去
-                Err(_) => {
-                    self.speaking = None;
-                    true
-                }
-            },
+            // 问不出来就当它结束，否则朗读会卡在这一句上再也走不下去
+            Some(t) => !t.is_speaking().unwrap_or(false),
         }
     }
-}
 
-/// 解析 `say -v '?'`。每行形如：
-/// `Lilian (Premium)    zh_CN    # 你好！我叫黎潋。`
-/// 名字里可能有空格，所以按「两个以上空格」切，而不是按单个空格。
-pub fn list_native_voices() -> Vec<NativeVoice> {
-    let out = match Command::new("say").arg("-v").arg("?").output() {
-        Ok(o) => o,
-        Err(_) => return Vec::new(),
-    };
-    let text = String::from_utf8_lossy(&out.stdout);
-    let mut voices = Vec::new();
-    for line in text.lines() {
-        let head = line.split('#').next().unwrap_or("");
-        let mut parts = head.split("  ").filter(|s| !s.trim().is_empty());
-        let (Some(name), Some(lang)) = (parts.next(), parts.next()) else {
-            continue;
+    pub fn voices(&self) -> Vec<NativeVoice> {
+        let Some(t) = self.inner.as_ref() else {
+            return Vec::new();
         };
-        let name = name.trim().to_string();
-        let lang = lang.trim().replace('_', "-");
-        if !lang.to_lowercase().starts_with("zh") {
-            continue;
-        }
-        let better = name.contains("(Premium)") || name.contains("(Enhanced)");
-        voices.push(NativeVoice { name, lang, better });
+        let Ok(list) = t.voices() else {
+            return Vec::new();
+        };
+        list.into_iter()
+            .filter(|v| v.language().primary_language().eq_ignore_ascii_case("zh"))
+            .map(|v| NativeVoice {
+                better: is_better(&v.name()),
+                name: v.id(),
+                lang: v.language().to_string(),
+            })
+            .collect()
     }
-    voices
 }
 
 pub type TtsState = Mutex<Tts>;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// 有没有中文语音取决于这台机器装了什么，不能断言；但**初始化与枚举本身
+    /// 必须在三个平台上都不炸**——原来直接调 macOS 的 `say`，另外两个平台
+    /// 根本没跑过这条路径。
+    #[test]
+    fn listing_voices_works_on_every_platform() {
+        let tts = Tts::default();
+        let voices = tts.voices();
+        eprintln!("本机中文语音 {} 个", voices.len());
+        for v in &voices {
+            assert!(!v.name.is_empty(), "语音标识不该为空");
+            assert!(
+                v.lang.to_lowercase().starts_with("zh"),
+                "过滤后不该混进非中文语音：{}",
+                v.lang
+            );
+        }
+    }
+
+    #[test]
+    fn empty_text_is_a_no_op() {
+        let mut tts = Tts::default();
+        assert!(tts.speak("   ", "", 1.0).is_ok(), "空白文本应当直接返回");
+    }
+}
