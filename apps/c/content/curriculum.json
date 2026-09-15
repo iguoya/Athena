@@ -13,9 +13,9 @@
       "on_main_path": true,
       "prerequisites": [],
       "source_refs": [
-        { "source_id": "beej-bgc", "locator": "§5.1 Memory and Variables" },
-        { "source_id": "dis", "locator": "Ch.2 Parts of program memory" },
-        { "source_id": "c23", "locator": "6.2.6 Representations of types" }
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.1 Memory and Variables" },
+        { "relation": "adapted", "source_id": "dis", "locator": "Ch.2 Parts of program memory" },
+        { "relation": "adapted", "source_id": "c23", "locator": "6.2.6 Representations of types" }
       ],
       "summary": "Beej §5.1：内存是一排编了号的字节。DIS 第 2 章补上代码段、数据段、栈、堆。",
       "outline": {
@@ -51,8 +51,8 @@
           "knowledge_type": "concept",
           "requires": [],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§5.1 Memory and Variables" },
-            { "source_id": "c23", "locator": "6.2.6 Representations of types" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.1 Memory and Variables" },
+            { "relation": "adapted", "source_id": "c23", "locator": "6.2.6 Representations of types" }
           ],
           "description": "内存是一排编号的盒子，每格一字节。多字节的值占相邻格子。"
         },
@@ -65,8 +65,8 @@
           "knowledge_type": "concept",
           "requires": ["c.memory.bytes"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§5.1" },
-            { "source_id": "beej-bgc", "locator": "§5.7 sizeof and Pointers" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.1" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.7 sizeof and Pointers" }
           ],
           "description": "sizeof 问的是类型或表达式的宽度，不是名字有多重要。"
         },
@@ -78,7 +78,7 @@
           "mastery_goal": "required",
           "knowledge_type": "concept",
           "requires": ["c.memory.bytes"],
-          "source_refs": [{ "source_id": "dis", "locator": "Ch.2 Parts of program memory" }],
+          "source_refs": [{ "relation": "adapted", "source_id": "dis", "locator": "Ch.2 Parts of program memory" }],
           "description": "局部变量在栈上，全局在数据段，malloc 出来的在堆上。指针变量本身通常在栈上，指向的对象可以在别处。"
         }
       ]
@@ -91,9 +91,9 @@
       "on_main_path": true,
       "prerequisites": ["Memory"],
       "source_refs": [
-        { "source_id": "beej-bgc", "locator": "§5 Pointers" },
-        { "source_id": "modern-c", "locator": "Ch.11 Pointers" },
-        { "source_id": "c23", "locator": "6.3.2.3 Pointers" }
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5 Pointers" },
+        { "relation": "adapted", "source_id": "modern-c", "locator": "Ch.11 Pointers" },
+        { "relation": "adapted", "source_id": "c23", "locator": "6.3.2.3 Pointers" }
       ],
       "summary": "Beej §5：类型、解引用、作为参数传递、空指针。传指针改调用方写在这一章，不另开「函数」章。空指针按 C23 教 nullptr。",
       "outline": {
@@ -129,8 +129,8 @@
           "knowledge_type": "concept",
           "requires": [],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§5.2 Pointer Types" },
-            { "source_id": "c23", "locator": "6.3.2.3 Pointers" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.2 Pointer Types" },
+            { "relation": "adapted", "source_id": "c23", "locator": "6.3.2.3 Pointers" }
           ],
           "description": "int *p 保存的是某个 int 的地址，不是那个 int 自己。"
         },
@@ -143,8 +143,8 @@
           "knowledge_type": "concept",
           "requires": ["c.pointer.address"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§5.3 Dereferencing" },
-            { "source_id": "c23", "locator": "6.3.2.3 Pointers" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.3 Dereferencing" },
+            { "relation": "adapted", "source_id": "c23", "locator": "6.3.2.3 Pointers" }
           ],
           "description": "*p 用的是 p 指向的那个对象，可以当原来的变量用。"
         },
@@ -156,7 +156,7 @@
           "mastery_goal": "master",
           "knowledge_type": "strategy",
           "requires": ["c.pointer.deref"],
-          "source_refs": [{ "source_id": "beej-bgc", "locator": "§5.4 Passing Pointers as Arguments" }],
+          "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.4 Passing Pointers as Arguments" }],
           "description": "参数仍是副本，但复制的是地址；两边解引用碰到同一块对象。"
         },
         {
@@ -168,8 +168,8 @@
           "knowledge_type": "concept",
           "requires": ["c.pointer.address"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§5.5 The NULL Pointer" },
-            { "source_id": "c23", "locator": "6.4.4.6 Predefined constants (nullptr)" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§5.5 The NULL Pointer" },
+            { "relation": "adapted", "source_id": "c23", "locator": "6.4.4.6 Predefined constants (nullptr)" }
           ],
           "description": "C23 用 nullptr 表示不指向任何人。NULL 仍合法，常见于旧代码。解引用空指针是未定义行为。"
         }
@@ -183,9 +183,9 @@
       "on_main_path": true,
       "prerequisites": ["Pointer"],
       "source_refs": [
-        { "source_id": "beej-bgc", "locator": "§6 Arrays" },
-        { "source_id": "beej-bgc", "locator": "§6.6 Arrays and Pointers" },
-        { "source_id": "beej-bgc", "locator": "§11.2 Array/Pointer Equivalence" }
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§6 Arrays" },
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§6.6 Arrays and Pointers" },
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§11.2 Array/Pointer Equivalence" }
       ],
       "summary": "Beej §6 先讲连续存储和越界，§6.6 / §11.2 再讲数组名和指针为什么常常能互换。",
       "outline": {
@@ -220,7 +220,7 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": [],
-          "source_refs": [{ "source_id": "beej-bgc", "locator": "§6.1–6.3" }],
+          "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§6.1–6.3" }],
           "description": "同类型元素紧挨着排。初始化按声明顺序填进这些格子。"
         },
         {
@@ -231,7 +231,7 @@
           "mastery_goal": "master",
           "knowledge_type": "concept",
           "requires": ["c.array.block"],
-          "source_refs": [{ "source_id": "beej-bgc", "locator": "§6.4 Out of Bounds!" }],
+          "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§6.4 Out of Bounds!" }],
           "description": "C 不拦 a[i] 是否仍在这块里。走出去是未定义行为。"
         },
         {
@@ -243,8 +243,8 @@
           "knowledge_type": "concept",
           "requires": ["c.array.block"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§6.6 Arrays and Pointers" },
-            { "source_id": "beej-bgc", "locator": "§11.2 Array/Pointer Equivalence" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§6.6 Arrays and Pointers" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§11.2 Array/Pointer Equivalence" }
           ],
           "description": "多数表达式里，数组名变成指向第一个元素的指针。&a 的类型仍是指向整块数组。"
         }
@@ -257,7 +257,7 @@
       "difficulty": 2,
       "on_main_path": true,
       "prerequisites": ["Array"],
-      "source_refs": [{ "source_id": "beej-bgc", "locator": "§7 Strings" }],
+      "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§7 Strings" }],
       "summary": "Beej §7：字面量、当作数组、结束符、strlen 不含 0、拷贝必须给 0 留格。",
       "outline": {
         "lead": "字符串是以 0 结尾的 char 数组，长度不写在对象里。",
@@ -292,8 +292,8 @@
           "knowledge_type": "concept",
           "requires": [],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§7.1–7.3" },
-            { "source_id": "beej-bgc", "locator": "§7.6 String Termination" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§7.1–7.3" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§7.6 String Termination" }
           ],
           "description": "可见字符后面必须有一格 0。strlen 不含这一格。"
         },
@@ -305,7 +305,7 @@
           "mastery_goal": "required",
           "knowledge_type": "skill",
           "requires": ["c.string.zero"],
-          "source_refs": [{ "source_id": "beej-bgc", "locator": "§7.7 Copying a String" }],
+          "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§7.7 Copying a String" }],
           "description": "目标缓冲区太短就会写穿。C 不在运行时拦住。"
         }
       ]
@@ -317,7 +317,7 @@
       "difficulty": 2,
       "on_main_path": false,
       "prerequisites": ["Pointer"],
-      "source_refs": [{ "source_id": "beej-bgc", "locator": "§8 Structs" }],
+      "source_refs": [{ "relation": "adapted", "source_id": "beej-bgc", "locator": "§8 Structs" }],
       "summary": "Beej §8：声明、初始化、按值传递会复制、箭头运算符、不能直接比较。",
       "outline": {
         "lead": "结构体是一块对象，成员是这块里的字段。",
@@ -352,8 +352,8 @@
           "knowledge_type": "concept",
           "requires": [],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§8.1 Declaring a Struct" },
-            { "source_id": "beej-bgc", "locator": "§8.2 Struct Initializers" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§8.1 Declaring a Struct" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§8.2 Struct Initializers" }
           ],
           "description": "成员按声明写在同一块里。初始化按成员顺序填。"
         },
@@ -366,8 +366,8 @@
           "knowledge_type": "skill",
           "requires": ["c.struct.decl"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§8.3 Passing Structs to Functions" },
-            { "source_id": "beej-bgc", "locator": "§8.4 The Arrow Operator" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§8.3 Passing Structs to Functions" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§8.4 The Arrow Operator" }
           ],
           "description": "按值传递复制整块。p->m 等价于 (*p).m。"
         }
@@ -381,9 +381,9 @@
       "on_main_path": true,
       "prerequisites": ["Pointer", "Array"],
       "source_refs": [
-        { "source_id": "beej-bgc", "locator": "§12 Manual Memory Allocation" },
-        { "source_id": "dis", "locator": "Ch.2 Dynamic memory allocation" },
-        { "source_id": "modern-c", "locator": "Ch.13 Storage" }
+        { "relation": "adapted", "source_id": "beej-bgc", "locator": "§12 Manual Memory Allocation" },
+        { "relation": "adapted", "source_id": "dis", "locator": "Ch.2 Dynamic memory allocation" },
+        { "relation": "adapted", "source_id": "modern-c", "locator": "Ch.13 Storage" }
       ],
       "summary": "Beej §12：malloc / free、失败检查、按数组分配。DIS 说明这块空间在堆上，指针本身仍常在栈上。",
       "outline": {
@@ -419,8 +419,8 @@
           "knowledge_type": "concept",
           "requires": [],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§12.1 malloc() and free()" },
-            { "source_id": "beej-bgc", "locator": "§12.2 Error Checking" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§12.1 malloc() and free()" },
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§12.2 Error Checking" }
           ],
           "description": "失败时返回 NULL。free 之后不要再解引用这个起点。"
         },
@@ -433,8 +433,8 @@
           "knowledge_type": "skill",
           "requires": ["c.heap.malloc"],
           "source_refs": [
-            { "source_id": "beej-bgc", "locator": "§12.3 Allocating Space for an Array" },
-            { "source_id": "dis", "locator": "Ch.2 Dynamically allocated arrays" }
+            { "relation": "adapted", "source_id": "beej-bgc", "locator": "§12.3 Allocating Space for an Array" },
+            { "relation": "adapted", "source_id": "dis", "locator": "Ch.2 Dynamically allocated arrays" }
           ],
           "description": "malloc(n * sizeof *p) 要的是 n 个元素的连续字节。指针仍只保存起点。"
         }
