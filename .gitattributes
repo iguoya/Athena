@@ -1,0 +1,30 @@
+# 全仓库统一用 LF，不跟平台走。
+#
+# Windows 上 Git 默认 core.autocrlf=true，checkout 时会把文本文件转成 CRLF。
+# 这个仓库经不起那种转换：
+#
+# - `apps/cpp` 的 CSS / Blueprint / JSON 要打进 GResource，字节内容应当三平台一致；
+# - 测试里有按字节匹配的断言（2026-09-15 就因此在 Windows CI 上挂了一个：
+#   找 "window {\n    font-size: 20pt;" 找不到，因为实际是 \r\n）；
+# - 内容 JSON 每天都要做 diff，换行符一变整个文件都算改过。
+#
+# text=auto 让 Git 自己判断哪些是文本，eol=lf 规定文本一律以 LF 检出。
+* text=auto eol=lf
+
+# 这些一律按二进制处理，不做任何换行转换（Git 的自动判断偶尔会误判）
+*.png binary
+*.jpg binary
+*.ico binary
+*.icns binary
+*.pdf binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.gresource binary
+*.zst binary
+*.db binary
+
+# Windows 专用的批处理必须是 CRLF，否则某些环境下解析会出错
+*.bat text eol=crlf
+*.cmd text eol=crlf
