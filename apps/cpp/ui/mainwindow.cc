@@ -100,6 +100,7 @@ MainWindow::MainWindow(
         m_main_builder,
         m_content_loader,
         *m_experiment_runner,
+        m_ui_alive,
         [this]() { return_from_experiment(); });
     m_about_dialog = make_unique<AboutDialog>(*this);
 

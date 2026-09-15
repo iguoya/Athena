@@ -1,6 +1,7 @@
 #pragma once
 
 #include "content/content_loader.h"
+#include "registry/chapter_catalog.h"
 #include "services/experiment_runner.h"
 
 #include <gtkmm.h>
@@ -22,6 +23,9 @@ struct ExperimentSelection {
     string description;
     string source_path;
     string member_name;
+    // 这个知识点挂的骨架案例（ADR 0053），可以为空。实验页据此决定
+    // 要不要显示「动手实验」那一页。
+    vector<LabSpec> labs;
 };
 
 // ExperimentDock 不拥有控件；同一套控制逻辑可以接到代码章节页或学习

@@ -9,6 +9,7 @@ ExperimentPage::ExperimentPage(
     const Glib::RefPtr<Gtk::Builder>& builder,
     const ContentLoader& content_loader,
     ExperimentRunner& experiment_runner,
+    shared_ptr<atomic_bool> ui_alive,
     function<void()> on_return_requested)
     : m_experiment_runner(experiment_runner) {
     auto* source_view = GTK_SOURCE_VIEW(
@@ -29,10 +30,11 @@ ExperimentPage::ExperimentPage(
         builder->get_widget<Gtk::Button>("experiment_back_button");
     m_workspace_paned =
         builder->get_widget<Gtk::Paned>("experiment_workspace_paned");
+    m_case_paned = builder->get_widget<Gtk::Paned>("case_workspace_paned");
 
     if (!source_view || !result_view || !run_button || !spinner
         || !status_label || !title_label || !objective_label || !back_button
-        || !m_workspace_paned) {
+        || !m_workspace_paned || !m_case_paned) {
         throw runtime_error("Failed to load the focused experiment page");
     }
 
@@ -47,6 +49,8 @@ ExperimentPage::ExperimentPage(
         status_label,
         title_label,
         objective_label);
+    m_case_dock = make_unique<CaseDock>(
+        builder, CaseWorkspace(CaseWorkspace::default_root()), std::move(ui_alive));
 }
 
 void ExperimentPage::show(
@@ -61,6 +65,32 @@ void ExperimentPage::show(
         && m_selected_function_id == experiment.function_id) {
         m_dock->run_selected();
     }
+
+    // 没挂案例的知识点不显示「动手实验」页——Notebook 的标签跟着子控件
+    // 的可见性走，隐藏 Paned 那一页整个就不出现。
+    const bool has_case = !experiment.labs.empty();
+    m_case_paned->set_visible(has_case);
+    if (has_case) {
+        m_case_dock->show(experiment.labs.front());
+        initialize_case_split();
+    }
+}
+
+void ExperimentPage::initialize_case_split() {
+    if (m_has_initialized_case_split || !m_case_paned) {
+        return;
+    }
+    Glib::signal_idle().connect_once([this]() {
+        if (!m_case_paned) {
+            return;
+        }
+        const int width = m_case_paned->get_allocated_width();
+        if (width <= 0) {
+            return;
+        }
+        m_case_paned->set_position(width / 2);
+        m_has_initialized_case_split = true;
+    });
 }
 
 void ExperimentPage::initialize_balanced_split() {

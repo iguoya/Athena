@@ -173,7 +173,8 @@ void CodeChapterPage::populate_topic_list() {
                  .title = subchapter.title,
                  .description = subchapter.description,
                  .source_path = subchapter.source,
-                 .member_name = subchapter.name},
+                 .member_name = subchapter.name,
+                 .labs = subchapter.labs},
             .icon = subchapter.icon,
         };
         const TopicSelection topic = (*selection_by_row)[row];

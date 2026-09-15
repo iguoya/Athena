@@ -254,6 +254,197 @@ Box experiment_page {
     Label { label: "验证工作台"; }
 
 
+    // 动手实验（ADR 0053）：左边是学员自己的代码，右边是题目与结果。
+    // 与「验证工作台」并列而不是取代它——那边看真实工程源码（示范），
+    // 这边自己写一遍（待填），两半都要有。
+    Paned case_workspace_paned {
+      name: "case_workspace_paned";
+      orientation: horizontal;
+      // 同 experiment_workspace_paned：实际位置由代码在拿到可用宽度后设成
+      // 一半，不写死某台开发机的像素。
+      position: 0;
+      wide-handle: true;
+      resize-start-child: true;
+      resize-end-child: true;
+      shrink-start-child: false;
+      shrink-end-child: false;
+      hexpand: true;
+      vexpand: true;
+
+      Box {
+        orientation: vertical;
+        spacing: 6;
+        hexpand: true;
+        vexpand: true;
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Label case_file_label {
+            name: "case_file_label";
+            halign: start;
+            valign: center;
+            hexpand: true;
+
+            styles [ "dim-label" ]
+          }
+
+          Button case_reset_button {
+            name: "case_reset_button";
+            label: "重置骨架";
+            tooltip-text: "丢弃你的修改，恢复成最初的骨架";
+            halign: end;
+
+            styles [ "btn-sm" ]
+          }
+        }
+
+        Frame {
+          label: "你的代码";
+          hexpand: true;
+          vexpand: true;
+
+          styles [ "panel-frame", "group-frame" ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            GtkSource.View case_source_view {
+              name: "case_source_view";
+              editable: true;
+              cursor-visible: true;
+              monospace: true;
+              show-line-numbers: true;
+              highlight-current-line: true;
+              auto-indent: true;
+              insert-spaces-instead-of-tabs: true;
+              tab-width: 4;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 12;
+              bottom-margin: 12;
+
+              styles [ "code-view" ]
+            }
+          }
+        }
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 10;
+        margin-start: 12;
+        hexpand: true;
+        vexpand: true;
+
+        // 题干在最上面且醒目：读者第一眼该看到「要解决什么」，而不是
+        // 「补全哪个函数」（apps/dsa ADR 0003 第 5 条）。
+        Frame {
+          label: "题目";
+          hexpand: true;
+
+          styles [ "panel-frame", "group-frame" ]
+
+          Box {
+            orientation: vertical;
+            spacing: 8;
+            margin-top: 10;
+            margin-bottom: 10;
+            margin-start: 12;
+            margin-end: 12;
+
+            Label case_prompt_label {
+              name: "case_prompt_label";
+              halign: start;
+              wrap: true;
+              xalign: 0;
+
+              styles [ "lesson-callout-title" ]
+            }
+
+            Label case_goal_label {
+              name: "case_goal_label";
+              halign: start;
+              wrap: true;
+              xalign: 0;
+            }
+
+            Label case_hint_label {
+              name: "case_hint_label";
+              visible: false;
+              halign: start;
+              wrap: true;
+              xalign: 0;
+
+              styles [ "dim-label" ]
+            }
+          }
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Spinner case_spinner {
+            name: "case_spinner";
+            visible: false;
+            valign: center;
+          }
+
+          Label case_status_label {
+            name: "case_status_label";
+            visible: false;
+            halign: start;
+            valign: center;
+            hexpand: true;
+
+            styles [ "dim-label" ]
+          }
+
+          Button case_run_button {
+            name: "case_run_button";
+            label: "▶ 编译并运行";
+            halign: end;
+
+            styles [ "btn-sm", "btn-primary" ]
+          }
+        }
+
+        Frame {
+          label: "编译与输出";
+          hexpand: true;
+          vexpand: true;
+
+          styles [ "panel-frame", "group-frame" ]
+
+          ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+
+            TextView case_output_view {
+              name: "case_output_view";
+              editable: false;
+              cursor-visible: false;
+              monospace: true;
+              wrap-mode: word_char;
+              left-margin: 14;
+              right-margin: 14;
+              top-margin: 12;
+              bottom-margin: 12;
+
+              styles [ "code-view" ]
+            }
+          }
+        }
+      }
+    }
+
+    [tab]
+    Label { label: "动手实验"; }
+
+
     Box {
       orientation: vertical;
       spacing: 12;

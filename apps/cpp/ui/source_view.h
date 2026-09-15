@@ -8,6 +8,10 @@
 
 using namespace std;
 
+// 给源码框配上 C++ 语法高亮、括号匹配和配色方案。只读的真实源码和
+// 可编辑的骨架案例（ADR 0053）共用这一份设置。
+void apply_cpp_highlighting(GtkSourceView* source_view);
+
 // 在只读源码框展示真实教学源码，并可选定位、高亮一个成员函数定义。
 void display_project_source(
     GtkSourceView* source_view,

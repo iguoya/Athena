@@ -1533,7 +1533,8 @@ void TypeSemanticsLessonPage::open_experiment(const string& subchapter_name) {
              .title = topic.title,
              .description = topic.description,
              .source_path = topic.source,
-             .member_name = topic.name},
+             .member_name = topic.name,
+             .labs = topic.labs},
             false);
     }
 }

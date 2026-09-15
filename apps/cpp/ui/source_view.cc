@@ -15,6 +15,29 @@ void scroll_source_to_cursor(GtkSourceView* source_view) {
     gtk_text_view_scroll_to_mark(text_view, cursor, 0.15, true, 0.0, 0.20);
 }
 
+void apply_cpp_highlighting(GtkSourceView* source_view) {
+    if (!source_view) {
+        return;
+    }
+    auto source_buffer = GTK_SOURCE_BUFFER(
+        gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
+    auto language_manager = gtk_source_language_manager_get_default();
+    auto cpp_language = gtk_source_language_manager_get_language(
+        language_manager, "cpp");
+    if (cpp_language) {
+        gtk_source_buffer_set_language(source_buffer, cpp_language);
+    }
+    gtk_source_buffer_set_highlight_syntax(source_buffer, true);
+    gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
+
+    auto scheme_manager = gtk_source_style_scheme_manager_get_default();
+    auto scheme = gtk_source_style_scheme_manager_get_scheme(
+        scheme_manager, "Adwaita");
+    if (scheme) {
+        gtk_source_buffer_set_style_scheme(source_buffer, scheme);
+    }
+}
+
 void display_project_source(
     GtkSourceView* source_view,
     const ContentLoader& content_loader,
@@ -34,24 +57,9 @@ void display_project_source(
             : "无法读取源文件：" + relative_path;
     }
 
+    apply_cpp_highlighting(source_view);
     auto source_buffer = GTK_SOURCE_BUFFER(
         gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view)));
-    auto language_manager = gtk_source_language_manager_get_default();
-    auto cpp_language = gtk_source_language_manager_get_language(
-        language_manager, "cpp");
-    if (cpp_language) {
-        gtk_source_buffer_set_language(source_buffer, cpp_language);
-    }
-    gtk_source_buffer_set_highlight_syntax(source_buffer, true);
-    gtk_source_buffer_set_highlight_matching_brackets(source_buffer, true);
-
-    auto scheme_manager = gtk_source_style_scheme_manager_get_default();
-    auto scheme = gtk_source_style_scheme_manager_get_scheme(
-        scheme_manager, "Adwaita");
-    if (scheme) {
-        gtk_source_buffer_set_style_scheme(source_buffer, scheme);
-    }
-
     auto text_buffer = GTK_TEXT_BUFFER(source_buffer);
     gtk_text_buffer_set_text(
         text_buffer, source_text.c_str(), static_cast<int>(source_text.size()));

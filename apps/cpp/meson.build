@@ -239,6 +239,7 @@ app_sources = files(
   'ui/ai_insight_dialog.cc',
   'ui/ai_markdown_dialog.cc',
   'ui/api_key_store.cc',
+  'ui/case_dock.cc',
   'ui/chapter_index_page.cc',
   'ui/chapter_overview.cc',
   'ui/chapter_page_stack.cc',

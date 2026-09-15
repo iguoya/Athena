@@ -92,11 +92,36 @@ TEST(GtkResourceTest, LoadsTheFocusedExperimentPageWidgetTree) {
     const auto notebook =
         builder->get_widget<Gtk::Notebook>("experiment_notebook");
     ASSERT_NE(notebook, nullptr);
-    EXPECT_EQ(notebook->get_n_pages(), 2);
+    // 验证工作台 / 动手实验 / 探索（暂定）。动手实验是 ADR 0053 加的，
+    // 与验证工作台并列——那边看真实源码，这边自己写。
+    EXPECT_EQ(notebook->get_n_pages(), 3);
     const auto workspace =
         builder->get_widget<Gtk::Paned>("experiment_workspace_paned");
     ASSERT_NE(workspace, nullptr);
     EXPECT_EQ(workspace->get_orientation(), Gtk::Orientation::HORIZONTAL);
+
+    // 动手实验那一页的控件，CaseDock 按这些名字取（ADR 0053）。
+    const auto case_paned =
+        builder->get_widget<Gtk::Paned>("case_workspace_paned");
+    ASSERT_NE(case_paned, nullptr);
+    EXPECT_EQ(case_paned->get_orientation(), Gtk::Orientation::HORIZONTAL);
+    EXPECT_NE(
+        gtk_builder_get_object(builder->gobj(), "case_source_view"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::TextView>("case_output_view"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("case_prompt_label"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("case_goal_label"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("case_hint_label"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("case_file_label"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Label>("case_status_label"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Button>("case_run_button"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Button>("case_reset_button"), nullptr);
+    EXPECT_NE(builder->get_widget<Gtk::Spinner>("case_spinner"), nullptr);
+
+    // 源码框必须可编辑——整条 ADR 0053 就是为了让学员能写。
+    auto* case_source = GTK_TEXT_VIEW(
+        gtk_builder_get_object(builder->gobj(), "case_source_view"));
+    ASSERT_NE(case_source, nullptr);
+    EXPECT_TRUE(gtk_text_view_get_editable(case_source));
 }
 
 TEST(GtkResourceTest, LoadsTheNativeTypeSemanticsLearningScene) {
