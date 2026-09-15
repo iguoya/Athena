@@ -12,12 +12,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.image = NSImage(
-            systemSymbolName: "graduationcap",
-            accessibilityDescription: "Athena 启动器"
-        )
-        statusItem.button?.target = self
-        statusItem.button?.action = #selector(togglePopover)
+        if let button = statusItem.button {
+            let image = NSImage(
+                systemSymbolName: "graduationcap.fill",
+                accessibilityDescription: "Athena 启动器"
+            )
+            image?.isTemplate = true
+            button.image = image
+            button.imagePosition = .imageLeading
+            button.title = "Athena"
+            button.target = self
+            button.action = #selector(togglePopover)
+        }
 
         popover.behavior = .transient
         popover.animates = false

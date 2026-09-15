@@ -187,10 +187,23 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
     let stderr = log
         .try_clone()
         .map_err(|error| format!("日志复制失败：{error}"))?;
-    let child = command(app, repo, &app.dev.run)
+    let mut spawning = command(app, repo, &app.dev.run);
+    spawning
         .stdin(Stdio::null())
         .stdout(Stdio::from(stdout))
-        .stderr(Stdio::from(stderr))
+        .stderr(Stdio::from(stderr));
+
+    // 长驻进程还要自立门户：留在调用者的进程组里，`athena-dev open` 一返回，
+    // shell 收尾时按进程组清理就把应用一起带走了——终端里打开的应用活不过
+    // 那条命令，而从菜单栏打开的能活，因为那边的调用者是常驻进程。终端入口
+    // 是 README 明说支持的用法（ADR 0046），不能只在 GUI 下成立。
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::CommandExt;
+        spawning.process_group(0);
+    }
+
+    let child = spawning
         .spawn()
         .map_err(|error| format!("{} 启动失败：{error}", app.title))?;
     Ok(child.id())

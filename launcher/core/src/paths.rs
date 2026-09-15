@@ -114,5 +114,8 @@ pub fn extra_path_entries() -> Vec<PathBuf> {
         entries.push(home().join(".local/bin"));
     }
     entries.push(home().join(".cargo/bin"));
+    // 驾考学习用 Flutter。官方默认装在 ~/flutter，桌面启动器的 PATH 里没有它。
+    entries.push(home().join("flutter/bin"));
+    entries.push(home().join("development/flutter/bin"));
     entries.into_iter().filter(|path| path.is_dir()).collect()
 }

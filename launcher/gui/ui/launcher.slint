@@ -150,11 +150,11 @@ export component LauncherWindow inherits Window {
     callback stop(string);
 
     title: "Athena 启动器";
-    // 初始大小，不是上限：窗口可以拉大，图块和连线跟着重排。
+    // 初始大小按三列两行估：现在有六个学习应用，窄窗口改走滚动，不裁掉后排。
     preferred-width: 404px;
-    preferred-height: 372px;
+    preferred-height: 420px;
     min-width: 280px;
-    min-height: 240px;
+    min-height: 280px;
     background: #fbfbfd;
 
     VerticalLayout {
@@ -169,13 +169,16 @@ export component LauncherWindow inherits Window {
             height: 20px;
         }
 
-        graph := Rectangle {
+        graph := ScrollView {
             vertical-stretch: 1;
 
             // 一行放得下几个由当前宽度决定，窗口拉大就多排几个。
             property <int> columns: max(1, floor(self.width / 124px));
+            property <int> rows: max(1, floor((root.apps.length + self.columns - 1) / self.columns));
             property <length> stride-x: 124px;
             property <length> stride-y: 132px;
+            viewport-width: self.width;
+            viewport-height: max(self.height, self.rows * self.stride-y);
             // 图块内那个圆角色块的中心，连线从这里出发、到这里收尾。
             property <length> hub-x: 58px;
             property <length> hub-y: 38px;

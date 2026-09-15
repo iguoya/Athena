@@ -54,7 +54,11 @@ struct LauncherView: View {
 
     private var footer: some View {
         VStack(alignment: .leading, spacing: 2) {
-            MenuRow(title: "登录时自动启动启动器", systemImage: "power") {
+            MenuRow(
+                title: "登录时自动启动启动器",
+                systemImage: "power",
+                trailing: loginItemEnabled ? "已开启" : nil
+            ) {
                 toggleLoginItem()
             }
             MenuRow(title: "重新扫描应用清单", systemImage: "arrow.clockwise") {
@@ -67,9 +71,28 @@ struct LauncherView: View {
         }
     }
 
+    private var loginItemEnabled: Bool {
+        SMAppService.mainApp.status == .enabled
+    }
+
     private func toggleLoginItem() {
+        // 直接跑 .build/ 里的裸二进制时，SMAppService 注册的是那个构建产物的路径。
+        // 下次重建或清掉 .build，登录项就成了死链接，而且只能去系统设置里手删——
+        // 谁注册的谁才能注销，文件都没了就没人能注销它。只有正经 bundle 才放行。
+        guard Bundle.main.bundleURL.pathExtension == "app" else {
+            let alert = NSAlert()
+            alert.messageText = "先把启动器装成 .app"
+            alert.informativeText = """
+                现在跑的是构建产物本身，注册登录项会指到 .build/ 下的临时路径，\
+                重建后失效，还得手动去「系统设置 → 通用 → 登录项与扩展」删掉。
+
+                先执行 launcher/macos/scripts/install.sh，再从装好的那份里开启。
+                """
+            alert.runModal()
+            return
+        }
         do {
-            if SMAppService.mainApp.status == .enabled {
+            if loginItemEnabled {
                 try SMAppService.mainApp.unregister()
             } else {
                 try SMAppService.mainApp.register()
@@ -176,6 +199,7 @@ private struct AppRow: View {
 private struct MenuRow: View {
     let title: String
     let systemImage: String
+    var trailing: String? = nil
     let action: () -> Void
 
     @State private var hovering = false
@@ -188,6 +212,11 @@ private struct MenuRow: View {
                 .foregroundStyle(.secondary)
             Text(title).font(.system(size: 13))
             Spacer()
+            if let trailing {
+                Text(trailing)
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
+            }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 5)
