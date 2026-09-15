@@ -168,9 +168,11 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
-      - name: Install Qt
+      - name: Install Qt and Ninja
+        # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
+        # 两个平台、和 app.json 的 dev.run 保持同一个位置。
         run: |
-          python -m pip install --quiet aqtinstall
+          python -m pip install --quiet aqtinstall ninja
           python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -m qtdeclarative -O ${{ github.workspace }}\Qt
 
       - name: Verify

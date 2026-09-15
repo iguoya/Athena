@@ -351,16 +351,40 @@ QString Curriculum::goalLabel(const QString& goal) const {
     return "未评";
 }
 
+namespace {
+
+// 实验台可执行文件在哪：Windows 上文件名带 .exe，多配置生成器（Visual Studio）
+// 还会在 build/ 下多套一层 Debug/ 或 Release/。挨个试，不假设只有 POSIX
+// 那一种布局（ADR 0047）。
+QString find_lab_executable(const QString& playground) {
+    const QStringList candidates = {
+        playground + "/build/athena-c",
+        playground + "/build/athena-c.exe",
+        playground + "/build/Debug/athena-c.exe",
+        playground + "/build/Release/athena-c.exe",
+    };
+    for (const QString& candidate : candidates) {
+        const QFileInfo info(candidate);
+        if (info.exists() && info.isExecutable()) {
+            return candidate;
+        }
+    }
+    return {};
+}
+
+}  // namespace
+
 void Curriculum::launchLab() {
-    const QString path = m_root + "/playground/build/athena-c";
-    if (!QFileInfo::exists(path) || !QFileInfo(path).isExecutable()) {
+    const QString playground = m_root + "/playground";
+    const QString path = find_lab_executable(playground);
+    if (path.isEmpty()) {
         m_lab_message =
             "内存小程序还没构建。在 apps/c/playground 里 cmake 之后再开实验台。";
         emit labMessageChanged();
         return;
     }
     clear_lab_message();
-    QProcess::startDetached(path, {}, m_root + "/playground");
+    QProcess::startDetached(path, {}, playground);
 }
 
 void Curriculum::rebuild_chapter_graph() {

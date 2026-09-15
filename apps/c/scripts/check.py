@@ -72,17 +72,20 @@ def main() -> int:
     check_json()
 
     cmake = tool("cmake")
-    run(
-        [
-            cmake,
-            "-S",
-            ".",
-            "-B",
-            arguments.build_dir,
-            f"-DCMAKE_BUILD_TYPE={arguments.buildtype}",
-        ],
-        "CMake 配置",
-    )
+    configure = [
+        cmake,
+        "-S",
+        ".",
+        "-B",
+        arguments.build_dir,
+        f"-DCMAKE_BUILD_TYPE={arguments.buildtype}",
+    ]
+    # 有 Ninja 就用 Ninja：Windows 上 CMake 默认挑 Visual Studio，那是多配置
+    # 生成器，产物会落在 build/Debug/ 而不是 build/，和 app.json 的
+    # `dev.run: build/athena-c` 对不上。指定单配置生成器，三个平台的布局就一致了。
+    if shutil.which("ninja") is not None:
+        configure += ["-G", "Ninja"]
+    run(configure, "CMake 配置")
     # --config 只有多配置生成器（Visual Studio、Xcode）认，单配置生成器忽略它，
     # 所以三个平台可以共用这一条命令。
     run(
