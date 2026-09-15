@@ -79,8 +79,33 @@ ADR 里写清成本、收益与降级；应用文档里写明哪个平台不支�
 >    还没适配。gtkmm 本身在 Windows 上是被支持的（GIMP、Inkscape 都这么发），
 >    卡住的是 MSYS2 仓库此刻的版本搭配，**不是 gtkmm 不能用于 Windows**。
 >
-> 教训：把文档里的记录当成自己验证过的事实来转述，会把「一个临时的版本窗口」
-> 说成「永久的技术障碍」，进而影响选型判断。排除一个平台之前要亲自跑一遍。
+> **这也不是「Windows 问题」。** 三方对照：本地 macOS（glib 2.88.3）、CI Ubuntu
+> （glib 2.88.0）都编得过，只有 MSYS2（glib 2.90.0）编不过，而三边的 glibmm 与
+> gtkmm 版本相同。glib 2.88 的 `gdbusactiongroup.h` 用的还是旧式
+> `G_TYPE_CHECK_INSTANCE_CAST` 宏，2.90 改成了 `G_DECLARE_FINAL_TYPE`。
+> 也就是说 Linux 与 macOS 升到 2.90 之后会撞同一堵墙，MSYS2 只是跟进得快。
+>
+> **试过在下游抹平，失败了，失败的方式恰好说明了为什么抹不平。** 直觉的做法是
+> 用宏把 glibmm 前置声明里的 `struct _GDBusActionGroupClass` 重定向到 glib 生成
+> 的名字。实测结果：原来的三个 `conflicting declaration` 确实消失，换成了三个
+> `using typedef-name 'GDBusActionGroupClass' after 'struct'`。根因在
+> `G_DECLARE_FINAL_TYPE` 的定义里：
+>
+> ```c
+> typedef struct { ParentName##Class parent_class; } ModuleObjName##Class;
+> ```
+>
+> 它生成的是**匿名结构体的 typedef**——根本不存在具名的
+> `struct GDBusActionGroupClass`，这正是 “final type” 的本意：不把 Class 结构
+> 暴露给外部派生。而 glibmm 的包装模型需要一个具名、可前置声明的 Class 结构。
+> 两者是**类型模型的差异，不是命名差异**，下游用宏抹不平；只能由 glibmm 改变
+> 包装方式，或 glib 收回这个改动。垫片已回滚。
+>
+> 教训有两条。其一：把文档里的记录当成自己验证过的事实来转述，会把「一个临时的
+> 版本窗口」说成「永久的技术障碍」，进而影响选型判断——排除一个平台之前要亲自
+> 跑一遍。其二：判断「能不能在下游绕过」同样要动手试，试的过程会暴露机制；
+> 但试一次不成就该停手，继续加码抹平上游的类型模型差异，正是本 ADR 所说的
+> 「跟上游缺陷缠斗」。
 
 > 2026-09-15 补记：[ADR 0051](0051-platform-priority-macos-windows-first.md) 之后
 > Windows 升为优先平台，上表第一行（`apps/cpp` 排除 Windows）因此从「次要平台的

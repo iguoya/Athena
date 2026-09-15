@@ -45,12 +45,6 @@ test_source_root_arg = '-DATHENA_SOURCE_ROOT="' + meson.project_source_root() + 
 # 不在 C++ 里重复写死版本字符串。
 add_project_arguments('-DATHENA_VERSION="' + meson.project_version() + '"', language: 'cpp')
 
-# glib 2.90 与 glibmm 2.88 的类型名冲突垫片（compat/glib_2_90_class_alias.h 里
-# 写了来龙去脉）。用 -include 全局预包含，省得在几十个 .cc 里各加一行；垫片
-# 自己带 GLIB_CHECK_VERSION 守卫，低版本上是空的，所以三个平台可以无差别地加。
-add_project_arguments(
-  '-include', meson.project_source_root() / 'compat' / 'glib_2_90_class_alias.h',
-  language: 'cpp')
 
 # === 从 athena.json 读取项目定义（JSON 为单一数据源） ===
 project_generator = meson.project_source_root() / 'scripts' / 'generate_project.py'
