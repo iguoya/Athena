@@ -1,18 +1,31 @@
 // 朗读文本转换的用例（ADR 0018）。speakable 是纯函数，最容易在改别的规则时
 // 被顺手改坏，而坏了只有戴着耳机听才发现——所以拿测试钉住。
 // 跑法：node scripts/test-speech.mjs（已挂进 npm run build）
-import { execFileSync } from "node:child_process";
+//
+// 用 esbuild 的 JS API 而不是 spawn `npx esbuild`：Windows 上 npx 实际是
+// npx.cmd，execFileSync 不经 shell，CreateProcess 只替没有扩展名的程序补 .exe，
+// 于是这里在 Windows 上必然 ENOENT（主仓库 ADR 0047）。不起子进程就没有这个
+// 问题，顺带还省掉一次进程启动。
+import * as esbuild from "esbuild";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = mkdtempSync(join(tmpdir(), "speech-"));
 const out = join(dir, "speak.mjs");
-execFileSync("npx", ["esbuild", "src/speak.ts", "--bundle", "--format=esm", `--outfile=${out}`,
-  "--log-level=error"], { cwd: root, stdio: "inherit" });
-const { speakable } = await import(out);
+await esbuild.build({
+  absWorkingDir: root,
+  entryPoints: ["src/speak.ts"],
+  bundle: true,
+  format: "esm",
+  outfile: out,
+  logLevel: "error",
+});
+// Windows 上 import() 不接受 C:\ 开头的裸路径，要转成 file:// URL 才认。
+const { speakable } = await import(pathToFileURL(out).href);
 
 const CASES = [
   // 下标上标要摊平，否则 TTS 直接跳过，念出来缺主语
