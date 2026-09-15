@@ -49,6 +49,17 @@ Gtk::Box& section(Gtk::Box& host, const string& title) {
     return body;
 }
 
+Gtk::Box& folded_section(
+    Gtk::Box& host, const string& badge, const string& title) {
+    const auto builder = load();
+    auto& expander = take<Gtk::Expander>(builder, "lesson_section_folded");
+    take<Gtk::Label>(builder, "lesson_section_folded_badge").set_text(badge);
+    take<Gtk::Label>(builder, "lesson_section_folded_title").set_text(title);
+    auto& body = take<Gtk::Box>(builder, "lesson_section_folded_body");
+    host.append(expander);
+    return body;
+}
+
 Gtk::Box& callout(Gtk::Box& host, CalloutKind kind, const string& title) {
     const auto builder = load();
     auto& root = take<Gtk::Box>(builder, "lesson_callout");

@@ -1594,3 +1594,23 @@ button.quiz-wrong:disabled {
     border-color: @athena_danger;
     color: #842029;              /* alert-danger text */
 }
+
+/* === 内容区档位（ADR 0056 第 7 节）===
+   折叠不是把内容藏起来，是明确告诉读者这段可以先跳——所以标题行要清楚，
+   徽章要一眼看见档位。 */
+.lesson-section-folded {
+    padding: 4px 0;
+    border-left: 3px solid @athena_border;
+    padding-left: 12px;
+}
+
+.lesson-section-folded > label,
+.lesson-section-folded label {
+    color: @athena_body_text;
+}
+
+.lesson-section-folded .badge {
+    background-color: @athena_surface_subtle;
+    color: @athena_muted;
+    border: 1px solid @athena_border;
+}

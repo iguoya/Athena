@@ -21,6 +21,10 @@ struct LessonBlock {
     string title;
     // callout 的语气：why / key / note / trap / use
     string kind;
+    // section 的档位：core（核心，展开）/ deeper（进阶，折叠）/
+    // optional（选读，折叠）。空等同 core。让难点显式可见，而不是
+    // 藏在一长段正文里。
+    string tier;
     // code 与 figure 的说明文字
     string caption;
     // table 的表注

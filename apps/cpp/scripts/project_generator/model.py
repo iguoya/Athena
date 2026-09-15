@@ -102,7 +102,7 @@ LESSON_BLOCK_REQUIRED = {
 }
 LESSON_BLOCK_FIELDS = frozenset({
     "type", "text", "title", "kind", "caption", "note", "id",
-    "items", "head", "rows", "blocks", "answer", "source_refs",
+    "items", "head", "rows", "blocks", "answer", "source_refs", "tier",
 })
 CALLOUT_KINDS = frozenset({"why", "key", "note", "trap", "use"})
 
@@ -110,6 +110,10 @@ CALLOUT_KINDS = frozenset({"why", "key", "note", "trap", "use"})
 # 和 mastery_goal（要学到什么程度）正交，三者不要混用。
 STAGES = frozenset({"basic", "intermediate", "advanced"})
 PATH_FIELDS = frozenset({"name", "title", "description", "default", "chapters"})
+# 一节内部的档位（ADR 0056 第 7 节）：core 必须懂、deeper 遇到坑再回来、
+# optional 用到再说。与 stage 不是一回事——stage 说这个知识点在整条路上
+# 排第几段，tier 说这一节内部哪里难。
+SECTION_TIERS = frozenset({"core", "deeper", "optional"})
 # 可编辑骨架案例的字段（ADR 0053）。prompt 是题干——这道实验要验证或解决什么；
 # goal 是动手清单——补哪个符号、对照哪段输出。两个都必填：只写「补全 xxx」而
 # 看不到认知问题，是 apps/dsa ADR 0003 第 5 条点名要避免的写法。
@@ -332,6 +336,14 @@ def validate_lesson_block(
                 )
             validate_source_refs(
                 block["source_refs"], f"{label}.source_refs", catalog
+            )
+    if "tier" in block:
+        if block_type != "section":
+            raise ProjectError(f"{label}.tier only applies to section blocks")
+        tier = require_text(block["tier"], f"{label}.tier")
+        if tier not in SECTION_TIERS:
+            raise ProjectError(
+                f"{label}.tier must be one of {sorted(SECTION_TIERS)}, got {tier!r}"
             )
     if block_type == "table":
         rows = require_list(block.get("rows"), f"{label}.rows")

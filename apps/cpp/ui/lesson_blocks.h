@@ -25,6 +25,11 @@ enum class CalloutKind { Why, Key, Note, Trap, Use };
 // 往 host 里加一个带标题的内容区，返回可继续 append 的内容容器。
 Gtk::Box& section(Gtk::Box& host, const string& title);
 
+// 一个折叠起来的内容区：进阶与选读用它，核心内容用 section 直接展开。
+// badge 是档位标记（「进阶」「选读」），显示在标题左边——折叠不是把内容
+// 藏起来，是明确告诉读者这段可以先跳。
+Gtk::Box& folded_section(Gtk::Box& host, const string& badge, const string& title);
+
 // 往 host 里加一个提示框，返回它的正文容器——多段正文就多次 prose()。
 Gtk::Box& callout(Gtk::Box& host, CalloutKind kind, const string& title);
 

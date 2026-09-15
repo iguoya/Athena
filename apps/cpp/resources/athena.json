@@ -107,7 +107,7 @@
               "requires": [
                 "initialization"
               ],
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
               "name": "auto_deduction",
@@ -119,7 +119,7 @@
               "requires": [
                 "initialization"
               ],
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
               "name": "enum_class",
@@ -165,7 +165,7 @@
                 "auto_deduction",
                 "value_category"
               ],
-              "stage": "intermediate"
+              "stage": "advanced"
             }
           ]
         },
@@ -198,7 +198,7 @@
               "description": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。",
               "difficulty": 3,
               "mastery_goal": "master",
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
               "name": "pass_by_reference",
@@ -214,7 +214,7 @@
               "description": "学习返回成员或生命周期更长的对象引用的安全用法；重点演示返回局部变量引用造成的悬空引用，理解为什么这是未定义行为以及编译器警告的局限。",
               "difficulty": 4,
               "mastery_goal": "required",
-              "stage": "basic"
+              "stage": "advanced"
             }
           ]
         },
@@ -256,7 +256,7 @@
               "description": "学习捕获列表的语义差异：按值捕获复制一份快照、按引用捕获共享原对象；演示隐式捕获、mutable 与返回类型推导，以及捕获局部变量后在对象生命周期外使用导致的悬空引用风险。",
               "difficulty": 3,
               "mastery_goal": "master",
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
               "name": "function_wrapper",
@@ -303,7 +303,7 @@
               "description": "学习对象构造与析构的时机和顺序：成员按声明顺序初始化而非初始化列表书写顺序，析构按相反顺序执行；观察局部对象离开作用域和异常栈展开时的自动析构。",
               "difficulty": 3,
               "mastery_goal": "master",
-              "stage": "basic"
+              "stage": "intermediate"
             },
             {
               "name": "operator_overloading",
@@ -369,7 +369,7 @@
               "description": "理解迭代器的解引用、递增和区间表示。",
               "difficulty": 1,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "range_for",
@@ -377,7 +377,7 @@
               "description": "学习范围 for 的展开机制和引用语义：循环变量按值会复制每个元素、按引用才能修改原容器；理解遍历过程中修改容器结构导致迭代器失效的风险。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             }
           ]
         },
@@ -400,7 +400,7 @@
               "description": "理解标准算法如何通过迭代器操作不同容器。",
               "difficulty": 2,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "sorting",
@@ -416,7 +416,7 @@
               "description": "学习 find、find_if 和二分查找相关算法。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "transform",
@@ -424,7 +424,7 @@
               "description": "学习 transform 等对序列进行映射和转换的算法。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "ranges_algorithm",
@@ -470,7 +470,7 @@
               "description": "学习组合多个不同类型的值以及结构化绑定。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "optional",
@@ -478,7 +478,7 @@
               "description": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "variant",
@@ -494,7 +494,7 @@
               "description": "理解 any 的类型擦除、运行时取值和适用边界。",
               "difficulty": 2,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "chrono",
@@ -510,7 +510,7 @@
               "description": "学习 std::format 的占位符、格式说明和类型安全输出。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             }
           ]
         },
@@ -721,7 +721,7 @@
                   ]
                 }
               ],
-              "stage": "advanced"
+              "stage": "intermediate"
             },
             {
               "name": "forwarding",
@@ -802,7 +802,7 @@
               "requires": [
                 "cpp.Reference.reference_basics"
               ],
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "basic",
@@ -810,7 +810,7 @@
               "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "unique",
@@ -818,7 +818,7 @@
               "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "shared",
@@ -834,7 +834,7 @@
               "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。",
               "difficulty": 4,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "advanced"
             }
           ]
         },
@@ -857,7 +857,7 @@
               "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。",
               "difficulty": 4,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "advanced"
             },
             {
               "name": "standard_exception",
@@ -865,7 +865,7 @@
               "description": "学习标准异常层次和根据错误语义选择异常类型。",
               "difficulty": 2,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "custom_exception",
@@ -873,7 +873,7 @@
               "description": "学习定义携带上下文且保持稳定接口的异常类型。",
               "difficulty": 2,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "noexcept_contract",
@@ -881,7 +881,7 @@
               "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。",
               "difficulty": 4,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "advanced"
             },
             {
               "name": "exception_safety",
@@ -889,7 +889,7 @@
               "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。",
               "difficulty": 5,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "advanced"
             },
             {
               "name": "expected_errors",
@@ -939,7 +939,7 @@
               "requires": [
                 "parameter_passing"
               ],
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "span_views",
@@ -998,7 +998,7 @@
               "description": "学习使用文件流打开、读取、写入和关闭文件。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "string_stream",
@@ -1006,7 +1006,7 @@
               "description": "学习 stringstream 的解析、拼接和格式转换用途。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "filesystem",
@@ -1014,7 +1014,7 @@
               "description": "学习使用 std::filesystem 处理路径、目录和文件属性。",
               "difficulty": 2,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "basic"
             }
           ]
         },
@@ -1039,7 +1039,7 @@
               "requires": [
                 "cpp.ClassObject.class_basic"
               ],
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "compile_time",
@@ -1096,7 +1096,7 @@
               "description": "理解继承关系、访问控制和基类子对象。",
               "difficulty": 1,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "polymorphism",
@@ -1104,7 +1104,7 @@
               "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "override_keyword",
@@ -1112,7 +1112,7 @@
               "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。",
               "difficulty": 1,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "final_keyword",
@@ -1120,7 +1120,7 @@
               "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。",
               "difficulty": 1,
               "mastery_goal": "familiar",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "object_slicing",
@@ -1128,7 +1128,7 @@
               "description": "观察把派生类对象按值赋给基类对象时派生部分被丢弃、虚函数调用退化为基类版本的现象；理解多态必须通过指针或引用实现，按值传递是多态代码的隐蔽错误来源。",
               "difficulty": 4,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "advanced"
             },
             {
               "name": "abstract_interface",
@@ -1136,7 +1136,7 @@
               "description": "学习纯虚函数、抽象类和面向接口的设计。",
               "difficulty": 2,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "virtual_destructor",
@@ -1144,7 +1144,7 @@
               "description": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。",
               "difficulty": 4,
               "mastery_goal": "master",
-              "stage": "intermediate"
+              "stage": "advanced"
             }
           ]
         },
@@ -1167,7 +1167,7 @@
               "description": "学习函数模板、类模板、实例化和模板参数。",
               "difficulty": 2,
               "mastery_goal": "required",
-              "stage": "intermediate"
+              "stage": "basic"
             },
             {
               "name": "template_specialization",
@@ -1175,7 +1175,7 @@
               "description": "学习为特定类型提供全特化实现覆盖通用模板；理解全特化与偏特化的区别，以及特化版本必须与主模板签名严格对应。",
               "difficulty": 3,
               "mastery_goal": "familiar",
-              "stage": "advanced"
+              "stage": "intermediate"
             },
             {
               "name": "generic_programming",
@@ -1183,7 +1183,7 @@
               "description": "理解通过通用接口和类型约束编写可复用算法。",
               "difficulty": 3,
               "mastery_goal": "required",
-              "stage": "advanced"
+              "stage": "intermediate"
             },
             {
               "name": "variadic_template",
@@ -1222,7 +1222,7 @@
               "description": "学习线程创建、join 与 detach 的生命周期约束；演示多线程无同步读写共享数据产生的数据竞争，引出后续同步原语的必要性。",
               "difficulty": 3,
               "mastery_goal": "required",
-              "stage": "advanced"
+              "stage": "intermediate"
             },
             {
               "name": "mutex_lock",

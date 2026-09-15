@@ -132,3 +132,39 @@ TEST(LessonRendererTest, RendersTheShippedChapterEndToEnd) {
     // 课文里引用的图必须都是注册过的 id，否则页面上只剩图注。
     EXPECT_EQ(asked_figures, vector<string>{"shallow_copy_aliasing"});
 }
+
+
+// 档位：核心直接展开，进阶与选读收进 Expander 并带徽章（ADR 0056 第 7 节）。
+TEST(LessonRendererTest, FoldsDeeperSectionsAndKeepsCoreExpanded) {
+    const auto make_section = [](const string& tier, const string& title) {
+        LessonBlock inner;
+        inner.type = "prose";
+        inner.text = "正文";
+        LessonBlock section;
+        section.type = "section";
+        section.title = title;
+        section.tier = tier;
+        section.blocks = {inner};
+        return section;
+    };
+
+    LessonDoc doc;
+    doc.blocks = {make_section("", "核心"), make_section("deeper", "进阶"),
+                  make_section("optional", "选读")};
+
+    Gtk::Box host(Gtk::Orientation::VERTICAL);
+    LessonRenderer().render(host, doc);
+
+    int expanders = 0;
+    int frames = 0;
+    for (Gtk::Widget* child = host.get_first_child(); child != nullptr;
+         child = child->get_next_sibling()) {
+        if (dynamic_cast<Gtk::Expander*>(child) != nullptr) {
+            ++expanders;
+        } else if (dynamic_cast<Gtk::Frame*>(child) != nullptr) {
+            ++frames;
+        }
+    }
+    EXPECT_EQ(frames, 1) << "核心档应当直接展开";
+    EXPECT_EQ(expanders, 2) << "进阶与选读应当收进 Expander";
+}

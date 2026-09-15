@@ -34,6 +34,7 @@ LessonBlock parse_block(const json& node) {
     block.text = text_or(node, "text");
     block.title = text_or(node, "title");
     block.kind = text_or(node, "kind");
+    block.tier = text_or(node, "tier");
     block.caption = text_or(node, "caption");
     block.note = text_or(node, "note");
     block.id = text_or(node, "id");

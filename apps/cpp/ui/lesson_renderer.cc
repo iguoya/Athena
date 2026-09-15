@@ -67,7 +67,17 @@ void LessonRenderer::render_block(Gtk::Box& host, const LessonBlock& block) cons
         return;
     }
     if (block.type == "section") {
-        Gtk::Box& body = lesson::section(host, block.title);
+        // 档位决定这一节是摊开还是收起：核心必须懂，进阶遇到坑再回来，
+        // 选读用到再说。空 tier 等同核心。
+        const char* badge = nullptr;
+        if (block.tier == "deeper") {
+            badge = "进阶";
+        } else if (block.tier == "optional") {
+            badge = "选读";
+        }
+        Gtk::Box& body = badge == nullptr
+            ? lesson::section(host, block.title)
+            : lesson::folded_section(host, badge, block.title);
         render_blocks(body, block.blocks);
         return;
     }

@@ -197,3 +197,38 @@ Button lesson_quiz_option {
     wrap: true;
   }
 }
+
+// 可折叠的内容区：进阶与选读用它，核心内容仍用 lesson_section 直接展开。
+// 难点要显式可见——折叠不是藏起来，是明确告诉读者「这段可以先跳」。
+Expander lesson_section_folded {
+  expanded: false;
+
+  styles [ "lesson-section-folded" ]
+
+  [label]
+  Box {
+    orientation: horizontal;
+    spacing: 8;
+
+    Label lesson_section_folded_badge {
+      valign: center;
+
+      styles [ "badge" ]
+    }
+
+    Label lesson_section_folded_title {
+      halign: start;
+      wrap: true;
+      xalign: 0;
+    }
+  }
+
+  Box lesson_section_folded_body {
+    orientation: vertical;
+    spacing: 10;
+    margin-top: 12;
+    margin-bottom: 8;
+    margin-start: 14;
+    margin-end: 14;
+  }
+}
