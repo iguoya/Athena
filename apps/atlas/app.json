@@ -1,0 +1,54 @@
+{
+  "id": "atlas",
+  "title": "Atlas",
+  "description": "军工研制技术图谱：实时与高性能双侧约束；十七所实时控制为重要参考；机器人仅相邻参考；大模型仅地面助力。",
+  "icon": {
+    "type": "theme",
+    "name": "compass-symbolic",
+    "symbol": "map",
+    "letter": "A",
+    "accent": "#316B78",
+    "file": "icon.svg"
+  },
+  "dev": {
+    "env": {
+      "ATLAS_ROOT": "${dir}",
+      "CMAKE_PREFIX_PATH": {
+        "first_existing": [
+          "/opt/homebrew/opt/qt@6",
+          "/usr/local/opt/qt@6",
+          "/usr/local/opt/qt6"
+        ]
+      }
+    },
+    "prepare": [
+      {
+        "run": [
+          "cmake",
+          "-S",
+          ".",
+          "-B",
+          "build",
+          "-DCMAKE_BUILD_TYPE=Debug"
+        ],
+        "label": "配置 Atlas CMake"
+      },
+      {
+        "run": [
+          "cmake",
+          "--build",
+          "build",
+          "--target",
+          "atlas"
+        ],
+        "label": "编译 Atlas"
+      }
+    ],
+    "run": [
+      "build/atlas"
+    ],
+    "ready": "process",
+    "match": "build",
+    "binary": "atlas"
+  }
+}

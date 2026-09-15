@@ -132,15 +132,17 @@ jobs:
       - name: Verify
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
-  # C 语言教程：Qt Quick + CMake。跑的是应用自己的 scripts/check.py。
-  c:
-    name: C 语言教程（${{ matrix.os }}）
+  # Qt Quick / CMake 应用：各自跑自己的 scripts/check.py。
+  # Atlas 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
+  qt-quick:
+    name: ${{ matrix.app }}（${{ matrix.os }}）
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         os: [macos-15, ubuntu-26.04]
+        app: [c, atlas]
     # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
@@ -165,23 +167,27 @@ jobs:
       - name: Verify
         # Homebrew 的 Qt 是 keg-only，不在默认搜索路径里；CMAKE_PREFIX_PATH
         # 指过去即可，不必把 Qt 灌进全局 PATH。
-        run: python3 scripts/check.py c
+        run: python3 scripts/check.py ${{ matrix.app }}
         env:
           CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
 
-  # Windows 上的 Qt 走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
+  # Windows 上的 Qt Quick 应用走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
   # aqtinstall 是个 pip 包，不必引第三方 action。
   #
   # 这个 job 起初是 continue-on-error 的探测位，2026-09-15 修掉两处问题后转正：
   # 一是给 aqt 传了 -m qtdeclarative（Qt 6 里 Quick 属于基础包，不是可选 module），
   # 二是 runner 的 PATH 里有 MinGW，CMake 挑中 g++ 去链 MSVC 构建的 Qt。
   # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
-  c-windows:
-    name: C 语言教程（Windows）
+  qt-quick-windows:
+    name: ${{ matrix.app }}（Windows）
     runs-on: windows-latest
     timeout-minutes: 45
     env:
       QT_VERSION: "6.8.1"
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [c, atlas]
 
     steps:
       - name: Check out source
@@ -209,7 +215,7 @@ jobs:
           python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 -O ${{ github.workspace }}\Qt
 
       - name: Verify
-        run: python scripts/check.py c
+        run: python scripts/check.py ${{ matrix.app }}
         env:
           CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
 
@@ -264,7 +270,7 @@ jobs:
 
   # 驾考学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
   # scripts/check.py（ADR 0007）。
-  driving:
+  driver:
     name: 驾考学习（${{ matrix.os }}）
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -294,7 +300,7 @@ jobs:
         run: flutter config --no-analytics --enable-macos-desktop --enable-linux-desktop --enable-windows-desktop
 
       - name: Verify
-        run: python3 scripts/check.py driving
+        run: python3 scripts/check.py driver
 
   # 启动器：纯 Rust，三平台同一套源码。
   launcher:
