@@ -67,6 +67,9 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
+  # 这一档不按 ADR 0051 降级：apps/cpp 的 Windows 已经被 ADR 0049 排除，
+  # macOS 与 Ubuntu 是它仅有的两个支持平台。再把 Ubuntu 放松，就只剩一个平台
+  # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
   cpp-ubuntu:
     name: C++ 教程（Ubuntu）
     runs-on: ubuntu-26.04
@@ -104,6 +107,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-15, ubuntu-26.04]
+    # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
 
@@ -131,20 +136,33 @@ jobs:
           CMAKE_PREFIX_PATH: ${{ runner.os == 'macOS' && '/opt/homebrew/opt/qt@6' || '' }}
 
   # Windows 上的 Qt 走 aqtinstall：官方安装器是交互式的，CI 里用不了，而
-  # aqtinstall 是个 pip 包，不必引第三方 action。标成实验性持续探测——README
-  # 里说 Windows 要自己设 CMAKE_PREFIX_PATH，那就该有一条流水线替这句话背书
-  # （ADR 0047），但暂时不让它阻塞整体结论。
+  # aqtinstall 是个 pip 包，不必引第三方 action。
+  #
+  # 这个 job 起初是 continue-on-error 的探测位，2026-09-15 修掉两处问题后转正：
+  # 一是给 aqt 传了 -m qtdeclarative（Qt 6 里 Quick 属于基础包，不是可选 module），
+  # 二是 runner 的 PATH 里有 MinGW，CMake 挑中 g++ 去链 MSVC 构建的 Qt。
+  # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
   c-windows:
-    name: C 语言教程（Windows，实验性）
+    name: C 语言教程（Windows）
     runs-on: windows-latest
     timeout-minutes: 45
-    continue-on-error: true
     env:
       QT_VERSION: "6.8.1"
 
     steps:
       - name: Check out source
         uses: actions/checkout@v7
+
+      - name: Set up MSVC
+        # 装的是 MSVC 构建的 Qt（win64_msvc2022_64），但 runner 的 PATH 里还有
+        # MinGW，CMake 会挑中 g++，链接时撞上符号修饰不兼容：
+        # `undefined reference to __imp__Z9qt_assertPKcS0_i`。把 MSVC 的环境
+        # 导进来，CMake 才会选 cl.exe。
+        #
+        # 这里引了第三方 action，和上面 Qt 用 pip 包 aqtinstall 的取向不同——
+        # 设置 MSVC 环境没有同等简洁的替代，手写 vcvars 导出要自己维护一套
+        # 变量过滤，反而更脆。
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Install Qt and Ninja
         # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
@@ -171,7 +189,9 @@ jobs:
       fail-fast: false
       matrix:
         app: [dsa, english, mathematics]
-        os: [macos-15, ubuntu-26.04, windows-latest]
+        os: [macos-15, windows-latest, ubuntu-26.04]
+    # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
 
     steps:
       - name: Check out source
@@ -215,7 +235,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, ubuntu-26.04, windows-latest]
+        os: [macos-15, windows-latest, ubuntu-26.04]
+    # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
+    continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
 
     steps:
       - name: Check out source

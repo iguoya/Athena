@@ -95,10 +95,9 @@ launcher/target/release/athena-dev logs dsa    # 日志文件路径
   而不是假装成功。
 - **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
   装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
-- **Windows** 上启动器本身有 CI 保证编得过；被启动的应用则参差：三个 Tauri 应用
-  已纳入三平台流水线，`apps/c`（Qt）与 `apps/cpp`（GTK4）的 Windows job 还是
-  `continue-on-error` 的探测位，后者卡在 MSYS2 giomm 与 glib 的头文件冲突上。
-  也就是说，Windows 上能不能真的打开某个应用，取决于那个应用自己。
+- **Windows** 上启动器本身、三个 Tauri 应用和 `apps/c`（Qt）都有正式的 CI 门槛，
+  全部构建通过。唯一的缺口是 `apps/cpp`（GTK4）——卡在 MSYS2 giomm 与 glib 的
+  头文件冲突上，已按 ADR 0049 明确排除 Windows，它只支持 macOS 与 Ubuntu。
 
 ## 日志
 

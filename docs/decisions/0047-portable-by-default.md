@@ -109,7 +109,7 @@
   Python，改用标准库 `venv.EnvBuilder` 拿解释器路径。
 - ~~三个 Tauri 应用的 `rusqlite` 没开 `bundled`~~ —— 已经是 `bundled`，SQLite
   源码跟着一起编，不再需要目标机器上有 libsqlite3。
-- ~~验证入口和各应用检查脚本是 `.sh`~~ —— 根入口与五个应用的检查脚本全部是
+- ~~验证入口和各应用检查脚本是 `.sh`~~ —— 根入口与各应用的检查脚本全部是
   Python，`apps/c` 的 `fetch-sources.sh` 也一并改写。仓库里只剩
   `launcher/macos/scripts/` 下两个 macOS 专用安装脚本。
 
