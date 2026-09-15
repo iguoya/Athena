@@ -17,12 +17,11 @@ ADR 0047 把跨平台写成「选型的硬指标，不是加分项」。这句�
 常驻、全局热键、预热是 macOS 上每天都在用的收益，为对称砍掉它们，是拿真实便利换
 一张整齐的架构图（ADR 0048 已否决这个建议）。
 
-**二是为不受控的上游问题挂永久探测位。** `apps/cpp` 在 Windows 上编不过，卡在
-MSYS2 的 giomm 2.86 与 glib 2.90 头文件冲突——本仓库这边没有障碍，倒在 gtkmm
-自己的头文件上。CI 里为它留了一个 `continue-on-error` 的 job「持续探测，上游修好
-就会自动变绿」。可是 `apps/cpp/AGENTS.md` 本来就写着「当前支持 macOS 与 Ubuntu」：
-这个 job 每次 CI 烧掉一段 runner 时间，不产生任何决策价值，只制造一种「我们还在
-努力支持 Windows」的假象。
+**二是为看不懂的失败挂永久探测位。** `apps/cpp` 在 Windows 上编不过，报的是
+giomm / gtkmm 头文件里的类型冲突。CI 里为它留了一个 `continue-on-error` 的 job
+「持续探测，上游修好就会自动变绿」，却没人去查那个「上游问题」到底是什么——
+后来查清是 MSYS2 的包版本脱节（见下方实测更正），既不是上游未修，也不是平台
+不兼容。一个没人读的探测位，烧 runner 时间之余还固化了一个错误认知。
 
 ## 决策
 
@@ -57,7 +56,7 @@ ADR 里写清成本、收益与降级；应用文档里写明哪个平台不支�
 
 | 组件 | 排除 | 成本 | 那个平台怎么办 |
 |---|---|---|---|
-| `apps/cpp`（GTK4） | Windows | MSYS2 当前的 glib 2.90 与 glibmm/giomm 2.86 版本错配，**上游问题，不受我们控制**（详见下方补记） | 暂不支持；`AGENTS.md` 早已声明只支持 macOS 与 Ubuntu |
+| `apps/cpp`（GTK4） | Windows | MSYS2 仓库里 glibmm 包滞后于 glib 包（2.86 vs 2.90），**发行渠道的版本脱节，上游早已修复**（详见下方补记） | 暂不支持；等 MSYS2 跟进即可，不需要改我们的代码 |
 | `launcher/macos`（菜单栏） | 非 macOS | 整套 AppKit/SwiftUI 实现，无从移植 | 跨平台 Slint 版功能完整，只少菜单栏常驻、全局热键与预热（ADR 0048） |
 | `apps/dsa` 的实验编译器 | MSVC `cl.exe` | 命令行参数是另一套，要为它单独写一份编译调用 | Windows 上装 MSYS2/MinGW 或 LLVM 即可，`g++` / `clang++` 都认 |
 
@@ -74,48 +73,54 @@ ADR 里写清成本、收益与降级；应用文档里写明哪个平台不支�
 >    随之消失。
 > 3. 清掉上面两类后**只剩三个**错误，全部是 `giomm` / `gdkmm` 的
 >    `using XxxClass = struct _XxxClass` 撞上 glib 的 `G_DECLARE_FINAL_TYPE`
->    生成的 typedef。根因是 MSYS2 装的 **glib 2.90.0**——那是通往 3.0 的
->    **开发系列**，而 glibmm / giomm 停在为 2.84/2.86 稳定版做的 2.86.0，
->    还没适配。gtkmm 本身在 Windows 上是被支持的（GIMP、Inkscape 都这么发），
->    卡住的是 MSYS2 仓库此刻的版本搭配，**不是 gtkmm 不能用于 Windows**。
+>    生成的 typedef。根因见下——是包版本脱节，不是平台能力问题；gtkmm 本身在
+>    Windows 上是被支持的（GIMP、Inkscape 都这么发）。
 >
-> **这也不是「Windows 问题」。** 三方对照：本地 macOS（glib 2.88.3）、CI Ubuntu
-> （glib 2.88.0）都编得过，只有 MSYS2（glib 2.90.0）编不过，而三边的 glibmm 与
-> gtkmm 版本相同。glib 2.88 的 `gdbusactiongroup.h` 用的还是旧式
-> `G_TYPE_CHECK_INSTANCE_CAST` 宏，2.90 改成了 `G_DECLARE_FINAL_TYPE`。
-> 也就是说 Linux 与 macOS 升到 2.90 之后会撞同一堵墙，MSYS2 只是跟进得快。
+> **这也不是「Windows 问题」，更不是 glib 的平台兼容问题。** glib 是基础设施，
+> 它在三个平台上都能跑；真正脱节的是**发行渠道里两个包的版本**。
 >
-> **试过在下游抹平，失败了，失败的方式恰好说明了为什么抹不平。** 直觉的做法是
-> 用宏把 glibmm 前置声明里的 `struct _GDBusActionGroupClass` 重定向到 glib 生成
-> 的名字。实测结果：原来的三个 `conflicting declaration` 确实消失，换成了三个
+> 三方对照：本地 macOS 是 glib 2.88.3 + glibmm 2.88.1（匹配），CI Ubuntu 是
+> glib 2.88.0 + glibmm 2.86.0（够近），都编得过；MSYS2 是 **glib 2.90.0 +
+> glibmm 2.86.0**——glib 往前走了两个版本，glibmm 没跟上。
+>
+> 上游其实早就修好了。glibmm 2.89.0（2026-08-10）的发行说明写得很清楚：
+>
+> > Emblem and DBus::ActionGroup: Don't derive gtkmm__Gxxx types.
+> > The underlying C classes are final types since GLib 2.89.2.
+>
+> 也就是说：glib 2.89.2 起把这几个类改成 final type，glibmm 2.89.0 随即调整了
+> 包装方式，2.90.0（2026-09-13）已是稳定版。**我们撞上的是 MSYS2 仓库里
+> glibmm 包滞后一个多月的窗口，不是上游未解决的问题。**
+>
+> **也试过在下游用宏抹平，失败了，失败的方式说明了为什么抹不平。** 直觉做法是把
+> glibmm 前置声明里的 `struct _GDBusActionGroupClass` 重定向到 glib 生成的名字。
+> 实测：原来的三个 `conflicting declaration` 确实消失，换成三个
 > `using typedef-name 'GDBusActionGroupClass' after 'struct'`。根因在
-> `G_DECLARE_FINAL_TYPE` 的定义里：
+> `G_DECLARE_FINAL_TYPE` 的定义里——
 >
 > ```c
 > typedef struct { ParentName##Class parent_class; } ModuleObjName##Class;
 > ```
 >
-> 它生成的是**匿名结构体的 typedef**——根本不存在具名的
-> `struct GDBusActionGroupClass`，这正是 “final type” 的本意：不把 Class 结构
-> 暴露给外部派生。而 glibmm 的包装模型需要一个具名、可前置声明的 Class 结构。
-> 两者是**类型模型的差异，不是命名差异**，下游用宏抹不平；只能由 glibmm 改变
-> 包装方式，或 glib 收回这个改动。垫片已回滚。
+> 它生成的是**匿名结构体的 typedef**，不存在具名的 `struct GDBusActionGroupClass`，
+> 这正是 final type 的本意。旧版 glibmm 的包装需要具名 Class 结构，两者是类型模型
+> 的差异，宏改不出来。而这件事上游正是靠**改包装方式**解决的（不再 derive
+> `gtkmm__Gxxx`），所以下游抹不平是必然的。垫片已回滚。
 >
-> 教训有两条。其一：把文档里的记录当成自己验证过的事实来转述，会把「一个临时的
-> 版本窗口」说成「永久的技术障碍」，进而影响选型判断——排除一个平台之前要亲自
-> 跑一遍。其二：判断「能不能在下游绕过」同样要动手试，试的过程会暴露机制；
-> 但试一次不成就该停手，继续加码抹平上游的类型模型差异，正是本 ADR 所说的
-> 「跟上游缺陷缠斗」。
+> **出路因此很具体**：等 MSYS2 把 glibmm / gtkmm 更新到 2.89+，或换一个版本同步
+> 的分发渠道（vcpkg、gvsbuild），或在 CI 里把 glib 钉回 2.88。都不需要改我们的代码。
 
 > 2026-09-15 补记：[ADR 0051](0051-platform-priority-macos-windows-first.md) 之后
-> Windows 升为优先平台，上表第一行（`apps/cpp` 排除 Windows）因此从「次要平台的
-> 一处排除」变成「优先平台上的一个缺口」。排除本身仍然成立——上游不修就是修不了，
-> 这是成本判断，不随优先级改变；但它值不值得用换界面技术的代价去填，是 ADR 0051
-> 留下的待决问题。
+> Windows 升为优先平台，上表第一行因此从「次要平台的一处排除」变成「优先平台上的
+> 一个缺口」。但查清根因之后，这个缺口的性质也变了：**不是「上游不修就修不了」，
+> 而是「MSYS2 的包跟上就好了」**——上游 glibmm 2.89.0 早已修复，我们的代码不需要
+> 任何改动。所以 ADR 0051 里那个「要不要换界面技术」的待决问题，现在没有紧迫性。
 
-`apps/c` 与 `apps/cpp` 的对比正好说明判据是成本而不是喜好：两者都是原生 GUI 应用，
-但 Qt 在 Windows 上是一等公民、`aqtinstall` 一条命令装得上，成本低就留着；GTK4 在
-MSYS2 上要等上游修头文件，成本高且不由我们决定，就排除。
+`apps/c` 与 `apps/cpp` 的对比原本被用来说明判据是成本而不是喜好。查清根因后这个
+对比要打个折扣：Qt 那边确实是 `aqtinstall` 一条命令装得上、当天就打通；GTK4 这边
+的障碍**不是技术成本，而是 MSYS2 的包版本脱节**，我们这侧无事可做，也无成本可付。
+真正的教训是：把「暂时装不上匹配的依赖」当成「这个技术栈成本高」，会导致错误的
+选型结论。
 
 > 2026-09-15 验证：`apps/c` 的 Windows 构建当天就打通并转为正式门槛，代价只是两处
 > 配置修正（aqt 的模块参数、让 CMake 用 MSVC 而不是 runner 上的 MinGW）。「成本低」
@@ -123,8 +128,11 @@ MSYS2 上要等上游修头文件，成本高且不由我们决定，就排除�
 
 ## 后果
 
-- CI 去掉 `cpp-windows`，流水线跑得更快，红绿也重新代表真实结论——留下的 job
-  绿了就是真的支持，不再有「实验性、不阻塞」这种中间状态需要每次解释。
-- 代价：上游哪天修好了 gtkmm 的头文件冲突，不会再自动被发现。这是可接受的——
-  真要重新评估 Windows 支持，本来也需要一次有意识的决定，而不是某天 CI 悄悄变绿。
+- ~~CI 去掉 `cpp-windows`~~ —— 2026-09-15 查清根因后又加了回来，理由变了：它现在
+  监测的是一个**具体且预期会变**的条件（MSYS2 把 glibmm 更新到 2.89+），一变绿就是
+  「可以支持 Windows 了」的信号。本条原意仍然成立——不留的是**没人读、不产生决策
+  价值**的探测位，而不是所有红格子。
+- `apps/cpp/meson.build` 增加了 glib 与 glibmm 的配套版本检查：错配时在**配置期**
+  说清楚是版本问题，而不是到编译期吐一堆 `conflicting declaration`。这次绕远路的
+  直接原因就是那串错误看不出跟版本有关。
 - ADR 0047 的「已知待清理项」按本文重新梳理：已完成的标掉，被排除的写明排除。

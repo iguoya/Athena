@@ -10,6 +10,25 @@ gtk4_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 glibmm_dep = dependency('glibmm-2.68')
 gio_dep = dependency('gio-2.0')
+
+# C 库与它的 C++ 绑定必须**配套**，不能各走各的版本。
+#
+# glib 2.89.2 起把 GEmblem / GDBusActionGroup / GdkCursor 等改用
+# G_DECLARE_FINAL_TYPE 声明，该宏生成的是匿名结构体的 typedef；glibmm 2.89.0
+# 随即改了包装方式（发行说明：“Don't derive gtkmm__Gxxx types. The underlying
+# C classes are final types since GLib 2.89.2.”）。两边版本错配时，编译器吐的是
+# 一串 `conflicting declaration ... GDBusActionGroupClass`，看不出跟版本有关，
+# 排查成本很高——2026-09-15 就因此绕了一大圈（主仓库 ADR 0049）。
+#
+# 所以在配置期直接把话说清楚。这不是给某个平台开的特例：三个平台同一条规则，
+# 谁先撞上谁先报。
+if glib_dep.version().version_compare('>= 2.89.2') and glibmm_dep.version().version_compare('< 2.89.0')
+  error(
+    'glib @0@ 与 glibmm @1@ 不配套：glib 2.89.2 起若干类型改成了 final type，'.format(
+      glib_dep.version(), glibmm_dep.version()) +
+    '需要 glibmm >= 2.89.0 才能正确包装。请把两者升到同一代，' +
+    '或把 glib 降回 2.88.x（详见主仓库 ADR 0049）。')
+endif
 sourceview_dep = dependency('gtksourceview-5')
 md4c_dep = dependency('md4c')
 nlohmann_json_dep = dependency('nlohmann_json')
