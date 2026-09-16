@@ -239,6 +239,97 @@ class BsProgress extends StatelessWidget {
   }
 }
 
+/// 模拟考战绩：一次一根柱，90 分线横在上面，一眼看出在不在往上走。
+class ExamTrend extends StatelessWidget {
+  const ExamTrend({super.key, required this.scores, this.passScore = 90, this.height = 132});
+
+  /// 时间正序：老的在左，新的在右。
+  final List<int> scores;
+  final int passScore;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    if (scores.isEmpty) {
+      return Text(
+        "还没有模拟考记录。四个阶段过关后就能开考，考完这里会画出每次的分数。",
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+      );
+    }
+    return SizedBox(
+      height: height,
+      child: CustomPaint(
+        painter: _TrendPainter(scores, passScore),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _TrendPainter extends CustomPainter {
+  _TrendPainter(this.scores, this.passScore);
+
+  final List<int> scores;
+  final int passScore;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const labelHeight = 20.0;
+    final chart = Rect.fromLTWH(0, 0, size.width, size.height - labelHeight);
+    final slot = chart.width / scores.length;
+    final barWidth = min(slot * 0.6, 34.0);
+    double yOf(int score) => chart.bottom - chart.height * (score.clamp(0, 100) / 100);
+
+    // 90 分线
+    final line = yOf(passScore);
+    final dash = Paint()
+      ..color = Bs.secondary
+      ..strokeWidth = 1;
+    for (var x = 0.0; x < chart.width; x += 8) {
+      canvas.drawLine(Offset(x, line), Offset(x + 4, line), dash);
+    }
+    _text(canvas, Offset(chart.width - 2, line - 16), "$passScore 分", Bs.secondary, align: TextAlign.right);
+
+    for (var i = 0; i < scores.length; i++) {
+      final score = scores[i];
+      final center = slot * i + slot / 2;
+      final top = yOf(score);
+      final rect = RRect.fromRectAndRadius(
+        Rect.fromLTRB(center - barWidth / 2, top, center + barWidth / 2, chart.bottom),
+        const Radius.circular(3),
+      );
+      canvas.drawRRect(rect, Paint()..color = score >= passScore ? Bs.success : Bs.danger);
+      _text(canvas, Offset(center, chart.bottom + 2), "$score", Bs.dark, align: TextAlign.center);
+    }
+  }
+
+  void _text(Canvas canvas, Offset at, String text, Color color, {TextAlign align = TextAlign.left}) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w600)),
+      textDirection: TextDirection.ltr,
+      textAlign: align,
+    )..layout();
+    final dx = switch (align) {
+      TextAlign.center => at.dx - painter.width / 2,
+      TextAlign.right => at.dx - painter.width,
+      _ => at.dx,
+    };
+    painter.paint(canvas, Offset(dx, at.dy));
+  }
+
+  @override
+  bool shouldRepaint(covariant _TrendPainter oldDelegate) =>
+      !listEquals(oldDelegate.scores, scores) || oldDelegate.passScore != passScore;
+}
+
+bool listEquals(List<int> a, List<int> b) {
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
+}
+
 class StatTile extends StatelessWidget {
   const StatTile({
     super.key,

@@ -3,6 +3,8 @@ import "dart:io";
 import "package:path/path.dart" as p;
 import "package:sqflite_common_ffi/sqflite_ffi.dart";
 
+import "models.dart";
+
 /// 相对自己平时的答题节奏：样本不够不下结论；必须明显停更久才算迟疑。
 bool lingeredVsPace(int durationMs, Iterable<int> otherDurations) {
   final samples = [
@@ -269,6 +271,47 @@ class ProgressStore {
       ORDER BY a.id DESC
     """);
     return [for (final row in rows) row["question_id"] as String];
+  }
+
+  /// 每道题累计答错过几次。考前最该刷的是反复栽跟头的题，不是最近错的那一道。
+  Future<Map<String, int>> wrongCounts() async {
+    final rows = await _db.rawQuery(
+      "SELECT question_id, COUNT(*) AS n FROM attempts WHERE correct = 0 GROUP BY question_id",
+    );
+    return {
+      for (final row in rows) row["question_id"] as String: row["n"] as int,
+    };
+  }
+
+  /// 最近几次模拟考的成绩，新的在前——记了不给人看，等于没记（主仓库 ADR 0052）。
+  Future<List<ExamRecord>> recentExams({String? subjectId, int limit = 12}) async {
+    final rows = await _db.rawQuery(
+      """
+      SELECT subject_id, score, passed, at FROM exams
+      ${subjectId == null ? "" : "WHERE subject_id = ?"}
+      ORDER BY id DESC LIMIT ?
+      """,
+      [?subjectId, limit],
+    );
+    return [
+      for (final row in rows)
+        ExamRecord(
+          subjectId: row["subject_id"] as String,
+          score: row["score"] as int,
+          passed: (row["passed"] as int) == 1,
+          at: DateTime.tryParse(row["at"] as String? ?? "") ?? DateTime.now(),
+        ),
+    ];
+  }
+
+  /// 最近一次开始往前数，连着及格了几次。
+  static int passStreak(List<ExamRecord> exams) {
+    var n = 0;
+    for (final exam in exams) {
+      if (!exam.passed) break;
+      n++;
+    }
+    return n;
   }
 
   /// 最近一次答对、且没有明显慢于平时节奏。迟疑答对的题练习里还会再出。

@@ -28,6 +28,8 @@ class _HomePageState extends State<HomePage> {
   int _avgMs = 0;
   int _wrongCount = 0;
   List<Question> _wrongQuestions = const [];
+  Map<String, int> _wrongCounts = const {};
+  List<ExamRecord> _exams = const [];
 
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
 
@@ -79,6 +81,8 @@ class _HomePageState extends State<HomePage> {
     final attempts = await widget.store.attemptCounts();
     final avgMs = await widget.store.averageDurationMs();
     final ids = await widget.store.wrongQuestionIds();
+    final wrongCounts = await widget.store.wrongCounts();
+    final exams = await widget.store.recentExams();
     final s1Done = allMastered(widget.bank.forSubject("subject1"), mastered);
     final wrong = [
       for (final id in ids)
@@ -87,6 +91,8 @@ class _HomePageState extends State<HomePage> {
     if (!s1Done) {
       wrong.removeWhere((q) => q.topicId.startsWith("drive.s4."));
     }
+    // 错得越多的排越前：考前该先啃反复栽跟头的那几道。
+    wrong.sort((a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0));
     if (!mounted) return;
     setState(() {
       _mastered = mastered;
@@ -94,6 +100,8 @@ class _HomePageState extends State<HomePage> {
       _avgMs = avgMs;
       _wrongCount = wrong.length;
       _wrongQuestions = wrong;
+      _wrongCounts = wrongCounts;
+      _exams = exams;
     });
   }
 
@@ -329,6 +337,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 16),
+          _examTrend(context, subject),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -534,6 +543,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// 模拟考战绩：每次一根柱、90 分线横着，连续及格几次写在旁边（主仓库 ADR 0052）。
+  Widget _examTrend(BuildContext context, Subject subject) {
+    final mine = [for (final e in _exams) if (e.subjectId == subject.id) e];
+    if (mine.isEmpty) return const SizedBox.shrink();
+    final scores = [for (final e in mine.reversed) e.score];
+    final best = scores.reduce((a, b) => a > b ? a : b);
+    final streak = ProgressStore.passStreak(mine);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+      decoration: BoxDecoration(
+        color: Bs.body,
+        border: Border.all(color: Bs.border),
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.timeline, size: 22, color: Bs.paper),
+              const SizedBox(width: 8),
+              Text("模拟考战绩", style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(width: 16),
+              Text(
+                "考了 ${mine.length} 次 · 最好 $best 分"
+                "${streak >= 2 ? " · 连续 $streak 次及格" : ""}",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ExamTrend(scores: scores, passScore: subject.exam.passScore),
+        ],
+      ),
+    );
+  }
+
   Widget _wrongOverview(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
@@ -549,11 +596,13 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 12),
           Text(
-            _wrongCount == 0 ? "最近一次都做对了。" : "最近一次答错 $_wrongCount 道，点左侧或下面开始订正。",
+            _wrongCount == 0
+                ? "最近一次都做对了。"
+                : "最近一次答错 $_wrongCount 道，按错过的次数排好了——排在前面的是反复栽跟头的题。",
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           if (_wrongCount > 0) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             FilledButton(
               onPressed: () => _openSession(
                 SessionLaunch(
@@ -565,6 +614,36 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: const Text("开始订正"),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.separated(
+                itemCount: _wrongQuestions.length,
+                separatorBuilder: (_, _) => const Divider(height: 18),
+                itemBuilder: (context, i) {
+                  final q = _wrongQuestions[i];
+                  final times = _wrongCounts[q.id] ?? 1;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BsBadge(
+                        text: times >= 3 ? "错 $times 次 · 顽固" : "错 $times 次",
+                        icon: times >= 3 ? Icons.priority_high : Icons.close,
+                        color: times >= 3 ? Bs.danger : Bs.warning,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          q.prompt,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ],

@@ -241,6 +241,21 @@ class ExamRules {
   }
 }
 
+/// 一次模拟考的战绩。
+class ExamRecord {
+  const ExamRecord({
+    required this.subjectId,
+    required this.score,
+    required this.passed,
+    required this.at,
+  });
+
+  final String subjectId;
+  final int score;
+  final bool passed;
+  final DateTime at;
+}
+
 class StudyPhase {
   const StudyPhase({required this.id, required this.title, this.plain = ""});
 
