@@ -50,19 +50,35 @@ class SessionStage extends StatefulWidget {
 }
 
 class _SessionStageState extends State<SessionStage> {
-  var _index = 0;
-  final _selected = <String>{};
-  var _revealed = false;
+  /// 一组五题：答完一题就停下来点一次「下一题」太碎，改成一页做完五题再翻页。
+  static const _groupSize = 5;
+
+  var _start = 0;
+  final _picked = <int, Set<String>>{};
+  final _judged = <int>{};
+  final _correct = <int>{};
+  final _hesitant = <int>{};
+  /// 右栏依据显示哪一题：作答后自动跟到刚答的题，也可以用题干右侧的「解析」调回来。
+  int? _focus;
   var _busy = false;
   DateTime _shownAt = DateTime.now();
-  var _hesitant = false;
-  final _correct = <int>{};
   Timer? _timer;
   late Duration _left;
   _Result? _result;
   final _speaker = Speaker();
 
   SessionLaunch get _launch => widget.launch;
+
+  int get _end => min(_start + _groupSize, _launch.questions.length);
+
+  Iterable<int> get _group => [for (var i = _start; i < _end; i++) i];
+
+  bool get _groupDone => _group.every(_judged.contains);
+
+  bool get _lastGroup => _end >= _launch.questions.length;
+
+  /// 练习里作答即揭晓；模拟考只记选择，对错留到交卷（ADR 0005）。
+  bool _revealed(int index) => _launch.revealImmediately && _judged.contains(index);
 
   @override
   void initState() {
@@ -92,8 +108,6 @@ class _SessionStageState extends State<SessionStage> {
     super.dispose();
   }
 
-  Question get _question => _launch.questions[_index];
-
   @override
   Widget build(BuildContext context) {
     if (_launch.questions.isEmpty) {
@@ -102,23 +116,22 @@ class _SessionStageState extends State<SessionStage> {
     if (_result != null) {
       return _ResultPane(result: _result!, onClose: widget.onClose);
     }
-    final q = _question;
     return CallbackShortcuts(
-      bindings: _shortcuts(q),
+      bindings: _shortcuts(),
       child: Focus(
         autofocus: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _stageHead(context, q),
+            _stageHead(context),
             const Divider(height: 1),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(flex: 5, child: _promptColumn(context, q)),
+                  Expanded(flex: 5, child: _groupColumn(context)),
                   const VerticalDivider(width: 1),
-                  Expanded(flex: 3, child: _evidenceColumn(context, q)),
+                  Expanded(flex: 3, child: _evidenceColumn(context)),
                 ],
               ),
             ),
@@ -128,13 +141,21 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
-  Map<ShortcutActivator, VoidCallback> _shortcuts(Question q) {
+  /// 键盘落在本组第一道还没答的题上；一组答完，回车和空格翻页。
+  int? get _pending {
+    for (final i in _group) {
+      if (!_judged.contains(i)) return i;
+    }
+    return null;
+  }
+
+  Map<ShortcutActivator, VoidCallback> _shortcuts() {
     final bindings = <ShortcutActivator, VoidCallback>{
       const SingleActivator(LogicalKeyboardKey.enter): () {
-        if (_revealed) _next();
+        if (_groupDone) _nextGroup();
       },
       const SingleActivator(LogicalKeyboardKey.space): () {
-        if (_revealed) _next();
+        if (_groupDone) _nextGroup();
       },
     };
     const letters = [
@@ -149,24 +170,33 @@ class _SessionStageState extends State<SessionStage> {
       LogicalKeyboardKey.digit3,
       LogicalKeyboardKey.digit4,
     ];
-    for (var i = 0; i < min(q.choices.length, 4); i++) {
-      void pick() => _pick(q, q.choices[i].id);
-      bindings[SingleActivator(letters[i])] = pick;
-      bindings[SingleActivator(digits[i])] = pick;
+    void onIndexed(int slot) {
+      final index = _pending;
+      if (index == null) return;
+      final q = _launch.questions[index];
+      if (slot >= q.choices.length) return;
+      _pick(index, q, q.choices[slot].id);
     }
-    for (final choice in q.choices) {
-      if (choice.id == "T") {
-        bindings[const SingleActivator(LogicalKeyboardKey.keyT)] = () => _pick(q, "T");
-      }
-      if (choice.id == "F") {
-        bindings[const SingleActivator(LogicalKeyboardKey.keyF)] = () => _pick(q, "F");
-      }
+
+    for (var i = 0; i < letters.length; i++) {
+      bindings[SingleActivator(letters[i])] = () => onIndexed(i);
+      bindings[SingleActivator(digits[i])] = () => onIndexed(i);
     }
+    void onJudge(String id) {
+      final index = _pending;
+      if (index == null) return;
+      final q = _launch.questions[index];
+      if (q.choices.any((choice) => choice.id == id)) _pick(index, q, id);
+    }
+
+    bindings[const SingleActivator(LogicalKeyboardKey.keyT)] = () => onJudge("T");
+    bindings[const SingleActivator(LogicalKeyboardKey.keyF)] = () => onJudge("F");
     return bindings;
   }
 
-  Widget _stageHead(BuildContext context, Question q) {
+  Widget _stageHead(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final total = _launch.questions.length;
     return Padding(
       padding: const EdgeInsets.fromLTRB(28, 16, 28, 12),
       child: Row(
@@ -174,20 +204,16 @@ class _SessionStageState extends State<SessionStage> {
           Text(_launch.title, style: textTheme.titleMedium),
           const SizedBox(width: 16),
           Text(
-            "${_index + 1} / ${_launch.questions.length}",
+            _end - _start == 1 ? "$_end / $total" : "${_start + 1}–$_end / $total",
             style: textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          if (q.isMulti) ...[
-            const SizedBox(width: 16),
-            Text("多选", style: textTheme.labelMedium),
-          ],
           const Spacer(),
           SizedBox(
             width: 160,
             child: LinearProgressIndicator(
-              value: (_index + (_revealed ? 1 : 0)) / _launch.questions.length,
+              value: _judged.length / total,
               minHeight: 6,
               borderRadius: BorderRadius.circular(4),
               color: Bs.paper,
@@ -196,20 +222,66 @@ class _SessionStageState extends State<SessionStage> {
           ),
           const SizedBox(width: 16),
           if (_launch.timed)
-            Text(_clock(_left), style: textTheme.titleMedium?.copyWith(fontFeatures: const [FontFeature.tabularFigures()])),
+            Text(
+              _clock(_left),
+              style: textTheme.titleMedium?.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+            ),
         ],
       ),
     );
   }
 
-  Widget _promptColumn(BuildContext context, Question q) {
+  Widget _groupColumn(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 20, 24, 28),
+      children: [
+        for (final i in _group) ...[
+          _questionBlock(context, i),
+          if (i + 1 < _end) const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Divider(height: 1),
+          ),
+        ],
+        const SizedBox(height: 24),
+        if (_groupDone) ...[
+          Center(
+            child: FilledButton(
+              onPressed: _nextGroup,
+              style: FilledButton.styleFrom(
+                backgroundColor: Bs.dark,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(160, 48),
+              ),
+              child: Text(_lastGroup ? "结束本轮" : "下一组"),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              _launch.revealImmediately
+                  ? "答错的题会自动朗读解释。看完再点下一组或回车。"
+                  : "这一组答完了。点下一组或回车继续。",
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _questionBlock(BuildContext context, int index) {
+    final q = _launch.questions[index];
+    final canExplain = _revealed(index);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
+            BsBadge(text: "第${index + 1}题", icon: Icons.tag, color: Bs.dark),
             BsBadge(
               text: Bs.kindLabel(q.kind),
               icon: Bs.kindIcon(q.kind),
@@ -229,46 +301,50 @@ class _SessionStageState extends State<SessionStage> {
           ],
         ),
         const SizedBox(height: 12),
-        if (q.sign != null) ...[
-          SignView(id: q.sign!, size: 180),
-          const SizedBox(height: 16),
-        ],
-        Text(q.prompt, style: Theme.of(context).textTheme.headlineSmall?.copyWith(height: 1.35)),
-        const SizedBox(height: 20),
-        for (final choice in q.choices) _choiceRow(context, q, choice),
-        if (_revealed) ...[
-          const SizedBox(height: 16),
-          Center(
-            child: FilledButton(
-              onPressed: _next,
-              style: FilledButton.styleFrom(
-                backgroundColor: Bs.dark,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(160, 48),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                q.prompt,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(height: 1.35),
               ),
-              child: Text(_index + 1 >= _launch.questions.length ? "结束本题" : "下一题"),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "看完或听完解释再点下一题或回车。不会按秒数自动跳。",
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
+            // 解析按钮只在答完后出现：答之前点得开，等于把答案摆在题面上。
+            if (canExplain) ...[
+              const SizedBox(width: 16),
+              OutlinedButton.icon(
+                onPressed: () => setState(() => _focus = index),
+                icon: const Icon(Icons.menu_book, size: 20),
+                label: const Text("解析"),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: _focus == index ? Bs.paper : Bs.secondary,
+                  side: BorderSide(color: _focus == index ? Bs.paper : Bs.border),
+                  minimumSize: const Size(96, 44),
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 16),
+        if (q.sign != null) ...[
+          SignView(id: q.sign!, size: 160),
+          const SizedBox(height: 16),
         ],
+        for (final choice in q.choices) _choiceRow(context, index, q, choice),
       ],
     );
   }
 
   /// 选项块：选中的那一项整块上色、白字，"我选的是哪个"先于对错跳出来。
   /// 答错时正确项只用淡底描边补位，比我的选择弱一档，免得两块同样抢眼。
-  Widget _choiceRow(BuildContext context, Question question, Choice choice) {
-    final selected = _selected.contains(choice.id);
+  Widget _choiceRow(BuildContext context, int index, Question question, Choice choice) {
+    final selected = _picked[index]?.contains(choice.id) ?? false;
+    final revealed = _revealed(index);
     Color? solid;
     Color? tint;
     IconData? mark;
-    if (_revealed) {
+    if (revealed) {
       if (selected) {
         solid = choice.ok ? Bs.success : Bs.danger;
         mark = choice.ok ? Icons.check_circle : Icons.cancel;
@@ -286,15 +362,15 @@ class _SessionStageState extends State<SessionStage> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Align(
         alignment: Alignment.centerLeft,
-        // 块宽跟着选项文字走：判断题得到两个短块，长选项到 720 才折行。
+        // 块宽介于题干和文字之间：短选项也占住半栏多，长选项到 760 才折行。
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 220, maxWidth: 720),
+          constraints: const BoxConstraints(minWidth: 460, maxWidth: 760),
           child: Material(
             color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
             borderRadius: BorderRadius.circular(Bs.radius),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              onTap: _revealed ? _next : () => _pick(question, choice.id),
+              onTap: _judged.contains(index) ? null : () => _pick(index, question, choice.id),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -326,7 +402,7 @@ class _SessionStageState extends State<SessionStage> {
                           color: Bs.body,
                           borderRadius: BorderRadius.circular(Bs.radius),
                         ),
-                        child: SignView(id: signId, size: _revealed && choice.ok ? 72 : 64),
+                        child: SignView(id: signId, size: revealed && choice.ok ? 72 : 64),
                       ),
                       const SizedBox(width: 10),
                     ],
@@ -353,149 +429,154 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
-  Widget _evidenceColumn(BuildContext context, Question q) {
+  Widget _evidenceColumn(BuildContext context) {
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.45,
     );
+    final focus = _focus;
+    if (focus == null || !_revealed(focus)) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
+        children: [
+          Text(
+            _launch.revealImmediately
+                ? "点选项就出对错。答错的题会自动把解释念出来，答完也能点题干右边的「解析」回看。"
+                : "模拟考不显示对错，这一组答完点下一组。",
+            style: muted,
+          ),
+        ],
+      );
+    }
+    final q = _launch.questions[focus];
+    final ok = _correct.contains(focus);
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
       children: [
+        Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
+        const SizedBox(height: 12),
         if (q.sign != null) ...[
           SignView(id: q.sign!, size: 180),
           const SizedBox(height: 24),
         ],
-        if (!_revealed)
-          Text(
-            q.isMulti ? "点齐选项就出对错。" : "点选项就出对错。",
-            style: muted,
-          )
-        else ...[
-          BsAlert(
-            color: _correct.contains(_index) ? Bs.success : Bs.danger,
-            icon: _correct.contains(_index) ? Icons.check_circle : Icons.cancel,
-            child: Text(
-              _gradeLine(),
-              style: const TextStyle(fontWeight: FontWeight.w700),
-            ),
+        BsAlert(
+          color: ok ? Bs.success : Bs.danger,
+          icon: ok ? Icons.check_circle : Icons.cancel,
+          child: Text(
+            _gradeLine(focus),
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: 12),
-          BsAlert(
-            color: Bs.paper,
-            icon: Icons.volume_up,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (q.explain.trim().isNotEmpty)
-                  Text(q.explain, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
-                if (q.explain.trim().isNotEmpty && q.articleLines.isNotEmpty) const SizedBox(height: 10),
-                if (q.articleLines.isNotEmpty)
-                  Text(
-                    q.articleLines.join("\n"),
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5),
-                  ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    FilledButton(
-                      onPressed: _speaker.available ? _speakExplain : null,
-                      style: _voiceButtonStyle(Bs.success),
-                      child: const Text("系统朗读"),
-                    ),
-                    FilledButton(
-                      onPressed: _speaker.available ? _stopExplain : null,
-                      style: _voiceButtonStyle(Bs.secondary),
-                      child: const Text("停止朗读"),
-                    ),
-                  ],
+        ),
+        const SizedBox(height: 12),
+        BsAlert(
+          color: Bs.paper,
+          icon: Icons.volume_up,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (q.explain.trim().isNotEmpty)
+                Text(q.explain, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
+              if (q.explain.trim().isNotEmpty && q.articleLines.isNotEmpty) const SizedBox(height: 10),
+              if (q.articleLines.isNotEmpty)
+                Text(
+                  q.articleLines.join("\n"),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: FilledButton(
-              onPressed: _next,
-              style: FilledButton.styleFrom(backgroundColor: Bs.dark, foregroundColor: Colors.white),
-              child: Text(_index + 1 >= _launch.questions.length ? "结束本题" : "下一题"),
-            ),
-          ),
-          const SizedBox(height: 16),
-          for (final ref in q.sourceRefs)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: InkWell(
-                onTap: ref.url.isEmpty ? null : () => launchUrl(Uri.parse(ref.url)),
-                child: Text(
-                  "${ref.locator} · ${ref.note}",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Bs.paper,
-                    height: 1.4,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  FilledButton(
+                    onPressed: _speaker.available ? () => _speak(q) : null,
+                    style: _voiceButtonStyle(Bs.success),
+                    child: const Text("系统朗读"),
                   ),
+                  FilledButton(
+                    onPressed: _speaker.available ? _stopSpeaking : null,
+                    style: _voiceButtonStyle(Bs.secondary),
+                    child: const Text("停止朗读"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        for (final ref in q.sourceRefs)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: InkWell(
+              onTap: ref.url.isEmpty ? null : () => launchUrl(Uri.parse(ref.url)),
+              child: Text(
+                "${ref.locator} · ${ref.note}",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Bs.paper,
+                  height: 1.4,
                 ),
               ),
             ),
-        ],
+          ),
       ],
     );
   }
 
-  String _gradeLine() {
-    if (!_correct.contains(_index)) return "答错";
-    if (_hesitant) return "答对 · 迟疑";
+  String _gradeLine(int index) {
+    if (!_correct.contains(index)) return "答错";
+    if (_hesitant.contains(index)) return "答对 · 迟疑";
     return "答对";
   }
 
-  void _pick(Question question, String id) {
-    if (_revealed || _busy) return;
+  void _pick(int index, Question question, String id) {
+    if (_busy || _judged.contains(index)) return;
     setState(() {
+      final chosen = _picked.putIfAbsent(index, () => <String>{});
       if (question.isMulti) {
-        if (_selected.contains(id)) {
-          _selected.remove(id);
+        if (chosen.contains(id)) {
+          chosen.remove(id);
         } else {
-          _selected.add(id);
+          chosen.add(id);
         }
       } else {
-        _selected
+        chosen
           ..clear()
           ..add(id);
       }
     });
-    if (!question.isMulti || _selected.length >= question.correctIds.length) {
-      _commit();
+    final chosen = _picked[index] ?? const <String>{};
+    if (!question.isMulti || chosen.length >= question.correctIds.length) {
+      _commit(index, question);
     }
   }
 
-  Future<void> _commit() async {
-    if (_revealed || _busy || _selected.isEmpty) return;
+  Future<void> _commit(int index, Question question) async {
+    if (_busy || _judged.contains(index)) return;
+    final chosen = _picked[index];
+    if (chosen == null || chosen.isEmpty) return;
     _busy = true;
-    final ok = answersMatch(_question, _selected);
-    if (ok) _correct.add(_index);
+    final ok = answersMatch(question, chosen);
     final durationMs = DateTime.now().difference(_shownAt).inMilliseconds;
     final hesitant = lingeredVsPace(durationMs, await widget.store.recentDurations());
     await widget.store.recordAttempt(
-      questionId: _question.id,
-      topicId: _question.topicId,
+      questionId: question.id,
+      topicId: question.topicId,
       subjectId: _launch.subjectId,
       correct: ok,
       durationMs: durationMs,
       hesitant: hesitant,
     );
     if (!mounted) return;
-    if (_launch.revealImmediately) {
-      setState(() {
-        _hesitant = hesitant;
-        _revealed = true;
-        _busy = false;
-      });
-      _speakExplain();
-      return;
-    }
-    _busy = false;
-    await _advance();
+    setState(() {
+      _judged.add(index);
+      if (ok) _correct.add(index);
+      if (hesitant) _hesitant.add(index);
+      // 下一题的用时从这一题判定的那一刻算起。
+      _shownAt = DateTime.now();
+      if (_launch.revealImmediately) _focus = index;
+      _busy = false;
+    });
+    // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
+    if (_launch.revealImmediately && !ok) await _speak(question);
   }
 
   ButtonStyle _voiceButtonStyle(Color color) {
@@ -510,29 +591,21 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
-  Future<void> _speakExplain() {
-    return _speaker.speak(_question.speakText);
-  }
+  Future<void> _speak(Question question) => _speaker.speak(question.speakText);
 
-  Future<void> _stopExplain() => _speaker.stop();
+  Future<void> _stopSpeaking() => _speaker.stop();
 
-  Future<void> _next() async {
+  Future<void> _nextGroup() async {
     await _speaker.stop();
-    await _advance();
-  }
-
-  Future<void> _advance() async {
-    await _speaker.stop();
-    if (_index + 1 >= _launch.questions.length) {
+    if (_lastGroup) {
       await _finish();
       return;
     }
+    if (!mounted) return;
     setState(() {
-      _index += 1;
-      _selected.clear();
-      _revealed = false;
+      _start = _end;
+      _focus = null;
       _busy = false;
-      _hesitant = false;
       _shownAt = DateTime.now();
     });
   }
