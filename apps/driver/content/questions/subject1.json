@@ -4176,6 +4176,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "路口设有停车让行标志时，应当停车瞭望，确认安全后再通行。",
+      "sign": "stop",
       "choices": [
         {
           "id": "T",
@@ -4207,6 +4208,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "路口设有减速让行标志时，应当减速瞭望；确认安全后可以不停车通过。",
+      "sign": "yield",
       "choices": [
         {
           "id": "T",
@@ -4279,6 +4281,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "路段设有限速标志时，最高行驶速度不得超过标志标明的数值。",
+      "sign": "speed_60",
       "choices": [
         {
           "id": "T",
@@ -4317,6 +4320,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "道路入口设有禁止驶入标志时，可以从该方向驶入。",
+      "sign": "no_entry",
       "choices": [
         {
           "id": "T",
@@ -4348,6 +4352,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "设有禁止超车标志的路段，对向没有来车时可以超车。",
+      "sign": "no_overtaking",
       "choices": [
         {
           "id": "T",
@@ -4386,6 +4391,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "设有禁止掉头标志的地点，可以掉头。",
+      "sign": "no_u_turn",
       "choices": [
         {
           "id": "T",
@@ -4424,6 +4430,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "路口设有禁止向左转弯标志时，可以向左转弯。",
+      "sign": "no_left",
       "choices": [
         {
           "id": "T",
@@ -4455,6 +4462,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "路口设有直行标志时，只准直行，不得左右转弯。",
+      "sign": "go_straight",
       "choices": [
         {
           "id": "T",
@@ -4486,6 +4494,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "设有禁止鸣喇叭标志的路段，可以用鸣喇叭催促前车。",
+      "sign": "no_horn",
       "choices": [
         {
           "id": "T",
@@ -4524,6 +4533,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "看到注意儿童、注意行人标志，应当减速行驶，注意观察。",
+      "sign": "warning_children",
       "choices": [
         {
           "id": "T",
@@ -4555,6 +4565,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "看到施工标志，应当减速慢行。",
+      "sign": "warning_work",
       "choices": [
         {
           "id": "T",
@@ -4586,6 +4597,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "看到急弯路标志，应当减速行驶，不得在弯道超车。",
+      "sign": "warning_curve",
       "choices": [
         {
           "id": "T",
@@ -4624,6 +4636,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "设有禁止停放车辆标志的路段，可以临时停一下上下客。",
+      "sign": "no_parking",
       "choices": [
         {
           "id": "T",
@@ -4662,6 +4675,7 @@
       "topic_id": "drive.s1.signals",
       "kind": "judge",
       "prompt": "设有禁止停车标志的路段，不得停车。",
+      "sign": "no_stopping",
       "choices": [
         {
           "id": "T",
@@ -10388,6 +10402,408 @@
         }
       ],
       "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.056",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "看到图中这个蓝底白字的标志，应当怎么行驶？",
+      "sign": "min_speed",
+      "choices": [
+        {
+          "id": "A",
+          "label": "车速不得超过标志标明的数值",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "这是建议速度，可高可低",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "这是前方路段的平均车速提示",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车速不得低于标志标明的数值",
+          "ok": true
+        }
+      ],
+      "explain": "蓝底是指示、红圈是禁令：蓝底数字是最低限速，红圈数字才是最高限速。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "指示标志 最低限速",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "最低限速标志为蓝底白字圆形，表示机动车驶入前方道路时的最低时速限制。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第七十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "高速公路应当标明车道的行驶速度，最低车速不得低于每小时60公里。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.057",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个标志，说明前方路面易滑，应当减速慢行，避免急转向和紧急制动。",
+      "sign": "warning_slip",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "易滑路段的问题是附着力低：任何突然的方向或刹车动作都可能让车失控。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "警告标志 易滑",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "易滑标志为黄底黑边三角形，用以警告车辆驾驶人前方路段路面易滑。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.058",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "看到图中这个警告标志，正确的做法是？",
+      "sign": "warning_slope",
+      "choices": [
+        {
+          "id": "A",
+          "label": "挂空挡利用惯性滑行省油",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "保持原速通过",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "提前减速，控制车速下坡，不得空挡滑行",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "加速冲上去",
+          "ok": false
+        }
+      ],
+      "explain": "陡坡靠发动机制动控制车速；空挡滑行会让制动全部压在刹车片上，很快就热衰减。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "警告标志 陡坡",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "陡坡标志为黄底黑边三角形，用以警告车辆驾驶人前方为陡坡路段。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十二条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "驾驶机动车不得有下列行为：下陡坡时熄火或者空挡滑行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.059",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "看到图中这个标志，接近该地点时应当怎么做？",
+      "sign": "warning_rail",
+      "choices": [
+        {
+          "id": "A",
+          "label": "鸣喇叭后快速通过",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "减速观察，确认安全后通过，必要时停车",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "保持速度跟着前车通过",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只要没听到火车鸣笛就可以正常通过",
+          "ok": false
+        }
+      ],
+      "explain": "道口没有信号或者管理人员时，法律要求减速或者停车，确认安全才准通过。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "警告标志 注意铁路道口",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "注意无人看守铁路道口标志为黄底黑边三角形，警告前方为铁路与道路平面交叉道口。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车行经铁路道口时，应当按照交通信号或者管理人员的指挥通行；没有交通信号或者管理人员的，应当减速或者停车，确认安全后通过。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.060",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个标志，说明前方是十字交叉路口，应当提前减速并观察左右来车。",
+      "sign": "warning_cross",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "交叉路口是冲突最集中的地方，警告标志的作用就是把减速提前到进入路口之前。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "警告标志 十字交叉",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "十字交叉标志为黄底黑边三角形，用以警告前方为十字形平面交叉路口。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十四条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车通过没有交通信号灯控制也没有交通警察指挥的交叉路口，应当减速慢行，并让行人和优先通行的车辆先行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.061",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个标志，说明前方是村庄路段，应当减速慢行，注意突然横过道路的行人、儿童和畜力车。",
+      "sign": "warning_village",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "村庄路段的风险不在车速本身，而在两侧随时会出现的人和牲畜。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "警告标志 村庄",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "村庄标志为黄底黑边三角形，用以警告车辆驾驶人前方为村庄路段。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.signals.062",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "看到图中这个蓝底箭头环绕的标志，应当怎么行驶？",
+      "sign": "roundabout",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直接从环岛中央穿过",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "可以逆向绕行，走近路",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "环岛内车辆应当让准备进入的车辆先行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "按标志指示的方向绕行，进入环岛前让已在环岛内的车辆先行",
+          "ok": true
+        }
+      ],
+      "explain": "环岛的规则只有一条核心：里面的车有优先权，外面的车等。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "指示标志 环岛行驶",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "环岛行驶标志为蓝底白色箭头圆形，表示车辆必须按标志指示的方向绕行。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十一条第（三）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "准备进入环形路口的机动车应当让已在路口内的机动车先行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.063",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个蓝底白色小汽车的标志，表示这条车道或道路专供机动车通行，非机动车和行人不得进入。",
+      "sign": "motor_lane",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "蓝底是指示：它指定了这条路给谁走，不是禁止谁走的红圈标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "指示标志 机动车道",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "机动车道标志为蓝底白色车辆图案的圆形指示标志，表示该车道或道路只供机动车行驶。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第三十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "根据道路条件和通行需要，道路划分为机动车道、非机动车道和人行道的，机动车、非机动车、行人实行分道通行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.064",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个标志，表示该路段禁止行人通行。",
+      "sign": "no_pedestrian",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "红圈加斜杠是禁令：圈里画什么，就禁止什么通行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "禁令标志 禁止行人通行",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "禁止行人通行标志为红圈红杠、圈内黑色行人图案，表示禁止行人通行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.065",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "看到图中这个红圈白底、圈内没有图案的标志，表示禁止一切机动车通行。",
+      "sign": "no_vehicles",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "空心红圈是「禁止一切机动车通行」，比禁止驶入更彻底——两个方向都不准进。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "禁令标志 禁止机动车通行",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "禁止机动车通行标志为红圈白底、圈内无图案，表示禁止一切机动车通行。"
+        }
+      ],
+      "phase": 3,
       "difficulty": 2,
       "band": "common"
     }

@@ -62,7 +62,7 @@ class _SignPainter extends CustomPainter {
       case "yield":
         _inverted(canvas, side, null);
       case "stop":
-        _inverted(canvas, side, "停");
+        _octagon(canvas, side);
       case "no_pedestrian":
         _banSymbol(canvas, side, (c, s) => _person(c, Offset(s / 2, s * 0.72), s * 0.42, Colors.black));
       case "warning":
@@ -207,6 +207,33 @@ class _SignPainter extends CustomPainter {
     if (text != null) {
       _label(canvas, Offset(side / 2, side * 0.38), text, side * 0.22, Colors.black);
     }
+  }
+
+  /// 停车让行是八角形红底白字，减速让行是倒三角——形状本身就是这两个标志的区别，
+  /// 画成同一种形状等于把考点抹平了。
+  void _octagon(Canvas canvas, double side) {
+    final center = Offset(side / 2, side / 2);
+    final radius = side * 0.46;
+    final path = Path();
+    for (var i = 0; i < 8; i++) {
+      final angle = pi / 8 + i * pi / 4;
+      final point = Offset(center.dx + radius * cos(angle), center.dy + radius * sin(angle));
+      if (i == 0) {
+        path.moveTo(point.dx, point.dy);
+      } else {
+        path.lineTo(point.dx, point.dy);
+      }
+    }
+    path.close();
+    canvas.drawPath(path, Paint()..color = _red);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = side * 0.05,
+    );
+    _label(canvas, center, "停", side * 0.4, Colors.white);
   }
 
   void _slash(Canvas canvas, double side) {
