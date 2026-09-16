@@ -255,35 +255,44 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
+  /// 选项块：选中的那一项整块上色、白字，"我选的是哪个"先于对错跳出来。
+  /// 答错时正确项只用淡底描边补位，比我的选择弱一档，免得两块同样抢眼。
   Widget _choiceRow(BuildContext context, Question question, Choice choice) {
     final selected = _selected.contains(choice.id);
-    Color? fill;
-    Color? border;
+    Color? solid;
+    Color? tint;
     IconData? mark;
     if (_revealed) {
-      if (choice.ok) {
-        fill = const Color(0xFFECF6EC);
-        border = const Color(0xFF2E7D32);
+      if (selected) {
+        solid = choice.ok ? Bs.success : Bs.danger;
+        mark = choice.ok ? Icons.check_circle : Icons.cancel;
+      } else if (choice.ok) {
+        tint = Bs.success;
         mark = Icons.check_circle;
-      } else if (selected) {
-        fill = const Color(0xFFFDECEC);
-        border = const Color(0xFFC62828);
-        mark = Icons.cancel;
       }
     } else if (selected) {
-      fill = Bs.paper.withValues(alpha: 0.12);
-      border = Bs.paper;
+      solid = Bs.paper;
     }
+    final fg = solid != null
+        ? Colors.white
+        : (tint ?? Theme.of(context).colorScheme.onSurface);
+    final textTheme = Theme.of(context).textTheme;
     final signId = choice.sign;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Material(
-        color: fill ?? Colors.transparent,
+        color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
+        borderRadius: BorderRadius.circular(Bs.radius),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: _revealed ? _next : () => _pick(question, choice.id),
           child: Container(
             decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: border ?? const Color(0x00000000), width: 3)),
+              border: Border.all(
+                color: solid ?? tint ?? Bs.border,
+                width: solid != null || tint != null ? 2 : 1,
+              ),
+              borderRadius: BorderRadius.circular(Bs.radius),
             ),
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             child: Row(
@@ -293,15 +302,34 @@ class _SessionStageState extends State<SessionStage> {
                   width: 32,
                   child: Text(
                     choice.id,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                    style: textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: fg,
+                    ),
                   ),
                 ),
                 if (signId != null) ...[
-                  SignView(id: signId, size: _revealed && choice.ok ? 72 : 64),
+                  // 标志本来就画在白底上，实色块里给它一块白托才不糊。
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Bs.body,
+                      borderRadius: BorderRadius.circular(Bs.radius),
+                    ),
+                    child: SignView(id: signId, size: _revealed && choice.ok ? 72 : 64),
+                  ),
                   const SizedBox(width: 10),
                 ],
-                Expanded(child: Text(choice.label, style: Theme.of(context).textTheme.bodyLarge)),
-                if (mark != null) Icon(mark, size: Bs.bodySize, color: border),
+                Expanded(
+                  child: Text(
+                    choice.label,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: fg,
+                      fontWeight: solid != null ? FontWeight.w600 : null,
+                    ),
+                  ),
+                ),
+                if (mark != null) Icon(mark, size: Bs.bodySize, color: fg),
               ],
             ),
           ),
