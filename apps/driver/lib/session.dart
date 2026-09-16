@@ -327,6 +327,10 @@ class _SessionStageState extends State<SessionStage> {
           ],
         ),
         const SizedBox(height: 16),
+        if (q.image != null) ...[
+          QuestionImage(path: q.image!),
+          const SizedBox(height: 16),
+        ],
         if (q.sign != null) ...[
           SignView(id: q.sign!, size: 160),
           const SizedBox(height: 16),
@@ -397,6 +401,17 @@ class _SessionStageState extends State<SessionStage> {
                           borderRadius: BorderRadius.circular(Bs.radius),
                         ),
                         child: SignView(id: signId, size: revealed && choice.ok ? 72 : 64),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    if (choice.image != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Bs.body,
+                          borderRadius: BorderRadius.circular(Bs.radius),
+                        ),
+                        child: QuestionImage(path: choice.image!, maxWidth: 180),
                       ),
                       const SizedBox(width: 10),
                     ],

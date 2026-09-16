@@ -39,12 +39,17 @@ class QuestionBand {
 }
 
 class Choice {
-  const Choice({required this.id, required this.label, required this.ok, this.sign});
+  const Choice({required this.id, required this.label, required this.ok, this.sign, this.image});
 
   final String id;
   final String label;
   final bool ok;
+
+  /// 自绘标志的 id；选项本身就是一个标志时用它。
   final String? sign;
+
+  /// 选项配图在 content/ 下的相对路径——考场上四个选项各一张图的题靠它。
+  final String? image;
 
   factory Choice.fromJson(Map<String, dynamic> json) {
     return Choice(
@@ -52,6 +57,7 @@ class Choice {
       label: json["label"] as String,
       ok: json["ok"] as bool,
       sign: json["sign"] as String?,
+      image: json["image"] as String?,
     );
   }
 }
@@ -66,6 +72,7 @@ class Question {
     required this.explain,
     required this.sourceRefs,
     this.sign,
+    this.image,
     this.difficulty = 1,
     this.phase = 1,
     this.band = QuestionBand.regular,
@@ -79,6 +86,9 @@ class Question {
   final String explain;
   final List<SourceRef> sourceRefs;
   final String? sign;
+
+  /// 题图在 content/ 下的相对路径，例如 images/subject1/xxx.jpg。
+  final String? image;
   final int difficulty;
   final int phase;
   final String band;
@@ -153,6 +163,7 @@ class Question {
           SourceRef.fromJson(raw as Map<String, dynamic>),
       ],
       sign: json["sign"] as String?,
+      image: json["image"] as String?,
       difficulty: json["difficulty"] as int? ?? 1,
       phase: json["phase"] as int? ?? 1,
       band: json["band"] as String? ?? QuestionBand.regular,

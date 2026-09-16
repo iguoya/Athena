@@ -1,6 +1,9 @@
+import "dart:io";
 import "dart:math";
 
 import "package:flutter/material.dart";
+
+import "content.dart";
 
 /// Bootstrap 5 色板与常用零件。图标用 Material 的系统符号，角色对齐 Bootstrap Icons。
 class Bs {
@@ -69,6 +72,32 @@ class Bs {
       "multi" => "多选",
       _ => "单选",
     };
+  }
+}
+
+/// 题图：开发时直接读工作树里的文件，发行包走打进去的 assets。
+class QuestionImage extends StatelessWidget {
+  const QuestionImage({super.key, required this.path, this.maxWidth = 560});
+
+  final String path;
+  final double maxWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final resolved = ContentLoader.imagePath(path);
+    final image = ContentLoader.imagesOnDisk
+        ? Image.file(File(resolved), fit: BoxFit.contain)
+        : Image.asset(resolved, fit: BoxFit.contain);
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Bs.radius),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: image,
+        ),
+      ),
+    );
   }
 }
 
