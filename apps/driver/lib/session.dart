@@ -50,8 +50,8 @@ class SessionStage extends StatefulWidget {
 }
 
 class _SessionStageState extends State<SessionStage> {
-  /// 一组五题：答完一题就停下来点一次「下一题」太碎，改成一页做完五题再翻页。
-  static const _groupSize = 5;
+  /// 一组四题：答完一题就停下来点一次「下一题」太碎，改成一页做完四题再翻页。
+  static const _groupSize = 4;
 
   var _start = 0;
   final _picked = <int, Set<String>>{};
@@ -362,23 +362,17 @@ class _SessionStageState extends State<SessionStage> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Align(
         alignment: Alignment.centerLeft,
-        // 块宽介于题干和文字之间：短选项也占住半栏多，长选项到 760 才折行。
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 460, maxWidth: 760),
+        // 块宽占栏宽三分之二：跟题干这一段的长度呼应，又不至于拉成整条。
+        child: FractionallySizedBox(
+          alignment: Alignment.centerLeft,
+          widthFactor: 2 / 3,
           child: Material(
             color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
             borderRadius: BorderRadius.circular(Bs.radius),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: _judged.contains(index) ? null : () => _pick(index, question, choice.id),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: solid ?? tint ?? Bs.border,
-                    width: solid != null || tint != null ? 2 : 1,
-                  ),
-                  borderRadius: BorderRadius.circular(Bs.radius),
-                ),
+              child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
