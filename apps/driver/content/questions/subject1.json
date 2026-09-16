@@ -146,44 +146,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.license.005",
-      "topic_id": "drive.s1.license",
-      "kind": "judge",
-      "prompt": "小型汽车科目一试卷为 100 题，应在 45 分钟内完成。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "GA 1026：其他车型 100 题；申领驾驶证的科目一时长 45 分钟。",
-      "source_refs": [
-        {
-          "source_id": "ga-1026",
-          "relation": "quoted",
-          "locator": "4.1.4 / 5.1.2",
-          "url": "http://jj.ga.zhuhai.gov.cn/ConvenienceGuide/Details/173",
-          "note": "小型汽车科目一考试为100题，考试时间45分钟。"
-        },
-        {
-          "source_id": "license-order-162",
-          "relation": "exam_alignment",
-          "locator": "第38条第（一）项",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "合格标准仍是百分制90分。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.license.006",
       "topic_id": "drive.s1.license",
       "kind": "judge",
@@ -792,47 +754,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.alcohol.007",
-      "topic_id": "drive.s1.alcohol",
-      "kind": "single",
-      "prompt": "饮酒后驾驶机动车，除暂扣驾驶证外，还应当并处？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "只警告一次",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "五百元固定罚款",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "一千元以上二千元以下罚款",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "只记分不罚款",
-          "ok": false
-        }
-      ],
-      "explain": "第91条对饮酒后驾驶机动车：暂扣六个月驾驶证，并处一千元以上二千元以下罚款。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第91条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.signals.006",
       "topic_id": "drive.s1.signals",
       "kind": "single",
@@ -1348,37 +1269,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.occupants.005",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "在道路上临时停车的，不得妨碍其他车辆和行人通行。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "临时停也要让路还走得动。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第56条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "在道路上临时停车的，不得妨碍其他车辆和行人通行。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.occupants.006",
       "topic_id": "drive.s1.occupants",
       "kind": "judge",
@@ -1439,37 +1329,6 @@
       "phase": 2,
       "difficulty": 1,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.license.009",
-      "topic_id": "drive.s1.license",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 1,
-      "prompt": "未取得机动车驾驶证，不得驾驶机动车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第19条把取得驾驶证规定为驾驶机动车的前提。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第19条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "驾驶机动车，应当依法取得机动车驾驶证。"
-        }
-      ],
-      "band": "hot"
     },
     {
       "id": "drive.s1.license.010",
@@ -1926,99 +1785,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.alcohol.009",
-      "topic_id": "drive.s1.alcohol",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 1,
-      "prompt": "服用国家管制的精神药品后，只要自我感觉良好就可以开车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "第22条直接禁止，不以自我感觉为准。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第22条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "服用国家管制的精神药品或者麻醉药品……不得驾驶机动车。"
-        }
-      ],
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.alcohol.010",
-      "topic_id": "drive.s1.alcohol",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 1,
-      "prompt": "过度疲劳影响安全驾驶的，不得驾驶机动车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第22条把过度疲劳与饮酒并列。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第22条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "过度疲劳影响安全驾驶的，不得驾驶机动车。"
-        }
-      ],
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.alcohol.011",
-      "topic_id": "drive.s1.alcohol",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 1,
-      "prompt": "不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第21条。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第21条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。"
-        }
-      ],
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.alcohol.012",
       "topic_id": "drive.s1.alcohol",
       "kind": "judge",
@@ -2048,99 +1814,6 @@
         }
       ],
       "band": "common"
-    },
-    {
-      "id": "drive.s1.signals.009",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 3,
-      "prompt": "车辆、行人应当按照交通信号通行；遇交通警察现场指挥时，应当按照交通警察的指挥通行。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第38条。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第38条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "车辆、行人应当按照交通信号通行；遇有交通警察现场指挥时，应当按照交通警察的指挥通行。"
-        }
-      ],
-      "band": "hot"
-    },
-    {
-      "id": "drive.s1.signals.013",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 3,
-      "prompt": "没有交通信号的道路，应当在确保安全、畅通的原则下通行。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第38条后半句。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第38条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "在没有交通信号的道路上，应当在确保安全、畅通的原则下通行。"
-        }
-      ],
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.highway.009",
-      "topic_id": "drive.s1.highway",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 4,
-      "prompt": "行人不得进入高速公路。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第67条。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第67条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "行人、非机动车、拖拉机、轮式专用机械车、铰接式客车、全挂拖斗车以及其他设计最高时速低于七十公里的机动车，不得进入高速公路。"
-        }
-      ],
-      "band": "hot"
     },
     {
       "id": "drive.s1.highway.010",
@@ -2265,68 +1938,6 @@
         }
       ],
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.occupants.008",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 2,
-      "prompt": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第51条。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第51条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带。"
-        }
-      ],
-      "band": "hot"
-    },
-    {
-      "id": "drive.s1.occupants.009",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "difficulty": 1,
-      "phase": 2,
-      "prompt": "摩托车驾驶人应当按规定戴安全头盔。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "第51条。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第51条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "摩托车驾驶人及乘坐人员应当按规定戴安全头盔。"
-        }
-      ],
-      "band": "regular"
     },
     {
       "id": "drive.s1.occupants.010",
@@ -3017,47 +2628,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.025",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "没有道路中心线的公路，最高时速不得超过？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "30公里",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "40公里",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "50公里",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "70公里",
-          "ok": false
-        }
-      ],
-      "explain": "公路没中心线是40。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "quoted",
-          "locator": "第45条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "没有道路中心线的道路，城市道路为每小时30公里，公路为每小时40公里。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.rules.026",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -3099,47 +2669,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.027",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "同方向只有1条机动车道的公路，最高时速不得超过？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "50公里",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "70公里",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "80公里",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "100公里",
-          "ok": false
-        }
-      ],
-      "explain": "公路单车道70。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "quoted",
-          "locator": "第45条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "同方向只有1条机动车道的道路，城市道路为每小时50公里，公路为每小时70公里。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.rules.028",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -3167,47 +2696,6 @@
         }
       ],
       "explain": "城市多车道70，公路才是80。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "quoted",
-          "locator": "第45条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "同方向有2条以上机动车道的道路，城市道路为每小时70公里，公路为每小时80公里。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.029",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "同方向有2条以上机动车道的公路，最高时速不得超过？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "70公里",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "80公里",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "100公里",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "120公里",
-          "ok": false
-        }
-      ],
-      "explain": "公路多车道80，不是高速的120。",
       "source_refs": [
         {
           "source_id": "road-safety-regulation",
@@ -5965,47 +5453,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.penalty.005",
-      "topic_id": "drive.s1.penalty",
-      "kind": "single",
-      "prompt": "驾驶机动车在高速公路或者城市快速路上违法停车，一次记多少分？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "6分",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "3分",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "1分",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "9分",
-          "ok": true
-        }
-      ],
-      "explain": "高速上停车比占应急车道行驶更危险，记9分。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "第九条第（三）项",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "一次记9分：（三）驾驶机动车在高速公路或者城市快速路上违法停车的。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.penalty.006",
       "topic_id": "drive.s1.penalty",
       "kind": "single",
@@ -7882,47 +7329,6 @@
           "locator": "同向车道分界线",
           "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
           "note": "白色实线用以分隔同向行驶的交通流，禁止车辆跨越、压线行驶。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
-      "id": "drive.s1.signals.044",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "路面中央的单黄实线表示什么？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "同向车道的分界，可以跨越",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "提示前方是学校路段",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "分隔对向车流，禁止车辆跨越",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "可以在其上临时停车",
-          "ok": false
-        }
-      ],
-      "explain": "单黄实线常见于两车道公路：越过去就是逆向车道，禁止越线超车和掉头。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-3",
-          "relation": "adapted",
-          "locator": "禁止跨越对向车行道分界线",
-          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
-          "note": "单黄实线用以分隔对向行驶的交通流，禁止车辆跨越。"
         }
       ],
       "phase": 3,
@@ -11800,44 +11206,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.rules.078",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "驾驶机动车在没有中心线的城市道路上，最高速度不能超过每小时50公里。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "无中心线城3公4，有中心线城5公7。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第45条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第四十五条：机动车在道路上行驶不得超过限速标志、标线标明的速度。在没有限速标志、标线的道路上，机动车不得超过下列最高行驶速度： (一)没有道路中心线的道路，城市道路为每小时30公里，公路为每小时40公里;(二)同方向只有1条机动车道的道路，城市道路为每小时50公里，公路为每小时70公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102520esdzgk35fyn6jltog11yjg",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.license.040",
       "topic_id": "drive.s1.license",
       "kind": "judge",
@@ -13054,44 +12422,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.rules.085",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "驾驶机动车时可以向道路上抛撒物品。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "行车时不得向道路上抛撒物品，以免妨碍其他车辆或行人。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第62条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《实施条例》第六十二条，驾驶机动车不得有下列行为：(一)在车门、车厢没有关好时行车；(二)在机动车驾驶室的前后窗范围内悬挂、放置妨碍驾驶人视线的物品；(三)拨打接听手持电话、观看电视等妨碍安全驾驶的行为；(四)下陡坡时熄火或者空挡滑行；(五)向道路上抛撒物品；(六)驾驶摩托车手离车把或者在车把上悬挂物品；(七)连续驾驶机动车超过4小时未停车休息或者停车休息时间少于20分钟；(八)在禁止鸣喇叭的区域或者路段鸣喇叭。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102522fvrkrlgkdprygst918z1hk",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.accident.028",
       "topic_id": "drive.s1.accident",
       "kind": "judge",
@@ -13890,44 +13220,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.registration.022",
-      "topic_id": "drive.s1.registration",
-      "kind": "judge",
-      "prompt": "对有伪造或变造号牌、行驶证嫌疑的车辆，交通警察可依法予以扣留。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "伪造或变造号牌、行驶证等，可依法扣留机动车，还将处15日以下拘留，并处罚款2000-5000元，构成犯罪的，还将依法追究刑事责任。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第96条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》第九十六条:伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，由公安机关交通管理部门予以收缴，扣留该机动车，处15日以下拘留，并处2000元以上5000元以下罚款；构成犯罪的，依法追究刑事责任。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102524crdacmj9jdwm8kjb6xfqcx",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.license.058",
       "topic_id": "drive.s1.license",
       "kind": "judge",
@@ -14346,44 +13638,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.accident.035",
-      "topic_id": "drive.s1.accident",
-      "kind": "judge",
-      "prompt": "驾驶机动车在道路上发生交通事故造成人身伤亡的，驾驶人必须报警。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "造成人员伤亡的，必须报警处理。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第70条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《中华人民共和国道路交通安全法》第七十条规定：在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。因抢救受伤人员变动现场的，应当标明位置。乘车人、过往车辆驾驶人、过往行人应当予以协助。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102525ceouqwrleszhhgpuyow8zp",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.rules.092",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -14498,44 +13752,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.rules.093",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "驾驶机动车通过窄路、窄桥时的最高速度不能超过每小时30公里。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "窄路、窄桥行驶车速不得超30km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第46条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第四十六条：机动车行驶中进出非机动车道、通过铁路道口、急弯路、窄路、窄桥时，最高行驶速度不得超过每小时30公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102525jab1ixbffkb7qpkujh7rsw",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.registration.024",
       "topic_id": "drive.s1.registration",
       "kind": "judge",
@@ -14572,44 +13788,6 @@
       "phase": 1,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.license.063",
-      "topic_id": "drive.s1.license",
-      "kind": "judge",
-      "prompt": "伪造、变造机动车驾驶证构成犯罪的将被依法追究刑事责任。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "构成犯罪的，将依法追究刑事责任。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第96条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》第九十六条：伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，由公安机关交通管理部门予以收缴，扣留该机动车，处15日以下拘留，并处2000元以上5000元以下罚款；构成犯罪的，依法追究刑事责任。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102525ad95qqeszovczkexzx4svn",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
     },
     {
       "id": "drive.s1.accident.036",
@@ -15030,44 +14208,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.occupants.036",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "距离交叉路口50米以内的路段不能停车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "站30口50，不得停车。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第63条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《实施条例》第六十三条：交叉路口、铁路道口、急弯路、宽度不足4米的窄路、桥梁、陡坡、隧道以及距离上述地点50米以内的路段，不得停车。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102526hctwbytpnkhxfypnj7t5j5",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.license.066",
       "topic_id": "drive.s1.license",
       "kind": "judge",
@@ -15102,44 +14242,6 @@
         }
       ],
       "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.occupants.037",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "在车门、车厢没有关好时不要驾驶机动车起步。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "开车起步前，要确认关好车门、车厢。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第62条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《实施条例》第六十二条，驾驶机动车不得有下列行为：(一)在车门、车厢没有关好时行车；(二)在机动车驾驶室的前后窗范围内悬挂、放置妨碍驾驶人视线的物品；(三)拨打接听手持电话、观看电视等妨碍安全驾驶的行为；(四)下陡坡时熄火或者空挡滑行；(五)向道路上抛撒物品；(六)驾驶摩托车手离车把或者在车把上悬挂物品；(七)连续驾驶机动车超过4小时未停车休息或者停车休息时间少于20分钟；(八)在禁止鸣喇叭的区域或者路段鸣喇叭。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102526vpubng85fs4khtr53vvr2p",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
       "difficulty": 1,
       "band": "regular"
     },
@@ -16208,92 +15310,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.lights.018",
-      "topic_id": "drive.s1.lights",
-      "kind": "judge",
-      "prompt": "牵引故障车时，牵引与被牵引的机动车，在行驶中都要开启危险报警闪光灯。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "牵引故障车最高车速不得超30km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第61条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第六十一条：牵引车和被牵引车均应当开启危险报警闪光灯。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102528tx4b1mrdqzo8jvcpp69tdh",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.license.077",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "申请小型汽车准驾车型驾驶证的人年龄条件是多少？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "18周岁以上60周岁以下",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "18周岁以上不设上限",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "21周岁以上50周岁以下",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "24周岁以上70周岁以下",
-          "ok": false
-        }
-      ],
-      "explain": "申领C1、C2，满18岁即可，不设上限。",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定,申请机动车驾驶证的人，年龄条件应当符合下列规定: 1.申请小型汽车、小型自动挡汽车、残疾人专用小型自动挡载客汽车、轻便摩托车准驾车型的，在18周岁以上; 2.申请低速载货汽车、三轮汽车、普通三轮摩托车、普通二轮摩托车或者轮式专用机械车准驾车型的，在18周岁以上，60周岁以下; 3. 申请城市公交车、中型客车大型货车、轻型牵引挂车、无轨电车或者有轨电车准驾车型的，在20周岁以上，60周岁以下; 4.申请大型客车、重型牵引挂车准驾车型的，在22周岁以上，60周岁以下; 5.接受全…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "2019041010252922utpyw2wqab8cxs29urkh",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.104",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -16918,54 +15934,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.rules.107",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "驾驶机动车在泥泞道路行驶时，最高速度不能超过多少？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "15公里/小时",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "20公里/小时",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "30公里/小时",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "40公里/小时",
-          "ok": false
-        }
-      ],
-      "explain": "路况不佳，车速不得超30km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第46条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第四十六条：机动车在冰雪、泥泞的道路上行驶时，最高行驶速度不得超过每小时30公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025305rmudymwcmx5sxzfrgmwjv",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.108",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -17012,54 +15980,6 @@
       "phase": 2,
       "difficulty": 1,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.license.084",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "机动车驾驶人初次申领驾驶证后的实习期是多长时间？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "6个月",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "12个月",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "16个月",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "18个月",
-          "ok": false
-        }
-      ],
-      "explain": "实习期12个月，车后要贴统一式样的实习标志，记满12分注销。",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定:机动车驾驶人初次取得汽车类准驾车型或者初次取得摩托车类准驾车型后的12个月为实习期。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102531hsanwdc3qymvyz13swvhx",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
     },
     {
       "id": "drive.s1.registration.026",
@@ -17156,54 +16076,6 @@
       "phase": 1,
       "difficulty": 1,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.license.086",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "申请增加准驾车型的，申请人应向哪里的车辆管理所申领机动车驾驶证？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "居住地",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "户籍所在地",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "全国任意车管所",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "所持驾驶证核发地",
-          "ok": true
-        }
-      ],
-      "explain": "《机动车驾驶证申领和使用规定》规定，申领机动车驾驶证的人，按照下列规定向车辆管理所提出申请：（一）在户籍所在地居住的，应当在户籍所在地提出申请；（二）在户籍所在地以外居住的，可以在居住地提出申请；（三）现役军人（含武警），应当在部队驻地提出申请；（四）境外人员，应当在居留地或者居住地提出申请；（五）申请增加准驾车型的，应当在所持机动车驾驶证核发地提出申请；（六）接受全日制驾驶职业教育，申请增加大型客车、重型牵引挂车准驾车型的，应当在…",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定，申领机动车驾驶证的人，按照下列规定向车辆管理所提出申请：（一）在户籍所在地居住的，应当在户籍所在地提出申请；（二）在户籍所在地以外居住的，可以在居住地提出申请；（三）现役军人（含武警），应当在部队驻地提出申请；（四）境外人员，应当在居留地或者居住地提出申请；（五）申请增加准驾车型的，应当在所持机动车驾驶证核发地提出申请；（六）接受全日制驾驶职业教育，申请增加大型客车、重型牵引挂车准驾车型的，应当在接受教育地提出申请。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025315g9vdmkdjqdm2mvtp8p6ft",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "common"
     },
     {
       "id": "drive.s1.occupants.040",
@@ -18116,54 +16988,6 @@
       "phase": 2,
       "difficulty": 1,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.license.091",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "驾驶人有哪种情形，交通警察可依法扣留机动车驾驶证？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "饮酒后驾驶机动车",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "超过规定速度10%",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "疲劳后驾驶机动车",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "行车中未系安全带",
-          "ok": false
-        }
-      ],
-      "explain": "开车不喝酒，喝酒不开车。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》规定:饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102533d7ff9zchrzw3yhbsnjnvhr",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.117",
@@ -19364,44 +18188,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.accident.047",
-      "topic_id": "drive.s1.accident",
-      "kind": "judge",
-      "prompt": "驾驶机动车造成重大交通事故后逃逸，构成犯罪的，由公安机关交通管理部门吊销机动车驾驶证，且终生不得重新取得机动车驾驶证。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "假一吊二撤三醉五逃终生。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》第一百零一条规定：造成交通事故后逃逸的，由公安机关交通管理部门吊销机动车驾驶证，且终身不得重新取得机动车驾驶证。构成犯罪的，依法追究刑事责任。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102549e9za4mhdtfuzhxqfn5se2x",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.rules.129",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -19850,44 +18636,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.134",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "驾驶机动车在同方向只有1条机动车道的城市道路，最高速度不能超过每小时70公里。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "无中心线城3公4，有中心线城5公7。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第45条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《实施条例》第四十五条：在没有限速标志、标线的道路上，机动车不得超过下列最高行驶速度：(一)没有道路中心线的道路，城市道路为每小时30公里，公路为每小时40公里；(二)同方向只有1条机动车道的道路，城市道路为每小时50公里，公路为每小时70公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20191126190216jbhtvucr1ydbfn4hrn5hne",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.lights.025",
       "topic_id": "drive.s1.lights",
       "kind": "judge",
@@ -20124,44 +18872,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.penalty.051",
-      "topic_id": "drive.s1.penalty",
-      "kind": "judge",
-      "prompt": "机动车驾驶人申请学法减分时，参加道路交通安全法律、法规和相关知识网上学习三日内累计满三十分钟且考试合格的，一次扣减1分。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "《道路交通安全违法行为记分管理办法》规定：参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识网上学习三日内累计满三十分钟且考试合格的，一次扣减1分。参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识现场学习满一小时且考试合格的，一次扣减2分。参加公安机关交通管理部门组织的交通安全公益活动的，满一小时为一次，一次扣减1分。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定：参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识网上学习三日内累计满三十分钟且考试合格的，一次扣减1分。参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识现场学习满一小时且考试合格的，一次扣减2分。参加公安机关交通管理部门组织的交通安全公益活动的，满一小时为一次，一次扣减1分。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200513154400tsd8ibfmufuzfg8zigj1dk",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.136",
@@ -20738,54 +19448,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.141",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "使用软连接牵引装置时，牵引车与被牵引车之间应当保持多远距离？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "小于0.5米",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "小于4米",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "大于4米小于10米",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "大于10米",
-          "ok": false
-        }
-      ],
-      "explain": "被牵引的机动车宽度不得大于牵引机动车的宽度。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第61条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《中华人民共和国道路交通安全法实施条例》第六十一条 牵引故障机动车应当遵守下列规定：（一）被牵引的机动车除驾驶人外不得载人，不得拖带挂车；（二）被牵引的机动车宽度不得大于牵引机动车的宽度；（三）使用软连接牵引装置时，牵引车与被牵引车之间的距离应当大于4米小于10米；"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200618184253uyepsettehgrvguwwwth2a",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.penalty.052",
       "topic_id": "drive.s1.penalty",
       "kind": "judge",
@@ -21042,54 +19704,6 @@
       "phase": 1,
       "difficulty": 1,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.142",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "机动车购买后尚未登记，需要临时上道路行驶的，应当如何做？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "取得临时通行牌证",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "带上身份证",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "直接上路行驶",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "在车窗上张贴合格证",
-          "ok": false
-        }
-      ],
-      "explain": "机动车上路要有牌，还未注册登记的要申请临时牌。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第8条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《中华人民共和国道路交通安全法》第八条明确规定国家对机动车实行登记制度。机动车经公安机关交通管理部门登记后，方可上道路行驶。尚未登记的机动车，需要临时上道路行驶的，应当取得临时通行牌证"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200706191818pzhrnxfz6jir5wkjgxvldp",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "regular"
     },
     {
       "id": "drive.s1.license.104",
@@ -22508,54 +21122,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.license.113",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "申请残疾人专用小型自动挡载客汽车驾驶证的人年龄条件是多少？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "18周岁以上，无上限年龄",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "18周岁以上60周岁以下",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "20周岁以上70周岁以下",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "20周岁以上60周岁以下",
-          "ok": false
-        }
-      ],
-      "explain": "申领C1、C2、C5、F，满18岁即可，不设上限。",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定:申请小型汽车、小型自动挡汽车、残疾人专用小型自动挡载客汽车、轻便摩托车准驾车型的，年龄在18周岁以上。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200914180630ys4uf7lvvmxhcsjyqse5d4",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.accident.051",
       "topic_id": "drive.s1.accident",
       "kind": "judge",
@@ -22756,54 +21322,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.highway.039",
-      "topic_id": "drive.s1.highway",
-      "kind": "single",
-      "prompt": "在城市快速路上违法占用应急车道，一次记多少分?",
-      "choices": [
-        {
-          "id": "A",
-          "label": "1分",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "3分",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "6分",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "12分",
-          "ok": false
-        }
-      ],
-      "explain": "高速路快速路：倒车逆行12、违停9、应急6、低速3。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记6分：（一）驾驶校车、公路客运汽车、旅游客运汽车载人超过核定人数未达到百分之二十，或者驾驶7座以上载客汽车载人超过核定人数百分之二十以上未达到百分之五十，或者驾驶其他载客汽车载人超过核定人数百分之五十以上未达到百分之百的；（二）驾驶校车、中型以上载客载货汽车、危险物品运输车辆在高速公路、城市快速路上行驶超过规定时速未达到百分之二十，或者在高速公路、城市快速路以外的道路上行驶超过规定时速百分之二十以上未达到百分之五十的；（三）驾驶…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20201016175724elutl8zy5eraefbqld6o5w",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.license.114",
       "topic_id": "drive.s1.license",
       "kind": "judge",
@@ -22888,44 +21406,6 @@
       "phase": 4,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.registration.033",
-      "topic_id": "drive.s1.registration",
-      "kind": "judge",
-      "prompt": "上道路行驶的机动车不按规定安装机动车号牌的，一次记12分。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "号牌：伪造、变造的，记12分；未悬挂或故意遮挡、污损的，记9分；不按规定安装的，记3分。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记3分： （一）驾驶校车、公路客运汽车、旅游客运汽车、7座以上载客汽车以外的其他载客汽车载人超过核定人数百分之二十以上未达到百分之五十的； （二）驾驶校车、中型以上载客载货汽车、危险物品运输车辆以外的机动车在高速公路、城市快速路以外的道路上行驶超过规定时速百分之二十以上未达到百分之五十的； （三）驾驶机动车在高速公路或者城市快速路上不按规定车道行驶的； （四）驾驶机动车不按规定超车、让行，或者在高速公路、城市快速路以外的道路上逆行…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20201016175724rmqbjukmwafkchd9cqutir",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.149",
@@ -23396,44 +21876,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.152",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "道路划设专用车道的，在专用车道内，只准许规定的车辆通行。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "专用车道就是给专用车辆行驶的。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第37条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《中华人民共和国道路交通安全法》第三十七条 道路划设专用车道的，在专用车道内，只准许规定的车辆通行，其他车辆不得进入专用车道内行驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "202011061424276nybc2j4ydbhkmgvrengav",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.153",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -23711,44 +22153,6 @@
           "source_id": "public-bank-2022",
           "relation": "selection_basis",
           "locator": "20201201144300p1tcpgqnsvovdqnzxrbzwy",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.rules.156",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "机动车驶进急弯、坡道顶端等影响安全视距的路段时，应当减速慢行，并鸣喇叭示意。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "视距不足要减速慢行，安全第一。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第59条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《中华人民共和国道路交通安全法实施条例》第五十九条 机动车在夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口时，应当交替使用远近光灯示意。 机动车驶近急弯、坡道顶端等影响安全视距的路段以及超车或者遇有紧急情况时，应当减速慢行，并鸣喇叭示意。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "202012011443009sw6j5clhkbwgmm3age5lx",
           "url": "https://github.com/doupoa/DrivingTestSubjectOne",
           "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
         }
@@ -24062,44 +22466,6 @@
       "phase": 2,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.160",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "驾驶机动车通过急弯路时，最高行驶速度不得超过30公里/小时。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "通过铁路道口、急弯路、窄路、窄桥时，车速不得超30km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第46条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第四十六条 机动车行驶中遇有下列情形之一的，最高行驶速度不得超过每小时30公里，其中拖拉机、电瓶车、轮式专用机械车不得超过每小时15公里： (一)进出非机动车道，通过铁路道口、急弯路、窄路、窄桥时； (二)掉头、转弯、下陡坡时； (三)遇雾、雨、雪、沙尘、冰雹，能见度在50米以内时； (四)在冰雪、泥泞的道路上行驶时； (五)牵引发生故障的机动车时。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20210125171551cesgel8rnzysen8le4k2be",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "regular"
     },
     {
       "id": "drive.s1.highway.042",
@@ -24670,54 +23036,6 @@
         }
       ],
       "phase": 4,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.rules.164",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "驾驶机动车不得有下列哪种行为？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "观察前方车辆动态",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "观看车载电视",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "观察后方车辆动态",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "观察交通信号",
-          "ok": false
-        }
-      ],
-      "explain": "文明驾驶，安全第一。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第62条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第六十二条 驾驶机动车不得有下列行为：(一)在车门、车厢没有关好时行车；(二)在机动车驾驶室的前后窗范围内悬挂、放置妨碍驾驶人视线的物品；(三)拨打接听手持电话、观看电视等妨碍安全驾驶的行为；(四)下陡坡时熄火或者空挡滑行；(五)向道路上抛撒物品；(六)驾驶摩托车手离车把或者在车把上悬挂物品；(七)连续驾驶机动车超过4小时未停车休息或者停车休息时间少于20分钟；(八)在禁止鸣喇叭的区域或者路段鸣喇叭。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20210305160037hgbtqjkcd8kspbcugrshsc",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
       "difficulty": 1,
       "band": "regular"
     },
@@ -26254,44 +24572,6 @@
       "phase": 1,
       "difficulty": 2,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.accident.065",
-      "topic_id": "drive.s1.accident",
-      "kind": "judge",
-      "prompt": "遇前方道路发生交通事故时，在交通警察的指挥下可以临时占用对向车道。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "有交警现场指挥，优先按照交警的指挥行驶。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第38条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》第三十八条：车辆、行人应当按照交通信号通行；遇有交通警察现场指挥时，应当按照交通警察的指挥通行；在没有交通信号的道路上，应当在确保安全、畅通的原则下通行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20210902165900tzpwdmib2jlob2no2sgvtm",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "common"
     },
     {
       "id": "drive.s1.lights.043",
@@ -28766,44 +27046,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.penalty.064",
-      "topic_id": "drive.s1.penalty",
-      "kind": "judge",
-      "prompt": "累积记分满12分的，不得再处理其他机动车的交通违法行为记录。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "驾驶人自己的车辆累积记分满12分，不得处理其他机动车的违法记分。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有二起以上交通违法行为应当予以记分的，记分分值累积计算。机动车驾驶人可以一次性处理完毕同一辆机动车的多起交通违法行为记录，记分分值累积计算。累积记分末满12分的，可以处理其驾驶的其他机动车的交通违法行为记录；累积记分满12分的，不得再处理其他机动车的交通违法行为记录。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220408192503jhjkvmh4rljyd26s8vty7c",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.penalty.065",
       "topic_id": "drive.s1.penalty",
       "kind": "single",
@@ -29614,44 +27856,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.penalty.071",
-      "topic_id": "drive.s1.penalty",
-      "kind": "judge",
-      "prompt": "行政处罚决定被依法变更或者撤销的，相应记分不会被变更或者撤销。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "行政处罚依法变更或者撤销的，相应记分也会被变更或者撤销。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，行政处罚决定被依法变更或者撤销的，相应记分应当变更或者撤销。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220408192504kkaohhf7cavqvdaot8shra",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.rules.192",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -30242,44 +28446,6 @@
       "phase": 1,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.license.161",
-      "topic_id": "drive.s1.license",
-      "kind": "judge",
-      "prompt": "年龄在70周岁以上的机动车驾驶人审验时还应当按照规定进行记忆力、判断力、反应力等能力测试。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "三力测试：对70周岁以上的驾驶人进行记忆力、判断力、反应力三方面的能力测试。",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定,机动车驾驶证审验内容包括: (一) 道路交通安全违法行为、交通事故处理情况；(二)身体条件情况； (三)道路交通安全违法行为记分及记满12分后参加学习和考试情况。持有大型客车重型牵引挂车、城市公交车、中型客车大型货车驾驶证一个记分周期内有记分的，以及持有其他准驾车型驾驶证发生交通事故造成人员死亡承担同等以上责任末被吊销机动车驾驶证的驾驶人，审验时应当参加不少于三小时的道路交通安全法律法规、交通安全文明驾驶、应急处置等知识学习，并接受交通事故案例警示教育。年龄在70周岁以上的机…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220408192505mj5umaue1gv5zyjwpfh2iq",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
     },
     {
       "id": "drive.s1.license.162",
@@ -31958,54 +30124,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.penalty.087",
-      "topic_id": "drive.s1.penalty",
-      "kind": "single",
-      "prompt": "在最近几个记分周期内，机动车驾驶人因饮酒后驾驶机动车受到过处罚的，不得通过交通安全教育扣减交通违法行为记分？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "1个",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "2个",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "3个",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "4个",
-          "ok": false
-        }
-      ],
-      "explain": "最近3个记分周期内，有饮酒驾驶机动车处罚的，不得参加满分学习。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人申请接受交通安全教育扣减交通违法行为记分的，公安机关交通管理部门应当受理。但有以下情形之一的，不予受理：（一） 在本记分周期内或者上一个记分周期内，机动车驾驶人有二次以上参加满分教育记录的；（二）在最近三个记分周期内，机动车驾驶人因造成交通事故后逃逸，或者饮酒后驾驶机动车，或者使用伪造、变造的机动车号牌、行驶证、驾驶证、校车标牌，或者使用其他机动车号牌、行驶证，或者买分卖分受到过处罚的；（三）机动车驾驶证在实习期内，或者机动车驾驶证逾期未审验，或者机动车驾驶…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220412175302sayjwjxsgqsqixijr6qa6w",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.penalty.088",
       "topic_id": "drive.s1.penalty",
       "kind": "single",
@@ -32732,44 +30850,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.206",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识网上学习三日内累计满三十分钟且考试合格的，一次扣减1分。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "学法减分学习时，网上学习三天累计三十分钟，考试合格后，一次可以减1分。",
-      "source_refs": [
-        {
-          "source_id": "penalty-order-163",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
-          "note": "《道路交通安全违法行为记分管理办法》规定，参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识网上学习三日内累计满三十分钟且考试合格的，一次扣减1分。参加公安机关交通管理部门组织的道路交通安全法律法规和相关知识现场学习满一小时且考试合格的，一次扣减2分。参加公安机关交通管理部门组织的交通安全公益活动的，满一小时为一次，一次扣减1分。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220412180651tzqd2q976kvszhtwak22cm",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 1,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.rules.207",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -32816,54 +30896,6 @@
       "phase": 2,
       "difficulty": 1,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.highway.053",
-      "topic_id": "drive.s1.highway",
-      "kind": "single",
-      "prompt": "驾驶中型客车在高速公路上行驶，最高速度不能超过多少？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "80公里/小时",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "100公里/小时",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "110公里/小时",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "120公里/小时",
-          "ok": false
-        }
-      ],
-      "explain": "高速公路：摩托车不得超80km/h，小车不得超120km/h，其他车不得超100km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》规定：在高速公路上行驶的小型载客汽车最高车速不得超过每小时120公里，其他机动车不得超过每小时100公里，摩托车不得超过每小时80公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220414095823j6x8fjnjdmdyagu6sjdt2s",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 1,
-      "band": "hot"
     },
     {
       "id": "drive.s1.registration.045",
@@ -34162,54 +32194,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.license.207",
-      "topic_id": "drive.s1.license",
-      "kind": "single",
-      "prompt": "70周岁以上的驾驶人，可以驾驶以下哪种车型？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "大型货车",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "牵引挂车",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "中型客车",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "小型自动挡汽车",
-          "ok": true
-        }
-      ],
-      "explain": "70周岁以上，不能再开中大型车。",
-      "source_refs": [
-        {
-          "source_id": "license-order-162",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
-          "note": "《机动车驾驶证申领和使用规定》规定：年龄在70周岁以上能够通过记忆力、判断力、反应力等能力测试的，可以申请小型汽车、小型自动挡汽车、残疾人专用小型自动挡载客汽车、轻便摩托车准驾车型的机动车驾驶证。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220420094351bbggcrwzcmiezreeweb7wa",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.license.208",
       "topic_id": "drive.s1.license",
       "kind": "single",
@@ -34688,54 +32672,6 @@
       "phase": 1,
       "difficulty": 1,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.registration.052",
-      "topic_id": "drive.s1.registration",
-      "kind": "single",
-      "prompt": "以下哪种情形机动车所有人应申请办理注销登记？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "机动车所有人联系方式变更的",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "机动车已达到国家强制报废标准的",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "机动车发生损坏的",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "车辆识别代号因磨损、锈蚀、事故等原因辨认不清或者损坏的",
-          "ok": false
-        }
-      ],
-      "explain": "机动车达到报废标准的，不可继续上路行驶，应申请注销登记。",
-      "source_refs": [
-        {
-          "source_id": "registration-order-164",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
-          "note": "《机动车登记规定》规定，机动车有下列情形之一的，机动车所有人应当向登记地车辆管理所申请注销登记：（一）机动车已达到国家强制报废标准的；（二）机动车未达到国家强制报废标准，机动车所有人自愿报废的；（三）因自然灾害、失火、交通事故等造成机动车灭失的；（四）机动车因故不在我国境内使用的；（五）因质量问题退车的。属于第一款第四项、第五项规定情形的，机动车所有人申请注销登记前，应当将涉及该车的道路交通安全违法行为和交通事故处理完毕。属于二手车出口符合第一款第四项规定情形的，二手车出口企业应当在机动车办理海关出口通关手续后…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20220429143656t1gxvpchenekseqoarmtuz",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 1,
-      "band": "hot"
     },
     {
       "id": "drive.s1.registration.053",
@@ -35645,55 +33581,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.rules.301",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "路面上的黄色标记是何含义？",
-      "image": "images/subject1/_1567562746669_2019_kemu1_866100.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "禁止转弯",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "禁止掉头",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "允许掉头",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "禁止直行",
-          "ok": false
-        }
-      ],
-      "explain": "有黄色叉形标记，就是禁止。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第四十九条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在没有禁止掉头或者没有禁止左转弯标志、标线的地点可以掉头，但不得妨碍正常行驶的其他车辆和行人的通行。在铁路道口、人行横道、桥梁、急弯、陡坡、隧道不得掉头。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102540cbwr3n54uxfqsawdk2v47m",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.accident.078",
       "topic_id": "drive.s1.accident",
       "kind": "judge",
@@ -36036,55 +33923,6 @@
           "source_id": "public-bank-2022",
           "relation": "selection_basis",
           "locator": "20190410102557yacdtxccn3e5acyrlck7xa",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.334",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
-      "image": "images/subject1/_E5_BE_AE_E4_BF_A1_E5_9B_BE_E7_89_87_20210826165939.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "前雾灯打开",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "后雾灯打开",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "前照灯近光打开",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "前照灯远光打开",
-          "ok": false
-        }
-      ],
-      "explain": "前雾灯绿色光朝左，后雾灯黄色光朝右。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第五十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯，但同方向行驶的后车与前车近距离行驶时，不得使用远光灯。机动车雾天行驶应当开启雾灯和危险报警闪光灯。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102557ghc8gccl6rfxzzx1jwmnqe",
           "url": "https://github.com/doupoa/DrivingTestSubjectOne",
           "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
         }
@@ -38010,45 +35848,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.rules.373",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "如图所示，驾驶机动车通过此路口，最高速度不能超过每小时30公里。",
-      "image": "images/subject1/image-524.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "通过铁路道口、急弯路、窄路、窄桥时，车速不得超30km/h。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十六条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车行经铁路道口时，应当按照交通信号或者管理人员的指挥通行；没有交通信号或者管理人员的，应当减速或者停车，确认安全后通过。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20211112095131lnwv27kjz8ppyupjv6ryzo",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.highway.075",
       "topic_id": "drive.s1.highway",
       "kind": "judge",
@@ -39493,45 +37292,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.occupants.097",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "如图所示，驾驶机动车在路口遇到这种交通信号时，右转弯的车辆在不妨碍被放行的车辆、行人的情况下，可以通行。",
-      "image": "images/subject1/2019_kemu1_1121900.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "红灯分圆形和箭头两种，圆形红灯可以右转，箭头红灯要按照箭头导向行驶。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十四条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车通过交叉路口，应当按照交通信号灯、交通标志、交通标线或者交通警察的指挥通过；通过没有交通信号灯、交通标志、交通标线或者交通警察指挥的交叉路口时，应当减速慢行，并让行人和优先通行的车辆先行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102523qtbvip4jywo85s39wtt71x",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.rules.393",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -39959,45 +37719,6 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.402",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "在这个路口不能掉头。",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_817300.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "行车要注意交通标志，遵守交通规则。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第四十九条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在没有禁止掉头或者没有禁止左转弯标志、标线的地点可以掉头，但不得妨碍正常行驶的其他车辆和行人的通行。在铁路道口、人行横道、桥梁、急弯、陡坡、隧道不得掉头。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102525uyjjqz3pr6uw8pkgup19s6",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.rules.403",
@@ -41229,55 +38950,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.rules.424",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "在这条车道行驶的最高车速是多少？",
-      "image": "images/subject1/2019_kemu1_821000.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "120公里/小时",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "110公里/小时",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "100公里/小时",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "90公里/小时",
-          "ok": true
-        }
-      ],
-      "explain": "标志标线齐全的路段，按标志标线行驶。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-3",
-          "relation": "adapted",
-          "locator": "车行道分界线",
-          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
-          "note": "黄线分隔对向车流、白线分隔同向车流；虚线准许跨越，实线禁止跨越、压线。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102529xreza6tdeemcxb61pq1kpk",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.425",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -41425,55 +39097,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.rules.427",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "在这个路口右转弯如何通行？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_814100.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "先让对面车左转弯",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "直接向右转弯",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "抢在对面车前右转弯",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "鸣喇叭催促",
-          "ok": false
-        }
-      ],
-      "explain": "右转让左转，左转让直行，转弯让直行。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十四条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车通过交叉路口，应当按照交通信号灯、交通标志、交通标线或者交通警察的指挥通过；通过没有交通信号灯、交通标志、交通标线或者交通警察指挥的交叉路口时，应当减速慢行，并让行人和优先通行的车辆先行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025291lgd6jmjz9kgvynmmkzko",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.lights.085",
       "topic_id": "drive.s1.lights",
       "kind": "single",
@@ -41521,55 +39144,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.428",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "驾驶机动车在路口遇到这种情况如何行驶？",
-      "image": "images/subject1/2019_kemu1_805400.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "可以向右转弯",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "靠右侧直行",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "遵守交通信号灯",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "停车等待",
-          "ok": true
-        }
-      ],
-      "explain": "交警指挥与信号灯不一致，要优先按交警指挥行驶。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第三十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "绿灯亮时，准许车辆通行，但转弯的车辆不得妨碍被放行的直行车辆、行人通行；黄灯亮时，已越过停止线的车辆可以继续通行；红灯亮时，禁止车辆通行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102529vzmra1zotu1pcdz68vqjis",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.429",
@@ -41864,55 +39438,6 @@
       "phase": 2,
       "difficulty": 2,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.occupants.103",
-      "topic_id": "drive.s1.occupants",
-      "kind": "single",
-      "prompt": "这样停放机动车有什么违法行为？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_819500.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "停车占用人行道",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "在公共汽车站停车",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "在有禁停标志路段停车",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "在非机动车道停车",
-          "ok": false
-        }
-      ],
-      "explain": "站30口50，不得停车。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第六十三条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在道路上临时停车，不得妨碍其他车辆和行人通行；在设有禁停标志、标线的路段，在人行横道、施工地段不得停车；车辆停稳前不得开车门和上下人员。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102530qjxuzcgmbcvuhsphlk6ehw",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.435",
@@ -42454,55 +39979,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.rules.441",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "如图所示，驾驶机动车遇到这种情况，以下做法正确的是什么？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_1120600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "减速慢行、鸣喇叭示意",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "为拓宽视野，临时占用左侧车道行驶",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "加速行驶",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "停车观察",
-          "ok": false
-        }
-      ],
-      "explain": "急转弯会影响驾驶员安全视距，为了安全，应减速慢行并鸣喇叭示意对向来车。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102531jfgmr5zkkpnn8z1yvqxvtc",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.lights.088",
       "topic_id": "drive.s1.lights",
       "kind": "single",
@@ -42846,55 +40322,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.highway.083",
-      "topic_id": "drive.s1.highway",
-      "kind": "single",
-      "prompt": "在这段高速公路上行驶的最高车速是多少？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_820600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "120公里/小时",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "100公里/小时",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "90公里/小时",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "60公里/小时",
-          "ok": false
-        }
-      ],
-      "explain": "蓝底白色是最低限速，红圈白底是最高限速。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第七十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "高速公路应当标明车道的行驶速度，最高车速不得超过每小时120公里，最低车速不得低于每小时60公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102532pua4zto52c2ytfdfs2cdy7",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "regular"
-    },
-    {
       "id": "drive.s1.signals.214",
       "topic_id": "drive.s1.signals",
       "kind": "single",
@@ -43038,55 +40465,6 @@
         }
       ],
       "phase": 4,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.447",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "在这个路口左转弯选择哪条车道？",
-      "image": "images/subject1/2019_kemu1_813700.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "最左侧车道",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "中间车道",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "最右侧车道",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "不用变道",
-          "ok": false
-        }
-      ],
-      "explain": "左转弯找左转弯标线，选择左转弯车道。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-3",
-          "relation": "adapted",
-          "locator": "车行道分界线",
-          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
-          "note": "黄线分隔对向车流、白线分隔同向车流；虚线准许跨越，实线禁止跨越、压线。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102532t2j2zpd72dtkcwzbs6xofr",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
       "difficulty": 2,
       "band": "common"
     },
@@ -43285,55 +40663,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.449",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "遇到这种情形怎样行驶？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_812700.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "停车让对方车辆通过",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "开启左转向灯向左行驶",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "加速超越障碍后会车",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "开前照灯告知对方让行",
-          "ok": false
-        }
-      ],
-      "explain": "障碍路段，哪方有障碍，哪方停车让行。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第五十二条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车通过没有交通信号灯控制也没有交通警察指挥的交叉路口，没有交通标志、标线控制的，应当让右方道路的来车先行；转弯的机动车让直行的车辆先行；相对方向行驶的右转弯机动车让左转弯车辆先行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102533qrjrj1b1zuuetvuri2t8ex",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.rules.450",
@@ -43826,55 +41155,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.highway.085",
-      "topic_id": "drive.s1.highway",
-      "kind": "single",
-      "prompt": "在这条高速公路上行驶时的最高速度不能超过多少？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_808400.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "100公里/小时",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "110公里/小时",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "120公里/小时",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "90公里/小时",
-          "ok": false
-        }
-      ],
-      "explain": "问时速看路边标志。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第七十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "高速公路应当标明车道的行驶速度，最高车速不得超过每小时120公里，最低车速不得低于每小时60公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102535bxhud7yeer7vou9f7m2fyl",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 4,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.highway.086",
       "topic_id": "drive.s1.highway",
       "kind": "single",
@@ -43922,55 +41202,6 @@
       "phase": 4,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.456",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "遇到这种情况的路口怎样通过？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_805600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "左转弯加速通过",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "加速直行通过",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "右转弯加速通过",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "确认安全后通过",
-          "ok": true
-        }
-      ],
-      "explain": "区分：黄灯亮了等一等，黄灯持续闪烁确认安全再通过。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第三十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "绿灯亮时，准许车辆通行，但转弯的车辆不得妨碍被放行的直行车辆、行人通行；黄灯亮时，已越过停止线的车辆可以继续通行；红灯亮时，禁止车辆通行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102535vjssuvwhwpedinpn6emc6k",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.highway.087",
@@ -44423,45 +41654,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.signals.218",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "这个标志的含义是警告前方道路易滑，注意慢行。",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_857100.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "黄牌是警告标志，提醒驾驶人前方有反向弯路路段，注意谨慎慢行。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025363jzmymktwsgd6ykb24nndr",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.461",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -44616,45 +41808,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "regular"
-    },
-    {
-      "id": "drive.s1.signals.222",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "这个标志的含义是提醒车辆驾驶人前方是堤坝路段。",
-      "image": "images/subject1/2019_kemu1_858400.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "黄牌是警告标志，提醒驾驶人前方是傍山险路，注意谨慎驾驶。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102536gkrafbccyo3lf66ar2ndvz",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "hot"
     },
     {
       "id": "drive.s1.signals.223",
@@ -44813,45 +41966,6 @@
       "band": "hot"
     },
     {
-      "id": "drive.s1.signals.227",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "这个标志的含义是告示前方道路是单向通行路段。",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_859700.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "黄牌是警告标志，提醒驾驶人前方有障碍物，需要向右绕行，注意谨慎驾驶。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102536yvbprw7gro9yv8evrpapwp",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.signals.228",
       "topic_id": "drive.s1.signals",
       "kind": "judge",
@@ -44921,45 +42035,6 @@
           "source_id": "public-bank-2022",
           "relation": "selection_basis",
           "locator": "201904101025369vrhp6hfnbmrafwrwgfgqk",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "regular"
-    },
-    {
-      "id": "drive.s1.signals.230",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "这个标志的含义是提醒车辆驾驶人前方是车辆渡口。",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_858700.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "黄牌是警告标志，提醒驾驶人前方是渡口，注意谨慎驾驶。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102536bwjmg1fdx8kddcptx6qe2z",
           "url": "https://github.com/doupoa/DrivingTestSubjectOne",
           "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
         }
@@ -45944,45 +43019,6 @@
       "band": "regular"
     },
     {
-      "id": "drive.s1.signals.252",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "这个标志的含义是警告车辆驾驶人前方是人行横道。",
-      "image": "images/subject1/2019_kemu1_857800.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "黄牌是警告标志，提醒驾驶人前方可能有行人，注意谨慎驾驶。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十七条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车行经人行横道时，应当减速行驶；遇行人正在通过人行横道，应当停车让行。机动车行经没有交通信号的道路时，遇行人横过道路，应当避让。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102537giqpsshzg9dyezkhb5kjjd",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
       "id": "drive.s1.signals.253",
       "topic_id": "drive.s1.signals",
       "kind": "judge",
@@ -46137,45 +43173,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.signals.257",
-      "topic_id": "drive.s1.signals",
-      "kind": "judge",
-      "prompt": "驾驶机动车在路口遇到这种信号灯亮时，不能右转弯。",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_837100.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "右转不受圆形灯控，在安全的前提下可右转。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第三十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "绿灯亮时，准许车辆通行，但转弯的车辆不得妨碍被放行的直行车辆、行人通行；黄灯亮时，已越过停止线的车辆可以继续通行；红灯亮时，禁止车辆通行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102538bptp8bfjd3ntm2wdqpncl4",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.rules.466",
@@ -46489,55 +43486,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.469",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "这个导向箭头是何含义？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_863500.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "指示前方右转",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "指示前方掉头",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "指示前方直行",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "指示向左变道",
-          "ok": false
-        }
-      ],
-      "explain": "看箭头方向：箭头是掉头，就是指示前方掉头。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第四十九条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在没有禁止掉头或者没有禁止左转弯标志、标线的地点可以掉头，但不得妨碍正常行驶的其他车辆和行人的通行。在铁路道口、人行横道、桥梁、急弯、陡坡、隧道不得掉头。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025383wundmksrd4chejzjdfsz3",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.signals.262",
@@ -46972,55 +43920,6 @@
           "source_id": "public-bank-2022",
           "relation": "selection_basis",
           "locator": "20190410102539bsecbickrt2mn53exjmmrj",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.473",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "这个路面标记是何含义？",
-      "image": "images/subject1/2019_kemu1_864300.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "最低限速为80公里/小时",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "平均速度为80公里/小时",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "解除80公里/小时限速",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "最高限速为80公里/小时",
-          "ok": false
-        }
-      ],
-      "explain": "看数字颜色：黄色是最高限速，白色是最低限速。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102539gklzqwtynesugjxr1gkyjp",
           "url": "https://github.com/doupoa/DrivingTestSubjectOne",
           "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
         }
@@ -47518,55 +44417,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.signals.275",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "路中心双黄实线是何含义？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_864600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "可跨越对向车道分界线",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "禁止跨越对向车行道分界线",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "双侧可跨越同向车道分界线",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "单向行驶车道分界线",
-          "ok": false
-        }
-      ],
-      "explain": "双黄实线不可跨越或压线行驶。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-3",
-          "relation": "adapted",
-          "locator": "车行道分界线",
-          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
-          "note": "黄线分隔对向车流、白线分隔同向车流；虚线准许跨越，实线禁止跨越、压线。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025416qnxospbe7kkxjuhukag98",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.signals.276",
@@ -48204,55 +45054,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.signals.288",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "图中圈内白色横实线是何含义？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_865200.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "停止线",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "让行线",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "减速线",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "待转线",
-          "ok": false
-        }
-      ],
-      "explain": "靠近路口有三类白线：单白横实线是停止线；双白横实线是停车让行线；双白横虚线是减速让行线。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-3",
-          "relation": "adapted",
-          "locator": "车行道分界线",
-          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
-          "note": "黄线分隔对向车流、白线分隔同向车流；虚线准许跨越，实线禁止跨越、压线。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102544vxsnfw7q26x3ggamnnchbk",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "common"
     },
     {
       "id": "drive.s1.signals.289",
@@ -51676,55 +48477,6 @@
       "band": "common"
     },
     {
-      "id": "drive.s1.rules.531",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "以下哪个指示灯亮时，表示发动机温度过高？",
-      "image": "images/subject1/_1567565690349_2019_kemu1_1162900.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "图1",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "图2",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "图3",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "图4",
-          "ok": false
-        }
-      ],
-      "explain": "图1是机油指示灯，图3是ABS防抱死指示灯，图4是燃油指示灯。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102558sn9hbjkv2nskqdranhnavb",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
       "id": "drive.s1.rules.532",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -51968,55 +48720,6 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.537",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "以下哪个仪表表示燃油表？",
-      "image": "images/subject1/_exam_subject1_2019_kemu1_1161700.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "图1",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "图2",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "图3",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "图4",
-          "ok": true
-        }
-      ],
-      "explain": "图1是转速表，图2是速度和里程表，图3是水温表。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101025596zy9sfaseufa3yltmra6mm",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.rules.538",
@@ -52320,55 +49023,6 @@
       "phase": 1,
       "difficulty": 2,
       "band": "hot"
-    },
-    {
-      "id": "drive.s1.rules.540",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "图中驾驶人的这种违法行为会被记多少分？",
-      "image": "images/subject1/2019_kemu1_BB110596.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "记12分",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "记3分",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "记6分",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "记9分",
-          "ok": true
-        }
-      ],
-      "explain": "号牌：伪造、变造的，记12分；未悬挂或故意遮挡、污损的，记9分；不按规定安装的，记3分。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第七十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "高速公路应当标明车道的行驶速度，最高车速不得超过每小时120公里，最低车速不得低于每小时60公里。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201911261902177cfvtjhsjjpaymptzzhrie",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common"
     },
     {
       "id": "drive.s1.rules.541",
@@ -53269,55 +49923,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.signals.314",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "在路口遇到图中这种黄灯不断闪烁时，说明什么情况？",
-      "image": "images/subject1/2019_kemu1_BB120356.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "路口禁止一切车辆通行",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "路口交通信号暂时解除",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "路口交通管制需要清空",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "路口发生道路交通事故",
-          "ok": false
-        }
-      ],
-      "explain": "黄灯不断闪烁时，行经路口要谨慎驾驶，注意观察周围情况，确认安全再通过。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第三十八条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "绿灯亮时，准许车辆通行，但转弯的车辆不得妨碍被放行的直行车辆、行人通行；黄灯亮时，已越过停止线的车辆可以继续通行；红灯亮时，禁止车辆通行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20191126190218eqxzg3qanyraueam8tuobr",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "hot"
     },
     {
       "id": "drive.s1.signals.315",
@@ -54363,104 +50968,6 @@
       "phase": 3,
       "difficulty": 2,
       "band": "common"
-    },
-    {
-      "id": "drive.s1.signals.322",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "下面哪个标志表示注意驼峰桥？",
-      "image": "images/subject1/2020_kemu1_11995300.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "图①",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "图②",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "图③",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "图④",
-          "ok": false
-        }
-      ],
-      "explain": "巧记：驼峰桥带门，2个凸不平，向下凹低洼，向上凸高凸。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "禁令与警告标志",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "禁令标志为红圈红杠，表示禁止或限制；警告标志为黄底黑边三角形，提示前方风险；指示标志为蓝底白图案，指出应当怎么走。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200727150249kxmbockmfbejoh56gtcpqx",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "common"
-    },
-    {
-      "id": "drive.s1.rules.561",
-      "topic_id": "drive.s1.rules",
-      "kind": "single",
-      "prompt": "以下哪个指示灯亮时，表示当前汽车发动机温度过高或冷却液过少？",
-      "image": "images/subject1/2020_kemu1_11995600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "图①",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "图②",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "图③",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "图④",
-          "ok": false
-        }
-      ],
-      "explain": "图1是水温指示灯，图3是ABS指示灯，图4是燃油指示灯。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第五十一条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带，摩托车驾驶人及乘坐人员应当按规定戴安全头盔。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200727150249plthxnjgabidanfurdev7u",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "regular"
     },
     {
       "id": "drive.s1.signals.323",
