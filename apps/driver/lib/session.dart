@@ -238,10 +238,16 @@ class _SessionStageState extends State<SessionStage> {
         for (final choice in q.choices) _choiceRow(context, q, choice),
         if (_revealed) ...[
           const SizedBox(height: 16),
-          FilledButton(
-            onPressed: _next,
-            style: FilledButton.styleFrom(backgroundColor: Bs.dark, foregroundColor: Colors.white),
-            child: Text(_index + 1 >= _launch.questions.length ? "结束本题" : "下一题"),
+          Center(
+            child: FilledButton(
+              onPressed: _next,
+              style: FilledButton.styleFrom(
+                backgroundColor: Bs.dark,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(160, 48),
+              ),
+              child: Text(_index + 1 >= _launch.questions.length ? "结束本题" : "下一题"),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -273,64 +279,73 @@ class _SessionStageState extends State<SessionStage> {
     } else if (selected) {
       solid = Bs.paper;
     }
-    final fg = solid != null
-        ? Colors.white
-        : (tint ?? Theme.of(context).colorScheme.onSurface);
+    final fg = solid != null ? Colors.white : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;
     final signId = choice.sign;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
-        borderRadius: BorderRadius.circular(Bs.radius),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: _revealed ? _next : () => _pick(question, choice.id),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: solid ?? tint ?? Bs.border,
-                width: solid != null || tint != null ? 2 : 1,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        // 块宽跟着选项文字走：判断题得到两个短块，长选项到 720 才折行。
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 220, maxWidth: 720),
+          child: Material(
+            color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
+            borderRadius: BorderRadius.circular(Bs.radius),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: _revealed ? _next : () => _pick(question, choice.id),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: solid ?? tint ?? Bs.border,
+                    width: solid != null || tint != null ? 2 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(Bs.radius),
+                ),
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 32,
+                      child: Text(
+                        choice.id,
+                        style: textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: fg,
+                        ),
+                      ),
+                    ),
+                    if (signId != null) ...[
+                      // 标志本来就画在白底上，实色块里给它一块白托才不糊。
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Bs.body,
+                          borderRadius: BorderRadius.circular(Bs.radius),
+                        ),
+                        child: SignView(id: signId, size: _revealed && choice.ok ? 72 : 64),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    Flexible(
+                      child: Text(
+                        choice.label,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: fg,
+                          fontWeight: solid != null ? FontWeight.w600 : null,
+                        ),
+                      ),
+                    ),
+                    if (mark != null) ...[
+                      const SizedBox(width: 10),
+                      Icon(mark, size: Bs.bodySize, color: fg),
+                    ],
+                  ],
+                ),
               ),
-              borderRadius: BorderRadius.circular(Bs.radius),
-            ),
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 32,
-                  child: Text(
-                    choice.id,
-                    style: textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: fg,
-                    ),
-                  ),
-                ),
-                if (signId != null) ...[
-                  // 标志本来就画在白底上，实色块里给它一块白托才不糊。
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Bs.body,
-                      borderRadius: BorderRadius.circular(Bs.radius),
-                    ),
-                    child: SignView(id: signId, size: _revealed && choice.ok ? 72 : 64),
-                  ),
-                  const SizedBox(width: 10),
-                ],
-                Expanded(
-                  child: Text(
-                    choice.label,
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: fg,
-                      fontWeight: solid != null ? FontWeight.w600 : null,
-                    ),
-                  ),
-                ),
-                if (mark != null) Icon(mark, size: Bs.bodySize, color: fg),
-              ],
             ),
           ),
         ),
