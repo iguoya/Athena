@@ -10806,6 +10806,305 @@
       "phase": 3,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.022",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "非机动车应当在非机动车道内行驶；没有划分非机动车道的，应当靠车行道的右侧行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "非机动车的位置是法定的，这也是判断机动车该不该让、在哪让的前提。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十七条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "驾驶非机动车在道路上行驶应当遵守有关交通安全的规定。非机动车应当在非机动车道内行驶；在没有非机动车道的道路上，应当靠车行道的右侧行驶。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.023",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "残疾人机动轮椅车、电动自行车在非机动车道内行驶时，最高时速不得超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "15公里",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "10公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "20公里",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "25公里",
+          "ok": false
+        }
+      ],
+      "explain": "法律给非机动车道里的这两类车定了15公里的上限，超了就不再按非机动车对待。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "残疾人机动轮椅车、电动自行车在非机动车道内行驶时，最高时速不得超过15公里。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.024",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "行人应当在人行道内行走，没有人行道的靠路边行走。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这是行人的默认位置；机动车判断「该不该有人在这」也靠它。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "行人应当在人行道内行走，没有人行道的靠路边行走。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.025",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "行人不得扒车、强行拦车或者实施妨碍道路交通安全的其他行为。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "扒车和拦车不是「胆子大」，是法律明文禁止的危险行为。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "行人不得跨越、倚坐道路隔离设施，不得扒车、强行拦车或者实施妨碍道路交通安全的其他行为。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.026",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "学龄前儿童以及不能辨认或者不能控制自己行为的精神疾病患者、智力障碍者在道路上通行，应当由其监护人、监护人委托的人或者对其负有管理、保护职责的人带领。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这类行人无法为自己的安全负责，法律把责任放在带领人身上。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十四条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "学龄前儿童以及不能辨认或者不能控制自己行为的精神疾病患者、智力障碍者在道路上通行，应当由其监护人、监护人委托的人或者对其负有管理、保护职责的人带领。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.027",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "盲人在道路上通行，应当使用盲杖或者采取其他导盲手段，车辆应当避让盲人。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "避让盲人是机动车一方的义务，不是礼貌问题。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十四条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "盲人在道路上通行，应当使用盲杖或者采取其他导盲手段，车辆应当避让盲人。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.occupants.028",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "乘车人不得有下列哪种行为？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "系好安全带",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "提醒驾驶人注意路况",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "向车外抛洒物品",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "在后排就坐",
+          "ok": false
+        }
+      ],
+      "explain": "抛洒物对后车就是从天而降的障碍；携带危险品、妨碍驾驶人也一样禁止。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "乘车人不得携带易燃易爆等危险物品，不得向车外抛洒物品，不得有影响驾驶人安全驾驶的行为。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.occupants.029",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "乘车人不得携带易燃易爆等危险物品，也不得有影响驾驶人安全驾驶的行为。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "乘车人也是交通参与者，同样受法律约束。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "乘车人不得携带易燃易爆等危险物品，不得向车外抛洒物品，不得有影响驾驶人安全驾驶的行为。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.030",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "行人通过铁路道口时，应当按照交通信号或者管理人员的指挥通行；没有交通信号和管理人员的，应当在确认无火车驶临后迅速通过。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "道口对行人同样致命，规则和机动车一个逻辑：先确认，再通过。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "行人通过铁路道口时，应当按照交通信号或者管理人员的指挥通行；没有交通信号和管理人员的，应当在确认无火车驶临后迅速通过。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
     }
   ]
 }
