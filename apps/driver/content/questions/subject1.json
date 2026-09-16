@@ -7619,6 +7619,301 @@
       "phase": 1,
       "difficulty": 1,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.037",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面中央的双黄实线表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "提示前方有障碍，可以绕行",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "两侧车辆均禁止跨越、压线行驶",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "只有左侧车辆禁止跨越",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "同向车道之间的分界，可以变道",
+          "ok": false
+        }
+      ],
+      "explain": "黄线分的是对向车流，实线就是不准越；双黄实线两边都不准，越线超车、掉头都在禁止之列。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "禁止跨越对向车行道分界线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "双黄实线表示双方向均禁止跨越、压线行驶。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.038",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "白色虚线用于分隔同向行驶的车道，在保证安全的前提下可以跨越变更车道。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "白线分同向、黄线分对向；虚线可越、实线不可越——两组规则一配，路面就读得懂了。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "同向车道分界线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "白色虚线用以分隔同向行驶的交通流，在保证安全的前提下准许车辆跨越变更车道。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.039",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "黄色虚实线中，实线一侧禁止车辆跨越，虚线一侧在保证安全的情况下准许跨越。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "虚实线是「一边能越、一边不能越」，看自己这一侧是虚还是实。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "禁止跨越对向车行道分界线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "黄色虚实线表示实线一侧禁止车辆跨越，虚线一侧准许车辆在保证安全的情况下跨越。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.040",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路口或者匝道口画的导流线表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "可以临时停车等候",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "提示前方是停车让行路口",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "准许车辆从此处掉头",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车辆应当按规定路线行驶，不得压线或者越线行驶",
+          "ok": true
+        }
+      ],
+      "explain": "导流线是把车流理顺的区域，既不能压着开，也不能停在里面。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "导流线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "导流线表示车辆必须按规定的路线行驶，不得压线或者越线行驶，也不得在导流线区域内停车。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.041",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "路面上的黄色网状线区域，禁止以任何原因停车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "网状线画在最怕堵的地方（路口、出入口），前方没有足够空间时要在网状线外等。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "禁止停车标线（网状线）",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "网状线用以标示禁止以任何原因停车的区域。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十三条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车遇有前方机动车停车排队等候或者缓慢行驶时，不得在人行横道、网状线区域内停车等候。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.042",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "在划有导向车道的路口，应当怎样行驶？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "按所需行进方向提前驶入导向车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "在路口内根据车流随时变换车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一律走最左侧车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "先进入路口再选择方向",
+          "ok": false
+        }
+      ],
+      "explain": "导向车道要在进路口之前选好；到了路口再变道，既压实线也容易与直行车冲突。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十一条第（二）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "在划有导向车道的路口，按所需行进方向驶入导向车道。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.043",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "同向车道分界线是白色实线的路段，不得变更车道、压线行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "同向的白线也分虚实：实线路段（如路口渐变段、隧道）不准变道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "同向车道分界线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "白色实线用以分隔同向行驶的交通流，禁止车辆跨越、压线行驶。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.044",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面中央的单黄实线表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "同向车道的分界，可以跨越",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "提示前方是学校路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "分隔对向车流，禁止车辆跨越",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "可以在其上临时停车",
+          "ok": false
+        }
+      ],
+      "explain": "单黄实线常见于两车道公路：越过去就是逆向车道，禁止越线超车和掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "禁止跨越对向车行道分界线",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "单黄实线用以分隔对向行驶的交通流，禁止车辆跨越。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
     }
   ]
 }
