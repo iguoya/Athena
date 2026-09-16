@@ -11105,6 +11105,357 @@
       "phase": 2,
       "difficulty": 2,
       "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.069",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶机动车倒车时，正确的做法是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "先鸣喇叭再快速倒",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "察明车后情况，确认安全后倒车",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "只看后视镜即可",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "让乘车人下车指挥就可以在任何地点倒车",
+          "ok": false
+        }
+      ],
+      "explain": "倒车的盲区最大；而且铁路道口、交叉路口、单行路、桥梁、急弯、陡坡和隧道里一律不准倒车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车倒车时，应当察明车后情况，确认安全后倒车。不得在铁路道口、交叉路口、单行路、桥梁、急弯、陡坡或者隧道中倒车。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.rules.070",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "机动车载物的高度，重型、中型载货汽车从地面起不得超过4米，其他载货的机动车不得超过2.5米。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "超高最先撞的是限高架、天桥和电线，跟超载一样是硬指标。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车载物不得超过机动车行驶证上核定的载质量，装载长度、宽度不得超出车厢，并应当遵守下列规定：重型、中型载货汽车，半挂车载物，高度从地面起不得超过4米，载运集装箱的机动车高度从地面起不得超过4.2米；其他载货的机动车载物，高度从地面起不得超过2.5米。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.071",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "载货汽车、半挂牵引车、拖拉机只允许牵引1辆挂车；挂车不得载人。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "挂车没有独立的制动与转向，串得越多越不可控，也不能坐人。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十六条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车牵引挂车应当符合下列规定：载货汽车、半挂牵引车、拖拉机只允许牵引1辆挂车；挂车不得载人。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.066",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "任何单位和个人不得擅自设置、移动、占用、损毁交通信号灯、交通标志、交通标线。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "交通设施是公共的通行规则的载体，动了它等于改了所有人的规则。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "任何单位和个人不得擅自设置、移动、占用、损毁交通信号灯、交通标志、交通标线。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.072",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "未经许可，任何单位和个人不得占用道路从事非交通活动。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "摆摊、堆料、办活动占道都要经过许可，否则就是违法占道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "未经许可，任何单位和个人不得占用道路从事非交通活动。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.073",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "公安机关交通管理部门因交通需要采取限制通行、禁止通行措施的，应当提前向社会公告。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "限行不是突然袭击，法律要求提前公告，让人有机会改路线。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第三十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "公安机关交通管理部门根据道路和交通流量的具体情况，可以对机动车、非机动车、行人采取疏导、限制通行、禁止通行等措施。遇有大型群众性活动、大范围施工等情况，需要采取限制交通的措施，或者作出与公众的道路交通活动直接有关的决定，应当提前向社会公告。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.074",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "道路养护车、工程作业车进行作业时，在不影响过往车辆通行的前提下，可以不受标志、标线限制，过往车辆和人员应当注意避让。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "作业车有作业需要的豁免，但豁免的前提是不妨碍通行，而且不得逆行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十四条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "道路养护车辆、工程作业车进行作业时，在不影响过往车辆通行的前提下，其行驶路线和方向不受标志、标线限制，过往车辆和人员应当注意避让。洒水车、清扫车等应当按照安全作业标准作业；在不影响其他车辆通行的情况下，可以不受车辆分道行驶的限制，但不得逆向行驶。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.075",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "警车、消防车、救护车、工程救险车非执行紧急任务时，不得使用警报器；夜间在市区不得使用警报器。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "警报器代表特殊路权，非紧急任务用就是滥用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十六条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "警车、消防车、救护车、工程救险车执行紧急任务遇交通受阻时，可以断续使用警报器，并注意疏导，避免引起交通堵塞；非执行紧急任务时，不得使用警报器、标志灯具。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.highway.029",
+      "topic_id": "drive.s1.highway",
+      "kind": "judge",
+      "prompt": "在高速公路上行驶时，载货汽车车厢内不得载人，两轮摩托车也不得载人。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "高速上一旦发生事故，车厢里的人完全没有保护。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第八十三条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车在高速公路上行驶，不得有下列行为：载货汽车车厢载人；两轮摩托车载人。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.039",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "对道路交通安全违法行为给予警告、二百元以下罚款的，可以适用简易程序，由交通警察当场作出处罚决定。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "当场处罚的门槛是二百元以下；更重的处罚要走一般程序。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零七条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "对道路交通安全违法行为给予警告、二百元以下罚款，交通警察可以当场作出行政处罚决定，并出具行政处罚决定书。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.016",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "公路客运车辆、旅游客运车辆、危险物品运输车辆和重型载货汽车应当安装、使用符合国家标准的行驶记录仪。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "行驶记录仪是事后查证驾驶时长与速度的依据，属于这些车辆的法定装备。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "运送旅客的机动车应当有公路客运标志牌，重型载货汽车、半挂牵引车应当安装、使用符合国家标准的行驶记录仪。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
     }
   ]
 }
