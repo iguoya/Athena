@@ -293,11 +293,12 @@ class _SessionStageState extends State<SessionStage> {
               color: q.isHot ? Bs.danger : (q.isCommon ? Bs.warning : Bs.secondary),
             ),
             for (final ref in q.sourceRefs)
-              BsBadge(
-                text: "${Bs.sourceShort(ref.sourceId)} ${ref.locator}",
-                icon: Icons.menu_book,
-                color: Bs.secondary,
-              ),
+              if (Bs.isContentSource(ref.relation))
+                BsBadge(
+                  text: "${Bs.sourceShort(ref.sourceId)} ${ref.locator}".trim(),
+                  icon: Icons.menu_book,
+                  color: Bs.secondary,
+                ),
           ],
         ),
         const SizedBox(height: 12),
@@ -513,12 +514,13 @@ class _SessionStageState extends State<SessionStage> {
         ),
         const SizedBox(height: 16),
         for (final ref in q.sourceRefs)
+          if (Bs.isContentSource(ref.relation))
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: InkWell(
               onTap: ref.url.isEmpty ? null : () => launchUrl(Uri.parse(ref.url)),
               child: Text(
-                "${ref.locator} · ${ref.note}",
+                "${ref.locator.isEmpty ? Bs.sourceShort(ref.sourceId) : ref.locator} · ${ref.note}",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Bs.paper,
                   height: 1.4,

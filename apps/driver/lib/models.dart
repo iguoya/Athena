@@ -123,6 +123,12 @@ class Question {
     final seen = <String>{};
     final lines = <String>[];
     for (final ref in sourceRefs) {
+      // selection_basis 说的是「这题为什么收进来」，不是法条，不该念也不该显示在条文里。
+      if (ref.relation == "selection_basis" ||
+          ref.relation == "exam_alignment" ||
+          ref.relation == "see_also") {
+        continue;
+      }
       final note = ref.note.trim();
       if (note.isEmpty || !seen.add(note)) continue;
       final loc = ref.locator.trim();

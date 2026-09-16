@@ -51,11 +51,22 @@ class Bs {
     return switch (sourceId) {
       "road-safety-law" => "道交法",
       "road-safety-regulation" => "实施条例",
-      "license-order-162" => "公安部令162号",
+      "license-order-162" => "驾驶证规定",
+      "penalty-order-163" => "记分办法",
+      "registration-order-164" => "登记规定",
+      "accident-order-146" => "事故处理规定",
+      "criminal-law" => "刑法",
       "ga-1026" => "GA 1026",
-      "gb5768-2" => "GB 5768",
+      "gb5768-2" => "GB 5768 标志",
+      "gb5768-3" => "GB 5768 标线",
+      "public-bank-2022" => "公开题库",
       _ => sourceId,
     };
+  }
+
+  /// 说明「为什么选这条题」的来源不是法条，不进题干上方的徽章行。
+  static bool isContentSource(String relation) {
+    return relation != "selection_basis" && relation != "exam_alignment" && relation != "see_also";
   }
 
   static IconData kindIcon(String kind) {
