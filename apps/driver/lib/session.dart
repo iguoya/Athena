@@ -58,9 +58,11 @@ class _SessionStageState extends State<SessionStage> {
   final _judged = <int>{};
   final _correct = <int>{};
   final _hesitant = <int>{};
+
   /// 右栏依据显示哪一题：作答后自动跟到刚答的题，也可以用题干右侧的「解析」调回来。
   int? _focus;
   var _busy = false;
+  var _submitting = false;
   DateTime _shownAt = DateTime.now();
   Timer? _timer;
   late Duration _left;
@@ -69,16 +71,34 @@ class _SessionStageState extends State<SessionStage> {
 
   SessionLaunch get _launch => widget.launch;
 
-  int get _end => min(_start + _groupSize, _launch.questions.length);
+  /// 模拟考按考场走：整卷答完再交卷，中途可以改答案，交卷前不判对错。
+  bool get _isExam => !_launch.revealImmediately;
+
+  int get _total => _launch.questions.length;
+
+  int get _end => min(_start + _groupSize, _total);
 
   Iterable<int> get _group => [for (var i = _start; i < _end; i++) i];
 
-  bool get _groupDone => _group.every(_judged.contains);
+  bool get _lastGroup => _end >= _total;
 
-  bool get _lastGroup => _end >= _launch.questions.length;
+  bool _answered(int index) => (_picked[index] ?? const <String>{}).isNotEmpty;
+
+  /// 练习里这一组全判过了才翻页；模拟考随时可以翻。
+  bool get _groupDone => _isExam ? _group.every(_answered) : _group.every(_judged.contains);
+
+  int get _answeredCount => _isExam
+      ? [for (var i = 0; i < _total; i++) i].where(_answered).length
+      : _judged.length;
 
   /// 练习里作答即揭晓；模拟考只记选择，对错留到交卷（ADR 0005）。
   bool _revealed(int index) => _launch.revealImmediately && _judged.contains(index);
+
+  /// 多选题要自己点「确认作答」——按选够个数自动判分，等于告诉你这题该选几个。
+  bool _awaitingConfirm(int index) {
+    if (_isExam || _judged.contains(index)) return false;
+    return _launch.questions[index].isMulti && _answered(index);
+  }
 
   @override
   void initState() {
@@ -93,7 +113,7 @@ class _SessionStageState extends State<SessionStage> {
         if (!mounted) return;
         if (_left.inSeconds <= 1) {
           _timer?.cancel();
-          _finish();
+          _submitExam(auto: true);
           return;
         }
         setState(() => _left -= const Duration(seconds: 1));
@@ -131,7 +151,7 @@ class _SessionStageState extends State<SessionStage> {
                 children: [
                   Expanded(flex: 5, child: _groupColumn(context)),
                   const VerticalDivider(width: 1),
-                  Expanded(flex: 3, child: _evidenceColumn(context)),
+                  Expanded(flex: 3, child: _sideColumn(context)),
                 ],
               ),
             ),
@@ -144,19 +164,28 @@ class _SessionStageState extends State<SessionStage> {
   /// 键盘落在本组第一道还没答的题上；一组答完，回车和空格翻页。
   int? get _pending {
     for (final i in _group) {
-      if (!_judged.contains(i)) return i;
+      if (_isExam ? !_answered(i) : !_judged.contains(i)) return i;
     }
     return null;
   }
 
   Map<ShortcutActivator, VoidCallback> _shortcuts() {
+    void advance() {
+      final index = _pending;
+      if (index != null && _awaitingConfirm(index)) {
+        _commit(index, _launch.questions[index]);
+        return;
+      }
+      if (_groupDone && !_lastGroup) _nextGroup();
+    }
+
     final bindings = <ShortcutActivator, VoidCallback>{
-      const SingleActivator(LogicalKeyboardKey.enter): () {
-        if (_groupDone) _nextGroup();
+      const SingleActivator(LogicalKeyboardKey.enter): advance,
+      const SingleActivator(LogicalKeyboardKey.space): advance,
+      const SingleActivator(LogicalKeyboardKey.arrowRight): () {
+        if (!_lastGroup) _nextGroup();
       },
-      const SingleActivator(LogicalKeyboardKey.space): () {
-        if (_groupDone) _nextGroup();
-      },
+      const SingleActivator(LogicalKeyboardKey.arrowLeft): _prevGroup,
     };
     const letters = [
       LogicalKeyboardKey.keyA,
@@ -196,7 +225,6 @@ class _SessionStageState extends State<SessionStage> {
 
   Widget _stageHead(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final total = _launch.questions.length;
     return Padding(
       padding: const EdgeInsets.fromLTRB(28, 16, 28, 12),
       child: Row(
@@ -204,16 +232,20 @@ class _SessionStageState extends State<SessionStage> {
           Text(_launch.title, style: textTheme.titleMedium),
           const SizedBox(width: 16),
           Text(
-            _end - _start == 1 ? "$_end / $total" : "${_start + 1}–$_end / $total",
+            _end - _start == 1 ? "$_end / $_total" : "${_start + 1}–$_end / $_total",
             style: textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
+          if (_isExam) ...[
+            const SizedBox(width: 16),
+            Text("已答 $_answeredCount / $_total", style: textTheme.bodyMedium),
+          ],
           const Spacer(),
           SizedBox(
             width: 160,
             child: LinearProgressIndicator(
-              value: _judged.length / total,
+              value: _total == 0 ? 0 : _answeredCount / _total,
               minHeight: 6,
               borderRadius: BorderRadius.circular(4),
               color: Bs.paper,
@@ -237,36 +269,100 @@ class _SessionStageState extends State<SessionStage> {
       children: [
         for (final i in _group) ...[
           _questionBlock(context, i),
-          if (i + 1 < _end) const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(height: 1),
-          ),
+          if (i + 1 < _end)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Divider(height: 1),
+            ),
         ],
         const SizedBox(height: 24),
-        if (_groupDone) ...[
-          Center(
-            child: FilledButton(
-              onPressed: _nextGroup,
+      ],
+    );
+  }
+
+  /// 右栏：上面是依据或答题卡，翻页按钮压在中间偏下的空白处——
+  /// 放在左栏最下方要一路滚到底才够得着。
+  Widget _sideColumn(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(child: _isExam ? _answerCard(context) : _evidenceColumn(context)),
+        Align(
+          alignment: const Alignment(0, 0.55),
+          child: _pager(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _pager(BuildContext context) {
+    final hint = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
+    if (_isExam) return _examNav(context);
+    if (!_groupDone) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FilledButton(
+            onPressed: _nextGroup,
+            style: FilledButton.styleFrom(
+              backgroundColor: Bs.dark,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(180, 52),
+            ),
+            child: Text(_lastGroup ? "结束本轮" : "下一组"),
+          ),
+          const SizedBox(height: 8),
+          Text("答错的题会自动朗读解释。看完再点下一组或回车。", style: hint, textAlign: TextAlign.center),
+        ],
+      ),
+    );
+  }
+
+  /// 模拟考的翻页条：能回头改答案，所以上一组、下一组都留着。
+  Widget _examNav(BuildContext context) {
+    return Column(
+      children: [
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            OutlinedButton(
+              onPressed: _start == 0 ? null : _prevGroup,
+              style: OutlinedButton.styleFrom(minimumSize: const Size(120, 48)),
+              child: const Text("上一组"),
+            ),
+            FilledButton(
+              onPressed: _lastGroup ? null : _nextGroup,
               style: FilledButton.styleFrom(
                 backgroundColor: Bs.dark,
                 foregroundColor: Colors.white,
-                minimumSize: const Size(160, 48),
+                minimumSize: const Size(120, 48),
               ),
-              child: Text(_lastGroup ? "结束本轮" : "下一组"),
+              child: const Text("下一组"),
             ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              _launch.revealImmediately
-                  ? "答错的题会自动朗读解释。看完再点下一组或回车。"
-                  : "这一组答完了。点下一组或回车继续。",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+            FilledButton.icon(
+              onPressed: _submitting ? null : () => _confirmSubmit(context),
+              style: FilledButton.styleFrom(
+                backgroundColor: Bs.success,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(140, 48),
               ),
+              icon: const Icon(Icons.assignment_turned_in, size: 20),
+              label: const Text("交卷"),
             ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "考场规则：交卷前可以回头改答案，交卷后一次性判分。",
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-        ],
+        ),
       ],
     );
   }
@@ -336,7 +432,31 @@ class _SessionStageState extends State<SessionStage> {
           SignView(id: q.sign!, size: 160),
           const SizedBox(height: 16),
         ],
+        if (q.isMulti && !_judged.contains(index)) ...[
+          Text(
+            "多选题：选完点「确认作答」。",
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
         for (final choice in q.choices) _choiceRow(context, index, q, choice),
+        if (_awaitingConfirm(index)) ...[
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FilledButton(
+              onPressed: _busy ? null : () => _commit(index, q),
+              style: FilledButton.styleFrom(
+                backgroundColor: Bs.paper,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(160, 48),
+              ),
+              child: const Text("确认作答"),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -363,6 +483,7 @@ class _SessionStageState extends State<SessionStage> {
     final fg = solid != null ? Colors.white : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;
     final signId = choice.sign;
+    final locked = _judged.contains(index);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Align(
@@ -376,7 +497,7 @@ class _SessionStageState extends State<SessionStage> {
             borderRadius: BorderRadius.circular(Bs.radius),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              onTap: _judged.contains(index) ? null : () => _pick(index, question, choice.id),
+              onTap: locked ? null : () => _pick(index, question, choice.id),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
                 child: Row(
@@ -439,6 +560,74 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
+  /// 模拟考的答题卡：哪些答了、哪些空着一眼看全，点一下跳到那一组。
+  Widget _answerCard(BuildContext context) {
+    final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      height: 1.45,
+    );
+    final unanswered = [for (var i = 0; i < _total; i++) i].where((i) => !_answered(i)).toList();
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
+      children: [
+        Text("答题卡", style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(
+          unanswered.isEmpty ? "全部答完了，可以交卷。" : "还剩 ${unanswered.length} 题没答。",
+          style: muted,
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (var i = 0; i < _total; i++)
+              _cardCell(context, i),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "模拟考不显示对错，交卷后一次性判分。时间到了会自动交卷。",
+          style: muted,
+        ),
+        // 下面留白给翻页条和交卷按钮
+        const SizedBox(height: 220),
+      ],
+    );
+  }
+
+  Widget _cardCell(BuildContext context, int index) {
+    final answered = _answered(index);
+    final inGroup = index >= _start && index < _end;
+    return SizedBox(
+      width: 44,
+      height: 40,
+      child: Material(
+        color: answered ? Bs.paper : Bs.body,
+        borderRadius: BorderRadius.circular(Bs.radius),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _jumpTo(index),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: inGroup ? Bs.dark : Bs.border, width: inGroup ? 2 : 1),
+              borderRadius: BorderRadius.circular(Bs.radius),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "${index + 1}",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: answered ? Colors.white : Bs.dark,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _evidenceColumn(BuildContext context) {
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -450,9 +639,7 @@ class _SessionStageState extends State<SessionStage> {
         padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
         children: [
           Text(
-            _launch.revealImmediately
-                ? "点选项就出对错。答错的题会自动把解释念出来，答完也能点题干右边的「解析」回看。"
-                : "模拟考不显示对错，这一组答完点下一组。",
+            "点选项就出对错。答错的题会自动把解释念出来，答完也能点题干右边的「解析」回看。",
             style: muted,
           ),
         ],
@@ -461,7 +648,8 @@ class _SessionStageState extends State<SessionStage> {
     final q = _launch.questions[focus];
     final ok = _correct.contains(focus);
     return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
+      // 底部留白给压在中间偏下的翻页按钮
+      padding: const EdgeInsets.fromLTRB(24, 20, 28, 220),
       children: [
         Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 12),
@@ -515,19 +703,19 @@ class _SessionStageState extends State<SessionStage> {
         const SizedBox(height: 16),
         for (final ref in q.sourceRefs)
           if (Bs.isContentSource(ref.relation))
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: InkWell(
-              onTap: ref.url.isEmpty ? null : () => launchUrl(Uri.parse(ref.url)),
-              child: Text(
-                "${ref.locator.isEmpty ? Bs.sourceShort(ref.sourceId) : ref.locator} · ${ref.note}",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Bs.paper,
-                  height: 1.4,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: InkWell(
+                onTap: ref.url.isEmpty ? null : () => launchUrl(Uri.parse(ref.url)),
+                child: Text(
+                  "${ref.locator.isEmpty ? Bs.sourceShort(ref.sourceId) : ref.locator} · ${ref.note}",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Bs.paper,
+                    height: 1.4,
+                  ),
                 ),
               ),
             ),
-          ),
       ],
     );
   }
@@ -554,10 +742,9 @@ class _SessionStageState extends State<SessionStage> {
           ..add(id);
       }
     });
-    final chosen = _picked[index] ?? const <String>{};
-    if (!question.isMulti || chosen.length >= question.correctIds.length) {
-      _commit(index, question);
-    }
+    // 模拟考只记选择；练习里单选和判断点一下就判，多选要自己点「确认作答」。
+    if (_isExam || question.isMulti) return;
+    _commit(index, question);
   }
 
   Future<void> _commit(int index, Question question) async {
@@ -583,11 +770,11 @@ class _SessionStageState extends State<SessionStage> {
       if (hesitant) _hesitant.add(index);
       // 下一题的用时从这一题判定的那一刻算起。
       _shownAt = DateTime.now();
-      if (_launch.revealImmediately) _focus = index;
+      _focus = index;
       _busy = false;
     });
     // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
-    if (_launch.revealImmediately && !ok) await _speak(question);
+    if (!ok) await _speak(question);
   }
 
   ButtonStyle _voiceButtonStyle(Color color) {
@@ -606,10 +793,30 @@ class _SessionStageState extends State<SessionStage> {
 
   Future<void> _stopSpeaking() => _speaker.stop();
 
+  void _jumpTo(int index) {
+    final start = (index ~/ _groupSize) * _groupSize;
+    if (start == _start) return;
+    setState(() {
+      _start = start;
+      _focus = null;
+      _shownAt = DateTime.now();
+    });
+  }
+
+  void _prevGroup() {
+    if (_start == 0) return;
+    setState(() {
+      _start = max(0, _start - _groupSize);
+      _focus = null;
+      _shownAt = DateTime.now();
+    });
+  }
+
   Future<void> _nextGroup() async {
     await _speaker.stop();
     if (_lastGroup) {
-      await _finish();
+      if (_isExam) return;
+      await _finishPractice();
       return;
     }
     if (!mounted) return;
@@ -621,12 +828,65 @@ class _SessionStageState extends State<SessionStage> {
     });
   }
 
-  Future<void> _finish() async {
+  Future<void> _confirmSubmit(BuildContext context) async {
+    final left = _total - _answeredCount;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("交卷"),
+        content: Text(
+          left == 0
+              ? "$_total 题都答完了，交卷后一次性判分。"
+              : "还有 $left 题没答，没答的按答错计。确定交卷吗？",
+          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("再检查一下")),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Bs.success, foregroundColor: Colors.white),
+            child: const Text("确定交卷"),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) await _submitExam();
+  }
+
+  /// 交卷：整卷一次判分、一次入库，跟考场一样。
+  Future<void> _submitExam({bool auto = false}) async {
+    if (_submitting) return;
+    _submitting = true;
     _timer?.cancel();
     await _speaker.stop();
+    for (var i = 0; i < _total; i++) {
+      final question = _launch.questions[i];
+      final chosen = _picked[i] ?? const <String>{};
+      final ok = chosen.isNotEmpty && answersMatch(question, chosen);
+      if (ok) _correct.add(i);
+      _judged.add(i);
+      await widget.store.recordAttempt(
+        questionId: question.id,
+        topicId: question.topicId,
+        subjectId: _launch.subjectId,
+        correct: ok,
+        durationMs: 0,
+        hesitant: false,
+      );
+    }
+    await _finish(autoSubmitted: auto);
+  }
+
+  Future<void> _finishPractice() async {
+    _timer?.cancel();
+    await _speaker.stop();
+    await _finish();
+  }
+
+  Future<void> _finish({bool autoSubmitted = false}) async {
     final correct = _correct.length;
     final score = _launch.paper?.scaledScore(correct) ??
-        (_launch.questions.isEmpty ? 0 : ((correct / _launch.questions.length) * 100).round());
+        (_total == 0 ? 0 : ((correct / _total) * 100).round());
     final passed = score >= (_launch.paper?.rules.passScore ?? 90);
     if (_launch.timed) {
       await widget.store.recordExam(
@@ -640,12 +900,13 @@ class _SessionStageState extends State<SessionStage> {
       _result = _Result(
         title: _launch.title,
         correct: correct,
-        total: _launch.questions.length,
+        total: _total,
         score: score,
         passed: passed,
         timed: _launch.timed,
         fullBank: _launch.paper?.fullBank ?? true,
         want: _launch.paper?.rules.questionCount,
+        autoSubmitted: autoSubmitted,
       );
     });
   }
@@ -667,6 +928,7 @@ class _Result {
     required this.timed,
     required this.fullBank,
     this.want,
+    this.autoSubmitted = false,
   });
 
   final String title;
@@ -677,6 +939,9 @@ class _Result {
   final bool timed;
   final bool fullBank;
   final int? want;
+
+  /// 时间到了系统替你交的卷——结果页要说一声，不然会以为是自己点的。
+  final bool autoSubmitted;
 }
 
 class _ResultPane extends StatelessWidget {
@@ -701,6 +966,13 @@ class _ResultPane extends StatelessWidget {
             "答对 ${result.correct} / ${result.total}，折合 ${result.score} 分",
             style: Theme.of(context).textTheme.titleMedium,
           ),
+          if (result.autoSubmitted) ...[
+            const SizedBox(height: 12),
+            Text(
+              "时间到，已自动交卷。",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Bs.danger),
+            ),
+          ],
           if (result.timed && !result.fullBank && result.want != null) ...[
             const SizedBox(height: 12),
             Text(

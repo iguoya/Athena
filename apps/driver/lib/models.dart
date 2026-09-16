@@ -214,6 +214,7 @@ class ExamRules {
     required this.minutes,
     required this.passScore,
     required this.pointsPerQuestion,
+    this.mix = const {},
   });
 
   final int questionCount;
@@ -221,12 +222,21 @@ class ExamRules {
   final int passScore;
   final int pointsPerQuestion;
 
+  /// 考场的题型配比：科目一 30 判断 + 70 单选，科目四 10 判断 + 30 单选 + 10 多选。
+  /// 空表示不限题型，按权重随机抽。
+  final Map<String, int> mix;
+
   factory ExamRules.fromJson(Map<String, dynamic> json) {
+    final rawMix = json["mix"] as Map<String, dynamic>?;
     return ExamRules(
       questionCount: json["question_count"] as int,
       minutes: json["minutes"] as int,
       passScore: json["pass_score"] as int,
       pointsPerQuestion: json["points_per_question"] as int,
+      mix: {
+        for (final entry in (rawMix ?? const <String, dynamic>{}).entries)
+          entry.key: entry.value as int,
+      },
     );
   }
 }
