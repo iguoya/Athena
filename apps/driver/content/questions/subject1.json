@@ -9995,6 +9995,401 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.035",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "在道路上醉酒驾驶机动车的，构成什么罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "危险驾驶罪",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "交通肇事罪",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "以危险方法危害公共安全罪",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不构成犯罪，只是行政违法",
+          "ok": false
+        }
+      ],
+      "explain": "醉驾本身就入刑，不需要撞到人；撞了人造成重大伤亡的另按交通肇事罪。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一第（二）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，醉酒驾驶机动车的，处拘役，并处罚金。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "醉酒驾驶机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证，依法追究刑事责任。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.036",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "犯危险驾驶罪的，刑罚是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "管制",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "拘役，并处罚金",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "三年以下有期徒刑",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只处罚金",
+          "ok": false
+        }
+      ],
+      "explain": "危险驾驶罪的法定刑只有拘役加罚金这一档，但留下的案底是终身的。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，有追逐竞驶情节恶劣、醉酒驾驶等情形之一的，处拘役，并处罚金。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.037",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "在道路上追逐竞驶，情节恶劣的，构成危险驾驶罪。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "「飙车」不是只罚款的事，情节恶劣直接入刑。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一第（一）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车追逐竞驶，情节恶劣的，处拘役，并处罚金。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.038",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "从事校车业务或者旅客运输，严重超过额定乘员载客的，也可能构成危险驾驶罪。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "严重超员和严重超速的营运车辆同样在危险驾驶罪的四种情形里。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "从事校车业务或者旅客运输，严重超过额定乘员载客，或者严重超过规定时速行驶的，处拘役，并处罚金。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.017",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "违反交通运输管理法规发生重大事故，致人重伤、死亡或者使公私财产遭受重大损失的，构成什么罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "危险驾驶罪",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "过失致人死亡罪",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "交通肇事罪",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不构成犯罪",
+          "ok": false
+        }
+      ],
+      "explain": "交通肇事罪要有重大事故后果；醉驾不撞人也构成的是危险驾驶罪。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "违反交通运输管理法规，因而发生重大事故，致人重伤、死亡或者使公私财产遭受重大损失的，处三年以下有期徒刑或者拘役。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.018",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "交通运输肇事后逃逸或者有其他特别恶劣情节的，处三年以上七年以下有期徒刑；因逃逸致人死亡的，处七年以上有期徒刑。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "逃逸把量刑抬了两档：三到七年，致人死亡起步七年。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "交通运输肇事后逃逸或者有其他特别恶劣情节的，处三年以上七年以下有期徒刑；因逃逸致人死亡的，处七年以上有期徒刑。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.019",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "发生交通事故后当事人逃逸的，逃逸的当事人承担全部责任；但有证据证明对方当事人也有过错的，可以减轻责任。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "逃逸先推定全责，这是条例写死的；对方确有过错才可能减一点。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第九十二条第一款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "发生交通事故后当事人逃逸的，逃逸的当事人承担全部责任。但是，有证据证明对方当事人也有过错的，可以减轻责任。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.020",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "当事人故意破坏、伪造交通事故现场、毁灭证据的，承担全部责任。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "把现场动了、证据毁了，责任就没法查清，法律直接把后果归给动手的人。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第九十二条第二款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "当事人故意破坏、伪造现场、毁灭证据的，承担全部责任。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.021",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "机动车发生交通事故造成道路设施损毁的，驾驶人应当报警等候处理，不得驶离；机动车可以移动的，应当先移至不妨碍交通的地点。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "撞了护栏、信号杆也是事故，不能当作「没撞到人」直接走。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第八十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车与非机动车驾驶人、行人发生交通事故，造成人身伤亡或者道路设施损毁的，驾驶人应当报警，等候处理，不得驶离。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.022",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "当事人请求公安机关交通管理部门调解损害赔偿的，应当在收到交通事故认定书之日起几日内提出？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "十日",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "三日",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "五日",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "三十日",
+          "ok": false
+        }
+      ],
+      "explain": "调解申请是十日、复核申请是三日——两个期限别记混。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第九十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "当事人对交通事故损害赔偿有争议，各方当事人一致请求公安机关交通管理部门调解的，应当在收到交通事故认定书之日起10日内提出书面调解申请。"
+        },
+        {
+          "source_id": "accident-order-146",
+          "relation": "adapted",
+          "locator": "第八十六条",
+          "url": "http://gdga.gd.gov.cn/xxgk/flfg/content/post_1089353.html",
+          "note": "当事人申请公安机关交通管理部门调解的，应当在收到道路交通事故认定书之日起十日内一致书面申请。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.023",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "投保机动车第三者责任强制保险的车辆发生交通事故，公安机关交通管理部门应当通知保险公司支付抢救费用。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "交强险的抢救费用是先垫付的，不必等责任认定完成。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第九十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "投保机动车第三者责任强制保险的机动车发生交通事故，因抢救受伤人员需要保险公司支付抢救费用的，由公安机关交通管理部门通知保险公司。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
     }
   ]
 }
