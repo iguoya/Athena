@@ -7128,6 +7128,497 @@
       "phase": 2,
       "difficulty": 2,
       "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.026",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "机动车驾驶证的有效期分为哪几种？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "三年、六年和长期",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "六年、十二年和长期",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "五年、十年和终身",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "六年、十年和长期",
+          "ok": true
+        }
+      ],
+      "explain": "第一本证是六年；六年里每个记分周期都没记满12分，换十年；十年里同样干净，才换长期。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第十三条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶证有效期分为六年、十年和长期。"
+        },
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十二条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "在机动车驾驶证的六年有效期内，每个记分周期均未记满12分的，换发十年有效期的机动车驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.license.027",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "在机动车驾驶证的十年有效期内，每个记分周期均未记满12分的，换发长期有效的机动车驾驶证。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "长期证不是自动给的，要靠十年里每个周期都没记满12分换来。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十二条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "在机动车驾驶证的十年有效期内，每个记分周期均未记满12分的，换发长期有效的机动车驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.028",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "年龄在70周岁以上的机动车驾驶人，身体条件证明应当多久提交一次？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "每两年一次",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每年一次",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每三年一次",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "换证时提交一次即可",
+          "ok": false
+        }
+      ],
+      "explain": "70周岁以上每年体检一次，在记分周期结束后三十日内提交证明，逾期不交会被注销。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十四条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "年龄在70周岁以上的机动车驾驶人，应当每年进行一次身体检查，在记分周期结束后三十日内，提交医疗机构出具的有关身体条件的证明。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.license.029",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "申请小型汽车、小型自动挡汽车准驾车型驾驶证的，年龄条件是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "18周岁以上",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "16周岁以上",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "20周岁以上",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "21周岁以上",
+          "ok": false
+        }
+      ],
+      "explain": "小车18周岁起，上限已经放开；大型客车、牵引车另有更高的年龄要求。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第十四条第（一）项",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "申请小型汽车、小型自动挡汽车、残疾人专用小型自动挡载客汽车准驾车型的，在18周岁以上。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.030",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "超过机动车驾驶证有效期一年以上未换证的，驾驶证将被注销。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "证过期不是小事：超过一年没换就注销；注销未超过二年的，考试合格后还能恢复。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十九条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶人有超过机动车驾驶证有效期一年以上未换证情形的，车辆管理所应当注销其机动车驾驶证；被注销未超过二年的，机动车驾驶人参加相应考试合格后，可以恢复驾驶资格。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.license.031",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "实习期内驾驶机动车，不得驾驶公共汽车、营运客车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "实习期的限制不只是高速要人陪同：营运客车、公共汽车这类车也不能开。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十七条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶人在实习期内不得驾驶公共汽车、营运客车或者执行任务的消防车、救护车、工程救险车以及载有爆炸物品、易燃易爆化学物品、剧毒或者放射性等危险物品的机动车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.001",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "已注册登记的机动车改变车身颜色的，机动车所有人应当办理什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "转移登记",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "注销登记",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "变更登记",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不需要办理任何登记",
+          "ok": false
+        }
+      ],
+      "explain": "换颜色、换发动机、换车身车架、改使用性质、住所迁出迁入，都走变更登记。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第十六条第（一）项",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "已注册登记的机动车有下列情形之一的，机动车所有人应当向登记地车辆管理所申请变更登记：（一）改变车身颜色的。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.002",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "下列哪种情形，机动车所有人应当向车辆管理所申请注销登记？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "机动车更换发动机",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "机动车已达到国家强制报废标准",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "机动车改变车身颜色",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "机动车所有人住所迁出管辖区域",
+          "ok": false
+        }
+      ],
+      "explain": "报废、灭失、自愿报废、退车这类「这辆车不再用了」才注销；还在用只是改了什么，办变更。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第三十七条",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "机动车有下列情形之一的，机动车所有人应当向登记地车辆管理所申请注销登记：（一）机动车已达到国家强制报废标准的；（二）机动车未达到国家强制报废标准，机动车所有人自愿报废的；（三）因自然灾害、失火、交通事故等造成机动车灭失的。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.003",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "因交通事故造成机动车灭失的，机动车所有人应当申请注销登记。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "车灭失了登记信息还挂着，后面的处罚和赔偿都会找上原车主。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第三十七条第（三）项",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "因自然灾害、失火、交通事故等造成机动车灭失的，机动车所有人应当申请注销登记。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.004",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "更换发动机、车身或者车架的，机动车所有人应当申请变更登记。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "换的是登记过的关键部件，登记信息就要跟着改。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第十六条",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "已注册登记的机动车更换发动机的、更换车身或者车架的，机动车所有人应当向登记地车辆管理所申请变更登记。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.005",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "机动车登记的使用性质由非营运改变为营运的，机动车所有人应当申请变更登记。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "使用性质变了，检验周期和保险都要跟着变，必须先办变更登记。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第十六条第（五）项",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "机动车登记的使用性质改变的，机动车所有人应当向登记地车辆管理所申请变更登记。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.registration.006",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "机动车所有人可以在机动车检验有效期满前三个月内，向车辆管理所申请检验合格标志。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "检验不必卡着到期那天办，提前三个月就能办。",
+      "source_refs": [
+        {
+          "source_id": "registration-order-164",
+          "relation": "adapted",
+          "locator": "第五十四条",
+          "url": "https://www.gov.cn/gongbao/content/2022/content_5682413.htm",
+          "note": "机动车所有人可以在机动车检验有效期满前三个月内向车辆管理所申请检验合格标志。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.007",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "上道路行驶的机动车未放置检验合格标志、保险标志的，公安机关交通管理部门可以扣留机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "号牌、检验合格标志、保险标志、行驶证、驾驶证，缺一样上路都可能被扣车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "上道路行驶的机动车未悬挂机动车号牌，未放置检验合格标志、保险标志，或者未随车携带行驶证、驾驶证的，公安机关交通管理部门应当扣留机动车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.008",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "国家对机动车实行第三者责任强制保险制度。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "交强险是上路的前提之一，登记、检验、事故赔偿都绕不开它。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第十七条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "国家实行机动车第三者责任强制保险制度，设立道路交通事故社会救助基金。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
     }
   ]
 }
