@@ -8796,6 +8796,817 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.021",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "对道路交通安全违法行为的处罚种类包括哪些？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "只有罚款和拘留",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "警告、罚款、暂扣或者吊销机动车驾驶证、拘留",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "警告、罚款、没收车辆",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "罚款、扣车、吊销驾驶证",
+          "ok": false
+        }
+      ],
+      "explain": "记分不是处罚种类，是与处罚并行的管理措施——这一点常考。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第八十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "对道路交通安全违法行为的处罚种类包括：警告、罚款、暂扣或者吊销机动车驾驶证、拘留。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.022",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶人违反道路通行规定的，一般如何处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处五元以上五十元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "一律处二百元罚款",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "处二百元以上二千元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "处警告或者二十元以上二百元以下罚款",
+          "ok": true
+        }
+      ],
+      "explain": "这是通行违法的「底档」；无证驾驶、超速五成这类另按第九十九条罚二百到二千元。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人违反道路交通安全法律、法规关于道路通行规定的，处警告或者二十元以上二百元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.023",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "行人、乘车人、非机动车驾驶人违反道路交通安全法律、法规关于道路通行规定的，处警告或者五元以上五十元以下罚款。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "行人和非机动车也在处罚范围内，只是额度低一档。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第八十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "行人、乘车人、非机动车驾驶人违反道路交通安全法律、法规关于道路通行规定的，处警告或者五元以上五十元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.024",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶客运机动车载客超过核定人数百分之二十的，罚款幅度是多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五百元以上二千元以下",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "二百元以上五百元以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一千元以上二千元以下",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "二十元以上二百元以下",
+          "ok": false
+        }
+      ],
+      "explain": "超员不到两成罚二百到五百；超过两成或者违规载货，罚五百到二千。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十二条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "公路客运车辆载客超过核定人数的，处二百元以上五百元以下罚款；超过核定人数百分之二十或者违反规定载货的，处五百元以上二千元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.025",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "违反规定停放机动车，驾驶人不在现场或者虽在现场但拒绝立即驶离的，处二十元以上二百元以下罚款，并可以将机动车拖移至不妨碍交通的地点。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "拖车不是额外处罚，是为了恢复通行；罚款仍按二十到二百那一档。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "违反道路交通安全法律、法规关于机动车停放、临时停车规定的，机动车驾驶人不在现场或者虽在现场但拒绝立即驶离，妨碍其他车辆、行人通行的，处二十元以上二百元以下罚款，并可以将该机动车拖移至不妨碍交通的地点或者公安机关交通管理部门指定的地点停放。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.026",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，如何处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处二百元以上二千元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "处警告并罚款五百元",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "处十五日以下拘留，并处二千元以上五千元以下罚款",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "只吊销驾驶证，不拘留",
+          "ok": false
+        }
+      ],
+      "explain": "假证假牌是拘留档，另外按记分办法一次记12分。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，由公安机关交通管理部门予以收缴，扣留该机动车，处十五日以下拘留，并处二千元以上五千元以下罚款。"
+        },
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第八条第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "使用伪造、变造的机动车号牌、行驶证、驾驶证的，一次记12分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.027",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "上道路行驶的机动车没有参加第三者责任强制保险的，扣留机动车，并处依照规定投保最低责任限额应缴纳的保险费的二倍罚款。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "没交强险等于把风险全压在别人身上，所以按应缴保费的两倍罚，还要扣车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车所有人、管理人未按照国家规定投保机动车第三者责任强制保险的，公安机关交通管理部门应当扣留车辆至依照规定投保后，并处依照规定投保最低责任限额应缴纳的保险费的二倍罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.028",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶拼装的机动车或者已达到报废标准的机动车上道路行驶的，如何处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处警告并责令改正",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "收缴车辆强制报废，处二百元以上二千元以下罚款，并吊销机动车驾驶证",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "只罚款不吊证",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "暂扣车辆六个月",
+          "ok": false
+        }
+      ],
+      "explain": "拼装车与报废车是「车本身不该上路」，所以车被收缴报废，人也要吊证。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "驾驶拼装的机动车或者已达到报废标准的机动车上道路行驶的，公安机关交通管理部门应当予以收缴，强制报废，对驾驶人处二百元以上二千元以下罚款，并吊销机动车驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.029",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "当事人应当自收到罚款决定书之日起十五日内，到指定的银行缴纳罚款。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "十五日是缴款期限，逾期要按日加处罚款。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "当事人应当自收到罚款决定书之日起十五日内，到指定的银行缴纳罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.030",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "逾期不缴纳罚款的，每日按罚款数额的百分之三加处罚款。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "拖一天多三个百分点，拖久了会比原罚款还多。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "当事人逾期不履行行政处罚决定的，作出行政处罚决定的行政机关可以采取每日按罚款数额的百分之三加处罚款的措施。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.031",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "交通警察依法扣留机动车驾驶证的，驾驶人应当在十五日内到公安机关交通管理部门接受处理；无正当理由逾期不接受处理的，吊销机动车驾驶证。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "证被扣了不去处理，后果是吊销，不是自动作废。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百一十条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当在十五日内到公安机关交通管理部门接受处理。无正当理由逾期不接受处理的，吊销机动车驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.032",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "机动车驾驶证被扣留、暂扣期间，或者记分达到12分的，不得驾驶机动车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "证不在手上、或者分记满了，这段时间开车就是无证驾驶那一类的违法。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驾驶人有下列情形之一的，不得驾驶机动车：驾驶证丧失、损毁、超过有效期或者被依法扣留、暂扣期间，以及累积记分达到12分的。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.033",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "在一个记分周期内记分未达到12分，且罚款已经缴纳的，记分予以清除。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "周期结束清零有两个前提：没记满12分，罚款也交了。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驾驶人在一个记分周期内记分未达到12分，所处罚款已经缴纳的，记分予以清除。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.034",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "记分达到12分，拒不参加学习、也不接受考试的，由公安机关交通管理部门公告其机动车驾驶证停止使用。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "不去学习考试，证不会自动恢复，而是被公告停用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驾驶人记分达到12分，拒不参加公安机关交通管理部门通知的学习，也不接受考试的，由公安机关交通管理部门公告其机动车驾驶证停止使用。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.registration.009",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "非营运的小型载客汽车，自注册登记之日起6年以内的安全技术检验周期是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "每年检验1次",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每6个月检验1次",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "每2年检验1次",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "6年内免检，不需要办理",
+          "ok": false
+        }
+      ],
+      "explain": "6年内每2年一次（需按规定申领检验合格标志），超过6年就要每年一次。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第十六条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "小型、微型非营运载客汽车6年以内每2年检验1次；超过6年的，每年检验1次；超过15年的，每6个月检验1次。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.010",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "营运载客汽车5年以内每年检验1次；超过5年的，每6个月检验1次。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "营运车跑得多、载人多，检验频率比家用车高。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第十六条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "营运载客汽车5年以内每年检验1次；超过5年的，每6个月检验1次。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.011",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "机动车号牌应当悬挂在车前、车后指定位置并保持清晰；检验合格标志、保险标志应当粘贴在机动车前窗右上角。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "牌照和标志的位置是法定的，遮挡、错位都会被查。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第十三条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车号牌应当悬挂在车前、车后指定位置，保持清晰、完整，不得故意遮挡、污损。检验合格标志、保险标志应当粘贴在机动车前窗右上角。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.012",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "国家实行机动车强制报废制度，已达到报废标准的机动车不得上道路行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "报废标准到了就必须退出，不是「还能开就继续开」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第十四条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "国家实行机动车强制报废制度，根据机动车的安全技术状况和不同用途，规定不同的报废标准。应当报废的机动车必须及时办理注销登记。达到报废标准的机动车不得上道路行驶。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.013",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "禁止任何单位或者个人拼装机动车，也禁止擅自改变机动车已登记的结构、构造或者特征。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "改装动的是登记过的结构，属于法律明文禁止的行为。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "任何单位或者个人不得有下列行为：拼装机动车或者擅自改变机动车已登记的结构、构造或者特征；改变机动车型号、发动机号、车架号或者车辆识别代号；伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.014",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "除警车、消防车、救护车、工程救险车外，其他机动车不得安装、使用警报器、标志灯具。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "特种车的警报器和标志灯具代表特殊路权，别的车装了就是冒用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "警车、消防车、救护车、工程救险车应当按照规定喷涂标志图案，安装警报器、标志灯具。其他机动车不得喷涂、安装、使用上述特种车辆的标志图案、警报器或者标志灯具。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.registration.015",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "机动车进行安全技术检验时，应当提供机动车第三者责任强制保险凭证，未提供的不予检验。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "检验和交强险是绑在一起的：没保险不给验车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第十七条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车安全技术检验时，应当提供机动车行驶证和机动车第三者责任强制保险凭证；未提供的，不予检验。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.032",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "公安机关交通管理部门对机动车驾驶证实行审验制度。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "审验和换证是两回事：换证看有效期，审验看这个周期里的记分与体检情况。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "公安机关交通管理部门依照法律、行政法规的规定，定期对机动车驾驶证实施审验。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.033",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "机动车驾驶证丧失或者损毁不能辨认的，可以向车辆管理所申请补发，车辆管理所应当在三日内补发。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "补证是三日内办结；补证期间不得驾驶机动车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十七条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驾驶证丧失或者损毁不能辨认的，机动车驾驶人应当向机动车驾驶证核发地车辆管理所申请补发，车辆管理所应当在3日内补发。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.034",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "在道路上学习驾驶，应当先学习道路交通安全法律、法规和相关知识，并在教练员随车指导下按指定的路线、时间进行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "先学法再上路是法定顺序，路线和时间也不是随便挑的。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "在道路上学习驾驶技能应当先学习道路交通安全法律、法规和相关知识；学习机动车驾驶技能应当按照公安机关交通管理部门指定的路线、时间进行，教练员应当随车指导。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     }
   ]
 }
