@@ -7,40 +7,55 @@ import "content.dart";
 
 /// Bootstrap 5 色板与常用零件。图标用 Material 的系统符号，角色对齐 Bootstrap Icons。
 class Bs {
-  // 绿色系：侧栏深绿、主行动与强调用绿，整体比原来的深棕轻快。语义仍按通用规范——
-  // 红=错/危险，绿=对/通过与主行动，黄=注意，蓝=已选中但还没判定，紫=多选/偏难。
-  static const primary = Color(0xFF15803D);
-  static const success = Color(0xFF16A34A);
+  // 直接用 Bootstrap 5 的标准色板：蓝主行动、绿通过、红错误、黄注意、青信息，
+  // 加上扩展色里的紫和青绿。明亮、通用、语义人人都认得。
+  static const primary = Color(0xFF0D6EFD);
+  static const secondary = Color(0xFF6C757D);
+  static const success = Color(0xFF198754);
   static const danger = Color(0xFFDC3545);
-  static const warning = Color(0xFFF59E0B);
-  static const info = Color(0xFF0284C7);
-  static const accent = Color(0xFF7C3AED);
-  /// 品牌强调（题号、进度条、朗读条）。名字沿用，颜色跟着主色走。
-  static const paper = Color(0xFF166534);
-  static const secondary = Color(0xFF64748B);
-  static const light = Color(0xFFF6FAF7);
-  static const dark = Color(0xFF1F2937);
+  static const warning = Color(0xFFFFC107);
+  static const info = Color(0xFF0DCAF0);
+  static const purple = Color(0xFF6F42C1);
+  static const teal = Color(0xFF20C997);
+  static const orange = Color(0xFFFD7E14);
+  static const pink = Color(0xFFD63384);
+  static const light = Color(0xFFF8F9FA);
+  static const dark = Color(0xFF212529);
   static const body = Color(0xFFFFFFFF);
-  static const border = Color(0xFFDDE7E0);
-  static const nav = Color(0xFF14532D);
+  static const border = Color(0xFFDEE2E6);
+
+  /// 侧栏：Bootstrap 里 navbar 配 bg-primary 的深一档，白字清晰。
+  static const nav = Color(0xFF0A58CA);
+
+  /// 品牌强调（题号、进度条、朗读条、选中态）——就是主色本身。
+  static const paper = primary;
+
+  /// 保留别名：老代码里的 accent 指紫色。
+  static const accent = purple;
+
   static const radius = 4.0;
   static const bodySize = 20.0;
 
-  /// 题型各给一种颜色：判断蓝、单选橙、多选紫，一眼分得出这题怎么答。
+  /// 底色亮就用深字，底色暗就用白字——黄底白字看不清是最常见的翻车点。
+  static Color onColor(Color background) {
+    return background.computeLuminance() > 0.5 ? dark : Colors.white;
+  }
+
+  /// 题型各给一种颜色：判断青、单选蓝、多选紫，一眼分得出这题怎么答。
   static Color kindColor(String kind) {
     return switch (kind) {
-      "judge" => info,
-      "multi" => accent,
+      "judge" => teal,
+      "multi" => purple,
       _ => primary,
     };
   }
 
-  /// 高频红、常考黄、常规青灰、偏难紫——按「要不要多练」排。
+  /// 高频红、常考黄、常规灰、偏难紫——按「要不要多练」排。
   static Color bandColor(String band) {
     return switch (band) {
       QuestionBandColors.hot => danger,
       QuestionBandColors.common => warning,
-      QuestionBandColors.rare => accent,
+      QuestionBandColors.rare => purple,
       _ => secondary,
     };
   }
@@ -195,7 +210,7 @@ class BsBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = foreground ?? (color == Bs.warning || color == Bs.light ? Bs.dark : Colors.white);
+    final fg = foreground ?? Bs.onColor(color);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(

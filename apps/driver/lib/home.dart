@@ -232,18 +232,18 @@ class _HomePageState extends State<HomePage> {
     VoidCallback? onTap,
     bool muted = false,
   }) {
-    // 深绿底上：没选中的也要看得清，选中的用亮绿底 + 左侧亮条顶出来
-    final color = muted ? Colors.white54 : (selected ? Colors.white : const Color(0xFFD7EFDD));
+    // 蓝底上：没选中的也要看得清，选中的用白色半透明底 + 左侧黄条顶出来
+    final color = muted ? Colors.white54 : (selected ? Colors.white : const Color(0xFFDCE9FF));
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF22C55E).withValues(alpha: 0.24) : null,
+          color: selected ? Colors.white.withValues(alpha: 0.18) : null,
           borderRadius: BorderRadius.circular(Bs.radius),
           border: Border(
-            left: BorderSide(color: selected ? const Color(0xFF4ADE80) : Colors.transparent, width: 4),
+            left: BorderSide(color: selected ? Bs.warning : Colors.transparent, width: 4),
           ),
         ),
         child: Row(

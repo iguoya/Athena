@@ -396,7 +396,7 @@ class _SessionStageState extends State<SessionStage> {
                 BsBadge(
                   text: "${Bs.sourceShort(ref.sourceId)} ${ref.locator}".trim(),
                   icon: Icons.menu_book,
-                  color: Bs.success,
+                  color: Bs.teal,
                 ),
           ],
         ),
@@ -481,8 +481,8 @@ class _SessionStageState extends State<SessionStage> {
         mark = Icons.check_circle;
       }
     } else if (selected) {
-      // 已选中、还没判定：用蓝，别跟「答对」的绿混在一起
-      solid = Bs.info;
+      // 已选中、还没判定：用主色蓝，跟「答对」的绿、「答错」的红分三档
+      solid = Bs.primary;
     }
     final fg = solid != null ? Colors.white : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;
