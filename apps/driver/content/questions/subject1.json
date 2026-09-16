@@ -169,7 +169,7 @@
           "relation": "quoted",
           "locator": "4.1.4 / 5.1.2",
           "url": "http://jj.ga.zhuhai.gov.cn/ConvenienceGuide/Details/173",
-          "note": "其他车型100题；申领机动车驾驶证应在45min内完成。"
+          "note": "小型汽车科目一考试为100题，考试时间45分钟。"
         },
         {
           "source_id": "license-order-162",
@@ -7912,6 +7912,888 @@
         }
       ],
       "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.045",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "交通信号灯由红灯、绿灯、黄灯组成：红灯表示禁止通行，绿灯表示准许通行，黄灯表示警示。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "三色灯的分工是法律写死的，黄灯不是「加速冲过去」的意思，是警示。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "交通信号灯由红灯、绿灯、黄灯组成。红灯表示禁止通行，绿灯表示准许通行，黄灯表示警示。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.046",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "机动车信号灯的绿色箭头灯亮时，表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "警示车辆注意瞭望",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "准许车辆按照箭头指示方向通行",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "准许车辆向任意方向通行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "禁止车辆通行",
+          "ok": false
+        }
+      ],
+      "explain": "箭头灯只放行箭头指的那个方向，跟满盘绿灯不是一回事。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "绿色箭头灯亮时，准许车辆按指示方向通行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.047",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "红色叉形灯或者箭头灯亮时，禁止本车道车辆通行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "车道信号灯上的红叉表示这条车道封了，要提前并到放行的车道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "红色叉形灯或者箭头灯亮时，禁止本车道车辆通行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.048",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "方向指示信号灯的箭头方向向左、向上、向右，分别表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "掉头、直行、靠边",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "让行、直行、超车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "左转、掉头、右转",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "左转、直行、右转",
+          "ok": true
+        }
+      ],
+      "explain": "箭头向上是直行，不是「向前掉头」；三个方向对应三种行进方式。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "方向指示信号灯的箭头方向向左、向上、向右分别表示左转、直行、右转。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.049",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "持续闪烁的黄灯（闪光警告信号灯）表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "提示车辆、行人通行时注意瞭望，确认安全后通过",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "禁止通行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "准许车辆优先通行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "表示信号灯出了故障，可以不减速通过",
+          "ok": false
+        }
+      ],
+      "explain": "闪黄灯路口没有放行顺序，谁都要减速看清楚再过。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十二条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "闪光警告信号灯为持续闪烁的黄灯，提示车辆、行人通行时注意瞭望，确认安全后通过。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.signals.050",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "人行横道信号灯绿灯亮时，准许行人通过人行横道。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "行人灯与机动车灯分开设置，各看各的。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十九条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "人行横道信号灯绿灯亮时，准许行人通过人行横道。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.051",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "人行横道信号灯红灯亮时，已经进入人行横道的行人，应当迅速通过或者在道路中心线处停留等候。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "红灯亮起时人已经在路中间，退回去反而更危险：要么快速走完，要么停在中心线等。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十九条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "人行横道信号灯红灯亮时，禁止行人进入人行横道，但已经进入人行横道的，可以继续通过或者在道路中心线处停留等候。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.052",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "车道信号灯之外，铁路道口信号灯红灯亮起或者红灯交替闪烁时，应当怎么做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "减速通过道口",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "停车等待，禁止通行",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "鸣喇叭后通过",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "确认无火车后快速通过",
+          "ok": false
+        }
+      ],
+      "explain": "道口红灯是硬禁止；灯全灭时才准许通行，且仍要观察。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十三条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "道路与铁路平面交叉道口有两个红灯交替闪烁或者一个红灯亮时，表示禁止车辆、行人通行；红灯熄灭时，表示允许车辆、行人通行。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.053",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "交通警察的指挥信号包括哪些？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "只有手势信号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "只有口哨信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "手势信号和使用器具的交通指挥信号",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "手势信号和交通信号灯",
+          "ok": false
+        }
+      ],
+      "explain": "交警除了手势，还可以用指挥棒、口哨这类器具发出指挥信号，都要服从。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察指挥分为手势信号和使用器具的交通指挥信号。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.054",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "交通标志分为指示标志、警告标志、禁令标志、指路标志、旅游区标志、道路施工安全标志和辅助标志。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "记住这七类，看到没见过的牌子也能先判断它是「让你做」还是「不准你做」。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通标志分为指示标志、警告标志、禁令标志、指路标志、旅游区标志、道路施工安全标志和辅助标志。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.055",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "交通标线分为指示标线、警告标线和禁止标线。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "标线也是信号：指示怎么走、警告有风险、禁止不能做。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通标线分为指示标线、警告标线、禁止标线。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.055",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "设有专用车道的道路，专用车道内只准许规定的车辆通行，其他车辆不得进入。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "公交专用道、校车专用道这类车道有专属路权，别的车进去就是违法占用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第三十七条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "道路划设专用车道的，在专用车道内，只准许规定的车辆通行，其他车辆不得进入专用车道内行驶。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.rules.056",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车载物，应当符合什么要求？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "以装得下为准",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "超过核定载质量一成以内可以接受",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "符合机动车行驶证上核定的载质量，严禁超载",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "只要捆扎牢固就可以超载",
+          "ok": false
+        }
+      ],
+      "explain": "核定载质量写在行驶证上，超了既是违法也直接影响制动。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十八条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车载物应当符合核定的载质量，严禁超载；载物的长、宽、高不得违反装载要求，不得遗洒、飘散载运物。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.057",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "机动车载运货物时，不得遗洒、飘散载运物。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "掉下来的货物对后车就是路障，属于法定禁止行为。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十八条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "不得遗洒、飘散载运物。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.058",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "载货汽车的车厢载人，下列说法正确的是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "车厢不得载客，但在规定条件下可以附载临时作业人员",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "车厢内可以载客，只要不超过核定人数",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "车厢可以载任何人，只要坐稳",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车厢载人不受限制",
+          "ok": false
+        }
+      ],
+      "explain": "货车车厢不是载客空间；条例只允许在货物上部空间不足时附载少量随车作业人员。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十五条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "载货汽车车厢不得载客；在城市道路上，货运机动车在装载空间不足的情况下，车厢内可以附载临时作业人员，但不得超过5人。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "禁止货运机动车载客。货运机动车需要附载作业人员的，应当设置保护作业人员的安全措施。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.059",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "驾驶摩托车时，后座不得乘坐12周岁以下的未成年人；轻便摩托车不得载人。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "摩托车载人有年龄门槛，轻便摩托车干脆不准载人。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十五条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "摩托车后座不得乘坐未满12周岁的未成年人，轻便摩托车不得载人。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.060",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "牵引故障机动车时，被牵引的机动车除驾驶人外不得载人，也不得拖带挂车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "被牵引车本身已经不能自主控制，再载人或拖挂车就是叠加风险。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "牵引故障机动车应当遵守下列规定：被牵引的机动车除驾驶人外不得载人，不得拖带挂车。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.061",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "用软连接牵引装置牵引故障车时，牵引车与被牵引车之间的距离应当是多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "2米以上4米以下",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "10米以上15米以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "不作要求",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "4米以上10米以下",
+          "ok": true
+        }
+      ],
+      "explain": "太近来不及反应，太远容易被别的车插进来，条例给的区间是4到10米。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "使用软连接牵引装置时，牵引车与被牵引车之间的距离应当大于4米小于10米。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.062",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "被牵引的机动车转向或者制动失效的，应当使用硬连接牵引装置或者采用专用清障车拖曳。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "方向或刹车没了，软绳牵引根本控制不住。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "转向或者制动失效的被牵引车，应当使用硬连接牵引装置牵引或者采用专用清障车拖曳。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.063",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶机动车通过漫水路或者漫水桥时，应当怎么做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "加速冲过去，避免熄火",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "跟着前车原速通过",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "停车察明水情，确认安全后低速通过",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "鸣喇叭后快速通过",
+          "ok": false
+        }
+      ],
+      "explain": "水下的路面情况看不见：先停车看清深度和路基，再低速过。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车通过漫水路或者漫水桥时，应当停车察明水情，确认安全后，低速通过。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.064",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "机动车通过施工作业路段时，应当注意警示标志，减速行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "施工段的车道、路面随时在变，减速是唯一能兜住意外的办法。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第八十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车通过施工作业路段时，应当注意警示标志，减速行驶。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.065",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "城市快速路的通行，参照高速公路的规定执行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "快速路虽然在城里，但通行规则按高速走——包括不得停车、不得占用应急车道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第八十五条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "城市快速路的通行，参照高速公路的规定执行。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.066",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "拖拉机不得进入高速公路和大中城市中心城区；在允许通行的道路上可以从事货运，但不得载人。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "拖拉机速度和制动都跟不上快速路况，能去的路段也只准拉货。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "高速公路、大中城市中心城区内的道路，禁止拖拉机通行。在允许拖拉机通行的道路上，拖拉机可以从事货运，但不得用于载人。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.067",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "遇有自然灾害、恶劣气象条件或者重大交通事故等严重影响交通安全的情形，公安机关交通管理部门可以采取什么措施？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "只能提示绕行",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "实行交通管制",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "只能降低限速",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "由驾驶人自行决定是否通行",
+          "ok": false
+        }
+      ],
+      "explain": "交通管制期间强行通行、不听劝阻的，按道路交通安全法第九十九条罚二百到二千元。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "遇有自然灾害、恶劣气象条件或者重大交通事故等严重影响交通安全的情形，采取其他措施难以保证交通安全时，公安机关交通管理部门可以实行交通管制。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.068",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "在没有禁止掉头标志的地点掉头，也不得妨碍正常行驶的其他车辆和行人通行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "「可以掉头」不等于「随时掉头」：先让正常行驶的车和行人。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十九条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车在没有禁止掉头或者没有禁止左转弯标志、标线的地点可以掉头，但不得妨碍正常行驶的其他车辆和行人的通行。"
+        }
+      ],
+      "phase": 2,
       "difficulty": 2,
       "band": "common"
     }
