@@ -895,6 +895,15 @@ class _SessionStageState extends State<SessionStage> {
         passed: passed,
       );
     }
+    final missed = <_Missed>[
+      for (var i = 0; i < _total; i++)
+        if (_judged.contains(i) && !_correct.contains(i))
+          _Missed(
+            number: i + 1,
+            question: _launch.questions[i],
+            picked: {...?_picked[i]},
+          ),
+    ];
     if (!mounted) return;
     setState(() {
       _result = _Result(
@@ -907,6 +916,7 @@ class _SessionStageState extends State<SessionStage> {
         fullBank: _launch.paper?.fullBank ?? true,
         want: _launch.paper?.rules.questionCount,
         autoSubmitted: autoSubmitted,
+        missed: missed,
       );
     });
   }
@@ -929,6 +939,7 @@ class _Result {
     required this.fullBank,
     this.want,
     this.autoSubmitted = false,
+    this.missed = const [],
   });
 
   final String title;
@@ -942,6 +953,26 @@ class _Result {
 
   /// 时间到了系统替你交的卷——结果页要说一声，不然会以为是自己点的。
   final bool autoSubmitted;
+
+  /// 这一卷答错的题：交卷后最该看的就是它们。
+  final List<_Missed> missed;
+}
+
+/// 一道答错的题，连同「我当时选的」——只报分不告诉错在哪，等于白考一次。
+class _Missed {
+  const _Missed({required this.number, required this.question, required this.picked});
+
+  final int number;
+  final Question question;
+  final Set<String> picked;
+
+  String labelsOf(Set<String> ids) {
+    final labels = [
+      for (final choice in question.choices)
+        if (ids.contains(choice.id)) "${choice.id}. ${choice.label}",
+    ];
+    return labels.isEmpty ? "（没作答）" : labels.join("；");
+  }
 }
 
 class _ResultPane extends StatelessWidget {
@@ -980,8 +1011,81 @@ class _ResultPane extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
-          const SizedBox(height: 28),
+          const SizedBox(height: 20),
           FilledButton(onPressed: onClose, child: const Text("回到章节")),
+          if (result.missed.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            Text(
+              "错了 ${result.missed.length} 题，趁热看一遍：",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView.separated(
+                itemCount: result.missed.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
+                itemBuilder: (context, i) => _MissedCard(item: result.missed[i]),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 错题卡：题干、我选了什么、正确答案是什么，再跟一段条文。
+class _MissedCard extends StatelessWidget {
+  const _MissedCard({required this.item});
+
+  final _Missed item;
+
+  @override
+  Widget build(BuildContext context) {
+    final q = item.question;
+    final right = {for (final c in q.choices) if (c.ok) c.id};
+    final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      height: 1.45,
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        color: Bs.body,
+        border: Border.all(color: Bs.border),
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BsBadge(text: "第${item.number}题", icon: Icons.tag, color: Bs.danger),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  q.prompt,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.4),
+                ),
+              ),
+            ],
+          ),
+          if (q.image != null) ...[
+            const SizedBox(height: 10),
+            QuestionImage(path: q.image!, maxWidth: 360),
+          ],
+          const SizedBox(height: 10),
+          Text("你选的：${item.labelsOf(item.picked)}", style: muted?.copyWith(color: Bs.danger)),
+          Text("正确答案：${item.labelsOf(right)}", style: muted?.copyWith(color: Bs.success)),
+          if (q.explain.trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(q.explain, style: muted),
+          ],
+          if (q.articleLines.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(q.articleLines.join("\n"), style: muted),
+          ],
         ],
       ),
     );

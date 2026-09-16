@@ -93,19 +93,53 @@ class QuestionImage extends StatelessWidget {
   final String path;
   final double maxWidth;
 
+  ImageProvider get _provider {
+    final resolved = ContentLoader.imagePath(path);
+    return ContentLoader.imagesOnDisk ? FileImage(File(resolved)) : AssetImage(resolved);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final resolved = ContentLoader.imagePath(path);
-    final image = ContentLoader.imagesOnDisk
-        ? Image.file(File(resolved), fit: BoxFit.contain)
-        : Image.asset(resolved, fit: BoxFit.contain);
     return Align(
       alignment: Alignment.centerLeft,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(Bs.radius),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: image,
+      child: Tooltip(
+        message: "点开看大图",
+        child: InkWell(
+          onTap: () => _open(context),
+          borderRadius: BorderRadius.circular(Bs.radius),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(Bs.radius),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Image(image: _provider, fit: BoxFit.contain),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 点开铺满窗口看细节：图里的红圈、远处的车灯，缩在栏里根本看不清。
+  void _open(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (dialogContext) => Dialog(
+        insetPadding: const EdgeInsets.all(32),
+        backgroundColor: Colors.transparent,
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            InteractiveViewer(
+              maxScale: 5,
+              child: Image(image: _provider, fit: BoxFit.contain),
+            ),
+            IconButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              icon: const Icon(Icons.close, color: Colors.white, size: 28),
+              tooltip: "关闭",
+            ),
+          ],
         ),
       ),
     );
