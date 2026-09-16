@@ -17,9 +17,15 @@ void main() {
       expect(question.choices.where((c) => c.ok), isNotEmpty);
       expect(question.sourceRefs, isNotEmpty);
       for (final ref in question.sourceRefs) {
-        expect(ref.locator, isNotEmpty);
         expect(ref.url, isNotEmpty);
         expect(ref.sourceId, isNotEmpty);
+        // 条号只有核对过才写（ADR 0008），所以 locator 可以空；
+        // 但条文内容不能空，否则学习页的依据栏没东西可显示。
+        expect(
+          ref.locator.isNotEmpty || ref.note.isNotEmpty,
+          isTrue,
+          reason: "${question.id} 的出处既没有条号也没有条文",
+        );
       }
     }
     expect(bank.forSubject("subject1").length, greaterThanOrEqualTo(150));

@@ -4,6 +4,7 @@
 - 状态：已接受
 - 影响：`content/curriculum.json`、`content/questions/subject1.json`、练习与模拟考入口
 - 对齐：本应用 ADR 0001（只做两门理论）、0003（题目有出处）
+- 修订：第 1 条的四阶段划分由 ADR 0009 重排，解锁规则不变
 
 ## 背景
 
