@@ -71,8 +71,9 @@ class DriverApp extends StatelessWidget {
         scaffoldBackgroundColor: Bs.light,
         dividerColor: Bs.border,
         filledButtonTheme: FilledButtonThemeData(
+          // 主按钮用主行动色，不再是一片深灰
           style: FilledButton.styleFrom(
-            backgroundColor: Bs.dark,
+            backgroundColor: Bs.primary,
             foregroundColor: Colors.white,
             textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),

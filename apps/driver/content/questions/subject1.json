@@ -51046,6 +51046,1001 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.001",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，同方向划有二条以上机动车道、没有限速标志的城市道路，最高时速不得超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "50公里",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "60公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "80公里",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "70公里",
+          "ok": true
+        }
+      ],
+      "explain": "河南的地方条例把没有限速标志时的上限写死了：城市道路70，封闭专用道和公路80。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "同方向划有二条以上机动车道的道路，没有限速标志、标线的，城市道路最高时速不得超过七十公里，封闭的机动车专用道路和公路最高时速不得超过八十公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.002",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，没有限速标志的封闭机动车专用道路和公路，最高时速不得超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "80公里",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "60公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "70公里",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "100公里",
+          "ok": false
+        }
+      ],
+      "explain": "跟城市道路的70对着记：出了城、进了专用道，上限是80。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "同方向划有二条以上机动车道的道路，没有限速标志、标线的，封闭的机动车专用道路和公路最高时速不得超过八十公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.003",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，低速载货汽车、三轮汽车、拖拉机、轮式专用机械车在道路上行驶，最高时速不得超过30公里。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这一档车结构和制动都跟不上，条例直接压到30。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "低速载货汽车、三轮汽车、拖拉机、电瓶车、轮式专用机械车、正三轮摩托车、轻便摩托车在道路上行驶时最高时速不得超过三十公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.004",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，二轮摩托车在城市道路上行驶时最高时速不得超过50公里。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "二轮、侧三轮摩托车和铰接式客车这一档：城市道路50，封闭专用道和公路60。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "二轮摩托车、侧三轮摩托车、铰接式客车、电车等在城市道路上行驶时最高时速不得超过五十公里，在封闭的机动车专用道路和公路上行驶时最高时速不得超过六十公里。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.005",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，机动车转弯、变更车道、超车、掉头、靠路边停车时，应当提前多少距离开启转向灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "提前30米至10米",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "提前一百米至五十米",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "提前五十米至二十米",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "转向时开启即可",
+          "ok": false
+        }
+      ],
+      "explain": "国家法规只说「提前」，河南条例给了具体区间：100米到50米之间开灯。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十六条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车转弯、变更车道、超车、掉头、靠路边停车时，应当提前一百米至五十米开启转向灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.006",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，机动车在夜间行驶应当开启前照灯、示廓灯和后位灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "跟国家条例一致，河南条例又写了一遍，说明是本地考点。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十六条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车在夜间行驶，应当开启前照灯、示廓灯和后位灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.007",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，机动车在准许掉头的地点掉头，应当怎么做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "从任意车道直接掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "先靠右停车再掉头",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "提前进入导向车道，或者在距掉头地点一百米至五十米处驶入最左侧车道",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "鸣喇叭后掉头",
+          "ok": false
+        }
+      ],
+      "explain": "掉头前要先把车摆到最左侧，且不得妨碍行人和其他车辆。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十七条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车在准许掉头的地点掉头时，应当提前进入导向车道或者在距掉头地点一百米至五十米处驶入最左侧车道，并不得妨碍行人和其他车辆正常通行。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.008",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，遇前方车辆排队等候或者行驶缓慢时，不得进入非机动车道、人行道行驶，也不得鸣喇叭催促行人、车辆。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "堵车时挤非机动车道和按喇叭催，在河南是明文禁止的。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十八条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车遇有前方车辆排队等候或者行驶缓慢时，应当停车等候或者依次行驶，不得进入非机动车道、人行道行驶，不得鸣喇叭催促行人、车辆。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.009",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的狭窄道路上会车，有条件让行的车辆应当避让没有条件让行的车辆。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "谁让得动谁让——这是狭窄路段的基本规则。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十九条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车在狭窄道路上会车时，有条件让行的车辆应当避让没有条件让行的车辆。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.010",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的狭窄道路上会车，后进入该路段的车辆应当避让先进入该路段的车辆。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "先进的先走，后来的等——避免在窄路中间顶牛。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第二十九条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "后进入该路段的车辆应当避让先进入该路段的车辆。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.011",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，机动车上城市快速路和高速公路行驶前，驾驶人应当事先检查什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "轮胎、燃料、润滑油、制动器、灯光、灭火器具、反光的故障车警告标志",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "只需要检查油量",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "只需要检查轮胎和刹车",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车上有没有备胎",
+          "ok": false
+        }
+      ],
+      "explain": "灭火器和反光故障车警告标志也在检查清单里，上高速前要确认「安全有效」。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第三十四条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车需要上城市快速路和高速公路行驶的，驾驶人应当事先检查车辆的轮胎、燃料、润滑油、制动器、灯光、灭火器具、反光的故障车警告标志等，并保证安全有效。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.012",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，发现交通事故受伤人员，过往车辆的驾乘人员、行人应当及时报告急救医疗单位和公安机关交通管理部门。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "报告义务落在每个路过的人身上，不只是当事人。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第三十八条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "发现交通事故受伤人员，过往车辆驾乘人员、行人以及其他有关人员应当及时报告急救医疗单位和公安机关交通管理部门。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.013",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，机动车在高速公路、城市快速路上违反道路通行规定的，罚款多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五十元",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "一百元",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "五百元",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "二百元",
+          "ok": true
+        }
+      ],
+      "explain": "河南把高速和快速路上的通行违法统一定在200元这一档。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第六十二条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车驾驶人在高速公路、城市快速路或者其他封闭的机动车专用道违反道路交通安全法律、法规关于道路通行规定的，处二百元罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.014",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，机动车在高速公路上超过规定时速百分之五十的，罚款多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "二百元以上二千元以下",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "五百元以上一千元以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一千元以上二千元以下",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "二百元",
+          "ok": false
+        }
+      ],
+      "explain": "普通道路超速五成是200–2000元，上了高速就抬到1000–2000元。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第六十三条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "机动车行驶超过规定时速百分之五十的，处二百元以上二千元以下罚款；在高速公路上行驶超过规定时速百分之五十的，处一千元以上二千元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.015",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，在高速公路上停车上下乘客的，对驾驶人罚款多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "二百元",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "五百元以上二千元以下",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "一千元以上二千元以下",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "警告",
+          "ok": false
+        }
+      ],
+      "explain": "高速上停车上下客极危险，《河南省高速公路条例》还可以并处暂扣三个月以下驾驶证。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第六十三条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "在高速公路上停车上下乘客的，对驾驶人处五百元以上二千元以下罚款。"
+        },
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第五十九条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "在高速公路上停车上下乘客、装卸货物的，对驾驶员处五百元以上二千元以下罚款；情节严重的，可以并处暂扣三个月以下驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.016",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，发生交通事故后不及时报警的，罚款多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "二百元",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "三百元以上五百元以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一千元以上二千元以下",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "五百元以上一千元以下",
+          "ok": true
+        }
+      ],
+      "explain": "事故后拖着不报警，本身就是一条独立的违法。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第六十三条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "发生交通事故不及时报警的，处五百元以上一千元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.017",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，未取得驾驶证驾驶非营运汽车的，罚款多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五百元以上一千元以下",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "二百元以上五百元以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一千元以上一千五百元以下",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "二千元以上五千元以下",
+          "ok": false
+        }
+      ],
+      "explain": "河南把无证驾驶按营运与非营运分开：非营运500–1000，营运1000–1500。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第六十六条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "未取得机动车驾驶证驾驶非营运汽车的，处五百元以上一千元以下罚款；驾驶营运汽车的，处一千元以上一千五百元以下罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.018",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，驾驶机动车拨打接听手持电话、下陡坡时空挡滑行的，处二百元罚款。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这些妨碍安全驾驶的行为在河南是200元一档，另按记分办法记分。",
+      "source_refs": [
+        {
+          "source_id": "henan-road-safety",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://hnga.henan.gov.cn/2021/01-06/2074166.html",
+          "note": "驾驶机动车拨打接听手持电话、下陡坡时熄火或者空挡滑行等妨碍安全驾驶行为的，处二百元罚款。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.019",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上，同方向只有两条车道的，左侧第一条车道为超车道，不超车时严禁占用超车道。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "长期占着超车道在河南是明文禁止的，不只是「不文明」。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十五条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "同方向只有两条车道的，左侧第一条车道为超车道。不超车时严禁占用超车道。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.020",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上，不准倒车、逆行，不准穿越中央隔离带掉头或者转弯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "这三种行为在国家法规里一次记12分，河南条例同样禁止。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十五条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "车辆在高速公路上行驶，不准倒车、逆行，不准穿越中央隔离带掉头或者转弯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.021",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南的高速公路上因故障停车，故障车警告标志牌应当设置在行驶方向后方多少米以外？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五十米",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "一百米",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "一百五十米",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "二百米",
+          "ok": false
+        }
+      ],
+      "explain": "普通道路是车后50–100米，高速公路是150米以外——两个距离别记混。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十六条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "车辆因遇障碍、发生故障、事故等停车后，驾驶员应当立即开启危险报警闪光灯，并在行驶方向后方的一百五十米以外设置故障车警告标志牌。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.022",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上夜间或者雨、雪、雾天故障停车，除开启危险报警闪光灯外，还应当同时开启示宽灯、尾灯和后雾灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "能见度差时，光是双闪不够——车的轮廓要让后车尽早看见。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十六条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "夜间、雨、雪、雾天还应当同时开启示宽灯、尾灯和后雾灯。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.023",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上，因前方发生事故、堵塞必须停车时，应当依次停在行车道内；除事故救援车辆外，禁止占用应急车道停车、行车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "堵车时溜应急车道最容易挡住救援车，条例把这条单独写了出来。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十七条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "在高速公路上行驶的车辆因前方发生事故、堵塞等情况必须停车时，应当依次停在行车道内，除事故救援车辆外，禁止占用应急车道停车、行车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.024",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，禁止在高速公路上停车上下乘客或者装卸货物。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "高速上车速高，停下上下人和搬货几乎必然引发追尾。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十四条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "禁止在高速公路上停车上下乘客或者装卸货物。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.henan.025",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上行驶，装载容易散落、飞扬、泄漏的物品必须封盖严密。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "掉在高速上的货物对后车就是高速障碍物。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十四条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "装载容易散落、飞扬、泄漏的物品，必须封盖严密。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.026",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南，设计最高时速低于七十公里的机动车不得驶入高速公路。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "跟道交法第六十七条一致：跑不到速度就不能上高速。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十三条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "行人、非机动车以及设计最高时速低于七十公里的机动车，不得进入高速公路。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.henan.027",
+      "topic_id": "drive.s1.henan",
+      "kind": "single",
+      "prompt": "在河南，在高速公路上停车上下乘客、装卸货物且情节严重的，除罚款外还可以并处什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "吊销机动车驾驶证",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "暂扣三个月以下机动车驾驶证",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "十五日以下拘留",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "终生禁驾",
+          "ok": false
+        }
+      ],
+      "explain": "罚款之外还能暂扣驾驶证三个月以下，这是河南条例给的加重档。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第五十九条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "在高速公路上停车上下乘客、装卸货物的，对驾驶员处五百元以上二千元以下罚款；情节严重的，可以并处暂扣三个月以下驾驶证。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.henan.028",
+      "topic_id": "drive.s1.henan",
+      "kind": "judge",
+      "prompt": "在河南的高速公路上，同方向有三条或者三条以上车道的，车辆应当按照规定的各车道最低车速要求行驶。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "左侧车道有更高的最低车速要求，跑不到就该往右让。",
+      "source_refs": [
+        {
+          "source_id": "henan-expressway",
+          "relation": "adapted",
+          "locator": "第四十五条",
+          "url": "https://hnga.henan.gov.cn/2020/09-09/1809704.html",
+          "note": "同方向有三条或者三条以上车道的，车辆应当按照规定的各车道的最低车速要求行驶。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
     }
   ]
 }

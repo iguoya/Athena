@@ -305,14 +305,16 @@ class _SessionStageState extends State<SessionStage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FilledButton(
+          FilledButton.icon(
             onPressed: _nextGroup,
             style: FilledButton.styleFrom(
-              backgroundColor: Bs.dark,
+              backgroundColor: Bs.primary,
               foregroundColor: Colors.white,
-              minimumSize: const Size(180, 52),
+              minimumSize: const Size(190, 56),
+              textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w700),
             ),
-            child: Text(_lastGroup ? "结束本轮" : "下一组"),
+            icon: Icon(_lastGroup ? Icons.flag : Icons.arrow_forward, size: 22),
+            label: Text(_lastGroup ? "结束本轮" : "下一组"),
           ),
           const SizedBox(height: 8),
           Text("答错的题会自动朗读解释。看完再点下一组或回车。", style: hint, textAlign: TextAlign.center),
@@ -335,14 +337,15 @@ class _SessionStageState extends State<SessionStage> {
               style: OutlinedButton.styleFrom(minimumSize: const Size(120, 48)),
               child: const Text("上一组"),
             ),
-            FilledButton(
+            FilledButton.icon(
               onPressed: _lastGroup ? null : _nextGroup,
               style: FilledButton.styleFrom(
-                backgroundColor: Bs.dark,
+                backgroundColor: Bs.primary,
                 foregroundColor: Colors.white,
-                minimumSize: const Size(120, 48),
+                minimumSize: const Size(130, 48),
               ),
-              child: const Text("下一组"),
+              icon: const Icon(Icons.arrow_forward, size: 20),
+              label: const Text("下一组"),
             ),
             FilledButton.icon(
               onPressed: _submitting ? null : () => _confirmSubmit(context),
@@ -377,23 +380,23 @@ class _SessionStageState extends State<SessionStage> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            BsBadge(text: "第${index + 1}题", icon: Icons.tag, color: Bs.dark),
+            BsBadge(text: "第${index + 1}题", icon: Icons.tag, color: Bs.paper),
             BsBadge(
               text: Bs.kindLabel(q.kind),
               icon: Bs.kindIcon(q.kind),
-              color: q.isMulti ? Bs.warning : (q.kind == "judge" ? Bs.secondary : Bs.dark),
+              color: Bs.kindColor(q.kind),
             ),
             BsBadge(
               text: QuestionBand.labels[q.band] ?? "常规",
               icon: q.isHot ? Icons.local_fire_department : Icons.route,
-              color: q.isHot ? Bs.danger : (q.isCommon ? Bs.warning : Bs.secondary),
+              color: Bs.bandColor(q.band),
             ),
             for (final ref in q.sourceRefs)
               if (Bs.isContentSource(ref.relation))
                 BsBadge(
                   text: "${Bs.sourceShort(ref.sourceId)} ${ref.locator}".trim(),
                   icon: Icons.menu_book,
-                  color: Bs.secondary,
+                  color: Bs.success,
                 ),
           ],
         ),
@@ -478,7 +481,8 @@ class _SessionStageState extends State<SessionStage> {
         mark = Icons.check_circle;
       }
     } else if (selected) {
-      solid = Bs.paper;
+      // 已选中、还没判定：用蓝，别跟「答对」的绿混在一起
+      solid = Bs.info;
     }
     final fg = solid != null ? Colors.white : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;

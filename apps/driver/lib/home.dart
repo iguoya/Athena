@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
           ),
           if (open) ...[
             const SizedBox(height: 16),
-            const Divider(color: Colors.white24),
+            const Divider(color: Colors.white30),
             const SizedBox(height: 8),
             if (current.id == "subject1") ...[
               _navLine(
@@ -232,16 +232,19 @@ class _HomePageState extends State<HomePage> {
     VoidCallback? onTap,
     bool muted = false,
   }) {
-    final color = muted ? Colors.white38 : (selected ? Colors.white : Colors.white70);
+    // 深绿底上：没选中的也要看得清，选中的用亮绿底 + 左侧亮条顶出来
+    final color = muted ? Colors.white54 : (selected ? Colors.white : const Color(0xFFD7EFDD));
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? Colors.white.withValues(alpha: 0.12) : null,
+          color: selected ? const Color(0xFF22C55E).withValues(alpha: 0.24) : null,
           borderRadius: BorderRadius.circular(Bs.radius),
-          border: Border(left: BorderSide(color: selected ? Bs.warning : Colors.transparent, width: 3)),
+          border: Border(
+            left: BorderSide(color: selected ? const Color(0xFF4ADE80) : Colors.transparent, width: 4),
+          ),
         ),
         child: Row(
           children: [

@@ -7,20 +7,43 @@ import "content.dart";
 
 /// Bootstrap 5 色板与常用零件。图标用 Material 的系统符号，角色对齐 Bootstrap Icons。
 class Bs {
-  static const primary = Color(0xFFB45309);
-  static const success = Color(0xFF198754);
+  // 绿色系：侧栏深绿、主行动与强调用绿，整体比原来的深棕轻快。语义仍按通用规范——
+  // 红=错/危险，绿=对/通过与主行动，黄=注意，蓝=已选中但还没判定，紫=多选/偏难。
+  static const primary = Color(0xFF15803D);
+  static const success = Color(0xFF16A34A);
   static const danger = Color(0xFFDC3545);
-  static const warning = Color(0xFFCA8A04);
-  static const info = Color(0xFF57534E);
-  static const paper = Color(0xFF8B5A2B);
-  static const secondary = Color(0xFF6C757D);
-  static const light = Color(0xFFF8F9FA);
-  static const dark = Color(0xFF212529);
+  static const warning = Color(0xFFF59E0B);
+  static const info = Color(0xFF0284C7);
+  static const accent = Color(0xFF7C3AED);
+  /// 品牌强调（题号、进度条、朗读条）。名字沿用，颜色跟着主色走。
+  static const paper = Color(0xFF166534);
+  static const secondary = Color(0xFF64748B);
+  static const light = Color(0xFFF6FAF7);
+  static const dark = Color(0xFF1F2937);
   static const body = Color(0xFFFFFFFF);
-  static const border = Color(0xFFDEE2E6);
-  static const nav = Color(0xFF2A2420);
+  static const border = Color(0xFFDDE7E0);
+  static const nav = Color(0xFF14532D);
   static const radius = 4.0;
   static const bodySize = 20.0;
+
+  /// 题型各给一种颜色：判断蓝、单选橙、多选紫，一眼分得出这题怎么答。
+  static Color kindColor(String kind) {
+    return switch (kind) {
+      "judge" => info,
+      "multi" => accent,
+      _ => primary,
+    };
+  }
+
+  /// 高频红、常考黄、常规青灰、偏难紫——按「要不要多练」排。
+  static Color bandColor(String band) {
+    return switch (band) {
+      QuestionBandColors.hot => danger,
+      QuestionBandColors.common => warning,
+      QuestionBandColors.rare => accent,
+      _ => secondary,
+    };
+  }
 
   static TextTheme textTheme(TextTheme base) {
     TextStyle scaled(TextStyle? style, double size, {FontWeight? weight, double height = 1.4}) {
@@ -59,6 +82,8 @@ class Bs {
       "ga-1026" => "GA 1026",
       "gb5768-2" => "GB 5768 标志",
       "gb5768-3" => "GB 5768 标线",
+      "henan-road-safety" => "河南条例",
+      "henan-expressway" => "河南高速条例",
       "public-bank-2022" => "公开题库",
       _ => sourceId,
     };
@@ -84,6 +109,14 @@ class Bs {
       _ => "单选",
     };
   }
+}
+
+/// 频次的取值——与 models 里的 QuestionBand 一致，放在这里是为了不让配色层依赖数据层。
+class QuestionBandColors {
+  static const hot = "hot";
+  static const common = "common";
+  static const regular = "regular";
+  static const rare = "rare";
 }
 
 /// 题图：开发时直接读工作树里的文件，发行包走打进去的 assets。
