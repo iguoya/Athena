@@ -4,6 +4,7 @@
 - 状态：已接受
 - 影响：`content/questions/`、`content/sources/catalog.json`、`content-contract.json`
 - 对齐：主仓库 ADR 0043
+- 修订：「不搬商业整库」由 ADR 0008 取消（自用软件不考虑分发与商业化），出处要求不变
 
 ## 背景
 
