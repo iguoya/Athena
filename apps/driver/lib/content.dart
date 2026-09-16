@@ -52,15 +52,16 @@ class ContentLoader {
 
   static Future<String> _read(String relative) async {
     final env = Platform.environment["ATHENA_DRIVER_ROOT"];
-    final candidates = <String>[
-      if (env != null && env.isNotEmpty) p.join(env, "content", relative),
-      p.join(Directory.current.path, "content", relative),
+    // 记的是应用根，不是 content 目录：relative 有一级也有两级，从文件路径倒推会算错。
+    final bases = <String>[
+      if (env != null && env.isNotEmpty) env,
+      Directory.current.path,
     ];
-    for (final path in candidates) {
+    for (final base in bases) {
       try {
-        final file = File(path);
+        final file = File(p.join(base, "content", relative));
         if (await file.exists()) {
-          contentRoot = p.dirname(p.dirname(path));
+          contentRoot = base;
           return await file.readAsString();
         }
       } on FileSystemException {

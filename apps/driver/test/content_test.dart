@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:athena_driver/content.dart";
 import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -27,6 +29,17 @@ void main() {
           reason: "${question.id} 的出处既没有条号也没有条文",
         );
       }
+    }
+    // 题图要能在工作树里找到：contentRoot 记的是应用根，不是 content 目录，
+    // 从文件路径倒推会算成 content/content/…
+    final withImage = bank.questions.where((q) => q.image != null).toList();
+    expect(withImage, isNotEmpty);
+    for (final question in withImage) {
+      expect(
+        File(ContentLoader.imagePath(question.image!)).existsSync(),
+        isTrue,
+        reason: "${question.id} 的题图找不到：${ContentLoader.imagePath(question.image!)}",
+      );
     }
     expect(bank.forSubject("subject1").length, greaterThanOrEqualTo(150));
     expect(bank.forSubject("subject4").length, greaterThanOrEqualTo(60));
