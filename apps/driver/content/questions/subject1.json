@@ -9607,6 +9607,394 @@
       "phase": 1,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.lights.001",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "夜间在没有路灯、照明不良的道路上行驶，应当开启哪些灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "只开前照灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "只开示廓灯和后位灯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "危险报警闪光灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前照灯、示廓灯和后位灯",
+          "ok": true
+        }
+      ],
+      "explain": "前照灯是给自己照路，示廓灯和后位灯是让别人看见车的轮廓和位置，三个一起开才完整。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车在夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.002",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "同方向行驶的后车与前车近距离行驶时，不得使用远光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "远光打在前车后视镜上会直接晃瞎前车驾驶人，跟车时一律近光。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "同方向行驶的后车与前车近距离行驶时，不得使用远光灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.003",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车雾天行驶应当开启什么灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "远光灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "雾灯和危险报警闪光灯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "只开示廓灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只开近光灯",
+          "ok": false
+        }
+      ],
+      "explain": "雾天开远光会被水汽反射回来，反而看不见；雾灯穿透力强，危险报警闪光灯让后车早点发现你。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车雾天行驶应当开启雾灯和危险报警闪光灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.004",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "在没有中心隔离设施或者没有中心线的道路上夜间会车，应当在距对面来车多少米以外改用近光灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "50米",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "100米",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "200米",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "150米",
+          "ok": true
+        }
+      ],
+      "explain": "150米是留给对方适应的距离，等到会车跟前才切近光已经晚了。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十八条第（五）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "夜间会车应当在距相对方向来车150米以外改用近光灯，在窄路、窄桥与非机动车会车时应当使用近光灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.005",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "在窄路、窄桥与非机动车会车时，应当使用近光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "非机动车没有后视镜挡光，远光更容易让骑车人失明式炫目。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十八条第（五）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "在窄路、窄桥与非机动车会车时应当使用近光灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.lights.006",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口时，应当交替使用远近光灯示意。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "远近光交替是夜间的「喇叭」：用光告诉看不见你的人，这里有车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十九条第一款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车在夜间通过急弯、坡路、拱桥、人行横道或者没有交通信号灯控制的路口时，应当交替使用远近光灯示意。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.007",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "驶近急弯、坡道顶端等影响安全视距的路段，以及超车或者遇有紧急情况时，应当减速慢行并鸣喇叭示意。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "看不见对面时，减速加鸣喇叭是条例写明的动作；禁止鸣喇叭的路段除外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十九条第二款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驶近急弯、坡道顶端等影响安全视距的路段以及超车或者遇有紧急情况时，应当减速慢行，并鸣喇叭示意。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.lights.008",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "白天遇有雾、雨、雪、沙尘、冰雹等低能见度情况行驶时，同样应当开启前照灯、示廓灯和后位灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "开灯不是为了看路，是为了被看见——白天能见度低时一样要开。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十二条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在遇有沙尘、冰雹、雨、雪、雾、结冰等气象条件时，应当降低行驶速度。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.009",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车在道路上发生故障需要停车排除时，首先应当做什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "立即开启危险报警闪光灯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "下车查看故障",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "打电话叫救援",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "先把车锁好离开",
+          "ok": false
+        }
+      ],
+      "explain": "先让后车知道这里有一辆不动的车，再谈挪车、放三角牌和叫救援。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十二条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯，将机动车移至不妨碍交通的地方停放。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.010",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "在道路上发生故障或者交通事故，妨碍交通又难以移动的，应当开启危险报警闪光灯并在车后50米至100米处设置警告标志；夜间还应当同时开启示廓灯和后位灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "普通道路是车后50–100米，高速公路是来车方向150米以外——两个距离别记混。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车在道路上发生故障或者发生交通事故，妨碍交通又难以移动的，应当按照规定开启危险报警闪光灯并在车后50米至100米处设置警告标志，夜间还应当同时开启示廓灯和后位灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.011",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "牵引故障机动车时，牵引车和被牵引车都应当开启危险报警闪光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "两辆车连成一串，整体都是异常行驶状态，都要示警。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "牵引车和被牵引车均应当开启危险报警闪光灯。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
     }
   ]
 }
