@@ -25,7 +25,16 @@
               "source_id": "nuaa-cs",
               "locator": "课程结构中的程序设计、软件工程与实践环节"
             }
-          ]
+          ],
+          "pitfall": "工具零散，每样单独跑一次都不难，难在把构建、调试、测试和 CI 固定成每天都走的那条路；换台机器或换个目录就重新配，可复现性最先失守。",
+          "priority": "essential",
+          "priority_reason": "研制过程要求每次改动都可复现、可追溯，构建与调试是这条链条的第一环，后面所有验证都建立在它之上。",
+          "targets": [
+            "target-realtime-software",
+            "target-onboard-computer",
+            "target-vehicle-engineering"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.cs.data-concurrency",
@@ -46,7 +55,16 @@
               "source_id": "nuaa-cs",
               "locator": "数据结构、操作系统与软件工程课程方向"
             }
-          ]
+          ],
+          "pitfall": "容量上限和满载时的处置常被留到最后才想，压力一来不是内存无限增长就是悄悄丢数据；并发缺陷又难复现，测试跑绿了不等于没有竞争。",
+          "priority": "essential",
+          "priority_reason": "周期性数据要在截止期内完成交接，有界队列和锁策略直接决定最坏延迟，绕不过去。",
+          "targets": [
+            "target-realtime-software",
+            "target-onboard-computer",
+            "target-realtime-control"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.cs.os-network",
@@ -67,7 +85,16 @@
               "source_id": "nuaa-cs",
               "locator": "操作系统、计算机网络课程方向"
             }
-          ]
+          ],
+          "pitfall": "错误路径比正常路径长得多：超时、半关闭、部分写、被信号打断的重试，少处理一个就在长跑几小时之后暴露，而且现场往往已经过去。",
+          "priority": "important",
+          "priority_reason": "地面站、试验台架与设备之间的数据链依赖这套接口，但飞行器上走的是另一套总线时序，所以是显著支撑而非唯一入口。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering",
+            "target-realtime-control"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.cs.data-pipeline",
@@ -89,7 +116,16 @@
               "source_id": "tensorrt-benchmark",
               "locator": "端到端延迟、主机延迟、计算时间与吞吐的测量边界"
             }
-          ]
+          ],
+          "pitfall": "容易只盯住某个函数的耗时，忽略排队、拷贝和显示带来的端到端延迟；各环节时标不统一时，后面所有分析都建立在错位的数据上。",
+          "priority": "essential",
+          "priority_reason": "实时与算力两条验收都落在端到端分段延迟上，没有带时标的完整路径就说不清时间预算花在了哪里。",
+          "targets": [
+            "target-realtime-software",
+            "target-sensing-compute",
+            "target-digital-intelligence"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.cs.observability",
@@ -110,7 +146,16 @@
               "source_id": "tensorrt-benchmark",
               "locator": "端到端基准、CUDA Events 与剖析的测量方法"
             }
-          ]
+          ],
+          "pitfall": "只记平均值会把最坏情况抹平，而验收看的正是最坏值；埋点又常在出问题之后才补，那时现场已经没了，只能靠猜。",
+          "priority": "essential",
+          "priority_reason": "最坏延迟和抖动要用实测证据验收，缺少剖析与分位数统计就只能凭体感改系统。",
+          "targets": [
+            "target-realtime-software",
+            "target-onboard-computer",
+            "target-sensing-compute"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.cs.integration",
@@ -131,7 +176,16 @@
               "source_id": "nasa-fprime",
               "locator": "组件接口、构建与单元/集成测试的工程样本"
             }
-          ]
+          ],
+          "pitfall": "在自己机器上能跑不算交付：配置、依赖、启动顺序和故障处置一旦只存在脑子里，别人复现不出来，回归也就无从谈起。",
+          "priority": "important",
+          "priority_reason": "产品保证要求他人可复现、可评审，但这一步建立在可观测与工程化之上，属于收口而不是起步。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering",
+            "target-realtime-control"
+          ],
+          "app": ""
         }
       ],
       "edges": [
@@ -216,6 +270,717 @@
       ]
     },
     {
+      "id": "computer-programming",
+      "title": "程序设计与算法",
+      "view_kind": "academic",
+      "summary": "从写得出、跑得动、边界正确的代码开始：语言、数据结构与算法、结构设计与工程化工具链，最后收口到一个自成一体的项目。Python 语言、C 语言编程、C++ 程序设计和工程实践与工具链都是推荐入门起点，从这些里任选一个开始都合理。",
+      "nodes": [
+        {
+          "id": "atlas.cs.python",
+          "title": "Python 语言",
+          "track": "software",
+          "stable_definition": "语法与数据模型、标准库与第三方包生态、脚本与自动化、虚拟环境与依赖管理、与 C/C++ 的绑定和扩展。",
+          "engineering_role": "一门自成体系的语言，1991 年问世，定位是“可读、够用、生态丰富”。它是数据处理、快速原型、自动化和人工智能的默认工具。它和 C 系语言是互补关系而不是先后关系——一个偏开发效率，一个偏运行效率，不需要先学别的语言才能学它。",
+          "pitfall": "动态类型下大工程容易失控；性能和并发（GIL）需要权衡。",
+          "practice": "写一个可安装的命令行数据工具：用虚拟环境锁定依赖，读一批 CSV 做清洗与统计，再用 ctypes 或 pybind11 把最慢的那段循环换成自己写的 C 函数，交出替换前后的耗时对照。",
+          "validation": "benchmark",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：同一份输入分别跑纯 Python 版与扩展版各三轮，报告中位耗时与内存峰值；删掉虚拟环境重建一次后，这两组数字仍能用一条命令复现。",
+          "volatility": "evolving",
+          "priority": "important",
+          "priority_reason": "飞行试验数据处理、仿真脚本、批量对比和模型评测都以它为默认工具，但飞行器上运行的代码不由它承担，可以在主干语言之后再补。",
+          "targets": [
+            "target-digital-intelligence",
+            "target-gnc",
+            "target-vehicle-engineering"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "python-docs",
+              "locator": "语言参考、标准库、虚拟环境与打包部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "培养方案中的程序设计与数据处理方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.c_lang",
+          "title": "C 语言编程",
+          "track": "software",
+          "stable_definition": "指针与内存布局、数组与字符串、结构体与联合、预处理器、分离编译与链接、完全手动的资源管理。",
+          "engineering_role": "1972 年 Dennis Ritchie 为重写 Unix 而设计 C，把它定位成“可移植的汇编”：保留对内存和硬件的直接控制，同时摆脱对具体指令集的依赖。此后半个世纪，操作系统内核、单片机固件、各种语言的运行时几乎都用 C 写成。它是软硬结合方向真正的枢纽语言。",
+          "pitfall": "指针和手动内存管理陷阱多，未定义行为编译器不拦你。",
+          "practice": "实现一个定长块内存池：给出 malloc/free 的替代接口、边界标记和泄漏统计，再写一组会踩越界、重复释放和 use-after-free 的用例，用 AddressSanitizer 把每一个都抓出来。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外硬件：正常用例在 -fsanitize=address,undefined 下零报告；故意注入的每一处错误都能被定位到具体行号；程序退出时内存池统计的已分配块数为零。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "弹上固件、总线驱动和实时内核接口都以 C 描述，指针、栈和资源释放的手感直接决定这类软件能不能做到内存有界、行为可预测，绕不过去。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-avionics-bus",
+            "target-realtime-control"
+          ],
+          "app": "c",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "程序的机器级表示与虚拟内存（第 3、9 章）"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cppreference",
+              "locator": "C 语言参考的指针、数组与存储期部分"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.cpp",
+          "title": "C++ 程序设计",
+          "track": "software",
+          "stable_definition": "类型系统与值类别，资源管理与 RAII，面向对象，模板与泛型编程，标准库容器与算法，并发基础。",
+          "engineering_role": "1979 年 Bjarne Stroustrup 在贝尔实验室做“C with Classes”，1983 年定名 C++，至今仍以“兼容 C、零开销抽象”为纲领。它把 C 的底层控制力和高级抽象结合起来，是需要又快又能建大型结构的场合（游戏引擎、数据库、桌面软件、这个平台本身）的主力语言。",
+          "pitfall": "语义细节多：值类别、对象生命周期、模板报错、从 C 继承来的未定义行为。",
+          "practice": "实现一个固定容量容器：自带 RAII、移动语义、自定义分配器和迭代器，配一组单元测试；再加一个计数器统计构造、拷贝、移动与析构次数，验证移动路径上确实没有发生拷贝、对象数量最终归零。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：构造与析构计数必须配平，移动路径上的拷贝次数为零；全部测试在 -fsanitize=address,undefined 下无报告。",
+          "volatility": "evolving",
+          "priority": "essential",
+          "priority_reason": "实时软件与地面测发控普遍要求既跑得快又能建起大型结构，RAII 和零开销抽象是在不引入垃圾回收停顿的前提下管住资源生命周期的主要手段。",
+          "targets": [
+            "target-realtime-software",
+            "target-onboard-computer",
+            "target-vehicle-engineering",
+            "target-realtime-control"
+          ],
+          "app": "cpp",
+          "requires": [
+            "atlas.cs.c_lang"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cppreference",
+              "locator": "C++ 语言参考的值类别、对象生命周期与模板部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cpp-core-guidelines",
+              "locator": "资源管理与 RAII 相关条款"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.da",
+          "title": "数据结构与算法",
+          "track": "foundation",
+          "stable_definition": "线性表 / 树 / 图 / 哈希表的手写实现，排序与查找，分治 / 贪心 / 动态规划 / 回溯，以及复杂度分析。",
+          "engineering_role": "算法思想本身与语言无关，但落到“写出边界正确、复杂度可控的代码”这一步就离不开一门趁手的语言。它的价值是把“想到一个解法”变成能跑、能测的实现——几乎每个真实项目的核心逻辑都是某种数据结构加某种算法。",
+          "pitfall": "从思路到代码的边界处理；复杂度分析和状态设计（尤其动态规划）。",
+          "practice": "手写哈希表、二叉搜索树和优先队列各一个，用同一组 10^3 到 10^7 规模的输入跑出耗时曲线，再逐点对照标准库的 unordered_map / map / priority_queue。",
+          "validation": "benchmark",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：实测曲线的增长阶与理论复杂度一致，与标准库的差距能用内存布局或常数因子解释；空表、单元素、重复键和满载这几个边界用例全部通过。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "最坏延迟要能分析，前提是知道每个数据结构操作的复杂度上界；有界队列、优先级调度和搜索剪枝都是数据结构与算法的直接应用。",
+          "targets": [
+            "target-realtime-software",
+            "target-gnc",
+            "target-sensing-compute"
+          ],
+          "app": "dsa",
+          "requires": [
+            "atlas.cs.cpp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "clrs",
+              "locator": "数据结构、排序与查找、动态规划与贪心相关部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "培养方案中的数据结构与算法课程方向"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.dp",
+          "title": "设计模式",
+          "track": "software",
+          "stable_definition": "创建型 / 结构型 / 行为型三类经典模式的动机、结构、协作方式和适用边界，以及它们试图化解的耦合问题。",
+          "engineering_role": "帮你识别“这段代码为什么难改”，并用经过检验的结构重新组织依赖关系；读框架和大型代码库时，也能一眼认出作者在用哪种套路。",
+          "pitfall": "容易套用过度——为了用模式而增加间接层，反而更难懂。",
+          "practice": "挑一段自己写过、改起来最别扭的代码，用策略或观察者重构一遍，交出重构前后的依赖关系图，并逐条说明新增的每一层间接消掉了哪一条耦合。",
+          "validation": "review",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：重构前后行为不变、原有测试照常全绿；对每一个新增抽象都能回答「去掉它会退回什么问题」，答不上来的当场删掉。",
+          "volatility": "stable",
+          "priority": "optional",
+          "priority_reason": "对长期维护的地面工具和大型软件有帮助，但实时闭环更看重静态结构和可分析性，多一层间接反而增加延迟分析的难度，属于可选。",
+          "targets": [
+            "target-realtime-software",
+            "target-digital-intelligence"
+          ],
+          "app": "cpp",
+          "requires": [
+            "atlas.cs.cpp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gof-design-patterns",
+              "locator": "创建型、结构型与行为型三类模式的结构与适用性讨论"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.engineering_practice",
+          "title": "工程实践与工具链",
+          "track": "software",
+          "stable_definition": "构建系统与交叉编译，Git 与协作流程，单元测试与 TDD，调试器、Sanitizer 与静态分析，持续集成，发布与打包。",
+          "engineering_role": "这是一套与语言、领域都无关的元技能：它决定你能不能可靠地做出、改动、交付一个项目。任何一条学习线做到“写真实代码”的程度，都会立刻受益，所以越早养成越省事。",
+          "pitfall": "工具零散、配置繁琐；难点在于坚持用，而不是知道有。",
+          "practice": "给一个已有小项目补齐工程化：CMake 构建加一次交叉编译、单元测试、Sanitizer 与静态分析、CI 上的多平台矩阵，以及带版本号的打包产物。",
+          "validation": "integration",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：从一份干净克隆出发，一条命令完成配置、构建、测试与打包；CI 在提交后自动跑完同一套流程，任一步失败都能拦住合并。",
+          "volatility": "evolving",
+          "priority": "essential",
+          "priority_reason": "研制过程要求需求、接口、版本、测试和变更全程可复核，交叉编译、单元测试与持续集成是把这条追溯链落到每一次提交上的唯一手段。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering",
+            "target-onboard-computer",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cmake-tutorial",
+              "locator": "构建、测试与安装打包的分步教程"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "pro-git",
+              "locator": "分支、协作流程与历史管理部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "google-sanitizers",
+              "locator": "AddressSanitizer 与 UndefinedBehaviorSanitizer 的用法说明"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.practice",
+          "title": "应用实践",
+          "track": "assurance",
+          "stable_definition": "把语言、数据结构和算法用在一个自成一体的小项目上（如二阶魔方求解器），完整走一遍需求拆解、实现、测试和迭代。",
+          "engineering_role": "检验前面学到的东西能不能拼起来解决一个真问题；建议在每学完一段之后都回来做一个。",
+          "pitfall": "难在收口：控制范围、把一个玩具做到“确实能用”。",
+          "practice": "做一个自成一体的小项目（如二阶魔方求解器）：先写清需求边界和验收条件，再实现、测试、迭代到能稳定给出解，最后把用法和已知限制写进 README。",
+          "validation": "review",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：一个没参与开发的人照 README 就能构建并跑出正确结果；随机初始状态的求解成功率与耗时有实测统计；范围之外的输入给出明确拒绝而不是崩溃。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "把零散能力收口成一个别人能复现的交付物，是从会写代码走到能扛一个分系统的必经一步，但它依赖前面的语言与算法先到位，可以稍后再做。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering"
+          ],
+          "app": "cpp",
+          "requires": [
+            "atlas.cs.cpp",
+            "atlas.cs.da"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-fprime",
+              "locator": "组件接口、构建与单元/集成测试的工程样本"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nuaa-cs",
+              "locator": "培养方案中的综合课程设计与实践环节"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.cs.c_lang",
+          "to": "atlas.cs.cpp",
+          "relation": "requires",
+          "rationale": "C++ 起初就是在 C 上做加法——“C with Classes”这个名字说明了一切，至今仍与 C 高度兼容。C++ 的对象模型、构造与析构、RAII、模板实例化全部建立在 C 的内存布局和编译链接模型之上，报错信息和未定义行为也多半是 C 语义的延伸。理解 C 的指针和手动内存管理之后，RAII、移动语义这些设计的动机会清楚很多。但这是来路，不是门槛：C++ 也可以作为第一门语言直接上手，两者并行学也行。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "cppreference",
+              "locator": "C++ 语言参考中与 C 兼容的内存模型与链接规则"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.cpp",
+          "to": "atlas.cs.da",
+          "relation": "requires",
+          "rationale": "本平台的数据结构课是用 C++ 手写实现每一种结构的：链表和树要用指针和明确的所有权，容器要用模板和 RAII，迭代器要重载运算符，性能对比要贴着内存布局看。算法思想虽然语言无关，但要读写这些实现、对照标准库的 vector / map / priority_queue，得先掌握 C++ 的类、模板和内存管理。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "clrs",
+              "locator": "数据结构实现中对指针、动态分配与摊还分析的处理"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.cpp",
+          "to": "atlas.cs.dp",
+          "relation": "requires",
+          "rationale": "1994 年《设计模式》成书时，示例代码用的是 C++ 和 Smalltalk；GoF 的 23 个模式本质上是“如何用面向对象特性化解耦合”的经验总结。策略、装饰器、观察者、访问者这些都直接依赖虚函数、继承、组合和接口这几样东西。没有一门具备完整面向对象能力的语言垫底，模式就退化成背结构图。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "gof-design-patterns",
+              "locator": "以 C++ 与 Smalltalk 为示例语言的模式实现讨论"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.cpp",
+          "to": "atlas.cs.practice",
+          "relation": "requires",
+          "rationale": "平台当前的实践项目——二阶魔方求解器——是用 C++ 写的：状态编码、搜索、剪枝都用到了类、标准库容器和模板。要读懂并扩展它，先要有 C++ 的基础。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nasa-fprime",
+              "locator": "以 C++ 组件组织一个可构建、可测试系统的工程样本"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.da",
+          "to": "atlas.cs.practice",
+          "relation": "requires",
+          "rationale": "魔方求解的核心是状态空间搜索：BFS 与 IDA*、启发式函数、用哈希表去重，全是数据结构与算法的直接应用。这个项目就是把算法真正“用出来”的地方。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "clrs",
+              "locator": "图搜索、广度优先与散列表相关部分"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "离散数学",
+          "content": "命题与谓词逻辑、集合与关系、图论、组合计数、数学归纳法。",
+          "role": "算法正确性证明、复杂度推导的语言；编译原理、形式化方法的基础。"
+        },
+        {
+          "name": "计算理论与自动机",
+          "content": "正则语言与 DFA/NFA、上下文无关文法、图灵机、可计算性与 P/NP。",
+          "role": "理解正则表达式和词法分析的能力边界；判断一个问题能不能算、好不好算。"
+        },
+        {
+          "name": "算法复杂度分析",
+          "content": "渐进记号、摊还分析、递归式求解、问题下界与 NP 完全性。",
+          "role": "预估程序在大规模数据下的表现，为数据结构和算法选型提供依据。"
+        }
+      ]
+    },
+    {
+      "id": "computer-machine",
+      "title": "机器与系统基础",
+      "view_kind": "academic",
+      "summary": "回答「计算机凭什么能算、一段程序在机器上到底怎么被执行」：从逻辑门、指令集与存储层次，到寄存器、栈帧与调用约定，再到操作系统对硬件的抽象与复用。这张图里没有推荐入门起点——起步节点都在「程序设计与算法」那一张，这里的内容更适合在能写出程序之后回头补，用来给上层每一层抽象校准「省掉了什么、又付出了什么」。",
+      "nodes": [
+        {
+          "id": "atlas.cs.assembly",
+          "title": "汇编语言",
+          "track": "foundation",
+          "stable_definition": "某种指令集（x86-64 或 ARM）的寄存器与寻址方式、指令与标志位、调用约定与栈帧、中断响应，以及对照高级语言看编译产物。",
+          "engineering_role": "这是所有软件的历史原点：早期程序直接用机器码和汇编写成，今天你仍然靠它看懂反汇编、定位崩溃、理解性能和安全问题的最底层原因，也靠它给裸机写启动代码。它给你一把尺子——之后每一层抽象“省掉了什么、又要付出什么”，都能拿它来量。",
+          "pitfall": "细节琐碎、可读性差；调用约定、栈帧布局和寄存器分配容易绕晕。",
+          "practice": "把同一个函数分别用 -O0 和 -O2 编译，读反汇编逐条对照：参数走哪几个寄存器、栈帧怎么建立与回收、优化版把哪些访存消掉了；再手写一小段汇编函数被 C 调用，验证自己遵守了调用约定。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：能在调试器里逐指令走完一次调用，画出进入与退出时的栈布局并与实际内存内容核对；手写汇编函数在开与不开优化时都返回正确结果，且不破坏被调用者保存寄存器。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "最坏执行时间要可分析、崩溃现场要能判读，离不开对寄存器、栈帧和编译产物的直接阅读，裸机启动代码和中断向量表也只能在这一层写；但日常开发不必手写汇编，可以稍后补。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-avionics-bus"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "程序的机器级表示（第 3 章）：寄存器、寻址、栈帧与调用约定"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "godbolt",
+              "locator": "同一段源码在不同优化级别下的编译产物对照"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.computer_systems",
+          "title": "计算机系统基础",
+          "track": "foundation",
+          "stable_definition": "从布尔代数、逻辑门到加法器和 ALU，指令集与体系结构，数的表示、字节序与对齐，寄存器 / 高速缓存 / 主存的存储层次，以及“一段程序在机器上到底怎么被执行”。",
+          "engineering_role": "它回答的是“计算机凭什么能算”这个最根本的问题，是操作系统、汇编、嵌入式共同的地基。历史上体系结构与操作系统一直相互推动：分时需求催生了保护模式，多核催生了新的缓存一致性和调度模型。不打这个底，上层很多设计都会变成“背下来但说不清为什么”的黑盒。",
+          "pitfall": "抽象层多，从概念到实物的对应需要反复搭建。",
+          "practice": "在逻辑门仿真器里搭出加法器和一个最小 ALU，再到 CPU 模拟器上跑一段自己写的指令序列，观察取指、译码、执行逐拍发生了什么；另写一个步长扫描程序，测出本机各级 cache 的容量拐点。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察，需要逻辑门仿真器或 CPU 模拟器（软件即可，不需要实物硬件）：加法器与 ALU 的真值表全覆盖验证通过；步长扫描测出的访存耗时曲线上能指认出各级 cache 的拐点，并与系统报告的容量对得上。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "字节序、对齐、中断响应和存储层次直接决定总线数据怎么解析、最坏延迟从哪里来，这是弹上计算机和数字后端共同的判读前提，绕不过去。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-sensing-compute",
+            "target-avionics-bus"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nand2tetris",
+              "locator": "从与非门到 ALU、CPU 与汇编器的逐级搭建"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "信息的表示与处理、存储器层次结构（第 2、6 章）"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.operating_systems",
+          "title": "操作系统",
+          "track": "software",
+          "stable_definition": "手写内存分配器、用户态协作式 / 抢占式调度器、极简内存文件系统、页面替换与缓存算法。",
+          "engineering_role": "操作系统是对硬件的抽象与复用——把一台机器变成很多个看起来独占的执行环境。它是 Linux 驱动、嵌入式 RTOS 这些方向的概念来源：进程、上下文切换、虚拟内存、并发原语最早都是在这里定义清楚的。",
+          "pitfall": "并发叠加底层，环境搭建成本高；正确性难以验证。",
+          "practice": "实现一个用户态协作式调度器和一个抢占式版本，配上手写内存分配器和内存文件系统；再对同一组访问序列比较 FIFO、LRU、Clock 三种页面替换的命中率。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察，需要内核模拟器或 QEMU 这类环境（本机虚拟机即可）：调度器在给定任务集下不饿死任何任务、上下文切换次数可统计；文件系统通过创建、读写、删除和满盘用例；三种替换策略的命中率差异能用访问局部性解释。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "进程调度、虚拟内存和并发原语是 RTOS 优先级、有界内存和上下文切换开销的概念来源，但岗位上直接面对的是 RTOS 而不是通用内核，可以在实时软件之后补。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.cs.computer_systems"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ostep",
+              "locator": "虚拟化、并发与持久化三部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "qemu-docs",
+              "locator": "用虚拟机运行与调试自制内核或系统代码"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.cs.computer_systems",
+          "to": "atlas.cs.operating_systems",
+          "relation": "requires",
+          "rationale": "操作系统的每一项机制都是在管理某种硬件资源：进程调度对应CPU 与上下文，虚拟内存对应 MMU 和多级页表，文件缓存与并发对应存储层次和缓存一致性。历史上二者一直共同演进——分时系统催生了 CPU 的保护模式，多核催生了新的调度与内存一致性模型。跳过体系结构直接学 OS，大量机制会变成“知道这么做但答不上为什么”的黑盒。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "csapp",
+              "locator": "异常控制流与虚拟内存（第 8、9 章）"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "体系结构进阶",
+          "content": "流水线与冒险、乱序执行、多级缓存与一致性协议、分支预测、SIMD。",
+          "role": "解释性能优化为什么有效，指导写出对硬件友好的数据布局和循环。"
+        }
+      ]
+    },
+    {
+      "id": "computer-network-intelligence",
+      "title": "并发、网络与智能",
+      "view_kind": "academic",
+      "summary": "把程序接到操作系统、网络和数据上：系统调用与信号、并发与内存序、协议分层与抓包、套接字编程，以及用数据训练模型。这张图同样没有推荐入门起点，它的来路分散在前两张图里，建议在能独立写出并调通一个程序之后再进来。",
+      "nodes": [
+        {
+          "id": "atlas.cs.linux_sysprog",
+          "title": "Linux 系统编程",
+          "track": "software",
+          "stable_definition": "进程与线程、fork/exec，管道与共享内存等 IPC，文件与 I/O，信号，套接字，以及系统调用的错误处理。",
+          "engineering_role": "写出真正跑在操作系统之上、直接使用内核服务的程序。它是并发、网络、驱动这几条线的共同基础，也是亲手体会“用户态与内核态边界”的地方。",
+          "pitfall": "错误处理和资源清理繁琐，并发场景下更甚；调试要靠 strace 这类工具。",
+          "practice": "写一个作业执行器：用 fork/exec 启动子进程、用管道回收输出、用 SIGCHLD 收尸、用 SIGTERM 优雅退出，所有系统调用都检查返回值并处理 EINTR；最后用 strace 核对实际发生的调用序列。",
+          "validation": "integration",
+          "validation_note": "在 Linux 环境（本机或虚拟机）上编程运行观察：连续启动上千个短任务后没有僵尸进程，用 /proc/self/fd 核对无文件描述符泄漏；被信号打断的读写能正确重试；strace 输出的调用序列与设计一致。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "地面测发控、试验台架和数据处理程序都跑在 Linux 上，进程、文件描述符、信号和套接字是它们的基本构件；弹上侧不走这套接口，所以不是第一优先。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tlpi",
+              "locator": "进程、信号、文件 I/O 与进程间通信相关章节"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "man7-pages",
+              "locator": "系统调用手册第 2 节与库函数第 3 节"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.concurrency",
+          "title": "并发与并行",
+          "track": "software",
+          "stable_definition": "锁与条件变量、无锁数据结构、线程池、异步与协程、内存序，并用 ThreadSanitizer 复现数据竞争。",
+          "engineering_role": "写出正确的多线程代码，并理解高并发服务和 RTOS 任务同步背后共同的难点：多个执行流共享状态时如何不出错。",
+          "pitfall": "非确定性的 bug 难复现、难调试；内存序是深水区。",
+          "practice": "实现一个固定线程数的线程池加有界任务队列：先用互斥量与条件变量写一版，再写一个无锁的单生产者单消费者环形缓冲；然后故意去掉一处同步，用 ThreadSanitizer 把这条数据竞争复现出来。",
+          "validation": "benchmark",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：正确版本在 ThreadSanitizer 下长跑无报告，被破坏的版本能稳定报出竞争位置；对比两种实现的吞吐与延迟分位数，并说明 relaxed 与 acquire-release 的内存序选择对结果的影响。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "多个执行流共享状态时如何不出错，正是 RTOS 任务同步、有界队列交接和优先级反转对策的核心问题，控制周期内的确定性直接取决于它。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-realtime-control",
+            "target-robot-systems"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.cs.linux_sysprog"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cppreference",
+              "locator": "线程支持库与原子操作、内存序部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "google-sanitizers",
+              "locator": "ThreadSanitizer 的数据竞争检测说明"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.computer_networks",
+          "title": "计算机网络",
+          "track": "software",
+          "stable_definition": "OSI / TCP-IP 分层，以太网与交换，IP 与路由、子网与 NAT，TCP 的连接管理与拥塞控制、UDP，DNS / DHCP / HTTP / TLS，用 Wireshark 抓包对照 RFC，动手实现 ARP / IP / TCP 的最小子集和常见客户端 / 服务端。",
+          "engineering_role": "网络是现代软件的默认运行环境。理解每一层的职责，你才能判断一次延迟或丢包出在应用、传输还是链路，才能设计和排查分布式系统的通信。它实践性很强：抓包分析、手写精简协议栈、配路由和防火墙、用 tc / netem 模拟弱网，每一项都能上手验证——它不是只能背的理论课。",
+          "pitfall": "协议细节多、状态机复杂（尤其 TCP）；抓包时要能把二进制字节和协议字段一一对上。",
+          "practice": "用 Wireshark 抓一次完整的 HTTPS 访问，把 DNS 查询、三次握手和 TLS 握手的每个字段与 RFC 对上；再手写 ARP 与 IP 的最小实现，并用 tc/netem 注入丢包和延迟，观察 TCP 拥塞窗口怎么变化。",
+          "validation": "measurement",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备（抓包与弱网都用本机工具）：抓包里每个字节都能指认属于哪个协议字段；注入 1% 丢包和 100ms 延迟后，实测吞吐的变化方向与拥塞控制的预期一致，并能画出重传与窗口变化。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "遥测遥控、地面站与试验台之间的数据链要能判断一次延迟或丢包出在哪一层，抓包对照协议是排查这类问题的基本功；弹上总线另有一套时序约束，不由它覆盖。",
+          "targets": [
+            "target-vehicle-engineering",
+            "target-realtime-software",
+            "target-digital-intelligence"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.cs.linux_sysprog"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "kurose-ross",
+              "locator": "自顶向下的应用层、传输层、网络层与链路层组织"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "rfc9293-tcp",
+              "locator": "TCP 的连接管理与状态机定义"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "wireshark-user-guide",
+              "locator": "抓包、过滤与协议分层解析"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.network_programming",
+          "title": "网络编程",
+          "track": "software",
+          "stable_definition": "TCP/UDP 套接字，自己实现基于行或二进制的应用层协议，I/O 多路复用（epoll/kqueue），超时与断线重连。",
+          "engineering_role": "做联网程序、服务端、设备之间的通信；把网络协议落成能跑、能抓包对照的代码。",
+          "pitfall": "边界情况多：粘包、半连接、部分写、大量并发连接的管理。",
+          "practice": "写一对客户端与服务端：自定义带长度前缀的二进制协议，服务端用 epoll 或 kqueue 扛住上千并发连接，处理粘包、部分写、半关闭、超时与断线重连；最后抓包核对线上字节与协议定义一致。",
+          "validation": "benchmark",
+          "validation_note": "在开发机上编程运行观察即可，不需要额外设备：1000 条并发连接下不丢消息、不错帧，服务端内存与描述符数量保持稳定；人为断开并重启服务端后客户端能自动恢复；报告不同并发连接数下的延迟分位数。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "把遥测接收、指令下发和台架上位机做成能扛住断线、超时和粘包的长期运行程序，靠的就是套接字与 I/O 多路复用这套手艺。",
+          "targets": [
+            "target-realtime-software",
+            "target-vehicle-engineering",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.cs.computer_networks",
+            "atlas.cs.linux_sysprog"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "beej-network",
+              "locator": "套接字、地址结构、阻塞与多路复用的编程指引"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "man7-pages",
+              "locator": "socket(2)、epoll(7) 等手册页"
+            }
+          ]
+        },
+        {
+          "id": "atlas.cs.model_dev",
+          "title": "模型开发",
+          "track": "compute",
+          "stable_definition": "神经网络与反向传播，训练 / 验证 / 推理的完整流程，主流框架，数据管道与评估指标，模型导出与部署。",
+          "engineering_role": "让机器从数据里学规律，做预测、分类、生成这类难以用规则写死的任务。核心是理解“数据、算力、模型结构”三者如何共同决定最终效果。",
+          "pitfall": "训练不稳定、调参经验性强；数据质量往往才是真正的上限。",
+          "practice": "在一个公开数据集上从零走完一轮：划分训练、验证与测试集，写训练循环和评估指标，做一次超参对比实验，最后导出模型并用导出格式复现同样的推理结果。",
+          "validation": "benchmark",
+          "validation_note": "在开发机上编程运行观察，需要 Python 环境，GPU 可选（在 CPU 上缩小规模同样跑得完）：固定随机种子后训练结果可复现；测试集与验证集的指标差距能解释；导出前后的推理输出在容差内一致，并报告单样本推理耗时。",
+          "volatility": "evolving",
+          "priority": "optional",
+          "priority_reason": "只服务地面侧的数据分析、文档检索与受控问答，飞行控制闭环明确不引入模型推理，因此对多数研制方向是加分项而非必需。",
+          "targets": [
+            "target-digital-intelligence",
+            "target-sensing-compute"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "pytorch-docs",
+              "locator": "张量、自动求导、训练循环与模型导出部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "huggingface-course",
+              "locator": "数据集处理、微调与评估流程"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.cs.linux_sysprog",
+          "to": "atlas.cs.concurrency",
+          "relation": "requires",
+          "rationale": "实用并发的原语——线程、互斥量、条件变量、原子操作、内存屏障——都是操作系统和硬件提供、经由系统编程接口（pthread、futex 等）暴露出来的。数据竞争、死锁、惊群这些问题也只有在真正被内核调度的线程上才复现得出来。先能在系统层面创建线程、管理它们的生命周期，再谈并发模型和无锁结构才不悬空。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "tlpi",
+              "locator": "线程、互斥量与条件变量相关章节"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.linux_sysprog",
+          "to": "atlas.cs.computer_networks",
+          "relation": "requires",
+          "rationale": "抓包、构造原始数据包、实现协议栈都要在系统层面收发字节：raw socket / AF_PACKET、libpcap、和内核的网络缓冲区打交道，都是系统编程接口。先能管好文件描述符和缓冲区，才搭得起自己的协议栈或抓包工具。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "man7-pages",
+              "locator": "packet(7)、raw(7) 等原始套接字手册页"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.computer_networks",
+          "to": "atlas.cs.network_programming",
+          "relation": "requires",
+          "rationale": "写套接字程序前要先懂 TCP 和 UDP 的区别、端口和地址、连接的建立与关闭在网络上到底发生了什么。理解了协议的实际行为，粘包、Nagle 算法、TIME_WAIT 这些编程时绕不开的现象才不是玄学。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "rfc9293-tcp",
+              "locator": "连接建立、关闭与 TIME-WAIT 状态的定义"
+            }
+          ]
+        },
+        {
+          "from": "atlas.cs.linux_sysprog",
+          "to": "atlas.cs.network_programming",
+          "relation": "requires",
+          "rationale": "套接字 API 本身就是一组系统调用，和文件描述符、`select`/`poll`/`epoll` 事件模型、非阻塞 I/O 深度绑定。网络程序的难点——粘包与拆包、半关闭、部分写、超时重连、并发连接管理——都是系统编程问题的延伸。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "beej-network",
+              "locator": "阻塞、select/poll 与部分发送的处理方式"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "线性代数与概率统计",
+          "content": "矩阵运算与分解、向量空间、概率分布、期望与方差、极大似然。",
+          "role": "机器学习、信号处理、图形学、控制理论共同的数学底座。"
+        }
+      ]
+    },
+    {
       "id": "electronic-practice",
       "title": "电子信息技术 · 实践主干",
       "view_kind": "academic",
@@ -238,7 +1003,16 @@
               "source_id": "buaa-automation",
               "locator": "电子技术、仪器仪表与工程实践课程方向"
             }
-          ]
+          ],
+          "pitfall": "仪器档位、接地和探头补偿用错时，读数会系统性地骗人；不会把现象翻译成电路假设就只能换零件碰运气。",
+          "priority": "essential",
+          "priority_reason": "电气联调与测发控的每一步都依赖可重复的测量与故障定位，没有它后续外设与总线联调没有判据。",
+          "targets": [
+            "target-realtime-control",
+            "target-avionics-bus",
+            "target-vehicle-engineering"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.ei.mcu-interfaces",
@@ -259,7 +1033,16 @@
               "source_id": "cnsa-satellite-platform",
               "locator": "卫星平台的测控、数据管理与姿态轨道控制功能"
             }
-          ]
+          ],
+          "pitfall": "外设例程能跑却说不清时钟树、中断优先级和 DMA 请求从哪来，一换芯片或一改速率就全塌。",
+          "priority": "essential",
+          "priority_reason": "弹上电子与实时软件的接口面就是 MCU 外设与总线；寄存器级可控是截止期与时序验收的前提。",
+          "targets": [
+            "target-avionics-bus",
+            "target-onboard-computer",
+            "target-realtime-software"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.ei.power-signal",
@@ -280,7 +1063,16 @@
               "source_id": "cast-platform",
               "locator": "星上综合电子、高效供电与数据传输能力"
             }
-          ]
+          ],
+          "pitfall": "原理图能通电但电源完整性、回流路径和串扰没设计进去，板子一上高速或大电流就间歇失效。",
+          "priority": "important",
+          "priority_reason": "可复现的硬件交付依赖电源分区与信号完整性；它不替代功能联调，却决定联调结果能不能在下一块板上重现。",
+          "targets": [
+            "target-avionics-bus",
+            "target-realtime-control",
+            "target-vehicle-engineering"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.ei.sensor-chain",
@@ -301,7 +1093,16 @@
               "source_id": "cmse-ttc-network",
               "locator": "测量、遥测、时间统一与计算处理系统"
             }
-          ]
+          ],
+          "pitfall": "采样率、抗混叠和接地没对齐时，算法再复杂也只是在拟合噪声；标定缺少可追溯基准就会越调越偏。",
+          "priority": "essential",
+          "priority_reason": "探测、制导与健康管理都建立在采集链给出可信数字之上；前端没做好，后端验收没有意义。",
+          "targets": [
+            "target-sensing-compute",
+            "target-gnc",
+            "target-realtime-control"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.ei.dsp-fpga",
@@ -323,7 +1124,15 @@
               "source_id": "cast-platform",
               "locator": "星上综合电子与数据传输能力"
             }
-          ]
+          ],
+          "pitfall": "只在 PC 上离线算通，却没在板级预算里核对延迟、定点溢出和跨时钟域，一上实时链路就抖或溢出。",
+          "priority": "important",
+          "priority_reason": "硬件高性能与探测信号处理需要可在板级跑通的数据通路；它把采集链接到可验收的特征与吞吐。",
+          "targets": [
+            "target-sensing-compute",
+            "target-avionics-bus"
+          ],
+          "app": ""
         },
         {
           "id": "atlas.ei.board-system",
@@ -344,7 +1153,16 @@
               "source_id": "nasa-fprime",
               "locator": "接口、状态、日志与单元/集成测试样本"
             }
-          ]
+          ],
+          "pitfall": "子系统各自能过，合机后电源时序、复位链和接口状态机对不齐；问题出在边界，却被误判成单板故障。",
+          "priority": "important",
+          "priority_reason": "软硬件联调与环境验证是把分系统收成可交付状态的最后一环，验收看的是合机后的最坏行为而不是单板均值。",
+          "targets": [
+            "target-vehicle-engineering",
+            "target-realtime-control",
+            "target-avionics-bus"
+          ],
+          "app": ""
         }
       ],
       "edges": [
@@ -425,6 +1243,627 @@
               "locator": "组件接口与集成测试样本"
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "electronic-circuit",
+      "title": "电路、器件与制板",
+      "view_kind": "academic",
+      "summary": "从能测、能搭、能把原理图变成板子开始：电路基础、传感器与信号调理、FPGA 与硬件描述语言、EDA 与 PCB。电路基础是推荐入门起点，不依赖编程知识，从这里开始都合理。",
+      "nodes": [
+        {
+          "id": "atlas.ei.electronics_basics",
+          "title": "电路基础",
+          "track": "electronics",
+          "stable_definition": "数字电路（门、触发器、时序逻辑、译码）与模拟电路（分压、RC、运放、三极管开关），面包板搭建，万用表和示波器的使用。",
+          "engineering_role": "所有硬件方向的地基：单片机的每一个引脚都是一段真实电路，点灯要算限流电阻、接按键要处理上下拉和抖动、接传感器要判断电平和是否需要分压。它也是独立的一门——不依赖任何编程知识，但没有它，后面的单片机和 PCB 只能照着接线图抄，一换器件就卡住。",
+          "pitfall": "模拟部分直觉难建立；仪器使用和排错要靠动手积累。",
+          "practice": "在面包板上搭分压、RC 低通和同相放大，用万用表核对静态工作点，用示波器量上升沿与截止频率。",
+          "validation": "measurement",
+          "validation_note": "在面包板 / 万用表 / 示波器上完成：测量值与计算值偏差可解释，并能指出一处噪声或接地问题的来源。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "测发控、电气联调和传感前端的每一步都要能用万用表与示波器把电平、时序和噪声判清楚，否则后续联调没有判据。",
+          "targets": [
+            "target-realtime-control",
+            "target-avionics-bus",
+            "target-sensing-compute"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "art-of-electronics",
+              "locator": "分压、RC、运放与数字逻辑入门部分"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "art-of-electronics",
+              "locator": "面包板搭建与仪器使用练习"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.sensors",
+          "title": "传感器与信号调理",
+          "track": "electronics",
+          "stable_definition": "常见传感器（温度、光、加速度、电流、应变等）的原理与接口，放大与偏置、抗混叠滤波、基准与 ADC，噪声来源与抑制，标定与线性化。",
+          "engineering_role": "把真实世界的物理量变成单片机能读、读得准的数字。几乎每个嵌入式项目的第一步都是“先把信号采干净”——采集链路没做好，后面再多算法也是放大噪声。",
+          "pitfall": "模拟前端对噪声、接地、布线敏感；标定要耐心，要有参照标准。",
+          "practice": "选一路温度或加速度传感器，搭放大与抗混叠滤波，经 ADC 采样后做线性标定，对照已知基准报误差。",
+          "validation": "measurement",
+          "validation_note": "在传感器 + 万用表 / 示波器条件下：标定曲线的残差可报告，并指出一处噪声来源与抑制措施。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "探测与健康管理的第一步是把物理量采干净；前端噪声、抗混叠和标定做不好，后面算法只是放大误差。",
+          "targets": [
+            "target-sensing-compute",
+            "target-realtime-control",
+            "target-gnc"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.electronics_basics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "art-of-electronics",
+              "locator": "传感器接口、放大与滤波"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "analog-devices-sensor",
+              "locator": "信号调理与 ADC 前端应用笔记"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.fpga",
+          "title": "FPGA 与硬件描述语言",
+          "track": "compute",
+          "stable_definition": "Verilog / VHDL，组合逻辑与时序逻辑，有限状态机，阻塞 / 非阻塞赋值，仿真（testbench）、综合、布局布线与时序约束，上板验证。",
+          "engineering_role": "和单片机是数字硬件的两条并行路线：单片机是一颗 CPU 顺序执行指令，FPGA 是把逻辑直接“焊”成并行电路，没有取指周期。用来做高速采集、并行信号处理、自定义接口、硬件加速，以及在一片芯片上搭出一个完整数字系统。数字电路学的门和触发器，在这里第一次变成可以随手改写的东西。",
+          "pitfall": "思维方式要从“顺序执行”切换到“所有逻辑同时发生”；时序收敛和跨时钟域是长期难点。",
+          "practice": "用 Verilog 写一个带 testbench 的 UART 收发或简单 FIR，仿真通过后上板，用逻辑分析仪对照波形。",
+          "validation": "integration",
+          "validation_note": "在 FPGA 开发板 + 仿真器上：仿真与上板波形一致，时序报告无违例，并给出一处跨时钟域处理依据。",
+          "volatility": "evolving",
+          "priority": "important",
+          "priority_reason": "高速采集与自定义接口需要把逻辑焊成并行通路；时序收敛与跨时钟域是硬件高性能的关键取舍，但不是每条研制线的入门门槛。",
+          "targets": [
+            "target-sensing-compute",
+            "target-avionics-bus"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.electronics_basics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ieee-1364-verilog",
+              "locator": "Verilog HDL 组合 / 时序与非阻塞赋值"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "xilinx-ug901",
+              "locator": "综合与时序约束入门"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-fpga",
+              "locator": "岗位对 FPGA / HDL 能力的需求样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.pcb_design",
+          "title": "EDA · 电路仿真与 PCB 设计",
+          "track": "electronics",
+          "stable_definition": "用 EDA 工具（KiCad、立创 EDA、Altium 等）录入原理图，SPICE 仿真验证关键电路，元件选型与封装，PCB 布局布线，电源与地平面、DRC 与信号完整性检查，导出 Gerber 打样，SMT 或手工焊接与上电调试。",
+          "engineering_role": "把电路从纸面和面包板变成可靠、可批量复制的实物——做自己的开发板、模块和产品的最后一步。EDA 是这一整套从设计到制造的软件流水线。",
+          "pitfall": "从“能连通”到“稳定可靠”：信号完整性、EMC、可制造性，每一次打样都有成本和周期。",
+          "practice": "围绕一颗已用熟的 MCU 画原理图与双层 PCB：电源分区、去耦、晶振布局完整，跑 DRC 后导出 Gerber。",
+          "validation": "review",
+          "validation_note": "在 EDA 软件 + 打样 + 焊接条件下：DRC 无未解释违例，上电无短路，关键网络阻抗与地平面分区说得清。",
+          "volatility": "evolving",
+          "priority": "important",
+          "priority_reason": "把原理图变成可打样、可焊接、可过电源完整性检查的板子，是电气与弹上电子从台架走向可复现硬件的必要一步。",
+          "targets": [
+            "target-avionics-bus",
+            "target-realtime-control",
+            "target-vehicle-engineering"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.electronics_basics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "kicad-getting-started",
+              "locator": "原理图到 PCB 与 Gerber 导出"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ipc-2221",
+              "locator": "PCB 设计通用标准：间距、电源与地"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "emc-ott",
+              "locator": "信号完整性与 EMC 工程约束"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.ei.electronics_basics",
+          "to": "atlas.ei.sensors",
+          "relation": "requires",
+          "rationale": "信号调理就是模拟电路的直接应用：用运放搭同相 / 差分放大，用 RC 或有源滤波器做抗混叠，靠分压和基准把信号落进 ADC 量程。运放、滤波、阻抗这些概念不清楚，采回来的数据就是一堆噪声。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "art-of-electronics",
+              "locator": "传感器接口、放大与滤波"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.electronics_basics",
+          "to": "atlas.ei.fpga",
+          "relation": "requires",
+          "rationale": "FPGA 就是把数字电路里的门、触发器、译码器、计数器做成可编程的：写 HDL 本质上是在描述一张逻辑电路图，综合工具再把它映射到芯片里的查找表和寄存器上。不先理解组合逻辑、时序逻辑、建立 / 保持时间、竞争冒险，写出来的代码仿真能过、上板就出问题。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ieee-1364-verilog",
+              "locator": "Verilog HDL 组合 / 时序与非阻塞赋值"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.electronics_basics",
+          "to": "atlas.ei.pcb_design",
+          "relation": "requires",
+          "rationale": "EDA 和 PCB 设计是电路知识的工程化落地：SPICE 仿真要看懂结果，电源完整性、地平面、去耦、走线阻抗、EMC，每一条都是模拟电路和信号知识的实际约束。原理图上画错一个上下拉，板子回来就是废的。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "kicad-getting-started",
+              "locator": "原理图到 PCB 与 Gerber 导出"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "模拟电路进阶",
+          "content": "运放的非理想特性、噪声与失调、有源滤波器综合、基准与带隙、电源完整性。",
+          "role": "把信号调理、传感器前端、精密测量从“能用”做到“准”。"
+        },
+        {
+          "name": "电磁兼容与信号完整性",
+          "content": "传输线与反射、串扰、地弹、共模与差模干扰、屏蔽与滤波、EMC 测试项目。",
+          "role": "解释高速 PCB 为什么要控阻抗、加端接、分割地平面，以及产品过不了 EMC 认证时从哪里下手。"
+        }
+      ]
+    },
+    {
+      "id": "electronic-mcu",
+      "title": "单片机与外设接口",
+      "view_kind": "academic",
+      "summary": "让代码变成看得见的物理动作，并建立查手册、看时序、按位配置寄存器的习惯：51 单片机、STM32、通信协议与总线、FreeRTOS。这张图没有推荐入门起点——电路基础在前一张，C 语言在计算机侧的程序设计图里。",
+      "nodes": [
+        {
+          "id": "atlas.ei.mcu_8051",
+          "title": "51 单片机",
+          "track": "electronics",
+          "stable_definition": "最小系统与时钟，GPIO，定时器 / 计数器，中断系统，串口（UART），用 C51 直接读写特殊功能寄存器。",
+          "engineering_role": "嵌入式的入门台阶：第一次让代码变成看得见的物理动作，并建立“查数据手册、看时序图、按位配置寄存器”的习惯。8051 内核 1980 年由 Intel 推出，资源少、外设简单，正因为简单，特别适合把嵌入式的基本套路一次看清楚。",
+          "pitfall": "从纯软件转到要关心时序、电平、上下拉；工具链和烧录环境也要折腾。",
+          "practice": "在 8051 开发板或 Proteus 上完成 GPIO 点灯、定时器中断闪烁和 UART 回显，全部直接读写 SFR。",
+          "validation": "integration",
+          "validation_note": "在开发板 / Proteus 仿真上：三种外设行为与手册描述一致，并能指出对应的 SFR 位域。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "嵌入式的入门台阶：先把「外设 = 寄存器 + 中断」和查手册、看时序图的习惯建立起来，后续更复杂的 MCU 才有套路可循。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-avionics-bus"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mcs51-manual",
+              "locator": "MCS-51 内核、SFR 与中断系统"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "keil-c51",
+              "locator": "C51 对特殊功能寄存器的访问约定"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.stm32",
+          "title": "STM32",
+          "track": "electronics",
+          "stable_definition": "ARM Cortex-M 内核与异常模型，时钟树，GPIO / 定时器 / DMA / ADC 等外设，寄存器操作与 HAL 库的取舍，SWD 调试。",
+          "engineering_role": "当前最主流的 32 位单片机，用来做电机控制、数据采集、带无线或有线通信的产品级固件。是嵌入式从“会点灯”走向“做产品”的分水岭。",
+          "pitfall": "外设多、时钟树配置繁杂；要在 HAL 的便利和寄存器的可控之间不断权衡。",
+          "practice": "在 STM32 开发板上用寄存器或 HAL 跑通 GPIO、定时器 PWM、ADC+DMA 采样，SWD 断点定位一次外设配置错误。",
+          "validation": "integration",
+          "validation_note": "在开发板 + 调试器上：PWM 占空比与 ADC 采样率可测，DMA 连续采集无丢样，时钟树配置说得清。",
+          "volatility": "evolving",
+          "priority": "essential",
+          "priority_reason": "当前主流的 32 位 MCU 平台：时钟树、DMA、ADC 与高级定时器是弹上计算、测发控接口和实时闭环的共同硬件底座。",
+          "targets": [
+            "target-onboard-computer",
+            "target-realtime-software",
+            "target-avionics-bus",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.mcu_8051"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "Cortex-M 内核、时钟树与常用外设"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-core",
+              "locator": "CMSIS 与启动文件约定"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.protocols_bus",
+          "title": "通信协议与总线",
+          "track": "electronics",
+          "stable_definition": "UART / SPI / I2C / 1-Wire / CAN / Modbus 的电气特性、时序、寻址与总线仲裁，用逻辑分析仪抓波形对照协议手册。",
+          "engineering_role": "让多个芯片和模块协同工作——调传感器、显示屏、电机驱动、多机通信都靠它。",
+          "pitfall": "时钟极性 / 相位、地址、应答位这些细节；总线冲突和信号完整性问题难定位。",
+          "practice": "在 STM32 上分别跑通 SPI 与 I2C 外设通信，用逻辑分析仪抓波形，对照手册标出时钟极性、地址和应答位。",
+          "validation": "measurement",
+          "validation_note": "在开发板 + 逻辑分析仪上：波形字段与手册一致，故意制造一次应答失败并能定位原因。",
+          "volatility": "stable",
+          "priority": "essential",
+          "priority_reason": "弹上电子与测发控联调的核心是总线时序：极性、地址、应答与仲裁必须能用逻辑分析仪对照协议手册判读。",
+          "targets": [
+            "target-avionics-bus",
+            "target-realtime-control",
+            "target-onboard-computer"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.stm32"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nxp-i2c-um10204",
+              "locator": "I2C 总线时序、寻址与应答"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "iso-11898-1",
+              "locator": "CAN 数据链路层与仲裁"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "casic-avionics",
+              "locator": "岗位对总线与接口联调能力的需求样本"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.freertos",
+          "title": "FreeRTOS",
+          "track": "control",
+          "stable_definition": "任务与调度策略，队列 / 信号量 / 互斥量 / 事件组，临界区与中断的配合，堆内存管理，优先级反转及其对策。",
+          "engineering_role": "在单片机上跑多任务：把数据采集、控制、通信拆成互不阻塞的任务，用调度器统一安排，代码结构比一个大 while 循环清晰得多。",
+          "pitfall": "任务优先级和共享资源的设计；抢占引入的时序问题难复现。",
+          "practice": "在 STM32 或 QEMU 上移植 FreeRTOS：拆成采样、控制、通信三个任务，用队列传数，制造并消除一次优先级反转。",
+          "validation": "measurement",
+          "validation_note": "在开发板 / QEMU 上：给出控制任务的最坏响应时间，并说明优先级与临界区如何保证截止期。",
+          "volatility": "evolving",
+          "priority": "essential",
+          "priority_reason": "控制周期内的任务调度、优先级与共享资源是实时软件的核心；最坏抖动要在真实调度器上测，不能只在裸机循环里估。",
+          "targets": [
+            "target-realtime-software",
+            "target-onboard-computer",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.stm32"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "freertos-book",
+              "locator": "任务、队列、互斥与优先级反转"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "freertos-kernel",
+              "locator": "内核调度与移植要点"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.ei.mcu_8051",
+          "to": "atlas.ei.stm32",
+          "relation": "requires",
+          "rationale": "先在 8051 这种资源少、外设简单的芯片上，把“一个外设 = 一组寄存器 + 一个中断”的心智模型和查手册、看时序图的习惯建立起来。STM32 是同一套思路的放大版：外设更多、时钟树更复杂、还多了 DMA 和总线矩阵，但底层套路一致。跳过入门芯片直接上 STM32，很容易被 HAL 和几百页参考手册淹没，只会照抄例程。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Cortex-M 内核、时钟树与常用外设"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.stm32",
+          "to": "atlas.ei.protocols_bus",
+          "relation": "requires",
+          "rationale": "SPI、I2C、CAN 这些总线要在带完整硬件外设的 MCU 上才练得起来：STM32 有专门的外设控制器、配套的中断和 DMA 支持，配合逻辑分析仪抓时序，才能真正理解时钟极性、地址仲裁、应答位这些细节。只用 8051 软件模拟，够玩最基础的 UART，练不到总线的精髓。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nxp-i2c-um10204",
+              "locator": "I2C 总线时序、寻址与应答"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.stm32",
+          "to": "atlas.ei.freertos",
+          "relation": "requires",
+          "rationale": "RTOS 不是凭空运行的，它要移植到一个具体的 MCU 上：任务切换依赖该架构的上下文保存方式，SysTick 提供时基，中断优先级要和内核配合。STM32 加 Cortex-M 是 FreeRTOS 最主流的落地平台。先把裸机 STM32 跑通，再引入调度器，才看得清 RTOS 到底解决了什么、又带来了多少开销。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "freertos-book",
+              "locator": "任务、队列、互斥与优先级反转"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "通信原理",
+          "content": "调制与解调（ASK/FSK/PSK/QAM）、信道容量、信道编码与纠错、复用与多址、扩频。",
+          "role": "理解 UART/CAN 之上的无线链路（蓝牙、WiFi、LoRa）和高速有线接口为什么这样设计，排查误码和链路预算问题。"
+        }
+      ]
+    },
+    {
+      "id": "electronic-embedded",
+      "title": "嵌入式、信号与控制",
+      "view_kind": "academic",
+      "summary": "在 MCU 之上做信号处理、机电闭环和带 MMU 的系统：数字信号处理、电机控制、嵌入式 Linux、Linux 驱动、端侧 AI 部署。这张图没有推荐入门起点，它的来路分散在前两张图和计算机侧。",
+      "nodes": [
+        {
+          "id": "atlas.ei.dsp",
+          "title": "数字信号处理",
+          "track": "compute",
+          "stable_definition": "采样与量化、卷积、FIR / IIR 滤波器设计与实现、FFT 与频谱分析、加窗、重采样，以及定点与实时实现。",
+          "engineering_role": "把采集回来的信号变得有用：滤掉噪声和工频干扰、提取频率特征、做包络和相位检测。是音频、振动分析、通信、雷达、电力监测这些方向的共同工具。既可以在 MCU 上用 CMSIS-DSP 实时跑，也可以用 FPGA 做成硬件流水线。",
+          "pitfall": "时域和频域来回切换需要建立直觉；定点实现要处理溢出和精度。信号与系统的变换数学作为背景，见下方理论科目。",
+          "practice": "在带 FPU/DSP 指令的 MCU 上用 CMSIS-DSP 实现 FIR 或 FFT，对比浮点与定点的误差与耗时。",
+          "validation": "benchmark",
+          "validation_note": "在开发板（带 FPU/DSP 指令）上：给出滤波前后频谱对比和单次处理耗时，误差在约定门限内。",
+          "volatility": "stable",
+          "priority": "important",
+          "priority_reason": "探测信号与健康管理要把采集数据变成可用特征：滤波、FFT 与定点实现直接决定信噪比和实时链路能否跑得动。",
+          "targets": [
+            "target-sensing-compute",
+            "target-gnc",
+            "target-digital-intelligence"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "oppenheim-dtsp",
+              "locator": "采样、FIR/IIR 与 FFT 基本方法"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-dsp",
+              "locator": "CMSIS-DSP 滤波与变换接口"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.motor_control",
+          "title": "电机控制",
+          "track": "control",
+          "stable_definition": "有刷 / 无刷直流电机与步进电机的驱动，PWM 与死区，H 桥与三相桥，电流 / 位置 / 速度反馈，梯形换相到 FOC （矢量控制），以及 PID 闭环整定。",
+          "engineering_role": "让电机按你要的转速、位置、力矩运转——机器人、云台、电动工具、平衡车、无人机的动力核心。是模拟电路、功率器件、传感器、实时控制和 DSP 数学的综合落地。",
+          "pitfall": "强电与弱电混在一起，调试有烧管子的风险；FOC 的坐标变换和电流环整定门槛较高。控制理论与 PID 作为背景，见下方。",
+          "practice": "用 STM32 高级定时器输出带死区的互补 PWM，接 H 桥驱动有刷或步进电机，整定一节速度或位置 PID。",
+          "validation": "measurement",
+          "validation_note": "在电机 + 驱动板 + 电源条件下：转速 / 位置跟踪误差可测，并能说明死区与电流采样如何影响环路。",
+          "volatility": "evolving",
+          "priority": "optional",
+          "priority_reason": "PWM、电流环与 FOC 是机电闭环的综合落地，主要服务机器人与机电执行方向；研制主干里更常见的是通用实时控制，而非电机专论。",
+          "targets": [
+            "target-robot-systems",
+            "target-realtime-control"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.dsp"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-foc-sprabq2",
+              "locator": "FOC / 矢量控制应用基础"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "高级定时器互补 PWM 与死区"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.embedded_linux",
+          "title": "嵌入式 Linux",
+          "track": "software",
+          "stable_definition": "交叉编译工具链，Buildroot / Yocto 构建根文件系统，U-Boot 与内核启动流程，设备树，文件系统与存储，systemd 与服务，OTA 升级。",
+          "engineering_role": "当算力和功能需求超过单片机——要跑网络协议栈、图形界面、数据库、Python——就上带 MMU 的处理器和 Linux。做网关、工控屏、智能音箱、边缘服务器这类产品的底座。",
+          "pitfall": "构建系统庞大、报错晦涩；启动链路长，任何一环出问题都卡在串口没输出。",
+          "practice": "在 SBC 上用 Buildroot 编出可启动镜像，改一处设备树并验证外设节点出现，串口抓住启动全程。",
+          "validation": "integration",
+          "validation_note": "在 SBC（树莓派等）上：镜像可重复构建并启动到登录，设备树修改有对应的 sysfs/日志证据。",
+          "volatility": "evolving",
+          "priority": "optional",
+          "priority_reason": "当算力与网络协议栈需求超过 MCU 时才上带 MMU 的 Linux；弹上实时闭环通常不走这条，它更贴近地面台架、网关与助力侧。",
+          "targets": [
+            "target-digital-intelligence",
+            "target-vehicle-engineering"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "buildroot-manual",
+              "locator": "交叉编译、根文件系统与镜像生成"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "devicetree-spec",
+              "locator": "设备树描述硬件的约定"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.linux_driver",
+          "title": "Linux 驱动开发",
+          "track": "software",
+          "stable_definition": "字符设备与文件操作接口，内核模块的加载与卸载，中断处理与并发原语，内核内存管理与 DMA，设备树。",
+          "engineering_role": "打通“用户态程序”和“具体硬件”这两端，是做嵌入式 Linux 产品、给单板计算机适配外设的核心能力。",
+          "pitfall": "内核态没有内存保护，一个空指针就是整机崩溃；调试手段有限，要靠交叉编译和串口日志。",
+          "practice": "写一个字符设备模块：实现 open/read/write/ioctl，加载到运行中的嵌入式 Linux，用用户态程序对照行为。",
+          "validation": "integration",
+          "validation_note": "在 SBC / 虚拟机上：模块可加载卸载，用户态读写与 ioctl 行为符合约定，oops 时能从日志定位。",
+          "volatility": "evolving",
+          "priority": "optional",
+          "priority_reason": "字符设备与中断是用户态到硬件的另一侧契约，主要服务嵌入式 Linux 产品适配；实时闭环岗位更常面对 RTOS 与裸机外设。",
+          "targets": [
+            "target-digital-intelligence",
+            "target-onboard-computer"
+          ],
+          "app": "",
+          "requires": [
+            "atlas.ei.embedded_linux"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ldd3",
+              "locator": "字符设备、中断与内核并发原语"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "kernel-docs",
+              "locator": "内核模块与设备模型文档"
+            }
+          ]
+        },
+        {
+          "id": "atlas.ei.edge_ai",
+          "title": "端侧 AI 部署",
+          "track": "compute",
+          "stable_definition": "模型量化、剪枝与蒸馏，算子与内存约束，嵌入式推理框架（TFLite Micro、CMSIS-NN 等），在 MCU / SBC 上跑推理并评估精度损失。",
+          "engineering_role": "把模型开发和嵌入式两条线接起来：做本地关键词唤醒、振动异常检测、小图像分类这类不依赖云端的智能设备。",
+          "pitfall": "在极其有限的算力和内存下做取舍；量化掉点和实时性之间的平衡。",
+          "practice": "把一个已量化的小模型用 TFLite Micro 或 CMSIS-NN 部署到 MCU，报告推理耗时、内存占用与精度掉点。",
+          "validation": "benchmark",
+          "validation_note": "在开发板 / SBC 上：给出延迟、RAM/Flash 占用和与浮点基线的精度对比，三者都有数。",
+          "volatility": "evolving",
+          "priority": "optional",
+          "priority_reason": "端侧推理把模型部署到受限 MCU/SBC，服务地面监测与智能助力；飞控闭环明确不以模型推理作为实时路径。",
+          "targets": [
+            "target-digital-intelligence",
+            "target-sensing-compute"
+          ],
+          "app": "",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tflite-micro",
+              "locator": "MCU 上的推理运行时与内存规划"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-nn",
+              "locator": "CMSIS-NN 算子与量化约定"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "atlas.ei.dsp",
+          "to": "atlas.ei.motor_control",
+          "relation": "requires",
+          "rationale": "FOC 的核心是 Clarke / Park 坐标变换加上电流环滤波，本质是一组实时信号处理运算；换相噪声、纹波抑制也要用到滤波器设计的思路。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-foc-sprabq2",
+              "locator": "FOC / 矢量控制应用基础"
+            }
+          ]
+        },
+        {
+          "from": "atlas.ei.embedded_linux",
+          "to": "atlas.ei.linux_driver",
+          "relation": "requires",
+          "rationale": "写驱动之前要先有一个跑起来的嵌入式 Linux 系统：知道内核怎么编译、设备树怎么描述硬件、根文件系统里放什么，模块才有地方加载、有 log 可看。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ldd3",
+              "locator": "字符设备、中断与内核并发原语"
+            }
+          ]
+        }
+      ],
+      "theory": [
+        {
+          "name": "信号与系统",
+          "content": "连续与离散信号、卷积、傅里叶级数 / 变换、拉普拉斯与 Z 变换、采样定理、系统的频率响应与稳定性。",
+          "role": "数字信号处理和滤波器设计的数学基础，也是控制理论、通信、图像处理的共同语言。"
+        },
+        {
+          "name": "控制理论与 PID",
+          "content": "反馈与传递函数、系统稳定性判据、根轨迹与频域法、PID 整定、状态空间简介。",
+          "role": "电机调速与位置伺服、温度 / 压力闭环、平衡车和多旋翼等一切“测量—比较—执行”的控制类项目。"
         }
       ]
     },
@@ -3927,6 +5366,232 @@
         }
       ],
       "standing": "相邻领域"
+    }
+  ],
+  "cross_edges": [
+    {
+      "from": "atlas.cs.assembly",
+      "to": "atlas.cs.c_lang",
+      "relation": "enables",
+      "strong": false,
+      "rationale": "历史与概念上 C 都是从汇编演进而来的“可移植汇编”。它保留了对内存和硬件的直接控制，只是换上一层不绑定指令集的语法。C 里那些最容易踩坑的设计——指针运算、数组退化为指针、调用栈布局、`volatile`、未定义行为——单看 C 标准像一堆任意规定，落到汇编层面（寄存器、栈帧、寻址方式、编译器到底生成了什么）才真正讲得通。这属于“知道渊源会更透彻”，不是入学门槛——完全可以先上手 C，回头再补汇编。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "程序的机器级表示（第 3 章）：寄存器、寻址、栈帧与调用约定"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.python",
+      "to": "atlas.cs.model_dev",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "从 2015 年前后开始，深度学习的框架（TensorFlow、PyTorch）、数据处理库（NumPy、pandas）、可视化和实验管理工具几乎全部以 Python 为接口层。模型开发的日常工作——搭数据管道、写训练循环、画损失曲线、做超参搜索——本身就是写 Python 代码。先能熟练用 Python 处理数据和组织程序，才谈得上读框架文档、复现论文。而线性代数与概率作为数学基础，见右下“理论科目”，配合教材了解即可。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "python-docs",
+          "locator": "语言参考、标准库、虚拟环境与打包部分"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.c_lang",
+      "to": "atlas.cs.linux_sysprog",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "Unix 及其后代 Linux 的系统调用接口从第一天起就是用 C 描述的：`open`/`read`/`fork`/`mmap` 的函数原型、`errno` 约定、以指针传入传出的 `struct` 参数，全是 C 的方式。系统编程要成天和裸缓冲区、位标志、信号处理函数、谁负责释放资源打交道，这些正是 C 最擅长、也最容易出错的地方。有了 C 的手感，才能照着 man page 直接上手。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "程序的机器级表示与虚拟内存（第 3、9 章）"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.electronics_basics",
+      "to": "atlas.ei.mcu_8051",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "单片机的每个引脚都连着一段真实电路。点亮一个 LED 要算限流电阻，接按键要处理上下拉和机械抖动，接传感器要确认电平匹配、要不要分压或电平转换。程序写对了但现象不对时，示波器和万用表是唯一的排查手段。不懂电路，单片机就只能照抄接线图。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "art-of-electronics",
+          "locator": "分压、RC、运放与数字逻辑入门部分"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.c_lang",
+      "to": "atlas.ei.mcu_8051",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "从 8051 到今天，单片机固件的主力语言一直是 C：直接对寄存器地址赋值，用位运算配置外设，手动管理只有几十到几百字节的 RAM。这里没有操作系统兜底，C 的每一个未定义行为都可能表现成莫名其妙的硬件现象，所以要先把 C 的指针和内存管理练扎实。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "程序的机器级表示与虚拟内存（第 3、9 章）"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.assembly",
+      "to": "atlas.ei.mcu_8051",
+      "relation": "enables",
+      "strong": false,
+      "rationale": "裸机开发绕不开汇编：启动文件要手工设置堆栈指针和中断向量表，进入 main 之前的初始化、精确到指令周期的延时、读反汇编定位死机，都得能看懂汇编。8051 的中断响应和 SFR 操作尤其贴近指令层。这是加分项而非前置——先用 C 玩起来，遇到时序和启动代码再回头补汇编也可以。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "程序的机器级表示（第 3 章）：寄存器、寻址、栈帧与调用约定"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.linux_sysprog",
+      "to": "atlas.ei.linux_driver",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "写驱动之前还要站在“用户程序怎么使用这个设备”的角度：设备文件、`ioctl`、`mmap`、阻塞与非阻塞语义，都是系统编程里已经见过的接口，驱动实现的正是这些接口在内核的另一侧。熟悉用户态的调用约定，才知道自己在实现什么契约。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "tlpi",
+          "locator": "进程、信号、文件 I/O 与进程间通信相关章节"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.operating_systems",
+      "to": "atlas.ei.linux_driver",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "驱动是内核的一部分，运行在没有内存保护、可以直接触碰硬件的环境里。中断上下文、内核态并发与加锁、内存分配与 DMA、设备树——每一样都要求先理解内核的进程模型、并发模型和内存模型。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ostep",
+          "locator": "虚拟化、并发与持久化三部分"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.stm32",
+      "to": "atlas.ei.pcb_design",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "画一块板子是围绕一颗你已经用熟的芯片展开的：每个引脚接什么、要不要上拉、晶振和去耦电容怎么摆、电源怎么分区，都建立在“我清楚这颗芯片怎么工作”之上。先在开发板上把 STM32 用透，自制板才不会只是抄参考设计。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Cortex-M 内核、时钟树与常用外设"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.sensors",
+      "to": "atlas.ei.dsp",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "信号处理的前提是先有一段采集干净的信号：采样率够不够、有没有抗混叠、量程和分辨率合不合适，全在信号调理这一步决定。前端没做好，DSP 只是在放大噪声。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "art-of-electronics",
+          "locator": "传感器接口、放大与滤波"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.stm32",
+      "to": "atlas.ei.dsp",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "实时 DSP 要在一个有一定算力的平台上做：STM32 的 F4/F7 带单精度 FPU 和 CMSIS-DSP 库，能实时跑滤波和 FFT。先熟悉这类芯片的定时器、ADC、DMA，才能搭出“采样—处理—输出”的实时链路。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Cortex-M 内核、时钟树与常用外设"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.stm32",
+      "to": "atlas.ei.motor_control",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "电机控制要用到 STM32 的高级定时器（互补 PWM、死区、刹车输入）、ADC 与运放采样、以及和 PWM 同步的中断。这些外设先玩熟，才谈得上写换相和电流环。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Cortex-M 内核、时钟树与常用外设"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.sensors",
+      "to": "atlas.ei.motor_control",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "闭环控制离不开反馈：电流采样、编码器或霍尔的位置、有时还有电压和温度。这些信号的调理和标定做不好，环路就震荡或失步。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "art-of-electronics",
+          "locator": "传感器接口、放大与滤波"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.stm32",
+      "to": "atlas.ei.embedded_linux",
+      "relation": "enables",
+      "strong": false,
+      "rationale": "先在裸机和 RTOS 上做过项目，才看得清完整的 Linux 用多大的开销（内存、启动时间、实时性）换来了多大的便利（进程隔离、现成的网络和文件系统、丰富的软件生态）。这是概念上的对照，不是硬性前置。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Cortex-M 内核、时钟树与常用外设"
+        }
+      ]
+    },
+    {
+      "from": "atlas.cs.model_dev",
+      "to": "atlas.ei.edge_ai",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "端侧部署的前提是先有一个训练好、评估过的模型——知道它的结构、精度基线、算子构成和参数量，才谈得上量化、剪枝、蒸馏，以及在有限算力下大概会掉多少点。没有完整的训练评估流程，端侧优化就没有可对照的基准。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "pytorch-docs",
+          "locator": "张量、自动求导、训练循环与模型导出部分"
+        }
+      ]
+    },
+    {
+      "from": "atlas.ei.stm32",
+      "to": "atlas.ei.edge_ai",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "端侧推理的目标平台正是 STM32 这类 MCU：只有几十到几百 KB 的 RAM，没有 FPU 或只有单精度，要用 CMSIS-NN 或 TFLite Micro 这样为受限环境写的框架。先熟悉这类平台的内存模型和外设，才谈得上把模型塞进去还能实时跑。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Cortex-M 内核、时钟树与常用外设"
+        }
+      ]
     }
   ]
 }

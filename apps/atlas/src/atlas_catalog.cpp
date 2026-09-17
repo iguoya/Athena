@@ -208,8 +208,19 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
         return false;
     }
 
+    // 先过一遍地图清单。节点的 targets 要指向职业目标层的地图，而校验它是否存在
+    // 需要先知道每张图的 view_kind——在校验节点的同一个循环里，后面的地图还没
+    // 读到。跨图关联（cross_edges）的两端校验同理，见本函数末尾。
+    QHash<QString, QString> viewKindByMapId;
+    for (const QVariant& mapValue : maps) {
+        const QVariantMap map = mapValue.toMap();
+        viewKindByMapId.insert(map.value("id").toString(),
+                               map.value("view_kind").toString());
+    }
+
     QSet<QString> mapIds;
     QSet<QString> globalNodeIds;
+    QHash<QString, QString> mapIdByNodeId;
     for (const QVariant& mapValue : maps) {
         const QVariantMap map = mapValue.toMap();
         if (!hasNonEmptyStrings(map, {"id", "title", "summary", "view_kind"}, error)) {
@@ -227,12 +238,32 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
             return false;
         }
 
+        // 不建节点的理论科目（ADR 0009 第 7 条）：它们不是可验证的实践科目，
+        // 建成节点会和实践科目排成一排。可以没有，写了就要三段齐全——只给名字
+        // 等于把一份课程表塞进图谱。
+        for (const QVariant& value : map.value("theory").toList()) {
+            const QVariantMap topic = value.toMap();
+            if (!hasNonEmptyStrings(topic, {"name", "content", "role"}, error)) {
+                *error = QString("地图 %1 的理论科目：%2").arg(mapId, *error);
+                return false;
+            }
+        }
+
         QSet<QString> nodeIds;
         QHash<QString, QSet<QString>> requirements;
         for (const QVariant& nodeValue : nodes) {
             const QVariantMap node = nodeValue.toMap();
-            if (!hasNonEmptyStrings(node, {"id", "title", "track", "stable_definition",
-                                         "engineering_role", "practice", "validation", "volatility"}, error)) {
+            // 技术体系层（academic）才强制必要程度与难点（ADR 0009）：那是从
+            // apps/cpp 路线图吸收来、并按职业目标层反推定级的那一层。职业方向 /
+            // 职业目标图另有自己的结构，不在这一次吸收里改写。
+            const QString viewKind = map.value("view_kind").toString();
+            const bool academic = viewKind == "academic";
+            QStringList requiredFields = {"id", "title", "track", "stable_definition",
+                                         "engineering_role", "practice", "validation", "volatility"};
+            if (academic) {
+                requiredFields << "pitfall" << "priority" << "priority_reason";
+            }
+            if (!hasNonEmptyStrings(node, requiredFields, error)) {
                 return false;
             }
             const QString nodeId = node.value("id").toString();
@@ -242,6 +273,60 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
             }
             nodeIds.insert(nodeId);
             globalNodeIds.insert(nodeId);
+            mapIdByNodeId.insert(nodeId, mapId);
+
+            const QString validation = node.value("validation").toString();
+            static const QSet<QString> knownValidation {
+                "measurement", "benchmark", "integration", "review", "simulation", "analysis"
+            };
+            if (!knownValidation.contains(validation)) {
+                *error = QString("节点 %1 的 validation 取值无效：%2").arg(nodeId, validation);
+                return false;
+            }
+            const QString volatility = node.value("volatility").toString();
+            if (volatility != "stable" && volatility != "evolving" && volatility != "volatile") {
+                *error = QString("节点 %1 的 volatility 只能是 stable、evolving 或 volatile。")
+                             .arg(nodeId);
+                return false;
+            }
+
+            if (academic) {
+                // 学习的必要程度按职业目标层的专业方向判定（ADR 0009 第 5 条）：等级、
+                // 理由和它支撑的目标能力三者必须同时在场。只留等级会退化成口味排序，
+                // 只留理由则无法排先后。
+                const QString priority = node.value("priority").toString();
+                if (priority != "essential" && priority != "important" && priority != "optional") {
+                    *error = QString("节点 %1 的 priority 只能是 essential、important 或 optional。")
+                                 .arg(nodeId);
+                    return false;
+                }
+                const QStringList targets = stringList(node, "targets");
+                if (targets.isEmpty()) {
+                    *error = QString("节点 %1 缺 targets：必要程度要能追到它支撑的目标能力。")
+                                 .arg(nodeId);
+                    return false;
+                }
+                for (const QString& target : targets) {
+                    if (!viewKindByMapId.contains(target)) {
+                        *error = QString("节点 %1 的 targets 引用了不存在的地图 %2。")
+                                     .arg(nodeId, target);
+                        return false;
+                    }
+                    if (viewKindByMapId.value(target) != "target") {
+                        *error = QString("节点 %1 的 targets 只能指向职业目标层的地图，%2 不是。")
+                                     .arg(nodeId, target);
+                        return false;
+                    }
+                }
+
+                // 承载这个领域的独立应用（ADR 0009 第 8 条）。可以为空（规划中的方向），
+                // 但写了就必须真有那个应用，否则界面上会给出一个点不开的入口。
+                const QString app = node.value("app").toString();
+                if (!app.isEmpty() && !QFile::exists(m_root + "/../" + app + "/app.json")) {
+                    *error = QString("节点 %1 的 app 指向了不存在的应用：%2").arg(nodeId, app);
+                    return false;
+                }
+            }
             if (!hasSourceRefs(node.value("source_refs").toList(), sourceIds, error)) {
                 *error = QString("节点 %1：%2").arg(nodeId, *error);
                 return false;
@@ -328,6 +413,38 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
         }
     }
 
+    // 跨图关联（ADR 0009 第 6 条）。技术体系层拆成八张之后，「C 语言 → 51 单片机」
+    // 「操作系统 → Linux 驱动」这类真实存在的先修关系两端落在不同的图里。图内
+    // requires 不跨图，这些关系放顶层，拆图才不会连带丢掉依赖信息。
+    QSet<QString> crossKeys;
+    for (const QVariant& value : document.value("cross_edges").toList()) {
+        const QVariantMap edge = value.toMap();
+        if (!hasNonEmptyStrings(edge, {"from", "to", "rationale"}, error)) {
+            return false;
+        }
+        const QString from = edge.value("from").toString();
+        const QString to = edge.value("to").toString();
+        if (!globalNodeIds.contains(from) || !globalNodeIds.contains(to)) {
+            *error = QString("跨图关联 %1 → %2 引用了不存在的节点。").arg(from, to);
+            return false;
+        }
+        if (mapIdByNodeId.value(from) == mapIdByNodeId.value(to)) {
+            *error = QString("跨图关联 %1 → %2 的两端在同一张图里，应当写成图内 requires。")
+                         .arg(from, to);
+            return false;
+        }
+        const QString key = from + "\x1f" + to;
+        if (crossKeys.contains(key)) {
+            *error = QString("跨图关联重复：%1 → %2").arg(from, to);
+            return false;
+        }
+        crossKeys.insert(key);
+        if (!hasSourceRefs(edge.value("evidence_refs").toList(), sourceIds, error)) {
+            *error = QString("跨图关联 %1 → %2：%3").arg(from, to, *error);
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -348,6 +465,7 @@ bool AtlasCatalog::reload() {
     m_title = document.value("title").toString();
     m_subtitle = document.value("subtitle").toString();
     m_maps = document.value("maps").toList();
+    m_cross_edges = document.value("cross_edges").toList();
     emit catalogChanged();
 
     // 默认落在第一张学科入口图上：方向图要先有学科底盘才谈得上选方向。
@@ -377,6 +495,8 @@ void AtlasCatalog::clearMap() {
     m_nodes.clear();
     m_edges.clear();
     m_selected_node.clear();
+    m_selected_map_theory.clear();
+    m_cross_edges.clear();
     m_canvas_width = 1280;
     m_canvas_height = 720;
 }
@@ -411,6 +531,7 @@ void AtlasCatalog::applyMap(const QVariantMap& map) {
     const LaidOutGraph laidOut = layoutGraph(classifiedNodes, {});
     m_nodes = laidOut.nodes;
     m_edges = map.value("edges").toList();
+    m_selected_map_theory = map.value("theory").toList();
     m_canvas_width = laidOut.width;
     m_canvas_height = laidOut.height;
     m_selected_node.clear();
@@ -455,18 +576,70 @@ QString AtlasCatalog::relationLabel(const QString& relation) const {
     return relation;
 }
 
-QString AtlasCatalog::priorityLabel(const QString& priorityTier) const {
-    if (priorityTier == "essential") return "大众必备主干";
-    if (priorityTier == "growth") return "热门 · 增长方向";
-    if (priorityTier == "specialist") return "小众 · 专题参考";
-    return "未分类";
+// 必要程度按职业目标层的专业方向判定，不是通用的学习建议（ADR 0009 第 5 条）。
+QString AtlasCatalog::priorityLabel(const QString& priority) const {
+    if (priority == "essential") return "必需 · 绕不过去";
+    if (priority == "important") return "重要 · 显著支撑";
+    if (priority == "optional") return "可选 · 方向相关";
+    return "未分级";
 }
 
-QString AtlasCatalog::priorityColor(const QString& priorityTier) const {
-    if (priorityTier == "essential") return "#0F766E";
-    if (priorityTier == "growth") return "#B7791F";
-    if (priorityTier == "specialist") return "#7563A6";
+QString AtlasCatalog::priorityColor(const QString& priority) const {
+    if (priority == "essential") return "#0F766E";
+    if (priority == "important") return "#B7791F";
+    if (priority == "optional") return "#7563A6";
     return "#667085";
+}
+
+QVariantList AtlasCatalog::crossEdgesFor(const QString& nodeId) const {
+    QVariantList related;
+    for (const QVariant& value : m_cross_edges) {
+        const QVariantMap edge = value.toMap();
+        const QString from = edge.value("from").toString();
+        const QString to = edge.value("to").toString();
+        const bool incoming = to == nodeId;
+        if (!incoming && from != nodeId) {
+            continue;
+        }
+        const QString peerId = incoming ? from : to;
+        QVariantMap item;
+        item.insert("peer_id", peerId);
+        // incoming：对端是本节点的前置；否则本节点是对端的前置。
+        item.insert("incoming", incoming);
+        item.insert("strong", edge.value("strong", true));
+        item.insert("rationale", edge.value("rationale"));
+        item.insert("peer_title", peerId);
+        for (const QVariant& mapValue : m_maps) {
+            const QVariantMap map = mapValue.toMap();
+            bool found = false;
+            for (const QVariant& nodeValue : map.value("nodes").toList()) {
+                const QVariantMap node = nodeValue.toMap();
+                if (node.value("id").toString() != peerId) {
+                    continue;
+                }
+                item.insert("peer_title", node.value("title"));
+                item.insert("map_id", map.value("id"));
+                item.insert("map_title", map.value("title"));
+                found = true;
+                break;
+            }
+            if (found) {
+                break;
+            }
+        }
+        related.append(item);
+    }
+    return related;
+}
+
+QString AtlasCatalog::mapTitle(const QString& mapId) const {
+    for (const QVariant& value : m_maps) {
+        const QVariantMap map = value.toMap();
+        if (map.value("id").toString() == mapId) {
+            return map.value("title").toString();
+        }
+    }
+    return mapId;
 }
 
 QString AtlasCatalog::volatilityLabel(const QString& volatility) const {

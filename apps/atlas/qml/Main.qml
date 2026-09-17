@@ -63,16 +63,6 @@ ApplicationWindow {
                     }
                 }
 
-                // 视角切换紧跟在标题下面：切的是同一个能力域的看法，不是换地图，
-                // 所以它属于这块内容区，而不是侧栏（ADR 0008）。
-                Atlas.ViewTabs {
-                    family: atlas.selectedMapFamily
-                    hasCompanion: atlas.selectedCompanionMapId.length > 0
-                    onViewChosen: function(family) {
-                        atlas.openMap(atlas.selectedCompanionMapId)
-                    }
-                }
-
                 Text {
                     visible: atlas.error.length > 0
                     Layout.fillWidth: true

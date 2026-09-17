@@ -30,8 +30,8 @@ Item {
                 Rectangle { width: 10; height: 10; radius: 5; color: root.accent; anchors.verticalCenter: parent.verticalCenter }
                 Text {
                     width: parent.width - 18
-                    text: atlas.priorityLabel(root.node.priority_tier) + " · " + atlas.volatilityLabel(root.node.volatility)
-                    color: atlas.priorityColor(root.node.priority_tier)
+                    text: atlas.priorityLabel(root.node.priority) + " · " + atlas.volatilityLabel(root.node.volatility)
+                    color: atlas.priorityColor(root.node.priority)
                     font.pixelSize: 13
                     elide: Text.ElideRight
                 }
@@ -48,7 +48,7 @@ Item {
             }
             Text {
                 width: parent.width
-                text: (root.node.kit && root.node.kit.tooling) ? root.node.kit.tooling : root.node.engineering_role
+                text: root.node.engineering_role
                 color: "#50636A"
                 font.pixelSize: 14
                 wrapMode: Text.WordWrap

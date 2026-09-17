@@ -11,12 +11,14 @@ private slots:
     void defaultsToAnAcademicEntryMap();
     void keepsUnitNamesOutOfTheContent();
     void everyNodeCarriesItsOwnPractice();
+    void bindsNecessityToCareerTargets();
+    void keepsCrossMapDependenciesReachable();
 };
 
 void AtlasCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
     QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
-    QCOMPARE(catalog.maps().size(), 16);
+    QCOMPARE(catalog.maps().size(), 22);
     QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-practice"));
     QVERIFY(catalog.nodes().size() >= 6);
     QVERIFY(catalog.edges().size() >= 5);
@@ -33,9 +35,70 @@ void AtlasCatalogTest::defaultsToAnAcademicEntryMap() {
     for (const QVariant& value : catalog.maps()) {
         ++byKind[value.toMap().value("view_kind").toString()];
     }
-    QCOMPARE(byKind.value("academic"), 2);
+    // 技术体系层吸收 apps/cpp 那张学科路线图后扩到八张（ADR 0009 第 2 条）。
+    QCOMPARE(byKind.value("academic"), 8);
     QCOMPARE(byKind.value("target"), 9);
     QCOMPARE(byKind.value("career") + byKind.value("engineering"), 5);
+}
+
+// 必要程度要能追到它支撑的目标能力（ADR 0009 第 5 条）。只给等级会退化成口味
+// 排序，所以等级、理由、目标三者必须同时在场，且目标必须真的指向目标层。
+void AtlasCatalogTest::bindsNecessityToCareerTargets() {
+    AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
+    QSet<QString> targetMapIds;
+    for (const QVariant& value : catalog.maps()) {
+        const QVariantMap map = value.toMap();
+        if (map.value("view_kind").toString() == "target") {
+            targetMapIds.insert(map.value("id").toString());
+        }
+    }
+    QCOMPARE(targetMapIds.size(), 9);
+
+    for (const QVariant& mapValue : catalog.maps()) {
+        const QVariantMap map = mapValue.toMap();
+        if (map.value("view_kind").toString() != QStringLiteral("academic")) {
+            continue;
+        }
+        for (const QVariant& nodeValue : map.value("nodes").toList()) {
+            const QVariantMap node = nodeValue.toMap();
+            const QString nodeId = node.value("id").toString();
+            QVERIFY2(!node.value("pitfall").toString().isEmpty(),
+                     qPrintable(QStringLiteral("节点 %1 没写难点").arg(nodeId)));
+            QVERIFY2(!node.value("priority_reason").toString().isEmpty(),
+                     qPrintable(QStringLiteral("节点 %1 没写必要程度的理由").arg(nodeId)));
+            const QStringList targets = node.value("targets").toStringList();
+            QVERIFY2(!targets.isEmpty(),
+                     qPrintable(QStringLiteral("节点 %1 没有 targets").arg(nodeId)));
+            for (const QString& target : targets) {
+                QVERIFY2(targetMapIds.contains(target),
+                         qPrintable(QStringLiteral("节点 %1 的 targets 指向了非目标层地图 %2")
+                                        .arg(nodeId, target)));
+            }
+        }
+    }
+}
+
+// 拆成八张图之后，一部分先修关系的两端落在不同图里。它们放在顶层 cross_edges，
+// 界面要能顺着它跳到对端——否则这些依赖等于因为拆图而消失了（ADR 0009 第 6 条）。
+void AtlasCatalogTest::keepsCrossMapDependenciesReachable() {
+    AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
+    // C 语言在程序设计图、51 单片机在单片机图，这条强先修必须还在。
+    const QVariantList links = catalog.crossEdgesFor(QStringLiteral("atlas.ei.mcu_8051"));
+    QVERIFY(!links.isEmpty());
+    bool foundCLanguage = false;
+    for (const QVariant& value : links) {
+        const QVariantMap link = value.toMap();
+        QVERIFY(!link.value("rationale").toString().isEmpty());
+        // 对端必须能定位到某张图，否则界面上点不过去。
+        QVERIFY(!link.value("map_id").toString().isEmpty());
+        QVERIFY(!link.value("peer_title").toString().isEmpty());
+        if (link.value("peer_id").toString() == QStringLiteral("atlas.cs.c_lang")) {
+            foundCLanguage = true;
+            QVERIFY(link.value("incoming").toBool());
+            QVERIFY(link.value("strong").toBool());
+        }
+    }
+    QVERIFY(foundCLanguage);
 }
 
 // 界面上不出现具体院所名，一律用「某所」（仓库级 ADR 0055）。这条断言盯着内容

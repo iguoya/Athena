@@ -21,6 +21,8 @@ class AtlasCatalog final : public QObject {
     Q_PROPERTY(int canvasWidth READ canvasWidth NOTIFY selectionChanged)
     Q_PROPERTY(int canvasHeight READ canvasHeight NOTIFY selectionChanged)
     Q_PROPERTY(QVariantMap selectedNode READ selectedNode NOTIFY selectionChanged)
+    // 不建节点的理论科目，属于当前这张图（ADR 0009 第 7 条）。
+    Q_PROPERTY(QVariantList selectedMapTheory READ selectedMapTheory NOTIFY selectionChanged)
     Q_PROPERTY(QString error READ error NOTIFY catalogChanged)
 
 public:
@@ -40,6 +42,7 @@ public:
     int canvasWidth() const { return m_canvas_width; }
     int canvasHeight() const { return m_canvas_height; }
     QVariantMap selectedNode() const { return m_selected_node; }
+    QVariantList selectedMapTheory() const { return m_selected_map_theory; }
     QString error() const { return m_error; }
 
     Q_INVOKABLE void openMap(const QString& mapId);
@@ -52,6 +55,10 @@ public:
     Q_INVOKABLE QString validationLabel(const QString& validation) const;
     Q_INVOKABLE QString trackColor(const QString& track) const;
     Q_INVOKABLE QString familyLabel(const QString& family) const;
+    // 与某个节点相关的跨图关联，带上对端节点在哪张图，否则这条关系只是一句话，
+    // 使用者不知道去哪儿找它（ADR 0009 第 6 条）。
+    Q_INVOKABLE QVariantList crossEdgesFor(const QString& nodeId) const;
+    Q_INVOKABLE QString mapTitle(const QString& mapId) const;
 
     bool reload();
 
@@ -80,5 +87,7 @@ private:
     int m_canvas_width = 1280;
     int m_canvas_height = 720;
     QVariantMap m_selected_node;
+    QVariantList m_selected_map_theory;
+    QVariantList m_cross_edges;
     QString m_error;
 };

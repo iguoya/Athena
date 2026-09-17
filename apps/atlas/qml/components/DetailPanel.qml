@@ -2,6 +2,11 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+// 右侧详情面板。它把一个节点的全部判断依据摊开：是什么、解决什么、难在哪、
+// 为什么这个必要程度、支撑哪些目标能力、先做什么、怎么算过、出处。
+//
+// 没选中节点时它不留白，而是显示这张图的理论科目——那些科目不建节点（ADR 0009
+// 第 7 条），如果面板上也不给它们位置，它们就彻底没有落点了。
 Rectangle {
     id: root
     required property var node
@@ -12,6 +17,7 @@ Rectangle {
     border.width: 1
 
     readonly property bool hasNode: Boolean(root.node && root.node.id)
+    readonly property var crossLinks: root.hasNode ? atlas.crossEdgesFor(root.node.id) : []
 
     ScrollView {
         anchors.fill: parent
@@ -35,10 +41,11 @@ Rectangle {
                 ToolButton { visible: root.hasNode; text: "×"; onClicked: root.closed() }
             }
 
+            // —— 未选中节点：讲怎么读这张图，并给理论科目一个落点 ——
             Text {
                 visible: !root.hasNode
                 Layout.fillWidth: true
-                text: "从左侧选一个节点，这里会展开它的稳定定义、工程角色、动手练习和验收方式。两张学科入口是通用底盘，方向图落在它上面。"
+                text: "从图上选一个节点，这里会展开它的定义、工程角色、难点、必要程度的判断依据、动手练习和验收口径。实线是强先修，虚线是「知道渊源会更透彻」的来路。"
                 color: "#52666D"
                 wrapMode: Text.WordWrap
                 font.pixelSize: 16
@@ -46,9 +53,59 @@ Rectangle {
             }
 
             ColumnLayout {
+                visible: !root.hasNode && atlas.selectedMapTheory.length > 0
+                Layout.fillWidth: true
+                spacing: 10
+
+                Label { text: "理论科目（不建节点）"; font.bold: true }
+                Text {
+                    Layout.fillWidth: true
+                    text: "它们没有可上手验证的实验，所以不在图上占节点；配合教材了解即可。"
+                    color: "#62777E"
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 14
+                    lineHeight: 1.24
+                }
+                Repeater {
+                    model: atlas.selectedMapTheory
+                    delegate: ColumnLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        spacing: 3
+                        Text {
+                            Layout.fillWidth: true
+                            text: modelData.name
+                            color: "#24424B"
+                            font.pixelSize: 15
+                            font.weight: Font.DemiBold
+                            wrapMode: Text.WordWrap
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            text: modelData.content
+                            color: "#4A5F66"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 14
+                            lineHeight: 1.22
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            text: "起什么作用：" + modelData.role
+                            color: "#62777E"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 14
+                            lineHeight: 1.22
+                        }
+                    }
+                }
+            }
+
+            // —— 选中节点 ——
+            ColumnLayout {
                 visible: root.hasNode
                 Layout.fillWidth: true
                 spacing: 12
+
                 Text {
                     Layout.fillWidth: true
                     text: root.node.title || ""
@@ -57,50 +114,170 @@ Rectangle {
                     font.pixelSize: 25
                     font.weight: Font.DemiBold
                 }
-                Rectangle { Layout.fillWidth: true; height: 4; radius: 2; color: atlas.trackColor(root.node.track || "") }
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 4
+                    radius: 2
+                    color: atlas.trackColor(root.node.track || "")
+                }
                 Text {
-                    text: atlas.priorityLabel(root.node.priority_tier || "") + " · " + atlas.volatilityLabel(root.node.volatility || "") + " · " + atlas.validationLabel(root.node.validation || "")
-                    color: "#50656C"
+                    Layout.fillWidth: true
+                    text: atlas.priorityLabel(root.node.priority || "")
+                        + " · " + atlas.volatilityLabel(root.node.volatility || "")
+                        + " · " + atlas.validationLabel(root.node.validation || "")
+                    color: atlas.priorityColor(root.node.priority || "")
+                    wrapMode: Text.WordWrap
                     font.pixelSize: 14
                 }
+
                 Label { text: "它是什么"; font.bold: true }
-                Text { Layout.fillWidth: true; text: root.node.stable_definition || ""; wrapMode: Text.WordWrap; color: "#40545B"; font.pixelSize: 16; lineHeight: 1.24 }
+                Text {
+                    Layout.fillWidth: true
+                    text: root.node.stable_definition || ""
+                    wrapMode: Text.WordWrap
+                    color: "#40545B"
+                    font.pixelSize: 16
+                    lineHeight: 1.24
+                }
+
                 Label { text: "工程中解决什么"; font.bold: true }
-                Text { Layout.fillWidth: true; text: root.node.engineering_role || ""; wrapMode: Text.WordWrap; color: "#40545B"; font.pixelSize: 16; lineHeight: 1.24 }
-                Label { visible: Boolean(root.node.kit && root.node.kit.reading); text: "读什么"; font.bold: true }
                 Text {
-                    visible: Boolean(root.node.kit && root.node.kit.reading)
                     Layout.fillWidth: true
-                    text: (root.node.kit && root.node.kit.reading) || ""
+                    text: root.node.engineering_role || ""
                     wrapMode: Text.WordWrap
                     color: "#40545B"
                     font.pixelSize: 16
                     lineHeight: 1.24
                 }
-                Label { visible: Boolean(root.node.kit && root.node.kit.tooling); text: "用什么"; font.bold: true }
+
+                Label { visible: Boolean(root.node.pitfall); text: "难在哪"; font.bold: true }
                 Text {
-                    visible: Boolean(root.node.kit && root.node.kit.tooling)
+                    visible: Boolean(root.node.pitfall)
                     Layout.fillWidth: true
-                    text: (root.node.kit && root.node.kit.tooling) || ""
+                    text: root.node.pitfall || ""
+                    wrapMode: Text.WordWrap
+                    color: "#8A4B3F"
+                    font.pixelSize: 16
+                    lineHeight: 1.24
+                }
+
+                Label { visible: Boolean(root.node.priority_reason); text: "为什么是这个必要程度"; font.bold: true }
+                Text {
+                    visible: Boolean(root.node.priority_reason)
+                    Layout.fillWidth: true
+                    text: root.node.priority_reason || ""
                     wrapMode: Text.WordWrap
                     color: "#40545B"
                     font.pixelSize: 16
                     lineHeight: 1.24
                 }
-                Label { visible: Boolean(root.node.kit && root.node.kit.artifact); text: "交出什么"; font.bold: true }
-                Text {
-                    visible: Boolean(root.node.kit && root.node.kit.artifact)
-                    Layout.fillWidth: true
-                    text: (root.node.kit && root.node.kit.artifact) || ""
-                    wrapMode: Text.WordWrap
-                    color: "#40545B"
-                    font.pixelSize: 16
-                    lineHeight: 1.24
+
+                // 必要程度的判据是目标能力，所以要能点过去看那张图，而不是只给个等级。
+                Label {
+                    visible: Boolean(root.node.targets && root.node.targets.length > 0)
+                    text: "支撑哪些目标能力"
+                    font.bold: true
                 }
+                Flow {
+                    visible: Boolean(root.node.targets && root.node.targets.length > 0)
+                    Layout.fillWidth: true
+                    spacing: 8
+                    Repeater {
+                        model: root.node.targets || []
+                        delegate: Rectangle {
+                            required property var modelData
+                            radius: 13
+                            color: targetHover.hovered ? "#E4EFEC" : "#F1F5F3"
+                            border.color: "#CBD8D3"
+                            border.width: 1
+                            height: 26
+                            width: targetLabel.implicitWidth + 22
+                            Text {
+                                id: targetLabel
+                                anchors.centerIn: parent
+                                text: atlas.mapTitle(modelData)
+                                color: "#33565E"
+                                font.pixelSize: 13
+                            }
+                            HoverHandler { id: targetHover }
+                            TapHandler { onTapped: atlas.openMap(modelData) }
+                        }
+                    }
+                }
+
                 Label { text: "先做什么"; font.bold: true }
-                Text { Layout.fillWidth: true; text: root.node.practice || ""; wrapMode: Text.WordWrap; color: "#40545B"; font.pixelSize: 16; lineHeight: 1.24 }
+                Text {
+                    Layout.fillWidth: true
+                    text: root.node.practice || ""
+                    wrapMode: Text.WordWrap
+                    color: "#40545B"
+                    font.pixelSize: 16
+                    lineHeight: 1.24
+                }
+
                 Label { text: "如何验证"; font.bold: true }
-                Text { Layout.fillWidth: true; text: root.node.validation_note || ""; wrapMode: Text.WordWrap; color: "#40545B"; font.pixelSize: 16; lineHeight: 1.24 }
+                Text {
+                    Layout.fillWidth: true
+                    text: root.node.validation_note || ""
+                    wrapMode: Text.WordWrap
+                    color: "#40545B"
+                    font.pixelSize: 16
+                    lineHeight: 1.24
+                }
+
+                Text {
+                    visible: Boolean(root.node.app)
+                    Layout.fillWidth: true
+                    text: "这个领域由「" + (root.node.app || "") + "」应用承载，学习与练习在那里进行。"
+                    wrapMode: Text.WordWrap
+                    color: "#3C6B63"
+                    font.pixelSize: 14
+                    lineHeight: 1.24
+                }
+
+                // 拆成多张图之后，一部分先修关系的两端落在不同图里。不显示出来，
+                // 这些依赖就等于因为拆图而消失了（ADR 0009 第 6 条）。
+                Label {
+                    visible: root.crossLinks.length > 0
+                    text: "跨图关联"
+                    font.bold: true
+                }
+                Repeater {
+                    model: root.crossLinks
+                    delegate: ColumnLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        spacing: 3
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: (modelData.incoming ? "前置：" : "它支撑：")
+                                + modelData.peer_title
+                                + "（" + modelData.map_title + "）"
+                                + (modelData.strong ? "" : " · 来路，非门槛")
+                            color: crossHover.hovered ? "#1F4E58" : "#35606A"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 15
+                            font.underline: crossHover.hovered
+                            HoverHandler { id: crossHover }
+                            TapHandler {
+                                onTapped: {
+                                    atlas.openMap(modelData.map_id)
+                                    atlas.selectNode(modelData.peer_id)
+                                }
+                            }
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            text: modelData.rationale
+                            color: "#5A6D72"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 14
+                            lineHeight: 1.22
+                        }
+                    }
+                }
+
                 Label { text: "来源"; font.bold: true }
                 Repeater {
                     model: root.node.source_refs || []
