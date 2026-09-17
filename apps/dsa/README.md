@@ -76,3 +76,10 @@ Athena 首页点「数据结构与算法」会 spawn `app.json` 的 dev 声明�
 | `src/` | 前端 |
 | `src-tauri/` | Tauri / Rust 命令 |
 | `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
+| `docs/cpp-foundations-reference.md` | C++20 实验所需的前置能力及其与 DSA 课程的边界 |
+
+## 跨应用参考
+
+DSA 的课程和实验仍只认 `content/`。如需核对某个案例假定的 C++ 语言能力，阅读
+[`docs/cpp-foundations-reference.md`](docs/cpp-foundations-reference.md)；该文档只提供
+术语与边界参考，不引入对 `apps/cpp` 的构建、源码或配置依赖。
