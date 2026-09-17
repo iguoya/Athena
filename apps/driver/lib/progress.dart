@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:flutter/services.dart";
 import "package:path/path.dart" as p;
 import "package:sqflite_common_ffi/sqflite_ffi.dart";
 
@@ -52,6 +53,7 @@ class ProgressStore {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
     final dbPath = path ?? _defaultPath();
+    await _seedIfMissing(dbPath);
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
@@ -68,6 +70,20 @@ class ProgressStore {
       ),
     );
     return ProgressStore(db);
+  }
+
+  /// 发行包第一次启动时，把打包进来的那份进度库铺到用户数据目录。
+  /// 不这么做的话，换成打包副本就等于从零开始——之前练的记录都在工作树里。
+  static Future<void> _seedIfMissing(String dbPath) async {
+    final file = File(dbPath);
+    if (file.existsSync() && file.lengthSync() > 0) return;
+    try {
+      final seed = await rootBundle.load("progress/learning.db");
+      file.parent.createSync(recursive: true);
+      file.writeAsBytesSync(seed.buffer.asUint8List(seed.offsetInBytes, seed.lengthInBytes));
+    } catch (_) {
+      // 没有随包的种子库（开发时就是这样），照常建一个空库。
+    }
   }
 
   static String _defaultPath() {
