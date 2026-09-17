@@ -402,6 +402,8 @@ class StatTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(Bs.radius),
       ),
       child: Row(
+        // 不写 min 的话 Row 会把统计块撑满整行，四个块各占一行，白占地方
+        mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
             radius: 20,
