@@ -13,3 +13,4 @@
 | [0007](0007-four-questions-per-page.md) | 练习一页四题，答错才朗读，解析按需回看 | 已接受 |
 | [0008](0008-adopt-public-question-banks.md) | 自用软件不受版权束缚，公开题库可以直接收录 | 已接受 |
 | [0009](0009-rebalance-subject-one-phases.md) | 科目一四阶段按题量重划 | 已接受 |
+| [0010](0010-sync-progress-through-a-github-jsonl.md) | 跨机器同步走 GitHub 私有仓库里的一个 JSONL 事件流 | 已接受 |

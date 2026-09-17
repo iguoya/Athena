@@ -6,6 +6,7 @@ import "exam.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
+import "sync.dart";
 import "session.dart";
 
 class HomePage extends StatefulWidget {
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const _wrongId = "wrong";
+  static const _syncId = "sync";
 
   String _place = "subject1";
   SessionLaunch? _session;
@@ -30,6 +32,10 @@ class _HomePageState extends State<HomePage> {
   List<Question> _wrongQuestions = const [];
   Map<String, int> _wrongCounts = const {};
   List<ExamRecord> _exams = const [];
+  SyncConfig? _sync = SyncConfig.load();
+  var _syncBusy = false;
+  SyncResult? _syncResult;
+  int _attemptTotal = 0;
 
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
 
@@ -83,6 +89,7 @@ class _HomePageState extends State<HomePage> {
     final ids = await widget.store.wrongQuestionIds();
     final wrongCounts = await widget.store.wrongCounts();
     final exams = await widget.store.recentExams();
+    final attemptTotal = await widget.store.attemptTotal();
     final s1Done = allMastered(widget.bank.forSubject("subject1"), mastered);
     final wrong = [
       for (final id in ids)
@@ -102,11 +109,12 @@ class _HomePageState extends State<HomePage> {
       _wrongQuestions = wrong;
       _wrongCounts = wrongCounts;
       _exams = exams;
+      _attemptTotal = attemptTotal;
     });
   }
 
   Subject? get _subject {
-    if (_place == _wrongId) return null;
+    if (_place == _wrongId || _place == _syncId) return null;
     return widget.bank.curriculum.subject(_place);
   }
 
@@ -164,6 +172,13 @@ class _HomePageState extends State<HomePage> {
             selected: _place == _wrongId && _session == null,
             label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
             onTap: () => _go(_wrongId),
+          ),
+          _navLine(
+            icon: Icons.cloud_sync,
+            selected: _place == _syncId && _session == null,
+            label: _sync?.usable == true ? "跨机器同步" : "跨机器同步（未配置）",
+            muted: _sync?.usable != true,
+            onTap: () => _go(_syncId),
           ),
           if (open) ...[
             const SizedBox(height: 16),
@@ -259,6 +274,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
+    if (_place == _syncId) return _syncOverview(context);
     if (_place == "subject4" && !_s1Done) return _lockedSubject4(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -652,6 +668,224 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  /// 跨机器同步：把作答记录推到 GitHub 私有仓库的一个 JSONL 文件，两台机器
+  /// 各拉各的、按并集合并（ADR 0010）。
+  Widget _syncOverview(BuildContext context) {
+    final config = _sync;
+    final result = _syncResult;
+    final ready = config?.usable == true;
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
+      child: ListView(
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.cloud_sync, color: Bs.primary),
+              SizedBox(width: 8),
+              Text("跨机器同步", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "作答记录推到 GitHub 私有仓库里的一个 JSONL 文件。两台机器各拉各的，"
+            "按「题号 + 时间」取并集合并——只增不改，不会互相覆盖。",
+            style: theme.textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              StatTile(
+                icon: Icons.storage,
+                label: "本机记录",
+                value: "$_attemptTotal 条",
+                color: Bs.primary,
+              ),
+              StatTile(
+                icon: Icons.schedule,
+                label: "上次同步",
+                value: _lastSyncedLabel(config),
+                color: config?.lastSyncedAt == null ? Bs.secondary : Bs.success,
+              ),
+              StatTile(
+                icon: ready ? Icons.link : Icons.link_off,
+                label: "远端",
+                value: ready ? "${config!.owner}/${config.repo}" : "未配置",
+                color: ready ? Bs.teal : Bs.warning,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              FilledButton.icon(
+                onPressed: ready && !_syncBusy ? _runSync : null,
+                style: FilledButton.styleFrom(minimumSize: const Size(160, 52)),
+                icon: _syncBusy
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Icon(Icons.sync, size: 22),
+                label: Text(_syncBusy ? "同步中…" : "立即同步"),
+              ),
+              const SizedBox(width: 12),
+              OutlinedButton.icon(
+                onPressed: _syncBusy ? null : () => _editSync(context),
+                icon: const Icon(Icons.key, size: 20),
+                label: Text(ready ? "修改配置" : "配置仓库与令牌"),
+                style: OutlinedButton.styleFrom(minimumSize: const Size(160, 52)),
+              ),
+            ],
+          ),
+          if (result != null) ...[
+            const SizedBox(height: 16),
+            BsAlert(
+              color: result.ok ? Bs.success : Bs.danger,
+              icon: result.ok ? Icons.check_circle : Icons.error,
+              child: Text(
+                result.ok
+                    ? "${result.message}；合并后共 ${result.total} 条记录"
+                    : result.message,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+          const SizedBox(height: 24),
+          BsAlert(
+            color: Bs.info,
+            icon: Icons.info,
+            child: Text(
+              "配置要点：GitHub 上开一个私有仓库（空的就行），令牌用 fine-grained "
+              "personal access token，权限只给这个仓库的 Contents 读写。令牌存在本机的 "
+              "${SyncConfig.configPath}，不进版本库。",
+              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _lastSyncedLabel(SyncConfig? config) {
+    final raw = config?.lastSyncedAt;
+    if (raw == null) return "还没同步过";
+    final at = DateTime.tryParse(raw);
+    if (at == null) return "还没同步过";
+    final diff = DateTime.now().difference(at);
+    if (diff.inMinutes < 1) return "刚刚";
+    if (diff.inHours < 1) return "${diff.inMinutes} 分钟前";
+    if (diff.inDays < 1) return "${diff.inHours} 小时前";
+    return "${diff.inDays} 天前";
+  }
+
+  Future<void> _runSync() async {
+    final config = _sync;
+    if (config == null || !config.usable) return;
+    setState(() {
+      _syncBusy = true;
+      _syncResult = null;
+    });
+    final result = await GithubSync(config).run(widget.store);
+    if (!mounted) return;
+    if (result.ok) {
+      final updated = config.withLastSynced(DateTime.now());
+      updated.save();
+      _sync = updated;
+      await _reload();
+    }
+    if (!mounted) return;
+    setState(() {
+      _syncBusy = false;
+      _syncResult = result;
+    });
+  }
+
+  Future<void> _editSync(BuildContext context) async {
+    final current = _sync;
+    final owner = TextEditingController(text: current?.owner ?? "");
+    final repo = TextEditingController(text: current?.repo ?? "");
+    final path = TextEditingController(text: current?.path ?? "driver-progress.jsonl");
+    final branch = TextEditingController(text: current?.branch ?? "main");
+    final token = TextEditingController(text: current?.token ?? "");
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("同步配置"),
+        content: SizedBox(
+          width: 520,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: owner,
+                  decoration: const InputDecoration(labelText: "GitHub 用户名", hintText: "例如 iguoya"),
+                ),
+                TextField(
+                  controller: repo,
+                  decoration: const InputDecoration(labelText: "私有仓库名", hintText: "例如 athena-progress"),
+                ),
+                TextField(
+                  controller: path,
+                  decoration: const InputDecoration(labelText: "文件路径"),
+                ),
+                TextField(
+                  controller: branch,
+                  decoration: const InputDecoration(labelText: "分支"),
+                ),
+                TextField(
+                  controller: token,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: "访问令牌（fine-grained PAT）",
+                    hintText: "只给这个仓库的 Contents 读写权限",
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          if (current != null)
+            TextButton(
+              onPressed: () {
+                SyncConfig.clear();
+                Navigator.of(dialogContext).pop(false);
+              },
+              child: const Text("清除配置", style: TextStyle(color: Bs.danger)),
+            ),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(null), child: const Text("取消")),
+          FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text("保存")),
+        ],
+      ),
+    );
+    if (saved == null) return;
+    if (!saved) {
+      setState(() {
+        _sync = null;
+        _syncResult = null;
+      });
+      return;
+    }
+    final config = SyncConfig(
+      owner: owner.text.trim(),
+      repo: repo.text.trim(),
+      token: token.text.trim(),
+      path: path.text.trim().isEmpty ? "driver-progress.jsonl" : path.text.trim(),
+      branch: branch.text.trim().isEmpty ? "main" : branch.text.trim(),
+      lastSyncedAt: current?.lastSyncedAt,
+    );
+    config.save();
+    setState(() {
+      _sync = config;
+      _syncResult = null;
+    });
   }
 
   Widget _sessionPane() {

@@ -86,6 +86,22 @@ class ProgressStore {
     }
   }
 
+  /// 放用户数据的目录（发行包用；工作树里跑的时候进度在 progress/ 下）。
+  static String userDataDir() {
+    late final String root;
+    if (Platform.isMacOS) {
+      root = p.join(Platform.environment["HOME"]!, "Library", "Application Support");
+    } else if (Platform.isWindows) {
+      root = Platform.environment["APPDATA"] ?? Platform.environment["USERPROFILE"]!;
+    } else {
+      final home = Platform.environment["HOME"]!;
+      root = Platform.environment["XDG_DATA_HOME"] ?? p.join(home, ".local", "share");
+    }
+    final folder = Directory(p.join(root, "AthenaDriver"));
+    folder.createSync(recursive: true);
+    return folder.path;
+  }
+
   static String _defaultPath() {
     // 进度随仓库走（ADR 0053）：换一台机器 clone 下来，掌握度和战绩要还在。
     // `app.json` 只存在于工作树，Flutter 发行包里没有它——据此区分，不必判断
@@ -98,18 +114,7 @@ class ProgressStore {
       return p.join(inRepository.path, "learning.db");
     }
 
-    late final String root;
-    if (Platform.isMacOS) {
-      root = p.join(Platform.environment["HOME"]!, "Library", "Application Support");
-    } else if (Platform.isWindows) {
-      root = Platform.environment["APPDATA"] ?? Platform.environment["USERPROFILE"]!;
-    } else {
-      final home = Platform.environment["HOME"]!;
-      root = Platform.environment["XDG_DATA_HOME"] ?? p.join(home, ".local", "share");
-    }
-    final folder = Directory(p.join(root, "AthenaDriver"));
-    folder.createSync(recursive: true);
-    return p.join(folder.path, "learning.db");
+    return p.join(userDataDir(), "learning.db");
   }
 
   static Future<void> _createV1(Database db) async {
@@ -445,6 +450,105 @@ class ProgressStore {
       at: row["at"] as String,
       read: (row["read"] as int) == 1,
     );
+  }
+
+  /// 导出成事件流：作答、模拟考、里程碑都是只追加的记录，设备之间按并集合并
+  /// 就行，不需要冲突解决（ADR 0010）。notices 是由这些记录派生的，不导。
+  Future<List<Map<String, Object?>>> exportEvents({String? since}) async {
+    final events = <Map<String, Object?>>[];
+    final attempts = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM attempts ORDER BY at"
+          : "SELECT * FROM attempts WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in attempts) {
+      events.add({
+        "kind": "attempt",
+        "question_id": row["question_id"],
+        "topic_id": row["topic_id"],
+        "subject_id": row["subject_id"],
+        "correct": row["correct"],
+        "duration_ms": row["duration_ms"] ?? 0,
+        "hesitant": row["hesitant"] ?? 0,
+        "at": row["at"],
+      });
+    }
+    final exams = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM exams ORDER BY at"
+          : "SELECT * FROM exams WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in exams) {
+      events.add({
+        "kind": "exam",
+        "subject_id": row["subject_id"],
+        "score": row["score"],
+        "passed": row["passed"],
+        "at": row["at"],
+      });
+    }
+    final achievements = await _db.rawQuery("SELECT * FROM achievements ORDER BY at");
+    for (final row in achievements) {
+      events.add({"kind": "achievement", "key": row["key"], "at": row["at"]});
+    }
+    events.sort((a, b) => (a["at"] as String).compareTo(b["at"] as String));
+    return events;
+  }
+
+  /// 把别的设备的事件并进来，已有的跳过。返回真正写进去的条数。
+  Future<int> importEvents(List<Map<String, Object?>> events) async {
+    var written = 0;
+    await _db.transaction((txn) async {
+      for (final event in events) {
+        switch (event["kind"]) {
+          case "attempt":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM attempts WHERE question_id = ? AND at = ? LIMIT 1",
+              [event["question_id"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("attempts", {
+              "question_id": event["question_id"],
+              "topic_id": event["topic_id"],
+              "subject_id": event["subject_id"],
+              "correct": event["correct"],
+              "duration_ms": event["duration_ms"] ?? 0,
+              "hesitant": event["hesitant"] ?? 0,
+              "at": event["at"],
+            });
+            written++;
+          case "exam":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM exams WHERE subject_id = ? AND at = ? LIMIT 1",
+              [event["subject_id"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("exams", {
+              "subject_id": event["subject_id"],
+              "score": event["score"],
+              "passed": event["passed"],
+              "at": event["at"],
+            });
+            written++;
+          case "achievement":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM achievements WHERE key = ? LIMIT 1",
+              [event["key"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("achievements", {"key": event["key"], "at": event["at"]});
+            written++;
+        }
+      }
+    });
+    return written;
+  }
+
+  Future<int> attemptTotal() async {
+    final rows = await _db.rawQuery("SELECT COUNT(*) AS n FROM attempts");
+    return (rows.first["n"] as int?) ?? 0;
   }
 
   Future<void> close() => _db.close();

@@ -26,6 +26,9 @@
 - **界面**：Dart；桌面工作台（侧栏 + 主区），不为手机窄屏折中。标志用
   `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
+- **跨机器同步**：作答记录是只追加的事件流，推到 GitHub 私有仓库的一个 JSONL 文件，
+  按「题号 + 时间」取并集合并（ADR 0010）。走 REST Contents API，不要求装 git；令牌存
+  本机用户数据目录的 `sync.json`，不进版本库。本地 SQLite 仍是唯一读写来源。
 - **进度**：SQLite，`progress/learning.db`——**随仓库走**，换机器 clone 下来
   掌握度和战绩还在（主仓库 ADR 0053）；拿不到工作树的发行副本退回用户数据目录
   `AthenaDriver/`。自建表、自迁移，知识点 ID 前缀 `drive.`（主仓库 ADR 0037）
