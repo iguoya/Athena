@@ -68,6 +68,30 @@
 Linux 上没有 `say`。前端先问 Rust 要原生语音列表，拿不到就退回
 `speechSynthesis`。两条路的接口保持一致，页面代码不关心走的是哪条。
 
+> **2026-09-15 复核：这个「回退」在 Windows 上恐怕不够，本节的判断需要扩展。**
+>
+> 本 ADR 的全部论据是「WKWebView 只看得见 2 个中文语音」——那是 macOS 特有的
+> 限制，所以当时把其余平台一律归为「退回 Web Speech 即可」。但 Windows 上
+> Tauri 用的是 WebView2，它有一个**性质相同的已知问题**：
+> `speechSynthesis.getVoices()` 拿不到微软的 Natural voices，尽管同一台机器上
+> 的 Edge 浏览器拿得到（WebView2Feedback #2660）。
+>
+> 也就是说 macOS 与 Windows 撞的是同一类墙——**宿主 WebView 只暴露一部分系统
+> 语音**——只是成因不同。按 ADR 0051 的平台优先级（macOS ≈ Windows > Linux），
+> Windows 也该有原生实现，而不是停在回退上。
+>
+> 代码层面目前是安全的：`tts_voices` 在没有 `say` 的平台上返回空，
+> `useNative` 置 false，页面照常走 Web Speech，不崩也不报错
+> （`mathematics（windows-latest）` 的 cargo check 一直是绿的）。所以这不是
+> bug，是**功能在优先平台上的缺口**。
+>
+> 真要补，Windows 侧的选择不止一个，且各有代价：PowerShell 的
+> `System.Speech.Synthesis` 最简单，但它走 SAPI5，同样拿不到 Natural voices；
+> 要拿到好语音得用 WinRT 的 `Windows.Media.SpeechSynthesis`，那是另一套依赖。
+> **先别动手**——按本 ADR 自己的方法论，应当先在一台真实 Windows 上把语音列表
+> 打出来（`report_env` 已经有这个能力），确认实际看得见几个中文语音、够不够用，
+> 再决定值不值得引入原生实现。当年 macOS 这条结论就是这么得出来的。
+
 ### 3. 语速换算需要实听校准
 
 Web Speech 的 `rate` 是倍数（0.9–1.45），`say -r` 是每分钟词数（默认约 175）。
