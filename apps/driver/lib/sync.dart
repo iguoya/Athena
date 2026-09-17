@@ -18,6 +18,9 @@ class SyncConfig {
     this.path = "driver-progress.jsonl",
     this.branch = "main",
     this.lastSyncedAt,
+    this.folder = "",
+    this.device = "",
+    this.folderSyncedAt,
   });
 
   final String owner;
@@ -29,7 +32,36 @@ class SyncConfig {
   /// 上次成功同步的时刻，只用来在界面上说一句「上次是什么时候」。
   final String? lastSyncedAt;
 
+  /// 文件夹同步：指向一个云盘目录（iCloud Drive、OneDrive、坚果云都行）。
+  final String folder;
+
+  /// 本机代号，决定这台机器写哪个文件——每台只写自己的那份，云盘就不会有写冲突。
+  final String device;
+  final String? folderSyncedAt;
+
   bool get usable => owner.isNotEmpty && repo.isNotEmpty && token.isNotEmpty;
+
+  bool get folderUsable => folder.isNotEmpty;
+
+  /// 机器名当默认代号：「Mac Pro」这种带空格的清一清。
+  static String defaultDevice() {
+    final raw = Platform.localHostname.split(".").first;
+    final cleaned = raw.replaceAll(RegExp(r"[^A-Za-z0-9_-]"), "-");
+    return cleaned.isEmpty ? "device" : cleaned;
+  }
+
+  /// iCloud Drive 在各平台的默认位置，省得手敲一长串路径。
+  static String? defaultCloudFolder() {
+    final home = Platform.environment["HOME"] ?? Platform.environment["USERPROFILE"];
+    if (home == null) return null;
+    if (Platform.isMacOS) {
+      return p.join(home, "Library", "Mobile Documents", "com~apple~CloudDocs", "Athena");
+    }
+    if (Platform.isWindows) {
+      return p.join(home, "iCloudDrive", "Athena");
+    }
+    return null;
+  }
 
   static String get configPath => p.join(ProgressStore.userDataDir(), "sync.json");
 
@@ -46,6 +78,9 @@ class SyncConfig {
         path: raw["path"] as String? ?? "driver-progress.jsonl",
         branch: raw["branch"] as String? ?? "main",
         lastSyncedAt: raw["last_synced_at"] as String?,
+        folder: raw["folder"] as String? ?? "",
+        device: raw["device"] as String? ?? "",
+        folderSyncedAt: raw["folder_synced_at"] as String?,
       );
     } on FormatException {
       return null;
@@ -62,6 +97,9 @@ class SyncConfig {
         "path": path,
         "branch": branch,
         if (lastSyncedAt != null) "last_synced_at": lastSyncedAt,
+        "folder": folder,
+        "device": device,
+        if (folderSyncedAt != null) "folder_synced_at": folderSyncedAt,
       }),
     );
     // 令牌明文躺在磁盘上，至少别让同机其他用户读到。
@@ -70,14 +108,31 @@ class SyncConfig {
     }
   }
 
-  SyncConfig withLastSynced(DateTime at) => SyncConfig(
-    owner: owner,
-    repo: repo,
-    token: token,
-    path: path,
-    branch: branch,
-    lastSyncedAt: at.toIso8601String(),
+  SyncConfig copyWith({
+    String? owner,
+    String? repo,
+    String? token,
+    String? path,
+    String? branch,
+    String? lastSyncedAt,
+    String? folder,
+    String? device,
+    String? folderSyncedAt,
+  }) => SyncConfig(
+    owner: owner ?? this.owner,
+    repo: repo ?? this.repo,
+    token: token ?? this.token,
+    path: path ?? this.path,
+    branch: branch ?? this.branch,
+    lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+    folder: folder ?? this.folder,
+    device: device ?? this.device,
+    folderSyncedAt: folderSyncedAt ?? this.folderSyncedAt,
   );
+
+  SyncConfig withLastSynced(DateTime at) => copyWith(lastSyncedAt: at.toIso8601String());
+
+  SyncConfig withFolderSynced(DateTime at) => copyWith(folderSyncedAt: at.toIso8601String());
 
   static void clear() {
     final file = File(configPath);
@@ -205,10 +260,11 @@ class GithubSync {
       if (raw.statusCode >= 300) throw http.ClientException(_explain(raw));
       text = utf8.decode(raw.bodyBytes);
     }
-    return _Remote(exists: true, sha: sha, text: text, events: _parse(text));
+    return _Remote(exists: true, sha: sha, text: text, events: parseLines(text));
   }
 
-  static List<Map<String, Object?>> _parse(String text) {
+  /// 一行一个事件；坏掉的行跳过，不拖垮整份记录。
+  static List<Map<String, Object?>> parseLines(String text) {
     final events = <Map<String, Object?>>[];
     for (final line in const LineSplitter().convert(text)) {
       final trimmed = line.trim();
@@ -246,4 +302,90 @@ class _Remote {
   final String? sha;
   final String text;
   final List<Map<String, Object?>> events;
+}
+
+/// 文件夹同步：把事件流写进一个云盘目录（iCloud Drive、OneDrive、坚果云都行），
+/// 由云盘客户端负责跨机器搬运。
+///
+/// **每台机器只写自己那份文件**（`driver-progress-<device>.jsonl`），读的时候
+/// 把目录下所有 `driver-progress-*.jsonl` 并起来。这样云盘永远碰不到「两端同时
+/// 改同一个文件」，也就不会产生冲突副本；真出现了副本，它也只是又一份事件流，
+/// 一起并进来就是了（ADR 0010）。
+class FolderSync {
+  FolderSync(this.config);
+
+  final SyncConfig config;
+
+  static const _prefix = "driver-progress-";
+  static const _suffix = ".jsonl";
+
+  String get _deviceFile {
+    final device = config.device.isEmpty ? SyncConfig.defaultDevice() : config.device;
+    return "$_prefix$device$_suffix";
+  }
+
+  Future<SyncResult> run(ProgressStore store) async {
+    if (!config.folderUsable) {
+      return const SyncResult(ok: false, message: "还没选同步文件夹");
+    }
+    final dir = Directory(config.folder);
+    try {
+      if (!dir.existsSync()) dir.createSync(recursive: true);
+      await _materialize(dir);
+      var pulled = 0;
+      for (final file in _files(dir)) {
+        final events = GithubSync.parseLines(file.readAsStringSync());
+        pulled += await store.importEvents(events);
+      }
+      final local = await store.exportEvents();
+      final payload = local.map(jsonEncode).join("\n");
+      final mine = File(p.join(dir.path, _deviceFile));
+      final before = mine.existsSync() ? mine.readAsStringSync() : "";
+      if (before != payload) {
+        mine.writeAsStringSync(payload);
+      }
+      return SyncResult(
+        ok: true,
+        pulled: pulled,
+        pushed: before == payload ? 0 : local.length,
+        total: local.length,
+        message: pulled > 0
+            ? "从云盘并回 $pulled 条，本机那份已写回"
+            : (before == payload ? "两边已经一致" : "本机记录已写进同步文件夹"),
+      );
+    } on FileSystemException catch (error) {
+      return SyncResult(ok: false, message: "读写同步文件夹失败：${error.message}");
+    }
+  }
+
+  List<File> _files(Directory dir) {
+    return [
+      for (final entry in dir.listSync())
+        if (entry is File &&
+            p.basename(entry.path).startsWith(_prefix) &&
+            p.basename(entry.path).endsWith(_suffix))
+          entry,
+    ];
+  }
+
+  /// iCloud 还没下载到本地的文件在目录里是 `.名字.icloud` 占位，直接读会失败。
+  /// macOS 上让 brctl 先把它们拉下来。
+  Future<void> _materialize(Directory dir) async {
+    if (!Platform.isMacOS) return;
+    final placeholders = [
+      for (final entry in dir.listSync())
+        if (entry is File &&
+            p.basename(entry.path).startsWith(".") &&
+            p.basename(entry.path).endsWith(".icloud"))
+          entry.path,
+    ];
+    for (final path in placeholders) {
+      try {
+        await Process.run("brctl", ["download", path]);
+      } on ProcessException {
+        // 没有 brctl 就算了，读不到的文件下次再说。
+        continue;
+      }
+    }
+  }
 }

@@ -670,12 +670,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 跨机器同步：把作答记录推到 GitHub 私有仓库的一个 JSONL 文件，两台机器
-  /// 各拉各的、按并集合并（ADR 0010）。
+  /// 跨机器同步：日常走云盘文件夹（iCloud Drive 这类），GitHub 那条留着当
+  /// 版本历史与异地备份（ADR 0010）。
   Widget _syncOverview(BuildContext context) {
     final config = _sync;
-    final result = _syncResult;
-    final ready = config?.usable == true;
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
@@ -688,83 +686,91 @@ class _HomePageState extends State<HomePage> {
               Text("跨机器同步", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(
-            "作答记录推到 GitHub 私有仓库里的一个 JSONL 文件。两台机器各拉各的，"
-            "按「题号 + 时间」取并集合并——只增不改，不会互相覆盖。",
+            "作答记录是只追加的事件流，两台机器按「题号 + 时间」取并集合并——只增不改，"
+            "不会互相覆盖。本机现有 $_attemptTotal 条。",
             style: theme.textTheme.bodyLarge,
           ),
           const SizedBox(height: 20),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              StatTile(
-                icon: Icons.storage,
-                label: "本机记录",
-                value: "$_attemptTotal 条",
-                color: Bs.primary,
-              ),
-              StatTile(
-                icon: Icons.schedule,
-                label: "上次同步",
-                value: _lastSyncedLabel(config),
-                color: config?.lastSyncedAt == null ? Bs.secondary : Bs.success,
-              ),
-              StatTile(
-                icon: ready ? Icons.link : Icons.link_off,
-                label: "远端",
-                value: ready ? "${config!.owner}/${config.repo}" : "未配置",
-                color: ready ? Bs.teal : Bs.warning,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              FilledButton.icon(
-                onPressed: ready && !_syncBusy ? _runSync : null,
-                style: FilledButton.styleFrom(minimumSize: const Size(160, 52)),
-                icon: _syncBusy
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                      )
-                    : const Icon(Icons.sync, size: 22),
-                label: Text(_syncBusy ? "同步中…" : "立即同步"),
-              ),
-              const SizedBox(width: 12),
-              OutlinedButton.icon(
-                onPressed: _syncBusy ? null : () => _editSync(context),
-                icon: const Icon(Icons.key, size: 20),
-                label: Text(ready ? "修改配置" : "配置仓库与令牌"),
-                style: OutlinedButton.styleFrom(minimumSize: const Size(160, 52)),
-              ),
-            ],
-          ),
-          if (result != null) ...[
+          _folderSyncCard(context, config),
+          const SizedBox(height: 16),
+          _githubSyncCard(context, config),
+          if (_syncResult != null) ...[
             const SizedBox(height: 16),
             BsAlert(
-              color: result.ok ? Bs.success : Bs.danger,
-              icon: result.ok ? Icons.check_circle : Icons.error,
+              color: _syncResult!.ok ? Bs.success : Bs.danger,
+              icon: _syncResult!.ok ? Icons.check_circle : Icons.error,
               child: Text(
-                result.ok
-                    ? "${result.message}；合并后共 ${result.total} 条记录"
-                    : result.message,
+                _syncResult!.ok
+                    ? "${_syncResult!.message}；合并后共 ${_syncResult!.total} 条记录"
+                    : _syncResult!.message,
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],
-          const SizedBox(height: 24),
-          BsAlert(
-            color: Bs.info,
-            icon: Icons.info,
+        ],
+      ),
+    );
+  }
+
+  Widget _syncCard({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required List<Widget> rows,
+    required List<Widget> actions,
+  }) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        color: Bs.body,
+        border: Border.all(color: Bs.border),
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: color, size: 24),
+              const SizedBox(width: 8),
+              Text(title, style: Theme.of(context).textTheme.titleLarge),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary, height: 1.45),
+          ),
+          const SizedBox(height: 12),
+          ...rows,
+          const SizedBox(height: 12),
+          Wrap(spacing: 10, runSpacing: 10, children: actions),
+        ],
+      ),
+    );
+  }
+
+  Widget _syncLine(BuildContext context, String label, String value, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 92,
+            child: Text(label, style: const TextStyle(color: Bs.secondary, fontSize: 16)),
+          ),
+          Expanded(
             child: Text(
-              "配置要点：GitHub 上开一个私有仓库（空的就行），令牌用 fine-grained "
-              "personal access token，权限只给这个仓库的 Contents 读写。令牌存在本机的 "
-              "${SyncConfig.configPath}，不进版本库。",
-              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              value,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: color ?? Bs.dark,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -772,8 +778,82 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String _lastSyncedLabel(SyncConfig? config) {
-    final raw = config?.lastSyncedAt;
+  Widget _folderSyncCard(BuildContext context, SyncConfig? config) {
+    final ready = config?.folderUsable == true;
+    final device = (config?.device.isEmpty ?? true) ? SyncConfig.defaultDevice() : config!.device;
+    return _syncCard(
+      context: context,
+      icon: Icons.cloud_done,
+      color: Bs.primary,
+      title: "云盘文件夹（日常同步）",
+      subtitle: "指向一个云盘目录，由云盘客户端搬运。每台机器只写自己那份文件，"
+          "所以不会有写冲突；读的时候把目录里所有机器的记录并起来。",
+      rows: [
+        _syncLine(context, "同步目录", ready ? config!.folder : "未选择",
+            color: ready ? null : Bs.warning),
+        _syncLine(context, "本机代号", device),
+        _syncLine(context, "上次同步", _agoLabel(config?.folderSyncedAt)),
+      ],
+      actions: [
+        FilledButton.icon(
+          onPressed: ready && !_syncBusy ? _runFolderSync : null,
+          style: FilledButton.styleFrom(minimumSize: const Size(150, 48)),
+          icon: _syncBusy
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                )
+              : const Icon(Icons.sync, size: 20),
+          label: Text(_syncBusy ? "同步中…" : "立即同步"),
+        ),
+        OutlinedButton.icon(
+          onPressed: _syncBusy ? null : () => _editFolder(context),
+          icon: const Icon(Icons.folder_open, size: 20),
+          label: Text(ready ? "换个目录" : "选择同步目录"),
+          style: OutlinedButton.styleFrom(minimumSize: const Size(150, 48)),
+        ),
+      ],
+    );
+  }
+
+  Widget _githubSyncCard(BuildContext context, SyncConfig? config) {
+    final ready = config?.usable == true;
+    return _syncCard(
+      context: context,
+      icon: Icons.history,
+      color: Bs.teal,
+      title: "GitHub 私有仓库（版本历史与异地备份）",
+      subtitle: "每次同步留下一个可回滚的提交。不依赖任何客户端软件，三个平台一视同仁——"
+          "云盘那条走不通时它还在。",
+      rows: [
+        _syncLine(context, "远端仓库", ready ? "${config!.owner}/${config.repo}" : "未配置",
+            color: ready ? null : Bs.warning),
+        _syncLine(context, "文件", config?.path ?? "driver-progress.jsonl"),
+        _syncLine(context, "上次同步", _agoLabel(config?.lastSyncedAt)),
+      ],
+      actions: [
+        FilledButton.icon(
+          onPressed: ready && !_syncBusy ? _runSync : null,
+          style: FilledButton.styleFrom(
+            backgroundColor: Bs.teal,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(150, 48),
+          ),
+          icon: const Icon(Icons.backup, size: 20),
+          label: const Text("推一份备份"),
+        ),
+        OutlinedButton.icon(
+          onPressed: _syncBusy ? null : () => _editSync(context),
+          icon: const Icon(Icons.key, size: 20),
+          label: Text(ready ? "修改配置" : "配置仓库与令牌"),
+          style: OutlinedButton.styleFrom(minimumSize: const Size(150, 48)),
+        ),
+      ],
+    );
+  }
+
+  String _agoLabel(String? raw) {
     if (raw == null) return "还没同步过";
     final at = DateTime.tryParse(raw);
     if (at == null) return "还没同步过";
@@ -782,6 +862,91 @@ class _HomePageState extends State<HomePage> {
     if (diff.inHours < 1) return "${diff.inMinutes} 分钟前";
     if (diff.inDays < 1) return "${diff.inHours} 小时前";
     return "${diff.inDays} 天前";
+  }
+
+  Future<void> _runFolderSync() async {
+    final config = _sync;
+    if (config == null || !config.folderUsable) return;
+    setState(() {
+      _syncBusy = true;
+      _syncResult = null;
+    });
+    final result = await FolderSync(config).run(widget.store);
+    if (!mounted) return;
+    if (result.ok) {
+      final updated = config.withFolderSynced(DateTime.now());
+      updated.save();
+      _sync = updated;
+      await _reload();
+    }
+    if (!mounted) return;
+    setState(() {
+      _syncBusy = false;
+      _syncResult = result;
+    });
+  }
+
+  Future<void> _editFolder(BuildContext context) async {
+    final current = _sync;
+    final folder = TextEditingController(
+      text: current?.folder.isNotEmpty == true
+          ? current!.folder
+          : (SyncConfig.defaultCloudFolder() ?? ""),
+    );
+    final device = TextEditingController(
+      text: current?.device.isNotEmpty == true ? current!.device : SyncConfig.defaultDevice(),
+    );
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text("同步文件夹"),
+        content: SizedBox(
+          width: 560,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: folder,
+                decoration: const InputDecoration(
+                  labelText: "目录路径",
+                  helperText: "iCloud Drive、OneDrive、坚果云的同步目录都行，两台机器挂同一个账号即可",
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (SyncConfig.defaultCloudFolder() != null)
+                TextButton.icon(
+                  onPressed: () => folder.text = SyncConfig.defaultCloudFolder()!,
+                  icon: const Icon(Icons.cloud, size: 18),
+                  label: const Text("用 iCloud Drive 里的 Athena 目录"),
+                ),
+              TextField(
+                controller: device,
+                decoration: const InputDecoration(
+                  labelText: "本机代号",
+                  helperText: "决定这台机器写哪个文件，两台不能重名",
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(null), child: const Text("取消")),
+          FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text("保存")),
+        ],
+      ),
+    );
+    if (saved != true) return;
+    final base = current ?? const SyncConfig(owner: "", repo: "", token: "");
+    final updated = base.copyWith(
+      folder: folder.text.trim(),
+      device: device.text.trim().isEmpty ? SyncConfig.defaultDevice() : device.text.trim(),
+    );
+    updated.save();
+    setState(() {
+      _sync = updated;
+      _syncResult = null;
+    });
   }
 
   Future<void> _runSync() async {
