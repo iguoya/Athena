@@ -291,6 +291,16 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - 当前包只允许描述为 ad-hoc 签名、未公证版本；完成 Developer ID 和 notarization 前不得宣称已通过 Gatekeeper 正式发行验证。
 - 修改打包器、macOS 模板或发行工作流后，应至少生成并启动一次本机架构的 `.app`，并验证 DMG 校验和与应用签名结构。
 
+## Windows 发行规则
+
+- Windows 可携带包统一通过 `scripts/package_windows.py` 生成，不手工复制单个可执行文件作为 Release。
+- `dist/` 是本地生成目录，不提交 zip 或 MSI；GitHub Release 只上传标签构建产生的
+  `Athena-VERSION-windows-x64.msi` 与 `.zip`。
+- `meson.build` 和 Git 标签必须使用同一个 `MAJOR.MINOR.PATCH` 版本；打包器默认读取
+  `meson.build` 并拒绝不一致的 `--version`。标签写作 `v7.0.0`，不要打成 `v7.0`。
+- 当前 MSI 未做 Authenticode 签名，对外描述必须如实。
+- 修改打包器或发行工作流后，应至少在本机生成 zip 并启动一次 `Athena.cmd`。
+
 ## 修改流程
 
 1. 阅读相关文档和现有实现。

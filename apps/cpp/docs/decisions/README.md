@@ -59,3 +59,4 @@
 | [0008](0008-version-single-source.md) | 版本号以 `meson.build` 为单一来源 | 已接受 |
 | [0018](0018-linux-deb-appimage-release.md) | Ubuntu 同时发行 DEB 与 AppImage | 已接受 |
 | [0019](0019-ubuntu-26-release-baseline.md) | Linux 发行以 Ubuntu 26.04 为基线 | 已接受 |
+| [0057](0057-windows-msi-zip-release.md) | Windows 发行 MSI 与便携 zip | 已接受 |

@@ -2,13 +2,16 @@
 
 ## 当前范围
 
-每个标签发行生成 macOS 双架构 DMG 和 Ubuntu x86_64 的两种安装包：
+每个标签发行生成 macOS 双架构 DMG、Ubuntu x86_64 的两种安装包，以及
+Windows x64 的 MSI 与便携 zip：
 
 ```text
 Athena-VERSION-macos-x86_64.dmg
 Athena-VERSION-macos-arm64.dmg
 athena_VERSION_amd64.deb
 Athena-VERSION-linux-x86_64.AppImage
+Athena-VERSION-windows-x64.msi
+Athena-VERSION-windows-x64.zip
 ```
 
 当前发行包使用 ad-hoc 签名，尚未接入 Developer ID 和 Apple 公证。首次从网络下载
@@ -110,11 +113,54 @@ DEB 是 Ubuntu 首选：`sudo apt install ./athena_VERSION_amd64.deb` 会解析�
 内置 Athena 和大多数库；它定位为 Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意
 Linux 发行版的完全静态兼容。
 
+## Windows 本机构建
+
+Windows 打包在 MSYS2 UCRT64 里跑，额外需要 `adwaita-icon-theme`、
+`hicolor-icon-theme`。MSI 还要本机装过 WiX 5：
+
+```sh
+dotnet tool install --global wix
+```
+
+先构建经过优化和剥离符号的发行版：
+
+```sh
+meson setup build-windows-release --buildtype=release -Dstrip=true
+meson compile -C build-windows-release
+meson test -C build-windows-release --print-errorlogs
+```
+
+再从同一份 `Athena.exe` 生成 zip 与 MSI：
+
+```sh
+python scripts/package_windows.py \
+  --project-root . \
+  --binary build-windows-release/Athena.exe \
+  --output-dir dist
+```
+
+版本号以 `meson.build` 为单一来源，脚本默认直接读取；显式传入 `--version`
+时必须与 `meson.build` 一致，否则拒绝打包。没有 WiX 时加 `--skip-msi`，
+只出 zip。
+
+打包器会：
+
+- 按 glib 在 Windows 上的 prefix 规则维持 `bin` / `lib` / `share` 布局。
+- 用 `ldd` 递归收集非系统 DLL，并带上 `gspawn` 助手、GdkPixbuf 加载器、
+  GIO 模块、GSettings schemas、Adwaita / hicolor 图标和 GtkSourceView 规格。
+- 写 `Athena.cmd` 作为入口：展开加载器缓存路径，并把 `GSK_RENDERER` 设成
+  cairo，避开部分机器上 GSK 的 GL 后端起不来。
+- 用 WiX 5 把同一棵树收进 per-machine MSI，开始菜单指向 `Athena.cmd`。
+
+当前 MSI 未做 Authenticode 签名。SmartScreen 可能提示「未知发布者」，
+不要把当前包描述成已签名版本。
+
 ## GitHub Release
 
 `.github/workflows/release.yml` 由 `v*.*.*` 标签触发：Intel 与 Apple Silicon Runner
-分别构建、测试和打包 DMG；Ubuntu 26.04 Runner 构建、测试并生成 DEB 与 AppImage。
-三个构建任务完成后，发布任务汇总所有资产、生成 SHA-256 校验和，并创建 GitHub Release
+分别构建、测试和打包 DMG；Ubuntu 26.04 Runner 构建、测试并生成 DEB 与 AppImage；
+Windows Runner 在 MSYS2 UCRT64 里构建、测试并生成 MSI 与 zip。
+这些构建任务完成后，发布任务汇总所有资产、生成 SHA-256 校验和，并创建 GitHub Release
 和自动发行说明。
 
 发布前要求：

@@ -172,9 +172,103 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  windows:
+    name: Build Windows packages
+    runs-on: windows-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-meson
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-gtkmm-4.0
+            mingw-w64-ucrt-x86_64-gtksourceview5
+            mingw-w64-ucrt-x86_64-md4c
+            mingw-w64-ucrt-x86_64-nlohmann-json
+            mingw-w64-ucrt-x86_64-gtest
+            mingw-w64-ucrt-x86_64-sqlite3
+            mingw-w64-ucrt-x86_64-librsvg
+            mingw-w64-ucrt-x86_64-blueprint-compiler
+            mingw-w64-ucrt-x86_64-adwaita-icon-theme
+            mingw-w64-ucrt-x86_64-hicolor-icon-theme
+            mingw-w64-ucrt-x86_64-python
+
+      - name: Read and verify version
+        id: version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          meson setup build-windows-release --buildtype=release -Dstrip=true
+          project_version=$(meson introspect build-windows-release --projectinfo \
+            | python -c 'import json,sys; print(json.load(sys.stdin)["version"])')
+          if [[ "$version" != "$project_version" ]]; then
+            echo "Tag version $version does not match Meson version $project_version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test
+        run: |
+          meson compile -C build-windows-release
+          meson test -C build-windows-release --print-errorlogs
+
+      - name: Install WiX
+        shell: pwsh
+        run: dotnet tool install --global wix --version 5.0.2
+
+      - name: Package MSI and zip
+        run: |
+          export PATH="$PATH:$USERPROFILE/.dotnet/tools"
+          python scripts/package_windows.py \
+            --project-root . \
+            --binary build-windows-release/Athena.exe \
+            --output-dir dist \
+            --version "${{ steps.version.outputs.version }}"
+
+      - name: Verify Windows packages
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $zip = "apps/cpp/dist/Athena-$version-windows-x64.zip"
+          $msi = "apps/cpp/dist/Athena-$version-windows-x64.msi"
+          if (-not (Test-Path $zip)) { throw "missing $zip" }
+          if (-not (Test-Path $msi)) { throw "missing $msi" }
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $archive = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path $zip))
+          try {
+            $names = $archive.Entries | ForEach-Object { $_.FullName }
+            if ($names -notcontains "bin/Athena.exe") {
+              throw "zip is missing bin/Athena.exe"
+            }
+          } finally {
+            $archive.Dispose()
+          }
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: Athena-windows-x64
+          path: |
+            apps/cpp/dist/Athena-*-windows-x64.zip
+            apps/cpp/dist/Athena-*-windows-x64.msi
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish GitHub Release
-    needs: [macos, linux]
+    needs: [macos, linux, windows]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -190,7 +284,7 @@ jobs:
 
       - name: Create checksums
         working-directory: dist
-        run: sha256sum Athena-*.dmg Athena-*.AppImage athena_*.deb > SHA256SUMS.txt
+        run: sha256sum Athena-*.dmg Athena-*.AppImage athena_*.deb Athena-*-windows-x64.zip Athena-*-windows-x64.msi > SHA256SUMS.txt
 
       - name: Publish release
         env:
@@ -200,6 +294,7 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
             dist/Athena-*.dmg dist/Athena-*.AppImage dist/athena_*.deb \
+            dist/Athena-*-windows-x64.zip dist/Athena-*-windows-x64.msi \
             dist/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \

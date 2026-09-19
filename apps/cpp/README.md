@@ -75,6 +75,23 @@ chmod +x Athena-VERSION-linux-x86_64.AppImage
 AppImage 内置 Athena 及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
 运行的静态包。
 
+## Windows 安装包
+
+GitHub 标签发行同时提供 Windows x64 的 MSI（装进「程序文件」）和一份同内容的
+便携 zip。两者都自带 GTK 运行时，不需要再装 MSYS2。当前没有 Authenticode
+签名，SmartScreen 可能提示「未知发布者」。
+
+```sh
+meson setup build-windows-release --buildtype=release -Dstrip=true
+meson compile -C build-windows-release
+python scripts/package_windows.py \
+  --project-root . \
+  --binary build-windows-release/Athena.exe \
+  --output-dir dist
+```
+
+完整流程见 `docs/RELEASE.md`。
+
 ## 许可证
 
 本项目基于[木兰宽松许可证第二版](https://license.coscl.org.cn/MulanPSL2)（Mulan PSL v2）授权，完整条款见 [LICENSE](../../LICENSE)。

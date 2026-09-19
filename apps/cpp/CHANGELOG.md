@@ -3,6 +3,23 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
+## [7.0.0] - 2026-09-20
+
+### 新增
+
+- **Windows 进入正式发行**：标签 Release 现在除了 macOS DMG 和 Ubuntu DEB / AppImage，
+  还产出 `Athena-VERSION-windows-x64.msi` 与同内容的便携 zip。打包入口是
+  `scripts/package_windows.py`（ADR 0057），从 Meson 的 `Athena.exe` 收集 UCRT64
+  GTK 运行时，换机不需要再装 MSYS2。
+- 驾考学习在 Windows 上按 UTF-8 编译源文件（MSVC `/utf-8`），窗口标题「驾考学习」
+  不再被系统代码页 936 读成非法字符。
+
+### 修复
+
+- 启动器在 Windows 上点名微软雅黑 UI（以及各平台带简体字形的 UI 字体）。
+  Slint 缺字回退在英文 Windows 上会先命中 Yu Gothic，简体独有的「语」「习」「结」
+  会画成空白。
+
 ## [6.0.0] - 2026-09-14
 
 ### 变更
