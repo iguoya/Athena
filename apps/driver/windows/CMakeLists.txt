@@ -39,7 +39,9 @@ add_definitions(-DUNICODE -D_UNICODE)
 # of modifying this function.
 function(APPLY_STANDARD_SETTINGS TARGET)
   target_compile_features(${TARGET} PUBLIC cxx_std_17)
-  target_compile_options(${TARGET} PRIVATE /W4 /WX /wd"4100")
+  # /utf-8：源文件是 UTF-8（窗口标题「驾考学习」）。不写的话，中文 Windows 上
+  # MSVC 按系统代码页 936 读，C4819 被 /WX 抬成错误，编不过。
+  target_compile_options(${TARGET} PRIVATE /W4 /WX /wd"4100" /utf-8)
   target_compile_options(${TARGET} PRIVATE /EHsc)
   target_compile_definitions(${TARGET} PRIVATE "_HAS_EXCEPTIONS=0")
   target_compile_definitions(${TARGET} PRIVATE "$<$<CONFIG:Debug>:_DEBUG>")

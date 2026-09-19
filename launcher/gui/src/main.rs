@@ -41,6 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
 
     let window = LauncherWindow::new()?;
+    window.set_ui_font(ui_font().into());
     {
         let handle = window.as_weak();
         window.window().on_close_requested(move || {
@@ -242,6 +243,41 @@ fn evolution_links(apps: &[App]) -> Vec<LinkSpec> {
 /// 应用自带的图标，按图块里的显示尺寸渲染（乘 2 供高分屏用）。
 fn tile_icon(app: &App) -> Option<slint::Image> {
     icon::render(app.icon_file.as_ref()?, 60)
+}
+
+/// 界面默认字体：必须覆盖简体中文。
+///
+/// Slint 的缺字回退按系统字体枚举顺序走。英文 Windows 上 Yu Gothic（日文）
+/// 往往排在微软雅黑前面，于是「语」「习」「结」这类简体独有的字画不出来，
+/// 标题变成「C 言程」「英 学」。点名一款带 GB 字形的 UI 字体，回退就不会
+/// 先落到日文或繁体上。
+fn ui_font() -> &'static str {
+    #[cfg(windows)]
+    {
+        let fonts = std::env::var_os("WINDIR")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| std::path::PathBuf::from(r"C:\Windows"))
+            .join("Fonts");
+        // YaHei UI 和 YaHei 都在 msyh.ttc 里；UI 那个度量更适合界面。
+        if fonts.join("msyh.ttc").is_file() {
+            return "Microsoft YaHei UI";
+        }
+        if fonts.join("NotoSansSC-VF.ttf").is_file() {
+            return "Noto Sans SC";
+        }
+        if fonts.join("simhei.ttf").is_file() {
+            return "SimHei";
+        }
+        "Segoe UI"
+    }
+    #[cfg(target_os = "macos")]
+    {
+        "PingFang SC"
+    }
+    #[cfg(not(any(windows, target_os = "macos")))]
+    {
+        "Noto Sans CJK SC"
+    }
 }
 
 /// 把启动器自己拉到前台。

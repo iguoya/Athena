@@ -146,10 +146,15 @@ export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
     in property <string> status;
     in property <[LinkSpec]> links;
+    // 必须点名带简体的 UI 字体。Slint 缺字回退在英文 Windows 上会先命中
+    // Yu Gothic，简体独有的「语」「习」「结」直接空白。具体家族名由 Rust 按
+    // 平台填进来，这里只负责接到 Window 的默认字体上。
+    in property <string> ui-font: "sans-serif";
     callback open(string);
     callback stop(string);
 
     title: "Athena 启动器";
+    default-font-family: ui-font;
     // 初始大小按三列两行估：现在有六个学习应用，窄窗口改走滚动，不裁掉后排。
     preferred-width: 404px;
     preferred-height: 420px;
