@@ -106,7 +106,20 @@ pub fn extra_path_entries() -> Vec<PathBuf> {
             entries.push(PathBuf::from(raw));
         }
     } else if cfg!(target_os = "windows") {
-        // Windows 上工具链一般已经在 PATH 里；预留位置，需要时再补。
+        // `apps/cpp` 的 GTK4/gtkmm 走 MSYS2 UCRT64（g++、pkg-config、ninja、
+        // blueprint-compiler 全在这个前缀下）；这套工具链不在 Windows 默认 PATH
+        // 里，从菜单栏托盘或普通终端启动时摸不到，meson 要么报找不到
+        // pkg-config，要么误捡系统装的 MSVC cl.exe，把 build/ 配置成不兼容的
+        // 工具链（gtkmm 是 MinGW ABI，跟 MSVC 不兼容）。`scripts/package_windows.py`
+        // 打包时已经认定 `C:\msys64\ucrt64\bin` 是这套工具链的位置，这里补上同一个
+        // 路径，让开发态启动也稳定找到它。
+        entries.push(PathBuf::from(r"C:\msys64\ucrt64\bin"));
+        // `apps/c` 的 Qt Quick / QML 走官方 Qt 安装器的 MSVC kit：CMake 能找到它是
+        // 因为 app.json 的 CMAKE_PREFIX_PATH 指了路，但可执行文件运行时还要在 PATH
+        // 里找到 Qt6Core.dll 等运行库，装好编译不代表能跑。官方安装器把版本号写进
+        // 路径（不像 Homebrew 那样有个不随版本变的符号链接），升级 Qt 版本后要跟着
+        // 改这里——这是该装法本身的限制，不是能绕开的兜底。
+        entries.push(PathBuf::from(r"C:\Qt\6.8.1\msvc2022_64\bin"));
     } else {
         for raw in ["/usr/local/bin", "/usr/bin"] {
             entries.push(PathBuf::from(raw));
