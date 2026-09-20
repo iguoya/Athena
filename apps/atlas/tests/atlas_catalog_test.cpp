@@ -13,15 +13,17 @@ private slots:
     void everyNodeCarriesItsOwnPractice();
     void bindsNecessityToCareerTargets();
     void keepsCrossMapDependenciesReachable();
+    void restoresCppKnowledgeGraphAsTwoChapters();
+    void locksCareerMapsUntilKnowledgeSystemIsComplete();
 };
 
 void AtlasCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
     QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
-    QCOMPARE(catalog.maps().size(), 22);
-    QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-practice"));
-    QVERIFY(catalog.nodes().size() >= 6);
-    QVERIFY(catalog.edges().size() >= 5);
+    QCOMPARE(catalog.maps().size(), 18);
+    QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-science"));
+    QVERIFY(catalog.nodes().size() >= 15);
+    QVERIFY(catalog.edges().size() >= 13);
     QVERIFY(catalog.canvasWidth() >= 1280);
     QVERIFY(catalog.canvasHeight() >= 720);
 }
@@ -30,13 +32,13 @@ void AtlasCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
 // 学科入口上，不能落在方向图或目标图上。
 void AtlasCatalogTest::defaultsToAnAcademicEntryMap() {
     AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
-    QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-practice"));
+    QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-science"));
     QHash<QString, int> byKind;
     for (const QVariant& value : catalog.maps()) {
         ++byKind[value.toMap().value("view_kind").toString()];
     }
-    // 技术体系层吸收 apps/cpp 那张学科路线图后扩到八张（ADR 0009 第 2 条）。
-    QCOMPARE(byKind.value("academic"), 8);
+    // 课程知识图谱恢复为计算机 / 电子信息两章，实践主干两张仍在（ADR 0010）。
+    QCOMPARE(byKind.value("academic"), 4);
     QCOMPARE(byKind.value("target"), 9);
     QCOMPARE(byKind.value("career") + byKind.value("engineering"), 5);
 }
@@ -141,6 +143,52 @@ void AtlasCatalogTest::preservesStrictMapSelection() {
     QCOMPARE(catalog.selectedNode().value("id").toString(), QStringLiteral("atlas.embedded.bringup"));
     catalog.openMap("aerospace-engineering");
     QVERIFY(catalog.selectedNode().isEmpty());
+}
+
+// 原 C++ 首页知识图谱是计算机 / 电子信息两张完整图。拆成六张碎片会把同侧
+// 先修变成跨图跳转，也会把虚线来路误写成强先修（ADR 0010）。
+void AtlasCatalogTest::restoresCppKnowledgeGraphAsTwoChapters() {
+    AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
+    QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
+
+    catalog.openMap("computer-science");
+    QCOMPARE(catalog.nodes().size(), 15);
+    QVERIFY(catalog.edges().size() >= 13);
+    catalog.selectNode("atlas.cs.cpp");
+    QCOMPARE(catalog.selectedNode().value("entry").toBool(), true);
+    QCOMPARE(catalog.selectedNode().value("verify").toString(), QStringLiteral("code"));
+    QVERIFY(catalog.selectedNode().value("requires").toList().isEmpty());
+
+    bool foundWeakCppOrigin = false;
+    for (const QVariant& value : catalog.edges()) {
+        const QVariantMap edge = value.toMap();
+        if (edge.value("from").toString() == QStringLiteral("atlas.cs.c_lang")
+            && edge.value("to").toString() == QStringLiteral("atlas.cs.cpp")) {
+            QCOMPARE(edge.value("relation").toString(), QStringLiteral("enables"));
+            QVERIFY(edge.value("number").toInt() >= 1);
+            foundWeakCppOrigin = true;
+        }
+    }
+    QVERIFY(foundWeakCppOrigin);
+
+    catalog.openMap("electronic-information");
+    QCOMPARE(catalog.nodes().size(), 13);
+    catalog.selectNode("atlas.ei.electronics_basics");
+    QCOMPARE(catalog.selectedNode().value("entry").toBool(), true);
+    QCOMPARE(catalog.selectedNode().value("verify").toString(), QStringLiteral("bench"));
+}
+
+// 职业图仍在内容里（宁增勿删），但当前盘面只开放技术体系（ADR 0012）。
+void AtlasCatalogTest::locksCareerMapsUntilKnowledgeSystemIsComplete() {
+    AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
+    QVERIFY(!catalog.mapLocked(QStringLiteral("computer-science")));
+    QVERIFY(!catalog.mapLocked(QStringLiteral("electronic-information")));
+    QVERIFY(!catalog.mapLocked(QStringLiteral("computer-practice")));
+    QVERIFY(!catalog.mapLocked(QStringLiteral("electronic-practice")));
+    QVERIFY(catalog.mapLocked(QStringLiteral("embedded-realtime")));
+    QVERIFY(catalog.mapLocked(QStringLiteral("aerospace-engineering")));
+    QVERIFY(catalog.mapLocked(QStringLiteral("target-realtime-software")));
+    QVERIFY(catalog.mapLocked(QStringLiteral("large-model-engineering")));
 }
 
 QTEST_MAIN(AtlasCatalogTest)

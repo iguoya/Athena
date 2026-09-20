@@ -21,6 +21,7 @@ class AtlasCatalog final : public QObject {
     Q_PROPERTY(int canvasWidth READ canvasWidth NOTIFY selectionChanged)
     Q_PROPERTY(int canvasHeight READ canvasHeight NOTIFY selectionChanged)
     Q_PROPERTY(QVariantMap selectedNode READ selectedNode NOTIFY selectionChanged)
+    Q_PROPERTY(bool showingNode READ showingNode NOTIFY selectionChanged)
     // 不建节点的理论科目，属于当前这张图（ADR 0009 第 7 条）。
     Q_PROPERTY(QVariantList selectedMapTheory READ selectedMapTheory NOTIFY selectionChanged)
     Q_PROPERTY(QString error READ error NOTIFY catalogChanged)
@@ -42,19 +43,26 @@ public:
     int canvasWidth() const { return m_canvas_width; }
     int canvasHeight() const { return m_canvas_height; }
     QVariantMap selectedNode() const { return m_selected_node; }
+    bool showingNode() const { return !m_selected_node.isEmpty(); }
     QVariantList selectedMapTheory() const { return m_selected_map_theory; }
     QString error() const { return m_error; }
 
     Q_INVOKABLE void openMap(const QString& mapId);
+    Q_INVOKABLE bool mapLocked(const QString& mapId) const;
     Q_INVOKABLE void selectNode(const QString& nodeId);
+    Q_INVOKABLE void openNode(const QString& nodeId);
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE QString relationLabel(const QString& relation) const;
     Q_INVOKABLE QString priorityLabel(const QString& priorityTier) const;
+    Q_INVOKABLE QString priorityBadge(const QString& priority) const;
     Q_INVOKABLE QString priorityColor(const QString& priorityTier) const;
     Q_INVOKABLE QString volatilityLabel(const QString& volatility) const;
     Q_INVOKABLE QString validationLabel(const QString& validation) const;
+    Q_INVOKABLE QString verifyLabel(const QString& verify) const;
+    Q_INVOKABLE QString trackLabel(const QString& track) const;
     Q_INVOKABLE QString trackColor(const QString& track) const;
     Q_INVOKABLE QString familyLabel(const QString& family) const;
+    Q_INVOKABLE QString nodeTitle(const QString& nodeId) const;
     // 与某个节点相关的跨图关联，带上对端节点在哪张图，否则这条关系只是一句话，
     // 使用者不知道去哪儿找它（ADR 0009 第 6 条）。
     Q_INVOKABLE QVariantList crossEdgesFor(const QString& nodeId) const;

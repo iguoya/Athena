@@ -52,7 +52,9 @@ def check_absorption() -> None:
 
     原料是 apps/cpp 首页那张学科路线图的逐字导出。使用者随时会删掉源文件，
     删之前要有把握「信息确实都在 atlas 里了」——靠人眼比对 28 个节点 × 三段
-    文字外加 34 条依赖理由是不现实的，所以这件事必须是一项检查。
+    文字外加 34 条依赖理由是不现实的，所以这件事必须是一项检查。课程知识图谱
+    按原图收成计算机 / 电子信息两章（ADR 0010），检查仍按节点 id 对照，不按
+    碎片图的旧切分。
     """
     print("== 技术体系图对原料的覆盖 ==", flush=True)
     raw_path = PROJECT_ROOT / "content" / "absorbed" / "cpp-roadmap.json"
@@ -131,6 +133,21 @@ def check_absorption() -> None:
             problems.append(
                 f"{node_id} 是推荐入门起点，但地图 {map_id} 的 summary 没说明这件事"
             )
+
+    # 5. 课程知识图谱必须是原图那两章，不能再拆回碎片图（ADR 0010）。
+    map_ids = {entry["id"] for entry in atlas["maps"]}
+    if "computer-science" not in map_ids or "electronic-information" not in map_ids:
+        problems.append("课程知识图谱缺少 computer-science / electronic-information 两章")
+    for leftover in (
+        "computer-programming",
+        "computer-machine",
+        "computer-network-intelligence",
+        "electronic-circuit",
+        "electronic-mcu",
+        "electronic-embedded",
+    ):
+        if leftover in map_ids:
+            problems.append(f"碎片图 {leftover} 还在，课程节点应已迁入两章")
 
     if problems:
         for problem in problems:

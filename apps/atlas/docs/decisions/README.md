@@ -8,4 +8,8 @@
 - [ADR 0006：以实时与高性能计算约束软、硬件两侧](0006-realtime-and-hpc-both-sides.md)
 - [ADR 0007：运行时只留一个 Atlas 进程，不做 QML 热重载](0007-single-instance-not-hot-reload.md)
 - [ADR 0008：一个能力域一个入口，体系与实操用标签页切换](0008-one-entry-per-domain-with-tabs.md)（**已失效**，随 0004 一同被推翻）
-- [ADR 0009：吸收 apps/cpp 首页学科路线图，技术体系层扩到八张](0009-absorb-the-cpp-discipline-roadmap.md)
+- [ADR 0009：吸收 apps/cpp 首页学科路线图，技术体系层扩到八张](0009-absorb-the-cpp-discipline-roadmap.md)（课程知识图谱的张数由 ADR 0010 收窄为两章）
+- [ADR 0010：C++ 首页知识图谱按原结构收成两章](0010-two-course-graphs-from-cpp-knowledge-graph.md)
+- [ADR 0011：两章完整学科知识体系，只连真先修，节点开专页](0011-true-prereqs-and-node-pages.md)
+- [ADR 0012：Atlas 是其他学习应用的路线图与指南针](0012-compass-for-sister-apps.md)
+- [ADR 0013：桌面表达深度是一等目标，内容正确是底线](0013-desktop-expression-and-visual-experiment.md)

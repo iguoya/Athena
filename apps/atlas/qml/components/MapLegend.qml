@@ -2,17 +2,26 @@ import QtQuick
 import QtQuick.Layouts
 
 RowLayout {
+    id: root
+    required property var nodes
     spacing: 18
+
+    readonly property var tracksInUse: {
+        const seen = []
+        const labels = []
+        for (let i = 0; i < nodes.length; ++i) {
+            const track = nodes[i].track
+            if (!track || seen.indexOf(track) >= 0)
+                continue
+            seen.push(track)
+            labels.push({ color: atlas.trackColor(track), label: atlas.trackLabel(track) })
+        }
+        return labels
+    }
+
     Text { text: "能力域"; color: "#40575E"; font.pixelSize: 14; font.weight: Font.DemiBold }
     Repeater {
-        model: [
-            { color: "#2E6F78", label: "基础" },
-            { color: "#4969A8", label: "软件" },
-            { color: "#9A6632", label: "电子" },
-            { color: "#8A557E", label: "控制" },
-            { color: "#3B7E64", label: "计算" },
-            { color: "#A2464B", label: "保障" }
-        ]
+        model: root.tracksInUse
         delegate: RowLayout {
             required property var modelData
             spacing: 5
@@ -21,5 +30,5 @@ RowLayout {
         }
     }
     Item { Layout.fillWidth: true }
-    Text { text: "验收：测量　·　基准　·　集成　·　评审　·　实线强先修　虚线使能"; color: "#5A6D72"; font.pixelSize: 13 }
+    Text { text: "侧栏按必需 / 重要 / 可选罗列　·　实线门槛　虚线来路　·　▶ 入门可任选起步"; color: "#5A6D72"; font.pixelSize: 13 }
 }

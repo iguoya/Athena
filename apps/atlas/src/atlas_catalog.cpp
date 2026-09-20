@@ -66,15 +66,65 @@ struct GraphMetrics {
     int padY = 70;
 };
 
+GraphMetrics courseGraphMetrics() {
+    // 课程知识图谱沿用原 C++ 首页那张图的取舍：卡片不压缩，画布变宽靠平移缩放。
+    GraphMetrics metrics;
+    metrics.nodeWidth = 340;
+    metrics.nodeHeight = 214;
+    metrics.columnGap = 36;
+    metrics.layerGap = 108;
+    metrics.padX = 56;
+    metrics.padY = 64;
+    return metrics;
+}
+
+int priorityRank(const QString& priority) {
+    if (priority == QLatin1String("essential")) return 0;
+    if (priority == QLatin1String("important")) return 1;
+    return 2;
+}
+
 struct LaidOutGraph {
     QVariantList nodes;
     int width = 1280;
     int height = 720;
 };
 
+LaidOutGraph placeLayers(const QVariantList& sourceNodes, const QVector<QVector<int>>& layers,
+                         const GraphMetrics& metrics) {
+    LaidOutGraph graph;
+    int maximumColumns = 1;
+    for (const auto& layer : layers) {
+        maximumColumns = std::max(maximumColumns, static_cast<int>(layer.size()));
+    }
+    graph.width = std::max(1280, metrics.padX * 2 + maximumColumns * metrics.nodeWidth
+        + (maximumColumns - 1) * metrics.columnGap);
+    graph.height = std::max(720, metrics.padY * 2 + static_cast<int>(layers.size()) * metrics.nodeHeight
+        + std::max(0, static_cast<int>(layers.size()) - 1) * metrics.layerGap);
+
+    int y = metrics.padY;
+    for (int layerIndex = 0; layerIndex < layers.size(); ++layerIndex) {
+        const auto& layer = layers.at(layerIndex);
+        const int rowWidth = layer.size() * metrics.nodeWidth
+            + std::max(0, static_cast<int>(layer.size()) - 1) * metrics.columnGap;
+        int x = (graph.width - rowWidth) / 2;
+        for (const int index : layer) {
+            QVariantMap node = sourceNodes.at(index).toMap();
+            node.insert("x", x);
+            node.insert("y", y);
+            node.insert("w", metrics.nodeWidth);
+            node.insert("h", metrics.nodeHeight);
+            node.insert("layer", layerIndex);
+            graph.nodes.append(node);
+            x += metrics.nodeWidth + metrics.columnGap;
+        }
+        y += metrics.nodeHeight + metrics.layerGap;
+    }
+    return graph;
+}
+
 // 强先修的布局必须稳定：同一份内容在三个平台上得到同一层和同一位置。
 LaidOutGraph layoutGraph(const QVariantList& sourceNodes, const GraphMetrics& metrics) {
-    LaidOutGraph graph;
     QHash<QString, int> indexOf;
     for (int i = 0; i < sourceNodes.size(); ++i) {
         indexOf.insert(sourceNodes.at(i).toMap().value("id").toString(), i);
@@ -115,34 +165,21 @@ LaidOutGraph layoutGraph(const QVariantList& sourceNodes, const GraphMetrics& me
         layers.append(layer);
     }
 
-    int maximumColumns = 1;
-    for (const auto& layer : layers) {
-        maximumColumns = std::max(maximumColumns, static_cast<int>(layer.size()));
-    }
-    graph.width = std::max(1280, metrics.padX * 2 + maximumColumns * metrics.nodeWidth
-        + (maximumColumns - 1) * metrics.columnGap);
-    graph.height = std::max(720, metrics.padY * 2 + static_cast<int>(layers.size()) * metrics.nodeHeight
-        + std::max(0, static_cast<int>(layers.size()) - 1) * metrics.layerGap);
+    return placeLayers(sourceNodes, layers, metrics);
+}
 
-    int y = metrics.padY;
-    for (int layerIndex = 0; layerIndex < layers.size(); ++layerIndex) {
-        const auto& layer = layers.at(layerIndex);
-        const int rowWidth = layer.size() * metrics.nodeWidth
-            + std::max(0, static_cast<int>(layer.size()) - 1) * metrics.columnGap;
-        int x = (graph.width - rowWidth) / 2;
-        for (const int index : layer) {
-            QVariantMap node = sourceNodes.at(index).toMap();
-            node.insert("x", x);
-            node.insert("y", y);
-            node.insert("w", metrics.nodeWidth);
-            node.insert("h", metrics.nodeHeight);
-            node.insert("layer", layerIndex);
-            graph.nodes.append(node);
-            x += metrics.nodeWidth + metrics.columnGap;
-        }
-        y += metrics.nodeHeight + metrics.layerGap;
+LaidOutGraph layoutByPriority(const QVariantList& sourceNodes, const GraphMetrics& metrics) {
+    QVector<QVector<int>> buckets(3);
+    for (int i = 0; i < sourceNodes.size(); ++i) {
+        buckets[priorityRank(sourceNodes.at(i).toMap().value("priority").toString())].append(i);
     }
-    return graph;
+    QVector<QVector<int>> layers;
+    for (const auto& bucket : buckets) {
+        if (!bucket.isEmpty()) {
+            layers.append(bucket);
+        }
+    }
+    return placeLayers(sourceNodes, layers, metrics);
 }
 
 } // namespace
@@ -327,6 +364,19 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
                     return false;
                 }
             }
+            if (map.value("graph_kind").toString() == QStringLiteral("course")) {
+                // 课程知识图谱要能看见原图上的判断：从哪进、拿什么验（ADR 0010）。
+                if (!node.contains("entry")) {
+                    *error = QString("课程节点 %1 缺少 entry（是否为入门起点）。").arg(nodeId);
+                    return false;
+                }
+                const QString verify = node.value("verify").toString();
+                if (verify != "code" && verify != "board" && verify != "bench") {
+                    *error = QString("课程节点 %1 的 verify 只能是 code、board 或 bench。")
+                                 .arg(nodeId);
+                    return false;
+                }
+            }
             if (!hasSourceRefs(node.value("source_refs").toList(), sourceIds, error)) {
                 *error = QString("节点 %1：%2").arg(nodeId, *error);
                 return false;
@@ -366,12 +416,21 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
                 *error = QString("边 %1 → %2：%3").arg(from, to, *error);
                 return false;
             }
-            if (edge.value("relation").toString() == "requires") {
+            const QString relation = edge.value("relation").toString();
+            if (relation != "requires" && relation != "enables") {
+                *error = QString("边 %1 → %2 的 relation 只能是 requires 或 enables。")
+                             .arg(from, to);
+                return false;
+            }
+            if (relation == "requires") {
                 requiredEdges.insert(from + "\x1f" + to);
                 if (!requirements.value(to).contains(from)) {
                     *error = QString("边 %1 → %2 标为 requires，却未写入目标节点 requires。").arg(from, to);
                     return false;
                 }
+            } else if (requirements.value(to).contains(from)) {
+                *error = QString("边 %1 → %2 是虚线来路，不应写入目标节点 requires。").arg(from, to);
+                return false;
             }
         }
         for (auto it = requirements.cbegin(); it != requirements.cend(); ++it) {
@@ -528,13 +587,34 @@ void AtlasCatalog::applyMap(const QVariantMap& map) {
         }
         classifiedNodes.append(node);
     }
-    const LaidOutGraph laidOut = layoutGraph(classifiedNodes, {});
+    const bool course = map.value("graph_kind").toString() == QStringLiteral("course");
+    const LaidOutGraph laidOut = course
+        ? layoutByPriority(classifiedNodes, courseGraphMetrics())
+        : layoutGraph(classifiedNodes, GraphMetrics{});
     m_nodes = laidOut.nodes;
-    m_edges = map.value("edges").toList();
+    QVariantList numberedEdges;
+    int edgeNumber = 1;
+    for (const QVariant& value : map.value("edges").toList()) {
+        QVariantMap edge = value.toMap();
+        edge.insert("number", edgeNumber++);
+        numberedEdges.append(edge);
+    }
+    m_edges = numberedEdges;
     m_selected_map_theory = map.value("theory").toList();
     m_canvas_width = laidOut.width;
     m_canvas_height = laidOut.height;
     m_selected_node.clear();
+}
+
+bool AtlasCatalog::mapLocked(const QString& mapId) const {
+    // 职业方向 / 职业目标仍在内容里，界面先锁住：当前只培养知识体系（ADR 0012）。
+    for (const QVariant& mapValue : m_maps) {
+        const QVariantMap map = mapValue.toMap();
+        if (map.value("id").toString() == mapId) {
+            return map.value("view_kind").toString() != QStringLiteral("academic");
+        }
+    }
+    return true;
 }
 
 void AtlasCatalog::openMap(const QString& mapId) {
@@ -561,6 +641,29 @@ void AtlasCatalog::selectNode(const QString& nodeId) {
     }
 }
 
+void AtlasCatalog::openNode(const QString& nodeId) {
+    QString mapId;
+    for (const QVariant& mapValue : m_maps) {
+        const QVariantMap map = mapValue.toMap();
+        for (const QVariant& nodeValue : map.value("nodes").toList()) {
+            if (nodeValue.toMap().value("id").toString() == nodeId) {
+                mapId = map.value("id").toString();
+                break;
+            }
+        }
+        if (!mapId.isEmpty()) {
+            break;
+        }
+    }
+    if (mapId.isEmpty()) {
+        return;
+    }
+    if (mapId != m_selected_map_id) {
+        openMap(mapId);
+    }
+    selectNode(nodeId);
+}
+
 void AtlasCatalog::clearSelection() {
     if (!m_selected_node.isEmpty()) {
         m_selected_node.clear();
@@ -576,11 +679,18 @@ QString AtlasCatalog::relationLabel(const QString& relation) const {
     return relation;
 }
 
-// 必要程度按职业目标层的专业方向判定，不是通用的学习建议（ADR 0009 第 5 条）。
+// 课程图按培养要求分级；职业目标图仍用同一套词，表示对那个落点有多必要。
 QString AtlasCatalog::priorityLabel(const QString& priority) const {
-    if (priority == "essential") return "必需 · 绕不过去";
-    if (priority == "important") return "重要 · 显著支撑";
-    if (priority == "optional") return "可选 · 方向相关";
+    if (priority == "essential") return "必需 · 学科核心";
+    if (priority == "important") return "重要 · 实现目标";
+    if (priority == "optional") return "可选 · 列出以免盲点";
+    return "未分级";
+}
+
+QString AtlasCatalog::priorityBadge(const QString& priority) const {
+    if (priority == "essential") return "核心";
+    if (priority == "important") return "建议";
+    if (priority == "optional") return "可选";
     return "未分级";
 }
 
@@ -642,6 +752,16 @@ QString AtlasCatalog::mapTitle(const QString& mapId) const {
     return mapId;
 }
 
+QString AtlasCatalog::nodeTitle(const QString& nodeId) const {
+    for (const QVariant& value : m_nodes) {
+        const QVariantMap node = value.toMap();
+        if (node.value("id").toString() == nodeId) {
+            return node.value("title").toString();
+        }
+    }
+    return nodeId;
+}
+
 QString AtlasCatalog::volatilityLabel(const QString& volatility) const {
     if (volatility == "stable") return "稳定基础";
     if (volatility == "evolving") return "持续演进";
@@ -659,7 +779,36 @@ QString AtlasCatalog::validationLabel(const QString& validation) const {
     return validation;
 }
 
+QString AtlasCatalog::verifyLabel(const QString& verify) const {
+    if (verify == "code") return "编程";
+    if (verify == "board") return "开发板";
+    if (verify == "bench") return "硬件";
+    return verify;
+}
+
+QString AtlasCatalog::trackLabel(const QString& track) const {
+    if (track == "language") return "编程语言";
+    if (track == "engineering") return "结构与工程";
+    if (track == "systems") return "系统";
+    if (track == "hardware") return "电路与嵌入式";
+    if (track == "ai") return "模型与端侧";
+    if (track == "capstone") return "综合应用";
+    if (track == "foundation") return "基础";
+    if (track == "software") return "软件";
+    if (track == "electronics") return "电子";
+    if (track == "control") return "控制";
+    if (track == "compute") return "计算";
+    if (track == "assurance") return "保障";
+    return track;
+}
+
 QString AtlasCatalog::trackColor(const QString& track) const {
+    if (track == "language") return "#4969A8";
+    if (track == "engineering") return "#2E6F78";
+    if (track == "systems") return "#3B5B8A";
+    if (track == "hardware") return "#9A6632";
+    if (track == "ai") return "#3B7E64";
+    if (track == "capstone") return "#A2464B";
     if (track == "foundation") return "#2E6F78";
     if (track == "software") return "#4969A8";
     if (track == "electronics") return "#9A6632";

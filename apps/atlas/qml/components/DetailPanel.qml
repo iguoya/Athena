@@ -19,6 +19,15 @@ Rectangle {
     readonly property bool hasNode: Boolean(root.node && root.node.id)
     readonly property var crossLinks: root.hasNode ? atlas.crossEdgesFor(root.node.id) : []
 
+    function mapIsLocked(mapId) {
+        const maps = atlas.maps
+        for (let i = 0; i < maps.length; ++i) {
+            if (maps[i].id === mapId)
+                return maps[i].view_kind !== "academic"
+        }
+        return true
+    }
+
     ScrollView {
         anchors.fill: parent
         clip: true
@@ -50,6 +59,42 @@ Rectangle {
                 wrapMode: Text.WordWrap
                 font.pixelSize: 16
                 lineHeight: 1.28
+            }
+
+            ColumnLayout {
+                visible: !root.hasNode && root.edges.length > 0
+                Layout.fillWidth: true
+                spacing: 10
+
+                Label { text: "依赖编号（与图上圆点对应）"; font.bold: true }
+                Repeater {
+                    model: root.edges
+                    delegate: ColumnLayout {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        spacing: 2
+                        Text {
+                            Layout.fillWidth: true
+                            text: (modelData.number || "") + ". "
+                                + atlas.nodeTitle(modelData.from)
+                                + " → "
+                                + atlas.nodeTitle(modelData.to)
+                                + (modelData.relation === "requires" ? "" : " · 来路，非门槛")
+                            color: "#24424B"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 14
+                            font.weight: Font.DemiBold
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            text: modelData.rationale || ""
+                            color: "#5A6D72"
+                            wrapMode: Text.WordWrap
+                            font.pixelSize: 13
+                            lineHeight: 1.22
+                        }
+                    }
+                }
             }
 
             ColumnLayout {
@@ -172,37 +217,14 @@ Rectangle {
                     lineHeight: 1.24
                 }
 
-                // 必要程度的判据是目标能力，所以要能点过去看那张图，而不是只给个等级。
-                Label {
-                    visible: Boolean(root.node.targets && root.node.targets.length > 0)
-                    text: "支撑哪些目标能力"
-                    font.bold: true
-                }
-                Flow {
+                Text {
                     visible: Boolean(root.node.targets && root.node.targets.length > 0)
                     Layout.fillWidth: true
-                    spacing: 8
-                    Repeater {
-                        model: root.node.targets || []
-                        delegate: Rectangle {
-                            required property var modelData
-                            radius: 13
-                            color: targetHover.hovered ? "#E4EFEC" : "#F1F5F3"
-                            border.color: "#CBD8D3"
-                            border.width: 1
-                            height: 26
-                            width: targetLabel.implicitWidth + 22
-                            Text {
-                                id: targetLabel
-                                anchors.centerIn: parent
-                                text: atlas.mapTitle(modelData)
-                                color: "#33565E"
-                                font.pixelSize: 13
-                            }
-                            HoverHandler { id: targetHover }
-                            TapHandler { onTapped: atlas.openMap(modelData) }
-                        }
-                    }
+                    text: "职业方向与目标待知识体系补全后解锁，这一阶段不按就业落点组织学习。"
+                    wrapMode: Text.WordWrap
+                    color: "#7A8F94"
+                    font.pixelSize: 14
+                    lineHeight: 1.22
                 }
 
                 Label { text: "先做什么"; font.bold: true }
@@ -261,6 +283,7 @@ Rectangle {
                             font.underline: crossHover.hovered
                             HoverHandler { id: crossHover }
                             TapHandler {
+                                enabled: !root.mapIsLocked(modelData.map_id || "")
                                 onTapped: {
                                     atlas.openMap(modelData.map_id)
                                     atlas.selectNode(modelData.peer_id)

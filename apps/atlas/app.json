@@ -1,12 +1,12 @@
 {
   "id": "atlas",
-  "title": "Atlas",
+  "title": "司南",
   "description": "军工研制技术图谱：实时与高性能双侧约束；某所实时控制为重要参考；机器人仅相邻参考；大模型仅地面助力。",
   "icon": {
     "type": "theme",
     "name": "compass-symbolic",
     "symbol": "map",
-    "letter": "A",
+    "letter": "司",
     "accent": "#316B78",
     "file": "icon.svg"
   },
@@ -17,7 +17,8 @@
         "first_existing": [
           "/opt/homebrew/opt/qt@6",
           "/usr/local/opt/qt@6",
-          "/usr/local/opt/qt6"
+          "/usr/local/opt/qt6",
+          "C:/Qt/6.8.1/msvc2022_64"
         ]
       }
     },
@@ -31,7 +32,7 @@
           "build",
           "-DCMAKE_BUILD_TYPE=Debug"
         ],
-        "label": "配置 Atlas CMake"
+        "label": "配置司南 CMake"
       },
       {
         "run": [
@@ -41,7 +42,7 @@
           "--target",
           "atlas"
         ],
-        "label": "编译 Atlas"
+        "label": "编译司南"
       }
     ],
     "run": [
