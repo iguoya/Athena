@@ -93,7 +93,7 @@ fn home() -> PathBuf {
 
 /// 从桌面环境（菜单栏、快捷键、登录项）启动时 PATH 很短，node、cargo、meson、Qt
 /// 往往都不在里面。这些补全过去散落在五份 dev 脚本里，现在只写一处。
-pub fn extra_path_entries() -> Vec<PathBuf> {
+pub fn extra_path_entries(app_id: &str) -> Vec<PathBuf> {
     let mut entries: Vec<PathBuf> = Vec::new();
     if cfg!(target_os = "macos") {
         for raw in [
@@ -113,7 +113,16 @@ pub fn extra_path_entries() -> Vec<PathBuf> {
         // 工具链（gtkmm 是 MinGW ABI，跟 MSVC 不兼容）。`scripts/package_windows.py`
         // 打包时已经认定 `C:\msys64\ucrt64\bin` 是这套工具链的位置，这里补上同一个
         // 路径，让开发态启动也稳定找到它。
-        entries.push(PathBuf::from(r"C:\msys64\ucrt64\bin"));
+        //
+        // 只给 cpp 一个应用注入：`apps/c`、`apps/atlas` 是 Qt + MSVC，一旦这个目录
+        // 下的 g++/gcc 对它们也可见，CMake 的 Ninja 生成器会优先在 PATH 里找到
+        // MinGW 编译器而不是走 vswhere 探测 MSVC——实测触发过这个问题：Qt 官方安装器
+        // 的 Qt6 是 MSVC ABI 编的，链接期全是 `undefined reference`。不同工具链
+        // 不共用 PATH，各应用只看见自己需要的那一套（用户反馈：同一个 app 不同
+        // 工具链要分开，这里是同一台机器不同 app 的工具链要分开，同一条原则）。
+        if app_id == "cpp" {
+            entries.push(PathBuf::from(r"C:\msys64\ucrt64\bin"));
+        }
         // `apps/c` 的 Qt Quick / QML 走官方 Qt 安装器的 MSVC kit：CMake 能找到它是
         // 因为 app.json 的 CMAKE_PREFIX_PATH 指了路，但可执行文件运行时还要在 PATH
         // 里找到 Qt6Core.dll 等运行库，装好编译不代表能跑。官方安装器把版本号写进

@@ -3,6 +3,7 @@
 
 #include <QFont>
 #include <QGuiApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTimer>
@@ -34,6 +35,9 @@ int main(int argc, char* argv[]) {
     app.setFont(ui_font);
 
     const QString root = resolve_root();
+    // 复用 app.json 里声明的同一份 icon.svg（读取源码而非打包资源，dev
+    // 模式改图标不用重编）；标题栏与任务栏图标同出一源，不用另配一份通用图标。
+    app.setWindowIcon(QIcon(root + "/icon.svg"));
     Curriculum curriculum(root);
     QQmlApplicationEngine engine;
     engine.addImportPath(root + "/qml");

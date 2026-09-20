@@ -7,7 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml)
+# app.json 的 `run`/`binary` 写死 build/athena-c（单配置生成器的扁平布局）。
+# Windows 上 CMake 有时选中 Visual Studio 这种多配置生成器，产物会落进
+# build/Debug/athena-c.exe，路径就对不上——这里强制所有配置都落回 build/ 顶层，
+# 生成器选哪个都不影响 app.json 找得到它。
+foreach(_config_type ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER "${_config_type}" _config_upper)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_config_upper} "${CMAKE_BINARY_DIR}")
+endforeach()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml Svg)
 
 qt_add_executable(athena-c
     src/main.cpp
@@ -16,7 +26,7 @@ qt_add_executable(athena-c
 )
 
 target_include_directories(athena-c PRIVATE src)
-target_link_libraries(athena-c PRIVATE Qt6::Quick Qt6::Qml)
+target_link_libraries(athena-c PRIVATE Qt6::Quick Qt6::Qml Qt6::Svg)
 target_compile_definitions(athena-c PRIVATE
     ATHENA_C_SOURCE_ROOT="${CMAKE_SOURCE_DIR}")
 
