@@ -4,17 +4,25 @@ import "package:athena_driver/exam.dart";
 import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
-Question _q(String id, {String band = QuestionBand.regular}) {
+Question _q(String id, {String band = QuestionBand.regular, String kind = "judge"}) {
+  final choices = kind == "single"
+      ? const [
+          Choice(id: "A", label: "a", ok: true),
+          Choice(id: "B", label: "b", ok: false),
+          Choice(id: "C", label: "c", ok: false),
+          Choice(id: "D", label: "d", ok: false),
+        ]
+      : const [
+          Choice(id: "T", label: "正确", ok: true),
+          Choice(id: "F", label: "错误", ok: false),
+        ];
   return Question(
     id: id,
     topicId: "drive.s1.license",
-    kind: "judge",
+    kind: kind,
     prompt: "x",
     band: band,
-    choices: const [
-      Choice(id: "T", label: "正确", ok: true),
-      Choice(id: "F", label: "错误", ok: false),
-    ],
+    choices: choices,
     explain: "",
     sourceRefs: const [],
   );
@@ -75,6 +83,25 @@ void main() {
     final hot = paper.questions.where((q) => q.isHot).length;
     final regular = paper.questions.where((q) => q.isRegular).length;
     expect(hot, greaterThan(regular));
+  });
+
+  test("阶段测试从大题库只抽 100 题，判断 30 单选 70", () {
+    const exam = ExamRules(
+      questionCount: 100,
+      minutes: 45,
+      passScore: 90,
+      pointsPerQuestion: 1,
+      mix: {"judge": 30, "single": 70},
+    );
+    final bank = [
+      for (var i = 0; i < 200; i++) _q("j$i"),
+      for (var i = 0; i < 200; i++) _q("s$i", kind: "single"),
+    ];
+    final rules = phaseExamRules(exam, bank.length);
+    final paper = Paper.draw(bank, rules, Random(1));
+    expect(paper.questions, hasLength(100));
+    expect(paper.questions.where((q) => q.kind == "judge").length, 30);
+    expect(paper.questions.where((q) => q.kind == "single").length, 70);
   });
 
   test("偏难怪默认不进练习，打错才会再出", () {

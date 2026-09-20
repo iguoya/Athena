@@ -54,4 +54,24 @@ void main() {
     expect(phaseTestMinutes(20), 9);
     expect(phaseTestMinutes(40), 18);
   });
+
+  test("阶段测试按考场题量和配比抽，不把整阶段摊开", () {
+    const exam = ExamRules(
+      questionCount: 100,
+      minutes: 45,
+      passScore: 90,
+      pointsPerQuestion: 1,
+      mix: {"judge": 30, "single": 70},
+    );
+    final full = phaseExamRules(exam, 476);
+    expect(full.questionCount, 100);
+    expect(full.minutes, 45);
+    expect(full.mix["judge"], 30);
+    expect(full.mix["single"], 70);
+
+    final short = phaseExamRules(exam, 40);
+    expect(short.questionCount, 100);
+    expect(short.minutes, phaseTestMinutes(40));
+    expect(short.mix["single"], 70);
+  });
 }

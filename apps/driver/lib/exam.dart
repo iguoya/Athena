@@ -76,6 +76,19 @@ int phaseTestMinutes(int count) {
   return minutes < 8 ? 8 : minutes;
 }
 
+/// 阶段测试按考场口径抽：100 题、45 分钟、判断 30 / 单选 70、90 分及格。
+/// 本阶段日常题不够 100 道时，时长按题量估，分数仍折合百分制。
+ExamRules phaseExamRules(ExamRules exam, int poolSize) {
+  final take = min(exam.questionCount, poolSize);
+  return ExamRules(
+    questionCount: exam.questionCount,
+    minutes: take >= exam.questionCount ? exam.minutes : phaseTestMinutes(take),
+    passScore: exam.passScore,
+    pointsPerQuestion: exam.pointsPerQuestion,
+    mix: exam.mix,
+  );
+}
+
 bool answersMatch(Question question, Set<String> selected) {
   return setEquals(selected, question.correctIds);
 }

@@ -65,5 +65,10 @@ void main() {
     expect(sample.speakText.startsWith(sample.explain), isTrue);
     expect(sample.speakText, contains("应当依法取得机动车驾驶证"));
     expect(sample.speakText.indexOf(sample.explain), lessThan(sample.speakText.indexOf("应当依法取得机动车驾驶证")));
+    expect(
+      bank.questions.any((q) => q.topicId == "drive.s1.alcohol" && q.prompt.contains("20") && q.prompt.contains("毫克")),
+      isTrue,
+      reason: "考场高频：饮酒后驾驶血液酒精含量从 20 毫克/100 毫升起算",
+    );
   });
 }
