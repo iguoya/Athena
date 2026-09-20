@@ -1,0 +1,41 @@
+// Windows 可执行文件资源：图标与文件属性（右键属性 -> 详细信息）。
+// 由 meson.build 的 configure_file() 替换版本号后编译；@ICON_PATH@ 是
+// build 时的绝对路径，图标数据在编译期就整份嵌进资源里，跟运行期路径无关。
+//
+// 字符串一律用英文：GNU windres 对窄字符串不做代码页转换，直接按字节拼
+// UTF-16，非 ASCII 字符（包括中文）编出来的资源 Windows 版本信息 API 读不出
+// 正确文本——BOM、#pragma code_page、--codepage 都试过，没有一种在这套
+// MSYS2 UCRT64 工具链上生效。这是这份资源本身的取舍，不代表软件不能用中文；
+// 全仓的用户可见界面仍然一律中文，这里只有『右键属性』这个开发者视角的对话框
+// 例外。
+#include <winver.h>
+
+IDI_ICON1 ICON "@ICON_PATH@"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION @VERSION_COMMA@
+PRODUCTVERSION @VERSION_COMMA@
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x40004L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Athena"
+            VALUE "FileDescription", "Athena C++ Tutorial"
+            VALUE "FileVersion", "@VERSION_STR@"
+            VALUE "InternalName", "Athena"
+            VALUE "OriginalFilename", "Athena.exe"
+            VALUE "ProductName", "Athena C++ Tutorial"
+            VALUE "ProductVersion", "@VERSION_STR@"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

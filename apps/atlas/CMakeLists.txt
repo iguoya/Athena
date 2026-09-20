@@ -32,8 +32,21 @@ add_library(atlas_shell STATIC
 target_include_directories(atlas_shell PUBLIC src)
 target_link_libraries(atlas_shell PUBLIC Qt6::Gui Qt6::Network)
 
+# Windows 文件属性（右键属性 -> 详细信息）：CMake/Qt 构建的可执行文件默认没有
+# 这份信息，Tauri/Flutter 的打包器会自动生成，这里手动补齐（不含图标——标题栏
+# 和任务栏图标已经在 main.cpp 里用 QIcon 运行时设置，见 application.setWindowIcon）。
+set(windows_resource "")
+if(WIN32)
+    set(VERSION_STR "${PROJECT_VERSION}")
+    set(VERSION_COMMA "${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},${PROJECT_VERSION_PATCH},0")
+    set(app_rc "${CMAKE_CURRENT_BINARY_DIR}/app.rc")
+    configure_file(packaging/windows/app.rc.in "${app_rc}" @ONLY)
+    set(windows_resource "${app_rc}")
+endif()
+
 qt_add_executable(atlas
     src/main.cpp
+    ${windows_resource}
 )
 target_link_libraries(atlas PRIVATE atlas_domain atlas_shell Qt6::Quick Qt6::Qml Qt6::QuickControls2 Qt6::Svg)
 target_compile_definitions(atlas PRIVATE ATLAS_SOURCE_ROOT="${CMAKE_SOURCE_DIR}")

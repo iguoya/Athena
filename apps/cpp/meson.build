@@ -54,8 +54,28 @@ python = find_program('python3')
 # 应用图标交给 .app 的 Info.plist 和图标主题，URI 交给系统默认处理器。
 # 这里只保留 macOS 构建真正需要的依赖。
 platform_dependencies = []
+platform_sources = []
 if host_machine.system() == 'darwin'
   platform_dependencies += [dependency('gtk4-macos')]
+elif host_machine.system() == 'windows'
+  # GTK4 把逐窗口设置图标的 API 整个删掉了，图标只能靠平台原生机制：
+  # Windows 是编进 exe 资源，跟 Linux 的图标主题、macOS 的 Info.plist/icns
+  # 是同一层级的三条平台专属路径，不是能统一掉的分支（AGENTS.md 跨平台一节）。
+  # 顺带把版本号（右键属性 -> 详细信息）也接上，CMake/Meson 构建的可执行文件
+  # 默认没有这份信息，Tauri/Flutter 的打包器会自动生成，这里手动补齐。
+  windows_module = import('windows')
+  version_parts = meson.project_version().split('.')
+  version_comma = ','.join(version_parts) + ',0'
+  app_rc = configure_file(
+    input: 'packaging/windows/app.rc.in',
+    output: 'app.rc',
+    configuration: {
+      'ICON_PATH': (meson.current_source_dir() / 'icon.ico').replace('\\', '/'),
+      'VERSION_COMMA': version_comma,
+      'VERSION_STR': meson.project_version(),
+    }
+  )
+  platform_sources += windows_module.compile_resources(app_rc)
 endif
 
 # 业务逻辑类目录（C++ 语言各章节演示类）
@@ -274,7 +294,7 @@ resources = gnome.compile_resources(
 )
 
 executable('Athena', app_sources,
-  sources: resources,
+  sources: resources + platform_sources,
   include_directories: [cplusplus_inc],
   dependencies: [
     gtkmm_dep,
