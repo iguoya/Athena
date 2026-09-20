@@ -181,6 +181,11 @@ $s.Speak([IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8))
       return Process.start("powershell", [
         "-NoProfile",
         "-NonInteractive",
+        // 默认执行策略 Restricted 会拦 .ps1 文件（只放行内联 -Command），
+        // 不加这个参数在很多机器上会静默失败——进程正常退出、没有任何报错，
+        // 但压根没念出声音。
+        "-ExecutionPolicy",
+        "Bypass",
         "-File",
         ps1.path,
         "-Voice",

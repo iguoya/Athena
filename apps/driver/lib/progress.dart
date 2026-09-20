@@ -1,3 +1,4 @@
+import "dart:convert";
 import "dart:io";
 
 import "package:flutter/services.dart";
@@ -6,20 +7,51 @@ import "package:sqflite_common_ffi/sqflite_ffi.dart";
 
 import "models.dart";
 
-/// 相对自己平时的答题节奏：样本不够不下结论；必须明显停更久才算迟疑。
-bool lingeredVsPace(int durationMs, Iterable<int> otherDurations) {
-  final samples = [
-    for (final ms in otherDurations)
-      if (ms > 0) ms,
-  ]..sort();
-  if (samples.length < 6) return false;
-  final median = samples[samples.length ~/ 2];
-  return durationMs >= median * 2.5 && durationMs >= median + 12000;
-}
-
 class TopicStats {
   const TopicStats({required this.attempts, required this.correct});
 
+  final int attempts;
+  final int correct;
+
+  double get rate => attempts == 0 ? 0 : correct / attempts;
+}
+
+/// 一场没交的模拟考——中途崩了或被重启，靠这个接着答，不用整场重来。
+class ExamDraft {
+  const ExamDraft({
+    required this.subjectId,
+    required this.title,
+    required this.questionIds,
+    required this.questionCount,
+    required this.minutes,
+    required this.passScore,
+    required this.pointsPerQuestion,
+    required this.mix,
+    required this.fullBank,
+    required this.picked,
+    required this.startedAt,
+  });
+
+  final String subjectId;
+  final String title;
+  final List<String> questionIds;
+  final int questionCount;
+  final int minutes;
+  final int passScore;
+  final int pointsPerQuestion;
+  final Map<String, int> mix;
+  final bool fullBank;
+
+  /// 题在卷子里的序号 -> 选了哪些选项 id。
+  final Map<int, Set<String>> picked;
+  final DateTime startedAt;
+}
+
+/// 一天的练习量——柱子高矮一眼看出手感有没有断（主仓库 ADR 0056）。
+class DailyCount {
+  const DailyCount({required this.day, required this.attempts, required this.correct});
+
+  final DateTime day;
   final int attempts;
   final int correct;
 
@@ -57,15 +89,17 @@ class ProgressStore {
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
-        version: 4,
+        version: 5,
         onCreate: (db, version) async {
           await _createV1(db);
           await _createV2(db);
+          await _createV5(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) await _createV2(db);
           if (oldVersion < 3) await _createV3(db);
           if (oldVersion < 4) await _createV4(db);
+          if (oldVersion < 5) await _createV5(db);
         },
       ),
     );
@@ -168,16 +202,35 @@ class ProgressStore {
     await db.execute("ALTER TABLE attempts ADD COLUMN hesitant INTEGER NOT NULL DEFAULT 0");
   }
 
+  /// 模拟考中途的答案只在内存里，中途崩了或被重启就整场白做——挪一份进库，
+  /// 一个 key（科目 + 哪一种考）同时只留一份，交卷或放弃就删掉。
+  static Future<void> _createV5(Database db) async {
+    await db.execute("""
+      CREATE TABLE exam_drafts (
+        draft_key TEXT PRIMARY KEY,
+        subject_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        question_ids TEXT NOT NULL,
+        question_count INTEGER NOT NULL,
+        minutes INTEGER NOT NULL,
+        pass_score INTEGER NOT NULL,
+        points_per_question INTEGER NOT NULL,
+        mix TEXT NOT NULL,
+        full_bank INTEGER NOT NULL,
+        picked TEXT NOT NULL,
+        started_at TEXT NOT NULL
+      )
+    """);
+  }
+
   Future<List<Notice>> recordAttempt({
     required String questionId,
     required String topicId,
     required String subjectId,
     required bool correct,
     int durationMs = 0,
-    bool? hesitant,
     String? topicTitle,
   }) async {
-    final lingering = hesitant ?? lingeredVsPace(durationMs, await recentDurations());
     final beforeWrong = (await wrongQuestionIds()).length;
     await _db.insert("attempts", {
       "question_id": questionId,
@@ -185,7 +238,7 @@ class ProgressStore {
       "subject_id": subjectId,
       "correct": correct ? 1 : 0,
       "duration_ms": durationMs,
-      "hesitant": lingering ? 1 : 0,
+      "hesitant": 0,
       "at": DateTime.now().toIso8601String(),
     });
     final born = <Notice>[];
@@ -236,6 +289,55 @@ class ProgressStore {
     return born;
   }
 
+  /// 存/覆盖一份模拟考草稿——一个 key 同时只留一份，答一题存一次。
+  Future<void> saveExamDraft(ExamDraft draft, {required String draftKey}) async {
+    await _db.insert("exam_drafts", {
+      "draft_key": draftKey,
+      "subject_id": draft.subjectId,
+      "title": draft.title,
+      "question_ids": jsonEncode(draft.questionIds),
+      "question_count": draft.questionCount,
+      "minutes": draft.minutes,
+      "pass_score": draft.passScore,
+      "points_per_question": draft.pointsPerQuestion,
+      "mix": jsonEncode(draft.mix),
+      "full_bank": draft.fullBank ? 1 : 0,
+      "picked": jsonEncode({
+        for (final entry in draft.picked.entries) "${entry.key}": entry.value.toList(),
+      }),
+      "started_at": draft.startedAt.toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<ExamDraft?> loadExamDraft(String draftKey) async {
+    final rows = await _db.query("exam_drafts", where: "draft_key = ?", whereArgs: [draftKey]);
+    if (rows.isEmpty) return null;
+    final row = rows.first;
+    final pickedRaw = jsonDecode(row["picked"] as String) as Map<String, dynamic>;
+    return ExamDraft(
+      subjectId: row["subject_id"] as String,
+      title: row["title"] as String,
+      questionIds: [for (final id in jsonDecode(row["question_ids"] as String) as List<dynamic>) id as String],
+      questionCount: row["question_count"] as int,
+      minutes: row["minutes"] as int,
+      passScore: row["pass_score"] as int,
+      pointsPerQuestion: row["points_per_question"] as int,
+      mix: {
+        for (final entry in (jsonDecode(row["mix"] as String) as Map<String, dynamic>).entries) entry.key: entry.value as int,
+      },
+      fullBank: (row["full_bank"] as int) == 1,
+      picked: {
+        for (final entry in pickedRaw.entries)
+          int.parse(entry.key): {for (final id in entry.value as List<dynamic>) id as String},
+      },
+      startedAt: DateTime.tryParse(row["started_at"] as String? ?? "") ?? DateTime.now(),
+    );
+  }
+
+  Future<void> clearExamDraft(String draftKey) async {
+    await _db.delete("exam_drafts", where: "draft_key = ?", whereArgs: [draftKey]);
+  }
+
   Future<int> currentStreak() async {
     final rows = await _db.rawQuery(
       "SELECT correct FROM attempts ORDER BY at DESC, id DESC LIMIT 40",
@@ -277,6 +379,34 @@ class ProgressStore {
           correct: (row["correct"] as int?) ?? 0,
         ),
     };
+  }
+
+  /// 最近 N 天每天的练习量，没练的天数补 0——柱子连不上就是断更了。
+  Future<List<DailyCount>> dailyAttempts({int days = 14}) async {
+    final today = DateTime.now();
+    final since = DateTime(today.year, today.month, today.day).subtract(Duration(days: days - 1));
+    final rows = await _db.rawQuery(
+      "SELECT at, correct FROM attempts WHERE at >= ?",
+      [since.toIso8601String()],
+    );
+    String key(DateTime d) =>
+        "${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}";
+    final counts = <String, List<int>>{};
+    for (final row in rows) {
+      final at = DateTime.tryParse(row["at"] as String? ?? "");
+      if (at == null) continue;
+      final entry = counts.putIfAbsent(key(at), () => [0, 0]);
+      entry[0] += 1;
+      if ((row["correct"] as int?) == 1) entry[1] += 1;
+    }
+    return [
+      for (var i = 0; i < days; i++)
+        () {
+          final day = since.add(Duration(days: i));
+          final entry = counts[key(day)] ?? const [0, 0];
+          return DailyCount(day: day, attempts: entry[0], correct: entry[1]);
+        }(),
+    ];
   }
 
   Future<List<String>> wrongQuestionIds() async {
@@ -345,22 +475,9 @@ class ProgressStore {
         FROM attempts
         GROUP BY question_id
       ) latest ON a.id = latest.last_id
-      WHERE a.correct = 1 AND a.hesitant = 0
+      WHERE a.correct = 1
     """);
     return {for (final row in rows) row["question_id"] as String};
-  }
-
-  Future<List<int>> recentDurations({int limit = 24}) async {
-    final rows = await _db.rawQuery(
-      """
-      SELECT duration_ms FROM attempts
-      WHERE duration_ms > 0
-      ORDER BY id DESC
-      LIMIT ?
-      """,
-      [limit],
-    );
-    return [for (final row in rows) row["duration_ms"] as int];
   }
 
   Future<int> averageDurationMs() async {

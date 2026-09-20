@@ -53,42 +53,4 @@ void main() {
     expect(await store.masteredQuestionIds(), {"q2"});
     expect(await store.wrongQuestionIds(), ["q1"]);
   });
-
-  test("迟疑只在明显慢于自己节奏时才成立", () {
-    const pace = [4000, 5000, 4500, 5200, 4800, 5100];
-    expect(lingeredVsPace(8000, pace), isFalse);
-    expect(lingeredVsPace(16000, pace), isFalse);
-    expect(lingeredVsPace(22000, pace), isTrue);
-    expect(lingeredVsPace(60000, pace.take(5)), isFalse);
-  });
-
-  test("按平时节奏答对算掌握，明显停更久的答对还会再练", () async {
-    for (var i = 0; i < 6; i++) {
-      await store.recordAttempt(
-        questionId: "pace$i",
-        topicId: "t",
-        subjectId: "s",
-        correct: true,
-        durationMs: 5000,
-      );
-    }
-    await store.recordAttempt(
-      questionId: "solid",
-      topicId: "t",
-      subjectId: "s",
-      correct: true,
-      durationMs: 6000,
-    );
-    await store.recordAttempt(
-      questionId: "slow",
-      topicId: "t",
-      subjectId: "s",
-      correct: true,
-      durationMs: 25000,
-      hesitant: true,
-    );
-    final mastered = await store.masteredQuestionIds();
-    expect(mastered, contains("solid"));
-    expect(mastered, isNot(contains("slow")));
-  });
 }

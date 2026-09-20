@@ -1,9 +1,12 @@
+import "dart:async";
 import "dart:io";
 import "dart:math";
+import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
 
 import "content.dart";
+import "progress.dart";
 
 /// Bootstrap 5 色板与常用零件。图标用 Material 的系统符号，角色对齐 Bootstrap Icons。
 class Bs {
@@ -167,29 +170,119 @@ class QuestionImage extends StatelessWidget {
     );
   }
 
-  /// 点开铺满窗口看细节：图里的红圈、远处的车灯，缩在栏里根本看不清。
+  /// 点开看细节：图里的红圈、远处的车灯，缩在栏里根本看不清。
+  /// 按图片本身的像素尺寸放大（超过屏幕才等比缩小），不铺满整个窗口——
+  /// 铺满会把长宽比不是屏幕比例的图硬撑出一圈黑边。
   void _open(BuildContext context) {
     showDialog<void>(
       context: context,
-      barrierColor: Colors.black87,
+      // 不整屏遮暗——放大是看细节，不是切到另一个场景，身后的做题台应该
+      // 还看得见。
+      barrierColor: Colors.transparent,
       builder: (dialogContext) => Dialog(
         insetPadding: const EdgeInsets.all(32),
         backgroundColor: Colors.transparent,
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            InteractiveViewer(
-              maxScale: 5,
-              child: Image(image: _provider, fit: BoxFit.contain),
-            ),
-            IconButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              icon: const Icon(Icons.close, color: Colors.white, size: 28),
-              tooltip: "关闭",
-            ),
-          ],
+        child: FutureBuilder<ui.Image>(
+          future: _resolveImage(_provider),
+          builder: (context, snapshot) {
+            final natural = snapshot.data;
+            final Widget picture;
+            if (natural == null) {
+              picture = const SizedBox(
+                width: 240,
+                height: 240,
+                child: Center(child: CircularProgressIndicator(color: Colors.white)),
+              );
+            } else {
+              final screen = MediaQuery.sizeOf(context);
+              final scale = min(
+                1.0,
+                min(
+                  (screen.width - 64) / natural.width,
+                  (screen.height - 64) / natural.height,
+                ),
+              );
+              picture = SizedBox(
+                width: natural.width * scale,
+                height: natural.height * scale,
+                child: InteractiveViewer(
+                  maxScale: 5,
+                  child: Image(image: _provider, fit: BoxFit.contain),
+                ),
+              );
+            }
+            return Stack(
+              alignment: Alignment.topRight,
+              children: [
+                picture,
+                IconButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                  tooltip: "关闭",
+                ),
+              ],
+            );
+          },
         ),
       ),
+    );
+  }
+
+  Future<ui.Image> _resolveImage(ImageProvider provider) {
+    final completer = Completer<ui.Image>();
+    final stream = provider.resolve(const ImageConfiguration());
+    late ImageStreamListener listener;
+    listener = ImageStreamListener(
+      (info, _) {
+        completer.complete(info.image);
+        stream.removeListener(listener);
+      },
+      onError: (error, stack) {
+        completer.completeError(error, stack);
+        stream.removeListener(listener);
+      },
+    );
+    stream.addListener(listener);
+    return completer.future;
+  }
+}
+
+/// 题干里的否定词标红——"以下哪项是错误的""不得超车"这类反着问、反着答的
+/// 题，漏看一个"不"字整题就反了，是最常见的翻车点。按长的词先匹配，
+/// 免得「不可以」被短的「不可」抢先截半个词。
+final _negationPattern = RegExp(
+  "不正确|不属于|不包括|不允许|不可以|不需要|错误|不得|不能|不可|不用|不必|禁止|并非|没有|除外",
+);
+
+class PromptText extends StatelessWidget {
+  const PromptText(this.text, {super.key, this.style, this.maxLines, this.overflow});
+
+  final String text;
+  final TextStyle? style;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  @override
+  Widget build(BuildContext context) {
+    final spans = <InlineSpan>[];
+    var cursor = 0;
+    for (final match in _negationPattern.allMatches(text)) {
+      if (match.start > cursor) {
+        spans.add(TextSpan(text: text.substring(cursor, match.start)));
+      }
+      spans.add(TextSpan(
+        text: text.substring(match.start, match.end),
+        style: const TextStyle(color: Bs.danger, fontWeight: FontWeight.w800),
+      ));
+      cursor = match.end;
+    }
+    if (cursor < text.length) {
+      spans.add(TextSpan(text: text.substring(cursor)));
+    }
+    return Text.rich(
+      TextSpan(style: style, children: spans),
+      maxLines: maxLines,
+      overflow: overflow ?? TextOverflow.clip,
     );
   }
 }
@@ -224,7 +317,15 @@ class BsBadge extends StatelessWidget {
             Icon(icon, size: 18, color: fg),
             const SizedBox(width: 6),
           ],
-          Text(text, style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w600)),
+          // 侧栏这类窄容器会把徽章压成 tight 约束——min 撑不开就得靠这个截断，
+          // 不然内容一长（比如带阶段名）就在自己的 Row 里溢出。
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
     );
@@ -376,6 +477,261 @@ bool listEquals(List<int> a, List<int> b) {
     if (a[i] != b[i]) return false;
   }
   return true;
+}
+
+/// 最近 N 天的练习量：柱子连不上就是断更了，颜色按当天正确率分（主仓库 ADR 0056）。
+class DailyActivityChart extends StatelessWidget {
+  const DailyActivityChart({super.key, required this.days, this.height = 96});
+
+  /// 时间正序：老的在左，今天在右。
+  final List<DailyCount> days;
+  final double height;
+
+  /// 从今天往前数，连续有练习的天数——跟连对题目是两回事，这个看的是有没有停更。
+  static int dayStreak(List<DailyCount> days) {
+    var n = 0;
+    for (final day in days.reversed) {
+      if (day.attempts == 0) break;
+      n++;
+    }
+    return n;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (days.every((d) => d.attempts == 0)) {
+      return Text(
+        "最近还没有练习记录，练一组就会画出来。",
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+      );
+    }
+    return SizedBox(
+      height: height,
+      child: CustomPaint(
+        painter: _DailyPainter(days),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _DailyPainter extends CustomPainter {
+  _DailyPainter(this.days);
+
+  final List<DailyCount> days;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const labelHeight = 18.0;
+    final chart = Rect.fromLTWH(0, 0, size.width, size.height - labelHeight);
+    final slot = chart.width / days.length;
+    final barWidth = min(slot * 0.6, 22.0);
+    final maxAttempts = days.map((d) => d.attempts).fold(1, (a, b) => a > b ? a : b);
+    double yOf(int n) => chart.bottom - chart.height * (n / maxAttempts);
+
+    for (var i = 0; i < days.length; i++) {
+      final day = days[i];
+      final center = slot * i + slot / 2;
+      final isToday = i == days.length - 1;
+      final color = day.attempts == 0
+          ? Bs.border
+          : (day.rate >= 0.9 ? Bs.success : (day.rate >= 0.7 ? Bs.warning : Bs.danger));
+      final top = day.attempts == 0 ? chart.bottom - 3 : yOf(day.attempts);
+      final rect = RRect.fromRectAndRadius(
+        Rect.fromLTRB(center - barWidth / 2, top, center + barWidth / 2, chart.bottom),
+        const Radius.circular(3),
+      );
+      canvas.drawRRect(rect, Paint()..color = color);
+      if (isToday || i == 0 || day.day.day == 1) {
+        _text(canvas, Offset(center, chart.bottom + 2), "${day.day.month}/${day.day.day}", isToday ? Bs.dark : Bs.secondary, align: TextAlign.center);
+      }
+    }
+  }
+
+  void _text(Canvas canvas, Offset at, String text, Color color, {TextAlign align = TextAlign.left}) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
+      textDirection: TextDirection.ltr,
+      textAlign: align,
+    )..layout();
+    final dx = switch (align) {
+      TextAlign.center => at.dx - painter.width / 2,
+      TextAlign.right => at.dx - painter.width,
+      _ => at.dx,
+    };
+    painter.paint(canvas, Offset(dx, at.dy));
+  }
+
+  @override
+  bool shouldRepaint(covariant _DailyPainter oldDelegate) => true;
+}
+
+/// 各章节正确率横向对比：条越短、越红的越该优先补（主仓库 ADR 0056）。
+class TopicAccuracyChart extends StatelessWidget {
+  const TopicAccuracyChart({super.key, required this.items, this.onTap});
+
+  /// (章节标题, 这一章的作答统计)，调用方按想要的顺序传（通常是正确率从低到高）。
+  final List<(String, TopicStats)> items;
+
+  /// 点一行跳到哪——下标对应 `items` 里的顺序。不传就是纯展示，不能点。
+  final void Function(int index)? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    if (items.isEmpty) {
+      return Text(
+        "还没有分章节的作答记录。",
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+      );
+    }
+    final style = Theme.of(context).textTheme.bodyMedium;
+    // 标题列按最长的那个章节名量出宽度：最长的单行放得下，其余的自然也放得下，
+    // 所有行的标题列同宽，条形图的起点和长度才能对齐、统一。
+    var titleWidth = 0.0;
+    for (final (title, _) in items) {
+      final painter = TextPainter(
+        text: TextSpan(text: title, style: style),
+        textDirection: Directionality.of(context),
+        maxLines: 1,
+      )..layout();
+      if (painter.width > titleWidth) titleWidth = painter.width;
+    }
+    return Column(
+      children: [
+        for (var i = 0; i < items.length; i++)
+          () {
+            final (title, stats) = items[i];
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: titleWidth, child: Text(title, maxLines: 1, style: style)),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(Bs.radius),
+                      child: LinearProgressIndicator(
+                        value: stats.attempts == 0 ? 0 : stats.rate,
+                        minHeight: 14,
+                        backgroundColor: Bs.border,
+                        color: stats.attempts == 0
+                            ? Bs.border
+                            : (stats.rate >= 0.9 ? Bs.success : (stats.rate >= 0.7 ? Bs.warning : Bs.danger)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 80,
+                    child: Text(
+                      stats.attempts == 0 ? "未练" : "${stats.correct}/${stats.attempts}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Bs.secondary),
+                    ),
+                  ),
+                  // 跳转只挂在这个图标上——条形图、标题、数字都不能点，
+                  // 免得使用者划过图表时误触跳转。
+                  if (onTap != null) ...[
+                    const SizedBox(width: 4),
+                    IconButton(
+                      tooltip: "去练这一章",
+                      onPressed: () => onTap!(i),
+                      icon: const Icon(Icons.chevron_right, size: 20),
+                    ),
+                  ],
+                ],
+              ),
+            );
+          }(),
+      ],
+    );
+  }
+}
+
+/// 掌握度环：已掌握、待练、还没见过三色分段，中间写百分比（主仓库 ADR 0056）。
+class MasteryRing extends StatelessWidget {
+  const MasteryRing({
+    super.key,
+    required this.mastered,
+    required this.pending,
+    required this.untouched,
+    this.size = 96,
+  });
+
+  final int mastered;
+  final int pending;
+  final int untouched;
+  final double size;
+
+  int get _total => mastered + pending + untouched;
+
+  @override
+  Widget build(BuildContext context) {
+    final pct = _total == 0 ? 0 : (mastered / _total * 100).round();
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: Size(size, size),
+            painter: _MasteryRingPainter(mastered: mastered, pending: pending, untouched: untouched),
+          ),
+          Text("$pct%", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+}
+
+class _MasteryRingPainter extends CustomPainter {
+  _MasteryRingPainter({required this.mastered, required this.pending, required this.untouched});
+
+  final int mastered;
+  final int pending;
+  final int untouched;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const strokeWidth = 10.0;
+    final rect = Rect.fromLTWH(strokeWidth / 2, strokeWidth / 2, size.width - strokeWidth, size.height - strokeWidth);
+    canvas.drawArc(
+      rect,
+      0,
+      2 * pi,
+      false,
+      Paint()
+        ..color = Bs.border
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth,
+    );
+    final total = mastered + pending + untouched;
+    if (total == 0) return;
+    var start = -pi / 2;
+    for (final segment in [(mastered, Bs.success), (pending, Bs.paper), (untouched, Bs.warning)]) {
+      final count = segment.$1;
+      if (count == 0) continue;
+      final sweep = 2 * pi * count / total;
+      canvas.drawArc(
+        rect,
+        start,
+        sweep,
+        false,
+        Paint()
+          ..color = segment.$2
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth,
+      );
+      start += sweep;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _MasteryRingPainter oldDelegate) =>
+      oldDelegate.mastered != mastered || oldDelegate.pending != pending || oldDelegate.untouched != untouched;
 }
 
 class StatTile extends StatelessWidget {
