@@ -51,3 +51,32 @@ Gtk::Widget* make_cube_3d_view(
     function<optional<TurnAnimation>()> animation_provider = nullptr);
 Gtk::Widget* make_cube_net_view(
     function<CubeState()> state_provider, int width = 240, int height = 180);
+
+// 单面视角：只画 face 这一个面的 2x2 格子（配色 + 调试编号），不做任何
+// 3D 投影或透视判断——跟 make_cube_net_view() 里对应那一块用的是同一套
+// net_cell_sign() 映射，数字跟展开图上那一块完全一致。给"这个操作面现在
+// 长什么样"这种只关心单个面、不需要立体感的场景用（比如按 U/R/F 分开
+// 摆三块，替代逐格摆 3D 透视图）。
+Gtk::Widget* make_cube_face_view(
+    function<CubeState()> state_provider, Face face, int width = 140,
+    int height = 140);
+
+// 状态空间可视化：三组同心圆（各 2 圈，组内同色），圆心呈"奔驰标"式
+// 三等分布，两两相交，24 个交点按"3 对组合 × 对齐/交叉 2 类"分成 6 组
+// 配色——呼应抖音"数学为王时代"第90集《降维理解立体秒解魔方复原》
+// 里的环形点阵画面，只是视觉复刻，不追求同一种数学含义。
+//
+// 三组圆分别对应 U/R/F 三个面：上（橙）= U，左下（绿）= R，右下（紫）
+// = F——"操作区"点哪个面的按钮，对应那一组圆的圆心就绕公共中心转过
+// 那次转法的角度，跟 3D 魔方视图的转动动画同步播放，animation_provider
+// 是拉模型（同 make_cube_3d_view() 的 animation_provider 那一套）：
+// 每次重绘取一次当前动画状态，调用方在播放期间持续更新、播完后清空。
+struct RingAnimation {
+    int active_group; // 0=上/U, 1=左下/R, 2=右下/F
+    double angle_offset_radians; // 相对静止角度的偏移，随动画推进变化
+};
+
+Gtk::Widget* make_state_space_rings_view(
+    long long state_space_size = kCubeStateSpaceSizeIgnoringOrientation,
+    int size = 320,
+    function<optional<RingAnimation>()> animation_provider = nullptr);

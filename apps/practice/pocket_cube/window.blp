@@ -1,5 +1,4 @@
 using Gtk 4.0;
-using GtkSource 5;
 
 // PocketCube 独立实践应用的窗口布局。原来是挂在 apps/cpp 学习页框架里的
 // 一节"应用实践"，随 apps/cpp ADR 0058 搬出来后不再套 ChapterMeta/
@@ -61,28 +60,17 @@ ApplicationWindow window {
           }
         }
 
-        Button practice_run_button {
-        name: "practice_run_button";
-        label: "运行";
-        valign: center;
-        margin-start: 10;
-
-        styles [
-          "btn-sm",
-          "btn-primary"
-        ]
-      }
-
-      // “重置魔方”紧跟在“运行”后面：把魔方重置回初始（已复原）状态，跟
-      // “运行”视觉上区分主次（次要操作用 outline 样式，不跟主操作的
-      // btn-primary 抢视觉焦点），不叫“复原”是为了跟九宫格每格右下角
-      // 那个含义完全不同的“复原”切换按钮（本地展示开关，不改真实状态）
-      // 区分开，避免同名不同义。
+      // “重置魔方”：把魔方重置回初始（已复原）状态。原来紧跟在“运行”
+      // 按钮后面，“运行”按钮固定只执行 U 顺时针转、意义不大，已经被
+      // 左侧“操作区”的九个转法按钮取代（点哪个转哪个），这里只留
+      // “重置魔方”。不叫“复原”是为了跟九宫格每格右下角那个含义完全
+      // 不同的“复原”切换按钮（本地展示开关，不改真实状态）区分开，
+      // 避免同名不同义。
       Button practice_reset_button {
         name: "practice_reset_button";
         label: "重置魔方";
         valign: center;
-        margin-start: 6;
+        margin-start: 10;
         tooltip-text: "把魔方重置回初始（已复原）状态，清空转动路径，并把九宫格里被手动切换过的格子一并弹回默认预览";
 
         styles [
@@ -97,9 +85,9 @@ ApplicationWindow window {
     orientation: horizontal;
   }
 
-  // 主体分左右两栏：左边源码框 + 运行按钮 + 输出框，右边“当前状态”
-  // 一行 + “未来状态”九宫格，具体绘图控件在 C++ 侧动态创建，见
-  // MainWindow::initialize_practice_page()。
+  // 主体分左右两栏：左边状态空间可视化 + 操作区，右边“当前状态”
+  // 一行 + “操作视角”三个面板，具体绘图控件和按钮在 C++ 侧动态创建，
+  // 见 main.cc 的 wire_window()。
   Box practice_body {
     orientation: horizontal;
     spacing: 14;
@@ -112,10 +100,14 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 源码框：跟标准教学页左侧的 source_view 同一套写法，展示的是
-      // 真实源文件内容，不是另外维护的教学代码字符串。点“运行”时
-      // 执行的就是这里显示的代码。
+      // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
+      // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
+      // 这个小魔方背后状态空间大得惊人——原来这块地方是源码框（点
+      // “运行”时执行的代码），搬出去了：源码本身跟“当前状态/操作视角”
+      // 数据一样，不是这个应用的教学重点，具体内容见 pocket_cube.hpp，
+      // 想看源码直接开文件更直接。
       Frame {
+        label: "状态空间";
         hexpand: true;
         vexpand: true;
 
@@ -123,52 +115,47 @@ ApplicationWindow window {
           "panel-frame"
         ]
 
-        ScrolledWindow {
+        // halign/valign: fill（不是 center）——里面的 DrawingArea 自己
+        // hexpand/vexpand，要靠 host 也 fill 才能真的把 Frame 让出来的
+        // 空间占满，用 center 的话 host 会缩回子控件的自然尺寸，等于
+        // 白设了子控件的 expand。
+        Box practice_state_space_host {
+          name: "practice_state_space_host";
+          orientation: horizontal;
           hexpand: true;
           vexpand: true;
-
-          GtkSource.View practice_source_view {
-            name: "practice_source_view";
-            editable: false;
-            cursor-visible: false;
-            monospace: true;
-            show-line-numbers: true;
-            highlight-current-line: false;
-            tab-width: 4;
-            left-margin: 14;
-            right-margin: 14;
-            top-margin: 12;
-            bottom-margin: 12;
-
-            styles [
-              "code-view"
-            ]
-          }
+          halign: fill;
+          valign: fill;
         }
       }
 
-      ScrolledWindow {
+      // 操作区：九个转法按钮（U/R/F 三个面各顺时针/逆时针/180°），
+      // 点哪个就真的对魔方应用那一步——取代原来固定只会转 U 顺时针的
+      // “运行”按钮。跟右边“操作视角”三个面板显示的是同样的 U/R/F 三个
+      // 操作面，但那边只读、这里才是真正改状态的入口。
+      Frame {
+        label: "操作区";
         hexpand: true;
         vexpand: true;
-        hscrollbar-policy: never;
 
         styles [
           "panel-frame"
         ]
 
-        TextView practice_result_view {
-          name: "practice_result_view";
-          editable: false;
-          cursor-visible: false;
-          wrap-mode: word_char;
-          top-margin: 10;
-          bottom-margin: 10;
-          left-margin: 12;
-          right-margin: 12;
-
-          styles [
-            "code-view"
-          ]
+        // halign/valign: fill，跟"状态空间"那份 host 同一个道理——用
+        // center 的话 Frame 让出来的高度全是空的，九个按钮缩在中间一小
+        // 条，没有把"操作区"这个名字对应的整块区域用起来。
+        Box practice_operations_host {
+          name: "practice_operations_host";
+          orientation: horizontal;
+          hexpand: true;
+          vexpand: true;
+          halign: fill;
+          valign: fill;
+          margin-top: 10;
+          margin-bottom: 10;
+          margin-start: 10;
+          margin-end: 10;
         }
       }
     }
@@ -208,15 +195,13 @@ ApplicationWindow window {
         }
       }
 
-      // 下一步穷举：3×3 九宫格，分别是 U/R/F 三个面各转顺时针/逆时针/
-      // 180° 后的状态（2 阶魔方没有固定参考系，D/L/B 都等价于先整体转
-      // 半圈再转 U/R/F，是冗余转法，不单独穷举，见
-      // pocket_cube/state.h 的 next_move_set()）；每格同样是
-      // 3D 视角 + 展开图一起画，只读预览，不接受点击。九宫格铺满这块
-      // 区域的整个宽高，充分利用当前状态大块让出来的空间，不再居中挤
-      // 成一小坨。
+      // 操作视角：U/R/F 三个操作面（2 阶魔方没有固定参考系，D/L/B 都
+      // 等价于先整体转半圈再转 U/R/F，不是这个应用会用到的面，见
+      // pocket_cube/state.h 的 next_move_set()）各自的 2x2 小面板，只读
+      // 展示"这个面现在是什么颜色"。原来这里是九宫格，预测九种转法各自
+      // 转完之后的样子，反馈是这个预测容易干扰，换成只看当前状态。
       Frame {
-        label: "未来状态";
+        label: "操作视角";
         hexpand: true;
         vexpand: true;
 

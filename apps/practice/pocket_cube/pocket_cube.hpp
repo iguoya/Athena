@@ -30,10 +30,18 @@ public:
 
     void turn(ostream& os) {
         const Move move = next_turn_move();
-        m_state = apply_move(m_state, move);
-        m_move_history.push_back(move);
+        apply_turn(move);
         os << "执行了一次 " << move_description(move) << "。" << endl;
         os << (is_solved(m_state) ? "当前已复原。" : "当前尚未复原。") << endl;
+    }
+
+    // “操作区”九个按钮的统一入口：直接应用任意一步转法，不产出文字
+    // 日志——界面已经有“当前状态”面板的路径/复原状态文字，不需要再
+    // 维护一份重复的日志文本。turn() 内部也改调这个，两处只有一份
+    // 真正改状态的代码。
+    void apply_turn(const Move& move) {
+        m_state = apply_move(m_state, move);
+        m_move_history.push_back(move);
     }
 
     // turn() 下一次会真正执行的转法：供界面先看一眼要转哪个层、哪个

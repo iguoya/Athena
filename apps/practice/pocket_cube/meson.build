@@ -8,7 +8,6 @@ gtkmm_dep = dependency('gtkmm-4.0')
 gtk4_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 glibmm_dep = dependency('glibmm-2.68')
-sourceview_dep = dependency('gtksourceview-5')
 gtest_dep = dependency('gtest')
 gtest_main_dep = dependency('gtest_main')
 
@@ -47,8 +46,7 @@ resources = gnome.compile_resources(
 
 executable('pocket-cube', 'main.cc', 'state.cc', 'view.cc', resources,
   include_directories: [practice_root],
-  cpp_args: ['-DPOCKET_CUBE_SOURCE_ROOT="' + meson.current_source_dir() + '"'],
-  dependencies: [gtkmm_dep, gtk4_dep, sourceview_dep],
+  dependencies: [gtkmm_dep, gtk4_dep],
   # Windows 上链接成 GUI 子系统，不带控制台窗口（跟 apps/cpp 同一个道理）；
   # 其它平台这个参数没有意义，Meson 自己按目标系统忽略。
   win_subsystem: 'windows',

@@ -40,6 +40,48 @@ TEST(CubeStateTest, EveryFaceStartsUniform) {
     }
 }
 
+// sticker_home() 在已复原状态下应该是恒等映射——每个槽位的贴纸本来
+// 就是它自己，"原始槽位"就是"当前槽位"。
+TEST(CubeStateTest, StickerHomeIsIdentityWhenSolved) {
+    const CubeState solved = make_solved_cube();
+    for (const Face face : kAllFaces) {
+        for (int u : {-1, 1}) {
+            for (int v : {-1, 1}) {
+                const StickerHome home = sticker_home(solved, face, u, v);
+                EXPECT_EQ(home.face, face);
+                EXPECT_EQ(home.u_sign, u);
+                EXPECT_EQ(home.v_sign, v);
+            }
+        }
+    }
+}
+
+// sticker_home() 的核心正确性：不管转成什么状态，当前槽位贴纸的颜色
+// 必须等于"已复原状态下，home 槽位那张贴纸的颜色"——这才说明 home
+// 真的找对了"这张贴纸原来是哪一张"，不是随便返回一个凑数的槽位。
+TEST(CubeStateTest, StickerHomeTracksTheSameStickerAcrossMoves) {
+    const CubeState solved = make_solved_cube();
+    CubeState state = solved;
+    const array<Move, 6> moves = {
+        Move{Face::U, Turn::Clockwise}, Move{Face::R, Turn::CounterClockwise},
+        Move{Face::F, Turn::Half}, Move{Face::U, Turn::CounterClockwise},
+        Move{Face::R, Turn::Clockwise}, Move{Face::F, Turn::Clockwise}};
+    for (const Move move : moves) {
+        state = apply_move(state, move);
+        for (const Face face : kAllFaces) {
+            for (int u : {-1, 1}) {
+                for (int v : {-1, 1}) {
+                    const StickerHome home = sticker_home(state, face, u, v);
+                    EXPECT_EQ(
+                        sticker_at(state, face, u, v),
+                        sticker_at(solved, home.face, home.u_sign, home.v_sign))
+                        << "sticker_home 找到的原始槽位颜色对不上当前贴纸颜色";
+                }
+            }
+        }
+    }
+}
+
 // 代数自检：任意一个面转 4 次 90 度，必须回到原状态——这是"合法的
 // 90 度旋转"这个前提能推出的必然性质，不依赖我对"哪个颜色该转到哪"
 // 的主观判断，能有效抓出旋转矩阵实现里的符号错误。

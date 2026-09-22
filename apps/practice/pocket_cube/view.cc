@@ -6,6 +6,10 @@
 #include <array>
 #include <cmath>
 #include <numbers>
+#include <optional>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace {
 
@@ -36,6 +40,52 @@ ChartColor sticker_color(Face face) {
     case Face::R: return chart_color(0xf3a3ae); // 红
     }
     return chart_color(0xffffff);
+}
+
+// 每个贴纸的调试编号——数字集合跟"状态空间"环形图节点编号是同一套
+// （绿=2/4/6/8、蓝=1/3/5/7、橙=10/12/14/16、红=9/11/13/15、
+// 黄=17/19/21/23，U 面白色没有对应的环节点颜色，借用剩下没用到的
+// 黑色那组 18/20/22/24）。编号绑定的是贴纸本身（参照已复原状态时它
+// 在展开图上的位置），不是画面上的槽位——魔方转动之后同一张贴纸会
+// 换到别的槽位，编号跟着贴纸一起换过去，不会留在原地；调用方传入
+// 的 face/u_sign/v_sign 已经是 sticker_home() 转换过的"贴纸原始槽位"，
+// 不是当前槽位。
+int sticker_label(Face face, int u_sign, int v_sign) {
+    constexpr array<int, 4> kU{18, 20, 22, 24};
+    constexpr array<int, 4> kD{17, 19, 21, 23};
+    constexpr array<int, 4> kF{2, 4, 6, 8};
+    constexpr array<int, 4> kB{1, 3, 5, 7};
+    constexpr array<int, 4> kL{10, 12, 14, 16};
+    constexpr array<int, 4> kR{9, 11, 13, 15};
+    const int idx = (v_sign > 0 ? 2 : 0) + (u_sign > 0 ? 1 : 0);
+    switch (face) {
+    case Face::U: return kU[idx];
+    case Face::D: return kD[idx];
+    case Face::F: return kF[idx];
+    case Face::B: return kB[idx];
+    case Face::L: return kL[idx];
+    case Face::R: return kR[idx];
+    }
+    return 0;
+}
+
+// 在格子中心画编号文字——用 get_text_extents() 量出文字包围盒再居中，
+// 不是凭经验挪偏移量，格子大小变化时数字始终居中。
+void draw_cell_label(
+    const Cairo::RefPtr<Cairo::Context>& cr, const Vec2& center, int label,
+    double font_size) {
+    cairo_select_font_face(
+        cr->cobj(), "sans-serif", CAIRO_FONT_SLANT_NORMAL,
+        CAIRO_FONT_WEIGHT_BOLD);
+    cr->set_font_size(font_size);
+    const string text = to_string(label);
+    Cairo::TextExtents extents;
+    cr->get_text_extents(text, extents);
+    cr->move_to(
+        center.x - extents.width / 2.0 - extents.x_bearing,
+        center.y - extents.height / 2.0 - extents.y_bearing);
+    cr->set_source_rgba(0, 0, 0, 0.75);
+    cr->show_text(text);
 }
 
 // 一个面在 3D 空间里的 4 个角点，由 face_layout() 的轴信息生成——跟
@@ -186,6 +236,7 @@ struct StickerDraw {
     array<Vec2, 4> screen;
     ChartColor color;
     double depth;
+    int label;
 };
 
 void collect_face_stickers(
@@ -239,9 +290,10 @@ void collect_face_stickers(
             }
             depth /= static_cast<double>(rotated_corners.size());
 
+            const StickerHome home = sticker_home(state, face.face, u_sign, v_sign);
             out.push_back(StickerDraw{
                 screen, sticker_color(sticker_at(state, face.face, u_sign, v_sign)),
-                depth});
+                depth, sticker_label(home.face, home.u_sign, home.v_sign)});
         }
     }
 }
@@ -266,8 +318,43 @@ void draw_cube_3d(
         return a.depth < b.depth;
     });
 
+    const double label_font_size = max(8.0, scale * 0.16);
     for (const auto& sticker : stickers) {
         fill_grid_cell(cr, sticker.screen, sticker.color);
+        Vec2 center{0, 0};
+        for (const auto& corner : sticker.screen) {
+            center.x += corner.x / sticker.screen.size();
+            center.y += corner.y / sticker.screen.size();
+        }
+        draw_cell_label(cr, center, sticker.label, label_font_size);
+    }
+}
+
+// 展开图每一格该查 sticker_at()/sticker_home() 的哪个 (u_sign, v_sign)，
+// 不能直接照搬屏幕格子的 (ui, vi)——face_layout() 的 u_axis/v_axis 是给
+// "状态怎么存"用的空间坐标系，对六个面各自独立定义，并不是为"摊平在
+// 十字形网格里、边跟边要对得上物理折叠关系"这件事设计的。以 F 为例：
+// F 与 U 的公共棱是 F 的 v(=Y)=+1 那条边，十字形网格里 U 画在 F 上方，
+// 这条棱理应落在 F 格子的顶排，但 v_sign=+1 直接映射到屏幕下排（vi=1）
+// 会把它画到底排——跟正上方的 U 对不上，物理折叠不起来。L/R 更极端：
+// 它们的 u_axis 是 Y（上下）、v_axis 是 Z（前后），如果照搬 ui→u_sign、
+// vi→v_sign，就是把"上下"画成了格子的左右列、"前后"画成了格子的
+// 上下行——整个转了 90°。下面这套映射是按标准十字形展开图（F 不转、
+// U/D/L/R/B 各自绕与 F 的公共棱转 90° 摊平）实际算出来的，跟 3D 视图
+// （collect_face_stickers()，靠真正的 3D 投影，不存在这个问题）能对上：
+// 比如修好之后 F 顶排是 6、8，R 顶排是 15、11，横着读正好是
+// "6 8 15 11"，不是当前 (ui,vi) 直接套 (u_sign,v_sign) 时算出来的
+// "6 8 13 15"。
+void net_cell_sign(Face face, int ui, int vi, int& u_sign, int& v_sign) {
+    const int a = ui * 2 - 1;
+    const int b = vi * 2 - 1;
+    switch (face) {
+    case Face::U: u_sign = a; v_sign = b; break;
+    case Face::D: u_sign = a; v_sign = -b; break;
+    case Face::F: u_sign = a; v_sign = -b; break;
+    case Face::B: u_sign = -a; v_sign = -b; break;
+    case Face::L: u_sign = -b; v_sign = a; break;
+    case Face::R: u_sign = -b; v_sign = -a; break;
     }
 }
 
@@ -284,8 +371,9 @@ void draw_cube_net(
         const double origin_y = margin_y + row * cell;
         for (int ui = 0; ui < 2; ++ui) {
             for (int vi = 0; vi < 2; ++vi) {
-                const int u_sign = ui * 2 - 1;
-                const int v_sign = vi * 2 - 1;
+                int u_sign = 0;
+                int v_sign = 0;
+                net_cell_sign(face, ui, vi, u_sign, v_sign);
                 const array<Vec2, 4> screen = {
                     Vec2{origin_x + ui * cell / 2, origin_y + vi * cell / 2},
                     Vec2{origin_x + (ui + 1) * cell / 2, origin_y + vi * cell / 2},
@@ -296,6 +384,12 @@ void draw_cube_net(
                 };
                 fill_grid_cell(
                     cr, screen, sticker_color(sticker_at(state, face, u_sign, v_sign)));
+                const Vec2 center{
+                    origin_x + (ui + 0.5) * cell / 2, origin_y + (vi + 0.5) * cell / 2};
+                const StickerHome home = sticker_home(state, face, u_sign, v_sign);
+                draw_cell_label(
+                    cr, center, sticker_label(home.face, home.u_sign, home.v_sign),
+                    cell * 0.32);
             }
         }
     };
@@ -306,6 +400,260 @@ void draw_cube_net(
     draw_one_face(Face::R, 2, 1);
     draw_one_face(Face::B, 3, 1);
     draw_one_face(Face::D, 1, 2);
+}
+
+// 一组同心圆的两个半径比例（相对 max_radius）——内圈 0.62、外圈 1.0，
+// 三组共用同一套比例（"同样大小方式"），画在不同圆心上。
+constexpr double kInnerRadiusRatio = 0.72;
+constexpr double kOuterRadiusRatio = 1.0;
+constexpr double kRingLineWidth = 5.5; // 线宽些，参考视频里那种粗环
+
+struct RingGroupSpec {
+    Vec2 origin;
+    ChartColor inner_color;
+    ChartColor outer_color;
+};
+
+void draw_ring_group(
+    const Cairo::RefPtr<Cairo::Context>& cr, const RingGroupSpec& group,
+    double max_radius) {
+    const array<pair<double, ChartColor>, 2> rings = {{
+        {kInnerRadiusRatio, group.inner_color},
+        {kOuterRadiusRatio, group.outer_color},
+    }};
+    for (const auto& [ratio, color] : rings) {
+        cr->set_source_rgba(color.r, color.g, color.b, 0.9);
+        cr->set_line_width(kRingLineWidth);
+        cr->arc(
+            group.origin.x, group.origin.y, max_radius * ratio, 0,
+            2 * std::numbers::pi);
+        cr->stroke();
+    }
+}
+
+// 三组同心圆，圆心呈"奔驰标"式三等分布（各间隔 120°），整体绕公共
+// 中心 M 慢慢转（phase 每帧递增）——三点始终两两等距（等边三角形绕
+// 自己外接圆心转动，边长不变），所以"两圆有两个交点"这条件不会因为
+// 转动而在某个瞬间失效，24 个交点全程都在。
+constexpr double kCenterDistanceRatio = 0.8; // 相对 max_radius；(ro-ri, 2ri) = (0.38, 1.24)，取中段的 0.8
+constexpr double kOrbitRatio =
+    kCenterDistanceRatio / 1.7320508075688772; // /√3：三点两两间距 = 轨道半径×√3
+
+// 反解 max_radius：整幅图（三个圆心的轨道 + 各自外圈半径）转动起来
+// 会扫出一个以 M 为圆心、半径 = orbit_radius + max_radius 的圆盘，
+// 这个圆盘必须整个落在画布内，否则转到某些角度时就会有圆弧被裁掉
+// （固定角度时按"上/左下/右下"分别核算边界的算法，一转动就不成立了，
+// 换成转动无关的各向同性上界）。
+double solve_max_radius(int width, int height, const Vec2& center) {
+    const double nearest_edge =
+        min({center.x, width - center.x, center.y, height - center.y});
+    return 0.9 * nearest_edge / (1.0 + kOrbitRatio);
+}
+
+// 标准两圆求交点公式：圆心距超出 [|r1-r2|, r1+r2] 时无解（不该发生在
+// 我们这 12 对圆上，因为 kCenterDistanceRatio 已经保证落在区间内，
+// 但公式本身对任意输入负责，返回 optional 而不是假设调用方一定合法）。
+optional<pair<Vec2, Vec2>> circle_intersections(
+    const Vec2& c1, double r1, const Vec2& c2, double r2) {
+    const double dx = c2.x - c1.x;
+    const double dy = c2.y - c1.y;
+    const double d = sqrt(dx * dx + dy * dy);
+    if (d < 1e-9 || d > r1 + r2 || d < abs(r1 - r2)) {
+        return nullopt;
+    }
+    const double a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
+    const double h = sqrt(max(0.0, r1 * r1 - a * a));
+    const Vec2 p{c1.x + a * dx / d, c1.y + a * dy / d};
+    return make_pair(
+        Vec2{p.x + h * dy / d, p.y - h * dx / d},
+        Vec2{p.x - h * dy / d, p.y + h * dx / d});
+}
+
+// 两组同心圆（各 2 个圆）两两组合出的 4 对圆，各自最多 2 个交点，
+// 按"g1/g2 各自哪一圈参与"拆成 4 个原始子列表——ii=g1 内×g2 内，
+// io=g1 内×g2 外，oi=g1 外×g2 内，oo=g1 外×g2 外。拆到这个粒度是
+// 因为"哪一环转动"要按"活动组自己的外圈是否参与"来判断，活动组
+// 可能是 g1 也可能是 g2，只有拆到 4 个原始子列表才能两种情况都
+// 处理（见 draw_state_space_rings() 的用法：先按需要旋转某些子
+// 列表，再合并成 g1_outer/g1_inner 两组配色用）。
+struct PairIntersections {
+    vector<Vec2> inner_inner;
+    vector<Vec2> inner_outer;
+    vector<Vec2> outer_inner;
+    vector<Vec2> outer_outer;
+};
+
+PairIntersections collect_pair_intersections(
+    const RingGroupSpec& g1, const RingGroupSpec& g2, double max_radius) {
+    const double ri = max_radius * kInnerRadiusRatio;
+    const double ro = max_radius * kOuterRadiusRatio;
+    const auto add = [](vector<Vec2>& out, optional<pair<Vec2, Vec2>> pts) {
+        if (pts) {
+            out.push_back(pts->first);
+            out.push_back(pts->second);
+        }
+    };
+    PairIntersections result;
+    add(result.inner_inner, circle_intersections(g1.origin, ri, g2.origin, ri));
+    add(result.inner_outer, circle_intersections(g1.origin, ri, g2.origin, ro));
+    add(result.outer_inner, circle_intersections(g1.origin, ro, g2.origin, ri));
+    add(result.outer_outer, circle_intersections(g1.origin, ro, g2.origin, ro));
+    return result;
+}
+
+// 把点 p 绕 center 转 delta_radians（标准数学定义，逆时针为正），
+// 半径（到 center 的距离）保持不变——"环绕自己圆心旋转"就是拿这个
+// 函数对落在这个环上的交点做的，不重新算两个圆的真实几何交点，故意
+// 忽略旋转过程中跟另一个环的真实距离关系（只有静止角度 0 时才代表
+// 真交点，动画中间帧只是视觉上的"跟着转"）。
+Vec2 rotate_around(const Vec2& p, const Vec2& center, double delta_radians) {
+    const double dx = p.x - center.x;
+    const double dy = p.y - center.y;
+    const double radius = sqrt(dx * dx + dy * dy);
+    const double angle = atan2(dy, dx) + delta_radians;
+    return Vec2{center.x + radius * cos(angle), center.y + radius * sin(angle)};
+}
+
+// 编号是临时调试手段：截图配色时肉眼没法准确对应"这几个点具体是哪
+// 种几何组合"，编号之后可以直接说"3、7、12 号统一红色"，不会认错
+// 点。确认最终配色方案之后这个标号可以整个删掉，不是长期要留的
+// 功能。一个点一份颜色（不再是"一组 4 个点共用一色"），因为实际
+// 反馈是按编号单点指定的，不是按"外圈/内圈"这种整组指定的。
+void draw_node(
+    const Cairo::RefPtr<Cairo::Context>& cr, const Vec2& p,
+    const ChartColor& color, double node_radius, int label) {
+    // arc() 不会自己开新路径——如果上一个点画完文字之后 current point
+    // 留在文字末尾，arc() 会先从那里画一条线连过来。每个点开始前显式
+    // 起个新路径，断开这条隐式连线。
+    cr->begin_new_path();
+    cr->arc(p.x, p.y, node_radius, 0, 2 * std::numbers::pi);
+    cr->set_source_rgb(color.r, color.g, color.b);
+    cr->fill_preserve();
+    // 深色描边让节点在浅色环线上更"明显"，不是纯色块糊在一起。
+    cr->set_source_rgba(0, 0, 0, 0.35);
+    cr->set_line_width(1.0);
+    cr->stroke();
+
+    // cairomm 不同版本的字体粗细/斜体枚举名不稳定，直接用底层 C API
+    // 绕开（cairomm::Context::cobj() 拿原始 cairo_t*），避免猜命名空间。
+    cairo_select_font_face(
+        cr->cobj(), "sans-serif", CAIRO_FONT_SLANT_NORMAL,
+        CAIRO_FONT_WEIGHT_BOLD);
+    cr->set_font_size(max(10.0, node_radius * 1.1));
+    cr->set_source_rgb(0, 0, 0);
+    cr->move_to(p.x + node_radius + 2, p.y - node_radius - 2);
+    cr->show_text(to_string(label));
+}
+
+// 三组圆的静止角度（弧度，标准数学定义，从正 x 轴逆时针为正）：上
+// （U）在 -90°，左下（R）、右下（F）各偏 ±120°，跟 draw_ring_group()
+// 里 groups 数组的下标一一对应（0=上/U, 1=左下/R, 2=右下/F），
+// RingAnimation::active_group 也用这套下标，两边不会对不上。
+constexpr double kGroupRestAngle[3] = {
+    -std::numbers::pi / 2.0,
+    -std::numbers::pi / 2.0 + 2.0 * std::numbers::pi / 3.0,
+    -std::numbers::pi / 2.0 - 2.0 * std::numbers::pi / 3.0,
+};
+
+void draw_state_space_rings(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
+    const RingAnimation* animation) {
+    // 靠上一点：公共中心 M 的 y 取高度的 0.42 而不是正中间 0.5。
+    const Vec2 center{width / 2.0, height * 0.42};
+    const double max_radius = solve_max_radius(width, height, center);
+    const double orbit_radius = max_radius * kOrbitRatio;
+
+    // 圆心永远停在静止角度——"旋转"不是圆心绕公共中心 M 公转，是圆
+    // 自己的 8 个交点绕这个圆自己的圆心转（见下面 group_pairs 循环），
+    // 圆心本身不用动画状态。
+    const auto orbit_point = [&](int group_index) {
+        const double angle = kGroupRestAngle[group_index];
+        return Vec2{
+            center.x + orbit_radius * cos(angle),
+            center.y + orbit_radius * sin(angle)};
+    };
+
+    // 同一组的内外两环改成同一个颜色——组内颜色一致，一眼就能看出
+    // 6 个圆分属哪 3 组，不需要再靠"内圈/外圈"这层区分去认颜色。原来
+    // 上/左下两组用的橙、绿（0xffc48a/0xa7ddb6）跟节点配色表里的饱和
+    // 橙(0xF39C12)、饱和绿(0x27AE60) 同色系，容易把"环本身的颜色"和
+    // "交点的颜色"看混——换成节点配色表里完全没用到的淡青、淡粉，
+    // 右下角的淡紫本来就没跟任何节点颜色撞，不用动。
+    const array<RingGroupSpec, 3> groups = {{
+        {orbit_point(0), chart_color(0x9AD6D6), chart_color(0x9AD6D6)},
+        {orbit_point(1), chart_color(0xF0AFC7), chart_color(0xF0AFC7)},
+        {orbit_point(2), chart_color(0xc9a8e8), chart_color(0xc9a8e8)},
+    }};
+
+    for (const auto& group : groups) {
+        draw_ring_group(cr, group, max_radius);
+    }
+
+    // 24 个交点的配色，按编号（1~24，见 draw_node() 标出来的号）直接
+    // 指定——反馈是按单点编号给的（比如"10 12 14 16 用红色"），不是
+    // 按"外圈/内圈"整组给的，量到这个粒度就不适合再按组配色了，直接
+    // 用一张编号表最不容易认错点。(0,1)（橙×绿）单数(1/3/5/7)=蓝、
+    // 双数(2/4/6/8)=绿；(0,2)（橙×紫）单数(9/11/13/15)=红、双数
+    // (10/12/14/16)=橙——这两对都来回改过好几次，以这版编号表为准；
+    // (1,2)（绿×紫）单数(17/19/21/23)=黄、双数(18/20/22/24)=黑（原则
+    // 上该用白色，但白色在浅色背景上不合适，换成黑色）。
+    constexpr array<ChartColor, 24> kLabelColors = {{
+        chart_color(0x2E86DE), chart_color(0x27AE60), chart_color(0x2E86DE),
+        chart_color(0x27AE60), chart_color(0x2E86DE), chart_color(0x27AE60),
+        chart_color(0x2E86DE), chart_color(0x27AE60), // 1-8: (0,1)，单蓝双绿
+        chart_color(0xE74C3C), chart_color(0xF39C12), chart_color(0xE74C3C),
+        chart_color(0xF39C12), chart_color(0xE74C3C), chart_color(0xF39C12),
+        chart_color(0xE74C3C), chart_color(0xF39C12), // 9-16: (0,2)，单红双橙
+        chart_color(0xF1C40F), chart_color(0x1A1A1A), chart_color(0xF1C40F),
+        chart_color(0x1A1A1A), chart_color(0xF1C40F), chart_color(0x1A1A1A),
+        chart_color(0xF1C40F), chart_color(0x1A1A1A), // 17-24: (1,2)，单黄双黑
+    }};
+    const double node_radius = max(5.0, max_radius * 0.055);
+    const array<pair<int, int>, 3> group_pairs = {{{0, 1}, {0, 2}, {1, 2}}};
+
+    // 每个点标一下"落在 i 的外圈还是内圈上""落在 j 的外圈还是内圈
+    // 上"——活动组可能是这一对里的 i 也可能是 j，只有点一级记清楚
+    // 两边各自的内外归属，才能不管活动组是谁都能正确判断"这个点该不
+    // 该跟着转"（只转活动组自己外圈参与的点，见下面 spin 那段）。
+    struct LabeledPoint {
+        Vec2 pos;
+        bool i_outer;
+        bool j_outer;
+    };
+
+    int label = 1;
+    for (const auto& [i, j] : group_pairs) {
+        PairIntersections pts = collect_pair_intersections(groups[i], groups[j], max_radius);
+
+        vector<LabeledPoint> points;
+        const auto append = [&](vector<Vec2>& src, bool i_outer, bool j_outer) {
+            for (auto& p : src) {
+                points.push_back({p, i_outer, j_outer});
+            }
+        };
+        append(pts.outer_inner, true, false);
+        append(pts.outer_outer, true, true);
+        append(pts.inner_inner, false, false);
+        append(pts.inner_outer, false, true);
+
+        if (animation) {
+            const int active = animation->active_group;
+            const Vec2& pivot = groups[active].origin;
+            const double delta = animation->angle_offset_radians;
+            for (auto& lp : points) {
+                const bool active_outer_here =
+                    (active == i && lp.i_outer) || (active == j && lp.j_outer);
+                if (active_outer_here) {
+                    lp.pos = rotate_around(lp.pos, pivot, delta);
+                }
+            }
+        }
+
+        for (const auto& lp : points) {
+            draw_node(cr, lp.pos, kLabelColors[label - 1], node_radius, label);
+            ++label;
+        }
+    }
 }
 
 } // namespace
@@ -376,5 +724,85 @@ Gtk::Widget* make_cube_net_view(
             draw_cube_net(cr, width, height, state_provider());
         });
     area->set_tooltip_text("六面展开图：六个面一次性摊开，没有遮挡");
+    return area;
+}
+
+// 只画一个面的 2x2 格子，没有透视、不用背面剔除——跟 draw_cube_net()
+// 里单个面那块用的是同一个 net_cell_sign()，数字跟展开图上那一块的
+// 编号完全一致，不是另起一套。
+void draw_cube_face(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
+    const CubeState& state, Face face) {
+    const double cell = min(width / 2.0, height / 2.0);
+    const double margin_x = (width - cell * 2) / 2;
+    const double margin_y = (height - cell * 2) / 2;
+    for (int ui = 0; ui < 2; ++ui) {
+        for (int vi = 0; vi < 2; ++vi) {
+            int u_sign = 0;
+            int v_sign = 0;
+            net_cell_sign(face, ui, vi, u_sign, v_sign);
+            const double origin_x = margin_x + ui * cell;
+            const double origin_y = margin_y + vi * cell;
+            const array<Vec2, 4> screen = {
+                Vec2{origin_x, origin_y},
+                Vec2{origin_x + cell, origin_y},
+                Vec2{origin_x + cell, origin_y + cell},
+                Vec2{origin_x, origin_y + cell},
+            };
+            fill_grid_cell(cr, screen, sticker_color(sticker_at(state, face, u_sign, v_sign)));
+            const Vec2 center{origin_x + cell / 2, origin_y + cell / 2};
+            const StickerHome home = sticker_home(state, face, u_sign, v_sign);
+            draw_cell_label(
+                cr, center, sticker_label(home.face, home.u_sign, home.v_sign),
+                cell * 0.32);
+        }
+    }
+}
+
+Gtk::Widget* make_cube_face_view(
+    function<CubeState()> state_provider, Face face, int width, int height) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(width);
+    area->set_content_height(height);
+    area->set_draw_func(
+        [state_provider, face](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_cube_face(cr, width, height, state_provider(), face);
+        });
+    return area;
+}
+
+Gtk::Widget* make_state_space_rings_view(
+    long long state_space_size, int size,
+    function<optional<RingAnimation>()> animation_provider) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    // content_width/height 只是"最小自然尺寸"，不是固定尺寸——真正
+    // 决定画多大的是 draw_func 每次拿到的 width/height（由 GTK 布局
+    // 分配决定），draw_state_space_rings() 本来就是按这两个参数动态
+    // 反解半径，不是按固定像素画的，所以这里放开 hexpand/vexpand 让
+    // 它跟着所在的 Frame 一起变大，配合 window.blp 里 host 容器改成
+    // halign/valign: fill，才能在窗口开大时图像跟着放大，而不是固定
+    // 320×320 缩在一个大面板中间，四周全是空的。
+    area->set_content_width(size);
+    area->set_content_height(size);
+    area->set_hexpand(true);
+    area->set_vexpand(true);
+
+    // 静止时不转——只有对应面的按钮点下去、animation_provider() 返回
+    // 非空的那段时间，对应那一组圆才会偏离静止角度；平时三组都停在
+    // kGroupRestAngle 定义的位置。拉模型跟 make_cube_3d_view() 的
+    // animation_provider 同一套用法。
+    area->set_draw_func(
+        [animation_provider](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            const optional<RingAnimation> animation =
+                animation_provider ? animation_provider() : nullopt;
+            draw_state_space_rings(
+                cr, width, height, animation ? &*animation : nullptr);
+        });
+
+    area->set_tooltip_text(
+        "状态空间约有 " + to_string(state_space_size) + " 种");
+
     return area;
 }

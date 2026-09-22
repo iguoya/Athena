@@ -70,6 +70,17 @@ bool is_solved(const CubeState& state);
 // u_sign/v_sign 对应 face_layout(face) 里 u_axis/v_axis 的符号。
 Face sticker_at(const CubeState& state, Face face, int u_sign, int v_sign);
 
+// 当前贴在 (face,u_sign,v_sign) 这个槽位上的贴纸，追根溯源它在"已
+// 复原"状态下原本属于哪个槽位——给界面标调试编号用：编号要跟着贴纸
+// 本身走（这一物理贴纸转到哪都是同一个号），不能跟着槽位走（槽位是
+// 画面上的固定位置，贴纸会因为转动换到别的槽位，槽位本身没有"身份"）。
+struct StickerHome {
+    Face face;
+    int u_sign;
+    int v_sign;
+};
+StickerHome sticker_home(const CubeState& state, Face face, int u_sign, int v_sign);
+
 // 穷举下一步的标准非冗余转法集合：2 阶魔方没有固定的中心块参考系，
 // 转 D/L/B 的效果都等价于先把整个魔方绕对应轴转半圈、再转 U/R/F，属于
 // 冗余操作，穷举时不需要单独列出；只转 U/R/F 三个面、每个面 3 种幅度

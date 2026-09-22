@@ -297,3 +297,48 @@ Face sticker_at(const CubeState& state, Face face, int u_sign, int v_sign) {
     }
     return face; // 理论上不会到达：8 个角块正好覆盖全部 6×4 个位置组合。
 }
+
+StickerHome sticker_home(const CubeState& state, Face face, int u_sign, int v_sign) {
+    const FaceLayout layout = face_layout(face);
+    for (size_t i = 0; i < state.corners.size(); ++i) {
+        const Corner& corner = state.corners[i];
+        if (axis_value(corner, layout.normal_axis) != layout.normal_sign ||
+            axis_value(corner, layout.u_axis) != u_sign ||
+            axis_value(corner, layout.v_axis) != v_sign) {
+            continue;
+        }
+        // 这格贴纸现在的颜色本身就是它的原始归属面——rotate_corner_90()
+        // 转动时颜色标签会在 x/y/z 三个轴之间搬家（见该函数顶部注释：
+        // 比如绕 Y 轴转一次，color_x 会变成转动前的 color_z），但标签
+        // 的值本身（R/L/U/D/F/B 这六个 Face）不会被改写，所以"当前颜色
+        // 是什么"直接就是"原本属于哪个面"，不能反过来从当前坐标推：
+        // 当前坐标只跟位置有关，跟颜色标签在三个轴之间怎么重新分配的
+        // 转动历史无关，两者会对不上（这是这个函数最初版本的 bug，
+        // 被 StickerHomeTracksTheSameStickerAcrossMoves 测试抓出来过）。
+        const Face home_face = axis_color(corner, layout.normal_axis);
+
+        // corners 数组下标固定对应同一个物理角块（apply_move() 原地更新
+        // 每个 Corner 的字段，不重排数组），下标跟 make_solved_cube() 那套
+        // (x:{-1,1})(y:{-1,1})(z:{-1,1}) 嵌套循环的展开顺序一一对应，
+        // 用下标就能反推这个角块在"已复原"状态下的原始坐标，不依赖
+        // corner 当前的 x/y/z（那是转动后的当前坐标，不是原始坐标）——
+        // 这部分只用来定位贴纸在 home_face 上原本是哪一格，跟上面
+        // home_face 本身的推导是两回事。
+        const int original_x = (i & 4) ? 1 : -1;
+        const int original_y = (i & 2) ? 1 : -1;
+        const int original_z = (i & 1) ? 1 : -1;
+        const auto original_value = [&](Axis axis) {
+            switch (axis) {
+            case Axis::X: return original_x;
+            case Axis::Y: return original_y;
+            case Axis::Z: return original_z;
+            }
+            return 0;
+        };
+        const FaceLayout home_layout = face_layout(home_face);
+        return StickerHome{
+            home_face, original_value(home_layout.u_axis),
+            original_value(home_layout.v_axis)};
+    }
+    return StickerHome{face, u_sign, v_sign}; // 理论上不会到达，同 sticker_at()。
+}
