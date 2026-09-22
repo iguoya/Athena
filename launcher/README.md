@@ -37,10 +37,9 @@
   应用目录里了，按文件名认最直接。
 - `match`（可选）是判断进程归属的路径前缀，`apps/cpp` 用它指向 `build`。
 
-托盘图标来自 `gui/assets/tiger.svg`——Athena 早期欢迎页的主视觉，2026-08-30 随
-欢迎页一起删掉，现在从 git 历史里取回来了。菜单栏只有 22pt 高，整只老虎缩进去
-只剩一条色块，所以 `gui/build.rs` 在构建期裁出虎头再渲染成位图；换图标就是换那份
-SVG（连带调一下裁剪框）。
+窗口标题栏、任务栏和托盘用**同一份**虎头，来自 `gui/assets/tiger.svg`（整只
+老虎缩到 16–32 px 只剩色带，所以 `gui/build.rs` 裁出头部）。标题栏引用构建期
+写出的 `tiger-mark.png`；托盘与 exe 资源段用同一裁切渲的位图——换标志只换那份 SVG。
 
 编排器统一注入：PATH 补全（node / cargo / meson / Qt 在桌面环境里往往不在 PATH）、
 共享的 `CARGO_TARGET_DIR`（三个 Tauri 应用依赖相同，各编一份是白费 6 GB）、
@@ -109,4 +108,5 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 ## 日志
 
 macOS `~/Library/Logs/Athena/<id>.log`，Linux `$XDG_STATE_HOME/athena/logs/`，
-Windows `%LOCALAPPDATA%\Athena\logs\`。构建失败先看它。
+Windows `%LOCALAPPDATA%\Athena\logs\`。准备步骤和长驻进程的输出都写在这里，
+构建失败先看它。

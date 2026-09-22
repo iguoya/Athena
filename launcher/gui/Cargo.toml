@@ -30,6 +30,13 @@ gtk = "0.18"
 
 [build-dependencies]
 slint-build = "1.17"
-# 托盘图标在构建期由 SVG 渲染成位图：换图标只要换 assets/tray-icon.svg，
-# 运行时不带任何图片解码依赖。
+# 从 tiger.svg 裁虎头：托盘、标题栏、任务栏共用同一份。
 resvg = "0.45"
+# 写出 assets/tiger-mark.png，给 Slint Window.icon 的 @image-url 用。
+png = "0.17"
+
+[target.'cfg(target_os = "windows")'.build-dependencies]
+# 把同一份虎头编进 exe 资源段。标题栏走 Window.icon，
+# 任务栏 / 资源管理器认这个；两边像素来源相同。
+ico = "0.5"
+winresource = "0.1"

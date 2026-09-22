@@ -2,6 +2,12 @@
 //!
 //! 图标放在各应用自己的目录里（`apps/<id>/icon.svg`），由 `app.json` 指名。
 //! 启动器不认识谁是谁——新增一个应用，自带一张图标就显示得出来。
+//!
+//! 启动器自己的标志来自 `assets/tiger.svg`，构建期裁出虎头：
+//! - 标题栏：`Window.icon` → `assets/tiger-mark.png`
+//! - 托盘：`tray-icon.rgba`
+//! - 任务栏 / exe：多尺寸 `.ico`
+//! 三处同源，不要另做一张。
 
 use std::path::Path;
 

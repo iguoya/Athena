@@ -17,15 +17,12 @@ export struct AppEntry {
     has-icon: bool,
     // 图块里的字，取自 app.json 的 icon.letter（"C++"、"算"）。
     letter: string,
-    // 图块底色，取自 icon.accent，用各自技术生态的惯用色；类型是 color
-    // 不是更宽的 brush，因为要在 Tile 里调 .darker() 表达"未运行"。
+    // 图块底色，取自 icon.accent，用各自技术生态的惯用色；常驻显示，
+    // 不随运行状态变化（见 Tile 的 plate-color）。
     accent: color,
-    // 点的颜色，启动中是橙色（通行约定）；运行/未运行不靠这个点，靠色块
-    // 本身明暗（见 Tile 的 plate-color）。
+    // 运行状态点的颜色：绿=运行中、橙=启动中、灰=未运行。
     tint: brush,
     running: bool,
-    // 色块的明暗是二选一，表达不了"正在启动、还没完全跑起来"这个中间态，
-    // 靠这个点单独补上；跑稳了或彻底停了都不需要它，只在这个状态显眼。
     starting: bool,
 }
 
@@ -45,25 +42,41 @@ component Tile inherits Rectangle {
     property <length> hub: 56px;
     property <length> hub-top: 10px;
 
-    // 是否在跑，靠色块本身的明暗表达，不靠文字：运行中是应用自己的 accent
-    // 原色（彩色、有身份），未运行褪成同一句灰（跟启动器别处"未运行"的
-    // 灰点 #8a8a8e 是同一个颜色，全局统一）——不是把 accent 调暗几成，
-    // 因为深色的 accent（比如 cpp 的深蓝）调暗后跟原色几乎分不出来；
-    // 直接换成一个固定的中性灰，不管 accent 是什么颜色，反差都一样大。
-    property <brush> plate-color: entry.running ? entry.accent : #8a8a8e;
+    // 色块常驻应用自己的 accent 原色——未运行也不褪灰。运行态用 accent 光环
+    // + 同色投影，每个应用颜色不同，不再共用一颗单调绿点。
+    property <brush> plate-color: entry.accent;
+    property <bool> live: entry.running;
+
+    // 运行态光环：贴在色块外侧，颜色跟 accent 走。
+    Rectangle {
+        x: (parent.width - self.width) / 2;
+        y: root.hub-top + (root.hub - self.height) / 2;
+        width: root.live ? root.hub + 10px : root.hub + 2px;
+        height: self.width;
+        border-radius: self.width / 3.2;
+        background: transparent;
+        border-width: root.live ? 2.5px : 0px;
+        border-color: entry.accent;
+        opacity: root.live ? (entry.starting ? 0.55 : 0.85) : 0;
+        drop-shadow-blur: root.live ? (entry.starting ? 16px : 12px) : 0px;
+        drop-shadow-color: entry.accent;
+        animate width, opacity, drop-shadow-blur, border-width {
+            duration: 180ms;
+            easing: ease-out;
+        }
+    }
 
     plate := Rectangle {
         x: (parent.width - self.width) / 2;
         y: root.hub-top + (root.hub - self.height) / 2;
-        width: touch.has-hover ? root.hub + 3px : root.hub;
+        width: touch.has-hover || root.live ? root.hub + 3px : root.hub;
         height: self.width;
         border-radius: self.width / 3.6;
         background: root.plate-color;
-        // 很淡的一层投影：色块浮起来一点，图标和底色才不像贴在页面上。
-        drop-shadow-blur: touch.has-hover ? 10px : 5px;
-        drop-shadow-offset-y: touch.has-hover ? 3px : 1px;
-        drop-shadow-color: #00000024;
-        animate width, drop-shadow-blur, drop-shadow-offset-y, background {
+        drop-shadow-blur: root.live ? 14px : (touch.has-hover ? 10px : 5px);
+        drop-shadow-offset-y: root.live ? 0px : (touch.has-hover ? 3px : 1px);
+        drop-shadow-color: root.live ? entry.accent : #00000024;
+        animate width, drop-shadow-blur, drop-shadow-offset-y, drop-shadow-color, background {
             duration: 140ms;
             easing: ease-out;
         }
@@ -103,16 +116,20 @@ component Tile inherits Rectangle {
         overflow: elide;
     }
 
-    // 运行/未运行看色块本身明暗（plate-color），这个点只在"启动中"时才
-    // 显眼（橙色）——停了或跑稳了都不需要额外再说一遍，不用文字。
+    // 状态点：运行中更大并带同色光晕；tint 仍由 Rust 按三态算好。
     Rectangle {
         x: (parent.width - self.width) / 2;
-        y: root.hub-top + root.hub + 30px;
-        width: 6px;
-        height: 6px;
-        border-radius: 3px;
+        y: root.hub-top + root.hub + 28px;
+        width: root.live ? 9px : 6px;
+        height: self.width;
+        border-radius: self.width / 2;
         background: entry.tint;
-        visible: entry.starting;
+        drop-shadow-blur: root.live ? 8px : 0px;
+        drop-shadow-color: entry.tint;
+        animate width, drop-shadow-blur {
+            duration: 160ms;
+            easing: ease-out;
+        }
     }
 
     touch := TouchArea {
@@ -180,6 +197,8 @@ export component LauncherWindow inherits Window {
     callback stop(string);
 
     title: "Athena 启动器";
+    // 标题栏左上角：与托盘、任务栏同一份虎头（build.rs 从 tiger.svg 裁出）。
+    icon: @image-url("../assets/tiger-mark.png");
     default-font-family: ui-font;
     // 初始大小按三列两行估：现在有六个学习应用，窄窗口改走滚动，不裁掉后排。
     preferred-width: 404px;

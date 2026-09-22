@@ -302,9 +302,9 @@ fn build_entries(apps: &[App]) -> Vec<AppEntry> {
 /// 把一轮状态探测结果写回某个面板的图块模型；学习应用面板和实践面板各调
 /// 一次，探测到的 `states` 顺序必须跟建模型时的 `apps` 顺序一致。
 ///
-/// 运行/未运行不写进模型里的文字字段——早先是拿一行「运行中」/「未运行」
-/// 文字表达，改成图块色块本身的明暗（Tile 的 plate-color，按 running 算），
-/// 这里只需要给 running/starting 两个布尔赋值。
+/// 运行/未运行不写进模型里的文字字段——文字改成图块下方常驻的状态点，
+/// 颜色由 `tint` 算好（绿/橙/灰）；`running` 给停止按钮和 accent 光环，
+/// `starting` 让光环更散一点，表示还在拉起。
 fn apply_states(model: &ModelRc<AppEntry>, states: &[RunState]) {
     for (index, state) in states.iter().enumerate() {
         if let Some(mut entry) = model.row_data(index) {
@@ -396,8 +396,9 @@ fn parse_color(text: &str, app_id: &str) -> Color {
 
 fn tint(state: RunState) -> Color {
     match state {
-        RunState::Ready => Color::from_rgb_u8(0x34, 0xc7, 0x59),
-        RunState::Starting => Color::from_rgb_u8(0xff, 0x9f, 0x0a),
+        // 更饱和一点：运行态绿/橙要跳出来，别跟未运行灰混成一片。
+        RunState::Ready => Color::from_rgb_u8(0x00, 0xe6, 0x76),
+        RunState::Starting => Color::from_rgb_u8(0xff, 0xb0, 0x20),
         RunState::Stopped => Color::from_rgb_u8(0x8a, 0x8a, 0x8e),
     }
 }

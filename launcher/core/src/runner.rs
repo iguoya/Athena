@@ -1,6 +1,6 @@
 //! 执行清单里的 dev 声明：构建、启动、探测状态、停止、把窗口叫到前面。
 
-use std::io::Write;
+use std::io::{BufRead, Read, Write};
 use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
@@ -72,14 +72,12 @@ impl ProcessSnapshot {
     }
 
     /// 构建期的那一串（npm、cargo、vite、ninja）：命令行里带着应用目录的路径。
-    /// 末尾必须带分隔符：`apps/c` 是 `apps/cpp` 的前缀，少了它两个应用会互相误判。
     fn is_busy(&self, app: &App) -> bool {
-        let needle = format!("{}{}", app.dir.display(), std::path::MAIN_SEPARATOR);
         self.system.processes().values().any(|process| {
-            process
-                .cmd()
-                .iter()
-                .any(|part| part.to_string_lossy().contains(&needle))
+            command_line_belongs_to(
+                &app.dir,
+                process.cmd().iter().map(|part| part.to_string_lossy()),
+            )
         })
     }
 
@@ -89,17 +87,18 @@ impl ProcessSnapshot {
     /// 这段时间里端口是通的但屏幕上什么都没有。http 探测只用来回答另一个问题：
     /// 窗口已经出来了，但页面是不是还没连上。
     pub fn state(&self, app: &App) -> RunState {
-        if self.window_pid(app).is_some() {
-            return match &app.dev.ready {
-                ReadySpec::Http(url) if !reachable(url) => RunState::Starting,
-                _ => RunState::Ready,
-            };
-        }
-        if self.is_busy(app) {
-            RunState::Starting
-        } else {
-            RunState::Stopped
-        }
+        let window_present = self.window_pid(app).is_some();
+        // 窗口还没出来时不去连端口：停着的应用不该每两秒探一次 localhost。
+        let http_up = match &app.dev.ready {
+            ReadySpec::Http(url) if window_present => reachable(url),
+            _ => false,
+        };
+        classify_run_state(
+            window_present,
+            self.is_busy(app),
+            &app.dev.ready,
+            http_up,
+        )
     }
 
     pub fn pid_of(&self, app: &App) -> Option<u32> {
@@ -129,6 +128,87 @@ fn reachable(url: &str) -> bool {
     })
 }
 
+/// 命令行里出现应用目录，才算这个构建进程属于它。
+///
+/// 末尾必须带分隔符：`apps/c` 是 `apps/cpp` 的前缀，少了它两个应用会互相误判。
+fn command_line_belongs_to(
+    dir: &Path,
+    parts: impl IntoIterator<Item = impl AsRef<str>>,
+) -> bool {
+    let needle = format!("{}{}", dir.display(), std::path::MAIN_SEPARATOR);
+    parts.into_iter().any(|part| part.as_ref().contains(&needle))
+}
+
+/// 窗口在不在、构建进程在不在、端口通不通，三者不能折成「有动静就算运行中」。
+fn classify_run_state(
+    window_present: bool,
+    busy: bool,
+    ready: &ReadySpec,
+    http_up: bool,
+) -> RunState {
+    if window_present {
+        return match ready {
+            ReadySpec::Http(_) if !http_up => RunState::Starting,
+            _ => RunState::Ready,
+        };
+    }
+    if busy {
+        RunState::Starting
+    } else {
+        RunState::Stopped
+    }
+}
+
+fn emit(log: &mut impl Write, report: &mut impl FnMut(&str), line: &str) {
+    let _ = writeln!(log, "{line}");
+    report(line);
+}
+
+/// 跑完一步准备，把它的标准输出和标准错误按行写进日志，并交给 `report`。
+fn run_prepare(
+    mut command: Command,
+    log: &mut impl Write,
+    mut report: impl FnMut(&str),
+) -> Result<std::process::ExitStatus, std::io::Error> {
+    command.stdout(Stdio::piped()).stderr(Stdio::piped());
+    let mut child = command.spawn()?;
+    let stdout = child.stdout.take().expect("stdout piped");
+    let stderr = child.stderr.take().expect("stderr piped");
+    let (sender, receiver) = std::sync::mpsc::channel();
+    let err_sender = sender.clone();
+    std::thread::spawn(move || forward_output(stdout, sender));
+    std::thread::spawn(move || forward_output(stderr, err_sender));
+    for line in receiver {
+        emit(log, &mut report, &line);
+    }
+    child.wait()
+}
+
+/// 按字节读到换行再转成字符串。非法 UTF-8 换成替换符，不因此停掉后面的行。
+fn forward_output(reader: impl Read, sender: std::sync::mpsc::Sender<String>) {
+    let mut reader = std::io::BufReader::new(reader);
+    let mut buffer = Vec::new();
+    loop {
+        buffer.clear();
+        match reader.read_until(b'\n', &mut buffer) {
+            Ok(0) => break,
+            Ok(_) => {
+                if buffer.last() == Some(&b'\n') {
+                    buffer.pop();
+                }
+                if buffer.last() == Some(&b'\r') {
+                    buffer.pop();
+                }
+                let line = String::from_utf8_lossy(&buffer).into_owned();
+                if sender.send(line).is_err() {
+                    break;
+                }
+            }
+            Err(_) => break,
+        }
+    }
+}
+
 /// 构建并启动一个应用。`report` 收到的每一行同时写进日志文件。
 ///
 /// 这个函数会阻塞到"长驻命令已经拉起来"为止——prepare 那几步（npm install、
@@ -148,11 +228,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
         .open(&log_path)
         .map_err(|error| format!("打不开日志 {}：{error}", log_path.display()))?;
 
-    let mut say = |line: &str| {
-        let _ = writeln!(log, "{line}");
-        report(line);
-    };
-    say(&format!("===== 启动 {} =====", app.id));
+    emit(&mut log, &mut report, &format!("===== 启动 {} =====", app.id));
 
     for step in &app.dev.prepare {
         if let Some(marker) = &step.when_missing {
@@ -164,20 +240,23 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
             .label
             .clone()
             .unwrap_or_else(|| step.run.join(" "));
-        say(&format!("[准备] {label}"));
-        let status = command(app, repo, &step.run)
-            .stdout(Stdio::inherit())
-            .stderr(Stdio::inherit())
-            .status()
+        emit(&mut log, &mut report, &format!("[准备] {label}"));
+        // 准备步骤的原文也进同一份日志，并经 report 回到界面。
+        // 继承父进程时，托盘没有控制台，cmake / cargo 的输出会丢。
+        let status = run_prepare(command(app, repo, &step.run), &mut log, &mut report)
             .map_err(|error| format!("{label} 没能执行：{error}"))?;
         if !status.success() {
             let message = format!("{label} 失败（退出码 {:?}）", status.code());
-            say(&message);
+            emit(&mut log, &mut report, &message);
             return Err(message);
         }
     }
 
-    say(&format!("[启动] {}", app.dev.run.join(" ")));
+    emit(
+        &mut log,
+        &mut report,
+        &format!("[启动] {}", app.dev.run.join(" ")),
+    );
     // 长驻命令的 stdin 不能继承编排器：`launcher open` 返回后父进程退出，
     // 子进程会读到 EOF。Flutter 的 resident runner 因此整段退出，启动器只能
     // 每次冷编译。接到 /dev/null，热重载由各应用自己的监视器负责。
@@ -279,13 +358,11 @@ pub fn stop(app: &App) -> Result<(), String> {
         kill(pid);
         stopped = true;
     }
-    let needle = format!("{}{}", app.dir.display(), std::path::MAIN_SEPARATOR);
     for (pid, process) in snapshot.system.processes() {
-        if process
-            .cmd()
-            .iter()
-            .any(|part| part.to_string_lossy().contains(&needle))
-        {
+        if command_line_belongs_to(
+            &app.dir,
+            process.cmd().iter().map(|part| part.to_string_lossy()),
+        ) {
             kill(pid.as_u32());
             stopped = true;
         }
@@ -431,4 +508,70 @@ fn activate_windows(pid: u32, title: &str) -> Result<(), String> {
 #[cfg(not(windows))]
 fn activate_windows(_pid: u32, title: &str) -> Result<(), String> {
     Err(format!("{title} 已经在运行"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn c_directory_does_not_claim_cpp_command() {
+        let apps = PathBuf::from("repo").join("apps");
+        let c_dir = apps.join("c");
+        let cpp_command = apps.join("cpp").join("src-tauri").display().to_string();
+        assert!(
+            !command_line_belongs_to(&c_dir, [cpp_command.as_str()]),
+            "apps/c 不能因为字符串前缀吃掉 apps/cpp"
+        );
+        let own = c_dir.join("node_modules").display().to_string();
+        assert!(command_line_belongs_to(&c_dir, [own.as_str()]));
+    }
+
+    #[test]
+    fn open_port_without_window_is_not_ready() {
+        let http = ReadySpec::Http("http://127.0.0.1:1420".into());
+        assert_eq!(
+            classify_run_state(false, true, &http, true),
+            RunState::Starting
+        );
+        assert_eq!(
+            classify_run_state(false, false, &http, true),
+            RunState::Stopped
+        );
+        assert_eq!(
+            classify_run_state(true, false, &http, false),
+            RunState::Starting
+        );
+        assert_eq!(
+            classify_run_state(true, false, &http, true),
+            RunState::Ready
+        );
+        assert_eq!(
+            classify_run_state(true, false, &ReadySpec::Process, false),
+            RunState::Ready
+        );
+    }
+
+    #[test]
+    fn prepare_output_reaches_the_log_and_the_report() {
+        let mut command = Command::new(if cfg!(windows) { "cmd" } else { "echo" });
+        if cfg!(windows) {
+            command.args(["/c", "echo prepare-line"]);
+            #[cfg(windows)]
+            {
+                use std::os::windows::process::CommandExt;
+                command.creation_flags(0x0800_0000);
+            }
+        } else {
+            command.arg("prepare-line");
+        }
+        let mut log = Vec::new();
+        let mut reported = Vec::new();
+        let status = run_prepare(command, &mut log, |line| reported.push(line.to_string()))
+            .expect("准备步骤要能跑起来");
+        assert!(status.success());
+        let text = String::from_utf8(log).expect("日志是 UTF-8");
+        assert!(text.contains("prepare-line"), "{text}");
+        assert!(reported.iter().any(|line| line.contains("prepare-line")));
+    }
 }
