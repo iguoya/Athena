@@ -102,7 +102,7 @@ SpawnOutcome spawn_and_capture(
     atomic_bool killed{false};
 
     // 看门狗：到点还没结束就强杀。communicate() 会因为管道关闭而返回。
-    // 用 thread 而非 jthread：Apple libc++ 的 jthread 仍未默认可用。
+    // 用 thread + 显式 join：三平台都能编过，不依赖尚未普遍落地的 jthread。
     thread watchdog([&] {
         if (timeout.count() <= 0) {
             return;
