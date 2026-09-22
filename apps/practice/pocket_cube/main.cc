@@ -107,44 +107,10 @@ void play_turn_animation(
         kTurnAnimationFrameMs);
 }
 
-// 操作视角面板：只画 face 这一个面的 2x2 格子（make_cube_face_view()，
-// 没有透视、不用拖拽），标题写清楚是哪个操作面——给"这个面现在是什么
-// 颜色"这种只关心单个面的场景用，不是"转完之后会变成什么样"的预测。
-Gtk::Widget* make_operation_face_panel(
-    function<CubeState()> state_provider, Face face, const string& caption,
-    vector<Gtk::Widget*>& redraw_targets) {
-    auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-    box->set_hexpand(true);
-    box->set_vexpand(true);
-    box->set_halign(Gtk::Align::FILL);
-    box->set_valign(Gtk::Align::FILL);
-    box->set_margin(6);
-
-    auto* view_face = make_cube_face_view(state_provider, face, 140, 140);
-    view_face->set_hexpand(true);
-    view_face->set_vexpand(true);
-    box->append(*view_face);
-    redraw_targets.push_back(view_face);
-
-    auto label = Gtk::make_managed<Gtk::Label>(caption);
-    label->add_css_class("caption");
-    label->add_css_class("dim-label");
-    label->set_halign(Gtk::Align::CENTER);
-    box->append(*label);
-
-    auto frame = Gtk::make_managed<Gtk::Frame>();
-    frame->set_hexpand(true);
-    frame->set_vexpand(true);
-    frame->add_css_class("panel-frame");
-    frame->set_child(*box);
-    return frame;
-}
-
 void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
     auto reset_button = builder->get_widget<Gtk::Button>("practice_reset_button");
     auto current_host = builder->get_widget<Gtk::Box>("practice_cube_current_host");
-    auto next_grid_host =
-        builder->get_widget<Gtk::Box>("practice_cube_next_grid_host");
+    // practice_cube_next_grid_host（操作视角）暂时留空，不接线。
     auto state_space_host =
         builder->get_widget<Gtk::Box>("practice_state_space_host");
     auto operations_host =
@@ -190,13 +156,41 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
             [cube] { return cube->state(); },
             320,
             [current_view_animation] { return *current_view_animation; });
-        auto* view_net = make_cube_net_view(
-            [cube] { return cube->state(); }, 320, 240);
         current_host->append(*view_3d);
-        current_host->append(*view_net);
         redraw_targets->push_back(view_3d);
-        redraw_targets->push_back(view_net);
         current_view_3d = view_3d;
+
+        // 三张展开图：上 U / 右 R / 前 F——同一份 CubeState，三种摊法，
+        // 各自把该转法会动的一圈摊到中间行（默认 U/D 极面看上，L/R
+        // 极面看右，F/B 极面看前）。尺寸统一，标题跟操作视角同一套
+        // 「上 U / 右 R / 前 F」叫法，不靠极面术语区分。
+        const auto append_axis_net =
+            [&](Gtk::Widget* view, const string& caption) {
+                auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
+                view->set_hexpand(false);
+                view->set_vexpand(false);
+                box->append(*view);
+                auto label = Gtk::make_managed<Gtk::Label>(caption);
+                label->add_css_class("caption");
+                label->add_css_class("dim-label");
+                label->set_halign(Gtk::Align::CENTER);
+                box->append(*label);
+                current_host->append(*box);
+                redraw_targets->push_back(view);
+            };
+        constexpr int kNetW = 200;
+        constexpr int kNetH = 150;
+        append_axis_net(
+            make_cube_net_view([cube] { return cube->state(); }, kNetW, kNetH),
+            "展开图 · 上 U");
+        append_axis_net(
+            make_cube_net_view_lr_axis(
+                [cube] { return cube->state(); }, kNetW, kNetH),
+            "展开图 · 右 R");
+        append_axis_net(
+            make_cube_net_view_fb_axis(
+                [cube] { return cube->state(); }, kNetW, kNetH),
+            "展开图 · 前 F");
 
         auto summary = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 8);
         summary->set_valign(Gtk::Align::CENTER);
@@ -227,31 +221,9 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
         current_host->append(*summary);
     }
 
-    // 操作视角：U/R/F 三个面各自的 2x2 小面板，只读展示"这个操作面现在
-    // 是什么颜色"，不是预测转完之后的样子——之前这里是九宫格预测九种
-    // 转法的结果，反馈是这个九宫格容易干扰，换成只看当前状态。
-    if (next_grid_host) {
-        auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 10);
-        row->set_hexpand(true);
-        row->set_vexpand(true);
-        const array<pair<Face, string>, 3> panels = {{
-            {Face::U, "上 U"},
-            {Face::R, "右 R"},
-            {Face::F, "前 F"},
-        }};
-        for (const auto& [face, caption] : panels) {
-            auto* panel = make_operation_face_panel(
-                [cube] { return cube->state(); }, face, caption, *redraw_targets);
-            row->append(*panel);
-        }
-        next_grid_host->append(*row);
-    }
-
-    // 操作区：九个转法按钮，跟“操作视角”三个面板共用同一份
-    // next_move_set()，不是另外维护一份转法列表；按钮标签用
+    // 操作区：九个转法按钮，转法列表来自 next_move_set()；按钮标签用
     // move_label()（Singmaster 记号，如 "U'"），tooltip 用
-    // move_description()（记号+中文注解），跟九宫格每格的标注同一套
-    // 文案来源。
+    // move_description()（记号+中文注解）。
     vector<Gtk::Button*> operation_buttons;
     if (operations_host) {
         auto grid = Gtk::make_managed<Gtk::Grid>();
