@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# app.json 的 `run`/`binary` 写死 build/atlas（单配置生成器的扁平布局）。
+# app.json 的 `run`/`binary` 写死 build/athena-atlas（单配置生成器的扁平布局）。
 # Windows 上 CMake 有时选中 Visual Studio 这种多配置生成器，产物会落进
-# build/Debug/atlas.exe，路径就对不上——这里强制所有配置都落回 build/ 顶层，
+# build/Debug/athena-atlas.exe，路径就对不上——这里强制所有配置都落回 build/ 顶层，
 # 生成器选哪个都不影响 app.json 找得到它。
 foreach(_config_type ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER "${_config_type}" _config_upper)
@@ -44,12 +44,15 @@ if(WIN32)
     set(windows_resource "${app_rc}")
 endif()
 
-qt_add_executable(atlas
+# WIN32：Windows 上链接成 GUI 子系统，不带控制台窗口（跟 apps/c 同一个
+# 道理）。atlas_domain_tests/atlas_shell_tests 两个测试可执行文件不加——
+# 测试要往标准输出打结果，需要控制台。
+qt_add_executable(athena-atlas WIN32
     src/main.cpp
     ${windows_resource}
 )
-target_link_libraries(atlas PRIVATE atlas_domain atlas_shell Qt6::Quick Qt6::Qml Qt6::QuickControls2 Qt6::Svg)
-target_compile_definitions(atlas PRIVATE ATLAS_SOURCE_ROOT="${CMAKE_SOURCE_DIR}")
+target_link_libraries(athena-atlas PRIVATE atlas_domain atlas_shell Qt6::Quick Qt6::Qml Qt6::QuickControls2 Qt6::Svg)
+target_compile_definitions(athena-atlas PRIVATE ATLAS_SOURCE_ROOT="${CMAKE_SOURCE_DIR}")
 
 qt_add_executable(atlas_domain_tests
     tests/atlas_catalog_test.cpp
@@ -63,9 +66,9 @@ qt_add_executable(atlas_shell_tests
 target_link_libraries(atlas_shell_tests PRIVATE atlas_shell Qt6::Test)
 
 if(APPLE)
-    # 开发阶段直接运行 build/atlas，也能找到 Homebrew 的 Qt 动态库。
+    # 开发阶段直接运行 build/athena-atlas，也能找到 Homebrew 的 Qt 动态库。
     get_filename_component(_qt_prefix "${Qt6_DIR}/../../.." ABSOLUTE)
-    set_target_properties(atlas PROPERTIES BUILD_RPATH "${_qt_prefix}/lib")
+    set_target_properties(athena-atlas PROPERTIES BUILD_RPATH "${_qt_prefix}/lib")
 endif()
 
 enable_testing()

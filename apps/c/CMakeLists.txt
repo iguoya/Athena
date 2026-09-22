@@ -31,7 +31,10 @@ if(WIN32)
     set(windows_resource "${app_rc}")
 endif()
 
-qt_add_executable(athena-c
+# WIN32：Windows 上链接成 GUI 子系统，不带控制台窗口。不加这个，直接双击
+# exe 或者被脚本拉起时都会先弹一个黑色控制台窗口再显示真正的界面。
+# 其它平台忽略这个关键字，不用另外分支。
+qt_add_executable(athena-c WIN32
     src/main.cpp
     src/curriculum.cpp
     src/reloader.cpp

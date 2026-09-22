@@ -241,6 +241,20 @@ fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
     command.args(&argv[1..]);
     command.current_dir(&app.dir);
 
+    // 编排器自己是 GUI 子系统、没有控制台；它拉起的子进程只要是控制台子
+    // 系统的程序（cmake、ninja、meson、python……几乎所有构建工具都是），
+    // Windows 就会当场新分配一个控制台窗口，一闪一闪地冒出来——prepare
+    // 里每一步都会冒一个，构建完了才消失。CREATE_NO_WINDOW 让子进程直接
+    // 不分配控制台，stdout/stderr 走的是下面重定向的管道/文件句柄，不需要
+    // 控制台也能正常工作；对最终要跑起来的 GUI 应用本身同样适用——不管它
+    // 自己编译成的是不是控制台子系统，都不会再弹窗口。
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        command.creation_flags(CREATE_NO_WINDOW);
+    }
+
     if let Some(joined) = joined {
         command.env("PATH", joined);
     }
@@ -286,8 +300,11 @@ pub fn stop(app: &App) -> Result<(), String> {
 fn kill(pid: u32) {
     #[cfg(windows)]
     {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
         let _ = Command::new("taskkill")
             .args(["/PID", &pid.to_string(), "/T", "/F"])
+            .creation_flags(CREATE_NO_WINDOW)
             .status();
     }
     #[cfg(not(windows))]

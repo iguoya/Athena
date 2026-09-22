@@ -287,7 +287,7 @@ resources = gnome.compile_resources(
   source_dir: ['resources', '.', meson.current_build_dir()]
 )
 
-executable('Athena', app_sources,
+executable('athena-cpp', app_sources,
   sources: resources + platform_sources,
   include_directories: [cplusplus_inc],
   dependencies: [
@@ -297,6 +297,10 @@ executable('Athena', app_sources,
     sourceview_dep,
     athena_core_dep
   ] + platform_dependencies,
+  # Windows 上链接成 GUI 子系统，不带控制台窗口——不加这个，编排器拉起
+  # 应用时会先闪一下黑色控制台窗口。其它平台这个参数没有意义，Meson 自己
+  # 按目标系统忽略。
+  win_subsystem: 'windows',
   install: true)
 
 # === 桌面集成（Linux 任务栏图标与启动器条目；macOS 用 .app 内的 icns） ===

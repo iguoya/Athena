@@ -49,6 +49,9 @@ executable('pocket-cube', 'main.cc', 'state.cc', 'view.cc', resources,
   include_directories: [practice_root],
   cpp_args: ['-DPOCKET_CUBE_SOURCE_ROOT="' + meson.current_source_dir() + '"'],
   dependencies: [gtkmm_dep, gtk4_dep, sourceview_dep],
+  # Windows 上链接成 GUI 子系统，不带控制台窗口（跟 apps/cpp 同一个道理）；
+  # 其它平台这个参数没有意义，Meson 自己按目标系统忽略。
+  win_subsystem: 'windows',
   install: false)
 
 # === 测试 ===
