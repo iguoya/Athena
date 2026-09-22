@@ -1,77 +1,26 @@
 {
     "version": "2.0.0",
-    // 全部用 "process"：命令和参数直接交给系统执行，不经过 shell。
-    // 以前这里是 bash -lc 拼出来的长串，Windows 上要先装 Git Bash 才能用
-    // （ADR 0047）。平台差异交给 VS Code 自己的 windows / linux / osx 段，
-    // 不在命令行里写 if。
     "tasks": [
         {
-            "label": "Athena: Configure",
+            "label": "Athena: Build launcher",
             "type": "process",
-            "command": "meson",
+            "command": "cargo",
             "args": [
-                "setup",
                 "build",
-                "--buildtype=debug"
-            ],
-            "linux": {
-                // Ubuntu 26.04 的 gtkmm pc 文件没带上 GTK4 的头文件路径，
-                // 单独给 Linux 补，不影响另外两个平台。
-                "args": [
-                    "setup",
-                    "build",
-                    "--buildtype=debug",
-                    "-Dcpp_args=-I/usr/include/gtk-4.0"
-                ]
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/apps/cpp"
-            },
-            "problemMatcher": [],
-            "detail": "配置 Debug 构建；build 已存在时 Meson 自己会复用"
-        },
-        {
-            "label": "Athena: Build",
-            "type": "process",
-            "command": "meson",
-            "args": [
-                "compile",
-                "-C",
-                "build"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/apps/cpp"
-            },
-            "dependsOn": "Athena: Configure",
-            "dependsOrder": "sequence",
-            "problemMatcher": "$gcc",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "detail": "配置后增量编译 C++ 教程（调试前置任务）"
-        },
-        {
-            "label": "Athena: Check",
-            "type": "process",
-            "command": "python3",
-            "windows": {
-                "command": "python"
-            },
-            "args": [
-                "scripts/check.py",
-                "cpp",
-                "--build-dir",
-                "build",
-                "--buildtype",
-                "debug"
+                "--manifest-path",
+                "launcher/Cargo.toml",
+                "-p",
+                "athena-launcher"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": "$gcc",
-            "group": "test",
-            "detail": "走统一验证入口检查 C++ 教程（ADR 0007）"
+            "problemMatcher": "$rustc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "增量编译跨平台启动器（托盘 + 列表窗口）"
         },
         {
             "label": "Athena: Check All",
@@ -88,49 +37,7 @@
             },
             "problemMatcher": [],
             "group": "test",
-            "detail": "跨应用出处检查 + 五个应用各自的检查"
-        },
-        {
-            "label": "Athena: Prepare orchestrator",
-            "type": "process",
-            "command": "cargo",
-            "args": [
-                "build",
-                "-q",
-                "-p",
-                "launcher-core",
-                "--manifest-path",
-                "launcher/Cargo.toml"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": [],
-            "detail": "编排器本身（launcher-core，二进制名 launcher）"
-        },
-        {
-            "label": "Athena: Run",
-            "type": "process",
-            "command": "${workspaceFolder}/launcher/target/debug/launcher",
-            "windows": {
-                "command": "${workspaceFolder}/launcher/target/debug/launcher.exe"
-            },
-            "args": [
-                "open",
-                "cpp"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "dependsOn": "Athena: Prepare orchestrator",
-            "dependsOrder": "sequence",
-            "problemMatcher": "$gcc",
-            "presentation": {
-                "clear": true,
-                "panel": "dedicated",
-                "focus": true
-            },
-            "detail": "经编排器构建并启动 C++ 教程（ADR 0046）"
+            "detail": "跨应用出处检查 + 每个应用自己的检查"
         }
     ]
 }

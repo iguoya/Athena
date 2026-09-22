@@ -1,0 +1,4 @@
+# 只作用于本目录。clangd 从源文件向上找配置，所以在仓库根打开时
+# 也不会把别的应用的 C++ 指到这份编译数据库上。
+CompileFlags:
+  CompilationDatabase: build
