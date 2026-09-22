@@ -5,7 +5,7 @@
 //! （ADR 0046）。这样新增一个应用不用再抄一份 dev 脚本，改一次行为
 //! 也不用改五遍。
 //!
-//! 三个前端共用它：终端的 `athena-dev`、跨平台的 Slint 窗口、
+//! 三个前端共用它：终端的 `launcher`、跨平台的 Slint 窗口、
 //! macOS 的菜单栏常驻应用。
 
 pub mod manifest;
@@ -13,5 +13,5 @@ pub mod paths;
 pub mod progress;
 pub mod runner;
 
-pub use manifest::{discover, App};
+pub use manifest::{discover, discover_in, App};
 pub use runner::{activate, launch, stop, ProcessSnapshot, RunState};

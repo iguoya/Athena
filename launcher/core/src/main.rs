@@ -1,30 +1,53 @@
-//! `athena-dev`：终端里的编排器入口，也是 GUI 之外的备用路径。
+//! `launcher`：终端里的编排器入口，也是 GUI 之外的备用路径。
 //!
 //! 用法：
-//!   athena-dev list             列出全部应用和当前状态
-//!   athena-dev list --json      同上，机器读的格式；菜单栏版靠它认应用（ADR 0048）
-//!   athena-dev open <id>        打开：已在跑就把窗口叫到前面，没跑才构建并启动
-//!   athena-dev stop <id>        停止它，连同构建期拉起的那一串
-//!   athena-dev logs <id>        打印日志文件路径
-//!   athena-dev sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
+//!   launcher list             列出全部应用和当前状态
+//!   launcher list --json      同上，机器读的格式；菜单栏版靠它认应用（ADR 0048）
+//!   launcher open <id>        打开：已在跑就把窗口叫到前面，没跑才构建并启动
+//!   launcher stop <id>        停止它，连同构建期拉起的那一串
+//!   launcher logs <id>        打印日志文件路径
+//!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
+//!
+//! `--root <dir>` 换发现根目录（相对仓库根，默认 `apps/`），放在任意位置都行：
+//! `launcher --root apps/practice list`。扫 `apps/practice/*` 这种子目录下的
+//! 独立小项目时用得上，不用另写一套发现逻辑。
 
 use std::process::ExitCode;
 
-use athena_dev::{discover, paths, runner, App, ProcessSnapshot};
+use launcher_core::{discover, paths, runner, App, ProcessSnapshot};
 
-/// 管道被下游关掉（`athena-dev list | head`）时不该炸成 panic，安静收工就好。
+/// 从参数里摘出 `--root <dir>`（相对仓库根），不管它出现在哪个位置；
+/// 剩下的参数原样交给下面的子命令解析，`--root` 对它们不可见。
+fn extract_root_flag(arguments: Vec<String>) -> (Option<String>, Vec<String>) {
+    let mut root = None;
+    let mut rest = Vec::with_capacity(arguments.len());
+    let mut iterator = arguments.into_iter();
+    while let Some(argument) = iterator.next() {
+        if argument == "--root" {
+            root = iterator.next();
+        } else {
+            rest.push(argument);
+        }
+    }
+    (root, rest)
+}
+
+/// 管道被下游关掉（`launcher list | head`）时不该炸成 panic，安静收工就好。
 fn line(text: &str) {
     use std::io::Write;
     let _ = writeln!(std::io::stdout(), "{text}");
 }
 
 fn main() -> ExitCode {
-    let arguments: Vec<String> = std::env::args().skip(1).collect();
+    let (root_override, arguments) = extract_root_flag(std::env::args().skip(1).collect());
     let Some(repo) = paths::locate_repo() else {
         eprintln!("找不到 Athena 仓库：设置 ATHENA_ROOT，或在仓库里执行。");
         return ExitCode::FAILURE;
     };
-    let apps = discover(&repo);
+    let apps = match &root_override {
+        Some(root) => launcher_core::discover_in(&repo.join(root)),
+        None => discover(&repo),
+    };
 
     match arguments.first().map(String::as_str) {
         None | Some("list") => {
@@ -68,7 +91,7 @@ fn main() -> ExitCode {
             }
             Err(code) => code,
         },
-        Some("sync") => match athena_dev::progress::sync(&repo, &apps, line) {
+        Some("sync") => match launcher_core::progress::sync(&repo, &apps, line) {
             Ok(()) => ExitCode::SUCCESS,
             Err(message) => {
                 eprintln!("{message}");
@@ -110,7 +133,7 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
 
 fn pick<'a>(apps: &'a [App], wanted: Option<&String>) -> Result<&'a App, ExitCode> {
     let Some(wanted) = wanted else {
-        eprintln!("要指定应用 id，例如 athena-dev open dsa");
+        eprintln!("要指定应用 id，例如 launcher open dsa");
         return Err(ExitCode::FAILURE);
     };
     apps.iter().find(|app| &app.id == wanted).ok_or_else(|| {
@@ -122,7 +145,7 @@ fn pick<'a>(apps: &'a [App], wanted: Option<&String>) -> Result<&'a App, ExitCod
 fn open(app: &App, repo: &std::path::Path) -> ExitCode {
     // 已经在跑就只把窗口叫到前面——绝不起第二份。
     let snapshot = ProcessSnapshot::take();
-    if snapshot.state(app) != athena_dev::RunState::Stopped {
+    if snapshot.state(app) != launcher_core::RunState::Stopped {
         return match runner::activate(app) {
             Ok(()) => ExitCode::SUCCESS,
             Err(message) => {

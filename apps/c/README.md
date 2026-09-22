@@ -16,7 +16,7 @@
 
 ```sh
 cd apps/c
-athena-dev open c
+launcher open c
 ```
 
 依赖：CMake 与 Qt 6。改 `qml/` 或 `content/` 保存即热加载。
@@ -48,4 +48,4 @@ python3 scripts/fetch-sources.py
 | `content/sources/` | 教材目录与本地副本 |
 | `src/` | Qt 壳 |
 | `playground/` | 保留的 LVGL 小程序 |
-| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
+| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `launcher` 执行（ADR 0046） |

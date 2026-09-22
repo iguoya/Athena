@@ -178,7 +178,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
     }
 
     say(&format!("[启动] {}", app.dev.run.join(" ")));
-    // 长驻命令的 stdin 不能继承编排器：`athena-dev open` 返回后父进程退出，
+    // 长驻命令的 stdin 不能继承编排器：`launcher open` 返回后父进程退出，
     // 子进程会读到 EOF。Flutter 的 resident runner 因此整段退出，启动器只能
     // 每次冷编译。接到 /dev/null，热重载由各应用自己的监视器负责。
     let stdout = log
@@ -193,7 +193,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
         .stdout(Stdio::from(stdout))
         .stderr(Stdio::from(stderr));
 
-    // 长驻进程还要自立门户：留在调用者的进程组里，`athena-dev open` 一返回，
+    // 长驻进程还要自立门户：留在调用者的进程组里，`launcher open` 一返回，
     // shell 收尾时按进程组清理就把应用一起带走了——终端里打开的应用活不过
     // 那条命令，而从菜单栏打开的能活，因为那边的调用者是常驻进程。终端入口
     // 是 README 明说支持的用法（ADR 0046），不能只在 GUI 下成立。

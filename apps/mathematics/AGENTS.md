@@ -182,7 +182,7 @@ ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的
 | `src/` | 前端：路线图 / 讲解 / 三类实验 / 错题本 |
 | `src-tauri/` | 窗口、读内容、进度。**不做数学**——符号计算全在前端 |
 | `engine/` | 符号引擎：`engine.py`（常驻进程）与自带的 `.venv`（不入库） |
-| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `athena-dev` 执行（ADR 0046） |
+| `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `launcher` 执行（ADR 0046） |
 | `docs/decisions/` | 本应用 ADR |
 | `AGENTS.md` | 本文 |
 
@@ -216,7 +216,7 @@ ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的
 
 ## 架构原则
 
-- **独立可运行**：`athena-dev open mathematics`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
+- **独立可运行**：`launcher open mathematics`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **引擎只判不算**：任何把完整答案直接呈给用户的交互路径都需要 ADR 才能加。
 - **壳要薄**：Rust 侧负责窗口、路径、进度；业务文案、课树和符号计算都不进 Rust。
@@ -227,7 +227,7 @@ ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的
 ```sh
 cd apps/mathematics
 python3 scripts/setup-engine.py   # 只需跑一次：建 engine/.venv 并装 SymPy（验算功能要它）
-athena-dev open mathematics             # 日常开发：改前端秒级热更新；启动器和图谱走的也是这条
+launcher open mathematics             # 日常开发：改前端秒级热更新；启动器和图谱走的也是这条
 ```
 
 **验证改动一律走 `tauri:dev`。** 本应用绝大多数改动在前端（TS / CSS /

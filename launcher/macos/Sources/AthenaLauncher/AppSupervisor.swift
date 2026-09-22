@@ -2,7 +2,7 @@ import AppKit
 import Foundation
 
 // 一个应用此刻在哪个状态。判定不在这里做——菜单栏版和跨平台窗口、终端入口
-// 共用同一个编排器 `athena-dev`（ADR 0046），这里只是把它报的状态显示出来。
+// 共用同一个编排器 `launcher`（ADR 0046），这里只是把它报的状态显示出来。
 enum RunState: Equatable {
     case stopped
     case starting
@@ -62,7 +62,7 @@ final class AppSupervisor: ObservableObject {
         orchestrator = Self.locateOrchestrator(in: root)
         guard orchestrator != nil, let listing = runOrchestrator(["list", "--json"]) else {
             repositoryProblem =
-                "还没有编排器可用：先在 launcher/ 执行 cargo build -p athena-dev --release。"
+                "还没有编排器可用：先在 launcher/ 执行 cargo build -p launcher-core --release。"
             apps = []
             return
         }
@@ -73,7 +73,7 @@ final class AppSupervisor: ObservableObject {
 
     // 优先用 release 产物；开发时 debug 的也认。
     private static func locateOrchestrator(in repository: URL) -> URL? {
-        let candidates = ["launcher/target/release/athena-dev", "launcher/target/debug/athena-dev"]
+        let candidates = ["launcher/target/release/launcher", "launcher/target/debug/launcher"]
         return candidates
             .map { repository.appendingPathComponent($0) }
             .first { FileManager.default.isExecutableFile(atPath: $0.path) }

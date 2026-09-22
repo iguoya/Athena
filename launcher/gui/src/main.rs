@@ -1,8 +1,8 @@
 //! Athena 跨平台启动器（macOS / Ubuntu / Windows）。
 //!
-//! 界面在 `ui/launcher.slint`，执行逻辑全在 `athena-dev`——这里只做三件事：
+//! 界面在 `ui/launcher.slint`，执行逻辑全在 `launcher`——这里只做三件事：
 //! 定时把状态刷进界面、把点击转成一次 open/stop、把构建进度显示出来。
-//! 这样它和终端的 `athena-dev`、macOS 菜单栏版走的是同一条执行路径。
+//! 这样它和终端的 `launcher`、macOS 菜单栏版走的是同一条执行路径。
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
@@ -14,7 +14,7 @@ use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use athena_dev::{discover, paths, runner, App, ProcessSnapshot, RunState};
+use launcher_core::{discover, paths, runner, App, ProcessSnapshot, RunState};
 use slint::{Color, Model, ModelRc, SharedString, VecModel};
 
 use crate::tray::{Action, Tray};

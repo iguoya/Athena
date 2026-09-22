@@ -411,22 +411,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "athena-dev"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
- "sysinfo",
- "which",
- "windows 0.62.2",
-]
-
-[[package]]
 name = "athena-launcher"
 version = "0.1.0"
 dependencies = [
- "athena-dev",
  "gtk",
+ "launcher-core",
  "muda 0.20.0",
  "objc2 0.6.4",
  "objc2-app-kit 0.3.2",
@@ -2950,6 +2939,17 @@ dependencies = [
  "euclid",
  "polycool",
  "smallvec",
+]
+
+[[package]]
+name = "launcher-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sysinfo",
+ "which",
+ "windows 0.62.2",
 ]
 
 [[package]]

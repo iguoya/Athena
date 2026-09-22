@@ -98,7 +98,7 @@
                 "build",
                 "-q",
                 "-p",
-                "athena-dev",
+                "launcher-core",
                 "--manifest-path",
                 "launcher/Cargo.toml"
             ],
@@ -106,14 +106,14 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
-            "detail": "编排器本身（athena-dev）"
+            "detail": "编排器本身（launcher-core，二进制名 launcher）"
         },
         {
             "label": "Athena: Run",
             "type": "process",
-            "command": "${workspaceFolder}/launcher/target/debug/athena-dev",
+            "command": "${workspaceFolder}/launcher/target/debug/launcher",
             "windows": {
-                "command": "${workspaceFolder}/launcher/target/debug/athena-dev.exe"
+                "command": "${workspaceFolder}/launcher/target/debug/launcher.exe"
             },
             "args": [
                 "open",

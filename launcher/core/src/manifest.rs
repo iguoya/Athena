@@ -150,8 +150,14 @@ impl App {
 /// 扫描 `<repo>/apps/*/app.json`。顺序按目录名排，界面上的次序才不随文件系统变。
 /// 这里没有任何针对某个应用的分支：C++ 教程也只是 `apps/cpp`（ADR 0045）。
 pub fn discover(repo: &Path) -> Vec<App> {
-    let apps_root = repo.join("apps");
-    let mut entries: Vec<PathBuf> = match std::fs::read_dir(&apps_root) {
+    discover_in(&repo.join("apps"))
+}
+
+/// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死 `apps/`。
+/// `apps/practice/` 下将来会挂多个独立小项目，`practice` 面板复用同一套发现
+/// 逻辑，只是换一个根目录（不用为它另写一份）。
+pub fn discover_in(apps_root: &Path) -> Vec<App> {
+    let mut entries: Vec<PathBuf> = match std::fs::read_dir(apps_root) {
         Ok(reader) => reader
             .filter_map(Result::ok)
             .map(|entry| entry.path())

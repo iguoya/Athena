@@ -8,7 +8,7 @@
 用 Python 自带的 sqlite3 模块而不是 sqlite3 命令行：三个平台都有 Python，
 但 Windows 上默认没有 sqlite3.exe（ADR 0047）。
 
-git 那边由 `athena-dev sync` 配好，等价于：
+git 那边由 `launcher sync` 配好，等价于：
 
     git config diff.sqlite.textconv "python3 scripts/db-textconv.py"
 """

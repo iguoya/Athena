@@ -28,7 +28,7 @@
 
 ```sh
 cd apps/atlas
-athena-dev open atlas
+launcher open atlas
 
 python3 scripts/check.py
 ```

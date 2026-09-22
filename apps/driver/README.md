@@ -18,7 +18,7 @@
 
 ```sh
 cd apps/driver
-athena-dev open driver
+launcher open driver
 ```
 
 环境变量 `ATHENA_DRIVER_ROOT` 指向应用根目录（含 `content/`）。不要打开打包副本。

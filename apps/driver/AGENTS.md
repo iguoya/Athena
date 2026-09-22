@@ -56,7 +56,7 @@ Sandbox，否则读仓库题库和写进度库都会被拒，窗口只剩黑框�
 
 ```sh
 cd apps/driver
-athena-dev open driver
+launcher open driver
 # 或菜单栏启动器点「驾考学习」；勾预热后登录即编好，点一下窗口现身。
 # 改 lib/ 会热重载；改 content/ JSON 要热重启（大写 R，或保存后点重启）。
 python3 scripts/run_dev.py

@@ -1,5 +1,5 @@
 [package]
-name = "athena-dev"
+name = "launcher-core"
 description = "Athena 各学习应用的统一开发编排器：读 app.json 的 dev 声明，构建、启动、探测状态"
 version.workspace = true
 edition.workspace = true
@@ -12,11 +12,11 @@ sysinfo = { version = "0.33", default-features = false, features = ["system"] }
 which = "8.0.6"
 
 [lib]
-name = "athena_dev"
+name = "launcher_core"
 path = "src/lib.rs"
 
 [[bin]]
-name = "athena-dev"
+name = "launcher"
 path = "src/main.rs"
 
 [target."cfg(windows)".dependencies]

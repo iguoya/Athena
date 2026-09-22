@@ -6,7 +6,7 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-athena-dev = { path = "../core" }
+launcher-core = { path = "../core" }
 slint = "1.17"
 # 托盘与菜单：三平台同一套 API（macOS NSStatusItem、Windows Shell_NotifyIcon、
 # Linux StatusNotifierItem / AppIndicator）。事件走全局 channel，所以不必和

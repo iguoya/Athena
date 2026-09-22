@@ -34,9 +34,9 @@ launcher/macos/scripts/install.sh                           # macOS：菜单栏�
 终端里也能用同一个编排器：
 
 ```sh
-launcher/target/release/athena-dev list        # 谁在跑、谁没跑
-launcher/target/release/athena-dev open dsa    # 打开；已在跑的只把窗口叫到前面
-launcher/target/release/athena-dev stop dsa
+launcher/target/release/launcher list        # 谁在跑、谁没跑
+launcher/target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
+launcher/target/release/launcher stop dsa
 ```
 
 一律走这些热更新入口，不要启动打包副本——那会让人不知不觉对着旧版本工作。

@@ -1,6 +1,6 @@
 import Foundation
 
-// 应用清单来自编排器的 `athena-dev list --json`（ADR 0046、0048）。
+// 应用清单来自编排器的 `launcher list --json`（ADR 0046、0048）。
 //
 // 菜单栏版不自己读 app.json。清单里哪些字段可选、默认值是什么，只保留编排器
 // 那一份；两边各解析一遍就会各自漂移——symbol 的兜底曾经一边是 "book"、
@@ -21,7 +21,7 @@ struct LearningApp: Identifiable, Sendable {
 }
 
 enum AppCatalog {
-    /// 解析 `athena-dev list --json` 的输出。
+    /// 解析 `launcher list --json` 的输出。
     ///
     /// 少字段的行跳过而不是整张表作废：新增一个还没写全 app.json 的应用时，
     /// 其余应用照常能打开。

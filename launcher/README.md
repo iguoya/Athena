@@ -4,12 +4,12 @@
 
 | 目录 | 是什么 | 用在哪 |
 | --- | --- | --- |
-| [`core/`](core) | 编排器 `athena-dev`（Rust） | 所有前端的执行层，也能直接在终端用 |
+| [`core/`](core) | 编排器 `launcher`（Rust） | 所有前端的执行层，也能直接在终端用 |
 | [`gui/`](gui) | 跨平台启动器（Rust + Slint） | macOS / Ubuntu / Windows：托盘常驻 + 列表窗口 |
 | [`macos/`](macos) | 菜单栏启动器（Swift） | macOS 专用，⌃⌥A 唤出 |
 
 "同一条执行路径"是字面意思：前端都不自己读 `app.json`、不自己判断状态、不自己拼
-日志路径，一律向编排器要（`athena-dev list --json`）。菜单栏版是平台专属的，更要
+日志路径，一律向编排器要（`launcher list --json`）。菜单栏版是平台专属的，更要
 守住这条——它为什么值得单独留着、另外两个平台少了什么，见
 [ADR 0048](../docs/decisions/0048-menubar-launcher-stays-macos-only.md)。
 
@@ -67,12 +67,12 @@ launcher/macos/scripts/install.sh
 **终端**：
 
 ```sh
-launcher/target/release/athena-dev list        # 谁在跑、谁没跑
-launcher/target/release/athena-dev list --json # 同上，机器读的格式（前端用它）
-launcher/target/release/athena-dev open dsa    # 打开；已在跑的只把窗口叫到前面
-launcher/target/release/athena-dev stop dsa    # 连同构建期拉起的那一串一起收掉
-launcher/target/release/athena-dev logs dsa    # 日志文件路径
-launcher/target/release/athena-dev sync        # 提交并推送学习进度
+launcher/target/release/launcher list        # 谁在跑、谁没跑
+launcher/target/release/launcher list --json # 同上，机器读的格式（前端用它）
+launcher/target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
+launcher/target/release/launcher stop dsa    # 连同构建期拉起的那一串一起收掉
+launcher/target/release/launcher logs dsa    # 日志文件路径
+launcher/target/release/launcher sync        # 提交并推送学习进度
 ```
 
 `sync` 对应 ADR 0053：进度库跟着仓库走（`apps/<id>/progress/learning.db`），所以
