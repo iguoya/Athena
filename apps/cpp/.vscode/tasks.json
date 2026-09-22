@@ -1,0 +1,67 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cpp: Configure",
+            "type": "process",
+            "command": "meson",
+            "args": [
+                "setup",
+                "build",
+                "--buildtype=debug"
+            ],
+            "linux": {
+                "args": [
+                    "setup",
+                    "build",
+                    "--buildtype=debug",
+                    "-Dcpp_args=-I/usr/include/gtk-4.0"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "配置 Debug 构建；build 已存在时 Meson 自己会复用"
+        },
+        {
+            "label": "cpp: Build",
+            "type": "process",
+            "command": "meson",
+            "args": [
+                "compile",
+                "-C",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "cpp: Configure",
+            "dependsOrder": "sequence",
+            "problemMatcher": "$gcc",
+            "group": "build",
+            "detail": "配置后增量编译 C++ 教程"
+        },
+        {
+            "label": "cpp: Check",
+            "type": "process",
+            "command": "python3",
+            "windows": {
+                "command": "python"
+            },
+            "args": [
+                "scripts/check.py",
+                "--build-dir",
+                "build",
+                "--buildtype",
+                "debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": "$gcc",
+            "group": "test",
+            "detail": "本应用自己的验证入口"
+        }
+    ]
+}
