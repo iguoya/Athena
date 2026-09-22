@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Athena（Ubuntu：构建并用 GDB 调试）",
+            "name": "C++ 教程（Ubuntu：构建并用 GDB 调试）",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/apps/cpp/build/athena-cpp",
@@ -15,7 +15,7 @@
             "preLaunchTask": "Athena: Build"
         },
         {
-            "name": "Athena（macOS：构建并用 LLDB 调试）",
+            "name": "C++ 教程（macOS：构建并用 LLDB 调试）",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/apps/cpp/build/athena-cpp",
@@ -34,7 +34,7 @@
             ]
         },
         {
-            "name": "附加到 Athena",
+            "name": "附加到 C++ 教程",
             "type": "cppdbg",
             "request": "attach",
             "processId": "${command:pickProcess}",

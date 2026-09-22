@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an unsigned, relocatable Athena.app and DMG from a Meson binary."""
+"""Build an unsigned, relocatable athena-cpp.app and DMG from a Meson binary."""
 
 from __future__ import annotations
 
@@ -407,7 +407,7 @@ def create_icon(project_root: Path, resources_dir: Path) -> None:
     }
     iconutil = require_tool("iconutil")
     with tempfile.TemporaryDirectory(prefix="athena-icon-") as temporary:
-        iconset = Path(temporary) / "Athena.iconset"
+        iconset = Path(temporary) / "cpp.iconset"
         iconset.mkdir()
         for filename, size in sizes.items():
             source = (
@@ -420,7 +420,7 @@ def create_icon(project_root: Path, resources_dir: Path) -> None:
                     "缺哪一档就补哪一档"
                 )
             shutil.copy2(source, iconset / filename)
-        run(iconutil, "--convert", "icns", iconset, "--output", resources_dir / "Athena.icns")
+        run(iconutil, "--convert", "icns", iconset, "--output", resources_dir / "cpp.icns")
 
 
 def render_templates(project_root: Path, contents_dir: Path, version: str) -> None:
@@ -431,7 +431,7 @@ def render_templates(project_root: Path, contents_dir: Path, version: str) -> No
     with plist_path.open("rb") as source:
         plistlib.load(source)
 
-    launcher = contents_dir / "MacOS" / "Athena"
+    launcher = contents_dir / "MacOS" / "cpp"
     shutil.copy2(template_dir / "Athena.in", launcher)
     launcher.chmod(0o755)
 
@@ -476,7 +476,7 @@ def create_dmg(app_path: Path, output_path: Path) -> None:
             hdiutil,
             "create",
             "-volname",
-            "Athena",
+            "C++ Tutorial",
             "-srcfolder",
             staging,
             "-ov",
@@ -518,12 +518,12 @@ def main() -> int:
     binary = args.binary.resolve()
     output_dir = args.output_dir.resolve()
     if not binary.is_file():
-        raise PackagingError(f"Athena binary not found: {binary}")
+        raise PackagingError(f"athena-cpp binary not found: {binary}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     architecture = architecture_name()
-    app_path = output_dir / "Athena.app"
-    dmg_path = output_dir / f"Athena-{version}-macos-{architecture}.dmg"
+    app_path = output_dir / "athena-cpp.app"
+    dmg_path = output_dir / f"athena-cpp-{version}-macos-{architecture}.dmg"
     if app_path.exists():
         shutil.rmtree(app_path)
     if dmg_path.exists():

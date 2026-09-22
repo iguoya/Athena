@@ -18,7 +18,7 @@ void AboutDialog::ensure_created() {
     }
 
     m_dialog = make_unique<Gtk::Dialog>();
-    m_dialog->set_title("关于 Athena");
+    m_dialog->set_title("关于 C++ 教程");
     m_dialog->set_default_size(440, 480);
 
     auto* content = m_dialog->get_content_area();
@@ -37,7 +37,7 @@ void AboutDialog::ensure_created() {
 
     auto title_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 3);
     title_box->set_valign(Gtk::Align::CENTER);
-    auto name_label = Gtk::make_managed<Gtk::Label>("Athena");
+    auto name_label = Gtk::make_managed<Gtk::Label>("C++ 教程");
     name_label->add_css_class("title-2");
     name_label->set_halign(Gtk::Align::START);
     title_box->append(*name_label);
@@ -77,7 +77,7 @@ void AboutDialog::ensure_created() {
     license_scroll->set_policy(
         Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
     auto license_label = Gtk::make_managed<Gtk::Label>(
-        "Athena is licensed under Mulan PSL v2.\n"
+        "This software is licensed under Mulan PSL v2.\n"
         "You can use this software according to the terms and "
         "conditions of the Mulan PSL v2.\n"
         "You may obtain a copy of Mulan PSL v2 at:\n"

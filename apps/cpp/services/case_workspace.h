@@ -31,7 +31,7 @@ public:
     // root 是工作副本的根目录；reader 缺省时读 GResource。
     explicit CaseWorkspace(string root, SkeletonReader reader = {});
 
-    // Glib::get_user_data_dir()/Athena/cases —— 与学习库同一个 Athena 目录下。
+    // released_data_dir()/cases —— 与发行副本的学习库同一个目录下。
     static string default_root();
 
     // 这个案例的工作副本目录，不保证存在。

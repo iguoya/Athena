@@ -17,8 +17,9 @@
   由 `cc.find_library('sqlite3')` 探测，不引入 Homebrew 依赖，也不随发行包分发。
 - `storage/learning_store` 放入 athena-core，RAII 管理 sqlite3 句柄，头文件不暴露
   sqlite3.h；`:memory:` 可用于单元测试。
-- 数据库文件位于 `Glib::get_user_data_dir()/Athena/learning.db`
-  （macOS 即 `~/Library/Application Support/Athena/`）。
+- 数据库文件位于发行副本的用户数据目录 `athena-cpp/learning.db`
+  （macOS 即 `~/Library/Application Support/athena-cpp/`）。工作树里有
+  `ATHENA_CPP_ROOT` 时改写 `apps/cpp/progress/learning.db`（仓库 ADR 0053）。
 - 打开失败时应用降级运行：状态、笔记、历史相关控件功能失效，其余不受影响。
 - 运行历史记录保存 SourceLocator 提取的成员函数源码快照、运行时 Git 提交
   和工作区脏标记，用于回看与并排比较两次实验的源码和输出。
@@ -44,3 +45,8 @@
 `run_history` 表及记录不执行 `DROP TABLE`，保持原样，避免不可逆删除用户数据。
 
 SQLite 技术选择继续适用于熟练度、AI 讲解缓存和应用设置。
+
+## 2026-09-22 补充
+
+发行副本的数据目录从 `Athena` 改为 `athena-cpp`，和应用显示名「C++ 教程」对齐。
+启动时若新目录还不存在、旧目录还在，把整个旧目录改名过去；改名失败则继续读旧目录。

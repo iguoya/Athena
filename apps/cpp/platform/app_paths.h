@@ -23,3 +23,8 @@ string external_apps_root();
 //
 // 发行包里没人传它，返回空串，调用方退回本机用户数据目录。
 string own_app_root();
+
+// 发行副本的用户数据目录：用户数据目录下的 athena-cpp。
+// 若新目录还不存在、旧目录 Athena 还在，改名过去，进度和案例副本跟着走。
+// 改名失败则继续用旧目录，避免两处各写一半。
+string released_data_dir();

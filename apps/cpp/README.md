@@ -1,6 +1,6 @@
-# Athena
+# C++ 教程
 
-为快速渐进学习和掌握 C++ 而开发的自用软件平台，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。基于 GTK4（gtkmm4）、GtkSourceView 5、MD4C、Meson 和 Blueprint。
+为快速渐进学习和掌握 C++ 而开发的自用软件，突出学练合一：把零散的代码知识点学习整合到统一框架中，方便运行验证和自我修正。基于 GTK4（gtkmm4）、GtkSourceView 5、MD4C、Meson 和 Blueprint。
 
 GtkSourceView 5 用于源码框和文档代码块的 C++ 语法高亮与行号显示，MD4C 用于把
 文章章节的 Markdown 解析为结构化内容块，再由跨平台 GTK 控件直接呈现目录、正文和
@@ -22,11 +22,11 @@ scripts/check.sh
 
 仓库内置了 `.vscode/tasks.json` 与 `.vscode/launch.json`。Ubuntu 请安装 VS Code 的
 **C/C++** 扩展和 `gdb`，然后按 `Ctrl+Shift+B` 运行默认的 `Athena: Build` 任务；在
-“运行和调试”中选择“**Athena（Ubuntu：构建并用 GDB 调试）**”即可断点调试。该任务会
+“运行和调试”中选择“**C++ 教程（Ubuntu：构建并用 GDB 调试）**”即可断点调试。该任务会
 先配置 Meson 再构建，Ubuntu 26.04 会自动补上系统包遗漏的 GTK4 头文件搜索路径。
 
 macOS 的调试配置使用 CodeLLDB 扩展。不要使用 Code Runner 的“Run Code”：它只编译当前
-源文件，无法生成 Athena 所需的全部资源和链接目标。
+源文件，无法生成本应用所需的全部资源和链接目标。
 
 测试包括：`athena-core` 独立验证章节 JSON、Markdown 转换和演示注册表；
 `athena-gtk-resources` 只构造 Blueprint/GResource 中的关键控件，不启动完整窗口；
@@ -52,7 +52,7 @@ meson setup build-release --buildtype=release -Dstrip=true
 meson compile -C build-release
 meson test -C build-release --print-errorlogs
 python3 scripts/package_macos.py \
-  --project-root . --binary build-release/Athena \
+  --project-root . --binary build-release/athena-cpp \
   --output-dir dist
 ```
 
@@ -67,12 +67,12 @@ GitHub 标签发行同时提供 Ubuntu x86_64 的两种下载：推荐使用由 
 GTK 依赖的 `.deb`，也提供适用于 Ubuntu 26.04 及以上相近环境的 AppImage。
 
 ```sh
-sudo apt install ./athena_VERSION_amd64.deb
-chmod +x Athena-VERSION-linux-x86_64.AppImage
-./Athena-VERSION-linux-x86_64.AppImage
+sudo apt install ./athena-cpp_VERSION_amd64.deb
+chmod +x athena-cpp-VERSION-linux-x86_64.AppImage
+./athena-cpp-VERSION-linux-x86_64.AppImage
 ```
 
-AppImage 内置 Athena 及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
+AppImage 内置本应用及多数 GTK 运行时；它仍不是承诺可在任意 Linux 发行版免依赖
 运行的静态包。
 
 ## Windows 安装包

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Athena and generate build or chapter scaffold artifacts."""
+"""Validate the C++ tutorial project and generate build or chapter scaffold artifacts."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def write_generated(path: Path, content: str) -> None:
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate Athena and generate resources, runtime catalog, registry, "
+            "Validate the C++ tutorial and generate resources, runtime catalog, registry, "
             "or chapter skeletons."
         )
     )

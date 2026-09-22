@@ -37,7 +37,7 @@ public:
     // 的 PopoverMenuBar；两条路径共享同一份模型和同一组 win.* 动作，
     // 见 menu_bar_platform.h。
     Glib::RefPtr<Gio::MenuModel> menu_model() const { return m_menu_model; }
-    // 供 Athena（Gtk::Application）接到 macOS 原生应用菜单模板的
+    // 供 Gtk::Application 接到 macOS 原生应用菜单模板的
     // "关于"/"偏好设置" 两个约定动作，见 athena.cc。
     void show_about_dialog();
     void show_settings_dialog();

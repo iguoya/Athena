@@ -10,13 +10,13 @@
 
 ## 背景
 
-Athena 已在 Ubuntu 使用 GTK4、GtkSourceView 5 和 WebKitGTK 6.0 运行，但标签发布
+本应用已在 Ubuntu 使用 GTK4、GtkSourceView 5 和 WebKitGTK 6.0 运行，但标签发布
 流程只生成 macOS DMG。Ubuntu 用户缺少可直接安装的发行产物。
 
 ## 决策
 
 - `scripts/package_linux.py` 是 Linux 发行包的唯一入口：从 Meson 的 `/usr` 安装树
-  同时生成 `athena_VERSION_amd64.deb` 与 `Athena-VERSION-linux-x86_64.AppImage`。
+  同时生成 `athena-cpp_VERSION_amd64.deb` 与 `athena-cpp-VERSION-linux-x86_64.AppImage`。
 - DEB 是 Ubuntu 的主安装包，明确声明与 Meson 链接一致的运行时依赖（GTK、
   GtkSourceView、MD4C、SQLite）；用户通过 APT 安装时由系统解析其传递依赖。
 - AppImage 由固定版本并校验 SHA-256 的 linuxdeploy 生成，作为 Ubuntu 基线及以上

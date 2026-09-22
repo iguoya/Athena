@@ -1,5 +1,7 @@
 #include "services/case_workspace.h"
 
+#include "platform/app_paths.h"
+
 #include <giomm/resource.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
@@ -80,7 +82,7 @@ CaseWorkspace::CaseWorkspace(string root, SkeletonReader reader)
       m_reader(reader ? std::move(reader) : SkeletonReader(read_skeleton_from_resources)) {}
 
 string CaseWorkspace::default_root() {
-    return Glib::build_filename(Glib::get_user_data_dir(), "Athena", "cases");
+    return Glib::build_filename(released_data_dir(), "cases");
 }
 
 string CaseWorkspace::directory_of(const string& case_id) const {

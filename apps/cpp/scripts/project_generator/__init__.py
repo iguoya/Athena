@@ -1,1 +1,1 @@
-"""Shared implementation for Athena's project generator."""
+"""Shared implementation for the C++ tutorial project generator."""

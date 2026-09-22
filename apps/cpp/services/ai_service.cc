@@ -43,11 +43,11 @@ TempFileResult write_secure_temp_file(
         return {.error = "无法确定用户缓存目录"};
     }
 
-    gchar* temp_dir = g_build_filename(cache_root, "Athena", "tmp", nullptr);
+    gchar* temp_dir = g_build_filename(cache_root, "athena-cpp", "tmp", nullptr);
     if (g_mkdir_with_parents(temp_dir, 0700) != 0) {
         const string message = g_strerror(errno);
         g_free(temp_dir);
-        return {.error = "无法创建 Athena 缓存目录：" + message};
+        return {.error = "无法创建缓存目录：" + message};
     }
 
     gchar* path_raw =
@@ -91,7 +91,7 @@ AiChatResult perform_ai_request(const AiChatRequest& request) {
         {"stream", false},
     };
 
-    // g_mkstemp() 要求模板以六个 X 结尾。文件放在 Athena 自己的用户缓存
+    // g_mkstemp() 要求模板以六个 X 结尾。文件放在本应用自己的用户缓存
     // 目录中，不依赖启动进程传入的 TMPDIR；后者可能指向已经被系统清理的
     // 安装沙箱目录，使请求在发出前失败。
     const TempFileResult config_file = write_secure_temp_file(

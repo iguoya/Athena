@@ -62,7 +62,8 @@
 
 - **骨架原件**：`content/cases/<case_id>/*.cpp`，由生成器打包进 GResource，
   只读，随应用分发。
-- **工作副本**：`Glib::get_user_data_dir()/Athena/cases/<case_id>/`，首次打开
+- **工作副本**：`released_data_dir()/cases/<case_id>/`（发行副本即用户数据目录下的
+  `athena-cpp/cases/`），首次打开
   该案例时从 GResource 展开，之后学员的编辑都写在这里。
 
 「重置」就是删掉工作副本重新展开。仓库里的案例源码任何时候都不被应用改写。

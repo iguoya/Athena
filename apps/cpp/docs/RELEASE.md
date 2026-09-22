@@ -1,4 +1,4 @@
-# Athena 发行说明
+# C++ 教程发行说明
 
 ## 当前范围
 
@@ -6,12 +6,12 @@
 Windows x64 的 MSI 与便携 zip：
 
 ```text
-Athena-VERSION-macos-x86_64.dmg
-Athena-VERSION-macos-arm64.dmg
-athena_VERSION_amd64.deb
-Athena-VERSION-linux-x86_64.AppImage
-Athena-VERSION-windows-x64.msi
-Athena-VERSION-windows-x64.zip
+athena-cpp-VERSION-macos-x86_64.dmg
+athena-cpp-VERSION-macos-arm64.dmg
+athena-cpp_VERSION_amd64.deb
+athena-cpp-VERSION-linux-x86_64.AppImage
+athena-cpp-VERSION-windows-x64.msi
+athena-cpp-VERSION-windows-x64.zip
 ```
 
 当前发行包使用 ad-hoc 签名，尚未接入 Developer ID 和 Apple 公证。首次从网络下载
@@ -46,7 +46,7 @@ meson test -C build-release --print-errorlogs
 ```sh
 python3 scripts/package_macos.py \
   --project-root . \
-  --binary build-release/Athena \
+  --binary build-release/athena-cpp \
   --output-dir dist
 ```
 
@@ -55,8 +55,8 @@ python3 scripts/package_macos.py \
 
 打包器会：
 
-- 创建标准 `Athena.app/Contents` 结构和 `Info.plist`。
-- 从 `tiger.svg` 生成多尺寸 `Athena.icns`。
+- 创建标准 `athena-cpp.app/Contents` 结构和 `Info.plist`。
+- 从 `tiger.svg` 生成多尺寸 `cpp.icns`。程序坞显示名是「C++ 教程」。
 - 递归收集非系统动态库并改写为 `@executable_path` 相对引用。
 - 打包 GTK 图标主题、GSettings 配置定义、Fontconfig 配置和 GdkPixbuf 加载器。
 - 生成运行启动器，根据应用实际位置设置 GTK 运行环境。
@@ -67,13 +67,13 @@ python3 scripts/package_macos.py \
 ## 本机验证
 
 ```sh
-dist/Athena.app/Contents/MacOS/Athena
-codesign --verify --deep --strict dist/Athena.app
-hdiutil verify dist/Athena-VERSION-macos-x86_64.dmg
+dist/athena-cpp.app/Contents/MacOS/cpp
+codesign --verify --deep --strict dist/athena-cpp.app
+hdiutil verify dist/athena-cpp-VERSION-macos-x86_64.dmg
 ```
 
 正式发布前还应挂载 DMG，并从挂载卷中的 `.app` 启动一次。由于当前没有 Apple
-公证，最好在没有 Athena 开发环境的另一台 Mac 上验证 Gatekeeper 提示和完整功能。
+公证，最好在另一台没有本仓库开发环境的 Mac 上验证 Gatekeeper 提示和完整功能。
 
 ## Ubuntu 本机构建
 
@@ -109,8 +109,8 @@ python3 scripts/package_linux.py \
   --appimage-runtime ./appimage-runtime-x86_64
 ```
 
-DEB 是 Ubuntu 首选：`sudo apt install ./athena_VERSION_amd64.deb` 会解析依赖。AppImage
-内置 Athena 和大多数库；它定位为 Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意
+DEB 是 Ubuntu 首选：`sudo apt install ./athena-cpp_VERSION_amd64.deb` 会解析依赖。AppImage
+内置本应用和大多数库；它定位为 Ubuntu 26.04 及以上相近环境的便携下载，不承诺任意
 Linux 发行版的完全静态兼容。
 
 ## Windows 本机构建
@@ -148,9 +148,9 @@ python scripts/package_windows.py \
 - 按 glib 在 Windows 上的 prefix 规则维持 `bin` / `lib` / `share` 布局。
 - 用 `ldd` 递归收集非系统 DLL，并带上 `gspawn` 助手、GdkPixbuf 加载器、
   GIO 模块、GSettings schemas、Adwaita / hicolor 图标和 GtkSourceView 规格。
-- 写 `Athena.cmd` 作为入口：展开加载器缓存路径，并把 `GSK_RENDERER` 设成
+- 写 `athena-cpp.cmd` 作为入口：展开加载器缓存路径，并把 `GSK_RENDERER` 设成
   cairo，避开部分机器上 GSK 的 GL 后端起不来。
-- 用 WiX 5 把同一棵树收进 per-machine MSI，开始菜单指向 `Athena.cmd`。
+- 用 WiX 5 把同一棵树收进 per-machine MSI，开始菜单指向 `athena-cpp.cmd`。
 
 当前 MSI 未做 Authenticode 签名。SmartScreen 可能提示「未知发布者」，
 不要把当前包描述成已签名版本。
@@ -174,7 +174,7 @@ Windows Runner 在 MSYS2 UCRT64 里构建、测试并生成 MSI 与 zip。
 发布命令：
 
 ```sh
-git tag -a v1.0.0 -m "Athena 1.0.0"
+git tag -a v1.0.0 -m "C++ 教程 1.0.0"
 git push origin v1.0.0
 ```
 

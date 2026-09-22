@@ -74,17 +74,17 @@ jobs:
       - name: Verify architecture and disk image
         shell: bash
         run: |
-          file dist/Athena.app/Contents/MacOS/athena-cpp \
+          file dist/athena-cpp.app/Contents/MacOS/athena-cpp \
             | grep -q "${{ matrix.architecture }}"
-          codesign --verify --deep --strict dist/Athena.app
+          codesign --verify --deep --strict dist/athena-cpp.app
           hdiutil verify \
-            "dist/Athena-${{ steps.version.outputs.version }}-macos-${{ matrix.architecture }}.dmg"
+            "dist/athena-cpp-${{ steps.version.outputs.version }}-macos-${{ matrix.architecture }}.dmg"
 
       - name: Upload release asset
         uses: actions/upload-artifact@v7
         with:
-          name: Athena-macos-${{ matrix.architecture }}
-          path: apps/cpp/dist/Athena-*.dmg
+          name: athena-cpp-macos-${{ matrix.architecture }}
+          path: apps/cpp/dist/athena-cpp-*.dmg
           if-no-files-found: error
           retention-days: 7
 
@@ -153,11 +153,11 @@ jobs:
       - name: Verify Linux packages
         shell: bash
         run: |
-          dpkg-deb --info "dist/athena_${{ steps.version.outputs.version }}_amd64.deb"
-          dpkg-deb --contents "dist/athena_${{ steps.version.outputs.version }}_amd64.deb" \
+          dpkg-deb --info "dist/athena-cpp_${{ steps.version.outputs.version }}_amd64.deb"
+          dpkg-deb --contents "dist/athena-cpp_${{ steps.version.outputs.version }}_amd64.deb" \
             > deb-contents.txt
           grep -q './usr/bin/athena-cpp' deb-contents.txt
-          appimage="dist/Athena-${{ steps.version.outputs.version }}-linux-x86_64.AppImage"
+          appimage="dist/athena-cpp-${{ steps.version.outputs.version }}-linux-x86_64.AppImage"
           test -x "$appimage"
           offset=$("$appimage" --appimage-offset)
           unsquashfs -o "$offset" -l "$appimage" | grep -q 'squashfs-root/usr/bin/athena-cpp'
@@ -165,10 +165,10 @@ jobs:
       - name: Upload release assets
         uses: actions/upload-artifact@v7
         with:
-          name: Athena-linux-x86_64
+          name: athena-cpp-linux-x86_64
           path: |
-            apps/cpp/dist/athena_*.deb
-            apps/cpp/dist/Athena-*-linux-x86_64.AppImage
+            apps/cpp/dist/athena-cpp_*.deb
+            apps/cpp/dist/athena-cpp-*-linux-x86_64.AppImage
           if-no-files-found: error
           retention-days: 7
 
@@ -241,8 +241,8 @@ jobs:
         shell: pwsh
         run: |
           $version = "${{ steps.version.outputs.version }}"
-          $zip = "apps/cpp/dist/Athena-$version-windows-x64.zip"
-          $msi = "apps/cpp/dist/Athena-$version-windows-x64.msi"
+          $zip = "apps/cpp/dist/athena-cpp-$version-windows-x64.zip"
+          $msi = "apps/cpp/dist/athena-cpp-$version-windows-x64.msi"
           if (-not (Test-Path $zip)) { throw "missing $zip" }
           if (-not (Test-Path $msi)) { throw "missing $msi" }
           Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -259,10 +259,10 @@ jobs:
       - name: Upload release assets
         uses: actions/upload-artifact@v7
         with:
-          name: Athena-windows-x64
+          name: athena-cpp-windows-x64
           path: |
-            apps/cpp/dist/Athena-*-windows-x64.zip
-            apps/cpp/dist/Athena-*-windows-x64.msi
+            apps/cpp/dist/athena-cpp-*-windows-x64.zip
+            apps/cpp/dist/athena-cpp-*-windows-x64.msi
           if-no-files-found: error
           retention-days: 7
 
@@ -278,13 +278,13 @@ jobs:
       - name: Download release assets
         uses: actions/download-artifact@v8
         with:
-          pattern: Athena-*
+          pattern: athena-cpp-*
           path: dist
           merge-multiple: true
 
       - name: Create checksums
         working-directory: dist
-        run: sha256sum Athena-*.dmg Athena-*.AppImage athena_*.deb Athena-*-windows-x64.zip Athena-*-windows-x64.msi > SHA256SUMS.txt
+        run: sha256sum athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi > SHA256SUMS.txt
 
       - name: Publish release
         env:
@@ -293,8 +293,8 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
-            dist/Athena-*.dmg dist/Athena-*.AppImage dist/athena_*.deb \
-            dist/Athena-*-windows-x64.zip dist/Athena-*-windows-x64.msi \
+            dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb \
+            dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi \
             dist/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \

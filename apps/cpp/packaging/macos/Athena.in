@@ -4,7 +4,7 @@ set -eu
 contents_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 resources_dir="$contents_dir/Resources"
 loader_dir="$resources_dir/lib/gdk-pixbuf-2.0/2.10.0/loaders"
-cache_file="${TMPDIR:-/tmp}/com.iguoya.Athena-${UID:-user}-loaders.cache"
+cache_file="${TMPDIR:-/tmp}/cn.yatiger.cpp-${UID:-user}-loaders.cache"
 
 sed "s|@LOADER_DIR@|$loader_dir|g" \
   "$resources_dir/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache.in" \

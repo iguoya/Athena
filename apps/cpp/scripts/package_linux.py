@@ -15,8 +15,8 @@ import tempfile
 from pathlib import Path
 
 
-PACKAGE_NAME = "athena"
-APP_NAME = "Athena"
+PACKAGE_NAME = "athena-cpp"
+APP_NAME = "athena-cpp"
 DEB_ARCHITECTURE = "amd64"
 RUNTIME_DEPENDENCIES = (
     "libgtkmm-4.0-0",
@@ -75,7 +75,7 @@ def install_tree(build_dir: Path, destination: Path) -> None:
     run(["meson", "install", "-C", str(build_dir), "--destdir", str(destination)])
     required_paths = (
         destination / "usr/bin/athena-cpp",
-        destination / "usr/share/applications/cn.athena.desktop",
+        destination / "usr/share/applications/cn.yatiger.cpp.desktop",
         destination / "usr/share/icons/hicolor/256x256/apps/cn.athena.icon.png",
     )
     missing = [str(path) for path in required_paths if not path.is_file()]
@@ -95,7 +95,7 @@ def write_debian_control(path: Path, version: str) -> None:
                 "Maintainer: Athena contributors <noreply@github.com>",
                 "Depends: " + ", ".join(RUNTIME_DEPENDENCIES),
                 "Description: C++ learning and practice application",
-                " Athena is a local GTK desktop application for learning and practicing C++.",
+                " A local GTK desktop application for learning and practicing C++.",
                 "",
             )
         ),
@@ -139,10 +139,10 @@ def build_appimage(
     if not appimage_runtime.is_file():
         raise RuntimeError(f"AppImage runtime is missing: {appimage_runtime}")
 
-    app_dir = installed_root.parent / "Athena.AppDir"
+    app_dir = installed_root.parent / "athena-cpp.AppDir"
     shutil.copytree(installed_root / "usr", app_dir / "usr")
 
-    desktop_file = app_dir / "usr/share/applications/cn.athena.desktop"
+    desktop_file = app_dir / "usr/share/applications/cn.yatiger.cpp.desktop"
     # ADR 0038：图标是 PNG 尺寸集，不再依赖发行版的 SVG 渲染。
     icon_file = app_dir / "usr/share/icons/hicolor/256x256/apps/cn.athena.icon.png"
     root_desktop_file = app_dir / desktop_file.name

@@ -128,7 +128,7 @@ void MainWindow::open_learning_store() {
     // clone 下来掌握度还在。发行包拿不到仓库路径，退回本机用户数据目录。
     const string own_root = own_app_root();
     const string data_dir = own_root.empty()
-        ? Glib::build_filename(Glib::get_user_data_dir(), "Athena")
+        ? released_data_dir()
         : Glib::build_filename(own_root, "progress");
     g_mkdir_with_parents(data_dir.c_str(), 0700);
     try {
@@ -146,12 +146,12 @@ void MainWindow::setup_menu() {
     // 一个下拉项。两条路径共享同一份 win.* 动作，行为完全一致。
     m_menu_model = Gio::Menu::create();
     auto app_menu = Gio::Menu::create();
-    app_menu->append("关于 Athena", "win.about");
+    app_menu->append("关于", "win.about");
     app_menu->append("设置…", "win.settings");
     auto quit_section = Gio::Menu::create();
-    quit_section->append("退出 Athena", "win.quit");
+    quit_section->append("退出", "win.quit");
     app_menu->append_section("", quit_section);
-    m_menu_model->append_submenu("Athena", app_menu);
+    m_menu_model->append_submenu("C++ 教程", app_menu);
 
     add_action("settings", [this]() { m_dialogs->show_settings(); });
     add_action("about", [this]() { m_about_dialog->present(); });

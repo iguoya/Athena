@@ -276,7 +276,7 @@ def copy_pixbuf_loaders(prefix: Path, staging: Path) -> list[Path]:
         if not source_cache.is_file():
             raise PackagingError("gdk-pixbuf-query-loaders and loaders.cache are both missing")
         cache_text = source_cache.read_text(encoding="utf-8")
-    # 路径到用户机器上才会确定，先写成占位符，Athena.cmd 启动时再展开。
+    # 路径到用户机器上才会确定，先写成占位符，athena-cpp.cmd 启动时再展开。
     (destination_version / "loaders.cache.in").write_text(
         rewrite_pixbuf_cache(cache_text, Path("@LOADER_DIR@")),
         encoding="utf-8",
@@ -356,7 +356,7 @@ def write_launcher(staging: Path, version: str) -> None:
         ),
         encoding="utf-8",
     )
-    (staging / "Athena.cmd").write_text(
+    (staging / "athena-cpp.cmd").write_text(
         "\r\n".join(
             (
                 "@echo off",
@@ -384,9 +384,9 @@ def write_launcher(staging: Path, version: str) -> None:
     (staging / "README.txt").write_text(
         "\n".join(
             (
-                f"Athena {version}（Windows x64）",
+                f"C++ 教程 {version}（Windows x64）",
                 "",
-                "解压后运行 Athena.cmd，或直接打开 bin\\athena-cpp.exe。",
+                "解压后运行 athena-cpp.cmd，或直接打开 bin\\athena-cpp.exe。",
                 "本包自带 GTK4 运行时，不需要再装 MSYS2。",
                 "当前没有 Authenticode 签名，SmartScreen 可能提示「未知发布者」。",
                 "",
@@ -431,7 +431,7 @@ def populate_staging(
     shutil.copy2(find_license(project_root), staging / "LICENSE.txt")
     write_png_ico(
         project_root / "resources" / "icons" / "256x256" / "apps" / "cn.athena.icon.png",
-        staging / "Athena.ico",
+        staging / "cpp.ico",
     )
 
     if not (bin_dir / "libglib-2.0-0.dll").is_file() and not any(
@@ -478,29 +478,29 @@ def write_wxs(wxs_path: Path, version: str, icon: Path) -> None:
             (
                 '<?xml version="1.0" encoding="utf-8"?>',
                 '<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">',
-                '  <Package Name="Athena" Manufacturer="Athena contributors"',
+                '  <Package Name="C++ 教程" Manufacturer="Athena"',
                 f'           Version="{version}" UpgradeCode="{MSI_UPGRADE_CODE}"',
                 '           Scope="perMachine">',
-                '    <MajorUpgrade DowngradeErrorMessage="A newer version of Athena is already installed." />',
+                '    <MajorUpgrade DowngradeErrorMessage="已经安装了更新的 C++ 教程。" />',
                 '    <MediaTemplate EmbedCab="yes" />',
                 f'    <Icon Id="AthenaIcon" SourceFile="{xml_escape(windows_path(icon))}" />',
                 '    <Property Id="ARPPRODUCTICON" Value="AthenaIcon" />',
                 '    <StandardDirectory Id="ProgramFiles64Folder">',
-                '      <Directory Id="INSTALLFOLDER" Name="Athena" />',
+                '      <Directory Id="INSTALLFOLDER" Name="athena-cpp" />',
                 "    </StandardDirectory>",
                 '    <StandardDirectory Id="ProgramMenuFolder">',
                 '      <Component Id="StartMenuShortcut" Guid="*">',
                 '        <Shortcut Id="AthenaStartMenu"',
-                '                  Name="Athena"',
+                '                  Name="C++ 教程"',
                 '                  Description="C++ learning and practice application"',
-                '                  Target="[INSTALLFOLDER]Athena.cmd"',
+                '                  Target="[INSTALLFOLDER]athena-cpp.cmd"',
                 '                  WorkingDirectory="INSTALLFOLDER"',
                 '                  Icon="AthenaIcon" />',
-                '        <RegistryValue Root="HKCU" Key="Software\\Athena\\Athena"',
+                '        <RegistryValue Root="HKCU" Key="Software\\athena-cpp"',
                 '                       Name="installed" Type="integer" Value="1" KeyPath="yes" />',
                 "      </Component>",
                 "    </StandardDirectory>",
-                '    <Feature Id="Main" Title="Athena" Level="1">',
+                '    <Feature Id="Main" Title="C++ 教程" Level="1">',
                 '      <ComponentRef Id="StartMenuShortcut" />',
                 '      <Files Directory="INSTALLFOLDER" Include="!(bindpath.staging)\\**" />',
                 "    </Feature>",
@@ -523,7 +523,7 @@ def build_msi(staging: Path, output_path: Path, version: str) -> Path:
         output_path.unlink()
     with tempfile.TemporaryDirectory(prefix="athena-wix-") as temporary:
         wxs_path = Path(temporary) / "Athena.wxs"
-        write_wxs(wxs_path, version, staging / "Athena.ico")
+        write_wxs(wxs_path, version, staging / "cpp.ico")
         run(
             wix,
             "build",
@@ -542,7 +542,7 @@ def build_msi(staging: Path, output_path: Path, version: str) -> Path:
 def verify_staging(staging: Path) -> None:
     required = (
         staging / "bin" / "athena-cpp.exe",
-        staging / "Athena.cmd",
+        staging / "athena-cpp.cmd",
         staging / "share" / "glib-2.0" / "schemas" / "gschemas.compiled",
         staging / "lib" / "gdk-pixbuf-2.0",
     )
@@ -588,15 +588,15 @@ def main() -> int:
 
     binary = args.binary.resolve()
     if not binary.is_file():
-        raise PackagingError(f"Athena binary not found: {binary}")
+        raise PackagingError(f"athena-cpp binary not found: {binary}")
 
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
-    zip_path = output_dir / f"Athena-{version}-windows-x64.zip"
-    msi_path = output_dir / f"Athena-{version}-windows-x64.msi"
+    zip_path = output_dir / f"athena-cpp-{version}-windows-x64.zip"
+    msi_path = output_dir / f"athena-cpp-{version}-windows-x64.msi"
 
     with tempfile.TemporaryDirectory(prefix="athena-windows-package-") as temporary:
-        staging = Path(temporary) / "Athena"
+        staging = Path(temporary) / "athena-cpp"
         populate_staging(project_root, binary, staging, version)
         verify_staging(staging)
         write_zip(staging, zip_path)

@@ -6,7 +6,7 @@ class Athena : public Gtk::Application {
   protected:
   // 默认 flags 即单实例：第二次启动会转到已运行的实例并触发 on_activate，
   // 由 on_activate 把已有窗口提到前台，不再新开一个进程 / 窗口。
-  Athena() : Gtk::Application("cn.yatiger.athena") {}
+  Athena() : Gtk::Application("cn.yatiger.cpp") {}
 
   void on_activate() override;
 

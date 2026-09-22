@@ -64,8 +64,9 @@ archive/       历史归档，不参与构建
 | `atlas` | 司南 | `athena-atlas` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
-`apps/cpp` 的用户数据目录仍叫 `Athena`，发行包文件名仍带 `Athena`；进程和 `app.json` 的
-`binary` 是 `athena-cpp`。
+C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
+`athena-cpp`（`.app` / `.deb` / `.dmg` / `.zip` / `.msi`）。发行副本的用户数据在
+`athena-cpp` 目录；若旧目录 `Athena` 还在、新目录还没有，启动时把旧目录改名过去。
 
 **`apps/` 下不是清一色的"学习应用"，改动或新增一个目录前先按判据对号入座，
 不要去查有没有把它列进某张清单——清单会过期，判据不会：**
