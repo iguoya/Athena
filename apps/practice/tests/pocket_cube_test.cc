@@ -1,4 +1,4 @@
-#include "practice/pocket_cube/pocket_cube.hpp"
+#include "pocket_cube/pocket_cube.hpp"
 
 #include <gtest/gtest.h>
 

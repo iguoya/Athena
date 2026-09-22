@@ -1,0 +1,45 @@
+{
+  "id": "pocket-cube",
+  "title": "PocketCube 2 阶魔方",
+  "description": "用 C++ 演示和操作 2 阶魔方（只有 8 个角块）的状态表示与旋转；完整的打乱和求解算法还没做。",
+  "icon": {
+    "type": "theme",
+    "name": "applications-games-symbolic",
+    "symbol": "cube",
+    "letter": "魔",
+    "accent": "#6F42C1",
+    "file": "icon.svg"
+  },
+  "dev": {
+    "env": {
+      "ATHENA_PRACTICE_POCKET_CUBE_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "build",
+        "run": [
+          "meson",
+          "setup",
+          "build",
+          "--buildtype=debug"
+        ],
+        "label": "配置构建目录"
+      },
+      {
+        "run": [
+          "meson",
+          "compile",
+          "-C",
+          "build"
+        ],
+        "label": "增量编译"
+      }
+    ],
+    "run": [
+      "build/pocket-cube"
+    ],
+    "ready": "process",
+    "match": "build",
+    "binary": "pocket-cube"
+  }
+}

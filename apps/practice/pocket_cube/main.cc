@@ -1,12 +1,13 @@
-#include "pocket_cube_page.h"
-
 #include "pocket_cube/pocket_cube.hpp"
 #include "pocket_cube/view.h"
-#include "ui/icon_utils.h"
-#include "ui/source_view.h"
+
+#include <gtksourceview/gtksource.h>
+#include <gtkmm.h>
 
 #include <algorithm>
 #include <chrono>
+#include <cstdlib>
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -16,6 +17,28 @@
 using namespace std;
 
 namespace {
+
+string resolve_root() {
+    if (const char* from_env = getenv("ATHENA_PRACTICE_POCKET_CUBE_ROOT")) {
+        if (from_env[0] != '\0') {
+            return string(from_env);
+        }
+    }
+    return string(POCKET_CUBE_SOURCE_ROOT);
+}
+
+// 源码框展示的就是「运行」按钮点了以后真正执行的代码（PocketCube::turn()，
+// pocket_cube.hpp 里），不是另外维护的教学代码字符串——跟 apps/cpp 的源码框
+// 同一个原则，只是这里没有 ContentLoader/GResource，直接读磁盘上的真实文件。
+string load_pocket_cube_source(const string& root) {
+    ifstream file(root + "/pocket_cube.hpp");
+    if (!file) {
+        return "// 找不到 pocket_cube.hpp，检查 ATHENA_PRACTICE_POCKET_CUBE_ROOT。";
+    }
+    ostringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
 string format_thousands(long long value) {
     string digits = to_string(value);
@@ -163,48 +186,30 @@ Gtk::Widget* make_cube_state_block(
     return frame;
 }
 
-} // namespace
-
-PocketCubePage::PocketCubePage(
-    const ChapterMeta& chapter,
-    const Glib::RefPtr<Gtk::Builder>& builder,
-    const ContentLoader& content_loader,
-    function<void()> on_overview_requested) {
-    auto title_label = builder->get_widget<Gtk::Label>("chapter_title_label");
-    auto description_label =
-        builder->get_widget<Gtk::Label>("chapter_description_label");
-    auto chapter_icon = builder->get_widget<Gtk::Image>("chapter_icon");
-    auto chapter_overview_button =
-        builder->get_widget<Gtk::Button>("chapter_overview_button");
+void wire_window(const Glib::RefPtr<Gtk::Builder>& builder, const string& root) {
     auto source_view = GTK_SOURCE_VIEW(
         gtk_builder_get_object(builder->gobj(), "practice_source_view"));
     auto run_button = builder->get_widget<Gtk::Button>("practice_run_button");
     auto reset_button = builder->get_widget<Gtk::Button>("practice_reset_button");
-    auto result_view =
-        builder->get_widget<Gtk::TextView>("practice_result_view");
-    auto current_host =
-        builder->get_widget<Gtk::Box>("practice_cube_current_host");
+    auto result_view = builder->get_widget<Gtk::TextView>("practice_result_view");
+    auto current_host = builder->get_widget<Gtk::Box>("practice_cube_current_host");
     auto next_grid_host =
         builder->get_widget<Gtk::Box>("practice_cube_next_grid_host");
 
-    if (title_label) {
-        title_label->set_text(chapter.title);
-    }
-    if (description_label) {
-        description_label->set_text(chapter.description);
-    }
-    if (chapter_icon) {
-        configure_icon_image(*chapter_icon, chapter.icon, 36);
-    }
     if (result_view) {
-        result_view->get_buffer()->set_text("点击“运行”查看结果。");
+        result_view->get_buffer()->set_text("点击「运行」查看结果。");
     }
-    if (!chapter.subchapters.empty()) {
-        display_project_source(
-            source_view,
-            content_loader,
-            chapter.source,
-            chapter.subchapters.front().name);
+    if (source_view != nullptr) {
+        auto buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(source_view));
+        const string source = load_pocket_cube_source(root);
+        gtk_text_buffer_set_text(
+            GTK_TEXT_BUFFER(buffer), source.c_str(), static_cast<int>(source.size()));
+        auto language_manager = gtk_source_language_manager_get_default();
+        auto language =
+            gtk_source_language_manager_get_language(language_manager, "cpp");
+        if (language != nullptr) {
+            gtk_source_buffer_set_language(GTK_SOURCE_BUFFER(buffer), language);
+        }
     }
 
     auto cube = make_shared<PocketCube>();
@@ -303,11 +308,6 @@ PocketCubePage::PocketCubePage(
         next_grid_host->append(*grid);
     }
 
-    if (chapter_overview_button) {
-        chapter_overview_button->signal_clicked().connect(
-            std::move(on_overview_requested));
-    }
-
     const auto refresh_cube_display =
         [cube,
          redraw_targets,
@@ -370,4 +370,22 @@ PocketCubePage::PocketCubePage(
                 }
             });
     }
+}
+
+} // namespace
+
+int main(int argc, char* argv[]) {
+    const string root = resolve_root();
+    auto app = Gtk::Application::create("cn.athena.practice.pocketcube");
+    app->signal_activate().connect([app, root] {
+        auto builder = Gtk::Builder::create_from_resource("/app/window.ui");
+        auto* window = builder->get_widget<Gtk::ApplicationWindow>("window");
+        if (window == nullptr) {
+            return;
+        }
+        wire_window(builder, root);
+        app->add_window(*window);
+        window->present();
+    });
+    return app->run(argc, argv);
 }

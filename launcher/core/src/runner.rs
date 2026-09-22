@@ -218,7 +218,7 @@ fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
     let mut path = std::env::var_os("PATH")
         .map(|value| std::env::split_paths(&value).collect::<Vec<_>>())
         .unwrap_or_default();
-    for entry in paths::extra_path_entries(&app.id) {
+    for entry in paths::extra_path_entries(app) {
         if !path.contains(&entry) {
             path.insert(0, entry);
         }

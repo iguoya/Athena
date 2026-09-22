@@ -16,7 +16,7 @@ using namespace std;
 //
 // 配色约定：U 白、D 黄、F 绿、B 蓝、L 橙、R 红——魔方圈最通用的西方
 // 配色方案（Western/BOY scheme），不是本项目自定的，具体颜色值在
-// practice/pocket_cube/view.cc 的 sticker_color() 里。
+// pocket_cube/view.cc 的 sticker_color() 里。
 
 enum class Face { U, D, L, R, F, B };
 

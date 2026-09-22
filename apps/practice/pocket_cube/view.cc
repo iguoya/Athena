@@ -1,6 +1,6 @@
-#include "practice/pocket_cube/view.h"
+#include "pocket_cube/view.h"
 
-#include "render/chart_scale.h"
+#include "color.h"
 
 #include <algorithm>
 #include <array>

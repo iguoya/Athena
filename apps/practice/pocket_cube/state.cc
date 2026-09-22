@@ -1,4 +1,4 @@
-#include "practice/pocket_cube/state.h"
+#include "pocket_cube/state.h"
 
 namespace {
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "practice/pocket_cube/state.h"
+#include "pocket_cube/state.h"
 
 #include <array>
 #include <iostream>
@@ -10,7 +10,7 @@ using namespace std;
 
 // 2 阶魔方（Pocket Cube）：只有 8 个角块，没有棱块和中心块。这才是这个
 // 知识点真正的实现——魔方的状态表示和转动代数在
-// practice/pocket_cube/state.h 里（不依赖 GTK，可以脱离渲染层单独
+// pocket_cube/state.h 里（不依赖 GTK，可以脱离渲染层单独
 // 测试）；这个类持有一份当前状态，供界面直接调用，“运行”按钮点了
 // 以后执行的就是这里的代码，不是界面代码里另外藏一份。
 //
