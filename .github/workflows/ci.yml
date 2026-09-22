@@ -133,7 +133,7 @@ jobs:
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
   # Qt Quick / CMake 应用：各自跑自己的 scripts/check.py。
-  # Atlas 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
+  # Polaris 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
   qt-quick:
     name: ${{ matrix.app }}（${{ matrix.os }}）
     runs-on: ${{ matrix.os }}
@@ -142,7 +142,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-15, ubuntu-26.04]
-        app: [c, atlas]
+        app: [c, polaris]
     # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
@@ -187,7 +187,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [c, atlas]
+        app: [c, polaris]
 
     steps:
       - name: Check out source

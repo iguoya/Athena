@@ -1,0 +1,55 @@
+{
+  "id": "polaris",
+  "title": "北极星",
+  "description": "计算机与电子信息的课程图谱：先看见学科全局、主次和去向，再决定进哪个应用练细节。",
+  "icon": {
+    "type": "theme",
+    "name": "compass-symbolic",
+    "symbol": "map",
+    "letter": "北",
+    "accent": "#316B78",
+    "file": "icon.svg"
+  },
+  "dev": {
+    "env": {
+      "POLARIS_ROOT": "${dir}",
+      "CMAKE_PREFIX_PATH": {
+        "first_existing": [
+          "/opt/homebrew/opt/qt@6",
+          "/usr/local/opt/qt@6",
+          "/usr/local/opt/qt6",
+          "C:/Qt/6.8.1/msvc2022_64"
+        ]
+      }
+    },
+    "prepare": [
+      {
+        "run": [
+          "cmake",
+          "-S",
+          ".",
+          "-B",
+          "build",
+          "-DCMAKE_BUILD_TYPE=Debug"
+        ],
+        "label": "配置北极星 CMake"
+      },
+      {
+        "run": [
+          "cmake",
+          "--build",
+          "build",
+          "--target",
+          "athena-polaris"
+        ],
+        "label": "编译北极星"
+      }
+    ],
+    "run": [
+      "build/athena-polaris"
+    ],
+    "ready": "process",
+    "match": "build",
+    "binary": "athena-polaris"
+  }
+}

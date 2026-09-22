@@ -115,7 +115,7 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         // 路径，让开发态启动也稳定找到它。
         //
         // 只给用 Meson 的应用注入（目前是 apps/cpp 和 apps/practice/
-        // 下的 GTK4 小项目）：`apps/c`、`apps/atlas` 是 Qt + MSVC，一旦这个
+        // 下的 GTK4 小项目）：`apps/c`、`apps/polaris` 是 Qt + MSVC，一旦这个
         // 目录下的 g++/gcc 对它们也可见，CMake 的 Ninja 生成器会优先在 PATH
         // 里找到 MinGW 编译器而不是走 vswhere 探测 MSVC——实测触发过这个
         // 问题：Qt 官方安装器的 Qt6 是 MSVC ABI 编的，链接期全是

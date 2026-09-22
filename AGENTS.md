@@ -37,7 +37,7 @@ apps/<id>/     一个目录一个独立应用，彼此完全平级
   english/     英语学习（Tauri）
   mathematics/ 数学学习（Tauri）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  atlas/       技术体系图谱（Qt Quick / QML）——不是学习应用，见下文
+  polaris/       技术体系图谱（Qt Quick / QML）——不是学习应用，见下文
   design-patterns/  设计模式素材坑——连应用都不是，见下文
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
@@ -61,7 +61,7 @@ archive/       历史归档，不参与构建
 | `english` | 英语学习 | `athena-english` | `en.` |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
-| `atlas` | 司南 | `athena-atlas` | （无进度库） |
+| `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
 C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
@@ -78,7 +78,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
-  以它自己的 `AGENTS.md` 为准。当前：`atlas`。
+  以它自己的 `AGENTS.md` 为准。当前：`polaris`。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
   这是预期行为，不是遗漏。当前：`design-patterns`。

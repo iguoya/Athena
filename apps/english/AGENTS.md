@@ -109,4 +109,4 @@ launcher open english       # 日常开发（热更新）；启动器和图谱�
 1. 改课：先改 `content/`，再补前端展示类型（若有新练习形态）。
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
 3. 改 UI：只动 `src/` + `index.html`。
-4. 学科地图在司南（`apps/atlas`），不在 C++ 教程里再挂入口。
+4. 学科地图在北极星（`apps/polaris`），不在 C++ 教程里再挂入口。

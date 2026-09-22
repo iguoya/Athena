@@ -45,7 +45,7 @@
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已接受（阶段性，带退出条件） |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条 |
-| [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 atlas ADR 0004、0005 的主干重划 |
+| [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划 |
 | [0055](0055-no-institute-names-in-product-content.md) | 软件内容不出现具体院所名，一律用「某所」 | 已接受（强制，`scripts/check.py` 拦截） |
 | [0056](0056-visualization-and-interaction-first.md) | 可视化与交互是学习内容本身，不是装饰 | 已接受（强制方针） |
 | [0057](0057-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |

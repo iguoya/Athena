@@ -1,5 +1,7 @@
-# Meson build directories（builddir=本地 debug，build=复现 CI 的 debugoptimized）
+# 构建目录。Meson 一律用 build/。builddir/ 是 C++ 教程还在仓库根时的旧名
+# （ADR 0045），作废，避免再在根上或应用旁边长出第二份。
 build/
+builddir/
 dist/
 
 # Meson internal files

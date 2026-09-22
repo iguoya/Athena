@@ -8,7 +8,7 @@
 ## 背景
 
 `apps/cpp` 的首页原本是一张跨应用「学科路线图」：本地分类（C++）和 `apps/`
-下的独立应用（dsa、english、mathematics、driver、atlas）画在同一张图上，
+下的独立应用（dsa、english、mathematics、driver、polaris）画在同一张图上，
 点哪个节点就进哪个应用。这个设计定型于 ADR 0032 第 5–6 条，ADR 0044 第 8
 条在菜单栏启动器做出来之后又重申了一遍「图谱入口保留不变」——当时的理由是
 「启动器不是学科导航」，两者回答的是不同问题。

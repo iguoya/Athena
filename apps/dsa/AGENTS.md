@@ -111,10 +111,10 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 以及至少一个 case 的编译运行。**不必**为改本应用而跑主仓库 `scripts/check.py`，
 除非同时改了 `apps/cpp` 的 discover。
 
-## 与 C++ 教程、司南的关系
+## 与 C++ 教程、北极星的关系
 
 - 启动器扫描 `apps/dsa/app.json`，按 dev 声明启动源码（ADR 0041），不传任何状态。
-- 学科地图在司南。**本应用不依赖那张图上有没有入口。**
+- 学科地图在北极星。**本应用不依赖那张图上有没有入口。**
 - 课表留在本目录的 `content/`，不迁回 `apps/cpp/resources/athena.json`。
 
 ## 修改流程
@@ -122,4 +122,4 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 1. 改课：先改 `content/curriculum.json` 与 cases，再补前端展示类型（若有新 block）。
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
 3. 改 UI 布局：只动 `src/` + `index.html`，不要求 C++ 教程的界面跟着改。
-4. 学科入口若要出现在司南，改 `apps/atlas`，与本应用发版可分开。
+4. 学科入口若要出现在北极星，改 `apps/polaris`，与本应用发版可分开。
