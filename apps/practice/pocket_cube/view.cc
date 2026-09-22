@@ -358,22 +358,62 @@ void net_cell_sign(Face face, int ui, int vi, int& u_sign, int& v_sign) {
     }
 }
 
-// 展开图：U 在上、D 在下，L F R B 横排在中间一行——标准的十字形网格。
-void draw_cube_net(
+// 以 L/R 为极面重新摊开：L 在上、R 在下，中间一排是 U-F-D-B（R 顺时针
+// 循环 U→F→D→B→U 会动的那一圈，见 state.cc face_info() 顶部注释），看
+// R/L 转法用这版。跟 net_cell_sign() 一样，是把六个面绕各自跟 F 的公共
+// 棱（F 本身固定不转）转 90° 摊平实际算出来的，不是凭感觉套的。
+void net_cell_sign_lr(Face face, int ui, int vi, int& u_sign, int& v_sign) {
+    const int a = ui * 2 - 1;
+    const int b = vi * 2 - 1;
+    switch (face) {
+    case Face::L: u_sign = -a; v_sign = b; break;
+    case Face::R: u_sign = -a; v_sign = -b; break;
+    case Face::U: u_sign = b; v_sign = a; break;
+    case Face::F: u_sign = b; v_sign = -a; break;
+    case Face::D: u_sign = b; v_sign = -a; break;
+    case Face::B: u_sign = b; v_sign = a; break;
+    }
+}
+
+// 以 F/B 为极面重新摊开：F 在上、B 在下，中间一排是 U-L-D-R（F 顺时针
+// 循环 U→L→D→R→U 会动的那一圈），看 F/B 转法用这版。这次固定不转的
+// 极面是 L（F/B 本身是极面，不能再当基准），六个面绕各自跟 L 的公共棱
+// 转 90° 摊平算出来的，方法跟前两版完全一样。
+void net_cell_sign_fb(Face face, int ui, int vi, int& u_sign, int& v_sign) {
+    const int a = ui * 2 - 1;
+    const int b = vi * 2 - 1;
+    switch (face) {
+    case Face::F: u_sign = -b; v_sign = -a; break;
+    case Face::B: u_sign = b; v_sign = -a; break;
+    case Face::U: u_sign = -a; v_sign = -b; break;
+    case Face::L: u_sign = -a; v_sign = -b; break;
+    case Face::D: u_sign = a; v_sign = -b; break;
+    case Face::R: u_sign = a; v_sign = -b; break;
+    }
+}
+
+// 展开图：三种摊法共用的绘制逻辑，区别只是 sign_fn（每格该查哪个
+// (u_sign,v_sign)）和 pole_top/row/pole_bottom（六个面摆在十字网格哪一
+// 格）——具体传什么由三个 make_cube_net_view*() 各自决定，画格子、填色、
+// 标编号这套逻辑完全一样，不重复三份。
+using NetCellSignFn = void (*)(Face, int, int, int&, int&);
+
+void draw_cube_net_generic(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
-    const CubeState& state) {
+    const CubeState& state, NetCellSignFn sign_fn, Face pole_top,
+    const array<Face, 4>& row, Face pole_bottom) {
     const double cell = min(width / 4.0, height / 3.0);
     const double margin_x = (width - cell * 4) / 2;
     const double margin_y = (height - cell * 3) / 2;
 
-    const auto draw_one_face = [&](Face face, int col, int row) {
+    const auto draw_one_face = [&](Face face, int col, int row_index) {
         const double origin_x = margin_x + col * cell;
-        const double origin_y = margin_y + row * cell;
+        const double origin_y = margin_y + row_index * cell;
         for (int ui = 0; ui < 2; ++ui) {
             for (int vi = 0; vi < 2; ++vi) {
                 int u_sign = 0;
                 int v_sign = 0;
-                net_cell_sign(face, ui, vi, u_sign, v_sign);
+                sign_fn(face, ui, vi, u_sign, v_sign);
                 const array<Vec2, 4> screen = {
                     Vec2{origin_x + ui * cell / 2, origin_y + vi * cell / 2},
                     Vec2{origin_x + (ui + 1) * cell / 2, origin_y + vi * cell / 2},
@@ -394,12 +434,20 @@ void draw_cube_net(
         }
     };
 
-    draw_one_face(Face::U, 1, 0);
-    draw_one_face(Face::L, 0, 1);
-    draw_one_face(Face::F, 1, 1);
-    draw_one_face(Face::R, 2, 1);
-    draw_one_face(Face::B, 3, 1);
-    draw_one_face(Face::D, 1, 2);
+    draw_one_face(pole_top, 1, 0);
+    for (size_t i = 0; i < row.size(); ++i) {
+        draw_one_face(row[i], static_cast<int>(i), 1);
+    }
+    draw_one_face(pole_bottom, 1, 2);
+}
+
+// 展开图：U 在上、D 在下，L F R B 横排在中间一行——标准的十字形网格。
+void draw_cube_net(
+    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
+    const CubeState& state) {
+    draw_cube_net_generic(
+        cr, width, height, state, net_cell_sign, Face::U,
+        {Face::L, Face::F, Face::R, Face::B}, Face::D);
 }
 
 // 一组同心圆的两个半径比例（相对 max_radius）——内圈 0.62、外圈 1.0，
@@ -724,6 +772,38 @@ Gtk::Widget* make_cube_net_view(
             draw_cube_net(cr, width, height, state_provider());
         });
     area->set_tooltip_text("六面展开图：六个面一次性摊开，没有遮挡");
+    return area;
+}
+
+Gtk::Widget* make_cube_net_view_lr_axis(
+    function<CubeState()> state_provider, int width, int height) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(width);
+    area->set_content_height(height);
+    area->set_draw_func(
+        [state_provider](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_cube_net_generic(
+                cr, width, height, state_provider(), net_cell_sign_lr, Face::L,
+                {Face::U, Face::F, Face::D, Face::B}, Face::R);
+        });
+    area->set_tooltip_text("六面展开图（L/R 极面）：看 R/L 转法用这版");
+    return area;
+}
+
+Gtk::Widget* make_cube_net_view_fb_axis(
+    function<CubeState()> state_provider, int width, int height) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(width);
+    area->set_content_height(height);
+    area->set_draw_func(
+        [state_provider](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            draw_cube_net_generic(
+                cr, width, height, state_provider(), net_cell_sign_fb, Face::F,
+                {Face::U, Face::L, Face::D, Face::R}, Face::B);
+        });
+    area->set_tooltip_text("六面展开图（F/B 极面）：看 F/B 转法用这版");
     return area;
 }
 

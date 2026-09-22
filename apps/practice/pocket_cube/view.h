@@ -52,6 +52,20 @@ Gtk::Widget* make_cube_3d_view(
 Gtk::Widget* make_cube_net_view(
     function<CubeState()> state_provider, int width = 240, int height = 180);
 
+// 展开图的十字形网格天生只跟"折叠轴垂直的那两个极面"贴合：默认这版
+// （make_cube_net_view()）极面是 U/D，中间一排 L-F-R-B 刚好是绕 U/D
+// 轴转动时会动的那一圈，看 U/D 转法很直观；但看 R 转法时受影响的是
+// U-F-D-B 这一圈，在这版布局里被拆散在四个角落，不直观。下面两个是
+// 分别以 L/R、F/B 为极面重新摊开的十字形展开图，跟默认版是同一个
+// CubeState、同一套 sticker_at()/sticker_home()/sticker_label()，只是
+// 摊开方式（每个面该转到十字网格哪一格、贴纸编号怎么摆）不同——具体
+// 摊法是把六个面绕各自跟极面的公共棱转 90° 展平算出来的（跟默认版
+// net_cell_sign() 用的是同一套方法），不是另编的一套规则。
+Gtk::Widget* make_cube_net_view_lr_axis(
+    function<CubeState()> state_provider, int width = 240, int height = 180);
+Gtk::Widget* make_cube_net_view_fb_axis(
+    function<CubeState()> state_provider, int width = 240, int height = 180);
+
 // 单面视角：只画 face 这一个面的 2x2 格子（配色 + 调试编号），不做任何
 // 3D 投影或透视判断——跟 make_cube_net_view() 里对应那一块用的是同一套
 // net_cell_sign() 映射，数字跟展开图上那一块完全一致。给"这个操作面现在
