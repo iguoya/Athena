@@ -31,8 +31,8 @@ TEST(CubeViewTest, NetViewHasFixedContentSize) {
     EXPECT_EQ(area->get_content_height(), 180);
 }
 
-// 下一步穷举九宫格需要把两种视图都缩小塞进小格子里（见
-// MainWindow::initialize_practice_page()），尺寸参数必须真的生效。
+// 下一步穷举九宫格需要把两种视图都缩小塞进小格子里（见 main.cc 的
+// make_cube_state_block()），尺寸参数必须真的生效。
 TEST(CubeViewTest, ThreeDViewAcceptsCustomSize) {
     auto* view = make_cube_3d_view([] { return make_solved_cube(); }, 90);
 
@@ -52,3 +52,10 @@ TEST(CubeViewTest, NetViewAcceptsCustomSize) {
 }
 
 } // namespace
+
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+    const auto application =
+        Gtk::Application::create("cn.athena.practice.pocketcube.tests");
+    return RUN_ALL_TESTS();
+}

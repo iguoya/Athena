@@ -36,8 +36,9 @@
   ```
 
 - [`tests/`](tests/)：`pocket_cube_state_test.cc`、`pocket_cube_test.cc`、
-  `pocket_cube_view_test.cc`，原样搬过来，**还没有接进 `pocket_cube/
-  meson.build`**——下一步要做的事之一。
+  `pocket_cube_view_test.cc`，已经接进 `pocket_cube/meson.build`（跟
+  `apps/cpp` 一样分核心测试和 GTK 测试两个可执行文件），`meson test -C
+  build` 能跑。
 
 ## 发现与启动
 

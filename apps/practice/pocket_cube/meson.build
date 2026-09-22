@@ -9,6 +9,8 @@ gtk4_dep = dependency('gtk4')
 glib_dep = dependency('glib-2.0')
 glibmm_dep = dependency('glibmm-2.68')
 sourceview_dep = dependency('gtksourceview-5')
+gtest_dep = dependency('gtest')
+gtest_main_dep = dependency('gtest_main')
 
 # glib 2.89.2+ 与 glibmm < 2.89.0 的声明方式冲突，跟 apps/cpp 踩的是同一个坑
 # （见 compat/glib_final_type_shim.h 顶部注释），这里复制一份同样的垫片，
@@ -48,3 +50,24 @@ executable('pocket-cube', 'main.cc', 'state.cc', 'view.cc', resources,
   cpp_args: ['-DPOCKET_CUBE_SOURCE_ROOT="' + meson.current_source_dir() + '"'],
   dependencies: [gtkmm_dep, gtk4_dep, sourceview_dep],
   install: false)
+
+# === 测试 ===
+# 核心测试不依赖 GTK，跟 apps/cpp 一样分开：纯逻辑（state、pocket_cube）
+# 和渲染（view，要起 Cairo/GTK 才能测）各一个可执行文件。
+core_test_exe = executable(
+  'pocket-cube-core-tests',
+  files('../tests/pocket_cube_state_test.cc', '../tests/pocket_cube_test.cc'),
+  'state.cc',
+  include_directories: [practice_root],
+  dependencies: [gtest_main_dep],
+)
+test('pocket-cube-core', core_test_exe)
+
+gtk_test_exe = executable(
+  'pocket-cube-gtk-tests',
+  files('../tests/pocket_cube_view_test.cc'),
+  'state.cc', 'view.cc',
+  include_directories: [practice_root],
+  dependencies: [gtest_dep, gtkmm_dep, gtk4_dep],
+)
+test('pocket-cube-gtk', gtk_test_exe, is_parallel: false)
