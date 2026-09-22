@@ -289,7 +289,12 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - macOS 可携带包统一通过 `scripts/package_macos.py` 生成，不手工复制单个可执行文件作为 Release。
 - `dist/` 是本地生成目录，不提交 `.app` 或 DMG；GitHub Release 只上传标签构建产生的 DMG。
 - `meson.build`、`Info.plist` 和 Git 标签必须使用一致的语义化版本号；版本以 `meson.build` 为单一来源，`package_macos.py` 默认读取它并拒绝不一致的 `--version`。
-- 每次发版在 `CHANGELOG.md` 记录该版本的显著变化。
+- 每次发版在 `CHANGELOG.md` 记录该版本的显著变化；**这一节就是 GitHub Release
+  的正文**（由 `scripts/changelog_notes.py` 抽出）。若漏写，脚本会按上一标签
+  至今的提交自动汇总补节（`--write`），仍应优先手写可读说明。
+- 发版顺序：改 `meson.build` 版本 → 写 `CHANGELOG.md` 新节（或让脚本补）→
+  提交 → `git tag -a vX.Y.Z`（附注里可写一句摘要）→ 推送提交与标签，等
+  `.github/workflows/release.yml` 出包并建 Release。
 - 当前包只允许描述为 ad-hoc 签名、未公证版本；完成 Developer ID 和 notarization 前不得宣称已通过 Gatekeeper 正式发行验证。
 - 修改打包器、macOS 模板或发行工作流后，应至少生成并启动一次本机架构的 `.app`，并验证 DMG 校验和与应用签名结构。
 
@@ -300,6 +305,7 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   `athena-cpp-VERSION-windows-x64.msi` 与 `.zip`。
 - `meson.build` 和 Git 标签必须使用同一个 `MAJOR.MINOR.PATCH` 版本；打包器默认读取
   `meson.build` 并拒绝不一致的 `--version`。标签写作 `v7.0.0`，不要打成 `v7.0`。
+- 发版说明与 macOS 同一套：以 `CHANGELOG.md` 对应节为准。
 - 当前 MSI 未做 Authenticode 签名，对外描述必须如实。
 - 修改打包器或发行工作流后，应至少在本机生成 zip 并启动一次 `athena-cpp.cmd`。
 

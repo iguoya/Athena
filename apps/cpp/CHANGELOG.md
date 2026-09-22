@@ -3,97 +3,78 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
+**发版时**：先改 `meson.build` 版本 → 在本文件最上方写好 `## [X.Y.Z]` 一节
+（这就是 GitHub Release 正文）→ 提交 → 打附注标签 `vX.Y.Z` → `git push`
+并推送该标签。若漏写这一节，`scripts/changelog_notes.py` 会统计上一版
+标签到 HEAD 的提交自动补一节（可再手工润色）；Release 工作流同样走这条路径。
+
 ## [7.0.0] - 2026-09-23
 
 ### 变更
 
-- **优化启动器统一管理**：跨平台托盘启动器统一发现、构建与打开各学习 /
-  实践应用（含 `apps/practice` 实践分区）；Windows 上按应用构建系统注入
-  MSYS2 UCRT64 或 Qt 路径，避免 Meson / CMake 工具链互相踩脚。
+- **启动器加厚**（首发在 5.0.0）：改名 `launcher`，支持实践应用发现与 GUI
+  「实践」分区；托盘常驻、按应用注入 Windows 工具链、窗口前置；调试入口改盯启动器。
+- **应用边界再收敛**：C++ 教程不再叫 Athena；去掉跨应用首页，实践迁到
+  `apps/practice/`；图谱应用更名为北极星；设计模式素材独立成目录。
+- **Windows 转正**：C++ 教程 Windows CI 打通；发行包增加 MSI 与便携 zip。
 
 ### 新增
 
-- **Windows 进入正式发行**：标签 Release 现在除了 macOS DMG 和 Ubuntu DEB / AppImage，
-  还产出 `athena-cpp-VERSION-windows-x64.msi` 与同内容的便携 zip。打包入口是
-  `scripts/package_windows.py`，从 Meson 的 `athena-cpp.exe` 收集 UCRT64
-  GTK 运行时，换机不需要再装 MSYS2。
-- 驾考学习在 Windows 上按 UTF-8 编译源文件（MSVC `/utf-8`），窗口标题「驾考学习」
-  不再被系统代码页 936 读成非法字符。
+- **驾考学习**：科目一 / 四题库、分组练习、模拟考、错题与战绩；进度可跨机器同步。
+- **北极星**：软硬融合技术体系图谱，接入统一验证入口。
+- **PocketCube**：独立 2 阶魔方实践应用，含上 / 右 / 前展开图。
+- **C++ 教程**：骨架案例、出处与数据驱动学习页、进度库随仓库走；AI 退出判分。
+- CI 覆盖各学习应用，不再只编 C++ 教程。
 
 ### 修复
 
-- 启动器在 Windows 上点名微软雅黑 UI（以及各平台带简体字形的 UI 字体）。
-  Slint 缺字回退在英文 Windows 上会先命中 Yu Gothic，简体独有的「语」「习」「结」
-  会画成空白。
+- 启动器与 C++ / 数学 / DSA 在 Windows 上的字体、工具链与运行时阻塞项。
 
 ## [6.0.0] - 2026-09-14
 
 ### 变更
 
-- **跨平台优先升为仓库级强约束（ADR 0047）**，管技术选型、代码编写和构建过程三段。
-  按这条原则把 `apps/cpp` 的平台分支清零：教学内容只从 GResource 读（删掉两套取
-  可执行文件路径的实现和编译期绝对路径）；菜单栏改问 GTK 的 `gtk-shell-shows-menubar`
-  设置项；删掉运行时设 Dock 图标的 Objective-C++ 实现；打开 URI 交给系统默认处理器。
-  现在生产代码里没有 `#ifdef`、没有 `.mm`，Meson 里只剩一条 macOS 依赖。
-- **验证入口从 shell 迁到 Python**（`scripts/check.py`）：验证每天都要跑，不该要求
-  Windows 上先装 Git Bash 或 WSL。步骤、参数、输出与原来一致。
-- 连测试代码也不再依赖 POSIX：`chmod`/`S_IRUSR` 换成 `g_chmod` + 八进制权限位，
-  `setenv`/`unsetenv` 换成 GLib 版本，写死的 `/tmp` 换成 `Glib::get_tmp_dir()`。
-- 三个 Tauri 应用的 `rusqlite` 开 `bundled`，不再要求目标机器上有 libsqlite3；
-  `apps/mathematics` 的 venv 解释器按存在与否在 `bin/python` 和 `Scripts/python.exe`
-  之间挑。
+- **跨平台优先（ADR 0047）**：选型、编码、构建一律跨平台优先。`apps/cpp`
+  去掉运行期平台分支（教学内容只走 GResource，菜单栏与打开 URI 用通用抽象）。
+- **验证入口改 Python**：`scripts/check.py` 替代 `.sh`，三平台都能直接跑；
+  顺带去掉测试里的 POSIX 专用写法。
+- Tauri 应用自带 SQLite（`rusqlite` bundled）；数学引擎按本机 venv 路径选解释器。
 
 ### 新增
 
-- **CI 扩到三个平台**：C++ 教程在 macOS / Ubuntu / Windows（MSYS2 UCRT64）各跑一遍
-  同一条 Python 入口，启动器在三平台矩阵里构建。启动器三平台全绿；C++ 教程的
-  Windows job 标为实验性——它卡在上游（MSYS2 现行 giomm 与 glib 头文件冲突），
-  本仓库这边已无障碍，保留 job 持续探测。
+- **CI 三个平台**：C++ 教程与启动器在 macOS / Ubuntu / Windows 跑同一套入口。
+  本版 Windows 上的 C++ job 仍属实验性探测。
 
 ### 修复
 
-- Blueprint 编译在 Windows 上按 UTF-8 读 `.blp`（`PYTHONUTF8=1`），否则遇到中文
-  会按系统代码页解码后崩溃。
+- Windows 上 Blueprint / 验证输出的 UTF-8；CI 依赖包名与 Linux 托盘链接库。
 
 ## [5.0.0] - 2026-09-14
 
 ### 变更
 
-- **仓库结构重排：C++ 教程降级为 `apps/cpp`，所有学习应用平级（ADR 0045）。**
-  仓库根不再有任何 C++ 源码、构建文件、脚本或文档；`AGENTS.md` 分层为仓库级与
-  应用级，ADR 按影响面分家（编号不重排，两处各自延续）。
-- **各应用只声明怎么启动，执行统一由编排器负责（ADR 0046）。** `app.json` 的 `dev`
-  块写环境变量、准备步骤、长驻命令和就绪判据；五份 `scripts/dev.sh` 全部退役。
-  编排器统一注入 PATH 补全与共享的 `CARGO_TARGET_DIR`，三个 Tauri 应用不再各编
-  一份依赖。
-- 构建目录统一叫 `build`（原 `builddir`）；`apps/cpp` 根上散落的源文件按语义归入
-  `platform/`、`ui/`、`packaging/`。
-- 实验窗口改为纵向"当前目标 → 真实源码 → 运行验证 → 观察结果"证据链，减少阅读与
-  实验之间的横向视线跳跃。
-- Linux CI / Release 安装依赖与 Meson 对齐：去掉已不再链接的 WebKitGTK、md4c-html；
-  DEB 运行时依赖补上 `libmd4c0`。
+- **应用平级**：C++ 教程降为 `apps/cpp`，与其它学习应用同级（ADR 0045）；
+  文档与 ADR 按仓库 / 应用分家。
+- **声明式启动**：各应用只写 `app.json`，由编排器统一构建与打开（ADR 0046）；
+  开发态启动，不再装进系统目录。
+- **C++ 教学换代**：大纲 / 过程 / 实验分层；内容改 GTK 承载，去掉 Markdown
+  手册路线；知识点补难度、掌握目标与先修；实验证据链纵向排列；移除运行历史
+  与 AI 差异讲解。
 
 ### 新增
 
-- **启动器（ADR 0044、0046）**：`launcher/` 下三个前端共用一个编排器——跨平台的
-  托盘常驻窗口（Rust + Slint）、macOS 菜单栏常驻应用（Swift，⌃⌥A 唤出）、
-  终端的 `athena-dev`。列表是图块网格，每个应用自带图标，有历史演进关系的学科
-  之间画连线（目前 C → C++）。
+- **启动器**：托盘 / macOS 菜单栏 / 终端三条前端共用编排器，图块列表打开各应用。
+- **姊妹应用**：`c`、`dsa`、`english`、`mathematics` 入场；DSA 承接原 C++ 空分类。
+- **内容出处**：判分内容必须带来源，检查器入库（ADR 0043）。
+- C++ 教程补齐类型与表达式章、知识图谱与随堂考核。
 
 ### 移除
 
-- 移除运行历史、双记录比较、git 快照及"AI 讲解差异"，让执行链路只负责当前实验；
-  旧数据库中的 `run_history` 表和记录保留原样，不做破坏性删除。
-- 删除仅服务于旧 HTML/WebView 路径的 `cpp_syntax_highlighter`（内容已由 GTK
-  `DocumentView` + GtkSourceView 承载，该模块无调用方）。
-- 删除各应用 `bin/` 下转发到 dev 脚本的别名、`apps/c/playground` 的构建产物，
-  以及一个遗留的 worktree 副本。
+- 旧 WebView / HTML 阅读路径相关模块，以及指向已退役启动脚本的别名。
 
 ### 修复
 
-- 取消启动时强制进入 macOS 原生全屏，主窗口改用 1440×900 的适中默认尺寸；
-  同时缩小实验窗口，确保系统标题栏和关闭按钮在常见屏幕工作区内可见。
-- 首页说明区块铺满页宽，消除 `gtk_widget_measure` 的尺寸协商告警。
+- 窗口尺寸与全屏策略；学习页插图打包链路；C / 数学在各自平台上的显示与朗读问题。
 
 ## [3.0.0] - 2026-08-29
 

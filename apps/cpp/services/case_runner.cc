@@ -102,7 +102,8 @@ SpawnOutcome spawn_and_capture(
     atomic_bool killed{false};
 
     // 看门狗：到点还没结束就强杀。communicate() 会因为管道关闭而返回。
-    jthread watchdog([&] {
+    // 用 thread 而非 jthread：Apple libc++ 的 jthread 仍未默认可用。
+    thread watchdog([&] {
         if (timeout.count() <= 0) {
             return;
         }
@@ -127,6 +128,9 @@ SpawnOutcome spawn_and_capture(
         done = true;
     }
     done_signal.notify_all();
+    if (watchdog.joinable()) {
+        watchdog.join();
+    }
 
     outcome.timed_out = killed.load();
     if (outcome.finished && !outcome.timed_out) {

@@ -179,6 +179,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+        working-directory: apps/cpp
 
     steps:
       - name: Check out tagged source
@@ -239,10 +240,11 @@ jobs:
 
       - name: Verify Windows packages
         shell: pwsh
+        working-directory: apps/cpp
         run: |
           $version = "${{ steps.version.outputs.version }}"
-          $zip = "apps/cpp/dist/athena-cpp-$version-windows-x64.zip"
-          $msi = "apps/cpp/dist/athena-cpp-$version-windows-x64.msi"
+          $zip = "dist/athena-cpp-$version-windows-x64.zip"
+          $msi = "dist/athena-cpp-$version-windows-x64.msi"
           if (-not (Test-Path $zip)) { throw "missing $zip" }
           if (-not (Test-Path $msi)) { throw "missing $msi" }
           Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -275,6 +277,12 @@ jobs:
       contents: write
 
     steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+        with:
+          # 缺 CHANGELOG 节时要 git log 上一标签..HEAD，需要完整历史与标签。
+          fetch-depth: 0
+
       - name: Download release assets
         uses: actions/download-artifact@v8
         with:
@@ -285,6 +293,21 @@ jobs:
       - name: Create checksums
         working-directory: dist
         run: sha256sum athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi > SHA256SUMS.txt
+
+      - name: Build release notes from CHANGELOG
+        working-directory: apps/cpp
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # 有手写节就用；缺失则统计上一标签至今的提交并写回 CHANGELOG，
+          # 再抽出正文。写回只影响本 job 工作树，真正入库靠发版前提交。
+          python3 scripts/changelog_notes.py "$version" CHANGELOG.md --write \
+            > "${GITHUB_WORKSPACE}/release-notes.md"
+          {
+            echo
+            echo "---"
+            echo
+            echo "完整更新日志见仓库 \`apps/cpp/CHANGELOG.md\`。"
+          } >> "${GITHUB_WORKSPACE}/release-notes.md"
 
       - name: Publish release
         env:
@@ -298,5 +321,5 @@ jobs:
             dist/SHA256SUMS.txt \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \
-            --generate-notes \
+            --notes-file release-notes.md \
             --title "Athena $version"
