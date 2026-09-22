@@ -292,21 +292,25 @@ fn build_entries(apps: &[App]) -> Vec<AppEntry> {
             accent: parse_color(&app.accent, &app.id).into(),
             icon: tile_icon(app).unwrap_or_default(),
             has_icon: tile_icon(app).is_some(),
-            state: RunState::Stopped.label().into(),
             tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
             running: false,
+            starting: false,
         })
         .collect()
 }
 
 /// 把一轮状态探测结果写回某个面板的图块模型；学习应用面板和实践面板各调
 /// 一次，探测到的 `states` 顺序必须跟建模型时的 `apps` 顺序一致。
+///
+/// 运行/未运行不写进模型里的文字字段——早先是拿一行「运行中」/「未运行」
+/// 文字表达，改成图块色块本身的明暗（Tile 的 plate-color，按 running 算），
+/// 这里只需要给 running/starting 两个布尔赋值。
 fn apply_states(model: &ModelRc<AppEntry>, states: &[RunState]) {
     for (index, state) in states.iter().enumerate() {
         if let Some(mut entry) = model.row_data(index) {
-            entry.state = state.label().into();
             entry.tint = tint(*state).into();
             entry.running = *state != RunState::Stopped;
+            entry.starting = *state == RunState::Starting;
             model.set_row_data(index, entry);
         }
     }
