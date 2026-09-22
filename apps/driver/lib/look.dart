@@ -170,9 +170,10 @@ class QuestionImage extends StatelessWidget {
     );
   }
 
-  /// 点开看细节：图里的红圈、远处的车灯，缩在栏里根本看不清。
-  /// 按图片本身的像素尺寸放大（超过屏幕才等比缩小），不铺满整个窗口——
-  /// 铺满会把长宽比不是屏幕比例的图硬撑出一圈黑边。
+  /// 点开看细节：图里的红圈、远处的车灯，缩在栏里根本看不清。题库图片本身分辨率
+  /// 普遍只有几百像素，跟内嵌显示的尺寸相差无几，只按原始像素放大等于没放大——
+  /// 所以这里至少放大到 2 倍（屏幕装不下再等比缩小），不铺满整个窗口——铺满会把
+  /// 长宽比不是屏幕比例的图硬撑出一圈黑边。
   void _open(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -196,7 +197,7 @@ class QuestionImage extends StatelessWidget {
             } else {
               final screen = MediaQuery.sizeOf(context);
               final scale = min(
-                1.0,
+                2.0,
                 min(
                   (screen.width - 64) / natural.width,
                   (screen.height - 64) / natural.height,
