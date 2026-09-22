@@ -3,13 +3,19 @@
 本文件记录每个发行版本的显著变化。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循语义化版本，以 `meson.build` 为单一来源。
 
-## [7.0.0] - 2026-09-20
+## [7.0.0] - 2026-09-23
+
+### 变更
+
+- **优化启动器统一管理**：跨平台托盘启动器统一发现、构建与打开各学习 /
+  实践应用（含 `apps/practice` 实践分区）；Windows 上按应用构建系统注入
+  MSYS2 UCRT64 或 Qt 路径，避免 Meson / CMake 工具链互相踩脚。
 
 ### 新增
 
 - **Windows 进入正式发行**：标签 Release 现在除了 macOS DMG 和 Ubuntu DEB / AppImage，
-  还产出 `Athena-VERSION-windows-x64.msi` 与同内容的便携 zip。打包入口是
-  `scripts/package_windows.py`（ADR 0057），从 Meson 的 `Athena.exe` 收集 UCRT64
+  还产出 `athena-cpp-VERSION-windows-x64.msi` 与同内容的便携 zip。打包入口是
+  `scripts/package_windows.py`，从 Meson 的 `athena-cpp.exe` 收集 UCRT64
   GTK 运行时，换机不需要再装 MSYS2。
 - 驾考学习在 Windows 上按 UTF-8 编译源文件（MSVC `/utf-8`），窗口标题「驾考学习」
   不再被系统代码页 936 读成非法字符。
