@@ -12,7 +12,9 @@ use std::collections::HashMap;
 use std::sync::mpsc::Sender;
 
 use muda::{Menu, MenuEvent, MenuId, MenuItem, PredefinedMenuItem, Submenu};
-use tray_icon::{Icon, TrayIcon, TrayIconBuilder};
+use tray_icon::{
+    Icon, MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent,
+};
 
 #[derive(Debug, Clone)]
 pub enum Action {
@@ -90,9 +92,12 @@ impl Tray {
     #[cfg(not(target_os = "linux"))]
     pub fn start(apps: &[(String, String)]) -> Self {
         let wiring = build(apps);
+        // 左键唤出窗口、右键出菜单：测试阶段关了列表也要能从托盘把窗口叫回来。
+        let _ = TrayIconEvent::receiver();
         let builder = TrayIconBuilder::new()
             .with_menu(Box::new(wiring.menu))
             .with_tooltip("Athena 启动器")
+            .with_menu_on_left_click(false)
             .with_icon(icon().unwrap_or_else(|| {
                 Icon::from_rgba(vec![0; 4], 1, 1).expect("空图标")
             }));
@@ -124,9 +129,11 @@ impl Tray {
                 return;
             }
             let wiring = build(&apps);
+            let _ = TrayIconEvent::receiver();
             let tray = TrayIconBuilder::new()
                 .with_menu(Box::new(wiring.menu))
                 .with_tooltip("Athena 启动器")
+                .with_menu_on_left_click(false)
                 .with_icon(icon().expect("托盘图标"))
                 .build();
             if let Err(error) = &tray {
@@ -172,9 +179,21 @@ impl Tray {
             Tray::Local { actions, .. } | Tray::Remote { actions, .. } => actions,
             Tray::Unavailable => return Vec::new(),
         };
-        MenuEvent::receiver()
+        let mut out: Vec<Action> = MenuEvent::receiver()
             .try_iter()
             .filter_map(|event| actions.get(&event.id).cloned())
-            .collect()
+            .collect();
+        for event in TrayIconEvent::receiver().try_iter() {
+            match event {
+                TrayIconEvent::DoubleClick { .. } => out.push(Action::ShowWindow),
+                TrayIconEvent::Click {
+                    button: MouseButton::Left,
+                    button_state: MouseButtonState::Up,
+                    ..
+                } => out.push(Action::ShowWindow),
+                _ => {}
+            }
+        }
+        out
     }
 }

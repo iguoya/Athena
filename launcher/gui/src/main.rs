@@ -3,25 +3,40 @@
 //! 界面在 `ui/launcher.slint`，执行逻辑全在 `launcher`——这里只做三件事：
 //! 定时把状态刷进界面、把点击转成一次 open/stop、把构建进度显示出来。
 //! 这样它和终端的 `launcher`、macOS 菜单栏版走的是同一条执行路径。
+//!
+//! 常驻形态是托盘。关窗口、debug 构建、测试阶段都不能把进程带走——
+//! 只用 `window.run()` 会在最后一扇窗藏起来时退出，托盘图标跟着没了。
 
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![windows_subsystem = "windows"]
 
 mod icon;
 mod tray;
 
+use std::net::{Ipv4Addr, TcpListener, TcpStream};
 use std::rc::Rc;
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use launcher_core::{discover, paths, runner, App, ProcessSnapshot, RunState};
+use launcher_core::{discover, discover_in, paths, runner, App, ProcessSnapshot, RunState};
 use slint::{Color, Model, ModelRc, SharedString, VecModel};
 
 use crate::tray::{Action, Tray};
 
+/// 本机回环上占一个端口：第二份启动器连上来，等于请第一份把窗口举到前面。
+const SINGLETON_PORT: u16 = 47821;
+
 slint::include_modules!();
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    prefer_software_renderer();
+
+    let Some(wake) = claim_singleton() else {
+        // 已经有一份在托盘里：敲一下它，自己立刻退出，不要再开一个窗口。
+        let _ = TcpStream::connect((Ipv4Addr::LOCALHOST, SINGLETON_PORT));
+        return Ok(());
+    };
+
     let Some(repo) = paths::locate_repo() else {
         eprintln!("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里。");
         std::process::exit(1);
@@ -31,6 +46,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         eprintln!("{} 下没有找到任何 app.json", repo.join("apps").display());
         std::process::exit(1);
     }
+    // 实践面板：跟学习应用区隔开的独立分区，数据源是 apps/practice/* 而
+    // 不是 apps/*，复用同一套 discover_in()。这里可以为空——PocketCube
+    // 之外还没有别的小项目时，界面按 practice-apps.length 隐藏整个分区。
+    let practice_apps: Arc<Vec<App>> = Arc::new(discover_in(&repo.join("apps/practice")));
+    // open/stop 按 id 找应用，两边的 app 都要能找到；tray 菜单仍然只列
+    // 学习应用（apps），不把实践小项目也塞进去，两个界面各自的范围不同。
+    let all_apps: Arc<Vec<App>> = Arc::new(
+        apps.iter().chain(practice_apps.iter()).cloned().collect(),
+    );
 
     // 常驻的是托盘，不是窗口：关掉窗口只是收起来，启动器还在状态栏待命。
     let tray = Rc::new(Tray::start(
@@ -51,22 +75,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             slint::CloseRequestResponse::HideWindow
         });
     }
-    let entries: Rc<VecModel<AppEntry>> = Rc::new(VecModel::from(
-        apps.iter()
-            .map(|app| AppEntry {
-                id: app.id.as_str().into(),
-                title: app.title.as_str().into(),
-                letter: app.letter.as_str().into(),
-                accent: parse_color(&app.accent, &app.id).into(),
-                icon: tile_icon(app).unwrap_or_default(),
-                has_icon: tile_icon(app).is_some(),
-                state: RunState::Stopped.label().into(),
-                tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
-                running: false,
-            })
-            .collect::<Vec<_>>(),
-    ));
+    let entries: Rc<VecModel<AppEntry>> = Rc::new(VecModel::from(build_entries(&apps)));
     window.set_apps(ModelRc::from(entries.clone()));
+    let practice_entries: Rc<VecModel<AppEntry>> =
+        Rc::new(VecModel::from(build_entries(&practice_apps)));
+    window.set_practice_apps(ModelRc::from(practice_entries.clone()));
     window.set_status("点一下就打开；已经在跑的只把窗口叫到前面。".into());
     window.set_links(ModelRc::new(VecModel::from(evolution_links(&apps))));
 
@@ -76,16 +89,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let progress = Arc::new(Mutex::new(receiver));
 
     {
-        let apps = apps.clone();
+        let all_apps = all_apps.clone();
         let repo = repo.clone();
         let sender = sender.clone();
-        window.on_open(move |id| open_app(&apps, id.as_str(), &repo, &sender));
+        window.on_open(move |id| open_app(&all_apps, id.as_str(), &repo, &sender));
     }
 
     {
-        let apps = apps.clone();
+        let all_apps = all_apps.clone();
         let sender = sender.clone();
-        window.on_stop(move |id| stop_app(&apps, id.as_str(), &sender));
+        window.on_stop(move |id| stop_app(&all_apps, id.as_str(), &sender));
     }
 
     let clicks = slint::Timer::default();
@@ -99,6 +112,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             slint::TimerMode::Repeated,
             Duration::from_millis(200),
             move || {
+                if wake.accept().is_ok() {
+                    if let Some(window) = handle.upgrade() {
+                        let _ = window.show();
+                        bring_to_front();
+                    }
+                }
                 for action in tray.drain() {
                     match action {
                         Action::Open(id) => open_app(&apps, &id, &repo, &sender),
@@ -127,6 +146,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let timer = slint::Timer::default();
     {
         let apps = apps.clone();
+        let practice_apps = practice_apps.clone();
         let handle = window.as_weak();
         let progress = progress.clone();
         let tray = tray.clone();
@@ -137,6 +157,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let snapshot = ProcessSnapshot::take();
                 let states: Vec<RunState> =
                     apps.iter().map(|app| snapshot.state(app)).collect();
+                // 实践面板的状态刷新跟学习应用分开算：tray 只认识 apps，
+                // 不该把 practice_apps 的状态也塞进 tray.update()。
+                let practice_states: Vec<RunState> = practice_apps
+                    .iter()
+                    .map(|app| snapshot.state(app))
+                    .collect();
                 let latest = progress
                     .lock()
                     .ok()
@@ -151,15 +177,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         .collect(),
                 );
                 if let Some(window) = handle.upgrade() {
-                    let model = window.get_apps();
-                    for (index, state) in states.iter().enumerate() {
-                        if let Some(mut entry) = model.row_data(index) {
-                            entry.state = state.label().into();
-                            entry.tint = tint(*state).into();
-                            entry.running = *state != RunState::Stopped;
-                            model.set_row_data(index, entry);
-                        }
-                    }
+                    apply_states(&window.get_apps(), &states);
+                    apply_states(&window.get_practice_apps(), &practice_states);
                     if let Some(line) = latest {
                         window.set_status(SharedString::from(line));
                     }
@@ -169,11 +188,28 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // 启动时也要 activate：否则窗口留在启动它的那个 Space，屏幕上开着全屏
-    // 应用时就像是没起来。
+    // 应用时就像是没起来。事件循环必须用 until_quit：托盘走的是 tray-icon，
+    // Slint 看不见它，最后一扇窗藏起来时普通 run() 会把进程结束掉。
     window.show()?;
     bring_to_front();
-    window.run()?;
+    slint::run_event_loop_until_quit()?;
     Ok(())
+}
+
+/// Windows 上 femtovg/OpenGL 在部分机器 `glGenBuffers` 没加载就崩。
+/// 启动器只是一张列表，软件渲染够用；测试阶段更不能因为渲染后端把托盘带走。
+fn prefer_software_renderer() {
+    #[cfg(windows)]
+    if std::env::var_os("SLINT_BACKEND").is_none() {
+        std::env::set_var("SLINT_BACKEND", "winit-software");
+    }
+}
+
+/// 占住回环端口。占不住说明已经有一份在跑，调用方去敲它然后退出。
+fn claim_singleton() -> Option<TcpListener> {
+    let listener = TcpListener::bind((Ipv4Addr::LOCALHOST, SINGLETON_PORT)).ok()?;
+    listener.set_nonblocking(true).ok()?;
+    Some(listener)
 }
 
 /// 打开一个应用：已经在跑就把窗口叫到前面，没跑才构建并启动。
@@ -243,6 +279,37 @@ fn evolution_links(apps: &[App]) -> Vec<LinkSpec> {
 /// 应用自带的图标，按图块里的显示尺寸渲染（乘 2 供高分屏用）。
 fn tile_icon(app: &App) -> Option<slint::Image> {
     icon::render(app.icon_file.as_ref()?, 60)
+}
+
+/// 学习应用面板和实践面板共用同一套图块数据构造，只是喂的 `apps` 来源
+/// 不同（`discover(repo)` vs `discover_in(repo/apps/practice)）。
+fn build_entries(apps: &[App]) -> Vec<AppEntry> {
+    apps.iter()
+        .map(|app| AppEntry {
+            id: app.id.as_str().into(),
+            title: app.title.as_str().into(),
+            letter: app.letter.as_str().into(),
+            accent: parse_color(&app.accent, &app.id).into(),
+            icon: tile_icon(app).unwrap_or_default(),
+            has_icon: tile_icon(app).is_some(),
+            state: RunState::Stopped.label().into(),
+            tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
+            running: false,
+        })
+        .collect()
+}
+
+/// 把一轮状态探测结果写回某个面板的图块模型；学习应用面板和实践面板各调
+/// 一次，探测到的 `states` 顺序必须跟建模型时的 `apps` 顺序一致。
+fn apply_states(model: &ModelRc<AppEntry>, states: &[RunState]) {
+    for (index, state) in states.iter().enumerate() {
+        if let Some(mut entry) = model.row_data(index) {
+            entry.state = state.label().into();
+            entry.tint = tint(*state).into();
+            entry.running = *state != RunState::Stopped;
+            model.set_row_data(index, entry);
+        }
+    }
 }
 
 /// 界面默认字体：必须覆盖简体中文。

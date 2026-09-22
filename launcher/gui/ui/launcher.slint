@@ -142,8 +142,35 @@ component Tile inherits Rectangle {
     }
 }
 
+// 实践面板用：跟学习应用那张图谱不同，没有"谁从谁长出来"的演进关系可画
+// （apps/practice/ 下的小项目彼此独立），复用同一个 Tile，去掉连线那一套。
+component PracticeGrid inherits ScrollView {
+    in property <[AppEntry]> apps;
+    callback open(string);
+    callback stop(string);
+
+    property <int> columns: max(1, floor(self.width / 124px));
+    property <int> rows: max(1, floor((apps.length + self.columns - 1) / self.columns));
+    property <length> stride-x: 124px;
+    property <length> stride-y: 132px;
+    viewport-width: self.width;
+    viewport-height: max(self.height, self.rows * self.stride-y);
+
+    for entry[index] in apps: Tile {
+        x: mod(index, columns) * stride-x;
+        y: floor(index / columns) * stride-y;
+        entry: entry;
+        open => { root.open(entry.id); }
+        stop => { root.stop(entry.id); }
+    }
+}
+
 export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
+    // 实践面板：跟学习应用区隔开的独立分区（apps/practice/ 下的小项目），
+    // 侧重动手练习，不是知识学习——两者背后是同一套发现和启动逻辑，只是
+    // 数据源（发现根目录）和界面分区不同。空的时候整个分区隐藏，不占地方。
+    in property <[AppEntry]> practice-apps;
     in property <string> status;
     in property <[LinkSpec]> links;
     // 必须点名带简体的 UI 字体。Slint 缺字回退在英文 Windows 上会先命中
@@ -272,6 +299,26 @@ export component LauncherWindow inherits Window {
                 open => { root.open(entry.id); }
                 stop => { root.stop(entry.id); }
             }
+        }
+
+        if practice-apps.length > 0: Rectangle {
+            height: 1px;
+            background: #e5e5ea;
+        }
+
+        if practice-apps.length > 0: Text {
+            text: "实践面板";
+            font-size: 12px;
+            font-weight: 600;
+            color: #8a8a8e;
+            height: 20px;
+        }
+
+        if practice-apps.length > 0: PracticeGrid {
+            height: 132px;
+            apps: practice-apps;
+            open(id) => { root.open(id); }
+            stop(id) => { root.stop(id); }
         }
 
         Text {
