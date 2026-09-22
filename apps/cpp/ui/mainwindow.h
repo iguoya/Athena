@@ -2,7 +2,6 @@
 
 #include "content/content_loader.h"
 #include "registry/chapter_catalog.h"
-#include "ui/external_app_launcher.h"
 #include "registry/function_registry.h"
 #include "storage/learning_store.h"
 #include "ui/learning_dialogs.h"
@@ -24,7 +23,6 @@ class CodeChapterPage;
 class ExperimentPage;
 class ExperimentRunner;
 class LessonPage;
-class PocketCubePage;
 class TypeSemanticsLessonPage;
 struct ExperimentSelection;
 
@@ -48,11 +46,6 @@ private:
     void load_chapter_metadata();
     void open_learning_store();
     void setup_menu();
-    void build_home_graph();
-    // 首页上 apps/ 里那些独立学习应用的入口（ADR 0032）。
-    // 图谱上由独立应用承载的领域被点开时，按 app.json 启动那个程序。
-    void launch_domain_app(const string& app_id);
-    void go_home();
     void enter_category(const string& category_name);
     void build_category(const string& category_name);
     void ensure_chapter_page(
@@ -93,10 +86,8 @@ private:
     ContentLoader m_content_loader;
     std::map<string, Glib::RefPtr<Gtk::Builder>> m_chapter_builders;
 
-    Gtk::Box* m_home_graph = nullptr;
     Gtk::Stack* m_root_stack = nullptr;
     Gtk::Box* m_breadcrumb_box = nullptr;
-    Gtk::Button* m_home_button = nullptr;
     Gtk::MenuButton* m_chapter_switcher = nullptr;
     Glib::RefPtr<Gio::Menu> m_menu_model;
     unique_ptr<ChapterPageStack> m_pages;
@@ -121,7 +112,6 @@ private:
     std::map<string, unique_ptr<CodeChapterPage>> m_code_pages;
     // 数据驱动学习页（ADR 0055）：写了课文的章节走这条路。
     std::map<string, unique_ptr<LessonPage>> m_lesson_pages;
-    std::map<string, unique_ptr<PocketCubePage>> m_pocket_cube_pages;
     // 学习工作台原型：目前只有 TypeSemantics 一章用它，独立于上面几个
     // map，不影响其他章节的构建路径。
     std::map<string, unique_ptr<TypeSemanticsLessonPage>>

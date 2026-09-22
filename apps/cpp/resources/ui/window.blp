@@ -1,45 +1,9 @@
 using Gtk 4.0;
 using GtkSource 5;
 
-// 首页：按计算机专业学习脉络铺开的学科知识图谱，取代旧的九宫格入口。
-// MainWindow 运行时把 render/domain_graph_view 生成的视图挂进 home_graph。
-Box home_page {
-  name: "home_page";
-  orientation: vertical;
-  vexpand: true;
-
-  styles [
-    "app-content"
-  ]
-
-    // 学科图谱的两张图是固定宽度、不压缩的，窄窗口时整页横向滚动查看。
-  ScrolledWindow {
-    hscrollbar-policy: automatic;
-    vexpand: true;
-
-    Box {
-      orientation: vertical;
-      spacing: 28;
-      valign: start;
-      halign: start;
-      margin-top: 40;
-      margin-bottom: 56;
-      margin-start: 40;
-      margin-end: 40;
-
-      Box home_graph {
-        name: "home_graph";
-        orientation: vertical;
-        valign: start;
-        halign: start;
-      }
-    }
-  }
-}
-
 // 某一分类内部：只有章节内容栈。进入分类默认落在生成的索引页（章节网格），
 // 章节之间的横向切换由顶栏的章节切换器承担，不再有常驻标签条（见 ADR 0021）。
-// 分类切换只影响这里，首页布局与它互不干扰——两者是 root_stack 里并列的两页。
+// 应用启动即直接进这一页（跨应用学科图谱首页已移除，见 apps/cpp ADR）。
 Box content_area {
   name: "content_area";
   orientation: vertical;
@@ -482,7 +446,7 @@ ApplicationWindow window {
   Box main_container {
     orientation: vertical;
 
-    // === 顶栏：应用菜单、返回首页、当前位置 ===
+    // === 顶栏：应用菜单、当前位置 ===
     Box top_bar {
       name: "top_bar";
       orientation: horizontal;
@@ -497,31 +461,6 @@ ApplicationWindow window {
       PopoverMenuBar app_menu_bar {
         name: "app_menu_bar";
         visible: false;
-      }
-
-      Button home_button {
-        name: "home_button";
-        tooltip-text: "返回首页";
-
-        styles [
-          "flat",
-          "home-button"
-        ]
-
-        Box {
-          orientation: horizontal;
-          spacing: 8;
-          valign: center;
-
-          Image {
-            icon-name: "go-home-symbolic";
-            pixel-size: 18;
-          }
-
-          Label {
-            label: "首页";
-          }
-        }
       }
 
       // 当前位置：MainWindow 按层级填充。分类名是一个 breadcrumb-link

@@ -2,10 +2,7 @@
 
 #include "platform/menu_bar_platform.h"
 #include "platform/app_paths.h"
-#include "registry/domain_graph.h"
-#include "ui/external_app_launcher.h"
 #include "registry/knowledge_graph.h"
-#include "render/domain_graph_view.h"
 #include "services/experiment_runner.h"
 #include "ui/about_dialog.h"
 #include "ui/chapter_index_page.h"
@@ -13,7 +10,6 @@
 #include "ui/chapter_overview.h"
 #include "ui/code_chapter_page.h"
 #include "ui/experiment_page.h"
-#include "ui/pocket_cube_page.h"
 #include "ui/progress_overview.h"
 #include "ui/lesson_figures.h"
 #include "ui/lesson_page.h"
@@ -41,7 +37,6 @@ string index_page_key(const string& category_name) {
 constexpr const char* kCppCategory = "cpp";
 // 数据驱动学习页的控件名，由 lesson_page.blp 的根控件名派生（ADR 0055）。
 constexpr const char* kDataLessonPageWidget = "lesson_page";
-constexpr const char* kPracticeCubePageWidget = "practice_cube_page";
 // 由 athena.json 的 chapter.ui.blueprint 派生：blueprint 文件名去掉
 // .blp 后缀再加 _page，见 scripts/project_generator/model.py。
 constexpr const char* kTypeSemanticsLessonPageWidget =
@@ -67,12 +62,9 @@ MainWindow::MainWindow(
     Gtk::Window::set_default_icon_name("cn.athena.icon");
 
     m_root_stack = m_main_builder->get_widget<Gtk::Stack>("root_stack");
-    m_home_graph = m_main_builder->get_widget<Gtk::Box>("home_graph");
     m_breadcrumb_box =
         m_main_builder->get_widget<Gtk::Box>("breadcrumb_box");
-    auto* home_page = m_main_builder->get_widget<Gtk::Box>("home_page");
     auto* content_area = m_main_builder->get_widget<Gtk::Box>("content_area");
-    m_home_button = m_main_builder->get_widget<Gtk::Button>("home_button");
     auto* experiment_page =
         m_main_builder->get_widget<Gtk::Box>("experiment_page");
     auto* app_menu_bar =
@@ -81,15 +73,13 @@ MainWindow::MainWindow(
         m_main_builder->get_widget<Gtk::Stack>("chapter_stack");
     m_chapter_switcher =
         m_main_builder->get_widget<Gtk::MenuButton>("chapter_switcher");
-    if (!m_root_stack || !m_home_graph || !m_breadcrumb_box || !home_page
-        || !content_area || !experiment_page || !m_home_button || !app_menu_bar
+    if (!m_root_stack || !m_breadcrumb_box
+        || !content_area || !experiment_page || !app_menu_bar
         || !chapter_stack || !m_chapter_switcher) {
         throw runtime_error("Failed to get required widgets from main UI");
     }
-    m_root_stack->add(*home_page, "home", "首页");
     m_root_stack->add(*content_area, "category", "分类");
     m_root_stack->add(*experiment_page, "experiment", "专注实验");
-    m_root_stack->set_visible_child("home");
     m_pages = make_unique<ChapterPageStack>(*chapter_stack);
 
     load_chapter_metadata();
@@ -114,8 +104,9 @@ MainWindow::MainWindow(
     // 只在没有这层系统集成的平台（目前是 Ubuntu）显示，避免重复。
     app_menu_bar->set_visible(!platform_has_native_menu_bar());
 
-    m_home_button->signal_clicked().connect([this]() { go_home(); });
-    build_home_graph();
+    // 本应用只有一个分类（C++），启动器不是学科导航（root AGENTS.md），
+    // 首页那张跨应用图谱已经完成阶段性任务、移除——直接进 C++ 知识图谱。
+    enter_category(kCppCategory);
 }
 
 MainWindow::~MainWindow() {
@@ -178,89 +169,12 @@ void MainWindow::setup_menu() {
     }
 }
 
-void MainWindow::build_home_graph() {
-    // 掌握度口径与分类内知识图谱、进度页一致：知识点 ID -> 星级。
-    std::map<string, int> mastery_by_id;
-    if (m_learning_store) {
-        try {
-            mastery_by_id = m_learning_store->load_all_mastery();
-        } catch (const exception& error) {
-            cerr << "Failed to load mastery stats for home graph: "
-                 << error.what() << endl;
-        }
-    }
-
-    const DomainGraph graph = build_domain_graph(m_catalog, mastery_by_id);
-    // 领域节点有两种去处：本程序里的分类，或 apps/ 下的独立应用（ADR 0032）。
-    // 图谱只说这个领域由谁承载，怎么打开由这里决定。
-    // std:: 不能省：Gtk::Widget 有成员函数 map()，裸写会被解析成它。
-    std::map<string, string> app_by_domain;
-    for (const auto& node : graph.nodes) {
-        if (node.kind == DomainKind::ExternalApp && !node.app_id.empty()) {
-            app_by_domain[node.id] = node.app_id;
-        }
-    }
-    auto* view = make_domain_graph_view(
-        graph,
-        [this, app_by_domain](const string& domain_id) {
-            const auto found = app_by_domain.find(domain_id);
-            if (found == app_by_domain.end()) {
-                enter_category(domain_id);
-                return;
-            }
-            launch_domain_app(found->second);
-        });
-    m_home_graph->append(*view);
-}
-
-void MainWindow::launch_domain_app(const string& app_id) {
-    const string apps_root = external_apps_root();
-    for (const auto& app : discover_external_apps(apps_root)) {
-        if (app.id != app_id) {
-            continue;
-        }
-        // 独立应用自己建库、自己迁移（ADR 0037），主程序不传学习库路径，
-        // 也不假设两边的表结构还能对上。
-        if (const auto error = launch_external_app(app)) {
-            // 未构建或启动失败都只是提示：外部应用可不可用不影响主程序。
-            auto* notice = Gtk::make_managed<Gtk::MessageDialog>(
-                *this, *error, false, Gtk::MessageType::INFO,
-                Gtk::ButtonsType::OK, true);
-            notice->signal_response().connect([notice](int) { notice->hide(); });
-            notice->show();
-        }
-        return;
-    }
-
-    // 独立应用不随主程序 .app 分发，所以两种"找不到"要分开说：
-    // 装好的发行包里根本没有 apps/，让用户去检查 app.json 是误导。
-    const string message = apps_root.empty()
-        ? "「" + app_id + "」是独立应用，不包含在当前发行包里。\n\n"
-              "请到源码仓库的 apps/" + app_id
-              + " 目录按该应用自己的 README / AGENTS.md 用开发模式启动"
-                "（Tauri 应用执行 ./scripts/dev.sh），不要打开 /Applications 里的打包副本。"
-        : "在 " + apps_root + " 下没有找到独立应用 " + app_id
-              + "，请检查 " + app_id + "/app.json 是否存在。";
-    auto* missing = Gtk::make_managed<Gtk::MessageDialog>(
-        *this, message, false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK,
-        true);
-    missing->signal_response().connect([missing](int) { missing->hide(); });
-    missing->show();
-}
-
 void MainWindow::show_about_dialog() {
     m_about_dialog->present();
 }
 
 void MainWindow::show_settings_dialog() {
     m_dialogs->show_settings();
-}
-
-void MainWindow::go_home() {
-    clear_breadcrumb();
-    m_home_button->set_visible(true);
-    m_chapter_switcher->set_visible(false);
-    m_root_stack->set_visible_child("home");
 }
 
 string MainWindow::category_title(const string& category_name) const {
@@ -278,7 +192,6 @@ void MainWindow::enter_category(const string& category_name) {
         build_category(category_name);
     }
     m_root_stack->set_visible_child("category");
-    m_home_button->set_visible(true);
     m_chapter_switcher->set_visible(true);
     show_category_index(category_name);
 }
@@ -421,10 +334,7 @@ void MainWindow::ensure_chapter_page(
                     return false;
                 }
             });
-    } else if (chapter.widget_name == kPracticeCubePageWidget) {
-        m_pocket_cube_pages[page_key] = make_unique<PocketCubePage>(
-            chapter, builder, m_content_loader, overview_requested);
-       } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
+    } else if (chapter.widget_name == kTypeSemanticsLessonPageWidget) {
         std::map<string, int> mastery_by_id;
         if (m_learning_store) {
             try {
@@ -474,7 +384,6 @@ void MainWindow::show_experiment(
     }
 
     m_root_stack->set_visible_child("experiment");
-    m_home_button->set_visible(false);
     m_chapter_switcher->set_visible(false);
     show_chapter_breadcrumb(
         m_current_category, "专注实验 · " + experiment.title);
@@ -484,12 +393,11 @@ void MainWindow::show_experiment(
 void MainWindow::return_from_experiment() {
     if (m_experiment_return_category.empty()
         || m_experiment_return_page_key.empty()) {
-        go_home();
+        enter_category(kCppCategory);
         return;
     }
 
     m_root_stack->set_visible_child("category");
-    m_home_button->set_visible(true);
     m_chapter_switcher->set_visible(true);
     navigate_to(
         m_experiment_return_category, m_experiment_return_page_key);

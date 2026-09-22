@@ -10,7 +10,7 @@ namespace {
 TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     const auto registry = create_default_function_registry();
 
-    EXPECT_EQ(registry.ids().size(), 22);
+    EXPECT_EQ(registry.ids().size(), 21);
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.initialization"));
     EXPECT_TRUE(registry.contains("cpp.TypeSemantics.object_lifetime"));
     EXPECT_TRUE(registry.contains("cpp.Reference.reference_basics"));
@@ -19,7 +19,9 @@ TEST(FunctionRegistryTest, RegistersCurrentChapterExperiments) {
     // 所以这里只确认 RAII 的实验仍在册。
     EXPECT_TRUE(registry.contains("cpp.RAII.basic"));
     EXPECT_TRUE(registry.contains("cpp.RAII.raw_pointer_ownership"));
-    EXPECT_TRUE(registry.contains("practice.PocketCube.run"));
+    // practice.PocketCube.run 随「应用实践」分类搬到 apps/practice/ 了
+    // （ADR 0058），不再是本应用的知识点。
+    EXPECT_FALSE(registry.contains("practice.PocketCube.run"));
     EXPECT_FALSE(registry.contains("cpp.Functions.not_implemented"));
 }
 
