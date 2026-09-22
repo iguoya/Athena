@@ -67,20 +67,27 @@ struct GraphMetrics {
 };
 
 GraphMetrics courseGraphMetrics() {
-    // 课程知识图谱沿用原 C++ 首页那张图的取舍：卡片不压缩，画布变宽靠平移缩放。
+    // 课程知识图谱沿用原 C++ 首页那张图：360 宽卡片上摊开内容 / 用途 / 难点，
+    // 不压缩介绍去迁就高度；画布变高变宽靠平移缩放。
     GraphMetrics metrics;
-    metrics.nodeWidth = 340;
-    metrics.nodeHeight = 214;
-    metrics.columnGap = 36;
-    metrics.layerGap = 108;
+    metrics.nodeWidth = 360;
+    metrics.nodeHeight = 448;
+    metrics.columnGap = 32;
+    metrics.layerGap = 64;
     metrics.padX = 56;
-    metrics.padY = 64;
+    metrics.padY = 56;
     return metrics;
 }
 
 int priorityRank(const QString& priority) {
     if (priority == QLatin1String("essential")) return 0;
     if (priority == QLatin1String("important")) return 1;
+    return 2;
+}
+
+int stageRank(const QString& stage) {
+    if (stage == QLatin1String("junior")) return 0;
+    if (stage == QLatin1String("intermediate")) return 1;
     return 2;
 }
 
@@ -172,6 +179,32 @@ LaidOutGraph layoutByPriority(const QVariantList& sourceNodes, const GraphMetric
     QVector<QVector<int>> buckets(3);
     for (int i = 0; i < sourceNodes.size(); ++i) {
         buckets[priorityRank(sourceNodes.at(i).toMap().value("priority").toString())].append(i);
+    }
+    QVector<QVector<int>> layers;
+    for (const auto& bucket : buckets) {
+        if (!bucket.isEmpty()) {
+            layers.append(bucket);
+        }
+    }
+    return placeLayers(sourceNodes, layers, metrics);
+}
+
+// 课程图按「这一阶段该学什么」分层：初级 → 中级 → 资深。层内再按主干 / 支撑 / 台阶排，
+// 避免把必要程度和阶段混成同一条轴。
+LaidOutGraph layoutByStage(const QVariantList& sourceNodes, const GraphMetrics& metrics) {
+    QVector<QVector<int>> buckets(3);
+    for (int i = 0; i < sourceNodes.size(); ++i) {
+        buckets[stageRank(sourceNodes.at(i).toMap().value("stage").toString())].append(i);
+    }
+    for (auto& bucket : buckets) {
+        std::sort(bucket.begin(), bucket.end(), [&](int left, int right) {
+            const int byPriority = priorityRank(sourceNodes.at(left).toMap().value("priority").toString())
+                - priorityRank(sourceNodes.at(right).toMap().value("priority").toString());
+            if (byPriority != 0) {
+                return byPriority < 0;
+            }
+            return left < right;
+        });
     }
     QVector<QVector<int>> layers;
     for (const auto& bucket : buckets) {
@@ -288,6 +321,7 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
 
         QSet<QString> nodeIds;
         QHash<QString, QSet<QString>> requirements;
+        QHash<QString, QString> nodeStage;
         for (const QVariant& nodeValue : nodes) {
             const QVariantMap node = nodeValue.toMap();
             // 技术体系层（academic）才强制必要程度与难点（ADR 0009）：那是从
@@ -337,6 +371,20 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
                                  .arg(nodeId);
                     return false;
                 }
+                const QString stage = node.value("stage").toString();
+                if (!stage.isEmpty()) {
+                    if (stage != "junior" && stage != "intermediate" && stage != "senior") {
+                        *error = QString("节点 %1 的 stage 只能是 junior、intermediate 或 senior。")
+                                     .arg(nodeId);
+                        return false;
+                    }
+                    if (node.value("stage_reason").toString().trimmed().isEmpty()) {
+                        *error = QString("节点 %1 缺 stage_reason：要说明这一阶段为什么学它。")
+                                     .arg(nodeId);
+                        return false;
+                    }
+                    nodeStage.insert(nodeId, stage);
+                }
                 const QStringList targets = stringList(node, "targets");
                 if (targets.isEmpty()) {
                     *error = QString("节点 %1 缺 targets：必要程度要能追到它支撑的目标能力。")
@@ -376,6 +424,54 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
                                  .arg(nodeId);
                     return false;
                 }
+                const QVariantList chapters = node.value("chapters").toList();
+                if (chapters.size() < 3) {
+                    *error = QString("课程节点 %1 缺少细分章节学习流程（至少三章）。")
+                                 .arg(nodeId);
+                    return false;
+                }
+                QSet<QString> chapterIds;
+                QHash<QString, QSet<QString>> chapterRequires;
+                for (const QVariant& chapterValue : chapters) {
+                    const QVariantMap chapter = chapterValue.toMap();
+                    const QString chapterId = chapter.value("id").toString();
+                    if (!hasNonEmptyStrings(chapter, {"id", "title", "summary"}, error)) {
+                        *error = QString("课程节点 %1 的章节：%2").arg(nodeId, *error);
+                        return false;
+                    }
+                    if (chapterIds.contains(chapterId)) {
+                        *error = QString("课程节点 %1 的章节 ID 重复：%2").arg(nodeId, chapterId);
+                        return false;
+                    }
+                    chapterIds.insert(chapterId);
+                    const QString mastery = chapter.value("mastery").toString();
+                    if (mastery != "familiarity" && mastery != "usage" && mastery != "assessment") {
+                        *error = QString("章节 %1 的 mastery 只能是 familiarity、usage 或 assessment（CS2013）。")
+                                     .arg(chapterId);
+                        return false;
+                    }
+                    const QString kind = chapter.value("kind").toString();
+                    const bool practice = chapter.value("hands_on").toBool() || kind == "practice";
+                    if (mastery != "familiarity" && !practice) {
+                        *error = QString("章节 %1 是运用或评估，必须标为实践，以便和理论区隔。")
+                                     .arg(chapterId);
+                        return false;
+                    }
+                    QSet<QString> requiredChapters;
+                    for (const QString& required : stringList(chapter, "requires")) {
+                        requiredChapters.insert(required);
+                    }
+                    chapterRequires.insert(chapterId, requiredChapters);
+                }
+                for (auto it = chapterRequires.cbegin(); it != chapterRequires.cend(); ++it) {
+                    for (const QString& required : it.value()) {
+                        if (!chapterIds.contains(required)) {
+                            *error = QString("章节 %1 的先修 %2 不在本课学习流程里。")
+                                         .arg(it.key(), required);
+                            return false;
+                        }
+                    }
+                }
             }
             if (!hasSourceRefs(node.value("source_refs").toList(), sourceIds, error)) {
                 *error = QString("节点 %1：%2").arg(nodeId, *error);
@@ -395,6 +491,14 @@ bool AtlasCatalog::validateDocument(const QVariantMap& document, QString* error)
             for (const QString& required : it.value()) {
                 if (!nodeIds.contains(required)) {
                     *error = QString("地图 %1 的强先修 %2 不在本地图内。").arg(mapId, required);
+                    return false;
+                }
+                const QString fromStage = nodeStage.value(required);
+                const QString toStage = nodeStage.value(it.key());
+                if (!fromStage.isEmpty() && !toStage.isEmpty()
+                    && stageRank(fromStage) > stageRank(toStage)) {
+                    *error = QString("节点 %1 不能把更高阶段的 %2 当成先修。")
+                                 .arg(it.key(), required);
                     return false;
                 }
             }
@@ -588,8 +692,19 @@ void AtlasCatalog::applyMap(const QVariantMap& map) {
         classifiedNodes.append(node);
     }
     const bool course = map.value("graph_kind").toString() == QStringLiteral("course");
+    bool courseHasStage = false;
+    if (course) {
+        for (const QVariant& nodeValue : classifiedNodes) {
+            if (!nodeValue.toMap().value("stage").toString().isEmpty()) {
+                courseHasStage = true;
+                break;
+            }
+        }
+    }
     const LaidOutGraph laidOut = course
-        ? layoutByPriority(classifiedNodes, courseGraphMetrics())
+        ? (courseHasStage
+               ? layoutByStage(classifiedNodes, courseGraphMetrics())
+               : layoutByPriority(classifiedNodes, courseGraphMetrics()))
         : layoutGraph(classifiedNodes, GraphMetrics{});
     m_nodes = laidOut.nodes;
     QVariantList numberedEdges;
@@ -698,6 +813,61 @@ QString AtlasCatalog::priorityColor(const QString& priority) const {
     if (priority == "essential") return "#0F766E";
     if (priority == "important") return "#B7791F";
     if (priority == "optional") return "#7563A6";
+    return "#667085";
+}
+
+QString AtlasCatalog::stageLabel(const QString& stage) const {
+    if (stage == "junior") return "初级 · 这一阶段学";
+    if (stage == "intermediate") return "中级 · 这一阶段学";
+    if (stage == "senior") return "资深 · 这一阶段学";
+    return "未分阶段";
+}
+
+QString AtlasCatalog::stageBadge(const QString& stage) const {
+    if (stage == "junior") return "初级";
+    if (stage == "intermediate") return "中级";
+    if (stage == "senior") return "资深";
+    return "未分阶段";
+}
+
+QString AtlasCatalog::stageColor(const QString& stage) const {
+    if (stage == "junior") return "#2E8F7A";
+    if (stage == "intermediate") return "#3D7A86";
+    if (stage == "senior") return "#8A7A4A";
+    return "#667085";
+}
+
+int AtlasCatalog::stageRank(const QString& stage) const {
+    if (stage == "junior") return 0;
+    if (stage == "intermediate") return 1;
+    if (stage == "senior") return 2;
+    return -1;
+}
+
+QString AtlasCatalog::previousStageBadge(const QString& stage) const {
+    if (stage == "senior") return "中级";
+    if (stage == "intermediate") return "初级";
+    return QString();
+}
+
+QString AtlasCatalog::chapterMasteryLabel(const QString& mastery) const {
+    if (mastery == "familiarity") return "熟悉";
+    if (mastery == "usage") return "运用";
+    if (mastery == "assessment") return "评估";
+    return "未分级";
+}
+
+QString AtlasCatalog::chapterMasteryHint(const QString& mastery) const {
+    if (mastery == "familiarity") return "能指认这个概念，知道它解决什么";
+    if (mastery == "usage") return "能在常规情境里动手做";
+    if (mastery == "assessment") return "能比较方案、判断边界和失效";
+    return QString();
+}
+
+QString AtlasCatalog::chapterMasteryColor(const QString& mastery) const {
+    if (mastery == "familiarity") return "#8A7A4A";
+    if (mastery == "usage") return "#3D7A86";
+    if (mastery == "assessment") return "#2E8F7A";
     return "#667085";
 }
 

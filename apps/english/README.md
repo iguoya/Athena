@@ -1,7 +1,7 @@
 # Athena · 英语学习（独立应用）
 
-与主程序**平级**的独立学习应用（主仓库 ADR 0032）。技术栈：Tauri 2 + Web UI。
-**不启动主程序也可以完成全部练习。** 决策见 [`docs/decisions/`](docs/decisions/)。
+与 C++ 教程**平级**的独立学习应用（主仓库 ADR 0032）。技术栈：Tauri 2 + Web UI。
+**不启动别的应用也可以完成全部练习。** 决策见 [`docs/decisions/`](docs/decisions/)。
 
 ## 做什么
 

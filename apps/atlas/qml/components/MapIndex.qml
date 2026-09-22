@@ -270,6 +270,18 @@ Rectangle {
                             color: nodeBtn.highlighted ? "#3D7A86"
                                                        : (nodeBtn.hovered ? "#1C3841" : "transparent")
                         }
+                        ToolTip.visible: nodeBtn.hovered && Boolean(row.modelData.node.stable_definition)
+                        ToolTip.text: {
+                            const n = row.modelData.node
+                            let text = "内容：" + (n.stable_definition || "")
+                            if (n.engineering_role)
+                                text += "\n用途：" + n.engineering_role
+                            if (n.pitfall)
+                                text += "\n难点：" + n.pitfall
+                            return text
+                        }
+                        ToolTip.delay: 280
+                        ToolTip.timeout: 12000
                     }
                 }
             }
@@ -277,7 +289,7 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            text: "点知识图谱看全图。图上单击照亮航路，双击进入专页。"
+            text: "点知识图谱看全图。点知识点进入这一课的详细介绍。"
             color: "#9BB5B0"
             font.pixelSize: 13
             wrapMode: Text.WordWrap

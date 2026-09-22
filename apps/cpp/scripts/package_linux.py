@@ -74,7 +74,7 @@ def find_license(project_root: Path) -> Path:
 def install_tree(build_dir: Path, destination: Path) -> None:
     run(["meson", "install", "-C", str(build_dir), "--destdir", str(destination)])
     required_paths = (
-        destination / "usr/bin/Athena",
+        destination / "usr/bin/athena-cpp",
         destination / "usr/share/applications/cn.athena.desktop",
         destination / "usr/share/icons/hicolor/256x256/apps/cn.athena.icon.png",
     )
@@ -154,7 +154,7 @@ def build_appimage(
         "--appdir",
         str(app_dir),
         "--executable",
-        str(app_dir / "usr/bin/Athena"),
+        str(app_dir / "usr/bin/athena-cpp"),
         "--desktop-file",
         str(root_desktop_file),
         "--icon-file",

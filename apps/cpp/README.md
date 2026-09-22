@@ -86,7 +86,7 @@ meson setup build-windows-release --buildtype=release -Dstrip=true
 meson compile -C build-windows-release
 python scripts/package_windows.py \
   --project-root . \
-  --binary build-windows-release/Athena.exe \
+  --binary build-windows-release/athena-cpp.exe \
   --output-dir dist
 ```
 

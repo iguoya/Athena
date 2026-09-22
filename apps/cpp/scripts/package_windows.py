@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Build a relocatable Windows zip and optional MSI from a Meson Athena.exe.
+"""Build a relocatable Windows zip and optional MSI from a Meson athena-cpp.exe.
 
 GTK 在 Windows 上按「glib DLL 所在目录的上一级」当 prefix。所以包必须维持
-MSYS2 的 bin / lib / share 布局：Athena.exe 和运行库在 bin/，主题、schemas、
+MSYS2 的 bin / lib / share 布局：athena-cpp.exe 和运行库在 bin/，主题、schemas、
 GdkPixbuf 加载器在对应的 lib/ 与 share/ 下。换机不需要再装 MSYS2。
 """
 
@@ -375,7 +375,7 @@ def write_launcher(staging: Path, version: str) -> None:
                 '  set "GDK_PIXBUF_MODULE_FILE=%PIXBUF_VER%\\loaders.cache"',
                 ")",
                 'powershell -NoProfile -ExecutionPolicy Bypass -File "%ROOT%\\expand-pixbuf-cache.ps1"',
-                'start "" /D "%ROOT%\\bin" "%ROOT%\\bin\\Athena.exe" %*',
+                'start "" /D "%ROOT%\\bin" "%ROOT%\\bin\\athena-cpp.exe" %*',
                 "",
             )
         ),
@@ -386,7 +386,7 @@ def write_launcher(staging: Path, version: str) -> None:
             (
                 f"Athena {version}（Windows x64）",
                 "",
-                "解压后运行 Athena.cmd，或直接打开 bin\\Athena.exe。",
+                "解压后运行 Athena.cmd，或直接打开 bin\\athena-cpp.exe。",
                 "本包自带 GTK4 运行时，不需要再装 MSYS2。",
                 "当前没有 Authenticode 签名，SmartScreen 可能提示「未知发布者」。",
                 "",
@@ -408,7 +408,7 @@ def populate_staging(
     bin_dir = staging / "bin"
     bin_dir.mkdir(parents=True)
 
-    executable = bin_dir / "Athena.exe"
+    executable = bin_dir / "athena-cpp.exe"
     shutil.copy2(binary, executable)
 
     helpers: list[Path] = []
@@ -541,7 +541,7 @@ def build_msi(staging: Path, output_path: Path, version: str) -> Path:
 
 def verify_staging(staging: Path) -> None:
     required = (
-        staging / "bin" / "Athena.exe",
+        staging / "bin" / "athena-cpp.exe",
         staging / "Athena.cmd",
         staging / "share" / "glib-2.0" / "schemas" / "gschemas.compiled",
         staging / "lib" / "gdk-pixbuf-2.0",

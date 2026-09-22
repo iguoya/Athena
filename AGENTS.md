@@ -48,6 +48,25 @@ archive/       历史归档，不参与构建
 **C++ 教程没有特权**（ADR 0045）：它和别的学科一样住在 `apps/` 下，仓库根不再有它的
 源码、构建文件、脚本和文档。任何"以主程序为中心"的假设都是过时的。
 
+**名字**。仓库叫 Athena。打开应用的终端命令是 `launcher open <id>`（二进制在
+`launcher/target/`，名字是 `launcher`；旧文档里的 `athena-dev` 是同一个编排器）。
+进程名用 `athena-<id>`，连字符。目录、界面标题、知识点前缀不必是同一个词；
+已经写进进度库的前缀不改。
+
+| 目录 / id | 界面 | 进程 | 知识点前缀 |
+|---|---|---|---|
+| `cpp` | C++ 教程 | `athena-cpp` | `cpp.` |
+| `c` | C 语言编程 | `athena-c` | `c.` |
+| `dsa` | 数据结构与算法 | `athena-dsa` | `dsa.` |
+| `english` | 英语学习 | `athena-english` | `en.` |
+| `mathematics` | 数学学习 | `athena-math` | `math.` |
+| `driver` | 驾考学习 | `athena-driver` | `drive.` |
+| `atlas` | 司南 | `athena-atlas` | （无进度库） |
+
+`driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
+`apps/cpp` 的用户数据目录仍叫 `Athena`，发行包文件名仍带 `Athena`；进程和 `app.json` 的
+`binary` 是 `athena-cpp`。
+
 **`apps/` 下不是清一色的"学习应用"，改动或新增一个目录前先按判据对号入座，
 不要去查有没有把它列进某张清单——清单会过期，判据不会：**
 

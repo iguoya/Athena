@@ -1,26 +1,19 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Shapes
 
-// 专页是仪器盘：邻域图画关系，三块表回答指南针，点表才展开原文。
+// 知识点专页：原 C++ 首页的内容 / 用途 / 难点 / 需要放在最前面，
+// 先修理由全文一起摊开；流程图和必要性在后面，不再把原文挤进剩余高度。
 Item {
     id: root
     required property var node
     signal closed()
 
-    property int face: 0
-
+    readonly property bool hasNode: Boolean(root.node && root.node.id)
     readonly property color accent: atlas.trackColor(root.node.track || "")
     readonly property var inbound: root.collect("to")
     readonly property var outbound: root.collect("from")
-    readonly property var faces: [
-        { title: "必要", tone: "#4AD4B2", body: root.node.priority_reason || "", hint: "为什么必须学" },
-        { title: "能力", tone: "#7EB6E8", body: root.node.engineering_role || "", hint: "学完能做什么" },
-        { title: "产出", tone: "#E0B36A", body: root.node.practice || "", hint: "能交出什么" }
-    ]
-    readonly property var currentFace: faces[Math.max(0, Math.min(2, face))]
-
+    readonly property var crossLinks: root.hasNode ? atlas.crossEdgesFor(root.node.id) : []
     function collect(side) {
         const here = root.node.id || ""
         const list = []
@@ -31,62 +24,45 @@ Item {
                 list.push({
                     id: edge.from,
                     title: atlas.nodeTitle(edge.from),
-                    strong: edge.relation === "requires"
+                    strong: edge.relation === "requires",
+                    rationale: edge.rationale || ""
                 })
             if (side === "from" && edge.from === here)
                 list.push({
                     id: edge.to,
                     title: atlas.nodeTitle(edge.to),
-                    strong: edge.relation === "requires"
+                    strong: edge.relation === "requires",
+                    rationale: edge.rationale || ""
                 })
         }
         return list
     }
 
-    function verifyMark() {
-        const v = root.node.verify || ""
-        if (v === "code") return "<>"
-        if (v === "board") return "▣"
-        if (v === "bench") return "∿"
-        return "·"
-    }
-
-    function validationMark() {
-        const v = root.node.validation || ""
-        if (v === "measurement") return "测"
-        if (v === "benchmark") return "比"
-        if (v === "review") return "核"
-        return "验"
+    function mapIsLocked(mapId) {
+        const maps = atlas.maps
+        for (let i = 0; i < maps.length; ++i) {
+            if (maps[i].id === mapId)
+                return maps[i].view_kind !== "academic"
+        }
+        return true
     }
 
     Rectangle {
         anchors.fill: parent
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: "#F20B1C22" }
-            GradientStop { position: 1.0; color: "#F5132B35" }
-        }
+        color: "#0B1C22"
     }
 
-    Rectangle {
-        width: 420
-        height: 240
-        radius: 180
-        x: -100
-        y: -80
-        color: root.accent
-        opacity: 0.22
-    }
+    TapHandler {}
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 28
-        spacing: 16
+        spacing: 14
+        visible: root.hasNode
 
         RowLayout {
             Layout.fillWidth: true
             spacing: 12
-            Button { text: "返回图谱"; onClicked: root.closed() }
             TrackGlyph {
                 track: root.node.track || ""
                 ink: root.accent
@@ -99,189 +75,141 @@ Item {
                 color: "#F2FFFB"
                 font.pixelSize: 28
                 font.weight: Font.DemiBold
-                elide: Text.ElideRight
+                wrapMode: Text.WordWrap
+            }
+            Rectangle {
+                visible: Boolean(root.node.stage)
+                width: stageTag.implicitWidth + 16
+                height: 28
+                radius: 14
+                color: "#2A4A52"
+                MapText {
+                    id: stageTag
+                    anchors.centerIn: parent
+                    text: atlas.stageBadge(root.node.stage || "")
+                    color: atlas.stageColor(root.node.stage || "")
+                    font.pixelSize: 13
+                    font.weight: Font.DemiBold
+                }
             }
             PriorityMeter { priority: root.node.priority || ""; lamp: 12 }
-            Rectangle {
-                visible: Boolean(root.node.verify)
-                width: verifyTag.implicitWidth + 14
-                height: 26
-                radius: 13
-                color: "#35545C"
-                MapText {
-                    id: verifyTag
-                    anchors.centerIn: parent
-                    text: root.verifyMark() + "  " + atlas.verifyLabel(root.node.verify || "")
-                    color: "#FFFFFF"
-                    font.pixelSize: 12
-                }
+            MapText {
+                text: "Esc"
+                color: escHover.hovered ? "#E8F7F2" : "#8FB9AE"
+                font.pixelSize: 13
+                HoverHandler { id: escHover }
+                TapHandler { onTapped: root.closed() }
             }
-            MapText { text: "Esc"; color: "#8FB9AE"; font.pixelSize: 13 }
         }
 
-        RowLayout {
+        MapText {
+            Layout.fillWidth: true
+            text: atlas.priorityLabel(root.node.priority || "")
+                + " · " + atlas.volatilityLabel(root.node.volatility || "")
+                + " · " + atlas.validationLabel(root.node.validation || "")
+            color: atlas.priorityColor(root.node.priority || "")
+            font.pixelSize: 14
+            wrapMode: Text.WordWrap
+        }
+
+        Flickable {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 18
+            clip: true
+            contentWidth: width
+            contentHeight: pageColumn.height
+            ScrollBar.vertical: ScrollBar { }
 
-            NeighborGraph {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredWidth: 720
-                inbound: root.inbound
-                outbound: root.outbound
-                centerTitle: root.node.title || ""
-                accent: root.accent
-                onNodeOpened: function(nodeId) { atlas.openNode(nodeId) }
-            }
+            Column {
+                id: pageColumn
+                width: parent.width
+                spacing: 18
 
-            ColumnLayout {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.preferredWidth: 400
-                Layout.maximumWidth: 440
-                spacing: 12
+                CourseIntro {
+                    width: parent.width
+                    node: root.node
+                    extras: true
+                    headingSize: 16
+                    bodySize: 17
+                }
 
-                Row {
-                    Layout.fillWidth: true
-                    spacing: 10
+                Column {
+                    visible: root.inbound.length > 0
+                    width: parent.width
+                    spacing: 8
+                    MapText {
+                        text: "先修与来路"
+                        color: "#9AD7C8"
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                    }
                     Repeater {
-                        model: root.faces
-                        delegate: Rectangle {
+                        model: root.inbound
+                        delegate: Column {
                             required property var modelData
-                            required property int index
-                            width: 118
-                            height: 96
-                            radius: 18
-                            color: root.face === index ? "#442E8F7A" : "#2215262C"
-                            border.color: modelData.tone
-                            border.width: root.face === index ? 2 : 1
-                            scale: faceHover.hovered ? 1.03 : 1
-                            Behavior on scale { NumberAnimation { duration: 120 } }
-                            Column {
-                                anchors.centerIn: parent
-                                spacing: 8
-                                Rectangle {
-                                    width: 42
-                                    height: 42
-                                    radius: 21
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    color: modelData.tone
-                                    MapText {
-                                        anchors.centerIn: parent
-                                        text: index === 0 ? "衡" : (index === 1 ? "能" : "件")
-                                        color: "#102026"
-                                        font.pixelSize: 16
-                                        font.weight: Font.DemiBold
-                                    }
-                                }
-                                MapText {
-                                    text: modelData.title
-                                    color: modelData.tone
-                                    font.pixelSize: 14
-                                    font.weight: Font.DemiBold
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                            }
-                            HoverHandler { id: faceHover }
-                            TapHandler { onTapped: root.face = index }
-                        }
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 72
-                    radius: 16
-                    color: "#2215262C"
-                    border.color: "#3D6F70"
-                    Row {
-                        anchors.fill: parent
-                        anchors.margins: 14
-                        spacing: 18
-                        Column {
-                            spacing: 6
-                            MapText { text: "先修"; color: "#8FB9AE"; font.pixelSize: 11 }
+                            width: pageColumn.width
+                            spacing: 4
                             MapText {
-                                text: String(root.inbound.length)
-                                color: "#E8F7F2"
-                                font.pixelSize: 26
-                                font.weight: Font.DemiBold
-                            }
-                        }
-                        Rectangle { width: 1; height: parent.height; color: "#3D6F70" }
-                        Column {
-                            spacing: 6
-                            MapText { text: "下游"; color: "#8FB9AE"; font.pixelSize: 11 }
-                            MapText {
-                                text: String(root.outbound.length)
-                                color: "#E8F7F2"
-                                font.pixelSize: 26
-                                font.weight: Font.DemiBold
-                            }
-                        }
-                        Rectangle { width: 1; height: parent.height; color: "#3D6F70" }
-                        Column {
-                            spacing: 6
-                            MapText { text: "验证"; color: "#8FB9AE"; font.pixelSize: 11 }
-                            MapText {
-                                text: root.validationMark()
-                                color: "#E0B36A"
-                                font.pixelSize: 26
-                                font.weight: Font.DemiBold
-                            }
-                        }
-                        Item { width: 8; height: 1 }
-                        Column {
-                            visible: Boolean(root.node.pitfall)
-                            spacing: 6
-                            MapText { text: "暗礁"; color: "#E0A090"; font.pixelSize: 11 }
-                            Shape {
-                                width: 28
-                                height: 24
-                                ShapePath {
-                                    fillColor: "#E08A4A"
-                                    strokeWidth: 0
-                                    PathMove { x: 14; y: 2 }
-                                    PathLine { x: 26; y: 22 }
-                                    PathLine { x: 2; y: 22 }
-                                    PathLine { x: 14; y: 2 }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    radius: 18
-                    color: "#3315262C"
-                    border.color: root.currentFace.tone
-                    Column {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 8
-                        MapText {
-                            text: root.currentFace.hint
-                            color: root.currentFace.tone
-                            font.pixelSize: 13
-                            font.weight: Font.DemiBold
-                        }
-                        Flickable {
-                            width: parent.width
-                            height: parent.height - 28
-                            clip: true
-                            contentWidth: width
-                            contentHeight: faceBody.height
-                            MapText {
-                                id: faceBody
                                 width: parent.width
-                                text: root.currentFace.body
-                                color: "#E7F4F0"
+                                text: (modelData.strong ? "门槛：" : "来路：")
+                                      + (modelData.title || "")
+                                      + (modelData.strong ? "" : " · 知道渊源会更透彻，不是入学条件")
+                                color: linkIn.hovered ? "#C6F4E8" : "#7EF0D4"
+                                font.pixelSize: 16
+                                font.underline: linkIn.hovered
+                                wrapMode: Text.WordWrap
+                                HoverHandler { id: linkIn }
+                                TapHandler { onTapped: atlas.openNode(modelData.id) }
+                            }
+                            MapText {
+                                visible: Boolean(modelData.rationale)
+                                width: parent.width
+                                text: modelData.rationale || ""
+                                color: "#D5EBE6"
                                 font.pixelSize: 16
                                 wrapMode: Text.WordWrap
-                                lineHeight: 1.32
+                                lineHeight: 1.34
+                                lineHeightMode: Text.ProportionalHeight
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    visible: root.outbound.length > 0
+                    width: parent.width
+                    spacing: 8
+                    MapText {
+                        text: "它为谁铺路"
+                        color: "#9AD7C8"
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                    }
+                    Repeater {
+                        model: root.outbound
+                        delegate: Column {
+                            required property var modelData
+                            width: pageColumn.width
+                            spacing: 4
+                            MapText {
+                                width: parent.width
+                                text: (modelData.strong ? "门槛：" : "来路：")
+                                      + (modelData.title || "")
+                                color: linkOut.hovered ? "#C6F4E8" : "#7EF0D4"
+                                font.pixelSize: 16
+                                font.underline: linkOut.hovered
+                                wrapMode: Text.WordWrap
+                                HoverHandler { id: linkOut }
+                                TapHandler { onTapped: atlas.openNode(modelData.id) }
+                            }
+                            MapText {
+                                visible: Boolean(modelData.rationale)
+                                width: parent.width
+                                text: modelData.rationale || ""
+                                color: "#D5EBE6"
+                                font.pixelSize: 16
+                                wrapMode: Text.WordWrap
+                                lineHeight: 1.34
                                 lineHeightMode: Text.ProportionalHeight
                             }
                         }
@@ -289,16 +217,175 @@ Item {
                 }
 
                 Rectangle {
+                    visible: Boolean(root.node.priority_reason || root.node.stage_reason)
+                    width: parent.width
+                    height: necessityColumn.implicitHeight + 24
+                    radius: 18
+                    color: "#3315262C"
+                    border.color: "#C45C2A"
+                    Column {
+                        id: necessityColumn
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.margins: 14
+                        spacing: 8
+                        MapText {
+                            text: "必要性"
+                            color: "#FFD2B0"
+                            font.pixelSize: 15
+                            font.weight: Font.DemiBold
+                        }
+                        MapText {
+                            visible: Boolean(root.node.priority_reason)
+                            width: parent.width
+                            text: root.node.priority_reason || ""
+                            color: "#F2E6DC"
+                            font.pixelSize: 16
+                            wrapMode: Text.WordWrap
+                            lineHeight: 1.32
+                            lineHeightMode: Text.ProportionalHeight
+                        }
+                        MapText {
+                            visible: Boolean(root.node.industry_reason)
+                            width: parent.width
+                            text: "军工里 · " + (root.node.industry_reason || "")
+                            color: "#D7C4B4"
+                            font.pixelSize: 15
+                            wrapMode: Text.WordWrap
+                            lineHeight: 1.28
+                            lineHeightMode: Text.ProportionalHeight
+                        }
+                        MapText {
+                            visible: Boolean(root.node.stage_reason)
+                            width: parent.width
+                            text: (atlas.stageBadge(root.node.stage || "") || "这一阶段")
+                                  + " · " + (root.node.stage_reason || "")
+                            color: "#A9C5C0"
+                            font.pixelSize: 14
+                            wrapMode: Text.WordWrap
+                            lineHeight: 1.28
+                            lineHeightMode: Text.ProportionalHeight
+                        }
+                    }
+                }
+
+                Rectangle {
+                    visible: Boolean(root.node.chapters && root.node.chapters.length)
+                    width: parent.width
+                    height: chapterRoute.implicitHeight + 24
+                    radius: 18
+                    color: "#2215262C"
+                    border.color: "#3D6F70"
+                    ChapterRoute {
+                        id: chapterRoute
+                        anchors.fill: parent
+                        anchors.margins: 12
+                        chapters: root.node.chapters || []
+                        accent: root.accent
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 168
+                    radius: 18
+                    color: "#2215262C"
+                    border.color: "#3D6F70"
+                    NeighborGraph {
+                        anchors.fill: parent
+                        inbound: root.inbound
+                        outbound: root.outbound
+                        centerTitle: root.node.title || ""
+                        accent: root.accent
+                        onNodeOpened: function(nodeId) { atlas.openNode(nodeId) }
+                    }
+                }
+
+                Column {
                     visible: Boolean(root.node.app)
-                    Layout.fillWidth: true
-                    height: 40
-                    radius: 12
-                    color: "#332E8F7A"
+                    width: parent.width
+                    spacing: 6
                     MapText {
-                        anchors.centerIn: parent
-                        text: "细节由下游应用承接  ·  " + root.node.app
+                        text: "下游应用"
+                        color: "#9AD7C8"
+                        font.pixelSize: 15
+                        font.weight: Font.DemiBold
+                    }
+                    MapText {
+                        width: parent.width
+                        text: "这个领域由「" + (root.node.app || "") + "」应用承载，学习与练习在那里进行。"
                         color: "#A5F0DE"
-                        font.pixelSize: 13
+                        font.pixelSize: 16
+                        wrapMode: Text.WordWrap
+                        lineHeight: 1.32
+                    }
+                }
+
+                Column {
+                    visible: root.crossLinks.length > 0
+                    width: parent.width
+                    spacing: 8
+                    MapText {
+                        text: "跨图关联"
+                        color: "#9AD7C8"
+                        font.pixelSize: 15
+                        font.weight: Font.DemiBold
+                    }
+                    Repeater {
+                        model: root.crossLinks
+                        delegate: Column {
+                            required property var modelData
+                            width: pageColumn.width
+                            spacing: 4
+                            MapText {
+                                width: parent.width
+                                text: (modelData.incoming ? "前置：" : "它支撑：")
+                                    + modelData.peer_title
+                                    + "（" + modelData.map_title + "）"
+                                    + (modelData.strong ? "" : " · 来路，非门槛")
+                                color: crossHover.hovered ? "#C6F4E8" : "#7EF0D4"
+                                font.pixelSize: 16
+                                font.underline: crossHover.hovered
+                                wrapMode: Text.WordWrap
+                                HoverHandler { id: crossHover }
+                                TapHandler {
+                                    enabled: !root.mapIsLocked(modelData.map_id || "")
+                                    onTapped: atlas.openNode(modelData.peer_id)
+                                }
+                            }
+                            MapText {
+                                width: parent.width
+                                text: modelData.rationale || ""
+                                color: "#B7CBC6"
+                                font.pixelSize: 15
+                                wrapMode: Text.WordWrap
+                                lineHeight: 1.28
+                            }
+                        }
+                    }
+                }
+
+                Column {
+                    visible: Boolean(root.node.source_refs && root.node.source_refs.length)
+                    width: parent.width
+                    spacing: 6
+                    MapText {
+                        text: "来源"
+                        color: "#9AD7C8"
+                        font.pixelSize: 15
+                        font.weight: Font.DemiBold
+                    }
+                    Repeater {
+                        model: root.node.source_refs || []
+                        delegate: MapText {
+                            required property var modelData
+                            width: pageColumn.width
+                            text: "• " + modelData.source_id + " · " + modelData.locator
+                            color: "#A9C5C0"
+                            font.pixelSize: 15
+                            wrapMode: Text.WordWrap
+                        }
                     }
                 }
             }

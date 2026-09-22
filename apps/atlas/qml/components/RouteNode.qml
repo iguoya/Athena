@@ -66,11 +66,12 @@ Item {
 
         Column {
             anchors.fill: parent
-            anchors.leftMargin: 18
+            anchors.leftMargin: 16
             anchors.rightMargin: 14
-            anchors.topMargin: 14
-            anchors.bottomMargin: 12
-            spacing: 10
+            anchors.topMargin: 12
+            anchors.bottomMargin: 10
+            spacing: 6
+            clip: true
 
             Row {
                 spacing: 8
@@ -92,50 +93,26 @@ Item {
                 width: parent.width
                 text: root.node.title
                 color: "#132B32"
-                font.pixelSize: 18
+                font.pixelSize: 17
                 font.weight: Font.DemiBold
                 wrapMode: Text.WordWrap
-                lineHeight: 1.25
+                lineHeight: 1.22
                 lineHeightMode: Text.ProportionalHeight
                 maximumLineCount: 2
                 elide: Text.ElideRight
             }
 
-            Item { width: 1; height: 4 }
-
-            Row {
-                spacing: 14
-                Repeater {
-                    model: [
-                        { n: root.inbound, mark: "◀", tone: "#2E6F78" },
-                        { n: root.outbound, mark: "▶", tone: "#4969A8" }
-                    ]
-                    delegate: Column {
-                        required property var modelData
-                        spacing: 2
-                        MapText {
-                            text: modelData.mark + " " + modelData.n
-                            color: modelData.tone
-                            font.pixelSize: 16
-                            font.weight: Font.DemiBold
-                        }
-                        Rectangle {
-                            width: Math.max(8, modelData.n * 10)
-                            height: 4
-                            radius: 2
-                            color: modelData.tone
-                            opacity: 0.7
-                        }
-                    }
-                }
-            }
-
-            MapText {
-                visible: root.selected
-                text: "双击进入 →"
-                color: "#C45C2A"
-                font.pixelSize: 12
-                font.weight: Font.DemiBold
+            CourseIntro {
+                width: parent.width
+                node: root.node
+                light: true
+                extras: false
+                headingSize: 12
+                bodySize: 13
+                definitionLines: 4
+                roleLines: 6
+                pitfallLines: 2
+                needLines: 2
             }
         }
     }
@@ -149,7 +126,9 @@ Item {
         }
     }
     TapHandler {
-        onTapped: root.chosen(root.node.id)
-        onDoubleTapped: root.opened(root.node.id)
+        onTapped: {
+            root.chosen(root.node.id)
+            root.opened(root.node.id)
+        }
     }
 }

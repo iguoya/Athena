@@ -39,6 +39,7 @@ ApplicationWindow {
     function enterNode(nodeId) {
         atlas.openNode(nodeId)
         window.nodePageOpen = true
+        routeMap.flyTo(nodeId)
     }
 
     function returnToMap() {
@@ -97,12 +98,8 @@ ApplicationWindow {
                 canvasWidth: atlas.canvasWidth
                 canvasHeight: atlas.canvasHeight
                 selectedNodeId: atlas.selectedNode.id || ""
-                opacity: window.nodePageOpen ? 0.18 : 1
-                Behavior on opacity { NumberAnimation { duration: 320; easing.type: Easing.OutCubic } }
-                onNodeChosen: function(nodeId) {
-                    atlas.selectNode(nodeId)
-                    routeMap.flyTo(nodeId)
-                }
+                visible: !window.nodePageOpen
+                onNodeChosen: function(nodeId) { window.enterNode(nodeId) }
                 onNodeOpened: function(nodeId) { window.enterNode(nodeId) }
                 onBlankChosen: {
                     if (!window.nodePageOpen)

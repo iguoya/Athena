@@ -438,7 +438,7 @@ def render_templates(project_root: Path, contents_dir: Path, version: str) -> No
 
 def verify_bundle(app_path: Path) -> None:
     forbidden = ("/usr/local/", "/opt/homebrew/")
-    macho_files = [app_path / "Contents" / "MacOS" / "Athena-bin"]
+    macho_files = [app_path / "Contents" / "MacOS" / "athena-cpp"]
     macho_files.extend((app_path / "Contents" / "Frameworks").glob("*"))
     macho_files.extend(
         (app_path / "Contents" / "Resources" / "lib").rglob("*.so")
@@ -459,7 +459,7 @@ def ad_hoc_sign(app_path: Path) -> None:
     nested = list((app_path / "Contents" / "Frameworks").glob("*"))
     nested.extend((app_path / "Contents" / "Resources" / "lib").rglob("*.so"))
     nested.extend((app_path / "Contents" / "Resources" / "lib").rglob("*.dylib"))
-    nested.append(app_path / "Contents" / "MacOS" / "Athena-bin")
+    nested.append(app_path / "Contents" / "MacOS" / "athena-cpp")
     for path in nested:
         run(codesign, "--force", "--sign", "-", path)
     run(codesign, "--force", "--sign", "-", app_path)
@@ -536,7 +536,7 @@ def main() -> int:
     for directory in (macos_dir, frameworks_dir, resources_dir):
         directory.mkdir(parents=True)
 
-    executable = macos_dir / "Athena-bin"
+    executable = macos_dir / "athena-cpp"
     shutil.copy2(binary, executable)
     executable.chmod(0o755)
     render_templates(project_root, contents_dir, version)

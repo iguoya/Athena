@@ -130,12 +130,12 @@ meson compile -C build-windows-release
 meson test -C build-windows-release --print-errorlogs
 ```
 
-再从同一份 `Athena.exe` 生成 zip 与 MSI：
+再从同一份 `athena-cpp.exe` 生成 zip 与 MSI：
 
 ```sh
 python scripts/package_windows.py \
   --project-root . \
-  --binary build-windows-release/Athena.exe \
+  --binary build-windows-release/athena-cpp.exe \
   --output-dir dist
 ```
 

@@ -15,6 +15,7 @@ private slots:
     void keepsCrossMapDependenciesReachable();
     void restoresCppKnowledgeGraphAsTwoChapters();
     void locksCareerMapsUntilKnowledgeSystemIsComplete();
+    void courseChaptersCarryNecessityAndPractice();
 };
 
 void AtlasCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
@@ -172,10 +173,14 @@ void AtlasCatalogTest::restoresCppKnowledgeGraphAsTwoChapters() {
     QVERIFY(foundWeakCppOrigin);
 
     catalog.openMap("electronic-information");
-    QCOMPARE(catalog.nodes().size(), 13);
+    QVERIFY(catalog.nodes().size() >= 13);
     catalog.selectNode("atlas.ei.electronics_basics");
     QCOMPARE(catalog.selectedNode().value("entry").toBool(), true);
     QCOMPARE(catalog.selectedNode().value("verify").toString(), QStringLiteral("bench"));
+    catalog.selectNode("atlas.ei.analog");
+    QCOMPARE(catalog.selectedNode().value("id").toString(), QStringLiteral("atlas.ei.analog"));
+    catalog.selectNode("atlas.ei.digital");
+    QCOMPARE(catalog.selectedNode().value("id").toString(), QStringLiteral("atlas.ei.digital"));
 }
 
 // 职业图仍在内容里（宁增勿删），但当前盘面只开放技术体系（ADR 0012）。
@@ -189,6 +194,49 @@ void AtlasCatalogTest::locksCareerMapsUntilKnowledgeSystemIsComplete() {
     QVERIFY(catalog.mapLocked(QStringLiteral("aerospace-engineering")));
     QVERIFY(catalog.mapLocked(QStringLiteral("target-realtime-software")));
     QVERIFY(catalog.mapLocked(QStringLiteral("large-model-engineering")));
+}
+
+// 每门课的细分知识点按 CS2013 掌握度分级；运用 / 评估必须标实践。
+void AtlasCatalogTest::courseChaptersCarryNecessityAndPractice() {
+    AtlasCatalog catalog(QString::fromUtf8(ATLAS_SOURCE_ROOT));
+    QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
+    catalog.openMap("computer-science");
+    for (const QVariant& nodeValue : catalog.nodes()) {
+        const QVariantMap node = nodeValue.toMap();
+        const QVariantList chapters = node.value("chapters").toList();
+        QVERIFY2(chapters.size() >= 3,
+                 qPrintable(QStringLiteral("课程 %1 没有细分学习流程")
+                                .arg(node.value("id").toString())));
+        QVERIFY2(!node.value("priority_reason").toString().trimmed().isEmpty(),
+                 qPrintable(QStringLiteral("课程 %1 缺必要性介绍")
+                                .arg(node.value("id").toString())));
+        for (const QVariant& chapterValue : chapters) {
+            const QVariantMap chapter = chapterValue.toMap();
+            const QString mastery = chapter.value("mastery").toString();
+            QVERIFY(mastery == QLatin1String("familiarity")
+                    || mastery == QLatin1String("usage")
+                    || mastery == QLatin1String("assessment"));
+            if (mastery != QLatin1String("familiarity")) {
+                QVERIFY2(chapter.value("kind").toString() == QLatin1String("practice")
+                         || chapter.value("hands_on").toBool(),
+                         qPrintable(QStringLiteral("章节 %1 是运用或评估，必须标实践")
+                                        .arg(chapter.value("id").toString())));
+            } else {
+                QCOMPARE(chapter.value("kind").toString(), QStringLiteral("theory"));
+            }
+        }
+    }
+    catalog.openMap("electronic-information");
+    QVERIFY(catalog.nodes().size() >= 13);
+    for (const QVariant& nodeValue : catalog.nodes()) {
+        const QVariantMap node = nodeValue.toMap();
+        QVERIFY2(node.value("chapters").toList().size() >= 3,
+                 qPrintable(QStringLiteral("课程 %1 没有细分学习流程")
+                                .arg(node.value("id").toString())));
+        QVERIFY2(!node.value("priority_reason").toString().trimmed().isEmpty(),
+                 qPrintable(QStringLiteral("课程 %1 缺必要性介绍")
+                                .arg(node.value("id").toString())));
+    }
 }
 
 QTEST_MAIN(AtlasCatalogTest)

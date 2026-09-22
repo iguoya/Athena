@@ -56,6 +56,14 @@ public:
     Q_INVOKABLE QString priorityLabel(const QString& priorityTier) const;
     Q_INVOKABLE QString priorityBadge(const QString& priority) const;
     Q_INVOKABLE QString priorityColor(const QString& priorityTier) const;
+    Q_INVOKABLE QString stageLabel(const QString& stage) const;
+    Q_INVOKABLE QString stageBadge(const QString& stage) const;
+    Q_INVOKABLE QString stageColor(const QString& stage) const;
+    Q_INVOKABLE int stageRank(const QString& stage) const;
+    Q_INVOKABLE QString previousStageBadge(const QString& stage) const;
+    Q_INVOKABLE QString chapterMasteryLabel(const QString& mastery) const;
+    Q_INVOKABLE QString chapterMasteryHint(const QString& mastery) const;
+    Q_INVOKABLE QString chapterMasteryColor(const QString& mastery) const;
     Q_INVOKABLE QString volatilityLabel(const QString& volatility) const;
     Q_INVOKABLE QString validationLabel(const QString& validation) const;
     Q_INVOKABLE QString verifyLabel(const QString& verify) const;

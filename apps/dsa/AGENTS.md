@@ -1,12 +1,11 @@
 # Athena DSA — 项目协作规则
 
-本文档是 **`apps/dsa` 独立应用** 的项目级指令。本应用与 Athena 主程序
-（GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读主程序配置、
-不链接主程序代码、不依赖主程序进程即可完成开发、构建、学习与实验全流程。
+本文档是 **`apps/dsa` 独立应用** 的项目级指令。本应用与 C++ 教程
+（`apps/cpp`，GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读它的配置、
+不链接它的代码、不依赖它的进程即可完成开发、构建、学习与实验全流程。
 
-主仓库根目录的 `AGENTS.md` 只描述主程序与「异构应用」边界；**改本应用时以
-本文为准**。可选地，主程序首页图谱可通过 `app.json` 把本应用当独立进程拉起
-（ADR 0032），那不是运行本应用的前提。
+仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
+`app.json` 把本应用当独立进程拉起（ADR 0032），那不是运行本应用的前提。
 
 ## 定位
 
@@ -26,13 +25,13 @@
 - **内容**：`content/curriculum.json` + `content/cases/**`（本目录唯一课表）
 - **进度**：SQLite；**始终写入本应用自己的库**（`progress/learning.db`，
   **随仓库走**，换机器 clone 下来进度还在，主仓库 ADR 0053；发行副本退回
-  用户数据目录 `AthenaDSA/`），自建表、自迁移，不共用主程序的学习库，也不依赖
-  主程序是否启动过（ADR 0037）。`--store` 仅为兼容旧版主程序而接受并忽略。
+  用户数据目录 `AthenaDSA/`），自建表、自迁移，不共用 C++ 教程的学习库，也不依赖
+  它是否启动过（ADR 0037）。`--store` 仅为兼容旧启动参数而接受并忽略。
   知识点 ID 前缀一律 `dsa.`。
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行
   （不是壳内 FFI）。
 
-不引入主程序的 Meson、gtkmm、Blueprint、`athena.json`。
+不引入 `apps/cpp` 的 Meson、gtkmm、Blueprint、`athena.json`。
 
 ## 目录与所有权
 
@@ -47,7 +46,7 @@
 
 ## 内容与教学分层
 
-精神对齐「导读 → 讲解 → 实验」，载体与主程序无关。课表唯一源是
+精神对齐「导读 → 讲解 → 实验」，载体与 C++ 教程无关。课表唯一源是
 `content/curriculum.json`。
 
 - **导读**合一（ADR 0001）：不再分「本章导览 / 教学大纲」两栏；地图与方向在同一份。
@@ -82,7 +81,7 @@
 - **实验逻辑在 C++**：前端不重写一份算法真相；需要步进可视化时由 C++ 打印
   约定事件（如 NDJSON），前端只消费。
 - **壳要薄**：Rust 侧负责路径、进程、进度；业务文案与课树不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
+- **与 C++ 教程零编译耦合**：`apps/cpp` 的 Meson / `scripts/check.py` 不构建本应用。
 
 ## C++ 实验约定
 
@@ -110,18 +109,17 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）、
 以及至少一个 case 的编译运行。**不必**为改本应用而跑主仓库 `scripts/check.py`，
-除非同时改了主程序里的 discover / 图谱入口。
+除非同时改了 `apps/cpp` 的 discover。
 
-## 与 Athena 主程序的关系（可选）
+## 与 C++ 教程、司南的关系
 
-- 主程序可通过扫描 `apps/dsa/app.json` 把本应用作为独立进程启动（ADR 0041：
-  spawn `app.json` 的 dev 声明，不启动打包副本），不传任何状态。
-- 图谱节点文案、是否挂入口，属于主程序仓库的改动；**本应用功能不依赖该入口**。
-- 禁止为了「和主程序一致」而把课表迁回 `resources/athena.json`。
+- 启动器扫描 `apps/dsa/app.json`，按 dev 声明启动源码（ADR 0041），不传任何状态。
+- 学科地图在司南。**本应用不依赖那张图上有没有入口。**
+- 课表留在本目录的 `content/`，不迁回 `apps/cpp/resources/athena.json`。
 
 ## 修改流程
 
 1. 改课：先改 `content/curriculum.json` 与 cases，再补前端展示类型（若有新 block）。
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
-3. 改 UI 布局：只动 `src/` + `index.html`，不反向要求主程序 UI 对齐。
-4. 需要主程序入口时，另提主仓库变更（`domain_graph` / 文案），与本应用发版可分开。
+3. 改 UI 布局：只动 `src/` + `index.html`，不要求 C++ 教程的界面跟着改。
+4. 学科入口若要出现在司南，改 `apps/atlas`，与本应用发版可分开。

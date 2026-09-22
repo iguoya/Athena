@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Particles
-import QtQuick.Shapes
 
 // 航海星图式知识图谱：分层是地形，节点是灯塔，实线是航路，虚线是来路。
 // 单击选点看清邻域，双击或点「进入」才进专页。编号航标可点开依赖理由。
@@ -420,15 +419,24 @@ Item {
                 const node = root.hoveredNode
                 if (!node)
                     return 0
-                return node.x + node.w + 16 > board.width - 300 ? node.x - 296 : node.x + node.w + 16
+                const panelW = 420
+                return node.x + node.w + 18 > board.width - panelW - 12
+                    ? Math.max(8, node.x - panelW - 18)
+                    : node.x + node.w + 18
             }
-            y: root.hoveredNode ? root.hoveredNode.y : 0
-            width: 280
+            y: {
+                const node = root.hoveredNode
+                if (!node)
+                    return 0
+                const h = captionColumn.height + 28
+                return Math.max(8, Math.min(node.y, board.height - h - 8))
+            }
+            width: 420
             height: captionColumn.height + 28
             radius: 16
             z: 16
-            color: "#CC10262C"
-            border.color: "#6FE0C8"
+            color: "#F2F7F4"
+            border.color: "#1F6F68"
             border.width: 1
             Column {
                 id: captionColumn
@@ -436,46 +444,22 @@ Item {
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.margins: 14
-                spacing: 10
+                spacing: 8
                 MapText {
                     width: parent.width
                     text: root.hoveredNode ? (root.hoveredNode.title || "") : ""
-                    color: "#E7FFF7"
-                    font.pixelSize: 16
+                    color: "#132B32"
+                    font.pixelSize: 17
                     font.weight: Font.DemiBold
                     wrapMode: Text.WordWrap
-                    maximumLineCount: 2
-                    elide: Text.ElideRight
                 }
-                Row {
-                    spacing: 10
-                    PriorityMeter {
-                        priority: root.hoveredNode ? (root.hoveredNode.priority || "") : ""
-                        lamp: 9
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    TrackGlyph {
-                        track: root.hoveredNode ? (root.hoveredNode.track || "") : ""
-                        ink: root.hoveredNode ? atlas.trackColor(root.hoveredNode.track) : "#4AD4B2"
-                        width: 18
-                        height: 18
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-                Row {
-                    spacing: 16
-                    MapText {
-                        text: "◀ " + (root.hoveredNode ? root.degreeIn(root.hoveredNode.id) : 0)
-                        color: "#7EF0D4"
-                        font.pixelSize: 14
-                        font.weight: Font.DemiBold
-                    }
-                    MapText {
-                        text: (root.hoveredNode ? root.degreeOut(root.hoveredNode.id) : 0) + " ▶"
-                        color: "#7EB6E8"
-                        font.pixelSize: 14
-                        font.weight: Font.DemiBold
-                    }
+                CourseIntro {
+                    width: parent.width
+                    node: root.hoveredNode || ({})
+                    light: true
+                    extras: false
+                    headingSize: 13
+                    bodySize: 14
                 }
             }
         }
@@ -535,112 +519,6 @@ Item {
                     }
                 }
             }
-        }
-    }
-
-    Item {
-        width: 92
-        height: 92
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.rightMargin: 16
-        anchors.topMargin: 14
-        Shape {
-            anchors.fill: parent
-            antialiasing: true
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                strokeColor: "#6FE0C8"
-                strokeWidth: 1.6
-                fillColor: "#C80E242B"
-                PathAngleArc {
-                    centerX: 46
-                    centerY: 46
-                    radiusX: 40
-                    radiusY: 40
-                    startAngle: 0
-                    sweepAngle: 360
-                }
-            }
-            ShapePath {
-                strokeWidth: 0
-                fillColor: "#4AD4B2"
-                PathMove { x: 46; y: 12 }
-                PathLine { x: 54; y: 46 }
-                PathLine { x: 46; y: 80 }
-                PathLine { x: 38; y: 46 }
-                PathLine { x: 46; y: 12 }
-            }
-        }
-        Shape {
-            anchors.fill: parent
-            antialiasing: true
-            RotationAnimator on rotation {
-                from: 0
-                to: 360
-                duration: 48000
-                loops: Animation.Infinite
-                running: root.visible && root.opacity > 0.5
-            }
-            ShapePath {
-                strokeColor: "#336FE0C8"
-                strokeWidth: 1
-                fillColor: "transparent"
-                PathAngleArc {
-                    centerX: 46
-                    centerY: 46
-                    radiusX: 34
-                    radiusY: 34
-                    startAngle: 8
-                    sweepAngle: 44
-                }
-            }
-            ShapePath {
-                strokeColor: "#336FE0C8"
-                strokeWidth: 1
-                fillColor: "transparent"
-                PathAngleArc {
-                    centerX: 46
-                    centerY: 46
-                    radiusX: 34
-                    radiusY: 34
-                    startAngle: 188
-                    sweepAngle: 44
-                }
-            }
-        }
-        MapText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: 8
-            text: "先修"
-            color: "#E7FFF7"
-            font.pixelSize: 11
-            font.weight: Font.DemiBold
-        }
-    }
-
-    Rectangle {
-        anchors.left: parent.left
-        width: 90
-        height: parent.height
-        z: 18
-        enabled: false
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: "#9907151A" }
-            GradientStop { position: 1.0; color: "#0007151A" }
-        }
-    }
-    Rectangle {
-        anchors.right: parent.right
-        width: 90
-        height: parent.height
-        z: 18
-        enabled: false
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: "#0007151A" }
-            GradientStop { position: 1.0; color: "#9907151A" }
         }
     }
 

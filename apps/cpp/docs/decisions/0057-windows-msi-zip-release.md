@@ -10,14 +10,14 @@ macOS DMG 和 Ubuntu DEB / AppImage。Windows 用户只能从源码编，和仓�
 「macOS ≈ Windows > Linux」（ADR 0051）以及「安装包允许 `.msi`」（仓库级
 ADR 0047）对不上。
 
-直接复制 `Athena.exe` 带不走 GTK 运行时：动态库、GSettings schemas、
+直接复制 `athena-cpp.exe` 带不走 GTK 运行时：动态库、GSettings schemas、
 GdkPixbuf 加载器、图标主题、GtkSourceView 语言规格都在 MSYS2 prefix 里。
 换一台没装 UCRT64 的机器即不可用。
 
 ## 决策
 
 - `scripts/package_windows.py` 是 Windows 发行包的唯一入口：从一份
-  `Athena.exe` 生成 `Athena-VERSION-windows-x64.zip` 与
+  `athena-cpp.exe` 生成 `Athena-VERSION-windows-x64.zip` 与
   `Athena-VERSION-windows-x64.msi`。
 - 包维持 MSYS2 的 `bin` / `lib` / `share` 布局。glib 在 Windows 上按
   自身 DLL 所在目录的上一级当 prefix，这套布局换机即可运行，不要求再装
@@ -25,7 +25,7 @@ GdkPixbuf 加载器、图标主题、GtkSourceView 语言规格都在 MSYS2 pref
 - zip 是便携下载；MSI 用 WiX 5 整树收进 `Program Files\Athena`，并放一条
   开始菜单快捷方式。两者内容相同。当前不做 Authenticode 签名。
 - 标签 Release 增加一个 `windows-latest` + MSYS2 UCRT64 作业：构建、测试、
-  打包、检查 zip/MSI 里有 `bin/Athena.exe`，再交给发布作业汇总校验和。
+  打包、检查 zip/MSI 里有 `bin/athena-cpp.exe`，再交给发布作业汇总校验和。
 
 ## 后果
 

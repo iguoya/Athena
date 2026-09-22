@@ -1,12 +1,11 @@
 # Athena Mathematics — 项目协作规则
 
-本文档是 **`apps/mathematics` 独立应用** 的项目级指令。本应用与 Athena 主程序
-（GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读主程序配置、
-不链接主程序代码、不依赖主程序进程即可完成开发、构建与练习全流程。
+本文档是 **`apps/mathematics` 独立应用** 的项目级指令。本应用与 C++ 教程
+（`apps/cpp`，GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读它的配置、
+不链接它的代码、不依赖它的进程即可完成开发、构建与练习全流程。
 
-主仓库根目录的 `AGENTS.md` 只描述主程序与「异构应用」边界；**改本应用时以
-本文为准**。可选地，主程序可通过 `app.json` 把本应用当独立进程拉起
-（主仓库 ADR 0032），那不是运行本应用的前提。
+仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
+`app.json` 把本应用当独立进程拉起（主仓库 ADR 0032），那不是运行本应用的前提。
 
 ## 定位
 
@@ -169,7 +168,7 @@
 的 2026-09-15 修订）。只是**符号判等继续用 SymPy**，因为 Octave 的 symbolic 包绕一圈
 还是 SymPy、MATLAB 的强项不在符号推导；数值实验、工程仿真、场与曲面可视化这些是
 它们的强项，用得上就引。**不引入**：
-主程序的 Meson、gtkmm、Blueprint、`athena.json`。**Pyodide 不再是备选**——
+`apps/cpp` 的 Meson、gtkmm、Blueprint、`athena.json`。**Pyodide 不再是备选**——
 ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的人」，而主仓库
 `AGENTS.md` 已把目标机器的基线定为一台开发机（Python 视为已装），这个条件不会
 成立。不实现、不下载、不打包。
@@ -188,7 +187,7 @@ ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的
 
 ## 内容与教学分层
 
-精神对齐「大纲 → 讲解 → 实验」，载体与主程序无关。课表唯一源是
+精神对齐「大纲 → 讲解 → 实验」，载体与 C++ 教程无关。课表唯一源是
 `content/curriculum.json`。
 
 数学的「实验」分四类，按知识点性质选用，**不强求配齐**：
@@ -220,7 +219,7 @@ ADR 0025 当时留的触发条件是「本应用要发行给不愿装 Python 的
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **引擎只判不算**：任何把完整答案直接呈给用户的交互路径都需要 ADR 才能加。
 - **壳要薄**：Rust 侧负责窗口、路径、进度；业务文案、课树和符号计算都不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
+- **与 C++ 教程零编译耦合**：`apps/cpp` 的 Meson / `scripts/check.py` 不构建本应用。
 
 ## 开发与验证
 
@@ -240,7 +239,7 @@ launcher open mathematics             # 日常开发：改前端秒级热更新�
 环境变量 `ATHENA_MATH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）。
-**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了主程序 discover。
+**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了 `apps/cpp` 的 discover。
 
 只想核对**排版与样式**时，可以 `npm run build` 之后跑 `node scripts/make-preview.mjs`，
 它在 `dist/` 里生成一个 `preview.html`，把 Tauri 命令换成读静态 JSON，用任意
@@ -257,4 +256,4 @@ ADR 0025 早已改成本机 Python 常驻进程，预算的对象随之变成 `i
 1. 改课：先改 `content/`，再补前端展示类型（若有新实验形态）。
 2. 改引擎交互：先确认没有违反「只判不算」，再动 `src/`。
 3. 改运行时：只动 `src-tauri`，保持命令表面稳定。
-4. 需要主程序图谱入口时，另提主仓库 `domain_graph` 变更（本期不挂）。
+4. 学科地图在司南（`apps/atlas`），不在 C++ 教程里再挂入口。

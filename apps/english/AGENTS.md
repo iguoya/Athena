@@ -1,12 +1,11 @@
 # Athena English — 项目协作规则
 
-本文档是 **`apps/english` 独立应用** 的项目级指令。本应用与 Athena 主程序
-（GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读主程序配置、
-不链接主程序代码、不依赖主程序进程即可完成开发、构建与练习全流程。
+本文档是 **`apps/english` 独立应用** 的项目级指令。本应用与 C++ 教程
+（`apps/cpp`，GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读它的配置、
+不链接它的代码、不依赖它的进程即可完成开发、构建与练习全流程。
 
-主仓库根目录的 `AGENTS.md` 只描述主程序与「异构应用」边界；**改本应用时以
-本文为准**。可选地，主程序可通过 `app.json` 把本应用当独立进程拉起
-（主仓库 ADR 0032），那不是运行本应用的前提。
+仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
+`app.json` 把本应用当独立进程拉起（主仓库 ADR 0032），那不是运行本应用的前提。
 
 ## 定位
 
@@ -29,7 +28,7 @@
   `AthenaEnglish/`。自建表、自迁移（主仓库 ADR 0037）。`--store` 仅为兼容而接受并忽略。
   知识点 ID 前缀一律 `en.`。
 
-不引入主程序的 Meson、gtkmm、Blueprint、`athena.json`。
+不引入 `apps/cpp` 的 Meson、gtkmm、Blueprint、`athena.json`。
 
 ## 目录与所有权
 
@@ -45,7 +44,7 @@
 
 ## 内容与教学分层
 
-精神对齐「大纲 → 讲解 → 练习」，载体与主程序无关。课表唯一源是
+精神对齐「大纲 → 讲解 → 练习」，载体与 C++ 教程无关。课表唯一源是
 `content/curriculum.json`。
 
 - 词必须带义项和例句，禁止「单词 = 一个中文」。练习时先给语境、再提取本句义项，
@@ -88,7 +87,7 @@
 - **独立可运行**：`launcher open english`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **壳要薄**：Rust 侧负责路径、进度；业务文案与课树不进 Rust。
-- **与主程序零编译耦合**：主程序 Meson / `scripts/check.py` 不构建本应用。
+- **与 C++ 教程零编译耦合**：`apps/cpp` 的 Meson / `scripts/check.py` 不构建本应用。
 
 ## 开发与验证
 
@@ -103,11 +102,11 @@ launcher open english       # 日常开发（热更新）；启动器和图谱�
 环境变量 `ATHENA_ENGLISH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）。
-**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了主程序 discover。
+**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了 `apps/cpp` 的 discover。
 
 ## 修改流程
 
 1. 改课：先改 `content/`，再补前端展示类型（若有新练习形态）。
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
 3. 改 UI：只动 `src/` + `index.html`。
-4. 需要主程序图谱入口时，另提主仓库 `domain_graph` 变更（本期不挂）。
+4. 学科地图在司南（`apps/atlas`），不在 C++ 教程里再挂入口。

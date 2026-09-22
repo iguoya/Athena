@@ -13,3 +13,4 @@
 - [ADR 0011：两章完整学科知识体系，只连真先修，节点开专页](0011-true-prereqs-and-node-pages.md)
 - [ADR 0012：Atlas 是其他学习应用的路线图与指南针](0012-compass-for-sister-apps.md)
 - [ADR 0013：桌面表达深度是一等目标，内容正确是底线](0013-desktop-expression-and-visual-experiment.md)
+- [ADR 0014：课图按军工研制链筛选，章节分初级 / 中级 / 资深并顺序解锁](0014-military-path-and-stage-bands.md)
