@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
 
@@ -199,10 +199,25 @@ jobs:
         # `undefined reference to __imp__Z9qt_assertPKcS0_i`。把 MSVC 的环境
         # 导进来，CMake 才会选 cl.exe。
         #
-        # 这里引了第三方 action，和上面 Qt 用 pip 包 aqtinstall 的取向不同——
-        # 设置 MSVC 环境没有同等简洁的替代，手写 vcvars 导出要自己维护一套
-        # 变量过滤，反而更脆。
-        uses: ilammy/msvc-dev-cmd@v1
+        # 原先用 ilammy/msvc-dev-cmd，但它至今只有 node20 版本，Node 20 已被
+        # GitHub 弃用。它做的事本身很简单：vswhere 找到 VS，跑 vcvars64.bat，
+        # 把前后有变化的环境变量写进 GITHUB_ENV。这里照原样手写，不再依赖它。
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" `
+            -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vs) { throw "vswhere 没找到带 VC 工具集的 Visual Studio" }
+          $before = @{}
+          Get-ChildItem env: | ForEach-Object { $before[$_.Name] = $_.Value }
+          $lines = cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set"
+          if ($LASTEXITCODE -ne 0) { throw "vcvars64.bat 失败（退出码 $LASTEXITCODE）" }
+          foreach ($line in $lines) {
+            $name, $value = $line -split '=', 2
+            if ($name -and $before[$name] -ne $value) {
+              "$name=$value" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+            }
+          }
 
       - name: Install Qt and Ninja
         # Ninja 是单配置生成器：产物落在 build/ 而不是 build/Debug/，和另外
@@ -238,7 +253,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
@@ -257,7 +272,7 @@ jobs:
             libspeechd-dev
 
       - name: Cache cargo
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry
@@ -328,7 +343,7 @@ jobs:
             libxdo-dev
 
       - name: Cache cargo
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry
