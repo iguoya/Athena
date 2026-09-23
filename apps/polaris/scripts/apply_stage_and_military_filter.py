@@ -344,7 +344,7 @@ NEW_EI_NODES = [
         [],
         [
             ("adapted", "mit-ocw-6003", "卷积、傅里叶与采样"),
-            ("informed", "scipy-signal", "滤波与频谱分析接口"),
+            ("see_also", "scipy-signal", "滤波与频谱分析接口"),
         ],
     ),
     node(
@@ -365,7 +365,7 @@ NEW_EI_NODES = [
         [
             ("adapted", "matlab-onramp", "矩阵运算、绘图与脚本工作流"),
             ("adapted", "simulink-onramp", "连续 / 离散模型与仿真步长"),
-            ("informed", "gd-hil", "半实物岗位对 MATLAB/Simulink 的能力样本"),
+            ("see_also", "gd-hil", "半实物岗位对 MATLAB/Simulink 的能力样本"),
         ],
     ),
     node(
@@ -385,7 +385,7 @@ NEW_EI_NODES = [
         ["polaris.ei.signals_systems"],
         [
             ("adapted", "mit-ocw-6450", "数字调制、噪声与误码"),
-            ("informed", "cmse-ttc-2023", "测控通信系统的跟踪、遥测与遥控职责"),
+            ("see_also", "cmse-ttc-2023", "测控通信系统的跟踪、遥测与遥控职责"),
         ],
     ),
     node(
@@ -405,7 +405,7 @@ NEW_EI_NODES = [
         ["polaris.ei.signals_systems"],
         [
             ("adapted", "mit-ocw-204a", "反馈、稳定性与基本控制器"),
-            ("informed", "matlab-onramp", "用模型观察阶跃与扰动"),
+            ("see_also", "matlab-onramp", "用模型观察阶跃与扰动"),
         ],
     ),
     node(
@@ -425,7 +425,7 @@ NEW_EI_NODES = [
         ["polaris.ei.electronics_basics"],
         [
             ("adapted", "mit-ocw-6013", "传输线、反射与场路边界"),
-            ("informed", "emc-ott", "高速电路的反射、串扰与接地"),
+            ("see_also", "emc-ott", "高速电路的反射、串扰与接地"),
         ],
     ),
 ]
