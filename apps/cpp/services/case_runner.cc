@@ -32,13 +32,28 @@ string clamp_output(string text) {
     return text;
 }
 
+// Windows 的 C 运行库在文本模式下把 \n 写成 \r\n，学员程序和编译器的输出
+// 都会带上。统一折回 \n，界面与测试看到的是同一份文本；单独的 \r（进度条式
+// 回车）不动。
+string normalize_newlines(string text) {
+    size_t write = 0;
+    for (size_t read = 0; read < text.size(); ++read) {
+        if (text[read] == '\r' && read + 1 < text.size() && text[read + 1] == '\n') {
+            continue;
+        }
+        text[write++] = text[read];
+    }
+    text.resize(write);
+    return text;
+}
+
 string bytes_to_string(const Glib::RefPtr<const Glib::Bytes>& bytes) {
     if (!bytes) {
         return {};
     }
     gsize size = 0;
     const auto* data = static_cast<const char*>(bytes->get_data(size));
-    return string(data, size);
+    return normalize_newlines(string(data, size));
 }
 
 // giomm 的包装表要显式初始化，否则创建 SubprocessLauncher 时拿不到 wrap
