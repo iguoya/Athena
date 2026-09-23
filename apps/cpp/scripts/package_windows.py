@@ -529,7 +529,11 @@ def build_msi(staging: Path, output_path: Path, version: str) -> Path:
             "build",
             "-arch",
             "x64",
-            f"-bindpath:staging={windows_path(staging)}",
+            # 具名绑定路径是两个参数 `-bindpath name=path`。写成 `-bindpath:name=...`
+            # 会被当成补丁专用的 -bindpath:target / -bindpath:update 一类开关，
+            # WiX 5 直接报 WIX0118。
+            "-bindpath",
+            f"staging={windows_path(staging)}",
             "-o",
             str(output_path),
             str(wxs_path),
