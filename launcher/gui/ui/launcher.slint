@@ -159,7 +159,7 @@ component Tile inherits Rectangle {
 }
 
 // 实践面板用：跟学习应用那张图谱不同，没有"谁从谁长出来"的演进关系可画
-// （apps/practice/ 下的小项目彼此独立），复用同一个 Tile，去掉连线那一套。
+// （practice/ 下的小项目彼此独立），复用同一个 Tile，去掉连线那一套。
 component PracticeGrid inherits ScrollView {
     in property <[AppEntry]> apps;
     callback open(string);
@@ -183,7 +183,7 @@ component PracticeGrid inherits ScrollView {
 
 export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
-    // 实践面板：跟学习应用区隔开的独立分区（apps/practice/ 下的小项目），
+    // 实践面板：跟学习应用区隔开的独立分区（practice/ 下的小项目），
     // 侧重动手练习，不是知识学习——两者背后是同一套发现和启动逻辑，只是
     // 数据源（发现根目录）和界面分区不同。空的时候整个分区隐藏，不占地方。
     in property <[AppEntry]> practice-apps;
@@ -238,7 +238,7 @@ export component LauncherWindow inherits Window {
             property <length> hub-y: 38px;
 
             // 学科之间的历史演进关系（C++ 从 C 长出来）。画法照搬 C++ 教程首页
-            // 那张学科图谱（apps/cpp/render/domain_graph_view.cc）：两个控制点
+            // 那张学科图谱（subjects/cpp/render/domain_graph_view.cc）：两个控制点
             // 都落在两个节点之间的中线上，出来就是一条规整的 S 形；箭头是实心
             // 三角；颜色淡到退成背景，不喧宾夺主。
             for link in root.links: edge := Rectangle {

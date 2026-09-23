@@ -67,7 +67,7 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
-  # 这一档不按 ADR 0051 降级：apps/cpp 的 Windows 已经被 ADR 0049 排除，
+  # 这一档不按 ADR 0051 降级：subjects/cpp 的 Windows 已经被 ADR 0049 排除，
   # macOS 与 Ubuntu 是它仅有的两个支持平台。再把 Ubuntu 放松，就只剩一个平台
   # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
   cpp-ubuntu:
@@ -257,7 +257,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: apps/${{ matrix.app }}/package-lock.json
+          cache-dependency-path: subjects/${{ matrix.app }}/package-lock.json
 
       - name: Install Tauri system dependencies (Ubuntu)
         # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
@@ -277,8 +277,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            apps/${{ matrix.app }}/src-tauri/target
-          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('apps/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+            subjects/${{ matrix.app }}/src-tauri/target
+          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
 
       - name: Verify
         run: python3 scripts/check.py ${{ matrix.app }}

@@ -130,7 +130,7 @@ fn reachable(url: &str) -> bool {
 
 /// 命令行里出现应用目录，才算这个构建进程属于它。
 ///
-/// 末尾必须带分隔符：`apps/c` 是 `apps/cpp` 的前缀，少了它两个应用会互相误判。
+/// 末尾必须带分隔符：`subjects/c` 是 `subjects/cpp` 的前缀，少了它两个应用会互相误判。
 fn command_line_belongs_to(
     dir: &Path,
     parts: impl IntoIterator<Item = impl AsRef<str>>,
@@ -516,12 +516,12 @@ mod tests {
 
     #[test]
     fn c_directory_does_not_claim_cpp_command() {
-        let apps = PathBuf::from("repo").join("apps");
+        let apps = PathBuf::from("repo").join("subjects");
         let c_dir = apps.join("c");
         let cpp_command = apps.join("cpp").join("src-tauri").display().to_string();
         assert!(
             !command_line_belongs_to(&c_dir, [cpp_command.as_str()]),
-            "apps/c 不能因为字符串前缀吃掉 apps/cpp"
+            "subjects/c 不能因为字符串前缀吃掉 subjects/cpp"
         );
         let own = c_dir.join("node_modules").display().to_string();
         assert!(command_line_belongs_to(&c_dir, [own.as_str()]));

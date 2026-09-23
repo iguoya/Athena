@@ -1,0 +1,221 @@
+using Gtk 4.0;
+
+// PocketCube 独立实践应用的窗口布局。原来是挂在 subjects/cpp 学习页框架里的
+// 一节"应用实践"，随 subjects/cpp ADR 0058 搬出来后不再套 ChapterMeta/
+// content_loader 那套；标题、简介直接写死在这里，不再是动态填充。
+ApplicationWindow window {
+  title: "PocketCube 2 阶魔方";
+  default-width: 1360;
+  default-height: 800;
+
+  Box practice_cube_page {
+    orientation: vertical;
+    spacing: 14;
+    hexpand: true;
+    vexpand: true;
+    margin-top: 16;
+    margin-start: 20;
+    margin-end: 20;
+    margin-bottom: 18;
+
+    Frame chapter_header_frame {
+      hexpand: true;
+
+      styles [
+        "panel-frame"
+      ]
+
+      Box chapter_header {
+        orientation: horizontal;
+        spacing: 14;
+        margin-top: 10;
+        margin-bottom: 10;
+        margin-start: 14;
+        margin-end: 14;
+
+        Box {
+          orientation: vertical;
+          spacing: 3;
+          hexpand: true;
+          valign: center;
+
+          Label chapter_title_label {
+            label: "PocketCube 2 阶魔方";
+            halign: start;
+
+            styles [
+              "title-2"
+            ]
+          }
+
+          Label chapter_description_label {
+            label: "用 C++ 演示和操作 2 阶魔方（顶点块、边块，只有 8 个角块）的状态表示与旋转；完整的打乱和求解算法还没做。";
+            halign: start;
+            wrap: true;
+            xalign: 0;
+
+            styles [
+              "header-description"
+            ]
+          }
+        }
+
+      // “重置魔方”：把魔方重置回初始（已复原）状态。原来紧跟在“运行”
+      // 按钮后面，“运行”按钮固定只执行 U 顺时针转、意义不大，已经被
+      // 左侧“操作区”的九个转法按钮取代（点哪个转哪个），这里只留
+      // “重置魔方”。不叫“复原”是为了跟九宫格每格右下角那个含义完全
+      // 不同的“复原”切换按钮（本地展示开关，不改真实状态）区分开，
+      // 避免同名不同义。
+      Button practice_reset_button {
+        name: "practice_reset_button";
+        label: "重置魔方";
+        valign: center;
+        margin-start: 10;
+        tooltip-text: "把魔方重置回初始（已复原）状态，清空转动路径，并把九宫格里被手动切换过的格子一并弹回默认预览";
+
+        styles [
+          "btn-sm",
+          "btn-outline-secondary"
+        ]
+      }
+    }
+  }
+
+  Separator {
+    orientation: horizontal;
+  }
+
+  // 主体分左右两栏：左边状态空间可视化 + 操作区，右边“当前状态”
+  // 一行 + “操作视角”三个面板，具体绘图控件和按钮在 C++ 侧动态创建，
+  // 见 main.cc 的 wire_window()。
+  Box practice_body {
+    orientation: horizontal;
+    spacing: 14;
+    hexpand: true;
+    vexpand: true;
+
+    Box practice_left_panel {
+      orientation: vertical;
+      spacing: 10;
+      hexpand: true;
+      vexpand: true;
+
+      // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
+      // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
+      // 这个小魔方背后状态空间大得惊人——原来这块地方是源码框（点
+      // “运行”时执行的代码），搬出去了：源码本身跟“当前状态/操作视角”
+      // 数据一样，不是这个应用的教学重点，具体内容见 pocket_cube.hpp，
+      // 想看源码直接开文件更直接。
+      Frame {
+        label: "状态空间";
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        // halign/valign: fill（不是 center）——里面的 DrawingArea 自己
+        // hexpand/vexpand，要靠 host 也 fill 才能真的把 Frame 让出来的
+        // 空间占满，用 center 的话 host 会缩回子控件的自然尺寸，等于
+        // 白设了子控件的 expand。
+        Box practice_state_space_host {
+          name: "practice_state_space_host";
+          orientation: horizontal;
+          hexpand: true;
+          vexpand: true;
+          halign: fill;
+          valign: fill;
+        }
+      }
+
+      // 操作区：九个转法按钮（U/R/F 三个面各顺时针/逆时针/180°），
+      // 点哪个就真的对魔方应用那一步——取代原来固定只会转 U 顺时针的
+      // “运行”按钮。跟右边“操作视角”三个面板显示的是同样的 U/R/F 三个
+      // 操作面，但那边只读、这里才是真正改状态的入口。
+      Frame {
+        label: "操作区";
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        // halign/valign: fill，跟"状态空间"那份 host 同一个道理——用
+        // center 的话 Frame 让出来的高度全是空的，九个按钮缩在中间一小
+        // 条，没有把"操作区"这个名字对应的整块区域用起来。
+        Box practice_operations_host {
+          name: "practice_operations_host";
+          orientation: horizontal;
+          hexpand: true;
+          vexpand: true;
+          halign: fill;
+          valign: fill;
+          margin-top: 10;
+          margin-bottom: 10;
+          margin-start: 10;
+          margin-end: 10;
+        }
+      }
+    }
+
+    Box practice_right_panel {
+      orientation: vertical;
+      spacing: 10;
+      hexpand: true;
+      vexpand: true;
+
+      // 当前状态：3D 视角 + 上/右/前三张展开图 + 状态摘要。3D 直觉但
+      // 一次最多看到 3 个面；三张展开图分别对着 U/R/F 转法把受影响的
+      // 一圈摊到中间行，精确读状态；摘要给路径与是否已复原。不设
+      // vexpand，高度由内容自然撑开。
+      Frame {
+        label: "当前状态";
+        hexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        // 空容器，实际内容（3D 与三张展开图见 pocket_cube/view.h，
+        // 摘要 Label 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，
+        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
+        Box practice_cube_current_host {
+          name: "practice_cube_current_host";
+          orientation: horizontal;
+          spacing: 14;
+          hexpand: true;
+          halign: center;
+          valign: center;
+          margin-top: 8;
+          margin-bottom: 8;
+        }
+      }
+
+      // 操作视角：Frame 与 host 先留着占位，内容暂时不接线（main.cc
+      // 不往 practice_cube_next_grid_host 塞控件）。
+      Frame {
+        label: "操作视角";
+        hexpand: true;
+        vexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        Box practice_cube_next_grid_host {
+          name: "practice_cube_next_grid_host";
+          orientation: vertical;
+          hexpand: true;
+          vexpand: true;
+          margin-top: 8;
+          margin-bottom: 8;
+          margin-start: 8;
+          margin-end: 8;
+        }
+      }
+    }
+  }
+  }
+}

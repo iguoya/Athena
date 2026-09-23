@@ -3,7 +3,7 @@
 # Windows 上 Git 默认 core.autocrlf=true，checkout 时会把文本文件转成 CRLF。
 # 这个仓库经不起那种转换：
 #
-# - `apps/cpp` 的 CSS / Blueprint / JSON 要打进 GResource，字节内容应当三平台一致；
+# - `subjects/cpp` 的 CSS / Blueprint / JSON 要打进 GResource，字节内容应当三平台一致；
 # - 测试里有按字节匹配的断言（2026-09-15 就因此在 Windows CI 上挂了一个：
 #   找 "window {\n    font-size: 20pt;" 找不到，因为实际是 \r\n）；
 # - 内容 JSON 每天都要做 diff，换行符一变整个文件都算改过。
@@ -34,7 +34,7 @@
 #
 # `merge` 保持关着（上一条 `*.db binary` 已经 unset 掉它）：真撞上冲突时按整文件
 # 二选一，不要让 git 去缝合 SQLite 页——缝出来的是一个坏库。
-apps/*/progress/*.db -text diff=sqlite
+subjects/*/progress/*.db -text diff=sqlite
 
 # Windows 专用的批处理必须是 CRLF，否则某些环境下解析会出错
 *.bat text eol=crlf

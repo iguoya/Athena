@@ -7,7 +7,7 @@
 // 这个脚本只读不写，不参与任何应用的构建，因此不构成 ADR 0032 禁止的耦合——
 // 那条禁的是运行时与构建期依赖，开发期的横向检查不在其列。
 //
-// 各应用字段名不同，靠 apps/<app>/content-contract.json 认路。没有那份文件的
+// 各应用字段名不同，靠 subjects/<app>/content-contract.json 认路。没有那份文件的
 // 应用报「未接入」而不是默默跳过：沉默地通过是最坏的结果。
 //
 // 跑法：node scripts/check-app-sources.mjs
@@ -17,7 +17,7 @@ import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const appsDir = join(root, "apps");
+const appsDir = join(root, "subjects");
 
 /**
  * 与原材料的关系（ADR 0043 第 2 节第 3 条）。
@@ -108,7 +108,7 @@ for (const app of readdirSync(appsDir).sort()) {
   c.locatorFields ??= ["locator", "ref", "loc"];
   c.whyFields ??= ["why", "note"];
   c.relationField ??= "relation";
-  // 条目的标识字段。默认认 id / stem，但 apps/cpp 的知识点用 name——认不出来
+  // 条目的标识字段。默认认 id / stem，但 subjects/cpp 的知识点用 name——认不出来
   // 时每条的 key 都会退化成「(无 id)」，全部撞在一起，豁免名单写了也不生效。
   c.idFields ??= ["id", "stem"];
 

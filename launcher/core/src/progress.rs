@@ -96,7 +96,7 @@ fn push(repo: &Path, report: &mut impl FnMut(&str)) -> Result<(), String> {
 
 /// 每个应用自己目录下的 `progress/`，转成相对仓库根的 pathspec。
 ///
-/// 按 `app.dir` 推而不是拼 `apps/<id>`：id 来自 `app.json`，跟目录名不保证
+/// 按 `app.dir` 推而不是拼 `subjects/<id>`：id 来自 `app.json`，跟目录名不保证
 /// 一样（`mathematics` 的知识点前缀就是 `math.`，两者有意不同）。
 fn progress_paths(repo: &Path, apps: &[App]) -> Vec<String> {
     apps.iter()

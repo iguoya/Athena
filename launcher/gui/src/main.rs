@@ -43,13 +43,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let apps: Arc<Vec<App>> = Arc::new(discover(&repo));
     if apps.is_empty() {
-        eprintln!("{} 下没有找到任何 app.json", repo.join("apps").display());
+        eprintln!("{} 下没有找到任何 app.json", repo.join("subjects").display());
         std::process::exit(1);
     }
-    // 实践面板：跟学习应用区隔开的独立分区，数据源是 apps/practice/* 而
-    // 不是 apps/*，复用同一套 discover_in()。这里可以为空——PocketCube
+    // 实践面板：跟学习应用区隔开的独立分区，数据源是 practice/* 而
+    // 不是 subjects/*，复用同一套 discover_in()。这里可以为空——PocketCube
     // 之外还没有别的小项目时，界面按 practice-apps.length 隐藏整个分区。
-    let practice_apps: Arc<Vec<App>> = Arc::new(discover_in(&repo.join("apps/practice")));
+    let practice_apps: Arc<Vec<App>> = Arc::new(discover_in(&repo.join("practice")));
     // open/stop 按 id 找应用，两边的 app 都要能找到；tray 菜单仍然只列
     // 学习应用（apps），不把实践小项目也塞进去，两个界面各自的范围不同。
     let all_apps: Arc<Vec<App>> = Arc::new(
@@ -282,7 +282,7 @@ fn tile_icon(app: &App) -> Option<slint::Image> {
 }
 
 /// 学习应用面板和实践面板共用同一套图块数据构造，只是喂的 `apps` 来源
-/// 不同（`discover(repo)` vs `discover_in(repo/apps/practice)）。
+/// 不同（`discover(repo)` vs `discover_in(repo/practice)）。
 fn build_entries(apps: &[App]) -> Vec<AppEntry> {
     apps.iter()
         .map(|app| AppEntry {

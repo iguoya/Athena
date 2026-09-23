@@ -8,8 +8,8 @@
 //!   launcher logs <id>        打印日志文件路径
 //!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
 //!
-//! `--root <dir>` 换发现根目录（相对仓库根，默认 `apps/`），放在任意位置都行：
-//! `launcher --root apps/practice list`。扫 `apps/practice/*` 这种子目录下的
+//! `--root <dir>` 换发现根目录（相对仓库根，默认 `subjects/`），放在任意位置都行：
+//! `launcher --root practice list`。扫 `practice/*` 这种子目录下的
 //! 独立小项目时用得上，不用另写一套发现逻辑。
 
 use std::process::ExitCode;

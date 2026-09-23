@@ -2,7 +2,7 @@
 
 use std::path::{Path, PathBuf};
 
-/// 找到 Athena 仓库根。标志是 `apps/` 目录。
+/// 找到 Athena 仓库根。标志是 `subjects/` 目录。
 ///
 /// 顺序：显式环境变量 → 可执行文件往上找 → 当前目录往上找。
 pub fn locate_repo() -> Option<PathBuf> {
@@ -37,7 +37,7 @@ fn climb(from: &Path) -> Option<PathBuf> {
 }
 
 fn validate(candidate: &Path) -> Option<PathBuf> {
-    if candidate.join("apps").is_dir() {
+    if candidate.join("subjects").is_dir() {
         std::fs::canonicalize(candidate).ok()
     } else {
         None
@@ -106,7 +106,7 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
             entries.push(PathBuf::from(raw));
         }
     } else if cfg!(target_os = "windows") {
-        // `apps/cpp` 的 GTK4/gtkmm 走 MSYS2 UCRT64（g++、pkg-config、ninja、
+        // `subjects/cpp` 的 GTK4/gtkmm 走 MSYS2 UCRT64（g++、pkg-config、ninja、
         // blueprint-compiler 全在这个前缀下）；这套工具链不在 Windows 默认 PATH
         // 里，从菜单栏托盘或普通终端启动时摸不到，meson 要么报找不到
         // pkg-config，要么误捡系统装的 MSVC cl.exe，把 build/ 配置成不兼容的
@@ -114,8 +114,8 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         // 打包时已经认定 `C:\msys64\ucrt64\bin` 是这套工具链的位置，这里补上同一个
         // 路径，让开发态启动也稳定找到它。
         //
-        // 只给用 Meson 的应用注入（目前是 apps/cpp 和 apps/practice/
-        // 下的 GTK4 小项目）：`apps/c`、`apps/polaris` 是 Qt + MSVC，一旦这个
+        // 只给用 Meson 的应用注入（目前是 subjects/cpp 和 practice/
+        // 下的 GTK4 小项目）：`subjects/c`、`subjects/polaris` 是 Qt + MSVC，一旦这个
         // 目录下的 g++/gcc 对它们也可见，CMake 的 Ninja 生成器会优先在 PATH
         // 里找到 MinGW 编译器而不是走 vswhere 探测 MSVC——实测触发过这个
         // 问题：Qt 官方安装器的 Qt6 是 MSVC ABI 编的，链接期全是
@@ -123,7 +123,7 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         // 需要的那一套（用户反馈：同一个 app 不同工具链要分开，这里是同一
         // 台机器不同 app 的工具链要分开，同一条原则）。
         //
-        // 按 app_id 列白名单撑不住以后 apps/practice/ 下继续加 GTK4 小项目
+        // 按 app_id 列白名单撑不住以后 practice/ 下继续加 GTK4 小项目
         // （每加一个都要回来改这里），改成按 app.json 的 dev.prepare 是否
         // 真的调用 meson 判断——用什么构建系统这件事已经写在清单里了，
         // 不用另外维护一份重复的名单。
@@ -135,7 +135,7 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         if uses_meson {
             entries.push(PathBuf::from(r"C:\msys64\ucrt64\bin"));
         }
-        // `apps/c` 的 Qt Quick / QML 走官方 Qt 安装器的 MSVC kit：CMake 能找到它是
+        // `subjects/c` 的 Qt Quick / QML 走官方 Qt 安装器的 MSVC kit：CMake 能找到它是
         // 因为 app.json 的 CMAKE_PREFIX_PATH 指了路，但可执行文件运行时还要在 PATH
         // 里找到 Qt6Core.dll 等运行库，装好编译不代表能跑。官方安装器把版本号写进
         // 路径（不像 Homebrew 那样有个不随版本变的符号链接），升级 Qt 版本后要跟着

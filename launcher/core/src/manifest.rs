@@ -1,4 +1,4 @@
-//! 应用清单：`apps/<id>/app.json`。
+//! 应用清单：`subjects/<id>/app.json`。
 //!
 //! 每个应用只**声明**自己怎么构建、怎么跑、怎么算就绪；执行统一由编排器负责。
 //! 这样各应用不必各写一份形状相同的 dev 脚本，改一次行为也不用改五遍。
@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use serde::Deserialize;
 
 /// 环境变量的值。除了直接给字符串，还可以让编排器从几个候选里挑第一个存在的
-/// 路径——`apps/c` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
+/// 路径——`subjects/c` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
 #[derive(Debug, Clone, Deserialize)]
 #[serde(untagged)]
 pub enum EnvValue {
@@ -75,7 +75,7 @@ pub struct DevSpec {
     #[serde(default)]
     pub ready: ReadySpec,
     /// 判断进程属于本应用时用的路径前缀（相对应用目录）。默认就是应用目录本身；
-    /// `apps/cpp` 的窗口进程落在 `builddir/` 里，仓库里别的进程不该被算进来。
+    /// `subjects/cpp` 的窗口进程落在 `builddir/` 里，仓库里别的进程不该被算进来。
     #[serde(default)]
     pub r#match: Option<String>,
     /// 窗口进程的可执行文件名。共享 cargo 缓存之后，Tauri 应用的二进制落在
@@ -147,14 +147,14 @@ impl App {
     }
 }
 
-/// 扫描 `<repo>/apps/*/app.json`。顺序按目录名排，界面上的次序才不随文件系统变。
-/// 这里没有任何针对某个应用的分支：C++ 教程也只是 `apps/cpp`（ADR 0045）。
+/// 扫描 `<repo>/subjects/*/app.json`。顺序按目录名排，界面上的次序才不随文件系统变。
+/// 这里没有任何针对某个应用的分支：C++ 教程也只是 `subjects/cpp`（ADR 0045）。
 pub fn discover(repo: &Path) -> Vec<App> {
-    discover_in(&repo.join("apps"))
+    discover_in(&repo.join("subjects"))
 }
 
-/// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死 `apps/`。
-/// `apps/practice/` 下将来会挂多个独立小项目，`practice` 面板复用同一套发现
+/// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死 `subjects/`。
+/// `practice/` 下将来会挂多个独立小项目，`practice` 面板复用同一套发现
 /// 逻辑，只是换一个根目录（不用为它另写一份）。
 pub fn discover_in(apps_root: &Path) -> Vec<App> {
     let mut entries: Vec<PathBuf> = match std::fs::read_dir(apps_root) {

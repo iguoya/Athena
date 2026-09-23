@@ -1,6 +1,6 @@
 import Foundation
 
-// 启动器要知道 Athena 仓库在哪，才能扫到 apps/*/app.json。
+// 启动器要知道 Athena 仓库在哪，才能扫到 subjects/*/app.json。
 // 三条线索按可靠性排序：显式环境变量 → 打包时写进 Info.plist 的路径 →
 // 从可执行文件所在位置向上找。三条都落空时返回 nil，界面会说清楚缺什么。
 enum Repository {
@@ -26,10 +26,10 @@ enum Repository {
         return nil
     }
 
-    // 仓库的标志是 apps/ 目录：启动器只关心这一件事。
+    // 仓库的标志是 subjects/ 目录：启动器只关心这一件事。
     private static func validated(_ url: URL) -> URL? {
         var isDirectory: ObjCBool = false
-        let apps = url.appendingPathComponent("apps").path
+        let apps = url.appendingPathComponent("subjects").path
         guard FileManager.default.fileExists(atPath: apps, isDirectory: &isDirectory),
               isDirectory.boolValue else {
             return nil

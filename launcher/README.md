@@ -18,7 +18,7 @@
 
 ## 应用怎么被启动
 
-没有任何应用自己写启动脚本。每个应用在 `apps/<id>/app.json` 里**声明**：
+没有任何应用自己写启动脚本。每个应用在 `subjects/<id>/app.json` 里**声明**：
 
 ```json
 "dev": {
@@ -35,7 +35,7 @@
 - `ready` 区分"有 dev server"和"进程在就算就绪"。
 - `binary` 是窗口进程的可执行文件名——共享 cargo 缓存之后，Tauri 应用的二进制不在
   应用目录里了，按文件名认最直接。
-- `match`（可选）是判断进程归属的路径前缀，`apps/cpp` 用它指向 `build`。
+- `match`（可选）是判断进程归属的路径前缀，`subjects/cpp` 用它指向 `build`。
 
 窗口标题栏、任务栏和托盘用**同一份**虎头，来自 `gui/assets/tiger.svg`（整只
 老虎缩到 16–32 px 只剩色带，所以 `gui/build.rs` 裁出头部）。标题栏引用构建期
@@ -74,7 +74,7 @@ launcher/target/release/launcher logs dsa    # 日志文件路径
 launcher/target/release/launcher sync        # 提交并推送学习进度
 ```
 
-`sync` 对应 ADR 0053：进度库跟着仓库走（`apps/<id>/progress/learning.db`），所以
+`sync` 对应 ADR 0053：进度库跟着仓库走（`subjects/<id>/progress/learning.db`），所以
 同步就是一次提交加一次推送。它**只碰 `progress` 路径**，不会连带你手上的代码改动；
 待推送的提交里有不是进度的，它会列出来交回你自己决定，不替你 push。顺带把
 `git diff` 的 sqlite textconv 配好，这样进度库的 diff 不是一句 "Binary files differ"。
@@ -101,7 +101,7 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 - **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
   装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
 - **Windows** 上全部应用都有正式的 CI 门槛并且构建通过：启动器、三个 Tauri 应用、
-  `apps/c`（Qt）、`apps/cpp`（GTK4）。`apps/cpp` 的 Windows 支持 2026-09-15 打通，
+  `subjects/c`（Qt）、`subjects/cpp`（GTK4）。`subjects/cpp` 的 Windows 支持 2026-09-15 打通，
   其中一处临时垫片绕开了 glib 2.90 与 MSYS2 现有 glibmm 2.86 的名字冲突
   （ADR 0049），MSYS2 跟上后可以删。
 

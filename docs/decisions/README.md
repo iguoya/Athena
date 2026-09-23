@@ -1,7 +1,7 @@
 # 仓库级 ADR 索引
 
 这里收**影响仓库结构或多个应用**的架构决策记录。只管某一个应用的决策记在该应用自己的
-`docs/decisions/` 下，例如 [`apps/cpp/docs/decisions/`](../../apps/cpp/docs/decisions/README.md)。
+`docs/decisions/` 下，例如 [`subjects/cpp/docs/decisions/`](../../subjects/cpp/docs/decisions/README.md)。
 两处各自延续编号，所以两边都有跳号（ADR 0045）。
 
 架构决策记录保存重要取舍的背景、决策与后果，**不是实时功能清单**：一条 ADR 说明当时
@@ -31,7 +31,8 @@
 | [0041](0041-independent-apps-launch-in-dev-mode.md) | 独立应用从源码以开发模式启动，不经打包副本 | 已接受 |
 | [0042](0042-c-language-qt-qml-lessons.md) | C 语言学习应用用 Qt Quick / QML 写教案 | 已接受 |
 | [0044](0044-menubar-launcher.md) | 常驻菜单栏的启动器，主程序也只是其中一项 | 已接受 |
-| [0045](0045-apps-are-peers.md) | C++ 教程降级为 `apps/cpp`，所有学习应用平级 | 已接受 |
+| [0045](0045-apps-are-peers.md) | C++ 教程降级为 `subjects/cpp`，所有学习应用平级 | 已接受；目录由 0060 拆分 |
+| [0060](0060-subjects-and-practice.md) | `apps/` 拆成 `subjects/`（课程学科）与 `practice/`（项目应用） | 已接受 |
 
 ## 仓库工程
 
@@ -43,7 +44,7 @@
 | [0048](0048-menubar-launcher-stays-macos-only.md) | 菜单栏启动器保留为 macOS 专属，只消费编排器结论 | 已接受 |
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已接受（阶段性，带退出条件） |
-| [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`apps/cpp` 的选型冲突已解决 |
+| [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`subjects/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划 |
 | [0055](0055-no-institute-names-in-product-content.md) | 软件内容不出现具体院所名，一律用「某所」 | 已接受（强制，`scripts/check.py` 拦截） |

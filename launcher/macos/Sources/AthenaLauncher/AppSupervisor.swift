@@ -68,7 +68,7 @@ final class AppSupervisor: ObservableObject {
         }
         // 清单由编排器给，菜单栏版不自己读 app.json（ADR 0048）。
         apps = AppCatalog.parse(listing)
-        repositoryProblem = apps.isEmpty ? "编排器没报出任何应用，检查 apps/ 下的 app.json。" : nil
+        repositoryProblem = apps.isEmpty ? "编排器没报出任何应用，检查 subjects/ 下的 app.json。" : nil
     }
 
     // 优先用 release 产物；开发时 debug 的也认。

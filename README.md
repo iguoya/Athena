@@ -7,18 +7,18 @@
 
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
-| [`apps/cpp`](apps/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
-| [`apps/c`](apps/c) | C 语言编程 | Qt Quick / QML、CMake |
-| [`apps/dsa`](apps/dsa) | 数据结构与算法 | Tauri + Vite |
-| [`apps/english`](apps/english) | 英语学习 | Tauri + Vite |
-| [`apps/mathematics`](apps/mathematics) | 数学学习 | Tauri + Vite |
-| [`apps/driver`](apps/driver) | 驾考学习 | Flutter 桌面 |
+| [`subjects/cpp`](subjects/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
+| [`subjects/c`](subjects/c) | C 语言编程 | Qt Quick / QML、CMake |
+| [`subjects/dsa`](subjects/dsa) | 数据结构与算法 | Tauri + Vite |
+| [`subjects/english`](subjects/english) | 英语学习 | Tauri + Vite |
+| [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite |
+| [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
 
 每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
 [`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。
 
 C++ 教程曾经占据仓库根、是打开其他应用的必经之路；[ADR 0045](docs/decisions/0045-apps-are-peers.md)
-之后它只是 `apps/` 下的一个应用，没有任何特权。
+之后它只是 `subjects/` 下的一个应用，没有任何特权。
 
 ## 打开应用
 
@@ -55,7 +55,7 @@ CI 跑的是同一条命令，每个应用各一个 job。
 
 - [`AGENTS.md`](AGENTS.md)：仓库级协作规则（跨应用教学规范、应用之间的边界）。
 - [`docs/decisions/`](docs/decisions)：跨应用的架构决策记录。
-- `apps/<id>/AGENTS.md` 与 `apps/<id>/docs/`：各应用自己的规则与文档。
+- `subjects/<id>/AGENTS.md` 与 `subjects/<id>/docs/`：各应用自己的规则与文档。
 
 ## 许可
 
