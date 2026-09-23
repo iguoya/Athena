@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
 project(Polaris VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -74,3 +74,14 @@ endif()
 enable_testing()
 add_test(NAME polaris_domain_tests COMMAND polaris_domain_tests)
 add_test(NAME polaris_shell_tests COMMAND polaris_shell_tests)
+
+# 单个测试秒级跑完；给个上限，挂住时两分钟内报错，而不是耗光整个 CI job。
+set_tests_properties(polaris_domain_tests polaris_shell_tests PROPERTIES TIMEOUT 120)
+
+if(WIN32)
+    # Windows 按 PATH 找 DLL，而 aqt / 官方安装器装的 Qt 不在 PATH 上。缺 DLL 时
+    # 系统弹模态框等人点，ctest 会一直挂到 job 超时——CI 上北极星的 Windows job
+    # 次次 45 分钟被取消就是这个。测试时把 Qt 的 bin 目录前插进 PATH。
+    set_tests_properties(polaris_domain_tests polaris_shell_tests PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:Qt6::Core>")
+endif()
