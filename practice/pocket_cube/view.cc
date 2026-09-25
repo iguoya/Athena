@@ -88,59 +88,49 @@ void draw_cell_label(
     cr->show_text(text);
 }
 
-// 一个面在 3D 空间里的 4 个角点，由 face_layout() 的轴信息生成——跟
-// sticker_at() 用的是同一套 (u_axis, v_axis, 符号) 定义，几何位置和
-// 状态查询天然对得上，不需要另外维护一张“格子顺序对照表”。
-struct CubeFace {
-    Face face;
-    array<Vec3, 4> corners; // (u,v) = (-1,-1)(1,-1)(1,1)(-1,1) 四个角
-    Vec3 normal;
-};
+Vec3 operator+(const Vec3& a, const Vec3& b) { return {a.x + b.x, a.y + b.y, a.z + b.z}; }
+Vec3 operator-(const Vec3& a, const Vec3& b) { return {a.x - b.x, a.y - b.y, a.z - b.z}; }
+Vec3 operator*(const Vec3& a, double k) { return {a.x * k, a.y * k, a.z * k}; }
+double dot(const Vec3& a, const Vec3& b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
 
-Vec3 axis_point(Axis axis, int value, Vec3 base) {
+Vec3 normalized(const Vec3& a) {
+    const double n = sqrt(dot(a, a));
+    return n > 0 ? a * (1.0 / n) : a;
+}
+
+constexpr array<Axis, 3> kAxes{Axis::X, Axis::Y, Axis::Z};
+
+double component(const Vec3& p, Axis axis) {
     switch (axis) {
-    case Axis::X: base.x = value; break;
-    case Axis::Y: base.y = value; break;
-    case Axis::Z: base.z = value; break;
+    case Axis::X: return p.x;
+    case Axis::Y: return p.y;
+    case Axis::Z: return p.z;
     }
-    return base;
+    return 0;
 }
 
-Vec3 axis_point3(
-    Axis normal_axis, int normal_sign, Axis u_axis, int u_sign, Axis v_axis,
-    int v_sign) {
-    Vec3 p{0, 0, 0};
-    p = axis_point(normal_axis, normal_sign, p);
-    p = axis_point(u_axis, u_sign, p);
-    p = axis_point(v_axis, v_sign, p);
-    return p;
+Vec3 axis_unit(Axis axis) {
+    switch (axis) {
+    case Axis::X: return {1, 0, 0};
+    case Axis::Y: return {0, 1, 0};
+    case Axis::Z: return {0, 0, 1};
+    }
+    return {};
 }
 
-CubeFace make_cube_face(Face face) {
-    const FaceLayout layout = face_layout(face);
-    CubeFace result;
-    result.face = face;
-    result.corners[0] = axis_point3(
-        layout.normal_axis, layout.normal_sign, layout.u_axis, -1, layout.v_axis, -1);
-    result.corners[1] = axis_point3(
-        layout.normal_axis, layout.normal_sign, layout.u_axis, 1, layout.v_axis, -1);
-    result.corners[2] = axis_point3(
-        layout.normal_axis, layout.normal_sign, layout.u_axis, 1, layout.v_axis, 1);
-    result.corners[3] = axis_point3(
-        layout.normal_axis, layout.normal_sign, layout.u_axis, -1, layout.v_axis, 1);
-    result.normal = axis_point3(
-        layout.normal_axis, layout.normal_sign, layout.u_axis, 0, layout.v_axis, 0);
-    return result;
+// 法向轴 + 朝向唯一确定一个面；反查 face_layout()，不另写一张对照表。
+Face face_on(Axis axis, int sign) {
+    for (Face face : {Face::U, Face::D, Face::L, Face::R, Face::F, Face::B}) {
+        const FaceLayout layout = face_layout(face);
+        if (layout.normal_axis == axis && layout.normal_sign == sign) {
+            return face;
+        }
+    }
+    return Face::U;
 }
 
-array<CubeFace, 6> cube_faces() {
-    return {
-        make_cube_face(Face::U), make_cube_face(Face::D), make_cube_face(Face::F),
-        make_cube_face(Face::B), make_cube_face(Face::R), make_cube_face(Face::L),
-    };
-}
-
-// 绕 Y 轴转 yaw、再绕 X 轴转 pitch。
+// 绕 Y 轴转 yaw、再绕 X 轴转 pitch：世界坐标 → 观察坐标（z 朝向观察者）。
+// yaw 绕的是世界竖直轴，所以拖动是“转台”式环绕，地面始终水平。
 Vec3 rotate(const Vec3& p, double yaw, double pitch) {
     const double x1 = p.x * cos(yaw) + p.z * sin(yaw);
     const double z1 = -p.x * sin(yaw) + p.z * cos(yaw);
@@ -150,25 +140,11 @@ Vec3 rotate(const Vec3& p, double yaw, double pitch) {
     return {x1, y2, z2};
 }
 
-Vec2 project(const Vec3& rotated, double scale, const Vec2& origin) {
-    // 正交投影：直接丢弃深度分量；屏幕 y 轴向下为正，3D 的 y 轴向上为
-    // 正，所以要取反。
-    return {origin.x + rotated.x * scale, origin.y - rotated.y * scale};
-}
-
-// 这个格子（face 面上 (u_sign, v_sign) 那一格）对应的角块，在 axis
-// 这根轴上的坐标符号——用来判断这一格是否处于正在播放动画的那一层
-// （跟 face_layout(face) 三根轴里，法向轴/u 轴/v 轴哪一根跟 axis 一致，
-// 就取对应的符号）。三根轴里必然有且只有一根匹配 axis。
-int corner_axis_sign(Face face, int u_sign, int v_sign, Axis axis) {
-    const FaceLayout layout = face_layout(face);
-    if (layout.normal_axis == axis) {
-        return layout.normal_sign;
-    }
-    if (layout.u_axis == axis) {
-        return u_sign;
-    }
-    return v_sign;
+// rotate() 的逆变换：观察坐标 → 世界坐标，用来求相机在世界里的位置。
+Vec3 unrotate(const Vec3& p, double yaw, double pitch) {
+    const double y1 = p.y * cos(pitch) + p.z * sin(pitch);
+    const double z1 = -p.y * sin(pitch) + p.z * cos(pitch);
+    return {p.x * cos(yaw) - z1 * sin(yaw), y1, p.x * sin(yaw) + z1 * cos(yaw)};
 }
 
 // 把一个模型空间的点绕 axis 轴转 degrees 度（标准数学定义，右手定则，
@@ -188,20 +164,6 @@ Vec3 rotate_around_axis(const Vec3& p, Axis axis, double degrees) {
     return p;
 }
 
-Vec3 face_point(const CubeFace& face, double u, double v) {
-    const auto& p00 = face.corners[0];
-    const auto& p10 = face.corners[1];
-    const auto& p11 = face.corners[2];
-    const auto& p01 = face.corners[3];
-    const auto lerp = [](double a, double b, double t) { return a + (b - a) * t; };
-    const auto mix = [&](double Vec3::*axis) {
-        const double top = lerp(p00.*axis, p10.*axis, u);
-        const double bottom = lerp(p01.*axis, p11.*axis, u);
-        return lerp(top, bottom, v);
-    };
-    return {mix(&Vec3::x), mix(&Vec3::y), mix(&Vec3::z)};
-}
-
 void fill_grid_cell(
     const Cairo::RefPtr<Cairo::Context>& cr, const array<Vec2, 4>& screen,
     const ChartColor& color) {
@@ -217,84 +179,347 @@ void fill_grid_cell(
     cr->stroke();
 }
 
-// 待画的一格贴纸：屏幕坐标 + 颜色 + 深度（4 个角点旋转后、投影前的
-// 平均 z，越大越靠近观察者）。旧实现按“整面固定法向量”一次性判断
-// 3 个面的可见性和前后顺序，理由是“转动的那一层里，跟转轴同向的那个
-// 面法向量不变，其余面只有半边格子参与转动，面本身固定法向量不受
-// 影响”——这个理由只覆盖了“面会不会被错误剔除”，没考虑到转到 90°~180°
-// 之间时，动画格子的屏幕位置会明显偏出所在面原来的平面、跟另一个静态
-// 面产生实际的前后遮挡，而静态整面排序完全不知道这件事，会把正在转动
-// 的格子画在不该被挡住的静态面后面——尤其转 180° 时格子要转到正对面，
-// 偏移量最大，最容易被整面挡住，看起来就是“这几格没渲染出来”。
-// 现在改成逐格（而不是逐面）计算法向量和深度：动画中那一层的格子用
-// 旋转到当前角度之后的法向量做背面剔除、用旋转后 4 个角点的平均深度
-// 参与全局排序，没在转的格子仍然用所在面的固定法向量——跟旧结果完全
-// 一致，因为同一面 4 格法向量本来就相同、彼此又不重叠，排序谁先谁后
-// 都无所谓；只有正在转动、跟原来所在面不再共面的格子才会因此在深度
-// 排序里换到正确的位置。
-struct StickerDraw {
-    array<Vec2, 4> screen;
-    ChartColor color;
-    double depth;
-    int label;
+// ===== 3D 视图：8 个角块实体 + 光照 + 地面投影 =====
+//
+// 立体感靠的是单眼线索（遮挡、透视、明暗、阴影、转动），普通屏幕全都
+// 给得出来，不需要 VR：
+// - 每个角块是一个深色塑料块体，贴纸内缩贴在外表面上，块与块之间留缝，
+//   转动时露出块体侧面——遮挡关系和“这是实心块”的印象都来自这里；
+// - 轻度透视，近大远小；
+// - 主光固定在世界坐标里，拖动视角时各面明暗随之变化（转动中的明暗
+//   变化是最强的形状线索），另有一盏跟着相机走的补光，保证正对观察者
+//   的面不会黑掉；
+// - 魔方悬在地面上方，沿主光方向投下软阴影，地面网格给出水平参照。
+//
+// 不动点：2 阶魔方只转 U/R/F（next_move_set()），D/L/B 交界的那个角块
+// 从头到尾不动。这里把它画成“支在一根立柱上”——立柱在那个角块正下方，
+// U/R/F 三个转动层在几何上都碰不到它，画面本身就说明了这个约定。
+
+constexpr double kCubieHalf = 0.485;     // 角块半边长；相邻两块之间留 0.03 的缝
+constexpr double kStickerHalf = 0.40;    // 贴纸半边长，四周露出一圈块体
+constexpr double kStickerChamfer = 0.10; // 贴纸切角，读起来像实物贴纸而不是色块
+constexpr double kFloorY = -2.05;        // 地面高度：魔方悬空，阴影与本体分开，默认视角能从底下看到立柱
+constexpr double kFloorRadius = 2.8;
+constexpr double kCameraDistance = 7.5;  // 越小透视越强；7.5 ≈ 中长焦，不变形
+constexpr double kStandRadius = 0.08;
+
+// 不动的那个角块：D/L/B 交界，坐标符号 (-1,-1,-1)，见 state.h next_move_set()。
+constexpr array<int, 3> kFixedCubie{-1, -1, -1};
+
+// 主光从左上前方打过来：默认视角下 U 最亮、F 次之、R 最暗，三个可见面
+// 明暗分明；阴影落在右后方，从默认视角看得到。
+const Vec3 kKeyLight = normalized({-0.5, 1.0, 0.45});
+// 配色本身是淡色，明暗只在 [0.7, 1] 左右浮动：乘得太狠淡色会发灰发脏。
+constexpr double kAmbient = 0.62;
+constexpr double kKeyStrength = 0.38;
+constexpr double kFillStrength = 0.12;
+
+constexpr ChartColor kBodyColor = chart_color(0x2a2a31);
+
+struct Camera {
+    double yaw;
+    double pitch;
+    double scale;
+    Vec2 origin;
+    Vec3 eye; // 相机在世界坐标里的位置
+
+    Camera(double yaw_, double pitch_, double scale_, Vec2 origin_)
+        : yaw(yaw_), pitch(pitch_), scale(scale_), origin(origin_),
+          eye(unrotate({0, 0, kCameraDistance}, yaw_, pitch_)) {}
+
+    // 透视缩放系数：观察坐标 z 越大（越近）越大，z=0 处恰好是 1。
+    double perspective(const Vec3& world) const {
+        return kCameraDistance / (kCameraDistance - rotate(world, yaw, pitch).z);
+    }
+
+    Vec2 project(const Vec3& world) const {
+        const Vec3 v = rotate(world, yaw, pitch);
+        const double f = kCameraDistance / (kCameraDistance - v.z);
+        // 屏幕 y 向下为正，3D 的 y 向上为正，取反。
+        return {origin.x + v.x * scale * f, origin.y - v.y * scale * f};
+    }
+
+    bool faces_camera(const Vec3& point, const Vec3& normal) const {
+        return dot(normal, eye - point) > 0;
+    }
 };
 
-void collect_face_stickers(
-    const CubeFace& face, const CubeState& state, double yaw, double pitch,
-    double scale, const Vec2& origin, const TurnAnimation* animation,
-    vector<StickerDraw>& out) {
-    for (int ui = 0; ui < 2; ++ui) {
-        for (int vi = 0; vi < 2; ++vi) {
-            const double u0 = ui * 0.5;
-            const double v0 = vi * 0.5;
-            const int u_sign = ui * 2 - 1;
-            const int v_sign = vi * 2 - 1;
+ChartColor scaled(const ChartColor& c, double k, double add = 0) {
+    return {
+        clamp(c.r * k + add, 0.0, 1.0), clamp(c.g * k + add, 0.0, 1.0),
+        clamp(c.b * k + add, 0.0, 1.0)};
+}
 
-            const bool animating = animation != nullptr &&
-                corner_axis_sign(face.face, u_sign, v_sign, animation->axis) ==
-                    animation->layer_coord;
+// Lambert 漫反射（主光 + 补光）+ Blinn-Phong 高光。按面平涂：块面是
+// 平面，逐像素算和逐面算结果一样，Cairo 也没有逐像素着色。
+ChartColor shade(
+    const ChartColor& base, const Vec3& normal, const Vec3& point, const Camera& camera,
+    double gloss) {
+    const Vec3 to_eye = normalized(camera.eye - point);
+    const double diffuse = kAmbient + kKeyStrength * max(0.0, dot(normal, kKeyLight)) +
+                           kFillStrength * max(0.0, dot(normal, to_eye));
+    const Vec3 half = normalized(kKeyLight + to_eye);
+    const double specular = gloss * pow(max(0.0, dot(normal, half)), 40.0);
+    return scaled(base, diffuse, specular);
+}
 
-            const auto model_point = [&](double u, double v) {
-                Vec3 point = face_point(face, u, v);
-                if (animating) {
-                    point = rotate_around_axis(
-                        point, animation->axis, animation->current_degrees);
-                }
-                return point;
-            };
+void fill_polygon(
+    const Cairo::RefPtr<Cairo::Context>& cr, const vector<Vec2>& points,
+    const ChartColor& color) {
+    cr->begin_new_path();
+    cr->move_to(points[0].x, points[0].y);
+    for (size_t i = 1; i < points.size(); ++i) {
+        cr->line_to(points[i].x, points[i].y);
+    }
+    cr->close_path();
+    cr->set_source_rgb(color.r, color.g, color.b);
+    // 同色细描边盖住相邻多边形之间的抗锯齿接缝，否则块面之间会透出背景细线。
+    cr->fill_preserve();
+    cr->set_line_width(0.8);
+    cr->stroke();
+}
 
-            // 背面剔除用这一格“此刻真正”的法向量：没在转就是所在面
-            // 固定的法向量，正在转就跟着模型坐标一起绕动画轴转到当前
-            // 角度——这一步就是修复的关键，静态法向量在转到 90° 以后
-            // 已经不能代表这格真实朝向哪边了。
-            Vec3 normal = face.normal;
-            if (animating) {
-                normal = rotate_around_axis(
-                    normal, animation->axis, animation->current_degrees);
-            }
-            if (rotate(normal, yaw, pitch).z <= 0) {
+// 某个角块在转动动画里的刚体变换：属于正在转的那一层就绕层轴转到当前
+// 角度，否则原样返回。点和法向量都走这一个函数。
+struct CubieTransform {
+    const TurnAnimation* animation = nullptr;
+
+    Vec3 operator()(const Vec3& p) const {
+        return animation ? rotate_around_axis(p, animation->axis, animation->current_degrees)
+                         : p;
+    }
+};
+
+// 画一个角块：块体 6 个面里朝向相机的那几个（凸体，彼此不遮挡，不用
+// 排序），外表面再贴上贴纸和编号。
+void draw_cubie(
+    const Cairo::RefPtr<Cairo::Context>& cr, const CubeState& state,
+    const array<int, 3>& pos, const CubieTransform& transform, const Camera& camera) {
+    const Vec3 center{pos[0] * 0.5, pos[1] * 0.5, pos[2] * 0.5};
+    for (size_t a = 0; a < kAxes.size(); ++a) {
+        const Axis axis = kAxes[a];
+        const Axis tangent_b = kAxes[(a + 1) % 3];
+        const Axis tangent_c = kAxes[(a + 2) % 3];
+        for (int sign : {-1, 1}) {
+            const Vec3 normal = transform(axis_unit(axis) * sign);
+            const Vec3 face_center = transform(center + axis_unit(axis) * (sign * kCubieHalf));
+            if (!camera.faces_camera(face_center, normal)) {
                 continue;
             }
-
-            const array<Vec3, 4> rotated_corners = {
-                rotate(model_point(u0, v0), yaw, pitch),
-                rotate(model_point(u0 + 0.5, v0), yaw, pitch),
-                rotate(model_point(u0 + 0.5, v0 + 0.5), yaw, pitch),
-                rotate(model_point(u0, v0 + 0.5), yaw, pitch),
+            // 面内一点：(b, c) 是沿两根切向轴、相对面中心的偏移。
+            const auto face_point = [&](double b, double c) {
+                return transform(
+                    center + axis_unit(axis) * (sign * kCubieHalf) + axis_unit(tangent_b) * b +
+                    axis_unit(tangent_c) * c);
             };
-            array<Vec2, 4> screen;
-            double depth = 0.0;
-            for (size_t i = 0; i < rotated_corners.size(); ++i) {
-                screen[i] = project(rotated_corners[i], scale, origin);
-                depth += rotated_corners[i].z;
-            }
-            depth /= static_cast<double>(rotated_corners.size());
 
-            const StickerHome home = sticker_home(state, face.face, u_sign, v_sign);
-            out.push_back(StickerDraw{
-                screen, sticker_color(sticker_at(state, face.face, u_sign, v_sign)),
-                depth, sticker_label(home.face, home.u_sign, home.v_sign)});
+            vector<Vec2> body;
+            for (const auto& [b, c] :
+                 {pair{-1, -1}, pair{1, -1}, pair{1, 1}, pair{-1, 1}}) {
+                body.push_back(camera.project(face_point(b * kCubieHalf, c * kCubieHalf)));
+            }
+            fill_polygon(cr, body, shade(kBodyColor, normal, face_center, camera, 0.18));
+
+            // 只有朝外的那一面（朝向跟角块自己在这根轴上的坐标符号一致）才有贴纸。
+            if (sign != pos[a]) {
+                continue;
+            }
+            const Face face = face_on(axis, sign);
+            const FaceLayout layout = face_layout(face);
+            const int u_sign = pos[static_cast<size_t>(layout.u_axis)];
+            const int v_sign = pos[static_cast<size_t>(layout.v_axis)];
+
+            // 切角八边形，逆时针走一圈。
+            constexpr double s = kStickerHalf;
+            constexpr double k = kStickerHalf - kStickerChamfer;
+            vector<Vec2> sticker;
+            for (const auto& [b, c] :
+                 {pair{-k, -s}, pair{k, -s}, pair{s, -k}, pair{s, k}, pair{k, s}, pair{-k, s},
+                  pair{-s, k}, pair{-s, -k}}) {
+                sticker.push_back(camera.project(face_point(b, c)));
+            }
+            fill_polygon(
+                cr, sticker,
+                shade(sticker_color(sticker_at(state, face, u_sign, v_sign)), normal,
+                      face_center, camera, 0.35));
+
+            const StickerHome home = sticker_home(state, face, u_sign, v_sign);
+            const double font_size =
+                max(8.0, camera.scale * camera.perspective(face_center) * 0.15);
+            draw_cell_label(
+                cr, camera.project(face_center),
+                sticker_label(home.face, home.u_sign, home.v_sign), font_size);
         }
+    }
+}
+
+// 画家算法的排序键：8 个等大的块排成网格，对每根轴，跟相机不在同一侧
+// 的那一块一定在后面；把三根轴的“远近”加起来排序就满足所有约束——两块
+// 在某根轴上被分隔平面隔开时，相机那一侧的后画；如果两根分隔平面给出
+// 相反结论，说明两块互不遮挡，谁先谁后都行。比按中心距离排序可靠：
+// 透视下中心距离在块大小相近时会排错。
+int far_to_near_key(const array<int, 3>& pos, const Vec3& eye) {
+    int key = 0;
+    for (size_t a = 0; a < kAxes.size(); ++a) {
+        const double e = component(eye, kAxes[a]);
+        key += pos[a] * (e > 0 ? 1 : (e < 0 ? -1 : 0));
+    }
+    return key;
+}
+
+void sort_far_to_near(vector<array<int, 3>>& cubies, const Vec3& eye) {
+    sort(cubies.begin(), cubies.end(), [&](const auto& a, const auto& b) {
+        return far_to_near_key(a, eye) < far_to_near_key(b, eye);
+    });
+}
+
+// 立柱：从不动角块底面中心垂直落到地面。
+Vec3 stand_top() { return {kFixedCubie[0] * 0.5, -1.0 + (0.5 - kCubieHalf), kFixedCubie[2] * 0.5}; }
+Vec3 stand_bottom() { return {kFixedCubie[0] * 0.5, kFloorY, kFixedCubie[2] * 0.5}; }
+
+void draw_stand(const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera) {
+    const Vec2 top = camera.project(stand_top());
+    const Vec2 bottom = camera.project(stand_bottom());
+    const double width =
+        2 * kStandRadius * camera.scale *
+        camera.perspective((stand_top() + stand_bottom()) * 0.5);
+
+    // 圆柱的明暗用横向线性渐变模拟：中间偏左一道亮带，两侧暗。
+    double dx = bottom.x - top.x;
+    double dy = bottom.y - top.y;
+    const double len = max(1e-6, sqrt(dx * dx + dy * dy));
+    dx /= len;
+    dy /= len;
+    const Vec2 perp{-dy * width / 2, dx * width / 2};
+    const Vec2 mid{(top.x + bottom.x) / 2, (top.y + bottom.y) / 2};
+    auto gradient = Cairo::LinearGradient::create(
+        mid.x - perp.x, mid.y - perp.y, mid.x + perp.x, mid.y + perp.y);
+    gradient->add_color_stop_rgb(0.0, 0.30, 0.31, 0.34);
+    gradient->add_color_stop_rgb(0.35, 0.78, 0.79, 0.82);
+    gradient->add_color_stop_rgb(1.0, 0.22, 0.23, 0.26);
+
+    cr->begin_new_path();
+    cr->move_to(top.x, top.y);
+    cr->line_to(bottom.x, bottom.y);
+    cr->set_source(gradient);
+    cr->set_line_width(width);
+    cr->set_line_cap(Cairo::Context::LineCap::BUTT);
+    cr->stroke();
+}
+
+// 沿主光方向把世界坐标里的点压到地面上。
+Vec3 project_to_floor(const Vec3& p) {
+    const double t = (p.y - kFloorY) / kKeyLight.y;
+    return {p.x - kKeyLight.x * t, kFloorY, p.z - kKeyLight.z * t};
+}
+
+// 平面点集的凸包（Andrew 单调链），在地面的 (x, z) 平面里算。
+vector<Vec3> floor_convex_hull(vector<Vec3> points) {
+    sort(points.begin(), points.end(), [](const Vec3& a, const Vec3& b) {
+        return a.x < b.x || (a.x == b.x && a.z < b.z);
+    });
+    const auto cross = [](const Vec3& o, const Vec3& a, const Vec3& b) {
+        return (a.x - o.x) * (b.z - o.z) - (a.z - o.z) * (b.x - o.x);
+    };
+    vector<Vec3> hull(points.size() * 2);
+    size_t k = 0;
+    for (size_t i = 0; i < points.size(); ++i) {
+        while (k >= 2 && cross(hull[k - 2], hull[k - 1], points[i]) <= 0) --k;
+        hull[k++] = points[i];
+    }
+    for (size_t i = points.size() - 1, t = k + 1; i > 0; --i) {
+        while (k >= t && cross(hull[k - 2], hull[k - 1], points[i - 1]) <= 0) --k;
+        hull[k++] = points[i - 1];
+    }
+    hull.resize(k > 0 ? k - 1 : 0);
+    return hull;
+}
+
+void draw_floor(const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera, double alpha) {
+    const auto trace_circle = [&](double radius) {
+        cr->begin_new_path();
+        constexpr int kSegments = 72;
+        for (int i = 0; i <= kSegments; ++i) {
+            const double t = 2 * std::numbers::pi * i / kSegments;
+            const Vec2 p = camera.project({radius * cos(t), kFloorY, radius * sin(t)});
+            i == 0 ? cr->move_to(p.x, p.y) : cr->line_to(p.x, p.y);
+        }
+        cr->close_path();
+    };
+
+    // 几层同心圆叠出由中心向外淡出的地面，边缘不留生硬的圆圈。
+    for (double ratio : {1.0, 0.82, 0.64, 0.46}) {
+        trace_circle(kFloorRadius * ratio);
+        cr->set_source_rgba(0.45, 0.47, 0.52, 0.05 * alpha);
+        cr->fill();
+    }
+
+    // 网格线只画在圆盘内：直线投影后仍是直线，两端算好直接连。
+    cr->set_line_width(1.0);
+    constexpr double kStep = 0.5;
+    const double inner = kFloorRadius * 0.92;
+    for (double v = -inner + fmod(inner, kStep); v <= inner; v += kStep) {
+        const double half = sqrt(max(0.0, inner * inner - v * v));
+        for (const auto& [a, b] :
+             {pair{Vec3{v, kFloorY, -half}, Vec3{v, kFloorY, half}},
+              pair{Vec3{-half, kFloorY, v}, Vec3{half, kFloorY, v}}}) {
+            const Vec2 pa = camera.project(a);
+            const Vec2 pb = camera.project(b);
+            cr->begin_new_path();
+            cr->move_to(pa.x, pa.y);
+            cr->line_to(pb.x, pb.y);
+            cr->set_source_rgba(0.40, 0.42, 0.48, 0.10 * alpha);
+            cr->stroke();
+        }
+    }
+}
+
+// 软阴影：Cairo 没有模糊，用若干层“凸包 + 不同宽度的圆角描边”叠出
+// 由内向外渐淡的半影。每层先画进一个不透明的 group 再整体按固定透明度
+// 贴回去，填充和描边重叠的部分才不会被算两次。
+void draw_shadow(
+    const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera,
+    const vector<Vec3>& caster_points, double alpha) {
+    vector<Vec3> floor_points;
+    floor_points.reserve(caster_points.size());
+    for (const auto& p : caster_points) {
+        floor_points.push_back(project_to_floor(p));
+    }
+    const vector<Vec3> hull = floor_convex_hull(floor_points);
+    if (hull.size() < 3) {
+        return;
+    }
+
+    const Vec2 stand_a = camera.project(project_to_floor(stand_top()));
+    const Vec2 stand_b = camera.project(stand_bottom());
+    const double stand_width =
+        2 * kStandRadius * camera.scale * camera.perspective(stand_bottom());
+
+    constexpr int kLayers = 12;
+    const double penumbra = camera.scale * 0.22;
+    for (int i = kLayers; i >= 1; --i) {
+        cr->push_group();
+        cr->set_source_rgb(0.05, 0.06, 0.10);
+        cr->begin_new_path();
+        for (size_t j = 0; j < hull.size(); ++j) {
+            const Vec2 p = camera.project(hull[j]);
+            j == 0 ? cr->move_to(p.x, p.y) : cr->line_to(p.x, p.y);
+        }
+        cr->close_path();
+        cr->set_line_join(Cairo::Context::LineJoin::ROUND);
+        cr->fill_preserve();
+        cr->set_line_width(2 * penumbra * i / kLayers);
+        cr->stroke();
+
+        // 立柱的影子：主光下是地面上的一条细线，从柱脚伸向远离光源的一侧。
+        cr->set_line_cap(Cairo::Context::LineCap::ROUND);
+        cr->move_to(stand_a.x, stand_a.y);
+        cr->line_to(stand_b.x, stand_b.y);
+        cr->set_line_width(stand_width + 2 * penumbra * i / kLayers * 0.5);
+        cr->stroke();
+
+        cr->pop_group_to_source();
+        cr->paint_with_alpha(0.028 * alpha);
     }
 }
 
@@ -302,31 +527,88 @@ void draw_cube_3d(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
     const CubeState& state, double yaw, double pitch,
     const TurnAnimation* animation) {
-    const double scale = min(width, height) * 0.28;
-    const Vec2 origin{width / 2.0, height / 2.0};
+    // 画面中心略偏上：下方要给悬空的高度和地面阴影留位置。
+    const Camera camera(yaw, pitch, min(width, height) * 0.22, {width / 2.0, height * 0.41});
 
-    vector<StickerDraw> stickers;
-    stickers.reserve(24);
-    for (const auto& face : cube_faces()) {
-        collect_face_stickers(face, state, yaw, pitch, scale, origin, animation, stickers);
+    const auto in_turning_layer = [&](const array<int, 3>& pos) {
+        return animation != nullptr &&
+               pos[static_cast<size_t>(animation->axis)] == animation->layer_coord;
+    };
+    const auto transform_for = [&](const array<int, 3>& pos) {
+        return CubieTransform{in_turning_layer(pos) ? animation : nullptr};
+    };
+
+    vector<array<int, 3>> resting;
+    vector<array<int, 3>> turning;
+    for (int x : {-1, 1}) {
+        for (int y : {-1, 1}) {
+            for (int z : {-1, 1}) {
+                (in_turning_layer({x, y, z}) ? turning : resting).push_back({x, y, z});
+            }
+        }
     }
 
-    // 画家算法：按深度从远到近画——现在是全部待画贴纸一起排序，不是
-    // 先按面分组、组内固定顺序，动画中的格子才能正确插到该在的前后
-    // 位置。
-    sort(stickers.begin(), stickers.end(), [](const StickerDraw& a, const StickerDraw& b) {
-        return a.depth < b.depth;
-    });
-
-    const double label_font_size = max(8.0, scale * 0.16);
-    for (const auto& sticker : stickers) {
-        fill_grid_cell(cr, sticker.screen, sticker.color);
-        Vec2 center{0, 0};
-        for (const auto& corner : sticker.screen) {
-            center.x += corner.x / sticker.screen.size();
-            center.y += corner.y / sticker.screen.size();
+    // 地面与阴影：相机降到地面以下时淡出，否则会从底下看到一张盖在魔方
+    // 前面的“天花板”。
+    const double floor_alpha = clamp((camera.eye.y - kFloorY) / 1.5, 0.0, 1.0);
+    if (floor_alpha > 0) {
+        vector<Vec3> caster_points;
+        for (const auto* group : {&resting, &turning}) {
+            for (const auto& pos : *group) {
+                const CubieTransform transform = transform_for(pos);
+                const Vec3 center{pos[0] * 0.5, pos[1] * 0.5, pos[2] * 0.5};
+                for (int dx : {-1, 1}) {
+                    for (int dy : {-1, 1}) {
+                        for (int dz : {-1, 1}) {
+                            caster_points.push_back(transform(
+                                center + Vec3{dx * kCubieHalf, dy * kCubieHalf, dz * kCubieHalf}));
+                        }
+                    }
+                }
+            }
         }
-        draw_cell_label(cr, center, sticker.label, label_font_size);
+        draw_floor(cr, camera, floor_alpha);
+        draw_shadow(cr, camera, caster_points, floor_alpha);
+    }
+
+    // 两组之间用转动层的分隔平面排序：转动层绕层轴转，始终待在自己那半边，
+    // 相机那一侧的组后画。组内各按自己的坐标系排序——转动层要把相机位置
+    // 反转回层的局部坐标里再比较。立柱在不动角块下方，只属于静止组：
+    // 跟静止组的块隔着 y = -1 平面，相机在平面上方就先画立柱。
+    const auto draw_resting = [&] {
+        sort_far_to_near(resting, camera.eye);
+        const bool stand_first = camera.eye.y > -1.0;
+        if (stand_first) {
+            draw_stand(cr, camera);
+        }
+        for (const auto& pos : resting) {
+            draw_cubie(cr, state, pos, CubieTransform{}, camera);
+        }
+        if (!stand_first) {
+            draw_stand(cr, camera);
+        }
+    };
+    const auto draw_turning = [&] {
+        if (turning.empty()) {
+            return;
+        }
+        sort_far_to_near(
+            turning,
+            rotate_around_axis(camera.eye, animation->axis, -animation->current_degrees));
+        for (const auto& pos : turning) {
+            draw_cubie(cr, state, pos, CubieTransform{animation}, camera);
+        }
+    };
+
+    const bool camera_on_turning_side =
+        animation != nullptr &&
+        component(camera.eye, animation->axis) * animation->layer_coord > 0;
+    if (camera_on_turning_side) {
+        draw_resting();
+        draw_turning();
+    } else {
+        draw_turning();
+        draw_resting();
     }
 }
 
@@ -704,6 +986,39 @@ void draw_state_space_rings(
     }
 }
 
+// 初始视角：俯视，同时看到 U/F/R 三个转动面。pitch 必须为正（相机在
+// 上方）：为负会转到仰视，U 被剔除、露出 D。yaw 从正对 F/R 棱的 -45°
+// 往回偏一点，避免左右对称的呆板构图，也让右后方的阴影露出来。
+constexpr double kDefaultYaw = -std::numbers::pi / 4 + 0.22;
+constexpr double kDefaultPitch = std::numbers::pi / 6.5;
+// 俯仰限制在约 ±74°：再往上下就正对某个面，立体感消失。
+constexpr double kPitchLimit = 1.3;
+constexpr double kDragSensitivity = 0.012; // 弧度/像素
+
+// 视角状态。拖动时按指针位移直接设角度；松手时带着最后的角速度继续转、
+// 指数衰减停下——转动过程本身就是立体线索，惯性让“甩一下看看背面”
+// 成本更低。
+struct OrbitState {
+    double yaw = kDefaultYaw;
+    double pitch = kDefaultPitch;
+    double drag_start_yaw = 0;
+    double drag_start_pitch = 0;
+    double yaw_velocity = 0; // 弧度/秒
+    double pitch_velocity = 0;
+    double last_offset_x = 0;
+    double last_offset_y = 0;
+    gint64 last_update_us = 0;
+    gint64 last_frame_us = 0;
+    guint inertia_tick = 0;
+};
+
+void stop_inertia(Gtk::DrawingArea* area, OrbitState& orbit) {
+    if (orbit.inertia_tick != 0) {
+        area->remove_tick_callback(orbit.inertia_tick);
+        orbit.inertia_tick = 0;
+    }
+}
+
 } // namespace
 
 Gtk::Widget* make_cube_3d_view(
@@ -713,50 +1028,101 @@ Gtk::Widget* make_cube_3d_view(
     area->set_content_width(size);
     area->set_content_height(size);
 
-    // 初始视角：能同时看到 U/F/R 三个面——是俯视（视线从上往下看，能
-    // 看见顶面 U），不是仰视。pitch 必须取正值：draw_cube_3d() 的可见
-    // 性判断是“旋转后 z 分量为正才画”，而 rotate() 对 U 面法向量
-    // (0,1,0) 算出的 z 分量正好是 sin(pitch)——pitch 为负会让 U 面转
-    // 到背面被剔除、露出对面的 D，看起来就成了仰视（此前这里错写成了
-    // 负值，见 review 记录）。
-    auto yaw = make_shared<double>(-std::numbers::pi / 4);
-    auto pitch = make_shared<double>(std::numbers::pi / 6.5);
+    auto orbit = make_shared<OrbitState>();
 
     area->set_draw_func(
-        [state_provider, animation_provider, yaw, pitch](
+        [state_provider, animation_provider, orbit](
             const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const optional<TurnAnimation> animation =
                 animation_provider ? animation_provider() : nullopt;
             draw_cube_3d(
-                cr, width, height, state_provider(), *yaw, *pitch,
+                cr, width, height, state_provider(), orbit->yaw, orbit->pitch,
                 animation ? &*animation : nullptr);
         });
 
-    // 鼠标拖拽旋转：拖动过程中的位移量换算成 yaw/pitch 增量；俯仰角
-    // 限制在正负约 75°，避免转到正对某条棱、视觉上完全失去立体感。
-    // pitch 是 +offset_y（不是 -offset_y）：手指往上拖，应该像用手指
-    // 从下往上托着魔方底部一样，把底面往观察者方向翻上来、露出更多
-    // 顶面，符合“拖拽=用手指推动物体表面朝同一方向走”这个直觉；原来
-    // 写成减号，上下方向是反的（左右方向的 yaw 本来就没有这个问题）。
+    // pitch 取 +offset_y：手指往上拖，像从下往上托着魔方底部，把底面翻向
+    // 观察者、露出更多顶面——“拖拽 = 推着物体表面同向走”的直觉。
     auto drag = Gtk::GestureDrag::create();
-    auto drag_start_yaw = make_shared<double>(0.0);
-    auto drag_start_pitch = make_shared<double>(0.0);
-    drag->signal_drag_begin().connect(
-        [yaw, pitch, drag_start_yaw, drag_start_pitch](double, double) {
-            *drag_start_yaw = *yaw;
-            *drag_start_pitch = *pitch;
-        });
-    drag->signal_drag_update().connect(
-        [yaw, pitch, drag_start_yaw, drag_start_pitch, area](
-            double offset_x, double offset_y) {
-            constexpr double sensitivity = 0.012;
-            *yaw = *drag_start_yaw + offset_x * sensitivity;
-            *pitch = clamp(*drag_start_pitch + offset_y * sensitivity, -1.3, 1.3);
-            area->queue_draw();
-        });
+    drag->signal_drag_begin().connect([area, orbit](double, double) {
+        stop_inertia(area, *orbit);
+        orbit->drag_start_yaw = orbit->yaw;
+        orbit->drag_start_pitch = orbit->pitch;
+        orbit->yaw_velocity = 0;
+        orbit->pitch_velocity = 0;
+        orbit->last_offset_x = 0;
+        orbit->last_offset_y = 0;
+        orbit->last_update_us = g_get_monotonic_time();
+    });
+    drag->signal_drag_update().connect([area, orbit](double offset_x, double offset_y) {
+        const gint64 now = g_get_monotonic_time();
+        const double dt = (now - orbit->last_update_us) / 1e6;
+        if (dt > 0) {
+            // 指针事件间隔不均匀，瞬时速度抖得厉害，做一次指数平滑。
+            const double vx = (offset_x - orbit->last_offset_x) * kDragSensitivity / dt;
+            const double vy = (offset_y - orbit->last_offset_y) * kDragSensitivity / dt;
+            orbit->yaw_velocity = 0.6 * vx + 0.4 * orbit->yaw_velocity;
+            orbit->pitch_velocity = 0.6 * vy + 0.4 * orbit->pitch_velocity;
+        }
+        orbit->last_offset_x = offset_x;
+        orbit->last_offset_y = offset_y;
+        orbit->last_update_us = now;
+
+        orbit->yaw = orbit->drag_start_yaw + offset_x * kDragSensitivity;
+        orbit->pitch = clamp(
+            orbit->drag_start_pitch + offset_y * kDragSensitivity, -kPitchLimit, kPitchLimit);
+        area->queue_draw();
+    });
+    drag->signal_drag_end().connect([area, orbit](double, double) {
+        // 停住不动再松手，就不该继续转。
+        if (g_get_monotonic_time() - orbit->last_update_us > 80'000) {
+            return;
+        }
+        if (hypot(orbit->yaw_velocity, orbit->pitch_velocity) < 0.3) {
+            return;
+        }
+        orbit->last_frame_us = 0;
+        orbit->inertia_tick = area->add_tick_callback(
+            [area, orbit](const Glib::RefPtr<Gdk::FrameClock>& clock) {
+                const gint64 now = clock->get_frame_time();
+                const double dt =
+                    orbit->last_frame_us == 0 ? 0.0 : (now - orbit->last_frame_us) / 1e6;
+                orbit->last_frame_us = now;
+
+                orbit->yaw += orbit->yaw_velocity * dt;
+                orbit->pitch += orbit->pitch_velocity * dt;
+                if (abs(orbit->pitch) >= kPitchLimit) {
+                    orbit->pitch = clamp(orbit->pitch, -kPitchLimit, kPitchLimit);
+                    orbit->pitch_velocity = 0;
+                }
+                const double decay = exp(-dt * 3.5);
+                orbit->yaw_velocity *= decay;
+                orbit->pitch_velocity *= decay;
+                area->queue_draw();
+
+                if (hypot(orbit->yaw_velocity, orbit->pitch_velocity) < 0.05) {
+                    orbit->inertia_tick = 0;
+                    return false;
+                }
+                return true;
+            });
+    });
     area->add_controller(drag);
+
+    auto click = Gtk::GestureClick::create();
+    click->signal_pressed().connect([area, orbit](int n_press, double, double) {
+        if (n_press == 2) {
+            stop_inertia(area, *orbit);
+            orbit->yaw = kDefaultYaw;
+            orbit->pitch = kDefaultPitch;
+            area->queue_draw();
+        }
+    });
+    area->add_controller(click);
+
     area->set_cursor("grab");
-    area->set_tooltip_text("按住拖动可以旋转查看");
+    area->set_tooltip_text(
+        "按住拖动旋转查看，松手会带惯性；双击回到默认视角。"
+        "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动");
 
     return area;
 }
