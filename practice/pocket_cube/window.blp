@@ -100,9 +100,9 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 3D 视角：原来"状态空间"这块最大的区域让给魔方 3D 视图——立体感
-      // 靠转动、光照和阴影，画面太小这些线索都看不清。三环点阵挪到左下
-      // 角，跟操作区并排。
+      // 3D 视角：左栏整列都给魔方 3D 视图——立体感靠转动、光照和阴影，
+      // 画面太小这些线索都看不清。三环点阵和操作区挪到右栏"当前状态"
+      // 下方并列一行。
       Frame {
         label: "3D 视角";
         hexpand: true;
@@ -125,10 +125,46 @@ ApplicationWindow window {
           valign: fill;
         }
       }
+    }
 
-      // 左下角一排：状态空间 + 操作区暂时挤在一起。vexpand 显式设为
-      // false，否则子控件的 expand 会向上传播，跟上面的 3D 视角平分高度。
-      Box practice_left_bottom_row {
+    // 右栏只占内容需要的宽度（hexpand: false），窗口放大时多出来的宽度
+    // 全部给左侧 3D 视角，而不是左右平分。
+    Box practice_right_panel {
+      orientation: vertical;
+      spacing: 10;
+      hexpand: false;
+      vexpand: true;
+
+      // 当前状态：上/右/前三张展开图 + 状态摘要（3D 视图已挪到左侧
+      // "3D 视角"）。三张展开图分别对着 U/R/F 转法把受影响的一圈摊到
+      // 中间行，精确读状态；摘要给路径与是否已复原。不设
+      // vexpand，高度由内容自然撑开。
+      Frame {
+        label: "当前状态";
+        hexpand: true;
+
+        styles [
+          "panel-frame"
+        ]
+
+        // 空容器，实际内容（3D 与三张展开图见 pocket_cube/view.h，
+        // 摘要 Label 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，
+        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
+        Box practice_cube_current_host {
+          name: "practice_cube_current_host";
+          orientation: horizontal;
+          spacing: 14;
+          hexpand: true;
+          halign: center;
+          valign: center;
+          margin-top: 8;
+          margin-bottom: 8;
+        }
+      }
+
+      // 当前状态下方一排：状态空间 + 操作区并列。vexpand 显式设为
+      // false，否则子控件的 expand 会向上传播，跟下面的操作视角平分高度。
+      Box practice_status_row {
         orientation: horizontal;
         spacing: 10;
         hexpand: true;
@@ -178,40 +214,6 @@ ApplicationWindow window {
             margin-start: 10;
             margin-end: 10;
           }
-        }
-      }
-    }
-
-    Box practice_right_panel {
-      orientation: vertical;
-      spacing: 10;
-      hexpand: true;
-      vexpand: true;
-
-      // 当前状态：上/右/前三张展开图 + 状态摘要（3D 视图已挪到左侧
-      // "3D 视角"）。三张展开图分别对着 U/R/F 转法把受影响的一圈摊到
-      // 中间行，精确读状态；摘要给路径与是否已复原。不设
-      // vexpand，高度由内容自然撑开。
-      Frame {
-        label: "当前状态";
-        hexpand: true;
-
-        styles [
-          "panel-frame"
-        ]
-
-        // 空容器，实际内容（3D 与三张展开图见 pocket_cube/view.h，
-        // 摘要 Label 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，
-        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
-        Box practice_cube_current_host {
-          name: "practice_cube_current_host";
-          orientation: horizontal;
-          spacing: 14;
-          hexpand: true;
-          halign: center;
-          valign: center;
-          margin-top: 8;
-          margin-bottom: 8;
         }
       }
 

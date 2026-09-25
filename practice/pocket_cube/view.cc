@@ -564,20 +564,23 @@ struct Rect {
     double h = 0;
 };
 
-// 3D 视角的分区：魔方占主体，拓扑图在旁边切出一条（横屏在右、竖屏在
-// 上），两者不重叠——拓扑图压在魔方上会挡住它要解释的东西。
+// 3D 视角上下两块：上面魔方、下面拓扑图，各画各的、各自裁剪在自己的
+// 矩形里，魔方的阴影不会伸进拓扑图。拓扑图的卡片是正方形，高度超过
+// 宽度的部分没用，所以按宽度封顶。
 struct Layout3D {
     Rect cube;
     Rect topology;
 };
 
 Layout3D layout_3d(int width, int height) {
-    if (width >= height) {
-        const double side = clamp(width * 0.3, 100.0, height * 0.55);
-        return {{0, 0, width - side, double(height)}, {width - side, 0, side, double(height)}};
-    }
-    const double side = clamp(height * 0.3, 100.0, width * 0.55);
-    return {{0, side, double(width), height - side}, {0, 0, double(width), side}};
+    const double lower = clamp(height * 0.36, 120.0, max(120.0, width * 0.7));
+    return {{0, 0, double(width), height - lower}, {0, height - lower, double(width), lower}};
+}
+
+void clip_to(const Cairo::RefPtr<Cairo::Context>& cr, const Rect& r) {
+    cr->begin_new_path();
+    cr->rectangle(r.x, r.y, r.w, r.h);
+    cr->clip();
 }
 
 void draw_cube_3d(
@@ -1058,7 +1061,7 @@ void draw_state_space_rings(
 // ===== 拓扑图：角块缩成点、共面相邻缩成线 =====
 //
 // 8 个角块各缩成它中心的一个点，两块共用一个接触面就连一条线——得到的
-// 是立方体图 Q3：8 点、12 边、每点度数 3。画在 3D 视角旁边切出的一条里，
+// 是立方体图 Q3：8 点、12 边、每点度数 3。画在 3D 视角的下半块，
 // 跟魔方共用同一个相机，拖动时一起转，看得出点和块一一对应。
 //
 // 图是活的：
@@ -1275,8 +1278,23 @@ Gtk::Widget* make_cube_3d_view(
             const CubeState state = state_provider();
             const TurnAnimation* turn = animation ? &*animation : nullptr;
             const Layout3D layout = layout_3d(width, height);
+            cr->save();
+            clip_to(cr, layout.cube);
             draw_cube_3d(cr, layout.cube, state, orbit->yaw, orbit->pitch, turn);
+            cr->restore();
+
+            // 上下两块之间一条分隔线。
+            cr->begin_new_path();
+            cr->move_to(12, layout.topology.y + 0.5);
+            cr->line_to(width - 12, layout.topology.y + 0.5);
+            cr->set_source_rgba(0, 0, 0, 0.10);
+            cr->set_line_width(1);
+            cr->stroke();
+
+            cr->save();
+            clip_to(cr, layout.topology);
             draw_topology(cr, layout.topology, state, orbit->yaw, orbit->pitch, turn);
+            cr->restore();
         });
 
     // pitch 取 +offset_y：手指往上拖，像从下往上托着魔方底部，把底面翻向
@@ -1362,7 +1380,7 @@ Gtk::Widget* make_cube_3d_view(
     area->set_tooltip_text(
         "按住拖动旋转查看，松手会带惯性；双击回到默认视角。"
         "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动。"
-        "旁边是角块缩成点、相邻缩成线后的拓扑图（立方体图 Q3）");
+        "下半块是角块缩成点、相邻缩成线后的拓扑图（立方体图 Q3）");
 
     return area;
 }
