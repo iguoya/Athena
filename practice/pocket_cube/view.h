@@ -4,6 +4,7 @@
 
 #include <gtkmm.h>
 
+#include <memory>
 #include <optional>
 
 using namespace std;
@@ -14,7 +15,7 @@ using namespace std;
 // - make_cube_3d_view()：8 个实体角块 + 轻度透视 + 光照 + 地面软阴影，
 //   拖动环绕（带惯性，双击复位），直觉的立体印象，但任意时刻最多同时
 //   看到 3 个面。不动的 D/L/B 角块画成支在立柱上，见 view.cc 3D 一节。
-//   下半块是角块缩成点、相邻缩成线的拓扑图（Q3），跟魔方共用视角。
+//   拓扑图（角块缩成点的 Q3）是独立控件 make_cube_topology_view()。
 // - make_cube_net_view()：六面展开图（十字形网格），六个面一次性摊
 //   开、没有遮挡，精确读状态用这个。
 //
@@ -48,9 +49,29 @@ using namespace std;
 // 状态，最后一帧就能跟真实状态无缝衔接（不会跳一下）。只有 3D 视图
 // 支持动画——展开图没有“转动”的空间概念，做动画反而奇怪，保持瞬间
 // 刷新，精确读结果用这个。
+// 3D 视图与拓扑图共用的视角：3D 视图拖动（含惯性、双击复位）时改写
+// yaw/pitch 并发出 changed，订阅了同一个对象的控件跟着重绘。用
+// make_cube_view_angle() 创建，初值是 3D 视图的默认视角。
+struct CubeViewAngle {
+    double yaw = 0;
+    double pitch = 0;
+    sigc::signal<void()> changed;
+};
+shared_ptr<CubeViewAngle> make_cube_view_angle();
+
+// angle 为空时 3D 视图自建一个，不跟任何控件联动。
 Gtk::Widget* make_cube_3d_view(
     function<CubeState()> state_provider, int size = 240,
-    function<optional<TurnAnimation>()> animation_provider = nullptr);
+    function<optional<TurnAnimation>()> animation_provider = nullptr,
+    shared_ptr<CubeViewAngle> angle = nullptr);
+
+// 拓扑图：8 个角块缩成点、共面相邻缩成线（立方体图 Q3），点按当前占位
+// 角块涂三色。只读、不接拖动，视角跟随传入的 angle；转动动画用法同
+// make_cube_3d_view() 的 animation_provider，调用方播动画时要同时对
+// 这个控件 queue_draw()。
+Gtk::Widget* make_cube_topology_view(
+    function<CubeState()> state_provider, shared_ptr<CubeViewAngle> angle,
+    int size = 200, function<optional<TurnAnimation>()> animation_provider = nullptr);
 Gtk::Widget* make_cube_net_view(
     function<CubeState()> state_provider, int width = 240, int height = 180);
 

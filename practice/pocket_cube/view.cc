@@ -564,25 +564,6 @@ struct Rect {
     double h = 0;
 };
 
-// 3D 视角上下两块：上面魔方、下面拓扑图，各画各的、各自裁剪在自己的
-// 矩形里，魔方的阴影不会伸进拓扑图。拓扑图的卡片是正方形，高度超过
-// 宽度的部分没用，所以按宽度封顶。
-struct Layout3D {
-    Rect cube;
-    Rect topology;
-};
-
-Layout3D layout_3d(int width, int height) {
-    const double lower = clamp(height * 0.36, 120.0, max(120.0, width * 0.7));
-    return {{0, 0, double(width), height - lower}, {0, height - lower, double(width), lower}};
-}
-
-void clip_to(const Cairo::RefPtr<Cairo::Context>& cr, const Rect& r) {
-    cr->begin_new_path();
-    cr->rectangle(r.x, r.y, r.w, r.h);
-    cr->clip();
-}
-
 void draw_cube_3d(
     const Cairo::RefPtr<Cairo::Context>& cr, const Rect& region,
     const CubeState& state, double yaw, double pitch,
@@ -1061,8 +1042,8 @@ void draw_state_space_rings(
 // ===== 拓扑图：角块缩成点、共面相邻缩成线 =====
 //
 // 8 个角块各缩成它中心的一个点，两块共用一个接触面就连一条线——得到的
-// 是立方体图 Q3：8 点、12 边、每点度数 3。画在 3D 视角的下半块，
-// 跟魔方共用同一个相机，拖动时一起转，看得出点和块一一对应。
+// 是立方体图 Q3：8 点、12 边、每点度数 3。独立控件，跟 3D 视图共用一个
+// CubeViewAngle，拖 3D 视图时一起转，看得出点和块一一对应。
 //
 // 图是活的：
 // - 点按当前占着这个位置的角块涂三色，转一步就看得出哪几块换了位置；
@@ -1073,54 +1054,20 @@ void draw_state_space_rings(
 
 constexpr ChartColor kAccentColor = chart_color(0x6f42c1); // 跟 app.json 图标同一个强调色
 
-void rounded_rect(
-    const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double w, double h,
-    double radius) {
-    constexpr double kQuarter = std::numbers::pi / 2;
-    cr->begin_new_path();
-    cr->arc(x + w - radius, y + radius, radius, -kQuarter, 0);
-    cr->arc(x + w - radius, y + h - radius, radius, 0, kQuarter);
-    cr->arc(x + radius, y + h - radius, radius, kQuarter, 2 * kQuarter);
-    cr->arc(x + radius, y + radius, radius, 2 * kQuarter, 3 * kQuarter);
-    cr->close_path();
-}
-
 void draw_topology(
     const Cairo::RefPtr<Cairo::Context>& cr, const Rect& region,
     const CubeState& state, double yaw, double pitch, const TurnAnimation* animation) {
-    constexpr double kMargin = 8;
-    const double side = min(region.w, region.h) - 2 * kMargin;
-    if (side < 60) {
+    const double side = min(region.w, region.h);
+    if (side < 40) {
         return;
     }
-    const double box_x = region.x + (region.w - side) / 2;
-    const double box_y = region.y + (region.h - side) / 2;
-
-    rounded_rect(cr, box_x, box_y, side, side, 8);
-    cr->set_source_rgba(1, 1, 1, 0.88);
-    cr->fill_preserve();
-    cr->set_source_rgba(0, 0, 0, 0.10);
-    cr->set_line_width(1);
-    cr->stroke();
-
-    // 中文要走 Pango：Cairo 的 toy font API 不做字体回退，CJK 会变方块。
-    const double caption_size = max(9.0, side * 0.07);
-    auto caption = Pango::Layout::create(cr);
-    Pango::FontDescription font("sans-serif");
-    font.set_absolute_size(caption_size * PANGO_SCALE);
-    caption->set_font_description(font);
-    caption->set_text("拓扑 · 8 点 12 边");
-    cr->set_source_rgba(0, 0, 0, 0.55);
-    cr->move_to(box_x + 8, box_y + 6);
-    caption->show_in_cairo_context(cr);
 
     // 点在 [-0.5, 0.5]^3 里，转到任何角度都落在半径 √3/2 的球内；再给
-    // 透视留一点余量。
-    const double pad = side * 0.13;
-    const double top_offset = caption_size * 0.6;
+    // 透视和点的半径留一点余量。
+    const double pad = side * 0.12;
     const Camera camera(
         yaw, pitch, (side / 2 - pad) / 0.95,
-        {box_x + side / 2, box_y + side / 2 + top_offset});
+        {region.x + region.w / 2, region.y + region.h / 2});
 
     vector<array<int, 3>> positions;
     for (int x : {-1, 1}) {
@@ -1239,8 +1186,7 @@ constexpr double kDragSensitivity = 0.012; // 弧度/像素
 // 指数衰减停下——转动过程本身就是立体线索，惯性让“甩一下看看背面”
 // 成本更低。
 struct OrbitState {
-    double yaw = kDefaultYaw;
-    double pitch = kDefaultPitch;
+    shared_ptr<CubeViewAngle> angle;
     double drag_start_yaw = 0;
     double drag_start_pitch = 0;
     double yaw_velocity = 0; // 弧度/秒
@@ -1261,40 +1207,35 @@ void stop_inertia(Gtk::DrawingArea* area, OrbitState& orbit) {
 
 } // namespace
 
+shared_ptr<CubeViewAngle> make_cube_view_angle() {
+    auto angle = make_shared<CubeViewAngle>();
+    angle->yaw = kDefaultYaw;
+    angle->pitch = kDefaultPitch;
+    return angle;
+}
+
 Gtk::Widget* make_cube_3d_view(
     function<CubeState()> state_provider, int size,
-    function<optional<TurnAnimation>()> animation_provider) {
+    function<optional<TurnAnimation>()> animation_provider,
+    shared_ptr<CubeViewAngle> angle) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
     area->set_content_width(size);
     area->set_content_height(size);
 
     auto orbit = make_shared<OrbitState>();
+    orbit->angle = angle ? angle : make_cube_view_angle();
+    // 视角的任何改动都走 changed 信号：自己和订阅了同一视角的拓扑图一起
+    // 重绘。Gtk::Widget 是 sigc::trackable，控件销毁时连接自动断开。
+    orbit->angle->changed.connect(sigc::mem_fun(*area, &Gtk::Widget::queue_draw));
 
     area->set_draw_func(
         [state_provider, animation_provider, orbit](
             const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const optional<TurnAnimation> animation =
                 animation_provider ? animation_provider() : nullopt;
-            const CubeState state = state_provider();
-            const TurnAnimation* turn = animation ? &*animation : nullptr;
-            const Layout3D layout = layout_3d(width, height);
-            cr->save();
-            clip_to(cr, layout.cube);
-            draw_cube_3d(cr, layout.cube, state, orbit->yaw, orbit->pitch, turn);
-            cr->restore();
-
-            // 上下两块之间一条分隔线。
-            cr->begin_new_path();
-            cr->move_to(12, layout.topology.y + 0.5);
-            cr->line_to(width - 12, layout.topology.y + 0.5);
-            cr->set_source_rgba(0, 0, 0, 0.10);
-            cr->set_line_width(1);
-            cr->stroke();
-
-            cr->save();
-            clip_to(cr, layout.topology);
-            draw_topology(cr, layout.topology, state, orbit->yaw, orbit->pitch, turn);
-            cr->restore();
+            draw_cube_3d(
+                cr, {0, 0, double(width), double(height)}, state_provider(),
+                orbit->angle->yaw, orbit->angle->pitch, animation ? &*animation : nullptr);
         });
 
     // pitch 取 +offset_y：手指往上拖，像从下往上托着魔方底部，把底面翻向
@@ -1302,15 +1243,15 @@ Gtk::Widget* make_cube_3d_view(
     auto drag = Gtk::GestureDrag::create();
     drag->signal_drag_begin().connect([area, orbit](double, double) {
         stop_inertia(area, *orbit);
-        orbit->drag_start_yaw = orbit->yaw;
-        orbit->drag_start_pitch = orbit->pitch;
+        orbit->drag_start_yaw = orbit->angle->yaw;
+        orbit->drag_start_pitch = orbit->angle->pitch;
         orbit->yaw_velocity = 0;
         orbit->pitch_velocity = 0;
         orbit->last_offset_x = 0;
         orbit->last_offset_y = 0;
         orbit->last_update_us = g_get_monotonic_time();
     });
-    drag->signal_drag_update().connect([area, orbit](double offset_x, double offset_y) {
+    drag->signal_drag_update().connect([orbit](double offset_x, double offset_y) {
         const gint64 now = g_get_monotonic_time();
         const double dt = (now - orbit->last_update_us) / 1e6;
         if (dt > 0) {
@@ -1324,10 +1265,10 @@ Gtk::Widget* make_cube_3d_view(
         orbit->last_offset_y = offset_y;
         orbit->last_update_us = now;
 
-        orbit->yaw = orbit->drag_start_yaw + offset_x * kDragSensitivity;
-        orbit->pitch = clamp(
+        orbit->angle->yaw = orbit->drag_start_yaw + offset_x * kDragSensitivity;
+        orbit->angle->pitch = clamp(
             orbit->drag_start_pitch + offset_y * kDragSensitivity, -kPitchLimit, kPitchLimit);
-        area->queue_draw();
+        orbit->angle->changed.emit();
     });
     drag->signal_drag_end().connect([area, orbit](double, double) {
         // 停住不动再松手，就不该继续转。
@@ -1339,22 +1280,23 @@ Gtk::Widget* make_cube_3d_view(
         }
         orbit->last_frame_us = 0;
         orbit->inertia_tick = area->add_tick_callback(
-            [area, orbit](const Glib::RefPtr<Gdk::FrameClock>& clock) {
+            [orbit](const Glib::RefPtr<Gdk::FrameClock>& clock) {
                 const gint64 now = clock->get_frame_time();
                 const double dt =
                     orbit->last_frame_us == 0 ? 0.0 : (now - orbit->last_frame_us) / 1e6;
                 orbit->last_frame_us = now;
 
-                orbit->yaw += orbit->yaw_velocity * dt;
-                orbit->pitch += orbit->pitch_velocity * dt;
-                if (abs(orbit->pitch) >= kPitchLimit) {
-                    orbit->pitch = clamp(orbit->pitch, -kPitchLimit, kPitchLimit);
+                CubeViewAngle& angle = *orbit->angle;
+                angle.yaw += orbit->yaw_velocity * dt;
+                angle.pitch += orbit->pitch_velocity * dt;
+                if (abs(angle.pitch) >= kPitchLimit) {
+                    angle.pitch = clamp(angle.pitch, -kPitchLimit, kPitchLimit);
                     orbit->pitch_velocity = 0;
                 }
                 const double decay = exp(-dt * 3.5);
                 orbit->yaw_velocity *= decay;
                 orbit->pitch_velocity *= decay;
-                area->queue_draw();
+                angle.changed.emit();
 
                 if (hypot(orbit->yaw_velocity, orbit->pitch_velocity) < 0.05) {
                     orbit->inertia_tick = 0;
@@ -1369,9 +1311,9 @@ Gtk::Widget* make_cube_3d_view(
     click->signal_pressed().connect([area, orbit](int n_press, double, double) {
         if (n_press == 2) {
             stop_inertia(area, *orbit);
-            orbit->yaw = kDefaultYaw;
-            orbit->pitch = kDefaultPitch;
-            area->queue_draw();
+            orbit->angle->yaw = kDefaultYaw;
+            orbit->angle->pitch = kDefaultPitch;
+            orbit->angle->changed.emit();
         }
     });
     area->add_controller(click);
@@ -1379,9 +1321,31 @@ Gtk::Widget* make_cube_3d_view(
     area->set_cursor("grab");
     area->set_tooltip_text(
         "按住拖动旋转查看，松手会带惯性；双击回到默认视角。"
-        "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动。"
-        "下半块是角块缩成点、相邻缩成线后的拓扑图（立方体图 Q3）");
+        "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动");
 
+    return area;
+}
+
+Gtk::Widget* make_cube_topology_view(
+    function<CubeState()> state_provider, shared_ptr<CubeViewAngle> angle, int size,
+    function<optional<TurnAnimation>()> animation_provider) {
+    auto area = Gtk::make_managed<Gtk::DrawingArea>();
+    area->set_content_width(size);
+    area->set_content_height(size);
+    angle->changed.connect(sigc::mem_fun(*area, &Gtk::Widget::queue_draw));
+    area->set_draw_func(
+        [state_provider, animation_provider, angle](
+            const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
+            const optional<TurnAnimation> animation =
+                animation_provider ? animation_provider() : nullopt;
+            draw_topology(
+                cr, {0, 0, double(width), double(height)}, state_provider(), angle->yaw,
+                angle->pitch, animation ? &*animation : nullptr);
+        });
+    area->set_tooltip_text(
+        "角块缩成点、共面相邻缩成线：立方体图 Q3，8 点 12 边。"
+        "点的三色是当前占着这个位置的角块，紫圈是不动的 D/L/B 角块；"
+        "转动中跨层的 4 条边画成虚线。视角跟随 3D 视图");
     return area;
 }
 

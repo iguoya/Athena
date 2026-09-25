@@ -53,7 +53,7 @@ int ring_group_for_face(Face face) {
 // 两边的进度（progress）算的是同一个数，天然同步，不需要维护两条
 // 独立的计时器。
 void play_turn_animation(
-    Gtk::Widget* view_3d,
+    vector<Gtk::Widget*> turn_views,
     shared_ptr<optional<TurnAnimation>> animation_state,
     Move move,
     bool reverse,
@@ -68,7 +68,9 @@ void play_turn_animation(
 
     *animation_state =
         TurnAnimation{layout.normal_axis, layout.normal_sign, start_degrees};
-    view_3d->queue_draw();
+    for (auto* view : turn_views) {
+        view->queue_draw();
+    }
     if (rings_view && rings_animation_state && ring_group >= 0) {
         *rings_animation_state =
             RingAnimation{ring_group, start_degrees * std::numbers::pi / 180.0};
@@ -77,7 +79,7 @@ void play_turn_animation(
 
     const auto started = chrono::steady_clock::now();
     Glib::signal_timeout().connect(
-        [animation_state, view_3d, started, start_degrees, end_degrees,
+        [animation_state, turn_views, started, start_degrees, end_degrees,
          on_complete, rings_view, rings_animation_state, ring_group]() -> bool {
             const double elapsed_ms = chrono::duration<double, milli>(
                                           chrono::steady_clock::now() - started)
@@ -88,7 +90,9 @@ void play_turn_animation(
             if (*animation_state) {
                 (*animation_state)->current_degrees = current_degrees;
             }
-            view_3d->queue_draw();
+            for (auto* view : turn_views) {
+                view->queue_draw();
+            }
             if (rings_view && rings_animation_state && ring_group >= 0) {
                 *rings_animation_state = RingAnimation{
                     ring_group, current_degrees * std::numbers::pi / 180.0};
@@ -114,6 +118,7 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
     auto state_space_host =
         builder->get_widget<Gtk::Box>("practice_state_space_host");
     auto cube_3d_host = builder->get_widget<Gtk::Box>("practice_cube_3d_host");
+    auto topology_host = builder->get_widget<Gtk::Box>("practice_cube_topology_host");
     auto operations_host =
         builder->get_widget<Gtk::Box>("practice_operations_host");
 
@@ -149,20 +154,34 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
 
     Gtk::Label* path_label = nullptr;
     Gtk::Label* solved_label = nullptr;
-    Gtk::Widget* current_view_3d = nullptr;
+    // 3D 视图和拓扑图共用视角和转动动画：拖 3D 视图时拓扑图跟着转，点
+    // 按钮时两边同一帧播同一段转动。
+    vector<Gtk::Widget*> turn_views;
     auto current_view_animation = make_shared<optional<TurnAnimation>>();
+    auto view_angle = make_cube_view_angle();
     if (cube_3d_host) {
         // 占满左上"3D 视角"整块区域：立体感靠转动、光照和阴影，画面越大
         // 这些线索越清楚。320 只是最小尺寸，实际跟着区域一起放大。
         auto* view_3d = make_cube_3d_view(
             [cube] { return cube->state(); },
             320,
-            [current_view_animation] { return *current_view_animation; });
+            [current_view_animation] { return *current_view_animation; },
+            view_angle);
         view_3d->set_hexpand(true);
         view_3d->set_vexpand(true);
         cube_3d_host->append(*view_3d);
         redraw_targets->push_back(view_3d);
-        current_view_3d = view_3d;
+        turn_views.push_back(view_3d);
+    }
+    if (topology_host) {
+        auto* topology = make_cube_topology_view(
+            [cube] { return cube->state(); }, view_angle, 200,
+            [current_view_animation] { return *current_view_animation; });
+        topology->set_hexpand(true);
+        topology->set_vexpand(true);
+        topology_host->append(*topology);
+        redraw_targets->push_back(topology);
+        turn_views.push_back(topology);
     }
 
     if (current_host) {
@@ -276,7 +295,7 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
             }
         };
 
-    // 九个按钮共享同一个 current_view_3d/current_view_animation，同一时刻
+    // 九个按钮共享同一组 turn_views/current_view_animation，同一时刻
     // 只能播一个转动动画，点下去先把全部九个按钮禁用，动画播完（真正
     // apply_turn() 改了状态之后）再一起解禁——避免动画播到一半又点了
     // 另一个按钮，两次转动的动画状态互相打架。
@@ -292,7 +311,7 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
             [cube,
              move,
              refresh_cube_display,
-             current_view_3d,
+             turn_views,
              current_view_animation,
              rings_view,
              rings_animation,
@@ -304,10 +323,10 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
                     set_operation_buttons_sensitive(true);
                 };
 
-                if (current_view_3d) {
+                if (!turn_views.empty()) {
                     set_operation_buttons_sensitive(false);
                     play_turn_animation(
-                        current_view_3d, current_view_animation, move, false,
+                        turn_views, current_view_animation, move, false,
                         finish_turn, rings_view, rings_animation);
                 } else {
                     finish_turn();

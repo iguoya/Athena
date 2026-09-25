@@ -21,6 +21,20 @@ TEST(CubeViewTest, ThreeDViewHintsThatItIsDraggable) {
     EXPECT_FALSE(view->get_tooltip_text().empty());
 }
 
+TEST(CubeViewTest, TopologyViewFollowsSharedAngle) {
+    auto angle = make_cube_view_angle();
+    auto* view = make_cube_topology_view([] { return make_solved_cube(); }, angle);
+
+    ASSERT_NE(view, nullptr);
+    auto* area = dynamic_cast<Gtk::DrawingArea*>(view);
+    ASSERT_NE(area, nullptr);
+    EXPECT_EQ(area->get_content_width(), 200);
+    EXPECT_FALSE(view->get_tooltip_text().empty());
+    // 3D 视图和拓扑图各订阅一次，视角变化时两边都重绘。
+    make_cube_3d_view([] { return make_solved_cube(); }, 240, nullptr, angle);
+    EXPECT_EQ(angle->changed.size(), 2u);
+}
+
 TEST(CubeViewTest, NetViewHasFixedContentSize) {
     auto* view = make_cube_net_view([] { return make_solved_cube(); });
 
