@@ -199,7 +199,7 @@ constexpr double kCubieHalf = 0.485;     // 角块半边长；相邻两块之间
 constexpr double kStickerHalf = 0.40;    // 贴纸半边长，四周露出一圈块体
 constexpr double kStickerChamfer = 0.10; // 贴纸切角，读起来像实物贴纸而不是色块
 constexpr double kFloorY = -2.05;        // 地面高度：魔方悬空，阴影与本体分开，默认视角能从底下看到立柱
-constexpr double kFloorRadius = 2.4;
+constexpr double kFloorRadius = 2.0;
 constexpr double kCameraDistance = 7.5;  // 越小透视越强；7.5 ≈ 中长焦，不变形
 constexpr double kStandRadius = 0.08;
 
@@ -290,6 +290,23 @@ struct CubieTransform {
     }
 };
 
+// 角块 pos 在第 a 根轴上朝外那张贴纸所在的槽位：面由轴和坐标符号决定，
+// 面内格子由 face_layout() 的 u/v 轴取同一个 pos 的符号。3D 块体和拓扑
+// 图都按这个查颜色，两边不会对不上。
+struct StickerSlot {
+    Face face;
+    int u_sign;
+    int v_sign;
+};
+
+StickerSlot outward_slot(const array<int, 3>& pos, size_t a) {
+    const Face face = face_on(kAxes[a], pos[a]);
+    const FaceLayout layout = face_layout(face);
+    return {
+        face, pos[static_cast<size_t>(layout.u_axis)],
+        pos[static_cast<size_t>(layout.v_axis)]};
+}
+
 // 画一个角块：块体 6 个面里朝向相机的那几个（凸体，彼此不遮挡，不用
 // 排序），外表面再贴上贴纸和编号。
 void draw_cubie(
@@ -324,10 +341,7 @@ void draw_cubie(
             if (sign != pos[a]) {
                 continue;
             }
-            const Face face = face_on(axis, sign);
-            const FaceLayout layout = face_layout(face);
-            const int u_sign = pos[static_cast<size_t>(layout.u_axis)];
-            const int v_sign = pos[static_cast<size_t>(layout.v_axis)];
+            const auto [face, u_sign, v_sign] = outward_slot(pos, a);
 
             // 切角八边形，逆时针走一圈。
             constexpr double s = kStickerHalf;
@@ -435,21 +449,23 @@ vector<Vec3> floor_convex_hull(vector<Vec3> points) {
     return hull;
 }
 
-void draw_floor(const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera, double alpha) {
-    const auto trace_circle = [&](double radius) {
-        cr->begin_new_path();
-        constexpr int kSegments = 72;
-        for (int i = 0; i <= kSegments; ++i) {
-            const double t = 2 * std::numbers::pi * i / kSegments;
-            const Vec2 p = camera.project({radius * cos(t), kFloorY, radius * sin(t)});
-            i == 0 ? cr->move_to(p.x, p.y) : cr->line_to(p.x, p.y);
-        }
-        cr->close_path();
-    };
+// 地面上以原点正下方为圆心的一个圆，投影后的路径（留在 cr 里待填充）。
+void trace_floor_circle(
+    const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera, double radius) {
+    cr->begin_new_path();
+    constexpr int kSegments = 72;
+    for (int i = 0; i <= kSegments; ++i) {
+        const double t = 2 * std::numbers::pi * i / kSegments;
+        const Vec2 p = camera.project({radius * cos(t), kFloorY, radius * sin(t)});
+        i == 0 ? cr->move_to(p.x, p.y) : cr->line_to(p.x, p.y);
+    }
+    cr->close_path();
+}
 
+void draw_floor(const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera, double alpha) {
     // 几层同心圆叠出由中心向外淡出的地面，边缘不留生硬的圆圈。
     for (double ratio : {1.0, 0.82, 0.64, 0.46}) {
-        trace_circle(kFloorRadius * ratio);
+        trace_floor_circle(cr, camera, kFloorRadius * ratio);
         cr->set_source_rgba(0.45, 0.47, 0.52, 0.05 * alpha);
         cr->fill();
     }
@@ -477,6 +493,10 @@ void draw_floor(const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera, d
 // 软阴影：Cairo 没有模糊，用若干层“凸包 + 不同宽度的圆角描边”叠出
 // 由内向外渐淡的半影。每层先画进一个不透明的 group 再整体按固定透明度
 // 贴回去，填充和描边重叠的部分才不会被算两次。
+//
+// 阴影只落在地面圆盘上：整张阴影再用“圆盘由中心向外渐隐”的蒙版贴回去，
+// 跟地面一起淡出。否则视角压低时透视会把影子拉得很长，越出取景框被
+// 截断——圆盘本身已经计入取景包围框，贴在盘上的影子就永远完整。
 void draw_shadow(
     const Cairo::RefPtr<Cairo::Context>& cr, const Camera& camera,
     const vector<Vec3>& caster_points, double alpha) {
@@ -495,6 +515,7 @@ void draw_shadow(
     const double stand_width =
         2 * kStandRadius * camera.scale * camera.perspective(stand_bottom());
 
+    cr->push_group();
     constexpr int kLayers = 12;
     const double penumbra = camera.scale * 0.22;
     for (int i = kLayers; i >= 1; --i) {
@@ -521,24 +542,62 @@ void draw_shadow(
         cr->pop_group_to_source();
         cr->paint_with_alpha(0.028 * alpha);
     }
+    const auto shadow = cr->pop_group();
+
+    // 蒙版：从盘缘往里 8 圈，每圈 0.4 的不透明度叠上去，盘缘淡、0.6 半径
+    // 以内基本全不透明——魔方正下方的本影不受影响。
+    cr->push_group();
+    for (int ring = 0; ring < 8; ++ring) {
+        trace_floor_circle(cr, camera, kFloorRadius * (1.0 - 0.05 * ring));
+        cr->set_source_rgba(0, 0, 0, 0.4);
+        cr->fill();
+    }
+    const auto mask = cr->pop_group();
+    cr->set_source(shadow);
+    cr->mask(mask);
+}
+
+struct Rect {
+    double x = 0;
+    double y = 0;
+    double w = 0;
+    double h = 0;
+};
+
+// 3D 视角的分区：魔方占主体，拓扑图在旁边切出一条（横屏在右、竖屏在
+// 上），两者不重叠——拓扑图压在魔方上会挡住它要解释的东西。
+struct Layout3D {
+    Rect cube;
+    Rect topology;
+};
+
+Layout3D layout_3d(int width, int height) {
+    if (width >= height) {
+        const double side = clamp(width * 0.3, 100.0, height * 0.55);
+        return {{0, 0, width - side, double(height)}, {width - side, 0, side, double(height)}};
+    }
+    const double side = clamp(height * 0.3, 100.0, width * 0.55);
+    return {{0, side, double(width), height - side}, {0, 0, double(width), side}};
 }
 
 void draw_cube_3d(
-    const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
+    const Cairo::RefPtr<Cairo::Context>& cr, const Rect& region,
     const CubeState& state, double yaw, double pitch,
     const TurnAnimation* animation) {
     // 按“任何视角都完整显示”定缩放：遍历全部 yaw 和 ±kPitchLimit 内的
-    // pitch，魔方（含转动中的层）加地面圆盘投影后的最大范围是横向 ±2.73、
-    // 向上 2.16、向下 3.48（单位 = 魔方半边长）。按这个包围框取景，拖到
+    // pitch，魔方（含转动中的层）加地面圆盘投影后的最大范围是横向 ±2.23、
+    // 向上 2.16、向下 3.10（单位 = 魔方半边长）。按这个包围框取景，拖到
     // 哪个角度都不会被裁；不随视角动态缩放，否则一边转一边忽大忽小。
-    constexpr double kFitHalfWidth = 2.8;
+    // 阴影是半透明的淡出区域，不计入包围框。
+    constexpr double kFitHalfWidth = 2.3;
     constexpr double kFitAbove = 2.2;
-    constexpr double kFitBelow = 3.55;
+    constexpr double kFitBelow = 3.15;
     const double scale =
-        0.96 * min(width / (2 * kFitHalfWidth), height / (kFitAbove + kFitBelow));
+        0.96 * min(region.w / (2 * kFitHalfWidth), region.h / (kFitAbove + kFitBelow));
     const Camera camera(
         yaw, pitch, scale,
-        {width / 2.0, height / 2.0 - scale * (kFitBelow - kFitAbove) / 2});
+        {region.x + region.w / 2.0,
+         region.y + region.h / 2.0 - scale * (kFitBelow - kFitAbove) / 2});
 
     const auto in_turning_layer = [&](const array<int, 3>& pos) {
         return animation != nullptr &&
@@ -996,6 +1055,174 @@ void draw_state_space_rings(
     }
 }
 
+// ===== 拓扑图：角块缩成点、共面相邻缩成线 =====
+//
+// 8 个角块各缩成它中心的一个点，两块共用一个接触面就连一条线——得到的
+// 是立方体图 Q3：8 点、12 边、每点度数 3。画在 3D 视角旁边切出的一条里，
+// 跟魔方共用同一个相机，拖动时一起转，看得出点和块一一对应。
+//
+// 图是活的：
+// - 点按当前占着这个位置的角块涂三色，转一步就看得出哪几块换了位置；
+//   位置（图的顶点）永远是那 8 个，换的是占位的块——这正是“状态”的含义；
+// - 转动中那一层的 4 个点跟着转，跨层的 4 条边改成虚线：这 4 对相邻
+//   关系在转动过程中暂时断开，转到位后重新接上，图还是同一张 Q3；
+// - 不动的 D/L/B 角块那个点加一圈描边，它的颜色永远不变。
+
+constexpr ChartColor kAccentColor = chart_color(0x6f42c1); // 跟 app.json 图标同一个强调色
+
+void rounded_rect(
+    const Cairo::RefPtr<Cairo::Context>& cr, double x, double y, double w, double h,
+    double radius) {
+    constexpr double kQuarter = std::numbers::pi / 2;
+    cr->begin_new_path();
+    cr->arc(x + w - radius, y + radius, radius, -kQuarter, 0);
+    cr->arc(x + w - radius, y + h - radius, radius, 0, kQuarter);
+    cr->arc(x + radius, y + h - radius, radius, kQuarter, 2 * kQuarter);
+    cr->arc(x + radius, y + radius, radius, 2 * kQuarter, 3 * kQuarter);
+    cr->close_path();
+}
+
+void draw_topology(
+    const Cairo::RefPtr<Cairo::Context>& cr, const Rect& region,
+    const CubeState& state, double yaw, double pitch, const TurnAnimation* animation) {
+    constexpr double kMargin = 8;
+    const double side = min(region.w, region.h) - 2 * kMargin;
+    if (side < 60) {
+        return;
+    }
+    const double box_x = region.x + (region.w - side) / 2;
+    const double box_y = region.y + (region.h - side) / 2;
+
+    rounded_rect(cr, box_x, box_y, side, side, 8);
+    cr->set_source_rgba(1, 1, 1, 0.88);
+    cr->fill_preserve();
+    cr->set_source_rgba(0, 0, 0, 0.10);
+    cr->set_line_width(1);
+    cr->stroke();
+
+    // 中文要走 Pango：Cairo 的 toy font API 不做字体回退，CJK 会变方块。
+    const double caption_size = max(9.0, side * 0.07);
+    auto caption = Pango::Layout::create(cr);
+    Pango::FontDescription font("sans-serif");
+    font.set_absolute_size(caption_size * PANGO_SCALE);
+    caption->set_font_description(font);
+    caption->set_text("拓扑 · 8 点 12 边");
+    cr->set_source_rgba(0, 0, 0, 0.55);
+    cr->move_to(box_x + 8, box_y + 6);
+    caption->show_in_cairo_context(cr);
+
+    // 点在 [-0.5, 0.5]^3 里，转到任何角度都落在半径 √3/2 的球内；再给
+    // 透视留一点余量。
+    const double pad = side * 0.13;
+    const double top_offset = caption_size * 0.6;
+    const Camera camera(
+        yaw, pitch, (side / 2 - pad) / 0.95,
+        {box_x + side / 2, box_y + side / 2 + top_offset});
+
+    vector<array<int, 3>> positions;
+    for (int x : {-1, 1}) {
+        for (int y : {-1, 1}) {
+            for (int z : {-1, 1}) {
+                positions.push_back({x, y, z});
+            }
+        }
+    }
+    const auto turning = [&](const array<int, 3>& pos) {
+        return animation != nullptr &&
+               pos[static_cast<size_t>(animation->axis)] == animation->layer_coord;
+    };
+    const auto world_point = [&](const array<int, 3>& pos) {
+        const Vec3 center{pos[0] * 0.5, pos[1] * 0.5, pos[2] * 0.5};
+        return CubieTransform{turning(pos) ? animation : nullptr}(center);
+    };
+    const auto depth_of = [&](const Vec3& p) { return rotate(p, yaw, pitch).z; };
+
+    // 边和点统一按深度从远到近画，近处的点能压住远处的边。
+    struct Item {
+        double depth;
+        int a; // 点的下标
+        int b; // 边的另一端；点本身为 -1
+    };
+    vector<Item> items;
+    for (size_t i = 0; i < positions.size(); ++i) {
+        items.push_back({depth_of(world_point(positions[i])), static_cast<int>(i), -1});
+        for (size_t j = i + 1; j < positions.size(); ++j) {
+            int differing = 0;
+            for (size_t k = 0; k < 3; ++k) {
+                differing += positions[i][k] != positions[j][k];
+            }
+            if (differing == 1) {
+                const Vec3 mid = (world_point(positions[i]) + world_point(positions[j])) * 0.5;
+                // 边比同深度的点略靠后，端点处由点盖住线头。
+                items.push_back({depth_of(mid) - 0.01, static_cast<int>(i), static_cast<int>(j)});
+            }
+        }
+    }
+    sort(items.begin(), items.end(), [](const Item& l, const Item& r) {
+        return l.depth < r.depth;
+    });
+
+    // 远处淡、近处实：深度映射到 [0,1]，点的半径另随透视缩放。
+    const auto nearness = [](double depth) { return clamp((depth + 0.9) / 1.8, 0.0, 1.0); };
+    const double node_radius = side * 0.058;
+
+    for (const Item& item : items) {
+        const double t = nearness(item.depth);
+        if (item.b >= 0) {
+            const auto& pa = positions[static_cast<size_t>(item.a)];
+            const auto& pb = positions[static_cast<size_t>(item.b)];
+            const Vec2 sa = camera.project(world_point(pa));
+            const Vec2 sb = camera.project(world_point(pb));
+            const bool broken = animation != nullptr && turning(pa) != turning(pb);
+            cr->begin_new_path();
+            cr->move_to(sa.x, sa.y);
+            cr->line_to(sb.x, sb.y);
+            cr->set_source_rgba(0.25, 0.27, 0.32, 0.30 + 0.45 * t);
+            cr->set_line_width(1.2 + 1.3 * t);
+            if (broken) {
+                cr->set_dash(vector<double>{4.0, 3.0}, 0);
+            }
+            cr->stroke();
+            cr->unset_dash();
+            continue;
+        }
+
+        const auto& pos = positions[static_cast<size_t>(item.a)];
+        const Vec3 p = world_point(pos);
+        const Vec2 c = camera.project(p);
+        const double r = node_radius * camera.perspective(p);
+        const double alpha = 0.55 + 0.45 * t;
+
+        // 三等分扇形：上方一瓣是 U/D 向（Y）的贴纸，另两瓣是 X、Z 向。
+        constexpr array<size_t, 3> kWedgeAxes{1, 0, 2};
+        for (size_t w = 0; w < kWedgeAxes.size(); ++w) {
+            const auto [face, u_sign, v_sign] = outward_slot(pos, kWedgeAxes[w]);
+            const ChartColor color = sticker_color(sticker_at(state, face, u_sign, v_sign));
+            const double start = -std::numbers::pi / 2 - std::numbers::pi / 3 +
+                                 w * 2 * std::numbers::pi / 3;
+            cr->begin_new_path();
+            cr->move_to(c.x, c.y);
+            cr->arc(c.x, c.y, r, start, start + 2 * std::numbers::pi / 3);
+            cr->close_path();
+            cr->set_source_rgba(color.r, color.g, color.b, alpha);
+            cr->fill();
+        }
+        cr->begin_new_path();
+        cr->arc(c.x, c.y, r, 0, 2 * std::numbers::pi);
+        cr->set_source_rgba(0.15, 0.15, 0.18, 0.55 + 0.35 * t);
+        cr->set_line_width(1.2);
+        cr->stroke();
+
+        if (pos == kFixedCubie) {
+            cr->begin_new_path();
+            cr->arc(c.x, c.y, r + 3.0, 0, 2 * std::numbers::pi);
+            cr->set_source_rgba(kAccentColor.r, kAccentColor.g, kAccentColor.b, alpha);
+            cr->set_line_width(2.0);
+            cr->stroke();
+        }
+    }
+}
+
 // 初始视角：俯视，同时看到 U/F/R 三个转动面。pitch 必须为正（相机在
 // 上方）：为负会转到仰视，U 被剔除、露出 D。yaw 从正对 F/R 棱的 -45°
 // 往回偏一点，避免左右对称的呆板构图，也让右后方的阴影露出来。
@@ -1045,9 +1272,11 @@ Gtk::Widget* make_cube_3d_view(
             const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const optional<TurnAnimation> animation =
                 animation_provider ? animation_provider() : nullopt;
-            draw_cube_3d(
-                cr, width, height, state_provider(), orbit->yaw, orbit->pitch,
-                animation ? &*animation : nullptr);
+            const CubeState state = state_provider();
+            const TurnAnimation* turn = animation ? &*animation : nullptr;
+            const Layout3D layout = layout_3d(width, height);
+            draw_cube_3d(cr, layout.cube, state, orbit->yaw, orbit->pitch, turn);
+            draw_topology(cr, layout.topology, state, orbit->yaw, orbit->pitch, turn);
         });
 
     // pitch 取 +offset_y：手指往上拖，像从下往上托着魔方底部，把底面翻向
@@ -1132,7 +1361,8 @@ Gtk::Widget* make_cube_3d_view(
     area->set_cursor("grab");
     area->set_tooltip_text(
         "按住拖动旋转查看，松手会带惯性；双击回到默认视角。"
-        "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动");
+        "底下立柱托着的是 D/L/B 交界的角块：只转 U/R/F 时它从头到尾不动。"
+        "旁边是角块缩成点、相邻缩成线后的拓扑图（立方体图 Q3）");
 
     return area;
 }
