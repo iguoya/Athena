@@ -1114,15 +1114,30 @@ void draw_topology(
 
     // 远处淡、近处实：深度映射到 [0,1]，点的半径另随透视缩放。
     const auto nearness = [](double depth) { return clamp((depth + 0.9) / 1.8, 0.0, 1.0); };
-    const double node_radius = side * 0.058;
+    // 点要装下三瓣各自的两位数编号，比纯色点大一圈。
+    const double node_radius = side * 0.085;
 
     for (const Item& item : items) {
         const double t = nearness(item.depth);
         if (item.b >= 0) {
             const auto& pa = positions[static_cast<size_t>(item.a)];
             const auto& pb = positions[static_cast<size_t>(item.b)];
-            const Vec2 sa = camera.project(world_point(pa));
-            const Vec2 sb = camera.project(world_point(pb));
+            const Vec3 wa = world_point(pa);
+            const Vec3 wb = world_point(pb);
+            Vec2 sa = camera.project(wa);
+            Vec2 sb = camera.project(wb);
+            // 线只画在两个圆的边缘之间：点上有编号，线头伸进圆里会压字，
+            // 而且边比远端点后画，深度排序管不住这一段。
+            const double ra = node_radius * camera.perspective(wa);
+            const double rb = node_radius * camera.perspective(wb);
+            const double dx = sb.x - sa.x;
+            const double dy = sb.y - sa.y;
+            const double len = sqrt(dx * dx + dy * dy);
+            if (len <= ra + rb) {
+                continue;
+            }
+            sa = {sa.x + dx / len * ra, sa.y + dy / len * ra};
+            sb = {sb.x - dx / len * rb, sb.y - dy / len * rb};
             const bool broken = animation != nullptr && turning(pa) != turning(pb);
             cr->begin_new_path();
             cr->move_to(sa.x, sa.y);
@@ -1144,7 +1159,14 @@ void draw_topology(
         const double alpha = 0.55 + 0.45 * t;
 
         // 三等分扇形：上方一瓣是 U/D 向（Y）的贴纸，另两瓣是 X、Z 向。
+        // 每瓣标上那张贴纸的编号——跟 3D 视图、展开图同一套 1~24，同样
+        // 跟着贴纸走（sticker_home()），不跟着位置走。
         constexpr array<size_t, 3> kWedgeAxes{1, 0, 2};
+        struct WedgeLabel {
+            Vec2 at;
+            int number;
+        };
+        array<WedgeLabel, 3> wedge_labels{};
         for (size_t w = 0; w < kWedgeAxes.size(); ++w) {
             const auto [face, u_sign, v_sign] = outward_slot(pos, kWedgeAxes[w]);
             const ChartColor color = sticker_color(sticker_at(state, face, u_sign, v_sign));
@@ -1156,6 +1178,36 @@ void draw_topology(
             cr->close_path();
             cr->set_source_rgba(color.r, color.g, color.b, alpha);
             cr->fill();
+
+            const double mid = start + std::numbers::pi / 3;
+            const StickerHome home = sticker_home(state, face, u_sign, v_sign);
+            wedge_labels[w] = {
+                {c.x + r * 0.55 * cos(mid), c.y + r * 0.55 * sin(mid)},
+                sticker_label(home.face, home.u_sign, home.v_sign)};
+        }
+        // 三瓣之间描细白线分隔，编号各归各瓣。
+        for (size_t w = 0; w < kWedgeAxes.size(); ++w) {
+            const double edge = -std::numbers::pi / 2 - std::numbers::pi / 3 +
+                                w * 2 * std::numbers::pi / 3;
+            cr->begin_new_path();
+            cr->move_to(c.x, c.y);
+            cr->line_to(c.x + r * cos(edge), c.y + r * sin(edge));
+            cr->set_source_rgba(1, 1, 1, 0.8 * alpha);
+            cr->set_line_width(1.0);
+            cr->stroke();
+        }
+        cairo_select_font_face(
+            cr->cobj(), "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+        cr->set_font_size(max(7.0, r * 0.52));
+        for (const auto& label : wedge_labels) {
+            const string text = to_string(label.number);
+            Cairo::TextExtents extents;
+            cr->get_text_extents(text, extents);
+            cr->move_to(
+                label.at.x - extents.width / 2.0 - extents.x_bearing,
+                label.at.y - extents.height / 2.0 - extents.y_bearing);
+            cr->set_source_rgba(0.1, 0.1, 0.12, 0.85 * alpha);
+            cr->show_text(text);
         }
         cr->begin_new_path();
         cr->arc(c.x, c.y, r, 0, 2 * std::numbers::pi);
@@ -1344,7 +1396,8 @@ Gtk::Widget* make_cube_topology_view(
         });
     area->set_tooltip_text(
         "角块缩成点、共面相邻缩成线：立方体图 Q3，8 点 12 边。"
-        "点的三色是当前占着这个位置的角块，紫圈是不动的 D/L/B 角块；"
+        "点的三瓣是当前占着这个位置的角块的三张贴纸，编号跟 3D 视图、展开图"
+        "同一套、跟着贴纸走；紫圈是不动的 D/L/B 角块；"
         "转动中跨层的 4 条边画成虚线。视角跟随 3D 视图");
     return area;
 }
