@@ -85,9 +85,9 @@ ApplicationWindow window {
     orientation: horizontal;
   }
 
-  // 主体分左右两栏：左边状态空间可视化 + 操作区，右边“当前状态”
-  // 一行 + “操作视角”三个面板，具体绘图控件和按钮在 C++ 侧动态创建，
-  // 见 main.cc 的 wire_window()。
+  // 主体分左右两栏：左边整列是魔方 3D 视角；右边上排“当前状态 + 操作区”
+  // 并列，下排“状态空间 + 拓扑图”并列、占满剩余高度。具体绘图控件和
+  // 按钮在 C++ 侧动态创建，见 main.cc 的 wire_window()。
   Box practice_body {
     orientation: horizontal;
     spacing: 14;
@@ -100,8 +100,8 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 3D 视角：左栏上方的主体给魔方 3D 视图——立体感靠转动、光照和
-      // 阴影，画面太小这些线索都看不清。下方一排是状态空间和拓扑图。
+      // 3D 视角：左栏整列给魔方 3D 视图——立体感靠转动、光照和阴影，
+      // 画面太小这些线索都看不清。
       Frame {
         label: "3D 视角";
         hexpand: true;
@@ -124,56 +124,6 @@ ApplicationWindow window {
           valign: fill;
         }
       }
-
-      // 左下一排：状态空间 + 拓扑图并列。vexpand 显式设为 false，否则
-      // 子控件的 expand 会向上传播，跟上面的 3D 视角平分高度。
-      Box practice_left_bottom_row {
-        orientation: horizontal;
-        spacing: 10;
-        hexpand: true;
-        vexpand: false;
-
-        // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
-        // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
-        // 这个小魔方背后状态空间大得惊人。
-        Frame {
-          label: "状态空间";
-          hexpand: true;
-
-          styles [
-            "panel-frame"
-          ]
-
-          Box practice_state_space_host {
-            name: "practice_state_space_host";
-            orientation: horizontal;
-            hexpand: true;
-            vexpand: true;
-            halign: fill;
-            valign: fill;
-          }
-        }
-
-        // 拓扑图：角块缩成点、共面相邻缩成线（立方体图 Q3），独立控件，
-        // 视角跟随 3D 视图，见 pocket_cube/view.h make_cube_topology_view()。
-        Frame {
-          label: "拓扑 · 8 点 12 边";
-          hexpand: true;
-
-          styles [
-            "panel-frame"
-          ]
-
-          Box practice_cube_topology_host {
-            name: "practice_cube_topology_host";
-            orientation: horizontal;
-            hexpand: true;
-            vexpand: true;
-            halign: fill;
-            valign: fill;
-          }
-        }
-      }
     }
 
     Box practice_right_panel {
@@ -182,46 +132,45 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 当前状态：上/右/前三张展开图 + 状态摘要（3D 视图已挪到左侧
-      // "3D 视角"）。三张展开图分别对着 U/R/F 转法把受影响的一圈摊到
-      // 中间行，精确读状态；摘要给路径与是否已复原。不设
-      // vexpand，高度由内容自然撑开。
-      Frame {
-        label: "当前状态";
-        hexpand: true;
-
-        styles [
-          "panel-frame"
-        ]
-
-        // 空容器，实际内容（3D 与三张展开图见 pocket_cube/view.h，
-        // 摘要 Label 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，
-        // 跟“结构在 Blueprint、内容在 C++”的一贯分工一致。
-        Box practice_cube_current_host {
-          name: "practice_cube_current_host";
-          orientation: horizontal;
-          spacing: 14;
-          hexpand: true;
-          halign: center;
-          valign: center;
-          margin-top: 8;
-          margin-bottom: 8;
-        }
-      }
-
-      // 当前状态下方一排：操作区。vexpand 显式设为 false，否则子控件的
-      // expand 会向上传播，跟下面的操作视角平分高度。
+      // 右上一排：当前状态 + 操作区并列。vexpand 显式设为 false，否则
+      // 子控件的 expand 会向上传播，跟下排平分高度。
       Box practice_status_row {
         orientation: horizontal;
         spacing: 10;
         hexpand: true;
         vexpand: false;
 
+        // 当前状态：上/右/前三张展开图 + 状态摘要。三张展开图分别对着
+        // U/R/F 转法把受影响的一圈摊到中间行，精确读状态；摘要给路径与
+        // 是否已复原。高度由内容自然撑开。
+        Frame {
+          label: "当前状态";
+          hexpand: true;
+
+          styles [
+            "panel-frame"
+          ]
+
+          // 空容器，实际内容（三张展开图见 pocket_cube/view.h，摘要 Label
+          // 是普通 Gtk::Label）在 C++ 侧动态创建后塞进来，跟“结构在
+          // Blueprint、内容在 C++”的一贯分工一致。
+          Box practice_cube_current_host {
+            name: "practice_cube_current_host";
+            orientation: horizontal;
+            spacing: 14;
+            hexpand: true;
+            halign: center;
+            valign: center;
+            margin-top: 8;
+            margin-bottom: 8;
+          }
+        }
+
         // 操作区：九个转法按钮（U/R/F 三个面各顺时针/逆时针/180°），
         // 点哪个就真的对魔方应用那一步。
         Frame {
           label: "操作区";
-          hexpand: true;
+          hexpand: false;
 
           styles [
             "panel-frame"
@@ -243,12 +192,64 @@ ApplicationWindow window {
         }
       }
 
+      // 右下一排：状态空间 + 拓扑图并列，占满右栏剩余高度。
+      Box practice_graphs_row {
+        orientation: horizontal;
+        spacing: 10;
+        hexpand: true;
+        vexpand: true;
+
+        // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
+        // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
+        // 这个小魔方背后状态空间大得惊人。
+        Frame {
+          label: "状态空间";
+          hexpand: true;
+          vexpand: true;
+
+          styles [
+            "panel-frame"
+          ]
+
+          Box practice_state_space_host {
+            name: "practice_state_space_host";
+            orientation: horizontal;
+            hexpand: true;
+            vexpand: true;
+            halign: fill;
+            valign: fill;
+          }
+        }
+
+        // 拓扑图：角块缩成点、共面相邻缩成线（立方体图 Q3），独立控件，
+        // 视角跟随 3D 视图，见 pocket_cube/view.h make_cube_topology_view()。
+        Frame {
+          label: "拓扑 · 8 点 12 边";
+          hexpand: true;
+          vexpand: true;
+
+          styles [
+            "panel-frame"
+          ]
+
+          Box practice_cube_topology_host {
+            name: "practice_cube_topology_host";
+            orientation: horizontal;
+            hexpand: true;
+            vexpand: true;
+            halign: fill;
+            valign: fill;
+          }
+        }
+      }
+
       // 操作视角：Frame 与 host 先留着占位，内容暂时不接线（main.cc
-      // 不往 practice_cube_next_grid_host 塞控件）。
+      // 不往 practice_cube_next_grid_host 塞控件）。没有内容时不占高度
+      // （vexpand: false），把空间让给上面的状态空间和拓扑图。
       Frame {
         label: "操作视角";
         hexpand: true;
-        vexpand: true;
+        vexpand: false;
 
         styles [
           "panel-frame"
@@ -258,7 +259,7 @@ ApplicationWindow window {
           name: "practice_cube_next_grid_host";
           orientation: vertical;
           hexpand: true;
-          vexpand: true;
+          vexpand: false;
           margin-top: 8;
           margin-bottom: 8;
           margin-start: 8;
