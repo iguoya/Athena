@@ -98,22 +98,26 @@ Gtk::Widget* make_cube_face_view(
     function<CubeState()> state_provider, Face face, int width = 140,
     int height = 140);
 
-// 状态空间可视化：三组同心圆（各 2 圈，组内同色），圆心呈"奔驰标"式
-// 三等分布，两两相交，24 个交点按"3 对组合 × 对齐/交叉 2 类"分成 6 组
-// 配色——呼应抖音"数学为王时代"第90集《降维理解立体秒解魔方复原》
-// 里的环形点阵画面，只是视觉复刻，不追求同一种数学含义。
-//
-// 三组圆分别对应 U/R/F 三个面：上（橙）= U，左下（绿）= R，右下（紫）
-// = F——"操作区"点哪个面的按钮，对应那一组圆的圆心就绕公共中心转过
-// 那次转法的角度，跟 3D 魔方视图的转动动画同步播放，animation_provider
-// 是拉模型（同 make_cube_3d_view() 的 animation_provider 那一套）：
-// 每次重绘取一次当前动画状态，调用方在播放期间持续更新、播完后清空。
+// 状态空间图：三组同心圆（各 2 圈），圆心呈"奔驰标"式三等分布，两两
+// 相交出 24 个交点——视觉上复刻抖音"数学为王时代"第90集《降维理解立体
+// 秒解魔方复原》的环形点阵，数学上是拓扑图（Q3）的平面展开：
+// - 三组圆 = U/R/F 三根轴（上 = U，另两组 = R、F），外圈是会转的层，
+//   内圈是不动的层（D/L/B）；
+// - 每个交点是一张贴纸：两圈定下角块在这两根轴上的坐标，两个交点按
+//   第三根轴的坐标二选一（靠近第三组圆心的是 -1）；
+// - 转一步时，侧面 8 张贴纸沿该组外圈走 2 格，该面自己的 4 张沿另两组
+//   圆围成的四边形走 1 格——外圈上交点的角度顺序恰好就是层上贴纸绕一圈
+//   的顺序，旋转路径是几何上现成的。
+// state_provider 给当前状态，交点按当前贴纸上色、标号；为空时画复原态。
+// animation_provider 同 make_cube_3d_view() 的拉模型：播放期间返回这一步
+// 的转法和进度（0→1），state_provider 继续返回转动前的状态，播完清空。
 struct RingAnimation {
-    int active_group; // 0=上/U, 1=左下/R, 2=右下/F
-    double angle_offset_radians; // 相对静止角度的偏移，随动画推进变化
+    Move move;
+    double progress;
 };
 
 Gtk::Widget* make_state_space_rings_view(
     long long state_space_size = kCubeStateSpaceSizeIgnoringOrientation,
     int size = 320,
-    function<optional<RingAnimation>()> animation_provider = nullptr);
+    function<optional<RingAnimation>()> animation_provider = nullptr,
+    function<CubeState()> state_provider = nullptr);

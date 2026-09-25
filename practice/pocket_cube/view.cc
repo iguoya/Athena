@@ -205,6 +205,7 @@ constexpr double kStandRadius = 0.08;
 
 // 不动的那个角块：D/L/B 交界，坐标符号 (-1,-1,-1)，见 state.h next_move_set()。
 constexpr array<int, 3> kFixedCubie{-1, -1, -1};
+constexpr ChartColor kAccentColor = chart_color(0x6f42c1); // 跟 app.json 图标同一个强调色
 
 // 主光从左上前方打过来：默认视角下 U 最亮、F 次之、R 最暗，三个可见面
 // 明暗分明；阴影落在右后方，从默认视角看得到。
@@ -805,6 +806,8 @@ void draw_ring_group(
         {kOuterRadiusRatio, group.outer_color},
     }};
     for (const auto& [ratio, color] : rings) {
+        // arc() 会从当前点连一条线过来（比如上一个标号文字的末尾），先断开。
+        cr->begin_new_path();
         cr->set_source_rgba(color.r, color.g, color.b, 0.9);
         cr->set_line_width(kRingLineWidth);
         cr->arc(
@@ -852,56 +855,194 @@ optional<pair<Vec2, Vec2>> circle_intersections(
         Vec2{p.x - h * dy / d, p.y + h * dx / d});
 }
 
-// 两组同心圆（各 2 个圆）两两组合出的 4 对圆，各自最多 2 个交点，
-// 按"g1/g2 各自哪一圈参与"拆成 4 个原始子列表——ii=g1 内×g2 内，
-// io=g1 内×g2 外，oi=g1 外×g2 内，oo=g1 外×g2 外。拆到这个粒度是
-// 因为"哪一环转动"要按"活动组自己的外圈是否参与"来判断，活动组
-// 可能是 g1 也可能是 g2，只有拆到 4 个原始子列表才能两种情况都
-// 处理（见 draw_state_space_rings() 的用法：先按需要旋转某些子
-// 列表，再合并成 g1_outer/g1_inner 两组配色用）。
-struct PairIntersections {
-    vector<Vec2> inner_inner;
-    vector<Vec2> inner_outer;
-    vector<Vec2> outer_inner;
-    vector<Vec2> outer_outer;
+// ===== 状态空间图 = 拓扑图的平面展开 =====
+//
+// 三组同心圆各对应一根转动轴：组 0（上）= U = y 轴，组 1 = R = x 轴，
+// 组 2 = F = z 轴。每组的外圈是会转的那一层（y/x/z = +1，即 U/R/F 层），
+// 内圈是不动的那一层（D/L/B 层）。
+//
+// 一个交点 ↔ 一张贴纸：组 i 的某一圈、组 j 的某一圈定下角块在这两根轴
+// 上的坐标；这两圈有两个交点，按第三根轴 k 的坐标二选一——靠近组 k
+// 圆心的是 -1，另一个是 +1；交点代表的就是这块角块朝 k 轴的那张贴纸。
+// 24 个交点和 24 张贴纸一一对应，拓扑图（Q3）的每个点拆开就是这里的
+// 三个交点，不动的 DBL 角块是三组都取内圈、都靠近第三组圆心的那三个。
+//
+// 这样定下来，旋转路径是几何上现成的：组 g 外圈上 8 个交点按角度排，
+// 恰好是 g 层侧面 8 张贴纸绕层一圈的顺序（以 U 为例：F F L L B B R R），
+// 转一次 g 就是这 8 张沿外圈走 2 格；g 面自己的 4 张贴纸落在另两组圆
+// 远离 g 圆心的 4 个交点上，围成一个四边形，转一次沿四边形走 1 格。
+
+constexpr array<size_t, 3> kGroupAxis{1, 0, 2}; // 组下标 → kAxes 下标（Y, X, Z）
+
+size_t ring_group_of(Face face) {
+    const Axis axis = face_layout(face).normal_axis;
+    for (size_t g = 0; g < kGroupAxis.size(); ++g) {
+        if (kAxes[kGroupAxis[g]] == axis) {
+            return g;
+        }
+    }
+    return 0;
+}
+
+struct RingSlot {
+    Vec2 pos;
+    array<int, 3> cubie;
+    size_t sticker_axis;
+    StickerSlot slot;
 };
 
-PairIntersections collect_pair_intersections(
-    const RingGroupSpec& g1, const RingGroupSpec& g2, double max_radius) {
+double cross2(const Vec2& o, const Vec2& a, const Vec2& b) {
+    return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+}
+
+vector<RingSlot> ring_slots(const array<Vec2, 3>& centers, double max_radius) {
     const double ri = max_radius * kInnerRadiusRatio;
     const double ro = max_radius * kOuterRadiusRatio;
-    const auto add = [](vector<Vec2>& out, optional<pair<Vec2, Vec2>> pts) {
-        if (pts) {
-            out.push_back(pts->first);
-            out.push_back(pts->second);
+    vector<RingSlot> slots;
+    for (const auto& [i, j] : {pair<size_t, size_t>{0, 1}, {0, 2}, {1, 2}}) {
+        const size_t k = 3 - i - j;
+        for (bool i_outer : {false, true}) {
+            for (bool j_outer : {false, true}) {
+                const auto points = circle_intersections(
+                    centers[i], i_outer ? ro : ri, centers[j], j_outer ? ro : ri);
+                if (!points) {
+                    continue;
+                }
+                for (const Vec2& p : {points->first, points->second}) {
+                    const bool near_k = cross2(centers[i], centers[j], p) *
+                                            cross2(centers[i], centers[j], centers[k]) >
+                                        0;
+                    array<int, 3> cubie{};
+                    cubie[kGroupAxis[i]] = i_outer ? 1 : -1;
+                    cubie[kGroupAxis[j]] = j_outer ? 1 : -1;
+                    cubie[kGroupAxis[k]] = near_k ? -1 : 1;
+                    slots.push_back(
+                        {p, cubie, kGroupAxis[k], outward_slot(cubie, kGroupAxis[k])});
+                }
+            }
         }
+    }
+    return slots;
+}
+
+// 转法 move 下，每个交点上的贴纸去往哪个交点：dest[s] = t。直接拿
+// apply_move() 作用在复原状态上、用 sticker_home() 反查来源，不手写
+// 方向表——跟 3D 视图、展开图用的是同一份转动语义。
+vector<size_t> ring_permutation(const vector<RingSlot>& slots, Move move) {
+    const CubeState moved = apply_move(make_solved_cube(), move);
+    vector<size_t> dest(slots.size());
+    for (size_t t = 0; t < slots.size(); ++t) {
+        dest[t] = t;
+    }
+    for (size_t t = 0; t < slots.size(); ++t) {
+        const StickerSlot& target = slots[t].slot;
+        const StickerHome home = sticker_home(moved, target.face, target.u_sign, target.v_sign);
+        for (size_t s = 0; s < slots.size(); ++s) {
+            const StickerSlot& source = slots[s].slot;
+            if (source.face == home.face && source.u_sign == home.u_sign &&
+                source.v_sign == home.v_sign) {
+                dest[s] = t;
+                break;
+            }
+        }
+    }
+    return dest;
+}
+
+// 动画中每张贴纸沿旋转路径走：侧面贴纸绕组 g 圆心、沿外圈走；g 面自己
+// 的贴纸绕那个四边形的中心走。半径在起止两点之间线性插值（外圈上两者
+// 相等，就是纯圆弧）。
+//
+// 方向按“走几格”定，不按短弧定：外圈上 8 个交点只占大约 190° 的一段，
+// 按短弧选方向，跨过空白段的那几张会跟别的反着走、半路撞在一起。同一
+// 类贴纸按角度排好序，这一步走的格数对所有贴纸都一样（2 或 1，半圈 4
+// 或 2），朝格数的方向走、必要时穿过空白段；半圈两个方向格数相同，取
+// 顺时针那一转的方向。
+vector<Vec2> ring_positions(
+    const vector<RingSlot>& slots, const array<Vec2, 3>& centers, const RingAnimation* animation) {
+    vector<Vec2> positions;
+    for (const auto& slot : slots) {
+        positions.push_back(slot.pos);
+    }
+    if (animation == nullptr) {
+        return positions;
+    }
+
+    const size_t g = ring_group_of(animation->move.face);
+    const size_t axis = kGroupAxis[g];
+    const vector<size_t> dest = ring_permutation(slots, animation->move);
+    const vector<size_t> quarter =
+        ring_permutation(slots, {animation->move.face, Turn::Clockwise});
+
+    Vec2 face_center{0, 0};
+    int face_count = 0;
+    for (const auto& slot : slots) {
+        if (slot.sticker_axis == axis && slot.cubie[axis] == 1) {
+            face_center.x += slot.pos.x;
+            face_center.y += slot.pos.y;
+            ++face_count;
+        }
+    }
+    if (face_count > 0) {
+        face_center = {face_center.x / face_count, face_center.y / face_count};
+    }
+
+    // 两类会动的贴纸各自按绕枢轴的角度排序。
+    const auto angle_around = [](const Vec2& p, const Vec2& pivot) {
+        return atan2(p.y - pivot.y, p.x - pivot.x);
     };
-    PairIntersections result;
-    add(result.inner_inner, circle_intersections(g1.origin, ri, g2.origin, ri));
-    add(result.inner_outer, circle_intersections(g1.origin, ri, g2.origin, ro));
-    add(result.outer_inner, circle_intersections(g1.origin, ro, g2.origin, ri));
-    add(result.outer_outer, circle_intersections(g1.origin, ro, g2.origin, ro));
-    return result;
+    vector<size_t> ring_order;
+    vector<size_t> face_order;
+    for (size_t s = 0; s < slots.size(); ++s) {
+        if (slots[s].cubie[axis] != 1) {
+            continue;
+        }
+        (slots[s].sticker_axis == axis ? face_order : ring_order).push_back(s);
+    }
+    sort(ring_order.begin(), ring_order.end(), [&](size_t a, size_t b) {
+        return angle_around(slots[a].pos, centers[g]) < angle_around(slots[b].pos, centers[g]);
+    });
+    sort(face_order.begin(), face_order.end(), [&](size_t a, size_t b) {
+        return angle_around(slots[a].pos, face_center) < angle_around(slots[b].pos, face_center);
+    });
+    // 从 s 到 to 在 order 里沿角度增大方向走几格，折到 (-n/2, n/2]。
+    const auto signed_steps = [](const vector<size_t>& order, size_t s, size_t to) {
+        const int n = static_cast<int>(order.size());
+        const int from = static_cast<int>(find(order.begin(), order.end(), s) - order.begin());
+        const int target = static_cast<int>(find(order.begin(), order.end(), to) - order.begin());
+        int steps = ((target - from) % n + n) % n;
+        return steps > n / 2 ? steps - n : steps;
+    };
+
+    const double t = clamp(animation->progress, 0.0, 1.0);
+    for (size_t s = 0; s < slots.size(); ++s) {
+        if (dest[s] == s) {
+            continue;
+        }
+        const bool on_face = slots[s].sticker_axis == axis;
+        const Vec2 pivot = on_face ? face_center : centers[g];
+        const vector<size_t>& order = on_face ? face_order : ring_order;
+        const auto polar = [&](const Vec2& p) {
+            return pair{angle_around(p, pivot), hypot(p.x - pivot.x, p.y - pivot.y)};
+        };
+        const auto [a0, r0] = polar(slots[s].pos);
+        const auto [a1, r1] = polar(slots[dest[s]].pos);
+        int steps = signed_steps(order, s, dest[s]);
+        if (steps * 2 == static_cast<int>(order.size())) {
+            // 半圈：两个方向格数一样，跟顺时针那一转同向。
+            steps *= signed_steps(order, s, quarter[s]) < 0 ? -1 : 1;
+        }
+        const double forward = fmod(a1 - a0 + 4 * std::numbers::pi, 2 * std::numbers::pi);
+        const double delta = steps > 0 ? forward : forward - 2 * std::numbers::pi;
+        const double a = a0 + delta * t;
+        const double r = r0 + (r1 - r0) * t;
+        positions[s] = {pivot.x + r * cos(a), pivot.y + r * sin(a)};
+    }
+    return positions;
 }
 
-// 把点 p 绕 center 转 delta_radians（标准数学定义，逆时针为正），
-// 半径（到 center 的距离）保持不变——"环绕自己圆心旋转"就是拿这个
-// 函数对落在这个环上的交点做的，不重新算两个圆的真实几何交点，故意
-// 忽略旋转过程中跟另一个环的真实距离关系（只有静止角度 0 时才代表
-// 真交点，动画中间帧只是视觉上的"跟着转"）。
-Vec2 rotate_around(const Vec2& p, const Vec2& center, double delta_radians) {
-    const double dx = p.x - center.x;
-    const double dy = p.y - center.y;
-    const double radius = sqrt(dx * dx + dy * dy);
-    const double angle = atan2(dy, dx) + delta_radians;
-    return Vec2{center.x + radius * cos(angle), center.y + radius * sin(angle)};
-}
-
-// 编号是临时调试手段：截图配色时肉眼没法准确对应"这几个点具体是哪
-// 种几何组合"，编号之后可以直接说"3、7、12 号统一红色"，不会认错
-// 点。确认最终配色方案之后这个标号可以整个删掉，不是长期要留的
-// 功能。一个点一份颜色（不再是"一组 4 个点共用一色"），因为实际
-// 反馈是按编号单点指定的，不是按"外圈/内圈"这种整组指定的。
+// 交点：填当前在这个位置的贴纸的颜色，旁边标它的编号（跟 3D 视图、
+// 展开图、拓扑图同一套 1~24，跟着贴纸走）。
 void draw_node(
     const Cairo::RefPtr<Cairo::Context>& cr, const Vec2& p,
     const ChartColor& color, double node_radius, int label) {
@@ -912,9 +1053,9 @@ void draw_node(
     cr->arc(p.x, p.y, node_radius, 0, 2 * std::numbers::pi);
     cr->set_source_rgb(color.r, color.g, color.b);
     cr->fill_preserve();
-    // 深色描边让节点在浅色环线上更"明显"，不是纯色块糊在一起。
-    cr->set_source_rgba(0, 0, 0, 0.35);
-    cr->set_line_width(1.0);
+    // 深色描边：白色（U 面）贴纸在浅色底上也看得见。
+    cr->set_source_rgba(0, 0, 0, 0.55);
+    cr->set_line_width(1.2);
     cr->stroke();
 
     // cairomm 不同版本的字体粗细/斜体枚举名不稳定，直接用底层 C API
@@ -928,10 +1069,8 @@ void draw_node(
     cr->show_text(to_string(label));
 }
 
-// 三组圆的静止角度（弧度，标准数学定义，从正 x 轴逆时针为正）：上
-// （U）在 -90°，左下（R）、右下（F）各偏 ±120°，跟 draw_ring_group()
-// 里 groups 数组的下标一一对应（0=上/U, 1=左下/R, 2=右下/F），
-// RingAnimation::active_group 也用这套下标，两边不会对不上。
+// 三组圆的静止角度（弧度，屏幕坐标 y 向下）：组 0（U）在正上方，组 1
+// （R）、组 2（F）各偏 ±120°，跟 kGroupAxis 的下标一一对应。
 constexpr double kGroupRestAngle[3] = {
     -std::numbers::pi / 2.0,
     -std::numbers::pi / 2.0 + 2.0 * std::numbers::pi / 3.0,
@@ -940,101 +1079,55 @@ constexpr double kGroupRestAngle[3] = {
 
 void draw_state_space_rings(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
-    const RingAnimation* animation) {
+    const CubeState& state, const RingAnimation* animation) {
     // 靠上一点：公共中心 M 的 y 取高度的 0.42 而不是正中间 0.5。
     const Vec2 center{width / 2.0, height * 0.42};
     const double max_radius = solve_max_radius(width, height, center);
     const double orbit_radius = max_radius * kOrbitRatio;
 
-    // 圆心永远停在静止角度——"旋转"不是圆心绕公共中心 M 公转，是圆
-    // 自己的 8 个交点绕这个圆自己的圆心转（见下面 group_pairs 循环），
-    // 圆心本身不用动画状态。
-    const auto orbit_point = [&](int group_index) {
-        const double angle = kGroupRestAngle[group_index];
-        return Vec2{
-            center.x + orbit_radius * cos(angle),
-            center.y + orbit_radius * sin(angle)};
-    };
+    array<Vec2, 3> centers;
+    for (size_t g = 0; g < centers.size(); ++g) {
+        centers[g] = {
+            center.x + orbit_radius * cos(kGroupRestAngle[g]),
+            center.y + orbit_radius * sin(kGroupRestAngle[g])};
+    }
 
-    // 同一组的内外两环改成同一个颜色——组内颜色一致，一眼就能看出
-    // 6 个圆分属哪 3 组，不需要再靠"内圈/外圈"这层区分去认颜色。原来
-    // 上/左下两组用的橙、绿（0xffc48a/0xa7ddb6）跟节点配色表里的饱和
-    // 橙(0xF39C12)、饱和绿(0x27AE60) 同色系，容易把"环本身的颜色"和
-    // "交点的颜色"看混——换成节点配色表里完全没用到的淡青、淡粉，
-    // 右下角的淡紫本来就没跟任何节点颜色撞，不用动。
+    // 同一组的内外两环同一个颜色，一眼看出 6 个圆分属哪 3 组；用的是
+    // 贴纸配色里没有的淡青、淡粉、淡紫，环的颜色不会跟交点（贴纸）混。
     const array<RingGroupSpec, 3> groups = {{
-        {orbit_point(0), chart_color(0x9AD6D6), chart_color(0x9AD6D6)},
-        {orbit_point(1), chart_color(0xF0AFC7), chart_color(0xF0AFC7)},
-        {orbit_point(2), chart_color(0xc9a8e8), chart_color(0xc9a8e8)},
+        {centers[0], chart_color(0x9AD6D6), chart_color(0x9AD6D6)},
+        {centers[1], chart_color(0xF0AFC7), chart_color(0xF0AFC7)},
+        {centers[2], chart_color(0xc9a8e8), chart_color(0xc9a8e8)},
     }};
-
     for (const auto& group : groups) {
         draw_ring_group(cr, group, max_radius);
     }
 
-    // 24 个交点的配色，按编号（1~24，见 draw_node() 标出来的号）直接
-    // 指定——反馈是按单点编号给的（比如"10 12 14 16 用红色"），不是
-    // 按"外圈/内圈"整组给的，量到这个粒度就不适合再按组配色了，直接
-    // 用一张编号表最不容易认错点。(0,1)（橙×绿）单数(1/3/5/7)=蓝、
-    // 双数(2/4/6/8)=绿；(0,2)（橙×紫）单数(9/11/13/15)=红、双数
-    // (10/12/14/16)=橙——这两对都来回改过好几次，以这版编号表为准；
-    // (1,2)（绿×紫）单数(17/19/21/23)=黄、双数(18/20/22/24)=黑（原则
-    // 上该用白色，但白色在浅色背景上不合适，换成黑色）。
-    constexpr array<ChartColor, 24> kLabelColors = {{
-        chart_color(0x2E86DE), chart_color(0x27AE60), chart_color(0x2E86DE),
-        chart_color(0x27AE60), chart_color(0x2E86DE), chart_color(0x27AE60),
-        chart_color(0x2E86DE), chart_color(0x27AE60), // 1-8: (0,1)，单蓝双绿
-        chart_color(0xE74C3C), chart_color(0xF39C12), chart_color(0xE74C3C),
-        chart_color(0xF39C12), chart_color(0xE74C3C), chart_color(0xF39C12),
-        chart_color(0xE74C3C), chart_color(0xF39C12), // 9-16: (0,2)，单红双橙
-        chart_color(0xF1C40F), chart_color(0x1A1A1A), chart_color(0xF1C40F),
-        chart_color(0x1A1A1A), chart_color(0xF1C40F), chart_color(0x1A1A1A),
-        chart_color(0xF1C40F), chart_color(0x1A1A1A), // 17-24: (1,2)，单黄双黑
-    }};
+    const vector<RingSlot> slots = ring_slots(centers, max_radius);
+    const vector<Vec2> positions = ring_positions(slots, centers, animation);
+    const vector<size_t> dest =
+        animation ? ring_permutation(slots, animation->move) : vector<size_t>{};
     const double node_radius = max(5.0, max_radius * 0.055);
-    const array<pair<int, int>, 3> group_pairs = {{{0, 1}, {0, 2}, {1, 2}}};
 
-    // 每个点标一下"落在 i 的外圈还是内圈上""落在 j 的外圈还是内圈
-    // 上"——活动组可能是这一对里的 i 也可能是 j，只有点一级记清楚
-    // 两边各自的内外归属，才能不管活动组是谁都能正确判断"这个点该不
-    // 该跟着转"（只转活动组自己外圈参与的点，见下面 spin 那段）。
-    struct LabeledPoint {
-        Vec2 pos;
-        bool i_outer;
-        bool j_outer;
-    };
-
-    int label = 1;
-    for (const auto& [i, j] : group_pairs) {
-        PairIntersections pts = collect_pair_intersections(groups[i], groups[j], max_radius);
-
-        vector<LabeledPoint> points;
-        const auto append = [&](vector<Vec2>& src, bool i_outer, bool j_outer) {
-            for (auto& p : src) {
-                points.push_back({p, i_outer, j_outer});
+    // 正在走的贴纸后画，压在静止的点上面。
+    for (int pass = 0; pass < 2; ++pass) {
+        for (size_t s = 0; s < slots.size(); ++s) {
+            const bool moving = !dest.empty() && dest[s] != s;
+            if (moving != (pass == 1)) {
+                continue;
             }
-        };
-        append(pts.outer_inner, true, false);
-        append(pts.outer_outer, true, true);
-        append(pts.inner_inner, false, false);
-        append(pts.inner_outer, false, true);
-
-        if (animation) {
-            const int active = animation->active_group;
-            const Vec2& pivot = groups[active].origin;
-            const double delta = animation->angle_offset_radians;
-            for (auto& lp : points) {
-                const bool active_outer_here =
-                    (active == i && lp.i_outer) || (active == j && lp.j_outer);
-                if (active_outer_here) {
-                    lp.pos = rotate_around(lp.pos, pivot, delta);
-                }
+            const StickerSlot& slot = slots[s].slot;
+            const StickerHome home = sticker_home(state, slot.face, slot.u_sign, slot.v_sign);
+            draw_node(
+                cr, positions[s], sticker_color(sticker_at(state, slot.face, slot.u_sign, slot.v_sign)),
+                node_radius, sticker_label(home.face, home.u_sign, home.v_sign));
+            if (slots[s].cubie == kFixedCubie) {
+                cr->begin_new_path();
+                cr->arc(positions[s].x, positions[s].y, node_radius + 3.0, 0, 2 * std::numbers::pi);
+                cr->set_source_rgb(kAccentColor.r, kAccentColor.g, kAccentColor.b);
+                cr->set_line_width(2.0);
+                cr->stroke();
             }
-        }
-
-        for (const auto& lp : points) {
-            draw_node(cr, lp.pos, kLabelColors[label - 1], node_radius, label);
-            ++label;
         }
     }
 }
@@ -1052,7 +1145,6 @@ void draw_state_space_rings(
 //   关系在转动过程中暂时断开，转到位后重新接上，图还是同一张 Q3；
 // - 不动的 D/L/B 角块那个点加一圈描边，它的颜色永远不变。
 
-constexpr ChartColor kAccentColor = chart_color(0x6f42c1); // 跟 app.json 图标同一个强调色
 
 void draw_topology(
     const Cairo::RefPtr<Cairo::Context>& cr, const Rect& region,
@@ -1495,7 +1587,8 @@ Gtk::Widget* make_cube_face_view(
 
 Gtk::Widget* make_state_space_rings_view(
     long long state_space_size, int size,
-    function<optional<RingAnimation>()> animation_provider) {
+    function<optional<RingAnimation>()> animation_provider,
+    function<CubeState()> state_provider) {
     auto area = Gtk::make_managed<Gtk::DrawingArea>();
     // content_width/height 只是"最小自然尺寸"，不是固定尺寸——真正
     // 决定画多大的是 draw_func 每次拿到的 width/height（由 GTK 布局
@@ -1509,21 +1602,24 @@ Gtk::Widget* make_state_space_rings_view(
     area->set_hexpand(true);
     area->set_vexpand(true);
 
-    // 静止时不转——只有对应面的按钮点下去、animation_provider() 返回
-    // 非空的那段时间，对应那一组圆才会偏离静止角度；平时三组都停在
-    // kGroupRestAngle 定义的位置。拉模型跟 make_cube_3d_view() 的
-    // animation_provider 同一套用法。
+    // 静止时每个交点停在自己的位置；animation_provider() 返回非空的那段
+    // 时间里，这一步要动的贴纸沿旋转路径走向目标交点。拉模型跟
+    // make_cube_3d_view() 的 animation_provider 同一套用法。
     area->set_draw_func(
-        [animation_provider](
+        [animation_provider, state_provider](
             const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
             const optional<RingAnimation> animation =
                 animation_provider ? animation_provider() : nullopt;
             draw_state_space_rings(
-                cr, width, height, animation ? &*animation : nullptr);
+                cr, width, height, state_provider ? state_provider() : make_solved_cube(),
+                animation ? &*animation : nullptr);
         });
 
     area->set_tooltip_text(
-        "状态空间约有 " + to_string(state_space_size) + " 种");
+        "状态空间约有 " + to_string(state_space_size) + " 种。"
+        "三组圆 = U/R/F 三根轴，外圈是会转的层、内圈是不动的层；每个交点是一张"
+        "贴纸，编号跟 3D 视图、拓扑图同一套。转一步时，侧面贴纸沿外圈走 2 格，"
+        "该面自己的 4 张沿另两组圆围成的四边形走 1 格；紫圈是不动的 DBL 角块");
 
     return area;
 }

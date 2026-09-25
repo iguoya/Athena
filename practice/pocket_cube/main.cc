@@ -33,19 +33,6 @@ string format_thousands(long long value) {
 constexpr int kTurnAnimationMs = 400;
 constexpr int kTurnAnimationFrameMs = 16;
 
-// U/R/F 三个面在"状态空间"三组圆里各自对应哪一组——上（橙）=U、
-// 左下（绿）=R、右下（紫）=F，见 view.h 的 RingAnimation 注释；这个
-// 应用只穷举 U/R/F 三个面（见 state.h 的 next_move_set() 注释），
-// 不会遇到其它面，所以不用处理 D/L/B。
-int ring_group_for_face(Face face) {
-    switch (face) {
-    case Face::U: return 0;
-    case Face::R: return 1;
-    case Face::F: return 2;
-    default: return -1;
-    }
-}
-
 // rings_view/rings_animation_state 是可选的：只有"操作区"九个按钮
 // （真正改状态的那九个）需要联动"状态空间"面板的圆环转动，"未来状态"
 // 九宫格每格右下角的预览切换按钮只是本地展示开关、不代表真实发生的
@@ -64,23 +51,21 @@ void play_turn_animation(
     const double target_degrees = turn_angle_degrees(move);
     const double start_degrees = reverse ? target_degrees : 0.0;
     const double end_degrees = reverse ? 0.0 : target_degrees;
-    const int ring_group = ring_group_for_face(move.face);
 
     *animation_state =
         TurnAnimation{layout.normal_axis, layout.normal_sign, start_degrees};
     for (auto* view : turn_views) {
         view->queue_draw();
     }
-    if (rings_view && rings_animation_state && ring_group >= 0) {
-        *rings_animation_state =
-            RingAnimation{ring_group, start_degrees * std::numbers::pi / 180.0};
+    if (rings_view && rings_animation_state) {
+        *rings_animation_state = RingAnimation{move, reverse ? 1.0 : 0.0};
         rings_view->queue_draw();
     }
 
     const auto started = chrono::steady_clock::now();
     Glib::signal_timeout().connect(
         [animation_state, turn_views, started, start_degrees, end_degrees,
-         on_complete, rings_view, rings_animation_state, ring_group]() -> bool {
+         on_complete, rings_view, rings_animation_state, move, reverse]() -> bool {
             const double elapsed_ms = chrono::duration<double, milli>(
                                           chrono::steady_clock::now() - started)
                                           .count();
@@ -93,9 +78,9 @@ void play_turn_animation(
             for (auto* view : turn_views) {
                 view->queue_draw();
             }
-            if (rings_view && rings_animation_state && ring_group >= 0) {
-                *rings_animation_state = RingAnimation{
-                    ring_group, current_degrees * std::numbers::pi / 180.0};
+            if (rings_view && rings_animation_state) {
+                *rings_animation_state =
+                    RingAnimation{move, reverse ? 1.0 - progress : progress};
                 rings_view->queue_draw();
             }
             if (progress >= 1.0) {
@@ -122,18 +107,20 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
     auto operations_host =
         builder->get_widget<Gtk::Box>("practice_operations_host");
 
+    auto cube = make_shared<PocketCube>();
+    auto redraw_targets = make_shared<vector<Gtk::Widget*>>();
+
     Gtk::Widget* rings_view = nullptr;
     auto rings_animation = make_shared<optional<RingAnimation>>();
     if (state_space_host) {
-        // 左下角跟操作区挤在一排，最小尺寸收小，别把上面的 3D 视角压矮。
+        // 交点按当前状态上色、标号，跟 3D 视图、拓扑图同一份状态。
         rings_view = make_state_space_rings_view(
             kCubeStateSpaceSizeIgnoringOrientation, 200,
-            [rings_animation] { return *rings_animation; });
+            [rings_animation] { return *rings_animation; },
+            [cube] { return cube->state(); });
         state_space_host->append(*rings_view);
+        redraw_targets->push_back(rings_view);
     }
-
-    auto cube = make_shared<PocketCube>();
-    auto redraw_targets = make_shared<vector<Gtk::Widget*>>();
 
     auto describe_path = [](const vector<Move>& history) {
         if (history.empty()) {
