@@ -100,14 +100,11 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
-      // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
-      // 这个小魔方背后状态空间大得惊人——原来这块地方是源码框（点
-      // “运行”时执行的代码），搬出去了：源码本身跟“当前状态/操作视角”
-      // 数据一样，不是这个应用的教学重点，具体内容见 pocket_cube.hpp，
-      // 想看源码直接开文件更直接。
+      // 3D 视角：原来"状态空间"这块最大的区域让给魔方 3D 视图——立体感
+      // 靠转动、光照和阴影，画面太小这些线索都看不清。三环点阵挪到左下
+      // 角，跟操作区并排。
       Frame {
-        label: "状态空间";
+        label: "3D 视角";
         hexpand: true;
         vexpand: true;
 
@@ -119,8 +116,8 @@ ApplicationWindow window {
         // hexpand/vexpand，要靠 host 也 fill 才能真的把 Frame 让出来的
         // 空间占满，用 center 的话 host 会缩回子控件的自然尺寸，等于
         // 白设了子控件的 expand。
-        Box practice_state_space_host {
-          name: "practice_state_space_host";
+        Box practice_cube_3d_host {
+          name: "practice_cube_3d_host";
           orientation: horizontal;
           hexpand: true;
           vexpand: true;
@@ -129,33 +126,58 @@ ApplicationWindow window {
         }
       }
 
-      // 操作区：九个转法按钮（U/R/F 三个面各顺时针/逆时针/180°），
-      // 点哪个就真的对魔方应用那一步——取代原来固定只会转 U 顺时针的
-      // “运行”按钮。跟右边“操作视角”三个面板显示的是同样的 U/R/F 三个
-      // 操作面，但那边只读、这里才是真正改状态的入口。
-      Frame {
-        label: "操作区";
+      // 左下角一排：状态空间 + 操作区暂时挤在一起。vexpand 显式设为
+      // false，否则子控件的 expand 会向上传播，跟上面的 3D 视角平分高度。
+      Box practice_left_bottom_row {
+        orientation: horizontal;
+        spacing: 10;
         hexpand: true;
-        vexpand: true;
+        vexpand: false;
 
-        styles [
-          "panel-frame"
-        ]
-
-        // halign/valign: fill，跟"状态空间"那份 host 同一个道理——用
-        // center 的话 Frame 让出来的高度全是空的，九个按钮缩在中间一小
-        // 条，没有把"操作区"这个名字对应的整块区域用起来。
-        Box practice_operations_host {
-          name: "practice_operations_host";
-          orientation: horizontal;
+        // 状态空间可视化：三环点阵动画，复刻抖音"数学为王时代"第90集
+        // 《降维理解立体秒解魔方复原》里的环形点阵画面，用来直观表达
+        // 这个小魔方背后状态空间大得惊人。
+        Frame {
+          label: "状态空间";
           hexpand: true;
-          vexpand: true;
-          halign: fill;
-          valign: fill;
-          margin-top: 10;
-          margin-bottom: 10;
-          margin-start: 10;
-          margin-end: 10;
+
+          styles [
+            "panel-frame"
+          ]
+
+          Box practice_state_space_host {
+            name: "practice_state_space_host";
+            orientation: horizontal;
+            hexpand: true;
+            vexpand: true;
+            halign: fill;
+            valign: fill;
+          }
+        }
+
+        // 操作区：九个转法按钮（U/R/F 三个面各顺时针/逆时针/180°），
+        // 点哪个就真的对魔方应用那一步。
+        Frame {
+          label: "操作区";
+          hexpand: true;
+
+          styles [
+            "panel-frame"
+          ]
+
+          // halign/valign: fill：九个按钮撑满整块区域，不缩在中间一小条。
+          Box practice_operations_host {
+            name: "practice_operations_host";
+            orientation: horizontal;
+            hexpand: true;
+            vexpand: true;
+            halign: fill;
+            valign: fill;
+            margin-top: 10;
+            margin-bottom: 10;
+            margin-start: 10;
+            margin-end: 10;
+          }
         }
       }
     }
@@ -166,9 +188,9 @@ ApplicationWindow window {
       hexpand: true;
       vexpand: true;
 
-      // 当前状态：3D 视角 + 上/右/前三张展开图 + 状态摘要。3D 直觉但
-      // 一次最多看到 3 个面；三张展开图分别对着 U/R/F 转法把受影响的
-      // 一圈摊到中间行，精确读状态；摘要给路径与是否已复原。不设
+      // 当前状态：上/右/前三张展开图 + 状态摘要（3D 视图已挪到左侧
+      // "3D 视角"）。三张展开图分别对着 U/R/F 转法把受影响的一圈摊到
+      // 中间行，精确读状态；摘要给路径与是否已复原。不设
       // vexpand，高度由内容自然撑开。
       Frame {
         label: "当前状态";

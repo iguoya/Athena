@@ -199,7 +199,7 @@ constexpr double kCubieHalf = 0.485;     // 角块半边长；相邻两块之间
 constexpr double kStickerHalf = 0.40;    // 贴纸半边长，四周露出一圈块体
 constexpr double kStickerChamfer = 0.10; // 贴纸切角，读起来像实物贴纸而不是色块
 constexpr double kFloorY = -2.05;        // 地面高度：魔方悬空，阴影与本体分开，默认视角能从底下看到立柱
-constexpr double kFloorRadius = 2.8;
+constexpr double kFloorRadius = 2.4;
 constexpr double kCameraDistance = 7.5;  // 越小透视越强；7.5 ≈ 中长焦，不变形
 constexpr double kStandRadius = 0.08;
 
@@ -527,8 +527,18 @@ void draw_cube_3d(
     const Cairo::RefPtr<Cairo::Context>& cr, int width, int height,
     const CubeState& state, double yaw, double pitch,
     const TurnAnimation* animation) {
-    // 画面中心略偏上：下方要给悬空的高度和地面阴影留位置。
-    const Camera camera(yaw, pitch, min(width, height) * 0.22, {width / 2.0, height * 0.41});
+    // 按“任何视角都完整显示”定缩放：遍历全部 yaw 和 ±kPitchLimit 内的
+    // pitch，魔方（含转动中的层）加地面圆盘投影后的最大范围是横向 ±2.73、
+    // 向上 2.16、向下 3.48（单位 = 魔方半边长）。按这个包围框取景，拖到
+    // 哪个角度都不会被裁；不随视角动态缩放，否则一边转一边忽大忽小。
+    constexpr double kFitHalfWidth = 2.8;
+    constexpr double kFitAbove = 2.2;
+    constexpr double kFitBelow = 3.55;
+    const double scale =
+        0.96 * min(width / (2 * kFitHalfWidth), height / (kFitAbove + kFitBelow));
+    const Camera camera(
+        yaw, pitch, scale,
+        {width / 2.0, height / 2.0 - scale * (kFitBelow - kFitAbove) / 2});
 
     const auto in_turning_layer = [&](const array<int, 3>& pos) {
         return animation != nullptr &&

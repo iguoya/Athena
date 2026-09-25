@@ -113,14 +113,16 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
     // practice_cube_next_grid_host（操作视角）暂时留空，不接线。
     auto state_space_host =
         builder->get_widget<Gtk::Box>("practice_state_space_host");
+    auto cube_3d_host = builder->get_widget<Gtk::Box>("practice_cube_3d_host");
     auto operations_host =
         builder->get_widget<Gtk::Box>("practice_operations_host");
 
     Gtk::Widget* rings_view = nullptr;
     auto rings_animation = make_shared<optional<RingAnimation>>();
     if (state_space_host) {
+        // 左下角跟操作区挤在一排，最小尺寸收小，别把上面的 3D 视角压矮。
         rings_view = make_state_space_rings_view(
-            kCubeStateSpaceSizeIgnoringOrientation, 320,
+            kCubeStateSpaceSizeIgnoringOrientation, 200,
             [rings_animation] { return *rings_animation; });
         state_space_host->append(*rings_view);
     }
@@ -149,16 +151,21 @@ void wire_window(const Glib::RefPtr<Gtk::Builder>& builder) {
     Gtk::Label* solved_label = nullptr;
     Gtk::Widget* current_view_3d = nullptr;
     auto current_view_animation = make_shared<optional<TurnAnimation>>();
-    if (current_host) {
-        // 尺寸比"操作视角"三个小面板（140px）明显大一圈——这里
-        // 是唯一展示"现在真实是什么状态"的地方，不该比旁边的小面板更小。
+    if (cube_3d_host) {
+        // 占满左上"3D 视角"整块区域：立体感靠转动、光照和阴影，画面越大
+        // 这些线索越清楚。320 只是最小尺寸，实际跟着区域一起放大。
         auto* view_3d = make_cube_3d_view(
             [cube] { return cube->state(); },
             320,
             [current_view_animation] { return *current_view_animation; });
-        current_host->append(*view_3d);
+        view_3d->set_hexpand(true);
+        view_3d->set_vexpand(true);
+        cube_3d_host->append(*view_3d);
         redraw_targets->push_back(view_3d);
         current_view_3d = view_3d;
+    }
+
+    if (current_host) {
 
         // 三张展开图：上 U / 右 R / 前 F——同一份 CubeState，三种摊法，
         // 各自把该转法会动的一圈摊到中间行（默认 U/D 极面看上，L/R
