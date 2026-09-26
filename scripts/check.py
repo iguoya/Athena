@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """仓库统一验证入口（ADR 0007、0045、0047）。
 
-检查逻辑归各应用自己（subjects/<id>/scripts/check.py），这里只负责依次调用，
+检查逻辑归各应用自己（subjects/<id>/ 与 practice/<id>/ 下的 scripts/check.py），
+这里只负责依次调用，
 外加两项跨应用检查：内容必须有出处（ADR 0043），软件内容不出现具体院所名
 （ADR 0055）。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
 也不用改 CI。
@@ -37,8 +38,23 @@ def _force_utf8_output() -> None:
         if reconfigure is not None:
             reconfigure(encoding="utf-8", errors="replace")
 
+# 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
+APP_ROOTS = ("subjects", "practice")
+
+
+def find_app(app: str) -> Path:
+    """按目录名找应用。两处同名会让 `check.py <id>` 有歧义，直接报错而不是任选一个。"""
+    found = [REPO_ROOT / root / app for root in APP_ROOTS if (REPO_ROOT / root / app).is_dir()]
+    if not found:
+        raise SystemExit(f"找不到应用 {app}（在 {' 和 '.join(APP_ROOTS)} 下都没有）")
+    if len(found) > 1:
+        paths = "、".join(str(p.relative_to(REPO_ROOT)) for p in found)
+        raise SystemExit(f"应用名 {app} 同时存在于 {paths}，改名消除歧义")
+    return found[0]
+
+
 def run_app(app: str, extra: list[str]) -> None:
-    entry = REPO_ROOT / "subjects" / app / "scripts" / "check.py"
+    entry = find_app(app) / "scripts" / "check.py"
     if not entry.is_file():
         raise SystemExit(f"应用 {app} 没有 {entry.relative_to(REPO_ROOT)}")
     print(f"== 检查应用：{app} ==", flush=True)
@@ -120,10 +136,10 @@ def main(argv: list[str]) -> int:
 
     run_redaction_check()
     run_source_check()
-    apps_root = REPO_ROOT / "subjects"
-    for entry in sorted(apps_root.iterdir()):
-        if (entry / "scripts" / "check.py").is_file():
-            run_app(entry.name, [])
+    for root in APP_ROOTS:
+        for entry in sorted((REPO_ROOT / root).iterdir()):
+            if (entry / "scripts" / "check.py").is_file():
+                run_app(entry.name, [])
     return 0
 
 
