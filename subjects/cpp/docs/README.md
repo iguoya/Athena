@@ -12,6 +12,7 @@
 | 模块该不该拆、怎样协作 | [CODE_ROLES](CODE_ROLES.md) |
 | 打包、签名和发布 | [RELEASE](RELEASE.md) |
 | 外部内容对照资料 | [CONTENT_REFERENCES](CONTENT_REFERENCES.md) |
+| `AGENTS.md` 里只留要点的规则，完整原文 | [CONTENT_RULES](CONTENT_RULES.md)（学习内容）、[ENGINEERING_RULES](ENGINEERING_RULES.md)（架构、生成、编码、GTK） |
 | 追溯一个决策的理由 | [ADR 索引](decisions/README.md) |
 | 查旧架构、旧布局或未采用提案 | [历史归档](archive/README.md) |
 
