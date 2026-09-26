@@ -25,3 +25,13 @@ ADR 0027 落地时的一次整理：架构与代码组织文档瘦身为现状�
 
 被归档的 ADR 中仍然有效的结论，已在 [ADR 索引](../decisions/README.md) 中逐条注明；
 其余部分不再指导开发。
+
+## 2026-09-26
+
+GitHub Release 正文统一改为 `CHANGELOG.md` 对应版本节之前的原文。7.0.0 起发版工作流
+才从 CHANGELOG 抽取正文，更早的版本多数只有 GitHub 自动生成的一行比较链接，6.0.0 是
+一段手写摘要。比较链接已保留在新正文末尾，摘要要点已被 CHANGELOG 6.0.0 节覆盖。
+
+| 归档文件 | 当时作用 | 现在看哪里 |
+|---|---|---|
+| [release-notes/](2026-09-26/release-notes/) | v0.1.0–v7.0.0 八个 Release 的替换前正文 | [CHANGELOG](../../CHANGELOG.md) 与各版本 Release 页 |
