@@ -16,10 +16,11 @@
 |---|---|---|
 | [0001](0001-data-driven-chapter-model.md) | `athena.json` 单一数据源与确定性代码生成 | 已接受 |
 | [0004](0004-athena-core-static-library.md) | 领域核心编译为 `athena-core` 静态库，与 GTK 解耦 | 已接受 |
-| [0005](0005-no-top-level-namespace.md) | 不使用项目顶层命名空间，优先 `using namespace std` | 已接受 |
+| [0005](0005-no-top-level-namespace.md) | 不使用项目顶层命名空间，优先 `using namespace std` | 已接受；头文件部分由 0059 修订 |
 | [0013](0013-single-author-validation-runtime-catalog.md) | Python 独占作者配置校验，C++ 只解码运行时 Catalog | 已接受 |
 | [0014](0014-modularize-main-window-by-feature.md) | 按页面与用例拆分 `MainWindow` | 已接受，实施完成 |
 | [0016](0016-split-learning-dialogs-by-responsibility.md) | 按单一职责拆分 `LearningDialogs` | 已接受，实施完成 |
+| [0059](0059-rule-cleanup-drop-artificial-constraints.md) | 规则清理：删过时的、放宽代价大于收益的、能自动化的交给工具 | 已接受 |
 
 ## 学习内容与界面形态
 
@@ -37,7 +38,7 @@
 | [0036](0036-chapter-guide-first.md) | 「本章导览」置于首位，作为极简概要 | **已被 0039 取代** |
 | [0038](0038-figures-as-widgets-and-cairo.md) | 插图改由 GTK 控件与 Cairo 自绘承载，退出 SVG 图片路线 | 已接受，`type_semantics` 先行改造 |
 | [0039](0039-merge-guide-into-outline.md) | 撤销「本章导览」，主旨并入教学大纲并精简 | 已接受，取代 0036 |
-| [0053](0053-editable-scaffold-experiments.md) | 教学实验改为可编辑的骨架案例，本机编译运行 | 已接受，机制先行 |
+| [0053](0053-editable-scaffold-experiments.md) | 教学实验改为可编辑的骨架案例，本机编译运行 | 已接受，机制先行；一对一要求由 0059 放宽 |
 | [0054](0054-sourced-teaching-content.md) | 教学内容与习题一律有据可依，官方规范优先 | 已接受，登记表与校验先行 |
 | [0055](0055-lesson-content-as-data.md) | 学习页内容改由数据驱动，`.blp` 降为块模板 | 已接受，新章走数据、存量不迁 |
 | [0056](0056-chapter-plan-and-staged-unlock.md) | 按多源交叉比对重划章节，知识点分三级并软门禁 | 已接受，结构先行、门禁待题库 |
