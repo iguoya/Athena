@@ -33,6 +33,7 @@
 | [0044](0044-menubar-launcher.md) | 常驻菜单栏的启动器，主程序也只是其中一项 | 已接受 |
 | [0045](0045-apps-are-peers.md) | C++ 教程降级为 `subjects/cpp`，所有学习应用平级 | 已接受；目录由 0060 拆分 |
 | [0060](0060-subjects-and-practice.md) | `apps/` 拆成 `subjects/`（课程学科）与 `practice/`（项目应用） | 已接受 |
+| [0062](0062-apps-own-their-constraints.md) | 每个应用只守自己的约束，不从别的应用继承 | 已接受 |
 
 ## 仓库工程
 
