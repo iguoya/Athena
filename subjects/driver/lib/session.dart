@@ -331,22 +331,25 @@ class _SessionStageState extends State<SessionStage> {
   }
 
   Widget _groupColumn(BuildContext context) {
-    return ListView(
-      controller: _scroll,
-      padding: const EdgeInsets.fromLTRB(28, 20, 24, 16),
-      children: [
-        for (final i in _group) ...[
-          KeyedSubtree(
-            key: _blockKeys.putIfAbsent(i, GlobalKey.new),
-            child: _questionBlock(context, i),
-          ),
-          if (i + 1 < _end)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(height: 1),
+    // 底部留出半屏空白：不然本页最后几道题被滚动范围卡住，只能停在屏幕下半截。
+    return LayoutBuilder(
+      builder: (context, constraints) => ListView(
+        controller: _scroll,
+        padding: EdgeInsets.fromLTRB(28, 20, 24, max(16, constraints.maxHeight / 2)),
+        children: [
+          for (final i in _group) ...[
+            KeyedSubtree(
+              key: _blockKeys.putIfAbsent(i, GlobalKey.new),
+              child: _questionBlock(context, i),
             ),
+            if (i + 1 < _end)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Divider(height: 1),
+              ),
+          ],
         ],
-      ],
+      ),
     );
   }
 
@@ -899,24 +902,23 @@ class _SessionStageState extends State<SessionStage> {
       _autoAdvance();
       return;
     }
-    _revealPending();
+    final next = _pending;
+    if (next != null) _centerOn(next);
     // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
   }
 
-  /// 一页十题一屏放不下：答完一题把下一道没答的滚进视野，键盘作答落在哪道题就能看见哪道。
-  /// 只滚到它的底边露出来为止，刚答的那道题尽量还留在屏上。
-  void _revealPending() {
-    final next = _pending;
-    if (next == null) return;
+  /// 一页十题一屏放不下：把要答的那道题滚到屏幕正中，视线不用往下找，也不用自己拿滚轮翻。
+  /// 页首几道题滚不到中间（上面没有内容可让），就停在原位，那本来就在眼前。
+  void _centerOn(int index, {bool animate = true}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final target = _blockKeys[next]?.currentContext;
+      final target = _blockKeys[index]?.currentContext;
       if (!mounted || target == null) return;
       Scrollable.ensureVisible(
         target,
-        duration: const Duration(milliseconds: 250),
+        alignment: 0.5,
+        duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
         curve: Curves.easeOut,
-        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
       );
     });
   }
@@ -963,13 +965,16 @@ class _SessionStageState extends State<SessionStage> {
 
   void _jumpTo(int index) {
     final start = _groupStartContaining(index);
-    if (start == _start) return;
+    if (start == _start) {
+      _centerOn(index);
+      return;
+    }
     setState(() {
       _start = start;
       _focus = null;
       _shownAt = DateTime.now();
     });
-    _scrollToTop();
+    _scrollToTop(center: index);
   }
 
   void _prevGroup() {
@@ -999,9 +1004,12 @@ class _SessionStageState extends State<SessionStage> {
     _scrollToTop();
   }
 
-  /// 换页后 ListView 复用同一个控制器，滚动位置会留在上一页的底部，要手动拉回页首。
-  void _scrollToTop() {
+  /// 换页后 ListView 复用同一个控制器，滚动位置会留在上一页的底部，要手动拉回页首；
+  /// 本页有答过的题（跳页、回看）就直接把第一道没答的摆到中间。
+  void _scrollToTop({int? center}) {
     if (_scroll.hasClients) _scroll.jumpTo(0);
+    final target = center ?? _pending;
+    if (target != null) _centerOn(target, animate: false);
   }
 
   /// 退出不等于交卷：练习本来就逐题落盘，退出不丢东西，不用问；模拟考/章节测试
