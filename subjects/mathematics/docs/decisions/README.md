@@ -26,8 +26,9 @@
 | [0019](0019-exercises-must-be-sourced-and-worked-examples.md) | 练习与测验必须有所本；每节配标准例题 | 已接受（修正 0017 第 1 节，补齐 0014 第 2 节） |
 | [0020](0020-formal-and-intuitive-two-views.md) | 讲解分「直觉」与「严谨」两个视图，逐条对照 | 已接受（第 2、4 节由 0023 修正） |
 | [0021](0021-terminological-titles-with-plain-subtitles.md) | 标题用规范术语，直觉说法降为副标题 | 已接受 |
-| [0022](0022-plain-sources-first-formalize-later.md) | 参考来源一律选通俗的；严谨不等于形式化 | 已接受（修正 0017 第 2 节、0020 第 2 节） |
+| [0022](0022-plain-sources-first-formalize-later.md) | 参考来源一律选通俗的；严谨不等于形式化 | 已接受（修正 0017 第 2 节、0020 第 2 节；「一律」由 0027 改为「优先」） |
 | [0023](0023-two-equal-passes-each-with-its-own-exercises.md) | 每节分对等的两遍讲解，各配各的习题 | 已接受（修正 0020 第 2、4 节；本文第 4 节由 0024 作废） |
 | [0024](0024-bind-every-point-to-applications.md) | 知识点绑定应用，越多越好 | 已接受（作废 0023 第 4 节，澄清 0003 的适用范围） |
 | [0025](0025-native-python-sidecar-engine.md) | 符号引擎改用本机 Python 常驻进程；判据改为教学效果与成本收益 | 已接受（修正 0001 第 2、4 节） |
 | [0026](0026-native-tts-instead-of-web-speech.md) | 朗读改走系统 TTS，不用 WebView 的 Web Speech | 已接受（修正 0018 的实现手段） |
+| [0027](0027-rule-cleanup-drop-artificial-constraints.md) | 规则清理：删过时的、放宽代价大于收益的、取消界面不出现考试字样 | 已接受（修订 0022） |
