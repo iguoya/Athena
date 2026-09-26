@@ -163,6 +163,64 @@ def main() -> None:
         assert 'alias="chapter_catalog.json"' in resource_xml
         assert ">athena.json<" not in resource_xml
 
+        # 共享 .blp 由生成器扫 resources/ui/ 顶层得出，Meson 与 GResource 不再手写名单。
+        write(root / "resources" / "ui" / "window.blp")
+        write(root / "resources" / "ui" / "outline.blp")
+        resources = run(generator, root, "resources", "--output", str(resource_output))
+        assert "window|resources/ui/window.blp|window.ui" in resources.stdout
+        assert "outline|resources/ui/outline.blp|outline.ui" in resources.stdout
+        assert "code|resources/ui/chapters/code.blp|code.ui" in resources.stdout
+        resource_xml = resource_output.read_text(encoding="utf-8")
+        assert '<file preprocess="xml-stripblanks">window.ui</file>' in resource_xml
+        assert '<file preprocess="xml-stripblanks">outline.ui</file>' in resource_xml
+        configured = ";".join(resources.stdout.split())
+
+        # 构建期守卫：清单没变就写 stamp；多了或少了 .blp 就明确失败，提示重新配置。
+        stamp = root / "build" / "blueprint-guard.stamp"
+        run(generator, root, "blueprint-guard", "--expected", configured, "--stamp", str(stamp))
+        assert stamp.is_file()
+        write(root / "resources" / "ui" / "new_panel.blp")
+        stale = run(
+            generator, root, "blueprint-guard", "--expected", configured,
+            "--stamp", str(stamp), check=False,
+        )
+        assert stale.returncode != 0
+        assert "new: resources/ui/new_panel.blp" in stale.stderr, stale.stderr
+        assert "meson setup --reconfigure" in stale.stderr, stale.stderr
+        (root / "resources" / "ui" / "new_panel.blp").unlink()
+        (root / "resources" / "ui" / "outline.blp").unlink()
+        gone = run(
+            generator, root, "blueprint-guard", "--expected", configured,
+            "--stamp", str(stamp), check=False,
+        )
+        assert "gone: resources/ui/outline.blp" in gone.stderr, gone.stderr
+
+        # 被章节引用的顶层 .blp（例如数据驱动页面的 lesson.blp）只作章节页，不重复登记成共享界面。
+        chapter_owned = copy.deepcopy(config)
+        chapter_owned["categories"][0]["chapters"][0]["ui"] = {
+            "blueprint": "resources/ui/window.blp"
+        }
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(chapter_owned, ensure_ascii=False, indent=2) + "\n",
+        )
+        resources = run(generator, root, "resources", "--output", str(resource_output))
+        assert resources.stdout.count("resources/ui/window.blp") == 1
+        resource_xml = resource_output.read_text(encoding="utf-8")
+        assert '<file preprocess="xml-stripblanks">window.ui</file>' not in resource_xml
+
+        # 共享 .blp 与章节页产出同名 .ui 会在构建目录里互相覆盖，直接拒绝。
+        write(
+            root / "resources" / "athena.json",
+            json.dumps(config, ensure_ascii=False, indent=2) + "\n",
+        )
+        write(root / "resources" / "ui" / "code.blp")
+        clash = run(generator, root, "resources", "--output", str(resource_output), check=False)
+        assert clash.returncode != 0
+        assert "both generate 'code.ui'" in clash.stderr, clash.stderr
+        (root / "resources" / "ui" / "code.blp").unlink()
+        (root / "resources" / "ui" / "window.blp").unlink()
+
         catalog_output = root / "build" / "chapter_catalog.generated.json"
         run(generator, root, "catalog", "--output", str(catalog_output))
         catalog = json.loads(catalog_output.read_text(encoding="utf-8"))

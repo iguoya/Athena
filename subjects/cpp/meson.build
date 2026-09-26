@@ -97,6 +97,7 @@ project_generator_sources = files(
   'scripts/generate_project.py',
   'scripts/project_generator/__init__.py',
   'scripts/project_generator/catalog.py',
+  'scripts/project_generator/figures.py',
   'scripts/project_generator/model.py',
   'scripts/project_generator/registry.py',
   'scripts/project_generator/resources.py',
@@ -105,7 +106,9 @@ project_generator_sources = files(
 athena_json = meson.project_source_root() / 'resources' / 'athena.json'
 gresource_xml = meson.current_build_dir() / 'app.gresource.xml'
 
-# 脚本 stdout 格式: "chapter_id|blp_relative_path|ui_filename"
+# 脚本 stdout 每行一个要编译的 .blp："目标名|blp 相对路径|产物 .ui 文件名"。
+# 章节页由 athena.json 决定，共享界面是 resources/ui/ 顶层其余的 .blp——
+# 清单只在生成器里算（scripts/project_generator/resources.py），这里不手写。
 gen_output = run_command(
   python,
   project_generator,
@@ -166,45 +169,25 @@ foreach line : gen_output
   endif
 endforeach
 
-# 主窗口 .blp（独立于章节目录）
-compiled_ui += custom_target(
-  'compile-window.blp',
-  input: files('resources/ui/window.blp'),
-  output: 'window.ui',
-  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-  env: blueprint_env,
-)
-
-compiled_ui += custom_target(
-  'compile-learning_unit.blp',
-  input: files('resources/ui/learning_unit.blp'),
-  output: 'learning_unit.ui',
-  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-  env: blueprint_env,
-)
-
-compiled_ui += custom_target(
-  'compile-checkpoint.blp',
-  input: files('resources/ui/checkpoint.blp'),
-  output: 'checkpoint.ui',
-  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-  env: blueprint_env,
-)
-
-compiled_ui += custom_target(
-  'compile-lesson_blocks.blp',
-  input: files('resources/ui/lesson_blocks.blp'),
-  output: 'lesson_blocks.ui',
-  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-  env: blueprint_env,
-)
-
-compiled_ui += custom_target(
-  'compile-outline.blp',
-  input: files('resources/ui/outline.blp'),
-  output: 'outline.ui',
-  command: [blueprint_compiler, 'compile', '@INPUT@', '--output', '@OUTPUT@'],
-  env: blueprint_env,
+# Meson 不支持 glob，上面的清单是配置期算的。之后新增、删除 .blp 或改了章节页，
+# 只跑 meson compile 不会重新配置；这个守卫每次构建重算一遍，对不上就失败并
+# 提示重新配置，而不是把新 .blp 静默漏掉。
+blueprint_guard = custom_target(
+  'blueprint-guard',
+  input: athena_json,
+  depend_files: project_generator_sources,
+  output: 'blueprint-guard.stamp',
+  command: [
+    python,
+    project_generator,
+    '--project-root', meson.project_source_root(),
+    '--config', '@INPUT@',
+    'blueprint-guard',
+    '--expected', ';'.join(gen_output),
+    '--stamp', '@OUTPUT@',
+  ],
+  build_always_stale: true,
+  build_by_default: true,
 )
 
 # === 共享核心库 ===
@@ -283,7 +266,7 @@ app_sources = files(
 resources = gnome.compile_resources(
   'app-resources',
   gresource_xml,
-  dependencies: compiled_ui + [runtime_catalog_generated],
+  dependencies: compiled_ui + [runtime_catalog_generated, blueprint_guard],
   source_dir: ['resources', '.', meson.current_build_dir()]
 )
 

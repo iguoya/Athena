@@ -56,6 +56,16 @@ def make_parser() -> argparse.ArgumentParser:
     resources.add_argument("--output", type=Path, required=True)
     catalog = commands.add_parser("catalog", help="generate normalized runtime Catalog")
     catalog.add_argument("--output", type=Path, required=True)
+    guard = commands.add_parser(
+        "blueprint-guard",
+        help="fail if the .blp set differs from what Meson was configured with",
+    )
+    guard.add_argument(
+        "--expected",
+        required=True,
+        help="the 'id|blp|ui' lines printed by `resources` at configure time, joined by ';'",
+    )
+    guard.add_argument("--stamp", type=Path, required=True)
     registry = commands.add_parser("registry", help="generate FunctionRegistry C++")
     registry.add_argument("--output", type=Path, required=True)
     commands.add_parser("check", help="validate the project without writing files")
@@ -80,8 +90,33 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "resources":
         write_generated(args.output, render_resources(model, root))
-        for target_id, blueprint, ui_name in blueprint_entries(model):
+        for target_id, blueprint, ui_name in blueprint_entries(model, root):
             print(f"{target_id}|{blueprint}|{ui_name}")
+    elif args.command == "blueprint-guard":
+        # Meson 不支持 glob：要编译哪些 .blp 是配置期算好的。之后新增或删掉
+        # .blp（或在 athena.json 里改了章节页），只跑 meson compile 不会重新配置，
+        # 新文件会被静默漏掉。这里每次构建重算一遍，对不上就明确失败。
+        expected = {line for line in args.expected.split(";") if line}
+        actual = {
+            f"{target_id}|{blueprint}|{ui_name}"
+            for target_id, blueprint, ui_name in blueprint_entries(model, root)
+        }
+        if expected != actual:
+            added = sorted(line.split("|")[1] for line in actual - expected)
+            removed = sorted(line.split("|")[1] for line in expected - actual)
+            details = "; ".join(
+                part
+                for part in (
+                    f"new: {', '.join(added)}" if added else "",
+                    f"gone: {', '.join(removed)}" if removed else "",
+                )
+                if part
+            )
+            raise ProjectError(
+                f"the set of .blp files changed since Meson was configured ({details}). "
+                "Reconfigure: meson setup --reconfigure <build-dir>"
+            )
+        write_generated(args.stamp, "ok\n")
     elif args.command == "catalog":
         write_generated(args.output, render_catalog(model))
     elif args.command == "registry":

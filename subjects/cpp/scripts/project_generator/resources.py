@@ -1,14 +1,58 @@
-"""Render GResource XML and expose Blueprint build entries."""
+"""Render GResource XML and expose Blueprint build entries.
+
+`.blp` 的清单只在这里算一次，Meson 编译和 GResource 打包都用它，不再有第二份
+手写名单：
+
+- 章节页的 `.blp` 由 `athena.json` 决定（`model["ui"]`），发布到 `/app/chapters/`；
+- 共享的 `.blp` 是 `resources/ui/` 顶层的全部 `.blp`，减去已被章节引用的那些
+  （例如数据驱动页面用的 `lesson.blp`），发布到 `/app/<名字>.ui`。
+
+新增一个共享 `.blp` 只需把文件放进 `resources/ui/`。
+"""
 
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
+from .model import ProjectError
 
-def blueprint_entries(model: dict) -> list[tuple[str, str, str]]:
+SHARED_BLUEPRINT_DIR = Path("resources") / "ui"
+
+
+def shared_blueprints(model: dict, root: Path) -> list[str]:
+    """`resources/ui/` 顶层、没被任何章节引用的 `.blp`，按路径排序。"""
+    ui_dir = root / SHARED_BLUEPRINT_DIR
+    if not ui_dir.is_dir():
+        return []
+    chapter_blueprints = set(model["ui"].values())
     return [
+        blueprint
+        for blueprint in (
+            path.relative_to(root).as_posix() for path in sorted(ui_dir.glob("*.blp"))
+        )
+        if blueprint not in chapter_blueprints
+    ]
+
+
+def blueprint_entries(model: dict, root: Path) -> list[tuple[str, str, str]]:
+    """每个要编译的 `.blp`：(Meson 目标名, 源路径, 产物 .ui 文件名)。
+
+    所有 `.ui` 产物落在同一个构建目录，重名会互相覆盖，所以这里直接拒绝。
+    """
+    entries = [
         (Path(ui_name).stem, blueprint, ui_name)
         for ui_name, blueprint in sorted(model["ui"].items())
     ]
+    owners = {ui_name: blueprint for _, blueprint, ui_name in entries}
+    for blueprint in shared_blueprints(model, root):
+        ui_name = Path(blueprint).with_suffix(".ui").name
+        if ui_name in owners:
+            raise ProjectError(
+                f"blueprints {owners[ui_name]!r} and {blueprint!r} both generate "
+                f"{ui_name!r}; rename one of them"
+            )
+        owners[ui_name] = blueprint
+        entries.append((Path(ui_name).stem, blueprint, ui_name))
+    return entries
 
 
 def render_resources(model: dict, root: Path) -> str:
@@ -65,17 +109,20 @@ def render_resources(model: dict, root: Path) -> str:
             if path.is_file() and not any(part.startswith(".") for part in path.parts)
         ]
 
+    shared_ui_entries = [
+        '    <file preprocess="xml-stripblanks">{}</file>'.format(
+            xml_escape(Path(blueprint).with_suffix(".ui").name)
+        )
+        for blueprint in shared_blueprints(model, root)
+    ]
+
     def entries_or_comment(entries: list[str], comment: str) -> str:
         return "\n".join(entries) if entries else f"    <!-- {comment} -->"
 
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/app">
-    <file preprocess="xml-stripblanks">window.ui</file>
-    <file preprocess="xml-stripblanks">learning_unit.ui</file>
-    <file preprocess="xml-stripblanks">checkpoint.ui</file>
-    <file preprocess="xml-stripblanks">lesson_blocks.ui</file>
-    <file preprocess="xml-stripblanks">outline.ui</file>
+{entries_or_comment(shared_ui_entries, "暂无共享界面")}
     <file>style.css</file>
 {entries_or_comment(article_entries, "暂无文章")}
   </gresource>
