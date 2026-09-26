@@ -22,8 +22,8 @@
 - 面向对象设计遵循以下六条原则；它们是上一条总纲在类粒度上的落地，冲突时以本文件
   和 ADR 为准，不为教条式套用原则牺牲本项目"轻量协调层、不过早抽象"的取舍：
   - **单一职责（SRP）**：一个类只有一个变化原因。对话框、页面、服务按用途拆分，
-    不把设置、历史、自测、渲染通道等塞进同一个类；单文件持续膨胀（经验阈值约
-    500 行）应视为拆分信号。
+    不把设置、历史、自测、渲染通道等塞进同一个类。拆不拆看职责：一个文件里混了
+    几种变化原因、改一处要先读懂一堆无关代码，才是拆分信号；行数本身不是判据（ADR 0059）。
   - **开闭（OCP）**：新增章节、知识点、标签类型、平台后端、AI 服务商时，通过配置、
     新增文件或新增接口实现完成，不改动既有协调代码和注册表手写映射。
   - **里氏替换（LSP）**：任何接口（如 `DocumentView`）的实现必须完整履行其契约，
@@ -60,11 +60,11 @@
     为什么没有通用解。
   - Meson 必须按目标平台选择源码和系统依赖；不得为了 Linux 在共享代码里增加平台分支，
     也不得让 Linux 构建链接 `gtk4-macos`、Apple Framework 或 Objective-C++ 源文件。
-  - AI 讲解的 `DocumentView` 必须在 macOS 与 Ubuntu 履行加载、字号、主题和外部
+  - AI 讲解的 `DocumentView` 必须在 macOS、Windows 与 Linux 履行加载、字号、主题和外部
     链接契约；不得以平台特有 WebView 作为内容渲染旁路。
-  - 新增或修改共享代码后，至少运行 Ubuntu 的无 GTK 核心测试和 Meson 构建；涉及页面、
-    资源或平台后端时再运行 Ubuntu GTK 冒烟测试。发布物由各平台独立打包，不能把 macOS
-    的 `.app`/DMG 规则套到 Linux。
+  - 新增或修改共享代码后，在本机跑 `python3 scripts/check.py`（构建加全部测试），其余
+    平台交给 CI 的三平台矩阵（ADR 0059）。发布物由各平台独立打包，不能把 macOS 的
+    `.app`/DMG 规则套到别的平台。
 - `resources/athena.json` 是项目配置的唯一数据源，当前承载分类、章节、分组和知识点元数据。
 - UI 层只显示章节、收集用户操作并展示执行结果，不维护重复的章节注册信息。
 - JSON 解析、元数据校验、演示函数注册和 GTK 界面协调应保持职责分离。
@@ -93,12 +93,12 @@
 
 - 使用 RAII 表达资源所有权。
 - 禁止拥有所有权的裸指针；GTK 提供的非拥有型控件指针除外，并应保持生命周期关系清晰。
-- 项目代码和教学示例优先使用 `using namespace std;`，减少反复书写 `std::` 带来的视觉噪声；该偏好同样适用于本项目自己的头文件。
+- 教学代码（`cplusplus/` 下，源码框展示给学员看）和 `.cc` 实现文件优先使用 `using namespace std;`，减少反复书写 `std::` 带来的视觉噪声。基础设施头文件（`ui/`、`render/`、`storage/`、`content/`、`platform/`、`services/`、`registry/` 等）不写：头文件里的 `using namespace` 会带进每个 include 它的文件（ADR 0059 修订 ADR 0005）。存量见 `docs/TECH_DEBT.md`，改到哪个头文件顺手去掉。
 - `using namespace std;` 放在标准库 `#include` 之后；只有出现实际名称冲突或需要强调来源时才局部使用显式 `std::`。
 - `std::move`、`std::forward`、`std::remove`（以及其他已知有跨头文件重载/ADL 冲突风险的标准库名字）始终显式加 `std::` 前缀，即使当前文件看不出冲突：`move`/`forward` 不加前缀属于编译器会警告的风险写法（`-Wunqualified-std-cast-call`），`remove` 在 `<cstdio>` 和 `<algorithm>` 之间存在同名歧义。这属于第 72 条"实际名称冲突"的具体例子，不是待清理的冗余前缀。
 - 不要把已有的简洁标准库名称机械改回 `std::` 前缀，也不必改写为大量 `using std::name` 声明；清理 `std::` 冗余前缀时跳过上一条列出的例外名字。
 - 默认使用 `const`、引用和明确的所有权语义。
-- Athena 是独立桌面应用，项目类型和课程类直接使用类名，不增加与项目名或分类名重复的 `athena`、`athena::cpp` 顶层命名空间。
+- C++ 教程是独立桌面应用，项目类型和课程类直接使用类名，不增加与项目名或分类名重复的 `athena`、`athena::cpp` 顶层命名空间。
 - 只在确有名称隔离需求时引入具备领域含义的命名空间；`.cpp` 内部辅助类型和函数优先放入匿名命名空间限制可见性。
 - 具体课程类直接使用主题名，例如 `Reference`、`SmartPointer`；不要统一添加 `Chapter` 后缀。
 - 作为可运行知识点的成员函数必须为 public，以便通用运行机制调用。
@@ -139,18 +139,13 @@
      等——这类节点连同它必需的父容器可以留在代码里。
   选 2 或 3 时，在该文件顶部注释里写清为什么不用 `.blp`。
 - 新增 `render/`、`ui/` 下的视图前先判断：能进 `.blp` 的部分有没有进 `.blp`。
-- **既有欠账盘点**（下列都是纯代码构建、不是范例，改到时顺手往 `.blp` 收，
-  不要照抄扩大）：
-  - `render/chart_view`、`render/knowledge_graph_view`、`render/domain_graph_view`
-    ——外壳和图例可进 `.blp`，Cairo 自绘的图形区（规则 3）留代码；
-  - `ui/progress_page`、`ui/chapter_index_page`——页面骨架 + 卡片可做成 `.blp`
-    模板；
-  - `ui/settings_dialog`、`ui/about_dialog`、`ui/ai_markdown_dialog`——对话框结构应写在 `.blp`，代码只填内容和信号。
-  - 已经合规的参考：`resources/ui/window.blp`、`resources/ui/chapters/*.blp`
-    （章节页 = `.blp` 模板 + `code_chapter_page.cc` 只做协调）。
-- 加新 `.blp` 的接线：`meson.build` 加一个 `blueprint-compiler compile` 的
-  `custom_target`，编译产物 `.ui` 由 `scripts/project_generator/resources.py`
-  写进 GResource 清单——两处都要改，参考 `window.blp` 的现有写法。
+- **既有纯代码构建的视图是欠账，不是范例**：改到时顺手往 `.blp` 收，不要照抄扩大。
+  具体文件清单在 `docs/TECH_DEBT.md`（规则里不写文件清单，写了迟早过时，ADR 0059）。
+  合规参考：`resources/ui/window.blp`、`resources/ui/chapters/*.blp`
+  （章节页 = `.blp` 模板 + `code_chapter_page.cc` 只做协调）。
+- 加新 `.blp` 不用手工接线：共享界面放进 `resources/ui/`，章节页在 `athena.json` 里声明，
+  生成器统一算出清单，Meson 编译和 GResource 打包都用它（ADR 0059）。清单是配置期算的，
+  新增后只跑 `meson compile` 会被构建期守卫拦下并提示 `meson setup --reconfigure`。
 - 不在窗口类中实现教学业务逻辑。
 - GResource 路径必须由配置和构建生成流程保持一致。
 - 共享 Blueprint 模板时，不得假设不同分类的 `order` 全局唯一。

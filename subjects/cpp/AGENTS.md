@@ -27,12 +27,13 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   能否实验、掌握目标来判断，以及可复用的内容块组件（`ui/lesson_blocks.h`）。
   它是**范式不是模子**：`type_semantics` 的节结构由那些知识点的性质决定，
   照抄它的目录只会抄到形状。
-- `docs/CODE_ROLES.md`：借政府组织结构理解代码组织的思维模型与它的边界，说明本文件
-  这些规则背后的取舍；属于背景观念，冲突时以本文件和 ADR 为准。
 - `docs/CONTENT_REFERENCES.md`：**内容来源与查证规则**（ADR 0054）。教学内容一律
   有据可依，不得凭记忆发挥；来源分两级，定义与边界以一级规范性材料
   （cppreference、ISO 草案、Core Guidelines、Microsoft Learn）为准，中文教程站
   只作讲法对照。要防的是抄，不是查。
+
+背景阅读（不必每次读，ADR 0059）：`docs/CODE_ROLES.md` 借政府组织结构讲代码组织的思维模型；
+冲突时以本文件和 ADR 为准。已知的存量欠账见 `docs/TECH_DEBT.md`。
 
 若实现与文档不一致，先指出差异；修复代码或更新文档时，保持二者同步。
 
@@ -48,13 +49,14 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - Meson
 - Blueprint UI
 - nlohmann/json
-- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；使用系统自带 libsqlite3，不随包分发）。
+- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；macOS 与 Linux 用系统自带 libsqlite3，Windows 由打包器随包带上 DLL）。
   库在 `progress/learning.db`，**随仓库走**（主仓库 ADR 0053）：路径由启动器通过
   `ATHENA_CPP_ROOT` 传入，`platform/app_paths` 的 `own_app_root()` 读它，拿不到
   （发行包）就退回用户数据目录。这不放松「教学内容只从 GResource 读」——内容必须与
   二进制同版本，进度是使用者自己的东西。
 
-除非任务明确要求，不引入新的生产依赖，不更换 UI 技术栈，也不把项目改造成完整 MVC/MVP 框架。
+引入新依赖按主仓库 ADR 0057：判据是合不合适，不是依赖多不多（ADR 0059）。更换 UI 技术栈、
+把项目改造成完整 MVC/MVP 框架仍要先问。
 
 ## 学习内容
 
@@ -73,25 +75,26 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   难度与掌握目标靠按 `requires` 实时绘制的路线图一眼可见；以图为主；能合并的节不要拆。
 - **大纲与教学过程用 GTK 控件表达**（ADR 0033）：能由运行时数据算出来的画成活的并配互动，
   纯概念示意按下面「图文」一条选载体；不同维度不共用视觉编码；一句话能说清就不加图。
-- **本应用的三层落地**（仓库级 ADR 0028 的具体形态）：大纲是每章 `.blp` 的「教学大纲」标签（一句题注加五节：痛点与来历、
-  心智模型、讲什么与边界、判断与代价、落点；「讲什么与边界」按 ADR 0029 标出难度档与掌握目标），不写语法机制、代码示例和 API 细节；教学过程是
-  原生学习页；教学实验是课程类的 public 成员函数，通常 10–30 行。
+- **本应用的三层落地**（仓库级 ADR 0028 的具体形态）：大纲是每章 `.blp` 的「教学大纲」标签，
+  默认一句题注加五节（痛点与来历、心智模型、讲什么与边界、判断与代价、落点），五节是参考
+  不是模具，可合并或省略（仓库级 ADR 0040）；「讲什么与边界」按 ADR 0029 标出难度档与掌握
+  目标；不写语法机制、代码示例和 API 细节。教学过程是原生学习页；教学实验是课程类的 public
+  成员函数，通常 10–30 行。
 - **两条实验路径并存**（ADR 0053）：只读实验（课程类成员函数，展示真实源码）与骨架案例
-  （`resources/cases/<case>/`，挂在知识点的 `labs[]` 上，学员就地编辑、本机编译运行）。可实操
-  的知识点默认一对一配一个骨架案例；验收标准是不改一行就能编译运行（字段见
+  （`resources/cases/<case>/`，挂在知识点的 `labs[]` 上，学员就地编辑、本机编译运行）。值得亲手
+  写一遍的知识点才配骨架案例，不要求一对一（ADR 0059）；验收标准是不改一行就能编译运行（字段见
   `docs/CHAPTER_CONFIG.md` 7.2）；编译诊断完整展示不截断。
 - 优先覆盖 C++ 特有能力；与 C 重叠的基础只在理解 C++ 语义确有必要时加入。**受众**是有两三年
   经验的初中级开发者：不讲编程通识，C++ 特有语义要讲透，也不过分拔高。
 - **所有教学内容与习题有据可依**（ADR 0054，规则见 `docs/CONTENT_REFERENCES.md`）：一级规范性
   材料定语义，中文教程站只作讲法对照；`source_refs` 指到 `resources/sources/catalog.json`。
   计入掌握度的题目必须有出处，AI 现场出题不计入；自造题写明理由，一节内不得过半。
-- **本应用只负责 C++ 语言这一个领域**：别的领域在这里只能是首页学科图谱上的一个节点（按
-  `app_id` 启动那个独立应用，ADR 0032 第 5 条），不得在 `athena.json` 里为它开分类、列章节（`da`、`dp` 两次空目录
-  表的反例见原文）。判断边界看教的是什么，不看用什么语言写。
+- **本应用只负责 C++ 语言这一个领域**：别的领域归各自的独立应用，走启动器打开；不得在
+  `athena.json` 里为它开分类、列章节（`da`、`dp` 两次空目录表的反例见原文）。判断边界看教的是什么，不看用什么语言写。
 - 源码框显示真实源文件，不在 UI 或 C++ 中维护另一份教学代码字符串。
 - **图文**（ADR 0038）：插图不用 SVG 图片。表格、对照、卡片清单用 `.blp` 控件；连线、箭头、
   层次和由数据算出位置的结构用 `DrawingArea` / `Snapshot` 自绘；两者都不合适才考虑挂进 icon
-  theme 的 GTK 内建 SVG 路径。`mermaid` 等运行时 JS 渲染的图不用，确有必要先提 ADR。
+  theme 的 GTK 内建 SVG 路径。
 
 ## 架构原则
 
@@ -106,7 +109,8 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - 模块间只通过稳定 ID 和数据对象协作；页面之间不互相调用，跨页导航经 `MainWindow`；异步结果
   经回调交回表示层，服务层不直接更新 GTK。构造参数膨胀、双向调用、共享控件指针，说明边界
   划错了，重新切分而不是加旁路。
-- SOLID 与迪米特法则是总纲在类粒度的落地，不教条套用：单文件约 500 行是拆分信号；新增章节、
+- SOLID 与迪米特法则是总纲在类粒度的落地，不教条套用：拆不拆看职责是否单一、改一处
+  要不要读懂无关代码，不看行数；新增章节、
   知识点、平台后端、AI 服务商走配置或新增文件；出现第二实现或测试替身才补接口；用细粒度
   `function<>` 回调，不定义胖监听接口。
 - **三个平台都支持**（Windows 2026-09-15 打通；临时垫片 `compat/glib_final_type_shim.h`，
@@ -116,9 +120,8 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   源码和依赖，Linux 构建不链接 `gtk4-macos`、Apple Framework 或 Objective-C++。
 - **教学内容只从 GResource 读**：运行期不按文件路径找随程序分发的东西；`ATHENA_SOURCE_ROOT`
   只给测试目标用，生产代码不得出现。`platform/` 下新增平台代码要在 ADR 里说明为什么没有通用解。
-- AI 讲解的 `DocumentView` 在 macOS 与 Ubuntu 都要履行加载、字号、主题和外部链接契约，不以平台
-  WebView 旁路。改共享代码后至少跑 Ubuntu 无 GTK 核心测试和 Meson 构建；涉及页面、资源或平台
-  后端再跑 GTK 冒烟测试。
+- AI 讲解的 `DocumentView` 在 macOS、Windows、Linux 都要履行加载、字号、主题和外部链接契约，
+  不以平台 WebView 旁路。改共享代码后本机跑 `python3 scripts/check.py`，其余平台交给 CI。
 - **`resources/athena.json` 是配置的唯一数据源**：UI 不重复维护章节注册信息；JSON 解析、元数据
   校验、函数注册和 GTK 协调职责分离。配置契约先于解析器、注册表和生成器，不为兼容旧代码扭曲它。
 - **稳定 ID**：由 `category.name`、`chapter.name`、`subchapter.name` 派生查找键（如
@@ -144,7 +147,8 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 
 - RAII 表达所有权；禁止拥有所有权的裸指针（GTK 非拥有型控件指针除外）；默认 `const`、引用和
   明确的所有权语义。
-- 项目代码与教学示例用 `using namespace std;`（放在标准库 `#include` 之后）。`std::move`、
+- 教学代码（`cplusplus/`）与 `.cc` 用 `using namespace std;`（放在标准库 `#include` 之后）；
+  基础设施头文件不写，它会带进每个 include 它的文件（ADR 0059）。`std::move`、
   `std::forward`、`std::remove` 等有冲突风险的名字**始终显式加 `std::`**，清理冗余前缀时跳过它们；
   其余不机械改回 `std::`，也不改成大量 `using std::name`。
 - 不加 `athena`、`athena::cpp` 顶层命名空间，确有隔离需求才引入领域命名空间；`.cpp` 内部辅助
@@ -155,7 +159,7 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 
 ## GTK 与 Blueprint 规则
 
-完整原文（含既有欠账清单）见 [docs/ENGINEERING_RULES.md](docs/ENGINEERING_RULES.md)。
+完整原文见 [docs/ENGINEERING_RULES.md](docs/ENGINEERING_RULES.md)。
 
 - **自绘用 GTK 的合成能力**（ADR 0035）：需要对照切换、聚焦、逐步推进时写自定义 `Gtk::Widget`
   并 override `snapshot_vfunc()`，路径仍用 `append_cairo()` 画；纯静态图形用 `DrawingArea`。
@@ -170,10 +174,10 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
   3. **`.blp` 表达不了的绘制**：`DrawingArea` + Cairo、`Gtk::Snapshot` 等。
 
   选 2 或 3 时，在该文件顶部注释里写清为什么不用 `.blp`。
-- 既有纯代码构建的视图是欠账，不是范例，改到时顺手收进 `.blp`；合规参考是
-  `resources/ui/window.blp` 与 `resources/ui/chapters/*.blp`。
-- 加新 `.blp` 要改两处：`meson.build` 的 `blueprint-compiler compile` target，以及
-  `scripts/project_generator/resources.py` 的 GResource 清单。
+- 既有纯代码构建的视图是欠账，不是范例，改到时顺手收进 `.blp`（清单在 `docs/TECH_DEBT.md`）；
+  合规参考是 `resources/ui/window.blp` 与 `resources/ui/chapters/*.blp`。
+- 加新 `.blp` 不用手工接线：共享界面放进 `resources/ui/`，章节页在 `athena.json` 里声明，
+  生成器统一算清单。新增后要 `meson setup --reconfigure`，只 compile 会被构建期守卫拦下。
 - 窗口类不实现教学业务逻辑；GResource 路径由配置和生成流程保持一致；共享模板不假设不同分类的
   `order` 全局唯一；Builder、页面缓存和初始化状态用完整章节 ID 作键。
 
