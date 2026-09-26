@@ -1,7 +1,7 @@
 # Athena English · ADR 索引
 
-本目录只记录 **`subjects/english` 独立应用** 的产品与技术决策。主仓库
-`docs/decisions/` 约束 GTK 主程序；精神可对齐，编号与文件互不混用。
+本目录只记录 **`subjects/english` 独立应用** 的产品与技术决策。仓库级
+`docs/decisions/` 只放所有应用共同遵守的大原则；两处编号与文件互不混用。
 
 | 编号 | 决策 | 状态 |
 |---|---|---|

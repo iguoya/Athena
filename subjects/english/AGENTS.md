@@ -1,8 +1,6 @@
 # Athena English — 项目协作规则
 
-本文档是 **`subjects/english` 独立应用** 的项目级指令。本应用与 C++ 教程
-（`subjects/cpp`，GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读它的配置、
-不链接它的代码、不依赖它的进程即可完成开发、构建与练习全流程。
+本文档是 **`subjects/english` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建与练习全流程。
 
 仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
 `app.json` 把本应用当独立进程拉起（主仓库 ADR 0032），那不是运行本应用的前提。
@@ -30,7 +28,6 @@
   `AthenaEnglish/`。自建表、自迁移（主仓库 ADR 0037）。`--store` 仅为兼容而接受并忽略。
   知识点 ID 前缀一律 `en.`。
 
-不引入 `subjects/cpp` 的 Meson、gtkmm、Blueprint、`athena.json`。
 
 ## 目录与所有权
 
@@ -89,7 +86,6 @@
 - **独立可运行**：`launcher open english`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页。
 - **壳要薄**：Rust 侧负责路径、进度；业务文案与课树不进 Rust。
-- **与 C++ 教程零编译耦合**：`subjects/cpp` 的 Meson / `scripts/check.py` 不构建本应用。
 
 ## 开发与验证
 
@@ -103,8 +99,8 @@ launcher open english       # 日常开发（热更新）；启动器和图谱�
 
 环境变量 `ATHENA_ENGLISH_ROOT` 可强制指定应用根目录（含 `content/`）。
 
-验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）。
-**不必**为改本应用而跑主仓库 `scripts/check.py`，除非同时改了 `subjects/cpp` 的 discover。
+验证走仓库根的统一入口 `python3 scripts/check.py english`：装前端依赖、`npm run build`、
+`cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。
 
 ## 修改流程
 

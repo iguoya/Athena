@@ -1,8 +1,6 @@
 # Athena DSA — 项目协作规则
 
-本文档是 **`subjects/dsa` 独立应用** 的项目级指令。本应用与 C++ 教程
-（`subjects/cpp`，GTK / Meson / `resources/athena.json`）**平级、可脱离**：不读它的配置、
-不链接它的代码、不依赖它的进程即可完成开发、构建、学习与实验全流程。
+本文档是 **`subjects/dsa` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建、学习与实验全流程。
 
 仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
 `app.json` 把本应用当独立进程拉起（ADR 0032），那不是运行本应用的前提。
@@ -13,7 +11,7 @@
   **可即时编辑、本机编译运行的 C++** 验证预期，观察区后续承接可视化。
 - 案例与讲解默认用 **C++20**；算法思想与语言无关，实现与对照以 C++ 为准。
 - **本应用是数据结构与算法这个领域的唯一承载者**：`subjects/cpp` 那边同名的空分类
-  早已删除，首页图谱的节点直接指过来。两个应用都写 C++，边界是**教的是什么**
+  早已删除。两个应用都写 C++，边界是**教的是什么**
   ——那边教标准库怎么用，这里教手写实现与代价直觉。哈希表、排序、树这几章落在
   重叠地带，写之前看一眼 [`docs/boundary-with-cpp.md`](docs/boundary-with-cpp.md)。
 - 不以做成在线 OJ 或通用 IDE 为目标；实验短小、可观察、可反复改跑。
@@ -31,7 +29,6 @@
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行
   （不是壳内 FFI）。
 
-不引入 `subjects/cpp` 的 Meson、gtkmm、Blueprint、`athena.json`。
 
 ## 目录与所有权
 
@@ -81,7 +78,6 @@
 - **实验逻辑在 C++**：前端不重写一份算法真相；需要步进可视化时由 C++ 打印
   约定事件（如 NDJSON），前端只消费。
 - **壳要薄**：Rust 侧负责路径、进程、进度；业务文案与课树不进 Rust。
-- **与 C++ 教程零编译耦合**：`subjects/cpp` 的 Meson / `scripts/check.py` 不构建本应用。
 
 ## C++ 实验约定
 
@@ -107,9 +103,9 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 
 环境变量 `ATHENA_DSA_ROOT` 可强制指定应用根目录（含 `content/`）。
 
-验证以本目录为准：前端 `npm run build`、Rust `cargo check`（在 `src-tauri`）、
-以及至少一个 case 的编译运行。**不必**为改本应用而跑主仓库 `scripts/check.py`，
-除非同时改了 `subjects/cpp` 的 discover。
+验证走仓库根的统一入口 `python3 scripts/check.py dsa`：装前端依赖、`npm run build`、
+`cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。改了 C++ 实验时，再在应用里
+编译运行至少一个 case。
 
 ## 与 C++ 教程、北极星的关系
 
