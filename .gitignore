@@ -32,7 +32,10 @@ Thumbs.db
 
 # 代理工具的本地状态：会话设置、临时工作树、会话计划。都是本机产物，
 # 不是项目的一部分（.claude/worktrees 单独就有 93M）。
-.claude/
+# 例外是 .claude/settings.json：项目共享配置（启用的插件等），要随仓库走。
+# 用 .claude/* 而不是 .claude/：忽略整个目录后，git 无法再放行其中的文件。
+.claude/*
+!.claude/settings.json
 .zcode/
 
 # Swift Package Manager（launcher）
