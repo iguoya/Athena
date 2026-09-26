@@ -3,8 +3,8 @@
 
 检查逻辑归各应用自己（subjects/<id>/ 与 practice/<id>/ 下的 scripts/check.py），
 这里只负责依次调用，
-外加两项跨应用检查：内容必须有出处（ADR 0043），软件内容不出现具体院所名
-（ADR 0055）。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
+外加三项跨应用检查：内容必须有出处（ADR 0043），软件内容不出现具体院所名
+（ADR 0055），项目 skill 在 .agents/ 与 .claude/ 两处一致（ADR 0061）。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
 也不用改 CI。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
@@ -13,7 +13,7 @@
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
-    python3 scripts/check.py --sources-only   只跑跨应用检查（出处 + 院所名）
+    python3 scripts/check.py --sources-only   只跑跨应用检查（院所名 + skill 两处一致 + 出处）
 """
 
 from __future__ import annotations
@@ -106,6 +106,32 @@ def run_redaction_check() -> None:
         )
 
 
+def run_skill_mirror_check() -> None:
+    """项目 skill 在 .agents/skills/（源）与 .claude/skills/（副本）两处必须逐字一致（ADR 0061）。
+
+    Codex 只读前者，Claude Code 只读后者。不用符号链接：Windows 上 git 默认把它检出成
+    普通文本文件（ADR 0047）。只放一处、或两处内容不同，都等于有一个代理拿到的是旧版。
+    """
+    print("== 跨应用检查：项目 skill 两处一致 ==", flush=True)
+    source, mirror = REPO_ROOT / ".agents" / "skills", REPO_ROOT / ".claude" / "skills"
+
+    def files(root: Path) -> dict[Path, bytes]:
+        if not root.is_dir():
+            return {}
+        return {p.relative_to(root): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+
+    src, dst = files(source), files(mirror)
+    problems = [f"  只在 .agents/skills/：{p}" for p in sorted(src.keys() - dst.keys())]
+    problems += [f"  只在 .claude/skills/：{p}" for p in sorted(dst.keys() - src.keys())]
+    problems += [f"  内容不同：{p}" for p in sorted(src.keys() & dst.keys()) if src[p] != dst[p]]
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(
+            f"项目 skill 两处不一致（{len(problems)} 处）。以 .agents/skills/ 为源，"
+            "改完后整目录复制到 .claude/skills/。"
+        )
+
+
 def run_source_check() -> None:
     print("== 跨应用检查：内容必须有出处 ==", flush=True)
     node = shutil.which("node")
@@ -127,6 +153,7 @@ def main(argv: list[str]) -> int:
     # 有了它，CI 的每一步都还是走这一个入口（ADR 0007）。
     if argv[:1] == ["--sources-only"]:
         run_redaction_check()
+        run_skill_mirror_check()
         run_source_check()
         return 0
 
@@ -135,6 +162,7 @@ def main(argv: list[str]) -> int:
         return 0
 
     run_redaction_check()
+    run_skill_mirror_check()
     run_source_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
