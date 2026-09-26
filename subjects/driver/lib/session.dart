@@ -61,9 +61,11 @@ class SessionStage extends StatefulWidget {
 }
 
 class _SessionStageState extends State<SessionStage> {
-  /// 一组 3–4 题：答完一题就停下来点一次「下一题」太碎，改成一页做完几题再翻页。
-  /// 组里有图/标志的题占地方，为了整页不用滚动就少放一题（ADR 0012）。
-  static const _maxGroupSize = 4;
+  /// 一页十题：少了翻页太勤；页面放不下就靠答完自动滚到下一题补上（ADR 0022）。
+  static const _groupSize = 10;
+
+  /// 一页全对之后停这么久再翻：让最后一题的绿色先落进眼里，再换页。
+  static const _autoAdvanceDelay = Duration(milliseconds: 900);
 
   var _start = 0;
   final _picked = <int, Set<String>>{};
@@ -80,6 +82,10 @@ class _SessionStageState extends State<SessionStage> {
   late DateTime _examStartedAt;
   _Result? _result;
   final _speaker = Speaker();
+  final _scroll = ScrollController();
+
+  /// 每道题块的 key：答完一题要把下一道没答的滚进视野，得先找得到它。
+  final _blockKeys = <int, GlobalKey>{};
 
   SessionLaunch get _launch => widget.launch;
 
@@ -88,30 +94,9 @@ class _SessionStageState extends State<SessionStage> {
 
   int get _total => _launch.questions.length;
 
-  /// 从 start 起这一组放几题：候选的几题里只要有带图/标志的就退到 3 题一组，
-  /// 换取整页大概率不用滚动；纯文字题维持 4 题一组。
-  int _groupSizeAt(int start) {
-    final cap = min(_maxGroupSize, _total - start);
-    if (cap <= 3) return cap;
-    for (var i = start; i < start + _maxGroupSize; i++) {
-      final q = _launch.questions[i];
-      if (q.image != null || q.sign != null) return 3;
-    }
-    return _maxGroupSize;
-  }
+  int _groupStartContaining(int index) => index ~/ _groupSize * _groupSize;
 
-  /// 反查某道题所在组的起点：组长不固定，只能从头按同一套规则重新摊。
-  int _groupStartContaining(int index) {
-    var start = 0;
-    while (start < _total) {
-      final size = _groupSizeAt(start);
-      if (index < start + size) return start;
-      start += size;
-    }
-    return start;
-  }
-
-  int get _end => min(_start + _groupSizeAt(_start), _total);
+  int get _end => min(_start + _groupSize, _total);
 
   Iterable<int> get _group => [for (var i = _start; i < _end; i++) i];
 
@@ -121,6 +106,9 @@ class _SessionStageState extends State<SessionStage> {
 
   /// 练习里这一组全判过了才翻页；模拟考随时可以翻。
   bool get _groupDone => _isExam ? _group.every(_answered) : _group.every(_judged.contains);
+
+  /// 练习里这一页全判过且全对：没有要回头看的，直接翻（ADR 0022）。
+  bool get _groupClean => !_isExam && _groupDone && _group.every(_correct.contains);
 
   int get _answeredCount => _isExam
       ? [for (var i = 0; i < _total; i++) i].where(_answered).length
@@ -179,6 +167,7 @@ class _SessionStageState extends State<SessionStage> {
   void dispose() {
     _timer?.cancel();
     _speaker.stop();
+    _scroll.dispose();
     super.dispose();
   }
 
@@ -343,10 +332,14 @@ class _SessionStageState extends State<SessionStage> {
 
   Widget _groupColumn(BuildContext context) {
     return ListView(
+      controller: _scroll,
       padding: const EdgeInsets.fromLTRB(28, 20, 24, 16),
       children: [
         for (final i in _group) ...[
-          _questionBlock(context, i),
+          KeyedSubtree(
+            key: _blockKeys.putIfAbsent(i, GlobalKey.new),
+            child: _questionBlock(context, i),
+          ),
           if (i + 1 < _end)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
@@ -362,7 +355,7 @@ class _SessionStageState extends State<SessionStage> {
   }
 
   /// 翻页/交卷条：练习组没答完时没有下一步，返回 null 就不占左栏底部的位置。
-  /// 提示文案去掉了——练熟了不用每次都读一遍，也省下一截高度给四题一组腾地方。
+  /// 全对的一页会自动翻；这个按钮留给有错题、看完解析再走的时候。
   Widget? _pager(BuildContext context) {
     if (_isExam) return _examNav(context);
     if (!_groupDone) return null;
@@ -552,7 +545,7 @@ class _SessionStageState extends State<SessionStage> {
     final signId = choice.sign;
     final locked = _judged.contains(index);
     return Padding(
-      // 选项间距压缩到 4：四题一组时留出底部翻页条的空间。
+      // 选项间距压缩到 4：一页十题，每题都省一点高度，少滚几下。
       padding: const EdgeInsets.only(bottom: 4),
       child: Align(
         alignment: Alignment.centerLeft,
@@ -902,8 +895,39 @@ class _SessionStageState extends State<SessionStage> {
       _busy = false;
     });
     _announce(notices);
+    if (_groupClean) {
+      _autoAdvance();
+      return;
+    }
+    _revealPending();
     // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
+  }
+
+  /// 一页十题一屏放不下：答完一题把下一道没答的滚进视野，键盘作答落在哪道题就能看见哪道。
+  /// 只滚到它的底边露出来为止，刚答的那道题尽量还留在屏上。
+  void _revealPending() {
+    final next = _pending;
+    if (next == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final target = _blockKeys[next]?.currentContext;
+      if (!mounted || target == null) return;
+      Scrollable.ensureVisible(
+        target,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
+
+  /// 全对的一页停一下再翻；这期间人已经自己翻走了（点按钮、回车、方向键）就不再翻第二次。
+  void _autoAdvance() {
+    final start = _start;
+    Future.delayed(_autoAdvanceDelay, () {
+      if (!mounted || _start != start || _result != null) return;
+      _nextGroup();
+    });
   }
 
   /// 新解锁的成就/里程碑弹一条提示条——记了不给人看，等于没记（主仓库 ADR 0052）。
@@ -945,6 +969,7 @@ class _SessionStageState extends State<SessionStage> {
       _focus = null;
       _shownAt = DateTime.now();
     });
+    _scrollToTop();
   }
 
   void _prevGroup() {
@@ -954,6 +979,7 @@ class _SessionStageState extends State<SessionStage> {
       _focus = null;
       _shownAt = DateTime.now();
     });
+    _scrollToTop();
   }
 
   Future<void> _nextGroup() async {
@@ -970,6 +996,12 @@ class _SessionStageState extends State<SessionStage> {
       _busy = false;
       _shownAt = DateTime.now();
     });
+    _scrollToTop();
+  }
+
+  /// 换页后 ListView 复用同一个控制器，滚动位置会留在上一页的底部，要手动拉回页首。
+  void _scrollToTop() {
+    if (_scroll.hasClients) _scroll.jumpTo(0);
   }
 
   /// 退出不等于交卷：练习本来就逐题落盘，退出不丢东西，不用问；模拟考/章节测试
