@@ -11,10 +11,22 @@ import "sync.dart";
 import "session.dart";
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.bank, required this.store});
+  const HomePage({
+    super.key,
+    required this.bank,
+    required this.store,
+    this.autoSync = true,
+    this.onReady,
+  });
 
   final Bank bank;
   final ProgressStore store;
+
+  /// 启动和定时的自动同步。测试里关掉：否则会按本机的 sync.json 真去读写云盘目录。
+  final bool autoSync;
+
+  /// 第一次从进度库读完统计后调一次；测试靠它等首页就绪，不按固定时长等。
+  final VoidCallback? onReady;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -123,7 +135,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _reload();
+    _reload().then((_) => widget.onReady?.call());
+    if (!widget.autoSync) return;
     // 刚打开应用，人肯定在，不用等活动信号——直接拉一次别的机器的进度。
     _autoSync(force: true);
     _autoSyncTimer = Timer.periodic(_autoSyncInterval, (_) => _autoSync());

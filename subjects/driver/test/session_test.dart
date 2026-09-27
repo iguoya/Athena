@@ -54,10 +54,16 @@ void main() {
     );
 
     // 键盘 T/F 落在第一道还没交的题上；每交一题要等作答记录落盘。
+    // 不按固定时长等：机器忙时写库慢，等到「已答」计数真的变了再往下走。
+    var answered = 0;
     Future<void> answer(LogicalKeyboardKey key) async {
       await tester.sendKeyEvent(key);
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
-      await tester.pump();
+      answered++;
+      for (var i = 0; i < 200 && find.textContaining("已答 $answered / 100").evaluate().isEmpty; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+        await tester.pump();
+      }
+      expect(find.textContaining("已答 $answered / 100"), findsOneWidget);
     }
 
     for (var i = 0; i < 5; i++) {
