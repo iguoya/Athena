@@ -32049,6 +32049,54 @@
       "band": "hot"
     },
     {
+      "id": "drive.s1.registration.061",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "机动车购买后尚未登记，需要临时上道路行驶的，应当如何做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "取得临时通行牌证",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "带上身份证",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "直接上路行驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "在车窗上张贴合格证",
+          "ok": false
+        }
+      ],
+      "explain": "机动车上路要有牌，还未注册登记的要申请临时牌。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "尚未登记的机动车，需要临时上道路行驶的，应当取得临时通行牌证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200706191818pzhrnxfz6jir5wkjgxvldp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
       "id": "drive.s1.penalty.096",
       "topic_id": "drive.s1.penalty",
       "kind": "single",
@@ -32095,6 +32143,1544 @@
       "phase": 4,
       "difficulty": 1,
       "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.097",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶人违反交通运输管理法规发生重大事故使公私财产遭受重大损失，可能会受到什么刑罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处5年以上徒刑",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "处3年以下徒刑或者拘役",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "处3年以上徒刑",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "处3年以上7年以下徒刑",
+          "ok": false
+        }
+      ],
+      "explain": "没逃逸三年以下；逃逸或情节特别恶劣三到七年；因逃逸致人死亡七年以上。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "违反交通运输管理法规，因而发生重大事故，致人重伤、死亡或者使公私财产遭受重大损失的，处三年以下有期徒刑或者拘役；交通运输肇事后逃逸或者有其他特别恶劣情节的，处三年以上七年以下有期徒刑；因逃逸致人死亡的，处七年以上有期徒刑。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102529uzswwybkvfq9ybs2urz4cg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.098",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "公安机关交通管理部门对驾驶人的交通违法行为除依法给予行政处罚外，实行下列哪种制度？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "违法登记制度",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "奖励里程制度",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "累积记分制度",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "强制报废制度",
+          "ok": false
+        }
+      ],
+      "explain": "发生交通违法行为，除依法给予行政处罚外，实行累积记分制度。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十四条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "公安机关交通管理部门对机动车驾驶人违反道路交通安全法律、法规的行为，除依法给予行政处罚外，实行累积记分制度。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102529xamo65jrcmzougxean7hom",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.099",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "交通肇事致一人以上重伤，负事故全部责任或者主要责任，并具有下列哪种行为的，构成交通肇事罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "未报警",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "酒后、吸食毒品后驾驶机动车辆的",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "未带驾驶证",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "未抢救受伤人员",
+          "ok": false
+        }
+      ],
+      "explain": "致一人重伤、负主要以上责任，再叠加酒驾毒驾、无证、明知车有问题、无牌报废、严重超载、逃逸之一，就构成交通肇事罪。",
+      "source_refs": [
+        {
+          "source_id": "traffic-crime-interpretation",
+          "relation": "adapted",
+          "locator": "第二条第二款",
+          "url": "http://gongbao.court.gov.cn/details/cf47fe33d0a96d2b796c91004aba25.html",
+          "note": "交通肇事致一人以上重伤，负事故全部或者主要责任，并具有下列情形之一的，以交通肇事罪定罪处罚：（一）酒后、吸食毒品后驾驶机动车辆的；（二）无驾驶资格驾驶机动车辆的；（三）明知是安全装置不全或者安全机件失灵的机动车辆而驾驶的；（四）明知是无牌证或者已报废的机动车辆而驾驶的；（五）严重超载驾驶的；（六）为逃避法律追究逃离事故现场的。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010252927mc2eoqepr7kqbpkvmfot",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.100",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶机动车在道路上追逐竞驶，情节恶劣，会受到什么处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处拘役，并处罚金",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "处管制，并处罚金",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "处1年以上徒刑",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "处6个月徒刑",
+          "ok": false
+        }
+      ],
+      "explain": "追逐竞驶情节恶劣和醉驾都是危险驾驶罪，处拘役并处罚金。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，有下列情形之一的，处拘役，并处罚金：（一）追逐竞驶，情节恶劣的；（二）醉酒驾驶机动车的；……"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025295ey5hvjdglbis62rygbldp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.101",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "使用伪造、变造的行驶证一次记几分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "12分",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "1分",
+          "ok": false
+        }
+      ],
+      "explain": "伪造、变造或者用别人的号牌行驶证，都是12分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第八条第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "使用伪造、变造的机动车号牌、行驶证、驾驶证、校车标牌或者使用其他机动车号牌、行驶证的，一次记12分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530tfsfqesshhrxydcd7gzasz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.102",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "以下哪项行为可构成危险驾驶罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "闯红灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "无证驾驶",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "疲劳驾驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "醉驾",
+          "ok": true
+        }
+      ],
+      "explain": "危险驾驶罪管的是醉驾、追逐竞驶情节恶劣等；闯红灯、无证、疲劳驾驶是行政违法。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，有下列情形之一的，处拘役，并处罚金：（一）追逐竞驶，情节恶劣的；（二）醉酒驾驶机动车的；……"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530fdmnkbskblnzq9mu8njajj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.103",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "对驾驶已达到报废标准的机动车上路行驶的驾驶人，会受到下列哪种处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处15日以下拘留",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "吊销机动车驾驶证",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "处20以上200元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "追究刑事责任",
+          "ok": false
+        }
+      ],
+      "explain": "报废车和拼装车一样：收缴强制报废，罚二百到二千元，吊销驾驶证。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "驾驶拼装的机动车或者已达到报废标准的机动车上道路行驶的，公安机关交通管理部门应当予以收缴，强制报废。对驾驶前款所列机动车上道路行驶的驾驶人，处二百元以上二千元以下罚款，并吊销机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530ejtujmheraoljfjekr4kk5",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.104",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶人违法驾驶造成重大交通事故构成犯罪的，依法追究什么责任？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "刑事责任",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "民事责任",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "经济责任",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "直接责任",
+          "ok": false
+        }
+      ],
+      "explain": "违法犯罪的，都将依法追究刑事责任。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零一条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "违反道路交通安全法律、法规的规定，发生重大交通事故，构成犯罪的，依法追究刑事责任，并由公安机关交通管理部门吊销机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531ssdfzwtxpmidhmnrntropb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.105",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶人有哪种情形，交通警察可依法扣留机动车驾驶证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "饮酒后驾驶机动车",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "超过规定速度10%",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "疲劳后驾驶机动车",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "行车中未系安全带",
+          "ok": false
+        }
+      ],
+      "explain": "饮酒驾驶要暂扣驾驶证，所以交警可以当场先扣留；超速10%、未系安全带够不上暂扣。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百一十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "执行职务的交通警察认为应当对道路交通违法行为人给予暂扣或者吊销机动车驾驶证处罚的，可以先予扣留机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102533d7ff9zchrzw3yhbsnjnvhr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.106",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "对驾驶拼装机动车上路行驶的驾驶人，会受到下列哪种处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处15日以下拘留",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "依法追究刑事责任",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "处200元以上2000元以下罚款",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "吊销机动车行驶证",
+          "ok": false
+        }
+      ],
+      "explain": "拼装车、报废车上路：罚二百到二千元，并吊销驾驶证。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "驾驶拼装的机动车或者已达到报废标准的机动车上道路行驶的，公安机关交通管理部门应当予以收缴，强制报废。对驾驶前款所列机动车上道路行驶的驾驶人，处二百元以上二千元以下罚款，并吊销机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102533v1anyowxqsrocmtcdkr3oh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.107",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "交通肇事致一人以上重伤，负事故全部责任或者主要责任，并具有下列哪种行为的，构成交通肇事罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "未抢救受伤人员",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "未报警",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "未带驾驶证",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "为逃避法律追究逃离事故现场的",
+          "ok": true
+        }
+      ],
+      "explain": "为逃避追究逃离现场，叠加致人重伤、负主要以上责任，就构成交通肇事罪。",
+      "source_refs": [
+        {
+          "source_id": "traffic-crime-interpretation",
+          "relation": "adapted",
+          "locator": "第二条第二款",
+          "url": "http://gongbao.court.gov.cn/details/cf47fe33d0a96d2b796c91004aba25.html",
+          "note": "交通肇事致一人以上重伤，负事故全部或者主要责任，并具有下列情形之一的，以交通肇事罪定罪处罚：（一）酒后、吸食毒品后驾驶机动车辆的；（二）无驾驶资格驾驶机动车辆的；（三）明知是安全装置不全或者安全机件失灵的机动车辆而驾驶的；（四）明知是无牌证或者已报废的机动车辆而驾驶的；（五）严重超载驾驶的；（六）为逃避法律追究逃离事故现场的。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534wty4quz2isugrcftrpmek5",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.108",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶人造成事故后逃逸构成犯罪的，吊销驾驶证且多长时间不得重新取得驾驶证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "5年内",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "10年内",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "终生",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "20年内",
+          "ok": false
+        }
+      ],
+      "explain": "肇事逃逸终生禁驾。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零一条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "造成交通事故后逃逸的，由公安机关交通管理部门吊销机动车驾驶证，且终生不得重新取得机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534pbiqdzvytgjjgtirsqhe7s",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.109",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "醉酒驾驶机动车在道路上行驶会受到什么处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "处2年以下徒刑",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "处拘役，并处罚金",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "处2年以上徒刑",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "处管制，并处罚金",
+          "ok": false
+        }
+      ],
+      "explain": "醉驾入刑：拘役并处罚金。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，有下列情形之一的，处拘役，并处罚金：（一）追逐竞驶，情节恶劣的；（二）醉酒驾驶机动车的；……"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102535gqnuaytv7gcsglbc7okvbs",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.110",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶人违反交通运输管理法规发生重大事故后，因逃逸致人死亡的，处多少年有期徒刑？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "2年以下",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "3年以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "7年以下",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "7年以上",
+          "ok": true
+        }
+      ],
+      "explain": "因逃逸导致伤者没得到救治而死亡，是最重的一档：七年以上。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "违反交通运输管理法规，因而发生重大事故，致人重伤、死亡或者使公私财产遭受重大损失的，处三年以下有期徒刑或者拘役；交通运输肇事后逃逸或者有其他特别恶劣情节的，处三年以上七年以下有期徒刑；因逃逸致人死亡的，处七年以上有期徒刑。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025368ndkruptpxov5hvbbzytq5",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.111",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "将机动车交由未取得机动车驾驶证的人驾驶的，由公安交通管理部门处二百元以上二千元以下罚款，可以并处以下哪种处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "15日以下拘留",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "吊销驾驶证",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "扣留车辆",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "5年不得重新取得新驾驶证",
+          "ok": false
+        }
+      ],
+      "explain": "把车交给无证或证被吊销、暂扣的人，罚二百到二千元，可以并处吊销自己的驾驶证。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "有下列行为之一的，由公安机关交通管理部门处二百元以上二千元以下罚款：（一）未取得机动车驾驶证……驾驶机动车的；（二）将机动车交由未取得机动车驾驶证或者机动车驾驶证被吊销、暂扣的人驾驶的；（三）造成交通事故后逃逸，尚不构成犯罪的；……行为人有前款第二项、第四项情形之一的，可以并处吊销机动车驾驶证；有第一项、第三项、第五项至第八项情形之一的，可以并处十五日以下拘留。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025518urkyk78mtrf8zw9jrsa2c",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.112",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "对道路交通安全违法行为的处罚种类不包括( )？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "警告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "罚款",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "暂扣",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "训诫",
+          "ok": true
+        }
+      ],
+      "explain": "四种：警告、罚款、暂扣或吊销驾驶证、拘留。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第八十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "对道路交通安全违法行为的处罚种类包括：警告、罚款、暂扣或者吊销机动车驾驶证、拘留。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200706191818336yqvqxkfzmpuegquzlkt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.113",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "以下哪项行为可构成危险驾驶罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "闯红灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "无证驾驶",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "疲劳驾驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "追逐竞驶，情节恶劣",
+          "ok": true
+        }
+      ],
+      "explain": "追逐竞驶，指驾驶人在道路上高速、超速行驶，随意追逐、超越其他车辆，频繁、突然并线，近距离驶入其他车辆前方的危险行为。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law",
+          "relation": "adapted",
+          "locator": "第一百三十三条之一",
+          "url": "https://jtgl.beijing.gov.cn/jgj/93950/jwgk/jtsgclbf/21208394/index.html",
+          "note": "在道路上驾驶机动车，有下列情形之一的，处拘役，并处罚金：（一）追逐竞驶，情节恶劣的；（二）醉酒驾驶机动车的；……"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200717152353xvzhej4czjlnwwyrvdnppq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.114",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "造成交通事故后逃逸，尚不构成犯罪的，公安机关交通管理部门会处以何种处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "200元以上2000元以下罚款",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "1000元以上3000元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "5000元以上10000元以下罚款",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "一次记6分",
+          "ok": false
+        }
+      ],
+      "explain": "逃逸尚不构成犯罪：罚二百到二千元，可以并处十五日以下拘留；另记分，并终生禁驾。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "有下列行为之一的，由公安机关交通管理部门处二百元以上二千元以下罚款：（一）未取得机动车驾驶证……驾驶机动车的；（二）将机动车交由未取得机动车驾驶证或者机动车驾驶证被吊销、暂扣的人驾驶的；（三）造成交通事故后逃逸，尚不构成犯罪的；……行为人有前款第二项、第四项情形之一的，可以并处吊销机动车驾驶证；有第一项、第三项、第五项至第八项情形之一的，可以并处十五日以下拘留。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200727150249qopusywmxuhsodbquxtrhd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.115",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶机动车不按规定超车、让行的，将被一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "3分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "6分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "12分",
+          "ok": false
+        }
+      ],
+      "explain": "不按规定超车、让行记3分；不按规定会车只记1分，别混。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十一条第（四）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶机动车不按规定超车、让行，或者在高速公路、城市快速路以外的道路上逆行的，一次记3分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20201106142427vrmnjvzcljlb4asgu1st5h",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.116",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "造成交通事故后逃逸，尚不构成犯罪的，公安机关交通管理部门除按照规定罚款外，还可以并处（ ）？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "吊销驾驶证",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "15日以下拘留",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "扣留车辆",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "5年内不得重新取得驾驶证",
+          "ok": false
+        }
+      ],
+      "explain": "逃逸尚不构成犯罪的，可以并处十五日以下拘留。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "有下列行为之一的，由公安机关交通管理部门处二百元以上二千元以下罚款：（一）未取得机动车驾驶证……驾驶机动车的；（二）将机动车交由未取得机动车驾驶证或者机动车驾驶证被吊销、暂扣的人驾驶的；（三）造成交通事故后逃逸，尚不构成犯罪的；……行为人有前款第二项、第四项情形之一的，可以并处吊销机动车驾驶证；有第一项、第三项、第五项至第八项情形之一的，可以并处十五日以下拘留。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20210601102119qhr5qa9gurejhjmgwwo2r9",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.117",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "当事人应当自收到罚款的行政处罚决定书之日起几日内，到指定的银行缴纳罚款？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "10",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "15",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "20",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "30",
+          "ok": false
+        }
+      ],
+      "explain": "收到罚单，要在15日内缴纳罚款。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第一百零八条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "当事人应当自收到罚款的行政处罚决定书之日起十五日内，到指定的银行缴纳罚款。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20211210160038d5mdx2rk7pvkuv3xc1ezjq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.118",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶人申请学法减分时，参加道路交通安全法律、法规和相关知识现场学习满一小时且考试合格的，一次扣减几分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "2分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "6分",
+          "ok": false
+        }
+      ],
+      "explain": "网上学习30分钟减1分，现场学习1小时减2分，公益活动1小时减1分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第二十七条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "参加公安机关交通管理部门组织的道路交通安全法律、法规和相关知识现场学习满一小时且考试合格的，一次扣减2分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192503umcf4tj7s9cs1ynwfbwl3j",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.119",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "上道路行驶的机动车不按规定安装机动车号牌的，一次记几分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "12分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "1分",
+          "ok": false
+        }
+      ],
+      "explain": "没按规定装号牌3分；不挂或故意遮挡、污损号牌是9分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十一条第（十）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶不按规定安装机动车号牌的机动车上道路行驶的，一次记3分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192504njk6j1hiryeyes2tunslaa",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.120",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶人申请学法减分时，一个记分周期内，累计最高扣减几分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "12分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "4分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "3分",
+          "ok": false
+        }
+      ],
+      "explain": "学法减分一个周期最多减6分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第二十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "在一个记分周期内累计最高扣减6分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192504agm4kbgr2xq48gqjxuqvdk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.121",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶人有下列哪种违法行为一次记6分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "造成致人轻伤以上或者死亡的交通事故后逃逸，尚不构成犯罪的",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "使用伪造、变造的机动车号牌",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "造成致人轻微伤或者财产损失的交通事故后逃逸，尚不构成犯罪的",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "驾驶机动车在高速公路或者城市快速路上不按规定车道行驶的",
+          "ok": false
+        }
+      ],
+      "explain": "逃逸按后果分档：轻微伤或财产损失6分，轻伤以上或死亡12分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十条第（十）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "造成致人轻微伤或者财产损失的交通事故后逃逸，尚不构成犯罪的，一次记6分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192504fcm663kbtckkekeqgi9gck",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.122",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "机动车驾驶证被暂扣或者扣留期间驾驶机动车的，一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "9分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "12分",
+          "ok": false
+        }
+      ],
+      "explain": "常考记6分的情形：扣证期间驾驶机动车；不按交通信号灯指示通行；货车超载50%以上；事故致人轻微伤或财产损失后逃逸未犯罪；高速路、快速路占用应急车道。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十条第（九）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "机动车驾驶证被暂扣或者扣留期间驾驶机动车的，一次记6分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192504udijnlycrnoan2bcgw8oxv",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.123",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶小型汽车在普通公路上行驶，超过规定时速50%以上的，一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "9分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "12分",
+          "ok": false
+        }
+      ],
+      "explain": "小车超速：高速和快速路上20%到50%记6分、50%以上记12分；普通道路20%到50%记3分、50%以上记6分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十条第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶校车、中型以上载客载货汽车、危险物品运输车辆以外的机动车……在高速公路、城市快速路以外的道路上行驶超过规定时速百分之五十以上的，一次记6分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192504sk2laws88bput3kbumdggr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.124",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "小型汽车驾驶人在一个记分周期内累积记分达到12分的，要参加为期几天的道路交通安全法律、法规和相关知识学习？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3日",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "10日",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "7日",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "30日",
+          "ok": false
+        }
+      ],
+      "explain": "小型汽车驾驶人满分学习7天；大车驾驶人是30天。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十八条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "机动车驾驶人在一个记分周期内累积记分满12分的，应当参加为期七天的道路交通安全法律、法规和相关知识学习。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220408192505tccnhwlmjkcxvhrdrw9clr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.125",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶人有下列哪种违法行为一次记9分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驾驶机动车在高速公路上逆行的",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "驾驶机动车在高速公路上穿越中央分隔带掉头的",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "驾驶机动车在城市快速路上违法停车的",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "使用其他机动车号牌、行驶证的",
+          "ok": false
+        }
+      ],
+      "explain": "高速、快速路违法停车9分；倒车、逆行、穿越中央分隔带掉头是12分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第九条第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶机动车在高速公路或者城市快速路上违法停车的，一次记9分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220415112627byfajxbkxxehluwt3s3kxv",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.126",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶小型汽车在高速公路、城市快速路上行驶超过规定时速50%以上的，一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "9分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "12分",
+          "ok": true
+        }
+      ],
+      "explain": "小车超速：\n高速路快速路：50%以上扣12分，20%-50%扣6分，20%以下不扣分；\n一般道路：50%以上扣6分，20%-50%扣3分，20%以下不扣分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第八条第（五）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶其他机动车在高速公路、城市快速路上行驶超过规定时速百分之五十以上的，一次记12分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220415113439mjzp8pwvs4vujt7gyq4tr2",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.127",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "图中驾驶人的这种违法行为会被记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "记12分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "记3分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "记6分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "记9分",
+          "ok": true
+        }
+      ],
+      "explain": "图中车辆故意遮挡号牌，记9分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第九条第（四）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶未悬挂机动车号牌或者故意遮挡、污损机动车号牌的机动车上道路行驶的，一次记9分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201911261902177cfvtjhsjjpaymptzzhrie",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_BB110596.jpg"
+    },
+    {
+      "id": "drive.s1.penalty.128",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "图中蓝色车这种违法的行为会被记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "记1分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "记3分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "记6分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "记9分",
+          "ok": false
+        }
+      ],
+      "explain": "蓝车在高速上占用应急车道行驶，记6分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十条第（十一）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶机动车在高速公路或者城市快速路上违法占用应急车道行驶的，一次记6分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20191126190218y9bmejrg6mkueidttevyey",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_BB110627.jpeg"
     },
     {
       "id": "drive.s1.rules.252",
@@ -45215,6 +46801,870 @@
       "band": "common"
     },
     {
+      "id": "drive.s1.accident.086",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "驾驶机动车发生交通事故后当事人故意破坏、伪造现场、毁灭证据的，应当承担什么责任？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "主要责任",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "次要责任",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "同等责任",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "全部责任",
+          "ok": true
+        }
+      ],
+      "explain": "破坏、伪造现场和逃逸一样，承担全部责任。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第九十二条第二款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "当事人故意破坏、伪造现场、毁灭证据的，承担全部责任。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530wg7h97aiddty2sje3euebz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.087",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "在道路上发生未造成人员伤亡且无争议的轻微交通事故如何处置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "保护好现场再协商",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "不要移动车辆",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "疏导其他车辆绕行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "撤离现场自行协商",
+          "ok": true
+        }
+      ],
+      "explain": "没人受伤、双方没争议，先撤离恢复交通，再自己协商。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，未造成人身伤亡，当事人对事实及成因无争议的，可以即行撤离现场，恢复交通，自行协商处理损害赔偿事宜；不即行撤离现场的，应当迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530d5v2ras5gxcaagyyfnzmpk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.088",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "驾驶机动车发生交通事故，仅造成财产损失的，但是对交通事故事实及成因有争议的，应当怎么处理？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "迅速报警",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "占道继续和对方争辩",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "找中间人帮忙解决",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "自行协商损害赔偿事宜",
+          "ok": false
+        }
+      ],
+      "explain": "对事实有争议就不能自行协商，要报警。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，未造成人身伤亡，当事人对事实及成因无争议的，可以即行撤离现场，恢复交通，自行协商处理损害赔偿事宜；不即行撤离现场的，应当迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534ewc5fxf3juaq492qbucty4",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.accident.089",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "发生交通事故时，下列哪种情况下当事人应当保护现场并立即报警？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "未造成人员伤亡的",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "未发生财产损失事故",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "未损害公共设施及建筑物的",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "驾驶人有酒后驾驶嫌疑的",
+          "ok": true
+        }
+      ],
+      "explain": "对方或自己有酒驾嫌疑，就不能私了，要保护现场报警。",
+      "source_refs": [
+        {
+          "source_id": "accident-order-146",
+          "relation": "adapted",
+          "locator": "第十三条",
+          "url": "http://gdga.gd.gov.cn/xxgk/flfg/content/post_1089353.html",
+          "note": "发生死亡事故、伤人事故的，或者……驾驶人有饮酒、服用国家管制的精神药品或者麻醉药品嫌疑的……当事人应当保护现场并立即报警。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102535sk5vuzu7fjuuzt7vdqizyo",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.090",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "机动车之间发生交通事故造成轻微财产损失，当事人对事实及成因无争议时，在确保安全的原则下，对现场拍照或标划事故车辆现场位置后，可自行撤离现场处理损害赔偿事宜，主要目的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "双方互有损失",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "找现场证人就行了，不必报警",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "为了及时恢复交通，避免造成交通拥堵",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "事故后果很小，无需赔偿",
+          "ok": false
+        }
+      ],
+      "explain": "先撤离是为了恢复交通、防止二次事故。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第三款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，仅造成轻微财产损失，并且基本事实清楚的，当事人应当先撤离现场再进行协商处理。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102535s5hestdegk4udcnzknbjx1",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.091",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "行车中遇有前方发生交通事故，需要帮助时，应怎样做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "尽量绕道躲避",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "立即报警，停车观望",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "协助保护现场，并立即报警",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "加速通过，不予理睬",
+          "ok": false
+        }
+      ],
+      "explain": "乐于助人是中华民族的传统美德。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "乘车人、过往车辆驾驶人、过往行人应当予以协助。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102553lwfccwx3hntgc5rhfplgzu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.092",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "行车中遇交通事故受伤者需要抢救时，应怎样做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "及时将伤者送医院抢救或拨打急救电话",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "尽量避开，少惹麻烦",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "绕过现场行驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "借故避开现场",
+          "ok": false
+        }
+      ],
+      "explain": "有伤员要立即拨打急救电话或送医院。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025548y8amvugytckksxdsvnqfn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.093",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "机动车发生财产损失交通事故，对应当自行撤离现场而未撤离的，交警应如何处置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "责令当事人撤离现场",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "处以200元罚款",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣留机动车",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "拘留",
+          "ok": false
+        }
+      ],
+      "explain": "该撤离不撤离，交警会责令撤离。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第八十九条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "对仅造成轻微财产损失，并且基本事实清楚的，交通警察应当责令当事人撤离现场，恢复交通。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20191126190216xdbjcacqte4ywl9qjyj6kj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.094",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "交通事故中急救中毒伤员，以下做法错误的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "尽快将中毒人员移出毒区",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "脱去接触有毒空气的衣服",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "用清水清洗暴露部位",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "原地等待救援",
+          "ok": true
+        }
+      ],
+      "explain": "已经中毒要立即采取措施，不能干等着。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251twi6xtabszvthxhwdpu6wg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.095",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "在事故现场抢救伤员的基本要求是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "先治伤，后救命",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "先救命，后治伤",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "先帮助轻伤员",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "后救助重伤员",
+          "ok": false
+        }
+      ],
+      "explain": "生命在第一位，先救命后治伤。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251uexbcqrkswyfqxd3ghvc17",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.096",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "抢救昏迷失去知觉的伤员需注意什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "马上实施心肺复苏",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "使劲掐伤员的人中",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "连续拍打伤员面部",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "抢救前先检查呼吸",
+          "ok": true
+        }
+      ],
+      "explain": "生命在第一位，先确认生命体征，再进行下一步措施。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251n99b7kwh8ymmg5rzzja7ao",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.097",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "在为成人做心肺复苏时，胸外按压频率是多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "60-80次/分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "80-100次/分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "100-120次/分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "120-140次/分",
+          "ok": false
+        }
+      ],
+      "explain": "成人胸外按压每分钟100到120次，深度5到6厘米。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251hcejbjhr3n5p8memqfpc9j",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.098",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "抢救失血伤员时，要先采取什么措施？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "观察",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "包扎",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "止血",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "询问",
+          "ok": false
+        }
+      ],
+      "explain": "失血要先止血再包扎。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251dtvwxwhvdza1araqzfnjrt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.099",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "采用指压止血法为动脉出血伤员止血时，拇指压住伤口的什么位置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "近心端动脉",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "血管下方动脉",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "远心端动脉",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "血管中部",
+          "ok": false
+        }
+      ],
+      "explain": "动脉血从心脏流出，压住靠心脏一端才能截住血流。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202008181732512bbtxdobgrcjdpcv6kgmnb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.100",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "包扎止血不能用的物品是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "绷带",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "三角巾",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "止血带",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "麻绳",
+          "ok": true
+        }
+      ],
+      "explain": "包扎伤口要用柔软光滑的物品。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251ydlh5ndrkzpnfq2y3naymg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.101",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "救助有害气体中毒伤员，首先采取的措施是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "采取保暖措施",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "将伤员转移到有新鲜空气的地方",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "进行人工呼吸",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "进行胸外心脏按压",
+          "ok": false
+        }
+      ],
+      "explain": "跟煤气中毒同理，先转移到室外空气新鲜的地方。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202008181732517jvvlotyz9mjfomjqbdvab",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.102",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "抢救骨折伤员时注意什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "迅速抬上担架送往医院",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "适当调整损伤时的姿势",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "用绷带对骨折部位进行包扎",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不要移动身体骨折部位",
+          "ok": true
+        }
+      ],
+      "explain": "骨折肉眼看不见，尽量不要触碰和移动。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "在道路上发生交通事故，车辆驾驶人应当立即停车，保护现场；造成人身伤亡的，车辆驾驶人应当立即抢救受伤人员，并迅速报告执勤的交通警察或者公安机关交通管理部门。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200818173251u1hebzpgjhxrkfdbw4s8jd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.accident.103",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "机动车突然着火，以下做法错误的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "尽快减速停车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "向下风方向撤离",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "车辆远离加油站",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "设置警告标志",
+          "ok": false
+        }
+      ],
+      "explain": "车辆着火要往上风方向撤离，下风方向会被烟和火势波及。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202110121733523t5heutwisirmpkn5skszk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
       "id": "drive.s1.rules.489",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -47776,6 +50226,726 @@
       "band": "hot"
     },
     {
+      "id": "drive.s1.license.217",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶人在驾驶证有效期满前多长时间申请换证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "30日内",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "60日内",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "90日内",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "6个月内",
+          "ok": false
+        }
+      ],
+      "explain": "到期换证提前九十日内办；信息变化换证是三十日内，别混。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十三条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶人应当于机动车驾驶证有效期满前九十日内，向机动车驾驶证核发地或者核发地以外的车辆管理所申请换证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102528uagnpbsksi9bwcdrfx1ek8",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.218",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "机动车驾驶证遗失的，机动车驾驶人应当向哪里的车辆管理所申请补发？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "核发地",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "暂住地",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "居住地",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "以上地方都可",
+          "ok": true
+        }
+      ],
+      "explain": "核发地或者核发地以外的车管所都能补，也就是全国通办。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十九条第一款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶证遗失的，机动车驾驶人应当向机动车驾驶证核发地或者核发地以外的车辆管理所申请补发。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102529jsq6emnfywiv2cdpxmjv4s",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.219",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "存在以下哪种行为的申请人在一年内不得再次申领机动车驾驶证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "在考试过程中出现身体不适",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "在考试过程中有舞弊行为",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "不能按照教学大纲认真练习驾驶技能",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "未参加理论培训",
+          "ok": false
+        }
+      ],
+      "explain": "申请环节作假（虚假材料、考试舞弊）一年；拿到证后被查出骗证、撤销许可是三年。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第九十三条第二款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "申请人在考试过程中有贿赂、舞弊行为的，取消考试资格，已经通过考试的其他科目成绩无效，公安机关交通管理部门处二千元以下罚款；申请人在一年内不得再次申领机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102529hngmpsw9rvcnksofbymfp4",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.220",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶人因服兵役、出国（境）等原因无法办理审验时，延期审验期限最长不超过多长时间？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1年",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "2年",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3年",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "5年",
+          "ok": false
+        }
+      ],
+      "explain": "延期最长三年，延期期间不能开车。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十五条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "延期期限最长不超过三年。延期期间机动车驾驶人不得驾驶机动车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102529xjzxpkneifimcaleptqbuf",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.221",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "在学习驾驶证明的有效期内，科目二和科目三道路驾驶技能考试预约次数不得超过多少次？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3次",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "4次",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "5次",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "6次",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：2+3=5。科目二和科目三都只有5次考试机会。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第四十七条第二款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "在学习驾驶证明有效期内，科目二和科目三道路驾驶技能考试预约考试的次数分别不得超过五次。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530cd5nvxw1zg831v5yjm7hcs",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.222",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "超过机动车驾驶证有效期一年以上未换证被注销，但未超过2年的，机动车驾驶人应当如何恢复驾驶资格？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "参加道路交通安全法律、法规和相关知识考试合格后",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "参加场地考试合格后",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "参加道路驾驶技能考试合格后",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "参加安全文明驾驶常识考试合格后",
+          "ok": false
+        }
+      ],
+      "explain": "过期一年以上没换证会被注销；注销未满两年，重考科目一就能恢复。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十九条第三款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "有第一款第八项情形被注销机动车驾驶证未超过二年的，机动车驾驶人参加道路交通安全法律、法规和相关知识考试合格后，可以恢复驾驶资格。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531awh93jtdeqv4fwjljcdidz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.223",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶证审验内容不包括以下哪一项？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "道路交通安全违法行为、交通事故处理情况",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "身体条件情况",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "道路交通安全违法行为记分及记满12分后参加学习和考试情况",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "机动车检验情况",
+          "ok": true
+        }
+      ],
+      "explain": "审验看的是人：违法和事故处理、身体条件、记分和满分学习，不查车。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十三条第一款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶证审验内容包括：（一）道路交通安全违法行为、交通事故处理情况；（二）身体条件情况；（三）道路交通安全违法行为记分及记满12分后参加学习和考试情况。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531b1tjaurxade4yxms6qhwvx",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.224",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "年龄在70周岁以上的机动车驾驶人，应当每年进行一次身体检查的目的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "体现对老年人的关心",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "例行程序仅供参考",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "检查是否患有老年常见病",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "检查是否患有妨碍安全驾驶的疾病",
+          "ok": true
+        }
+      ],
+      "explain": "安全第一，健康的身体状况是安全驾驶的前提。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十四条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "年龄在70周岁以上的机动车驾驶人，应当每年进行一次身体检查，在记分周期结束后三十日内，提交医疗机构出具的有关身体条件的证明。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531cnjfyydm7nlsrbpbtn6zce",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.225",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "以下哪种身体条件，不可以申请机动车驾驶证?",
+      "choices": [
+        {
+          "id": "A",
+          "label": "糖尿病",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "红绿色盲",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高血压",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "怀孕",
+          "ok": false
+        }
+      ],
+      "explain": "红绿色盲认不清信号灯，不能申请；糖尿病、高血压、怀孕不在禁止之列。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第十四条第（二）项",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "辨色力：无红绿色盲；"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531sxktss7vtujv3t8ur5vgpk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.226",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶人户籍迁出原车辆管理所需要向什么地方的车辆管理所提出申请换证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "迁出地",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "居住地",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "所在地",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "迁入地",
+          "ok": true
+        }
+      ],
+      "explain": "户籍迁出应向迁入地车管所申请。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十四条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶人户籍迁出原车辆管理所管辖区的，应当向迁入地车辆管理所申请换证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531ndlvbasf6tren6nnwvxxqb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.227",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "学习驾驶证明的有效期是多久？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1年",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "2年",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3年",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "4年",
+          "ok": false
+        }
+      ],
+      "explain": "三年内考完科目二、三，否则已过的科目作废。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第四十一条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "学习驾驶证明的有效期为三年……申请人应当在有效期内完成科目二和科目三考试。未在有效期内完成考试的，已考试合格的科目成绩作废。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025333tl9rp36zqq4zkupz17wv4",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.license.228",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "初次申领的机动车驾驶证的有效期为多少年？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3年",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "5年",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "6年",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "12年",
+          "ok": false
+        }
+      ],
+      "explain": "初次领证6年；6年里每个周期都没记满12分换10年证，再10年没记满换长期。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第十三条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶证有效期分为六年、十年和长期。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534jhojrjzsopkdye9tr6q8hr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.license.229",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "持小型汽车驾驶证的驾驶人在下列哪种情况下需要接受审验？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "有效期满换发驾驶证时",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "一个记分周期末",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "记分周期未满分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "记分周期满12分",
+          "ok": false
+        }
+      ],
+      "explain": "小型汽车驾驶人平时不用年审，到期换证时审验。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第七十二条第二款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "机动车驾驶人按照本规定第六十三条、第六十四条换领机动车驾驶证时，应当接受公安机关交通管理部门的审验。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534sngkaqzyfmrmfelnmuhmx5",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.230",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶证记载的驾驶人信息发生变化的要在多长时间内申请换证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "60日",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "50日",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "40日",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "30日",
+          "ok": true
+        }
+      ],
+      "explain": "信息变化三十日内换证；到期换证是九十日内。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第六十六条第一款",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "有下列情形之一的，机动车驾驶人应当在三十日内到机动车驾驶证核发地或者核发地以外的车辆管理所申请换证：（一）在车辆管理所管辖区域内，机动车驾驶证记载的机动车驾驶人信息发生变化的；"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102534csdejbmk3azkdwjwsqz1fc",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.231",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "驾驶人出现以下哪种情况时，不得驾驶机动车？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驾驶证丢失、损毁",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "驾驶证接近有效期",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "记分达到10分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "记分达到6分",
+          "ok": false
+        }
+      ],
+      "explain": "证丢了、坏了、过期、被扣、记满12分，都不能开。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车驾驶人在机动车驾驶证丢失、损毁、超过有效期或者被依法扣留、暂扣期间以及记分达到12分的，不得驾驶机动车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220412175301myabjcwzmwzcbphqn2zjlh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
       "id": "drive.s1.rules.541",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -48264,6 +51434,54 @@
       "phase": 4,
       "difficulty": 2,
       "band": "hot"
+    },
+    {
+      "id": "drive.s1.highway.090",
+      "topic_id": "drive.s1.highway",
+      "kind": "single",
+      "prompt": "大雾天在高速公路遇事故不能继续行驶时怎样处置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "车上人员要迅速从左侧车门离开",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "在来车方向100米处设置警告标志",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "开启危险报警闪光灯和远光灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车上人员站到护栏以外安全的地方",
+          "ok": true
+        }
+      ],
+      "explain": "高速上停车后人留在车里或车旁最危险，要转移到护栏外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十八条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在高速公路上发生故障时……车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2022021114454428ezzwbba7a7bknkwp8hva",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
     },
     {
       "id": "drive.s1.signals.305",
@@ -48899,6 +52117,397 @@
       "phase": 3,
       "difficulty": 2,
       "band": "hot"
+    },
+    {
+      "id": "drive.s1.lights.102",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "危险报警闪光灯可用于下列什么场合？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "在道路上跟车行驶时",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "遇到道路拥堵时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "机动车发生故障停车时",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "引领后车行驶时",
+          "ok": false
+        }
+      ],
+      "explain": "双闪是告诉别人「我这里有异常」，跟车、堵车、引路都不该用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十二条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102559kn7usxlfzk9lucybbngzt8",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.lights.103",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "前雾灯打开",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "后雾灯打开",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "前照灯近光打开",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前照灯远光打开",
+          "ok": false
+        }
+      ],
+      "explain": "前雾灯绿色光朝左，后雾灯黄色光朝右。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "后雾灯指示灯（黄色，光束朝右，带竖向波浪线）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102557ghc8gccl6rfxzzx1jwmnqe",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/20190410102557ghc8gccl6rfxzzx1jwmnqe.jpg"
+    },
+    {
+      "id": "drive.s1.lights.104",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）这个符号表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "近光灯开关",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "远光灯开关",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "车灯总开关",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "后雾灯开关",
+          "ok": false
+        }
+      ],
+      "explain": "按一下车灯总开关，全车的灯都会亮起。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "照明总开关（车灯开关）标志。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025577m6ebujc597bqpy5fvptqn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_891400.jpg"
+    },
+    {
+      "id": "drive.s1.lights.105",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "右转向指示灯闪烁",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "危险报警闪光灯闪烁",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "左转向指示灯闪烁",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车前后位置灯闪烁",
+          "ok": false
+        }
+      ],
+      "explain": "该灯闪烁时，说明车辆出现故障，提醒过往车辆要注意安全。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "危险报警闪光灯（红色双三角）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025574hfpedk1yqpm9xsrmvsymk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_890200.jpg"
+    },
+    {
+      "id": "drive.s1.lights.106",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "危险报警闪光灯开启",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "前照灯开启",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "前后位置灯开启",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "前后雾灯开启",
+          "ok": false
+        }
+      ],
+      "explain": "位置灯就是车辆示宽灯（示廓灯）。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "位置灯（示廓灯）指示灯（两个灯泡朝外放射）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558tyjmme4icj4kjp5gnbxmfn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_887400.jpg"
+    },
+    {
+      "id": "drive.s1.lights.107",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左转向指示灯闪烁",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "右转向指示灯闪烁",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "车前后位置灯亮起",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车前后示宽灯亮起",
+          "ok": false
+        }
+      ],
+      "explain": "哪边的箭头亮就是哪边的转向灯。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "转向指示灯（左右箭头，哪边亮表示哪边转向灯在闪）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558ympgn3wzx5wyrnda7ncnzu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_890500.jpg"
+    },
+    {
+      "id": "drive.s1.lights.108",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "前雾灯打开",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "后雾灯打开",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "前照灯近光打开",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前照灯远光打开",
+          "ok": false
+        }
+      ],
+      "explain": "前雾灯绿色光朝左，后雾灯黄色光朝右。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "前雾灯指示灯（绿色，光束朝左，带竖向波浪线）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558wo9ssjent4iw31q6set2au",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/20190410102558wo9ssjent4iw31q6set2au.jpg"
+    },
+    {
+      "id": "drive.s1.lights.109",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "提拉这个开关控制机动车哪个部位？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "倒车灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "左右转向灯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "示廓灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "报警闪光灯",
+          "ok": false
+        }
+      ],
+      "explain": "转向灯拨杆：向上提右转向，向下拉左转向。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025599df8nmeawzntbkzfq6u32n",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_894700.jpg"
     },
     {
       "id": "drive.s1.rules.551",
@@ -49672,6 +53281,102 @@
       "band": "hot"
     },
     {
+      "id": "drive.s1.occupants.115",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "机动车发生碰撞时座椅安全带主要作用是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "减轻驾乘人员伤害",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "保护驾乘人员腰部",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "保护驾乘人员颈部",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "保护驾乘人员胸部",
+          "ok": false
+        }
+      ],
+      "explain": "安全起见，行车前一定要系好安全带。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车行驶时，驾驶人、乘坐人员应当按规定使用安全带。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558f4ctpwxkwhnru3ar1zzw3v",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.occupants.116",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "安全头枕在发生追尾事故时，能有效保护驾驶人的什么部位？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "腰部",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "胸部",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "颈部",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "头部",
+          "ok": false
+        }
+      ],
+      "explain": "追尾时身体被推向前、头向后甩，头枕挡住头部，保护颈部。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558sykw2lv7nzer5kfyhhjyso",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
       "id": "drive.s1.signals.321",
       "topic_id": "drive.s1.signals",
       "kind": "single",
@@ -49797,6 +53502,1217 @@
       "phase": 2,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.563",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "安全气囊是一种什么装置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驾驶人头颈保护系统",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "防抱死制动系统",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "电子制动力分配系统",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "辅助驾乘人员保护系统",
+          "ok": true
+        }
+      ],
+      "explain": "安全气囊是辅助保护，要和安全带配合才起作用。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102557dpxrftw4necvbb7b5r47jg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.564",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "防抱死制动系统（ABS）在什么情况下可以最大限度发挥制动器效能？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "间歇制动",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "持续制动",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "缓踏制动踏板",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "紧急制动",
+          "ok": true
+        }
+      ],
+      "explain": "ABS 在紧急制动时防止车轮抱死，保住转向能力。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102559jjmk1xg8xeksx4wvmagcac",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.565",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "行车中水温报警灯亮，下列可能是其原因的是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "缺少润滑油",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示灯损坏",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "缺少冷却液",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "冷却液过多",
+          "ok": false
+        }
+      ],
+      "explain": "冷却液不足，要及时补充。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102559sakmktrjumfpfd5js5tptc",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.566",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "上车前，驾驶人应该如何进行绕车检查？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "顺时针绕车一周",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "逆时针绕车一周",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "任意方向绕车一周",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "可直接上车",
+          "ok": false
+        }
+      ],
+      "explain": "行车前的安全检查，是驾驶安全的保障。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20210922150442l12s69i6xwfioyqfncybug",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.567",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "关于操纵加速踏板，以下正确的做法是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "轻踏、猛抬",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "重踏、缓抬",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "轻踏、缓抬",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "重踏、猛抬",
+          "ok": false
+        }
+      ],
+      "explain": "突然猛踩或猛抬加速踏板（油门）都不安全。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202112141652356w7pf2e5x8cxs8n4iubbtd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.568",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "检查机动车机油时，以下正确的做法是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "停在平坦的地方，在启动前检查",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "停在平坦的地方，在怠速状态下检查",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "无需停在平坦的地方，在启动前检查",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "无需停在平坦的地方，在怠速状态下检查",
+          "ok": false
+        }
+      ],
+      "explain": "停在平地、发动机启动前检查，机油都流回油底壳，读数才准。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202112201455185jdbswqhkxsi7agzdzrkcp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.569",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下选项中，自适应巡航系统的英文缩写是什么?",
+      "choices": [
+        {
+          "id": "A",
+          "label": "EBD",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "ACC",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "ABS",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "GPS",
+          "ok": false
+        }
+      ],
+      "explain": "ACC 自适应巡航会跟车调速；CCS 定速巡航只保持设定车速。",
+      "source_refs": [
+        {
+          "source_id": "gbt-39263",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=10BF00ED36B553FD01605C88DA567824",
+          "note": "自适应巡航控制（adaptive cruise control，ACC）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "202204121510016sktvq9zpd8vjwtfmubeg9",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.570",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下选项中，车道偏离预警系统的英文缩写是什么?",
+      "choices": [
+        {
+          "id": "A",
+          "label": "EBD",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "ACC",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "LDW",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "GPS",
+          "ok": false
+        }
+      ],
+      "explain": "LDW车道偏离预警系统是一种通过报警的方式辅助驾驶员减少汽车因车道偏离而发生交通事故的系统。",
+      "source_refs": [
+        {
+          "source_id": "gbt-39263",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=10BF00ED36B553FD01605C88DA567824",
+          "note": "车道偏离预警（lane departure warning，LDW）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220412151001nspqp1nudwrlbdmns2ckza",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.571",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下选项中，定速巡航系统的英文缩写是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "ACC",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "CCS",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "ABS",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "FCW",
+          "ok": false
+        }
+      ],
+      "explain": "有 A 的 ACC 会跟车，有 S 的 CCS 只定速。",
+      "source_refs": [
+        {
+          "source_id": "gbt-39263",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=10BF00ED36B553FD01605C88DA567824",
+          "note": "定速巡航（cruise control system，CCS）与自适应巡航（ACC）的区别在于能否根据前车自动调整车速。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220416110440t3lmviatglyxhog2nefjhr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.572",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下选项中，车辆盲点监测系统的英文缩写是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "ACC",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "BSD",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "AEB",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "FCW",
+          "ok": false
+        }
+      ],
+      "explain": "盲点监测是为了保（B）安全，D在最后是监测，A在最后是辅助。",
+      "source_refs": [
+        {
+          "source_id": "gbt-39263",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=10BF00ED36B553FD01605C88DA567824",
+          "note": "盲区监测（blind spot detection，BSD）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220416110440fy65xm8ck8jxwaykmz2lx",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.573",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下选项中，车辆自动刹车辅助系统的英文缩写是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "FCW",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "AEB",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "BSD",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "ACC",
+          "ok": false
+        }
+      ],
+      "explain": "AEB 会自动刹车，但有速度和识别上的极限，不能替代驾驶人。",
+      "source_refs": [
+        {
+          "source_id": "gbt-39263",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=10BF00ED36B553FD01605C88DA567824",
+          "note": "自动紧急制动（autonomous emergency braking，AEB）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220416110440edbw6z7ydbttj8zrsbhn5a",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.574",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶机动车在道路上行驶突然熄火，以下错误的做法是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "开危险报警闪光灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "放置警告标志",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "车辆移到安全地点",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "立即停车检修",
+          "ok": true
+        }
+      ],
+      "explain": "熄火后先开双闪、把车移到安全处、放警告标志，不能停在原地就修。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十二条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯，将机动车移至不妨碍交通的地方停放；难以移动的，应当持续开启危险报警闪光灯，并在来车方向设置警告标志等措施扩大示警距离。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220429143656pls38cd92preyqzckz2xo7",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.575",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "车辆停稳后，为了避免车辆溜动，应当使用以下哪个装置？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "变速器操纵杆",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "节气门操纵杆",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "离合器操纵杆",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "驻车制动器操作杆",
+          "ok": true
+        }
+      ],
+      "explain": "停车后要拉好手刹，以防溜车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220429143656dgvvyraubshtx9xdcxc9na",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.576",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "电动汽车连接或者断开充电插座的注意事项，以下正确的说法是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "可通过拉动充电电缆断开插头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "可通过家用电路系统给车辆充电",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "不要用湿手操作连接或断开插头",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "连接或断开插头时可触摸插头边缘",
+          "ok": false
+        }
+      ],
+      "explain": "插拔充电枪要握插头、手要干，防止触电。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20220629164008jp1mmpx85esrkjjzlgzugq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.577",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "行车中仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "发动机温度过低",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "发动机温度过高",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "发动机冷却系故障",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "发动机润滑系故障",
+          "ok": false
+        }
+      ],
+      "explain": "红色温度计亮是水温过高，常见原因是冷却液不足，应停车检查。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "冷却液温度过高报警灯（红色温度计浸在液体中）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102557roby5wg3ec3a4qxohrzvp3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_889100.jpg"
+    },
+    {
+      "id": "drive.s1.rules.578",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "充电电流过大",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "蓄电池损坏",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "电流表故障",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "充电电路故障",
+          "ok": true
+        }
+      ],
+      "explain": "蓄电池符号亮说明发电机没在给电池充电，是充电电路出了问题。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "充电电路故障指示灯（红色蓄电池符号）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025577vhpkyq6pnmbykb78npete",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_890900.jpg"
+    },
+    {
+      "id": "drive.s1.rules.579",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "制动踏板没回位",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "驻车制动解除",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "行车制动器失效",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "制动系统出现异常",
+          "ok": true
+        }
+      ],
+      "explain": "括号圆圈里：P是驻车制动器处于制动状态（无故障）；“！”表示制动系统异常或故障。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "制动系统故障报警灯（圆圈加感叹号）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025577rl4bn8rgkvs4hnmvru3b1",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_888100.jpg"
+    },
+    {
+      "id": "drive.s1.rules.580",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）这个符号表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "冷风暖气风扇",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "空调制冷",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "空气循环",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "雪地起步模式",
+          "ok": false
+        }
+      ],
+      "explain": "想要冷风或暖气，都按冷风暖气风扇。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "鼓风机（风扇）标志。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010255792fs6x9dfvdd5qewhliyjp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_891700.jpg"
+    },
+    {
+      "id": "drive.s1.rules.581",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）这个符号表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "一侧车门开启",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "行李舱开启",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "发动机舱开启",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "燃油箱盖开启",
+          "ok": false
+        }
+      ],
+      "explain": "车头盖子翘起是发动机舱开；车尾翘起是行李舱开。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "发动机舱盖未关指示灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102557ezzc54d4vqkghezxaql1u3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_891200.jpg"
+    },
+    {
+      "id": "drive.s1.rules.582",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "制动液不足",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "洗涤液不足",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "冷却系故障",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "冷却液不足",
+          "ok": true
+        }
+      ],
+      "explain": "温度过高，要加冷却液了。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "冷却液液位过低报警灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010255794mxf8kuly5ebkyjmf7qqh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_892500.jpg"
+    },
+    {
+      "id": "drive.s1.rules.583",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "空气内循环",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "空气外循环",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "迎面吹风",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "风窗玻璃除霜",
+          "ok": false
+        }
+      ],
+      "explain": "箭头从外面进车里是外循环，箭头在车内打转是内循环。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "空气外循环（箭头从车外进入车内）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558v6uyohex3lyxbg7joyvzt3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_891500.jpg"
+    },
+    {
+      "id": "drive.s1.rules.584",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）一直亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "防抱死制动系统故障",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "安全气囊处于故障状态",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "安全气囊处于工作状态",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "安全带没有系好",
+          "ok": false
+        }
+      ],
+      "explain": "只有安全气囊出现故障，该灯才会一直亮着。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "安全气囊故障指示灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102558kfcc5k5jhjbeub9apvhqjs",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_891300.jpg"
+    },
+    {
+      "id": "drive.s1.rules.585",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "迎面出风",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "空气外循环",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "空气内循环",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "风窗玻璃除霜",
+          "ok": false
+        }
+      ],
+      "explain": "箭头在车内打转是内循环，隧道、堵车时用来挡住外面的废气。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "空气内循环（箭头在车内回转）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025592lggbpkrydbc9e9l7rj7db",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_891600.jpg"
+    },
+    {
+      "id": "drive.s1.rules.586",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下哪个仪表表示燃油表？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "图1",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "图2",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "图3",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "图4",
+          "ok": true
+        }
+      ],
+      "explain": "图1是转速表，图2是速度和里程表，图3是水温表。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "燃油表（带加油机符号）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025596zy9sfaseufa3yltmra6mm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_1161700.jpg"
+    },
+    {
+      "id": "drive.s1.rules.587",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "机动车仪表板上（如图所示）亮表示什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "行车制动系统出现故障",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "驻车制动器处于制动状态",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "防抱死制动系统出现故障",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "驻车制动器处于解除状态",
+          "ok": false
+        }
+      ],
+      "explain": "圈里是 P：手刹没松；圈里是感叹号：制动系统故障。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "驻车制动指示灯（圆圈加字母 P）。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102559xusonkkup1kyf3dp5grygq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_888300.jpg"
     },
     {
       "id": "drive.s1.henan.001",
@@ -52991,6 +57907,391 @@
       "phase": 1,
       "difficulty": 2,
       "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.033",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "关于醉酒驾驶机动车的处罚，以下说法错误的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "公安机关交通管理部门约束至酒醒",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "吊销驾驶证",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "五年内不得重新取得机动车驾驶证",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "记6分",
+          "ok": true
+        }
+      ],
+      "explain": "醉驾是约束至酒醒、吊销驾驶证、追究刑事责任、五年内不得重新取得，不是记6分。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证。醉酒驾驶机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证，依法追究刑事责任；五年内不得重新取得机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530cmdtgbswnzrusqf2skml5w",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.034",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "机动车驾驶人血液中酒精含量大于或者等于多少可认定为醉驾？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "20毫克/100毫升",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "60毫克/100毫升",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "80毫克/100毫升",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "50毫克/100毫升",
+          "ok": false
+        }
+      ],
+      "explain": "20到80之间是饮酒驾驶，80及以上是醉驾。",
+      "source_refs": [
+        {
+          "source_id": "gb-19522",
+          "relation": "adapted",
+          "locator": "第4.1节",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=7758DED7DB2C251F9F43092150D9EC15",
+          "note": "醉酒后驾车：车辆驾驶人员血液中的酒精含量大于或者等于80mg/100mL的驾驶行为。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102531yaos3turgu4og2vrdnxkaa",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.035",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "驾驶人连续驾驶不得超过多长时间？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "4小时",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "6小时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "8小时",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "10小时",
+          "ok": false
+        }
+      ],
+      "explain": "连续开4小时就要停下来休息至少20分钟。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十二条第（七）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "连续驾驶机动车超过4小时未停车休息或者停车休息时间少于20分钟；"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025354p8jrbpkfu8nsv5gzj8eku",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.036",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "饮酒后或者醉酒驾驶机动车发生重大交通事故构成犯罪的，依法追究刑事责任，吊销机动车驾驶证，将多少年内不得申请机动车驾驶证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五年",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "十年",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "二十年",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "终生",
+          "ok": true
+        }
+      ],
+      "explain": "酒驾醉驾出重大事故构成犯罪，终生禁驾。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条第五款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "饮酒后或者醉酒驾驶机动车发生重大交通事故，构成犯罪的，依法追究刑事责任，并由公安机关交通管理部门吊销机动车驾驶证，终生不得重新取得机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102552vqphojurqwvzjmvzn78sjj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.037",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "以下哪种行为处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "醉酒驾驶机动车的",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "故意遮挡机动车号牌的",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "使用其他车辆保险标志的",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的",
+          "ok": true
+        }
+      ],
+      "explain": "第二次饮酒驾驶：十日以下拘留、一千到二千元罚款、吊销驾驶证。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证。醉酒驾驶机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证，依法追究刑事责任；五年内不得重新取得机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102554uyug9nlezlsl5sxoexteoa",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.alcohol.038",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "饮酒后驾驶机动车的，除按规定处1000元以上2000元以下罚款，还要受到哪种处罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "扣留机动车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣留行驶证",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "暂扣6个月驾驶证",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "暂扣身份证",
+          "ok": false
+        }
+      ],
+      "explain": "饮酒驾驶：暂扣六个月驾驶证，罚一千到二千元，另记12分。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证。醉酒驾驶机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证，依法追究刑事责任；五年内不得重新取得机动车驾驶证。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20210125171550bmxep8u1tkzayspi43qg4w",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.alcohol.039",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "关于驾驶机动车，以下说法正确的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "服用国家管制的精神药品可以短距离驾驶机动车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "饮酒后可以短距离驾驶机动车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "饮酒后不得驾驶机动车",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "患有妨碍安全驾驶机动车的疾病可以短距离驾驶机动车",
+          "ok": false
+        }
+      ],
+      "explain": "饮酒、服药、带病、疲劳都不能开，没有「短距离可以」的例外。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "饮酒、服用国家管制的精神药品或者麻醉药品，或者患有妨碍安全驾驶机动车的疾病，或者过度疲劳影响安全驾驶的，不得驾驶机动车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20210205114628gvbbwhtp2ky976nb94mqh9",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.alcohol.040",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "图中驾驶人的这种违法行为会被记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "记12分",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "记6分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "记3分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "记24分",
+          "ok": false
+        }
+      ],
+      "explain": "饮酒后驾驶，一次记12分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第八条第（一）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "饮酒后驾驶机动车的，一次记12分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20191126190217eefkr45z6rw3nuknyzgmth",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_BB110597.jpg"
     }
   ]
 }
