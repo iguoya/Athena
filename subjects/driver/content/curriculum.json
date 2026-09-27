@@ -16,7 +16,29 @@
         "mix": {
           "judge": 40,
           "single": 60
-        }
+        },
+        "blocks": {
+          "license": 20,
+          "traffic": 25,
+          "penalty": 25,
+          "accident": 10,
+          "vehicle": 10,
+          "local": 10
+        },
+        "topic_blocks": {
+          "drive.s1.license": "license",
+          "drive.s1.registration": "license",
+          "drive.s1.henan": "local",
+          "drive.s1.rules": "traffic",
+          "drive.s1.signals": "traffic",
+          "drive.s1.lights": "traffic",
+          "drive.s1.highway": "traffic",
+          "drive.s1.occupants": "traffic",
+          "drive.s1.alcohol": "penalty",
+          "drive.s1.penalty": "penalty",
+          "drive.s1.accident": "accident"
+        },
+        "blocks_note": "GA 1026—2022 表 1（小型汽车）：驾驶证和机动车管理规定 20%、道路通行条件及通行规定 25%、道路交通安全违法行为及处罚 25%、道路交通事故处理相关规定 10%、机动车基础知识 10%、地方性法规 10%。题目标了 exam_block 的以题目为准（ADR 0023）。"
       },
       "outline": {
         "pain": "不会开车先要过闭卷法规：让行、酒驾、标志、故障停车，考场按全国题库抽 100 题。",

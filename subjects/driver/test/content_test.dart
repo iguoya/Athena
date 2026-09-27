@@ -1,6 +1,8 @@
 import "dart:io";
+import "dart:math";
 
 import "package:athena_driver/content.dart";
+import "package:athena_driver/exam.dart";
 import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -70,5 +72,21 @@ void main() {
       isTrue,
       reason: "考场高频：饮酒后驾驶血液酒精含量从 20 毫克/100 毫升起算",
     );
+  });
+
+  test("用真实题库组科目一模拟考：六个内容块和题型配比都抽得满", () async {
+    final bank = await ContentLoader.load();
+    final rules = bank.curriculum.subject("subject1").exam;
+    expect(rules.blocks.values.fold(0, (a, b) => a + b), rules.questionCount);
+    final paper = Paper.draw(bank.forSubject("subject1"), rules, Random(7));
+    expect(paper.questions, hasLength(rules.questionCount));
+    for (final entry in rules.blocks.entries) {
+      expect(paper.questions.where((q) => rules.blockOf(q) == entry.key).length, entry.value, reason: entry.key);
+    }
+    expect(paper.fullBank, isTrue);
+    // 每道科目一题都要能归到一块，不然组卷时会漏在所有格子之外。
+    for (final q in bank.forSubject("subject1")) {
+      expect(rules.blockOf(q), isNotNull, reason: q.id);
+    }
   });
 }

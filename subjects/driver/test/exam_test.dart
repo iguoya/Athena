@@ -4,7 +4,13 @@ import "package:athena_driver/exam.dart";
 import "package:athena_driver/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
-Question _q(String id, {String band = QuestionBand.regular, String kind = "judge"}) {
+Question _q(
+  String id, {
+  String band = QuestionBand.regular,
+  String kind = "judge",
+  String topic = "drive.s1.license",
+  String? block,
+}) {
   final choices = kind == "single"
       ? const [
           Choice(id: "A", label: "a", ok: true),
@@ -18,8 +24,9 @@ Question _q(String id, {String band = QuestionBand.regular, String kind = "judge
         ];
   return Question(
     id: id,
-    topicId: "drive.s1.license",
+    topicId: topic,
     kind: kind,
+    examBlock: block,
     prompt: "x",
     band: band,
     choices: choices,
@@ -111,5 +118,55 @@ void main() {
     final hot = _q("h", band: QuestionBand.hot);
     expect(hot.appearsInPractice(mastered: false, wrong: false), isTrue);
     expect(hot.appearsInPractice(mastered: true, wrong: false), isFalse);
+  });
+
+  test("科目一按 GA 1026 表 1 的内容块抽题，每块内判断、单选仍是 4:6", () {
+    const blocked = ExamRules(
+      questionCount: 100,
+      minutes: 45,
+      passScore: 90,
+      pointsPerQuestion: 1,
+      mix: {"judge": 40, "single": 60},
+      blocks: {"license": 20, "traffic": 25, "penalty": 25, "accident": 10, "vehicle": 10, "local": 10},
+      topicBlocks: {
+        "drive.s1.license": "license",
+        "drive.s1.rules": "traffic",
+        "drive.s1.penalty": "penalty",
+        "drive.s1.accident": "accident",
+        "drive.s1.henan": "local",
+      },
+    );
+    final cells = blockCells(blocked);
+    expect(cells[("license", "judge")], 8);
+    expect(cells[("license", "single")], 12);
+    expect(cells[("traffic", "judge")], 10);
+    expect(cells[("vehicle", "single")], 6);
+    expect(cells.values.fold(0, (a, b) => a + b), 100);
+
+    // 通行题占题库一大半，照样只抽 25 道；车辆知识题挂在通行知识点下，靠 exam_block 归块。
+    final bank = [
+      for (final (topic, n) in [
+        ("drive.s1.license", 60),
+        ("drive.s1.rules", 400),
+        ("drive.s1.penalty", 60),
+        ("drive.s1.accident", 30),
+        ("drive.s1.henan", 30),
+      ])
+        for (var i = 0; i < n; i++) _q("$topic.$i", topic: topic, kind: i.isEven ? "judge" : "single"),
+      for (var i = 0; i < 30; i++) _q("v$i", topic: "drive.s1.rules", block: "vehicle", kind: i.isEven ? "judge" : "single"),
+    ];
+    final paper = Paper.draw(bank, blocked, Random(3));
+    expect(paper.questions, hasLength(100));
+    int inBlock(String block) => paper.questions.where((q) => blocked.blockOf(q) == block).length;
+    expect(inBlock("traffic"), 25);
+    expect(inBlock("vehicle"), 10);
+    expect(inBlock("local"), 10);
+    expect(paper.questions.where((q) => q.kind == "judge").length, 40);
+    expect(paper.fullBank, isTrue);
+  });
+
+  test("错到不可能及格的那一道就结束：科目一第 11 道，科目四第 6 道", () {
+    expect(failingWrongCount(100, 90), 11);
+    expect(failingWrongCount(50, 90), 6);
   });
 }

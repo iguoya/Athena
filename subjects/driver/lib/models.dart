@@ -76,6 +76,7 @@ class Question {
     this.difficulty = 1,
     this.phase = 1,
     this.band = QuestionBand.regular,
+    this.examBlock,
   });
 
   final String id;
@@ -92,6 +93,9 @@ class Question {
   final int difficulty;
   final int phase;
   final String band;
+
+  /// 模拟考组卷时归哪一块（GA 1026 表 1）；空就按知识点的默认块（ADR 0023）。
+  final String? examBlock;
 
   bool get isHot => band == QuestionBand.hot;
   bool get isCommon => band == QuestionBand.common;
@@ -173,6 +177,7 @@ class Question {
       difficulty: json["difficulty"] as int? ?? 1,
       phase: json["phase"] as int? ?? 1,
       band: json["band"] as String? ?? QuestionBand.regular,
+      examBlock: json["exam_block"] as String?,
     );
   }
 }
@@ -215,6 +220,8 @@ class ExamRules {
     required this.passScore,
     required this.pointsPerQuestion,
     this.mix = const {},
+    this.blocks = const {},
+    this.topicBlocks = const {},
   });
 
   final int questionCount;
@@ -222,12 +229,22 @@ class ExamRules {
   final int passScore;
   final int pointsPerQuestion;
 
-  /// 考场的题型配比：科目一 30 判断 + 70 单选，科目四 10 判断 + 30 单选 + 10 多选。
+  /// 考场的题型配比（GA 1026）：科目一 40 判断 + 60 单选，科目四 20 判断 + 20 单选 + 10 多选。
   /// 空表示不限题型，按权重随机抽。
   final Map<String, int> mix;
 
+  /// 考场的内容比例：块 -> 题数（GA 1026 表 1）。空表示不分块（ADR 0023）。
+  final Map<String, int> blocks;
+
+  /// 知识点 -> 默认块；题目自己标了 exam_block 的以题目为准。
+  final Map<String, String> topicBlocks;
+
+  String? blockOf(Question question) => question.examBlock ?? topicBlocks[question.topicId];
+
   factory ExamRules.fromJson(Map<String, dynamic> json) {
     final rawMix = json["mix"] as Map<String, dynamic>?;
+    final rawBlocks = json["blocks"] as Map<String, dynamic>?;
+    final rawTopicBlocks = json["topic_blocks"] as Map<String, dynamic>?;
     return ExamRules(
       questionCount: json["question_count"] as int,
       minutes: json["minutes"] as int,
@@ -236,6 +253,14 @@ class ExamRules {
       mix: {
         for (final entry in (rawMix ?? const <String, dynamic>{}).entries)
           entry.key: entry.value as int,
+      },
+      blocks: {
+        for (final entry in (rawBlocks ?? const <String, dynamic>{}).entries)
+          entry.key: entry.value as int,
+      },
+      topicBlocks: {
+        for (final entry in (rawTopicBlocks ?? const <String, dynamic>{}).entries)
+          entry.key: entry.value as String,
       },
     );
   }
