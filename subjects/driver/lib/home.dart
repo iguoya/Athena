@@ -1560,7 +1560,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       builder: (dialogContext) => AlertDialog(
         title: const Text("开始测试"),
         content: Text(
-          "「$title」限时 $minutes 分钟，交卷才判分。确定现在开始吗？",
+          "「$title」限时 $minutes 分钟。跟考场一样答一题交一题，交了不能改；错到不可能及格就提前结束。确定现在开始吗？",
           style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
@@ -1611,7 +1611,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       builder: (dialogContext) => AlertDialog(
         title: const Text("有一场没交的模拟考"),
         content: Text(
-          "「${draft.title}」上次还没交卷，已经选了 ${draft.picked.length}/${draft.questionCount} 题。"
+          "「${draft.title}」上次还没交卷，已经答了 ${draft.picked.length}/${draft.questionCount} 题。"
           "继续上次的，还是放弃重新开始？",
           style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
