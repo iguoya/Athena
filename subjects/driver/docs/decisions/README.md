@@ -7,7 +7,7 @@
 |---|---|---|
 | [0001](0001-subject-one-and-four-only.md) | 只做科目一与科目四理论 | 已接受 |
 | [0002](0002-flutter-desktop.md) | 桌面壳用 Flutter | 已接受 |
-| [0003](0003-sourced-theory-questions.md) | 题目必须能指到法条或标准 | 已接受 |
+| [0003](0003-sourced-theory-questions.md) | 题目必须能指到法条或标准 | 已接受（第 3 条由 0024 修订） |
 | [0004](0004-desktop-workspace.md) | 桌面工作台，不用手机题库的控件妥协 | 已接受 |
 | [0005](0005-native-tts-for-explain.md) | 答题解释用系统 TTS 朗读 | 已接受 |
 | [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受 |
@@ -28,3 +28,4 @@
 | [0021](0021-launch-window-maximized.md) | 桌面窗口启动时直接最大化 | 已接受 |
 | [0022](0022-ten-per-page-auto-advance-when-clean.md) | 一页十题，全对自动翻页 | 已接受 |
 | [0023](0023-exam-follows-test-centre.md) | 模拟考按考场的判分方式和内容比例走 | 已接受（修订 0007、0016 第 3 条） |
+| [0024](0024-sign-meaning-questions.md) | 标志、标线、交警手势收「认含义」题，不收「认类别」题 | 已接受（修订 0003 第 3 条） |
