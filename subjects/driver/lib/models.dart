@@ -417,12 +417,87 @@ class RoadSign {
   }
 }
 
+/// 易混数字对照页的一行：数字、适用情形、出处（ADR 0028）。
+class CheatRow {
+  const CheatRow({
+    required this.value,
+    required this.caseText,
+    required this.sourceId,
+    required this.locator,
+    this.amount,
+  });
+
+  final String value;
+  final String caseText;
+  final String sourceId;
+  final String locator;
+
+  /// 画横条用的数值；区间、期限这类不好比大小的没有。
+  final double? amount;
+
+  factory CheatRow.fromJson(Map<String, dynamic> json) {
+    return CheatRow(
+      value: json["value"] as String,
+      caseText: json["case"] as String,
+      sourceId: json["source_id"] as String,
+      locator: json["locator"] as String? ?? "",
+      amount: (json["amount"] as num?)?.toDouble(),
+    );
+  }
+}
+
+/// 一组易混数字，外加按题面找相关题的匹配式。
+class CheatGroup {
+  const CheatGroup({
+    required this.id,
+    required this.title,
+    required this.unit,
+    required this.note,
+    required this.match,
+    required this.rows,
+  });
+
+  final String id;
+  final String title;
+  final String unit;
+  final String note;
+  final RegExp match;
+  final List<CheatRow> rows;
+
+  double get maxAmount => rows.fold(0, (m, r) => (r.amount ?? 0) > m ? r.amount! : m);
+
+  /// 题干或选项里提到这组数字的题。
+  List<Question> related(Iterable<Question> questions) => [
+    for (final q in questions)
+      if (match.hasMatch(q.prompt) || q.choices.any((c) => match.hasMatch(c.label))) q,
+  ];
+
+  factory CheatGroup.fromJson(Map<String, dynamic> json) {
+    return CheatGroup(
+      id: json["id"] as String,
+      title: json["title"] as String,
+      unit: json["unit"] as String? ?? "",
+      note: json["note"] as String? ?? "",
+      match: RegExp(json["match"] as String),
+      rows: [
+        for (final raw in json["rows"] as List<dynamic>) CheatRow.fromJson(raw as Map<String, dynamic>),
+      ],
+    );
+  }
+}
+
 class Bank {
-  const Bank({required this.curriculum, required this.questions, this.signs = const []});
+  const Bank({
+    required this.curriculum,
+    required this.questions,
+    this.signs = const [],
+    this.cheatsheet = const [],
+  });
 
   final Curriculum curriculum;
   final List<Question> questions;
   final List<RoadSign> signs;
+  final List<CheatGroup> cheatsheet;
 
   List<Question> forSubject(String subjectId) {
     final ids = {

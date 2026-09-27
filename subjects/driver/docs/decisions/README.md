@@ -32,3 +32,4 @@
 | [0025](0025-auto-advance-when-page-done.md) | 一页十题答完就自动翻页，不看对错 | 已接受（修订 0022 第 2、3 条） |
 | [0026](0026-phase-size-follows-content.md) | 阶段题量随内容走，不设上下限 | 已接受（修订 0009） |
 | [0027](0027-practice-by-national-error-rate.md) | 练习按全国错误率排序，易错题标出来 | 已接受 |
+| [0028](0028-confusable-numbers-page.md) | 易混数字对照页 | 已接受 |

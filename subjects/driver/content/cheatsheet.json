@@ -1,0 +1,371 @@
+{
+  "_": "易混数字对照页（ADR 0028）。每行都指到条文；match 是按题面找相关题的正则。",
+  "groups": [
+    {
+      "id": "points",
+      "title": "记分分值",
+      "unit": "分",
+      "note": "一次记分只有 12、9、6、3、1 五档，没有 2 分。",
+      "match": "记\\s*\\d+\\s*分|记几分|记多少分",
+      "rows": [
+        {
+          "value": "12 分",
+          "case": "饮酒后驾驶；致人轻伤以上事故后逃逸（尚不构成犯罪）；使用伪造、变造的号牌、行驶证、驾驶证，或使用其他车的号牌、行驶证；高速、快速路上倒车、逆行、穿越中央分隔带掉头；小车在高速、快速路超速 50% 以上",
+          "source_id": "penalty-order-163",
+          "locator": "第八条",
+          "amount": 12
+        },
+        {
+          "value": "9 分",
+          "case": "高速、快速路上违法停车；未悬挂或故意遮挡、污损号牌；驾驶与准驾车型不符的车",
+          "source_id": "penalty-order-163",
+          "locator": "第九条",
+          "amount": 9
+        },
+        {
+          "value": "6 分",
+          "case": "闯红灯；驾驶证被暂扣、扣留期间驾驶；致人轻微伤或财产损失事故后逃逸；高速、快速路占用应急车道；小车在高速、快速路超速 20%–50%，普通道路超速 50% 以上",
+          "source_id": "penalty-order-163",
+          "locator": "第十条",
+          "amount": 6
+        },
+        {
+          "value": "3 分",
+          "case": "拨打接听手持电话；不按规定超车、让行，普通道路逆行；人行横道不礼让；不按规定安装号牌；故障、事故停车不按规定用灯光或放警告标志；高速低于最低时速；高速、快速路不按规定车道；普通道路超速 20%–50%",
+          "source_id": "penalty-order-163",
+          "locator": "第十一条",
+          "amount": 3
+        },
+        {
+          "value": "1 分",
+          "case": "不按规定会车，普通道路不按规定倒车、掉头；不按规定使用灯光；违反禁令标志、禁止标线；未系安全带；未按期检验",
+          "source_id": "penalty-order-163",
+          "locator": "第十二条",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "title": "限速",
+      "unit": "公里/小时",
+      "note": "没有限速标志时按这张表；有标志听标志。",
+      "match": "公里|km/h|时速|车速|最高速度|最低速度",
+      "rows": [
+        {
+          "value": "30",
+          "case": "没有道路中心线的城市道路",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十五条第（一）项",
+          "amount": 30
+        },
+        {
+          "value": "40",
+          "case": "没有道路中心线的公路",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十五条第（一）项",
+          "amount": 40
+        },
+        {
+          "value": "50",
+          "case": "同方向只有 1 条机动车道的城市道路",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十五条第（二）项",
+          "amount": 50
+        },
+        {
+          "value": "70",
+          "case": "同方向只有 1 条机动车道的公路",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十五条第（二）项",
+          "amount": 70
+        },
+        {
+          "value": "30",
+          "case": "进出非机动车道，过铁路道口、急弯、窄路、窄桥；掉头、转弯、下陡坡；能见度 50 米以内；冰雪、泥泞路；牵引故障车",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十六条",
+          "amount": 30
+        },
+        {
+          "value": "120",
+          "case": "高速公路最高（小型载客汽车）",
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条",
+          "amount": 120
+        },
+        {
+          "value": "110",
+          "case": "高速同向 3 条以上车道，最左侧车道最低",
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条",
+          "amount": 110
+        },
+        {
+          "value": "100",
+          "case": "高速同向 2 条车道，左侧车道最低",
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条",
+          "amount": 100
+        },
+        {
+          "value": "90",
+          "case": "高速同向 3 条以上车道，中间车道最低",
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条",
+          "amount": 90
+        },
+        {
+          "value": "60",
+          "case": "高速公路最低",
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条",
+          "amount": 60
+        }
+      ]
+    },
+    {
+      "id": "fog",
+      "title": "高速低能见度",
+      "unit": "公里/小时",
+      "note": "能见度越低，车速和车距一起往下掉；小于 50 米就要下高速。",
+      "match": "能见度",
+      "rows": [
+        {
+          "value": "小于 200 米",
+          "case": "车速不超过 60，车距 100 米以上；开雾灯、近光灯、示廓灯和前后位灯",
+          "source_id": "road-safety-regulation",
+          "locator": "第八十一条第一款第（一）项",
+          "amount": 60
+        },
+        {
+          "value": "小于 100 米",
+          "case": "车速不超过 40，车距 50 米以上；再加开危险报警闪光灯",
+          "source_id": "road-safety-regulation",
+          "locator": "第八十一条第一款第（二）项",
+          "amount": 40
+        },
+        {
+          "value": "小于 50 米",
+          "case": "车速不超过 20，从最近的出口尽快驶离高速公路",
+          "source_id": "road-safety-regulation",
+          "locator": "第八十一条第一款第（三）项",
+          "amount": 20
+        }
+      ]
+    },
+    {
+      "id": "distance",
+      "title": "距离",
+      "unit": "米",
+      "note": "「口」字边上 50 米不停车，「站」字边上 30 米不停车。",
+      "match": "\\d+\\s*米",
+      "rows": [
+        {
+          "value": "150",
+          "case": "高速公路故障：警告标志设在来车方向 150 米以外",
+          "source_id": "road-safety-law",
+          "locator": "第六十八条",
+          "amount": 150
+        },
+        {
+          "value": "150",
+          "case": "夜间会车：距对向来车 150 米以外改用近光灯",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条第（五）项",
+          "amount": 150
+        },
+        {
+          "value": "100",
+          "case": "高速车速超过 100 公里/小时：与同车道前车保持 100 米以上",
+          "source_id": "road-safety-regulation",
+          "locator": "第八十条",
+          "amount": 100
+        },
+        {
+          "value": "50–100",
+          "case": "一般道路故障难以移动：警告标志设在车后 50 米至 100 米",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十条",
+          "amount": 100
+        },
+        {
+          "value": "50",
+          "case": "交叉路口、铁路道口、急弯、宽度不足 4 米的窄路、桥梁、陡坡、隧道及其 50 米以内不得停车",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条第（二）项",
+          "amount": 50
+        },
+        {
+          "value": "50",
+          "case": "高速车速低于 100 公里/小时：与前车最小距离 50 米",
+          "source_id": "road-safety-regulation",
+          "locator": "第八十条",
+          "amount": 50
+        },
+        {
+          "value": "30",
+          "case": "公共汽车站、急救站、加油站、消防栓或消防队门前及其 30 米以内不得停车（使用这些设施的除外）",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条第（三）项",
+          "amount": 30
+        },
+        {
+          "value": "4–10",
+          "case": "软连接牵引：牵引车与被牵引车之间大于 4 米小于 10 米",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十一条第（三）项",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "id": "terms",
+      "title": "期限",
+      "unit": "",
+      "note": "换证 90 日内、信息变 30 日内；弄虚作假 1 年、骗证 3 年、醉驾 5 年、逃逸终生。",
+      "match": "\\d+\\s*(日|天|个月|年)|终生",
+      "rows": [
+        {
+          "value": "12 个月",
+          "case": "实习期（初次取得驾驶证后）；记分周期",
+          "source_id": "license-order-162",
+          "locator": "第七十六条；163 号令第三条"
+        },
+        {
+          "value": "6 年 / 10 年 / 长期",
+          "case": "驾驶证有效期三档：初领 6 年，每个周期都没记满 12 分依次换 10 年、长期",
+          "source_id": "license-order-162",
+          "locator": "第十三条、第六十二条"
+        },
+        {
+          "value": "90 日内",
+          "case": "驾驶证有效期满前 90 日内申请换证",
+          "source_id": "license-order-162",
+          "locator": "第六十三条"
+        },
+        {
+          "value": "30 日内",
+          "case": "驾驶证记载的信息变化，30 日内申请换证",
+          "source_id": "license-order-162",
+          "locator": "第六十六条"
+        },
+        {
+          "value": "3 年",
+          "case": "学习驾驶证明有效期，科目二、三要在期内考完",
+          "source_id": "license-order-162",
+          "locator": "第四十一条"
+        },
+        {
+          "value": "7 天",
+          "case": "记满 12 分：满分学习 7 天（小型汽车）",
+          "source_id": "penalty-order-163",
+          "locator": "第十八条"
+        },
+        {
+          "value": "15 日内",
+          "case": "收到罚款决定书后缴纳罚款",
+          "source_id": "road-safety-law",
+          "locator": "第一百零八条"
+        },
+        {
+          "value": "6 个月",
+          "case": "饮酒后驾驶：暂扣驾驶证 6 个月",
+          "source_id": "road-safety-law",
+          "locator": "第九十一条第一款"
+        },
+        {
+          "value": "1 年",
+          "case": "隐瞒情况、提供虚假材料申领，考试舞弊：1 年内不得再申领",
+          "source_id": "license-order-162",
+          "locator": "第九十三条"
+        },
+        {
+          "value": "3 年",
+          "case": "以欺骗、贿赂手段取得驾驶证被撤销：3 年内不得再申领",
+          "source_id": "license-order-162",
+          "locator": "第九十三条"
+        },
+        {
+          "value": "5 年",
+          "case": "醉酒驾驶吊销驾驶证：5 年内不得重新取得",
+          "source_id": "road-safety-law",
+          "locator": "第九十一条第二款"
+        },
+        {
+          "value": "终生",
+          "case": "肇事逃逸吊销驾驶证；酒驾醉驾发生重大事故构成犯罪",
+          "source_id": "road-safety-law",
+          "locator": "第一百〇一条、第九十一条"
+        }
+      ]
+    },
+    {
+      "id": "fines",
+      "title": "罚款区间",
+      "unit": "元",
+      "note": "",
+      "match": "罚款",
+      "rows": [
+        {
+          "value": "20–200",
+          "case": "违反道路通行规定（可以只警告）",
+          "source_id": "road-safety-law",
+          "locator": "第九十条",
+          "amount": 200
+        },
+        {
+          "value": "200–500",
+          "case": "逾期不审验仍驾驶；证被扣押期间骗领补证；身体条件不适合仍驾驶",
+          "source_id": "license-order-162",
+          "locator": "第九十九条",
+          "amount": 500
+        },
+        {
+          "value": "1000–2000",
+          "case": "饮酒后驾驶（另暂扣驾驶证 6 个月）",
+          "source_id": "road-safety-law",
+          "locator": "第九十一条第一款",
+          "amount": 2000
+        },
+        {
+          "value": "200–2000",
+          "case": "无证驾驶或把车交给无证者；肇事逃逸尚不构成犯罪；超速 50%；驾驶拼装、报废车",
+          "source_id": "road-safety-law",
+          "locator": "第九十九条、第一百条",
+          "amount": 2000
+        },
+        {
+          "value": "2000–5000",
+          "case": "伪造、变造或使用伪造、变造的登记证书、号牌、行驶证、驾驶证（并处 15 日以下拘留）",
+          "source_id": "road-safety-law",
+          "locator": "第九十六条第一款",
+          "amount": 5000
+        }
+      ]
+    },
+    {
+      "id": "alcohol",
+      "title": "血液酒精含量",
+      "unit": "毫克/100 毫升",
+      "note": "呼气值乘 2200 换算成血液值。",
+      "match": "酒精|饮酒|醉酒",
+      "rows": [
+        {
+          "value": "20",
+          "case": "达到 20、不到 80：饮酒后驾驶",
+          "source_id": "gb-19522",
+          "locator": "第 4.1 节",
+          "amount": 20
+        },
+        {
+          "value": "80",
+          "case": "达到 80：醉酒驾驶",
+          "source_id": "gb-19522",
+          "locator": "第 4.1 节",
+          "amount": 80
+        }
+      ]
+    }
+  ]
+}

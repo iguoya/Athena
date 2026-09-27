@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static const _wrongId = "wrong";
   static const _syncId = "sync";
+  static const _numbersId = "numbers";
 
   String _place = "subject1";
   SessionLaunch? _session;
@@ -206,7 +207,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Subject? get _subject {
-    if (_place == _wrongId || _place == _syncId) return null;
+    if (_place == _wrongId || _place == _syncId || _place == _numbersId) return null;
     return widget.bank.curriculum.subject(_place);
   }
 
@@ -277,6 +278,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             selected: _place == _wrongId && _session == null,
             label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
             onTap: () => _go(_wrongId),
+          ),
+          _navLine(
+            icon: Icons.pin,
+            selected: _place == _numbersId && _session == null,
+            label: "易混数字",
+            onTap: () => _go(_numbersId),
           ),
           _navLine(
             icon: Icons.cloud_sync,
@@ -406,6 +413,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _syncId) return _syncOverview(context);
+    if (_place == _numbersId) return _numbersOverview(context);
     if (_place == "subject4" && !_s1Done) return _lockedSubject4(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1099,6 +1107,138 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  /// 易混数字：同类数字并排，配横条比大小，每组能直接练相关题（ADR 0028）。
+  Widget _numbersOverview(BuildContext context) {
+    final subject = widget.bank.curriculum.subject("subject1");
+    final open = dailyQuestions(widget.bank.unlocked("subject1", _s1Open));
+    final all = dailyQuestions(_subject1All);
+    final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      height: 1.45,
+    );
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.pin, color: Bs.paper),
+            SizedBox(width: 8),
+            Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "科目一丢分多在硬数字上。同类数字放在一起看，记住的是它们之间的区别；每组都能直接练相关的题。",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        for (final group in widget.bank.cheatsheet) ...[
+          const SizedBox(height: 28),
+          _numberGroup(context, subject, group, open, all, muted),
+        ],
+      ],
+    );
+  }
+
+  Widget _numberGroup(
+    BuildContext context,
+    Subject subject,
+    CheatGroup group,
+    List<Question> open,
+    List<Question> all,
+    TextStyle? muted,
+  ) {
+    final related = group.related(open);
+    final pending = _pending(related);
+    final locked = group.related(all).length - related.length;
+    final maxAmount = group.maxAmount;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      decoration: BoxDecoration(
+        color: Bs.body,
+        border: Border.all(color: Bs.border),
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(group.title, style: Theme.of(context).textTheme.titleLarge),
+              if (group.unit.isNotEmpty) ...[
+                const SizedBox(width: 10),
+                Text(group.unit, style: muted),
+              ],
+              const Spacer(),
+              FilledButton.icon(
+                onPressed: pending.isEmpty
+                    ? null
+                    : () => _startPractice(subject, related, "易混数字 · ${group.title}"),
+                icon: const Icon(Icons.play_arrow, size: 20),
+                label: Text(pending.isEmpty ? "这组已掌握" : "练这组 ${pending.length} 题"),
+              ),
+            ],
+          ),
+          if (group.note.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(group.note, style: muted),
+          ],
+          if (locked > 0) ...[
+            const SizedBox(height: 4),
+            Text("还有 $locked 题在没解锁的阶段里，过关后会加进来。", style: muted),
+          ],
+          const SizedBox(height: 12),
+          for (final row in group.rows)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 190,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          row.value,
+                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Bs.paper),
+                        ),
+                        if (row.amount != null && maxAmount > 0) ...[
+                          const SizedBox(height: 4),
+                          // 横条长度按本组最大值换算：高低一眼看出来（仓库 ADR 0056）。
+                          FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: (row.amount! / maxAmount).clamp(0.04, 1.0),
+                            child: Container(
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Bs.paper.withValues(alpha: 0.75),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(row.caseText, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.45)),
+                        const SizedBox(height: 2),
+                        Text("${Bs.sourceShort(row.sourceId)} ${row.locator}", style: muted),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

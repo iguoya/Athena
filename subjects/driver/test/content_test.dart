@@ -1,3 +1,4 @@
+import "dart:convert";
 import "dart:io";
 import "dart:math";
 
@@ -87,6 +88,20 @@ void main() {
     // 每道科目一题都要能归到一块，不然组卷时会漏在所有格子之外。
     for (final q in bank.forSubject("subject1")) {
       expect(rules.blockOf(q), isNotNull, reason: q.id);
+    }
+  });
+
+  test("易混数字每组都找得到相关题，每行都有登记过的出处（ADR 0028）", () async {
+    final bank = await ContentLoader.load();
+    expect(bank.cheatsheet, isNotEmpty);
+    final catalog = jsonDecode(File("content/sources/catalog.json").readAsStringSync()) as Map<String, dynamic>;
+    final sources = {for (final s in catalog["sources"] as List<dynamic>) (s as Map<String, dynamic>)["id"] as String};
+    for (final group in bank.cheatsheet) {
+      expect(group.related(bank.forSubject("subject1")), isNotEmpty, reason: group.id);
+      for (final row in group.rows) {
+        expect(sources, contains(row.sourceId), reason: "${group.id} ${row.value}");
+        expect(row.locator, isNotEmpty, reason: "${group.id} ${row.value}");
+      }
     }
   });
 }

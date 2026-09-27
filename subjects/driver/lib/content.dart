@@ -31,7 +31,11 @@ class ContentLoader {
       ])
         if (seen.add(question.id)) question,
     ];
-    return Bank(curriculum: curriculum, questions: questions, signs: signs);
+    final cheatsheet = [
+      for (final raw in (jsonDecode(await _read("cheatsheet.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+        CheatGroup.fromJson(raw as Map<String, dynamic>),
+    ];
+    return Bank(curriculum: curriculum, questions: questions, signs: signs, cheatsheet: cheatsheet);
   }
 
   static List<RoadSign> _signsOf(String raw) {
