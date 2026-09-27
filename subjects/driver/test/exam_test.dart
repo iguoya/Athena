@@ -10,6 +10,7 @@ Question _q(
   String kind = "judge",
   String topic = "drive.s1.license",
   String? block,
+  double? rate,
 }) {
   final choices = kind == "single"
       ? const [
@@ -27,6 +28,7 @@ Question _q(
     topicId: topic,
     kind: kind,
     examBlock: block,
+    errorRate: rate,
     prompt: "x",
     band: band,
     choices: choices,
@@ -168,5 +170,20 @@ void main() {
   test("错到不可能及格的那一道就结束：科目一第 11 道，科目四第 6 道", () {
     expect(failingWrongCount(100, 90), 11);
     expect(failingWrongCount(50, 90), 6);
+  });
+
+  test("练习同档内按全国错误率从高到低，没有错误率的按中位数排（ADR 0027）", () {
+    final ordered = hardestFirst([
+      _q("a", rate: 5),
+      _q("own"),
+      _q("b", rate: 40),
+      _q("c", rate: 12),
+      _q("d", rate: 12),
+    ]);
+    // 中位数是 12：按条文写的题排在 12% 那一段，同分保持原顺序。
+    expect([for (final q in ordered) q.id], ["b", "own", "c", "d", "a"]);
+    expect(_q("x", rate: 20).isErrorProne, isTrue);
+    expect(_q("y", rate: 19.9).isErrorProne, isFalse);
+    expect(_q("z").isErrorProne, isFalse);
   });
 }

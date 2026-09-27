@@ -92,7 +92,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       for (final q in pending)
         if (!_wrongIds.contains(q.id) && q.isRegular) q,
     ];
-    return [...wrong, ...hot, ...common, ...regular, ...wrong, ...hot];
+    // 档的先后不变，同一档里先练全国错误率高的（ADR 0027）。
+    return [
+      ...hardestFirst(wrong),
+      ...hardestFirst(hot),
+      ...hardestFirst(common),
+      ...hardestFirst(regular),
+      ...wrong,
+      ...hot,
+    ];
   }
 
   List<Question> _openPool(Subject subject) {

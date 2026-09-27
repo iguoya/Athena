@@ -465,6 +465,13 @@ class _SessionStageState extends State<SessionStage> {
               icon: q.isHot ? Icons.local_fire_department : Icons.route,
               color: Bs.bandColor(q.band),
             ),
+            // 易错提示只在练习里给：考场上没有这个提示（ADR 0027）。
+            if (!_isExam && q.isErrorProne)
+              BsBadge(
+                text: "易错 ${q.errorRate!.round()}%",
+                icon: Icons.warning_amber,
+                color: Bs.danger,
+              ),
             for (final ref in q.sourceRefs)
               if (Bs.isContentSource(ref.relation))
                 BsBadge(

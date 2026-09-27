@@ -77,6 +77,7 @@ class Question {
     this.phase = 1,
     this.band = QuestionBand.regular,
     this.examBlock,
+    this.errorRate,
   });
 
   final String id;
@@ -96,6 +97,14 @@ class Question {
 
   /// 模拟考组卷时归哪一块（GA 1026 表 1）；空就按知识点的默认块（ADR 0023）。
   final String? examBlock;
+
+  /// 公开题库给的全国错误率（百分数）；自己按条文写的题没有（ADR 0027）。
+  final double? errorRate;
+
+  /// 练习时标「易错」的门槛：约是最难的四分之一。
+  static const errorProneRate = 20.0;
+
+  bool get isErrorProne => (errorRate ?? 0) >= errorProneRate;
 
   bool get isHot => band == QuestionBand.hot;
   bool get isCommon => band == QuestionBand.common;
@@ -178,6 +187,7 @@ class Question {
       phase: json["phase"] as int? ?? 1,
       band: json["band"] as String? ?? QuestionBand.regular,
       examBlock: json["exam_block"] as String?,
+      errorRate: (json["error_rate"] as num?)?.toDouble(),
     );
   }
 }
@@ -475,6 +485,19 @@ bool allMastered(Iterable<Question> questions, Set<String> mastered) {
     if (!mastered.contains(question.id)) return false;
   }
   return any;
+}
+
+/// 同一档里按全国错误率从高到低排，先练大家最容易错的；没有错误率的按中位数算，
+/// 不把按条文写的核心题压到最后（ADR 0027）。排序稳定，错误率相同的保持原顺序。
+List<Question> hardestFirst(List<Question> questions) {
+  final rates = [for (final q in questions) if (q.errorRate != null) q.errorRate!]..sort();
+  final median = rates.isEmpty ? 0.0 : rates[rates.length ~/ 2];
+  final indexed = [for (var i = 0; i < questions.length; i++) (i, questions[i])];
+  indexed.sort((a, b) {
+    final byRate = (b.$2.errorRate ?? median).compareTo(a.$2.errorRate ?? median);
+    return byRate != 0 ? byRate : a.$1.compareTo(b.$1);
+  });
+  return [for (final (_, q) in indexed) q];
 }
 
 List<Question> dailyQuestions(Iterable<Question> questions) {
