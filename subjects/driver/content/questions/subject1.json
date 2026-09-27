@@ -33683,6 +33683,54 @@
       "image": "images/subject1/2019_kemu1_BB110627.jpeg"
     },
     {
+      "id": "drive.s1.penalty.129",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶机动车不按规定使用灯光的，将被一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1分",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "9分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "6分",
+          "ok": false
+        }
+      ],
+      "explain": "平时不按规定用灯光记1分；故障、事故停车后不按规定用灯光或不放警告标志记3分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十二条第（三）项",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "驾驶机动车不按规定使用灯光的，一次记1分。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200717152353l8ny8s53q58uuzthydfwvg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
       "id": "drive.s1.rules.252",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -51484,6 +51532,55 @@
       "band": "common"
     },
     {
+      "id": "drive.s1.highway.091",
+      "topic_id": "drive.s1.highway",
+      "kind": "single",
+      "prompt": "如图所示，在高速公路上同方向三条机动车道最左侧车道行驶，应保持什么车速？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "60公里/小时-120公里/小时",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "90公里/小时-120公里/小时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "100公里/小时-120公里/小时",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "110公里/小时-120公里/小时",
+          "ok": true
+        }
+      ],
+      "explain": "三车道：最左110到120，中间90到120，最右60到120；两车道：左侧100到120，右侧60到120。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第七十八条第二款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "同方向有3条以上车道的，最左侧车道的最低车速为每小时110公里，中间车道的最低车速为每小时90公里。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102535moz9ek2le3k7uwk5ghqquk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；答案按条文或标准核对后写入。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_1092300.jpg"
+    },
+    {
       "id": "drive.s1.signals.305",
       "topic_id": "drive.s1.signals",
       "kind": "single",
@@ -54713,6 +54810,486 @@
       "difficulty": 2,
       "band": "hot",
       "image": "images/subject1/2019_kemu1_888300.jpg"
+    },
+    {
+      "id": "drive.s1.rules.588",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "在以下路段不能倒车的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "急弯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "隧道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "交叉路口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "三者皆是",
+          "ok": true
+        }
+      ],
+      "explain": "铁路道口、交叉路口、单行路、桥梁、急弯、陡坡、隧道都不能倒车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车倒车时，应当察明车后情况，确认安全后倒车。不得在铁路道口、交叉路口、单行路、桥梁、急弯、陡坡或者隧道中倒车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102530kk4cfk8p3ulggencj8w6nf",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.589",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶机动车在进出非机动车道时，最高速度不能超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "30公里/小时",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "40公里/小时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "50公里/小时",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "60公里/小时",
+          "ok": false
+        }
+      ],
+      "explain": "进出非机动车道和过铁路道口、急弯、窄路、窄桥同一档：30公里。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十六条第（一）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "进出非机动车道，通过铁路道口、急弯路、窄路、窄桥时，最高行驶速度不得超过每小时30公里。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102535qepvparznqy2jhjgb2ok9e",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.590",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "前轮胎爆裂已出现转向时，驾驶人不要过度矫正，在控制住方向的情况下，应怎样做，使车辆缓慢减速？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "采取紧急制动",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "使用驻车制动",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "轻踏制动踏板",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "迅速踏下制动踏板",
+          "ok": false
+        }
+      ],
+      "explain": "爆胎后猛踩刹车或拉手刹车会失控，要握稳方向、轻踏制动，慢慢减速。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025523bkhzhpyan21dfi316easb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.591",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "车辆在泥泞路上发生侧滑时，以下做法正确的是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "向侧滑的一侧转动转向盘适量修正",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "向侧滑的另一侧转动转向盘适量修正",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "迅速制动减速",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "迅速制动停车",
+          "ok": false
+        }
+      ],
+      "explain": "车尾往哪边甩，就往哪边适量打方向；反着打会甩得更厉害。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20201229173153relny4xlhyvmhqx3xrkbpp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.592",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "下长坡连续使用行车制动会导致什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "会缩短发动机寿命",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "增加驾驶人的劳动强度",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "容易造成车辆倾翻",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "会使制动器温度升高而使制动效果急剧下降",
+          "ok": true
+        }
+      ],
+      "explain": "一直踩刹车，刹车片过热，制动力会急剧下降；长下坡要挂低挡，靠发动机制动。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010255341rry1r34mxrexse8jouik",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.593",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "车辆涉水后，应保持低速行驶，怎样操作制动踏板，以恢复制动效果？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "持续重踏",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "间断重踏",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "持续轻踏",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "间断轻踏",
+          "ok": true
+        }
+      ],
+      "explain": "刹车片沾水打滑，间断轻踏让摩擦生热把水蒸干，制动才能恢复。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102554kythbjfnhhdwrqjgr6ardm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.594",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "在暴雨天气驾车，刮水器无法刮净雨水时，应怎样做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "减速行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "集中注意力谨慎驾驶",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "立即减速靠边停车",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "以正常速度行驶",
+          "ok": false
+        }
+      ],
+      "explain": "刮水器刮不净就是看不清路，应立即减速靠边停车，开双闪等雨小再走。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十二条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "夜间行驶或者在容易发生危险的路段行驶，以及遇有沙尘、冰雹、雨、雪、雾、结冰等气象条件时，应当降低行驶速度。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102552hlajgb98eyjhrmdhp9vtlp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.595",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶车辆驶入铁路道口前减速降挡，进入道口后应怎样做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不能变换挡位",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "可以变换挡位",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "可换为高挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "停车观察",
+          "ok": false
+        }
+      ],
+      "explain": "在道口里换挡容易熄火，车停在铁轨上最危险；进道口前就降好挡。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十二条第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102554eavrf1c11np1uliahmoyli",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.596",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "冰雪路行车时应注意什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "制动距离延长",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "抗滑能力变大",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "路面附着力增大",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "制动性能没有变化",
+          "ok": false
+        }
+      ],
+      "explain": "冰雪路附着力小，制动距离大大延长，要降速、加大车距、点刹。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十二条第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "夜间行驶或者在容易发生危险的路段行驶，以及遇有沙尘、冰雹、雨、雪、雾、结冰等气象条件时，应当降低行驶速度。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025523nidc51ec9ssqtweeiascd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.597",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "当您即将通过交叉路口的时候，才意识到要左转而不是向前，以下说法正确的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "在确保安全的情况下，倒车然后左转",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "继续向前行驶",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "停在交叉路口，等待安全时左转",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "以上说法都不正确",
+          "ok": false
+        }
+      ],
+      "explain": "已经到路口才发现走错方向，只能继续往前，再找地方合法掉头；路口里停车、倒车、强行转弯都不行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车倒车时，应当察明车后情况，确认安全后倒车。不得在铁路道口、交叉路口、单行路、桥梁、急弯、陡坡或者隧道中倒车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102532xmljmneyfzzadq6ploaanj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "regular"
     },
     {
       "id": "drive.s1.henan.001",
