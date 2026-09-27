@@ -13,7 +13,7 @@
 | [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受 |
 | [0007](0007-four-questions-per-page.md) | 练习一页四题，答错才朗读，解析按需回看 | 已接受（第 1 条由 0022 修订） |
 | [0008](0008-adopt-public-question-banks.md) | 自用软件不受版权束缚，公开题库可以直接收录 | 已接受 |
-| [0009](0009-rebalance-subject-one-phases.md) | 科目一四阶段按题量重划 | 已接受 |
+| [0009](0009-rebalance-subject-one-phases.md) | 科目一四阶段按题量重划 | 已接受（题量区间由 0026 取消） |
 | [0010](0010-sync-progress-through-a-github-jsonl.md) | 跨机器同步走 GitHub 私有仓库里的一个 JSONL 事件流 | 已接受 |
 | [0011](0011-luoyang-local-questions-in-scope.md) | 考试地在河南洛阳，河南地方性题目照收 | 已接受 |
 | [0012](0012-adaptive-group-size-and-side-panel-layout.md) | 分组题量按内容自适应，翻页条挪到左栏底部，右栏顶部加统计方块 | 已接受（第 1 条由 0022 修订） |
@@ -30,3 +30,4 @@
 | [0023](0023-exam-follows-test-centre.md) | 模拟考按考场的判分方式和内容比例走 | 已接受（修订 0007、0016 第 3 条） |
 | [0024](0024-sign-meaning-questions.md) | 标志、标线、交警手势收「认含义」题，不收「认类别」题 | 已接受（修订 0003 第 3 条） |
 | [0025](0025-auto-advance-when-page-done.md) | 一页十题答完就自动翻页，不看对错 | 已接受（修订 0022 第 2、3 条） |
+| [0026](0026-phase-size-follows-content.md) | 阶段题量随内容走，不设上下限 | 已接受（修订 0009） |
