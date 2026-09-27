@@ -8704,7 +8704,7 @@
           "ok": false
         }
       ],
-      "explain": "6年内每2年一次（需按规定申领检验合格标志），超过6年就要每年一次。",
+      "explain": "6年内每2年一次（需按规定申领检验合格标志），超过6年就要每年一次。（这是实施条例第十六条的原文，考题按它答。2022年检验改革后，实际做法是10年内只在第6年、第10年上线检验，其余年份申领检验标志即可。）",
       "source_refs": [
         {
           "source_id": "road-safety-regulation",
@@ -32102,6 +32102,47 @@
       "band": "common"
     },
     {
+      "id": "drive.s1.registration.062",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "2022年10月1日起，非营运小型载客汽车自注册登记之日起10年内，在哪几年需要上线进行安全技术检验？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "每2年上线检验一次",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "第6年和第10年",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每年上线检验一次",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "10年内不用办理任何检验手续",
+          "ok": false
+        }
+      ],
+      "explain": "2022年检验改革：10年内只在第6年、第10年上线检验，其余年份每两年申领一次检验标志；超过10年每年上线检验。考题问实施条例第十六条的检验周期时，仍按条文答「6年以内每2年检验1次」。",
+      "source_refs": [
+        {
+          "source_id": "inspection-reform-2022",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://www.mps.gov.cn/n6557563/c8694854/content.html",
+          "note": "非营运小微型载客汽车自注册登记之日起第6年、第10年进行安全技术检验，10年内每两年向公安机关申领检验标志；超过10年的，每年检验1次。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
       "id": "drive.s1.penalty.096",
       "topic_id": "drive.s1.penalty",
       "kind": "single",
@@ -47736,6 +47777,78 @@
       "band": "common"
     },
     {
+      "id": "drive.s1.accident.104",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "肇事车辆没有参加交强险，或者肇事后逃逸的，受伤人员的抢救费用怎样解决？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "由医院免费承担",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "等找到肇事者后再救治",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "由道路交通事故社会救助基金先行垫付",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "由路过的驾驶人垫付",
+          "ok": false
+        }
+      ],
+      "explain": "医院不得因为抢救费用没到位就拖延救治：投了交强险的由保险公司在限额内付；没投保或者肇事逃逸的，由社会救助基金先垫付，再向责任人追偿。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第七十五条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "肇事车辆参加机动车第三者责任强制保险的，由保险公司在责任限额范围内支付抢救费用；抢救费用超过责任限额的，未参加机动车第三者责任强制保险或者肇事后逃逸的，由道路交通事故社会救助基金先行垫付部分或者全部抢救费用。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.105",
+      "topic_id": "drive.s1.accident",
+      "kind": "judge",
+      "prompt": "车辆发生交通事故后逃逸的，事故现场目击人员和其他知情人员应当向公安机关交通管理部门或者交通警察举报。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "看到肇事逃逸，记下车牌、车型和去向，报给交警；举报属实的还会有奖励。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "quoted",
+          "locator": "第七十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "车辆发生交通事故后逃逸的，事故现场目击人员和其他知情人员应当向公安机关交通管理部门或者交通警察举报。举报属实的，公安机关交通管理部门应当给予奖励。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
       "id": "drive.s1.rules.489",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -59939,6 +60052,137 @@
       "image": "images/subject1/2020_kemu1_11995400.jpg"
     },
     {
+      "id": "drive.s1.signals.453",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "道路上出现粉红色（或荧光粉红色）底、黑色文字的警告标志，表示前方是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "道路施工作业区",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "正在进行交通事故管理的路段",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "学校区域",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路收费站",
+          "ok": false
+        }
+      ],
+      "explain": "粉红色是 2022 版国标专门给「交通事故管理」标志用的颜色；施工作业区用橙色，两者一眼就能分开。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "交通事故管理标志",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "交通事故管理标志：粉红色底或荧光粉红色底、黑文字，警告前方路段正在进行道路交通事故管理，车辆驾驶人应减速慢行、停车等候或绕道行驶。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.signals.454",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "看到交通事故管理标志，驾驶人应当怎么做？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "鸣喇叭提醒现场人员让路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "加速尽快通过事故路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "减速慢行，停车等候或者绕道行驶",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "靠边停车观看现场情况",
+          "ok": false
+        }
+      ],
+      "explain": "事故现场有救援人员和车辆，最怕二次事故：减速、听指挥等候，能绕行就绕行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "交通事故管理标志",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "交通事故管理标志：粉红色底或荧光粉红色底、黑文字，警告前方路段正在进行道路交通事故管理，车辆驾驶人应减速慢行、停车等候或绕道行驶。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.signals.455",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "施工路段绕行",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "双向交通",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "注意危险",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "左右绕行",
+          "ok": true
+        }
+      ],
+      "explain": "黄色警告标志：前方有障碍物，箭头分向左右两侧，车辆可以从左侧或右侧绕行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：左右绕行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025419jn7bgxkdaaptvnmzvs2mj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 核对，看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_843600.jpg"
+    },
+    {
       "id": "drive.s1.rules.562",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
@@ -61691,6 +61935,75 @@
       "phase": 2,
       "difficulty": 3,
       "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.598",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "车辆通过学校和小区应注意观察标志标线，低速行驶，不要鸣喇叭。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "学校、小区里行人和孩子多，随时可能冒出来：低速、看标志、少按喇叭。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十七条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "在单位院内、居民居住区内，机动车应当低速行驶，避让行人；有限速标志的，按照限速标志行驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025516gyas1qteypt2gvpmckxt8",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的科目一题，按 ADR 0008 收录，条文核对后写入。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.599",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "机动车行经渡口，应当服从渡口管理人员指挥，按照指定地点依次待渡；上下渡船时，应当低速慢行。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "渡口上车要听管理人员的，上下渡船的跳板窄、坡陡，只能低速慢行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第六十五条第二款",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "机动车行经渡口，应当服从渡口管理人员指挥，按照指定地点依次待渡。机动车上下渡船时，应当低速慢行。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 3,
+      "band": "rare"
     },
     {
       "id": "drive.s1.henan.001",
