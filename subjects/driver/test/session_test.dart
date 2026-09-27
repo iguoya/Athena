@@ -68,9 +68,11 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
-    // 本页最后一题答错：停在本页看正确答案，不自动翻；回车翻到下一组。
+    // 一页十题答完就翻（ADR 0025）：最后一题答错，先停 2.5 秒看清正确答案。
     expect(find.text("第11题"), findsNothing);
-    await answer(LogicalKeyboardKey.enter);
+    await tester.pump(const Duration(milliseconds: 2000));
+    expect(find.text("第11题"), findsNothing);
+    await tester.pump(const Duration(milliseconds: 600));
     expect(find.text("第11题"), findsOneWidget);
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);

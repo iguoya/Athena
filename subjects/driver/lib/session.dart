@@ -64,8 +64,12 @@ class _SessionStageState extends State<SessionStage> {
   /// 一页十题：少了翻页太勤；页面放不下就靠答完自动滚到下一题补上（ADR 0022）。
   static const _groupSize = 10;
 
-  /// 一页全对之后停这么久再翻：让最后一题的绿色先落进眼里，再换页。
+  /// 一页答完、最后一题答对：停这么久再翻，让绿色先落进眼里（ADR 0022、0025）。
   static const _autoAdvanceDelay = Duration(milliseconds: 900);
+
+  /// 最后一题答错：练习里念完解释再停这么久；模拟考不讲题，停久一点看清正确答案（ADR 0025）。
+  static const _wrongPracticePause = Duration(milliseconds: 1500);
+  static const _wrongExamPause = Duration(milliseconds: 2500);
 
   var _start = 0;
   final _picked = <int, Set<String>>{};
@@ -115,9 +119,6 @@ class _SessionStageState extends State<SessionStage> {
 
   /// 这一组全交过了：回车、空格可以翻页。模拟考的翻页按钮不看这个，随时能翻。
   bool get _groupDone => _group.every(_judged.contains);
-
-  /// 练习里这一页全判过且全对：没有要回头看的，直接翻（ADR 0022）。
-  bool get _groupClean => !_isExam && _groupDone && _group.every(_correct.contains);
 
   int get _answeredCount => _judged.length;
 
@@ -899,6 +900,8 @@ class _SessionStageState extends State<SessionStage> {
     final chosen = _picked[index];
     if (chosen == null || chosen.isEmpty) return;
     _busy = true;
+    // 记下是哪一页答完的：等朗读、停顿期间人已经自己翻走，就不再替他翻（ADR 0025）。
+    final page = _start;
     final ok = answersMatch(question, chosen);
     final durationMs = DateTime.now().difference(_shownAt).inMilliseconds;
     final notices = await widget.store.recordAttempt(
@@ -928,21 +931,22 @@ class _SessionStageState extends State<SessionStage> {
       final next = _pending;
       if (next != null) {
         _centerOn(next);
-      } else if (ok && !_lastGroup) {
-        // 本页交完：最后一题答对就翻；答错先停下看清正确答案，自己点「下一组」。
-        _autoAdvance();
+      } else if (!_lastGroup) {
+        // 本页交完就翻（ADR 0025）：答错多停一会儿，看清标出的正确答案。
+        _autoAdvance(page, ok ? _autoAdvanceDelay : _wrongExamPause);
       }
       return;
     }
     _announce(notices);
-    if (_groupClean) {
-      _autoAdvance();
-      return;
-    }
     final next = _pending;
     if (next != null) _centerOn(next);
     // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
+    // 一页十题答完就翻，不看对错（ADR 0025）；最后一题答错，先把解释念完再翻。
+    if (_groupDone) {
+      if (!ok) await _speaker.finished();
+      _autoAdvance(page, ok ? _autoAdvanceDelay : _wrongPracticePause);
+    }
   }
 
   /// 一页十题一屏放不下：把要答的那道题滚到屏幕正中，视线不用往下找，也不用自己拿滚轮翻。
@@ -960,11 +964,10 @@ class _SessionStageState extends State<SessionStage> {
     });
   }
 
-  /// 全对的一页停一下再翻；这期间人已经自己翻走了（点按钮、回车、方向键）就不再翻第二次。
-  void _autoAdvance() {
-    final start = _start;
-    Future.delayed(_autoAdvanceDelay, () {
-      if (!mounted || _start != start || _result != null) return;
+  /// 答完的一页停一下再翻；这期间人已经自己翻走了（点按钮、回车、方向键）就不再翻第二次。
+  void _autoAdvance(int page, Duration delay) {
+    Future.delayed(delay, () {
+      if (!mounted || _start != page || _result != null) return;
       _nextGroup();
     });
   }

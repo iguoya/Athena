@@ -26,6 +26,7 @@
 | [0019](0019-confirm-before-timed-test-and-exit-without-submit.md) | 开考前先确认一次，考试中途能退出不用交卷 | 已接受 |
 | [0020](0020-remove-hesitant-concept.md) | 撤销「迟疑」概念，答对就算掌握 | 已接受 |
 | [0021](0021-launch-window-maximized.md) | 桌面窗口启动时直接最大化 | 已接受 |
-| [0022](0022-ten-per-page-auto-advance-when-clean.md) | 一页十题，全对自动翻页 | 已接受 |
+| [0022](0022-ten-per-page-auto-advance-when-clean.md) | 一页十题，全对自动翻页 | 已接受（第 2、3 条由 0025 修订） |
 | [0023](0023-exam-follows-test-centre.md) | 模拟考按考场的判分方式和内容比例走 | 已接受（修订 0007、0016 第 3 条） |
 | [0024](0024-sign-meaning-questions.md) | 标志、标线、交警手势收「认含义」题，不收「认类别」题 | 已接受（修订 0003 第 3 条） |
+| [0025](0025-auto-advance-when-page-done.md) | 一页十题答完就自动翻页，不看对错 | 已接受（修订 0022 第 2、3 条） |

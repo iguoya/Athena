@@ -145,6 +145,15 @@ $s.GetInstalledVoices() | ForEach-Object { '{0}|{1}' -f $_.VoiceInfo.Name, $_.Vo
     }
   }
 
+  /// 等当前这段念完（被 stop 掉也算完）；没在念就立刻返回。翻页要等它，免得把解释掐断（ADR 0025）。
+  Future<void> finished() async {
+    final proc = _proc;
+    if (proc == null) return;
+    try {
+      await proc.exitCode;
+    } catch (_) {}
+  }
+
   Future<void> stop() async {
     final proc = _proc;
     _proc = null;
