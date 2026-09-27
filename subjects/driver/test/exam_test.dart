@@ -85,13 +85,13 @@ void main() {
     expect(hot, greaterThan(regular));
   });
 
-  test("阶段测试从大题库只抽 100 题，判断 30 单选 70", () {
+  test("阶段测试从大题库只抽 100 题，判断 40 单选 60", () {
     const exam = ExamRules(
       questionCount: 100,
       minutes: 45,
       passScore: 90,
       pointsPerQuestion: 1,
-      mix: {"judge": 30, "single": 70},
+      mix: {"judge": 40, "single": 60},
     );
     final bank = [
       for (var i = 0; i < 200; i++) _q("j$i"),
@@ -100,8 +100,8 @@ void main() {
     final rules = phaseExamRules(exam, bank.length);
     final paper = Paper.draw(bank, rules, Random(1));
     expect(paper.questions, hasLength(100));
-    expect(paper.questions.where((q) => q.kind == "judge").length, 30);
-    expect(paper.questions.where((q) => q.kind == "single").length, 70);
+    expect(paper.questions.where((q) => q.kind == "judge").length, 40);
+    expect(paper.questions.where((q) => q.kind == "single").length, 60);
   });
 
   test("偏难怪默认不进练习，打错才会再出", () {

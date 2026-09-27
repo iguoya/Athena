@@ -61,17 +61,17 @@ void main() {
       minutes: 45,
       passScore: 90,
       pointsPerQuestion: 1,
-      mix: {"judge": 30, "single": 70},
+      mix: {"judge": 40, "single": 60},
     );
     final full = phaseExamRules(exam, 476);
     expect(full.questionCount, 100);
     expect(full.minutes, 45);
-    expect(full.mix["judge"], 30);
-    expect(full.mix["single"], 70);
+    expect(full.mix["judge"], 40);
+    expect(full.mix["single"], 60);
 
     final short = phaseExamRules(exam, 40);
     expect(short.questionCount, 100);
     expect(short.minutes, phaseTestMinutes(40));
-    expect(short.mix["single"], 70);
+    expect(short.mix["single"], 60);
   });
 }

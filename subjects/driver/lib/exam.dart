@@ -33,7 +33,8 @@ class Paper {
       }
     }
 
-    // 先照考场的题型配比抽：科目一判断 30 单选 70，科目四判断 10 单选 30 多选 10。
+    // 先照考场的题型配比抽（GA 1026—2022 4.1.3.1、4.3.2.3.1）：科目一判断 40 单选 60，
+    // 科目四判断 20 单选 20 多选 10。
     var quota = 0;
     for (final entry in rules.mix.entries) {
       quota += entry.value;
@@ -76,7 +77,7 @@ int phaseTestMinutes(int count) {
   return minutes < 8 ? 8 : minutes;
 }
 
-/// 阶段测试按考场口径抽：100 题、45 分钟、判断 30 / 单选 70、90 分及格。
+/// 阶段测试按考场口径抽：100 题、45 分钟、判断 40 / 单选 60、90 分及格。
 /// 本阶段日常题不够 100 道时，时长按题量估，分数仍折合百分制。
 ExamRules phaseExamRules(ExamRules exam, int poolSize) {
   final take = min(exam.questionCount, poolSize);
