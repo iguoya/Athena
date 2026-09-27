@@ -53638,6 +53638,6307 @@
       "band": "hot"
     },
     {
+      "id": "drive.s1.signals.324",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "这个标志的含义是提醒前方右侧行车道或路面变窄。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌是警告标志，提醒驾驶人前方右侧行车道或路面变窄，注意谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：提醒前方右侧行车道或路面变窄。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102536tml9lohy9vvkzdu95d4uka",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_857400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.325",
+      "topic_id": "drive.s1.signals",
+      "kind": "judge",
+      "prompt": "这个标志的含义是提醒前方左侧行车道或路面变窄。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌是警告标志，提醒驾驶人前方左侧行车道或路面变窄，注意谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：提醒前方左侧行车道或路面变窄。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102537cwra1wskw7hge9dmcmi4m3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_857500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.326",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路特殊天气最高速度",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路特殊天气建议速度",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路特殊天气最低速度",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路特殊天气平均速度",
+          "ok": false
+        }
+      ],
+      "explain": "绿底上画着雨雾天气、下面配速度牌的，是高速公路特殊天气建议速度标志：遇到这种天气按牌上的速度开。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路特殊天气建议速度。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538a1tj9bwltpwjjxv3h6rkty",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.327",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "低速行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "注意行人",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "行人先行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "步行",
+          "ok": true
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该路段只允许步行，车辆不能驶入。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：步行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025382nbpmzzxxibxce6nsozy35",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_848900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.328",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止左转",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "此路不通",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止通行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "超高绕行",
+          "ok": true
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示高度超4米的车辆要绕行，低于4米的可直行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：超高绕行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538u8ugbvckgyna57kmru35pd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_853000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.329",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "连续上坡",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "上陡坡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "下陡坡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "连续下坡",
+          "ok": true
+        }
+      ],
+      "explain": "黄牌标志内两个斜向下箭头，是连续下坡警告标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：连续下坡。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538mmpxfiawgmwubs3amxxvrg",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_840200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.330",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示前方右转",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示前方掉头",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "指示前方直行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示向左变道",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：箭头是掉头，就是指示前方掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示前方掉头。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025383wundmksrd4chejzjdfsz3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.331",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意双向行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "靠两侧行驶",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "可变车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "注意潮汐车道",
+          "ok": true
+        }
+      ],
+      "explain": "潮汐车道就是可变车道，会根据早晚车流量来调整车道的行驶方向。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意潮汐车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538xkmh2uunm4zkwcpbmngutq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_844300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.332",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "非机动车车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "禁止自行车通行车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "自行车专用车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "停放自行车路段",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该车道只允许非机动车行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：非机动车车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538yj5g8m18xs9sbazx5xtpwd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_850700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.333",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路起点预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路出口预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路入口预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路终点预告",
+          "ok": true
+        }
+      ],
+      "explain": "高速公路的起点和终点标志，仅一线之差。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路终点预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025382jgadhek77d76bnboztxp9",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.334",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "过水路面",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "漫水桥",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "渡口",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "船用码头",
+          "ok": false
+        }
+      ],
+      "explain": "表示前方是可载车过河的渡口，提醒驾驶人谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：渡口。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025384fy1bkr31kvlf1ttzh7fah",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_842000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.335",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行和左转弯行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "直行和右转弯行驶",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "立体交叉直行和右转弯行驶",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "立体交叉直行和左转弯行驶",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示车辆在立体交叉处可直行和按图示路线右转弯行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：立体交叉直行和右转弯行驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102538pbzbvap5cca5cwbu8z93fa",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_848400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.336",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示禁行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示合流",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示直行",
+          "ok": true
+        }
+      ],
+      "explain": "看箭头方向：指向前方，就是向前直行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示直行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539nsyz4yb23zqzxaamdvtgno",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.337",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "单向通行",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "右侧绕行",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "注意危险",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "左侧绕行",
+          "ok": false
+        }
+      ],
+      "explain": "提醒驾驶人谨慎驾驶，前方注意右侧绕行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：右侧绕行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539ljwaabt37bpcxfej9dbcl1",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_843800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.338",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路界牌编号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路里程编号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路命名编号",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "高速公路路段编号",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，G代表高速，数字2代表命名。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路命名编号。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539vfnhx3jmirfidcpiaxwvhn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.339",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这一组交通警察手势是什么信号？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "靠边停车信号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "左转弯待转信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "减速慢行信号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "左转弯信号",
+          "ok": true
+        }
+      ],
+      "explain": "巧记：右手平伸左手摆动向左转。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察的指挥分为：手势信号和使用器具的交通指挥信号。本题手势为「左转弯信号」。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539t6grsickgmuvwewsz1i6il",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/oef85415cfb61bdfd75eaef08c205ba90.jpg"
+    },
+    {
+      "id": "drive.s1.signals.340",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行和向右转弯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "直行和向左转弯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "禁止直行和向左转弯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只准向右和向左转弯",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该路段只准直行和向左转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：直行和向左转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539fggnljjmvzw1vfcidfvcaf",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_847900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.341",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "国道编号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "省道编号",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "县道编号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "乡道编号",
+          "ok": false
+        }
+      ],
+      "explain": "红底白字G开头是国道，黄底黑字S开头是省道，白底黑字X开头是县道，Y开头是乡道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：省道编号。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539rzznxqhkctbpyifdo8dayr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_852000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.342",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意残疾人",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "残疾人出入口",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "残疾人休息处",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "残疾人专用通道",
+          "ok": false
+        }
+      ],
+      "explain": "提醒驾驶人谨慎驾驶，注意礼让残疾人。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意残疾人。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539kseujpyjzwvkncxxpqxer7",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_843300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.343",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "大型畜牧场",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "野生动物保护区",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "注意野生动物",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "注意牲畜",
+          "ok": true
+        }
+      ],
+      "explain": "画牛的是注意牲畜，画鹿的是注意野生动物。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意牲畜。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539axesxlhcjyi1x81gj8uddk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_841000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.344",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个路面标记是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "最低限速为80公里/小时",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "平均速度为80公里/小时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "解除80公里/小时限速",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "最高限速为80公里/小时",
+          "ok": false
+        }
+      ],
+      "explain": "看数字颜色：黄色是最高限速，白色是最低限速。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：最低限速为80公里/小时。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539gklzqwtynesugjxr1gkyjp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_864300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.345",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Y型交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "十字交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "丁字交叉路口预告",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "道路分叉处预告",
+          "ok": false
+        }
+      ],
+      "explain": "预告前方是丁字交叉路口，图形里横线挡住的方向没有路。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：丁字交叉路口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102539vcuveqn5u2imsru1spllob",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_851500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.346",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路紧急停车带",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "高速公路避让处所",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路停车区",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路客车站",
+          "ok": false
+        }
+      ],
+      "explain": "道路右侧凸出一块，中间有虚线是紧急停车带，没有就是错车道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路紧急停车带。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025395yks9xxf1y5etcir7aujz6",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_855600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.347",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意避让火车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "有人看守铁路道口",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "无人看守铁路道口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "多股铁路与道路相交",
+          "ok": true
+        }
+      ],
+      "explain": "标志内见到一个“X”和一个“∧”，表示多股铁路与道路相交。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：多股铁路与道路相交。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025402fwkrvtznh4gx2bmrwrhoh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_842800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.348",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "提示前方有左弯或需向左合流",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "提示前方有右弯或需向右合流",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "提示前方右侧有障碍或需向左合流",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "提示前方有左弯或需向左绕行",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：弯向左侧，就是指示前方要向左小转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：提示前方有左弯或需向左合流。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540ejcol3slqbnbzwoh2vrkm7",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.349",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "Y型交叉口",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "主路让行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "注意分流",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "注意合流",
+          "ok": true
+        }
+      ],
+      "explain": "黄牌标志是警告，提醒驾驶人注意前方有车辆汇入。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意合流。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025406eav85yi9ujuthjzhnvg25",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_844600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.350",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "掉头",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "倒车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "左转",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "绕行",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示此处允许机动车掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：掉头。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540stfg9hmw8ymomoqmwnfnkh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_851000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.351",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路领卡处",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路收费处",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路检查站",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "设有ETC的收费站",
+          "ok": true
+        }
+      ],
+      "explain": "ETC：指电子不停车收费系统。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：设有ETC的收费站。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540mfzfpsmvqd27e6ivbccuxt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.352",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "图中圈内白色虚线是什么标线？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "小型车转弯线",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "车道连接线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "非机动车引导线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "路口导向线",
+          "ok": true
+        }
+      ],
+      "explain": "交叉路口内一条虚线，无论白色还是黄色，都是路口导向线。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：路口导向线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025403k7aubk5tfy3dkh6mdycjj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_861500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.353",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "路面低洼",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "驼峰桥",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "路面不平",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "路面高突",
+          "ok": true
+        }
+      ],
+      "explain": "黄牌内有一个凸起，表示路面凸起，提醒驾驶人谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：路面高突。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540vcoemdnz8ro4pyfofcskpl",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_842300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.354",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "向左单行路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "向右单行路",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "直行单行路",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "右转让行",
+          "ok": false
+        }
+      ],
+      "explain": "长方形蓝牌是单行路标志，箭头指向哪边就是哪边的单行路。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：向右单行路。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540lkzfv9n5hy3oosoa8d7puv",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_848700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.355",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个路面标记是什么标线？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁驶区",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "网状线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "导流线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "中心圈",
+          "ok": true
+        }
+      ],
+      "explain": "中心圈一般用来区分车辆大、小转弯，经过时不得压线行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：中心圈。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540vbs88osjwtwkpyujx5xegp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_865600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.356",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "堤坝路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "上陡坡",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "连续上坡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "下陡坡",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌标志内一个斜向上箭头，是上陡坡警告标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：上陡坡。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025408nmczrvq73oqmkrjy9bemj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_840000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.357",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示前方右转弯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示向左变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示前方直行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示前方左转弯",
+          "ok": true
+        }
+      ],
+      "explain": "看箭头方向：指向左侧，表示前方可左转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示前方左转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025409wjqzhy4ksafpncwjat4xw",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.358",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "建议速度",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "最低速度",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "最高速度",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "限制速度",
+          "ok": false
+        }
+      ],
+      "explain": "看标志内数字的颜色：黄高白低黑建议。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：建议速度。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540gcg9t9cv7hd9zy1mxbcedv",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_844100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.359",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "小型车车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "小型车专用车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "机动车车道",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "多乘员车辆专用车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝色是指示标志，表示该车道只供机动车行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：机动车车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025408xufl3qrmnxpeyce7m2smd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_850500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.360",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这一组交通警察手势是什么信号？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "靠边停车信号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "减速慢行信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "停止信号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "右转弯信号",
+          "ok": true
+        }
+      ],
+      "explain": "巧记：左手平伸，右手摆动向右行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察的指挥分为：手势信号和使用器具的交通指挥信号。本题手势为「右转弯信号」。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546gwun567jdr6vxxpd5ckwy3",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_867300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.361",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "靠左侧道路行驶",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "只准向左转弯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "左侧是下坡路段",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "靠道路左侧停车",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示车辆只准靠左侧行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：靠左侧道路行驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102540bqutoncn5s56rb4c4cn4jk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_848200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.362",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "地点距离",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "行驶路线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "行驶方向",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "终点地名",
+          "ok": false
+        }
+      ],
+      "explain": "预告前方各地点的名称和距离。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：地点距离。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025406adruxbx2xx5maww8gjt6j",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_852300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.363",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止直行和向左转弯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "允许直行和向右变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "允许直行和向左变道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "禁止直行和向右转弯",
+          "ok": false
+        }
+      ],
+      "explain": "红圈是禁令标志，表示禁止一切车辆直行或向左转。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：禁止直行和向左转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541jpqsbfbv8xluwq9namqglu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_845900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.364",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左转车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "掉头车道",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "绕行车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "分向车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该车道车辆只准掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：掉头车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541xnor67zutajd46pzcwlyul",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_850000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.365",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路右侧出口预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路下一出口预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路地点、方向预告",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "高速公路左侧出口预告",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，为驾驶人指示前方地名及方向。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路地点、方向预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541hi266xs5x6wfk7djyqj5en",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.366",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这一组交通警察手势是什么信号？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行信号",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "转弯信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "停止信号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "靠边停车信号",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：双手平伸右手摆直行。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察的指挥分为：手势信号和使用器具的交通指挥信号。本题手势为「直行信号」。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541nntouaffzwrrmvifmlctho",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_866900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.367",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "傍山险路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "悬崖路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "注意落石",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "危险路段",
+          "ok": false
+        }
+      ],
+      "explain": "多设在有落石危险的傍山路段。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意落石。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541chiqnwtqjbgdhzaxgrhvky",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_841300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.368",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "十字交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "互通式立体交叉预告",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "Y型交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "环行交叉路口预告",
+          "ok": false
+        }
+      ],
+      "explain": "预告前方是互通式立体交叉，按图形选好要走的匝道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：互通式立体交叉预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541v49srzexy7h5nru7zygqhm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_851800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.369",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路停车区预告",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "高速公路避险处预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路服务区预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路停车场预告",
+          "ok": false
+        }
+      ],
+      "explain": "有刀叉是服务区，有茶杯是停车区，只有P是停车场。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路停车区预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541uulaxnabcs7mpjbblo5csu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.370",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "转弯诱导标志",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "线形诱导标志",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "合流诱导标志",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "分流诱导标志",
+          "ok": false
+        }
+      ],
+      "explain": "箭头指向的一侧就是前方道路转弯的方向，提前减速，按箭头方向走。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：线形诱导标志。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025419xaftz2wpdn7hj5pmd2hok",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_853600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.371",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上的黄色标线是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "车行道变多标线",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "路面宽度渐变标线",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "接近障碍物标线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "施工路段提示线",
+          "ok": false
+        }
+      ],
+      "explain": "黄色斜线把车道逐渐收窄，提示前方路面宽度渐变，提前减速、按标线合流。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：路面宽度渐变标线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541wd6ripknjruwvxyb1d2hzt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_866400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.372",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个路面数字标记是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "保持车距标记",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "最小间距标记",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "速度限制标记",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "道路编号标记",
+          "ok": false
+        }
+      ],
+      "explain": "看数字颜色：黄色是最高限速，白色是最低限速。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：速度限制标记。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541gerfshlwpdjzqwggwvgiym",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_864100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.373",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路公用电话",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路报警电话",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路紧急电话",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "高速公路救援电话",
+          "ok": false
+        }
+      ],
+      "explain": "紧急电话标志上没有字，救援电话标志上有“救援”字样。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路紧急电话。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541ngen3t9t5basvbe9yuw9gh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.374",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "图中圈内的锯齿状白色实线是什么标线？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "导向车道线",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "方向引导线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "可变导向车道线",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "单向行驶线",
+          "ok": false
+        }
+      ],
+      "explain": "可变导向车道线，会根据交通流量更改指示方向。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：可变导向车道线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102541gsp73upbw8hp4ropzh5shj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_861800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.375",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "应当鸣喇叭",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "禁止鸣喇叭",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止鸣高音喇叭",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "禁止鸣低音喇叭",
+          "ok": false
+        }
+      ],
+      "explain": "该标志一般设在视线受阻的路段。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：应当鸣喇叭。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542qf7gkjw2fchm8f8uffc3x6",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_849000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.376",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "此路不通",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "T型路口",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "分流路口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "减速通行",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示前方道路不通。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：此路不通。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542qxxsfue2spz9wzrzpdywot",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_853100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.377",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "解除3米限宽",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "限制高度为3米",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "预告宽度为3米",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "限制宽度为3米",
+          "ok": true
+        }
+      ],
+      "explain": "黑角在上下表示限制高度，在左右表示限制宽度，中间数字是多少就是限制多少。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：限制宽度为3米。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542wleqdpsnvvcvk5fk9qkkfv",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_846700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.378",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示前方可左转或掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示前方可直行或左转",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示前方可直行或掉头",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "指示前方直行向左变道",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：箭头是直行+掉头，说明前方可直行或掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示前方可直行或掉头。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025427kmoqmzdree95jgp7apmxp",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.379",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意保持车距",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "车距确认路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "车速测试路段",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "两侧变窄路段",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌标志表示警告和注意，倒V表示车距，提醒驾驶人要保持安全车距。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意保持车距。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542qyrbdfmtqwrncgpexckurk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_844400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.380",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "公交车专用车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "BRT车辆专用车道",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "大型客车专用车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "多乘员车专用车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝色是指示标志，表示该车道只供BRT车辆行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：BRT车辆专用车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542xsbay1cvpthsgkbeehxkrm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_850800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.381",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路报警电话号码",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路交通广播频率",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路救援电话号码",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路服务电话号码",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，该标志是高速公路交通广播频率。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路交通广播频率。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025422cosirhxaxig5wmdk2mgxh",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "rare",
+      "image": "images/subject1/2019_kemu1_854900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.382",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不平路面",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "驼峰桥",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "路面高突",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "路面低洼",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：驼峰桥带门，2个凸不平，向下凹低洼，向上凸高凸。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：驼峰桥。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542ekw3kukhs1kplv5wae3svk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_842100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.383",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "紧急停车带",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "露天停车场",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "停车位",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "错车道",
+          "ok": true
+        }
+      ],
+      "explain": "道路右侧凸出一块，中间有虚线是紧急停车带，没有就是错车道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：错车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542ckdtmm4ywsvyq32wbrbhqk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_852600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.384",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示向左转弯或掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示直行或向左变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示直行或左转弯",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "指示直行或掉头",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：指向前方和左侧，说明前方可直行或左转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示直行或左转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542kwv5jfwvfutfbekp5u52jt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.385",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "公交线路专用车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "大型客车专用车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "快速公交系统专用车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "多乘员车辆专用车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该车道专供公交车行驶，其它车辆不得占用。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：公交线路专用车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542rkzlndccoc7euhgtpgovpu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_850300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.386",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路下一出口预告",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "高速公路右侧出口预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路目的地预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路左侧出口预告",
+          "ok": false
+        }
+      ],
+      "explain": "高速公路上预告下一个出口的名称和距离。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路下一出口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542gcdsuepzz1vq7gfkycasn7",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.387",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这一组交通警察手势是什么信号？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左转弯待转信号",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "左转弯信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "减速慢行信号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "右转弯信号",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：左手侧摆待左转。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察的指挥分为：手势信号和使用器具的交通指挥信号。本题手势为「左转弯待转信号」。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025426pnh9snfrlty5ktapptlhy",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_867200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.388",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "临崖路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "堤坝路",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "傍山险路",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "落石路",
+          "ok": false
+        }
+      ],
+      "explain": "该标志表示前方路段容易发生危险，注意谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：傍山险路。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025424ppdcr5dk2bhqzzg73alye",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_841600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.389",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止向右转弯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "禁止向左转弯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "向左和向右转弯",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "禁止向左右转弯",
+          "ok": false
+        }
+      ],
+      "explain": "蓝色圆形标志是指示标志，表示一切车辆只准向左和向右转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：向左和向右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542lkryjwuj3cawmtbu7e5ihz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_848000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.390",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "禁止向右转弯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止直行",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "禁止向左转弯",
+          "ok": false
+        }
+      ],
+      "explain": "红圈是禁令标志，表示禁止一切车辆直行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：禁止直行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542ghw9sqsgljbx3hernvwdbt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_845700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.391",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "旅游区类别",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "旅游区距离",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "旅游区方向",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "旅游区符号",
+          "ok": false
+        }
+      ],
+      "explain": "棕色牌内有景区名+公里数，是旅游区距离标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：旅游区距离。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102542xlvbvdrgtf35atb7xsmshb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "rare",
+      "image": "images/subject1/2019_kemu1_856200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.392",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "施工路段",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "事故易发路段",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "减速慢行路段",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "拥堵路段",
+          "ok": false
+        }
+      ],
+      "explain": "事故易发路段，驾驶人要注意谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：事故易发路段。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025432w8kgagrwgzyihmp7pcqwm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_843400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.393",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意野生动物",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "注意牲畜",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "动物公园",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "开放的牧区",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌内有鹿表示注意野生动物，驾驶人要注意行车。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意野生动物。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543dmnwvhvgrmaidutxjra1us",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_841100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.394",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "会车时停车让对方车先行",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "前方是双向通行路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "右侧道路禁止车通行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "会车时停车让右侧车先行",
+          "ok": false
+        }
+      ],
+      "explain": "红箭头较细，黑箭头较粗，表示黑箭头优先通行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：会车时停车让对方车先行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543se6klfk8kdogvdkptxq1or",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_845200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.395",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "环行交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "十字交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "丁字交叉路口预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "Y型交叉路口预告",
+          "ok": true
+        }
+      ],
+      "explain": "预告前方是 Y 型交叉路口，按箭头选方向。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：Y型交叉路口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025438racursvx8ghve26t4ms42",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_851600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.396",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路服务区",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路加油站",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路休息区",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路客车站",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，为驾驶人指示加油站所在位置。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路加油站。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543ybrmvtbgasuzbavvynvmyb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.397",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "距无人看守铁路道口50米",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "距有人看守铁路道口50米",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "距无人看守铁路道口100米",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "距有人看守铁路道口100米",
+          "ok": false
+        }
+      ],
+      "explain": "栅栏表示有人看守，火车表示无人看守。每一条斜杠代表距离50米。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：距无人看守铁路道口50米。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025432yvsrht7njtrscawksgxal",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_842900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.398",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "减速拍照区",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "道路流量监测",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "全路段抓拍",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "交通监控设备",
+          "ok": true
+        }
+      ],
+      "explain": "提醒前方道路设有交通监控设备。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：交通监控设备。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025434gpwgwvyrtpwwfjuctziew",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_853400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.399",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上的黄色标记是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止左转",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "禁止掉头",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止右转",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "禁止直行",
+          "ok": false
+        }
+      ],
+      "explain": "有黄色叉形标记，就是禁止。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：禁止右转。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543wrvrakmnrgy5nrex7anwor",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_866200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.400",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "窄路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "右侧变窄",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "左侧变窄",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "窄桥",
+          "ok": true
+        }
+      ],
+      "explain": "注意区分窄桥和窄路。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：窄桥。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543ds891jdonmj7gl8dd8skyn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_840600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.401",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "40米减速行驶路段",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "最低时速40公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "解除时速40公里限制",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "最高时速40公里",
+          "ok": false
+        }
+      ],
+      "explain": "红色标志是禁令，黑色标志是解除禁令。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：解除时速40公里限制。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543vimend4sgzc65yezoekzop",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_847000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.402",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "提示前方有左弯或需向左合流",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "提示前方有右弯或需向右合流",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "提示前方有障碍需向左合流",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "提示前方有左弯或需向左绕行",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：弯向右侧说明前方要向右小转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：提示前方有右弯或需向右合流。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025436tamxwmgqahk9fvz1g9qpr",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.403",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "避险车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "应急车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "路肩",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "急弯道",
+          "ok": false
+        }
+      ],
+      "explain": "注意看“避险车道”字样。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：避险车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102543rqxnebsepm6hyihsza3whs",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_844700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.404",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路ETC车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "高速公路缴费车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路检查车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路领卡车道",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，ETC指电子不停车收费系统。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路ETC车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025434rbwzazfgcxvxzmrbkkecs",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.405",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "靠右侧行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "不允许直行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "直行单行路",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "直行车让行",
+          "ok": false
+        }
+      ],
+      "explain": "长方形蓝牌是单行路标志，箭头指向哪边就是哪边的单行路，表示向哪边单向行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：直行单行路。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025433zd1jlp21vymvnu74rzupl",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_848800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.406",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "停车场",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "观景台",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "休息区",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "服务区",
+          "ok": false
+        }
+      ],
+      "explain": "告知前方有可以停车休息的休息区。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：休息区。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544abn8rz158qzqzeppgfjxnz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_852900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.407",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示前方右转弯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "指示前方掉头",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示前方直行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示向左变道",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：指向右侧，表示前方可右转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示前方右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544nkmcsb1qqzcz5sdyzd2g2y",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.408",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "隧道开远光灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "隧道减速",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "隧道开灯",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "隧道开示宽灯",
+          "ok": false
+        }
+      ],
+      "explain": "该标志是为提醒驾驶人进入隧道前要打开前照灯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：隧道开灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544wkwzgpwh53wpwyhqqhvs3h",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_844200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.409",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路起点",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "高速公路出口",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路入口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路终点",
+          "ok": false
+        }
+      ],
+      "explain": "注意：高速公路的起点和终点标志，仅一线之差。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路起点。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544clakw3d2jif81rwhvulz5n",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.410",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这一组交通警察手势是什么信号？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "右转弯信号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "减速慢行信号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "变道信号",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "靠边停车信号",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：右臂横摆是变道。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第三十一条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "交通警察的指挥分为：手势信号和使用器具的交通指挥信号。本题手势为「变道信号」。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544cwe2cv2kr2udzyysdalsvt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_867500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.411",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "涵洞",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "水渠",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "桥梁",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "隧道",
+          "ok": true
+        }
+      ],
+      "explain": "该标志表示前方是隧道，提醒驾驶人要谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：隧道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544smywsnpgzjq2rlvex48x7t",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_841900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.412",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "立体交叉直行和右转弯行驶",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "立体交叉直行和左转弯行驶",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "直行和左转弯行驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "直行和右转弯行驶",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示车辆在立体交叉处可直行和按图示路线左转弯行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：立体交叉直行和左转弯行驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010254467wrnqsyv7jykw7tkqoqds",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_848300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.413",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "图中圈内白色横实线是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "停止线",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "让行线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "减速线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "待转线",
+          "ok": false
+        }
+      ],
+      "explain": "靠近路口有三类白线：单白横实线是停止线；双白横实线是停车让行线；双白横虚线是减速让行线。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：停止线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544vxsnfw7q26x3ggamnnchbk",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_865200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.414",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止直行和向左转弯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "允许直行和向右变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "允许直行和向左变道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "禁止直行和向右转弯",
+          "ok": true
+        }
+      ],
+      "explain": "红圈是禁令标志，表示禁止一切车辆直行或向右转。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：禁止直行和向右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025449if4ubja6vqgjyefcssxmo",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_846000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.415",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "红色圆圈内标线含义是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "临时停靠站",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "大客车停靠站",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "公交车停靠站",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "应急停车带",
+          "ok": false
+        }
+      ],
+      "explain": "公交车停靠站是专用提供给公交车使用的。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：公交车停靠站。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544f2iwjwg1kl9dtozesp66qd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_862900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.416",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左侧绕行",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "单向通行",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "注意危险",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "右侧绕行",
+          "ok": false
+        }
+      ],
+      "explain": "图中箭头在左侧，选项中找“左”。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：左侧绕行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544ewbc4qap2p57rsxwjmicu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_843700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.417",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行和左转合用车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "禁止左转和掉头车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "掉头和左转合用车道",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "分向行驶车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，该标志表示车辆只准掉头和左转。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：掉头和左转合用车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544et9icsxufjg4z7ea3aqgsj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_850100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.418",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路终点地名预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路行驶路线预告",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路行驶方向预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路地点距离预告",
+          "ok": true
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，告知驾驶人前方地名及距离。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路地点距离预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025444gechyej19alc2ktmcvusm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.419",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意横风",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "风向标",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "隧道入口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "气象台",
+          "ok": false
+        }
+      ],
+      "explain": "见到该标志，要注意减速慢行，握稳方向盘。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意横风。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544mw6xramfpabop9kdg65ebu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_841400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.420",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行和向右转弯",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "直行和向左转弯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止直行和向右转弯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只准向左和向右转弯",
+          "ok": false
+        }
+      ],
+      "explain": "该标志表示一切车辆只准直行和向右转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：直行和向右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102544k7aarsyv4zvprqrxqxjkel",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_847800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.421",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "国道编号",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "省道编号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "县道编号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "乡道编号",
+          "ok": false
+        }
+      ],
+      "explain": "红底白字G开头是国道，黄底黑字S开头是省道，白底黑字X开头是县道，Y开头是乡道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：国道编号。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025446vlt3ybb2qdth7ehw4odrt",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_851900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.422",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上白色虚线和三角地带标线组成的是什么标线？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "道路入口标线",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "可跨越式分道线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "道路入口减速线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "道路出口标线",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：左进右出；由主路指向支路是出口，由支路指向主路是入口。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：道路入口标线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025459n1kwtmguy4y176fmgkpdd",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_862400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.423",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "避让非机动车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "非机动车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止非机动车通行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "注意非机动车",
+          "ok": true
+        }
+      ],
+      "explain": "见到该标志，要注意避让非机动车。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意非机动车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025458wecunyxckv9gjbcmegw1r",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_843200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.424",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "分向车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "右转车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "掉头车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "左转车道",
+          "ok": true
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示该车道的行驶车辆只准左转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：左转车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545vczmr2m5jeqqiz5ntv1xus",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_849600.jpg"
+    },
+    {
+      "id": "drive.s1.signals.425",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上的黄色填充标线是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "接近移动障碍物标线",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "远离狭窄路面标线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "接近障碍物标线",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "接近狭窄路面标线",
+          "ok": false
+        }
+      ],
+      "explain": "该标线是为提醒驾驶人前方有障碍物，注意谨慎驾驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：接近障碍物标线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545qzdfl2qxscrr6ocyame9qb",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_866500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.426",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个路面标记是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "最低限速为100公里/小时",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "平均速度为100公里/小时",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "解除100公里/小时限速",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "最高限速为100公里/小时",
+          "ok": true
+        }
+      ],
+      "explain": "看数字颜色：黄色是最高限速，白色是最低限速。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：最高限速为100公里/小时。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545m1rbvf3t1jkecn4ymm98tj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_864200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.427",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "地点和距离预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "十字交叉路口预告",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "分道信息预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "道路分岔处预告",
+          "ok": false
+        }
+      ],
+      "explain": "预告前方是十字交叉路口。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：十字交叉路口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545qeese7faqg8eqdhz96zg8p",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_851400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.428",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路公用电话",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路报警电话",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "高速公路紧急电话",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路救援电话",
+          "ok": true
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，紧急电话标志上没有字，救援电话标志上有“救援”字样+号码。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路救援电话。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545pjfrbt6oaqvcsnpajqb8de",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.429",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "限制高度为3.5米",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "限制宽度为3.5米",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "解除3.5米限高",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "限制车距为3.5米",
+          "ok": false
+        }
+      ],
+      "explain": "黑角在上下表示限制高度，在左右表示限制宽度，中间数字是多少就是限制多少。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：限制高度为3.5米。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545l5di7ymukdcclapn6y1c15",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_846800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.430",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示前方可直行或向左变道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示前方可直行或左转",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "指示前方可直行或掉头",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示前方可左转或掉头",
+          "ok": true
+        }
+      ],
+      "explain": "看箭头方向：箭头是左转+掉头，说明前方可左转或掉头。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示前方可左转或掉头。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545rvzmqrmexd9atluxqsravu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.431",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "注意交互式道路",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "注意分离式道路",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "平面交叉路口",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "环行平面交叉",
+          "ok": false
+        }
+      ],
+      "explain": "一左一右两箭头中间一刀切，表示注意分离式道路。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意分离式道路。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545tkpeicrskgyy4anb7nnlev",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_844500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.432",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "停车领卡",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "停车缴费",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "停车检查",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "ETC通道",
+          "ok": false
+        }
+      ],
+      "explain": "该标志一般设在高速公路收费站入口处。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：停车领卡。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545cgyhxydh4sspb24cnwckb4",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.433",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "图中圈内两条白色虚线是什么标线？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "小型车转弯线",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "掉头引导线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "左弯待转区线",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "交叉路停车线",
+          "ok": false
+        }
+      ],
+      "explain": "直行亮绿灯，左转车可驶入左弯待转区，左转和直行都是红灯时，不可驶入。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：左弯待转区线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545qfpstu1ncfeqjtbkrry2pz",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "hot",
+      "image": "images/subject1/2019_kemu1_861400.jpg"
+    },
+    {
+      "id": "drive.s1.signals.434",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "观景台",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "停车场",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "休息区",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "停车位",
+          "ok": false
+        }
+      ],
+      "explain": "告知前方设有可以停车观景的观景台。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：观景台。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102545k1qwdhrj4epvdyudhdxq3l",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "rare",
+      "image": "images/subject1/2019_kemu1_852700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.435",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "解除禁止借道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "解除禁止变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "准许变道行驶",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "解除禁止超车",
+          "ok": true
+        }
+      ],
+      "explain": "红圈是禁令标志，黑色是解除禁令。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：解除禁止超车。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546d2ucep7tvlaes19cfqaunn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_846300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.436",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个导向箭头是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指示向右转弯或掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "指示直行或右转弯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "指示直行或向右变道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示直行或掉头",
+          "ok": false
+        }
+      ],
+      "explain": "看箭头方向：指向前方和右侧，说明前方可直行或右转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：指示直行或右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546uv1qhqlermahxfytzcrfnf",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_863200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.437",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路下一出口预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路右侧出口预告",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路目的地预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路左侧出口预告",
+          "ok": false
+        }
+      ],
+      "explain": "该标志是为告知驾驶人右侧出口可到达的位置。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路右侧出口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546qfp9q7m5rzvupfolfmpzgj",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.438",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "堤坝路",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "临崖路",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "易滑路",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "傍水路",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌内有堤坝有水的，是堤坝路警告标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：堤坝路。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546k4wekv8p9bpnlpjqluhelq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_841700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.439",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "靠道路右侧停车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "只准向右转弯",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "右侧是下坡路段",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "靠右侧道路行驶",
+          "ok": true
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示车辆只准靠右侧行驶。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：靠右侧道路行驶。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025466xa5pmjz84gb5svm74ravy",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_848100.jpg"
+    },
+    {
+      "id": "drive.s1.signals.440",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "国道编号",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "省道编号",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "县道编号",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "乡道编号",
+          "ok": true
+        }
+      ],
+      "explain": "红底白字G开头是国道，黄底黑字S开头是省道，白底黑字X开头是县道，Y开头是乡道。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：乡道编号。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546jd7v7ph2p1xchzd4qc68ag",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "rare",
+      "image": "images/subject1/2019_kemu1_852200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.441",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "禁止在路口掉头",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "禁止向左向右变道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁止车辆直行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "禁止向左向右转弯",
+          "ok": true
+        }
+      ],
+      "explain": "红圈是禁令标志，表示禁止一切车辆向左或向右转。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：禁止向左向右转弯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025462mzujmznfbmkdjelwlanyu",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_845800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.442",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这种白色矩形标线框含义是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "长时停车位",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "限时停车位",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "专用停车位",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "免费停车位",
+          "ok": false
+        }
+      ],
+      "explain": "限时停车位表示允许车辆在规定时间段内停车。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：限时停车位。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546p4awb5yqfuslarekae7fev",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/20190410102546p4awb5yqfuslarekae7fev.jpg"
+    },
+    {
+      "id": "drive.s1.signals.443",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "施工路段",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "车多路段",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "慢行",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "拥堵路段",
+          "ok": false
+        }
+      ],
+      "explain": "看到“慢”字，要注意减速慢行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：慢行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010254621ge8iwbdfu7yblqctcxmq",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_843500.jpg"
+    },
+    {
+      "id": "drive.s1.signals.444",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "直行和左转合用车道",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "直行和掉头合用车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "直行和右转车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "分向行驶车道",
+          "ok": false
+        }
+      ],
+      "explain": "蓝牌是指示标志，表示车辆只准直行和左转。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：直行和左转合用车道。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546krsxfk43vpuig48u8ntgdm",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_849900.jpg"
+    },
+    {
+      "id": "drive.s1.signals.445",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路终点预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路入口预告",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路起点预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路出口预告",
+          "ok": false
+        }
+      ],
+      "explain": "绿牌标志代表高速公路，表示距离前方高速公路入口还有2公里。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路入口预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102546m76y3b3pyejc8yxsydqenn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_854000.jpg"
+    },
+    {
+      "id": "drive.s1.signals.446",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "交叉路口",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "注意信号灯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "注意行人",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "人行横道灯",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌内有红绿灯，表示前方有信号灯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：注意信号灯。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "2019041010254686bfxsa8rczgzfz9dsqns2",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_841200.jpg"
+    },
+    {
+      "id": "drive.s1.signals.447",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "高速公路收费站预告",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "高速公路服务区预告",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "高速公路避险处预告",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "高速公路客车站预告",
+          "ok": false
+        }
+      ],
+      "explain": "有刀叉是服务区，有茶杯是停车区，只有P是停车场。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：高速公路服务区预告。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201904101025465skb4t3igdiivgpj6y7wx6",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_855800.jpg"
+    },
+    {
+      "id": "drive.s1.signals.448",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "路面上的白色标线是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "车行道横向减速标线",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "道路施工提示标线",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "车行道纵向减速标线",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "车道变少提示标线",
+          "ok": false
+        }
+      ],
+      "explain": "该标志是为提醒驾驶人注意减速慢行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：车行道横向减速标线。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102547bpanptrysuefomc2q7lmh8",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2019_kemu1_866300.jpg"
+    },
+    {
+      "id": "drive.s1.signals.449",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "双向交通",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "分离式道路",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "潮汐车道",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "减速让行",
+          "ok": false
+        }
+      ],
+      "explain": "黄牌标志内见到上下箭头，是双向交通警告标志。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：双向交通。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20190410102547wmumuoqllpyjz2dkpf3gzn",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_840700.jpg"
+    },
+    {
+      "id": "drive.s1.signals.450",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "前方是十字路口",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "前方路口不能右转",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "前方路口不能直行",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "前方路口不能左转",
+          "ok": false
+        }
+      ],
+      "explain": "T字形路口不可直行，只能转弯。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：前方路口不能直行。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20191126190219gzeohxgkkkjdpv4arqrjde",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_BB120370.jpg"
+    },
+    {
+      "id": "drive.s1.signals.451",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "前方路口不能右转",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "前方路口不能左转",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "前方路口不能直行",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前方是十字路口",
+          "ok": false
+        }
+      ],
+      "explain": "左侧被挡住，没路不能通行。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "note": "标志含义：前方路口不能左转。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "201911261902199ujkobow3kqdjdtttajyup",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "image": "images/subject1/2019_kemu1_BB120372.jpg"
+    },
+    {
+      "id": "drive.s1.signals.452",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "下面哪个标志表示注意路面不平？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "图①",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "图②",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "图③",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "图④",
+          "ok": false
+        }
+      ],
+      "explain": "巧记：驼峰桥带门，2个凸不平，向下凹低洼，向上凸高凸。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-3",
+          "relation": "adapted",
+          "locator": "",
+          "url": "https://cdjg.chengdu.gov.cn/cdjg/c113997//2023-02/22/40f2079167e147c698d41448fe9a06e1/files/2abda8416caf4aa6817dc45b5b20549e.pdf",
+          "note": "标线含义：图②。"
+        },
+        {
+          "source_id": "public-bank-2022",
+          "relation": "selection_basis",
+          "locator": "20200727150249k2ecblnhfm33cbygd7ci1f",
+          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
+          "note": "公开题库（MIT）的图片题，题图随仓库走；含义按 GB 5768 或实施条例核对，逐张看图确认（ADR 0024）。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "regular",
+      "image": "images/subject1/2020_kemu1_11995400.jpg"
+    },
+    {
       "id": "drive.s1.rules.562",
       "topic_id": "drive.s1.rules",
       "kind": "judge",
