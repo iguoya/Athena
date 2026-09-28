@@ -220,6 +220,7 @@ class DrillScene {
     required this.judged,
     required this.bounds,
     this.labels = const [],
+    this.quarterTurns = 0,
   });
 
   final String id;
@@ -232,6 +233,28 @@ class DrillScene {
   final Judged judged;
   final Rect bounds;
   final List<(Offset, String)> labels;
+
+  /// 画的时候顺时针转几个 90°：侧方停车的场地是竖长条，横过来才铺得满 16:10 的画布。
+  /// 只影响绘制，几何和判定都在原坐标里。
+  final int quarterTurns;
+
+  /// 场地坐标 → 绘制坐标（按 [quarterTurns] 旋转）。
+  Offset view(Offset p) => switch (quarterTurns % 4) {
+        1 => Offset(-p.dy, p.dx),
+        2 => Offset(-p.dx, -p.dy),
+        3 => Offset(p.dy, -p.dx),
+        _ => p,
+      };
+
+  Rect get viewBounds {
+    final pts = [bounds.topLeft, bounds.topRight, bounds.bottomLeft, bounds.bottomRight].map(view).toList();
+    return Rect.fromLTRB(
+      pts.map((p) => p.dx).reduce(min),
+      pts.map((p) => p.dy).reduce(min),
+      pts.map((p) => p.dx).reduce(max),
+      pts.map((p) => p.dy).reduce(max),
+    );
+  }
 }
 
 /// 播放时某一刻的状态。
@@ -392,7 +415,8 @@ final parallelScene = DrillScene(
   id: "parallel",
   start: Pose(_parallelLane, _parallelStartY + 8, -pi / 2),
   judged: Judged.body,
-  bounds: const Rect.fromLTRB(-2, -14, 8, 16),
+  bounds: const Rect.fromLTRB(-1, -10, 7, 10.5),
+  quarterTurns: 1,
   inside: (p) => _inRect(p, _parallelRoad) || _inRect(p, _parallelBay),
   lines: const [
     SceneLine([Offset(0, -16), Offset(0, 16)], LineKind.edge),
@@ -539,7 +563,8 @@ class DrillPlayerState extends State<DrillPlayer> with SingleTickerProviderState
     _seek(_t + dt * _rate);
     final stopAt = _stopAt;
     if (stopAt != null && _t >= stopAt) {
-      _seek(stopAt);
+      // 停在这一步的末尾而不是下一步的开头：否则画面和步骤高亮都会跳到下一步。
+      _seek(stopAt - 1e-3);
       _stopAt = null;
       pause();
     } else if (_t >= _timeline.total) {
@@ -685,13 +710,13 @@ class DrillPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawRect(Offset.zero & size, Paint()..color = _ground);
-    final b = scene.bounds;
+    final b = scene.viewBounds;
     final scale = min(size.width / b.width, size.height / b.height) * 0.94;
     final origin = Offset(
       (size.width - b.width * scale) / 2 - b.left * scale,
       (size.height - b.height * scale) / 2 - b.top * scale,
     );
-    Offset map(Offset p) => origin + p * scale;
+    Offset map(Offset p) => origin + scene.view(p) * scale;
 
     // 场地线
     for (final line in scene.lines) {

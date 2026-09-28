@@ -7,6 +7,7 @@ import "exam.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
+import "subject2.dart";
 import "sync.dart";
 import "session.dart";
 
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _wrongCount = 0;
   List<Question> _wrongQuestions = const [];
   List<Question> _reviewQuestions = const [];
+  List<DrillRun> _drillRuns = const [];
   Map<String, int> _reviewStreaks = const {};
   int _reviewGraduated = 0;
   Map<String, int> _wrongCounts = const {};
@@ -162,6 +164,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final ids = await widget.store.wrongQuestionIds();
     final wrongCounts = await widget.store.wrongCounts();
     final streaks = await widget.store.correctStreaksSinceWrong();
+    final drillRuns = await widget.store.drillRuns();
     final exams = await widget.store.recentExams();
     final notices = await widget.store.notices(limit: 5);
     final daily = await widget.store.dailyAttempts();
@@ -216,6 +219,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _wrongCount = wrong.length;
       _wrongQuestions = wrong;
       _reviewQuestions = review;
+      _drillRuns = drillRuns;
       _reviewStreaks = streaks;
       _reviewGraduated = eligible.length - review.length;
       _wrongCounts = wrongCounts;
@@ -290,6 +294,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             onTap: () => _go("subject1"),
           ),
           _navLine(
+            icon: Icons.local_parking,
+            selected: _place == "subject2" && _session == null,
+            label: "科目二（C2）",
+            onTap: () => _go("subject2"),
+          ),
+          _navLine(
             icon: _s1Done ? Icons.health_and_safety : Icons.lock,
             selected: _place == "subject4" && _session == null,
             label: _s1Done ? "科目四" : "科目四（未解锁）",
@@ -341,18 +351,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
               ),
             ],
-            _navLine(
-              icon: Icons.timer,
-              selected: false,
-              label: current.id == "subject1" && !_s1Done
-                  ? "模拟考试（完成本科后）"
-                  : "模拟考试",
-              muted: current.id == "subject1" && !_s1Done,
-              onTap: current.id == "subject1" && !_s1Done
-                  ? null
-                  : () => _startExam(current),
-            ),
-            if (current.id == "subject4")
+            // 科目二没有笔试（ADR 0036）。
+            if (current.exam != null)
+              _navLine(
+                icon: Icons.timer,
+                selected: false,
+                label: current.id == "subject1" && !_s1Done
+                    ? "模拟考试（完成本科后）"
+                    : "模拟考试",
+                muted: current.id == "subject1" && !_s1Done,
+                onTap: current.id == "subject1" && !_s1Done
+                    ? null
+                    : () => _startExam(current),
+              ),
+            if (current.id != "subject1")
               _navLine(
                 icon: Icons.list_alt,
                 selected: false,
@@ -442,6 +454,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _reviewId) return _reviewOverview(context);
+    if (_place == "subject2") {
+      final subject2 = widget.bank.curriculum.subject("subject2");
+      return Subject2Page(
+        bank: widget.bank,
+        store: widget.store,
+        mastered: _mastered,
+        runs: _drillRuns,
+        onPractice: (questions, title) => _startPractice(subject2, questions, title),
+        onChanged: _reload,
+      );
+    }
     if (_place == _syncId) return _syncOverview(context);
     if (_place == _numbersId) return _numbersOverview(context);
     if (_place == "subject4" && !_s1Done) return _lockedSubject4(context);
