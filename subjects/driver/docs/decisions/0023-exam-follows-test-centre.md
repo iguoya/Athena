@@ -1,7 +1,7 @@
 # ADR 0023：模拟考按考场的判分方式和内容比例走
 
 - 日期：2026-09-27
-- 状态：已接受
+- 状态：已接受（决策第 1 条「错到不可能及格立即结束」由 ADR 0041 撤销）
 - 影响：`lib/session.dart`、`lib/exam.dart`、`lib/models.dart`、`lib/home.dart`、
   `content/curriculum.json`、`content/questions/subject1.json`
 - 关系：修订本应用 ADR 0007 中「模拟考交卷前可以改答案、交卷后一次性判分」的考场规则

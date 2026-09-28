@@ -27,7 +27,7 @@
 | [0020](0020-remove-hesitant-concept.md) | 撤销「迟疑」概念，答对就算掌握 | 已接受 |
 | [0021](0021-launch-window-maximized.md) | 桌面窗口启动时直接最大化 | 已接受 |
 | [0022](0022-ten-per-page-auto-advance-when-clean.md) | 一页十题，全对自动翻页 | 已接受（第 2、3 条由 0025 修订） |
-| [0023](0023-exam-follows-test-centre.md) | 模拟考按考场的判分方式和内容比例走 | 已接受（修订 0007、0016 第 3 条） |
+| [0023](0023-exam-follows-test-centre.md) | 模拟考按考场的判分方式和内容比例走 | 已接受（修订 0007、0016 第 3 条；「提前结束」由 0041 撤销） |
 | [0024](0024-sign-meaning-questions.md) | 标志、标线、交警手势收「认含义」题，不收「认类别」题 | 已接受（修订 0003 第 3 条） |
 | [0025](0025-auto-advance-when-page-done.md) | 一页十题答完就自动翻页，不看对错 | 已接受（修订 0022 第 2、3 条） |
 | [0026](0026-phase-size-follows-content.md) | 阶段题量随内容走，不设上下限 | 已接受（修订 0009） |
@@ -45,3 +45,4 @@
 | [0038](0038-page-dwell-at-least-five-seconds.md) | 自动翻页前至少停留 5 秒 | 已接受（修订 0025 的停顿时长） |
 | [0039](0039-subject2-organized-around-practice-days.md) | 科目二围绕「练车日」组织，不沿用科目一的练习形式 | 已接受 |
 | [0040](0040-subject2-narration-cautions-marks.md) | 科目二动画加语音讲解、注意事项与画面标注 | 已接受 |
+| [0041](0041-exam-continues-after-failing.md) | 模拟考错到不可能及格也继续答完 | 已接受（撤销 0023 的提前结束） |

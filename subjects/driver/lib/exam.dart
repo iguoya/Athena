@@ -124,7 +124,7 @@ Map<(String, String), int> blockCells(ExamRules rules) {
   return cells;
 }
 
-/// 错到第几道就不可能及格了——考场到这一道当场结束（ADR 0023）。
+/// 错到第几道就不可能及格了——模拟考只拿来提示，不提前结束（ADR 0041）。
 /// 按折合百分制算：科目一 100 题错到第 11 道，科目四 50 题错到第 6 道。
 int failingWrongCount(int total, int passScore) {
   if (total <= 0) return 1;

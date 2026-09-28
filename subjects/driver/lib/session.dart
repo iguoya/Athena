@@ -95,13 +95,13 @@ class _SessionStageState extends State<SessionStage> {
 
   SessionLaunch get _launch => widget.launch;
 
-  /// 模拟考按考场走（ADR 0023）：答一题交一题，交了不能改；答错当场给出正确答案；
-  /// 错题多到不可能及格就提前结束。
+  /// 模拟考按考场的交法（ADR 0023）：答一题交一题，交了不能改；答错当场给出正确答案。
+  /// 错到不可能及格也继续答完，不提前结束（ADR 0041）。
   bool get _isExam => !_launch.revealImmediately;
 
   int get _wrongCount => _judged.length - _correct.length;
 
-  /// 错到这一道就不可能及格了：科目一 100 题是第 11 道。
+  /// 错到这一道就不可能及格了：科目一 100 题是第 11 道。只用来提示，不结束考试（ADR 0041）。
   int get _failAt => failingWrongCount(_total, _launch.paper?.rules.passScore ?? 90);
 
   int get _total => _launch.questions.length;
@@ -306,7 +306,9 @@ class _SessionStageState extends State<SessionStage> {
             Text("已答 $_answeredCount / $_total", style: textTheme.bodyMedium),
             const SizedBox(width: 16),
             Text(
-              "错 $_wrongCount 题（错到 $_failAt 题结束）",
+              _wrongCount >= _failAt
+                  ? "错 $_wrongCount 题（已不及格，继续答完）"
+                  : "错 $_wrongCount 题（错到 $_failAt 题不及格）",
               style: textTheme.bodyMedium?.copyWith(color: _wrongCount > 0 ? Bs.danger : null),
             ),
           ],
@@ -434,7 +436,7 @@ class _SessionStageState extends State<SessionStage> {
         ),
         const SizedBox(height: 8),
         Text(
-          "考场规则：答一题交一题，交了不能改；答错当场给出正确答案；错到不可能及格就提前结束。",
+          "答一题交一题，交了不能改；答错当场给出正确答案；不及格也继续答完，把整卷练完。",
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -679,7 +681,7 @@ class _SessionStageState extends State<SessionStage> {
         ),
         const SizedBox(height: 16),
         Text(
-          "答错的题标红，答对不提示。错到第 $_failAt 题本场结束，时间到了自动交卷。",
+          "答错的题标红，答对不提示。错到第 $_failAt 题就不及格，但照样答完；时间到了自动交卷。",
           style: muted,
         ),
       ],
@@ -939,10 +941,6 @@ class _SessionStageState extends State<SessionStage> {
       _examNotices.addAll(notices);
       // 交一题存一次草稿，中途崩了或被重启也能续上（ADR 0016）。
       unawaited(_saveDraft());
-      if (_wrongCount >= _failAt) {
-        await _endEarly();
-        return;
-      }
       final next = _pending;
       if (next != null) {
         _centerOn(next);
@@ -1125,30 +1123,9 @@ class _SessionStageState extends State<SessionStage> {
     if (ok == true) await _submitExam();
   }
 
-  /// 错到不可能及格：考场当场结束，这里也一样，先说一声再出结果。
-  Future<void> _endEarly() async {
-    _timer?.cancel();
-    if (!mounted) return;
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text("考试结束"),
-        content: Text(
-          "已经错了 $_wrongCount 题，这一卷不可能及格了。考场上到这里也会自动结束。",
-          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
-        ),
-        actions: [
-          FilledButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text("看结果")),
-        ],
-      ),
-    );
-    await _submitExam(endedEarly: true);
-  }
-
   /// 交卷：每题交的时候已经判过、记过了；没答的按错计分，但不写作答记录——
   /// 没见过的题不该被记成「答错」（ADR 0023）。
-  Future<void> _submitExam({bool auto = false, bool endedEarly = false}) async {
+  Future<void> _submitExam({bool auto = false}) async {
     if (_submitting) return;
     _submitting = true;
     _timer?.cancel();
@@ -1156,7 +1133,7 @@ class _SessionStageState extends State<SessionStage> {
     // 交了卷草稿就没用了；没交就留着，回到首页还能续上。
     final draftKey = _launch.draftKey;
     if (draftKey != null) await widget.store.clearExamDraft(draftKey);
-    await _finish(autoSubmitted: auto, endedEarly: endedEarly, notices: _examNotices);
+    await _finish(autoSubmitted: auto, notices: _examNotices);
   }
 
   Future<void> _finishPractice() async {
@@ -1165,7 +1142,7 @@ class _SessionStageState extends State<SessionStage> {
     await _finish();
   }
 
-  Future<void> _finish({bool autoSubmitted = false, bool endedEarly = false, List<Notice> notices = const []}) async {
+  Future<void> _finish({bool autoSubmitted = false, List<Notice> notices = const []}) async {
     final correct = _correct.length;
     final score = _launch.paper?.scaledScore(correct) ??
         (_total == 0 ? 0 : ((correct / _total) * 100).round());
@@ -1199,7 +1176,6 @@ class _SessionStageState extends State<SessionStage> {
         fullBank: _launch.paper?.fullBank ?? true,
         want: _launch.paper?.rules.questionCount,
         autoSubmitted: autoSubmitted,
-        endedEarly: endedEarly,
         unanswered: _total - _judged.length,
         missed: missed,
         notices: allNotices,
@@ -1225,7 +1201,6 @@ class _Result {
     required this.fullBank,
     this.want,
     this.autoSubmitted = false,
-    this.endedEarly = false,
     this.unanswered = 0,
     this.missed = const [],
     this.notices = const [],
@@ -1242,9 +1217,6 @@ class _Result {
 
   /// 时间到了系统替你交的卷——结果页要说一声，不然会以为是自己点的。
   final bool autoSubmitted;
-
-  /// 错到不可能及格、提前结束的一卷。
-  final bool endedEarly;
 
   /// 没答的题数：按错计分，不在错题卡里（没看过的题谈不上「错在哪」）。
   final int unanswered;
@@ -1300,13 +1272,6 @@ class _ResultPane extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               "时间到，已自动交卷。",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Bs.danger),
-            ),
-          ],
-          if (result.endedEarly) ...[
-            const SizedBox(height: 12),
-            Text(
-              "错题多到不可能及格，考试提前结束——考场上也是这样。",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Bs.danger),
             ),
           ],

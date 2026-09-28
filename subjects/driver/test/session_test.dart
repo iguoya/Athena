@@ -22,8 +22,8 @@ Question _judge(int i) => Question(
     );
 
 void main() {
-  // 模拟考按考场走（ADR 0023）：答一题交一题，交了不能改，错到第 11 道当场结束。
-  testWidgets("模拟考答错第 11 道就结束，判不合格，没答的题不写作答记录", (tester) async {
+  // 模拟考答一题交一题，交了不能改（ADR 0023）；错到不可能及格也不提前结束（ADR 0041）。
+  testWidgets("模拟考错到不可能及格也继续答，交卷判不合格，没答的题不写作答记录", (tester) async {
     late Directory dir;
     late ProgressStore store;
     await tester.runAsync(() async {
@@ -85,30 +85,34 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
-    expect(find.text("考试结束"), findsNothing);
-    expect(find.text("错 10 题（错到 11 题结束）"), findsOneWidget);
+    expect(find.text("错 10 题（错到 11 题不及格）"), findsOneWidget);
+    // 错到第 11 道已不可能及格，但不提前结束，照样往下答（ADR 0041）。
     await answer(LogicalKeyboardKey.keyF);
     await tester.pumpAndSettle();
-    expect(find.text("考试结束"), findsOneWidget);
+    expect(find.text("考试结束"), findsNothing);
+    expect(find.text("错 11 题（已不及格，继续答完）"), findsOneWidget);
+    await answer(LogicalKeyboardKey.keyT);
 
-    // 出结果前要走 recordExam 真实写库；同上，等到结果页真的出来，不赌固定时长——
+    // 自己交卷。出结果前要走 recordExam 真实写库；同上，等到结果页真的出来，不赌固定时长——
     // Windows runner 上 100ms 经常不够。
-    await tester.tap(find.text("看结果"));
+    await tester.tap(find.text("交卷"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("确定交卷"));
     for (var i = 0; i < 200 && find.text("未及格").evaluate().isEmpty; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
     await tester.pumpAndSettle();
     expect(find.text("未及格"), findsOneWidget);
-    expect(find.textContaining("提前结束"), findsOneWidget);
-    expect(find.text("还有 84 题没答，按错计分。"), findsOneWidget);
+    expect(find.textContaining("提前结束"), findsNothing);
+    expect(find.text("还有 83 题没答，按错计分。"), findsOneWidget);
 
     await tester.runAsync(() async {
-      // 只交了 16 题，就只有 16 条作答记录；没见过的 84 题不算「答错」。
+      // 只交了 17 题，就只有 17 条作答记录；没见过的 83 题不算「答错」。
       // 新库会拿仓库里的进度库当底子，只数这场造的题。
       bool ours(String id) => RegExp(r"^q\d+$").hasMatch(id);
       expect((await store.wrongQuestionIds()).where(ours), hasLength(11));
-      expect((await store.masteredQuestionIds()).where(ours), hasLength(5));
+      expect((await store.masteredQuestionIds()).where(ours), hasLength(6));
     });
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
