@@ -599,10 +599,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _phaseRow(BuildContext context, Subject subject, StudyPhase phase, double titleWidth) {
     final questions = widget.bank.forPhase(subject.id, phase.id);
-    final mastered = questions.where((q) => _mastered.contains(q.id)).length;
+    // 进度与过关判定同一口径（unlockedThrough）：偏难题默认不练、不挡过关，
+    // 也就不进分母，否则阶段明明过了，进度条却永远差那几道。
+    final daily = dailyQuestions(questions);
+    final rare = questions.length - daily.length;
+    final mastered = daily.where((q) => _mastered.contains(q.id)).length;
     final locked = phase.id > _s1Open;
     final current = phase.id == _s1Open && !_s1Done;
-    final ratio = questions.isEmpty ? 0.0 : mastered / questions.length;
+    final ratio = daily.isEmpty ? 0.0 : mastered / daily.length;
     return InkWell(
       onTap: locked
           ? null
@@ -633,8 +637,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             const SizedBox(width: 12),
             SizedBox(
               width: 90,
-              child: Text(locked ? "—" : "$mastered/${questions.length}"),
+              child: rare == 0 || locked
+                  ? Text(locked ? "—" : "$mastered/${daily.length}")
+                  : Tooltip(
+                      message: "另有偏难 $rare 道：默认不练、不挡过关，不计入进度",
+                      child: Text("$mastered/${daily.length}"),
+                    ),
             ),
+            const SizedBox(width: 12),
+            _percent(locked, ratio),
             const SizedBox(width: 12),
             Expanded(
               child: BsProgress(
@@ -644,6 +655,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// 进度条左边的百分比。向下取整：差一道没掌握时不该显示成 100%。
+  Widget _percent(bool locked, double ratio) {
+    return SizedBox(
+      width: 44,
+      child: Text(
+        locked ? "—" : "${(ratio * 100).floor()}%",
+        textAlign: TextAlign.right,
+        style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
       ),
     );
   }
@@ -815,6 +838,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               width: 90,
               child: Text(locked ? "—" : "$mastered/${questions.length}"),
             ),
+            const SizedBox(width: 12),
+            _percent(locked, ratio),
             const SizedBox(width: 12),
             Expanded(
               child: BsProgress(
