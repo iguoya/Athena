@@ -34,6 +34,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static const _wrongId = "wrong";
+  static const _reviewId = "review";
+
+  /// 累计答错到几次算「反复栽跟头」，进考前复习（ADR 0033）。
+  static const _reviewMinWrong = 2;
   static const _syncId = "sync";
   static const _numbersId = "numbers";
 
@@ -44,6 +48,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _avgMs = 0;
   int _wrongCount = 0;
   List<Question> _wrongQuestions = const [];
+  List<Question> _reviewQuestions = const [];
   Map<String, int> _wrongCounts = const {};
   List<ExamRecord> _exams = const [];
   List<Notice> _notices = const [];
@@ -174,6 +179,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
     );
+    // 考前复习：累计错够次数的都留着，后来答对了也不移出——错过两次说明这里
+    // 容易翻车，考前值得再过一遍（ADR 0033）。从作答记录派生，不另存一张表。
+    final latestWrong = ids.toSet();
+    final review = [
+      for (final q in widget.bank.questions)
+        if ((wrongCounts[q.id] ?? 0) >= _reviewMinWrong &&
+            (s1Done || !q.topicId.startsWith("drive.s4.")))
+          q,
+    ]..sort((a, b) {
+        final byCount = (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
+        if (byCount != 0) return byCount;
+        // 同样错的次数，最近一次还错着的排前面。
+        return (latestWrong.contains(b.id) ? 1 : 0).compareTo(latestWrong.contains(a.id) ? 1 : 0);
+      });
     if (!mounted) return;
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
     if (attemptTotal > _attemptTotal) _lastActivityAt = DateTime.now();
@@ -183,6 +202,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _avgMs = avgMs;
       _wrongCount = wrong.length;
       _wrongQuestions = wrong;
+      _reviewQuestions = review;
       _wrongCounts = wrongCounts;
       _exams = exams;
       _notices = notices;
@@ -195,7 +215,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Subject? get _subject {
-    if (_place == _wrongId || _place == _syncId || _place == _numbersId) return null;
+    if (_place == _wrongId || _place == _reviewId || _place == _syncId || _place == _numbersId) return null;
     return widget.bank.curriculum.subject(_place);
   }
 
@@ -266,6 +286,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             selected: _place == _wrongId && _session == null,
             label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
             onTap: () => _go(_wrongId),
+          ),
+          _navLine(
+            icon: Icons.fact_check,
+            selected: _place == _reviewId && _session == null,
+            label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
+            onTap: () => _go(_reviewId),
           ),
           _navLine(
             icon: Icons.pin,
@@ -400,6 +426,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
+    if (_place == _reviewId) return _reviewOverview(context);
     if (_place == _syncId) return _syncOverview(context);
     if (_place == _numbersId) return _numbersOverview(context);
     if (_place == "subject4" && !_s1Done) return _lockedSubject4(context);
@@ -1112,6 +1139,125 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 考前复习：累计答错 [_reviewMinWrong] 次以上的题，按错的次数排（ADR 0033）。
+  /// 跟错题本的区别：错题本只看最近一次，答对就移走；这里答对了也留着，
+  /// 标成「已订正」——考前要回头确认的恰恰是这些反复翻过车的题。
+  Widget _reviewOverview(BuildContext context) {
+    final items = _reviewQuestions;
+    final open = [for (final q in items) if (_wrongIds.contains(q.id)) q];
+    final fixed = items.length - open.length;
+    final s1 = items.where((q) => q.topicId.startsWith("drive.s1.")).length;
+    final s4 = items.length - s1;
+    final body = Theme.of(context).textTheme.bodyLarge;
+
+    void start(String title, List<Question> questions) => _openSession(
+          SessionLaunch(
+            title: title,
+            subjectId: _reviewId,
+            questions: questions,
+            timed: false,
+            revealImmediately: true,
+          ),
+        );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.fact_check, color: Bs.paper),
+              SizedBox(width: 8),
+              Text(
+                "考前复习",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            items.isEmpty
+                ? "还没有累计答错 $_reviewMinWrong 次以上的题。"
+                : "累计答错 $_reviewMinWrong 次以上的题都在这里，答对了也不移走——考前把反复翻车的再过一遍。",
+            style: body,
+          ),
+          if (items.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              children: [
+                BsBadge(text: "共 ${items.length} 道", icon: Icons.fact_check, color: Bs.paper),
+                BsBadge(text: "还错着 ${open.length} 道", icon: Icons.close, color: Bs.danger),
+                BsBadge(text: "已订正 $fixed 道", icon: Icons.check, color: Bs.success),
+                if (s4 > 0) BsBadge(text: "科目一 $s1 · 科目四 $s4", icon: Icons.menu_book, color: Bs.secondary),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                FilledButton(
+                  onPressed: () => start("考前复习", items),
+                  child: Text("全部复习 ${items.length}"),
+                ),
+                FilledButton.tonal(
+                  onPressed: open.isEmpty ? null : () => start("考前复习 · 还错着的", open),
+                  child: Text("只练还错着的 ${open.length}"),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.separated(
+                itemCount: items.length,
+                separatorBuilder: (_, _) => const Divider(height: 18),
+                itemBuilder: (context, i) {
+                  final q = items[i];
+                  final times = _wrongCounts[q.id] ?? _reviewMinWrong;
+                  final still = _wrongIds.contains(q.id);
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: BsBadge(
+                          text: times >= 3 ? "错 $times 次 · 顽固" : "错 $times 次",
+                          icon: times >= 3 ? Icons.priority_high : Icons.close,
+                          color: times >= 3 ? Bs.danger : Bs.warning,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 110,
+                        child: BsBadge(
+                          text: still ? "还错着" : "已订正",
+                          icon: still ? Icons.close : Icons.check,
+                          color: still ? Bs.danger : Bs.success,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: PromptText(
+                          q.prompt,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: body,
                         ),
                       ),
                     ],

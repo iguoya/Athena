@@ -34,3 +34,7 @@
 | [0027](0027-practice-by-national-error-rate.md) | 练习按全国错误率排序，易错题标出来 | 已接受 |
 | [0028](0028-confusable-numbers-page.md) | 易混数字对照页 | 已接受 |
 | [0029](0029-subject4-trim-other-vehicle-duties.md) | 科目四里其他车型驾驶人的专属知识标偏难 | 已接受（修订 0017 第 4 条） |
+| [0030](0030-find-working-tree-from-executable.md) | 直接点开调试包也认得出工作树，一台机器只有一份进度库 | 已接受 |
+| [0031](0031-each-question-once-per-round.md) | 一轮练习里每道题只出一次 | 已接受 |
+| [0032](0032-rare-questions-capped-in-exams.md) | 模拟考可以抽到偏难怪，每卷封顶 2% | 已接受（修订 0026、0029 的「不考」；回到 0003 原意） |
+| [0033](0033-pre-exam-review.md) | 考前复习——累计错 2 次以上的题单独成页 | 已接受 |
