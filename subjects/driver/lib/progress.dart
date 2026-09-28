@@ -97,6 +97,15 @@ class Rehearsal {
   final DateTime at;
 }
 
+/// 教练的话（ADR 0039）：原始记录，和自己整理过的点位卡分开存。
+class DrillNote {
+  const DrillNote({required this.itemId, required this.text, required this.at});
+
+  final String itemId;
+  final String text;
+  final DateTime at;
+}
+
 class DailyCount {
   const DailyCount({required this.day, required this.attempts, required this.correct});
 
@@ -138,13 +147,14 @@ class ProgressStore {
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
-        version: 7,
+        version: 8,
         onCreate: (db, version) async {
           await _createV1(db);
           await _createV2(db);
           await _createV5(db);
           await _createV6(db);
           await _createV7(db);
+          await _createV8(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) await _createV2(db);
@@ -153,6 +163,7 @@ class ProgressStore {
           if (oldVersion < 5) await _createV5(db);
           if (oldVersion < 6) await _createV6(db);
           if (oldVersion < 7) await _createV7(db);
+          if (oldVersion < 8) await _createV8(db);
         },
       ),
     );
@@ -296,6 +307,18 @@ class ProgressStore {
         item_id TEXT NOT NULL,
         missed TEXT NOT NULL,
         total INTEGER NOT NULL,
+        at TEXT NOT NULL
+      )
+    """);
+  }
+
+  /// 教练的话（ADR 0039）。
+  static Future<void> _createV8(Database db) async {
+    await db.execute("""
+      CREATE TABLE drill_notes (
+        id INTEGER PRIMARY KEY,
+        item_id TEXT NOT NULL,
+        text TEXT NOT NULL,
         at TEXT NOT NULL
       )
     """);
@@ -735,6 +758,15 @@ class ProgressStore {
     for (final row in drills) {
       events.add({"kind": "drill", "item_id": row["item_id"], "mistakes": row["mistakes"], "at": row["at"]});
     }
+    final drillNotes = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM drill_notes ORDER BY at"
+          : "SELECT * FROM drill_notes WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in drillNotes) {
+      events.add({"kind": "drill_note", "item_id": row["item_id"], "text": row["text"], "at": row["at"]});
+    }
     // 点位卡文字与默演记录跟着事件同步；照片不同步，跨机器靠仓库（ADR 0037）。
     final notes = await _db.rawQuery(
       since == null
@@ -812,6 +844,18 @@ class ProgressStore {
             await txn.insert("drill_runs", {
               "item_id": event["item_id"],
               "mistakes": event["mistakes"] ?? "",
+              "at": event["at"],
+            });
+            written++;
+          case "drill_note":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM drill_notes WHERE item_id = ? AND at = ? LIMIT 1",
+              [event["item_id"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("drill_notes", {
+              "item_id": event["item_id"],
+              "text": event["text"] ?? "",
               "at": event["at"],
             });
             written++;
@@ -967,6 +1011,23 @@ class ProgressStore {
           total: row["total"] as int,
           at: DateTime.parse(row["at"] as String),
         ),
+    ];
+  }
+
+  Future<void> recordDrillNote(String itemId, String text, {DateTime? at}) async {
+    await _db.insert("drill_notes", {
+      "item_id": itemId,
+      "text": text,
+      "at": (at ?? DateTime.now()).toIso8601String(),
+    });
+  }
+
+  /// 教练的话，新的在前。
+  Future<List<DrillNote>> drillNotes() async {
+    final rows = await _db.rawQuery("SELECT * FROM drill_notes ORDER BY at DESC, id DESC");
+    return [
+      for (final row in rows)
+        DrillNote(itemId: row["item_id"] as String, text: row["text"] as String, at: DateTime.parse(row["at"] as String)),
     ];
   }
 

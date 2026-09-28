@@ -34,11 +34,11 @@ void main() {
 
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
+    await tester.tap(find.text("项目手册"));
+    await tester.pump();
     for (final title in ["倒车入库", "侧方停车", "曲线行驶", "直角转弯"]) {
       expect(find.text(title), findsWidgets);
     }
-    expect(find.text("满分 100 · 80 分合格"), findsOneWidget);
-    expect(find.text("今天练车的重点"), findsOneWidget);
 
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);

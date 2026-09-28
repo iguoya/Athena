@@ -8,21 +8,23 @@ import "progress.dart";
 
 /// 默演（ADR 0037）：逐步先口述、再对照。想象演练和看示范能帮新手先在脑子里搭起动作框架，
 /// 但要和真车练习接上才生效——所以放在练车前后做，不替代练车。自评，不写掌握度。
-Future<void> showRehearsal(
+/// 做完返回 true，中途「不做了」返回 false。
+Future<bool> showRehearsal(
   BuildContext context, {
   required GuideItem item,
   required ProgressStore store,
   required Map<(String, int), PointNote> notes,
   required List<PointPhoto> photos,
   required Future<void> Function() onChanged,
-}) {
-  return showDialog<void>(
+}) async {
+  final done = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (context) => Dialog.fullscreen(
       child: RehearsalView(item: item, store: store, notes: notes, photos: photos, onChanged: onChanged),
     ),
   );
+  return done ?? false;
 }
 
 enum _Phase { recall, compare, done }
@@ -85,7 +87,7 @@ class _RehearsalViewState extends State<RehearsalView> {
         automaticallyImplyLeading: false,
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop(_phase == _Phase.done),
             child: Text(_phase == _Phase.done ? "完成" : "不做了"),
           ),
           const SizedBox(width: 12),
@@ -136,7 +138,7 @@ class _RehearsalViewState extends State<RehearsalView> {
             Text("这几步会进练车前简报。练车时先盯住它们，回来把点位卡补上。", style: theme.textTheme.bodyMedium),
           ],
           const SizedBox(height: 20),
-          FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text("完成")),
+          FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text("完成")),
         ],
       );
     }
