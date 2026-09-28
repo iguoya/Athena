@@ -43,8 +43,14 @@ void main() {
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);
     await tester.pump();
+    expect(find.text("我的点位卡"), findsOneWidget);
+    final itemPage = find.descendant(of: find.byKey(const ValueKey("subject2-item")), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.text("车身出线"), 300, scrollable: itemPage);
     expect(find.text("操作要求（标准原文）"), findsOneWidget);
     expect(find.text("车身出线"), findsOneWidget);
+    await tester.drag(itemPage, const Offset(0, 5000));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("系好安全带"), findsOneWidget);
     expect(find.textContaining("系好安全带"), findsOneWidget); // 第 1 步展开着
 
     // 单步播第 2 步：播完停在第 2 步末尾，步骤列表跟着高亮到第 2 步。
@@ -69,16 +75,16 @@ void main() {
     await tester.pump();
     expect(inDialog(find.text("90 分")), findsOneWidget);
     await tester.tap(find.text("记下这一把"));
-    for (var i = 0; i < 200 && find.text("这一项的练车记录").evaluate().isEmpty; i++) {
+    for (var i = 0; i < 200 && find.textContaining("上次练：今天").evaluate().isEmpty; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await tester.scrollUntilVisible(find.text("这一项的练车记录"), 300, scrollable: itemPage);
     expect(find.text("这一项的练车记录"), findsOneWidget);
-    // 简报跟着记录走（ADR 0037）。
-    final page = find.ancestor(of: find.text("这一项的练车记录"), matching: find.byType(Scrollable)).first;
-    await tester.scrollUntilVisible(find.textContaining("上次练：今天"), -300, scrollable: page);
-    expect(find.textContaining("上次练：今天"), findsOneWidget);
     expect(find.textContaining("中途停车 ×2"), findsWidgets);
+    // 简报跟着记录走（ADR 0037）。
+    await tester.scrollUntilVisible(find.textContaining("上次练：今天"), -300, scrollable: itemPage);
+    expect(find.textContaining("上次练：今天"), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.runAsync(() async {

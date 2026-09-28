@@ -58,6 +58,45 @@ class DrillRun {
   final DateTime at;
 }
 
+/// 点位卡某一步的文字（ADR 0037）。只追加，读最新的一行。
+class PointNote {
+  const PointNote({required this.itemId, required this.step, required this.text, required this.at});
+
+  final String itemId;
+  final int step;
+  final String text;
+  final DateTime at;
+}
+
+/// 点位卡上的一张照片。[file] 相对 [ProgressStore.pointsDir]。
+class PointPhoto {
+  const PointPhoto({
+    required this.id,
+    required this.itemId,
+    required this.step,
+    required this.file,
+    required this.caption,
+    required this.at,
+  });
+
+  final int id;
+  final String itemId;
+  final int step;
+  final String file;
+  final String caption;
+  final DateTime at;
+}
+
+/// 一次默演（ADR 0037）：[missed] 是卡住的步骤下标。自评，不写掌握度。
+class Rehearsal {
+  const Rehearsal({required this.itemId, required this.missed, required this.total, required this.at});
+
+  final String itemId;
+  final List<int> missed;
+  final int total;
+  final DateTime at;
+}
+
 class DailyCount {
   const DailyCount({required this.day, required this.attempts, required this.correct});
 
@@ -99,12 +138,13 @@ class ProgressStore {
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
-        version: 6,
+        version: 7,
         onCreate: (db, version) async {
           await _createV1(db);
           await _createV2(db);
           await _createV5(db);
           await _createV6(db);
+          await _createV7(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) await _createV2(db);
@@ -112,6 +152,7 @@ class ProgressStore {
           if (oldVersion < 4) await _createV4(db);
           if (oldVersion < 5) await _createV5(db);
           if (oldVersion < 6) await _createV6(db);
+          if (oldVersion < 7) await _createV7(db);
         },
       ),
     );
@@ -222,6 +263,39 @@ class ProgressStore {
         id INTEGER PRIMARY KEY,
         item_id TEXT NOT NULL,
         mistakes TEXT NOT NULL,
+        at TEXT NOT NULL
+      )
+    """);
+  }
+
+  /// 点位卡与默演（ADR 0037）。照片文件在 [pointsDir]，这里只记元数据。
+  static Future<void> _createV7(Database db) async {
+    await db.execute("""
+      CREATE TABLE point_notes (
+        id INTEGER PRIMARY KEY,
+        item_id TEXT NOT NULL,
+        step INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        at TEXT NOT NULL
+      )
+    """);
+    await db.execute("""
+      CREATE TABLE point_photos (
+        id INTEGER PRIMARY KEY,
+        item_id TEXT NOT NULL,
+        step INTEGER NOT NULL,
+        file TEXT NOT NULL,
+        caption TEXT NOT NULL,
+        at TEXT NOT NULL,
+        removed INTEGER NOT NULL DEFAULT 0
+      )
+    """);
+    await db.execute("""
+      CREATE TABLE rehearsals (
+        id INTEGER PRIMARY KEY,
+        item_id TEXT NOT NULL,
+        missed TEXT NOT NULL,
+        total INTEGER NOT NULL,
         at TEXT NOT NULL
       )
     """);
@@ -661,6 +735,31 @@ class ProgressStore {
     for (final row in drills) {
       events.add({"kind": "drill", "item_id": row["item_id"], "mistakes": row["mistakes"], "at": row["at"]});
     }
+    // 点位卡文字与默演记录跟着事件同步；照片不同步，跨机器靠仓库（ADR 0037）。
+    final notes = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM point_notes ORDER BY at"
+          : "SELECT * FROM point_notes WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in notes) {
+      events.add({"kind": "point", "item_id": row["item_id"], "step": row["step"], "text": row["text"], "at": row["at"]});
+    }
+    final rehearsals = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM rehearsals ORDER BY at"
+          : "SELECT * FROM rehearsals WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in rehearsals) {
+      events.add({
+        "kind": "rehearsal",
+        "item_id": row["item_id"],
+        "missed": row["missed"],
+        "total": row["total"],
+        "at": row["at"],
+      });
+    }
     final achievements = await _db.rawQuery("SELECT * FROM achievements ORDER BY at");
     for (final row in achievements) {
       events.add({"kind": "achievement", "key": row["key"], "at": row["at"]});
@@ -716,6 +815,32 @@ class ProgressStore {
               "at": event["at"],
             });
             written++;
+          case "point":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM point_notes WHERE item_id = ? AND step = ? AND at = ? LIMIT 1",
+              [event["item_id"], event["step"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("point_notes", {
+              "item_id": event["item_id"],
+              "step": event["step"],
+              "text": event["text"] ?? "",
+              "at": event["at"],
+            });
+            written++;
+          case "rehearsal":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM rehearsals WHERE item_id = ? AND at = ? LIMIT 1",
+              [event["item_id"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("rehearsals", {
+              "item_id": event["item_id"],
+              "missed": event["missed"] ?? "",
+              "total": event["total"] ?? 0,
+              "at": event["at"],
+            });
+            written++;
           case "achievement":
             final exists = await txn.rawQuery(
               "SELECT 1 FROM achievements WHERE key = ? LIMIT 1",
@@ -750,6 +875,96 @@ class ProgressStore {
             for (final id in (row["mistakes"] as String).split(","))
               if (id.isNotEmpty) id,
           ],
+          at: DateTime.parse(row["at"] as String),
+        ),
+    ];
+  }
+
+  /// 点位卡照片放在进度库旁边的 `points/`：工作树里随仓库走，发行副本在用户数据目录。
+  String get pointsDir => p.join(p.dirname(_db.path), "points");
+
+  Future<void> savePointNote(String itemId, int step, String text, {DateTime? at}) async {
+    await _db.insert("point_notes", {
+      "item_id": itemId,
+      "step": step,
+      "text": text,
+      "at": (at ?? DateTime.now()).toIso8601String(),
+    });
+  }
+
+  /// 每一步最新的一版文字，键是（项目, 步骤）。
+  Future<Map<(String, int), PointNote>> pointNotes() async {
+    final rows = await _db.rawQuery("""
+      SELECT item_id, step, text, at FROM (
+        SELECT item_id, step, text, at,
+          ROW_NUMBER() OVER (PARTITION BY item_id, step ORDER BY at DESC, id DESC) AS rn
+        FROM point_notes
+      ) WHERE rn = 1
+    """);
+    return {
+      for (final row in rows)
+        (row["item_id"] as String, row["step"] as int): PointNote(
+          itemId: row["item_id"] as String,
+          step: row["step"] as int,
+          text: row["text"] as String,
+          at: DateTime.parse(row["at"] as String),
+        ),
+    };
+  }
+
+  Future<void> addPointPhoto(String itemId, int step, String file, String caption) async {
+    await _db.insert("point_photos", {
+      "item_id": itemId,
+      "step": step,
+      "file": file,
+      "caption": caption,
+      "at": DateTime.now().toIso8601String(),
+    });
+  }
+
+  Future<List<PointPhoto>> pointPhotos() async {
+    final rows = await _db.rawQuery("SELECT * FROM point_photos WHERE removed = 0 ORDER BY at, id");
+    return [
+      for (final row in rows)
+        PointPhoto(
+          id: row["id"] as int,
+          itemId: row["item_id"] as String,
+          step: row["step"] as int,
+          file: row["file"] as String,
+          caption: row["caption"] as String,
+          at: DateTime.parse(row["at"] as String),
+        ),
+    ];
+  }
+
+  /// 删照片：删文件，记录标记删除。
+  Future<void> removePointPhoto(PointPhoto photo) async {
+    await _db.update("point_photos", {"removed": 1}, where: "id = ?", whereArgs: [photo.id]);
+    final file = File(p.join(pointsDir, photo.file));
+    if (await file.exists()) await file.delete();
+  }
+
+  Future<void> recordRehearsal(String itemId, List<int> missed, int total, {DateTime? at}) async {
+    await _db.insert("rehearsals", {
+      "item_id": itemId,
+      "missed": missed.join(","),
+      "total": total,
+      "at": (at ?? DateTime.now()).toIso8601String(),
+    });
+  }
+
+  /// 默演记录，新的在前。
+  Future<List<Rehearsal>> rehearsals() async {
+    final rows = await _db.rawQuery("SELECT * FROM rehearsals ORDER BY at DESC, id DESC");
+    return [
+      for (final row in rows)
+        Rehearsal(
+          itemId: row["item_id"] as String,
+          missed: [
+            for (final s in (row["missed"] as String).split(","))
+              if (s.isNotEmpty) int.parse(s),
+          ],
+          total: row["total"] as int,
           at: DateTime.parse(row["at"] as String),
         ),
     ];

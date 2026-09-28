@@ -7,6 +7,7 @@ import "drill.dart";
 import "guide.dart";
 import "look.dart";
 import "models.dart";
+import "points.dart";
 import "progress.dart";
 
 /// 科目二（C2）：动画讲解、评判条目、评判题、练车错因记录（ADR 0036）。
@@ -36,8 +37,41 @@ class Subject2Page extends StatefulWidget {
 
 class _Subject2PageState extends State<Subject2Page> {
   String? _item;
+  Map<(String, int), PointNote> _notes = const {};
+  List<PointPhoto> _photos = const [];
+  List<Rehearsal> _rehearsals = const [];
 
   Subject2Guide get _guide => widget.bank.guide;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocal();
+  }
+
+  /// 点位卡和默演记录只有科目二用，自己读，不经首页。
+  Future<void> _loadLocal() async {
+    final notes = await widget.store.pointNotes();
+    final photos = await widget.store.pointPhotos();
+    final rehearsals = await widget.store.rehearsals();
+    if (!mounted) return;
+    setState(() {
+      _notes = notes;
+      _photos = photos;
+      _rehearsals = rehearsals;
+    });
+  }
+
+  /// 每项最近一次默演卡住的步骤（ADR 0037）。
+  Map<String, List<int>> get _missedSteps {
+    final out = <String, List<int>>{};
+    for (final r in _rehearsals) {
+      out.putIfAbsent(r.itemId, () => r.missed);
+    }
+    return out;
+  }
+
+  Brief get _brief => buildBrief(_guide, widget.runs, missedSteps: _missedSteps);
 
   Future<void> _record([String? itemId]) async {
     final result = await showDrillRunDialog(context, _guide, itemId ?? _item ?? _guide.items.first.id);
@@ -72,7 +106,11 @@ class _Subject2PageState extends State<Subject2Page> {
           for (final r in widget.runs)
             if (r.itemId == item.id) r,
         ],
-        brief: buildBrief(_guide, widget.runs).item(item.id)!,
+        brief: _brief.item(item.id)!,
+        store: widget.store,
+        notes: _notes,
+        photos: _photos,
+        onPointsChanged: _loadLocal,
         onBack: () => setState(() => _item = null),
         onPractice: widget.onPractice,
         onRecord: () => _record(item.id),
@@ -86,7 +124,7 @@ class _Subject2PageState extends State<Subject2Page> {
     final all = widget.bank.forSubject("subject2");
     final pending = _pending(all);
     final general = widget.bank.forTopic("drive.s2.general");
-    final brief = buildBrief(_guide, widget.runs);
+    final brief = _brief;
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
       children: [
@@ -254,12 +292,20 @@ class _ItemPage extends StatefulWidget {
     required this.mastered,
     required this.runs,
     required this.brief,
+    required this.store,
+    required this.notes,
+    required this.photos,
+    required this.onPointsChanged,
     required this.onBack,
     required this.onPractice,
     required this.onRecord,
   });
 
   final ItemBrief brief;
+  final ProgressStore store;
+  final Map<(String, int), PointNote> notes;
+  final List<PointPhoto> photos;
+  final Future<void> Function() onPointsChanged;
   final GuideItem item;
   final Subject2Guide guide;
   final List<Question> questions;
@@ -294,6 +340,7 @@ class _ItemPageState extends State<_ItemPage> {
     );
     final steps = _StepList(
       steps: item.steps,
+      notes: [for (var i = 0; i < item.steps.length; i++) widget.notes[(item.id, i)]?.text.trim() ?? ""],
       current: _step,
       onTap: (i) {
         _player.currentState?.jumpTo(i);
@@ -302,6 +349,7 @@ class _ItemPageState extends State<_ItemPage> {
       onPlay: (i) => _player.currentState?.playStep(i),
     );
     return ListView(
+      key: const ValueKey("subject2-item"),
       padding: const EdgeInsets.fromLTRB(28, 16, 28, 28),
       children: [
         Wrap(
@@ -316,7 +364,15 @@ class _ItemPageState extends State<_ItemPage> {
           ],
         ),
         const SizedBox(height: 12),
-        _ItemBriefCard(brief: widget.brief),
+        _ItemBriefCard(
+          brief: widget.brief,
+          pointsWritten: [
+            for (var i = 0; i < item.steps.length; i++)
+              if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ?? false) ||
+                  widget.photos.any((ph) => ph.itemId == item.id && ph.step == i))
+                i,
+          ].length,
+        ),
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -354,6 +410,22 @@ class _ItemPageState extends State<_ItemPage> {
           ],
         ),
         const SizedBox(height: 24),
+        _Section(
+          icon: Icons.push_pin_outlined,
+          title: "我的点位卡",
+          trailing: Text(
+            "只写你自己验证过的：教练怎么说、你在车里实测怎样",
+            style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+          ),
+          child: PointCards(
+            item: item,
+            store: widget.store,
+            notes: widget.notes,
+            photos: widget.photos,
+            onChanged: widget.onPointsChanged,
+          ),
+        ),
+        const SizedBox(height: 20),
         _Section(
           icon: Icons.menu_book,
           title: "操作要求（标准原文）",
@@ -475,9 +547,10 @@ class _BriefCard extends StatelessWidget {
 
 /// 单项页顶部：这一项的简报。
 class _ItemBriefCard extends StatelessWidget {
-  const _ItemBriefCard({required this.brief});
+  const _ItemBriefCard({required this.brief, required this.pointsWritten});
 
   final ItemBrief brief;
+  final int pointsWritten;
 
   @override
   Widget build(BuildContext context) {
@@ -503,6 +576,13 @@ class _ItemBriefCard extends StatelessWidget {
           ],
         ),
       ],
+      const SizedBox(height: 8),
+      Text(
+        pointsWritten == 0
+            ? "点位卡还空着：练车时把教练说的点位记下来，下次练车前在这里过一遍。"
+            : "点位卡写了 $pointsWritten/${brief.item.steps.length} 步，练车前过一遍。",
+        style: theme.textTheme.bodyMedium,
+      ),
       if (brief.missedSteps.isNotEmpty) ...[
         const SizedBox(height: 8),
         Text(
@@ -531,9 +611,18 @@ class _ItemBriefCard extends StatelessWidget {
 }
 
 class _StepList extends StatelessWidget {
-  const _StepList({required this.steps, required this.current, required this.onTap, required this.onPlay});
+  const _StepList({
+    required this.steps,
+    required this.notes,
+    required this.current,
+    required this.onTap,
+    required this.onPlay,
+  });
 
   final List<GuideStep> steps;
+
+  /// 每一步自己写的点位，空串表示没写。
+  final List<String> notes;
   final int current;
   final ValueChanged<int> onTap;
   final ValueChanged<int> onPlay;
@@ -578,6 +667,18 @@ class _StepList extends StatelessWidget {
                             if (i == current) ...[
                               const SizedBox(height: 4),
                               Text(steps[i].body, style: theme.textTheme.bodyMedium),
+                              if (notes[i].isNotEmpty) ...[
+                                const SizedBox(height: 6),
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Bs.warning.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text("我的点位：${notes[i]}", style: theme.textTheme.bodyMedium),
+                                ),
+                              ],
                             ],
                           ],
                         ),
