@@ -104,4 +104,21 @@ void main() {
       }
     }
   });
+
+  test("content 下每个 JSON 都登记进了 pubspec 的 assets——漏了开发时照常、打包副本读不到", () {
+    final pubspec = File("pubspec.yaml").readAsStringSync();
+    final listed = {
+      for (final line in const LineSplitter().convert(pubspec))
+        if (line.trim().startsWith("- content/")) line.trim().substring(2),
+    };
+    final files = Directory("content")
+        .listSync(recursive: true)
+        .whereType<File>()
+        .map((f) => f.path.replaceAll("\\", "/"))
+        .where((p) => p.endsWith(".json"));
+    for (final path in files) {
+      final covered = listed.contains(path) || listed.any((dir) => dir.endsWith("/") && path.startsWith(dir));
+      expect(covered, isTrue, reason: "$path 没登记进 pubspec.yaml 的 assets");
+    }
+  });
 }
