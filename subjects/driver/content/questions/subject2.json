@@ -1,0 +1,1932 @@
+{
+  "subject_id": "subject2",
+  "questions": [
+    {
+      "id": "drive.s2.general.001",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "小型自动挡汽车（C2）科目二考试满分 100 分，成绩达到 80 分为合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "90 分合格的只有大客、牵引车、城市公交、中客、大货、轻型牵引挂车，其他准驾车型（含 C1、C2）80 分合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.1",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "考试满分为100分，考试大型客车、重型牵引挂车、城市公交车、中型客车、大型货车、轻型牵引挂车准驾车型的，成绩达到90分的为合格，其他准驾车型的成绩达到80分的为合格。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.002",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "C2 科目二成绩达到多少分为合格？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "70 分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "80 分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "90 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "100 分",
+          "ok": false
+        }
+      ],
+      "explain": "小型汽车、小型自动挡汽车属于「其他准驾车型」，80 分合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.1",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "考试满分为100分，考试大型客车、重型牵引挂车、城市公交车、中型客车、大型货车、轻型牵引挂车准驾车型的，成绩达到90分的为合格，其他准驾车型的成绩达到80分的为合格。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.003",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "按国标，小型自动挡汽车科目二的考试内容包括倒车入库、侧方停车、曲线行驶和直角转弯，不含坡道定点停车和起步。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "坡道定点停车和起步是 C1 的项目（4.2.2 b），C2 没有；省级公安机关交通管理部门还可以根据实际增加考试内容。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 4.2.3",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "小型自动挡汽车、残疾人专用小型自动挡载客汽车准驾车型的考试内容应包括：a) 倒车入库；b) 侧方停车；c) 曲线行驶；d) 直角转弯；e) 省级公安机关交通管理部门根据实际增加的考试内容。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.004",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "科目二考试时不按规定使用安全带，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "通用不合格情形第一条。上车先系安全带，再做别的。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不按规定使用安全带或者戴安全头盔的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.005",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "启动发动机时挡位未置于空挡（驻车挡），扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "这是不合格，不是扣分。自动挡启动前确认在 P 挡（或 N 挡）。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 f)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "启动发动机时挡位未置于空挡（驻车挡）的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.006",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "起步时车辆后溜距离大于 30cm，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": true
+        }
+      ],
+      "explain": "大于 30cm 不合格；小于或等于 30cm 扣 10 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 g)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步时车辆后溜距离大于 30cm的；"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步时车辆后溜距离小于或等于 30cm 的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.007",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "起步时车辆后溜距离小于或等于 30cm，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "以 30cm 为界：不超过扣 10 分，超过不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步时车辆后溜距离小于或等于 30cm 的；"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 g)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步时车辆后溜距离大于 30cm的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.008",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "不松驻车制动起步，但能及时纠正的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "及时纠正扣 10 分；未及时纠正就是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不松驻车制动起步，但能及时纠正的；"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 h)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不松驻车制动起步，未及时纠正的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.009",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "不松驻车制动起步，未及时纠正的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "同一个错误，纠没纠正是两个档：纠正了扣 10 分，没纠正不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 h)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不松驻车制动起步，未及时纠正的；"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不松驻车制动起步，但能及时纠正的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.010",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "行驶中视线离开行驶方向超过 2s，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "低头找挡位、盯着方向盘都算视线离开行驶方向。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 o)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "行驶中，视线离开行驶方向超过 2s 的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.011",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "起步时未完全关闭车门，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": true
+        }
+      ],
+      "explain": "车门没关好就起步，不合格。起步前看一眼仪表上的车门指示。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 i)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步时未完全关闭车门的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.012",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "制动、加速踏板使用错误的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "踩错踏板是不合格。自动挡只有两个踏板，更要分清。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 k)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "制动、加速踏板使用错误的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.013",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "驾驶姿势不正确的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "属于扣 10 分情形。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "驾驶姿势不正确的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.014",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "制动不平顺的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "一脚急刹也会扣分，控速要提前、要柔。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 k)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "制动不平顺的。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.015",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "转弯时转、回方向过早或过晚，或者转向角度过大、过小，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "属于扣 10 分情形；如果因此压线出线，还会按专项评判再判。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 g)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "转弯时，转、回方向过早、过晚，或者转向角度过大、过小的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.016",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "科目二考试过程中，因扣分或出现不合格情形致使继续考试无法达到合格标准的，本次考试终止。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "扣到 80 分以下或出现不合格情形，当场结束。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.1 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "考试过程中，因扣分或出现不合格情形致使继续考试无法达到合格标准的，本次考试终止；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.017",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "科目二考试不合格的，可以当场补考一次。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "不参加当场补考或补考仍不合格的，本次预约考试结束（5.2.1 e）。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.1 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "考试不合格的可当场补考一次；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.018",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "行驶中双手均离开转向盘的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "至少一只手在方向盘上。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 m)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "行驶中，双手均离开转向盘的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.019",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "遮挡、关闭车内音视频监控设备的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "这是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "遮挡、关闭车内音视频监控设备的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.020",
+      "topic_id": "drive.s2.general",
+      "kind": "single",
+      "prompt": "启动发动机后，不及时松开启动开关，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "属于扣 10 分情形。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "启动发动机后，不及时松开启动开关的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s2.general.021",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "起步或行驶中挂错挡，不能及时纠正的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "自动挡也有挂错的时候：该挂 R 挂成 D、该挂 D 挂成 R。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.2 f)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "起步或行驶中挂错挡，不能及时纠正的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s2.general.022",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "行驶中身体任何部位伸出车外的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "倒库时探头看线也算。看线用后视镜。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 p)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "行驶中，身体任何部位伸出车外的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.general.023",
+      "topic_id": "drive.s2.general",
+      "kind": "judge",
+      "prompt": "不按规定路线、顺序行驶的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "项目顺序、路线由考场规定，走错就是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.2.1 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "不按规定路线、顺序行驶的；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.001",
+      "topic_id": "drive.s2.reverse",
+      "kind": "judge",
+      "prompt": "倒车入库时车身出线的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "看的是车身，不是车轮：后视镜、保险杠越线都算。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车身出线的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.002",
+      "topic_id": "drive.s2.reverse",
+      "kind": "judge",
+      "prompt": "倒车入库时倒库不入的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "倒库不入是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "倒库不入的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.003",
+      "topic_id": "drive.s2.reverse",
+      "kind": "judge",
+      "prompt": "倒车入库时，在倒车前未将两个前轮触地点均驶过控制线的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "出库后要开到两个前轮都越过另一端控制线，才能开始第二次倒车。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "在倒车前，未将两个前轮触地点均驶过控制线的，不合格；"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.2.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "从道路一端控制线（两个前轮触地点在控制线以外），倒入车库停车，再前进出库向另一端控制线行驶，待两个前轮触地点均驶过控制线后，倒入车库停车，前进驶出车库，回到起始点。考试过程中，车身不应超出道路边缘线或库位边线，车辆进退途中不应停车。项目完成时间不应超过3.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.004",
+      "topic_id": "drive.s2.reverse",
+      "kind": "single",
+      "prompt": "小型自动挡汽车倒车入库项目完成时间不应超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1.5 分钟",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "2 分钟",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "3.5 分钟",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "8 分钟",
+          "ok": false
+        }
+      ],
+      "explain": "倒车入库 3.5 分钟，包括两次入库；侧方停车才是 1.5 分钟。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.2.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "从道路一端控制线（两个前轮触地点在控制线以外），倒入车库停车，再前进出库向另一端控制线行驶，待两个前轮触地点均驶过控制线后，倒入车库停车，前进驶出车库，回到起始点。考试过程中，车身不应超出道路边缘线或库位边线，车辆进退途中不应停车。项目完成时间不应超过3.5min。"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "项目完成时间超过规定时间的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.005",
+      "topic_id": "drive.s2.reverse",
+      "kind": "single",
+      "prompt": "倒车入库项目完成时间超过规定时间，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": true
+        }
+      ],
+      "explain": "超时不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "项目完成时间超过规定时间的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.006",
+      "topic_id": "drive.s2.reverse",
+      "kind": "single",
+      "prompt": "倒车入库中途停车，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每次扣 5 分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每次扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "每停一次扣 5 分；进退途中不应停车。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 e)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.007",
+      "topic_id": "drive.s2.reverse",
+      "kind": "judge",
+      "prompt": "倒车入库时，车辆进退途中不应停车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "停了按每次扣 5 分算。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.2.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "从道路一端控制线（两个前轮触地点在控制线以外），倒入车库停车，再前进出库向另一端控制线行驶，待两个前轮触地点均驶过控制线后，倒入车库停车，前进驶出车库，回到起始点。考试过程中，车身不应超出道路边缘线或库位边线，车辆进退途中不应停车。项目完成时间不应超过3.5min。"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.1 e)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.008",
+      "topic_id": "drive.s2.reverse",
+      "kind": "single",
+      "prompt": "倒车入库一共要倒入车库几次？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1 次",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "2 次",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "3 次",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "4 次",
+          "ok": false
+        }
+      ],
+      "explain": "从一端倒入车库，出库到另一端控制线外，再倒入一次，最后前进出库回到起始点。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.2.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "从道路一端控制线（两个前轮触地点在控制线以外），倒入车库停车，再前进出库向另一端控制线行驶，待两个前轮触地点均驶过控制线后，倒入车库停车，前进驶出车库，回到起始点。考试过程中，车身不应超出道路边缘线或库位边线，车辆进退途中不应停车。项目完成时间不应超过3.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.reverse.009",
+      "topic_id": "drive.s2.reverse",
+      "kind": "judge",
+      "prompt": "倒车入库开始时，车辆两个前轮触地点应在控制线以外。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "起点就在控制线外，第二次倒车前也要两前轮都驶过另一端控制线。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.2.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "从道路一端控制线（两个前轮触地点在控制线以外），倒入车库停车，再前进出库向另一端控制线行驶，待两个前轮触地点均驶过控制线后，倒入车库停车，前进驶出车库，回到起始点。考试过程中，车身不应超出道路边缘线或库位边线，车辆进退途中不应停车。项目完成时间不应超过3.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.001",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车车辆入库停止后，车身出线的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "入库停下那一刻车身不能压出库线。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆入库停止后，车身出线的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.002",
+      "topic_id": "drive.s2.parallel",
+      "kind": "single",
+      "prompt": "小型自动挡汽车侧方停车项目完成时间不应超过多少？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "1 分钟",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "1.5 分钟",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "2 分钟",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "3.5 分钟",
+          "ok": false
+        }
+      ],
+      "explain": "重型牵引挂车 2 分钟，其他车型 1.5 分钟。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.5.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆在库左前方一次倒车入库，再开启左转向灯后前进向左前方出库，出库后关闭转向灯。考试过程中，车轮不应触轧道路边缘线或库位边线，车身不应触碰库位边线，车辆进退途中不应停车。项目完成时间重型牵引挂车不应超过 2min，其他车型不应超过 1.5min。"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "项目完成时间超过规定时间的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.003",
+      "topic_id": "drive.s2.parallel",
+      "kind": "single",
+      "prompt": "侧方停车行驶中车轮触轧道路边缘线或库位边线，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每次扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "每次扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "每次扣 10 分。注意：压线是扣分，入库停止后车身出线才是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "行驶中车轮触轧道路边缘线或库位边线的，每次扣 10 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.004",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车行驶中车身触碰库位边线的，每次扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "车身触碰也按次扣 10 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "行驶中车身触碰库位边线的，每次扣 10 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.005",
+      "topic_id": "drive.s2.parallel",
+      "kind": "single",
+      "prompt": "侧方停车出库时不使用或错误使用转向灯，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "扣 10 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 e)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "出库时不使用或错误使用转向灯的，扣 10 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.006",
+      "topic_id": "drive.s2.parallel",
+      "kind": "single",
+      "prompt": "侧方停车出库时应当开启哪一侧转向灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "右转向灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "左转向灯",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "危险报警闪光灯",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不用开灯",
+          "ok": false
+        }
+      ],
+      "explain": "向左前方出库，开左转向灯；出库后关闭。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.5.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆在库左前方一次倒车入库，再开启左转向灯后前进向左前方出库，出库后关闭转向灯。考试过程中，车轮不应触轧道路边缘线或库位边线，车身不应触碰库位边线，车辆进退途中不应停车。项目完成时间重型牵引挂车不应超过 2min，其他车型不应超过 1.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.007",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车应当一次倒车入库。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "标准原文：车辆在库左前方一次倒车入库。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.5.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆在库左前方一次倒车入库，再开启左转向灯后前进向左前方出库，出库后关闭转向灯。考试过程中，车轮不应触轧道路边缘线或库位边线，车身不应触碰库位边线，车辆进退途中不应停车。项目完成时间重型牵引挂车不应超过 2min，其他车型不应超过 1.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.008",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车出库后可以不关闭转向灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "出库后要关闭转向灯。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.5.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆在库左前方一次倒车入库，再开启左转向灯后前进向左前方出库，出库后关闭转向灯。考试过程中，车轮不应触轧道路边缘线或库位边线，车身不应触碰库位边线，车辆进退途中不应停车。项目完成时间重型牵引挂车不应超过 2min，其他车型不应超过 1.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.009",
+      "topic_id": "drive.s2.parallel",
+      "kind": "single",
+      "prompt": "侧方停车中途停车，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每次扣 5 分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每次扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "每次扣 5 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 f)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.010",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车项目完成时间超过规定时间的，扣 10 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "超时是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.4 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "项目完成时间超过规定时间的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.parallel.011",
+      "topic_id": "drive.s2.parallel",
+      "kind": "judge",
+      "prompt": "侧方停车时，车辆从库的左前方倒车入库。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "倒车起点在库的左前方，出库向左前方。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.5.2",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车辆在库左前方一次倒车入库，再开启左转向灯后前进向左前方出库，出库后关闭转向灯。考试过程中，车轮不应触轧道路边缘线或库位边线，车身不应触碰库位边线，车辆进退途中不应停车。项目完成时间重型牵引挂车不应超过 2min，其他车型不应超过 1.5min。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.curve.001",
+      "topic_id": "drive.s2.curve",
+      "kind": "judge",
+      "prompt": "曲线行驶车轮轧道路边缘线的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "曲线行驶看的是车轮。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.5 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车轮轧道路边缘线的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.curve.002",
+      "topic_id": "drive.s2.curve",
+      "kind": "single",
+      "prompt": "曲线行驶中途停车，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每次扣 5 分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每次扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "每次扣 5 分，不是不合格。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.5 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.curve.003",
+      "topic_id": "drive.s2.curve",
+      "kind": "judge",
+      "prompt": "曲线行驶中途停车的，直接评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "每次扣 5 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.5 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.curve.004",
+      "topic_id": "drive.s2.curve",
+      "kind": "judge",
+      "prompt": "曲线行驶应从弯道一端前进驶入、从另一端驶出，转向和速度应平稳。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "全程前进，不倒车。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.6",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "驾驶车辆从弯道的一端前进驶入，从另一端驶出。行驶中，车轮不应触轧车道边线，转向、速度应平稳，中途不应停车，大型客车、重型牵引挂车、城市公交车、中型客车、大型货车应以二挡（含）以上挡位通过。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.curve.005",
+      "topic_id": "drive.s2.curve",
+      "kind": "judge",
+      "prompt": "小型自动挡汽车曲线行驶必须挂二挡以上通过，否则扣 5 分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "二挡要求只针对大客、牵引车、城市公交、大货、中客；C2 没有这条。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.5 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "大型客车、重型牵引挂车、城市公交车、大型货车、中型客车准驾车型行驶时挡位未挂在二挡及以上的，扣 5 分。"
+        },
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.6",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "驾驶车辆从弯道的一端前进驶入，从另一端驶出。行驶中，车轮不应触轧车道边线，转向、速度应平稳，中途不应停车，大型客车、重型牵引挂车、城市公交车、中型客车、大型货车应以二挡（含）以上挡位通过。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s2.corner.001",
+      "topic_id": "drive.s2.corner",
+      "kind": "judge",
+      "prompt": "直角转弯车轮轧道路边缘线的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "直角转弯看的是车轮。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.6 a)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "车轮轧道路边缘线的，不合格；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.corner.002",
+      "topic_id": "drive.s2.corner",
+      "kind": "single",
+      "prompt": "直角转弯前不使用或错误使用转向灯，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "扣 10 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.6 b)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "转弯前不使用或错误使用转向灯的，扣 10 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.corner.003",
+      "topic_id": "drive.s2.corner",
+      "kind": "single",
+      "prompt": "直角转弯完成后不关闭转向灯，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "扣 5 分",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "扣 10 分",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "扣 10 分。开灯、关灯各是一个扣分点。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.6 c)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "转弯后不关闭转向灯的，扣 10 分；"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.corner.004",
+      "topic_id": "drive.s2.corner",
+      "kind": "single",
+      "prompt": "直角转弯中途停车，如何评判？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "不扣分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "每次扣 5 分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "每次扣 10 分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不合格",
+          "ok": false
+        }
+      ],
+      "explain": "每次扣 5 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.6 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.corner.005",
+      "topic_id": "drive.s2.corner",
+      "kind": "judge",
+      "prompt": "直角转弯前应开启转向灯，完成转弯后应关闭转向灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "开、关都要做。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 5.2.7",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "驾驶车辆按车道边线向左或向右直角转弯。转弯前应开启转向灯，完成转弯后应关闭转向灯；行驶中，车轮不应触轧车道边线，中途不应停车。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s2.corner.006",
+      "topic_id": "drive.s2.corner",
+      "kind": "judge",
+      "prompt": "直角转弯中途停车的，评判为不合格。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "每次扣 5 分。",
+      "source_refs": [
+        {
+          "source_id": "ga-1026",
+          "relation": "quoted",
+          "locator": "GA 1026—2022 6.2.3.6 d)",
+          "url": "https://std.samr.gov.cn/hb/search/stdHBDetailedCNF?id=E424B54CA6246DD7E05397BE0A0A5C54",
+          "note": "中途停车的，每次扣 5 分。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 2,
+      "band": "hot"
+    }
+  ]
+}

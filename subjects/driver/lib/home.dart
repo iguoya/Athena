@@ -718,7 +718,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final pending = _pending(all);
     final mastered = all.where((q) => _mastered.contains(q.id)).length;
     final avg = _avgMs == 0 ? "—" : "${(_avgMs / 1000).toStringAsFixed(1)}秒";
-    final exam = subject.exam;
+    final exam = subject.exam!;
     // 整页用 ListView：理由同科目一概览——固定高度会把章节列表挤没。
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
@@ -931,7 +931,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ],
           ),
           const SizedBox(height: 10),
-          ExamTrend(scores: scores, passScore: subject.exam.passScore),
+          ExamTrend(scores: scores, passScore: subject.exam!.passScore),
         ],
       ),
     );
@@ -1910,20 +1910,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       return;
     }
     if (!mounted) return;
-    if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam.minutes)) return;
+    if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam!.minutes)) return;
     if (!mounted) return;
     // 不经 dailyQuestions：偏难怪由组卷按上限少量放进来（ADR 0032）。
     final all = subject.id == "subject1"
         ? widget.bank.unlocked("subject1", _s1Open)
         : widget.bank.forSubject(subject.id);
-    final paper = Paper.draw(all, subject.exam, Random());
+    final paper = Paper.draw(all, subject.exam!, Random());
     _openSession(
       SessionLaunch(
         title: "${subject.code} 模拟考试",
         subjectId: subject.id,
         questions: paper.questions,
         timed: true,
-        minutes: subject.exam.minutes,
+        minutes: subject.exam!.minutes,
         revealImmediately: false,
         paper: paper,
         draftKey: draftKey,

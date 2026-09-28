@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:path/path.dart" as p;
 
 import "app_root.dart";
+import "guide.dart";
 import "models.dart";
 
 class ContentLoader {
@@ -28,6 +29,7 @@ class ContentLoader {
     final questions = <Question>[
       for (final question in [
         ..._questionsOf(await _read("questions/subject1.json")),
+        ..._questionsOf(await _read("questions/subject2.json")),
         ..._questionsOf(await _read("questions/subject4.json")),
       ])
         if (seen.add(question.id)) question,
@@ -36,7 +38,8 @@ class ContentLoader {
       for (final raw in (jsonDecode(await _read("cheatsheet.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
         CheatGroup.fromJson(raw as Map<String, dynamic>),
     ];
-    return Bank(curriculum: curriculum, questions: questions, signs: signs, cheatsheet: cheatsheet);
+    final guide = Subject2Guide.fromJson(jsonDecode(await _read("subject2.json")) as Map<String, dynamic>);
+    return Bank(curriculum: curriculum, questions: questions, signs: signs, cheatsheet: cheatsheet, guide: guide);
   }
 
   static List<RoadSign> _signsOf(String raw) {

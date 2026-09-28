@@ -1,3 +1,5 @@
+import "guide.dart";
+
 class SourceRef {
   const SourceRef({
     required this.sourceId,
@@ -322,7 +324,9 @@ class Subject {
   final String code;
   final String title;
   final String? officialName;
-  final ExamRules exam;
+
+  /// 笔试规则；科目二没有笔试，为空（ADR 0036）。
+  final ExamRules? exam;
   final List<Topic> topics;
   final List<StudyPhase> phases;
 
@@ -341,7 +345,7 @@ class Subject {
       code: json["code"] as String,
       title: json["title"] as String,
       officialName: json["official_name"] as String?,
-      exam: ExamRules.fromJson(json["exam"] as Map<String, dynamic>),
+      exam: json["exam"] == null ? null : ExamRules.fromJson(json["exam"] as Map<String, dynamic>),
       topics: [
         for (final raw in json["topics"] as List<dynamic>)
           Topic.fromJson(raw as Map<String, dynamic>),
@@ -492,9 +496,11 @@ class Bank {
     required this.questions,
     this.signs = const [],
     this.cheatsheet = const [],
+    this.guide = Subject2Guide.empty,
   });
 
   final Curriculum curriculum;
+  final Subject2Guide guide;
   final List<Question> questions;
   final List<RoadSign> signs;
   final List<CheatGroup> cheatsheet;

@@ -10,7 +10,7 @@ import "package:flutter_test/flutter_test.dart";
 void main() {
   test("课表与题库能从工作目录读出来，知识点对得上", () async {
     final bank = await ContentLoader.load();
-    expect(bank.curriculum.subjects, hasLength(2));
+    expect(bank.curriculum.subjects, hasLength(3));
     expect(bank.forSubject("subject1"), isNotEmpty);
     expect(bank.forSubject("subject4"), isNotEmpty);
     final topics = {
@@ -77,7 +77,7 @@ void main() {
 
   test("用真实题库组科目一模拟考：六个内容块和题型配比都抽得满", () async {
     final bank = await ContentLoader.load();
-    final rules = bank.curriculum.subject("subject1").exam;
+    final rules = bank.curriculum.subject("subject1").exam!;
     expect(rules.blocks.values.fold(0, (a, b) => a + b), rules.questionCount);
     final paper = Paper.draw(bank.forSubject("subject1"), rules, Random(7));
     expect(paper.questions, hasLength(rules.questionCount));

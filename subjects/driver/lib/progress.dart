@@ -49,6 +49,15 @@ class ExamDraft {
 }
 
 /// 一天的练习量——柱子高矮一眼看出手感有没有断（主仓库 ADR 0056）。
+/// 练一把车的记录（ADR 0036）：哪一项、出了哪些错（同一个错可以出现多次）。
+class DrillRun {
+  const DrillRun({required this.itemId, required this.mistakes, required this.at});
+
+  final String itemId;
+  final List<String> mistakes;
+  final DateTime at;
+}
+
 class DailyCount {
   const DailyCount({required this.day, required this.attempts, required this.correct});
 
@@ -90,17 +99,19 @@ class ProgressStore {
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
-        version: 5,
+        version: 6,
         onCreate: (db, version) async {
           await _createV1(db);
           await _createV2(db);
           await _createV5(db);
+          await _createV6(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) await _createV2(db);
           if (oldVersion < 3) await _createV3(db);
           if (oldVersion < 4) await _createV4(db);
           if (oldVersion < 5) await _createV5(db);
+          if (oldVersion < 6) await _createV6(db);
         },
       ),
     );
@@ -204,6 +215,18 @@ class ProgressStore {
 
   /// 模拟考中途的答案只在内存里，中途崩了或被重启就整场白做——挪一份进库，
   /// 一个 key（科目 + 哪一种考）同时只留一份，交卷或放弃就删掉。
+  /// 科目二练车记录（ADR 0036）。mistakes 是逗号连起来的错因 id，空串表示这把没毛病。
+  static Future<void> _createV6(Database db) async {
+    await db.execute("""
+      CREATE TABLE drill_runs (
+        id INTEGER PRIMARY KEY,
+        item_id TEXT NOT NULL,
+        mistakes TEXT NOT NULL,
+        at TEXT NOT NULL
+      )
+    """);
+  }
+
   static Future<void> _createV5(Database db) async {
     await db.execute("""
       CREATE TABLE exam_drafts (
@@ -629,6 +652,15 @@ class ProgressStore {
         "at": row["at"],
       });
     }
+    final drills = await _db.rawQuery(
+      since == null
+          ? "SELECT * FROM drill_runs ORDER BY at"
+          : "SELECT * FROM drill_runs WHERE at > ? ORDER BY at",
+      [?since],
+    );
+    for (final row in drills) {
+      events.add({"kind": "drill", "item_id": row["item_id"], "mistakes": row["mistakes"], "at": row["at"]});
+    }
     final achievements = await _db.rawQuery("SELECT * FROM achievements ORDER BY at");
     for (final row in achievements) {
       events.add({"kind": "achievement", "key": row["key"], "at": row["at"]});
@@ -672,6 +704,18 @@ class ProgressStore {
               "at": event["at"],
             });
             written++;
+          case "drill":
+            final exists = await txn.rawQuery(
+              "SELECT 1 FROM drill_runs WHERE item_id = ? AND at = ? LIMIT 1",
+              [event["item_id"], event["at"]],
+            );
+            if (exists.isNotEmpty) continue;
+            await txn.insert("drill_runs", {
+              "item_id": event["item_id"],
+              "mistakes": event["mistakes"] ?? "",
+              "at": event["at"],
+            });
+            written++;
           case "achievement":
             final exists = await txn.rawQuery(
               "SELECT 1 FROM achievements WHERE key = ? LIMIT 1",
@@ -684,6 +728,31 @@ class ProgressStore {
       }
     });
     return written;
+  }
+
+  /// 记一把练车。不写掌握度——掌握度只由答题写入（ADR 0036）。
+  Future<void> recordDrillRun(String itemId, List<String> mistakes, {DateTime? at}) async {
+    await _db.insert("drill_runs", {
+      "item_id": itemId,
+      "mistakes": mistakes.join(","),
+      "at": (at ?? DateTime.now()).toIso8601String(),
+    });
+  }
+
+  /// 练车记录，新的在前。
+  Future<List<DrillRun>> drillRuns() async {
+    final rows = await _db.rawQuery("SELECT * FROM drill_runs ORDER BY at DESC, id DESC");
+    return [
+      for (final row in rows)
+        DrillRun(
+          itemId: row["item_id"] as String,
+          mistakes: [
+            for (final id in (row["mistakes"] as String).split(","))
+              if (id.isNotEmpty) id,
+          ],
+          at: DateTime.parse(row["at"] as String),
+        ),
+    ];
   }
 
   Future<int> attemptTotal() async {
