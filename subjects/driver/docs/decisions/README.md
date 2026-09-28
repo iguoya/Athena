@@ -33,3 +33,4 @@
 | [0026](0026-phase-size-follows-content.md) | 阶段题量随内容走，不设上下限 | 已接受（修订 0009） |
 | [0027](0027-practice-by-national-error-rate.md) | 练习按全国错误率排序，易错题标出来 | 已接受 |
 | [0028](0028-confusable-numbers-page.md) | 易混数字对照页 | 已接受 |
+| [0029](0029-subject4-trim-other-vehicle-duties.md) | 科目四里其他车型驾驶人的专属知识标偏难 | 已接受（修订 0017 第 4 条） |
