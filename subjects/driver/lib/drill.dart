@@ -518,13 +518,16 @@ final drillScenes = {for (final s in [reverseScene, parallelScene, curveScene, c
 // ---------------------------------------------------------------------------
 
 class DrillPlayer extends StatefulWidget {
-  const DrillPlayer({super.key, required this.scene, required this.stepTitles, this.onStep});
+  const DrillPlayer({super.key, required this.scene, required this.stepTitles, this.onStep, this.hideCue = false});
 
   final DrillScene scene;
 
   /// 步骤标题（来自 content/subject2.json，条数与场景步骤一致）。
   final List<String> stepTitles;
   final ValueChanged<int>? onStep;
+
+  /// 默演时先藏起画面上的步骤标题和要点，免得替人把答案说了（ADR 0037）。
+  final bool hideCue;
 
   @override
   State<DrillPlayer> createState() => DrillPlayerState();
@@ -624,8 +627,8 @@ class DrillPlayerState extends State<DrillPlayer> with SingleTickerProviderState
               painter: DrillPainter(
                 scene: widget.scene,
                 frame: frame,
-                caption: "第 ${frame.step + 1} 步 · $title",
-                cue: steps[frame.step].cue,
+                caption: widget.hideCue ? "第 ${frame.step + 1} 步" : "第 ${frame.step + 1} 步 · $title",
+                cue: widget.hideCue ? null : steps[frame.step].cue,
                 blinkOn: (_t * 2.5).floor().isEven,
               ),
             ),

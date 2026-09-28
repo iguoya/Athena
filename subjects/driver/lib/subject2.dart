@@ -9,6 +9,7 @@ import "look.dart";
 import "models.dart";
 import "points.dart";
 import "progress.dart";
+import "rehearsal.dart";
 
 /// 科目二（C2）：动画讲解、评判条目、评判题、练车错因记录（ADR 0036）。
 class Subject2Page extends StatefulWidget {
@@ -406,6 +407,18 @@ class _ItemPageState extends State<_ItemPage> {
               onPressed: widget.onRecord,
               icon: const Icon(Icons.edit_note),
               label: const Text("记一把练车"),
+            ),
+            FilledButton.tonalIcon(
+              onPressed: () => showRehearsal(
+                context,
+                item: item,
+                store: widget.store,
+                notes: widget.notes,
+                photos: widget.photos,
+                onChanged: widget.onPointsChanged,
+              ),
+              icon: const Icon(Icons.record_voice_over),
+              label: const Text("默演一遍"),
             ),
           ],
         ),
