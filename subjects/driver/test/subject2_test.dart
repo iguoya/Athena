@@ -105,4 +105,18 @@ void main() {
     await b.close();
     await dir.delete(recursive: true);
   });
+
+  test("每一步都有注意事项，条款号能在摘录里找到；讲解稿带上注意事项（ADR 0040）", () {
+    for (final item in bank.guide.items) {
+      for (var i = 0; i < item.steps.length; i++) {
+        final step = item.steps[i];
+        expect(step.caution, isNotEmpty, reason: "${item.id} 第 ${i + 1} 步没有注意事项");
+        expect(step.cautionLocators, isNotEmpty);
+        for (final l in step.cautionLocators) {
+          expect(excerpts, contains("- ${l.substring("GA 1026—2022 ".length)}："), reason: "${item.id} 第 ${i + 1} 步 $l");
+        }
+        expect(step.narration(i), allOf(startsWith("第${i + 1}步，${step.title}。"), contains("注意：${step.caution}")));
+      }
+    }
+  });
 }

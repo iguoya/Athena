@@ -44,3 +44,4 @@
 | [0037](0037-subject2-brief-reference-points-rehearsal.md) | 科目二配合线下练车：练车前简报、个人点位卡、默演模式 | 已接受 |
 | [0038](0038-page-dwell-at-least-five-seconds.md) | 自动翻页前至少停留 5 秒 | 已接受（修订 0025 的停顿时长） |
 | [0039](0039-subject2-organized-around-practice-days.md) | 科目二围绕「练车日」组织，不沿用科目一的练习形式 | 已接受 |
+| [0040](0040-subject2-narration-cautions-marks.md) | 科目二动画加语音讲解、注意事项与画面标注 | 已接受 |

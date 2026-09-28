@@ -62,10 +62,31 @@ class Mistake {
 }
 
 class GuideStep {
-  const GuideStep({required this.title, required this.body});
+  const GuideStep({required this.title, required this.body, this.caution = "", this.cautionLocators = const []});
 
   final String title;
   final String body;
+
+  /// 注意事项：这一步最容易被判扣分或不合格的地方，逐条对应评判条款（ADR 0040）。
+  final String caution;
+  final List<String> cautionLocators;
+
+  /// 语音讲解的稿子：第几步、做什么、注意什么（ADR 0040）。
+  String narration(int index) => [
+        "第${index + 1}步，$title。",
+        body,
+        if (caution.isNotEmpty) "注意：$caution",
+      ].join("");
+
+  factory GuideStep.fromJson(Map<String, dynamic> json) {
+    final caution = json["caution"] as Map<String, dynamic>?;
+    return GuideStep(
+      title: json["title"] as String,
+      body: json["body"] as String,
+      caution: caution?["text"] as String? ?? "",
+      cautionLocators: [for (final l in caution?["locators"] as List<dynamic>? ?? const []) l as String],
+    );
+  }
 }
 
 class GuideItem {
@@ -108,10 +129,7 @@ class GuideItem {
       requirementLocator: requirement["locator"] as String,
       requirementQuote: requirement["quote"] as String,
       rules: [for (final r in json["rules"] as List<dynamic>) GuideRule.fromJson(r as Map<String, dynamic>)],
-      steps: [
-        for (final s in json["steps"] as List<dynamic>)
-          GuideStep(title: (s as Map<String, dynamic>)["title"] as String, body: s["body"] as String),
-      ],
+      steps: [for (final s in json["steps"] as List<dynamic>) GuideStep.fromJson(s as Map<String, dynamic>)],
       tips: [for (final t in json["tips"] as List<dynamic>) t as String],
       mistakes: [for (final m in json["mistakes"] as List<dynamic>) Mistake.fromJson(m as Map<String, dynamic>)],
     );

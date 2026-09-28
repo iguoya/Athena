@@ -6,6 +6,7 @@ import "brief.dart";
 import "drill.dart";
 import "guide.dart";
 import "look.dart";
+import "narration.dart";
 import "models.dart";
 import "points.dart";
 import "readiness.dart";
@@ -957,6 +958,7 @@ class _ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<_ItemPage> {
   final _player = GlobalKey<DrillPlayerState>();
+  final _narrator = defaultNarrator();
   var _step = 0;
 
   @override
@@ -973,6 +975,9 @@ class _ItemPageState extends State<_ItemPage> {
       scene: scene,
       stepTitles: [for (final s in item.steps) s.title],
       onStep: (step) => setState(() => _step = step),
+      narration: [for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i)],
+      cautions: [for (final s in item.steps) s.caution],
+      narrator: _narrator,
     );
     final steps = _StepList(
       steps: item.steps,
@@ -1334,6 +1339,25 @@ class _StepList extends StatelessWidget {
                             if (i == current) ...[
                               const SizedBox(height: 4),
                               Text(steps[i].body, style: theme.textTheme.bodyMedium),
+                              if (steps[i].caution.isNotEmpty) ...[
+                                const SizedBox(height: 6),
+                                Tooltip(
+                                  message: steps[i].cautionLocators.join("；"),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(Icons.warning_amber_rounded, size: 18, color: Bs.danger),
+                                      const SizedBox(width: 6),
+                                      Expanded(
+                                        child: Text(
+                                          steps[i].caution,
+                                          style: theme.textTheme.bodyMedium?.copyWith(color: Bs.danger),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                               if (notes[i].isNotEmpty) ...[
                                 const SizedBox(height: 6),
                                 Container(

@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "drill.dart";
 import "guide.dart";
 import "look.dart";
+import "narration.dart";
 import "points.dart";
 import "progress.dart";
 
@@ -51,6 +52,9 @@ class RehearsalView extends StatefulWidget {
 
 class _RehearsalViewState extends State<RehearsalView> {
   final _player = GlobalKey<DrillPlayerState>();
+
+  /// 对照阶段念这一步的讲解；口述阶段播放器藏着要点，也不念（ADR 0040）。
+  final _narrator = defaultNarrator();
   var _step = 0;
   var _phase = _Phase.recall;
   final _missed = <int>[];
@@ -105,6 +109,9 @@ class _RehearsalViewState extends State<RehearsalView> {
                 scene: drillScenes[item.id]!,
                 stepTitles: [for (final s in item.steps) s.title],
                 hideCue: _phase == _Phase.recall,
+                narration: [for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i)],
+                cautions: [for (final s in item.steps) s.caution],
+                narrator: _narrator,
               ),
             ),
             const SizedBox(width: 24),

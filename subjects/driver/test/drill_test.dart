@@ -81,4 +81,25 @@ void main() {
     expect(end.y, closeTo(-car.minRadius, 1e-9));
     expect(sin(end.heading), closeTo(-1, 1e-9));
   });
+
+  // 画面标注（ADR 0040）：每一步都要指出点什么，标在场地范围里。
+  for (final scene in drillScenes.values) {
+    test("${scene.id}：每一步都有画面标注，场地标注落在画面里", () {
+      for (var i = 0; i < scene.steps.length; i++) {
+        final marks = scene.steps[i].marks;
+        expect(marks, isNotEmpty, reason: "${scene.id} 第 ${i + 1} 步没有标注");
+        for (final m in marks) {
+          expect(m.label, isNotEmpty);
+          final points = switch (m) {
+            LineMark(:final points) => points,
+            SpotMark(:final at) => [at],
+            CarMark() => const <Offset>[],
+          };
+          for (final p in points) {
+            expect(scene.bounds.inflate(0.5).contains(p), isTrue, reason: "${scene.id} 第 ${i + 1} 步「${m.label}」在画面外");
+          }
+        }
+      }
+    });
+  }
 }
