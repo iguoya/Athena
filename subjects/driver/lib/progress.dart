@@ -429,6 +429,29 @@ class ProgressStore {
     return [for (final row in rows) row["question_id"] as String];
   }
 
+  /// 每道答错过的题，最后一次答错之后又连着答对了几次（考前复习的移出判据，ADR 0034）。
+  /// 「最后一次」跟 `_latestAttempts` 同一个排序：先按时间，时间相同按行号。
+  Future<Map<String, int>> correctStreaksSinceWrong() async {
+    final rows = await _db.rawQuery("""
+      WITH last_wrong AS (
+        SELECT question_id, at, id FROM (
+          SELECT question_id, at, id,
+            ROW_NUMBER() OVER (PARTITION BY question_id ORDER BY at DESC, id DESC) AS rn
+          FROM attempts WHERE correct = 0
+        ) WHERE rn = 1
+      )
+      SELECT w.question_id, COUNT(a.id) AS n
+      FROM last_wrong w
+      LEFT JOIN attempts a
+        ON a.question_id = w.question_id AND a.correct = 1
+        AND (a.at > w.at OR (a.at = w.at AND a.id > w.id))
+      GROUP BY w.question_id
+    """);
+    return {
+      for (final row in rows) row["question_id"] as String: row["n"] as int,
+    };
+  }
+
   /// 每道题累计答错过几次。考前最该刷的是反复栽跟头的题，不是最近错的那一道。
   Future<Map<String, int>> wrongCounts() async {
     final rows = await _db.rawQuery(

@@ -35,9 +35,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static const _wrongId = "wrong";
   static const _reviewId = "review";
-
-  /// 累计答错到几次算「反复栽跟头」，进考前复习（ADR 0033）。
-  static const _reviewMinWrong = 2;
   static const _syncId = "sync";
   static const _numbersId = "numbers";
 
@@ -49,6 +46,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _wrongCount = 0;
   List<Question> _wrongQuestions = const [];
   List<Question> _reviewQuestions = const [];
+  Map<String, int> _reviewStreaks = const {};
+  int _reviewGraduated = 0;
   Map<String, int> _wrongCounts = const {};
   List<ExamRecord> _exams = const [];
   List<Notice> _notices = const [];
@@ -162,6 +161,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final avgMs = await widget.store.averageDurationMs();
     final ids = await widget.store.wrongQuestionIds();
     final wrongCounts = await widget.store.wrongCounts();
+    final streaks = await widget.store.correctStreaksSinceWrong();
     final exams = await widget.store.recentExams();
     final notices = await widget.store.notices(limit: 5);
     final daily = await widget.store.dailyAttempts();
@@ -179,19 +179,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
     );
-    // 考前复习：累计错够次数的都留着，后来答对了也不移出——错过两次说明这里
-    // 容易翻车，考前值得再过一遍（ADR 0033）。从作答记录派生，不另存一张表。
-    final latestWrong = ids.toSet();
-    final review = [
+    // 考前复习：累计错够次数进来，最后一次错之后连对够次数出去，再错又回来
+    // （ADR 0033、0034）。全部从作答记录派生，不另存一张表。
+    final eligible = [
       for (final q in widget.bank.questions)
-        if ((wrongCounts[q.id] ?? 0) >= _reviewMinWrong &&
+        if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong &&
             (s1Done || !q.topicId.startsWith("drive.s4.")))
           q,
+    ];
+    int left(Question q) =>
+        reviewExitStreak(wrongCounts[q.id] ?? 0) - (streaks[q.id] ?? 0);
+    final review = [
+      for (final q in eligible)
+        if (inReview(wrongCount: wrongCounts[q.id] ?? 0, streak: streaks[q.id] ?? 0)) q,
     ]..sort((a, b) {
-        final byCount = (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
-        if (byCount != 0) return byCount;
-        // 同样错的次数，最近一次还错着的排前面。
-        return (latestWrong.contains(b.id) ? 1 : 0).compareTo(latestWrong.contains(a.id) ? 1 : 0);
+        // 离移出还差得越多越靠前：还错着的、错得多的先练。
+        final byLeft = left(b).compareTo(left(a));
+        if (byLeft != 0) return byLeft;
+        return (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
       });
     if (!mounted) return;
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
@@ -203,6 +208,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _wrongCount = wrong.length;
       _wrongQuestions = wrong;
       _reviewQuestions = review;
+      _reviewStreaks = streaks;
+      _reviewGraduated = eligible.length - review.length;
       _wrongCounts = wrongCounts;
       _exams = exams;
       _notices = notices;
@@ -1152,13 +1159,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  /// 考前复习：累计答错 [_reviewMinWrong] 次以上的题，按错的次数排（ADR 0033）。
-  /// 跟错题本的区别：错题本只看最近一次，答对就移走；这里答对了也留着，
-  /// 标成「已订正」——考前要回头确认的恰恰是这些反复翻过车的题。
+  /// 考前复习：累计答错 [reviewMinWrong] 次以上的题（ADR 0033）。
+  /// 跟错题本的区别：错题本答对一次就移走；这里要在最后一次错之后连对够
+  /// [reviewExitStreak] 次才移出，再错又回来（ADR 0034）。
   Widget _reviewOverview(BuildContext context) {
     final items = _reviewQuestions;
     final open = [for (final q in items) if (_wrongIds.contains(q.id)) q];
-    final fixed = items.length - open.length;
+    final fixing = items.length - open.length;
     final s1 = items.where((q) => q.topicId.startsWith("drive.s1.")).length;
     final s4 = items.length - s1;
     final body = Theme.of(context).textTheme.bodyLarge;
@@ -1191,8 +1198,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           const SizedBox(height: 12),
           Text(
             items.isEmpty
-                ? "还没有累计答错 $_reviewMinWrong 次以上的题。"
-                : "累计答错 $_reviewMinWrong 次以上的题都在这里，答对了也不移走——考前把反复翻车的再过一遍。",
+                ? (_reviewGraduated == 0
+                    ? "还没有累计答错 $reviewMinWrong 次以上的题。"
+                    : "反复错过的 $_reviewGraduated 道都已连对够次数移出了；再错会自动回来。")
+                : "累计答错 $reviewMinWrong 次以上的题进这里。最后一次错之后，错几次就要连对几次（最多 4 次）才移出；移出后再错会自动回来。",
             style: body,
           ),
           if (items.isNotEmpty) ...[
@@ -1203,7 +1212,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               children: [
                 BsBadge(text: "共 ${items.length} 道", icon: Icons.fact_check, color: Bs.paper),
                 BsBadge(text: "还错着 ${open.length} 道", icon: Icons.close, color: Bs.danger),
-                BsBadge(text: "已订正 $fixed 道", icon: Icons.check, color: Bs.success),
+                BsBadge(text: "订正中 $fixing 道", icon: Icons.trending_up, color: Bs.warning),
+                if (_reviewGraduated > 0)
+                  BsBadge(text: "已移出 $_reviewGraduated 道", icon: Icons.check, color: Bs.success),
                 if (s4 > 0) BsBadge(text: "科目一 $s1 · 科目四 $s4", icon: Icons.menu_book, color: Bs.secondary),
               ],
             ),
@@ -1229,8 +1240,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 separatorBuilder: (_, _) => const Divider(height: 18),
                 itemBuilder: (context, i) {
                   final q = items[i];
-                  final times = _wrongCounts[q.id] ?? _reviewMinWrong;
-                  final still = _wrongIds.contains(q.id);
+                  final times = _wrongCounts[q.id] ?? reviewMinWrong;
+                  final streak = _reviewStreaks[q.id] ?? 0;
+                  final need = reviewExitStreak(times);
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1244,11 +1256,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       ),
                       const SizedBox(width: 8),
                       SizedBox(
-                        width: 110,
+                        width: 150,
                         child: BsBadge(
-                          text: still ? "还错着" : "已订正",
-                          icon: still ? Icons.close : Icons.check,
-                          color: still ? Bs.danger : Bs.success,
+                          text: streak == 0 ? "还错着 · 0/$need" : "连对 $streak/$need",
+                          icon: streak == 0 ? Icons.close : Icons.trending_up,
+                          color: streak == 0 ? Bs.danger : Bs.warning,
                         ),
                       ),
                       const SizedBox(width: 12),

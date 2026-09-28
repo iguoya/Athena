@@ -37,4 +37,5 @@
 | [0030](0030-find-working-tree-from-executable.md) | 直接点开调试包也认得出工作树，一台机器只有一份进度库 | 已接受 |
 | [0031](0031-each-question-once-per-round.md) | 一轮练习里每道题只出一次 | 已接受 |
 | [0032](0032-rare-questions-capped-in-exams.md) | 模拟考可以抽到偏难怪，每卷封顶 2% | 已接受（修订 0026、0029 的「不考」；回到 0003 原意） |
-| [0033](0033-pre-exam-review.md) | 考前复习——累计错 2 次以上的题单独成页 | 已接受 |
+| [0033](0033-pre-exam-review.md) | 考前复习——累计错 2 次以上的题单独成页 | 已接受（第 2 条由 0034 修订） |
+| [0034](0034-review-exit-by-correct-streak.md) | 考前复习动态进出——错几次就要连对几次才移出 | 已接受（修订 0033 第 2 条） |

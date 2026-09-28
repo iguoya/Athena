@@ -589,6 +589,18 @@ List<Question> practiceQueue(List<Question> pending, Set<String> wrongIds) {
   ];
 }
 
+/// 累计答错到几次进考前复习（ADR 0033）。
+const reviewMinWrong = 2;
+
+/// 移出考前复习要在最后一次答错之后连对几次：错几次就要连对几次，封顶 4 次（ADR 0034）。
+/// 错得越多，要证明的次数越多；封顶是为了错过七八次的题也有出路。
+int reviewExitStreak(int wrongCount) => wrongCount.clamp(reviewMinWrong, 4);
+
+/// 这道题现在该不该留在考前复习：错够了次数、且最后一次错之后还没连对够。
+/// 移出后再错一次，连对清零，自然回来。
+bool inReview({required int wrongCount, required int streak}) =>
+    wrongCount >= reviewMinWrong && streak < reviewExitStreak(wrongCount);
+
 List<Question> dailyQuestions(Iterable<Question> questions) {
   return [for (final question in questions) if (!question.isRare) question];
 }
