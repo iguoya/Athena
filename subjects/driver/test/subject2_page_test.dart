@@ -38,6 +38,7 @@ void main() {
       expect(find.text(title), findsWidgets);
     }
     expect(find.text("满分 100 · 80 分合格"), findsOneWidget);
+    expect(find.text("今天练车的重点"), findsOneWidget);
 
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);
@@ -73,6 +74,10 @@ void main() {
       await tester.pump();
     }
     expect(find.text("这一项的练车记录"), findsOneWidget);
+    // 简报跟着记录走（ADR 0037）。
+    final page = find.ancestor(of: find.text("这一项的练车记录"), matching: find.byType(Scrollable)).first;
+    await tester.scrollUntilVisible(find.textContaining("上次练：今天"), -300, scrollable: page);
+    expect(find.textContaining("上次练：今天"), findsOneWidget);
     expect(find.textContaining("中途停车 ×2"), findsWidgets);
     expect(tester.takeException(), isNull);
 

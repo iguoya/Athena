@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+import "brief.dart";
 import "drill.dart";
 import "guide.dart";
 import "look.dart";
@@ -71,6 +72,7 @@ class _Subject2PageState extends State<Subject2Page> {
           for (final r in widget.runs)
             if (r.itemId == item.id) r,
         ],
+        brief: buildBrief(_guide, widget.runs).item(item.id)!,
         onBack: () => setState(() => _item = null),
         onPractice: widget.onPractice,
         onRecord: () => _record(item.id),
@@ -84,6 +86,7 @@ class _Subject2PageState extends State<Subject2Page> {
     final all = widget.bank.forSubject("subject2");
     final pending = _pending(all);
     final general = widget.bank.forTopic("drive.s2.general");
+    final brief = buildBrief(_guide, widget.runs);
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
       children: [
@@ -107,6 +110,8 @@ class _Subject2PageState extends State<Subject2Page> {
           "练完一把车记下出的错，按考场规则给自己打分，看哪一项、哪一类错反复出现。",
           style: theme.textTheme.bodyLarge,
         ),
+        const SizedBox(height: 16),
+        _BriefCard(brief: brief, onOpen: (id) => setState(() => _item = id)),
         const SizedBox(height: 16),
         Wrap(
           spacing: 10,
@@ -248,11 +253,13 @@ class _ItemPage extends StatefulWidget {
     required this.questions,
     required this.mastered,
     required this.runs,
+    required this.brief,
     required this.onBack,
     required this.onPractice,
     required this.onRecord,
   });
 
+  final ItemBrief brief;
   final GuideItem item;
   final Subject2Guide guide;
   final List<Question> questions;
@@ -308,6 +315,8 @@ class _ItemPageState extends State<_ItemPage> {
             BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
           ],
         ),
+        const SizedBox(height: 12),
+        _ItemBriefCard(brief: widget.brief),
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -387,6 +396,136 @@ class _ItemPageState extends State<_ItemPage> {
           _DrillStats(guide: widget.guide, runs: widget.runs, itemId: item.id),
         ],
       ],
+    );
+  }
+}
+
+String _ago(DateTime at) {
+  final days = DateUtils.dateOnly(DateTime.now()).difference(DateUtils.dateOnly(at)).inDays;
+  return switch (days) {
+    0 => "今天",
+    1 => "昨天",
+    _ => "$days 天前",
+  };
+}
+
+/// 总览顶部：今天练车的重点（ADR 0037）。
+class _BriefCard extends StatelessWidget {
+  const _BriefCard({required this.brief, required this.onOpen});
+
+  final Brief brief;
+  final ValueChanged<String> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final lastAt = brief.lastAt;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+      decoration: BoxDecoration(
+        color: Bs.warning.withValues(alpha: 0.12),
+        border: Border.all(color: Bs.warning),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 10,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const Icon(Icons.assignment_turned_in, color: Bs.orange),
+              Text("今天练车的重点", style: theme.textTheme.titleMedium),
+              Text(
+                lastAt == null ? "还没有练车记录，先记几把，这里才有东西可说" : "上次练车：${_ago(lastAt)}",
+                style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (final f in brief.focus)
+            InkWell(
+              onTap: () => onOpen(f.itemId),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Icon(
+                      switch (f.kind) {
+                        FocusKind.mistake => Icons.error_outline,
+                        FocusKind.weak => Icons.trending_down,
+                        FocusKind.rehearsal => Icons.record_voice_over,
+                        FocusKind.untried => Icons.fiber_new,
+                      },
+                      size: 20,
+                      color: f.kind == FocusKind.mistake ? Bs.danger : Bs.secondary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(f.text, style: theme.textTheme.bodyLarge)),
+                    const Icon(Icons.chevron_right, color: Bs.secondary),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 单项页顶部：这一项的简报。
+class _ItemBriefCard extends StatelessWidget {
+  const _ItemBriefCard({required this.brief});
+
+  final ItemBrief brief;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final lastAt = brief.lastAt;
+    final lines = <Widget>[
+      Text(
+        brief.neverPracticed
+            ? "这一项还没记过练车。练完记一把，下次这里会告诉你该盯什么。"
+            : "最近 ${brief.recent} 把能过 ${brief.passes} 把 · 上次练：${_ago(lastAt!)}",
+        style: theme.textTheme.bodyLarge,
+      ),
+      if (brief.recurring.isNotEmpty) ...[
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text("反复出现：", style: theme.textTheme.bodyMedium),
+            for (final r in brief.recurring)
+              BsBadge(text: "${r.mistake.label} · ${r.runs} 把", color: levelColor(r.mistake.level)),
+          ],
+        ),
+      ],
+      if (brief.missedSteps.isNotEmpty) ...[
+        const SizedBox(height: 8),
+        Text(
+          "上次默演卡在：${[for (final i in brief.missedSteps) "第 ${i + 1} 步「${brief.item.steps[i].title}」"].join("、")}",
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
+    ];
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: (brief.recurring.isNotEmpty || brief.weak ? Bs.warning : Bs.info).withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.assignment_turned_in, color: Bs.orange),
+          const SizedBox(width: 10),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: lines)),
+        ],
+      ),
     );
   }
 }
