@@ -409,17 +409,22 @@ class ProgressStore {
     ];
   }
 
+  /// 每道题按作答时间取最近一次。不能按自增 id 取：同步和合并进来的是别处早先的作答，
+  /// 入库晚、id 大，按 id 会把几小时前的一次答错当成最新，盖掉后来的答对（ADR 0030）。
+  static const _latestAttempts = """
+    SELECT question_id, correct, at, id FROM (
+      SELECT question_id, correct, at, id,
+        ROW_NUMBER() OVER (PARTITION BY question_id ORDER BY at DESC, id DESC) AS rn
+      FROM attempts
+    ) WHERE rn = 1
+  """;
+
   Future<List<String>> wrongQuestionIds() async {
     final rows = await _db.rawQuery("""
       SELECT a.question_id
-      FROM attempts a
-      INNER JOIN (
-        SELECT question_id, MAX(id) AS last_id
-        FROM attempts
-        GROUP BY question_id
-      ) latest ON a.id = latest.last_id
+      FROM ($_latestAttempts) a
       WHERE a.correct = 0
-      ORDER BY a.id DESC
+      ORDER BY a.at DESC, a.id DESC
     """);
     return [for (final row in rows) row["question_id"] as String];
   }
@@ -469,12 +474,7 @@ class ProgressStore {
   Future<Set<String>> masteredQuestionIds() async {
     final rows = await _db.rawQuery("""
       SELECT a.question_id
-      FROM attempts a
-      INNER JOIN (
-        SELECT question_id, MAX(id) AS last_id
-        FROM attempts
-        GROUP BY question_id
-      ) latest ON a.id = latest.last_id
+      FROM ($_latestAttempts) a
       WHERE a.correct = 1
     """);
     return {for (final row in rows) row["question_id"] as String};
