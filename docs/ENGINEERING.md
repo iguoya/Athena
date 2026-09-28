@@ -79,5 +79,10 @@ python3 scripts/check.py --sources-only   # 只跑跨应用检查（院所名、
 
 CI 跑的是同一条入口，每个应用一个 job：依赖各装各的，命令都是
 `python3 scripts/check.py <id>`。三个 Tauri 应用共用一个矩阵，新增同类应用
-时往 `matrix.app` 里加一行；换一种技术栈就新起一组 job，因为要装的依赖不同。
+时把 id 加进它的动态矩阵、job 级 `if` 过滤列表和 `workflow_dispatch` 的 `app`
+选项；换一种技术栈就新起一组 job，因为要装的依赖不同。
+
+**触发是显式的（ADR 0064）**：`gh workflow run ci.yml` 全量，
+`gh workflow run ci.yml -f app=<id>` 只跑一个应用；推 `v*.*.*` tag 时全量。日常
+提交不触发——改了平台相关代码、动了依赖或准备发布时再手动跑。
 支持哪个平台就在那个平台上跑，否则支持会悄悄退化（ADR 0047）。

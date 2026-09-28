@@ -44,7 +44,8 @@
 | [0047](0047-portable-by-default.md) | 跨平台优先：选型、代码与构建过程的默认原则 | 已接受 |
 | [0048](0048-menubar-launcher-stays-macos-only.md) | 菜单栏启动器保留为 macOS 专属，只消费编排器结论 | 已接受 |
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |
-| [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已接受（阶段性，带退出条件） |
+| [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已被 0064 取代 |
+| [0064](0064-ci-explicit-trigger.md) | CI 改为显式触发，不再推送即跑 | 已接受；取代 0050 |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`subjects/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划 |

@@ -1,23 +1,23 @@
 name: CI
 
-# 什么时候跑：**推送即跑**，纯文档改动除外（ADR 0050）。
+# 什么时候跑：**显式触发**（ADR 0064，取代 ADR 0050 的「推送即跑」）。
 #
-# 早跑一次的价值不只是抓 bug，更是对开发过程本身的约束——知道每次提交都会被
-# 十几个平台组合验一遍，写的时候就不会把「先推上去回头再说」当默认选项。
-# 成本确实存在（三个 Tauri 应用各要在三平台编一遍 Rust 壳），但 cargo 缓存之后
-# 只有首次昂贵；真正的纯浪费是改一行 Markdown 也拉起全部 runner，所以用
-# paths-ignore 把那类提交排除掉，其余照跑。
+# - 手动：`gh workflow run ci.yml`（全量）或 `gh workflow run ci.yml -f app=driver`
+#   （只跑一个应用），也可以在 Actions 页面点 Run workflow 选。
+# - 打版本 tag：发布前全量验一遍，tag 本身就是显式动作。
+#
+# 日常提交不触发：提交前该走的是本地 `python3 scripts/check.py`（ADR 0007），
+# 远程矩阵留给「要确认跨平台」的时候——改了平台相关代码、动了依赖、准备发布。
 on:
   push:
-    branches: [main]
     tags: ["v*.*.*"]
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
-      - ".vscode/**"
-      - "LICENSE"
-  pull_request:
   workflow_dispatch:
+    inputs:
+      app:
+        description: 只跑哪个应用（all 为全量）
+        type: choice
+        default: all
+        options: [all, cpp, c, polaris, dsa, english, mathematics, driver, launcher]
 
 permissions:
   contents: read
@@ -48,6 +48,7 @@ jobs:
   # C++ 教程：GTK4 + Meson。三个平台各装各的依赖，跑的是同一条 Python 入口。
   cpp-macos:
     name: C++ 教程（macOS）
+    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
     runs-on: macos-15
     timeout-minutes: 30
     env:
@@ -72,6 +73,7 @@ jobs:
   # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
   cpp-ubuntu:
     name: C++ 教程（Ubuntu）
+    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
     runs-on: ubuntu-26.04
     timeout-minutes: 30
 
@@ -99,6 +101,7 @@ jobs:
   # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
   cpp-windows:
     name: C++ 教程（Windows）
+    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -136,13 +139,15 @@ jobs:
   # Polaris 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
   qt-quick:
     name: ${{ matrix.app }}（${{ matrix.os }}）
+    if: contains(fromJSON('["all","c","polaris"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         os: [macos-15, ubuntu-26.04]
-        app: [c, polaris]
+        # 手动只选一个应用时矩阵只留它；tag 触发时 inputs 为空，按全量。
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c","polaris"]' || format('["{0}"]', inputs.app)) }}
     # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
@@ -180,6 +185,7 @@ jobs:
   # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
   qt-quick-windows:
     name: ${{ matrix.app }}（Windows）
+    if: contains(fromJSON('["all","c","polaris"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     env:
@@ -187,7 +193,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [c, polaris]
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c","polaris"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source
@@ -238,12 +244,13 @@ jobs:
   # 和本地是同一条命令（ADR 0007）。
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
+    if: contains(fromJSON('["all","dsa","english","mathematics"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: [dsa, english, mathematics]
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["dsa","english","mathematics"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
@@ -287,6 +294,7 @@ jobs:
   # scripts/check.py（ADR 0007）。
   driver:
     name: 驾考学习（${{ matrix.os }}）
+    if: contains(fromJSON('["all","driver"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
@@ -320,6 +328,7 @@ jobs:
   # 启动器：纯 Rust，三平台同一套源码。
   launcher:
     name: 启动器（${{ matrix.os }}）
+    if: contains(fromJSON('["all","launcher"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:

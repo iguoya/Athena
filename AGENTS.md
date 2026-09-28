@@ -125,7 +125,9 @@ archive/        历史归档，不参与构建
 ## 验证要求
 
 仓库根有一个统一入口，本地与 CI 共用（ADR 0007、0045）；CI 的组织方式见
-[docs/ENGINEERING.md](docs/ENGINEERING.md)「验证要求」。
+[docs/ENGINEERING.md](docs/ENGINEERING.md)「验证要求」。**CI 显式触发，日常提交不跑
+（ADR 0064）**：本地 `check.py` 是唯一的日常门槛；要确认跨平台时手动
+`gh workflow run ci.yml [-f app=<id>]`，推版本 tag 时全量跑。
 
 ```sh
 python3 scripts/check.py                  # 跨应用检查 + 每个应用自己的检查
