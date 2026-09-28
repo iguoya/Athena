@@ -31,6 +31,7 @@ class ExamDraft {
     required this.fullBank,
     required this.picked,
     required this.startedAt,
+    this.savedAt,
   });
 
   final String subjectId;
@@ -46,6 +47,17 @@ class ExamDraft {
   /// 题在卷子里的序号 -> 选了哪些选项 id。
   final Map<int, Set<String>> picked;
   final DateTime startedAt;
+
+  /// 最后一次存草稿（最后交一题）的时刻。续答时用时只算到这里，挂起的那段不算
+  /// （ADR 0043）。版本 9 之前存的草稿没有这一列，读出来是 null。
+  final DateTime? savedAt;
+
+  /// 上次停下之前已经答了多久。老草稿不知道，按 0 算——宁可少算，不把挂起的几天算进去。
+  Duration get spent {
+    final end = savedAt;
+    if (end == null || end.isBefore(startedAt)) return Duration.zero;
+    return end.difference(startedAt);
+  }
 }
 
 /// 一天的练习量——柱子高矮一眼看出手感有没有断（主仓库 ADR 0056）。
@@ -149,7 +161,7 @@ class ProgressStore {
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(
-        version: 8,
+        version: 9,
         onCreate: (db, version) async {
           await _createV1(db);
           await _createV2(db);
@@ -157,6 +169,7 @@ class ProgressStore {
           await _createV6(db);
           await _createV7(db);
           await _createV8(db);
+          await _createV9(db);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) await _createV2(db);
@@ -166,6 +179,7 @@ class ProgressStore {
           if (oldVersion < 6) await _createV6(db);
           if (oldVersion < 7) await _createV7(db);
           if (oldVersion < 8) await _createV8(db);
+          if (oldVersion < 9) await _createV9(db);
         },
       ),
     );
@@ -326,6 +340,11 @@ class ProgressStore {
     """);
   }
 
+  /// 草稿记最后一次保存的时刻：自动续答后用时只算真正答题的时间（ADR 0043）。
+  static Future<void> _createV9(Database db) async {
+    await db.execute("ALTER TABLE exam_drafts ADD COLUMN saved_at TEXT");
+  }
+
   static Future<void> _createV5(Database db) async {
     await db.execute("""
       CREATE TABLE exam_drafts (
@@ -428,6 +447,7 @@ class ProgressStore {
         for (final entry in draft.picked.entries) "${entry.key}": entry.value.toList(),
       }),
       "started_at": draft.startedAt.toIso8601String(),
+      "saved_at": (draft.savedAt ?? DateTime.now()).toIso8601String(),
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
@@ -453,6 +473,7 @@ class ProgressStore {
           int.parse(entry.key): {for (final id in entry.value as List<dynamic>) id as String},
       },
       startedAt: DateTime.tryParse(row["started_at"] as String? ?? "") ?? DateTime.now(),
+      savedAt: DateTime.tryParse(row["saved_at"] as String? ?? ""),
     );
   }
 

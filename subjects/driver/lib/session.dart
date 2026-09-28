@@ -39,7 +39,7 @@ class SessionLaunch {
   /// 从草稿续上时，已经选过的答案；不续就是全新一场，留空。
   final Map<int, Set<String>>? resumePicked;
 
-  /// 草稿最初开考的时刻，用来算倒计时还剩多少——不是「续上的时刻」。
+  /// 续答时的开考时刻：已平移成「续上的时刻减去上次已用的时间」，用时从这里接着算（ADR 0043）。
   final DateTime? resumeStartedAt;
 }
 

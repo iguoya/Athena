@@ -197,6 +197,9 @@ void main() {
       expect((await store.recentExams(subjectId: "subject1", limit: 1000)).length, examsBefore);
       final draft = await store.loadExamDraft("subject1.exit-test");
       expect(draft?.picked.keys.toSet(), {0, 1, 2});
+      // 续答时用时只算到最后一次存草稿（ADR 0043）：saved_at 要存下来。
+      expect(draft?.savedAt, isNotNull);
+      expect(draft!.spent, greaterThanOrEqualTo(Duration.zero));
     });
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:athena_driver/exam.dart";
 import "package:athena_driver/models.dart";
+import "package:athena_driver/progress.dart";
 import "package:flutter_test/flutter_test.dart";
 
 Question _q(
@@ -219,5 +220,25 @@ void main() {
     final ids = [for (final q in queue) q.id];
     expect(ids.toSet().length, ids.length);
     expect(ids, ["wrongHot", "wrongRare", "hot", "common", "reg"]);
+  });
+
+  // 续答时用时只算到上次停下（ADR 0043）：挂起的几天不算；老草稿没有 saved_at，按 0 算。
+  test("草稿已用时间：到最后一次存草稿为止，老草稿按 0", () {
+    ExamDraft draft({DateTime? savedAt}) => ExamDraft(
+          subjectId: "subject1",
+          title: "科目一 模拟考试",
+          questionIds: const ["q0"],
+          questionCount: 100,
+          minutes: 45,
+          passScore: 90,
+          pointsPerQuestion: 1,
+          mix: const {"judge": 40, "single": 60},
+          fullBank: true,
+          picked: const {},
+          startedAt: DateTime(2026, 9, 1, 10),
+          savedAt: savedAt,
+        );
+    expect(draft(savedAt: DateTime(2026, 9, 1, 10, 12)).spent, const Duration(minutes: 12));
+    expect(draft().spent, Duration.zero);
   });
 }

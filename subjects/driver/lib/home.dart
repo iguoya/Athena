@@ -1908,7 +1908,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   /// 点了才发现是手误，至少还能反悔——真去抽题、开始计时之前先问一句
-  /// （ADR 0019）。续答草稿不用再问一遍，「继续/重新开始」那个弹窗本身就是确认。
+  /// （ADR 0019）。有草稿就直接续上（ADR 0043），不走这里。
   Future<bool> _confirmStartTest(String title, int minutes) async {
     final ok = await showDialog<bool>(
       context: context,
@@ -1958,37 +1958,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  /// 有没有一场没交的模拟考草稿：有就问续上还是重新开始；没有就返回 null，
-  /// 照常抽新卷（ADR 0016）。
+  /// 有没有一场没交的模拟考草稿：有就直接续上，不问（ADR 0043）；没有就返回 null，
+  /// 照常抽新卷。想换一卷就把这一卷交了。
   Future<SessionLaunch?> _resumeDraft(String draftKey) async {
     final draft = await widget.store.loadExamDraft(draftKey);
     if (draft == null || !mounted) return null;
-    final resume = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text("有一场没交的模拟考"),
-        content: Text(
-          "「${draft.title}」上次还没交卷，已经答了 ${draft.picked.length}/${draft.questionCount} 题。"
-          "继续上次的，还是放弃重新开始？",
-          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text("放弃，重新开始"),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text("继续上次"),
-          ),
-        ],
-      ),
-    );
-    if (resume != true) {
-      await widget.store.clearExamDraft(draftKey);
-      return null;
-    }
     final questions = [
       for (final id in draft.questionIds)
         if (widget.bank.questions.any((q) => q.id == id)) widget.bank.byId(id),
@@ -2019,7 +1993,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
       draftKey: draftKey,
       resumePicked: draft.picked,
-      resumeStartedAt: draft.startedAt,
+      // 开考时刻平移到「现在减去上次已用的时间」：挂起的那段不算进用时（ADR 0043）。
+      resumeStartedAt: DateTime.now().subtract(draft.spent),
     );
   }
 
