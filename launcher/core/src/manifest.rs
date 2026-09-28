@@ -93,12 +93,35 @@ struct IconSpec {
     /// 图块里的字，通常一到三个字符（"C++"、"算"）。
     #[serde(default)]
     letter: Option<String>,
-    /// 图块底色，取各自技术生态的惯用色，不自造。
+    /// 没有 `file` 时兜底色块的底色（ADR 0065 之后 `icon.svg` 自带颜色，不再垫它）。
     #[serde(default)]
     accent: Option<String>,
-    /// 图块里的图标，相对应用目录的 SVG。图标跟着应用走，启动器不认识谁是谁。
+    /// 应用的图标，相对应用目录的彩色 SVG。图标跟着应用走，启动器不认识谁是谁；
+    /// 启动器图块、窗口 / 任务栏、应用界面三处都从它来（ADR 0065）。
     #[serde(default)]
     file: Option<String>,
+    /// `launcher icons` 要从 `file` 派生的位图：相对应用目录的路径 → 边长，
+    /// 或 `"ico"` / `"icns"`。平台图标位只认位图，由这里一次渲染好提交进库。
+    #[serde(default)]
+    renders: BTreeMap<String, RawRender>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(untagged)]
+enum RawRender {
+    Size(u32),
+    Format(String),
+}
+
+/// 一份派生位图的格式。
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RenderSpec {
+    /// 边长为 n 的 PNG。
+    Png(u32),
+    /// 多尺寸 `.ico`（Windows exe 资源、Tauri / Flutter 的 Windows 图标位）。
+    Ico,
+    /// 多尺寸 `.icns`（macOS）。
+    Icns,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -125,6 +148,8 @@ pub struct App {
     pub accent: String,
     /// 没有图标文件时退回 `letter`。
     pub icon_file: Option<PathBuf>,
+    /// `icon.renders`：相对应用目录的路径与格式，按路径排序。
+    pub icon_renders: Vec<(String, RenderSpec)>,
     pub dir: PathBuf,
     pub dev: DevSpec,
     /// 这个学科是从哪个学科长出来的（C++ 之于 C）。只记真实的历史演进关系；
@@ -139,6 +164,19 @@ impl App {
             Some(relative) => self.dir.join(relative),
             None => self.dir.clone(),
         }
+    }
+
+    /// `icon.renders` 里最大的一张 PNG（已存在才算）。给只吃位图的前端用。
+    pub fn largest_png(&self) -> Option<PathBuf> {
+        self.icon_renders
+            .iter()
+            .filter_map(|(path, spec)| match spec {
+                RenderSpec::Png(size) => Some((*size, self.dir.join(path))),
+                _ => None,
+            })
+            .filter(|(_, path)| path.is_file())
+            .max_by_key(|(size, _)| *size)
+            .map(|(_, path)| path)
     }
 
     /// 没有 `run` 就说明这个应用还没接入编排器，只能提示怎么手动启动。
@@ -180,7 +218,22 @@ fn parse(dir: &Path) -> Option<App> {
         }
     };
     let icon = raw.icon.clone();
+    let mut icon_renders = Vec::new();
+    for (path, spec) in icon.as_ref().map(|icon| &icon.renders).into_iter().flatten() {
+        let spec = match spec {
+            RawRender::Size(size) if *size > 0 => RenderSpec::Png(*size),
+            RawRender::Format(format) if format == "ico" => RenderSpec::Ico,
+            RawRender::Format(format) if format == "icns" => RenderSpec::Icns,
+            _ => {
+                // 跟 accent 写错一样：不让启动器起不来，但要点名是谁、哪一项。
+                eprintln!("{} 的 icon.renders「{path}」：只认正整数边长、\"ico\"、\"icns\"，已跳过", dir.display());
+                continue;
+            }
+        };
+        icon_renders.push((path.clone(), spec));
+    }
     Some(App {
+        icon_renders,
         // 没写 letter 就取标题第一个字：新增应用不配这两项也能显示。
         letter: icon
             .as_ref()

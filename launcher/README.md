@@ -37,9 +37,36 @@
   应用目录里了，按文件名认最直接。
 - `match`（可选）是判断进程归属的路径前缀，`subjects/cpp` 用它指向 `build`。
 
-窗口标题栏、任务栏和托盘用**同一份**虎头，来自 `gui/assets/tiger.svg`（整只
-老虎缩到 16–32 px 只剩色带，所以 `gui/build.rs` 裁出头部）。标题栏引用构建期
-写出的 `tiger-mark.png`；托盘与 exe 资源段用同一裁切渲的位图——换标志只换那份 SVG。
+窗口标题栏、任务栏和托盘用**同一份**虎头，来自 `gui/assets/tiger.svg`（Fluent Emoji
+虎头，和各应用同一画风，ADR 0065）。标题栏引用构建期写出的 `tiger-mark.png`；托盘与
+exe 资源段用同一份渲的位图——换标志只换那份 SVG。
+
+### 图标
+
+每个应用的 `icon.svg` 就是它的图标本身：透明底、自带颜色。启动器图块原样显示它，
+不垫底色，也不随运行状态变样（运行态只看状态点）；应用自己的窗口 / 任务栏 / Dock
+和界面里的标志也都从它来（ADR 0065）。平台图标位要位图，在 `icon.renders` 里声明：
+
+```json
+"icon": {
+  "file": "icon.svg",
+  "renders": {
+    "icon.png": 256,
+    "icon.ico": "ico",
+    "src-tauri/icons/icon.icns": "icns"
+  }
+}
+```
+
+值是 PNG 边长，或 `"ico"`（16–256 共 9 帧）/ `"icns"`（16–1024）。改了 `icon.svg` 跑：
+
+```sh
+launcher/target/release/launcher icons          # subjects/ 与 practice/ 一起重新生成
+launcher/target/release/launcher icons --check  # 只核对，过期时退出码非零
+```
+
+生成的文件提交进各应用目录，应用构建不依赖启动器。没有 `icon.svg` 的新应用，图块退回
+`icon.accent` 色块加 `icon.letter`。
 
 编排器统一注入：按应用需要补 PATH（node / cargo / meson / Qt / flutter——异构
 工具链不混用）、同类 Tauri 共享的 `CARGO_TARGET_DIR`（ADR 0063：同类可共享，

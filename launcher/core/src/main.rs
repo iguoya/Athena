@@ -7,6 +7,8 @@
 //!   launcher stop <id>        停止它，连同构建期拉起的那一串
 //!   launcher logs <id>        打印日志文件路径
 //!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
+//!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
+//!                             不给 --root 时 subjects/ 与 practice/ 一起扫（ADR 0065）
 //!
 //! `--root <dir>` 换发现根目录（相对仓库根，默认 `subjects/`），放在任意位置都行：
 //! `launcher --root practice list`。扫 `practice/*` 这种子目录下的
@@ -91,6 +93,31 @@ fn main() -> ExitCode {
             }
             Err(code) => code,
         },
+        Some("icons") => {
+            let check = arguments.get(1).map(String::as_str) == Some("--check");
+            // 维护命令，不是某一面板的操作：默认两个发现根一起扫，免得漏掉 practice/。
+            let apps = match &root_override {
+                Some(_) => apps,
+                None => [discover(&repo), launcher_core::discover_in(&repo.join("practice"))].concat(),
+            };
+            match launcher_core::icons::render_all(&apps, check, line) {
+                Ok(report) if check && report.stale > 0 => {
+                    eprintln!("{} 份位图和 icon.svg 对不上，跑一次 `launcher icons`。", report.stale);
+                    ExitCode::FAILURE
+                }
+                Ok(report) => {
+                    line(&format!(
+                        "写入 {}，未变 {}，过期 {}",
+                        report.written, report.unchanged, report.stale
+                    ));
+                    ExitCode::SUCCESS
+                }
+                Err(message) => {
+                    eprintln!("{message}");
+                    ExitCode::FAILURE
+                }
+            }
+        }
         Some("sync") => match launcher_core::progress::sync(&repo, &apps, line) {
             Ok(()) => ExitCode::SUCCESS,
             Err(message) => {
@@ -119,6 +146,10 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 "title": app.title,
                 "summary": app.summary,
                 "symbol": app.symbol,
+                // 彩色图标本身，以及它派生出的最大一张 PNG：菜单栏版用位图，
+                // 免得 AppKit 去画 SVG 滤镜（ADR 0065）。
+                "icon": app.icon_file,
+                "iconPng": app.largest_png(),
                 "dir": app.dir,
                 "matchPrefix": app.match_prefix(),
                 "binary": app.dev.binary.clone().unwrap_or_default(),

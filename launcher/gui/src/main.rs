@@ -276,25 +276,25 @@ fn evolution_links(apps: &[App]) -> Vec<LinkSpec> {
         .collect()
 }
 
-/// 应用自带的图标，按图块里的显示尺寸渲染（乘 2 供高分屏用）。
+/// 应用自带的图标，按图块里的显示尺寸（56px）渲染，乘 2 供高分屏用。
 fn tile_icon(app: &App) -> Option<slint::Image> {
-    icon::render(app.icon_file.as_ref()?, 60)
+    icon::render(app.icon_file.as_ref()?, 112)
 }
 
 /// 学习应用面板和实践面板共用同一套图块数据构造，只是喂的 `apps` 来源
 /// 不同（`discover(repo)` vs `discover_in(repo/practice)）。
 fn build_entries(apps: &[App]) -> Vec<AppEntry> {
     apps.iter()
-        .map(|app| AppEntry {
+        .map(|app| (app, tile_icon(app)))
+        .map(|(app, icon)| AppEntry {
             id: app.id.as_str().into(),
             title: app.title.as_str().into(),
             letter: app.letter.as_str().into(),
             accent: parse_color(&app.accent, &app.id).into(),
-            icon: tile_icon(app).unwrap_or_default(),
-            has_icon: tile_icon(app).is_some(),
+            has_icon: icon.is_some(),
+            icon: icon.unwrap_or_default(),
             tint: Color::from_rgb_u8(0x8a, 0x8a, 0x8e).into(),
             running: false,
-            starting: false,
         })
         .collect()
 }
@@ -303,14 +303,13 @@ fn build_entries(apps: &[App]) -> Vec<AppEntry> {
 /// 一次，探测到的 `states` 顺序必须跟建模型时的 `apps` 顺序一致。
 ///
 /// 运行/未运行不写进模型里的文字字段——文字改成图块下方常驻的状态点，
-/// 颜色由 `tint` 算好（绿/橙/灰）；`running` 给停止按钮和 accent 光环，
-/// `starting` 让光环更散一点，表示还在拉起。
+/// 颜色由 `tint` 算好（绿/橙/灰）；`running` 只管停止按钮。图标本身不随
+/// 状态变化（ADR 0065）。
 fn apply_states(model: &ModelRc<AppEntry>, states: &[RunState]) {
     for (index, state) in states.iter().enumerate() {
         if let Some(mut entry) = model.row_data(index) {
             entry.tint = tint(*state).into();
             entry.running = *state != RunState::Stopped;
-            entry.starting = *state == RunState::Starting;
             model.set_row_data(index, entry);
         }
     }

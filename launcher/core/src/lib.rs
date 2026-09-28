@@ -8,10 +8,11 @@
 //! 三个前端共用它：终端的 `launcher`、跨平台的 Slint 窗口、
 //! macOS 的菜单栏常驻应用。
 
+pub mod icons;
 pub mod manifest;
 pub mod paths;
 pub mod progress;
 pub mod runner;
 
-pub use manifest::{discover, discover_in, App};
+pub use manifest::{discover, discover_in, App, RenderSpec};
 pub use runner::{activate, launch, stop, ProcessSnapshot, RunState};

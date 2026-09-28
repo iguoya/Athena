@@ -9,8 +9,12 @@ struct LearningApp: Identifiable, Sendable {
     var id: String
     var title: String
     var summary: String
-    /// 菜单里显示的 SF Symbol。
+    /// 没有彩色图标时菜单里退回显示的 SF Symbol。
     var symbol: String
+    /// 应用彩色图标的位图（`icon.svg` 派生的最大一张 PNG，ADR 0065）。
+    /// 和 Slint 启动器图块、应用自己的 Dock 图标同源；用位图是因为 Fluent 的 SVG
+    /// 带滤镜，不指望 AppKit 画对。
+    var iconURL: URL?
     var directory: URL
     /// 判断「这个应用在不在跑」时看的路径前缀，编排器算好了交过来。
     var matchPrefix: String
@@ -37,6 +41,7 @@ enum AppCatalog {
                 title: title,
                 summary: row["summary"] as? String ?? "",
                 symbol: row["symbol"] as? String ?? "book",
+                iconURL: (row["iconPng"] as? String).map { URL(fileURLWithPath: $0) },
                 directory: URL(fileURLWithPath: directory),
                 matchPrefix: row["matchPrefix"] as? String ?? directory,
                 binary: row["binary"] as? String ?? "",

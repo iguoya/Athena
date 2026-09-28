@@ -10,6 +10,11 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sysinfo = { version = "0.33", default-features = false, features = ["system"] }
 which = "8.0.6"
+# `launcher icons`：把各应用的彩色 icon.svg 渲染成平台图标位要的位图（ADR 0065）。
+# resvg 与 GUI 同版本；Fluent Emoji 的滤镜只有它画得对。
+resvg = "0.45"
+ico = "0.5"
+icns = "0.3"
 
 [lib]
 name = "launcher_core"

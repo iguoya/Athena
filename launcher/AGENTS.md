@@ -8,7 +8,7 @@
 
 | 目录 | 是什么 |
 |---|---|
-| `core/` | 编排器 `launcher`（Rust）：发现应用、准备、启动、判断状态、日志、`sync` |
+| `core/` | 编排器 `launcher`（Rust）：发现应用、准备、启动、判断状态、日志、`sync`、`icons` |
 | `gui/` | 跨平台启动器（Rust + Slint）：托盘常驻 + 列表窗口，另有「实践」分区 |
 | `macos/` | 菜单栏启动器（Swift），macOS 专属（ADR 0048） |
 
@@ -29,8 +29,12 @@
   列出来交回使用者，不替人 push。
 - **平台降级要如实说**（ADR 0047、0049、0051）：做不到就明说（例如 Wayland 不允许抢
   焦点时提示使用者自己切过去），不假装成功。
-- **换标志只换 `gui/assets/tiger.svg`。** 标题栏、任务栏、托盘都从这一份派生，裁切在
-  `gui/build.rs` 里。
+- **换标志只换 `gui/assets/tiger.svg`。** 标题栏、任务栏、托盘都由 `gui/build.rs` 从这一份
+  渲染，不另画。
+- **应用图标原样显示，不表达运行状态**（ADR 0065）。`icon.svg` 自带颜色，图块不垫底色、
+  不加光环、不随状态放大；运行态只由状态点表达。`accent` + `letter` 只给没有图标的应用兜底。
+- **图标位图由 `launcher icons` 生成**，按各应用 `icon.renders` 声明写进应用自己的目录
+  并提交；改了任何 `icon.svg` 就重跑，`launcher icons --check` 只核对不写。
 
 ## 验证
 

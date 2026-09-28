@@ -3,7 +3,7 @@
 //! 图标放在各应用自己的目录里（`subjects/<id>/icon.svg`），由 `app.json` 指名。
 //! 启动器不认识谁是谁——新增一个应用，自带一张图标就显示得出来。
 //!
-//! 启动器自己的标志来自 `assets/tiger.svg`，构建期裁出虎头：
+//! 启动器自己的标志来自 `assets/tiger.svg`，构建期渲染：
 //! - 标题栏：`Window.icon` → `assets/tiger-mark.png`
 //! - 托盘：`tray-icon.rgba`
 //! - 任务栏 / exe：多尺寸 `.ico`
@@ -13,8 +13,8 @@ use std::path::Path;
 
 use slint::{Image, Rgba8Pixel, SharedPixelBuffer};
 
-/// 渲染成边长 `size` 的位图。图标本身是纯白的，配 `accent` 底色显示，
-/// 所以这里不处理颜色。读不到或不是合法 SVG 时返回 None，界面退回显示文字。
+/// 渲染成边长 `size` 的位图。图标自带颜色、透明底（ADR 0065），原样显示，
+/// 不再垫底色。读不到或不是合法 SVG 时返回 None，界面退回 accent 色块加文字。
 pub fn render(path: &Path, size: u32) -> Option<Image> {
     let svg = std::fs::read(path).ok()?;
     let tree = resvg::usvg::Tree::from_data(&svg, &resvg::usvg::Options::default()).ok()?;

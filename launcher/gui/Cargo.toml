@@ -30,10 +30,8 @@ gtk = "0.18"
 
 [build-dependencies]
 slint-build = "1.17"
-# 从 tiger.svg 裁虎头：托盘、标题栏、任务栏共用同一份。
+# 从 tiger.svg 渲虎头：托盘、标题栏、任务栏共用同一份。
 resvg = "0.45"
-# 写出 assets/tiger-mark.png，给 Slint Window.icon 的 @image-url 用。
-png = "0.17"
 
 [target.'cfg(target_os = "windows")'.build-dependencies]
 # 把同一份虎头编进 exe 资源段。标题栏走 Window.icon，

@@ -12,18 +12,17 @@ export struct LinkSpec {
 export struct AppEntry {
     id: string,
     title: string,
-    // 图块里的图标，来自应用自己的 icon.svg；没有图标时用 letter 顶上。
+    // 图块里的图标，来自应用自己的彩色 icon.svg（ADR 0065），原样显示；
+    // 没有图标时用 accent 色块 + letter 顶上。
     icon: image,
     has-icon: bool,
-    // 图块里的字，取自 app.json 的 icon.letter（"C++"、"算"）。
+    // 兜底色块里的字，取自 app.json 的 icon.letter（"C++"、"算"）。
     letter: string,
-    // 图块底色，取自 icon.accent，用各自技术生态的惯用色；常驻显示，
-    // 不随运行状态变化（见 Tile 的 plate-color）。
+    // 兜底色块的底色，取自 icon.accent。有图标的应用用不上它。
     accent: color,
     // 运行状态点的颜色：绿=运行中、橙=启动中、灰=未运行。
     tint: brush,
     running: bool,
-    starting: bool,
 }
 
 component Tile inherits Rectangle {
@@ -42,58 +41,37 @@ component Tile inherits Rectangle {
     property <length> hub: 56px;
     property <length> hub-top: 10px;
 
-    // 色块常驻应用自己的 accent 原色——未运行也不褪灰。运行态用 accent 光环
-    // + 同色投影，每个应用颜色不同，不再共用一颗单调绿点。
-    property <brush> plate-color: entry.accent;
-    property <bool> live: entry.running;
+    // 图标在三种运行状态下一模一样（ADR 0065）：同一张图、同样大小，
+    // 状态只交给下面那颗状态点。悬停放大一点是在回应指针，不是状态。
+    property <length> side: touch.has-hover ? root.hub + 4px : root.hub;
 
-    // 运行态光环：贴在色块外侧，颜色跟 accent 走。
-    Rectangle {
+    Image {
+        source: entry.icon;
+        visible: entry.has-icon;
         x: (parent.width - self.width) / 2;
         y: root.hub-top + (root.hub - self.height) / 2;
-        width: root.live ? root.hub + 10px : root.hub + 2px;
+        width: root.side;
         height: self.width;
-        border-radius: self.width / 3.2;
-        background: transparent;
-        border-width: root.live ? 2.5px : 0px;
-        border-color: entry.accent;
-        opacity: root.live ? (entry.starting ? 0.55 : 0.85) : 0;
-        drop-shadow-blur: root.live ? (entry.starting ? 16px : 12px) : 0px;
-        drop-shadow-color: entry.accent;
-        animate width, opacity, drop-shadow-blur, border-width {
-            duration: 180ms;
-            easing: ease-out;
-        }
+        image-fit: contain;
+        animate width { duration: 140ms; easing: ease-out; }
     }
 
-    plate := Rectangle {
+    // 兜底：没有 icon.svg 的应用，用 accent 色块加 letter。
+    Rectangle {
+        visible: !entry.has-icon;
         x: (parent.width - self.width) / 2;
         y: root.hub-top + (root.hub - self.height) / 2;
-        width: touch.has-hover || root.live ? root.hub + 3px : root.hub;
+        width: root.side;
         height: self.width;
         border-radius: self.width / 3.6;
-        background: root.plate-color;
-        drop-shadow-blur: root.live ? 14px : (touch.has-hover ? 10px : 5px);
-        drop-shadow-offset-y: root.live ? 0px : (touch.has-hover ? 3px : 1px);
-        drop-shadow-color: root.live ? entry.accent : #00000024;
-        animate width, drop-shadow-blur, drop-shadow-offset-y, drop-shadow-color, background {
-            duration: 140ms;
-            easing: ease-out;
-        }
-
-        Image {
-            source: entry.icon;
-            visible: entry.has-icon;
-            x: (parent.width - self.width) / 2;
-            y: (parent.height - self.height) / 2;
-            width: parent.width * 0.56;
-            height: self.width;
-            image-fit: contain;
-        }
+        background: entry.accent;
+        drop-shadow-blur: 5px;
+        drop-shadow-offset-y: 1px;
+        drop-shadow-color: #00000024;
+        animate width { duration: 140ms; easing: ease-out; }
 
         Text {
             text: entry.letter;
-            visible: !entry.has-icon;
             color: white;
             font-size: entry.letter.character-count > 1 ? 19px : 24px;
             font-weight: 600;
@@ -116,15 +94,15 @@ component Tile inherits Rectangle {
         overflow: elide;
     }
 
-    // 状态点：运行中更大并带同色光晕；tint 仍由 Rust 按三态算好。
+    // 状态点：运行状态唯一的表达。运行中更大并带同色光晕；tint 由 Rust 按三态算好。
     Rectangle {
         x: (parent.width - self.width) / 2;
         y: root.hub-top + root.hub + 28px;
-        width: root.live ? 9px : 6px;
+        width: entry.running ? 9px : 6px;
         height: self.width;
         border-radius: self.width / 2;
         background: entry.tint;
-        drop-shadow-blur: root.live ? 8px : 0px;
+        drop-shadow-blur: entry.running ? 8px : 0px;
         drop-shadow-color: entry.tint;
         animate width, drop-shadow-blur {
             duration: 160ms;
@@ -197,7 +175,7 @@ export component LauncherWindow inherits Window {
     callback stop(string);
 
     title: "Athena 启动器";
-    // 标题栏左上角：与托盘、任务栏同一份虎头（build.rs 从 tiger.svg 裁出）。
+    // 标题栏左上角：与托盘、任务栏同一份虎头（build.rs 从 tiger.svg 渲染）。
     icon: @image-url("../assets/tiger-mark.png");
     default-font-family: ui-font;
     // 初始大小按三列两行估：现在有六个学习应用，窄窗口改走滚动，不裁掉后排。

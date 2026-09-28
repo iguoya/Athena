@@ -114,10 +114,18 @@ private struct AppRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Image(systemName: app.symbol)
-                .font(.system(size: 15))
-                .frame(width: 22)
-                .foregroundStyle(.secondary)
+            // 图标不随运行状态变化（ADR 0065），状态只看下面那颗点。
+            if let icon = app.iconURL.flatMap(NSImage.init(contentsOf:)) {
+                Image(nsImage: icon)
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 22, height: 22)
+            } else {
+                Image(systemName: app.symbol)
+                    .font(.system(size: 15))
+                    .frame(width: 22)
+                    .foregroundStyle(.secondary)
+            }
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(app.title)
