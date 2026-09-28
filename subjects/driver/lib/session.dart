@@ -64,12 +64,11 @@ class _SessionStageState extends State<SessionStage> {
   /// 一页十题：少了翻页太勤；页面放不下就靠答完自动滚到下一题补上（ADR 0022）。
   static const _groupSize = 10;
 
-  /// 一页答完、最后一题答对：停这么久再翻，让绿色先落进眼里（ADR 0022、0025）。
-  static const _autoAdvanceDelay = Duration(milliseconds: 900);
+  /// 一页答完到自动翻页，至少停这么久：从最后一题判完算起，够看清题目和解释（ADR 0038）。
+  static const _pageDwell = Duration(seconds: 5);
 
-  /// 最后一题答错：练习里念完解释再停这么久；模拟考不讲题，停久一点看清正确答案（ADR 0025）。
+  /// 练习里最后一题答错：解释念完以后至少再停这么久，念得长也不会一念完就翻（ADR 0025、0038）。
   static const _wrongPracticePause = Duration(milliseconds: 1500);
-  static const _wrongExamPause = Duration(milliseconds: 2500);
 
   var _start = 0;
   final _picked = <int, Set<String>>{};
@@ -909,6 +908,7 @@ class _SessionStageState extends State<SessionStage> {
     _busy = true;
     // 记下是哪一页答完的：等朗读、停顿期间人已经自己翻走，就不再替他翻（ADR 0025）。
     final page = _start;
+    final judged = Stopwatch()..start();
     final ok = answersMatch(question, chosen);
     final durationMs = DateTime.now().difference(_shownAt).inMilliseconds;
     final notices = await widget.store.recordAttempt(
@@ -939,8 +939,8 @@ class _SessionStageState extends State<SessionStage> {
       if (next != null) {
         _centerOn(next);
       } else if (!_lastGroup) {
-        // 本页交完就翻（ADR 0025）：答错多停一会儿，看清标出的正确答案。
-        _autoAdvance(page, ok ? _autoAdvanceDelay : _wrongExamPause);
+        // 本页交完就翻（ADR 0025），但至少停 5 秒，看清标出的正确答案（ADR 0038）。
+        _autoAdvance(page, _pageDwell - judged.elapsed);
       }
       return;
     }
@@ -949,10 +949,12 @@ class _SessionStageState extends State<SessionStage> {
     if (next != null) _centerOn(next);
     // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
-    // 一页十题答完就翻，不看对错（ADR 0025）；最后一题答错，先把解释念完再翻。
+    // 一页十题答完就翻，不看对错（ADR 0025）；从判完算起至少停 5 秒（ADR 0038）；
+    // 最后一题答错，先把解释念完，念完后至少再停一会儿。
     if (_groupDone) {
       if (!ok) await _speaker.finished();
-      _autoAdvance(page, ok ? _autoAdvanceDelay : _wrongPracticePause);
+      final rest = _pageDwell - judged.elapsed;
+      _autoAdvance(page, ok || rest > _wrongPracticePause ? rest : _wrongPracticePause);
     }
   }
 

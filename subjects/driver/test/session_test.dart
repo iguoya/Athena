@@ -74,9 +74,9 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
-    // 一页十题答完就翻（ADR 0025）：最后一题答错，先停 2.5 秒看清正确答案。
+    // 一页十题答完就翻（ADR 0025），但至少停 5 秒看清正确答案（ADR 0038）。
     expect(find.text("第11题"), findsNothing);
-    await tester.pump(const Duration(milliseconds: 2000));
+    await tester.pump(const Duration(milliseconds: 4500));
     expect(find.text("第11题"), findsNothing);
     await tester.pump(const Duration(milliseconds: 600));
     expect(find.text("第11题"), findsOneWidget);
@@ -187,6 +187,54 @@ void main() {
       final draft = await store.loadExamDraft("subject1.exit-test");
       expect(draft?.picked.keys.toSet(), {0, 1, 2});
     });
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  });
+
+  // 练习一页答完也至少停 5 秒再翻，看清最后一题的解释（ADR 0038）。
+  testWidgets("练习一页十题答完，至少停 5 秒再自动翻页", (tester) async {
+    late Directory dir;
+    late ProgressStore store;
+    await tester.runAsync(() async {
+      dir = await Directory.systemTemp.createTemp("athena-driver-dwell-");
+      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+    });
+    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    final questions = [for (var i = 0; i < 20; i++) _judge(i)];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SessionStage(
+            launch: SessionLaunch(
+              title: "科目一 · 练习",
+              subjectId: "subject1",
+              questions: questions,
+              timed: false,
+              revealImmediately: true,
+            ),
+            store: store,
+            onClose: () {},
+          ),
+        ),
+      ),
+    );
+    for (var n = 1; n <= 10; n++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyT);
+      for (var i = 0; i < 200 && find.textContaining("已答 $n").evaluate().isEmpty; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+        await tester.pump();
+      }
+    }
+    expect(find.text("第11题"), findsNothing);
+    await tester.pump(const Duration(milliseconds: 4500));
+    expect(find.text("第11题"), findsNothing);
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump();
+    expect(find.text("第11题"), findsOneWidget);
+
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
       await store.close();

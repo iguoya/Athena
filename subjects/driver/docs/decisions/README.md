@@ -42,3 +42,4 @@
 | [0035](0035-review-exit-by-correct-margin.md) | 退出考前复习——答对次数至少比答错多 1～2 次 | 已接受（修订 0034 第 2 条） |
 | [0036](0036-subject2-c2-rules-drills-and-animations.md) | 科目二（C2）：评判规则题、操作动画讲解、练车错因记录 | 已接受（修订 AGENTS.md「不做科目二场地」） |
 | [0037](0037-subject2-brief-reference-points-rehearsal.md) | 科目二配合线下练车：练车前简报、个人点位卡、默演模式 | 已接受 |
+| [0038](0038-page-dwell-at-least-five-seconds.md) | 自动翻页前至少停留 5 秒 | 已接受（修订 0025 的停顿时长） |
