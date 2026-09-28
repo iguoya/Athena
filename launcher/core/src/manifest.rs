@@ -78,9 +78,9 @@ pub struct DevSpec {
     /// `subjects/cpp` 的窗口进程落在 `builddir/` 里，仓库里别的进程不该被算进来。
     #[serde(default)]
     pub r#match: Option<String>,
-    /// 窗口进程的可执行文件名。共享 cargo 缓存之后，Tauri 应用的二进制落在
-    /// 仓库的 `.cache/cargo-target/` 下，已经不在应用目录里了，光靠路径前缀
-    /// 认不出来——按文件名认最直接。
+    /// 窗口进程的可执行文件名。同类 Tauri 共享 `.cache/cargo-target/` 后（ADR 0063），
+    /// 二进制不在应用目录的 `src-tauri/target` 下，光靠路径前缀认不出来——按文件名
+    /// 认最直接。异构应用（产物仍在自己的 `build/` 里）主要靠 `match` 路径。
     #[serde(default)]
     pub binary: Option<String>,
 }

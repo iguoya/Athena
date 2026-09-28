@@ -40,7 +40,8 @@
 | 编号 | 决策 | 状态 |
 |---|---|---|
 | [0007](0007-unified-check-entry.md) | 统一验证入口（现为 `scripts/check.py`） | 已接受；各应用均已接入 |
-| [0046](0046-unified-dev-orchestrator.md) | 统一开发编排器，各应用只声明怎么启动 | 已接受 |
+| [0046](0046-unified-dev-orchestrator.md) | 统一开发编排器，各应用只声明怎么启动 | 已接受；第 5 条范围由 0063 收窄 |
+| [0063](0063-per-app-build-directories.md) | 同类可共享构建缓存，异构必须隔离 | 已接受；修订 0046 第 5 条 |
 | [0047](0047-portable-by-default.md) | 跨平台优先：选型、代码与构建过程的默认原则 | 已接受 |
 | [0048](0048-menubar-launcher-stays-macos-only.md) | 菜单栏启动器保留为 macOS 专属，只消费编排器结论 | 已接受 |
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |

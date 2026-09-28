@@ -70,10 +70,17 @@ pub fn log_file(app_id: &str) -> PathBuf {
 /// 三个 Tauri 应用依赖完全相同，各编一份 target 是纯粹的重复（一份 2–4 GB）。
 /// 指到同一个目录后，相同版本的依赖只编一次，第二、三个应用的首次构建几乎是白拿的。
 /// 代价是 cargo 对 target 目录加文件锁，同时构建两个应用会串行等待。
+///
+/// 只给**同类** Tauri 用（ADR 0063）。异构项目（Flutter / Meson / CMake）不得指到这里。
 pub fn shared_cargo_target(repo: &Path) -> PathBuf {
     let dir = repo.join(".cache/cargo-target");
     let _ = std::fs::create_dir_all(&dir);
     dir
+}
+
+/// 目录里有 `src-tauri/` 就视为与 dsa / english / mathematics 同一类 Tauri 应用。
+pub fn is_tauri_app(app: &crate::manifest::App) -> bool {
+    app.dir.join("src-tauri").is_dir()
 }
 
 fn home() -> PathBuf {
@@ -93,6 +100,8 @@ fn home() -> PathBuf {
 
 /// 从桌面环境（菜单栏、快捷键、登录项）启动时 PATH 很短，node、cargo、meson、Qt
 /// 往往都不在里面。这些补全过去散落在五份 dev 脚本里，现在只写一处。
+///
+/// Windows 上工具链按应用需要注入（ADR 0063）：异构 ABI 不进同一条 PATH。
 pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
     let mut entries: Vec<PathBuf> = Vec::new();
     if cfg!(target_os = "macos") {
@@ -135,12 +144,12 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         if uses_meson {
             entries.push(PathBuf::from(r"C:\msys64\ucrt64\bin"));
         }
-        // `subjects/c` 的 Qt Quick / QML 走官方 Qt 安装器的 MSVC kit：CMake 能找到它是
-        // 因为 app.json 的 CMAKE_PREFIX_PATH 指了路，但可执行文件运行时还要在 PATH
-        // 里找到 Qt6Core.dll 等运行库，装好编译不代表能跑。官方安装器把版本号写进
-        // 路径（不像 Homebrew 那样有个不随版本变的符号链接），升级 Qt 版本后要跟着
-        // 改这里——这是该装法本身的限制，不是能绕开的兜底。
-        entries.push(PathBuf::from(r"C:\Qt\6.8.1\msvc2022_64\bin"));
+        // Qt 运行库只给声明了 CMAKE_PREFIX_PATH 的应用（c / polaris）。
+        // 塞给 Flutter / Meson 会让无关进程在 PATH 里多出一串 MSVC Qt DLL 目录，
+        // 无益且可能干扰探测。
+        if app.dev.env.contains_key("CMAKE_PREFIX_PATH") {
+            entries.push(PathBuf::from(r"C:\Qt\6.8.1\msvc2022_64\bin"));
+        }
     } else {
         for raw in ["/usr/local/bin", "/usr/bin"] {
             entries.push(PathBuf::from(raw));
@@ -149,7 +158,10 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
     }
     entries.push(home().join(".cargo/bin"));
     // 驾考学习用 Flutter。官方默认装在 ~/flutter，桌面启动器的 PATH 里没有它。
-    entries.push(home().join("flutter/bin"));
-    entries.push(home().join("development/flutter/bin"));
+    // 只给带 pubspec.yaml 的应用补，避免给 GTK/Qt/Tauri 多掺一条无关前缀。
+    if app.dir.join("pubspec.yaml").is_file() {
+        entries.push(home().join("flutter/bin"));
+        entries.push(home().join("development/flutter/bin"));
+    }
     entries.into_iter().filter(|path| path.is_dir()).collect()
 }

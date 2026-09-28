@@ -43,7 +43,7 @@ Thumbs.db
 # Swift Package Manager（launcher）
 launcher/.build/
 
-# 共享的 cargo 构建缓存（launcher/core 统一注入 CARGO_TARGET_DIR）
+# 同类 Tauri 共享的 cargo 构建缓存（ADR 0063；仅 dsa/english/mathematics）
 .cache/
 
 # 进度库本身要进版本库（ADR 0053），但 SQLite 的伴生文件不要：

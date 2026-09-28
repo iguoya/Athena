@@ -90,7 +90,8 @@ def main() -> int:
     run([tool("npm"), "run", "build"], "前端类型检查与构建")
 
     if not arguments.skip_rust:
-        # 不设 CARGO_TARGET_DIR：尊重外部环境。编排器会注入共享目录，
+        # 不设 CARGO_TARGET_DIR：尊重外部环境。编排器对同类 Tauri 会注入共享目录
+        # （ADR 0063），check 自己跑时用默认的 src-tauri/target 即可。
         # 单独跑时就用应用自己的 src-tauri/target。
         cargo = tool("cargo")
         run(

@@ -41,9 +41,9 @@
 老虎缩到 16–32 px 只剩色带，所以 `gui/build.rs` 裁出头部）。标题栏引用构建期
 写出的 `tiger-mark.png`；托盘与 exe 资源段用同一裁切渲的位图——换标志只换那份 SVG。
 
-编排器统一注入：PATH 补全（node / cargo / meson / Qt 在桌面环境里往往不在 PATH）、
-共享的 `CARGO_TARGET_DIR`（三个 Tauri 应用依赖相同，各编一份是白费 6 GB）、
-以及日志重定向。
+编排器统一注入：按应用需要补 PATH（node / cargo / meson / Qt / flutter——异构
+工具链不混用）、同类 Tauri 共享的 `CARGO_TARGET_DIR`（ADR 0063：同类可共享，
+异构各用自己的 `build/`），以及日志重定向。
 
 ## 用
 

@@ -289,7 +289,7 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
 }
 
 /// 按清单组装一条命令：工作目录是应用自己的目录，环境变量分三层——
-/// 继承的、编排器统一注入的（PATH、共享 cargo 缓存）、应用自己声明的。
+/// 继承的、编排器统一注入的（PATH、同类 Tauri 的共享 cargo 缓存）、应用自己声明的。
 fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
     let program = &argv[0];
 
@@ -338,7 +338,9 @@ fn command(app: &App, repo: &Path, argv: &[String]) -> Command {
         command.env("PATH", joined);
     }
 
-    if std::env::var_os("CARGO_TARGET_DIR").is_none() {
+    // 同类 Tauri 共享一份 cargo target（ADR 0046 / 0063）；异构应用不注入，
+    // 免得 Flutter / GTK 启动时也带着无关的 CARGO_TARGET_DIR。
+    if paths::is_tauri_app(app) && std::env::var_os("CARGO_TARGET_DIR").is_none() {
         command.env("CARGO_TARGET_DIR", paths::shared_cargo_target(repo));
     }
 

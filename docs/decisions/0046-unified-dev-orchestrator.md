@@ -55,9 +55,11 @@
    用系统字体，中文界面不必内嵌字体。**macOS 菜单栏版保留**（ADR 0044），
    改为调用同一个核心——两个前端，一条执行路径。
 
-5. **编排器统一注入共享的 `CARGO_TARGET_DIR`**（`<repo>/.cache/cargo-target`）。
+5. **编排器对同类 Tauri 应用注入共享的 `CARGO_TARGET_DIR`**（`<repo>/.cache/cargo-target`）。
    相同版本的依赖只编一次，第二、三个 Tauri 应用的首次构建几乎是白拿的。
    这条不需要任何应用改代码，正是"统一执行"的顺带好处。
+   **范围已由 ADR 0063 收窄**：只给有 `src-tauri/` 的同类应用注入；异构项目
+   （Flutter / Meson / CMake）各用自己的构建目录，不进这份缓存。
 
 6. **平台能力差异如实记录，不假装一致**：把已运行的窗口叫到前面，macOS 有正经
    办法，X11 靠 `wmctrl`/`xdotool`，而 **Wayland 出于安全根本不允许别的进程抢
