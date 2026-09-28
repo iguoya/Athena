@@ -20,7 +20,7 @@
 | [0013](0013-periodic-auto-sync.md) | 启动时同步一次，之后每 15 分钟自动同步一次 | 已接受 |
 | [0014](0014-surface-recorded-achievements.md) | 把已经记录的成就实际展示出来 | 已接受 |
 | [0015](0015-add-progress-visualizations.md) | 补三种进度可视化——每日练习柱状图、章节正确率横向对比、掌握度环 | 已接受 |
-| [0016](0016-resumable-exam-drafts.md) | 模拟考边答边存草稿，中途重启能续上 | 已接受 |
+| [0016](0016-resumable-exam-drafts.md) | 模拟考边答边存草稿，中途重启能续上 | 已接受（第 5 条「超时续上即交卷」由 0042 撤销） |
 | [0017](0017-scope-to-c1-c2-license-category.md) | 题库按小型汽车（C1/C2）准驾车型精确裁剪，不收其他车型专属内容 | 已接受 |
 | [0018](0018-topic-test-and-chart-navigation.md) | 补一个章节测试入口，图表点一下能跳转 | 部分撤销（第 1、2 条） |
 | [0019](0019-confirm-before-timed-test-and-exit-without-submit.md) | 开考前先确认一次，考试中途能退出不用交卷 | 已接受 |
@@ -46,3 +46,4 @@
 | [0039](0039-subject2-organized-around-practice-days.md) | 科目二围绕「练车日」组织，不沿用科目一的练习形式 | 已接受 |
 | [0040](0040-subject2-narration-cautions-marks.md) | 科目二动画加语音讲解、注意事项与画面标注 | 已接受 |
 | [0041](0041-exam-continues-after-failing.md) | 模拟考错到不可能及格也继续答完 | 已接受（撤销 0023 的提前结束） |
+| [0042](0042-exam-timer-without-deadline.md) | 模拟考只计时，到点不收卷 | 已接受（撤销 0016 第 5 条的超时交卷） |

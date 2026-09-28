@@ -1907,7 +1907,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  /// 点了才发现是手误，至少还能反悔——真去抽题、真去掐表之前先问一句
+  /// 点了才发现是手误，至少还能反悔——真去抽题、开始计时之前先问一句
   /// （ADR 0019）。续答草稿不用再问一遍，「继续/重新开始」那个弹窗本身就是确认。
   Future<bool> _confirmStartTest(String title, int minutes) async {
     final ok = await showDialog<bool>(
@@ -1915,7 +1915,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       builder: (dialogContext) => AlertDialog(
         title: const Text("开始测试"),
         content: Text(
-          "「$title」限时 $minutes 分钟。答一题交一题，交了不能改；不及格也继续答完整卷。确定现在开始吗？",
+          "「$title」考场时长 $minutes 分钟，这里只计时、到点不收卷。答一题交一题，交了不能改；不及格也继续答完整卷。确定现在开始吗？",
           style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [

@@ -80,8 +80,8 @@ class _SessionStageState extends State<SessionStage> {
   var _busy = false;
   var _submitting = false;
   DateTime _shownAt = DateTime.now();
+  /// 每秒刷新一次「用时」。只计时不收卷：到了考场时长也不自动交卷（ADR 0042）。
   Timer? _timer;
-  late Duration _left;
   late DateTime _examStartedAt;
   _Result? _result;
 
@@ -155,26 +155,10 @@ class _SessionStageState extends State<SessionStage> {
       _start = firstOpen < 0 ? 0 : _groupStartContaining(firstOpen);
     }
     _examStartedAt = _launch.resumeStartedAt ?? DateTime.now();
-    if (_launch.timed && _launch.minutes != null) {
-      final elapsed = DateTime.now().difference(_examStartedAt);
-      _left = Duration(minutes: _launch.minutes!) - elapsed;
-      if (_left <= Duration.zero) {
-        // 挂起的这段时间已经超时了，回来就直接按超时交卷处理。
-        _left = Duration.zero;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _submitExam(auto: true);
-        });
-      } else {
-        _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-          if (!mounted) return;
-          if (_left.inSeconds <= 1) {
-            _timer?.cancel();
-            _submitExam(auto: true);
-            return;
-          }
-          setState(() => _left -= const Duration(seconds: 1));
-        });
-      }
+    if (_launch.timed) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (mounted) setState(() {});
+      });
     }
   }
 
@@ -324,11 +308,7 @@ class _SessionStageState extends State<SessionStage> {
             ),
           ),
           const SizedBox(width: 16),
-          if (_launch.timed)
-            Text(
-              _clock(_left),
-              style: textTheme.titleMedium?.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
-            ),
+          if (_launch.timed) _elapsedClock(textTheme),
         ],
       ),
     );
@@ -681,7 +661,7 @@ class _SessionStageState extends State<SessionStage> {
         ),
         const SizedBox(height: 16),
         Text(
-          "答错的题标红，答对不提示。错到第 $_failAt 题就不及格，但照样答完；时间到了自动交卷。",
+          "答错的题标红，答对不提示。错到第 $_failAt 题就不及格，但照样答完；时间到了也不收卷，自己交卷才结束。",
           style: muted,
         ),
       ],
@@ -1125,7 +1105,7 @@ class _SessionStageState extends State<SessionStage> {
 
   /// 交卷：每题交的时候已经判过、记过了；没答的按错计分，但不写作答记录——
   /// 没见过的题不该被记成「答错」（ADR 0023）。
-  Future<void> _submitExam({bool auto = false}) async {
+  Future<void> _submitExam() async {
     if (_submitting) return;
     _submitting = true;
     _timer?.cancel();
@@ -1133,7 +1113,7 @@ class _SessionStageState extends State<SessionStage> {
     // 交了卷草稿就没用了；没交就留着，回到首页还能续上。
     final draftKey = _launch.draftKey;
     if (draftKey != null) await widget.store.clearExamDraft(draftKey);
-    await _finish(autoSubmitted: auto, notices: _examNotices);
+    await _finish(notices: _examNotices);
   }
 
   Future<void> _finishPractice() async {
@@ -1142,7 +1122,7 @@ class _SessionStageState extends State<SessionStage> {
     await _finish();
   }
 
-  Future<void> _finish({bool autoSubmitted = false, List<Notice> notices = const []}) async {
+  Future<void> _finish({List<Notice> notices = const []}) async {
     final correct = _correct.length;
     final score = _launch.paper?.scaledScore(correct) ??
         (_total == 0 ? 0 : ((correct / _total) * 100).round());
@@ -1175,7 +1155,6 @@ class _SessionStageState extends State<SessionStage> {
         timed: _launch.timed,
         fullBank: _launch.paper?.fullBank ?? true,
         want: _launch.paper?.rules.questionCount,
-        autoSubmitted: autoSubmitted,
         unanswered: _total - _judged.length,
         missed: missed,
         notices: allNotices,
@@ -1183,8 +1162,23 @@ class _SessionStageState extends State<SessionStage> {
     });
   }
 
+  /// 已用时间对着考场时长：超了只变红提示，不收卷（ADR 0042）。
+  Widget _elapsedClock(TextTheme textTheme) {
+    final elapsed = DateTime.now().difference(_examStartedAt);
+    final limit = _launch.minutes == null ? null : Duration(minutes: _launch.minutes!);
+    final over = limit != null && elapsed > limit;
+    return Text(
+      limit == null ? "用时 ${_clock(elapsed)}" : "用时 ${_clock(elapsed)} / ${_clock(limit)}",
+      style: textTheme.titleMedium?.copyWith(
+        fontFeatures: const [FontFeature.tabularFigures()],
+        color: over ? Bs.danger : null,
+      ),
+    );
+  }
+
+  /// 分钟不折小时：超时很久也照样读得懂（「125:03」）。
   String _clock(Duration value) {
-    final m = value.inMinutes.remainder(60).toString().padLeft(2, "0");
+    final m = value.inMinutes.toString().padLeft(2, "0");
     final s = value.inSeconds.remainder(60).toString().padLeft(2, "0");
     return "$m:$s";
   }
@@ -1200,7 +1194,6 @@ class _Result {
     required this.timed,
     required this.fullBank,
     this.want,
-    this.autoSubmitted = false,
     this.unanswered = 0,
     this.missed = const [],
     this.notices = const [],
@@ -1215,8 +1208,6 @@ class _Result {
   final bool fullBank;
   final int? want;
 
-  /// 时间到了系统替你交的卷——结果页要说一声，不然会以为是自己点的。
-  final bool autoSubmitted;
 
   /// 没答的题数：按错计分，不在错题卡里（没看过的题谈不上「错在哪」）。
   final int unanswered;
@@ -1268,13 +1259,6 @@ class _ResultPane extends StatelessWidget {
             "答对 ${result.correct} / ${result.total}，折合 ${result.score} 分",
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          if (result.autoSubmitted) ...[
-            const SizedBox(height: 12),
-            Text(
-              "时间到，已自动交卷。",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Bs.danger),
-            ),
-          ],
           if (result.timed && result.unanswered > 0) ...[
             const SizedBox(height: 8),
             Text(

@@ -93,6 +93,11 @@ void main() {
     expect(find.text("错 11 题（已不及格，继续答完）"), findsOneWidget);
     await answer(LogicalKeyboardKey.keyT);
 
+    // 过了 45 分钟也不收卷，还停在答题页（ADR 0042）。
+    await tester.pump(const Duration(minutes: 46));
+    expect(find.text("未及格"), findsNothing);
+    expect(find.text("交卷"), findsOneWidget);
+
     // 自己交卷。出结果前要走 recordExam 真实写库；同上，等到结果页真的出来，不赌固定时长——
     // Windows runner 上 100ms 经常不够。
     await tester.tap(find.text("交卷"));
