@@ -1059,21 +1059,23 @@ class _SessionStageState extends State<SessionStage> {
     if (target != null) _centerOn(target, animate: false);
   }
 
-  /// 退出不等于交卷：练习本来就逐题落盘，退出不丢东西，不用问；模拟考/章节测试
-  /// 退出只是把草稿留着（ADR 0016），没提交、没判分、不算完成一次测试，说清楚
-  /// 再退，免得以为「退出」等于「交了」。
+  /// 退出不等于交卷：每题交的时候就写了作答记录（ADR 0023），退出不丢任何一题。
+  /// 练习直接退；模拟考/章节测试退出只是这一卷不出分、不算一次测试，草稿留着
+  /// （ADR 0016）。两件事都要说清楚：既别以为「退出」等于「交了」，也别以为答过的题白答了。
   Future<void> _confirmExit(BuildContext context) async {
     if (!_isExam) {
       widget.onClose();
       return;
     }
+    final answered = _judged.length;
     final ok = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text("退出测试"),
-        content: const Text(
-          "退出不会交卷、不会判分，答案会存成草稿，下次进来可以选择续上。确定现在退出吗？",
-          style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
+        content: Text(
+          "${answered == 0 ? "还没答题。" : "答过的 $answered 题已经记进作答记录，掌握度照算。"}"
+          "这一卷没交，不出分数，也不算一次测试；进度存成草稿，下次进来可以续上。确定现在退出吗？",
+          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("继续测试")),

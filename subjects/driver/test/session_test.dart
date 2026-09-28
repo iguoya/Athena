@@ -109,4 +109,79 @@ void main() {
       await dir.delete(recursive: true);
     });
   });
+  // 中途退出不交卷：答过的题交的时候已经落盘，退出不丢；这一卷不出分、不记一次考试，草稿留着续答。
+  testWidgets("模拟考中途退出，答过的题照样记进作答记录，不记考试成绩", (tester) async {
+    late Directory dir;
+    late ProgressStore store;
+    late int examsBefore;
+    await tester.runAsync(() async {
+      dir = await Directory.systemTemp.createTemp("athena-driver-exit-");
+      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      examsBefore = (await store.recentExams(subjectId: "subject1", limit: 1000)).length;
+    });
+    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    final questions = [for (var i = 0; i < 100; i++) _judge(i)];
+    const rules = ExamRules(questionCount: 100, minutes: 45, passScore: 90, pointsPerQuestion: 1);
+    var closed = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SessionStage(
+            launch: SessionLaunch(
+              title: "科目一 模拟考试",
+              subjectId: "subject1",
+              questions: questions,
+              timed: true,
+              minutes: 45,
+              revealImmediately: false,
+              paper: Paper(questions: questions, rules: rules, fullBank: true),
+              draftKey: "subject1.exit-test",
+            ),
+            store: store,
+            onClose: () => closed = true,
+          ),
+        ),
+      ),
+    );
+
+    var answered = 0;
+    Future<void> answer(LogicalKeyboardKey key) async {
+      await tester.sendKeyEvent(key);
+      answered++;
+      for (var i = 0; i < 200 && find.textContaining("已答 $answered / 100").evaluate().isEmpty; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+        await tester.pump();
+      }
+      expect(find.textContaining("已答 $answered / 100"), findsOneWidget);
+    }
+
+    await answer(LogicalKeyboardKey.keyT);
+    await answer(LogicalKeyboardKey.keyT);
+    await answer(LogicalKeyboardKey.keyF);
+
+    await tester.tap(find.byTooltip("退出，不交卷"));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("答过的 3 题已经记进作答记录"), findsOneWidget);
+    await tester.tap(find.text("退出"));
+    await tester.pumpAndSettle();
+    expect(closed, isTrue);
+
+    await tester.runAsync(() async {
+      // 草稿是交题时顺手存的，等它写完再查。
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      bool ours(String id) => RegExp(r"^q\d+$").hasMatch(id);
+      final counts = await store.attemptCounts();
+      expect(counts.keys.where(ours).toSet(), {"q0", "q1", "q2"});
+      expect((await store.masteredQuestionIds()).where(ours), hasLength(2));
+      expect((await store.wrongQuestionIds()).where(ours), ["q2"]);
+      expect((await store.recentExams(subjectId: "subject1", limit: 1000)).length, examsBefore);
+      final draft = await store.loadExamDraft("subject1.exit-test");
+      expect(draft?.picked.keys.toSet(), {0, 1, 2});
+    });
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  });
 }
