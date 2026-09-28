@@ -454,6 +454,7 @@ class _SessionStageState extends State<SessionStage> {
           runSpacing: 8,
           children: [
             BsBadge(text: "第${index + 1}题", icon: Icons.tag, color: Bs.paper),
+            SerialBadge(q.serial),
             BsBadge(
               text: Bs.kindLabel(q.kind),
               icon: Bs.kindIcon(q.kind),
@@ -785,7 +786,14 @@ class _SessionStageState extends State<SessionStage> {
         const SizedBox(height: 16),
         const Divider(height: 1),
         const SizedBox(height: 16),
-        Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
+        Wrap(
+          spacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
+            SerialBadge(q.serial),
+          ],
+        ),
         const SizedBox(height: 12),
         if (q.sign != null) ...[
           SignView(id: q.sign!, size: 180),
@@ -1391,6 +1399,8 @@ class _MissedCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.4),
                 ),
               ),
+              const SizedBox(width: 10),
+              SerialBadge(q.serial),
             ],
           ),
           if (q.image != null) ...[

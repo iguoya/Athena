@@ -113,6 +113,10 @@ class Question {
   bool get isRegular => band == QuestionBand.regular;
   bool get isRare => band == QuestionBand.rare;
 
+  /// 稳定编号：题库 id 去掉 `drive.` 前缀（如 `s1.signals.207`）。任何页面、任何一轮都一样，
+  /// 反馈题目问题时报这个号就能定位；「第几题」只是这一轮里的位置。
+  String get serial => id.startsWith("drive.") ? id.substring("drive.".length) : id;
+
   /// 常规、偏难怪在练习里少出；偏难怪默认不出，除非刚打错。
   bool get isRoutine => isRegular || isRare;
 

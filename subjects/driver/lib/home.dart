@@ -1179,6 +1179,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
+                      const SizedBox(width: 12),
+                      SerialBadge(q.serial),
                     ],
                   );
                 },
@@ -1304,6 +1306,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           style: body,
                         ),
                       ),
+                      const SizedBox(width: 12),
+                      SerialBadge(q.serial),
                     ],
                   );
                 },

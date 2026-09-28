@@ -121,4 +121,12 @@ void main() {
       expect(covered, isTrue, reason: "$path 没登记进 pubspec.yaml 的 assets");
     }
   });
+
+  test("每道题的稳定编号都不重复，去掉了 drive. 前缀", () async {
+    final bank = await ContentLoader.load();
+    final serials = [for (final q in bank.questions) q.serial];
+    expect(serials.toSet().length, serials.length);
+    expect(serials.every((s) => !s.startsWith("drive.") && s.contains(".")), isTrue);
+    expect(bank.byId("drive.s1.signals.207").serial, "s1.signals.207");
+  });
 }

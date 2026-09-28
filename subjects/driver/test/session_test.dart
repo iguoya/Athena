@@ -66,6 +66,8 @@ void main() {
       expect(find.textContaining("已答 $answered / 100"), findsOneWidget);
     }
 
+    // 每道题都带稳定编号（合成题的 id 就是编号本身）。
+    expect(find.text("q0"), findsWidgets);
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyT);
     }

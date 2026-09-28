@@ -4,6 +4,7 @@ import "dart:math";
 import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 import "content.dart";
 import "progress.dart";
@@ -335,6 +336,45 @@ class BsBadge extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 题目的稳定编号（[Question.serial]）：点一下复制，反馈题目问题时报这个号。
+class SerialBadge extends StatelessWidget {
+  const SerialBadge(this.serial, {super.key});
+
+  final String serial;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: "题目编号，点一下复制",
+      child: InkWell(
+        borderRadius: BorderRadius.circular(Bs.radius),
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: serial));
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("已复制题目编号 $serial"), duration: const Duration(seconds: 2)),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            border: Border.all(color: Bs.border),
+            borderRadius: BorderRadius.circular(Bs.radius),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.numbers, size: 16, color: Bs.secondary),
+              const SizedBox(width: 4),
+              Text(serial, style: const TextStyle(fontSize: 14, color: Bs.secondary, fontFamily: "monospace")),
+            ],
+          ),
+        ),
       ),
     );
   }
