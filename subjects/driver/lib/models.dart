@@ -592,14 +592,17 @@ List<Question> practiceQueue(List<Question> pending, Set<String> wrongIds) {
 /// 累计答错到几次进考前复习（ADR 0033）。
 const reviewMinWrong = 2;
 
-/// 移出考前复习要在最后一次答错之后连对几次：错几次就要连对几次，封顶 4 次（ADR 0034）。
-/// 错得越多，要证明的次数越多；封顶是为了错过七八次的题也有出路。
-int reviewExitStreak(int wrongCount) => wrongCount.clamp(reviewMinWrong, 4);
+/// 移出考前复习要累计答对几次：比答错多 1～2 次（ADR 0035）。
+/// 错 2 次多 1 次（对 3 次），错 3 次及以上多 2 次（错 3 对 5、错 8 对 10）。
+/// 答对按累计算，错之前答对过的也算，所以错得再多也有出路，只是要多做几轮。
+int reviewExitCorrect(int wrongCount) => wrongCount + (wrongCount >= 3 ? 2 : 1);
 
-/// 这道题现在该不该留在考前复习：错够了次数、且最后一次错之后还没连对够。
-/// 移出后再错一次，连对清零，自然回来。
-bool inReview({required int wrongCount, required int streak}) =>
-    wrongCount >= reviewMinWrong && streak < reviewExitStreak(wrongCount);
+/// 这道题现在该不该留在考前复习：错够了次数，且还没做到「最近一次答对、
+/// 累计答对够数」。[streak] 是最后一次错之后的连对次数，只用来判断最近一次对不对——
+/// 刚答错的题哪怕累计答对够了也不放出去。
+bool inReview({required int wrongCount, required int correctCount, required int streak}) =>
+    wrongCount >= reviewMinWrong &&
+    !(streak > 0 && correctCount >= reviewExitCorrect(wrongCount));
 
 List<Question> dailyQuestions(Iterable<Question> questions) {
   return [for (final question in questions) if (!question.isRare) question];

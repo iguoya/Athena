@@ -18,8 +18,8 @@ void main() {
     await dir.delete(recursive: true);
   });
 
-  // 考前复习的进出（ADR 0033、0034）：错几次就要连对几次，封顶 4 次；再错清零回来。
-  test("考前复习：连对够次数移出，错多次的封顶 4 次也能出，再错一次回来", () async {
+  // 考前复习的进出（ADR 0033、0035）：答对比答错多 1～2 次、且最近一次答对才出；再错回来。
+  test("考前复习：答对比答错多 1～2 次才移出，错多次的也能出，再错一次回来", () async {
     Future<void> answer(String id, List<bool> results) async {
       for (final ok in results) {
         await store.recordAttempt(questionId: id, topicId: "t", subjectId: "s", correct: ok);
@@ -29,45 +29,47 @@ void main() {
     Future<bool> reviewing(String id) async {
       final wrongs = await store.wrongCounts();
       final streaks = await store.correctStreaksSinceWrong();
-      return inReview(wrongCount: wrongs[id] ?? 0, streak: streaks[id] ?? 0);
+      final total = await store.attemptCounts();
+      final wrong = wrongs[id] ?? 0;
+      return inReview(wrongCount: wrong, correctCount: (total[id] ?? 0) - wrong, streak: streaks[id] ?? 0);
     }
 
     // 只错一次：不进。
     await answer("once", [false]);
     expect(await reviewing("once"), isFalse);
 
-    // 错 2 次：连对 1 次还在，连对 2 次移出。
-    await answer("two", [false, false, true]);
+    // 错 2 次：要对 3 次。对 2 次还在，对第 3 次移出。
+    await answer("two", [false, false, true, true]);
     expect(await reviewing("two"), isTrue);
     await answer("two", [true]);
     expect(await reviewing("two"), isFalse);
-    // 移出后再错：连对清零、累计错 3 次，要连对 3 次才再出去。
+    // 移出后再错：累计错 3 次，要对 5 次；已经对 3 次，再对 2 次才出去。
     await answer("two", [false]);
     expect(await reviewing("two"), isTrue);
     expect((await store.correctStreaksSinceWrong())["two"], 0);
-    await answer("two", [true, true]);
+    await answer("two", [true]);
     expect(await reviewing("two"), isTrue);
     await answer("two", [true]);
     expect(await reviewing("two"), isFalse);
 
-    // 错 8 次的顽固题：连对 4 次就能出，不会永远困在里面。
+    // 错 8 次的顽固题：对 10 次也能出，不会永远困在里面。
     await answer("stubborn", List.filled(8, false));
-    await answer("stubborn", [true, true, true]);
+    await answer("stubborn", List.filled(9, true));
     expect(await reviewing("stubborn"), isTrue);
     await answer("stubborn", [true]);
     expect(await reviewing("stubborn"), isFalse);
 
-    // 答对在前、答错在后的不算连对：只数最后一次错之后的。
-    await answer("late", [true, true, true, false, false]);
-    expect((await store.correctStreaksSinceWrong())["late"], 0);
+    // 累计答对早就够了，但刚答错：先留着，再答对一次才出去。
+    await answer("late", [true, true, true, true, false, false]);
     expect(await reviewing("late"), isTrue);
+    await answer("late", [true]);
+    expect(await reviewing("late"), isFalse);
   });
 
-  test("考前复习移出门槛：错几次连对几次，最少 2 次、最多 4 次", () {
-    expect(reviewExitStreak(2), 2);
-    expect(reviewExitStreak(3), 3);
-    expect(reviewExitStreak(4), 4);
-    expect(reviewExitStreak(8), 4);
+  test("考前复习移出门槛：答对比答错多 1～2 次", () {
+    expect(reviewExitCorrect(2), 3);
+    expect(reviewExitCorrect(3), 5);
+    expect(reviewExitCorrect(8), 10);
   });
 
   test("按作答时间认最近一次：后并进来的更早答错不盖掉现在的答对", () async {

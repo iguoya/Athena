@@ -1,7 +1,7 @@
 # ADR 0034：考前复习动态进出——错几次就要连对几次才移出
 
 - 日期：2026-09-28
-- 状态：已接受
+- 状态：已接受；第 2 条移出门槛由 [ADR 0035](0035-review-exit-by-correct-margin.md) 修订（取消封顶 4 次，改为答对比答错多 1～2 次）
 - 影响：`lib/models.dart`（`reviewExitStreak`、`inReview`）、`lib/progress.dart`
   （`correctStreaksSinceWrong`）、`lib/home.dart`（考前复习页）
 - 关系：修订 ADR 0033 第 2 条「答对了也不移走」与其后果第 1 条「只增不减」

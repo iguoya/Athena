@@ -9,8 +9,8 @@ import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
-  // 考前复习（ADR 0033、0034）：累计错够 2 次进来，连对够次数移出。
-  testWidgets("考前复习收累计错 2 次的题，连对 1 次仍在、标连对 1/2；只错 1 次的不收", (tester) async {
+  // 考前复习（ADR 0033、0035）：累计错够 2 次进来，答对比答错多 1～2 次才移出。
+  testWidgets("考前复习收累计错 2 次的题，答对 1 次仍在、标对 1/3；只错 1 次的不收", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -40,10 +40,15 @@ void main() {
       await store.recordAttempt(questionId: once.id, topicId: once.topicId, subjectId: "subject1", correct: false);
       final wrongs = await store.wrongCounts();
       final streaks = await store.correctStreaksSinceWrong();
+      final totals = await store.attemptCounts();
       final s1Done = allMastered(bank.forSubject("subject1"), await store.masteredQuestionIds());
       expected = {
         for (final q in bank.questions)
-          if (inReview(wrongCount: wrongs[q.id] ?? 0, streak: streaks[q.id] ?? 0) &&
+          if (inReview(
+                wrongCount: wrongs[q.id] ?? 0,
+                correctCount: (totals[q.id] ?? 0) - (wrongs[q.id] ?? 0),
+                streak: streaks[q.id] ?? 0,
+              ) &&
               (s1Done || !q.topicId.startsWith("drive.s4.")))
             q.id,
       };
@@ -66,7 +71,7 @@ void main() {
     final list = find.byType(Scrollable).last;
     await tester.scrollUntilVisible(find.textContaining(twice.prompt), 300, scrollable: list);
     final row = find.ancestor(of: find.textContaining(twice.prompt), matching: find.byType(Row)).first;
-    expect(find.descendant(of: row, matching: find.text("连对 1/2")), findsOneWidget);
+    expect(find.descendant(of: row, matching: find.text("对 1/3")), findsOneWidget);
     expect(find.descendant(of: row, matching: find.text("错 2 次")), findsOneWidget);
 
     // 总数按规则独立算一遍：只错过一次的那道不算在里面。

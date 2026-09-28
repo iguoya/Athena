@@ -179,21 +179,29 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
     );
-    // 考前复习：累计错够次数进来，最后一次错之后连对够次数出去，再错又回来
-    // （ADR 0033、0034）。全部从作答记录派生，不另存一张表。
+    // 考前复习：累计错够次数进来；最近一次答对、且累计答对比答错多 1～2 次才出去，
+    // 再错又回来（ADR 0033、0035）。全部从作答记录派生，不另存一张表。
     final eligible = [
       for (final q in widget.bank.questions)
         if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong &&
             (s1Done || !q.topicId.startsWith("drive.s4.")))
           q,
     ];
-    int left(Question q) =>
-        reviewExitStreak(wrongCounts[q.id] ?? 0) - (streaks[q.id] ?? 0);
+    int correctOf(Question q) => (attempts[q.id] ?? 0) - (wrongCounts[q.id] ?? 0);
+    int left(Question q) => reviewExitCorrect(wrongCounts[q.id] ?? 0) - correctOf(q);
+    bool stillWrong(Question q) => (streaks[q.id] ?? 0) == 0;
     final review = [
       for (final q in eligible)
-        if (inReview(wrongCount: wrongCounts[q.id] ?? 0, streak: streaks[q.id] ?? 0)) q,
+        if (inReview(
+          wrongCount: wrongCounts[q.id] ?? 0,
+          correctCount: correctOf(q),
+          streak: streaks[q.id] ?? 0,
+        ))
+          q,
     ]..sort((a, b) {
-        // 离移出还差得越多越靠前：还错着的、错得多的先练。
+        // 还错着的先练；同样状态下离移出还差得越多越靠前，再按错的次数。
+        final byOpen = (stillWrong(b) ? 1 : 0).compareTo(stillWrong(a) ? 1 : 0);
+        if (byOpen != 0) return byOpen;
         final byLeft = left(b).compareTo(left(a));
         if (byLeft != 0) return byLeft;
         return (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
@@ -1160,8 +1168,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   /// 考前复习：累计答错 [reviewMinWrong] 次以上的题（ADR 0033）。
-  /// 跟错题本的区别：错题本答对一次就移走；这里要在最后一次错之后连对够
-  /// [reviewExitStreak] 次才移出，再错又回来（ADR 0034）。
+  /// 跟错题本的区别：错题本答对一次就移走；这里要最近一次答对、且累计答对
+  /// 够 [reviewExitCorrect] 次（比答错多 1～2 次）才移出，再错又回来（ADR 0035）。
   Widget _reviewOverview(BuildContext context) {
     final items = _reviewQuestions;
     final open = [for (final q in items) if (_wrongIds.contains(q.id)) q];
@@ -1201,7 +1209,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ? (_reviewGraduated == 0
                     ? "还没有累计答错 $reviewMinWrong 次以上的题。"
                     : "反复错过的 $_reviewGraduated 道都已连对够次数移出了；再错会自动回来。")
-                : "累计答错 $reviewMinWrong 次以上的题进这里。最后一次错之后，错几次就要连对几次（最多 4 次）才移出；移出后再错会自动回来。",
+                : "累计答错 $reviewMinWrong 次以上的题进这里。答对次数要比答错多 1～2 次（错 2 次对 3 次，错 3 次以上多对 2 次）、且最近一次答对才移出；移出后再错会自动回来。",
             style: body,
           ),
           if (items.isNotEmpty) ...[
@@ -1242,7 +1250,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   final q = items[i];
                   final times = _wrongCounts[q.id] ?? reviewMinWrong;
                   final streak = _reviewStreaks[q.id] ?? 0;
-                  final need = reviewExitStreak(times);
+                  final correct = (_attempts[q.id] ?? 0) - times;
+                  final need = reviewExitCorrect(times);
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -1258,7 +1267,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       SizedBox(
                         width: 150,
                         child: BsBadge(
-                          text: streak == 0 ? "还错着 · 0/$need" : "连对 $streak/$need",
+                          text: streak == 0 ? "还错着 · 对 $correct/$need" : "对 $correct/$need",
                           icon: streak == 0 ? Icons.close : Icons.trending_up,
                           color: streak == 0 ? Bs.danger : Bs.warning,
                         ),
