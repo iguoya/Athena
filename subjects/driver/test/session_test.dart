@@ -89,8 +89,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text("考试结束"), findsOneWidget);
 
+    // 出结果前要走 recordExam 真实写库；同上，等到结果页真的出来，不赌固定时长——
+    // Windows runner 上 100ms 经常不够。
     await tester.tap(find.text("看结果"));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    for (var i = 0; i < 200 && find.text("未及格").evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
     await tester.pumpAndSettle();
     expect(find.text("未及格"), findsOneWidget);
     expect(find.textContaining("提前结束"), findsOneWidget);
@@ -167,8 +172,12 @@ void main() {
     expect(closed, isTrue);
 
     await tester.runAsync(() async {
-      // 草稿是交题时顺手存的，等它写完再查。
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      // 草稿是交题时顺手存的、不被等待；轮询到它写全再查，不赌固定时长。
+      for (var i = 0; i < 200; i++) {
+        final draft = await store.loadExamDraft("subject1.exit-test");
+        if (draft != null && draft.picked.length == 3) break;
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
       bool ours(String id) => RegExp(r"^q\d+$").hasMatch(id);
       final counts = await store.attemptCounts();
       expect(counts.keys.where(ours).toSet(), {"q0", "q1", "q2"});
