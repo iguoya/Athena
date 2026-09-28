@@ -75,7 +75,7 @@ void main() {
     expect(answersMatch(question, {"A", "B", "C"}), isFalse);
   });
 
-  test("模拟考不抽偏难怪，高频多于常规", () {
+  test("模拟考偏难怪不超过整卷 2%（至少 1 道），高频多于常规（ADR 0032）", () {
     final bank = [
       for (var i = 0; i < 30; i++) _q("hot$i", band: QuestionBand.hot),
       for (var i = 0; i < 30; i++) _q("reg$i"),
@@ -87,11 +87,31 @@ void main() {
       passScore: 90,
       pointsPerQuestion: 1,
     );
+    for (var seed = 0; seed < 50; seed++) {
+      final paper = Paper.draw(bank, small, Random(seed));
+      expect(paper.questions, hasLength(20));
+      expect(paper.questions.where((q) => q.isRare).length, lessThanOrEqualTo(1), reason: "seed $seed");
+    }
     final paper = Paper.draw(bank, small, Random(7));
-    expect(paper.questions.every((q) => !q.isRare), isTrue);
     final hot = paper.questions.where((q) => q.isHot).length;
     final regular = paper.questions.where((q) => q.isRegular).length;
     expect(hot, greaterThan(regular));
+  });
+
+  test("偏难怪占了半个题库也只抽到上限：100 题最多 2 道，且确实抽得到", () {
+    final bank = [
+      for (var i = 0; i < 100; i++) _q("reg$i"),
+      for (var i = 0; i < 100; i++) _q("rare$i", band: QuestionBand.rare),
+    ];
+    const rules = ExamRules(questionCount: 100, minutes: 45, passScore: 90, pointsPerQuestion: 1);
+    expect(Paper.rareLimit(100), 2);
+    expect(Paper.rareLimit(50), 1);
+    for (var seed = 0; seed < 20; seed++) {
+      final paper = Paper.draw(bank, rules, Random(seed));
+      final rare = paper.questions.where((q) => q.isRare).length;
+      expect(rare, 2, reason: "seed $seed");
+      expect(paper.questions, hasLength(100));
+    }
   });
 
   test("阶段测试从大题库只抽 100 题，判断 40 单选 60", () {

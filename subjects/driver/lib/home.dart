@@ -1745,7 +1745,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam.minutes)) return;
     if (!mounted) return;
-    final all = _openPool(subject);
+    // 不经 dailyQuestions：偏难怪由组卷按上限少量放进来（ADR 0032）。
+    final all = subject.id == "subject1"
+        ? widget.bank.unlocked("subject1", _s1Open)
+        : widget.bank.forSubject(subject.id);
     final paper = Paper.draw(all, subject.exam, Random());
     _openSession(
       SessionLaunch(

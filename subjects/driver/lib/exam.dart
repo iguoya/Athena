@@ -10,34 +10,40 @@ class Paper {
   final bool fullBank;
 
   static Paper draw(List<Question> bank, ExamRules rules, Random random) {
-    final pool = dailyQuestions(bank);
-    final source = pool.isNotEmpty ? pool : [...bank];
+    // 偏难怪也进袋子，但封顶（ADR 0032）：考场上确实可能抽到，不能完全不见；
+    // 又只占题库一两个百分点，不能让它在卷面上喧宾夺主。
+    final daily = dailyQuestions(bank);
+    final source = [...bank];
+    final rareCap = rareLimit(rules.questionCount);
     final seen = <String>{};
     final picked = <Question>[];
     final take = min(rules.questionCount, source.length);
 
-    /// 高频、常考的题在袋子里多放几份，抽中的机会更大。
+    /// 高频、常考的题在袋子里多放几份，抽中的机会更大；偏难怪按常规题的一份放。
     List<Question> weightedBag(bool Function(Question) accept) {
       return <Question>[
         for (final question in source)
           if (accept(question))
-            for (var i = 0; i < question.drawWeight; i++) question,
+            for (var i = 0; i < (question.isRare ? 1 : question.drawWeight); i++) question,
       ]..shuffle(random);
     }
 
     int count(bool Function(Question) accept) => picked.where(accept).length;
 
+    bool admits(Question question) => !question.isRare || count((q) => q.isRare) < rareCap;
+
     /// 从袋子里往卷子上加题，直到满足 accept 的题有 want 道（或整卷够数）。
     void fill(bool Function(Question) accept, int want, [bool Function(Question)? from]) {
       for (final question in weightedBag(from ?? accept)) {
         if (picked.length >= take || count(accept) >= want) break;
-        if (!seen.add(question.id)) continue;
+        if (seen.contains(question.id) || !admits(question)) continue;
+        seen.add(question.id);
         picked.add(question);
       }
     }
 
-    // 先按内容块 × 题型的格子抽（ADR 0023）；题库不够一整卷时不分块，免得格子比题还多。
-    final cells = source.length >= rules.questionCount ? blockCells(rules) : const <(String, String), int>{};
+    // 先按内容块 × 题型的格子抽（ADR 0023）；日常题不够一整卷时不分块，免得格子比题还多。
+    final cells = daily.length >= rules.questionCount ? blockCells(rules) : const <(String, String), int>{};
     for (final entry in cells.entries) {
       final (block, kind) = entry.key;
       fill((q) => rules.blockOf(q) == block && q.kind == kind, entry.value);
@@ -56,15 +62,22 @@ class Paper {
     fill((_) => true, take);
     if (picked.length < take) {
       final rest = [for (final question in source) if (!seen.contains(question.id)) question]..shuffle(random);
-      picked.addAll(rest.take(take - picked.length));
+      for (final question in rest) {
+        if (picked.length >= take) break;
+        if (admits(question)) picked.add(question);
+      }
     }
     picked.shuffle(random);
     return Paper(
       questions: picked,
       rules: rules,
-      fullBank: source.length >= rules.questionCount && _mixSatisfied(picked, rules),
+      fullBank: daily.length >= rules.questionCount && _mixSatisfied(picked, rules),
     );
   }
+
+  /// 一卷里偏难怪的上限：整卷的 2%，至少 1 道（ADR 0032）。
+  /// 科目一 100 题最多 2 道，科目四 50 题最多 1 道。
+  static int rareLimit(int questionCount) => max(1, (questionCount * 0.02).floor());
 
   /// 题型配比、内容比例有没有抽满——没抽满就不算「跟考场一样」，结果页要说明。
   static bool _mixSatisfied(List<Question> picked, ExamRules rules) {
