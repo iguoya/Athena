@@ -139,11 +139,13 @@ class ProgressStore {
 
   final Database _db;
 
-  static Future<ProgressStore> open({String? path}) async {
+  /// [seed] 为 false 时新库从空白开始，不铺随包的进度库——测试要一个跟使用者练到哪
+  /// 无关的起点。
+  static Future<ProgressStore> open({String? path, bool seed = true}) async {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
     final dbPath = path ?? _defaultPath();
-    await _seedIfMissing(dbPath);
+    if (seed) await _seedIfMissing(dbPath);
     final db = await databaseFactory.openDatabase(
       dbPath,
       options: OpenDatabaseOptions(

@@ -20,9 +20,9 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-review-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
-      // 新库拿仓库里的进度库当底子：挑两道从没答过、题干独一无二的科目一题来造记录。
-      final seen = await store.attemptCounts();
+      // 从空库开始：拿仓库进度库当底子的话，使用者把科目一答遍之后就挑不出没答过的题了。
+      store = await ProgressStore.open(path: "${dir.path}/learning.db", seed: false);
+      // 挑两道题干独一无二的科目一题来造记录，列表里才能按题干认出它。
       final pool = bank.forSubject("subject1");
       final prompts = <String, int>{};
       for (final q in pool) {
@@ -30,7 +30,7 @@ void main() {
       }
       final fresh = [
         for (final q in pool)
-          if (!seen.containsKey(q.id) && prompts[q.prompt] == 1 && !q.prompt.contains("\n")) q,
+          if (prompts[q.prompt] == 1 && !q.prompt.contains("\n")) q,
       ];
       twice = fresh[0];
       once = fresh[1];
