@@ -4,6 +4,7 @@ import "dart:io";
 import "package:flutter/services.dart";
 import "package:path/path.dart" as p;
 
+import "app_root.dart";
 import "models.dart";
 
 class ContentLoader {
@@ -55,12 +56,10 @@ class ContentLoader {
   }
 
   static Future<String> _read(String relative) async {
-    final env = Platform.environment["ATHENA_DRIVER_ROOT"];
     // 记的是应用根，不是 content 目录：relative 有一级也有两级，从文件路径倒推会算错。
-    final bases = <String>[
-      if (env != null && env.isNotEmpty) env,
-      Directory.current.path,
-    ];
+    // 直接点开 build/ 下的调试包也读工作树里的题库，不读打包时的旧副本（ADR 0030）。
+    final root = workingTreeRoot();
+    final bases = <String>[?root];
     for (final base in bases) {
       try {
         final file = File(p.join(base, "content", relative));

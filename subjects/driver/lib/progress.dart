@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:path/path.dart" as p;
 import "package:sqflite_common_ffi/sqflite_ffi.dart";
 
+import "app_root.dart";
 import "models.dart";
 
 class TopicStats {
@@ -139,10 +140,9 @@ class ProgressStore {
   static String _defaultPath() {
     // 进度随仓库走（ADR 0053）：换一台机器 clone 下来，掌握度和战绩要还在。
     // `app.json` 只存在于工作树，Flutter 发行包里没有它——据此区分，不必判断
-    // 路径是否可写，也不必问自己「是不是在仓库里」。
-    final env = Platform.environment["ATHENA_DRIVER_ROOT"];
-    final appRoot = (env != null && env.isNotEmpty) ? env : Directory.current.path;
-    if (File(p.join(appRoot, "app.json")).existsSync()) {
+    // 路径是否可写。直接点开 build/ 下的调试包也要认得出工作树（ADR 0030）。
+    final appRoot = workingTreeRoot();
+    if (appRoot != null) {
       final inRepository = Directory(p.join(appRoot, "progress"));
       inRepository.createSync(recursive: true);
       return p.join(inRepository.path, "learning.db");
