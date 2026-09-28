@@ -575,6 +575,20 @@ List<Question> hardestFirst(List<Question> questions) {
   return [for (final (_, q) in indexed) q];
 }
 
+/// 一轮练习的出题顺序：错题、高频、常考、常规，同一档里先练全国错误率高的（ADR 0027）。
+/// 每道题只出一次——答对就算掌握，同一轮里再出一遍是白做；「高频多练」靠排在前面
+/// 和模拟考多抽体现，不靠重复（ADR 0031）。
+List<Question> practiceQueue(List<Question> pending, Set<String> wrongIds) {
+  final wrong = [for (final q in pending) if (wrongIds.contains(q.id)) q];
+  final rest = [for (final q in pending) if (!wrongIds.contains(q.id)) q];
+  return [
+    ...hardestFirst(wrong),
+    ...hardestFirst([for (final q in rest) if (q.isHot) q]),
+    ...hardestFirst([for (final q in rest) if (q.isCommon) q]),
+    ...hardestFirst([for (final q in rest) if (q.isRegular) q]),
+  ];
+}
+
 List<Question> dailyQuestions(Iterable<Question> questions) {
   return [for (final question in questions) if (!question.isRare) question];
 }

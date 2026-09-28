@@ -88,32 +88,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   List<Question> _practiceQueue(List<Question> questions) {
-    final pending = _pending(questions);
-    final wrong = [
-      for (final q in pending)
-        if (_wrongIds.contains(q.id)) q,
-    ];
-    final hot = [
-      for (final q in pending)
-        if (!_wrongIds.contains(q.id) && q.isHot) q,
-    ];
-    final common = [
-      for (final q in pending)
-        if (!_wrongIds.contains(q.id) && q.isCommon) q,
-    ];
-    final regular = [
-      for (final q in pending)
-        if (!_wrongIds.contains(q.id) && q.isRegular) q,
-    ];
-    // 档的先后不变，同一档里先练全国错误率高的（ADR 0027）。
-    return [
-      ...hardestFirst(wrong),
-      ...hardestFirst(hot),
-      ...hardestFirst(common),
-      ...hardestFirst(regular),
-      ...wrong,
-      ...hot,
-    ];
+    return practiceQueue(_pending(questions), _wrongIds);
   }
 
   List<Question> _openPool(Subject subject) {

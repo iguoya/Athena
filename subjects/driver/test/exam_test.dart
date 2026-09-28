@@ -186,4 +186,18 @@ void main() {
     expect(_q("y", rate: 19.9).isErrorProne, isFalse);
     expect(_q("z").isErrorProne, isFalse);
   });
+
+  test("一轮练习每道题只出一次：错题、高频、常考、常规依次排（ADR 0031）", () {
+    final pending = [
+      _q("reg", band: QuestionBand.regular),
+      _q("hot", band: QuestionBand.hot),
+      _q("wrongHot", band: QuestionBand.hot),
+      _q("common", band: QuestionBand.common),
+      _q("wrongRare", band: QuestionBand.rare),
+    ];
+    final queue = practiceQueue(pending, {"wrongHot", "wrongRare"});
+    final ids = [for (final q in queue) q.id];
+    expect(ids.toSet().length, ids.length);
+    expect(ids, ["wrongHot", "wrongRare", "hot", "common", "reg"]);
+  });
 }
