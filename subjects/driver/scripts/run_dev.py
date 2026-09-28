@@ -36,6 +36,7 @@ def flutter_env() -> dict[str, str]:
     env = os.environ.copy()
     env.setdefault("ATHENA_DRIVER_ROOT", str(APP_ROOT))
     apply_macos_xcode(env)
+    apply_windows_msvc(env)
     return env
 
 
@@ -56,6 +57,64 @@ def apply_macos_xcode(env: dict[str, str]) -> None:
     parts = path.split(os.pathsep) if path else []
     if xcode_bin not in parts:
         env["PATH"] = os.pathsep.join([xcode_bin, *parts])
+
+
+def apply_windows_msvc(env: dict[str, str]) -> None:
+    """桌面启动器 / 普通终端往往没有 VS Developer Prompt；CMake 会报找不到 CXX 编译器。
+
+    用 vswhere 定位 vcvars64.bat，把那次 `set` 的结果并进本次环境。已经能
+    which 到 cl.exe 就不动——说明外层已经是开发者环境。
+    """
+    if sys.platform != "win32":
+        return
+    if shutil.which("cl", path=env.get("PATH")):
+        return
+    vswhere = (
+        Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"))
+        / "Microsoft Visual Studio"
+        / "Installer"
+        / "vswhere.exe"
+    )
+    if not vswhere.is_file():
+        return
+    try:
+        install = subprocess.check_output(
+            [
+                str(vswhere),
+                "-latest",
+                "-products",
+                "*",
+                "-requires",
+                "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+                "-property",
+                "installationPath",
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return
+    if not install:
+        return
+    vcvars = Path(install) / "VC" / "Auxiliary" / "Build" / "vcvars64.bat"
+    if not vcvars.is_file():
+        return
+    try:
+        dumped = subprocess.check_output(
+            ["cmd", "/c", f'call "{vcvars}" >nul && set'],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return
+    for line in dumped.splitlines():
+        if "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        # PATH / INCLUDE / LIB / LIBPATH / VCTools* 都要；整表并进最省事，
+        # vcvars 只会动工具链相关变量。
+        env[key] = value
+    print(f"[工具链] 已加载 {vcvars}", flush=True)
 
 
 def desktop_device() -> str:
@@ -122,6 +181,7 @@ def main(argv: list[str]) -> int:
     if sys.platform == "darwin" and env.get("DEVELOPER_DIR"):
         print(f"[工具链] DEVELOPER_DIR={env['DEVELOPER_DIR']}", flush=True)
     if argv:
+        # pub get / analyze 不需要 MSVC；但 Windows 上 `build` 一类仍走同一环境无妨。
         return subprocess.call([flutter, *argv], cwd=APP_ROOT, env=env)
     return run_resident(flutter, desktop_device(), env)
 
