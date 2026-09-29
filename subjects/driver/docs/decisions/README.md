@@ -49,3 +49,4 @@
 | [0042](0042-exam-timer-without-deadline.md) | 模拟考只计时，到点不收卷 | 已接受（撤销 0016 第 5 条的超时交卷） |
 | [0043](0043-always-resume-exam-draft.md) | 开始模拟考总是接着上次没交的那一卷 | 已接受（修订 0016 第 4、5 条） |
 | [0044](0044-subject1-no-unlocking.md) | 科目一不设解锁，四个阶段和模拟考全部开放 | 已接受（撤销 0006 第 2、3 条） |
+| [0045](0045-collect-remaining-public-bank-questions.md) | 补收公开题库剩余题目，同考点换问法也收，逐道核对现行规定 | 已接受 |
