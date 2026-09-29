@@ -2,6 +2,8 @@
 // 内容驱动：界面按 content/ 下的 JSON 渲染，不为新增知识点或诊断项复制整页。
 
 import { invoke } from "@tauri-apps/api/core";
+// 应用图标：和启动器图块、任务栏、标题栏同一份（仓库 ADR 0065）。
+import appIcon from "../icon.svg";
 import { TransformView, type Mat2, type Readout } from "./transform-view";
 import { GraphView, type GraphNode } from "./graph-view";
 import {
@@ -341,7 +343,7 @@ function renderSide() {
 
   const parts: string[] = [
     `<div class="brand">
-       <h1>${curriculum.title}</h1>
+       <h1><img class="app-icon" src="${appIcon}" alt="" />${curriculum.title}</h1>
        <div class="pass">第一遍 · 走通为准</div>
        <div class="bar"><span style="width:${pct}%"></span></div>
        <div class="bar-txt">${all.length} 节走过 ${walked} 节</div>

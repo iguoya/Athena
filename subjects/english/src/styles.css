@@ -40,15 +40,12 @@
   background: var(--english-panel);
 }
 #english-stage-map .english-brand { display: flex; align-items: center; gap: 12px; }
+/* 标志位放应用图标本身（icon.svg 自带颜色），不再垫底色块（仓库 ADR 0065）。 */
 #english-stage-map .english-mark {
-  display: grid;
-  place-items: center;
+  display: block;
+  flex: none;
   width: 38px;
   height: 38px;
-  border-radius: 11px;
-  color: var(--english-blue);
-  background: var(--english-blue-soft);
-  font-weight: 500;
 }
 #english-stage-map h1,
 #english-stage-map h2,

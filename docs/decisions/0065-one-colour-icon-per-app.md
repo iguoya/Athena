@@ -28,10 +28,27 @@
 
 1. **`icon.svg` 就是这个应用的图标本身**：透明底、自带颜色、不需要谁再垫底色。
    启动器图块、窗口/任务栏/Dock、应用自己界面上的标志，三处都从这一份来，不另画。
-2. **画风统一取 Fluent Emoji 的 Color 版**（微软，MIT）：彩色、有体积感，16px
-   任务栏上也认得出。Fluent 里没有的就按同一画风补：C / C++ 用 Simple Icons 的语言
-   标志字形（CC0）填渐变，2 阶魔方按同样的渐变与高光自己画。启动器自己的标志也换成
-   Fluent 的虎头，和各应用放在一起时不突兀。出处写在每个 `icon.svg` 顶部的注释里。
+2. **每个应用按自己的身份概念挑本领域最贴切、最好看的图标，不强求彼此画风一致。**
+   做法是在开放许可的图标库里按概念检索（Iconify 汇集的 Fluent、Streamline、
+   SVG Logos 等彩色集），逐个比较 16–256px 的实际效果再定，不拿「最接近的现成
+   emoji」凑数：
+
+   | 应用 | 身份概念 | 图标 |
+   |---|---|---|
+   | c / cpp | 语言本身 | 官方标志（SVG Logos，CC0） |
+   | dsa | 节点构成的树 | Fluent Color「Org」：一根带两子，就是二叉树（MIT） |
+   | mathematics | 用线性变换讲线性代数 | Streamline「Transform Right」：正方形被变成平行四边形（CC BY 4.0） |
+   | driver | 科目一、四考交通法规 | Fluent Emoji 红绿灯（MIT） |
+   | english | 拉丁字母 | Fluent Emoji「abc」（MIT） |
+   | polaris | 北极星本身 | Fluent Emoji 发光的星（MIT） |
+   | pocket-cube | 2 阶魔方 | 自己画：库里的魔方全是 3 阶，用了反而说错 |
+   | 启动器 | Athena 虎头标志 | Fluent Emoji 虎头（MIT） |
+
+   深色任务栏上看不见的（近黑描边）要改色，改动写进注释。出处、许可与改动写在每个
+   `icon.svg` 顶部；CC BY 的署名靠这段注释随文件走。
+
+   （同日修订：初稿写的是「画风统一取 Fluent Emoji」，使用者看过效果后改为按概念
+   逐个挑选、不要求协调。）
 3. **位图由 `launcher icons` 生成并提交，应用构建不依赖启动器。** 每个应用在
    `app.json` 的 `icon.renders` 里声明要哪些派生文件（相对应用目录的路径 → 边长，
    或 `"ico"` / `"icns"`），编排器照单渲染。理由：
