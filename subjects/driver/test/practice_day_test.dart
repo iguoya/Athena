@@ -9,6 +9,8 @@ import "package:athena_driver/review.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "unlock_support.dart";
+
 void main() {
   // 科目二围绕练车日（ADR 0039）：复盘今天一次录完整天，练车日、日志、考前各自看得到。
   testWidgets("复盘今天：格子表记错、实时算分、加一把、记教练的话；四个分区都跟着更新", (tester) async {
@@ -20,6 +22,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-day-");
       store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      await unlockSubject2(store);
       before = (await store.drillRuns()).length;
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));

@@ -8,6 +8,8 @@ import "package:athena_driver/points.dart";
 import "package:athena_driver/progress.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
+
+import "unlock_support.dart";
 import "package:image/image.dart" as img;
 import "package:path/path.dart" as p;
 
@@ -20,6 +22,7 @@ void main() {
     setUp(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-points-");
       store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      await unlockSubject2(store);
     });
 
     tearDown(() async {
@@ -89,6 +92,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-points-ui-");
       store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      await unlockSubject2(store);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();

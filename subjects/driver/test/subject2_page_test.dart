@@ -8,6 +8,8 @@ import "package:athena_driver/progress.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "unlock_support.dart";
+
 void main() {
   // 科目二页面（ADR 0036）：用真实内容渲染，布局溢出、动画驱动、记一把练车都走一遍。
   testWidgets("科目二：四项卡片、动画单步、记一把练车后统计出现", (tester) async {
@@ -19,6 +21,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-s2-");
       store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      await unlockSubject2(store);
       before = (await store.drillRuns()).length;
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));

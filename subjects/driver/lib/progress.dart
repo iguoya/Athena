@@ -636,6 +636,17 @@ class ProgressStore {
     return n;
   }
 
+  /// 科目二的解锁线：最近 [steadyRuns] 场科目一模拟考都不低于 [steadyScore] 分（ADR 0047）。
+  /// 百分制折合分就是正确率；只看最近几场而不看最高分——考过一次 95 不算稳，
+  /// 连着几场都在 95 以上才算。[exams] 新的在前，可以混着别的科目。
+  static const steadyScore = 95;
+  static const steadyRuns = 3;
+
+  static bool subject1Steady(List<ExamRecord> exams) {
+    final recent = [for (final e in exams) if (e.subjectId == "subject1") e].take(steadyRuns).toList();
+    return recent.length == steadyRuns && recent.every((e) => e.score >= steadyScore);
+  }
+
   /// 最近一次答对、且没有明显慢于平时节奏。迟疑答对的题练习里还会再出。
   Future<Set<String>> masteredQuestionIds() async {
     final rows = await _db.rawQuery("""

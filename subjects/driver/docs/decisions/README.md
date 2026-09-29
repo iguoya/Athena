@@ -51,3 +51,4 @@
 | [0044](0044-subject1-no-unlocking.md) | 科目一不设解锁，四个阶段和模拟考全部开放 | 已接受（撤销 0006 第 2、3 条） |
 | [0045](0045-collect-remaining-public-bank-questions.md) | 补收公开题库剩余题目，同考点换问法也收，逐道核对现行规定 | 已接受 |
 | [0046](0046-low-trust-source-questions.md) | 低可信来源的题量不大时也收，答案逐道按条文重核 | 已接受 |
+| [0047](0047-subject2-unlocks-at-steady-95.md) | 科目二要等科目一模拟考稳定在 95 分以上才开放 | 已接受 |

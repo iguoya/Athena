@@ -9,6 +9,8 @@ import "package:athena_driver/rehearsal.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "unlock_support.dart";
+
 void main() {
   // 默演（ADR 0037）：先口述、再对照；卡住的步骤记下来，进练车前简报。
   testWidgets("默演：口述时讲解藏着，对照时亮出；卡住的步骤记进库、进简报", (tester) async {
@@ -19,6 +21,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-rehearsal-");
       store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      await unlockSubject2(store);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();

@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _reviewGraduated = 0;
   Map<String, int> _wrongCounts = const {};
   List<ExamRecord> _exams = const [];
+  List<ExamRecord> _s1Exams = const [];
   List<Notice> _notices = const [];
   List<DailyCount> _daily = const [];
   Map<String, TopicStats> _topicStats = const {};
@@ -76,6 +77,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
 
   bool get _s1Done => allMastered(_subject1All, _mastered);
+
+  /// 最近几场科目一模拟考都在 95 分以上（ADR 0047）。
+  bool get _s1Steady => ProgressStore.subject1Steady(_s1Exams);
+
+  /// 科目二要等科目一模拟考稳定在 95 分以上（ADR 0047），科目四要等科目一日常题
+  /// 全部掌握（ADR 0006 第 4 条）。两把锁都由作答和交卷记录推导，没有手动开关。
+  bool _locked(String subjectId) => switch (subjectId) {
+        "subject2" => !_s1Steady,
+        "subject4" => !_s1Done,
+        _ => false,
+      };
+
+  /// 锁着的科目，它的题不进错题本和考前复习——题干都不该先看到（ADR 0006 后果）。
+  static bool _hiddenTopic(String topicId, {required bool s1Done, required bool s1Steady}) =>
+      (!s1Steady && topicId.startsWith("drive.s2.")) || (!s1Done && topicId.startsWith("drive.s4."));
 
   bool _keepInPractice(Question q) {
     return q.appearsInPractice(
@@ -160,6 +176,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final streaks = await widget.store.correctStreaksSinceWrong();
     final drillRuns = await widget.store.drillRuns();
     final exams = await widget.store.recentExams();
+    // 单独取科目一的：混着取的最近 12 场可能被科目四挤掉，科目二的解锁线就算不准了。
+    final s1Exams = await widget.store.recentExams(subjectId: "subject1", limit: ProgressStore.steadyRuns);
     final notices = await widget.store.notices(limit: 5);
     final daily = await widget.store.dailyAttempts();
     final topicStats = await widget.store.topicStats();
@@ -169,9 +187,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       for (final id in ids)
         if (widget.bank.questions.any((q) => q.id == id)) widget.bank.byId(id),
     ];
-    if (!s1Done) {
-      wrong.removeWhere((q) => q.topicId.startsWith("drive.s4."));
-    }
+    final s1Steady = ProgressStore.subject1Steady(s1Exams);
+    wrong.removeWhere((q) => _hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady));
     // 错得越多的排越前：考前该先啃反复栽跟头的那几道。
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
@@ -181,7 +198,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final eligible = [
       for (final q in widget.bank.questions)
         if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong &&
-            (s1Done || !q.topicId.startsWith("drive.s4.")))
+            !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
           q,
     ];
     int correctOf(Question q) => (attempts[q.id] ?? 0) - (wrongCounts[q.id] ?? 0);
@@ -218,6 +235,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _reviewGraduated = eligible.length - review.length;
       _wrongCounts = wrongCounts;
       _exams = exams;
+      _s1Exams = s1Exams;
       _notices = notices;
       _daily = daily;
       _topicStats = topicStats;
@@ -249,7 +267,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _sidebar(BuildContext context) {
     final current = _subject;
-    final open = current != null && (current.id != "subject4" || _s1Done);
+    final open = current != null && !_locked(current.id);
     final s1Daily = dailyQuestions(_subject1All);
     final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
@@ -285,9 +303,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             onTap: () => _go("subject1"),
           ),
           _navLine(
-            icon: Icons.local_parking,
+            icon: _s1Steady ? Icons.local_parking : Icons.lock,
             selected: _place == "subject2" && _session == null,
-            label: "科目二（C2）",
+            label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
+            muted: !_s1Steady,
             onTap: () => _go("subject2"),
           ),
           _navLine(
@@ -416,6 +435,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _reviewId) return _reviewOverview(context);
+    if (_locked(_place)) return _lockedSubject(context, widget.bank.curriculum.subject(_place));
     if (_place == "subject2") {
       final subject2 = widget.bank.curriculum.subject("subject2");
       return Subject2Page(
@@ -429,41 +449,49 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
     if (_place == _syncId) return _syncOverview(context);
     if (_place == _numbersId) return _numbersOverview(context);
-    if (_place == "subject4" && !_s1Done) return _lockedSubject4(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
     return _subjectOverview(context, subject);
   }
 
-  Widget _lockedSubject4(BuildContext context) {
-    final left = _pending(dailyQuestions(_subject1All)).length;
+  Widget _lockedSubject(BuildContext context, Subject subject) {
+    final String why;
+    final String todo;
+    if (subject.id == "subject2") {
+      final scores = [for (final e in _s1Exams) e.score];
+      why = "科目二是场地驾驶技能考，科目一考过才能约。科目一模拟考最近 ${ProgressStore.steadyRuns} 场"
+          "都在 ${ProgressStore.steadyScore} 分以上之前，先不开放。";
+      todo = scores.isEmpty
+          ? "还没考过科目一模拟考。"
+          : "科目一最近 ${scores.length} 场：${scores.join("、")} 分（新的在前）。"
+              "要连着 ${ProgressStore.steadyRuns} 场都不低于 ${ProgressStore.steadyScore} 分。";
+    } else {
+      final left = _pending(dailyQuestions(_subject1All)).length;
+      why = "科目四是单独一卷、单独记分的文明驾驶常识考，跟路考不是同一张成绩。科目一日常题全部掌握之前，先不开放。";
+      todo = "科目一还有 $left 题没掌握。先把科目一练完。";
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.lock, color: Bs.paper),
-              SizedBox(width: 8),
+              const Icon(Icons.lock, color: Bs.paper),
+              const SizedBox(width: 8),
               Text(
-                "科目四未解锁",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                "${subject.code}未解锁",
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            "科目四是单独一卷、单独记分的文明驾驶常识考，跟路考不是同一张成绩。科目一日常题全部掌握之前，先不开放。",
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          Text(why, style: Theme.of(context).textTheme.bodyLarge),
           const SizedBox(height: 16),
           BsAlert(
             color: Bs.warning,
             icon: Icons.flag,
-            child: Text(
-              "科目一还有 $left 题没掌握。先把科目一练完。",
-            ),
+            child: Text(todo),
           ),
           const SizedBox(height: 24),
           FilledButton(
@@ -513,8 +541,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           icon: Icons.menu_book,
           child: Text(
             _s1Done
-                ? "科目一日常题都掌握了，科目四已经开放。模拟考随时可以考。"
-                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。模拟考随时可以考；科目四要等科目一全部掌握。",
+                ? "科目一日常题都掌握了，科目四已经开放。模拟考随时可以考；连着 ${ProgressStore.steadyRuns} 场 ${ProgressStore.steadyScore} 分以上开放科目二。"
+                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。模拟考随时可以考；科目二要等模拟考连着 ${ProgressStore.steadyRuns} 场 ${ProgressStore.steadyScore} 分以上，科目四要等科目一全部掌握。",
           ),
         ),
         const SizedBox(height: 16),
@@ -1855,7 +1883,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Future<void> _startExam(Subject subject) async {
-    if (subject.id == "subject4" && !_s1Done) return;
+    if (_locked(subject.id)) return;
     final draftKey = "${subject.id}.exam";
     final resumed = await _resumeDraft(draftKey);
     if (resumed != null) {
@@ -1923,7 +1951,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _startPractice(Subject subject, List<Question> questions, String title) {
-    if (subject.id == "subject4" && !_s1Done) return;
+    if (_locked(subject.id)) return;
     final pending = _practiceQueue(questions);
     if (pending.isEmpty) return;
     _openSession(
