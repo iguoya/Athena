@@ -74,7 +74,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   List<Question> get _subject1All => widget.bank.forSubject("subject1");
 
-  int get _s1Open => unlockedThrough(_subject1All, _mastered);
 
   bool get _s1Done => allMastered(_subject1All, _mastered);
 
@@ -98,18 +97,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   List<Question> _openPool(Subject subject) {
-    final raw = subject.id == "subject1"
-        ? widget.bank.unlocked("subject1", _s1Open)
-        : widget.bank.forSubject(subject.id);
-    return dailyQuestions(raw);
+    // 科目一不设解锁（ADR 0044）：四个阶段只是按内容分的四组，全部开放。
+    return dailyQuestions(widget.bank.forSubject(subject.id));
   }
 
   List<Question> _openTopic(Subject subject, Topic topic) {
     final questions = widget.bank.forTopic(topic.id);
-    return dailyQuestions([
-      for (final q in questions)
-        if (subject.id != "subject1" || q.phase <= _s1Open) q,
-    ]);
+    return dailyQuestions(questions);
   }
 
   @override
@@ -256,9 +250,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _sidebar(BuildContext context) {
     final current = _subject;
     final open = current != null && (current.id != "subject4" || _s1Done);
-    final phase = current?.id == "subject1"
-        ? current!.phaseById(_s1Open)
-        : null;
+    final s1Daily = dailyQuestions(_subject1All);
+    final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
       color: Bs.nav,
       child: ListView(
@@ -280,10 +273,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 12),
           BsBadge(
-            text: phase == null
-                ? "科目一未完成"
-                : "科目一 · 第${phase.id}阶段 ${phase.title}",
-            color: Bs.warning,
+            text: _s1Done ? "科目一已全部掌握" : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
+            color: _s1Done ? Bs.success : Bs.warning,
             icon: Icons.flag,
           ),
           const SizedBox(height: 20),
@@ -335,37 +326,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             const SizedBox(height: 16),
             const Divider(color: Colors.white30),
             const SizedBox(height: 8),
-            if (current.id == "subject1") ...[
-              _navLine(
-                icon: Icons.list_alt,
-                selected: false,
-                label: () {
-                  final n = _pending(_openPool(current)).length;
-                  return n == 0 ? "本阶段练习（已掌握）" : "本阶段练习 $n";
-                }(),
-                muted: _pending(_openPool(current)).isEmpty,
-                onTap: () => _startPractice(
-                  current,
-                  widget.bank.forPhase("subject1", _s1Open),
-                  "第$_s1Open阶段",
-                ),
-              ),
-            ],
             // 科目二没有笔试（ADR 0036）。
             if (current.exam != null)
               _navLine(
                 icon: Icons.timer,
                 selected: false,
-                label: current.id == "subject1" && !_s1Done
-                    ? "模拟考试（完成本科后）"
-                    : "模拟考试",
-                muted: current.id == "subject1" && !_s1Done,
-                onTap: current.id == "subject1" && !_s1Done
-                    ? null
-                    : () => _startExam(current),
+                label: "模拟考试",
+                onTap: () => _startExam(current),
               ),
-            if (current.id != "subject1")
-              _navLine(
+            _navLine(
                 icon: Icons.list_alt,
                 selected: false,
                 label: () {
@@ -380,19 +349,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               () {
                 final questions = _openTopic(current, topic);
                 final pending = _pending(questions);
-                final locked =
-                    current.id == "subject1" &&
-                    widget.bank
-                        .forTopic(topic.id)
-                        .every((q) => q.phase > _s1Open);
                 return _navLine(
-                  icon: locked ? Icons.lock : Icons.article_outlined,
+                  icon: Icons.article_outlined,
                   selected: _session?.title.endsWith(topic.title) ?? false,
-                  label: locked
-                      ? "${topic.title}（未解锁）"
-                      : (pending.isEmpty
-                            ? topic.title
-                            : "${topic.title}  ${pending.length}"),
+                  label: pending.isEmpty
+                      ? topic.title
+                      : "${topic.title}  ${pending.length}",
                   muted: pending.isEmpty,
                   onTap: pending.isEmpty
                       ? null
@@ -474,10 +436,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _lockedSubject4(BuildContext context) {
-    final open = _s1Open;
-    final phase = widget.bank.curriculum.subject("subject1").phaseById(open);
-    final current = widget.bank.forPhase("subject1", open);
-    final left = _pending(current).length;
+    final left = _pending(dailyQuestions(_subject1All)).length;
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
       child: Column(
@@ -495,7 +454,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 12),
           Text(
-            "科目四是单独一卷、单独记分的文明驾驶常识考，跟路考不是同一张成绩。科目一四个阶段都掌握之前，先不开放。",
+            "科目四是单独一卷、单独记分的文明驾驶常识考，跟路考不是同一张成绩。科目一日常题全部掌握之前，先不开放。",
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 16),
@@ -503,7 +462,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             color: Bs.warning,
             icon: Icons.flag,
             child: Text(
-              "现在在科目一第$open阶段「${phase?.title ?? ""}」，还剩 $left 题。先把科目一练完。",
+              "科目一还有 $left 题没掌握。先把科目一练完。",
             ),
           ),
           const SizedBox(height: 24),
@@ -517,11 +476,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _subject1Overview(BuildContext context, Subject subject) {
-    final open = _s1Open;
     final visible = _openPool(subject);
     final pending = _pending(visible);
-    final current = widget.bank.forPhase("subject1", open);
-    final phase = subject.phaseById(open);
     // 整页用 ListView：塞进去的卡片越来越多，固定高度的 Column + Expanded
     // 会把最下面的章节列表挤没了，改成能滚动就不会有「东西被挤没」这回事。
     return ListView(
@@ -541,11 +497,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               subject.code,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            BsBadge(
-              text: "第$open/${subject.phases.length}阶段",
-              color: Bs.warning,
-              icon: Icons.flag,
-            ),
             if (_s1Done)
               const BsBadge(
                 text: "已全部掌握",
@@ -562,8 +513,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           icon: Icons.menu_book,
           child: Text(
             _s1Done
-                ? "科目一四阶段都掌握了，可以开科目四和科目一全库模拟考。"
-                : "当前第$open阶段「${phase?.title ?? ""}」：${phase?.plain ?? ""}。练路上会碰到的场面：高频、常考多出，偏难怪默认不出。本阶段日常题掌握后解锁下一阶段。科目四要等科目一全部完成。",
+                ? "科目一日常题都掌握了，科目四已经开放。模拟考随时可以考。"
+                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。模拟考随时可以考；科目四要等科目一全部掌握。",
           ),
         ),
         const SizedBox(height: 16),
@@ -576,27 +527,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           runSpacing: 10,
           children: [
             StatTile(
-              icon: Icons.flag,
-              label: "当前阶段",
-              value: "$open",
-              color: Bs.warning,
-            ),
-            StatTile(
               icon: Icons.pending_actions,
-              label: "本阶段待练",
-              value: "${_pending(current).length}",
+              label: "待练",
+              value: "${pending.length}",
               color: Bs.paper,
             ),
             StatTile(
               icon: Icons.check_circle,
-              label: "已开放掌握",
+              label: "已掌握",
               value:
                   "${visible.where((q) => _mastered.contains(q.id)).length}/${visible.length}",
               color: Bs.success,
             ),
             StatTile(
               icon: Icons.quiz,
-              label: "已开放题",
+              label: "日常题",
               value: "${visible.length}",
               color: Bs.secondary,
             ),
@@ -610,14 +555,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             FilledButton(
               onPressed: pending.isEmpty
                   ? null
-                  : () => _startPractice(subject, current, "第$open阶段"),
-              child: const Text("本阶段练习"),
+                  : () => _startPractice(subject, visible, "待练"),
+              child: const Text("练习待练题"),
             ),
-            if (_s1Done)
-              FilledButton.tonal(
-                onPressed: () => _startExam(subject),
-                child: const Text("科目一模拟考"),
-              ),
+            FilledButton.tonal(
+              onPressed: () => _startExam(subject),
+              child: const Text("科目一模拟考"),
+            ),
           ],
         ),
         const SizedBox(height: 20),
@@ -639,7 +583,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     var width = 0.0;
     for (final phase in subject.phases) {
       final painter = TextPainter(
-        text: TextSpan(text: "第${phase.id}阶段 ${phase.title}（未解锁）", style: style),
+        text: TextSpan(text: "第${phase.id}阶段 ${phase.title}", style: style),
         textDirection: Directionality.of(context),
         maxLines: 1,
       )..layout();
@@ -664,57 +608,47 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _phaseRow(BuildContext context, Subject subject, StudyPhase phase, double titleWidth) {
     final questions = widget.bank.forPhase(subject.id, phase.id);
-    // 进度与过关判定同一口径（unlockedThrough）：偏难题默认不练、不挡过关，
-    // 也就不进分母，否则阶段明明过了，进度条却永远差那几道。
+    // 偏难题默认不练、不挡掌握，也就不进分母，否则明明练完了，进度条却永远差那几道。
     final daily = dailyQuestions(questions);
     final rare = questions.length - daily.length;
     final mastered = daily.where((q) => _mastered.contains(q.id)).length;
-    final locked = phase.id > _s1Open;
-    final current = phase.id == _s1Open && !_s1Done;
     final ratio = daily.isEmpty ? 0.0 : mastered / daily.length;
     return InkWell(
-      onTap: locked
-          ? null
-          : () => _startPractice(subject, questions, "第${phase.id}阶段"),
+      onTap: () => _startPractice(subject, questions, "第${phase.id}阶段"),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
             Icon(
-              locked ? Icons.lock : (ratio >= 1 ? Icons.lock_open : Icons.flag),
+              ratio >= 1 ? Icons.check_circle : Icons.flag,
               size: 18,
-              color: locked
-                  ? Bs.secondary
-                  : (current ? Bs.warning : Bs.success),
+              color: ratio >= 1 ? Bs.success : Bs.warning,
             ),
             const SizedBox(width: 8),
             SizedBox(
               width: titleWidth,
               child: Text(
-                locked
-                    ? "第${phase.id}阶段 ${phase.title}（未解锁）"
-                    : "第${phase.id}阶段 ${phase.title}",
+                "第${phase.id}阶段 ${phase.title}",
                 maxLines: 1,
-                style: Theme.of(context).textTheme.bodyLarge
-                    ?.copyWith(color: locked ? Bs.secondary : null),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
             const SizedBox(width: 12),
             SizedBox(
               width: 90,
-              child: rare == 0 || locked
-                  ? Text(locked ? "—" : "$mastered/${daily.length}")
+              child: rare == 0
+                  ? Text("$mastered/${daily.length}")
                   : Tooltip(
                       message: "另有偏难 $rare 道：默认不练、不挡过关，不计入进度",
                       child: Text("$mastered/${daily.length}"),
                     ),
             ),
             const SizedBox(width: 12),
-            _percent(locked, ratio),
+            _percent(ratio),
             const SizedBox(width: 12),
             Expanded(
               child: BsProgress(
-                value: locked ? 0 : ratio,
+                value: ratio,
                 color: ratio >= 1 ? Bs.success : Bs.paper,
               ),
             ),
@@ -725,11 +659,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   /// 进度条左边的百分比。向下取整：差一道没掌握时不该显示成 100%。
-  Widget _percent(bool locked, double ratio) {
+  Widget _percent(double ratio) {
     return SizedBox(
       width: 44,
       child: Text(
-        locked ? "—" : "${(ratio * 100).floor()}%",
+        "${(ratio * 100).floor()}%",
         textAlign: TextAlign.right,
         style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
       ),
@@ -859,9 +793,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _topicRow(BuildContext context, Subject subject, Topic topic, double titleWidth) {
     final questions = _openTopic(subject, topic);
-    final total = widget.bank.forTopic(topic.id);
-    final locked =
-        subject.id == "subject1" && total.isNotEmpty && questions.isEmpty;
     final pending = _pending(questions);
     final mastered = questions.where((q) => _mastered.contains(q.id)).length;
     final ratio = questions.isEmpty ? 0.0 : mastered / questions.length;
@@ -875,19 +806,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: Row(
           children: [
             Icon(
-              locked ? Icons.lock : Icons.article,
+              Icons.article,
               size: 18,
-              color: locked ? Bs.secondary : (enabled ? Bs.paper : Bs.success),
+              color: enabled ? Bs.paper : Bs.success,
             ),
             const SizedBox(width: 8),
             SizedBox(
               width: titleWidth,
               child: Text(
-                locked
-                    ? "${topic.title}（未解锁）"
-                    : pending.isEmpty
-                    ? "${topic.title}（已掌握）"
-                    : topic.title,
+                pending.isEmpty ? "${topic.title}（已掌握）" : topic.title,
                 maxLines: 1,
                 style: Theme.of(context).textTheme.bodyLarge
                     ?.copyWith(color: enabled ? null : Bs.secondary),
@@ -896,19 +823,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             const SizedBox(width: 12),
             SizedBox(
               width: 90,
-              child: Text(locked ? "—" : "${pending.length}"),
+              child: Text("${pending.length}"),
             ),
             const SizedBox(width: 12),
             SizedBox(
               width: 90,
-              child: Text(locked ? "—" : "$mastered/${questions.length}"),
+              child: Text("$mastered/${questions.length}"),
             ),
             const SizedBox(width: 12),
-            _percent(locked, ratio),
+            _percent(ratio),
             const SizedBox(width: 12),
             Expanded(
               child: BsProgress(
-                value: locked ? 0 : ratio,
+                value: ratio,
                 color: ratio >= 1 ? Bs.success : Bs.paper,
               ),
             ),
@@ -1322,7 +1249,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   /// 易混数字：同类数字并排，配横条比大小，每组能直接练相关题（ADR 0028）。
   Widget _numbersOverview(BuildContext context) {
     final subject = widget.bank.curriculum.subject("subject1");
-    final open = dailyQuestions(widget.bank.unlocked("subject1", _s1Open));
+    final open = dailyQuestions(_subject1All);
     final all = dailyQuestions(_subject1All);
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1929,7 +1856,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Future<void> _startExam(Subject subject) async {
     if (subject.id == "subject4" && !_s1Done) return;
-    if (subject.id == "subject1" && !_s1Done) return;
     final draftKey = "${subject.id}.exam";
     final resumed = await _resumeDraft(draftKey);
     if (resumed != null) {
@@ -1940,9 +1866,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam!.minutes)) return;
     if (!mounted) return;
     // 不经 dailyQuestions：偏难怪由组卷按上限少量放进来（ADR 0032）。
-    final all = subject.id == "subject1"
-        ? widget.bank.unlocked("subject1", _s1Open)
-        : widget.bank.forSubject(subject.id);
+    final all = widget.bank.forSubject(subject.id);
     final paper = Paper.draw(all, subject.exam!, Random());
     _openSession(
       SessionLaunch(

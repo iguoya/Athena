@@ -48,7 +48,6 @@ void main() {
     expect(bank.forSubject("subject4").length, greaterThanOrEqualTo(60));
     expect(bank.curriculum.subject("subject1").phases, hasLength(4));
     expect({for (final q in bank.forSubject("subject1")) q.phase}, equals({1, 2, 3, 4}));
-    expect(unlockedThrough(bank.forSubject("subject1"), {}), 1);
     expect(allMastered(bank.forSubject("subject1"), {}), isFalse);
     expect(bank.byId("drive.s1.signals.020").phase, 3);
     expect(bank.byId("drive.s1.signals.020").isHot, isTrue);

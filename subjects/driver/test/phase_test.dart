@@ -29,17 +29,7 @@ void main() {
     _q("rare", phase: 1, band: QuestionBand.rare),
   ];
 
-  test("科目一从第1阶段开始，前一阶段全部掌握才打开下一阶段", () {
-    expect(unlockedThrough(s1, {}), 1);
-    expect(unlockedThrough(s1, {"a1"}), 1);
-    expect(unlockedThrough(s1, {"a1", "a2"}), 2);
-    expect(unlockedThrough(s1, {"a1", "a2", "b1"}), 3);
-    expect(unlockedThrough(s1, {"a1", "a2", "b1", "c1"}), 4);
-    expect(unlockedThrough(s1, {"a1", "a2", "b1", "c1", "d1"}), 4);
-  });
-
-  test("偏难怪题不挡过关，也不算科目一没学完", () {
-    expect(unlockedThrough(s1, {"a1", "a2"}), 2);
+  test("偏难怪题不挡科目一全部掌握", () {
     expect(allMastered(s1, {"a1", "a2", "b1", "c1", "d1"}), isTrue);
   });
 

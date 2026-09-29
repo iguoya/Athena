@@ -10,7 +10,7 @@
 | [0003](0003-sourced-theory-questions.md) | 题目必须能指到法条或标准 | 已接受（第 3 条由 0024 修订） |
 | [0004](0004-desktop-workspace.md) | 桌面工作台，不用手机题库的控件妥协 | 已接受 |
 | [0005](0005-native-tts-for-explain.md) | 答题解释用系统 TTS 朗读 | 已接受 |
-| [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受 |
+| [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受（第 2、3 条由 0044 撤销） |
 | [0007](0007-four-questions-per-page.md) | 练习一页四题，答错才朗读，解析按需回看 | 已接受（第 1 条由 0022 修订） |
 | [0008](0008-adopt-public-question-banks.md) | 自用软件不受版权束缚，公开题库可以直接收录 | 已接受 |
 | [0009](0009-rebalance-subject-one-phases.md) | 科目一四阶段按题量重划 | 已接受（题量区间由 0026 取消） |
@@ -48,3 +48,4 @@
 | [0041](0041-exam-continues-after-failing.md) | 模拟考错到不可能及格也继续答完 | 已接受（撤销 0023 的提前结束） |
 | [0042](0042-exam-timer-without-deadline.md) | 模拟考只计时，到点不收卷 | 已接受（撤销 0016 第 5 条的超时交卷） |
 | [0043](0043-always-resume-exam-draft.md) | 开始模拟考总是接着上次没交的那一卷 | 已接受（修订 0016 第 4、5 条） |
+| [0044](0044-subject1-no-unlocking.md) | 科目一不设解锁，四个阶段和模拟考全部开放 | 已接受（撤销 0006 第 2、3 条） |

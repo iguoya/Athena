@@ -534,32 +534,7 @@ class Bank {
     return [for (final q in forSubject(subjectId)) if (q.phase == phase) q];
   }
 
-  List<Question> unlocked(String subjectId, int through) {
-    return [for (final q in forSubject(subjectId)) if (q.phase <= through) q];
-  }
-
   Question byId(String id) => questions.firstWhere((q) => q.id == id);
-}
-
-/// 当前最高已开放阶段：前一阶段全部掌握才进入下一阶段。
-int unlockedThrough(Iterable<Question> questions, Set<String> mastered) {
-  var maxPhase = 1;
-  for (final question in questions) {
-    if (question.isRare) continue;
-    if (question.phase > maxPhase) maxPhase = question.phase;
-  }
-  for (var phase = 1; phase <= maxPhase; phase++) {
-    var any = false;
-    var done = true;
-    for (final question in questions) {
-      if (question.isRare || question.phase != phase) continue;
-      any = true;
-      if (!mastered.contains(question.id)) done = false;
-    }
-    if (!any) continue;
-    if (!done) return phase;
-  }
-  return maxPhase;
 }
 
 bool allMastered(Iterable<Question> questions, Set<String> mastered) {
