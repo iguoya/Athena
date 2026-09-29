@@ -66812,6 +66812,1307 @@
       "band": "hot",
       "image": "images/subject1/2019_kemu1_BB110597.jpg",
       "error_rate": 5.6
+    },
+    {
+      "id": "drive.s1.rules.600",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡汽车起动发动机时，变速器换挡杆应当处于哪个挡位？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "P挡或N挡",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "D挡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "R挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "任意挡位都可以",
+          "ok": false
+        }
+      ],
+      "explain": "GB 7258第10.2.1条：自动挡车只有在驻车挡P或空挡N时才能起动发动机，防止一打着火车就往前或往后窜。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：转向盘的作用；机动车踏板的分类和作用；变速器操纵杆的作用；驻车制动器的作用；各类开关的辨识和作用；辅助驾驶功能。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.601",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "没有自动起停功能的自动挡汽车，换挡杆在D挡时也能正常起动发动机。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "GB 7258第10.2.1条要求自动挡车只能在P挡或N挡起动；只有带自动起停功能的车，才允许在D挡由系统自己重新起动。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.602",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡汽车换挡杆上的“P”挡是什么挡？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驻车挡",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "空挡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "倒车挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前进挡",
+          "ok": false
+        }
+      ],
+      "explain": "P是驻车挡：停车后挂P，变速器锁住，车不会溜。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：转向盘的作用；机动车踏板的分类和作用；变速器操纵杆的作用；驻车制动器的作用；各类开关的辨识和作用；辅助驾驶功能。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.603",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡汽车换挡杆上的“R”挡是什么挡？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "倒车挡",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "驻车挡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "空挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "低速挡",
+          "ok": false
+        }
+      ],
+      "explain": "R是倒车挡。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：转向盘的作用；机动车踏板的分类和作用；变速器操纵杆的作用；驻车制动器的作用；各类开关的辨识和作用；辅助驾驶功能。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.604",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡汽车换挡杆上的“N”挡是什么挡？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "空挡",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "驻车挡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "倒车挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "前进挡",
+          "ok": false
+        }
+      ],
+      "explain": "N是空挡：动力不传到车轮，但变速器不锁止，车在坡上会溜，停车要挂P并拉驻车制动。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：转向盘的作用；机动车踏板的分类和作用；变速器操纵杆的作用；驻车制动器的作用；各类开关的辨识和作用；辅助驾驶功能。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.605",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡汽车换挡杆上的“D”挡是什么挡？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驱动挡（前进挡）",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "倒车挡",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "驻车挡",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "空挡",
+          "ok": false
+        }
+      ],
+      "explain": "D是驱动挡，也就是向前行驶用的挡位。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：转向盘的作用；机动车踏板的分类和作用；变速器操纵杆的作用；驻车制动器的作用；各类开关的辨识和作用；辅助驾驶功能。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.606",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "自动挡汽车从P挡换入其他挡位时，需要驾驶人做两个动作，踩下制动踏板可以算作其中一个。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "GB 7258第10.2.1条：由P挡换出、换入或经过R挡，要两个不同方向的动作，踩下制动踏板算一个——所以换挡前先踩住刹车。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "regular",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.607",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驾驶自动挡汽车停车熄火、准备离开车辆前，怎样做才能防止车辆溜动？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "换入P挡并使用驻车制动器",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "挂N挡即可",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "挂D挡并熄火",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "只要关闭发动机即可",
+          "ok": false
+        }
+      ],
+      "explain": "P挡锁住变速器，驻车制动器（手刹或电子驻车）刹住车轮，两样一起用才稳妥；N挡不锁止，坡上会溜。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.2.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "采用自动变速器的机动车，应通过设计保证只有当变速器换挡装置处于驻车挡（“P”挡）或空挡（“N”挡）时方可起动发动机（具有自动起停功能时在驱动挡[“D”挡]也可起动发动机）；变速器换挡装置换入或经过倒车挡（“R”挡），以及由驻车挡（“P”挡）位置换入其他挡位时，应通过驾驶人的不同方向的两个动作（驾驶人踩下制动踏板应视为一个动作）完成。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：变速器操纵杆的作用；驻车制动器的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.608",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "驾驶自动挡汽车下长坡时，挂N挡滑行可以节省燃油。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "条例第62条禁止下陡坡时熄火或者空挡滑行：挂N挡就没有发动机制动，全靠刹车，容易过热失灵。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第六十二条第（四）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "驾驶机动车不得有下列行为：……（四）下陡坡时熄火或者空挡滑行。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：变速器操纵杆的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.609",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "自动挡小型汽车驾驶室里通常有哪两个踏板？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "制动踏板和加速踏板",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "离合器踏板和制动踏板",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "离合器踏板和加速踏板",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "驻车制动踏板和离合器踏板",
+          "ok": false
+        }
+      ],
+      "explain": "自动挡没有离合器踏板：左边宽的是制动踏板，右边窄的是加速踏板。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：机动车踏板的分类和作用。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "authored",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "大纲只列「踏板的分类和作用」这一考点，没有写具体布置；自动挡两踏板、手动挡三踏板是车辆的通用构造，按此出题。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.610",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "手动挡汽车驾驶室里最左侧的踏板是什么踏板？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "离合器踏板",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "制动踏板",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "加速踏板",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "驻车制动踏板",
+          "ok": false
+        }
+      ],
+      "explain": "手动挡三个踏板从左到右是离合器、制动、加速。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见操纵装置」：机动车踏板的分类和作用。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "authored",
+          "locator": "教学大纲 2.机动车基本知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "大纲列了踏板和离合器操纵装置的作用，没有写左右布置；「左离合、中制动、右加速」是手动挡车的通用构造，按此出题。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.611",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "离合器的作用是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "使发动机与传动系统平稳接合或彻底分离",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "让车辆减速停车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "控制车辆行驶方向",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "提高发动机转速",
+          "ok": false
+        }
+      ],
+      "explain": "离合器在发动机和变速器之间：踩下是分离，起步、换挡时切断动力；抬起是接合，动力传到车轮。GB 7258要求它接合平稳、分离彻底。",
+      "source_refs": [
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "10.1.1",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "机动车的离合器应接合平稳，分离彻底，工作时不应有异响、抖动或不正常打滑等现象。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "教学大纲 2.机动车基本知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "驾驶操纵装置的作用：掌握离合器操纵装置的作用（适用C1等，不含C2）。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.612",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "驾驶自动挡汽车时，制动踏板和加速踏板都应当用右脚操作。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "自动挡左脚没有踏板要踩；两只脚分管刹车和油门，紧急时容易两个一起踩，所以都用右脚。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "教学大纲 3.基础和场地驾驶",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "操纵装置的规范操作：掌握行车制动装置、加速操纵装置的正确操作方法。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "authored",
+          "locator": "教学大纲 3.基础和场地驾驶",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "大纲要求掌握制动和加速装置的正确操作方法，没有逐字写「右脚」；右脚兼管两个踏板是驾驶培训的通用规范，按此出题。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.613",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "行车中仪表板上的胎压报警灯亮起，说明什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "轮胎气压异常，应尽快在安全地点停车检查",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "发动机温度过高",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "机油压力过低",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "安全带没有系好",
+          "ok": false
+        }
+      ],
+      "explain": "胎压监测系统在轮胎气压异常时报警；气压不足继续跑容易爆胎，要尽快找安全地点停车检查。",
+      "source_refs": [
+        {
+          "source_id": "gb-26149",
+          "relation": "adapted",
+          "locator": "适用范围与报警功能",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BFBF3C14BF19BCD6DB781E2059436268",
+          "note": "乘用车轮胎气压监测系统在轮胎气压异常时向驾驶人发出报警信号；适用于M1类车辆。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.614",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "胎压报警灯亮起后，只要车还能开，就可以继续高速行驶，等到目的地再检查。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "道交法第21条：不得驾驶具有安全隐患的机动车。胎压异常高速行驶容易爆胎，应尽快停车检查。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "驾驶人驾驶机动车上道路行驶前，应当对机动车的安全技术性能进行认真检查；不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。"
+        },
+        {
+          "source_id": "gb-26149",
+          "relation": "adapted",
+          "locator": "适用范围与报警功能",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BFBF3C14BF19BCD6DB781E2059436268",
+          "note": "轮胎气压异常时系统向驾驶人报警。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.615",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "电子稳定性控制系统（ESC，也常叫ESP）的主要作用是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "保持车身稳定，防止车辆在转弯、湿滑路面上侧滑失控",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "防止制动时车轮抱死",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "自动控制车速巡航",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "帮助自动泊车",
+          "ok": false
+        }
+      ],
+      "explain": "ESC在车辆开始侧滑时自动对个别车轮制动、调节动力，把车拉回预定方向；防车轮抱死的是ABS。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "电子稳定性控制系统信号装置",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "标准规定了电子稳定性控制系统（ESC）故障信号装置和ESC「OFF」信号装置的标志。"
+        },
+        {
+          "source_id": "gb-7258",
+          "relation": "adapted",
+          "locator": "4.17.4",
+          "url": "https://www.chinabuses.com/uploadfile/2017/1122/20171122104007910.pdf",
+          "note": "车高大于等于3.7m的未设置乘客站立区的客车应装备电子稳定性控制系统，以保证对车辆的防侧翻控制。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.616",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "仪表板上电子稳定性控制系统（ESC）的故障指示灯常亮，说明该系统可能出现故障，应尽快检修。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "ESC故障灯常亮表示系统可能失效，湿滑路面上少了一道防侧滑保护，要尽快检修。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "电子稳定性控制系统信号装置",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "标准规定了电子稳定性控制系统（ESC）故障信号装置的标志。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第二十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "不得驾驶安全设施不全或者机件不符合技术标准等具有安全隐患的机动车。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.617",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "关闭电子稳定性控制系统（ESC OFF）后，车辆在湿滑路面上更不容易侧滑。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "关掉ESC就没有了自动纠正侧滑的功能，湿滑路面更容易失控；除非陷车脱困等特殊情况，平时不要关。",
+      "source_refs": [
+        {
+          "source_id": "gb-4094",
+          "relation": "adapted",
+          "locator": "电子稳定性控制系统信号装置",
+          "url": "https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8156DD3A7E05397BE0A0AB82A",
+          "note": "标准规定了ESC「OFF」信号装置的标志，表示系统已被关闭。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 2,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.618",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "纯电动汽车起步和低速行驶时声音很小，驶近行人时驾驶人更要主动减速、注意避让。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "行人常靠听声音判断来车，电动车低速几乎没声，行人可能察觉不到；道交法第47条要求机动车避让行人。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十七条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车行经人行横道时，应当减速行驶；遇行人正在通过人行横道，应当停车让行。机动车行经没有交通信号的道路时，遇行人横过道路，应当避让。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "authored",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "大纲考点为「新能源汽车基础知识」，未细列；纯电动车低速声音小是其使用常识，结合道交法第47条避让行人出题。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.registration.063",
+      "topic_id": "drive.s1.registration",
+      "kind": "single",
+      "prompt": "小型新能源汽车使用什么颜色的号牌？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "渐变绿色",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "蓝底白字",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "黄底黑字",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "黄绿双拼色",
+          "ok": false
+        }
+      ],
+      "explain": "小型新能源汽车号牌是渐变绿色；黄绿双拼色是大型新能源汽车的，蓝牌是普通小型汽车的。",
+      "source_refs": [
+        {
+          "source_id": "ga-36",
+          "relation": "adapted",
+          "locator": "小型新能源汽车号牌",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/GA_36-2018.pdf",
+          "note": "小型新能源汽车号牌为渐变绿色。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "新能源汽车基础知识。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.registration.064",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "大型新能源汽车号牌为黄绿双拼色。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "GA 36—2018：大型新能源汽车号牌黄绿双拼色，小型新能源汽车号牌渐变绿色。",
+      "source_refs": [
+        {
+          "source_id": "ga-36",
+          "relation": "adapted",
+          "locator": "大型新能源汽车号牌",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/GA_36-2018.pdf",
+          "note": "大型新能源汽车号牌为黄绿双拼色。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.registration.065",
+      "topic_id": "drive.s1.registration",
+      "kind": "judge",
+      "prompt": "新能源汽车号牌的号码序号比普通汽车号牌多一位。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "GA 36—2018把新能源汽车号牌的序号从5位增加到6位，所以绿牌号码比蓝牌长一位。",
+      "source_refs": [
+        {
+          "source_id": "ga-36",
+          "relation": "adapted",
+          "locator": "新能源汽车号牌序号",
+          "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/GA_36-2018.pdf",
+          "note": "新能源汽车号牌序号由5位增加为6位。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.occupants.117",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "未成年人的父母或者其他监护人应当采取配备儿童安全座椅等措施，防止未成年人受到交通事故的伤害。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "未成年人保护法第18条把配备儿童安全座椅写成了监护人的法定责任，2021年6月1日起施行。",
+      "source_refs": [
+        {
+          "source_id": "minors-protection-law",
+          "relation": "quoted",
+          "locator": "第十八条",
+          "url": "https://npcobserver.com/wp-content/uploads/2023/09/2020-Minors-Protection-Law-Revision_Gazette.pdf",
+          "note": "未成年人的父母或者其他监护人应当……采取配备儿童安全座椅、教育未成年人遵守交通规则等措施，防止未成年人受到交通事故的伤害。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.occupants.118",
+      "topic_id": "drive.s1.occupants",
+      "kind": "single",
+      "prompt": "带婴幼儿乘车，以下哪种做法最安全？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "使用与孩子年龄、体重相适应的儿童安全座椅",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "由大人抱在怀里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "让孩子坐在副驾驶座位方便照看",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "让孩子和大人共用一条安全带",
+          "ok": false
+        }
+      ],
+      "explain": "成人安全带按成人身材设计，套不住小孩；大人抱着在碰撞时根本抱不住。按年龄、体重选合适的儿童安全座椅。",
+      "source_refs": [
+        {
+          "source_id": "minors-protection-law",
+          "relation": "adapted",
+          "locator": "第十八条",
+          "url": "https://npcobserver.com/wp-content/uploads/2023/09/2020-Minors-Protection-Law-Revision_Gazette.pdf",
+          "note": "未成年人的父母或者其他监护人应当……采取配备儿童安全座椅、教育未成年人遵守交通规则等措施，防止未成年人受到交通事故的伤害。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "hot",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.occupants.119",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "儿童乘车时由大人抱在怀里，比使用儿童安全座椅更安全。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "碰撞瞬间孩子的冲击力是体重的几十倍，大人抱不住，还可能把孩子压在身下；应当使用儿童安全座椅。",
+      "source_refs": [
+        {
+          "source_id": "minors-protection-law",
+          "relation": "adapted",
+          "locator": "第十八条",
+          "url": "https://npcobserver.com/wp-content/uploads/2023/09/2020-Minors-Protection-Law-Revision_Gazette.pdf",
+          "note": "未成年人的父母或者其他监护人应当……采取配备儿童安全座椅、教育未成年人遵守交通规则等措施，防止未成年人受到交通事故的伤害。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 5.机动车基础知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "考试要点「常见安全装置」：仪表、指示灯、报警灯的辨识和作用；……儿童安全座椅的作用及使用要求；防抱死制动装置等其他常见安全装置的作用。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.occupants.120",
+      "topic_id": "drive.s1.occupants",
+      "kind": "judge",
+      "prompt": "机动车行驶中，乘车人不得将身体任何部分伸出车外，儿童也不例外。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第77条：机动车行驶中不得将身体任何部分伸出车外。带孩子乘车要看住，必要时锁上车窗。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "locator": "第七十七条第（四）项",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "乘坐机动车应当遵守下列规定：……（四）机动车行驶中，不得干扰驾驶，不得将身体任何部分伸出车外，不得跳车。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.130",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "对行驶中的公共交通工具的驾驶人员使用暴力或者抢控驾驶操纵装置，干扰正常行驶，危及公共安全的，构成什么罪？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "妨害安全驾驶罪",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "危险驾驶罪",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "交通肇事罪",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "不构成犯罪，只是治安违法",
+          "ok": false
+        }
+      ],
+      "explain": "刑法第133条之二（2021年3月1日起施行）专门规定了妨害安全驾驶罪。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law-full",
+          "relation": "quoted",
+          "locator": "第一百三十三条之二第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/11033925/index.html",
+          "note": "对行驶中的公共交通工具的驾驶人员使用暴力或者抢控驾驶操纵装置，干扰公共交通工具正常行驶，危及公共安全的，处一年以下有期徒刑、拘役或者管制，并处或者单处罚金。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 3.道路交通安全违法行为及处罚",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "道路交通安全违法刑事处罚：交通肇事罪；危险驾驶罪；……其他涉牌涉证、涉考涉驾等犯罪行为的刑事处罚。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "hot"
+    },
+    {
+      "id": "drive.s1.penalty.131",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "公交车行驶中，乘客因坐过站与驾驶人争执并抢夺方向盘，危及公共安全的，构成妨害安全驾驶罪。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "抢控行驶中公交车的方向盘、危及公共安全，就是刑法第133条之二第一款的情形。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law-full",
+          "relation": "quoted",
+          "locator": "第一百三十三条之二第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/11033925/index.html",
+          "note": "对行驶中的公共交通工具的驾驶人员使用暴力或者抢控驾驶操纵装置，干扰公共交通工具正常行驶，危及公共安全的，处一年以下有期徒刑、拘役或者管制，并处或者单处罚金。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点 3.道路交通安全违法行为及处罚",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "道路交通安全违法刑事处罚：交通肇事罪；危险驾驶罪；……其他涉牌涉证、涉考涉驾等犯罪行为的刑事处罚。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.132",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "犯妨害安全驾驶罪的，处什么刑罚？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "一年以下有期徒刑、拘役或者管制，并处或者单处罚金",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "拘役，并处罚金",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "三年以下有期徒刑或者拘役",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "三年以上七年以下有期徒刑",
+          "ok": false
+        }
+      ],
+      "explain": "刑法第133条之二：一年以下有期徒刑、拘役或者管制，并处或者单处罚金。「拘役，并处罚金」是危险驾驶罪的刑罚，别记混。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law-full",
+          "relation": "quoted",
+          "locator": "第一百三十三条之二第一款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/11033925/index.html",
+          "note": "对行驶中的公共交通工具的驾驶人员使用暴力或者抢控驾驶操纵装置，干扰公共交通工具正常行驶，危及公共安全的，处一年以下有期徒刑、拘役或者管制，并处或者单处罚金。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.133",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "公共交通工具的驾驶人员在行驶中擅离职守，与他人互殴或者殴打他人，危及公共安全的，同样构成妨害安全驾驶罪。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "刑法第133条之二第二款：司机一方擅离职守、互殴或者打人，危及公共安全的，按同样的罪处罚。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law-full",
+          "relation": "quoted",
+          "locator": "第一百三十三条之二第二款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/11033925/index.html",
+          "note": "前款规定的驾驶人员在行驶的公共交通工具上擅离职守，与他人互殴或者殴打他人，危及公共安全的，依照前款的规定处罚。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.134",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "妨害安全驾驶的行为同时构成其他犯罪的，依照处罚较重的规定定罪处罚。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "刑法第133条之二第三款。比如抢方向盘导致车辆翻覆、造成严重后果，可能按以危险方法危害公共安全罪等更重的罪处罚。",
+      "source_refs": [
+        {
+          "source_id": "criminal-law-full",
+          "relation": "quoted",
+          "locator": "第一百三十三条之二第三款",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/11033925/index.html",
+          "note": "有前两款行为，同时构成其他犯罪的，依照处罚较重的规定定罪处罚。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 2,
+      "band": "regular"
     }
   ]
 }
