@@ -106094,6 +106094,974 @@
       "band": "common",
       "error_rate": 9.4,
       "image": "images/subject1/2019_kemu1_1160400.jpg"
+    },
+    {
+      "id": "drive.s1.rules.963",
+      "topic_id": "drive.s1.rules",
+      "kind": "judge",
+      "prompt": "新能源汽车充电时，可以打开车辆前舱盖进行日常养护操作。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "充电时高压系统处于工作状态，不能打开前舱盖做养护，以免触电或引发事故；养护要在断开充电后进行。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "新能源汽车基础知识"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "regular",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.rules.964",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "驶近交叉路口，发现前方信号灯为红灯时，应当踩下哪个踏板？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "加速踏板",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "离合器踏板",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "制动踏板",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "驻车制动器",
+          "ok": false
+        }
+      ],
+      "explain": "减速停车用制动踏板（行车制动）；驻车制动器是停稳后防溜车用的。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目一考试要点",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "常见操纵装置：机动车踏板的分类和作用"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common",
+      "exam_block": "vehicle"
+    },
+    {
+      "id": "drive.s1.penalty.200",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "以下不属于依法扣留车辆情形的是？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "变造机动车行驶证",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "未投保机动车交通事故责任强制保险",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "伪造车辆牌照",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "未携带机动车登记证书",
+          "ok": true
+        }
+      ],
+      "explain": "伪造、变造证件号牌（道交法第96条）、未投保交强险（第98条）都要扣留车辆；登记证书不需要随车携带，没带不会扣车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，由公安机关交通管理部门予以收缴，扣留该机动车，处十五日以下拘留，并处二千元以上五千元以下罚款。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "《道路交通安全法》第九十八条：机动车所有人、管理人未按照国家规定投保机动车第三者责任强制保险的，由公安机关交通管理部门扣留车辆至依照规定投保后，并处依照规定投保最低责任限额应缴纳的保险费的二倍罚款。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.201",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "以下属于依法扣留车辆情形的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "未携带保险合同",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "未携带机动车登记证书",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "悬挂变造的车辆牌照",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "未携带道路运输从业资格证",
+          "ok": false
+        }
+      ],
+      "explain": "使用变造的号牌，扣留机动车（道交法第96条）。保险合同、登记证书不要求随车携带。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十六条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "伪造、变造或者使用伪造、变造的机动车登记证书、号牌、行驶证、驾驶证的，由公安机关交通管理部门予以收缴，扣留该机动车，处十五日以下拘留，并处二千元以上五千元以下罚款。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.965",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "以下缩写中，表示电子不停车收费系统的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "GPS",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "ETC",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "LDW",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "ACC",
+          "ok": false
+        }
+      ],
+      "explain": "ETC是电子不停车收费系统；GPS是卫星定位导航，LDW是车道偏离预警，ACC是自适应巡航。",
+      "source_refs": [
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目三安全文明驾驶常识考试要点 4.恶劣气象和复杂道路条件下安全驾驶知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "驶入驶出收费站；安全汇入车流；行车道的选择；行车速度与安全距离确认；应急车道的使用；安全通过高速公路隧道、桥梁；驶离高速公路"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.271",
+      "topic_id": "drive.s1.license",
+      "kind": "single",
+      "prompt": "下列哪种标识是自学直考人员在道路上学习驾驶时，应当在车上放置的标志？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "产品合格标识",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "保持车距标识",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "提醒危险标识",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "学车专用标识",
+          "ok": true
+        }
+      ],
+      "explain": "自学直考人员使用自备车辆在道路上学习驾驶，车上应当放置学车专用标识，由签注的随车指导人员指导。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "自学直考学车专用标识",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "自学直考人员使用自备机动车在道路上学习驾驶的，应当按规定在车身喷涂或者粘贴学车专用标识，并由学车专用标识签注的随车指导人员随车指导。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.accident.157",
+      "topic_id": "drive.s1.accident",
+      "kind": "single",
+      "prompt": "以下关于发生交通事故后车辆难以移动的处置，说法错误的是（ ）。",
+      "choices": [
+        {
+          "id": "A",
+          "label": "开启危险报警闪光灯",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "在来车方向50至100米处设置警告标志",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "立即疏散车内人员",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "站在车道内等候救援",
+          "ok": true
+        }
+      ],
+      "explain": "条例第60条：开双闪、在车后50～100米设警告标志；人员应撤离到路外安全地点，站在车道内等候极易被后车撞上。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第六十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "《实施条例》第六十条：机动车在道路上发生故障或者发生交通事故，妨碍交通又难以移动的，应当按照规定开启危险报警闪光灯并在车后50米至100米处设置警告标志，夜间还应当同时开启示廓灯和后位灯。 所以不是在50米内，应该是50米以外100米内。扩展提示：高速公路上要在车后150米外设置警告标志。"
+        },
+        {
+          "source_id": "exam-syllabus-2022",
+          "relation": "adapted",
+          "locator": "科目三安全文明驾驶常识考试要点 6.防范次生事故处置与伤员急救知识",
+          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
+          "note": "事故处置原则；事故现场处置常规方法；防范隧道事故和次生事故；危险货物运输车辆事故后的处置与个人防护"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.alcohol.062",
+      "topic_id": "drive.s1.alcohol",
+      "kind": "single",
+      "prompt": "关于因饮酒后驾车被处罚，再次饮酒后驾车可能受到的处罚，说法错误的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "吊销驾驶证",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "暂扣驾驶证",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "拘留",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "罚款",
+          "ok": false
+        }
+      ],
+      "explain": "道交法第91条：再次饮酒后驾驶的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销驾驶证；不是暂扣。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "《道路交通安全法》第九十一条：饮酒后驾驶机动车的，处暂扣六个月机动车驾驶证，并处一千元以上二千元以下罚款。因饮酒后驾驶机动车被处罚，再次饮酒后驾驶机动车的，处十日以下拘留，并处一千元以上二千元以下罚款，吊销机动车驾驶证。醉酒驾驶机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证，依法追究刑事责任；五年内不得重新取得机动车驾驶证。饮酒后驾驶营运机动车的，处十五日拘留，并处五千元罚款，吊销机动车驾驶证，五年内不得重新取得机动车驾驶证。醉酒驾驶营运机动车的，由公安机关交通管理部门约束至酒醒，吊销机动车驾驶证…"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.202",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "不听劝阻违反交通管制规定强制通行的，除罚款外可并处15日以下拘留。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "道交法第99条：违反交通管制的规定强行通行、不听劝阻的，处二百元以上二千元以下罚款，可以并处十五日以下拘留。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第九十九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "《道路交通安全法》规定，有下列行为之一的，由公安机关交通管理部门处二百元以上二千元以下罚款：（一）未取得机动车驾驶证、机动车驾驶证被吊销或者机动车驾驶证被暂扣期间驾驶机动车的；（二）将机动车交由未取得机动车驾驶证或者机动车驾驶证被吊销、暂扣的人驾驶的；（三）造成交通事故后逃逸，尚不构成犯罪的；（四）机动车行驶超过规定时速百分之五十的；（五）强迫机动车驾驶人违反道路交通安全法律、法规和机动车安全驾驶要求驾驶机动车，造成交通事故，尚不构成犯罪的；（六）违反交通管制的规定强行通行，不听劝阻的；（七）故意损毁、移动、涂…"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.lights.169",
+      "topic_id": "drive.s1.lights",
+      "kind": "judge",
+      "prompt": "夜间驾驶机动车跟车距前车距离小于100m时，应使用近光灯。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "条例第58条：同方向行驶的后车与前车近距离行驶时不得使用远光灯。条文没写具体米数，考场题库以100米为界。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "《中华人民共和国道路交通安全法实施条例》第五十八条 机动车在夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯，但同方向行驶的后车与前车近距离行驶时，不得使用远光灯。机动车雾天行驶应当开启雾灯和危险报警闪光灯。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.lights.170",
+      "topic_id": "drive.s1.lights",
+      "kind": "single",
+      "prompt": "夜间驾驶机动车，当跟车距前车距离小于多少米时，应使用近光灯？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "150m",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "100m",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "200m",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "300m",
+          "ok": false
+        }
+      ],
+      "explain": "条例第58条要求近距离跟车不得用远光；考场题库以100米为界。注意区分：会车是距对向来车150米以外改近光。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第五十八条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "《中华人民共和国道路交通安全法实施条例》第五十八条 机动车在夜间没有路灯、照明不良或者遇有雾、雨、雪、沙尘、冰雹等低能见度情况下行驶时，应当开启前照灯、示廓灯和后位灯，但同方向行驶的后车与前车近距离行驶时，不得使用远光灯。机动车雾天行驶应当开启雾灯和危险报警闪光灯。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.rules.966",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "前方遇有下列哪种车辆可以超车？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "执行任务的警车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "执行任务的消防车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "执行任务的救护车",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "出租汽车",
+          "ok": true
+        }
+      ],
+      "explain": "道交法第43条：前车为执行紧急任务的警车、消防车、救护车、工程救险车的，不得超车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第四十三条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "《道路交通安全法》第四十三条，同车道行驶的机动车，后车应当与前车保持足以采取紧急制动措施的安全距离。有下列情形之一的，不得超车：（一）前车正在左转弯、掉头、超车的；（二）与对面来车有会车可能的；（三）前车为执行紧急任务的警车、消防车、救护车、工程救险车的； （四）行经铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道、市区交通流量大的路段等没有超车条件的。 本题说开启左转向灯，有可能是左转弯、掉头、超车其中一种，因此不得超车。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.rules.967",
+      "topic_id": "drive.s1.rules",
+      "kind": "single",
+      "prompt": "有关在道路同方向划有2条以上车道的，以下说法错误的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "左侧为快速车道",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "右侧为慢速车道",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "未达到快速车道限速规定的，可在快速车道行驶",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "在慢速车道超车时可借用快速车道",
+          "ok": false
+        }
+      ],
+      "explain": "条例第44条：左侧为快速车道、右侧为慢速车道；在快速车道行驶未达到规定速度的，应当在慢速车道行驶。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第四十四条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "在道路同方向划有2条以上机动车道的，左侧为快速车道，右侧为慢速车道。在快速车道行驶的机动车应当按照快速车道规定的速度行驶，未达到快速车道规定的行驶速度的，应当在慢速车道行驶。摩托车应当在最右侧车道行驶。有交通标志标明行驶速度的，按照标明的行驶速度行驶。慢速车道内的机动车超越前车时，可以借用快速车道行驶。在道路同方向划有2条以上机动车道的，变更车道的机动车不得影响相关车道内行驶的机动车的正常行驶。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 2,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.penalty.203",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "代替实际机动车驾驶人参加满分教育签注学习记录、满分学习考试或者接受交通安全教育扣减交通违法行为记分的，由公安机关交通管理部门处多少元罚款？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "五百元以下",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "一千元以下",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "二千元以下",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "三千元以下",
+          "ok": false
+        }
+      ],
+      "explain": "163号令规定：代替他人参加满分教育、满分考试或学法减分的，处二千元以下罚款；组织他人这样做并牟利的罚得更重。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "法律责任",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "代替实际机动车驾驶人参加满分教育签注学习记录、满分学习考试或者接受交通安全教育扣减交通违法行为记分的，处二千元以下罚款。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.204",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "下列交通违法行为，一次记9分的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "驾驶7座以上载客汽车载人超过核定人数百分之五十以上未达到百分之百的",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "驾驶校车载人超过核定人数百分之二十以上的",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "代替实际机动车驾驶人接受交通违法行为处罚和记分牟取经济利益的",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "使用伪造、变造的机动车号牌或者使用其他机动车号牌的",
+          "ok": false
+        }
+      ],
+      "explain": "163号令第9条：7座以上载客汽车超员50%以上未达100%，记9分；校车超员20%以上、代替接受处罚记分牟利、使用伪造号牌或其他车号牌都记12分（第8条）。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第九条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记9分： （一）驾驶7座以上载客汽车载人超过核定人数百分之五十以上未达到百分之百的； （二）驾驶校车、中型以上载客载货汽车、危险物品运输车辆在高速公路、城市快速路以外的道路上行驶超过规定时速百分之五十以上的； （三）驾驶机动车在高速公路或者城市快速路上违法停车的； （四）驾驶未悬挂机动车号牌或者故意遮挡、污损机动车号牌的机动车上道路行驶的； （五）驾驶与准驾车型不符的机动车的； （六）未取得校车驾驶资格驾驶校车的； （七）连续驾驶…"
+        },
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记12分： （一）饮酒后驾驶机动车的； （二）造成致人轻伤以上或者死亡的交通事故后逃逸，尚不构成犯罪的； （三）使用伪造、变造的机动车号牌、行驶证、驾驶证、校车标牌或者使用其他机动车号牌、行驶证的； （四）驾驶校车、公路客运汽车、旅游客运汽车载人超过核定人数百分之二十以上，或者驾驶其他载客汽车载人超过核定人数百分之百以上的； （五）驾驶校车、中型以上载客载货汽车、危险物品运输车辆在高速公路、城市快速路上行驶超过规定时速百分之二十以…"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.205",
+      "topic_id": "drive.s1.penalty",
+      "kind": "single",
+      "prompt": "驾驶载货汽车载物超过最大允许总质量百分之五十以上的，一次记多少分？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "3分",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "6分",
+          "ok": true
+        },
+        {
+          "id": "C",
+          "label": "9分",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "12分",
+          "ok": false
+        }
+      ],
+      "explain": "163号令第10条：载货汽车载物超过最大允许总质量50%以上，一次记6分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记6分： （一）驾驶校车、公路客运汽车、旅游客运汽车载人超过核定人数未达到百分之二十，或者驾驶7座以上载客汽 车载人超过核定人数百分之二十以上未达到百分之五十，或者驾驶其他载客汽车载人超过核定人数百分之五十以上未达到百分之百的； （二）驾驶校车、中型以上载客载货汽车、危险物品运输车辆在高速公路、城市快速路上行驶超过规定时速未 达到百分之二十，或者在高速公路、城市快速路以外的道路上行驶超过规定时速百分之二十以上未达到百分之五十的； …"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.penalty.206",
+      "topic_id": "drive.s1.penalty",
+      "kind": "judge",
+      "prompt": "驾驶载货汽车载物超过最大允许总质量百分之三十以上未达到百分之五十的，一次记6分。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "163号令第11条：超过30%以上未达50%的，一次记3分；50%以上才记6分。",
+      "source_refs": [
+        {
+          "source_id": "penalty-order-163",
+          "relation": "adapted",
+          "locator": "第十一条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/gabgz/11186803/index.html",
+          "note": "《道路交通安全违法行为记分管理办法》规定，机动车驾驶人有下列交通违法行为之一，一次记3分： （一）驾驶校车、公路客运汽车、旅游客运汽车、7座以上载客汽车以外的其他载客汽车载人超过核定人数百分之二十以上未达到百分之五十的； （二）驾驶校车、中型以上载客载货汽车、危险物品运输车辆以外的机动车在高速公路、城市快速路以外的道路上行驶超过规定时速百分之二十以上未达到百分之五十的； （三）驾驶机动车在高速公路或者城市快速路上不按规定车道行驶的； （四）驾驶机动车不按规定超车、让行，或者在高速公路、城市快速路以外的道路上逆行…"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.272",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "在道路上学习机动车驾驶技能应当使用教练车，在教练员随车指导下进行，与教学无关的人员可以乘坐教练车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "条例第20条：在道路上学习驾驶，与教学无关的人员不得乘坐教练车。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "adapted",
+          "locator": "第二十条",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "note": "学习机动车驾驶，应当先学习道路交通安全法律、法规和相关知识，考试合格后，再学习机动车驾驶技能。在道路上学习驾驶，应当按照公安机关交通管理部门指定的路线、时间进行。在道路上学习机动车驾驶技能应当使用教练车，在教练员随车指导下进行，与教学无关的人员不得乘坐教练车。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.license.273",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "在学习驾驶证明有效期内，第5次科目二考试仍不合格的，已考试合格的其他科目成绩作废。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": true
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": false
+        }
+      ],
+      "explain": "162号令第47条：学习驾驶证明有效期内，科目二和科目三道路驾驶技能考试预约次数各不得超过五次；第五次仍不合格的，已考试合格的其他科目成绩作废。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "第四十七条",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "《机动车驾驶证申领和使用规定》规定：在学习驾驶证明有效期内，科目二和科目三道路驾驶技能考试预约考试的次数分别不得超过五次。第五次考试仍不合格的，已考试合格的其他科目成绩作废。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "regular"
+    },
+    {
+      "id": "drive.s1.license.274",
+      "topic_id": "drive.s1.license",
+      "kind": "judge",
+      "prompt": "准驾车型为小型自动挡汽车的，可以驾驶低速载货汽车。",
+      "choices": [
+        {
+          "id": "T",
+          "label": "正确",
+          "ok": false
+        },
+        {
+          "id": "F",
+          "label": "错误",
+          "ok": true
+        }
+      ],
+      "explain": "C2准驾的是小型、微型自动挡载客汽车和轻型、微型自动挡载货汽车等，不含低速载货汽车（C3）；C1才准予驾驶C2、C3、C4。",
+      "source_refs": [
+        {
+          "source_id": "license-order-162",
+          "relation": "adapted",
+          "locator": "附件1准驾车型",
+          "url": "https://www.gov.cn/zhengce/2021-12/27/content_5712881.htm",
+          "note": "小型自动挡汽车（C2）准驾车型为小型、微型自动挡载客汽车以及轻型、微型自动挡载货汽车；轻型、微型自动挡专项作业车；上肢残疾人专用小型自动挡载客汽车。小型汽车（C1）准予驾驶C2、C3、C4。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 1,
+      "difficulty": 1,
+      "band": "common"
+    },
+    {
+      "id": "drive.s1.highway.171",
+      "topic_id": "drive.s1.highway",
+      "kind": "single",
+      "prompt": "在高速公路上车辆发生故障需要停车时，以下做法正确的是什么？",
+      "choices": [
+        {
+          "id": "A",
+          "label": "紧急制动后立即停车",
+          "ok": false
+        },
+        {
+          "id": "B",
+          "label": "开启左转向灯行驶至最左侧车道内缓慢停车",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "开启右转向灯缓慢行驶至右侧应急车道停车",
+          "ok": true
+        },
+        {
+          "id": "D",
+          "label": "开启危险报警闪光灯后立即停车",
+          "ok": false
+        }
+      ],
+      "explain": "车还能动就开右转向灯，缓慢驶入右侧应急车道停车，再开双闪、在来车方向150米以外设警告标志；在行车道急停或停在最左侧车道都极易被追尾。",
+      "source_refs": [
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第六十八条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在高速公路上发生故障时，应当依照本法第五十二条的有关规定办理；但是，警告标志应当设置在故障车来车方向一百五十米以外，车上人员应当迅速转移到右侧路肩上或者应急车道内，并且迅速报警。机动车在高速公路上发生故障或者交通事故，无法正常行驶的，应当由救援车、清障车拖曳、牵引。"
+        },
+        {
+          "source_id": "road-safety-law",
+          "relation": "adapted",
+          "locator": "第五十二条",
+          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
+          "note": "机动车在道路上发生故障，需要停车排除故障时，驾驶人应当立即开启危险报警闪光灯，将机动车移至不妨碍交通的地方停放；难以移动的，应当持续开启危险报警闪光灯，并在来车方向设置警告标志等措施扩大示警距离，必要时迅速报警。"
+        },
+        {
+          "source_id": "jsyks-web",
+          "relation": "selection_basis",
+          "locator": "科目一随机练习 2026-09-29 抽样",
+          "url": "https://m.jsyks.com/km1",
+          "note": "驾驶员考试网现行题库抽样发现的缺失考点；该站可信度一般，答案已逐题对照条文核对。"
+        }
+      ],
+      "phase": 4,
+      "difficulty": 1,
+      "band": "hot"
     }
   ]
 }

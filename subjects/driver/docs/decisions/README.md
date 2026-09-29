@@ -50,3 +50,4 @@
 | [0043](0043-always-resume-exam-draft.md) | 开始模拟考总是接着上次没交的那一卷 | 已接受（修订 0016 第 4、5 条） |
 | [0044](0044-subject1-no-unlocking.md) | 科目一不设解锁，四个阶段和模拟考全部开放 | 已接受（撤销 0006 第 2、3 条） |
 | [0045](0045-collect-remaining-public-bank-questions.md) | 补收公开题库剩余题目，同考点换问法也收，逐道核对现行规定 | 已接受 |
+| [0046](0046-low-trust-source-questions.md) | 低可信来源的题量不大时也收，答案逐道按条文重核 | 已接受 |
