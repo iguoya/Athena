@@ -63,8 +63,8 @@ tiger 定的（2026-09-30）：选资源先看和中国英语考试对得上多�
 ### 导入流程
 
 - 导入脚本在 `scripts/content/`，下载缓存放 `.cache/content/`（git 忽略）。
-  - `pnpm content:ecdict`：生成 `content/vocab/hs/words.json`（单词关词表草稿）。
-  - `pnpm content:cet4`：本机导入四级真题句子，并生成 `content/vocab/hs/exam-frequency.json`（每个高中词在四级真题里出现的次数，只有数字）。
+  - `pnpm content:ecdict`：生成三个词库草稿：`content/vocab/hs/words.json`（高中，3678 词，单词关用）、`vocab/cet4/words.json`（四级新增 1654 词）、`vocab/cet6/words.json`（六级新增 1755 词）。四六级词库按 ADR 0012 不单独背，用来给句子标难度和考试标签。
+  - `pnpm content:cet4`：本机导入四级真题句子，并给三个词库各生成一份 `exam-frequency.json`（每个词在四级真题里出现的次数，只有数字）。
   - `pnpm content:tatoeba`：给词表里每个词挑最多 8 条带简体中文译文的 Tatoeba 句子，生成 `content/sentences/tatoeba.json`、`content/vocab/hs/sentence-index.json`，不足 3 条的词写进 `content/vocab/hs/todo.json`。
 - 挑句按 i+1：4 到 20 个词，其余的词至少 80% 在高中词表里，短句优先，方便前期建立信心。
 - 导入结果只是候选：义项划分、语法标签、结构标注和中文释义都要经过 tiger 审核后才进入今日句组。

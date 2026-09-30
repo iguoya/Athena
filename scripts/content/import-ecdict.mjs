@@ -1,6 +1,7 @@
-// Build the high-school word list for the vocabulary gate (ADR 0012) from ECDICT (MIT, ADR 0019).
+// Build the word banks from ECDICT (MIT, ADR 0019): the high-school vocabulary gate (ADR 0012), then the words
+// CET-4 and CET-6 add on top of it.
 //
-//   pnpm content:ecdict            download ecdict.csv (about 65 MB) and write content/vocab/hs/words.json
+//   pnpm content:ecdict            download ecdict.csv (about 65 MB) and write content/vocab/{hs,cet4,cet6}/words.json
 //   pnpm content:ecdict <file>     use a local copy of ecdict.csv
 //
 // ECDICT tags words by exam: zk 中考, gk 高考, cet4, cet6, ky 考研, toefl, ielts, gre.
@@ -73,13 +74,39 @@ const rows = parseCsv(readText(file));
 const header = rows.next().value;
 const col = Object.fromEntries(header.map((name, i) => [name, i]));
 
-const words = [];
+// Each word goes to the lowest level it belongs to: high school, then CET-4, then CET-6.
+const LEVELS = [
+  {
+    dir: "hs",
+    about:
+      "单词关词表草稿（ADR 0012、0019），高考词。由 scripts/content/import-ecdict.mjs 生成，按常用程度排序。" +
+      "cnDraft 待 tiger 精简，simpleEn 待 AI 起草、tiger 审核，enRef 只作起草参考。例句见 content/sentences/。",
+    has: (tags, word) => tags.includes("gk") || EXTRA_WORDS.has(word),
+  },
+  {
+    dir: "cet4",
+    about:
+      "四级比高中多出来的词（ECDICT cet4 标签，去掉高中词），第二章用。按 ADR 0012 不单独背，在真题句子和听力里遇到时学。" +
+      "字段含义同 vocab/hs/words.json。",
+    has: (tags) => tags.includes("cet4"),
+  },
+  {
+    dir: "cet6",
+    about:
+      "六级比高中和四级多出来的词（ECDICT cet6 标签，去掉高中和四级词），第三章用。按 ADR 0012 不单独背，在句子和听力里学。" +
+      "字段含义同 vocab/hs/words.json。",
+    has: (tags) => tags.includes("cet6"),
+  },
+];
+const byLevel = Object.fromEntries(LEVELS.map((l) => [l.dir, []]));
+
 for (const r of rows) {
   const tags = (r[col.tag] ?? "").split(" ");
   const word = r[col.word];
-  if (!tags.includes("gk") && !EXTRA_WORDS.has(word)) continue;
-  if (!tags.includes("gk")) tags.push("gk");
-  words.push({
+  const level = LEVELS.find((l) => l.has(tags, word));
+  if (!level) continue;
+  if (level.dir === "hs" && !tags.includes("gk")) tags.push("gk");
+  byLevel[level.dir].push({
     word,
     phonetic: r[col.phonetic] || undefined,
     forms: [...forms(r[col.exchange] ?? "", word), ...(EXTRA_FORMS[word] ?? [])],
@@ -94,17 +121,14 @@ for (const r of rows) {
     status: "draft",
   });
 }
-words.sort((a, b) => (a.frq || 1e9) - (b.frq || 1e9) || a.word.localeCompare(b.word));
 
-writeJsonLines(
-  join(CONTENT, "vocab/hs/words.json"),
-  {
-    about:
-      "单词关词表草稿（ADR 0012、0019）。由 scripts/content/import-ecdict.mjs 生成，按常用程度排序。" +
-      "cnDraft 待 tiger 精简，simpleEn 待 AI 起草、tiger 审核，enRef 只作起草参考。例句见 content/sentences/。",
-    source: "ecdict",
-    generated: today(),
-  },
-  "words",
-  words,
-);
+for (const level of LEVELS) {
+  const words = byLevel[level.dir];
+  words.sort((a, b) => (a.frq || 1e9) - (b.frq || 1e9) || a.word.localeCompare(b.word));
+  writeJsonLines(
+    join(CONTENT, `vocab/${level.dir}/words.json`),
+    { about: level.about, source: "ecdict", generated: today() },
+    "words",
+    words,
+  );
+}

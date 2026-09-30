@@ -6,7 +6,7 @@
 // Source: https://github.com/123xzw999/cet4-exam-quiz, 46 CET-4 papers (2020-2026) with reading passages and
 // the listening lines each answer is located in. The script clones it into .cache/content/ and writes:
 //   content/private/exam/cet4.json          reading and listening sentences, each with paper and part
-//   content/vocab/hs/exam-frequency.json    how often each high-school word appears in those papers
+//   content/vocab/{hs,cet4,cet6}/exam-frequency.json  how often each bank word appears in those papers
 // The frequency file holds counts only, no exam text, so it is committed: chapter 1 uses it to put the words
 // CET-4 actually tests first. Writing and translation "model" answers in the source are not exam text and are skipped.
 
@@ -109,35 +109,39 @@ writeJsonLines(
   sentences,
 );
 
-// Count how often each high-school headword (any form) appears across the papers.
-const words = readJson(join(CONTENT, "vocab/hs/words.json")).words;
-const formToWord = new Map();
-for (const w of words) for (const f of [w.word, ...w.forms]) formToWord.set(f.toLowerCase(), w.word);
-const hits = new Map();
-const inSentences = new Map();
-for (const s of sentences) {
-  const heads = new Set();
-  for (const t of tokenize(s.en)) {
-    const head = formToWord.get(t);
-    if (!head) continue;
-    hits.set(head, (hits.get(head) ?? 0) + 1);
-    heads.add(head);
+// Count how often each headword (any form) of each word bank appears across the papers.
+for (const level of ["hs", "cet4", "cet6"]) {
+  const file = join(CONTENT, `vocab/${level}/words.json`);
+  if (!existsSync(file)) continue;
+  const words = readJson(file).words;
+  const formToWord = new Map();
+  for (const w of words) for (const f of [w.word, ...w.forms]) formToWord.set(f.toLowerCase(), w.word);
+  const hits = new Map();
+  const inSentences = new Map();
+  for (const s of sentences) {
+    const heads = new Set();
+    for (const t of tokenize(s.en)) {
+      const head = formToWord.get(t);
+      if (!head) continue;
+      hits.set(head, (hits.get(head) ?? 0) + 1);
+      heads.add(head);
+    }
+    for (const h of heads) inSentences.set(h, (inSentences.get(h) ?? 0) + 1);
   }
-  for (const h of heads) inSentences.set(h, (inSentences.get(h) ?? 0) + 1);
+  writeJsonLines(
+    join(CONTENT, `vocab/${level}/exam-frequency.json`),
+    {
+      about:
+        `vocab/${level}/words.json 里的词在 2020-2026 年 46 套四级真题（阅读和听力）里出现的次数，只有统计数字，不含真题原文。` +
+        "hits 是出现总次数，sentences 是出现在多少个句子里。用来把四级真正考的词排在前面。",
+      exam: "cet4",
+      papers: papers.length,
+      sentences: sentences.length,
+      generated: today(),
+    },
+    "words",
+    words
+      .map((w) => ({ word: w.word, hits: hits.get(w.word) ?? 0, sentences: inSentences.get(w.word) ?? 0 }))
+      .sort((a, b) => b.hits - a.hits || a.word.localeCompare(b.word)),
+  );
 }
-writeJsonLines(
-  join(CONTENT, "vocab/hs/exam-frequency.json"),
-  {
-    about:
-      "高中词在 2020-2026 年 46 套四级真题（阅读和听力）里出现的次数，只有统计数字，不含真题原文。" +
-      "hits 是出现总次数，sentences 是出现在多少个句子里。第一章按它把四级真正考的词排在前面。",
-    exam: "cet4",
-    papers: papers.length,
-    sentences: sentences.length,
-    generated: today(),
-  },
-  "words",
-  words
-    .map((w) => ({ word: w.word, hits: hits.get(w.word) ?? 0, sentences: inSentences.get(w.word) ?? 0 }))
-    .sort((a, b) => b.hits - a.hits || a.word.localeCompare(b.word)),
-);
