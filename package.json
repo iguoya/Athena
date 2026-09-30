@@ -11,7 +11,9 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "content:ecdict": "node scripts/content/import-ecdict.mjs",
+    "content:tatoeba": "node --max-old-space-size=6144 scripts/content/import-tatoeba.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

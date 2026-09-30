@@ -42,5 +42,7 @@ pnpm tauri build    # 打包安装程序，输出在 src-tauri/target/release/bu
 | `src/`                 | 界面：React + TypeScript + Tailwind + Motion |
 | `src/styles/index.css` | 三套皮肤的设计变量（晨光、极光、手账）       |
 | `src-tauri/`           | 桌面外壳和本地层（Rust）                     |
+| `content/`             | 课程内容（JSON），来源和版权见 ADR 0019      |
+| `scripts/content/`     | 开放资源导入脚本                             |
 | `adr/`                 | 架构决策记录                                 |
 | `archive/`             | 2020 年旧作文站，只作历史记录                |
