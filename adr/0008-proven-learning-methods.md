@@ -1,0 +1,39 @@
+# 0008 借鉴公认有效的学习理论
+
+- 状态：已采纳
+- 日期：2026-09-30
+- 决策人：tiger
+
+## 背景
+
+tiger 希望把互联网上其他高效的英语学习思想融入软件背后的指导思想。
+
+## 决策
+
+采用以下与本项目原则一致的方法，每条都落到具体功能上：
+
+| 思路 | 在软件里怎么用 |
+| --- | --- |
+| 可理解输入（Krashen） | 选文按她的生词量分级，难度只比她高一点 |
+| 四条路径（Nation, 2007） | 听读说写四步；生词约占文章 2% 到 3%；每周限时重读旧文练流利度 |
+| 注意假说（Schmidt, 1990） | 点句子彩色标出结构、高亮生词 |
+| 输出假说（Swain） | 说、写两步不可跳过；AI 批改指出与地道说法的差距 |
+| 跟读（Shadowing） | "说"这一步用逐句跟读并录音对比 |
+| 提取练习（Roediger & Karpicke, 2006） | 复习一律挖空填词，配合 FSRS 间隔算法 |
+| 词块法（Lewis） | 生词本可以收整个词块，不只收单词 |
+
+Krashen 的理论有争议（只靠输入不够），所以和输出假说、四条路径一起使用。
+
+出处：
+
+- https://en.wikipedia.org/wiki/Input_hypothesis
+- https://www.hackingchinese.com/analyse-and-balance-your-chinese-learning-with-paul-nations-four-strands/
+- https://en.wikipedia.org/wiki/Noticing_hypothesis
+- https://en.wikipedia.org/wiki/Comprehensible_output
+- https://contact.teslontario.org/wp-content/uploads/2018/08/Hamada-Shadowing.pdf
+- https://en.wikipedia.org/wiki/Testing_effect
+- https://en.wikipedia.org/wiki/Lexical_approach
+
+## 后果
+
+- 调度逻辑需要记录她的生词量和已遇到的语法点，才能选出难度合适的文章。
