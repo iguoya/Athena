@@ -9,9 +9,10 @@ import "package:athena_driver/progress.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 侧栏按科目分目录（ADR 0050）：章节挂在所属科目底下，箭头只展开 / 收起，锁着的科目没有子项。
+/// 侧栏按科目分目录（ADR 0050）：章节挂在所属科目底下，箭头只展开 / 收起，锁着的科目没有子项；
+/// 跨科目入口钉在底部（ADR 0051）。
 void main() {
-  testWidgets("科目一的章节挂在科目一和科目二之间，收起后不见，锁着的科目没有箭头", (tester) async {
+  testWidgets("科目一的章节挂在科目一和科目二之间，收起后不见，锁着的科目没有箭头，错题本和考前复习钉在底部", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -55,6 +56,18 @@ void main() {
     await tester.tap(find.byIcon(Glyph.expand));
     await tester.pump();
     expect(topic, findsOneWidget);
+
+    // 矮窗口里科目一的章节放不下，错题本、考前复习仍钉在底部看得见、点得到（ADR 0051）。
+    await tester.binding.setSurfaceSize(const Size(1600, 600));
+    await tester.pump();
+    for (final entry in ["错题本", "考前复习"]) {
+      final f = find.textContaining(entry);
+      expect(f, findsOneWidget);
+      expect(tester.getBottomLeft(f).dy, lessThanOrEqualTo(600));
+    }
+    await tester.tap(find.textContaining("考前复习"));
+    await tester.pump();
+    expect(find.textContaining("全部复习"), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

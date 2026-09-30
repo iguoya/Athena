@@ -259,7 +259,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Scaffold(
       body: Row(
         children: [
-          SizedBox(width: 272, child: _sidebar(context)),
+          SizedBox(width: 312, child: _sidebar(context)),
           const VerticalDivider(width: 1, color: Bs.border),
           Expanded(
             child: _session == null ? _overview(context) : _sessionPane(),
@@ -274,73 +274,86 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
       color: Bs.nav,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 20, 12, 24),
+      child: Column(
         children: [
-          const Row(
-            children: [
-              AppMark(),
-              SizedBox(width: 8),
-              Text(
-                "驾考学习",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: Bs.bodySize,
-                  fontWeight: FontWeight.w700,
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 20, 12, 12),
+              children: [
+                const Row(
+                  children: [
+                    AppMark(),
+                    SizedBox(width: 8),
+                    Text(
+                      "驾考学习",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: Bs.bodySize,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                BsBadge(
+                  text: _s1Done ? "科目一已全部掌握" : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
+                  color: _s1Done ? Bs.success : Bs.warning,
+                  icon: Glyph.goal,
+                ),
+                const SizedBox(height: 20),
+                // 三个科目是一级目录，各自的模拟考、待练和章节挂在自己底下（ADR 0050）。
+                ..._subjectBranch(
+                  "subject1",
+                  icon: Glyph.subject1,
+                  label: "科目一",
+                ),
+                ..._subjectBranch(
+                  "subject2",
+                  icon: _s1Steady ? Glyph.subject2 : Glyph.locked,
+                  label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
+                ),
+                ..._subjectBranch(
+                  "subject4",
+                  icon: _s1Done ? Glyph.subject4 : Glyph.locked,
+                  label: _s1Done ? "科目四" : "科目四（未解锁）",
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          BsBadge(
-            text: _s1Done ? "科目一已全部掌握" : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
-            color: _s1Done ? Bs.success : Bs.warning,
-            icon: Glyph.goal,
-          ),
-          const SizedBox(height: 20),
-          // 三个科目是一级目录，各自的模拟考、待练和章节挂在自己底下（ADR 0050）。
-          ..._subjectBranch(
-            "subject1",
-            icon: Glyph.subject1,
-            label: "科目一",
-          ),
-          ..._subjectBranch(
-            "subject2",
-            icon: _s1Steady ? Glyph.subject2 : Glyph.locked,
-            label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
-          ),
-          ..._subjectBranch(
-            "subject4",
-            icon: _s1Done ? Glyph.subject4 : Glyph.locked,
-            label: _s1Done ? "科目四" : "科目四（未解锁）",
-          ),
-          const SizedBox(height: 8),
-          const Divider(color: Colors.white30),
-          const SizedBox(height: 8),
-          _navLine(
-            icon: Glyph.wrongBook,
-            selected: _place == _wrongId && _session == null,
-            label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
-            onTap: () => _go(_wrongId),
-          ),
-          _navLine(
-            icon: Glyph.review,
-            selected: _place == _reviewId && _session == null,
-            label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
-            onTap: () => _go(_reviewId),
-          ),
-          _navLine(
-            icon: Glyph.numbers,
-            selected: _place == _numbersId && _session == null,
-            label: "易混数字",
-            onTap: () => _go(_numbersId),
-          ),
-          _navLine(
-            icon: Glyph.sync,
-            selected: _place == _syncId && _session == null,
-            label: _sync?.usable == true ? "跨机器同步" : "跨机器同步（未配置）",
-            muted: _sync?.usable != true,
-            onTap: () => _go(_syncId),
+          // 跨科目的几个入口钉在侧栏底部，不跟科目目录一起滚：科目展开得再长，
+          // 错题本、考前复习也一直看得见（ADR 0051）。
+          const Divider(height: 1, color: Colors.white30),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 12, 8),
+            child: Column(
+              children: [
+                _navLine(
+                  icon: Glyph.wrongBook,
+                  selected: _place == _wrongId && _session == null,
+                  label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
+                  onTap: () => _go(_wrongId),
+                ),
+                _navLine(
+                  icon: Glyph.review,
+                  selected: _place == _reviewId && _session == null,
+                  label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
+                  onTap: () => _go(_reviewId),
+                ),
+                _navLine(
+                  icon: Glyph.numbers,
+                  selected: _place == _numbersId && _session == null,
+                  label: "易混数字",
+                  onTap: () => _go(_numbersId),
+                ),
+                _navLine(
+                  icon: Glyph.sync,
+                  selected: _place == _syncId && _session == null,
+                  label: _sync?.usable == true ? "跨机器同步" : "跨机器同步（未配置）",
+                  muted: _sync?.usable != true,
+                  onTap: () => _go(_syncId),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -434,13 +447,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final color = muted
         ? Colors.white54
         : (selected ? Colors.white : const Color(0xFFDCE9FF));
-    // 子项往右缩一个图标宽，一眼看出挂在哪个科目底下。
+    // 子项往右缩一个图标宽，一眼看出挂在哪个科目底下。行距收紧、侧栏放宽到章节名不折行：
+    // 底部钉住跨科目入口后，科目一展开 13 行，科目二、科目四仍要留在一屏里（ADR 0051）。
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.only(left: indent ? 24 : 0),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: indent ? 4 : 8),
         decoration: BoxDecoration(
           color: selected ? Colors.white.withValues(alpha: 0.18) : null,
           borderRadius: BorderRadius.circular(Bs.radius),

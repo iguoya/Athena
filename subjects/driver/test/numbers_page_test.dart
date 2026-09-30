@@ -33,8 +33,6 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
-    // 侧栏里科目一默认展开，工具入口在章节下面，先滚到再点（ADR 0050）。
-    await tester.scrollUntilVisible(find.text("易混数字"), 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);
