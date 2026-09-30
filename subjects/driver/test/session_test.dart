@@ -208,7 +208,7 @@ void main() {
     });
   });
 
-  // 模拟考答错当场讲：右栏答题卡下面出依据，题干旁有「解析」；答对仍不提示（ADR 0050）。
+  // 模拟考答错当场讲：右栏答题卡下面出依据，题干旁有「解析」；答对仍不提示（ADR 0052）。
   testWidgets("模拟考答错在右栏讲为什么错，答对不讲", (tester) async {
     late Directory dir;
     late ProgressStore store;

@@ -69,7 +69,7 @@ class _SessionStageState extends State<SessionStage> {
   static const _pageDwell = Duration(seconds: 5);
 
   /// 一页最后一题答错（练习、模拟考都算）：解释念完以后至少再停这么久，
-  /// 念得长也不会一念完就翻（ADR 0025、0038、0050）。
+  /// 念得长也不会一念完就翻（ADR 0025、0038、0052）。
   static const _wrongAnswerPause = Duration(milliseconds: 1500);
 
   var _start = 0;
@@ -124,7 +124,7 @@ class _SessionStageState extends State<SessionStage> {
   int get _answeredCount => _judged.length;
 
   /// 这道题的依据能不能看：练习作答即揭晓（ADR 0005）；模拟考只讲答错的题——
-  /// 答对不提示跟考场一样，答错当场讲清为什么错（ADR 0050）。
+  /// 答对不提示跟考场一样，答错当场讲清为什么错（ADR 0052）。
   bool _revealed(int index) =>
       _judged.contains(index) && (_launch.revealImmediately || !_correct.contains(index));
 
@@ -363,7 +363,7 @@ class _SessionStageState extends State<SessionStage> {
     return _isExam ? _answerCard(context) : _evidenceColumn(context);
   }
 
-  /// 模拟考右栏：答题卡在上，刚答错的题的依据接在答题卡下面（ADR 0050）。
+  /// 模拟考右栏：答题卡在上，刚答错的题的依据接在答题卡下面（ADR 0052）。
   List<Widget> _examEvidence(BuildContext context) {
     final focus = _focus;
     if (focus == null || !_revealed(focus)) return const [];
@@ -950,7 +950,7 @@ class _SessionStageState extends State<SessionStage> {
     }
     final next = _pending;
     if (next != null) _centerOn(next);
-    // 答错才念，模拟考也念（ADR 0050）：答对还要听完一段解释，反而拖住手上的节奏。
+    // 答错才念，模拟考也念（ADR 0052）：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
     // 一页十题答完就翻，不看对错（ADR 0025）；从判完算起至少停 5 秒（ADR 0038）；
     // 最后一题答错，先把解释念完，念完后至少再停一会儿。模拟考最后一页不自动结束，要自己交卷。
