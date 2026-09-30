@@ -10,18 +10,18 @@
 
 ## 决策
 
-| 层 | 选型 |
-| --- | --- |
-| 桌面壳 | Tauri 2（Rust） |
-| 构建 | Vite |
-| 界面 | React + TypeScript |
-| 样式与组件 | Tailwind CSS、shadcn/ui |
-| 动画 | Motion |
-| 图表 | ECharts |
-| 批注编辑器 | Tiptap |
-| 状态与路由 | Zustand、React Router |
-| 本地数据 | SQLite |
-| 工程规范 | pnpm、ESLint + Prettier、Vitest |
+| 层         | 选型                            |
+| ---------- | ------------------------------- |
+| 桌面壳     | Tauri 2（Rust）                 |
+| 构建       | Vite                            |
+| 界面       | React + TypeScript              |
+| 样式与组件 | Tailwind CSS、shadcn/ui         |
+| 动画       | Motion                          |
+| 图表       | ECharts                         |
+| 批注编辑器 | Tiptap                          |
+| 状态与路由 | Zustand、React Router           |
+| 本地数据   | SQLite                          |
+| 工程规范   | pnpm、ESLint + Prettier、Vitest |
 
 - 不使用 Vue。
 - 选 Tauri 而不是 Electron：安装包和内存占用小得多，以后还能出手机版；代价是系统层用 Rust，界面跑在 Windows 自带的 WebView2 上。

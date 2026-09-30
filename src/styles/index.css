@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/*
+ * Three skins share one component set; each skin only redefines these tokens (ADR 0004).
+ * dawn = 晨光, night = 极光, journal = 手账.
+ */
+:root {
+  color-scheme: light;
+  --bg: #fbeee9;
+  --bg-2: #efe4fb;
+  --blob-a: #ffc6b3;
+  --blob-b: #d9c4ff;
+  --blob-c: #bfe6ff;
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-strong: rgba(255, 255, 255, 0.85);
+  --line: rgba(120, 80, 110, 0.14);
+  --fg: #3b2a3f;
+  --muted: #8a7488;
+  --accent: #e56b8c;
+  --accent-2: #8f6bff;
+  --on-accent: #ffffff;
+  --word: var(--fg);
+  --shadow: 0 18px 40px -18px rgba(150, 80, 120, 0.35);
+  --radius: 22px;
+  --font-display: "Fraunces Variable", "Noto Sans SC", Georgia, serif;
+  --font-body: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  --font-word: "Fraunces Variable", Georgia, serif;
+  --font-sentence: var(--font-display);
+  --tilt: 0deg;
+}
+
+:root[data-style="night"] {
+  color-scheme: dark;
+  --bg: #0b0a1f;
+  --bg-2: #120f2e;
+  --blob-a: #ff4fa3;
+  --blob-b: #6c5bff;
+  --blob-c: #22d3c5;
+  --surface: rgba(28, 24, 62, 0.55);
+  --surface-strong: rgba(40, 34, 86, 0.8);
+  --line: rgba(190, 170, 255, 0.16);
+  --fg: #f2eeff;
+  --muted: #a69fd0;
+  --accent: #ff5fae;
+  --accent-2: #5ee7d8;
+  --on-accent: #1a0b1f;
+  --shadow: 0 20px 50px -20px rgba(255, 79, 163, 0.45);
+  --radius: 18px;
+  --font-display: "Sora", "Noto Sans SC", system-ui, sans-serif;
+  --font-word: "Sora", system-ui, sans-serif;
+}
+
+:root[data-style="journal"] {
+  color-scheme: light;
+  --bg: #f6f0e3;
+  --bg-2: #f1e8d4;
+  --blob-a: transparent;
+  --blob-b: transparent;
+  --blob-c: transparent;
+  --surface: #fffdf7;
+  --surface-strong: #fffdf7;
+  --line: #e2d6bd;
+  --fg: #3a3226;
+  --muted: #8f8067;
+  --accent: #e0765a;
+  --accent-2: #6f9e8a;
+  --on-accent: #ffffff;
+  --word: #2f5e52;
+  --shadow: 2px 4px 0 rgba(90, 70, 40, 0.12);
+  --radius: 8px;
+  --font-display: "ZCOOL KuaiLe", "Caveat", "Noto Sans SC", cursive;
+  --font-word: "Caveat", "Segoe Print", cursive;
+  --font-sentence: "Caveat", "Segoe Print", cursive;
+  --tilt: -1.2deg;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-on-accent: var(--on-accent);
+  --color-word: var(--word);
+  --radius-skin: var(--radius);
+  --shadow-skin: var(--shadow);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-word: var(--font-word);
+  --font-sentence: var(--font-sentence);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.5s ease,
+    color 0.5s ease;
+  user-select: none;
+}
+
+/* The journal skin draws on grid paper. */
+:root[data-style="journal"] body {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: -1px -1px;
+}
+
+/* English text the learner reads can be selected and copied. */
+.en {
+  user-select: text;
+}
+
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

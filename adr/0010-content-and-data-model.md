@@ -13,16 +13,16 @@
 - 课程内容全部是仓库里的 JSON、Markdown 和音频文件，打包进安装包；SQLite 只存她的学习记录，不存题目。
 - 目录：
 
-| 内容 | 位置 |
-| --- | --- |
-| 真实例句库 | `content/sentences/` |
-| 语法点清单 | `content/grammar.json` |
-| 词卡 | `content/vocab/hs/`（高中，单词关）、`content/vocab/<考试>/` |
-| 今日句组 | `content/sets/` |
-| 短文（后期） | `content/passages/<考试>/` |
-| 听力 | `content/listening/<考试>/` |
-| 写作与翻译 | `content/writing/<考试>/` |
-| 来源登记 | `content/sources.json` |
+| 内容         | 位置                                                         |
+| ------------ | ------------------------------------------------------------ |
+| 真实例句库   | `content/sentences/`                                         |
+| 语法点清单   | `content/grammar.json`                                       |
+| 词卡         | `content/vocab/hs/`（高中，单词关）、`content/vocab/<考试>/` |
+| 今日句组     | `content/sets/`                                              |
+| 短文（后期） | `content/passages/<考试>/`                                   |
+| 听力         | `content/listening/<考试>/`                                  |
+| 写作与翻译   | `content/writing/<考试>/`                                    |
+| 来源登记     | `content/sources.json`                                       |
 
 - 例句是一等公民：词卡不写例句，每个义项引用至少 3 条真实例句的编号。
 - 每个义项有一条简单英文释义（只用比该词更简单的词）和中文释义。
