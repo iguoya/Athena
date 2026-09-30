@@ -23,7 +23,6 @@
 | 听力 | `content/listening/<考试>/` |
 | 写作与翻译 | `content/writing/<考试>/` |
 | 来源登记 | `content/sources.json` |
-| 旧范文 | `content/archive/`（从 2020 年 VuePress 作文站迁移） |
 
 - 例句是一等公民：词卡不写例句，每个义项引用至少 3 条真实例句的编号。
 - 每个义项有一条简单英文释义（只用比该词更简单的词）和中文释义。

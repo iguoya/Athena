@@ -19,5 +19,6 @@
 | [0013](0013-sentences-first-gradual-difficulty.md) | 句子为主，难度缓慢增加 |
 | [0014](0014-memory-and-learning-science.md) | 系统融入记忆理论和高效学习方法 |
 | [0015](0015-exam-weighted-priorities.md) | 按考试分值分布定学习重点 |
+| [0016](0016-archive-old-site.md) | 归档 2020 年的旧作文站 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
