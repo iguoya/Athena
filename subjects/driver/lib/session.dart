@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:math";
 
+import "package:clock/clock.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
@@ -925,7 +926,9 @@ class _SessionStageState extends State<SessionStage> {
     _busy = true;
     // 记下是哪一页答完的：等朗读、停顿期间人已经自己翻走，就不再替他翻（ADR 0025）。
     final page = _start;
-    final judged = Stopwatch()..start();
+    // 用 clock 的秒表而不是 Stopwatch：真跑时一样；测试里它跟着假时钟走，
+    // 写库、朗读花掉的真实时间不会被当成「已经停过」，翻页时刻才测得准。
+    final judged = clock.stopwatch()..start();
     final ok = answersMatch(question, chosen);
     final durationMs = DateTime.now().difference(_shownAt).inMilliseconds;
     final notices = await widget.store.recordAttempt(
