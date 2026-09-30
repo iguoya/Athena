@@ -6,6 +6,7 @@ import "dart:ui" as ui;
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
+import "glyphs.dart";
 import "content.dart";
 import "progress.dart";
 
@@ -122,9 +123,9 @@ class Bs {
 
   static IconData kindIcon(String kind) {
     return switch (kind) {
-      "judge" => Icons.rule,
-      "multi" => Icons.library_add_check_outlined,
-      _ => Icons.radio_button_checked,
+      "judge" => Glyph.kindJudge,
+      "multi" => Glyph.kindMulti,
+      _ => Glyph.kindSingle,
     };
   }
 
@@ -246,7 +247,7 @@ class QuestionImage extends StatelessWidget {
                 picture,
                 IconButton(
                   onPressed: () => Navigator.of(dialogContext).pop(),
-                  icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                  icon: const Icon(Glyph.close, color: Colors.white, size: 28),
                   tooltip: "关闭",
                 ),
               ],
@@ -389,7 +390,7 @@ class SerialBadge extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.numbers, size: 16, color: Bs.secondary),
+              const Icon(Glyph.serial, size: 16, color: Bs.secondary),
               const SizedBox(width: 4),
               Text(serial, style: const TextStyle(fontSize: 14, color: Bs.secondary, fontFamily: "monospace")),
             ],
@@ -706,7 +707,7 @@ class TopicAccuracyChart extends StatelessWidget {
                     IconButton(
                       tooltip: "去练这一章",
                       onPressed: () => onTap!(i),
-                      icon: const Icon(Icons.chevron_right, size: 20),
+                      icon: const Icon(Glyph.goTo, size: 20),
                     ),
                   ],
                 ],

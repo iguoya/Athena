@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+import "glyphs.dart";
 import "brief.dart";
 import "drill.dart";
 import "guide.dart";
@@ -147,7 +148,7 @@ class _Subject2PageState extends State<Subject2Page> {
             children: [
               CircleAvatar(
                 backgroundColor: Bs.paper.withValues(alpha: 0.15),
-                child: const Icon(Icons.local_parking, color: Bs.paper),
+                child: const Icon(Glyph.subject2, color: Bs.paper),
               ),
               Text("科目二", style: theme.textTheme.headlineMedium),
               Text("场地驾驶技能 · 小型自动挡（C2）", style: theme.textTheme.titleMedium?.copyWith(color: Bs.secondary)),
@@ -155,10 +156,10 @@ class _Subject2PageState extends State<Subject2Page> {
               SegmentedButton<_Tab>(
                 showSelectedIcon: false,
                 segments: const [
-                  ButtonSegment(value: _Tab.day, icon: Icon(Icons.today), label: Text("练车日")),
-                  ButtonSegment(value: _Tab.handbook, icon: Icon(Icons.menu_book), label: Text("项目手册")),
-                  ButtonSegment(value: _Tab.log, icon: Icon(Icons.history), label: Text("练车日志")),
-                  ButtonSegment(value: _Tab.exam, icon: Icon(Icons.flag), label: Text("考前")),
+                  ButtonSegment(value: _Tab.day, icon: Icon(Glyph.practiceDay), label: Text("练车日")),
+                  ButtonSegment(value: _Tab.handbook, icon: Icon(Glyph.handbook), label: Text("项目手册")),
+                  ButtonSegment(value: _Tab.log, icon: Icon(Glyph.log), label: Text("练车日志")),
+                  ButtonSegment(value: _Tab.exam, icon: Icon(Glyph.examReady), label: Text("考前")),
                 ],
                 selected: {_tab},
                 onSelectionChanged: (v) => setState(() => _tab = v.first),
@@ -229,20 +230,20 @@ class _Subject2PageState extends State<Subject2Page> {
     final today = DateUtils.dateOnly(DateTime.now());
     final todayRuns = [for (final r in widget.runs) if (DateUtils.isSameDay(r.at, today)) r];
     final before = _Panel(
-      icon: Icons.wb_sunny_outlined,
+      icon: Glyph.beforeDrill,
       title: "练车前",
       children: [
         _BriefCard(brief: _brief, onOpen: (id) => setState(() => _item = id)),
         const SizedBox(height: 12),
         FilledButton.icon(
           onPressed: _preDrill,
-          icon: const Icon(Icons.timer_outlined),
+          icon: const Icon(Glyph.brief),
           label: const Text("练车前 5 分钟：过点位卡、默演重点项"),
         ),
       ],
     );
     final after = _Panel(
-      icon: Icons.nights_stay_outlined,
+      icon: Glyph.afterDrill,
       title: "练车后",
       children: [
         Text(
@@ -254,8 +255,8 @@ class _Subject2PageState extends State<Subject2Page> {
           spacing: 10,
           runSpacing: 10,
           children: [
-            FilledButton.icon(onPressed: _reviewToday, icon: const Icon(Icons.fact_check), label: const Text("复盘今天")),
-            TextButton.icon(onPressed: _record, icon: const Icon(Icons.edit_note), label: const Text("只补一把")),
+            FilledButton.icon(onPressed: _reviewToday, icon: const Icon(Glyph.review), label: const Text("复盘今天")),
+            TextButton.icon(onPressed: _record, icon: const Icon(Glyph.record), label: const Text("只补一把")),
           ],
         ),
         const SizedBox(height: 12),
@@ -333,7 +334,7 @@ class _Subject2PageState extends State<Subject2Page> {
       padding: const EdgeInsets.fromLTRB(28, 20, 28, 28),
       children: [
         _Section(
-          icon: Icons.show_chart,
+          icon: Glyph.trend,
           title: "按练车日看每一项能过的比例",
           child: Column(
             children: [
@@ -374,14 +375,14 @@ class _Subject2PageState extends State<Subject2Page> {
         _ReadinessCard(readiness: readiness, lastAt: _brief.lastAt),
         const SizedBox(height: 16),
         _Section(
-          icon: Icons.table_chart_outlined,
+          icon: Glyph.formTable,
           title: "每一项最近的表现（最近 $readinessWindow 把）",
           child: _FormTable(readiness: readiness),
         ),
         if (readiness.culprits.isNotEmpty) ...[
           const SizedBox(height: 20),
           _Section(
-            icon: Icons.report_outlined,
+            icon: Glyph.mistake,
             title: "最拖后腿的失分来源",
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,13 +413,13 @@ class _Subject2PageState extends State<Subject2Page> {
         ],
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.record_voice_over,
+          icon: Glyph.rehearse,
           title: "四项连起来默演一遍",
           child: Wrap(
             spacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              FilledButton.icon(onPressed: _rehearseAll, icon: const Icon(Icons.play_arrow), label: const Text("开始")),
+              FilledButton.icon(onPressed: _rehearseAll, icon: const Icon(Glyph.play), label: const Text("开始")),
               Text("按考试的四项依次过：倒车入库 → 侧方停车 → 曲线行驶 → 直角转弯。考场的实际顺序以考场为准。",
                   style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
             ],
@@ -426,7 +427,7 @@ class _Subject2PageState extends State<Subject2Page> {
         ),
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.quiz_outlined,
+          icon: Glyph.question,
           title: "规则自测",
           child: Wrap(
             spacing: 12,
@@ -435,7 +436,7 @@ class _Subject2PageState extends State<Subject2Page> {
               Text("评判题掌握 ${all.length - pending.length}/${all.length}", style: theme.textTheme.bodyLarge),
               FilledButton.tonalIcon(
                 onPressed: pending.isEmpty ? null : () => widget.onPractice(all, "规则自测"),
-                icon: const Icon(Icons.quiz),
+                icon: const Icon(Glyph.practice),
                 label: Text(pending.isEmpty ? "已全部掌握" : "自测 · 待练 ${pending.length}"),
               ),
             ],
@@ -443,7 +444,7 @@ class _Subject2PageState extends State<Subject2Page> {
         ),
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.checklist,
+          icon: Glyph.rules,
           title: "上车检查：通用评判（每一项都适用）",
           child: _RuleTable(rules: _guide.generalRules),
         ),
@@ -773,7 +774,7 @@ class _PreDrillState extends State<_PreDrill> {
           if (coach.isNotEmpty) ...[
             const SizedBox(height: 16),
             _Section(
-              icon: Icons.campaign_outlined,
+              icon: Glyph.coach,
               title: "教练说过",
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -789,7 +790,7 @@ class _PreDrillState extends State<_PreDrill> {
           ],
           const SizedBox(height: 16),
           _Section(
-            icon: Icons.push_pin_outlined,
+            icon: Glyph.pointCard,
             title: "我的点位卡",
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -820,12 +821,12 @@ class _PreDrillState extends State<_PreDrill> {
                   photos: widget.photos,
                   onChanged: widget.onChanged,
                 ),
-                icon: const Icon(Icons.record_voice_over),
+                icon: const Icon(Glyph.rehearse),
                 label: const Text("默演这一项"),
               ),
               FilledButton.icon(
                 onPressed: last ? () => Navigator.of(context).pop() : () => setState(() => _index++),
-                icon: Icon(last ? Icons.check : Icons.arrow_forward),
+                icon: Icon(last ? Glyph.finish : Glyph.next),
                 label: Text(last ? "准备好了，去练车" : "下一项"),
               ),
             ],
@@ -873,7 +874,7 @@ class _ItemCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(child: Text(item.title, style: theme.textTheme.titleLarge)),
-                    const Icon(Icons.play_circle, color: Bs.paper),
+                    const Icon(Glyph.animation, color: Bs.paper),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -881,7 +882,7 @@ class _ItemCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 6,
                   children: [
-                    BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Icons.timer),
+                    BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Glyph.duration),
                     BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
                   ],
                 ),
@@ -998,9 +999,9 @@ class _ItemPageState extends State<_ItemPage> {
           spacing: 12,
           runSpacing: 8,
           children: [
-            TextButton.icon(onPressed: widget.onBack, icon: const Icon(Icons.arrow_back), label: const Text("科目二")),
+            TextButton.icon(onPressed: widget.onBack, icon: const Icon(Glyph.back), label: const Text("科目二")),
             Text(item.title, style: theme.textTheme.headlineMedium),
-            BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Icons.timer),
+            BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Glyph.duration),
             BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
           ],
         ),
@@ -1040,12 +1041,12 @@ class _ItemPageState extends State<_ItemPage> {
           children: [
             FilledButton.icon(
               onPressed: pending.isEmpty ? null : () => widget.onPractice(widget.questions, item.title),
-              icon: const Icon(Icons.quiz),
+              icon: const Icon(Glyph.practice),
               label: Text(pending.isEmpty ? "评判题（已掌握）" : "练这一项的评判题 · 待练 ${pending.length}"),
             ),
             FilledButton.tonalIcon(
               onPressed: widget.onRecord,
-              icon: const Icon(Icons.edit_note),
+              icon: const Icon(Glyph.record),
               label: const Text("记一把练车"),
             ),
             FilledButton.tonalIcon(
@@ -1057,14 +1058,14 @@ class _ItemPageState extends State<_ItemPage> {
                 photos: widget.photos,
                 onChanged: widget.onPointsChanged,
               ),
-              icon: const Icon(Icons.record_voice_over),
+              icon: const Icon(Glyph.rehearse),
               label: const Text("默演一遍"),
             ),
           ],
         ),
         const SizedBox(height: 24),
         _Section(
-          icon: Icons.push_pin_outlined,
+          icon: Glyph.pointCard,
           title: "我的点位卡",
           trailing: Text(
             "只写你自己验证过的：教练怎么说、你在车里实测怎样",
@@ -1081,7 +1082,7 @@ class _ItemPageState extends State<_ItemPage> {
         if (widget.coachNotes.isNotEmpty) ...[
           const SizedBox(height: 20),
           _Section(
-            icon: Icons.campaign_outlined,
+            icon: Glyph.coach,
             title: "教练说过",
             trailing: Text("原话，按时间倒序；整理过的放进点位卡", style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary)),
             child: Column(
@@ -1098,19 +1099,19 @@ class _ItemPageState extends State<_ItemPage> {
         ],
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.menu_book,
+          icon: Glyph.source,
           title: "操作要求（标准原文）",
           child: _Quote(text: item.requirementQuote, locator: item.requirementLocator),
         ),
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.rule,
+          icon: Glyph.rules,
           title: "评判",
           child: _RuleTable(rules: item.rules),
         ),
         const SizedBox(height: 20),
         _Section(
-          icon: Icons.lightbulb_outline,
+          icon: Glyph.tips,
           title: "经验要点",
           trailing: Text(widget.guide.tipsNote, style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary)),
           child: Column(
@@ -1124,7 +1125,7 @@ class _ItemPageState extends State<_ItemPage> {
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(top: 6),
-                        child: Icon(Icons.circle, size: 8, color: Bs.paper),
+                        child: Icon(Glyph.bullet, size: 8, color: Bs.paper),
                       ),
                       const SizedBox(width: 10),
                       Expanded(child: Text(tip, style: theme.textTheme.bodyLarge)),
@@ -1177,7 +1178,7 @@ class _BriefCard extends StatelessWidget {
             spacing: 10,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Icon(Icons.assignment_turned_in, color: Bs.orange),
+              const Icon(Glyph.brief, color: Bs.orange),
               Text("今天练车的重点", style: theme.textTheme.titleMedium),
               Text(
                 lastAt == null ? "还没有练车记录，先记几把，这里才有东西可说" : "上次练车：${_ago(lastAt)}",
@@ -1195,17 +1196,17 @@ class _BriefCard extends StatelessWidget {
                   children: [
                     Icon(
                       switch (f.kind) {
-                        FocusKind.mistake => Icons.error_outline,
-                        FocusKind.weak => Icons.trending_down,
-                        FocusKind.rehearsal => Icons.record_voice_over,
-                        FocusKind.untried => Icons.fiber_new,
+                        FocusKind.mistake => Glyph.mistake,
+                        FocusKind.weak => Glyph.weak,
+                        FocusKind.rehearsal => Glyph.rehearse,
+                        FocusKind.untried => Glyph.untried,
                       },
                       size: 20,
                       color: f.kind == FocusKind.mistake ? Bs.danger : Bs.secondary,
                     ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(f.text, style: theme.textTheme.bodyLarge)),
-                    const Icon(Icons.chevron_right, color: Bs.secondary),
+                    const Icon(Glyph.goTo, color: Bs.secondary),
                   ],
                 ),
               ),
@@ -1273,7 +1274,7 @@ class _ItemBriefCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.assignment_turned_in, color: Bs.orange),
+          const Icon(Glyph.brief, color: Bs.orange),
           const SizedBox(width: 10),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: lines)),
         ],
@@ -1346,7 +1347,7 @@ class _StepList extends StatelessWidget {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Icons.warning_amber_rounded, size: 18, color: Bs.danger),
+                                      const Icon(Glyph.caution, size: 18, color: Bs.danger),
                                       const SizedBox(width: 6),
                                       Expanded(
                                         child: Text(
@@ -1377,7 +1378,7 @@ class _StepList extends StatelessWidget {
                       IconButton(
                         tooltip: "播这一步",
                         onPressed: () => onPlay(i),
-                        icon: const Icon(Icons.play_arrow, size: 20),
+                        icon: const Icon(Glyph.playStep, size: 20),
                       ),
                     ],
                   ),
@@ -1500,7 +1501,7 @@ class _DrillStats extends StatelessWidget {
     final theme = Theme.of(context);
     if (runs.isEmpty) {
       return _Section(
-        icon: Icons.insights,
+        icon: Glyph.runs,
         title: "练车记录",
         child: Text(
           "还没有练车记录。练完一把车点「记一把练车」，勾上出的错，按考场规则打分。",
@@ -1532,7 +1533,7 @@ class _DrillStats extends StatelessWidget {
     ];
     final maxCount = top.isEmpty ? 1 : top.first.value;
     return _Section(
-      icon: Icons.insights,
+      icon: Glyph.runs,
       title: itemId == null ? "练车记录" : "这一项的练车记录",
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1541,15 +1542,15 @@ class _DrillStats extends StatelessWidget {
             spacing: 12,
             runSpacing: 12,
             children: [
-              StatTile(icon: Icons.directions_car, label: "练了", value: "${runs.length} 把"),
+              StatTile(icon: Glyph.runCount, label: "练了", value: "${runs.length} 把"),
               StatTile(
-                icon: Icons.verified,
+                icon: Glyph.passable,
                 label: "按考场规则能过",
                 value: "$passes 把 · ${(passes * 100 / runs.length).round()}%",
                 color: Bs.success,
               ),
               StatTile(
-                icon: Icons.today,
+                icon: Glyph.recentDays,
                 label: "最近 7 天",
                 value: "${runs.where((r) => r.at.isAfter(today.subtract(const Duration(days: 7)))).length} 把",
                 color: Bs.purple,
@@ -1709,7 +1710,7 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
         onDeleted: m.repeat && n > 0
             ? () => setState(() => n == 1 ? _counts.remove(m.id) : _counts[m.id] = n - 1)
             : null,
-        deleteIcon: const Icon(Icons.remove, size: 18),
+        deleteIcon: const Icon(Glyph.less, size: 18),
       );
     }
 

@@ -4,6 +4,7 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
+import "glyphs.dart";
 import "exam.dart";
 import "look.dart";
 import "models.dart";
@@ -274,7 +275,7 @@ class _SessionStageState extends State<SessionStage> {
           IconButton(
             tooltip: "退出，不交卷",
             onPressed: () => _confirmExit(context),
-            icon: const Icon(Icons.close),
+            icon: const Icon(Glyph.close),
           ),
           const SizedBox(width: 4),
           Text(_launch.title, style: textTheme.titleMedium),
@@ -372,7 +373,7 @@ class _SessionStageState extends State<SessionStage> {
         minimumSize: const Size(190, 56),
         textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w700),
       ),
-      icon: Icon(_lastGroup ? Icons.flag : Icons.arrow_forward, size: 22),
+      icon: Icon(_lastGroup ? Glyph.finish : Glyph.next, size: 22),
       label: Text(_lastGroup ? "结束本轮" : "下一组"),
     );
   }
@@ -399,7 +400,7 @@ class _SessionStageState extends State<SessionStage> {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(130, 48),
               ),
-              icon: const Icon(Icons.arrow_forward, size: 20),
+              icon: const Icon(Glyph.next, size: 20),
               label: const Text("下一组"),
             ),
             FilledButton.icon(
@@ -409,7 +410,7 @@ class _SessionStageState extends State<SessionStage> {
                 foregroundColor: Colors.white,
                 minimumSize: const Size(140, 48),
               ),
-              icon: const Icon(Icons.assignment_turned_in, size: 20),
+              icon: const Icon(Glyph.submit, size: 20),
               label: const Text("交卷"),
             ),
           ],
@@ -435,7 +436,7 @@ class _SessionStageState extends State<SessionStage> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            BsBadge(text: "第${index + 1}题", icon: Icons.tag, color: Bs.paper),
+            BsBadge(text: "第${index + 1}题", icon: Glyph.position, color: Bs.paper),
             SerialBadge(q.serial),
             BsBadge(
               text: Bs.kindLabel(q.kind),
@@ -444,21 +445,21 @@ class _SessionStageState extends State<SessionStage> {
             ),
             BsBadge(
               text: QuestionBand.labels[q.band] ?? "常规",
-              icon: q.isHot ? Icons.local_fire_department : Icons.route,
+              icon: q.isHot ? Glyph.hot : Glyph.band,
               color: Bs.bandColor(q.band),
             ),
             // 易错提示只在练习里给：考场上没有这个提示（ADR 0027）。
             if (!_isExam && q.isErrorProne)
               BsBadge(
                 text: "易错 ${q.errorRate!.round()}%",
-                icon: Icons.warning_amber,
+                icon: Glyph.errorProne,
                 color: Bs.danger,
               ),
             for (final ref in q.sourceRefs)
               if (Bs.isContentSource(ref.relation))
                 BsBadge(
                   text: "${Bs.sourceShort(ref.sourceId)} ${ref.locator}".trim(),
-                  icon: Icons.menu_book,
+                  icon: Glyph.source,
                   color: Bs.teal,
                 ),
           ],
@@ -484,7 +485,7 @@ class _SessionStageState extends State<SessionStage> {
               maintainState: true,
               child: OutlinedButton.icon(
                 onPressed: canExplain ? () => setState(() => _focus = index) : null,
-                icon: const Icon(Icons.menu_book, size: 20),
+                icon: const Icon(Glyph.explain, size: 20),
                 label: const Text("解析"),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: _focus == index ? Bs.paper : Bs.secondary,
@@ -544,10 +545,10 @@ class _SessionStageState extends State<SessionStage> {
     if (revealed) {
       if (selected) {
         solid = choice.ok ? Bs.success : Bs.danger;
-        mark = choice.ok ? Icons.check_circle : Icons.cancel;
+        mark = choice.ok ? Glyph.correct : Glyph.wrong;
       } else if (choice.ok) {
         tint = Bs.success;
-        mark = Icons.check_circle;
+        mark = Glyph.correct;
       }
     } else if (selected) {
       // 已选中、还没判定：用主色蓝，跟「答对」的绿、「答错」的红分三档
@@ -783,7 +784,7 @@ class _SessionStageState extends State<SessionStage> {
         ],
         BsAlert(
           color: ok ? Bs.success : Bs.danger,
-          icon: ok ? Icons.check_circle : Icons.cancel,
+          icon: ok ? Glyph.correct : Glyph.wrong,
           child: Text(
             _gradeLine(focus),
             style: const TextStyle(fontWeight: FontWeight.w700),
@@ -794,7 +795,7 @@ class _SessionStageState extends State<SessionStage> {
         // articleLines 和下面的可点条文列表说的是同一件事，只留能点开链接的那份。
         BsAlert(
           color: Bs.paper,
-          icon: Icons.volume_up,
+          icon: Glyph.readAloud,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1277,7 +1278,7 @@ class _ResultPane extends StatelessWidget {
             const SizedBox(height: 16),
             BsAlert(
               color: Bs.success,
-              icon: Icons.military_tech,
+              icon: Glyph.achievement,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1340,7 +1341,7 @@ class _MissedCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BsBadge(text: "第${item.number}题", icon: Icons.tag, color: Bs.danger),
+              BsBadge(text: "第${item.number}题", icon: Glyph.position, color: Bs.danger),
               const SizedBox(width: 10),
               Expanded(
                 child: PromptText(

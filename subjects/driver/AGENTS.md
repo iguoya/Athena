@@ -33,6 +33,9 @@
 - **进度**：SQLite，`progress/learning.db`——**随仓库走**，换机器 clone 下来
   掌握度和战绩还在（主仓库 ADR 0053）；拿不到工作树的发行副本退回用户数据目录
   `AthenaDriver/`。自建表、自迁移，知识点 ID 前缀 `drive.`（主仓库 ADR 0037）
+- **图标**：应用标志是上色的小汽车，启动器、任务栏、侧栏同一份 `icon.svg`（ADR 0048）。
+  界面功能图标只用 `lib/glyphs.dart` 的 `Glyph.xxx`：一个概念一个图标、一个图标一个意思、
+  统一 Material 实心风格，不直接写 `Icons.xxx`；加图标先在表里加一行（ADR 0049）。
 
 不引入 GTK、Qt、Tauri。开发时内容从 `ATHENA_DRIVER_ROOT` 读磁盘，改 JSON
 热重启即可看到；发行包才走 Flutter assets。macOS entitlements 关闭 App

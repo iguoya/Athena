@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "glyphs.dart";
 import "drill.dart";
 import "guide.dart";
 import "look.dart";
@@ -169,7 +170,7 @@ class _RehearsalViewState extends State<RehearsalView> {
             ),
           ),
           const SizedBox(height: 20),
-          FilledButton.icon(onPressed: _compare, icon: const Icon(Icons.visibility), label: const Text("说完了，对照")),
+          FilledButton.icon(onPressed: _compare, icon: const Icon(Glyph.compare), label: const Text("说完了，对照")),
         ] else ...[
           Text("讲解", style: theme.textTheme.titleMedium),
           const SizedBox(height: 6),
@@ -192,13 +193,13 @@ class _RehearsalViewState extends State<RehearsalView> {
             children: [
               FilledButton.icon(
                 onPressed: () => _judge(true),
-                icon: const Icon(Icons.check),
+                icon: const Icon(Glyph.correct),
                 label: const Text("对上了"),
                 style: FilledButton.styleFrom(backgroundColor: Bs.success),
               ),
               FilledButton.icon(
                 onPressed: () => _judge(false),
-                icon: const Icon(Icons.close),
+                icon: const Icon(Glyph.wrong),
                 label: const Text("漏了或说错了"),
                 style: FilledButton.styleFrom(backgroundColor: Bs.danger),
               ),

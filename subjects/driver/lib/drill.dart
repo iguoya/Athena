@@ -4,6 +4,7 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 
+import "glyphs.dart";
 import "narration.dart";
 
 /// 科目二四项的动画示意（ADR 0036）。
@@ -871,7 +872,7 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
             IconButton(
               tooltip: "上一步",
               onPressed: () => jumpTo(frame.step - (frame.stepProgress < 0.05 ? 1 : 0)),
-              icon: const Icon(Icons.skip_previous),
+              icon: const Icon(Glyph.stepBack),
             ),
             IconButton.filled(
               tooltip: _playing ? "暂停" : "播放",
@@ -879,19 +880,19 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
                 _stopAt = null;
                 _playing ? pause() : play();
               },
-              icon: Icon(_playing ? Icons.pause : Icons.play_arrow),
+              icon: Icon(_playing ? Glyph.pause : Glyph.play),
             ),
             IconButton(
               tooltip: "只播这一步",
               onPressed: () => playStep(frame.step),
-              icon: const Icon(Icons.play_circle_outline),
+              icon: const Icon(Glyph.playStep),
             ),
             IconButton(
               tooltip: "下一步",
               onPressed: frame.step + 1 < steps.length ? () => jumpTo(frame.step + 1) : null,
-              icon: const Icon(Icons.skip_next),
+              icon: const Icon(Glyph.stepNext),
             ),
-            IconButton(tooltip: "从头", onPressed: () => jumpTo(0), icon: const Icon(Icons.replay)),
+            IconButton(tooltip: "从头", onPressed: () => jumpTo(0), icon: const Icon(Glyph.restart)),
             if (widget.narration != null && widget.narrator != null && !widget.hideCue)
               IconButton(
                 tooltip: widget.narrator!.available
@@ -907,7 +908,7 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
                           }
                         })
                     : null,
-                icon: Icon(_voice && widget.narrator!.available ? Icons.record_voice_over : Icons.voice_over_off),
+                icon: Icon(_voice && widget.narrator!.available ? Glyph.readAloud : Glyph.readAloudOff),
               ),
             const SizedBox(width: 8),
             Expanded(

@@ -7,6 +7,7 @@ import "package:flutter/material.dart";
 import "package:image/image.dart" as img;
 import "package:path/path.dart" as p;
 
+import "glyphs.dart";
 import "guide.dart";
 import "look.dart";
 import "progress.dart";
@@ -212,7 +213,7 @@ class PointCard extends StatelessWidget {
                   if (!compact)
                     TextButton.icon(
                       onPressed: () => Navigator.of(context).pop(true),
-                      icon: const Icon(Icons.delete_outline, color: Bs.danger),
+                      icon: const Icon(Glyph.delete, color: Bs.danger),
                       label: const Text("删掉这张", style: TextStyle(color: Bs.danger)),
                     ),
                   const SizedBox(width: 8),
@@ -260,12 +261,12 @@ class PointCard extends StatelessWidget {
               if (!compact) ...[
                 TextButton.icon(
                   onPressed: () => _edit(context),
-                  icon: const Icon(Icons.edit, size: 18),
+                  icon: const Icon(Glyph.edit, size: 18),
                   label: Text(text.isEmpty ? "写点位" : "改"),
                 ),
                 TextButton.icon(
                   onPressed: () => _addPhoto(context),
-                  icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
+                  icon: const Icon(Glyph.addPhoto, size: 18),
                   label: const Text("加照片"),
                 ),
               ],

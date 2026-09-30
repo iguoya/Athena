@@ -3,6 +3,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+import "glyphs.dart";
 import "exam.dart";
 import "look.dart";
 import "models.dart";
@@ -293,49 +294,49 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           BsBadge(
             text: _s1Done ? "科目一已全部掌握" : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
             color: _s1Done ? Bs.success : Bs.warning,
-            icon: Icons.flag,
+            icon: Glyph.goal,
           ),
           const SizedBox(height: 20),
           _navLine(
-            icon: Icons.gavel,
+            icon: Glyph.subject1,
             selected: _place == "subject1" && _session == null,
             label: "科目一",
             onTap: () => _go("subject1"),
           ),
           _navLine(
-            icon: _s1Steady ? Icons.local_parking : Icons.lock,
+            icon: _s1Steady ? Glyph.subject2 : Glyph.locked,
             selected: _place == "subject2" && _session == null,
             label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
             muted: !_s1Steady,
             onTap: () => _go("subject2"),
           ),
           _navLine(
-            icon: _s1Done ? Icons.health_and_safety : Icons.lock,
+            icon: _s1Done ? Glyph.subject4 : Glyph.locked,
             selected: _place == "subject4" && _session == null,
             label: _s1Done ? "科目四" : "科目四（未解锁）",
             muted: !_s1Done,
             onTap: () => _go("subject4"),
           ),
           _navLine(
-            icon: Icons.bookmark,
+            icon: Glyph.wrongBook,
             selected: _place == _wrongId && _session == null,
             label: _wrongCount == 0 ? "错题本" : "错题本 $_wrongCount",
             onTap: () => _go(_wrongId),
           ),
           _navLine(
-            icon: Icons.fact_check,
+            icon: Glyph.review,
             selected: _place == _reviewId && _session == null,
             label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
             onTap: () => _go(_reviewId),
           ),
           _navLine(
-            icon: Icons.pin,
+            icon: Glyph.numbers,
             selected: _place == _numbersId && _session == null,
             label: "易混数字",
             onTap: () => _go(_numbersId),
           ),
           _navLine(
-            icon: Icons.cloud_sync,
+            icon: Glyph.sync,
             selected: _place == _syncId && _session == null,
             label: _sync?.usable == true ? "跨机器同步" : "跨机器同步（未配置）",
             muted: _sync?.usable != true,
@@ -348,13 +349,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             // 科目二没有笔试（ADR 0036）。
             if (current.exam != null)
               _navLine(
-                icon: Icons.timer,
+                icon: Glyph.mockExam,
                 selected: false,
                 label: "模拟考试",
                 onTap: () => _startExam(current),
               ),
             _navLine(
-                icon: Icons.list_alt,
+                icon: Glyph.practice,
                 selected: false,
                 label: () {
                   final n = _pending(_openPool(current)).length;
@@ -369,7 +370,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 final questions = _openTopic(current, topic);
                 final pending = _pending(questions);
                 return _navLine(
-                  icon: Icons.article_outlined,
+                  icon: Glyph.topic,
                   selected: _session?.title.endsWith(topic.title) ?? false,
                   label: pending.isEmpty
                       ? topic.title
@@ -477,7 +478,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           Row(
             children: [
-              const Icon(Icons.lock, color: Bs.paper),
+              const Icon(Glyph.locked, color: Bs.paper),
               const SizedBox(width: 8),
               Text(
                 "${subject.code}未解锁",
@@ -490,7 +491,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           const SizedBox(height: 16),
           BsAlert(
             color: Bs.warning,
-            icon: Icons.flag,
+            icon: Glyph.goal,
             child: Text(todo),
           ),
           const SizedBox(height: 24),
@@ -519,7 +520,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           children: [
             CircleAvatar(
               backgroundColor: Bs.paper.withValues(alpha: 0.15),
-              child: const Icon(Icons.gavel, color: Bs.paper),
+              child: const Icon(Glyph.subject1, color: Bs.paper),
             ),
             Text(
               subject.code,
@@ -529,7 +530,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const BsBadge(
                 text: "已全部掌握",
                 color: Bs.success,
-                icon: Icons.lock_open,
+                icon: Glyph.correct,
               ),
           ],
         ),
@@ -538,7 +539,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         const SizedBox(height: 16),
         BsAlert(
           color: Bs.paper,
-          icon: Icons.menu_book,
+          icon: Glyph.info,
           child: Text(
             _s1Done
                 ? "科目一日常题都掌握了，科目四已经开放。模拟考随时可以考；连着 ${ProgressStore.steadyRuns} 场 ${ProgressStore.steadyScore} 分以上开放科目二。"
@@ -555,20 +556,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           runSpacing: 10,
           children: [
             StatTile(
-              icon: Icons.pending_actions,
+              icon: Glyph.pending,
               label: "待练",
               value: "${pending.length}",
               color: Bs.paper,
             ),
             StatTile(
-              icon: Icons.check_circle,
+              icon: Glyph.correct,
               label: "已掌握",
               value:
                   "${visible.where((q) => _mastered.contains(q.id)).length}/${visible.length}",
               color: Bs.success,
             ),
             StatTile(
-              icon: Icons.quiz,
+              icon: Glyph.question,
               label: "日常题",
               value: "${visible.length}",
               color: Bs.secondary,
@@ -648,7 +649,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: Row(
           children: [
             Icon(
-              ratio >= 1 ? Icons.check_circle : Icons.flag,
+              ratio >= 1 ? Glyph.correct : Glyph.goal,
               size: 18,
               color: ratio >= 1 ? Bs.success : Bs.warning,
             ),
@@ -715,7 +716,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           children: [
             CircleAvatar(
               backgroundColor: Bs.paper.withValues(alpha: 0.15),
-              child: const Icon(Icons.health_and_safety, color: Bs.paper),
+              child: const Icon(Glyph.subject4, color: Bs.paper),
             ),
             Text(
               subject.code,
@@ -724,7 +725,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             const BsBadge(
               text: "科目一已过关",
               color: Bs.success,
-              icon: Icons.lock_open,
+              icon: Glyph.unlocked,
             ),
           ],
         ),
@@ -740,7 +741,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         const SizedBox(height: 16),
         BsAlert(
           color: Bs.paper,
-          icon: Icons.menu_book,
+          icon: Glyph.info,
           child: Text("科目一已经掌握。科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。"),
         ),
         const SizedBox(height: 16),
@@ -752,37 +753,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           runSpacing: 10,
           children: [
             StatTile(
-              icon: Icons.check_circle,
+              icon: Glyph.correct,
               label: "已掌握",
               value: "$mastered",
               color: Bs.success,
             ),
             StatTile(
-              icon: Icons.pending_actions,
+              icon: Glyph.pending,
               label: "待练",
               value: "${pending.length}",
               color: Bs.paper,
             ),
             StatTile(
-              icon: Icons.bookmark,
+              icon: Glyph.wrongBook,
               label: "错题",
               value: "$_wrongCount",
               color: Bs.danger,
             ),
             StatTile(
-              icon: Icons.speed,
+              icon: Glyph.speed,
               label: "均速",
               value: avg,
               color: Bs.secondary,
             ),
             StatTile(
-              icon: Icons.quiz,
+              icon: Glyph.question,
               label: "题库",
               value: "${all.length}",
               color: Bs.secondary,
             ),
             StatTile(
-              icon: Icons.timer,
+              icon: Glyph.mockExam,
               label: "考场",
               value: "${exam.questionCount}题/${exam.minutes}分",
               color: Bs.warning,
@@ -834,7 +835,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: Row(
           children: [
             Icon(
-              Icons.article,
+              Glyph.topic,
               size: 18,
               color: enabled ? Bs.paper : Bs.success,
             ),
@@ -896,7 +897,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           Row(
             children: [
-              const Icon(Icons.timeline, size: 22, color: Bs.paper),
+              const Icon(Glyph.examHistory, size: 22, color: Bs.paper),
               const SizedBox(width: 8),
               Text("模拟考战绩", style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(width: 16),
@@ -916,11 +917,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   static const _noticeIcons = {
-    "streak": Icons.bolt,
-    "topic": Icons.verified,
-    "wrongbook": Icons.check_circle,
-    "exam-pass": Icons.emoji_events,
-    "exam-fail": Icons.info_outline,
+    "streak": Glyph.streak,
+    "topic": Glyph.topicDone,
+    "wrongbook": Glyph.wrongBookCleared,
+    "exam-pass": Glyph.achievement,
+    "exam-fail": Glyph.examFailed,
   };
 
   /// 最近解锁的成就/提醒——记了不给人看，等于没记（主仓库 ADR 0052）。
@@ -939,7 +940,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           Row(
             children: [
-              const Icon(Icons.military_tech, size: 22, color: Bs.paper),
+              const Icon(Glyph.notice, size: 22, color: Bs.paper),
               const SizedBox(width: 8),
               Text("最近提醒", style: Theme.of(context).textTheme.titleMedium),
             ],
@@ -952,7 +953,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    _noticeIcons[notice.kind] ?? Icons.notifications,
+                    _noticeIcons[notice.kind] ?? Glyph.notice,
                     size: 18,
                     color: Bs.secondary,
                   ),
@@ -1011,7 +1012,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Row(
                   children: [
                     const Icon(
-                      Icons.local_fire_department,
+                      Glyph.recentDays,
                       size: 20,
                       color: Bs.paper,
                     ),
@@ -1058,7 +1059,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           Row(
             children: [
-              const Icon(Icons.bar_chart, size: 20, color: Bs.paper),
+              const Icon(Glyph.topicAccuracy, size: 20, color: Bs.paper),
               const SizedBox(width: 8),
               Text("各章节正确率", style: Theme.of(context).textTheme.titleMedium),
             ],
@@ -1080,7 +1081,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           const Row(
             children: [
-              Icon(Icons.bookmark, color: Bs.danger),
+              Icon(Glyph.wrongBook, color: Bs.danger),
               SizedBox(width: 8),
               Text(
                 "错题本",
@@ -1122,7 +1123,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     children: [
                       BsBadge(
                         text: times >= 3 ? "错 $times 次 · 顽固" : "错 $times 次",
-                        icon: times >= 3 ? Icons.priority_high : Icons.close,
+                        icon: times >= 3 ? Glyph.stubborn : Glyph.wrong,
                         color: times >= 3 ? Bs.danger : Bs.warning,
                       ),
                       const SizedBox(width: 12),
@@ -1175,7 +1176,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           const Row(
             children: [
-              Icon(Icons.fact_check, color: Bs.paper),
+              Icon(Glyph.review, color: Bs.paper),
               SizedBox(width: 8),
               Text(
                 "考前复习",
@@ -1198,12 +1199,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               spacing: 10,
               runSpacing: 8,
               children: [
-                BsBadge(text: "共 ${items.length} 道", icon: Icons.fact_check, color: Bs.paper),
-                BsBadge(text: "还错着 ${open.length} 道", icon: Icons.close, color: Bs.danger),
-                BsBadge(text: "订正中 $fixing 道", icon: Icons.trending_up, color: Bs.warning),
+                BsBadge(text: "共 ${items.length} 道", icon: Glyph.review, color: Bs.paper),
+                BsBadge(text: "还错着 ${open.length} 道", icon: Glyph.wrong, color: Bs.danger),
+                BsBadge(text: "订正中 $fixing 道", icon: Glyph.improving, color: Bs.warning),
                 if (_reviewGraduated > 0)
-                  BsBadge(text: "已移出 $_reviewGraduated 道", icon: Icons.check, color: Bs.success),
-                if (s4 > 0) BsBadge(text: "科目一 $s1 · 科目四 $s4", icon: Icons.menu_book, color: Bs.secondary),
+                  BsBadge(text: "已移出 $_reviewGraduated 道", icon: Glyph.graduated, color: Bs.success),
+                if (s4 > 0) BsBadge(text: "科目一 $s1 · 科目四 $s4", icon: Glyph.bySubject, color: Bs.secondary),
               ],
             ),
             const SizedBox(height: 20),
@@ -1239,7 +1240,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         width: 150,
                         child: BsBadge(
                           text: times >= 3 ? "错 $times 次 · 顽固" : "错 $times 次",
-                          icon: times >= 3 ? Icons.priority_high : Icons.close,
+                          icon: times >= 3 ? Glyph.stubborn : Glyph.wrong,
                           color: times >= 3 ? Bs.danger : Bs.warning,
                         ),
                       ),
@@ -1248,7 +1249,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         width: 150,
                         child: BsBadge(
                           text: streak == 0 ? "还错着 · 对 $correct/$need" : "对 $correct/$need",
-                          icon: streak == 0 ? Icons.close : Icons.trending_up,
+                          icon: streak == 0 ? Glyph.wrong : Glyph.improving,
                           color: streak == 0 ? Bs.danger : Bs.warning,
                         ),
                       ),
@@ -1288,7 +1289,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       children: [
         const Row(
           children: [
-            Icon(Icons.pin, color: Bs.paper),
+            Icon(Glyph.numbers, color: Bs.paper),
             SizedBox(width: 8),
             Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
           ],
@@ -1340,7 +1341,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 onPressed: pending.isEmpty
                     ? null
                     : () => _startPractice(subject, related, "易混数字 · ${group.title}"),
-                icon: const Icon(Icons.play_arrow, size: 20),
+                icon: const Icon(Glyph.practice, size: 20),
                 label: Text(pending.isEmpty ? "这组已掌握" : "练这组 ${pending.length} 题"),
               ),
             ],
@@ -1417,7 +1418,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           const Row(
             children: [
-              Icon(Icons.cloud_sync, color: Bs.primary),
+              Icon(Glyph.sync, color: Bs.primary),
               SizedBox(width: 8),
               Text(
                 "跨机器同步",
@@ -1439,7 +1440,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             const SizedBox(height: 16),
             BsAlert(
               color: _syncResult!.ok ? Bs.success : Bs.danger,
-              icon: _syncResult!.ok ? Icons.check_circle : Icons.error,
+              icon: _syncResult!.ok ? Glyph.correct : Glyph.syncFailed,
               child: Text(
                 _syncResult!.ok
                     ? "${_syncResult!.message}；合并后共 ${_syncResult!.total} 条记录"
@@ -1533,7 +1534,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         : config!.device;
     return _syncCard(
       context: context,
-      icon: Icons.cloud_done,
+      icon: Glyph.cloudFolder,
       color: Bs.primary,
       title: "云盘文件夹（日常同步）",
       subtitle:
@@ -1562,12 +1563,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     color: Colors.white,
                   ),
                 )
-              : const Icon(Icons.sync, size: 20),
+              : const Icon(Glyph.sync, size: 20),
           label: Text(_syncBusy ? "同步中…" : "立即同步"),
         ),
         OutlinedButton.icon(
           onPressed: _syncBusy ? null : () => _editFolder(context),
-          icon: const Icon(Icons.folder_open, size: 20),
+          icon: const Icon(Glyph.chooseFolder, size: 20),
           label: Text(ready ? "换个目录" : "选择同步目录"),
           style: OutlinedButton.styleFrom(minimumSize: const Size(150, 48)),
         ),
@@ -1579,7 +1580,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final ready = config?.usable == true;
     return _syncCard(
       context: context,
-      icon: Icons.history,
+      icon: Glyph.backup,
       color: Bs.teal,
       title: "GitHub 私有仓库（版本历史与异地备份）",
       subtitle:
@@ -1603,12 +1604,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             foregroundColor: Colors.white,
             minimumSize: const Size(150, 48),
           ),
-          icon: const Icon(Icons.backup, size: 20),
+          icon: const Icon(Glyph.backup, size: 20),
           label: const Text("推一份备份"),
         ),
         OutlinedButton.icon(
           onPressed: _syncBusy ? null : () => _editSync(context),
-          icon: const Icon(Icons.key, size: 20),
+          icon: const Icon(Glyph.credentials, size: 20),
           label: Text(ready ? "修改配置" : "配置仓库与令牌"),
           style: OutlinedButton.styleFrom(minimumSize: const Size(150, 48)),
         ),
@@ -1683,7 +1684,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 TextButton.icon(
                   onPressed: () =>
                       folder.text = SyncConfig.defaultCloudFolder()!,
-                  icon: const Icon(Icons.cloud, size: 18),
+                  icon: const Icon(Glyph.cloudFolder, size: 18),
                   label: const Text("用 iCloud Drive 里的 Athena 目录"),
                 ),
               TextField(

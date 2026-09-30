@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "glyphs.dart";
 import "guide.dart";
 import "look.dart";
 import "progress.dart";
@@ -106,7 +107,7 @@ class _DayReviewState extends State<DayReview> {
           const SizedBox(width: 8),
           FilledButton.icon(
             onPressed: _chosen.isEmpty || _saving ? null : _save,
-            icon: const Icon(Icons.save),
+            icon: const Icon(Glyph.save),
             label: Text(_chosen.isEmpty ? "先选今天练了哪几项" : "保存今天 $total 把"),
           ),
           const SizedBox(width: 16),
@@ -170,12 +171,12 @@ class _DayReviewState extends State<DayReview> {
                           draft.rounds--;
                         })
                     : null,
-                icon: const Icon(Icons.remove_circle_outline),
+                icon: const Icon(Glyph.less),
               ),
               IconButton(
                 tooltip: "多一把",
                 onPressed: draft.rounds < 12 ? () => setState(() => draft.rounds++) : null,
-                icon: const Icon(Icons.add_circle_outline),
+                icon: const Icon(Glyph.more),
               ),
             ],
           ),
