@@ -14,5 +14,6 @@
 | [0008](0008-proven-learning-methods.md) | 借鉴公认有效的学习理论 |
 | [0009](0009-visible-progress-and-motivation.md) | 见效快、看得见的进步和成就感 |
 | [0010](0010-content-and-data-model.md) | 内容与数据结构 |
+| [0011](0011-output-first-learn-to-use.md) | 学有所用：说和写是每天的必修 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
