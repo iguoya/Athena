@@ -10,7 +10,10 @@ import {
   weekMinutes,
   type Task,
 } from "@/data/demo";
+import { useNavigate } from "react-router";
 import { Celebration } from "@/components/Celebration";
+import { todaySet } from "@/content";
+import { dateKey, useProgress } from "@/store/progress";
 import { cn } from "@/lib/utils";
 
 function greeting(hour: number) {
@@ -24,13 +27,18 @@ function greeting(hour: number) {
 const STEP_LABEL: Record<Task["step"], string> = { read: "读", write: "写", listen: "听", speak: "说", review: "复" };
 
 export function Today() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const navigate = useNavigate();
+  const [demoTasks, setTasks] = useState(initialTasks);
   const [celebrate, setCelebrate] = useState(false);
+  const readDone = useProgress((p) => (p.readSets[dateKey()] ?? []).includes(todaySet().id));
+  // The read step follows real progress; the other steps stay demo state until their pages exist.
+  const tasks = demoTasks.map((t) => (t.id === "read" ? { ...t, done: readDone } : t));
   const required = tasks.filter((t) => !t.optional);
   const doneCount = required.filter((t) => t.done).length;
   const progress = doneCount / required.length;
 
   function toggle(id: string) {
+    if (id === "read") return navigate("/sentences");
     const next = tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
     const allDone = (ts: Task[]) => ts.filter((t) => !t.optional).every((t) => t.done);
     if (allDone(next) && !allDone(tasks)) setCelebrate(true);

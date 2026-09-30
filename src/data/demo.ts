@@ -42,9 +42,9 @@ export const initialTasks: Task[] = [
   {
     id: "read",
     step: "read",
-    title: "读 · 今日句组：宿舍生活",
+    title: "读 · 今日句组",
     detail: "6 个真实句子，点不认识的词收进生词本",
-    done: true,
+    done: false,
   },
   { id: "write", step: "write", title: "写 · 仿写 2 句", detail: "用今天的句式写你自己的宿舍生活", done: false },
   { id: "listen", step: "listen", title: "听 · 逐句听写", detail: "听今天的 6 句，边听边写", done: false },
