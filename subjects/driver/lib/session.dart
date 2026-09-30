@@ -68,8 +68,9 @@ class _SessionStageState extends State<SessionStage> {
   /// 一页答完到自动翻页，至少停这么久：从最后一题判完算起，够看清题目和解释（ADR 0038）。
   static const _pageDwell = Duration(seconds: 5);
 
-  /// 练习里最后一题答错：解释念完以后至少再停这么久，念得长也不会一念完就翻（ADR 0025、0038）。
-  static const _wrongPracticePause = Duration(milliseconds: 1500);
+  /// 一页最后一题答错（练习、模拟考都算）：解释念完以后至少再停这么久，
+  /// 念得长也不会一念完就翻（ADR 0025、0038、0050）。
+  static const _wrongAnswerPause = Duration(milliseconds: 1500);
 
   var _start = 0;
   final _picked = <int, Set<String>>{};
@@ -122,8 +123,10 @@ class _SessionStageState extends State<SessionStage> {
 
   int get _answeredCount => _judged.length;
 
-  /// 练习里作答即揭晓，可以看解析（ADR 0005）；模拟考不讲题。
-  bool _revealed(int index) => _launch.revealImmediately && _judged.contains(index);
+  /// 这道题的依据能不能看：练习作答即揭晓（ADR 0005）；模拟考只讲答错的题——
+  /// 答对不提示跟考场一样，答错当场讲清为什么错（ADR 0050）。
+  bool _revealed(int index) =>
+      _judged.contains(index) && (_launch.revealImmediately || !_correct.contains(index));
 
   /// 选项上标不标对错：练习全标；模拟考跟考场一样，只在答错时给出正确答案。
   bool _showsAnswer(int index) =>
@@ -358,6 +361,18 @@ class _SessionStageState extends State<SessionStage> {
 
   Widget _sideColumn(BuildContext context) {
     return _isExam ? _answerCard(context) : _evidenceColumn(context);
+  }
+
+  /// 模拟考右栏：答题卡在上，刚答错的题的依据接在答题卡下面（ADR 0050）。
+  List<Widget> _examEvidence(BuildContext context) {
+    final focus = _focus;
+    if (focus == null || !_revealed(focus)) return const [];
+    return [
+      const SizedBox(height: 16),
+      const Divider(height: 1),
+      const SizedBox(height: 16),
+      ..._evidence(context, focus),
+    ];
   }
 
   /// 翻页/交卷条：练习组没答完时没有下一步，返回 null 就不占左栏底部的位置。
@@ -662,9 +677,10 @@ class _SessionStageState extends State<SessionStage> {
         ),
         const SizedBox(height: 16),
         Text(
-          "答错的题标红，答对不提示。错到第 $_failAt 题就不及格，但照样答完；时间到了也不收卷，自己交卷才结束。",
+          "答错的题标红，当场讲为什么错并念出来；答对不提示。错到第 $_failAt 题就不及格，但照样答完；时间到了也不收卷，自己交卷才结束。",
           style: muted,
         ),
+        ..._examEvidence(context),
       ],
     );
   }
@@ -760,8 +776,6 @@ class _SessionStageState extends State<SessionStage> {
         ],
       );
     }
-    final q = _launch.questions[focus];
-    final ok = _correct.contains(focus);
     return ListView(
       padding: const EdgeInsets.fromLTRB(24, 20, 28, 28),
       children: [
@@ -769,81 +783,90 @@ class _SessionStageState extends State<SessionStage> {
         const SizedBox(height: 16),
         const Divider(height: 1),
         const SizedBox(height: 16),
-        Wrap(
-          spacing: 10,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
-            SerialBadge(q.serial),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (q.sign != null) ...[
-          SignView(id: q.sign!, size: 180),
-          const SizedBox(height: 24),
-        ],
-        BsAlert(
-          color: ok ? Bs.success : Bs.danger,
-          icon: ok ? Glyph.correct : Glyph.wrong,
-          child: Text(
-            _gradeLine(focus),
-            style: const TextStyle(fontWeight: FontWeight.w700),
-          ),
-        ),
-        const SizedBox(height: 12),
-        // 只留「简短解释」（explain）和「详细解释」（条文原文）两段，不重复：
-        // articleLines 和下面的可点条文列表说的是同一件事，只留能点开链接的那份。
-        BsAlert(
-          color: Bs.paper,
-          icon: Glyph.readAloud,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (q.explain.trim().isNotEmpty) ...[
-                Text("简短解释", style: Theme.of(context).textTheme.labelLarge),
-                const SizedBox(height: 6),
-                Text(q.explain, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
-              ],
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilledButton(
-                    onPressed: _speaker.available ? () => _speak(q) : null,
-                    style: _voiceButtonStyle(Bs.success),
-                    child: const Text("系统朗读"),
-                  ),
-                  FilledButton(
-                    onPressed: _speaker.available ? _stopSpeaking : null,
-                    style: _voiceButtonStyle(Bs.secondary),
-                    child: const Text("停止朗读"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        if (q.sourceRefs.any((ref) => Bs.isContentSource(ref.relation))) ...[
-          const SizedBox(height: 16),
-          Text("详细解释", style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: 8),
-          for (final ref in q.sourceRefs)
-            if (Bs.isContentSource(ref.relation))
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                // 纯文字展示，不做成可点的外链——练习中间跳出浏览器太打断节奏。
-                child: Text(
-                  "${ref.locator.isEmpty ? Bs.sourceShort(ref.sourceId) : ref.locator} · ${ref.note}",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    height: 1.4,
-                  ),
-                ),
-              ),
-        ],
+        ..._evidence(context, focus),
       ],
     );
+  }
+
+  /// 一道题的依据：对错、题图、简短解释（可朗读）、条文。练习和模拟考共用一份。
+  List<Widget> _evidence(BuildContext context, int focus) {
+    final q = _launch.questions[focus];
+    final ok = _correct.contains(focus);
+    return [
+      Wrap(
+        spacing: 10,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text("第${focus + 1}题 · 依据", style: Theme.of(context).textTheme.labelLarge),
+          SerialBadge(q.serial),
+        ],
+      ),
+      const SizedBox(height: 12),
+      if (q.sign != null) ...[
+        SignView(id: q.sign!, size: 180),
+        const SizedBox(height: 24),
+      ],
+      BsAlert(
+        color: ok ? Bs.success : Bs.danger,
+        icon: ok ? Glyph.correct : Glyph.wrong,
+        child: Text(
+          _gradeLine(focus),
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      const SizedBox(height: 12),
+      // 只留「简短解释」（explain）和「详细解释」（条文原文）两段，不重复：
+      // articleLines 和下面的可点条文列表说的是同一件事，只留能点开链接的那份。
+      BsAlert(
+        color: Bs.paper,
+        icon: Glyph.readAloud,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (q.explain.trim().isNotEmpty) ...[
+              Text("简短解释", style: Theme.of(context).textTheme.labelLarge),
+              const SizedBox(height: 6),
+              Text(q.explain, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
+            ],
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                FilledButton(
+                  onPressed: _speaker.available ? () => _speak(q) : null,
+                  style: _voiceButtonStyle(Bs.success),
+                  child: const Text("系统朗读"),
+                ),
+                FilledButton(
+                  onPressed: _speaker.available ? _stopSpeaking : null,
+                  style: _voiceButtonStyle(Bs.secondary),
+                  child: const Text("停止朗读"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      if (q.sourceRefs.any((ref) => Bs.isContentSource(ref.relation))) ...[
+        const SizedBox(height: 16),
+        Text("详细解释", style: Theme.of(context).textTheme.labelLarge),
+        const SizedBox(height: 8),
+        for (final ref in q.sourceRefs)
+          if (Bs.isContentSource(ref.relation))
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              // 纯文字展示，不做成可点的外链——练习中间跳出浏览器太打断节奏。
+              child: Text(
+                "${ref.locator.isEmpty ? Bs.sourceShort(ref.sourceId) : ref.locator} · ${ref.note}",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  height: 1.4,
+                ),
+              ),
+            ),
+      ],
+    ];
   }
 
   String _gradeLine(int index) => _correct.contains(index) ? "答对" : "答错";
@@ -922,26 +945,19 @@ class _SessionStageState extends State<SessionStage> {
       _examNotices.addAll(notices);
       // 交一题存一次草稿，中途崩了或被重启也能续上（ADR 0016）。
       unawaited(_saveDraft());
-      final next = _pending;
-      if (next != null) {
-        _centerOn(next);
-      } else if (!_lastGroup) {
-        // 本页交完就翻（ADR 0025），但至少停 5 秒，看清标出的正确答案（ADR 0038）。
-        _autoAdvance(page, _pageDwell - judged.elapsed);
-      }
-      return;
+    } else {
+      _announce(notices);
     }
-    _announce(notices);
     final next = _pending;
     if (next != null) _centerOn(next);
-    // 答错才念：答对还要听完一段解释，反而拖住手上的节奏。
+    // 答错才念，模拟考也念（ADR 0050）：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
     // 一页十题答完就翻，不看对错（ADR 0025）；从判完算起至少停 5 秒（ADR 0038）；
-    // 最后一题答错，先把解释念完，念完后至少再停一会儿。
-    if (_groupDone) {
+    // 最后一题答错，先把解释念完，念完后至少再停一会儿。模拟考最后一页不自动结束，要自己交卷。
+    if (_groupDone && !(_isExam && _lastGroup)) {
       if (!ok) await _speaker.finished();
       final rest = _pageDwell - judged.elapsed;
-      _autoAdvance(page, ok || rest > _wrongPracticePause ? rest : _wrongPracticePause);
+      _autoAdvance(page, ok || rest > _wrongAnswerPause ? rest : _wrongAnswerPause);
     }
   }
 

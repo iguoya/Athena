@@ -208,6 +208,97 @@ void main() {
     });
   });
 
+  // 模拟考答错当场讲：右栏答题卡下面出依据，题干旁有「解析」；答对仍不提示（ADR 0050）。
+  testWidgets("模拟考答错在右栏讲为什么错，答对不讲", (tester) async {
+    late Directory dir;
+    late ProgressStore store;
+    await tester.runAsync(() async {
+      dir = await Directory.systemTemp.createTemp("athena-driver-exam-explain-");
+      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+    });
+    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    final questions = [
+      for (var i = 0; i < 100; i++)
+        Question(
+          id: "q$i",
+          topicId: "drive.s1.license",
+          kind: "judge",
+          prompt: "第 $i 句",
+          choices: const [
+            Choice(id: "T", label: "正确", ok: true),
+            Choice(id: "F", label: "错误", ok: false),
+          ],
+          explain: "第 $i 句为什么对",
+          sourceRefs: const [],
+        ),
+    ];
+    const rules = ExamRules(questionCount: 100, minutes: 45, passScore: 90, pointsPerQuestion: 1);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SessionStage(
+            launch: SessionLaunch(
+              title: "科目一 模拟考试",
+              subjectId: "subject1",
+              questions: questions,
+              timed: true,
+              minutes: 45,
+              revealImmediately: false,
+              paper: Paper(questions: questions, rules: rules, fullBank: true),
+            ),
+            store: store,
+            onClose: () {},
+          ),
+        ),
+      ),
+    );
+
+    var answered = 0;
+    Future<void> answer(LogicalKeyboardKey key) async {
+      await tester.sendKeyEvent(key);
+      answered++;
+      for (var i = 0; i < 200 && find.textContaining("已答 $answered / 100").evaluate().isEmpty; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+        await tester.pump();
+      }
+      expect(find.textContaining("已答 $answered / 100"), findsOneWidget);
+    }
+
+    expect(find.text("简短解释"), findsNothing);
+    await answer(LogicalKeyboardKey.keyT);
+    // 答对：不讲，也没有「解析」可点。
+    expect(find.text("简短解释"), findsNothing);
+    expect(find.text("第 0 句为什么对"), findsNothing);
+    await answer(LogicalKeyboardKey.keyF);
+    // 答错：右栏讲这一题，可以手动再听。
+    expect(find.text("简短解释"), findsOneWidget);
+    expect(find.text("第 1 句为什么对"), findsOneWidget);
+    expect(find.text("答错"), findsOneWidget);
+    expect(find.text("系统朗读"), findsOneWidget);
+    expect(find.text("答题卡"), findsOneWidget);
+    // 接着答对下一题，右栏回到只有答题卡；答错那题的「解析」能把依据调回来。
+    await answer(LogicalKeyboardKey.keyT);
+    expect(find.text("简短解释"), findsNothing);
+    // 没讲的题「解析」按钮只是藏着（保留占位、不可点），可点的只有答错那题的；
+    // 答下一题时页面已经把下一道滚到正中，先滚回来再点。
+    final explain = find.ancestor(
+      of: find.text("解析"),
+      matching: find.byWidgetPredicate((w) => w is ButtonStyleButton && w.enabled),
+    );
+    expect(explain, findsOneWidget);
+    await tester.ensureVisible(explain);
+    await tester.pumpAndSettle();
+    await tester.tap(explain);
+    await tester.pump();
+    expect(find.text("第 1 句为什么对"), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  });
+
   // 练习一页答完也至少停 5 秒再翻，看清最后一题的解释（ADR 0038）。
   testWidgets("练习一页十题答完，至少停 5 秒再自动翻页", (tester) async {
     late Directory dir;
