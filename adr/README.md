@@ -9,11 +9,13 @@
 | [0003](0003-tech-stack.md) | 技术栈：Tauri 2 + React |
 | [0004](0004-visual-first-three-themes.md) | 视觉优先，三套皮肤定版 |
 | [0005](0005-real-sentences-no-isolated-words.md) | 单词不孤立，只用现实中的真实句子 |
-| [0006](0006-integrated-four-skills.md) | 听说读写结合，每天一篇短文 |
+| [0006](0006-integrated-four-skills.md) | 读写听说结合，每天一组真实句子 |
 | [0007](0007-implicit-grammar.md) | 语法融入真实句子，隐性习得 |
 | [0008](0008-proven-learning-methods.md) | 借鉴公认有效的学习理论 |
 | [0009](0009-visible-progress-and-motivation.md) | 见效快、看得见的进步和成就感 |
 | [0010](0010-content-and-data-model.md) | 内容与数据结构 |
-| [0011](0011-output-first-learn-to-use.md) | 学有所用：说和写是每天的必修 |
+| [0011](0011-output-first-learn-to-use.md) | 学有所用：写是必修，说是鼓励项 |
+| [0012](0012-vocabulary-gate.md) | 单词关：以高中词汇量为上限 |
+| [0013](0013-sentences-first-gradual-difficulty.md) | 句子为主，难度缓慢增加 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
