@@ -18,23 +18,29 @@ pnpm tauri dev      # 开发模式，改代码会自动刷新
 pnpm tauri build    # 打包安装程序，输出在 src-tauri/target/release/bundle/nsis/
 ```
 
+平时开发可以直接双击根目录的“启动 Lumi（开发版）.cmd”：自动拉最新代码、装依赖、编译并运行。
+
 只看界面也可以用 `pnpm dev`，在浏览器打开 http://localhost:1420 。
+
+## 自动更新
+
+推送到 master 后，GitHub Actions 会编译签名安装包并发布到 Releases；装好的软件每次启动会自动检查并更新。第一次使用前要设置签名密钥，步骤见 [ADR 0018](adr/0018-auto-update.md)。
 
 ## 常用命令
 
-| 命令 | 作用 |
-| --- | --- |
-| `pnpm lint` | ESLint 检查 |
-| `pnpm format` | Prettier 格式化 |
+| 命令             | 作用                |
+| ---------------- | ------------------- |
+| `pnpm lint`      | ESLint 检查         |
+| `pnpm format`    | Prettier 格式化     |
 | `pnpm typecheck` | TypeScript 类型检查 |
-| `pnpm test` | Vitest 单元测试 |
+| `pnpm test`      | Vitest 单元测试     |
 
 ## 目录
 
-| 位置 | 内容 |
-| --- | --- |
-| `src/` | 界面：React + TypeScript + Tailwind + Motion |
-| `src/styles/index.css` | 三套皮肤的设计变量（晨光、极光、手账） |
-| `src-tauri/` | 桌面外壳和本地层（Rust） |
-| `adr/` | 架构决策记录 |
-| `archive/` | 2020 年旧作文站，只作历史记录 |
+| 位置                   | 内容                                         |
+| ---------------------- | -------------------------------------------- |
+| `src/`                 | 界面：React + TypeScript + Tailwind + Motion |
+| `src/styles/index.css` | 三套皮肤的设计变量（晨光、极光、手账）       |
+| `src-tauri/`           | 桌面外壳和本地层（Rust）                     |
+| `adr/`                 | 架构决策记录                                 |
+| `archive/`             | 2020 年旧作文站，只作历史记录                |

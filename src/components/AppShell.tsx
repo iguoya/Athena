@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Backdrop } from "./Backdrop";
 import { Sidebar } from "./Sidebar";
 import { TitleBar } from "./TitleBar";
+import { UpdateToast } from "./UpdateToast";
 
 export function AppShell() {
   const location = useLocation();
@@ -10,6 +11,7 @@ export function AppShell() {
     <div className="flex h-full">
       <Backdrop />
       <TitleBar />
+      <UpdateToast />
       <Sidebar />
       <main className="min-w-0 flex-1 overflow-y-auto px-8 pb-10 pt-11">
         <AnimatePresence mode="wait">
