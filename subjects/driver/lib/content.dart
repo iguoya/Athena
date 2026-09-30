@@ -20,6 +20,13 @@ class ContentLoader {
 
   static bool get imagesOnDisk => contentRoot != null;
 
+  /// 应用图标 `icon.png`（由 `icon.svg` 派生）在应用根，不在 content 下；
+  /// 跟题图一样，开发时读工作树、发行包走 assets。
+  static String get appIconPath {
+    final root = contentRoot;
+    return root == null ? "icon.png" : p.join(root, "icon.png");
+  }
+
   static Future<Bank> load() async {
     final curriculum = Curriculum.fromJson(
       jsonDecode(await _read("curriculum.json")) as Map<String, dynamic>,

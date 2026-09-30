@@ -145,6 +145,26 @@ class QuestionBandColors {
   static const rare = "rare";
 }
 
+/// 应用标志：跟启动器图块、任务栏同一份图（仓库 ADR 0065、本应用 ADR 0048），不另画。
+class AppMark extends StatelessWidget {
+  const AppMark({super.key, this.size = 30});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = ContentLoader.appIconPath;
+    return Image(
+      image: ContentLoader.imagesOnDisk ? FileImage(File(path)) : AssetImage(path),
+      width: size,
+      height: size,
+      filterQuality: FilterQuality.medium,
+      // 图标文件缺了也不该让侧栏报错，留出同样大小的空位。
+      errorBuilder: (_, _, _) => SizedBox.square(dimension: size),
+    );
+  }
+}
+
 /// 题图：开发时直接读工作树里的文件，发行包走打进去的 assets。
 class QuestionImage extends StatelessWidget {
   const QuestionImage({super.key, required this.path, this.maxWidth = 560});

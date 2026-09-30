@@ -277,7 +277,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         children: [
           const Row(
             children: [
-              Icon(Icons.directions_car, color: Colors.white),
+              AppMark(),
               SizedBox(width: 8),
               Text(
                 "驾考学习",

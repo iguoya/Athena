@@ -49,6 +49,9 @@
 
    （同日修订：初稿写的是「画风统一取 Fluent Emoji」，使用者看过效果后改为按概念
    逐个挑选、不要求协调。）
+
+   （2026-09-30 修订：driver 的图标由红绿灯改为 Material Icons `directions_car` 上色版
+   （Apache 2.0），身份概念改取「小汽车」，理由见 `subjects/driver` 的 ADR 0048。）
 3. **位图由 `launcher icons` 生成并提交，应用构建不依赖启动器。** 每个应用在
    `app.json` 的 `icon.renders` 里声明要哪些派生文件（相对应用目录的路径 → 边长，
    或 `"ico"` / `"icns"`），编排器照单渲染。理由：
