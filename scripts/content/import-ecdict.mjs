@@ -119,6 +119,7 @@ for (const r of rows) {
     enRef: (r[col.definition] ?? "").split("\\n").filter((d) => /^[nvasr]\. \S/.test(d) && !/^v\. [it]\. /.test(d)),
     simpleEn: null,
     status: "draft",
+    source: "ecdict",
   });
 }
 

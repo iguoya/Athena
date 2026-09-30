@@ -71,6 +71,8 @@ function add(paper, part, en, cn) {
     id: `cet4-${paper.id}-${n}`,
     en,
     ...(cn ? { cn } : {}),
+    source: "exam-cet4-quiz",
+    url: `https://github.com/123xzw999/cet4-exam-quiz/blob/main/data/papers/${paper.id}.js`,
     exam: "cet4",
     paperId: paper.id,
     paper: `${paper.label} ${paper.set}`,

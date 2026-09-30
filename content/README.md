@@ -16,4 +16,4 @@
 | `private/exam/cet4.json`       | 四级真题句子（本机，git 忽略）                     | `pnpm content:cet4`    |
 | `private/`                     | 真题、课本等只在本机用的资料（git 忽略）           | 手动放                 |
 
-生成的 JSON 每条一行，方便在 git 里看改动。`words.json` 里的 `cnDraft`、`enRef` 都是草稿和参考：中文释义要精简，简单英文释义由 AI 起草、tiger 审核，例句只从句子库来。
+每条内容的 `source` 字段对应 `sources.json` 里的来源，`pnpm content:check` 会检查。生成的 JSON 每条一行，方便在 git 里看改动。`words.json` 里的 `cnDraft`、`enRef` 都是草稿和参考：中文释义要精简，简单英文释义由 AI 起草、tiger 审核，例句只从句子库来。
