@@ -17,5 +17,7 @@
 | [0011](0011-output-first-learn-to-use.md) | 学有所用：写是必修，说是鼓励项 |
 | [0012](0012-vocabulary-gate.md) | 单词关：以高中词汇量为上限 |
 | [0013](0013-sentences-first-gradual-difficulty.md) | 句子为主，难度缓慢增加 |
+| [0014](0014-memory-and-learning-science.md) | 系统融入记忆理论和高效学习方法 |
+| [0015](0015-exam-weighted-priorities.md) | 按考试分值分布定学习重点 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
