@@ -16,6 +16,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { CACHE, CONTENT, download, readJson, readText, today, tsvRows, writeJsonLines } from "./lib.mjs";
+import { ALWAYS_KNOWN, tokenize } from "./tokenize.mjs";
 
 const BASE = "https://downloads.tatoeba.org/exports/per_language";
 const FILES = {
@@ -52,28 +53,6 @@ for (const w of words) {
     if (!formToWords.has(key)) formToWords.set(key, new Set());
     formToWords.get(key).add(w.word);
   }
-}
-
-const CONTRACTIONS = { "won't": ["will", "not"], "can't": ["can", "not"], "shan't": ["shall", "not"] };
-const SUFFIXES = { "n't": "not", "'re": "are", "'ll": "will", "'ve": "have", "'d": "would", "'m": "am", "'s": null };
-const ALWAYS_KNOWN = new Set(["mr", "mrs", "ms", "ok", "okay"]);
-
-/** Lower-case words, with contractions split ("don't" -> do, not; "Tom's" -> tom). */
-function tokenize(en) {
-  const out = [];
-  for (const raw of en
-    .toLowerCase()
-    .replace(/’/g, "'")
-    .match(/[a-z]+(?:'[a-z]+)?/g) ?? []) {
-    if (CONTRACTIONS[raw]) {
-      out.push(...CONTRACTIONS[raw]);
-      continue;
-    }
-    const suffix = Object.keys(SUFFIXES).find((s) => raw.endsWith(s) && raw.length > s.length);
-    if (!suffix) out.push(raw);
-    else out.push(raw.slice(0, -suffix.length), ...(SUFFIXES[suffix] ? [SUFFIXES[suffix]] : []));
-  }
-  return out;
 }
 
 console.log("读取 Tatoeba 导出文件……");

@@ -48,7 +48,7 @@
 - 三套皮肤已定版：晨光（柔和渐变）、极光（夜间霓虹）、手账（纸张贴纸），共用一套组件，只换 `src/styles/index.css` 里的设计变量（`data-style` = dawn / night / journal）。
 - 旧的 2020 年 VuePress 作文站在 `archive/vuepress-2020/`，新软件不使用。
 - 自动更新（ADR 0018）：推送 master 后 GitHub Actions（`.github/workflows/release.yml`）编译签名安装包并发布 Release；软件启动时用 updater 插件检查并静默更新。tiger 开发用“启动 Lumi（开发版）.cmd”一键拉代码、编译、运行。签名密钥还没设：需要 tiger 生成密钥、把公钥填进 `tauri.conf.json` 的 `plugins.updater.pubkey`、把私钥存进 GitHub Secrets `TAURI_SIGNING_PRIVATE_KEY`，步骤见 ADR 0018。私钥永远不进仓库。
-- 内容来源和版权（ADR 0019，待 tiger 确认）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成单词关词表草稿，`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org）。
+- 内容来源和版权（ADR 0019，待 tiger 确认）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成单词关词表草稿，`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入本机并统计高中词在真题里的频次。选资源以中国英语考试为准，真题句优先于通用句库。
 - master 上的每次推送都会发布新版本，推送前确认 `pnpm lint`、`pnpm build` 通过。
 
 ## 当前进度（2026-09-30）
