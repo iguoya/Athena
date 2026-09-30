@@ -22,5 +22,6 @@
 | [0016](0016-archive-old-site.md)                   | 归档 2020 年的旧作文站                 |
 | [0017](0017-chapter-roadmap-high-school-first.md)  | 章节路线：先夯实高中英语，再逐级备考   |
 | [0018](0018-auto-update.md)                        | 启动时自动更新                         |
+| [0019](0019-open-content-sources.md)               | 开放内容来源和版权规则                 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580

@@ -1,0 +1,135 @@
+{
+  "about": "内容来源登记（ADR 0010、0019）。每条句子、词条、音频都要能对应到这里的一个来源。use：bundle 可以打包进安装包并放在公开仓库；bundle-sa 同上，但衍生数据必须沿用 CC BY-SA；quote 只摘单句并登记链接；local-only 只放本机 content/private/，永远不进仓库。",
+  "sources": [
+    {
+      "id": "tatoeba",
+      "name": "Tatoeba",
+      "url": "https://tatoeba.org",
+      "license": "CC BY 2.0 FR",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/fr/",
+      "use": "bundle",
+      "attribution": "每条句子署作者用户名和句子链接",
+      "notes": "句子可以用；朗读音频每条授权不同，多数是 CC BY-NC，只本机用，打包前逐条核对。"
+    },
+    {
+      "id": "ecdict",
+      "name": "ECDICT 英汉词典数据库",
+      "url": "https://github.com/skywind3000/ECDICT",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/skywind3000/ECDICT/blob/master/LICENSE",
+      "use": "bundle",
+      "attribution": "ECDICT (skywind3000), MIT",
+      "notes": "只用词表、考试标签、词形和中文释义草稿。英文释义字段来自 WordNet，只作起草简单英文释义的参考。"
+    },
+    {
+      "id": "wordnet",
+      "name": "Princeton WordNet 3.0",
+      "url": "https://wordnet.princeton.edu",
+      "license": "WordNet 3.0 License",
+      "licenseUrl": "https://wordnet.princeton.edu/license-and-commercial-use",
+      "use": "bundle",
+      "attribution": "WordNet 3.0 Copyright 2006 by Princeton University",
+      "notes": "经 ECDICT 带进来的英文释义。WordNet 的例句是编者写的，不当例句用。"
+    },
+    {
+      "id": "oewn",
+      "name": "Open English WordNet",
+      "url": "https://github.com/globalwordnet/english-wordnet",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "bundle",
+      "attribution": "Princeton WordNet and the Open English Wordnet team",
+      "notes": "比 WordNet 3.0 新，以后需要更准的英文释义参考时再导入。例句同样不用。"
+    },
+    {
+      "id": "voa",
+      "name": "VOA Learning English",
+      "url": "https://learningenglish.voanews.com",
+      "license": "Public domain (U.S. government work)",
+      "licenseUrl": "https://learningenglish.voanews.com/p/6861.html",
+      "use": "bundle",
+      "attribution": "VOA Learning English",
+      "notes": "VOA 自己写的文字和录音是公有领域；文中注明来自美联社、路透社等的照片和外稿不是，不能用。慢速新闻做听力、听写和精读。"
+    },
+    {
+      "id": "gutenberg",
+      "name": "Project Gutenberg",
+      "url": "https://www.gutenberg.org",
+      "license": "Public domain in the U.S.",
+      "licenseUrl": "https://www.gutenberg.org/policy/license.html",
+      "use": "bundle",
+      "attribution": "Project Gutenberg",
+      "notes": "取正文时去掉 Project Gutenberg 的商标页眉页脚。后期泛读用，没有分级，语言偏旧。"
+    },
+    {
+      "id": "librivox",
+      "name": "LibriVox",
+      "url": "https://librivox.org",
+      "license": "Public domain",
+      "licenseUrl": "https://librivox.org/pages/public-domain/",
+      "use": "bundle",
+      "attribution": "LibriVox 志愿者朗读",
+      "notes": "和 Gutenberg 原文配对做听力，需要自己对齐到段落。"
+    },
+    {
+      "id": "wiktionary",
+      "name": "Wiktionary",
+      "url": "https://en.wiktionary.org",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "use": "bundle-sa",
+      "attribution": "Wiktionary contributors",
+      "notes": "只取带出处的引文例句（quotations），放在单独的 CC BY-SA 文件里。"
+    },
+    {
+      "id": "simplewiki",
+      "name": "Simple English Wikipedia",
+      "url": "https://simple.wikipedia.org",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "use": "bundle-sa",
+      "attribution": "Simple English Wikipedia contributors",
+      "notes": "简单英语写的短文，适合句群和短文阶段的泛读。"
+    },
+    {
+      "id": "ngsl",
+      "name": "New General Service List",
+      "url": "https://www.newgeneralservicelist.com",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "use": "bundle-sa",
+      "attribution": "Browne, C., Culligan, B., and Phillips, J.",
+      "notes": "高频核心词表和词频，辅助排难度。"
+    },
+    {
+      "id": "exam",
+      "name": "高考、四六级、专四专八真题和音频",
+      "url": "",
+      "license": "版权归出题机构",
+      "licenseUrl": "",
+      "use": "local-only",
+      "attribution": "每条登记年份、卷别和题号",
+      "notes": "来源优先级最高，但只放 content/private/exam/，永远不推到公开仓库，也不打进发布安装包。"
+    },
+    {
+      "id": "textbook",
+      "name": "她的课本和课堂资料",
+      "url": "",
+      "license": "版权归出版社",
+      "licenseUrl": "",
+      "use": "local-only",
+      "attribution": "登记书名、册次和页码",
+      "notes": "只放 content/private/textbook/。"
+    },
+    {
+      "id": "jobs-stanford-2005",
+      "name": "Steve Jobs, Stanford Commencement Address, 2005",
+      "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+      "license": "Quotation",
+      "licenseUrl": "",
+      "use": "quote",
+      "attribution": "Steve Jobs，斯坦福大学毕业典礼演讲，2005",
+      "notes": "首页今日一句的示例。公开演讲只摘单句，登记链接。"
+    }
+  ]
+}
