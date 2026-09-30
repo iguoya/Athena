@@ -213,19 +213,9 @@ void CodeChapterPage::populate_topic_list() {
             badge->add_css_class("badge-difficulty");
             badge->add_css_class(level_class);
             group->append(*badge);
-            auto stars = Gtk::make_managed<Gtk::Box>(
-                Gtk::Orientation::HORIZONTAL, 6);
+            auto stars = make_star_row(difficulty, 14, 6);
             stars->add_css_class("difficulty-stars");
             stars->add_css_class(level_class);
-            for (int star_index = 1; star_index <= 5; ++star_index) {
-                auto icon = Gtk::make_managed<Gtk::Image>();
-                icon->set_from_icon_name(
-                    star_index <= difficulty
-                        ? "starred-symbolic"
-                        : "non-starred-symbolic");
-                icon->set_pixel_size(14);
-                stars->append(*icon);
-            }
             group->append(*stars);
             title_row->append(*group);
         }
@@ -396,13 +386,8 @@ void CodeChapterPage::populate_topic_list() {
         caption->add_css_class("star-caption");
         mastery_row->append(*caption);
 
-        auto mastery_stars = make_shared<vector<Gtk::Image*>>();
-        for (int index = 0; index < 5; ++index) {
-            auto star = Gtk::make_managed<Gtk::Image>();
-            star->set_pixel_size(14);
-            mastery_stars->push_back(star);
-            mastery_row->append(*star);
-        }
+        auto mastery_stars = make_star_row(0, 14, 4);
+        mastery_row->append(*mastery_stars);
         auto mastery_label = Gtk::make_managed<Gtk::Label>();
         mastery_label->add_css_class("star-level-label");
         mastery_label->set_halign(Gtk::Align::START);
@@ -410,13 +395,8 @@ void CodeChapterPage::populate_topic_list() {
 
         auto refresh_mastery = make_shared<function<void()>>();
         *refresh_mastery = [mastery, mastery_stars, mastery_label]() {
-            const int level = clamp(*mastery, 0, 5);
-            for (size_t index = 0; index < mastery_stars->size(); ++index) {
-                (*mastery_stars)[index]->set_from_icon_name(
-                    static_cast<int>(index) < level
-                        ? "starred-symbolic"
-                        : "non-starred-symbolic");
-            }
+            const int level = clamp(*mastery, 0, kStarCount);
+            set_star_row(*mastery_stars, level);
             mastery_label->set_text(to_string(level) + " 星");
         };
         (*refresh_mastery)();

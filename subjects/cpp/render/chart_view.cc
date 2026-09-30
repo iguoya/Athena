@@ -90,17 +90,6 @@ ChartFrame make_frame(int width, int height, double left_margin, double bottom_m
 
 } // namespace
 
-Gtk::Box* make_mastery_stars(int mastery) {
-    auto row = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 1);
-    for (int index = 0; index < kMaxMastery; ++index) {
-        auto star = Gtk::make_managed<Gtk::Label>(index < mastery ? "★" : "☆");
-        star->add_css_class(
-            index < mastery ? "progress-star-filled" : "progress-star-empty");
-        row->append(*star);
-    }
-    return row;
-}
-
 Gtk::DrawingArea* make_mastery_donut_chart(
     int mastered,
     int in_progress,

@@ -2,6 +2,7 @@
 
 #include "render/cairo_text.h"
 #include "render/lesson_figure.h"
+#include "ui/icon_utils.h"
 #include "ui/learning_unit_view.h"
 
 #include <algorithm>
@@ -33,14 +34,6 @@ const SubChapter& topic_by_name(
 
 string function_id_of(const ChapterMeta& chapter, const string& subchapter_name) {
     return topic_by_name(chapter, subchapter_name).function_id;
-}
-
-string repeat_star(int count) {
-    string stars;
-    for (int index = 0; index < count; ++index) {
-        stars += "★";
-    }
-    return stars;
 }
 
 // 平均熟练度落在哪一档：完全没碰过、学习中、已全部掌握。三档语义与
@@ -1488,7 +1481,7 @@ Gtk::Widget* TypeSemanticsLessonPage::build_tab_label(
     }
 
     if (difficulty > 0) {
-        auto* stars = Gtk::make_managed<Gtk::Label>(repeat_star(difficulty));
+        auto* stars = make_star_row(difficulty, 12, 1);
         stars->add_css_class("lesson-tab-stars");
         stars->add_css_class("difficulty-level-" + to_string(difficulty));
         stars->set_tooltip_text(

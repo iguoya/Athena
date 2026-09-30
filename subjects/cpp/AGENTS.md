@@ -95,6 +95,9 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - **图文**（ADR 0038）：插图不用 SVG 图片。表格、对照、卡片清单用 `.blp` 控件；连线、箭头、
   层次和由数据算出位置的结构用 `DrawingArea` / `Snapshot` 自绘；两者都不合适才考虑挂进 icon
   theme 的 GTK 内建 SVG 路径。
+- **星级只有一种画法**：知识点难度和熟练度都用 `ui/icon_utils` 的 `make_star_row` /
+  `set_star_row`，固定五颗 `starred-symbolic` / `non-starred-symbolic`，颜色交给 CSS。
+  不用文字 ★☆：它跟着字体走，大小、基线、着色都和图标对不上，同一个星级会长成两个样子。
 
 ## 架构原则
 

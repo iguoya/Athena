@@ -51,5 +51,3 @@ string circled_index(size_t one_based);
 // 必须同色，否则图例就失去意义。
 string chapter_palette_hex(size_t chapter_index);
 
-// 只读的五星展示（实心/空心），用于逐章节列表里的单个知识点。
-Gtk::Box* make_mastery_stars(int mastery);
