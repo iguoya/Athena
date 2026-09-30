@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils";
 export function Sidebar() {
   const { skin, setSkin } = useSkin();
   return (
-    <aside className="flex w-56 flex-none flex-col gap-1 border-r border-line bg-surface px-4 pb-5 pt-11 backdrop-blur-xl">
-      <div className="mx-2 mb-5 font-display text-[26px] font-semibold leading-none tracking-tight">
+    <aside className="flex w-52 flex-none flex-col gap-0.5 border-r border-line bg-surface px-3 pb-4 pt-10 backdrop-blur-xl xl:w-56 xl:px-4 xl:pt-11">
+      <div className="mx-2 mb-4 font-display text-[24px] font-semibold leading-none tracking-tight xl:mb-5 xl:text-[26px]">
         Lumi<span className="text-accent">.</span>
       </div>
-      <nav aria-label="主导航" className="flex flex-col gap-1">
+      <nav aria-label="主导航" className="flex flex-col gap-0.5">
         {NAV.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
@@ -18,12 +18,12 @@ export function Sidebar() {
             end={to === "/"}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-muted transition-all hover:text-fg",
+                "flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm text-muted transition-all hover:text-fg xl:gap-2.5 xl:px-3 xl:py-2",
                 isActive && "bg-surface-strong font-medium text-fg shadow-skin",
               )
             }
           >
-            <Icon size={18} strokeWidth={2} />
+            <Icon size={17} strokeWidth={2} />
             {label}
           </NavLink>
         ))}

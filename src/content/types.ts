@@ -44,3 +44,28 @@ export type Source = {
   kind: string;
   license: string;
 };
+
+/** A single grammar tag used on sentences and in review cards (ADR 0007). */
+export type GrammarPattern = {
+  id: string;
+  name: string;
+  difficulty: number;
+};
+
+/** One high-school unit on the chapter-1 knowledge map (ADR 0017). */
+export type GrammarUnit = {
+  id: string;
+  name: string;
+  order: number;
+  difficulty: number;
+  blurb: string;
+  patterns: GrammarPattern[];
+};
+
+export type GrammarChapter = {
+  chapter: number;
+  title: string;
+  subtitle: string;
+  blurb: string;
+  units: GrammarUnit[];
+};

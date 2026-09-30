@@ -61,18 +61,28 @@ export const initialTasks: Task[] = [
 
 export type UnitState = "lit" | "learning" | "locked";
 
-export const highSchoolUnits: { id: string; name: string; state: UnitState }[] = [
-  { id: "tense", name: "时态", state: "lit" },
-  { id: "passive", name: "被动语态", state: "lit" },
-  { id: "nonfinite", name: "非谓语动词", state: "learning" },
-  { id: "relative", name: "定语从句", state: "locked" },
-  { id: "noun-clause", name: "名词性从句", state: "locked" },
-  { id: "adverbial", name: "状语从句", state: "locked" },
-  { id: "modal", name: "情态动词", state: "locked" },
-  { id: "subjunctive", name: "虚拟语气", state: "locked" },
-  { id: "inversion", name: "倒装", state: "locked" },
-  { id: "emphasis", name: "强调", state: "locked" },
-];
+/**
+ * Demo mastery for the chapter-1 map until diagnosis + review cards write real progress.
+ * States follow ADR 0017: diagnosis can light a unit; finishing a unit unlocks its review card.
+ */
+export const unitStates: Record<string, UnitState> = {
+  tense: "lit",
+  passive: "lit",
+  nonfinite: "learning",
+  relative: "locked",
+  "noun-clause": "locked",
+  adverbial: "locked",
+  modal: "locked",
+  subjunctive: "locked",
+  inversion: "locked",
+  emphasis: "locked",
+};
+
+/** Sample sentences she "wrote correctly" for lit units — UI placeholders until writing is live. */
+export const demoMySentences: Record<string, string> = {
+  tense: "I finish my homework before dinner every day.",
+  passive: "Our dorm was cleaned by everyone last Sunday.",
+};
 
 export const weekMinutes = [
   { day: "四", minutes: 18 },

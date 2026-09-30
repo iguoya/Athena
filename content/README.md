@@ -5,6 +5,7 @@
 | 文件                           | 内容                                        | 怎么生成               |
 | ------------------------------ | ------------------------------------------- | ---------------------- |
 | `sources.json`                 | 来源登记：授权、署名、能不能打包            | 手写                   |
+| `grammar.json`                 | 第一章句式单元与语法点清单（知识地图）      | 手写                   |
 | `vocab/hs/words.json`          | 单词关词表草稿（ECDICT 高考词，约 3700 个） | `pnpm content:ecdict`  |
 | `sentences/tatoeba.json`       | Tatoeba 真实句子和中文译文                  | `pnpm content:tatoeba` |
 | `vocab/hs/sentence-index.json` | 每个词的候选例句编号                        | `pnpm content:tatoeba` |

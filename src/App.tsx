@@ -4,8 +4,11 @@ import { AppShell } from "@/components/AppShell";
 import { Today } from "@/pages/Today";
 import { Placeholder } from "@/pages/Placeholder";
 import { Sentences } from "@/pages/Sentences";
+import { MapPage } from "@/pages/Map";
 import { NAV } from "@/components/nav";
 import { applySkin, useSkin } from "@/theme/skins";
+
+const routed = new Set(["/", "/sentences", "/map"]);
 
 const router = createHashRouter([
   {
@@ -13,7 +16,8 @@ const router = createHashRouter([
     children: [
       { index: true, element: <Today /> },
       { path: "/sentences", element: <Sentences /> },
-      ...NAV.filter((n) => n.to !== "/" && n.to !== "/sentences").map((n) => ({ path: n.to, element: <Placeholder /> })),
+      { path: "/map", element: <MapPage /> },
+      ...NAV.filter((n) => !routed.has(n.to)).map((n) => ({ path: n.to, element: <Placeholder /> })),
     ],
   },
 ]);
