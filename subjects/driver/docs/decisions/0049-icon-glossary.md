@@ -136,6 +136,8 @@
 | 下一组、下一项 | `arrow_forward` | `Glyph.next` |
 | 返回 | `arrow_back` | `Glyph.back` |
 | 进入、去练 | `chevron_right` | `Glyph.goTo` |
+| 侧栏目录展开（ADR 0050） | `expand_more` | `Glyph.expand` |
+| 侧栏目录收起（ADR 0050） | `expand_less` | `Glyph.collapse` |
 | 关闭、退出 | `close` | `Glyph.close` |
 | 说明 | `info` | `Glyph.info` |
 | 编辑 | `edit` | `Glyph.edit` |

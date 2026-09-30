@@ -112,6 +112,10 @@ abstract final class Glyph {
   static const next = Icons.arrow_forward;
   static const back = Icons.arrow_back;
   static const goTo = Icons.chevron_right;
+
+  /// 侧栏目录：展开 / 收起一个科目的子项。
+  static const expand = Icons.expand_more;
+  static const collapse = Icons.expand_less;
   static const close = Icons.close;
   static const info = Icons.info;
   static const edit = Icons.edit;

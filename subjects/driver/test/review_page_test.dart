@@ -64,6 +64,8 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    // 侧栏里科目一默认展开，工具入口在章节下面，先滚到再点（ADR 0050）。
+    await tester.scrollUntilVisible(find.textContaining("考前复习"), 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.textContaining("考前复习").first);
     await tester.pump();
     expect(find.textContaining("全部复习"), findsOneWidget);

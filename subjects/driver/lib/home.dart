@@ -65,6 +65,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   var _appActive = true;
   var _lastActivityAt = DateTime.now();
 
+  /// 侧栏里展开着的科目。默认展开科目一；点科目名进去顺手展开，点右侧箭头只展开/收起、不换页。
+  final Set<String> _expanded = {"subject1"};
+
   /// 定时自动同步的间隔：够贴平时练习节奏，也不至于频繁读写云盘目录（ADR 0013）。
   static const _autoSyncInterval = Duration(minutes: 15);
 
@@ -267,8 +270,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _sidebar(BuildContext context) {
-    final current = _subject;
-    final open = current != null && !_locked(current.id);
     final s1Daily = dailyQuestions(_subject1All);
     final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
@@ -297,26 +298,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             icon: Glyph.goal,
           ),
           const SizedBox(height: 20),
-          _navLine(
+          // 三个科目是一级目录，各自的模拟考、待练和章节挂在自己底下（ADR 0050）。
+          ..._subjectBranch(
+            "subject1",
             icon: Glyph.subject1,
-            selected: _place == "subject1" && _session == null,
             label: "科目一",
-            onTap: () => _go("subject1"),
           ),
-          _navLine(
+          ..._subjectBranch(
+            "subject2",
             icon: _s1Steady ? Glyph.subject2 : Glyph.locked,
-            selected: _place == "subject2" && _session == null,
             label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
-            muted: !_s1Steady,
-            onTap: () => _go("subject2"),
           ),
-          _navLine(
+          ..._subjectBranch(
+            "subject4",
             icon: _s1Done ? Glyph.subject4 : Glyph.locked,
-            selected: _place == "subject4" && _session == null,
             label: _s1Done ? "科目四" : "科目四（未解锁）",
-            muted: !_s1Done,
-            onTap: () => _go("subject4"),
           ),
+          const SizedBox(height: 8),
+          const Divider(color: Colors.white30),
+          const SizedBox(height: 8),
           _navLine(
             icon: Glyph.wrongBook,
             selected: _place == _wrongId && _session == null,
@@ -342,49 +342,83 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             muted: _sync?.usable != true,
             onTap: () => _go(_syncId),
           ),
-          if (open) ...[
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white30),
-            const SizedBox(height: 8),
-            // 科目二没有笔试（ADR 0036）。
-            if (current.exam != null)
-              _navLine(
-                icon: Glyph.mockExam,
-                selected: false,
-                label: "模拟考试",
-                onTap: () => _startExam(current),
-              ),
-            _navLine(
-                icon: Glyph.practice,
-                selected: false,
-                label: () {
-                  final n = _pending(_openPool(current)).length;
-                  return n == 0 ? "全部练习（已掌握）" : "待练 $n 题";
-                }(),
-                muted: _pending(_openPool(current)).isEmpty,
-                onTap: () => _startPractice(current, _openPool(current), "待练"),
-              ),
-            const SizedBox(height: 8),
-            for (final topic in current.topics)
-              () {
-                final questions = _openTopic(current, topic);
-                final pending = _pending(questions);
-                return _navLine(
-                  icon: Glyph.topic,
-                  selected: _session?.title.endsWith(topic.title) ?? false,
-                  label: pending.isEmpty
-                      ? topic.title
-                      : "${topic.title}  ${pending.length}",
-                  muted: pending.isEmpty,
-                  onTap: pending.isEmpty
-                      ? null
-                      : () => _startPractice(current, questions, topic.title),
-                );
-              }(),
-          ],
         ],
       ),
     );
+  }
+
+  /// 一个科目在侧栏里的一枝：科目本身一行，展开时下面缩进挂模拟考、待练和各章节。
+  /// 锁着的科目没有子项——题干都不该先看到（ADR 0006 后果、ADR 0047）。
+  List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
+    final subject = widget.bank.curriculum.subject(id);
+    final locked = _locked(id);
+    final expanded = !locked && _expanded.contains(id);
+    final session = _session;
+    bool inSession(String title) => session != null && session.subjectId == id && session.title == title;
+    return [
+      _navLine(
+        icon: icon,
+        selected: _place == id && _session == null,
+        label: label,
+        muted: locked,
+        onTap: () {
+          if (!locked) _expanded.add(id);
+          _go(id);
+        },
+        trailing: locked
+            ? null
+            : InkWell(
+                borderRadius: BorderRadius.circular(Bs.radius),
+                onTap: () => setState(() {
+                  if (!_expanded.remove(id)) _expanded.add(id);
+                }),
+                child: Tooltip(
+                  message: expanded ? "收起" : "展开",
+                  child: Icon(
+                    expanded ? Glyph.collapse : Glyph.expand,
+                    size: Bs.bodySize,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
+      ),
+      if (expanded) ...[
+        // 科目二没有笔试（ADR 0036）。
+        if (subject.exam != null)
+          _navLine(
+            icon: Glyph.mockExam,
+            selected: session != null && session.draftKey == "$id.exam",
+            label: "模拟考试",
+            indent: true,
+            onTap: () => _startExam(subject),
+          ),
+        () {
+          final n = _pending(_openPool(subject)).length;
+          return _navLine(
+            icon: Glyph.practice,
+            selected: inSession("${subject.code} · 待练"),
+            label: n == 0 ? "全部练习（已掌握）" : "待练 $n 题",
+            muted: n == 0,
+            indent: true,
+            onTap: () => _startPractice(subject, _openPool(subject), "待练"),
+          );
+        }(),
+        for (final topic in subject.topics)
+          () {
+            final questions = _openTopic(subject, topic);
+            final pending = _pending(questions);
+            return _navLine(
+              icon: Glyph.topic,
+              selected: inSession("${subject.code} · ${topic.title}"),
+              label: pending.isEmpty ? topic.title : "${topic.title}  ${pending.length}",
+              muted: pending.isEmpty,
+              indent: true,
+              onTap: pending.isEmpty ? null : () => _startPractice(subject, questions, topic.title),
+            );
+          }(),
+        const SizedBox(height: 6),
+      ],
+    ];
   }
 
   Widget _navLine({
@@ -393,15 +427,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     required String label,
     VoidCallback? onTap,
     bool muted = false,
+    bool indent = false,
+    Widget? trailing,
   }) {
     // 蓝底上：没选中的也要看得清，选中的用白色半透明底 + 左侧黄条顶出来
     final color = muted
         ? Colors.white54
         : (selected ? Colors.white : const Color(0xFFDCE9FF));
+    // 子项往右缩一个图标宽，一眼看出挂在哪个科目底下。
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
+        margin: EdgeInsets.only(left: indent ? 24 : 0),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
           color: selected ? Colors.white.withValues(alpha: 0.18) : null,
@@ -427,6 +465,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
               ),
             ),
+            ?trailing,
           ],
         ),
       ),
