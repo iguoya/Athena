@@ -299,8 +299,8 @@ void main() {
     });
   });
 
-  // 练习一页答完也至少停 5 秒再翻，看清最后一题的解释（ADR 0038）。
-  testWidgets("练习一页十题答完，至少停 5 秒再自动翻页", (tester) async {
+  // 一页答完自动翻：最后一题答对只停 1 秒（ADR 0053）；答错至少停 5 秒，看清正确答案和解释（ADR 0038）。
+  Future<void> pageTurn(WidgetTester tester, {required bool lastCorrect, required int waitMs, required int turnMs}) async {
     late Directory dir;
     late ProgressStore store;
     await tester.runAsync(() async {
@@ -327,16 +327,17 @@ void main() {
       ),
     );
     for (var n = 1; n <= 10; n++) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.keyT);
+      final key = n == 10 && !lastCorrect ? LogicalKeyboardKey.keyF : LogicalKeyboardKey.keyT;
+      await tester.sendKeyEvent(key);
       for (var i = 0; i < 200 && find.textContaining("已答 $n").evaluate().isEmpty; i++) {
         await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
         await tester.pump();
       }
     }
     expect(find.text("第11题"), findsNothing);
-    await tester.pump(const Duration(milliseconds: 4500));
+    await tester.pump(Duration(milliseconds: waitMs));
     expect(find.text("第11题"), findsNothing);
-    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pump(Duration(milliseconds: turnMs));
     await tester.pump();
     expect(find.text("第11题"), findsOneWidget);
 
@@ -345,5 +346,13 @@ void main() {
       await store.close();
       await dir.delete(recursive: true);
     });
+  }
+
+  testWidgets("练习一页答完、最后一题答对，1 秒就翻页", (tester) async {
+    await pageTurn(tester, lastCorrect: true, waitMs: 600, turnMs: 600);
+  });
+
+  testWidgets("练习一页答完、最后一题答错，至少停 5 秒再翻页", (tester) async {
+    await pageTurn(tester, lastCorrect: false, waitMs: 4500, turnMs: 600);
   });
 }
