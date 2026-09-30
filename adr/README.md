@@ -20,5 +20,6 @@
 | [0014](0014-memory-and-learning-science.md) | 系统融入记忆理论和高效学习方法 |
 | [0015](0015-exam-weighted-priorities.md) | 按考试分值分布定学习重点 |
 | [0016](0016-archive-old-site.md) | 归档 2020 年的旧作文站 |
+| [0017](0017-chapter-roadmap-high-school-first.md) | 章节路线：先夯实高中英语，再逐级备考 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
