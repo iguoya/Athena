@@ -59,3 +59,4 @@
 | [0052](0052-exam-explains-wrong-answers.md) | 模拟考答错也当场讲、自动朗读 | 已接受（修订 0023、0005 第 4 条） |
 | [0053](0053-quick-turn-when-last-correct.md) | 一页最后一题答对，1 秒就翻页 | 已接受（修订 0038） |
 | [0054](0054-align-scope-docs-with-current-state.md) | 范围说明对齐现状：ADR 0001 几条已被后续决定取代 | 已接受（修订 0001 第 1、3、4 条） |
+| [0055](0055-explanations-carry-content-and-term-rule.md) | 解释必须讲内容；解释里「科目三」「科目四」的写法 | 已接受 |

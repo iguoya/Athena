@@ -128,4 +128,20 @@ void main() {
     expect(serials.every((s) => !s.startsWith("drive.") && s.contains(".")), isTrue);
     expect(bank.byId("drive.s1.signals.207").serial, "s1.signals.207");
   });
+
+  test("科目一、科目四的解释不能只剩条文号——答错会朗读解释，念一个条号没有教学价值（ADR 0055）", () async {
+    final bank = await ContentLoader.load();
+    // 把条文号、法规名、标准号、标点剥掉，剩下的才是「讲了什么」。
+    final citation = RegExp(
+      r"GA ?1026|GB ?\d+(\.\d+)?(—\d+)?|GA ?\d+|第?[0-9一二三四五六七八九十百]+(条|款|项|号令?)|"
+      r"实施条例|条例|道路交通安全法|刑法|《[^》]*》|公安部令?|令|表\s?\d+|第|条|款|项|附录[A-Z]?|"
+      r"[（）()、，,。.\s\-—:：和及的]",
+    );
+    final bare = [
+      for (final q in bank.questions)
+        if (q.id.startsWith("drive.s1.") || q.id.startsWith("drive.s4."))
+          if (q.explain.replaceAll(citation, "").length < 6) q.id,
+    ];
+    expect(bare, isEmpty, reason: "解释只有条文号：$bare");
+  });
 }
