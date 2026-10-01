@@ -16,3 +16,4 @@
 | [0009](0009-mixed-sources-and-visible-progress.md) | 综合取材；学习成果要看得见 | 已接受 |
 | [0010](0010-beginner-volume-and-batched-practice.md) | 初级题库达到可持续规模；大题库按短回合加载 | 已接受 |
 | [0011](0011-exam-words-allowed-in-ui.md) | 界面可以直接写考试字样 | 已接受（修订 0007 后果一节） |
+| [0012](0012-app-name-whetstone.md) | 界面名改为「磨砚」· Whetstone | 已接受；修订 0007、0011 里的界面名 |

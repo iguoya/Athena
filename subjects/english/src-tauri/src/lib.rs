@@ -291,7 +291,7 @@ fn iso_from_unix(ts: i64) -> String {
 fn get_app_info(state: tauri::State<'_, Mutex<AppState>>) -> AppInfo {
     let s = state.lock().unwrap();
     AppInfo {
-        title: "英语学习".into(),
+        title: "磨砚".into(),
         content_root: s.content_root.display().to_string(),
         store_path: s.store_path.display().to_string(),
     }

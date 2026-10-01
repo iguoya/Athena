@@ -52,7 +52,7 @@ export async function loadAppInfo(): Promise<AppInfo> {
     return call<AppInfo>("get_app_info");
   }
   return {
-    title: "英语学习",
+    title: "磨砚",
     content_root: "浏览器预览",
     store_path: "未连接进度库：答题结果不会保存",
   };
