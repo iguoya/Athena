@@ -144,4 +144,20 @@ void main() {
     ];
     expect(bare, isEmpty, reason: "解释只有条文号：$bare");
   });
+
+  test("叫法统一：科目三是路考、科目四是安全文明驾驶常识，题面不用合称、解释不用缩写（ADR 0056）", () async {
+    final bank = await ContentLoader.load();
+    // 规章原文把两部分合称「科目三」，只允许出现在引用的条文里，题面和解释里不写。
+    final merged = RegExp(
+      r"科目三(?:（[^）]*）|道路驾驶技能)?[和、及与]?(?:道路驾驶技能[和、及与])?安全文明驾驶常识",
+    );
+    final slang = RegExp(r"科[二三四]");
+    final bad = <String>[];
+    for (final q in bank.questions) {
+      if (!q.id.startsWith("drive.s1.") && !q.id.startsWith("drive.s4.")) continue;
+      final stem = "${q.prompt}${q.choices.map((c) => c.label).join()}";
+      if (merged.hasMatch(stem) || slang.hasMatch(q.explain)) bad.add(q.id);
+    }
+    expect(bad, isEmpty, reason: "出现了科目三合称或科二科三缩写：$bad");
+  });
 }

@@ -59,4 +59,5 @@
 | [0052](0052-exam-explains-wrong-answers.md) | 模拟考答错也当场讲、自动朗读 | 已接受（修订 0023、0005 第 4 条） |
 | [0053](0053-quick-turn-when-last-correct.md) | 一页最后一题答对，1 秒就翻页 | 已接受（修订 0038） |
 | [0054](0054-align-scope-docs-with-current-state.md) | 范围说明对齐现状：ADR 0001 几条已被后续决定取代 | 已接受（修订 0001 第 1、3、4 条） |
-| [0055](0055-explanations-carry-content-and-term-rule.md) | 解释必须讲内容；解释里「科目三」「科目四」的写法 | 已接受 |
+| [0055](0055-explanations-carry-content-and-term-rule.md) | 解释必须讲内容；解释里「科目三」「科目四」的写法 | 已接受（第 2 条由 0056 取代） |
+| [0056](0056-subject3-is-road-test-subject4-is-theory.md) | 叫法统一：科目三 = 路考，科目四 = 安全文明驾驶常识 | 已接受（取代 0055 第 2 条，修订 0001 第 1 条的写法） |

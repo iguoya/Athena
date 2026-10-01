@@ -3,6 +3,7 @@
 - 日期：2026-10-01
 - 状态：已接受
 - 影响：`content/questions/subject1.json`、`content/questions/subject4.json`、`test/content_test.dart`
+- 修订：第 2 条「术语规则」由 ADR 0056 取代（叫法改为：科目三 = 路考，科目四 = 安全文明驾驶常识）
 - 关系：ADR 0001（科目四 = 规章里的科目三安全文明驾驶常识）、ADR 0005 / 0052（答错朗读解释）不变
 
 ## 背景
