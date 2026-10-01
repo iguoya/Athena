@@ -5,7 +5,7 @@
 
 | 编号 | 决策 | 状态 |
 |---|---|---|
-| [0001](0001-subject-one-and-four-only.md) | 只做科目一与科目四理论 | 已接受 |
+| [0001](0001-subject-one-and-four-only.md) | 只做科目一与科目四理论 | 已接受（第 1、3、4 条由 0054 对齐现状） |
 | [0002](0002-flutter-desktop.md) | 桌面壳用 Flutter | 已接受 |
 | [0003](0003-sourced-theory-questions.md) | 题目必须能指到法条或标准 | 已接受（第 3 条由 0024 修订） |
 | [0004](0004-desktop-workspace.md) | 桌面工作台，不用手机题库的控件妥协 | 已接受 |
@@ -58,3 +58,4 @@
 | [0051](0051-pin-cross-subject-entries.md) | 错题本、考前复习等跨科目入口钉在侧栏底部 | 已接受（修订 0050 第 4 条） |
 | [0052](0052-exam-explains-wrong-answers.md) | 模拟考答错也当场讲、自动朗读 | 已接受（修订 0023、0005 第 4 条） |
 | [0053](0053-quick-turn-when-last-correct.md) | 一页最后一题答对，1 秒就翻页 | 已接受（修订 0038） |
+| [0054](0054-align-scope-docs-with-current-state.md) | 范围说明对齐现状：ADR 0001 几条已被后续决定取代 | 已接受（修订 0001 第 1、3、4 条） |
