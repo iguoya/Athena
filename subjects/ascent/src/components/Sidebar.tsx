@@ -8,7 +8,7 @@ export function Sidebar() {
   return (
     <aside className="flex w-52 flex-none flex-col gap-0.5 border-r border-line bg-surface px-3 pb-4 pt-10 backdrop-blur-xl xl:w-56 xl:px-4 xl:pt-11">
       <div className="mx-2 mb-4 font-display text-[24px] font-semibold leading-none tracking-tight xl:mb-5 xl:text-[26px]">
-        Lumi<span className="text-accent">.</span>
+        拾阶<span className="text-accent">.</span>
       </div>
       <nav aria-label="主导航" className="flex flex-col gap-0.5">
         {NAV.map(({ to, label, icon: Icon }) => (

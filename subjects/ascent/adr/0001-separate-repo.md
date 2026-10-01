@@ -1,12 +1,12 @@
 # 0001 独立仓库，不与 Athena 合并
 
-- 状态：已采纳
+- 状态：已被 [0020](0020-merged-into-athena.md) 取代（2026-10-01）
 - 日期：2026-09-30
 - 决策人：tiger
 
 ## 背景
 
-tiger 自用的学习平台 Athena（iguoya/Athena）里已经有一个英语学习应用（Tauri 2 + Vite + TypeScript，目标考研英语二）。本项目是给侄女用的，她是中原科技学院英语师范专业的大一新生，目标是四六级和专四专八。
+tiger 自用的学习平台 Athena（iguoya/Athena）里已经有一个英语学习应用（Tauri 2 + Vite + TypeScript，目标考研英语二）。本项目是给侄女用的，她是某所英语师范专业的大一新生，目标是四六级和专四专八。
 
 ## 决策
 

@@ -16,5 +16,5 @@ if (-not (Test-Path node_modules) -or (Get-FileHash pnpm-lock.yaml).Hash -ne $lo
   pnpm install
 }
 
-Write-Host "编译并启动 Lumi..." -ForegroundColor Magenta
+Write-Host "编译并启动拾阶..." -ForegroundColor Magenta
 pnpm tauri dev

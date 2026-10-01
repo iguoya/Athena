@@ -12,7 +12,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   cpp/         C++ 教程（GTK4 / gtkmm，原来的"主程序"）
   c/           C 语言（Qt Quick / QML）
   dsa/         数据结构与算法（Tauri）
-  english/     英语学习（Tauri）
+  english/     磨砚（考研英语二，Tauri）
+  ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
   polaris/       技术体系图谱（Qt Quick / QML）——不是学习应用，见下文
@@ -38,7 +39,8 @@ archive/       历史归档，不参与构建
 | `cpp` | C++ 教程 | `athena-cpp` | `cpp.` |
 | `c` | C 语言编程 | `athena-c` | `c.` |
 | `dsa` | 数据结构与算法 | `athena-dsa` | `dsa.` |
-| `english` | 英语学习 | `athena-english` | `en.` |
+| `english` | 磨砚 | `athena-english` | `en.` |
+| `ascent` | 拾阶 | `athena-ascent` | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
@@ -54,7 +56,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
   `progress/learning.db`。当前：`cpp` / `c` / `dsa` / `english` / `mathematics` /
-  `driver`。
+  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则

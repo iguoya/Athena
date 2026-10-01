@@ -55,3 +55,4 @@
 | [0056](0056-visualization-and-interaction-first.md) | 可视化与交互是学习内容本身，不是装饰 | 已接受（强制方针） |
 | [0057](0057-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
 | [0061](0061-agent-instructions-single-source.md) | 代理指令以 AGENTS.md 为唯一真源，且只放规则 | 已接受；`subjects/cpp` 应用级已同日瘦身到预算内 |
+| [0066](0066-two-english-apps-evolve-independently.md) | 并入 ascent（拾阶），两个英语应用（磨砚 / 拾阶）各自独立发展，不趋同 | 已接受 |

@@ -50,7 +50,7 @@ export function UpdateToast() {
         >
           <p className="flex items-center gap-2 text-sm font-medium">
             <Sparkles size={16} className="text-accent" />
-            Lumi 有新版本 {state.version}，正在更新
+            拾阶有新版本 {state.version}，正在更新
           </p>
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-line">
             <motion.div
