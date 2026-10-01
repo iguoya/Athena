@@ -55,3 +55,17 @@
   - 出处检查用 Lumi 自己的 `pnpm content:check`（条目上的 `source` id 登记在
     `content/sources.json`），尚未接入跨应用的 `content-contract.json`——两边字段模型不同，
     硬映射会失真。
+
+## 发布迁移（2026-10-01 补）
+
+- 发布流水线迁到仓库根 `.github/workflows/ascent-release.yml`：打 `ascent-v<x.y.z>` tag 或手动运行时构建
+  签名安装包。版本号由 tag 决定，更新器读固定标签 `ascent-updates` 下的 `latest.json`
+  （`tauri.conf.json` 的 `plugins.updater.endpoints` 已改）。**这条流水线尚未实际运行过**，
+  首次发布要盯一下，出错再改。
+- 需要在 Athena 仓库设 Secret `TAURI_SIGNING_PRIVATE_KEY`（内容取自本机 `~/.tauri/lumi.key`；
+  私钥永远不进仓库，也不要只放在 GitHub Secrets 里，Secrets 读不回来）。
+- **已安装的 0.1.8 不会自动迁过来**：它检查的还是旧仓库的地址。旧仓库归档后，那里最新的
+  `latest.json` 仍然可读，但不会再有新版本。只有一位用户，所以做法是：首次从 Athena 发布后，
+  请她手动安装一次新版，此后更新走新地址。数据目录 `identifier` 没变，进度不会丢。
+- 旧仓库 iguoya/English 已归档（可恢复）。归档前 `gh-pages` 上 2020 年作文站的构建产物没有迁
+  （源码在 `archive/vuepress-2020/`）。

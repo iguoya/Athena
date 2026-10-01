@@ -38,10 +38,10 @@ Athena，取消独立仓库的日常开发，同时两者**必须继续各走各
    并入时顺手补齐**——是否补、怎么补由使用者决定，拾阶 ADR 0020 有清单。
 5. **端口**：拾阶开发端口 1440（原 1420 与 `subjects/dsa` 冲突）。
 
-## 未决
+## 未决（2026-10-01 更新）
 
-- 旧仓库 iguoya/English 暂不动。归档或删除前要先定自动更新（拾阶 ADR 0018）怎么办：
-  updater 端点还指向旧仓库的 Releases，旧仓库没了，已安装版本就收不到更新。
-- `subjects/ascent/.github/workflows/release.yml` 在子目录里不会被 GitHub 执行，发布流程
-  何时迁到仓库根另议。
+- 旧仓库 iguoya/English 已归档（可恢复，未删除）。**删除前**须确认：私钥已另行备份、
+  新流水线已成功发布过一次、已不再需要 2020 年作文站的线上页面（`gh-pages`）。
+- 发布流水线已迁到 `.github/workflows/ascent-release.yml`，更新地址改为固定标签
+  `ascent-updates`（拾阶 ADR 0020「发布迁移」）。尚未实际运行。
 - CI 的 `workflow_dispatch` 选项与 Tauri 构建矩阵尚未加入 `ascent`（ADR 0064 显式触发）。

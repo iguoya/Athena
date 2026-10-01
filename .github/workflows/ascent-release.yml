@@ -1,0 +1,134 @@
+# 拾阶（subjects/ascent）的发布流水线：构建签名的 Windows 安装包，发成 GitHub Release，
+# 并把 latest.json 同步到固定标签 ascent-updates，供应用内更新器读取（ascent ADR 0018、0020）。
+#
+# 从原 iguoya/English 仓库的 release.yml 迁来，三处有意不同：
+# 1. 触发：只在打 `ascent-v*` tag 或手动运行时发布，不再「每次推 master 都发版」
+#    （Athena 的做法是显式触发，ADR 0064）。
+# 2. 版本号：由 tag 决定（ascent-v0.1.9 → 0.1.9）。旧方案用 run_number，在 Athena 里会从 1
+#    重新数，比已安装的 0.1.8 还小，更新器会认为没有新版本。
+# 3. 更新地址：Athena 的 releases/latest 是所有应用共用的，不能再指望它；改用固定标签
+#    ascent-updates 下的 latest.json，地址永远不变。
+#
+# 用法：
+#   git tag ascent-v0.1.9 && git push origin ascent-v0.1.9
+#   或 gh workflow run ascent-release.yml -f version=0.1.9
+#
+# 需要仓库 Secret：TAURI_SIGNING_PRIVATE_KEY（本机 ~/.tauri/lumi.key 的内容；公钥已在
+# tauri.conf.json 里，私钥永远不进仓库）。没设时流水线只提示、不构建。
+name: Ascent release
+
+on:
+  push:
+    tags: ["ascent-v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 版本号，如 0.1.9（不带 ascent-v 前缀，必须大于已发布的最高版本）
+        required: true
+        type: string
+
+concurrency:
+  group: ascent-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      APP_DIR: subjects/ascent
+    steps:
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            v="${{ inputs.version }}"
+          else
+            v="${GITHUB_REF_NAME#ascent-v}"
+          fi
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Check signing key
+        id: key
+        env:
+          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::notice::TAURI_SIGNING_PRIVATE_KEY 没设置，不构建发布。见 subjects/ascent/adr/0020。"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.ready == 'true'
+
+      - uses: pnpm/action-setup@v4
+        if: steps.key.outputs.ready == 'true'
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        if: steps.key.outputs.ready == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: subjects/ascent/pnpm-lock.yaml
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.key.outputs.ready == 'true'
+
+      - uses: swatinem/rust-cache@v2
+        if: steps.key.outputs.ready == 'true'
+        with:
+          workspaces: subjects/ascent/src-tauri
+
+      - name: Install dependencies
+        if: steps.key.outputs.ready == 'true'
+        working-directory: subjects/ascent
+        run: pnpm install --frozen-lockfile
+
+      - name: Set version
+        if: steps.key.outputs.ready == 'true'
+        working-directory: subjects/ascent
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+
+      - uses: tauri-apps/tauri-action@v0
+        if: steps.key.outputs.ready == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: subjects/ascent
+          tagName: ascent-v__VERSION__
+          releaseName: 拾阶 v__VERSION__
+          releaseBody: 自动构建，提交 ${{ github.sha }}
+          releaseDraft: false
+          prerelease: false
+
+      # 更新器读的地址固定为 …/releases/download/ascent-updates/latest.json。
+      # 不用 releases/latest：Athena 的最新发布可能是别的应用的。
+      - name: Publish latest.json to the fixed updates release
+        if: steps.key.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ascent-v${{ steps.version.outputs.value }}
+        run: |
+          gh release download "$TAG" --pattern latest.json --dir "$RUNNER_TEMP"
+          if ! gh release view ascent-updates >/dev/null 2>&1; then
+            gh release create ascent-updates --title "拾阶 更新通道" \
+              --notes "只存放 latest.json，供应用内更新器读取，请勿删除。" --latest=false
+          fi
+          gh release upload ascent-updates "$RUNNER_TEMP/latest.json" --clobber
