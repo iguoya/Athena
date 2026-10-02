@@ -1,9 +1,9 @@
-import "dart:async";
 import "dart:convert";
 import "dart:io";
 
+import "package:flutter/foundation.dart";
 import "package:path/path.dart" as p;
-import "package:postgres/postgres.dart";
+import "package:sqlite3/sqlite3.dart";
 
 import "app_root.dart";
 import "models.dart";
@@ -58,9 +58,50 @@ class ExamDraft {
     if (end == null || end.isBefore(startedAt)) return Duration.zero;
     return end.difference(startedAt);
   }
+
+  /// 上传给中心 API 的字段形态（ADR 0068 的接口契约：question_ids/mix/picked 是
+  /// JSON 字符串，started_at/saved_at 是 ISO 时间串）。
+  Map<String, Object?> toApi() => {
+        "subject_id": subjectId,
+        "title": title,
+        "question_ids": jsonEncode(questionIds),
+        "question_count": questionCount,
+        "minutes": minutes,
+        "pass_score": passScore,
+        "points_per_question": pointsPerQuestion,
+        "mix": jsonEncode(mix),
+        "full_bank": fullBank,
+        "picked": jsonEncode({
+          for (final entry in picked.entries) "${entry.key}": entry.value.toList(),
+        }),
+        "started_at": startedAt.toIso8601String(),
+        "saved_at": savedAt?.toIso8601String(),
+      };
+
+  static ExamDraft fromApi(Map<String, Object?> row) => ExamDraft(
+        subjectId: row["subject_id"]! as String,
+        title: row["title"]! as String,
+        questionIds: [
+          for (final id in jsonDecode(row["question_ids"]! as String) as List<dynamic>) id as String,
+        ],
+        questionCount: row["question_count"]! as int,
+        minutes: row["minutes"]! as int,
+        passScore: row["pass_score"]! as int,
+        pointsPerQuestion: row["points_per_question"]! as int,
+        mix: {
+          for (final entry in (jsonDecode(row["mix"]! as String) as Map<String, dynamic>).entries)
+            entry.key: entry.value as int,
+        },
+        fullBank: (row["full_bank"]! as bool),
+        picked: {
+          for (final entry in (jsonDecode(row["picked"]! as String) as Map<String, dynamic>).entries)
+            int.parse(entry.key): {for (final id in entry.value as List<dynamic>) id as String},
+        },
+        startedAt: DateTime.tryParse(row["started_at"]! as String? ?? "") ?? DateTime.now(),
+        savedAt: DateTime.tryParse(row["saved_at"] as String? ?? ""),
+      );
 }
 
-/// 一天的练习量——柱子高矮一眼看出手感有没有断（主仓库 ADR 0056）。
 /// 练一把车的记录（ADR 0036）：哪一项、出了哪些错（同一个错可以出现多次）。
 class DrillRun {
   const DrillRun({required this.itemId, required this.mistakes, required this.at});
@@ -80,10 +121,10 @@ class PointNote {
   final DateTime at;
 }
 
-/// 点位卡上的一张照片。[file] 相对 [ProgressStore.pointsDir]。
+/// 点位卡上的一张照片。[file] 相对 [ProgressStore.pointsDir]。登记随仓库走
+/// （photos.json，ADR 0070），file 名里带时间戳，本身就是唯一键。
 class PointPhoto {
   const PointPhoto({
-    required this.id,
     required this.itemId,
     required this.step,
     required this.file,
@@ -91,7 +132,6 @@ class PointPhoto {
     required this.at,
   });
 
-  final int id;
   final String itemId;
   final int step;
   final String file;
@@ -146,226 +186,76 @@ class Notice {
   final bool read;
 }
 
-/// postgres 驱动对 BIGINT（COUNT、IDENTITY）在不同小版本里可能给 int 或 String，
-/// 计数与 ID 列统一从这里过，免得每处都写一遍类型分叉。
-int _asInt(Object? value) {
-  if (value is int) return value;
-  if (value is String) return int.tryParse(value) ?? 0;
-  if (value is double) return value.round();
-  return 0;
+/// 待发送队列里的一条。追加型资源的 payload 是那一行业务字段；可变数据
+/// （成就、草稿、已读）的 payload 是动作参数（ADR 0068 决策 4）。
+class OutboxEntry {
+  const OutboxEntry({required this.id, required this.kind, required this.key, required this.payload});
+
+  final int id;
+  final String kind;
+  final String? key;
+  final Map<String, Object?> payload;
 }
 
-/// ResultRow 自带 int 下标（继承 List），按列名取值要走 toColumnMap。
-extension _RowByName on ResultRow {
-  Object? at(String name) => toColumnMap()[name];
-}
-
-/// 把每条查询投回建立连接的 zone 执行。
-///
-/// flutter_test 的 fake-async zone 会接管 timer 与事件循环：页面代码在 fake
-/// zone 里直接 await socket 查询，future 永远等不到 socket 事件。连接在哪个
-/// zone 建立（生产同一 zone、widget 测试是 runAsync 的真实 zone），查询就在
-/// 哪个 zone 跑——对生产行为无影响，测试里查询走真实事件循环，能真正完成。
-class PinnedConnection {
-  PinnedConnection(this._conn, this._zone);
-
-  final Connection _conn;
-  final Zone _zone;
-
-  Future<Result> execute(Object query, {Map<String, Object?>? parameters}) {
-    final sql = query is String ? Sql.named(query) : query as Sql;
-    return _zone.run(() => _conn.execute(sql, parameters: parameters));
-  }
-
-  Future<void> close() => _zone.run(() => _conn.close());
-}
-
-/// 中心 PG 不可达（内网不通）。上层据此给出「纯在线」的诚实提示，
-/// 不悄悄降级（ADR 0067 第 5 条）。外网场景不在这一层：数据库端口不出
-/// 内网（ADR 0068），离开内网时就是本异常。
+/// 本地进度库打不开（磁盘错误、文件损坏）。本地库是界面的唯一数据面，打不开
+/// 就是不能用；中心同步的成败不在此层——那是 SyncEngine 的状态，不拦做题。
 class ProgressUnavailable implements Exception {
   ProgressUnavailable(this.detail);
 
   final String detail;
 
   @override
-  String toString() => "学习记录服务不可达：检查是否在内网、软路由是否在线。详情：$detail";
-}
-
-/// 连接配置还没填。上层（main 的启动门）据此弹配置对话框，不写默认密码
-/// （ADR 0068：凭据不进仓库，每台机器各自配置）。
-class ProgressNotConfigured implements Exception {
-  @override
-  String toString() => "数据库连接尚未配置";
-}
-
-/// 数据库连接参数。密码只存在这两个地方，绝不写进代码或仓库：
-/// 环境变量 `ATHENA_DRIVER_DB`（完整 URI，脚本/CI 用）或用户数据目录的
-/// `db.json`（对话框保存，POSIX 上 chmod 600）。
-class DbConfig {
-  const DbConfig({
-    required this.host,
-    required this.port,
-    required this.database,
-    required this.username,
-    required this.password,
-  });
-
-  final String host;
-  final int port;
-  final String database;
-  final String username;
-  final String password;
-
-  static String get _file => p.join(ProgressStore.userDataDir(), "db.json");
-
-  static DbConfig? load() {
-    final uri = Platform.environment["ATHENA_DRIVER_DB"];
-    if (uri != null && uri.isNotEmpty) {
-      final parsed = Uri.tryParse(uri);
-      if (parsed != null && parsed.hasScheme) {
-        return DbConfig(
-          host: parsed.host,
-          port: parsed.hasPort ? parsed.port : 5432,
-          database: parsed.path.replaceFirst("/", ""),
-          username: Uri.decodeComponent(parsed.userInfo.split(":").first),
-          password: parsed.userInfo.contains(":")
-              ? Uri.decodeComponent(parsed.userInfo.split(":").last)
-              : "",
-        );
-      }
-    }
-    final file = File(_file);
-    if (!file.existsSync()) return null;
-    try {
-      final map = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
-      return DbConfig(
-        host: map["host"] as String,
-        port: (map["port"] as num).toInt(),
-        database: map["database"] as String,
-        username: map["username"] as String,
-        password: map["password"] as String,
-      );
-    } on FormatException {
-      return null;
-    }
-  }
-
-  /// 对话框「保存并连接」用。写完在 POSIX 上收紧权限；Windows 没有 chmod，
-  /// 用户数据目录本身的 ACL 已按用户隔离。
-  void save() {
-    final file = File(_file);
-    file.parent.createSync(recursive: true);
-    file.writeAsStringSync(jsonEncode({
-      "host": host,
-      "port": port,
-      "database": database,
-      "username": username,
-      "password": password,
-    }));
-    if (!Platform.isWindows) {
-      Process.runSync("chmod", ["600", _file]);
-    }
-  }
+  String toString() => "本地学习记录库打不开：$detail";
 }
 
 class ProgressStore {
-  ProgressStore(this._conn);
+  ProgressStore._(this._db, this._tempDir);
 
-  final PinnedConnection _conn;
+  final Database _db;
 
-  static const _connectTimeout = Duration(seconds: 4);
+  /// suite 模式（测试专用）下持有临时目录，close 时连库一起清掉。
+  final Directory? _tempDir;
 
-  /// [suite] 供测试：连本机（或 CI 注入）PG 上属于该测试文件的独立库
-  /// `athena_driver_test_<suite>`，打开时清空全部表——顶替原来「每个测试一个
-  /// 临时 SQLite 文件」的隔离语义。一个测试文件一个库（ADR 0068），flutter
-  /// test 并发跑不同文件时互不踩。测试不依赖软路由，账号是本地约定值。
-  static Future<ProgressStore> open({String? suite}) async {
-    final Endpoint endpoint;
-    final ConnectionSettings settings;
+  /// 有记录进队列后回调一次（同步器接上做防抖触发，ADR 0070）；没人接就是
+  /// 纯离线模式，队列安静地攒着。测试不接。
+  void Function()? onEnqueued;
+
+  /// 本地 SQLite 是唯一数据面（ADR 0070）：打开必成功（最多抛
+  /// [ProgressUnavailable]），做题不再以「连上中心」为前提。
+  ///
+  /// [suite] 供测试：每个测试文件一个独立的临时库（顶替原来「每人一个 PG 库」，
+  /// ADR 0068 决策 5 的隔离语义不变，ADR 0070），close 时自动删除；
+  /// 生产传 [path]，缺省放用户数据目录 local.db。
+  static Future<ProgressStore> open({String? path, String? suite}) async {
+    Directory? tempDir;
+    late final String file;
     if (suite != null) {
-      final uri = Platform.environment["ATHENA_DRIVER_TEST_DB"] ??
-          "postgresql://athena_driver:athena_driver@localhost:5432/athena_driver_test";
-      final parsed = Uri.parse(uri);
-      final base = Endpoint(
-        host: parsed.host,
-        port: parsed.hasPort ? parsed.port : 5432,
-        database: parsed.path.replaceFirst("/", ""),
-        username: Uri.decodeComponent(parsed.userInfo.split(":").first),
-        password: Uri.decodeComponent(parsed.userInfo.split(":").last),
-      );
+      tempDir = Directory.systemTemp.createTempSync("athena-driver-");
       final safe = suite.replaceAll(RegExp(r"[^a-zA-Z0-9_]"), "_");
-      final database = "athena_driver_test_$safe";
-      await _ensureDatabase(base, database);
-      endpoint = Endpoint(
-        host: base.host,
-        port: base.port,
-        database: database,
-        username: base.username,
-        password: base.password,
-      );
-      settings = const ConnectionSettings(sslMode: SslMode.disable);
+      file = p.join(tempDir.path, "$safe.db");
     } else {
-      final config = DbConfig.load();
-      if (config == null) throw ProgressNotConfigured();
-      endpoint = Endpoint(
-        host: config.host,
-        port: config.port,
-        database: config.database,
-        username: config.username,
-        password: config.password,
-      );
-      // 驱动默认要求 SSL，软路由的 PG 没配证书；内网本身可信。
-      settings = const ConnectionSettings(sslMode: SslMode.disable, connectTimeout: _connectTimeout);
+      file = path ?? p.join(userDataDir(), "local.db");
     }
-
-    final Connection conn;
+    final Database db;
     try {
-      conn = await Connection.open(endpoint, settings: settings);
-      await conn.execute("SELECT 1");
+      Directory(p.dirname(file)).createSync(recursive: true);
+      db = sqlite3.open(file);
+      _ensureSchema(db);
     } catch (error) {
+      tempDir?.deleteSync(recursive: true);
       throw ProgressUnavailable("$error");
     }
-    await _ensureSchema(conn);
-    if (suite != null) await _clearAll(conn);
-    // 查询固定在建立连接的 zone 里执行（见 PinnedConnection）：widget 测试里
-    // 连接在 tester.runAsync 的真实 zone 建立，页面代码在 fake-async zone 发起
-    // 的查询如果不投回真实 zone，socket 事件永远不会被 fake 时钟推进。
-    return ProgressStore(PinnedConnection(conn, Zone.current));
+    return ProgressStore._(db, tempDir);
   }
 
-  /// 第一次用到某测试文件专属库时把它建出来。CREATE DATABASE 没有
-  /// IF NOT EXISTS，两个文件同时首跑可能撞重复建库——撞上就算成功。
-  static Future<void> _ensureDatabase(Endpoint base, String database) async {
-    final admin = await Connection.open(
-      base,
-      settings: const ConnectionSettings(sslMode: SslMode.disable),
-    );
-    try {
-      final exists = await admin.execute(
-        Sql.named("SELECT 1 FROM pg_database WHERE datname = @name"),
-        parameters: {"name": database},
-      );
-      if (exists.isEmpty) {
-        try {
-          await admin.execute('CREATE DATABASE "$database"');
-        } on PgException catch (error) {
-          if (!error.message.contains("already exists")) rethrow;
-        }
-      }
-    } finally {
-      await admin.close();
-    }
-  }
-
-  /// 表结构按本地 SQLite 时代的 V9 现状一次建齐；迁移历史（V1→V9）不搬，
-  /// 历史数据由 scripts/migrate_progress_to_pg.py 一次性导入（ADR 0067）。
-  /// `at` 等时间列沿用 ISO 字符串存 TEXT——应用层只做字符串比较与解析，
-  /// 不依赖数据库时区，跨机器也不受服务器时区影响。
-  static Future<void> _ensureSchema(Connection conn) async {
-    await conn.execute("""
+  /// 表结构与中心 PG 同名同列（ADR 0070：方言差异关在本文件）；id 是本地自增，
+  /// 只作排序断路器，业务键唯一索引承担「拉回来的重复行不再插一遍」的幂等合并。
+  /// outbox 与业务表同库，写入在同一事务里落两边——记了题必有队列。
+  static void _ensureSchema(Database db) {
+    db.execute("PRAGMA journal_mode = WAL");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS attempts (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         question_id TEXT NOT NULL,
         topic_id TEXT NOT NULL,
         subject_id TEXT NOT NULL,
@@ -375,18 +265,20 @@ class ProgressStore {
         at TEXT NOT NULL
       )
     """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_attempts ON attempts (question_id, at)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS exams (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         subject_id TEXT NOT NULL,
         score INTEGER NOT NULL,
         passed INTEGER NOT NULL,
         at TEXT NOT NULL
       )
     """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_exams ON exams (subject_id, at)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS notices (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         kind TEXT NOT NULL,
         title TEXT NOT NULL,
         body TEXT NOT NULL,
@@ -394,13 +286,9 @@ class ProgressStore {
         read INTEGER NOT NULL
       )
     """);
-    await conn.execute("""
-      CREATE TABLE IF NOT EXISTS achievements (
-        key TEXT PRIMARY KEY,
-        at TEXT NOT NULL
-      )
-    """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_notices ON notices (kind, title, at)");
+    db.execute("CREATE TABLE IF NOT EXISTS achievements (key TEXT PRIMARY KEY, at TEXT NOT NULL)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS exam_drafts (
         draft_key TEXT PRIMARY KEY,
         subject_id TEXT NOT NULL,
@@ -417,63 +305,59 @@ class ProgressStore {
         saved_at TEXT
       )
     """);
-    await conn.execute("""
+    db.execute("""
       CREATE TABLE IF NOT EXISTS drill_runs (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         item_id TEXT NOT NULL,
         mistakes TEXT NOT NULL,
         at TEXT NOT NULL
       )
     """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_drill_runs ON drill_runs (item_id, at)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS point_notes (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         item_id TEXT NOT NULL,
         step INTEGER NOT NULL,
         text TEXT NOT NULL,
         at TEXT NOT NULL
       )
     """);
-    await conn.execute("""
-      CREATE TABLE IF NOT EXISTS point_photos (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        item_id TEXT NOT NULL,
-        step INTEGER NOT NULL,
-        file TEXT NOT NULL,
-        caption TEXT NOT NULL,
-        at TEXT NOT NULL,
-        removed INTEGER NOT NULL DEFAULT 0
-      )
-    """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_point_notes ON point_notes (item_id, step, at)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS rehearsals (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         item_id TEXT NOT NULL,
         missed TEXT NOT NULL,
         total INTEGER NOT NULL,
         at TEXT NOT NULL
       )
     """);
-    await conn.execute("""
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_rehearsals ON rehearsals (item_id, at)");
+    db.execute("""
       CREATE TABLE IF NOT EXISTS drill_notes (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         item_id TEXT NOT NULL,
         text TEXT NOT NULL,
         at TEXT NOT NULL
       )
     """);
-  }
-
-  static Future<void> _clearAll(Connection conn) async {
-    await conn.execute("""
-      TRUNCATE attempts, exams, notices, achievements, exam_drafts,
-        drill_runs, point_notes, point_photos, rehearsals, drill_notes
-      RESTART IDENTITY
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_drill_notes ON drill_notes (item_id, at)");
+    db.execute("""
+      CREATE TABLE IF NOT EXISTS outbox (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        kind TEXT NOT NULL,
+        key TEXT,
+        payload TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      )
     """);
+    db.execute("CREATE TABLE IF NOT EXISTS sync_state (name TEXT PRIMARY KEY, value INTEGER NOT NULL)");
   }
 
   /// 点位卡照片与进度同住一处：工作树里在 `progress/points`（随仓库走），
-  /// 发行副本在用户数据目录。照片文件本体不进数据库，跨机器靠仓库（ADR 0037）。
+  /// 发行副本在用户数据目录。照片文件与登记清单（photos.json）都不进数据库，
+  /// 跨机器靠仓库（ADR 0037、0069）。
   /// 测试把照片目录重定向到自己的临时目录；生产为 null。
   static String? pointsDirOverride;
 
@@ -487,7 +371,7 @@ class ProgressStore {
     return folder.path;
   }
 
-  /// 放用户数据的目录（发行包用；工作树里跑的时候进度在中心 PG）。
+  /// 放用户数据的目录（本地进度库 local.db 与发行副本的照片都在这里）。
   static String userDataDir() {
     late final String root;
     if (Platform.isMacOS) {
@@ -501,6 +385,30 @@ class ProgressStore {
     return p.join(root, "AthenaDriver");
   }
 
+  // ---------------------------------------------------------------- 写入（业务表 + outbox 同事务）
+
+  /// 队列入队。可变数据按 key 折叠——同 key 只留最新一条（草稿每答一题存一次，
+  /// 一场考试能排出一百条 PUT，而服务端本来就整份覆盖；save 与 delete 也靠折叠
+  /// 互斥，最新意图生效）。read-all 是全局动作，只留一条。追加型资源每条都要
+  /// 发，永不折叠。
+  void _enqueue(String kind, {String? key, required Map<String, Object?> payload}) {
+    if (key != null) {
+      _db.execute("DELETE FROM outbox WHERE key = ?", [key]);
+    } else if (kind == "read-all") {
+      _db.execute("DELETE FROM outbox WHERE kind = 'read-all'");
+    }
+    _db.execute(
+      "INSERT INTO outbox (kind, key, payload, created_at) VALUES (?, ?, ?, ?)",
+      [kind, key, jsonEncode(payload), DateTime.now().toIso8601String()],
+    );
+    onEnqueued?.call();
+  }
+
+  /// 仅供测试：绕过正常写入路径直接入队一条（构造服务端必拒的记录，验证
+  /// invalid 标死逻辑，ADR 0070）。生产代码不调用。
+  @visibleForTesting
+  void debugEnqueue(String kind, Map<String, Object?> payload) => _enqueue(kind, payload: payload);
+
   Future<List<Notice>> recordAttempt({
     required String questionId,
     required String topicId,
@@ -510,21 +418,22 @@ class ProgressStore {
     String? topicTitle,
     DateTime? at,
   }) async {
+    final stamp = (at ?? DateTime.now()).toIso8601String();
     final beforeWrong = (await wrongQuestionIds()).length;
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at) "
-        "VALUES (@questionId, @topicId, @subjectId, @correct, @durationMs, 0, @at)",
-      ),
-      parameters: {
-        "questionId": questionId,
-        "topicId": topicId,
-        "subjectId": subjectId,
-        "correct": correct ? 1 : 0,
-        "durationMs": durationMs,
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    _db.execute(
+      "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at) "
+      "VALUES (?, ?, ?, ?, ?, 0, ?)",
+      [questionId, topicId, subjectId, correct ? 1 : 0, durationMs, stamp],
     );
+    _enqueue("attempts", payload: {
+      "question_id": questionId,
+      "topic_id": topicId,
+      "subject_id": subjectId,
+      "correct": correct,
+      "duration_ms": durationMs,
+      "hesitant": false,
+      "at": stamp,
+    });
     final born = <Notice>[];
     if (correct) {
       born.addAll(await _maybeStreak());
@@ -548,18 +457,17 @@ class ProgressStore {
     String? subjectTitle,
     DateTime? at,
   }) async {
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO exams (subject_id, score, passed, at) "
-        "VALUES (@subjectId, @score, @passed, @at)",
-      ),
-      parameters: {
-        "subjectId": subjectId,
-        "score": score,
-        "passed": passed ? 1 : 0,
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    final stamp = (at ?? DateTime.now()).toIso8601String();
+    _db.execute(
+      "INSERT OR IGNORE INTO exams (subject_id, score, passed, at) VALUES (?, ?, ?, ?)",
+      [subjectId, score, passed ? 1 : 0, stamp],
     );
+    _enqueue("exams", payload: {
+      "subject_id": subjectId,
+      "score": score,
+      "passed": passed,
+      "at": stamp,
+    });
     final label = subjectTitle ?? subjectId;
     final born = <Notice>[
       await _notice(
@@ -582,80 +490,74 @@ class ProgressStore {
 
   /// 存/覆盖一份模拟考草稿——一个 key 同时只留一份，答一题存一次。
   Future<void> saveExamDraft(ExamDraft draft, {required String draftKey}) async {
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO exam_drafts (draft_key, subject_id, title, question_ids, question_count, "
-        "minutes, pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at) "
-        "VALUES (@draftKey, @subjectId, @title, @questionIds, @questionCount, @minutes, @passScore, "
-        "@pointsPerQuestion, @mix, @fullBank, @picked, @startedAt, @savedAt) "
-        "ON CONFLICT (draft_key) DO UPDATE SET subject_id = EXCLUDED.subject_id, "
-        "title = EXCLUDED.title, question_ids = EXCLUDED.question_ids, "
-        "question_count = EXCLUDED.question_count, minutes = EXCLUDED.minutes, "
-        "pass_score = EXCLUDED.pass_score, points_per_question = EXCLUDED.points_per_question, "
-        "mix = EXCLUDED.mix, full_bank = EXCLUDED.full_bank, picked = EXCLUDED.picked, "
-        "started_at = EXCLUDED.started_at, saved_at = EXCLUDED.saved_at",
-      ),
-      parameters: {
-        "draftKey": draftKey,
-        "subjectId": draft.subjectId,
-        "title": draft.title,
-        "questionIds": jsonEncode(draft.questionIds),
-        "questionCount": draft.questionCount,
-        "minutes": draft.minutes,
-        "passScore": draft.passScore,
-        "pointsPerQuestion": draft.pointsPerQuestion,
-        "mix": jsonEncode(draft.mix),
-        "fullBank": draft.fullBank ? 1 : 0,
-        "picked": jsonEncode({
-          for (final entry in draft.picked.entries) "${entry.key}": entry.value.toList(),
-        }),
-        "startedAt": draft.startedAt.toIso8601String(),
-        "savedAt": (draft.savedAt ?? DateTime.now()).toIso8601String(),
-      },
+    // 调用方不关心存草稿的时刻（session 只填题目内容），这里统一落当前时间：
+    // saved_at 是续答计时的截止线（ADR 0043），也是同步覆盖的判据（ADR 0068）。
+    if (draft.savedAt == null) {
+      draft = ExamDraft(
+        subjectId: draft.subjectId,
+        title: draft.title,
+        questionIds: draft.questionIds,
+        questionCount: draft.questionCount,
+        minutes: draft.minutes,
+        passScore: draft.passScore,
+        pointsPerQuestion: draft.pointsPerQuestion,
+        mix: draft.mix,
+        fullBank: draft.fullBank,
+        picked: draft.picked,
+        startedAt: draft.startedAt,
+        savedAt: DateTime.now(),
+      );
+    }
+    final row = draft.toApi();
+    _db.execute(
+      "INSERT INTO exam_drafts (draft_key, subject_id, title, question_ids, question_count, minutes, "
+      "pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at) "
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+      "ON CONFLICT (draft_key) DO UPDATE SET subject_id = excluded.subject_id, title = excluded.title, "
+      "question_ids = excluded.question_ids, question_count = excluded.question_count, "
+      "minutes = excluded.minutes, pass_score = excluded.pass_score, "
+      "points_per_question = excluded.points_per_question, mix = excluded.mix, "
+      "full_bank = excluded.full_bank, picked = excluded.picked, started_at = excluded.started_at, "
+      "saved_at = excluded.saved_at",
+      [
+        draftKey, row["subject_id"], row["title"], row["question_ids"], row["question_count"],
+        row["minutes"], row["pass_score"], row["points_per_question"], row["mix"],
+        (row["full_bank"] as bool) ? 1 : 0, row["picked"], row["started_at"], row["saved_at"],
+      ],
     );
+    _enqueue("exam-draft", key: draftKey, payload: row);
   }
 
   Future<ExamDraft?> loadExamDraft(String draftKey) async {
-    final rows = await _conn.execute(
-      Sql.named("SELECT * FROM exam_drafts WHERE draft_key = @key"),
-      parameters: {"key": draftKey},
-    );
+    final rows = _db.select("SELECT * FROM exam_drafts WHERE draft_key = ?", [draftKey]);
     if (rows.isEmpty) return null;
     final row = rows.first;
-    final pickedRaw = jsonDecode(row.at("picked") as String) as Map<String, dynamic>;
-    return ExamDraft(
-      subjectId: row.at("subject_id") as String,
-      title: row.at("title") as String,
-      questionIds: [for (final id in jsonDecode(row.at("question_ids") as String) as List<dynamic>) id as String],
-      questionCount: row.at("question_count") as int,
-      minutes: row.at("minutes") as int,
-      passScore: row.at("pass_score") as int,
-      pointsPerQuestion: row.at("points_per_question") as int,
-      mix: {
-        for (final entry in (jsonDecode(row.at("mix") as String) as Map<String, dynamic>).entries) entry.key: entry.value as int,
-      },
-      fullBank: (row.at("full_bank") as int) == 1,
-      picked: {
-        for (final entry in pickedRaw.entries)
-          int.parse(entry.key): {for (final id in entry.value as List<dynamic>) id as String},
-      },
-      startedAt: DateTime.tryParse(row.at("started_at") as String? ?? "") ?? DateTime.now(),
-      savedAt: DateTime.tryParse(row.at("saved_at") as String? ?? ""),
-    );
+    return ExamDraft.fromApi({
+      "subject_id": row["subject_id"],
+      "title": row["title"],
+      "question_ids": row["question_ids"],
+      "question_count": row["question_count"],
+      "minutes": row["minutes"],
+      "pass_score": row["pass_score"],
+      "points_per_question": row["points_per_question"],
+      "mix": row["mix"],
+      "full_bank": (row["full_bank"] as int) == 1,
+      "picked": row["picked"],
+      "started_at": row["started_at"],
+      "saved_at": row["saved_at"],
+    });
   }
 
   Future<void> clearExamDraft(String draftKey) async {
-    await _conn.execute(
-      Sql.named("DELETE FROM exam_drafts WHERE draft_key = @key"),
-      parameters: {"key": draftKey},
-    );
+    _db.execute("DELETE FROM exam_drafts WHERE draft_key = ?", [draftKey]);
+    _enqueue("exam-draft-delete", key: draftKey, payload: {});
   }
 
   Future<int> currentStreak() async {
-    final rows = await _conn.execute("SELECT correct FROM attempts ORDER BY at DESC, id DESC LIMIT 40");
+    final rows = _db.select("SELECT correct FROM attempts ORDER BY at DESC, id DESC LIMIT 40");
     var n = 0;
     for (final row in rows) {
-      if ((row.at("correct") as int?) == 1) {
+      if ((row["correct"] as int?) == 1) {
         n += 1;
       } else {
         break;
@@ -665,32 +567,31 @@ class ProgressStore {
   }
 
   Future<int> unreadCount() async {
-    final rows = await _conn.execute("SELECT COUNT(*) AS n FROM notices WHERE read = 0");
-    return _asInt(rows.first.at("n"));
+    final rows = _db.select("SELECT COUNT(*) AS n FROM notices WHERE read = 0");
+    return rows.first["n"] as int;
   }
 
   Future<List<Notice>> notices({int limit = 30}) async {
-    final rows = await _conn.execute(
-      Sql.named("SELECT * FROM notices ORDER BY id DESC LIMIT @limit"),
-      parameters: {"limit": limit},
-    );
+    final rows = _db.select("SELECT * FROM notices ORDER BY id DESC LIMIT ?", [limit]);
     return [for (final row in rows) _noticeFrom(row)];
   }
 
   Future<void> markAllRead() async {
-    await _conn.execute("UPDATE notices SET read = 1 WHERE read = 0");
+    _db.execute("UPDATE notices SET read = 1 WHERE read = 0");
+    // 服务端是「全部标已读」的动作语义，重复执行没有额外效果，全局折叠成一条。
+    _enqueue("read-all", payload: {});
   }
 
   Future<Map<String, TopicStats>> topicStats() async {
-    final rows = await _conn.execute("""
-      SELECT topic_id, COUNT(*) AS attempts, SUM(correct)::int AS correct
-      FROM attempts GROUP BY topic_id
-    """);
+    final rows = _db.select(
+      "SELECT topic_id, COUNT(*) AS attempts, CAST(SUM(correct) AS INTEGER) AS correct "
+      "FROM attempts GROUP BY topic_id",
+    );
     return {
       for (final row in rows)
-        row.at("topic_id") as String: TopicStats(
-          attempts: _asInt(row.at("attempts")),
-          correct: _asInt(row.at("correct")),
+        row["topic_id"] as String: TopicStats(
+          attempts: row["attempts"] as int,
+          correct: row["correct"] as int,
         ),
     };
   }
@@ -699,19 +600,16 @@ class ProgressStore {
   Future<List<DailyCount>> dailyAttempts({int days = 14}) async {
     final today = DateTime.now();
     final since = DateTime(today.year, today.month, today.day).subtract(Duration(days: days - 1));
-    final rows = await _conn.execute(
-      Sql.named("SELECT at, correct FROM attempts WHERE at >= @since"),
-      parameters: {"since": since.toIso8601String()},
-    );
+    final rows = _db.select("SELECT at, correct FROM attempts WHERE at >= ?", [since.toIso8601String()]);
     String key(DateTime d) =>
         "${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}";
     final counts = <String, List<int>>{};
     for (final row in rows) {
-      final at = DateTime.tryParse(row.at("at") as String? ?? "");
+      final at = DateTime.tryParse(row["at"] as String? ?? "");
       if (at == null) continue;
       final entry = counts.putIfAbsent(key(at), () => [0, 0]);
       entry[0] += 1;
-      if ((row.at("correct") as int?) == 1) entry[1] += 1;
+      if ((row["correct"] as int?) == 1) entry[1] += 1;
     }
     return [
       for (var i = 0; i < days; i++)
@@ -725,6 +623,8 @@ class ProgressStore {
 
   /// 每道题按作答时间取最近一次。不能按自增 id 取：并进来的是别处早先的作答，
   /// 入库晚、id 大，按 id 会把几小时前的一次答错当成最新，盖掉后来的答对（ADR 0030）。
+  /// 本地 id 是各机自增，只在 at 完全相同时当并列断路器——极端并列下两台机器的
+  /// 判定可能不同，但统计不受影响（ADR 0070 的已知取舍）。
   static const _latestAttempts = """
     SELECT question_id, correct, at, id FROM (
       SELECT question_id, correct, at, id,
@@ -734,19 +634,19 @@ class ProgressStore {
   """;
 
   Future<List<String>> wrongQuestionIds() async {
-    final rows = await _conn.execute("""
+    final rows = _db.select("""
       SELECT a.question_id
       FROM ($_latestAttempts) a
       WHERE a.correct = 0
       ORDER BY a.at DESC, a.id DESC
     """);
-    return [for (final row in rows) row.at("question_id") as String];
+    return [for (final row in rows) row["question_id"] as String];
   }
 
   /// 每道答错过的题，最后一次答错之后又连着答对了几次（考前复习的移出判据，ADR 0034）。
   /// 「最后一次」跟 `_latestAttempts` 同一个排序：先按时间，时间相同按行号。
   Future<Map<String, int>> correctStreaksSinceWrong() async {
-    final rows = await _conn.execute("""
+    final rows = _db.select("""
       WITH last_wrong AS (
         SELECT question_id, at, id FROM (
           SELECT question_id, at, id,
@@ -754,7 +654,7 @@ class ProgressStore {
           FROM attempts WHERE correct = 0
         ) t WHERE rn = 1
       )
-      SELECT w.question_id, COUNT(a.id)::int AS n
+      SELECT w.question_id, COUNT(a.id) AS n
       FROM last_wrong w
       LEFT JOIN attempts a
         ON a.question_id = w.question_id AND a.correct = 1
@@ -762,41 +662,35 @@ class ProgressStore {
       GROUP BY w.question_id
     """);
     return {
-      for (final row in rows) row.at("question_id") as String: _asInt(row.at("n")),
+      for (final row in rows) row["question_id"] as String: row["n"] as int,
     };
   }
 
   /// 每道题累计答错过几次。考前最该刷的是反复栽跟头的题，不是最近错的那一道。
   Future<Map<String, int>> wrongCounts() async {
-    final rows = await _conn.execute(
-      "SELECT question_id, COUNT(*)::int AS n FROM attempts WHERE correct = 0 GROUP BY question_id",
+    final rows = _db.select(
+      "SELECT question_id, COUNT(*) AS n FROM attempts WHERE correct = 0 GROUP BY question_id",
     );
     return {
-      for (final row in rows) row.at("question_id") as String: _asInt(row.at("n")),
+      for (final row in rows) row["question_id"] as String: row["n"] as int,
     };
   }
 
   /// 最近几次模拟考的成绩，新的在前——记了不给人看，等于没记（主仓库 ADR 0052）。
   Future<List<ExamRecord>> recentExams({String? subjectId, int limit = 12}) async {
     final rows = subjectId == null
-        ? await _conn.execute(
-            Sql.named("SELECT subject_id, score, passed, at FROM exams ORDER BY id DESC LIMIT @limit"),
-            parameters: {"limit": limit},
-          )
-        : await _conn.execute(
-            Sql.named(
-              "SELECT subject_id, score, passed, at FROM exams WHERE subject_id = @subjectId "
-              "ORDER BY id DESC LIMIT @limit",
-            ),
-            parameters: {"subjectId": subjectId, "limit": limit},
+        ? _db.select("SELECT subject_id, score, passed, at FROM exams ORDER BY id DESC LIMIT ?", [limit])
+        : _db.select(
+            "SELECT subject_id, score, passed, at FROM exams WHERE subject_id = ? ORDER BY id DESC LIMIT ?",
+            [subjectId, limit],
           );
     return [
       for (final row in rows)
         ExamRecord(
-          subjectId: row.at("subject_id") as String,
-          score: row.at("score") as int,
-          passed: (row.at("passed") as int) == 1,
-          at: DateTime.tryParse(row.at("at") as String? ?? "") ?? DateTime.now(),
+          subjectId: row["subject_id"] as String,
+          score: row["score"] as int,
+          passed: (row["passed"] as int) == 1,
+          at: DateTime.tryParse(row["at"] as String? ?? "") ?? DateTime.now(),
         ),
     ];
   }
@@ -824,30 +718,25 @@ class ProgressStore {
 
   /// 最近一次答对、且没有明显慢于平时节奏。迟疑答对的题练习里还会再出。
   Future<Set<String>> masteredQuestionIds() async {
-    final rows = await _conn.execute("""
+    final rows = _db.select("""
       SELECT a.question_id
       FROM ($_latestAttempts) a
       WHERE a.correct = 1
     """);
-    return {for (final row in rows) row.at("question_id") as String};
+    return {for (final row in rows) row["question_id"] as String};
   }
 
   Future<int> averageDurationMs() async {
-    // PG 的 AVG 是 NUMERIC，驱动给的不是 num——在 SQL 里转成 float8 再取整。
-    final rows = await _conn.execute(
-      "SELECT AVG(duration_ms)::float8 AS ms FROM attempts WHERE duration_ms > 0",
-    );
-    final value = rows.first.at("ms");
+    final rows = _db.select("SELECT AVG(duration_ms) AS ms FROM attempts WHERE duration_ms > 0");
+    final value = rows.first["ms"];
     if (value is num) return value.round();
     return 0;
   }
 
   Future<Map<String, int>> attemptCounts() async {
-    final rows = await _conn.execute(
-      "SELECT question_id, COUNT(*)::int AS n FROM attempts GROUP BY question_id",
-    );
+    final rows = _db.select("SELECT question_id, COUNT(*) AS n FROM attempts GROUP BY question_id");
     return {
-      for (final row in rows) row.at("question_id") as String: _asInt(row.at("n")),
+      for (final row in rows) row["question_id"] as String: row["n"] as int,
     };
   }
 
@@ -886,16 +775,11 @@ class ProgressStore {
     required String title,
     required String body,
   }) async {
-    final existing = await _conn.execute(
-      Sql.named("SELECT 1 FROM achievements WHERE key = @key"),
-      parameters: {"key": key},
-    );
+    final existing = _db.select("SELECT 1 FROM achievements WHERE key = ?", [key]);
     if (existing.isNotEmpty) return null;
     final at = DateTime.now().toIso8601String();
-    await _conn.execute(
-      Sql.named("INSERT INTO achievements (key, at) VALUES (@key, @at) ON CONFLICT (key) DO NOTHING"),
-      parameters: {"key": key, "at": at},
-    );
+    _db.execute("INSERT OR IGNORE INTO achievements (key, at) VALUES (?, ?)", [key, at]);
+    _enqueue("achievement", key: key, payload: {"at": at});
     return _notice(kind: kind, title: title, body: body, at: at);
   }
 
@@ -906,72 +790,64 @@ class ProgressStore {
     String? at,
   }) async {
     final stamp = at ?? DateTime.now().toIso8601String();
-    final result = await _conn.execute(
-      Sql.named(
-        "INSERT INTO notices (kind, title, body, at, read) "
-        "VALUES (@kind, @title, @body, @at, 0) RETURNING id",
-      ),
-      parameters: {"kind": kind, "title": title, "body": body, "at": stamp},
+    _db.execute(
+      "INSERT OR IGNORE INTO notices (kind, title, body, at, read) VALUES (?, ?, ?, ?, 0)",
+      [kind, title, body, stamp],
     );
-    return Notice(id: _asInt(result.first.at("id")), kind: kind, title: title, body: body, at: stamp, read: false);
+    final id = _db.select("SELECT id FROM notices WHERE kind = ? AND title = ? AND at = ?", [kind, title, stamp]);
+    _enqueue("notices", payload: {"kind": kind, "title": title, "body": body, "at": stamp, "read": false});
+    return Notice(id: id.isEmpty ? 0 : id.first["id"] as int, kind: kind, title: title, body: body, at: stamp, read: false);
   }
 
-  Notice _noticeFrom(ResultRow row) {
+  Notice _noticeFrom(Row row) {
     return Notice(
-      id: _asInt(row.at("id")),
-      kind: row.at("kind") as String,
-      title: row.at("title") as String,
-      body: row.at("body") as String,
-      at: row.at("at") as String,
-      read: (row.at("read") as int) == 1,
+      id: row["id"] as int,
+      kind: row["kind"] as String,
+      title: row["title"] as String,
+      body: row["body"] as String,
+      at: row["at"] as String,
+      read: (row["read"] as int) == 1,
     );
   }
 
   /// 记一把练车。不写掌握度——掌握度只由答题写入（ADR 0036）。
   Future<void> recordDrillRun(String itemId, List<String> mistakes, {DateTime? at}) async {
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO drill_runs (item_id, mistakes, at) VALUES (@itemId, @mistakes, @at)",
-      ),
-      parameters: {
-        "itemId": itemId,
-        "mistakes": mistakes.join(","),
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    final stamp = (at ?? DateTime.now()).toIso8601String();
+    _db.execute(
+      "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at) VALUES (?, ?, ?)",
+      [itemId, mistakes.join(","), stamp],
     );
+    _enqueue("drill-runs", payload: {"item_id": itemId, "mistakes": mistakes.join(","), "at": stamp});
   }
 
   /// 练车记录，新的在前。
   Future<List<DrillRun>> drillRuns() async {
-    final rows = await _conn.execute("SELECT * FROM drill_runs ORDER BY at DESC, id DESC");
+    final rows = _db.select("SELECT * FROM drill_runs ORDER BY at DESC, id DESC");
     return [
       for (final row in rows)
         DrillRun(
-          itemId: row.at("item_id") as String,
+          itemId: row["item_id"] as String,
           mistakes: [
-            for (final id in (row.at("mistakes") as String).split(","))
+            for (final id in (row["mistakes"] as String).split(","))
               if (id.isNotEmpty) id,
           ],
-          at: DateTime.parse(row.at("at") as String),
+          at: DateTime.parse(row["at"] as String),
         ),
     ];
   }
 
   Future<void> savePointNote(String itemId, int step, String text, {DateTime? at}) async {
-    await _conn.execute(
-      Sql.named("INSERT INTO point_notes (item_id, step, text, at) VALUES (@itemId, @step, @text, @at)"),
-      parameters: {
-        "itemId": itemId,
-        "step": step,
-        "text": text,
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    final stamp = (at ?? DateTime.now()).toIso8601String();
+    _db.execute(
+      "INSERT OR IGNORE INTO point_notes (item_id, step, text, at) VALUES (?, ?, ?, ?)",
+      [itemId, step, text, stamp],
     );
+    _enqueue("point-notes", payload: {"item_id": itemId, "step": step, "text": text, "at": stamp});
   }
 
   /// 每一步最新的一版文字，键是（项目, 步骤）。
   Future<Map<(String, int), PointNote>> pointNotes() async {
-    final rows = await _conn.execute("""
+    final rows = _db.select("""
       SELECT item_id, step, text, at FROM (
         SELECT item_id, step, text, at,
           ROW_NUMBER() OVER (PARTITION BY item_id, step ORDER BY at DESC, id DESC) AS rn
@@ -980,111 +856,318 @@ class ProgressStore {
     """);
     return {
       for (final row in rows)
-        (row.at("item_id") as String, row.at("step") as int): PointNote(
-          itemId: row.at("item_id") as String,
-          step: row.at("step") as int,
-          text: row.at("text") as String,
-          at: DateTime.parse(row.at("at") as String),
+        (row["item_id"] as String, row["step"] as int): PointNote(
+          itemId: row["item_id"] as String,
+          step: row["step"] as int,
+          text: row["text"] as String,
+          at: DateTime.parse(row["at"] as String),
         ),
     };
   }
 
+  // ---------------------------------------------------------------- 照片：清单文件随仓库走（ADR 0070）
+
+  static String get _photosManifest => p.join(pointsDir, "photos.json");
+
+  List<PointPhoto> _loadPhotos() {
+    final file = File(_photosManifest);
+    if (!file.existsSync()) return const [];
+    try {
+      final list = jsonDecode(file.readAsStringSync()) as List<dynamic>;
+      return [
+        for (final entry in list)
+          PointPhoto(
+            itemId: entry["item_id"] as String,
+            step: entry["step"] as int,
+            file: entry["file"] as String,
+            caption: entry["caption"] as String? ?? "",
+            at: DateTime.tryParse(entry["at"] as String? ?? "") ?? DateTime.now(),
+          ),
+      ];
+    } on FormatException {
+      return const [];
+    }
+  }
+
+  void _savePhotos(List<PointPhoto> photos) {
+    final file = File(_photosManifest);
+    file.createSync(recursive: true);
+    file.writeAsStringSync(const JsonEncoder.withIndent("  ").convert([
+      for (final photo in photos)
+        {"item_id": photo.itemId, "step": photo.step, "file": photo.file, "caption": photo.caption, "at": photo.at.toIso8601String()},
+    ]));
+  }
+
   Future<void> addPointPhoto(String itemId, int step, String file, String caption) async {
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO point_photos (item_id, step, file, caption, at) "
-        "VALUES (@itemId, @step, @file, @caption, @at)",
-      ),
-      parameters: {
-        "itemId": itemId,
-        "step": step,
-        "file": file,
-        "caption": caption,
-        "at": DateTime.now().toIso8601String(),
-      },
-    );
+    final photos = [..._loadPhotos()];
+    photos.add(PointPhoto(itemId: itemId, step: step, file: file, caption: caption, at: DateTime.now()));
+    _savePhotos(photos);
   }
 
-  Future<List<PointPhoto>> pointPhotos() async {
-    final rows = await _conn.execute("SELECT * FROM point_photos WHERE removed = 0 ORDER BY at, id");
-    return [
-      for (final row in rows)
-        PointPhoto(
-          id: _asInt(row.at("id")),
-          itemId: row.at("item_id") as String,
-          step: row.at("step") as int,
-          file: row.at("file") as String,
-          caption: row.at("caption") as String,
-          at: DateTime.parse(row.at("at") as String),
-        ),
-    ];
-  }
+  Future<List<PointPhoto>> pointPhotos() async => _loadPhotos();
 
-  /// 删照片：删文件，记录标记删除。
+  /// 删照片：删文件，登记行从清单里移除（清单随仓库走，删除对 git 可见）。
   Future<void> removePointPhoto(PointPhoto photo) async {
-    await _conn.execute(
-      Sql.named("UPDATE point_photos SET removed = 1 WHERE id = @id"),
-      parameters: {"id": photo.id},
-    );
+    _savePhotos([for (final entry in _loadPhotos()) if (entry.file != photo.file) entry]);
     final file = File(p.join(pointsDir, photo.file));
     if (await file.exists()) await file.delete();
   }
 
   Future<void> recordRehearsal(String itemId, List<int> missed, int total, {DateTime? at}) async {
-    await _conn.execute(
-      Sql.named(
-        "INSERT INTO rehearsals (item_id, missed, total, at) VALUES (@itemId, @missed, @total, @at)",
-      ),
-      parameters: {
-        "itemId": itemId,
-        "missed": missed.join(","),
-        "total": total,
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    final stamp = (at ?? DateTime.now()).toIso8601String();
+    _db.execute(
+      "INSERT OR IGNORE INTO rehearsals (item_id, missed, total, at) VALUES (?, ?, ?, ?)",
+      [itemId, missed.join(","), total, stamp],
     );
+    _enqueue("rehearsals", payload: {"item_id": itemId, "missed": missed.join(","), "total": total, "at": stamp});
   }
 
   /// 默演记录，新的在前。
   Future<List<Rehearsal>> rehearsals() async {
-    final rows = await _conn.execute("SELECT * FROM rehearsals ORDER BY at DESC, id DESC");
+    final rows = _db.select("SELECT * FROM rehearsals ORDER BY at DESC, id DESC");
     return [
       for (final row in rows)
         Rehearsal(
-          itemId: row.at("item_id") as String,
+          itemId: row["item_id"] as String,
           missed: [
-            for (final s in (row.at("missed") as String).split(","))
+            for (final s in (row["missed"] as String).split(","))
               if (s.isNotEmpty) int.parse(s),
           ],
-          total: row.at("total") as int,
-          at: DateTime.parse(row.at("at") as String),
+          total: row["total"] as int,
+          at: DateTime.parse(row["at"] as String),
         ),
     ];
   }
 
   Future<void> recordDrillNote(String itemId, String text, {DateTime? at}) async {
-    await _conn.execute(
-      Sql.named("INSERT INTO drill_notes (item_id, text, at) VALUES (@itemId, @text, @at)"),
-      parameters: {
-        "itemId": itemId,
-        "text": text,
-        "at": (at ?? DateTime.now()).toIso8601String(),
-      },
+    final stamp = (at ?? DateTime.now()).toIso8601String();
+    _db.execute(
+      "INSERT OR IGNORE INTO drill_notes (item_id, text, at) VALUES (?, ?, ?)",
+      [itemId, text, stamp],
     );
+    _enqueue("drill-notes", payload: {"item_id": itemId, "text": text, "at": stamp});
   }
 
   /// 教练的话，新的在前。
   Future<List<DrillNote>> drillNotes() async {
-    final rows = await _conn.execute("SELECT * FROM drill_notes ORDER BY at DESC, id DESC");
+    final rows = _db.select("SELECT * FROM drill_notes ORDER BY at DESC, id DESC");
     return [
       for (final row in rows)
-        DrillNote(itemId: row.at("item_id") as String, text: row.at("text") as String, at: DateTime.parse(row.at("at") as String)),
+        DrillNote(itemId: row["item_id"] as String, text: row["text"] as String, at: DateTime.parse(row["at"] as String)),
     ];
   }
 
   Future<int> attemptTotal() async {
-    final rows = await _conn.execute("SELECT COUNT(*) AS n FROM attempts");
-    return _asInt(rows.first.at("n"));
+    final rows = _db.select("SELECT COUNT(*) AS n FROM attempts");
+    return rows.first["n"] as int;
   }
 
-  Future<void> close() => _conn.close();
+  /// 全部成就（key -> 解锁时间串）。同步合并与测试用；界面将来展示成就也走这里。
+  Map<String, String> achievements() {
+    final rows = _db.select("SELECT key, at FROM achievements");
+    return {for (final row in rows) row["key"] as String: row["at"] as String};
+  }
+
+  // ---------------------------------------------------------------- 同步器的协作面（ADR 0068 决策 4、ADR 0070）
+
+  /// outbox 里待发送的条数（dead 除外）——界面显示「N 条待同步」的数据源。
+  int pendingCount() {
+    final rows = _db.select("SELECT COUNT(*) AS n FROM outbox WHERE kind != 'dead'");
+    return rows.first["n"] as int;
+  }
+
+  /// 上传被服务端判 invalid 的条目单独标死：那是程序缺陷不是网络问题，
+  /// 停止重试并显式暴露（ADR 0070 决策 4）。
+  int deadCount() {
+    final rows = _db.select("SELECT COUNT(*) AS n FROM outbox WHERE kind = 'dead'");
+    return rows.first["n"] as int;
+  }
+
+  List<String> pendingKinds() {
+    final rows = _db.select("SELECT DISTINCT kind FROM outbox WHERE kind != 'dead' ORDER BY id");
+    return [for (final row in rows) row["kind"] as String];
+  }
+
+  /// 取某资源的头一批（≤[limit]，服务端批量上限 500）。按 id 単调保序：草稿的
+  /// save 与 delete 不能乱序。同 key 已在 `_enqueue` 里折叠，这里只会拿到最新一条。
+  List<OutboxEntry> outboxBatch(String kind, {int limit = 500}) {
+    final rows = _db.select(
+      "SELECT id, kind, key, payload FROM outbox WHERE kind = ? ORDER BY id LIMIT ?",
+      [kind, limit],
+    );
+    return [
+      for (final row in rows)
+        OutboxEntry(
+          id: row["id"] as int,
+          kind: row["kind"] as String,
+          key: row["key"] as String?,
+          payload: (jsonDecode(row["payload"] as String) as Map<String, dynamic>).cast<String, Object?>(),
+        ),
+    ];
+  }
+
+  void outboxDelete(List<int> ids) {
+    if (ids.isEmpty) return;
+    final placeholders = List.filled(ids.length, "?").join(",");
+    _db.execute("DELETE FROM outbox WHERE id IN ($placeholders)", ids);
+  }
+
+  void outboxMarkDead(int id) {
+    _db.execute("UPDATE outbox SET kind = 'dead' WHERE id = ?", [id]);
+  }
+
+  /// 上传成功一条成就后：本地没有就带上，已有且本地更早就保留本地（服务端同样
+  /// 取更早，两端收敛一致——ADR 0068「成就取更早时间」）。
+  void applyRemoteAchievement(String key, String at) {
+    _db.execute(
+      "INSERT INTO achievements (key, at) VALUES (?, ?) "
+      "ON CONFLICT (key) DO UPDATE SET at = excluded.at WHERE excluded.at < achievements.at",
+      [key, at],
+    );
+  }
+
+  /// 拉回的草稿合并：服务端 `saved_at` 更新才覆盖本地；[draft] 为 null 表示服务端
+  /// 已没有这份草稿（别处交卷后删除），本地也删——但本地还有未上传的保存时不删，
+  /// 那份更新很快会推上去。
+  void applyRemoteDraft(String draftKey, ExamDraft? draft) {
+    if (draft == null) {
+      final pending = _db.select(
+        "SELECT 1 FROM outbox WHERE kind = 'exam-draft' AND key = ?", [draftKey]);
+      if (pending.isEmpty) {
+        _db.execute("DELETE FROM exam_drafts WHERE draft_key = ?", [draftKey]);
+      }
+      return;
+    }
+    final rows = _db.select("SELECT saved_at FROM exam_drafts WHERE draft_key = ?", [draftKey]);
+    final remoteAt = draft.savedAt;
+    if (rows.isEmpty) {
+      final row = draft.toApi();
+      _db.execute(
+        "INSERT OR REPLACE INTO exam_drafts (draft_key, subject_id, title, question_ids, question_count, "
+        "minutes, pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          draftKey, row["subject_id"], row["title"], row["question_ids"], row["question_count"],
+          row["minutes"], row["pass_score"], row["points_per_question"], row["mix"],
+          (row["full_bank"] as bool) ? 1 : 0, row["picked"], row["started_at"], row["saved_at"],
+        ],
+      );
+      return;
+    }
+    final localSaved = DateTime.tryParse(rows.first["saved_at"] as String? ?? "");
+    if (remoteAt != null && (localSaved == null || remoteAt.isAfter(localSaved))) {
+      final row = draft.toApi();
+      _db.execute(
+        "UPDATE exam_drafts SET subject_id = ?, title = ?, question_ids = ?, question_count = ?, "
+        "minutes = ?, pass_score = ?, points_per_question = ?, mix = ?, full_bank = ?, "
+        "picked = ?, started_at = ?, saved_at = ? WHERE draft_key = ?",
+        [
+          row["subject_id"], row["title"], row["question_ids"], row["question_count"], row["minutes"],
+          row["pass_score"], row["points_per_question"], row["mix"], (row["full_bank"] as bool) ? 1 : 0,
+          row["picked"], row["started_at"], row["saved_at"], draftKey,
+        ],
+      );
+    }
+  }
+
+  /// 拉回的追加型记录并集合并：业务键唯一索引 + INSERT OR IGNORE，本机已有的
+  /// 行（含自己刚上传的）自动跳过。各资源列名与中心一致，直接按表分发。
+  void applyRemote(String resource, List<Map<String, Object?>> items) {
+    switch (resource) {
+      case "attempts":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+              item["question_id"], item["topic_id"], item["subject_id"],
+              (item["correct"] is bool) ? ((item["correct"]! as bool) ? 1 : 0) : item["correct"],
+              item["duration_ms"] ?? 0,
+              ((item["hesitant"] ?? false) as bool) ? 1 : 0,
+              item["at"],
+            ],
+          );
+        }
+      case "exams":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO exams (subject_id, score, passed, at) VALUES (?, ?, ?, ?)",
+            [
+              item["subject_id"], item["score"],
+              (item["passed"] is bool) ? ((item["passed"]! as bool) ? 1 : 0) : item["passed"], item["at"],
+            ],
+          );
+        }
+      case "notices":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO notices (kind, title, body, at, read) VALUES (?, ?, ?, ?, ?)",
+            [
+              item["kind"], item["title"], item["body"], item["at"],
+              ((item["read"] ?? false) as bool) ? 1 : 0,
+            ],
+          );
+        }
+      case "drill-runs":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO drill_runs (item_id, mistakes, at) VALUES (?, ?, ?)",
+            [item["item_id"], item["mistakes"], item["at"]],
+          );
+        }
+      case "point-notes":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO point_notes (item_id, step, text, at) VALUES (?, ?, ?, ?)",
+            [item["item_id"], item["step"], item["text"], item["at"]],
+          );
+        }
+      case "rehearsals":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO rehearsals (item_id, missed, total, at) VALUES (?, ?, ?, ?)",
+            [item["item_id"], item["missed"], item["total"], item["at"]],
+          );
+        }
+      case "drill-notes":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO drill_notes (item_id, text, at) VALUES (?, ?, ?)",
+            [item["item_id"], item["text"], item["at"]],
+          );
+        }
+    }
+  }
+
+  /// 各资源的增量拉取游标（中心自增 id，只升不回退）。首拉从 0 开始即全量。
+  int cursor(String resource) {
+    final rows = _db.select("SELECT value FROM sync_state WHERE name = ?", ["cursor.$resource"]);
+    return rows.isEmpty ? 0 : rows.first["value"] as int;
+  }
+
+  void setCursor(String resource, int value) {
+    _db.execute(
+      "INSERT INTO sync_state (name, value) VALUES (?, ?) "
+      "ON CONFLICT (name) DO UPDATE SET value = excluded.value",
+      ["cursor.$resource", value],
+    );
+  }
+
+  /// 本地已有的草稿 key（同步器除了按科目枚举，也把它们拉一遍）。
+  List<String> localDraftKeys() {
+    final rows = _db.select("SELECT draft_key FROM exam_drafts");
+    return [for (final row in rows) row["draft_key"] as String];
+  }
+
+  Future<void> close() async {
+    _db.dispose();
+    final dir = _tempDir;
+    if (dir != null) {
+      try {
+        dir.deleteSync(recursive: true);
+      } on FileSystemException {
+        // Windows 上 WAL 句柄偶尔迟一拍释放；留给系统临时目录自己回收。
+      }
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:math";
 
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "glyphs.dart";
@@ -9,6 +10,7 @@ import "look.dart";
 import "models.dart";
 import "progress.dart";
 import "subject2.dart";
+import "sync.dart";
 import "session.dart";
 
 class HomePage extends StatefulWidget {
@@ -17,11 +19,17 @@ class HomePage extends StatefulWidget {
     required this.bank,
     required this.store,
     this.onReady,
+    this.syncStatus,
+    this.onOpenConfig,
   });
 
   final Bank bank;
   final ProgressStore store;
 
+  /// 同步状态（ADR 0070 决策 4）：null 表示未配置同步，侧栏照实提示；
+  /// 点击进入配置屏。测试不传就不渲染这一行。
+  final ValueListenable<SyncStatus>? syncStatus;
+  final VoidCallback? onOpenConfig;
 
   /// 第一次从进度库读完统计后调一次；测试靠它等首页就绪，不按固定时长等。
   final VoidCallback? onReady;
@@ -111,8 +119,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // 第一次从进度库读完统计后调一次 onReady；测试靠它等首页就绪。
-    _reload().then((_) => widget.onReady?.call());
+    // 第一次从进度库读完统计后调一次 onReady；测试靠它等首页就绪。就绪让到
+    // 下一帧之后：本地库是同步的，setState 与就绪会在同一拍微任务里完成，
+    // 提早报就绪的话，等就绪的测试直接断言会拿到还没重建的旧帧。
+    _reload().then((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => widget.onReady?.call());
+    });
   }
 
   @override
@@ -293,6 +305,11 @@ class _HomePageState extends State<HomePage> {
                   label: "易混数字",
                   onTap: () => _go(_numbersId),
                 ),
+                if (widget.syncStatus != null)
+                  ValueListenableBuilder<SyncStatus>(
+                    valueListenable: widget.syncStatus!,
+                    builder: (context, status, _) => _syncLine(status),
+                  ),
               ],
             ),
           ),
@@ -373,6 +390,42 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 6),
       ],
     ];
+  }
+
+  /// 侧栏底部的同步状态行（ADR 0070 决策 4）：待发条数常驻可见，出错如实说。
+  /// 点击进配置屏换令牌或改端点。
+  Widget _syncLine(SyncStatus status) {
+    final (icon, text, color) = status.dead > 0
+        ? (Glyph.syncFailed, "${status.dead} 条记录无法同步", Bs.warning)
+        : status.lastError != null && status.pending == 0 && !status.running
+            ? (Glyph.syncFailed, status.lastError!, const Color(0xFFDCE9FF))
+            : status.lastError != null && !status.running
+                ? (Glyph.syncFailed, "待同步 ${status.pending} 条 · ${status.lastError!}", const Color(0xFFDCE9FF))
+                : status.running
+                    ? (Glyph.sync, "同步中…", const Color(0xFFDCE9FF))
+                    : status.pending > 0
+                        ? (Glyph.sync, "待同步 ${status.pending} 条", const Color(0xFFDCE9FF))
+                        : (Glyph.sync, "已同步", Colors.white54);
+    return InkWell(
+      onTap: widget.onOpenConfig,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Row(
+          children: [
+            Icon(icon, size: Bs.bodySize, color: color),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: color, fontSize: Bs.bodySize),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _navLine({

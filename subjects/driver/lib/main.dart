@@ -1,5 +1,10 @@
+import "dart:async";
+import "dart:convert";
+
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
+import "package:http/http.dart" as http;
 import "package:window_manager/window_manager.dart";
 
 import "content.dart";
@@ -7,6 +12,7 @@ import "home.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
+import "sync.dart";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +25,8 @@ Future<void> main() async {
   runApp(const BootstrapGate());
 }
 
-/// 启动门：先试开库。没配置过就弹配置对话框（凭据存本机，不写默认值，
-/// ADR 0068）；连不上给诚实的错误页（ADR 0067 第 5 条）；都过了才进应用。
+/// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；API
+/// 没配置时进配置屏，但可以跳过先离线用——队列会等令牌配好后自然补发。
 class BootstrapGate extends StatefulWidget {
   const BootstrapGate({super.key});
 
@@ -33,6 +39,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
   String _message = "";
   Bank? _bank;
   ProgressStore? _store;
+  SyncEngine? _engine;
 
   @override
   void initState() {
@@ -45,13 +52,15 @@ class _BootstrapGateState extends State<BootstrapGate> {
     try {
       final bank = await ContentLoader.load();
       final store = await ProgressStore.open();
+      final config = ApiConfig.load();
+      _engine?.stop();
+      _engine = null;
+      if (config != null) _engine = _startEngine(store, bank, config);
       setState(() {
         _bank = bank;
         _store = store;
-        _stage = "ready";
+        _stage = config == null ? "config" : "ready";
       });
-    } on ProgressNotConfigured {
-      setState(() => _stage = "config");
     } catch (error) {
       setState(() {
         _message = "$error";
@@ -60,16 +69,60 @@ class _BootstrapGateState extends State<BootstrapGate> {
     }
   }
 
+  SyncEngine _startEngine(ProgressStore store, Bank bank, ApiConfig config) {
+    return SyncEngine(
+      store: store,
+      config: config,
+      draftKeys: [for (final subject in bank.curriculum.subjects) "${subject.id}.exam"],
+    )..start();
+  }
+
+  /// 侧栏同步行点进来重新配置：保存后换引擎重启同步，跳过则维持现状。
+  Future<void> _openConfig() async {
+    final config = await Navigator.of(context).push<ApiConfigScreenResult>(
+      MaterialPageRoute(
+        builder: (context) => const ApiConfigScreen(allowSkip: true),
+        fullscreenDialog: true,
+      ),
+    );
+    if (config == null || !mounted) return;
+    final bank = _bank;
+    final store = _store;
+    if (bank == null || store == null) return;
+    _engine?.stop();
+    _engine = _startEngine(store, bank, config.config);
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _engine?.stop();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return switch (_stage) {
       "config" => MaterialApp(
           title: "驾考学习",
           debugShowCheckedModeBanner: false,
-          home: DbConfigScreen(onSaved: _tryOpen),
+          home: ApiConfigScreen(
+            onSavedDirect: (config) {
+              final bank = _bank;
+              final store = _store;
+              if (bank == null || store == null) return;
+              _engine = _startEngine(store, bank, config);
+              setState(() => _stage = "ready");
+            },
+          ),
         ),
       "error" => BootstrapErrorApp(message: _message),
-      "ready" => DriverApp(bank: _bank!, store: _store!),
+      "ready" => DriverApp(
+          bank: _bank!,
+          store: _store!,
+          syncStatus: _engine?.status,
+          onOpenConfig: _openConfig,
+        ),
       _ => const MaterialApp(
           title: "驾考学习",
           home: Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -78,93 +131,224 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 }
 
-/// 第一次启动（或配置丢失）时的连接配置：存进用户数据目录的 db.json
-/// （POSIX 上 600），环境变量 ATHENA_DRIVER_DB 可以代替它（CI / 脚本）。
-class DbConfigScreen extends StatefulWidget {
-  const DbConfigScreen({super.key, required this.onSaved});
-
-  final Future<void> Function() onSaved;
-
-  @override
-  State<DbConfigScreen> createState() => _DbConfigScreenState();
+class ApiConfigScreenResult {
+  const ApiConfigScreenResult(this.config);
+  final ApiConfig config;
 }
 
-class _DbConfigScreenState extends State<DbConfigScreen> {
-  final _host = TextEditingController(text: "192.168.6.1");
-  final _port = TextEditingController(text: "5432");
-  final _database = TextEditingController(text: "athena_driver");
-  final _username = TextEditingController(text: "athena_driver");
-  final _password = TextEditingController();
+/// 设备同步配置（ADR 0068 决策 1、ADR 0070）：只持设备令牌，不持数据库口令。
+/// 存用户数据目录 api.json（POSIX 600），环境变量 ATHENA_DRIVER_API 可代替。
+class ApiConfigScreen extends StatefulWidget {
+  const ApiConfigScreen({super.key, this.onSavedDirect, this.allowSkip = false});
+
+  /// 启动门直接挂载时走这里（保存后直接进应用）；从侧栏 push 进来时
+  /// pop 带回结果由调用方处理。
+  final void Function(ApiConfig)? onSavedDirect;
+
+  /// true：从应用内进来，允许不改直接返回；启动门挂载时给「先离线用」。
+  final bool allowSkip;
+
+  @override
+  State<ApiConfigScreen> createState() => _ApiConfigScreenState();
+}
+
+class _ApiConfigScreenState extends State<ApiConfigScreen> {
+  final _lanBase = TextEditingController(text: "http://192.168.6.1:5000");
+  final _wanBase = TextEditingController();
+  final _token = TextEditingController();
+  final _cfClientId = TextEditingController();
+  final _cfClientSecret = TextEditingController();
+  String _pingResult = "";
+  bool _pinging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final existing = ApiConfig.load();
+    if (existing != null) {
+      _lanBase.text = existing.lanBase;
+      _wanBase.text = existing.wanBase ?? "";
+      _token.text = existing.token;
+      _cfClientId.text = existing.cfClientId ?? "";
+      _cfClientSecret.text = existing.cfClientSecret ?? "";
+    }
+  }
 
   @override
   void dispose() {
-    _host.dispose();
-    _port.dispose();
-    _database.dispose();
-    _username.dispose();
-    _password.dispose();
+    _lanBase.dispose();
+    _wanBase.dispose();
+    _token.dispose();
+    _cfClientId.dispose();
+    _cfClientSecret.dispose();
     super.dispose();
   }
 
-  void _save() {
-    for (final controller in [_host, _database, _username, _password]) {
-      if (controller.text.trim().isEmpty) return;
+  ApiConfig? _compose() {
+    final lan = _lanBase.text.trim();
+    final token = _token.text.trim();
+    if (lan.isEmpty || token.isEmpty) return null;
+    return ApiConfig(
+      lanBase: lan,
+      token: token,
+      wanBase: _wanBase.text.trim().isEmpty ? null : _wanBase.text.trim(),
+      cfClientId: _cfClientId.text.trim().isEmpty ? null : _cfClientId.text.trim(),
+      cfClientSecret: _cfClientSecret.text.trim().isEmpty ? null : _cfClientSecret.text.trim(),
+    );
+  }
+
+  Future<void> _ping() async {
+    final config = _compose();
+    if (config == null) {
+      setState(() => _pingResult = "先填内网端点和设备令牌");
+      return;
     }
-    DbConfig(
-      host: _host.text.trim(),
-      port: int.tryParse(_port.text.trim()) ?? 5432,
-      database: _database.text.trim(),
-      username: _username.text.trim(),
-      password: _password.text,
-    ).save();
-    widget.onSaved();
+    setState(() {
+      _pinging = true;
+      _pingResult = "";
+    });
+    String result = "两个端点都连不上";
+    for (final base in [config.lanBase, if (config.wanBase != null) config.wanBase!]) {
+      try {
+        final response = await http
+            .get(
+              Uri.parse("$base/api/driver/v1/ping"),
+              headers: {
+                "Authorization": "Bearer ${config.token}",
+                if (config.cfClientId != null && config.cfClientSecret != null) ...{
+                  "CF-Access-Client-Id": config.cfClientId!,
+                  "CF-Access-Client-Secret": config.cfClientSecret!,
+                },
+              },
+            )
+            .timeout(const Duration(seconds: 10));
+        if (response.statusCode == 200) {
+          final device = (jsonDecode(response.body) as Map)["device"];
+          result = "已连上（$base，设备名：$device）";
+          break;
+        }
+        if (response.statusCode == 401) {
+          result = "端点通了，但令牌无效或已撤销（$base）";
+          break;
+        }
+        result = "$base 返回 ${response.statusCode}";
+      } on TimeoutException {
+        result = "$base 超时";
+      } catch (_) {
+        // 换下一个端点再试。
+      }
+    }
+    if (mounted) {
+      setState(() {
+        _pingResult = result;
+        _pinging = false;
+      });
+    }
+  }
+
+  void _save() {
+    final config = _compose();
+    if (config == null) return;
+    config.save();
+    final direct = widget.onSavedDirect;
+    if (direct != null) {
+      direct(config);
+    } else {
+      Navigator.of(context).pop(ApiConfigScreenResult(config));
+    }
+  }
+
+  void _skip() {
+    final direct = widget.onSavedDirect;
+    if (direct != null) {
+      // 启动门跳过：不开同步器直接进应用，侧栏会提示「未配置同步」。
+      final state = context.findAncestorStateOfType<_BootstrapGateState>();
+      state?.setState(() => state._stage = "ready");
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("第一次使用：填写学习记录服务的连接信息",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 10),
-                const Text(
-                  "学习进度存在家里的软路由数据库里，两台电脑填同一份即可。"
-                  "密码只保存在这台机器上。",
-                  style: TextStyle(height: 1.5),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _host,
-                  decoration: const InputDecoration(labelText: "主机"),
-                ),
-                TextField(
-                  controller: _port,
-                  decoration: const InputDecoration(labelText: "端口"),
-                ),
-                TextField(
-                  controller: _database,
-                  decoration: const InputDecoration(labelText: "数据库"),
-                ),
-                TextField(
-                  controller: _username,
-                  decoration: const InputDecoration(labelText: "用户名"),
-                ),
-                TextField(
-                  controller: _password,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: "密码"),
-                ),
-                const SizedBox(height: 22),
-                FilledButton(onPressed: _save, child: const Text("保存并连接")),
-              ],
+    return MaterialApp(
+      title: "驾考学习",
+      debugShowCheckedModeBanner: false,
+      locale: const Locale("zh", "CN"),
+      supportedLocales: const [Locale("zh", "CN")],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      home: Scaffold(
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("学习记录同步", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "做题记录先存在本机，后台自动和家里的软路由保持同一份；断网也能照常做题，"
+                    "联网后自动补上。每台电脑一个设备令牌（dapi_ 开头），丢了哪台就撤销哪个。",
+                    style: TextStyle(height: 1.5),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _lanBase,
+                    decoration: const InputDecoration(labelText: "内网端点（在家时用）"),
+                  ),
+                  TextField(
+                    controller: _wanBase,
+                    decoration: const InputDecoration(
+                      labelText: "外网端点（可选，离开内网时用）",
+                      hintText: "https://www.yatiger.cn",
+                    ),
+                  ),
+                  TextField(
+                    controller: _token,
+                    decoration: const InputDecoration(labelText: "设备令牌"),
+                  ),
+                  TextField(
+                    controller: _cfClientId,
+                    decoration: const InputDecoration(labelText: "Cloudflare Client ID（可选，外网时用）"),
+                  ),
+                  TextField(
+                    controller: _cfClientSecret,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: "Cloudflare Client Secret（可选）"),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      OutlinedButton(
+                        onPressed: _pinging ? null : _ping,
+                        child: const Text("测试连接"),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          _pinging ? "正在连接…" : _pingResult,
+                          style: const TextStyle(fontSize: 13, height: 1.4),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      FilledButton(onPressed: _save, child: const Text("保存并开始同步")),
+                      const SizedBox(width: 12),
+                      TextButton(onPressed: _skip, child: Text(widget.allowSkip ? "返回" : "先离线用，稍后配置")),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -193,7 +377,7 @@ class BootstrapErrorApp extends StatelessWidget {
                     "启动失败\n\n$message",
                     style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
                   ),
-            ),
+                ),
           ),
         ),
       ),
@@ -202,10 +386,20 @@ class BootstrapErrorApp extends StatelessWidget {
 }
 
 class DriverApp extends StatelessWidget {
-  const DriverApp({super.key, required this.bank, required this.store});
+  const DriverApp({
+    super.key,
+    required this.bank,
+    required this.store,
+    this.syncStatus,
+    this.onOpenConfig,
+  });
 
   final Bank bank;
   final ProgressStore store;
+
+  /// null 表示还没配置同步（先离线用）：侧栏显示「未配置同步」。
+  final ValueListenable<SyncStatus>? syncStatus;
+  final VoidCallback? onOpenConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +436,12 @@ class DriverApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: HomePage(bank: bank, store: store),
+      home: HomePage(
+        bank: bank,
+        store: store,
+        syncStatus: syncStatus,
+        onOpenConfig: onOpenConfig,
+      ),
     );
   }
 }
