@@ -102,7 +102,8 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 ```
 
 `sync` 对应 ADR 0053：进度库跟着仓库走（`subjects/<id>/progress/learning.db`），所以
-同步就是一次提交加一次推送。它**只碰 `progress` 路径**，不会连带你手上的代码改动；
+同步就是一次提交加一次推送。（已迁中心 PostgreSQL 的应用，如 `driver`，个人数据不在
+这里，ADR 0067；它们的 `progress/` 目录只剩点位照片，仍按目录被收集。）它**只碰 `progress` 路径**，不会连带你手上的代码改动；
 待推送的提交里有不是进度的，它会列出来交回你自己决定，不替你 push。顺带把
 `git diff` 的 sqlite textconv 配好，这样进度库的 diff 不是一句 "Binary files differ"。
 

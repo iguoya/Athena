@@ -56,4 +56,5 @@
 | [0057](0057-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
 | [0061](0061-agent-instructions-single-source.md) | 代理指令以 AGENTS.md 为唯一真源，且只放规则 | 已接受；`subjects/cpp` 应用级已同日瘦身到预算内 |
 | [0066](0066-two-english-apps-evolve-independently.md) | 并入 ascent（拾阶），两个英语应用（磨砚 / 拾阶）各自独立发展，不趋同 | 已接受 |
-| [0067](0067-progress-data-goes-to-central-postgresql.md) | 进度数据直连中心 PostgreSQL（driver 先行），个人数据与项目数据区隔 | 已接受；修订 0053 的适用范围 |
+| [0067](0067-progress-data-goes-to-central-postgresql.md) | 进度数据直连中心 PostgreSQL（driver 先行），个人数据与项目数据区隔 | 已接受；修订 0053 的适用范围；第 4、5 条由 0068 修订 |
+| [0068](0068-three-layer-storage-credentials-and-rest-channel.md) | 个人数据三层存储（JSON 内容 / 本地 SQLite 队列 / 中心 PG）、凭据不进仓库、外网走 REST API | 已接受；修订 0067 第 4、5 条；服务端与迁移已落地，客户端本地层待做 |

@@ -74,12 +74,19 @@
 - **界面**：Dart；桌面工作台（侧栏 + 主区），不为手机窄屏折中。标志用
   `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
-- **跨机器同步**：作答记录是只追加的事件流，推到 GitHub 私有仓库的一个 JSONL 文件，
-  按「题号 + 时间」取并集合并（ADR 0010）。走 REST Contents API，不要求装 git；令牌存
-  本机用户数据目录的 `sync.json`，不进版本库。本地 SQLite 仍是唯一读写来源。
-- **进度**：SQLite，`progress/learning.db`——**随仓库走**，换机器 clone 下来
-  掌握度和战绩还在（主仓库 ADR 0053）；拿不到工作树的发行副本退回用户数据目录
-  `AthenaDriver/`。自建表、自迁移，知识点 ID 前缀 `drive.`（主仓库 ADR 0037）
+- **进度（个人数据）**：存软路由上的中心 **PostgreSQL**（库 `athena_driver`，专属账号），
+  内网直连；作答、考试、通知、成就、草稿、笔记都在这里，**不再有 `learning.db`、也不再走 GitHub
+  JSONL 同步**（主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。表由 `ProgressStore`
+  首次连接时建（`_ensureSchema`）；知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
+  **题库不进数据库**，仍是 `content/` 的 JSON。
+- **凭据不进仓库**：连接配置读环境变量 `ATHENA_DRIVER_DB`，或用户数据目录
+  `AthenaDriver/db.json`（对话框保存，POSIX 上 600）；没配置就弹对话框，不写默认值。
+  历史数据一次性迁移用 `scripts/migrate_progress_to_pg.py`（同一份配置，目标表非空即拒绝）。
+- **离开内网**：数据库端口不出内网，外网走 `practice/nas_admin` 的 REST API
+  （`/api/driver/v1`，设备令牌）。**客户端尚未接入**，也还没有本地 SQLite 队列——当前纯在线，
+  PG 不可达时做题功能禁用并提示（主仓库 ADR 0068 的「状态」表是准）。
+- **测试**：连本机的 PG（`ATHENA_DRIVER_TEST_DB`，默认 `athena_driver@localhost`，角色需
+  `CREATEDB`），每个测试文件一个独立库，并发安全；不连软路由，CI 也自己起 PG。
 - **图标**：应用标志是上色的小汽车，启动器、任务栏、侧栏同一份 `icon.svg`（ADR 0048）。
   界面功能图标只用 `lib/glyphs.dart` 的 `Glyph.xxx`：一个概念一个图标、一个图标一个意思、
   统一 Material 实心风格，不直接写 `Icons.xxx`；加图标先在表里加一行（ADR 0049）。

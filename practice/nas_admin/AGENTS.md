@@ -30,6 +30,9 @@
 - 数据库连接串：环境变量 `NAS_ADMIN_DATABASE_URL` 或本目录 `db-local.json`
   （已 gitignore，`{"url": ...}`）。deploy 会把它写到路由器
   `/opt/webapp/db-local.json`（600）。
+- 驾考 API 的 driver 库连接串：环境变量 `DRIVER_API_DATABASE_URL` 或本目录 `driver-db.json`
+  （已 gitignore，600，属主为运行用户）。用专用低权限角色 `driver_api`（只有增删改查、
+  无 DDL），不是 driver 客户端的账号；没配时 API 返回 503，不影响后台其他功能。
 - 后台管理员密码：部署时环境变量 `NAS_ADMIN_ADMIN_PASSWORD`（首次建号用，
   没有就拒绝部署）；改密码走 LuCI/FAB 界面。
 - 路由器 SSH 免密（root@192.168.6.1），deploy 直接可用。
@@ -40,6 +43,10 @@
 app.py              入口（本机/路由器同一个）
 config.py           FAB 配置（连接串、密钥，全走环境变量可覆盖）
 nas_admin/          应用包（__init__ 工厂、views 首页与探活、templates）
+nas_admin/driver_api/  驾考进度 REST API（/api/driver/v1，设备令牌认证；ADR 0068）
+tests/              单元测试（SQLite）、真实 FAB 冒烟、对真实 PG 的集成测试（设环境变量才跑）
+docs/driver-api.md  API 接口、认证、部署（含数据库低权限角色）与测试说明
+scripts/driver_token.py  管理设备令牌（create / list / revoke）
 scripts/run_dev.py  本机自举：bootstrap 建 .venv，serve 起 app.py
 scripts/check.py    验证入口（依赖就绪 + smoke：/api/health、/login/、/）
 scripts/deploy.py   部署到 /opt/webapp（含备份、建管理员、探活）
