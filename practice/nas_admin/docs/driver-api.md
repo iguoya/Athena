@@ -116,8 +116,11 @@ python3 scripts/driver_token.py revoke 3
    （2026-10-02 在路由器上用临时库验证过：增删改查够用、identity 列无需额外授权、不能建表/删表/清表、连不上别的库。）
 
 2. **配置连接串**（不进仓库）：环境变量 `DRIVER_API_DATABASE_URL`，或后台目录下 `driver-db.json`
-   （已 gitignore，`{"url": "postgresql://driver_api:密码@127.0.0.1:5432/athena_driver"}`，权限 600）。
-   API 与 PG 同在路由器上，连 `127.0.0.1` 即可。没配时 API 返回 503 `not_configured`，不影响后台其他功能。
+   （已 gitignore，`{"url": "postgresql://driver_api:密码@192.168.6.1:5432/athena_driver"}`，权限 600）。
+   API 与 PG 同在路由器上，连内网口 `192.168.6.1`（pg_hba 已放行该网段，路由器连自己的内网口
+   不依赖外部网络状态）。**不要写 `127.0.0.1`**：PG 的 `listen_addresses` 虽已加上它，但在 PG
+   下次重启前并不实际监听，连接会 refused（2026-10-02 部署仪表盘时踩过，症状是
+   `database_unavailable`）。没配时 API 返回 503 `not_configured`，不影响后台其他功能。
 
 3. **部署后台**（deploy 脚本，或同步 `nas_admin/` 到 `/opt/webapp` 后重启 `webapp` 服务）。
    令牌表 `driver_api_tokens` 会在首次使用时自动建在后台库里。
