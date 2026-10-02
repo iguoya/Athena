@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>驾考进度</title>
+  <style>
+    :root {
+      --bg: #f5f6f8; --card: #ffffff; --ink: #1f2329; --secondary: #6b7280;
+      --line: #e5e7eb; --accent: #2563eb; --ok: #16a34a; --bad: #dc2626;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111418; --card: #1b1f24; --ink: #e6e8ea; --secondary: #9aa1ab;
+        --line: #2a2f36; --accent: #60a5fa; --ok: #4ade80; --bad: #f87171;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px 16px 48px; background: var(--bg); color: var(--ink);
+      font: 15px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    }
+    main { max-width: 880px; margin: 0 auto; }
+    h1 { font-size: 1.35rem; margin: 0 0 4px; }
+    .meta { color: var(--secondary); font-size: 0.85rem; margin-bottom: 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    }
+    .card .num { font-size: 1.5rem; font-weight: 600; }
+    .card .label { color: var(--secondary); font-size: 0.82rem; margin-top: 2px; }
+    section { margin-top: 28px; }
+    section > h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    .chart { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; height: 280px; }
+    .empty {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 22px; color: var(--secondary); text-align: center;
+    }
+    ul.achievements { list-style: none; margin: 0; padding: 0; }
+    ul.achievements li {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 10px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px;
+    }
+    ul.achievements time { color: var(--secondary); font-size: 0.85rem; white-space: nowrap; }
+    .error-box { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 28px; text-align: center; color: var(--secondary); margin-top: 24px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>驾考进度</h1>
+  <div class="meta" id="meta">读取中…</div>
+
+  <div class="cards" id="cards" hidden></div>
+
+  <section id="daily-section" hidden>
+    <h2>最近 30 天</h2>
+    <div class="chart" id="daily"></div>
+  </section>
+
+  <section id="subjects-section" hidden>
+    <h2>各科目</h2>
+    <div class="chart" id="subjects" style="height: 220px;"></div>
+  </section>
+
+  <section id="exams-section" hidden>
+    <h2>模拟考成绩</h2>
+    <div class="chart" id="exams"></div>
+  </section>
+
+  <section id="achievements-section" hidden>
+    <h2>成就</h2>
+    <ul class="achievements" id="achievements"></ul>
+  </section>
+
+  <div class="error-box" id="error" hidden></div>
+</main>
+
+<script src="{{ url_for('static', filename='echarts.min.js') }}"></script>
+<script>
+"use strict";
+
+const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
+const secondary = getComputedStyle(document.documentElement).getPropertyValue("--secondary").trim();
+const line = getComputedStyle(document.documentElement).getPropertyValue("--line").trim();
+const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+const ok = getComputedStyle(document.documentElement).getPropertyValue("--ok").trim();
+const bad = getComputedStyle(document.documentElement).getPropertyValue("--bad").trim();
+
+const charts = [];
+function chart(el) {
+  const c = echarts.init(el);
+  charts.push(c);
+  return c;
+}
+window.addEventListener("resize", () => charts.forEach(c => c.resize()));
+
+const BASE_TEXT = { color: secondary, fontSize: 11 };
+const pct = v => v == null ? "—" : Math.round(v * 100) + "%";
+
+function render(data) {
+  const o = data.overview;
+  document.getElementById("meta").textContent =
+    "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ");
+
+  const cards = [
+    [o.attempts.toLocaleString(), "累计作答"],
+    [pct(o.rate), "总正确率"],
+    [o.streak >= 1 ? o.streak + " 天" : "—", "连续练习"],
+    [o.avg_duration_ms ? (o.avg_duration_ms / 1000).toFixed(1) + " 秒" : "—", "平均用时"],
+    [o.exams, "模拟考场数"],
+    [o.drills + o.rehearsals, "练车 / 演练"],
+    [o.achievements, "成就"],
+  ];
+  document.getElementById("cards").hidden = false;
+  document.getElementById("cards").innerHTML = cards
+    .map(([num, label]) => `<div class="card"><div class="num">${num}</div><div class="label">${label}</div></div>`)
+    .join("");
+
+  // ---- 最近 30 天：柱是题量，线是正确率
+  if (data.daily.some(d => d.attempts > 0)) {
+    document.getElementById("daily-section").hidden = false;
+    chart(document.getElementById("daily")).setOption({
+      grid: { left: 40, right: 40, top: 24, bottom: 24 },
+      tooltip: { trigger: "axis" },
+      xAxis: { type: "category", data: data.daily.map(d => d.date.slice(5)),
+               axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
+      yAxis: [
+        { type: "value", minInterval: 1, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+        { type: "value", max: 100, min: 0, axisLabel: BASE_TEXT, splitLine: { show: false } },
+      ],
+      series: [
+        { name: "作答", type: "bar", data: data.daily.map(d => d.attempts),
+          itemStyle: { color: accent, borderRadius: [3, 3, 0, 0] } },
+        { name: "正确率", type: "line", yAxisIndex: 1,
+          data: data.daily.map(d => d.attempts ? Math.round(d.correct / d.attempts * 100) : null),
+          smooth: true, showSymbol: false, itemStyle: { color: ok }, connectNulls: false,
+          tooltip: { valueFormatter: v => v == null ? "—" : v + "%" } },
+      ],
+    });
+  }
+
+  // ---- 各科目：横向条，条长是正确率，标签带题量
+  const withAttempts = data.subjects.filter(s => s.attempts > 0);
+  if (withAttempts.length) {
+    document.getElementById("subjects-section").hidden = false;
+    chart(document.getElementById("subjects")).setOption({
+      grid: { left: 120, right: 60, top: 10, bottom: 24 },
+      tooltip: {
+        formatter: p => {
+          const s = withAttempts[p[0].dataIndex];
+          return `${s.full_title}<br>作答 ${s.attempts} · 正确率 ${pct(s.rate)}`
+            + (s.exams ? `<br>模拟考 ${s.exams} 场 · 平均 ${s.exam_avg} 分` : "");
+        },
+      },
+      xAxis: { type: "value", max: 100, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+      yAxis: { type: "category", data: withAttempts.map(s => s.title),
+               axisLabel: { color: ink, fontSize: 13 }, axisLine: { lineStyle: { color: line } } },
+      series: [{
+        type: "bar", data: withAttempts.map(s => Math.round(s.rate * 100)),
+        label: { show: true, position: "right", color: secondary, formatter: p => pct(withAttempts[p.dataIndex].rate) },
+        itemStyle: { color: accent, borderRadius: [0, 3, 3, 0] }, barWidth: 18,
+      }],
+    });
+  }
+
+  // ---- 模拟考：每场一根柱，及格线横着，过没过用颜色分
+  if (data.exams.length) {
+    document.getElementById("exams-section").hidden = false;
+    chart(document.getElementById("exams")).setOption({
+      grid: { left: 36, right: 20, top: 24, bottom: 24 },
+      tooltip: {
+        formatter: p => {
+          const e = data.exams[p[0].dataIndex];
+          return `${e.subject} · ${e.at.replace("T", " ")}<br>${e.score} 分${e.passed ? " · 及格" : " · 未过"}`;
+        },
+      },
+      xAxis: { type: "category", data: data.exams.map((_, i) => i + 1),
+               axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
+      yAxis: { type: "value", max: 100, min: 0, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+      series: [{
+        type: "bar",
+        data: data.exams.map(e => ({ value: e.score, itemStyle: { color: e.passed ? ok : bad, borderRadius: [3, 3, 0, 0] } })),
+        markLine: {
+          silent: true, symbol: "none",
+          lineStyle: { color: secondary, type: "dashed" },
+          label: { formatter: "90 分", color: secondary },
+          data: [{ yAxis: 90 }],
+        },
+      }],
+    });
+  }
+
+  // ---- 成就墙：不是所有数据都值得画成图，解锁时间线本身就是内容
+  if (data.achievements.length) {
+    document.getElementById("achievements-section").hidden = false;
+    document.getElementById("achievements").innerHTML = data.achievements
+      .map(a => `<li><span>${a.label}</span><time>${a.at.slice(0, 10)}</time></li>`)
+      .join("");
+  }
+}
+
+function fail(message) {
+  document.getElementById("meta").textContent = "";
+  const box = document.getElementById("error");
+  box.hidden = false;
+  box.textContent = message;
+}
+
+fetch("data.json")
+  .then(r => r.ok ? r.json() : Promise.reject(new Error("http " + r.status)))
+  .then(render)
+  .catch(() => fail("进度数据暂时拿不到（数据库未配置、不可用或尚未初始化）。内网稍后再试，或先在内网用驾考客户端连接一次以建表。"));
+</script>
+</body>
+</html>

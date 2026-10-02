@@ -66,7 +66,11 @@ def main() -> int:
     index = client.get("/")
     assert index.status_code == 200, f"/ 状态码 {index.status_code}"
 
-    print(f"smoke OK：/api/health ok=true，/login/ 与 / 均 200，database={payload['database']}")
+    # 仪表盘页面是纯壳（ADR 0069）：不查库也必须能出，数据端点降级由测试覆盖。
+    driver_page = client.get("/driver/")
+    assert driver_page.status_code == 200, f"/driver/ 状态码 {driver_page.status_code}"
+
+    print(f"smoke OK：/api/health ok=true，/login/、/ 与 /driver/ 均 200，database={payload['database']}")
     return 0
 
 

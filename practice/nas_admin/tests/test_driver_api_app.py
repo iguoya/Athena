@@ -54,6 +54,14 @@ class RealAppTests(unittest.TestCase):
         self.assertTrue(health.get_json()["ok"])
         self.assertEqual(self.client.get("/login/").status_code, 200)
 
+    def test_仪表盘页面与数据端点(self):
+        page = self.client.get("/driver/")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"echarts.min.js", page.data)
+        data = self.client.get("/driver/data.json")
+        self.assertEqual(data.status_code, 200)
+        self.assertIn("overview", data.get_json())
+
     def test_API_要令牌_有令牌能读写(self):
         self.assertEqual(self.client.get(f"{BASE}/ping").status_code, 401)
         headers = {"Authorization": f"Bearer {self.token}"}
