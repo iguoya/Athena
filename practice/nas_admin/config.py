@@ -32,8 +32,30 @@ def _database_url() -> str:
     )
 
 
-SQLALCHEMY_DATABASE_URI = _database_url()
+def _normalize(url: str) -> str:
+    # 常见写法是 postgresql://；SQLAlchemy 默认会去找没装的 psycopg2，这里用的是 psycopg 3。
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url[len("postgresql://") :]
+    return url
+
+
+def _secret_key() -> str:
+    """会话签名密钥。来源按序：环境变量 `NAS_ADMIN_SECRET_KEY`，本目录 `secret-key.txt`
+    （已 gitignore，600；路由器上由 deploy 首次部署时随机生成），最后才是仅供本机开发的
+    默认值——默认值是公开的，拿它能伪造登录会话，所以路由器上绝不能落到这一步。"""
+    from_env = os.environ.get("NAS_ADMIN_SECRET_KEY")
+    if from_env:
+        return from_env
+    local = BASE_DIR / "secret-key.txt"
+    if local.is_file():
+        key = local.read_text(encoding="utf-8").strip()
+        if len(key) < 32:
+            sys.exit("secret-key.txt 太短（至少 32 个字符）")
+        return key
+    return "athena-nas-admin-dev-key"
+
+
+SQLALCHEMY_DATABASE_URI = _normalize(_database_url())
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-# 生产部署时应通过环境变量换掉默认密钥（见 AGENTS.md 待办）。
-SECRET_KEY = os.environ.get("NAS_ADMIN_SECRET_KEY", "athena-nas-admin-dev-key")
+SECRET_KEY = _secret_key()
