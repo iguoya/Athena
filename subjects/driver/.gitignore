@@ -46,3 +46,7 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# 进度已迁入中心 PostgreSQL（主仓库 ADR 0067）。旧 SQLite 库不再进版本库，也别被 launcher sync 重新 add。
+progress/learning.db
+progress/learning.db-*
