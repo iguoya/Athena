@@ -1,0 +1,19 @@
+{% extends base_template %}
+
+{% block content %}
+<div style="padding: 1rem;">
+  <h3 style="margin: 0 0 1rem;">AthenaNAS 后台管理</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+    {% for title, value in cards %}
+    <div style="border: 1px solid rgba(128,128,128,.35); border-radius: .5rem; padding: .9rem 1rem;">
+      <div style="font-size: .8rem; opacity: .7; margin-bottom: .3rem;">{{ title }}</div>
+      <div style="font-size: 1rem; word-break: break-all;">{{ value }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <p style="margin-top: 1.5rem; opacity: .7;">
+    骨架阶段：认证用 FAB 自带登录（右上角），功能页从这里长出来。
+    探活：<a href="/api/health">/api/health</a>
+  </p>
+</div>
+{% endblock %}

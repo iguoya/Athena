@@ -1,0 +1,5 @@
+flask-appbuilder>=4.5
+psycopg[binary]>=3.2
+# sqlalchemy-utils（FAB 的依赖）尚未适配 SQLAlchemy 2.1（ScalarAttributeImpl
+# 被移除），钉在 2.0 稳定线；utils 跟上后放开。
+sqlalchemy>=2.0,<2.1

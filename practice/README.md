@@ -43,6 +43,20 @@
   `subjects/cpp` 一样分核心测试和 GTK 测试两个可执行文件），`meson test -C
   build` 能跑。
 
+- [`nas_admin/`](nas_admin/)：**NAS 后台管理**（2026-10-02 从路由器
+  /opt/webapp 的单文件 Flask 演化而来）。Flask-AppBuilder 5 + 路由器上的
+  PostgreSQL 17（库 nas_admin），本机与路由器共用同一条连接串、同一套数据。
+  本目录是唯一源，`scripts/deploy.py` 一条命令部署回 /opt/webapp（自动备份、
+  装依赖、首次建管理员、重启 procd 服务、探活）。面板在
+  <http://192.168.6.1:5000/>。选型原则：通用主流、开发与维护效率
+  优先。
+
+  ```sh
+  cd practice/nas_admin
+  python3 scripts/check.py     # 本机 smoke（/api/health、/login/、/）
+  python3 scripts/deploy.py    # 部署到路由器
+  ```
+
 ## 发现与启动
 
 不单独起一个独立进程，走 `launcher` 编排器同一套机制——发现根目录从
