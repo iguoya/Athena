@@ -49,11 +49,11 @@ class DashboardCase(unittest.TestCase):
             conn.execute(
                 insert(schema.attempts),
                 [
-                    {"question_id": "q1", "topic_id": "t1", "subject_id": "subject1", "correct": 1, "duration_ms": 4000, "at": f"{TODAY}T10:00:00.000"},
-                    {"question_id": "q2", "topic_id": "t1", "subject_id": "subject1", "correct": 0, "duration_ms": 6000, "at": f"{TODAY}T10:01:00.000"},
-                    {"question_id": "q3", "topic_id": "t2", "subject_id": "subject4", "correct": 1, "duration_ms": 5000, "at": f"{YESTERDAY}T09:00:00.000"},
-                    {"question_id": "q1", "topic_id": "t1", "subject_id": "subject1", "correct": 0, "duration_ms": 3000, "at": f"{BEFORE_YESTERDAY}T08:00:00.000"},
-                    {"question_id": "q2", "topic_id": "t1", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{BEFORE_YESTERDAY}T08:01:00.000"},
+                    {"question_id": "q1", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 4000, "at": f"{TODAY}T10:00:00.000"},
+                    {"question_id": "q2", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 6000, "at": f"{TODAY}T10:01:00.000"},
+                    {"question_id": "q3", "topic_id": "drive.s4.civil", "subject_id": "subject4", "correct": 1, "duration_ms": 5000, "at": f"{YESTERDAY}T09:00:00.000"},
+                    {"question_id": "q1", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 3000, "at": f"{BEFORE_YESTERDAY}T08:00:00.000"},
+                    {"question_id": "q2", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{BEFORE_YESTERDAY}T08:01:00.000"},
                 ],
             )
             conn.execute(
@@ -118,12 +118,52 @@ class PageTest(DashboardCase):
         self.assertEqual(by_id["subject4"]["attempts"], 1)
         self.assertEqual(by_id["subject4"]["title"], "科目四")
 
+        # 日历热力：全量按天的 [日期, 量] 对，只有练过的天出现
+        calendar = {d[0]: d[1] for d in data["calendar"]}
+        self.assertEqual(calendar[TODAY], 2)
+        self.assertEqual(calendar[YESTERDAY], 1)
+        self.assertEqual(calendar[BEFORE_YESTERDAY], 2)
+        self.assertEqual(len(calendar), 3)
+
+        # 旭日：一级按量降序（subject1=4 在前），叶子带章节展示名
+        self.assertEqual(data["sunburst"][0]["name"], "科目一")
+        self.assertEqual(data["sunburst"][0]["value"], 4)
+        self.assertIn("通行、超车与让行", [c["name"] for c in data["sunburst"][0]["children"]])
+
+        # 雷达：seed 里每章作答都不足 10 次，正确率噪声大，不进雷达
+        self.assertEqual(data["radar"]["indicators"], [])
+
         self.assertEqual(len(data["exams"]), 2)
         self.assertEqual(data["exams"][0]["score"], 88)
         self.assertFalse(data["exams"][0]["passed"])
 
         self.assertEqual(data["achievements"][0]["label"], "连对 5 题")
         self.assertEqual(data["achievements"][0]["at"].startswith(YESTERDAY), True)
+
+    def test_radar_picks_main_subject_with_threshold(self):
+        """雷达取正式科目中作答量最大的；不足 10 次的章节不进。"""
+        with self.driver.begin() as conn:
+            rows = []
+            # 科目一 rules 章 12 次答对 10、signals 章 12 次答对 6；alcohol 只有 5 次（门槛外）
+            for i in range(12):
+                rows.append({"question_id": f"q{i}", "topic_id": "drive.s1.rules", "subject_id": "subject1",
+                             "correct": 1 if i < 10 else 0, "duration_ms": 0, "at": f"{TODAY}T1{i:02d}:00:00.000"})
+                rows.append({"question_id": f"s{i}", "topic_id": "drive.s1.signals", "subject_id": "subject1",
+                             "correct": 1 if i < 6 else 0, "duration_ms": 0, "at": f"{TODAY}T2{i:02d}:00:00.000"})
+            for i in range(5):
+                rows.append({"question_id": f"a{i}", "topic_id": "drive.s1.alcohol", "subject_id": "subject1",
+                             "correct": 1, "duration_ms": 0, "at": f"{TODAY}T3{i:02d}:00:00.000"})
+            # 错题本量再大也不抢主修科目（wrong 不是正式科目）
+            for i in range(50):
+                rows.append({"question_id": f"w{i}", "topic_id": "drive.s1.rules", "subject_id": "wrong",
+                             "correct": 0, "duration_ms": 0, "at": f"{TODAY}T4{i:02d}:00:00.000"})
+            conn.execute(insert(schema.attempts), rows)
+        data = self.client.get("/driver/data.json").get_json()
+        radar = data["radar"]
+        self.assertEqual(radar["subject"], "科目一")
+        names = [i["name"] for i in radar["indicators"]]
+        self.assertEqual(names, ["通行、超车与让行", "交通信号与标志"])  # 按量降序，alcohol 被门槛滤掉
+        self.assertEqual(radar["values"], [83.3, 50.0])
 
     def test_readonly_no_rows_change(self):
         self.seed()

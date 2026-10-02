@@ -28,15 +28,15 @@
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
     }
-    .card .num { font-size: 1.5rem; font-weight: 600; }
+    .card .num { font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
     .card .label { color: var(--secondary); font-size: 0.82rem; margin-top: 2px; }
     section { margin-top: 28px; }
     section > h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    section > h2 small { color: var(--secondary); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
     .chart { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; height: 280px; }
-    .empty {
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 22px; color: var(--secondary); text-align: center;
-    }
+    .chart.tall { height: 340px; }
+    .duo { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 720px) { .duo { grid-template-columns: 1fr 1fr; } }
     ul.achievements { list-style: none; margin: 0; padding: 0; }
     ul.achievements li {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px;
@@ -54,9 +54,27 @@
 
   <div class="cards" id="cards" hidden></div>
 
+  <section id="calendar-section" hidden>
+    <h2>练习日历<small>颜色越深练得越多</small></h2>
+    <div class="chart" id="calendar" style="height: auto; padding: 16px 8px;"></div>
+  </section>
+
   <section id="daily-section" hidden>
     <h2>最近 30 天</h2>
     <div class="chart" id="daily"></div>
+  </section>
+
+  <section id="duo-section" hidden>
+    <div class="duo">
+      <div id="sunburst-block" hidden>
+        <h2 style="font-size:1.05rem;margin:0 0 10px;">作答分布<small style="color:var(--secondary);font-weight:400;font-size:.8rem;margin-left:8px;">外圈是章节</small></h2>
+        <div class="chart tall" id="sunburst"></div>
+      </div>
+      <div id="radar-block" hidden>
+        <h2 style="font-size:1.05rem;margin:0 0 10px;" id="radar-title">章节正确率</h2>
+        <div class="chart tall" id="radar"></div>
+      </div>
+    </div>
   </section>
 
   <section id="subjects-section" hidden>
@@ -81,12 +99,9 @@
 <script>
 "use strict";
 
-const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim();
-const secondary = getComputedStyle(document.documentElement).getPropertyValue("--secondary").trim();
-const line = getComputedStyle(document.documentElement).getPropertyValue("--line").trim();
-const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
-const ok = getComputedStyle(document.documentElement).getPropertyValue("--ok").trim();
-const bad = getComputedStyle(document.documentElement).getPropertyValue("--bad").trim();
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const ink = css("--ink"), secondary = css("--secondary"), line = css("--line");
+const accent = css("--accent"), ok = css("--ok"), bad = css("--bad");
 
 const charts = [];
 function chart(el) {
@@ -99,24 +114,74 @@ window.addEventListener("resize", () => charts.forEach(c => c.resize()));
 const BASE_TEXT = { color: secondary, fontSize: 11 };
 const pct = v => v == null ? "—" : Math.round(v * 100) + "%";
 
+// 概览数字从 0 滚到目标值：数字动效让「总量」这类抽象大数有实感
+function countUp(el, target, format) {
+  if (!isFinite(target) || target <= 0) { el.textContent = format(target); return; }
+  const start = performance.now(), duration = 700;
+  function tick(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = format(target * eased);
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 function render(data) {
   const o = data.overview;
   document.getElementById("meta").textContent =
     "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ").replace(/\+.*$/, "");
 
   const cards = [
-    [o.attempts.toLocaleString(), "累计作答"],
-    [pct(o.rate), "总正确率"],
-    [o.streak >= 1 ? o.streak + " 天" : "—", "连续练习"],
-    [o.avg_duration_ms ? (o.avg_duration_ms / 1000).toFixed(1) + " 秒" : "—", "平均用时"],
-    [o.exams, "模拟考场数"],
-    [o.drills + o.rehearsals, "练车 / 演练"],
-    [o.achievements, "成就"],
+    [o.attempts, v => Math.round(v).toLocaleString("zh-CN"), "累计作答"],
+    // 百分比以「83」为目标滚动而不是 0.83——后者四舍五入全程只会显示 0%/1%
+    [o.rate == null ? 0 : Math.round(o.rate * 100), v => o.rate == null ? "—" : Math.round(v) + "%", "总正确率"],
+    [o.streak, v => (o.streak >= 1 ? Math.round(v) + " 天" : "—"), "连续练习"],
+    [o.avg_duration_ms ? o.avg_duration_ms / 1000 : 0, v => o.avg_duration_ms ? (v).toFixed(1) + " 秒" : "—", "平均用时"],
+    [o.exams, v => Math.round(v), "模拟考场数"],
+    [o.drills + o.rehearsals, v => Math.round(v), "练车 / 演练"],
+    [o.achievements, v => Math.round(v), "成就"],
   ];
-  document.getElementById("cards").hidden = false;
-  document.getElementById("cards").innerHTML = cards
-    .map(([num, label]) => `<div class="card"><div class="num">${num}</div><div class="label">${label}</div></div>`)
+  const box = document.getElementById("cards");
+  box.hidden = false;
+  box.innerHTML = cards
+    .map(() => `<div class="card"><div class="num">0</div><div class="label"></div></div>`)
     .join("");
+  [...box.querySelectorAll(".card")].forEach((card, i) => {
+    const [target, format, label] = cards[i];
+    card.querySelector(".label").textContent = label;
+    countUp(card.querySelector(".num"), target, format);
+  });
+
+  // ---- 练习日历：热力格子，全历史跨度
+  if (data.calendar.length) {
+    const days = data.calendar.map(d => d[0]);
+    const first = new Date(days[0]);
+    const rangeStart = new Date(first.getFullYear(), first.getMonth(), 1).toISOString().slice(0, 10);
+    const rangeEnd = new Date().toISOString().slice(0, 10);
+    const months = (new Date(rangeEnd).getYear() - new Date(rangeStart).getYear()) * 12
+                 + new Date(rangeEnd).getMonth() - new Date(rangeStart).getMonth() + 1;
+    const el = document.getElementById("calendar");
+    el.style.height = (months * 26 + 56) + "px";
+    document.getElementById("calendar-section").hidden = false;
+    chart(el).setOption({
+      visualMap: {
+        min: 0, max: Math.max(...data.calendar.map(d => d[1])), type: "continuous",
+        orient: "horizontal", left: "center", bottom: 0, itemWidth: 12,
+        text: ["多", "少"], textStyle: BASE_TEXT, inRange: { color: [line, accent] },
+      },
+      calendar: {
+        range: [rangeStart, rangeEnd], cellSize: [null, 18], splitLine: { show: false },
+        itemStyle: { color: "transparent", borderColor: line, borderWidth: 1 },
+        yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
+        monthLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
+      },
+      series: [{
+        type: "heatmap", coordinateSystem: "calendar", data: data.calendar,
+        itemStyle: { borderRadius: 3 },
+      }],
+    });
+  }
 
   // ---- 最近 30 天：柱是题量，线是正确率
   if (data.daily.some(d => d.attempts > 0)) {
@@ -138,6 +203,51 @@ function render(data) {
           smooth: true, showSymbol: false, itemStyle: { color: ok }, connectNulls: false,
           tooltip: { valueFormatter: v => v == null ? "—" : v + "%" } },
       ],
+    });
+  }
+
+  // ---- 作答分布旭日：内圈是科目/场景，外圈是章节
+  if (data.sunburst.length) {
+    document.getElementById("duo-section").hidden = false;
+    document.getElementById("sunburst-block").hidden = false;
+    chart(document.getElementById("sunburst")).setOption({
+      tooltip: { formatter: p => `${p.treePathInfo.map(i => i.name).slice(0, -1).join(" · ")}：${p.value} 次作答` },
+      series: [{
+        type: "sunburst", radius: ["12%", "88%"], data: data.sunburst,
+        label: { color: ink, fontSize: 11, minAngle: 12 },
+        levels: [
+          {},
+          { r0: "12%", r: "46%", label: { rotate: "tangential", fontSize: 13, fontWeight: 600 } },
+          { r0: "46%", r: "88%", itemStyle: { opacity: 0.75 }, label: { rotate: 0 } },
+        ],
+        itemStyle: { borderColor: css("--card"), borderWidth: 1.5 },
+      }],
+    });
+  }
+
+  // ---- 主修科目章节正确率雷达：形状越「圆」越均衡，瘪下去的是短板
+  if (data.radar.indicators.length >= 3) {
+    document.getElementById("duo-section").hidden = false;
+    document.getElementById("radar-block").hidden = false;
+    document.getElementById("radar-title").textContent = data.radar.subject + "章节正确率";
+    chart(document.getElementById("radar")).setOption({
+      tooltip: { formatter: p => p.name ? `${p.name}<br>${p.value} 分` : "" },
+      radar: {
+        indicator: data.radar.indicators, radius: "62%", splitNumber: 4,
+        axisName: { color: secondary, fontSize: 10 },
+        axisLine: { lineStyle: { color: line } },
+        splitLine: { lineStyle: { color: line } },
+        splitArea: { show: false },
+      },
+      series: [{
+        type: "radar",
+        data: [{
+          value: data.radar.values, name: "正确率",
+          areaStyle: { color: accent, opacity: 0.25 },
+          lineStyle: { color: accent }, itemStyle: { color: accent },
+          symbolSize: 4,
+        }],
+      }],
     });
   }
 

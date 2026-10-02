@@ -35,6 +35,38 @@ SUBJECT_TITLES: dict[str, tuple[str, str]] = {
     "review": ("复习", "考前复习"),
 }
 
+# 章节展示名同样来自 curriculum.json 的 topic 标题（只放名字，不复制教学内容，
+# 与 SUBJECT_TITLES 同一先例）。服务端不读 driver 的内容 JSON——应用间构建隔离。
+TOPIC_TITLES: dict[str, str] = {
+    "drive.s1.license": "驾驶证与准驾",
+    "drive.s1.registration": "机动车登记与检验",
+    "drive.s1.henan": "河南地方法规",
+    "drive.s1.rules": "通行、超车与让行",
+    "drive.s1.alcohol": "饮酒、疲劳与安全义务",
+    "drive.s1.penalty": "违法记分与处罚",
+    "drive.s1.accident": "交通事故处理",
+    "drive.s1.signals": "交通信号与标志",
+    "drive.s1.lights": "灯光使用",
+    "drive.s1.highway": "高速公路",
+    "drive.s1.occupants": "安全带、停放与乘员",
+    "drive.s2.general": "合格标准与通用评判",
+    "drive.s2.reverse": "倒车入库",
+    "drive.s2.parallel": "侧方停车",
+    "drive.s2.curve": "曲线行驶",
+    "drive.s2.corner": "直角转弯",
+    "drive.s4.crash": "事故现场与责任",
+    "drive.s4.lights": "灯光与视线",
+    "drive.s4.weather": "恶劣气象与复杂道路",
+    "drive.s4.emergency": "故障、警告标志与避险",
+    "drive.s4.yield": "让行与弱势交通参与者",
+    "drive.s4.maneuver": "行车操作与车距",
+    "drive.s4.civil": "安全文明驾驶",
+    "drive.s4.aid": "伤员救护义务",
+}
+
+# 正式科目（wrong / review 是练习场景，不算章节归属的科目）
+REAL_SUBJECTS = ("subject1", "subject2", "subject4")
+
 EXAM_PASS_LINE = 90  # 100 分制下的及格线，仅作图表参考线；数据里已有 passed
 
 
@@ -48,7 +80,10 @@ def collect(days: int = DAILY_WINDOW) -> dict[str, Any]:
         return {
             "overview": _overview(conn),
             "daily": _daily(conn, days),
+            "calendar": _calendar(conn),
             "subjects": _subjects(conn),
+            "sunburst": _sunburst(conn),
+            "radar": _radar(conn),
             "exams": _exam_list(conn),
             "achievements": _achievement_list(conn),
         }
@@ -159,3 +194,71 @@ def _achievement_list(conn: Connection) -> list[dict[str, Any]]:
     a = schema.achievements
     rows = conn.execute(select(a.c.key, a.c.at).order_by(a.c.at, a.c.key)).all()
     return [{"key": r[0], "label": _achievement_label(r[0]), "at": r[1]} for r in rows]
+
+
+# ---------------------------------------------------------------- 可视化扩展（二期）
+
+
+def _calendar(conn: Connection) -> list[list[Any]]:
+    """全量按天的作答量，给日历热力图（[日期, 量] 对；没练的日子不出现在列表里，
+    由前端日历底色表达）。GROUP BY 必须引用同一个标签列——各写一份 substr 表达式
+    会生成两组绑定参数，PG 判定两表达式不同而报 GroupingError（SQLite 宽松测不出），
+    与 _daily 同一模式。"""
+    a = schema.attempts
+    day = _day_of(a.c.at).label("day")
+    rows = conn.execute(select(day, func.count()).group_by(day)).all()
+    return [[str(r[0]), int(r[1])] for r in rows]
+
+
+def _topic_stats(conn: Connection) -> dict[tuple[str, str], tuple[int, int]]:
+    """(场景/科目, 章节) → (作答数, 答对数)。旭日与雷达共用这一份聚合。"""
+    a = schema.attempts
+    rows = conn.execute(
+        select(a.c.subject_id, a.c.topic_id, func.count(), func.coalesce(func.sum(a.c.correct), 0)).group_by(a.c.subject_id, a.c.topic_id)
+    ).all()
+    return {(r[0], r[1]): (int(r[2]), int(r[3])) for r in rows}
+
+
+def _sunburst(conn: Connection) -> list[dict[str, Any]]:
+    """作答分布旭日：一级是场景/科目，二级是章节。量大的放前面，一眼看到主力。"""
+    stats = _topic_stats(conn)
+    grouped: dict[str, list[tuple[str, int, int]]] = {}
+    for (subject, topic), (n, correct) in stats.items():
+        grouped.setdefault(subject, []).append((topic, n, correct))
+    out = []
+    for subject, items in sorted(grouped.items(), key=lambda kv: -sum(i[1] for i in kv[1])):
+        short = SUBJECT_TITLES.get(subject, (subject,))[0]
+        out.append(
+            {
+                "name": short,
+                "value": sum(i[1] for i in items),
+                "children": [
+                    {"name": TOPIC_TITLES.get(topic, topic), "value": n}
+                    for topic, n, _ in sorted(items, key=lambda i: (-i[1], i[0]))
+                ],
+            }
+        )
+    return out
+
+
+def _radar(conn: Connection) -> dict[str, Any]:
+    """主修科目（正式科目中作答量最大）各章的正确率雷达。答得太少的章节
+    正确率噪声大，不足 10 次的不进雷达。"""
+    stats = _topic_stats(conn)
+    totals: dict[str, int] = {}
+    for (subject, _), (n, _) in stats.items():
+        if subject in REAL_SUBJECTS:
+            totals[subject] = totals.get(subject, 0) + n
+    if not totals:
+        return {"subject": None, "indicators": [], "values": []}
+    main = max(totals, key=totals.get)
+    short = SUBJECT_TITLES.get(main, (main,))[0]
+    items = sorted(
+        ((topic, n, correct) for (subject, topic), (n, correct) in stats.items() if subject == main and n >= 10),
+        key=lambda i: (-i[1], i[0]),
+    )
+    return {
+        "subject": short,
+        "indicators": [{"name": TOPIC_TITLES.get(t, t), "max": 100} for t, _, _ in items],
+        "values": [round(c / n * 100, 1) for _, n, c in items],
+    }
