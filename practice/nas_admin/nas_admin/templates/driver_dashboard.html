@@ -18,25 +18,37 @@
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; padding: 20px 16px 48px; background: var(--bg); color: var(--ink);
+      margin: 0; padding: 20px 3vw 48px; background: var(--bg); color: var(--ink);
       font: 15px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
     }
-    main { max-width: 880px; margin: 0 auto; }
+    /* 2K 及以上充分铺开；超宽屏（4K）也别无限拉 */
+    main { max-width: 2200px; margin: 0 auto; }
     h1 { font-size: 1.35rem; margin: 0 0 4px; }
     .meta { color: var(--secondary); font-size: 0.85rem; margin-bottom: 20px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
     }
     .card .num { font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
     .card .label { color: var(--secondary); font-size: 0.82rem; margin-top: 2px; }
     section { margin-top: 28px; }
-    section > h2 { font-size: 1.05rem; margin: 0 0 10px; }
-    section > h2 small { color: var(--secondary); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
+    section > h2, .block > h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    h2 small { color: var(--secondary); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
     .chart { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; height: 280px; }
-    .chart.tall { height: 340px; }
-    .duo { display: grid; grid-template-columns: 1fr; gap: 14px; }
-    @media (min-width: 720px) { .duo { grid-template-columns: 1fr 1fr; } }
+    .chart.tall { height: 320px; }
+    /* 图表网格：窄屏单列，中屏两列，宽屏（≥1500px，含 2K）三列铺满 */
+    .grid { display: grid; gap: 28px 14px; grid-template-columns: 1fr; margin-top: 28px; }
+    /* 子项默认 min-width:auto 会被 ECharts 的 canvas 固有宽度撑开，轨道就不均分了 */
+    .grid > section, .grid > .block { margin-top: 0; min-width: 0; }
+    @media (min-width: 960px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      .grid .span2 { grid-column: span 2; }
+    }
+    @media (min-width: 1500px) {
+      .grid { grid-template-columns: 1fr 1fr 1fr; }
+      .grid .span2 { grid-column: span 2; }
+      .grid .span3 { grid-column: span 3; }
+    }
     ul.achievements { list-style: none; margin: 0; padding: 0; }
     ul.achievements li {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px;
@@ -54,43 +66,42 @@
 
   <div class="cards" id="cards" hidden></div>
 
-  <section id="calendar-section" hidden>
-    <h2>练习日历<small>颜色越深练得越多</small></h2>
-    <div class="chart" id="calendar" style="height: auto; padding: 16px 8px;"></div>
-  </section>
-
   <section id="daily-section" hidden>
-    <h2>最近 30 天</h2>
+    <h2>最近 30 天<small>柱是作答量，线是正确率</small></h2>
     <div class="chart" id="daily"></div>
   </section>
 
-  <section id="duo-section" hidden>
-    <div class="duo">
-      <div id="sunburst-block" hidden>
-        <h2 style="font-size:1.05rem;margin:0 0 10px;">作答分布<small style="color:var(--secondary);font-weight:400;font-size:.8rem;margin-left:8px;">外圈是章节</small></h2>
-        <div class="chart tall" id="sunburst"></div>
-      </div>
-      <div id="radar-block" hidden>
-        <h2 style="font-size:1.05rem;margin:0 0 10px;" id="radar-title">章节正确率</h2>
-        <div class="chart tall" id="radar"></div>
-      </div>
+  <div class="grid">
+    <section id="calendar-section" hidden>
+      <h2>练习日历<small>颜色越深练得越多</small></h2>
+      <div class="chart" id="calendar" style="height: auto; padding: 16px 8px;"></div>
+    </section>
+
+    <div class="block" id="sunburst-block" hidden>
+      <h2>作答分布<small>外圈是章节</small></h2>
+      <div class="chart tall" id="sunburst"></div>
     </div>
-  </section>
 
-  <section id="subjects-section" hidden>
-    <h2>各科目</h2>
-    <div class="chart" id="subjects" style="height: 220px;"></div>
-  </section>
+    <div class="block" id="radar-block" hidden>
+      <h2 id="radar-title">章节正确率</h2>
+      <div class="chart tall" id="radar"></div>
+    </div>
 
-  <section id="exams-section" hidden>
-    <h2>模拟考成绩</h2>
-    <div class="chart" id="exams"></div>
-  </section>
+    <section id="exams-section" class="span2" hidden>
+      <h2>模拟考成绩</h2>
+      <div class="chart" id="exams"></div>
+    </section>
 
-  <section id="achievements-section" hidden>
-    <h2>成就</h2>
-    <ul class="achievements" id="achievements"></ul>
-  </section>
+    <section id="subjects-section" hidden>
+      <h2>各科目</h2>
+      <div class="chart" id="subjects"></div>
+    </section>
+
+    <section id="achievements-section" class="span2 span3" hidden>
+      <h2>成就</h2>
+      <ul class="achievements" id="achievements"></ul>
+    </section>
+  </div>
 
   <div class="error-box" id="error" hidden></div>
 </main>
@@ -109,6 +120,7 @@ function chart(el) {
   charts.push(c);
   return c;
 }
+// 列数随断点变化，网格里每个图都要跟着容器重排
 window.addEventListener("resize", () => charts.forEach(c => c.resize()));
 
 const BASE_TEXT = { color: secondary, fontSize: 11 };
@@ -153,7 +165,7 @@ function render(data) {
     countUp(card.querySelector(".num"), target, format);
   });
 
-  // ---- 练习日历：热力格子，全历史跨度
+  // ---- 练习日历：热力格子，全历史跨度。宽度自适应所在列，格子高度固定
   if (data.calendar.length) {
     const days = data.calendar.map(d => d[0]);
     const first = new Date(days[0]);
@@ -162,7 +174,7 @@ function render(data) {
     const months = (new Date(rangeEnd).getYear() - new Date(rangeStart).getYear()) * 12
                  + new Date(rangeEnd).getMonth() - new Date(rangeStart).getMonth() + 1;
     const el = document.getElementById("calendar");
-    el.style.height = (months * 26 + 56) + "px";
+    el.style.height = (months * 30 + 64) + "px";
     document.getElementById("calendar-section").hidden = false;
     chart(el).setOption({
       visualMap: {
@@ -171,19 +183,19 @@ function render(data) {
         text: ["多", "少"], textStyle: BASE_TEXT, inRange: { color: [line, accent] },
       },
       calendar: {
-        range: [rangeStart, rangeEnd], cellSize: [null, 18], splitLine: { show: false },
+        range: [rangeStart, rangeEnd], cellSize: [null, 24], splitLine: { show: false },
         itemStyle: { color: "transparent", borderColor: line, borderWidth: 1 },
         yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
         monthLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
       },
       series: [{
         type: "heatmap", coordinateSystem: "calendar", data: data.calendar,
-        itemStyle: { borderRadius: 3 },
+        itemStyle: { borderRadius: 4 },
       }],
     });
   }
 
-  // ---- 最近 30 天：柱是题量，线是正确率
+  // ---- 最近 30 天：柱是题量，线是正确率（时间轴全宽，宽屏下柱距舒展）
   if (data.daily.some(d => d.attempts > 0)) {
     document.getElementById("daily-section").hidden = false;
     chart(document.getElementById("daily")).setOption({
@@ -208,7 +220,6 @@ function render(data) {
 
   // ---- 作答分布旭日：内圈是科目/场景，外圈是章节
   if (data.sunburst.length) {
-    document.getElementById("duo-section").hidden = false;
     document.getElementById("sunburst-block").hidden = false;
     chart(document.getElementById("sunburst")).setOption({
       tooltip: { formatter: p => `${p.treePathInfo.map(i => i.name).slice(0, -1).join(" · ")}：${p.value} 次作答` },
@@ -227,7 +238,6 @@ function render(data) {
 
   // ---- 主修科目章节正确率雷达：形状越「圆」越均衡，瘪下去的是短板
   if (data.radar.indicators.length >= 3) {
-    document.getElementById("duo-section").hidden = false;
     document.getElementById("radar-block").hidden = false;
     document.getElementById("radar-title").textContent = data.radar.subject + "章节正确率";
     chart(document.getElementById("radar")).setOption({
