@@ -64,7 +64,7 @@ class RealAppTests(unittest.TestCase):
 
     def test_API_要令牌_有令牌能读写(self):
         self.assertEqual(self.client.get(f"{BASE}/ping").status_code, 401)
-        headers = {"Authorization": f"Bearer {self.token}"}
+        headers = {"Authorization": f"Bearer {self.token}", "X-Athena-User": "tiger"}
         self.assertEqual(self.client.get(f"{BASE}/ping", headers=headers).get_json()["device"], "冒烟")
         item = {"question_id": "q", "topic_id": "t", "subject_id": "s", "correct": 1, "at": "2026-10-02T14:11:10.123"}
         r = self.client.post(f"{BASE}/attempts", json={"items": [item]}, headers=headers)

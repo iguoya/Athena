@@ -53,7 +53,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "hesitant": (flag(), False),
                 "at": (iso_time(), True),
             },
-            ("question_id", "at"),
+            ("user", "question_id", "at"),
         ),
         Resource(
             "exams",
@@ -64,7 +64,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "passed": (flag(), True),
                 "at": (iso_time(), True),
             },
-            ("subject_id", "at"),
+            ("user", "subject_id", "at"),
         ),
         Resource(
             "drill-runs",
@@ -74,7 +74,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "mistakes": (string(MAX_TEXT, allow_empty=True), True),
                 "at": (iso_time(), True),
             },
-            ("item_id", "at"),
+            ("user", "item_id", "at"),
         ),
         Resource(
             "rehearsals",
@@ -85,7 +85,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "total": (integer(0, 10_000), True),
                 "at": (iso_time(), True),
             },
-            ("item_id", "at"),
+            ("user", "item_id", "at"),
         ),
         Resource(
             "drill-notes",
@@ -95,7 +95,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "text": (string(MAX_TEXT, allow_empty=True), True),
                 "at": (iso_time(), True),
             },
-            ("item_id", "at"),
+            ("user", "item_id", "at"),
         ),
         Resource(
             "point-notes",
@@ -106,7 +106,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "text": (string(MAX_TEXT, allow_empty=True), True),
                 "at": (iso_time(), True),
             },
-            ("item_id", "step", "at"),
+            ("user", "item_id", "step", "at"),
         ),
         Resource(
             "notices",
@@ -118,7 +118,7 @@ APPEND_ONLY: dict[str, Resource] = {
                 "at": (iso_time(), True),
                 "read": (flag(), False),
             },
-            ("kind", "title", "at"),
+            ("user", "kind", "title", "at"),
         ),
     )
 }

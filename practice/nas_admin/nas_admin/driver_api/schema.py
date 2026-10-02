@@ -9,6 +9,9 @@
 
 列名、类型必须和 progress.dart 一致；时间列沿用 ISO 字符串存 TEXT（应用层只做字符串
 比较，不依赖数据库时区，跨机器也不受服务器时区影响）。
+
+每张表都带 `user` 列（ADR 0071）：同一份题库给多个学习者用，个人数据按用户隔离。
+列带 DEFAULT 'tiger' 只为让不带该列的测试 fixture 仍能建数据；真实读写永远显式给值。
 """
 
 from __future__ import annotations
@@ -20,9 +23,18 @@ metadata = MetaData()
 # PG 里是 BIGINT IDENTITY；SQLite 只有 INTEGER PRIMARY KEY 才自增。
 _ID = BigInteger().with_variant(Integer, "sqlite")
 
+# 首用户名（ADR 0071）：加列时的默认值，存量数据全归它。
+FIRST_USER = "tiger"
+
 
 def _table(name: str, *columns: Column) -> Table:
-    return Table(name, metadata, Column("id", _ID, primary_key=True, autoincrement=True), *columns)
+    return Table(
+        name,
+        metadata,
+        Column("id", _ID, primary_key=True, autoincrement=True),
+        Column("user", Text, nullable=False, server_default=FIRST_USER),
+        *columns,
+    )
 
 
 attempts = _table(
@@ -56,6 +68,7 @@ notices = _table(
 achievements = Table(
     "achievements",
     metadata,
+    Column("user", Text, primary_key=True, server_default=FIRST_USER),
     Column("key", Text, primary_key=True),
     Column("at", Text, nullable=False),
 )
@@ -63,6 +76,7 @@ achievements = Table(
 exam_drafts = Table(
     "exam_drafts",
     metadata,
+    Column("user", Text, primary_key=True, server_default=FIRST_USER),
     Column("draft_key", Text, primary_key=True),
     Column("subject_id", Text, nullable=False),
     Column("title", Text, nullable=False),

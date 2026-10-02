@@ -45,17 +45,22 @@ class ApiCase(unittest.TestCase):
         self.app = app
         self.client = app.test_client()
         _id, self.token = auth.create_token(self.tokens, "测试设备")
-        self.headers = {"Authorization": f"Bearer {self.token}"}
+        # 默认以首用户 tiger 走（ADR 0071）：不带用户头的请求一律 400，
+        # 个别用例换人时在 headers 里覆盖。
+        self.headers = {"Authorization": f"Bearer {self.token}", "X-Athena-User": "tiger"}
 
-    # 简写
-    def get(self, path, **kw):
-        return self.client.get(BASE + path, headers=self.headers, **kw)
+    # 简写；user 用来临时换人（多用户用例）
+    def get(self, path, user=None, **kw):
+        headers = {**self.headers, **({"X-Athena-User": user} if user else {})}
+        return self.client.get(BASE + path, headers=headers, **kw)
 
-    def post(self, path, body):
-        return self.client.post(BASE + path, json=body, headers=self.headers)
+    def post(self, path, body, user=None):
+        headers = {**self.headers, **({"X-Athena-User": user} if user else {})}
+        return self.client.post(BASE + path, json=body, headers=headers)
 
-    def put(self, path, body):
-        return self.client.put(BASE + path, json=body, headers=self.headers)
+    def put(self, path, body, user=None):
+        headers = {**self.headers, **({"X-Athena-User": user} if user else {})}
+        return self.client.put(BASE + path, json=body, headers=headers)
 
     def rows(self, table):
         with self.driver.connect() as conn:
@@ -100,7 +105,9 @@ class AuthTests(ApiCase):
         _id, other = auth.create_token(self.tokens, "另一台")
         auth.revoke_token(self.tokens, auth.list_tokens(self.tokens)[0]["id"])
         self.assertEqual(self.get("/ping").status_code, 401)
-        r = self.client.get(BASE + "/ping", headers={"Authorization": f"Bearer {other}"})
+        r = self.client.get(
+            BASE + "/ping", headers={"Authorization": f"Bearer {other}", "X-Athena-User": "tiger"}
+        )
         self.assertEqual(r.status_code, 200)
 
     def test_限流(self):
@@ -339,7 +346,7 @@ class FailureTests(unittest.TestCase):
         app = Flask(__name__)
         init_driver_api(app, driver_engine=driver_engine, token_engine=tokens)
         _id, token = auth.create_token(tokens, "d")
-        return app.test_client(), {"Authorization": f"Bearer {token}"}
+        return app.test_client(), {"Authorization": f"Bearer {token}", "X-Athena-User": "tiger"}
 
     def test_表还没建_503_且不泄露细节(self):
         client, headers = self.make(driver_engine=memory_engine())  # 空库，没有表
@@ -371,3 +378,53 @@ class NormalizeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MultiUserTests(ApiCase):
+    """ADR 0071：同一份题库给多个学习者，个人数据按用户隔离、互不可见。"""
+
+    def attempt(self, question_id: str, at: str, user: str) -> object:
+        return self.post(
+            "/attempts",
+            {"items": [{"question_id": question_id, "topic_id": "t", "subject_id": "s",
+                        "correct": True, "duration_ms": 0, "hesitant": False, "at": at}]},
+            user=user,
+        )
+
+    def test_两个用户互不可见也不能靠同键互吞(self):
+        # 同一题、同一时刻，两个用户各一条：去重键含 user，谁也不吞谁。
+        self.assertEqual(self.attempt("q1", T0, "tiger").status_code, 200)
+        self.assertEqual(self.attempt("q1", T0, "second").status_code, 200)
+        # 各自只看到自己那条；返回行不回传 user（它是请求方自己的身份）。
+        data = self.get("/attempts").get_json()
+        self.assertEqual(len(data["items"]), 1)
+        self.assertNotIn("user", data["items"][0])
+        data = self.get("/attempts", user="second").get_json()
+        self.assertEqual(len(data["items"]), 1)
+
+    def test_成就与草稿按用户独立(self):
+        self.assertEqual(self.put("/achievements/streak.5", {"at": T0}, user="tiger").status_code, 200)
+        # second 解锁同一个成就，各记各的（时间不同也互不覆盖）。
+        r = self.put("/achievements/streak.5", {"at": T1}, user="second").get_json()
+        self.assertEqual(r["at"], T1)
+        keys = [a["key"] for a in self.get("/achievements", user="second").get_json()["items"]]
+        self.assertEqual(keys, ["streak.5"])
+
+        draft = {"subject_id": "subject1", "title": "模拟考", "question_ids": "[]",
+                 "question_count": 100, "minutes": 45, "pass_score": 90,
+                 "points_per_question": 1, "mix": "{}", "full_bank": 0,
+                 "picked": "{}", "started_at": T0}
+        self.assertEqual(self.put("/exam-drafts/subject1.exam", draft, user="tiger").status_code, 200)
+        self.assertEqual(self.put("/exam-drafts/subject1.exam", draft, user="second").status_code, 200)
+        # tiger 删掉自己的草稿，second 的还在。
+        self.assertEqual(self.client.delete(BASE + "/exam-drafts/subject1.exam",
+                                           headers={**self.headers, "X-Athena-User": "tiger"}).status_code, 204)
+        self.assertEqual(self.get("/exam-drafts/subject1.exam", user="second").status_code, 200)
+
+    def test_缺用户头与空用户名都是400(self):
+        r = self.client.get(BASE + "/attempts", headers={"Authorization": f"Bearer {self.token}"})
+        self.assertEqual(r.status_code, 400)
+        self.assertEqual(r.get_json()["error"], "invalid")
+        r = self.client.get(BASE + "/attempts",
+                            headers={"Authorization": f"Bearer {self.token}", "X-Athena-User": "  "})
+        self.assertEqual(r.status_code, 400)

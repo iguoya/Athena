@@ -47,6 +47,9 @@ def _guard() -> tuple[Response, int] | None:
     if not auth.allow(device["id"]):
         return _error(429, "rate_limited", "请求太频繁，稍后再试")
     g.device = device
+    # 用户来自请求头而不是令牌（ADR 0071）：令牌标识设备，同一台设备上换人不是换令牌。
+    # ValidationError 会被下面的 errorhandler 映射成 400，与字段校验同一出口。
+    g.user = string()("user", request.headers.get("X-Athena-User", "").strip())
     return None
 
 
@@ -124,13 +127,13 @@ def _log_write(resource: str, **counts: int) -> None:
 @bp.get("/ping")
 def ping():
     """连通与令牌自检：客户端设置页点「测试连接」用。"""
-    return jsonify(ok=True, device=g.device["name"], server_time=datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    return jsonify(ok=True, device=g.device["name"], user=g.user, server_time=datetime.now(timezone.utc).isoformat(timespec="seconds"))
 
 
 @bp.get("/stats")
 def get_stats():
     with store.engine().connect() as conn:
-        return jsonify(stats=store.stats(conn))
+        return jsonify(stats=store.stats(conn, g.user))
 
 
 # ---------------------------------------------------------------- 追加型资源
@@ -140,7 +143,7 @@ def _make_list(res: Resource):
     def view():
         after_id, limit = _page_args()
         with store.engine().connect() as conn:
-            items, has_more = store.list_after(conn, res, after_id, limit)
+            items, has_more = store.list_after(conn, res, g.user, after_id, limit)
         return jsonify(items=items, has_more=has_more, next_after_id=items[-1]["id"] if items else after_id)
 
     return view
@@ -159,7 +162,7 @@ def _make_post(res: Resource):
             except ValidationError as error:
                 raise ValidationError(f"items[{index}].{error.field}", error.message) from None
         with store.engine().begin() as conn:
-            inserted, skipped = store.insert_missing(conn, res, items)
+            inserted, skipped = store.insert_missing(conn, res, items, g.user)
         _log_write(res.path, inserted=inserted, skipped=skipped)
         return jsonify(inserted=inserted, skipped=skipped)
 
@@ -174,7 +177,7 @@ for _name, _res in APPEND_ONLY.items():
 @bp.post("/notices/read-all")
 def notices_read_all():
     with store.engine().begin() as conn:
-        updated = store.mark_notices_read(conn)
+        updated = store.mark_notices_read(conn, g.user)
     _log_write("notices/read-all", updated=updated)
     return jsonify(updated=updated)
 
@@ -185,7 +188,7 @@ def notices_read_all():
 @bp.get("/achievements")
 def achievements_list():
     with store.engine().connect() as conn:
-        return jsonify(items=store.list_achievements(conn))
+        return jsonify(items=store.list_achievements(conn, g.user))
 
 
 @bp.put("/achievements/<key>")
@@ -193,7 +196,7 @@ def achievements_put(key: str):
     key = string()("key", key)
     at = clean({"at": (iso_time(), True)}, _body())["at"]
     with store.engine().begin() as conn:
-        effective = store.put_achievement(conn, key, at)
+        effective = store.put_achievement(conn, g.user, key, at)
     _log_write("achievements", key=1)
     return jsonify(key=key, at=effective)
 
@@ -205,7 +208,7 @@ def achievements_put(key: str):
 def draft_get(key: str):
     key = string()("key", key)
     with store.engine().connect() as conn:
-        draft = store.get_draft(conn, key)
+        draft = store.get_draft(conn, g.user, key)
     if draft is None:
         return _error(404, "not_found", "没有这份草稿")
     return jsonify(draft)
@@ -216,7 +219,7 @@ def draft_put(key: str):
     key = string()("key", key)
     fields = clean(DRAFT_FIELDS, _body())
     with store.engine().begin() as conn:
-        applied = store.put_draft(conn, key, fields)
+        applied = store.put_draft(conn, g.user, key, fields)
     _log_write("exam-drafts", applied=int(applied))
     return jsonify(applied=applied)
 
@@ -225,6 +228,6 @@ def draft_put(key: str):
 def draft_delete(key: str):
     key = string()("key", key)
     with store.engine().begin() as conn:
-        store.delete_draft(conn, key)
+        store.delete_draft(conn, g.user, key)
     _log_write("exam-drafts", deleted=1)
     return "", 204

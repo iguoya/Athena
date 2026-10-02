@@ -35,9 +35,13 @@ API 读写的是中心库 `athena_driver` 的全部个人数据表。
 - **成就** `PUT /achievements/<key>`：按键幂等，已存在时保留**更早**的解锁时间。
 - **试卷草稿** `PUT /exam-drafts/<key>`：整份覆盖；库里的 `saved_at` 比传来的更新则**不覆盖**（返回 `applied:false`）。
 
-## 二、认证
+## 二、认证与用户
 
-所有接口都要设备令牌：`Authorization: Bearer dapi_xxxx`。没有匿名接口。
+所有接口都要设备令牌：`Authorization: Bearer dapi_xxxx`，以及**必填**的
+`X-Athena-User` 头（ADR 0071）——同一份题库给多个学习者用，个人数据按用户隔离。
+令牌标识设备（换人不换令牌），用户标识学习者；缺头或空值是 400。上传的去重键、
+拉取的行、成就、草稿、已读、统计全部按用户隔离；返回的行里不带 `user` 字段——
+那是请求方自己的身份。中心表的迁移与全新建库用 `scripts/driver_migrate_users.py`。
 
 - 每台设备一个令牌，服务端**只存 SHA-256 哈希**，库被读走也还原不出令牌。
 - 丢了一台设备就撤销那一个，不影响别的。
