@@ -64,7 +64,7 @@ class DashboardIndexView(IndexView):
             ("Flask-AppBuilder", _dist_version("Flask-AppBuilder")),
             ("数据库", _database_label()),
             ("数据库服务", _database_server()),
-            ("服务器时间", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+            ("服务器时间", datetime.now().strftime("%Y-%m-%d %H:%M")),
         ]
         # 必须用 self.render_template：只有它注入 base_template 等 FAB 上下文。
         return self.render_template("dashboard.html", cards=cards)

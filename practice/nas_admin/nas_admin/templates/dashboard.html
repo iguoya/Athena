@@ -1,12 +1,15 @@
 {% extends base_template %}
 
 {% block content %}
+<style>
+  .driver-link:hover { background: rgba(37,99,235,.14); }
+</style>
 <div style="padding: 1rem; font-size: 16px;">
   <h3 style="margin: 0 0 1rem; font-size: 20px;">AthenaNAS 后台管理</h3>
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
-    <a href="/driver/" style="display: flex; flex-direction: column; justify-content: center; gap: .35rem; border: 1px solid rgba(37,99,235,.45); border-radius: .5rem; padding: .9rem 1rem; text-decoration: none; color: inherit; background: rgba(37,99,235,.06);">
+    <a class="driver-link" href="/driver/" style="display: flex; flex-direction: column; justify-content: center; gap: .35rem; border: 1px solid rgba(37,99,235,.45); border-radius: .5rem; padding: .9rem 1rem; text-decoration: none; color: inherit; background: rgba(37,99,235,.06);">
       <strong style="font-size: 18px;">驾考进度</strong>
-      <span style="font-size: 15px; opacity: .7;">练习日历 · 成绩曲线 · 成就墙</span>
+      <span style="font-size: 15px; opacity: .85;">练习日历 · 成绩曲线 · 成就墙</span>
       <span style="font-size: 15px; color: #2563eb;">打开 →</span>
     </a>
     {% for title, value in cards %}
