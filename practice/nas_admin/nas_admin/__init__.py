@@ -11,6 +11,7 @@ from flask import Flask
 from flask_appbuilder import AppBuilder
 from flask_appbuilder.models.sqla.base import SQLA
 
+from nas_admin.driver_api import init_driver_api
 from nas_admin.views import DashboardIndexView, health
 
 # FAB 5：SQLA 从 models.sqla.base 导入（不再在包顶层）；indexview 是
@@ -30,5 +31,8 @@ def create_app(config_object: str = "config") -> Flask:
 
     # 健康检查挂在 FAB 体系之外：探活不需要登录，也不依赖任何初始化。
     app.add_url_rule("/api/health", "health", health)
+
+    # 驾考进度 REST API（设备令牌认证，见 docs/driver-api.md）。
+    init_driver_api(app)
 
     return app
