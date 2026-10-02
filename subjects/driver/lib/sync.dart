@@ -128,6 +128,7 @@ class SyncEngine {
   SyncEngine({
     required ProgressStore store,
     required ApiConfig config,
+    required this.user,
     required this.draftKeys,
   }) : _status = ValueNotifier(const SyncStatus()) {
     _store = store;
@@ -151,6 +152,10 @@ class SyncEngine {
 
   late final ProgressStore _store;
   late final ApiConfig _config;
+
+  /// 学习者名字（ADR 0071）：随每个请求发 `X-Athena-User`，服务端按它隔离读写。
+  /// 是会话状态不是凭据——同一台设备换人不换令牌。
+  final String user;
 
   /// 草稿 key 的封闭集合（每科目一份），同步时全部探一遍——别处新存的草稿
   /// 本地还没出现过，光靠本地 key 会漏。
@@ -341,6 +346,7 @@ class SyncEngine {
       final uri = Uri.parse("$base/api/driver/v1$path");
       final request = http.Request(method, uri)
         ..headers["Authorization"] = "Bearer ${_config.token}"
+        ..headers["X-Athena-User"] = user
         ..headers["Cache-Control"] = "no-store";
       if (_config.cfClientId != null && _config.cfClientSecret != null) {
         request.headers["CF-Access-Client-Id"] = _config.cfClientId!;

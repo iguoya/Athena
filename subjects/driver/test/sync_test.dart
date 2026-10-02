@@ -17,14 +17,14 @@ class FakeApi {
   final Map<String, String> _achievements = {};
   final Map<String, Map<String, Object?>> _drafts = {};
 
-  static final _dedupe = <String, int Function(Map<String, Object?>)>{
-    "attempts": (m) => Object.hash(m["question_id"], m["at"]),
-    "exams": (m) => Object.hash(m["subject_id"], m["at"]),
-    "drill-runs": (m) => Object.hash(m["item_id"], m["at"]),
-    "rehearsals": (m) => Object.hash(m["item_id"], m["at"]),
-    "drill-notes": (m) => Object.hash(m["item_id"], m["at"]),
-    "point-notes": (m) => Object.hash(m["item_id"], m["step"], m["at"]),
-    "notices": (m) => Object.hash(m["kind"], m["title"], m["at"]),
+  static final _dedupe = <String, int Function(Map<String, Object?>, String)>{
+    "attempts": (m, u) => Object.hash(u, m["question_id"], m["at"]),
+    "exams": (m, u) => Object.hash(u, m["subject_id"], m["at"]),
+    "drill-runs": (m, u) => Object.hash(u, m["item_id"], m["at"]),
+    "rehearsals": (m, u) => Object.hash(u, m["item_id"], m["at"]),
+    "drill-notes": (m, u) => Object.hash(u, m["item_id"], m["at"]),
+    "point-notes": (m, u) => Object.hash(u, m["item_id"], m["step"], m["at"]),
+    "notices": (m, u) => Object.hash(u, m["kind"], m["title"], m["at"]),
   };
 
   final _ids = <String, int>{};
@@ -40,7 +40,8 @@ class FakeApi {
 
   int rowCount(String resource) => _rows[resource]?.length ?? 0;
 
-  Map<String, Object?>? draft(String key) => _drafts[key];
+  Map<String, Object?>? draft(String user, String key) =>
+      _drafts["$user${String.fromCharCode(0)}$key"];
 
   Future<void> _listen() async {
     await for (final request in _server!) {
@@ -54,14 +55,19 @@ class FakeApi {
           _json(response, 401, {"error": "unauthorized"});
           continue;
         }
-        await _handle(request, response);
+        final user = request.headers.value("X-Athena-User")?.trim() ?? "";
+        if (user.isEmpty) {
+          _json(response, 400, {"error": "invalid", "message": "user：不能为空"});
+          continue;
+        }
+        await _handle(request, response, user);
       } catch (_) {
         _json(response, 500, {"error": "internal"});
       }
     }
   }
 
-  Future<void> _handle(HttpRequest request, HttpResponse response) async {
+  Future<void> _handle(HttpRequest request, HttpResponse response, String user) async {
     final path = request.uri.path.replaceFirst(RegExp(r"^/api/driver/v1"), "");
     final method = request.method;
 
@@ -78,7 +84,9 @@ class FakeApi {
         final all = _rows[resource] ?? const [];
         final page = [
           for (final row in all)
-            if ((row["id"] as int) > after) row,
+            // 按用户过滤，返回行剥掉 user（与真实服务端同一口径，ADR 0071）。
+            if (row["user"] == user && (row["id"] as int) > after)
+              {for (final entry in row.entries) if (entry.key != "user") entry.key: entry.value},
         ].take(limit).toList();
         _json(response, 200, {
           "items": page,
@@ -102,18 +110,18 @@ class FakeApi {
         var skipped = 0;
         final known = <int>{};
         for (final row in _rows[resource] ?? const <Map<String, Object?>>[]) {
-          known.add(_dedupe[resource]!(row));
+          known.add(_dedupe[resource]!(row, row["user"] as String));
         }
         final list = _rows.putIfAbsent(resource, () => []);
         for (final item in items) {
-          final key = _dedupe[resource]!(item);
+          final key = _dedupe[resource]!(item, user);
           if (known.contains(key)) {
             skipped++;
             continue;
           }
           known.add(key);
           _ids[resource] = (_ids[resource] ?? 0) + 1;
-          list.add({...item, "id": _ids[resource]});
+          list.add({...item, "user": user, "id": _ids[resource]});
           inserted++;
         }
         _json(response, 200, {"inserted": inserted, "skipped": skipped});
@@ -123,17 +131,20 @@ class FakeApi {
 
     if (method == "POST" && path == "/notices/read-all") {
       for (final row in _rows["notices"] ?? const <Map<String, Object?>>[]) {
-        row["read"] = true;
+        if (row["user"] == user) row["read"] = true;
       }
       _json(response, 200, {"updated": 0});
       return;
     }
 
     if (path.startsWith("/achievements")) {
+      final nul = String.fromCharCode(0);
       if (method == "GET" && path == "/achievements") {
         _json(response, 200, {
           "items": [
-            for (final entry in _achievements.entries) {"key": entry.key, "at": entry.value},
+            for (final entry in _achievements.entries)
+              if (entry.key.startsWith("$user$nul"))
+                {"key": entry.key.split(nul)[1], "at": entry.value},
           ],
         });
         return;
@@ -141,17 +152,19 @@ class FakeApi {
       if (method == "PUT") {
         final key = path.split("/").last;
         final at = (await _body(request))["at"] as String;
-        final existing = _achievements[key];
-        if (existing == null || at.compareTo(existing) < 0) _achievements[key] = at;
-        _json(response, 200, {"key": key, "at": _achievements[key]});
+        final full = "$user$nul$key"; // 键表按 (user, key) 幂等（ADR 0071）
+        final existing = _achievements[full];
+        if (existing == null || at.compareTo(existing) < 0) _achievements[full] = at;
+        _json(response, 200, {"key": key, "at": _achievements[full]});
         return;
       }
     }
 
     if (path.startsWith("/exam-drafts/")) {
       final key = path.split("/").last;
+      final full = "$user${String.fromCharCode(0)}$key"; // 键表按 (user, key)（ADR 0071）
       if (method == "GET") {
-        final draft = _drafts[key];
+        final draft = _drafts[full];
         if (draft == null) {
           _json(response, 404, {"error": "not_found"});
         } else {
@@ -161,10 +174,10 @@ class FakeApi {
       }
       if (method == "PUT") {
         final body = await _body(request);
-        final existing = _drafts[key];
+        final existing = _drafts[full];
         final incoming = (body["saved_at"] as String?) ?? "";
         if (existing == null || incoming.compareTo((existing["saved_at"] as String?) ?? "") > 0) {
-          _drafts[key] = body;
+          _drafts[full] = body;
           _json(response, 200, {"applied": true});
         } else {
           _json(response, 200, {"applied": false});
@@ -172,7 +185,7 @@ class FakeApi {
         return;
       }
       if (method == "DELETE") {
-        _drafts.remove(key);
+        _drafts.remove(full);
         response.statusCode = 204;
         await response.close();
         return;
@@ -204,7 +217,12 @@ void main() {
     api = FakeApi();
     await api.start();
     store = await ProgressStore.open(suite: "sync_test");
-    engine = SyncEngine(store: store, config: ApiConfig(lanBase: api.base, token: api._token), draftKeys: const ["subject1.exam"]);
+    engine = SyncEngine(
+      store: store,
+      config: ApiConfig(lanBase: api.base, token: api._token),
+      user: "tiger",
+      draftKeys: const ["subject1.exam"],
+    );
   });
 
   tearDown(() async {
@@ -224,9 +242,9 @@ void main() {
     expect(store.pendingCount(), 0);
     expect(api.rowCount("attempts"), 1);
     expect(api.rowCount("exams"), 1);
-    // 交卷及格还会产生通知与成就，一并上传。
+    // 交卷及格还会产生通知与成就，一并上传（成就键带用户前缀，FakeApi 内部口径）。
     expect(api.rowCount("notices"), greaterThanOrEqualTo(1));
-    expect(api._achievements.keys, contains("exam.pass.subject1"));
+    expect(api._achievements.keys, contains("tiger${String.fromCharCode(0)}exam.pass.subject1"));
   });
 
   test("上传幂等：同一条重复上传被服务端跳过，本地不会重复", () async {
@@ -241,6 +259,7 @@ void main() {
   test("游标拉取：别处新增的记录并进本地，重复拉不重复插", () async {
     api._rows.putIfAbsent("attempts", () => []).add({
       "id": 1,
+      "user": "tiger",
       "question_id": "remote.1",
       "topic_id": "t",
       "subject_id": "s",
@@ -258,7 +277,8 @@ void main() {
   });
 
   test("成就取更早：远端早于本地时，两端都收敛到更早的时间", () async {
-    api._achievements["streak.5"] = "2026-01-01T00:00:00.000";
+    final nul = String.fromCharCode(0);
+    api._achievements["tiger${nul}streak.5"] = "2026-01-01T00:00:00.000";
     // 本地连对 5 题解锁（at 是现在，晚于远端）。
     for (var i = 0; i < 5; i++) {
       await store.recordAttempt(questionId: "q$i", topicId: "t", subjectId: "s", correct: true);
@@ -266,7 +286,7 @@ void main() {
     expect(store.achievements().keys, contains("streak.5"));
     await engine.syncNow();
     // 上传（服务端保留更早）再拉取（本地也取更早）：两端一致为远端那个时间。
-    expect(api._achievements["streak.5"], "2026-01-01T00:00:00.000");
+    expect(api._achievements["tiger${nul}streak.5"], "2026-01-01T00:00:00.000");
     expect(store.achievements()["streak.5"], "2026-01-01T00:00:00.000");
   });
 
@@ -287,10 +307,10 @@ void main() {
     );
     await store.saveExamDraft(draft, draftKey: "subject1.exam");
     await engine.syncNow();
-    expect(api.draft("subject1.exam"), isNotNull);
+    expect(api.draft("tiger", "subject1.exam"), isNotNull);
 
     // 远端被别处更新（saved_at 更新），拉取后覆盖本地。
-    api._drafts["subject1.exam"] = {
+    api._drafts["tiger${String.fromCharCode(0)}subject1.exam"] = {
       ...draft.toApi(),
       "saved_at": "2026-10-01T10:09:00.000",
       "picked": "{\"1\": [\"T\"]}",
@@ -300,7 +320,7 @@ void main() {
     expect(pulled!.picked.keys, {1});
 
     // 远端删除（交卷了），本地也没有待传的保存 → 本地草稿跟着删。
-    api._drafts.remove("subject1.exam");
+    api._drafts.remove("tiger${String.fromCharCode(0)}subject1.exam");
     await engine.syncNow();
     expect(await store.loadExamDraft("subject1.exam"), isNull);
   });
@@ -328,11 +348,39 @@ void main() {
     expect(engine.status.value.lastError, contains("无法同步"));
   });
 
+  test("多用户：两份本地库同步到同一中心，互不可见也不互吞（ADR 0071）", () async {
+    // 第二位学习者：独立的本地库文件就是独立的空白历史。
+    final storeB = await ProgressStore.open(suite: "sync_test_user_b");
+    addTearDown(() => storeB.close());
+    final engineB = SyncEngine(
+      store: storeB,
+      config: ApiConfig(lanBase: api.base, token: api._token),
+      user: "second",
+      draftKeys: const ["subject1.exam"],
+    );
+    addTearDown(engineB.stop);
+
+    // tiger 答对一题；second 离线答同一题、同一时刻。
+    await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true, at: DateTime.parse("2026-10-02T10:00:00"));
+    await storeB.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: false, at: DateTime.parse("2026-10-02T10:00:00"));
+    await engine.syncNow();
+    await engineB.syncNow();
+
+    // 中心各存一条（去重键含 user），两边各自只拉到自己的。
+    expect(api.rowCount("attempts"), 2);
+    expect(await store.wrongQuestionIds(), isEmpty);
+    expect(await storeB.wrongQuestionIds(), ["q1"]);
+    expect(store.cursor("attempts"), 1);
+    // 游标在该用户的行流上前进，不因别人的行跳号而漏拉。
+    expect(storeB.cursor("attempts"), 2);
+  });
+
   test("令牌无效时同步报 401，队列保留", () async {
     // 连得上服务、令牌是错的：服务端回 401，队列原地保留等人换令牌。
     final bad = SyncEngine(
       store: store,
       config: ApiConfig(lanBase: api.base, token: "dapi_wrong"),
+      user: "tiger",
       draftKeys: const [],
     );
     await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);

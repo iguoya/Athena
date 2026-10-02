@@ -1,18 +1,22 @@
 import "dart:async";
 import "dart:convert";
+import "dart:io";
 
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:http/http.dart" as http;
+import "package:path/path.dart" as p;
 import "package:window_manager/window_manager.dart";
 
 import "content.dart";
+import "glyphs.dart";
 import "home.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
 import "sync.dart";
+import "users.dart";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +29,9 @@ Future<void> main() async {
   runApp(const BootstrapGate());
 }
 
-/// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；API
-/// 没配置时进配置屏，但可以跳过先离线用——队列会等令牌配好后自然补发。
+/// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；多用户时
+/// 先选学习者（ADR 0071）；API 没配置时可以跳过先离线用——队列会等令牌配好后
+/// 自然补发。
 class BootstrapGate extends StatefulWidget {
   const BootstrapGate({super.key});
 
@@ -40,6 +45,8 @@ class _BootstrapGateState extends State<BootstrapGate> {
   Bank? _bank;
   ProgressStore? _store;
   SyncEngine? _engine;
+  String? _user;
+  UserRegistry? _registry;
 
   @override
   void initState() {
@@ -50,16 +57,47 @@ class _BootstrapGateState extends State<BootstrapGate> {
   Future<void> _tryOpen() async {
     setState(() => _stage = "loading");
     try {
-      final bank = await ContentLoader.load();
-      final store = await ProgressStore.open();
-      final config = ApiConfig.load();
-      _engine?.stop();
-      _engine = null;
-      if (config != null) _engine = _startEngine(store, bank, config);
+      _bank ??= await ContentLoader.load();
+      final registry = _registry ??= UserRegistry.load();
+      if (registry.users.isEmpty) {
+        // 单用户时代的库文件还在：收编为首用户 tiger（ADR 0071，存量全归它）。
+        if (File(p.join(ProgressStore.userDataDir(), "local.db")).existsSync()) {
+          ProgressStore.adoptLegacyFiles("tiger");
+          registry.register("tiger");
+        } else {
+          setState(() => _stage = "first-user");
+          return;
+        }
+      }
+      // 单用户不打扰直接进；多人记住上次用的（ADR 0071 决策 7）。
+      if (registry.users.length == 1) {
+        await _openAs(registry.users.first);
+      } else if (registry.last != null && registry.users.contains(registry.last)) {
+        await _openAs(registry.last!);
+      } else {
+        setState(() => _stage = "pick");
+      }
+    } catch (error) {
       setState(() {
-        _bank = bank;
+        _message = "$error";
+        _stage = "error";
+      });
+    }
+  }
+
+  /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
+  Future<void> _openAs(String user) async {
+    try {
+      _engine?.stop();
+      await _store?.close();
+      final store = await ProgressStore.open(user: user);
+      _registry?.setLast(user);
+      final config = ApiConfig.load();
+      _engine = config == null ? null : _startEngine(store, _bank!, config, user);
+      setState(() {
         _store = store;
-        _stage = config == null ? "config" : "ready";
+        _user = user;
+        _stage = "ready";
       });
     } catch (error) {
       setState(() {
@@ -69,12 +107,27 @@ class _BootstrapGateState extends State<BootstrapGate> {
     }
   }
 
-  SyncEngine _startEngine(ProgressStore store, Bank bank, ApiConfig config) {
+  SyncEngine _startEngine(ProgressStore store, Bank bank, ApiConfig config, String user) {
     return SyncEngine(
       store: store,
       config: config,
+      user: user,
       draftKeys: [for (final subject in bank.curriculum.subjects) "${subject.id}.exam"],
     )..start();
+  }
+
+  /// 侧栏用户行点进来换人：UserGateScreen pop 带回选中的名字（或新建后注册的名字）。
+  Future<void> _switchUser() async {
+    final registry = _registry;
+    if (registry == null) return;
+    final picked = await Navigator.of(context).push<String>(
+      MaterialPageRoute(
+        builder: (context) => UserGateScreen(users: registry.users, allowCancel: true),
+        fullscreenDialog: true,
+      ),
+    );
+    if (picked == null || picked == _user || !mounted) return;
+    await _openAs(picked);
   }
 
   /// 侧栏同步行点进来重新配置：保存后换引擎重启同步，跳过则维持现状。
@@ -88,9 +141,10 @@ class _BootstrapGateState extends State<BootstrapGate> {
     if (config == null || !mounted) return;
     final bank = _bank;
     final store = _store;
-    if (bank == null || store == null) return;
+    final user = _user;
+    if (bank == null || store == null || user == null) return;
     _engine?.stop();
-    _engine = _startEngine(store, bank, config.config);
+    _engine = _startEngine(store, bank, config.config, user);
     setState(() {});
   }
 
@@ -103,6 +157,18 @@ class _BootstrapGateState extends State<BootstrapGate> {
   @override
   Widget build(BuildContext context) {
     return switch (_stage) {
+      "first-user" || "pick" => MaterialApp(
+          title: "驾考学习",
+          debugShowCheckedModeBanner: false,
+          locale: const Locale("zh", "CN"),
+          supportedLocales: const [Locale("zh", "CN")],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: UserGateScreen(users: _registry?.users ?? const []),
+        ),
       "config" => MaterialApp(
           title: "驾考学习",
           debugShowCheckedModeBanner: false,
@@ -110,8 +176,9 @@ class _BootstrapGateState extends State<BootstrapGate> {
             onSavedDirect: (config) {
               final bank = _bank;
               final store = _store;
-              if (bank == null || store == null) return;
-              _engine = _startEngine(store, bank, config);
+              final user = _user;
+              if (bank == null || store == null || user == null) return;
+              _engine = _startEngine(store, bank, config, user);
               setState(() => _stage = "ready");
             },
           ),
@@ -120,6 +187,8 @@ class _BootstrapGateState extends State<BootstrapGate> {
       "ready" => DriverApp(
           bank: _bank!,
           store: _store!,
+          currentUser: _user!,
+          onSwitchUser: _switchUser,
           syncStatus: _engine?.status,
           onOpenConfig: _openConfig,
         ),
@@ -128,6 +197,115 @@ class _BootstrapGateState extends State<BootstrapGate> {
           home: Scaffold(body: Center(child: CircularProgressIndicator())),
         ),
     };
+  }
+}
+
+/// 选学习者 / 新建学习者（ADR 0071）：选名字直接进，不设口令。
+///
+/// 两种挂法：启动门把它当 home（选择后直接调启动门换库）；应用内从侧栏 push 进来
+/// （pop 带回名字）。[allowCancel] 只在后者有意义。
+class UserGateScreen extends StatefulWidget {
+  const UserGateScreen({super.key, required this.users, this.allowCancel = false});
+
+  final List<String> users;
+  final bool allowCancel;
+
+  @override
+  State<UserGateScreen> createState() => _UserGateScreenState();
+}
+
+class _UserGateScreenState extends State<UserGateScreen> {
+  final _name = TextEditingController();
+  String _error = "";
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  void _done(String name) {
+    final gate = context.findAncestorStateOfType<_BootstrapGateState>();
+    if (gate != null && !ModalRoute.of(context)!.isFirst) {
+      Navigator.of(context).pop(name);
+    } else {
+      gate?._openAs(name);
+    }
+  }
+
+  void _create() {
+    try {
+      final name = _name.text;
+      UserRegistry.validate(name);
+      final gate = context.findAncestorStateOfType<_BootstrapGateState>();
+      (gate?._registry ?? UserRegistry.load()).register(name);
+      _done(name.trim());
+    } on FormatException catch (error) {
+      setState(() => _error = error.message);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("谁在学车？", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                const Text(
+                  "各人的做题记录、成就和解锁进度完全分开，互不打扰。",
+                  style: TextStyle(height: 1.5),
+                ),
+                const SizedBox(height: 20),
+                for (final name in widget.users)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _done(name),
+                        icon: const Icon(Glyph.user),
+                        label: Align(alignment: Alignment.centerLeft, child: Text(name)),
+                      ),
+                    ),
+                  ),
+                if (widget.users.isNotEmpty) const Divider(height: 28),
+                TextField(
+                  controller: _name,
+                  autofocus: widget.users.isEmpty,
+                  decoration: const InputDecoration(
+                    labelText: "新学习者的名字",
+                    helperText: "两台电脑起同一个名字，共享的就是同一份记录。",
+                  ),
+                  onSubmitted: (_) => _create(),
+                ),
+                if (_error.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(_error, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                ],
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    FilledButton(onPressed: _create, child: const Text("新建并进入")),
+                    if (widget.allowCancel) ...[
+                      const SizedBox(width: 12),
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -223,8 +401,8 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
             )
             .timeout(const Duration(seconds: 10));
         if (response.statusCode == 200) {
-          final device = (jsonDecode(response.body) as Map)["device"];
-          result = "已连上（$base，设备名：$device）";
+          final map = jsonDecode(response.body) as Map;
+          result = "已连上（$base，设备名：${map["device"]}，使用者：${map["user"]}）";
           break;
         }
         if (response.statusCode == 401) {
@@ -390,16 +568,20 @@ class DriverApp extends StatelessWidget {
     super.key,
     required this.bank,
     required this.store,
+    required this.currentUser,
     this.syncStatus,
     this.onOpenConfig,
+    this.onSwitchUser,
   });
 
   final Bank bank;
   final ProgressStore store;
 
-  /// null 表示还没配置同步（先离线用）：侧栏显示「未配置同步」。
+  /// 当前学习者（ADR 0071）：侧栏常驻显示，点击换人。
+  final String currentUser;
   final ValueListenable<SyncStatus>? syncStatus;
   final VoidCallback? onOpenConfig;
+  final VoidCallback? onSwitchUser;
 
   @override
   Widget build(BuildContext context) {
@@ -439,8 +621,10 @@ class DriverApp extends StatelessWidget {
       home: HomePage(
         bank: bank,
         store: store,
+        currentUser: currentUser,
         syncStatus: syncStatus,
         onOpenConfig: onOpenConfig,
+        onSwitchUser: onSwitchUser,
       ),
     );
   }

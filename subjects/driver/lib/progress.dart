@@ -223,16 +223,19 @@ class ProgressStore {
   /// 本地 SQLite 是唯一数据面（ADR 0070）：打开必成功（最多抛
   /// [ProgressUnavailable]），做题不再以「连上中心」为前提。
   ///
-  /// [suite] 供测试：每个测试文件一个独立的临时库（顶替原来「每人一个 PG 库」，
-  /// ADR 0068 决策 5 的隔离语义不变，ADR 0070），close 时自动删除；
-  /// 生产传 [path]，缺省放用户数据目录 local.db。
-  static Future<ProgressStore> open({String? path, String? suite}) async {
+  /// [user] 是学习者名字（ADR 0071）：本地按用户分库文件 `local-<用户>.db`，
+  /// 换人就是换一份空白历史；本地表不建 `user` 列——分文件已隔离，中心侧才有该列。
+  /// [suite] 供测试：每个测试文件一个独立的临时库（隔离语义自 ADR 0068 决策 5
+  /// 延续），close 时自动删除；[path] 显式指定文件（测试用）。
+  static Future<ProgressStore> open({String? path, String? suite, String? user}) async {
     Directory? tempDir;
     late final String file;
     if (suite != null) {
       tempDir = Directory.systemTemp.createTempSync("athena-driver-");
       final safe = suite.replaceAll(RegExp(r"[^a-zA-Z0-9_]"), "_");
       file = p.join(tempDir.path, "$safe.db");
+    } else if (user != null) {
+      file = p.join(userDataDir(), "local-${_fileSafe(user)}.db");
     } else {
       file = path ?? p.join(userDataDir(), "local.db");
     }
@@ -245,7 +248,9 @@ class ProgressStore {
       tempDir?.deleteSync(recursive: true);
       throw ProgressUnavailable("$error");
     }
-    return ProgressStore._(db, tempDir);
+    final store = ProgressStore._(db, tempDir);
+    store._user = user;
+    return store;
   }
 
   /// 表结构与中心 PG 同名同列（ADR 0070：方言差异关在本文件）；id 是本地自增，
@@ -865,9 +870,31 @@ class ProgressStore {
     };
   }
 
-  // ---------------------------------------------------------------- 照片：清单文件随仓库走（ADR 0070）
+  // ---------------------------------------------------------------- 照片：清单文件随仓库走（ADR 0070），按用户一份（ADR 0071）
 
-  static String get _photosManifest => p.join(pointsDir, "photos.json");
+  /// 名字进文件名（本地库、照片清单）：替换路径非法字符。名字本身仍按原名存进
+  /// 注册表与请求头，safe 名只做磁盘文件名。
+  static String _fileSafe(String user) => user.replaceAll(RegExp(r'[/\\:*?"<>|]'), "_");
+
+  /// 单用户时代（ADR 0070 落地当天）的 local.db / photos.json 收编为首用户的文件
+  /// （ADR 0071）。本地优先版本尚未发行过，这只是防御：存在旧名且新名不存在时改名。
+  static void adoptLegacyFiles(String user) {
+    final legacy = File(p.join(userDataDir(), "local.db"));
+    final modern = File(p.join(userDataDir(), "local-${_fileSafe(user)}.db"));
+    if (legacy.existsSync() && !modern.existsSync()) legacy.renameSync(modern.path);
+    final legacyPhotos = File(p.join(pointsDir, "photos.json"));
+    final modernPhotos = File(p.join(pointsDir, "photos-${_fileSafe(user)}.json"));
+    if (legacyPhotos.existsSync() && !modernPhotos.existsSync()) legacyPhotos.renameSync(modernPhotos.path);
+  }
+
+  String? _user;
+
+  String get _photosManifest {
+    final user = _user;
+    return user == null
+        ? p.join(pointsDir, "photos.json")
+        : p.join(pointsDir, "photos-${_fileSafe(user)}.json");
+  }
 
   List<PointPhoto> _loadPhotos() {
     final file = File(_photosManifest);

@@ -19,12 +19,18 @@ class HomePage extends StatefulWidget {
     required this.bank,
     required this.store,
     this.onReady,
+    this.currentUser,
+    this.onSwitchUser,
     this.syncStatus,
     this.onOpenConfig,
   });
 
   final Bank bank;
   final ProgressStore store;
+
+  /// 当前学习者（ADR 0071）：侧栏常驻显示，点击换人。null（测试）不渲染。
+  final String? currentUser;
+  final VoidCallback? onSwitchUser;
 
   /// 同步状态（ADR 0070 决策 4）：null 表示未配置同步，侧栏照实提示；
   /// 点击进入配置屏。测试不传就不渲染这一行。
@@ -305,6 +311,13 @@ class _HomePageState extends State<HomePage> {
                   label: "易混数字",
                   onTap: () => _go(_numbersId),
                 ),
+                if (widget.currentUser != null)
+                  _navLine(
+                    icon: Glyph.user,
+                    selected: false,
+                    label: "学习者：${widget.currentUser}",
+                    onTap: widget.onSwitchUser,
+                  ),
                 if (widget.syncStatus != null)
                   ValueListenableBuilder<SyncStatus>(
                     valueListenable: widget.syncStatus!,

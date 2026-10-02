@@ -107,6 +107,7 @@ abstract final class Glyph {
   static const backup = Icons.backup;
   static const credentials = Icons.key;
   static const chooseFolder = Icons.folder_open;
+  static const user = Icons.person;
 
   // ── 通用操作 ──
   static const next = Icons.arrow_forward;

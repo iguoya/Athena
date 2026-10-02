@@ -75,14 +75,20 @@
   `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
 - **进度（个人数据）——本地优先（主仓库 ADR 0070）**：界面只读写本地 SQLite
-  （用户数据目录 `AthenaDriver/local.db`，不进仓库；表结构与中心 PG 同名同列，
-  业务键唯一索引承担幂等合并）。写入在同一事务里落业务表和待发送队列（outbox）；
-  `lib/sync.dart` 的 SyncEngine 后台把队列幂等上传、按游标增量拉取，与软路由上的
-  中心 PostgreSQL（库 `athena_driver`）保持同一份。断网照常做题，联网后自动补发；
-  侧栏常驻显示待同步条数。**不再有 `learning.db`、不再走 GitHub JSONL 同步**
-  （主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。表结构管理在服务端，
-  客户端不再建表。知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
+  （用户数据目录 `AthenaDriver/local-<用户>.db`，不进仓库；表结构与中心 PG 同名同列
+  ——除本地不建的 `user` 列，业务键唯一索引承担幂等合并）。写入在同一事务里落业务表
+  和待发送队列（outbox）；`lib/sync.dart` 的 SyncEngine 后台把队列幂等上传、按游标增量
+  拉取，与软路由上的中心 PostgreSQL（库 `athena_driver`）保持同一份。断网照常做题，
+  联网后自动补发；侧栏常驻显示待同步条数。**不再有 `learning.db`、不再走 GitHub
+  JSONL 同步**（主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。
+  表结构管理在服务端，客户端不再建表。知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
   **题库不进数据库**，仍是 `content/` 的 JSON。
+- **多用户（主仓库 ADR 0071）**：同一份题库给多个学习者，各人一份空白历史。
+  用户就是一个名字（无口令），注册表在用户数据目录 `users.json`（`lib/users.dart`）；
+  单用户不打扰直接进，多人启动时选、侧栏「学习者」一行随时换。名字即标识：本地库
+  文件名、照片清单名、请求头 `X-Athena-User` 用的都是它，重名拒绝、不做改名；
+  两台机器起同一个名字共享同一份历史。首用户 tiger，单用户时代的 local.db /
+  photos.json 升级时自动收编。
 - **通路统一走 REST API（主仓库 ADR 0070）**：内网直连 PG 的通道已退役，数据库端口
   不出内网；所有同步走 `practice/nas_admin` 的 `/api/driver/v1`（设备令牌认证），
   内网端点连路由器、外网端点过 Cloudflare（另带 Access Service Token 头），按序尝试。
@@ -91,8 +97,9 @@
   POSIX 上 600）；没配置不拦启动——离线照常做题，配好令牌后队列自然补发。发令牌在
   路由器上用 `nas_admin` 的 `scripts/driver_token.py`。历史数据当年用
   `scripts/migrate_progress_to_pg.py` 一次性迁入 PG（已执行完，仅作历史参考）。
-- **照片（ADR 0070）**：文件与登记清单（`progress/points/photos.json`）都随仓库走，
-  不进任何数据库，跨机器靠 `launcher sync`；其余九张表都是同步的个人数据。
+- **照片（ADR 0070、0071）**：文件与登记清单（`progress/points/photos-<用户>.json`）
+  都随仓库走，不进任何数据库，跨机器靠 `launcher sync`；其余九张表都是按用户同步的
+  个人数据。
 - **测试**：数据层是本地 SQLite，每个测试文件开自己的临时库（`open(suite:)`，close 时
   删除），并发互不踩、不依赖任何外部数据库；同步器的契约测试用本机 `HttpServer`
   假一个 API（`test/sync_test.dart`）。
