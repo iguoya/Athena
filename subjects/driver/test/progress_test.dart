@@ -10,7 +10,7 @@ void main() {
 
   setUp(() async {
     dir = await Directory.systemTemp.createTemp("athena-driver-");
-    store = await ProgressStore.open(isolated: true);
+    store = await ProgressStore.open(suite: "progress_test");
   });
 
   tearDown(() async {

@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:convert";
 import "dart:io";
 
@@ -159,6 +160,26 @@ extension _RowByName on ResultRow {
   Object? at(String name) => toColumnMap()[name];
 }
 
+/// 把每条查询投回建立连接的 zone 执行。
+///
+/// flutter_test 的 fake-async zone 会接管 timer 与事件循环：页面代码在 fake
+/// zone 里直接 await socket 查询，future 永远等不到 socket 事件。连接在哪个
+/// zone 建立（生产同一 zone、widget 测试是 runAsync 的真实 zone），查询就在
+/// 哪个 zone 跑——对生产行为无影响，测试里查询走真实事件循环，能真正完成。
+class PinnedConnection {
+  PinnedConnection(this._conn, this._zone);
+
+  final Connection _conn;
+  final Zone _zone;
+
+  Future<Result> execute(Object query, {Map<String, Object?>? parameters}) {
+    final sql = query is String ? Sql.named(query) : query as Sql;
+    return _zone.run(() => _conn.execute(sql, parameters: parameters));
+  }
+
+  Future<void> close() => _zone.run(() => _conn.close());
+}
+
 /// 中心 PG 不可达（内网不通）。上层据此给出「纯在线」的诚实提示，
 /// 不悄悄降级（ADR 0067 第 5 条）。外网场景不在这一层：数据库端口不出
 /// 内网（ADR 0068），离开内网时就是本异常。
@@ -251,26 +272,37 @@ class DbConfig {
 class ProgressStore {
   ProgressStore(this._conn);
 
-  final Connection _conn;
+  final PinnedConnection _conn;
 
   static const _connectTimeout = Duration(seconds: 4);
 
-  /// [isolated] 供测试：连本机（或 CI 注入）的 `athena_driver_test` 库并在打开时
-  /// 清空全部表，顶替原来「每个测试一个临时 SQLite 文件」的隔离语义。测试库
-  /// 不依赖软路由（ADR 0068），账号是本地约定值，不是生产凭据。
-  static Future<ProgressStore> open({bool isolated = false}) async {
+  /// [suite] 供测试：连本机（或 CI 注入）PG 上属于该测试文件的独立库
+  /// `athena_driver_test_<suite>`，打开时清空全部表——顶替原来「每个测试一个
+  /// 临时 SQLite 文件」的隔离语义。一个测试文件一个库（ADR 0068），flutter
+  /// test 并发跑不同文件时互不踩。测试不依赖软路由，账号是本地约定值。
+  static Future<ProgressStore> open({String? suite}) async {
     final Endpoint endpoint;
     final ConnectionSettings settings;
-    if (isolated) {
+    if (suite != null) {
       final uri = Platform.environment["ATHENA_DRIVER_TEST_DB"] ??
           "postgresql://athena_driver:athena_driver@localhost:5432/athena_driver_test";
       final parsed = Uri.parse(uri);
-      endpoint = Endpoint(
+      final base = Endpoint(
         host: parsed.host,
         port: parsed.hasPort ? parsed.port : 5432,
         database: parsed.path.replaceFirst("/", ""),
         username: Uri.decodeComponent(parsed.userInfo.split(":").first),
         password: Uri.decodeComponent(parsed.userInfo.split(":").last),
+      );
+      final safe = suite.replaceAll(RegExp(r"[^a-zA-Z0-9_]"), "_");
+      final database = "athena_driver_test_$safe";
+      await _ensureDatabase(base, database);
+      endpoint = Endpoint(
+        host: base.host,
+        port: base.port,
+        database: database,
+        username: base.username,
+        password: base.password,
       );
       settings = const ConnectionSettings(sslMode: SslMode.disable);
     } else {
@@ -295,8 +327,35 @@ class ProgressStore {
       throw ProgressUnavailable("$error");
     }
     await _ensureSchema(conn);
-    if (isolated) await _clearAll(conn);
-    return ProgressStore(conn);
+    if (suite != null) await _clearAll(conn);
+    // 查询固定在建立连接的 zone 里执行（见 PinnedConnection）：widget 测试里
+    // 连接在 tester.runAsync 的真实 zone 建立，页面代码在 fake-async zone 发起
+    // 的查询如果不投回真实 zone，socket 事件永远不会被 fake 时钟推进。
+    return ProgressStore(PinnedConnection(conn, Zone.current));
+  }
+
+  /// 第一次用到某测试文件专属库时把它建出来。CREATE DATABASE 没有
+  /// IF NOT EXISTS，两个文件同时首跑可能撞重复建库——撞上就算成功。
+  static Future<void> _ensureDatabase(Endpoint base, String database) async {
+    final admin = await Connection.open(
+      base,
+      settings: const ConnectionSettings(sslMode: SslMode.disable),
+    );
+    try {
+      final exists = await admin.execute(
+        Sql.named("SELECT 1 FROM pg_database WHERE datname = @name"),
+        parameters: {"name": database},
+      );
+      if (exists.isEmpty) {
+        try {
+          await admin.execute('CREATE DATABASE "$database"');
+        } on PgException catch (error) {
+          if (!error.message.contains("already exists")) rethrow;
+        }
+      }
+    } finally {
+      await admin.close();
+    }
   }
 
   /// 表结构按本地 SQLite 时代的 V9 现状一次建齐；迁移历史（V1→V9）不搬，

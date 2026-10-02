@@ -111,6 +111,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // 第一次从进度库读完统计后调一次 onReady；测试靠它等首页就绪。
+    _reload().then((_) => widget.onReady?.call());
   }
 
   @override

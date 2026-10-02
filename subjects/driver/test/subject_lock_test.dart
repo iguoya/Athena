@@ -33,7 +33,7 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-lock-");
-      store = await ProgressStore.open(isolated: true);
+      store = await ProgressStore.open(suite: "subject_lock_test");
       // 两场 100 分、最近一场 94：差一点也不开。
       for (final (i, score) in [100, 100, 94].indexed) {
         await store.recordExam(
@@ -44,7 +44,7 @@ void main() {
         );
       }
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),

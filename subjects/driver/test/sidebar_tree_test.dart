@@ -19,9 +19,9 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-tree-");
-      store = await ProgressStore.open(isolated: true);
+      store = await ProgressStore.open(suite: "sidebar_tree_test");
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1400));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
@@ -67,7 +67,8 @@ void main() {
     }
     await tester.tap(find.textContaining("考前复习"));
     await tester.pump();
-    expect(find.textContaining("全部复习"), findsOneWidget);
+    // 新库没有累计答错的题，这一页显示空状态；断言「页面确实打开了」，不依赖作答数据。
+    expect(find.textContaining("还没有累计答错"), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

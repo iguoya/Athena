@@ -17,7 +17,7 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-numbers-");
-      store = await ProgressStore.open(isolated: true);
+      store = await ProgressStore.open(suite: "numbers_page_test");
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     // 关掉自动同步：首页一启动就会按本机 sync.json 去读写真实的云盘目录，测试不能碰它。

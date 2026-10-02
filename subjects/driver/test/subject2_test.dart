@@ -83,7 +83,7 @@ void main() {
   });
 
   test("练车记录能存能读，新的在前", () async {
-    final store = await ProgressStore.open(isolated: true);
+    final store = await ProgressStore.open(suite: "subject2_test");
     final at = DateTime(2026, 9, 28, 20, 0);
     await store.recordDrillRun("reverse", const ["stop", "stop"], at: at);
     await store.recordDrillRun("curve", const [], at: at.add(const Duration(minutes: 5)));
