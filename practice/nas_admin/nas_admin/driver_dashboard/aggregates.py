@@ -66,6 +66,9 @@ TOPIC_TITLES: dict[str, str] = {
 
 # 正式科目（wrong / review 是练习场景，不算章节归属的科目）
 REAL_SUBJECTS = ("subject1", "subject2", "subject4")
+# 理论考试的科目（科目一是法规、科目四是安全文明；科目二是场地实操、科目三是
+# 路考，不是理论考试）——分科标签页只做这两科，科目二的练习仍在总览可见。
+THEORY_SUBJECTS = ("subject1", "subject4")
 
 EXAM_PASS_LINE = 90  # 100 分制下的及格线，仅作图表参考线；数据里已有 passed
 
@@ -86,7 +89,7 @@ def collect(days: int = DAILY_WINDOW) -> dict[str, Any]:
             "radar": _radar(conn),
             "exams": _exam_list(conn),
             "achievements": _achievement_list(conn),
-            "details": {sid: _subject_detail(conn, sid) for sid in REAL_SUBJECTS},
+            "details": {sid: _subject_detail(conn, sid) for sid in THEORY_SUBJECTS},
         }
 
 

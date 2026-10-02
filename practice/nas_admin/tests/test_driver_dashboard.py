@@ -252,8 +252,8 @@ class SubjectDetailTest(DashboardCase):
         self.assertEqual(details["subject1"]["title"], "科目一")
         self.assertEqual(details["subject4"]["title"], "科目四")
         self.assertEqual(len(details["subject4"]["chapters"]), 1)
-        # 科目二没练过也没考过：不出标签页
-        self.assertIsNone(details["subject2"])
+        # 只做理论科目（科目一/四）的分科页；科目二即使有练习也不出标签页（ADR 0069）
+        self.assertNotIn("subject2", details)
 
 
 class StreakTest(unittest.TestCase):
