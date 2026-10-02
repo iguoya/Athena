@@ -19,21 +19,21 @@
     * { box-sizing: border-box; }
     body {
       margin: 0; padding: 20px 3vw 48px; background: var(--bg); color: var(--ink);
-      font: 15px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      font: 16px/1.65 -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
     }
     /* 2K 及以上充分铺开；超宽屏（4K）也别无限拉 */
     main { max-width: 2200px; margin: 0 auto; }
-    h1 { font-size: 1.35rem; margin: 0 0 4px; }
-    .meta { color: var(--secondary); font-size: 0.85rem; margin-bottom: 20px; }
+    h1 { font-size: 1.375rem; margin: 0 0 4px; }
+    .meta { color: var(--secondary); font-size: 0.95rem; margin-bottom: 20px; }
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
     }
-    .card .num { font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .card .label { color: var(--secondary); font-size: 0.82rem; margin-top: 2px; }
+    .card .num { font-size: 1.625rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .card .label { color: var(--secondary); font-size: 0.9rem; margin-top: 2px; }
     section { margin-top: 28px; }
-    section > h2, .block > h2 { font-size: 1.05rem; margin: 0 0 10px; }
-    h2 small { color: var(--secondary); font-weight: 400; font-size: 0.8rem; margin-left: 8px; }
+    section > h2, .block > h2 { font-size: 1.125rem; margin: 0 0 10px; }
+    h2 small { color: var(--secondary); font-weight: 400; font-size: 0.875rem; margin-left: 8px; }
     .chart { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; height: 280px; }
     .chart.tall { height: 320px; }
     /* 图表网格：窄屏单列，中屏两列，宽屏（≥1500px，含 2K）三列铺满 */
@@ -54,7 +54,7 @@
       background: var(--card); border: 1px solid var(--line); border-radius: 12px;
       padding: 10px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px;
     }
-    ul.achievements time { color: var(--secondary); font-size: 0.85rem; white-space: nowrap; }
+    ul.achievements time { color: var(--secondary); font-size: 0.95rem; white-space: nowrap; }
     .error-box { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
       padding: 28px; text-align: center; color: var(--secondary); margin-top: 24px; }
   </style>
@@ -123,7 +123,7 @@ function chart(el) {
 // 列数随断点变化，网格里每个图都要跟着容器重排
 window.addEventListener("resize", () => charts.forEach(c => c.resize()));
 
-const BASE_TEXT = { color: secondary, fontSize: 11 };
+const BASE_TEXT = { color: secondary, fontSize: 13 };
 const pct = v => v == null ? "—" : Math.round(v * 100) + "%";
 
 // 概览数字从 0 滚到目标值：数字动效让「总量」这类抽象大数有实感
@@ -185,8 +185,8 @@ function render(data) {
       calendar: {
         range: [rangeStart, rangeEnd], cellSize: [null, 24], splitLine: { show: false },
         itemStyle: { color: "transparent", borderColor: line, borderWidth: 1 },
-        yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
-        monthLabel: { color: secondary, fontSize: 10, nameMap: "ZH" },
+        yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 12, nameMap: "ZH" },
+        monthLabel: { color: secondary, fontSize: 12, nameMap: "ZH" },
       },
       series: [{
         type: "heatmap", coordinateSystem: "calendar", data: data.calendar,
@@ -225,10 +225,10 @@ function render(data) {
       tooltip: { formatter: p => `${p.treePathInfo.map(i => i.name).slice(0, -1).join(" · ")}：${p.value} 次作答` },
       series: [{
         type: "sunburst", radius: ["12%", "88%"], data: data.sunburst,
-        label: { color: ink, fontSize: 11, minAngle: 12 },
+        label: { color: ink, fontSize: 13, minAngle: 12 },
         levels: [
           {},
-          { r0: "12%", r: "46%", label: { rotate: "tangential", fontSize: 13, fontWeight: 600 } },
+          { r0: "12%", r: "46%", label: { rotate: "tangential", fontSize: 15, fontWeight: 600 } },
           { r0: "46%", r: "88%", itemStyle: { opacity: 0.75 }, label: { rotate: 0 } },
         ],
         itemStyle: { borderColor: css("--card"), borderWidth: 1.5 },
@@ -244,7 +244,7 @@ function render(data) {
       tooltip: { formatter: p => p.name ? `${p.name}<br>${p.value} 分` : "" },
       radar: {
         indicator: data.radar.indicators, radius: "62%", splitNumber: 4,
-        axisName: { color: secondary, fontSize: 10 },
+        axisName: { color: secondary, fontSize: 12 },
         axisLine: { lineStyle: { color: line } },
         splitLine: { lineStyle: { color: line } },
         splitArea: { show: false },
@@ -276,10 +276,10 @@ function render(data) {
       },
       xAxis: { type: "value", max: 100, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
       yAxis: { type: "category", data: withAttempts.map(s => s.title),
-               axisLabel: { color: ink, fontSize: 13 }, axisLine: { lineStyle: { color: line } } },
+               axisLabel: { color: ink, fontSize: 15 }, axisLine: { lineStyle: { color: line } } },
       series: [{
         type: "bar", data: withAttempts.map(s => Math.round(s.rate * 100)),
-        label: { show: true, position: "right", color: secondary, formatter: p => pct(withAttempts[p.dataIndex].rate) },
+        label: { show: true, position: "right", fontSize: 13, color: secondary, formatter: p => pct(withAttempts[p.dataIndex].rate) },
         itemStyle: { color: accent, borderRadius: [0, 3, 3, 0] }, barWidth: 18,
       }],
     });
