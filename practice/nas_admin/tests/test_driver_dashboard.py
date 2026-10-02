@@ -186,6 +186,76 @@ class PageTest(DashboardCase):
         self.assertEqual(data["subjects"], [])
 
 
+class SubjectDetailTest(DashboardCase):
+    """科目深挖与错题口径：跨场景作答序列、连对攻克、顽固榜、章节错题维度。"""
+
+    def seed_subject(self) -> None:
+        """q1 错→对→对（+错题本再对一次）= 已攻克；q2 错→错 = 仍错着；
+        q3 全对 = 从未错过；q4 只在考前复习里出现过（也算答过的题）。"""
+        rows = [
+            # 正式场景 subject1
+            {"question_id": "drive.s1.rules.001", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{BEFORE_YESTERDAY}T08:00:00.000"},
+            {"question_id": "drive.s1.rules.001", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{BEFORE_YESTERDAY}T09:00:00.000"},
+            {"question_id": "drive.s1.rules.001", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{YESTERDAY}T08:00:00.000"},
+            {"question_id": "drive.s1.rules.002", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{BEFORE_YESTERDAY}T10:00:00.000"},
+            {"question_id": "drive.s1.rules.002", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{YESTERDAY}T10:00:00.000"},
+            {"question_id": "drive.s1.signals.003", "topic_id": "drive.s1.signals", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T08:00:00.000"},
+            # 错题本：q1 又对了一次（算第 4 次作答）；q5 是 s1 的题但只有错题本记录
+            {"question_id": "drive.s1.rules.001", "topic_id": "drive.s1.rules", "subject_id": "wrong", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T09:00:00.000"},
+            {"question_id": "drive.s1.alcohol.005", "topic_id": "drive.s1.alcohol", "subject_id": "wrong", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T10:00:00.000"},
+            # 考前复习：q4 只在这里出现
+            {"question_id": "drive.s1.penalty.004", "topic_id": "drive.s1.penalty", "subject_id": "review", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T11:00:00.000"},
+            # 科目四一条：不得混进科目一
+            {"question_id": "drive.s4.civil.001", "topic_id": "drive.s4.civil", "subject_id": "subject4", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T12:00:00.000"},
+        ]
+        with self.driver.begin() as conn:
+            conn.execute(insert(schema.attempts), rows)
+
+    def test_wrong_analysis(self):
+        self.seed_subject()
+        detail = self.client.get("/driver/data.json").get_json()["details"]["subject1"]
+        w = detail["wrong"]
+        # 答过的题：q1-q5（q5 只有错题本记录也算）；错过的：q1、q2、q5；攻克：q1；仍错：q2、q5
+        self.assertEqual(w["questions"], 5)
+        self.assertEqual(w["ever_wrong"], 3)
+        self.assertEqual(w["fixed"], 1)
+        self.assertEqual(w["still"], 2)
+        # 消化曲线：第 1 次对的只有 q3、q4（0.4）；第 2 次 1/2；第 3、4 次全对
+        curve = {c["n"]: c for c in w["repeat_curve"]}
+        self.assertEqual(curve[1]["count"], 5)
+        self.assertEqual(curve[1]["rate"], 0.4)
+        self.assertEqual(curve[2]["rate"], 0.5)
+        self.assertEqual(curve[3]["rate"], 1.0)
+        self.assertEqual(curve[4]["count"], 1)
+        # 顽固榜：q2 错 2 次居首，带题号与状态
+        self.assertEqual(w["stubborn"][0]["no"], "002")
+        self.assertEqual(w["stubborn"][0]["wrongs"], 2)
+        self.assertFalse(w["stubborn"][0]["fixed"])
+
+    def test_chapters_carry_wrong_dimensions(self):
+        self.seed_subject()
+        detail = self.client.get("/driver/data.json").get_json()["details"]["subject1"]
+        by_id = {c["id"]: c for c in detail["chapters"]}
+        rules = by_id["drive.s1.rules"]
+        self.assertEqual(rules["attempts"], 5)      # 正式场景 5 次
+        self.assertEqual(rules["questions"], 2)     # q1、q2
+        self.assertEqual(rules["wrong_questions"], 2)
+        # alcohol 章只在错题本出现：正式作答 0，但错题统计里有它
+        self.assertEqual(by_id["drive.s1.alcohol"]["questions"], 1)
+        # 复习场景的重练量归入 wrong_drill，不进正式章节作答
+        drill = {x["id"]: x for x in detail["wrong_drill"]}
+        self.assertEqual(drill["drive.s1.penalty"]["attempts"], 1)
+
+    def test_subject_separation_and_empty(self):
+        self.seed_subject()
+        details = self.client.get("/driver/data.json").get_json()["details"]
+        self.assertEqual(details["subject1"]["title"], "科目一")
+        self.assertEqual(details["subject4"]["title"], "科目四")
+        self.assertEqual(len(details["subject4"]["chapters"]), 1)
+        # 科目二没练过也没考过：不出标签页
+        self.assertIsNone(details["subject2"])
+
+
 class StreakTest(unittest.TestCase):
     """dayStreak 口径与客户端（look.dart）一致：从今天往前数，今天没练就是 0。"""
 

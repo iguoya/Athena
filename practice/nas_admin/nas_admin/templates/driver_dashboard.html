@@ -8,12 +8,12 @@
   <style>
     :root {
       --bg: #f5f6f8; --card: #ffffff; --ink: #1f2329; --secondary: #6b7280;
-      --line: #e5e7eb; --accent: #2563eb; --ok: #16a34a; --bad: #dc2626;
+      --line: #e5e7eb; --accent: #2563eb; --ok: #16a34a; --bad: #dc2626; --warn: #d97706;
     }
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #111418; --card: #1b1f24; --ink: #e6e8ea; --secondary: #9aa1ab;
-        --line: #2a2f36; --accent: #60a5fa; --ok: #4ade80; --bad: #f87171;
+        --line: #2a2f36; --accent: #60a5fa; --ok: #4ade80; --bad: #f87171; --warn: #fbbf24;
       }
     }
     * { box-sizing: border-box; }
@@ -25,12 +25,16 @@
     main { max-width: 2200px; margin: 0 auto; }
     h1 { font-size: 1.625rem; margin: 0 0 4px; }
     .meta { color: var(--secondary); font-size: 1rem; margin-bottom: 20px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
-    .card {
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
-    }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
     .card .num { font-size: 1.875rem; font-weight: 600; font-variant-numeric: tabular-nums; }
     .card .label { color: var(--secondary); font-size: 1rem; margin-top: 2px; }
+    .tabs { display: flex; gap: 8px; margin: 26px 0 0; flex-wrap: wrap; }
+    .tabs button {
+      font: inherit; font-size: 1.125rem; padding: 8px 22px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--card); color: var(--secondary); cursor: pointer;
+    }
+    .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
     section { margin-top: 28px; }
     section > h2, .block > h2 { font-size: 1.3125rem; margin: 0 0 10px; }
     h2 small { color: var(--secondary); font-weight: 400; font-size: 1rem; margin-left: 8px; }
@@ -49,12 +53,16 @@
       .grid .span2 { grid-column: span 2; }
       .grid .span3 { grid-column: span 3; }
     }
-    ul.achievements { list-style: none; margin: 0; padding: 0; }
-    ul.achievements li {
+    ul.list { list-style: none; margin: 0; padding: 0; }
+    ul.list li {
       background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 10px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px;
+      padding: 10px 16px; margin-bottom: 8px; display: flex; justify-content: space-between;
+      gap: 12px; font-size: 1rem; flex-wrap: wrap;
     }
-    ul.achievements time { color: var(--secondary); font-size: 1rem; white-space: nowrap; }
+    ul.list li .sub { color: var(--secondary); }
+    ul.list time { color: var(--secondary); white-space: nowrap; }
+    .empty { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 22px; color: var(--secondary); text-align: center; }
     .error-box { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
       padding: 28px; text-align: center; color: var(--secondary); margin-top: 24px; }
   </style>
@@ -66,42 +74,48 @@
 
   <div class="cards" id="cards" hidden></div>
 
-  <section id="daily-section" hidden>
-    <h2>最近 30 天<small>柱是作答量，线是正确率</small></h2>
-    <div class="chart" id="daily"></div>
-  </section>
+  <div class="tabs" id="tabs" hidden></div>
 
-  <div class="grid">
-    <section id="calendar-section" hidden>
-      <h2>练习日历<small>颜色越深练得越多</small></h2>
-      <div class="chart" id="calendar" style="height: auto; padding: 16px 8px;"></div>
+  <div id="tab-overview">
+    <section id="daily-section" hidden>
+      <h2>最近 30 天<small>柱是作答量，线是正确率</small></h2>
+      <div class="chart" id="daily"></div>
     </section>
 
-    <div class="block" id="sunburst-block" hidden>
-      <h2>作答分布<small>外圈是章节</small></h2>
-      <div class="chart tall" id="sunburst"></div>
+    <div class="grid">
+      <section id="calendar-section" hidden>
+        <h2>练习日历<small>颜色越深练得越多</small></h2>
+        <div class="chart" id="calendar" style="height: auto; padding: 16px 8px;"></div>
+      </section>
+
+      <div class="block" id="sunburst-block" hidden>
+        <h2>作答分布<small>外圈是章节</small></h2>
+        <div class="chart tall" id="sunburst"></div>
+      </div>
+
+      <div class="block" id="radar-block" hidden>
+        <h2 id="radar-title">章节正确率</h2>
+        <div class="chart tall" id="radar"></div>
+      </div>
+
+      <section id="exams-section" class="span2" hidden>
+        <h2>模拟考成绩</h2>
+        <div class="chart" id="exams"></div>
+      </section>
+
+      <section id="subjects-section" hidden>
+        <h2>各科目</h2>
+        <div class="chart" id="subjects"></div>
+      </section>
+
+      <section id="achievements-section" class="span2 span3" hidden>
+        <h2>成就</h2>
+        <ul class="list" id="achievements"></ul>
+      </section>
     </div>
-
-    <div class="block" id="radar-block" hidden>
-      <h2 id="radar-title">章节正确率</h2>
-      <div class="chart tall" id="radar"></div>
-    </div>
-
-    <section id="exams-section" class="span2" hidden>
-      <h2>模拟考成绩</h2>
-      <div class="chart" id="exams"></div>
-    </section>
-
-    <section id="subjects-section" hidden>
-      <h2>各科目</h2>
-      <div class="chart" id="subjects"></div>
-    </section>
-
-    <section id="achievements-section" class="span2 span3" hidden>
-      <h2>成就</h2>
-      <ul class="achievements" id="achievements"></ul>
-    </section>
   </div>
+
+  <div id="tab-subjects"></div>
 
   <div class="error-box" id="error" hidden></div>
 </main>
@@ -112,7 +126,8 @@
 
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const ink = css("--ink"), secondary = css("--secondary"), line = css("--line");
-const accent = css("--accent"), ok = css("--ok"), bad = css("--bad");
+const accent = css("--accent"), ok = css("--ok"), bad = css("--bad"), warn = css("--warn");
+const cardBg = css("--card");
 
 const charts = [];
 function chart(el) {
@@ -120,11 +135,11 @@ function chart(el) {
   charts.push(c);
   return c;
 }
-// 列数随断点变化，网格里每个图都要跟着容器重排
 window.addEventListener("resize", () => charts.forEach(c => c.resize()));
 
 const BASE_TEXT = { color: secondary, fontSize: 15 };
 const pct = v => v == null ? "—" : Math.round(v * 100) + "%";
+const rateColor = r => r == null ? secondary : r >= 0.9 ? ok : r >= 0.8 ? accent : bad;
 
 // 概览数字从 0 滚到目标值：数字动效让「总量」这类抽象大数有实感
 function countUp(el, target, format) {
@@ -139,68 +154,21 @@ function countUp(el, target, format) {
   requestAnimationFrame(tick);
 }
 
-function render(data) {
-  const o = data.overview;
-  document.getElementById("meta").textContent =
-    "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ").replace(/\+.*$/, "");
+let DATA;
+const rendered = {};
 
-  const cards = [
-    [o.attempts, v => Math.round(v).toLocaleString("zh-CN"), "累计作答"],
-    // 百分比以「83」为目标滚动而不是 0.83——后者四舍五入全程只会显示 0%/1%
-    [o.rate == null ? 0 : Math.round(o.rate * 100), v => o.rate == null ? "—" : Math.round(v) + "%", "总正确率"],
-    [o.streak, v => (o.streak >= 1 ? Math.round(v) + " 天" : "—"), "连续练习"],
-    [o.avg_duration_ms ? o.avg_duration_ms / 1000 : 0, v => o.avg_duration_ms ? (v).toFixed(1) + " 秒" : "—", "平均用时"],
-    [o.exams, v => Math.round(v), "模拟考场数"],
-    [o.drills + o.rehearsals, v => Math.round(v), "练车 / 演练"],
-    [o.achievements, v => Math.round(v), "成就"],
-  ];
-  const box = document.getElementById("cards");
-  box.hidden = false;
-  box.innerHTML = cards
-    .map(() => `<div class="card"><div class="num">0</div><div class="label"></div></div>`)
-    .join("");
-  [...box.querySelectorAll(".card")].forEach((card, i) => {
-    const [target, format, label] = cards[i];
-    card.querySelector(".label").textContent = label;
-    countUp(card.querySelector(".num"), target, format);
-  });
+/* ---------------------------------------------------------------- 总览 */
 
-  // ---- 练习日历：热力格子，全历史跨度。宽度自适应所在列，格子高度固定
-  if (data.calendar.length) {
-    const days = data.calendar.map(d => d[0]);
-    const first = new Date(days[0]);
-    const rangeStart = new Date(first.getFullYear(), first.getMonth(), 1).toISOString().slice(0, 10);
-    const rangeEnd = new Date().toISOString().slice(0, 10);
-    const months = (new Date(rangeEnd).getYear() - new Date(rangeStart).getYear()) * 12
-                 + new Date(rangeEnd).getMonth() - new Date(rangeStart).getMonth() + 1;
-    const el = document.getElementById("calendar");
-    el.style.height = (months * 30 + 64) + "px";
-    document.getElementById("calendar-section").hidden = false;
-    chart(el).setOption({
-      visualMap: {
-        min: 0, max: Math.max(...data.calendar.map(d => d[1])), type: "continuous",
-        orient: "horizontal", left: "center", bottom: 0, itemWidth: 12,
-        text: ["多", "少"], textStyle: BASE_TEXT, inRange: { color: [line, accent] },
-      },
-      calendar: {
-        range: [rangeStart, rangeEnd], cellSize: [null, 24], splitLine: { show: false },
-        itemStyle: { color: "transparent", borderColor: line, borderWidth: 1 },
-        yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 14, nameMap: "ZH" },
-        monthLabel: { color: secondary, fontSize: 14, nameMap: "ZH" },
-      },
-      series: [{
-        type: "heatmap", coordinateSystem: "calendar", data: data.calendar,
-        itemStyle: { borderRadius: 4 },
-      }],
-    });
-  }
+function renderOverview() {
+  const data = DATA;
 
-  // ---- 最近 30 天：柱是题量，线是正确率（时间轴全宽，宽屏下柱距舒展）
+  // ---- 最近 30 天：柱是题量，线是正确率
   if (data.daily.some(d => d.attempts > 0)) {
     document.getElementById("daily-section").hidden = false;
     chart(document.getElementById("daily")).setOption({
-      grid: { left: 40, right: 40, top: 24, bottom: 24 },
+      grid: { left: 56, right: 48, top: 28, bottom: 28 },
       tooltip: { trigger: "axis" },
+      legend: { textStyle: BASE_TEXT, top: 0 },
       xAxis: { type: "category", data: data.daily.map(d => d.date.slice(5)),
                axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
       yAxis: [
@@ -218,7 +186,35 @@ function render(data) {
     });
   }
 
-  // ---- 作答分布旭日：内圈是科目/场景，外圈是章节
+  // ---- 练习日历：热力格子，全历史跨度
+  if (data.calendar.length) {
+    const days = data.calendar.map(d => d[0]);
+    const first = new Date(days[0]);
+    const rangeStart = new Date(first.getFullYear(), first.getMonth(), 1).toISOString().slice(0, 10);
+    const rangeEnd = new Date().toISOString().slice(0, 10);
+    const months = (new Date(rangeEnd).getYear() - new Date(rangeStart).getYear()) * 12
+                 + new Date(rangeEnd).getMonth() - new Date(rangeStart).getMonth() + 1;
+    const el = document.getElementById("calendar");
+    el.style.height = (months * 32 + 68) + "px";
+    document.getElementById("calendar-section").hidden = false;
+    chart(el).setOption({
+      visualMap: {
+        min: 0, max: Math.max(...data.calendar.map(d => d[1])), type: "continuous",
+        orient: "horizontal", left: "center", bottom: 0, itemWidth: 12,
+        text: ["多", "少"], textStyle: BASE_TEXT, inRange: { color: [line, accent] },
+      },
+      calendar: {
+        range: [rangeStart, rangeEnd], cellSize: [null, 26], splitLine: { show: false },
+        itemStyle: { color: "transparent", borderColor: line, borderWidth: 1 },
+        yearLabel: { show: false }, dayLabel: { color: secondary, fontSize: 14, nameMap: "ZH" },
+        monthLabel: { color: secondary, fontSize: 14, nameMap: "ZH" },
+      },
+      series: [{ type: "heatmap", coordinateSystem: "calendar", data: data.calendar,
+                 itemStyle: { borderRadius: 4 } }],
+    });
+  }
+
+  // ---- 作答分布旭日
   if (data.sunburst.length) {
     document.getElementById("sunburst-block").hidden = false;
     chart(document.getElementById("sunburst")).setOption({
@@ -231,12 +227,12 @@ function render(data) {
           { r0: "12%", r: "46%", label: { rotate: "tangential", fontSize: 17, fontWeight: 600 } },
           { r0: "46%", r: "88%", itemStyle: { opacity: 0.75 }, label: { rotate: 0 } },
         ],
-        itemStyle: { borderColor: css("--card"), borderWidth: 1.5 },
+        itemStyle: { borderColor: cardBg, borderWidth: 1.5 },
       }],
     });
   }
 
-  // ---- 主修科目章节正确率雷达：形状越「圆」越均衡，瘪下去的是短板
+  // ---- 主修科目章节正确率雷达
   if (data.radar.indicators.length >= 3) {
     document.getElementById("radar-block").hidden = false;
     document.getElementById("radar-title").textContent = data.radar.subject + "章节正确率";
@@ -249,24 +245,20 @@ function render(data) {
         splitLine: { lineStyle: { color: line } },
         splitArea: { show: false },
       },
-      series: [{
-        type: "radar",
-        data: [{
-          value: data.radar.values, name: "正确率",
-          areaStyle: { color: accent, opacity: 0.25 },
-          lineStyle: { color: accent }, itemStyle: { color: accent },
-          symbolSize: 4,
-        }],
-      }],
+      series: [{ type: "radar", data: [{
+        value: data.radar.values, name: "正确率",
+        areaStyle: { color: accent, opacity: 0.25 },
+        lineStyle: { color: accent }, itemStyle: { color: accent }, symbolSize: 4,
+      }] }],
     });
   }
 
-  // ---- 各科目：横向条，条长是正确率，标签带题量
+  // ---- 各科目横条
   const withAttempts = data.subjects.filter(s => s.attempts > 0);
   if (withAttempts.length) {
     document.getElementById("subjects-section").hidden = false;
     chart(document.getElementById("subjects")).setOption({
-      grid: { left: 120, right: 60, top: 10, bottom: 24 },
+      grid: { left: 130, right: 70, top: 10, bottom: 28 },
       tooltip: {
         formatter: p => {
           const s = withAttempts[p[0].dataIndex];
@@ -278,47 +270,317 @@ function render(data) {
       yAxis: { type: "category", data: withAttempts.map(s => s.title),
                axisLabel: { color: ink, fontSize: 17 }, axisLine: { lineStyle: { color: line } } },
       series: [{
-        type: "bar", data: withAttempts.map(s => Math.round(s.rate * 100)),
-        label: { show: true, position: "right", fontSize: 15, color: secondary, formatter: p => pct(withAttempts[p.dataIndex].rate) },
-        itemStyle: { color: accent, borderRadius: [0, 3, 3, 0] }, barWidth: 18,
+        type: "bar", data: withAttempts.map(s => ({ value: Math.round(s.rate * 100),
+          itemStyle: { color: rateColor(s.rate), borderRadius: [0, 3, 3, 0] } })),
+        label: { show: true, position: "right", fontSize: 15, color: secondary,
+                 formatter: p => pct(withAttempts[p.dataIndex].rate) },
+        barWidth: 20,
       }],
     });
   }
 
-  // ---- 模拟考：每场一根柱，及格线横着，过没过用颜色分
-  if (data.exams.length) {
-    document.getElementById("exams-section").hidden = false;
-    chart(document.getElementById("exams")).setOption({
-      grid: { left: 36, right: 20, top: 24, bottom: 24 },
-      tooltip: {
-        formatter: p => {
-          const e = data.exams[p[0].dataIndex];
-          return `${e.subject} · ${e.at.replace("T", " ")}<br>${e.score} 分${e.passed ? " · 及格" : " · 未过"}`;
-        },
-      },
-      xAxis: { type: "category", data: data.exams.map((_, i) => i + 1),
-               axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
-      yAxis: { type: "value", max: 100, min: 0, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
-      series: [{
-        type: "bar",
-        data: data.exams.map(e => ({ value: e.score, itemStyle: { color: e.passed ? ok : bad, borderRadius: [3, 3, 0, 0] } })),
-        markLine: {
-          silent: true, symbol: "none",
-          lineStyle: { color: secondary, type: "dashed" },
-          label: { formatter: "90 分", color: secondary },
-          data: [{ yAxis: 90 }],
-        },
-      }],
-    });
-  }
-
-  // ---- 成就墙：不是所有数据都值得画成图，解锁时间线本身就是内容
+  // ---- 模拟考 + 成就
+  renderExams("exams", "exams-section", data.exams);
   if (data.achievements.length) {
     document.getElementById("achievements-section").hidden = false;
     document.getElementById("achievements").innerHTML = data.achievements
       .map(a => `<li><span>${a.label}</span><time>${a.at.slice(0, 10)}</time></li>`)
       .join("");
   }
+}
+
+// 模拟考柱图（总览与科目页共用）
+function renderExams(elId, sectionId, exams) {
+  if (!exams.length) return;
+  document.getElementById(sectionId).hidden = false;
+  chart(document.getElementById(elId)).setOption({
+    grid: { left: 44, right: 24, top: 28, bottom: 28 },
+    tooltip: {
+      formatter: p => {
+        const e = exams[p[0].dataIndex];
+        return `${e.subject} · ${e.at.replace("T", " ")}<br>${e.score} 分${e.passed ? " · 及格" : " · 未过"}`;
+      },
+    },
+    xAxis: { type: "category", data: exams.map((_, i) => i + 1),
+             axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
+    yAxis: { type: "value", max: 100, min: 0, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+    series: [{
+      type: "bar",
+      data: exams.map(e => ({ value: e.score,
+        itemStyle: { color: e.passed ? ok : bad, borderRadius: [3, 3, 0, 0] } })),
+      markLine: {
+        silent: true, symbol: "none",
+        lineStyle: { color: secondary, type: "dashed" },
+        label: { formatter: "90 分", color: secondary, fontSize: 15 },
+        data: [{ yAxis: 90 }],
+      },
+    }],
+  });
+}
+
+/* ---------------------------------------------------------------- 科目深挖 */
+
+// 章节短名映射（矩阵 tooltip 用）
+const TOPIC_TITLES_MAP = {};
+function TOPIC_TITLE(topic) { return TOPIC_TITLES_MAP[topic] ?? topic; }
+
+function renderSubject(sid) {
+  const d = DATA.details[sid];
+  if (!d) return;
+  const w = d.wrong;
+  const exams = DATA.exams.filter(e => e.subject === d.title);
+  const p = sid;  // 元素 id 前缀，避免与总览冲突
+  document.getElementById("tab-subjects").insertAdjacentHTML("beforeend", `
+    <div id="tab-${p}" hidden>
+      <div class="cards" id="${p}-cards"></div>
+      <div class="grid">
+        <section class="span2">
+          <h2>错题消化曲线<small>同一道题第 n 次作答时的正确率——重练到第几遍才稳</small></h2>
+          <div class="chart" id="${p}-curve"></div>
+        </section>
+        <div class="block">
+          <h2>错题状态<small>最近两次连对算攻克</small></h2>
+          <div class="chart tall" id="${p}-status"></div>
+        </div>
+        <section class="span3">
+          <h2>章节练习与错题<small>条是作答量，颜色是正确率，右侧标注错过的题</small></h2>
+          <div class="chart" id="${p}-chapters" style="height: 420px;"></div>
+        </section>
+        <section class="span3" id="${p}-matrix-section">
+          <h2>章节 × 日期<small>格子是当天该章的正确率，灰格没练</small></h2>
+          <div class="chart" id="${p}-matrix" style="height: 420px;"></div>
+        </section>
+        <section>
+          <h2>顽固错题<small>错得最多的十道</small></h2>
+          <ul class="list" id="${p}-stubborn"></ul>
+        </section>
+        <section id="${p}-drill-section">
+          <h2>错题重练<small>错题本与考前复习里的作答</small></h2>
+          <div class="chart" id="${p}-drill"></div>
+        </section>
+        <section class="span3" id="${p}-exams-section">
+          <h2>${d.title}模拟考</h2>
+          <div class="chart" id="${p}-exams"></div>
+          <div class="empty" id="${p}-exams-empty" hidden>还没有${d.title}的模拟考记录</div>
+        </section>
+      </div>
+    </div>`);
+
+  // ---- 科目概览卡
+  const totalAttempts = d.chapters.reduce((s, c) => s + c.attempts, 0);
+  const totalCorrect = d.chapters.reduce((s, c) => s + c.correct, 0);
+  const drills = d.wrong_drill.reduce((s, x) => s + x.attempts, 0);
+  const avg = exams.length ? Math.round(exams.reduce((s, e) => s + e.score, 0) / exams.length) : null;
+  const cards = [
+    [totalAttempts, v => Math.round(v).toLocaleString("zh-CN"), "作答"],
+    [totalAttempts ? totalCorrect / totalAttempts : 0, v => totalAttempts ? pct(v) : "—", "正确率"],
+    [w.questions, v => Math.round(v).toLocaleString("zh-CN"), "答过的题"],
+    [w.ever_wrong, v => Math.round(v).toLocaleString("zh-CN"), "错过的题"],
+    [w.fixed, v => Math.round(v).toLocaleString("zh-CN"), "已攻克"],
+    [w.still, v => Math.round(v).toLocaleString("zh-CN"), "仍错着"],
+    [drills, v => Math.round(v).toLocaleString("zh-CN"), "错题重练"],
+    [exams.length, v => avg == null ? Math.round(v) : Math.round(v), avg == null ? "模拟考场数" : `模拟考 · 均分 ${avg}`],
+  ];
+  const box = document.getElementById(p + "-cards");
+  box.innerHTML = cards.map(() => `<div class="card"><div class="num">0</div><div class="label"></div></div>`).join("");
+  [...box.querySelectorAll(".card")].forEach((card, i) => {
+    const [target, format, label] = cards[i];
+    card.querySelector(".label").textContent = label;
+    countUp(card.querySelector(".num"), target, format);
+  });
+
+  // ---- 错题消化曲线（样本 <5 的点不画：一两个题的正确率只是噪声）
+  const curve = w.repeat_curve.filter(c => c.count >= 5);
+  chart(document.getElementById(p + "-curve")).setOption({
+    grid: { left: 56, right: 24, top: 32, bottom: 36 },
+    tooltip: {
+      formatter: q => {
+        const c = curve[q[0].dataIndex];
+        return `第 ${c.n} 次作答：正确率 ${pct(c.rate)}<br>样本 ${c.count} 题`;
+      },
+    },
+    xAxis: { type: "category", name: "第 n 次", nameTextStyle: BASE_TEXT,
+             data: curve.map(c => c.n), axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
+    yAxis: { type: "value", min: 40, max: 100,
+             axisLabel: { ...BASE_TEXT, formatter: "{value}%" }, splitLine: { lineStyle: { color: line } } },
+    series: [{
+      type: "line", data: curve.map(c => Math.round(c.rate * 100)),
+      label: { show: true, color: secondary, fontSize: 15, formatter: q => curve[q.dataIndex].count + " 题" },
+      lineStyle: { color: accent, width: 3 }, itemStyle: { color: accent }, symbolSize: 8,
+      areaStyle: { color: accent, opacity: 0.08 },
+      markLine: { silent: true, symbol: "none", lineStyle: { color: ok, type: "dashed" },
+                  label: { formatter: "90%", color: ok, fontSize: 15 }, data: [{ yAxis: 90 }] },
+    }],
+  });
+
+  // ---- 错题状态环
+  const never = w.questions - w.ever_wrong;
+  chart(document.getElementById(p + "-status")).setOption({
+    tooltip: { formatter: q => `${q.name}：${q.value} 题（${pct(q.value / w.questions)}）` },
+    series: [{
+      type: "pie", radius: ["45%", "72%"], center: ["50%", "52%"],
+      label: { color: ink, fontSize: 15, formatter: q => `${q.name} ${q.value}` },
+      data: [
+        { name: "从未错过", value: never, itemStyle: { color: line } },
+        { name: "已攻克", value: w.fixed, itemStyle: { color: ok } },
+        { name: "仍错着", value: w.still, itemStyle: { color: bad } },
+      ],
+    }],
+  });
+
+  // ---- 章节练习与错题横条
+  const chapters = d.chapters.filter(c => c.attempts > 0);
+  chart(document.getElementById(p + "-chapters")).setOption({
+    grid: { left: 200, right: 150, top: 10, bottom: 28 },
+    tooltip: {
+      formatter: q => {
+        const c = chapters[q[0].dataIndex];
+        return `${c.title}<br>作答 ${c.attempts} 次 · 答过 ${c.questions} 题<br>`
+          + `正确率 ${pct(c.rate)} · 错过 ${c.wrong_questions} 题`;
+      },
+    },
+    xAxis: { type: "value", axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+    yAxis: { type: "category", inverse: true, data: chapters.map(c => c.title),
+             axisLabel: { color: ink, fontSize: 16 }, axisLine: { lineStyle: { color: line } } },
+    series: [{
+      type: "bar", data: chapters.map(c => ({ value: c.attempts,
+        itemStyle: { color: rateColor(c.rate), borderRadius: [0, 3, 3, 0] } })),
+      label: { show: true, position: "right", fontSize: 15, color: secondary,
+               formatter: q => `${pct(chapters[q.dataIndex].rate)} · 错过 ${chapters[q.dataIndex].wrong_questions}` },
+      barWidth: 20,
+    }],
+  });
+
+  // ---- 章节 × 日期热力矩阵
+  if (d.chapter_days.length) {
+    const days = [...new Set(d.chapter_days.map(x => x.day))].sort();
+    const titles = chapters.map(c => c.title);
+    const cells = d.chapter_days.map(x => [days.indexOf(x.day), titles.indexOf(TOPIC_TITLE(x.topic)),
+      x.attempts ? Math.round(x.correct / x.attempts * 100) : 0]);
+    chart(document.getElementById(p + "-matrix")).setOption({
+      grid: { left: 200, right: 100, top: 10, bottom: 60 },
+      tooltip: {
+        formatter: q => {
+          const x = d.chapter_days[q[0].dataIndex];
+          return `${TOPIC_TITLE(x.topic)} · ${x.day}<br>${x.correct}/${x.attempts} 正确`;
+        },
+      },
+      visualMap: {
+        min: 50, max: 100, orient: "vertical", right: 10, top: "center", itemWidth: 14,
+        text: ["稳", "生"], textStyle: BASE_TEXT,
+        inRange: { color: [bad, warn, ok] },
+      },
+      xAxis: { type: "category", data: days.map(x => x.slice(5)), axisLabel: BASE_TEXT,
+               axisLine: { lineStyle: { color: line } } },
+      yAxis: { type: "category", inverse: true, data: titles,
+               axisLabel: { color: ink, fontSize: 15 }, axisLine: { lineStyle: { color: line } } },
+      series: [{ type: "heatmap", data: cells,
+                 itemStyle: { borderColor: cardBg, borderWidth: 2, borderRadius: 3 },
+                 label: { show: days.length <= 20, fontSize: 13, color: "#fff" } }],
+    });
+  } else {
+    document.getElementById(p + "-matrix-section").hidden = true;
+  }
+
+  // ---- 顽固错题榜
+  document.getElementById(p + "-stubborn").innerHTML = w.stubborn.length
+    ? w.stubborn.map(s =>
+        `<li><span>#${s.no} · ${s.title}</span><span class="sub">错 ${s.wrongs}/${s.total} 次 · ${s.fixed ? "已攻克" : "仍错着"}</span></li>`).join("")
+    : `<li><span>没有反复答错的题</span></li>`;
+
+  // ---- 错题重练横条（wrong / review 场景）
+  if (d.wrong_drill.length) {
+    chart(document.getElementById(p + "-drill")).setOption({
+      grid: { left: 200, right: 80, top: 10, bottom: 28 },
+      tooltip: { formatter: q => {
+        const x = d.wrong_drill[q[0].dataIndex];
+        return `${x.title}：重练 ${x.attempts} 次 · 正确率 ${pct(x.rate)}`;
+      } },
+      xAxis: { type: "value", axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+      yAxis: { type: "category", inverse: true, data: d.wrong_drill.map(x => x.title),
+               axisLabel: { color: ink, fontSize: 15 }, axisLine: { lineStyle: { color: line } } },
+      series: [{
+        type: "bar", data: d.wrong_drill.map(x => ({ value: x.attempts,
+          itemStyle: { color: rateColor(x.rate), borderRadius: [0, 3, 3, 0] } })),
+        label: { show: true, position: "right", fontSize: 15, color: secondary,
+                 formatter: q => pct(d.wrong_drill[q.dataIndex].rate) },
+        barWidth: 18,
+      }],
+    });
+  } else {
+    document.getElementById(p + "-drill-section").hidden = true;
+  }
+
+  // ---- 该科目模拟考
+  if (exams.length) {
+    document.getElementById(p + "-exams-empty").remove();
+    renderExams(p + "-exams", p + "-exams-section", exams);
+  } else {
+    document.getElementById(p + "-exams").remove();
+    document.getElementById(p + "-exams-empty").hidden = false;
+  }
+}
+
+/* ---------------------------------------------------------------- 装配 */
+
+function render(data) {
+  DATA = data;
+  const o = data.overview;
+  document.getElementById("meta").textContent =
+    "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ").replace(/\+.*$/, "");
+
+  const cards = [
+    [o.attempts, v => Math.round(v).toLocaleString("zh-CN"), "累计作答"],
+    // 百分比以「83」为目标滚动而不是 0.83——后者四舍五入全程只会显示 0%/1%
+    [o.rate == null ? 0 : Math.round(o.rate * 100), v => o.rate == null ? "—" : Math.round(v) + "%", "总正确率"],
+    [o.streak, v => (o.streak >= 1 ? Math.round(v) + " 天" : "—"), "连续练习"],
+    [o.avg_duration_ms ? o.avg_duration_ms / 1000 : 0, v => o.avg_duration_ms ? (v).toFixed(1) + " 秒" : "—", "平均用时"],
+    [o.exams, v => Math.round(v), "模拟考场数"],
+    [o.drills + o.rehearsals, v => Math.round(v), "练车 / 演练"],
+    [o.achievements, v => Math.round(v), "成就"],
+  ];
+  const box = document.getElementById("cards");
+  box.hidden = false;
+  box.innerHTML = cards.map(() => `<div class="card"><div class="num">0</div><div class="label"></div></div>`).join("");
+  [...box.querySelectorAll(".card")].forEach((card, i) => {
+    const [target, format, label] = cards[i];
+    card.querySelector(".label").textContent = label;
+    countUp(card.querySelector(".num"), target, format);
+  });
+
+  // 标签页：总览 + 有数据的科目（理论考试只有科目一、科目四；科目二是场地、科目三是路考）
+  for (const d of Object.values(data.details))
+    for (const c of d ? d.chapters : []) TOPIC_TITLES_MAP[c.id] = c.title;
+  const tabsBar = document.getElementById("tabs");
+  const tabs = ["overview", ...Object.keys(data.details).filter(k => data.details[k])];
+  tabsBar.hidden = false;
+  tabsBar.innerHTML = tabs.map(t =>
+    `<button role="tab" data-tab="${t}" aria-selected="false">${t === "overview" ? "总览" : data.details[t].title}</button>`
+  ).join("");
+  tabsBar.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-tab]");
+    if (btn) activate(btn.dataset.tab);
+  });
+  window.addEventListener("hashchange", () => activate(location.hash.slice(1) || "overview"));
+
+  renderOverview();
+  activate(tabs.includes(location.hash.slice(1)) ? location.hash.slice(1) : "overview");
+}
+
+function activate(tab) {
+  if (!DATA) return;
+  document.querySelectorAll("#tabs button").forEach(b =>
+    b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+  document.getElementById("tab-overview").hidden = tab !== "overview";
+  document.querySelectorAll("#tab-subjects > div").forEach(el => el.hidden = true);
+  if (tab !== "overview") {
+    if (!rendered[tab]) { rendered[tab] = true; renderSubject(tab); }
+    const el = document.getElementById("tab-" + tab);
+    if (el) el.hidden = false;
+  }
+  if (("#" + tab) !== location.hash) history.replaceState(null, "", "#" + tab);
+  // 懒渲染的图在容器刚显示后量到尺寸
+  requestAnimationFrame(() => charts.forEach(c => c.resize()));
 }
 
 function fail(message) {

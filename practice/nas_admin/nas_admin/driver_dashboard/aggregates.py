@@ -16,7 +16,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 from typing import Any
 
-from sqlalchemy import Connection, func, select
+from sqlalchemy import Connection, and_, func, or_, select
 
 from nas_admin.driver_api import schema
 from nas_admin.driver_api import store
@@ -86,7 +86,170 @@ def collect(days: int = DAILY_WINDOW) -> dict[str, Any]:
             "radar": _radar(conn),
             "exams": _exam_list(conn),
             "achievements": _achievement_list(conn),
+            "details": {sid: _subject_detail(conn, sid) for sid in REAL_SUBJECTS},
         }
+
+
+def _topic_subject(topic_id: str) -> str | None:
+    """章节 id（drive.s1.rules）归属的科目（subject1）；格式不合返回 None。
+    错题本/复习场景的 subject_id 是 wrong/review，章节归属要看 topic 前缀。"""
+    parts = topic_id.split(".")
+    if len(parts) == 3 and parts[1][:1] == "s" and parts[1][1:].isdigit():
+        return f"subject{parts[1][1:]}"
+    return None
+
+
+def _subject_detail(conn: Connection, subject_id: str) -> dict[str, Any] | None:
+    """单科目深挖（ADR 0069 的展示范围）。
+
+    练习 = 该科目的正式作答；错题重练 = wrong/review 场景里挂在该科目章节上的作答。
+    模拟考只有科目级分数（exams 表不记逐题），按章节的考试数据需要客户端补记录，
+    这里不虚构。库里另有 hesitant（迟疑）列，但客户端早已去掉迟疑概念（driver
+    提交 3c4276b），那是迁移遗留的历史字段，不参与统计。没练过也没考过的科目
+    返回 None，前端不出这个标签页。
+    """
+    a = schema.attempts
+    rows = conn.execute(
+        select(a.c.topic_id, func.count(), func.coalesce(func.sum(a.c.correct), 0))
+        .where(a.c.subject_id == subject_id)
+        .group_by(a.c.topic_id)
+    ).all()
+    day_rows = conn.execute(
+        select(a.c.topic_id, _day_of(a.c.at).label("day"), func.count(), func.coalesce(func.sum(a.c.correct), 0))
+        .where(a.c.subject_id == subject_id)
+        .group_by(a.c.topic_id, "day")
+    ).all()
+    chapters = [
+        {
+            "id": r[0],
+            "title": TOPIC_TITLES.get(r[0], r[0]),
+            "attempts": int(r[1]),
+            "correct": int(r[2]),
+            "rate": round(int(r[2]) / int(r[1]), 4) if r[1] else None,
+        }
+        for r in sorted(rows, key=lambda r: -r[1])
+    ]
+    if not chapters and not day_rows:
+        exams_n = conn.execute(
+            select(func.count()).select_from(schema.exams).where(schema.exams.c.subject_id == subject_id)
+        ).scalar_one()
+        if exams_n == 0:
+            return None
+    # 错题/复习场景按章节归属进该科目
+    wrong_rows = conn.execute(
+        select(a.c.topic_id, a.c.subject_id, func.count(), func.coalesce(func.sum(a.c.correct), 0))
+        .where(a.c.subject_id.in_(["wrong", "review"]))
+        .group_by(a.c.topic_id, a.c.subject_id)
+    ).all()
+    wrong_drill: dict[str, dict[str, int]] = {}
+    for topic, place, n, correct in wrong_rows:
+        if _topic_subject(topic) != subject_id:
+            continue
+        slot = wrong_drill.setdefault(topic, {"attempts": 0, "correct": 0})
+        slot["attempts"] += int(n)
+        slot["correct"] += int(correct)
+
+    wrong = _wrong_analysis(conn, subject_id, chapters)
+
+    return {
+        "title": SUBJECT_TITLES.get(subject_id, (subject_id,))[0],
+        "chapters": chapters,
+        "chapter_days": [
+            {"topic": r[0], "title": TOPIC_TITLES.get(r[0], r[0]), "day": str(r[1]), "attempts": int(r[2]), "correct": int(r[3])}
+            for r in day_rows
+        ],
+        "wrong_drill": [
+            {"id": t, "title": TOPIC_TITLES.get(t, t), "attempts": v["attempts"],
+             "rate": round(v["correct"] / v["attempts"], 4) if v["attempts"] else None}
+            for t, v in sorted(wrong_drill.items(), key=lambda kv: -kv[1]["attempts"])
+        ],
+        "wrong": wrong,
+    }
+
+
+def _wrong_analysis(conn: Connection, subject_id: str, chapters: list[dict[str, Any]]) -> dict[str, Any]:
+    """错题深挖：状态、消化曲线、顽固榜，并把章节错题维度并回章节列表。
+
+    口径（写清楚，客户端语义为准的例外见 ADR 0069）：
+    - 一道题的「见到次数」不分场景——正式练习、错题本、复习都算一次作答；
+    - 「已攻克」= 曾经答错、且**最近两次**作答都答对（连对口径，防蒙对）；只见过
+      一次或最近两次里有错的都算「仍错着」；
+    - 消化曲线 = 同一道题第 n 次作答时的正确率，回答「重练到第几遍才稳」。
+
+    数据量（每科目数千行）一次拉全在 Python 聚合，比多层窗口函数可读。
+    """
+    a = schema.attempts
+    short = "s" + subject_id.removeprefix("subject")  # subject1 → s1，对应 topic 前缀 drive.s1.
+    scope = or_(
+        a.c.subject_id == subject_id,
+        and_(a.c.subject_id.in_(["wrong", "review"]), a.c.topic_id.like(f"drive.{short}.%")),
+    )
+    rows = conn.execute(
+        select(a.c.question_id, a.c.topic_id, a.c.correct, a.c.at).where(scope).order_by(a.c.question_id, a.c.at)
+    ).all()
+
+    per_q: dict[str, dict[str, Any]] = {}
+    for qid, topic, correct, _at in rows:
+        per_q.setdefault(qid, {"topic": topic, "seq": []})["seq"].append(int(correct))
+
+    by_topic_wrong: dict[str, set[str]] = {}
+    by_topic_seen: dict[str, set[str]] = {}
+    curve: dict[int, list[int]] = {}
+    ever_wrong = fixed = 0
+    stubborn: list[dict[str, Any]] = []
+    for qid, item in per_q.items():
+        seq = item["seq"]
+        by_topic_seen.setdefault(item["topic"], set()).add(qid)
+        for n, correct in enumerate(seq, 1):
+            slot = curve.setdefault(n, [0, 0])
+            slot[0] += 1
+            slot[1] += correct
+        wrongs = seq.count(0)
+        if wrongs == 0:
+            continue
+        ever_wrong += 1
+        by_topic_wrong.setdefault(item["topic"], set()).add(qid)
+        if len(seq) >= 2 and seq[-1] == 1 and seq[-2] == 1:
+            fixed += 1
+            state = "fixed"
+        else:
+            state = "still"
+        stubborn.append({"qid": qid, "topic": item["topic"], "wrongs": wrongs, "total": len(seq), "state": state})
+
+    # 章节错题维度并回章节列表。只在错题本/复习里出现、正式练习为 0 的章节也补进
+    # 列表（attempts 0 但带着错题统计）——否则那些章的错题就无处安放。
+    chapter_by_id = {c["id"]: c for c in chapters}
+    for topic, seen in by_topic_seen.items():
+        chapter = chapter_by_id.get(topic)
+        if chapter is None:
+            chapter = {"id": topic, "title": TOPIC_TITLES.get(topic, topic),
+                       "attempts": 0, "correct": 0, "rate": None}
+            chapter_by_id[topic] = chapter
+            chapters.append(chapter)
+        chapter["questions"] = len(seen)
+        chapter["wrong_questions"] = len(by_topic_wrong.get(topic, set()))
+        chapter["miss_rate"] = round(chapter["wrong_questions"] / len(seen), 4) if seen else None
+
+    stubborn.sort(key=lambda s: (-s["wrongs"], s["qid"]))
+    return {
+        "questions": len(per_q),
+        "ever_wrong": ever_wrong,
+        "fixed": fixed,
+        "still": ever_wrong - fixed,
+        "repeat_curve": [
+            {"n": n, "count": slot[0], "rate": round(slot[1] / slot[0], 4)} for n, slot in sorted(curve.items())
+        ],
+        "stubborn": [
+            {
+                "title": TOPIC_TITLES.get(s["topic"], s["topic"]),
+                "no": s["qid"].rsplit(".", 1)[-1],
+                "wrongs": s["wrongs"],
+                "total": s["total"],
+                "fixed": s["state"] == "fixed",
+            }
+            for s in stubborn[:10]
+        ],
+    }
 
 
 def _overview(conn: Connection) -> dict[str, Any]:
