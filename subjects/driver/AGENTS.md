@@ -74,19 +74,28 @@
 - **界面**：Dart；桌面工作台（侧栏 + 主区），不为手机窄屏折中。标志用
   `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
-- **进度（个人数据）**：存软路由上的中心 **PostgreSQL**（库 `athena_driver`，专属账号），
-  内网直连；作答、考试、通知、成就、草稿、笔记都在这里，**不再有 `learning.db`、也不再走 GitHub
-  JSONL 同步**（主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。表由 `ProgressStore`
-  首次连接时建（`_ensureSchema`）；知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
+- **进度（个人数据）——本地优先（主仓库 ADR 0070）**：界面只读写本地 SQLite
+  （用户数据目录 `AthenaDriver/local.db`，不进仓库；表结构与中心 PG 同名同列，
+  业务键唯一索引承担幂等合并）。写入在同一事务里落业务表和待发送队列（outbox）；
+  `lib/sync.dart` 的 SyncEngine 后台把队列幂等上传、按游标增量拉取，与软路由上的
+  中心 PostgreSQL（库 `athena_driver`）保持同一份。断网照常做题，联网后自动补发；
+  侧栏常驻显示待同步条数。**不再有 `learning.db`、不再走 GitHub JSONL 同步**
+  （主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。表结构管理在服务端，
+  客户端不再建表。知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
   **题库不进数据库**，仍是 `content/` 的 JSON。
-- **凭据不进仓库**：连接配置读环境变量 `ATHENA_DRIVER_DB`，或用户数据目录
-  `AthenaDriver/db.json`（对话框保存，POSIX 上 600）；没配置就弹对话框，不写默认值。
-  历史数据一次性迁移用 `scripts/migrate_progress_to_pg.py`（同一份配置，目标表非空即拒绝）。
-- **离开内网**：数据库端口不出内网，外网走 `practice/nas_admin` 的 REST API
-  （`/api/driver/v1`，设备令牌）。**客户端尚未接入**，也还没有本地 SQLite 队列——当前纯在线，
-  PG 不可达时做题功能禁用并提示（主仓库 ADR 0068 的「状态」表是准）。
-- **测试**：连本机的 PG（`ATHENA_DRIVER_TEST_DB`，默认 `athena_driver@localhost`，角色需
-  `CREATEDB`），每个测试文件一个独立库，并发安全；不连软路由，CI 也自己起 PG。
+- **通路统一走 REST API（主仓库 ADR 0070）**：内网直连 PG 的通道已退役，数据库端口
+  不出内网；所有同步走 `practice/nas_admin` 的 `/api/driver/v1`（设备令牌认证），
+  内网端点连路由器、外网端点过 Cloudflare（另带 Access Service Token 头），按序尝试。
+- **凭据不进仓库**：同步配置（端点 + 设备令牌 `dapi_` 开头 + 可选 Access 头）读环境变量
+  `ATHENA_DRIVER_API`（JSON 串），或用户数据目录 `AthenaDriver/api.json`（配置屏保存，
+  POSIX 上 600）；没配置不拦启动——离线照常做题，配好令牌后队列自然补发。发令牌在
+  路由器上用 `nas_admin` 的 `scripts/driver_token.py`。历史数据当年用
+  `scripts/migrate_progress_to_pg.py` 一次性迁入 PG（已执行完，仅作历史参考）。
+- **照片（ADR 0070）**：文件与登记清单（`progress/points/photos.json`）都随仓库走，
+  不进任何数据库，跨机器靠 `launcher sync`；其余九张表都是同步的个人数据。
+- **测试**：数据层是本地 SQLite，每个测试文件开自己的临时库（`open(suite:)`，close 时
+  删除），并发互不踩、不依赖任何外部数据库；同步器的契约测试用本机 `HttpServer`
+  假一个 API（`test/sync_test.dart`）。
 - **图标**：应用标志是上色的小汽车，启动器、任务栏、侧栏同一份 `icon.svg`（ADR 0048）。
   界面功能图标只用 `lib/glyphs.dart` 的 `Glyph.xxx`：一个概念一个图标、一个图标一个意思、
   统一 Material 实心风格，不直接写 `Icons.xxx`；加图标先在表里加一行（ADR 0049）。

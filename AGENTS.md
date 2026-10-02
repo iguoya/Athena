@@ -65,7 +65,8 @@ archive/        历史归档，不参与构建
   本应用也成立的做法，自己写下理由。
 - **学习应用的进度库各自独立、随仓库走**（ADR 0037、0053）：`progress/learning.db` 进版本库，
   同步用 `launcher sync`；知识点 ID 用自己的前缀。**例外：已迁中心 PostgreSQL 的应用**
-  （目前只有 `driver`，ADR 0067、0068）个人数据在 PG，不再有 `learning.db`；凭据不进仓库。
+  （目前只有 `driver`，ADR 0067、0068、0070）个人数据在 PG、客户端本地只留缓存与待发队列，
+  不再有 `learning.db`；凭据不进仓库。
 - **应用只声明怎么启动**（ADR 0046）：`app.json` 的 `dev` 块由编排器执行；不用打包副本。
 - **打开应用走启动器**（ADR 0044、0046、0048）：`launcher open <id>`，项目应用加
   `--root practice`。前端不自己读 `app.json`、不自己判断状态；新增应用启动器不改代码。
