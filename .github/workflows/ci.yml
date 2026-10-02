@@ -322,6 +322,37 @@ jobs:
       - name: Enable desktop targets
         run: flutter config --no-analytics --enable-macos-desktop --enable-linux-desktop --enable-windows-desktop
 
+      # 进度库改成了 PostgreSQL（ADR 0067），测试连本机的库、不依赖软路由（ADR 0068）。
+      # 角色要有 CREATEDB：每个测试文件按文件名建自己的库，并发互不踩。
+      # 账号是公开的测试约定值，不是任何生产凭据。
+      - name: Install PostgreSQL（Linux）
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y --no-install-recommends postgresql
+          sudo systemctl start postgresql
+          sudo -u postgres psql -c "CREATE ROLE athena_driver LOGIN PASSWORD 'athena_driver' CREATEDB"
+          sudo -u postgres psql -c "CREATE DATABASE athena_driver_test OWNER athena_driver"
+
+      - name: Install PostgreSQL（macOS）
+        if: runner.os == 'macOS'
+        run: |
+          brew install postgresql@17
+          brew services start postgresql@17
+          export PATH="$(brew --prefix postgresql@17)/bin:$PATH"
+          until pg_isready -h localhost; do sleep 1; done
+          psql -h localhost postgres -c "CREATE ROLE athena_driver LOGIN PASSWORD 'athena_driver' CREATEDB"
+          psql -h localhost postgres -c "CREATE DATABASE athena_driver_test OWNER athena_driver"
+
+      - name: Install PostgreSQL（Windows）
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install postgresql17 --params "/Password:ci-superuser" -y --no-progress
+          $env:PGPASSWORD = "ci-superuser"
+          $psql = "C:\Program Files\PostgreSQL\17\bin\psql.exe"
+          & $psql -h localhost -U postgres -c "CREATE ROLE athena_driver LOGIN PASSWORD 'athena_driver' CREATEDB"
+          & $psql -h localhost -U postgres -c "CREATE DATABASE athena_driver_test OWNER athena_driver"
+
       - name: Verify
         run: python3 scripts/check.py driver
 
