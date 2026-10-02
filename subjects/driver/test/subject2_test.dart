@@ -82,28 +82,16 @@ void main() {
     expect(Level.parse("-10").label, "扣 10 分");
   });
 
-  test("练车记录能存能读，并随同步事件往返，不重复写入", () async {
-    final dir = await Directory.systemTemp.createTemp("athena-driver-drill-");
-    final a = await ProgressStore.open(path: "${dir.path}/a.db");
-    final b = await ProgressStore.open(path: "${dir.path}/b.db");
-    final before = (await b.drillRuns()).length;
+  test("练车记录能存能读，新的在前", () async {
+    final store = await ProgressStore.open(isolated: true);
     final at = DateTime(2026, 9, 28, 20, 0);
-    await a.recordDrillRun("reverse", const ["stop", "stop"], at: at);
-    await a.recordDrillRun("curve", const [], at: at.add(const Duration(minutes: 5)));
-    final mine = (await a.drillRuns()).where((r) => !r.at.isBefore(at)).toList();
+    await store.recordDrillRun("reverse", const ["stop", "stop"], at: at);
+    await store.recordDrillRun("curve", const [], at: at.add(const Duration(minutes: 5)));
+    final mine = await store.drillRuns();
     expect(mine.first.itemId, "curve");
     expect(mine.first.mistakes, isEmpty);
     expect(mine.last.mistakes, ["stop", "stop"]);
-
-    final events = await a.exportEvents(since: at.subtract(const Duration(seconds: 1)).toIso8601String());
-    final drills = events.where((e) => e["kind"] == "drill").toList();
-    expect(drills, hasLength(2));
-    expect(await b.importEvents(drills), 2);
-    expect(await b.importEvents(drills), 0);
-    expect((await b.drillRuns()).length, before + 2);
-    await a.close();
-    await b.close();
-    await dir.delete(recursive: true);
+    await store.close();
   });
 
   test("每一步都有注意事项，条款号能在摘录里找到；讲解稿带上注意事项（ADR 0040）", () {

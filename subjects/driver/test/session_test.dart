@@ -28,7 +28,7 @@ void main() {
     late ProgressStore store;
     await tester.runAsync(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-session-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final questions = [for (var i = 0; i < 100; i++) _judge(i)];
@@ -132,7 +132,7 @@ void main() {
     late int examsBefore;
     await tester.runAsync(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-exit-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
       examsBefore = (await store.recentExams(subjectId: "subject1", limit: 1000)).length;
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
@@ -214,7 +214,7 @@ void main() {
     late ProgressStore store;
     await tester.runAsync(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-exam-explain-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final questions = [
@@ -305,7 +305,7 @@ void main() {
     late ProgressStore store;
     await tester.runAsync(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-dwell-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final questions = [for (var i = 0; i < 20; i++) _judge(i)];

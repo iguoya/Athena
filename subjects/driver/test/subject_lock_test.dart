@@ -33,17 +33,21 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-lock-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
       // 两场 100 分、最近一场 94：差一点也不开。
-      await store.importEvents([
-        for (final (i, score) in [100, 100, 94].indexed)
-          {"kind": "exam", "subject_id": "subject1", "score": score, "passed": 1, "at": DateTime(2026, 1, 1, 9, i).toIso8601String()},
-      ]);
+      for (final (i, score) in [100, 100, 94].indexed) {
+        await store.recordExam(
+          subjectId: "subject1",
+          score: score,
+          passed: true,
+          at: DateTime(2026, 1, 1, 9, i),
+        );
+      }
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, autoSync: false, onReady: ready.complete)),
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));

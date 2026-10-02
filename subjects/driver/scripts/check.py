@@ -71,6 +71,26 @@ def check_json() -> None:
     print(f"{len(files)} 个 JSON 文件解析通过", flush=True)
 
 
+def ensure_test_database() -> None:
+    """测试连本机 PG（ADR 0068），不依赖软路由。连不上时把建库的步骤一并给出。"""
+    import socket
+
+    try:
+        with socket.create_connection(("127.0.0.1", 5432), timeout=2):
+            return
+    except OSError:
+        pass
+    raise SystemExit(
+        "测试需要本机 PostgreSQL（127.0.0.1:5432）。\n"
+        "  Windows：winget install -e --id PostgreSQL.PostgreSQL.17\n"
+        "  macOS：brew install postgresql@17 && brew services start postgresql@17\n"
+        "  装好后建测试账号与库（本机约定值，不是生产凭据）：\n"
+        "  psql -U postgres -c \"CREATE ROLE athena_driver LOGIN PASSWORD 'athena_driver';\"\n"
+        "  psql -U postgres -c \"CREATE DATABASE athena_driver_test OWNER athena_driver;\"\n"
+        "  完整地址可用环境变量 ATHENA_DRIVER_TEST_DB 覆盖。"
+    )
+
+
 def desktop_target() -> str:
     mapping = {"Darwin": "macos", "Windows": "windows", "Linux": "linux"}
     system = platform.system()
@@ -112,10 +132,13 @@ def main() -> int:
     arguments = parser.parse_args()
 
     check_json()
+    ensure_test_database()
     flutter = flutter_bin()
     run([flutter, "pub", "get"], "安装 Dart 依赖")
     run([flutter, "analyze"], "静态分析")
-    run([flutter, "test"], "测试")
+    # 测试共享本机 athena_driver_test 库（open(isolated) 打开时清表），
+    # 并发跑会互相清——串行是这套隔离语义的前提。
+    run([flutter, "test", "--concurrency=1"], "测试")
     if not arguments.skip_build:
         target = desktop_target()
         reason = desktop_toolchain_ready(target)

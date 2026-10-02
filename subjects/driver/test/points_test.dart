@@ -21,11 +21,13 @@ void main() {
 
     setUp(() async {
       dir = await Directory.systemTemp.createTemp("athena-driver-points-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      ProgressStore.pointsDirOverride = p.join(dir.path, "points");
+      store = await ProgressStore.open(isolated: true);
       await unlockSubject2(store);
     });
 
     tearDown(() async {
+      ProgressStore.pointsDirOverride = null;
       await store.close();
       await dir.delete(recursive: true);
     });
@@ -38,28 +40,15 @@ void main() {
       final notes = await store.pointNotes();
       expect(notes[("reverse", 2)]!.text, "右后视镜下沿碰到库角打满");
 
-      final events = await store.exportEvents(since: t.subtract(const Duration(seconds: 1)).toIso8601String());
-      expect(events.where((e) => e["kind"] == "point"), hasLength(2));
-      expect(events.where((e) => e["kind"] == "rehearsal"), hasLength(1));
-
-      final other = await ProgressStore.open(path: "${dir.path}/other.db");
-      final mine = [for (final e in events) if (e["kind"] == "point" || e["kind"] == "rehearsal") e];
-      expect(await other.importEvents(mine), 3);
-      expect(await other.importEvents(mine), 0);
-      expect((await other.pointNotes())[("reverse", 2)]!.text, "右后视镜下沿碰到库角打满");
-      final rehearsal = (await other.rehearsals()).firstWhere((r) => r.at == t);
-      expect(rehearsal.missed, [2, 3]);
-      expect(rehearsal.total, 7);
-      await other.close();
     });
 
     test("照片缩到长边 1280 存成 JPEG，放在进度库旁边的 points/；删照片连文件一起删", () async {
       final source = File(p.join(dir.path, "big.png"));
       await source.writeAsBytes(img.encodePng(img.Image(width: 3000, height: 2000)));
-      final relative = await importPointPhoto(source.path, store.pointsDir, "parallel", 1, now: DateTime(2026, 9, 28, 20));
+      final relative = await importPointPhoto(source.path, ProgressStore.pointsDir, "parallel", 1, now: DateTime(2026, 9, 28, 20));
       expect(relative, startsWith("parallel/2-20260928-"));
-      final file = File(p.join(store.pointsDir, relative));
-      expect(p.dirname(store.pointsDir), dir.path);
+      final file = File(p.join(ProgressStore.pointsDir, relative));
+      expect(p.dirname(ProgressStore.pointsDir), dir.path);
       final saved = img.decodeJpg(await file.readAsBytes())!;
       expect(saved.width, pointPhotoEdge);
       expect(saved.height, 853);
@@ -70,15 +59,13 @@ void main() {
       await store.removePointPhoto(photos.single);
       expect(await store.pointPhotos(), isEmpty);
       expect(await file.exists(), isFalse);
-      // 照片不进事件同步。
-      expect((await store.exportEvents()).where((e) => e["kind"] == "photo"), isEmpty);
     });
 
     test("认不出的文件给一句能看懂的说明", () async {
       final bogus = File(p.join(dir.path, "not-an-image.jpg"));
       await bogus.writeAsString("hello");
       expect(
-        () => importPointPhoto(bogus.path, store.pointsDir, "curve", 0),
+        () => importPointPhoto(bogus.path, ProgressStore.pointsDir, "curve", 0),
         throwsA(isA<FormatException>().having((e) => e.message, "message", contains("认不出"))),
       );
     });
@@ -91,13 +78,14 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-points-ui-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      ProgressStore.pointsDirOverride = p.join(dir.path, "points");
+      store = await ProgressStore.open(isolated: true);
       await unlockSubject2(store);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, autoSync: false, onReady: ready.complete)),
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));

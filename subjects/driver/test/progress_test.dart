@@ -10,7 +10,7 @@ void main() {
 
   setUp(() async {
     dir = await Directory.systemTemp.createTemp("athena-driver-");
-    store = await ProgressStore.open(path: "${dir.path}/learning.db");
+    store = await ProgressStore.open(isolated: true);
   });
 
   tearDown(() async {
@@ -74,17 +74,14 @@ void main() {
 
   test("按作答时间认最近一次：后并进来的更早答错不盖掉现在的答对", () async {
     await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
-    // 同步或合并带回来的是早先在别处的作答：入库晚、id 大，时间却更早。
-    await store.importEvents([
-      {
-        "kind": "attempt",
-        "question_id": "q1",
-        "topic_id": "t",
-        "subject_id": "s",
-        "correct": 0,
-        "at": "2000-01-01T00:00:00.000",
-      },
-    ]);
+    // 从旧库迁移进来的是早先的作答：入库晚、id 大，时间却更早（ADR 0030）。
+    await store.recordAttempt(
+      questionId: "q1",
+      topicId: "t",
+      subjectId: "s",
+      correct: false,
+      at: DateTime(2000, 1, 1),
+    );
     expect(await store.masteredQuestionIds(), {"q1"});
     expect(await store.wrongQuestionIds(), isEmpty);
   });

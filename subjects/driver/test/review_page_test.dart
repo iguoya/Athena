@@ -21,7 +21,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-review-");
       // 从空库开始：拿仓库进度库当底子的话，使用者把科目一答遍之后就挑不出没答过的题了。
-      store = await ProgressStore.open(path: "${dir.path}/learning.db", seed: false);
+      store = await ProgressStore.open(isolated: true);
       // 挑两道题干独一无二的科目一题来造记录，列表里才能按题干认出它。
       final pool = bank.forSubject("subject1");
       final prompts = <String, int>{};
@@ -56,7 +56,7 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, autoSync: false, onReady: ready.complete)),
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));

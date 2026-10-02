@@ -20,13 +20,13 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-rehearsal-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
       await unlockSubject2(store);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, autoSync: false, onReady: ready.complete)),
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));

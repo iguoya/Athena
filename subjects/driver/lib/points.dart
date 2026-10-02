@@ -174,7 +174,7 @@ class PointCard extends StatelessWidget {
     );
     if (caption == null) return;
     try {
-      final file = await importPointPhoto(picked.path, store.pointsDir, item.id, step);
+      final file = await importPointPhoto(picked.path, ProgressStore.pointsDir, item.id, step);
       await store.addPointPhoto(item.id, step, file, caption.trim());
       await onChanged();
     } on Exception catch (error) {
@@ -202,7 +202,7 @@ class PointCard extends StatelessWidget {
             children: [
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1000, maxHeight: 640),
-                child: Image.file(File(p.join(store.pointsDir, photo.file)), errorBuilder: _missing),
+                child: Image.file(File(p.join(ProgressStore.pointsDir, photo.file)), errorBuilder: _missing),
               ),
               const SizedBox(height: 10),
               if (photo.caption.isNotEmpty) Text(photo.caption, style: Theme.of(context).textTheme.bodyLarge),
@@ -293,7 +293,7 @@ class PointCard extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image.file(
-                              File(p.join(store.pointsDir, photo.file)),
+                              File(p.join(ProgressStore.pointsDir, photo.file)),
                               height: 110,
                               width: 180,
                               fit: BoxFit.cover,

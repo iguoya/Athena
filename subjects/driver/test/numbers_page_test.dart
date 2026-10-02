@@ -17,13 +17,13 @@ void main() {
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-numbers-");
-      store = await ProgressStore.open(path: "${dir.path}/learning.db");
+      store = await ProgressStore.open(isolated: true);
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
     // 关掉自动同步：首页一启动就会按本机 sync.json 去读写真实的云盘目录，测试不能碰它。
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, autoSync: false, onReady: ready.complete)),
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
     );
     // 等首页从进度库读完统计再往下走，免得关库时还有查询在跑。查询的后续步骤要靠 pump
     // 推进，所以边让真实时间走一点、边 pump，直到就绪回调触发。
