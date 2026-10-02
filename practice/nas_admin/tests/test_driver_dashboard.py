@@ -172,6 +172,17 @@ class StreakTest(unittest.TestCase):
         self.assertEqual(aggregates.day_streak(self.window([0, 0])), 0)
 
 
+class LabelTest(unittest.TestCase):
+    def test_练习场景与科目的展示名(self):
+        self.assertEqual(aggregates.SUBJECT_TITLES["wrong"][0], "错题本")
+        self.assertEqual(aggregates.SUBJECT_TITLES["review"][0], "复习")
+
+    def test_成就可读名(self):
+        self.assertEqual(aggregates._achievement_label("streak.5"), "连对 5 题")
+        self.assertEqual(aggregates._achievement_label("topic.t1"), "章节过关")
+        self.assertEqual(aggregates._achievement_label("exam.pass.subject1"), "科目一模拟考首次及格")
+
+
 class DegradationTest(unittest.TestCase):
     def setUp(self) -> None:
         app = Flask("nas_admin")

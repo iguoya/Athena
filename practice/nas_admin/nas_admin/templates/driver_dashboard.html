@@ -102,7 +102,7 @@ const pct = v => v == null ? "—" : Math.round(v * 100) + "%";
 function render(data) {
   const o = data.overview;
   document.getElementById("meta").textContent =
-    "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ");
+    "数据截至 " + (o.last_day ?? "—") + " · 生成于 " + data.generated_at.replace("T", " ").replace(/\+.*$/, "");
 
   const cards = [
     [o.attempts.toLocaleString(), "累计作答"],

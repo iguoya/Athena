@@ -25,10 +25,14 @@ DAILY_WINDOW = 30  # 每日趋势的天数窗口，对齐客户端首页「最�
 
 # 科目 id 与标题来自 subjects/driver/content/curriculum.json（subject3 是路考，
 # 不在题库里，练车数据不带科目）。这里只放展示名，不复制内容（应用间构建隔离）。
+# wrong / review 不是科目，是客户端的练习场景（错题本、考前复习，home.dart 的
+# _wrongId / _reviewId）——作答记录里带这两个 subject_id，正确率单独看才有意义。
 SUBJECT_TITLES: dict[str, tuple[str, str]] = {
     "subject1": ("科目一", "道路交通安全法律、法规和相关知识"),
     "subject2": ("科目二", "场地驾驶技能（C2）"),
     "subject4": ("科目四", "安全文明驾驶常识"),
+    "wrong": ("错题本", "错题重练"),
+    "review": ("复习", "考前复习"),
 }
 
 EXAM_PASS_LINE = 90  # 100 分制下的及格线，仅作图表参考线；数据里已有 passed
@@ -145,6 +149,9 @@ def _achievement_label(key: str) -> str:
         return f"连对 {key.removeprefix('streak.')} 题"
     if key.startswith("topic."):
         return "章节过关"
+    if key.startswith("exam.pass."):
+        subject = key.removeprefix("exam.pass.")
+        return f"{SUBJECT_TITLES.get(subject, (subject,))[0]}模拟考首次及格"
     return key
 
 
