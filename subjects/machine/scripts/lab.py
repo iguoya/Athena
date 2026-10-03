@@ -7,7 +7,7 @@
 用法：
     python3 scripts/lab.py doctor              # 体检：缺什么、怎么装、各目标能否真跑
     python3 scripts/lab.py gen [lab]           # 预生成观察层汇编到 content/asm/<lab>/
-    python3 scripts/lab.py run <lab> [--target T]   # 编译并运行汇编骨架
+    python3 scripts/lab.py run <lab> [--target T | --all]   # 编译并运行汇编骨架；--all 跑全部并比对输出
     python3 scripts/lab.py check               # 校验：骨架能汇编、观察层没过期（check.py 调用）
 """
 
@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import platform
+import shlex
 import shutil
 import subprocess
 import sys
@@ -30,8 +31,11 @@ OBSERVED = PROJECT_ROOT / "content" / "asm"
 BUILD = PROJECT_ROOT / "build" / "lab"
 
 WSL_DISTRO = "Ubuntu"
-WSL_TOOLS = ["gcc", "gdb", "aarch64-linux-gnu-gcc", "qemu-aarch64", "gdb-multiarch"]
-WSL_APT = "sudo apt install gcc gdb gcc-aarch64-linux-gnu qemu-user gdb-multiarch"
+# libc6-dev 不是命令，是 gcc 编译带 #include 的 C 驱动所需的头文件包（gcc 本身不带 stdio.h）；
+# 探测时用 /usr/include/stdio.h 在不在来判断。
+WSL_TOOLS = ["gcc", "libc6-dev", "gdb", "aarch64-linux-gnu-gcc", "qemu-aarch64", "gdb-multiarch"]
+WSL_MARK = "WSL_REACHED"
+WSL_APT = "sudo apt install gcc libc6-dev gdb gcc-aarch64-linux-gnu qemu-user gdb-multiarch"
 LEVELS = ("O0", "O2")
 
 # 观察层的编译选项。去掉展开表、标识串和控制流保护，是为了让输出只剩函数本身（教案要展示的东西）。
@@ -119,7 +123,9 @@ def probe_wsl() -> tuple[bool, str, list[str]]:
     wsl = shutil.which("wsl")
     if wsl is None:
         return False, "没有 wsl.exe。以管理员身份运行：wsl --install Ubuntu", []
-    script = "for t in " + " ".join(WSL_TOOLS) + "; do command -v $t >/dev/null && echo $t; done"
+    # dash 里 command -v 找不到命令时返回 127，循环的最后一个工具缺失就会让整条脚本以 127 退出，
+    # 被误判成「进不了 WSL」。所以用一个标记行确认已经进入，再无条件 exit 0。
+    script = "echo " + WSL_MARK + "; for t in " + " ".join(WSL_TOOLS) + "; do command -v $t >/dev/null && echo $t; done; [ -f /usr/include/stdio.h ] && echo libc6-dev; exit 0"
     try:
         done = subprocess.run(
             [wsl, "-d", WSL_DISTRO, "-e", "sh", "-c", script],
@@ -128,7 +134,7 @@ def probe_wsl() -> tuple[bool, str, list[str]]:
     except subprocess.TimeoutExpired:
         return False, "启动 WSL 超时", []
     out, err = _decode(done.stdout), _decode(done.stderr)
-    if done.returncode != 0:
+    if done.returncode != 0 or WSL_MARK not in out:
         full = err or out or f"退出码 {done.returncode}"
         message = next((line.strip() for line in full.splitlines() if line.strip()), full)
         hint = ""
@@ -138,7 +144,8 @@ def probe_wsl() -> tuple[bool, str, list[str]]:
         elif "WSL_E_DISTRO_NOT_FOUND" in full or "没有" in full:
             hint = f"；安装发行版：wsl --install {WSL_DISTRO}"
         return False, f"进不了 {WSL_DISTRO}：{message}{hint}", []
-    return True, f"{WSL_DISTRO} 可用", [line.strip() for line in out.splitlines() if line.strip()]
+    found = [line.strip() for line in out.splitlines() if line.strip() and line.strip() != WSL_MARK]
+    return True, f"{WSL_DISTRO} 可用", found
 
 
 def cmd_doctor(_: argparse.Namespace) -> int:
@@ -160,9 +167,9 @@ def cmd_doctor(_: argparse.Namespace) -> int:
         if target.id == native:
             run = "真跑（本机原生）"
         elif platform.system() == "Windows" and target.id != "win-x64":
-            need = {"sysv-x64": ["gcc"], "aarch64-linux": ["aarch64-linux-gnu-gcc", "qemu-aarch64"]}[target.id]
+            need = {"sysv-x64": ["gcc", "libc6-dev"], "aarch64-linux": ["aarch64-linux-gnu-gcc", "qemu-aarch64"]}[target.id]
             ready = wsl_ok and all(t in wsl_tools for t in need)
-            run = "可经 WSL 真跑（运行路径尚未实现）" if ready else "需要 WSL，现在不可用"
+            run = "可经 WSL 真跑" if ready else "需要 WSL 与上面缺的工具，现在不可用"
         else:
             run = "只能观察（本机不原生支持，ADR 0006 第 3 条）"
         print(f"{target.id:<14} 观察 ✓   {run}")
@@ -218,42 +225,145 @@ def cmd_gen(args: argparse.Namespace) -> int:
 
 # ---------------------------------------------------------------- 真跑
 
-def cmd_run(args: argparse.Namespace) -> int:
-    directory, manifest = load_lab(args.lab)
-    native = host_native_target()
-    target_id = args.target or native
-    if target_id is None:
-        raise SystemExit("本机没有原生可真跑的目标（ADR 0006 第 3 条）。可以用 gen 看汇编。")
-    if target_id not in TARGETS:
-        raise SystemExit(f"未知目标：{target_id}（可选 {', '.join(TARGETS)}）")
-    if target_id != native:
-        raise SystemExit(
-            f"{target_id} 在本机不是原生目标。经 WSL 运行的路径尚未实现（等 WSL 修好后验证再加）；"
-            "先用 doctor 看环境，用 gen 看汇编。"
-        )
+@dataclass
+class RunResult:
+    target: str
+    ok: bool
+    output: str  # 只含驱动程序自己的输出，不含编译信息
+    note: str = ""  # 失败原因
+
+
+def _wsl_path(windows_path: Path) -> str:
+    """Windows 路径 → WSL 里的 /mnt/<盘符>/…。直接算，不为它多起一次 wsl.exe。"""
+    resolved = windows_path.resolve()
+    drive = resolved.drive.rstrip(":").lower()
+    return "/mnt/" + drive + "/" + "/".join(resolved.parts[1:])
+
+
+def _judge(target_id: str, returncode: int, output: str) -> RunResult:
+    if returncode != 0 or "FAIL" in output:
+        return RunResult(target_id, False, output, f"退出码 {returncode}")
+    return RunResult(target_id, True, output)
+
+
+def run_native(lab_id: str, directory: Path, manifest: dict, target_id: str) -> RunResult:
     target = TARGETS[target_id]
-    skeleton = directory / manifest["skeletons"][target_id]
-    out_dir = BUILD / args.lab / target_id
+    out_dir = BUILD / lab_id / target_id
     out_dir.mkdir(parents=True, exist_ok=True)
     exe = out_dir / ("lab.exe" if platform.system() == "Windows" else "lab")
     build = [
         clang(), f"--target={target.triple}", "-std=c23", "-O1", "-Wall",
         str(directory / manifest["driver"]), str(directory / manifest["reference"]["file"]),
-        str(skeleton), "-o", str(exe),
+        str(directory / manifest["skeletons"][target_id]), "-o", str(exe),
     ]
-    print(f"== 编译 {args.lab} / {target_id} ==", flush=True)
-    done = subprocess.run(build)
+    done = subprocess.run(build, capture_output=True, text=True)
+    if done.stderr.strip():
+        print(done.stderr.strip(), file=sys.stderr)
     if done.returncode != 0:
-        return done.returncode
-    print(f"== 运行 ==", flush=True)
+        return RunResult(target_id, False, "", "编译失败")
     ran = subprocess.run([str(exe)], capture_output=True, text=True, timeout=30)
-    sys.stdout.write(ran.stdout)
-    sys.stderr.write(ran.stderr)
-    if ran.returncode != 0 or "FAIL" in ran.stdout:
-        print(f"\n失败：退出码 {ran.returncode}", file=sys.stderr)
-        return 1
-    print(f"\n通过：{target_id} 上汇编与 C 参考实现一致。")
-    return 0
+    return _judge(target_id, ran.returncode, ran.stdout)
+
+
+def run_via_wsl(lab_id: str, directory: Path, manifest: dict, target_id: str) -> RunResult:
+    """sysv-x64 在 WSL 里原生跑；aarch64-linux 交叉编译成静态可执行文件，交给 qemu-user 模拟。
+
+    静态链接是为了不必给 qemu 指定 ARM 的 sysroot（-L）：少一个要配置的东西。产物放在 WSL 自己的
+    /tmp 里而不是 /mnt/c，免得经过 9P 文件系统变慢（也避开 Windows 杀软的扫描）。"""
+    wsl = shutil.which("wsl")
+    if wsl is None:
+        raise SystemExit("没有 wsl.exe。以管理员身份运行：wsl --install Ubuntu")
+    src = _wsl_path(directory)
+    out = f"/tmp/athena-machine-lab/{lab_id}/{target_id}"
+    common = f"{shlex.quote(src + '/' + manifest['driver'])} {shlex.quote(src + '/' + manifest['reference']['file'])}"
+    skeleton = shlex.quote(src + "/" + manifest["skeletons"][target_id])
+    flags = "-std=c23 -O1 -Wall"
+    if target_id == "sysv-x64":
+        build, run = f"gcc {flags} {common} {skeleton} -o {out}/lab", f"{out}/lab"
+    else:
+        build = f"aarch64-linux-gnu-gcc {flags} -static {common} {skeleton} -o {out}/lab"
+        run = f"qemu-aarch64 {out}/lab"
+    # 编译和运行分两次调用：编译信息和驱动输出才不会混在一起，比对三边输出时只比后者。
+    compiled = subprocess.run(
+        [wsl, "-d", WSL_DISTRO, "-e", "sh", "-c", f"mkdir -p {out} && {build}"],
+        capture_output=True, timeout=120,
+    )
+    if compiled.stderr.strip() or compiled.stdout.strip():
+        print(_decode(compiled.stderr or compiled.stdout), file=sys.stderr)
+    if compiled.returncode != 0:
+        return RunResult(target_id, False, "", "编译失败")
+    ran = subprocess.run([wsl, "-d", WSL_DISTRO, "-e", "sh", "-c", run], capture_output=True, timeout=60)
+    return _judge(target_id, ran.returncode, _decode(ran.stdout))
+
+
+WSL_NEEDS = {"sysv-x64": ["gcc", "libc6-dev"], "aarch64-linux": ["aarch64-linux-gnu-gcc", "qemu-aarch64"]}
+
+
+def availability() -> tuple[list[str], dict[str, str]]:
+    """(本机能真跑的目标, 不能的目标 → 原因)。ADR 0006 第 3 条的平台矩阵在这里落成代码。"""
+    runnable: list[str] = []
+    skipped: dict[str, str] = {}
+    native = host_native_target()
+    if native:
+        runnable.append(native)
+    wsl_state: tuple[bool, str, list[str]] | None = None
+    for target_id in TARGETS:
+        if target_id == native:
+            continue
+        if platform.system() != "Windows":
+            skipped[target_id] = "本机只能观察（ADR 0006 第 3 条）"
+            continue
+        if wsl_state is None:
+            wsl_state = probe_wsl()
+        ok, note, tools = wsl_state
+        if not ok:
+            skipped[target_id] = f"WSL 不可用：{note}"
+            continue
+        missing = [t for t in WSL_NEEDS[target_id] if t not in tools]
+        if missing:
+            skipped[target_id] = f"{WSL_DISTRO} 里缺 {', '.join(missing)}。安装：{WSL_APT}"
+            continue
+        runnable.append(target_id)
+    return runnable, skipped
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    directory, manifest = load_lab(args.lab)
+    runnable, skipped = availability()
+    if args.all:
+        targets = runnable
+    else:
+        target_id = args.target or host_native_target()
+        if target_id is None:
+            raise SystemExit("本机没有原生可真跑的目标（ADR 0006 第 3 条）。可以用 gen 看汇编。")
+        if target_id not in runnable:
+            raise SystemExit(f"{target_id} 现在不能真跑：{skipped.get(target_id, '未知原因')}")
+        targets = [target_id]
+
+    results: list[RunResult] = []
+    for target_id in targets:
+        print(f"== {args.lab} / {target_id} ==", flush=True)
+        runner = run_native if target_id == host_native_target() else run_via_wsl
+        result = runner(args.lab, directory, manifest, target_id)
+        print(result.output.rstrip())
+        print(("通过" if result.ok else f"失败：{result.note}") + "\n", flush=True)
+        results.append(result)
+
+    failed = [r for r in results if not r.ok]
+    if args.all:
+        # ADR 0006 第 5 条：三个目标的输出应当一致——这是「同一个 C 语义」最直接的证据。
+        outputs = {r.output.strip() for r in results if r.ok}
+        print("== 汇总 ==")
+        for r in results:
+            print(f"{r.target:<14} {'通过' if r.ok else '失败'}")
+        for target_id, why in skipped.items():
+            print(f"{target_id:<14} 跳过：{why}")
+        if len(outputs) > 1:
+            print("\n各目标的输出不一致。", file=sys.stderr)
+            return 1
+        if results and not failed:
+            print(f"\n{len(results)} 个目标的输出完全一致。")
+    return 1 if failed else 0
 
 
 # ---------------------------------------------------------------- 校验
@@ -311,6 +421,7 @@ def main() -> int:
     run = sub.add_parser("run", help="编译并运行汇编骨架")
     run.add_argument("lab")
     run.add_argument("--target", choices=sorted(TARGETS))
+    run.add_argument("--all", action="store_true", help="跑本机所有能跑的目标，并比对输出是否一致")
     run.set_defaults(func=cmd_run)
     sub.add_parser("check", help="校验").set_defaults(func=cmd_check)
     arguments = parser.parse_args()

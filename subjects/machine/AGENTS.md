@@ -4,9 +4,9 @@
 
 > **改造进行中（ADR 0005、0006）**：本应用原名 `c`；重组前的状态在 tag `pre-machine-reorg`。
 > 课程图已重写为三条线（本文「定位」「教学结构」），来源已进 catalog；但汇编线与联合章目前都是**灰章**
-> （还没有知识点和教案）。多目标实验已有命令行版（`labs/` + `scripts/lab.py`），**应用里的实验台界面
-> 还没接**，仍是旧的 `playground/`；经 WSL 运行 `sysv-x64` / `aarch64-linux` 的路径也还没实现。这些按
-> ADR 0005 的步骤陆续补，没补之前不要把它们写成已有。
+> （还没有知识点和教案）。多目标实验已有命令行版（`labs/` + `scripts/lab.py`），三个目标在 Windows 上
+> 都实测跑通（`sysv-x64`、`aarch64-linux` 经 WSL）；**应用里的实验台界面还没接**，仍是旧的
+> `playground/`。这些按 ADR 0005 的步骤陆续补，没补之前不要把它们写成已有。
 
 ## 定位
 
@@ -80,12 +80,14 @@ launcher open machine
 改 QML / `curriculum.json` / `exercises.json` 保存后窗口会自己重新加载。只有改
 `src/` 才需要让脚本再编一次 C++。本机需要 Qt 6（Homebrew `qt@6`）。
 
-多目标实验（需要 clang；经 WSL 的部分见 ADR 0006）：
+多目标实验（需要 clang；Windows 上 `sysv-x64`、`aarch64-linux` 经 WSL 的 Ubuntu 运行，ADR 0006 第 2 条的
+工具清单还要加上 `libc6-dev`，否则 gcc 找不到 `stdio.h`，`doctor` 会指出缺什么）：
 
 ```sh
 python3 scripts/lab.py doctor       # 缺什么、怎么装、各目标能否真跑
 python3 scripts/lab.py gen sum      # 改了 fn.c 之后重新生成观察层，否则 check 会报过期
-python3 scripts/lab.py run sum      # 在本机原生目标上编译并运行骨架（目前只在 Windows 上实测过）
+python3 scripts/lab.py run sum      # 在本机原生目标上编译并运行骨架
+python3 scripts/lab.py run sum --all   # 跑本机所有能跑的目标，并比对输出是否一致（目前只在 Windows 上实测过）
 ```
 
 不要把产物装进 `/Applications`，也不要把 LVGL 小程序当成教学入口。

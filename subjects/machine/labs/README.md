@@ -10,6 +10,9 @@
 | `asm/<目标>.s` | 骨架：默认就能编译运行，学习者改一处再跑。x86-64 用该目标的默认语法（ADR 0007） |
 | `lab.json` | 实验清单 |
 
+运行：`python3 scripts/lab.py run <id> --all` 跑本机所有能跑的目标，并比对三边输出是否一致
+（骨架写错了，对应目标会打印 `FAIL`）。
+
 观察层（教案里展示的汇编）不在这里，在 `content/asm/<id>/`，由 `scripts/lab.py gen` 生成。
 改了 `fn.c` 必须重新生成，否则 `scripts/check.py` 会报观察层过期。
 
