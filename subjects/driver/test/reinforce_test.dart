@@ -23,11 +23,13 @@ Question _q(String id, {String topic = "drive.s1.rules", String band = QuestionB
 final _day0 = DateTime(2026, 10, 1, 9);
 
 /// 在 [day] 天后的 [hour] 点作答。
-AttemptView _a(String id, bool ok, {int day = 0, int hour = 9, String topic = "drive.s1.rules"}) => AttemptView(
+AttemptView _a(String id, bool ok, {int day = 0, int hour = 9, String topic = "drive.s1.rules", String kind = "practice"}) =>
+    AttemptView(
       questionId: id,
       topicId: topic,
       correct: ok,
       at: DateTime(_day0.year, _day0.month, _day0.day + day, hour),
+      kind: kind,
     );
 
 List<AttemptView> _a2() => [_a("q50", true, day: -3)];
@@ -175,7 +177,7 @@ void main() {
         for (var i = 2; i < 40; i++) _a("q$i", false, topic: "drive.s1.penalty"),
         // q0：错了 4 次，最近一次还是错
         for (var n = 0; n < 4; n++) _a("q0", false, day: n, topic: "drive.s1.penalty"),
-        // q1：错过一次，之后隔天连对 3 次，已经稳固
+        // q1：错过一次，之后隔天连对 3 次，已经稳固（但没在强化练习里测过，所以仍在备选库里）
         _a("q1", false, topic: "drive.s1.penalty"),
         for (var n = 1; n <= 3; n++) _a("q1", true, day: n, topic: "drive.s1.penalty"),
       ];
@@ -211,6 +213,82 @@ void main() {
       expect(w("run"), greaterThan(w("solid")));
       expect(w("many"), greaterThan(w("wrong")), reason: "错三次比错一次重");
       expect(w("old"), greaterThan(w("wrong")), reason: "隔得越久越重，30 天封顶");
+    });
+
+    test("测过且没出错才移出：别处答对多少次都不算；强化练习里测对一次就移出；再答错自动回来", () {
+      final now = DateTime(2026, 10, 12, 9);
+      final plan0 = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build([
+          // q0：答错，后来在练习里隔天连对 3 次——很熟了，但没在强化练习里测过
+          _a("q0", false), _a("q0", true, day: 1), _a("q0", true, day: 2), _a("q0", true, day: 3),
+          // q1：答错，在强化练习里测对了一次 → 验收通过
+          _a("q1", false), _a("q1", true, day: 1, kind: "reinforce"),
+          // q2：答错，在强化练习里又错了 → 仍要练
+          _a("q2", false), _a("q2", false, day: 1, kind: "reinforce"),
+          // q3：强化练习里测对过，后来在练习里又答错 → 回来
+          _a("q3", false), _a("q3", true, day: 1, kind: "reinforce"), _a("q3", false, day: 2),
+        ]),
+        now: now,
+        random: Random(1),
+      );
+      final retest = plan0.picks.where((p) => p.reason == "retest").map((p) => p.question.id).toSet();
+      expect(retest, containsAll(["q0", "q2", "q3"]), reason: "没验收通过的都在备选库里");
+      expect(retest, isNot(contains("q1")), reason: "q1 在强化练习里测过且没出错，已经移出");
+      expect(plan0.retired, 1);
+      expect(plan0.wrongPool, 3);
+      expect(plan0.untested, 1, reason: "只有 q0 从没在强化练习里测过");
+
+      // q1 之后又答错一次：自动回到备选库，需要在强化练习里再测对一次才能再移出
+      final back = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build([
+          _a("q1", false), _a("q1", true, day: 1, kind: "reinforce"), _a("q1", false, day: 2),
+        ]),
+        now: now,
+        random: Random(1),
+      );
+      expect(back.retired, 0);
+      expect(back.picks.where((p) => p.reason == "retest").map((p) => p.question.id), contains("q1"));
+    });
+
+    test("移出的题不占错题名额：备选库缩小后，名额让给薄弱章节", () {
+      // 40 道错题全部在强化练习里测对了 → 备选库空了
+      final attempts = [
+        for (var i = 0; i < 40; i++) ...[_a("q$i", false), _a("q$i", true, day: 1, kind: "reinforce")],
+      ];
+      final plan = planReinforcement(pool: pool, histories: HistorySet.build(attempts), now: _day0, random: Random(1));
+      expect(plan.wrongPool, 0);
+      expect(plan.retired, 40);
+      expect(plan.byReason.containsKey("retest"), isFalse);
+      expect(plan.picks, hasLength(20), reason: "名额由薄弱章节等补足，不会空手");
+    });
+
+    test("覆盖保证：每轮都优先给没在强化练习里测过的错题留名额，几轮下来每道都测到", () {
+      // 60 道错题，一轮 20 题；每轮把抽到的题当作在强化练习里答对（模拟做完一轮）
+      var attempts = [for (var i = 0; i < 60; i++) _a("q$i", false)];
+      final everDrawn = <String>{};
+      var rounds = 0;
+      while (rounds < 12) {
+        final histories = HistorySet.build(attempts);
+        final plan = planReinforcement(pool: pool, histories: histories, now: _day0, random: Random(rounds));
+        if (plan.wrongPool == 0) break;
+        // 每一轮至少有名额给没测过的题（覆盖名额：一半向上取整 = 10）
+        final fresh = plan.picks.where((p) => histories.of(p.question.id)?.reinforced == 0 && histories.of(p.question.id)?.wrong != 0).length;
+        expect(fresh, greaterThanOrEqualTo(plan.untested >= 10 ? 10 : plan.untested), reason: "第 $rounds 轮");
+        for (final p in plan.picks) {
+          everDrawn.add(p.question.id);
+        }
+        attempts = [
+          ...attempts,
+          for (final p in plan.picks) _a(p.question.id, true, day: 1 + rounds, kind: "reinforce"),
+        ];
+        rounds++;
+      }
+      expect(rounds, lessThanOrEqualTo(8), reason: "60 道题、每轮至少 10 个新的覆盖名额，几轮就都验收完");
+      for (var i = 0; i < 60; i++) {
+        expect(everDrawn, contains("q$i"), reason: "q$i 从没在强化练习里出现过就不该移出");
+      }
     });
 
     test("某一类不够，别的类补上，总数仍是 20", () {

@@ -12,10 +12,11 @@ import "package:flutter_test/flutter_test.dart";
 void main() {
   // 强化练习从历史上全部错题里按权重抽取（主仓库 ADR 0085）：
   // 页面写明错题池有多大；错题池够大时整轮都来自它；「换一批」重新抽，抽到的是另一批。
-  testWidgets("错题池很大：整轮都从历史错题里抽，写明池子大小；换一批抽到另一批", (tester) async {
+  testWidgets("错题库很大：整轮都从还没验收的错题里抽，写明库的大小；换一批抽到另一批", (tester) async {
     late Bank bank;
     late ProgressStore store;
     late Set<String> wrongIds;
+    late Set<String> retiredIds;
     await tester.runAsync(() async {
       bank = await ContentLoader.load();
       store = await ProgressStore.open(suite: "reinforce_pool");
@@ -25,9 +26,15 @@ void main() {
       for (final q in wrong) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: false);
       }
-      // 其中 20 道后来又答对了：旧规则里它们早就掉出复测池，现在仍在错题池里
+      // 前 20 道后来在练习里又答对了：在别处答对不算验收，仍在备选库里
       for (final q in wrong.take(20)) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
+      }
+      // 中间 15 道在强化练习里测过，而且没有出错 → 已经移出备选库
+      retiredIds = {for (final q in wrong.skip(20).take(15)) q.id};
+      for (final q in wrong.skip(20).take(15)) {
+        await store.recordAttempt(
+            questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true, kind: "reinforce");
       }
     });
 
@@ -44,8 +51,10 @@ void main() {
 
     await tester.tap(find.text("强化练习").first);
     await tester.pump();
-    expect(find.textContaining("历史上答错过的全部 60 题"), findsOneWidget, reason: "后来答对过的 20 道也在池子里");
-    expect(find.textContaining("复测错题 20"), findsOneWidget, reason: "错题池够大：整轮 20 题都来自它");
+    expect(find.textContaining("历史上答错过 60 题，其中还要练 45 题"), findsOneWidget);
+    expect(find.textContaining("45 题还没在强化练习里测过"), findsOneWidget);
+    expect(find.textContaining("测过且没有出错的 15 题已移出"), findsOneWidget);
+    expect(find.textContaining("复测错题 20"), findsOneWidget, reason: "备选库够大：整轮 20 题都来自它");
     expect(find.text("换一批"), findsOneWidget);
 
     Set<String> started() => {for (final q in tester.widget<SessionStage>(find.byType(SessionStage)).launch.questions) q.id};
@@ -55,6 +64,7 @@ void main() {
     final first = started();
     expect(first, hasLength(20));
     expect(first.difference(wrongIds), isEmpty, reason: "整轮都来自历史错题");
+    expect(first.intersection(retiredIds), isEmpty, reason: "已经移出的 15 道不再出现");
 
     // 在做题台里直接回到强化练习页，点「换一批」，再开始：抽到的是另一批
     await tester.tap(find.text("强化练习").first);
@@ -68,6 +78,7 @@ void main() {
     await tester.pump();
     final second = started();
     expect(second.difference(wrongIds), isEmpty);
+    expect(second.intersection(retiredIds), isEmpty);
     expect(second, isNot(equals(first)), reason: "换一批要抽到另一批题，不能总是同一批");
 
     await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 6)));

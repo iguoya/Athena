@@ -99,10 +99,12 @@ class ReinforcePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            plan.wrongPool > 0
-                ? "错题池：历史上答错过的全部 ${plan.wrongPool} 题（后来答对过的也在里面）。每次从里面按权重抽 ${plan.picks.length} 题——"
-                    "错得多、最近又错、隔得久的更容易被抽到；错题池不够时才用薄弱章节和到期复习补。"
-                : "还没有答错过的题，先按薄弱章节的新题练起；答错的题会进错题池，之后每次从全部错题里抽。",
+            plan.wrongPool + plan.retired > 0
+                ? "错题库：历史上答错过 ${plan.wrongPool + plan.retired} 题，其中还要练 ${plan.wrongPool} 题"
+                    "（${plan.untested} 题还没在强化练习里测过，每次优先抽它们）；在强化练习里测过且没有出错的 ${plan.retired} 题已移出，"
+                    "再答错会自动回来。每次从还要练的题里按权重抽 ${plan.picks.length} 题——错得多、最近又错、隔得久的更容易被抽到；"
+                    "不够时才用薄弱章节和到期复习补。"
+                : "还没有答错过的题，先按薄弱章节的新题练起；答错的题会进错题库，之后每次从里面抽，直到在强化练习里测过且没有出错才移出。",
             style: body,
           ),
           const SizedBox(height: 6),

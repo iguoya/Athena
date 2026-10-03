@@ -64,6 +64,16 @@ class QuestionHistory {
   /// 最近至多 [recentWindow] 次的对错，旧的在前。
   final List<bool> recent = [];
 
+  /// 在强化练习里作答过几次（`kind = reinforce`）。0 表示还没在强化练习里测过。
+  int reinforced = 0;
+
+  /// 最近一次答错之后，在强化练习里答对了几次；答错清零（主仓库 ADR 0086）。
+  int reinforcedSinceWrong = 0;
+
+  /// 错题能不能从强化练习的备选库移出：自最近一次答错以来，在强化练习里测过且之后没有出错。
+  /// 任何一次答错（不管在哪）都让它回到备选库。
+  bool get retiredFromWrongPool => wrong > 0 && lastCorrect && reinforcedSinceWrong >= 1;
+
   static const recentWindow = 5;
 }
 
@@ -111,13 +121,16 @@ class HistorySet {
         if (attempt.correct) hits++;
       }
       h.attempts++;
+      if (attempt.kind == "reinforce") h.reinforced++;
       if (attempt.correct) {
         h.trailingCorrect++;
         h.streakDays.add(dayKey(attempt.at));
+        if (attempt.kind == "reinforce") h.reinforcedSinceWrong++;
       } else {
         h.wrong++;
         h.trailingCorrect = 0;
         h.streakDays.clear();
+        h.reinforcedSinceWrong = 0;
       }
       h.lastAt = attempt.at;
       h.lastCorrect = attempt.correct;
@@ -238,14 +251,18 @@ class ReinforcePick {
 /// 同考点变式占整轮的比例（考点簇就绪时）。经验值，没有数据支撑（主仓库 ADR 0085）。
 const reinforceVariantShare = 0.25;
 
-/// 错题池里一道题被抽到的权重（主仓库 ADR 0085）：错得越多、最近一次还是错、隔得越久越重；
-/// 已经连对、隔夜仍对的轻——但不会消失，所以遗忘也能被抽检到。
+/// 错题名额里留给「还没在强化练习里测过」的题的比例（主仓库 ADR 0086）。经验值。
+const reinforceCoverageShare = 0.5;
+
+/// 备选库里一道错题被抽到的权重（主仓库 ADR 0085、0086）：错得越多、最近一次还是错、隔得越久越重；
+/// 越熟越轻。权重不会降到 0——真正从备选库消失只有一个条件：在强化练习里测过且没有出错
+/// （[QuestionHistory.retiredFromWrongPool]）。
 double wrongWeight(QuestionHistory h, DateTime now) {
   final state = !h.lastCorrect
       ? 3.0
       : switch (levelOf(h)) {
-          MasteryLevel.solid => 0.4,
-          MasteryLevel.consolidating => 0.8,
+          MasteryLevel.solid => 0.3,
+          MasteryLevel.consolidating => 0.6,
           _ => 1.2,
         };
   final last = h.lastAt;
@@ -264,12 +281,18 @@ List<Question> weightedOrder(List<Question> items, double Function(Question) wei
 }
 
 class ReinforcePlan {
-  const ReinforcePlan(this.picks, {this.wrongPool = 0});
+  const ReinforcePlan(this.picks, {this.wrongPool = 0, this.retired = 0, this.untested = 0});
 
   final List<ReinforcePick> picks;
 
-  /// 历史上答错过的题一共多少道（抽取的总体，不是这一轮抽到的数量）。
+  /// 备选库里还要练的错题多少道（抽取的总体，不是这一轮抽到的数量）。
   final int wrongPool;
+
+  /// 其中还没在强化练习里测过的多少道。
+  final int untested;
+
+  /// 已经在强化练习里测过且没有出错、从备选库移出的错题多少道；再答错会自动回来。
+  final int retired;
 
   List<Question> get questions => [for (final p in picks) p.question];
 
@@ -282,8 +305,8 @@ class ReinforcePlan {
   }
 }
 
-/// 强化练习选题（主仓库 ADR 0085，修订 ADR 0076 决策 7）：整轮默认从**历史上答错过的全部题**里按权重
-/// 随机抽取（见 [wrongWeight]），不管那道题后来是否答对；每一轮重算都是新的一次抽取。
+/// 强化练习选题（主仓库 ADR 0085、0086，修订 ADR 0076 决策 7）：整轮默认从**历史上答错过、还没验收的题**里按权重
+/// 随机抽取（见 [wrongWeight]）。一道错题要在强化练习里测过且没有出错才移出备选库；每一轮重算都是新的一次抽取。
 ///
 /// [pool] 由调用方给出——已排除锁着的科目、偏难怪题（不挡过关，ADR 0032）。每题最多出一次
 /// （driver ADR 0031）。错题池不够一轮时，按错题、薄弱章节、到期复习、同考点变式的顺序补足；
@@ -305,13 +328,17 @@ ReinforcePlan planReinforcement({
   final overall = histories.overallAccuracy;
   double weakness(String topic) => 1 - (chapterAcc[topic] ?? overall);
 
-  // 错题池：历史上答错过至少一次的全部题，不管后来是否答对。
+  // 备选库：历史上答错过、还没在强化练习里验收通过（测过且没有出错）的题。
+  // 验收通过的从这里移出，仍归「到期复习」按间隔管；再答错会自动回来。
   final wrongPool = <Question>[];
+  var retired = 0;
   final due = <Question>[];
   final weak = <Question>[];
   for (final q in all.values) {
     final h = histories.of(q.id);
-    if (h != null && h.wrong > 0) {
+    final isRetired = h != null && h.retiredFromWrongPool;
+    if (isRetired) retired++;
+    if (h != null && h.wrong > 0 && !isRetired) {
       wrongPool.add(q);
     } else if (h != null && h.attempts > 0 && (dueRatio(h, now) ?? 0) >= 1) {
       due.add(q);
@@ -320,7 +347,14 @@ ReinforcePlan planReinforcement({
     }
   }
   // 按权重随机排出抽取顺序：错得多、最近又错、隔得久的更容易靠前，但每一轮都不一样。
-  final retest = weightedOrder(wrongPool, (q) => wrongWeight(histories.of(q.id)!, now), random);
+  final drawOrder = weightedOrder(wrongPool, (q) => wrongWeight(histories.of(q.id)!, now), random);
+  // 覆盖保证：还没在强化练习里测过的题，错题名额的一半优先给它们（组内仍按权重），其余名额按权重从整个备选库抽。
+  final variantSlots = (clusters != null && !clusters.isEmpty) ? (count * reinforceVariantShare).round() : 0;
+  final coverageSlots = ((count - variantSlots) * reinforceCoverageShare).ceil();
+  final untestedOrder = [for (final q in drawOrder) if (histories.of(q.id)!.reinforced == 0) q];
+  final covered = untestedOrder.take(coverageSlots).toList();
+  final coveredIds = {for (final q in covered) q.id};
+  final retest = [...covered, for (final q in drawOrder) if (!coveredIds.contains(q.id)) q];
   // 超期越久越先。
   due.sort((a, b) => dueRatio(histories.of(b.id), now)!.compareTo(dueRatio(histories.of(a.id), now)!));
   // 章节越弱越先；没做过的略加分；加一点随机，免得每次都是同一批。
@@ -397,7 +431,12 @@ ReinforcePlan planReinforcement({
     }
   }
   picks.shuffle(random);
-  return ReinforcePlan(picks, wrongPool: wrongPool.length);
+  return ReinforcePlan(
+    picks,
+    wrongPool: wrongPool.length,
+    untested: untestedOrder.length,
+    retired: retired,
+  );
 }
 
 // ---------------------------------------------------------------- 优先章节
