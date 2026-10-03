@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Sora Variable", "Noto Sans SC", ui-sans-serif, sans-serif;
+  --font-sans: "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Consolas", monospace;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  @apply font-sans antialiased bg-slate-50 text-slate-900 dark:bg-[#0b0c14] dark:text-slate-100;
+}
+
+/* 网格底纹 + 顶部渐变光晕,组成应用的标志性背景 */
+.bg-scene {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% -10%, rgb(124 92 255 / 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 85% -5%, rgb(34 211 238 / 0.14), transparent 70%);
+}
+.dark .bg-scene {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% -10%, rgb(124 92 255 / 0.25), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 85% -5%, rgb(34 211 238 / 0.18), transparent 70%),
+    linear-gradient(rgb(148 163 184 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
+}
+
+/* 渐变标题字 */
+.text-gradient {
+  @apply bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 bg-clip-text text-transparent;
+}
+
+/* 页面切换转场 */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* 结果卡 / 列表项出现 */
+.pop-enter-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.pop-enter-from {
+  opacity: 0;
+  transform: scale(0.96) translateY(6px);
+}
+.pop-leave-active {
+  transition: opacity 0.15s ease;
+}
+.pop-leave-to {
+  opacity: 0;
+}
+
+/* 输入框统一观感 */
+.field {
+  @apply rounded-lg border border-slate-200 bg-white/80 px-3 py-2 font-mono text-sm shadow-sm outline-none transition
+    focus:border-violet-400 focus:ring-2 focus:ring-violet-400/30
+    dark:border-white/10 dark:bg-white/5 dark:focus:border-violet-400/60;
+}
+
+/* 通用卡片 */
+.card {
+  @apply rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm backdrop-blur
+    dark:border-white/10 dark:bg-white/[0.04];
+}

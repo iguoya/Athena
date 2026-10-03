@@ -1,0 +1,28 @@
+{
+  "id": "math-tools",
+  "title": "数学工具",
+  "description": "实践应用:矩阵实验室、函数绘图等数学工具箱(Tauri + Vue 3)",
+  "icon": {
+    "type": "theme",
+    "name": "accessories-calculator-symbolic",
+    "symbol": "sigma",
+    "letter": "M",
+    "accent": "#7C5CFF",
+    "file": "icon.svg"
+  },
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["npm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": {
+      "http": "http://localhost:1451"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-math-tools"
+  }
+}

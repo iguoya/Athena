@@ -1,0 +1,32 @@
+{
+  "name": "athena-math-tools",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 1451 --strictPort",
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
+    "@fontsource/noto-sans-sc": "^5.3.0",
+    "lucide-vue-next": "^1.0.0",
+    "mathjs": "^15.2.0",
+    "motion-v": "^2.5.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@tauri-apps/api": "^2.12.0",
+    "@tauri-apps/cli": "^2.12.0",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.8.3",
+    "vite": "^8.3.1",
+    "vue-tsc": "^3.3.12"
+  }
+}
