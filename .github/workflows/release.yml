@@ -361,9 +361,9 @@ jobs:
           elif [ "$RUNNER_OS" = "macOS" ]; then
             hdiutil verify "dist/athena-driver-$version-$platform.dmg"
           else
-            # 先完整展开再匹配:grep -q 提前退出会让 tar 吃 SIGPIPE,pipefail 下误判失败
+            # 禁止管道匹配:grep -q 提前退出会让写端吃 SIGPIPE,pipefail 下误判失败
             listing=$(tar -tzf "dist/athena-driver-$version-$platform.tar.gz")
-            echo "$listing" | grep -q athena-driver
+            [[ "$listing" == *athena-driver* ]] || { echo 'tar.gz 缺 athena-driver'; exit 1; }
           fi
 
       - name: Upload release assets
