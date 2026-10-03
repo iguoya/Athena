@@ -234,6 +234,32 @@ void main() {
     test("没有记录就是空", () {
       expect(reasonOutcomes(const []), isEmpty);
     });
+
+    test("变式差距：复测原题答对率减去同考点变式答对率；两类都有才算得出", () {
+      final outcomes = reasonOutcomes([
+        for (var i = 0; i < 10; i++) _a("r$i", i < 8, kind: "reinforce", reason: "retest", minute: i), // 8/10
+        for (var i = 0; i < 10; i++) _a("v$i", i < 4, kind: "reinforce", reason: "variant", minute: 20 + i), // 4/10
+      ]);
+      final gap = variantGap(outcomes)!;
+      expect(gap.gap, closeTo(0.4, 1e-9), reason: "原题 80%，变式 40%：差 40 个百分点，说明在背题");
+      expect(gap.enough, isTrue);
+      expect(variantGap(reasonOutcomes([_a("r", true, kind: "reinforce", reason: "retest")])), isNull);
+      expect(variantGap(const []), isNull);
+      final small = variantGap(reasonOutcomes([
+        _a("r", true, kind: "reinforce", reason: "retest"),
+        _a("v", false, kind: "reinforce", reason: "variant", minute: 1),
+      ]))!;
+      expect(small.enough, isFalse, reason: "不到 10 次只当线索");
+    });
+
+    test("选题理由的顺序固定：复测、变式、薄弱、到期", () {
+      final outcomes = reasonOutcomes([
+        _a("a", true, kind: "reinforce", reason: "due"),
+        _a("b", true, kind: "reinforce", reason: "variant", minute: 1),
+        _a("c", true, kind: "reinforce", reason: "retest", minute: 2),
+      ]);
+      expect(outcomes.map((o) => o.reason), ["retest", "variant", "due"]);
+    });
   });
 
   test("汇总：一次算出全部统计", () {

@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:athena_driver/clusters.dart";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/models.dart";
@@ -11,7 +12,7 @@ void main() {
   Future<void> openReinforce(WidgetTester tester, Bank bank, ProgressStore store) async {
     await tester.binding.setSurfaceSize(const Size(1600, 1400));
     final ready = Completer<void>();
-    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)));
+    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete, clusterBuilder: (_) async => ClusterIndex.empty)));
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();

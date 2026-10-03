@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:athena_driver/clusters.dart";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/models.dart";
 import "package:athena_driver/reinforce.dart";
@@ -28,6 +29,8 @@ AttemptView _a(String id, bool ok, {int day = 0, int hour = 9, String topic = "d
       correct: ok,
       at: DateTime(_day0.year, _day0.month, _day0.day + day, hour),
     );
+
+List<AttemptView> _a2() => [_a("q50", true, day: -3)];
 
 void main() {
   group("掌握度四级", () {
@@ -240,6 +243,108 @@ void main() {
     test("没有任何记录：覆盖率为 0（说明结果全靠先验，不可信）", () {
       final blank = estimatePass(bank: bank, rules: rules, histories: HistorySet.build(const []), trials: 50, random: Random(1));
       expect(blank.coverage, 0.0);
+    });
+  });
+
+  group("同考点变式（考点簇，ADR 0079）", () {
+    ClusterIndex index(List<List<String>> clusters) => ClusterIndex(clusters, {
+          for (var i = 0; i < clusters.length; i++)
+            for (final id in clusters[i]) id: i,
+        });
+    final pool = [for (var i = 0; i < 60; i++) _q("q$i", topic: i < 30 ? "drive.s1.penalty" : "drive.s1.lights", rate: i.toDouble())];
+    // q0～q7 答错；它们各有一个同簇的、没做过的变式 q40～q47
+    final wrongAttempts = [for (var i = 0; i < 8; i++) _a("q$i", false, topic: "drive.s1.penalty")];
+    final clusters = index([for (var i = 0; i < 8; i++) ["q$i", "q${40 + i}"]]);
+
+    test("没有考点簇：和以前一样，没有变式", () {
+      final plan = planReinforcement(pool: pool, histories: HistorySet.build(wrongAttempts), now: _day0, random: Random(1));
+      expect(plan.byReason.containsKey("variant"), isFalse);
+      final empty = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build(wrongAttempts),
+        now: _day0,
+        random: Random(1),
+        clusters: ClusterIndex.empty,
+      );
+      expect(empty.byReason.containsKey("variant"), isFalse);
+    });
+
+    test("错了的题，各出一个同簇的变式；变式不是错题本身，也没有重复", () {
+      final plan = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build(wrongAttempts),
+        now: _day0,
+        random: Random(2),
+        clusters: clusters,
+      );
+      final variants = plan.picks.where((p) => p.reason == "variant").map((p) => p.question.id).toList();
+      expect(variants.length, greaterThanOrEqualTo(4), reason: "复测配额 8 的一半让给变式");
+      for (final id in variants) {
+        expect(int.parse(id.substring(1)), inInclusiveRange(40, 47), reason: "$id 是某道错题的同簇变式");
+      }
+      final ids = plan.picks.map((p) => p.question.id).toList();
+      expect(ids.toSet(), hasLength(ids.length), reason: "每题只出一次");
+      expect(plan.picks, hasLength(20));
+      // 8 道错题仍然都在复测里（配额不够的由补足拿走）
+      expect(plan.picks.where((p) => p.reason == "retest"), hasLength(8));
+    });
+
+    test("轮流出：4 个变式名额分给 4 道不同的错题，而不是都出自同一道", () {
+      final plan = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build(wrongAttempts),
+        now: _day0,
+        random: Random(3),
+        clusters: index([
+          ["q0", "q40", "q41", "q42", "q43"], // 一道错题有很多变式
+          for (var i = 1; i < 8; i++) ["q$i", "q${43 + i}"],
+        ]),
+      );
+      final firstFour = plan.picks.where((p) => p.reason == "variant").map((p) => p.question.id).toSet();
+      expect(firstFour.where((id) => ["q40", "q41", "q42", "q43"].contains(id)).length, lessThanOrEqualTo(2),
+          reason: "不能把名额都给 q0 的变式");
+    });
+
+    test("同簇的另一道题本身也是错题：它在复测里，不重复当变式", () {
+      final plan = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build(wrongAttempts),
+        now: _day0,
+        random: Random(4),
+        clusters: index([
+          ["q0", "q1"], // 两道都是错题
+        ]),
+      );
+      expect(plan.picks.where((p) => p.reason == "variant"), isEmpty);
+    });
+
+    test("没做过的变式排在答对过的前面（新角度更能检验是否真懂）", () {
+      final seenCorrect = [_a("q41", true, day: -5), ..._a2()];
+      final plan = planReinforcement(
+        pool: pool,
+        histories: HistorySet.build([_a("q0", false, topic: "drive.s1.penalty"), ...seenCorrect]),
+        now: _day0,
+        random: Random(5),
+        clusters: index([
+          ["q0", "q41", "q42"],
+        ]),
+      );
+      final variants = plan.picks.where((p) => p.reason == "variant").map((p) => p.question.id).toList();
+      expect(variants.first == "q42" || variants.length == 1 && variants.single == "q42", isTrue,
+          reason: "q42 没做过，q41 答对过：先出 q42，得到：$variants");
+    });
+
+    test("簇里的变式不在题池里（比如锁着的科目）就不出", () {
+      final plan = planReinforcement(
+        pool: pool.where((q) => q.id != "q40").toList(),
+        histories: HistorySet.build([_a("q0", false, topic: "drive.s1.penalty")]),
+        now: _day0,
+        random: Random(6),
+        clusters: index([
+          ["q0", "q40"],
+        ]),
+      );
+      expect(plan.picks.any((p) => p.question.id == "q40"), isFalse);
     });
   });
 

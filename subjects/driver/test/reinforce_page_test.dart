@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:athena_driver/clusters.dart";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/models.dart";
@@ -29,7 +30,7 @@ void main() {
 
     await tester.binding.setSurfaceSize(const Size(1600, 1200));
     final ready = Completer<void>();
-    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)));
+    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete, clusterBuilder: (_) async => ClusterIndex.empty)));
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
@@ -78,6 +79,57 @@ void main() {
 
     // 做题台一出现，朗读模块就去问系统有哪些语音（起一个系统进程）；等它跑完再收场，
     // 免得测试结束时还挂着定时器。
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 6)));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() => store.close());
+  });
+
+  testWidgets("有考点簇时，题单里出现「同考点变式」，并在后台算好簇后自动换题单（ADR 0079）", (tester) async {
+    late Bank bank;
+    late ProgressStore store;
+    late List<Question> wrong;
+    late List<Question> mates;
+    await tester.runAsync(() async {
+      bank = await ContentLoader.load();
+      store = await ProgressStore.open(suite: "reinforce_page_variants");
+      final pool = bank.forSubject("subject1").where((q) => !q.isRare).toList();
+      wrong = pool.take(6).toList();
+      mates = pool.skip(100).take(6).toList();
+      for (final q in wrong) {
+        await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: false);
+      }
+    });
+    final clusters = ClusterIndex([
+      for (var i = 0; i < 6; i++) [wrong[i].id, mates[i].id],
+    ], {
+      for (var i = 0; i < 6; i++) ...{wrong[i].id: i, mates[i].id: i},
+    });
+    await tester.binding.setSurfaceSize(const Size(1600, 1200));
+    final ready = Completer<void>();
+    await tester.pumpWidget(MaterialApp(
+      home: HomePage(bank: bank, store: store, onReady: ready.complete, clusterBuilder: (_) async => clusters),
+    ));
+    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
+    expect(ready.isCompleted, isTrue);
+    await tester.tap(find.text("强化练习").first);
+    for (var i = 0; i < 300 && find.textContaining("同考点变式").evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
+    expect(find.textContaining("同考点变式"), findsWidgets, reason: "簇算好后题单里应有变式");
+    expect(find.textContaining("复测错题 6"), findsOneWidget, reason: "6 道错题照样都在复测里");
+
+    await tester.tap(find.textContaining("开始强化练习"));
+    await tester.pump();
+    final stage = tester.widget<SessionStage>(find.byType(SessionStage));
+    final reasons = stage.launch.reasons!;
+    final variantIds = [for (final e in reasons.entries) if (e.value == "variant") e.key];
+    expect(variantIds, isNotEmpty);
+    expect(variantIds.toSet().difference({for (final q in mates) q.id}), isEmpty, reason: "变式都是错题的同簇题");
     await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 6)));
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpWidget(const SizedBox());
