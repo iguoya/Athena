@@ -17,6 +17,9 @@
   --tk-bg: #0b0c14;
   --tk-blob-a: rgb(124 92 255 / 0.25);
   --tk-blob-b: rgb(34 211 238 / 0.18);
+  --tk-stars:
+    radial-gradient(1.2px 1.2px at 28px 40px, rgb(255 255 255 / 0.35), transparent 55%),
+    radial-gradient(1px 1px at 130px 150px, rgb(255 255 255 / 0.22), transparent 55%);
   --tk-grid: rgb(148 163 184 / 0.05);
   --tk-surface: rgb(255 255 255 / 0.04);
   --tk-line: rgb(255 255 255 / 0.1);
@@ -28,6 +31,7 @@
   --tk-card-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
   --tk-font-display: "Sora Variable", "Noto Sans SC", ui-sans-serif, sans-serif;
   --tk-radius: 1rem;
+  --tk-tilt: 0deg;
 }
 
 :root[data-style="dawn"] {
@@ -35,6 +39,7 @@
   --tk-bg: #faf6f1;
   --tk-blob-a: rgb(251 191 36 / 0.2);
   --tk-blob-b: rgb(251 113 133 / 0.14);
+  --tk-stars: none;
   --tk-grid: rgb(140 110 80 / 0.05);
   --tk-surface: rgb(255 255 255 / 0.72);
   --tk-line: rgb(180 140 100 / 0.22);
@@ -46,6 +51,7 @@
   --tk-card-shadow: 0 1px 2px rgb(120 90 60 / 0.12);
   --tk-font-display: "Fraunces Variable", "Noto Sans SC", Georgia, serif;
   --tk-radius: 1rem;
+  --tk-tilt: 0deg;
 }
 
 :root[data-style="draft"] {
@@ -53,6 +59,7 @@
   --tk-bg: #f5f1e6;
   --tk-blob-a: transparent;
   --tk-blob-b: transparent;
+  --tk-stars: none;
   --tk-grid: rgb(140 120 90 / 0.09);
   --tk-surface: #fffdf6;
   --tk-line: #e0d5bd;
@@ -64,6 +71,7 @@
   --tk-card-shadow: 2px 3px 0 rgb(90 70 40 / 0.1);
   --tk-font-display: "ZCOOL KuaiLe", "Noto Sans SC", cursive;
   --tk-radius: 0.5rem;
+  --tk-tilt: -0.8deg;
 }
 
 html,
@@ -76,6 +84,31 @@ body {
   @apply font-sans antialiased;
   background: var(--tk-bg);
   color: var(--tk-fg);
+  /* 皮肤切换时全局颜色平滑过渡,而不是瞬间跳变 */
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* 选区与滚动条跟随皮肤 */
+::selection {
+  background: color-mix(in oklab, var(--tk-accent-from) 28%, transparent);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--tk-fg) 18%, transparent);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--tk-accent-from) 45%, transparent);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* ---- 皮肤主色的语义 utility(可用 hover: 等变体修饰) ---- */
@@ -111,14 +144,51 @@ body {
   font-family: var(--tk-font-display);
 }
 
-/* 场景背景:双色光晕 + 方格网格(草稿皮肤光晕关闭、网格加深) */
+/* 场景背景:双色光晕 + 星野 + 方格网格(星野仅星穹可见,草稿光晕关闭、网格加深) */
 .bg-scene {
   background-image:
     radial-gradient(ellipse 60% 40% at 20% -10%, var(--tk-blob-a), transparent 70%),
     radial-gradient(ellipse 50% 35% at 85% -5%, var(--tk-blob-b), transparent 70%),
+    var(--tk-stars),
+    var(--tk-stars),
     linear-gradient(var(--tk-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--tk-grid) 1px, transparent 1px);
-  background-size: auto, auto, 44px 44px, 44px 44px;
+  background-size: auto, auto, 210px 190px, 320px 260px, 44px 44px, 44px 44px;
+}
+
+/* ---- 皮肤签名细节 ---- */
+
+/* 胶带贴纸(草稿):贴在卡片顶部内侧;其他皮肤不渲染 */
+.tape {
+  position: relative;
+}
+[data-style="draft"] .tape::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 28px;
+  width: 58px;
+  height: 14px;
+  background: rgb(224 118 90 / 0.16);
+  border-inline: 2px dotted rgb(224 118 90 / 0.35);
+  rotate: -2.5deg;
+  pointer-events: none;
+}
+
+/* 手写批注(草稿):装饰公式行用快乐体 */
+[data-style="draft"] .formula {
+  font-family: "ZCOOL KuaiLe", "Noto Sans SC", cursive;
+  letter-spacing: 0.05em;
+}
+
+/* hover 倾斜随皮肤(独立 rotate 属性,不与 translate 冲突) */
+.tool-card {
+  rotate: 0deg;
+  transition: rotate 0.35s ease, translate 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.4s ease, border-color 0.4s ease;
+}
+.tool-card:hover {
+  rotate: var(--tk-tilt);
 }
 
 /* 页面切换转场 */
@@ -170,4 +240,5 @@ body {
   border-radius: var(--tk-radius);
   box-shadow: var(--tk-card-shadow);
   backdrop-filter: blur(10px);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }

@@ -65,7 +65,7 @@ const tools = [
         :initial="{ opacity: 0, y: 28 }"
         :animate="{ opacity: 1, y: 0 }"
         :transition="{ duration: 0.5, delay: 0.12 + i * 0.1, ease: 'easeOut' }"
-        class="card group relative overflow-hidden p-6 text-left transition-all duration-300
+        class="card tool-card tape group relative overflow-hidden p-6 text-left transition-all duration-300
           hover:-translate-y-1.5 hover:shadow-xl dark:hover:bg-white/[0.06]"
         :class="[`hover:shadow-2xl ${t.glow}`, t.wide ? 'col-span-2' : '']"
         @click="emit('open', t.id)"
@@ -94,7 +94,7 @@ const tools = [
       :initial="{ opacity: 0 }"
       :animate="{ opacity: 1 }"
       :transition="{ delay: 0.5, duration: 0.8 }"
-      class="mt-12 font-mono text-xs tracking-wide text-slate-400 dark:text-slate-600"
+      class="formula mt-12 font-mono text-xs tracking-wide text-slate-400 dark:text-slate-600"
     >
       e<sup>iπ</sup> + 1 = 0 &nbsp;·&nbsp; ∇·B = 0 &nbsp;·&nbsp; A = PDP⁻¹ &nbsp;·&nbsp; ∫<sub>a</sub><sup>b</sup> f′(x)dx = f(b) − f(a)
     </motion.p>

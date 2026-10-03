@@ -93,7 +93,7 @@ const toolStyle: Record<Tool, string> = {
         :initial="{ opacity: 0, y: 20 }"
         :animate="{ opacity: 1, y: 0 }"
         :transition="{ duration: 0.45, delay: 0.08 + ci * 0.06, ease: 'easeOut' }"
-        class="card overflow-hidden"
+        class="card tape overflow-hidden"
       >
         <!-- 章头 -->
         <button
