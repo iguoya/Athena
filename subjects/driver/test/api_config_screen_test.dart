@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:athena_driver/main.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -24,5 +26,89 @@ void main() {
     await tester.pump();
     expect(find.textContaining("这里填的不是邮箱"), findsOneWidget);
     expect(find.textContaining("不是邮箱；是 Cloudflare"), findsOneWidget, reason: "输入框下面也有提示");
+  });
+
+  // 「测试连接」内网和外网各测各的、逐行显示；以前内网通了就停，「已连上」不能说明外网也通。
+  // 外网访问凭据只发给外网端点。只点「测试连接」，不点保存，不会写用户真实的 api.json。
+  testWidgets("测试连接：内网、外网逐行各自的结果；外网凭据只发给外网端点", (tester) async {
+    // testWidgets 里 Flutter 会把所有 HTTP 请求换成假的（一律回 400）；这里要连本机真实的小服务，先关掉替换。
+    HttpOverrides.global = null;
+    late HttpServer lan;
+    late HttpServer wan;
+    final lanSeen = <String?>[];
+    final wanSeen = <String?>[];
+    await tester.runAsync(() async {
+      lan = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      wan = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      lan.listen((r) {
+        lanSeen.add(r.headers.value("CF-Access-Client-Id"));
+        r.response
+          ..statusCode = 200
+          ..write('{"ok":true}')
+          ..close();
+      });
+      wan.listen((r) {
+        wanSeen.add(r.headers.value("CF-Access-Client-Id"));
+        r.response
+          ..statusCode = 302
+          ..headers.set("Location", "https://x.cloudflareaccess.com/cdn-cgi/access/login/x")
+          ..close();
+      });
+    });
+    addTearDown(() async {
+      await lan.close(force: true);
+      await wan.close(force: true);
+    });
+    tester.view.physicalSize = const Size(1200, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ApiConfigScreen(allowSkip: true));
+
+    final lanUrl = "http://127.0.0.1:${lan.port}";
+    final wanUrl = "http://127.0.0.1:${wan.port}";
+    await tester.enterText(find.widgetWithText(TextField, "内网端点（在家时用）"), lanUrl);
+    await tester.enterText(find.widgetWithText(TextField, "外网端点（可选，离开内网时用）"), wanUrl);
+    await tester.enterText(find.widgetWithText(TextField, "外网访问凭据 · Client ID（可选）"), "abc.access");
+    await tester.enterText(find.widgetWithText(TextField, "外网访问凭据 · Client Secret（可选）"), "s3cret");
+    await tester.tap(find.text("测试连接"));
+    for (var i = 0; i < 300 && find.textContaining("外网（").evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      await tester.pump();
+    }
+
+    expect(find.textContaining("内网（$lanUrl）：已连上"), findsOneWidget);
+    expect(find.textContaining("外网（$wanUrl）：被 Cloudflare 访问规则拦住了"), findsOneWidget);
+    expect(lanSeen, [null], reason: "外网访问凭据不发给内网地址");
+    expect(wanSeen, ["abc.access"]);
+  });
+
+  testWidgets("测试连接：没填外网端点就明说没测外网，不让人以为外网也通了", (tester) async {
+    // testWidgets 里 Flutter 会把所有 HTTP 请求换成假的（一律回 400）；这里要连本机真实的小服务，先关掉替换。
+    HttpOverrides.global = null;
+    late HttpServer lan;
+    await tester.runAsync(() async {
+      lan = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      lan.listen((r) {
+        r.response
+          ..statusCode = 200
+          ..write('{"ok":true}')
+          ..close();
+      });
+    });
+    addTearDown(() => lan.close(force: true));
+    tester.view.physicalSize = const Size(1200, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ApiConfigScreen(allowSkip: true));
+
+    await tester.enterText(find.widgetWithText(TextField, "内网端点（在家时用）"), "http://127.0.0.1:${lan.port}");
+    await tester.enterText(find.widgetWithText(TextField, "外网端点（可选，离开内网时用）"), "");
+    await tester.tap(find.text("测试连接"));
+    for (var i = 0; i < 300 && find.textContaining("没填外网端点").evaluate().isEmpty; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      await tester.pump();
+    }
+    expect(find.textContaining("：已连上"), findsOneWidget);
+    expect(find.textContaining("外网：没填外网端点，所以没测"), findsOneWidget);
   });
 }

@@ -90,7 +90,8 @@ class HttpUserDirectory implements UserDirectory {
         ..headers["Content-Type"] = "application/json; charset=utf-8"
         ..body = jsonEncode(body);
       if (acting != null) request.headers["X-Athena-User"] = acting;
-      if (_config.cfClientId != null && _config.cfClientSecret != null) {
+      // 外网访问凭据只发给外网端点，不发给内网地址。
+      if (base == _config.wanBase && _config.cfClientId != null && _config.cfClientSecret != null) {
         request.headers["CF-Access-Client-Id"] = _config.cfClientId!;
         request.headers["CF-Access-Client-Secret"] = _config.cfClientSecret!;
       }

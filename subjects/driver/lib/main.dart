@@ -655,14 +655,19 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
       _pinging = true;
       _pingResult = "";
     });
-    String result = "两个端点都连不上";
+    // 内网和外网各测各的、逐行显示：以前内网通了就停，「已连上」只说明内网通，外网通不通
+    // 看不出来，容易误以为外网也配好了。
+    final lines = <String>[];
     final client = http.Client();
-    for (final base in [config.lanBase, if (config.wanBase != null) config.wanBase!]) {
+    final endpoints = [("内网", config.lanBase, false), if (config.wanBase != null) ("外网", config.wanBase!, true)];
+    for (final (label, base, external) in endpoints) {
+      String outcome;
       try {
         final request = http.Request("GET", Uri.parse("$base/api/driver/v1/ping"))
           ..followRedirects = false
           ..headers.addAll({
-            if (config.cfClientId != null && config.cfClientSecret != null) ...{
+            // 外网访问凭据只发给外网端点，不发给内网地址。
+            if (external && config.cfClientId != null && config.cfClientSecret != null) ...{
               "CF-Access-Client-Id": config.cfClientId!,
               "CF-Access-Client-Secret": config.cfClientSecret!,
             },
@@ -670,24 +675,28 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
         final response = await client.send(request).timeout(const Duration(seconds: 10));
         final body = await response.stream.bytesToString();
         if (blockedByCloudflare(response.statusCode, response.headers, body)) {
-          result = "$base 被 Cloudflare 访问规则拦住了：检查外网访问凭据";
-          break;
+          outcome = (config.cfClientId == null)
+              ? "被 Cloudflare 访问规则拦住了（没填外网访问凭据）"
+              : "被 Cloudflare 访问规则拦住了：检查凭据，以及 Cloudflare 里是否给这个令牌加了 Service Auth 策略";
+        } else if (response.statusCode == 401) {
+          outcome = "后台是旧版本，要先部署新版";
+        } else if (response.statusCode == 200) {
+          outcome = "已连上";
+        } else {
+          outcome = "返回 ${response.statusCode}";
         }
-        if (response.statusCode == 200) {
-          result = "已连上（$base）";
-          break;
-        }
-        result = "$base 返回 ${response.statusCode}";
       } on TimeoutException {
-        result = "$base 超时";
+        outcome = "超时";
       } catch (_) {
-        // 换下一个端点再试。
+        outcome = "连不上";
       }
+      lines.add("$label（$base）：$outcome");
     }
+    if (config.wanBase == null) lines.add("外网：没填外网端点，所以没测（离开内网时才需要）");
     client.close();
     if (mounted) {
       setState(() {
-        _pingResult = result;
+        _pingResult = lines.join("\n");
         _pinging = false;
       });
     }
