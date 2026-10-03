@@ -54,7 +54,7 @@
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条；对已迁移中心 PG 的应用由 0067 修订 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划；第 2、3 条由 0080 限定 |
 | [0080](0080-reorg-exemption-when-intent-changes.md) | 应用意图整体改变时，可由应用级 ADR 声明重组豁免 | 已接受；限定 0054 第 2、3 条；首例 `subjects/machine` |
-| [0055](0055-no-institute-names-in-product-content.md) | 软件内容不出现具体院所名，一律用「某所」 | 已接受（强制，`scripts/check.py` 拦截） |
+| [0055](0055-no-institute-names-in-product-content.md) | 软件内容不出现具体院所名，一律用「某所」 | 已被 0082 撤销，相关内容与条款已清除 |
 | [0056](0056-visualization-and-interaction-first.md) | 可视化与交互是学习内容本身，不是装饰 | 已接受（强制方针） |
 | [0057](0057-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
 | [0061](0061-agent-instructions-single-source.md) | 代理指令以 AGENTS.md 为唯一真源，且只放规则 | 已接受；`subjects/cpp` 应用级已同日瘦身到预算内 |
