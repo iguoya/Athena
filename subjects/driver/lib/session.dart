@@ -112,6 +112,7 @@ class _SessionStageState extends State<SessionStage> {
   DateTime _shownAt = DateTime.now();
   /// 每秒刷新一次「用时」。只计时不收卷：到了考场时长也不自动交卷（ADR 0042）。
   Timer? _timer;
+  Timer? _advanceTimer;
   late DateTime _examStartedAt;
   _Result? _result;
 
@@ -198,6 +199,7 @@ class _SessionStageState extends State<SessionStage> {
   void dispose() {
     _writeExplainViews();
     _timer?.cancel();
+    _advanceTimer?.cancel();
     _speaker.stop();
     _scroll.dispose();
     super.dispose();
@@ -1052,7 +1054,9 @@ class _SessionStageState extends State<SessionStage> {
 
   /// 答完的一页停一下再翻；这期间人已经自己翻走了（点按钮、回车、方向键）就不再翻第二次。
   void _autoAdvance(int page, Duration delay) {
-    Future.delayed(delay, () {
+    _advanceTimer?.cancel();
+    _advanceTimer = Timer(delay, () {
+      _advanceTimer = null;
       if (!mounted || _start != page || _result != null) return;
       _nextGroup();
     });

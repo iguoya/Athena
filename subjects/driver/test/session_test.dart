@@ -119,10 +119,12 @@ void main() {
       expect((await store.wrongQuestionIds()).where(ours), hasLength(11));
       expect((await store.masteredQuestionIds()).where(ours), hasLength(6));
     });
-    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
-    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
-    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
-    // 推进过停留期让 timer 落地,再拆树。
+    // 答题链路里的真实 IO 在 runAsync 时间片里续跑,答满一组的自动翻页 timer
+    // 是那个时间片里创建的「真实 Timer」——假时钟的 pump 推不动它,收尾时
+    // 真实时间没熬过停留期(Linux/macOS 快)就以「仍有 pending timer」失败,
+    // Windows 慢、真实时间够,反而通过。推进真实时间放掉它,再推进假时钟
+    // 清掉假时钟上的计时(成就提示条 3 秒等),然后拆树。
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 2200)));
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
@@ -206,10 +208,12 @@ void main() {
       expect(draft?.savedAt, isNotNull);
       expect(draft!.spent, greaterThanOrEqualTo(Duration.zero));
     });
-    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
-    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
-    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
-    // 推进过停留期让 timer 落地,再拆树。
+    // 答题链路里的真实 IO 在 runAsync 时间片里续跑,答满一组的自动翻页 timer
+    // 是那个时间片里创建的「真实 Timer」——假时钟的 pump 推不动它,收尾时
+    // 真实时间没熬过停留期(Linux/macOS 快)就以「仍有 pending timer」失败,
+    // Windows 慢、真实时间够,反而通过。推进真实时间放掉它,再推进假时钟
+    // 清掉假时钟上的计时(成就提示条 3 秒等),然后拆树。
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 2200)));
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
@@ -302,10 +306,12 @@ void main() {
     await tester.pump();
     expect(find.text("第 1 句为什么对"), findsOneWidget);
 
-    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
-    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
-    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
-    // 推进过停留期让 timer 落地,再拆树。
+    // 答题链路里的真实 IO 在 runAsync 时间片里续跑,答满一组的自动翻页 timer
+    // 是那个时间片里创建的「真实 Timer」——假时钟的 pump 推不动它,收尾时
+    // 真实时间没熬过停留期(Linux/macOS 快)就以「仍有 pending timer」失败,
+    // Windows 慢、真实时间够,反而通过。推进真实时间放掉它,再推进假时钟
+    // 清掉假时钟上的计时(成就提示条 3 秒等),然后拆树。
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 2200)));
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
