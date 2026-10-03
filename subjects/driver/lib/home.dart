@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:isolate";
 import "dart:math";
 
 import "package:flutter/foundation.dart";
@@ -9,9 +10,17 @@ import "exam.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
+import "reinforce.dart";
+import "reinforce_page.dart";
 import "subject2.dart";
 import "sync.dart";
 import "session.dart";
+
+/// 通过概率放到后台 isolate 里算。必须是顶层函数：在 State 的异步方法里写闭包，
+/// 闭包会连带捕获 `this`，界面对象送不进 isolate（ArgumentError: unsendable）。
+Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules, HistorySet histories) {
+  return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -47,6 +56,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static const _wrongId = "wrong";
   static const _reviewId = "review";
+  static const _reinforceId = "reinforce";
   static const _numbersId = "numbers";
 
   String _place = "subject1";
@@ -66,6 +76,16 @@ class _HomePageState extends State<HomePage> {
   List<Notice> _notices = const [];
   List<DailyCount> _daily = const [];
   Map<String, TopicStats> _topicStats = const {};
+
+  // 强化练习（主仓库 ADR 0076）：全部由作答记录派生，不另存。
+  HistorySet _histories = HistorySet.build(const []);
+  ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
+  List<ChapterPriority> _priorities = const [];
+  final Map<String, PassEstimate> _pass = {};
+  final Set<String> _passComputing = {};
+
+  /// 数据刷新一次加一：后台算通过概率期间数据变了，旧结果作废。
+  int _passGeneration = 0;
 
   /// 侧栏里展开着的科目。默认展开科目一；点科目名进去顺手展开，点右侧箭头只展开/收起、不换页。
   final Set<String> _expanded = {"subject1"};
@@ -192,9 +212,30 @@ class _HomePageState extends State<HomePage> {
         if (byLeft != 0) return byLeft;
         return (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
       });
+    // 强化练习：错题、薄弱章节、间隔到期合成一张题单（主仓库 ADR 0076）。
+    final histories = HistorySet.build(await widget.store.allAttempts());
+    final theoryPool = [
+      for (final q in widget.bank.questions)
+        if (!q.isRare &&
+            (q.topicId.startsWith("drive.s1.") || q.topicId.startsWith("drive.s4.")) &&
+            !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
+          q,
+    ];
+    final reinforcePlan = planReinforcement(pool: theoryPool, histories: histories, now: DateTime.now());
+    final secondsPerQuestion = avgMs > 0 ? avgMs / 1000 : 25.0;
+    final priorities = chapterPriorities(
+      pool: theoryPool,
+      histories: histories,
+      questionsPerSession: (1800 / secondsPerQuestion).round().clamp(10, 150),
+    );
     if (!mounted) return;
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
     setState(() {
+      _histories = histories;
+      _reinforcePlan = reinforcePlan;
+      _priorities = priorities;
+      _pass.clear();
+      _passGeneration++;
       _mastered = mastered;
       _attempts = attempts;
       _avgMs = avgMs;
@@ -213,6 +254,7 @@ class _HomePageState extends State<HomePage> {
     });
     // 看过了就标已读——本机单人用，没有「谁看过」的问题，进首页就算看到了。
     await widget.store.markAllRead();
+    if (_place == _reinforceId) unawaited(_ensurePass());
   }
 
   Subject? get _subject {
@@ -304,6 +346,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _reviewId && _session == null,
                   label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
                   onTap: () => _go(_reviewId),
+                ),
+                _navLine(
+                  icon: Glyph.reinforce,
+                  selected: _place == _reinforceId && _session == null,
+                  label: "强化练习",
+                  onTap: () => _go(_reinforceId),
                 ),
                 _navLine(
                   icon: Glyph.numbers,
@@ -496,6 +544,7 @@ class _HomePageState extends State<HomePage> {
   Widget _overview(BuildContext context) {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _reviewId) return _reviewOverview(context);
+    if (_place == _reinforceId) return _reinforceOverview(context);
     if (_locked(_place)) return _lockedSubject(context, widget.bank.curriculum.subject(_place));
     if (_place == "subject2") {
       final subject2 = widget.bank.curriculum.subject("subject2");
@@ -1207,6 +1256,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// 强化练习（主仓库 ADR 0076）：错题、薄弱章节、间隔到期合成一张题单。
+  /// 是练习不是考试——不计时、不占模拟考成绩；作答的场合标记是 `reinforce`。
+  Widget _reinforceOverview(BuildContext context) {
+    final subjects = <ReinforceSubjectView>[];
+    for (final id in const ["subject1", "subject4"]) {
+      if (_locked(id)) continue;
+      final subject = widget.bank.curriculum.subject(id);
+      subjects.add(ReinforceSubjectView(
+        id: id,
+        title: subject.title,
+        funnel: masteryFunnel(dailyQuestions(widget.bank.forSubject(id)), _histories),
+        exams: [for (final e in _exams) if (e.subjectId == id) e],
+        passScore: subject.exam?.passScore ?? 90,
+        pass: _pass[id],
+        passComputing: _passComputing.contains(id),
+      ));
+    }
+    return ReinforcePage(
+      plan: _reinforcePlan,
+      subjects: subjects,
+      priorities: _priorities,
+      topicTitles: {
+        for (final subject in widget.bank.curriculum.subjects)
+          for (final topic in subject.topics) topic.id: topic.title,
+      },
+      onStart: () => _openSession(
+        SessionLaunch(
+          title: "强化练习",
+          subjectId: _reinforceId,
+          questions: _reinforcePlan.questions,
+          timed: false,
+          revealImmediately: true,
+          attemptKind: "reinforce",
+        ),
+      ),
+    );
+  }
+
   /// 考前复习：累计答错 [reviewMinWrong] 次以上的题（ADR 0033）。
   /// 跟错题本的区别：错题本答对一次就移走；这里要最近一次答对、且累计答对
   /// 够 [reviewExitCorrect] 次（比答错多 1～2 次）才移出，再错又回来（ADR 0035）。
@@ -1485,6 +1572,27 @@ class _HomePageState extends State<HomePage> {
       _place = place;
       _session = null;
     });
+    if (place == _reinforceId) unawaited(_ensurePass());
+  }
+
+  /// 通过概率要抽几百次卷，放到后台 isolate 里算，不卡界面；算完才显示（主仓库 ADR 0076）。
+  Future<void> _ensurePass() async {
+    for (final id in const ["subject1", "subject4"]) {
+      if (_locked(id) || _pass.containsKey(id) || _passComputing.contains(id)) continue;
+      final rules = widget.bank.curriculum.subject(id).exam;
+      if (rules == null) continue;
+      final pool = widget.bank.forSubject(id);
+      final histories = _histories;
+      final generation = _passGeneration;
+      setState(() => _passComputing.add(id));
+      try {
+        final estimate = await _estimateInBackground(pool, rules, histories);
+        if (!mounted) return;
+        if (generation == _passGeneration) setState(() => _pass[id] = estimate);
+      } finally {
+        if (mounted) setState(() => _passComputing.remove(id));
+      }
+    }
   }
 
   /// 点了才发现是手误，至少还能反悔——真去抽题、开始计时之前先问一句

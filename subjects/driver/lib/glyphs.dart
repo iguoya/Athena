@@ -15,6 +15,7 @@ abstract final class Glyph {
   static const wrongBook = Icons.bookmark;
   static const wrongBookCleared = Icons.bookmark_remove;
   static const review = Icons.fact_check;
+  static const reinforce = Icons.fitness_center;
   static const numbers = Icons.pin;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──

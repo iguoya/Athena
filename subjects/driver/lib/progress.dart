@@ -7,6 +7,7 @@ import "package:sqlite3/sqlite3.dart";
 
 import "app_root.dart";
 import "models.dart";
+import "reinforce.dart";
 
 class TopicStats {
   const TopicStats({required this.attempts, required this.correct});
@@ -694,6 +695,21 @@ class ProgressStore {
     return {
       for (final row in rows) row["question_id"] as String: row["n"] as int,
     };
+  }
+
+  /// 全部作答（强化练习选题与学习建议用）。只取需要的四列；时间解析不了的行跳过。
+  Future<List<AttemptView>> allAttempts() async {
+    final rows = _db.select("SELECT question_id, topic_id, correct, at FROM attempts ORDER BY at, id");
+    return [
+      for (final row in rows)
+        if (DateTime.tryParse(row["at"] as String? ?? "") case final at?)
+          AttemptView(
+            questionId: row["question_id"] as String,
+            topicId: row["topic_id"] as String,
+            correct: (row["correct"] as int?) == 1,
+            at: at,
+          ),
+    ];
   }
 
   /// 最近几次模拟考的成绩，新的在前——记了不给人看，等于没记（主仓库 ADR 0052）。

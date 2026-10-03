@@ -25,6 +25,7 @@ class SessionLaunch {
     this.draftKey,
     this.resumePicked,
     this.resumeStartedAt,
+    this.attemptKind,
   });
 
   final String title;
@@ -43,6 +44,10 @@ class SessionLaunch {
 
   /// 续答时的开考时刻：已平移成「续上的时刻减去上次已用的时间」，用时从这里接着算（ADR 0043）。
   final DateTime? resumeStartedAt;
+
+  /// 作答的场合标记（driver ADR 0057、主仓库 ADR 0076）；空则按是否模拟考推：
+  /// 模拟考 `exam`，其余 `practice`。强化练习传 `reinforce`。
+  final String? attemptKind;
 }
 
 /// 嵌在工作台主区里的做题台：左题右据，不用整页路由。
@@ -938,7 +943,7 @@ class _SessionStageState extends State<SessionStage> {
       correct: ok,
       durationMs: durationMs,
       // 场合标记（ADR 0057）：模拟考与平时练习的逐题作答分列统计。
-      kind: _isExam ? "exam" : "practice",
+      kind: _launch.attemptKind ?? (_isExam ? "exam" : "practice"),
     );
     if (!mounted) return;
     setState(() {
