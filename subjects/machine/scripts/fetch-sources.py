@@ -64,7 +64,12 @@ DIS_ASM_CHAPTERS = {
 MS_DOCS_RAW = "https://raw.githubusercontent.com/MicrosoftDocs/cpp-docs/main/docs/build"
 MS_X64_PAGES = ["x64-calling-convention", "x64-software-conventions", "stack-usage"]
 GNU_AS_BASE = "https://sourceware.org/binutils/docs/as"
-GNU_AS_PAGES = ["i386_002dSyntax", "i386_002dDependent", "AArch64_002dDependent"]
+# i386_002dSyntax 只是目录页，真正的内容在子页：Variations（AT&T 与 Intel 的差别）、Regs、Memory、
+# Mnemonics（指令后缀）、Chars。
+GNU_AS_PAGES = [
+    "i386_002dSyntax", "i386_002dVariations", "i386_002dChars", "i386_002dRegs",
+    "i386_002dMemory", "i386_002dMnemonics", "i386_002dDependent", "AArch64_002dDependent",
+]
 SYSV_ABI_PDF = (
     "https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build"
 )

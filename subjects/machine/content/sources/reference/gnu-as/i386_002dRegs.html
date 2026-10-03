@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This file documents the GNU Assembler "as".
+
+Copyright © 1991-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, with no Front-Cover Texts, and with no
+Back-Cover Texts.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+ -->
+<title>i386-Regs (Using as)</title>
+
+<meta name="description" content="i386-Regs (Using as)">
+<meta name="keywords" content="i386-Regs (Using as)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="AS-Index.html" rel="index" title="AS Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="i386_002dDependent.html" rel="up" title="i386-Dependent">
+<link href="i386_002dPrefixes.html" rel="next" title="i386-Prefixes">
+<link href="i386_002dMnemonics.html" rel="prev" title="i386-Mnemonics">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="i386_002dRegs">
+<div class="nav-panel">
+<p>
+Next: <a href="i386_002dPrefixes.html" accesskey="n" rel="next">Instruction Prefixes</a>, Previous: <a href="i386_002dMnemonics.html" accesskey="p" rel="prev">i386-Mnemonics</a>, Up: <a href="i386_002dDependent.html" accesskey="u" rel="up">80386 Dependent Features</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="AS-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection section-level-set-subsection" id="Register-Naming"><span>9.16.5 Register Naming<a class="copiable-link" href="#Register-Naming"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-i386-registers"></a>
+<a class="index-entry-id" id="index-registers_002c-i386"></a>
+<a class="index-entry-id" id="index-x86_002d64-registers"></a>
+<a class="index-entry-id" id="index-registers_002c-x86_002d64"></a>
+<p>Register operands are always prefixed with &lsquo;<samp class="samp">%</samp>&rsquo;.  The 80386 registers
+consist of
+</p>
+<ul class="itemize mark-bullet">
+<li>the 8 32-bit registers &lsquo;<samp class="samp">%eax</samp>&rsquo; (the accumulator), &lsquo;<samp class="samp">%ebx</samp>&rsquo;,
+&lsquo;<samp class="samp">%ecx</samp>&rsquo;, &lsquo;<samp class="samp">%edx</samp>&rsquo;, &lsquo;<samp class="samp">%edi</samp>&rsquo;, &lsquo;<samp class="samp">%esi</samp>&rsquo;, &lsquo;<samp class="samp">%ebp</samp>&rsquo; (the
+frame pointer), and &lsquo;<samp class="samp">%esp</samp>&rsquo; (the stack pointer).
+
+</li><li>the 8 16-bit low-ends of these: &lsquo;<samp class="samp">%ax</samp>&rsquo;, &lsquo;<samp class="samp">%bx</samp>&rsquo;, &lsquo;<samp class="samp">%cx</samp>&rsquo;,
+&lsquo;<samp class="samp">%dx</samp>&rsquo;, &lsquo;<samp class="samp">%di</samp>&rsquo;, &lsquo;<samp class="samp">%si</samp>&rsquo;, &lsquo;<samp class="samp">%bp</samp>&rsquo;, and &lsquo;<samp class="samp">%sp</samp>&rsquo;.
+
+</li><li>the 8 8-bit registers: &lsquo;<samp class="samp">%ah</samp>&rsquo;, &lsquo;<samp class="samp">%al</samp>&rsquo;, &lsquo;<samp class="samp">%bh</samp>&rsquo;,
+&lsquo;<samp class="samp">%bl</samp>&rsquo;, &lsquo;<samp class="samp">%ch</samp>&rsquo;, &lsquo;<samp class="samp">%cl</samp>&rsquo;, &lsquo;<samp class="samp">%dh</samp>&rsquo;, and &lsquo;<samp class="samp">%dl</samp>&rsquo; (These
+are the high-bytes and low-bytes of &lsquo;<samp class="samp">%ax</samp>&rsquo;, &lsquo;<samp class="samp">%bx</samp>&rsquo;,
+&lsquo;<samp class="samp">%cx</samp>&rsquo;, and &lsquo;<samp class="samp">%dx</samp>&rsquo;)
+
+</li><li>the 6 section registers &lsquo;<samp class="samp">%cs</samp>&rsquo; (code section), &lsquo;<samp class="samp">%ds</samp>&rsquo;
+(data section), &lsquo;<samp class="samp">%ss</samp>&rsquo; (stack section), &lsquo;<samp class="samp">%es</samp>&rsquo;, &lsquo;<samp class="samp">%fs</samp>&rsquo;,
+and &lsquo;<samp class="samp">%gs</samp>&rsquo;.
+
+</li><li>the 5 processor control registers &lsquo;<samp class="samp">%cr0</samp>&rsquo;, &lsquo;<samp class="samp">%cr2</samp>&rsquo;,
+&lsquo;<samp class="samp">%cr3</samp>&rsquo;, &lsquo;<samp class="samp">%cr4</samp>&rsquo;, and &lsquo;<samp class="samp">%cr8</samp>&rsquo;.
+
+</li><li>the 6 debug registers &lsquo;<samp class="samp">%db0</samp>&rsquo;, &lsquo;<samp class="samp">%db1</samp>&rsquo;, &lsquo;<samp class="samp">%db2</samp>&rsquo;,
+&lsquo;<samp class="samp">%db3</samp>&rsquo;, &lsquo;<samp class="samp">%db6</samp>&rsquo;, and &lsquo;<samp class="samp">%db7</samp>&rsquo;.
+
+</li><li>the 2 test registers &lsquo;<samp class="samp">%tr6</samp>&rsquo; and &lsquo;<samp class="samp">%tr7</samp>&rsquo;.
+
+</li><li>the 8 floating point register stack &lsquo;<samp class="samp">%st</samp>&rsquo; or equivalently
+&lsquo;<samp class="samp">%st(0)</samp>&rsquo;, &lsquo;<samp class="samp">%st(1)</samp>&rsquo;, &lsquo;<samp class="samp">%st(2)</samp>&rsquo;, &lsquo;<samp class="samp">%st(3)</samp>&rsquo;,
+&lsquo;<samp class="samp">%st(4)</samp>&rsquo;, &lsquo;<samp class="samp">%st(5)</samp>&rsquo;, &lsquo;<samp class="samp">%st(6)</samp>&rsquo;, and &lsquo;<samp class="samp">%st(7)</samp>&rsquo;.
+These registers are overloaded by 8 MMX registers &lsquo;<samp class="samp">%mm0</samp>&rsquo;,
+&lsquo;<samp class="samp">%mm1</samp>&rsquo;, &lsquo;<samp class="samp">%mm2</samp>&rsquo;, &lsquo;<samp class="samp">%mm3</samp>&rsquo;, &lsquo;<samp class="samp">%mm4</samp>&rsquo;, &lsquo;<samp class="samp">%mm5</samp>&rsquo;,
+&lsquo;<samp class="samp">%mm6</samp>&rsquo; and &lsquo;<samp class="samp">%mm7</samp>&rsquo;.
+
+</li><li>the 8 128-bit SSE registers registers &lsquo;<samp class="samp">%xmm0</samp>&rsquo;, &lsquo;<samp class="samp">%xmm1</samp>&rsquo;, &lsquo;<samp class="samp">%xmm2</samp>&rsquo;,
+&lsquo;<samp class="samp">%xmm3</samp>&rsquo;, &lsquo;<samp class="samp">%xmm4</samp>&rsquo;, &lsquo;<samp class="samp">%xmm5</samp>&rsquo;, &lsquo;<samp class="samp">%xmm6</samp>&rsquo; and &lsquo;<samp class="samp">%xmm7</samp>&rsquo;.
+</li></ul>
+
+<p>The AMD x86-64 architecture extends the register set by:
+</p>
+<ul class="itemize mark-bullet">
+<li>enhancing the 8 32-bit registers to 64-bit: &lsquo;<samp class="samp">%rax</samp>&rsquo; (the
+accumulator), &lsquo;<samp class="samp">%rbx</samp>&rsquo;, &lsquo;<samp class="samp">%rcx</samp>&rsquo;, &lsquo;<samp class="samp">%rdx</samp>&rsquo;, &lsquo;<samp class="samp">%rdi</samp>&rsquo;,
+&lsquo;<samp class="samp">%rsi</samp>&rsquo;, &lsquo;<samp class="samp">%rbp</samp>&rsquo; (the frame pointer), &lsquo;<samp class="samp">%rsp</samp>&rsquo; (the stack
+pointer)
+
+</li><li>the 8 extended registers &lsquo;<samp class="samp">%r8</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%r15</samp>&rsquo;.
+
+</li><li>the 8 32-bit low ends of the extended registers: &lsquo;<samp class="samp">%r8d</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%r15d</samp>&rsquo;.
+
+</li><li>the 8 16-bit low ends of the extended registers: &lsquo;<samp class="samp">%r8w</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%r15w</samp>&rsquo;.
+
+</li><li>the 8 8-bit low ends of the extended registers: &lsquo;<samp class="samp">%r8b</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%r15b</samp>&rsquo;.
+
+</li><li>the 4 8-bit registers: &lsquo;<samp class="samp">%sil</samp>&rsquo;, &lsquo;<samp class="samp">%dil</samp>&rsquo;, &lsquo;<samp class="samp">%bpl</samp>&rsquo;, &lsquo;<samp class="samp">%spl</samp>&rsquo;.
+
+</li><li>the 8 debug registers: &lsquo;<samp class="samp">%db8</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%db15</samp>&rsquo;.
+
+</li><li>the 8 128-bit SSE registers: &lsquo;<samp class="samp">%xmm8</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%xmm15</samp>&rsquo;.
+</li></ul>
+
+<p>With the AVX extensions more registers were made available:
+</p>
+<ul class="itemize mark-bullet">
+<li>the 16 256-bit SSE &lsquo;<samp class="samp">%ymm0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%ymm15</samp>&rsquo; (only the first 8
+available in 32-bit mode).  The bottom 128 bits are overlaid with the
+&lsquo;<samp class="samp">xmm0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">xmm15</samp>&rsquo; registers.
+
+</li></ul>
+
+<p>The AVX512 extensions added the following registers:
+</p>
+<ul class="itemize mark-bullet">
+<li>the 32 512-bit registers &lsquo;<samp class="samp">%zmm0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%zmm31</samp>&rsquo; (only the first 8
+available in 32-bit mode).  The bottom 128 bits are overlaid with the
+&lsquo;<samp class="samp">%xmm0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%xmm31</samp>&rsquo; registers and the first 256 bits are
+overlaid with the &lsquo;<samp class="samp">%ymm0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%ymm31</samp>&rsquo; registers.
+
+</li><li>the 8 mask registers &lsquo;<samp class="samp">%k0</samp>&rsquo;&ndash;&lsquo;<samp class="samp">%k7</samp>&rsquo;.
+
+</li></ul>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="i386_002dPrefixes.html">Instruction Prefixes</a>, Previous: <a href="i386_002dMnemonics.html">i386-Mnemonics</a>, Up: <a href="i386_002dDependent.html">80386 Dependent Features</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="AS-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

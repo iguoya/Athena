@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This file documents the GNU Assembler "as".
+
+Copyright © 1991-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, with no Front-Cover Texts, and with no
+Back-Cover Texts.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+ -->
+<title>i386-Chars (Using as)</title>
+
+<meta name="description" content="i386-Chars (Using as)">
+<meta name="keywords" content="i386-Chars (Using as)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="AS-Index.html" rel="index" title="AS Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="i386_002dSyntax.html" rel="up" title="i386-Syntax">
+<link href="i386_002dVariations.html" rel="prev" title="i386-Variations">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="i386_002dChars">
+<div class="nav-panel">
+<p>
+Previous: <a href="i386_002dVariations.html" accesskey="p" rel="prev">AT&amp;T Syntax versus Intel Syntax</a>, Up: <a href="i386_002dSyntax.html" accesskey="u" rel="up">i386 Syntactical Considerations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="AS-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection subsection-level-set-subsubsection" id="Special-Characters-11"><span>9.16.3.2 Special Characters<a class="copiable-link" href="#Special-Characters-11"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-line-comment-character_002c-i386"></a>
+<a class="index-entry-id" id="index-i386-line-comment-character"></a>
+<p>The presence of a &lsquo;<samp class="samp">#</samp>&rsquo; appearing anywhere on a line indicates the
+start of a comment that extends to the end of that line.
+</p>
+<p>If a &lsquo;<samp class="samp">#</samp>&rsquo; appears as the first character of a line then the whole
+line is treated as a comment, but in this case the line can also be a
+logical line number directive (see <a class="pxref" href="Comments.html">Comments</a>) or a preprocessor
+control command (see <a class="pxref" href="Preprocessing.html">Preprocessing</a>).
+</p>
+<p>If the <samp class="option">--divide</samp> command-line option has not been specified
+then the &lsquo;<samp class="samp">/</samp>&rsquo; character appearing anywhere on a line also
+introduces a line comment.
+</p>
+<a class="index-entry-id" id="index-line-separator_002c-i386"></a>
+<a class="index-entry-id" id="index-statement-separator_002c-i386"></a>
+<a class="index-entry-id" id="index-i386-line-separator"></a>
+<p>The &lsquo;<samp class="samp">;</samp>&rsquo; character can be used to separate statements on the same
+line.
+</p>
+</div>
+
+
+
+</body>
+</html>

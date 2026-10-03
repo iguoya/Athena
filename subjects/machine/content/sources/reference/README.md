@@ -13,7 +13,7 @@
 | `sysv-abi/` | System V x86-64 psABI（PDF） | CC BY 4.0 | PDF **不提交**，脚本重新抓 |
 | `ms-x64-abi/` | Microsoft x64 调用约定等 3 页（Markdown 源文件） | CC BY 4.0，示例 MIT | 是 |
 | `aapcs64/` | Arm AAPCS64（rst 源文件） | CC BY-SA 4.0 | 是 |
-| `gnu-as/` | GNU as 手册 3 页（i386 语法、AArch64） | GFDL | 是 |
+| `gnu-as/` | GNU as 手册 8 页（i386 语法与子页、AArch64） | GFDL | 是 |
 | `intel-sdm/` | Intel SDM 合订本（26.7 MB） | Intel 版权，个人查阅 | PDF **不提交** |
 
 Arm 的 A64 ISA 文档（DDI 0602）和架构参考手册（DDI 0487）对脚本返回 403，只在 catalog 里登记网址（`arm-isa`）。

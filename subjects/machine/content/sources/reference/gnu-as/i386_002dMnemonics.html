@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This file documents the GNU Assembler "as".
+
+Copyright © 1991-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, with no Front-Cover Texts, and with no
+Back-Cover Texts.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+ -->
+<title>i386-Mnemonics (Using as)</title>
+
+<meta name="description" content="i386-Mnemonics (Using as)">
+<meta name="keywords" content="i386-Mnemonics (Using as)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="AS-Index.html" rel="index" title="AS Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="i386_002dDependent.html" rel="up" title="i386-Dependent">
+<link href="i386_002dRegs.html" rel="next" title="i386-Regs">
+<link href="i386_002dSyntax.html" rel="prev" title="i386-Syntax">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="i386_002dMnemonics">
+<div class="nav-panel">
+<p>
+Next: <a href="i386_002dRegs.html" accesskey="n" rel="next">Register Naming</a>, Previous: <a href="i386_002dSyntax.html" accesskey="p" rel="prev">i386 Syntactical Considerations</a>, Up: <a href="i386_002dDependent.html" accesskey="u" rel="up">80386 Dependent Features</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="AS-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection section-level-set-subsection" id="i386_002dMnemonics-1"><span>9.16.4 i386-Mnemonics<a class="copiable-link" href="#i386_002dMnemonics-1"> &para;</a></span></h4>
+<ul class="mini-toc">
+<li><a href="#Instruction-Naming" accesskey="1">Instruction Naming</a></li>
+<li><a href="#AT_0026T-Mnemonic-versus-Intel-Mnemonic" accesskey="2">AT&amp;T Mnemonic versus Intel Mnemonic</a></li>
+</ul>
+<div class="subsubsection-level-extent" id="Instruction-Naming">
+<h4 class="subsubsection subsection-level-set-subsubsection"><span>9.16.4.1 Instruction Naming<a class="copiable-link" href="#Instruction-Naming"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-i386-instruction-naming"></a>
+<a class="index-entry-id" id="index-instruction-naming_002c-i386"></a>
+<a class="index-entry-id" id="index-x86_002d64-instruction-naming"></a>
+<a class="index-entry-id" id="index-instruction-naming_002c-x86_002d64"></a>
+
+<p>Instruction mnemonics are suffixed with one character modifiers which
+specify the size of operands.  The letters &lsquo;<samp class="samp">b</samp>&rsquo;, &lsquo;<samp class="samp">w</samp>&rsquo;, &lsquo;<samp class="samp">l</samp>&rsquo;
+and &lsquo;<samp class="samp">q</samp>&rsquo; specify byte, word, long and quadruple word operands.  If
+no suffix is specified by an instruction then <code class="code">as</code> tries to
+fill in the missing suffix based on the destination register operand
+(the last one by convention).  Thus, &lsquo;<samp class="samp">mov %ax, %bx</samp>&rsquo; is equivalent
+to &lsquo;<samp class="samp">movw %ax, %bx</samp>&rsquo;; also, &lsquo;<samp class="samp">mov $1, %bx</samp>&rsquo; is equivalent to
+&lsquo;<samp class="samp">movw $1, bx</samp>&rsquo;.  Note that this is incompatible with the AT&amp;T Unix
+assembler which assumes that a missing mnemonic suffix implies long
+operand size.  (This incompatibility does not affect compiler output
+since compilers always explicitly specify the mnemonic suffix.)
+</p>
+<p>When there is no sizing suffix and no (suitable) register operands to
+deduce the size of memory operands, with a few exceptions and where long
+operand size is possible in the first place, operand size will default
+to long in 32- and 64-bit modes.  Similarly it will default to short in
+16-bit mode. Noteworthy exceptions are
+</p>
+<ul class="itemize mark-bullet">
+<li>Instructions with an implicit on-stack operand as well as branches,
+which default to quad in 64-bit mode.
+
+</li><li>Sign- and zero-extending moves, which default to byte size source
+operands.
+
+</li><li>Floating point insns with integer operands, which default to short (for
+perhaps historical reasons).
+
+</li><li>CRC32 with a 64-bit destination, which defaults to a quad source
+operand.
+
+</li></ul>
+
+<a class="index-entry-id" id="index-encoding-options_002c-i386"></a>
+<a class="index-entry-id" id="index-encoding-options_002c-x86_002d64"></a>
+
+<p>Different encoding options can be specified via pseudo prefixes:
+</p>
+<ul class="itemize mark-bullet">
+<li>&lsquo;<samp class="samp">{disp8}</samp>&rsquo; &ndash; prefer 8-bit displacement.
+
+</li><li>&lsquo;<samp class="samp">{disp32}</samp>&rsquo; &ndash; prefer 32-bit displacement.
+
+</li><li>&lsquo;<samp class="samp">{disp16}</samp>&rsquo; &ndash; prefer 16-bit displacement.
+
+</li><li>&lsquo;<samp class="samp">{load}</samp>&rsquo; &ndash; prefer load-form instruction.
+
+</li><li>&lsquo;<samp class="samp">{store}</samp>&rsquo; &ndash; prefer store-form instruction.
+
+</li><li>&lsquo;<samp class="samp">{vex}</samp>&rsquo; &ndash;  encode with VEX prefix.
+
+</li><li>&lsquo;<samp class="samp">{vex3}</samp>&rsquo; &ndash; encode with 3-byte VEX prefix.
+
+</li><li>&lsquo;<samp class="samp">{evex}</samp>&rsquo; &ndash;  encode with EVEX prefix.
+
+</li><li>&lsquo;<samp class="samp">{rex}</samp>&rsquo; &ndash; prefer REX prefix for integer and legacy vector
+instructions (x86-64 only).  Note that this differs from the &lsquo;<samp class="samp">rex</samp>&rsquo;
+prefix which generates REX prefix unconditionally.
+
+</li><li>&lsquo;<samp class="samp">{rex2}</samp>&rsquo; &ndash; prefer REX2 prefix for integer and legacy vector
+instructions (APX_F only).
+
+</li><li>&lsquo;<samp class="samp">{noimm8s}</samp>&rsquo; &ndash; exclude sign-extended 8-bit immediate.
+
+</li><li>&lsquo;<samp class="samp">{nooptimize}</samp>&rsquo; &ndash; disable instruction size optimization.
+</li></ul>
+
+<p>Mnemonics of Intel VNNI/IFMA instructions are encoded with the EVEX prefix
+by default.  The pseudo &lsquo;<samp class="samp">{vex}</samp>&rsquo; prefix can be used to encode
+mnemonics of Intel VNNI/IFMA instructions with the VEX prefix.
+</p>
+<a class="index-entry-id" id="index-conversion-instructions_002c-i386"></a>
+<a class="index-entry-id" id="index-i386-conversion-instructions"></a>
+<a class="index-entry-id" id="index-conversion-instructions_002c-x86_002d64"></a>
+<a class="index-entry-id" id="index-x86_002d64-conversion-instructions"></a>
+<p>The Intel-syntax conversion instructions
+</p>
+<ul class="itemize mark-bullet">
+<li>&lsquo;<samp class="samp">cbw</samp>&rsquo; &mdash; sign-extend byte in &lsquo;<samp class="samp">%al</samp>&rsquo; to word in &lsquo;<samp class="samp">%ax</samp>&rsquo;,
+
+</li><li>&lsquo;<samp class="samp">cwde</samp>&rsquo; &mdash; sign-extend word in &lsquo;<samp class="samp">%ax</samp>&rsquo; to long in &lsquo;<samp class="samp">%eax</samp>&rsquo;,
+
+</li><li>&lsquo;<samp class="samp">cwd</samp>&rsquo; &mdash; sign-extend word in &lsquo;<samp class="samp">%ax</samp>&rsquo; to long in &lsquo;<samp class="samp">%dx:%ax</samp>&rsquo;,
+
+</li><li>&lsquo;<samp class="samp">cdq</samp>&rsquo; &mdash; sign-extend dword in &lsquo;<samp class="samp">%eax</samp>&rsquo; to quad in &lsquo;<samp class="samp">%edx:%eax</samp>&rsquo;,
+
+</li><li>&lsquo;<samp class="samp">cdqe</samp>&rsquo; &mdash; sign-extend dword in &lsquo;<samp class="samp">%eax</samp>&rsquo; to quad in &lsquo;<samp class="samp">%rax</samp>&rsquo;
+(x86-64 only),
+
+</li><li>&lsquo;<samp class="samp">cqo</samp>&rsquo; &mdash; sign-extend quad in &lsquo;<samp class="samp">%rax</samp>&rsquo; to octuple in
+&lsquo;<samp class="samp">%rdx:%rax</samp>&rsquo; (x86-64 only),
+</li></ul>
+
+<p>are called &lsquo;<samp class="samp">cbtw</samp>&rsquo;, &lsquo;<samp class="samp">cwtl</samp>&rsquo;, &lsquo;<samp class="samp">cwtd</samp>&rsquo;, &lsquo;<samp class="samp">cltd</samp>&rsquo;, &lsquo;<samp class="samp">cltq</samp>&rsquo;, and
+&lsquo;<samp class="samp">cqto</samp>&rsquo; in AT&amp;T naming.  <code class="code">as</code> accepts either naming for these
+instructions.
+</p>
+<a class="index-entry-id" id="index-extension-instructions_002c-i386"></a>
+<a class="index-entry-id" id="index-i386-extension-instructions"></a>
+<a class="index-entry-id" id="index-extension-instructions_002c-x86_002d64"></a>
+<a class="index-entry-id" id="index-x86_002d64-extension-instructions"></a>
+<p>The Intel-syntax extension instructions
+</p>
+<ul class="itemize mark-bullet">
+<li>&lsquo;<samp class="samp">movsx</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg16</samp>&rsquo;.
+
+</li><li>&lsquo;<samp class="samp">movsx</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg32</samp>&rsquo;.
+
+</li><li>&lsquo;<samp class="samp">movsx</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg64</samp>&rsquo;
+(x86-64 only).
+
+</li><li>&lsquo;<samp class="samp">movsx</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg16/mem16</samp>&rsquo; to &lsquo;<samp class="samp">reg32</samp>&rsquo;
+
+</li><li>&lsquo;<samp class="samp">movsx</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg16/mem16</samp>&rsquo; to &lsquo;<samp class="samp">reg64</samp>&rsquo;
+(x86-64 only).
+
+</li><li>&lsquo;<samp class="samp">movsxd</samp>&rsquo; &mdash; sign-extend &lsquo;<samp class="samp">reg32/mem32</samp>&rsquo; to &lsquo;<samp class="samp">reg64</samp>&rsquo;
+(x86-64 only).
+
+</li><li>&lsquo;<samp class="samp">movzx</samp>&rsquo; &mdash; zero-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg16</samp>&rsquo;.
+
+</li><li>&lsquo;<samp class="samp">movzx</samp>&rsquo; &mdash; zero-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg32</samp>&rsquo;.
+
+</li><li>&lsquo;<samp class="samp">movzx</samp>&rsquo; &mdash; zero-extend &lsquo;<samp class="samp">reg8/mem8</samp>&rsquo; to &lsquo;<samp class="samp">reg64</samp>&rsquo;
+(x86-64 only).
+
+</li><li>&lsquo;<samp class="samp">movzx</samp>&rsquo; &mdash; zero-extend &lsquo;<samp class="samp">reg16/mem16</samp>&rsquo; to &lsquo;<samp class="samp">reg32</samp>&rsquo;
+
+</li><li>&lsquo;<samp class="samp">movzx</samp>&rsquo; &mdash; zero-extend &lsquo;<samp class="samp">reg16/mem16</samp>&rsquo; to &lsquo;<samp class="samp">reg64</samp>&rsquo;
+(x86-64 only).
+</li></ul>
+
+<p>are called &lsquo;<samp class="samp">movsbw/movsxb/movsx</samp>&rsquo;, &lsquo;<samp class="samp">movsbl/movsxb/movsx</samp>&rsquo;,
+&lsquo;<samp class="samp">movsbq/movsxb/movsx</samp>&rsquo;, &lsquo;<samp class="samp">movswl/movsxw</samp>&rsquo;, &lsquo;<samp class="samp">movswq/movsxw</samp>&rsquo;,
+&lsquo;<samp class="samp">movslq/movsxl</samp>&rsquo;, &lsquo;<samp class="samp">movzbw/movzxb/movzx</samp>&rsquo;,
+&lsquo;<samp class="samp">movzbl/movzxb/movzx</samp>&rsquo;, &lsquo;<samp class="samp">movzbq/movzxb/movzx</samp>&rsquo;,
+&lsquo;<samp class="samp">movzwl/movzxw</samp>&rsquo; and &lsquo;<samp class="samp">movzwq/movzxw</samp>&rsquo; in AT&amp;T syntax.
+</p>
+<a class="index-entry-id" id="index-jump-instructions_002c-i386"></a>
+<a class="index-entry-id" id="index-call-instructions_002c-i386"></a>
+<a class="index-entry-id" id="index-jump-instructions_002c-x86_002d64"></a>
+<a class="index-entry-id" id="index-call-instructions_002c-x86_002d64"></a>
+<p>Far call/jump instructions are &lsquo;<samp class="samp">lcall</samp>&rsquo; and &lsquo;<samp class="samp">ljmp</samp>&rsquo; in
+AT&amp;T syntax, but are &lsquo;<samp class="samp">call far</samp>&rsquo; and &lsquo;<samp class="samp">jump far</samp>&rsquo; in Intel
+convention.
+</p>
+</div>
+<div class="subsubsection-level-extent" id="AT_0026T-Mnemonic-versus-Intel-Mnemonic">
+<h4 class="subsubsection subsection-level-set-subsubsection"><span>9.16.4.2 AT&amp;T Mnemonic versus Intel Mnemonic<a class="copiable-link" href="#AT_0026T-Mnemonic-versus-Intel-Mnemonic"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-i386-mnemonic-compatibility"></a>
+<a class="index-entry-id" id="index-mnemonic-compatibility_002c-i386"></a>
+
+<p><code class="code">as</code> supports assembly using Intel mnemonic.
+<code class="code">.intel_mnemonic</code> selects Intel mnemonic with Intel syntax, and
+<code class="code">.att_mnemonic</code> switches back to the usual AT&amp;T mnemonic with AT&amp;T
+syntax for compatibility with the output of <code class="code">gcc</code>.
+Several x87 instructions, &lsquo;<samp class="samp">fadd</samp>&rsquo;, &lsquo;<samp class="samp">fdiv</samp>&rsquo;, &lsquo;<samp class="samp">fdivp</samp>&rsquo;,
+&lsquo;<samp class="samp">fdivr</samp>&rsquo;, &lsquo;<samp class="samp">fdivrp</samp>&rsquo;, &lsquo;<samp class="samp">fmul</samp>&rsquo;, &lsquo;<samp class="samp">fsub</samp>&rsquo;, &lsquo;<samp class="samp">fsubp</samp>&rsquo;,
+&lsquo;<samp class="samp">fsubr</samp>&rsquo; and &lsquo;<samp class="samp">fsubrp</samp>&rsquo;,  are implemented in AT&amp;T System V/386
+assembler with different mnemonics from those in Intel IA32 specification.
+<code class="code">gcc</code> generates those instructions with AT&amp;T mnemonic.
+</p>
+<ul class="itemize mark-bullet">
+<li>&lsquo;<samp class="samp">movslq</samp>&rsquo; with AT&amp;T mnemonic only accepts 64-bit destination
+register.  &lsquo;<samp class="samp">movsxd</samp>&rsquo; should be used to encode 16-bit or 32-bit
+destination register with both AT&amp;T and Intel mnemonics.
+</li></ul>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="i386_002dRegs.html">Register Naming</a>, Previous: <a href="i386_002dSyntax.html">i386 Syntactical Considerations</a>, Up: <a href="i386_002dDependent.html">80386 Dependent Features</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="AS-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
