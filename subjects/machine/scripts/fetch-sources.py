@@ -2,12 +2,16 @@
 """把写课要用的公开教材拉到 content/sources/reference/。
 
 Beej 允许私下镜像；c-faq 只供本机查阅，不进 git（见 .gitignore）。
+汇编线（ADR 0005 第 9 条）的来源：DIS 汇编章、各 ABI 规范、GNU as 手册、Intel SDM。
+Arm 的 ISA 文档（DDI 0602、DDI 0487）对脚本返回 403，只在 catalog 里登记网址。
 
 原来是 fetch-sources.sh。内容生成也是日常环节，不该要求 Windows 上先装
 Git Bash 或 curl（ADR 0047）；urllib 是标准库，三个平台都现成。
 
 用法：
-    python3 scripts/fetch-sources.py
+    python3 scripts/fetch-sources.py          # 全部
+    python3 scripts/fetch-sources.py asm      # 只抓汇编线的来源（不碰已有的 C 教材副本）
+    python3 scripts/fetch-sources.py c        # 只抓 C 教材
 """
 
 from __future__ import annotations
@@ -40,6 +44,34 @@ DIVE_PAGES = [
     "structs",
 ]
 CFAQ_SECTIONS = ["ptrs", "aryptr", "malloc"]
+
+# DIS 汇编章：第 6 章导论、第 7 章 x86-64、第 9 章 ARMv8、第 10 章小结。
+# 第 8 章 IA32（32 位）不在范围内。x86-64 章用 AT&T 语法；本应用不强制统一语法（ADR 0007），
+# 引用时 locator 照原文的语法写即可。
+DIS_ASM_SECTIONS = [
+    "index", "basics", "common", "arithmetic", "conditional_control_loops",
+    "preliminaries", "if_statements", "loops", "functions", "recursion",
+    "arrays", "matrices", "structs", "buffer_overflow", "exercises",
+]
+DIS_ASM_CHAPTERS = {
+    "C6-asm_intro": ["index"],
+    "C7-x86_64": DIS_ASM_SECTIONS,
+    "C9-ARM64": DIS_ASM_SECTIONS,
+    "C10-asm_takeaways": ["index"],
+}
+
+# ABI 规范与手册。Microsoft 取 cpp-docs 的 Markdown 源文件（CC BY 4.0），比渲染后的网页干净。
+MS_DOCS_RAW = "https://raw.githubusercontent.com/MicrosoftDocs/cpp-docs/main/docs/build"
+MS_X64_PAGES = ["x64-calling-convention", "x64-software-conventions", "stack-usage"]
+GNU_AS_BASE = "https://sourceware.org/binutils/docs/as"
+GNU_AS_PAGES = ["i386_002dSyntax", "i386_002dDependent", "AArch64_002dDependent"]
+SYSV_ABI_PDF = (
+    "https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build"
+)
+AAPCS64_RST = "https://raw.githubusercontent.com/ARM-software/abi-aa/main/aapcs64/aapcs64.rst"
+# Intel 合订本的固定入口，会重定向到当前版本（抓取时是 325462-093）。26 MB，PDF 不进 git。
+INTEL_SDM_PDF = "https://cdrdv2.intel.com/v1/dl/getContent/671200"
+LARGE_TIMEOUT = 300
 
 
 def _force_utf8_output() -> None:
@@ -84,21 +116,56 @@ def downloads() -> list[tuple[str, Path]]:
             REFERENCE / "c23/n3220.pdf",
         )
     )
+    items += [
+        (
+            f"https://diveintosystems.org/book/{chapter}/{page}.html",
+            REFERENCE / "dive-into-systems" / chapter / f"{page}.html",
+        )
+        for chapter, pages in DIS_ASM_CHAPTERS.items()
+        for page in pages
+    ]
+    items += [
+        (f"{MS_DOCS_RAW}/{name}.md", REFERENCE / "ms-x64-abi" / f"{name}.md")
+        for name in MS_X64_PAGES
+    ]
+    items += [
+        (f"{GNU_AS_BASE}/{name}.html", REFERENCE / "gnu-as" / f"{name}.html")
+        for name in GNU_AS_PAGES
+    ]
+    items += [
+        (SYSV_ABI_PDF, REFERENCE / "sysv-abi/abi.pdf"),
+        (AAPCS64_RST, REFERENCE / "aapcs64/aapcs64.rst"),
+        (INTEL_SDM_PDF, REFERENCE / "intel-sdm/intel-sdm.pdf"),
+    ]
     return items
 
 
 def fetch(url: str, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=60) as response:
+    timeout = LARGE_TIMEOUT if destination.suffix == ".pdf" else 60
+    with urllib.request.urlopen(request, timeout=timeout) as response:
         destination.write_bytes(response.read())
     print(f"  {destination.relative_to(REFERENCE)}", flush=True)
 
 
+def is_asm(destination: Path) -> bool:
+    """属于汇编线（ADR 0005 第 9 条）的来源。只抓一组时用它分开，免得改动已有的副本。"""
+    top = destination.relative_to(REFERENCE).parts
+    if top[0] in {"ms-x64-abi", "gnu-as", "sysv-abi", "aapcs64", "intel-sdm"}:
+        return True
+    return top[0] == "dive-into-systems" and len(top) > 1 and top[1] in DIS_ASM_CHAPTERS
+
+
 def main() -> int:
     _force_utf8_output()
-    print(f"抓取到 {REFERENCE.relative_to(PROJECT_ROOT)}", flush=True)
+    group = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if group not in {"all", "asm", "c"}:
+        raise SystemExit("用法：fetch-sources.py [all|asm|c]")
+    print(f"抓取到 {REFERENCE.relative_to(PROJECT_ROOT)}（{group}）", flush=True)
     for url, destination in downloads():
+        if group != "all" and is_asm(destination) != (group == "asm"):
+            continue
         try:
             fetch(url, destination)
         except (urllib.error.URLError, OSError) as error:

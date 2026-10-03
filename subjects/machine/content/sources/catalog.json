@@ -15,8 +15,8 @@
     "local_path": "reference/dive-into-systems/",
     "license": "CC BY-NC-ND 4.0，禁止派生；原样保存 HTML",
     "role": "memory-map",
-    "checked_on": "2026-09-14",
-    "note": "第 2 章先讲程序地址空间。教案只引用节名，不改写其正文。"
+    "checked_on": "2026-10-03",
+    "note": "第 2 章先讲程序地址空间；汇编线（ADR 0005）另取第 6 章汇编导论、第 7 章 64 位 x86、第 9 章 ARMv8、第 10 章小结，第 8 章 IA32 不取。x86-64 章用 AT&T 语法（ADR 0007）。教案只引用节名，不改写其正文。"
   },
   "modern-c": {
     "title": "Modern C (Jens Gustedt)",
@@ -45,5 +45,62 @@
     "role": "semantic-baseline",
     "checked_on": "2026-09-14",
     "note": "语义对错以 C23 为准（ADR 0004）。本地用 N3220 对条款号。不要用 C2y 稿当现行标准。"
+  },
+  "sysv-abi": {
+    "title": "System V Application Binary Interface, AMD64 Architecture Processor Supplement (x86-64 psABI)",
+    "url": "https://gitlab.com/x86-psABIs/x86-64-ABI",
+    "pdf": "https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build",
+    "local_path": "reference/sysv-abi/",
+    "license": "CC BY 4.0（PDF 第 10 页声明）；PDF 是二进制，不进 git，可由脚本重新抓取",
+    "role": "abi-sysv",
+    "checked_on": "2026-10-03",
+    "note": "Version 1.0，2025-03-12，154 页。System V（Linux、macOS）调用约定的权威出处：寄存器用途、栈帧、参数传递见第 3.2 节。取自 master 构建，内容会变，引用时写明版本日期。"
+  },
+  "ms-x64-abi": {
+    "title": "Microsoft x64 calling convention / software conventions / stack usage",
+    "url": "https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention",
+    "github": "https://github.com/MicrosoftDocs/cpp-docs",
+    "local_path": "reference/ms-x64-abi/",
+    "license": "文档 CC BY 4.0，示例代码 MIT；Markdown 源文件取自 MicrosoftDocs/cpp-docs main，署名保留",
+    "role": "abi-windows",
+    "checked_on": "2026-10-03",
+    "note": "Windows x64 调用约定：rcx、rdx、r8、r9 传参，32 字节 shadow space。三页：x64-calling-convention、x64-software-conventions、stack-usage。"
+  },
+  "aapcs64": {
+    "title": "Procedure Call Standard for the Arm 64-bit Architecture (AAPCS64)",
+    "url": "https://github.com/ARM-software/abi-aa",
+    "local_path": "reference/aapcs64/",
+    "license": "CC BY-SA 4.0 加专利授权；改写内容对外发布时需沿用同样的许可（自用不分发不受影响）",
+    "role": "abi-arm64",
+    "checked_on": "2026-10-03",
+    "note": "取 aapcs64/aapcs64.rst 的 main 分支，抓取当日 main 为 a5e86d3fec73（2026-09-23）。Linux 上的 ARM64 调用约定；macOS 的差异另见 Apple 文档，实现 macOS 目标时再登记。"
+  },
+  "intel-sdm": {
+    "title": "Intel 64 and IA-32 Architectures Software Developer's Manual (combined volumes)",
+    "url": "https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html",
+    "pdf": "https://cdrdv2.intel.com/v1/dl/getContent/671200",
+    "local_path": "reference/intel-sdm/",
+    "license": "版权归 Intel；个人查阅，PDF 不进 git",
+    "role": "isa-x86-reference",
+    "checked_on": "2026-10-03",
+    "note": "Order Number 325462-093US，2026 年 9 月，26.7 MB。x86-64 指令语义与编码的权威出处，用 Intel 语法书写。固定入口会重定向到当前版本，引用时写明 Order Number。"
+  },
+  "gnu-as": {
+    "title": "GNU assembler (as) manual: i386 syntax and AArch64 dependent features",
+    "url": "https://sourceware.org/binutils/docs/as/",
+    "local_path": "reference/gnu-as/",
+    "license": "GNU Free Documentation License；版权 Free Software Foundation",
+    "role": "assembler-syntax",
+    "checked_on": "2026-10-03",
+    "note": "只取三页：i386-Syntax（AT&T 与 Intel 语法及 .intel_syntax noprefix）、i386-Dependent、AArch64-Dependent。汇编器统一为 GNU as（ADR 0005、0007）的出处。"
+  },
+  "arm-isa": {
+    "title": "Arm A64 Instruction Set Architecture (DDI 0602) and Arm Architecture Reference Manual for A-profile (DDI 0487)",
+    "url": "https://developer.arm.com/documentation/ddi0602/latest/",
+    "local": false,
+    "license": "Arm 专有文档，仅登记网址，不落本地",
+    "role": "isa-arm-reference",
+    "checked_on": "2026-10-03",
+    "note": "developer.arm.com 对脚本返回 403，需要在浏览器里接受条款，所以不抓取。引用 ARM64 指令语义时用这个网址当出处，locator 写指令名。"
   }
 }
