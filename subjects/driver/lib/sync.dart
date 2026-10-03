@@ -167,6 +167,7 @@ class SyncEngine {
     "drill-notes",
     "point-notes",
     "notices",
+    "explain-views",
   ];
 
   static const _batchSize = 500;

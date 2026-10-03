@@ -1289,6 +1289,8 @@ class _HomePageState extends State<HomePage> {
           timed: false,
           revealImmediately: true,
           attemptKind: "reinforce",
+          // 每题为什么被选中，随作答一起记下，事后才能评估这套选题办法有没有用。
+          reasons: {for (final pick in _reinforcePlan.picks) pick.question.id: pick.reason},
         ),
       ),
     );
@@ -1680,6 +1682,8 @@ class _HomePageState extends State<HomePage> {
       resumePicked: draft.picked,
       // 开考时刻平移到「现在减去上次已用的时间」：挂起的那段不算进用时（ADR 0043）。
       resumeStartedAt: DateTime.now().subtract(draft.spent),
+      // 续答沿用草稿里的会话（主仓库 ADR 0076 决策 3）；老草稿没有，由做题台新起一个。
+      sessionId: draft.sessionId,
     );
   }
 

@@ -1,5 +1,6 @@
 import "dart:convert";
 import "dart:io";
+import "dart:math";
 
 import "package:flutter/foundation.dart";
 import "package:path/path.dart" as p;
@@ -8,6 +9,12 @@ import "package:sqlite3/sqlite3.dart";
 import "app_root.dart";
 import "models.dart";
 import "reinforce.dart";
+
+/// 新会话的标识：16 位随机十六进制，不含任何个人信息或设备信息（主仓库 ADR 0076 决策 3）。
+String newSessionId() {
+  final random = Random.secure();
+  return List.generate(16, (_) => random.nextInt(16).toRadixString(16)).join();
+}
 
 class TopicStats {
   const TopicStats({required this.attempts, required this.correct});
@@ -33,6 +40,7 @@ class ExamDraft {
     required this.picked,
     required this.startedAt,
     this.savedAt,
+    this.sessionId,
   });
 
   final String subjectId;
@@ -52,6 +60,9 @@ class ExamDraft {
   /// 最后一次存草稿（最后交一题）的时刻。续答时用时只算到这里，挂起的那段不算
   /// （ADR 0043）。更早版本存的草稿没有这一列，读出来是 null。
   final DateTime? savedAt;
+
+  /// 这场考试所属的会话（主仓库 ADR 0076）。续答沿用它，不另起新会话；老草稿没有，读出来是 null。
+  final String? sessionId;
 
   /// 上次停下之前已经答了多久。老草稿不知道，按 0 算——宁可少算，不把挂起的几天算进去。
   Duration get spent {
@@ -77,6 +88,7 @@ class ExamDraft {
         }),
         "started_at": startedAt.toIso8601String(),
         "saved_at": savedAt?.toIso8601String(),
+        "session_id": sessionId,
       };
 
   static ExamDraft fromApi(Map<String, Object?> row) => ExamDraft(
@@ -100,6 +112,7 @@ class ExamDraft {
         },
         startedAt: DateTime.tryParse(row["started_at"]! as String? ?? "") ?? DateTime.now(),
         savedAt: DateTime.tryParse(row["saved_at"] as String? ?? ""),
+        sessionId: row["session_id"] as String?,
       );
 }
 
@@ -365,6 +378,27 @@ class ProgressStore {
       )
     """);
     db.execute("CREATE TABLE IF NOT EXISTS sync_state (name TEXT PRIMARY KEY, value INTEGER NOT NULL)");
+    // 归因字段与解析停留（主仓库 ADR 0076）：CREATE IF NOT EXISTS 不会给已有的表补列，手动加。
+    void addColumn(String table, String column, String type) {
+      final existing = db.select("PRAGMA table_info($table)").map((r) => r["name"] as String).toSet();
+      if (!existing.contains(column)) db.execute("ALTER TABLE $table ADD COLUMN $column $type");
+    }
+
+    addColumn("attempts", "chosen", "TEXT");
+    addColumn("attempts", "session_id", "TEXT");
+    addColumn("attempts", "reason", "TEXT");
+    addColumn("exams", "session_id", "TEXT");
+    addColumn("exams", "used_ms", "INTEGER");
+    addColumn("exam_drafts", "session_id", "TEXT");
+    db.execute("""
+      CREATE TABLE IF NOT EXISTS explain_views (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question_id TEXT NOT NULL,
+        attempt_at TEXT NOT NULL,
+        dwell_ms INTEGER NOT NULL
+      )
+    """);
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_explain_views ON explain_views (question_id, attempt_at)");
   }
 
   /// 点位卡照片与进度同住一处：工作树里在 `progress/points`（随仓库走），
@@ -426,6 +460,12 @@ class ProgressStore {
   List<Map<String, Object?>> debugAttempts() =>
       _db.select("SELECT * FROM attempts ORDER BY at");
 
+  @visibleForTesting
+  List<Map<String, Object?>> debugExams() => _db.select("SELECT * FROM exams ORDER BY at");
+
+  @visibleForTesting
+  List<Map<String, Object?>> debugExplainViews() => _db.select("SELECT * FROM explain_views ORDER BY id");
+
   Future<List<Notice>> recordAttempt({
     required String questionId,
     required String topicId,
@@ -433,6 +473,9 @@ class ProgressStore {
     required bool correct,
     int durationMs = 0,
     String kind = "practice",
+    String? chosen,
+    String? sessionId,
+    String? reason,
     String? topicTitle,
     DateTime? at,
   }) async {
@@ -441,9 +484,9 @@ class ProgressStore {
     final cappedMs = durationMs < 300000 ? durationMs : 300000;
     final beforeWrong = (await wrongQuestionIds()).length;
     _db.execute(
-      "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind) "
-      "VALUES (?, ?, ?, ?, ?, 0, ?, ?)",
-      [questionId, topicId, subjectId, correct ? 1 : 0, cappedMs, stamp, kind],
+      "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind, "
+      "chosen, session_id, reason) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)",
+      [questionId, topicId, subjectId, correct ? 1 : 0, cappedMs, stamp, kind, chosen, sessionId, reason],
     );
     _enqueue("attempts", payload: {
       "question_id": questionId,
@@ -454,6 +497,10 @@ class ProgressStore {
       "hesitant": false,
       "at": stamp,
       "kind": kind,
+      // 归因字段（主仓库 ADR 0076）：没有就不带，服务端存为空。
+      "chosen": ?chosen,
+      "session_id": ?sessionId,
+      "reason": ?reason,
     });
     final born = <Notice>[];
     if (correct) {
@@ -471,23 +518,48 @@ class ProgressStore {
     return born;
   }
 
+  /// 答错后看解析的停留（主仓库 ADR 0076 决策 4）。作答在判定时刻写入、停留在之后才知道，
+  /// 所以单独成一个事件，按 (question_id, attempt_at) 对上那次作答；封顶 5 分钟，同 driver ADR 0057。
+  Future<void> recordExplainView({
+    required String questionId,
+    required String attemptAt,
+    required int dwellMs,
+  }) async {
+    final capped = dwellMs.clamp(0, 300000);
+    _db.execute(
+      "INSERT OR IGNORE INTO explain_views (question_id, attempt_at, dwell_ms) VALUES (?, ?, ?)",
+      [questionId, attemptAt, capped],
+    );
+    _enqueue("explain-views", payload: {
+      "question_id": questionId,
+      "attempt_at": attemptAt,
+      "dwell_ms": capped,
+    });
+  }
+
   Future<List<Notice>> recordExam({
     required String subjectId,
     required int score,
     required bool passed,
+    String? sessionId,
+    int? usedMs,
     String? subjectTitle,
     DateTime? at,
   }) async {
     final stamp = (at ?? DateTime.now()).toIso8601String();
+    // 整场用时同样封顶在服务端的 24 小时上限内（挂机恢复的极端情形）。
+    final cappedUsed = usedMs?.clamp(0, 24 * 3600 * 1000);
     _db.execute(
-      "INSERT OR IGNORE INTO exams (subject_id, score, passed, at) VALUES (?, ?, ?, ?)",
-      [subjectId, score, passed ? 1 : 0, stamp],
+      "INSERT OR IGNORE INTO exams (subject_id, score, passed, at, session_id, used_ms) VALUES (?, ?, ?, ?, ?, ?)",
+      [subjectId, score, passed ? 1 : 0, stamp, sessionId, cappedUsed],
     );
     _enqueue("exams", payload: {
       "subject_id": subjectId,
       "score": score,
       "passed": passed,
       "at": stamp,
+      "session_id": ?sessionId,
+      "used_ms": ?cappedUsed,
     });
     final label = subjectTitle ?? subjectId;
     final born = <Notice>[
@@ -527,23 +599,25 @@ class ProgressStore {
         picked: draft.picked,
         startedAt: draft.startedAt,
         savedAt: DateTime.now(),
+        sessionId: draft.sessionId,
       );
     }
     final row = draft.toApi();
     _db.execute(
       "INSERT INTO exam_drafts (draft_key, subject_id, title, question_ids, question_count, minutes, "
-      "pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at) "
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+      "pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at, session_id) "
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
       "ON CONFLICT (draft_key) DO UPDATE SET subject_id = excluded.subject_id, title = excluded.title, "
       "question_ids = excluded.question_ids, question_count = excluded.question_count, "
       "minutes = excluded.minutes, pass_score = excluded.pass_score, "
       "points_per_question = excluded.points_per_question, mix = excluded.mix, "
       "full_bank = excluded.full_bank, picked = excluded.picked, started_at = excluded.started_at, "
-      "saved_at = excluded.saved_at",
+      "saved_at = excluded.saved_at, session_id = excluded.session_id",
       [
         draftKey, row["subject_id"], row["title"], row["question_ids"], row["question_count"],
         row["minutes"], row["pass_score"], row["points_per_question"], row["mix"],
         (row["full_bank"] as bool) ? 1 : 0, row["picked"], row["started_at"], row["saved_at"],
+        row["session_id"],
       ],
     );
     _enqueue("exam-draft", key: draftKey, payload: row);
@@ -566,6 +640,7 @@ class ProgressStore {
       "picked": row["picked"],
       "started_at": row["started_at"],
       "saved_at": row["saved_at"],
+      "session_id": row["session_id"],
     });
   }
 
@@ -1102,12 +1177,13 @@ class ProgressStore {
       final row = draft.toApi();
       _db.execute(
         "INSERT OR REPLACE INTO exam_drafts (draft_key, subject_id, title, question_ids, question_count, "
-        "minutes, pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "minutes, pass_score, points_per_question, mix, full_bank, picked, started_at, saved_at, session_id) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           draftKey, row["subject_id"], row["title"], row["question_ids"], row["question_count"],
           row["minutes"], row["pass_score"], row["points_per_question"], row["mix"],
           (row["full_bank"] as bool) ? 1 : 0, row["picked"], row["started_at"], row["saved_at"],
+          row["session_id"],
         ],
       );
       return;
@@ -1118,11 +1194,11 @@ class ProgressStore {
       _db.execute(
         "UPDATE exam_drafts SET subject_id = ?, title = ?, question_ids = ?, question_count = ?, "
         "minutes = ?, pass_score = ?, points_per_question = ?, mix = ?, full_bank = ?, "
-        "picked = ?, started_at = ?, saved_at = ? WHERE draft_key = ?",
+        "picked = ?, started_at = ?, saved_at = ?, session_id = ? WHERE draft_key = ?",
         [
           row["subject_id"], row["title"], row["question_ids"], row["question_count"], row["minutes"],
           row["pass_score"], row["points_per_question"], row["mix"], (row["full_bank"] as bool) ? 1 : 0,
-          row["picked"], row["started_at"], row["saved_at"], draftKey,
+          row["picked"], row["started_at"], row["saved_at"], row["session_id"], draftKey,
         ],
       );
     }
@@ -1135,8 +1211,8 @@ class ProgressStore {
       case "attempts":
         for (final item in items) {
           _db.execute(
-            "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind, "
+            "chosen, session_id, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
               item["question_id"], item["topic_id"], item["subject_id"],
               (item["correct"] is bool) ? ((item["correct"]! as bool) ? 1 : 0) : item["correct"],
@@ -1144,17 +1220,26 @@ class ProgressStore {
               ((item["hesitant"] ?? false) as bool) ? 1 : 0,
               item["at"],
               item["kind"] ?? "practice",
+              item["chosen"], item["session_id"], item["reason"],
             ],
           );
         }
       case "exams":
         for (final item in items) {
           _db.execute(
-            "INSERT OR IGNORE INTO exams (subject_id, score, passed, at) VALUES (?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO exams (subject_id, score, passed, at, session_id, used_ms) VALUES (?, ?, ?, ?, ?, ?)",
             [
               item["subject_id"], item["score"],
               (item["passed"] is bool) ? ((item["passed"]! as bool) ? 1 : 0) : item["passed"], item["at"],
+              item["session_id"], item["used_ms"],
             ],
+          );
+        }
+      case "explain-views":
+        for (final item in items) {
+          _db.execute(
+            "INSERT OR IGNORE INTO explain_views (question_id, attempt_at, dwell_ms) VALUES (?, ?, ?)",
+            [item["question_id"], item["attempt_at"], item["dwell_ms"]],
           );
         }
       case "notices":

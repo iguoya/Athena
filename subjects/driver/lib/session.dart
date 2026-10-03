@@ -26,6 +26,8 @@ class SessionLaunch {
     this.resumePicked,
     this.resumeStartedAt,
     this.attemptKind,
+    this.sessionId,
+    this.reasons,
   });
 
   final String title;
@@ -48,6 +50,12 @@ class SessionLaunch {
   /// 作答的场合标记（driver ADR 0057、主仓库 ADR 0076）；空则按是否模拟考推：
   /// 模拟考 `exam`，其余 `practice`。强化练习传 `reinforce`。
   final String? attemptKind;
+
+  /// 续答时沿用的会话 id（来自草稿）；新开一场留空，由做题台生成（主仓库 ADR 0076 决策 3）。
+  final String? sessionId;
+
+  /// 强化练习的选题理由：题号 -> retest/weak/due/fill。其余场合为空（主仓库 ADR 0076）。
+  final Map<String, String>? reasons;
 }
 
 /// 嵌在工作台主区里的做题台：左题右据，不用整页路由。
@@ -86,8 +94,19 @@ class _SessionStageState extends State<SessionStage> {
   final _judged = <int>{};
   final _correct = <int>{};
 
+  /// 这次做题所属的会话（主仓库 ADR 0076）：一次练习、一次复习、一场模拟考各是一个会话；
+  /// 模拟考续答沿用草稿里的同一个。
+  late final String _sessionId = _launch.sessionId ?? newSessionId();
+
+  /// 每道题这次作答的时刻（ISO 串）：解析停留靠它对上那次作答。续答恢复的题没有。
+  final _attemptAt = <int, String>{};
+
   /// 右栏依据显示哪一题：作答后自动跟到刚答的题，也可以用题干右侧的「解析」调回来。
   int? _focus;
+
+  /// [_focus] 这一题的解析从什么时候开始显示；每题累计的毫秒数在 [_explainMs]。
+  DateTime _focusSince = DateTime.now();
+  final _explainMs = <int, int>{};
   var _busy = false;
   var _submitting = false;
   DateTime _shownAt = DateTime.now();
@@ -177,6 +196,7 @@ class _SessionStageState extends State<SessionStage> {
 
   @override
   void dispose() {
+    _writeExplainViews();
     _timer?.cancel();
     _speaker.stop();
     _scroll.dispose();
@@ -508,7 +528,7 @@ class _SessionStageState extends State<SessionStage> {
               maintainAnimation: true,
               maintainState: true,
               child: OutlinedButton.icon(
-                onPressed: canExplain ? () => setState(() => _focus = index) : null,
+                onPressed: canExplain ? () => setState(() => _moveFocus(index)) : null,
                 icon: const Icon(Glyph.explain, size: 20),
                 label: const Text("解析"),
                 style: OutlinedButton.styleFrom(
@@ -880,6 +900,34 @@ class _SessionStageState extends State<SessionStage> {
 
   String _gradeLine(int index) => _correct.contains(index) ? "答对" : "答错";
 
+  /// 换右栏显示的题。先把上一题解析显示了多久记到账上（只记答错的题，主仓库 ADR 0076 决策 4）；
+  /// 本方法不 setState，由调用方在自己的 setState 里用。
+  void _moveFocus(int? next) {
+    final index = _focus;
+    if (index != null && _judged.contains(index) && !_correct.contains(index)) {
+      final dwell = DateTime.now().difference(_focusSince).inMilliseconds;
+      if (dwell >= 500) _explainMs[index] = (_explainMs[index] ?? 0) + dwell;
+    }
+    _focus = next;
+    _focusSince = DateTime.now();
+  }
+
+  /// 把累计的解析停留写进记录：翻页、交卷、关掉做题台时调。每题每次作答只写一条
+  /// （按 (题号, 作答时刻) 去重），写完清掉，所以重复调用无害。
+  void _writeExplainViews() {
+    _moveFocus(_focus); // 把当前正显示的那一题也结算进去
+    for (final entry in _explainMs.entries) {
+      final attemptAt = _attemptAt[entry.key];
+      if (attemptAt == null) continue;
+      unawaited(widget.store.recordExplainView(
+        questionId: _launch.questions[entry.key].id,
+        attemptAt: attemptAt,
+        dwellMs: entry.value,
+      ));
+    }
+    _explainMs.clear();
+  }
+
   void _pick(int index, Question question, String id) {
     if (_busy || _judged.contains(index)) return;
     setState(() {
@@ -919,6 +967,7 @@ class _SessionStageState extends State<SessionStage> {
         // 只存交过的题：多选没点确认的选择不算数（ADR 0023）。
         picked: {for (final i in _judged) i: {...?_picked[i]}},
         startedAt: _examStartedAt,
+        sessionId: _sessionId,
       ),
       draftKey: draftKey,
     );
@@ -935,7 +984,8 @@ class _SessionStageState extends State<SessionStage> {
     // 写库、朗读花掉的真实时间不会被当成「已经停过」，翻页时刻才测得准。
     final judged = clock.stopwatch()..start();
     final ok = answersMatch(question, chosen);
-    final durationMs = DateTime.now().difference(_shownAt).inMilliseconds;
+    final attemptTime = DateTime.now();
+    final durationMs = attemptTime.difference(_shownAt).inMilliseconds;
     final notices = await widget.store.recordAttempt(
       questionId: question.id,
       topicId: question.topicId,
@@ -944,14 +994,20 @@ class _SessionStageState extends State<SessionStage> {
       durationMs: durationMs,
       // 场合标记（ADR 0057）：模拟考与平时练习的逐题作答分列统计。
       kind: _launch.attemptKind ?? (_isExam ? "exam" : "practice"),
+      // 归因字段（主仓库 ADR 0076）：所选选项（多选排序后逗号拼接）、会话、选题理由。
+      at: attemptTime,
+      chosen: ([...chosen]..sort()).join(","),
+      sessionId: _sessionId,
+      reason: _launch.reasons?[question.id],
     );
     if (!mounted) return;
+    _attemptAt[index] = attemptTime.toIso8601String();
     setState(() {
       _judged.add(index);
       if (ok) _correct.add(index);
       // 下一题的用时从这一题判定的那一刻算起。
       _shownAt = DateTime.now();
-      _focus = index;
+      _moveFocus(index);
       _busy = false;
     });
     if (_isExam) {
@@ -1041,9 +1097,10 @@ class _SessionStageState extends State<SessionStage> {
     }
     setState(() {
       _start = start;
-      _focus = null;
+      _moveFocus(null);
       _shownAt = DateTime.now();
     });
+    _writeExplainViews();
     _scrollToTop(center: index);
   }
 
@@ -1051,9 +1108,10 @@ class _SessionStageState extends State<SessionStage> {
     if (_start == 0) return;
     setState(() {
       _start = _groupStartContaining(_start - 1);
-      _focus = null;
+      _moveFocus(null);
       _shownAt = DateTime.now();
     });
+    _writeExplainViews();
     _scrollToTop();
   }
 
@@ -1067,10 +1125,11 @@ class _SessionStageState extends State<SessionStage> {
     if (!mounted) return;
     setState(() {
       _start = _end;
-      _focus = null;
+      _moveFocus(null);
       _busy = false;
       _shownAt = DateTime.now();
     });
+    _writeExplainViews();
     _scrollToTop();
   }
 
@@ -1158,6 +1217,7 @@ class _SessionStageState extends State<SessionStage> {
   }
 
   Future<void> _finish({List<Notice> notices = const []}) async {
+    _writeExplainViews();
     final correct = _correct.length;
     final score = _launch.paper?.scaledScore(correct) ??
         (_total == 0 ? 0 : ((correct / _total) * 100).round());
@@ -1168,6 +1228,9 @@ class _SessionStageState extends State<SessionStage> {
         subjectId: _launch.subjectId,
         score: score,
         passed: passed,
+        // 与该场考试内所有作答的 session_id 相同；用时不含挂起（续答的开考时刻已平移）。
+        sessionId: _sessionId,
+        usedMs: DateTime.now().difference(_examStartedAt).inMilliseconds,
       ));
     }
     final missed = <_Missed>[

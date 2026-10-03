@@ -27,6 +27,7 @@ class FakeApi {
     "drill-notes": (m, u) => Object.hash(u, m["item_id"], m["at"]),
     "point-notes": (m, u) => Object.hash(u, m["item_id"], m["step"], m["at"]),
     "notices": (m, u) => Object.hash(u, m["kind"], m["title"], m["at"]),
+    "explain-views": (m, u) => Object.hash(u, m["question_id"], m["attempt_at"]),
   };
 
   final _ids = <String, int>{};
