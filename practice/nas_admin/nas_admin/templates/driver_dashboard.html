@@ -119,6 +119,7 @@
   </div>
 
   <div id="tab-subjects"></div>
+  <div id="tab-diagnosis" hidden></div>
 
   <div class="error-box" id="error" hidden></div>
 </main>
@@ -707,6 +708,101 @@ function showView(p, view) {
   requestAnimationFrame(() => charts.forEach(c => c.resize()));
 }
 
+/* ---------------------------------------------------------------- 学习诊断
+   口径同客户端 lib/diagnosis.dart（ADR 0076 决策 10），按单个学习者算；首次切到该标签才取数。
+   服务端读不到题库内容：不做「与全国错误率比」和多选漏选/多选的方向，页面上明说。 */
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const diag = { loaded: false, charts: [], user: null };
+
+function loadDiagnosis(user) {
+  const box = document.getElementById("tab-diagnosis");
+  if (!diag.loaded) box.innerHTML = `<div class="empty">读取中…</div>`;
+  const url = "diagnosis.json" + (user ? "?user=" + encodeURIComponent(user) : "");
+  fetch(url)
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("http " + r.status)))
+    .then(d => { diag.loaded = true; diag.user = d.selected; renderDiagnosis(d); })
+    .catch(() => { box.innerHTML = `<div class="empty">学习诊断暂时拿不到，稍后再试。</div>`; });
+}
+
+function renderDiagnosis(d) {
+  const box = document.getElementById("tab-diagnosis");
+  diag.charts.forEach(c => { const i = charts.indexOf(c); if (i >= 0) charts.splice(i, 1); c.dispose(); });
+  diag.charts = [];
+  if (!d.diagnosis) { box.innerHTML = `<div class="empty">还没有任何作答记录，诊断从第一次练习之后开始。</div>`; return; }
+  const g = d.diagnosis;
+  const picker = d.learners.length > 1
+    ? `<label class="meta">学习者 <select id="diag-user">${d.learners.map(p =>
+        `<option value="${esc(p.id)}"${p.id === d.selected ? " selected" : ""}>${esc(p.name)}（${p.attempts} 次作答）</option>`).join("")}</select></label>`
+    : `<div class="meta">${esc(d.learners[0].name)} · ${g.attempts} 次作答</div>`;
+  const note = `<div class="meta">口径与客户端「强化练习」页下半的学习诊断一致。<b>与全国错误率比</b>、<b>多选漏选/多选</b>的方向需要题库内容，这里算不了，请在客户端看。</div>`;
+
+  const c = g.causes;
+  const causeTotal = Object.values(c.counts).reduce((a, b) => a + b, 0);
+  const causeHtml = c.median_ms == null
+    ? `<div class="empty">答对的题还不到 20 道，算不出你自己的平时用时，先不下结论（已有 ${c.sample} 次有效用时）。</div>`
+    : `<div class="chart" id="diag-causes"></div>
+       <ul class="list">${["careless", "unknown", "shaky", "ordinary"].filter(k => c.counts[k]).map(k =>
+         `<li><span><b>${c.labels[k]} ${c.counts[k]}</b><span class="sub"> · ${esc(c.advice[k])}</span></span>
+          <span class="sub">${(c.by_cause[k] || []).map(t => esc(t.title) + " " + t.n).join("、") || ""}</span></li>`).join("")
+         || `<li>没有明显的错因偏向</li>`}</ul>
+       <div class="meta">你答对一题的中位用时 ${(c.median_ms / 1000).toFixed(1)} 秒；比它快 40% 以上算「快」，慢 60% 以上算「慢」。共 ${causeTotal} 条需要关注。</div>`;
+
+  const cf = g.confusion;
+  const confHtml = cf.with_chosen === 0
+    ? `<div class="empty">答错时所选选项还没有记录（较早的作答没存），这一项暂时没有数据。</div>`
+    : `<ul class="list">${cf.repeated.length
+        ? cf.repeated.map(r => `<li><span>${esc(r.serial)} <span class="sub">${esc(r.topic)}</span></span><span>反复选 ${esc(r.chosen)}，${r.times} 次</span></li>`).join("")
+        : `<li>没有反复选同一个错选项的题。</li>`}</ul>
+       <div class="meta">${cf.with_chosen} 次答错有所选记录（共 ${cf.wrong_total} 次答错）；其中多选题答错 ${cf.multi_wrong} 次。</div>`;
+
+  const vg = g.variant_gap;
+  const outHtml = g.outcomes.length === 0
+    ? `<div class="empty">还没有强化练习的作答（需要带「选题理由」的记录）。</div>`
+    : `<div class="chart" id="diag-outcomes"></div>` + (vg
+        ? `<div class="meta"><b>变式差距</b>：复测原题答对 ${pct(vg.retest_rate)}（${vg.retest_n} 次），同考点变式答对 ${pct(vg.variant_rate)}（${vg.variant_n} 次），
+           差 ${Math.round(vg.gap * 100)} 个百分点。${vg.enough ? (vg.gap >= 0.2 ? "差得多，说明记住的更像是那几道题，而不是考点。" : "差距不大，记住的多半是考点本身。") : "样本不足 10 次，只当线索。"}</div>`
+        : "");
+
+  box.innerHTML = `${picker}${note}
+    <div class="grid">
+      <section class="span2"><h2>记忆保持<small>答对之后，隔多久再做还答得对</small></h2>
+        <div class="chart" id="diag-retention"></div></section>
+      <section><h2>错因<small>用时对比自己的中位数</small></h2>${causeHtml}</section>
+      <section><h2>选错的方式</h2>${confHtml}</section>
+      <section class="span2"><h2>强化练习成效<small>按选题理由看</small></h2>${outHtml}</section>
+    </div>`;
+  const sel = document.getElementById("diag-user");
+  if (sel) sel.addEventListener("change", () => loadDiagnosis(sel.value));
+
+  const mk = id => { const el = document.getElementById(id); if (!el) return null; const ch = chart(el); diag.charts.push(ch); return ch; };
+  mk("diag-retention")?.setOption({
+    textStyle: BASE_TEXT, grid: { left: 50, right: 20, top: 30, bottom: 36 },
+    tooltip: { trigger: "axis", formatter: ps => { const b = g.retention[ps[0].dataIndex];
+      return `${b.label}<br>${b.correct}/${b.n} 答对${b.enough ? "" : "（样本不足）"}`; } },
+    xAxis: { type: "category", data: g.retention.map(b => `${b.label}\n(${b.n})`), axisLabel: { color: secondary, fontSize: 13 } },
+    yAxis: { type: "value", min: 0, max: 100, axisLabel: { color: secondary, formatter: "{value}%" }, splitLine: { lineStyle: { color: line } } },
+    series: [{ type: "bar", barMaxWidth: 46, data: g.retention.map(b => b.rate == null ? "-" : {
+      value: Math.round(b.rate * 100), itemStyle: { color: accent, opacity: b.enough ? 1 : 0.35 } }),
+      label: { show: true, position: "top", color: ink, formatter: p => p.value + "%" } }],
+  });
+  mk("diag-causes")?.setOption({
+    textStyle: BASE_TEXT, grid: { left: 70, right: 30, top: 10, bottom: 20 },
+    xAxis: { type: "value", axisLabel: { color: secondary }, splitLine: { lineStyle: { color: line } } },
+    yAxis: { type: "category", inverse: true, data: ["careless", "unknown", "shaky", "ordinary"].map(k => c.labels[k]), axisLabel: { color: ink } },
+    series: [{ type: "bar", barMaxWidth: 28, label: { show: true, position: "right", color: ink },
+      data: ["careless", "unknown", "shaky", "ordinary"].map((k, i) => ({ value: c.counts[k], itemStyle: { color: [warn, bad, accent, secondary][i] } })) }],
+  });
+  mk("diag-outcomes")?.setOption({
+    textStyle: BASE_TEXT, grid: { left: 150, right: 50, top: 10, bottom: 20 },
+    tooltip: { formatter: p => { const o = g.outcomes[p.dataIndex]; return `${o.label}<br>${o.correct}/${o.n}`; } },
+    xAxis: { type: "value", min: 0, max: 100, axisLabel: { color: secondary, formatter: "{value}%" }, splitLine: { lineStyle: { color: line } } },
+    yAxis: { type: "category", inverse: true, data: g.outcomes.map(o => `${o.label}（${o.n}）`), axisLabel: { color: ink, fontSize: 13 } },
+    series: [{ type: "bar", barMaxWidth: 26, label: { show: true, position: "right", color: ink, formatter: p => p.value + "%" },
+      data: g.outcomes.map(o => ({ value: Math.round(o.rate * 100), itemStyle: { color: ok, opacity: o.n >= 10 ? 1 : 0.4 } })) }],
+  });
+}
+
 /* ---------------------------------------------------------------- 装配 */
 
 function render(data) {
@@ -738,10 +834,10 @@ function render(data) {
   for (const d of Object.values(data.details))
     for (const c of d ? d.chapters : []) TOPIC_TITLES_MAP[c.id] = c.title;
   const tabsBar = document.getElementById("tabs");
-  const tabs = ["overview", ...Object.keys(data.details).filter(k => data.details[k])];
+  const tabs = ["overview", ...Object.keys(data.details).filter(k => data.details[k]), "diagnosis"];
   tabsBar.hidden = false;
   tabsBar.innerHTML = tabs.map(t =>
-    `<button role="tab" data-tab="${t}" aria-selected="false">${t === "overview" ? "总览" : data.details[t].title}</button>`
+    `<button role="tab" data-tab="${t}" aria-selected="false">${t === "overview" ? "总览" : t === "diagnosis" ? "学习诊断" : data.details[t].title}</button>`
   ).join("");
   tabsBar.addEventListener("click", e => {
     const btn = e.target.closest("button[data-tab]");
@@ -756,7 +852,7 @@ function render(data) {
 // hash 两级：#总览 或 #科目.视图；非法值回退
 function parseHash(tabs) {
   const [tab, view] = location.hash.slice(1).split(".");
-  const validTab = tab === "overview" || (DATA.details && DATA.details[tab]) ? tab : "overview";
+  const validTab = tab === "overview" || tab === "diagnosis" || (DATA.details && DATA.details[tab]) ? tab : "overview";
   if (tabs && !tabs.includes(validTab)) return ["overview", null];
   return [validTab, view || subjectView[validTab] || null];
 }
@@ -767,7 +863,11 @@ function activate(tab, view = null) {
     b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
   document.getElementById("tab-overview").hidden = tab !== "overview";
   document.querySelectorAll("#tab-subjects > div").forEach(el => el.hidden = true);
-  if (tab !== "overview") {
+  document.getElementById("tab-diagnosis").hidden = tab !== "diagnosis";
+  if (tab === "diagnosis") {
+    if (!diag.loaded) loadDiagnosis(null);
+    if (location.hash !== "#diagnosis") history.replaceState(null, "", "#diagnosis");
+  } else if (tab !== "overview") {
     if (!rendered[tab]) { rendered[tab] = true; renderSubject(tab); }
     const el = document.getElementById("tab-" + tab);
     if (el) el.hidden = false;

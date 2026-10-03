@@ -47,6 +47,7 @@ nas_admin/access.py  来源地址与限流（应用里不认证，门在网络�
 nas_admin/driver_api/  驾考进度 REST API（/api/driver/v1；ADR 0068、0077）
 nas_admin/user_api/  全局学习者目录 REST API（/api/users/v1；ADR 0074、0075、0077）
 nas_admin/driver_dashboard/  驾考进度只读仪表盘（/driver/，免登录页面，外网靠 Access；ADR 0069）
+                     含「学习诊断」标签（diagnosis.py，口径同客户端 lib/diagnosis.dart，按学习者算；ADR 0076）
 nas_admin/static/   echarts.min.js 等前端文件（随部署走，不走 CDN）
 tests/              单元测试（SQLite）、真实 FAB 冒烟、对真实 PG 的集成测试（设环境变量才跑）
 docs/driver-api.md  API 接口、认证、部署（含数据库低权限角色）与测试说明

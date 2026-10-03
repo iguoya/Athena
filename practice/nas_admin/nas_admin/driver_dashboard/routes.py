@@ -9,11 +9,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from flask import Blueprint, current_app, jsonify, render_template
+from flask import Blueprint, current_app, jsonify, render_template, request
 from sqlalchemy.exc import DBAPIError, OperationalError, SQLAlchemyError
 
 from nas_admin.driver_api import store
-from nas_admin.driver_dashboard import aggregates
+from nas_admin.driver_dashboard import aggregates, diagnosis
 
 bp = Blueprint("driver_dashboard", __name__, url_prefix="/driver")
 
@@ -29,6 +29,25 @@ def data():
     payload["overview"]["streak"] = aggregates.day_streak(payload["daily"])
     payload["generated_at"] = datetime.now().astimezone().isoformat(timespec="seconds")
     return jsonify(payload)
+
+
+@bp.get("/diagnosis.json")
+def diagnosis_data():
+    """学习诊断：按单个学习者算（遗忘、错因是「这个人」的事）。不带 user 默认作答最多的那位。"""
+    people = diagnosis.learners()
+    if not people:
+        return jsonify(learners=[], selected=None, diagnosis=None)
+    wanted = request.args.get("user")
+    known = {p["id"] for p in people}
+    if wanted is not None and wanted not in known:
+        return jsonify(error="unknown_learner", message="没有这位学习者的作答记录"), 404
+    selected = wanted or people[0]["id"]
+    return jsonify(
+        learners=people,
+        selected=selected,
+        diagnosis=diagnosis.build(diagnosis.attempts_of(selected), aggregates.TOPIC_TITLES),
+        generated_at=datetime.now().astimezone().isoformat(timespec="seconds"),
+    )
 
 
 @bp.after_request
