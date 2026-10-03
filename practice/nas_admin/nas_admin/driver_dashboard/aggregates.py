@@ -25,14 +25,15 @@ DAILY_WINDOW = 30  # 每日趋势的天数窗口，对齐客户端首页「最�
 
 # 科目 id 与标题来自 subjects/driver/content/curriculum.json（subject3 是路考，
 # 不在题库里，练车数据不带科目）。这里只放展示名，不复制内容（应用间构建隔离）。
-# wrong / review 不是科目，是客户端的练习场景（错题本、考前复习，home.dart 的
-# _wrongId / _reviewId）——作答记录里带这两个 subject_id，正确率单独看才有意义。
+# wrong / review / reinforce 不是科目，是客户端的练习场景（错题本、考前复习、强化练习，
+# home.dart 的 _wrongId / _reviewId / _reinforceId）——作答记录里带这两个 subject_id，正确率单独看才有意义。
 SUBJECT_TITLES: dict[str, tuple[str, str]] = {
     "subject1": ("科目一", "道路交通安全法律、法规和相关知识"),
     "subject2": ("科目二", "场地驾驶技能（C2）"),
     "subject4": ("科目四", "安全文明驾驶常识"),
     "wrong": ("错题本", "错题重练"),
     "review": ("复习", "考前复习"),
+    "reinforce": ("强化练习", "按薄弱点选题的练习"),
 }
 
 # 章节展示名同样来自 curriculum.json 的 topic 标题（只放名字，不复制教学内容，
@@ -144,7 +145,7 @@ def _subject_detail(conn: Connection, subject_id: str) -> dict[str, Any] | None:
     # 错题/复习场景按章节归属进该科目
     wrong_rows = conn.execute(
         select(a.c.topic_id, a.c.subject_id, func.count(), func.coalesce(func.sum(a.c.correct), 0))
-        .where(a.c.subject_id.in_(["wrong", "review"]))
+        .where(a.c.subject_id.in_(["wrong", "review", "reinforce"]))
         .group_by(a.c.topic_id, a.c.subject_id)
     ).all()
     wrong_drill: dict[str, dict[str, int]] = {}
@@ -281,7 +282,7 @@ def _wrong_analysis(conn: Connection, subject_id: str, chapters: list[dict[str, 
     short = "s" + subject_id.removeprefix("subject")  # subject1 → s1，对应 topic 前缀 drive.s1.
     scope = or_(
         a.c.subject_id == subject_id,
-        and_(a.c.subject_id.in_(["wrong", "review"]), a.c.topic_id.like(f"drive.{short}.%")),
+        and_(a.c.subject_id.in_(["wrong", "review", "reinforce"]), a.c.topic_id.like(f"drive.{short}.%")),
     )
     rows = conn.execute(
         select(a.c.question_id, a.c.topic_id, a.c.correct, a.c.at).where(scope).order_by(a.c.question_id, a.c.at)
