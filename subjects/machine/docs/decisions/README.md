@@ -10,5 +10,6 @@
 | [0002](0002-curriculum-from-open-textbooks.md) | 章节与知识点跟开源教材走 | 已接受；章序跟教材的部分由 0005 修订 |
 | [0003](0003-local-sources-and-sourced-exercises.md) | 教材落到本地；教案和题目必须有所本 | 已接受 |
 | [0004](0004-c23-language-baseline.md) | 教程语义以 C23（ISO/IEC 9899:2024）为基准 | 已接受；第 2 条（Beej 的脊不变）由 0005 修订 |
-| [0005](0005-machine-c-and-assembly-tracks.md) | 改名 machine，C 与汇编两条线独立又联合 | 已接受；修订 0002、0004 第 2 条；豁免仓库 0054（依 0080） |
+| [0005](0005-machine-c-and-assembly-tracks.md) | 改名 machine，C 与汇编两条线独立又联合 | 已接受；修订 0002、0004 第 2 条；豁免仓库 0054（依 0080）；第 8 条语法部分由 0007 修订 |
 | [0006](0006-multi-target-run-environment.md) | 多目标运行环境与平台矩阵 | 已接受 |
+| [0007](0007-x86-syntax-follows-real-usage.md) | x86-64 汇编语法不强制统一，按目标的实际用法并可切换 | 已接受；修订 0005 第 8 条的语法部分 |
