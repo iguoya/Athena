@@ -44,7 +44,7 @@ if(WIN32)
     set(windows_resource "${app_rc}")
 endif()
 
-# WIN32：Windows 上链接成 GUI 子系统，不带控制台窗口（跟 subjects/c 同一个
+# WIN32：Windows 上链接成 GUI 子系统，不带控制台窗口（跟 subjects/machine 同一个
 # 道理）。polaris_domain_tests/polaris_shell_tests 两个测试可执行文件不加——
 # 测试要往标准输出打结果，需要控制台。
 qt_add_executable(athena-polaris WIN32

@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量）
         type: choice
         default: all
-        options: [all, cpp, c, polaris, dsa, english, mathematics, driver, launcher]
+        options: [all, cpp, machine, polaris, dsa, english, mathematics, driver, launcher]
 
 permissions:
   contents: read
@@ -139,7 +139,7 @@ jobs:
   # Polaris 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
   qt-quick:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","c","polaris"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","machine","polaris"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -147,7 +147,7 @@ jobs:
       matrix:
         os: [macos-15, ubuntu-26.04]
         # 手动只选一个应用时矩阵只留它；tag 触发时 inputs 为空，按全量。
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c","polaris"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine","polaris"]' || format('["{0}"]', inputs.app)) }}
     # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
@@ -185,7 +185,7 @@ jobs:
   # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
   qt-quick-windows:
     name: ${{ matrix.app }}（Windows）
-    if: contains(fromJSON('["all","c","polaris"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","machine","polaris"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     env:
@@ -193,7 +193,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c","polaris"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine","polaris"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source

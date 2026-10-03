@@ -35,7 +35,7 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp c dsa english mathematics driver（学习应用）
+subjects/<id>/  课程学科：cpp machine dsa english mathematics driver（学习应用）
                 polaris（图谱/参考类）design-patterns（素材坑）
 practice/<id>/  项目应用：pocket_cube（ADR 0060）
 launcher/       启动器：core/ gui/ macos/

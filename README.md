@@ -8,7 +8,7 @@
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
 | [`subjects/cpp`](subjects/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
-| [`subjects/c`](subjects/c) | C 语言编程 | Qt Quick / QML、CMake |
+| [`subjects/machine`](subjects/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`subjects/dsa`](subjects/dsa) | 数据结构与算法 | Tauri + Vite |
 | [`subjects/english`](subjects/english) | 英语学习 | Tauri + Vite |
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite |

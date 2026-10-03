@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use serde::Deserialize;
 
 /// 环境变量的值。除了直接给字符串，还可以让编排器从几个候选里挑第一个存在的
-/// 路径——`subjects/c` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
+/// 路径——`subjects/machine` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
 #[derive(Debug, Clone, Deserialize)]
 #[serde(untagged)]
 pub enum EnvValue {

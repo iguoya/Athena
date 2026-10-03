@@ -130,7 +130,7 @@ fn reachable(url: &str) -> bool {
 
 /// 命令行里出现应用目录，才算这个构建进程属于它。
 ///
-/// 末尾必须带分隔符：`subjects/c` 是 `subjects/cpp` 的前缀，少了它两个应用会互相误判。
+/// 末尾必须带分隔符：`subjects/c` 与 `subjects/cpp` 这类前缀包含关系（`c` 已改名 `machine`，写法保留作示例），少了它两个应用会互相误判。
 fn command_line_belongs_to(
     dir: &Path,
     parts: impl IntoIterator<Item = impl AsRef<str>>,

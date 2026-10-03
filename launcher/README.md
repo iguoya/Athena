@@ -129,7 +129,7 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 - **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
   装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
 - **Windows** 上全部应用都有正式的 CI 门槛并且构建通过：启动器、三个 Tauri 应用、
-  `subjects/c`（Qt）、`subjects/cpp`（GTK4）。`subjects/cpp` 的 Windows 支持 2026-09-15 打通，
+  `subjects/machine`（Qt）、`subjects/cpp`（GTK4）。`subjects/cpp` 的 Windows 支持 2026-09-15 打通，
   其中一处临时垫片绕开了 glib 2.90 与 MSYS2 现有 glibmm 2.86 的名字冲突
   （ADR 0049），MSYS2 跟上后可以删。
 
