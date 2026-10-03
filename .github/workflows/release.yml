@@ -268,115 +268,9 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  driver:
-    name: Build driver (${{ matrix.platform }})
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            platform: windows-x64
-          - os: macos-15
-            platform: macos-arm64
-          - os: macos-15-intel
-            platform: macos-x86_64
-          - os: ubuntu-26.04
-            platform: linux-x86_64
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
-    steps:
-      - name: Check out tagged source
-        uses: actions/checkout@v7
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-
-      - name: Install Linux desktop dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-
-      - name: Enable desktop targets
-        working-directory: subjects/driver
-        run: flutter config --no-analytics --enable-macos-desktop --enable-linux-desktop --enable-windows-desktop
-
-      - name: Read and verify version
-        id: version
-        shell: bash
-        working-directory: subjects/driver
-        run: |
-          version="${GITHUB_REF_NAME#v}"
-          pubspec_version=$(sed -n 's/^version: \([0-9.]*\)+[0-9]*$/\1/p' pubspec.yaml)
-          if [[ "$version" != "$pubspec_version" ]]; then
-            echo "Tag version $version does not match pubspec version $pubspec_version" >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Test
-        working-directory: subjects/driver
-        run: flutter test
-
-      - name: Build
-        working-directory: subjects/driver
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            flutter build windows --release
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            flutter build macos --release
-          else
-            flutter build linux --release
-          fi
-
-      - name: Package
-        working-directory: subjects/driver
-        shell: bash
-        run: |
-          version="${{ steps.version.outputs.version }}"
-          platform="${{ matrix.platform }}"
-          mkdir -p dist
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            # Release 目录自含:athena-driver.exe、dll 与 data/ 同层,压缩即用
-            powershell -NoProfile -Command "Compress-Archive -Path 'build/windows/x64/runner/Release/*' -DestinationPath 'dist/athena-driver-$version-$platform.zip' -Force"
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            app=$(ls build/macos/Build/Products/Release | grep '\.app$' | head -1)
-            hdiutil create -volname "athena-driver" -srcfolder "build/macos/Build/Products/Release/$app" -ov -format UDZO "dist/athena-driver-$version-$platform.dmg"
-          else
-            tar -czf "dist/athena-driver-$version-$platform.tar.gz" -C build/linux/x64/release/bundle .
-          fi
-
-      - name: Verify package
-        working-directory: subjects/driver
-        shell: bash
-        run: |
-          version="${{ steps.version.outputs.version }}"
-          platform="${{ matrix.platform }}"
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            python -c "import zipfile,sys; names=zipfile.ZipFile('dist/athena-driver-$version-$platform.zip').namelist(); sys.exit(0 if any(n.endswith('athena-driver.exe') for n in names) else 1)" || { echo 'zip 缺 athena-driver.exe'; exit 1; }
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            hdiutil verify "dist/athena-driver-$version-$platform.dmg"
-          else
-            # 禁止管道匹配:grep -q 提前退出会让写端吃 SIGPIPE,pipefail 下误判失败
-            listing=$(tar -tzf "dist/athena-driver-$version-$platform.tar.gz")
-            [[ "$listing" == *athena-driver* ]] || { echo 'tar.gz 缺 athena-driver'; exit 1; }
-          fi
-
-      - name: Upload release assets
-        uses: actions/upload-artifact@v7
-        with:
-          name: athena-driver-${{ matrix.platform }}
-          path: subjects/driver/dist/athena-driver-*
-          if-no-files-found: error
-          retention-days: 7
-
   publish:
     name: Publish GitHub Release
-    needs: [macos, linux, windows, driver]
+    needs: [macos, linux, windows]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -398,7 +292,7 @@ jobs:
 
       - name: Create checksums
         working-directory: dist
-        run: sha256sum athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi athena-driver-*.zip athena-driver-*.dmg athena-driver-*.tar.gz > SHA256SUMS.txt
+        run: sha256sum athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi > SHA256SUMS.txt
 
       - name: Build release notes from CHANGELOG
         working-directory: subjects/cpp
@@ -423,11 +317,9 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           assets=(dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb
             dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi
-            dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz
             dist/SHA256SUMS.txt)
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            # tag 移动重跑时 Release 已存在:同名资产 --clobber 覆盖,新增的(如 driver)补上,
-            # 说明与标题一并更新。
+            # tag 移动重跑时 Release 已存在:同名资产 --clobber 覆盖,说明与标题一并更新。
             gh release upload "$GITHUB_REF_NAME" "${assets[@]}" --clobber --repo "$GITHUB_REPOSITORY"
             gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
               --notes-file release-notes.md --title "Athena $version"
