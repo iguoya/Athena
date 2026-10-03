@@ -778,7 +778,9 @@ class ProgressStore {
 
   /// 全部作答（强化练习选题与学习建议用）。只取需要的四列；时间解析不了的行跳过。
   Future<List<AttemptView>> allAttempts() async {
-    final rows = _db.select("SELECT question_id, topic_id, correct, at FROM attempts ORDER BY at, id");
+    final rows = _db.select(
+      "SELECT question_id, topic_id, correct, at, duration_ms, chosen, kind, reason FROM attempts ORDER BY at, id",
+    );
     return [
       for (final row in rows)
         if (DateTime.tryParse(row["at"] as String? ?? "") case final at?)
@@ -787,6 +789,10 @@ class ProgressStore {
             topicId: row["topic_id"] as String,
             correct: (row["correct"] as int?) == 1,
             at: at,
+            durationMs: (row["duration_ms"] as int?) ?? 0,
+            chosen: row["chosen"] as String?,
+            kind: (row["kind"] as String?) ?? "practice",
+            reason: row["reason"] as String?,
           ),
     ];
   }

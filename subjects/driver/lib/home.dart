@@ -6,6 +6,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "glyphs.dart";
+import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
 import "models.dart";
@@ -80,6 +81,10 @@ class _HomePageState extends State<HomePage> {
   // 强化练习（主仓库 ADR 0076）：全部由作答记录派生，不另存。
   HistorySet _histories = HistorySet.build(const []);
   ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
+  DiagnosisData? _diagnosis;
+
+  /// 按题号取题：学习诊断要把作答记录对回题库（题干、选项、全国错误率）。
+  late final Map<String, Question> _questionIndex = {for (final q in widget.bank.questions) q.id: q};
   List<ChapterPriority> _priorities = const [];
   final Map<String, PassEstimate> _pass = {};
   final Set<String> _passComputing = {};
@@ -213,7 +218,9 @@ class _HomePageState extends State<HomePage> {
         return (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
       });
     // 强化练习：错题、薄弱章节、间隔到期合成一张题单（主仓库 ADR 0076）。
-    final histories = HistorySet.build(await widget.store.allAttempts());
+    final allAttempts = await widget.store.allAttempts();
+    final histories = HistorySet.build(allAttempts);
+    final diagnosis = DiagnosisData.build(allAttempts, (id) => _questionIndex[id]);
     final theoryPool = [
       for (final q in widget.bank.questions)
         if (!q.isRare &&
@@ -232,6 +239,7 @@ class _HomePageState extends State<HomePage> {
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
     setState(() {
       _histories = histories;
+      _diagnosis = diagnosis;
       _reinforcePlan = reinforcePlan;
       _priorities = priorities;
       _pass.clear();
@@ -1277,6 +1285,7 @@ class _HomePageState extends State<HomePage> {
       plan: _reinforcePlan,
       subjects: subjects,
       priorities: _priorities,
+      diagnosis: _diagnosis,
       topicTitles: {
         for (final subject in widget.bank.curriculum.subjects)
           for (final topic in subject.topics) topic.id: topic.title,

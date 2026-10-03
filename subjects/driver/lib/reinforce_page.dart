@@ -2,6 +2,8 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+import "diagnosis.dart";
+import "diagnosis_panel.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
@@ -44,6 +46,7 @@ class ReinforcePage extends StatelessWidget {
     required this.priorities,
     required this.topicTitles,
     required this.onStart,
+    this.diagnosis,
   });
 
   final ReinforcePlan plan;
@@ -51,6 +54,9 @@ class ReinforcePage extends StatelessWidget {
   final List<ChapterPriority> priorities;
   final Map<String, String> topicTitles;
   final VoidCallback onStart;
+
+  /// 学习诊断（遗忘、错因、选错的方式、与全国比、强化练习成效）；没有就不显示这一区。
+  final DiagnosisData? diagnosis;
 
   static const _levelColors = {
     MasteryLevel.fresh: Color(0xFFADB5BD),
@@ -166,6 +172,11 @@ class ReinforcePage extends StatelessWidget {
                   ],
                 ),
               ),
+          ],
+          if (diagnosis != null) ...[
+            const SizedBox(height: 32),
+            const Divider(),
+            DiagnosisPanel(data: diagnosis!, topicTitles: topicTitles),
           ],
         ],
       ),

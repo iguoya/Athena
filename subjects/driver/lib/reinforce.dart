@@ -18,12 +18,28 @@ class AttemptView {
     required this.topicId,
     required this.correct,
     required this.at,
+    this.durationMs = 0,
+    this.chosen,
+    this.kind = "practice",
+    this.reason,
   });
 
   final String questionId;
   final String topicId;
   final bool correct;
   final DateTime at;
+
+  /// 单题用时（毫秒，已封顶 5 分钟）；老记录或没记的是 0。
+  final int durationMs;
+
+  /// 所选选项（主仓库 ADR 0076）；升级前的老记录没有。
+  final String? chosen;
+
+  /// 场合标记：practice / exam / reinforce。
+  final String kind;
+
+  /// 强化练习的选题理由；其余场合没有。
+  final String? reason;
 }
 
 /// 一道题的作答历史摘要。
