@@ -35,6 +35,9 @@
       border: 1px solid var(--line); background: var(--card); color: var(--secondary); cursor: pointer;
     }
     .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    /* 科目内二级视图标签：小一号、带边距，与一级科目切换显式区隔 */
+    .view-tabs { margin: 22px 0 0; }
+    .view-tabs button { font-size: 1rem; padding: 6px 18px; }
     section { margin-top: 28px; }
     section > h2, .block > h2 { font-size: 1.3125rem; margin: 0 0 10px; }
     h2 small { color: var(--secondary); font-weight: 400; font-size: 1rem; margin-left: 8px; }
@@ -337,52 +340,63 @@ function renderSubject(sid) {
         <h2>数据说明与建议<small>由上面的记录派生，数字变了建议跟着变</small></h2>
         <ul class="list" id="${p}-advice"></ul>
       </section>
-      <div class="grid">
-        <section class="span2">
-          <h2>错题消化曲线<small>同一道题第 n 次作答时的正确率——重练到第几遍才稳</small></h2>
-          <div class="chart" id="${p}-curve"></div>
-        </section>
-        <div class="block">
-          <h2>错题状态<small>最近两次连对算攻克</small></h2>
-          <div class="chart tall" id="${p}-status"></div>
+      <div class="tabs view-tabs" id="${p}-views" hidden></div>
+      <div class="view" id="${p}-view-wrong">
+        <div class="grid">
+          <section class="span2">
+            <h2>错题消化曲线<small>同一道题第 n 次作答时的正确率——重练到第几遍才稳</small></h2>
+            <div class="chart" id="${p}-curve"></div>
+          </section>
+          <div class="block">
+            <h2>错题状态<small>最近两次连对算攻克</small></h2>
+            <div class="chart tall" id="${p}-status"></div>
+          </div>
+          <section class="span3">
+            <h2>章节练习与错题<small>条是作答量，颜色是正确率，右侧标注错过的题</small></h2>
+            <div class="chart" id="${p}-chapters" style="height: 420px;"></div>
+          </section>
+          <section>
+            <h2>顽固错题<small>错得最多的十道</small></h2>
+            <ul class="list" id="${p}-stubborn"></ul>
+          </section>
+          <section id="${p}-drill-section">
+            <h2>错题重练<small>错题本与考前复习里的作答</small></h2>
+            <div class="chart" id="${p}-drill"></div>
+          </section>
         </div>
-        <section class="span3">
-          <h2>章节练习与错题<small>条是作答量，颜色是正确率，右侧标注错过的题</small></h2>
-          <div class="chart" id="${p}-chapters" style="height: 420px;"></div>
-        </section>
-        <section class="span3" id="${p}-examchapters-section" hidden>
-          <h2>模拟考章节丢分<small>条是考试里丢分的题数，颜色是考试正确率</small></h2>
-          <div class="chart" id="${p}-examchapters" style="height: 420px;"></div>
-        </section>
-        <section class="span3" id="${p}-sessions-section" hidden>
-          <h2>每场丢分的章节构成<small>柱是一场考试，颜色是丢分所在章节</small></h2>
-          <div class="chart" id="${p}-sessions" style="height: 400px;"></div>
-        </section>
-        <section class="span3" id="${p}-gap-section" hidden>
-          <h2>练习 vs 考试<small>同一章的两根条：平时练习与模拟考的正确率，落差大的是应试短板</small></h2>
-          <div class="chart" id="${p}-gap" style="height: 420px;"></div>
-        </section>
-        <section id="${p}-repeat-section" hidden>
-          <h2>跨场重复丢分<small>不止一场考试都错的题</small></h2>
-          <ul class="list" id="${p}-repeat"></ul>
-        </section>
-        <section class="span3" id="${p}-matrix-section">
-          <h2>章节 × 日期<small>格子是当天该章的正确率，灰格没练</small></h2>
-          <div class="chart" id="${p}-matrix" style="height: 420px;"></div>
-        </section>
-        <section>
-          <h2>顽固错题<small>错得最多的十道</small></h2>
-          <ul class="list" id="${p}-stubborn"></ul>
-        </section>
-        <section id="${p}-drill-section">
-          <h2>错题重练<small>错题本与考前复习里的作答</small></h2>
-          <div class="chart" id="${p}-drill"></div>
-        </section>
-        <section class="span3" id="${p}-exams-section">
-          <h2>${d.title}模拟考</h2>
-          <div class="chart" id="${p}-exams"></div>
-          <div class="empty" id="${p}-exams-empty" hidden>还没有${d.title}的模拟考记录</div>
-        </section>
+      </div>
+      <div class="view" id="${p}-view-exam" hidden>
+        <div class="grid">
+          <section class="span3" id="${p}-examchapters-section" hidden>
+            <h2>模拟考章节丢分<small>条是考试里丢分的题数，颜色是考试正确率</small></h2>
+            <div class="chart" id="${p}-examchapters" style="height: 420px;"></div>
+          </section>
+          <section class="span3" id="${p}-sessions-section" hidden>
+            <h2>每场丢分的章节构成<small>柱是一场考试，颜色是丢分所在章节</small></h2>
+            <div class="chart" id="${p}-sessions" style="height: 400px;"></div>
+          </section>
+          <section class="span3" id="${p}-gap-section" hidden>
+            <h2>练习 vs 考试<small>同一章的两根条：平时练习与模拟考的正确率，落差大的是应试短板</small></h2>
+            <div class="chart" id="${p}-gap" style="height: 420px;"></div>
+          </section>
+          <section id="${p}-repeat-section" hidden>
+            <h2>跨场重复丢分<small>不止一场考试都错的题</small></h2>
+            <ul class="list" id="${p}-repeat"></ul>
+          </section>
+          <section class="span3" id="${p}-exams-section">
+            <h2>${d.title}模拟考成绩<small>90 分及格线，过没过用颜色分</small></h2>
+            <div class="chart" id="${p}-exams"></div>
+            <div class="empty" id="${p}-exams-empty" hidden>还没有${d.title}的模拟考记录</div>
+          </section>
+        </div>
+      </div>
+      <div class="view" id="${p}-view-chapters" hidden>
+        <div class="grid">
+          <section class="span3" id="${p}-matrix-section">
+            <h2>章节 × 日期<small>格子是当天该章的正确率，灰格没练</small></h2>
+            <div class="chart" id="${p}-matrix" style="height: 420px;"></div>
+          </section>
+        </div>
       </div>
     </div>`);
 
@@ -664,6 +678,33 @@ function renderSubject(sid) {
     document.getElementById(p + "-exams").remove();
     document.getElementById(p + "-exams-empty").hidden = false;
   }
+
+  // ---- 二级视图标签：错题 / 模拟考 / 章节节奏，一屏一组
+  const views = document.getElementById(p + "-views");
+  const defs = [
+    ["wrong", "错题与消化"],
+    ["exam", "模拟考"],
+    ["chapters", "章节节奏"],
+  ];
+  views.hidden = false;
+  views.innerHTML = defs.map(([key, label], i) =>
+    `<button role="tab" data-view="${key}" aria-selected="${i === 0}">${label}</button>`).join("");
+  views.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-view]");
+    if (btn) showView(p, btn.dataset.view);
+  });
+}
+
+// 科目内视图切换；按科目记住上次所在视图
+const subjectView = {};
+function showView(p, view) {
+  document.querySelectorAll(`#${p}-views button`).forEach(b =>
+    b.setAttribute("aria-selected", String(b.dataset.view === view)));
+  for (const [, id] of [["wrong", `${p}-view-wrong`], ["exam", `${p}-view-exam`], ["chapters", `${p}-view-chapters`]])
+    document.getElementById(id).hidden = id !== `${p}-view-${view}`;
+  subjectView[p] = view;
+  history.replaceState(null, "", `#${p}.${view}`);
+  requestAnimationFrame(() => charts.forEach(c => c.resize()));
 }
 
 /* ---------------------------------------------------------------- 装配 */
@@ -706,13 +747,21 @@ function render(data) {
     const btn = e.target.closest("button[data-tab]");
     if (btn) activate(btn.dataset.tab);
   });
-  window.addEventListener("hashchange", () => activate(location.hash.slice(1) || "overview"));
+  window.addEventListener("hashchange", () => activate(...parseHash()));
 
   renderOverview();
-  activate(tabs.includes(location.hash.slice(1)) ? location.hash.slice(1) : "overview");
+  activate(...parseHash(tabs));
 }
 
-function activate(tab) {
+// hash 两级：#总览 或 #科目.视图；非法值回退
+function parseHash(tabs) {
+  const [tab, view] = location.hash.slice(1).split(".");
+  const validTab = tab === "overview" || (DATA.details && DATA.details[tab]) ? tab : "overview";
+  if (tabs && !tabs.includes(validTab)) return ["overview", null];
+  return [validTab, view || subjectView[validTab] || null];
+}
+
+function activate(tab, view = null) {
   if (!DATA) return;
   document.querySelectorAll("#tabs button").forEach(b =>
     b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
@@ -722,8 +771,10 @@ function activate(tab) {
     if (!rendered[tab]) { rendered[tab] = true; renderSubject(tab); }
     const el = document.getElementById("tab-" + tab);
     if (el) el.hidden = false;
+    showView(tab, view && document.getElementById(`tab-${tab}-view-${view}`) ? view : subjectView[tab] || "wrong");
+  } else if (("#" + tab) !== location.hash) {
+    history.replaceState(null, "", "#" + tab);
   }
-  if (("#" + tab) !== location.hash) history.replaceState(null, "", "#" + tab);
   // 懒渲染的图在容器刚显示后量到尺寸
   requestAnimationFrame(() => charts.forEach(c => c.resize()));
 }
