@@ -1628,10 +1628,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _go(String place) {
+    // 在做题台里直接点侧栏离开，不会走 onClose；可作答早就一题题写进库了，题单、错题数和掌握度
+    // 还是进做题台之前的旧数据——强化练习的题单跟错题直接挂钩，刚答错的题就进不了「复测」。
+    // 所以离开做题台时补一次重读，跟 onClose 里做的一样。
+    final leavingSession = _session != null;
     setState(() {
       _place = place;
       _session = null;
     });
+    if (leavingSession) unawaited(_reload());
     if (place == _reinforceId) {
       unawaited(_ensurePass());
       unawaited(_ensureClusters());
