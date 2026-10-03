@@ -570,7 +570,7 @@ function renderSubject(sid) {
     advice.push(`${weakest.title}：考试正确率 ${pct(weakest.exam_rate)}，是模拟考里最弱的一章，建议优先补练。`);
     const gapped = [...withExam].sort((a, b) => ((a.rate ?? 0) - (a.exam_rate ?? 0)) - ((b.rate ?? 0) - (b.exam_rate ?? 0)));
     const worst = gapped[gapped.length - 1];
-    if (worst && (worst.rate ?? 0) - (worst.exam_rate ?? 0) >= 0.05) {
+    if (worst && worst.id !== weakest.id && (worst.rate ?? 0) - (worst.exam_rate ?? 0) >= 0.05) {
       advice.push(`${worst.title}：平时 ${pct(worst.rate)}、考试 ${pct(worst.exam_rate)}，落差最大——平时会、考场上丢，多用模拟考节奏练它。`);
     }
   }
@@ -585,7 +585,13 @@ function renderSubject(sid) {
     }
   }
   if (w.stubborn.length) {
-    advice.push(`错题消化：重练到第 ${w.repeat_curve.length} 次及以上正确率已到 ${pct(w.repeat_curve[w.repeat_curve.length - 1]?.rate)}——重练有效；仍错着的 ${w.still} 题里，先消灭反复错的顽固题。`);
+    // 消化曲线的结论只引用样本充足的点：最后一个 ≥20 题的点，单题样本的正确率没有说服力
+    const solid = [...w.repeat_curve].reverse().find(c => c.count >= 20);
+    if (solid) {
+      advice.push(`错题消化：重练到第 ${solid.n} 次正确率 ${pct(solid.rate)}（${solid.count} 题样本）——重练有效；仍错着的 ${w.still} 题里，先消灭反复错的顽固题。`);
+    } else {
+      advice.push(`仍错着 ${w.still} 题：先消灭「顽固错题」里反复错的那些，重练才有效率。`);
+    }
   }
   document.getElementById(p + "-advice-section").hidden = false;
   document.getElementById(p + "-advice").innerHTML = advice.map(t => `<li><span>${t}</span></li>`).join("");
