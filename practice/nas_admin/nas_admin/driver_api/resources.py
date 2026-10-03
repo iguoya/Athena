@@ -52,6 +52,8 @@ APPEND_ONLY: dict[str, Resource] = {
                 "duration_ms": (integer(0, _MAX_MS), False),
                 "hesitant": (flag(), False),
                 "at": (iso_time(), True),
+                # 场合标记（driver ADR 0057）：可缺省，旧客户端不传按平时练习。
+                "kind": (string(MAX_ID), False),
             },
             ("user", "question_id", "at"),
         ),

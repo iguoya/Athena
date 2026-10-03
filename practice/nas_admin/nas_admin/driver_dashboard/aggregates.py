@@ -72,6 +72,9 @@ THEORY_SUBJECTS = ("subject1", "subject4")
 
 EXAM_PASS_LINE = 90  # 100 分制下的及格线，仅作图表参考线；数据里已有 passed
 
+# 单题用时统计上限（driver ADR 0057 客户端封顶同值）：历史挂机脏值不拉偏平均。
+DURATION_CAP_MS = 300_000
+
 
 def _day_of(at: Any) -> Any:
     return func.substr(at, 1, 10)
@@ -153,6 +156,7 @@ def _subject_detail(conn: Connection, subject_id: str) -> dict[str, Any] | None:
         slot["correct"] += int(correct)
 
     wrong = _wrong_analysis(conn, subject_id, chapters)
+    _exam_chapters(conn, subject_id, chapters)
 
     return {
         "title": SUBJECT_TITLES.get(subject_id, (subject_id,))[0],
@@ -168,6 +172,29 @@ def _subject_detail(conn: Connection, subject_id: str) -> dict[str, Any] | None:
         ],
         "wrong": wrong,
     }
+
+
+def _exam_chapters(conn: Connection, subject_id: str, chapters: list[dict[str, Any]]) -> None:
+    """模拟考的章节维度（driver ADR 0057 的 kind='exam'）：每章的考试作答量、
+    正确率与丢分题数，并进章节列表。没有模拟考作答的科目全部为 0/None，
+    前端不画这张图。"""
+    a = schema.attempts
+    rows = conn.execute(
+        select(a.c.topic_id, func.count(), func.coalesce(func.sum(a.c.correct), 0))
+        .where(and_(a.c.subject_id == subject_id, a.c.kind == "exam"))
+        .group_by(a.c.topic_id)
+    ).all()
+    missed: dict[str, int] = {}
+    for topic, _q in conn.execute(
+        select(a.c.topic_id, a.c.question_id).where(and_(a.c.subject_id == subject_id, a.c.kind == "exam", a.c.correct == 0)).distinct()
+    ):
+        missed[topic] = missed.get(topic, 0) + 1
+    stats = {r[0]: (int(r[1]), int(r[2])) for r in rows}
+    for chapter in chapters:
+        n, correct = stats.get(chapter["id"], (0, 0))
+        chapter["exam_attempts"] = n
+        chapter["exam_rate"] = round(correct / n, 4) if n else None
+        chapter["exam_wrong_questions"] = missed.get(chapter["id"], 0)
 
 
 def _wrong_analysis(conn: Connection, subject_id: str, chapters: list[dict[str, Any]]) -> dict[str, Any]:
@@ -258,7 +285,7 @@ def _wrong_analysis(conn: Connection, subject_id: str, chapters: list[dict[str, 
 def _overview(conn: Connection) -> dict[str, Any]:
     a = schema.attempts
     total, correct = conn.execute(select(func.count(), func.coalesce(func.sum(a.c.correct), 0))).one()
-    avg_ms = conn.execute(select(func.avg(a.c.duration_ms)).where(a.c.duration_ms > 0)).scalar_one()
+    avg_ms = conn.execute(select(func.avg(a.c.duration_ms)).where(a.c.duration_ms.between(1, DURATION_CAP_MS))).scalar_one()
     last_day = conn.execute(select(func.max(_day_of(a.c.at)))).scalar_one()
     exams_n = conn.execute(select(func.count()).select_from(schema.exams)).scalar_one()
     achievements_n = conn.execute(select(func.count()).select_from(schema.achievements)).scalar_one()

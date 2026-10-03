@@ -40,6 +40,10 @@ _engine_lock = threading.Lock()
 _engine: Engine | None = None
 
 
+# 可缺省字段的默认值：数值计数列归 0，场合标记归平时练习（driver ADR 0057）。
+_COLUMN_DEFAULTS = {"duration_ms": 0, "hesitant": 0, "read": 0, "kind": "practice"}
+
+
 class NotConfigured(RuntimeError):
     """没配 driver 数据库连接串。"""
 
@@ -105,7 +109,7 @@ def insert_missing(conn: Connection, res: Resource, items: Iterable[dict[str, An
     inserted = skipped = 0
     _lock(conn, table.name)
     for item in items:
-        row = {c.name: item.get(c.name, 0 if c.name in ("duration_ms", "hesitant", "read") else None) for c in columns}
+        row = {c.name: item.get(c.name, _COLUMN_DEFAULTS.get(c.name)) for c in columns}
         row["user"] = user
         # SELECT 列表里的绑定参数必须带类型，否则 PG 报「无法确定参数类型」。
         values = [cast(literal(row[c.name]), c.type) for c in columns]

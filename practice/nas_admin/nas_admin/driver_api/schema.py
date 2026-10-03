@@ -46,6 +46,9 @@ attempts = _table(
     Column("duration_ms", Integer, nullable=False, server_default="0"),
     Column("hesitant", Integer, nullable=False, server_default="0"),
     Column("at", Text, nullable=False),
+    # 场合标记（driver ADR 0057）：practice 平时练习 / exam 模拟考；
+    # 错题本与考前复习的场景仍在 subject_id（wrong/review），两维正交。
+    Column("kind", Text, nullable=False, server_default="practice"),
 )
 
 exams = _table(

@@ -346,6 +346,10 @@ function renderSubject(sid) {
           <h2>章节练习与错题<small>条是作答量，颜色是正确率，右侧标注错过的题</small></h2>
           <div class="chart" id="${p}-chapters" style="height: 420px;"></div>
         </section>
+        <section class="span3" id="${p}-examchapters-section" hidden>
+          <h2>模拟考章节丢分<small>条是考试里丢分的题数，颜色是考试正确率</small></h2>
+          <div class="chart" id="${p}-examchapters" style="height: 420px;"></div>
+        </section>
         <section class="span3" id="${p}-matrix-section">
           <h2>章节 × 日期<small>格子是当天该章的正确率，灰格没练</small></h2>
           <div class="chart" id="${p}-matrix" style="height: 420px;"></div>
@@ -450,6 +454,31 @@ function renderSubject(sid) {
       barWidth: 20,
     }],
   });
+
+  // ---- 模拟考章节丢分（kind='exam' 的数据要有才画，driver ADR 0057）
+  const examChapters = chapters.filter(c => c.exam_attempts > 0);
+  if (examChapters.length) {
+    document.getElementById(p + "-examchapters-section").hidden = false;
+    chart(document.getElementById(p + "-examchapters")).setOption({
+      grid: { left: 200, right: 110, top: 10, bottom: 28 },
+      tooltip: {
+        formatter: q => {
+          const c = examChapters[q[0].dataIndex];
+          return `${c.title}<br>考试作答 ${c.exam_attempts} 次 · 正确率 ${pct(c.exam_rate)}<br>丢分 ${c.exam_wrong_questions} 题`;
+        },
+      },
+      xAxis: { type: "value", minInterval: 1, axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+      yAxis: { type: "category", inverse: true, data: examChapters.map(c => c.title),
+               axisLabel: { color: ink, fontSize: 16 }, axisLine: { lineStyle: { color: line } } },
+      series: [{
+        type: "bar", data: examChapters.map(c => ({ value: c.exam_wrong_questions,
+          itemStyle: { color: rateColor(c.exam_rate), borderRadius: [0, 3, 3, 0] } })),
+        label: { show: true, position: "right", fontSize: 15, color: secondary,
+                 formatter: q => `丢 ${examChapters[q.dataIndex].exam_wrong_questions} · ${pct(examChapters[q.dataIndex].exam_rate)}` },
+        barWidth: 20,
+      }],
+    });
+  }
 
   // ---- 章节 × 日期热力矩阵
   if (d.chapter_days.length) {

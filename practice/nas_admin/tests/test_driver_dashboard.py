@@ -256,6 +256,41 @@ class SubjectDetailTest(DashboardCase):
         self.assertNotIn("subject2", details)
 
 
+    def test_exam_chapter_dimensions(self):
+        """kind='exam' 的章节维度（driver ADR 0057）：考试作答、正确率、丢分题数。"""
+        with self.driver.begin() as conn:
+            conn.execute(insert(schema.attempts), [
+                # rules 章考试作答：3 题对 2、丢 1 题
+                {"question_id": "drive.s1.rules.101", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T13:00:00.000", "kind": "exam"},
+                {"question_id": "drive.s1.rules.102", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T13:01:00.000", "kind": "exam"},
+                {"question_id": "drive.s1.rules.103", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T13:02:00.000", "kind": "exam"},
+                # 同章平时练习：不计入考试维度
+                {"question_id": "drive.s1.rules.104", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T14:00:00.000", "kind": "practice"},
+                # 另一章只有平时练习：考试维度应为零值
+                {"question_id": "drive.s1.signals.105", "topic_id": "drive.s1.signals", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T14:01:00.000", "kind": "practice"},
+            ])
+        detail = self.client.get("/driver/data.json").get_json()["details"]["subject1"]
+        by_id = {c["id"]: c for c in detail["chapters"]}
+        rules = by_id["drive.s1.rules"]
+        self.assertEqual(rules["exam_attempts"], 3)
+        self.assertEqual(rules["exam_rate"], 0.6667)
+        self.assertEqual(rules["exam_wrong_questions"], 1)
+        signals = by_id["drive.s1.signals"]
+        self.assertEqual(signals["exam_attempts"], 0)
+        self.assertIsNone(signals["exam_rate"])
+        self.assertEqual(signals["exam_wrong_questions"], 0)
+
+    def test_avg_duration_ignores_idle_outliers(self):
+        """挂机产生的天文时长不拉偏平均用时（与客户端封顶一致的统计上限）。"""
+        with self.driver.begin() as conn:
+            conn.execute(insert(schema.attempts), [
+                {"question_id": "drive.s1.rules.201", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 4000, "at": f"{TODAY}T15:00:00.000"},
+                {"question_id": "drive.s1.rules.202", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 36947433, "at": f"{TODAY}T15:01:00.000"},
+            ])
+        data = self.client.get("/driver/data.json").get_json()
+        self.assertEqual(data["overview"]["avg_duration_ms"], 4000)
+
+
 class StreakTest(unittest.TestCase):
     """dayStreak 口径与客户端（look.dart）一致：从今天往前数，今天没练就是 0。"""
 
