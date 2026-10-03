@@ -17,6 +17,8 @@ tiger 收编为数字编号、全局用户目录登记。
   （0073 时代，从未随发行版发出）：全部表里这些旧值的 `user` 行 UPDATE 为数字编号，
   列 DEFAULT 一并改写——旧直连客户端继续写入也落到正确归属。
 - `attempts` 没有 `kind` 列（driver ADR 0057 之前的库）：补上，默认 `practice`；不回填历史。
+- 归因列（主仓库 ADR 0076）：`attempts.chosen/session_id/reason`、`exams.session_id/used_ms`、
+  `exam_drafts.session_id` 都是可空列，缺则补；新表 `explain_views` 缺则建。老数据这些列为空，不回填。
 - 已收编（DEFAULT 已是数字编号）：什么都不做。
 
 tiger 的编号（ADR 0075，服务端分配的纯数字，1～999）：`--tiger-id` 显式给；否则先试着
@@ -56,6 +58,14 @@ _EVENT_TABLES = {
     "point_notes": "item_id TEXT NOT NULL, step INTEGER NOT NULL, text TEXT NOT NULL, at TEXT NOT NULL",
     "rehearsals": "item_id TEXT NOT NULL, missed TEXT NOT NULL, total INTEGER NOT NULL, at TEXT NOT NULL",
     "drill_notes": "item_id TEXT NOT NULL, text TEXT NOT NULL, at TEXT NOT NULL",
+    # 答错后看解析的停留（主仓库 ADR 0076 决策 4）
+    "explain_views": "question_id TEXT NOT NULL, attempt_at TEXT NOT NULL, dwell_ms INTEGER NOT NULL",
+}
+# 可空的归因列（主仓库 ADR 0076）：新建库和老库都用 ADD COLUMN IF NOT EXISTS 补齐，幂等。
+_OPTIONAL_COLUMNS = {
+    "attempts": [("chosen", "TEXT"), ("session_id", "TEXT"), ("reason", "TEXT")],
+    "exams": [("session_id", "TEXT"), ("used_ms", "INTEGER")],
+    "exam_drafts": [("session_id", "TEXT")],
 }
 # 键表：主键含 user（ADR 0071）。
 _KEY_TABLES = {
@@ -205,6 +215,13 @@ def main() -> int:
                 conn.execute(f"ALTER TABLE {table} DROP CONSTRAINT {table}_pkey")
                 conn.execute(f'ALTER TABLE {table} ADD PRIMARY KEY ("user", {key})')
                 print(f"[升级] {table}: 加 user 列，主键 -> (user, {key})")
+        for table, extra in _OPTIONAL_COLUMNS.items():
+            if not table_exists(conn, table):
+                continue
+            for name, kind in extra:
+                if not column_exists(conn, table, name):
+                    conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {kind}")
+                    print(f"[加列] {table}.{name}（ADR 0076）")
         # 收编（ADR 0075）：字面量 tiger 和 0073 时代的 `u_…` 编号，全部换算成数字编号。
         adopted = user_default(conn, "attempts")
         if adopted != tiger_id:

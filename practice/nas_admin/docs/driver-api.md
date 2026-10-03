@@ -26,6 +26,7 @@ API 读写的是中心库 `athena_driver` 的全部个人数据表。
 | drill-runs / rehearsals / drill-notes | item_id + at |
 | point-notes | item_id + step + at |
 | notices | kind + title + at |
+| explain-views | question_id + attempt_at |
 
 `at` 是客户端的 ISO-8601 时间串，**服务端原样保存**（不转时区、不改精度），两端字符串一致去重才成立。
 
@@ -73,8 +74,26 @@ API 读写的是中心库 `athena_driver` 的全部个人数据表。
 | `PUT /exam-drafts/<key>` | 存草稿，返回 `{applied}` |
 | `DELETE /exam-drafts/<key>` | 删草稿，204（不存在也 204） |
 
-资源（`<资源>`）：`attempts`、`exams`、`drill-runs`、`rehearsals`、`drill-notes`、`point-notes`、`notices`。
+资源（`<资源>`）：`attempts`、`exams`、`drill-runs`、`rehearsals`、`drill-notes`、`point-notes`、`notices`、`explain-views`。
 字段与旧版客户端本地表一致，字段名、类型、长度上限见 `nas_admin/driver_api/resources.py`。
+
+**归因字段（主仓库 ADR 0076）**：都是可选字段，旧客户端不传即为空；不参与去重键；旧数据全为空。
+
+| 资源 | 字段 | 含义 |
+|---|---|---|
+| attempts | `chosen` | 所选选项的稳定标识（题库里的 `Choice.id`，多选排序后逗号拼接），≤ 40 字符 |
+| attempts | `session_id` | 这次作答所属的会话（客户端随机生成，不含个人信息），≤ 64 字符 |
+| attempts | `reason` | 仅强化练习使用：这道题为什么被选中（`retest`/`weak`/`due`/`fill`），≤ 32 字符 |
+| attempts | `kind` | 场合标记，现有 `practice`/`exam`，新增 `reinforce`（强化练习） |
+| exams | `session_id` | 与该场考试内所有 `attempts.session_id` 相同，即「作答属于哪场考试」的关联键 |
+| exams | `used_ms` | 整场实际用时（不含挂起） |
+| exam-drafts | `session_id` | 续答沿用同一个会话；整份覆盖，没带就清空 |
+| explain-views | `question_id`、`attempt_at`、`dwell_ms` | 答错后看解析的停留（≤ 300000 ms）；`attempt_at` 对上那次作答的 `at`。独立成一个事件，因为停留在判定之后才知道，回头改作答行会破坏追加型同步 |
+
+**部署顺序**：服务端**拒绝未知字段**，所以必须先部署服务端、再发客户端，否则新客户端上传会得到 400。
+中心库加列与建 `explain_views` 表用 `scripts/driver_migrate_users.py`（属主执行，幂等）。API 的低权限
+角色若是在建表之前授的权，新表需要补授 `SELECT, INSERT, UPDATE, DELETE`（`ALTER DEFAULT PRIVILEGES`
+设置过的话自动具备）。
 
 拉取响应：`{"items":[...], "has_more": bool, "next_after_id": N}`。下次从 `next_after_id` 继续；
 `has_more` 为 false 就是拉完了。

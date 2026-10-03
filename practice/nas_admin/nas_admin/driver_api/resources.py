@@ -54,6 +54,10 @@ APPEND_ONLY: dict[str, Resource] = {
                 "at": (iso_time(), True),
                 # 场合标记（driver ADR 0057）：可缺省，旧客户端不传按平时练习。
                 "kind": (string(MAX_ID), False),
+                # 归因字段（主仓库 ADR 0076）：可缺省，旧客户端不传即为空。
+                "chosen": (string(40), False),
+                "session_id": (string(64), False),
+                "reason": (string(32), False),
             },
             ("user", "question_id", "at"),
         ),
@@ -65,8 +69,21 @@ APPEND_ONLY: dict[str, Resource] = {
                 "score": (integer(0, 1000), True),
                 "passed": (flag(), True),
                 "at": (iso_time(), True),
+                "session_id": (string(64), False),
+                "used_ms": (integer(0, _MAX_MS), False),
             },
             ("user", "subject_id", "at"),
+        ),
+        Resource(
+            "explain-views",
+            schema.explain_views,
+            {
+                "question_id": (string(), True),
+                "attempt_at": (iso_time(), True),
+                # 客户端在记录处封顶 5 分钟（driver ADR 0057 同值），服务端不放宽。
+                "dwell_ms": (integer(0, 300_000), True),
+            },
+            ("user", "question_id", "attempt_at"),
         ),
         Resource(
             "drill-runs",
@@ -139,4 +156,5 @@ DRAFT_FIELDS: Mapping[str, tuple[Check, bool]] = {
     "picked": (string(MAX_TEXT, allow_empty=True), True),
     "started_at": (iso_time(), True),
     "saved_at": (iso_time(), False),
+    "session_id": (string(64), False),
 }

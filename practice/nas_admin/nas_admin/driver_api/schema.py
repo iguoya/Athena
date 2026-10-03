@@ -49,6 +49,12 @@ attempts = _table(
     # 场合标记（driver ADR 0057）：practice 平时练习 / exam 模拟考；
     # 错题本与考前复习的场景仍在 subject_id（wrong/review），两维正交。
     Column("kind", Text, nullable=False, server_default="practice"),
+    # 归因字段（主仓库 ADR 0076）：都可空，旧数据全为空，不参与去重键。
+    # chosen 是所选选项的稳定标识（多选排序后逗号拼接）；session_id 是这次作答所属的会话；
+    # reason 仅强化练习使用，记这道题为什么被选中。
+    Column("chosen", Text),
+    Column("session_id", Text),
+    Column("reason", Text),
 )
 
 exams = _table(
@@ -57,6 +63,10 @@ exams = _table(
     Column("score", Integer, nullable=False),
     Column("passed", Integer, nullable=False),
     Column("at", Text, nullable=False),
+    # 与该场考试内所有 attempts.session_id 相同，就是「作答属于哪场考试」的关联键；
+    # used_ms 是整场实际用时（不含挂起）。（主仓库 ADR 0076）
+    Column("session_id", Text),
+    Column("used_ms", Integer),
 )
 
 notices = _table(
@@ -93,6 +103,8 @@ exam_drafts = Table(
     Column("picked", Text, nullable=False),
     Column("started_at", Text, nullable=False),
     Column("saved_at", Text),
+    # 续答沿用同一个会话（主仓库 ADR 0076 决策 3）。
+    Column("session_id", Text),
 )
 
 drill_runs = _table(
@@ -123,6 +135,15 @@ drill_notes = _table(
     Column("item_id", Text, nullable=False),
     Column("text", Text, nullable=False),
     Column("at", Text, nullable=False),
+)
+
+# 答错后看解析的停留（主仓库 ADR 0076 决策 4）：作答在判定时刻写入，停留在之后才知道，
+# 回头改作答行会破坏追加型同步，所以单独成一个事件，按 (question_id, attempt_at) 对上那次作答。
+explain_views = _table(
+    "explain_views",
+    Column("question_id", Text, nullable=False),
+    Column("attempt_at", Text, nullable=False),
+    Column("dwell_ms", Integer, nullable=False),
 )
 
 # point_photos 暂不开放（照片是文件，体积大，v1 只同步文字数据）。

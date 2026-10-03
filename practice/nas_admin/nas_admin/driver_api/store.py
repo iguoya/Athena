@@ -184,7 +184,8 @@ def put_draft(conn: Connection, user: str, key: str, fields: dict[str, Any]) -> 
     """整份覆盖；若库里的 saved_at 比传来的更新，则不覆盖（返回 False）。"""
     d = schema.exam_drafts
     _lock(conn, d.name)
-    values = {**fields, "saved_at": fields.get("saved_at")}
+    # 整份覆盖：没带的可选字段要清成空，不能留着旧值。
+    values = {**fields, "saved_at": fields.get("saved_at"), "session_id": fields.get("session_id")}
     current = conn.execute(select(d.c.saved_at).where(d.c.user == user, d.c.draft_key == key)).first()
     if current is None:
         conn.execute(insert(d).values(user=user, draft_key=key, **values))

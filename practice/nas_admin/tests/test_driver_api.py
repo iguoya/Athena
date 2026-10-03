@@ -326,6 +326,65 @@ class DraftTests(ApiCase):
         self.assertEqual(self.put("/exam-drafts/k", body).status_code, 400)
 
 
+class AttributionTests(ApiCase):
+    """主仓库 ADR 0076 阶段 1：作答与考试的归因字段、答错后看解析的停留。都是可选字段。"""
+
+    def test_作答带归因字段_原样存取(self):
+        item = attempt(chosen="A,C", session_id="s0123456789abcde", reason="retest", kind="reinforce")
+        self.assertEqual(self.post("/attempts", {"items": [item]}).get_json(), {"inserted": 1, "skipped": 0})
+        got = self.get("/attempts").get_json()["items"][0]
+        self.assertEqual((got["chosen"], got["session_id"], got["reason"], got["kind"]), ("A,C", "s0123456789abcde", "retest", "reinforce"))
+
+    def test_旧客户端不带这些字段_存为空(self):
+        self.post("/attempts", {"items": [attempt()]})
+        got = self.get("/attempts").get_json()["items"][0]
+        self.assertEqual((got["chosen"], got["session_id"], got["reason"]), (None, None, None))
+
+    def test_新字段不参与去重键(self):
+        self.post("/attempts", {"items": [attempt(at=T0)]})
+        r = self.post("/attempts", {"items": [attempt(at=T0, chosen="B", session_id="x")]})
+        self.assertEqual(r.get_json(), {"inserted": 0, "skipped": 1}, "同一题同一时刻是同一条，哪怕补了归因")
+
+    def test_归因字段校验(self):
+        for field, bad in (("chosen", 5), ("chosen", "x" * 41), ("session_id", "s" * 65), ("session_id", ""), ("reason", "r" * 33), ("reason", 1)):
+            r = self.post("/attempts", {"items": [attempt(**{field: bad})]})
+            self.assertEqual(r.status_code, 400, f"{field}={bad!r}")
+
+    def test_考试带会话与用时(self):
+        exam = {"subject_id": "subject1", "score": 92, "passed": 1, "at": T0, "session_id": "sess1", "used_ms": 1_800_000}
+        self.assertEqual(self.post("/exams", {"items": [exam]}).get_json(), {"inserted": 1, "skipped": 0})
+        got = self.get("/exams").get_json()["items"][0]
+        self.assertEqual((got["session_id"], got["used_ms"]), ("sess1", 1_800_000))
+        old = {"subject_id": "subject4", "score": 80, "passed": 0, "at": T1}
+        self.post("/exams", {"items": [old]})
+        self.assertEqual(self.get("/exams").get_json()["items"][1]["used_ms"], None)
+        self.assertEqual(self.post("/exams", {"items": [{**exam, "at": "2026-10-03T10:00:00", "used_ms": -1}]}).status_code, 400)
+
+    def test_解析停留_上传_幂等_按用户隔离(self):
+        view = {"question_id": "q1", "attempt_at": T0, "dwell_ms": 6200}
+        self.assertEqual(self.post("/explain-views", {"items": [view]}).get_json(), {"inserted": 1, "skipped": 0})
+        self.assertEqual(self.post("/explain-views", {"items": [view]}).get_json(), {"inserted": 0, "skipped": 1})
+        self.assertEqual(self.get("/explain-views").get_json()["items"][0]["dwell_ms"], 6200)
+        self.assertEqual(self.get("/explain-views", user="second").get_json()["items"], [])
+        self.assertEqual(self.post("/explain-views", {"items": [view]}, user="second").get_json()["inserted"], 1)
+
+    def test_解析停留校验_封顶_5_分钟(self):
+        ok = {"question_id": "q1", "attempt_at": T0, "dwell_ms": 300_000}
+        self.assertEqual(self.post("/explain-views", {"items": [ok]}).status_code, 200)
+        for bad in ({**ok, "dwell_ms": 300_001}, {**ok, "dwell_ms": -1}, {**ok, "dwell_ms": "6"}, {**ok, "attempt_at": "昨天"}, {"question_id": "q1", "attempt_at": T0}):
+            self.assertEqual(self.post("/explain-views", {"items": [bad]}).status_code, 400, str(bad))
+
+    def test_统计里有解析停留(self):
+        self.post("/explain-views", {"items": [{"question_id": "q1", "attempt_at": T0, "dwell_ms": 100}]})
+        self.assertEqual(self.get("/stats").get_json()["stats"]["explain-views"]["count"], 1)
+
+    def test_草稿带会话_续答沿用_整份覆盖会清掉(self):
+        self.put("/exam-drafts/subject1.exam", draft(session_id="sess9"))
+        self.assertEqual(self.get("/exam-drafts/subject1.exam").get_json()["session_id"], "sess9")
+        self.put("/exam-drafts/subject1.exam", draft())
+        self.assertIsNone(self.get("/exam-drafts/subject1.exam").get_json()["session_id"], "整份覆盖，没带就是空")
+
+
 class FailureTests(unittest.TestCase):
     """数据库、配置出问题时的表现：503 和不泄露细节。"""
 
