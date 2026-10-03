@@ -421,12 +421,20 @@ jobs:
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
-          gh release create "$GITHUB_REF_NAME" \
-            dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb \
-            dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi \
-            dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz \
-            dist/SHA256SUMS.txt \
-            --repo "$GITHUB_REPOSITORY" \
-            --verify-tag \
-            --notes-file release-notes.md \
-            --title "Athena $version"
+          assets=(dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb
+            dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi
+            dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz
+            dist/SHA256SUMS.txt)
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            # tag 移动重跑时 Release 已存在:同名资产 --clobber 覆盖,新增的(如 driver)补上,
+            # 说明与标题一并更新。
+            gh release upload "$GITHUB_REF_NAME" "${assets[@]}" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+              --notes-file release-notes.md --title "Athena $version"
+          else
+            gh release create "$GITHUB_REF_NAME" "${assets[@]}" \
+              --repo "$GITHUB_REPOSITORY" \
+              --verify-tag \
+              --notes-file release-notes.md \
+              --title "Athena $version"
+          fi
