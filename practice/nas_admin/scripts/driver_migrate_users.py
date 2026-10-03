@@ -16,6 +16,7 @@ tiger 收编为数字编号、全局用户目录登记。
 - 加列时默认值是 'tiger' 的库（0071 时代的中间状态），或曾被收编成 `u_…` 的库
   （0073 时代，从未随发行版发出）：全部表里这些旧值的 `user` 行 UPDATE 为数字编号，
   列 DEFAULT 一并改写——旧直连客户端继续写入也落到正确归属。
+- `attempts` 没有 `kind` 列（driver ADR 0057 之前的库）：补上，默认 `practice`；不回填历史。
 - 已收编（DEFAULT 已是数字编号）：什么都不做。
 
 tiger 的编号（ADR 0075，服务端分配的纯数字，1～999）：`--tiger-id` 显式给；否则先试着
@@ -47,7 +48,8 @@ _EVENT_TABLES = {
     "attempts": """
         question_id TEXT NOT NULL, topic_id TEXT NOT NULL, subject_id TEXT NOT NULL,
         correct INTEGER NOT NULL, duration_ms INTEGER NOT NULL DEFAULT 0,
-        hesitant INTEGER NOT NULL DEFAULT 0, at TEXT NOT NULL""",
+        hesitant INTEGER NOT NULL DEFAULT 0, at TEXT NOT NULL,
+        kind TEXT NOT NULL DEFAULT 'practice'""",
     "exams": "subject_id TEXT NOT NULL, score INTEGER NOT NULL, passed INTEGER NOT NULL, at TEXT NOT NULL",
     "notices": "kind TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, at TEXT NOT NULL, read INTEGER NOT NULL",
     "drill_runs": "item_id TEXT NOT NULL, mistakes TEXT NOT NULL, at TEXT NOT NULL",
@@ -185,6 +187,10 @@ def main() -> int:
             if not column_exists(conn, table, "user"):
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN \"user\" TEXT NOT NULL DEFAULT '{FIRST_USER}'")
                 print(f"[加列] {table}.user")
+        # 场合标记（driver ADR 0057）：老库没有就补上，默认平时练习。历史作答的 exam 回填不在这里做。
+        if table_exists(conn, "attempts") and not column_exists(conn, "attempts", "kind"):
+            conn.execute("ALTER TABLE attempts ADD COLUMN kind TEXT NOT NULL DEFAULT 'practice'")
+            print("[加列] attempts.kind")
         for table, columns in _KEY_TABLES.items():
             key = _KEY_COLUMN[table]
             if not table_exists(conn, table):

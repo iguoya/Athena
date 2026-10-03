@@ -1,7 +1,7 @@
 """全局学习者目录 REST API（/api/users/v1，ADR 0074、0075）。
 
 约定：
-- 全部接口要设备令牌（`Authorization: Bearer <token>`），与驾考 API 同一套令牌。
+- 应用里不认证（主仓库 ADR 0077）：内网直连可信，外网由 Cloudflare Access 在边缘把守。
 - 学习者无口令：登录就是「名字（重名再加编号）」，接口只告诉你「这个人是几号」。
   没有「列出全部学习者」的接口，按名字查询也不泄露他人编号（ADR 0075 决策 6）。
 - 改名只能改自己：请求头 `X-Athena-User` 必须等于被改的编号。无口令模型下这是防
@@ -17,7 +17,7 @@ from flask import Blueprint, Response, current_app, g, jsonify, request
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
 from werkzeug.exceptions import HTTPException
 
-from nas_admin.driver_api import auth
+from nas_admin import access
 from nas_admin.driver_api.validate import ValidationError, clean, integer, string
 from nas_admin.user_api import directory
 
@@ -37,15 +37,10 @@ def _error(status: int, code: str, message: str, **extra: Any) -> tuple[Response
 def _guard() -> tuple[Response, int] | None:
     if request.content_length and request.content_length > MAX_BODY:
         return _error(413, "too_large", f"请求体不能超过 {MAX_BODY // 1024} KB")
-    device = auth.authenticate(request.headers.get("Authorization"))
-    if device is None:
-        response, status = _error(401, "unauthorized", "缺少或无效的设备令牌")
-        response.headers["WWW-Authenticate"] = 'Bearer realm="user-api"'
-        return response, status
-    if not auth.allow(device["id"]):
+    g.address = access.client_address()
+    if not access.allow(g.address):
         return _error(429, "rate_limited", "请求太频繁，稍后再试")
-    g.device = device
-    directory.ensure_table(auth.token_engine())
+    directory.ensure_table(directory.engine())
     return None
 
 
@@ -116,7 +111,7 @@ def _acting_user() -> str:
 
 
 def _log(action: str, **fields: Any) -> None:
-    current_app.logger.info("user_api %s device=%s %s", action, g.device["name"], fields)
+    current_app.logger.info("user_api %s from=%s %s", action, g.address, fields)
 
 
 # ---------------------------------------------------------------- 接口
@@ -126,7 +121,7 @@ def _log(action: str, **fields: Any) -> None:
 def register():
     """新建学习者：名字 → 服务端分配编号。重名照样新建，由使用者自己确认（ADR 0075 决策 3）。"""
     fields = clean({"name": (_name, True)}, _body())
-    with auth.token_engine().begin() as conn:
+    with directory.engine().begin() as conn:
         created = directory.register(conn, fields["name"])
     _log("register", id=created["id"])
     return jsonify(user=created), 201
@@ -141,7 +136,7 @@ def login():
     - 不止一个而没给编号 → 409 `ambiguous` 带匹配个数，客户端再问编号后重发。
     """
     fields = clean({"name": (_name, True), "id": (_user_id, False)}, _body())
-    with auth.token_engine().connect() as conn:
+    with directory.engine().connect() as conn:
         matches = directory.find(conn, fields["name"], fields.get("id"))
     if not matches:
         return _error(404, "not_found", "没有这个学习者")
@@ -162,7 +157,7 @@ def get_self(user_id: int):
     denied = _require_self(user_id)
     if denied:
         return denied
-    with auth.token_engine().connect() as conn:
+    with directory.engine().connect() as conn:
         found = directory.get(conn, user_id)
     if found is None:
         return _error(404, "not_found", "没有这个学习者")
@@ -176,7 +171,7 @@ def rename_self(user_id: int):
     if denied:
         return denied
     fields = clean({"name": (_name, True)}, _body())
-    with auth.token_engine().begin() as conn:
+    with directory.engine().begin() as conn:
         renamed = directory.rename(conn, user_id, fields["name"])
     if renamed is None:
         return _error(404, "not_found", "没有这个学习者")

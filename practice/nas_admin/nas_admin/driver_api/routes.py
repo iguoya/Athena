@@ -1,7 +1,8 @@
 """驾考进度 REST API（/api/driver/v1）。
 
 约定：
-- 全部接口要设备令牌（`Authorization: Bearer <token>`），没有匿名接口。
+- 应用里不认证（主仓库 ADR 0077）：内网直连可信，外网由 Cloudflare Access 在边缘把守整个主机名。
+  用户来自请求头 `X-Athena-User`（学习者编号），无口令。
 - 追加型记录：`POST /<资源>` 批量上传（幂等，重复上传被跳过）；`GET /<资源>?after_id=`
   增量拉取。这两个动作合起来就是同步：上传自己没发出去的，拉取别处新增的。
 - 错误一律 JSON `{"error": 代码, "message": 说明}`，不返回堆栈、路径或数据库细节。
@@ -16,7 +17,8 @@ from flask import Blueprint, Response, current_app, g, jsonify, request
 from sqlalchemy.exc import DBAPIError, OperationalError, SQLAlchemyError
 from werkzeug.exceptions import HTTPException
 
-from nas_admin.driver_api import auth, store
+from nas_admin import access
+from nas_admin.driver_api import store
 from nas_admin.driver_api.resources import APPEND_ONLY, DRAFT_FIELDS, Resource
 from nas_admin.driver_api.validate import ValidationError, clean, integer, iso_time, string
 
@@ -39,17 +41,14 @@ def _error(status: int, code: str, message: str) -> tuple[Response, int]:
 def _guard() -> tuple[Response, int] | None:
     if request.content_length and request.content_length > MAX_BODY:
         return _error(413, "too_large", f"请求体不能超过 {MAX_BODY // 1024} KB")
-    device = auth.authenticate(request.headers.get("Authorization"))
-    if device is None:
-        response, status = _error(401, "unauthorized", "缺少或无效的设备令牌")
-        response.headers["WWW-Authenticate"] = 'Bearer realm="driver-api"'
-        return response, status
-    if not auth.allow(device["id"]):
+    # 应用里不认证（ADR 0077）：这里只限流，防止失控的客户端把库打爆。
+    g.address = access.client_address()
+    if not access.allow(g.address):
         return _error(429, "rate_limited", "请求太频繁，稍后再试")
-    g.device = device
-    # 用户来自请求头而不是令牌（ADR 0071）：令牌标识设备，同一台设备上换人不是换令牌。
-    # ValidationError 会被下面的 errorhandler 映射成 400，与字段校验同一出口。
-    g.user = string()("user", request.headers.get("X-Athena-User", "").strip())
+    # 用户来自请求头（ADR 0071）：同一台电脑上换人只是换这个头。ValidationError 会被下面的
+    # errorhandler 映射成 400，与字段校验同一出口。连通自检不要求带学习者。
+    header = request.headers.get("X-Athena-User", "").strip()
+    g.user = header if request.endpoint == "driver_api.ping" else string()("user", header)
     return None
 
 
@@ -118,7 +117,7 @@ def _page_args() -> tuple[int, int]:
 
 
 def _log_write(resource: str, **counts: int) -> None:
-    current_app.logger.info("driver_api 写入 device=%s resource=%s %s", g.device["name"], resource, counts)
+    current_app.logger.info("driver_api 写入 from=%s user=%s resource=%s %s", g.address, g.user, resource, counts)
 
 
 # ---------------------------------------------------------------- 基础
@@ -126,8 +125,8 @@ def _log_write(resource: str, **counts: int) -> None:
 
 @bp.get("/ping")
 def ping():
-    """连通与令牌自检：客户端设置页点「测试连接」用。"""
-    return jsonify(ok=True, device=g.device["name"], user=g.user, server_time=datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    """连通自检：客户端设置页点「测试连接」用。不要求学习者头。"""
+    return jsonify(ok=True, user=g.user, server_time=datetime.now(timezone.utc).isoformat(timespec="seconds"))
 
 
 @bp.get("/stats")

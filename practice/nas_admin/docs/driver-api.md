@@ -2,11 +2,12 @@
 
 挂在 nas_admin 后台里（`nas_admin/driver_api/`），让驾考客户端**离开内网也能读写同一份进度数据**。
 
-数据库端口不出内网：客户端只拿一个可撤销的设备令牌，数据库密码只留在路由器上。
+数据库端口不出内网：数据库密码只留在路由器上。**应用里不认证**——内网直连可信，外网的门放在
+Cloudflare 访问规则上（主仓库 ADR 0077，已取消设备令牌）。
 API 读写的是中心库 `athena_driver` 的全部个人数据表。
 
-> 状态：已实现、已测试、已部署路由器。仓库级 ADR：0067（中心 PG）、0068（本 API 的
-> 由来与安全模型）、0069（客户端已接入，内网直连 PG 的通道退役——客户端内外网都走本 API）。
+> 状态：已实现、已测试。仓库级 ADR：0067（中心 PG）、0068（本 API 的由来）、0070（客户端已接入，
+> 内网直连 PG 的通道退役）、0077（取消设备令牌，门放在 Cloudflare 上，取代 0068 的令牌认证）。
 
 ## 一、同步模型
 
@@ -35,30 +36,25 @@ API 读写的是中心库 `athena_driver` 的全部个人数据表。
 - **成就** `PUT /achievements/<key>`：按键幂等，已存在时保留**更早**的解锁时间。
 - **试卷草稿** `PUT /exam-drafts/<key>`：整份覆盖；库里的 `saved_at` 比传来的更新则**不覆盖**（返回 `applied:false`）。
 
-## 二、认证与用户
+## 二、访问控制与用户
 
-所有接口都要设备令牌：`Authorization: Bearer dapi_xxxx`，以及**必填**的
-`X-Athena-User` 头（ADR 0071）——同一份题库给多个学习者用，个人数据按用户隔离。
-令牌标识设备（换人不换令牌），用户标识学习者；缺头或空值是 400。上传的去重键、
-拉取的行、成就、草稿、已读、统计全部按用户隔离；返回的行里不带 `user` 字段——
-那是请求方自己的身份。中心表的迁移与全新建库用 `scripts/driver_migrate_users.py`。
+**应用里不认证**（ADR 0077）。谁能碰到这个接口，由网络决定：
 
-- 每台设备一个令牌，服务端**只存 SHA-256 哈希**，库被读走也还原不出令牌。
-- 丢了一台设备就撤销那一个，不影响别的。
-- 令牌表在后台自己的库（`nas_admin`），不放进 driver 的个人数据库。
-- 每个令牌每分钟最多 300 个请求，超出返回 429。
+- **内网**：客户端直连路由器上的后台，家用网络内视为可信，不需要任何凭据。
+- **外网**：经 Cloudflare 隧道，整个主机名（含 `/api/`）由 Cloudflare Access 把守。桌面客户端用
+  Access 的**服务令牌**（请求头 `CF-Access-Client-Id` / `CF-Access-Client-Secret`），全家共用一对，
+  在客户端的可选配置里填。一次性配置和自检见 [cloudflare-access.md](cloudflare-access.md)。
 
-管理令牌（路由器或本机，需能连后台库）：
+用户来自**必填**的 `X-Athena-User` 头（ADR 0071、0075），值是学习者编号（服务端分配的
+1～999 数字，见 [user-api.md](user-api.md)）。同一份题库给多个学习者用，个人数据按用户隔离；
+缺头或空值是 400（`/ping` 例外）。上传的去重键、拉取的行、成就、草稿、已读、统计全部按用户隔离；
+返回的行里不带 `user` 字段——那是请求方自己的身份。无口令：防误看，不防对抗。中心表的迁移与
+全新建库用 `scripts/driver_migrate_users.py`。
 
-```sh
-python3 scripts/driver_token.py create "笔记本"   # 令牌明文只显示这一次
-python3 scripts/driver_token.py list
-python3 scripts/driver_token.py revoke 3
-```
+限流按来源地址（经 Cloudflare 来的取 `Cf-Connecting-Ip`），每个地址每分钟最多 300 个请求，超出
+返回 429。目的只是不让失控的客户端把库打爆。
 
-外网访问时前面还有 Cloudflare Access（`www.yatiger.cn` 已有）：程序调用用 Access 的
-**Service Token**（请求头 `CF-Access-Client-Id` / `CF-Access-Client-Secret`），两层都要带。
-设备令牌不依赖 Access——Access 挡陌生人，设备令牌挡「进来了但不该写数据」的人，也让每次写入能追溯到设备。
+旧客户端若还带着 `Authorization` 头，服务端直接忽略。
 
 ## 三、接口
 
@@ -66,7 +62,7 @@ python3 scripts/driver_token.py revoke 3
 
 | 方法与路径 | 说明 |
 |---|---|
-| `GET /ping` | 令牌自检，返回设备名与服务器时间（客户端「测试连接」用） |
+| `GET /ping` | 连通自检，不要求学习者头，返回服务器时间（客户端「测试连接」用） |
 | `GET /stats` | 各表条数与最大 id，用来快速判断是否落后 |
 | `GET /<资源>?after_id=0&limit=200` | 增量拉取，`limit` 1～500 |
 | `POST /<资源>` | 批量上传 `{"items":[...]}`，1～500 条，返回 `{inserted, skipped}` |
@@ -94,9 +90,8 @@ python3 scripts/driver_token.py revoke 3
 | 状态 | error | 含义 |
 |---|---|---|
 | 400 | invalid | 校验失败，message 指到字段（如 `items[3].at`） |
-| 401 | unauthorized | 缺少或无效的令牌，已撤销也是 401 |
 | 413 | too_large | 请求体过大 |
-| 429 | rate_limited | 请求太频繁 |
+| 429 | rate_limited | 同一来源地址请求太频繁 |
 | 503 | not_configured | 没配 driver 数据库连接串 |
 | 503 | not_initialized | 表还没建（需先在内网用驾考客户端连一次） |
 | 503 | database_unavailable | 数据库暂不可用 |
@@ -126,12 +121,9 @@ python3 scripts/driver_token.py revoke 3
    `database_unavailable`）。没配时 API 返回 503 `not_configured`，不影响后台其他功能。
 
 3. **部署后台**（deploy 脚本，或同步 `nas_admin/` 到 `/opt/webapp` 后重启 `webapp` 服务）。
-   令牌表 `driver_api_tokens` 会在首次使用时自动建在后台库里。
 
-4. **发令牌**：`python3 scripts/driver_token.py create "<设备名>"`，把输出的令牌配到该设备的本地配置（不进仓库）。
-
-5. **Cloudflare**：为 API 调用建一个 Access **Service Token**，并在 `www` 应用的策略里加一条
-   「Service Auth」放行；浏览器访问仍走邮箱验证码。
+4. **Cloudflare**：为桌面客户端建服务令牌与「服务认证」策略，部署后做一次自检——见
+   [cloudflare-access.md](cloudflare-access.md)。只在家里内网用的话可以跳过。
 
 ## 五、测试
 
@@ -149,7 +141,9 @@ cd practice/nas_admin
 
 - **照片**（`point_photos`）暂不开放：照片是文件、体积大，v1 只同步文字数据。
 - 没有服务端汇总统计（连续天数、平均用时等），客户端从拉到的记录自己算，和现在本地的算法一致。
-- 速率限制是进程内的；路由器上后台只有一个进程，够用，多进程部署要换共享存储。
+- 速率限制是进程内的、按来源地址；路由器上后台只有一个进程，够用，多进程部署要换共享存储。
+- 应用里没有第二道门：Cloudflare Access 配错或被删时，外网就是敞开的，所以每次改完要做自检。
+  可选的后续加固是服务端校验 `Cf-Access-Jwt-Assertion` 的签名（ADR 0077 风险一节）。
 - 后台入口仍是 Flask 自带服务器；对外前建议换 `waitress`（纯 Python，路由器能装）。
 - 客户端（`subjects/driver`）已接入（主仓库 ADR 0070）：本地优先 + 待发送队列 + 游标拉取，
   断网照常做题、联网后补发；内网也走本 API，直连 PG 的通道已退役。

@@ -10,6 +10,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 APP_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(APP_ROOT))
@@ -18,7 +19,7 @@ from flask import Flask  # noqa: E402
 from sqlalchemy import create_engine, select  # noqa: E402
 from sqlalchemy.pool import StaticPool  # noqa: E402
 
-from nas_admin.driver_api import auth  # noqa: E402
+from nas_admin import access  # noqa: E402
 from nas_admin.user_api import directory, init_user_api  # noqa: E402
 
 BASE = "/api/users/v1"
@@ -26,16 +27,14 @@ BASE = "/api/users/v1"
 
 class UserApiCase(unittest.TestCase):
     def setUp(self) -> None:
-        auth.reset_rate_limits()
+        access.reset_rate_limits()
         self.engine = create_engine("sqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False})
         app = Flask(__name__)
-        init_user_api(app, token_engine=self.engine)
+        init_user_api(app, engine=self.engine)
         self.client = app.test_client()
-        _id, self.token = auth.create_token(self.engine, "测试设备")
-        self.auth = {"Authorization": f"Bearer {self.token}"}
 
-    def call(self, method, path, body=None, acting=None, token=True):
-        headers = dict(self.auth) if token else {}
+    def call(self, method, path, body=None, acting=None):
+        headers = {}
         if acting is not None:
             headers["X-Athena-User"] = str(acting)
         return self.client.open(BASE + path, method=method, json=body, headers=headers)
@@ -46,11 +45,21 @@ class UserApiCase(unittest.TestCase):
         return r.get_json()["user"]
 
 
-class AuthTests(UserApiCase):
-    def test_无令牌_401(self):
-        for method, path in (("POST", "/users"), ("POST", "/login"), ("GET", "/users/1"), ("PATCH", "/users/1")):
-            r = self.call(method, path, {"name": "x"}, token=False)
-            self.assertEqual(r.status_code, 401, f"{method} {path}")
+class AccessTests(UserApiCase):
+    """应用里不认证（ADR 0077）：不需要令牌，只限流。"""
+
+    def test_不需要令牌(self):
+        self.assertEqual(self.call("POST", "/users", {"name": "小王"}).status_code, 201)
+        self.assertEqual(self.client.post(BASE + "/login", json={"name": "小王"}, headers={"Authorization": "Bearer x"}).status_code, 200)
+
+    def test_超过限流返回429(self):
+        self.register("小王")
+        access.reset_rate_limits()  # 登记那一下也算一次请求，重新计数
+        with mock.patch.object(access, "RATE_LIMIT", 2):
+            self.assertEqual(self.call("POST", "/login", {"name": "小王"}).status_code, 200)
+            self.assertEqual(self.call("POST", "/login", {"name": "小王"}).status_code, 200)
+            r = self.call("POST", "/login", {"name": "小王"})
+        self.assertEqual((r.status_code, r.get_json()["error"]), (429, "rate_limited"))
 
     def test_响应不被缓存(self):
         self.assertEqual(self.call("POST", "/users", {"name": "小王"}).headers["Cache-Control"], "no-store")
@@ -90,7 +99,7 @@ class RegisterTests(UserApiCase):
         ]
         for body, label in cases:
             self.assertEqual(self.call("POST", "/users", body).status_code, 400, label)
-        self.assertEqual(self.client.post(BASE + "/users", data="oops", headers=self.auth).status_code, 400)
+        self.assertEqual(self.client.post(BASE + "/users", data="oops").status_code, 400)
 
 
 class LoginTests(UserApiCase):

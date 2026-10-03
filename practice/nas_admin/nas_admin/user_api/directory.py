@@ -1,6 +1,6 @@
 """全局学习者目录（ADR 0073、0074、0075）：谁是学习者、叫什么、编号几号。
 
-放在后台库（nas_admin）里，与设备令牌同库：这是仓库级设施，不属于任何一个应用的个人
+放在后台库（nas_admin）里：这是仓库级设施，不属于任何一个应用的个人
 数据库。学习者编号是服务端顺序分配的纯数字（1～999），永不变、不复用、不提供删除；
 名字不要求唯一，重名由编号区分。
 
@@ -16,8 +16,10 @@ import zlib
 from datetime import datetime, timezone
 from typing import Any
 
+from flask import current_app
 from sqlalchemy import Column, Connection, Engine, Index, Integer, MetaData, Table, Text, func, insert, select, text, update
 
+ENGINE_KEY = "user_api.engine"  # app.extensions 里放注入的 Engine（测试用）
 MAX_ID = 999  # 家用够了；超出就拒绝登记，不悄悄回绕
 MAX_NAME = 64
 
@@ -49,6 +51,16 @@ def _now() -> str:
 def name_key(name: str) -> str:
     """名字的比较键：去首尾空白、折叠大小写。"""
     return name.strip().casefold()
+
+
+def engine() -> Engine:
+    """目录所在的库：后台库（nas_admin）。测试注入内存库。"""
+    injected = current_app.extensions.get(ENGINE_KEY)
+    if injected is not None:
+        return injected
+    from nas_admin import db  # 延迟导入，避免循环依赖
+
+    return db.engine
 
 
 def ensure_table(engine: Engine) -> None:

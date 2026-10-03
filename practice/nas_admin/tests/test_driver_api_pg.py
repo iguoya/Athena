@@ -28,7 +28,8 @@ from flask import Flask  # noqa: E402
 from sqlalchemy import create_engine, inspect, text  # noqa: E402
 from sqlalchemy.exc import DBAPIError  # noqa: E402
 
-from nas_admin.driver_api import auth, init_driver_api, schema, store  # noqa: E402
+from nas_admin import access  # noqa: E402
+from nas_admin.driver_api import init_driver_api, schema, store  # noqa: E402
 from test_driver_api import BASE, T0, T1, attempt, memory_engine  # noqa: E402
 
 OWNER_URL = os.environ.get("DRIVER_API_TEST_PG_OWNER_URL")
@@ -41,8 +42,6 @@ class PostgresTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.owner = create_engine(store._normalize(OWNER_URL), pool_size=8, max_overflow=8)
         cls.api = create_engine(store._normalize(API_URL), pool_size=8, max_overflow=8)
-        # 生产里令牌表在后台自己的 PG 库；测试也用 PG 存令牌（内存 SQLite 单连接扛不住多线程）。
-        auth.ensure_table(cls.owner)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -50,16 +49,14 @@ class PostgresTests(unittest.TestCase):
         cls.api.dispose()
 
     def setUp(self) -> None:
-        auth.reset_rate_limits()
-        names = ", ".join([t.name for t in schema.metadata.sorted_tables] + [auth.tokens.name])
+        access.reset_rate_limits()
+        names = ", ".join(t.name for t in schema.metadata.sorted_tables)
         with self.owner.begin() as conn:
             conn.execute(text(f"TRUNCATE {names} RESTART IDENTITY"))
-        tokens = self.owner
         app = Flask(__name__)
-        init_driver_api(app, driver_engine=self.api, token_engine=tokens)
+        init_driver_api(app, driver_engine=self.api)
         self.client = app.test_client()
-        _id, token = auth.create_token(tokens, "pg-test")
-        self.headers = {"Authorization": f"Bearer {token}", "X-Athena-User": "tiger"}
+        self.headers = {"X-Athena-User": "tiger"}
 
     def post(self, path, body):
         return self.client.post(BASE + path, json=body, headers=self.headers)
@@ -124,7 +121,7 @@ class PostgresTests(unittest.TestCase):
             try:
                 # 每个线程自己的 test_client，模拟多台设备同时同步。
                 app = Flask(__name__)
-                init_driver_api(app, driver_engine=self.api, token_engine=self.tokens_engine())
+                init_driver_api(app, driver_engine=self.api)
                 r = app.test_client().post(BASE + "/attempts", json={"items": batch}, headers=self.headers)
                 if r.status_code != 200:
                     errors.append(f"{r.status_code} {r.get_json()}")
@@ -141,9 +138,6 @@ class PostgresTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(self.count("attempts"), 20, "并发下不能有重复行")
         self.assertEqual(sum(results), 20, "每条恰好被某一个请求插入")
-
-    def tokens_engine(self):
-        return self.client.application.extensions[auth.TOKEN_ENGINE_KEY]
 
     # ------------------------------------------------------------ 权限
 

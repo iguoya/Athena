@@ -46,8 +46,8 @@ REMOTE_DIR = "/opt/webapp"
 EXCLUDED_TOP = {".venv", "data", "__pycache__", ".git", ".gitignore", "tests"}
 EXCLUDED_ROOT_FILES = {"db-local.json", "secret-key.txt", "driver-db.json"}
 EXCLUDED_SUFFIX = (".pyc", ".tar")
-# 路由器上要用的脚本（令牌管理）；run_dev/check/deploy 是开发脚本，不上路由。
-DEPLOYED_SCRIPTS = {"scripts/driver_token.py"}
+# 路由器上要用的脚本；目前没有（设备令牌已取消，ADR 0077）。run_dev/check/deploy 是开发脚本，不上路由。
+DEPLOYED_SCRIPTS: set[str] = set()
 SECRET_FILES = ("db-local.json", "secret-key.txt", "driver-db.json")
 
 

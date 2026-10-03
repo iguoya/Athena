@@ -1,4 +1,4 @@
-"""驾考 API 挂进真实的 FAB 应用（`create_app`）后的冒烟：不破坏原有端点，令牌走后台库。
+"""驾考 API 挂进真实的 FAB 应用（`create_app`）后的冒烟：不破坏原有端点；应用里不认证（ADR 0077）。
 
 用临时 SQLite 文件顶替后台的 PG 连接串，所以不依赖路由器：
 
@@ -29,15 +29,13 @@ class RealAppTests(unittest.TestCase):
         cls.tmp = tempfile.TemporaryDirectory()
         os.environ["NAS_ADMIN_DATABASE_URL"] = f"sqlite:///{Path(cls.tmp.name, 'admin.db').as_posix()}"
         from nas_admin import create_app, db
-        from nas_admin.driver_api import auth, schema, store
+        from nas_admin.driver_api import schema, store
 
         cls.app = create_app("config")
         cls.app.testing = True
         driver = create_engine("sqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False})
         schema.metadata.create_all(driver)
         cls.app.extensions[store.ENGINE_KEY] = driver
-        with cls.app.app_context():
-            _id, cls.token = auth.create_token(db.engine, "冒烟")
         cls.client = cls.app.test_client()
 
     @classmethod
@@ -62,19 +60,23 @@ class RealAppTests(unittest.TestCase):
         self.assertEqual(data.status_code, 200)
         self.assertIn("overview", data.get_json())
 
-    def test_API_要令牌_有令牌能读写(self):
-        self.assertEqual(self.client.get(f"{BASE}/ping").status_code, 401)
-        headers = {"Authorization": f"Bearer {self.token}", "X-Athena-User": "tiger"}
-        self.assertEqual(self.client.get(f"{BASE}/ping", headers=headers).get_json()["device"], "冒烟")
+    def test_API_不要令牌_按学习者头读写(self):
+        self.assertEqual(self.client.get(f"{BASE}/ping").status_code, 200)
+        headers = {"X-Athena-User": "tiger"}
         item = {"question_id": "q", "topic_id": "t", "subject_id": "s", "correct": 1, "at": "2026-10-02T14:11:10.123"}
         r = self.client.post(f"{BASE}/attempts", json={"items": [item]}, headers=headers)
         self.assertEqual(r.get_json(), {"inserted": 1, "skipped": 0})
 
+    def test_学习者目录_在真实应用里能用(self):
+        r = self.client.post("/api/users/v1/users", json={"name": "冒烟"})
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(self.client.post("/api/users/v1/login", json={"name": "冒烟"}).get_json()["user"]["name"], "冒烟")
+
     def test_API_不走_FAB_登录会话(self):
-        # FAB 的登录 cookie 不该让 API 通过：API 只认设备令牌。
+        # FAB 的登录会话与 API 无关：登录页照常，API 不看它。
         r = self.client.post("/login/", data={"username": "x", "password": "y"})
         self.assertIn(r.status_code, (200, 302, 400))
-        self.assertEqual(self.client.get(f"{BASE}/ping").status_code, 401)
+        self.assertEqual(self.client.get(f"{BASE}/stats").status_code, 400, "没有学习者头照样是 400")
 
     def test_路由表里_API_都在约定前缀下(self):
         rules = [r.rule for r in self.app.url_map.iter_rules() if r.endpoint.startswith("driver_api.")]

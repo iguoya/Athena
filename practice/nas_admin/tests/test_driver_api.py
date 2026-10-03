@@ -20,7 +20,8 @@ from flask import Flask  # noqa: E402
 from sqlalchemy import create_engine, select  # noqa: E402
 from sqlalchemy.pool import StaticPool  # noqa: E402
 
-from nas_admin.driver_api import auth, init_driver_api, schema, store  # noqa: E402
+from nas_admin import access  # noqa: E402
+from nas_admin.driver_api import init_driver_api, schema, store  # noqa: E402
 
 BASE = "/api/driver/v1"
 T0 = "2026-10-02T14:11:10.123"
@@ -33,21 +34,19 @@ def memory_engine():
 
 
 class ApiCase(unittest.TestCase):
-    """每个用例一套全新的内存库、应用和令牌。"""
+    """每个用例一套全新的内存库和应用。应用里不认证（ADR 0077），只靠 X-Athena-User 分用户。"""
 
     def setUp(self) -> None:
-        auth.reset_rate_limits()
+        access.reset_rate_limits()
         self.driver = memory_engine()
-        self.tokens = memory_engine()
         schema.metadata.create_all(self.driver)
         app = Flask(__name__)
-        init_driver_api(app, driver_engine=self.driver, token_engine=self.tokens)
+        init_driver_api(app, driver_engine=self.driver)
         self.app = app
         self.client = app.test_client()
-        _id, self.token = auth.create_token(self.tokens, "测试设备")
         # 默认以首用户 tiger 走（ADR 0071）：不带用户头的请求一律 400，
         # 个别用例换人时在 headers 里覆盖。
-        self.headers = {"Authorization": f"Bearer {self.token}", "X-Athena-User": "tiger"}
+        self.headers = {"X-Athena-User": "tiger"}
 
     # 简写；user 用来临时换人（多用户用例）
     def get(self, path, user=None, **kw):
@@ -71,57 +70,47 @@ def attempt(question="s1.signals.207", at=T0, **extra):
     return {"question_id": question, "topic_id": "t", "subject_id": "subject1", "correct": 1, "at": at, **extra}
 
 
-class AuthTests(ApiCase):
-    def test_无令牌_401(self):
+class AccessTests(ApiCase):
+    """应用里不认证（ADR 0077）：不需要令牌；用户靠请求头；只做限流。"""
+
+    def test_不需要令牌_带了也不看(self):
+        self.assertEqual(self.client.get(BASE + "/stats", headers={"X-Athena-User": "tiger"}).status_code, 200)
+        r = self.client.get(BASE + "/stats", headers={"X-Athena-User": "tiger", "Authorization": "Bearer whatever"})
+        self.assertEqual(r.status_code, 200, "旧客户端还带着令牌也能用，服务端直接忽略")
+
+    def test_连通自检不要求学习者头(self):
         r = self.client.get(BASE + "/ping")
-        self.assertEqual(r.status_code, 401)
-        self.assertEqual(r.get_json()["error"], "unauthorized")
-        self.assertIn("Bearer", r.headers["WWW-Authenticate"])
-
-    def test_错误令牌_401(self):
-        for header in ("Bearer dapi_wrong", "Bearer nope", "Basic abc", "", "Bearer " + "x" * 500):
-            r = self.client.get(BASE + "/ping", headers={"Authorization": header})
-            self.assertEqual(r.status_code, 401, header[:20])
-
-    def test_有效令牌通过并返回设备名(self):
-        r = self.get("/ping")
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.get_json()["device"], "测试设备")
+        self.assertTrue(r.get_json()["ok"])
+        self.assertNotIn("device", r.get_json())
 
-    def test_撤销后立即失效(self):
-        token_id = auth.list_tokens(self.tokens)[0]["id"]
-        self.assertTrue(auth.revoke_token(self.tokens, token_id))
-        self.assertEqual(self.get("/ping").status_code, 401)
-        self.assertFalse(auth.revoke_token(self.tokens, token_id), "重复撤销应返回 False")
+    def test_其他接口缺学习者头是400(self):
+        for method, path in (("get", "/stats"), ("post", "/attempts"), ("put", "/achievements/k"), ("post", "/notices/read-all")):
+            r = getattr(self.client, method)(BASE + path, json={})
+            self.assertEqual(r.status_code, 400, f"{method} {path}")
 
-    def test_库里只存哈希_不存明文(self):
-        with self.tokens.connect() as conn:
-            stored = conn.execute(select(auth.tokens.c.token_hash)).scalar_one()
-        self.assertNotIn(self.token, stored)
-        self.assertEqual(stored, auth.hash_token(self.token))
-        self.assertNotIn("token_hash", auth.list_tokens(self.tokens)[0], "列表不应带出哈希")
+    def test_限流按来源地址_互不影响(self):
+        self.assertTrue(all(access.allow("1.1.1.1", limit=3) for _ in range(3)))
+        self.assertFalse(access.allow("1.1.1.1", limit=3))
+        self.assertTrue(access.allow("2.2.2.2", limit=3), "别的来源不受影响")
 
-    def test_每个令牌互相独立(self):
-        _id, other = auth.create_token(self.tokens, "另一台")
-        auth.revoke_token(self.tokens, auth.list_tokens(self.tokens)[0]["id"])
-        self.assertEqual(self.get("/ping").status_code, 401)
-        r = self.client.get(
-            BASE + "/ping", headers={"Authorization": f"Bearer {other}", "X-Athena-User": "tiger"}
-        )
-        self.assertEqual(r.status_code, 200)
+    def test_超过限流返回429(self):
+        with mock.patch.object(access, "RATE_LIMIT", 2):
+            self.assertEqual(self.get("/stats").status_code, 200)
+            self.assertEqual(self.get("/stats").status_code, 200)
+            r = self.get("/stats")
+        self.assertEqual((r.status_code, r.get_json()["error"]), (429, "rate_limited"))
 
-    def test_限流(self):
-        self.assertTrue(all(auth.allow(99, limit=3) for _ in range(3)))
-        self.assertFalse(auth.allow(99, limit=3))
-        self.assertTrue(auth.allow(100, limit=3), "别的设备不受影响")
+    def test_经_Cloudflare_的请求按_Cf_Connecting_Ip_限流(self):
+        with mock.patch.object(access, "RATE_LIMIT", 1):
+            a = {**self.headers, "Cf-Connecting-Ip": "9.9.9.9"}
+            b = {**self.headers, "Cf-Connecting-Ip": "8.8.8.8"}
+            self.assertEqual(self.client.get(BASE + "/stats", headers=a).status_code, 200)
+            self.assertEqual(self.client.get(BASE + "/stats", headers=a).status_code, 429)
+            self.assertEqual(self.client.get(BASE + "/stats", headers=b).status_code, 200)
 
     def test_响应不被缓存(self):
         self.assertEqual(self.get("/ping").headers["Cache-Control"], "no-store")
-
-    def test_所有写接口都要令牌(self):
-        for method, path in (("post", "/attempts"), ("put", "/achievements/k"), ("put", "/exam-drafts/k"), ("delete", "/exam-drafts/k"), ("post", "/notices/read-all")):
-            r = getattr(self.client, method)(BASE + path, json={})
-            self.assertEqual(r.status_code, 401, f"{method} {path}")
 
 
 class AppendOnlyTests(ApiCase):
@@ -341,12 +330,10 @@ class FailureTests(unittest.TestCase):
     """数据库、配置出问题时的表现：503 和不泄露细节。"""
 
     def make(self, driver_engine=None):
-        auth.reset_rate_limits()
-        tokens = memory_engine()
+        access.reset_rate_limits()
         app = Flask(__name__)
-        init_driver_api(app, driver_engine=driver_engine, token_engine=tokens)
-        _id, token = auth.create_token(tokens, "d")
-        return app.test_client(), {"Authorization": f"Bearer {token}", "X-Athena-User": "tiger"}
+        init_driver_api(app, driver_engine=driver_engine)
+        return app.test_client(), {"X-Athena-User": "tiger"}
 
     def test_表还没建_503_且不泄露细节(self):
         client, headers = self.make(driver_engine=memory_engine())  # 空库，没有表
@@ -422,9 +409,8 @@ class MultiUserTests(ApiCase):
         self.assertEqual(self.get("/exam-drafts/subject1.exam", user="second").status_code, 200)
 
     def test_缺用户头与空用户名都是400(self):
-        r = self.client.get(BASE + "/attempts", headers={"Authorization": f"Bearer {self.token}"})
+        r = self.client.get(BASE + "/attempts")
         self.assertEqual(r.status_code, 400)
         self.assertEqual(r.get_json()["error"], "invalid")
-        r = self.client.get(BASE + "/attempts",
-                            headers={"Authorization": f"Bearer {self.token}", "X-Athena-User": "  "})
+        r = self.client.get(BASE + "/attempts", headers={"X-Athena-User": "  "})
         self.assertEqual(r.status_code, 400)
