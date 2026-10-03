@@ -1,3 +1,4 @@
+import "dart:convert";
 import "dart:io";
 
 import "package:athena_driver/users.dart";
@@ -16,44 +17,108 @@ void main() {
     await dir.delete(recursive: true);
   });
 
-  test("新建生成 u_ 前缀的随机 ID，注册表落在全局目录（ADR 0072、0073）", () {
+  File file() => File(UserRegistry.fileOverride!);
+
+  test("登录过的人记进缓存并设为上次使用者，重开还在（ADR 0075 决策 7）", () {
     final registry = UserRegistry.load();
     expect(registry.users, isEmpty);
-    final profile = registry.register("小张");
-    expect(profile.id, matches(RegExp(r"^u_[0-9a-f]{16}$")));
-    expect(profile.name, "小张");
-    expect(registry.last, profile.id);
+    registry.remember(const UserProfile(id: "3", name: "小张"));
+    expect(registry.last, "3");
 
     final reopened = UserRegistry.load();
-    expect(reopened.users.single.id, profile.id);
+    expect(reopened.users.single.id, "3");
     expect(reopened.users.single.name, "小张");
-    expect(reopened.last, profile.id);
+    expect(reopened.last, "3");
   });
 
-  test("改名只动显示名，ID 不变（ADR 0072）", () {
+  test("再次登录同一个编号只更新名字，不重复登记", () {
     final registry = UserRegistry.load();
-    final profile = registry.register("tiger");
-    registry.rename(profile.id, "老司机");
+    registry.remember(const UserProfile(id: "3", name: "小张"));
+    registry.remember(const UserProfile(id: "3", name: "老张"));
+    expect(registry.users, hasLength(1));
+    expect(registry.byId("3")!.name, "老张");
+  });
+
+  test("按名字找：忽略大小写和首尾空白，重名全部返回", () {
+    final registry = UserRegistry.load();
+    registry.remember(const UserProfile(id: "1", name: "Tiger"));
+    registry.remember(const UserProfile(id: "2", name: "小王"));
+    registry.remember(const UserProfile(id: "5", name: "小王"));
+    expect(registry.matching("  tiger ").map((p) => p.id), ["1"]);
+    expect(registry.matching("小王").map((p) => p.id), ["2", "5"]);
+    expect(registry.matching("没人"), isEmpty);
+  });
+
+  test("改名只动名字，编号不变（ADR 0075）", () {
+    final registry = UserRegistry.load();
+    registry.remember(const UserProfile(id: "1", name: "tiger"));
+    registry.renamed("1", "老司机");
     final reopened = UserRegistry.load();
-    expect(reopened.users.single.id, profile.id);
+    expect(reopened.users.single.id, "1");
     expect(reopened.users.single.name, "老司机");
   });
 
-  test("重名拒绝；续用（withId）用既有 ID、名字本机自己叫（ADR 0073）", () {
+  test("读到不认识的字段，写回时原样保留（跨应用共用的文件，REPOSITORY.md 的读写约定）", () {
+    file().writeAsStringSync(jsonEncode({
+      "version": 2,
+      "users": [
+        {"id": "1", "name": "tiger", "avatar": "car"},
+      ],
+      "last": "1",
+    }));
     final registry = UserRegistry.load();
-    registry.register("tiger", withId: "u_d4d3f8fd73531202");
-    expect(() => registry.register("tiger"), throwsFormatException);
-    final adopted = registry.register("驾驶新手", withId: "u_abc");
-    expect(adopted.id, "u_abc");
-    expect(registry.byId("u_abc")!.name, "驾驶新手");
-    // 同一 ID 不能登记两次。
-    expect(() => registry.register("又一个人", withId: "u_abc"), throwsFormatException);
+    registry.remember(const UserProfile(id: "2", name: "小王"));
+    registry.renamed("1", "老司机");
+
+    final saved = jsonDecode(file().readAsStringSync()) as Map<String, dynamic>;
+    expect(saved["version"], 2);
+    final first = (saved["users"] as List).first as Map<String, dynamic>;
+    expect(first["avatar"], "car");
+    expect(first["name"], "老司机");
   });
 
-  test("旧格式（名字数组）升级：名字直接当 ID——唯一存量 tiger 正好映射（ADR 0073）", () {
-    File(UserRegistry.fileOverride!).writeAsStringSync('{"users": ["tiger"], "last": "tiger"}');
+  test("编号不是 1～999 数字串的旧条目被忽略，不崩（0071~0073 的草稿结构从未发行）", () {
+    file().writeAsStringSync(jsonEncode({
+      "users": [
+        "tiger",
+        {"id": "u_d4d3f8fd73531202", "name": "旧草稿"},
+        {"id": "0", "name": "零号"},
+        {"id": "1000", "name": "超限"},
+        {"id": "007", "name": "前导零"},
+        {"id": 4, "name": "数字型编号也认"},
+      ],
+      "last": "u_d4d3f8fd73531202",
+    }));
     final registry = UserRegistry.load();
-    expect(registry.users.single.id, "tiger");
-    expect(registry.users.single.name, "tiger");
+    expect(registry.users.map((p) => p.id), ["4"]);
+    expect(registry.last, isNull, reason: "last 指向被忽略的条目时作废");
+  });
+
+  test("文件损坏当作还没有学习者", () {
+    file().writeAsStringSync("{ not json");
+    expect(UserRegistry.load().users, isEmpty);
+    file().writeAsStringSync('{"users": "oops"}');
+    expect(UserRegistry.load().users, isEmpty);
+  });
+
+  test("写盘走临时文件再改名，不留残片", () {
+    final registry = UserRegistry.load();
+    registry.remember(const UserProfile(id: "1", name: "tiger"));
+    expect(File("${file().path}.tmp").existsSync(), isFalse);
+  });
+
+  test("名字与编号的输入校验", () {
+    expect(() => UserRegistry.validateName(""), throwsFormatException);
+    expect(() => UserRegistry.validateName("   "), throwsFormatException);
+    expect(() => UserRegistry.validateName("a/b"), throwsFormatException);
+    expect(() => UserRegistry.validateName(r"a\b"), throwsFormatException);
+    expect(() => UserRegistry.validateName("x" * 65), throwsFormatException);
+    UserRegistry.validateName("小王");
+
+    for (final bad in ["", "0", "1000", "abc", "-1", "1.5", "u_1"]) {
+      expect(() => UserRegistry.validateId(bad), throwsFormatException, reason: bad);
+    }
+    UserRegistry.validateId("1");
+    UserRegistry.validateId(" 999 ");
   });
 }

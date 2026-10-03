@@ -75,7 +75,7 @@
   `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
 - **进度（个人数据）——本地优先（主仓库 ADR 0070）**：界面只读写本地 SQLite
-  （用户数据目录 `AthenaDriver/local-<学习者ID>.db`，不进仓库；表结构与中心 PG 同名同列
+  （用户数据目录 `AthenaDriver/local-<学习者编号>.db`，不进仓库；表结构与中心 PG 同名同列
   ——除本地不建的 `user` 列，业务键唯一索引承担幂等合并）。写入在同一事务里落业务表
   和待发送队列（outbox）；`lib/sync.dart` 的 SyncEngine 后台把队列幂等上传、按游标增量
   拉取，与软路由上的中心 PostgreSQL（库 `athena_driver`）保持同一份。断网照常做题，
@@ -83,17 +83,19 @@
   JSONL 同步**（主仓库 ADR 0067、0068；旧同步代码已删，ADR 0010 仅作历史）。
   表结构管理在服务端，客户端不再建表。知识点 ID 前缀 `drive.`（主仓库 ADR 0037）。
   **题库不进数据库**，仍是 `content/` 的 JSON。
-- **多用户（主仓库 ADR 0071、0072、0073）**：同一份题库给多个学习者，各人一份空白历史。
-  学习者无口令（信任模型与设备令牌一致，防误看不防对抗）。**ID 是身份，名字只是称呼**：
-  ID 为 `u_` + 16 位随机十六进制，永不变；本地库文件名（`local-<ID>.db`）、照片清单名、
-  请求头 `X-Athena-User`、中心 `user` 列用的都是 ID；显示名只存在本机注册表，随时可改，
-  重名拒绝。注册表是**应用无关的全局文件** `Athena/users.json`（与 `AthenaDriver/` 平级，
-  `lib/users.dart`），将来别的学习应用接入中心时认同一套 ID。单用户不打扰直接进，
-  多人启动时选、侧栏「学习者」一行随时换。
-  **跨设备续用靠 ID，不靠同名**：另一台机器在选择页「续用」里输入既有 ID。**客户端不猜首
-  用户**：首用户 tiger 的规范 ID 由 `practice/nas_admin` 的 `scripts/driver_migrate_users.py`
-  一次性生成并打印（同时把中心存量记录从 `tiger` 改写为该 ID），人工分发一次；本机残留
-  单用户时代的 `local.db` 时，选择页提示用这个 ID 续用来收编。
+- **多用户（主仓库 ADR 0071～0075）**：同一份题库给多个学习者，各人一份空白历史。
+  学习者无口令（信任模型与设备令牌一致，防误看不防对抗）。**登录就是输入名字**
+  （`UserGateScreen`，`lib/main.dart`）：本机缓存里唯一命中就直接进、不联网；否则问中心
+  目录（`lib/user_directory.dart`）——找到一个就进，没有就提示可以「新建学习者」，**重名
+  才再问学习者编号**。**编号是身份**：服务端在登记时分配的 1～999 纯数字，永不变；本地库
+  文件名（`local-<编号>.db`）、照片清单名、请求头 `X-Athena-User`、中心 `user` 列用的都是
+  它。名字只是称呼，不要求唯一，**只能改当前登录的自己**（服务端也校验）。新建后界面显著
+  展示分到的编号。中心目录是权威（后台库 `athena_users`，接口见 `practice/nas_admin` 的
+  `docs/user-api.md`），**新建与异地首次登录要联网**，不为离线新建设计路径；已在本机用过
+  的学习者离线照常进。本机缓存是应用无关的全局文件 `Athena/users.json`（`lib/users.dart`，
+  格式见主仓库 `docs/REPOSITORY.md`）。首用户 tiger 的记录由
+  `practice/nas_admin/scripts/driver_migrate_users.py` 收编到数字编号；本机残留单用户时代的
+  `local.db` 时，登录后会问一句归不归到这位名下，客户端不替人猜。
 - **通路统一走 REST API（主仓库 ADR 0070）**：内网直连 PG 的通道已退役，数据库端口
   不出内网；所有同步走 `practice/nas_admin` 的 `/api/driver/v1`（设备令牌认证），
   内网端点连路由器、外网端点过 Cloudflare（另带 Access Service Token 头），按序尝试。
@@ -102,7 +104,7 @@
   POSIX 上 600）；没配置不拦启动——离线照常做题，配好令牌后队列自然补发。发令牌在
   路由器上用 `nas_admin` 的 `scripts/driver_token.py`。历史数据当年用
   `scripts/migrate_progress_to_pg.py` 一次性迁入 PG（已执行完，仅作历史参考）。
-- **照片（ADR 0070、0071）**：文件与登记清单（`progress/points/photos-<学习者ID>.json`）
+- **照片（ADR 0070、0071）**：文件与登记清单（`progress/points/photos-<学习者编号>.json`）
   都随仓库走，不进任何数据库，跨机器靠 `launcher sync`；其余九张表都是按用户同步的
   个人数据。
 - **测试**：数据层是本地 SQLite，每个测试文件开自己的临时库（`open(suite:)`，close 时

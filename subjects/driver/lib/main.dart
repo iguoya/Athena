@@ -16,6 +16,7 @@ import "look.dart";
 import "models.dart";
 import "progress.dart";
 import "sync.dart";
+import "user_directory.dart";
 import "users.dart";
 
 Future<void> main() async {
@@ -29,9 +30,9 @@ Future<void> main() async {
   runApp(const BootstrapGate());
 }
 
-/// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；多用户时
-/// 先选学习者（ADR 0071）；API 没配置时可以跳过先离线用——队列会等令牌配好后
-/// 自然补发。
+/// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；先认出是谁
+/// （ADR 0071、0075：输入名字登录，本机缓存里的人离线也能直接进）；API 没配置时可以先
+/// 离线用——队列会等令牌配好后自然补发。
 class BootstrapGate extends StatefulWidget {
   const BootstrapGate({super.key});
 
@@ -48,7 +49,11 @@ class _BootstrapGateState extends State<BootstrapGate> {
   UserProfile? _profile;
   UserRegistry? _registry;
 
-  /// 本机还有单用户时代的 local.db 等着收编（选择页据此提示走续用）。
+  /// 应用内的导航器：启动门自己在 MaterialApp 之上，拿不到 Navigator，
+  /// 侧栏触发的换人与配置页都经它 push。
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  /// 本机还有单用户时代的 local.db 等着认领（登录后询问归到谁名下）。
   bool _legacyPending = false;
 
   @override
@@ -63,15 +68,13 @@ class _BootstrapGateState extends State<BootstrapGate> {
       _bank ??= await ContentLoader.load();
       final registry = _registry ??= UserRegistry.load();
       if (registry.users.isEmpty) {
-        // 首次使用进选择页。本机躺着单用户时代的 local.db 时提示走「续用」收编
-        // （ADR 0073 决策 4：客户端不猜首用户的 ID，ID 由迁移脚本生成、人分发一次）。
         setState(() {
           _legacyPending = File(p.join(ProgressStore.userDataDir(), "local.db")).existsSync();
           _stage = "first-user";
         });
         return;
       }
-      // 单用户不打扰直接进；多人记住上次用的（ADR 0071 决策 7）。
+      // 缓存里只有一个人，不打扰直接进；多人记住上次用的（ADR 0071 决策 7）。
       if (registry.users.length == 1) {
         await _openAs(registry.users.first);
       } else if (registry.last != null && registry.byId(registry.last!) != null) {
@@ -87,8 +90,17 @@ class _BootstrapGateState extends State<BootstrapGate> {
     }
   }
 
+  /// 登录页选定学习者后进入应用；[adoptLegacy] 为真时先把旧的单用户本地库归到他名下。
+  Future<void> _enter(UserProfile profile, bool adoptLegacy) async {
+    if (adoptLegacy) {
+      ProgressStore.adoptLegacyFiles(profile.id);
+      _legacyPending = false;
+    }
+    await _openAs(profile);
+  }
+
   /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
-  /// 身份认 [UserProfile.id]（ADR 0072）；侧栏显示的是显示名。
+  /// 身份认编号（ADR 0075）；侧栏显示的是名字。
   Future<void> _openAs(UserProfile profile) async {
     try {
       _engine?.stop();
@@ -119,13 +131,33 @@ class _BootstrapGateState extends State<BootstrapGate> {
     )..start();
   }
 
-  /// 侧栏用户行点进来换人：UserGateScreen pop 带回选中的学习者（含新建与改名后的最新名）。
+  /// 登录页每次动作时现取：配置页保存令牌后，同一个页面立刻就能用。
+  UserDirectory? _directory() {
+    final config = ApiConfig.load();
+    return config == null ? null : HttpUserDirectory(config);
+  }
+
+  /// 名字被改后同步侧栏显示（只能改当前登录的人，ADR 0075 决策 5）。
+  void _onRenamed(UserProfile profile) {
+    if (_profile?.id != profile.id) return;
+    setState(() => _profile = profile);
+  }
+
+  /// 侧栏用户行点进来：换人，或改当前学习者自己的名字。
   Future<void> _switchUser() async {
     final registry = _registry;
-    if (registry == null) return;
-    final picked = await Navigator.of(context).push<UserProfile>(
+    final navigator = _navigatorKey.currentState;
+    if (registry == null || navigator == null) return;
+    final picked = await navigator.push<UserProfile>(
       MaterialPageRoute(
-        builder: (context) => UserGateScreen(users: registry.users, allowCancel: true),
+        builder: (context) => UserGateScreen(
+          registry: registry,
+          directoryFactory: _directory,
+          currentUser: _profile,
+          allowCancel: true,
+          onPicked: (profile, _) => Navigator.of(context).pop(profile),
+          onRenamed: _onRenamed,
+        ),
         fullscreenDialog: true,
       ),
     );
@@ -135,7 +167,9 @@ class _BootstrapGateState extends State<BootstrapGate> {
 
   /// 侧栏同步行点进来重新配置：保存后换引擎重启同步，跳过则维持现状。
   Future<void> _openConfig() async {
-    final config = await Navigator.of(context).push<ApiConfigScreenResult>(
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) return;
+    final config = await navigator.push<ApiConfigScreenResult>(
       MaterialPageRoute(
         builder: (context) => const ApiConfigScreen(allowSkip: true),
         fullscreenDialog: true,
@@ -170,7 +204,12 @@ class _BootstrapGateState extends State<BootstrapGate> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: UserGateScreen(users: _registry?.users ?? const [], legacyHint: _legacyPending),
+          home: UserGateScreen(
+            registry: _registry!,
+            directoryFactory: _directory,
+            legacyPending: _legacyPending,
+            onPicked: _enter,
+          ),
         ),
       "config" => MaterialApp(
           title: "驾考学习",
@@ -191,6 +230,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
           bank: _bank!,
           store: _store!,
           currentUser: _profile!.name,
+          navigatorKey: _navigatorKey,
           onSwitchUser: _switchUser,
           syncStatus: _engine?.status,
           onOpenConfig: _openConfig,
@@ -203,25 +243,36 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 }
 
-/// 选学习者 / 新建 / 改名 / 续用（ADR 0071、0072、0073）。选名字直接进，不设口令。
+/// 登录页（ADR 0075）：输入名字进入，不设口令。
 ///
-/// 学习者行显示名字与 ID——ID 是身份（改名不影响绑定），复制 ID 到另一台电脑的
-/// 「续用」框里就是同一份历史。[legacyHint] 为真说明本机躺着单用户时代的旧库，
-/// 引导用迁移脚本打印的 ID 收编（ADR 0073 决策 4：客户端不猜首用户）。
+/// - 名字在本机缓存里唯一命中 → 直接进，不联网（离线可用）。
+/// - 否则问中心目录：找到一个就进；没有就提示可以新建；不止一个同名就再问**学习者编号**。
+/// - 新建是单独的动作：名字已有人用时先确认，新建后显著展示分到的编号。
+/// - 从侧栏进来时（[currentUser] 非空）可以改**当前这位**学习者自己的名字，改不了别人的。
 ///
-/// 两种挂法：启动门把它当 home（选择后直接调启动门换库）；应用内从侧栏 push 进来
-/// （pop 带回学习者）。[allowCancel] 只在后者有意义。
+/// 目录是权威，新建与异地首次登录要联网（ADR 0074 决策 3）；[directoryFactory] 返回 null
+/// 表示还没配设备令牌，页面给出配置入口。
 class UserGateScreen extends StatefulWidget {
   const UserGateScreen({
     super.key,
-    required this.users,
+    required this.registry,
+    required this.directoryFactory,
+    required this.onPicked,
+    this.onRenamed,
+    this.currentUser,
     this.allowCancel = false,
-    this.legacyHint = false,
+    this.legacyPending = false,
   });
 
-  final List<UserProfile> users;
+  final UserRegistry registry;
+  final UserDirectory? Function() directoryFactory;
+
+  /// 选定学习者。第二个参数为真表示使用者同意把旧的单用户本地记录归到他名下。
+  final void Function(UserProfile profile, bool adoptLegacy) onPicked;
+  final void Function(UserProfile profile)? onRenamed;
+  final UserProfile? currentUser;
   final bool allowCancel;
-  final bool legacyHint;
+  final bool legacyPending;
 
   @override
   State<UserGateScreen> createState() => _UserGateScreenState();
@@ -229,73 +280,183 @@ class UserGateScreen extends StatefulWidget {
 
 class _UserGateScreenState extends State<UserGateScreen> {
   final _name = TextEditingController();
-  final _adoptId = TextEditingController();
-  final _adoptName = TextEditingController();
+  final _id = TextEditingController();
+  late UserProfile? _current = widget.currentUser;
+  bool _askId = false;
+  bool _busy = false;
   String _error = "";
 
   @override
   void dispose() {
     _name.dispose();
-    _adoptId.dispose();
-    _adoptName.dispose();
+    _id.dispose();
     super.dispose();
   }
 
-  UserRegistry get _registry =>
-      context.findAncestorStateOfType<_BootstrapGateState>()?._registry ?? UserRegistry.load();
+  static const _needSetup = "现在连不上学习者目录：还没有配置同步设备令牌。新建学习者和在新电脑上登录都要联网，请先配置同步。";
 
-  void _done(UserProfile profile) {
-    final gate = context.findAncestorStateOfType<_BootstrapGateState>();
-    if (gate != null && !ModalRoute.of(context)!.isFirst) {
-      Navigator.of(context).pop(profile);
-    } else {
-      gate?._openAs(profile);
-    }
-  }
-
-  void _create() {
+  Future<void> _guarded(Future<void> Function() action) async {
+    setState(() {
+      _busy = true;
+      _error = "";
+    });
     try {
-      final profile = _registry.register(_name.text);
-      _done(profile);
+      await action();
     } on FormatException catch (error) {
-      setState(() => _error = error.message);
+      _fail(error.message);
+    } on DirectoryUnavailable catch (error) {
+      _fail("现在连不上学习者目录（${error.detail}）。已在这台电脑上用过的学习者可以直接点上面的名字。");
+    } on DirectoryRejected catch (error) {
+      _fail(error.message);
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
 
-  void _adopt() {
-    try {
-      // 续用另一台电脑的学习者：ID 决定身份，名字本机自己叫。
-      final profile = _registry.register(
-        _adoptName.text.trim().isEmpty ? _adoptId.text.trim() : _adoptName.text,
-        withId: _adoptId.text,
-      );
-      // 旧 local.db 只可能属于原单用户；续用的 ID 若正是他（迁移脚本生成、人分发
-      // 的那个），顺手把文件改名归位。新建学习者不碰旧文件（ADR 0073）。
-      final gate = context.findAncestorStateOfType<_BootstrapGateState>();
-      if (gate != null && gate._legacyPending) {
-        ProgressStore.adoptLegacyFiles(profile.id);
-        gate._legacyPending = false;
+  void _fail(String message) {
+    if (mounted) setState(() => _error = message);
+  }
+
+  /// 登录：先看本机缓存，再问中心。
+  Future<void> _enter() async {
+    await _guarded(() async {
+      UserRegistry.validateName(_name.text);
+      final cached = widget.registry.matching(_name.text);
+      final typedId = _askId ? _id.text.trim() : "";
+      if (_askId) UserRegistry.validateId(typedId);
+      if (cached.isNotEmpty) {
+        final hit = cached.length == 1 && typedId.isEmpty
+            ? cached.first
+            : cached.where((profile) => profile.id == typedId).firstOrNull;
+        if (hit != null) return _finish(hit);
+        if (typedId.isEmpty) {
+          // 本机就有重名的人：只能靠编号区分。
+          setState(() {
+            _askId = true;
+            _error = "这台电脑上有重名的学习者，请输入你的学习者编号。";
+          });
+          return;
+        }
+        // 缓存里没有这一对：交给中心判断（也许是在别的电脑上建的同名者）。
       }
-      _done(profile);
-    } on FormatException catch (error) {
-      setState(() => _error = error.message);
-    }
+      final directory = widget.directoryFactory();
+      if (directory == null) return _fail(_needSetup);
+      try {
+        await _finish(await directory.login(_name.text, id: typedId));
+      } on DirectoryNotFound {
+        _fail(_askId
+            ? "名字和编号对不上。编号是第一次新建时告诉你的那个数字。"
+            : "没有叫「${_name.text.trim()}」的学习者。第一次来的话，点「新建学习者」。");
+      } on DirectoryAmbiguous {
+        setState(() {
+          _askId = true;
+          _error = "有重名的学习者，请输入你的学习者编号。";
+        });
+      }
+    });
   }
 
-  Future<void> _rename(UserProfile profile) async {
+  /// 新建：名字已有人用时先确认，成功后展示编号。
+  Future<void> _create() async {
+    await _guarded(() async {
+      UserRegistry.validateName(_name.text);
+      final directory = widget.directoryFactory();
+      if (directory == null) return _fail(_needSetup);
+      var exists = widget.registry.matching(_name.text).isNotEmpty;
+      if (!exists) {
+        try {
+          await directory.login(_name.text);
+          exists = true;
+        } on DirectoryAmbiguous {
+          exists = true;
+        } on DirectoryNotFound {
+          // 没人叫这个名字，直接新建。
+        }
+      }
+      if (exists) {
+        final go = await _confirm(
+          title: "已有同名的学习者",
+          body: "已经有叫「${_name.text.trim()}」的学习者。如果你就是 ta，请点「取消」再点「进入」；"
+              "如果是另一个人，仍可新建，之后在别的电脑登录会多问一次编号。",
+          yes: "仍要新建",
+          no: "取消",
+        );
+        if (!go) return;
+      }
+      final created = await directory.register(_name.text);
+      if (!mounted) return;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Text("你的学习者编号是 ${created.id}"),
+          content: const SizedBox(
+            width: 420,
+            child: Text("在别的电脑上用名字登录时，如果遇到同名的人，会问你这个编号。记一下就行。"),
+          ),
+          actions: [
+            FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text("知道了")),
+          ],
+        ),
+      );
+      await _finish(created);
+    });
+  }
+
+  Future<bool> _confirm({required String title, required String body, required String yes, required String no}) async {
+    if (!mounted) return false;
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: SizedBox(width: 440, child: Text(body, style: const TextStyle(height: 1.5))),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(no)),
+          FilledButton(onPressed: () => Navigator.of(context).pop(true), child: Text(yes)),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
+  /// 选定：记进本机缓存；本机还躺着单用户时代的旧记录就问一句归不归他。
+  Future<void> _finish(UserProfile profile) async {
+    var adopt = false;
+    if (widget.legacyPending) {
+      adopt = await _confirm(
+        title: "这台电脑上有一份旧的本地记录",
+        body: "是单用户时代留下的做题记录。要归到「${profile.name}」名下吗？",
+        yes: "归到我名下",
+        no: "不用",
+      );
+    }
+    final stored = widget.registry.remember(profile);
+    if (!mounted) return;
+    widget.onPicked(stored, adopt);
+  }
+
+  Future<void> _configure() async {
+    await Navigator.of(context).push<ApiConfigScreenResult>(
+      MaterialPageRoute(builder: (context) => const ApiConfigScreen(allowSkip: true), fullscreenDialog: true),
+    );
+    if (mounted) setState(() => _error = "");
+  }
+
+  /// 改当前登录者自己的名字：服务端也校验，改别人的会被拒（ADR 0075 决策 5）。
+  Future<void> _renameSelf() async {
+    final profile = _current;
+    if (profile == null) return;
     final controller = TextEditingController(text: profile.name);
     final saved = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("改「${profile.name}」的名字"),
+        title: const Text("改我的名字"),
         content: SizedBox(
           width: 420,
           child: TextField(
             controller: controller,
             autofocus: true,
-            decoration: const InputDecoration(
-              helperText: "只改这台机器上的称呼；学习记录的绑定看 ID，改名不受影响。",
-            ),
+            decoration: InputDecoration(helperText: "只改称呼；学习记录认编号 ${profile.id}，改名不受影响。"),
             onSubmitted: (value) => Navigator.of(context).pop(value),
           ),
         ),
@@ -306,114 +467,122 @@ class _UserGateScreenState extends State<UserGateScreen> {
       ),
     );
     if (saved == null) return;
-    try {
-      _registry.rename(profile.id, saved);
-      setState(() {}); // 列表与 registry 共享同一 List 引用，重建即见新名
-    } on FormatException catch (error) {
-      setState(() => _error = error.message);
-    }
+    await _guarded(() async {
+      UserRegistry.validateName(saved);
+      final directory = widget.directoryFactory();
+      if (directory == null) return _fail("改名要联网，先配置同步设备令牌。");
+      final renamed = await directory.rename(profile.id, saved);
+      widget.registry.renamed(renamed.id, renamed.name);
+      widget.onRenamed?.call(renamed);
+      if (mounted) setState(() => _current = renamed);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final configured = widget.directoryFactory() != null;
     return Scaffold(
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("谁在学车？", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
-                const Text(
-                  "各人的做题记录、成就和解锁进度完全分开，互不打扰。",
-                  style: TextStyle(height: 1.5),
-                ),
-                const SizedBox(height: 20),
-                for (final profile in widget.users)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Padding(
+              padding: const EdgeInsets.all(28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("谁在学车？", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "输入你的名字进入。各人的做题记录、成就和解锁进度完全分开，互不打扰。",
+                    style: TextStyle(height: 1.5),
+                  ),
+                  const SizedBox(height: 20),
+                  if (_current != null) ...[
+                    Row(
                       children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => _done(profile),
-                            icon: const Icon(Glyph.user),
-                            label: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(profile.name),
-                                  // ID 是「我是谁」的最终答案（ADR 0072 决策 5）：可见、可选中复制。
-                                  SelectableText(
-                                    profile.id,
-                                    style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: "改名",
-                          onPressed: () => _rename(profile),
+                        const Icon(Glyph.user),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text("现在是：${_current!.name}（编号 ${_current!.id}）")),
+                        TextButton.icon(
+                          onPressed: _busy ? null : _renameSelf,
                           icon: const Icon(Glyph.edit, size: 18),
+                          label: const Text("改我的名字"),
                         ),
                       ],
                     ),
-                  ),
-                if (widget.users.isNotEmpty) const Divider(height: 28),
-                TextField(
-                  controller: _name,
-                  autofocus: widget.users.isEmpty,
-                  decoration: const InputDecoration(
-                    labelText: "新学习者的名字",
-                    helperText: "新学习者有全新的空白记录；想接着已有的记录用下面的续用。",
-                  ),
-                  onSubmitted: (_) => _create(),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _adoptId,
-                  decoration: const InputDecoration(
-                    labelText: "续用已有的学习者：输入 ID",
-                    helperText: "在另一台电脑的学习者一栏里选中那串 ID 复制过来。",
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _adoptName,
-                  decoration: const InputDecoration(labelText: "在这台电脑上叫（可空，默认用 ID）"),
-                ),
-                if (widget.legacyHint) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    "这台电脑上有一份单用户时代的本地记录：用迁移脚本打印的学习者 ID 续用，"
-                    "记录会原样归到这个名下（ADR 0073）。",
-                    style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.primary, height: 1.4),
-                  ),
-                ],
-                if (_error.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Text(_error, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                ],
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    FilledButton(onPressed: _create, child: const Text("新建并进入")),
-                    const SizedBox(width: 12),
-                    OutlinedButton(onPressed: _adopt, child: const Text("续用并进入")),
-                    if (widget.allowCancel) ...[
-                      const SizedBox(width: 12),
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
-                    ],
+                    const Divider(height: 28),
                   ],
-                ),
-              ],
+                  if (widget.registry.users.isNotEmpty) ...[
+                    const Text("这台电脑上用过的", style: TextStyle(fontSize: 13, color: Color(0xFF757575))),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final profile in widget.registry.users)
+                          OutlinedButton.icon(
+                            onPressed: _busy ? null : () => _guarded(() => _finish(profile)),
+                            icon: const Icon(Glyph.user, size: 18),
+                            label: Text(profile.name),
+                          ),
+                      ],
+                    ),
+                    const Divider(height: 28),
+                  ],
+                  TextField(
+                    controller: _name,
+                    autofocus: widget.registry.users.isEmpty,
+                    decoration: const InputDecoration(labelText: "你的名字"),
+                    onSubmitted: (_) => _enter(),
+                  ),
+                  if (_askId) ...[
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _id,
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: "学习者编号（1～999）",
+                        helperText: "有重名的学习者：输入你第一次新建时分到的编号。",
+                      ),
+                      onSubmitted: (_) => _enter(),
+                    ),
+                  ],
+                  if (!configured) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "还没有配置同步设备令牌：新建学习者和在新电脑上登录要联网查家里的目录。",
+                            style: TextStyle(fontSize: 13, color: theme.colorScheme.primary, height: 1.4),
+                          ),
+                        ),
+                        TextButton(onPressed: _configure, child: const Text("配置同步")),
+                      ],
+                    ),
+                  ],
+                  if (_error.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(_error, style: TextStyle(color: theme.colorScheme.error, height: 1.4)),
+                  ],
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      FilledButton(onPressed: _busy ? null : _enter, child: const Text("进入")),
+                      const SizedBox(width: 12),
+                      OutlinedButton(onPressed: _busy ? null : _create, child: const Text("新建学习者")),
+                      if (widget.allowCancel) ...[
+                        const SizedBox(width: 12),
+                        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -682,6 +851,7 @@ class DriverApp extends StatelessWidget {
     required this.bank,
     required this.store,
     required this.currentUser,
+    this.navigatorKey,
     this.syncStatus,
     this.onOpenConfig,
     this.onSwitchUser,
@@ -692,6 +862,9 @@ class DriverApp extends StatelessWidget {
 
   /// 当前学习者（ADR 0071）：侧栏常驻显示，点击换人。
   final String currentUser;
+
+  /// 应用内导航器：启动门在 MaterialApp 之上，侧栏换人、配置页经它 push。
+  final GlobalKey<NavigatorState>? navigatorKey;
   final ValueListenable<SyncStatus>? syncStatus;
   final VoidCallback? onOpenConfig;
   final VoidCallback? onSwitchUser;
@@ -699,6 +872,7 @@ class DriverApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: "驾考学习",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
