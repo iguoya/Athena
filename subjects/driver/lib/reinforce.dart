@@ -251,6 +251,10 @@ class ReinforcePick {
 /// 同考点变式占整轮的比例（考点簇就绪时）。经验值，没有数据支撑（主仓库 ADR 0085）。
 const reinforceVariantShare = 0.25;
 
+/// 一轮强化练习默认出多少题（主仓库 ADR 0087，修订 ADR 0076 决策 7 的「默认 20 题」）。
+/// 一页十题，50 题是五页；20 题一轮太少，错题库几百道要练很多轮。
+const reinforceRoundSize = 50;
+
 /// 错题名额里留给「还没在强化练习里测过」的题的比例（主仓库 ADR 0086）。经验值。
 const reinforceCoverageShare = 0.5;
 
@@ -319,7 +323,7 @@ ReinforcePlan planReinforcement({
   required HistorySet histories,
   required DateTime now,
   Random? random,
-  int count = 20,
+  int count = reinforceRoundSize,
   ClusterIndex? clusters,
 }) {
   random ??= Random();

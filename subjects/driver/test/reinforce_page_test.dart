@@ -43,7 +43,7 @@ void main() {
     // 题单构成：做错的 6 道进了复测，其余按薄弱章节补足
     expect(find.textContaining("复测错题 6"), findsOneWidget);
     expect(find.textContaining("薄弱章节"), findsWidgets);
-    expect(find.textContaining("开始强化练习 20 题"), findsOneWidget);
+    expect(find.textContaining("开始强化练习 50 题"), findsOneWidget);
     expect(find.textContaining("模拟考仍从整个题库按考场配比抽取"), findsOneWidget);
 
     // 掌握度漏斗
@@ -68,8 +68,8 @@ void main() {
     final stage = tester.widget<SessionStage>(find.byType(SessionStage));
     expect(stage.launch.attemptKind, "reinforce");
     expect(stage.launch.timed, isFalse);
-    expect(stage.launch.questions, hasLength(20));
-    expect({for (final q in stage.launch.questions) q.id}, hasLength(20), reason: "每题只出一次");
+    expect(stage.launch.questions, hasLength(50));
+    expect({for (final q in stage.launch.questions) q.id}, hasLength(50), reason: "每题只出一次");
     expect(
       {for (final q in wrongOnes) q.id}.difference({for (final q in stage.launch.questions) q.id}),
       isEmpty,

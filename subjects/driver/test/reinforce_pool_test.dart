@@ -21,7 +21,7 @@ void main() {
       bank = await ContentLoader.load();
       store = await ProgressStore.open(suite: "reinforce_pool");
       final pool = bank.forSubject("subject1").where((q) => !q.isRare).toList();
-      final wrong = pool.take(60).toList();
+      final wrong = pool.take(150).toList();
       wrongIds = {for (final q in wrong) q.id};
       for (final q in wrong) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: false);
@@ -51,10 +51,13 @@ void main() {
 
     await tester.tap(find.text("强化练习").first);
     await tester.pump();
-    expect(find.textContaining("历史上答错过 60 题，其中还要练 45 题"), findsOneWidget);
-    expect(find.textContaining("45 题还没在强化练习里测过"), findsOneWidget);
+    expect(find.textContaining("历史上答错过 150 题，其中还要练 135 题"), findsOneWidget);
+    expect(find.textContaining("135 题还没在强化练习里测过"), findsOneWidget);
     expect(find.textContaining("测过且没有出错的 15 题已移出"), findsOneWidget);
-    expect(find.textContaining("复测错题 20"), findsOneWidget, reason: "备选库够大：整轮 20 题都来自它");
+    expect(find.textContaining("复测错题 50"), findsOneWidget, reason: "备选库够大：整轮 50 题都来自它");
+    // 备选库的大小直接用大号数字摆出来
+    expect(find.text("135"), findsWidgets, reason: "备选库 135 题，大号数字");
+    expect(find.textContaining("还要练的错题（备选库）"), findsOneWidget);
     expect(find.text("换一批"), findsOneWidget);
 
     Set<String> started() => {for (final q in tester.widget<SessionStage>(find.byType(SessionStage)).launch.questions) q.id};
@@ -62,7 +65,7 @@ void main() {
     await tester.tap(find.textContaining("开始强化练习"));
     await tester.pump();
     final first = started();
-    expect(first, hasLength(20));
+    expect(first, hasLength(50));
     expect(first.difference(wrongIds), isEmpty, reason: "整轮都来自历史错题");
     expect(first.intersection(retiredIds), isEmpty, reason: "已经移出的 15 道不再出现");
 

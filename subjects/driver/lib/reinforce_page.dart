@@ -98,6 +98,18 @@ class ReinforcePage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
+          // 备选库的大小直接摆出来：总共还要练多少道，是这页最先要回答的问题。
+          Wrap(
+            spacing: 14,
+            runSpacing: 10,
+            children: [
+              _CountTile(label: "还要练的错题（备选库）", value: plan.wrongPool, color: Bs.danger, emphasis: true),
+              _CountTile(label: "其中还没在强化练习里测过", value: plan.untested, color: Bs.warning),
+              _CountTile(label: "已测过且没出错、移出", value: plan.retired, color: Bs.success),
+              _CountTile(label: "每轮抽取", value: plan.picks.length, color: Bs.primary),
+            ],
+          ),
+          const SizedBox(height: 12),
           Text(
             plan.wrongPool + plan.retired > 0
                 ? "错题库：历史上答错过 ${plan.wrongPool + plan.retired} 题，其中还要练 ${plan.wrongPool} 题"
@@ -290,6 +302,38 @@ class _PassBlock extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+
+/// 一个醒目的数字块：大号数字加说明，用来摆备选库的大小。
+class _CountTile extends StatelessWidget {
+  const _CountTile({required this.label, required this.value, required this.color, this.emphasis = false});
+
+  final String label;
+  final int value;
+  final Color color;
+  final bool emphasis;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: color, width: emphasis ? 2 : 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text("$value", style: TextStyle(fontSize: emphasis ? 36 : 28, fontWeight: FontWeight.w700, color: color)),
+          const SizedBox(width: 6),
+          Text("题 · $label", style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      ),
     );
   }
 }
