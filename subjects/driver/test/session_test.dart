@@ -119,6 +119,11 @@ void main() {
       expect((await store.wrongQuestionIds()).where(ours), hasLength(11));
       expect((await store.masteredQuestionIds()).where(ours), hasLength(6));
     });
+    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
+    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
+    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
+    // 推进过停留期让 timer 落地,再拆树。
+    await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
       await store.close();
@@ -201,6 +206,11 @@ void main() {
       expect(draft?.savedAt, isNotNull);
       expect(draft!.spent, greaterThanOrEqualTo(Duration.zero));
     });
+    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
+    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
+    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
+    // 推进过停留期让 timer 落地,再拆树。
+    await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
       await store.close();
@@ -292,6 +302,11 @@ void main() {
     await tester.pump();
     expect(find.text("第 1 句为什么对"), findsOneWidget);
 
+    // 答满一组的自动翻页 timer 挂在假时钟上;停留期从真实秒表折算,Linux/macOS
+    // 跑得快、延迟为正,不推进假时钟就会以「测试结束仍有 pending timer」失败
+    // (Windows 慢、真实耗时吃掉停留期,延迟为负立即触发,反而通过)。
+    // 推进过停留期让 timer 落地,再拆树。
+    await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
       await store.close();
