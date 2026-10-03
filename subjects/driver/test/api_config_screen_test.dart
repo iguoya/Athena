@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:athena_driver/main.dart";
+import "package:athena_driver/sync.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -67,7 +68,7 @@ void main() {
     final lanUrl = "http://127.0.0.1:${lan.port}";
     final wanUrl = "http://127.0.0.1:${wan.port}";
     await tester.enterText(find.widgetWithText(TextField, "内网端点（在家时用）"), lanUrl);
-    await tester.enterText(find.widgetWithText(TextField, "外网端点（可选，离开内网时用）"), wanUrl);
+    await tester.enterText(find.widgetWithText(TextField, "外网端点（离开内网时用）"), wanUrl);
     await tester.enterText(find.widgetWithText(TextField, "外网访问凭据 · Client ID（可选）"), "abc.access");
     await tester.enterText(find.widgetWithText(TextField, "外网访问凭据 · Client Secret（可选）"), "s3cret");
     await tester.tap(find.text("测试连接"));
@@ -82,33 +83,22 @@ void main() {
     expect(wanSeen, ["abc.access"]);
   });
 
-  testWidgets("测试连接：没填外网端点就明说没测外网，不让人以为外网也通了", (tester) async {
-    // testWidgets 里 Flutter 会把所有 HTTP 请求换成假的（一律回 400）；这里要连本机真实的小服务，先关掉替换。
-    HttpOverrides.global = null;
-    late HttpServer lan;
-    await tester.runAsync(() async {
-      lan = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-      lan.listen((r) {
-        r.response
-          ..statusCode = 200
-          ..write('{"ok":true}')
-          ..close();
-      });
-    });
-    addTearDown(() => lan.close(force: true));
+  test("外网端点内置默认值：配置里没有、是空串、是 null 都回到默认（只有一个外网域名）", () {
+    expect(const ApiConfig().wanBase, ApiConfig.defaultWanBase);
+    expect(ApiConfig.fromJson(const {}).wanBase, ApiConfig.defaultWanBase);
+    expect(ApiConfig.fromJson(const {"wan_base": null}).wanBase, ApiConfig.defaultWanBase);
+    expect(ApiConfig.fromJson(const {"wan_base": "  "}).wanBase, ApiConfig.defaultWanBase);
+    expect(ApiConfig.fromJson(const {"wan_base": "https://example.org"}).wanBase, "https://example.org");
+    expect(ApiConfig.defaultWanBase, "https://www.yatiger.cn");
+    expect(ApiConfig.fromJson(const {"cf_client_id": "a.access"}).cfClientId, "a.access");
+  });
+
+  testWidgets("设置页：外网端点框里直接就是内置的地址，不是灰色提示", (tester) async {
     tester.view.physicalSize = const Size(1200, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ApiConfigScreen(allowSkip: true));
-
-    await tester.enterText(find.widgetWithText(TextField, "内网端点（在家时用）"), "http://127.0.0.1:${lan.port}");
-    await tester.enterText(find.widgetWithText(TextField, "外网端点（可选，离开内网时用）"), "");
-    await tester.tap(find.text("测试连接"));
-    for (var i = 0; i < 300 && find.textContaining("没填外网端点").evaluate().isEmpty; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
-      await tester.pump();
-    }
-    expect(find.textContaining("：已连上"), findsOneWidget);
-    expect(find.textContaining("外网：没填外网端点，所以没测"), findsOneWidget);
+    final field = tester.widget<TextField>(find.widgetWithText(TextField, "外网端点（离开内网时用）"));
+    expect(field.controller!.text, isNotEmpty, reason: "要有真实的值，不是靠 hintText 假装填了");
   });
 }

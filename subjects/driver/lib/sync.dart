@@ -12,20 +12,24 @@ import "progress.dart";
 ///
 /// - 内网端点直连路由器上的后台，家用网络内视为可信，不需要凭据；默认就是路由器的内网地址，
 ///   所以什么都不配也能同步。
-/// - 外网端点过 Cloudflare，整个主机名由 Access 把守；程序调用带 Access 服务令牌头
-///   （外网访问凭据，Cloudflare 的概念，全家共用一对，可选）。
+/// - 外网端点同样内置默认值（只有一个外网域名），过 Cloudflare，整个主机名由 Access 把守；
+///   程序调用带 Access 服务令牌头（外网访问凭据，Cloudflare 的概念，全家共用一对，可选）。
+///   只有内网连不上时才会试外网，所以在家里用不会碰到它。
 ///
 /// 同步器按「上次用活的端点优先」的顺序尝试，切网自动换路。
 class ApiConfig {
   const ApiConfig({
     this.lanBase = defaultLanBase,
-    this.wanBase,
+    this.wanBase = defaultWanBase,
     this.cfClientId,
     this.cfClientSecret,
   });
 
   /// 路由器上后台的内网地址。
   static const defaultLanBase = "http://192.168.6.1:5000";
+
+  /// 外网域名（经 Cloudflare 隧道进来）。只有这一个，所以直接内置，不让人去猜该填什么。
+  static const defaultWanBase = "https://www.yatiger.cn";
 
   final String lanBase;
   final String? wanBase;
@@ -42,9 +46,10 @@ class ApiConfig {
   /// 读取时忽略不认识的字段：旧版本留下的 `token` 就是这样被丢掉的。
   static ApiConfig fromJson(Map<String, dynamic> map) {
     final lan = (map["lan_base"] as String?)?.trim() ?? "";
+    final wan = (map["wan_base"] as String?)?.trim() ?? "";
     return ApiConfig(
       lanBase: lan.isEmpty ? defaultLanBase : lan,
-      wanBase: map["wan_base"] as String?,
+      wanBase: wan.isEmpty ? defaultWanBase : wan,
       cfClientId: map["cf_client_id"] as String?,
       cfClientSecret: map["cf_client_secret"] as String?,
     );

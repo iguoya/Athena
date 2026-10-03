@@ -247,7 +247,7 @@ void main() {
     store = await ProgressStore.open(suite: "sync_test");
     engine = SyncEngine(
       store: store,
-      config: ApiConfig(lanBase: api.base),
+      config: ApiConfig(lanBase: api.base, wanBase: null),
       user: "tiger",
       draftKeys: const ["subject1.exam"],
     );
@@ -382,7 +382,7 @@ void main() {
     addTearDown(() => storeB.close());
     final engineB = SyncEngine(
       store: storeB,
-      config: ApiConfig(lanBase: api.base),
+      config: ApiConfig(lanBase: api.base, wanBase: null),
       user: "second",
       draftKeys: const ["subject1.exam"],
     );
@@ -405,7 +405,7 @@ void main() {
 
   test("路由器上还是旧版后台（401）：说清楚是版本旧，队列保留，升级后补发", () async {
     api.setLegacy(true);
-    final engine = SyncEngine(store: store, config: ApiConfig(lanBase: api.base), user: "tiger", draftKeys: const []);
+    final engine = SyncEngine(store: store, config: ApiConfig(lanBase: api.base, wanBase: null), user: "tiger", draftKeys: const []);
     await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
     await engine.syncNow();
     expect(store.pendingCount(), greaterThan(0));
@@ -422,7 +422,7 @@ void main() {
     api.setBlocked(true);
     final blocked = SyncEngine(
       store: store,
-      config: ApiConfig(lanBase: api.base),
+      config: ApiConfig(lanBase: api.base, wanBase: null),
       user: "tiger",
       draftKeys: const [],
     );

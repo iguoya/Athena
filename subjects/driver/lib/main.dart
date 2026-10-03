@@ -621,7 +621,7 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
     super.initState();
     final existing = ApiConfig.load();
     _lanBase.text = existing.lanBase;
-    _wanBase.text = existing.wanBase ?? "";
+    _wanBase.text = existing.wanBase ?? ApiConfig.defaultWanBase;
     _cfClientId.text = existing.cfClientId ?? "";
     _cfClientSecret.text = existing.cfClientSecret ?? "";
   }
@@ -639,7 +639,7 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
     final lan = _lanBase.text.trim();
     return ApiConfig(
       lanBase: lan.isEmpty ? ApiConfig.defaultLanBase : lan,
-      wanBase: _wanBase.text.trim().isEmpty ? null : _wanBase.text.trim(),
+      wanBase: _wanBase.text.trim().isEmpty ? ApiConfig.defaultWanBase : _wanBase.text.trim(),
       cfClientId: _cfClientId.text.trim().isEmpty ? null : _cfClientId.text.trim(),
       cfClientSecret: _cfClientSecret.text.trim().isEmpty ? null : _cfClientSecret.text.trim(),
     );
@@ -692,7 +692,6 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
       }
       lines.add("$label（$base）：$outcome");
     }
-    if (config.wanBase == null) lines.add("外网：没填外网端点，所以没测（离开内网时才需要）");
     client.close();
     if (mounted) {
       setState(() {
@@ -776,8 +775,8 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                   TextField(
                     controller: _wanBase,
                     decoration: const InputDecoration(
-                      labelText: "外网端点（可选，离开内网时用）",
-                      hintText: "https://www.yatiger.cn",
+                      labelText: "外网端点（离开内网时用）",
+                      helperText: "已内置，一般不用改",
                     ),
                   ),
                   TextField(

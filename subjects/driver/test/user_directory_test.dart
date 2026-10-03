@@ -113,7 +113,7 @@ void main() {
   setUp(() async {
     server = FakeDirectoryServer();
     await server.start();
-    directory = HttpUserDirectory(ApiConfig(lanBase: server.base));
+    directory = HttpUserDirectory(ApiConfig(lanBase: server.base, wanBase: null));
   });
 
   tearDown(() => server.stop());
@@ -201,7 +201,7 @@ void main() {
     final fallback = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: server.base));
     expect((await fallback.register("tiger")).id, "1");
 
-    final none = HttpUserDirectory(ApiConfig(lanBase: deadBase));
+    final none = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: null));
     await expectLater(none.login("tiger"), throwsA(isA<DirectoryUnavailable>()));
   });
 }
