@@ -1,19 +1,18 @@
 # Athena Math Tools — 项目协作规则
 
-本文档是 **`practice/math-tools` 独立应用** 的项目级指令,不依赖其他应用即可完成开发与
+本文档是 **`subjects/math-tools` 独立应用** 的项目级指令,不依赖其他应用即可完成开发与
 运行。仓库根 `AGENTS.md` 写各应用共同遵守的规则;改本应用时以本文为准。
 
 ## 定位
 
-- **实践应用**(ADR 0060):做能跑的数学工具,不追求知识点覆盖,**不建进度库**,
+- **数学学习的配套工具**(ADR 0084,原在 `practice/`):做能跑的数学工具,不追求知识点覆盖,**不建进度库**,
   跨应用教学规范不生效。
 - 当前包含:练习纲要(七章二十四条的练习本,勾选打卡)、矩阵实验室(行列式/逆/
   转置/特征值/幂)、函数绘图(表达式绘制、拖拽平移、滚轮缩放)。
 - **练习纲要只是清单,不是教学系统**:勾选状态存 localStorage
   (`mt-curriculum-done`),是个人打卡便利,不是掌握度记录;纲要数据在
-  `src/data/curriculum.ts`,只写「练什么、验收什么」,不写讲解正文。若将来要
-  升级成带讲解与掌握度的教学应用,那是新增 `subjects/` 应用的边界变化,先立 ADR
-  再动。
+  `src/data/curriculum.ts`,只写「练什么、验收什么」,不写讲解正文。若将来要升级成带讲解与掌握度的学习应用,那是应用类型的变化(它现在归图谱/参考类,
+  ADR 0084),先立 ADR 再动。
 
 ## 技术栈与选型理由
 
@@ -39,7 +38,7 @@
 
 ## 开发与运行
 
-- 打开应用走启动器:`launcher open math-tools --root practice`(ADR 0044、0046)。
+- 打开应用走启动器:`launcher open math-tools`(ADR 0044、0046)。
 - 手动开发:`npm install` 后 `npm run tauri:dev`(改前端即时热更);
   仅看界面可 `npm run dev` 后浏览器开 http://localhost:1451 。
 - 打包:`npm run tauri:build`(打包前需先补 `src-tauri/icons/`,当前

@@ -30,7 +30,8 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine dsa english mathematics driver（学习应用）
-                polaris（图谱/参考类）design-patterns（素材坑）
+                polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
+                design-patterns（素材坑）
 practice/<id>/  项目应用：pocket_cube（ADR 0060）
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述

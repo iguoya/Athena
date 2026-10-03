@@ -1,6 +1,6 @@
 # 数学工具 · Math Tools
 
-实践类数学工具箱(`practice/`,ADR 0060):矩阵实验室、函数绘图,后续按需扩充。
+数学学习的配套工具箱(`subjects/`,ADR 0084,原属 `practice/`):矩阵实验室、函数绘图,后续按需扩充。
 技术栈:Tauri 2 + Vue 3 + TypeScript + Tailwind CSS 4 + motion-v + mathjs。
 选型理由与协作规则见 [AGENTS.md](AGENTS.md)。
 
@@ -9,7 +9,7 @@
 走启动器(推荐):
 
 ```sh
-launcher open math-tools --root practice
+launcher open math-tools
 ```
 
 手动开发:
