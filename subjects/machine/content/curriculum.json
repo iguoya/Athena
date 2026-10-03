@@ -494,20 +494,213 @@
       "id": "AsmBasics",
       "title": "读懂汇编",
       "track": "asm",
-      "description": "寄存器、内存操作数、约 15 条常用指令与标志位。先学会读 C 编译出的 x86-64 汇编（Intel 语法），再动手改一两行。",
-      "difficulty": 0,
-      "on_main_path": false,
+      "description": "寄存器、内存操作数、几条最常用的指令与标志位。先学会读 C 编译出的 x86-64 汇编，再动手改一两行。",
+      "difficulty": 2,
+      "on_main_path": true,
       "prerequisites": [
         "Memory"
       ],
-      "source_refs": [],
-      "summary": "规划中，尚未写成。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "dis",
+          "locator": "Ch.7 §7.1 Assembly Basics，§7.2 Common Instructions（AT&T 语法）"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "intel-sdm",
+          "locator": "Vol.1 §3.4.1.1 General-Purpose Registers in 64-Bit Mode；§3.7.5 Specifying an Offset"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "gnu-as",
+          "locator": "i386-Variations；i386-Memory；i386-Mnemonics"
+        }
+      ],
+      "summary": "先读后写：寄存器、操作数、几条最常用的指令、标志位，然后读 C 编译出的汇编。汇编输出是某个实现的一次结果，不是 C 的规则（ADR 0005）。",
       "outline": {
         "lead": "先读，后写：从 C 编译出的汇编里认出变量、运算和跳转。",
-        "intro": "主线指令集 x86-64，Intel 语法，GNU as（ADR 0005 第 8 条）。汇编输出是某个实现的一次结果，不是 C 的规则。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
-        "grades": []
+        "intro": "主线指令集是 x86-64，Intel 与 AT&T 两种写法都要认得（ADR 0007）。先认寄存器，再认操作数，然后是几条最常用的指令和标志位，最后拿真实的 C 编译结果练习读。汇编输出是某个实现的一次结果，关于 C 的结论仍以 C23 为准。",
+        "titles": {
+          "origin": "C 里的变量，到了机器里去哪了",
+          "model": "寄存器、内存、指令",
+          "scope": "x86-64 的基本读法",
+          "tradeoff": "先认形式，再算值",
+          "landing": "下一章：比较与跳转"
+        },
+        "origin": "C 里的变量有名字，机器里只有寄存器和带编号的内存。读不懂汇编，就看不见 int x 在机器里占了哪个寄存器，也看不见 a[i] 到底算出了哪个地址。",
+        "model": "CPU 里有 16 个通用寄存器；指令的操作数是常数、寄存器、内存三种形式之一；内存形式是 基址 + 下标×缩放 + 偏移 算出来的一个地址；算术指令还会顺手在标志位里留下结果的记录。",
+        "scope": "覆盖寄存器及其别名、操作数的形式、Intel 与 AT&T 的写法对照、几条最常用的指令、标志位、读一个小函数。条件跳转和循环在「比较与跳转」，调用约定与栈帧在「函数调用与栈帧」，ARM64 在「ARM64」。",
+        "tradeoff": "读一条指令先问三件事：每个操作数是哪种形式、多宽、谁是源谁是目的（两种写法的顺序相反）。认清形式再算值，比背指令表快。",
+        "landing": "下一章「比较与跳转」：标志位怎样决定走哪条路，if 和 for 在汇编里的样子。",
+        "grades": [
+          {
+            "goal": "master",
+            "label": "先拿下",
+            "note": "寄存器及别名、操作数的三种形式、几条最常用的指令、读一个小函数。"
+          },
+          {
+            "goal": "required",
+            "label": "必须掌握",
+            "note": "标志位；Intel 与 AT&T 两种写法能互相对照。"
+          }
+        ]
       },
-      "topics": []
+      "topics": [
+        {
+          "id": "machine.asm.basics.registers",
+          "title": "寄存器是 CPU 里有名字的格子",
+          "qml": "lessons/Registers.qml",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.1.1 Registers；§7.1.2 Advanced Register Notation"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "intel-sdm",
+              "locator": "Vol.1 §3.4.1.1 General-Purpose Registers in 64-Bit Mode"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "sysv-abi",
+              "locator": "§3.2.1 Registers；Figure 3.4 Register Usage"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ms-x64-abi",
+              "locator": "x64-calling-convention：Parameter passing；Return values"
+            }
+          ],
+          "description": "16 个 64 位通用寄存器，eax、ax、al 是 rax 的一部分；写 32 位会清零高 32 位。"
+        },
+        {
+          "id": "machine.asm.basics.operands",
+          "title": "一条指令的三种操作数",
+          "qml": "lessons/Operands.qml",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "machine.asm.basics.registers"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.1.3 Instruction Structure；§7.1.4 An Example with Operands；§7.1.5 Instruction Suffixes"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "intel-sdm",
+              "locator": "Vol.1 §3.7.5 Specifying an Offset"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "gnu-as",
+              "locator": "i386-Variations；i386-Memory"
+            }
+          ],
+          "description": "常数、寄存器、内存；内存操作数是 基址 + 下标×缩放 + 偏移 算出的地址。"
+        },
+        {
+          "id": "machine.asm.basics.instructions",
+          "title": "mov、add、sub、lea：最常用的几条指令",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "machine.asm.basics.operands"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.2 Common Instructions"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "intel-sdm",
+              "locator": "Vol.2 LEA—Load Effective Address"
+            }
+          ],
+          "description": "mov 拷贝，add 与 sub 做算术，lea 只算地址不读内存。"
+        },
+        {
+          "id": "machine.asm.basics.flags",
+          "title": "标志位：算术指令顺手留下的记录",
+          "planned": true,
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "machine.asm.basics.instructions"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "intel-sdm",
+              "locator": "Vol.1 §3.4.3.1 Status Flags"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.4 Conditional Control and Loops"
+            }
+          ],
+          "description": "零标志、符号标志、进位标志、溢出标志记着上一次运算的结果，比较与跳转靠它们。"
+        },
+        {
+          "id": "machine.asm.basics.syntax",
+          "title": "AT&T 与 Intel：同一条指令的两种写法",
+          "planned": true,
+          "difficulty": 1,
+          "mastery_goal": "required",
+          "knowledge_type": "concept",
+          "requires": [
+            "machine.asm.basics.operands"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gnu-as",
+              "locator": "i386-Variations；i386-Memory；i386-Mnemonics"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.1.3 Instruction Structure"
+            }
+          ],
+          "description": "操作数顺序相反、前缀与后缀不同、内存写法不同：一张对照卡。"
+        },
+        {
+          "id": "machine.asm.basics.read_c",
+          "title": "读 C 编译出来的汇编",
+          "planned": true,
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "machine.asm.basics.instructions",
+            "machine.asm.basics.flags"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "dis",
+              "locator": "Ch.7 §7.1 Assembly Basics；§7.2.1 Putting It All Together"
+            }
+          ],
+          "description": "拿 -O0 与 -O2 的真实输出，认出变量、运算和返回值。"
+        }
+      ]
     },
     {
       "id": "AsmControl",

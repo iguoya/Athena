@@ -75,5 +75,264 @@
         "goal": "master"
       }
     ]
+  },
+  "machine.asm.basics.registers": {
+    "intro": "核的是寄存器的别名与写入规则（Intel SDM Vol.1 §3.4.1.1、DIS §7.1.2），以及参数和返回值放哪个寄存器是调用约定的事，不是 CPU 的规定。",
+    "in_class": [
+      {
+        "stem": "在 x86-64 里，执行 mov eax, ebx（写入 32 位寄存器 eax）之后，rax 的高 32 位会怎样？",
+        "choices": [
+          "保持原来的值",
+          "被清零",
+          "被 ebx 的符号位填充",
+          "变成未定义的值"
+        ],
+        "correct": 1,
+        "explain": "Intel SDM Vol.1 §3.4.1.1：32 位操作数的结果零扩展到 64 位，所以写 eax 会把 rax 的高 32 位清零。16 位和 8 位的写入则不修改高位。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "intel-sdm",
+            "locator": "Vol.1 §3.4.1.1 General-Purpose Registers in 64-Bit Mode"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      },
+      {
+        "stem": "al 指的是什么？",
+        "choices": [
+          "rax 的最低 8 位（一个字节）",
+          "rax 的高 32 位",
+          "一个独立于 rax 的 8 位寄存器",
+          "rax 的低 16 位"
+        ],
+        "correct": 0,
+        "explain": "DIS §7.1.2：al 是 ax 的低字节，ax 又是 rax 的低 16 位，它们都是同一个寄存器的一部分。Intel SDM 的 Table 3-2 列出了各宽度的名字。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "dis",
+            "locator": "Ch.7 §7.1.2 Advanced Register Notation"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "intel-sdm",
+            "locator": "Vol.1 §3.4.1.1 General-Purpose Registers in 64-Bit Mode"
+          }
+        ],
+        "difficulty": 1,
+        "goal": "master"
+      }
+    ],
+    "homework": [
+      {
+        "stem": "System V（Linux）下，函数的第一个整数参数通过哪个寄存器传递？Windows x64 呢？",
+        "choices": [
+          "System V 用 rdi，Windows x64 用 rcx",
+          "两者都用 rdi",
+          "两者都用 rcx",
+          "System V 用 rcx，Windows x64 用 rdi"
+        ],
+        "correct": 0,
+        "explain": "参数放哪个寄存器是调用约定（ABI）规定的，不是 CPU 规定的：System V psABI 的整数参数依次是 rdi、rsi、rdx、rcx、r8、r9；Microsoft x64 约定是 rcx、rdx、r8、r9。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "sysv-abi",
+            "locator": "§3.2.3 Parameter Passing；Figure 3.4 Register Usage"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "ms-x64-abi",
+            "locator": "x64-calling-convention：Parameter passing；Return values"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "dis",
+            "locator": "Ch.7 §7.1.1 Registers"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      },
+      {
+        "stem": "一个返回 int 的函数，返回值放在哪个寄存器里？（System V 与 Windows x64 都适用）",
+        "choices": [
+          "rax（int 用它的低 32 位 eax）",
+          "rdi",
+          "rsp",
+          "rip"
+        ],
+        "correct": 0,
+        "explain": "System V psABI 的 Figure 3.4 把 rax 列为第一个返回值寄存器；Microsoft 文档说 64 位以内的标量返回值通过 RAX 返回。int 只占低 32 位，所以编译结果里用 eax。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "sysv-abi",
+            "locator": "§3.2.3 Parameter Passing；Figure 3.4 Register Usage"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "ms-x64-abi",
+            "locator": "x64-calling-convention：Parameter passing；Return values"
+          }
+        ],
+        "difficulty": 1,
+        "goal": "master"
+      },
+      {
+        "stem": "执行 mov al, bl（8 位写入）之后，rax 的高 56 位会怎样？",
+        "choices": [
+          "保持原来的值",
+          "被清零",
+          "被 bl 的符号位填充",
+          "变成未定义的值"
+        ],
+        "correct": 0,
+        "explain": "Intel SDM Vol.1 §3.4.1.1：8 位和 16 位操作数只产生 8 位或 16 位的结果，目标寄存器的其余高位不被修改。只有 32 位写入才清零高位。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "intel-sdm",
+            "locator": "Vol.1 §3.4.1.1 General-Purpose Registers in 64-Bit Mode"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      }
+    ]
+  },
+  "machine.asm.basics.operands": {
+    "intro": "核的是内存操作数 基址 + 下标×缩放 + 偏移 的计算和限制（Intel SDM Vol.1 §3.7.5、DIS §7.1.4），以及两种写法的对应（GNU as 手册）。",
+    "in_class": [
+      {
+        "stem": "内存操作数 基址 + 下标×缩放 + 偏移 里，缩放（scale）可以取哪些值？",
+        "choices": [
+          "1、2、4、8",
+          "任意整数",
+          "只能是 4",
+          "2 的任意次幂"
+        ],
+        "correct": 0,
+        "explain": "GNU as 手册 i386-Memory：scale 取 1、2、4、8，不写就是 1。Intel SDM Vol.1 §3.7.5 同样只列出 2、4、8（以及不用缩放）。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Memory"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "intel-sdm",
+            "locator": "Vol.1 §3.7.5 Specifying an Offset"
+          }
+        ],
+        "difficulty": 1,
+        "goal": "master"
+      },
+      {
+        "stem": "下面哪一条是合法的 x86-64 指令形式？（Intel 写法）",
+        "choices": [
+          "mov [rbx], [rcx]",
+          "mov 5, eax",
+          "mov eax, [rbx]",
+          "mov [rbx+rcx*3], eax"
+        ],
+        "correct": 2,
+        "explain": "DIS §7.1.4：内存形式不能同时当一条指令的源和目的，所以第一条不行；常数不能当目的操作数，所以第二条不行；缩放只能是 1、2、4、8，第四条的 3 不行。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "dis",
+            "locator": "Ch.7 §7.1.4 An Example with Operands"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Memory"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      }
+    ],
+    "homework": [
+      {
+        "stem": "设 rbx = 0x2000，rcx = 3。指令 mov eax, dword ptr [rbx + rcx*4 + 8] 读取的内存地址是多少？",
+        "choices": [
+          "0x2014",
+          "0x200C",
+          "0x200B",
+          "0x2018"
+        ],
+        "correct": 0,
+        "explain": "有效地址 = 基址 + 下标×缩放 + 偏移 = 0x2000 + 3×4 + 8 = 0x2000 + 12 + 8 = 0x2014（Intel SDM Vol.1 §3.7.5）。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "intel-sdm",
+            "locator": "Vol.1 §3.7.5 Specifying an Offset"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Memory"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      },
+      {
+        "stem": "Intel 写法 mov eax, dword ptr [rbx + rcx*4 + 8] 对应的 AT&T 写法是？",
+        "choices": [
+          "movl 8(%rbx,%rcx,4), %eax",
+          "movl %eax, 8(%rbx,%rcx,4)",
+          "mov eax, 8(rbx,rcx,4)",
+          "movl [rbx+rcx*4+8], %eax"
+        ],
+        "correct": 0,
+        "explain": "AT&T 的源在前、目的在后；内存写成 偏移(基址,下标,缩放)；寄存器带 %；宽度由指令后缀表示，l 是 32 位（GNU as 手册 i386-Variations、i386-Memory）。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Variations"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Memory"
+          }
+        ],
+        "difficulty": 2,
+        "goal": "master"
+      },
+      {
+        "stem": "在 AT&T 语法里，指令后缀 q 表示操作数宽度是多少？",
+        "choices": [
+          "8 字节（64 位）",
+          "4 字节（32 位）",
+          "2 字节（16 位）",
+          "1 字节（8 位）"
+        ],
+        "correct": 0,
+        "explain": "GNU as 手册 i386-Variations：后缀 b、w、l、q 分别表示 8、16、32、64 位的内存引用。DIS §7.1.5 的 Table 3 也列出了 l 对应 int、q 对应 long 和指针。",
+        "source_refs": [
+          {
+            "relation": "adapted",
+            "source_id": "gnu-as",
+            "locator": "i386-Variations"
+          },
+          {
+            "relation": "adapted",
+            "source_id": "dis",
+            "locator": "Ch.7 §7.1.5 Instruction Suffixes"
+          }
+        ],
+        "difficulty": 1,
+        "goal": "master"
+      }
+    ]
   }
 }

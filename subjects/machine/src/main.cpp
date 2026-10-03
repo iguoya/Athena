@@ -60,6 +60,16 @@ int main(int argc, char* argv[]) {
     if (engine.rootObjects().isEmpty()) {
         return 1;
     }
+    // 开发用：ATHENA_MACHINE_OPEN=<章 id>/<知识点 id> 直接打开某一节，用来截图和冒烟；
+    // 只写章 id 就停在该章的大纲。界面上不暴露，也不进 app.json。
+    if (const char* open = getenv("ATHENA_MACHINE_OPEN")) {
+        const QString target = QString::fromUtf8(open);
+        const qsizetype slash = target.indexOf('/');
+        curriculum.openChapter(slash < 0 ? target : target.left(slash));
+        if (slash >= 0) {
+            curriculum.select(target.mid(slash + 1));
+        }
+    }
     // 等窗口起来再监视：macOS 上 addPaths 会误触发一次 directoryChanged。
     QTimer::singleShot(400, &reloader, [&reloader] { reloader.watch(); });
     return app.exec();

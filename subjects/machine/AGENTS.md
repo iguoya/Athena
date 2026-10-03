@@ -3,8 +3,8 @@
 本文档是 **`subjects/machine` 独立应用** 的项目级指令，不依赖任何其他应用。改本应用时以本文为准。
 
 > **改造进行中（ADR 0005、0006）**：本应用原名 `c`；重组前的状态在 tag `pre-machine-reorg`。
-> 课程图已重写为三条线（本文「定位」「教学结构」），来源已进 catalog；但汇编线与联合章目前都是**灰章**
-> （还没有知识点和教案）。多目标实验已有命令行版（`labs/` + `scripts/lab.py`），三个目标在 Windows 上
+> 课程图已重写为三条线（本文「定位」「教学结构」），来源已进 catalog；汇编线只有「读懂汇编」写了两节
+> （寄存器、操作数），其余汇编章和全部联合章仍是**灰章**。多目标实验已有命令行版（`labs/` + `scripts/lab.py`），三个目标在 Windows 上
 > 都实测跑通（`sysv-x64`、`aarch64-linux` 经 WSL）；**应用里的实验台界面还没接**，仍是旧的
 > `playground/`。这些按 ADR 0005 的步骤陆续补，没补之前不要把它们写成已有。
 
@@ -89,6 +89,9 @@ python3 scripts/lab.py gen sum      # 改了 fn.c 之后重新生成观察层，
 python3 scripts/lab.py run sum      # 在本机原生目标上编译并运行骨架
 python3 scripts/lab.py run sum --all   # 跑本机所有能跑的目标，并比对输出是否一致（目前只在 Windows 上实测过）
 ```
+
+开发时直接打开某一节（截图、冒烟用，界面上不暴露）：环境变量 `ATHENA_MACHINE_OPEN=<章 id>/<知识点 id>`，
+例如 `AsmBasics/machine.asm.basics.registers`；只写章 id 就停在该章大纲。
 
 不要把产物装进 `/Applications`，也不要把 LVGL 小程序当成教学入口。
 
