@@ -24,9 +24,10 @@ const TILE_PAD: f32 = 4.0;
 const CONTENT_HALF_W: f32 = 54.0;
 const CONTENT_ABOVE: f32 = 30.0;
 const CONTENT_BELOW: f32 = 64.0;
-/// 分组胶囊的外框（与 `launcher.slint` 里的 `GroupPill` 同尺寸）。
-pub const PILL_W: f32 = 104.0;
+/// 分组胶囊的高度（与 `launcher.slint` 里的 `GroupPill` 同高）；宽度按文字算，见 `pill_width`。
 pub const PILL_H: f32 = 32.0;
+/// 同一圈上相邻两个胶囊之间至少留的空隙。
+const PILL_GAP: f32 = 8.0;
 /// 中心虎头的半径。
 pub const HUB_R: f32 = 46.0;
 
@@ -106,7 +107,20 @@ pub struct GroupNode {
     pub color: &'static str,
     /// 胶囊中心。
     pub at: Point,
+    /// 胶囊宽度：按名字的字数算，名字长一点不会被截断，名字短就不浪费地方。
+    pub width: f32,
     pub apps: usize,
+}
+
+/// 胶囊宽度：汉字按 14px、其余按 8px 估（13px 字号），两边各留 14px。
+pub fn pill_width(name: &str) -> f32 {
+    let text: f32 = name.chars().map(|c| if c.is_ascii() { 8.0 } else { 14.0 }).sum();
+    (text + 28.0).clamp(64.0, 150.0)
+}
+
+/// 两个胶囊（中心 a、b，宽 wa、wb）是否重叠，含间隙。
+fn pills_overlap(a: Point, wa: f32, b: Point, wb: f32) -> bool {
+    (a.x - b.x).abs() < (wa + wb) / 2.0 + PILL_GAP && (a.y - b.y).abs() < PILL_H + PILL_GAP
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -192,6 +206,26 @@ pub fn layout(apps: &[App]) -> MindMap {
         sector_start += width;
     }
 
+    // 2.5 领域圈的半径：从 GROUP_RADIUS 起，胶囊两两重叠就整圈往外推 4px，直到互不重叠
+    // （相邻的单应用领域各占一个小扇区，中心靠得近，胶囊就会叠在一起）。
+    // 第一圈应用必须离领域圈至少 153px，所以跟着外移。
+    let widths: Vec<f32> = group_names.iter().map(|name| pill_width(name)).collect();
+    let mut group_radius = GROUP_RADIUS;
+    let origin = Point::new(0.0, 0.0);
+    loop {
+        let spots: Vec<Point> = sectors
+            .iter()
+            .map(|&(start, width)| Point::from_polar(origin, group_radius, start + width / 2.0))
+            .collect();
+        let crowded = (0..spots.len())
+            .any(|i| (i + 1..spots.len()).any(|j| pills_overlap(spots[i], widths[i], spots[j], widths[j])));
+        if !crowded || group_radius > 600.0 {
+            break;
+        }
+        group_radius += 4.0;
+    }
+    let first_ring = FIRST_RING.max(group_radius + 153.0);
+
     // 3. 先算每个组需要几圈，才知道画布多大（中心坐标取决于画布）。
     let mut ring_of: Vec<usize> = vec![0; apps.len()];
     let mut slot_in_ring: Vec<(usize, usize)> = vec![(0, 0); apps.len()]; // (本圈序号, 本圈个数)
@@ -201,7 +235,7 @@ pub fn layout(apps: &[App]) -> MindMap {
         let mut placed = 0;
         let mut ring = 0;
         while placed < m.len() {
-            let radius = FIRST_RING + RING_STEP * ring as f32;
+            let radius = first_ring + RING_STEP * ring as f32;
             let capacity = capacity(width, radius);
             let take = capacity.min(m.len() - placed);
             for (k, &app_index) in m[placed..placed + take].iter().enumerate() {
@@ -214,9 +248,9 @@ pub fn layout(apps: &[App]) -> MindMap {
         }
     }
     let outer = if apps.is_empty() {
-        GROUP_RADIUS
+        group_radius
     } else {
-        FIRST_RING + RING_STEP * max_ring as f32
+        first_ring + RING_STEP * max_ring as f32
     };
     let extent = outer + MARGIN;
     let center = Point::new(extent, extent);
@@ -230,7 +264,8 @@ pub fn layout(apps: &[App]) -> MindMap {
             GroupNode {
                 name: name.clone(),
                 color: PALETTE[g % PALETTE.len()],
-                at: Point::from_polar(center, GROUP_RADIUS, start + width / 2.0),
+                at: Point::from_polar(center, group_radius, start + width / 2.0),
+                width: widths[g],
                 apps: members[g].len(),
             }
         })
@@ -243,14 +278,14 @@ pub fn layout(apps: &[App]) -> MindMap {
             let (start, width) = sectors[g];
             let (k, count) = slot_in_ring[i];
             let angle = start + (k as f32 + 0.5) * width / count as f32;
-            let radius = FIRST_RING + RING_STEP * ring_of[i] as f32;
+            let radius = first_ring + RING_STEP * ring_of[i] as f32;
             AppNode { id: app.id.clone(), group: g, at: Point::from_polar(center, radius, angle) }
         })
         .collect();
 
-    let mut rings = vec![GROUP_RADIUS];
+    let mut rings = vec![group_radius];
     if !apps.is_empty() {
-        rings.extend((0..=max_ring).map(|r| FIRST_RING + RING_STEP * r as f32));
+        rings.extend((0..=max_ring).map(|r| first_ring + RING_STEP * r as f32));
     }
 
     // 5. 连线。
@@ -375,7 +410,7 @@ mod tests {
         (node.at.x - TILE_W / 2.0, node.at.y - ICON_CENTER_Y, node.at.x + TILE_W / 2.0, node.at.y - ICON_CENTER_Y + TILE_H)
     }
     fn pill_box(group: &GroupNode) -> (f32, f32, f32, f32) {
-        (group.at.x - PILL_W / 2.0, group.at.y - PILL_H / 2.0, group.at.x + PILL_W / 2.0, group.at.y + PILL_H / 2.0)
+        (group.at.x - group.width / 2.0, group.at.y - PILL_H / 2.0, group.at.x + group.width / 2.0, group.at.y + PILL_H / 2.0)
     }
     fn overlap(a: (f32, f32, f32, f32), b: (f32, f32, f32, f32)) -> bool {
         a.0 < b.2 && b.0 < a.2 && a.1 < b.3 && b.1 < a.3
@@ -392,9 +427,12 @@ mod tests {
                 assert!(!overlap(*a, pill_box(group)), "图块 {i} 压住了分组 {g}");
             }
         }
-        for group in &map.groups {
+        for (i, group) in map.groups.iter().enumerate() {
             let p = pill_box(group);
             assert!(p.0 >= 0.0 && p.1 >= 0.0 && p.2 <= map.width && p.3 <= map.height);
+            for (j, other) in map.groups.iter().enumerate().skip(i + 1) {
+                assert!(!overlap(p, pill_box(other)), "分组 {i}（{}）与 {j}（{}）的胶囊重叠", group.name, other.name);
+            }
         }
         for link in &map.links {
             for end in [link.from, link.to] {
@@ -459,6 +497,17 @@ mod tests {
         more.extend((0..3).map(|i| app(&format!("b{i}"), Some("小组"), None, &[])));
         more.push(app("solo", Some("独行"), None, &[]));
         assert_clean(&layout(&more));
+    }
+
+    #[test]
+    fn 很多单应用的领域挨在一起时胶囊不重叠() {
+        // 每个领域一个应用：扇区都是最小的，胶囊最容易叠在一起；名字长短不一
+        let names = ["编程语言", "英语", "数理基础与方法", "图谱", "考试", "算法", "Tools", "其它领域"];
+        let apps: Vec<App> = names.iter().enumerate().map(|(i, n)| app(&format!("a{i}"), Some(n), None, &[])).collect();
+        assert_clean(&layout(&apps));
+        // 再多几个
+        let many: Vec<App> = (0..12).map(|i| app(&format!("m{i}"), Some(&format!("领域{i}")), None, &[])).collect();
+        assert_clean(&layout(&many));
     }
 
     #[test]

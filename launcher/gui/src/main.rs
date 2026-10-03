@@ -277,6 +277,7 @@ fn set_mind_map(window: &LauncherWindow, map: &mindmap::MindMap) {
             color: parse_color(group.color, "思维导图"),
             x: group.at.x,
             y: group.at.y,
+            w: group.width,
         })
         .collect();
     let links: Vec<MapLink> = map.links.iter().map(map_link).collect();

@@ -15,6 +15,8 @@ export struct GroupSpec {
     color: color,
     x: float,
     y: float,
+    // 胶囊宽度：按名字的字数由布局算好。
+    w: float,
 }
 
 /// 一条连线：三次贝塞尔（起点、两个控制点、终点）。kind：0 虎头→领域，1 领域→应用，
@@ -182,10 +184,10 @@ component PracticeGrid inherits ScrollView {
     }
 }
 
-// 领域分组的胶囊：颜色来自布局（按分组出现顺序取色），尺寸与 core 的 PILL_W / PILL_H 一致。
+// 领域分组的胶囊：颜色、宽度都来自布局（颜色按分组出现顺序取，宽度按名字字数算），高度与 core 的 PILL_H 一致。
 component GroupPill inherits Rectangle {
     in property <GroupSpec> spec;
-    width: 104px;
+    width: spec.w * 1px;
     height: 32px;
     border-radius: 16px;
     background: spec.color;
@@ -293,7 +295,7 @@ component MindMap inherits ScrollView {
 
     for group in root.groups: GroupPill {
         spec: group;
-        x: root.ox + group.x * 1px - 52px;
+        x: root.ox + group.x * 1px - group.w * 0.5px;
         y: root.oy + group.y * 1px - 16px;
     }
 
