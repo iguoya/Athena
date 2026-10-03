@@ -60,3 +60,7 @@
 | [0068](0068-three-layer-storage-credentials-and-rest-channel.md) | 个人数据三层存储（JSON 内容 / 本地 SQLite 队列 / 中心 PG）、凭据不进仓库、外网走 REST API | 已接受；修订 0067 第 4、5 条；服务端与迁移已落地，客户端本地层由 0070 落地 |
 | [0069](0069-driver-progress-readonly-dashboard.md) | 驾考进度的网页只读仪表盘挂在 nas_admin：外网过 Access、内网免登录、服务端聚合口径对齐客户端 | 已接受；已落地部署 |
 | [0070](0070-driver-client-local-first-rest-only.md) | 驾考客户端本地优先、统一走 REST API：内网直连 PG 通道退役，本地 SQLite 是唯一数据面、队列幂等补发，测试脱离 PG | 已接受；落地 0068 决策 2、4 |
+| [0071](0071-driver-multi-user.md) | 驾考引入用户维度：同一份题库，多个学习者各一份历史，无口令、本地按用户分库、中心表加 `user` 列 | 已接受；决策 2 由 0072 修订、决策 4 由 0074 修订 |
+| [0072](0072-user-id-display-name.md) | 学习者 ID 与显示名分离，允许改名 | 已接受；修订 0071 决策 2；决策 2、3、4 由 0073、0074 修订 |
+| [0073](0073-global-user-directory.md) | 学习者目录全局化（`Athena/users.json`、中心 `athena_users`），tiger 以规范 ID 收编 | 已接受；修订 0072 决策 3；决策 2、4 由 0074 修订 |
+| [0074](0074-central-learner-directory.md) | 中心学习者目录是权威，ID 由后台登记时生成，名字不要求唯一、谁都能改 | 已接受；修订 0071 决策 4、0072 决策 2/4、0073 决策 2/4；尚未实现 |
