@@ -1,12 +1,18 @@
 {
   "id": "machine",
   "title": "C 与机器",
-  "tagline": "语义以 C23 为准。章序跟 Beej 教程卷，从内存与指针讲起；地址空间分块跟 Dive Into Systems 第 2 章。",
+  "tagline": "C 与汇编各自成线，另有联合章讲两者怎么对应。C 语义以 C23 为准，汇编结论以 ABI 与 ISA 手册为准（ADR 0005）。",
+  "tracks": [
+    { "id": "c", "label": "C 独立", "note": "只讲 C 本身，语义以 C23 为准", "color": "#5468A4" },
+    { "id": "joint", "label": "联合", "note": "C 与汇编怎么对应，先修同时指向两侧", "color": "#7c3aed" },
+    { "id": "asm", "label": "汇编独立", "note": "x86-64 为主线，ARM64 作对照", "color": "#c2570c" }
+  ],
   "standard": "C23",
   "standard_iso": "ISO/IEC 9899:2024",
   "chapters": [
     {
       "id": "Memory",
+      "track": "c",
       "title": "内存与变量",
       "description": "每个字节有一个整数编号，叫地址。多字节的值占相邻格子，sizeof 告诉你占几格。",
       "difficulty": 1,
@@ -85,6 +91,7 @@
     },
     {
       "id": "Pointer",
+      "track": "c",
       "title": "指针",
       "description": "指针变量保存的是地址。解引用顺着这个地址去碰原来的对象；把指针传进函数，函数才能改调用方。",
       "difficulty": 2,
@@ -95,7 +102,7 @@
         { "relation": "adapted", "source_id": "modern-c", "locator": "Ch.11 Pointers" },
         { "relation": "adapted", "source_id": "c23", "locator": "6.3.2.3 Pointers" }
       ],
-      "summary": "Beej §5：类型、解引用、作为参数传递、空指针。传指针改调用方写在这一章，不另开「函数」章。空指针按 C23 教 nullptr。",
+      "summary": "Beej §5：类型、解引用、作为参数传递、空指针。传指针改调用方写在这一章；函数本身的语义放在后面的「函数」章（ADR 0005）。空指针按 C23 教 nullptr。",
       "outline": {
         "lead": "指针里写的是地址；*p 才是那个地址上的对象。",
         "intro": "Beej §5 的顺序是：先取地址，再声明指针类型，再解引用，最后才说为什么要传给函数。空指针放在能用之后当哨兵：C23 写 nullptr，NULL 仍合法。",
@@ -177,6 +184,7 @@
     },
     {
       "id": "Array",
+      "track": "c",
       "title": "数组",
       "description": "数组是连续的一排同类型对象。下标是从起点再走几格；在表达式里，数组名常常变成指向第一个元素的指针。",
       "difficulty": 2,
@@ -252,6 +260,7 @@
     },
     {
       "id": "String",
+      "track": "c",
       "title": "字符串",
       "description": "C 没有字符串类型。它是一排 char，靠结尾的 '\\0' 判断到哪结束。",
       "difficulty": 2,
@@ -312,6 +321,7 @@
     },
     {
       "id": "Struct",
+      "track": "c",
       "title": "结构体",
       "description": "结构体把若干成员捆成一块对象。用指针时通过箭头取成员；按值传递会复制整块。",
       "difficulty": 2,
@@ -375,6 +385,7 @@
     },
     {
       "id": "Heap",
+      "track": "c",
       "title": "动态分配",
       "description": "malloc 向堆要一段连续字节，返回起点。用完必须 free。指针变量可以在栈上，指向的对象在堆上。",
       "difficulty": 3,
@@ -439,6 +450,222 @@
           "description": "malloc(n * sizeof *p) 要的是 n 个元素的连续字节。指针仍只保存起点。"
         }
       ]
+    },
+    {
+      "id": "Control",
+      "title": "控制流",
+      "track": "c",
+      "description": "if、for、while、switch 决定下一步执行哪里。这一章只讲 C 的语义；它们在机器里的样子留给汇编章和联合章。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Memory"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "先把「接下来执行哪一句」在 C 里讲准确，再去看机器怎么跳。",
+        "intro": "补在内存与指针主线之外的一章（ADR 0005）：汇编线的「比较与跳转」需要 C 侧有对应的独立章。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "Function",
+      "title": "函数",
+      "track": "c",
+      "description": "参数是副本、返回值、调用先后。指针传参已在指针章，这里讲函数本身的语义，为调用约定与栈帧做 C 侧铺垫。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Control",
+        "Pointer"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "函数调用在 C 里是什么，才谈得上它在机器里是什么。",
+        "intro": "补在指针章之后的一章（ADR 0005）：联合章「控制流与函数」需要 C 侧有函数的独立章。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "AsmBasics",
+      "title": "读懂汇编",
+      "track": "asm",
+      "description": "寄存器、内存操作数、约 15 条常用指令与标志位。先学会读 C 编译出的 x86-64 汇编（Intel 语法），再动手改一两行。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Memory"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "先读，后写：从 C 编译出的汇编里认出变量、运算和跳转。",
+        "intro": "主线指令集 x86-64，Intel 语法，GNU as（ADR 0005 第 8 条）。汇编输出是某个实现的一次结果，不是 C 的规则。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "AsmControl",
+      "title": "比较与跳转",
+      "track": "asm",
+      "description": "cmp 与条件跳转，标志位如何决定走哪条路；汇编里的控制流。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "AsmBasics"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "汇编没有 if 和 for，只有比较和跳转。",
+        "intro": "汇编独立章，只依赖汇编侧（ADR 0005 第 3 条）。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "AsmCall",
+      "title": "函数调用与栈帧",
+      "track": "asm",
+      "description": "call 与 ret、栈帧、参数与返回值放在哪。System V x86-64 为基准，Windows x64 作对照。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "AsmControl"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "调用约定是编译器与程序之间的协议，不是 CPU 的规定。",
+        "intro": "System V 为基准 ABI，Windows x64 作对照（ADR 0005 第 8 条）。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "AsmArm64",
+      "title": "ARM64",
+      "track": "asm",
+      "description": "同一组概念在另一套指令集里的样子：寄存器、寻址、调用约定（AAPCS64），用 QEMU 真跑。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "AsmCall"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "换一套指令集，看清哪些是计算的本质，哪些是 x86 的历史包袱。",
+        "intro": "运行环境见 ADR 0006。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "JointPointer",
+      "title": "内存与指针 × 寄存器、栈、寻址",
+      "track": "joint",
+      "description": "在典型编译结果里，&x 常对应 lea，*p 对应经寄存器的内存访问，局部变量落在栈上。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Pointer",
+        "AsmBasics"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "同一段 C 代码，在三个目标上看指针长什么样。",
+        "intro": "联合章：先修同时指向 C 侧和汇编侧（ADR 0005 第 3 条）。汇编只作为「某个实现的一次结果」展示，关于 C 的结论仍只来自 C23。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "JointArray",
+      "title": "数组与字符串 × 变址与字节循环",
+      "track": "joint",
+      "description": "a[i] 是「基址 + 下标 × 元素大小」；以 0 结尾的字符串在机器里是一个逐字节的循环。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "String",
+        "AsmControl"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "下标和结束符，在机器里都是算出来的。",
+        "intro": "联合章：先修同时指向 C 侧和汇编侧（ADR 0005 第 3 条）。汇编只作为「某个实现的一次结果」展示，关于 C 的结论仍只来自 C23。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "JointStruct",
+      "title": "结构体 × 偏移与对齐",
+      "track": "joint",
+      "description": "成员就是基址加偏移，对齐与填充在汇编里一眼可见。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Struct",
+        "AsmBasics",
+        "JointPointer"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "对齐不是 C 的抽象，是机器的要求。",
+        "intro": "联合章：先修同时指向 C 侧和汇编侧（ADR 0005 第 3 条）。汇编只作为「某个实现的一次结果」展示，关于 C 的结论仍只来自 C23。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "JointHeap",
+      "title": "动态分配 × 调用约定与优化",
+      "track": "joint",
+      "description": "调用 malloc 在机器层的约定，以及同一段 C 代码在 -O0 与 -O2 下编译结果的差别。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Heap",
+        "AsmCall"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "编译器替你做了多少事，看汇编才知道。",
+        "intro": "联合章：先修同时指向 C 侧和汇编侧（ADR 0005 第 3 条）。汇编只作为「某个实现的一次结果」展示，关于 C 的结论仍只来自 C23。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
+    },
+    {
+      "id": "JointCall",
+      "title": "控制流与函数 × 跳转与栈帧",
+      "track": "joint",
+      "description": "if / for 变成比较与跳转，函数调用变成 call 与栈帧的建立和销毁。",
+      "difficulty": 0,
+      "on_main_path": false,
+      "prerequisites": [
+        "Function",
+        "AsmCall"
+      ],
+      "source_refs": [],
+      "summary": "规划中，尚未写成。",
+      "outline": {
+        "lead": "从 C 的调用，一路看到栈上的帧。",
+        "intro": "联合章：先修同时指向 C 侧和汇编侧（ADR 0005 第 3 条）。汇编只作为「某个实现的一次结果」展示，关于 C 的结论仍只来自 C23。知识点与出处待补：写课时按本地教材核对后加入，来源先进 catalog（ADR 0005 第 9 条）。",
+        "grades": []
+      },
+      "topics": []
     }
   ]
 }

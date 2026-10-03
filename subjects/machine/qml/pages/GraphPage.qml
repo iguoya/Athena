@@ -5,15 +5,42 @@ import "../components" as C
 Flickable {
     id: root
     clip: true
+    readonly property int legendHeight: 40
     contentWidth: Math.max(width, curriculum.graphWidth + 40)
-    contentHeight: Math.max(height, curriculum.graphHeight + 48)
+    contentHeight: Math.max(height, curriculum.graphHeight + 48 + legendHeight)
     ScrollBar.vertical: ScrollBar {}
     ScrollBar.horizontal: ScrollBar {}
+
+    // 图例：三条线各一种颜色，内容来自课表 tracks。
+    Row {
+        x: board.x + 4
+        y: 12
+        spacing: 20
+        Repeater {
+            model: curriculum.tracks
+            delegate: Row {
+                required property var modelData
+                spacing: 6
+                Rectangle {
+                    width: 14
+                    height: 14
+                    radius: 7
+                    color: modelData.color
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text {
+                    text: modelData.label + "：" + modelData.note
+                    color: "#495057"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+        }
+    }
 
     Item {
         id: board
         x: Math.max(20, Math.floor((root.width - curriculum.graphWidth) / 2))
-        y: 12
+        y: 12 + legendHeight
         width: curriculum.graphWidth
         height: curriculum.graphHeight
 

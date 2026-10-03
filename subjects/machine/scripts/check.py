@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""C 语言教程的验证入口：内容校验、CMake 配置与构建。
+"""C 与机器的验证入口：内容校验、课程图结构校验、CMake 配置与构建。
 
 用 Python 而不是 shell：验证是每天都要跑的环节，不该要求 Windows 上先装
 Git Bash 或 WSL（ADR 0047）。
@@ -58,9 +58,98 @@ def check_json() -> None:
     print(f"{len(files)} 个 JSON 文件解析通过", flush=True)
 
 
+# ADR 0005 第 3、5 条：三条线、先修方向、知识点前缀。
+TRACK_TOPIC_PREFIX = {"c": "machine.c.", "asm": "machine.asm.", "joint": "machine.joint."}
+# 汇编独立章允许依赖的唯一一个 C 章：变量要先有地址，汇编才有东西可指。
+ASM_MAY_DEPEND_ON_C = {"Memory"}
+
+
+def validate_curriculum(data: dict, exercise_ids: set[str]) -> list[str]:
+    """课程图结构校验，返回问题列表（空表示通过）。纯函数，便于单独测。"""
+    errors: list[str] = []
+    track_ids = [t.get("id") for t in data.get("tracks", [])]
+    if sorted(track_ids) != sorted(TRACK_TOPIC_PREFIX):
+        errors.append(f"tracks 应恰好是 {sorted(TRACK_TOPIC_PREFIX)}，现在是 {sorted(map(str, track_ids))}")
+
+    chapters = data.get("chapters", [])
+    by_id: dict[str, dict] = {}
+    for chapter in chapters:
+        cid = chapter.get("id")
+        if cid in by_id:
+            errors.append(f"章 id 重复：{cid}")
+        by_id[cid] = chapter
+
+    topic_ids: set[str] = set()
+    for chapter in chapters:
+        cid, track = chapter.get("id"), chapter.get("track")
+        if track not in TRACK_TOPIC_PREFIX:
+            errors.append(f"{cid}: track「{track}」不在 {sorted(TRACK_TOPIC_PREFIX)} 里")
+            continue
+        prereqs = chapter.get("prerequisites", [])
+        for pre in prereqs:
+            if pre not in by_id:
+                errors.append(f"{cid}: 先修「{pre}」不存在")
+        kinds = {by_id[pre].get("track") for pre in prereqs if pre in by_id}
+        if track == "c" and kinds - {"c"}:
+            errors.append(f"{cid}: C 独立章只能依赖 C 独立章，现在依赖了 {sorted(kinds - {'c'})} 线")
+        if track == "asm":
+            for pre in prereqs:
+                if pre in by_id and by_id[pre].get("track") == "c" and pre not in ASM_MAY_DEPEND_ON_C:
+                    errors.append(f"{cid}: 汇编独立章只可依赖 C 的 {sorted(ASM_MAY_DEPEND_ON_C)}，却依赖了「{pre}」")
+                if pre in by_id and by_id[pre].get("track") == "joint":
+                    errors.append(f"{cid}: 汇编独立章不得依赖联合章「{pre}」")
+        if track == "joint":
+            if not {"c", "asm"} <= kinds:
+                errors.append(f"{cid}: 联合章必须同时直接依赖 C 独立章和汇编独立章，现在只有 {sorted(kinds)}")
+        for topic in chapter.get("topics", []):
+            tid = topic.get("id", "")
+            topic_ids.add(tid)
+            if not tid.startswith(TRACK_TOPIC_PREFIX[track]):
+                errors.append(f"{cid}: 知识点 id「{tid}」应以 {TRACK_TOPIC_PREFIX[track]} 开头")
+        own = {t.get("id") for t in chapter.get("topics", [])}
+        for topic in chapter.get("topics", []):
+            for req in topic.get("requires", []):
+                if req not in own:
+                    errors.append(f"{cid}: 知识点「{topic.get('id')}」的 requires「{req}」不在本章内")
+
+    # 环：Kahn 算法删不完就是有环（应用里的布局会静默丢掉环上的章）。
+    indegree = {cid: len([p for p in ch.get("prerequisites", []) if p in by_id]) for cid, ch in by_id.items()}
+    ready = [cid for cid, n in indegree.items() if n == 0]
+    seen = 0
+    while ready:
+        cid = ready.pop()
+        seen += 1
+        for other, ch in by_id.items():
+            if cid in ch.get("prerequisites", []):
+                indegree[other] -= 1
+                if indegree[other] == 0:
+                    ready.append(other)
+    if seen != len(by_id):
+        errors.append("先修关系有环：" + "、".join(sorted(c for c, n in indegree.items() if n > 0)))
+
+    for eid in sorted(exercise_ids - topic_ids):
+        errors.append(f"exercises.json 的「{eid}」在课表里找不到对应知识点")
+    return errors
+
+
+def check_curriculum() -> None:
+    print("== 课程图结构校验 ==", flush=True)
+    content = PROJECT_ROOT / "content"
+    data = json.loads((content / "curriculum.json").read_text(encoding="utf-8"))
+    exercises = json.loads((content / "exercises.json").read_text(encoding="utf-8"))
+    errors = validate_curriculum(data, set(exercises))
+    if errors:
+        lines = ["课程图校验失败："] + [f"  - {e}" for e in errors]
+        raise SystemExit(chr(10).join(lines))
+    tracks = {}
+    for chapter in data["chapters"]:
+        tracks[chapter["track"]] = tracks.get(chapter["track"], 0) + 1
+    print(f"{len(data['chapters'])} 章通过：" + "、".join(f"{k} {v}" for k, v in sorted(tracks.items())), flush=True)
+
+
 def main() -> int:
     _force_utf8_output()
-    parser = argparse.ArgumentParser(description="验证 C 语言教程：校验、配置、构建")
+    parser = argparse.ArgumentParser(description="验证 C 与机器：内容与课程图校验、配置、构建")
     parser.add_argument("--build-dir", default="build", help="构建目录（默认 build）")
     parser.add_argument(
         "--buildtype",
@@ -70,6 +159,7 @@ def main() -> int:
     arguments = parser.parse_args()
 
     check_json()
+    check_curriculum()
 
     cmake = tool("cmake")
     configure = [

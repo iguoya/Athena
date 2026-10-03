@@ -67,7 +67,9 @@ LaidOutGraph layout_graph(
     const QVariantList& items,
     const GraphMetrics& metrics,
     const char* id_key,
-    const char* requires_key) {
+    const char* requires_key,
+    const char* lane_key = nullptr,
+    const QStringList& lane_order = {}) {
     LaidOutGraph graph;
     QHash<QString, int> index_of;
     for (int index = 0; index < items.size(); ++index) {
@@ -114,6 +116,18 @@ LaidOutGraph layout_graph(
             }
         }
         if (!layer.isEmpty()) {
+            // 同一层里按「线」排：C 独立、联合、汇编独立各自挨在一起，
+            // 联合章自然落在两侧之间；线内保持课表里的原顺序（stable_sort）。
+            if (lane_key != nullptr) {
+                const auto rank = [&](int index) {
+                    const int at = lane_order.indexOf(
+                        items[index].toMap().value(lane_key).toString());
+                    return at < 0 ? static_cast<int>(lane_order.size()) : at;
+                };
+                std::stable_sort(layer.begin(), layer.end(), [&](int a, int b) {
+                    return rank(a) < rank(b);
+                });
+            }
             layers.push_back(layer);
         }
     }
@@ -203,6 +217,7 @@ void Curriculum::reload() {
     m_error.clear();
     m_title.clear();
     m_tagline.clear();
+    m_tracks.clear();
     m_chapters.clear();
     m_graph_nodes.clear();
     m_graph_edges.clear();
@@ -229,7 +244,10 @@ void Curriculum::reload() {
     }
 
     const QJsonObject root = document.object();
-    m_title = root.value("title").toString("C 语言编程");
+    m_title = root.value("title").toString("C 与机器");
+    for (const auto& track_value : root.value("tracks").toArray()) {
+        m_tracks.push_back(object_to_map(track_value.toObject()));
+    }
     m_tagline = root.value("tagline").toString();
 
     const QJsonArray chapters = root.value("chapters").toArray();
@@ -338,6 +356,25 @@ QString Curriculum::difficultyColor(int difficulty) const {
     }
 }
 
+QString Curriculum::trackLabel(const QString& track_id) const {
+    for (const QVariant& track : m_tracks) {
+        if (track.toMap().value("id").toString() == track_id) {
+            return track.toMap().value("label").toString();
+        }
+    }
+    return {};
+}
+
+QString Curriculum::trackColor(const QString& track_id) const {
+    for (const QVariant& track : m_tracks) {
+        if (track.toMap().value("id").toString() == track_id) {
+            const QString color = track.toMap().value("color").toString();
+            return color.isEmpty() ? QStringLiteral("#adb5bd") : color;
+        }
+    }
+    return "#adb5bd";
+}
+
 QString Curriculum::goalLabel(const QString& goal) const {
     if (goal == "master") {
         return "掌握";
@@ -409,6 +446,10 @@ void Curriculum::rebuild_chapter_graph() {
         nodes.push_back(chapter);
     }
 
+    QStringList lane_order;
+    for (const QVariant& track : m_tracks) {
+        lane_order.push_back(track.toMap().value("id").toString());
+    }
     const LaidOutGraph laid = layout_graph(
         nodes,
         GraphMetrics{
@@ -419,7 +460,9 @@ void Curriculum::rebuild_chapter_graph() {
             .pad_x = 48,
             .pad_y = 28},
         "id",
-        "prerequisites");
+        "prerequisites",
+        "track",
+        lane_order);
     m_graph_nodes = laid.nodes;
     m_graph_edges = laid.edges;
     m_graph_width = laid.width;

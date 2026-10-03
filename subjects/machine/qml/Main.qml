@@ -10,7 +10,7 @@ ApplicationWindow {
     height: 900
     minimumWidth: 960
     minimumHeight: 640
-    title: "C 语言编程"
+    title: "C 与机器"
     color: "#f8f9fa"
     font.pointSize: 22
 

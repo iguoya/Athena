@@ -6,13 +6,15 @@
 #include <QVariantList>
 #include <QVariantMap>
 
-// 首页是**章**的知识图谱（对齐主程序 C++ 分类图谱）。
+// 首页是**章**的知识图谱：章分 C 独立 / 联合 / 汇编独立三条线（ADR 0005），
+// 线的名字与颜色来自课表的 tracks，不写死在界面里（ADR 0058）。
 // 点章进入该章大纲；大纲里的知识点路线图才能点进教案。
 class Curriculum : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY catalogChanged)
     Q_PROPERTY(QString tagline READ tagline NOTIFY catalogChanged)
     Q_PROPERTY(QVariantList chapters READ chapters NOTIFY catalogChanged)
+    Q_PROPERTY(QVariantList tracks READ tracks NOTIFY catalogChanged)
     Q_PROPERTY(QVariantList graphNodes READ graphNodes NOTIFY catalogChanged)
     Q_PROPERTY(QVariantList graphEdges READ graphEdges NOTIFY catalogChanged)
     Q_PROPERTY(int graphWidth READ graphWidth NOTIFY catalogChanged)
@@ -39,6 +41,7 @@ public:
     QString title() const { return m_title; }
     QString tagline() const { return m_tagline; }
     QVariantList chapters() const { return m_chapters; }
+    QVariantList tracks() const { return m_tracks; }
     QVariantList graphNodes() const { return m_graph_nodes; }
     QVariantList graphEdges() const { return m_graph_edges; }
     int graphWidth() const { return m_graph_width; }
@@ -65,6 +68,8 @@ public:
     Q_INVOKABLE void select(const QString& topic_id);
     Q_INVOKABLE QString difficultyColor(int difficulty) const;
     Q_INVOKABLE QString goalLabel(const QString& goal) const;
+    Q_INVOKABLE QString trackLabel(const QString& track_id) const;
+    Q_INVOKABLE QString trackColor(const QString& track_id) const;
     Q_INVOKABLE void launchLab();
     void reload();
 
@@ -86,6 +91,7 @@ private:
     QString m_root;
     QString m_title;
     QString m_tagline;
+    QVariantList m_tracks;
     QVariantList m_chapters;
     QVariantList m_graph_nodes;
     QVariantList m_graph_edges;

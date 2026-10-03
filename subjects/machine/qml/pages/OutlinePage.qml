@@ -47,6 +47,7 @@ Flickable {
 
         C.SectionFrame {
             Layout.fillWidth: true
+            visible: curriculum.topics.length > 0
             title: "先看主次与顺序"
             Text {
                 Layout.fillWidth: true
@@ -71,6 +72,7 @@ Flickable {
         }
 
         C.SectionFrame {
+            visible: !!outline.origin
             title: (outline.titles && outline.titles.origin) || "痛点与来历"
             Text {
                 Layout.fillWidth: true
@@ -80,6 +82,7 @@ Flickable {
             }
         }
         C.SectionFrame {
+            visible: !!outline.model
             title: (outline.titles && outline.titles.model) || "心智模型"
             Text {
                 Layout.fillWidth: true
@@ -89,6 +92,7 @@ Flickable {
             }
         }
         C.SectionFrame {
+            visible: !!outline.scope
             title: (outline.titles && outline.titles.scope) || "讲什么与边界"
             Text {
                 Layout.fillWidth: true
@@ -98,6 +102,7 @@ Flickable {
             }
         }
         C.SectionFrame {
+            visible: !!outline.tradeoff
             title: (outline.titles && outline.titles.tradeoff) || "判断与代价"
             Text {
                 Layout.fillWidth: true
@@ -107,6 +112,7 @@ Flickable {
             }
         }
         C.SectionFrame {
+            visible: !!outline.landing
             title: (outline.titles && outline.titles.landing) || "落点"
             Text {
                 Layout.fillWidth: true

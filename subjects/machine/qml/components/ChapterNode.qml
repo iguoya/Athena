@@ -41,6 +41,21 @@ Rectangle {
         Row {
             spacing: 6
             Rectangle {
+                // 线（C 独立 / 联合 / 汇编独立）：名字与颜色来自课表 tracks。
+                visible: !!(node && node.track)
+                width: trackLabel.implicitWidth + 16
+                height: trackLabel.implicitHeight + 8
+                radius: 10
+                color: node && node.track ? curriculum.trackColor(node.track) : "#adb5bd"
+                Text {
+                    id: trackLabel
+                    anchors.centerIn: parent
+                    text: node && node.track ? curriculum.trackLabel(node.track) : ""
+                    color: "white"
+                    font.bold: true
+                }
+            }
+            Rectangle {
                 visible: !!(node && node.on_main_path)
                 width: mainLabel.implicitWidth + 16
                 height: mainLabel.implicitHeight + 8
