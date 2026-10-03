@@ -3,10 +3,33 @@
 
 import { ScrollView } from "std-widgets.slint";
 
-/// 一条学科之间的关系：谁从谁长出来的，按 apps 里的下标指。
-export struct LinkSpec {
-    from: int,
-    to: int,
+/// 思维导图里一个应用的位置：图标中心，单位是画布坐标（不带 px，由 Rust 的布局给出）。
+export struct NodePos {
+    x: float,
+    y: float,
+}
+
+/// 领域分组节点：胶囊中心与颜色。
+export struct GroupSpec {
+    name: string,
+    color: color,
+    x: float,
+    y: float,
+}
+
+/// 一条连线：三次贝塞尔（起点、两个控制点、终点）。kind：0 虎头→领域，1 领域→应用，
+/// 2 演进（带箭头），3 相关。颜色连透明度一起由 Rust 按 kind 算好。
+export struct MapLink {
+    kind: int,
+    color: color,
+    x0: float, y0: float,
+    cx1: float, cy1: float,
+    cx2: float, cy2: float,
+    x1: float, y1: float,
+    has-arrow: bool,
+    ax: float, ay: float,
+    bx: float, by: float,
+    cx: float, cy: float,
 }
 
 export struct AppEntry {
@@ -159,6 +182,131 @@ component PracticeGrid inherits ScrollView {
     }
 }
 
+// 领域分组的胶囊：颜色来自布局（按分组出现顺序取色），尺寸与 core 的 PILL_W / PILL_H 一致。
+component GroupPill inherits Rectangle {
+    in property <GroupSpec> spec;
+    width: 104px;
+    height: 32px;
+    border-radius: 16px;
+    background: spec.color;
+    Text {
+        text: spec.name;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        width: parent.width - 12px;
+        x: 6px;
+        height: parent.height;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        overflow: elide;
+    }
+}
+
+// 学习应用面板：放射状思维导图（ADR 0083）。位置全部由 core 的布局算好，这里只负责画：
+// 同心圈（空间感）→ 连线 → 虎头与领域胶囊 → 应用图块。图块仍是原来的 Tile，图标原样显示（ADR 0065）。
+component MindMap inherits ScrollView {
+    in property <[AppEntry]> apps;
+    in property <[NodePos]> positions;
+    in property <[GroupSpec]> groups;
+    in property <[MapLink]> map-links;
+    in property <[float]> rings;
+    in property <float> map-width;
+    in property <float> map-height;
+    in property <float> center-x;
+    in property <float> center-y;
+    callback open(string);
+    callback stop(string);
+
+    // 窗口比画布大时把画布摆在正中；比画布小时靠滚动。
+    property <length> canvas-w: max(self.width, root.map-width * 1px);
+    property <length> canvas-h: max(self.height, root.map-height * 1px);
+    property <length> ox: (self.canvas-w - root.map-width * 1px) / 2;
+    property <length> oy: (self.canvas-h - root.map-height * 1px) / 2;
+    viewport-width: self.canvas-w;
+    viewport-height: self.canvas-h;
+
+    // 同心圈：从外到内叠着画，每一圈淡淡地铺一层底，叠起来中间深、外面浅——
+    // 这就是「立体」的来源，不碰图标本身。
+    for r[i] in rings: Rectangle {
+        x: root.ox + (root.center-x - r) * 1px;
+        y: root.oy + (root.center-y - r) * 1px;
+        width: 2 * r * 1px;
+        height: self.width;
+        border-radius: self.width / 2;
+        background: #5468a40a;
+        border-width: 1px;
+        border-color: #5468a418;
+    }
+
+    for link in root.map-links: Rectangle {
+        x: 0; y: 0;
+        width: root.canvas-w;
+        height: root.canvas-h;
+        Path {
+            x: 0; y: 0;
+            width: parent.width;
+            height: parent.height;
+            viewbox-x: 0;
+            viewbox-y: 0;
+            viewbox-width: parent.width / 1px;
+            viewbox-height: parent.height / 1px;
+            stroke: link.color;
+            stroke-width: link.kind == 2 ? 2.2px : link.kind == 3 ? 1.6px : link.kind == 0 ? 2.4px : 1.6px;
+
+            MoveTo { x: root.ox / 1px + link.x0; y: root.oy / 1px + link.y0; }
+            CubicTo {
+                control-1-x: root.ox / 1px + link.cx1;
+                control-1-y: root.oy / 1px + link.cy1;
+                control-2-x: root.ox / 1px + link.cx2;
+                control-2-y: root.oy / 1px + link.cy2;
+                x: root.ox / 1px + link.x1;
+                y: root.oy / 1px + link.y1;
+            }
+        }
+        if link.has-arrow: Path {
+            x: 0; y: 0;
+            width: parent.width;
+            height: parent.height;
+            viewbox-x: 0;
+            viewbox-y: 0;
+            viewbox-width: parent.width / 1px;
+            viewbox-height: parent.height / 1px;
+            fill: link.color;
+
+            MoveTo { x: root.ox / 1px + link.ax; y: root.oy / 1px + link.ay; }
+            LineTo { x: root.ox / 1px + link.bx; y: root.oy / 1px + link.by; }
+            LineTo { x: root.ox / 1px + link.cx; y: root.oy / 1px + link.cy; }
+            Close {}
+        }
+    }
+
+    // 中心：启动器自己的虎头。
+    Image {
+        source: @image-url("../assets/tiger-mark.png");
+        width: 72px;
+        height: 72px;
+        x: root.ox + root.center-x * 1px - 36px;
+        y: root.oy + root.center-y * 1px - 36px;
+        image-fit: contain;
+    }
+
+    for group in root.groups: GroupPill {
+        spec: group;
+        x: root.ox + group.x * 1px - 52px;
+        y: root.oy + group.y * 1px - 16px;
+    }
+
+    for entry[index] in root.apps: Tile {
+        // 节点坐标是图标中心；图块的图标中心在 (58, 38)。
+        x: root.ox + root.positions[index].x * 1px - 58px;
+        y: root.oy + root.positions[index].y * 1px - 38px;
+        entry: entry;
+        open => { root.open(entry.id); }
+        stop => { root.stop(entry.id); }
+    }
+}
+
 export component LauncherWindow inherits Window {
     in property <[AppEntry]> apps;
     // 实践面板：跟学习应用区隔开的独立分区（practice/ 下的小项目），
@@ -166,7 +314,15 @@ export component LauncherWindow inherits Window {
     // 数据源（发现根目录）和界面分区不同。空的时候整个分区隐藏，不占地方。
     in property <[AppEntry]> practice-apps;
     in property <string> status;
-    in property <[LinkSpec]> links;
+    // 思维导图（ADR 0083）：位置、分组和连线全部由 launcher-core 的布局算好。
+    in property <[NodePos]> positions;
+    in property <[GroupSpec]> groups;
+    in property <[MapLink]> map-links;
+    in property <[float]> rings;
+    in property <float> map-width: 600;
+    in property <float> map-height: 600;
+    in property <float> center-x: 300;
+    in property <float> center-y: 300;
     // 必须点名带简体的 UI 字体。Slint 缺字回退在英文 Windows 上会先命中
     // Yu Gothic，简体独有的「语」「习」「结」直接空白。具体家族名由 Rust 按
     // 平台填进来，这里只负责接到 Window 的默认字体上。
@@ -178,11 +334,11 @@ export component LauncherWindow inherits Window {
     // 标题栏左上角：与托盘、任务栏同一份虎头（build.rs 从 tiger.svg 渲染）。
     icon: @image-url("../assets/tiger-mark.png");
     default-font-family: ui-font;
-    // 初始大小按三列两行估：现在有六个学习应用，窄窗口改走滚动，不裁掉后排。
-    preferred-width: 404px;
-    preferred-height: 420px;
-    min-width: 280px;
-    min-height: 280px;
+    // 思维导图需要约 700px 见方的画布（放不下就在画布里滚动）；下面还有实践面板和状态栏。
+    preferred-width: 700px;
+    preferred-height: 820px;
+    min-width: 360px;
+    min-height: 420px;
     background: #fbfbfd;
 
     VerticalLayout {
@@ -197,108 +353,21 @@ export component LauncherWindow inherits Window {
             height: 20px;
         }
 
-        graph := ScrollView {
-            // 按内容实际的行数定高，不铺满剩余空间——不然只有六七个应用时
-            // 这块区域会占满整个窗口，实践面板被挤到底部，中间空出一大截。
-            // 内容超出窗口才需要滚动，用 min() 卡个上限，避免窗口本来就矮时
-            // 这块还硬要按满行数撑高，反而把下面的实践面板推出可视区域。
-            height: min(self.rows * self.stride-y, 320px);
-
-            // 一行放得下几个由当前宽度决定，窗口拉大就多排几个。
-            property <int> columns: max(1, floor(self.width / 124px));
-            property <int> rows: max(1, floor((root.apps.length + self.columns - 1) / self.columns));
-            property <length> stride-x: 124px;
-            property <length> stride-y: 132px;
-            viewport-width: self.width;
-            viewport-height: max(self.height, self.rows * self.stride-y);
-            // 图块内那个圆角色块的中心，连线从这里出发、到这里收尾。
-            property <length> hub-x: 58px;
-            property <length> hub-y: 38px;
-
-            // 学科之间的历史演进关系（C++ 从 C 长出来）。画法照搬 C++ 教程首页
-            // 那张学科图谱（subjects/cpp/render/domain_graph_view.cc）：两个控制点
-            // 都落在两个节点之间的中线上，出来就是一条规整的 S 形；箭头是实心
-            // 三角；颜色淡到退成背景，不喧宾夺主。
-            for link in root.links: edge := Rectangle {
-                x: 0; y: 0;
-                width: parent.width;
-                height: parent.height;
-
-                property <int> from-col: mod(link.from, graph.columns);
-                property <int> from-row: floor(link.from / graph.columns);
-                property <int> to-col: mod(link.to, graph.columns);
-                property <int> to-row: floor(link.to / graph.columns);
-                // 同一行就左右连（从色块右缘到左缘），跨行就上下连（底缘到顶缘）
-                // ——和图谱里"上一层指向下一层"是同一个手法，只是转了 90 度。
-                property <bool> sideways: from-row == to-row;
-                property <float> half: 28;
-
-                property <float> x0: (from-col * graph.stride-x + graph.hub-x) / 1px
-                    + (sideways ? (to-col > from-col ? half : -half) : 0);
-                property <float> y0: (from-row * graph.stride-y + graph.hub-y) / 1px
-                    + (sideways ? 0 : half);
-                property <float> x1: (to-col * graph.stride-x + graph.hub-x) / 1px
-                    + (sideways ? (to-col > from-col ? -half : half) : 0);
-                property <float> y1: (to-row * graph.stride-y + graph.hub-y) / 1px
-                    + (sideways ? 0 : -half);
-                property <float> mid: sideways ? (x0 + x1) / 2 : (y0 + y1) / 2;
-                // 线在离箭头 7 处收住，剩下的交给三角形，不然线头会从尖端支出来。
-                property <float> tip: 7;
-                property <float> back: sideways ? (x1 > x0 ? -tip : tip) : -tip;
-
-                Path {
-                    x: 0; y: 0;
-                    width: parent.width;
-                    height: parent.height;
-                    viewbox-x: 0;
-                    viewbox-y: 0;
-                    viewbox-width: parent.width / 1px;
-                    viewbox-height: parent.height / 1px;
-                    stroke: #bcc4ce;
-                    stroke-width: 1.6px;
-
-                    MoveTo { x: edge.x0; y: edge.y0; }
-                    CubicTo {
-                        control-1-x: edge.sideways ? edge.mid : edge.x0;
-                        control-1-y: edge.sideways ? edge.y0 : edge.mid;
-                        control-2-x: edge.sideways ? edge.mid : edge.x1;
-                        control-2-y: edge.sideways ? edge.y1 : edge.mid;
-                        x: edge.sideways ? edge.x1 + edge.back : edge.x1;
-                        y: edge.sideways ? edge.y1 : edge.y1 + edge.back;
-                    }
-                }
-
-                // 实心三角：尖端顶在目标色块的边上。
-                Path {
-                    x: 0; y: 0;
-                    width: parent.width;
-                    height: parent.height;
-                    viewbox-x: 0;
-                    viewbox-y: 0;
-                    viewbox-width: parent.width / 1px;
-                    viewbox-height: parent.height / 1px;
-                    fill: #bcc4ce;
-
-                    MoveTo { x: edge.x1; y: edge.y1; }
-                    LineTo {
-                        x: edge.sideways ? edge.x1 + edge.back * 1.15 : edge.x1 - 5;
-                        y: edge.sideways ? edge.y1 - 5 : edge.y1 + edge.back * 1.15;
-                    }
-                    LineTo {
-                        x: edge.sideways ? edge.x1 + edge.back * 1.15 : edge.x1 + 5;
-                        y: edge.sideways ? edge.y1 + 5 : edge.y1 + edge.back * 1.15;
-                    }
-                    Close {}
-                }
-            }
-
-            for entry[index] in apps: Tile {
-                x: mod(index, graph.columns) * graph.stride-x;
-                y: floor(index / graph.columns) * graph.stride-y;
-                entry: entry;
-                open => { root.open(entry.id); }
-                stop => { root.stop(entry.id); }
-            }
+        graph := MindMap {
+            // 思维导图吃掉窗口里剩下的高度；放不下就滚动。
+            vertical-stretch: 1;
+            min-height: 320px;
+            apps: root.apps;
+            positions: root.positions;
+            groups: root.groups;
+            map-links: root.map-links;
+            rings: root.rings;
+            map-width: root.map-width;
+            map-height: root.map-height;
+            center-x: root.center-x;
+            center-y: root.center-y;
+            open(id) => { root.open(id); }
+            stop(id) => { root.stop(id); }
         }
 
         if practice-apps.length > 0: Rectangle {
@@ -320,10 +389,6 @@ export component LauncherWindow inherits Window {
             open(id) => { root.open(id); }
             stop(id) => { root.stop(id); }
         }
-
-        // 吸收窗口拉大之后多出来的空间：两个面板紧跟着排，不会被这块
-        // 撑开的空白隔在中间——多余的高度全部堆到这里，状态栏底下。
-        Rectangle { vertical-stretch: 1; }
 
         Text {
             text: status;

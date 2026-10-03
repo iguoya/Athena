@@ -10,6 +10,7 @@
 
 pub mod icons;
 pub mod manifest;
+pub mod mindmap;
 pub mod paths;
 pub mod progress;
 pub mod runner;

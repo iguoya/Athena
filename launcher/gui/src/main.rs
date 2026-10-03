@@ -18,7 +18,9 @@ use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use launcher_core::{discover, discover_in, paths, runner, App, ProcessSnapshot, RunState};
+use launcher_core::{
+    discover, discover_in, mindmap, paths, runner, App, ProcessSnapshot, RunState,
+};
 use slint::{Color, Model, ModelRc, SharedString, VecModel};
 
 use crate::tray::{Action, Tray};
@@ -81,7 +83,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         Rc::new(VecModel::from(build_entries(&practice_apps)));
     window.set_practice_apps(ModelRc::from(practice_entries.clone()));
     window.set_status("点一下就打开；已经在跑的只把窗口叫到前面。".into());
-    window.set_links(ModelRc::new(VecModel::from(evolution_links(&apps))));
+    set_mind_map(&window, &mindmap::layout(&apps));
 
     // 构建输出从后台线程流回来：界面上要看得见"卡在哪一步"，
     // 沉默几十秒是"慢"的主观放大器。
@@ -257,23 +259,67 @@ fn open_log(path: &std::path::Path) {
     let _ = opener::open(path);
 }
 
-/// 学科之间的历史演进关系（目前只有 C → C++）。
+/// 把 core 算好的思维导图布局原样填进界面（ADR 0083）。
 ///
-/// 只给出"谁从谁长出来"，具体画在哪由界面按当前列数算——窗口可以拉大，
-/// 位置随时在变。只记真实存在的演进关系：算法、英语、数学各自独立，
-/// 为了画面对称去连不存在的关系，是把装饰当成信息。
-fn evolution_links(apps: &[App]) -> Vec<LinkSpec> {
-    apps.iter()
-        .enumerate()
-        .filter_map(|(index, app)| {
-            let origin = app.evolves_from.as_ref()?;
-            let from = apps.iter().position(|other| &other.id == origin)?;
-            Some(LinkSpec {
-                from: from as i32,
-                to: index as i32,
-            })
+/// 位置、分组、连线和同心圈都在 `launcher_core::mindmap` 里算，那里有单元测试；
+/// 这里不做任何几何，只做类型转换。
+fn set_mind_map(window: &LauncherWindow, map: &mindmap::MindMap) {
+    let positions: Vec<NodePos> = map
+        .nodes
+        .iter()
+        .map(|node| NodePos { x: node.at.x, y: node.at.y })
+        .collect();
+    let groups: Vec<GroupSpec> = map
+        .groups
+        .iter()
+        .map(|group| GroupSpec {
+            name: group.name.as_str().into(),
+            color: parse_color(group.color, "思维导图"),
+            x: group.at.x,
+            y: group.at.y,
         })
-        .collect()
+        .collect();
+    let links: Vec<MapLink> = map.links.iter().map(map_link).collect();
+    window.set_positions(ModelRc::new(VecModel::from(positions)));
+    window.set_groups(ModelRc::new(VecModel::from(groups)));
+    window.set_map_links(ModelRc::new(VecModel::from(links)));
+    window.set_rings(ModelRc::new(VecModel::from(map.rings.clone())));
+    window.set_map_width(map.width);
+    window.set_map_height(map.height);
+    window.set_center_x(map.center.x);
+    window.set_center_y(map.center.y);
+}
+
+/// 一条连线：几何照搬布局，透明度按种类定——虎头到领域的最淡，演进线不透明，
+/// 相关线比分支略深，免得和分支线混成一片。
+fn map_link(link: &mindmap::Link) -> MapLink {
+    let (kind, alpha) = match link.kind {
+        mindmap::LinkKind::Hub => (0, 0x66),
+        mindmap::LinkKind::Branch => (1, 0x88),
+        mindmap::LinkKind::Evolves => (2, 0xff),
+        mindmap::LinkKind::Related => (3, 0xc0),
+    };
+    let base = parse_color(link.color, "思维导图");
+    let [a, b, c] = link.arrow.unwrap_or([link.to; 3]);
+    MapLink {
+        kind,
+        color: Color::from_argb_u8(alpha, base.red(), base.green(), base.blue()),
+        x0: link.from.x,
+        y0: link.from.y,
+        cx1: link.c1.x,
+        cy1: link.c1.y,
+        cx2: link.c2.x,
+        cy2: link.c2.y,
+        x1: link.to.x,
+        y1: link.to.y,
+        has_arrow: link.arrow.is_some(),
+        ax: a.x,
+        ay: a.y,
+        bx: b.x,
+        by: b.y,
+        cx: c.x,
+        cy: c.y,
+    }
 }
 
 /// 应用自带的图标，按图块里的显示尺寸（56px）渲染，乘 2 供高分屏用。

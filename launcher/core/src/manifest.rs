@@ -136,6 +136,10 @@ struct RawManifest {
     dev: Option<DevSpec>,
     #[serde(default)]
     evolves_from: Option<String>,
+    #[serde(default)]
+    group: Option<String>,
+    #[serde(default)]
+    related: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -155,6 +159,10 @@ pub struct App {
     /// 这个学科是从哪个学科长出来的（C++ 之于 C）。只记真实的历史演进关系；
     /// 各自独立的知识体系就空着，不为了连线而连线。
     pub evolves_from: Option<String>,
+    /// 领域分组（思维导图里同组的应用挂在同一个分支上）；省略归「其他」（ADR 0083）。
+    pub group: Option<String>,
+    /// 相关应用的 id。无向：只在一边声明就行；找不到的 id 布局时忽略（ADR 0083）。
+    pub related: Vec<String>,
 }
 
 impl App {
@@ -258,5 +266,7 @@ fn parse(dir: &Path) -> Option<App> {
         dir: dir.to_path_buf(),
         dev: raw.dev.unwrap_or_default(),
         evolves_from: raw.evolves_from,
+        group: raw.group,
+        related: raw.related,
     })
 }

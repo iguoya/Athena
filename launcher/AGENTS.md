@@ -31,6 +31,9 @@
   焦点时提示使用者自己切过去），不假装成功。
 - **换标志只换 `gui/assets/tiger.svg`。** 标题栏、任务栏、托盘都由 `gui/build.rs` 从这一份
   渲染，不另画。
+- **学习应用面板的布局是 `core/src/mindmap.rs` 的纯函数**（ADR 0083）：位置、分组、连线都在那里算、
+  有单元测试，GUI 只填数据；分组和关系来自 `app.json` 的 `group` / `related` / `evolves_from`，
+  不要在界面里按应用 id 写位置。改了布局先跑 `cargo test -p launcher-core mindmap`。
 - **应用图标原样显示，不表达运行状态**（ADR 0065）。`icon.svg` 自带颜色，图块不垫底色、
   不加光环、不随状态放大；运行态只由状态点表达。`accent` + `letter` 只给没有图标的应用兜底。
 - **图标位图由 `launcher icons` 生成**，按各应用 `icon.renders` 声明写进应用自己的目录
