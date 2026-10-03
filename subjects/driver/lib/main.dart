@@ -646,6 +646,10 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
   }
 
   Future<void> _ping() async {
+    if (_idLooksLikeEmail) {
+      setState(() => _pingResult = emailAsCredentialHint);
+      return;
+    }
     final config = _compose();
     setState(() {
       _pinging = true;
@@ -689,7 +693,21 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
     }
   }
 
+  /// 外网访问凭据的 ID 不是邮箱：邮箱是给人在浏览器里收验证码用的，程序用不上；程序用的是
+  /// Cloudflare 里新建「服务令牌」得到的一对 ID 和密钥。填了邮箱存下来也永远不会生效，
+  /// 所以保存和测试连接前先拦住并说清楚（ADR 0077）。
+  static const emailAsCredentialHint =
+      "这里填的不是邮箱。邮箱是给人在浏览器里收验证码用的，桌面程序用不上；"
+      "这里要的是在 Cloudflare 里新建「服务令牌」后得到的一对 ID（以 .access 结尾）和密钥。"
+      "只在家里内网用的话，这几项留空就行。";
+
+  bool get _idLooksLikeEmail => _cfClientId.text.contains("@");
+
   void _save() {
+    if (_idLooksLikeEmail) {
+      setState(() => _pingResult = emailAsCredentialHint);
+      return;
+    }
     final config = _compose();
     config.save();
     final direct = widget.onSavedDirect;
@@ -755,7 +773,10 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                   ),
                   TextField(
                     controller: _cfClientId,
-                    decoration: const InputDecoration(labelText: "外网访问凭据 · Client ID（可选）"),
+                    decoration: const InputDecoration(
+                      labelText: "外网访问凭据 · Client ID（可选）",
+                      helperText: "不是邮箱；是 Cloudflare「服务令牌」的 ID，以 .access 结尾",
+                    ),
                   ),
                   TextField(
                     controller: _cfClientSecret,
