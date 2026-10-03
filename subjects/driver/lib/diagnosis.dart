@@ -383,6 +383,27 @@ class DiagnosisData {
       );
 }
 
+/// 变式差距（主仓库 ADR 0076、0079）：复测原题答对的比例减去同考点变式答对的比例。
+/// 正数 = 换了问法就答不好，多半记住的是那几道题而不是考点本身。两类都得有记录才算得出。
+class VariantGap {
+  const VariantGap({required this.retest, required this.variant});
+
+  final ReasonOutcome retest;
+  final ReasonOutcome variant;
+
+  double get gap => retest.rate! - variant.rate!;
+
+  /// 任何一边样本太少都只当线索。
+  bool get enough => retest.n >= 10 && variant.n >= 10;
+}
+
+VariantGap? variantGap(List<ReasonOutcome> outcomes) {
+  final retest = outcomes.where((o) => o.reason == "retest" && o.n > 0).firstOrNull;
+  final variant = outcomes.where((o) => o.reason == "variant" && o.n > 0).firstOrNull;
+  if (retest == null || variant == null) return null;
+  return VariantGap(retest: retest, variant: variant);
+}
+
 /// 方便界面写「约 X 秒」。
 String seconds(int ms) => "${(ms / 1000).toStringAsFixed(ms >= 10000 ? 0 : 1)} 秒";
 

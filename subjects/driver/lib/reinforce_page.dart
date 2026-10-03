@@ -67,6 +67,7 @@ class ReinforcePage extends StatelessWidget {
 
   static const _reasonColors = {
     "retest": Bs.danger,
+    "variant": Color(0xFF6F42C1),
     "weak": Bs.warning,
     "due": Bs.primary,
     "fill": Bs.secondary,

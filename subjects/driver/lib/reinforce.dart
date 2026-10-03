@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "clusters.dart";
 import "exam.dart";
 import "models.dart";
 
@@ -216,10 +217,11 @@ double questionProbability(QuestionHistory? h, double chapterPrior) {
 
 // ---------------------------------------------------------------- 强化练习选题
 
-/// 选题理由。`retest` 复测错题，`weak` 薄弱章节，`due` 间隔到期，`fill` 数据不够时按
-/// 公开错误率补足（主仓库 ADR 0076 决策 7、8）。
+/// 选题理由。`retest` 复测错题，`variant` 错题的同考点变式（换了一种问法），`weak` 薄弱章节，
+/// `due` 间隔到期，`fill` 数据不够时按公开错误率补足（主仓库 ADR 0076 决策 7、8，ADR 0079）。
 const reinforceReasonLabels = {
   "retest": "复测错题",
+  "variant": "同考点变式",
   "weak": "薄弱章节",
   "due": "到期复习",
   "fill": "补足",
@@ -248,17 +250,21 @@ class ReinforcePlan {
   }
 }
 
-/// 强化练习选题：错题、薄弱章节、到期复习三类信号合成一张题单。
+/// 强化练习选题：错题、同考点变式、薄弱章节、到期复习四类信号合成一张题单。
 ///
 /// [pool] 由调用方给出——已排除锁着的科目、偏难怪题（不挡过关，ADR 0032）。每题最多出一次
 /// （driver ADR 0031）。初始配额 复测 40%、薄弱 30%、到期 30%；某类不够，按复测、薄弱、
 /// 到期的顺序拿别的类补；候选全不够（新学习者）时按公开错误率补足。
+///
+/// 给了 [clusters]（考点簇，ADR 0079）时，复测配额的一半让给**同考点变式**：错了一道题，就出它
+/// 同簇里换了问法的另一道（优先没做过的），检验是真懂还是只背了那道题；没给就没有变式，行为不变。
 ReinforcePlan planReinforcement({
   required Iterable<Question> pool,
   required HistorySet histories,
   required DateTime now,
   Random? random,
   int count = 20,
+  ClusterIndex? clusters,
 }) {
   random ??= Random();
   final all = <String, Question>{for (final q in pool) q.id: q};
@@ -295,11 +301,42 @@ ReinforcePlan planReinforcement({
   };
   weak.sort((a, b) => weakScore[b.id]!.compareTo(weakScore[a.id]!));
 
-  final retestQuota = (count * 0.4).round();
+  var retestQuota = (count * 0.4).round();
   final weakQuota = (count * 0.3).round();
   final dueQuota = count - retestQuota - weakQuota;
-  final lists = {"retest": retest, "weak": weak, "due": due};
-  final quotas = {"retest": retestQuota, "weak": weakQuota, "due": dueQuota};
+
+  // 同考点变式：每道错题轮流各出一个同簇的题（先出没做过的，再出答对过的），不出错题本身。
+  final variants = <Question>[];
+  var variantQuota = 0;
+  if (clusters != null && !clusters.isEmpty) {
+    variantQuota = retestQuota ~/ 2;
+    retestQuota -= variantQuota;
+    final isRetest = {for (final q in retest) q.id};
+    final perWrong = <List<Question>>[];
+    for (final wrong in retest) {
+      final mates = [
+        for (final id in clusters.mates(wrong.id))
+          if (all.containsKey(id) && !isRetest.contains(id)) all[id]!,
+      ]..sort((a, b) {
+          // 没做过的在前；都做过的，隔得久的在前。
+          final ha = histories.of(a.id);
+          final hb = histories.of(b.id);
+          if (ha == null || ha.attempts == 0) return (hb == null || hb.attempts == 0) ? a.id.compareTo(b.id) : -1;
+          if (hb == null || hb.attempts == 0) return 1;
+          return ha.lastAt!.compareTo(hb.lastAt!);
+        });
+      perWrong.add(mates);
+    }
+    final seen = <String>{};
+    for (var round = 0; perWrong.any((m) => m.length > round); round++) {
+      for (final mates in perWrong) {
+        if (mates.length > round && seen.add(mates[round].id)) variants.add(mates[round]);
+      }
+    }
+  }
+  final lists = {"retest": retest, "variant": variants, "weak": weak, "due": due};
+  final quotas = {"retest": retestQuota, "variant": variantQuota, "weak": weakQuota, "due": dueQuota};
+  const order = ["retest", "variant", "weak", "due"];
   final picks = <ReinforcePick>[];
   final used = <String>{};
 
@@ -313,10 +350,10 @@ ReinforcePlan planReinforcement({
     }
   }
 
-  for (final reason in ["retest", "weak", "due"]) {
+  for (final reason in order) {
     take(reason, quotas[reason]!);
   }
-  for (final reason in ["retest", "weak", "due"]) {
+  for (final reason in order) {
     take(reason, count - picks.length);
   }
   if (picks.length < count) {

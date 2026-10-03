@@ -6,6 +6,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "glyphs.dart";
+import "clusters.dart";
 import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
@@ -23,6 +24,14 @@ Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules,
   return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
 }
 
+/// 考点簇放到后台 isolate 里算（ADR 0079）。同样要是顶层函数，原因同上。
+Future<ClusterIndex> _buildClustersInBackground(List<Question> questions) {
+  return Isolate.run(() => buildClusters(questions));
+}
+
+/// 算考点簇的办法。默认在后台线程里现算；测试可以换成立即返回，免得拖慢、也免得改变选题。
+typedef ClusterBuilder = Future<ClusterIndex> Function(List<Question> questions);
+
 class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
@@ -33,7 +42,11 @@ class HomePage extends StatefulWidget {
     this.onSwitchUser,
     this.syncStatus,
     this.onOpenConfig,
+    this.clusterBuilder = _buildClustersInBackground,
   });
+
+  /// 考点簇的算法入口，见 [ClusterBuilder]。
+  final ClusterBuilder clusterBuilder;
 
   final Bank bank;
   final ProgressStore store;
@@ -81,6 +94,11 @@ class _HomePageState extends State<HomePage> {
   // 强化练习（主仓库 ADR 0076）：全部由作答记录派生，不另存。
   HistorySet _histories = HistorySet.build(const []);
   ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
+
+  /// 强化练习的题池（已排除锁着的科目和偏难怪题）和考点簇；簇在后台算好后重新选题。
+  List<Question> _reinforcePool = const [];
+  ClusterIndex _clusters = ClusterIndex.empty;
+  bool _clustersStarted = false;
   DiagnosisData? _diagnosis;
 
   /// 按题号取题：学习诊断要把作答记录对回题库（题干、选项、全国错误率）。
@@ -253,7 +271,12 @@ class _HomePageState extends State<HomePage> {
             !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
           q,
     ];
-    final reinforcePlan = planReinforcement(pool: theoryPool, histories: histories, now: DateTime.now());
+    final reinforcePlan = planReinforcement(
+      pool: theoryPool,
+      histories: histories,
+      now: DateTime.now(),
+      clusters: _clusters,
+    );
     final secondsPerQuestion = avgMs > 0 ? avgMs / 1000 : 25.0;
     final priorities = chapterPriorities(
       pool: theoryPool,
@@ -266,6 +289,7 @@ class _HomePageState extends State<HomePage> {
       _histories = histories;
       _diagnosis = diagnosis;
       _reinforcePlan = reinforcePlan;
+      _reinforcePool = theoryPool;
       _priorities = priorities;
       _pass.clear();
       _passGeneration++;
@@ -1608,7 +1632,31 @@ class _HomePageState extends State<HomePage> {
       _place = place;
       _session = null;
     });
-    if (place == _reinforceId) unawaited(_ensurePass());
+    if (place == _reinforceId) {
+      unawaited(_ensurePass());
+      unawaited(_ensureClusters());
+    }
+  }
+
+  /// 考点簇由题库内容现算（确定性，不落盘），第一次看强化练习页时在后台算一次，之后缓存在内存里。
+  /// 算好后用它重新选题，这样题单里才有「同考点变式」（主仓库 ADR 0079）。
+  Future<void> _ensureClusters() async {
+    if (_clustersStarted) return;
+    _clustersStarted = true;
+    final index = await widget.clusterBuilder(widget.bank.questions);
+    if (!mounted) return;
+    setState(() {
+      _clusters = index;
+      // 没在做题时才换题单：做题中的那张不动。
+      if (_session == null && _reinforcePool.isNotEmpty) {
+        _reinforcePlan = planReinforcement(
+          pool: _reinforcePool,
+          histories: _histories,
+          now: DateTime.now(),
+          clusters: index,
+        );
+      }
+    });
   }
 
   /// 通过概率要抽几百次卷，放到后台 isolate 里算，不卡界面；算完才显示（主仓库 ADR 0076）。

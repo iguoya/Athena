@@ -333,6 +333,7 @@ class DiagnosisPanel extends StatelessWidget {
     }
     const roles = {
       "retest": "复测错题 · 转正率",
+      "variant": "同考点变式 · 答对率",
       "weak": "薄弱章节 · 答对率",
       "due": "到期复习 · 保持率",
       "fill": "补足 · 答对率",
@@ -359,7 +360,30 @@ class DiagnosisPanel extends StatelessWidget {
             ],
           ),
         ),
-      Text("变式题的差距要等考点簇索引，还没做。", style: small),
+      ..._variantNote(body, small),
+    ];
+  }
+
+  /// 变式差距：复测原题和同考点变式答对率的差。
+  List<Widget> _variantNote(TextStyle? body, TextStyle? small) {
+    final gap = variantGap(data.outcomes);
+    if (gap == null) {
+      return [Text("还没有同考点变式题的记录；练过几次强化练习后，这里会比较「原题」和「换了问法」哪个答得更好。", style: small)];
+    }
+    final points = (gap.gap * 100).round();
+    final verdict = points >= 15
+        ? "换了问法就差了 $points 个百分点：多半记住的是那几道题，不是考点本身，值得回去看条文。"
+        : points <= -15
+            ? "变式反而答得更好（高 ${-points} 个百分点），说明是真懂了。"
+            : "差距不大（$points 个百分点），原题和换了问法答得差不多。";
+    return [
+      const SizedBox(height: 6),
+      Text(
+        "复测原题答对 ${((gap.retest.rate ?? 0) * 100).round()}%（${gap.retest.n} 次），"
+        "同考点变式答对 ${((gap.variant.rate ?? 0) * 100).round()}%（${gap.variant.n} 次）。$verdict",
+        style: body,
+      ),
+      if (!gap.enough) Text("任何一边不到 10 次都只当线索，别当结论。", style: small),
     ];
   }
 }
