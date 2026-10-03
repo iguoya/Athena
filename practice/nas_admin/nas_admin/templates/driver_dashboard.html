@@ -333,6 +333,10 @@ function renderSubject(sid) {
   document.getElementById("tab-subjects").insertAdjacentHTML("beforeend", `
     <div id="tab-${p}" hidden>
       <div class="cards" id="${p}-cards"></div>
+      <section id="${p}-advice-section" style="margin-top: 20px;" hidden>
+        <h2>数据说明与建议<small>由上面的记录派生，数字变了建议跟着变</small></h2>
+        <ul class="list" id="${p}-advice"></ul>
+      </section>
       <div class="grid">
         <section class="span2">
           <h2>错题消化曲线<small>同一道题第 n 次作答时的正确率——重练到第几遍才稳</small></h2>
@@ -349,6 +353,18 @@ function renderSubject(sid) {
         <section class="span3" id="${p}-examchapters-section" hidden>
           <h2>模拟考章节丢分<small>条是考试里丢分的题数，颜色是考试正确率</small></h2>
           <div class="chart" id="${p}-examchapters" style="height: 420px;"></div>
+        </section>
+        <section class="span3" id="${p}-sessions-section" hidden>
+          <h2>每场丢分的章节构成<small>柱是一场考试，颜色是丢分所在章节</small></h2>
+          <div class="chart" id="${p}-sessions" style="height: 400px;"></div>
+        </section>
+        <section class="span3" id="${p}-gap-section" hidden>
+          <h2>练习 vs 考试<small>同一章的两根条：平时练习与模拟考的正确率，落差大的是应试短板</small></h2>
+          <div class="chart" id="${p}-gap" style="height: 420px;"></div>
+        </section>
+        <section id="${p}-repeat-section" hidden>
+          <h2>跨场重复丢分<small>不止一场考试都错的题</small></h2>
+          <ul class="list" id="${p}-repeat"></ul>
         </section>
         <section class="span3" id="${p}-matrix-section">
           <h2>章节 × 日期<small>格子是当天该章的正确率，灰格没练</small></h2>
@@ -479,6 +495,100 @@ function renderSubject(sid) {
       }],
     });
   }
+
+  // ---- 每场丢分的章节构成（堆叠柱：哪场败在哪章）
+  const sessions = d.exam.sessions;
+  if (sessions.length) {
+    document.getElementById(p + "-sessions-section").hidden = false;
+    const titles = [...new Set(sessions.flatMap(s => s.misses.map(m => m.title)))];
+    chart(document.getElementById(p + "-sessions")).setOption({
+      grid: { left: 44, right: 20, top: 40, bottom: 28 },
+      tooltip: {
+        formatter: qs => {
+          const s = sessions[qs[0].dataIndex];
+          const detail = qs.map(q => `${q.marker}${q.seriesName}：${q.value} 题`).join("<br>");
+          return `第 ${qs[0].dataIndex + 1} 场 · ${s.at.slice(0, 10)} · ${s.score} 分${s.passed ? "（及格）" : ""}<br>${detail}`;
+        },
+      },
+      legend: { textStyle: BASE_TEXT, top: 0, type: "scroll" },
+      xAxis: { type: "category", data: sessions.map((_, i) => `第 ${i + 1} 场`),
+               axisLabel: BASE_TEXT, axisLine: { lineStyle: { color: line } } },
+      yAxis: { type: "value", minInterval: 1, name: "丢分题数", nameTextStyle: BASE_TEXT,
+               axisLabel: BASE_TEXT, splitLine: { lineStyle: { color: line } } },
+      series: titles.map(t => ({
+        name: t, type: "bar", stack: "miss", barWidth: 26,
+        itemStyle: { borderRadius: 3 },
+        data: sessions.map(s => s.misses.find(m => m.title === t)?.count ?? 0),
+      })),
+    });
+  }
+
+  // ---- 练习 vs 考试正确率对照（有考试数据的章才画）
+  const gapChapters = chapters.filter(c => c.exam_attempts > 0);
+  if (gapChapters.length) {
+    document.getElementById(p + "-gap-section").hidden = false;
+    chart(document.getElementById(p + "-gap")).setOption({
+      grid: { left: 200, right: 70, top: 36, bottom: 28 },
+      tooltip: { trigger: "axis", valueFormatter: v => v == null ? "—" : v + "%" },
+      legend: { textStyle: BASE_TEXT, top: 0 },
+      xAxis: { type: "value", max: 100, axisLabel: { ...BASE_TEXT, formatter: "{value}%" },
+               splitLine: { lineStyle: { color: line } } },
+      yAxis: { type: "category", inverse: true, data: gapChapters.map(c => c.title),
+               axisLabel: { color: ink, fontSize: 15 }, axisLine: { lineStyle: { color: line } } },
+      series: [
+        { name: "平时练习", type: "bar", barWidth: 14, itemStyle: { color: accent, borderRadius: 3 },
+          label: { show: true, position: "right", fontSize: 14, color: secondary, formatter: q => pct(gapChapters[q.dataIndex].rate) },
+          data: gapChapters.map(c => Math.round((c.rate ?? 0) * 100)) },
+        { name: "模拟考", type: "bar", barWidth: 14, itemStyle: { color: warn, borderRadius: 3 },
+          label: { show: true, position: "right", fontSize: 14, color: secondary, formatter: q => pct(gapChapters[q.dataIndex].exam_rate) },
+          data: gapChapters.map(c => c.exam_rate == null ? null : Math.round(c.exam_rate * 100)) },
+      ],
+    });
+  }
+
+  // ---- 跨场重复丢分
+  const repeatBox = document.getElementById(p + "-repeat");
+  if (d.exam.repeat_misses.length) {
+    document.getElementById(p + "-repeat-section").hidden = false;
+    repeatBox.innerHTML = d.exam.repeat_misses.map(r =>
+      `<li><span>#${r.no} · ${r.title}</span><span class="sub">${r.sessions} 场考试都丢分</span></li>`).join("");
+  }
+
+  // ---- 数据说明与建议：全部由已派生的量规则化生成，数字变建议跟着变
+  const advice = [];
+  if (sessions.length) {
+    const last = sessions[sessions.length - 1];
+    advice.push(last.passed
+      ? `最近一场 ${last.score} 分（及格）。保持节奏，考前把仍错着的 ${w.still} 题过一遍。`
+      : `最近一场 ${last.score} 分，距 90 分线差 ${90 - last.score} 分：丢分集中处见「每场丢分的章节构成」。`);
+  } else {
+    advice.push("还没有模拟考记录。章节练熟后来一场，考试维度的统计就会在这里展开。");
+  }
+  const withExam = chapters.filter(c => c.exam_attempts >= 20);
+  if (withExam.length) {
+    const weakest = [...withExam].sort((a, b) => (a.exam_rate ?? 1) - (b.exam_rate ?? 1))[0];
+    advice.push(`${weakest.title}：考试正确率 ${pct(weakest.exam_rate)}，是模拟考里最弱的一章，建议优先补练。`);
+    const gapped = [...withExam].sort((a, b) => ((a.rate ?? 0) - (a.exam_rate ?? 0)) - ((b.rate ?? 0) - (b.exam_rate ?? 0)));
+    const worst = gapped[gapped.length - 1];
+    if (worst && (worst.rate ?? 0) - (worst.exam_rate ?? 0) >= 0.05) {
+      advice.push(`${worst.title}：平时 ${pct(worst.rate)}、考试 ${pct(worst.exam_rate)}，落差最大——平时会、考场上丢，多用模拟考节奏练它。`);
+    }
+  }
+  if (d.exam.repeat_misses.length) {
+    const r = d.exam.repeat_misses[0];
+    advice.push(`#${r.no}（${r.title}）在 ${r.sessions} 场考试都丢分，属于最该优先消灭的题。`);
+  }
+  if (d.exam.pace && d.exam.pace.exam_avg_ms && d.exam.pace.practice_avg_ms) {
+    const examS = d.exam.pace.exam_avg_ms / 1000, pracS = d.exam.pace.practice_avg_ms / 1000;
+    if (examS < pracS * 0.7) {
+      advice.push(`考试每题 ${examS.toFixed(1)} 秒、平时 ${pracS.toFixed(1)} 秒：考试节奏明显偏快，答完留点时间回查。`);
+    }
+  }
+  if (w.stubborn.length) {
+    advice.push(`错题消化：重练到第 ${w.repeat_curve.length} 次及以上正确率已到 ${pct(w.repeat_curve[w.repeat_curve.length - 1]?.rate)}——重练有效；仍错着的 ${w.still} 题里，先消灭反复错的顽固题。`);
+  }
+  document.getElementById(p + "-advice-section").hidden = false;
+  document.getElementById(p + "-advice").innerHTML = advice.map(t => `<li><span>${t}</span></li>`).join("");
 
   // ---- 章节 × 日期热力矩阵
   if (d.chapter_days.length) {

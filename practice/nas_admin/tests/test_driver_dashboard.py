@@ -291,6 +291,33 @@ class SubjectDetailTest(DashboardCase):
         self.assertEqual(data["overview"]["avg_duration_ms"], 4000)
 
 
+    def test_exam_sessions_attribution(self):
+        """模拟考逐题归属场次（50 分钟窗）与跨场重复丢分（driver ADR 0057）。"""
+        with self.driver.begin() as conn:
+            conn.execute(insert(schema.attempts), [
+                # 第 1 场窗口 [09:10, 10:00]：q1、q2 都丢
+                {"question_id": "drive.s1.rules.301", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T09:30:00.000", "kind": "exam"},
+                {"question_id": "drive.s1.signals.302", "topic_id": "drive.s1.signals", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T09:40:00.000", "kind": "exam"},
+                {"question_id": "drive.s1.rules.303", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 1, "duration_ms": 0, "at": f"{TODAY}T09:50:00.000", "kind": "exam"},
+                # 第 2 场窗口 [10:10, 11:00]：q1 又丢（跨场重复）
+                {"question_id": "drive.s1.rules.301", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T10:30:00.000", "kind": "exam"},
+                # 窗口外的考试作答：不归属任何场
+                {"question_id": "drive.s1.rules.304", "topic_id": "drive.s1.rules", "subject_id": "subject1", "correct": 0, "duration_ms": 0, "at": f"{TODAY}T12:00:00.000", "kind": "exam"},
+            ])
+            conn.execute(insert(schema.exams), [
+                {"subject_id": "subject1", "score": 92, "passed": 1, "at": f"{TODAY}T10:00:00.000"},
+                {"subject_id": "subject1", "score": 88, "passed": 0, "at": f"{TODAY}T11:00:00.000"},
+            ])
+        exam = self.client.get("/driver/data.json").get_json()["details"]["subject1"]["exam"]
+        self.assertEqual(len(exam["sessions"]), 2)
+        first, second = exam["sessions"]
+        self.assertEqual(first["score"], 92)
+        self.assertEqual(first["misses"], [{"title": "通行、超车与让行", "count": 1}, {"title": "交通信号与标志", "count": 1}])
+        self.assertEqual(second["misses"], [{"title": "通行、超车与让行", "count": 1}])
+        # q1 两个窗口都归属：跨场重复丢分
+        self.assertEqual(exam["repeat_misses"], [{"no": "301", "title": "通行、超车与让行", "sessions": 2}])
+
+
 class StreakTest(unittest.TestCase):
     """dayStreak 口径与客户端（look.dart）一致：从今天往前数，今天没练就是 0。"""
 

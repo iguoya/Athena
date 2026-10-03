@@ -13,7 +13,7 @@
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any
 
 from sqlalchemy import Connection, and_, func, or_, select
@@ -171,6 +171,7 @@ def _subject_detail(conn: Connection, subject_id: str) -> dict[str, Any] | None:
             for t, v in sorted(wrong_drill.items(), key=lambda kv: -kv[1]["attempts"])
         ],
         "wrong": wrong,
+        "exam": _exam_analysis(conn, subject_id),
     }
 
 
@@ -195,6 +196,74 @@ def _exam_chapters(conn: Connection, subject_id: str, chapters: list[dict[str, A
         chapter["exam_attempts"] = n
         chapter["exam_rate"] = round(correct / n, 4) if n else None
         chapter["exam_wrong_questions"] = missed.get(chapter["id"], 0)
+
+
+def _exam_analysis(conn: Connection, subject_id: str) -> dict[str, Any]:
+    """模拟考深挖（driver ADR 0057 的 kind='exam' 数据，历史按交卷时间窗归属场次）：
+
+    - sessions：每场的丢分按章节拆开（前端画堆叠柱——哪场败在哪章）；
+    - gap：同一章节平时练习与模拟考的正确率落差（平时好、考试掉链子的章）；
+    - repeat_misses：跨场重复丢分的题（多场都错，最优先消灭）；
+    - pace：考试与平时的每题用时对比（节奏是否仓促）。
+    """
+    a, e = schema.attempts, schema.exams
+    sessions = [
+        {"at": r[0], "score": int(r[1]), "passed": bool(r[2])}
+        for r in conn.execute(select(e.c.at, e.c.score, e.c.passed).where(e.c.subject_id == subject_id).order_by(e.c.at))
+    ]
+    if not sessions:
+        return {"sessions": [], "gap": [], "repeat_misses": [], "pace": None}
+    rows = conn.execute(
+        select(a.c.question_id, a.c.topic_id, a.c.correct, a.c.at)
+        .where(and_(a.c.subject_id == subject_id, a.c.kind == "exam"))
+        .order_by(a.c.at)
+    ).all()
+
+    # 作答归属场次：交卷时刻往前 50 分钟窗（与 ADR 0057 回填同一口径），
+    # 多场窗口重叠时归最近的那场。
+    def _parse(stamp: str) -> datetime:
+        return datetime.fromisoformat(stamp.replace("Z", "+00:00")) if "T" in stamp else datetime.fromisoformat(stamp)
+
+    bounds = [(i, _parse(s["at"]) - timedelta(minutes=50), _parse(s["at"])) for i, s in enumerate(sessions)]
+    session_misses: list[dict[str, int]] = [{} for _ in sessions]
+    question_miss_sessions: dict[str, dict[str, Any]] = {}
+    for qid, topic, correct, at in rows:
+        moment = _parse(at)
+        candidates = [i for i, lo, hi in bounds if lo <= moment <= hi]
+        if not candidates:
+            continue
+        nearest = min(candidates, key=lambda i: bounds[i][2] - moment)
+        if not correct:
+            title = TOPIC_TITLES.get(topic, topic)
+            session_misses[nearest][title] = session_misses[nearest].get(title, 0) + 1
+            slot = question_miss_sessions.setdefault(qid, {"topic": topic, "sessions": set()})
+            slot["sessions"].add(nearest)
+
+    for session, misses in zip(sessions, session_misses):
+        session["misses"] = [
+            {"title": t, "count": n} for t, n in sorted(misses.items(), key=lambda kv: -kv[1])
+        ]
+
+    repeat = [
+        {"no": qid.rsplit(".", 1)[-1], "title": TOPIC_TITLES.get(v["topic"], v["topic"]),
+         "sessions": len(v["sessions"])}
+        for qid, v in question_miss_sessions.items() if len(v["sessions"]) >= 2
+    ]
+    repeat.sort(key=lambda x: (-x["sessions"], x["no"]))
+
+    def _avg_ms(kind: str) -> float | None:
+        value = conn.execute(
+            select(func.avg(a.c.duration_ms))
+            .where(and_(a.c.subject_id == subject_id, a.c.kind == kind, a.c.duration_ms.between(1, DURATION_CAP_MS)))
+        ).scalar_one()
+        return round(float(value)) if value is not None else None
+
+    return {
+        "sessions": sessions,
+        "gap": [],  # 由 chapters 的练习/考试两个 rate 在前端对算（见模板），这里不重复算
+        "repeat_misses": repeat[:10],
+        "pace": {"exam_avg_ms": _avg_ms("exam"), "practice_avg_ms": _avg_ms("practice")},
+    }
 
 
 def _wrong_analysis(conn: Connection, subject_id: str, chapters: list[dict[str, Any]]) -> dict[str, Any]:
