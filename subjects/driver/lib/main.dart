@@ -325,6 +325,11 @@ class _UserGateScreenState extends State<UserGateScreen> {
       _fail("现在连不上学习者目录（${error.detail}）。已在这台电脑上用过的学习者可以直接点上面的名字。");
     } on DirectoryRejected catch (error) {
       _fail(error.message);
+    } on DirectoryNotFound {
+      // 兜底：任何一步抛出没人处理的「找不到」，也要让人看见，不能静默。
+      _fail("目录里没有找到这位学习者。");
+    } on DirectoryAmbiguous {
+      _fail("有重名的学习者，请再输入学习者编号。");
     } finally {
       if (mounted) setState(() => _busy = false);
     }

@@ -10,6 +10,12 @@ import "package:flutter_test/flutter_test.dart";
 class FakeDirectoryServer {
   HttpServer? _server;
   var blocked = false;
+
+  /// 模拟旧版后台：没带设备令牌就 401（主仓库 ADR 0077 之前）。
+  var legacy = false;
+
+  /// 模拟没有目录接口的后台：回网页版 404。
+  var noRoutes = false;
   final List<({int id, String name})> rows = [];
 
   Future<void> start() async {
@@ -27,6 +33,18 @@ class FakeDirectoryServer {
     await for (final request in _server!) {
       final response = request.response;
       try {
+        if (legacy) {
+          _json(response, 401, {"error": "unauthorized", "message": "缺少或无效的设备令牌"});
+          continue;
+        }
+        if (noRoutes) {
+          response
+            ..statusCode = 404
+            ..headers.contentType = ContentType.html
+            ..write("<!doctype html><title>404 Not Found</title><h1>Not Found</h1>");
+          await response.close();
+          continue;
+        }
         if (blocked) {
           // 模拟外网被 Cloudflare Access 拦住：302 到登录页（ADR 0077）。
           response
@@ -151,6 +169,28 @@ void main() {
     );
     server.blocked = false;
     expect((await directory.register("tiger")).id, "1", reason: "放行后恢复");
+  });
+
+  test("旧版后台（还要求设备令牌，回 401）：明说版本旧，不报「连不上」", () async {
+    server.legacy = true;
+    await expectLater(
+      directory.login("tiger"),
+      throwsA(isA<DirectoryRejected>().having((e) => e.message, "message", allOf(contains("旧版本"), contains("部署")))),
+    );
+    await expectLater(directory.register("tiger"), throwsA(isA<DirectoryRejected>()));
+  });
+
+  test("后台没有目录接口（网页版 404）：不是「没有这个学习者」，也不会被当成可以新建", () async {
+    server.noRoutes = true;
+    await expectLater(
+      directory.login("tiger"),
+      throwsA(isA<DirectoryUnavailable>().having((e) => e.detail, "detail", contains("版本太旧"))),
+    );
+    await expectLater(directory.register("tiger"), throwsA(isA<DirectoryUnavailable>()));
+  });
+
+  test("应用自己的 JSON 404 才是「没有这个学习者」", () async {
+    await expectLater(directory.login("没人"), throwsA(isA<DirectoryNotFound>()));
   });
 
   test("内网端点不通自动换外网端点；全不通是 DirectoryUnavailable", () async {

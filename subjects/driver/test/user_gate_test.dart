@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:athena_driver/main.dart";
+import "package:athena_driver/sync.dart";
 import "package:athena_driver/user_directory.dart";
 import "package:athena_driver/users.dart";
 import "package:flutter/material.dart";
@@ -13,6 +14,9 @@ class FakeDirectory implements UserDirectory {
 
   /// 为真时所有调用都像网络不通。
   bool down = false;
+
+  /// 不为空时，新建会被服务端拒绝（比如后台版本太旧）。
+  String? registerRejection;
 
   UserProfile add(String name) {
     final profile = UserProfile(id: "${rows.length + 1}", name: name);
@@ -38,6 +42,7 @@ class FakeDirectory implements UserDirectory {
   Future<UserProfile> register(String name) async {
     calls++;
     if (down) throw DirectoryUnavailable("网络不通");
+    if (registerRejection != null) throw DirectoryRejected(registerRejection!);
     return add(name.trim());
   }
 
@@ -236,6 +241,17 @@ void main() {
     expect(registry.byId("1")?.name, "老司机");
     expect(renamed?.name, "老司机");
     expect(find.text("现在是：老司机（编号 1）"), findsOneWidget);
+  });
+
+  testWidgets("名字没人用、自动新建却被服务端拒绝：把原因显示出来，不能静默没反应", (tester) async {
+    directory.registerRejection = legacyServerMessage;
+    await open(tester);
+    await typeName(tester, "tiger");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(picked, isNull);
+    expect(find.textContaining("旧版本"), findsOneWidget);
+    expect(directory.rows, isEmpty);
   });
 
   testWidgets("连不上目录：新建说明原因，页面有同步设置入口；本机用过的人仍能直接进", (tester) async {

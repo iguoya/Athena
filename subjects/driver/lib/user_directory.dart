@@ -101,8 +101,14 @@ class HttpUserDirectory implements UserDirectory {
         if (blockedByCloudflare(response.statusCode, response.headers, text)) {
           throw DirectoryRejected("外网被 Cloudflare 访问规则拦住了：请在同步设置里检查外网访问凭据（在家里内网用不受影响）。");
         }
-        final data = text.isEmpty ? <String, dynamic>{} : (jsonDecode(text) as Map).cast<String, dynamic>();
         final status = response.statusCode;
+        // 旧版后台还在要求设备令牌：回 401。明说版本旧，不要笼统地报「连不上」（ADR 0077）。
+        if (status == 401) throw DirectoryRejected(legacyServerMessage);
+        // 不是 JSON 的错误页（典型是 404）：服务端根本没有这个接口，不是「没有这个学习者」。
+        if (status >= 400 && text.isNotEmpty && !text.trimLeft().startsWith("{")) {
+          throw DirectoryUnavailable("服务端不认识学习者目录接口（后台版本太旧，先部署新版）");
+        }
+        final data = text.isEmpty ? <String, dynamic>{} : (jsonDecode(text) as Map).cast<String, dynamic>();
         if (status < 300) return data.cast<String, Object?>();
         final message = (data["message"] ?? "请求被拒绝").toString();
         if (status == 404) throw DirectoryNotFound();

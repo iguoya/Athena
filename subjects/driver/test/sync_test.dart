@@ -15,6 +15,9 @@ class FakeApi {
   /// 模拟外网被 Cloudflare Access 拦住：所有请求 302 到登录页（ADR 0077）。
   var _blocked = false;
 
+  /// 模拟旧版后台：没带设备令牌就 401。
+  var _legacy = false;
+
   final Map<String, List<Map<String, Object?>>> _rows = {};
   final Map<String, String> _achievements = {};
   final Map<String, Map<String, Object?>> _drafts = {};
@@ -52,6 +55,8 @@ class FakeApi {
 
   void setBlocked(bool blocked) => _blocked = blocked;
 
+  void setLegacy(bool legacy) => _legacy = legacy;
+
   int rowCount(String resource) => _rows[resource]?.length ?? 0;
 
   Map<String, Object?>? draft(String user, String key) =>
@@ -63,6 +68,10 @@ class FakeApi {
       try {
         if (_down) {
           await response.close();
+          continue;
+        }
+        if (_legacy) {
+          _json(response, 401, {"error": "unauthorized", "message": "缺少或无效的设备令牌"});
           continue;
         }
         if (_blocked) {
@@ -392,6 +401,19 @@ void main() {
     expect(store.cursor("attempts"), 1);
     // 游标在该用户的行流上前进，不因别人的行跳号而漏拉。
     expect(storeB.cursor("attempts"), 2);
+  });
+
+  test("路由器上还是旧版后台（401）：说清楚是版本旧，队列保留，升级后补发", () async {
+    api.setLegacy(true);
+    final engine = SyncEngine(store: store, config: ApiConfig(lanBase: api.base), user: "tiger", draftKeys: const []);
+    await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
+    await engine.syncNow();
+    expect(store.pendingCount(), greaterThan(0));
+    expect(engine.status.value.lastError, contains("旧版本"));
+    api.setLegacy(false);
+    await engine.syncNow();
+    expect(store.pendingCount(), 0);
+    engine.stop();
   });
 
   test("外网被 Cloudflare 访问规则拦住（302 到登录页）：报清楚原因，队列保留，放行后补发", () async {

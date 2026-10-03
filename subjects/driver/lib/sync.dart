@@ -89,6 +89,10 @@ class ApiConfig {
   }
 }
 
+/// 旧版后台（取消设备令牌之前，主仓库 ADR 0077）还在要求令牌，对没带令牌的请求回 401 加应用自己的
+/// JSON 错误；新版后台从不回 401。客户端看到这个，要明说是服务端版本旧，别笼统地说「连不上」。
+const legacyServerMessage = "路由器上的后台还是旧版本（还要求设备令牌）：先把新版后台部署到路由器，再来登录和同步。";
+
 /// 请求被 Cloudflare Access 拦住的特征：重定向到登录页（3xx）、带 Cloudflare-Access 质询头，
 /// 或 401/403 且正文不是应用自己的 JSON 错误（应用的错误都是 `{"error":…}`，见
 /// nas_admin 的 API）。应用自己不回重定向，所以不会和业务错误混淆。
@@ -387,6 +391,7 @@ class SyncEngine {
         final text = await response.stream.bytesToString();
         _activeBase = base;
         if (blockedByCloudflare(response.statusCode, response.headers, text)) throw SyncAuthError();
+        if (response.statusCode == 401) throw SyncTransient(legacyServerMessage);
         if (response.statusCode == 404) throw SyncNotFound();
         if (response.statusCode == 400) {
           throw SyncInvalid(((jsonDecode(text.isEmpty ? "{}" : text) as Map)["message"] ?? "校验失败").toString());
@@ -401,6 +406,9 @@ class SyncEngine {
       } on SyncInvalid {
         rethrow;
       } on SyncNotFound {
+        rethrow;
+      } on SyncTransient {
+        // 服务端明确回了错误（5xx、旧版后台的 401…）：原样抛出，别被下面当成「网络不通」吞掉。
         rethrow;
       } on TimeoutException {
         lastNetworkError = "$uri 超时";
