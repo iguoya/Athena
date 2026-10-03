@@ -38,7 +38,7 @@ TEST(AppPathsTest, ReadsAppsRootFromEnvironment) {
 
     ASSERT_FALSE(root.empty());
     EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(root, "c", "app.json"), Glib::FileTest::EXISTS));
+        Glib::build_filename(root, "machine", "app.json"), Glib::FileTest::EXISTS));
 }
 
 TEST(AppPathsTest, EmptyWhenEnvironmentMissing) {
