@@ -9,7 +9,7 @@ import "package:flutter_test/flutter_test.dart";
 /// 只能改自己）。客户端对它过一遍，等于把两端对契约的理解各核了一遍（ADR 0075）。
 class FakeDirectoryServer {
   HttpServer? _server;
-  final token = "dapi_dir_token";
+  var blocked = false;
   final List<({int id, String name})> rows = [];
 
   Future<void> start() async {
@@ -27,8 +27,12 @@ class FakeDirectoryServer {
     await for (final request in _server!) {
       final response = request.response;
       try {
-        if (request.headers.value("Authorization") != "Bearer $token") {
-          _json(response, 401, {"error": "unauthorized"});
+        if (blocked) {
+          // 模拟外网被 Cloudflare Access 拦住：302 到登录页（ADR 0077）。
+          response
+            ..statusCode = 302
+            ..headers.set("Location", "https://example.cloudflareaccess.com/cdn-cgi/access/login/x");
+          await response.close();
           continue;
         }
         final raw = await utf8.decoder.bind(request).join();
@@ -91,7 +95,7 @@ void main() {
   setUp(() async {
     server = FakeDirectoryServer();
     await server.start();
-    directory = HttpUserDirectory(ApiConfig(lanBase: server.base, token: server.token));
+    directory = HttpUserDirectory(ApiConfig(lanBase: server.base));
   });
 
   tearDown(() => server.stop());
@@ -129,7 +133,6 @@ void main() {
     final client = HttpClient();
     final request = await client.patchUrl(Uri.parse("${server.base}/api/users/v1/users/${other.id}"));
     request.headers
-      ..set("Authorization", "Bearer ${server.token}")
       ..set("X-Athena-User", me.id)
       ..contentType = ContentType.json;
     request.write(jsonEncode({"name": "被改了"}));
@@ -140,12 +143,14 @@ void main() {
     expect(server.rows.last.name, "小王");
   });
 
-  test("令牌无效：DirectoryRejected，提示重新配置", () async {
-    final bad = HttpUserDirectory(ApiConfig(lanBase: server.base, token: "dapi_wrong"));
+  test("外网被 Cloudflare 访问规则拦住：DirectoryRejected，说明是访问凭据的事，不是网络不通", () async {
+    server.blocked = true;
     await expectLater(
-      bad.login("tiger"),
-      throwsA(isA<DirectoryRejected>().having((e) => e.message, "message", contains("令牌"))),
+      directory.login("tiger"),
+      throwsA(isA<DirectoryRejected>().having((e) => e.message, "message", contains("Cloudflare"))),
     );
+    server.blocked = false;
+    expect((await directory.register("tiger")).id, "1", reason: "放行后恢复");
   });
 
   test("内网端点不通自动换外网端点；全不通是 DirectoryUnavailable", () async {
@@ -153,10 +158,10 @@ void main() {
     final deadBase = "http://127.0.0.1:${dead.port}";
     await dead.close(force: true);
 
-    final fallback = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: server.base, token: server.token));
+    final fallback = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: server.base));
     expect((await fallback.register("tiger")).id, "1");
 
-    final none = HttpUserDirectory(ApiConfig(lanBase: deadBase, token: server.token));
+    final none = HttpUserDirectory(ApiConfig(lanBase: deadBase));
     await expectLater(none.login("tiger"), throwsA(isA<DirectoryUnavailable>()));
   });
 }

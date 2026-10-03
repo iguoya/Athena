@@ -8,20 +8,26 @@ import "package:path/path.dart" as p;
 
 import "progress.dart";
 
-/// 客户端只持设备令牌，不持数据库口令（ADR 0068 决策 3、ADR 0070）。内网端点直连
-/// 路由器上的后台，外网端点过 Cloudflare（程序调用再带 Access Service Token 头）。
+/// 同步配置（主仓库 ADR 0077）：客户端**不持有任何令牌**。
+///
+/// - 内网端点直连路由器上的后台，家用网络内视为可信，不需要凭据；默认就是路由器的内网地址，
+///   所以什么都不配也能同步。
+/// - 外网端点过 Cloudflare，整个主机名由 Access 把守；程序调用带 Access 服务令牌头
+///   （外网访问凭据，Cloudflare 的概念，全家共用一对，可选）。
+///
 /// 同步器按「上次用活的端点优先」的顺序尝试，切网自动换路。
 class ApiConfig {
   const ApiConfig({
-    required this.lanBase,
-    required this.token,
+    this.lanBase = defaultLanBase,
     this.wanBase,
     this.cfClientId,
     this.cfClientSecret,
   });
 
+  /// 路由器上后台的内网地址。
+  static const defaultLanBase = "http://192.168.6.1:5000";
+
   final String lanBase;
-  final String token;
   final String? wanBase;
   final String? cfClientId;
   final String? cfClientSecret;
@@ -29,43 +35,50 @@ class ApiConfig {
   Map<String, Object?> toJson() => {
         "lan_base": lanBase,
         "wan_base": wanBase,
-        "token": token,
         "cf_client_id": cfClientId,
         "cf_client_secret": cfClientSecret,
       };
 
-  static ApiConfig fromJson(Map<String, dynamic> map) => ApiConfig(
-        lanBase: map["lan_base"] as String,
-        token: map["token"] as String,
-        wanBase: map["wan_base"] as String?,
-        cfClientId: map["cf_client_id"] as String?,
-        cfClientSecret: map["cf_client_secret"] as String?,
-      );
+  /// 读取时忽略不认识的字段：旧版本留下的 `token` 就是这样被丢掉的。
+  static ApiConfig fromJson(Map<String, dynamic> map) {
+    final lan = (map["lan_base"] as String?)?.trim() ?? "";
+    return ApiConfig(
+      lanBase: lan.isEmpty ? defaultLanBase : lan,
+      wanBase: map["wan_base"] as String?,
+      cfClientId: map["cf_client_id"] as String?,
+      cfClientSecret: map["cf_client_secret"] as String?,
+    );
+  }
 
   static String get _file => p.join(ProgressStore.userDataDir(), "api.json");
 
-  /// 来源只有两处（ADR 0068 决策 1）：环境变量 `ATHENA_DRIVER_API`（JSON 串，CI 与
-  /// 脚本用）或用户数据目录的 `api.json`（配置屏保存，POSIX 上 600）。都不算默认值。
-  static ApiConfig? load() {
+  /// 来源有两处：环境变量 `ATHENA_DRIVER_API`（JSON 串，CI 与脚本用）或用户数据目录的
+  /// `api.json`（配置屏保存，POSIX 上 600）；都没有就是默认配置（内网地址、无外网）。
+  /// 文件里的外网访问凭据不进仓库。
+  static ApiConfig load() {
     final raw = Platform.environment["ATHENA_DRIVER_API"];
     if (raw != null && raw.isNotEmpty) {
       try {
         return ApiConfig.fromJson(jsonDecode(raw) as Map<String, dynamic>);
       } on FormatException {
-        return null;
+        return const ApiConfig();
+      } on TypeError {
+        return const ApiConfig();
       }
     }
     final file = File(_file);
-    if (!file.existsSync()) return null;
+    if (!file.existsSync()) return const ApiConfig();
     try {
       return ApiConfig.fromJson(jsonDecode(file.readAsStringSync()) as Map<String, dynamic>);
     } on FormatException {
-      return null;
+      return const ApiConfig();
+    } on TypeError {
+      return const ApiConfig();
     }
   }
 
-  /// 配置屏「保存」用。写完在 POSIX 上收紧权限；Windows 没有 chmod，
-  /// 用户数据目录本身的 ACL 已按用户隔离。
+  /// 配置屏「保存」用。写完在 POSIX 上收紧权限（里面可能有外网访问凭据）；Windows 没有
+  /// chmod，用户数据目录本身的 ACL 已按用户隔离。
   void save() {
     final file = File(_file);
     file.parent.createSync(recursive: true);
@@ -74,6 +87,15 @@ class ApiConfig {
       Process.runSync("chmod", ["600", _file]);
     }
   }
+}
+
+/// 请求被 Cloudflare Access 拦住的特征：重定向到登录页（3xx）、带 Cloudflare-Access 质询头，
+/// 或 401/403 且正文不是应用自己的 JSON 错误（应用的错误都是 `{"error":…}`，见
+/// nas_admin 的 API）。应用自己不回重定向，所以不会和业务错误混淆。
+bool blockedByCloudflare(int status, Map<String, String> headers, String body) {
+  if (status >= 300 && status < 400) return true;
+  if ((headers["www-authenticate"] ?? "").contains("Cloudflare-Access")) return true;
+  return (status == 401 || status == 403) && !body.trimLeft().startsWith("{");
 }
 
 /// 同步状态的快照——侧栏常驻显示的「N 条待同步」与最近错误（ADR 0070 决策 4）。
@@ -108,7 +130,8 @@ class SyncTransient implements Exception {
   SyncTransient(this.detail);
 }
 
-/// 令牌被拒（401）。继续重试没有意义，要人来处理（换令牌或撤销重发）。
+/// 外网被 Cloudflare 访问规则拦住（主仓库 ADR 0077）。继续重试没有意义，要人来处理
+/// （检查同步设置里的外网访问凭据）。内网直连不会遇到这个。
 class SyncAuthError implements Exception {}
 
 /// 服务端把某条记录判为 invalid（400）：本地数据不合契约，属程序缺陷。
@@ -223,7 +246,7 @@ class SyncEngine {
         _publish(clearError: true, syncedAt: DateTime.now());
       }
     } on SyncAuthError {
-      _publish(error: "设备令牌无效或已被撤销，请重新配置。");
+      _publish(error: "外网被 Cloudflare 访问规则拦住了：检查同步设置里的外网访问凭据（内网不受影响）。");
     } on SyncTransient catch (error) {
       // 网络不通是常态（不在内网、路由器重启）：如实记录，不惊动做题的人。
       _publish(error: "暂不同步：${error.detail}");
@@ -345,7 +368,7 @@ class SyncEngine {
       if (!tried.add(base)) continue;
       final uri = Uri.parse("$base/api/driver/v1$path");
       final request = http.Request(method, uri)
-        ..headers["Authorization"] = "Bearer ${_config.token}"
+        ..followRedirects = false // 被 Access 拦住会 302 到登录页，要看见它而不是跟过去
         ..headers["X-Athena-User"] = user
         ..headers["Cache-Control"] = "no-store";
       if (_config.cfClientId != null && _config.cfClientSecret != null) {
@@ -360,7 +383,7 @@ class SyncEngine {
         final response = await _client.send(request).timeout(_requestTimeout);
         final text = await response.stream.bytesToString();
         _activeBase = base;
-        if (response.statusCode == 401) throw SyncAuthError();
+        if (blockedByCloudflare(response.statusCode, response.headers, text)) throw SyncAuthError();
         if (response.statusCode == 404) throw SyncNotFound();
         if (response.statusCode == 400) {
           throw SyncInvalid(((jsonDecode(text.isEmpty ? "{}" : text) as Map)["message"] ?? "校验失败").toString());

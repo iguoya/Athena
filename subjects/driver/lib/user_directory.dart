@@ -9,7 +9,7 @@ import "users.dart";
 /// 中心学习者目录的客户端（主仓库 ADR 0074、0075；接口见 `practice/nas_admin/docs/user-api.md`）。
 ///
 /// 目录是权威：新建要联网，异地首次登录要联网；已在本机缓存里的学习者不走这里
-/// （离线照常进入）。认证复用同步用的设备令牌，端点顺序与同步器一致（内网优先，外网兜底）。
+/// （离线照常进入）。应用里不认证（主仓库 ADR 0077）；端点顺序与同步器一致（内网优先，外网兜底）。
 abstract class UserDirectory {
   /// 按名字登录；重名时需再给 [id]。
   /// 抛 [DirectoryNotFound]（没有这个人，或名字与编号对不上）、[DirectoryAmbiguous]
@@ -85,7 +85,7 @@ class HttpUserDirectory implements UserDirectory {
     for (final base in bases) {
       if (!tried.add(base)) continue;
       final request = http.Request(method, Uri.parse("$base/api/users/v1$path"))
-        ..headers["Authorization"] = "Bearer ${_config.token}"
+        ..followRedirects = false // 被 Access 拦住会 302 到登录页，要看见它而不是跟过去
         ..headers["Cache-Control"] = "no-store"
         ..headers["Content-Type"] = "application/json; charset=utf-8"
         ..body = jsonEncode(body);
@@ -98,11 +98,13 @@ class HttpUserDirectory implements UserDirectory {
         final response = await _client.send(request).timeout(_requestTimeout);
         final text = await response.stream.bytesToString();
         _activeBase = base;
+        if (blockedByCloudflare(response.statusCode, response.headers, text)) {
+          throw DirectoryRejected("外网被 Cloudflare 访问规则拦住了：请在同步设置里检查外网访问凭据（在家里内网用不受影响）。");
+        }
         final data = text.isEmpty ? <String, dynamic>{} : (jsonDecode(text) as Map).cast<String, dynamic>();
         final status = response.statusCode;
         if (status < 300) return data.cast<String, Object?>();
         final message = (data["message"] ?? "请求被拒绝").toString();
-        if (status == 401) throw DirectoryRejected("设备令牌无效或已被撤销，请先在同步设置里重新配置。");
         if (status == 404) throw DirectoryNotFound();
         if (status == 409 && data["error"] == "ambiguous") {
           throw DirectoryAmbiguous((data["matches"] as num?)?.toInt() ?? 2);

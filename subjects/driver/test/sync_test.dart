@@ -10,8 +10,10 @@ import "package:flutter_test/flutter_test.dart";
 /// 对契约的理解各核了一遍（ADR 0068 决策 4、ADR 0070）。
 class FakeApi {
   HttpServer? _server;
-  final _token = "dapi_test_token";
   var _down = false;
+
+  /// 模拟外网被 Cloudflare Access 拦住：所有请求 302 到登录页（ADR 0077）。
+  var _blocked = false;
 
   final Map<String, List<Map<String, Object?>>> _rows = {};
   final Map<String, String> _achievements = {};
@@ -38,6 +40,8 @@ class FakeApi {
 
   void setDown(bool down) => _down = down;
 
+  void setBlocked(bool blocked) => _blocked = blocked;
+
   int rowCount(String resource) => _rows[resource]?.length ?? 0;
 
   Map<String, Object?>? draft(String user, String key) =>
@@ -51,8 +55,12 @@ class FakeApi {
           await response.close();
           continue;
         }
-        if (request.headers.value("Authorization") != "Bearer $_token") {
-          _json(response, 401, {"error": "unauthorized"});
+        if (_blocked) {
+          response
+            ..statusCode = 302
+            ..headers.set("Location", "https://example.cloudflareaccess.com/cdn-cgi/access/login/x")
+            ..headers.set("Www-Authenticate", "Cloudflare-Access resource_metadata=x");
+          await response.close();
           continue;
         }
         final user = request.headers.value("X-Athena-User")?.trim() ?? "";
@@ -219,7 +227,7 @@ void main() {
     store = await ProgressStore.open(suite: "sync_test");
     engine = SyncEngine(
       store: store,
-      config: ApiConfig(lanBase: api.base, token: api._token),
+      config: ApiConfig(lanBase: api.base),
       user: "tiger",
       draftKeys: const ["subject1.exam"],
     );
@@ -354,7 +362,7 @@ void main() {
     addTearDown(() => storeB.close());
     final engineB = SyncEngine(
       store: storeB,
-      config: ApiConfig(lanBase: api.base, token: api._token),
+      config: ApiConfig(lanBase: api.base),
       user: "second",
       draftKeys: const ["subject1.exam"],
     );
@@ -375,18 +383,23 @@ void main() {
     expect(storeB.cursor("attempts"), 2);
   });
 
-  test("令牌无效时同步报 401，队列保留", () async {
-    // 连得上服务、令牌是错的：服务端回 401，队列原地保留等人换令牌。
-    final bad = SyncEngine(
+  test("外网被 Cloudflare 访问规则拦住（302 到登录页）：报清楚原因，队列保留，放行后补发", () async {
+    // 连得上 Cloudflare、但没带对外网访问凭据：所有请求 302 到登录页。
+    // 客户端不跟随重定向，直接说明是访问规则拦住了，不当成网络不通（ADR 0077）。
+    api.setBlocked(true);
+    final blocked = SyncEngine(
       store: store,
-      config: ApiConfig(lanBase: api.base, token: "dapi_wrong"),
+      config: ApiConfig(lanBase: api.base),
       user: "tiger",
       draftKeys: const [],
     );
     await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
-    await bad.syncNow();
+    await blocked.syncNow();
     expect(store.pendingCount(), greaterThan(0));
-    expect(bad.status.value.lastError, contains("令牌"));
-    bad.stop();
+    expect(blocked.status.value.lastError, contains("Cloudflare"));
+    api.setBlocked(false);
+    await blocked.syncNow();
+    expect(store.pendingCount(), 0, reason: "放行后队列自然补发");
+    blocked.stop();
   });
 }

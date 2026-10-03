@@ -98,13 +98,16 @@
   `practice/nas_admin/scripts/driver_migrate_users.py` 收编到数字编号；本机残留单用户时代的
   `local.db` 时，登录后会问一句归不归到这位名下，客户端不替人猜。
 - **通路统一走 REST API（主仓库 ADR 0070）**：内网直连 PG 的通道已退役，数据库端口
-  不出内网；所有同步走 `practice/nas_admin` 的 `/api/driver/v1`（设备令牌认证），
-  内网端点连路由器、外网端点过 Cloudflare（另带 Access Service Token 头），按序尝试。
-- **凭据不进仓库**：同步配置（端点 + 设备令牌 `dapi_` 开头 + 可选 Access 头）读环境变量
-  `ATHENA_DRIVER_API`（JSON 串），或用户数据目录 `AthenaDriver/api.json`（配置屏保存，
-  POSIX 上 600）；没配置不拦启动——离线照常做题，配好令牌后队列自然补发。发令牌在
-  路由器上用 `nas_admin` 的 `scripts/driver_token.py`。历史数据当年用
-  `scripts/migrate_progress_to_pg.py` 一次性迁入 PG（已执行完，仅作历史参考）。
+  不出内网；所有同步走 `practice/nas_admin` 的 `/api/driver/v1`，内网端点连路由器、外网端点过
+  Cloudflare，按序尝试。**没有设备令牌**（主仓库 ADR 0077）：应用里不认证，内网可信，外网的门
+  放在 Cloudflare 访问规则上。
+- **同步配置**：内网端点默认就是路由器地址，在家里什么都不用配、同步总是尝试（连不上就是
+  「暂不同步」，离线队列照旧）。离开内网时在「同步设置」里填外网端点和**外网访问凭据**（Cloudflare
+  访问规则的服务令牌，全家共用一对，可选）。读环境变量 `ATHENA_DRIVER_API`（JSON 串），或用户数据
+  目录 `AthenaDriver/api.json`（配置屏保存，POSIX 上 600，不进仓库）；旧配置里的 `token` 字段读取时
+  忽略。请求不跟随重定向：被 Cloudflare 拦住（302 到登录页、401/403）时提示检查外网访问凭据，
+  不当成网络不通。Cloudflare 一侧的配置与自检见 `practice/nas_admin/docs/cloudflare-access.md`。
+  历史数据当年用 `scripts/migrate_progress_to_pg.py` 一次性迁入 PG（已执行完，仅作历史参考）。
 - **照片（ADR 0070、0071）**：文件与登记清单（`progress/points/photos-<学习者编号>.json`）
   都随仓库走，不进任何数据库，跨机器靠 `launcher sync`；其余九张表都是按用户同步的
   个人数据。

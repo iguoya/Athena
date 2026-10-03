@@ -454,7 +454,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 侧栏底部的同步状态行（ADR 0070 决策 4）：待发条数常驻可见，出错如实说。
-  /// 点击进配置屏换令牌或改端点。
+  /// 点击进配置屏改端点或外网访问凭据。
   Widget _syncLine(SyncStatus status) {
     final (icon, text, color) = status.dead > 0
         ? (Glyph.syncFailed, "${status.dead} 条记录无法同步", Bs.warning)

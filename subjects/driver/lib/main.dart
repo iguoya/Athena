@@ -1,5 +1,4 @@
 import "dart:async";
-import "dart:convert";
 import "dart:io";
 
 import "package:flutter/foundation.dart";
@@ -31,8 +30,8 @@ Future<void> main() async {
 }
 
 /// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；先认出是谁
-/// （ADR 0071、0075：输入名字登录，本机缓存里的人离线也能直接进）；API 没配置时可以先
-/// 离线用——队列会等令牌配好后自然补发。
+/// （ADR 0071、0075：输入名字登录，本机缓存里的人离线也能直接进）；同步总是尝试，连不上
+/// 就是「暂不同步」，队列等连上后自然补发（ADR 0077：没有令牌可配）。
 class BootstrapGate extends StatefulWidget {
   const BootstrapGate({super.key});
 
@@ -107,8 +106,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
       await _store?.close();
       final store = await ProgressStore.open(user: profile.id);
       _registry?.setLast(profile.id);
-      final config = ApiConfig.load();
-      _engine = config == null ? null : _startEngine(store, _bank!, config, profile.id);
+      _engine = _startEngine(store, _bank!, ApiConfig.load(), profile.id);
       setState(() {
         _store = store;
         _profile = profile;
@@ -131,11 +129,8 @@ class _BootstrapGateState extends State<BootstrapGate> {
     )..start();
   }
 
-  /// 登录页每次动作时现取：配置页保存令牌后，同一个页面立刻就能用。
-  UserDirectory? _directory() {
-    final config = ApiConfig.load();
-    return config == null ? null : HttpUserDirectory(config);
-  }
+  /// 登录页每次动作时现取：配置页改了端点，同一个页面立刻生效。
+  UserDirectory _directory() => HttpUserDirectory(ApiConfig.load());
 
   /// 名字被改后同步侧栏显示（只能改当前登录的人，ADR 0075 决策 5）。
   void _onRenamed(UserProfile profile) {
@@ -250,8 +245,8 @@ class _BootstrapGateState extends State<BootstrapGate> {
 /// - 新建是单独的动作：名字已有人用时先确认，新建后显著展示分到的编号。
 /// - 从侧栏进来时（[currentUser] 非空）可以改**当前这位**学习者自己的名字，改不了别人的。
 ///
-/// 目录是权威，新建与异地首次登录要联网（ADR 0074 决策 3）；[directoryFactory] 返回 null
-/// 表示还没配设备令牌，页面给出配置入口。
+/// 目录是权威，新建与异地首次登录要联网（ADR 0074 决策 3）。离开内网时要先在「同步设置」
+/// 里填外网访问凭据（ADR 0077），页面底部有入口。
 class UserGateScreen extends StatefulWidget {
   const UserGateScreen({
     super.key,
@@ -265,7 +260,7 @@ class UserGateScreen extends StatefulWidget {
   });
 
   final UserRegistry registry;
-  final UserDirectory? Function() directoryFactory;
+  final UserDirectory Function() directoryFactory;
 
   /// 选定学习者。第二个参数为真表示使用者同意把旧的单用户本地记录归到他名下。
   final void Function(UserProfile profile, bool adoptLegacy) onPicked;
@@ -292,8 +287,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
     _id.dispose();
     super.dispose();
   }
-
-  static const _needSetup = "现在连不上学习者目录：还没有配置同步设备令牌。新建学习者和在新电脑上登录都要联网，请先配置同步。";
 
   Future<void> _guarded(Future<void> Function() action) async {
     setState(() {
@@ -340,7 +333,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
         // 缓存里没有这一对：交给中心判断（也许是在别的电脑上建的同名者）。
       }
       final directory = widget.directoryFactory();
-      if (directory == null) return _fail(_needSetup);
       try {
         await _finish(await directory.login(_name.text, id: typedId));
       } on DirectoryNotFound {
@@ -361,7 +353,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
     await _guarded(() async {
       UserRegistry.validateName(_name.text);
       final directory = widget.directoryFactory();
-      if (directory == null) return _fail(_needSetup);
       var exists = widget.registry.matching(_name.text).isNotEmpty;
       if (!exists) {
         try {
@@ -470,7 +461,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
     await _guarded(() async {
       UserRegistry.validateName(saved);
       final directory = widget.directoryFactory();
-      if (directory == null) return _fail("改名要联网，先配置同步设备令牌。");
       final renamed = await directory.rename(profile.id, saved);
       widget.registry.renamed(renamed.id, renamed.name);
       widget.onRenamed?.call(renamed);
@@ -481,7 +471,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final configured = widget.directoryFactory() != null;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -551,20 +540,6 @@ class _UserGateScreenState extends State<UserGateScreen> {
                       onSubmitted: (_) => _enter(),
                     ),
                   ],
-                  if (!configured) ...[
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "还没有配置同步设备令牌：新建学习者和在新电脑上登录要联网查家里的目录。",
-                            style: TextStyle(fontSize: 13, color: theme.colorScheme.primary, height: 1.4),
-                          ),
-                        ),
-                        TextButton(onPressed: _configure, child: const Text("配置同步")),
-                      ],
-                    ),
-                  ],
                   if (_error.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Text(_error, style: TextStyle(color: theme.colorScheme.error, height: 1.4)),
@@ -579,6 +554,8 @@ class _UserGateScreenState extends State<UserGateScreen> {
                         const SizedBox(width: 12),
                         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
                       ],
+                      const Spacer(),
+                      TextButton(onPressed: _configure, child: const Text("同步设置")),
                     ],
                   ),
                 ],
@@ -596,8 +573,9 @@ class ApiConfigScreenResult {
   final ApiConfig config;
 }
 
-/// 设备同步配置（ADR 0068 决策 1、ADR 0070）：只持设备令牌，不持数据库口令。
-/// 存用户数据目录 api.json（POSIX 600），环境变量 ATHENA_DRIVER_API 可代替。
+/// 同步设置（ADR 0070、0077）：内网端点（默认就是路由器地址）、可选的外网端点与外网访问凭据。
+/// 没有设备令牌，也不持数据库口令。存用户数据目录 api.json（POSIX 600），
+/// 环境变量 ATHENA_DRIVER_API 可代替。
 class ApiConfigScreen extends StatefulWidget {
   const ApiConfigScreen({super.key, this.onSavedDirect, this.allowSkip = false});
 
@@ -615,7 +593,6 @@ class ApiConfigScreen extends StatefulWidget {
 class _ApiConfigScreenState extends State<ApiConfigScreen> {
   final _lanBase = TextEditingController(text: "http://192.168.6.1:5000");
   final _wanBase = TextEditingController();
-  final _token = TextEditingController();
   final _cfClientId = TextEditingController();
   final _cfClientSecret = TextEditingController();
   String _pingResult = "";
@@ -625,32 +602,25 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
   void initState() {
     super.initState();
     final existing = ApiConfig.load();
-    if (existing != null) {
-      _lanBase.text = existing.lanBase;
-      _wanBase.text = existing.wanBase ?? "";
-      _token.text = existing.token;
-      _cfClientId.text = existing.cfClientId ?? "";
-      _cfClientSecret.text = existing.cfClientSecret ?? "";
-    }
+    _lanBase.text = existing.lanBase;
+    _wanBase.text = existing.wanBase ?? "";
+    _cfClientId.text = existing.cfClientId ?? "";
+    _cfClientSecret.text = existing.cfClientSecret ?? "";
   }
 
   @override
   void dispose() {
     _lanBase.dispose();
     _wanBase.dispose();
-    _token.dispose();
     _cfClientId.dispose();
     _cfClientSecret.dispose();
     super.dispose();
   }
 
-  ApiConfig? _compose() {
+  ApiConfig _compose() {
     final lan = _lanBase.text.trim();
-    final token = _token.text.trim();
-    if (lan.isEmpty || token.isEmpty) return null;
     return ApiConfig(
-      lanBase: lan,
-      token: token,
+      lanBase: lan.isEmpty ? ApiConfig.defaultLanBase : lan,
       wanBase: _wanBase.text.trim().isEmpty ? null : _wanBase.text.trim(),
       cfClientId: _cfClientId.text.trim().isEmpty ? null : _cfClientId.text.trim(),
       cfClientSecret: _cfClientSecret.text.trim().isEmpty ? null : _cfClientSecret.text.trim(),
@@ -659,36 +629,30 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
 
   Future<void> _ping() async {
     final config = _compose();
-    if (config == null) {
-      setState(() => _pingResult = "先填内网端点和设备令牌");
-      return;
-    }
     setState(() {
       _pinging = true;
       _pingResult = "";
     });
     String result = "两个端点都连不上";
+    final client = http.Client();
     for (final base in [config.lanBase, if (config.wanBase != null) config.wanBase!]) {
       try {
-        final response = await http
-            .get(
-              Uri.parse("$base/api/driver/v1/ping"),
-              headers: {
-                "Authorization": "Bearer ${config.token}",
-                if (config.cfClientId != null && config.cfClientSecret != null) ...{
-                  "CF-Access-Client-Id": config.cfClientId!,
-                  "CF-Access-Client-Secret": config.cfClientSecret!,
-                },
-              },
-            )
-            .timeout(const Duration(seconds: 10));
-        if (response.statusCode == 200) {
-          final map = jsonDecode(response.body) as Map;
-          result = "已连上（$base，设备名：${map["device"]}，使用者：${map["user"]}）";
+        final request = http.Request("GET", Uri.parse("$base/api/driver/v1/ping"))
+          ..followRedirects = false
+          ..headers.addAll({
+            if (config.cfClientId != null && config.cfClientSecret != null) ...{
+              "CF-Access-Client-Id": config.cfClientId!,
+              "CF-Access-Client-Secret": config.cfClientSecret!,
+            },
+          });
+        final response = await client.send(request).timeout(const Duration(seconds: 10));
+        final body = await response.stream.bytesToString();
+        if (blockedByCloudflare(response.statusCode, response.headers, body)) {
+          result = "$base 被 Cloudflare 访问规则拦住了：检查外网访问凭据";
           break;
         }
-        if (response.statusCode == 401) {
-          result = "端点通了，但令牌无效或已撤销（$base）";
+        if (response.statusCode == 200) {
+          result = "已连上（$base）";
           break;
         }
         result = "$base 返回 ${response.statusCode}";
@@ -698,6 +662,7 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
         // 换下一个端点再试。
       }
     }
+    client.close();
     if (mounted) {
       setState(() {
         _pingResult = result;
@@ -708,7 +673,6 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
 
   void _save() {
     final config = _compose();
-    if (config == null) return;
     config.save();
     final direct = widget.onSavedDirect;
     if (direct != null) {
@@ -755,7 +719,8 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                   const SizedBox(height: 10),
                   const Text(
                     "做题记录先存在本机，后台自动和家里的软路由保持同一份；断网也能照常做题，"
-                    "联网后自动补上。每台电脑一个设备令牌（dapi_ 开头），丢了哪台就撤销哪个。",
+                    "联网后自动补上。在家里内网用什么都不用改；离开内网时填外网端点，"
+                    "以及 Cloudflare 访问规则的服务令牌（外网访问凭据，全家共用一对）。",
                     style: TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 20),
@@ -771,17 +736,13 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                     ),
                   ),
                   TextField(
-                    controller: _token,
-                    decoration: const InputDecoration(labelText: "设备令牌"),
-                  ),
-                  TextField(
                     controller: _cfClientId,
-                    decoration: const InputDecoration(labelText: "Cloudflare Client ID（可选，外网时用）"),
+                    decoration: const InputDecoration(labelText: "外网访问凭据 · Client ID（可选）"),
                   ),
                   TextField(
                     controller: _cfClientSecret,
                     obscureText: true,
-                    decoration: const InputDecoration(labelText: "Cloudflare Client Secret（可选）"),
+                    decoration: const InputDecoration(labelText: "外网访问凭据 · Client Secret（可选）"),
                   ),
                   const SizedBox(height: 16),
                   Row(

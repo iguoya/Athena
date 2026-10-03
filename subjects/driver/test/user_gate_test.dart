@@ -11,6 +11,9 @@ class FakeDirectory implements UserDirectory {
   final List<UserProfile> rows = [];
   int calls = 0;
 
+  /// 为真时所有调用都像网络不通。
+  bool down = false;
+
   UserProfile add(String name) {
     final profile = UserProfile(id: "${rows.length + 1}", name: name);
     rows.add(profile);
@@ -20,6 +23,7 @@ class FakeDirectory implements UserDirectory {
   @override
   Future<UserProfile> login(String name, {String? id}) async {
     calls++;
+    if (down) throw DirectoryUnavailable("网络不通");
     final key = name.trim().toLowerCase();
     final hits = [
       for (final row in rows)
@@ -33,12 +37,14 @@ class FakeDirectory implements UserDirectory {
   @override
   Future<UserProfile> register(String name) async {
     calls++;
+    if (down) throw DirectoryUnavailable("网络不通");
     return add(name.trim());
   }
 
   @override
   Future<UserProfile> rename(String id, String name) async {
     calls++;
+    if (down) throw DirectoryUnavailable("网络不通");
     final index = rows.indexWhere((row) => row.id == id);
     rows[index] = rows[index].withName(name.trim());
     return rows[index];
@@ -70,7 +76,6 @@ void main() {
     WidgetTester tester, {
     UserProfile? current,
     bool legacy = false,
-    bool configured = true,
   }) async {
     tester.view.physicalSize = const Size(1200, 1600);
     tester.view.devicePixelRatio = 1;
@@ -78,7 +83,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: UserGateScreen(
         registry: registry,
-        directoryFactory: () => configured ? directory : null,
+        directoryFactory: () => directory,
         currentUser: current,
         legacyPending: legacy,
         onPicked: (profile, adopt) {
@@ -213,14 +218,23 @@ void main() {
     expect(find.text("现在是：老司机（编号 1）"), findsOneWidget);
   });
 
-  testWidgets("没配设备令牌：给出配置入口；要联网的动作说明原因", (tester) async {
-    await open(tester, configured: false);
-    expect(find.text("配置同步"), findsOneWidget);
+  testWidgets("连不上目录：新建说明原因，页面有同步设置入口；本机用过的人仍能直接进", (tester) async {
+    registry.remember(const UserProfile(id: "3", name: "小王"));
+    directory.down = true;
+    await open(tester);
+    expect(find.text("同步设置"), findsOneWidget);
+
     await typeName(tester, "新人");
     await tester.tap(find.text("新建学习者"));
     await tester.pumpAndSettle();
-    expect(find.textContaining("还没有配置同步设备令牌"), findsWidgets);
+    expect(find.textContaining("连不上学习者目录"), findsOneWidget);
     expect(picked, isNull);
+
+    // 本机缓存里的人离线照常进，不受影响。
+    await typeName(tester, "小王");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "3");
   });
 
   testWidgets("本机有单用户时代的旧记录：登录后问一句归不归他", (tester) async {
