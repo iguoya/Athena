@@ -46,6 +46,7 @@ class ReinforcePage extends StatelessWidget {
     required this.priorities,
     required this.topicTitles,
     required this.onStart,
+    required this.onReshuffle,
     this.diagnosis,
   });
 
@@ -54,6 +55,9 @@ class ReinforcePage extends StatelessWidget {
   final List<ChapterPriority> priorities;
   final Map<String, String> topicTitles;
   final VoidCallback onStart;
+
+  /// 「换一批」：从历史错题里重新抽一轮（主仓库 ADR 0085）。
+  final VoidCallback onReshuffle;
 
   /// 学习诊断（遗忘、错因、选错的方式、与全国比、强化练习成效）；没有就不显示这一区。
   final DiagnosisData? diagnosis;
@@ -95,10 +99,14 @@ class ReinforcePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            "把错题、薄弱章节和到期该复习的题合在一起选，每次 ${plan.picks.length} 题。"
-            "不计时、不占模拟考成绩；模拟考仍从整个题库按考场配比抽取。",
+            plan.wrongPool > 0
+                ? "错题池：历史上答错过的全部 ${plan.wrongPool} 题（后来答对过的也在里面）。每次从里面按权重抽 ${plan.picks.length} 题——"
+                    "错得多、最近又错、隔得久的更容易被抽到；错题池不够时才用薄弱章节和到期复习补。"
+                : "还没有答错过的题，先按薄弱章节的新题练起；答错的题会进错题池，之后每次从全部错题里抽。",
             style: body,
           ),
+          const SizedBox(height: 6),
+          Text("不计时、不占模拟考成绩；模拟考仍从整个题库按考场配比抽取。", style: body),
           const SizedBox(height: 18),
           if (plan.picks.isEmpty)
             Text("题池里还没有可练的题。", style: body)
@@ -116,7 +124,13 @@ class ReinforcePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            FilledButton(onPressed: onStart, child: Text("开始强化练习 ${plan.picks.length} 题")),
+            Row(
+              children: [
+                FilledButton(onPressed: onStart, child: Text("开始强化练习 ${plan.picks.length} 题")),
+                const SizedBox(width: 12),
+                OutlinedButton(onPressed: onReshuffle, child: const Text("换一批")),
+              ],
+            ),
           ],
           const SizedBox(height: 32),
           for (final subject in subjects) ...[

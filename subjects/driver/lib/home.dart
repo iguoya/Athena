@@ -1332,6 +1332,7 @@ class _HomePageState extends State<HomePage> {
     }
     return ReinforcePage(
       plan: _reinforcePlan,
+      onReshuffle: _reshuffleReinforce,
       subjects: subjects,
       priorities: _priorities,
       diagnosis: _diagnosis,
@@ -1641,6 +1642,19 @@ class _HomePageState extends State<HomePage> {
       unawaited(_ensurePass());
       unawaited(_ensureClusters());
     }
+  }
+
+  /// 「换一批」：用现在的作答记录从历史错题里重新抽一轮（主仓库 ADR 0085）。
+  void _reshuffleReinforce() {
+    if (_session != null || _reinforcePool.isEmpty) return;
+    setState(() {
+      _reinforcePlan = planReinforcement(
+        pool: _reinforcePool,
+        histories: _histories,
+        now: DateTime.now(),
+        clusters: _clusters,
+      );
+    });
   }
 
   /// 考点簇由题库内容现算（确定性，不落盘），第一次看强化练习页时在后台算一次，之后缓存在内存里。

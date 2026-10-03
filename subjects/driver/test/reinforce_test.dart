@@ -127,13 +127,18 @@ void main() {
       expect({for (final p in plan.picks) p.question.id}, hasLength(20), reason: "每题只出一次");
     });
 
-    test("复测优先错得多的；配额是复测 8、薄弱 6、到期 6", () {
+    test("错题池是历史上答错过的全部题：后来答对过的也在里面；不够一轮才用别的补", () {
       final attempts = <AttemptView>[
-        // 8 道错题，其中 q0 错了 3 次
+        // q0～q7：答错，其中 q0 错了 3 次
         for (var i = 0; i < 8; i++) _a("q$i", false, topic: "drive.s1.penalty"),
         for (var n = 1; n <= 2; n++) _a("q0", false, day: n, topic: "drive.s1.penalty"),
-        // 10 道早就连对 2 次的题，现在到期（隔了 10 天）
-        for (var i = 40; i < 50; i++) ...[_a("q$i", true, topic: "drive.s1.lights"), _a("q$i", true, hour: 10, topic: "drive.s1.lights")],
+        // q8～q15：错过一次，后来隔几天连对 3 次（已经稳固）——旧规则里它们早就掉出复测了
+        for (var i = 8; i < 16; i++) ...[
+          _a("q$i", false, topic: "drive.s1.penalty"),
+          _a("q$i", true, day: 1, topic: "drive.s1.penalty"),
+          _a("q$i", true, day: 2, topic: "drive.s1.penalty"),
+          _a("q$i", true, day: 3, topic: "drive.s1.penalty"),
+        ],
       ];
       final plan = planReinforcement(
         pool: pool,
@@ -141,11 +146,71 @@ void main() {
         now: DateTime(2026, 10, 12, 9),
         random: Random(2),
       );
-      expect(plan.byReason["retest"], 8);
-      expect(plan.byReason["weak"], 6);
-      expect(plan.byReason["due"], 6);
-      expect(plan.picks.where((p) => p.reason == "retest").map((p) => p.question.id), contains("q0"));
+      expect(plan.wrongPool, 16, reason: "历史上答错过的一共 16 道");
+      expect(plan.byReason["retest"], 16, reason: "错题池不到一轮，全部都在");
+      final ids = plan.picks.where((p) => p.reason == "retest").map((p) => p.question.id).toSet();
+      expect(ids, containsAll([for (var i = 0; i < 16; i++) "q$i"]));
+      expect(plan.picks, hasLength(20));
+      expect(plan.byReason.keys, everyElement(anyOf("retest", "weak", "due")), reason: "其余 4 道由薄弱或到期补足");
       expect({for (final p in plan.picks) p.question.id}, hasLength(20));
+    });
+
+    test("错题池比一轮大：整轮都从池里抽，每次抽到的不一样，轮流覆盖整个池子", () {
+      final attempts = [for (var i = 0; i < 40; i++) _a("q$i", false, topic: "drive.s1.penalty")];
+      final histories = HistorySet.build(attempts);
+      Set<String> draw(int seed) => {
+            for (final p in planReinforcement(pool: pool, histories: histories, now: _day0, random: Random(seed)).picks)
+              p.question.id,
+          };
+      final first = planReinforcement(pool: pool, histories: histories, now: _day0, random: Random(1));
+      expect(first.byReason, {"retest": 20}, reason: "错题池够大：整轮 20 题都来自错题池");
+      expect(first.wrongPool, 40);
+      expect(draw(1), isNot(equals(draw(2))), reason: "不同的一次抽取不能是同一批题");
+      final covered = <String>{for (var seed = 0; seed < 8; seed++) ...draw(seed)};
+      expect(covered.length, greaterThan(32), reason: "多抽几轮，几乎整个错题池都轮得到，不是总盯着前 20 道");
+    });
+
+    test("权重：错得多、最近又错的更容易被抽到；稳固了的轻，但不会消失", () {
+      final attempts = <AttemptView>[
+        for (var i = 2; i < 40; i++) _a("q$i", false, topic: "drive.s1.penalty"),
+        // q0：错了 4 次，最近一次还是错
+        for (var n = 0; n < 4; n++) _a("q0", false, day: n, topic: "drive.s1.penalty"),
+        // q1：错过一次，之后隔天连对 3 次，已经稳固
+        _a("q1", false, topic: "drive.s1.penalty"),
+        for (var n = 1; n <= 3; n++) _a("q1", true, day: n, topic: "drive.s1.penalty"),
+      ];
+      final histories = HistorySet.build(attempts);
+      var hot = 0;
+      var settled = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final ids = {
+          for (final p in planReinforcement(pool: pool, histories: histories, now: DateTime(2026, 10, 12), random: Random(seed)).picks)
+            p.question.id,
+        };
+        if (ids.contains("q0")) hot++;
+        if (ids.contains("q1")) settled++;
+      }
+      expect(hot, greaterThan(settled), reason: "反复错且最近又错的比稳固了的更常被抽到");
+      expect(hot, greaterThan(180), reason: "一轮抽 20/40，平均抽中率是 50%；q0 的权重约是别的两倍，应明显高于平均");
+      expect(settled, greaterThan(0), reason: "稳固了的也还有机会被抽检，不会彻底消失");
+    });
+
+    test("权重函数：最近又错 > 答对一次 > 连对 > 稳固；错得多、隔得久更重", () {
+      final h = HistorySet.build([
+        _a("wrong", false),
+        _a("once", false), _a("once", true, hour: 10),
+        _a("run", false), _a("run", true, hour: 10), _a("run", true, hour: 11),
+        _a("solid", false), _a("solid", true, day: 1), _a("solid", true, day: 2), _a("solid", true, day: 3),
+        _a("many", false), _a("many", false, hour: 10), _a("many", false, hour: 11),
+        _a("old", false, day: -30),
+      ]);
+      final now = DateTime(2026, 10, 12);
+      double w(String id) => wrongWeight(h.of(id)!, now);
+      expect(w("wrong"), greaterThan(w("once")));
+      expect(w("once"), greaterThan(w("run")));
+      expect(w("run"), greaterThan(w("solid")));
+      expect(w("many"), greaterThan(w("wrong")), reason: "错三次比错一次重");
+      expect(w("old"), greaterThan(w("wrong")), reason: "隔得越久越重，30 天封顶");
     });
 
     test("某一类不够，别的类补上，总数仍是 20", () {
@@ -171,18 +236,23 @@ void main() {
       var weakPenalty = 0;
       var weakLights = 0;
       for (var seed = 0; seed < 30; seed++) {
+        // 20 道错题全进错题池；一轮放大到 40 题，后 20 题由薄弱章节补足，才看得出补的偏向哪一章
         final plan = planReinforcement(
           pool: pool,
           histories: HistorySet.build(attempts),
           now: _day0,
           random: Random(seed),
+          count: 40,
         );
         for (final p in plan.picks.where((p) => p.reason == "weak")) {
           if (p.question.topicId == "drive.s1.penalty") weakPenalty++;
           if (p.question.topicId == "drive.s1.lights") weakLights++;
         }
       }
-      expect(weakPenalty, greaterThan(weakLights));
+      // penalty 章只有 10 道没做过的候选，lights 章有 30 道：比的是「候选被补中的比例」，不是个数
+      final penaltyRate = weakPenalty / (10 * 30);
+      final lightsRate = weakLights / (30 * 30);
+      expect(penaltyRate, greaterThan(lightsRate), reason: "薄弱章节的候选更容易被补中");
     });
   });
 
@@ -320,18 +390,19 @@ void main() {
 
     test("没做过的变式排在答对过的前面（新角度更能检验是否真懂）", () {
       final seenCorrect = [_a("q41", true, day: -5), ..._a2()];
+      // 一轮 4 题，变式名额只有 1 个：该给没做过的 q42，而不是答对过的 q41
       final plan = planReinforcement(
         pool: pool,
         histories: HistorySet.build([_a("q0", false, topic: "drive.s1.penalty"), ...seenCorrect]),
         now: _day0,
         random: Random(5),
+        count: 4,
         clusters: index([
           ["q0", "q41", "q42"],
         ]),
       );
       final variants = plan.picks.where((p) => p.reason == "variant").map((p) => p.question.id).toList();
-      expect(variants.first == "q42" || variants.length == 1 && variants.single == "q42", isTrue,
-          reason: "q42 没做过，q41 答对过：先出 q42，得到：$variants");
+      expect(variants, ["q42"], reason: "q42 没做过，q41 答对过：名额只有一个，先给 q42");
     });
 
     test("簇里的变式不在题池里（比如锁着的科目）就不出", () {

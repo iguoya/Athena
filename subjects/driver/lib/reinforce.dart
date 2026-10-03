@@ -217,8 +217,9 @@ double questionProbability(QuestionHistory? h, double chapterPrior) {
 
 // ---------------------------------------------------------------- 强化练习选题
 
-/// 选题理由。`retest` 复测错题，`variant` 错题的同考点变式（换了一种问法），`weak` 薄弱章节，
-/// `due` 间隔到期，`fill` 数据不够时按公开错误率补足（主仓库 ADR 0076 决策 7、8，ADR 0079）。
+/// 选题理由。`retest` 从历史上全部错题里抽到的题（不管后来是否答对，主仓库 ADR 0085），`variant`
+/// 错题的同考点变式（换了一种问法），`weak` 薄弱章节，`due` 间隔到期，`fill` 数据不够时按公开错误率补足
+/// （主仓库 ADR 0076 决策 7、8，ADR 0079）。
 const reinforceReasonLabels = {
   "retest": "复测错题",
   "variant": "同考点变式",
@@ -234,10 +235,41 @@ class ReinforcePick {
   final String reason;
 }
 
+/// 同考点变式占整轮的比例（考点簇就绪时）。经验值，没有数据支撑（主仓库 ADR 0085）。
+const reinforceVariantShare = 0.25;
+
+/// 错题池里一道题被抽到的权重（主仓库 ADR 0085）：错得越多、最近一次还是错、隔得越久越重；
+/// 已经连对、隔夜仍对的轻——但不会消失，所以遗忘也能被抽检到。
+double wrongWeight(QuestionHistory h, DateTime now) {
+  final state = !h.lastCorrect
+      ? 3.0
+      : switch (levelOf(h)) {
+          MasteryLevel.solid => 0.4,
+          MasteryLevel.consolidating => 0.8,
+          _ => 1.2,
+        };
+  final last = h.lastAt;
+  final days = last == null ? 0 : max(0, daysBetween(last, now));
+  final age = 1 + min(days, 30) / 15;
+  return (1 + h.wrong) * state * age;
+}
+
+/// 按权重随机、不放回地排出一个抽取顺序（Efraimidis–Spirakis：键 = u^(1/权重)，从大到小）。
+List<Question> weightedOrder(List<Question> items, double Function(Question) weight, Random random) {
+  final keyed = [
+    for (final q in items) (q, pow(max(random.nextDouble(), 1e-12), 1 / weight(q)).toDouble()),
+  ];
+  keyed.sort((a, b) => b.$2.compareTo(a.$2));
+  return [for (final k in keyed) k.$1];
+}
+
 class ReinforcePlan {
-  const ReinforcePlan(this.picks);
+  const ReinforcePlan(this.picks, {this.wrongPool = 0});
 
   final List<ReinforcePick> picks;
+
+  /// 历史上答错过的题一共多少道（抽取的总体，不是这一轮抽到的数量）。
+  final int wrongPool;
 
   List<Question> get questions => [for (final p in picks) p.question];
 
@@ -250,14 +282,15 @@ class ReinforcePlan {
   }
 }
 
-/// 强化练习选题：错题、同考点变式、薄弱章节、到期复习四类信号合成一张题单。
+/// 强化练习选题（主仓库 ADR 0085，修订 ADR 0076 决策 7）：整轮默认从**历史上答错过的全部题**里按权重
+/// 随机抽取（见 [wrongWeight]），不管那道题后来是否答对；每一轮重算都是新的一次抽取。
 ///
 /// [pool] 由调用方给出——已排除锁着的科目、偏难怪题（不挡过关，ADR 0032）。每题最多出一次
-/// （driver ADR 0031）。初始配额 复测 40%、薄弱 30%、到期 30%；某类不够，按复测、薄弱、
-/// 到期的顺序拿别的类补；候选全不够（新学习者）时按公开错误率补足。
+/// （driver ADR 0031）。错题池不够一轮时，按错题、薄弱章节、到期复习、同考点变式的顺序补足；
+/// 候选全不够（新学习者）时按公开错误率补足。
 ///
-/// 给了 [clusters]（考点簇，ADR 0079）时，复测配额的一半让给**同考点变式**：错了一道题，就出它
-/// 同簇里换了问法的另一道（优先没做过的），检验是真懂还是只背了那道题；没给就没有变式，行为不变。
+/// 给了 [clusters]（考点簇，ADR 0079）时，整轮的 [reinforceVariantShare] 让给**同考点变式**：错了一道题，
+/// 就出它同簇里换了问法的另一道（优先没做过的），检验是真懂还是只背了那道题；没给就没有变式。
 ReinforcePlan planReinforcement({
   required Iterable<Question> pool,
   required HistorySet histories,
@@ -272,26 +305,22 @@ ReinforcePlan planReinforcement({
   final overall = histories.overallAccuracy;
   double weakness(String topic) => 1 - (chapterAcc[topic] ?? overall);
 
-  final retest = <Question>[];
+  // 错题池：历史上答错过至少一次的全部题，不管后来是否答对。
+  final wrongPool = <Question>[];
   final due = <Question>[];
   final weak = <Question>[];
   for (final q in all.values) {
     final h = histories.of(q.id);
-    if (h != null && h.attempts > 0 && !h.lastCorrect) {
-      retest.add(q);
+    if (h != null && h.wrong > 0) {
+      wrongPool.add(q);
     } else if (h != null && h.attempts > 0 && (dueRatio(h, now) ?? 0) >= 1) {
       due.add(q);
     } else if (levelOf(h) == MasteryLevel.fresh || levelOf(h) == MasteryLevel.learning) {
       weak.add(q);
     }
   }
-  // 错得多的先复测；同样多的，隔得久的先。
-  retest.sort((a, b) {
-    final ha = histories.of(a.id)!;
-    final hb = histories.of(b.id)!;
-    final byWrong = hb.wrong.compareTo(ha.wrong);
-    return byWrong != 0 ? byWrong : ha.lastAt!.compareTo(hb.lastAt!);
-  });
+  // 按权重随机排出抽取顺序：错得多、最近又错、隔得久的更容易靠前，但每一轮都不一样。
+  final retest = weightedOrder(wrongPool, (q) => wrongWeight(histories.of(q.id)!, now), random);
   // 超期越久越先。
   due.sort((a, b) => dueRatio(histories.of(b.id), now)!.compareTo(dueRatio(histories.of(a.id), now)!));
   // 章节越弱越先；没做过的略加分；加一点随机，免得每次都是同一批。
@@ -301,19 +330,21 @@ ReinforcePlan planReinforcement({
   };
   weak.sort((a, b) => weakScore[b.id]!.compareTo(weakScore[a.id]!));
 
-  var retestQuota = (count * 0.4).round();
-  final weakQuota = (count * 0.3).round();
-  final dueQuota = count - retestQuota - weakQuota;
+  // 整轮默认全部来自错题池；薄弱章节和到期复习只在错题池不够时补足（主仓库 ADR 0085）。
+  var retestQuota = count;
+  const weakQuota = 0;
+  const dueQuota = 0;
 
   // 同考点变式：每道错题轮流各出一个同簇的题（先出没做过的，再出答对过的），不出错题本身。
   final variants = <Question>[];
   var variantQuota = 0;
   if (clusters != null && !clusters.isEmpty) {
-    variantQuota = retestQuota ~/ 2;
+    variantQuota = (count * reinforceVariantShare).round();
     retestQuota -= variantQuota;
     final isRetest = {for (final q in retest) q.id};
     final perWrong = <List<Question>>[];
-    for (final wrong in retest) {
+    // 变式从排在前面的那些错题出（这一轮最可能抽到的），不是整个错题池。
+    for (final wrong in retest.take(count)) {
       final mates = [
         for (final id in clusters.mates(wrong.id))
           if (all.containsKey(id) && !isRetest.contains(id)) all[id]!,
@@ -353,7 +384,8 @@ ReinforcePlan planReinforcement({
   for (final reason in order) {
     take(reason, quotas[reason]!);
   }
-  for (final reason in order) {
+  // 不够时的补足顺序：变式放最后，不超过它的名额，除非别的都没有了。
+  for (final reason in const ["retest", "weak", "due", "variant"]) {
     take(reason, count - picks.length);
   }
   if (picks.length < count) {
@@ -365,7 +397,7 @@ ReinforcePlan planReinforcement({
     }
   }
   picks.shuffle(random);
-  return ReinforcePlan(picks);
+  return ReinforcePlan(picks, wrongPool: wrongPool.length);
 }
 
 // ---------------------------------------------------------------- 优先章节
