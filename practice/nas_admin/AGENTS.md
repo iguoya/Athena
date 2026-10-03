@@ -44,10 +44,12 @@ app.py              入口（本机/路由器同一个）
 config.py           FAB 配置（连接串、密钥，全走环境变量可覆盖）
 nas_admin/          应用包（__init__ 工厂、views 首页与探活、templates）
 nas_admin/driver_api/  驾考进度 REST API（/api/driver/v1，设备令牌认证；ADR 0068）
+nas_admin/user_api/  全局学习者目录 REST API（/api/users/v1，同一套设备令牌；ADR 0074、0075）
 nas_admin/driver_dashboard/  驾考进度只读仪表盘（/driver/，免登录页面，外网靠 Access；ADR 0069）
 nas_admin/static/   echarts.min.js 等前端文件（随部署走，不走 CDN）
 tests/              单元测试（SQLite）、真实 FAB 冒烟、对真实 PG 的集成测试（设环境变量才跑）
 docs/driver-api.md  API 接口、认证、部署（含数据库低权限角色）与测试说明
+docs/user-api.md    学习者目录 API：登记、按名字登录、只能改自己的名字
 scripts/driver_token.py  管理设备令牌（create / list / revoke）
 scripts/run_dev.py  本机自举：bootstrap 建 .venv，serve 起 app.py
 scripts/check.py    验证入口（依赖就绪 + smoke：/api/health、/login/、/）
