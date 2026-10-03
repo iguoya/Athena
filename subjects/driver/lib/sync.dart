@@ -110,6 +110,7 @@ class SyncStatus {
     this.dead = 0,
     this.lastSyncAt,
     this.lastError,
+    this.pulled = 0,
   });
 
   final bool running;
@@ -118,13 +119,18 @@ class SyncStatus {
   final DateTime? lastSyncAt;
   final String? lastError;
 
-  SyncStatus copyWith({bool? running, int? pending, int? dead, DateTime? lastSyncAt, String? lastError}) =>
+  /// 本次运行里累计从中心拉回并写进本地库的记录条数。首页据它知道「本地库有新数据了，该重读」：
+  /// 后台同步是在首页读完本地库之后才把数据拉下来的，不通知的话界面会一直是空的。
+  final int pulled;
+
+  SyncStatus copyWith({bool? running, int? pending, int? dead, DateTime? lastSyncAt, String? lastError, int? pulled}) =>
       SyncStatus(
         running: running ?? this.running,
         pending: pending ?? this.pending,
         dead: dead ?? this.dead,
         lastSyncAt: lastSyncAt ?? this.lastSyncAt,
         lastError: lastError ?? this.lastError,
+        pulled: pulled ?? this.pulled,
       );
 }
 
@@ -190,6 +196,7 @@ class SyncEngine {
   final List<String> draftKeys;
 
   late final ValueNotifier<SyncStatus> _status;
+  int _pulledTotal = 0;
   Timer? _timer;
   Timer? _debounce;
   String? _activeBase;
@@ -232,6 +239,7 @@ class SyncEngine {
       dead: _store.deadCount(),
       lastSyncAt: syncedAt ?? current.lastSyncAt,
       lastError: error ?? (clearError ? null : current.lastError),
+      pulled: _pulledTotal,
     );
   }
 
@@ -333,16 +341,20 @@ class SyncEngine {
         final data = await _send("GET", "/$resource?after_id=$cursor&limit=$_batchSize", null);
         final items = (data["items"] as List<dynamic>? ?? const []).cast<Map<String, dynamic>>();
         _store.applyRemote(resource, items);
+        _pulledTotal += items.length;
         _store.setCursor(resource, (data["next_after_id"] as num).toInt());
         if (data["has_more"] != true) break;
       }
     }
 
     final achievements = await _send("GET", "/achievements", null);
+    final achievementsBefore = _store.achievements().length;
     for (final item in (achievements["items"] as List<dynamic>? ?? const [])) {
       final map = item as Map<String, dynamic>;
       _store.applyRemoteAchievement(map["key"] as String, map["at"] as String);
     }
+    // 成就接口每次返回全部，只数真正新增的，免得每轮同步都让首页重读。
+    _pulledTotal += _store.achievements().length - achievementsBefore;
 
     final keys = {...draftKeys, ..._store.localDraftKeys()};
     for (final key in keys) {

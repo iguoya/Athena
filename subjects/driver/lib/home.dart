@@ -147,9 +147,33 @@ class _HomePageState extends State<HomePage> {
     return dailyQuestions(questions);
   }
 
+  /// 已经为哪一次「拉到新数据」重读过。
+  int _seenPulled = 0;
+
+  /// 后台同步拉到新数据后重读本地库（首页只在启动时读一次，同步是之后才把数据拉下来的，
+  /// 不重读界面会一直是空的）。做题中不动：正在做的题单不该被换掉，关掉做题台时本来就会重读。
+  void _onSyncChanged() {
+    final status = widget.syncStatus?.value;
+    if (status == null || status.running || status.pulled == _seenPulled) return;
+    _seenPulled = status.pulled;
+    if (_session == null && mounted) unawaited(_reload());
+  }
+
+  @override
+  void didUpdateWidget(HomePage old) {
+    super.didUpdateWidget(old);
+    if (old.syncStatus != widget.syncStatus) {
+      old.syncStatus?.removeListener(_onSyncChanged);
+      _seenPulled = widget.syncStatus?.value.pulled ?? 0;
+      widget.syncStatus?.addListener(_onSyncChanged);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _seenPulled = widget.syncStatus?.value.pulled ?? 0;
+    widget.syncStatus?.addListener(_onSyncChanged);
     // 第一次从进度库读完统计后调一次 onReady；测试靠它等首页就绪。就绪让到
     // 下一帧之后：本地库是同步的，setState 与就绪会在同一拍微任务里完成，
     // 提早报就绪的话，等就绪的测试直接断言会拿到还没重建的旧帧。
@@ -160,6 +184,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    widget.syncStatus?.removeListener(_onSyncChanged);
     super.dispose();
   }
 
