@@ -1,6 +1,6 @@
 /** 练习纲要数据:章节 → 练习项(要点 + 验收要求 + 工具标签)。 */
 
-export type Tool = 'GeoGebra' | 'Octave' | 'Math Tools' | '理论'
+export type Tool = 'GeoGebra' | 'Octave' | 'SymPy' | 'Math Tools' | '理论'
 
 export interface Exercise {
   /** 练习要点:练什么 */
@@ -94,8 +94,8 @@ export const chapters: Chapter[] = [
       },
       {
         point: '2×2 特征值:手算 [2,1;1,3] 的特征多项式与特征值。',
-        req: '手算结果 2±√5 与软件输出(1.38197…,3.61803…)对上,误差说明来源。',
-        tools: ['理论', 'Math Tools', 'Octave'],
+        req: '手算结果 2±√5 与软件输出(1.38197…,3.61803…)对上;再用 SymPy 的 eigenvals 拿到精确根式 5/2±√5/2 逐项比对,误差说明来源。',
+        tools: ['理论', 'SymPy', 'Math Tools', 'Octave'],
       },
       {
         point: '特征向量方向:GeoGebra 里画向量 v 与 Av,拖动 v 转一圈。',
@@ -127,8 +127,8 @@ export const chapters: Chapter[] = [
       },
       {
         point: '泰勒实验:画 sin(x) 与它的 1、3、5、7 阶泰勒多项式。',
-        req: '能说出「阶数每加二,可靠区间大致延伸多少」的现象,并解释 sin 的偶数阶为何与上一阶相同。',
-        tools: ['GeoGebra', 'Octave'],
+        req: '能说出「阶数每加二,可靠区间大致延伸多少」的现象,并解释 sin 的偶数阶为何与上一阶相同;泰勒系数先用 SymPy 的 series 生成,再手推一阶对上。',
+        tools: ['GeoGebra', 'SymPy', 'Octave'],
       },
     ],
   },
@@ -155,8 +155,8 @@ export const chapters: Chapter[] = [
       },
       {
         point: '微积分基本定理数值验证:F(b) − F(a) 对比数值积分。',
-        req: '三组不同被积函数验证误差小于 1e−6,并指出误差的主要来源。',
-        tools: ['Octave', 'Math Tools'],
+        req: '三组不同被积函数验证误差小于 1e−6;原函数先用 SymPy 的 integrate 求精确式,再代值,并指出数值积分误差的主要来源。',
+        tools: ['SymPy', 'Octave', 'Math Tools'],
       },
     ],
   },

@@ -43,6 +43,7 @@ const pct = computed(() => Math.round((doneCount.value / total) * 100))
 const toolStyle: Record<Tool, string> = {
   GeoGebra: 'bg-violet-500/10 text-violet-600 dark:text-violet-300 ring-violet-400/30',
   Octave: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 ring-cyan-400/30',
+  SymPy: 'bg-amber-500/10 text-amber-600 dark:text-amber-300 ring-amber-400/30',
   'Math Tools': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 ring-emerald-400/30',
   理论: 'bg-slate-500/10 text-slate-500 dark:text-slate-300 ring-slate-400/30',
 }
