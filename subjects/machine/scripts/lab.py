@@ -1,0 +1,321 @@
+#!/usr/bin/env python3
+"""多目标实验台的命令行：体检、预生成汇编、编译运行、校验（ADR 0006、0007）。
+
+三个目标：win-x64（Microsoft ABI）、sysv-x64（System V）、aarch64-linux。
+观察汇编只需要 clang 的 --target，不需要目标平台能运行；真跑才依赖本机原生环境或 WSL。
+
+用法：
+    python3 scripts/lab.py doctor              # 体检：缺什么、怎么装、各目标能否真跑
+    python3 scripts/lab.py gen [lab]           # 预生成观察层汇编到 content/asm/<lab>/
+    python3 scripts/lab.py run <lab> [--target T]   # 编译并运行汇编骨架
+    python3 scripts/lab.py check               # 校验：骨架能汇编、观察层没过期（check.py 调用）
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import platform
+import shutil
+import subprocess
+import sys
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+LABS = PROJECT_ROOT / "labs"
+OBSERVED = PROJECT_ROOT / "content" / "asm"
+BUILD = PROJECT_ROOT / "build" / "lab"
+
+WSL_DISTRO = "Ubuntu"
+WSL_TOOLS = ["gcc", "gdb", "aarch64-linux-gnu-gcc", "qemu-aarch64", "gdb-multiarch"]
+WSL_APT = "sudo apt install gcc gdb gcc-aarch64-linux-gnu qemu-user gdb-multiarch"
+LEVELS = ("O0", "O2")
+
+# 观察层的编译选项。去掉展开表、标识串和控制流保护，是为了让输出只剩函数本身（教案要展示的东西）。
+# 不 #include 任何头文件的纯函数加 -ffreestanding，才能为任意目标出汇编而不需要它的 sysroot。
+OBSERVE_FLAGS = [
+    "-S", "-std=c23", "-ffreestanding",
+    "-fno-asynchronous-unwind-tables", "-fno-ident", "-fcf-protection=none",
+]
+
+
+@dataclass(frozen=True)
+class Target:
+    id: str
+    triple: str
+    arch: str  # x86-64 | aarch64
+    syntaxes: tuple[str, ...]  # x86-64 才有两种（ADR 0007）；ARM64 只有一种
+    default_syntax: str
+
+
+TARGETS: dict[str, Target] = {
+    "win-x64": Target("win-x64", "x86_64-pc-windows-msvc", "x86-64", ("att", "intel"), "intel"),
+    "sysv-x64": Target("sysv-x64", "x86_64-unknown-linux-gnu", "x86-64", ("att", "intel"), "att"),
+    "aarch64-linux": Target("aarch64-linux", "aarch64-unknown-linux-gnu", "aarch64", ("native",), "native"),
+}
+
+
+def _force_utf8_output() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
+
+def clang() -> str:
+    found = shutil.which("clang")
+    if found is None:
+        # ADR 0057：检测不到工具时给具体指引，只写查起来费事的部分。
+        raise SystemExit(
+            "找不到 clang。Windows：安装 LLVM 并把 bin 加进 PATH（需要它自带的 clang，不是 VS 的 clang-cl）；"
+            "macOS：xcode-select --install；Linux：sudo apt install clang"
+        )
+    return found
+
+
+def clang_version() -> str:
+    out = subprocess.run([clang(), "--version"], capture_output=True, text=True, check=True).stdout
+    return out.splitlines()[0].strip()
+
+
+def host_native_target() -> str | None:
+    """本机原生能真跑哪个目标。macOS 的变体（符号前缀等）还没实现，所以不声称（ADR 0006 第 3 条）。"""
+    system, machine = platform.system(), platform.machine().lower()
+    if system == "Windows" and machine in {"amd64", "x86_64"}:
+        return "win-x64"
+    if system == "Linux" and machine in {"x86_64", "amd64"}:
+        return "sysv-x64"
+    if system == "Linux" and machine in {"aarch64", "arm64"}:
+        return "aarch64-linux"
+    return None
+
+
+def load_lab(lab_id: str) -> tuple[Path, dict]:
+    directory = LABS / lab_id
+    manifest = directory / "lab.json"
+    if not manifest.is_file():
+        raise SystemExit(f"没有这个实验：{lab_id}（找不到 {manifest.relative_to(PROJECT_ROOT)}）")
+    return directory, json.loads(manifest.read_text(encoding="utf-8"))
+
+
+def all_lab_ids() -> list[str]:
+    return sorted(p.parent.name for p in LABS.glob("*/lab.json"))
+
+
+# ---------------------------------------------------------------- 体检
+
+def _decode(data: bytes) -> str:
+    """wsl.exe 自己的消息是 UTF-16LE，进到发行版里的命令输出是 UTF-8，两种都要认。"""
+    if b"\x00" in data:
+        return data.decode("utf-16-le", errors="replace").replace("\x00", "").strip()
+    return data.decode("utf-8", errors="replace").strip()
+
+
+def probe_wsl() -> tuple[bool, str, list[str]]:
+    """(能否进入发行版, 说明, 发行版里已有的工具)。"""
+    wsl = shutil.which("wsl")
+    if wsl is None:
+        return False, "没有 wsl.exe。以管理员身份运行：wsl --install Ubuntu", []
+    script = "for t in " + " ".join(WSL_TOOLS) + "; do command -v $t >/dev/null && echo $t; done"
+    try:
+        done = subprocess.run(
+            [wsl, "-d", WSL_DISTRO, "-e", "sh", "-c", script],
+            capture_output=True, timeout=90,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "启动 WSL 超时", []
+    out, err = _decode(done.stdout), _decode(done.stderr)
+    if done.returncode != 0:
+        full = err or out or f"退出码 {done.returncode}"
+        message = next((line.strip() for line in full.splitlines() if line.strip()), full)
+        hint = ""
+        # 错误码在第二行（「灾难性故障 / 错误代码: Wsl/Service/E_UNEXPECTED」），所以在全文里找。
+        if "E_UNEXPECTED" in full:
+            hint = "；管理员 PowerShell 里先试 wsl --update，不行再 wsl --unregister Ubuntu 后 wsl --install Ubuntu"
+        elif "WSL_E_DISTRO_NOT_FOUND" in full or "没有" in full:
+            hint = f"；安装发行版：wsl --install {WSL_DISTRO}"
+        return False, f"进不了 {WSL_DISTRO}：{message}{hint}", []
+    return True, f"{WSL_DISTRO} 可用", [line.strip() for line in out.splitlines() if line.strip()]
+
+
+def cmd_doctor(_: argparse.Namespace) -> int:
+    print("== 工具链 ==")
+    print(f"clang   {clang_version()}  {shutil.which('clang')}")
+    native = host_native_target()
+    wsl_ok, wsl_note, wsl_tools = (False, "", [])
+    if platform.system() == "Windows":
+        wsl_ok, wsl_note, wsl_tools = probe_wsl()
+        print(f"WSL     {wsl_note}")
+        if wsl_ok:
+            missing = [t for t in WSL_TOOLS if t not in wsl_tools]
+            print("        已有：" + (", ".join(wsl_tools) or "（无）"))
+            if missing:
+                print("        缺：" + ", ".join(missing))
+                print(f"        在 {WSL_DISTRO} 里安装：{WSL_APT}")
+    print("\n== 目标：观察 / 真跑 ==")
+    for target in TARGETS.values():
+        if target.id == native:
+            run = "真跑（本机原生）"
+        elif platform.system() == "Windows" and target.id != "win-x64":
+            need = {"sysv-x64": ["gcc"], "aarch64-linux": ["aarch64-linux-gnu-gcc", "qemu-aarch64"]}[target.id]
+            ready = wsl_ok and all(t in wsl_tools for t in need)
+            run = "可经 WSL 真跑（运行路径尚未实现）" if ready else "需要 WSL，现在不可用"
+        else:
+            run = "只能观察（本机不原生支持，ADR 0006 第 3 条）"
+        print(f"{target.id:<14} 观察 ✓   {run}")
+    return 0
+
+
+# ---------------------------------------------------------------- 观察层
+
+def _source_hash(directory: Path, manifest: dict) -> str:
+    return hashlib.sha256((directory / manifest["reference"]["file"]).read_bytes()).hexdigest()
+
+
+def observe_name(target: Target, syntax: str, level: str) -> str:
+    return f"{target.id}.{level}.s" if syntax == "native" else f"{target.id}.{syntax}.{level}.s"
+
+
+def generate_observation(directory: Path, manifest: dict, out_dir: Path) -> list[str]:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    source = directory / manifest["reference"]["file"]
+    names: list[str] = []
+    for target in TARGETS.values():
+        for syntax in target.syntaxes:
+            for level in LEVELS:
+                name = observe_name(target, syntax, level)
+                command = [clang(), f"--target={target.triple}", f"-{level}", *OBSERVE_FLAGS]
+                if target.arch == "x86-64":
+                    command.append(f"-masm={syntax}")
+                command += [str(source), "-o", str(out_dir / name)]
+                done = subprocess.run(command, capture_output=True, text=True)
+                if done.returncode != 0:
+                    raise SystemExit(f"{name} 生成失败：\n{done.stderr}")
+                names.append(name)
+    meta = {
+        "lab": manifest["id"],
+        "compiler": clang_version(),
+        "flags": OBSERVE_FLAGS,
+        "levels": list(LEVELS),
+        "source": f"labs/{manifest['id']}/{manifest['reference']['file']}",
+        "source_sha256": _source_hash(directory, manifest),
+        "files": names,
+    }
+    (out_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return names
+
+
+def cmd_gen(args: argparse.Namespace) -> int:
+    for lab_id in [args.lab] if args.lab else all_lab_ids():
+        directory, manifest = load_lab(lab_id)
+        names = generate_observation(directory, manifest, OBSERVED / lab_id)
+        print(f"{lab_id}: 生成 {len(names)} 份 → content/asm/{lab_id}/")
+    return 0
+
+
+# ---------------------------------------------------------------- 真跑
+
+def cmd_run(args: argparse.Namespace) -> int:
+    directory, manifest = load_lab(args.lab)
+    native = host_native_target()
+    target_id = args.target or native
+    if target_id is None:
+        raise SystemExit("本机没有原生可真跑的目标（ADR 0006 第 3 条）。可以用 gen 看汇编。")
+    if target_id not in TARGETS:
+        raise SystemExit(f"未知目标：{target_id}（可选 {', '.join(TARGETS)}）")
+    if target_id != native:
+        raise SystemExit(
+            f"{target_id} 在本机不是原生目标。经 WSL 运行的路径尚未实现（等 WSL 修好后验证再加）；"
+            "先用 doctor 看环境，用 gen 看汇编。"
+        )
+    target = TARGETS[target_id]
+    skeleton = directory / manifest["skeletons"][target_id]
+    out_dir = BUILD / args.lab / target_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+    exe = out_dir / ("lab.exe" if platform.system() == "Windows" else "lab")
+    build = [
+        clang(), f"--target={target.triple}", "-std=c23", "-O1", "-Wall",
+        str(directory / manifest["driver"]), str(directory / manifest["reference"]["file"]),
+        str(skeleton), "-o", str(exe),
+    ]
+    print(f"== 编译 {args.lab} / {target_id} ==", flush=True)
+    done = subprocess.run(build)
+    if done.returncode != 0:
+        return done.returncode
+    print(f"== 运行 ==", flush=True)
+    ran = subprocess.run([str(exe)], capture_output=True, text=True, timeout=30)
+    sys.stdout.write(ran.stdout)
+    sys.stderr.write(ran.stderr)
+    if ran.returncode != 0 or "FAIL" in ran.stdout:
+        print(f"\n失败：退出码 {ran.returncode}", file=sys.stderr)
+        return 1
+    print(f"\n通过：{target_id} 上汇编与 C 参考实现一致。")
+    return 0
+
+
+# ---------------------------------------------------------------- 校验
+
+def cmd_check(_: argparse.Namespace) -> int:
+    """骨架在三个目标都能汇编（不要求能运行，没有 WSL 的机器也能过）；观察层存在且没过期。"""
+    problems: list[str] = []
+    ids = all_lab_ids()
+    if not ids:
+        raise SystemExit("labs/ 下没有任何实验。")
+    with tempfile.TemporaryDirectory() as tmp:
+        for lab_id in ids:
+            directory, manifest = load_lab(lab_id)
+            for target in TARGETS.values():
+                skeleton = manifest.get("skeletons", {}).get(target.id)
+                if not skeleton or not (directory / skeleton).is_file():
+                    problems.append(f"{lab_id}: 缺 {target.id} 的骨架")
+                    continue
+                obj = Path(tmp) / f"{lab_id}.{target.id}.o"
+                done = subprocess.run(
+                    [clang(), f"--target={target.triple}", "-c", str(directory / skeleton), "-o", str(obj)],
+                    capture_output=True, text=True,
+                )
+                if done.returncode != 0:
+                    problems.append(f"{lab_id}/{target.id}: 骨架汇编失败\n{done.stderr.strip()}")
+            # 参考实现在两个优化级、两种语法下都能出汇编（顺便验证 --target 可用）
+            try:
+                generate_observation(directory, manifest, Path(tmp) / lab_id)
+            except SystemExit as error:
+                problems.append(f"{lab_id}: {error}")
+            meta_path = OBSERVED / lab_id / "meta.json"
+            if not meta_path.is_file():
+                problems.append(f"{lab_id}: 观察层还没生成，运行 python3 scripts/lab.py gen {lab_id}")
+                continue
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            if meta.get("source_sha256") != _source_hash(directory, manifest):
+                problems.append(f"{lab_id}: 观察层过期（参考实现改过），运行 python3 scripts/lab.py gen {lab_id}")
+            for name in meta.get("files", []):
+                if not (OBSERVED / lab_id / name).is_file():
+                    problems.append(f"{lab_id}: 观察层缺文件 {name}")
+    if problems:
+        raise SystemExit("实验校验失败：\n" + "\n".join(f"  - {p}" for p in problems))
+    print(f"{len(ids)} 个实验通过：骨架在 {len(TARGETS)} 个目标都能汇编，观察层是最新的。")
+    return 0
+
+
+def main() -> int:
+    _force_utf8_output()
+    parser = argparse.ArgumentParser(description="多目标实验台：体检、预生成汇编、编译运行、校验")
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("doctor", help="体检").set_defaults(func=cmd_doctor)
+    gen = sub.add_parser("gen", help="预生成观察层汇编")
+    gen.add_argument("lab", nargs="?")
+    gen.set_defaults(func=cmd_gen)
+    run = sub.add_parser("run", help="编译并运行汇编骨架")
+    run.add_argument("lab")
+    run.add_argument("--target", choices=sorted(TARGETS))
+    run.set_defaults(func=cmd_run)
+    sub.add_parser("check", help="校验").set_defaults(func=cmd_check)
+    arguments = parser.parse_args()
+    return arguments.func(arguments)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

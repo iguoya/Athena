@@ -3,9 +3,10 @@
 本文档是 **`subjects/machine` 独立应用** 的项目级指令，不依赖任何其他应用。改本应用时以本文为准。
 
 > **改造进行中（ADR 0005、0006）**：本应用原名 `c`；重组前的状态在 tag `pre-machine-reorg`。
-> 课程图已重写为三条线（本文「定位」「教学结构」），但汇编线与联合章目前都是**灰章**（还没有知识点），
-> 实验台仍是旧的 `playground/`，来源（DIS 汇编章、各 ABI 规范）还没进 catalog。这些按 ADR 0005
-> 的步骤陆续补，没补之前不要把它们写成已有。
+> 课程图已重写为三条线（本文「定位」「教学结构」），来源已进 catalog；但汇编线与联合章目前都是**灰章**
+> （还没有知识点和教案）。多目标实验已有命令行版（`labs/` + `scripts/lab.py`），**应用里的实验台界面
+> 还没接**，仍是旧的 `playground/`；经 WSL 运行 `sysv-x64` / `aarch64-linux` 的路径也还没实现。这些按
+> ADR 0005 的步骤陆续补，没补之前不要把它们写成已有。
 
 ## 定位
 
@@ -28,7 +29,7 @@
 | 知识图谱 | 首页 17 章（C 8 · 联合 5 · 汇编 4）+ `prerequisites`，卡片上标线 |
 | 教学大纲 | 点章之后：方向 + 知识点路线图（灰章只有题注与简介） |
 | 教学过程 | 章内路线图点白卡片才进入 |
-| 教学实验 | 现为旧 `playground/`；多目标实验台见 ADR 0006（待做） |
+| 教学实验 | 多目标实验 `labs/<id>/`，命令行 `scripts/lab.py`（ADR 0006）；应用内界面待做，现仍是旧 `playground/` |
 | 随堂考核 | `Checkpoint.qml` + `exercises.json`：多题、有解析 |
 
 **先修方向有规矩（ADR 0005 第 3 条，`scripts/check.py` 校验）**：C 独立章只依赖 C 独立章；
@@ -63,6 +64,9 @@ C 的保证）。
 | `content/sources/` | 教材目录与本地副本 |
 | `src/` | C++ 壳：读课表、从磁盘加载 QML、监视文件热加载 |
 | `scripts/fetch-sources.py` | 把公开教材拉到 `content/sources/reference/` |
+| `labs/<id>/` | 多目标实验：`fn.c` 参考实现、`main.c` 固定驱动、`asm/` 下每个目标一份可运行的骨架、`lab.json` |
+| `content/asm/<id>/` | 观察层：clang 为各目标、各语法、`-O0`/`-O2` 预生成的汇编，由 `lab.py gen` 生成，别手改 |
+| `scripts/lab.py` | `doctor` 体检、`gen` 预生成、`run` 真跑、`check` 校验（`check.py` 会调用） |
 | `playground/` | 保留的 LVGL 小程序，不从图谱启动 |
 | `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `launcher` 执行（ADR 0046） |
 
@@ -75,6 +79,14 @@ launcher open machine
 
 改 QML / `curriculum.json` / `exercises.json` 保存后窗口会自己重新加载。只有改
 `src/` 才需要让脚本再编一次 C++。本机需要 Qt 6（Homebrew `qt@6`）。
+
+多目标实验（需要 clang；经 WSL 的部分见 ADR 0006）：
+
+```sh
+python3 scripts/lab.py doctor       # 缺什么、怎么装、各目标能否真跑
+python3 scripts/lab.py gen sum      # 改了 fn.c 之后重新生成观察层，否则 check 会报过期
+python3 scripts/lab.py run sum      # 在本机原生目标上编译并运行骨架（目前只在 Windows 上实测过）
+```
 
 不要把产物装进 `/Applications`，也不要把 LVGL 小程序当成教学入口。
 

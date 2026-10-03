@@ -160,6 +160,8 @@ def main() -> int:
 
     check_json()
     check_curriculum()
+    # 多目标实验：骨架在三个目标都能汇编，观察层没过期（ADR 0006 第 6 条）。需要 clang。
+    run([sys.executable, str(PROJECT_ROOT / "scripts" / "lab.py"), "check"], "实验校验（多目标汇编）")
 
     cmake = tool("cmake")
     configure = [

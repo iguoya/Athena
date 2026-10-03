@@ -1,0 +1,14 @@
+{
+  "id": "sum",
+  "title": "数组求和",
+  "status": "sample",
+  "note": "示例实验：用来验证多目标工具链（ADR 0006），教案还没有引用它。",
+  "reference": { "file": "fn.c", "function": "c_sum" },
+  "driver": "main.c",
+  "entry": "asm_sum",
+  "skeletons": {
+    "win-x64": "asm/win-x64.s",
+    "sysv-x64": "asm/sysv-x64.s",
+    "aarch64-linux": "asm/aarch64-linux.s"
+  }
+}

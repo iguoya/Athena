@@ -1,0 +1,30 @@
+{
+  "lab": "sum",
+  "compiler": "clang version 23.1.1 (https://github.com/llvm/llvm-project 6dfe1677ab8dffbc6ec13d53a1e0215d75147689)",
+  "flags": [
+    "-S",
+    "-std=c23",
+    "-ffreestanding",
+    "-fno-asynchronous-unwind-tables",
+    "-fno-ident",
+    "-fcf-protection=none"
+  ],
+  "levels": [
+    "O0",
+    "O2"
+  ],
+  "source": "labs/sum/fn.c",
+  "source_sha256": "a72b5c33b73031aa5bf4b8550a8e25b964bc909c3f69182b904ab383084ee715",
+  "files": [
+    "win-x64.att.O0.s",
+    "win-x64.att.O2.s",
+    "win-x64.intel.O0.s",
+    "win-x64.intel.O2.s",
+    "sysv-x64.att.O0.s",
+    "sysv-x64.att.O2.s",
+    "sysv-x64.intel.O0.s",
+    "sysv-x64.intel.O2.s",
+    "aarch64-linux.O0.s",
+    "aarch64-linux.O2.s"
+  ]
+}
