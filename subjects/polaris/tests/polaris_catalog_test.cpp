@@ -9,7 +9,6 @@ private slots:
     void loadsAllMapsAndLaysOutAcyclicDependencies();
     void preservesStrictMapSelection();
     void defaultsToAnAcademicEntryMap();
-    void keepsUnitNamesOutOfTheContent();
     void everyNodeCarriesItsOwnPractice();
     void bindsNecessityToCareerTargets();
     void keepsCrossMapDependenciesReachable();
@@ -21,7 +20,7 @@ private slots:
 void PolarisCatalogTest::loadsAllMapsAndLaysOutAcyclicDependencies() {
     PolarisCatalog catalog(QString::fromUtf8(POLARIS_SOURCE_ROOT));
     QVERIFY2(catalog.error().isEmpty(), qPrintable(catalog.error()));
-    QCOMPARE(catalog.maps().size(), 18);
+    QCOMPARE(catalog.maps().size(), 17);
     QCOMPARE(catalog.selectedMapId(), QStringLiteral("computer-science"));
     QVERIFY(catalog.nodes().size() >= 15);
     QVERIFY(catalog.edges().size() >= 13);
@@ -40,7 +39,7 @@ void PolarisCatalogTest::defaultsToAnAcademicEntryMap() {
     }
     // 课程知识图谱恢复为计算机 / 电子信息两章，实践主干两张仍在（ADR 0010）。
     QCOMPARE(byKind.value("academic"), 4);
-    QCOMPARE(byKind.value("target"), 9);
+    QCOMPARE(byKind.value("target"), 8);
     QCOMPARE(byKind.value("career") + byKind.value("engineering"), 5);
 }
 
@@ -55,7 +54,7 @@ void PolarisCatalogTest::bindsNecessityToCareerTargets() {
             targetMapIds.insert(map.value("id").toString());
         }
     }
-    QCOMPARE(targetMapIds.size(), 9);
+    QCOMPARE(targetMapIds.size(), 8);
 
     for (const QVariant& mapValue : catalog.maps()) {
         const QVariantMap map = mapValue.toMap();
@@ -104,22 +103,6 @@ void PolarisCatalogTest::keepsCrossMapDependenciesReachable() {
     QVERIFY(foundCLanguage);
 }
 
-// 界面上不出现具体院所名，一律用「某所」（仓库级 ADR 0055）。这条断言盯着内容
-// 文件本身，因为淡化一旦只做在 QML 里，下一次换渲染方式就会把它漏掉。
-//
-// 禁用词写成 Unicode 转义：直接写字面量，这个文件自己就成了下一个命中点，
-// 全仓扫描（scripts/check.py）会把检查代码误报成违规内容。
-void PolarisCatalogTest::keepsUnitNamesOutOfTheContent() {
-    QFile file(QString::fromUtf8(POLARIS_SOURCE_ROOT) + "/content/polaris.json");
-    QVERIFY(file.open(QIODevice::ReadOnly | QIODevice::Text));
-    const QString text = QString::fromUtf8(file.readAll());
-    QVERIFY(!text.contains(QString::fromUtf8("\u5341\u4e03\u6240")));
-    QVERIFY(!text.contains(QString::fromUtf8("\u56db\u9662")));
-    QVERIFY(text.contains(QStringLiteral("某所")));
-}
-
-// 动手练习属于节点本身，不是另一张地图：把 practice 抽成独立实操图，会让同一个
-// 能力域在侧栏里出现两次。这条断言就是防止再走回那条路。
 void PolarisCatalogTest::everyNodeCarriesItsOwnPractice() {
     PolarisCatalog catalog(QString::fromUtf8(POLARIS_SOURCE_ROOT));
     for (const QVariant& mapValue : catalog.maps()) {

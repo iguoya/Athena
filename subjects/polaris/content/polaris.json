@@ -331,8 +331,7 @@
           "targets": [
             "target-realtime-software",
             "target-vehicle-engineering",
-            "target-onboard-computer",
-            "target-realtime-control"
+            "target-onboard-computer"
           ],
           "app": "",
           "entry": true,
@@ -513,10 +512,9 @@
           "targets": [
             "target-onboard-computer",
             "target-realtime-software",
-            "target-avionics-bus",
-            "target-realtime-control"
+            "target-avionics-bus"
           ],
-          "app": "c",
+          "app": "machine",
           "entry": true,
           "verify": "code",
           "requires": [],
@@ -617,8 +615,7 @@
           "priority_reason": "调度、虚拟内存、并发原语和隔离是计算机系统的核心课，不是某一款实时内核的说明书。",
           "targets": [
             "target-onboard-computer",
-            "target-realtime-software",
-            "target-realtime-control"
+            "target-realtime-software"
           ],
           "app": "",
           "entry": false,
@@ -807,8 +804,7 @@
           "targets": [
             "target-realtime-software",
             "target-onboard-computer",
-            "target-vehicle-engineering",
-            "target-realtime-control"
+            "target-vehicle-engineering"
           ],
           "app": "cpp",
           "entry": true,
@@ -912,8 +908,7 @@
           "priority_reason": "进程、文件描述符、信号和套接字是 Unix 上写系统程序的基本构件。",
           "targets": [
             "target-realtime-software",
-            "target-vehicle-engineering",
-            "target-realtime-control"
+            "target-vehicle-engineering"
           ],
           "app": "",
           "entry": false,
@@ -1087,7 +1082,6 @@
           "targets": [
             "target-onboard-computer",
             "target-realtime-software",
-            "target-realtime-control",
             "target-robot-systems"
           ],
           "app": "",
@@ -1293,8 +1287,7 @@
           "priority_reason": "套接字与超时重试是计算机网络的实践面，不必再单独占主干一格。",
           "targets": [
             "target-realtime-software",
-            "target-vehicle-engineering",
-            "target-realtime-control"
+            "target-vehicle-engineering"
           ],
           "app": "",
           "entry": false,
@@ -1692,7 +1685,6 @@
           "priority": "essential",
           "priority_reason": "集总电路、仪器和基本波形是电子信息的入门：不会判电平，后面的课没有共同语言。",
           "targets": [
-            "target-realtime-control",
             "target-avionics-bus",
             "target-sensing-compute"
           ],
@@ -1971,7 +1963,6 @@
           "priority_reason": "把物理量变成可信数字：调理、采样和标定是电子信息的测量核心。",
           "targets": [
             "target-sensing-compute",
-            "target-realtime-control",
             "target-gnc"
           ],
           "app": "",
@@ -2151,8 +2142,7 @@
           "targets": [
             "target-onboard-computer",
             "target-realtime-software",
-            "target-avionics-bus",
-            "target-realtime-control"
+            "target-avionics-bus"
           ],
           "app": "",
           "entry": false,
@@ -2258,7 +2248,6 @@
           "priority_reason": "分系统之间按协议按时序交换数据，是电子系统课的接口面。",
           "targets": [
             "target-avionics-bus",
-            "target-realtime-control",
             "target-onboard-computer"
           ],
           "app": "",
@@ -2359,7 +2348,6 @@
           "priority_reason": "原理图变成可制造、可焊接、可复查的板，是电子实践从台架走向可复现硬件的一步。",
           "targets": [
             "target-avionics-bus",
-            "target-realtime-control",
             "target-vehicle-engineering"
           ],
           "app": "",
@@ -2461,8 +2449,7 @@
           "priority_reason": "任务、优先级和共享资源要在真实调度器上观察，这是操作系统课在嵌入式上的对应物。",
           "targets": [
             "target-realtime-software",
-            "target-onboard-computer",
-            "target-realtime-control"
+            "target-onboard-computer"
           ],
           "app": "",
           "entry": false,
@@ -2654,8 +2641,7 @@
           "priority": "optional",
           "priority_reason": "PWM、电流环与位置环是机电伺服的综合落地，不是控制课本身。",
           "targets": [
-            "target-robot-systems",
-            "target-realtime-control"
+            "target-robot-systems"
           ],
           "app": "",
           "entry": false,
@@ -2916,7 +2902,6 @@
           "priority_reason": "连续量怎么放大、滤波和测量，是电子信息区别于「只会写寄存器」的那一半。",
           "targets": [
             "target-sensing-compute",
-            "target-realtime-control",
             "target-avionics-bus"
           ],
           "app": "",
@@ -3107,8 +3092,7 @@
           "priority_reason": "卷积、傅里叶和采样是电子信息的共同语言，不是某一门处理课的附录。",
           "targets": [
             "target-sensing-compute",
-            "target-gnc",
-            "target-realtime-control"
+            "target-gnc"
           ],
           "app": "",
           "entry": false,
@@ -3200,7 +3184,6 @@
           "priority_reason": "矩阵、信号和动态系统的常规数值与仿真环境，电子信息里用来先在模型里做实验。",
           "targets": [
             "target-gnc",
-            "target-realtime-control",
             "target-vehicle-engineering"
           ],
           "app": "",
@@ -3394,7 +3377,6 @@
           "priority_reason": "测—比—执行、稳定与误差是自动控制和电子系统的共同课，电机只是一种执行器。",
           "targets": [
             "target-gnc",
-            "target-realtime-control",
             "target-robot-systems"
           ],
           "app": "",
@@ -4016,8 +3998,7 @@
           "priority_reason": "周期性数据要在截止期内完成交接，有界队列和锁策略直接决定最坏延迟，绕不过去。",
           "targets": [
             "target-realtime-software",
-            "target-onboard-computer",
-            "target-realtime-control"
+            "target-onboard-computer"
           ],
           "app": "",
           "stage": "intermediate",
@@ -4048,8 +4029,7 @@
           "priority_reason": "地面站、试验台架与设备之间的数据链依赖这套接口，但飞行器上走的是另一套总线时序，所以是显著支撑而非唯一入口。",
           "targets": [
             "target-realtime-software",
-            "target-vehicle-engineering",
-            "target-realtime-control"
+            "target-vehicle-engineering"
           ],
           "app": "",
           "stage": "intermediate",
@@ -4145,8 +4125,7 @@
           "priority_reason": "产品保证要求他人可复现、可评审，但这一步建立在可观测与工程化之上，属于收口而不是起步。",
           "targets": [
             "target-realtime-software",
-            "target-vehicle-engineering",
-            "target-realtime-control"
+            "target-vehicle-engineering"
           ],
           "app": "",
           "stage": "senior",
@@ -4262,7 +4241,6 @@
           "priority": "essential",
           "priority_reason": "电气联调与测发控的每一步都依赖可重复的测量与故障定位，没有它后续外设与总线联调没有判据。",
           "targets": [
-            "target-realtime-control",
             "target-avionics-bus",
             "target-vehicle-engineering"
           ],
@@ -4327,7 +4305,6 @@
           "priority_reason": "可复现的硬件交付依赖电源分区与信号完整性；它不替代功能联调，却决定联调结果能不能在下一块板上重现。",
           "targets": [
             "target-avionics-bus",
-            "target-realtime-control",
             "target-vehicle-engineering"
           ],
           "app": "",
@@ -4359,8 +4336,7 @@
           "priority_reason": "探测、制导与健康管理都建立在采集链给出可信数字之上；前端没做好，后端验收没有意义。",
           "targets": [
             "target-sensing-compute",
-            "target-gnc",
-            "target-realtime-control"
+            "target-gnc"
           ],
           "app": "",
           "stage": "intermediate",
@@ -4423,7 +4399,6 @@
           "priority_reason": "软硬件联调与环境验证是把分系统收成可交付状态的最后一环，验收看的是合机后的最坏行为而不是单板均值。",
           "targets": [
             "target-vehicle-engineering",
-            "target-realtime-control",
             "target-avionics-bus"
           ],
           "app": "",
@@ -6131,7 +6106,7 @@
       "id": "target-vehicle-engineering",
       "title": "弹箭与飞航研制",
       "view_kind": "target",
-      "summary": "对照某所测发控/电气抓总与同族飞航公开研制链：接口、六自由度、动力时序、测发控、半实物。闭环用控制周期最坏值验收。",
+      "summary": "接口、六自由度、动力时序、测发控、半实物。闭环用控制周期最坏值验收。",
       "nodes": [
         {
           "id": "polaris.target.vehicle.mission-interface",
@@ -6414,7 +6389,7 @@
       "id": "target-gnc",
       "title": "制导导航与控制",
       "view_kind": "target",
-      "summary": "对照某所全程制导控制：控制周期内完成捷联、姿态、程序制导与组合导航；半实物看最坏抖动，不看平均帧率。",
+      "summary": "控制周期内完成捷联、姿态、程序制导与组合导航；半实物看最坏抖动，不看平均帧率。",
       "nodes": [
         {
           "id": "polaris.target.gnc.imu",
@@ -6682,7 +6657,7 @@
       "id": "target-onboard-computer",
       "title": "弹上计算机与实时软件",
       "view_kind": "target",
-      "summary": "对照某所飞控/嵌入式软件：RTOS 优先级、有界内存、截止期与故障恢复；VxWorks 是岗位目标，FreeRTOS 先把最坏延迟做实。",
+      "summary": "RTOS 优先级、有界内存、截止期与故障恢复；VxWorks 是岗位目标，FreeRTOS 先把最坏延迟做实。",
       "nodes": [
         {
           "id": "polaris.target.embedded.bringup",
@@ -7468,293 +7443,10 @@
       "standing": "地面助力 · 不进飞控"
     },
     {
-      "id": "target-realtime-control",
-      "title": "实时控制 · 某所对照",
-      "view_kind": "target",
-      "summary": "某所公开的控制系统总体链：测发控、定位定向、全程制导控制、电气、飞控软件、试验与健康管理。用来对照主干，不与主干平级；不写寻的、射频对抗或配方。",
-      "nodes": [
-        {
-          "id": "polaris.target.ctrl17.launch-test",
-          "title": "测发控与地面测试发射",
-          "track": "software",
-          "stable_definition": "把发射流程做成带时序、联锁、命令队列和遥测监视的地面控制链。",
-          "engineering_role": "某所公开职责含固体运载飞行器地面测试发射抓总；飞控未上电前，地面必须可测、可控、可禁止误动作。",
-          "practice": "实现本地测发控台：时序表、联锁、模拟遥测和禁止非法点火的审计日志。",
-          "validation": "integration",
-          "validation_note": "错包、断链、重复指令不得突破联锁。",
-          "volatility": "stable",
-          "requires": [],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "地面测试发射与电气系统抓总"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "cmse-ttc-2023",
-              "locator": "遥测遥控与运行管理"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "yamcs-quickstart",
-              "locator": "开源测控样本"
-            }
-          ]
-        },
-        {
-          "id": "polaris.target.ctrl17.alignment",
-          "title": "定位定向与初始对准",
-          "track": "control",
-          "stable_definition": "在发射前把载体坐标系、方位和惯性器件零位纳入可复查的初始状态。",
-          "engineering_role": "某所公开职责含定位定向；对准误差会进入全程制导，必须单独验收。",
-          "practice": "用静止 IMU 数据做粗对准，输出方位/水平残差和复测记录。",
-          "validation": "measurement",
-          "validation_note": "保留数据集、对准时间和复测偏差。",
-          "volatility": "stable",
-          "requires": [
-            "polaris.target.ctrl17.launch-test"
-          ],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "定位定向"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casc-ins-fusion",
-              "locator": "惯性器件标定与误差建模"
-            }
-          ]
-        },
-        {
-          "id": "polaris.target.ctrl17.electrical",
-          "title": "电气系统与时序配电",
-          "track": "electronics",
-          "stable_definition": "把供配电、电缆网和时序开关看成带状态与遥测的受控对象。",
-          "engineering_role": "某所公开抓总电气系统；没有时序配电，制导控制软件没有合法执行窗口。",
-          "practice": "画模拟箭上配电时序：上电、自检、允许控制、紧急断电，并注入欠压。",
-          "validation": "integration",
-          "validation_note": "非法时序不得给执行机构上电。",
-          "volatility": "stable",
-          "requires": [
-            "polaris.target.ctrl17.launch-test"
-          ],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "电气系统研制抓总"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casic-avionics",
-              "locator": "配电与电气接口"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "cast-platform",
-              "locator": "高效供电"
-            }
-          ]
-        },
-        {
-          "id": "polaris.target.ctrl17.gnc-loop",
-          "title": "全程制导控制闭环",
-          "track": "control",
-          "stable_definition": "在控制周期内完成导航、程序制导和姿态稳定，用最坏抖动验收。",
-          "engineering_role": "某所公开职责含全程制导控制；只写程序转弯/重力转弯与姿态回路，不写末端寻的。",
-          "practice": "把捷联、程序角和姿态回路接到六自由度模型，报告周期内最坏延迟。",
-          "validation": "simulation",
-          "validation_note": "固定风扰种子，报告弹道偏差、姿态余量和超期次数。",
-          "volatility": "evolving",
-          "requires": [
-            "polaris.target.ctrl17.alignment",
-            "polaris.target.ctrl17.electrical"
-          ],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "全程制导控制"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casic-gnc-sim",
-              "locator": "控制系统仿真"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17-2027",
-              "locator": "控制科学与航空宇航类需求"
-            }
-          ]
-        },
-        {
-          "id": "polaris.target.ctrl17.flight-sw",
-          "title": "飞控软件实时调度",
-          "track": "software",
-          "stable_definition": "用优先级、有界队列和静态内存把导航、控制和电气指令放进截止期内。",
-          "engineering_role": "某所校招含嵌入式/飞控软件；软件高性能是周期内搬完算完，不是平均 QPS。",
-          "practice": "三任务：采集、控制、下行；记录 100 Hz 最坏抖动、栈余量和超期处置。",
-          "validation": "measurement",
-          "validation_note": "总线负载和计算负载同时存在时看最大值。",
-          "volatility": "evolving",
-          "requires": [
-            "polaris.target.ctrl17.gnc-loop",
-            "polaris.target.ctrl17.electrical"
-          ],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17-2027",
-              "locator": "计算机与软件工程类需求"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casic-flight-software",
-              "locator": "VxWorks、总线与任务资源"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "freertos-book",
-              "locator": "任务与队列"
-            }
-          ]
-        },
-        {
-          "id": "polaris.target.ctrl17.test-health",
-          "title": "试验、仿真与健康管理",
-          "track": "assurance",
-          "stable_definition": "用半实物、故障注入和状态监视证明闭环可回归，异常可定位。",
-          "engineering_role": "某所公开岗位含仿真与健康管理/故障诊断；试验是控制系统总体的验收场。",
-          "practice": "注入惯组噪声、执行延迟、欠压和断链，输出故障—观测—判定表。",
-          "validation": "simulation",
-          "validation_note": "每项故障可脚本复现，并留下版本。",
-          "volatility": "evolving",
-          "requires": [
-            "polaris.target.ctrl17.flight-sw"
-          ],
-          "source_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17-intro",
-              "locator": "控制系统总体与试验环境"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "casic-gnc-sim",
-              "locator": "半物理仿真"
-            },
-            {
-              "relation": "adapted",
-              "source_id": "nasa-se-handbook",
-              "locator": "验证与技术状态"
-            }
-          ]
-        }
-      ],
-      "edges": [
-        {
-          "from": "polaris.target.ctrl17.launch-test",
-          "to": "polaris.target.ctrl17.alignment",
-          "relation": "requires",
-          "rationale": "对准发生在受控的地面测试流程里。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "定位定向"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.launch-test",
-          "to": "polaris.target.ctrl17.electrical",
-          "relation": "requires",
-          "rationale": "电气时序服从测发控联锁。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "电气系统"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.alignment",
-          "to": "polaris.target.ctrl17.gnc-loop",
-          "relation": "requires",
-          "rationale": "全程制导从初始方位和零位开始。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casc-ins-fusion",
-              "locator": "标定"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.electrical",
-          "to": "polaris.target.ctrl17.gnc-loop",
-          "relation": "requires",
-          "rationale": "控制律只能在合法供电窗口运行。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-avionics",
-              "locator": "配电"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.gnc-loop",
-          "to": "polaris.target.ctrl17.flight-sw",
-          "relation": "requires",
-          "rationale": "控制周期由飞控软件调度兑现。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-flight-software",
-              "locator": "任务资源"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.electrical",
-          "to": "polaris.target.ctrl17.flight-sw",
-          "relation": "requires",
-          "rationale": "软件指令必须对应电气状态。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-4-17",
-              "locator": "电气"
-            }
-          ]
-        },
-        {
-          "from": "polaris.target.ctrl17.flight-sw",
-          "to": "polaris.target.ctrl17.test-health",
-          "relation": "requires",
-          "rationale": "健康管理观察的是实时闭环，不是演示动画。",
-          "evidence_refs": [
-            {
-              "relation": "adapted",
-              "source_id": "casic-gnc-sim",
-              "locator": "半实物"
-            }
-          ]
-        }
-      ],
-      "standing": "某所对照 · 重要参考"
-    },
-    {
       "id": "target-robot-systems",
       "title": "机器人系统",
       "view_kind": "target",
-      "summary": "相邻领域：标定、估计、控制、运行时与场地安全。可对照 GNC/嵌入式，但不是弹箭研制主干，也不与某所实时控制对照平级。",
+      "summary": "相邻领域：标定、估计、控制、运行时与场地安全。可对照 GNC/嵌入式，但不是弹箭研制主干。",
       "nodes": [
         {
           "id": "polaris.target.robot.calibration",
