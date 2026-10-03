@@ -54,6 +54,12 @@
 ## 约定
 
 - 影响本应用架构边界的新决定,在 `docs/decisions/` 增补 ADR 后再动代码。
-- 主题令牌(颜色/字体)只改 `src/style.css` 的 `@theme` 块,组件内不硬编码色值。
-- 亮/暗主题跟随 `html.dark` 类切换(Tailwind 4 自定义 variant),首选项存
-  localStorage,默认暗色。
+- **皮肤机制**(与拾阶 skins 同构):一套组件、令牌换氛围。三套皮肤(星穹/晨读/草稿)
+  定义在 `src/style.css` 的 `--tk-*` 令牌块,清单与切换在 `src/theme.ts`;皮肤自带亮暗
+  (星穹=暗,其余浅,内部驱动 `html.dark`,组件的 `dark:` 变体继续工作)。组件里
+  **不硬编码主色**——渐变/发光/主色文字用 `accent-gradient`、`accent-glow`、
+  `accent-fg`、`accent-soft`、`text-gradient`、`tk-display` 这些 utility;工具卡片的
+  品类色(紫/青/橙)是功能识别色,不随皮肤变。新增皮肤 = 加一段 `--tk-*` 令牌 +
+  `SKINS` 一行,不动组件。
+- 练习勾选(`mt-curriculum-done`)与皮肤(`mt-skin`)都存 localStorage,是本机
+  便利,不进版本库。

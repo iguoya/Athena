@@ -217,7 +217,7 @@ onBeforeUnmount(() => {
     <!-- 顶部工具条 -->
     <div class="z-10 mx-auto mt-6 w-full max-w-3xl px-8">
       <div class="card flex items-center gap-2 p-2.5 pl-4">
-        <FunctionSquare :size="17" class="shrink-0 text-violet-500 dark:text-violet-300" />
+        <FunctionSquare :size="17" class="accent-fg shrink-0" />
         <input
           v-model="expr"
           class="w-full bg-transparent font-mono text-[15px] outline-none placeholder:text-slate-400"
@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
           @keydown.enter="compileExpr"
         />
         <button
-          class="shrink-0 rounded-lg bg-gradient-to-r from-violet-500 to-cyan-400 px-4 py-1.5 text-sm font-medium text-white shadow-md shadow-violet-500/25 transition hover:brightness-110 active:scale-95"
+          class="shrink-0 rounded-lg accent-gradient accent-glow px-4 py-1.5 text-sm font-medium text-white transition hover:brightness-110 active:scale-95"
           @click="compileExpr"
         >绘制</button>
       </div>
@@ -236,8 +236,8 @@ onBeforeUnmount(() => {
           :key="s"
           class="rounded-full border px-3 py-1 font-mono text-xs transition hover:-translate-y-0.5"
           :class="drawn === s
-            ? 'border-violet-400/60 bg-violet-500/10 text-violet-600 dark:text-violet-300'
-            : 'border-slate-200 text-slate-500 hover:border-violet-300 dark:border-white/10 dark:text-slate-400'"
+            ? 'accent-soft accent-fg'
+            : 'border-slate-200 text-slate-500 hover:border-slate-300 dark:border-white/10 dark:text-slate-400'"
           @click="expr = s; compileExpr()"
         >{{ s }}</button>
         <span class="ml-auto flex items-center gap-3 text-[11px] text-slate-400 dark:text-slate-500">
@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
           class="absolute left-6 top-4 rounded-lg border border-slate-200/60 bg-white/70 px-3 py-1.5 font-mono text-sm backdrop-blur dark:border-white/10 dark:bg-black/30"
         >
           f(x) =
-          <span class="bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 bg-clip-text font-semibold text-transparent">
+          <span class="text-gradient font-semibold">
             {{ drawn }}
           </span>
         </p>

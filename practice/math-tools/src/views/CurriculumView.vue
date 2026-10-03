@@ -57,17 +57,17 @@ const toolStyle: Record<Tool, string> = {
       :animate="{ opacity: 1, y: 0 }"
       :transition="{ duration: 0.5, ease: 'easeOut' }"
     >
-      <p class="mb-2 flex items-center gap-2 text-xs font-medium tracking-widest text-violet-500 dark:text-violet-300/80">
+      <p class="mb-2 flex items-center gap-2 text-xs font-medium tracking-widest accent-fg">
         <ListChecks :size="14" /> CURRICULUM
       </p>
-      <h1 class="font-display text-2xl font-bold">练习纲要</h1>
+      <h1 class="tk-display text-2xl font-bold">练习纲要</h1>
       <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
         每个概念走三遍:<span class="font-medium text-slate-700 dark:text-slate-200">看一遍直觉、拖一遍图形、算一遍数值</span>。
         勾选存本机浏览器,进度只对自己负责。
       </p>
 
       <div class="card mt-5 flex items-center gap-4 p-4">
-        <div class="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 text-white shadow-lg shadow-violet-500/25">
+        <div class="grid size-11 shrink-0 place-items-center rounded-xl accent-gradient accent-glow text-white">
           <Target :size="20" />
         </div>
         <div class="min-w-0 flex-1">
@@ -77,7 +77,7 @@ const toolStyle: Record<Tool, string> = {
           </div>
           <div class="h-2 overflow-hidden rounded-full bg-slate-200/70 dark:bg-white/10">
             <div
-              class="h-full rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 transition-all duration-500 ease-out"
+              class="h-full rounded-full accent-gradient transition-all duration-500 ease-out"
               :style="{ width: `${pct}%` }"
             />
           </div>
@@ -102,11 +102,11 @@ const toolStyle: Record<Tool, string> = {
         >
           <span
             class="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br font-mono text-sm font-bold text-white shadow"
-            :class="ci % 2 === 0 ? 'from-violet-500 to-fuchsia-400 shadow-violet-500/25' : 'from-cyan-400 to-emerald-400 shadow-cyan-400/25'"
+            :class="'accent-gradient accent-glow'"
           >{{ ci }}</span>
           <span class="min-w-0 flex-1">
             <span class="flex items-baseline gap-2">
-              <span class="font-display text-base font-semibold">{{ c.title }}</span>
+              <span class="tk-display text-base font-semibold">{{ c.title }}</span>
               <span class="font-mono text-[11px] tracking-wide text-slate-400">{{ c.en }}</span>
             </span>
             <span class="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">{{ c.goal }}</span>
@@ -124,8 +124,8 @@ const toolStyle: Record<Tool, string> = {
         <!-- 展开的练习项 -->
         <Transition name="pop">
           <div v-if="opened === c.id" class="border-t border-slate-200/70 px-5 pb-5 pt-4 dark:border-white/10">
-            <p class="mb-4 flex items-start gap-2 rounded-xl bg-violet-500/5 px-3.5 py-2.5 text-xs leading-relaxed text-slate-600 ring-1 ring-violet-400/15 dark:text-slate-300">
-              <Target :size="13" class="mt-0.5 shrink-0 text-violet-400" />
+            <p class="mb-4 flex items-start gap-2 rounded-xl accent-soft rounded-xl px-3.5 py-2.5 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+              <Target :size="13" class="accent-fg mt-0.5 shrink-0" />
               本章目标:{{ c.goal }}
             </p>
             <ol class="flex flex-col gap-4">

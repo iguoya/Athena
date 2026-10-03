@@ -46,10 +46,10 @@ const tools = [
       :animate="{ opacity: 1, y: 0 }"
       :transition="{ duration: 0.55, ease: 'easeOut' }"
     >
-      <p class="mb-3 flex items-center gap-2 text-xs font-medium tracking-widest text-violet-500 dark:text-violet-300/80">
+      <p class="mb-3 flex items-center gap-2 text-xs font-medium tracking-widest accent-fg">
         <Sparkles :size="14" /> PRACTICE · MATH TOOLS
       </p>
-      <h1 class="font-display text-4xl font-bold leading-tight tracking-tight">
+      <h1 class="tk-display text-4xl font-bold leading-tight tracking-tight">
         把<span class="text-gradient">数学</span>握在手里的练习本
       </h1>
       <p class="mt-3 max-w-xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
@@ -77,11 +77,11 @@ const tools = [
             <component :is="t.icon" :size="24" />
           </div>
           <div class="min-w-0">
-            <p class="font-display text-lg font-semibold">{{ t.name }}
+            <p class="tk-display text-lg font-semibold">{{ t.name }}
               <span class="ml-1.5 font-mono text-[11px] font-normal tracking-wider text-slate-400">{{ t.en }}</span>
             </p>
             <p class="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{{ t.desc }}</p>
-            <p class="mt-3 flex items-center gap-1.5 text-sm font-medium text-violet-500 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 dark:text-cyan-300">
+            <p class="mt-3 flex items-center gap-1.5 text-sm font-medium accent-fg opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
               打开 <ArrowRight :size="15" />
             </p>
           </div>

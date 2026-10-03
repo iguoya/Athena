@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Home, Grid3x3, LineChart, BookOpen, Sun, Moon, Sigma } from 'lucide-vue-next'
+import { Home, Grid3x3, LineChart, BookOpen, Sigma } from 'lucide-vue-next'
 import HomeView from './views/HomeView.vue'
 import MatrixView from './views/MatrixView.vue'
 import PlotView from './views/PlotView.vue'
 import CurriculumView from './views/CurriculumView.vue'
+import { SKINS, applySkin, currentSkin, type SkinId } from './theme'
 
 type TabId = 'home' | 'curriculum' | 'matrix' | 'plot'
 
@@ -16,26 +17,25 @@ const tabs: { id: TabId; label: string; icon: typeof Home }[] = [
 ]
 
 const active = ref<TabId>('home')
-const dark = ref(document.documentElement.classList.contains('dark'))
+const skin = ref<SkinId>(currentSkin())
 
-function toggleTheme() {
-  dark.value = !dark.value
-  document.documentElement.classList.toggle('dark', dark.value)
-  localStorage.setItem('mt-theme', dark.value ? 'dark' : 'light')
+function setSkin(id: SkinId) {
+  skin.value = id
+  applySkin(id)
 }
 </script>
 
 <template>
   <div class="flex h-full">
     <!-- 侧栏 -->
-    <aside class="relative z-10 flex w-60 shrink-0 flex-col border-r border-slate-200/70 bg-white/60 px-4 py-5 backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.03]">
+    <aside class="relative z-10 flex w-60 shrink-0 flex-col border-r px-4 py-5 backdrop-blur-xl" style="border-color: var(--tk-line); background: color-mix(in oklab, var(--tk-surface) 60%, transparent)">
       <div class="mb-8 flex items-center gap-3 px-2">
-        <div class="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400 text-white shadow-lg shadow-violet-500/30">
+        <div class="accent-gradient accent-glow grid size-10 place-items-center rounded-xl text-white">
           <Sigma :size="22" :stroke-width="2.5" />
         </div>
         <div>
-          <p class="font-display text-sm font-semibold tracking-wide">数学工具</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Math Tools</p>
+          <p class="tk-display text-sm font-semibold tracking-wide">数学工具</p>
+          <p class="text-xs" style="color: var(--tk-muted)">Math Tools</p>
         </div>
       </div>
 
@@ -50,15 +50,12 @@ function toggleTheme() {
           @click="active = t.id"
         >
           <Transition name="pop">
-            <span
-              v-if="active === t.id"
-              class="absolute inset-0 -z-10 rounded-xl bg-gradient-to-r from-violet-500/15 to-cyan-400/10 ring-1 ring-violet-400/30"
-            />
+            <span v-if="active === t.id" class="accent-soft absolute inset-0 -z-10 rounded-xl" />
           </Transition>
           <component
             :is="t.icon"
             :size="18"
-            :class="active === t.id ? 'text-violet-500 dark:text-violet-300' : 'group-hover:text-violet-400'"
+            :class="active === t.id ? 'accent-fg' : 'group-hover:text-violet-400'"
           />
           {{ t.label }}
         </button>
@@ -66,16 +63,19 @@ function toggleTheme() {
 
       <div class="mt-auto flex items-center justify-between px-2">
         <span class="text-xs text-slate-400 dark:text-slate-500">practice · math-tools</span>
-        <button
-          class="grid size-9 place-items-center rounded-full text-slate-500 transition hover:rotate-12 hover:bg-slate-100 hover:text-violet-500 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-cyan-300"
-          title="切换亮/暗主题"
-          @click="toggleTheme"
-        >
-          <Transition name="pop" mode="out-in">
-            <Moon v-if="dark" :size="18" key="moon" />
-            <Sun v-else :size="18" key="sun" />
-          </Transition>
-        </button>
+        <!-- 皮肤切换:三个色点 -->
+        <div class="flex items-center gap-1.5">
+          <button
+            v-for="s in SKINS"
+            :key="s.id"
+            class="size-5 rounded-full p-[3px] transition hover:scale-110"
+            :class="skin === s.id ? 'ring-1 ring-slate-400/60 dark:ring-white/40' : ''"
+            :title="`${s.name} · ${s.hint}`"
+            @click="setSkin(s.id)"
+          >
+            <span class="block size-full rounded-full" :style="{ background: s.dot }" />
+          </button>
+        </div>
       </div>
     </aside>
 

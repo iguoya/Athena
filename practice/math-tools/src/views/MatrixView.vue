@@ -124,7 +124,7 @@ function run(op: Op) {
 
 <template>
   <section>
-    <h1 class="font-display text-2xl font-bold">矩阵实验室</h1>
+    <h1 class="tk-display text-2xl font-bold">矩阵实验室</h1>
     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">输入矩阵,点算子即算;最新结果排在最前。</p>
 
     <div class="mt-6 flex flex-wrap items-center gap-3">
@@ -134,7 +134,7 @@ function run(op: Op) {
           :key="n"
           class="rounded-lg px-4 py-1.5 font-mono transition"
           :class="size === n
-            ? 'bg-gradient-to-r from-violet-500 to-fuchsia-400 text-white shadow'
+            ? 'accent-gradient text-white shadow'
             : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'"
           @click="setSize(n)"
         >{{ n }}×{{ n }}</button>
@@ -181,8 +181,8 @@ function run(op: Op) {
             :key="op.id"
             class="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition active:scale-95"
             :class="op.main
-              ? 'col-span-2 bg-gradient-to-r from-violet-500 to-cyan-400 text-white shadow-lg shadow-violet-500/25 hover:brightness-110'
-              : 'border border-slate-200 bg-white/60 hover:border-violet-300 hover:text-violet-600 dark:border-white/10 dark:bg-white/5 dark:hover:border-violet-400/40 dark:hover:text-violet-300'"
+              ? 'col-span-2 accent-gradient accent-glow text-white hover:brightness-110'
+              : 'border border-slate-200 bg-white/60 hover:border-slate-300 hover:accent-fg dark:border-white/10 dark:bg-white/5 dark:hover:border-white/25'"
             @click="run(op.id)"
           >
             <Play :size="13" />
