@@ -9,26 +9,24 @@
 
 /*
  * 皮肤 = 一组令牌(ADR:与拾阶 skins.ts 同构)。
- * 一套组件、三套氛围:星穹(默认,暗)/ 晨读(浅暖衬线)/ 草稿(米纸快乐体)。
- * 皮肤同时决定亮暗:切到星穹自动加 html.dark,其余移除——组件里的 dark: 变体继续工作。
+ * 一套组件、三套氛围:晴空(默认,浅蓝网格)/ 晨读(浅暖衬线)/ 草稿(米纸快乐体)。
+ * 三套都是浅色系;dark: 变体保留在组件里,将来若加暗皮肤只需令牌块 + html.dark。
  */
 :root {
-  color-scheme: dark;
-  --tk-bg: #0b0c14;
-  --tk-blob-a: rgb(124 92 255 / 0.25);
-  --tk-blob-b: rgb(34 211 238 / 0.18);
-  --tk-stars:
-    radial-gradient(1.2px 1.2px at 28px 40px, rgb(255 255 255 / 0.35), transparent 55%),
-    radial-gradient(1px 1px at 130px 150px, rgb(255 255 255 / 0.22), transparent 55%);
-  --tk-grid: rgb(148 163 184 / 0.05);
-  --tk-surface: rgb(255 255 255 / 0.04);
-  --tk-line: rgb(255 255 255 / 0.1);
-  --tk-fg: #f1f5f9;
-  --tk-muted: #94a3b8;
-  --tk-accent-from: #8b5cf6;
-  --tk-accent-to: #22d3ee;
-  --tk-glow: rgb(139 92 246 / 0.4);
-  --tk-card-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  color-scheme: light;
+  --tk-bg: #f3f6fc;
+  --tk-blob-a: rgb(99 102 241 / 0.14);
+  --tk-blob-b: rgb(6 182 212 / 0.12);
+  --tk-stars: none;
+  --tk-grid: rgb(100 130 180 / 0.08);
+  --tk-surface: rgb(255 255 255 / 0.72);
+  --tk-line: rgb(100 130 180 / 0.18);
+  --tk-fg: #243044;
+  --tk-muted: #64748b;
+  --tk-accent-from: #5b63f5;
+  --tk-accent-to: #06b6d4;
+  --tk-glow: rgb(91 99 245 / 0.3);
+  --tk-card-shadow: 0 1px 2px rgb(30 60 120 / 0.08);
   --tk-font-display: "Sora Variable", "Noto Sans SC", ui-sans-serif, sans-serif;
   --tk-radius: 1rem;
   --tk-tilt: 0deg;
