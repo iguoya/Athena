@@ -267,10 +267,16 @@ class ProgressStore {
         correct INTEGER NOT NULL,
         duration_ms INTEGER NOT NULL DEFAULT 0,
         hesitant INTEGER NOT NULL DEFAULT 0,
-        at TEXT NOT NULL
+        at TEXT NOT NULL,
+        kind TEXT NOT NULL DEFAULT 'practice'
       )
     """);
     db.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_attempts ON attempts (question_id, at)");
+    // 老库升级：CREATE IF NOT EXISTS 不会给已有的表补列，手动加（ADR 0057）。
+    final columns = db.select("PRAGMA table_info(attempts)").map((r) => r["name"] as String).toSet();
+    if (!columns.contains("kind")) {
+      db.execute("ALTER TABLE attempts ADD COLUMN kind TEXT NOT NULL DEFAULT 'practice'");
+    }
     db.execute("""
       CREATE TABLE IF NOT EXISTS exams (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -414,30 +420,39 @@ class ProgressStore {
   @visibleForTesting
   void debugEnqueue(String kind, Map<String, Object?> payload) => _enqueue(kind, payload: payload);
 
+  /// 仅供测试：attempts 原始行（断言 kind 场合标记与用时封顶，ADR 0057）。
+  @visibleForTesting
+  List<Map<String, Object?>> debugAttempts() =>
+      _db.select("SELECT * FROM attempts ORDER BY at");
+
   Future<List<Notice>> recordAttempt({
     required String questionId,
     required String topicId,
     required String subjectId,
     required bool correct,
     int durationMs = 0,
+    String kind = "practice",
     String? topicTitle,
     DateTime? at,
   }) async {
     final stamp = (at ?? DateTime.now()).toIso8601String();
+    // 单题用时封顶 5 分钟（ADR 0057）：中途挂机的时间不是答题时间，截断而非记天文值。
+    final cappedMs = durationMs < 300000 ? durationMs : 300000;
     final beforeWrong = (await wrongQuestionIds()).length;
     _db.execute(
-      "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at) "
-      "VALUES (?, ?, ?, ?, ?, 0, ?)",
-      [questionId, topicId, subjectId, correct ? 1 : 0, durationMs, stamp],
+      "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind) "
+      "VALUES (?, ?, ?, ?, ?, 0, ?, ?)",
+      [questionId, topicId, subjectId, correct ? 1 : 0, cappedMs, stamp, kind],
     );
     _enqueue("attempts", payload: {
       "question_id": questionId,
       "topic_id": topicId,
       "subject_id": subjectId,
       "correct": correct,
-      "duration_ms": durationMs,
+      "duration_ms": cappedMs,
       "hesitant": false,
       "at": stamp,
+      "kind": kind,
     });
     final born = <Notice>[];
     if (correct) {
@@ -1104,14 +1119,15 @@ class ProgressStore {
       case "attempts":
         for (final item in items) {
           _db.execute(
-            "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO attempts (question_id, topic_id, subject_id, correct, duration_ms, hesitant, at, kind) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [
               item["question_id"], item["topic_id"], item["subject_id"],
               (item["correct"] is bool) ? ((item["correct"]! as bool) ? 1 : 0) : item["correct"],
               item["duration_ms"] ?? 0,
               ((item["hesitant"] ?? false) as bool) ? 1 : 0,
               item["at"],
+              item["kind"] ?? "practice",
             ],
           );
         }

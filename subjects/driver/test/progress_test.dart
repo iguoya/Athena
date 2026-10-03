@@ -18,6 +18,24 @@ void main() {
     await dir.delete(recursive: true);
   });
 
+  // 场合标记与用时封顶（ADR 0057）。
+  test("作答记录带场合标记，默认平时练习；模拟考显式传 exam", () async {
+    await store.recordAttempt(questionId: "k1", topicId: "t", subjectId: "s", correct: true);
+    await store.recordAttempt(questionId: "k2", topicId: "t", subjectId: "s", correct: false, kind: "exam");
+    final rows = {for (final r in store.debugAttempts()) r["question_id"]: r};
+    expect(rows["k1"]!["kind"], "practice");
+    expect(rows["k2"]!["kind"], "exam");
+  });
+
+  test("单题用时封顶 5 分钟：挂机十小时也按 300000 记", () async {
+    await store.recordAttempt(
+      questionId: "k3", topicId: "t", subjectId: "s", correct: true,
+      durationMs: 36947433, at: DateTime(2026, 10, 3, 10),
+    );
+    final row = store.debugAttempts().single;
+    expect(row["duration_ms"], 300000);
+  });
+
   // 考前复习的进出（ADR 0033、0035）：答对比答错多 1～2 次、且最近一次答对才出；再错回来。
   test("考前复习：答对比答错多 1～2 次才移出，错多次的也能出，再错一次回来", () async {
     Future<void> answer(String id, List<bool> results) async {

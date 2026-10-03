@@ -937,6 +937,8 @@ class _SessionStageState extends State<SessionStage> {
       subjectId: _launch.subjectId,
       correct: ok,
       durationMs: durationMs,
+      // 场合标记（ADR 0057）：模拟考与平时练习的逐题作答分列统计。
+      kind: _isExam ? "exam" : "practice",
     );
     if (!mounted) return;
     setState(() {
