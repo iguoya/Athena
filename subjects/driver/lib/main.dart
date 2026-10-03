@@ -45,8 +45,11 @@ class _BootstrapGateState extends State<BootstrapGate> {
   Bank? _bank;
   ProgressStore? _store;
   SyncEngine? _engine;
-  String? _user;
+  UserProfile? _profile;
   UserRegistry? _registry;
+
+  /// 本机还有单用户时代的 local.db 等着收编（选择页据此提示走续用）。
+  bool _legacyPending = false;
 
   @override
   void initState() {
@@ -60,20 +63,19 @@ class _BootstrapGateState extends State<BootstrapGate> {
       _bank ??= await ContentLoader.load();
       final registry = _registry ??= UserRegistry.load();
       if (registry.users.isEmpty) {
-        // 单用户时代的库文件还在：收编为首用户 tiger（ADR 0071，存量全归它）。
-        if (File(p.join(ProgressStore.userDataDir(), "local.db")).existsSync()) {
-          ProgressStore.adoptLegacyFiles("tiger");
-          registry.register("tiger");
-        } else {
-          setState(() => _stage = "first-user");
-          return;
-        }
+        // 首次使用进选择页。本机躺着单用户时代的 local.db 时提示走「续用」收编
+        // （ADR 0073 决策 4：客户端不猜首用户的 ID，ID 由迁移脚本生成、人分发一次）。
+        setState(() {
+          _legacyPending = File(p.join(ProgressStore.userDataDir(), "local.db")).existsSync();
+          _stage = "first-user";
+        });
+        return;
       }
       // 单用户不打扰直接进；多人记住上次用的（ADR 0071 决策 7）。
       if (registry.users.length == 1) {
         await _openAs(registry.users.first);
-      } else if (registry.last != null && registry.users.contains(registry.last)) {
-        await _openAs(registry.last!);
+      } else if (registry.last != null && registry.byId(registry.last!) != null) {
+        await _openAs(registry.byId(registry.last!)!);
       } else {
         setState(() => _stage = "pick");
       }
@@ -86,17 +88,18 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 
   /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
-  Future<void> _openAs(String user) async {
+  /// 身份认 [UserProfile.id]（ADR 0072）；侧栏显示的是显示名。
+  Future<void> _openAs(UserProfile profile) async {
     try {
       _engine?.stop();
       await _store?.close();
-      final store = await ProgressStore.open(user: user);
-      _registry?.setLast(user);
+      final store = await ProgressStore.open(user: profile.id);
+      _registry?.setLast(profile.id);
       final config = ApiConfig.load();
-      _engine = config == null ? null : _startEngine(store, _bank!, config, user);
+      _engine = config == null ? null : _startEngine(store, _bank!, config, profile.id);
       setState(() {
         _store = store;
-        _user = user;
+        _profile = profile;
         _stage = "ready";
       });
     } catch (error) {
@@ -116,17 +119,17 @@ class _BootstrapGateState extends State<BootstrapGate> {
     )..start();
   }
 
-  /// 侧栏用户行点进来换人：UserGateScreen pop 带回选中的名字（或新建后注册的名字）。
+  /// 侧栏用户行点进来换人：UserGateScreen pop 带回选中的学习者（含新建与改名后的最新名）。
   Future<void> _switchUser() async {
     final registry = _registry;
     if (registry == null) return;
-    final picked = await Navigator.of(context).push<String>(
+    final picked = await Navigator.of(context).push<UserProfile>(
       MaterialPageRoute(
         builder: (context) => UserGateScreen(users: registry.users, allowCancel: true),
         fullscreenDialog: true,
       ),
     );
-    if (picked == null || picked == _user || !mounted) return;
+    if (picked == null || picked.id == _profile?.id || !mounted) return;
     await _openAs(picked);
   }
 
@@ -141,10 +144,10 @@ class _BootstrapGateState extends State<BootstrapGate> {
     if (config == null || !mounted) return;
     final bank = _bank;
     final store = _store;
-    final user = _user;
-    if (bank == null || store == null || user == null) return;
+    final profile = _profile;
+    if (bank == null || store == null || profile == null) return;
     _engine?.stop();
-    _engine = _startEngine(store, bank, config.config, user);
+    _engine = _startEngine(store, bank, config.config, profile.id);
     setState(() {});
   }
 
@@ -167,7 +170,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: UserGateScreen(users: _registry?.users ?? const []),
+          home: UserGateScreen(users: _registry?.users ?? const [], legacyHint: _legacyPending),
         ),
       "config" => MaterialApp(
           title: "驾考学习",
@@ -176,9 +179,9 @@ class _BootstrapGateState extends State<BootstrapGate> {
             onSavedDirect: (config) {
               final bank = _bank;
               final store = _store;
-              final user = _user;
-              if (bank == null || store == null || user == null) return;
-              _engine = _startEngine(store, bank, config, user);
+              final profile = _profile;
+              if (bank == null || store == null || profile == null) return;
+              _engine = _startEngine(store, bank, config, profile.id);
               setState(() => _stage = "ready");
             },
           ),
@@ -187,7 +190,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
       "ready" => DriverApp(
           bank: _bank!,
           store: _store!,
-          currentUser: _user!,
+          currentUser: _profile!.name,
           onSwitchUser: _switchUser,
           syncStatus: _engine?.status,
           onOpenConfig: _openConfig,
@@ -200,15 +203,25 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 }
 
-/// 选学习者 / 新建学习者（ADR 0071）：选名字直接进，不设口令。
+/// 选学习者 / 新建 / 改名 / 续用（ADR 0071、0072、0073）。选名字直接进，不设口令。
+///
+/// 学习者行显示名字与 ID——ID 是身份（改名不影响绑定），复制 ID 到另一台电脑的
+/// 「续用」框里就是同一份历史。[legacyHint] 为真说明本机躺着单用户时代的旧库，
+/// 引导用迁移脚本打印的 ID 收编（ADR 0073 决策 4：客户端不猜首用户）。
 ///
 /// 两种挂法：启动门把它当 home（选择后直接调启动门换库）；应用内从侧栏 push 进来
-/// （pop 带回名字）。[allowCancel] 只在后者有意义。
+/// （pop 带回学习者）。[allowCancel] 只在后者有意义。
 class UserGateScreen extends StatefulWidget {
-  const UserGateScreen({super.key, required this.users, this.allowCancel = false});
+  const UserGateScreen({
+    super.key,
+    required this.users,
+    this.allowCancel = false,
+    this.legacyHint = false,
+  });
 
-  final List<String> users;
+  final List<UserProfile> users;
   final bool allowCancel;
+  final bool legacyHint;
 
   @override
   State<UserGateScreen> createState() => _UserGateScreenState();
@@ -216,30 +229,86 @@ class UserGateScreen extends StatefulWidget {
 
 class _UserGateScreenState extends State<UserGateScreen> {
   final _name = TextEditingController();
+  final _adoptId = TextEditingController();
+  final _adoptName = TextEditingController();
   String _error = "";
 
   @override
   void dispose() {
     _name.dispose();
+    _adoptId.dispose();
+    _adoptName.dispose();
     super.dispose();
   }
 
-  void _done(String name) {
+  UserRegistry get _registry =>
+      context.findAncestorStateOfType<_BootstrapGateState>()?._registry ?? UserRegistry.load();
+
+  void _done(UserProfile profile) {
     final gate = context.findAncestorStateOfType<_BootstrapGateState>();
     if (gate != null && !ModalRoute.of(context)!.isFirst) {
-      Navigator.of(context).pop(name);
+      Navigator.of(context).pop(profile);
     } else {
-      gate?._openAs(name);
+      gate?._openAs(profile);
     }
   }
 
   void _create() {
     try {
-      final name = _name.text;
-      UserRegistry.validate(name);
+      final profile = _registry.register(_name.text);
+      _done(profile);
+    } on FormatException catch (error) {
+      setState(() => _error = error.message);
+    }
+  }
+
+  void _adopt() {
+    try {
+      // 续用另一台电脑的学习者：ID 决定身份，名字本机自己叫。
+      final profile = _registry.register(
+        _adoptName.text.trim().isEmpty ? _adoptId.text.trim() : _adoptName.text,
+        withId: _adoptId.text,
+      );
+      // 旧 local.db 只可能属于原单用户；续用的 ID 若正是他（迁移脚本生成、人分发
+      // 的那个），顺手把文件改名归位。新建学习者不碰旧文件（ADR 0073）。
       final gate = context.findAncestorStateOfType<_BootstrapGateState>();
-      (gate?._registry ?? UserRegistry.load()).register(name);
-      _done(name.trim());
+      if (gate != null && gate._legacyPending) {
+        ProgressStore.adoptLegacyFiles(profile.id);
+        gate._legacyPending = false;
+      }
+      _done(profile);
+    } on FormatException catch (error) {
+      setState(() => _error = error.message);
+    }
+  }
+
+  Future<void> _rename(UserProfile profile) async {
+    final controller = TextEditingController(text: profile.name);
+    final saved = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("改「${profile.name}」的名字"),
+        content: SizedBox(
+          width: 420,
+          child: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: const InputDecoration(
+              helperText: "只改这台机器上的称呼；学习记录的绑定看 ID，改名不受影响。",
+            ),
+            onSubmitted: (value) => Navigator.of(context).pop(value),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("取消")),
+          FilledButton(onPressed: () => Navigator.of(context).pop(controller.text), child: const Text("保存")),
+        ],
+      ),
+    );
+    if (saved == null) return;
+    try {
+      _registry.rename(profile.id, saved);
+      setState(() {}); // 列表与 registry 共享同一 List 引用，重建即见新名
     } on FormatException catch (error) {
       setState(() => _error = error.message);
     }
@@ -250,7 +319,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
+          constraints: const BoxConstraints(maxWidth: 520),
           child: Padding(
             padding: const EdgeInsets.all(28),
             child: Column(
@@ -264,16 +333,37 @@ class _UserGateScreenState extends State<UserGateScreen> {
                   style: TextStyle(height: 1.5),
                 ),
                 const SizedBox(height: 20),
-                for (final name in widget.users)
+                for (final profile in widget.users)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () => _done(name),
-                        icon: const Icon(Glyph.user),
-                        label: Align(alignment: Alignment.centerLeft, child: Text(name)),
-                      ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () => _done(profile),
+                            icon: const Icon(Glyph.user),
+                            label: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(profile.name),
+                                  // ID 是「我是谁」的最终答案（ADR 0072 决策 5）：可见、可选中复制。
+                                  SelectableText(
+                                    profile.id,
+                                    style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: "改名",
+                          onPressed: () => _rename(profile),
+                          icon: const Icon(Glyph.edit, size: 18),
+                        ),
+                      ],
                     ),
                   ),
                 if (widget.users.isNotEmpty) const Divider(height: 28),
@@ -282,10 +372,31 @@ class _UserGateScreenState extends State<UserGateScreen> {
                   autofocus: widget.users.isEmpty,
                   decoration: const InputDecoration(
                     labelText: "新学习者的名字",
-                    helperText: "两台电脑起同一个名字，共享的就是同一份记录。",
+                    helperText: "新学习者有全新的空白记录；想接着已有的记录用下面的续用。",
                   ),
                   onSubmitted: (_) => _create(),
                 ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _adoptId,
+                  decoration: const InputDecoration(
+                    labelText: "续用已有的学习者：输入 ID",
+                    helperText: "在另一台电脑的学习者一栏里选中那串 ID 复制过来。",
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _adoptName,
+                  decoration: const InputDecoration(labelText: "在这台电脑上叫（可空，默认用 ID）"),
+                ),
+                if (widget.legacyHint) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    "这台电脑上有一份单用户时代的本地记录：用迁移脚本打印的学习者 ID 续用，"
+                    "记录会原样归到这个名下（ADR 0073）。",
+                    style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.primary, height: 1.4),
+                  ),
+                ],
                 if (_error.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Text(_error, style: TextStyle(color: Theme.of(context).colorScheme.error)),
@@ -294,6 +405,8 @@ class _UserGateScreenState extends State<UserGateScreen> {
                 Row(
                   children: [
                     FilledButton(onPressed: _create, child: const Text("新建并进入")),
+                    const SizedBox(width: 12),
+                    OutlinedButton(onPressed: _adopt, child: const Text("续用并进入")),
                     if (widget.allowCancel) ...[
                       const SizedBox(width: 12),
                       TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
