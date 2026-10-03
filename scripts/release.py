@@ -14,14 +14,20 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
   python3 scripts/release.py push                         # 第二阶段：推送并触发 CI
   python3 scripts/release.py push 8.2.0                   # push 时显式指定版本
 
-两阶段，中间留人工润色的位置：
+两阶段，中间不需要人工：
   1. prepare：校验前提（main、干净、与远端同步、版本只增、tag 未占用）→
-     bump subjects/cpp/meson.build → CHANGELOG 缺节时按提交预生成 →
+     bump subjects/cpp/meson.build → CHANGELOG 缺节时先按提交生成机械底稿，
+     再交给 GLM 对照上一版的手写风格总结润色（不是提交标题堆砌）→
      提交「chore(release): x.y.z」→ 打 tag v x.y.z。
-     自动生成的 CHANGELOG 只是提交标题的堆砌；想润色就编辑后
-     `git commit --amend --no-edit && git tag -f v x.y.z`。
   2. push：确认 tag 指向 HEAD → `git push origin main v x.y.z` →
      打印查看 CI 的命令。此后构建与发布全部由 CI 接手。
+
+AI 润色的降级链（任何一步失败都保留机械底稿，不阻塞发版）：
+  · 没设 ZAI_API_KEY → 跳过润色，底稿留待手工或 agent 会话里改写；
+  · API 调用失败（网络、额度、模型名）→ 警告并保留底稿；
+  · 润色结果过不了院所名检查（ADR 0055）→ 丢弃，保留底稿。
+模型用 --model 或环境变量 ATHENA_RELEASE_MODEL 覆盖，默认 glm-4.7-flash。
+在 agent 会话里发版时也可以不让脚本润色，由 agent 直接改写后再提交。
 
 meson 版本必须预提交：release.yml 三个 cpp job 都用 tag 校验 meson 版本，
 这是既有的防呆（tag 与构建物必须一致）。driver、拾阶的版本由 CI 从 tag
@@ -31,9 +37,13 @@ meson 版本必须预提交：release.yml 三个 cpp job 都用 tag 校验 meson
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import re
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -43,6 +53,14 @@ CHANGELOG_NOTES = REPO_ROOT / "subjects/cpp/scripts/changelog_notes.py"
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 MESON_VERSION_RE = re.compile(r"(^  version: ')(\d+\.\d+\.\d+)(')", re.MULTILINE)
 CHANGELOG_SECTION_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\]", re.MULTILINE)
+SECTION_BLOCK_RE = re.compile(
+    r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## \[|\Z)", re.MULTILINE | re.DOTALL
+)
+ZAI_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+DEFAULT_MODEL = "glm-4.7-flash"
+# 与 scripts/check.py 的 run_redaction_check 同一个禁用词（ADR 0055）。写成转义
+# 是仓库规则：字面量会让全仓扫描把本文件报成违规。
+FORBIDDEN_INSTITUTE = "\u5341\u4e03\u6240"
 
 
 def run(args: list[str], *, capture: bool = True) -> subprocess.CompletedProcess[str]:
@@ -121,25 +139,96 @@ def bump_meson(target: str, dry_run: bool) -> None:
     print(f"  {MESON_BUILD.relative_to(REPO_ROOT)}：version → {target}", flush=True)
 
 
-def ensure_changelog(target: str, dry_run: bool) -> None:
+def extract_section(target: str) -> str:
+    for match in SECTION_BLOCK_RE.finditer(CHANGELOG.read_text(encoding="utf-8")):
+        if match.group(1) == target:
+            return match.group(2).strip()
+    return ""
+
+
+def replace_section(target: str, body: str) -> None:
+    text = CHANGELOG.read_text(encoding="utf-8")
+    for match in SECTION_BLOCK_RE.finditer(text):
+        if match.group(1) != target:
+            continue
+        title_end = text.index("\n", match.start()) + 1
+        CHANGELOG.write_text(text[:title_end] + body.strip() + "\n" + text[match.end():], encoding="utf-8")
+        return
+
+
+def ai_polish(target: str, model: str) -> str | None:
+    """把机械底稿交给 GLM 对照上一版手写风格重写；失败一律返回 None 保留底稿。"""
+    key = os.environ.get("ZAI_API_KEY")
+    if not key:
+        print("  ⚠ 未设 ZAI_API_KEY，跳过 AI 润色，CHANGELOG 保留机械底稿", flush=True)
+        return None
+    draft = extract_section(target)
+    style_sample = next(
+        (m.group(2).strip() for m in SECTION_BLOCK_RE.finditer(CHANGELOG.read_text(encoding="utf-8")) if m.group(1) != target),
+        "",
+    )
+    system = (
+        "你是 Athena 仓库的发版编辑。把 CHANGELOG 某一版的机械汇总改写成可读的发版说明："
+        "提炼主线（哪几条工作线各自做成了什么），合并同一主题的多个提交，每条用人话写；"
+        "保留小节分类结构（如「### 驾考 subjects/driver」「### 启动器与基础设施」「### 文档」），按内容归属分类；"
+        "不出现 feat/fix 等提交前缀，不编造提交里没有的内容，全文中文。"
+        "硬规则：软件内容不出现具体院所名，一律用「某所」。只输出该节正文，不要标题行和代码围栏。"
+    )
+    user = f"版本：{target}\n\n【上一版手写节（风格基准）】\n{style_sample}\n\n【本版机械底稿】\n{draft}"
+    body = json.dumps(
+        {
+            "model": model,
+            "temperature": 0.3,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        }
+    ).encode()
+    request = urllib.request.Request(
+        ZAI_ENDPOINT,
+        data=body,
+        headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response:
+            content = json.load(response)["choices"][0]["message"]["content"]
+    except (urllib.error.URLError, OSError, KeyError, IndexError, json.JSONDecodeError) as error:
+        print(f"  ⚠ AI 润色调用失败（{error}），保留机械底稿", flush=True)
+        return None
+    content = content.strip()
+    content = re.sub(r"^```(?:markdown)?\n|\n```$", "", content).strip()
+    if not content or "## [" in content or FORBIDDEN_INSTITUTE in content:
+        print("  ⚠ AI 润色结果不合格（越权改标题或触犯内容规则），保留机械底稿", flush=True)
+        return None
+    return content
+
+
+def ensure_changelog(target: str, model: str, dry_run: bool) -> None:
     sections = CHANGELOG_SECTION_RE.findall(CHANGELOG.read_text(encoding="utf-8"))
     if target in sections:
         print(f"  CHANGELOG 已有 [{target}] 节，原样保留", flush=True)
         return
     if dry_run:
-        print(f"  [dry] CHANGELOG 预生成 [{target}] 节（changelog_notes.py --write）")
+        polish = "GLM 润色" if os.environ.get("ZAI_API_KEY") else "机械底稿（未设 ZAI_API_KEY）"
+        print(f"  [dry] CHANGELOG 生成 [{target}] 节：changelog_notes.py 底稿 + {polish}")
         return
     result = run([sys.executable, str(CHANGELOG_NOTES), target, str(CHANGELOG), "--write"])
     if result.returncode != 0:
-        die(f"CHANGELOG 预生成失败：\n{result.stderr.strip()}")
-    print("  CHANGELOG 预生成了 [" + target + "] 节——是提交标题的堆砌，建议润色后再 push", flush=True)
+        die(f"CHANGELOG 底稿生成失败：\n{result.stderr.strip()}")
+    polished = ai_polish(target, model)
+    if polished:
+        replace_section(target, polished)
+        print(f"  CHANGELOG [{target}] 节已由 {model} 对照上一版风格总结润色", flush=True)
+    else:
+        print(f"  CHANGELOG [{target}] 节保留机械底稿，可手工或由 agent 会话改写", flush=True)
 
 
-def prepare(target: str, dry_run: bool) -> None:
+def prepare(target: str, model: str, dry_run: bool) -> None:
     print(f"发版准备 {target}：", flush=True)
     check_prerequisites(target)
     bump_meson(target, dry_run)
-    ensure_changelog(target, dry_run)
+    ensure_changelog(target, model, dry_run)
     if dry_run:
         print("dry-run 结束，未做任何改动。")
         return
@@ -148,7 +237,7 @@ def prepare(target: str, dry_run: bool) -> None:
     git("tag", f"v{target}")
     print(
         f"已提交并打 tag v{target}。接下来：\n"
-        f"  · 润色 CHANGELOG（可选）：编辑后 git commit --amend --no-edit && git tag -f v{target}\n"
+        f"  · 过目 CHANGELOG 的 [{target}] 节，不合意就编辑后 git commit --amend --no-edit && git tag -f v{target}\n"
         f"  · 确认无误：python3 scripts/release.py push",
         flush=True,
     )
@@ -183,13 +272,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="一键发版（ADR 0081），详见文件头 docstring")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_prepare = sub.add_parser("prepare", help="第一阶段：bump 版本、预生成 CHANGELOG、打 tag")
+    p_prepare = sub.add_parser("prepare", help="第一阶段：bump 版本、AI 润色 CHANGELOG、打 tag")
     target = p_prepare.add_mutually_exclusive_group()
     target.add_argument("--major", action="store_true", help="主版本 +1")
     target.add_argument("--minor", action="store_true", help="次版本 +1")
     target.add_argument("--patch", action="store_true", help="修订号 +1")
     target.add_argument("version", nargs="?", help="显式版本号 x.y.z")
     p_prepare.add_argument("--dry-run", action="store_true", help="只预览要做的改动")
+    p_prepare.add_argument(
+        "--model",
+        default=os.environ.get("ATHENA_RELEASE_MODEL", DEFAULT_MODEL),
+        help=f"CHANGELOG 润色用的模型（默认 {DEFAULT_MODEL}，可用环境变量 ATHENA_RELEASE_MODEL 覆盖）",
+    )
 
     p_push = sub.add_parser("push", help="第二阶段：推送 main 与发版 tag，触发 CI")
     p_push.add_argument("version", nargs="?", help="显式版本号（默认取最近的发版 tag）")
@@ -202,7 +296,7 @@ def main() -> int:
             p_prepare.error("显式版本号与 --major/--minor/--patch 别同时给")
         if not args.version and not (args.major or args.minor or args.patch):
             p_prepare.error("给一个版本号，或 --major/--minor/--patch 之一")
-        prepare(parse_target(args), args.dry_run)
+        prepare(parse_target(args), args.model, args.dry_run)
     return 0
 
 
