@@ -48,8 +48,7 @@
 ## 验证
 
 - `python3 scripts/check.py`:app.json 合法性 + `vue-tsc` 类型检查 + `vite build`。
-- 根目录 `python3 scripts/check.py math-tools` 透传到本脚本;`--sources-only` 覆盖
-  院所名扫描(ADR 0055,软件内容不写具体院所名)。
+- 根目录 `python3 scripts/check.py math-tools` 透传到本脚本。
 
 ## 约定
 

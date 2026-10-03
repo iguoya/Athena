@@ -25,7 +25,6 @@ CI（.github/workflows/release.yml）已经包揽构建、打包、发布和拾�
 AI 润色的降级链（任何一步失败都保留机械底稿，不阻塞发版）：
   · 没设 ZAI_API_KEY → 跳过润色，底稿留待手工或 agent 会话里改写；
   · API 调用失败（网络、额度、模型名）→ 警告并保留底稿；
-  · 润色结果过不了院所名检查（ADR 0055）→ 丢弃，保留底稿。
 模型用 --model 或环境变量 ATHENA_RELEASE_MODEL 覆盖，默认 glm-4.7-flash。
 在 agent 会话里发版时也可以不让脚本润色，由 agent 直接改写后再提交。
 
@@ -58,9 +57,6 @@ SECTION_BLOCK_RE = re.compile(
 )
 ZAI_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 DEFAULT_MODEL = "glm-4.7-flash"
-# 与 scripts/check.py 的 run_redaction_check 同一个禁用词（ADR 0055）。写成转义
-# 是仓库规则：字面量会让全仓扫描把本文件报成违规。
-FORBIDDEN_INSTITUTE = "\u5341\u4e03\u6240"
 
 
 def run(args: list[str], *, capture: bool = True) -> subprocess.CompletedProcess[str]:
@@ -172,7 +168,7 @@ def ai_polish(target: str, model: str) -> str | None:
         "提炼主线（哪几条工作线各自做成了什么），合并同一主题的多个提交，每条用人话写；"
         "保留小节分类结构（如「### 驾考 subjects/driver」「### 启动器与基础设施」「### 文档」），按内容归属分类；"
         "不出现 feat/fix 等提交前缀，不编造提交里没有的内容，全文中文。"
-        "硬规则：软件内容不出现具体院所名，一律用「某所」。只输出该节正文，不要标题行和代码围栏。"
+        "只输出该节正文，不要标题行和代码围栏。"
     )
     user = f"版本：{target}\n\n【上一版手写节（风格基准）】\n{style_sample}\n\n【本版机械底稿】\n{draft}"
     body = json.dumps(
@@ -198,8 +194,8 @@ def ai_polish(target: str, model: str) -> str | None:
         return None
     content = content.strip()
     content = re.sub(r"^```(?:markdown)?\n|\n```$", "", content).strip()
-    if not content or "## [" in content or FORBIDDEN_INSTITUTE in content:
-        print("  ⚠ AI 润色结果不合格（越权改标题或触犯内容规则），保留机械底稿", flush=True)
+    if not content or "## [" in content:
+        print("  ⚠ AI 润色结果不合格（越权改标题），保留机械底稿", flush=True)
         return None
     return content
 

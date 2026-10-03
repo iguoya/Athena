@@ -70,7 +70,7 @@ ADR 里写清成本、收益与降级，应用文档里写明哪个平台不支�
 ```sh
 python3 scripts/check.py            # 跨应用内容出处检查 + 每个应用自己的检查
 python3 scripts/check.py cpp        # 只跑某个应用，余下参数原样透传给它
-python3 scripts/check.py --sources-only   # 只跑跨应用检查（院所名、skill 两处一致、出处）
+python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处）
 ```
 
 检查逻辑归各应用自己（`subjects/<id>/` 与 `practice/<id>/` 下的 `scripts/check.py`），根入口只负责依次调用，

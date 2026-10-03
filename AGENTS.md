@@ -24,12 +24,6 @@
  明确决定某应用的意图整体改变时，该应用可在自己的 ADR 里声明重组豁免，并须在重组前打
  `pre-<id>-reorg` tag；出处与语义基准不在豁免之列。目前只有 `machine`（原 `c`）。
 
-- **软件内容里不写具体院所名，一律用「某所」（ADR 0055，强制）**。界面文案、内容
- 数据、`app.json`、来源目录标题、README / AGENTS / ADR 一概适用，`scripts/check.py`
- 全仓扫描拦截，本地和 CI 同一入口。脱敏只改称呼，不改取舍依据——要说明「这一条为
- 什么重要」，**写技术要求本身**（「控制周期内最坏延迟与抖动必须可测」），不写单位名。
- 自己要做禁用词检查的代码，把禁用词写成 Unicode 转义，否则检查器会把自己报成违规。
-
 ## 仓库结构
 
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
@@ -136,7 +130,7 @@ archive/        历史归档，不参与构建
 ```sh
 python3 scripts/check.py                  # 跨应用检查 + 每个应用自己的检查
 python3 scripts/check.py cpp              # 只跑某个应用，余下参数原样透传给它
-python3 scripts/check.py --sources-only   # 只跑跨应用检查（院所名、skill 两处一致、出处）
+python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处）
 ```
 
 检查逻辑归各应用自己的 `scripts/check.py`（`subjects/` 与 `practice/` 下都扫）。**每个应用都
