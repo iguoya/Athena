@@ -43,5 +43,8 @@
 - 给拾阶推急修也要全量发版。接受：个人仓库发版频率低，急修频率更低，全量构建时长可容忍。
 - 发版前 CHANGELOG 各应用小节要写全，统一 Release 的说明才完整。
 - `release.yml` 变长，但发版心智只剩一条：打 `v*` tag。
+- 发版操作入口是 `scripts/release.py`：`prepare` 校验前提、bump meson 版本、按提交预生成
+  CHANGELOG 节并打 tag；`push` 推送并触发 CI。两阶段之间留人工润色 CHANGELOG 的位置；
+  meson 版本必须预提交（CI 用 tag 校验它），driver、拾阶的版本由 CI 写入，不进仓库。
 - 已发布的历史 Release 与 `ascent-updates` 标签不动，历史提交不改写；`c115dd4` 的行为由
   后续提交回退，git 历史保留。
