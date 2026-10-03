@@ -344,7 +344,9 @@ class SyncEngine {
     for (final key in keys) {
       try {
         final data = await _send("GET", "/exam-drafts/$key", null);
-        _store.applyRemoteDraft(key, ExamDraft.fromApi((data["draft"] as Map).cast<String, Object?>()));
+        // 真实服务端把草稿字段直接放在响应顶层；早先的假服务端多包了一层 draft。两种都认。
+        final raw = (data["draft"] is Map ? data["draft"] as Map : data).cast<String, Object?>();
+        _store.applyRemoteDraft(key, ExamDraft.fromApi(raw));
       } on SyncNotFound {
         // 404：服务端没有这份草稿（别处交卷后删了）。
         _store.applyRemoteDraft(key, null);

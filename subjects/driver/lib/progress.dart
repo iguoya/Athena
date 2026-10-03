@@ -10,6 +10,10 @@ import "app_root.dart";
 import "models.dart";
 import "reinforce.dart";
 
+/// 服务端的标志位（hesitant、read、full_bank…）存的是 0/1 整数，拉回来就是整数；客户端自己
+/// 上传时用的是布尔。两种都认，缺省当假——不能直接 `as bool`，对着真实服务端会崩。
+bool asFlag(Object? value) => value is bool ? value : (value is num && value != 0);
+
 /// 新会话的标识：16 位随机十六进制，不含任何个人信息或设备信息（主仓库 ADR 0076 决策 3）。
 String newSessionId() {
   final random = Random.secure();
@@ -105,7 +109,7 @@ class ExamDraft {
           for (final entry in (jsonDecode(row["mix"]! as String) as Map<String, dynamic>).entries)
             entry.key: entry.value as int,
         },
-        fullBank: (row["full_bank"]! as bool),
+        fullBank: asFlag(row["full_bank"]),
         picked: {
           for (final entry in (jsonDecode(row["picked"]! as String) as Map<String, dynamic>).entries)
             int.parse(entry.key): {for (final id in entry.value as List<dynamic>) id as String},
@@ -1217,7 +1221,7 @@ class ProgressStore {
               item["question_id"], item["topic_id"], item["subject_id"],
               (item["correct"] is bool) ? ((item["correct"]! as bool) ? 1 : 0) : item["correct"],
               item["duration_ms"] ?? 0,
-              ((item["hesitant"] ?? false) as bool) ? 1 : 0,
+              asFlag(item["hesitant"]) ? 1 : 0,
               item["at"],
               item["kind"] ?? "practice",
               item["chosen"], item["session_id"], item["reason"],
@@ -1248,7 +1252,7 @@ class ProgressStore {
             "INSERT OR IGNORE INTO notices (kind, title, body, at, read) VALUES (?, ?, ?, ?, ?)",
             [
               item["kind"], item["title"], item["body"], item["at"],
-              ((item["read"] ?? false) as bool) ? 1 : 0,
+              asFlag(item["read"]) ? 1 : 0,
             ],
           );
         }

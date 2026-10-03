@@ -149,6 +149,33 @@ void main() {
       expect(store.debugExplainViews().single["dwell_ms"], 7000);
     });
 
+    test("服务端的标志位是 0/1 整数：拉回来的作答、通知、草稿都认（对着真实服务端会崩的老毛病）", () async {
+      final store = await ProgressStore.open(suite: "attribution_g");
+      addTearDown(store.close);
+      store.applyRemote("attempts", [
+        {"question_id": "q1", "topic_id": "t", "subject_id": "s", "correct": 1, "hesitant": 0, "at": "2026-10-03T09:00:00.000"},
+        {"question_id": "q2", "topic_id": "t", "subject_id": "s", "correct": 0, "hesitant": 1, "at": "2026-10-03T09:01:00.000"},
+      ]);
+      store.applyRemote("notices", [
+        {"kind": "k", "title": "t1", "body": "b", "at": "2026-10-03T09:00:00.000", "read": 1},
+        {"kind": "k", "title": "t2", "body": "b", "at": "2026-10-03T09:01:00.000", "read": 0},
+      ]);
+      store.applyRemote("exams", [
+        {"subject_id": "subject1", "score": 91, "passed": 1, "at": "2026-10-03T10:00:00.000"},
+      ]);
+      expect(store.debugAttempts().map((r) => (r["correct"], r["hesitant"])), [(1, 0), (0, 1)]);
+      expect(store.debugExams().single["passed"], 1);
+      final draft = ExamDraft.fromApi({
+        "subject_id": "subject1", "title": "模拟考", "question_ids": '["a"]', "question_count": 1, "minutes": 45,
+        "pass_score": 90, "points_per_question": 1, "mix": "{}", "full_bank": 1, "picked": "{}",
+        "started_at": "2026-10-03T09:00:00.000", "saved_at": null, "session_id": null,
+      });
+      expect(draft.fullBank, isTrue);
+      expect(asFlag(0), isFalse);
+      expect(asFlag(null), isFalse);
+      expect(asFlag(true), isTrue);
+    });
+
     test("会话 id：16 位十六进制，彼此不同，不含个人信息", () {
       final ids = {for (var i = 0; i < 50; i++) newSessionId()};
       expect(ids, hasLength(50));

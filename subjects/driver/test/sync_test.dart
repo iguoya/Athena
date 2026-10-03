@@ -19,6 +19,15 @@ class FakeApi {
   final Map<String, String> _achievements = {};
   final Map<String, Map<String, Object?>> _drafts = {};
 
+  /// 真实服务端的标志位存成 0/1 整数，拉回来也是整数；客户端上传时用布尔。假服务端照真实的来，
+  /// 否则「拉回来是整数」这一类错误（`as bool` 强转崩）在测试里永远测不出来。
+  static const _flags = {"correct", "hesitant", "passed", "read", "full_bank"};
+
+  static Map<String, Object?> _serverShape(Map<String, Object?> row) => {
+        for (final entry in row.entries)
+          entry.key: _flags.contains(entry.key) && entry.value is bool ? ((entry.value! as bool) ? 1 : 0) : entry.value,
+      };
+
   static final _dedupe = <String, int Function(Map<String, Object?>, String)>{
     "attempts": (m, u) => Object.hash(u, m["question_id"], m["at"]),
     "exams": (m, u) => Object.hash(u, m["subject_id"], m["at"]),
@@ -130,7 +139,7 @@ class FakeApi {
           }
           known.add(key);
           _ids[resource] = (_ids[resource] ?? 0) + 1;
-          list.add({...item, "user": user, "id": _ids[resource]});
+          list.add({..._serverShape(item), "user": user, "id": _ids[resource]});
           inserted++;
         }
         _json(response, 200, {"inserted": inserted, "skipped": skipped});
@@ -140,7 +149,7 @@ class FakeApi {
 
     if (method == "POST" && path == "/notices/read-all") {
       for (final row in _rows["notices"] ?? const <Map<String, Object?>>[]) {
-        if (row["user"] == user) row["read"] = true;
+        if (row["user"] == user) row["read"] = 1;
       }
       _json(response, 200, {"updated": 0});
       return;
@@ -177,7 +186,8 @@ class FakeApi {
         if (draft == null) {
           _json(response, 404, {"error": "not_found"});
         } else {
-          _json(response, 200, {"draft": draft});
+          // 真实服务端把草稿字段直接放在响应顶层，不再包一层 draft。
+          _json(response, 200, draft);
         }
         return;
       }
@@ -186,7 +196,7 @@ class FakeApi {
         final existing = _drafts[full];
         final incoming = (body["saved_at"] as String?) ?? "";
         if (existing == null || incoming.compareTo((existing["saved_at"] as String?) ?? "") > 0) {
-          _drafts[full] = body;
+          _drafts[full] = _serverShape(body);
           _json(response, 200, {"applied": true});
         } else {
           _json(response, 200, {"applied": false});

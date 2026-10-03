@@ -95,7 +95,9 @@ API 读写的是中心库 `athena_driver` 的全部个人数据表。
 角色若是在建表之前授的权，新表需要补授 `SELECT, INSERT, UPDATE, DELETE`（`ALTER DEFAULT PRIVILEGES`
 设置过的话自动具备）。
 
-拉取响应：`{"items":[...], "has_more": bool, "next_after_id": N}`。下次从 `next_after_id` 继续；
+拉取响应：`{"items":[...], "has_more": bool, "next_after_id": N}`。**标志位**（`correct`、`hesitant`、
+`passed`、`read`、`full_bank`）上传时可以用 0/1 或 true/false，但**拉回来一律是 0/1 整数**，客户端不要直接当布尔强转。
+`GET /exam-drafts/<key>` 的字段**直接放在响应顶层**（不包一层 `draft`）。下次从 `next_after_id` 继续；
 `has_more` 为 false 就是拉完了。
 
 校验规则（违反一律 400，**整批拒绝、不会写一半**）：
