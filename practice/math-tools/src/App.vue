@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Home, Grid3x3, LineChart, Sun, Moon, Sigma } from 'lucide-vue-next'
+import { Home, Grid3x3, LineChart, BookOpen, Sun, Moon, Sigma } from 'lucide-vue-next'
 import HomeView from './views/HomeView.vue'
 import MatrixView from './views/MatrixView.vue'
 import PlotView from './views/PlotView.vue'
+import CurriculumView from './views/CurriculumView.vue'
 
-type TabId = 'home' | 'matrix' | 'plot'
+type TabId = 'home' | 'curriculum' | 'matrix' | 'plot'
 
 const tabs: { id: TabId; label: string; icon: typeof Home }[] = [
   { id: 'home', label: '首页', icon: Home },
+  { id: 'curriculum', label: '练习纲要', icon: BookOpen },
   { id: 'matrix', label: '矩阵实验室', icon: Grid3x3 },
   { id: 'plot', label: '函数绘图', icon: LineChart },
 ]
@@ -83,6 +85,7 @@ function toggleTheme() {
         <div v-if="active === 'home'" key="home" class="mx-auto max-w-5xl px-10 py-10">
           <HomeView @open="active = $event" />
         </div>
+        <CurriculumView v-else-if="active === 'curriculum'" key="curriculum" class="mx-auto max-w-4xl px-10 py-10" />
         <MatrixView v-else-if="active === 'matrix'" key="matrix" class="mx-auto max-w-5xl px-10 py-10" />
         <PlotView v-else key="plot" class="h-full" />
       </Transition>
