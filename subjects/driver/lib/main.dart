@@ -52,6 +52,9 @@ class _BootstrapGateState extends State<BootstrapGate> {
   /// 侧栏触发的换人与配置页都经它 push。
   final _navigatorKey = GlobalKey<NavigatorState>();
 
+  /// 应用内的提示条：新建学习者后告诉使用者分到的编号，不弹窗拦人（ADR 0078）。
+  final _messengerKey = GlobalKey<ScaffoldMessengerState>();
+
   /// 本机还有单用户时代的 local.db 等着认领（登录后询问归到谁名下）。
   bool _legacyPending = false;
 
@@ -90,12 +93,27 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 
   /// 登录页选定学习者后进入应用；[adoptLegacy] 为真时先把旧的单用户本地库归到他名下。
-  Future<void> _enter(UserProfile profile, bool adoptLegacy) async {
+  Future<void> _enter(UserProfile profile, bool adoptLegacy, bool created) async {
     if (adoptLegacy) {
       ProgressStore.adoptLegacyFiles(profile.id);
       _legacyPending = false;
     }
     await _openAs(profile);
+    if (created) _showWelcome(profile);
+  }
+
+  /// 新建学习者后的提示：编号用一条不挡路的提示条告诉他（ADR 0078 决策 2）。
+  /// 等进入应用的那一帧画完再弹，提示条才挂得上。
+  void _showWelcome(UserProfile profile) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _messengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text("已新建学习者「${profile.name}」，编号 ${profile.id}。在别的电脑登录时如果遇到同名，会问这个编号。"),
+          duration: const Duration(seconds: 15),
+          showCloseIcon: true,
+        ),
+      );
+    });
   }
 
   /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
@@ -143,6 +161,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
     final registry = _registry;
     final navigator = _navigatorKey.currentState;
     if (registry == null || navigator == null) return;
+    String? createdId; // 这次是不是在登录页顺手新建的
     final picked = await navigator.push<UserProfile>(
       MaterialPageRoute(
         builder: (context) => UserGateScreen(
@@ -150,7 +169,10 @@ class _BootstrapGateState extends State<BootstrapGate> {
           directoryFactory: _directory,
           currentUser: _profile,
           allowCancel: true,
-          onPicked: (profile, _) => Navigator.of(context).pop(profile),
+          onPicked: (profile, _, created) {
+            if (created) createdId = profile.id;
+            Navigator.of(context).pop(profile);
+          },
           onRenamed: _onRenamed,
         ),
         fullscreenDialog: true,
@@ -158,6 +180,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
     );
     if (picked == null || picked.id == _profile?.id || !mounted) return;
     await _openAs(picked);
+    if (createdId == picked.id) _showWelcome(picked);
   }
 
   /// 侧栏同步行点进来重新配置：保存后换引擎重启同步，跳过则维持现状。
@@ -226,6 +249,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
           store: _store!,
           currentUser: _profile!.name,
           navigatorKey: _navigatorKey,
+          messengerKey: _messengerKey,
           onSwitchUser: _switchUser,
           syncStatus: _engine?.status,
           onOpenConfig: _openConfig,
@@ -263,7 +287,7 @@ class UserGateScreen extends StatefulWidget {
   final UserDirectory Function() directoryFactory;
 
   /// 选定学习者。第二个参数为真表示使用者同意把旧的单用户本地记录归到他名下。
-  final void Function(UserProfile profile, bool adoptLegacy) onPicked;
+  final void Function(UserProfile profile, bool adoptLegacy, bool created) onPicked;
   final void Function(UserProfile profile)? onRenamed;
   final UserProfile? currentUser;
   final bool allowCancel;
@@ -336,9 +360,13 @@ class _UserGateScreenState extends State<UserGateScreen> {
       try {
         await _finish(await directory.login(_name.text, id: typedId));
       } on DirectoryNotFound {
-        _fail(_askId
-            ? "名字和编号对不上。编号是第一次新建时告诉你的那个数字。"
-            : "没有叫「${_name.text.trim()}」的学习者。第一次来的话，点「新建学习者」。");
+        if (_askId) {
+          _fail("名字和编号对不上。编号是第一次新建时告诉你的那个数字。");
+          return;
+        }
+        // 一个都没有：直接新建并进入，不再让人另找「新建」按钮（ADR 0078）。输错了也无妨：
+        // 换回正确的名字，或者在侧栏把这个名字改对。
+        await _finish(await directory.register(_name.text), created: true);
       } on DirectoryAmbiguous {
         setState(() {
           _askId = true;
@@ -348,7 +376,8 @@ class _UserGateScreenState extends State<UserGateScreen> {
     });
   }
 
-  /// 新建：名字已有人用时先确认，成功后展示编号。
+  /// 显式新建：用于「另一个人和已有的人同名」这种少见情况；名字已有人用时先确认一次。
+  /// 平时不用点它——输入没人用过的名字点「进入」就会自动新建（ADR 0078）。
   Future<void> _create() async {
     await _guarded(() async {
       UserRegistry.validateName(_name.text);
@@ -374,23 +403,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
         );
         if (!go) return;
       }
-      final created = await directory.register(_name.text);
-      if (!mounted) return;
-      await showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: Text("你的学习者编号是 ${created.id}"),
-          content: const SizedBox(
-            width: 420,
-            child: Text("在别的电脑上用名字登录时，如果遇到同名的人，会问你这个编号。记一下就行。"),
-          ),
-          actions: [
-            FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text("知道了")),
-          ],
-        ),
-      );
-      await _finish(created);
+      await _finish(await directory.register(_name.text), created: true);
     });
   }
 
@@ -411,7 +424,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
   }
 
   /// 选定：记进本机缓存；本机还躺着单用户时代的旧记录就问一句归不归他。
-  Future<void> _finish(UserProfile profile) async {
+  Future<void> _finish(UserProfile profile, {bool created = false}) async {
     var adopt = false;
     if (widget.legacyPending) {
       adopt = await _confirm(
@@ -423,7 +436,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
     }
     final stored = widget.registry.remember(profile);
     if (!mounted) return;
-    widget.onPicked(stored, adopt);
+    widget.onPicked(stored, adopt, created);
   }
 
   Future<void> _configure() async {
@@ -485,7 +498,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
                   const Text("谁在学车？", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
                   const Text(
-                    "输入你的名字进入。各人的做题记录、成就和解锁进度完全分开，互不打扰。",
+                    "输入你的名字进入；第一次来的话，直接输入想用的名字，会自动新建。各人的做题记录、成就和解锁进度完全分开，互不打扰。",
                     style: TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 20),
@@ -549,7 +562,7 @@ class _UserGateScreenState extends State<UserGateScreen> {
                     children: [
                       FilledButton(onPressed: _busy ? null : _enter, child: const Text("进入")),
                       const SizedBox(width: 12),
-                      OutlinedButton(onPressed: _busy ? null : _create, child: const Text("新建学习者")),
+                      TextButton(onPressed: _busy ? null : _create, child: const Text("我是另一个同名的人，新建")),
                       if (widget.allowCancel) ...[
                         const SizedBox(width: 12),
                         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("返回")),
@@ -574,7 +587,7 @@ class ApiConfigScreenResult {
 }
 
 /// 同步设置（ADR 0070、0077）：内网端点（默认就是路由器地址）、可选的外网端点与外网访问凭据。
-/// 没有设备令牌，也不持数据库口令。存用户数据目录 api.json（POSIX 600），
+/// 不持数据库口令。存用户数据目录 api.json（POSIX 600），
 /// 环境变量 ATHENA_DRIVER_API 可代替。
 class ApiConfigScreen extends StatefulWidget {
   const ApiConfigScreen({super.key, this.onSavedDirect, this.allowSkip = false});
@@ -720,7 +733,7 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                   const Text(
                     "做题记录先存在本机，后台自动和家里的软路由保持同一份；断网也能照常做题，"
                     "联网后自动补上。在家里内网用什么都不用改；离开内网时填外网端点，"
-                    "以及 Cloudflare 访问规则的服务令牌（外网访问凭据，全家共用一对）。",
+                    "以及 Cloudflare 给的外网访问凭据（一对 ID 和密钥，全家共用）。",
                     style: TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 20),
@@ -813,6 +826,7 @@ class DriverApp extends StatelessWidget {
     required this.store,
     required this.currentUser,
     this.navigatorKey,
+    this.messengerKey,
     this.syncStatus,
     this.onOpenConfig,
     this.onSwitchUser,
@@ -826,6 +840,9 @@ class DriverApp extends StatelessWidget {
 
   /// 应用内导航器：启动门在 MaterialApp 之上，侧栏换人、配置页经它 push。
   final GlobalKey<NavigatorState>? navigatorKey;
+
+  /// 应用内的提示条（新建学习者后告诉编号等）。
+  final GlobalKey<ScaffoldMessengerState>? messengerKey;
   final ValueListenable<SyncStatus>? syncStatus;
   final VoidCallback? onOpenConfig;
   final VoidCallback? onSwitchUser;
@@ -834,6 +851,7 @@ class DriverApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      scaffoldMessengerKey: messengerKey,
       title: "驾考学习",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

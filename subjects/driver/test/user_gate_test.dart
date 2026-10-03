@@ -57,6 +57,7 @@ void main() {
   late FakeDirectory directory;
   UserProfile? picked;
   bool? adopted;
+  bool? createdFlag;
   UserProfile? renamed;
 
   setUp(() async {
@@ -64,7 +65,7 @@ void main() {
     UserRegistry.fileOverride = "${dir.path}${Platform.pathSeparator}users.json";
     registry = UserRegistry.load();
     directory = FakeDirectory();
-    picked = adopted = renamed = null;
+    picked = adopted = createdFlag = renamed = null;
   });
 
   tearDown(() async {
@@ -86,9 +87,10 @@ void main() {
         directoryFactory: () => directory,
         currentUser: current,
         legacyPending: legacy,
-        onPicked: (profile, adopt) {
+        onPicked: (profile, adopt, created) {
           picked = profile;
           adopted = adopt;
+          createdFlag = created;
         },
         onRenamed: (profile) => renamed = profile,
       ),
@@ -119,14 +121,40 @@ void main() {
     expect(registry.byId("1")?.name, "tiger");
   });
 
-  testWidgets("目录里没有这个名字：提示可以新建，不会自动新建", (tester) async {
+  testWidgets("名字没人用过：点「进入」就直接新建并进入，不弹窗、不用另找按钮（ADR 0078）", (tester) async {
     await open(tester);
     await typeName(tester, "新人");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
+    expect(picked?.id, "1");
+    expect(createdFlag, isTrue, reason: "告诉启动门这是新建的，进入后用提示条说编号");
+    expect(directory.rows.single.name, "新人");
+    expect(registry.byId("1")?.name, "新人");
+    expect(find.byType(AlertDialog), findsNothing, reason: "编号不再弹窗拦人");
+  });
+
+  testWidgets("已有的人点「进入」不会被当成新建", (tester) async {
+    directory.add("小王");
+    await open(tester);
+    await typeName(tester, "小王");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(createdFlag, isFalse);
+    expect(directory.rows, hasLength(1));
+  });
+
+  testWidgets("名字和编号对不上不会自动新建（只有「没有这个名字」才新建）", (tester) async {
+    directory.add("小王");
+    directory.add("小王");
+    await open(tester);
+    await typeName(tester, "小王");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(TextField, "学习者编号（1～999）"), "9");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
     expect(picked, isNull);
-    expect(find.textContaining("点「新建学习者」"), findsOneWidget);
-    expect(directory.rows, isEmpty);
+    expect(directory.rows, hasLength(2), reason: "没有因为对不上就新建第三个");
   });
 
   testWidgets("重名：再问学习者编号，输对才进，输错不进（ADR 0075 决策 2）", (tester) async {
@@ -151,25 +179,20 @@ void main() {
     expect(picked?.id, "2");
   });
 
-  testWidgets("新建：分到编号后显著展示，点「知道了」才进入", (tester) async {
+  testWidgets("显式新建（同名的另一个人）：名字没人用时直接新建进入，没有编号弹窗", (tester) async {
     await open(tester);
     await typeName(tester, "新人");
-    await tester.tap(find.text("新建学习者"));
+    await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
-    expect(find.text("你的学习者编号是 1"), findsOneWidget);
-    expect(picked, isNull);
-
-    await tester.tap(find.text("知道了"));
-    await tester.pumpAndSettle();
-    expect(picked?.id, "1");
-    expect(registry.byId("1")?.name, "新人");
+    expect(find.byType(AlertDialog), findsNothing);
+    expect((picked?.id, createdFlag), ("1", true));
   });
 
   testWidgets("名字已有人用：新建前先确认，取消就不新建", (tester) async {
     directory.add("小王");
     await open(tester);
     await typeName(tester, "小王");
-    await tester.tap(find.text("新建学习者"));
+    await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
     expect(find.text("已有同名的学习者"), findsOneWidget);
 
@@ -183,14 +206,11 @@ void main() {
     directory.add("小王");
     await open(tester);
     await typeName(tester, "小王");
-    await tester.tap(find.text("新建学习者"));
+    await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
     await tester.tap(find.text("仍要新建"));
     await tester.pumpAndSettle();
-    expect(find.text("你的学习者编号是 2"), findsOneWidget);
-    await tester.tap(find.text("知道了"));
-    await tester.pumpAndSettle();
-    expect(picked?.id, "2");
+    expect((picked?.id, createdFlag), ("2", true));
     expect(directory.rows, hasLength(2));
   });
 
@@ -225,7 +245,7 @@ void main() {
     expect(find.text("同步设置"), findsOneWidget);
 
     await typeName(tester, "新人");
-    await tester.tap(find.text("新建学习者"));
+    await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
     expect(find.textContaining("连不上学习者目录"), findsOneWidget);
     expect(picked, isNull);
