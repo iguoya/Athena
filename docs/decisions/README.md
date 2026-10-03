@@ -51,6 +51,7 @@
 | [0081](0081-unified-release.md) | 统一发版：一个 v* tag 全量构建 cpp、driver、拾阶，发一个 Athena Release | 已接受；修订 ascent 应用级 0018 的发版入口描述；回退 `c115dd4` 的 driver 独立发版 |
 | [0083](0083-launcher-mind-map.md) | 启动器的学习应用面板改为放射状思维导图，关系由 app.json 的 group / related 声明 | 已接受 |
 | [0084](0084-math-tools-joins-subjects.md) | math-tools 从 practice/ 迁入 subjects/，作为数学学习的配套工具 | 已接受；修订 0060 对 math-tools 的归类 |
+| [0085](0085-reinforce-draws-from-all-wrong.md) | 强化练习从历史上全部错题里按权重抽取，每轮重抽并可「换一批」 | 已接受；修订 0076 第 7 条的选题规则 |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`subjects/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条；对已迁移中心 PG 的应用由 0067 修订 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划；第 2、3 条由 0080 限定 |
@@ -69,7 +70,7 @@
 | [0073](0073-global-user-directory.md) | 学习者目录全局化（`Athena/users.json`、中心 `athena_users`），tiger 以规范 ID 收编 | 已接受；修订 0072 决策 3；决策 2、4 由 0074 修订 |
 | [0074](0074-central-learner-directory.md) | 中心学习者目录是权威，ID 由后台登记时生成，名字不要求唯一、谁都能改 | 已接受；修订 0071 决策 4、0072 决策 2/4、0073 决策 2/4；尚未实现 |
 | [0075](0075-login-by-name-numeric-id.md) | 按名字登录，学习者 ID 改为服务端分配的短数字（≤999），重名才问编号；只能改自己的名字 | 已接受；修订 0074 决策 1/4/5/6；代码已落地，未部署 |
-| [0076](0076-attempt-attribution-and-reinforcement-practice.md) | 作答记录补充归因字段（所选选项、会话、考试关联、解析停留），新增独立的「强化练习」，考点簇与派生统计分阶段做 | 已接受；阶段 1～4 均已落地（阶段 4 的实现方式见 0079）；服务端已部署 |
+| [0076](0076-attempt-attribution-and-reinforcement-practice.md) | 作答记录补充归因字段（所选选项、会话、考试关联、解析停留），新增独立的「强化练习」，考点簇与派生统计分阶段做 | 已接受；阶段 1～4 均已落地（阶段 4 的实现方式见 0079）；服务端已部署；第 7 条的选题规则由 0085 修订 |
 | [0077](0077-no-device-token-gate-at-cloudflare.md) | 取消设备令牌，外网的门放在 Cloudflare 访问规则上，应用里不认证；限流改按来源地址 | 已接受；修订 0068 决策 3、0070 令牌各条 |
 | [0078](0078-login-in-one-step.md) | 登录合并为一步：输入名字点进入，没有就直接新建；编号用提示条告知，不弹窗 | 已接受；修订 0075 决策 3 |
 | [0079](0079-clusters-computed-at-runtime.md) | 考点簇运行时现算（不落盘），强化练习出「同考点变式」，学习诊断给出变式差距 | 已接受；修订 0076 决策 9 的实现方式 |
