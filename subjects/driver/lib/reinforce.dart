@@ -591,3 +591,38 @@ PassEstimate estimatePass({
     trials: trials,
   );
 }
+
+/// 反复答错的题（ADR 0069）：累计答错 2 次及以上，分「还在错」与「已修补」。
+/// 「已修补」是最近一次答错之后连着答对、已按主仓库 ADR 0086 验收移出备选库
+/// 的题——它们不再参与抽取，但值得回头扫一眼。
+class StubbornQuestion {
+  const StubbornQuestion(this.question, this.wrong, this.attempts, this.repaired);
+
+  final Question question;
+  final int wrong;
+  final int attempts;
+
+  /// true = 已修补（验收移出备选库）；false = 还在错（在备选库里）。
+  final bool repaired;
+
+  /// 稳定编号：题库 id 去掉 `drive.` 前缀，反馈题目问题时报这个号。
+  String get serial => question.serial;
+}
+
+/// 累计答错 [minWrong] 次及以上的题：还在错的在前、已修补的在后，各自按错次
+/// 降序。题库改版删掉的题不展示。
+List<StubbornQuestion> stubbornQuestions(HistorySet histories, Map<String, Question> byId, {int minWrong = 2}) {
+  final out = <StubbornQuestion>[];
+  for (final entry in histories.byQuestion.entries) {
+    final h = entry.value;
+    if (h.wrong < minWrong) continue;
+    final q = byId[entry.key];
+    if (q == null) continue;
+    out.add(StubbornQuestion(q, h.wrong, h.attempts, h.lastCorrect));
+  }
+  out.sort((a, b) {
+    if (a.repaired != b.repaired) return a.repaired ? 1 : -1;
+    return b.wrong.compareTo(a.wrong);
+  });
+  return out;
+}

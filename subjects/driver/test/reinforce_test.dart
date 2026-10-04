@@ -51,6 +51,37 @@ AttemptView _a(
 List<AttemptView> _a2() => [_a("q50", true, day: -3)];
 
 void main() {
+  group("反复错题（ADR 0069）", () {
+    test("错 1 次不进清单；错 2 次以上按还在错在前、已修补在后，各自按错次降序", () {
+      final byId = {for (final q in [_q("a"), _q("b"), _q("c"), _q("d"), _q("e")]) q.id: q};
+      final h = HistorySet.build([
+        _a("b", false),
+        _a("b", false, day: 1),
+        _a("b", false, day: 2),
+        _a("a", false),
+        _a("a", false, day: 1),
+        _a("c", false),
+        _a("c", false, day: 1),
+        _a("c", true, day: 2),
+        _a("d", false),
+        _a("e", false),
+        _a("e", true, day: 1),
+      ]);
+      final stubborn = stubbornQuestions(h, byId);
+      expect([for (final s in stubborn) s.question.id], ["b", "a", "c"], reason: "b 错 3 次还在错最前，c 已修补最后");
+      expect(stubborn[0].repaired, isFalse);
+      expect(stubborn[0].wrong, 3);
+      expect(stubborn[1].wrong, 2);
+      expect(stubborn[2].repaired, isTrue, reason: "c 错 2 次后答对，算已修补");
+      expect(stubborn[2].serial, endsWith("c"));
+    });
+
+    test("题库改版删掉的题不展示", () {
+      final h = HistorySet.build([_a("gone", false), _a("gone", false, day: 1)]);
+      expect(stubbornQuestions(h, const {}), isEmpty);
+    });
+  });
+
   group("掌握度四级", () {
     test("没做过是新题；答错是学习中", () {
       final h = HistorySet.build([_a("a", false)]);

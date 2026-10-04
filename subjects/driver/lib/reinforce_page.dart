@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:flutter/services.dart";
 import "package:flutter/material.dart";
 
 import "diagnosis.dart";
@@ -49,6 +50,9 @@ class ReinforcePage extends StatelessWidget {
     required this.onReshuffle,
     this.onNewPractice,
     this.diagnosis,
+    this.roundSize = reinforceRoundSize,
+    this.onRoundSizeChanged,
+    this.stubborn = const [],
   });
 
   final ReinforcePlan plan;
@@ -66,9 +70,18 @@ class ReinforcePage extends StatelessWidget {
   /// 学习诊断（遗忘、错因、选错的方式、与全国比、强化练习成效）；没有就不显示这一区。
   final DiagnosisData? diagnosis;
 
+  /// 每轮抽取的题量（ADR 0069）：默认 50（主仓库 ADR 0087），界面上可调。
+  final int roundSize;
+
+  /// 轮量变化回调；null 则数字块不可点。
+  final void Function(int count)? onRoundSizeChanged;
+
+  /// 反复答错的题（累计错 2 次及以上）：还在错的在前、已修补的在后。
+  final List<StubbornQuestion> stubborn;
+
   /// 两张配色表都含皮肤主色（consolidating / due），getter 每次取当前皮肤值。
   static Map<MasteryLevel, Color> get _levelColors => {
-    MasteryLevel.fresh: Color(0xFFADB5BD),
+    MasteryLevel.fresh: const Color(0xFFADB5BD),
     MasteryLevel.learning: Bs.warning,
     MasteryLevel.consolidating: Bs.primary,
     MasteryLevel.solid: Bs.success,
@@ -76,7 +89,7 @@ class ReinforcePage extends StatelessWidget {
 
   static Map<String, Color> get _reasonColors => {
     "retest": Bs.danger,
-    "variant": Color(0xFF6F42C1),
+    "variant": const Color(0xFF6F42C1),
     "weak": Bs.warning,
     "due": Bs.primary,
     "fill": Bs.secondary,
@@ -98,8 +111,8 @@ class ReinforcePage extends StatelessWidget {
           Row(
             children: [
               Icon(Glyph.reinforce, color: Bs.paper),
-              SizedBox(width: 8),
-              Text("强化练习", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+              const SizedBox(width: 8),
+              const Text("强化练习", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             ],
           ),
           const SizedBox(height: 12),
@@ -111,7 +124,20 @@ class ReinforcePage extends StatelessWidget {
               _CountTile(label: "还要练的错题（备选库）", value: plan.wrongPool, color: Bs.danger, emphasis: true),
               _CountTile(label: "其中还没在强化练习里测过", value: plan.untested, color: Bs.warning),
               _CountTile(label: "已测过且没出错、移出", value: plan.retired, color: Bs.success),
-              _CountTile(label: "每轮抽取", value: plan.picks.length, color: Bs.primary),
+              PopupMenuButton<int>(
+                enabled: onRoundSizeChanged != null,
+                tooltip: "选择每轮抽取的题量",
+                onSelected: (count) => onRoundSizeChanged?.call(count),
+                itemBuilder: (context) => [
+                  for (final count in const [25, 50, 75, 100])
+                    PopupMenuItem(value: count, child: Text("每轮 $count 题")),
+                ],
+                child: _CountTile(
+                  label: onRoundSizeChanged == null ? "每轮抽取" : "每轮抽取（可点调）",
+                  value: roundSize,
+                  color: Bs.primary,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -223,6 +249,73 @@ class ReinforcePage extends StatelessWidget {
             const Divider(),
             DiagnosisPanel(data: diagnosis!, topicTitles: topicTitles),
           ],
+          if (stubborn.isNotEmpty) ...[
+            const SizedBox(height: 32),
+            const Divider(),
+            Text("反复错题", style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Text(
+              "累计答错 2 次及以上的题。反复错的题也可能是题目或答案本身有问题——"
+              "点编号复制，报编号核对题库；「已修补」的是后来连着答对、已移出错题库的，回头扫一眼。",
+              style: small,
+            ),
+            const SizedBox(height: 12),
+            for (final s in stubborn) _StubbornRow(stubborn: s),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 反复错题的一行：编号（点击复制）+ 题干摘要 + 累计错次 + 状态。
+class _StubbornRow extends StatelessWidget {
+  const _StubbornRow({required this.stubborn});
+
+  final StubbornQuestion stubborn;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final small = theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFF6C757D), height: 1.35);
+    final prompt = stubborn.question.prompt;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: stubborn.serial));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("已复制编号 ${stubborn.serial}，报编号可核对题目")),
+              );
+            },
+            borderRadius: BorderRadius.circular(6),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                border: Border.all(color: theme.dividerColor),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(stubborn.serial, style: theme.textTheme.bodySmall?.copyWith(fontFamily: "monospace")),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(prompt, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyLarge),
+                const SizedBox(height: 2),
+                Text(
+                  "累计错 ${stubborn.wrong} 次 · 共答 ${stubborn.attempts} 次"
+                  "${stubborn.repaired ? " · 已修补，移出错题库" : " · 还在错题库里"}",
+                  style: small,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -10,6 +10,64 @@ import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
+  testWidgets("轮量可点调整；反复错题区分「还在错」与「已修补」（ADR 0069）", (tester) async {
+    late Bank bank;
+    late ProgressStore store;
+    late Question stuck;
+    late Question repaired;
+    await tester.runAsync(() async {
+      bank = await ContentLoader.load();
+      store = await ProgressStore.open(suite: "reinforce_page_round");
+      final pool = bank.forSubject("subject1").where((q) => !q.isRare).toList();
+      stuck = pool[0];
+      repaired = pool[1];
+      for (var i = 0; i < 3; i++) {
+        await store.recordAttempt(questionId: stuck.id, topicId: stuck.topicId, subjectId: "subject1", correct: false);
+      }
+      await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: false);
+      await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: false);
+      await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: true);
+    });
+
+    await tester.binding.setSurfaceSize(const Size(1600, 1200));
+    final ready = Completer<void>();
+    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete, clusterBuilder: (_) async => ClusterIndex.empty)));
+    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
+    expect(ready.isCompleted, isTrue);
+
+    await tester.tap(find.text("强化练习").first);
+    await tester.pump();
+
+    // 默认 50；数字块可点，选 25 后计划重建
+    expect(find.textContaining("开始强化练习 50 题"), findsOneWidget);
+    await tester.tap(find.textContaining("每轮抽取"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("每轮 25 题").last);
+    await tester.pumpAndSettle();
+    expect(find.textContaining("开始强化练习 25 题"), findsOneWidget);
+
+    // 反复错题区：还在错的与已修补的都列出，累计错次如实显示
+    expect(find.text("反复错题"), findsOneWidget);
+    expect(find.textContaining("累计错 3 次"), findsOneWidget);
+    expect(find.textContaining("已修补，移出错题库"), findsOneWidget);
+    expect(find.text(stuck.serial), findsOneWidget);
+
+    // 点编号复制，出核对提示（顽固题区在页面底部，先滚到可见）
+    await tester.scrollUntilVisible(find.text(stuck.serial), 300, scrollable: find.byType(Scrollable).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(stuck.serial));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("报编号可核对题目"), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+    });
+  });
+
   // 强化练习（主仓库 ADR 0076）：错题、薄弱章节、间隔到期合成一张题单；
   // 页面说明为什么这样选，开始后作答的场合标记是 reinforce，不是 practice 也不是 exam。
   testWidgets("强化练习页：题单构成、漏斗、通过概率与真实模拟考并列；开始后作答带 reinforce 标记", (tester) async {
