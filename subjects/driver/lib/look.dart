@@ -15,9 +15,9 @@ import "skin.dart";
 /// 全局常量，含义人人认得，不随皮肤变；氛围色（primary / nav / light / body /
 /// border / paper）是 getter，指向当前皮肤（skin.dart，ADR 0058），换肤经
 /// `MaterialApp` 整树重建后在这些 getter 上自然生效。图标用 Material 的系统
-/// 符号，角色对齐 Bootstrap Icons。
+/// 符号。
 class Bs {
-  // —— 语义色：全局共享的常量（Bootstrap 5 原板）——
+  // —— 语义色：全局共享的常量（Material 3 没有成功/警示/信息角色，迁移见 ADR 0069 第 4 条）——
   static const secondary = Color(0xFF6C757D);
   static const success = Color(0xFF198754);
   static const danger = Color(0xFFDC3545);
@@ -176,12 +176,7 @@ class Bs {
 /// 页面自身全透明——环境背景由 `MaterialApp.builder` 里的 [AmbientBackdrop] 垫。
 ThemeData buildTheme(Skin skin) {
   return ThemeData(
-    colorScheme: ColorScheme.light(
-      primary: skin.primary,
-      secondary: skin.primary,
-      error: Bs.danger,
-      surface: skin.card,
-    ),
+    colorScheme: skin.scheme,
     useMaterial3: true,
     textTheme: Bs.textTheme(ThemeData(useMaterial3: true).textTheme),
     iconTheme: IconThemeData(size: Bs.bodySize),
@@ -193,8 +188,6 @@ ThemeData buildTheme(Skin skin) {
     filledButtonTheme: FilledButtonThemeData(
       // 主按钮用主行动色，不再是一片深灰
       style: FilledButton.styleFrom(
-        backgroundColor: skin.primary,
-        foregroundColor: Colors.white,
         textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
@@ -202,7 +195,6 @@ ThemeData buildTheme(Skin skin) {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        foregroundColor: skin.primary,
         side: BorderSide(color: skin.border),
         textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
@@ -211,7 +203,6 @@ ThemeData buildTheme(Skin skin) {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: skin.primary,
         textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
       ),
     ),
@@ -226,13 +217,13 @@ ThemeData buildTheme(Skin skin) {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(Bs.radius)),
     ),
-    // 悬停提示（答题卡方格的题干摘要等）：深底白字、控件级圆角。
+    // 悬停提示（答题卡方格的题干摘要等）：反色面（inverseSurface）、控件级圆角。
     tooltipTheme: TooltipThemeData(
       decoration: BoxDecoration(
-        color: Bs.dark,
+        color: skin.scheme.inverseSurface,
         borderRadius: BorderRadius.circular(Bs.radius),
       ),
-      textStyle: const TextStyle(color: Colors.white, fontSize: 14, height: 1.4),
+      textStyle: TextStyle(color: skin.scheme.onInverseSurface, fontSize: 14, height: 1.4),
       waitDuration: const Duration(milliseconds: 350),
     ),
     // 桌面长列表的滚动条：圆角拇指、随皮肤走；桌面平台默认就会给 ScrollView 包

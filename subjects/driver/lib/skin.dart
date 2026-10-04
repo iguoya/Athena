@@ -7,21 +7,22 @@ import "package:path/path.dart" as p;
 import "progress.dart";
 
 /// 皮肤：与拾阶（ascent）、math-tools 的 skins 同构——一套组件，令牌换氛围
-/// （本应用 ADR 0058）。语义色（对错、警示、题型、频次）不在这里：那些含义人人
-/// 认得，不随皮肤变；皮肤只管氛围——主行动色、侧栏、页面底、卡片底、hairline
-/// 和环境色斑。四套都是明色，不做暗色。
+/// （本应用 ADR 0058）。每套皮肤只存一个种子色，全部色彩角色由 Material 3 的
+/// [ColorScheme.fromSeed] 生成（ADR 0069），不手写十六进制补色。语义色（对错、
+/// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。四套都是明色，
+/// 不做暗色。
 class Skin {
-  const Skin({
+  Skin({
     required this.id,
     required this.name,
     required this.hint,
-    required this.primary,
-    required this.nav,
-    required this.page,
-    required this.card,
-    required this.border,
-    required this.ambient,
-  });
+    required this.seed,
+  }) : scheme = ColorScheme.fromSeed(
+          seedColor: seed,
+          // fidelity：色板贴着种子色走，primaryContainer 就是种子色本身，四套皮肤
+          // 才认得出（默认的 tonalSpot 会把蓝压成灰蓝、橙压成棕）。
+          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+        );
 
   final String id;
 
@@ -29,71 +30,37 @@ class Skin {
   final String name;
   final String hint;
 
-  /// 主行动色：按钮、选中态、题号、进度条。
-  final Color primary;
+  /// 种子色：整套 [scheme] 由它生成。
+  final Color seed;
 
-  /// 侧栏底色。渲染时叠一层透明度透出环境色斑。
-  final Color nav;
+  /// Material 3 色彩方案（明色）。组件主题与下面的 getter 都读它。
+  final ColorScheme scheme;
+
+  /// 主行动色：按钮、选中态、题号、进度条。
+  Color get primary => scheme.primary;
+
+  /// 侧栏底色（白字）。渲染时叠一层透明度透出环境色斑。
+  Color get nav => scheme.primary;
 
   /// 页面底色（旧 Bs.light 的语义）。
-  final Color page;
+  Color get page => scheme.surface;
 
   /// 卡片底色（旧 Bs.body 的语义）。
-  final Color card;
+  Color get card => scheme.surfaceContainerLowest;
 
   /// hairline 与分隔线（旧 Bs.border 的语义）。
-  final Color border;
+  Color get border => scheme.outlineVariant;
 
   /// 环境色斑：两三团大半径柔和色垫在整窗底下，玻璃感来自「面板半透明 +
   /// 背后有色可透」，不是来自系统模糊（ADR 0058：不引窗口材质）。
-  final List<Color> ambient;
+  List<Color> get ambient => [scheme.primaryContainer, scheme.primaryFixedDim, scheme.secondaryContainer];
 }
 
-const _skins = <Skin>[
-  Skin(
-    id: "sky",
-    name: "晴空",
-    hint: "蓝白 · 继承旧观感",
-    primary: Color(0xFF0D6EFD),
-    nav: Color(0xFF0A58CA),
-    page: Color(0xFFF4F7FB),
-    card: Color(0xFFFFFFFF),
-    border: Color(0xFFE3E8EF),
-    ambient: [Color(0xFF4D9FFF), Color(0xFF22C3D6), Color(0xFF8FB7FF)],
-  ),
-  Skin(
-    id: "meadow",
-    name: "青野",
-    hint: "绿意 · 平和护眼",
-    primary: Color(0xFF0C8F63),
-    nav: Color(0xFF0B6B4A),
-    page: Color(0xFFF4FAF6),
-    card: Color(0xFFFFFFFF),
-    border: Color(0xFFDDEBE2),
-    ambient: [Color(0xFF34D399), Color(0xFFA3E635), Color(0xFF5EEAD4)],
-  ),
-  Skin(
-    id: "sunrise",
-    name: "曙途",
-    hint: "暖橙 · 清晨上路",
-    primary: Color(0xFFE8590C),
-    nav: Color(0xFF9A3E0E),
-    page: Color(0xFFFBF6F0),
-    card: Color(0xFFFFFFFF),
-    border: Color(0xFFF0E2D6),
-    ambient: [Color(0xFFFFB454), Color(0xFFFF8787), Color(0xFFFFD3A5)],
-  ),
-  Skin(
-    id: "violet",
-    name: "暮汐",
-    hint: "暮紫 · 安静夜学",
-    primary: Color(0xFF7048E8),
-    nav: Color(0xFF4C33B8),
-    page: Color(0xFFF7F6FC),
-    card: Color(0xFFFFFFFF),
-    border: Color(0xFFE6E2F4),
-    ambient: [Color(0xFFA78BFA), Color(0xFF7DD3FC), Color(0xFFC4B5FD)],
-  ),
+final _skins = <Skin>[
+  Skin(id: "sky", name: "晴空", hint: "蓝白 · 继承旧观感", seed: const Color(0xFF0D6EFD)),
+  Skin(id: "meadow", name: "青野", hint: "绿意 · 平和护眼", seed: const Color(0xFF0C8F63)),
+  Skin(id: "sunrise", name: "曙途", hint: "暖橙 · 清晨上路", seed: const Color(0xFFE8590C)),
+  Skin(id: "violet", name: "暮汐", hint: "暮紫 · 安静夜学", seed: const Color(0xFF7048E8)),
 ];
 
 /// 皮肤清单与当前皮肤。切换经 [notifier] 通知 `MaterialApp` 换 theme 整树重建，
@@ -101,7 +68,7 @@ const _skins = <Skin>[
 class Skins {
   Skins._();
 
-  static const all = _skins;
+  static final all = _skins;
 
   /// 默认皮肤（青野，ADR 0063 修订 0058 决策 1 的默认指定）：没存过口味、
   /// skin.json 坏了、或 id 不在清单里时用它。清单顺序不变，晴空仍是第一套。
