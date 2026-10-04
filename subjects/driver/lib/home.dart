@@ -10,6 +10,7 @@ import "clusters.dart";
 import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
+import "markings_page.dart";
 import "models.dart";
 import "notes_page.dart";
 import "progress.dart";
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> {
   static const _reinforceId = "reinforce";
   static const _numbersId = "numbers";
   static const _signsId = "signs";
+  static const _markingsId = "markings";
   static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
@@ -328,6 +330,7 @@ class _HomePageState extends State<HomePage> {
         _place == _reviewId ||
         _place == _numbersId ||
         _place == _signsId ||
+        _place == _markingsId ||
         _place == _keyPointsId) {
       return null;
     }
@@ -441,6 +444,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _signsId && _session == null,
                   label: "标志速记",
                   onTap: () => _go(_signsId),
+                ),
+                _navLine(
+                  icon: Glyph.markings,
+                  selected: _place == _markingsId && _session == null,
+                  label: "标线速记",
+                  onTap: () => _go(_markingsId),
                 ),
                 _navLine(
                   icon: Glyph.notes,
@@ -698,6 +707,7 @@ class _HomePageState extends State<HomePage> {
     }
     if (_place == _numbersId) return _numbersOverview(context);
     if (_place == _signsId) return _signsOverview(context);
+    if (_place == _markingsId) return _markingsOverview(context);
     if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1580,6 +1590,21 @@ class _HomePageState extends State<HomePage> {
   Widget _signsOverview(BuildContext context) {
     return SignsPage(
       signs: widget.bank.signs,
+      daily: dailyQuestions(_subject1All),
+      all: _subject1All,
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
+      ),
+    );
+  }
+
+  /// 标线速记：手绘标线按类摊开，每组能直接练相关题（ADR 0065）。
+  Widget _markingsOverview(BuildContext context) {
+    return MarkingsPage(
+      markings: widget.bank.markings,
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,

@@ -74,6 +74,7 @@ class Question {
     required this.explain,
     required this.sourceRefs,
     this.sign,
+    this.marking,
     this.image,
     this.difficulty = 1,
     this.phase = 1,
@@ -90,6 +91,10 @@ class Question {
   final String explain;
   final List<SourceRef> sourceRefs;
   final String? sign;
+
+  /// 标线速记关联的标线 id（ADR 0065）；不复用 `sign` 是因为 clusters.dart 对带
+  /// `sign` 的题排除出考点簇，标线题挂上去会误伤簇计算。
+  final String? marking;
 
   /// 题图在 content/ 下的相对路径，例如 images/subject1/xxx.jpg。
   final String? image;
@@ -188,6 +193,7 @@ class Question {
           SourceRef.fromJson(raw as Map<String, dynamic>),
       ],
       sign: json["sign"] as String?,
+      marking: json["marking"] as String?,
       image: json["image"] as String?,
       difficulty: json["difficulty"] as int? ?? 1,
       phase: json["phase"] as int? ?? 1,
@@ -435,6 +441,43 @@ class RoadSign {
   }
 }
 
+/// 标线速记页的一条标线（ADR 0065）；结构对应 RoadSign，出处是 markings.json
+/// 文件级的 GB 5768.3。
+class Marking {
+  const Marking({
+    required this.id,
+    required this.name,
+    required this.kind,
+    required this.meaning,
+    this.band = QuestionBand.common,
+  });
+
+  final String id;
+  final String name;
+  final String kind;
+
+  /// 一句行动导向的「看到之后怎么开」（ADR 0065）。
+  final String meaning;
+  final String band;
+
+  String get kindLabel => switch (kind) {
+    "indicative" => "指示标线",
+    "prohibit" => "禁止标线",
+    "warning" => "警告标线",
+    _ => "交通标线",
+  };
+
+  factory Marking.fromJson(Map<String, dynamic> json) {
+    return Marking(
+      id: json["id"] as String,
+      name: json["name"] as String,
+      kind: json["kind"] as String,
+      meaning: json["meaning"] as String,
+      band: json["band"] as String? ?? QuestionBand.common,
+    );
+  }
+}
+
 /// 易混数字对照页的一行：数字、适用情形、出处（ADR 0028）。
 class CheatRow {
   const CheatRow({
@@ -569,6 +612,7 @@ class Bank {
     required this.curriculum,
     required this.questions,
     this.signs = const [],
+    this.markings = const [],
     this.cheatsheet = const [],
     this.notes = const [],
     this.guide = Subject2Guide.empty,
@@ -578,6 +622,7 @@ class Bank {
   final Subject2Guide guide;
   final List<Question> questions;
   final List<RoadSign> signs;
+  final List<Marking> markings;
   final List<CheatGroup> cheatsheet;
   final List<NoteGroup> notes;
 
