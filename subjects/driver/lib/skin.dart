@@ -8,7 +8,7 @@ import "progress.dart";
 
 /// 皮肤：与拾阶（ascent）、math-tools 的 skins 同构——一套组件，令牌换氛围
 /// （本应用 ADR 0058）。每套皮肤只存一个种子色，全部色彩角色由 Material 3 的
-/// [ColorScheme.fromSeed] 生成（ADR 0069），不手写十六进制补色。语义色（对错、
+/// [ColorScheme.fromSeed] 生成（ADR 0071），不手写十六进制补色。语义色（对错、
 /// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。四套都是明色，
 /// 不做暗色。
 class Skin {

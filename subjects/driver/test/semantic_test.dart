@@ -12,7 +12,7 @@ double _contrast(Color a, Color b) {
 }
 
 void main() {
-  // 对比度由 Material 3 方案保证（ADR 0069）；这里守住「换种子色、换变体后仍然成立」。
+  // 对比度由 Material 3 方案保证（ADR 0071）；这里守住「换种子色、换变体后仍然成立」。
   test("每个语义色的实心色与浅底都配得上自己的字，对比度不低于 4.5（AA）", () {
     final all = {
       "success": Sem.success,

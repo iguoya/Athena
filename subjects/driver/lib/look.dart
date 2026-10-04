@@ -18,7 +18,7 @@ import "skin.dart";
 /// `MaterialApp` 整树重建后在这些 getter 上自然生效。图标用 Material 的系统
 /// 符号。
 class Bs {
-  // —— 语义色：全局共享，含义不随皮肤变；色值由 Material 3 方案生成（semantic.dart，ADR 0069）——
+  // —— 语义色：全局共享，含义不随皮肤变；色值由 Material 3 方案生成（semantic.dart，ADR 0071）——
   static Color get secondary => Sem.neutral.color;
   static Color get success => Sem.success.color;
   static Color get danger => Sem.danger.color;

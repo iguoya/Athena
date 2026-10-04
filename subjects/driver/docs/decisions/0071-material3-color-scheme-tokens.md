@@ -1,4 +1,4 @@
-# ADR 0069：令牌层改接 Material 3 ColorScheme——不再沿用 Bootstrap 5 色板
+# ADR 0071：令牌层改接 Material 3 ColorScheme——不再沿用 Bootstrap 5 色板
 
 - 日期：2026-10-04
 - 状态：已接受
