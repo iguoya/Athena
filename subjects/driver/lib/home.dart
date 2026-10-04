@@ -96,6 +96,9 @@ class _HomePageState extends State<HomePage> {
 
   // 强化练习（主仓库 ADR 0076）：全部由作答记录派生，不另存。
   HistorySet _histories = HistorySet.build(const []);
+
+  /// 全部作答原样留着：考点簇是后台现算的，算好后要用它重建 [_histories]（变式验收，主仓库 ADR 0088）。
+  List<AttemptView> _allAttempts = const [];
   ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
 
   /// 强化练习的题池（已排除锁着的科目和偏难怪题）和考点簇；簇在后台算好后重新选题。
@@ -265,7 +268,7 @@ class _HomePageState extends State<HomePage> {
       });
     // 强化练习：错题、薄弱章节、间隔到期合成一张题单（主仓库 ADR 0076）。
     final allAttempts = await widget.store.allAttempts();
-    final histories = HistorySet.build(allAttempts);
+    final histories = HistorySet.build(allAttempts, clusters: _clusters);
     final diagnosis = DiagnosisData.build(allAttempts, (id) => _questionIndex[id]);
     final theoryPool = [
       for (final q in widget.bank.questions)
@@ -289,6 +292,7 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
     setState(() {
+      _allAttempts = allAttempts;
       _histories = histories;
       _diagnosis = diagnosis;
       _reinforcePlan = reinforcePlan;
@@ -1709,6 +1713,8 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
     setState(() {
       _clusters = index;
+      // 变式答对算原题验收，要有考点簇才认：簇就绪后重建一次作答摘要（主仓库 ADR 0088）。
+      _histories = HistorySet.build(_allAttempts, clusters: index);
       // 没在做题时才换题单：做题中的那张不动。
       if (_session == null && _reinforcePool.isNotEmpty) {
         _reinforcePlan = planReinforcement(

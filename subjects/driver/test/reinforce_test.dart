@@ -38,12 +38,14 @@ AttemptView _a(
   int hour = 9,
   String topic = "drive.s1.rules",
   String kind = "practice",
+  String? reason,
 }) => AttemptView(
   questionId: id,
   topicId: topic,
   correct: ok,
   at: DateTime(_day0.year, _day0.month, _day0.day + day, hour),
   kind: kind,
+  reason: reason,
 );
 
 List<AttemptView> _a2() => [_a("q50", true, day: -3)];
@@ -627,6 +629,67 @@ void main() {
     final clusters = index([
       for (var i = 0; i < 8; i++) ["q$i", "q${40 + i}"],
     ]);
+
+    group("变式答对也算验收（ADR 0088）", () {
+      final pair = index([["q0", "q40"]]);
+      // q40 是 q0 的变式：q0 答错在先，之后 q40 在强化练习里作为变式答对
+      List<AttemptView> withVariant({bool ok = true, String kind = "reinforce", String? reason = "variant"}) => [
+        _a("q0", false),
+        _a("q40", ok, day: 1, kind: kind, reason: reason),
+      ];
+
+      test("同簇变式在强化练习里答对：原题移出备选库；不给考点簇就不认", () {
+        final h = HistorySet.build(withVariant(), clusters: pair);
+        expect(h.of("q0")!.retiredFromWrongPool, isTrue);
+        expect(HistorySet.build(withVariant()).of("q0")!.retiredFromWrongPool, isFalse, reason: "没有考点簇，不知道谁是它的变式");
+      });
+
+      test("变式答错、在别处答对、或不是作为变式被选中的，都不算", () {
+        for (final attempts in [
+          withVariant(ok: false),
+          withVariant(kind: "practice"),
+          withVariant(reason: "retest"),
+          withVariant(reason: null),
+        ]) {
+          expect(HistorySet.build(attempts, clusters: pair).of("q0")!.retiredFromWrongPool, isFalse);
+        }
+      });
+
+      test("原题之后再答错：验收作废，回到备选库；变式在原题答错之前答对的不算", () {
+        final again = HistorySet.build([...withVariant(), _a("q0", false, day: 2)], clusters: pair);
+        expect(again.of("q0")!.retiredFromWrongPool, isFalse);
+        final before = HistorySet.build([
+          _a("q40", true, kind: "reinforce", reason: "variant"),
+          _a("q0", false, day: 1),
+        ], clusters: pair);
+        expect(before.of("q0")!.retiredFromWrongPool, isFalse, reason: "变式答对在 q0 最近一次答错之前");
+      });
+
+      test("没答错过的题不受影响；变式自己的历史也不被动", () {
+        final h = HistorySet.build([_a("q0", true), _a("q40", true, day: 1, kind: "reinforce", reason: "variant")], clusters: pair);
+        expect(h.of("q0")!.retiredFromWrongPool, isFalse, reason: "q0 没答错过，本来就不在备选库");
+        expect(h.of("q40")!.variantPassesSinceWrong, 0);
+      });
+
+      test("备选库随之缩小：同簇的错题一起移出", () {
+        final cluster = index([["q0", "q1", "q40"]]);
+        final plan = planReinforcement(
+          count: 20,
+          pool: pool,
+          histories: HistorySet.build([
+            _a("q0", false),
+            _a("q1", false),
+            _a("q2", false),
+            _a("q40", true, day: 1, kind: "reinforce", reason: "variant"),
+          ], clusters: cluster),
+          now: _day0,
+          random: Random(1),
+          clusters: cluster,
+        );
+        expect(plan.retired, 2, reason: "q0、q1 同簇，一起验收");
+        expect(plan.wrongPool, 1, reason: "q2 不在这个簇里，还要练");
+      });
+    });
 
     test("没有考点簇：和以前一样，没有变式", () {
       final plan = planReinforcement(

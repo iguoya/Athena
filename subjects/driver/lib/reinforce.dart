@@ -70,9 +70,16 @@ class QuestionHistory {
   /// 最近一次答错之后，在强化练习里答对了几次；答错清零（主仓库 ADR 0086）。
   int reinforcedSinceWrong = 0;
 
-  /// 错题能不能从强化练习的备选库移出：自最近一次答错以来，在强化练习里测过且之后没有出错。
-  /// 任何一次答错（不管在哪）都让它回到备选库。
-  bool get retiredFromWrongPool => wrong > 0 && lastCorrect && reinforcedSinceWrong >= 1;
+  /// 最近一次答错之后，同考点簇里的变式题在强化练习里答对了几次；这道题自己答错清零（主仓库 ADR 0088）。
+  /// 要给 [HistorySet.build] 传考点簇才会累计。
+  int variantPassesSinceWrong = 0;
+
+  /// 错题能不能从强化练习的备选库移出，两种验收来源任一成立即可：
+  /// 自最近一次答错以来，它自己在强化练习里测过且之后没有出错（主仓库 ADR 0086）；
+  /// 或同簇的变式题在强化练习里答对过（主仓库 ADR 0088）。
+  /// 它自己任何一次答错（不管在哪）都让它回到备选库。
+  bool get retiredFromWrongPool =>
+      wrong > 0 && ((lastCorrect && reinforcedSinceWrong >= 1) || variantPassesSinceWrong >= 1);
 
   static const recentWindow = 5;
 }
@@ -107,7 +114,10 @@ class HistorySet {
   QuestionHistory? of(String questionId) => byQuestion[questionId];
 
   /// 作答按时间排序后逐条折叠；同一时刻按输入顺序（`sort` 稳定）。
-  static HistorySet build(Iterable<AttemptView> attempts) {
+  ///
+  /// 给了 [clusters]（考点簇，主仓库 ADR 0079）时，强化练习里答对的变式题（`reason = variant`）
+  /// 会记给同簇的其他题，作为它们的验收来源（主仓库 ADR 0088）。
+  static HistorySet build(Iterable<AttemptView> attempts, {ClusterIndex? clusters}) {
     final sorted = [...attempts]..sort((a, b) => a.at.compareTo(b.at));
     final map = <String, QuestionHistory>{};
     var trials = 0;
@@ -131,6 +141,13 @@ class HistorySet {
         h.trailingCorrect = 0;
         h.streakDays.clear();
         h.reinforcedSinceWrong = 0;
+        h.variantPassesSinceWrong = 0;
+      }
+      if (clusters != null && attempt.correct && attempt.kind == "reinforce" && attempt.reason == "variant") {
+        // 还没有历史的同簇题不用记：它还没答错过，之后第一次答错会清零，本来也不会用到这条记录。
+        for (final mate in clusters.mates(attempt.questionId)) {
+          map[mate]?.variantPassesSinceWrong++;
+        }
       }
       h.lastAt = attempt.at;
       h.lastCorrect = attempt.correct;
