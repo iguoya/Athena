@@ -565,43 +565,73 @@ class BsProgress extends StatelessWidget {
 }
 
 /// 模拟考战绩：一次一根柱，90 分线横在上面，一眼看出在不在往上走。
-class ExamTrend extends StatelessWidget {
-  const ExamTrend({super.key, required this.scores, this.passScore = 90, this.height = 132});
+/// 悬停高亮一根柱并在左上角给出完整取值（ADR 0061）。
+class ExamTrend extends StatefulWidget {
+  const ExamTrend({
+    super.key,
+    required this.records,
+    this.passScore = 90,
+    this.height = 132,
+  });
 
   /// 时间正序：老的在左，新的在右。
-  final List<int> scores;
+  final List<ExamPoint> records;
   final int passScore;
   final double height;
 
   @override
+  State<ExamTrend> createState() => _ExamTrendState();
+}
+
+/// 单场考试的展示信息：分数、日期、过没过。look.dart 不认识 [ExamRecord]，
+/// 只收元组，业务类型留在调用方（ADR 0061 决策 2）。
+typedef ExamPoint = (int score, DateTime at, bool passed);
+
+class _ExamTrendState extends State<ExamTrend> {
+  int? _hover;
+
+  int? _slotAt(double dx, double width) {
+    final n = widget.records.length;
+    if (n == 0 || width <= 0) return null;
+    return (dx / width * n).floor().clamp(0, n - 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (scores.isEmpty) {
+    if (widget.records.isEmpty) {
       return Text(
         "还没有模拟考记录。四个阶段过关后就能开考，考完这里会画出每次的分数。",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
       );
     }
     return SizedBox(
-      height: height,
-      child: CustomPaint(
-        painter: _TrendPainter(scores, passScore),
-        child: const SizedBox.expand(),
+      height: widget.height,
+      child: LayoutBuilder(
+        builder: (context, constraints) => MouseRegion(
+          onHover: (e) => setState(() => _hover = _slotAt(e.localPosition.dx, constraints.maxWidth)),
+          onExit: (_) => setState(() => _hover = null),
+          child: CustomPaint(
+            painter: _TrendPainter(widget.records, widget.passScore, hover: _hover),
+            child: const SizedBox.expand(),
+          ),
+        ),
       ),
     );
   }
 }
 
 class _TrendPainter extends CustomPainter {
-  _TrendPainter(this.scores, this.passScore);
+  _TrendPainter(this.records, this.passScore, {this.hover});
 
-  final List<int> scores;
+  final List<ExamPoint> records;
   final int passScore;
+  final int? hover;
 
   @override
   void paint(Canvas canvas, Size size) {
     const labelHeight = 20.0;
     final chart = Rect.fromLTWH(0, 0, size.width, size.height - labelHeight);
-    final slot = chart.width / scores.length;
+    final slot = chart.width / records.length;
     final barWidth = min(slot * 0.6, 34.0);
     double yOf(int score) => chart.bottom - chart.height * (score.clamp(0, 100) / 100);
 
@@ -615,8 +645,8 @@ class _TrendPainter extends CustomPainter {
     }
     _text(canvas, Offset(chart.width - 2, line - 16), "$passScore 分", Bs.secondary, align: TextAlign.right);
 
-    for (var i = 0; i < scores.length; i++) {
-      final score = scores[i];
+    for (var i = 0; i < records.length; i++) {
+      final score = records[i].$1;
       final center = slot * i + slot / 2;
       final top = yOf(score);
       final rect = RRect.fromRectAndRadius(
@@ -624,7 +654,25 @@ class _TrendPainter extends CustomPainter {
         const Radius.circular(3),
       );
       canvas.drawRRect(rect, Paint()..color = score >= passScore ? Bs.success : Bs.danger);
+      if (hover == i) {
+        canvas.drawRRect(
+          rect.inflate(2),
+          Paint()
+            ..color = Bs.dark
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        );
+      }
       _text(canvas, Offset(center, chart.bottom + 2), "$score", Bs.dark, align: TextAlign.center);
+    }
+    if (hover != null && hover! < records.length) {
+      final (score, at, passed) = records[hover!];
+      _text(
+        canvas,
+        const Offset(0, 0),
+        "${at.month}月${at.day}日 · $score 分 · ${passed ? "及格" : "未过"}",
+        Bs.dark,
+      );
     }
   }
 
@@ -644,19 +692,21 @@ class _TrendPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _TrendPainter oldDelegate) =>
-      !listEquals(oldDelegate.scores, scores) || oldDelegate.passScore != passScore;
+      !recordsEquals(oldDelegate.records, records) ||
+      oldDelegate.passScore != passScore ||
+      oldDelegate.hover != hover;
 }
 
-bool listEquals(List<int> a, List<int> b) {
+bool recordsEquals(List<ExamPoint> a, List<ExamPoint> b) {
   if (a.length != b.length) return false;
   for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
+    if (a[i].$1 != b[i].$1 || !a[i].$2.isAtSameMomentAs(b[i].$2) || a[i].$3 != b[i].$3) return false;
   }
   return true;
 }
 
 /// 最近 N 天的练习量：柱子连不上就是断更了，颜色按当天正确率分（主仓库 ADR 0056）。
-class DailyActivityChart extends StatelessWidget {
+class DailyActivityChart extends StatefulWidget {
   const DailyActivityChart({super.key, required this.days, this.height = 96});
 
   /// 时间正序：老的在左，今天在右。
@@ -674,27 +724,47 @@ class DailyActivityChart extends StatelessWidget {
   }
 
   @override
+  State<DailyActivityChart> createState() => _DailyActivityChartState();
+}
+
+class _DailyActivityChartState extends State<DailyActivityChart> {
+  int? _hover;
+
+  int? _slotAt(double dx, double width) {
+    final n = widget.days.length;
+    if (n == 0 || width <= 0) return null;
+    return (dx / width * n).floor().clamp(0, n - 1);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (days.every((d) => d.attempts == 0)) {
+    if (widget.days.every((d) => d.attempts == 0)) {
       return Text(
         "最近还没有练习记录，练一组就会画出来。",
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Bs.secondary),
       );
     }
     return SizedBox(
-      height: height,
-      child: CustomPaint(
-        painter: _DailyPainter(days),
-        child: const SizedBox.expand(),
+      height: widget.height,
+      child: LayoutBuilder(
+        builder: (context, constraints) => MouseRegion(
+          onHover: (e) => setState(() => _hover = _slotAt(e.localPosition.dx, constraints.maxWidth)),
+          onExit: (_) => setState(() => _hover = null),
+          child: CustomPaint(
+            painter: _DailyPainter(widget.days, hover: _hover),
+            child: const SizedBox.expand(),
+          ),
+        ),
       ),
     );
   }
 }
 
 class _DailyPainter extends CustomPainter {
-  _DailyPainter(this.days);
+  _DailyPainter(this.days, {this.hover});
 
   final List<DailyCount> days;
+  final int? hover;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -718,9 +788,25 @@ class _DailyPainter extends CustomPainter {
         const Radius.circular(3),
       );
       canvas.drawRRect(rect, Paint()..color = color);
+      if (hover == i) {
+        canvas.drawRRect(
+          rect.inflate(2),
+          Paint()
+            ..color = Bs.dark
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        );
+      }
       if (isToday || i == 0 || day.day.day == 1) {
         _text(canvas, Offset(center, chart.bottom + 2), "${day.day.month}/${day.day.day}", isToday ? Bs.dark : Bs.secondary, align: TextAlign.center);
       }
+    }
+    if (hover != null && hover! < days.length) {
+      final day = days[hover!];
+      final detail = day.attempts == 0
+          ? "${day.day.month}/${day.day.day} · 没练"
+          : "${day.day.month}/${day.day.day} · ${day.attempts} 题 · 正确 ${(day.rate * 100).round()}%";
+      _text(canvas, const Offset(0, 0), detail, Bs.dark);
     }
   }
 
@@ -739,7 +825,8 @@ class _DailyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DailyPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _DailyPainter oldDelegate) =>
+      true; // 悬停状态画在图里，hover 变化就重画；图本身小，不值得做差量比较
 }
 
 /// 各章节正确率横向对比：条越短、越红的越该优先补（主仓库 ADR 0056）。

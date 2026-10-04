@@ -1130,7 +1130,10 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           const SizedBox(height: 10),
-          ExamTrend(scores: scores, passScore: subject.exam!.passScore),
+          ExamTrend(
+            records: [for (final e in mine.reversed) (e.score, e.at, e.passed)],
+            passScore: subject.exam!.passScore,
+          ),
         ],
       ),
     );
@@ -1298,6 +1301,15 @@ class _HomePageState extends State<HomePage> {
                 : "最近一次答错 $_wrongCount 道，按错过的次数排好了——排在前面的是反复栽跟头的题。",
             style: Theme.of(context).textTheme.bodyLarge,
           ),
+          if (_wrongCount == 0) ...[
+            const SizedBox(height: 16),
+            // 错题清空了，下一步是保持手感：强化练习从错题库抽，库空时抽薄弱章节的新题
+            //（主仓库 ADR 0085），正好接住（ADR 0061 决策 4）。
+            FilledButton.tonal(
+              onPressed: () => _go(_reinforceId),
+              child: const Text("去强化练习"),
+            ),
+          ],
           if (_wrongCount > 0) ...[
             const SizedBox(height: 20),
             FilledButton(
@@ -1370,6 +1382,10 @@ class _HomePageState extends State<HomePage> {
     return ReinforcePage(
       plan: _reinforcePlan,
       onReshuffle: _reshuffleReinforce,
+      onNewPractice: () {
+        final s1 = widget.bank.curriculum.subject("subject1");
+        _startPractice(s1, _openPool(s1), "待练");
+      },
       subjects: subjects,
       priorities: _priorities,
       diagnosis: _diagnosis,

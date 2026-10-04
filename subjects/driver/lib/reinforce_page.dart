@@ -47,6 +47,7 @@ class ReinforcePage extends StatelessWidget {
     required this.topicTitles,
     required this.onStart,
     required this.onReshuffle,
+    this.onNewPractice,
     this.diagnosis,
   });
 
@@ -58,6 +59,9 @@ class ReinforcePage extends StatelessWidget {
 
   /// 「换一批」：从历史错题里重新抽一轮（主仓库 ADR 0085）。
   final VoidCallback onReshuffle;
+
+  /// 题池空时的出口：去练新题（ADR 0061 决策 4）。null 就不显示这个入口。
+  final VoidCallback? onNewPractice;
 
   /// 学习诊断（遗忘、错因、选错的方式、与全国比、强化练习成效）；没有就不显示这一区。
   final DiagnosisData? diagnosis;
@@ -123,8 +127,16 @@ class ReinforcePage extends StatelessWidget {
           const SizedBox(height: 6),
           Text("不计时、不占模拟考成绩；模拟考仍从整个题库按考场配比抽取。", style: body),
           const SizedBox(height: 18),
-          if (plan.picks.isEmpty)
-            Text("题池里还没有可练的题。", style: body)
+          if (plan.picks.isEmpty) ...[
+            Text("题池里还没有可练的题。", style: body),
+            if (onNewPractice != null) ...[
+              const SizedBox(height: 12),
+              FilledButton.tonal(
+                onPressed: onNewPractice,
+                child: const Text("去练新题"),
+              ),
+            ],
+          ]
           else ...[
             Wrap(
               spacing: 10,
