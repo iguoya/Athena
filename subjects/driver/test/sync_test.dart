@@ -15,6 +15,14 @@ class FakeApi {
   /// 模拟外网被 Cloudflare Access 拦住：所有请求 302 到登录页（ADR 0077）。
   var _blocked = false;
 
+  /// 收到的请求（"GET /attempts?…"），按到达顺序；同步器发了多少、发的什么都从这里看。
+  final requests = <String>[];
+
+  /// 给每个 GET 加的延迟，用来把「一轮同步进行中」拉长到测试能插手；同时统计并发度。
+  var getDelay = Duration.zero;
+  var _inFlight = 0;
+  var maxInFlight = 0;
+
   /// 模拟旧版后台：没带设备令牌就 401。
   var _legacy = false;
 
@@ -53,6 +61,11 @@ class FakeApi {
 
   void setDown(bool down) => _down = down;
 
+  /// 模拟连不上：直接掐断连接（不回任何响应），客户端看到的是网络错误，不是空的 200。
+  var _drop = false;
+
+  void setDrop(bool drop) => _drop = drop;
+
   void setBlocked(bool blocked) => _blocked = blocked;
 
   void setLegacy(bool legacy) => _legacy = legacy;
@@ -62,35 +75,49 @@ class FakeApi {
   Map<String, Object?>? draft(String user, String key) =>
       _drafts["$user${String.fromCharCode(0)}$key"];
 
-  Future<void> _listen() async {
-    await for (final request in _server!) {
-      final response = request.response;
-      try {
-        if (_down) {
-          await response.close();
-          continue;
-        }
-        if (_legacy) {
-          _json(response, 401, {"error": "unauthorized", "message": "缺少或无效的设备令牌"});
-          continue;
-        }
-        if (_blocked) {
-          response
-            ..statusCode = 302
-            ..headers.set("Location", "https://example.cloudflareaccess.com/cdn-cgi/access/login/x")
-            ..headers.set("Www-Authenticate", "Cloudflare-Access resource_metadata=x");
-          await response.close();
-          continue;
-        }
-        final user = request.headers.value("X-Athena-User")?.trim() ?? "";
-        if (user.isEmpty) {
-          _json(response, 400, {"error": "invalid", "message": "user：不能为空"});
-          continue;
-        }
-        await _handle(request, response, user);
-      } catch (_) {
-        _json(response, 500, {"error": "internal"});
+  void _listen() {
+    // 每个请求各自处理，不排队：真实服务端是并发的，同步器并行拉取时要能看出并发度。
+    _server!.listen(_serve);
+  }
+
+  Future<void> _serve(HttpRequest request) async {
+    final response = request.response;
+    requests.add("${request.method} ${request.uri.path}");
+    try {
+      if (_drop) {
+        (await request.response.detachSocket()).destroy();
+        return;
       }
+      if (_down) {
+        await response.close();
+        return;
+      }
+      if (_legacy) {
+        _json(response, 401, {"error": "unauthorized", "message": "缺少或无效的设备令牌"});
+        return;
+      }
+      if (_blocked) {
+        response
+          ..statusCode = 302
+          ..headers.set("Location", "https://example.cloudflareaccess.com/cdn-cgi/access/login/x")
+          ..headers.set("Www-Authenticate", "Cloudflare-Access resource_metadata=x");
+        await response.close();
+        return;
+      }
+      final user = request.headers.value("X-Athena-User")?.trim() ?? "";
+      if (user.isEmpty) {
+        _json(response, 400, {"error": "invalid", "message": "user：不能为空"});
+        return;
+      }
+      if (request.method == "GET" && getDelay > Duration.zero) {
+        _inFlight++;
+        if (_inFlight > maxInFlight) maxInFlight = _inFlight;
+        await Future<void>.delayed(getDelay);
+        _inFlight--;
+      }
+      await _handle(request, response, user);
+    } catch (_) {
+      _json(response, 500, {"error": "internal"});
     }
   }
 
@@ -434,5 +461,135 @@ void main() {
     await blocked.syncNow();
     expect(store.pendingCount(), 0, reason: "放行后队列自然补发");
     blocked.stop();
+  });
+
+  Future<void> waitFor(bool Function() done, {Duration timeout = const Duration(seconds: 5)}) async {
+    final deadline = DateTime.now().add(timeout);
+    while (!done()) {
+      if (DateTime.now().isAfter(deadline)) fail("等了 $timeout 条件还没成立");
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+  }
+
+  test("拉取并行：十几个接口同时发（不超过 4 路），一轮耗时约等于最慢的几批而不是全部相加", () async {
+    api.getDelay = const Duration(milliseconds: 120);
+    final watch = Stopwatch()..start();
+    await engine.syncNow();
+    watch.stop();
+    // 8 类数据 + 成就 + 1 份草稿 = 10 个 GET；逐个发要 1.2 秒以上，4 路并行 3 批约 0.36 秒。
+    expect(api.requests.where((r) => r.startsWith("GET")).length, 10);
+    expect(api.maxInFlight, inInclusiveRange(2, 4));
+    expect(watch.elapsedMilliseconds, lessThan(900));
+  });
+
+  test("拉取出错就不再起新任务，整轮按失败处理", () async {
+    api.setLegacy(true);
+    await engine.syncNow();
+    expect(engine.status.value.lastError, contains("旧版本"));
+    expect(api.requests.length, lessThanOrEqualTo(4), reason: "第一批 4 个请求出错后，不再往外发剩下的 6 个");
+  });
+
+  test("写入后的触发只上传、不拉取", () async {
+    final quick = SyncEngine(
+      store: store,
+      config: ApiConfig(lanBase: api.base, wanBase: null),
+      user: "tiger",
+      draftKeys: const ["subject1.exam"],
+      debounce: const Duration(milliseconds: 20),
+    );
+    addTearDown(quick.stop);
+    api.requests.clear();
+    await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
+    await waitFor(() => store.pendingCount() == 0);
+    expect(api.rowCount("attempts"), 1);
+    expect(api.requests, isNotEmpty);
+    expect(api.requests.every((r) => r.startsWith("POST")), isTrue, reason: "没有任何 GET：别处的新数据等定时器那一轮再拉");
+  });
+
+  test("上传一送完，待同步数立刻清零，不等后面的拉取", () async {
+    api.getDelay = const Duration(milliseconds: 150);
+    await store.recordAttempt(questionId: "q1", topicId: "t", subjectId: "s", correct: true);
+    // 状态的初始值本来就是 pending = 0，所以要同时要求「服务端已经收到了」和「拉取还没做完」才算数。
+    var clearedEarly = false;
+    engine.status.addListener(() {
+      final v = engine.status.value;
+      final gets = api.requests.where((r) => r.startsWith("GET")).length;
+      if (v.running && v.pending == 0 && api.rowCount("attempts") == 1 && gets < 10) clearedEarly = true;
+    });
+    await engine.syncNow();
+    expect(clearedEarly, isTrue, reason: "上传完到整轮结束之间，界面应该已经看到待同步数为 0");
+  });
+
+  test("一轮进行中到来的新写入，本轮结束后马上补跑，不等 5 分钟", () async {
+    final quick = SyncEngine(
+      store: store,
+      config: ApiConfig(lanBase: api.base, wanBase: null),
+      user: "tiger",
+      draftKeys: const ["subject1.exam"],
+      debounce: const Duration(milliseconds: 20),
+    );
+    addTearDown(quick.stop);
+    api.getDelay = const Duration(milliseconds: 150);
+    final round = quick.syncNow(); // 没有待传的，直接进入拉取
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    await store.recordAttempt(questionId: "late", topicId: "t", subjectId: "s", correct: false);
+    await round;
+    await waitFor(() => store.pendingCount() == 0);
+    expect(api.rowCount("attempts"), 1);
+  });
+
+  group("内网与外网", () {
+    late FakeApi lan;
+
+    setUp(() async {
+      lan = FakeApi();
+      await lan.start();
+    });
+
+    tearDown(() async {
+      await lan._server!.close(force: true);
+    });
+
+    SyncEngine both({Duration probe = const Duration(minutes: 10)}) {
+      final e = SyncEngine(
+        store: store,
+        config: ApiConfig(lanBase: lan.base, wanBase: api.base),
+        user: "tiger",
+        draftKeys: const [],
+        lanProbeInterval: probe,
+      );
+      addTearDown(e.stop);
+      return e;
+    }
+
+    test("内网连不上就走外网；外网用着的时候，没到探测间隔不再去碰内网", () async {
+      lan.setDrop(true);
+      final e = both();
+      await store.recordAttempt(questionId: "a", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow();
+      expect(api.rowCount("attempts"), 1);
+
+      final lanRequests = lan.requests.length;
+      lan.setDrop(false);
+      await store.recordAttempt(questionId: "b", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow();
+      expect(api.rowCount("attempts"), 2, reason: "还没到探测间隔，继续走外网");
+      expect(lan.requests.length, lanRequests);
+    });
+
+    test("回到内网：到了探测间隔先试内网，连得上就切回直连", () async {
+      lan.setDrop(true);
+      final e = both(probe: Duration.zero);
+      await store.recordAttempt(questionId: "a", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow();
+      expect(api.rowCount("attempts"), 1);
+      expect(lan.rowCount("attempts"), 0);
+
+      lan.setDrop(false);
+      await store.recordAttempt(questionId: "b", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow();
+      expect(lan.rowCount("attempts"), 1, reason: "内网通了，新记录直接送内网");
+      expect(api.rowCount("attempts"), 1);
+    });
   });
 }

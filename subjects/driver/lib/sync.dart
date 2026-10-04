@@ -168,6 +168,8 @@ class SyncEngine {
     required ApiConfig config,
     required this.user,
     required this.draftKeys,
+    this.debounce = const Duration(seconds: 2),
+    this.lanProbeInterval = const Duration(minutes: 10),
   }) : _status = ValueNotifier(const SyncStatus()) {
     _store = store;
     _config = config;
@@ -189,6 +191,14 @@ class SyncEngine {
   static const _requestTimeout = Duration(seconds: 15);
   static const _interval = Duration(minutes: 5);
 
+  /// 内网地址在外网环境里多半连不上（路由器不在同一网络，包被丢弃而不是被拒绝），等满
+  /// [_requestTimeout] 才失败会让第一次请求卡很久。内网在家里是毫秒级的事，所以探测它只给这么长。
+  static const _lanProbeTimeout = Duration(seconds: 3);
+
+  /// 拉取时同时发出的请求数。一轮要拉十几个互相独立的接口，逐个等往返在外网（经 Cloudflare）
+  /// 每个要几百毫秒；并行之后一轮的耗时约等于最慢那一个。路由器不大，所以不放开到全部同时发。
+  static const _pullConcurrency = 4;
+
   late final ProgressStore _store;
   late final ApiConfig _config;
 
@@ -200,6 +210,12 @@ class SyncEngine {
   /// 本地还没出现过，光靠本地 key 会漏。
   final List<String> draftKeys;
 
+  /// 写入后多久触发上传：连续答题时合并成一次。
+  final Duration debounce;
+
+  /// 当前走着外网时，隔多久再试一次内网直连（回到家里能自动切回来）。
+  final Duration lanProbeInterval;
+
   late final ValueNotifier<SyncStatus> _status;
   int _pulledTotal = 0;
   Timer? _timer;
@@ -208,6 +224,10 @@ class SyncEngine {
   final _client = http.Client();
   bool _stopped = false;
   bool _running = false;
+
+  /// 一轮同步进行中又有新写入入队：本轮结束后要补跑一轮，否则要等下一次写入或 5 分钟定时器。
+  bool _dirty = false;
+  DateTime _lanProbeAfter = DateTime.fromMillisecondsSinceEpoch(0);
 
   ValueListenable<SyncStatus> get status => _status;
 
@@ -228,10 +248,18 @@ class SyncEngine {
   }
 
   /// 写入后的防抖触发：连续答题时不要每题都起一轮 HTTP。
+  ///
+  /// 只上传、不拉取：刚写入的是本机的新数据，把它送出去就是这次触发的全部目的；别处的新数据
+  /// 等定时器那一轮再拉，否则每答几题就要多发十几个请求去问「有没有新的」。
+  /// 一轮正在进行时到来的写入记下来，本轮结束后补跑（见 [syncNow]）。
   void trigger() {
-    if (_stopped || _running) return;
+    if (_stopped) return;
+    if (_running) {
+      _dirty = true;
+      return;
+    }
     _debounce?.cancel();
-    _debounce = Timer(const Duration(seconds: 2), () => syncNow());
+    _debounce = Timer(debounce, () => syncNow(pull: false));
   }
 
   /// 状态发布。lastError 是三态（设置 / 保留 / 清除），copyWith 的「null = 保留」
@@ -248,15 +276,18 @@ class SyncEngine {
     );
   }
 
-  /// 一轮完整同步：先上传（把本地新增推出去），再拉取（把别处的新增收进来）。
+  /// 一轮同步：先上传（把本地新增推出去），再拉取（把别处的新增收进来）；[pull] 为 false 时只上传。
   /// 任何一步临时失败就整轮结束——上传与拉取的先后不影响收敛：两边都是幂等的。
-  Future<void> syncNow() async {
+  Future<void> syncNow({bool pull = true}) async {
     if (_running || _stopped) return;
     _running = true;
+    _dirty = false;
+    var completed = false;
     _status.value = _status.value.copyWith(running: true);
     try {
       await _flush();
-      await _pull();
+      if (pull) await _pull();
+      completed = true;
       if (_store.deadCount() > 0) {
         // 本轮走完但仍有标死记录：错误不能被「同步完成」盖掉（ADR 0070 决策 4）。
         _publish(error: "有 ${_store.deadCount()} 条记录无法同步。");
@@ -272,6 +303,8 @@ class SyncEngine {
       _running = false;
       _status.value = _status.value.copyWith(running: false);
     }
+    // 只在本轮成功时补跑：失败多半是没网，立刻重试只会每隔两秒空转一次，交给 5 分钟的定时器。
+    if (completed && _dirty) trigger();
   }
 
   // ---------------------------------------------------------------- 上传
@@ -314,6 +347,8 @@ class SyncEngine {
             });
         }
         _store.outboxDelete([for (final entry in batch) entry.id]);
+        // 送完一批就发布待同步数：后面的拉取要好几秒，界面不该一直显示已经送完的数。
+        _publish();
       } on SyncInvalid catch (error) {
         // 整批拒收时无法知道是哪一条（服务端 400 指向 items[i]）：追加型资源逐条
         // 复试一次，把坏的那条标死，其余继续。单条资源（成就、草稿、已读）直接标死。
@@ -339,19 +374,27 @@ class SyncEngine {
 
   // ---------------------------------------------------------------- 拉取
 
-  Future<void> _pull() async {
-    for (final resource in _resources) {
-      while (true) {
-        final cursor = _store.cursor(resource);
-        final data = await _send("GET", "/$resource?after_id=$cursor&limit=$_batchSize", null);
-        final items = (data["items"] as List<dynamic>? ?? const []).cast<Map<String, dynamic>>();
-        _store.applyRemote(resource, items);
-        _pulledTotal += items.length;
-        _store.setCursor(resource, (data["next_after_id"] as num).toInt());
-        if (data["has_more"] != true) break;
-      }
-    }
+  /// 拉取：十几个互相独立的接口并行发（[_pullConcurrency] 路）。每个资源自己的翻页仍是串行的，
+  /// 游标按资源各记各的，所以并行不影响收敛；本地库的写入都是同步方法，互相不会交错。
+  Future<void> _pull() => _runLimited([
+    for (final resource in _resources) () => _pullResource(resource),
+    _pullAchievements,
+    for (final key in {...draftKeys, ..._store.localDraftKeys()}) () => _pullDraft(key),
+  ]);
 
+  Future<void> _pullResource(String resource) async {
+    while (true) {
+      final cursor = _store.cursor(resource);
+      final data = await _send("GET", "/$resource?after_id=$cursor&limit=$_batchSize", null);
+      final items = (data["items"] as List<dynamic>? ?? const []).cast<Map<String, dynamic>>();
+      _store.applyRemote(resource, items);
+      _pulledTotal += items.length;
+      _store.setCursor(resource, (data["next_after_id"] as num).toInt());
+      if (data["has_more"] != true) break;
+    }
+  }
+
+  Future<void> _pullAchievements() async {
     final achievements = await _send("GET", "/achievements", null);
     final achievementsBefore = _store.achievements().length;
     for (final item in (achievements["items"] as List<dynamic>? ?? const [])) {
@@ -360,19 +403,40 @@ class SyncEngine {
     }
     // 成就接口每次返回全部，只数真正新增的，免得每轮同步都让首页重读。
     _pulledTotal += _store.achievements().length - achievementsBefore;
+  }
 
-    final keys = {...draftKeys, ..._store.localDraftKeys()};
-    for (final key in keys) {
-      try {
-        final data = await _send("GET", "/exam-drafts/$key", null);
-        // 真实服务端把草稿字段直接放在响应顶层；早先的假服务端多包了一层 draft。两种都认。
-        final raw = (data["draft"] is Map ? data["draft"] as Map : data).cast<String, Object?>();
-        _store.applyRemoteDraft(key, ExamDraft.fromApi(raw));
-      } on SyncNotFound {
-        // 404：服务端没有这份草稿（别处交卷后删了）。
-        _store.applyRemoteDraft(key, null);
+  Future<void> _pullDraft(String key) async {
+    try {
+      final data = await _send("GET", "/exam-drafts/$key", null);
+      // 真实服务端把草稿字段直接放在响应顶层；早先的假服务端多包了一层 draft。两种都认。
+      final raw = (data["draft"] is Map ? data["draft"] as Map : data).cast<String, Object?>();
+      _store.applyRemoteDraft(key, ExamDraft.fromApi(raw));
+    } on SyncNotFound {
+      // 404：服务端没有这份草稿（别处交卷后删了）。
+      _store.applyRemoteDraft(key, null);
+    }
+  }
+
+  /// 最多 [limit] 路并行地跑完 [tasks]。出了第一个错就不再起新任务（断网时别每个都等一遍超时），
+  /// 已经发出去的等它结束，最后把第一个错抛出去——调用方据此判断这一轮失败，行为与逐个执行时一致。
+  Future<void> _runLimited(List<Future<void> Function()> tasks, {int limit = _pullConcurrency}) async {
+    var next = 0;
+    Object? firstError;
+    StackTrace? firstStack;
+    Future<void> worker() async {
+      while (firstError == null && next < tasks.length) {
+        final task = tasks[next++];
+        try {
+          await task();
+        } catch (error, stack) {
+          firstError ??= error;
+          firstStack ??= stack;
+        }
       }
     }
+
+    await Future.wait([for (var i = 0; i < limit && i < tasks.length; i++) worker()]);
+    if (firstError != null) Error.throwWithStackTrace(firstError!, firstStack!);
   }
 
   // ---------------------------------------------------------------- HTTP
@@ -381,9 +445,13 @@ class SyncEngine {
   /// [SyncTransient]，HTTP 401 是 [SyncAuthError]，400 是 [SyncInvalid]，
   /// 其余状态码按临时失败处理。
   Future<Map<String, Object?>> _send(String method, String path, Map<String, Object?>? body) async {
+    // 上次用活的端点优先；但正走着外网时，隔一阵先试一次内网，回到家里就能自动切回直连。
+    final lan = _config.lanBase;
+    final probeLan = _activeBase != null && _activeBase != lan && !DateTime.now().isBefore(_lanProbeAfter);
     final bases = [
+      if (probeLan) lan,
       ?_activeBase,
-      _config.lanBase,
+      lan,
       ?_config.wanBase,
     ];
     final tried = <String>{};
@@ -404,8 +472,10 @@ class SyncEngine {
         request.headers["Content-Type"] = "application/json; charset=utf-8";
         request.body = jsonEncode(body);
       }
+      // 内网不是当前在用的端点时，只给探测那么长的时间（见 [_lanProbeTimeout]）。
+      final probing = base == lan && _activeBase != lan;
       try {
-        final response = await _client.send(request).timeout(_requestTimeout);
+        final response = await _client.send(request).timeout(probing ? _lanProbeTimeout : _requestTimeout);
         final text = await response.stream.bytesToString();
         _activeBase = base;
         if (blockedByCloudflare(response.statusCode, response.headers, text)) throw SyncAuthError();
@@ -430,8 +500,10 @@ class SyncEngine {
         rethrow;
       } on TimeoutException {
         lastNetworkError = "$uri 超时";
+        if (probing) _lanProbeAfter = DateTime.now().add(lanProbeInterval);
       } catch (error) {
         lastNetworkError = "$error";
+        if (probing) _lanProbeAfter = DateTime.now().add(lanProbeInterval);
       }
     }
     throw SyncTransient(lastNetworkError == null ? "没有可用端点" : "网络不通（$lastNetworkError）");
