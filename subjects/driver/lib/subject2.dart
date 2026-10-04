@@ -675,7 +675,7 @@ class _TrendRow extends StatelessWidget {
           Expanded(
             child: rates.isEmpty
                 ? Text("还没有记录", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary))
-                : SizedBox(height: 44, child: CustomPaint(painter: _TrendPainter(rates))),
+                : _RateLine(rates),
           ),
           SizedBox(
             width: 150,
@@ -692,9 +692,12 @@ class _TrendRow extends StatelessWidget {
 }
 
 class _TrendPainter extends CustomPainter {
-  _TrendPainter(this.rates);
+  _TrendPainter(this.rates, {this.hover});
 
   final List<double> rates;
+
+  /// 悬停的练车日下标（ADR 0061 同一批交互语言）：点加描边圈，图内给取值。
+  final int? hover;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -719,10 +722,67 @@ class _TrendPainter extends CustomPainter {
     for (var i = 0; i < rates.length; i++) {
       canvas.drawCircle(at(i), 4, Paint()..color = rates[i] >= 0.8 ? Bs.success : (rates[i] >= 0.5 ? Bs.orange : Bs.danger));
     }
+    if (hover != null && hover! < rates.length) {
+      final point = at(hover!);
+      canvas.drawCircle(
+        point,
+        7,
+        Paint()
+          ..color = Bs.dark
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+      final label = "第${hover! + 1}个练车日 · ${(rates[hover!] * 100).round()}%";
+      _text(canvas, point, label, size);
+    }
+  }
+
+  /// 取值小字贴着悬停点画：点在下半就写上方，反之下方；水平方向不出画布。
+  void _text(Canvas canvas, Offset at, String text, Size size) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: const TextStyle(color: Bs.dark, fontSize: 11, fontWeight: FontWeight.w600)),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final dx = (at.dx - painter.width / 2).clamp(0.0, max(0.0, size.width - painter.width)).toDouble();
+    final dy = at.dy > size.height / 2 ? at.dy - painter.height - 8 : at.dy + 8;
+    painter.paint(canvas, Offset(dx, dy.clamp(0.0, size.height - painter.height).toDouble()));
   }
 
   @override
-  bool shouldRepaint(_TrendPainter old) => old.rates != rates;
+  bool shouldRepaint(_TrendPainter old) => old.rates != rates || old.hover != hover;
+}
+
+/// 单项能过率折线：悬停高亮最近的一个练车日并给取值（ADR 0061）。
+class _RateLine extends StatefulWidget {
+  const _RateLine(this.rates);
+
+  final List<double> rates;
+
+  @override
+  State<_RateLine> createState() => _RateLineState();
+}
+
+class _RateLineState extends State<_RateLine> {
+  int? _hover;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 44,
+      child: LayoutBuilder(
+        builder: (context, constraints) => MouseRegion(
+          onHover: (e) => setState(() {
+            final n = widget.rates.length;
+            if (n == 0 || constraints.maxWidth <= 0) return;
+            final t = (e.localPosition.dx / constraints.maxWidth) * (n - 1);
+            _hover = t.round().clamp(0, n - 1);
+          }),
+          onExit: (_) => setState(() => _hover = null),
+          child: CustomPaint(painter: _TrendPainter(widget.rates, hover: _hover)),
+        ),
+      ),
+    );
+  }
 }
 
 /// 练车前 5 分钟（ADR 0039）：今日重点的每一项，过一遍简报、点位卡、教练的话，想默演就默演。

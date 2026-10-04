@@ -152,39 +152,80 @@ class _SignCellState extends State<_SignCell> {
       height: 1.35,
     );
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hover = true),
       onExit: (_) => setState(() => _hover = false),
-      child: AnimatedContainer(
-        duration: Bs.durFast,
-        curve: Curves.easeOut,
-        width: 176,
-        transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
-        padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
-        decoration: BoxDecoration(
-          color: Bs.light,
-          borderRadius: BorderRadius.circular(Bs.radius),
-          boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
-        ),
-        child: Column(
-          children: [
-            SignView(id: widget.sign.id, size: 96),
-            const SizedBox(height: 10),
-            Text(
-              widget.sign.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
-            ),
-            if (widget.sign.band == QuestionBandColors.hot) ...[
+      child: GestureDetector(
+        onTap: () => _zoom(context),
+        child: AnimatedContainer(
+          duration: Bs.durFast,
+          curve: Curves.easeOut,
+          width: 176,
+          transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
+          padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+          decoration: BoxDecoration(
+            color: Bs.light,
+            borderRadius: BorderRadius.circular(Bs.radius),
+            boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
+          ),
+          child: Column(
+            children: [
+              SignView(id: widget.sign.id, size: 96),
+              const SizedBox(height: 10),
+              Text(
+                widget.sign.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
+              ),
+              if (widget.sign.band == QuestionBandColors.hot) ...[
+                const SizedBox(height: 6),
+                BsBadge(
+                  text: "高频",
+                  color: Bs.bandColor(QuestionBandColors.hot),
+                  icon: Glyph.hot,
+                ),
+              ],
               const SizedBox(height: 6),
-              BsBadge(
-                text: "高频",
-                color: Bs.bandColor(QuestionBandColors.hot),
-                icon: Glyph.hot,
+              Text(widget.sign.meaning, textAlign: TextAlign.center, style: muted),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 点开看大图（ADR 0059）：速记格子里 96px 的图看细节不够，放大用玻璃浮层——
+  /// 它本来就是「小面积浮层」的既定用途（ADR 0058），遮罩不遮暗，速记页还在身后。
+  void _zoom(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (dialogContext) => Dialog(
+        insetPadding: const EdgeInsets.all(32),
+        backgroundColor: Colors.transparent,
+        child: GlassPanel(
+          padding: const EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SignView(id: widget.sign.id, size: 192),
+              const SizedBox(height: 14),
+              Text(
+                widget.sign.name,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.sign.meaning,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.45,
+                  color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
-            const SizedBox(height: 6),
-            Text(widget.sign.meaning, textAlign: TextAlign.center, style: muted),
-          ],
+          ),
         ),
       ),
     );

@@ -527,42 +527,54 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
       ),
-      if (expanded) ...[
-        // 科目二没有笔试（ADR 0036）。
-        if (subject.exam != null)
-          _navLine(
-            icon: Glyph.mockExam,
-            selected: session != null && session.draftKey == "$id.exam",
-            label: "模拟考试",
-            indent: true,
-            onTap: () => _startExam(subject),
-          ),
-        () {
-          final n = _pending(_openPool(subject)).length;
-          return _navLine(
-            icon: Glyph.practice,
-            selected: inSession("${subject.code} · 待练"),
-            label: n == 0 ? "全部练习（已掌握）" : "待练 $n 题",
-            muted: n == 0,
-            indent: true,
-            onTap: () => _startPractice(subject, _openPool(subject), "待练"),
-          );
-        }(),
-        for (final topic in subject.topics)
-          () {
-            final questions = _openTopic(subject, topic);
-            final pending = _pending(questions);
-            return _navLine(
-              icon: Glyph.topic,
-              selected: inSession("${subject.code} · ${topic.title}"),
-              label: pending.isEmpty ? topic.title : "${topic.title}  ${pending.length}",
-              muted: pending.isEmpty,
-              indent: true,
-              onTap: pending.isEmpty ? null : () => _startPractice(subject, questions, topic.title),
-            );
-          }(),
-        const SizedBox(height: 6),
-      ],
+      // 展开收起走 200ms 高度动画（Bs.durFast 令牌）：树形目录是最高频的导航动作，
+      // 直插直删的跳变最扎眼（批次 8 收尾）。收起时留一个等宽空盒，动画才有起点尺寸。
+      AnimatedSize(
+        duration: Bs.durFast,
+        curve: Curves.easeOut,
+        alignment: Alignment.topCenter,
+        child: expanded
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 科目二没有笔试（ADR 0036）。
+                  if (subject.exam != null)
+                    _navLine(
+                      icon: Glyph.mockExam,
+                      selected: session != null && session.draftKey == "$id.exam",
+                      label: "模拟考试",
+                      indent: true,
+                      onTap: () => _startExam(subject),
+                    ),
+                  () {
+                    final n = _pending(_openPool(subject)).length;
+                    return _navLine(
+                      icon: Glyph.practice,
+                      selected: inSession("${subject.code} · 待练"),
+                      label: n == 0 ? "全部练习（已掌握）" : "待练 $n 题",
+                      muted: n == 0,
+                      indent: true,
+                      onTap: () => _startPractice(subject, _openPool(subject), "待练"),
+                    );
+                  }(),
+                  for (final topic in subject.topics)
+                    () {
+                      final questions = _openTopic(subject, topic);
+                      final pending = _pending(questions);
+                      return _navLine(
+                        icon: Glyph.topic,
+                        selected: inSession("${subject.code} · ${topic.title}"),
+                        label: pending.isEmpty ? topic.title : "${topic.title}  ${pending.length}",
+                        muted: pending.isEmpty,
+                        indent: true,
+                        onTap: pending.isEmpty ? null : () => _startPractice(subject, questions, topic.title),
+                      );
+                    }(),
+                  const SizedBox(height: 6),
+                ],
+              )
+            : const SizedBox(width: double.infinity),
+      ),
     ];
   }
 
