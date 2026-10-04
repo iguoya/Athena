@@ -101,6 +101,9 @@ class Bs {
         fontSize: size,
         height: height,
         fontWeight: weight ?? style?.fontWeight,
+        // 等宽数字全局生效：统计大数、进度、计时刷新时宽度不抖（原来只有两处手写，
+        // 大数与漏斗一直漏；在主题层一处生效全库）。
+        fontFeatures: const [FontFeature.tabularFigures()],
       );
     }
 
@@ -221,6 +224,16 @@ ThemeData buildTheme(Skin skin) {
     ),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(Bs.radius)),
+    ),
+    // 桌面长列表的滚动条：圆角拇指、随皮肤走；桌面平台默认就会给 ScrollView 包
+    // Scrollbar，这里只定样式（错题本、题库这类长列表之前没有任何滚动指示）。
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: WidgetStatePropertyAll(skin.primary.withValues(alpha: 0.35)),
+      thickness: const WidgetStatePropertyAll(6),
+      radius: const Radius.circular(999),
+      minThumbLength: 48,
+      crossAxisMargin: 2,
+      mainAxisMargin: 4,
     ),
   );
 }

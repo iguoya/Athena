@@ -1281,7 +1281,7 @@ class _SessionStageState extends State<SessionStage> {
     return Text(
       limit == null ? "用时 ${_clock(elapsed)}" : "用时 ${_clock(elapsed)} / ${_clock(limit)}",
       style: textTheme.titleMedium?.copyWith(
-        fontFeatures: const [FontFeature.tabularFigures()],
+        // 等宽数字已由主题全局启用（look.dart），这里只管超时变红。
         color: over ? Bs.danger : null,
       ),
     );

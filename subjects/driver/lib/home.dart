@@ -912,7 +912,6 @@ class _HomePageState extends State<HomePage> {
       child: Text(
         "${(ratio * 100).floor()}%",
         textAlign: TextAlign.right,
-        style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
       ),
     );
   }
