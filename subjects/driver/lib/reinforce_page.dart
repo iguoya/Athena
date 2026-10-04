@@ -179,13 +179,16 @@ class ReinforcePage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FractionallySizedBox(
-                            widthFactor: (chapter.expectedLoss / maxLoss).clamp(0.02, 1.0),
-                            child: Container(
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: Bs.danger.withValues(alpha: 0.75),
-                                borderRadius: BorderRadius.circular(3),
+                          BsTweenFraction(
+                            end: (chapter.expectedLoss / maxLoss).clamp(0.02, 1.0),
+                            builder: (context, v) => FractionallySizedBox(
+                              widthFactor: v,
+                              child: Container(
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Bs.danger.withValues(alpha: 0.75),
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
                               ),
                             ),
                           ),
@@ -228,16 +231,25 @@ class _Funnel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: SizedBox(
-            height: 18,
-            child: Row(
-              children: [
-                for (final level in MasteryLevel.values)
-                  if ((funnel[level] ?? 0) > 0)
-                    Expanded(flex: funnel[level]!, child: Container(color: colors[level])),
-              ],
+        // 分段用 flex 排比，动画从整条长出（ADR 0060）；逐段动画要重写成定宽结构，不值。
+        BsTweenFraction(
+          end: 1,
+          builder: (context, v) => Align(
+            alignment: Alignment.centerLeft,
+            widthFactor: v,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: SizedBox(
+                height: 18,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    for (final level in MasteryLevel.values)
+                      if ((funnel[level] ?? 0) > 0)
+                        Expanded(flex: funnel[level]!, child: Container(color: colors[level])),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

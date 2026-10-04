@@ -551,11 +551,14 @@ class BsProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Bs.radius),
-      child: LinearProgressIndicator(
-        value: value.clamp(0, 1),
-        minHeight: 10,
-        color: color ?? Bs.primary,
-        backgroundColor: Bs.border,
+      child: BsTweenFraction(
+        end: value,
+        builder: (context, v) => LinearProgressIndicator(
+          value: v,
+          minHeight: 10,
+          color: color ?? Bs.primary,
+          backgroundColor: Bs.border,
+        ),
       ),
     );
   }
@@ -843,29 +846,48 @@ class MasteryRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pct = _total == 0 ? 0 : (mastered / _total * 100).round();
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CustomPaint(
-            size: Size(size, size),
-            painter: _MasteryRingPainter(mastered: mastered, pending: pending, untouched: untouched),
+    return BsTweenFraction(
+      end: 1,
+      builder: (context, v) {
+        final shown = (pct * v).round();
+        return SizedBox(
+          width: size,
+          height: size,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CustomPaint(
+                size: Size(size, size),
+                painter: _MasteryRingPainter(
+                  mastered: mastered,
+                  pending: pending,
+                  untouched: untouched,
+                  progress: v,
+                ),
+              ),
+              Text("$shown%", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            ],
           ),
-          Text("$pct%", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class _MasteryRingPainter extends CustomPainter {
-  _MasteryRingPainter({required this.mastered, required this.pending, required this.untouched});
+  _MasteryRingPainter({
+    required this.mastered,
+    required this.pending,
+    required this.untouched,
+    this.progress = 1,
+  });
 
   final int mastered;
   final int pending;
   final int untouched;
+
+  /// 滑入因子（ADR 0060）：各段弧长乘它，进页面时环从 0 长出来。
+  final double progress;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -887,7 +909,7 @@ class _MasteryRingPainter extends CustomPainter {
     for (final segment in [(mastered, Bs.success), (pending, Bs.paper), (untouched, Bs.warning)]) {
       final count = segment.$1;
       if (count == 0) continue;
-      final sweep = 2 * pi * count / total;
+      final sweep = 2 * pi * progress * count / total;
       canvas.drawArc(
         rect,
         start,
@@ -904,7 +926,10 @@ class _MasteryRingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _MasteryRingPainter oldDelegate) =>
-      oldDelegate.mastered != mastered || oldDelegate.pending != pending || oldDelegate.untouched != untouched;
+      oldDelegate.mastered != mastered ||
+      oldDelegate.pending != pending ||
+      oldDelegate.untouched != untouched ||
+      oldDelegate.progress != progress;
 }
 
 class StatTile extends StatelessWidget {
@@ -974,12 +999,15 @@ class RateRing extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
-        painter: _RingPainter(rate.clamp(0, 1), tone),
-        child: Center(
-          child: Text(
-            caption,
-            style: TextStyle(fontSize: size * 0.22, fontWeight: FontWeight.w700, color: tone),
+      child: BsTweenFraction(
+        end: rate,
+        builder: (context, v) => CustomPaint(
+          painter: _RingPainter(v, tone),
+          child: Center(
+            child: Text(
+              caption,
+              style: TextStyle(fontSize: size * 0.22, fontWeight: FontWeight.w700, color: tone),
+            ),
           ),
         ),
       ),
@@ -1197,6 +1225,67 @@ class _StaggerInState extends State<StaggerIn> with SingleTickerProviderStateMix
         position: Tween(begin: const Offset(0, 0.04), end: Offset.zero).animate(_anim),
         child: widget.child,
       ),
+    );
+  }
+}
+
+/// 换页淡入（ADR 0060）：[pageKey] 变化时新内容从 0 淡到 1。只淡入、不交叉溶解——
+/// 页面底是同一层环境色斑，淡入即够；交叉溶解会让新旧两棵页面树并存一个时长，
+/// 测试的唯一性断言和内存都跟着变贵。旧页立即卸载，测试照常查唯一性。
+class PageFadeIn extends StatefulWidget {
+  const PageFadeIn({super.key, required this.pageKey, required this.child});
+
+  final Object pageKey;
+  final Widget child;
+
+  @override
+  State<PageFadeIn> createState() => _PageFadeInState();
+}
+
+class _PageFadeInState extends State<PageFadeIn> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: Bs.durIn)..forward();
+  late Object _key = widget.pageKey;
+
+  @override
+  void didUpdateWidget(PageFadeIn oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pageKey != widget.pageKey) {
+      _key = widget.pageKey;
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+      child: KeyedSubtree(key: ValueKey(_key), child: widget.child),
+    );
+  }
+}
+
+/// 数值滑入（ADR 0060）：占比从 0 长到目标值（进页面一次），目标值变化时从旧值
+/// 滑到新值。进度条、环、漏斗这类占比图形共用；数字本身不跳、不循环。
+class BsTweenFraction extends StatelessWidget {
+  const BsTweenFraction({super.key, required this.end, required this.builder});
+
+  final double end;
+  final Widget Function(BuildContext context, double value) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: end.clamp(0, 1)),
+      duration: Bs.durIn,
+      curve: Curves.easeOutCubic,
+      builder: (context, v, _) => builder(context, v),
     );
   }
 }

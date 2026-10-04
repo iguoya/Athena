@@ -330,7 +330,11 @@ class _HomePageState extends State<HomePage> {
           SizedBox(width: 312, child: _sidebar(context)),
           VerticalDivider(width: 1, color: Bs.border),
           Expanded(
-            child: _session == null ? _overview(context) : _sessionPane(),
+            // 换页淡入（ADR 0060）：会话与各页之间 300ms 淡入，做题台内部无感。
+            child: PageFadeIn(
+              pageKey: _session == null ? _place : "session",
+              child: _session == null ? _overview(context) : _sessionPane(),
+            ),
           ),
         ],
       ),
