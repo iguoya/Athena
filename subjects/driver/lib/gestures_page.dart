@@ -1,9 +1,12 @@
 import "package:flutter/material.dart";
 
+import "gesture_animation.dart";
 import "gesture_painter.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
+import "recall.dart";
+import "reinforce.dart";
 
 /// 手势速记页（ADR 0073）：8 个法定手势动作加「手势的效力」总则，每条配一句
 /// 「看到之后怎么开」，反向映射的 29 道题能直接练。内容源是
@@ -12,12 +15,16 @@ class GesturesPage extends StatelessWidget {
   const GesturesPage({
     super.key,
     required this.gestures,
+    required this.histories,
     required this.daily,
     required this.mastered,
     required this.onStartPractice,
   });
 
   final List<TrafficGesture> gestures;
+
+  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  final HistorySet histories;
 
   /// 科目一与科目四的日常题：「练这组」按反向映射的题 id 从这里取题。
   final List<Question> daily;
@@ -43,6 +50,12 @@ class GesturesPage extends StatelessWidget {
             Icon(Glyph.gestures, color: Bs.paper),
             SizedBox(width: 8),
             Text("手势速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => _startRecall(context),
+              icon: const Icon(Glyph.question, size: 18),
+              label: const Text("考我"),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -68,7 +81,7 @@ class GesturesPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: Text("看伸直臂是交警哪只手、摆动臂往哪摆", style: muted),
+                    child: Text("每个动作都是动画，点开看分步与俯视", style: muted),
                   ),
                   const Spacer(),
                   FilledButton.icon(
@@ -84,7 +97,20 @@ class GesturesPage extends StatelessWidget {
               Wrap(
                 spacing: 14,
                 runSpacing: 14,
-                children: [for (final g in actions) _GestureCell(gesture: g)],
+                children: [
+                for (final g in actions)
+                  _GestureCell(
+                    gesture: g,
+                    other: g.confuseWith == null
+                        ? null
+                        : actions.where((x) => x.id == g.confuseWith).firstOrNull,
+                    status: statusOf(
+                      related: [for (final q in daily) if (g.questions.contains(q.id)) q],
+                      mastered: mastered,
+                      histories: histories,
+                    ),
+                  ),
+              ],
               ),
             ],
           ),
@@ -92,10 +118,38 @@ class GesturesPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           "手势信号依据《道路交通安全法实施条例》与公安部《交通警察道路执勤执法工作规范》；"
-          "图是应用内示意，认手势以现场指挥为准。",
+          "动画是应用内示意：姿势逐个用题库里的手势题图核对过，认手势以现场指挥为准。",
           style: muted,
         ),
       ],
+    );
+  }
+
+  RecallEntry _recallEntryOf(TrafficGesture g) {
+    final other = g.confuseWith == null
+        ? null
+        : gestures.where((x) => x.id == g.confuseWith).firstOrNull;
+    return RecallEntry(
+      id: g.id,
+      name: g.name,
+      meaning: g.meaning,
+      confuseName: other?.name,
+      confuseNote: g.confuseNote,
+      confuseView: other == null ? null : GestureView(id: other.id, size: 72),
+    );
+  }
+
+  /// 考我：全部手势进卡片流，收尾深链练全部相关题（ADR 0077）。
+  void _startRecall(BuildContext context) {
+    RecallSession.show(
+      context,
+      entries: [for (final g in gestures) _recallEntryOf(g)],
+      viewOf: (id) => GestureView(id: id, size: 192),
+      onStartPractice: () {
+        final ids = {for (final g in gestures) ...g.questions};
+        final related = [for (final q in daily) if (ids.contains(q.id)) q];
+        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 考我");
+      },
     );
   }
 
@@ -126,9 +180,13 @@ class GesturesPage extends StatelessWidget {
 /// 手势速记的一个格子：手绘图 + 名称 + 「看到之后怎么开」。交互与标志、标线、
 /// 仪表格一致：悬停上浮，点开玻璃浮层看大图。
 class _GestureCell extends StatefulWidget {
-  const _GestureCell({required this.gesture});
+  const _GestureCell({required this.gesture, required this.status, this.other});
 
   final TrafficGesture gesture;
+  final SymbolStatus status;
+
+  /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
+  final TrafficGesture? other;
 
   @override
   State<_GestureCell> createState() => _GestureCellState();
@@ -152,7 +210,7 @@ class _GestureCellState extends State<_GestureCell> {
         child: AnimatedContainer(
           duration: Bs.durFast,
           curve: Curves.easeOut,
-          width: 176,
+          width: 192,
           transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
           padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
@@ -160,9 +218,16 @@ class _GestureCellState extends State<_GestureCell> {
             borderRadius: BorderRadius.circular(Bs.radius),
             boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
           ),
-          child: Column(
+          child: Stack(
             children: [
-              GestureView(id: widget.gesture.id, size: 96),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: StatusDot(status: widget.status),
+              ),
+              Column(
+            children: [
+              GestureAnimation(id: widget.gesture.id, size: 120),
               const SizedBox(height: 10),
               Text(
                 widget.gesture.name,
@@ -179,6 +244,8 @@ class _GestureCellState extends State<_GestureCell> {
               ],
               const SizedBox(height: 6),
               Text(widget.gesture.meaning, textAlign: TextAlign.center, style: muted),
+            ],
+          ),
             ],
           ),
         ),
@@ -198,7 +265,7 @@ class _GestureCellState extends State<_GestureCell> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              GestureView(id: widget.gesture.id, size: 192),
+              GestureAnimation(id: widget.gesture.id, size: 260, interactive: true),
               const SizedBox(height: 14),
               Text(
                 widget.gesture.name,
@@ -214,6 +281,37 @@ class _GestureCellState extends State<_GestureCell> {
                   color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
                 ),
               ),
+              if (widget.other != null) ...[
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Bs.light,
+                    borderRadius: BorderRadius.circular(Bs.radius),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureView(id: widget.other!.id, size: 72),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("容易混：${widget.other!.name}", style: Theme.of(dialogContext).textTheme.titleSmall),
+                            const SizedBox(height: 4),
+                            Text(widget.gesture.confuseNote ?? "", style: TextStyle(
+                              fontSize: 14,
+                              height: 1.45,
+                              color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
+                            )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

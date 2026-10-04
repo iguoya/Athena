@@ -4,6 +4,8 @@ import "gauge.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
+import "recall.dart";
+import "reinforce.dart";
 
 /// 仪表速记页（ADR 0067）：手绘车内符号按「报警灯 / 指示灯 / 仪表表盘 /
 /// 开关与操纵件」四组摊开，每条配一句「亮了怎么办 / 这是什么」，每组能直接
@@ -13,12 +15,16 @@ class GaugesPage extends StatelessWidget {
   const GaugesPage({
     super.key,
     required this.gauges,
+    required this.histories,
     required this.daily,
     required this.mastered,
     required this.onStartPractice,
   });
 
   final List<Gauge> gauges;
+
+  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  final HistorySet histories;
 
   /// 科目一的日常题（非偏难）：「练这组」按反向映射的题 id 从这里取题。
   final List<Question> daily;
@@ -47,6 +53,12 @@ class GaugesPage extends StatelessWidget {
             Icon(Glyph.gauges, color: Bs.paper),
             SizedBox(width: 8),
             Text("仪表速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => _startRecall(context),
+              icon: const Icon(Glyph.question, size: 18),
+              label: const Text("考我"),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -64,6 +76,34 @@ class GaugesPage extends StatelessWidget {
           style: muted,
         ),
       ],
+    );
+  }
+
+  RecallEntry _recallEntryOf(Gauge gauge) {
+    final other = gauge.confuseWith == null
+        ? null
+        : gauges.where((g) => g.id == gauge.confuseWith).firstOrNull;
+    return RecallEntry(
+      id: gauge.id,
+      name: gauge.name,
+      meaning: gauge.meaning,
+      confuseName: other?.name,
+      confuseNote: gauge.confuseNote,
+      confuseView: other == null ? null : GaugeView(id: other.id, size: 72),
+    );
+  }
+
+  /// 考我：全部符号进卡片流，收尾深链练全部相关题（ADR 0077）。
+  void _startRecall(BuildContext context) {
+    RecallSession.show(
+      context,
+      entries: [for (final g in gauges) _recallEntryOf(g)],
+      viewOf: (id) => GaugeView(id: id, size: 192),
+      onStartPractice: () {
+        final ids = {for (final g in gauges) ...g.questions};
+        final related = [for (final q in daily) if (ids.contains(q.id)) q];
+        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 考我");
+      },
     );
   }
 
@@ -106,7 +146,20 @@ class GaugesPage extends StatelessWidget {
             Wrap(
               spacing: 14,
               runSpacing: 14,
-              children: [for (final gauge in inGroup) _GaugeCell(gauge: gauge)],
+              children: [
+                for (final gauge in inGroup)
+                  _GaugeCell(
+                    gauge: gauge,
+                    other: gauge.confuseWith == null
+                        ? null
+                        : inGroup.where((g) => g.id == gauge.confuseWith).firstOrNull,
+                    status: statusOf(
+                      related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
+                      mastered: mastered,
+                      histories: histories,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -118,9 +171,13 @@ class GaugesPage extends StatelessWidget {
 /// 仪表速记的一个格子：手绘符号 + 名称 + 「亮了怎么办」。交互与标志、标线格
 /// 一致：悬停上浮，点开玻璃浮层看大图。
 class _GaugeCell extends StatefulWidget {
-  const _GaugeCell({required this.gauge});
+  const _GaugeCell({required this.gauge, required this.status, this.other});
 
   final Gauge gauge;
+  final SymbolStatus status;
+
+  /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
+  final Gauge? other;
 
   @override
   State<_GaugeCell> createState() => _GaugeCellState();
@@ -152,7 +209,14 @@ class _GaugeCellState extends State<_GaugeCell> {
             borderRadius: BorderRadius.circular(Bs.radius),
             boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
           ),
-          child: Column(
+          child: Stack(
+            children: [
+              Positioned(
+                right: 0,
+                top: 0,
+                child: StatusDot(status: widget.status),
+              ),
+              Column(
             children: [
               GaugeView(id: widget.gauge.id, size: 96),
               const SizedBox(height: 10),
@@ -171,6 +235,8 @@ class _GaugeCellState extends State<_GaugeCell> {
               ],
               const SizedBox(height: 6),
               Text(widget.gauge.meaning, textAlign: TextAlign.center, style: muted),
+            ],
+          ),
             ],
           ),
         ),
@@ -206,6 +272,37 @@ class _GaugeCellState extends State<_GaugeCell> {
                   color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
                 ),
               ),
+              if (widget.other != null) ...[
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Bs.light,
+                    borderRadius: BorderRadius.circular(Bs.radius),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GaugeView(id: widget.other!.id, size: 72),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("容易混：${widget.other!.name}", style: Theme.of(dialogContext).textTheme.titleSmall),
+                            const SizedBox(height: 4),
+                            Text(widget.gauge.confuseNote ?? "", style: TextStyle(
+                              fontSize: 14,
+                              height: 1.45,
+                              color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
+                            )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

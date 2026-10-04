@@ -412,12 +412,18 @@ class RoadSign {
     required this.kind,
     required this.meaning,
     this.band = QuestionBand.common,
+    this.confuseWith,
+    this.confuseNote,
   });
 
   final String id;
   final String name;
   final String kind;
   final String band;
+
+  /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
+  final String? confuseWith;
+  final String? confuseNote;
 
   /// 一句行动导向的「看到之后怎么开」（ADR 0059）；出处是 signs.json 文件级的 GB 5768.2。
   final String meaning;
@@ -437,6 +443,8 @@ class RoadSign {
       kind: json["kind"] as String,
       meaning: json["meaning"] as String? ?? "",
       band: json["band"] as String? ?? QuestionBand.common,
+      confuseWith: json["confuse_with"] as String?,
+      confuseNote: json["confuse_note"] as String?,
     );
   }
 }
@@ -450,6 +458,8 @@ class Marking {
     required this.kind,
     required this.meaning,
     this.band = QuestionBand.common,
+    this.confuseWith,
+    this.confuseNote,
   });
 
   final String id;
@@ -459,6 +469,11 @@ class Marking {
   /// 一句行动导向的「看到之后怎么开」（ADR 0065）。
   final String meaning;
   final String band;
+
+  /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
+  final String? confuseWith;
+  final String? confuseNote;
+
 
   String get kindLabel => switch (kind) {
     "indicative" => "指示标线",
@@ -474,6 +489,8 @@ class Marking {
       kind: json["kind"] as String,
       meaning: json["meaning"] as String,
       band: json["band"] as String? ?? QuestionBand.common,
+      confuseWith: json["confuse_with"] as String?,
+      confuseNote: json["confuse_note"] as String?,
     );
   }
 }
@@ -487,6 +504,8 @@ class TrafficGesture {
     required this.meaning,
     this.band = QuestionBand.common,
     this.questions = const [],
+    this.confuseWith,
+    this.confuseNote,
   });
 
   final String id;
@@ -500,6 +519,11 @@ class TrafficGesture {
   /// 反向题映射（ADR 0067 决策 3），加载时校验都存在。
   final List<String> questions;
 
+  /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
+  final String? confuseWith;
+  final String? confuseNote;
+
+
   factory TrafficGesture.fromJson(Map<String, dynamic> json) {
     return TrafficGesture(
       id: json["id"] as String,
@@ -510,6 +534,8 @@ class TrafficGesture {
       questions: [
         for (final raw in json["questions"] as List<dynamic>? ?? const []) raw as String,
       ],
+      confuseWith: json["confuse_with"] as String?,
+      confuseNote: json["confuse_note"] as String?,
     );
   }
 }
@@ -523,6 +549,8 @@ class Gauge {
     required this.meaning,
     this.band = QuestionBand.common,
     this.questions = const [],
+    this.confuseWith,
+    this.confuseNote,
   });
 
   final String id;
@@ -536,6 +564,11 @@ class Gauge {
   /// 反向题映射（ADR 0067 决策 3）：相关题的 id 直接声明在内容文件里，
   /// 题库 JSON 不加字段。加载时校验都存在。
   final List<String> questions;
+
+  /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
+  final String? confuseWith;
+  final String? confuseNote;
+
 
   String get kindLabel => switch (kind) {
     "alarm" => "报警灯",
@@ -555,6 +588,8 @@ class Gauge {
       questions: [
         for (final raw in json["questions"] as List<dynamic>? ?? const []) raw as String,
       ],
+      confuseWith: json["confuse_with"] as String?,
+      confuseNote: json["confuse_note"] as String?,
     );
   }
 }

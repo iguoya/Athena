@@ -4,6 +4,8 @@ import "glyphs.dart";
 import "look.dart";
 import "marking.dart";
 import "models.dart";
+import "recall.dart";
+import "reinforce.dart";
 
 /// 标线速记页（ADR 0065）：手绘标线按「指示 / 禁止 / 警告」三组摊开，每条配一句
 /// 「看到之后怎么开」，每组能直接练相关的题。内容源是 `content/markings.json`
@@ -12,6 +14,7 @@ class MarkingsPage extends StatelessWidget {
   const MarkingsPage({
     super.key,
     required this.markings,
+    required this.histories,
     required this.daily,
     required this.all,
     required this.mastered,
@@ -19,6 +22,9 @@ class MarkingsPage extends StatelessWidget {
   });
 
   final List<Marking> markings;
+
+  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  final HistorySet histories;
 
   /// 科目一的日常题（非偏难）：「练这组」从这里按 `Question.marking` 取题。
   final List<Question> daily;
@@ -50,6 +56,12 @@ class MarkingsPage extends StatelessWidget {
             Icon(Glyph.markings, color: Bs.paper),
             SizedBox(width: 8),
             Text("标线速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => _startRecall(context),
+              icon: const Icon(Glyph.question, size: 18),
+              label: const Text("考我"),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -67,6 +79,34 @@ class MarkingsPage extends StatelessWidget {
           style: muted,
         ),
       ],
+    );
+  }
+
+  RecallEntry _recallEntryOf(Marking marking) {
+    final other = marking.confuseWith == null
+        ? null
+        : markings.where((m) => m.id == marking.confuseWith).firstOrNull;
+    return RecallEntry(
+      id: marking.id,
+      name: marking.name,
+      meaning: marking.meaning,
+      confuseName: other?.name,
+      confuseNote: marking.confuseNote,
+      confuseView: other == null ? null : MarkingView(id: other.id, size: 72),
+    );
+  }
+
+  /// 考我：全部标线进卡片流，收尾深链练全部相关题（ADR 0077）。
+  void _startRecall(BuildContext context) {
+    RecallSession.show(
+      context,
+      entries: [for (final m in markings) _recallEntryOf(m)],
+      viewOf: (id) => MarkingView(id: id, size: 192),
+      onStartPractice: () {
+        final ids = {for (final m in markings) m.id};
+        final related = [for (final q in daily) if (q.marking != null && ids.contains(q.marking)) q];
+        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 考我");
+      },
     );
   }
 
@@ -122,7 +162,20 @@ class MarkingsPage extends StatelessWidget {
             Wrap(
               spacing: 14,
               runSpacing: 14,
-              children: [for (final marking in inGroup) _MarkingCell(marking: marking)],
+              children: [
+                for (final marking in inGroup)
+                  _MarkingCell(
+                    marking: marking,
+                    other: marking.confuseWith == null
+                        ? null
+                        : inGroup.where((m) => m.id == marking.confuseWith).firstOrNull,
+                    status: statusOf(
+                      related: [for (final q in daily) if (q.marking == marking.id) q],
+                      mastered: mastered,
+                      histories: histories,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -134,9 +187,13 @@ class MarkingsPage extends StatelessWidget {
 /// 标线速记的一个格子：手绘俯视图 + 名称 + 「怎么开」。交互与标志格一致：
 /// 悬停上浮，点开玻璃浮层看大图（ADR 0061）。
 class _MarkingCell extends StatefulWidget {
-  const _MarkingCell({required this.marking});
+  const _MarkingCell({required this.marking, required this.status, this.other});
 
   final Marking marking;
+  final SymbolStatus status;
+
+  /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
+  final Marking? other;
 
   @override
   State<_MarkingCell> createState() => _MarkingCellState();
@@ -168,7 +225,14 @@ class _MarkingCellState extends State<_MarkingCell> {
             borderRadius: BorderRadius.circular(Bs.radius),
             boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
           ),
-          child: Column(
+          child: Stack(
+            children: [
+              Positioned(
+                right: 0,
+                top: 0,
+                child: StatusDot(status: widget.status),
+              ),
+              Column(
             children: [
               MarkingView(id: widget.marking.id, size: 96),
               const SizedBox(height: 10),
@@ -187,6 +251,8 @@ class _MarkingCellState extends State<_MarkingCell> {
               ],
               const SizedBox(height: 6),
               Text(widget.marking.meaning, textAlign: TextAlign.center, style: muted),
+            ],
+          ),
             ],
           ),
         ),
@@ -223,6 +289,37 @@ class _MarkingCellState extends State<_MarkingCell> {
                   color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
                 ),
               ),
+              if (widget.other != null) ...[
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Bs.light,
+                    borderRadius: BorderRadius.circular(Bs.radius),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      MarkingView(id: widget.other!.id, size: 72),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("容易混：${widget.other!.name}", style: Theme.of(dialogContext).textTheme.titleSmall),
+                            const SizedBox(height: 4),
+                            Text(widget.marking.confuseNote ?? "", style: TextStyle(
+                              fontSize: 14,
+                              height: 1.45,
+                              color: Theme.of(dialogContext).colorScheme.onSurfaceVariant,
+                            )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),

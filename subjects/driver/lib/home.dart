@@ -1667,6 +1667,7 @@ class _HomePageState extends State<HomePage> {
   Widget _signsOverview(BuildContext context) {
     return SignsPage(
       signs: widget.bank.signs,
+      histories: _histories,
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
@@ -1682,6 +1683,7 @@ class _HomePageState extends State<HomePage> {
   Widget _markingsOverview(BuildContext context) {
     return MarkingsPage(
       markings: widget.bank.markings,
+      histories: _histories,
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
@@ -1697,6 +1699,7 @@ class _HomePageState extends State<HomePage> {
   Widget _gaugesOverview(BuildContext context) {
     return GaugesPage(
       gauges: widget.bank.gauges,
+      histories: _histories,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
       onStartPractice: (questions, title) => _startPractice(
@@ -1753,6 +1756,7 @@ class _HomePageState extends State<HomePage> {
     ];
     return GesturesPage(
       gestures: widget.bank.gestureList,
+      histories: _histories,
       daily: both,
       mastered: _mastered,
       onStartPractice: (questions, title) => _startPractice(
