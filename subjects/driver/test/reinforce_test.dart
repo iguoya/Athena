@@ -62,7 +62,7 @@ void main() {
         _a("a", false, day: 1),
         _a("c", false),
         _a("c", false, day: 1),
-        _a("c", true, day: 2),
+        for (var i = 0; i < 4; i++) _a("c", true, day: 2 + i),
         _a("d", false),
         _a("e", false),
         _a("e", true, day: 1),
@@ -72,8 +72,11 @@ void main() {
       expect(stubborn[0].repaired, isFalse);
       expect(stubborn[0].wrong, 3);
       expect(stubborn[1].wrong, 2);
-      expect(stubborn[2].repaired, isTrue, reason: "c 错 2 次后答对，算已修补");
+      expect(stubborn[2].repaired, isTrue, reason: "c 错 2 次、对 4 次，对的达到错的 2 倍，算已修补");
       expect(stubborn[2].serial, endsWith("c"));
+      expect(stubborn[0].correctsToRetire, 6, reason: "b 错 3 次还一次没对：要对 6 次才移出");
+      expect(stubborn[1].correctsToRetire, 4);
+      expect(stubborn[2].correctsToRetire, 0);
     });
 
     test("题库改版删掉的题不展示", () {
@@ -221,18 +224,16 @@ void main() {
       );
     });
 
-    test("错题池是历史上答错过的全部题：后来答对过的也在里面；不够一轮才用别的补", () {
+    test("错题池是答错过、对的还没到错的 2 倍的题：答对过但不够的也在里面；不够一轮才用别的补", () {
       final attempts = <AttemptView>[
         // q0～q7：答错，其中 q0 错了 3 次
         for (var i = 0; i < 8; i++) _a("q$i", false, topic: "drive.s1.penalty"),
         for (var n = 1; n <= 2; n++)
           _a("q0", false, day: n, topic: "drive.s1.penalty"),
-        // q8～q15：错过一次，后来隔几天连对 3 次（已经稳固）——旧规则里它们早就掉出复测了
+        // q8～q15：错过一次，后来只对了一次——对的只有错的 1 倍，还没到 2 倍，仍在备选库里
         for (var i = 8; i < 16; i++) ...[
           _a("q$i", false, topic: "drive.s1.penalty"),
           _a("q$i", true, day: 1, topic: "drive.s1.penalty"),
-          _a("q$i", true, day: 2, topic: "drive.s1.penalty"),
-          _a("q$i", true, day: 3, topic: "drive.s1.penalty"),
         ],
       ];
       final plan = planReinforcement(
@@ -301,8 +302,9 @@ void main() {
         // q0：错了 4 次，最近一次还是错
         for (var n = 0; n < 4; n++)
           _a("q0", false, day: n, topic: "drive.s1.penalty"),
-        // q1：错过一次，之后隔天连对 3 次，已经稳固（但没在强化练习里测过，所以仍在备选库里）
+        // q1：错过两次，之后隔天连对 3 次，已经稳固（但对的才 3 次，不到错的 2 倍，仍在备选库里）
         _a("q1", false, topic: "drive.s1.penalty"),
+        _a("q1", false, hour: 10, topic: "drive.s1.penalty"),
         for (var n = 1; n <= 3; n++)
           _a("q1", true, day: n, topic: "drive.s1.penalty"),
       ];
@@ -358,25 +360,24 @@ void main() {
       expect(w("old"), greaterThan(w("wrong")), reason: "隔得越久越重，30 天封顶");
     });
 
-    test("测过且没出错才移出：别处答对多少次都不算；强化练习里测对一次就移出；再答错自动回来", () {
+    test("对的次数达到错的次数 2 倍才移出：不论在哪答对都算；再答错、比例掉下去自动回来", () {
       final now = DateTime(2026, 10, 12, 9);
       final plan0 = planReinforcement(
         count: 20,
         pool: pool,
         histories: HistorySet.build([
-          // q0：答错，后来在练习里隔天连对 3 次——很熟了，但没在强化练习里测过
+          // q0：错 1 次、对 3 次 -> 对的是错的 3 倍，移出（在练习里答对也算，不必在强化练习里测）
           _a("q0", false),
           _a("q0", true, day: 1),
           _a("q0", true, day: 2),
           _a("q0", true, day: 3),
-          // q1：答错，在强化练习里测对了一次 → 验收通过
-          _a("q1", false), _a("q1", true, day: 1, kind: "reinforce"),
-          // q2：答错，在强化练习里又错了 → 仍要练
-          _a("q2", false), _a("q2", false, day: 1, kind: "reinforce"),
-          // q3：强化练习里测对过，后来在练习里又答错 → 回来
-          _a("q3", false),
-          _a("q3", true, day: 1, kind: "reinforce"),
-          _a("q3", false, day: 2),
+          // q1：错 1 次、对 2 次 -> 恰好 2 倍，移出（边界）
+          _a("q1", false), _a("q1", true, day: 1), _a("q1", true, day: 2, kind: "reinforce"),
+          // q2：错 1 次、对 1 次 -> 只有 1 倍，还要练
+          _a("q2", false), _a("q2", true, day: 1, kind: "reinforce"),
+          // q3：错 2 次、对 3 次 -> 要对 4 次才够，还要练
+          _a("q3", false), _a("q3", false, day: 1),
+          _a("q3", true, day: 2), _a("q3", true, day: 3), _a("q3", true, day: 4),
         ]),
         now: now,
         random: Random(1),
@@ -385,20 +386,21 @@ void main() {
           .where((p) => p.reason == "retest")
           .map((p) => p.question.id)
           .toSet();
-      expect(retest, containsAll(["q0", "q2", "q3"]), reason: "没验收通过的都在备选库里");
-      expect(retest, isNot(contains("q1")), reason: "q1 在强化练习里测过且没出错，已经移出");
-      expect(plan0.retired, 1);
-      expect(plan0.wrongPool, 3);
-      expect(plan0.untested, 1, reason: "只有 q0 从没在强化练习里测过");
+      expect(retest, containsAll(["q2", "q3"]), reason: "对的还不到错的 2 倍，仍在备选库里");
+      expect(retest, isNot(contains("q0")), reason: "q0 对的是错的 3 倍，已移出");
+      expect(retest, isNot(contains("q1")), reason: "q1 对的恰好是错的 2 倍，已移出");
+      expect(plan0.retired, 2);
+      expect(plan0.wrongPool, 2);
 
-      // q1 之后又答错一次：自动回到备选库，需要在强化练习里再测对一次才能再移出
+      // q1 之后又答错一次：错 2 次、对 2 次，比例掉下去，自动回到备选库
       final back = planReinforcement(
         count: 20,
         pool: pool,
         histories: HistorySet.build([
           _a("q1", false),
-          _a("q1", true, day: 1, kind: "reinforce"),
-          _a("q1", false, day: 2),
+          _a("q1", true, day: 1),
+          _a("q1", true, day: 2),
+          _a("q1", false, day: 3),
         ]),
         now: now,
         random: Random(1),
@@ -410,12 +412,26 @@ void main() {
       );
     });
 
+    test("错得越多要对得越多：错 3 次要对 6 次；每多答对一次，还差的次数少一次", () {
+      QuestionHistory h(int right) => HistorySet.build([
+            for (var i = 0; i < 3; i++) _a("x", false, day: i),
+            for (var i = 0; i < right; i++) _a("x", true, day: 3 + i),
+          ]).of("x")!;
+      expect(h(0).correctsToRetire, 6);
+      expect(h(5).correctsToRetire, 1);
+      expect(h(5).retiredFromWrongPool, isFalse);
+      expect(h(6).correctsToRetire, 0);
+      expect(h(6).retiredFromWrongPool, isTrue);
+      expect(QuestionHistory.retireRatio, 2);
+    });
+
     test("移出的题不占错题名额：备选库缩小后，名额让给薄弱章节", () {
-      // 40 道错题全部在强化练习里测对了 → 备选库空了
+      // 40 道错题全部答对了 2 次（对的达到错的 2 倍）-> 备选库空了
       final attempts = [
         for (var i = 0; i < 40; i++) ...[
           _a("q$i", false),
           _a("q$i", true, day: 1, kind: "reinforce"),
+          _a("q$i", true, day: 2),
         ],
       ];
       final plan = planReinforcement(
@@ -464,15 +480,17 @@ void main() {
         }
         attempts = [
           ...attempts,
-          for (final p in plan.picks)
+          for (final p in plan.picks) ...[
             _a(p.question.id, true, day: 1 + rounds, kind: "reinforce"),
+            _a(p.question.id, true, day: 1 + rounds, kind: "reinforce"),
+          ],
         ];
         rounds++;
       }
       expect(
         rounds,
         lessThanOrEqualTo(8),
-        reason: "60 道题、每轮至少 10 个新的覆盖名额，几轮就都验收完",
+        reason: "60 道题、每轮至少 10 个新的覆盖名额，几轮就都答对到够次数移出",
       );
       for (var i = 0; i < 60; i++) {
         expect(everDrawn, contains("q$i"), reason: "q$i 从没在强化练习里出现过就不该移出");
@@ -660,67 +678,6 @@ void main() {
     final clusters = index([
       for (var i = 0; i < 8; i++) ["q$i", "q${40 + i}"],
     ]);
-
-    group("变式答对也算验收（ADR 0088）", () {
-      final pair = index([["q0", "q40"]]);
-      // q40 是 q0 的变式：q0 答错在先，之后 q40 在强化练习里作为变式答对
-      List<AttemptView> withVariant({bool ok = true, String kind = "reinforce", String? reason = "variant"}) => [
-        _a("q0", false),
-        _a("q40", ok, day: 1, kind: kind, reason: reason),
-      ];
-
-      test("同簇变式在强化练习里答对：原题移出备选库；不给考点簇就不认", () {
-        final h = HistorySet.build(withVariant(), clusters: pair);
-        expect(h.of("q0")!.retiredFromWrongPool, isTrue);
-        expect(HistorySet.build(withVariant()).of("q0")!.retiredFromWrongPool, isFalse, reason: "没有考点簇，不知道谁是它的变式");
-      });
-
-      test("变式答错、在别处答对、或不是作为变式被选中的，都不算", () {
-        for (final attempts in [
-          withVariant(ok: false),
-          withVariant(kind: "practice"),
-          withVariant(reason: "retest"),
-          withVariant(reason: null),
-        ]) {
-          expect(HistorySet.build(attempts, clusters: pair).of("q0")!.retiredFromWrongPool, isFalse);
-        }
-      });
-
-      test("原题之后再答错：验收作废，回到备选库；变式在原题答错之前答对的不算", () {
-        final again = HistorySet.build([...withVariant(), _a("q0", false, day: 2)], clusters: pair);
-        expect(again.of("q0")!.retiredFromWrongPool, isFalse);
-        final before = HistorySet.build([
-          _a("q40", true, kind: "reinforce", reason: "variant"),
-          _a("q0", false, day: 1),
-        ], clusters: pair);
-        expect(before.of("q0")!.retiredFromWrongPool, isFalse, reason: "变式答对在 q0 最近一次答错之前");
-      });
-
-      test("没答错过的题不受影响；变式自己的历史也不被动", () {
-        final h = HistorySet.build([_a("q0", true), _a("q40", true, day: 1, kind: "reinforce", reason: "variant")], clusters: pair);
-        expect(h.of("q0")!.retiredFromWrongPool, isFalse, reason: "q0 没答错过，本来就不在备选库");
-        expect(h.of("q40")!.variantPassesSinceWrong, 0);
-      });
-
-      test("备选库随之缩小：同簇的错题一起移出", () {
-        final cluster = index([["q0", "q1", "q40"]]);
-        final plan = planReinforcement(
-          count: 20,
-          pool: pool,
-          histories: HistorySet.build([
-            _a("q0", false),
-            _a("q1", false),
-            _a("q2", false),
-            _a("q40", true, day: 1, kind: "reinforce", reason: "variant"),
-          ], clusters: cluster),
-          now: _day0,
-          random: Random(1),
-          clusters: cluster,
-        );
-        expect(plan.retired, 2, reason: "q0、q1 同簇，一起验收");
-        expect(plan.wrongPool, 1, reason: "q2 不在这个簇里，还要练");
-      });
-    });
 
     test("没有考点簇：和以前一样，没有变式", () {
       final plan = planReinforcement(

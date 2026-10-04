@@ -123,7 +123,7 @@ class ReinforcePage extends StatelessWidget {
             children: [
               _CountTile(label: "还要练的错题（备选库）", value: plan.wrongPool, color: Bs.danger, emphasis: true),
               _CountTile(label: "其中还没在强化练习里测过", value: plan.untested, color: Bs.warning),
-              _CountTile(label: "已测过且没出错、移出", value: plan.retired, color: Bs.success),
+              _CountTile(label: "对的够多、已移出", value: plan.retired, color: Bs.success),
               PopupMenuButton<int>(
                 enabled: onRoundSizeChanged != null,
                 tooltip: "选择每轮抽取的题量",
@@ -144,10 +144,10 @@ class ReinforcePage extends StatelessWidget {
           Text(
             plan.wrongPool + plan.retired > 0
                 ? "错题库：历史上答错过 ${plan.wrongPool + plan.retired} 题，其中还要练 ${plan.wrongPool} 题"
-                    "（${plan.untested} 题还没在强化练习里测过，每次优先抽它们）；在强化练习里测过且没有出错的 ${plan.retired} 题已移出（同考点的变式题答对也算），"
-                    "再答错会自动回来。每次从还要练的题里按权重抽 ${plan.picks.length} 题——错得多、最近又错、隔得久的更容易被抽到；"
+                    "（${plan.untested} 题还没在强化练习里测过，每次优先抽它们）；累计答对达到答错 ${QuestionHistory.retireRatio} 倍的 ${plan.retired} 题已移出，"
+                    "再答错、比例掉下去会自动回来。每次从还要练的题里按权重抽 ${plan.picks.length} 题——错得多、最近又错、隔得久的更容易被抽到；"
                     "不够时才用薄弱章节和到期复习补。"
-                : "还没有答错过的题，先按薄弱章节的新题练起；答错的题会进错题库，之后每次从里面抽，直到在强化练习里测过且没有出错才移出。",
+                : "还没有答错过的题，先按薄弱章节的新题练起；答错的题会进错题库，之后每次从里面抽，直到累计答对达到答错的 ${QuestionHistory.retireRatio} 倍才移出。",
             style: body,
           ),
           const SizedBox(height: 6),
@@ -255,9 +255,10 @@ class ReinforcePage extends StatelessWidget {
             Text("反复错题", style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Text(
-              "累计答错 2 次及以上的题；错过 ${QuestionHistory.stubbornWrong} 次以上的会常驻强化练习，再怎么答对也不移出。"
+              "累计答错 2 次及以上的题。移出错题库的规则是动态的：累计答对达到答错的 ${QuestionHistory.retireRatio} 倍就移出，"
+              "错得越多要对得越多（错 3 次要对 6 次）；之后再答错，比例掉下去又会自动回来。"
               "反复错的题也可能是题目或答案本身有问题——"
-              "点编号复制，报编号核对题库；「已修补」的是后来连着答对、已移出错题库的，回头扫一眼。",
+              "点编号复制，报编号核对题库；「已修补」的是已移出错题库的，回头扫一眼。",
               style: small,
             ),
             const SizedBox(height: 12),
@@ -310,8 +311,8 @@ class _StubbornRow extends StatelessWidget {
                 Text(prompt, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyLarge),
                 const SizedBox(height: 2),
                 Text(
-                  "累计错 ${stubborn.wrong} 次 · 共答 ${stubborn.attempts} 次"
-                  "${stubborn.pinned ? " · 错过 ${QuestionHistory.stubbornWrong} 次以上，常驻强化练习" : stubborn.repaired ? " · 已修补，移出错题库" : " · 还在错题库里"}",
+                  "对 ${stubborn.correct} 次 · 错 ${stubborn.wrong} 次"
+                  "${stubborn.repaired ? " · 已修补，移出错题库" : " · 还在错题库里，再对 ${stubborn.correctsToRetire} 次才移出"}",
                   style: small,
                 ),
               ],

@@ -1,7 +1,7 @@
 # ADR 0075：累计答错 3 次以上的题常驻强化练习
 
 - 日期：2026-10-04
-- 状态：已接受
+- 状态：已被 [0079](0079-reinforce-retire-by-correct-ratio.md) 取代（改为按「对的是错的 2 倍」动态移出）
 - 影响：`lib/reinforce.dart`（`QuestionHistory.stubbornWrong`、`retiredFromWrongPool`、
   `StubbornQuestion.pinned`）、`lib/reinforce_page.dart`（反复错题区文案）、
   `test/stubborn_pinned_test.dart`（新）

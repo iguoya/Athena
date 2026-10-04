@@ -26,15 +26,16 @@ void main() {
       for (final q in wrong) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: false);
       }
-      // 前 20 道后来在练习里又答对了：在别处答对不算验收，仍在备选库里
+      // 前 20 道后来只答对了 1 次：对的只有错的 1 倍，不到 2 倍，仍在备选库里
       for (final q in wrong.take(20)) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
       }
-      // 中间 15 道在强化练习里测过，而且没有出错 → 已经移出备选库
+      // 中间 15 道答对了 2 次：对的达到错的 2 倍 → 已经移出备选库（不论在哪答对）
       retiredIds = {for (final q in wrong.skip(20).take(15)) q.id};
       for (final q in wrong.skip(20).take(15)) {
-        await store.recordAttempt(
-            questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true, kind: "reinforce");
+        for (var i = 0; i < 2; i++) {
+          await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
+        }
       }
     });
 
@@ -53,7 +54,7 @@ void main() {
     await tester.pump();
     expect(find.textContaining("历史上答错过 150 题，其中还要练 135 题"), findsOneWidget);
     expect(find.textContaining("135 题还没在强化练习里测过"), findsOneWidget);
-    expect(find.textContaining("测过且没有出错的 15 题已移出"), findsOneWidget);
+    expect(find.textContaining("累计答对达到答错 2 倍的 15 题已移出"), findsOneWidget);
     expect(find.textContaining("复测错题 50"), findsOneWidget, reason: "备选库够大：整轮 50 题都来自它");
     // 备选库的大小直接用大号数字摆出来
     expect(find.text("135"), findsWidgets, reason: "备选库 135 题，大号数字");

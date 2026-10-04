@@ -26,7 +26,10 @@ void main() {
       }
       await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: false);
       await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: false);
-      await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: true);
+      // 错 2 次、后来对 4 次：对的达到错的 2 倍，已修补
+      for (var i = 0; i < 4; i++) {
+        await store.recordAttempt(questionId: repaired.id, topicId: repaired.topicId, subjectId: "subject1", correct: true);
+      }
     });
 
     await tester.binding.setSurfaceSize(const Size(1600, 1200));
@@ -51,7 +54,9 @@ void main() {
 
     // 反复错题区：还在错的与已修补的都列出，累计错次如实显示
     expect(find.text("反复错题"), findsOneWidget);
-    expect(find.textContaining("累计错 3 次"), findsOneWidget);
+    expect(find.textContaining("对 0 次 · 错 3 次"), findsOneWidget);
+    expect(find.textContaining("再对 6 次才移出"), findsOneWidget, reason: "错 3 次、一次没对：要对 6 次");
+    expect(find.textContaining("对 4 次 · 错 2 次"), findsOneWidget);
     expect(find.textContaining("已修补，移出错题库"), findsOneWidget);
     expect(find.text(stuck.serial), findsOneWidget);
 

@@ -67,27 +67,20 @@ class QuestionHistory {
   /// 在强化练习里作答过几次（`kind = reinforce`）。0 表示还没在强化练习里测过。
   int reinforced = 0;
 
-  /// 最近一次答错之后，在强化练习里答对了几次；答错清零（主仓库 ADR 0086）。
-  int reinforcedSinceWrong = 0;
+  /// 累计答对的次数（不管在练习、模拟考还是强化练习里）。
+  int get correct => attempts - wrong;
 
-  /// 最近一次答错之后，同考点簇里的变式题在强化练习里答对了几次；这道题自己答错清零（主仓库 ADR 0088）。
-  /// 要给 [HistorySet.build] 传考点簇才会累计。
-  int variantPassesSinceWrong = 0;
+  /// 错题能不能从强化练习的备选库移出：累计答对的次数达到答错次数的 [retireRatio] 倍
+  /// （本应用 ADR 0079，取代主仓库 ADR 0086、0088 的验收规则与本应用 ADR 0075 的常驻规则）。
+  /// 这是动态的：错一次、对两次就移出；之后再答错，比例掉下去，会自动回到备选库；
+  /// 错得越多，要对的次数也越多（错 3 次要对 6 次）。
+  bool get retiredFromWrongPool => wrong > 0 && correct >= retireRatio * wrong;
 
-  /// 错题能不能从强化练习的备选库移出，两种验收来源任一成立即可：
-  /// 自最近一次答错以来，它自己在强化练习里测过且之后没有出错（主仓库 ADR 0086）；
-  /// 或同簇的变式题在强化练习里答对过（主仓库 ADR 0088）。
-  /// 它自己任何一次答错（不管在哪）都让它回到备选库。
-  ///
-  /// 例外：累计答错 [stubbornWrong] 次及以上的**顽固题**不移出，常驻备选库（本应用 ADR 0075）——
-  /// 错到这个次数的题，一次验收通过说明不了记牢了，要一直留在强化练习里反复出。
-  bool get retiredFromWrongPool =>
-      wrong > 0 &&
-      wrong < stubbornWrong &&
-      ((lastCorrect && reinforcedSinceWrong >= 1) || variantPassesSinceWrong >= 1);
+  /// 还要再答对几次才够移出；已经够了是 0；没答错过的题不在备选库里，也是 0。
+  int get correctsToRetire => wrong == 0 ? 0 : max(0, retireRatio * wrong - correct);
 
-  /// 顽固题的门槛：累计答错这么多次（含）及以上。
-  static const stubbornWrong = 3;
+  /// 对的次数是错的次数的几倍才移出（「对的比错的多一倍」）。
+  static const retireRatio = 2;
 
   static const recentWindow = 5;
 }
@@ -122,10 +115,7 @@ class HistorySet {
   QuestionHistory? of(String questionId) => byQuestion[questionId];
 
   /// 作答按时间排序后逐条折叠；同一时刻按输入顺序（`sort` 稳定）。
-  ///
-  /// 给了 [clusters]（考点簇，主仓库 ADR 0079）时，强化练习里答对的变式题（`reason = variant`）
-  /// 会记给同簇的其他题，作为它们的验收来源（主仓库 ADR 0088）。
-  static HistorySet build(Iterable<AttemptView> attempts, {ClusterIndex? clusters}) {
+  static HistorySet build(Iterable<AttemptView> attempts) {
     final sorted = [...attempts]..sort((a, b) => a.at.compareTo(b.at));
     final map = <String, QuestionHistory>{};
     var trials = 0;
@@ -143,19 +133,10 @@ class HistorySet {
       if (attempt.correct) {
         h.trailingCorrect++;
         h.streakDays.add(dayKey(attempt.at));
-        if (attempt.kind == "reinforce") h.reinforcedSinceWrong++;
       } else {
         h.wrong++;
         h.trailingCorrect = 0;
         h.streakDays.clear();
-        h.reinforcedSinceWrong = 0;
-        h.variantPassesSinceWrong = 0;
-      }
-      if (clusters != null && attempt.correct && attempt.kind == "reinforce" && attempt.reason == "variant") {
-        // 还没有历史的同簇题不用记：它还没答错过，之后第一次答错会清零，本来也不会用到这条记录。
-        for (final mate in clusters.mates(attempt.questionId)) {
-          map[mate]?.variantPassesSinceWrong++;
-        }
       }
       h.lastAt = attempt.at;
       h.lastCorrect = attempt.correct;
@@ -284,8 +265,8 @@ const reinforceRoundSize = 50;
 const reinforceCoverageShare = 0.5;
 
 /// 备选库里一道错题被抽到的权重（主仓库 ADR 0085、0086）：错得越多、最近一次还是错、隔得越久越重；
-/// 越熟越轻。权重不会降到 0——真正从备选库消失只有一个条件：在强化练习里测过且没有出错
-/// （[QuestionHistory.retiredFromWrongPool]）。
+/// 越熟越轻。权重不会降到 0——真正从备选库消失只有一个条件：累计答对达到答错的 2 倍
+/// （[QuestionHistory.retiredFromWrongPool]，ADR 0079）。
 double wrongWeight(QuestionHistory h, DateTime now) {
   final state = !h.lastCorrect
       ? 3.0
@@ -320,7 +301,7 @@ class ReinforcePlan {
   /// 其中还没在强化练习里测过的多少道。
   final int untested;
 
-  /// 已经在强化练习里测过且没有出错、从备选库移出的错题多少道；再答错会自动回来。
+  /// 累计答对已达到答错 2 倍、从备选库移出的错题多少道；再答错、比例掉下去会自动回来。
   final int retired;
 
   List<Question> get questions => [for (final p in picks) p.question];
@@ -335,7 +316,7 @@ class ReinforcePlan {
 }
 
 /// 强化练习选题（主仓库 ADR 0085、0086，修订 ADR 0076 决策 7）：整轮默认从**历史上答错过、还没验收的题**里按权重
-/// 随机抽取（见 [wrongWeight]）。一道错题要在强化练习里测过且没有出错才移出备选库；每一轮重算都是新的一次抽取。
+/// 随机抽取（见 [wrongWeight]）。一道错题累计答对达到答错的 2 倍才移出备选库（ADR 0079）；每一轮重算都是新的一次抽取。
 ///
 /// [pool] 由调用方给出——已排除锁着的科目、偏难怪题（不挡过关，ADR 0032）。每题最多出一次
 /// （driver ADR 0031）。错题池不够一轮时，按错题、薄弱章节、到期复习、同考点变式的顺序补足；
@@ -357,8 +338,8 @@ ReinforcePlan planReinforcement({
   final overall = histories.overallAccuracy;
   double weakness(String topic) => 1 - (chapterAcc[topic] ?? overall);
 
-  // 备选库：历史上答错过、还没在强化练习里验收通过（测过且没有出错）的题。
-  // 验收通过的从这里移出，仍归「到期复习」按间隔管；再答错会自动回来。
+  // 备选库：历史上答错过、累计答对还没达到答错 2 倍的题。
+  // 达到的从这里移出，仍归「到期复习」按间隔管；再答错、比例掉下去会自动回来。
   final wrongPool = <Question>[];
   var retired = 0;
   final due = <Question>[];
@@ -601,8 +582,8 @@ PassEstimate estimatePass({
 }
 
 /// 反复答错的题（ADR 0069）：累计答错 2 次及以上，分「还在错」与「已修补」。
-/// 「已修补」是最近一次答错之后连着答对、已按主仓库 ADR 0086 验收移出备选库
-/// 的题——它们不再参与抽取，但值得回头扫一眼。
+/// 「已修补」是累计答对已达到答错 2 倍、移出强化练习备选库的题（ADR 0079）
+/// ——它们不再参与抽取，但值得回头扫一眼。
 class StubbornQuestion {
   const StubbornQuestion(this.question, this.wrong, this.attempts, this.repaired);
 
@@ -610,14 +591,17 @@ class StubbornQuestion {
   final int wrong;
   final int attempts;
 
-  /// true = 已修补（验收移出备选库）；false = 还在错（在备选库里）。
+  /// true = 已修补（移出备选库）；false = 还在错（在备选库里）。
   final bool repaired;
+
+  /// 累计答对的次数。
+  int get correct => attempts - wrong;
+
+  /// 还要再答对几次才够移出；已移出是 0。
+  int get correctsToRetire => repaired ? 0 : max(0, QuestionHistory.retireRatio * wrong - correct);
 
   /// 稳定编号：题库 id 去掉 `drive.` 前缀，反馈题目问题时报这个号。
   String get serial => question.serial;
-
-  /// 累计答错达到 [QuestionHistory.stubbornWrong] 次：常驻强化练习的备选库，不会因验收通过移出。
-  bool get pinned => wrong >= QuestionHistory.stubbornWrong;
 }
 
 /// 累计答错 [minWrong] 次及以上的题：还在错的在前、已修补的在后，各自按错次
@@ -629,7 +613,7 @@ List<StubbornQuestion> stubbornQuestions(HistorySet histories, Map<String, Quest
     if (h.wrong < minWrong) continue;
     final q = byId[entry.key];
     if (q == null) continue;
-    out.add(StubbornQuestion(q, h.wrong, h.attempts, h.lastCorrect));
+    out.add(StubbornQuestion(q, h.wrong, h.attempts, h.retiredFromWrongPool));
   }
   out.sort((a, b) {
     if (a.repaired != b.repaired) return a.repaired ? 1 : -1;
