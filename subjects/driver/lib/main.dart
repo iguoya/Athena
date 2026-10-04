@@ -14,9 +14,44 @@ import "home.dart";
 import "look.dart";
 import "models.dart";
 import "progress.dart";
+import "skin.dart";
 import "sync.dart";
 import "user_directory.dart";
 import "users.dart";
+
+/// 各 MaterialApp 共用的皮肤主题与整窗环境背景（ADR 0058）：皮肤令牌挂在
+/// [SkinStore.notifier] 上，切换器改值后这里重建 MaterialApp 整树换装；
+/// 环境背景垫在 builder 里，页面 Scaffold 全透明，铺满启动到做题的每个场景。
+Widget withSkins(
+  WidgetBuilder builder, {
+  GlobalKey<NavigatorState>? navigatorKey,
+  GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey,
+}) {
+  return ValueListenableBuilder<Skin>(
+    valueListenable: SkinStore.notifier,
+    builder: (context, skin, _) => MaterialApp(
+      title: "驾考学习",
+      debugShowCheckedModeBanner: false,
+      theme: buildTheme(skin),
+      navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      locale: const Locale("zh", "CN"),
+      supportedLocales: const [Locale("zh", "CN")],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      builder: (context, child) => Stack(
+        children: [
+          const Positioned.fill(child: AmbientBackdrop()),
+          if (child != null) Positioned.fill(child: child),
+        ],
+      ),
+      home: builder(context),
+    ),
+  );
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -212,27 +247,16 @@ class _BootstrapGateState extends State<BootstrapGate> {
   @override
   Widget build(BuildContext context) {
     return switch (_stage) {
-      "first-user" || "pick" => MaterialApp(
-          title: "驾考学习",
-          debugShowCheckedModeBanner: false,
-          locale: const Locale("zh", "CN"),
-          supportedLocales: const [Locale("zh", "CN")],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          home: UserGateScreen(
+      "first-user" || "pick" => withSkins(
+          (context) => UserGateScreen(
             registry: _registry!,
             directoryFactory: _directory,
             legacyPending: _legacyPending,
             onPicked: _enter,
           ),
         ),
-      "config" => MaterialApp(
-          title: "驾考学习",
-          debugShowCheckedModeBanner: false,
-          home: ApiConfigScreen(
+      "config" => withSkins(
+          (context) => ApiConfigScreen(
             onSavedDirect: (config) {
               final bank = _bank;
               final store = _store;
@@ -243,20 +267,23 @@ class _BootstrapGateState extends State<BootstrapGate> {
             },
           ),
         ),
-      "error" => BootstrapErrorApp(message: _message),
-      "ready" => DriverApp(
-          bank: _bank!,
-          store: _store!,
-          currentUser: _profile!.name,
+      "error" => withSkins((context) => BootstrapErrorApp(message: _message)),
+      "ready" => withSkins(
+          (context) => DriverApp(
+            bank: _bank!,
+            store: _store!,
+            currentUser: _profile!.name,
+            navigatorKey: _navigatorKey,
+            messengerKey: _messengerKey,
+            onSwitchUser: _switchUser,
+            syncStatus: _engine?.status,
+            onOpenConfig: _openConfig,
+          ),
           navigatorKey: _navigatorKey,
-          messengerKey: _messengerKey,
-          onSwitchUser: _switchUser,
-          syncStatus: _engine?.status,
-          onOpenConfig: _openConfig,
+          scaffoldMessengerKey: _messengerKey,
         ),
-      _ => const MaterialApp(
-          title: "驾考学习",
-          home: Scaffold(body: Center(child: CircularProgressIndicator())),
+      _ => withSkins(
+          (context) => Scaffold(body: Center(child: CircularProgressIndicator())),
         ),
     };
   }
@@ -843,7 +870,7 @@ class BootstrapErrorApp extends StatelessWidget {
                   padding: const EdgeInsets.all(24),
                   child: Text(
                     "启动失败\n\n$message",
-                    style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
+                    style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
                   ),
                 ),
           ),
@@ -883,49 +910,14 @@ class DriverApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: messengerKey,
-      title: "驾考学习",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.light(
-          primary: Bs.primary,
-          error: Bs.danger,
-          surface: Bs.light,
-        ),
-        useMaterial3: true,
-        textTheme: Bs.textTheme(ThemeData(useMaterial3: true).textTheme),
-        iconTheme: const IconThemeData(size: Bs.bodySize),
-        visualDensity: VisualDensity.standard,
-        splashFactory: NoSplash.splashFactory,
-        scaffoldBackgroundColor: Bs.light,
-        dividerColor: Bs.border,
-        filledButtonTheme: FilledButtonThemeData(
-          // 主按钮用主行动色，不再是一片深灰
-          style: FilledButton.styleFrom(
-            backgroundColor: Bs.primary,
-            foregroundColor: Colors.white,
-            textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-          ),
-        ),
-      ),
-      locale: const Locale("zh", "CN"),
-      supportedLocales: const [Locale("zh", "CN")],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      home: HomePage(
-        bank: bank,
-        store: store,
-        currentUser: currentUser,
-        syncStatus: syncStatus,
-        onOpenConfig: onOpenConfig,
-        onSwitchUser: onSwitchUser,
-      ),
+    // 主题、导航器与提示条壳由 withSkins 统一提供（ADR 0058），这里只挂主页。
+    return HomePage(
+      bank: bank,
+      store: store,
+      currentUser: currentUser,
+      syncStatus: syncStatus,
+      onOpenConfig: onOpenConfig,
+      onSwitchUser: onSwitchUser,
     );
   }
 }

@@ -417,7 +417,7 @@ class _SessionStageState extends State<SessionStage> {
         backgroundColor: Bs.primary,
         foregroundColor: Colors.white,
         minimumSize: const Size(190, 56),
-        textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w700),
+        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w700),
       ),
       icon: Icon(_lastGroup ? Glyph.finish : Glyph.next, size: 22),
       label: Text(_lastGroup ? "结束本轮" : "下一组"),
@@ -613,15 +613,23 @@ class _SessionStageState extends State<SessionStage> {
         child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
           widthFactor: 0.8,
-          child: Material(
-            color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
-            borderRadius: BorderRadius.circular(Bs.radius),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: locked ? null : () => _pick(index, question, choice.id),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                child: Row(
+          child: AnimatedContainer(
+            // 选中→判定（蓝→绿/红）走 200ms 过渡：颜色的变化本身就是反馈
+            // （ADR 0058 决策 6）。色值统一非空，从 null 到实色的突变不会闪。
+            duration: Bs.durFast,
+            curve: Curves.easeOut,
+            decoration: BoxDecoration(
+              color: solid ?? tint?.withValues(alpha: 0.12) ?? Bs.body,
+              borderRadius: BorderRadius.circular(Bs.radius),
+            ),
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                onTap: locked ? null : () => _pick(index, question, choice.id),
+                borderRadius: BorderRadius.circular(Bs.radius),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  child: Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -677,6 +685,7 @@ class _SessionStageState extends State<SessionStage> {
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -1084,7 +1093,7 @@ class _SessionStageState extends State<SessionStage> {
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       minimumSize: const Size(128, 48),
       maximumSize: const Size(160, 48),
-      textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+      textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
     );
   }
@@ -1161,7 +1170,7 @@ class _SessionStageState extends State<SessionStage> {
         content: Text(
           "${answered == 0 ? "还没答题。" : "答过的 $answered 题已经记进作答记录，掌握度照算。"}"
           "这一卷没交，不出分数，也不算一次测试；进度存成草稿，下次进来可以续上。确定现在退出吗？",
-          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
+          style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("继续测试")),
@@ -1186,7 +1195,7 @@ class _SessionStageState extends State<SessionStage> {
           left == 0
               ? "$_total 题都答完了，确定交卷吗？"
               : "还有 $left 题没答，没答的按答错计。确定交卷吗？",
-          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
+          style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("再检查一下")),

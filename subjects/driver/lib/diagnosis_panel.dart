@@ -13,7 +13,8 @@ class DiagnosisPanel extends StatelessWidget {
   final DiagnosisData data;
   final Map<String, String> topicTitles;
 
-  static const _causeColors = {
+  /// 错因配色里有皮肤主色（shaky），getter 每次取当前皮肤值，换肤后跟随。
+  static Map<ErrorCause, Color> get _causeColors => {
     ErrorCause.careless: Bs.warning,
     ErrorCause.unknown: Bs.danger,
     ErrorCause.ordinary: Color(0xFFADB5BD),

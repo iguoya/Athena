@@ -14,9 +14,10 @@ import "models.dart";
 import "progress.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
+import "session.dart";
+import "skin.dart";
 import "subject2.dart";
 import "sync.dart";
-import "session.dart";
 
 /// 通过概率放到后台 isolate 里算。必须是顶层函数：在 State 的异步方法里写闭包，
 /// 闭包会连带捕获 `this`，界面对象送不进 isolate（ArgumentError: unsendable）。
@@ -325,7 +326,7 @@ class _HomePageState extends State<HomePage> {
       body: Row(
         children: [
           SizedBox(width: 312, child: _sidebar(context)),
-          const VerticalDivider(width: 1, color: Bs.border),
+          VerticalDivider(width: 1, color: Bs.border),
           Expanded(
             child: _session == null ? _overview(context) : _sessionPane(),
           ),
@@ -338,7 +339,8 @@ class _HomePageState extends State<HomePage> {
     final s1Daily = dailyQuestions(_subject1All);
     final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
-      color: Bs.nav,
+      // 半一档透出环境色斑：侧栏是「阶 1」面板，玻璃感从这里来（ADR 0058）。
+      color: Bs.nav.withValues(alpha: 0.92),
       child: Column(
         children: [
           Expanded(
@@ -428,9 +430,47 @@ class _HomePageState extends State<HomePage> {
                     valueListenable: widget.syncStatus!,
                     builder: (context, status, _) => _syncLine(status),
                   ),
+                _skinPicker(),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  /// 皮肤切换器（ADR 0058）：一排渐变色点，选中的带白环；名字与简述进气泡，
+  /// 不占侧栏空间。与拾阶 / math-tools 的皮肤切换同构。
+  Widget _skinPicker() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          const Text("皮肤", style: TextStyle(color: Colors.white70, fontSize: 14)),
+          const Spacer(),
+          for (final skin in Skins.all)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Tooltip(
+                message: "${skin.name} · ${skin.hint}",
+                child: InkWell(
+                  onTap: () => SkinStore.set(skin),
+                  customBorder: const CircleBorder(),
+                  child: Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(colors: [skin.primary, skin.ambient.first]),
+                      border: Border.all(
+                        color: skin.id == Skins.current.id ? Colors.white : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -643,7 +683,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             children: [
-              const Icon(Glyph.locked, color: Bs.paper),
+              Icon(Glyph.locked, color: Bs.paper),
               const SizedBox(width: 8),
               Text(
                 "${subject.code}未解锁",
@@ -685,7 +725,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             CircleAvatar(
               backgroundColor: Bs.paper.withValues(alpha: 0.15),
-              child: const Icon(Glyph.subject1, color: Bs.paper),
+              child: Icon(Glyph.subject1, color: Bs.paper),
             ),
             Text(
               subject.code,
@@ -712,34 +752,38 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         const SizedBox(height: 16),
-        _examTrend(context, subject),
-        _progressCharts(context, subject),
-        _topicAccuracyCard(context, subject),
-        _recentNotices(context),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            StatTile(
-              icon: Glyph.pending,
-              label: "待练",
-              value: "${pending.length}",
-              color: Bs.paper,
-            ),
-            StatTile(
-              icon: Glyph.correct,
-              label: "已掌握",
-              value:
-                  "${visible.where((q) => _mastered.contains(q.id)).length}/${visible.length}",
-              color: Bs.success,
-            ),
-            StatTile(
-              icon: Glyph.question,
-              label: "日常题",
-              value: "${visible.length}",
-              color: Bs.secondary,
-            ),
-          ],
+        // 概览卡片按序拾阶入场（ADR 0058 决策 6）。
+        StaggerIn(index: 0, child: _examTrend(context, subject)),
+        StaggerIn(index: 1, child: _progressCharts(context, subject)),
+        StaggerIn(index: 2, child: _topicAccuracyCard(context, subject)),
+        StaggerIn(index: 3, child: _recentNotices(context)),
+        StaggerIn(
+          index: 4,
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              StatTile(
+                icon: Glyph.pending,
+                label: "待练",
+                value: "${pending.length}",
+                color: Bs.paper,
+              ),
+              StatTile(
+                icon: Glyph.correct,
+                label: "已掌握",
+                value:
+                    "${visible.where((q) => _mastered.contains(q.id)).length}/${visible.length}",
+                color: Bs.success,
+              ),
+              StatTile(
+                icon: Glyph.question,
+                label: "日常题",
+                value: "${visible.length}",
+                color: Bs.secondary,
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         Wrap(
@@ -881,7 +925,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             CircleAvatar(
               backgroundColor: Bs.paper.withValues(alpha: 0.15),
-              child: const Icon(Glyph.subject4, color: Bs.paper),
+              child: Icon(Glyph.subject4, color: Bs.paper),
             ),
             Text(
               subject.code,
@@ -1049,20 +1093,15 @@ class _HomePageState extends State<HomePage> {
     final scores = [for (final e in mine.reversed) e.score];
     final best = scores.reduce((a, b) => a > b ? a : b);
     final streak = ProgressStore.passStreak(mine);
-    return Container(
+    return BsCard(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Glyph.examHistory, size: 22, color: Bs.paper),
+              Icon(Glyph.examHistory, size: 22, color: Bs.paper),
               const SizedBox(width: 8),
               Text("模拟考战绩", style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(width: 16),
@@ -1092,20 +1131,14 @@ class _HomePageState extends State<HomePage> {
   /// 最近解锁的成就/提醒——记了不给人看，等于没记（主仓库 ADR 0052）。
   Widget _recentNotices(BuildContext context) {
     if (_notices.isEmpty) return const SizedBox.shrink();
-    return Container(
+    return BsCard(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Glyph.notice, size: 22, color: Bs.paper),
+              Icon(Glyph.notice, size: 22, color: Bs.paper),
               const SizedBox(width: 8),
               Text("最近提醒", style: Theme.of(context).textTheme.titleMedium),
             ],
@@ -1153,14 +1186,8 @@ class _HomePageState extends State<HomePage> {
       }
     }
     final streak = DailyActivityChart.dayStreak(_daily);
-    return Container(
+    return BsCard(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1176,7 +1203,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Glyph.recentDays,
                       size: 20,
                       color: Bs.paper,
@@ -1211,20 +1238,14 @@ class _HomePageState extends State<HomePage> {
         (topic, _topicStats[topic.id] ?? const TopicStats(attempts: 0, correct: 0)),
     ]..sort((a, b) => a.$2.rate.compareTo(b.$2.rate));
     if (ranked.isEmpty) return const SizedBox.shrink();
-    return Container(
+    return BsCard(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Glyph.topicAccuracy, size: 20, color: Bs.paper),
+              Icon(Glyph.topicAccuracy, size: 20, color: Bs.paper),
               const SizedBox(width: 8),
               Text("各章节正确率", style: Theme.of(context).textTheme.titleMedium),
             ],
@@ -1381,7 +1402,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Glyph.review, color: Bs.paper),
               SizedBox(width: 8),
@@ -1494,7 +1515,7 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
       children: [
-        const Row(
+        Row(
           children: [
             Icon(Glyph.numbers, color: Bs.paper),
             SizedBox(width: 8),
@@ -1526,13 +1547,8 @@ class _HomePageState extends State<HomePage> {
     final pending = _pending(related);
     final locked = group.related(all).length - related.length;
     final maxAmount = group.maxAmount;
-    return Container(
+    return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1575,7 +1591,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           row.value,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Bs.paper),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Bs.paper),
                         ),
                         if (row.amount != null && maxAmount > 0) ...[
                           const SizedBox(height: 4),
@@ -1707,7 +1723,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("开始测试"),
         content: Text(
           "「$title」考场时长 $minutes 分钟，这里只计时、到点不收卷。答一题交一题，交了不能改；不及格也继续答完整卷。确定现在开始吗？",
-          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
+          style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("再看看")),

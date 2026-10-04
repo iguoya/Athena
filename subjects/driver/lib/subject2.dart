@@ -148,7 +148,7 @@ class _Subject2PageState extends State<Subject2Page> {
             children: [
               CircleAvatar(
                 backgroundColor: Bs.paper.withValues(alpha: 0.15),
-                child: const Icon(Glyph.subject2, color: Bs.paper),
+                child: Icon(Glyph.subject2, color: Bs.paper),
               ),
               Text("科目二", style: theme.textTheme.headlineMedium),
               Text("场地驾驶技能 · 小型自动挡（C2）", style: theme.textTheme.titleMedium?.copyWith(color: Bs.secondary)),
@@ -549,7 +549,7 @@ class _FormTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     TableRow row(List<String> cells, {bool head = false}) => TableRow(
-          decoration: head ? const BoxDecoration(color: Bs.light) : null,
+          decoration: head ? BoxDecoration(color: Bs.light) : null,
           children: [
             for (final c in cells)
               Padding(
@@ -874,7 +874,7 @@ class _ItemCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(child: Text(item.title, style: theme.textTheme.titleLarge)),
-                    const Icon(Glyph.animation, color: Bs.paper),
+                    Icon(Glyph.animation, color: Bs.paper),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -1123,8 +1123,8 @@ class _ItemPageState extends State<_ItemPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 6),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
                         child: Icon(Glyph.bullet, size: 8, color: Bs.paper),
                       ),
                       const SizedBox(width: 10),
@@ -1432,7 +1432,7 @@ class _Quote extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Bs.light,
         border: Border(left: BorderSide(color: Bs.paper, width: 4)),
       ),

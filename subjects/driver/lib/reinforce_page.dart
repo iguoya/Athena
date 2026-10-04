@@ -62,14 +62,15 @@ class ReinforcePage extends StatelessWidget {
   /// 学习诊断（遗忘、错因、选错的方式、与全国比、强化练习成效）；没有就不显示这一区。
   final DiagnosisData? diagnosis;
 
-  static const _levelColors = {
+  /// 两张配色表都含皮肤主色（consolidating / due），getter 每次取当前皮肤值。
+  static Map<MasteryLevel, Color> get _levelColors => {
     MasteryLevel.fresh: Color(0xFFADB5BD),
     MasteryLevel.learning: Bs.warning,
     MasteryLevel.consolidating: Bs.primary,
     MasteryLevel.solid: Bs.success,
   };
 
-  static const _reasonColors = {
+  static Map<String, Color> get _reasonColors => {
     "retest": Bs.danger,
     "variant": Color(0xFF6F42C1),
     "weak": Bs.warning,
@@ -90,7 +91,7 @@ class ReinforcePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Glyph.reinforce, color: Bs.paper),
               SizedBox(width: 8),

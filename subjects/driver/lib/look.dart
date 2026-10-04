@@ -9,12 +9,15 @@ import "package:flutter/services.dart";
 import "glyphs.dart";
 import "content.dart";
 import "progress.dart";
+import "skin.dart";
 
-/// Bootstrap 5 色板与常用零件。图标用 Material 的系统符号，角色对齐 Bootstrap Icons。
+/// 语义色与皮肤令牌的门面。语义色（对错绿红、警示黄、题型青紫、频次档位）是
+/// 全局常量，含义人人认得，不随皮肤变；氛围色（primary / nav / light / body /
+/// border / paper）是 getter，指向当前皮肤（skin.dart，ADR 0058），换肤经
+/// `MaterialApp` 整树重建后在这些 getter 上自然生效。图标用 Material 的系统
+/// 符号，角色对齐 Bootstrap Icons。
 class Bs {
-  // 直接用 Bootstrap 5 的标准色板：蓝主行动、绿通过、红错误、黄注意、青信息，
-  // 加上扩展色里的紫和青绿。明亮、通用、语义人人都认得。
-  static const primary = Color(0xFF0D6EFD);
+  // —— 语义色：全局共享的常量（Bootstrap 5 原板）——
   static const secondary = Color(0xFF6C757D);
   static const success = Color(0xFF198754);
   static const danger = Color(0xFFDC3545);
@@ -24,21 +27,48 @@ class Bs {
   static const teal = Color(0xFF20C997);
   static const orange = Color(0xFFFD7E14);
   static const pink = Color(0xFFD63384);
-  static const light = Color(0xFFF8F9FA);
   static const dark = Color(0xFF212529);
-  static const body = Color(0xFFFFFFFF);
-  static const border = Color(0xFFDEE2E6);
 
-  /// 侧栏：Bootstrap 里 navbar 配 bg-primary 的深一档，白字清晰。
-  static const nav = Color(0xFF0A58CA);
+  // —— 氛围色：跟随当前皮肤 ——
+  static Color get primary => Skins.current.primary;
 
   /// 品牌强调（题号、进度条、朗读条、选中态）——就是主色本身。
-  static const paper = primary;
+  static Color get paper => primary;
+
+  /// 侧栏底色。
+  static Color get nav => Skins.current.nav;
+
+  /// 页面底色（旧 Bs.light 的语义）。
+  static Color get light => Skins.current.page;
+
+  /// 卡片底色（旧 Bs.body 的语义）。
+  static Color get body => Skins.current.card;
+
+  /// hairline 与分隔线。
+  static Color get border => Skins.current.border;
 
   /// 保留别名：老代码里的 accent 指紫色。
   static const accent = purple;
 
-  static const radius = 4.0;
+  /// 圆角分级（ADR 0058 决策 5）：控件、卡片、徽章胶囊。
+  static const radius = 10.0;
+  static const radiusCard = 16.0;
+  static const radiusPill = 999.0;
+
+  /// 动效时长令牌（ADR 0058 决策 6）：常规反馈与入场。新代码用令牌，不自己调参。
+  static const durFast = Duration(milliseconds: 200);
+  static const durIn = Duration(milliseconds: 300);
+
+  /// 卡片双层软阴影：一层贴地定位置，一层大而淡铺氛围；hover 加深一档。
+  static const cardShadow = [
+    BoxShadow(color: Color(0x0F101828), blurRadius: 10, offset: Offset(0, 2)),
+    BoxShadow(color: Color(0x0A101828), blurRadius: 24, offset: Offset(0, 8)),
+  ];
+  static const hoverShadow = [
+    BoxShadow(color: Color(0x1A101828), blurRadius: 14, offset: Offset(0, 4)),
+    BoxShadow(color: Color(0x12101828), blurRadius: 32, offset: Offset(0, 12)),
+  ];
+
   static const bodySize = 20.0;
 
   /// 底色亮就用深字，底色暗就用白字——黄底白字看不清是最常见的翻车点。
@@ -136,6 +166,63 @@ class Bs {
       _ => "单选",
     };
   }
+}
+
+/// 组装应用主题：皮肤只换氛围色，字号、密度、组件形状全局一致（ADR 0058）。
+/// 页面自身全透明——环境背景由 `MaterialApp.builder` 里的 [AmbientBackdrop] 垫。
+ThemeData buildTheme(Skin skin) {
+  return ThemeData(
+    colorScheme: ColorScheme.light(
+      primary: skin.primary,
+      secondary: skin.primary,
+      error: Bs.danger,
+      surface: skin.card,
+    ),
+    useMaterial3: true,
+    textTheme: Bs.textTheme(ThemeData(useMaterial3: true).textTheme),
+    iconTheme: IconThemeData(size: Bs.bodySize),
+    visualDensity: VisualDensity.standard,
+    splashFactory: NoSplash.splashFactory,
+    scaffoldBackgroundColor: Colors.transparent,
+    dividerColor: skin.border,
+    hoverColor: skin.primary.withValues(alpha: 0.06),
+    filledButtonTheme: FilledButtonThemeData(
+      // 主按钮用主行动色，不再是一片深灰
+      style: FilledButton.styleFrom(
+        backgroundColor: skin.primary,
+        foregroundColor: Colors.white,
+        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: skin.primary,
+        side: BorderSide(color: skin.border),
+        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: skin.primary,
+        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+      ),
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: skin.card,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radiusCard)),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(Bs.radius)),
+    ),
+  );
 }
 
 /// 频次的取值——与 models 里的 QuestionBand 一致，放在这里是为了不让配色层依赖数据层。
@@ -244,10 +331,11 @@ class QuestionImage extends StatelessWidget {
             return Stack(
               alignment: Alignment.topRight,
               children: [
-                picture,
+                // 玻璃托盘：半透明白底 + 高光描边，题图带透明通道时底下不再是应用底色。
+                GlassPanel(padding: const EdgeInsets.all(10), child: picture),
                 IconButton(
                   onPressed: () => Navigator.of(dialogContext).pop(),
-                  icon: const Icon(Glyph.close, color: Colors.white, size: 28),
+                  icon: const Icon(Glyph.close, color: Bs.dark, size: 28),
                   tooltip: "关闭",
                 ),
               ],
@@ -321,24 +409,27 @@ class BsBadge extends StatelessWidget {
   const BsBadge({
     super.key,
     required this.text,
-    this.color = Bs.primary,
+    this.color,
     this.foreground,
     this.icon,
   });
 
   final String text;
-  final Color color;
+
+  /// 缺省用当前皮肤的主行动色（默认参数必须是常量，皮肤色只能在这里回退）。
+  final Color? color;
   final Color? foreground;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    final fg = foreground ?? Bs.onColor(color);
+    final bg = color ?? Bs.primary;
+    final fg = foreground ?? Bs.onColor(bg);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(Bs.radius),
+        color: bg,
+        borderRadius: BorderRadius.circular(Bs.radiusPill),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -385,7 +476,7 @@ class SerialBadge extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             border: Border.all(color: Bs.border),
-            borderRadius: BorderRadius.circular(Bs.radius),
+            borderRadius: BorderRadius.circular(Bs.radiusPill),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -438,10 +529,10 @@ class BsAlert extends StatelessWidget {
 }
 
 class BsProgress extends StatelessWidget {
-  const BsProgress({super.key, required this.value, this.color = Bs.primary});
+  const BsProgress({super.key, required this.value, this.color});
 
   final double value;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -450,7 +541,7 @@ class BsProgress extends StatelessWidget {
       child: LinearProgressIndicator(
         value: value.clamp(0, 1),
         minHeight: 10,
-        color: color,
+        color: color ?? Bs.primary,
         backgroundColor: Bs.border,
       ),
     );
@@ -809,22 +900,23 @@ class StatTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
-    this.color = Bs.primary,
+    this.color,
   });
 
   final IconData icon;
   final String label;
   final String value;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final tone = color ?? Bs.primary;
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 16, 12),
       decoration: BoxDecoration(
         color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
+        borderRadius: BorderRadius.circular(Bs.radiusCard),
+        boxShadow: Bs.cardShadow,
       ),
       child: Row(
         // 不写 min 的话 Row 会把统计块撑满整行，四个块各占一行，白占地方
@@ -832,15 +924,15 @@ class StatTile extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: color.withValues(alpha: 0.15),
-            child: Icon(icon, size: 22, color: color),
+            backgroundColor: tone.withValues(alpha: 0.15),
+            child: Icon(icon, size: 22, color: tone),
           ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: const TextStyle(color: Bs.secondary, fontSize: 16)),
-              Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: Bs.bodySize)),
+              Text(value, style: TextStyle(fontWeight: FontWeight.w700, fontSize: Bs.bodySize)),
             ],
           ),
         ],
@@ -854,26 +946,27 @@ class RateRing extends StatelessWidget {
     super.key,
     required this.rate,
     required this.caption,
-    this.color = Bs.primary,
+    this.color,
     this.size = 56,
   });
 
   final double rate;
   final String caption;
-  final Color color;
+  final Color? color;
   final double size;
 
   @override
   Widget build(BuildContext context) {
+    final tone = color ?? Bs.primary;
     return SizedBox(
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _RingPainter(rate.clamp(0, 1), color),
+        painter: _RingPainter(rate.clamp(0, 1), tone),
         child: Center(
           child: Text(
             caption,
-            style: TextStyle(fontSize: size * 0.22, fontWeight: FontWeight.w700, color: color),
+            style: TextStyle(fontSize: size * 0.22, fontWeight: FontWeight.w700, color: tone),
           ),
         ),
       ),
@@ -913,4 +1006,184 @@ class _RingPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _RingPainter oldDelegate) =>
       oldDelegate.rate != rate || oldDelegate.color != color;
+}
+
+/// 整窗环境背景：页面色打底，再铺三团大半径柔色斑（ADR 0058 决策 4）。
+/// 内容静态，RepaintBoundary 一次成层、之后每帧零成本，窗口尺寸变化才重画；
+/// 不用系统窗口材质、不引原生插件——那是长期税（决策 4）。
+class AmbientBackdrop extends StatelessWidget {
+  const AmbientBackdrop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: CustomPaint(
+        painter: _AmbientPainter(Skins.current),
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _AmbientPainter extends CustomPainter {
+  _AmbientPainter(this.skin);
+
+  final Skin skin;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(Offset.zero & size, Paint()..color = skin.page);
+    // 左上一大团、右中一团、左下沿一团：按比例摆放，什么窗口形状都铺得匀。
+    final spots = [
+      (Offset(size.width * 0.10, size.height * 0.02), size.width * 0.50, skin.ambient[0], 0.38),
+      (Offset(size.width * 0.98, size.height * 0.36), size.width * 0.42, skin.ambient[1], 0.30),
+      (Offset(size.width * 0.28, size.height * 1.05), size.width * 0.55, skin.ambient[2], 0.28),
+    ];
+    for (final (center, radius, color, alpha) in spots) {
+      final paint = Paint()
+        ..color = color.withValues(alpha: alpha)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 90);
+      canvas.drawCircle(center, radius, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_AmbientPainter oldDelegate) => oldDelegate.skin.id != skin.id;
+}
+
+/// 阶 3 浮层的玻璃面板：背景模糊 + 半透明托底 + hairline 高光描边，阴影画在
+/// clip 外层不被裁掉。只给小面积浮层用（大图预览这类），不给整窗（ADR 0058
+/// 决策 4 的性能边界：BackdropFilter 是 saveLayer）。
+class GlassPanel extends StatelessWidget {
+  const GlassPanel({
+    super.key,
+    required this.child,
+    this.radius = Bs.radiusCard,
+    this.blur = 18,
+    this.padding,
+    this.color,
+  });
+
+  final Widget child;
+  final double radius;
+  final double blur;
+  final EdgeInsetsGeometry? padding;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
+        boxShadow: Bs.cardShadow,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+          child: Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              color: color ?? Colors.white.withValues(alpha: 0.62),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 白卡片：card 底、卡片级圆角、双层软阴影替代 1px 描边的「表格感」；桌面鼠标
+/// 悬停轻微上浮。首页概览先行收编，其余页的描边卡片后续顺手换（ADR 0058 决策 5）。
+class BsCard extends StatefulWidget {
+  const BsCard({
+    super.key,
+    required this.child,
+    this.margin,
+    this.padding = const EdgeInsets.fromLTRB(16, 14, 16, 12),
+    this.onTap,
+  });
+
+  final Widget child;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry padding;
+  final VoidCallback? onTap;
+
+  @override
+  State<BsCard> createState() => _BsCardState();
+}
+
+class _BsCardState extends State<BsCard> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: AnimatedContainer(
+        duration: Bs.durFast,
+        curve: Curves.easeOut,
+        margin: widget.margin,
+        transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
+        padding: widget.padding,
+        decoration: BoxDecoration(
+          color: Bs.body,
+          borderRadius: BorderRadius.circular(Bs.radiusCard),
+          boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
+        ),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+/// 概览卡片入场：按序延迟 45ms 淡入加轻微上滑，一列卡片「拾阶而上」。
+/// 延迟用可取消的 Timer：页面在延迟到期前被销毁（测试树拆掉、快速切换）时
+/// 取消掉，不给 flutter_test 留 pending timer。
+class StaggerIn extends StatefulWidget {
+  const StaggerIn({super.key, required this.index, required this.child});
+
+  final int index;
+  final Widget child;
+
+  @override
+  State<StaggerIn> createState() => _StaggerInState();
+}
+
+class _StaggerInState extends State<StaggerIn> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: Bs.durIn);
+  late final Animation<double> _anim =
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+  Timer? _delay;
+
+  @override
+  void initState() {
+    super.initState();
+    _delay = Timer(Duration(milliseconds: 45 * widget.index), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _delay?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _anim,
+      child: SlideTransition(
+        position: Tween(begin: const Offset(0, 0.04), end: Offset.zero).animate(_anim),
+        child: widget.child,
+      ),
+    );
+  }
 }
