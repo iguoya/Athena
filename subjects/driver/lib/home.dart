@@ -390,21 +390,21 @@ class _HomePageState extends State<HomePage> {
     final s1Mastered = s1Daily.where((q) => _mastered.contains(q.id)).length;
     return ColoredBox(
       // 半一档透出环境色斑：侧栏是「阶 1」面板，玻璃感从这里来（ADR 0058）。
-      color: Bs.nav.withValues(alpha: 0.92),
+      color: Skins.current.nav.withValues(alpha: 0.92),
       child: Column(
         children: [
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 20, 12, 12),
               children: [
-                const Row(
+                Row(
                   children: [
                     AppMark(),
                     SizedBox(width: 8),
                     Text(
                       "驾考学习",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Skins.current.scheme.onSurface,
                         fontSize: Bs.bodySize,
                         fontWeight: FontWeight.w700,
                       ),
@@ -439,7 +439,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // 跨科目的几个入口钉在侧栏底部，不跟科目目录一起滚：科目展开得再长，
           // 错题本、考前复习也一直看得见（ADR 0051）。
-          const Divider(height: 1, color: Colors.white30),
+          Divider(height: 1, color: Bs.border),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 12, 8),
             child: Column(
@@ -526,7 +526,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.only(top: 8),
       child: Row(
         children: [
-          const Text("皮肤", style: TextStyle(color: Colors.white70, fontSize: 14)),
+          Text("皮肤", style: TextStyle(color: Skins.current.navText, fontSize: 14)),
           const Spacer(),
           for (final skin in Skins.all)
             Padding(
@@ -543,7 +543,7 @@ class _HomePageState extends State<HomePage> {
                       shape: BoxShape.circle,
                       gradient: LinearGradient(colors: [skin.primary, skin.ambient.first]),
                       border: Border.all(
-                        color: skin.id == Skins.current.id ? Colors.white : Colors.transparent,
+                        color: skin.id == Skins.current.id ? Skins.current.scheme.onSurface : Colors.transparent,
                         width: 2,
                       ),
                     ),
@@ -586,7 +586,7 @@ class _HomePageState extends State<HomePage> {
                   child: Icon(
                     expanded ? Glyph.collapse : Glyph.expand,
                     size: Bs.bodySize,
-                    color: Colors.white70,
+                    color: Skins.current.navText,
                   ),
                 ),
               ),
@@ -660,16 +660,16 @@ class _HomePageState extends State<HomePage> {
   /// 点击进配置屏改端点或外网访问凭据。
   Widget _syncLine(SyncStatus status) {
     final (icon, text, color) = status.dead > 0
-        ? (Glyph.syncFailed, "${status.dead} 条记录无法同步", Bs.warning)
+        ? (Glyph.syncFailed, "${status.dead} 条记录无法同步", Bs.danger)
         : status.lastError != null && status.pending == 0 && !status.running
-            ? (Glyph.syncFailed, status.lastError!, const Color(0xFFDCE9FF))
+            ? (Glyph.syncFailed, status.lastError!, Bs.warning)
             : status.lastError != null && !status.running
-                ? (Glyph.syncFailed, "待同步 ${status.pending} 条 · ${status.lastError!}", const Color(0xFFDCE9FF))
+                ? (Glyph.syncFailed, "待同步 ${status.pending} 条 · ${status.lastError!}", Bs.warning)
                 : status.running
-                    ? (Glyph.sync, "同步中…", const Color(0xFFDCE9FF))
+                    ? (Glyph.sync, "同步中…", Skins.current.navText)
                     : status.pending > 0
-                        ? (Glyph.sync, "待同步 ${status.pending} 条", const Color(0xFFDCE9FF))
-                        : (Glyph.sync, "已同步", Colors.white54);
+                        ? (Glyph.sync, "待同步 ${status.pending} 条", Skins.current.navText)
+                        : (Glyph.sync, "已同步", Skins.current.navTextMuted);
     return InkWell(
       onTap: widget.onOpenConfig,
       child: Padding(
@@ -702,10 +702,10 @@ class _HomePageState extends State<HomePage> {
     bool indent2 = false,
     Widget? trailing,
   }) {
-    // 蓝底上：没选中的也要看得清，选中的用白色半透明底 + 左侧黄条顶出来
-    final color = muted
-        ? Colors.white54
-        : (selected ? Colors.white : const Color(0xFFDCE9FF));
+    // Material 3 导航抽屉：默认 onSurfaceVariant，选中行是主色低透明度的药丸底配主色字
+    // （Skin.navSelected），禁用 38% 透明度。
+    final skin = Skins.current;
+    final color = muted ? skin.navTextMuted : (selected ? skin.navTextSelected : skin.navText);
     // 子项往右缩一个图标宽，一眼看出挂在哪个科目底下。行距收紧、侧栏放宽到章节名不折行：
     // 底部钉住跨科目入口后，科目一展开 13 行，科目二、科目四仍要留在一屏里（ADR 0051）。
     return InkWell(
@@ -713,16 +713,10 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.only(left: indent2 ? 46 : (indent ? 24 : 0)),
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: indent ? 4 : 8),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: indent ? 4 : 8),
         decoration: BoxDecoration(
-          color: selected ? Colors.white.withValues(alpha: 0.18) : null,
-          borderRadius: BorderRadius.circular(Bs.radius),
-          border: Border(
-            left: BorderSide(
-              color: selected ? Bs.warning : Colors.transparent,
-              width: 4,
-            ),
-          ),
+          color: selected ? skin.navSelected : null,
+          borderRadius: BorderRadius.circular(Bs.radiusPill),
         ),
         child: Row(
           children: [

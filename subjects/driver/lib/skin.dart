@@ -39,8 +39,18 @@ class Skin {
   /// 主行动色：按钮、选中态、题号、进度条。
   Color get primary => scheme.primary;
 
-  /// 侧栏底色（白字）。渲染时叠一层透明度透出环境色斑。
-  Color get nav => scheme.primary;
+  /// 侧栏底色（Material 3 导航抽屉的 surfaceContainerLow）。渲染时叠一层透明度透出环境色斑。
+  Color get nav => scheme.surfaceContainerLow;
+
+  /// 侧栏文字与图标：默认 onSurfaceVariant，选中行用主色，禁用 38% 透明度
+  /// （Material 3 的禁用态约定）。
+  Color get navText => scheme.onSurfaceVariant;
+  Color get navTextSelected => scheme.primary;
+  Color get navTextMuted => scheme.onSurface.withValues(alpha: 0.38);
+
+  /// 侧栏选中行的底（导航抽屉的 active indicator）：主色以低透明度铺在侧栏底上，
+  /// 与徽章的浅色调同一做法；`secondaryContainer` 在 fidelity 方案里偏艳（曙途像一条橙色药丸）。
+  Color get navSelected => Color.alphaBlend(scheme.primary.withValues(alpha: 0.14), nav);
 
   /// 页面底色（旧 Bs.light 的语义）。
   Color get page => scheme.surface;

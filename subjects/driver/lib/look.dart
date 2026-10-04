@@ -432,14 +432,20 @@ class BsBadge extends StatelessWidget {
   final String text;
 
   /// 缺省用当前皮肤的主行动色（默认参数必须是常量，皮肤色只能在这里回退）。
+  /// 默认是浅色调（tonal）徽章：底是 [color] 以低透明度铺在卡片底上，字与图标用 [color]
+  /// 本身——Material 3 用状态层透明度做浅底的办法，色值随语义色走、对比度由实心色保证。
   final Color? color;
+
+  /// 给了就是实心徽章：底是 [color]，字用这个色（放在深色底或需要强调的地方）。
   final Color? foreground;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
-    final bg = color ?? Bs.primary;
-    final fg = foreground ?? Bs.onColor(bg);
+    final base = color ?? Bs.primary;
+    final solid = foreground != null;
+    final bg = solid ? base : Color.alphaBlend(base.withValues(alpha: 0.14), Bs.body);
+    final fg = solid ? foreground! : base;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
