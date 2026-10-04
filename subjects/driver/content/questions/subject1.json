@@ -18772,7 +18772,7 @@
         },
         {
           "id": "C",
-          "label": "内测通行",
+          "label": "内侧通行",
           "ok": false
         },
         {
@@ -36594,56 +36594,6 @@
       "error_rate": 2.7
     },
     {
-      "id": "drive.s1.signals.200",
-      "topic_id": "drive.s1.signals",
-      "kind": "single",
-      "prompt": "在路口遇到图中这种黄灯不断闪烁时，提醒车辆应注意什么？",
-      "image": "images/subject1/2021_kemu1_13152600.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "路口禁止一切车辆通行",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "路口发生道路交通事故",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "路口交通管制需要清空",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "路口交通信号暂时解除",
-          "ok": true
-        }
-      ],
-      "explain": "图中是黄灯，题问的是持续闪烁的黄灯：它是闪光警告信号灯，不指挥停和走，只提示注意瞭望，确认安全后通过（第四十二条）。所以选「信号暂时解除」——这时要靠自己观察，不是禁行、事故或管制。普通黄灯是过渡信号，别和它混。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "quoted",
-          "locator": "第四十二条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "闪光警告信号灯为持续闪烁的黄灯，提示车辆、行人通行时注意瞭望，确认安全后通过。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20210608142951pt2s9awsvvuyvr4vdot5b",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；出处逐题核对（按题目考点挂到具体条文或标准）。"
-        }
-      ],
-      "phase": 3,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 19.0
-    },
-    {
       "id": "drive.s1.occupants.088",
       "topic_id": "drive.s1.occupants",
       "kind": "judge",
@@ -54185,86 +54135,6 @@
       "error_rate": 4.1
     },
     {
-      "id": "drive.s1.occupants.111",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "驶近一个图中所示的路口时，必须先停车再重新起步通过路口。",
-      "image": "images/subject1/2019_kemu1_BB130304.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "停车后要确认安全才能起步通过。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十四条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车通过交叉路口，应当按照交通信号灯、交通标志、交通标线或者交通警察的指挥通过；通过没有交通信号灯、交通标志、交通标线或者交通警察指挥的交叉路口时，应当减速慢行，并让行人和优先通行的车辆先行。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20191126190220kuehnkkybfz9qeax4mbjzf",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；出处逐题核对（按题目考点挂到具体条文或标准）。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 40.7
-    },
-    {
-      "id": "drive.s1.occupants.112",
-      "topic_id": "drive.s1.occupants",
-      "kind": "judge",
-      "prompt": "遇到一个图中所示的漫水路段时，要提前减速，谨慎慢行进入水区，在涉水路段行驶，一定要低速缓慢行驶，涉水途中禁止停车。",
-      "image": "images/subject1/2019_kemu1_BB130306.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "条例第64条要求：行经漫水路或漫水桥，应当先停车察明水情，确认安全后再低速通过。题干只写减速进入、途中禁止停车，漏了「停车察明」这一步，所以错。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "quoted",
-          "locator": "第六十四条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车行经漫水路或者漫水桥时，应当停车察明水情，确认安全后，低速通过。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20191126190220v52ugfv1hwqerleuerog8e",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；出处逐题核对（按题目考点挂到具体条文或标准）。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 48.4
-    },
-    {
       "id": "drive.s1.rules.555",
       "topic_id": "drive.s1.rules",
       "kind": "single",
@@ -61433,46 +61303,6 @@
       "band": "regular",
       "image": "images/subject1/2019_kemu1_843600.jpg",
       "error_rate": 9.2
-    },
-    {
-      "id": "drive.s1.rules.562",
-      "topic_id": "drive.s1.rules",
-      "kind": "judge",
-      "prompt": "图中驾驶人驾驶机动车上路行驶的做法，是一种轻微的违规行为。",
-      "image": "images/subject1/1639550632899-2021_1_1_14234300.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "现官方已无违章和违规的说法。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "quoted",
-          "locator": "第十一条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "驾驶机动车上道路行驶，应当悬挂机动车号牌，放置检验合格标志、保险标志，并随车携带机动车行驶证。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "202112141652355q1cb8cebuhmvsydvygzf3",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的图片题，题图随仓库走；出处逐题核对（按题目考点挂到具体条文或标准）。"
-        }
-      ],
-      "phase": 2,
-      "difficulty": 2,
-      "band": "common",
-      "error_rate": 10.7
     },
     {
       "id": "drive.s1.rules.563",

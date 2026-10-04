@@ -2347,7 +2347,7 @@
           "ok": false
         }
       ],
-      "explain": "中型客车高速公路最高时速是100公里每小时。",
+      "explain": "罗某驾驶中型客车，13 时 10 分从 0 公里出发，14 时 10 分行至 125 公里加 200 米处，一小时跑了 125 公里多，平均时速已超过 125 公里；高速公路上中型客车最高车速为每小时 100 公里（第七十八条），所以主要违法行为是超速行驶。",
       "source_refs": [
         {
           "source_id": "road-safety-regulation",
@@ -2935,7 +2935,7 @@
           "ok": true
         }
       ],
-      "explain": "货车在高速公路上的最高车速为100公里/小时。",
+      "explain": "高速公路上车辆发生故障无法移动，要由救援车、清障车拖曳或牵引，不能让私家车拖曳（第六十八条）；货车在高速公路上最高车速为每小时 100 公里，刘某以 110 公里行驶是超速；故障车还要在来车方向 150 米以外设置警告标志，题中张某只开了危险报警闪光灯。题中没有张某疲劳驾驶的依据。",
       "source_refs": [
         {
           "source_id": "accident-order-146",
@@ -3083,7 +3083,7 @@
           "ok": false
         }
       ],
-      "explain": "弯道最高车速30，载货摩托车不能载人。",
+      "explain": "叶某驾驶中型厢式货车在弯道路段以 40 公里/小时行驶，急弯路最高行驶速度不得超过每小时 30 公里（第四十六条），属于超速；王某驾驶载货的正三轮摩托车载了 19 人，货运摩托车不得载人，属于非法载客。题中没有叶某准驾车型不符、王某不按信号灯行驶的依据。",
       "source_refs": [
         {
           "source_id": "road-safety-law",
@@ -18881,55 +18881,6 @@
       "error_rate": 2.0
     },
     {
-      "id": "drive.s4.maneuver.153",
-      "topic_id": "drive.s4.maneuver",
-      "kind": "multi",
-      "prompt": "车辆发生碰撞时，关于安全带作用的说法错误的是什么？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "保护颈部不受伤害",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "减轻驾乘人员受伤程度",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "减轻驾驶人疲劳",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "保持正确驾驶姿势",
-          "ok": true
-        }
-      ],
-      "explain": "安全带的作用是在碰撞时把人固定在座位上，避免撞上方向盘、挡风玻璃或甩出车外，减轻驾乘人员受伤程度。它不能保护颈部（颈部靠头枕），不能减轻驾驶人疲劳，也不是用来保持驾驶姿势的。本题问的是错误说法。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第（二）项",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。饮酒、服用国家管制的精神药品或者麻醉药品，或者患有妨碍安全驾驶机动车的疾病，或者过度疲劳影响安全驾驶的，不得驾驶机动车。任何人不得强迫、指使、纵容驾驶人违反道路交通安全法律、法规和机动车安全驾驶要求驾驶机动车。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101027132acudg7uitu9kb89cy8l2e",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 49.5
-    },
-    {
       "id": "drive.s4.lights.049",
       "topic_id": "drive.s4.lights",
       "kind": "multi",
@@ -23330,46 +23281,6 @@
       "difficulty": 2,
       "band": "regular",
       "error_rate": 1.7
-    },
-    {
-      "id": "drive.s4.maneuver.204",
-      "topic_id": "drive.s4.maneuver",
-      "kind": "judge",
-      "prompt": "前方标志指示路右侧是高速公路临时停车处。",
-      "image": "images/subject4/2019_kemu4_946300.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "错。图中是高速公路紧急停车带的标志：这里只在车辆发生故障、事故等紧急情况下使用，不是平时随意临时停车的地方。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "道路交通标志的形状、颜色和含义按 GB 5768.2 认读：警告黄底黑图、禁令红圈、指示蓝底、指路（高速）绿底。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102717ctnfvb2i2qu72f3ebgj1qf",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 39.0
     },
     {
       "id": "drive.s4.civil.178",
@@ -32338,46 +32249,6 @@
       "difficulty": 2,
       "band": "regular",
       "error_rate": 0.4
-    },
-    {
-      "id": "drive.s4.weather.060",
-      "topic_id": "drive.s4.weather",
-      "kind": "judge",
-      "prompt": "因故障在山区上坡路段长时间停车时，要用这种办法塞住车轮。",
-      "image": "images/subject4/2019_kemu4_963600.jpg",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "上坡路停车要防止后溜，要往轮胎后塞东西。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第六十三条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "机动车在道路上临时停车，应当遵守下列规定：（一）在设有禁停标志、标线的路段，在机动车道与非机动车道、人行道之间设有隔离设施的路段以及人行横道、施工地段，不得停车；（二）交叉路口、铁路道口、急弯路、宽度不足4米的窄路、桥梁、陡坡、隧道以及距离上述地点50米以内的路段，不得停车；（三）公共汽车站、急救站、加油站、消防栓或者消防队（站）门前以及距离上述地点30米以内的路段，除使用上述设施的以外，不得停车；（四）车辆停稳前不得开车门和上下人…"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102727pjnso9tavm2b5fzmjkf38q",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 17.6
     },
     {
       "id": "drive.s4.civil.273",
@@ -46743,56 +46614,6 @@
       "error_rate": 4.8
     },
     {
-      "id": "drive.s4.civil.358",
-      "topic_id": "drive.s4.civil",
-      "kind": "single",
-      "prompt": "这个标志是何含义？",
-      "image": "images/subject4/2020_kemu4_1000430217.jpg",
-      "choices": [
-        {
-          "id": "A",
-          "label": "消防设备箱标志",
-          "ok": true
-        },
-        {
-          "id": "B",
-          "label": "邮箱标志",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "加油站标志",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "灭火器标志",
-          "ok": false
-        }
-      ],
-      "explain": "此标志用于说明建筑配备各种消防设备。",
-      "source_refs": [
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "道路交通标志的形状、颜色和含义按 GB 5768.2 认读：警告黄底黑图、禁令红圈、指示蓝底、指路（高速）绿底。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "202005131544006brpqeaunioytbg3ksf3um",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 21.1
-    },
-    {
       "id": "drive.s4.weather.174",
       "topic_id": "drive.s4.weather",
       "kind": "multi",
@@ -50191,45 +50012,6 @@
       "error_rate": 6.4
     },
     {
-      "id": "drive.s4.civil.379",
-      "topic_id": "drive.s4.civil",
-      "kind": "judge",
-      "prompt": "上车前绕车检查时，要以顺时针方向绕车检查车辆，确认安全后方可上车。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": false
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": true
-        }
-      ],
-      "explain": "行车前一定要检查车辆安全情况。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200727150305ha8age3jeaunbxmq5c9fgs",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 25.2
-    },
-    {
       "id": "drive.s4.maneuver.318",
       "topic_id": "drive.s4.maneuver",
       "kind": "judge",
@@ -51520,55 +51302,6 @@
       "difficulty": 2,
       "band": "regular",
       "error_rate": 0.8
-    },
-    {
-      "id": "drive.s4.civil.389",
-      "topic_id": "drive.s4.civil",
-      "kind": "single",
-      "prompt": "黄昏时分，光线若明若暗，容易产生视觉误差，驾驶机动车应提前打开什么灯以便被其他驾驶人发现？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "远光灯",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "近光灯",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "示廓灯",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "前雾灯",
-          "ok": false
-        }
-      ],
-      "explain": "黄昏时光线明暗不定，容易产生视觉误差，别的驾驶人不容易发现你。本题以示廓灯为准：提前开启示廓灯，起到警示作用，让别人更早看到你。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第五十八条、第五十九条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "夜间没有路灯、照明不良或者低能见度时开启前照灯、示廓灯和后位灯，跟车时不得用远光；雾天开启雾灯和危险报警闪光灯；夜间通过急弯、坡路、拱桥、人行横道或者无信号灯路口交替使用远近光灯。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20200914180708jvzfmxg1oazk6tonl8cvze",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 47.8
     },
     {
       "id": "drive.s4.civil.390",
@@ -64119,7 +63852,7 @@
           "ok": false
         }
       ],
-      "explain": "没打转向灯和左转是一组错误行为。",
+      "explain": "图中出租车来到设有禁止左转弯标志的路口，仍然左转，违反了禁令标志；转弯前又没有开转向灯，共两种违法行为。",
       "source_refs": [
         {
           "source_id": "road-safety-law",
@@ -64140,156 +63873,6 @@
       "difficulty": 2,
       "band": "hot",
       "error_rate": 21.5
-    },
-    {
-      "id": "drive.s4.civil.508",
-      "topic_id": "drive.s4.civil",
-      "kind": "single",
-      "prompt": "动画2中有几种违法行为？",
-      "image": "images/subject4/2019_kemu4_909900.gif",
-      "choices": [
-        {
-          "id": "A",
-          "label": "一种违法行为",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "二种违法行为",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "三种违法行为",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "四种违法行为",
-          "ok": false
-        }
-      ],
-      "explain": "向右占用公家车道和未打转向灯是一组错误行为。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "201904101026597mukprerln5ujemvz98hbi",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 21.1
-    },
-    {
-      "id": "drive.s4.civil.509",
-      "topic_id": "drive.s4.civil",
-      "kind": "single",
-      "prompt": "动画5中有几种违法行为？",
-      "image": "images/subject4/910200.gif",
-      "choices": [
-        {
-          "id": "A",
-          "label": "一种违法行为",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "二种违法行为",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "三种违法行为",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "四种违法行为",
-          "ok": false
-        }
-      ],
-      "explain": "注意看对话框的内容。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102659fh6kuq3dgbbqypesmf7jad",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 20.5
-    },
-    {
-      "id": "drive.s4.civil.510",
-      "topic_id": "drive.s4.civil",
-      "kind": "single",
-      "prompt": "动画8中有几种违法行为？",
-      "image": "images/subject4/2019_kemu4_910500.gif",
-      "choices": [
-        {
-          "id": "A",
-          "label": "一种违法行为",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "二种违法行为",
-          "ok": true
-        },
-        {
-          "id": "C",
-          "label": "三种违法行为",
-          "ok": false
-        },
-        {
-          "id": "D",
-          "label": "四种违法行为",
-          "ok": false
-        }
-      ],
-      "explain": "非机动车道上的自行车图样很明显。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第二十二条第一款",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "机动车驾驶人应当遵守道路交通安全法律、法规的规定，按照操作规范安全驾驶、文明驾驶。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102659skbtrgusqzuk9sf9gaesdd",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 2,
-      "band": "hot",
-      "error_rate": 37.9
     },
     {
       "id": "drive.s4.civil.511",
@@ -64369,7 +63952,7 @@
           "ok": false
         }
       ],
-      "explain": "“应急车道”4个字很明显。",
+      "explain": "图中驾驶人手持电话接打电话，没系安全带，还把车开进了应急车道，共三种违法行为。非紧急情况不得在应急车道行驶或停车（第八十二条）。",
       "source_refs": [
         {
           "source_id": "road-safety-law",
@@ -71640,53 +71223,6 @@
       "image": "images/subject4/_exam_subject4_2019_kemu4_917200.jpg"
     },
     {
-      "id": "drive.s4.lights.151",
-      "topic_id": "drive.s4.lights",
-      "kind": "judge",
-      "prompt": "交通警察发出的是左转弯待转手势信号。",
-      "choices": [
-        {
-          "id": "T",
-          "label": "正确",
-          "ok": true
-        },
-        {
-          "id": "F",
-          "label": "错误",
-          "ok": false
-        }
-      ],
-      "explain": "警察脸朝向哪里，手中动作就是针对哪方车道车辆；并且题干中仅说明交警发出的信号是什么，并没有说我方主视角车辆看到这个信号应该怎么做，两者是截然不同的，大家不要误解。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-regulation",
-          "relation": "adapted",
-          "locator": "第三十一条",
-          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
-          "note": "《道路交通安全法实施条例》第三十一条，交通警察的指挥分为：手势、信号和使用器具的交通指挥信号。"
-        },
-        {
-          "source_id": "gb5768-2",
-          "relation": "adapted",
-          "locator": "交通警察手势信号",
-          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
-          "note": "左转弯待转信号：左臂向左下方平伸，掌心向下；左臂与手掌平直向下方摆动，准许左方左转弯的车辆进入路口，沿左转弯行驶方向靠近路口中心，等候左转弯信号。"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102717efpfvjubgwk2jajyekvps4",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 4,
-      "band": "regular",
-      "error_rate": 39.2,
-      "image": "images/subject4/_exam_subject4_2019_kemu4_953700.jpg"
-    },
-    {
       "id": "drive.s4.lights.152",
       "topic_id": "drive.s4.lights",
       "kind": "judge",
@@ -74873,63 +74409,6 @@
       "band": "regular",
       "error_rate": 19.9,
       "image": "images/subject4/_exam_subject4_2019_kemu4_963500.jpg"
-    },
-    {
-      "id": "drive.s4.maneuver.437",
-      "topic_id": "drive.s4.maneuver",
-      "kind": "single",
-      "prompt": "驾驶机动车怎样安全通过铁路道口？",
-      "choices": [
-        {
-          "id": "A",
-          "label": "换空挡利用惯性通过",
-          "ok": false
-        },
-        {
-          "id": "B",
-          "label": "进入道口后换低速挡",
-          "ok": false
-        },
-        {
-          "id": "C",
-          "label": "进入道口前减速减挡",
-          "ok": true
-        },
-        {
-          "id": "D",
-          "label": "道口内停车左右观察",
-          "ok": false
-        }
-      ],
-      "explain": "不要被图片误导，题目问的是安全通过铁路道口的方式。前方是有管理人员看守且有交通信号灯的铁路道口，为避免有状况发生，要在进入道口前减速减档，以免在通过时出现熄火或停车的情况。",
-      "source_refs": [
-        {
-          "source_id": "road-safety-law",
-          "relation": "adapted",
-          "locator": "第四十六条",
-          "url": "https://jtgl.beijing.gov.cn/jgj/jgxx/flfg/fl/205308/index.html",
-          "note": "《道路交通安全法》第四十六条：机动车通过铁路道口时，应按照交通信号或者管理人员的指示通行；没有交通信号或者管理人员的，应当减速或者停车观察，确认安全后通过。"
-        },
-        {
-          "source_id": "exam-syllabus-2022",
-          "relation": "adapted",
-          "locator": "科目三安全文明驾驶常识考试要点 3.道路交通信号在交通场景中的综合应用",
-          "url": "http://www.gov.cn/zhengce/zhengceku/2022-03/25/5681411/files/8487d1d0751a4bbd950916cabd7f4827.pdf",
-          "note": "不同类型交叉路口、路段及车站、铁路道口等特殊场所交通信号的综合应用"
-        },
-        {
-          "source_id": "public-bank-2022",
-          "relation": "selection_basis",
-          "locator": "20190410102710fkdkcz7cdng2fq3ru4ekx8",
-          "url": "https://github.com/doupoa/DrivingTestSubjectOne",
-          "note": "公开题库（MIT）的科目四题，按 ADR 0008 收录；法条按题面场景归类后核对写入。"
-        }
-      ],
-      "phase": 1,
-      "difficulty": 3,
-      "band": "common",
-      "error_rate": 30.0,
-      "image": "images/subject4/_exam_subject4_2019_kemu4_929400.jpg"
     },
     {
       "id": "drive.s4.weather.304",
