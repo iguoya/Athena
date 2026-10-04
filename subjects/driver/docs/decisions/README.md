@@ -77,3 +77,5 @@
 | [0070](0070-fresh-questions-under-topic.md) | 章节下的「练新题」入口 | 已接受 |
 | [0071](0071-material3-color-scheme-tokens.md) | 令牌层改接 Material 3 ColorScheme——不再沿用 Bootstrap 5 色板 | 已接受 |
 | [0072](0072-withdraw-doubtful-questions.md) | 下架答案存疑或题面有问题的题 | 已接受 |
+| [0073](0073-gesture-gallery-page.md) | 手势速记页——修订 0064 决策 4 的「手势不做图」 | 已接受 |
+| [0074](0074-crime-penalty-cheatsheet.md) | 易混数字加「刑罚档位」组——罪名与刑期的对照 | 已接受 |
