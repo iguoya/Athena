@@ -62,3 +62,11 @@
 | [0055](0055-explanations-carry-content-and-term-rule.md) | 解释必须讲内容；解释里「科目三」「科目四」的写法 | 已接受（第 2 条由 0056 取代） |
 | [0056](0056-subject3-is-road-test-subject4-is-theory.md) | 叫法统一：科目三 = 路考，科目四 = 安全文明驾驶常识 | 已接受（取代 0055 第 2 条，修订 0001 第 1 条的写法） |
 | [0057](0057-attempt-kind-and-duration-cap.md) | 作答记录带场合标记（practice/exam），单题用时封顶 5 分钟；历史按交卷时间窗回填 | 已接受 |
+| [0058](0058-skin-token-system.md) | 皮肤令牌系统：一套组件换氛围，只做明色 | 已接受 |
+| [0059](0059-sign-gallery-page.md) | 标志速记页——手绘标志成为可浏览的内容 | 已接受 |
+| [0060](0060-page-fade-and-number-slide.md) | 换页淡入与数值滑入，动效收窄到两处 | 已接受 |
+| [0061](0061-chart-hover-and-empty-actions.md) | 图表悬停取值与空态行动入口 | 已接受 |
+| [0062](0062-sync-pull-parallel-and-trigger-upload-only.md) | 同步在外网环境提速：拉取并行、写入触发只上传 | 已接受 |
+| [0063](0063-default-skin-meadow.md) | 默认皮肤改为青野 | 已接受 |
+| [0064](0064-keypoints-notes-page.md) | 考点速记页——情景要点对照，条目挂出处 | 已接受 |
+| [0065](0065-markings-gallery-page.md) | 标线速记页——路面读法成为可浏览的内容 | 已接受 |
