@@ -11,6 +11,7 @@ import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
 import "gauges_page.dart";
+import "gestures_page.dart";
 import "markings_page.dart";
 import "models.dart";
 import "notes_page.dart";
@@ -81,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   static const _markingsId = "markings";
   static const _gaugesId = "gauges";
   static const _henanId = "henan";
+  static const _gesturesId = "gestures";
   static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
@@ -360,6 +362,7 @@ class _HomePageState extends State<HomePage> {
         _place == _markingsId ||
         _place == _gaugesId ||
         _place == _henanId ||
+        _place == _gesturesId ||
         _place == _keyPointsId) {
       return null;
     }
@@ -491,6 +494,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _henanId && _session == null,
                   label: "河南速记",
                   onTap: () => _go(_henanId),
+                ),
+                _navLine(
+                  icon: Glyph.gestures,
+                  selected: _place == _gesturesId && _session == null,
+                  label: "手势速记",
+                  onTap: () => _go(_gesturesId),
                 ),
                 _navLine(
                   icon: Glyph.notes,
@@ -760,6 +769,7 @@ class _HomePageState extends State<HomePage> {
     if (_place == _markingsId) return _markingsOverview(context);
     if (_place == _gaugesId) return _gaugesOverview(context);
     if (_place == _henanId) return _henanOverview(context);
+    if (_place == _gesturesId) return _gesturesOverview(context);
     if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1704,6 +1714,24 @@ class _HomePageState extends State<HomePage> {
       lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
           "跟全国规定对照着记——先看速记，再练相关的题。",
       footnote: "条目依据《河南省道路交通安全条例》与《河南省高速公路条例》，罚款数字均指到条款。",
+    );
+  }
+
+  /// 手势速记：8 个法定动作摊开，两科共考的 29 题直接练（ADR 0073）。
+  Widget _gesturesOverview(BuildContext context) {
+    final both = [
+      ...dailyQuestions(_subject1All),
+      ...dailyQuestions(widget.bank.forSubject("subject4")),
+    ];
+    return GesturesPage(
+      gestures: widget.bank.gestureList,
+      daily: both,
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
+      ),
     );
   }
 

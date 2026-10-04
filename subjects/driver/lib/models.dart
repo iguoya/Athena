@@ -478,6 +478,42 @@ class Marking {
   }
 }
 
+/// 手势速记页的一条手势（ADR 0073）；出处是 gestures.json 文件级的实施条例。
+class TrafficGesture {
+  const TrafficGesture({
+    required this.id,
+    required this.name,
+    required this.kind,
+    required this.meaning,
+    this.band = QuestionBand.common,
+    this.questions = const [],
+  });
+
+  final String id;
+  final String name;
+  final String kind;
+
+  /// 一句「看到之后怎么开」（ADR 0073）。
+  final String meaning;
+  final String band;
+
+  /// 反向题映射（ADR 0067 决策 3），加载时校验都存在。
+  final List<String> questions;
+
+  factory TrafficGesture.fromJson(Map<String, dynamic> json) {
+    return TrafficGesture(
+      id: json["id"] as String,
+      name: json["name"] as String,
+      kind: json["kind"] as String,
+      meaning: json["meaning"] as String,
+      band: json["band"] as String? ?? QuestionBand.common,
+      questions: [
+        for (final raw in json["questions"] as List<dynamic>? ?? const []) raw as String,
+      ],
+    );
+  }
+}
+
 /// 仪表速记页的一条车内符号（ADR 0067）；出处是 gauges.json 文件级的 GB 4094。
 class Gauge {
   const Gauge({
@@ -659,6 +695,7 @@ class Bank {
     this.signs = const [],
     this.markings = const [],
     this.gauges = const [],
+    this.gestureList = const [],
     this.cheatsheet = const [],
     this.notes = const [],
     this.henanGroups = const [],
@@ -671,6 +708,7 @@ class Bank {
   final List<RoadSign> signs;
   final List<Marking> markings;
   final List<Gauge> gauges;
+  final List<TrafficGesture> gestureList;
   final List<CheatGroup> cheatsheet;
   final List<NoteGroup> notes;
 
