@@ -108,6 +108,9 @@ class _HomePageState extends State<HomePage> {
   List<AttemptView> _allAttempts = const [];
   ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
 
+  /// 强化练习每轮抽取的题量（ADR 0069）：默认 50，界面上可调，只在本会话生效。
+  int _reinforceRoundSize = reinforceRoundSize;
+
   /// 强化练习的题池（已排除锁着的科目和偏难怪题）和考点簇；簇在后台算好后重新选题。
   List<Question> _reinforcePool = const [];
   ClusterIndex _clusters = ClusterIndex.empty;
@@ -167,6 +170,26 @@ class _HomePageState extends State<HomePage> {
   List<Question> _practiceQueue(List<Question> questions) {
     return practiceQueue(_pending(questions), _wrongIds);
   }
+
+  /// 调整强化练习每轮的题量（ADR 0069）：只重算计划，不重读进度库。
+  void _setReinforceRoundSize(int count) {
+    setState(() {
+      _reinforceRoundSize = count;
+      _reinforcePlan = planReinforcement(
+        pool: _reinforcePool,
+        histories: _histories,
+        now: DateTime.now(),
+        clusters: _clusters,
+        count: count,
+      );
+    });
+  }
+
+  /// 该批题里从未作答过的（一次都没答过才算新题，ADR 0070）。
+  List<Question> _freshQuestions(Iterable<Question> questions) => [
+    for (final q in questions)
+      if (!_histories.byQuestion.containsKey(q.id)) q,
+  ];
 
   List<Question> _openPool(Subject subject) {
     // 科目一不设解锁（ADR 0044）：四个阶段只是按内容分的四组，全部开放。
@@ -289,6 +312,7 @@ class _HomePageState extends State<HomePage> {
       histories: histories,
       now: DateTime.now(),
       clusters: _clusters,
+      count: _reinforceRoundSize,
     );
     final secondsPerQuestion = avgMs > 0 ? avgMs / 1000 : 25.0;
     final priorities = chapterPriorities(
@@ -601,13 +625,27 @@ class _HomePageState extends State<HomePage> {
                     () {
                       final questions = _openTopic(subject, topic);
                       final pending = _pending(questions);
-                      return _navLine(
-                        icon: Glyph.topic,
-                        selected: inSession("${subject.code} · ${topic.title}"),
-                        label: pending.isEmpty ? topic.title : "${topic.title}  ${pending.length}",
-                        muted: pending.isEmpty,
-                        indent: true,
-                        onTap: pending.isEmpty ? null : () => _startPractice(subject, questions, topic.title),
+                      final fresh = _freshQuestions(questions);
+                      return Column(
+                        children: [
+                          _navLine(
+                            icon: Glyph.topic,
+                            selected: inSession("${subject.code} · ${topic.title}"),
+                            label: pending.isEmpty ? topic.title : "${topic.title}  ${pending.length}",
+                            muted: pending.isEmpty,
+                            indent: true,
+                            onTap: pending.isEmpty ? null : () => _startPractice(subject, questions, topic.title),
+                          ),
+                          if (fresh.isNotEmpty)
+                            _navLine(
+                              icon: Glyph.untried,
+                              selected: inSession("${subject.code} · ${topic.title} · 新题"),
+                              label: "练新题 ${fresh.length}",
+                              indent: true,
+                              indent2: true,
+                              onTap: () => _startPractice(subject, fresh, "${topic.title} · 新题"),
+                            ),
+                        ],
                       );
                     }(),
                   const SizedBox(height: 6),
@@ -661,6 +699,7 @@ class _HomePageState extends State<HomePage> {
     VoidCallback? onTap,
     bool muted = false,
     bool indent = false,
+    bool indent2 = false,
     Widget? trailing,
   }) {
     // 蓝底上：没选中的也要看得清，选中的用白色半透明底 + 左侧黄条顶出来
@@ -673,7 +712,7 @@ class _HomePageState extends State<HomePage> {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(left: indent ? 24 : 0),
+        margin: EdgeInsets.only(left: indent2 ? 46 : (indent ? 24 : 0)),
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: indent ? 4 : 8),
         decoration: BoxDecoration(
           color: selected ? Colors.white.withValues(alpha: 0.18) : null,
@@ -805,7 +844,7 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             if (_s1Done)
-              const BsBadge(
+              BsBadge(
                 text: "已全部掌握",
                 color: Bs.success,
                 icon: Glyph.correct,
@@ -1003,7 +1042,7 @@ class _HomePageState extends State<HomePage> {
               subject.code,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const BsBadge(
+            BsBadge(
               text: "科目一已过关",
               color: Bs.success,
               icon: Glyph.unlocked,
@@ -1016,14 +1055,14 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 4),
           Text(
             "法规名称：${subject.officialName}",
-            style: const TextStyle(color: Bs.secondary),
+            style: TextStyle(color: Bs.secondary),
           ),
         ],
         const SizedBox(height: 16),
         BsAlert(
           color: Bs.paper,
           icon: Glyph.info,
-          child: Text("科目一已经掌握。科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。"),
+          child: const Text("科目一已经掌握。科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。"),
         ),
         const SizedBox(height: 16),
         _progressCharts(context, subject),
@@ -1340,11 +1379,11 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Glyph.wrongBook, color: Bs.danger),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 "错题本",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
               ),
@@ -1437,6 +1476,12 @@ class _HomePageState extends State<HomePage> {
     }
     return ReinforcePage(
       plan: _reinforcePlan,
+      roundSize: _reinforceRoundSize,
+      onRoundSizeChanged: _setReinforceRoundSize,
+      stubborn: stubbornQuestions(
+        _histories,
+        {for (final q in widget.bank.questions) q.id: q},
+      ),
       onReshuffle: _reshuffleReinforce,
       onNewPractice: () {
         final s1 = widget.bank.curriculum.subject("subject1");
@@ -1493,8 +1538,8 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Icon(Glyph.review, color: Bs.paper),
-              SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),
+              const Text(
                 "考前复习",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
               ),
@@ -1683,8 +1728,8 @@ class _HomePageState extends State<HomePage> {
         Row(
           children: [
             Icon(Glyph.numbers, color: Bs.paper),
-            SizedBox(width: 8),
-            Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 8),
+            const Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
           ],
         ),
         const SizedBox(height: 8),
@@ -1890,7 +1935,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("开始测试"),
         content: Text(
           "「$title」考场时长 $minutes 分钟，这里只计时、到点不收卷。答一题交一题，交了不能改；不及格也继续答完整卷。确定现在开始吗？",
-          style: TextStyle(fontSize: Bs.bodySize, height: 1.45),
+          style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("再看看")),

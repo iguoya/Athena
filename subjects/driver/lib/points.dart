@@ -213,8 +213,8 @@ class PointCard extends StatelessWidget {
                   if (!compact)
                     TextButton.icon(
                       onPressed: () => Navigator.of(context).pop(true),
-                      icon: const Icon(Glyph.delete, color: Bs.danger),
-                      label: const Text("删掉这张", style: TextStyle(color: Bs.danger)),
+                      icon: Icon(Glyph.delete, color: Bs.danger),
+                      label: Text("删掉这张", style: TextStyle(color: Bs.danger)),
                     ),
                   const SizedBox(width: 8),
                   FilledButton(onPressed: () => Navigator.of(context).pop(false), child: const Text("关闭")),

@@ -9,6 +9,7 @@ import "package:flutter/services.dart";
 import "glyphs.dart";
 import "content.dart";
 import "progress.dart";
+import "semantic.dart";
 import "skin.dart";
 
 /// 语义色与皮肤令牌的门面。语义色（对错绿红、警示黄、题型青紫、频次档位）是
@@ -17,17 +18,17 @@ import "skin.dart";
 /// `MaterialApp` 整树重建后在这些 getter 上自然生效。图标用 Material 的系统
 /// 符号。
 class Bs {
-  // —— 语义色：全局共享的常量（Material 3 没有成功/警示/信息角色，迁移见 ADR 0069 第 4 条）——
-  static const secondary = Color(0xFF6C757D);
-  static const success = Color(0xFF198754);
-  static const danger = Color(0xFFDC3545);
-  static const warning = Color(0xFFFFC107);
-  static const info = Color(0xFF0DCAF0);
-  static const purple = Color(0xFF6F42C1);
-  static const teal = Color(0xFF20C997);
-  static const orange = Color(0xFFFD7E14);
-  static const pink = Color(0xFFD63384);
-  static const dark = Color(0xFF212529);
+  // —— 语义色：全局共享，含义不随皮肤变；色值由 Material 3 方案生成（semantic.dart，ADR 0069）——
+  static Color get secondary => Sem.neutral.color;
+  static Color get success => Sem.success.color;
+  static Color get danger => Sem.danger.color;
+  static Color get warning => Sem.warning.color;
+  static Color get info => Sem.info.color;
+  static Color get purple => Sem.purple.color;
+  static Color get teal => Sem.teal.color;
+  static Color get orange => Sem.orange.color;
+  static Color get pink => Sem.pink.color;
+  static Color get dark => Sem.ink;
 
   // —— 氛围色：跟随当前皮肤 ——
   static Color get primary => Skins.current.primary;
@@ -48,7 +49,7 @@ class Bs {
   static Color get border => Skins.current.border;
 
   /// 保留别名：老代码里的 accent 指紫色。
-  static const accent = purple;
+  static Color get accent => purple;
 
   /// 圆角分级（ADR 0058 决策 5）：控件、卡片、徽章胶囊。
   static const radius = 10.0;
@@ -179,7 +180,7 @@ ThemeData buildTheme(Skin skin) {
     colorScheme: skin.scheme,
     useMaterial3: true,
     textTheme: Bs.textTheme(ThemeData(useMaterial3: true).textTheme),
-    iconTheme: IconThemeData(size: Bs.bodySize),
+    iconTheme: const IconThemeData(size: Bs.bodySize),
     visualDensity: VisualDensity.standard,
     splashFactory: NoSplash.splashFactory,
     scaffoldBackgroundColor: Colors.transparent,
@@ -188,7 +189,7 @@ ThemeData buildTheme(Skin skin) {
     filledButtonTheme: FilledButtonThemeData(
       // 主按钮用主行动色，不再是一片深灰
       style: FilledButton.styleFrom(
-        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
       ),
@@ -196,14 +197,14 @@ ThemeData buildTheme(Skin skin) {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: skin.border),
-        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Bs.radius)),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
+        textStyle: const TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w600),
       ),
     ),
     dialogTheme: DialogThemeData(
@@ -349,7 +350,7 @@ class QuestionImage extends StatelessWidget {
                 GlassPanel(padding: const EdgeInsets.all(10), child: picture),
                 IconButton(
                   onPressed: () => Navigator.of(dialogContext).pop(),
-                  icon: const Icon(Glyph.close, color: Bs.dark, size: 28),
+                  icon: Icon(Glyph.close, color: Bs.dark, size: 28),
                   tooltip: "关闭",
                 ),
               ],
@@ -404,7 +405,7 @@ class PromptText extends StatelessWidget {
       }
       spans.add(TextSpan(
         text: text.substring(match.start, match.end),
-        style: const TextStyle(color: Bs.danger, fontWeight: FontWeight.w800),
+        style: TextStyle(color: Bs.danger, fontWeight: FontWeight.w800),
       ));
       cursor = match.end;
     }
@@ -495,9 +496,9 @@ class SerialBadge extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Glyph.serial, size: 16, color: Bs.secondary),
+              Icon(Glyph.serial, size: 16, color: Bs.secondary),
               const SizedBox(width: 4),
-              Text(serial, style: const TextStyle(fontSize: 14, color: Bs.secondary, fontFamily: "monospace")),
+              Text(serial, style: TextStyle(fontSize: 14, color: Bs.secondary, fontFamily: "monospace")),
             ],
           ),
         ),
@@ -510,16 +511,19 @@ class BsAlert extends StatelessWidget {
   const BsAlert({
     super.key,
     required this.child,
-    this.color = Bs.info,
+    this.color,
     this.icon,
   });
 
   final Widget child;
-  final Color color;
+
+  /// 缺省用信息色（默认参数必须是常量，语义色不再是常量，只能在这里回退）。
+  final Color? color;
   final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? Bs.info;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -1057,8 +1061,8 @@ class StatTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: const TextStyle(color: Bs.secondary, fontSize: 16)),
-              Text(value, style: TextStyle(fontWeight: FontWeight.w700, fontSize: Bs.bodySize)),
+              Text(label, style: TextStyle(color: Bs.secondary, fontSize: 16)),
+              Text(value, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: Bs.bodySize)),
             ],
           ),
         ],

@@ -58,7 +58,7 @@
 | 阶段 | 内容 | 状态 |
 |---|---|---|
 | 1 | 皮肤与主题层改接 `ColorScheme`（决策 1、2、3、5 的主题部分） | 随本 ADR 提交 |
-| 2 | 语义色改为 `ThemeExtension` 四件套，迁移 `Bs.success` 等使用点（决策 4） | 待办 |
+| 2 | 语义色由 Material 3 方案生成四件套，`Bs.success` 等改接（决策 4，实施方式见下） | 已完成 |
 | 3 | 自绘组件按 Material 3 收编：卡片、侧栏、状态徽章（决策 5 的其余部分） | 待办 |
 
 ## 后果
@@ -68,6 +68,27 @@
   （旧版侧栏比主色再深一档）；悬停提示条由深灰改为反色面。
 - 不变：题库、进度库、同步、字号基准、圆角与动效令牌、四套皮肤的名字与持久化。
 - 第一阶段结束后，语义色仍是旧的 Bootstrap 色值，与新的氛围色并存；这是已知的中间
-  状态，到第二阶段收口。
+  状态，第二阶段已收口（见下）。
 - `Skin` 不再是 `const` 对象，`Skins.all` 随之由 `const` 改 `final`；用到的位置只有
   侧栏皮肤切换器，已一并改。
+
+## 阶段 2 实施记录
+
+- **载体改为静态类，不用 `ThemeExtension`。** 决策 4 原定用 `ThemeExtension`，实施时
+  放弃：语义色不随皮肤变、也没有暗色，`ThemeExtension` 的好处（随 `Theme` 变化）用不上，
+  却要求 150 多处引用都改成 `Theme.of(context)...`。改为 `lib/semantic.dart` 的
+  `Semantic` 四件套（实心色 / 实心色上的字 / 浅底 / 浅底上的字）与全局 `Sem`；将来做
+  暗色，要给每个语义多生成一份 `Brightness.dark`，再升级成 `ThemeExtension`。
+- **`Bs` 门面名字不变，改指实心色。** `Bs.success / warning / info / danger / purple /
+  teal / orange / pink / secondary / dark / accent` 由 `static const` 改为 getter。
+  `danger` 取 Material 3 的 `error` 角色，与组件主题同值；`secondary` 取 neutral 变体，
+  `dark` 取方案的 `onSurface`。
+- **色值整体变深**（对比度由方案保证，白字都能放在实心色上）：例如成功 `#198754` →
+  `#006C40`，警示 `#FFC107` → `#785900`（琥珀偏棕），危险 `#DC3545` → `#BA1A1A`。图表里
+  的亮黄条变成深琥珀，是已知的观感变化；要保留亮色的地方改用浅底（`container`）。
+- **失去 `const` 的位置**约 20 处（`TextStyle(color: Bs.secondary)` 一类），已去掉；
+  `BsAlert` 的默认参数 `color = Bs.info` 改为可空、在 `build` 里回退，同 `BsBadge`。
+- **新增 `test/semantic_test.dart`**：每个语义色的实心色、浅底与各自的字，对比度不低于
+  4.5；每套皮肤主色上能放白字、卡片底与页面底不同色。换种子色或变体后这条仍然守得住。
+- **没做的**：把徽章、提示条、图表条改用浅底四件套（`container / onContainer`）——
+  现在用得上的位置仍是「实心色 + 透明度」；这属于阶段 3 的组件收编。

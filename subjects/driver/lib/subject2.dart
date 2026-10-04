@@ -740,7 +740,7 @@ class _TrendPainter extends CustomPainter {
   /// 取值小字贴着悬停点画：点在下半就写上方，反之下方；水平方向不出画布。
   void _text(Canvas canvas, Offset at, String text, Size size) {
     final painter = TextPainter(
-      text: TextSpan(text: text, style: const TextStyle(color: Bs.dark, fontSize: 11, fontWeight: FontWeight.w600)),
+      text: TextSpan(text: text, style: TextStyle(color: Bs.dark, fontSize: 11, fontWeight: FontWeight.w600)),
       textDirection: TextDirection.ltr,
     )..layout();
     final dx = (at.dx - painter.width / 2).clamp(0.0, max(0.0, size.width - painter.width)).toDouble();
@@ -1239,7 +1239,7 @@ class _BriefCard extends StatelessWidget {
             spacing: 10,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Icon(Glyph.brief, color: Bs.orange),
+              Icon(Glyph.brief, color: Bs.orange),
               Text("今天练车的重点", style: theme.textTheme.titleMedium),
               Text(
                 lastAt == null ? "还没有练车记录，先记几把，这里才有东西可说" : "上次练车：${_ago(lastAt)}",
@@ -1267,7 +1267,7 @@ class _BriefCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(f.text, style: theme.textTheme.bodyLarge)),
-                    const Icon(Glyph.goTo, color: Bs.secondary),
+                    Icon(Glyph.goTo, color: Bs.secondary),
                   ],
                 ),
               ),
@@ -1335,7 +1335,7 @@ class _ItemBriefCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Glyph.brief, color: Bs.orange),
+          Icon(Glyph.brief, color: Bs.orange),
           const SizedBox(width: 10),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: lines)),
         ],
@@ -1408,7 +1408,7 @@ class _StepList extends StatelessWidget {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(Glyph.caution, size: 18, color: Bs.danger),
+                                      Icon(Glyph.caution, size: 18, color: Bs.danger),
                                       const SizedBox(width: 6),
                                       Expanded(
                                         child: Text(
