@@ -1438,13 +1438,8 @@ class _MissedCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.45,
     );
-    return Container(
+    return BsCard(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-      decoration: BoxDecoration(
-        color: Bs.body,
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(Bs.radius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

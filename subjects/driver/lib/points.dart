@@ -243,13 +243,9 @@ class PointCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final text = note?.text.trim() ?? "";
-    return Container(
+    return BsCard(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Bs.border),
-        borderRadius: BorderRadius.circular(6),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

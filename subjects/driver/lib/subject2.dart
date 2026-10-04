@@ -464,9 +464,8 @@ class _Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return BsCard(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(border: Border.all(color: Bs.border), borderRadius: BorderRadius.circular(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -588,9 +587,11 @@ class _DaySummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 浅底嵌块、不描边不投影：在面板里它是内层，单独在日志列表里也是轻量条目，
+    // 套 BsCard 会跟外层面板叠出双层阴影（ADR 0058 决策 5 的收编）。
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(border: Border.all(color: Bs.border), borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: Bs.light, borderRadius: BorderRadius.circular(Bs.radius)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
