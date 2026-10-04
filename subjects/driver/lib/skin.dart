@@ -103,8 +103,9 @@ class Skins {
 
   static const all = _skins;
 
-  /// 清单第一套（晴空）：没存过口味、skin.json 坏了、或 id 不在清单里时用它。
-  static Skin get fallback => all.first;
+  /// 默认皮肤（青野，ADR 0063 修订 0058 决策 1 的默认指定）：没存过口味、
+  /// skin.json 坏了、或 id 不在清单里时用它。清单顺序不变，晴空仍是第一套。
+  static Skin get fallback => byId("meadow");
 
   static Skin byId(String id) =>
       all.where((s) => s.id == id).firstOrNull ?? fallback;
