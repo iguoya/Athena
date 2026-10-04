@@ -73,3 +73,4 @@
 | [0066](0066-split-rules-topic.md) | 拆分 drive.s1.rules：一个知识点装三分之一的题，薄弱点看不细 | 已接受 |
 | [0067](0067-gauge-gallery-page.md) | 仪表速记页——车内符号成为可浏览的内容 | 已接受 |
 | [0068](0068-henan-notes-page.md) | 河南速记页——地方条例的差异成为可浏览的内容 | 已接受 |
+| [0069](0069-material3-color-scheme-tokens.md) | 令牌层改接 Material 3 ColorScheme——不再沿用 Bootstrap 5 色板 | 已接受 |
