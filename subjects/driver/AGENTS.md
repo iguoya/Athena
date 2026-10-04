@@ -135,6 +135,7 @@ Sandbox，否则读仓库题库和写进度库都会被拒，窗口只剩黑框�
 | `docs/decisions/` | 本应用 ADR |
 | `scripts/check.py` | 本应用验证入口 |
 | `scripts/run_dev.py` | 按平台调用 `flutter run` |
+| `scripts/restart_clean.py` | 一键清理重启：停驾考 → `flutter clean` → 经启动器重开并轮询就绪（`--no-clean` 只重启）；macOS 可双击 `_restart_clean.command` |
 
 ## 开发与验证
 
