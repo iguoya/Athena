@@ -225,6 +225,15 @@ ThemeData buildTheme(Skin skin) {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(Bs.radius)),
     ),
+    // 悬停提示（答题卡方格的题干摘要等）：深底白字、控件级圆角。
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: Bs.dark,
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      textStyle: const TextStyle(color: Colors.white, fontSize: 14, height: 1.4),
+      waitDuration: const Duration(milliseconds: 350),
+    ),
     // 桌面长列表的滚动条：圆角拇指、随皮肤走；桌面平台默认就会给 ScrollView 包
     // Scrollbar，这里只定样式（错题本、题库这类长列表之前没有任何滚动指示）。
     scrollbarTheme: ScrollbarThemeData(

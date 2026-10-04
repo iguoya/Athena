@@ -690,6 +690,44 @@ class _SessionStageState extends State<SessionStage> {
     );
   }
 
+  /// 快捷键提示行：做题台支持全键盘作答，但此前没有任何地方写出来——没被发现的
+  /// 快捷键等于没有。放在右栏底部，键帽样式，不挡视线。
+  Widget _keyboardHints(BuildContext context) {
+    final muted = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
+    return Wrap(
+      spacing: 14,
+      runSpacing: 6,
+      children: [
+        for (final (key, action) in const [
+          ("↵ / 空格", "翻页、确认作答"),
+          ("A–D / 1–4", "选选项"),
+          ("T / F", "判断对错"),
+          ("← →", "组间跳转"),
+        ])
+          Text.rich(
+            TextSpan(children: [
+              WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Bs.body,
+                    border: Border.all(color: Bs.border),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(key, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                ),
+              ),
+              const WidgetSpan(child: SizedBox(width: 6)),
+              TextSpan(text: action, style: muted),
+            ]),
+          ),
+      ],
+    );
+  }
+
   /// 模拟考的答题卡：哪些答了、哪些空着一眼看全，点一下跳到那一组。
   Widget _answerCard(BuildContext context) {
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -721,6 +759,8 @@ class _SessionStageState extends State<SessionStage> {
           style: muted,
         ),
         ..._examEvidence(context),
+        const SizedBox(height: 20),
+        _keyboardHints(context),
       ],
     );
   }
@@ -747,29 +787,38 @@ class _SessionStageState extends State<SessionStage> {
       fill = wrong ? Bs.danger : (answered ? Bs.paper : Bs.body);
       fg = answered ? Colors.white : Bs.dark;
     }
-    return SizedBox(
-      width: 30,
-      height: 28,
-      child: Material(
-        color: fill,
-        borderRadius: BorderRadius.circular(6),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => _jumpTo(index),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: inGroup ? Bs.dark : Bs.border, width: inGroup ? 2 : 1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "${index + 1}",
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg),
+    return Tooltip(
+      message: _cellHint(index),
+      child: SizedBox(
+        width: 30,
+        height: 28,
+        child: Material(
+          color: fill,
+          borderRadius: BorderRadius.circular(6),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () => _jumpTo(index),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: inGroup ? Bs.dark : Bs.border, width: inGroup ? 2 : 1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                "${index + 1}",
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// 方格的悬停摘要（批次 6）：格子只有题号，悬停给出题干开头，跳之前先知道是哪道题。
+  String _cellHint(int index) {
+    final prompt = _launch.questions[index].prompt.replaceAll(RegExp(r"\s+"), " ");
+    return prompt.length <= 36 ? "第${index + 1}题 · $prompt" : "第${index + 1}题 · ${prompt.substring(0, 36)}…";
   }
 
   /// 右栏顶部的统计区：一眼看全组内外哪些题打过、答对答错，点一下跳过去。
@@ -813,6 +862,8 @@ class _SessionStageState extends State<SessionStage> {
             "点选项就出对错。答错的题会自动把解释念出来，答完也能点题干右边的「解析」回看。",
             style: muted,
           ),
+          const SizedBox(height: 20),
+          _keyboardHints(context),
         ],
       );
     }
@@ -824,6 +875,8 @@ class _SessionStageState extends State<SessionStage> {
         const Divider(height: 1),
         const SizedBox(height: 16),
         ..._evidence(context, focus),
+        const SizedBox(height: 20),
+        _keyboardHints(context),
       ],
     );
   }
