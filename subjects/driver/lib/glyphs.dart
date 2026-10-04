@@ -22,6 +22,7 @@ abstract final class Glyph {
   static const gauges = Icons.dashboard;
   static const henan = Icons.map;
   static const gestures = Icons.front_hand;
+  static const licenseNotes = Icons.badge;
   static const notes = Icons.notes;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──

@@ -48,6 +48,10 @@ class ContentLoader {
       for (final raw in (jsonDecode(await _read("henan.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
+    final licenseGroups = [
+      for (final raw in (jsonDecode(await _read("license_notes.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+        NoteGroup.fromJson(raw as Map<String, dynamic>),
+    ];
     final seen = <String>{};
     final questions = <Question>[
       for (final question in [
@@ -66,7 +70,7 @@ class ContentLoader {
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
     final guide = Subject2Guide.fromJson(jsonDecode(await _read("subject2.json")) as Map<String, dynamic>);
-    return Bank(curriculum: curriculum, questions: questions, signs: signs, markings: markings, gauges: gauges, gestureList: gestureList, cheatsheet: cheatsheet, notes: notes, henanGroups: henanGroups, guide: guide);
+    return Bank(curriculum: curriculum, questions: questions, signs: signs, markings: markings, gauges: gauges, gestureList: gestureList, cheatsheet: cheatsheet, notes: notes, henanGroups: henanGroups, licenseGroups: licenseGroups, guide: guide);
   }
 
   static List<RoadSign> _signsOf(String raw) {

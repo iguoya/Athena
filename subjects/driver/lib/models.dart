@@ -699,6 +699,7 @@ class Bank {
     this.cheatsheet = const [],
     this.notes = const [],
     this.henanGroups = const [],
+    this.licenseGroups = const [],
     this.guide = Subject2Guide.empty,
   });
 
@@ -714,6 +715,9 @@ class Bank {
 
   /// 河南速记（ADR 0068）：与 notes 同构的地方条例内容。
   final List<NoteGroup> henanGroups;
+
+  /// 记分证照速记（ADR 0076）：与 notes 同构，按作答记录里错得最多的点选条目。
+  final List<NoteGroup> licenseGroups;
 
   List<Question> forSubject(String subjectId) {
     final ids = {

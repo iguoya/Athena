@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
   static const _gaugesId = "gauges";
   static const _henanId = "henan";
   static const _gesturesId = "gestures";
+  static const _licenseNotesId = "license-notes";
   static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
@@ -363,6 +364,7 @@ class _HomePageState extends State<HomePage> {
         _place == _gaugesId ||
         _place == _henanId ||
         _place == _gesturesId ||
+        _place == _licenseNotesId ||
         _place == _keyPointsId) {
       return null;
     }
@@ -500,6 +502,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _gesturesId && _session == null,
                   label: "手势速记",
                   onTap: () => _go(_gesturesId),
+                ),
+                _navLine(
+                  icon: Glyph.licenseNotes,
+                  selected: _place == _licenseNotesId && _session == null,
+                  label: "记分证照速记",
+                  onTap: () => _go(_licenseNotesId),
                 ),
                 _navLine(
                   icon: Glyph.notes,
@@ -770,6 +778,7 @@ class _HomePageState extends State<HomePage> {
     if (_place == _gaugesId) return _gaugesOverview(context);
     if (_place == _henanId) return _henanOverview(context);
     if (_place == _gesturesId) return _gesturesOverview(context);
+    if (_place == _licenseNotesId) return _licenseNotesOverview(context);
     if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1714,6 +1723,25 @@ class _HomePageState extends State<HomePage> {
       lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
           "跟全国规定对照着记——先看速记，再练相关的题。",
       footnote: "条目依据《河南省道路交通安全条例》与《河南省高速公路条例》，罚款数字均指到条款。",
+    );
+  }
+
+  /// 记分证照速记：按作答记录里错得最多的点整理，复用考点速记组件（ADR 0076）。
+  Widget _licenseNotesOverview(BuildContext context) {
+    return NotesPage(
+      groups: widget.bank.licenseGroups,
+      daily: dailyQuestions(_subject1All),
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
+      ),
+      title: "记分证照速记",
+      icon: Glyph.licenseNotes,
+      lead: "记分分档、证照期限、罚款档位、禁考年限、号牌登记——科目一最容易丢分的这几块，"
+          "按作答记录里错得最多的点整理。先看对照，再练相关的题。",
+      footnote: "条目依据《道路交通安全违法行为记分管理办法》《机动车驾驶证申领和使用规定》《机动车登记规定》《道路交通安全法》及其实施条例，每条指到条款。",
     );
   }
 
