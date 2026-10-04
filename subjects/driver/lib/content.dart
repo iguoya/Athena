@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:path/path.dart" as p;
 
 import "app_root.dart";
+import "gesture_index.dart";
 import "guide.dart";
 import "models.dart";
 
@@ -44,6 +45,7 @@ class ContentLoader {
       for (final raw in (jsonDecode(await _read("gestures.json")) as Map<String, dynamic>)["gestures"] as List<dynamic>)
         TrafficGesture.fromJson(raw as Map<String, dynamic>),
     ];
+    GestureIndex.load(gestureList);
     final henanGroups = [
       for (final raw in (jsonDecode(await _read("henan.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
