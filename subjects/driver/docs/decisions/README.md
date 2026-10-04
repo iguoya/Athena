@@ -70,3 +70,4 @@
 | [0063](0063-default-skin-meadow.md) | 默认皮肤改为青野 | 已接受 |
 | [0064](0064-keypoints-notes-page.md) | 考点速记页——情景要点对照，条目挂出处 | 已接受 |
 | [0065](0065-markings-gallery-page.md) | 标线速记页——路面读法成为可浏览的内容 | 已接受 |
+| [0066](0066-split-rules-topic.md) | 拆分 drive.s1.rules：一个知识点装三分之一的题，薄弱点看不细 | 已接受 |
