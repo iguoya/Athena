@@ -922,21 +922,26 @@ class _SessionStageState extends State<SessionStage> {
               Text(q.explain, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
             ],
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                FilledButton(
-                  onPressed: _speaker.available ? () => _speak(q) : null,
-                  style: _voiceButtonStyle(Bs.success),
-                  child: const Text("系统朗读"),
-                ),
-                FilledButton(
-                  onPressed: _speaker.available ? _stopSpeaking : null,
-                  style: _voiceButtonStyle(Bs.secondary),
-                  child: const Text("停止朗读"),
-                ),
-              ],
+            // 朗读态可视（批次 7）：正在念的时候两个按钮的可用性跟着换，
+            // 「为什么页脚还不翻」就不用靠耳朵猜了。
+            ValueListenableBuilder<bool>(
+              valueListenable: _speaker.speaking,
+              builder: (context, speaking, _) => Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  FilledButton(
+                    onPressed: _speaker.available && !speaking ? () => _speak(q) : null,
+                    style: _voiceButtonStyle(Bs.success),
+                    child: Text(speaking ? "正在朗读…" : "系统朗读"),
+                  ),
+                  FilledButton(
+                    onPressed: _speaker.available && speaking ? _stopSpeaking : null,
+                    style: _voiceButtonStyle(Bs.secondary),
+                    child: const Text("停止朗读"),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

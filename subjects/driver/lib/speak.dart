@@ -1,5 +1,8 @@
+import "dart:async";
 import "dart:convert";
 import "dart:io";
+
+import "package:flutter/foundation.dart";
 
 /// 解释朗读：交互对齐英语应用（系统朗读 / 停止朗读），实现走本机 TTS。
 /// Flutter 桌面没有 WebView，不能用英语那套 `speechSynthesis`。
@@ -102,6 +105,10 @@ class Speaker {
   var voices = const <NativeVoice>[];
   var available = false;
 
+  /// 朗读状态：按钮态与「正在朗读…」由它驱动。进程念完（自然退出）也会落回 false，
+  /// 不用 UI 层猜时长。
+  final ValueNotifier<bool> speaking = ValueNotifier(false);
+
   Future<void> prepare() async {
     voices = await listVoices();
     available = voices.isNotEmpty || Platform.isMacOS;
@@ -139,7 +146,13 @@ $s.GetInstalledVoices() | ForEach-Object { '{0}|{1}' -f $_.VoiceInfo.Name, $_.Vo
     final file = File("${Directory.systemTemp.path}/athena-driver-speak.txt");
     await file.writeAsString(trimmed, encoding: utf8);
     try {
-      _proc = await _spawn(file.path);
+      final proc = await _spawn(file.path);
+      _proc = proc;
+      speaking.value = true;
+      // 念完自动落回空闲；新一轮朗读换了进程时，别动它的状态。
+      unawaited(proc.exitCode.then((_) {
+        if (identical(_proc, proc)) speaking.value = false;
+      }));
     } on ProcessException {
       available = false;
     }
@@ -162,6 +175,7 @@ $s.GetInstalledVoices() | ForEach-Object { '{0}|{1}' -f $_.VoiceInfo.Name, $_.Vo
     try {
       await proc.exitCode;
     } catch (_) {}
+    speaking.value = false;
   }
 
   int get _wpm => (175 * rate).clamp(90, 500).round();

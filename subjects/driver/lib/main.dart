@@ -214,6 +214,19 @@ class _BootstrapGateState extends State<BootstrapGate> {
       ),
     );
     if (picked == null || picked.id == _profile?.id || !mounted) return;
+    // 换人是唯一没有二次确认的破坏性操作（批次 7）：整库切换，误触一次就进错库。
+    final confirmed = await showDialog<bool>(
+      context: navigator.context,
+      builder: (context) => AlertDialog(
+        title: Text("换到「${picked.name}」？"),
+        content: const Text("当前学习者的进度都保存在这台机器上，随时可以换回来。"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("不换了")),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text("换人")),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
     await _openAs(picked);
     if (createdId == picked.id) _showWelcome(picked);
   }
