@@ -478,6 +478,51 @@ class Marking {
   }
 }
 
+/// 仪表速记页的一条车内符号（ADR 0067）；出处是 gauges.json 文件级的 GB 4094。
+class Gauge {
+  const Gauge({
+    required this.id,
+    required this.name,
+    required this.kind,
+    required this.meaning,
+    this.band = QuestionBand.common,
+    this.questions = const [],
+  });
+
+  final String id;
+  final String name;
+  final String kind;
+
+  /// 一句「亮了怎么办 / 这是什么」（ADR 0067）。
+  final String meaning;
+  final String band;
+
+  /// 反向题映射（ADR 0067 决策 3）：相关题的 id 直接声明在内容文件里，
+  /// 题库 JSON 不加字段。加载时校验都存在。
+  final List<String> questions;
+
+  String get kindLabel => switch (kind) {
+    "alarm" => "报警灯",
+    "indicate" => "指示灯",
+    "dial" => "仪表表盘",
+    "control" => "开关与操纵件",
+    _ => "车内符号",
+  };
+
+  factory Gauge.fromJson(Map<String, dynamic> json) {
+    return Gauge(
+      id: json["id"] as String,
+      name: json["name"] as String,
+      kind: json["kind"] as String,
+      meaning: json["meaning"] as String,
+      band: json["band"] as String? ?? QuestionBand.common,
+      questions: [
+        for (final raw in json["questions"] as List<dynamic>? ?? const []) raw as String,
+      ],
+    );
+  }
+}
+
 /// 易混数字对照页的一行：数字、适用情形、出处（ADR 0028）。
 class CheatRow {
   const CheatRow({
@@ -613,6 +658,7 @@ class Bank {
     required this.questions,
     this.signs = const [],
     this.markings = const [],
+    this.gauges = const [],
     this.cheatsheet = const [],
     this.notes = const [],
     this.guide = Subject2Guide.empty,
@@ -623,6 +669,7 @@ class Bank {
   final List<Question> questions;
   final List<RoadSign> signs;
   final List<Marking> markings;
+  final List<Gauge> gauges;
   final List<CheatGroup> cheatsheet;
   final List<NoteGroup> notes;
 

@@ -19,6 +19,7 @@ abstract final class Glyph {
   static const numbers = Icons.pin;
   static const signs = Icons.signpost;
   static const markings = Icons.filter_list;
+  static const gauges = Icons.dashboard;
   static const notes = Icons.notes;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──

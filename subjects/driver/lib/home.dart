@@ -10,6 +10,7 @@ import "clusters.dart";
 import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
+import "gauges_page.dart";
 import "markings_page.dart";
 import "models.dart";
 import "notes_page.dart";
@@ -78,6 +79,7 @@ class _HomePageState extends State<HomePage> {
   static const _numbersId = "numbers";
   static const _signsId = "signs";
   static const _markingsId = "markings";
+  static const _gaugesId = "gauges";
   static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
@@ -331,6 +333,7 @@ class _HomePageState extends State<HomePage> {
         _place == _numbersId ||
         _place == _signsId ||
         _place == _markingsId ||
+        _place == _gaugesId ||
         _place == _keyPointsId) {
       return null;
     }
@@ -450,6 +453,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _markingsId && _session == null,
                   label: "标线速记",
                   onTap: () => _go(_markingsId),
+                ),
+                _navLine(
+                  icon: Glyph.gauges,
+                  selected: _place == _gaugesId && _session == null,
+                  label: "仪表速记",
+                  onTap: () => _go(_gaugesId),
                 ),
                 _navLine(
                   icon: Glyph.notes,
@@ -708,6 +717,7 @@ class _HomePageState extends State<HomePage> {
     if (_place == _numbersId) return _numbersOverview(context);
     if (_place == _signsId) return _signsOverview(context);
     if (_place == _markingsId) return _markingsOverview(context);
+    if (_place == _gaugesId) return _gaugesOverview(context);
     if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1607,6 +1617,20 @@ class _HomePageState extends State<HomePage> {
       markings: widget.bank.markings,
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
+      ),
+    );
+  }
+
+  /// 仪表速记：手绘车内符号按类摊开，每组能直接练相关题（ADR 0067）。
+  Widget _gaugesOverview(BuildContext context) {
+    return GaugesPage(
+      gauges: widget.bank.gauges,
+      daily: dailyQuestions(_subject1All),
       mastered: _mastered,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
