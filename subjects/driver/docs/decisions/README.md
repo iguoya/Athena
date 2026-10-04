@@ -81,3 +81,4 @@
 | [0074](0074-crime-penalty-cheatsheet.md) | 易混数字加「刑罚档位」组——罪名与刑期的对照 | 已接受 |
 | [0075](0075-stubborn-questions-pinned-in-reinforce.md) | 累计答错 3 次以上的题常驻强化练习 | 已接受 |
 | [0076](0076-license-score-notes-page.md) | 记分证照速记页——按作答记录里错得最多的点整理 | 已接受 |
+| [0077](0077-recall-mode-and-confusable-pairs.md) | 速记页交互增强：考我模式、易混对撞卡与格子掌握度微点 | 已接受 |
