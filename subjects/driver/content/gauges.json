@@ -3,39 +3,450 @@
   "url": "",
   "_": "仪表速记页（ADR 0067）。meaning 是一句「亮了怎么办 / 这是什么」；出处是文件级的 gb-4094（GB 4094—2016 汽车操纵件、指示器及信号装置的标志），不逐条注条号。questions 是反向题映射（ADR 0067 决策 3）：直接问该符号的题 + 该装置的原理与操作题，加载时按题 id 关联，题库 JSON 不加字段。",
   "gauges": [
-    {"id": "seat_belt", "name": "安全带未系提醒灯", "kind": "alarm", "band": "hot", "meaning": "红色小人系带：你和乘员还没系好安全带，起步前都系上。", "questions": ["drive.s1.occupants.076", "drive.s1.occupants.079", "drive.s1.occupants.150", "drive.s1.occupants.115", "drive.s1.occupants.140", "drive.s1.occupants.142", "drive.s1.rules.433", "drive.s1.occupants.109", "drive.s1.occupants.035", "drive.s1.occupants.039", "drive.s1.occupants.047"]},
-    {"id": "abs_fault", "name": "防抱死制动系统（ABS）故障灯", "kind": "alarm", "band": "hot", "meaning": "黄色 ABS：防抱死系统有故障，普通刹车还在，紧急制动时车轮可能抱死，尽快检修。", "questions": ["drive.s1.rules.343", "drive.s1.rules.510", "drive.s1.rules.943", "drive.s1.rules.530", "drive.s1.rules.564", "drive.s1.rules.887", "drive.s1.rules.888", "drive.s1.rules.891", "drive.s1.rules.899", "drive.s1.rules.901"]},
-    {"id": "oil_pressure", "name": "机油压力报警灯", "kind": "alarm", "band": "hot", "meaning": "红色油壶：机油压力过低，立即停车熄火检查，缺机油继续开会拉缸。", "questions": ["drive.s1.rules.346", "drive.s1.rules.504", "drive.s1.rules.892", "drive.s1.rules.940", "drive.s1.rules.946", "drive.s1.rules.511", "drive.s1.rules.941"]},
-    {"id": "coolant_temp", "name": "冷却液温度报警灯", "kind": "alarm", "band": "hot", "meaning": "红色温度计：水温过高或冷却液不足，停车降温、别急着开盖加水。", "questions": ["drive.s1.rules.506", "drive.s1.rules.577", "drive.s1.rules.582", "drive.s1.rules.938", "drive.s1.rules.939", "drive.s1.rules.565"]},
-    {"id": "gear_lever", "name": "变速器操纵杆（挡位）", "kind": "control", "band": "hot", "meaning": "P 驻车、R 倒车、N 空挡、D 前进；自动挡 P/N 才能起动，离开车换 P 挡拉驻车制动。", "questions": ["drive.s1.rules.957", "drive.s1.rules.602", "drive.s1.rules.603", "drive.s1.rules.604", "drive.s1.rules.600", "drive.s1.rules.606", "drive.s1.rules.607"]},
-    {"id": "pedals", "name": "踏板（离合 / 制动 / 加速）", "kind": "control", "band": "hot", "meaning": "手动挡三个踏板左离合、中制动、右加速；自动挡只有制动和加速，都用右脚。", "questions": ["drive.s1.rules.520", "drive.s1.rules.958", "drive.s1.rules.959", "drive.s1.rules.609", "drive.s1.rules.610", "drive.s1.rules.611", "drive.s1.rules.612", "drive.s1.rules.964"]},
-    {"id": "brake_system", "name": "制动系统报警灯", "kind": "alarm", "band": "common", "meaning": "红色圆圈感叹号：行车制动可能出故障，先试试制动有效没有，异常就别再开。", "questions": ["drive.s1.rules.512", "drive.s1.rules.579", "drive.s1.rules.521", "drive.s1.rules.897", "drive.s1.rules.879"]},
-    {"id": "airbag_fault", "name": "安全气囊故障灯", "kind": "alarm", "band": "common", "meaning": "红色人前圆球：气囊系统有故障，碰撞时可能不弹出，尽快检修；气囊要配合安全带才起作用。", "questions": ["drive.s1.rules.496", "drive.s1.rules.584", "drive.s1.rules.533", "drive.s1.rules.563", "drive.s1.rules.139"]},
-    {"id": "fuel_low", "name": "燃油量低报警灯", "kind": "alarm", "band": "hot", "meaning": "黄色油泵：油箱快见底了，尽快去加油站，别在公路上把车停干。", "questions": ["drive.s1.rules.338", "drive.s1.rules.536", "drive.s1.rules.501", "drive.s1.rules.898"]},
-    {"id": "door_open", "name": "车门未关闭提示灯", "kind": "alarm", "band": "hot", "meaning": "红色车门俯视：哪个门没关严，靠边停好关牢再走。", "questions": ["drive.s1.occupants.075", "drive.s1.rules.942", "drive.s1.rules.948", "drive.s1.rules.949"]},
-    {"id": "battery", "name": "充电系统报警灯", "kind": "alarm", "band": "common", "meaning": "红色电瓶：充电电路异常，发电机没在给电瓶充电，尽快检修别熄火在半路。", "questions": ["drive.s1.rules.339", "drive.s1.rules.513", "drive.s1.rules.578"]},
-    {"id": "parking_brake", "name": "驻车制动指示灯", "kind": "alarm", "band": "common", "meaning": "红色圆圈 P：手刹还拉着，起步前松到底；行驶中常亮就是没松彻底。", "questions": ["drive.s1.rules.503", "drive.s1.rules.518", "drive.s1.rules.587"]},
-    {"id": "trunk_open", "name": "行李舱开启提示灯", "kind": "alarm", "band": "common", "meaning": "红色尾部俯视：后备箱没关好，停好关严再上路。", "questions": ["drive.s1.rules.325", "drive.s1.rules.950"]},
-    {"id": "hood_open", "name": "发动机舱开启提示灯", "kind": "alarm", "band": "common", "meaning": "红色车头俯视：引擎盖没扣好，停好扣牢再走，跑起来掀盖很危险。", "questions": ["drive.s1.rules.581", "drive.s1.rules.947"]},
-    {"id": "engine_fault", "name": "发动机控制系统故障灯", "kind": "alarm", "band": "common", "meaning": "黄色发动机轮廓：发动机电控系统有故障，能开也要尽快检查。", "questions": ["drive.s1.rules.333", "drive.s1.rules.532"]},
-    {"id": "tire_pressure", "name": "胎压报警灯", "kind": "alarm", "band": "common", "meaning": "黄色蹄形加感叹号：轮胎气压异常，尽快在安全地点停车检查，别硬撑上高速。", "questions": ["drive.s1.rules.613", "drive.s1.rules.614"]},
-    {"id": "esc_fault", "name": "电子稳定控制系统（ESC）故障灯", "kind": "alarm", "band": "common", "meaning": "黄色打滑车迹：车身稳定系统可能有故障，转弯湿路要格外小心，尽快检修。", "questions": ["drive.s1.rules.615", "drive.s1.rules.616"]},
-    {"id": "high_beam", "name": "远光灯指示灯", "kind": "indicate", "band": "common", "meaning": "蓝色平行直线：远光开着，会车、跟车要换近光，别晃对向的眼。", "questions": ["drive.s1.lights.070", "drive.s1.lights.096", "drive.s1.lights.164"]},
-    {"id": "low_beam", "name": "近光灯指示灯", "kind": "indicate", "band": "hot", "meaning": "绿色斜向短线：近光开着，夜间城市道路和会车用它。", "questions": ["drive.s1.lights.081", "drive.s1.lights.159", "drive.s1.lights.160", "drive.s1.lights.165"]},
-    {"id": "turn_signal", "name": "转向指示灯", "kind": "indicate", "band": "common", "meaning": "绿色箭头：转向灯在工作，转弯、变道、掉头提前开，完成后记得关。", "questions": ["drive.s1.lights.107", "drive.s1.lights.166"]},
-    {"id": "hazard", "name": "危险报警闪光灯", "kind": "indicate", "band": "common", "meaning": "红色双三角同时闪：故障停车、牵引、恶劣天气临时停车时开，警示别人躲开。", "questions": ["drive.s1.lights.105"]},
-    {"id": "position_lamp", "name": "位置灯（示廓灯）", "kind": "indicate", "band": "common", "meaning": "绿色短灯丝：车灯总开关打开，夜间临时停车、低能见度示廓用。", "questions": ["drive.s1.lights.106", "drive.s1.lights.161"]},
-    {"id": "front_fog", "name": "前雾灯指示灯", "kind": "indicate", "band": "common", "meaning": "绿色灯加斜向波浪线：前雾灯开着，雾天跟近光配合用，雨雾天及时开。", "questions": ["drive.s1.lights.108", "drive.s1.lights.162", "drive.s1.lights.167", "drive.s1.lights.157", "drive.s1.occupants.077"]},
-    {"id": "rear_fog", "name": "后雾灯指示灯", "kind": "indicate", "band": "common", "meaning": "黄色灯加斜向波浪线：后雾灯开着，让后车在雾里早点看见你。", "questions": ["drive.s1.lights.103", "drive.s1.lights.098"]},
-    {"id": "speedometer", "name": "速度和里程表", "kind": "dial", "band": "common", "meaning": "大表盘显示当前车速（km/h），小计数字累计里程；看着它控速不超速。", "questions": ["drive.s1.rules.523", "drive.s1.rules.953", "drive.s1.rules.495"]},
-    {"id": "tachometer", "name": "发动机转速表", "kind": "dial", "band": "common", "meaning": "表盘显示发动机每分钟转数（r/min ×1000），起步换挡看它别拖挡、别轰油。", "questions": ["drive.s1.rules.534", "drive.s1.rules.951", "drive.s1.rules.507"]},
-    {"id": "water_temp_gauge", "name": "水温表", "kind": "dial", "band": "common", "meaning": "表盘显示冷却液温度，正常行车大约 90 ℃，指针走高就停车检查。", "questions": ["drive.s1.rules.525", "drive.s1.rules.529", "drive.s1.rules.517"]},
-    {"id": "fuel_gauge", "name": "燃油表", "kind": "dial", "band": "common", "meaning": "表盘显示油箱存油，指针到警告线就该找加油站了。", "questions": ["drive.s1.rules.586", "drive.s1.rules.952"]},
-    {"id": "wiper_switch", "name": "刮水器开关", "kind": "control", "band": "common", "meaning": "控制前风窗刮水器和洗涤器，下雨起雾先开它保视野。", "questions": ["drive.s1.rules.500", "drive.s1.rules.528", "drive.s1.rules.956", "drive.s1.rules.960", "drive.s1.rules.962"]},
-    {"id": "light_switch", "name": "灯光总开关", "kind": "control", "band": "common", "meaning": "两挡旋钮：一挡开位置灯，二挡开前照灯（远近光在方向盘侧切换）。", "questions": ["drive.s1.lights.104", "drive.s1.lights.099"]},
-    {"id": "hvac_fan", "name": "空调出风模式", "kind": "control", "band": "common", "meaning": "风扇符号选吹风位置：迎面、地板或前风窗除雾，起雾就吹风窗。", "questions": ["drive.s1.rules.508", "drive.s1.rules.580", "drive.s1.rules.944", "drive.s1.rules.945"]},
-    {"id": "air_cycle", "name": "空气内外循环", "kind": "control", "band": "common", "meaning": "内循环用车内空气（堵车、穿隧道），外循环进新风（长途不困），按需切换。", "questions": ["drive.s1.rules.583", "drive.s1.rules.585"]},
-    {"id": "ignition", "name": "点火开关", "kind": "control", "band": "common", "meaning": "LOCK 锁转向盘拔钥匙、ACC 通附件电器、ON 全车通电、START 起动；起动后松手。", "questions": ["drive.s1.rules.498", "drive.s1.rules.505", "drive.s1.rules.515", "drive.s1.rules.519"]},
-    {"id": "parking_lever", "name": "驻车制动操纵杆", "kind": "control", "band": "common", "meaning": "手刹：停车拉紧防溜车，起步松到底，仪表的红 P 灯跟着它亮灭。", "questions": ["drive.s1.rules.954"]}
+    {
+      "id": "seat_belt",
+      "name": "安全带未系提醒灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "红色小人系带：你和乘员还没系好安全带，起步前都系上。",
+      "questions": [
+        "drive.s1.occupants.076",
+        "drive.s1.occupants.079",
+        "drive.s1.occupants.150",
+        "drive.s1.occupants.115",
+        "drive.s1.occupants.140",
+        "drive.s1.occupants.142",
+        "drive.s1.rules.433",
+        "drive.s1.occupants.109",
+        "drive.s1.occupants.035",
+        "drive.s1.occupants.039",
+        "drive.s1.occupants.047"
+      ]
+    },
+    {
+      "id": "abs_fault",
+      "name": "防抱死制动系统（ABS）故障灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "黄色 ABS：防抱死系统有故障，普通刹车还在，紧急制动时车轮可能抱死，尽快检修。",
+      "questions": [
+        "drive.s1.rules.343",
+        "drive.s1.rules.510",
+        "drive.s1.rules.943",
+        "drive.s1.rules.530",
+        "drive.s1.rules.564",
+        "drive.s1.rules.887",
+        "drive.s1.rules.888",
+        "drive.s1.rules.891",
+        "drive.s1.rules.899",
+        "drive.s1.rules.901"
+      ]
+    },
+    {
+      "id": "oil_pressure",
+      "name": "机油压力报警灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "红色油壶：机油压力过低，立即停车熄火检查，缺机油继续开会拉缸。",
+      "questions": [
+        "drive.s1.rules.346",
+        "drive.s1.rules.504",
+        "drive.s1.rules.892",
+        "drive.s1.rules.940",
+        "drive.s1.rules.946",
+        "drive.s1.rules.511",
+        "drive.s1.rules.941"
+      ],
+      "confuse_with": "fuel_low",
+      "confuse_note": "红色油壶是机油压力过低：立即停车熄火；黄色油泵是燃油量低：尽快找加油站。"
+    },
+    {
+      "id": "coolant_temp",
+      "name": "冷却液温度报警灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "红色温度计：水温过高或冷却液不足，停车降温、别急着开盖加水。",
+      "questions": [
+        "drive.s1.rules.506",
+        "drive.s1.rules.577",
+        "drive.s1.rules.582",
+        "drive.s1.rules.938",
+        "drive.s1.rules.939",
+        "drive.s1.rules.565"
+      ]
+    },
+    {
+      "id": "gear_lever",
+      "name": "变速器操纵杆（挡位）",
+      "kind": "control",
+      "band": "hot",
+      "meaning": "P 驻车、R 倒车、N 空挡、D 前进；自动挡 P/N 才能起动，离开车换 P 挡拉驻车制动。",
+      "questions": [
+        "drive.s1.rules.957",
+        "drive.s1.rules.602",
+        "drive.s1.rules.603",
+        "drive.s1.rules.604",
+        "drive.s1.rules.600",
+        "drive.s1.rules.606",
+        "drive.s1.rules.607"
+      ]
+    },
+    {
+      "id": "pedals",
+      "name": "踏板（离合 / 制动 / 加速）",
+      "kind": "control",
+      "band": "hot",
+      "meaning": "手动挡三个踏板左离合、中制动、右加速；自动挡只有制动和加速，都用右脚。",
+      "questions": [
+        "drive.s1.rules.520",
+        "drive.s1.rules.958",
+        "drive.s1.rules.959",
+        "drive.s1.rules.609",
+        "drive.s1.rules.610",
+        "drive.s1.rules.611",
+        "drive.s1.rules.612",
+        "drive.s1.rules.964"
+      ]
+    },
+    {
+      "id": "brake_system",
+      "name": "制动系统报警灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色圆圈感叹号：行车制动可能出故障，先试试制动有效没有，异常就别再开。",
+      "questions": [
+        "drive.s1.rules.512",
+        "drive.s1.rules.579",
+        "drive.s1.rules.521",
+        "drive.s1.rules.897",
+        "drive.s1.rules.879"
+      ]
+    },
+    {
+      "id": "airbag_fault",
+      "name": "安全气囊故障灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色人前圆球：气囊系统有故障，碰撞时可能不弹出，尽快检修；气囊要配合安全带才起作用。",
+      "questions": [
+        "drive.s1.rules.496",
+        "drive.s1.rules.584",
+        "drive.s1.rules.533",
+        "drive.s1.rules.563",
+        "drive.s1.rules.139"
+      ]
+    },
+    {
+      "id": "fuel_low",
+      "name": "燃油量低报警灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "黄色油泵：油箱快见底了，尽快去加油站，别在公路上把车停干。",
+      "questions": [
+        "drive.s1.rules.338",
+        "drive.s1.rules.536",
+        "drive.s1.rules.501",
+        "drive.s1.rules.898"
+      ]
+    },
+    {
+      "id": "door_open",
+      "name": "车门未关闭提示灯",
+      "kind": "alarm",
+      "band": "hot",
+      "meaning": "红色车门俯视：哪个门没关严，靠边停好关牢再走。",
+      "questions": [
+        "drive.s1.occupants.075",
+        "drive.s1.rules.942",
+        "drive.s1.rules.948",
+        "drive.s1.rules.949"
+      ]
+    },
+    {
+      "id": "battery",
+      "name": "充电系统报警灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色电瓶：充电电路异常，发电机没在给电瓶充电，尽快检修别熄火在半路。",
+      "questions": [
+        "drive.s1.rules.339",
+        "drive.s1.rules.513",
+        "drive.s1.rules.578"
+      ]
+    },
+    {
+      "id": "parking_brake",
+      "name": "驻车制动指示灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色圆圈 P：手刹还拉着，起步前松到底；行驶中常亮就是没松彻底。",
+      "questions": [
+        "drive.s1.rules.503",
+        "drive.s1.rules.518",
+        "drive.s1.rules.587"
+      ],
+      "confuse_with": "brake_system",
+      "confuse_note": "圆圈 P 是驻车制动（手刹没松到底）；圆圈感叹号是行车制动可能故障。"
+    },
+    {
+      "id": "trunk_open",
+      "name": "行李舱开启提示灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色尾部俯视：后备箱没关好，停好关严再上路。",
+      "questions": [
+        "drive.s1.rules.325",
+        "drive.s1.rules.950"
+      ]
+    },
+    {
+      "id": "hood_open",
+      "name": "发动机舱开启提示灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "红色车头俯视：引擎盖没扣好，停好扣牢再走，跑起来掀盖很危险。",
+      "questions": [
+        "drive.s1.rules.581",
+        "drive.s1.rules.947"
+      ]
+    },
+    {
+      "id": "engine_fault",
+      "name": "发动机控制系统故障灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "黄色发动机轮廓：发动机电控系统有故障，能开也要尽快检查。",
+      "questions": [
+        "drive.s1.rules.333",
+        "drive.s1.rules.532"
+      ]
+    },
+    {
+      "id": "tire_pressure",
+      "name": "胎压报警灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "黄色蹄形加感叹号：轮胎气压异常，尽快在安全地点停车检查，别硬撑上高速。",
+      "questions": [
+        "drive.s1.rules.613",
+        "drive.s1.rules.614"
+      ]
+    },
+    {
+      "id": "esc_fault",
+      "name": "电子稳定控制系统（ESC）故障灯",
+      "kind": "alarm",
+      "band": "common",
+      "meaning": "黄色打滑车迹：车身稳定系统可能有故障，转弯湿路要格外小心，尽快检修。",
+      "questions": [
+        "drive.s1.rules.615",
+        "drive.s1.rules.616"
+      ]
+    },
+    {
+      "id": "high_beam",
+      "name": "远光灯指示灯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "蓝色平行直线：远光开着，会车、跟车要换近光，别晃对向的眼。",
+      "questions": [
+        "drive.s1.lights.070",
+        "drive.s1.lights.096",
+        "drive.s1.lights.164"
+      ],
+      "confuse_with": "low_beam",
+      "confuse_note": "蓝色平行直线是远光；绿色斜向下短线是近光。会车记得换近光。"
+    },
+    {
+      "id": "low_beam",
+      "name": "近光灯指示灯",
+      "kind": "indicate",
+      "band": "hot",
+      "meaning": "绿色斜向短线：近光开着，夜间城市道路和会车用它。",
+      "questions": [
+        "drive.s1.lights.081",
+        "drive.s1.lights.159",
+        "drive.s1.lights.160",
+        "drive.s1.lights.165"
+      ]
+    },
+    {
+      "id": "turn_signal",
+      "name": "转向指示灯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "绿色箭头：转向灯在工作，转弯、变道、掉头提前开，完成后记得关。",
+      "questions": [
+        "drive.s1.lights.107",
+        "drive.s1.lights.166"
+      ]
+    },
+    {
+      "id": "hazard",
+      "name": "危险报警闪光灯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "红色双三角同时闪：故障停车、牵引、恶劣天气临时停车时开，警示别人躲开。",
+      "questions": [
+        "drive.s1.lights.105"
+      ]
+    },
+    {
+      "id": "position_lamp",
+      "name": "位置灯（示廓灯）",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "绿色短灯丝：车灯总开关打开，夜间临时停车、低能见度示廓用。",
+      "questions": [
+        "drive.s1.lights.106",
+        "drive.s1.lights.161"
+      ]
+    },
+    {
+      "id": "front_fog",
+      "name": "前雾灯指示灯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "绿色灯加斜向波浪线：前雾灯开着，雾天跟近光配合用，雨雾天及时开。",
+      "questions": [
+        "drive.s1.lights.108",
+        "drive.s1.lights.162",
+        "drive.s1.lights.167",
+        "drive.s1.lights.157",
+        "drive.s1.occupants.077"
+      ],
+      "confuse_with": "rear_fog",
+      "confuse_note": "绿色灯加波浪线是前雾灯；黄色灯加波浪线是后雾灯。"
+    },
+    {
+      "id": "rear_fog",
+      "name": "后雾灯指示灯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "黄色灯加斜向波浪线：后雾灯开着，让后车在雾里早点看见你。",
+      "questions": [
+        "drive.s1.lights.103",
+        "drive.s1.lights.098"
+      ]
+    },
+    {
+      "id": "speedometer",
+      "name": "速度和里程表",
+      "kind": "dial",
+      "band": "common",
+      "meaning": "大表盘显示当前车速（km/h），小计数字累计里程；看着它控速不超速。",
+      "questions": [
+        "drive.s1.rules.523",
+        "drive.s1.rules.953",
+        "drive.s1.rules.495"
+      ]
+    },
+    {
+      "id": "tachometer",
+      "name": "发动机转速表",
+      "kind": "dial",
+      "band": "common",
+      "meaning": "表盘显示发动机每分钟转数（r/min ×1000），起步换挡看它别拖挡、别轰油。",
+      "questions": [
+        "drive.s1.rules.534",
+        "drive.s1.rules.951",
+        "drive.s1.rules.507"
+      ]
+    },
+    {
+      "id": "water_temp_gauge",
+      "name": "水温表",
+      "kind": "dial",
+      "band": "common",
+      "meaning": "表盘显示冷却液温度，正常行车大约 90 ℃，指针走高就停车检查。",
+      "questions": [
+        "drive.s1.rules.525",
+        "drive.s1.rules.529",
+        "drive.s1.rules.517"
+      ]
+    },
+    {
+      "id": "fuel_gauge",
+      "name": "燃油表",
+      "kind": "dial",
+      "band": "common",
+      "meaning": "表盘显示油箱存油，指针到警告线就该找加油站了。",
+      "questions": [
+        "drive.s1.rules.586",
+        "drive.s1.rules.952"
+      ]
+    },
+    {
+      "id": "wiper_switch",
+      "name": "刮水器开关",
+      "kind": "control",
+      "band": "common",
+      "meaning": "控制前风窗刮水器和洗涤器，下雨起雾先开它保视野。",
+      "questions": [
+        "drive.s1.rules.500",
+        "drive.s1.rules.528",
+        "drive.s1.rules.956",
+        "drive.s1.rules.960",
+        "drive.s1.rules.962"
+      ]
+    },
+    {
+      "id": "light_switch",
+      "name": "灯光总开关",
+      "kind": "control",
+      "band": "common",
+      "meaning": "两挡旋钮：一挡开位置灯，二挡开前照灯（远近光在方向盘侧切换）。",
+      "questions": [
+        "drive.s1.lights.104",
+        "drive.s1.lights.099"
+      ]
+    },
+    {
+      "id": "hvac_fan",
+      "name": "空调出风模式",
+      "kind": "control",
+      "band": "common",
+      "meaning": "风扇符号选吹风位置：迎面、地板或前风窗除雾，起雾就吹风窗。",
+      "questions": [
+        "drive.s1.rules.508",
+        "drive.s1.rules.580",
+        "drive.s1.rules.944",
+        "drive.s1.rules.945"
+      ]
+    },
+    {
+      "id": "air_cycle",
+      "name": "空气内外循环",
+      "kind": "control",
+      "band": "common",
+      "meaning": "内循环用车内空气（堵车、穿隧道），外循环进新风（长途不困），按需切换。",
+      "questions": [
+        "drive.s1.rules.583",
+        "drive.s1.rules.585"
+      ]
+    },
+    {
+      "id": "ignition",
+      "name": "点火开关",
+      "kind": "control",
+      "band": "common",
+      "meaning": "LOCK 锁转向盘拔钥匙、ACC 通附件电器、ON 全车通电、START 起动；起动后松手。",
+      "questions": [
+        "drive.s1.rules.498",
+        "drive.s1.rules.505",
+        "drive.s1.rules.515",
+        "drive.s1.rules.519"
+      ]
+    },
+    {
+      "id": "parking_lever",
+      "name": "驻车制动操纵杆",
+      "kind": "control",
+      "band": "common",
+      "meaning": "手刹：停车拉紧防溜车，起步松到底，仪表的红 P 灯跟着它亮灭。",
+      "questions": [
+        "drive.s1.rules.954"
+      ]
+    }
   ]
 }
