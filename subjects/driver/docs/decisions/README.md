@@ -79,3 +79,4 @@
 | [0072](0072-withdraw-doubtful-questions.md) | 下架答案存疑或题面有问题的题 | 已接受 |
 | [0073](0073-gesture-gallery-page.md) | 手势速记页——修订 0064 决策 4 的「手势不做图」 | 已接受 |
 | [0074](0074-crime-penalty-cheatsheet.md) | 易混数字加「刑罚档位」组——罪名与刑期的对照 | 已接受 |
+| [0075](0075-stubborn-questions-pinned-in-reinforce.md) | 累计答错 3 次以上的题常驻强化练习 | 已接受 |

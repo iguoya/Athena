@@ -255,7 +255,8 @@ class ReinforcePage extends StatelessWidget {
             Text("反复错题", style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             Text(
-              "累计答错 2 次及以上的题。反复错的题也可能是题目或答案本身有问题——"
+              "累计答错 2 次及以上的题；错过 ${QuestionHistory.stubbornWrong} 次以上的会常驻强化练习，再怎么答对也不移出。"
+              "反复错的题也可能是题目或答案本身有问题——"
               "点编号复制，报编号核对题库；「已修补」的是后来连着答对、已移出错题库的，回头扫一眼。",
               style: small,
             ),
@@ -310,7 +311,7 @@ class _StubbornRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   "累计错 ${stubborn.wrong} 次 · 共答 ${stubborn.attempts} 次"
-                  "${stubborn.repaired ? " · 已修补，移出错题库" : " · 还在错题库里"}",
+                  "${stubborn.pinned ? " · 错过 ${QuestionHistory.stubbornWrong} 次以上，常驻强化练习" : stubborn.repaired ? " · 已修补，移出错题库" : " · 还在错题库里"}",
                   style: small,
                 ),
               ],

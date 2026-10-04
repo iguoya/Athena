@@ -78,8 +78,16 @@ class QuestionHistory {
   /// 自最近一次答错以来，它自己在强化练习里测过且之后没有出错（主仓库 ADR 0086）；
   /// 或同簇的变式题在强化练习里答对过（主仓库 ADR 0088）。
   /// 它自己任何一次答错（不管在哪）都让它回到备选库。
+  ///
+  /// 例外：累计答错 [stubbornWrong] 次及以上的**顽固题**不移出，常驻备选库（本应用 ADR 0075）——
+  /// 错到这个次数的题，一次验收通过说明不了记牢了，要一直留在强化练习里反复出。
   bool get retiredFromWrongPool =>
-      wrong > 0 && ((lastCorrect && reinforcedSinceWrong >= 1) || variantPassesSinceWrong >= 1);
+      wrong > 0 &&
+      wrong < stubbornWrong &&
+      ((lastCorrect && reinforcedSinceWrong >= 1) || variantPassesSinceWrong >= 1);
+
+  /// 顽固题的门槛：累计答错这么多次（含）及以上。
+  static const stubbornWrong = 3;
 
   static const recentWindow = 5;
 }
@@ -607,6 +615,9 @@ class StubbornQuestion {
 
   /// 稳定编号：题库 id 去掉 `drive.` 前缀，反馈题目问题时报这个号。
   String get serial => question.serial;
+
+  /// 累计答错达到 [QuestionHistory.stubbornWrong] 次：常驻强化练习的备选库，不会因验收通过移出。
+  bool get pinned => wrong >= QuestionHistory.stubbornWrong;
 }
 
 /// 累计答错 [minWrong] 次及以上的题：还在错的在前、已修补的在后，各自按错次
