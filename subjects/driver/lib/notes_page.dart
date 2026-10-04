@@ -15,12 +15,25 @@ class NotesPage extends StatelessWidget {
     required this.daily,
     required this.mastered,
     required this.onStartPractice,
+    this.title = "考点速记",
+    this.icon = Glyph.notes,
+    this.lead = "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
+        "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再练相关的题。",
+    this.footnote = "条目依据《道路交通安全法》《道路交通安全法实施条例》与 2022 版考试大纲，"
+        "每题的完整解释在答题时给出。",
   });
 
   final List<NoteGroup> groups;
   final List<Question> daily;
   final Set<String> mastered;
   final void Function(List<Question> questions, String title) onStartPractice;
+
+  /// 页面标题与图标：同一组件承载同一类「情景 → 要点对照」的内容，
+  /// 河南速记（ADR 0068）传自己的标题、图标与脚注。
+  final String title;
+  final IconData icon;
+  final String lead;
+  final String footnote;
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +46,16 @@ class NotesPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Glyph.notes, color: Bs.paper),
+            Icon(icon, color: Bs.paper),
             SizedBox(width: 8),
-            Text("考点速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            Text(title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
           ],
         ),
         const SizedBox(height: 8),
-        Text(
-          "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
-          "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再练相关的题。",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(lead, style: Theme.of(context).textTheme.bodyLarge),
         for (final group in groups) _noteGroup(context, group, muted),
         const SizedBox(height: 24),
-        Text(
-          "条目依据《道路交通安全法》《道路交通安全法实施条例》与 2022 版考试大纲，"
-          "每题的完整解释在答题时给出。",
-          style: muted,
-        ),
+        Text(footnote, style: muted),
       ],
     );
   }

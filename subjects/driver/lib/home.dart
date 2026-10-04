@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   static const _signsId = "signs";
   static const _markingsId = "markings";
   static const _gaugesId = "gauges";
+  static const _henanId = "henan";
   static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
@@ -334,6 +335,7 @@ class _HomePageState extends State<HomePage> {
         _place == _signsId ||
         _place == _markingsId ||
         _place == _gaugesId ||
+        _place == _henanId ||
         _place == _keyPointsId) {
       return null;
     }
@@ -459,6 +461,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _gaugesId && _session == null,
                   label: "仪表速记",
                   onTap: () => _go(_gaugesId),
+                ),
+                _navLine(
+                  icon: Glyph.henan,
+                  selected: _place == _henanId && _session == null,
+                  label: "河南速记",
+                  onTap: () => _go(_henanId),
                 ),
                 _navLine(
                   icon: Glyph.notes,
@@ -718,6 +726,7 @@ class _HomePageState extends State<HomePage> {
     if (_place == _signsId) return _signsOverview(context);
     if (_place == _markingsId) return _markingsOverview(context);
     if (_place == _gaugesId) return _gaugesOverview(context);
+    if (_place == _henanId) return _henanOverview(context);
     if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
@@ -1637,6 +1646,25 @@ class _HomePageState extends State<HomePage> {
         questions,
         title,
       ),
+    );
+  }
+
+  /// 河南速记：地方条例的情景要点对照，复用考点速记组件（ADR 0068）。
+  Widget _henanOverview(BuildContext context) {
+    return NotesPage(
+      groups: widget.bank.henanGroups,
+      daily: dailyQuestions(_subject1All),
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
+      ),
+      title: "河南速记",
+      icon: Glyph.henan,
+      lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
+          "跟全国规定对照着记——先看速记，再练相关的题。",
+      footnote: "条目依据《河南省道路交通安全条例》与《河南省高速公路条例》，罚款数字均指到条款。",
     );
   }
 

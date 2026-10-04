@@ -661,6 +661,7 @@ class Bank {
     this.gauges = const [],
     this.cheatsheet = const [],
     this.notes = const [],
+    this.henanGroups = const [],
     this.guide = Subject2Guide.empty,
   });
 
@@ -672,6 +673,9 @@ class Bank {
   final List<Gauge> gauges;
   final List<CheatGroup> cheatsheet;
   final List<NoteGroup> notes;
+
+  /// 河南速记（ADR 0068）：与 notes 同构的地方条例内容。
+  final List<NoteGroup> henanGroups;
 
   List<Question> forSubject(String subjectId) {
     final ids = {
