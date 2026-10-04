@@ -1,0 +1,15 @@
+{
+  "source_id": "road-safety-regulation",
+  "_": "手势速记页（ADR 0073）。8 个法定手势动作加一条「手势的效力」总则；meaning 是一句「看到之后怎么开」。出处是文件级的 road-safety-regulation（实施条例：交通信号包括交通警察的指挥），动作要领的原始依据是公安部《交通警察道路执勤执法工作规范》附件，不逐条注条号。questions 是反向题映射（ADR 0067 决策 3），科目四看图题逐张目检后挂动作。",
+  "gestures": [
+    {"id": "authority", "name": "手势的效力", "kind": "general", "band": "hot", "meaning": "交警现场指挥优先：手势与信号灯、标志标线不一致时，按手势走；拥堵有交警在场听交警的。", "questions": ["drive.s1.signals.074", "drive.s1.signals.457", "drive.s4.crash.056"]},
+    {"id": "stop", "name": "停止信号", "kind": "action", "band": "hot", "meaning": "单臂高举过肩、掌心向前：不准前方车辆通行，在停止线外停车等待。", "questions": ["drive.s1.signals.316", "drive.s1.signals.506", "drive.s4.civil.189", "drive.s4.lights.154", "drive.s4.lights.187", "drive.s4.lights.188", "drive.s4.lights.189"]},
+    {"id": "straight", "name": "直行信号", "kind": "action", "band": "hot", "meaning": "双臂侧平（一臂向侧、一臂向前），随后摆动：准许直行；右转弯车不妨碍放行车辆时可右转。", "questions": ["drive.s1.signals.366", "drive.s1.signals.496", "drive.s4.lights.186"]},
+    {"id": "turn_left", "name": "左转弯信号", "kind": "action", "band": "hot", "meaning": "交警右臂（你看到的左侧）前平伸、左臂向右前方摆动：准许左方来车左转弯，在导向车道内左转。", "questions": ["drive.s1.signals.339", "drive.s1.signals.497", "drive.s4.maneuver.168", "drive.s4.lights.152", "drive.s4.civil.221"]},
+    {"id": "turn_left_wait", "name": "左转弯待转信号", "kind": "action", "band": "hot", "meaning": "左臂在侧下方摆向正前方、掌心朝下：左转车可驶入待转区等信号，不是放行左转。", "questions": ["drive.s1.signals.387", "drive.s4.maneuver.171", "drive.s4.lights.155"]},
+    {"id": "turn_right", "name": "右转弯信号", "kind": "action", "band": "hot", "meaning": "交警左臂（你看到的右侧）前平伸、右臂向左前方摆动：准许右方来车右转弯。", "questions": ["drive.s1.signals.360", "drive.s1.signals.498", "drive.s4.maneuver.210"]},
+    {"id": "change_lane", "name": "变道信号", "kind": "action", "band": "common", "meaning": "右臂前平伸、掌心向左，右臂向左摆动：该车道的车要腾出车道，向指定车道变更。", "questions": ["drive.s1.signals.410", "drive.s4.lights.153"]},
+    {"id": "slow_down", "name": "减速慢行信号", "kind": "action", "band": "common", "meaning": "右臂向右前方伸出、掌心向下上下摆动：减速慢行，压住车速观察通过。", "questions": ["drive.s1.signals.263", "drive.s4.civil.218"]},
+    {"id": "pull_over", "name": "示意车辆靠边停车信号", "kind": "action", "band": "common", "meaning": "左臂前平伸、掌心向前，右臂向左摆动：靠边停车接受检查，开右转向灯驶向路边停稳。", "questions": ["drive.s4.civil.148"]}
+  ]
+}
