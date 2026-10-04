@@ -25,6 +25,48 @@ class SignView extends StatelessWidget {
   }
 }
 
+/// `_SignPainter` 画得出来的全部 id（ADR 0059）：加新标志时，这个清单与下面 switch
+/// 的 case 同步加。`content/signs.json` 的每条 id 都必须落在这个集合里，
+/// test/signs_page_test.dart 守住——漏画就会落到 switch 兜底的问号图。
+const paintableSignIds = {
+  "no_entry",
+  "no_vehicles",
+  "no_parking",
+  "no_stopping",
+  "speed_40",
+  "speed_60",
+  "speed_80",
+  "no_horn",
+  "no_overtaking",
+  "no_left",
+  "no_right",
+  "no_u_turn",
+  "yield",
+  "stop",
+  "no_pedestrian",
+  "warning",
+  "warning_pedestrian",
+  "warning_children",
+  "warning_cross",
+  "warning_curve",
+  "warning_slope",
+  "warning_slip",
+  "warning_work",
+  "warning_rail",
+  "warning_village",
+  "indicate",
+  "pedestrian",
+  "go_straight",
+  "turn_left",
+  "turn_right",
+  "min_speed",
+  "roundabout",
+  "motor_lane",
+  "guide",
+  "diamond",
+  "headlights",
+};
+
 class _SignPainter extends CustomPainter {
   _SignPainter(this.id);
 

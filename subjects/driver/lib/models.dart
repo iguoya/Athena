@@ -400,12 +400,21 @@ class Curriculum {
 }
 
 class RoadSign {
-  const RoadSign({required this.id, required this.name, required this.kind, this.band = QuestionBand.common});
+  const RoadSign({
+    required this.id,
+    required this.name,
+    required this.kind,
+    required this.meaning,
+    this.band = QuestionBand.common,
+  });
 
   final String id;
   final String name;
   final String kind;
   final String band;
+
+  /// 一句行动导向的「看到之后怎么开」（ADR 0059）；出处是 signs.json 文件级的 GB 5768.2。
+  final String meaning;
 
   String get kindLabel => switch (kind) {
     "prohibit" => "禁令标志",
@@ -420,6 +429,7 @@ class RoadSign {
       id: json["id"] as String,
       name: json["name"] as String,
       kind: json["kind"] as String,
+      meaning: json["meaning"] as String? ?? "",
       band: json["band"] as String? ?? QuestionBand.common,
     );
   }

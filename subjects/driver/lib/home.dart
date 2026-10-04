@@ -15,6 +15,7 @@ import "progress.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
 import "session.dart";
+import "signs_page.dart";
 import "skin.dart";
 import "subject2.dart";
 import "sync.dart";
@@ -73,6 +74,7 @@ class _HomePageState extends State<HomePage> {
   static const _reviewId = "review";
   static const _reinforceId = "reinforce";
   static const _numbersId = "numbers";
+  static const _signsId = "signs";
 
   String _place = "subject1";
   SessionLaunch? _session;
@@ -316,7 +318,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Subject? get _subject {
-    if (_place == _wrongId || _place == _reviewId || _place == _numbersId) return null;
+    if (_place == _wrongId || _place == _reviewId || _place == _numbersId || _place == _signsId) return null;
     return widget.bank.curriculum.subject(_place);
   }
 
@@ -417,6 +419,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _numbersId && _session == null,
                   label: "易混数字",
                   onTap: () => _go(_numbersId),
+                ),
+                _navLine(
+                  icon: Glyph.signs,
+                  selected: _place == _signsId && _session == null,
+                  label: "标志速记",
+                  onTap: () => _go(_signsId),
                 ),
                 if (widget.currentUser != null)
                   _navLine(
@@ -655,6 +663,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
     if (_place == _numbersId) return _numbersOverview(context);
+    if (_place == _signsId) return _signsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
     return _subjectOverview(context, subject);
@@ -1499,6 +1508,21 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  /// 标志速记：手绘标志按类摊开，每组能直接练相关题（ADR 0059）。
+  Widget _signsOverview(BuildContext context) {
+    return SignsPage(
+      signs: widget.bank.signs,
+      daily: dailyQuestions(_subject1All),
+      all: _subject1All,
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
       ),
     );
   }
