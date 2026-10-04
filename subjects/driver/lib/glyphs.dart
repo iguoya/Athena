@@ -18,6 +18,7 @@ abstract final class Glyph {
   static const reinforce = Icons.fitness_center;
   static const numbers = Icons.pin;
   static const signs = Icons.signpost;
+  static const notes = Icons.notes;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──
   static const practice = Icons.list_alt;

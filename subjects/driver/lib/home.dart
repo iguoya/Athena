@@ -11,6 +11,7 @@ import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
 import "models.dart";
+import "notes_page.dart";
 import "progress.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   static const _reinforceId = "reinforce";
   static const _numbersId = "numbers";
   static const _signsId = "signs";
+  static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
   SessionLaunch? _session;
@@ -322,7 +324,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Subject? get _subject {
-    if (_place == _wrongId || _place == _reviewId || _place == _numbersId || _place == _signsId) return null;
+    if (_place == _wrongId ||
+        _place == _reviewId ||
+        _place == _numbersId ||
+        _place == _signsId ||
+        _place == _keyPointsId) {
+      return null;
+    }
     return widget.bank.curriculum.subject(_place);
   }
 
@@ -433,6 +441,12 @@ class _HomePageState extends State<HomePage> {
                   selected: _place == _signsId && _session == null,
                   label: "标志速记",
                   onTap: () => _go(_signsId),
+                ),
+                _navLine(
+                  icon: Glyph.notes,
+                  selected: _place == _keyPointsId && _session == null,
+                  label: "考点速记",
+                  onTap: () => _go(_keyPointsId),
                 ),
                 if (widget.currentUser != null)
                   _navLine(
@@ -684,6 +698,7 @@ class _HomePageState extends State<HomePage> {
     }
     if (_place == _numbersId) return _numbersOverview(context);
     if (_place == _signsId) return _signsOverview(context);
+    if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
     return _subjectOverview(context, subject);
@@ -1543,6 +1558,20 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  /// 考点速记：情景对照文字速记（ADR 0064）。
+  Widget _keyPointsOverview(BuildContext context) {
+    return NotesPage(
+      groups: widget.bank.notes,
+      daily: dailyQuestions(_subject1All),
+      mastered: _mastered,
+      onStartPractice: (questions, title) => _startPractice(
+        widget.bank.curriculum.subject("subject1"),
+        questions,
+        title,
       ),
     );
   }

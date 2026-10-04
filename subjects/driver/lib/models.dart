@@ -504,12 +504,73 @@ class CheatGroup {
   }
 }
 
+/// 考点速记页的一组：情景对照（ADR 0064）。与易混数字同构，但条目是文字要点，
+/// 没有可比大小的数值。
+class NoteGroup {
+  const NoteGroup({
+    required this.id,
+    required this.title,
+    required this.note,
+    required this.match,
+    required this.items,
+  });
+
+  final String id;
+  final String title;
+  final String note;
+  final RegExp match;
+  final List<NoteItem> items;
+
+  /// 题干或选项里提到这组情景的题。
+  List<Question> related(Iterable<Question> questions) => [
+    for (final q in questions)
+      if (match.hasMatch(q.prompt) || q.choices.any((c) => match.hasMatch(c.label))) q,
+  ];
+
+  factory NoteGroup.fromJson(Map<String, dynamic> json) {
+    return NoteGroup(
+      id: json["id"] as String,
+      title: json["title"] as String,
+      note: json["note"] as String? ?? "",
+      match: RegExp(json["match"] as String),
+      items: [
+        for (final raw in json["items"] as List<dynamic>) NoteItem.fromJson(raw as Map<String, dynamic>),
+      ],
+    );
+  }
+}
+
+/// 考点速记的一条：情景、要点、出处。
+class NoteItem {
+  const NoteItem({
+    required this.scenario,
+    required this.points,
+    required this.sourceId,
+    required this.locator,
+  });
+
+  final String scenario;
+  final List<String> points;
+  final String sourceId;
+  final String locator;
+
+  factory NoteItem.fromJson(Map<String, dynamic> json) {
+    return NoteItem(
+      scenario: json["scenario"] as String,
+      points: [for (final raw in json["points"] as List<dynamic>) raw as String],
+      sourceId: json["source_id"] as String,
+      locator: json["locator"] as String? ?? "",
+    );
+  }
+}
+
 class Bank {
   const Bank({
     required this.curriculum,
     required this.questions,
     this.signs = const [],
     this.cheatsheet = const [],
+    this.notes = const [],
     this.guide = Subject2Guide.empty,
   });
 
@@ -518,6 +579,7 @@ class Bank {
   final List<Question> questions;
   final List<RoadSign> signs;
   final List<CheatGroup> cheatsheet;
+  final List<NoteGroup> notes;
 
   List<Question> forSubject(String subjectId) {
     final ids = {

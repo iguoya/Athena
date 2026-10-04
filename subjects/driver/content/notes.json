@@ -1,0 +1,100 @@
+{
+  "_": "考点速记页（ADR 0064）。每条 = 情景 + 要点；出处条级挂（条文类按《道路交通安全法》《实施条例》，处置要点按 2022 版考试大纲）。match 是组级练题正则。",
+  "groups": [
+    {
+      "id": "lights",
+      "title": "灯光使用",
+      "note": "转向灯提前开、说清楚去向；远光只给照路，凡是对着人不对着路都要换近光。",
+      "match": "远光|近光|雾灯|双闪|危险报警|示廓|转向灯|开灯|灯光|后位灯",
+      "items": [
+        {"scenario": "转向、变道、超车、靠边停车、驶离停车点", "points": ["提前开启对应方向的转向灯，打完灯观察确认安全再动方向"], "source_id": "road-safety-regulation", "locator": "第五十七条"},
+        {"scenario": "夜间会车", "points": ["距对向来车 150 米以外改用近光灯", "窄路、窄桥与非机动车会车用近光，减速或停车避让"], "source_id": "road-safety-regulation", "locator": "第四十八条"},
+        {"scenario": "夜间近距离跟车", "points": ["同方向行驶的后车与前车近距离行驶时，不得使用远光灯"], "source_id": "road-safety-regulation", "locator": "第四十八条"},
+        {"scenario": "超车", "points": ["提前开左转向灯，交替使用远近光灯或鸣喇叭提醒前车", "遇后车发出超车信号，有条件就让超"], "source_id": "road-safety-regulation", "locator": "第四十七条"},
+        {"scenario": "夜间过坡顶、急弯、人行横道或没有信号灯的路口", "points": ["交替使用远近光灯，示意对面来车注意"], "source_id": "road-safety-regulation", "locator": "第五十九条"},
+        {"scenario": "雾天行车", "points": ["开雾灯和危险报警闪光灯", "远光被雾滴散射，反而更看不清"], "source_id": "road-safety-regulation", "locator": "第五十八条"},
+        {"scenario": "夜间临时停车", "points": ["开危险报警闪光灯、示廓灯和后位灯"], "source_id": "road-safety-regulation", "locator": "第五十八条"},
+        {"scenario": "故障或事故妨碍交通又难以移动", "points": ["开危险报警闪光灯，车后 50–100 米设警告标志", "夜间同时开示廓灯和后位灯"], "source_id": "road-safety-regulation", "locator": "第六十条"},
+        {"scenario": "进出高速公路", "points": ["驶入开左转向灯进行车道，驶出开右转向灯经减速车道"], "source_id": "road-safety-regulation", "locator": "第七十九条"}
+      ]
+    },
+    {
+      "id": "yield",
+      "title": "让行规则",
+      "note": "一句话：人比车大，直行比转弯大，无障碍比有障碍大；记不住时先停再看。",
+      "match": "让行|先行|礼让|让.*通过|超车信号",
+      "items": [
+        {"scenario": "行经人行横道", "points": ["减速；遇行人正在通过，停车让行", "右转也要等人行横道上的行人走完"], "source_id": "road-safety-law", "locator": "第四十七条"},
+        {"scenario": "没有信号灯、标志标线控制的交叉路口", "points": ["让右方道路的来车先行"], "source_id": "road-safety-regulation", "locator": "第五十二条"},
+        {"scenario": "路口转弯对直行", "points": ["转弯的机动车让直行的车辆先行", "相对方向行驶，右转弯车让左转弯车先行"], "source_id": "road-safety-regulation", "locator": "第五十一条"},
+        {"scenario": "绿灯亮起时转弯", "points": ["不得妨碍被放行的直行车辆、行人通行"], "source_id": "road-safety-regulation", "locator": "第三十八条"},
+        {"scenario": "有障碍的路段会车", "points": ["无障碍的一方先行；有障碍一方已驶入障碍路段的可以先行"], "source_id": "road-safety-regulation", "locator": "第四十八条"},
+        {"scenario": "会车有困难", "points": ["有让路条件的一方让对方先行"], "source_id": "road-safety-regulation", "locator": "第四十八条"},
+        {"scenario": "特种车执行紧急任务", "points": ["警车、消防车、救护车、工程救险车不受信号灯限制，其他车辆和行人必须让行", "不得超越执行紧急任务的特种车"], "source_id": "road-safety-law", "locator": "第五十三条"},
+        {"scenario": "遇后车发出超车信号", "points": ["在安全的前提下减速靠右让超，不得故意不让或加速"], "source_id": "road-safety-regulation", "locator": "第四十七条"}
+      ]
+    },
+    {
+      "id": "highway",
+      "title": "高速公路",
+      "note": "入左出右、行车道不停车、故障五步：开双闪、靠边、设牌 150 米、人撤离、即报警。",
+      "match": "高速|匝道|加速车道|减速车道|应急车道",
+      "items": [
+        {"scenario": "进入与驶出", "points": ["驶入开左转向灯经加速车道进入行车道，驶出开右转向灯经减速车道"], "source_id": "road-safety-regulation", "locator": "第七十九条"},
+        {"scenario": "车速", "points": ["最高时速不超过 120 公里（小型客车），最低不低于 60 公里", "高速上感觉车速失真，以速度表为准"], "source_id": "road-safety-regulation", "locator": "第七十八条"},
+        {"scenario": "能见度低于 200 米", "points": ["车速不超过 60 公里/小时，与前车保持 100 米以上距离"], "source_id": "road-safety-regulation", "locator": "第八十一条"},
+        {"scenario": "能见度低于 100 米", "points": ["车速不超过 40 公里/小时，与前车保持 50 米以上距离"], "source_id": "road-safety-regulation", "locator": "第八十一条"},
+        {"scenario": "能见度低于 50 米", "points": ["车速不超过 20 公里/小时，并尽快驶离高速公路"], "source_id": "road-safety-regulation", "locator": "第八十一条"},
+        {"scenario": "故障或事故停车", "points": ["不得在行车道停车，停到应急车道并开危险报警闪光灯", "警告标志设在车后 150 米以外，人员迅速转移到护栏外，报警求助", "故障车由救援车、清障车拖曳，不得自行牵引"], "source_id": "road-safety-law", "locator": "第六十八条"},
+        {"scenario": "匝道与行车道", "points": ["不得倒车、逆行、掉头、穿越中央分隔带，匝道上同样"], "source_id": "road-safety-regulation", "locator": "第八十二条"}
+      ]
+    },
+    {
+      "id": "weather",
+      "title": "恶劣天气",
+      "note": "附着力小时什么都要缓：缓加油、缓打方向、缓踩制动；先看清再通过。",
+      "match": "冰雪|雾|结冰|泥泞|涉水|漫水|隧道|大雨|沙尘",
+      "items": [
+        {"scenario": "冰雪、泥泞道路", "points": ["最高行驶速度不得超过 30 公里/小时"], "source_id": "road-safety-regulation", "locator": "第四十六条"},
+        {"scenario": "雨雪雾沙尘等能见度低", "points": ["开近光灯、示廓灯、后位灯；同向近距离跟车不用远光，雾天加开雾灯和危险报警闪光灯"], "source_id": "road-safety-law", "locator": "第四十二条"},
+        {"scenario": "冰雪路面", "points": ["缓打方向、缓踩制动，急刹急转都容易侧滑", "车尾往哪边甩，就往哪边适量打方向"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 4"},
+        {"scenario": "泥泞路段", "points": ["停车观察，选平整坚实的路段缓慢通过"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 4"},
+        {"scenario": "行经漫水路、漫水桥", "points": ["先停车查明水情，确认安全后低速通过"], "source_id": "road-safety-regulation", "locator": "第六十四条"},
+        {"scenario": "通过隧道", "points": ["按规开启近光灯，不得超车、停车、倒车、掉头", "进出隧道有明暗适应过程，提前减速控速"], "source_id": "road-safety-regulation", "locator": "第五十条"},
+        {"scenario": "雨天遇行人、骑车人", "points": ["提前减速、保持距离低速通过，防其滑倒与溅水，不争道抢行"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 4"}
+      ]
+    },
+    {
+      "id": "emergency",
+      "title": "应急避险",
+      "note": "第一动作都是「稳住方向再减速」：爆胎、侧滑、失灵，猛打方向和急刹只会更糟。",
+      "match": "爆胎|制动失灵|制动.*失效|侧滑|失控|起火|灭火|落水|抱死",
+      "items": [
+        {"scenario": "高速行驶中爆胎", "points": ["紧握方向盘保持直线，抢挂低速挡利用发动机制动缓停", "紧急制动和猛打方向都可能翻车或被追尾"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 5"},
+        {"scenario": "前轮侧滑", "points": ["向侧滑的相反方向修正"], "source_id": "road-safety-law", "locator": "第二十二条"},
+        {"scenario": "后轮侧滑", "points": ["向侧滑的相同方向修正"], "source_id": "road-safety-law", "locator": "第二十二条"},
+        {"scenario": "行车制动失灵", "points": ["握稳方向、松抬加速踏板，抢挂低速挡利用发动机制动", "使用驻车制动器渐进减速，开启危险报警闪光灯"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 5"},
+        {"scenario": "转向失控", "points": ["高速行驶时紧急制动容易翻车，控制车速果断减速"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 5"},
+        {"scenario": "车辆起火", "points": ["立即停车熄火断电，组织人员撤离，初期火用灭火器扑救", "油料车、危化品车起火不强行施救"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 5"},
+        {"scenario": "车辆落水", "points": ["第一时间开门或开窗逃生，关闭车窗等待救援是错的"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 5"},
+        {"scenario": "湿滑路面制动", "points": ["车轮容易抱死侧滑：ABS 防抱死，ESC 纠侧滑，湿滑路面不要关"], "source_id": "exam-syllabus-2022", "locator": "科目一考试要点 5"}
+      ]
+    },
+    {
+      "id": "firstaid",
+      "title": "伤员急救",
+      "note": "先呼救、查体征，再处置伤口；会错的操作里「等」「拖」「随意搬动」最多。",
+      "match": "止血|骨折|心肺|人工呼吸|救护|包扎|烧伤|中毒|昏迷|伤员",
+      "items": [
+        {"scenario": "事故现场第一件事", "points": ["报警求助并保护现场，抢救伤员；移动伤员前先固定、避免二次伤害"], "source_id": "road-safety-law", "locator": "第七十条"},
+        {"scenario": "抢救昏迷伤员", "points": ["先检查呼吸和脉搏，再采取下一步措施"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "成人心肺复苏", "points": ["胸外按压频率 100–120 次/分"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "为伤员止血", "points": ["先按住流血位置压迫止血，再根据情况采取进一步措施"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "骨折固定", "points": ["夹板要超过伤口上下的关节，让关节不动"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "烧烫伤", "points": ["创面用保鲜膜或干净塑料袋轻轻覆盖，防感染", "淡盐水补充体液"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "有毒气体环境", "points": ["第一时间远离毒气源，再施救"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"},
+        {"scenario": "伤员被车轮或货物压住", "points": ["先移开车轮或货物，再将伤员移出"], "source_id": "exam-syllabus-2022", "locator": "科目三考试要点 6"}
+      ]
+    }
+  ]
+}
