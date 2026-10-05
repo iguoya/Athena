@@ -44,8 +44,9 @@ class RecallRowDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
+      // 答对用亮翠绿：全局 success 色偏暗，小圆点上发闷（使用者反馈）。
       SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.mastered => Bs.success,
+      SymbolStatus.mastered => const Color(0xFF2ECC71),
       SymbolStatus.partial || SymbolStatus.fresh => const Color(0xFFADB5BD),
     };
     return Tooltip(
