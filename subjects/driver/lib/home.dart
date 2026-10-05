@@ -1740,29 +1740,33 @@ class _HomePageState extends State<HomePage> {
         ),
         for (final group in groups) ...[
           const SizedBox(height: 28),
-          _numberGroup(context, subject, topic.id, group, open, all, muted),
+          _numberGroup(context, subject, topic, topic.id, group, open, all, muted),
         ],
       ],
     );
   }
 
+  /// 一个数字组的专属题（ADR 0102）：组内自测卡对应的题，行与题一对一。
+  List<Question> _numberGroupQuestions(SpeedTopic topic, CheatGroup group) =>
+      recallQuestionsOfNumberGroup(topic.id, cheatGroupsOf(widget.bank, topic), group.id);
+
   /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
   /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
   void _numbersRecall(BuildContext context, Subject subject, SpeedTopic topic, List<Question> open) {
     final cards = recallCardsOfNumbers(topic.id, cheatGroupsOf(widget.bank, topic));
-    final groups = {for (final g in cheatGroupsOf(widget.bank, topic)) g.id: g};
     RecallSession.show(
       context,
       onAnswer: _recordRecall,
       histories: _histories,
       mastered: _mastered,
       entries: [
+        // 关联题就是这张卡自己（ADR 0102）：收尾的「去做这几个的题」练的是答错的卡，
+        // 行与题一对一，不再指向组级正则捞出来的真题。
         for (final c in cards)
           RecallEntry.fromCard(
             c,
             front: _numberFront(context, c),
-            // 关联真题只能到「组」一级：卡的组键是「f:组」或「r:组」。
-            related: groups[c.group!.substring(2)]?.related(open) ?? const [],
+            related: c.stem == null ? const [] : [recallQuestionOf(c, cards)],
           ),
       ],
       onStartPractice: (questions) => _startPractice(subject, questions, "易混数字 · 自测"),
@@ -1811,15 +1815,19 @@ class _HomePageState extends State<HomePage> {
   Widget _numberGroup(
     BuildContext context,
     Subject subject,
+    SpeedTopic topic,
     String pageKey,
     CheatGroup group,
     List<Question> open,
     List<Question> all,
     TextStyle? muted,
   ) {
-    final related = group.related(open);
+    // 组按钮练的是本组的专属题——组内自测卡对应的题，行与题一对一（ADR 0102）；
+    // locked 仍按组级真题算：那是「还有多少真题在没解锁的阶段里」的意思。
+    final related = _numberGroupQuestions(topic, group);
     final pending = _pending(related);
-    final locked = group.related(all).length - related.length;
+    final bankRelated = group.related(all);
+    final locked = bankRelated.length - group.related(open).length;
     final maxAmount = group.maxAmount;
     return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),

@@ -291,6 +291,21 @@ List<Question> recallQuestionsOf(Bank bank, {Map<String, String> sourceUrls = co
   return out;
 }
 
+/// 易混数字一个组的专属题（ADR 0102）：组内每条情形的正向卡加每个值的反向卡，
+/// 各自就是一道有稳定题号的题——行与题因此一对一，组按钮与自测深链练的是它们，
+/// 不再是组级正则捞出来的一锅真题。
+List<Question> recallQuestionsOfNumberGroup(String page, List<CheatGroup> groups, String groupId) {
+  final cards = recallCardsOfNumbers(page, groups);
+  final own = [
+    for (final card in cards)
+      if (card.group != null && card.group!.substring(2) == groupId) card,
+  ];
+  return [
+    for (final card in own)
+      if (card.stem != null) recallQuestionOf(card, cards),
+  ];
+}
+
 /// `Random(seed)` 在不同 Dart 版本之间不保证同一个序列；这里自带一个简单的线性同余发生器，
 /// 题的选项只依赖题号，换 SDK 也不变（作答记录里存的是选项字母，选项一变就对不上了）。
 class _SeededRandom implements Random {
