@@ -34,8 +34,8 @@ Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules,
   return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
 }
 
-/// 易混数字一行的状态微点（ADR 0101，三态）：红 = 最近答错过、未掌握；绿 = 答对过；
-/// 灰 = 没作答过。行的颜色回答「碰过没有、最近对不对」，不回答「答全没有」。
+/// 易混数字一行的状态微点：与速记格子的微点（[StatusDot]）同一套样式，只换悬停措辞
+/// ——口径是这一行自己的自测卡（填数、选择、反向），不是组级关联真题（ADR 0095、0101）。
 class RecallRowDot extends StatelessWidget {
   const RecallRowDot({super.key, required this.status});
 
@@ -43,30 +43,13 @@ class RecallRowDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = switch (status) {
-      // 答对用亮翠绿：全局 success 色偏暗，小圆点上发闷（使用者反馈）。
-      SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.mastered => const Color(0xFF2ECC71),
-      SymbolStatus.partial || SymbolStatus.fresh => const Color(0xFFADB5BD),
-    };
-    return Tooltip(
-      message: switch (status) {
+    return StatusDot(
+      status: status,
+      tooltip: switch (status) {
         SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
         SymbolStatus.mastered => "这一行的自测题答对过",
         SymbolStatus.partial || SymbolStatus.fresh => "这一行还没自测过",
       },
-      // 状态色填充整个圆，中心挖一个黑色实心圆点（使用者指定的形态，圆径缩小一档）。
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        alignment: Alignment.center,
-        child: Container(
-          width: 14,
-          height: 14,
-          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-        ),
-      ),
     );
   }
 }

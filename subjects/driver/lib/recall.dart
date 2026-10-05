@@ -11,32 +11,43 @@ import "quiz_options.dart";
 import "recall_cards.dart";
 import "reinforce.dart";
 
-/// 格子角的掌握度微点（ADR 0077 决策 3）：红 = 相关题最近答错、
-/// 黄 = 部分掌握、绿 = 全部掌握、灰 = 从未作答。纯展示。
+/// 格子条目的状态微点（ADR 0077 决策 3 起用；ADR 0101 统一为三态、放大为实心圆加黑心，
+/// 放在图标下方、条目文字左侧）：红 = 相关题最近答错过、未掌握；绿 = 答对过（哪怕只
+/// 答对一部分）；灰 = 没作答过。与易混数字的行点同一套样式。
 class StatusDot extends StatelessWidget {
-  const StatusDot({super.key, required this.status});
+  const StatusDot({super.key, required this.status, this.tooltip});
 
   final SymbolStatus status;
+
+  /// 覆盖悬停说明的措辞（易混数字的行点写「这一行」，格子默认写「相关题」）。
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
+      // 答对用亮翠绿：全局 success 色在小圆点上偏暗（使用者反馈）。
       SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.partial => Bs.warning,
-      SymbolStatus.mastered => Bs.success,
+      SymbolStatus.mastered || SymbolStatus.partial => const Color(0xFF2ECC71),
       SymbolStatus.fresh => const Color(0xFFADB5BD),
     };
     return Tooltip(
-      message: switch (status) {
-        SymbolStatus.wrong => "相关题最近答错过",
-        SymbolStatus.partial => "相关题部分掌握",
-        SymbolStatus.mastered => "相关题已掌握",
-        SymbolStatus.fresh => "相关题还没做过",
-      },
+      message: tooltip ??
+          switch (status) {
+            SymbolStatus.wrong => "相关题最近答错过，还没掌握",
+            SymbolStatus.mastered => "相关题已答对掌握",
+            SymbolStatus.partial => "相关题答对过一部分",
+            SymbolStatus.fresh => "相关题还没做过",
+          },
       child: Container(
-        width: 10,
-        height: 10,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        alignment: Alignment.center,
+        child: Container(
+          width: 14,
+          height: 14,
+          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+        ),
       ),
     );
   }

@@ -243,21 +243,25 @@ class _MarkingCellState extends State<_MarkingCell> {
             borderRadius: BorderRadius.circular(Bs.radius),
             boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
           ),
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                top: 0,
-                child: StatusDot(status: widget.status),
-              ),
-              Column(
+          child: Column(
             children: [
               MarkingsPage._markingImage(widget.marking, 280),
               const SizedBox(height: 10),
-              Text(
-                widget.marking.name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
+              // 状态点在图标下方、条目文字左侧（ADR 0101：与行点同一套样式）。
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  StatusDot(status: widget.status),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      widget.marking.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
+                    ),
+                  ),
+                ],
               ),
               if (widget.marking.band == QuestionBandColors.hot) ...[
                 const SizedBox(height: 6),
@@ -269,8 +273,6 @@ class _MarkingCellState extends State<_MarkingCell> {
               ],
               const SizedBox(height: 6),
               Text(widget.marking.meaning, textAlign: TextAlign.center, style: muted),
-            ],
-          ),
             ],
           ),
         ),

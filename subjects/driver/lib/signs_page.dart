@@ -246,21 +246,25 @@ class _SignCellState extends State<_SignCell> {
             borderRadius: BorderRadius.circular(Bs.radius),
             boxShadow: _hover ? Bs.hoverShadow : Bs.cardShadow,
           ),
-          child: Stack(
-            children: [
-              Positioned(
-                right: 0,
-                top: 0,
-                child: StatusDot(status: widget.status),
-              ),
-              Column(
+          child: Column(
             children: [
               SignsPage._signImage(widget.sign, 192),
               const SizedBox(height: 10),
-              Text(
-                widget.sign.name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
+              // 状态点在图标下方、条目文字左侧（ADR 0101：与行点同一套样式）。
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  StatusDot(status: widget.status),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      widget.sign.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, height: 1.2),
+                    ),
+                  ),
+                ],
               ),
               if (widget.sign.band == QuestionBandColors.hot) ...[
                 const SizedBox(height: 6),
@@ -272,8 +276,6 @@ class _SignCellState extends State<_SignCell> {
               ],
               const SizedBox(height: 6),
               Text(widget.sign.meaning, textAlign: TextAlign.center, style: muted),
-            ],
-          ),
             ],
           ),
         ),
