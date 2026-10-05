@@ -101,6 +101,22 @@ void main() {
     await teardown(tester, store, dir);
   });
 
+  testWidgets("自我测验：侧栏里全部 8 个速记页都有入口，一轮都是 5 张", (tester) async {
+    final (_, store, dir) = await boot(tester);
+    for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记"]) {
+      await tester.tap(find.text(page).first);
+      await tester.pump();
+      expect(find.text("自我测验"), findsOneWidget, reason: "$page 缺自我测验入口");
+      await tester.tap(find.text("自我测验"));
+      await tester.pump();
+      // 一轮 5 张：剩余张数写在卡片头里。
+      expect(find.textContaining("剩 5 张"), findsOneWidget, reason: "$page 一轮应抽 5 张");
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+    }
+    await teardown(tester, store, dir);
+  });
+
   testWidgets("自我测验：易混数字与考点速记也有，文字卡正面是情形、揭示后是答案", (tester) async {
     final (_, store, dir) = await boot(tester);
 
