@@ -636,6 +636,7 @@ class CheatRow {
     required this.locator,
     this.amount,
     this.ask,
+    this.distractors = const [],
   });
 
   final String value;
@@ -646,6 +647,9 @@ class CheatRow {
   /// 这一行自己的问法模板（ADR 0103）：`{blank}` 是挖空位置；不填用组的，组也没有
   /// 就走老的「挖数字、挖不中句尾补」。
   final String? ask;
+
+  /// 这一行手工指定的干扰项（ADR 0104）：答案格式在组内独一份时由作者补同格式的假选项。
+  final List<String> distractors;
 
   /// 画横条用的数值；区间、期限这类不好比大小的没有。
   final double? amount;
@@ -658,6 +662,7 @@ class CheatRow {
       locator: json["locator"] as String? ?? "",
       amount: (json["amount"] as num?)?.toDouble(),
       ask: json["ask"] as String?,
+      distractors: [for (final x in json["distractors"] as List<dynamic>? ?? const []) x as String],
     );
   }
 }

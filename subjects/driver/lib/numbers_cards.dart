@@ -31,6 +31,7 @@ class NumberCard {
     required this.locator,
     this.typed,
     this.answerTexts = const [],
+    this.distractors = const [],
   });
 
   /// 页内稳定的键：「f/组/单条情形|值」（填数、选择）、「r/组/值」（反向）。
@@ -52,6 +53,9 @@ class NumberCard {
 
   /// 填数卡的手输答案；其余为空。
   final TypedAnswer? typed;
+
+  /// 手工指定的干扰项（ADR 0104）。
+  final List<String> distractors;
 
   /// 反向卡的正确答案候选：这个值下所有行的单条情形。
   final List<String> answerTexts;
@@ -95,6 +99,7 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
             sourceId: row.sourceId,
             locator: row.locator,
             typed: typed,
+            distractors: row.distractors,
           ),
         );
       }

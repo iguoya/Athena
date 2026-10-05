@@ -53,6 +53,7 @@ class RecallCard {
     this.kind,
     this.nearOnly = false,
     this.inputLabel,
+    this.distractors = const [],
   });
 
   /// 速记页的键（[RecallPage]）与页内稳定的条目键。
@@ -93,6 +94,9 @@ class RecallCard {
   /// 输入框前的小标签（组名）。
   final String? inputLabel;
 
+  /// 手工指定的干扰项（ADR 0104）。
+  final List<String> distractors;
+
   String get questionId => recallQuestionId(page, id);
 
   QuizSource get source => QuizSource(
@@ -104,6 +108,7 @@ class RecallCard {
     confuseName: confuseName,
     kind: kind,
     nearOnly: nearOnly,
+    distractors: distractors,
   );
 }
 
@@ -220,6 +225,7 @@ List<RecallCard> recallCardsOfNumbers(String page, List<CheatGroup> groups) {
         stem: c.stem,
         inputLabel: c.groupTitle,
         typed: c.typed,
+        distractors: c.distractors,
         prompt: switch (c.kind) {
           NumberCardKind.typed => "想一想：括号里该是几？把数字填进下面的框。",
           NumberCardKind.choice => "想一想：括号里该填什么？选一个。",

@@ -18,6 +18,7 @@ class QuizSource {
     this.confuseName,
     this.kind,
     this.nearOnly = false,
+    this.distractors = const [],
   });
 
   final String id;
@@ -45,6 +46,10 @@ class QuizSource {
   /// 只用同组做干扰、不跨组补位：别的组的值放进来是胡扯（把「12 分」放进限速的选项里），
   /// 宁可选项少几个。
   final bool nearOnly;
+
+  /// 内容作者手工指定的干扰项（ADR 0104）：答案格式在组内独一份时（「拘役并处罚金」混在
+  /// 刑期选项里），机器选的干扰项盖不住格式差，由作者补同格式的假选项。永远优先入选。
+  final List<String> distractors;
 }
 
 /// 生成好的一道选择题：正确答案与（已打乱的）选项，两者都是去掉解释括号后的显示文字。
@@ -121,6 +126,12 @@ Quiz buildQuiz(QuizSource target, List<QuizSource> pool, {Random? random, int co
 
   final confuse = target.confuseName == null ? null : optionLabel(target.confuseName!);
   if (confuse != null && confuse.isNotEmpty && seen.add(confuse)) options.add(confuse);
+
+  // 作者指定的干扰项最优先：它们存在的理由就是盖住答案的格式差。
+  for (final raw in target.distractors) {
+    final label = optionLabel(raw);
+    if (label.isNotEmpty && seen.add(label)) options.add(label);
+  }
 
   final near = <_Candidate>[];
   final far = <_Candidate>[];
