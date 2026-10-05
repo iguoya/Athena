@@ -30,6 +30,12 @@ abstract final class Glyph {
   static const signalRail = Icons.traffic;
   static const maneuvers = Icons.swap_calls;
   static const vehicleCare = Icons.car_repair;
+  static const people = Icons.directions_walk;
+  static const hill = Icons.terrain;
+  static const electric = Icons.ev_station;
+  static const expressway = Icons.add_road;
+  static const fatigue = Icons.bedtime;
+  static const fire = Icons.fire_extinguisher;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──
   static const practice = Icons.list_alt;
