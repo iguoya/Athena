@@ -5,11 +5,12 @@ import "package:path/path.dart" as p;
 
 import "progress.dart";
 
-/// 自测里的**自评**记录（ADR 0082、0083）：只用来补两处作答记录管不到的地方——
-/// 本轮之后「还出不出」的过滤，以及没有相关题的条目（胎压灯这类）的兜底。
+/// 自测的**作答**记录（ADR 0082、0083、0085）：自测里每张卡判一次对错，这里记下结果，
+/// 只用来补两处作答记录管不到的地方——本轮之后「还出不出」的过滤，以及没有相关题的
+/// 条目（胎压灯这类）的兜底。0085 前记录的是自评，字段与格式原样沿用。
 ///
 /// **它不是掌握度，也不是「认得」的依据。** 速记卡有相关题的，「认得」只看作答记录
-/// （答对并掌握才算，见 `classifyEntry`）；自评再肯定也只能得到「自评认得，待做题确认」。
+/// （答对并掌握才算，见 `classifyEntry`）；自测答得再对也只能得到「自测答对，待做题确认」。
 /// 这份记录不进作答、不进统计与激励、不参与过关，也不同步——换一台机器就是重新自测一遍，
 /// 代价很小，换来的是不必为它改中心库的表结构。
 ///
@@ -24,7 +25,7 @@ class SelfTestStore {
     _load();
   }
 
-  /// 间隔复现（ADR 0083）：自评认得之后，隔这么多天再考一次；再次一次记住就升一级、间隔
+  /// 间隔复现（ADR 0083）：答对之后，隔这么多天再考一次；再次一次答对就升一级、间隔
   /// 拉长（1 → 3 → 7 → 21 天，封顶）。作答记录证明的掌握也按它的阶梯回头复现。
   static const intervalDays = [1, 3, 7, 21];
 
@@ -36,7 +37,7 @@ class SelfTestStore {
 
   DateTime now() => _clock();
 
-  /// 页面键 → 条目键 → 记录 `{c: 一次就记住的连续次数, m: 没记住的次数, t: 最近一次自评的毫秒时间}`。
+  /// 页面键 → 条目键 → 记录 `{c: 一次就答对的连续次数, m: 没答对的次数, t: 最近一次作答的毫秒时间}`。
   final Map<String, Map<String, Map<String, int>>> _pages = {};
 
   static String _safe(String user) => user.replaceAll(RegExp(r'[/\\:*?"<>|]'), "_");
@@ -52,22 +53,22 @@ class SelfTestStore {
     return since < Duration(days: daysForStage(e["c"]!));
   }
 
-  /// 自评认得、且还在复现间隔内：这段时间里自测不再出它。
+  /// 自测答对、且还在复现间隔内：这段时间里自测不再出它。
   bool isConfirmed(String page, String id) => _withinInterval(page, id);
 
-  /// 自评认得过、间隔到了：该再考一次，确认还记得。
+  /// 答对过、间隔到了：该再考一次，确认还记得。
   bool isOverdue(String page, String id) => _clean(page, id) >= 1 && !_withinInterval(page, id);
 
-  /// 最近一次自评是没记住：自测优先再考。
+  /// 最近一次作答没答对：自测优先再考。
   bool isLearning(String page, String id) {
     final e = _entry(page, id);
     return e != null && (e["c"] ?? 0) == 0 && (e["m"] ?? 0) > 0;
   }
 
-  /// 记一次自评。[firstTry]：这一轮里第一次问到它（没经过「没记住 → 重现」）。
-  /// - 第一次问就记住：一次就记住的次数 +1（间隔升一级），记下时间；
-  /// - 没记住：次数清零、没记住次数 +1；
-  /// - 重现后才记住：不加次数（提醒出来的不算自己想起来的），记录原样保留。
+  /// 记一次作答。[firstTry]：这一轮里第一次问到它（没经过「没答对 → 重现」）。
+  /// - 第一次问就答对：一次就答对的次数 +1（间隔升一级），记下时间；
+  /// - 没答对：次数清零、没答对次数 +1；
+  /// - 重现后才答对：不加次数（提醒出来的不算自己想起来的），记录原样保留。
   void record(String page, String id, {required bool remembered, required bool firstTry}) {
     final e = _pages.putIfAbsent(page, () => {}).putIfAbsent(id, () => {"c": 0, "m": 0, "t": 0});
     final stamp = now().millisecondsSinceEpoch;

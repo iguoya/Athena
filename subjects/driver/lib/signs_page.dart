@@ -100,6 +100,7 @@ class SignsPage extends StatelessWidget {
       related: [for (final q in daily) if (q.sign == sign.id) q],
       name: sign.name,
       meaning: sign.meaning,
+      group: sign.kind,
       confuseName: other?.name,
       confuseNote: sign.confuseNote,
       confuseView: other == null ? null : _signImage(other, 144),

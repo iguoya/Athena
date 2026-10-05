@@ -1820,8 +1820,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 易混数字的自测（ADR 0080）：每行「情形 → 数字」是一张卡，正面只给情形，
-  /// 揭示后看数字与出处；每轮抽 5 张，收尾深链练全部相关题。
+  /// 易混数字的自测（ADR 0080，ADR 0085 改四选一）：每行「情形 → 数字」是一张卡，
+  /// 正面只给情形，从四个数字里选一个，答后看数字与出处；每轮抽 5 张，收尾深链练全部相关题。
   void _numbersRecall(BuildContext context, Subject subject, List<Question> open) {
     RecallSession.show(
       context,
@@ -1829,7 +1829,7 @@ class _HomePageState extends State<HomePage> {
       store: _selfTest,
       histories: _histories,
       mastered: _mastered,
-      prompt: "想一想：这种情形对应的数字是多少？",
+      prompt: "想一想：这种情形对应的数字是多少？选一个。",
       entries: [
         for (final group in widget.bank.cheatsheet)
           for (final row in group.rows)
@@ -1860,6 +1860,8 @@ class _HomePageState extends State<HomePage> {
               related: group.related(open),
               name: row.value,
               meaning: "${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
+              // 干扰项同组优先：罚款混罚款、时速混时速（ADR 0085）。
+              group: group.id,
             ),
       ],
       onStartPractice: (questions) => _startPractice(subject, questions, "易混数字 · 自测"),

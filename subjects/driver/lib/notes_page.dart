@@ -80,8 +80,9 @@ class NotesPage extends StatelessWidget {
     );
   }
 
-  /// 自测（ADR 0080）：每个「情景」是一张卡，正面只给情景，揭示后看要点；
-  /// 每轮抽 5 张。收尾深链练全部相关题。
+  /// 自测（ADR 0080，ADR 0085 改四选一）：每个「情景」是一张卡，正面只给情景，从四条
+  /// 要点里选一条对的（该情景有多条要点时每次抽一条），答后看完整要点；干扰项取同组其他
+  /// 情景的要点。每轮抽 5 张。收尾深链练全部相关题。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
@@ -89,7 +90,7 @@ class NotesPage extends StatelessWidget {
       store: selfTest,
       histories: histories,
       mastered: mastered,
-      prompt: "想一想：碰到这个情景该怎么做？要点有哪些？",
+      prompt: "想一想：碰到这个情景该怎么做？选一条对的。",
       entries: [
         for (final group in groups)
           for (final item in group.items)
@@ -101,6 +102,9 @@ class NotesPage extends StatelessWidget {
               related: group.related(daily),
               name: "要点",
               meaning: [for (final point in item.points) "· $point"].join("\n"),
+              // 正确选项每次从该情景的要点里抽一条，干扰项同组优先（ADR 0085）。
+              group: group.id,
+              answerTexts: item.points,
             ),
       ],
       onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),

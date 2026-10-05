@@ -6,8 +6,8 @@ import "package:athena_driver/selftest_store.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 自测里「认得」的客观依据（ADR 0083）：有相关题的条目，认得只看作答记录；
-/// 自评最多得到「自评认得，待做题确认」，答错过的自评再肯定也还是要考；
-/// 没有相关题的条目才退回自评，同样按间隔回头确认。
+/// 自测里答对最多得到「自测答对，待做题确认」，答错过的自测答得再对也还是要考；
+/// 没有相关题的条目才退回自测作答（ADR 0085 起是选择题对错），同样按间隔回头确认。
 void main() {
   late Bank bank;
   late List<Question> related;
@@ -50,14 +50,14 @@ void main() {
     );
   });
 
-  test("自评只能得到 selfOnly；作答记录答错过的，自评再肯定也还是 wrong", () {
+  test("自测答对只能得到 selfOnly；作答记录答错过的，自测答得再对也还是 wrong", () {
     final store = SelfTestStore(clock: () => day1);
     store.record("signs", "stop", remembered: true, firstTry: true);
-    expect(classify(related, history({}), store), RecallBucket.selfOnly, reason: "自评认得但没有作答证明，先不出");
+    expect(classify(related, history({}), store), RecallBucket.selfOnly, reason: "自测答对但没有作答证明，先不出");
     expect(
       classify(related, history({related[0]: [(false, day1)]}), store),
       RecallBucket.wrong,
-      reason: "客观证据压过自评",
+      reason: "客观证据压过自测作答",
     );
   });
 
@@ -74,7 +74,7 @@ void main() {
     expect(classify([q], h, later, mastered: {q.id}), RecallBucket.due);
   });
 
-  test("没有相关题：退回自评——没记住过 wrong，认得 known，到期 due，没考过 fresh", () {
+  test("没有相关题：退回自测作答——没答对过 wrong，答对 known，到期 due，没考过 fresh", () {
     var now = day1;
     final store = SelfTestStore(clock: () => now);
     final h = history({});

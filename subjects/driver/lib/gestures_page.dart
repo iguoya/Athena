@@ -141,6 +141,7 @@ class GesturesPage extends StatelessWidget {
       related: [for (final q in daily) if (g.questions.contains(q.id)) q],
       name: g.name,
       meaning: g.meaning,
+      group: g.kind,
       confuseName: other?.name,
       confuseNote: g.confuseNote,
       confuseView: other == null ? null : _gestureImage(other, 144),

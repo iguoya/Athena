@@ -3,26 +3,26 @@ import "dart:io";
 import "package:athena_driver/selftest_store.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 自测的自评记录（ADR 0082、0083）：只管「这段时间还出不出」，不是掌握度，
-/// 也不是「认得」的依据；自评认得的条目按 1 / 3 / 7 / 21 天的间隔回头考。
+/// 自测的作答记录（ADR 0082、0083，ADR 0085 起记录的是选择题对错）：只管「这段时间还出不出」，
+/// 不是掌握度，也不是「认得」的依据；答对过的条目按 1 / 3 / 7 / 21 天的间隔回头考。
 void main() {
   late Directory dir;
   setUp(() => dir = Directory.systemTemp.createTempSync("athena-selftest-"));
   tearDown(() => dir.deleteSync(recursive: true));
 
-  test("第一次问就记住算自评认得，没记住清零，重现后才记住不算", () {
+  test("第一次问就答对算一次，没答对清零，重现后才答对不算", () {
     final store = SelfTestStore();
     expect(store.isConfirmed("signs", "stop"), isFalse);
-    expect(store.isLearning("signs", "stop"), isFalse, reason: "没考过不是「没记住过」");
+    expect(store.isLearning("signs", "stop"), isFalse, reason: "没考过不是「没答对过」");
 
     store.record("signs", "stop", remembered: false, firstTry: true);
     expect(store.isLearning("signs", "stop"), isTrue);
-    // 没记住后重现、这次记住了：是被提醒出来的，不算认得。
+    // 没答对后重现、这次答对了：是被提醒出来的，不算认得。
     store.record("signs", "stop", remembered: true, firstTry: false);
     expect(store.isConfirmed("signs", "stop"), isFalse);
     expect(store.isLearning("signs", "stop"), isTrue);
 
-    // 下一轮第一次问就记住：自评认得。
+    // 下一轮第一次问就答对：这次不再出。
     store.record("signs", "stop", remembered: true, firstTry: true);
     expect(store.isConfirmed("signs", "stop"), isTrue);
     expect(store.isLearning("signs", "stop"), isFalse);
@@ -31,7 +31,7 @@ void main() {
     expect(store.isConfirmed("markings", "stop"), isFalse);
   });
 
-  test("间隔复现：1 天后到期重考，再次一次记住升级、间隔拉长到 3、7、21 天", () {
+  test("间隔复现：1 天后到期重考，再次一次答对升级、间隔拉长到 3、7、21 天", () {
     var now = DateTime(2026, 10, 1, 9);
     final store = SelfTestStore(clock: () => now);
     store.record("signs", "stop", remembered: true, firstTry: true);
@@ -43,14 +43,14 @@ void main() {
     expect(store.isConfirmed("signs", "stop"), isFalse);
     expect(store.isOverdue("signs", "stop"), isTrue, reason: "到期：该再考一次确认还记得");
 
-    // 到期后再次一次就记住：升到第 2 级，间隔 3 天。
+    // 到期后再次一次就答对：升到第 2 级，间隔 3 天。
     store.record("signs", "stop", remembered: true, firstTry: true);
     now = now.add(const Duration(days: 2, hours: 23));
     expect(store.isConfirmed("signs", "stop"), isTrue);
     now = now.add(const Duration(hours: 2));
     expect(store.isOverdue("signs", "stop"), isTrue);
 
-    // 到期后没记住：清零，成了「没记住过」，不再算到期。
+    // 到期后没答对：清零，成了「没答对过」，不再算到期。
     store.record("signs", "stop", remembered: false, firstTry: true);
     expect(store.isOverdue("signs", "stop"), isFalse);
     expect(store.isLearning("signs", "stop"), isTrue);

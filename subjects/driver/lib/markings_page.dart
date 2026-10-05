@@ -98,6 +98,7 @@ class MarkingsPage extends StatelessWidget {
       related: [for (final q in daily) if (q.marking == marking.id) q],
       name: marking.name,
       meaning: marking.meaning,
+      group: marking.kind,
       confuseName: other?.name,
       confuseNote: marking.confuseNote,
       confuseView: other == null ? null : _markingImage(other, 168),

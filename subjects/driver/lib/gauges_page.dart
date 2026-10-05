@@ -95,6 +95,7 @@ class GaugesPage extends StatelessWidget {
       related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
       name: gauge.name,
       meaning: gauge.meaning,
+      group: gauge.kind,
       confuseName: other?.name,
       confuseNote: gauge.confuseNote,
       confuseView: other == null ? null : _gaugeImage(other, 168),
