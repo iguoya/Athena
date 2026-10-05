@@ -7,7 +7,7 @@ import "marking.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 
 /// 标线速记页（ADR 0065）：手绘标线按「指示 / 禁止 / 警告」三组摊开，每条配一句
 /// 「看到之后怎么开」，每组能直接练相关的题。内容源是 `content/markings.json`
@@ -20,7 +20,7 @@ class MarkingsPage extends StatelessWidget {
     required this.daily,
     required this.all,
     required this.mastered,
-    required this.selfTest,
+    required this.onRecallAnswer,
     required this.onStartPractice,
   });
 
@@ -36,8 +36,8 @@ class MarkingsPage extends StatelessWidget {
   final List<Question> all;
   final Set<String> mastered;
 
-  /// 自测的「认得了没有」记录（ADR 0082）。
-  final SelfTestStore selfTest;
+  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
+  final RecallAnswerRecorder onRecallAnswer;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定，三分法与题库一致
@@ -88,19 +88,14 @@ class MarkingsPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(Marking marking) {
+  RecallEntry _recallEntryOf(Marking marking, RecallCard card) {
     final other = marking.confuseWith == null
         ? null
-        : markings.where((m) => m.id == marking.confuseWith).firstOrNull;
-    return RecallEntry(
-      id: marking.id,
+        : markings.where((x) => x.id == marking.confuseWith).firstOrNull;
+    return RecallEntry.fromCard(
+      card,
       front: _markingImage(marking, 400),
       related: [for (final q in daily) if (q.marking == marking.id) q],
-      name: marking.name,
-      meaning: marking.meaning,
-      group: marking.kind,
-      confuseName: other?.name,
-      confuseNote: marking.confuseNote,
       confuseView: other == null ? null : _markingImage(other, 168),
     );
   }
@@ -116,13 +111,13 @@ class MarkingsPage extends StatelessWidget {
 
   /// 自测：把没认得的标线逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
+    final cards = {for (final c in recallCardsOfMarkings(markings)) c.id: c};
     RecallSession.show(
       context,
-      pageKey: "markings",
-      store: selfTest,
+      onAnswer: onRecallAnswer,
       histories: histories,
       mastered: mastered,
-      entries: [for (final m in markings) _recallEntryOf(m)],
+      entries: [for (final m in markings) _recallEntryOf(m, cards[m.id]!)],
       onStartPractice: (questions) => onStartPractice(questions, "标线速记 · 自测"),
     );
   }

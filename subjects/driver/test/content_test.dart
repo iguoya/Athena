@@ -5,6 +5,7 @@ import "dart:math";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/exam.dart";
 import "package:athena_driver/models.dart";
+import "package:athena_driver/recall_cards.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
@@ -18,7 +19,13 @@ void main() {
         for (final topic in subject.topics) topic.id,
     };
     for (final question in bank.questions) {
-      expect(topics, contains(question.topicId));
+      // 速记题（ADR 0094）故意不在课表里：日常题、章节练习、模拟考、解锁判断都不会带上它。
+      if (isRecallQuestionId(question.id)) {
+        expect(question.topicId, startsWith(recallTopicPrefix));
+        expect(topics.contains(question.topicId), isFalse);
+      } else {
+        expect(topics, contains(question.topicId));
+      }
       expect(question.choices.where((c) => c.ok), isNotEmpty);
       expect(question.sourceRefs, isNotEmpty);
       for (final ref in question.sourceRefs) {

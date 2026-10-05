@@ -98,3 +98,5 @@
 | [0091](0091-recall-entries-all-have-questions.md) | 速记条目必须有相关题——11 个豁免清零，覆盖进检查 | 已接受 |
 | [0092](0092-numbers-cloze-questions.md) | 易混数字自测出题——要考的数字挖成括号，长清单拆成单条 | 已接受 |
 | [0093](0093-exam-review-includes-unanswered.md) | 交卷复盘把没答的题也列出来——失分点一页看全 | 已接受（原撞号 0092） |
+| [0094](0094-self-test-into-answer-records.md) | 自测并入作答记录——速记卡是有编号的题，错题本、强化练习自然带出，去掉「认得」概念 | 已接受 |
+| [0095](0095-numbers-retyped-and-reversed.md) | 易混数字自测重新规划——数值手输、非数值选择、反向选情形 | 已接受 |

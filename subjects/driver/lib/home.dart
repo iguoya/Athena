@@ -7,7 +7,6 @@ import "package:flutter/material.dart";
 
 import "glyphs.dart";
 import "clusters.dart";
-import "cloze.dart";
 import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
@@ -20,7 +19,7 @@ import "progress.dart";
 import "recall.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 import "session.dart";
 import "signs_page.dart";
 import "skin.dart";
@@ -77,9 +76,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /// 自测的「认得了没有」记录（ADR 0082）：每位学习者一份本地文件，没登录名（测试）就只存内存。
-  /// 它只决定自测还出不出某张卡，不是掌握度，不进作答与统计。
-  late final SelfTestStore _selfTest = SelfTestStore(user: widget.currentUser);
+  /// 自测作答写成作答记录后，隔一会儿重读一次进度（ADR 0094）：错题本、强化练习、考前复习随之更新；
+  /// 连着答的几张合并成一次，免得每答一张就重算一遍。
+  Timer? _recallReloadTimer;
+
 
   static const _wrongId = "wrong";
   static const _reviewId = "review";
@@ -246,6 +246,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _recallReloadTimer?.cancel();
     widget.syncStatus?.removeListener(_onSyncChanged);
     super.dispose();
   }
@@ -311,7 +312,9 @@ class _HomePageState extends State<HomePage> {
     final theoryPool = [
       for (final q in widget.bank.questions)
         if (!q.isRare &&
-            (q.topicId.startsWith("drive.s1.") || q.topicId.startsWith("drive.s4.")) &&
+            (q.topicId.startsWith("drive.s1.") ||
+                q.topicId.startsWith("drive.s4.") ||
+                q.topicId.startsWith(recallTopicPrefix)) &&
             !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
           q,
     ];
@@ -1659,7 +1662,7 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.notes,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
@@ -1677,7 +1680,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1694,7 +1697,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1710,7 +1713,7 @@ class _HomePageState extends State<HomePage> {
       histories: _histories,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1725,14 +1728,14 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.henanGroups,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
         title,
       ),
-      selfTestKey: "henan",
+      recallPage: RecallPage.henan,
       title: "河南速记",
       icon: Glyph.henan,
       lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
@@ -1747,14 +1750,14 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.licenseGroups,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
         title,
       ),
-      selfTestKey: "license-notes",
+      recallPage: RecallPage.licenseNotes,
       title: "记分证照速记",
       icon: Glyph.licenseNotes,
       lead: "记分分档、证照期限、罚款档位、禁考年限、号牌登记——科目一最容易丢分的这几块，"
@@ -1774,7 +1777,7 @@ class _HomePageState extends State<HomePage> {
       histories: _histories,
       daily: both,
       mastered: _mastered,
-      selfTest: _selfTest,
+      onRecallAnswer: _recordRecall,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1821,56 +1824,66 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 易混数字的自测（ADR 0080，ADR 0085 改四选一）：每行「情形 → 数字」是一张卡，
-  /// 正面只给情形，从四个数字里选一个，答后看数字与出处；每轮抽 5 张，收尾深链练全部相关题。
+  /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
+  /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
   void _numbersRecall(BuildContext context, Subject subject, List<Question> open) {
+    final cards = recallCardsOfNumbers(widget.bank.cheatsheet);
+    final groups = {for (final g in widget.bank.cheatsheet) g.id: g};
     RecallSession.show(
       context,
-      pageKey: "numbers",
-      store: _selfTest,
+      onAnswer: _recordRecall,
       histories: _histories,
       mastered: _mastered,
-      prompt: "想一想：括号里该填什么？选一个。",
       entries: [
-        for (final group in widget.bank.cheatsheet)
-          for (final row in group.rows)
-            // 一行情形常是一长串，按「；」拆成单条，每条自成一题（ADR 0092）。
-            for (final single in splitCase(row.caseText))
-            RecallEntry(
-              // 键用单条情形原文加数字，不用序号：改版插行不会让旧记录错位。
-              id: "${group.id}/$single|${row.value}",
-              front: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      group.unit.isEmpty ? group.title : "${group.title}（${group.unit}）",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    // 题干里把要考的数字挖成括号（ADR 0092），原文里写着答案就等于送分。
-                    Text(
-                      clozeStem(single, row.value, groupUnit: group.unit),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
-                    ),
-                  ],
-                ),
-              ),
-              // 相关题只能到「组」一级：同一组的行共用（ADR 0083）。
-              related: group.related(open),
-              name: row.value,
-              // 答后给完整原文和出处：挖掉的数字在原文里原样可见。
-              meaning: "原文：${row.caseText}\n${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
-              // 干扰项同组优先：罚款混罚款、时速混时速（ADR 0085）。
-              group: group.id,
-            ),
+        for (final c in cards)
+          RecallEntry.fromCard(
+            c,
+            front: _numberFront(context, c),
+            // 关联真题只能到「组」一级：卡的组键是「f:组」或「r:组」。
+            related: groups[c.group!.substring(2)]?.related(open) ?? const [],
+          ),
       ],
       onStartPractice: (questions) => _startPractice(subject, questions, "易混数字 · 自测"),
     );
+  }
+
+  /// 易混数字卡的正面：组名（小）加题干（大）。
+  Widget _numberFront(BuildContext context, RecallCard card) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 560, minHeight: 100),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            card.inputLabel ?? "",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            card.stem ?? "",
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 自测每判一张，写一条普通作答记录（ADR 0094）：题号是速记题的编号，知识点是 `drive.recall.<页>`，
+  /// 场合是练习。不记所选选项——自测的选项每次打乱，字母对不上固定的题面。
+  Future<void> _recordRecall(RecallEntry entry, {required bool correct}) async {
+    await widget.store.recordAttempt(
+      questionId: entry.questionId,
+      topicId: recallTopicOf(entry.questionId),
+      subjectId: "subject1",
+      correct: correct,
+    );
+    _recallReloadTimer?.cancel();
+    _recallReloadTimer = Timer(const Duration(milliseconds: 800), () {
+      if (mounted) unawaited(_reload());
+    });
   }
 
   Widget _numberGroup(
@@ -2016,7 +2029,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> _ensureClusters() async {
     if (_clustersStarted) return;
     _clustersStarted = true;
-    final index = await widget.clusterBuilder(widget.bank.questions);
+    // 速记题的题干是「这是什么标志？」这类模板句，同考点变式是给真题配的，不带它们。
+    final index = await widget.clusterBuilder([for (final q in widget.bank.questions) if (!isRecallQuestionId(q.id)) q]);
     if (!mounted) return;
     setState(() {
       _clusters = index;

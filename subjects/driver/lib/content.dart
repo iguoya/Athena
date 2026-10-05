@@ -8,6 +8,7 @@ import "app_root.dart";
 import "gesture_index.dart";
 import "guide.dart";
 import "models.dart";
+import "recall_cards.dart";
 
 class ContentLoader {
   /// 读到内容的那个根目录；开发时是工作树，发行包里为空（走 assets）。
@@ -72,7 +73,25 @@ class ContentLoader {
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
     final guide = Subject2Guide.fromJson(jsonDecode(await _read("subject2.json")) as Map<String, dynamic>);
-    return Bank(curriculum: curriculum, questions: questions, signs: signs, markings: markings, gauges: gauges, gestureList: gestureList, cheatsheet: cheatsheet, notes: notes, henanGroups: henanGroups, licenseGroups: licenseGroups, guide: guide);
+    // 速记题（ADR 0094）：每张速记卡一道有稳定编号的题，自测作答写成作答记录后，错题本、考前复习、强化练习
+    // 按同一份记录带出。知识点号不在课表里，日常题、章节练习、模拟考、解锁判断都不会带上它。
+    final catalog = jsonDecode(await _read("sources/catalog.json")) as Map<String, dynamic>;
+    final sourceUrls = {
+      for (final raw in catalog["sources"] as List<dynamic>)
+        (raw as Map<String, dynamic>)["id"] as String: raw["url"] as String? ?? "",
+    };
+    final recall = recallQuestionsOf(
+      signs: signs,
+      markings: markings,
+      gauges: gauges,
+      gestures: gestureList,
+      notes: notes,
+      henan: henanGroups,
+      licenseNotes: licenseGroups,
+      numbers: cheatsheet,
+      sourceUrls: sourceUrls,
+    );
+    return Bank(curriculum: curriculum, questions: [...questions, ...recall], signs: signs, markings: markings, gauges: gauges, gestureList: gestureList, cheatsheet: cheatsheet, notes: notes, henanGroups: henanGroups, licenseGroups: licenseGroups, guide: guide);
   }
 
   static List<RoadSign> _signsOf(String raw) {

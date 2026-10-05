@@ -28,7 +28,7 @@ String? _unitOf(String value) {
 /// 别的数字是条件、不是答案，不能一起挖——`高速车速超过 100 公里/小时：与同车道前车保持
 /// 100 米以上`，答案 100 米，就只挖后面那个 100，速度条件留着。没有可挖的数字（或者单位对不上），
 /// 就在句尾补一个括号，题干里绝不会留着答案。
-String clozeStem(String caseText, String value, {String groupUnit = ""}) {
+String clozeStem(String caseText, String value, {String groupUnit = "", bool appendBlank = true}) {
   final unit = _unitOf(value) ?? groupUnit;
   final numbers = {for (final m in _number.allMatches(value)) m[0]!};
   var stem = caseText;
@@ -44,5 +44,6 @@ String clozeStem(String caseText, String value, {String groupUnit = ""}) {
       }
     }
   }
-  return masked ? stem : "$stem →$clozeBlank";
+  // 手输题下面自己带输入框，不需要在句尾再补括号（appendBlank 为假）。
+  return masked || !appendBlank ? stem : "$stem →$clozeBlank";
 }

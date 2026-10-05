@@ -6,7 +6,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 import "sign.dart";
 
 /// 标志速记页（ADR 0059）：标志按「禁令 / 警告 / 指示 / 指路」四组摊开，
@@ -22,7 +22,7 @@ class SignsPage extends StatelessWidget {
     required this.daily,
     required this.all,
     required this.mastered,
-    required this.selfTest,
+    required this.onRecallAnswer,
     required this.onStartPractice,
   });
 
@@ -38,8 +38,8 @@ class SignsPage extends StatelessWidget {
   final List<Question> all;
   final Set<String> mastered;
 
-  /// 自测的「认得了没有」记录（ADR 0082）。
-  final SelfTestStore selfTest;
+  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
+  final RecallAnswerRecorder onRecallAnswer;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的形状口诀；分组本身由 json 的 `kind` 决定。
@@ -90,19 +90,14 @@ class SignsPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(RoadSign sign) {
+  RecallEntry _recallEntryOf(RoadSign sign, RecallCard card) {
     final other = sign.confuseWith == null
         ? null
-        : signs.where((s) => s.id == sign.confuseWith).firstOrNull;
-    return RecallEntry(
-      id: sign.id,
+        : signs.where((x) => x.id == sign.confuseWith).firstOrNull;
+    return RecallEntry.fromCard(
+      card,
       front: _signImage(sign, 288),
       related: [for (final q in daily) if (q.sign == sign.id) q],
-      name: sign.name,
-      meaning: sign.meaning,
-      group: sign.kind,
-      confuseName: other?.name,
-      confuseNote: sign.confuseNote,
       confuseView: other == null ? null : _signImage(other, 144),
     );
   }
@@ -116,13 +111,13 @@ class SignsPage extends StatelessWidget {
 
   /// 自测：把没认得的标志逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
+    final cards = {for (final c in recallCardsOfSigns(signs)) c.id: c};
     RecallSession.show(
       context,
-      pageKey: "signs",
-      store: selfTest,
+      onAnswer: onRecallAnswer,
       histories: histories,
       mastered: mastered,
-      entries: [for (final s in signs) _recallEntryOf(s)],
+      entries: [for (final s in signs) _recallEntryOf(s, cards[s.id]!)],
       onStartPractice: (questions) => onStartPractice(questions, "标志速记 · 自测"),
     );
   }

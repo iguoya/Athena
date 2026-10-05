@@ -5,7 +5,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 
 /// 考点速记页（ADR 0064）：灯光、让行、高速、恶劣天气、应急避险、伤员急救的
 /// 「情景 → 要点」对照。内容源是 `content/notes.json`，条级挂出处，每组能直接
@@ -17,10 +17,10 @@ class NotesPage extends StatelessWidget {
     required this.groups,
     required this.daily,
     required this.mastered,
-    required this.selfTest,
+    required this.onRecallAnswer,
     required this.histories,
     required this.onStartPractice,
-    this.selfTestKey = "keypoints",
+    this.recallPage = RecallPage.keypoints,
     this.title = "考点速记",
     this.icon = Glyph.notes,
     this.lead = "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
@@ -34,13 +34,14 @@ class NotesPage extends StatelessWidget {
   final Set<String> mastered;
   final void Function(List<Question> questions, String title) onStartPractice;
 
-  /// 自测的「认得了没有」记录与本页的键（ADR 0082）：考点、河南、记分证照三页共用
-  /// 本组件，各用各的键。
-  final SelfTestStore selfTest;
+  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
+  final RecallAnswerRecorder onRecallAnswer;
 
-  /// 作答历史：自测「认得」的客观依据（ADR 0083）。
+  /// 作答历史：自测按它判断哪些卡还要考（ADR 0094）。
   final HistorySet histories;
-  final String selfTestKey;
+
+  /// 本页的速记页键（作答记录里的题号带它）：考点、河南、记分证照三页共用本组件，各用各的。
+  final String recallPage;
 
   /// 页面标题与图标：同一组件承载同一类「情景 → 要点对照」的内容，
   /// 河南速记（ADR 0068）传自己的标题、图标与脚注。
@@ -84,28 +85,21 @@ class NotesPage extends StatelessWidget {
   /// 要点里选一条对的（该情景有多条要点时每次抽一条），答后看完整要点；干扰项取同组其他
   /// 情景的要点。每轮抽 5 张。收尾深链练全部相关题。
   void _startRecall(BuildContext context) {
+    final cards = recallCardsOfNotes(recallPage, groups);
     RecallSession.show(
       context,
-      pageKey: selfTestKey,
-      store: selfTest,
+      onAnswer: onRecallAnswer,
       histories: histories,
       mastered: mastered,
       prompt: "想一想：碰到这个情景该怎么做？选一条对的。",
       entries: [
-        for (final group in groups)
-          for (final item in group.items)
-            RecallEntry(
-              // 键用情景原文而不是序号：以后在组里插条目，旧记录不会错位到别的条目上。
-              id: "${group.id}/${item.scenario}",
-              front: _scenarioFront(context, group.title, item.scenario),
-              // 相关题只能到「组」一级：同一组的条目共用（ADR 0083）。
-              related: group.related(daily),
-              name: "要点",
-              meaning: [for (final point in item.points) "· $point"].join("\n"),
-              // 正确选项每次从该情景的要点里抽一条，干扰项同组优先（ADR 0085）。
-              group: group.id,
-              answerTexts: item.points,
-            ),
+        for (final (i, e) in [for (final group in groups) for (final item in group.items) (group, item)].indexed)
+          RecallEntry.fromCard(
+            cards[i],
+            front: _scenarioFront(context, e.$1.title, e.$2.scenario),
+            // 关联真题只能到「组」一级：同一组的条目共用（ADR 0083）。
+            related: e.$1.related(daily),
+          ),
       ],
       onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),
     );

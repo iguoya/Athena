@@ -8,7 +8,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 
 /// 手势速记页（ADR 0073）：8 个法定手势动作加「手势的效力」总则，每条配一句
 /// 「看到之后怎么开」，反向映射的 29 道题能直接练。内容源是
@@ -20,7 +20,7 @@ class GesturesPage extends StatelessWidget {
     required this.histories,
     required this.daily,
     required this.mastered,
-    required this.selfTest,
+    required this.onRecallAnswer,
     required this.onStartPractice,
   });
 
@@ -33,8 +33,8 @@ class GesturesPage extends StatelessWidget {
   final List<Question> daily;
   final Set<String> mastered;
 
-  /// 自测的「认得了没有」记录（ADR 0082）。
-  final SelfTestStore selfTest;
+  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
+  final RecallAnswerRecorder onRecallAnswer;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   @override
@@ -131,19 +131,14 @@ class GesturesPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(TrafficGesture g) {
+  RecallEntry _recallEntryOf(TrafficGesture g, RecallCard card) {
     final other = g.confuseWith == null
         ? null
         : gestures.where((x) => x.id == g.confuseWith).firstOrNull;
-    return RecallEntry(
-      id: g.id,
+    return RecallEntry.fromCard(
+      card,
       front: _gestureImage(g, 288),
       related: [for (final q in daily) if (g.questions.contains(q.id)) q],
-      name: g.name,
-      meaning: g.meaning,
-      group: g.kind,
-      confuseName: other?.name,
-      confuseNote: g.confuseNote,
       confuseView: other == null ? null : _gestureImage(other, 144),
     );
   }
@@ -158,14 +153,14 @@ class GesturesPage extends StatelessWidget {
 
   /// 自测：把没认得的手势逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
+    final cards = {for (final c in recallCardsOfGestures(gestures)) c.id: c};
     RecallSession.show(
       context,
-      pageKey: "gestures",
-      store: selfTest,
+      onAnswer: onRecallAnswer,
       histories: histories,
       mastered: mastered,
       // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
-      entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g)],
+      entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g, cards[g.id]!)],
       onStartPractice: (questions) => onStartPractice(questions, "手势速记 · 自测"),
     );
   }

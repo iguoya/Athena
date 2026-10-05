@@ -7,7 +7,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
-import "selftest_store.dart";
+import "recall_cards.dart";
 
 /// 仪表速记页（ADR 0067）：手绘车内符号按「报警灯 / 指示灯 / 仪表表盘 /
 /// 开关与操纵件」四组摊开，每条配一句「亮了怎么办 / 这是什么」，每组能直接
@@ -20,7 +20,7 @@ class GaugesPage extends StatelessWidget {
     required this.histories,
     required this.daily,
     required this.mastered,
-    required this.selfTest,
+    required this.onRecallAnswer,
     required this.onStartPractice,
   });
 
@@ -33,8 +33,8 @@ class GaugesPage extends StatelessWidget {
   final List<Question> daily;
   final Set<String> mastered;
 
-  /// 自测的「认得了没有」记录（ADR 0082）。
-  final SelfTestStore selfTest;
+  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
+  final RecallAnswerRecorder onRecallAnswer;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定。
@@ -85,19 +85,14 @@ class GaugesPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(Gauge gauge) {
+  RecallEntry _recallEntryOf(Gauge gauge, RecallCard card) {
     final other = gauge.confuseWith == null
         ? null
-        : gauges.where((g) => g.id == gauge.confuseWith).firstOrNull;
-    return RecallEntry(
-      id: gauge.id,
+        : gauges.where((x) => x.id == gauge.confuseWith).firstOrNull;
+    return RecallEntry.fromCard(
+      card,
       front: _gaugeImage(gauge, 360),
       related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
-      name: gauge.name,
-      meaning: gauge.meaning,
-      group: gauge.kind,
-      confuseName: other?.name,
-      confuseNote: gauge.confuseNote,
       confuseView: other == null ? null : _gaugeImage(other, 168),
     );
   }
@@ -113,13 +108,13 @@ class GaugesPage extends StatelessWidget {
 
   /// 自测：把没认得的符号逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
+    final cards = {for (final c in recallCardsOfGauges(gauges)) c.id: c};
     RecallSession.show(
       context,
-      pageKey: "gauges",
-      store: selfTest,
+      onAnswer: onRecallAnswer,
       histories: histories,
       mastered: mastered,
-      entries: [for (final g in gauges) _recallEntryOf(g)],
+      entries: [for (final g in gauges) _recallEntryOf(g, cards[g.id]!)],
       onStartPractice: (questions) => onStartPractice(questions, "仪表速记 · 自测"),
     );
   }
