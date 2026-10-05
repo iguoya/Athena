@@ -97,6 +97,7 @@ class SignsPage extends StatelessWidget {
     return RecallEntry(
       id: sign.id,
       front: _signImage(sign, 288),
+      related: [for (final q in daily) if (q.sign == sign.id) q],
       name: sign.name,
       meaning: sign.meaning,
       confuseName: other?.name,
@@ -118,12 +119,10 @@ class SignsPage extends StatelessWidget {
       context,
       pageKey: "signs",
       store: selfTest,
+      histories: histories,
+      mastered: mastered,
       entries: [for (final s in signs) _recallEntryOf(s)],
-      onStartPractice: () {
-        final ids = {for (final s in signs) s.id};
-        final related = [for (final q in daily) if (q.sign != null && ids.contains(q.sign)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标志速记 · 自测");
-      },
+      onStartPractice: (questions) => onStartPractice(questions, "标志速记 · 自测"),
     );
   }
 

@@ -95,6 +95,7 @@ class MarkingsPage extends StatelessWidget {
     return RecallEntry(
       id: marking.id,
       front: _markingImage(marking, 400),
+      related: [for (final q in daily) if (q.marking == marking.id) q],
       name: marking.name,
       meaning: marking.meaning,
       confuseName: other?.name,
@@ -118,12 +119,10 @@ class MarkingsPage extends StatelessWidget {
       context,
       pageKey: "markings",
       store: selfTest,
+      histories: histories,
+      mastered: mastered,
       entries: [for (final m in markings) _recallEntryOf(m)],
-      onStartPractice: () {
-        final ids = {for (final m in markings) m.id};
-        final related = [for (final q in daily) if (q.marking != null && ids.contains(q.marking)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 自测");
-      },
+      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · 自测"),
     );
   }
 

@@ -1659,6 +1659,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
       selfTest: _selfTest,
+      histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1724,6 +1725,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
       selfTest: _selfTest,
+      histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1745,6 +1747,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
       selfTest: _selfTest,
+      histories: _histories,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1824,6 +1827,8 @@ class _HomePageState extends State<HomePage> {
       context,
       pageKey: "numbers",
       store: _selfTest,
+      histories: _histories,
+      mastered: _mastered,
       prompt: "想一想：这种情形对应的数字是多少？",
       entries: [
         for (final group in widget.bank.cheatsheet)
@@ -1851,19 +1856,13 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              // 相关题只能到「组」一级：同一组的行共用（ADR 0083）。
+              related: group.related(open),
               name: row.value,
               meaning: "${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
             ),
       ],
-      onStartPractice: () {
-        final seen = <String>{};
-        final related = [
-          for (final group in widget.bank.cheatsheet)
-            for (final q in group.related(open))
-              if (seen.add(q.id)) q,
-        ];
-        if (related.isNotEmpty) _startPractice(subject, related, "易混数字 · 自测");
-      },
+      onStartPractice: (questions) => _startPractice(subject, questions, "易混数字 · 自测"),
     );
   }
 

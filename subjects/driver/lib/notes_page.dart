@@ -4,6 +4,7 @@ import "glyphs.dart";
 import "look.dart";
 import "models.dart";
 import "recall.dart";
+import "reinforce.dart";
 import "selftest_store.dart";
 
 /// 考点速记页（ADR 0064）：灯光、让行、高速、恶劣天气、应急避险、伤员急救的
@@ -17,6 +18,7 @@ class NotesPage extends StatelessWidget {
     required this.daily,
     required this.mastered,
     required this.selfTest,
+    required this.histories,
     required this.onStartPractice,
     this.selfTestKey = "keypoints",
     this.title = "考点速记",
@@ -35,6 +37,9 @@ class NotesPage extends StatelessWidget {
   /// 自测的「认得了没有」记录与本页的键（ADR 0082）：考点、河南、记分证照三页共用
   /// 本组件，各用各的键。
   final SelfTestStore selfTest;
+
+  /// 作答历史：自测「认得」的客观依据（ADR 0083）。
+  final HistorySet histories;
   final String selfTestKey;
 
   /// 页面标题与图标：同一组件承载同一类「情景 → 要点对照」的内容，
@@ -82,6 +87,8 @@ class NotesPage extends StatelessWidget {
       context,
       pageKey: selfTestKey,
       store: selfTest,
+      histories: histories,
+      mastered: mastered,
       prompt: "想一想：碰到这个情景该怎么做？要点有哪些？",
       entries: [
         for (final group in groups)
@@ -90,19 +97,13 @@ class NotesPage extends StatelessWidget {
               // 键用情景原文而不是序号：以后在组里插条目，旧记录不会错位到别的条目上。
               id: "${group.id}/${item.scenario}",
               front: _scenarioFront(context, group.title, item.scenario),
+              // 相关题只能到「组」一级：同一组的条目共用（ADR 0083）。
+              related: group.related(daily),
               name: "要点",
               meaning: [for (final point in item.points) "· $point"].join("\n"),
             ),
       ],
-      onStartPractice: () {
-        final seen = <String>{};
-        final related = [
-          for (final group in groups)
-            for (final q in group.related(daily))
-              if (seen.add(q.id)) q,
-        ];
-        if (related.isNotEmpty) onStartPractice(related, "$title · 自测");
-      },
+      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),
     );
   }
 

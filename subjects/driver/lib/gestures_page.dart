@@ -138,6 +138,7 @@ class GesturesPage extends StatelessWidget {
     return RecallEntry(
       id: g.id,
       front: _gestureImage(g, 288),
+      related: [for (final q in daily) if (g.questions.contains(q.id)) q],
       name: g.name,
       meaning: g.meaning,
       confuseName: other?.name,
@@ -160,13 +161,11 @@ class GesturesPage extends StatelessWidget {
       context,
       pageKey: "gestures",
       store: selfTest,
+      histories: histories,
+      mastered: mastered,
       // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
       entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g)],
-      onStartPractice: () {
-        final ids = {for (final g in gestures) ...g.questions};
-        final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 自测");
-      },
+      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · 自测"),
     );
   }
 

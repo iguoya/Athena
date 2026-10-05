@@ -56,19 +56,80 @@ SymbolStatus statusOf({
   return related.every((q) => mastered.contains(q.id)) ? SymbolStatus.mastered : SymbolStatus.partial;
 }
 
-/// 速记页的「自测」模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的）：
-/// 卡片流式检索练习。
+/// 一张速记卡现在属于哪一档（ADR 0083）。按「该不该考」从急到缓：
+/// [wrong] 作答记录里答错过、或自评没记住过——最该考；
+/// [due] 之前认得，复现间隔到了——该确认还记得；
+/// [fresh] 没有任何证据——还没考过；
+/// [partial] 相关题只做了一部分、没答错——次之；
+/// [selfOnly] 自评认得（在间隔内）但作答记录还没证明——自测先不出，留给做题确认；
+/// [known] 作答记录证明已掌握（或没有相关题、自评认得且在间隔内）——不考。
+enum RecallBucket { wrong, due, fresh, partial, selfOnly, known }
+
+/// 这一档里自测会抽的，按先后顺序。
+const recallDrawOrder = [RecallBucket.wrong, RecallBucket.due, RecallBucket.fresh, RecallBucket.partial];
+
+/// 判一张卡的档位。**「认得」以作答记录为准**（ADR 0083）：自评主观、会高估自己，所以
+/// 有相关题的条目，只有相关题全部答对并掌握才算认得；自评最多得到 [RecallBucket.selfOnly]，
+/// 而且作答记录里答错过的，自评再肯定也还是 [RecallBucket.wrong]。没有相关题的条目
+/// （胎压灯这类）没有客观证据可用，才退回自评，同样按间隔复现。
+RecallBucket classifyEntry({
+  required List<Question> related,
+  required Set<String> mastered,
+  required HistorySet histories,
+  required SelfTestStore store,
+  required String page,
+  required String id,
+}) {
+  if (related.isEmpty) {
+    if (store.isLearning(page, id)) return RecallBucket.wrong;
+    if (store.isConfirmed(page, id)) return RecallBucket.known;
+    if (store.isOverdue(page, id)) return RecallBucket.due;
+    return RecallBucket.fresh;
+  }
+  final status = statusOf(related: related, mastered: mastered, histories: histories);
+  switch (status) {
+    case SymbolStatus.wrong:
+      return RecallBucket.wrong;
+    case SymbolStatus.mastered:
+      return _masteryOverdue(related, histories, store.now()) ? RecallBucket.due : RecallBucket.known;
+    case SymbolStatus.partial:
+    case SymbolStatus.fresh:
+      if (store.isLearning(page, id)) return RecallBucket.wrong;
+      if (store.isConfirmed(page, id)) return RecallBucket.selfOnly;
+      if (store.isOverdue(page, id)) return RecallBucket.due;
+      return status == SymbolStatus.partial ? RecallBucket.partial : RecallBucket.fresh;
+  }
+}
+
+/// 作答记录证明了掌握，但离最近一次作答已经过了复现间隔：该回头确认还记得。
+/// 阶梯按相关题里连对跨过的天数最少的那道算（越稳固，间隔越长）。
+bool _masteryOverdue(List<Question> related, HistorySet histories, DateTime now) {
+  DateTime? oldest;
+  var stage = SelfTestStore.intervalDays.length;
+  for (final q in related) {
+    final h = histories.byQuestion[q.id];
+    if (h == null || h.lastAt == null) return false;
+    if (oldest == null || h.lastAt!.isBefore(oldest)) oldest = h.lastAt;
+    if (h.streakDays.length < stage) stage = h.streakDays.length;
+  }
+  if (oldest == null) return false;
+  return now.difference(oldest) >= Duration(days: SelfTestStore.daysForStage(stage));
+}
+
+/// 速记页的「自测」模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的，
+/// ADR 0083 「认得」改以作答记录为准）：卡片流式检索练习。
 ///
 /// 正面是条目自己提供的 [RecallEntry.front]（规范图或情景文字），先回想再点/空格揭示
 /// 答案，自评「记住了（1）/ 没记住（2）」。
 ///
-/// **只考没认得的**（ADR 0082）：自评实时记进 [SelfTestStore]——一轮里第一次问就记住的
-/// 条目标为「已认得」，以后不再出；没记住的隔两张后重现，下一轮也优先再考。每轮抽
-/// [RecallSession.batchSize] 个：先取没记住过的几个，再取从没考过的，不够再补。全部
-/// 认得了就说清楚，并给「重新自测」。随时可退出（右上角按钮或 Esc），已经评过的不丢。
+/// **只考没证明认得的，而且认得看作答记录，不看自评**：每轮从 [recallDrawOrder] 的档位里
+/// 依次抽 [RecallSession.batchSize] 个——答错过的先来，到期复现的次之，没考过的再次，
+/// 相关题只做了一部分的最后；作答记录证明已掌握的不出，自评认得、还没有作答证明的也先不出
+/// （[RecallBucket.selfOnly]，留给做题确认）。没记住的隔两张后重现。每评一张就记一张，随时
+/// 可退出（右上角按钮或 Esc）。收尾给「去做这几个的题」：把这一轮没记住、或只有自评的几个
+/// 条目的相关题起一轮练习，让作答记录来确认——真正的记忆闭环由作答通路完成。
 ///
-/// 记录**不是掌握度**：不写作答、不进统计与激励，真正的记忆闭环仍由「去练这组题」走
-/// 作答通路完成。
+/// 自评记录**不是掌握度**：不写作答、不进统计与激励。
 class RecallSession extends StatefulWidget {
   const RecallSession({
     super.key,
@@ -76,6 +137,8 @@ class RecallSession extends StatefulWidget {
     required this.onStartPractice,
     required this.pageKey,
     required this.store,
+    required this.histories,
+    required this.mastered,
     this.prompt = defaultPrompt,
     this.batchSize = defaultBatchSize,
   });
@@ -91,19 +154,25 @@ class RecallSession extends StatefulWidget {
   final String pageKey;
   final SelfTestStore store;
 
+  /// 作答历史与已掌握集合：「认得」的客观依据（ADR 0083）。
+  final HistorySet histories;
+  final Set<String> mastered;
+
   /// 正面卡下方的提问句：符号页问「这是什么」，数字与要点页问「是多少 / 怎么办」。
   final String prompt;
   final int batchSize;
 
-  /// 收尾的「去练这组」深链；页面自己算相关题并起练习。
-  final void Function() onStartPractice;
+  /// 收尾的「去做这几个的题」：收到这些条目相关题的去重并集；页面起一轮练习。
+  final void Function(List<Question> questions) onStartPractice;
 
   static Future<void> show(
     BuildContext context, {
     required List<RecallEntry> entries,
-    required void Function() onStartPractice,
+    required void Function(List<Question> questions) onStartPractice,
     required String pageKey,
     required SelfTestStore store,
+    required HistorySet histories,
+    required Set<String> mastered,
     String prompt = defaultPrompt,
     int batchSize = defaultBatchSize,
   }) {
@@ -118,6 +187,8 @@ class RecallSession extends StatefulWidget {
           onStartPractice: onStartPractice,
           pageKey: pageKey,
           store: store,
+          histories: histories,
+          mastered: mastered,
           prompt: prompt,
           batchSize: batchSize,
         ),
@@ -136,6 +207,7 @@ class RecallEntry {
     required this.front,
     required this.name,
     required this.meaning,
+    this.related = const [],
     this.confuseName,
     this.confuseNote,
     this.confuseView,
@@ -151,6 +223,11 @@ class RecallEntry {
   final String name;
   final String meaning;
 
+  /// 这个条目的相关题（客观证据的来源，ADR 0083）。符号页是按条目反向映射的题；
+  /// 数字、要点页只能到「组」一级，同一组的条目共用一份。没有相关题的条目为空，
+  /// 只能退回自评。
+  final List<Question> related;
+
   /// 易混对撞卡（ADR 0077 决策 2）：对方名称、差异口诀与大图。
   final String? confuseName;
   final String? confuseNote;
@@ -165,27 +242,46 @@ class _RecallSessionState extends State<RecallSession> {
   final Set<String> _missedThisRound = {};
   final List<String> _missedNames = [];
 
-  /// 上一轮抽到的条目 id：同一批里尽量不连着出现。
+  /// 本轮抽到的条目：收尾据此挑出「要去做题确认」的几个。
+  List<RecallEntry> _round = [];
+
+  /// 这次打开自测期间自评「一次就记住」的条目 id：同一次里不再重复抽它们，即使作答记录
+  /// 里它们仍是答错 / 没做过——自评只能让它们这一次不再出现，认得与否仍等作答来证明。
+  final Set<String> _doneThisSession = {};
+
+  /// 上一轮抽到的条目 id：同一档里尽量不连着出现。
   Set<String> _lastRound = {};
   final FocusNode _focus = FocusNode();
   bool _revealed = false;
   int _asked = 0;
   int _missed = 0;
   int _rounds = 1;
-  int _roundSize = 0;
   bool _done = false;
 
   SelfTestStore get _store => widget.store;
   String get _page => widget.pageKey;
 
-  int get _knownCount => _store.knownCount(_page, [for (final e in widget.entries) e.id]);
-  int get _unknownCount => widget.entries.length - _knownCount;
+  RecallBucket _bucketOf(RecallEntry e) => classifyEntry(
+    related: e.related,
+    mastered: widget.mastered,
+    histories: widget.histories,
+    store: _store,
+    page: _page,
+    id: e.id,
+  );
+
+  int _count(RecallBucket bucket) => widget.entries.where((e) => _bucketOf(e) == bucket).length;
+
+  /// 还能抽的（排除这次已经自评认得的）。
+  int get _drawable => widget.entries
+      .where((e) => recallDrawOrder.contains(_bucketOf(e)) && !_doneThisSession.contains(e.id))
+      .length;
 
   @override
   void initState() {
     super.initState();
     _queue = _draw();
-    _roundSize = _queue.length;
+    _round = [..._queue];
     _done = _queue.isEmpty;
     WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
   }
@@ -196,30 +292,31 @@ class _RecallSessionState extends State<RecallSession> {
     super.dispose();
   }
 
-  /// 抽一轮，只从没认得的里抽：没记住过的先来（至多一半，其余留给没考过的），
-  /// 没考过的次之，不够再用没记住过的补满；上一轮刚出现过的排在后面。
+  /// 抽一轮：按 [recallDrawOrder] 逐档取，每档内先打乱、上一轮刚出现过的排后面；
+  /// 这次自评认得过的不再抽。
   List<RecallEntry> _draw() {
-    final unknown = [for (final e in widget.entries) if (!_store.isKnown(_page, e.id)) e];
-    int byLast(RecallEntry a, RecallEntry b) =>
-        (_lastRound.contains(a.id) ? 1 : 0) - (_lastRound.contains(b.id) ? 1 : 0);
-    final learning = [for (final e in unknown) if (_store.isLearning(_page, e.id)) e]
-      ..shuffle()
-      ..sort(byLast);
-    final fresh = [for (final e in unknown) if (!_store.isLearning(_page, e.id)) e]..shuffle();
-    final cap = (widget.batchSize / 2).ceil();
-    final picked = <RecallEntry>[
-      ...learning.take(cap),
-      ...fresh.take(widget.batchSize),
-      ...learning.skip(cap),
-    ].take(widget.batchSize).toList()..shuffle();
-    _lastRound = {for (final e in picked) e.id};
-    return picked;
+    final byBucket = {for (final b in recallDrawOrder) b: <RecallEntry>[]};
+    for (final e in widget.entries) {
+      if (_doneThisSession.contains(e.id)) continue;
+      byBucket[_bucketOf(e)]?.add(e);
+    }
+    final picked = <RecallEntry>[];
+    for (final b in recallDrawOrder) {
+      final list = byBucket[b]!
+        ..shuffle()
+        ..sort((a, c) => (_lastRound.contains(a.id) ? 1 : 0) - (_lastRound.contains(c.id) ? 1 : 0));
+      picked.addAll(list);
+      if (picked.length >= widget.batchSize) break;
+    }
+    final round = picked.take(widget.batchSize).toList()..shuffle();
+    _lastRound = {for (final e in round) e.id};
+    return round;
   }
 
   void _nextRound() {
     setState(() {
       _queue = _draw();
-      _roundSize = _queue.length;
+      _round = [..._queue];
       _missedThisRound.clear();
       _missedNames.clear();
       _asked = 0;
@@ -230,9 +327,10 @@ class _RecallSessionState extends State<RecallSession> {
     });
   }
 
-  /// 清空本页记录，从头自测一遍。
+  /// 清空本页自评记录，从头自测一遍（作答记录不动）。
   void _restart() {
     _store.reset(_page);
+    _doneThisSession.clear();
     _lastRound = {};
     _rounds = 0;
     _nextRound();
@@ -244,13 +342,10 @@ class _RecallSessionState extends State<RecallSession> {
 
   void _grade(bool remembered) {
     final current = _queue.first;
+    final firstTry = !_missedThisRound.contains(current.id);
     // 评一张就记一张：中途退出也不丢。
-    _store.record(
-      _page,
-      current.id,
-      remembered: remembered,
-      firstTry: !_missedThisRound.contains(current.id),
-    );
+    _store.record(_page, current.id, remembered: remembered, firstTry: firstTry);
+    if (remembered && firstTry) _doneThisSession.add(current.id);
     setState(() {
       _asked++;
       _queue.removeAt(0);
@@ -267,6 +362,25 @@ class _RecallSessionState extends State<RecallSession> {
       _revealed = false;
       if (_queue.isEmpty) _done = true;
     });
+  }
+
+  /// 收尾要去做题确认的条目：这一轮没记住的，加上只有自评、没有作答证明的
+  /// （本轮抽到的，或抽不出新卡时全部「自评认得」的）。
+  List<RecallEntry> _focusEntries() {
+    final pool = _drawable == 0 ? widget.entries : _round;
+    return [
+      for (final e in pool)
+        if (_bucketOf(e) != RecallBucket.known && e.related.isNotEmpty) e,
+    ];
+  }
+
+  List<Question> _focusQuestions() {
+    final seen = <String>{};
+    return [
+      for (final e in _focusEntries())
+        for (final q in e.related)
+          if (!widget.mastered.contains(q.id) && seen.add(q.id)) q,
+    ];
   }
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
@@ -304,22 +418,38 @@ class _RecallSessionState extends State<RecallSession> {
     );
   }
 
-  /// 「已认得 K / N」进度条：让人看见自测在往前走，也说明为什么有些条目不再出现。
+  /// 进度反馈：作答记录证明认得的（实心绿）与只有自评的（浅色）分开画、分开写，
+  /// 让人看见哪些是客观的、哪些还待做题确认。
   Widget _progress(BuildContext context, TextStyle? muted) {
     final total = widget.entries.length;
-    final known = _knownCount;
+    final known = _count(RecallBucket.known);
+    final selfOnly = _count(RecallBucket.selfOnly);
+    double frac(int n) => total == 0 ? 0 : n / total;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text("已认得 $known / $total · 只考没认得的", style: muted),
+        Text(
+          "已认得 $known / $total（以作答记录为准）${selfOnly > 0 ? " · 自评认得 $selfOnly，待做题确认" : ""}",
+          style: muted,
+        ),
         const SizedBox(height: 6),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: total == 0 ? 0 : known / total,
-            minHeight: 6,
-            backgroundColor: Bs.border,
-            color: Bs.success,
+          child: SizedBox(
+            height: 6,
+            child: Stack(
+              children: [
+                Positioned.fill(child: ColoredBox(color: Bs.border)),
+                FractionallySizedBox(
+                  widthFactor: frac(known + selfOnly).clamp(0.0, 1.0),
+                  child: ColoredBox(color: Bs.success.withValues(alpha: 0.35)),
+                ),
+                FractionallySizedBox(
+                  widthFactor: frac(known).clamp(0.0, 1.0),
+                  child: ColoredBox(color: Bs.success),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -422,7 +552,7 @@ class _RecallSessionState extends State<RecallSession> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "第一次就记住的，以后不再考；没记住的会再来。",
+                    "自评只决定这次还出不出；认得与否，以做题的作答记录为准。",
                     textAlign: TextAlign.center,
                     style: muted?.copyWith(fontSize: 13),
                   ),
@@ -444,49 +574,62 @@ class _RecallSessionState extends State<RecallSession> {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.5,
     );
-    final allKnown = _unknownCount == 0;
-    final remaining = _unknownCount;
+    final remaining = _drawable;
+    final selfOnly = _count(RecallBucket.selfOnly);
+    final allKnown = remaining == 0 && selfOnly == 0 && _count(RecallBucket.known) == widget.entries.length;
+    final focus = _focusQuestions();
+    final title = allKnown
+        ? "这一页作答记录都证明你认得了"
+        : remaining == 0
+        ? "这一页没有要再考的了"
+        : "考完了";
+    final String message;
+    if (_missedNames.isNotEmpty) {
+      message = "需要再看看：${_missedNames.join("、")}";
+    } else if (allKnown) {
+      message = "没有要再考的了。隔一段时间会按间隔回头确认。";
+    } else if (remaining == 0) {
+      message = "剩下的是你自评认得、但作答记录还没证明的。去做几道相关题，让作答记录来确认。";
+    } else {
+      message = "这一轮全都一次记住了，还有 $remaining 个没认得。";
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(allKnown ? "这一页你都认得了" : "考完了", style: Theme.of(context).textTheme.titleLarge),
+        Text(title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),
-        SizedBox(width: 420, child: _progress(context, muted)),
+        SizedBox(width: 460, child: _progress(context, muted)),
         const SizedBox(height: 12),
-        if (_roundSize > 0) ...[
-          Text("这一轮 $_roundSize 个，共考 $_asked 次，其中没记住 $_missed 次。", style: body),
+        if (_round.isNotEmpty) ...[
+          Text("这一轮 ${_round.length} 个，共考 $_asked 次，其中没记住 $_missed 次。", style: body),
           const SizedBox(height: 6),
         ],
-        if (_missedNames.isNotEmpty)
-          Text("需要再看看：${_missedNames.join("、")}", textAlign: TextAlign.center, style: body)
-        else if (allKnown)
-          Text("没有要再考的了。真正的检验还是做题——去把相关的题过一遍。", textAlign: TextAlign.center, style: body)
-        else
-          Text("这一轮全都一次记住了，还剩 $remaining 个没认得。", textAlign: TextAlign.center, style: body),
+        Text(message, textAlign: TextAlign.center, style: body),
         const SizedBox(height: 18),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 12,
           runSpacing: 10,
           children: [
-            if (!allKnown)
+            if (remaining > 0)
               FilledButton(
                 onPressed: _nextRound,
                 child: Text("再来 ${remaining < widget.batchSize ? remaining : widget.batchSize} 个"),
               )
-            else
+            else if (!allKnown)
               FilledButton(
                 onPressed: _restart,
                 child: const Text("重新自测"),
               ),
-            OutlinedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                widget.onStartPractice();
-              },
-              child: const Text("去练这组题"),
-            ),
+            if (focus.isNotEmpty)
+              (remaining > 0 ? OutlinedButton.new : FilledButton.new)(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.onStartPractice(focus);
+                },
+                child: Text("去做这几个的题（${focus.length} 题）"),
+              ),
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text("关闭"),

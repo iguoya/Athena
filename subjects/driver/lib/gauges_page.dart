@@ -92,6 +92,7 @@ class GaugesPage extends StatelessWidget {
     return RecallEntry(
       id: gauge.id,
       front: _gaugeImage(gauge, 360),
+      related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
       name: gauge.name,
       meaning: gauge.meaning,
       confuseName: other?.name,
@@ -115,12 +116,10 @@ class GaugesPage extends StatelessWidget {
       context,
       pageKey: "gauges",
       store: selfTest,
+      histories: histories,
+      mastered: mastered,
       entries: [for (final g in gauges) _recallEntryOf(g)],
-      onStartPractice: () {
-        final ids = {for (final g in gauges) ...g.questions};
-        final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 自测");
-      },
+      onStartPractice: (questions) => onStartPractice(questions, "仪表速记 · 自测"),
     );
   }
 
