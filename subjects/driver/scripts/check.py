@@ -146,7 +146,7 @@ def check_recall_coverage() -> None:
             ]
             if not hits:
                 problems.append(f"{name}.json {group['id']}（{group['title']}）: 正则匹配不到任何题")
-    # 专题的要点组按科目取题（ADR 0097、0101）：每个标明的科目都得有相关题；条目的出处必须在 catalog 里。
+    # 专题的要点组按科目取题（ADR 0097、0103）：每个标明的科目都得有相关题；条目的出处必须在 catalog 里。
     catalog = json.loads((content / "sources" / "catalog.json").read_text(encoding="utf-8"))
     source_ids = {item["id"] for item in catalog["sources"]}
     prefix = {"subject1": "drive.s1.", "subject4": "drive.s4."}

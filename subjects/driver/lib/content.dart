@@ -73,7 +73,7 @@ class ContentLoader {
       for (final raw in (jsonDecode(await _read("notes.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
-    // 新专题各自一份内容文件（ADR 0101）：`topics/<专题 id>.json`，结构同考点速记。
+    // 新专题各自一份内容文件（ADR 0103）：`topics/<专题 id>.json`，结构同考点速记。
     final topicNotes = <String, List<NoteGroup>>{
       for (final topic in speedTopics)
         if (topic.kind == SpeedKind.notes && topic.source == null)
