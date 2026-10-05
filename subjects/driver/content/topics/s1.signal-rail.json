@@ -1,0 +1,233 @@
+{
+  "_": "科目一「信号灯与铁路道口」专题（ADR 0106）。结构同考点速记。",
+  "groups": [
+    {
+      "id": "sig-meaning",
+      "title": "每种灯是什么意思",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "三色灯红禁绿准黄警示；箭头灯只放行箭头指的方向；红叉封车道；闪黄灯是提醒不是加速。",
+      "match": "信号灯|绿灯|红灯|黄灯|箭头灯|叉形灯|闪烁|闪光警告",
+      "items": [
+        {
+          "scenario": "交通信号灯",
+          "points": [
+            "由红灯、绿灯、黄灯组成：红灯禁止通行，绿灯准许通行，黄灯警示"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第三十八条"
+        },
+        {
+          "scenario": "绿灯亮时",
+          "points": [
+            "准许通行，但转弯的车不得妨碍被放行的直行车辆、行人通过"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第三十八条"
+        },
+        {
+          "scenario": "黄灯亮时",
+          "points": [
+            "已越过停止线的车辆可以继续通行，没过线就应当停"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第三十八条"
+        },
+        {
+          "scenario": "红灯亮时",
+          "points": [
+            "禁止车辆通行；右转弯的车辆在不妨碍被放行的车辆、行人通行时可以通行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第三十八条"
+        },
+        {
+          "scenario": "方向指示信号灯",
+          "points": [
+            "箭头向左、向上、向右，分别表示左转、直行、右转",
+            "绿色箭头灯：准许车辆按箭头方向通行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十条、第四十一条"
+        },
+        {
+          "scenario": "车道信号灯的红色叉形灯或红色箭头灯",
+          "points": [
+            "禁止本车道车辆通行，要提前并到别的车道"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十条"
+        },
+        {
+          "scenario": "持续闪烁的黄灯（闪光警告信号灯）",
+          "points": [
+            "提示注意瞭望，确认安全后通过；不是让你加速通过"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十二条"
+        },
+        {
+          "scenario": "人行横道信号灯",
+          "points": [
+            "绿灯准许行人通过；红灯亮时，已进入人行横道的行人应迅速通过或在中心线处停留等候"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第三十九条"
+        }
+      ]
+    },
+    {
+      "id": "sig-cross",
+      "title": "路口怎么走",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "信号灯和交警指挥不一致听交警；没信号灯转弯让直行；堵车时绿灯也不进路口；绿灯有行人没过完要等。",
+      "match": "路口|交叉路口|不按.{0,6}信号|强迫.{0,8}(违法|闯)|待转区|绿灯.{0,10}(行人|非机动车)",
+      "items": [
+        {
+          "scenario": "信号灯与交通警察的指挥不一致",
+          "points": [
+            "按交通警察的指挥通行，不是按信号灯"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第三十八条"
+        },
+        {
+          "scenario": "没有信号灯控制的路口",
+          "points": [
+            "减速慢行，让行人和优先通行的车先行",
+            "转弯的机动车让直行的车辆、行人先行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十一条、第五十二条"
+        },
+        {
+          "scenario": "路口交通阻塞",
+          "points": [
+            "绿灯亮了也不能驶入交叉路口，不得占着路口等"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十三条"
+        },
+        {
+          "scenario": "绿灯亮但人行横道上仍有行人通行",
+          "points": [
+            "等行人通过后再起步，不得催促"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "直行绿灯、左转红灯",
+          "points": [
+            "可以进入左弯待转区等待"
+          ],
+          "source_id": "gb5768-3",
+          "locator": "左弯待转区线"
+        },
+        {
+          "scenario": "夜间通过没有信号灯控制的路口",
+          "points": [
+            "交替使用远近光灯示意"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十九条"
+        },
+        {
+          "scenario": "不按信号灯指示通行（闯红灯）",
+          "points": [
+            "一次记 6 分",
+            "河南另罚 200 元"
+          ],
+          "source_id": "penalty-order-163",
+          "locator": "第十条第（八）项"
+        },
+        {
+          "scenario": "乘客催你赶时间闯红灯",
+          "points": [
+            "不能服从：任何人不得强迫、指使、纵容驾驶人违法驾驶"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条"
+        }
+      ]
+    },
+    {
+      "id": "rail",
+      "title": "铁路道口",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "一停二看三通过；红灯或红灯交替闪烁停车等；不超车、不掉头、不倒车、不停车、不换挡。",
+      "match": "铁路道口|道口|火车",
+      "items": [
+        {
+          "scenario": "没有信号、没有管理人员的铁路道口",
+          "points": [
+            "一停、二看、三通过：停车确认安全才通过，不能加速抢过"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "铁路道口的信号灯",
+          "points": [
+            "红灯亮起或红灯交替闪烁：停车等待，禁止通行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十三条"
+        },
+        {
+          "scenario": "通过道口的车速",
+          "points": [
+            "最高行驶速度不超过每小时 30 公里（急弯、窄路、窄桥一样）"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "铁路道口内",
+          "points": [
+            "不得超车、掉头、倒车，也不得停车（含道口 50 米以内）"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十九条、第五十条、第六十三条"
+        },
+        {
+          "scenario": "驶入道口前减速降挡",
+          "points": [
+            "进入后不能换挡：中途换挡容易熄火，车停在铁轨上"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "车在道口突然熄火",
+          "points": [
+            "先尝试重新启动；不行就设法让车离开轨道，不能就地检修"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "机动车载运超限物品",
+          "points": [
+            "按铁路部门指定的道口和时间通过"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "行人通过道口",
+          "points": [
+            "按信号或管理人员指挥；没有的，确认无火车驶临后迅速通过"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十六条"
+        }
+      ]
+    }
+  ]
+}

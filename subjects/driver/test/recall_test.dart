@@ -283,9 +283,9 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自测：侧栏里全部 10 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
+  testWidgets("自测：侧栏里全部 12 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
     final (_, store, dir) = await boot(tester);
-    for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记", "事故处理与时限", "停车与违停"]) {
+    for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记", "事故处理与时限", "停车与违停", "乘员与安全带", "信号灯与铁路道口"]) {
       await tester.tap(find.text(page).first);
       await tester.pump();
       expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
