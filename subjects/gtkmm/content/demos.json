@@ -13,6 +13,54 @@
     "skeleton_dir": "实验骨架目录（只读；学习者副本在工作区）",
     "acceptance": "实验跑通标准"
   },
-  "demos": [],
-  "experiments": []
+  "demos": [
+    {
+      "id": "demo.buttons",
+      "title": "按钮三连：Button / ToggleButton / CheckButton",
+      "purpose": "具象化 clicked 与 toggled 信号的发出时机，以及 active 状态如何随点击变化。",
+      "theory_refs": [
+        "gtkmm.buttons.push-button",
+        "gtkmm.buttons.toggle",
+        "gtkmm.buttons.check"
+      ],
+      "source_dir": "demos/buttons",
+      "build_target": "demo-buttons",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/class.Button.html",
+          "note": "控件行为以 GTK4 C 文档为语义基准"
+        }
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "id": "exp.buttons",
+      "title": "第一次连接信号",
+      "purpose": "把演示里观察到的 clicked 信号写进自己的程序，完成第一次 signal_clicked().connect()。",
+      "theory_refs": [
+        "gtkmm.buttons.push-button"
+      ],
+      "source_dir": "demos/buttons-lab",
+      "skeleton_dir": "demos/buttons-lab",
+      "build_target": "exp-buttons",
+      "acceptance": "补全 TODO 后连点三次，标签依次显示「clicked 信号收到！」及递增次数。",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
+          "note": "信号语义以 GTK4 C 文档为基准"
+        }
+      ]
+    }
+  ]
 }

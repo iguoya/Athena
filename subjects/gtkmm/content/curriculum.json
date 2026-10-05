@@ -14,7 +14,10 @@
       "order": 1,
       "title": "Introduction",
       "status": "pending",
-      "translation_ref": { "chapter": 1, "title": "Introduction" },
+      "translation_ref": {
+        "chapter": 1,
+        "title": "Introduction"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -23,7 +26,10 @@
       "order": 2,
       "title": "Installation",
       "status": "pending",
-      "translation_ref": { "chapter": 2, "title": "Installation" },
+      "translation_ref": {
+        "chapter": 2,
+        "title": "Installation"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -32,25 +38,218 @@
       "order": 3,
       "title": "Basics",
       "status": "pending",
-      "translation_ref": { "chapter": 3, "title": "Basics" },
+      "translation_ref": {
+        "chapter": 3,
+        "title": "Basics"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
     {
       "id": "sec.06-buttons",
       "order": 4,
-      "title": "Buttons",
+      "title": "按钮",
       "status": "pending",
-      "translation_ref": { "chapter": 6, "title": "Buttons" },
-      "knowledge_points": [],
-      "checkpoint": []
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "knowledge_points": [
+        {
+          "id": "gtkmm.buttons.push-button",
+          "title": "clicked：按钮与信号",
+          "type": "concept",
+          "difficulty": 1,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "Gtk::Button 是最常用的交互控件：显示一个标签或图标，用户按下并释放后发出 clicked 信号，连接到该信号的处理器随即被调用。"
+            },
+            {
+              "type": "code",
+              "lang": "cpp",
+              "caption": "Gtk::Button 常用设置与信号连接（语义基准：docs.gtk.org/gtk4/class.Button.html）",
+              "source": "auto button = Gtk::Button();\nbutton.set_label(\"点击我（_C）\");      // 下划线助记符：Alt+C 触发\nbutton.set_use_underline(true);\nbutton.set_icon_name(\"document-save\"); // 或只显示图标\nbutton.signal_clicked().connect([] {\n  // 处理器：点击后执行\n});"
+            },
+            {
+              "type": "callout",
+              "variant": "tip",
+              "text": "助记符只在 set_use_underline(true) 时生效：标签里的 _C 表示 Alt+C，按钮显示时下划线出现在 C 下面。"
+            },
+            {
+              "type": "simulation",
+              "sim": "signal-flow",
+              "demo_ref": "demo.buttons",
+              "note": "模型简化：真实 GTK 由 GDK 事件分发到 main loop，此处省略事件队列与捕获阶段。"
+            },
+            {
+              "type": "demo",
+              "demo_ref": "demo.buttons"
+            },
+            {
+              "type": "quiz",
+              "id": "q1",
+              "stem": "Gtk::Button 的 clicked 信号在什么时刻发出？",
+              "options": [
+                "按下鼠标键时",
+                "按下并释放之后",
+                "释放鼠标且光标已移出按钮时",
+                "调用 set_sensitive(true) 时"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ]
+            },
+            {
+              "type": "experiment",
+              "demo_ref": "exp.buttons"
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.buttons.toggle",
+          "title": "toggled：保持状态的按钮",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.buttons.push-button"
+          ],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "Gtk::ToggleButton 在「按下/弹起」之间保持状态：内部有 active 布尔值，get_active()/set_active() 读写它；状态每次变化后发出 toggled 信号。"
+            },
+            {
+              "type": "code",
+              "lang": "cpp",
+              "caption": "读写状态、响应状态变化",
+              "source": "auto toggle = Gtk::ToggleButton();\ntoggle.set_label(\"切换我\");\ntoggle.signal_toggled().connect([this] {\n  if (toggle.get_active()) { /* 按下 */ } else { /* 弹起 */ }\n});"
+            },
+            {
+              "type": "simulation",
+              "sim": "toggle-state",
+              "demo_ref": "demo.buttons",
+              "note": "模型简化：真实切换由按下/释放完成，状态存于控件内部。"
+            },
+            {
+              "type": "observation_quiz",
+              "id": "oq1",
+              "demo_ref": "demo.buttons",
+              "stem": "打开真机演示，点击「切换我」两次：最后一次发出的 toggled 信号 detail 是什么、此时 get_active() 返回多少？",
+              "options": [
+                "active / true",
+                "inactive / false",
+                "第二次不再发信号",
+                "两次都是 active"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "authored",
+                  "locator": "content/demos.json :: demo.buttons",
+                  "note": "观察真机演示作答（应用 ADR 0002 决策 5）"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gtkmm.buttons.check",
+          "title": "CheckButton：勾选与互斥",
+          "type": "concept",
+          "difficulty": 1,
+          "mastery_goal": "required",
+          "requires": [
+            "gtkmm.buttons.toggle"
+          ],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "Gtk::CheckButton 是勾选框，视觉是圆圈或对勾，语义上继承自 Gtk::ToggleButton：同样用 toggled 信号与 get_active()。"
+            },
+            {
+              "type": "callout",
+              "variant": "warning",
+              "text": "GTK3 的 Gtk::RadioButton 在 GTK4 中已被移除。要一组互斥选项，用多个 Gtk::CheckButton 并调用 set_group() 加入同一组。"
+            },
+            {
+              "type": "quiz",
+              "id": "q2",
+              "stem": "GTK4 中要实现一组互斥的单选项，正确做法是？",
+              "options": [
+                "使用 Gtk::RadioButton",
+                "使用多个 Gtk::CheckButton 并 set_group() 成组",
+                "使用 Gtk::ToggleButton 并连接 pressed 信号",
+                "使用 Gtk::Switch 并 set_group()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "cp1",
+          "stem": "标签为「帮助（_H）」且 set_use_underline(true) 的按钮，键盘触发方式是？",
+          "options": [
+            "Alt+H",
+            "Ctrl+H",
+            "单独按 H 键",
+            "没有键盘触发方式"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://docs.gtk.org/gtk4/class.Button.html",
+              "note": "语义基准（应用 ADR 0002）"
+            }
+          ]
+        },
+        {
+          "id": "cp2",
+          "stem": "读取 Gtk::ToggleButton 当前状态应使用？",
+          "options": [
+            "get_state()",
+            "get_active()",
+            "is_pressed()",
+            "toggled()"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://docs.gtk.org/gtk4/class.ToggleButton.html",
+              "note": "语义基准（应用 ADR 0002）"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "sec.07-range-widgets",
       "order": 5,
       "title": "Range Widgets",
       "status": "pending",
-      "translation_ref": { "chapter": 7, "title": "Range Widgets" },
+      "translation_ref": {
+        "chapter": 7,
+        "title": "Range Widgets"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -59,7 +258,10 @@
       "order": 6,
       "title": "Miscellaneous Widgets",
       "status": "pending",
-      "translation_ref": { "chapter": 8, "title": "Miscellaneous Widgets" },
+      "translation_ref": {
+        "chapter": 8,
+        "title": "Miscellaneous Widgets"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -68,7 +270,10 @@
       "order": 7,
       "title": "Container Widgets",
       "status": "pending",
-      "translation_ref": { "chapter": 9, "title": "Container Widgets" },
+      "translation_ref": {
+        "chapter": 9,
+        "title": "Container Widgets"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -77,7 +282,10 @@
       "order": 8,
       "title": "ListView, GridView, ColumnView",
       "status": "pending",
-      "translation_ref": { "chapter": 10, "title": "ListView, GridView, ColumnView" },
+      "translation_ref": {
+        "chapter": 10,
+        "title": "ListView, GridView, ColumnView"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -86,7 +294,10 @@
       "order": 9,
       "title": "The TreeView Widget",
       "status": "pending",
-      "translation_ref": { "chapter": 11, "title": "The TreeView Widget" },
+      "translation_ref": {
+        "chapter": 11,
+        "title": "The TreeView Widget"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -95,7 +306,10 @@
       "order": 10,
       "title": "The DropDown Widget",
       "status": "pending",
-      "translation_ref": { "chapter": 12, "title": "The DropDown Widget" },
+      "translation_ref": {
+        "chapter": 12,
+        "title": "The DropDown Widget"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -104,7 +318,10 @@
       "order": 11,
       "title": "Combo Boxes",
       "status": "pending",
-      "translation_ref": { "chapter": 13, "title": "Combo Boxes" },
+      "translation_ref": {
+        "chapter": 13,
+        "title": "Combo Boxes"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -113,7 +330,10 @@
       "order": 12,
       "title": "TextView",
       "status": "pending",
-      "translation_ref": { "chapter": 14, "title": "TextView" },
+      "translation_ref": {
+        "chapter": 14,
+        "title": "TextView"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -122,7 +342,10 @@
       "order": 13,
       "title": "Menus and Toolbars",
       "status": "pending",
-      "translation_ref": { "chapter": 15, "title": "Menus and Toolbars" },
+      "translation_ref": {
+        "chapter": 15,
+        "title": "Menus and Toolbars"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -131,7 +354,10 @@
       "order": 14,
       "title": "Adjustments",
       "status": "pending",
-      "translation_ref": { "chapter": 16, "title": "Adjustments" },
+      "translation_ref": {
+        "chapter": 16,
+        "title": "Adjustments"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -140,7 +366,10 @@
       "order": 15,
       "title": "Dialogs",
       "status": "pending",
-      "translation_ref": { "chapter": 17, "title": "Dialogs" },
+      "translation_ref": {
+        "chapter": 17,
+        "title": "Dialogs"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -149,7 +378,10 @@
       "order": 16,
       "title": "The DrawingArea Widget",
       "status": "pending",
-      "translation_ref": { "chapter": 18, "title": "The DrawingArea Widget" },
+      "translation_ref": {
+        "chapter": 18,
+        "title": "The DrawingArea Widget"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -158,7 +390,10 @@
       "order": 17,
       "title": "Drag and Drop",
       "status": "pending",
-      "translation_ref": { "chapter": 19, "title": "Drag and Drop" },
+      "translation_ref": {
+        "chapter": 19,
+        "title": "Drag and Drop"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -167,7 +402,10 @@
       "order": 18,
       "title": "The Clipboard",
       "status": "pending",
-      "translation_ref": { "chapter": 20, "title": "The Clipboard" },
+      "translation_ref": {
+        "chapter": 20,
+        "title": "The Clipboard"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -176,7 +414,10 @@
       "order": 19,
       "title": "Printing",
       "status": "pending",
-      "translation_ref": { "chapter": 21, "title": "Printing" },
+      "translation_ref": {
+        "chapter": 21,
+        "title": "Printing"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -185,7 +426,10 @@
       "order": 20,
       "title": "Recently Used Documents",
       "status": "pending",
-      "translation_ref": { "chapter": 22, "title": "Recently Used Documents" },
+      "translation_ref": {
+        "chapter": 22,
+        "title": "Recently Used Documents"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -194,7 +438,10 @@
       "order": 21,
       "title": "Keyboard and Mouse Events",
       "status": "pending",
-      "translation_ref": { "chapter": 23, "title": "Keyboard and Mouse Events" },
+      "translation_ref": {
+        "chapter": 23,
+        "title": "Keyboard and Mouse Events"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -203,7 +450,10 @@
       "order": 22,
       "title": "Timeouts, I/O and Idle Functions",
       "status": "pending",
-      "translation_ref": { "chapter": 24, "title": "Timeouts, I/O and Idle Functions" },
+      "translation_ref": {
+        "chapter": 24,
+        "title": "Timeouts, I/O and Idle Functions"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -212,7 +462,10 @@
       "order": 23,
       "title": "Memory Management",
       "status": "pending",
-      "translation_ref": { "chapter": 25, "title": "Memory Management" },
+      "translation_ref": {
+        "chapter": 25,
+        "title": "Memory Management"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -221,7 +474,10 @@
       "order": 24,
       "title": "Gtk::Builder",
       "status": "pending",
-      "translation_ref": { "chapter": 26, "title": "Gtk::Builder" },
+      "translation_ref": {
+        "chapter": 26,
+        "title": "Gtk::Builder"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -230,7 +486,10 @@
       "order": 25,
       "title": "Internationalization and Localization",
       "status": "pending",
-      "translation_ref": { "chapter": 27, "title": "Internationalization and Localization" },
+      "translation_ref": {
+        "chapter": 27,
+        "title": "Internationalization and Localization"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -239,7 +498,10 @@
       "order": 26,
       "title": "Custom Widgets",
       "status": "pending",
-      "translation_ref": { "chapter": 28, "title": "Custom Widgets" },
+      "translation_ref": {
+        "chapter": 28,
+        "title": "Custom Widgets"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -248,7 +510,10 @@
       "order": 27,
       "title": "Multi-threaded Programs",
       "status": "pending",
-      "translation_ref": { "chapter": 29, "title": "Multi-threaded Programs" },
+      "translation_ref": {
+        "chapter": 29,
+        "title": "Multi-threaded Programs"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -257,7 +522,10 @@
       "order": 28,
       "title": "Recommended Techniques",
       "status": "pending",
-      "translation_ref": { "chapter": 30, "title": "Recommended Techniques" },
+      "translation_ref": {
+        "chapter": 30,
+        "title": "Recommended Techniques"
+      },
       "knowledge_points": [],
       "checkpoint": []
     },
@@ -266,7 +534,10 @@
       "order": 29,
       "title": "Building Applications",
       "status": "pending",
-      "translation_ref": { "chapter": 31, "title": "Building Applications" },
+      "translation_ref": {
+        "chapter": 31,
+        "title": "Building Applications"
+      },
       "knowledge_points": [],
       "checkpoint": []
     }
@@ -277,70 +548,100 @@
       "title": "Changes in gtkmm 3",
       "kind": "migration",
       "status": "pending",
-      "translation_ref": { "chapter": 4, "title": "Changes in gtkmm 3" }
+      "translation_ref": {
+        "chapter": 4,
+        "title": "Changes in gtkmm 3"
+      }
     },
     {
       "id": "ref.ch05-changes-gtkmm4",
       "title": "Changes in gtkmm-4.0 and glibmm-2.68",
       "kind": "migration",
       "status": "pending",
-      "translation_ref": { "chapter": 5, "title": "Changes in gtkmm-4.0 and glibmm-2.68" }
+      "translation_ref": {
+        "chapter": 5,
+        "title": "Changes in gtkmm-4.0 and glibmm-2.68"
+      }
     },
     {
       "id": "ref.ch32-contributing",
       "title": "Contributing",
       "kind": "contributing",
       "status": "pending",
-      "translation_ref": { "chapter": 32, "title": "Contributing" }
+      "translation_ref": {
+        "chapter": 32,
+        "title": "Contributing"
+      }
     },
     {
       "id": "ref.appendix.a-refptr",
       "title": "The RefPtr Smartpointer",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "A", "title": "The RefPtr Smartpointer" }
+      "translation_ref": {
+        "appendix": "A",
+        "title": "The RefPtr Smartpointer"
+      }
     },
     {
       "id": "ref.appendix.b-signals",
       "title": "Signals",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "B", "title": "Signals" }
+      "translation_ref": {
+        "appendix": "B",
+        "title": "Signals"
+      }
     },
     {
       "id": "ref.appendix.c-own-signals",
       "title": "Creating Your Own Signals",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "C", "title": "Creating Your Own Signals" }
+      "translation_ref": {
+        "appendix": "C",
+        "title": "Creating Your Own Signals"
+      }
     },
     {
       "id": "ref.appendix.d-signal-comparison",
       "title": "Comparison with Other Signalling Systems",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "D", "title": "Comparison with Other Signalling Systems" }
+      "translation_ref": {
+        "appendix": "D",
+        "title": "Comparison with Other Signalling Systems"
+      }
     },
     {
       "id": "ref.appendix.e-win32",
       "title": "gtkmm and Win32",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "E", "title": "gtkmm and Win32" }
+      "translation_ref": {
+        "appendix": "E",
+        "title": "gtkmm and Win32"
+      }
     },
     {
       "id": "ref.appendix.f-source-code",
       "title": "Working with gtkmm's Source Code",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "F", "title": "Working with gtkmm's Source Code" }
+      "translation_ref": {
+        "appendix": "F",
+        "title": "Working with gtkmm's Source Code"
+      }
     },
     {
       "id": "ref.appendix.g-gmmproc",
       "title": "Wrapping C Libraries with gmmproc",
       "kind": "appendix",
       "status": "pending",
-      "translation_ref": { "appendix": "G", "title": "Wrapping C Libraries with gmmproc" }
+      "translation_ref": {
+        "appendix": "G",
+        "title": "Wrapping C Libraries with gmmproc"
+      }
     },
     {
       "id": "ref.appendix.h-gfdl",
@@ -348,7 +649,10 @@
       "kind": "appendix",
       "status": "translated",
       "note": "许可证原文照录于 content/license/gfdl-1.2.md，不翻译（GFDL 义务的一部分，见 content/license.md）。",
-      "translation_ref": { "appendix": "H", "title": "GNU Free Documentation License" }
+      "translation_ref": {
+        "appendix": "H",
+        "title": "GNU Free Documentation License"
+      }
     }
   ]
 }

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -36,6 +37,7 @@ BLOCK_TYPES = {
     "callout",
     "simulation",        # Web 交互模拟；必须带 demo_ref（强制配对）
     "demo",              # 真机演示卡；必须带 demo_ref
+    "experiment",        # 骨架实验卡（exp.*）；必须带 demo_ref
     "observation_quiz",  # 演示观察题；必须带 demo_ref，判分内容须有出处
     "quiz",              # 随堂选择题；判分内容须有出处
 }
@@ -106,7 +108,7 @@ def check_block(block: dict, where: str) -> None:
     if block_type not in BLOCK_TYPES:
         fail(f"{where}: 未知块类型 {block_type!r}（白名单：{sorted(BLOCK_TYPES)}）")
         return
-    if block_type in ("simulation", "demo", "observation_quiz"):
+    if block_type in ("simulation", "demo", "experiment", "observation_quiz"):
         demo_ref = block.get("demo_ref")
         if not isinstance(demo_ref, str) or not demo_ref:
             fail(f"{where}: {block_type} 块必须带 demo_ref（强制配对，ADR 0001 决策 3）")
@@ -120,7 +122,7 @@ def collect_demo_refs(course: dict) -> set[str]:
 
     def walk(blocks) -> None:
         for block in blocks or []:
-            if block.get("type") in ("simulation", "demo", "observation_quiz"):
+            if block.get("type") in ("simulation", "demo", "experiment", "observation_quiz"):
                 if block.get("demo_ref"):
                     refs.add(block["demo_ref"])
 
@@ -236,30 +238,72 @@ def tool(name: str) -> str:
     return found
 
 
-def run(command: list[str], step: str) -> None:
+def run(command: list[str], step: str, env: dict[str, str] | None = None) -> None:
     print(f"== {step} ==", flush=True)
-    completed = subprocess.run(command, cwd=PROJECT_ROOT)
+    completed = subprocess.run(command, cwd=PROJECT_ROOT, env=env)
     if completed.returncode != 0:
         raise SystemExit(completed.returncode)
 
 
+MSYS2_HINT = (
+    "Windows 上 gtkmm-4.0 走 MSYS2 MINGW64（主仓库 ADR 0047、0051）：\n"
+    "  1. 安装 MSYS2（https://www.msys2.org/，默认装到 C:\\msys64）；\n"
+    "  2. 在「MSYS2 MINGW64」终端里运行：\n"
+    "     pacman -S --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-gtkmm-4.0 \\\n"
+    "       mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf\n"
+    "本脚本会自动使用 C:\\msys64\\mingw64，不需要把它加进系统 PATH。"
+)
+
+
+def msys2_mingw64() -> Path | None:
+    """gtkmm-4.0 在 Windows 的唯一现实来源是 MSYS2 MINGW64。
+
+    检测到就返回其根目录（用它前置 PATH，隔离系统 PATH 里的其他 pkg-config，
+    比如 GNU Octave 自带的那份会撞车）。
+    """
+    for candidate in (Path("C:/msys64/mingw64"), Path("D:/msys64/mingw64")):
+        pkgconf = candidate / "bin" / "pkgconf.exe"
+        gtkmm = candidate / "lib" / "pkgconfig" / "gtkmm-4.0.pc"
+        if pkgconf.is_file() and gtkmm.is_file():
+            return candidate
+    return None
+
+
 def check_native() -> None:
-    """演示/实验的 CMake 工程全量编译 + --self-check（有工程才跑）。"""
+    """演示/实验的 CMake 工程全量编译 + --self-check（有实体才跑）。
+
+    self-check 构造控件树后即退出 0，证明工程可编译、可加载——不弹窗。
+    """
     manifest = load_json(CONTENT_DIR / "demos.json") or {}
     entities = manifest.get("demos", []) + manifest.get("experiments", [])
     if not entities:
         return
     cmake = shutil.which("cmake")
     if cmake is None:
-        fail("清单里有演示/实验但找不到 cmake——MSYS2 环境是否已装好？")
+        fail("清单里有演示/实验但找不到 cmake——请安装 CMake 4.0+")
         return
+
+    env = os.environ.copy()
+    if sys.platform == "win32":
+        mingw = msys2_mingw64()
+        if mingw is None:
+            fail("没有可用的 gtkmm-4.0 工具链。\n" + MSYS2_HINT)
+            return
+        env["PATH"] = str(mingw / "bin") + os.pathsep + env["PATH"]
+        env["PKG_CONFIG_PATH"] = str(mingw / "lib" / "pkgconfig")
+    # macOS（Homebrew）/Linux：pkg-config 直接找系统路径，无需特殊 env。
+
     build_dir = PROJECT_ROOT / "build-native"
     build_dir.mkdir(exist_ok=True)
-    run([cmake, "-S", "demos", "-B", "build-native"], "原生侧 CMake configure")
-    run([cmake, "--build", "build-native"], "原生侧全量编译")
+    run([cmake, "-G", "Ninja", "-S", "demos", "-B", "build-native"],
+        "原生侧 CMake configure", env)
+    run([cmake, "--build", "build-native"], "原生侧全量编译", env)
     for entity in entities:
         binary = build_dir / entity["id"].replace(".", "-")
-        run([str(binary), "--self-check"], f"{entity['id']} --self-check")
+        if sys.platform == "win32" and not binary.with_suffix(".exe").is_file():
+            fail(f"{entity['id']}: 编译产物缺失（{binary.name}.exe）")
+            continue
+        run([str(binary), "--self-check"], f"{entity['id']} --self-check", env)
 
 
 def main() -> int:
@@ -289,7 +333,8 @@ def main() -> int:
     if not args.skip_native:
         check_native()
     if not args.skip_rust and (PROJECT_ROOT / "src-tauri" / "Cargo.toml").is_file():
-        run([tool("cargo"), "check"], "Rust 侧类型检查")
+        run([tool("cargo"), "check", "--manifest-path",
+             str(PROJECT_ROOT / "src-tauri" / "Cargo.toml")], "Rust 侧类型检查")
     return 0
 
 
