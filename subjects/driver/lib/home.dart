@@ -6,6 +6,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "glyphs.dart";
+import "cloze.dart";
 import "clusters.dart";
 import "diagnosis.dart";
 import "exam.dart";
@@ -30,6 +31,38 @@ import "sync.dart";
 /// 闭包会连带捕获 `this`，界面对象送不进 isolate（ArgumentError: unsendable）。
 Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules, HistorySet histories) {
   return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
+}
+
+/// 易混数字一行的状态微点（ADR 0095）：红 = 最近答错过、未掌握；黄 = 答过但没全掌握；
+/// 绿 = 掌握；灰 = 没作答过。与速记格子上的掌握度微点（ADR 0077 决策 3）同族，
+/// 但口径是这一行自己的自测卡（填数、选择、反向），不是组级关联真题。
+class RecallRowDot extends StatelessWidget {
+  const RecallRowDot({super.key, required this.status});
+
+  final SymbolStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (status) {
+      SymbolStatus.wrong => Bs.danger,
+      SymbolStatus.partial => Bs.warning,
+      SymbolStatus.mastered => Bs.success,
+      SymbolStatus.fresh => const Color(0xFFADB5BD),
+    };
+    return Tooltip(
+      message: switch (status) {
+        SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
+        SymbolStatus.partial => "这一行的自测题答过一部分，还没全掌握",
+        SymbolStatus.mastered => "这一行的自测题已掌握",
+        SymbolStatus.fresh => "这一行还没自测过",
+      },
+      child: Container(
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
+    );
+  }
 }
 
 /// 考点簇放到后台 isolate 里算（ADR 0079）。同样要是顶层函数，原因同上。
@@ -1935,6 +1968,11 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 9),
+                    child: RecallRowDot(status: _rowStatus(group, row)),
+                  ),
+                  const SizedBox(width: 10),
                   SizedBox(
                     width: 190,
                     child: Column(
@@ -1979,6 +2017,26 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  /// 一行易混数字对应的自测卡题号：每条情形一张填数/选择卡（f/），这个值一张反向卡（r/）。
+  /// 与 [recallCardsOfNumbers] 的卡 id 同构（ADR 0094）；反向卡按值合并，同值的行共用一张。
+  List<String> _numberRowQuestionIds(CheatGroup group, CheatRow row) => [
+    for (final single in splitCase(row.caseText))
+      recallQuestionId("numbers", "f/${group.id}/$single|${row.value}"),
+    recallQuestionId("numbers", "r/${group.id}/${row.value}"),
+  ];
+
+  /// 行的状态微点档位：按这一行自测卡的作答记录——最近答错且未掌握红，全掌握绿，
+  /// 答过没全对黄，没做过灰。只看这一行自己的卡，不看组级关联真题（那是别的口径）。
+  SymbolStatus _rowStatus(CheatGroup group, CheatRow row) {
+    final ids = _numberRowQuestionIds(group, row);
+    final touched = [for (final id in ids) if (_histories.byQuestion.containsKey(id)) id];
+    if (touched.isEmpty) return SymbolStatus.fresh;
+    if (touched.any((id) => (_histories.byQuestion[id]?.wrong ?? 0) > 0 && !_mastered.contains(id))) {
+      return SymbolStatus.wrong;
+    }
+    return ids.every(_mastered.contains) ? SymbolStatus.mastered : SymbolStatus.partial;
   }
 
   /// 跨机器同步：日常走云盘文件夹（iCloud Drive 这类），GitHub 那条留着当
