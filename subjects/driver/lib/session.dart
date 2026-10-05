@@ -80,9 +80,9 @@ class SessionStage extends StatefulWidget {
 
 class _SessionStageState extends State<SessionStage> {
   /// 每页题量：练习一页十题，少了翻页太勤；页面放不下就靠答完自动滚到下一题
-  /// 补上（ADR 0022）。模拟考一页十六道——百题卷五页十六加最后一页二十，
-  /// 六页翻完一场（ADR 0084，使用者拍板）。
-  int get _groupSize => _launch.timed ? 16 : 10;
+  /// 补上（ADR 0022）。模拟考一页二十道——百题卷刚好五页翻完一场，科目四五十题是
+  /// 二十、二十、十（ADR 0086，使用者拍板，取代 0084 的十六道）。
+  int get _groupSize => _launch.timed ? 20 : 10;
 
   /// 一页答完、最后一题答错：从判完算起至少停这么久再翻，够看清正确答案和解释（ADR 0038）。
   static const _pageDwell = Duration(seconds: 5);

@@ -76,7 +76,7 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
-    // 模拟考一页十六道（ADR 0082）：第一页是 1–16 题，答满才翻，错题提示边答边出。
+    // 模拟考一页二十道（ADR 0086）：第一页是 1–20 题，答满才翻，错题提示边答边出。
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
@@ -86,12 +86,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text("考试结束"), findsNothing);
     expect(find.text("错 11 题（已不及格，继续答完）"), findsOneWidget);
-    // 一页答完就翻（ADR 0025），但至少停 5 秒看清正确答案（ADR 0038）。
-    expect(find.text("第17题"), findsNothing);
+    // 第 16 题答完还没到页尾，不翻页：一页是 20 题。
+    expect(find.text("第21题"), findsNothing);
+    for (var i = 0; i < 3; i++) {
+      await answer(LogicalKeyboardKey.keyT);
+    }
+    // 第 20 题答错：一页答完就翻（ADR 0025），但至少停 5 秒看清正确答案（ADR 0038）。
+    await answer(LogicalKeyboardKey.keyF);
+    expect(find.text("第21题"), findsNothing);
     await tester.pump(const Duration(milliseconds: 4500));
-    expect(find.text("第17题"), findsNothing);
+    expect(find.text("第21题"), findsNothing);
     await tester.pump(const Duration(milliseconds: 600));
-    expect(find.text("第17题"), findsOneWidget);
+    expect(find.text("第21题"), findsOneWidget);
     await answer(LogicalKeyboardKey.keyT);
 
     // 过了 45 分钟也不收卷，还停在答题页（ADR 0042）。
@@ -111,14 +117,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text("未及格"), findsOneWidget);
     expect(find.textContaining("提前结束"), findsNothing);
-    expect(find.text("还有 83 题没答，按错计分。"), findsOneWidget);
+    expect(find.text("还有 79 题没答，按错计分。"), findsOneWidget);
 
     await tester.runAsync(() async {
-      // 只交了 17 题，就只有 17 条作答记录；没见过的 83 题不算「答错」。
+      // 只交了 21 题，就只有 21 条作答记录；没见过的 79 题不算「答错」。
       // 新库会拿仓库里的进度库当底子，只数这场造的题。
       bool ours(String id) => RegExp(r"^q\d+$").hasMatch(id);
-      expect((await store.wrongQuestionIds()).where(ours), hasLength(11));
-      expect((await store.masteredQuestionIds()).where(ours), hasLength(6));
+      expect((await store.wrongQuestionIds()).where(ours), hasLength(12));
+      expect((await store.masteredQuestionIds()).where(ours), hasLength(9));
     });
     // 答题链路里的真实 IO 在 runAsync 时间片里续跑,答满一组的自动翻页 timer
     // 是那个时间片里创建的「真实 Timer」——假时钟的 pump 推不动它,收尾时
