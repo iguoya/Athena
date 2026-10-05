@@ -105,3 +105,4 @@
 | [0098](0098-mastered-group-repractice.md) | 「这组已掌握」不再禁练——已掌握的组给「再练一遍」 | 已接受 |
 | [0100](0100-signs-expanded-from-bank-images.md) | 标志速记扩充——借题库官方标志图，从 33 种到 167 种，新增 sign_ref 关联、订正停车标志名 | 已接受 |
 | [0099](0099-self-test-retest-all.md) | 自测全对后给「再测一遍」——重考的入口不缺席 | 已接受 |
+| [0101](0101-number-row-dot-three-states.md) | 易混数字行状态点改三态——答对即绿，去掉「部分掌握」的黄色 | 已接受 |

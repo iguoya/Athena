@@ -34,9 +34,8 @@ Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules,
   return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
 }
 
-/// 易混数字一行的状态微点（ADR 0095）：红 = 最近答错过、未掌握；黄 = 答过但没全掌握；
-/// 绿 = 掌握；灰 = 没作答过。与速记格子上的掌握度微点（ADR 0077 决策 3）同族，
-/// 但口径是这一行自己的自测卡（填数、选择、反向），不是组级关联真题。
+/// 易混数字一行的状态微点（ADR 0101，三态）：红 = 最近答错过、未掌握；绿 = 答对过；
+/// 灰 = 没作答过。行的颜色回答「碰过没有、最近对不对」，不回答「答全没有」。
 class RecallRowDot extends StatelessWidget {
   const RecallRowDot({super.key, required this.status});
 
@@ -46,16 +45,14 @@ class RecallRowDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = switch (status) {
       SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.partial => Bs.warning,
       SymbolStatus.mastered => Bs.success,
-      SymbolStatus.fresh => const Color(0xFFADB5BD),
+      SymbolStatus.partial || SymbolStatus.fresh => const Color(0xFFADB5BD),
     };
     return Tooltip(
       message: switch (status) {
         SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
-        SymbolStatus.partial => "这一行的自测题答过一部分，还没全掌握",
-        SymbolStatus.mastered => "这一行的自测题已掌握",
-        SymbolStatus.fresh => "这一行还没自测过",
+        SymbolStatus.mastered => "这一行的自测题答对过",
+        SymbolStatus.partial || SymbolStatus.fresh => "这一行还没自测过",
       },
       // 状态色填充整个圆，中心挖一个黑色实心圆点（使用者指定的形态，圆径缩小一档）。
       child: Container(
@@ -1934,8 +1931,8 @@ class _HomePageState extends State<HomePage> {
     recallQuestionId(pageKey, "r/${group.id}/${row.value}"),
   ];
 
-  /// 行的状态微点档位：按这一行自测卡的作答记录——最近答错且未掌握红，全掌握绿，
-  /// 答过没全对黄，没做过灰。只看这一行自己的卡，不看组级关联真题（那是别的口径）。
+  /// 行的状态微点档位（ADR 0101，三态）：这一行有答错过且未掌握的自测卡 → 红；
+  /// 答对过（哪怕只答对了一部分卡）→ 绿；一张都没答过 → 灰。只看这一行自己的卡。
   SymbolStatus _rowStatus(String pageKey, CheatGroup group, CheatRow row) {
     final ids = _numberRowQuestionIds(pageKey, group, row);
     final touched = [for (final id in ids) if (_histories.byQuestion.containsKey(id)) id];
@@ -1943,7 +1940,7 @@ class _HomePageState extends State<HomePage> {
     if (touched.any((id) => (_histories.byQuestion[id]?.wrong ?? 0) > 0 && !_mastered.contains(id))) {
       return SymbolStatus.wrong;
     }
-    return ids.every(_mastered.contains) ? SymbolStatus.mastered : SymbolStatus.partial;
+    return SymbolStatus.mastered;
   }
 
   /// 跨机器同步：日常走云盘文件夹（iCloud Drive 这类），GitHub 那条留着当

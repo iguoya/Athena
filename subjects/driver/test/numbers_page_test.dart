@@ -54,7 +54,7 @@ void main() {
     });
   });
 
-  testWidgets("易混数字每行按自测卡的作答记录标状态点：答错红、没全掌握黄、没做过灰", (tester) async {
+  testWidgets("易混数字每行按自测卡的作答记录标状态点：答错红、答对过绿、没做过灰", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -97,11 +97,11 @@ void main() {
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);
 
-    // 页面顶上是第一组，前三行的微点按文档序排：红、黄、灰。
+    // 页面顶上是第一组，前三行的微点按文档序排：红、绿、灰（三态，ADR 0101）。
     final dots = tester.widgetList<RecallRowDot>(find.byType(RecallRowDot)).toList();
     expect(dots.length, greaterThanOrEqualTo(3), reason: "每行左侧都该有状态点");
     expect(dots[0].status, SymbolStatus.wrong, reason: "第一行最近答错过");
-    expect(dots[1].status, SymbolStatus.partial, reason: "第二行正向答对但反向卡没答，没全掌握");
+    expect(dots[1].status, SymbolStatus.mastered, reason: "第二行答对过（哪怕只答了一部分卡）");
     expect(dots[2].status, SymbolStatus.fresh, reason: "第三行没作答过");
 
     await tester.pumpWidget(const SizedBox());
