@@ -36,7 +36,7 @@ class NotesPage extends StatelessWidget {
   final List<NoteGroup> groups;
   final List<Question> daily;
   final Set<String> mastered;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  final void Function(List<Question> questions, String title, bool again) onStartPractice;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
   final RecallAnswerRecorder onRecallAnswer;
@@ -108,7 +108,7 @@ class NotesPage extends StatelessWidget {
             related: e.$1.related(daily),
           ),
       ],
-      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测", false),
     );
   }
 
@@ -152,7 +152,7 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 const Spacer(),
                 FilledButton.icon(
-                  onPressed: () => onStartPractice(related, "考点速记 · ${group.title}"),
+                  onPressed: () => onStartPractice(related, "考点速记 · ${group.title}", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
                 ),

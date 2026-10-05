@@ -1642,7 +1642,8 @@ class _HomePageState extends State<HomePage> {
     final subject = widget.bank.curriculum.subject(topic.subjectId);
     final all = widget.bank.forSubject(topic.subjectId);
     final daily = dailyQuestions(all);
-    void practice(List<Question> questions, String title) => _startPractice(subject, questions, title);
+    void practice(List<Question> questions, String title, bool again) =>
+        _startPractice(subject, questions, title, includeMastered: again);
     return switch (topic.kind) {
       SpeedKind.numbers => _numbersOverview(context, topic),
       SpeedKind.signs => SignsPage(
@@ -1834,7 +1835,7 @@ class _HomePageState extends State<HomePage> {
               ],
               const Spacer(),
               FilledButton.icon(
-                onPressed: () => _startPractice(subject, related, "易混数字 · ${group.title}"),
+                onPressed: () => _startPractice(subject, related, "易混数字 · ${group.title}", includeMastered: pending.isEmpty),
                 icon: const Icon(Glyph.practice, size: 20),
                 label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
               ),
@@ -2102,9 +2103,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _startPractice(Subject subject, List<Question> questions, String title) {
+  /// 起一轮练习。[includeMastered] 给「这组已掌握 · 再练一遍」用：不过滤已掌握的题，
+  /// 全组重练——否则组全掌握时队列是空的，按钮按了没反应（使用者反馈）。
+  void _startPractice(Subject subject, List<Question> questions, String title, {bool includeMastered = false}) {
     if (_locked(subject.id)) return;
-    final pending = _practiceQueue(questions);
+    final pending = includeMastered ? practiceQueue(questions, _wrongIds) : _practiceQueue(questions);
     if (pending.isEmpty) return;
     _openSession(
       SessionLaunch(

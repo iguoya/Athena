@@ -41,7 +41,7 @@ class GesturesPage extends StatelessWidget {
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  final void Function(List<Question> questions, String title, bool again) onStartPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class GesturesPage extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: pending.isEmpty
                         ? null
-                        : () => onStartPractice(related, "手势速记"),
+                        : () => onStartPractice(related, "手势速记", false),
                     icon: const Icon(Glyph.practice, size: 20),
                     label: Text(pending.isEmpty ? "已全部掌握" : "练手势 ${pending.length} 题"),
                   ),
@@ -169,7 +169,7 @@ class GesturesPage extends StatelessWidget {
       mastered: mastered,
       // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
       entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g, cards[g.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · 自测", false),
     );
   }
 

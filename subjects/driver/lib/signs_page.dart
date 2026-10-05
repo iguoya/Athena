@@ -46,7 +46,7 @@ class SignsPage extends StatelessWidget {
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  final void Function(List<Question> questions, String title, bool again) onStartPractice;
 
   /// 组的顺序与每组的形状口诀；分组本身由 json 的 `kind` 决定。
   static const _groups = [
@@ -129,7 +129,7 @@ class SignsPage extends StatelessWidget {
       histories: histories,
       mastered: mastered,
       entries: [for (final s in signs) _recallEntryOf(s, cards[s.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "标志速记 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "标志速记 · 自测", false),
     );
   }
 
@@ -167,7 +167,7 @@ class SignsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  onPressed: () => onStartPractice(related, "标志速记 · $label"),
+                  onPressed: () => onStartPractice(related, "标志速记 · $label", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
                 ),

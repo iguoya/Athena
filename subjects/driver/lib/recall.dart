@@ -39,13 +39,13 @@ class StatusDot extends StatelessWidget {
             SymbolStatus.fresh => "相关题还没做过",
           },
       child: Container(
-        width: 40,
-        height: 40,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         alignment: Alignment.center,
         child: Container(
-          width: 14,
-          height: 14,
+          width: 10,
+          height: 10,
           decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
         ),
       ),
