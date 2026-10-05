@@ -74,6 +74,7 @@ class Question {
     required this.explain,
     required this.sourceRefs,
     this.sign,
+    this.signRef,
     this.marking,
     this.image,
     this.difficulty = 1,
@@ -91,6 +92,13 @@ class Question {
   final String explain;
   final List<SourceRef> sourceRefs;
   final String? sign;
+
+  /// 标志速记关联的标志 id：题图本身就是标志图的题（题面不再自绘）靠它挂到标志页；
+  /// 不复用 `sign`，因为 `sign` 会让题面再画一遍自绘标志。
+  final String? signRef;
+
+  /// 这道题属于标志页的哪个标志：自绘标志的题用 `sign`，题图题用 `signRef`。
+  String? get signId => sign ?? signRef;
 
   /// 标线速记关联的标线 id（ADR 0065）；不复用 `sign` 是因为 clusters.dart 对带
   /// `sign` 的题排除出考点簇，标线题挂上去会误伤簇计算。
@@ -193,6 +201,7 @@ class Question {
           SourceRef.fromJson(raw as Map<String, dynamic>),
       ],
       sign: json["sign"] as String?,
+      signRef: json["sign_ref"] as String?,
       marking: json["marking"] as String?,
       image: json["image"] as String?,
       difficulty: json["difficulty"] as int? ?? 1,
@@ -438,6 +447,9 @@ class RoadSign {
     "warning" => "警告标志",
     "indicate" => "指示标志",
     "guide" => "指路标志",
+    "highway" => "高速公路标志",
+    "tourist" => "旅游区标志",
+    "marker" => "障碍物提示标志",
     _ => "交通标志",
   };
 

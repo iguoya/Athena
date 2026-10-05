@@ -1758,7 +1758,7 @@ class _HomePageState extends State<HomePage> {
         ),
         for (final group in groups) ...[
           const SizedBox(height: 28),
-          _numberGroup(context, subject, group, open, all, muted),
+          _numberGroup(context, subject, topic.id, group, open, all, muted),
         ],
       ],
     );
@@ -1829,6 +1829,7 @@ class _HomePageState extends State<HomePage> {
   Widget _numberGroup(
     BuildContext context,
     Subject subject,
+    String pageKey,
     CheatGroup group,
     List<Question> open,
     List<Question> all,
@@ -1875,7 +1876,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
-                    child: RecallRowDot(status: _rowStatus(group, row)),
+                    child: RecallRowDot(status: _rowStatus(pageKey, group, row)),
                   ),
                   const SizedBox(width: 12),
                   SizedBox(
@@ -1926,16 +1927,17 @@ class _HomePageState extends State<HomePage> {
 
   /// 一行易混数字对应的自测卡题号：每条情形一张填数/选择卡（f/），这个值一张反向卡（r/）。
   /// 与 [recallCardsOfNumbers] 的卡 id 同构（ADR 0094）；反向卡按值合并，同值的行共用一张。
-  List<String> _numberRowQuestionIds(CheatGroup group, CheatRow row) => [
+  /// 页键是专题 id——自测作答记的题号用它（ADR 0097 分科目后页键不再是 "numbers"）。
+  List<String> _numberRowQuestionIds(String pageKey, CheatGroup group, CheatRow row) => [
     for (final single in splitCase(row.caseText))
-      recallQuestionId("numbers", "f/${group.id}/$single|${row.value}"),
-    recallQuestionId("numbers", "r/${group.id}/${row.value}"),
+      recallQuestionId(pageKey, "f/${group.id}/$single|${row.value}"),
+    recallQuestionId(pageKey, "r/${group.id}/${row.value}"),
   ];
 
   /// 行的状态微点档位：按这一行自测卡的作答记录——最近答错且未掌握红，全掌握绿，
   /// 答过没全对黄，没做过灰。只看这一行自己的卡，不看组级关联真题（那是别的口径）。
-  SymbolStatus _rowStatus(CheatGroup group, CheatRow row) {
-    final ids = _numberRowQuestionIds(group, row);
+  SymbolStatus _rowStatus(String pageKey, CheatGroup group, CheatRow row) {
+    final ids = _numberRowQuestionIds(pageKey, group, row);
     final touched = [for (final id in ids) if (_histories.byQuestion.containsKey(id)) id];
     if (touched.isEmpty) return SymbolStatus.fresh;
     if (touched.any((id) => (_histories.byQuestion[id]?.wrong ?? 0) > 0 && !_mastered.contains(id))) {

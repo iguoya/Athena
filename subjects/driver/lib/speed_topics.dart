@@ -110,6 +110,13 @@ List<NoteGroup> noteGroupsOf(Bank bank, SpeedTopic topic) => switch (topic.sourc
   _ => bank.topicNotes[topic.id] ?? const [],
 };
 
+/// 手势专题的条目：只留本科目有题可考的手势（每个条目都要有题，ADR 0091）——「示意靠边停车」只有科目四的题，
+/// 就不进科目一的手势专题。
+List<TrafficGesture> gesturesOf(Bank bank, SpeedTopic topic) {
+  final prefix = topic.subjectId == "subject1" ? "drive.s1." : "drive.s4.";
+  return [for (final g in bank.gestureList) if (g.questions.any((id) => id.startsWith(prefix))) g];
+}
+
 /// 易混数字专题的分组：按各组标的科目筛。
 List<CheatGroup> cheatGroupsOf(Bank bank, SpeedTopic topic) => [
   for (final g in bank.cheatsheet) if (g.subjects.contains(topic.subjectId)) g,

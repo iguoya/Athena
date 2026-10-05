@@ -274,7 +274,7 @@ List<RecallCard> recallCardsOfTopic(SpeedTopic topic, Bank bank) => switch (topi
   SpeedKind.signs => recallCardsOfSigns(topic.id, bank.signs),
   SpeedKind.markings => recallCardsOfMarkings(topic.id, bank.markings),
   SpeedKind.gauges => recallCardsOfGauges(topic.id, bank.gauges),
-  SpeedKind.gestures => recallCardsOfGestures(topic.id, bank.gestureList),
+  SpeedKind.gestures => recallCardsOfGestures(topic.id, gesturesOf(bank, topic)),
   SpeedKind.notes => recallCardsOfNotes(topic.id, noteGroupsOf(bank, topic)),
 };
 

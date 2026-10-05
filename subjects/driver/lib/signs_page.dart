@@ -53,7 +53,10 @@ class SignsPage extends StatelessWidget {
     (kind: "prohibit", hint: "红圈在说「不许」——红圈、红杠都是禁令。"),
     (kind: "warning", hint: "黄三角在提醒「当心」——见到先减速。"),
     (kind: "indicate", hint: "蓝盘告诉你「该怎么走」——照它走不违规。"),
-    (kind: "guide", hint: "绿底白字报方向和距离，提前看、提前变道。"),
+    (kind: "guide", hint: "蓝底白字报路名、方向和距离，提前看、提前变道。"),
+    (kind: "highway", hint: "绿底白字是高速公路：出入口、服务设施、救援电话都在这一类。"),
+    (kind: "tourist", hint: "棕底白字指向旅游区：看方向、看距离。"),
+    (kind: "marker", hint: "红白斜杠提示障碍物：按斜杠走向从对应一侧通过。"),
   ];
 
   @override
@@ -105,7 +108,7 @@ class SignsPage extends StatelessWidget {
     return RecallEntry.fromCard(
       card,
       front: _signImage(sign, 288),
-      related: [for (final q in daily) if (q.sign == sign.id) q],
+      related: [for (final q in daily) if (q.signId == sign.id) q],
       confuseView: other == null ? null : _signImage(other, 144),
     );
   }
@@ -137,13 +140,13 @@ class SignsPage extends StatelessWidget {
     final related = [
       for (final sign in inGroup)
         for (final q in daily)
-          if (q.sign == sign.id) q,
+          if (q.signId == sign.id) q,
     ];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     final allRelated = [
       for (final sign in inGroup)
         for (final q in all)
-          if (q.sign == sign.id) q,
+          if (q.signId == sign.id) q,
     ];
     final locked = allRelated.length - related.length;
     return Padding(
@@ -186,9 +189,9 @@ class SignsPage extends StatelessWidget {
                     sign: sign,
                     other: sign.confuseWith == null
                         ? null
-                        : inGroup.where((s) => s.id == sign.confuseWith).firstOrNull,
+                        : signs.where((s) => s.id == sign.confuseWith).firstOrNull,
                     status: statusOf(
-                      related: [for (final q in daily) if (q.sign == sign.id) q],
+                      related: [for (final q in daily) if (q.signId == sign.id) q],
                       mastered: mastered,
                       histories: histories,
                     ),

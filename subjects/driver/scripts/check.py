@@ -117,7 +117,7 @@ def check_recall_coverage() -> None:
 
     content = PROJECT_ROOT / "content"
     questions = _load_questions()
-    sign_of = {q["sign"] for q in questions if q.get("sign")}
+    sign_of = {q.get("sign") or q.get("sign_ref") for q in questions if q.get("sign") or q.get("sign_ref")}
     marking_of = {q["marking"] for q in questions if q.get("marking")}
     problems: list[str] = []
 

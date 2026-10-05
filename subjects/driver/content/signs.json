@@ -23,12 +23,12 @@
     },
     {
       "id": "no_parking",
-      "name": "禁止停放车辆",
+      "name": "禁止长时停车",
       "kind": "prohibit",
       "band": "hot",
-      "meaning": "不能一直停着，临时停靠上下客可以。",
+      "meaning": "不能长时间停着，临时停靠上下客可以。",
       "confuse_with": "no_stopping",
-      "confuse_note": "一道斜杠是禁止停放：可临时停靠上下客；红叉是禁止停车：停一下也不行。",
+      "confuse_note": "一道斜杠是禁止长时停车：可临时停靠上下客；红叉是禁止停车（题库里也叫「禁止停放车辆」）：停一下也不行。",
       "image": "images/cheatsheet/sign/no_parking.png"
     },
     {
@@ -36,7 +36,7 @@
       "name": "禁止停车",
       "kind": "prohibit",
       "band": "common",
-      "meaning": "这段路一分钟也不能停，临时上下客也不行。",
+      "meaning": "这段路一分钟也不能停，临时上下客也不行（也叫「禁止停放车辆」）。",
       "image": "images/cheatsheet/sign/no_stopping.png"
     },
     {
@@ -272,8 +272,1130 @@
       "name": "指路牌（示意）",
       "kind": "guide",
       "band": "rare",
-      "meaning": "绿底白字指地名、距离和方向，提前看、提前变道。",
+      "meaning": "蓝底（一般道路）或绿底（高速公路）白字，指地名、距离和方向，提前看、提前变道。",
       "image": "images/cheatsheet/sign/guide.png"
+    },
+    {
+      "id": "no_straight",
+      "name": "禁止直行",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "这个路口不能直行，只能走别的方向。",
+      "image": "images/subject1/2019_kemu1_845700.jpg"
+    },
+    {
+      "id": "no_straight_left",
+      "name": "禁止直行和向左转弯",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "直行和左转都不行，只能右转或掉头。",
+      "image": "images/subject1/2019_kemu1_845900.jpg"
+    },
+    {
+      "id": "no_straight_right",
+      "name": "禁止直行和向右转弯",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "直行和右转都不行，只能左转或掉头。",
+      "image": "images/subject1/2019_kemu1_846000.jpg"
+    },
+    {
+      "id": "no_left_right",
+      "name": "禁止向左向右转弯",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "左右都不能转，只能直行（或掉头，如无禁止掉头）。",
+      "image": "images/subject1/2019_kemu1_845800.jpg"
+    },
+    {
+      "id": "limit_width",
+      "name": "限制宽度",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "车身（含载物）宽度不得超过牌上的数字，超了绕行。",
+      "confuse_with": "limit_height",
+      "confuse_note": "黑三角在左右是限宽，在上下是限高；数字是多少就限多少。",
+      "image": "images/subject1/2019_kemu1_846700.jpg"
+    },
+    {
+      "id": "limit_height",
+      "name": "限制高度",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "车身（含载物）高度不得超过牌上的数字，超了绕行。",
+      "image": "images/subject1/2019_kemu1_846800.jpg"
+    },
+    {
+      "id": "speed_lift_40",
+      "name": "解除限制速度 40",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "40 的限速到此为止，之后按该路段规定或下一块限速牌走。",
+      "confuse_with": "speed_40",
+      "confuse_note": "黑杠斜线划掉的是解除：限速结束；红圈黑字是限速开始。",
+      "image": "images/subject1/2019_kemu1_847000.jpg"
+    },
+    {
+      "id": "lift_no_overtaking",
+      "name": "解除禁止超车",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "禁止超车的路段结束，条件允许才可以超车。",
+      "confuse_with": "no_overtaking",
+      "confuse_note": "红圈黑字是禁止超车；黑圈加斜杠是解除。",
+      "image": "images/subject1/2019_kemu1_846300.jpg"
+    },
+    {
+      "id": "give_way_oncoming",
+      "name": "会车让行",
+      "kind": "prohibit",
+      "band": "hot",
+      "meaning": "狭窄路段会车时，我方（红色细箭头）要停车让对向先行。",
+      "confuse_with": "priority_oncoming",
+      "confuse_note": "红圈、我方是细箭头：会车让行；蓝底、我方是粗箭头：会车先行。",
+      "image": "images/subject1/2019_kemu1_845200.jpg"
+    },
+    {
+      "id": "customs",
+      "name": "海关",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "前方是海关，必须停车接受检查。",
+      "image": "images/subject1/2019_kemu1_847200.jpg"
+    },
+    {
+      "id": "stop_check",
+      "name": "停车检查",
+      "kind": "prohibit",
+      "band": "common",
+      "meaning": "前方关卡必须停车接受检查或办手续，不能直接通过。",
+      "image": "images/subject1/2019_kemu1_847100.jpg"
+    },
+    {
+      "id": "narrow_left",
+      "name": "左侧变窄",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方左侧车道或路面变窄：减速，别向左挤，注意并道。",
+      "confuse_with": "narrow_right",
+      "confuse_note": "看哪一边的线向里收，就是哪一侧变窄。",
+      "image": "images/subject1/_exam_subject1_2019_kemu1_840500.jpg"
+    },
+    {
+      "id": "narrow_right",
+      "name": "右侧变窄",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方右侧车道或路面变窄：减速，遇来车提前避让。",
+      "image": "images/subject1/2019_kemu1_840400.jpg"
+    },
+    {
+      "id": "narrow_both",
+      "name": "两侧变窄",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方两侧同时变窄：减速慢行，遇来车注意避让。",
+      "image": "images/subject1/2019_kemu1_840300.jpg"
+    },
+    {
+      "id": "narrow_bridge",
+      "name": "窄桥",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方桥面变窄：减速慢行，桥上不超车、不并行。",
+      "image": "images/subject1/2019_kemu1_840600.jpg"
+    },
+    {
+      "id": "slope_up",
+      "name": "上陡坡",
+      "kind": "warning",
+      "band": "rare",
+      "meaning": "前方上陡坡：提前减挡、保持车距，不在坡上超车、不停车。",
+      "confuse_with": "warning_slope",
+      "confuse_note": "斜箭头朝上是上陡坡，朝下是下陡坡。",
+      "image": "images/subject1/2019_kemu1_840000.jpg"
+    },
+    {
+      "id": "slope_down_cont",
+      "name": "连续下坡",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方长下坡：提前换低挡、用发动机制动，不空挡滑行，别一路长踩刹车。",
+      "image": "images/subject1/2019_kemu1_840200.jpg"
+    },
+    {
+      "id": "tidal_lane",
+      "name": "注意潮汐车道",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有潮汐（可变方向）车道：看车道上方的信号灯，别走错方向。",
+      "image": "images/subject1/2019_kemu1_844300.jpg"
+    },
+    {
+      "id": "ferry",
+      "name": "渡口",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是车辆渡口：减速，按次序排队上船，不抢道。",
+      "image": "images/subject1/2019_kemu1_842000.jpg"
+    },
+    {
+      "id": "bypass_right",
+      "name": "右侧绕行",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有障碍物或施工：从右侧绕行。",
+      "confuse_with": "bypass_left",
+      "confuse_note": "箭头在哪一侧就从哪一侧绕。",
+      "image": "images/subject1/2019_kemu1_843800.jpg"
+    },
+    {
+      "id": "bypass_left",
+      "name": "左侧绕行",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有障碍物或施工：从左侧绕行。",
+      "image": "images/subject1/2019_kemu1_843700.jpg"
+    },
+    {
+      "id": "bypass_both",
+      "name": "左右绕行",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有障碍物：左右两侧都能绕行，选一侧并注意来车。",
+      "image": "images/subject1/2019_kemu1_843600.jpg"
+    },
+    {
+      "id": "merge",
+      "name": "注意合流",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有车辆汇入：减速观察，按次序交替通行，不强行并线。",
+      "image": "images/subject1/2019_kemu1_844600.jpg"
+    },
+    {
+      "id": "road_bump",
+      "name": "路面高突",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方路面有一处凸起：提前减速通过，否则颠簸甚至托底。",
+      "confuse_with": "road_dip",
+      "confuse_note": "一个坡是高突，一个坑是低洼。",
+      "image": "images/subject1/2019_kemu1_842300.jpg"
+    },
+    {
+      "id": "road_dip",
+      "name": "路面低洼",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方路面低洼，可能积水：减速通过。",
+      "image": "images/subject1/2019_kemu1_842400.jpg"
+    },
+    {
+      "id": "road_rough",
+      "name": "路面不平",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方路面凹凸不平：减速，握稳方向盘。",
+      "confuse_with": "hump_bridge",
+      "confuse_note": "两个凸起是路面不平；凸起中间有空洞是驼峰桥。",
+      "image": "images/subject1/2019_kemu1_842200.jpg"
+    },
+    {
+      "id": "hump_bridge",
+      "name": "驼峰桥",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是驼峰桥，桥顶看不到对面：减速，靠右行，不在桥顶超车。",
+      "image": "images/subject1/2019_kemu1_842100.jpg"
+    },
+    {
+      "id": "rockfall",
+      "name": "注意落石",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方傍山路段可能落石：不停车、不逗留，减速谨慎通过。",
+      "image": "images/subject1/2019_kemu1_841300.jpg"
+    },
+    {
+      "id": "keep_gap",
+      "name": "注意保持车距",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "这段路要保持足够的跟车距离：别贴着前车。",
+      "image": "images/subject1/2019_kemu1_844400.jpg"
+    },
+    {
+      "id": "cliff_road",
+      "name": "傍山险路",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方一侧靠山、一侧临崖：减速慢行，不抢道、不靠近崖边。",
+      "image": "images/subject1/2019_kemu1_841600.jpg"
+    },
+    {
+      "id": "accident_prone",
+      "name": "事故易发路段",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方事故多发：减速、集中精神，不超车。",
+      "image": "images/subject1/2019_kemu1_843400.jpg"
+    },
+    {
+      "id": "wildlife",
+      "name": "注意野生动物",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方可能有野生动物穿行：减速，别鸣笛追赶。",
+      "confuse_with": "livestock",
+      "confuse_note": "画鹿是野生动物，画牛是牲畜。",
+      "image": "images/subject1/2019_kemu1_841100.jpg"
+    },
+    {
+      "id": "livestock",
+      "name": "注意牲畜",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方可能有牲畜上路：减速慢行，别急鸣喇叭惊吓。",
+      "image": "images/subject1/2019_kemu1_841000.jpg"
+    },
+    {
+      "id": "disabled",
+      "name": "注意残疾人",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有残疾人通行：减速，礼让。",
+      "image": "images/subject1/2019_kemu1_843300.jpg"
+    },
+    {
+      "id": "nonmotor",
+      "name": "注意非机动车",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有非机动车：减速，别挤占它们的路，留足侧向距离。",
+      "image": "images/subject1/2019_kemu1_843200.jpg"
+    },
+    {
+      "id": "crosswind",
+      "name": "注意横风",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有强侧风：握稳方向盘，减速，与大车保持侧向距离。",
+      "image": "images/subject1/2019_kemu1_841400.jpg"
+    },
+    {
+      "id": "tunnel_light",
+      "name": "隧道开灯",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方隧道：进洞前就打开近光灯。",
+      "confuse_with": "tunnel",
+      "confuse_note": "画着车灯光束的是提醒开灯；只画洞口是提醒前方有隧道。",
+      "image": "images/subject1/2019_kemu1_844200.jpg"
+    },
+    {
+      "id": "tunnel",
+      "name": "隧道",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是隧道：减速，开近光灯，不超车、不变道。",
+      "image": "images/subject1/2019_kemu1_841900.jpg"
+    },
+    {
+      "id": "split_road",
+      "name": "注意分离式道路",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方双向道路分开成两幅：别走错侧，注意对向不再同一路面。",
+      "image": "images/subject1/2019_kemu1_844500.jpg"
+    },
+    {
+      "id": "two_way",
+      "name": "双向交通",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方改为双向行驶（原为单向或分隔）：靠右行，注意对向来车。",
+      "image": "images/subject1/2019_kemu1_840700.jpg"
+    },
+    {
+      "id": "embankment",
+      "name": "堤坝路",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是临水堤坝路：减速，别靠近水边。",
+      "image": "images/subject1/2019_kemu1_841700.jpg"
+    },
+    {
+      "id": "ford",
+      "name": "过水路面",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是过水路面或漫水桥：水深看不清就别硬冲，宁可绕行。",
+      "image": "images/subject1/2019_kemu1_842500.jpg"
+    },
+    {
+      "id": "signal_ahead",
+      "name": "注意信号灯",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有信号灯：提前减速，看清灯色。",
+      "image": "images/subject1/2019_kemu1_841200.jpg"
+    },
+    {
+      "id": "slow",
+      "name": "慢行",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方需要慢行：减速，做好随时停车准备。",
+      "image": "images/subject1/2019_kemu1_843500.jpg"
+    },
+    {
+      "id": "curve_left",
+      "name": "向左急转弯",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方向左急弯：提前减速靠右，不越中线。",
+      "image": "images/subject1/2019_kemu1_839700.jpg"
+    },
+    {
+      "id": "curve_reverse",
+      "name": "反向弯路",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方连续两个相反方向的弯：减速，不越中线。",
+      "confuse_with": "curve_continuous",
+      "confuse_note": "斜着的 Z 或 N 是反向弯路（两个弯）；三个以上连续弯是连续弯路。",
+      "image": "images/subject1/2019_kemu1_839800.jpg"
+    },
+    {
+      "id": "curve_continuous",
+      "name": "连续弯路",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方连续三个以上的弯：持续减速，不超车。",
+      "image": "images/subject1/2019_kemu1_839900.jpg"
+    },
+    {
+      "id": "advised_speed",
+      "name": "建议速度",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "这个路段的建议车速：不是限速，但弯急路险时按它走更稳。",
+      "image": "images/subject1/2019_kemu1_844100.jpg"
+    },
+    {
+      "id": "rail_dist_50",
+      "name": "距无人看守铁路道口 50 米",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "离无人看守的道口还有 50 米（一道斜杠）：减速，准备停车观察。",
+      "confuse_with": "rail_dist_100",
+      "confuse_note": "每一道红斜杠代表 50 米：一道 50，两道 100，三道 150。",
+      "image": "images/subject1/2019_kemu1_842900.jpg"
+    },
+    {
+      "id": "rail_dist_100",
+      "name": "距无人看守铁路道口 100 米",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "离无人看守的道口还有 100 米（两道斜杠）：减速，准备停车观察。",
+      "image": "images/subject1/2019_kemu1_843000.jpg"
+    },
+    {
+      "id": "rail_dist_150",
+      "name": "距无人看守铁路道口 150 米",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "离无人看守的道口还有 150 米（三道斜杠）：减速，准备停车观察。",
+      "image": "images/subject1/2019_kemu1_843100.jpg"
+    },
+    {
+      "id": "rail_unguarded",
+      "name": "无人看守铁路道口",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方铁路道口没有人看守：一停二看三通过，不抢行。",
+      "confuse_with": "warning_rail",
+      "confuse_note": "画栅栏是有人看守，画火车头是无人看守。",
+      "image": "images/subject1/2019_kemu1_842700.jpg"
+    },
+    {
+      "id": "rail_multi",
+      "name": "多股铁路与道路相交",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方有多股铁路与道路相交：停车观察，确认两侧都没车再过。",
+      "image": "images/subject1/2019_kemu1_842800.jpg"
+    },
+    {
+      "id": "walk_only",
+      "name": "步行",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这里只许行人通行，车辆不得驶入。",
+      "image": "images/subject1/2019_kemu1_848900.jpg"
+    },
+    {
+      "id": "height_bypass",
+      "name": "超高绕行",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "超过牌上高度的车辆必须按箭头绕行，低于它的可直行。",
+      "image": "images/subject1/2019_kemu1_853000.jpg"
+    },
+    {
+      "id": "nonmotor_lane",
+      "name": "非机动车车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道只给非机动车走，机动车不得驶入。",
+      "image": "images/subject1/2019_kemu1_850700.jpg"
+    },
+    {
+      "id": "nonmotor_only",
+      "name": "非机动车行驶",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条道路只供非机动车行驶，机动车别进。",
+      "image": "images/subject1/2019_kemu1_850600.jpg"
+    },
+    {
+      "id": "motor_vehicle_lane",
+      "name": "机动车车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道只供机动车行驶。",
+      "image": "images/subject1/2019_kemu1_850500.jpg"
+    },
+    {
+      "id": "straight_left",
+      "name": "直行和向左转弯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "只准直行或向左转弯，不能右转。",
+      "image": "images/subject1/2019_kemu1_847900.jpg"
+    },
+    {
+      "id": "straight_right",
+      "name": "直行和向右转弯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "只准直行或向右转弯，不能左转。",
+      "image": "images/subject1/2019_kemu1_847800.jpg"
+    },
+    {
+      "id": "left_right",
+      "name": "向左和向右转弯",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "只准向左或向右转弯，不能直行。",
+      "image": "images/subject1/2019_kemu1_848000.jpg"
+    },
+    {
+      "id": "overpass_straight_right",
+      "name": "立体交叉直行和右转弯行驶",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "在立体交叉处，直行走主路，右转按图示的匝道。",
+      "image": "images/subject1/2019_kemu1_848400.jpg"
+    },
+    {
+      "id": "overpass_straight_left",
+      "name": "立体交叉直行和左转弯行驶",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "在立体交叉处，直行走主路，左转按图示的匝道。",
+      "image": "images/subject1/2019_kemu1_848300.jpg"
+    },
+    {
+      "id": "keep_left",
+      "name": "靠左侧道路行驶",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "只准靠左侧通行，别走右侧。",
+      "confuse_with": "keep_right",
+      "confuse_note": "箭头斜向左下是靠左，斜向右下是靠右。",
+      "image": "images/subject1/2019_kemu1_848200.jpg"
+    },
+    {
+      "id": "keep_right",
+      "name": "靠右侧道路行驶",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "只准靠右侧通行，别走左侧。",
+      "image": "images/subject1/2019_kemu1_848100.jpg"
+    },
+    {
+      "id": "u_turn",
+      "name": "掉头",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这里允许机动车掉头。",
+      "image": "images/subject1/2019_kemu1_851000.jpg"
+    },
+    {
+      "id": "u_turn_lane",
+      "name": "掉头车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准掉头。",
+      "image": "images/subject1/2019_kemu1_850000.jpg"
+    },
+    {
+      "id": "u_turn_left_lane",
+      "name": "掉头和左转合用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准掉头和左转。",
+      "image": "images/subject1/2019_kemu1_850100.jpg"
+    },
+    {
+      "id": "left_lane",
+      "name": "左转车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准左转，要左转提前并入。",
+      "image": "images/subject1/2019_kemu1_849600.jpg"
+    },
+    {
+      "id": "right_lane",
+      "name": "右转车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准右转，要右转提前并入。",
+      "image": "images/subject1/2019_kemu1_849500.jpg"
+    },
+    {
+      "id": "straight_lane",
+      "name": "直行车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准直行。",
+      "image": "images/subject1/2019_kemu1_849700.jpg"
+    },
+    {
+      "id": "straight_left_lane",
+      "name": "直行和左转合用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准直行或左转。",
+      "image": "images/subject1/2019_kemu1_849900.jpg"
+    },
+    {
+      "id": "straight_right_lane",
+      "name": "直行和右转合用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道的车只准直行或右转。",
+      "image": "images/subject1/2019_kemu1_849800.jpg"
+    },
+    {
+      "id": "divided_lanes",
+      "name": "分向行驶车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "多条车道各走各的方向：到路口前就要变到想走的车道。",
+      "image": "images/subject1/2019_kemu1_850200.jpg"
+    },
+    {
+      "id": "lanes_more",
+      "name": "车道数增加",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "前方车道变多（如两条变三条）：可顺势并到新车道。",
+      "confuse_with": "lanes_less",
+      "confuse_note": "往外分叉出新车道是增加；往里收拢是减少。",
+      "image": "images/subject1/2019_kemu1_853300.jpg"
+    },
+    {
+      "id": "lanes_less",
+      "name": "车道数变少",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "前方车道减少（如三条变两条）：提前看清，按次序并线。",
+      "image": "images/subject1/2019_kemu1_853200.jpg"
+    },
+    {
+      "id": "oneway_right",
+      "name": "向右单行路",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条路只准向右单向行驶，不能逆行。",
+      "image": "images/subject1/2019_kemu1_848700.jpg"
+    },
+    {
+      "id": "oneway_left",
+      "name": "向左单行路",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条路只准向左单向行驶，不能逆行。",
+      "image": "images/subject1/2019_kemu1_848600.jpg"
+    },
+    {
+      "id": "oneway_straight",
+      "name": "直行单行路",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条路只准向前单向行驶，不能逆行。",
+      "image": "images/subject1/2019_kemu1_848800.jpg"
+    },
+    {
+      "id": "dead_end",
+      "name": "此路不通",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "前方是死路：别驶入，换路线。",
+      "image": "images/subject1/2019_kemu1_853100.jpg"
+    },
+    {
+      "id": "honk",
+      "name": "应当鸣喇叭",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "视线受阻的路段：按喇叭提示对向来车。",
+      "confuse_with": "no_horn",
+      "confuse_note": "蓝底喇叭是要鸣；红圈红斜杠的喇叭是禁止鸣。",
+      "image": "images/subject1/2019_kemu1_849000.jpg"
+    },
+    {
+      "id": "brt_lane",
+      "name": "BRT 车辆专用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道只给 BRT（快速公交）车辆走，其他车别占用。",
+      "image": "images/subject1/2019_kemu1_850800.jpg"
+    },
+    {
+      "id": "bus_lane",
+      "name": "公交线路专用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道只给公交车走，其他车别占用。",
+      "image": "images/subject1/2019_kemu1_850300.jpg"
+    },
+    {
+      "id": "hov_lane",
+      "name": "多乘员车辆专用车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这条车道只给载客人数达标的车辆走，比机动车道标志的小车多两个人影。",
+      "image": "images/subject1/2019_kemu1_850900.jpg"
+    },
+    {
+      "id": "priority_oncoming",
+      "name": "会车先行",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "狭窄路段会车时，我方（粗箭头）可以先走，对向要让。",
+      "image": "images/subject1/2019_kemu1_849400.jpg"
+    },
+    {
+      "id": "main_road_first",
+      "name": "干路先行",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "前方路口干路上的车先行，支路车辆要让干路车辆。",
+      "image": "images/subject1/2019_kemu1_849300.jpg"
+    },
+    {
+      "id": "passing_bay",
+      "name": "错车道",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "窄路上供车辆让行的错车位：对向来车时，在这里停靠让路。",
+      "confuse_with": "hw_emergency_bay",
+      "confuse_note": "凸出一块、中间没有虚线的蓝底是错车道；绿底、中间有虚线的是紧急停车带。",
+      "image": "images/subject1/2019_kemu1_852600.jpg"
+    },
+    {
+      "id": "parking_indoor",
+      "name": "室内停车场",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这里是室内停车场：P 上有顶棚。",
+      "confuse_with": "parking_outdoor",
+      "confuse_note": "P 上有顶棚是室内，没有顶棚是露天。",
+      "image": "images/subject1/2019_kemu1_852500.jpg"
+    },
+    {
+      "id": "parking_outdoor",
+      "name": "露天停车场",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "这里是露天停车场：P 上没有顶棚。",
+      "image": "images/subject1/2019_kemu1_852400.jpg"
+    },
+    {
+      "id": "monitor",
+      "name": "交通监控设备",
+      "kind": "indicate",
+      "band": "common",
+      "meaning": "前方有交通监控设备：别违法，别抢黄灯、别超速。",
+      "image": "images/subject1/2019_kemu1_853400.jpg"
+    },
+    {
+      "id": "cross_ahead_preview",
+      "name": "交叉路口预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方交叉路口：几个方向各通往哪、还有多远，提前看好、提前变道。",
+      "image": "images/subject1/2019_kemu1_851300.jpg"
+    },
+    {
+      "id": "cross_ahead_plus",
+      "name": "十字交叉路口预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方 500 米是十字路口：对照牌上路名，提前选车道。",
+      "image": "images/subject1/2019_kemu1_851400.jpg"
+    },
+    {
+      "id": "cross_ahead_t",
+      "name": "丁字交叉路口预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方是丁字路口：横线挡住的方向没有路，只能左转或右转。",
+      "image": "images/subject1/2019_kemu1_851500.jpg"
+    },
+    {
+      "id": "cross_ahead_y",
+      "name": "Y 型交叉路口预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方是 Y 型岔路：按箭头选方向，提前变道。",
+      "image": "images/subject1/2019_kemu1_851600.jpg"
+    },
+    {
+      "id": "interchange_ahead",
+      "name": "互通式立体交叉预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方是互通立交：照图选好要走的匝道。",
+      "image": "images/subject1/2019_kemu1_851800.jpg"
+    },
+    {
+      "id": "roundabout_ahead",
+      "name": "环行交叉路口预告",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方是环岛路口：对照路名选好出口。",
+      "image": "images/subject1/2019_kemu1_851700.jpg"
+    },
+    {
+      "id": "place_distance",
+      "name": "地点距离",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方各地点的名称和路程：估算距离。",
+      "image": "images/subject1/2019_kemu1_852300.jpg"
+    },
+    {
+      "id": "tunnel_exit_dist",
+      "name": "隧道出口距离",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "特长隧道里离出口还有多远（2500 m 这样的牌）：耐心跟车，别超车。",
+      "image": "images/subject1/2019_kemu1_853500.jpg"
+    },
+    {
+      "id": "route_national",
+      "name": "国道编号",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "红底白字、G 开头的是国道编号。",
+      "confuse_with": "route_provincial",
+      "confuse_note": "G 红底白字国道；S 黄底黑字省道；X 白底黑字县道；Y 白底黑字乡道。",
+      "image": "images/subject1/2019_kemu1_851900.jpg"
+    },
+    {
+      "id": "route_provincial",
+      "name": "省道编号",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "黄底黑字、S 开头的是省道编号。",
+      "image": "images/subject1/2019_kemu1_852000.jpg"
+    },
+    {
+      "id": "route_county",
+      "name": "县道编号",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "白底黑字、X 开头的是县道编号。",
+      "image": "images/subject1/2019_kemu1_852100.jpg"
+    },
+    {
+      "id": "route_township",
+      "name": "乡道编号",
+      "kind": "guide",
+      "band": "rare",
+      "meaning": "白底黑字、Y 开头的是乡道编号。",
+      "image": "images/subject1/2019_kemu1_852200.jpg"
+    },
+    {
+      "id": "escape_lane",
+      "name": "避险车道",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "长下坡刹车失灵时用的避险车道：平时不要占用或停车。",
+      "image": "images/subject1/2019_kemu1_844700.jpg"
+    },
+    {
+      "id": "viewpoint",
+      "name": "观景台",
+      "kind": "guide",
+      "band": "rare",
+      "meaning": "前方可以停车观景的观景台。",
+      "image": "images/subject1/2019_kemu1_852700.jpg"
+    },
+    {
+      "id": "rest_area",
+      "name": "休息区",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "前方可以停车休息的休息区。",
+      "image": "images/subject1/2019_kemu1_852900.jpg"
+    },
+    {
+      "id": "emergency_shelter",
+      "name": "应急避难场所",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "灾害时用来躲避的应急避难场所：画面是人在跑。",
+      "image": "images/subject1/2019_kemu1_852800.jpg"
+    },
+    {
+      "id": "chevron",
+      "name": "线形诱导标志",
+      "kind": "guide",
+      "band": "common",
+      "meaning": "箭头指向的一侧就是前方道路转弯的方向：提前减速，按箭头方向走。",
+      "image": "images/subject1/2019_kemu1_853600.jpg"
+    },
+    {
+      "id": "hw_start",
+      "name": "高速公路起点",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "从这里起是高速公路：高速的规矩开始，不准掉头、倒车，不能随意停车。",
+      "confuse_with": "hw_end_ahead",
+      "confuse_note": "起点的路面完整；终点预告里路上有一道红斜杠划掉。",
+      "image": "images/subject1/2019_kemu1_854700.jpg"
+    },
+    {
+      "id": "hw_end_ahead",
+      "name": "高速公路终点预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方将驶出高速：红斜杠划掉高速路，提前减速，做好准备。",
+      "image": "images/subject1/2019_kemu1_854800.jpg"
+    },
+    {
+      "id": "hw_route_name",
+      "name": "高速公路命名编号",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "国家高速的编号（如 G2 京沪高速）：看编号确认走的是哪条高速。",
+      "image": "images/subject1/2019_kemu1_854300.jpg"
+    },
+    {
+      "id": "hw_dir_ahead",
+      "name": "高速公路地点、方向预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方分岔：看地名和 G 编号选对方向。",
+      "image": "images/subject1/2019_kemu1_854100.jpg"
+    },
+    {
+      "id": "hw_distance_ahead",
+      "name": "高速公路地点距离预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方各地点的名称和路程：估算路程、决定在哪下。",
+      "image": "images/subject1/2019_kemu1_854200.jpg"
+    },
+    {
+      "id": "hw_next_exit",
+      "name": "高速公路下一出口预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "下一个出口的名称和距离：想下就提前变到出口一侧。",
+      "image": "images/subject1/2019_kemu1_854400.jpg"
+    },
+    {
+      "id": "hw_exit_right",
+      "name": "高速公路右侧出口预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "右侧出口：想下就提前变到最右侧车道。",
+      "image": "images/subject1/2019_kemu1_854500.jpg"
+    },
+    {
+      "id": "hw_exit_left",
+      "name": "高速公路左侧出口预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "左出口：想下就提前变到最左侧车道（「左出口」字样很明显）。",
+      "image": "images/subject1/2019_kemu1_854600.jpg"
+    },
+    {
+      "id": "hw_entrance",
+      "name": "高速公路入口预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方 2 km 是高速入口。",
+      "image": "images/subject1/2019_kemu1_854000.jpg"
+    },
+    {
+      "id": "hw_parking_ahead",
+      "name": "高速公路停车场预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方是停车场（只有 P）：没有加油餐饮。",
+      "confuse_with": "hw_service_ahead",
+      "confuse_note": "有刀叉是服务区，有茶杯是停车区，只有 P 是停车场。",
+      "image": "images/subject1/_exam_subject1_2019_kemu1_856000.jpg"
+    },
+    {
+      "id": "hw_rest_ahead",
+      "name": "高速公路停车区预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方是停车区（P 加茶杯）：可以停车休息，没有加油餐饮。",
+      "image": "images/subject1/2019_kemu1_855900.jpg"
+    },
+    {
+      "id": "hw_service_ahead",
+      "name": "高速公路服务区预告",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方是服务区（刀叉）：有加油、餐饮、维修，累了就在这休息。",
+      "image": "images/subject1/2019_kemu1_855800.jpg"
+    },
+    {
+      "id": "hw_gas",
+      "name": "高速公路加油站",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "这里有加油站。",
+      "image": "images/subject1/2019_kemu1_855700.jpg"
+    },
+    {
+      "id": "hw_emergency_bay",
+      "name": "高速公路紧急停车带",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "右侧凸出的紧急停车带：故障或急事才用，不能当停车区。",
+      "image": "images/subject1/2019_kemu1_855600.jpg"
+    },
+    {
+      "id": "hw_emergency_phone",
+      "name": "高速公路紧急电话",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "路边设有紧急电话：故障或事故时用它求助。",
+      "confuse_with": "hw_rescue_phone",
+      "confuse_note": "只有听筒图的是紧急电话；写着「救援」和号码（如 1212）的是救援电话。",
+      "image": "images/subject1/2019_kemu1_855400.jpg"
+    },
+    {
+      "id": "hw_rescue_phone",
+      "name": "高速公路救援电话",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "这是救援电话号码，故障时拨打。",
+      "image": "images/subject1/2019_kemu1_855500.jpg"
+    },
+    {
+      "id": "hw_radio",
+      "name": "高速公路交通广播频率",
+      "kind": "highway",
+      "band": "rare",
+      "meaning": "把收音机调到牌上的频率，听路况。",
+      "image": "images/subject1/2019_kemu1_854900.jpg"
+    },
+    {
+      "id": "hw_etc_toll",
+      "name": "设有 ETC 的收费站",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "前方收费站有 ETC 车道：走 ETC 车道减速通过，别在 ETC 车道停车缴费。",
+      "image": "images/subject1/2019_kemu1_855100.jpg"
+    },
+    {
+      "id": "hw_etc_lane",
+      "name": "高速公路 ETC 车道",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "ETC 专用车道：没有 ETC 的车别进。",
+      "image": "images/subject1/2019_kemu1_855200.jpg"
+    },
+    {
+      "id": "hw_take_card",
+      "name": "停车领卡",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "高速入口：停车领通行卡，别忘了取。",
+      "image": "images/subject1/2019_kemu1_855000.jpg"
+    },
+    {
+      "id": "hw_weather_speed",
+      "name": "高速公路特殊天气建议速度",
+      "kind": "highway",
+      "band": "common",
+      "meaning": "雨、雾等特殊天气，按牌上的建议速度开。",
+      "image": "images/subject1/2019_kemu1_855300.jpg"
+    },
+    {
+      "id": "tourist_distance",
+      "name": "旅游区距离",
+      "kind": "tourist",
+      "band": "rare",
+      "meaning": "离旅游区还有牌上这么远（棕底白字）。",
+      "confuse_with": "tourist_direction",
+      "confuse_note": "箭头水平指向是旅游区方向；有景区名加公里数是旅游区距离。",
+      "image": "images/subject1/2019_kemu1_856200.jpg"
+    },
+    {
+      "id": "tourist_direction",
+      "name": "旅游区方向",
+      "kind": "tourist",
+      "band": "common",
+      "meaning": "旅游区在箭头所指的方向（棕底白字）。",
+      "image": "images/subject1/2019_kemu1_856300.jpg"
+    },
+    {
+      "id": "t_junction",
+      "name": "T 型交叉路口",
+      "kind": "warning",
+      "band": "common",
+      "meaning": "前方是 T 型路口：减速，注意横向来车，竖线挡住的方向没有路。",
+      "image": "images/subject1/2019_kemu1_839500.jpg"
+    },
+    {
+      "id": "pass_right",
+      "name": "右侧通行",
+      "kind": "marker",
+      "band": "common",
+      "meaning": "障碍物在左侧：从右侧通过，别往左靠。",
+      "confuse_with": "pass_left",
+      "confuse_note": "红白斜杠的走向：下右上左是右侧通行，反之是左侧通行，向上的 ∧ 是两侧都能通行。",
+      "image": "images/subject1/2019_kemu1_853800.jpg"
+    },
+    {
+      "id": "pass_left",
+      "name": "左侧通行",
+      "kind": "marker",
+      "band": "common",
+      "meaning": "障碍物在右侧：从左侧通过，别往右靠。",
+      "image": "images/subject1/2019_kemu1_853900.jpg"
+    },
+    {
+      "id": "pass_both",
+      "name": "两侧通行",
+      "kind": "marker",
+      "band": "common",
+      "meaning": "障碍物在中间：左右两侧都能通过。",
+      "image": "images/subject1/2019_kemu1_853700.jpg"
     }
   ]
 }

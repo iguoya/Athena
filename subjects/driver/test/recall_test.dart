@@ -18,7 +18,7 @@ import "package:flutter_test/flutter_test.dart";
 /// 自测（ADR 0077 起，ADR 0094 并入作答记录，ADR 0095 易混数字重新规划）：卡片流检索练习——
 /// 四选一 / 数值手输、对错当场判定、答错重现、答对的不再出现、随时退出。
 /// **自测的每次作答就是一条作答记录**：错题本、考前复习、强化练习用同一份记录。
-/// 选手势页（8 张）跑完整流程；标线页（33 张）看版面；易混数字页看手输。
+/// 选手势页跑完整流程；标线页（33 张）看版面；易混数字页看手输。
 void main() {
   Future<(Bank, ProgressStore, Directory)> boot(WidgetTester tester) async {
     late Directory dir;
@@ -121,14 +121,15 @@ void main() {
       if (isRecallQuestionId(a.questionId)) a,
   ];
 
-  testWidgets("自测：手势页 8 张逐张过完，答错的重现，每次作答记成作答记录；再开只考没答对够的，答对的不再出现", (tester) async {
-    final (_, store, dir) = await boot(tester);
+  testWidgets("自测：手势页逐张过完，答错的重现，每次作答记成作答记录；再开只考没答对够的，答对的不再出现", (tester) async {
+    final (bank, store, dir) = await boot(tester);
+    final n = recallCardsOfTopic(speedTopicById("s1.gestures")!, bank).length;
     final before = await store.allAttempts();
 
     await openRecall(tester, "手势速记");
     expect(find.textContaining("想一想"), findsOneWidget);
-    expect(find.text("已答对 0 / 8"), findsOneWidget);
-    expect(find.textContaining("剩 8 张"), findsOneWidget, reason: "没有张数上限：8 张都没考过，就排 8 张");
+    expect(find.text("已答对 0 / $n"), findsOneWidget);
+    expect(find.textContaining("剩 $n 张"), findsOneWidget, reason: "没有张数上限：$n 张都没考过，就排 $n 张");
     // 出的是四选一：一个正确项加三个错项。
     expect(find.byKey(const ValueKey("recall-correct")), findsOneWidget);
     expect(wrongOptions(), findsNWidgets(3));
@@ -141,20 +142,20 @@ void main() {
       gradedMiss = true;
     }
     expect(find.text("考完了"), findsOneWidget);
-    expect(find.textContaining("这次共 8 张"), findsOneWidget);
+    expect(find.textContaining("这次共 $n 张"), findsOneWidget);
     expect(find.textContaining("答错 1 次"), findsOneWidget);
     expect(find.textContaining("答错的："), findsOneWidget, reason: "收尾列出答错的");
-    expect(find.text("已答对 7 / 8"), findsOneWidget, reason: "答错后重现才答对的那张不算第一次就答对");
+    expect(find.text("已答对 ${n - 1} / $n"), findsOneWidget, reason: "答错后重现才答对的那张不算第一次就答对");
     expect(find.textContaining("认得"), findsNothing, reason: "界面里没有「认得」这个概念");
     expect(find.textContaining("再来"), findsNothing, reason: "没有「再来一轮」");
     expect(find.textContaining("去做这几个的题"), findsOneWidget);
 
     // 每次作答都是一条作答记录：8 张各一次，加上答错那张重现的一次，共 9 条，其中 1 条答错。
     final attempts = await recallAttempts(store);
-    expect(attempts.length, 9);
+    expect(attempts.length, n + 1);
     expect(attempts.where((a) => !a.correct).length, 1);
     expect(attempts.every((a) => a.questionId.startsWith("drive.recall.s1.gestures.")), isTrue);
-    expect((await store.allAttempts()).length, before.length + 9, reason: "只多了自测的 9 条");
+    expect((await store.allAttempts()).length, before.length + n + 1, reason: "只多了自测的 ${n + 1} 条");
 
     // 答错的卡进了错题库：累计答错数、强化练习的错题库用的就是这份记录（重现答对一次，错题本里已经移出，
     // 但累计答对 1 次还没到答错 1 次的 2 倍，强化练习仍会抽它）。
@@ -165,7 +166,7 @@ void main() {
     await reload(tester);
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    expect(find.text("已答对 7 / 8"), findsOneWidget);
+    expect(find.text("已答对 ${n - 1} / $n"), findsOneWidget);
     expect(find.textContaining("剩 1 张"), findsOneWidget, reason: "第二次只考答错的");
     await answer(tester, remembered: true);
     expect(find.text("这一页全部答对了"), findsOneWidget);
@@ -177,7 +178,7 @@ void main() {
     await tester.pump();
     expect(find.text("这一页全部答对了"), findsOneWidget);
     expect(find.textContaining("没有要考的了"), findsOneWidget);
-    expect(find.text("已答对 8 / 8"), findsOneWidget);
+    expect(find.text("已答对 $n / $n"), findsOneWidget);
     await closeDialog(tester);
 
     await teardown(tester, store, dir);
@@ -203,14 +204,15 @@ void main() {
   });
 
   testWidgets("自测：中途退出（按钮或 Esc）不丢已判的，再打开接着考没答对的", (tester) async {
-    final (_, store, dir) = await boot(tester);
+    final (bank, store, dir) = await boot(tester);
+    final n = recallCardsOfTopic(speedTopicById("s1.gestures")!, bank).length;
     await openRecall(tester, "手势速记");
-    expect(find.text("已答对 0 / 8"), findsOneWidget);
+    expect(find.text("已答对 0 / $n"), findsOneWidget);
 
     // 答对两张，用右上角退出按钮离开。
     await answer(tester, remembered: true);
     await answer(tester, remembered: true);
-    expect(find.text("已答对 2 / 8"), findsOneWidget);
+    expect(find.text("已答对 2 / $n"), findsOneWidget);
     await tester.tap(find.byIcon(Glyph.close));
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pump(const Duration(milliseconds: 400));
@@ -220,15 +222,15 @@ void main() {
     // 再打开：答对过的 2 张不再出现，只剩 6 张；再答一张后用 Esc 退出，同样记着。
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    expect(find.text("已答对 2 / 8"), findsOneWidget);
-    expect(remaining(), 6);
+    expect(find.text("已答对 2 / $n"), findsOneWidget);
+    expect(remaining(), n - 2);
     await answer(tester, remembered: true);
     await closeDialog(tester);
     await reload(tester);
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    expect(find.text("已答对 3 / 8"), findsOneWidget);
-    expect(remaining(), 5);
+    expect(find.text("已答对 3 / $n"), findsOneWidget);
+    expect(remaining(), n - 3);
     await closeDialog(tester);
     await teardown(tester, store, dir);
   });
@@ -289,7 +291,7 @@ void main() {
       expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
       await tester.tap(find.text("自测"));
       await tester.pump();
-      expect(remaining(), greaterThanOrEqualTo(8), reason: "$page 应把没考过的卡都排出来");
+      expect(remaining(), greaterThanOrEqualTo(7), reason: "$page 应把没考过的卡都排出来");
       expect(find.textContaining("认得"), findsNothing, reason: "$page：界面里没有「认得」这个概念");
       await closeDialog(tester);
     }
