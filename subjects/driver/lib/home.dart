@@ -57,11 +57,17 @@ class RecallRowDot extends StatelessWidget {
         SymbolStatus.mastered => "这一行的自测题已掌握",
         SymbolStatus.fresh => "这一行还没自测过",
       },
-      // 整个圆用状态色填充（环到圆心之间全上色），作为行状态的标记主体（使用者反馈）。
+      // 状态色填充整个圆，中心挖一个黑色实心圆点（使用者指定的形态，圆径缩小一档）。
       child: Container(
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        alignment: Alignment.center,
+        child: Container(
+          width: 14,
+          height: 14,
+          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+        ),
       ),
     );
   }
@@ -1691,7 +1697,7 @@ class _HomePageState extends State<HomePage> {
         onStartPractice: practice,
       ),
       SpeedKind.gestures => GesturesPage(
-        gestures: widget.bank.gestureList,
+        gestures: gesturesOf(widget.bank, topic),
         histories: _histories,
         daily: daily,
         mastered: _mastered,
