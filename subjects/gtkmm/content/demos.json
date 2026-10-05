@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "_": "演示与实验清单：壳、scripts/check.py 与（将来的）演示宿主三方的唯一事实源（应用 ADR 0001 决策 6）。curriculum.json 的教学块只引用这里的 id，不重复实体信息。",
+  "_fields": {
+    "id": "清单内唯一；演示 demo.*，实验 exp.*",
+    "title": "展示名",
+    "purpose": "演示目的——回答「这个演示具象化哪个理论点」",
+    "theory_refs": "对应的理论点 id（curriculum.json knowledge_points），前缀 gtkmm.",
+    "source_dir": "CMake 工程目录（相对应用根）",
+    "build_target": "CMake target 名",
+    "translation_ref": "锚定的教程章节（chapter/appendix + title）",
+    "source_refs": "出处（docs.gtk.org / 教程章节 / gtkmm-demo 文件）",
+    "skeleton_dir": "实验骨架目录（只读；学习者副本在工作区）",
+    "acceptance": "实验跑通标准"
+  },
+  "demos": [],
+  "experiments": []
+}

@@ -1,0 +1,36 @@
+{
+  "id": "gtkmm",
+  "title": "GTKMM",
+  "group": "编程",
+  "description": "gtkmm（GTK4 C++ 绑定）学习应用：官方教程全量翻译、交互模拟、真机演示与可编辑实验一体。",
+  "icon": {
+    "type": "theme",
+    "name": "applications-interface-symbolic",
+    "symbol": "window",
+    "letter": "G",
+    "accent": "#3D6FB4",
+    "file": "icon.svg"
+  },
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "npm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1460"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-gtkmm"
+  }
+}
