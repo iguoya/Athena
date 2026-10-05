@@ -114,7 +114,7 @@ class SignsPage extends StatelessWidget {
     fallback: (side) => SignView(id: sign.id, size: side),
   );
 
-  /// 自测：每轮抽 5 个标志，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：把没认得的标志逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,

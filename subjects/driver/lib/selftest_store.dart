@@ -5,9 +5,10 @@ import "package:path/path.dart" as p;
 
 import "progress.dart";
 
-/// 自测的**作答**记录（ADR 0082、0083、0085）：自测里每张卡判一次对错，这里记下结果，
-/// 只用来补两处作答记录管不到的地方——本轮之后「还出不出」的过滤，以及没有相关题的
-/// 条目（胎压灯这类）的兜底。0085 前记录的是自评，字段与格式原样沿用。
+/// 自测的**作答**记录（ADR 0082、0083、0085、0090）：自测里每张卡判一次对错，这里记下结果，
+/// 把每张卡区分成三种状态——没考过、答错过、答对过。答对过的以后不再出现；答错过的下次
+/// 再考（第二次只考它们）；没考过的先考。它补作答记录管不到的地方：没有相关题的条目
+/// （胎压灯这类）的兜底，以及本页「还出不出」的过滤。0085 前记录的是自评，字段与格式原样沿用。
 ///
 /// **它不是掌握度，也不是「认得」的依据。** 速记卡有相关题的，「认得」只看作答记录
 /// （答对并掌握才算，见 `classifyEntry`）；自测答得再对也只能得到「自测答对，待做题确认」。
@@ -25,50 +26,32 @@ class SelfTestStore {
     _load();
   }
 
-  /// 间隔复现（ADR 0083）：答对之后，隔这么多天再考一次；再次一次答对就升一级、间隔
-  /// 拉长（1 → 3 → 7 → 21 天，封顶）。作答记录证明的掌握也按它的阶梯回头复现。
-  static const intervalDays = [1, 3, 7, 21];
-
-  /// 第 [stage] 级（从 1 起）的间隔天数；超过阶梯按最长算。
-  static int daysForStage(int stage) => intervalDays[stage.clamp(1, intervalDays.length) - 1];
-
   final DateTime Function() _clock;
   final String? _file;
 
   DateTime now() => _clock();
 
-  /// 页面键 → 条目键 → 记录 `{c: 一次就答对的连续次数, m: 没答对的次数, t: 最近一次作答的毫秒时间}`。
+  /// 页面键 → 条目键 → 记录 `{c: 一次就答对的次数, m: 答错的次数, t: 最近一次作答的毫秒时间}`。
   final Map<String, Map<String, Map<String, int>>> _pages = {};
 
   static String _safe(String user) => user.replaceAll(RegExp(r'[/\\:*?"<>|]'), "_");
 
   Map<String, int>? _entry(String page, String id) => _pages[page]?[id];
 
-  int _clean(String page, String id) => _entry(page, id)?["c"] ?? 0;
+  /// 答对过（第一次问就答对）：以后不再出现，除非「重新自测」清掉记录（ADR 0090，
+  /// 取代 0083 的间隔复现——答对的不用在后续测试中出现）。
+  bool isConfirmed(String page, String id) => (_entry(page, id)?["c"] ?? 0) >= 1;
 
-  bool _withinInterval(String page, String id) {
-    final e = _entry(page, id);
-    if (e == null || (e["c"] ?? 0) < 1) return false;
-    final since = now().difference(DateTime.fromMillisecondsSinceEpoch(e["t"] ?? 0));
-    return since < Duration(days: daysForStage(e["c"]!));
-  }
-
-  /// 自测答对、且还在复现间隔内：这段时间里自测不再出它。
-  bool isConfirmed(String page, String id) => _withinInterval(page, id);
-
-  /// 答对过、间隔到了：该再考一次，确认还记得。
-  bool isOverdue(String page, String id) => _clean(page, id) >= 1 && !_withinInterval(page, id);
-
-  /// 最近一次作答没答对：自测优先再考。
+  /// 答错过、还没答对过：下次自测优先再考。
   bool isLearning(String page, String id) {
     final e = _entry(page, id);
     return e != null && (e["c"] ?? 0) == 0 && (e["m"] ?? 0) > 0;
   }
 
-  /// 记一次作答。[firstTry]：这一轮里第一次问到它（没经过「没答对 → 重现」）。
-  /// - 第一次问就答对：一次就答对的次数 +1（间隔升一级），记下时间；
-  /// - 没答对：次数清零、没答对次数 +1；
-  /// - 重现后才答对：不加次数（提醒出来的不算自己想起来的），记录原样保留。
+  /// 记一次作答。[firstTry]：这一次自测里第一次问到它（没经过「答错 → 重现」）。
+  /// - 第一次问就答对：记为答对过，以后不再出现；
+  /// - 答错：答对次数清零、答错次数 +1，下次自测再考；
+  /// - 答错后重现才答对：不算答对过（提醒出来的不算自己想起来的），记录原样保留，下次再考一次。
   void record(String page, String id, {required bool remembered, required bool firstTry}) {
     final e = _pages.putIfAbsent(page, () => {}).putIfAbsent(id, () => {"c": 0, "m": 0, "t": 0});
     final stamp = now().millisecondsSinceEpoch;
@@ -99,7 +82,6 @@ class SelfTestStore {
             id: {
               "c": ((mark as Map<String, dynamic>)["c"] as num?)?.toInt() ?? 0,
               "m": (mark["m"] as num?)?.toInt() ?? 0,
-              // 0082 版没有时间：当作很久以前，认得过的条目到期重考一次。
               "t": (mark["t"] as num?)?.toInt() ?? 0,
             },
         };

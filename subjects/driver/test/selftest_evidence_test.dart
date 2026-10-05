@@ -61,20 +61,30 @@ void main() {
     );
   });
 
-  test("作答记录证明掌握才是 known；离最近作答超过间隔就回头确认（due）", () {
+  test("作答记录证明掌握才是 known，而且隔多久都还是 known——答对的不再出现（ADR 0090）", () {
     final q = related[0];
-    // 先错一次，之后连着两天答对（连对跨 2 天，间隔阶梯第 2 级 = 3 天）。
+    // 先错一次，之后连着两天答对。
     final h = history({
       q: [(false, day1), (true, day1.add(const Duration(days: 1))), (true, day1.add(const Duration(days: 2)))],
     });
     final lastAt = day1.add(const Duration(days: 2));
-    final soon = SelfTestStore(clock: () => lastAt.add(const Duration(days: 2)));
-    expect(classify([q], h, soon, mastered: {q.id}), RecallBucket.known);
-    final later = SelfTestStore(clock: () => lastAt.add(const Duration(days: 4)));
-    expect(classify([q], h, later, mastered: {q.id}), RecallBucket.due);
+    for (final later in [2, 30, 400]) {
+      final store = SelfTestStore(clock: () => lastAt.add(Duration(days: later)));
+      expect(classify([q], h, store, mastered: {q.id}), RecallBucket.known, reason: "隔 $later 天也不回头");
+    }
   });
 
-  test("没有相关题：退回自测作答——没答对过 wrong，答对 known，到期 due，没考过 fresh", () {
+  test("按记录区分：自测答错过的下次再考（wrong），第一次就答对的不再出（selfOnly）", () {
+    final store = SelfTestStore(clock: () => day1);
+    store.record("signs", "stop", remembered: false, firstTry: true);
+    expect(classify(related, history({}), store), RecallBucket.wrong, reason: "答错过，第二次自测再考");
+    store.record("signs", "stop", remembered: true, firstTry: true);
+    expect(classify(related, history({}), store), RecallBucket.selfOnly, reason: "第二次一次答对，以后不再出");
+    expect(recallDrawOrder, isNot(contains(RecallBucket.selfOnly)));
+    expect(recallDrawOrder, isNot(contains(RecallBucket.known)));
+  });
+
+  test("没有相关题：退回自测作答——答错过 wrong，答对 known 且隔多久都不再出，没考过 fresh", () {
     var now = day1;
     final store = SelfTestStore(clock: () => now);
     final h = history({});
@@ -83,7 +93,7 @@ void main() {
     expect(classify(const [], h, store), RecallBucket.wrong);
     store.record("signs", "stop", remembered: true, firstTry: true);
     expect(classify(const [], h, store), RecallBucket.known);
-    now = now.add(const Duration(days: 2));
-    expect(classify(const [], h, store), RecallBucket.due);
+    now = now.add(const Duration(days: 400));
+    expect(classify(const [], h, store), RecallBucket.known);
   });
 }

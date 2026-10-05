@@ -114,7 +114,7 @@ class MarkingsPage extends StatelessWidget {
     fallback: (side) => MarkingView(id: marking.id, size: side),
   );
 
-  /// 自测：每轮抽 5 条标线，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：把没认得的标线逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,

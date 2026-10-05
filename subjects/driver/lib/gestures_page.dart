@@ -156,7 +156,7 @@ class GesturesPage extends StatelessWidget {
     fallback: (side) => GestureAnimation(id: g.id, size: side),
   );
 
-  /// 自测：每轮抽 5 个手势，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：把没认得的手势逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
