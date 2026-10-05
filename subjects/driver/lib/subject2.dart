@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+import "charts.dart";
 import "glyphs.dart";
 import "brief.dart";
 import "drill.dart";

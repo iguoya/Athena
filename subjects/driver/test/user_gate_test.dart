@@ -1,6 +1,6 @@
 import "dart:io";
 
-import "package:athena_driver/main.dart";
+import "package:athena_driver/user_gate_screen.dart";
 import "package:athena_driver/sync.dart";
 import "package:athena_driver/user_directory.dart";
 import "package:athena_driver/users.dart";

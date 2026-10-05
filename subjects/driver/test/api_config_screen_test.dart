@@ -1,6 +1,6 @@
 import "dart:io";
 
-import "package:athena_driver/main.dart";
+import "package:athena_driver/api_config_screen.dart";
 import "package:athena_driver/sync.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";

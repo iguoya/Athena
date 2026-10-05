@@ -5,6 +5,7 @@ import "dart:math";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
+import "charts.dart";
 import "recall_status.dart";
 import "glyphs.dart";
 import "clusters.dart";
