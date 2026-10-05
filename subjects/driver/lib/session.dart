@@ -79,10 +79,10 @@ class SessionStage extends StatefulWidget {
 }
 
 class _SessionStageState extends State<SessionStage> {
-  /// 每页题量：练习一页十题，少了翻页太勤；页面放不下就靠答完自动滚到下一题
-  /// 补上（ADR 0022）。模拟考一页二十道——百题卷刚好五页翻完一场，科目四五十题是
-  /// 二十、二十、十（ADR 0086，使用者拍板，取代 0084 的十六道）。
-  int get _groupSize => _launch.timed ? 20 : 10;
+  /// 每页题量：练习与模拟考都是一页二十题，翻页少；页面放不下就靠答完自动滚到下一题
+  /// 补上（ADR 0022）。百题的科目一模拟考刚好五页，科目四五十题是二十、二十、十
+  /// （ADR 0086、0088，使用者拍板；练习原为一页十题）。
+  int get _groupSize => 20;
 
   /// 一页答完、最后一题答错：从判完算起至少停这么久再翻，够看清正确答案和解释（ADR 0038）。
   static const _pageDwell = Duration(seconds: 5);
@@ -612,7 +612,7 @@ class _SessionStageState extends State<SessionStage> {
     final signId = choice.sign;
     final locked = _judged.contains(index);
     return Padding(
-      // 选项间距压缩到 4：一页十题，每题都省一点高度，少滚几下。
+      // 选项间距压缩到 4：一页二十题，每题都省一点高度，少滚几下。
       padding: const EdgeInsets.only(bottom: 4),
       child: Align(
         alignment: Alignment.centerLeft,
@@ -1112,7 +1112,7 @@ class _SessionStageState extends State<SessionStage> {
     if (next != null) _centerOn(next);
     // 答错才念，模拟考也念（ADR 0052）：答对还要听完一段解释，反而拖住手上的节奏。
     if (!ok) await _speak(question);
-    // 一页十题答完就翻（ADR 0025）。最后一题答对只停 1 秒（ADR 0053）；答错从判完算起
+    // 一页二十题答完就翻（ADR 0025）。最后一题答对只停 1 秒（ADR 0053）；答错从判完算起
     // 至少停 5 秒（ADR 0038），先把解释念完，念完后至少再停一会儿。
     // 模拟考最后一页不自动结束，要自己交卷。
     if (_groupDone && !(_isExam && _lastGroup)) {
@@ -1126,7 +1126,7 @@ class _SessionStageState extends State<SessionStage> {
     }
   }
 
-  /// 一页十题一屏放不下：把要答的那道题滚到屏幕正中，视线不用往下找，也不用自己拿滚轮翻。
+  /// 一页二十题一屏放不下：把要答的那道题滚到屏幕正中，视线不用往下找，也不用自己拿滚轮翻。
   /// 页首几道题滚不到中间（上面没有内容可让），就停在原位，那本来就在眼前。
   void _centerOn(int index, {bool animate = true}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {

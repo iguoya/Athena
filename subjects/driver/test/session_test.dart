@@ -336,7 +336,8 @@ void main() {
       store = await ProgressStore.open(suite: "session_test");
     });
     await tester.binding.setSurfaceSize(const Size(1600, 1000));
-    final questions = [for (var i = 0; i < 20; i++) _judge(i)];
+    // 一页二十题（ADR 0088）：造 30 道，答满第一页 20 道，等第 21 题翻出来。
+    final questions = [for (var i = 0; i < 30; i++) _judge(i)];
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -354,20 +355,20 @@ void main() {
         ),
       ),
     );
-    for (var n = 1; n <= 10; n++) {
-      final key = n == 10 && !lastCorrect ? LogicalKeyboardKey.keyF : LogicalKeyboardKey.keyT;
+    for (var n = 1; n <= 20; n++) {
+      final key = n == 20 && !lastCorrect ? LogicalKeyboardKey.keyF : LogicalKeyboardKey.keyT;
       await tester.sendKeyEvent(key);
       for (var i = 0; i < 200 && find.textContaining("已答 $n").evaluate().isEmpty; i++) {
         await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
         await tester.pump();
       }
     }
-    expect(find.text("第11题"), findsNothing);
+    expect(find.text("第21题"), findsNothing);
     await tester.pump(Duration(milliseconds: waitMs));
-    expect(find.text("第11题"), findsNothing);
+    expect(find.text("第21题"), findsNothing);
     await tester.pump(Duration(milliseconds: turnMs));
     await tester.pump();
-    expect(find.text("第11题"), findsOneWidget);
+    expect(find.text("第21题"), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {
