@@ -124,14 +124,21 @@ Quiz buildQuiz(QuizSource target, List<QuizSource> pool, {Random? random, int co
 
   final near = <_Candidate>[];
   final far = <_Candidate>[];
+  // 干扰项文字不重复；同一段文字先被别组的条目占了位、同组条目也有它时，同组的要顶替上来，
+  // 否则 nearOnly 的卡会因为别组撞了同样的值（两组都有「30 日」）丢掉同组的干扰项。
+  final taken = <String>{};
   for (final other in pool) {
     if (other.id == target.id || other.kind != target.kind) continue;
     final texts = other.answerTexts.isEmpty ? [other.name] : other.answerTexts;
+    final sameGroup = other.group != null && other.group == target.group;
     for (final raw in texts) {
       final label = optionLabel(raw);
       if (label.isEmpty || seen.contains(label)) continue;
       if (own.any((o) => _overlapsMeaning(o, label))) continue;
-      seen.add(label);
+      if (!taken.add(label)) {
+        if (!sameGroup || near.any((c) => c.label == label)) continue;
+        far.removeWhere((c) => c.label == label);
+      }
       final lenGap = (label.length - answer.length).abs() / max(max(label.length, answer.length), 1);
       final overlapGap = stem.isEmpty
           ? 0.0

@@ -4,10 +4,12 @@
     {
       "id": "points",
       "title": "记分分值",
-      "subjects": ["subject1"],
+      "subjects": [
+        "subject1"
+      ],
       "unit": "分",
       "note": "一次记分只有 12、9、6、3、1 五档，没有 2 分。",
-      "match": "记\\s*\\d+\\s*分|记几分|记多少分",
+      "match": "记\\s*\\d+\\s*分|记几分|记多少分|扣\\s*多少分|扣.{0,3}分",
       "rows": [
         {
           "value": "12 分",
@@ -44,12 +46,16 @@
           "locator": "第十二条",
           "amount": 1
         }
-      ]
+      ],
+      "ask": "{case}，一次记{blank}分。"
     },
     {
       "id": "speed",
       "title": "限速",
-      "subjects": ["subject1", "subject4"],
+      "subjects": [
+        "subject1",
+        "subject4"
+      ],
       "unit": "公里/小时",
       "note": "没有限速标志时按这张表；有标志听标志。",
       "match": "公里|km/h|时速|车速|最高速度|最低速度",
@@ -94,42 +100,51 @@
           "case": "高速公路最高（小型载客汽车）",
           "source_id": "road-safety-regulation",
           "locator": "第七十八条",
-          "amount": 120
+          "amount": 120,
+          "ask": "小型载客汽车在高速公路上行驶，最高时速不得超过{blank}公里/小时。"
         },
         {
           "value": "110",
           "case": "高速同向 3 条以上车道，最左侧车道最低",
           "source_id": "road-safety-regulation",
           "locator": "第七十八条",
-          "amount": 110
+          "amount": 110,
+          "ask": "在高速公路同向 3 条以上车道最左侧车道行驶，车速不得低于{blank}公里/小时。"
         },
         {
           "value": "100",
           "case": "高速同向 2 条车道，左侧车道最低",
           "source_id": "road-safety-regulation",
           "locator": "第七十八条",
-          "amount": 100
+          "amount": 100,
+          "ask": "在高速公路同向 2 条车道左侧车道行驶，车速不得低于{blank}公里/小时。"
         },
         {
           "value": "90",
           "case": "高速同向 3 条以上车道，中间车道最低",
           "source_id": "road-safety-regulation",
           "locator": "第七十八条",
-          "amount": 90
+          "amount": 90,
+          "ask": "在高速公路同向 3 条以上车道中间车道行驶，车速不得低于{blank}公里/小时。"
         },
         {
           "value": "60",
           "case": "高速公路最低",
           "source_id": "road-safety-regulation",
           "locator": "第七十八条",
-          "amount": 60
+          "amount": 60,
+          "ask": "在高速公路上行驶，车速不得低于{blank}公里/小时。"
         }
-      ]
+      ],
+      "ask": "{case}，最高时速不得超过{blank}公里/小时。"
     },
     {
       "id": "fog",
       "title": "高速低能见度",
-      "subjects": ["subject1", "subject4"],
+      "subjects": [
+        "subject1",
+        "subject4"
+      ],
       "unit": "公里/小时",
       "note": "能见度越低，车速和车距一起往下掉；小于 50 米就要下高速。",
       "match": "能见度",
@@ -155,12 +170,16 @@
           "locator": "第八十一条第一款第（三）项",
           "amount": 20
         }
-      ]
+      ],
+      "ask": "{case}。此时能见度{blank}。"
     },
     {
       "id": "distance",
       "title": "距离",
-      "subjects": ["subject1", "subject4"],
+      "subjects": [
+        "subject1",
+        "subject4"
+      ],
       "unit": "米",
       "note": "「口」字边上 50 米不停车，「站」字边上 30 米不停车。",
       "match": "\\d+\\s*米",
@@ -191,7 +210,8 @@
           "case": "一般道路故障难以移动：警告标志设在车后 50 米至 100 米",
           "source_id": "road-safety-regulation",
           "locator": "第六十条",
-          "amount": 100
+          "amount": 100,
+          "ask": "一般道路发生故障难以移动的，警告标志应设在车后{blank}米。"
         },
         {
           "value": "50",
@@ -219,14 +239,25 @@
           "case": "软连接牵引：牵引车与被牵引车之间大于 4 米小于 10 米",
           "source_id": "road-safety-regulation",
           "locator": "第六十一条第（三）项",
-          "amount": 10
+          "amount": 10,
+          "ask": "软连接牵引时，牵引车与被牵引车之间的距离应为{blank}米。"
+        },
+        {
+          "value": "100",
+          "case": "夜间同向近距离跟车（题库以 100 米为界）：用近光灯，不得使用远光灯",
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条",
+          "amount": 100,
+          "ask": "夜间同向近距离跟车（以{blank}米为界）：用近光灯，不得使用远光灯。"
         }
       ]
     },
     {
       "id": "terms",
       "title": "期限",
-      "subjects": ["subject1"],
+      "subjects": [
+        "subject1"
+      ],
       "unit": "",
       "note": "换证 90 日内、信息变 30 日内；弄虚作假 1 年、骗证 3 年、醉驾 5 年、逃逸终生。",
       "match": "\\d+\\s*(日|天|个月|年)|终生",
@@ -235,13 +266,15 @@
           "value": "12 个月",
           "case": "实习期（初次取得驾驶证后）；记分周期",
           "source_id": "license-order-162",
-          "locator": "第七十六条；163 号令第三条"
+          "locator": "第七十六条；163 号令第三条",
+          "ask": "关于「{case}」：期限是{blank}。"
         },
         {
           "value": "6 年 / 10 年 / 长期",
           "case": "驾驶证有效期三档：初领 6 年，每个周期都没记满 12 分依次换 10 年、长期",
           "source_id": "license-order-162",
-          "locator": "第十三条、第六十二条"
+          "locator": "第十三条、第六十二条",
+          "ask": "驾驶证有效期分为三档：初领{blank}，每个记分周期均未记满 12 分的依次换领下一档。"
         },
         {
           "value": "90 日内",
@@ -259,19 +292,22 @@
           "value": "3 年",
           "case": "学习驾驶证明有效期，科目二、三要在期内考完",
           "source_id": "license-order-162",
-          "locator": "第四十一条"
+          "locator": "第四十一条",
+          "ask": "学习驾驶证明的有效期为{blank}，科目二、科目三应当在有效期内完成考试。"
         },
         {
           "value": "7 天",
           "case": "记满 12 分：满分学习 7 天（小型汽车）",
           "source_id": "penalty-order-163",
-          "locator": "第十八条"
+          "locator": "第十八条",
+          "ask": "记满 12 分后，小型汽车驾驶人参加满分学习的天数为{blank}。"
         },
         {
           "value": "15 日内",
           "case": "收到罚款决定书后缴纳罚款",
           "source_id": "road-safety-law",
-          "locator": "第一百零八条"
+          "locator": "第一百零八条",
+          "ask": "收到罚款的行政处罚决定书后，应当在{blank}内缴纳罚款。"
         },
         {
           "value": "6 个月",
@@ -283,7 +319,8 @@
           "value": "1 年",
           "case": "隐瞒情况、提供虚假材料申领，考试舞弊：1 年内不得再申领",
           "source_id": "license-order-162",
-          "locator": "第九十三条"
+          "locator": "第九十三条",
+          "ask": "隐瞒有关情况、提供虚假材料申领或者考试舞弊的，{blank}内不得再次申领驾驶证。"
         },
         {
           "value": "3 年",
@@ -301,14 +338,29 @@
           "value": "终生",
           "case": "肇事逃逸吊销驾驶证；酒驾醉驾发生重大事故构成犯罪",
           "source_id": "road-safety-law",
-          "locator": "第一百〇一条、第九十一条"
+          "locator": "第一百〇一条、第九十一条",
+          "ask": "造成交通事故后逃逸构成犯罪的，{blank}不得重新取得机动车驾驶证。"
+        },
+        {
+          "value": "4 小时",
+          "case": "连续驾驶机动车超过 4 小时必须停车休息",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十二条"
+        },
+        {
+          "value": "20 分钟",
+          "case": "连续驾驶超过四小时后：停车休息的时间不得少于 20 分钟",
+          "source_id": "road-safety-regulation",
+          "locator": "第六十二条"
         }
       ]
     },
     {
       "id": "fines",
       "title": "罚款区间",
-      "subjects": ["subject1"],
+      "subjects": [
+        "subject1"
+      ],
       "unit": "元",
       "note": "",
       "match": "罚款",
@@ -348,12 +400,15 @@
           "locator": "第九十六条第一款",
           "amount": 5000
         }
-      ]
+      ],
+      "ask": "{case}，处{blank}元罚款。"
     },
     {
       "id": "alcohol",
       "title": "血液酒精含量",
-      "subjects": ["subject1"],
+      "subjects": [
+        "subject1"
+      ],
       "unit": "毫克/100 毫升",
       "note": "呼气值乘 2200 换算成血液值。",
       "match": "酒精|饮酒|醉酒",
@@ -363,21 +418,25 @@
           "case": "达到 20、不到 80：饮酒后驾驶",
           "source_id": "gb-19522",
           "locator": "第 4.1 节",
-          "amount": 20
+          "amount": 20,
+          "ask": "驾驶人血液中酒精含量达到{blank}毫克/100 毫升、尚不到 80 的，属于饮酒后驾驶。"
         },
         {
           "value": "80",
           "case": "达到 80：醉酒驾驶",
           "source_id": "gb-19522",
           "locator": "第 4.1 节",
-          "amount": 80
+          "amount": 80,
+          "ask": "驾驶人血液中酒精含量达到{blank}毫克/100 毫升及以上的，属于醉酒驾驶。"
         }
       ]
     },
     {
       "id": "crime-penalty",
       "title": "刑罚档位",
-      "subjects": ["subject1"],
+      "subjects": [
+        "subject1"
+      ],
       "unit": "年",
       "note": "三个罪名记牢：危险驾驶（拘役并处罚金）、妨害安全驾驶（一年以下）、交通肇事（三年以下；逃逸或特别恶劣三到七年；逃逸致人死亡七年以上）。",
       "match": "交通肇事|危险驾驶|妨害安全驾驶|拘役|有期徒刑|构成.{0,6}罪|处.{0,8}年|刑事责任",
@@ -416,6 +475,243 @@
           "source_id": "criminal-law",
           "locator": "第一百三十三条",
           "amount": 15
+        }
+      ],
+      "ask": "{case}，依法应判处的刑罚是{blank}。"
+    },
+    {
+      "id": "accident-days",
+      "title": "事故处理时限",
+      "subjects": [
+        "subject1"
+      ],
+      "unit": "日",
+      "note": "十日认定、五日（鉴定后）、三日复核、十日调解、三日受理——几个「日」最容易记混。",
+      "match": "认定书|复核|调解|受理|事故.{0,24}(日内|三十日|审验)",
+      "rows": [
+        {
+          "value": "10 日",
+          "case": "公安机关自现场调查之日起 10 日内制作道路交通事故认定书（逃逸案件从查获车辆和驾驶人之日起算）",
+          "source_id": "accident-order-146",
+          "locator": "第六十二条",
+          "amount": 10
+        },
+        {
+          "value": "10 日",
+          "case": "请求公安机关调解损害赔偿：收到认定书之日起 10 日内提出书面申请",
+          "source_id": "road-safety-regulation",
+          "locator": "第九十四条",
+          "amount": 10
+        },
+        {
+          "value": "5 日",
+          "case": "需要检验、鉴定的事故：检验报告、鉴定意见确定之日起 5 日内制作认定书",
+          "source_id": "accident-order-146",
+          "locator": "第六十二条",
+          "amount": 5
+        },
+        {
+          "value": "3 日",
+          "case": "对事故认定有异议：自认定书送达之日起 3 日内提出书面复核申请（以一次为限）",
+          "source_id": "accident-order-146",
+          "locator": "第七十一条",
+          "amount": 3
+        },
+        {
+          "value": "3 日",
+          "case": "事故现场撤除后才报警：交管部门记录后 3 日内决定是否受理",
+          "source_id": "accident-order-146",
+          "locator": "第十八条",
+          "amount": 3
+        },
+        {
+          "value": "30 日",
+          "case": "小型汽车驾驶人致人死亡并承担同等以上责任、驾驶证未吊销：本记分周期结束后 30 日内接受审验",
+          "source_id": "license-order-162",
+          "locator": "第七十二条",
+          "amount": 30
+        }
+      ]
+    },
+    {
+      "id": "registration-days",
+      "title": "登记办理日数",
+      "subjects": [
+        "subject1"
+      ],
+      "unit": "日",
+      "note": "转让登记、信息变更都是三十日；补发换发号牌十五日；查验三日、临时号牌三日作废。",
+      "match": "转让登记|变更备案|补领|换领|补发|换发|临时行驶车号牌|转出地|查验机动车",
+      "rows": [
+        {
+          "value": "30 日",
+          "case": "已注册登记的机动车所有权转让：现机动车所有人自交付之日起 30 日内申请转让登记",
+          "source_id": "registration-order-164",
+          "locator": "第二十五条",
+          "amount": 30
+        },
+        {
+          "value": "30 日",
+          "case": "机动车所有人联系方式等信息变更：变更后 30 日内向登记地车辆管理所申请变更备案",
+          "source_id": "registration-order-164",
+          "locator": "第二十三条",
+          "amount": 30
+        },
+        {
+          "value": "15 日",
+          "case": "补领、换领号牌：车辆管理所自受理之日起 15 日内补发、换发；补发换发期间可申领有效期不超过 15 日的临时行驶车号牌",
+          "source_id": "registration-order-164",
+          "locator": "第五十一条",
+          "amount": 15
+        },
+        {
+          "value": "3 日",
+          "case": "所有人住所迁出管辖区：转出地车辆管理所自受理之日起 3 日内查验机动车",
+          "source_id": "registration-order-164",
+          "locator": "第十八条",
+          "amount": 3
+        },
+        {
+          "value": "3 日",
+          "case": "收到机动车号牌之日起 3 日后，临时行驶车号牌作废",
+          "source_id": "registration-order-164",
+          "locator": "第四十七条",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "id": "points-reduction",
+      "title": "满分与学法减分",
+      "subjects": [
+        "subject1"
+      ],
+      "unit": "分",
+      "note": "满 12 分扣证、学满分；未满 12 分才能学法减分：一周期最多减 6 分，现场一小时 2 分，网上半小时和公益一小时各 1 分。",
+      "match": "满分学习|学法减分|扣减|公益活动|网上学习|现场学习|扣留.{0,4}驾驶证|累积记分.{0,8}(达到|未满)",
+      "rows": [
+        {
+          "value": "12 分",
+          "case": "一个记分周期内累积记分达到 12 分：公安机关交管部门扣留驾驶证",
+          "source_id": "road-safety-regulation",
+          "locator": "第二十三条",
+          "amount": 12
+        },
+        {
+          "value": "12 分",
+          "case": "一个记分周期内累积记分达到 12 分：通知参加满分学习、考试",
+          "source_id": "license-order-162",
+          "locator": "第七十一条",
+          "amount": 12
+        },
+        {
+          "value": "12 分",
+          "case": "累积记分未满 12 分：可以处理其驾驶的其他机动车的违法记录",
+          "source_id": "penalty-order-163",
+          "locator": "第十四条第二款",
+          "amount": 12
+        },
+        {
+          "value": "6 分",
+          "case": "处理完违法记录后累积记分未满 12 分，参加交通安全教育：一个记分周期内最多可扣减 6 分",
+          "source_id": "penalty-order-163",
+          "locator": "第二十五条",
+          "amount": 6
+        },
+        {
+          "value": "2 分",
+          "case": "现场学习满一小时且考试合格：一次扣减 2 分",
+          "source_id": "penalty-order-163",
+          "locator": "第二十七条第二款",
+          "amount": 2
+        },
+        {
+          "value": "1 分",
+          "case": "网上学习三日内累计满三十分钟且考试合格：一次扣减 1 分；参加交通安全公益活动满一小时：一次扣减 1 分",
+          "source_id": "penalty-order-163",
+          "locator": "第二十七条",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "license-thresholds",
+      "title": "申领门槛",
+      "subjects": [
+        "subject1"
+      ],
+      "unit": "",
+      "note": "视力、年龄、毒品、科目三预约间隔、预约次数——申领与考试里最容易混的几个数。",
+      "match": "视力|周岁|毒品|学习驾驶证明|预约|科目三.{0,8}考试",
+      "rows": [
+        {
+          "value": "4.9 以上",
+          "case": "C1、C2、C3 驾驶证：两眼裸视力或矫正视力应达到对数视力表 4.9 以上",
+          "source_id": "license-order-162",
+          "locator": "第十四条"
+        },
+        {
+          "value": "5.0 以上",
+          "case": "A、B 驾驶证：两眼裸视力或矫正视力应达到对数视力表 5.0 以上",
+          "source_id": "license-order-162",
+          "locator": "第十四条"
+        },
+        {
+          "value": "18 周岁",
+          "case": "申请小型汽车、小型自动挡汽车、残疾人专用小型自动挡载客汽车驾驶证：年龄在 18 周岁以上，不设上限",
+          "source_id": "license-order-162",
+          "locator": "第十四条"
+        },
+        {
+          "value": "3 年",
+          "case": "有吸食、注射毒品行为：3 年内不得申请机动车驾驶证",
+          "source_id": "license-order-162",
+          "locator": "第十五条"
+        },
+        {
+          "value": "20 日",
+          "case": "报考小型自动挡汽车科目三：取得学习驾驶证明满 20 日后才能预约",
+          "source_id": "license-order-162",
+          "locator": "第四十四条"
+        },
+        {
+          "value": "30 日",
+          "case": "报考小型汽车科目三：取得学习驾驶证明满 30 日后才能预约",
+          "source_id": "license-order-162",
+          "locator": "第四十四条"
+        },
+        {
+          "value": "5 次",
+          "case": "学习驾驶证明有效期内，科目二、科目三道路驾驶技能考试预约次数不得超过 5 次",
+          "source_id": "license-order-162",
+          "locator": "第四十七条第二款"
+        }
+      ]
+    },
+    {
+      "id": "first-aid",
+      "title": "急救数字",
+      "subjects": [
+        "subject1",
+        "subject4"
+      ],
+      "unit": "",
+      "note": "成人心肺复苏：按压频率每分钟 100 到 120 次，深度 5 到 6 厘米。",
+      "match": "心肺复苏|胸外按压|按压",
+      "rows": [
+        {
+          "value": "100–120 次",
+          "case": "成人心肺复苏：胸外按压频率为每分钟 100 次至 120 次",
+          "source_id": "exam-syllabus-2022",
+          "locator": "科目三安全文明驾驶常识考试要点 6.防范次生事故处置与伤员急救知识",
+          "ask": "成人心肺复苏时，胸外按压的频率为{blank}。"
+        },
+        {
+          "value": "5–6 厘米",
+          "case": "成人心肺复苏：胸外按压深度为 5 厘米至 6 厘米",
+          "source_id": "exam-syllabus-2022",
+          "locator": "科目三安全文明驾驶常识考试要点 6.防范次生事故处置与伤员急救知识",
+          "ask": "成人心肺复苏时，胸外按压的深度为{blank}。"
         }
       ]
     }

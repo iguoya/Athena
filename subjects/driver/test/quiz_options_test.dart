@@ -113,4 +113,19 @@ void main() {
       }
     }
   });
+
+  test("别组撞了同一个值（两组都有「30 日」）时，nearOnly 的卡仍然拿到同组的干扰项", () {
+    QuizSource card(String id, String name, String group) =>
+        QuizSource(id: id, name: name, group: group, kind: "f", nearOnly: true);
+    // 池里别组的条目排在前面：它们先占了「30 日」「3 日」，同组的同值条目不能因此被吃掉。
+    final pool = [
+      card("a1", "30 日", "f:accident"),
+      card("a2", "3 日", "f:accident"),
+      card("r1", "30 日", "f:registration"),
+      card("r2", "15 日", "f:registration"),
+      card("r3", "3 日", "f:registration"),
+    ];
+    final quiz = buildQuiz(pool[3], pool, random: Random(1));
+    expect(quiz.options.toSet(), {"15 日", "30 日", "3 日"}, reason: "同组三个值各一个，不因别组撞值丢选项");
+  });
 }
