@@ -9,6 +9,8 @@ import "package:athena_driver/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   const groupIds = [
     "score-pairs",
@@ -81,6 +83,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "记分证照速记");
     await tester.tap(find.text("记分证照速记").first);
     await tester.pump();
     for (final group in bank.licenseGroups) {
@@ -115,6 +118,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await showTopic(tester, "记分证照速记");
     await tester.tap(find.text("记分证照速记").first);
     await tester.pump();
     await tester.tap(find.textContaining("练这组").first);

@@ -10,6 +10,8 @@ import "package:athena_driver/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 内容契约（ADR 0073）：json 的每条 id 都要画得出来，含义文案不能缺；
   // 8 个法定动作 + 手势效力总则。
@@ -66,6 +68,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "手势速记");
     await tester.tap(find.text("手势速记").first);
     await tester.pump();
     expect(find.text("手势速记"), findsWidgets);
@@ -103,6 +106,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await showTopic(tester, "手势速记");
     await tester.tap(find.text("手势速记").first);
     await tester.pump();
     await tester.tap(find.textContaining("练手势").first);

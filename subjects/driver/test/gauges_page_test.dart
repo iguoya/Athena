@@ -10,6 +10,8 @@ import "package:athena_driver/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 内容契约（ADR 0067）：json 的每条 id 都要画得出来，含义文案不能缺——
   // 漏画的符号会落到 painter 兜底的问号图，测试把它挡在 check 阶段。
@@ -64,6 +66,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "仪表速记");
     await tester.tap(find.text("仪表速记").first);
     await tester.pump();
     expect(find.text("仪表速记"), findsWidgets);
@@ -100,6 +103,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await showTopic(tester, "仪表速记");
     await tester.tap(find.text("仪表速记").first);
     await tester.pump();
     await tester.tap(find.textContaining("练这组").first);

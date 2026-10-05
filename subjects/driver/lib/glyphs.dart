@@ -137,6 +137,10 @@ abstract final class Glyph {
   /// 侧栏目录：展开 / 收起一个科目的子项。
   static const expand = Icons.expand_more;
   static const collapse = Icons.expand_less;
+
+  /// 侧栏专题分组的折叠箭头（ADR 0109）：与科目的展开、收起图标是两个概念，分开。
+  static const groupOpen = Icons.keyboard_arrow_down;
+  static const groupClosed = Icons.keyboard_arrow_right;
   static const close = Icons.close;
   static const info = Icons.info;
   static const edit = Icons.edit;

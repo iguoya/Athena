@@ -5,6 +5,7 @@ import "dart:math";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
+import "practice_button.dart";
 import "glyphs.dart";
 import "cloze.dart";
 import "clusters.dart";
@@ -150,6 +151,12 @@ class _HomePageState extends State<HomePage> {
 
   /// 侧栏里展开着的科目。默认展开科目一；点科目名进去顺手展开，点右侧箭头只展开/收起、不换页。
   final Set<String> _expanded = {"subject1"};
+
+  /// 侧栏里展开着的专题分组（ADR 0109），键是「科目/分组」；默认全部折叠，点进某个专题时它所在的组自动展开。
+  final Set<String> _expandedTopicGroups = {};
+
+  /// 每个专题的自测题题号（按专题 id），由速记卡现算一次：专题状态点按这些题的作答记录上色。
+  Map<String, List<String>>? _topicQuestionIds;
 
 
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
@@ -540,10 +547,11 @@ class _HomePageState extends State<HomePage> {
 
   /// 一个科目在侧栏里的一枝：科目本身一行，展开时下面缩进挂模拟考、待练和各章节。
   /// 锁着的科目没有子项——题干都不该先看到（ADR 0006 后果、ADR 0047）。
-  /// 一个科目底下的速记专题：一行小标题「专题」，下面各专题一行。
+  /// 一个科目底下的速记专题（ADR 0096、0109）：小标题「专题」，下面按内容分成几组，组可以折叠；
+  /// 组和专题左边各有一个状态圆，按自测的作答记录上色（红 = 答错过未掌握、绿 = 答对过、灰 = 没做过）。
   List<Widget> _speedTopicLines(String subjectId) {
-    final topics = speedTopicsOf(subjectId);
-    if (topics.isEmpty) return const [];
+    final groups = speedTopicGroupsOf(subjectId);
+    if (groups.isEmpty) return const [];
     return [
       Padding(
         padding: const EdgeInsets.fromLTRB(28, 10, 0, 2),
@@ -552,15 +560,67 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Skins.current.navText.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
-      for (final topic in topics)
-        _navLine(
-          icon: topic.icon,
-          selected: _place == topic.id && _session == null,
-          label: topic.title,
-          indent: true,
-          onTap: () => _go(topic.id),
-        ),
+      for (final group in groups) ...[
+        () {
+          final key = "$subjectId/${group.id}";
+          final open = _expandedTopicGroups.contains(key);
+          return _navLine(
+            icon: open ? Glyph.groupOpen : Glyph.groupClosed,
+            selected: false,
+            label: "${group.title} · ${group.topics.length}",
+            indent: true,
+            leading: _topicDot([for (final t in group.topics) _topicStatus(t)], size: 18, tooltip: "这一组专题里的自测作答情况"),
+            onTap: () => setState(() {
+              if (!_expandedTopicGroups.remove(key)) _expandedTopicGroups.add(key);
+            }),
+          );
+        }(),
+        if (_expandedTopicGroups.contains("$subjectId/${group.id}"))
+          for (final topic in group.topics)
+            _navLine(
+              icon: topic.icon,
+              selected: _place == topic.id && _session == null,
+              label: topic.title,
+              indent2: true,
+              leading: _topicDot([_topicStatus(topic)], size: 16),
+              onTap: () => _go(topic.id),
+            ),
+      ],
     ];
+  }
+
+  /// 专题（或一组专题）的状态圆：几个专题里有红取红，否则有绿取绿，全灰才灰。
+  Widget _topicDot(List<SymbolStatus> statuses, {required double size, String? tooltip}) {
+    final status = statuses.contains(SymbolStatus.wrong)
+        ? SymbolStatus.wrong
+        : statuses.contains(SymbolStatus.mastered)
+            ? SymbolStatus.mastered
+            : SymbolStatus.fresh;
+    return TopicDot(
+      status: status,
+      size: size,
+      tooltip: tooltip ??
+          switch (status) {
+            SymbolStatus.wrong => "这个专题的自测题最近答错过，还没掌握",
+            SymbolStatus.mastered => "这个专题的自测题答对过",
+            _ => "这个专题还没自测过",
+          },
+    );
+  }
+
+  /// 专题的状态（三态，同易混数字的行点，ADR 0101）：自测题有答错过且未掌握的 → 红；答对过 → 绿；一道没答过 → 灰。
+  SymbolStatus _topicStatus(SpeedTopic topic) {
+    final ids = (_topicQuestionIds ??= {
+      for (final t in speedTopics) t.id: [for (final c in recallCardsOfTopic(t, widget.bank)) c.questionId],
+    })[topic.id]!;
+    var touched = false;
+    for (final id in ids) {
+      final h = _histories.byQuestion[id];
+      if (h == null) continue;
+      touched = true;
+      if (h.wrong > 0 && !_mastered.contains(id)) return SymbolStatus.wrong;
+    }
+    return touched ? SymbolStatus.mastered : SymbolStatus.fresh;
   }
 
   List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
@@ -708,6 +768,7 @@ class _HomePageState extends State<HomePage> {
     bool indent = false,
     bool indent2 = false,
     Widget? trailing,
+    Widget? leading,
   }) {
     // Material 3 导航抽屉：默认 onSurfaceVariant，选中行是主色低透明度的药丸底配主色字
     // （Skin.navSelected），禁用 38% 透明度。
@@ -727,6 +788,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Row(
           children: [
+            if (leading != null) ...[leading, const SizedBox(width: 8)],
             Icon(icon, size: Bs.bodySize, color: color),
             const SizedBox(width: 10),
             Expanded(
@@ -1843,6 +1905,7 @@ class _HomePageState extends State<HomePage> {
               ],
               const Spacer(),
               FilledButton.icon(
+                style: practiceButtonStyle(statusOf(related: related, mastered: _mastered, histories: _histories)),
                 onPressed: () => _startPractice(
                   subject,
                   related,
@@ -1957,6 +2020,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _go(String place) {
+    final topic = speedTopicById(place);
+    if (topic != null) _expandedTopicGroups.add("${topic.subjectId}/${speedGroupIdOf(topic)}");
     // 在做题台里直接点侧栏离开，不会走 onClose；可作答早就一题题写进库了，题单、错题数和掌握度
     // 还是进做题台之前的旧数据——强化练习的题单跟错题直接挂钩，刚答错的题就进不了「复测」。
     // 所以离开做题台时补一次重读，跟 onClose 里做的一样。

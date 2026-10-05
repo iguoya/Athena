@@ -12,6 +12,8 @@ import "package:athena_driver/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 易混数字页（ADR 0028）：用真实内容渲染一遍，布局溢出这类问题只在渲染时暴露。
   testWidgets("易混数字页用真实内容渲染不溢出，每组都有练习按钮", (tester) async {
@@ -37,6 +39,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "易混数字");
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);
@@ -93,6 +96,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue);
 
+    await showTopic(tester, "易混数字");
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "practice_button.dart";
 import "cheat_image.dart";
 import "gauge.dart";
 import "glyphs.dart";
@@ -152,6 +153,7 @@ class GaugesPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
+                  style: practiceButtonStyle(statusOf(related: related, mastered: mastered, histories: histories)),
                   onPressed: () => onStartPractice(related, "仪表速记 · $label", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),

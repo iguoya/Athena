@@ -277,6 +277,34 @@ const speedTopics = [
   ),
 ];
 
+/// 侧栏里专题的分组（ADR 0109）：专题多了，按内容归成几组折叠起来。分组按专题 id 点号后的部分归，
+/// 科目一、科目四同名专题归同一组；同一科目里只列出该科目有的专题。
+const speedGroups = [
+  (id: "recite", title: "速记对照", suffixes: ["numbers", "signs", "markings", "gauges", "gestures", "keypoints", "henan", "license-notes"]),
+  (id: "accident", title: "事故与停车", suffixes: ["accident", "crash", "parking", "stopping"]),
+  (id: "traffic", title: "通行规则", suffixes: ["maneuver", "signal-rail", "people", "hill", "expressway"]),
+  (id: "safety", title: "车辆与安全", suffixes: ["occupant", "vehicle", "failure", "ev", "fire", "fatigue"]),
+];
+
+/// 专题所在分组的 id。
+String speedGroupIdOf(SpeedTopic topic) {
+  final suffix = topic.id.substring(topic.id.indexOf(".") + 1);
+  return speedGroups.firstWhere((g) => g.suffixes.contains(suffix)).id;
+}
+
+/// 一个科目的专题按 [speedGroups] 分好组（空组不出现，组内保持注册表里的先后）。
+List<({String id, String title, List<SpeedTopic> topics})> speedTopicGroupsOf(String subjectId) {
+  final topics = speedTopicsOf(subjectId);
+  return [
+    for (final g in speedGroups)
+      (
+        id: g.id,
+        title: g.title,
+        topics: [for (final t in topics) if (g.suffixes.contains(t.id.substring(t.id.indexOf(".") + 1))) t],
+      ),
+  ].where((g) => g.topics.isNotEmpty).toList();
+}
+
 SpeedTopic? speedTopicById(String id) {
   for (final t in speedTopics) {
     if (t.id == id) return t;

@@ -15,6 +15,8 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 /// 自测（ADR 0077 起，ADR 0094 并入作答记录，ADR 0095 易混数字重新规划）：卡片流检索练习——
 /// 四选一 / 数值手输、对错当场判定、答错重现、答对的不再出现、随时退出。
 /// **自测的每次作答就是一条作答记录**：错题本、考前复习、强化练习用同一份记录。
@@ -68,8 +70,10 @@ void main() {
   }
 
   Future<void> openRecall(WidgetTester tester, String page) async {
+    await showTopic(tester, page);
     await tester.tap(find.text(page).first);
     await tester.pump();
+    await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
   }
@@ -164,6 +168,7 @@ void main() {
     // 再开：只剩答错过、还没答对到 2 倍的那 1 张；答对的 7 张不再出现。
     await closeDialog(tester);
     await reload(tester);
+    await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.text("已答对 ${n - 1} / $n"), findsOneWidget);
@@ -174,6 +179,7 @@ void main() {
     // 又答对一次（累计答对 2 次 ≥ 答错 1 次的 2 倍）：移出错题库，再开已经没有要考的了。
     await closeDialog(tester);
     await reload(tester);
+    await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.text("这一页全部答对了"), findsOneWidget);
@@ -193,6 +199,7 @@ void main() {
 
     // 错题本里能看到这道速记题（手势题的题干是「这是什么手势信号？」）。
     expect(find.text("错题本 1"), findsOneWidget, reason: "侧栏错题本多了这一道");
+    await showTopic(tester, "错题本 1");
     await tester.tap(find.text("错题本 1").first);
     await tester.pump();
     for (var i = 0; i < 20; i++) {
@@ -220,6 +227,7 @@ void main() {
     await reload(tester);
 
     // 再打开：答对过的 2 张不再出现，只剩 6 张；再答一张后用 Esc 退出，同样记着。
+    await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.text("已答对 2 / $n"), findsOneWidget);
@@ -227,6 +235,7 @@ void main() {
     await answer(tester, remembered: true);
     await closeDialog(tester);
     await reload(tester);
+    await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.text("已答对 3 / $n"), findsOneWidget);
@@ -286,9 +295,11 @@ void main() {
   testWidgets("自测：侧栏里全部 15 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
     final (_, store, dir) = await boot(tester);
     for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记", "事故处理与时限", "停车与违停", "乘员与安全带", "信号灯与铁路道口", "超车会车与掉头倒车", "车辆基础与操作", "电动汽车"]) {
+      await showTopic(tester, page);
       await tester.tap(find.text(page).first);
       await tester.pump();
       expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
+      await showTopic(tester, "自测");
       await tester.tap(find.text("自测"));
       await tester.pump();
       expect(remaining(), greaterThanOrEqualTo(7), reason: "$page 应把没考过的卡都排出来");
@@ -329,6 +340,7 @@ void main() {
     expect(find.text("确定（Enter）"), findsOneWidget);
     expect(wrongOptions(), findsNothing, reason: "手输题不出选项");
     await tester.enterText(find.byKey(const ValueKey("recall-typed")), "7777");
+    await showTopic(tester, "确定（Enter）");
     await tester.tap(find.text("确定（Enter）"));
     await tester.pump();
     expect(find.textContaining("答错了，正确答案："), findsOneWidget);
@@ -344,6 +356,7 @@ void main() {
     card = await toTyped();
     final right = card.typed!.numbers.map((n) => n == n.roundToDouble() ? n.round().toString() : n.toString()).join("-");
     await tester.enterText(find.byKey(const ValueKey("recall-typed")), right);
+    await showTopic(tester, "确定（Enter）");
     await tester.tap(find.text("确定（Enter）"));
     await tester.pump();
     expect(find.textContaining("答对了"), findsOneWidget, reason: "填 $right 应判对：${card.stem}");

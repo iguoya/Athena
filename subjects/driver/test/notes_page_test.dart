@@ -9,6 +9,8 @@ import "package:athena_driver/progress.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 内容契约（ADR 0064）：每组条目非空、每条有情景与要点、出处可指——
   // 速记条目是引用条文的内容，出处断了就跟题库对不上。
@@ -53,6 +55,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
     expect(find.text("考点速记"), findsWidgets);

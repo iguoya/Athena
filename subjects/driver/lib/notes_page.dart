@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "practice_button.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
@@ -152,6 +153,7 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 const Spacer(),
                 FilledButton.icon(
+                  style: practiceButtonStyle(statusOf(related: related, mastered: mastered, histories: histories)),
                   onPressed: () => onStartPractice(related, "考点速记 · ${group.title}", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),

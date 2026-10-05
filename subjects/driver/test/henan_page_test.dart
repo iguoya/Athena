@@ -9,6 +9,8 @@ import "package:athena_driver/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 内容契约（ADR 0068）：每组至少一条目，每条目都有河南条例的条款定位——
   // 罚款与赔偿比例是硬规定，条目出处必须指到条文。
@@ -72,6 +74,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "河南速记");
     await tester.tap(find.text("河南速记").first);
     await tester.pump();
     expect(find.text("河南速记"), findsWidgets);
@@ -107,6 +110,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await showTopic(tester, "河南速记");
     await tester.tap(find.text("河南速记").first);
     await tester.pump();
     await tester.tap(find.textContaining("练这组").first);

@@ -10,6 +10,8 @@ import "package:athena_driver/sign.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
+import "nav_helpers.dart";
+
 void main() {
   // 内容契约（ADR 0059、0100）：没有规范图的标志，id 都要画得出来；含义文案一律不能缺——
   // 漏画的标志会落到 painter 兜底的问号图，测试把它挡在 check 阶段。有规范图的标志用图，不需要自绘。
@@ -66,6 +68,7 @@ void main() {
     }
     expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
 
+    await showTopic(tester, "标志速记");
     await tester.tap(find.text("标志速记").first);
     await tester.pump();
     expect(find.text("标志速记"), findsWidgets);
@@ -104,6 +107,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
       await tester.pump();
     }
+    await showTopic(tester, "标志速记");
     await tester.tap(find.text("标志速记").first);
     await tester.pump();
     await tester.tap(find.textContaining("练这组").first);
