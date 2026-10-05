@@ -7,6 +7,7 @@ import "package:athena_driver/gesture_index.dart";
 import "package:athena_driver/models.dart";
 import "package:athena_driver/progress.dart";
 import "package:athena_driver/session.dart";
+import "package:athena_driver/speak.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -29,6 +30,9 @@ void main() {
   });
 
   testWidgets("答完手势题，右栏出现该动作的动画；答完非手势题没有", (tester) async {
+    // 故意答错会触发朗读：静音，不真的调系统 say，也不在假时钟里留计时器。
+    Speaker.muted = true;
+    addTearDown(() => Speaker.muted = false);
     late Directory dir;
     late ProgressStore store;
     late Bank bank;

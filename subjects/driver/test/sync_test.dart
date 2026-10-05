@@ -471,15 +471,13 @@ void main() {
     }
   }
 
-  test("拉取并行：十几个接口同时发（不超过 4 路），一轮耗时约等于最慢的几批而不是全部相加", () async {
+  test("拉取并行：十几个接口同时发，同一时刻在途的请求不超过 4 路", () async {
     api.getDelay = const Duration(milliseconds: 120);
-    final watch = Stopwatch()..start();
     await engine.syncNow();
-    watch.stop();
-    // 8 类数据 + 成就 + 1 份草稿 = 10 个 GET；逐个发要 1.2 秒以上，4 路并行 3 批约 0.36 秒。
+    // 8 类数据 + 成就 + 1 份草稿 = 10 个 GET。用「同时在途的请求数」证明并行，而不是墙钟耗时：
+    // 耗时断言在全量并行跑测试、机器很忙时会误报。
     expect(api.requests.where((r) => r.startsWith("GET")).length, 10);
     expect(api.maxInFlight, inInclusiveRange(2, 4));
-    expect(watch.elapsedMilliseconds, lessThan(900));
   });
 
   test("拉取出错就不再起新任务，整轮按失败处理", () async {

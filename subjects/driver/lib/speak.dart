@@ -99,6 +99,11 @@ List<NativeVoice> rankZhVoices(List<NativeVoice> voices) {
 }
 
 class Speaker {
+  /// 测试专用：置 true 后 [speak] 直接返回，不起系统朗读进程。否则测试里答错一题就真的调
+  /// `say` 出声，还会在假时钟里留下一个没结束的计时器，让测试在收尾时报错。
+  @visibleForTesting
+  static var muted = false;
+
   Process? _proc;
   var voiceName = "";
   var rate = 0.86;
@@ -140,6 +145,7 @@ $s.GetInstalledVoices() | ForEach-Object { '{0}|{1}' -f $_.VoiceInfo.Name, $_.Vo
   }
 
   Future<void> speak(String text) async {
+    if (muted) return;
     await stop();
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
