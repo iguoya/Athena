@@ -30,15 +30,14 @@ class Bs {
   static Color get pink => Sem.pink.color;
 
   /// 深色文字与线条（图表字、次级文字、关闭图标）：名字沿用「墨色」，实际跟
-  /// 主题的默认文字色（ADR 0081）——明色皮肤下是墨色，暮汐深色下是亮字。
+  /// 主题的默认文字色（ADR 0081）——就是墨色。
   /// 给亮色块配深字用 [onColor]，它按底色亮度选固定的墨与白，不随皮肤。
   static Color get dark => Skins.current.scheme.onSurface;
 
   // —— 氛围色：跟随当前皮肤 ——
   static Color get primary => Skins.current.primary;
 
-  /// 实心主色上的前景字（ADR 0081）：明色皮肤下是白字，暮汐深色下主色变亮、
-  /// 自动落深字——写死 Colors.white 在深色皮肤的主按钮上对比度不够。
+  /// 实心主色上的前景字（ADR 0081）：取自皮肤的 onPrimary，不写死白色。
   static Color get onPrimary => Skins.current.scheme.onPrimary;
 
   /// 品牌强调（题号、进度条、朗读条、选中态）——就是主色本身。
@@ -81,7 +80,7 @@ class Bs {
   static const bodySize = 20.0;
 
   /// 底色亮就用固定的墨色深字，底色暗就用白字——黄底白字看不清是最常见的翻车点。
-  /// 深字用 [Sem.ink] 而不是 [dark]：dark 在暮汐深色下是亮字，配亮色块会失对比。
+  /// 深字用 [Sem.ink] 而不是 [dark]：dark 跟主题文字色走，不是固定的墨色。
   static Color onColor(Color background) {
     return background.computeLuminance() > 0.5 ? Sem.ink : Colors.white;
   }
@@ -1236,8 +1235,7 @@ class GlassPanel extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              // 玻璃底随皮肤明暗（ADR 0081）：明色下是白玻璃，暮汐深色下是
-              // 深紫玻璃——写死的白色半透明在深色底上是一块晃眼的亮面板。
+              // 玻璃底取皮肤的 surfaceContainerLow（ADR 0081），不写死白色半透明。
               color: color ??
                   Skins.current.scheme.surfaceContainerLow.withValues(alpha: 0.62),
               border: Border.all(

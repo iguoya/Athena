@@ -8,11 +8,10 @@ import "progress.dart";
 
 /// 皮肤：与拾阶（ascent）、math-tools 的 skins 同构——一套组件，令牌换氛围
 /// （本应用 ADR 0058）。每套皮肤手写一份完整的 [ColorScheme]：主色、surface 各档、
-/// outline 系、inverse 面逐角色选定，四套之间的差异是整套色板的差异，不是一枚
+/// outline 系、inverse 面逐角色选定，三套之间的差异是整套色板的差异，不是一枚
 /// 种子色被方案规律拉平后的零星点缀（ADR 0081 修订 0071 决策 1）。语义色（对错、
-/// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。四套里只有暮汐是
-/// 深色（夜学），其余三套明色但各自带色温——淡色系的约束已解除（ADR 0081 修订
-/// 0058 决策 2）。
+/// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。三套都是明色、各自
+/// 带色温；深紫的「暮汐」因为太黑、文字看不清已去掉（ADR 0110）。
 class Skin {
   Skin({
     required this.id,
@@ -30,8 +29,6 @@ class Skin {
 
   /// 整套色彩方案：组件主题与下面的 getter 都读它。
   final ColorScheme scheme;
-
-  bool get isDark => scheme.brightness == Brightness.dark;
 
   /// 主行动色：按钮、选中态、题号、进度条。
   Color get primary => scheme.primary;
@@ -61,7 +58,7 @@ class Skin {
 
   /// 环境色斑：两三团大半径柔和色垫在整窗底下，玻璃感来自「面板半透明 +
   /// 背后有色可透」，不是来自系统模糊（ADR 0058：不引窗口材质）。逐套手选：
-  /// 明色皮肤给各自色温的天光，暮汐用深紫夜色，不把整窗提亮。
+  /// 各套皮肤给各自色温的天光。
   final List<Color> ambient;
 }
 
@@ -188,48 +185,7 @@ Skin _sunrise() => Skin(
   ambient: const [Color(0xFFF6D5A8), Color(0xFFEFB987), Color(0xFFFAE6CB)],
 );
 
-Skin _violet() => Skin(
-  id: "violet",
-  name: "暮汐",
-  hint: "深紫 · 安静夜学",
-  scheme: const ColorScheme.dark(
-    primary: Color(0xFFAC9BF7),
-    onPrimary: Color(0xFF2A1D66),
-    primaryContainer: Color(0xFF45348C),
-    onPrimaryContainer: Color(0xFFE5DEFF),
-    primaryFixedDim: Color(0xFF6B54C8),
-    secondary: Color(0xFFBFC2E9),
-    onSecondary: Color(0xFF2A2C4E),
-    secondaryContainer: Color(0xFF3A3C60),
-    onSecondaryContainer: Color(0xFFE2E1F5),
-    tertiary: Color(0xFF89C6C9),
-    onTertiary: Color(0xFF003738),
-    tertiaryContainer: Color(0xFF1F4E50),
-    onTertiaryContainer: Color(0xFFAEE0E2),
-    error: Color(0xFFFFB4AB),
-    onError: Color(0xFF690005),
-    errorContainer: Color(0xFF93000A),
-    onErrorContainer: Color(0xFFFFDAD6),
-    surface: Color(0xFF141220),
-    onSurface: Color(0xFFE5E1F1),
-    surfaceDim: Color(0xFF141220),
-    surfaceBright: Color(0xFF3A3750),
-    surfaceContainerLowest: Color(0xFF0F0D18),
-    surfaceContainerLow: Color(0xFF1A1727),
-    surfaceContainer: Color(0xFF1F1C2E),
-    surfaceContainerHigh: Color(0xFF2A263C),
-    surfaceContainerHighest: Color(0xFF353148),
-    surfaceTint: Color(0xFFAC9BF7),
-    outline: Color(0xFF706A8E),
-    outlineVariant: Color(0xFF3B3653),
-    inverseSurface: Color(0xFFE5E1F1),
-    onInverseSurface: Color(0xFF201D30),
-    inversePrimary: Color(0xFF45348C),
-  ),
-  ambient: const [Color(0xFF2C2156), Color(0xFF463575), Color(0xFF1B1732)],
-);
-
-final _skins = <Skin>[_sky(), _meadow(), _sunrise(), _violet()];
+final _skins = <Skin>[_sky(), _meadow(), _sunrise()];
 
 /// 皮肤清单与当前皮肤。切换经 [notifier] 通知 `MaterialApp` 换 theme 整树重建，
 /// `Bs` 的 getter 读 [current] 拿到新值（ADR 0058）。

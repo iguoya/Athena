@@ -605,8 +605,7 @@ class _SessionStageState extends State<SessionStage> {
       // 已选中、还没判定：用主色蓝，跟「答对」的绿、「答错」的红分三档
       solid = Bs.primary;
     }
-    // 实心块的字色按底色亮度选（ADR 0081）：语义色明暗都是深色、配白；主色在
-    // 暮汐深色下变亮，得落深字。
+    // 实心块的字色按底色亮度选（ADR 0081）：语义色是深色、配白。
     final fg = solid != null ? Bs.onColor(solid) : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;
     final signId = choice.sign;

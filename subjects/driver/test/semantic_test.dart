@@ -39,16 +39,13 @@ void main() {
     }
   });
 
-  // ADR 0081：四套皮肤里只有暮汐是深色（夜学），页面底必须是真正的深色，
-  // 不然「深色皮肤」名不副实；其余三套是明色。
-  test("明暗档位：只有暮汐是深色，且页面底是真正的深色", () {
+  // 暮汐（深紫）因为太黑、文字看不清已去掉（ADR 0110）：现在三套都是明色皮肤，页面底不能是深色。
+  test("全部皮肤都是明色，页面底够亮、文字够深", () {
+    expect(Skins.all.map((s) => s.id), isNot(contains("violet")));
     for (final skin in Skins.all) {
-      if (skin.id == "violet") {
-        expect(skin.scheme.brightness, Brightness.dark);
-        expect(skin.page.computeLuminance(), lessThan(0.2), reason: "暮汐页面底不够深");
-      } else {
-        expect(skin.scheme.brightness, Brightness.light, reason: skin.id);
-      }
+      expect(skin.scheme.brightness, Brightness.light, reason: skin.id);
+      expect(skin.page.computeLuminance(), greaterThan(0.8), reason: "${skin.id} 页面底不够亮");
+      expect(_contrast(skin.page, skin.scheme.onSurface), greaterThanOrEqualTo(7), reason: "${skin.id} 正文对比度");
     }
   });
 }
