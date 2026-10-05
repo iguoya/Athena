@@ -88,7 +88,7 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
             groupId: group.id,
             groupTitle: group.title,
             stem: ask != null
-                ? clozeStemByAsk(ask, single)
+                ? clozeStemByAsk(ask, single, row.value, groupUnit: group.unit)
                 : clozeStem(single, row.value, groupUnit: group.unit, appendBlank: typed == null),
             value: row.value,
             caseText: row.caseText,

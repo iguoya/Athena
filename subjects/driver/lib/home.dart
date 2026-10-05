@@ -1643,7 +1643,7 @@ class _HomePageState extends State<HomePage> {
     final all = widget.bank.forSubject(topic.subjectId);
     final daily = dailyQuestions(all);
     void practice(List<Question> questions, String title, bool again) =>
-        _startPractice(subject, questions, title, includeMastered: again);
+        _startPractice(subject, questions, title, includeMastered: again, shuffleQueue: true);
     return switch (topic.kind) {
       SpeedKind.numbers => _numbersOverview(context, topic),
       SpeedKind.signs => SignsPage(
@@ -1843,7 +1843,13 @@ class _HomePageState extends State<HomePage> {
               ],
               const Spacer(),
               FilledButton.icon(
-                onPressed: () => _startPractice(subject, related, "易混数字 · ${group.title}", includeMastered: pending.isEmpty),
+                onPressed: () => _startPractice(
+                  subject,
+                  related,
+                  "易混数字 · ${group.title}",
+                  includeMastered: pending.isEmpty,
+                  shuffleQueue: true,
+                ),
                 icon: const Icon(Glyph.practice, size: 20),
                 label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
               ),
@@ -2113,15 +2119,30 @@ class _HomePageState extends State<HomePage> {
 
   /// 起一轮练习。[includeMastered] 给「这组已掌握 · 再练一遍」用：不过滤已掌握的题，
   /// 全组重练——否则组全掌握时队列是空的，按钮按了没反应（使用者反馈）。
-  void _startPractice(Subject subject, List<Question> questions, String title, {bool includeMastered = false}) {
+  /// [shuffleQueue] 给速记组的组按钮用：整体洗牌出题——速记卡全是常规档、没有全国错误率，
+  /// 走 [practiceQueue] 的分档排序会退化成内容顺序（12→9→6→3→1），规律性毁掉考试价值。
+  void _startPractice(
+    Subject subject,
+    List<Question> questions,
+    String title, {
+    bool includeMastered = false,
+    bool shuffleQueue = false,
+  }) {
     if (_locked(subject.id)) return;
-    final pending = includeMastered ? practiceQueue(questions, _wrongIds) : _practiceQueue(questions);
-    if (pending.isEmpty) return;
+    final List<Question> queue;
+    if (shuffleQueue) {
+      queue = [...questions]..shuffle();
+    } else if (includeMastered) {
+      queue = practiceQueue(questions, _wrongIds);
+    } else {
+      queue = _practiceQueue(questions);
+    }
+    if (queue.isEmpty) return;
     _openSession(
       SessionLaunch(
         title: "${subject.code} · $title",
         subjectId: subject.id,
-        questions: pending,
+        questions: queue,
         timed: false,
         revealImmediately: true,
       ),
