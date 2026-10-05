@@ -71,6 +71,34 @@ def check_json() -> None:
     print(f"{len(files)} 个 JSON 文件解析通过", flush=True)
 
 
+def check_cheat_images() -> None:
+    """速记页内容里每个 `image` 都得指到真实存在的文件，且在 pubspec 的 assets 目录内
+    （ADR 0080）：发行包走 assets，开发读磁盘，路径写错只会在运行时静默退回自绘图。"""
+    print("== 速记页规范图校验 ==", flush=True)
+    content = PROJECT_ROOT / "content"
+    assets = [
+        line.strip()[2:].strip()
+        for line in (PROJECT_ROOT / "pubspec.yaml").read_text(encoding="utf-8").splitlines()
+        if line.strip().startswith("- content/images/")
+    ]
+    problems: list[str] = []
+    count = 0
+    for name, key in (("signs", "signs"), ("markings", "markings"), ("gauges", "gauges"), ("gestures", "gestures")):
+        data = json.loads((content / f"{name}.json").read_text(encoding="utf-8"))
+        for item in data[key]:
+            image = item.get("image")
+            if not image:
+                continue
+            count += 1
+            if not (content / image).is_file():
+                problems.append(f"{name}.json {item['id']}: 文件不存在 {image}")
+            elif not any(f"content/{image}".startswith(prefix) for prefix in assets):
+                problems.append(f"{name}.json {item['id']}: {image} 不在 pubspec 的 assets 目录里")
+    if problems:
+        raise SystemExit("\n".join(problems))
+    print(f"{count} 张规范图都存在且已列入 assets", flush=True)
+
+
 def desktop_target() -> str:
     mapping = {"Darwin": "macos", "Windows": "windows", "Linux": "linux"}
     system = platform.system()
@@ -112,6 +140,7 @@ def main() -> int:
     arguments = parser.parse_args()
 
     check_json()
+    check_cheat_images()
     flutter = flutter_bin()
     run([flutter, "pub", "get"], "安装 Dart 依赖")
     run([flutter, "analyze"], "静态分析")
