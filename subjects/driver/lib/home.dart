@@ -57,15 +57,15 @@ class RecallRowDot extends StatelessWidget {
         SymbolStatus.mastered => "这一行的自测题已掌握",
         SymbolStatus.fresh => "这一行还没自测过",
       },
-      // 外圈圆环加内部实心点，都填状态色；使用者的要求是醒目（外径为原微点五倍）。
+      // 外圈圆环加内部实心点，都填状态色；环带加粗让颜色成为标记的主体（使用者反馈）。
       child: Container(
         width: 50,
         height: 50,
-        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: color, width: 5)),
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: color, width: 12)),
         alignment: Alignment.center,
         child: Container(
-          width: 22,
-          height: 22,
+          width: 16,
+          height: 16,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
       ),
