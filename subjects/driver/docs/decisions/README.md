@@ -103,5 +103,5 @@
 | [0096](0096-number-row-status-dots.md) | 易混数字每行标作答状态点——答错红、没全掌握黄、掌握绿、没做过灰 | 已接受 |
 | [0097](0097-speed-topics-belong-to-subjects.md) | 速记专题归属科目——科目一有科目一的专题，科目四有科目四自己的，题号、相关题、作答记录都不混 | 已接受 |
 | [0098](0098-mastered-group-repractice.md) | 「这组已掌握」不再禁练——已掌握的组给「再练一遍」 | 已接受 |
-| [0098](0098-signs-expanded-from-bank-images.md) | 标志速记扩充——借题库官方标志图，从 33 种到 167 种，新增 sign_ref 关联、订正停车标志名 | 已接受 |
+| [0100](0100-signs-expanded-from-bank-images.md) | 标志速记扩充——借题库官方标志图，从 33 种到 167 种，新增 sign_ref 关联、订正停车标志名 | 已接受 |
 | [0099](0099-self-test-retest-all.md) | 自测全对后给「再测一遍」——重考的入口不缺席 | 已接受 |

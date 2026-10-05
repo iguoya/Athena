@@ -11,7 +11,7 @@ import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
-  // 内容契约（ADR 0059、0098）：没有规范图的标志，id 都要画得出来；含义文案一律不能缺——
+  // 内容契约（ADR 0059、0100）：没有规范图的标志，id 都要画得出来；含义文案一律不能缺——
   // 漏画的标志会落到 painter 兜底的问号图，测试把它挡在 check 阶段。有规范图的标志用图，不需要自绘。
   test("signs.json 的每条 id 都能画，每条都有含义文案", () async {
     final bank = await ContentLoader.load();
@@ -22,13 +22,13 @@ void main() {
       expect(sign.meaning, isNotEmpty, reason: "${sign.id} 缺「看到之后怎么开」的文案");
       expect(sign.name, isNotEmpty);
     }
-    // 名称与画法三方对齐（ADR 0059 决策 3、0098）：一道斜杠是禁止长时停车（可临时停靠），
+    // 名称与画法三方对齐（ADR 0059 决策 3、0100）：一道斜杠是禁止长时停车（可临时停靠），
     // 红叉是禁止停车（全禁，题库里也叫「禁止停放车辆」）——题面 s1.signals.033/034 与国标都是这个语义。
     expect(bank.signs.firstWhere((s) => s.id == "no_parking").name, "禁止长时停车");
     expect(bank.signs.firstWhere((s) => s.id == "no_stopping").name, "禁止停车");
   });
 
-  // 题与标志的关联（ADR 0098）：sign_ref 指到的标志必须存在；每个标志至少有一道相关题，
+  // 题与标志的关联（ADR 0100）：sign_ref 指到的标志必须存在；每个标志至少有一道相关题，
   // 否则「练这组」「自测答错后去练题」对它是空的（ADR 0091）。
   test("题目的 sign_ref 都指到存在的标志，每个标志都有相关题", () async {
     final bank = await ContentLoader.load();

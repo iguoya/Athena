@@ -8,6 +8,7 @@ import "package:athena_driver/models.dart";
 import "package:athena_driver/progress.dart";
 import "package:athena_driver/recall.dart";
 import "package:athena_driver/recall_cards.dart";
+import "package:athena_driver/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -39,8 +40,8 @@ void main() {
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);
-    // 一屏放不下全部分组，滚到底检查每组都渲染出来了。
-    for (final group in bank.cheatsheet) {
+    // 一屏放不下全部分组，滚到底检查每组都渲染出来了（页面的组来自专题，ADR 0097）。
+    for (final group in cheatGroupsOf(bank, speedTopics.firstWhere((t) => t.id == "s1.numbers"))) {
       await tester.scrollUntilVisible(find.text(group.title), 300, scrollable: find.byType(Scrollable).last);
       expect(find.text(group.title), findsOneWidget);
     }
@@ -63,13 +64,14 @@ void main() {
       store = await ProgressStore.open(suite: "numbers_page_dot_test");
 
       // 前三行造三种状态：第一行答错（红）、第二行答对但反向卡没答（黄）、第三行不动（灰）。
-      // 卡题号由行数据直接构造，与 [recallCardsOfNumbers] 的合成规则一致。
-      final group = bank.cheatsheet.first;
+      // 卡题号由行数据直接构造，与 [recallCardsOfNumbers] 的合成规则一致；页键是专题 id（ADR 0097）。
+      final topic = speedTopics.firstWhere((t) => t.id == "s1.numbers");
+      final group = cheatGroupsOf(bank, topic).first;
       final rows = group.rows;
       Future<void> attempt(String entryKey, {required bool correct}) async {
         await store.recordAttempt(
-          questionId: recallQuestionId("numbers", entryKey),
-          topicId: "drive.recall.numbers",
+          questionId: recallQuestionId(topic.id, entryKey),
+          topicId: "drive.recall.${topic.id}",
           subjectId: "subject1",
           correct: correct,
         );
