@@ -616,10 +616,10 @@ class _SessionStageState extends State<SessionStage> {
       padding: const EdgeInsets.only(bottom: 4),
       child: Align(
         alignment: Alignment.centerLeft,
-        // 块宽占栏宽八成：跟题干这一段的长度呼应，又不至于拉成整条。
+        // 块宽占栏宽九成：点击区域够大，又不至于拉成整条（ADR 0087，使用者拍板，原为八成，ADR 0012）。
         child: FractionallySizedBox(
           alignment: Alignment.centerLeft,
-          widthFactor: 0.8,
+          widthFactor: 0.9,
           child: AnimatedContainer(
             // 选中→判定（蓝→绿/红）走 200ms 过渡：颜色的变化本身就是反馈
             // （ADR 0058 决策 6）。色值统一非空，从 null 到实色的突变不会闪。
