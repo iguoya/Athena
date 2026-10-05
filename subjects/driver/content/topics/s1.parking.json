@@ -1,0 +1,254 @@
+{
+  "_": "科目一「停车·停放·违停」专题（ADR 0102）。结构同考点速记；科目一有自己的一份。",
+  "groups": [
+    {
+      "id": "park-where",
+      "title": "哪里不能停",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "「站 30 口 50」：公交站、急救站、加油站、消防栓 30 米；路口、铁道口、急弯、窄路、桥、陡坡、隧道 50 米。",
+      "match": "不得停车|不能停车|不得停放|禁止停放|禁止停车|停车.{0,12}(米以内|人行道|人行横道|网状线)|人行道|网状线|规定地点",
+      "items": [
+        {
+          "scenario": "交叉路口、铁路道口、急弯路、宽度不足 4 米的窄路、桥梁、陡坡、隧道",
+          "points": [
+            "以及离这些地点 50 米以内的路段，都不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "公共汽车站、急救站、加油站、消防栓、消防队（站）门前",
+          "points": [
+            "以及离这些地点 30 米以内的路段，除使用这些设施的以外不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "施工路段",
+          "points": [
+            "离施工路段 50 米以内不得停放车辆"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "人行道",
+          "points": [
+            "禁止停放机动车，施划了停车泊位的除外；找不到车位也不能借人行道"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十六条"
+        },
+        {
+          "scenario": "人行横道、黄色网状线区域",
+          "points": [
+            "任何原因都不得停车，临时停车也不行；前方堵住时在线外等"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十三条、第六十三条"
+        },
+        {
+          "scenario": "停放车辆",
+          "points": [
+            "应当在规定地点停放：停车场或划了泊位的路边，长时间停放选停车场"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十六条"
+        }
+      ]
+    },
+    {
+      "id": "park-how",
+      "title": "临时停车怎么停",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "靠边、顺行、30 厘米、不并列；开门前先看后方。",
+      "match": "临时停车|靠边停车|靠路边|停靠|车门|并列|逆向|顺行|停车泊位|妨碍.{0,10}(通行|行人)",
+      "items": [
+        {
+          "scenario": "在道路上临时停车",
+          "points": [
+            "不得妨碍其他车辆和行人通行"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十六条第二款"
+        },
+        {
+          "scenario": "路边临时停车",
+          "points": [
+            "按顺行方向停，车身离道路边缘不超过 30 厘米",
+            "不得逆向或并列停放"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "靠路边停车",
+          "points": [
+            "提前开右转向灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十七条"
+        },
+        {
+          "scenario": "停好车开车门",
+          "points": [
+            "停稳前不得开车门；开关车门不得妨碍其他车辆和行人通行",
+            "先观察前后环境，确认安全再开"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "路边划有停车泊位",
+          "points": [
+            "应停在泊位线以内"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十六条"
+        }
+      ]
+    },
+    {
+      "id": "park-penalty",
+      "title": "违停会怎样",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "不在场或拒绝驶离，罚 20–200 元并可拖移；河南另有地方规定。",
+      "match": "违反规定停放|拖移|拖车|违章停|违法停|停车泊位|地锁|停放.{0,12}(罚款|处罚)",
+      "items": [
+        {
+          "scenario": "违反规定停放、临时停车，驾驶人不在现场或虽在现场但拒绝立即驶离",
+          "points": [
+            "处 20 元以上 200 元以下罚款，并可以将机动车拖移至不妨碍交通的地点"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第九十三条"
+        },
+        {
+          "scenario": "河南：违反规定停放车辆，影响其他车辆、行人通行",
+          "points": [
+            "处 200 元罚款"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第五十八条第（六）项"
+        },
+        {
+          "scenario": "河南：在人行横道或网状线区域内停车等候",
+          "points": [
+            "罚 200 元"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第五十九条第（二）项"
+        },
+        {
+          "scenario": "河南：在道路停车泊位内设置停车障碍（如地锁）",
+          "points": [
+            "由交警部门处 500 元罚款"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第六十七条第二款"
+        },
+        {
+          "scenario": "河南：在高速公路上停车上下乘客",
+          "points": [
+            "对驾驶人罚 500 元以上 2000 元以下，情节严重可并处暂扣驾驶证三个月以下"
+          ],
+          "source_id": "henan-expressway",
+          "locator": "第五十九条"
+        }
+      ]
+    },
+    {
+      "id": "park-signal",
+      "title": "故障、夜间、雨雾天停车",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "先开双闪；夜间加示廓灯、后位灯；故障再摆警告标志。",
+      "match": "临时停车.{0,14}(灯|报警)|故障.{0,12}(停车|报警|警告)|危险报警闪光灯|示廓灯|警告标志",
+      "items": [
+        {
+          "scenario": "在道路上发生故障需要停车排除",
+          "points": [
+            "立即开危险报警闪光灯，把车移到不妨碍交通的地方"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十二条"
+        },
+        {
+          "scenario": "夜间临时停车",
+          "points": [
+            "开危险报警闪光灯、示廓灯和后位灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十八条"
+        },
+        {
+          "scenario": "雨、雪、雾天临时停车",
+          "points": [
+            "开危险报警闪光灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十八条"
+        },
+        {
+          "scenario": "故障难以移动",
+          "points": [
+            "车后 50–100 米设警告标志（高速公路 150 米以外），人员撤到路外"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十条"
+        }
+      ]
+    },
+    {
+      "id": "park-highway",
+      "title": "高速公路上的停车",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "高速上非紧急不停车；要休息去服务区；车道、匝道、加减速车道都不能停。",
+      "match": "高速.{0,24}停车|应急车道|匝道.{0,12}停|服务区.{0,8}(停车|休息)|疲劳.{0,14}停车|行车道内停车",
+      "items": [
+        {
+          "scenario": "高速公路上",
+          "points": [
+            "不得在车道内停车，匝道、加速车道、减速车道也不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第八十二条"
+        },
+        {
+          "scenario": "应急车道",
+          "points": [
+            "非紧急情况不得行驶或停车，疲劳了也不能在这里休息"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第八十二条"
+        },
+        {
+          "scenario": "感觉疲劳",
+          "points": [
+            "到下一个服务区或停车区休息"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第八十二条"
+        },
+        {
+          "scenario": "高速公路上发生故障",
+          "points": [
+            "能移到应急车道的尽量移到应急车道，开危险报警闪光灯，车后 150 米以外设警告标志"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第六十八条"
+        }
+      ]
+    }
+  ]
+}

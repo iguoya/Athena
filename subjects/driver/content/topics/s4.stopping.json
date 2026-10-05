@@ -1,0 +1,280 @@
+{
+  "_": "科目四「停车与停放」专题（ADR 0102）。结构同考点速记；科目四有自己的一份，不与科目一混用。",
+  "groups": [
+    {
+      "id": "stop-where",
+      "title": "哪些地方不能停",
+      "subjects": [
+        "subject4"
+      ],
+      "note": "站 30 口 50，再加上坡道、积水、结冰、松软路面和山区易落石路段。",
+      "match": "不得停车|不能停车|不得停放|禁止停放|停车场|停车泊位|避免停车|停车.{0,12}(米以内|人行横道|网状线|路面)",
+      "items": [
+        {
+          "scenario": "交叉路口、铁路道口、急弯路、窄路（宽度不足 4 米）、桥梁、陡坡、隧道",
+          "points": [
+            "以及离这些地点 50 米以内，不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "公共汽车站、急救站、加油站、消防栓、消防队（站）门前",
+          "points": [
+            "以及离这些地点 30 米以内，不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "人行横道、施工路段、立交桥上",
+          "points": [
+            "不得停放，临时停车也不行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "出租车停车位",
+          "points": [
+            "仅供出租车停放，社会车辆不能占用"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "山区容易塌方、落石、泥石流的路段",
+          "points": [
+            "尽量避免停车"
+          ],
+          "source_id": "exam-syllabus-2022",
+          "locator": "科目三安全文明驾驶常识考试要点 4.恶劣气象和复杂道路条件下安全驾驶知识"
+        },
+        {
+          "scenario": "选停车位置",
+          "points": [
+            "避开坡道、积水、结冰或松软路面：有水会滑，有坡会溜，路面松软会陷"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        }
+      ]
+    },
+    {
+      "id": "stop-how",
+      "title": "临时停车与起步",
+      "subjects": [
+        "subject4"
+      ],
+      "note": "靠边、顺行、不并列；停好提醒乘客先看后方再开门；起步前先观察再开灯。",
+      "match": "临时停车|靠边停车|停靠|车门|并列|逆向|停放的车辆|起步",
+      "items": [
+        {
+          "scenario": "路边临时停车",
+          "points": [
+            "紧靠道路右侧顺行方向停，不得逆向或并列停放",
+            "不得妨碍其他车辆和行人通行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "停好车后",
+          "points": [
+            "提醒乘车人开门前先观察后方来车，开关车门不得妨碍其他车辆和行人"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第六十六条"
+        },
+        {
+          "scenario": "临时靠边停车后起步",
+          "points": [
+            "先观察周围交通情况，确认安全再开左转向灯起步"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        },
+        {
+          "scenario": "超越路边停放的车辆",
+          "points": [
+            "预留横向安全距离、减速行驶，防它突然起步或开门"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "非机动车、行人绕过停放的车辆",
+          "points": [
+            "会驶入机动车道，要让它们先行，主动减速"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        }
+      ]
+    },
+    {
+      "id": "stop-signal",
+      "title": "灯光与警示",
+      "subjects": [
+        "subject4"
+      ],
+      "note": "临时停车先开双闪，夜间加示廓灯和后位灯，故障停车要摆警告标志。",
+      "match": "临时停车.{0,14}(灯|报警)|故障.{0,12}(停车|报警|警告)|危险报警闪光灯|示廓灯|警告标志",
+      "items": [
+        {
+          "scenario": "夜间路边临时停车",
+          "points": [
+            "开危险报警闪光灯、示廓灯和后位灯",
+            "不开灯、或开远光灯晃别人都是错的"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十八条"
+        },
+        {
+          "scenario": "雨、雪、雾天临时停车",
+          "points": [
+            "开危险报警闪光灯；雾灯是雾天行驶用的，不能只开前照灯和雾灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十八条"
+        },
+        {
+          "scenario": "发生故障需要停车",
+          "points": [
+            "第一时间开危险报警闪光灯，再移车、摆警告标志"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十二条"
+        },
+        {
+          "scenario": "警告标志放多远",
+          "points": [
+            "普通道路车后 50–100 米；高速公路车后 150 米以外"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第六十八条"
+        }
+      ]
+    },
+    {
+      "id": "stop-slope",
+      "title": "坡道与山区停车",
+      "subjects": [
+        "subject4"
+      ],
+      "note": "坡道停车怕溜车：选平缓处、拉驻车制动、行车制动要提前。",
+      "match": "山区.{0,16}停车|坡.{0,10}(停车|制动|停放)|驻车制动|溜车|塞车木|后溜|下坡路段停车",
+      "items": [
+        {
+          "scenario": "山区道路因故障停车",
+          "points": [
+            "选平缓路段停放，拉起驻车制动，开危险报警闪光灯",
+            "上坡路段停车可用三角木（塞车木）塞住车轮"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第五十二条"
+        },
+        {
+          "scenario": "下坡路段停车",
+          "points": [
+            "行车制动要比平路时提前：下坡车会往下溜，制动距离更长"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        },
+        {
+          "scenario": "上坡路段跟车，前车停车",
+          "points": [
+            "加大安全距离，防前车起步溜车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "山区道路停车",
+          "points": [
+            "尽量选平直的路段"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        },
+        {
+          "scenario": "冰雪路面",
+          "points": [
+            "避免跟车爬坡；减速停车多用发动机牵制作用（挂低挡）"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十二条第二款"
+        },
+        {
+          "scenario": "下坡制动失效冲入避险车道、停稳后",
+          "points": [
+            "拉紧驻车制动器，防止溜动发生二次险情"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        }
+      ]
+    },
+    {
+      "id": "stop-highway",
+      "title": "高速公路上的停车与紧急停车",
+      "subjects": [
+        "subject4"
+      ],
+      "note": "高速上要停只去服务区；故障撤到应急车道、150 米外摆标志；爆胎先控方向、轻踏制动。",
+      "match": "高速.{0,24}停车|应急车道|匝道.{0,12}停|服务区.{0,8}停车|爆胎|紧急停车|行车道内停车|转向失控",
+      "items": [
+        {
+          "scenario": "需要在高速公路上停车",
+          "points": [
+            "选服务区；匝道、加速车道、减速车道都不得停车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十三条"
+        },
+        {
+          "scenario": "高速公路上",
+          "points": [
+            "不得在车道内停车（开双闪也不行）、倒车、逆行、穿越中央分隔带掉头"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第八十二条"
+        },
+        {
+          "scenario": "高速公路上发生故障必须停车",
+          "points": [
+            "尽量停到应急车道，开危险报警闪光灯，车后 150 米设警告标志",
+            "夜间同时开示廓灯和后位灯，人员撤到路肩或应急车道"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第六十八条"
+        },
+        {
+          "scenario": "高速公路上起火",
+          "points": [
+            "不能往服务区、加油站开：火越开越大，后果更严重"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第七十八条至第八十二条"
+        },
+        {
+          "scenario": "行车中爆胎",
+          "points": [
+            "握紧转向盘，轻踏制动踏板缓慢减速停车，不急踏制动、不冒险用行车制动器停车"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        },
+        {
+          "scenario": "发动机突然熄火后不能启动",
+          "points": [
+            "缓慢靠边停车，再检查熄火原因"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第二十二条第一款"
+        }
+      ]
+    }
+  ]
+}

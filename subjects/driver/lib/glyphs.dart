@@ -25,6 +25,7 @@ abstract final class Glyph {
   static const licenseNotes = Icons.badge;
   static const notes = Icons.notes;
   static const accident = Icons.car_crash;
+  static const parkingRules = Icons.pin_drop;
 
   // ── 科目一 / 科目四：练习、考试与题目 ──
   static const practice = Icons.list_alt;
