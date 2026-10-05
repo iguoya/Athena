@@ -7,22 +7,20 @@ import "package:path/path.dart" as p;
 import "progress.dart";
 
 /// 皮肤：与拾阶（ascent）、math-tools 的 skins 同构——一套组件，令牌换氛围
-/// （本应用 ADR 0058）。每套皮肤只存一个种子色，全部色彩角色由 Material 3 的
-/// [ColorScheme.fromSeed] 生成（ADR 0071），不手写十六进制补色。语义色（对错、
-/// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。四套都是明色，
-/// 不做暗色。
+/// （本应用 ADR 0058）。每套皮肤手写一份完整的 [ColorScheme]：主色、surface 各档、
+/// outline 系、inverse 面逐角色选定，四套之间的差异是整套色板的差异，不是一枚
+/// 种子色被方案规律拉平后的零星点缀（ADR 0081 修订 0071 决策 1）。语义色（对错、
+/// 警示、题型、频次）不在这里：那些含义人人认得，不随皮肤变。四套里只有暮汐是
+/// 深色（夜学），其余三套明色但各自带色温——淡色系的约束已解除（ADR 0081 修订
+/// 0058 决策 2）。
 class Skin {
   Skin({
     required this.id,
     required this.name,
     required this.hint,
-    required this.seed,
-  }) : scheme = ColorScheme.fromSeed(
-          seedColor: seed,
-          // fidelity：色板贴着种子色走，primaryContainer 就是种子色本身，四套皮肤
-          // 才认得出（默认的 tonalSpot 会把蓝压成灰蓝、橙压成棕）。
-          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
-        );
+    required this.scheme,
+    required this.ambient,
+  });
 
   final String id;
 
@@ -30,11 +28,10 @@ class Skin {
   final String name;
   final String hint;
 
-  /// 种子色：整套 [scheme] 由它生成。
-  final Color seed;
-
-  /// Material 3 色彩方案（明色）。组件主题与下面的 getter 都读它。
+  /// 整套色彩方案：组件主题与下面的 getter 都读它。
   final ColorScheme scheme;
+
+  bool get isDark => scheme.brightness == Brightness.dark;
 
   /// 主行动色：按钮、选中态、题号、进度条。
   Color get primary => scheme.primary;
@@ -49,7 +46,8 @@ class Skin {
   Color get navTextMuted => scheme.onSurface.withValues(alpha: 0.38);
 
   /// 侧栏选中行的底（导航抽屉的 active indicator）：主色以低透明度铺在侧栏底上，
-  /// 与徽章的浅色调同一做法；`secondaryContainer` 在 fidelity 方案里偏艳（曙途像一条橙色药丸）。
+  /// 与徽章的浅色调同一做法；`secondaryContainer` 在手写色板里也压不住高饱和主色
+  /// （曙途会像一条橙色药丸），维持 0071 阶段 3 的选择。
   Color get navSelected => Color.alphaBlend(scheme.primary.withValues(alpha: 0.14), nav);
 
   /// 页面底色（旧 Bs.light 的语义）。
@@ -62,16 +60,176 @@ class Skin {
   Color get border => scheme.outlineVariant;
 
   /// 环境色斑：两三团大半径柔和色垫在整窗底下，玻璃感来自「面板半透明 +
-  /// 背后有色可透」，不是来自系统模糊（ADR 0058：不引窗口材质）。
-  List<Color> get ambient => [scheme.primaryContainer, scheme.primaryFixedDim, scheme.secondaryContainer];
+  /// 背后有色可透」，不是来自系统模糊（ADR 0058：不引窗口材质）。逐套手选：
+  /// 明色皮肤给各自色温的天光，暮汐用深紫夜色，不把整窗提亮。
+  final List<Color> ambient;
 }
 
-final _skins = <Skin>[
-  Skin(id: "sky", name: "晴空", hint: "蓝白 · 继承旧观感", seed: const Color(0xFF0D6EFD)),
-  Skin(id: "meadow", name: "青野", hint: "绿意 · 平和护眼", seed: const Color(0xFF0C8F63)),
-  Skin(id: "sunrise", name: "曙途", hint: "暖橙 · 清晨上路", seed: const Color(0xFFE8590C)),
-  Skin(id: "violet", name: "暮汐", hint: "暮紫 · 安静夜学", seed: const Color(0xFF7048E8)),
-];
+Skin _sky() => Skin(
+  id: "sky",
+  name: "晴空",
+  hint: "冷蓝 · 继承旧观感",
+  scheme: const ColorScheme.light(
+    primary: Color(0xFF0D5CC0),
+    onPrimary: Colors.white,
+    primaryContainer: Color(0xFFD3E2FA),
+    onPrimaryContainer: Color(0xFF0A3B8F),
+    primaryFixedDim: Color(0xFF9DC1F0),
+    secondary: Color(0xFF3D6489),
+    onSecondary: Colors.white,
+    secondaryContainer: Color(0xFFD9E7F9),
+    onSecondaryContainer: Color(0xFF173A5E),
+    tertiary: Color(0xFF4B5F9E),
+    onTertiary: Colors.white,
+    tertiaryContainer: Color(0xFFE0E6FF),
+    onTertiaryContainer: Color(0xFF1B2D66),
+    error: Color(0xFFB3261E),
+    onError: Colors.white,
+    errorContainer: Color(0xFFF9DEDC),
+    onErrorContainer: Color(0xFF410E0B),
+    surface: Color(0xFFF2F6FB),
+    onSurface: Color(0xFF18242F),
+    surfaceDim: Color(0xFFD8DFE8),
+    surfaceBright: Color(0xFFF9FBFE),
+    surfaceContainerLowest: Colors.white,
+    surfaceContainerLow: Color(0xFFE8F0F9),
+    surfaceContainer: Color(0xFFDFE9F4),
+    surfaceContainerHigh: Color(0xFFD6E2EF),
+    surfaceContainerHighest: Color(0xFFCDDAE9),
+    surfaceTint: Color(0xFF0D5CC0),
+    outline: Color(0xFF77879A),
+    outlineVariant: Color(0xFFC8D6E6),
+    inverseSurface: Color(0xFF2C3946),
+    onInverseSurface: Color(0xFFEEF2F7),
+    inversePrimary: Color(0xFFA6C8F8),
+  ),
+  ambient: const [Color(0xFFC2D8F2), Color(0xFF9CBCE8), Color(0xFFDCE8F8)],
+);
+
+Skin _meadow() => Skin(
+  id: "meadow",
+  name: "青野",
+  hint: "米绿 · 纸感护眼",
+  scheme: const ColorScheme.light(
+    primary: Color(0xFF177A53),
+    onPrimary: Colors.white,
+    primaryContainer: Color(0xFFC8EBD5),
+    onPrimaryContainer: Color(0xFF0A4A30),
+    primaryFixedDim: Color(0xFF9ED4B2),
+    secondary: Color(0xFF4F6A57),
+    onSecondary: Colors.white,
+    secondaryContainer: Color(0xFFD8EAD9),
+    onSecondaryContainer: Color(0xFF1B3625),
+    tertiary: Color(0xFF7A6430),
+    onTertiary: Colors.white,
+    tertiaryContainer: Color(0xFFF1E4C3),
+    onTertiaryContainer: Color(0xFF3F3212),
+    error: Color(0xFFB3261E),
+    onError: Colors.white,
+    errorContainer: Color(0xFFF9DEDC),
+    onErrorContainer: Color(0xFF410E0B),
+    surface: Color(0xFFF1F5EA),
+    onSurface: Color(0xFF1E281C),
+    surfaceDim: Color(0xFFD7DECB),
+    surfaceBright: Color(0xFFF8FCF1),
+    surfaceContainerLowest: Color(0xFFFDFEF8),
+    surfaceContainerLow: Color(0xFFE3EDD8),
+    surfaceContainer: Color(0xFFDAE6CC),
+    surfaceContainerHigh: Color(0xFFD1DFC1),
+    surfaceContainerHighest: Color(0xFFC9D7B7),
+    surfaceTint: Color(0xFF177A53),
+    outline: Color(0xFF78896E),
+    outlineVariant: Color(0xFFC5D6B7),
+    inverseSurface: Color(0xFF2C3629),
+    onInverseSurface: Color(0xFFEDF3E7),
+    inversePrimary: Color(0xFF93D2AE),
+  ),
+  ambient: const [Color(0xFFBEDCB4), Color(0xFFA3CCA5), Color(0xFFDCEBC4)],
+);
+
+Skin _sunrise() => Skin(
+  id: "sunrise",
+  name: "曙途",
+  hint: "暖橙 · 清晨上路",
+  scheme: const ColorScheme.light(
+    primary: Color(0xFFB84A00),
+    onPrimary: Colors.white,
+    primaryContainer: Color(0xFFFFD9BE),
+    onPrimaryContainer: Color(0xFF6B2A00),
+    primaryFixedDim: Color(0xFFF3B285),
+    secondary: Color(0xFF7A563C),
+    onSecondary: Colors.white,
+    secondaryContainer: Color(0xFFFBDEBB),
+    onSecondaryContainer: Color(0xFF5F421F),
+    tertiary: Color(0xFF856C2F),
+    onTertiary: Colors.white,
+    tertiaryContainer: Color(0xFFF7E3B0),
+    onTertiaryContainer: Color(0xFF4A3A0E),
+    error: Color(0xFFB3261E),
+    onError: Colors.white,
+    errorContainer: Color(0xFFF9DEDC),
+    onErrorContainer: Color(0xFF410E0B),
+    surface: Color(0xFFFAF2E7),
+    onSurface: Color(0xFF2A2118),
+    surfaceDim: Color(0xFFE2D8C8),
+    surfaceBright: Color(0xFFFEF9F0),
+    surfaceContainerLowest: Color(0xFFFFFEFA),
+    surfaceContainerLow: Color(0xFFF4E8D6),
+    surfaceContainer: Color(0xFFEFE1CC),
+    surfaceContainerHigh: Color(0xFFE9D9C2),
+    surfaceContainerHighest: Color(0xFFE3D2B8),
+    surfaceTint: Color(0xFFB84A00),
+    outline: Color(0xFF96846C),
+    outlineVariant: Color(0xFFE0CFB6),
+    inverseSurface: Color(0xFF362C21),
+    onInverseSurface: Color(0xFFF6EFE5),
+    inversePrimary: Color(0xFFFFB878),
+  ),
+  ambient: const [Color(0xFFF6D5A8), Color(0xFFEFB987), Color(0xFFFAE6CB)],
+);
+
+Skin _violet() => Skin(
+  id: "violet",
+  name: "暮汐",
+  hint: "深紫 · 安静夜学",
+  scheme: const ColorScheme.dark(
+    primary: Color(0xFFAC9BF7),
+    onPrimary: Color(0xFF2A1D66),
+    primaryContainer: Color(0xFF45348C),
+    onPrimaryContainer: Color(0xFFE5DEFF),
+    primaryFixedDim: Color(0xFF6B54C8),
+    secondary: Color(0xFFBFC2E9),
+    onSecondary: Color(0xFF2A2C4E),
+    secondaryContainer: Color(0xFF3A3C60),
+    onSecondaryContainer: Color(0xFFE2E1F5),
+    tertiary: Color(0xFF89C6C9),
+    onTertiary: Color(0xFF003738),
+    tertiaryContainer: Color(0xFF1F4E50),
+    onTertiaryContainer: Color(0xFFAEE0E2),
+    error: Color(0xFFFFB4AB),
+    onError: Color(0xFF690005),
+    errorContainer: Color(0xFF93000A),
+    onErrorContainer: Color(0xFFFFDAD6),
+    surface: Color(0xFF141220),
+    onSurface: Color(0xFFE5E1F1),
+    surfaceDim: Color(0xFF141220),
+    surfaceBright: Color(0xFF3A3750),
+    surfaceContainerLowest: Color(0xFF0F0D18),
+    surfaceContainerLow: Color(0xFF1A1727),
+    surfaceContainer: Color(0xFF1F1C2E),
+    surfaceContainerHigh: Color(0xFF2A263C),
+    surfaceContainerHighest: Color(0xFF353148),
+    surfaceTint: Color(0xFFAC9BF7),
+    outline: Color(0xFF706A8E),
+    outlineVariant: Color(0xFF3B3653),
+    inverseSurface: Color(0xFFE5E1F1),
+    onInverseSurface: Color(0xFF201D30),
+    inversePrimary: Color(0xFF45348C),
+  ),
+  ambient: const [Color(0xFF2C2156), Color(0xFF463575), Color(0xFF1B1732)],
+);
+
+final _skins = <Skin>[_sky(), _meadow(), _sunrise(), _violet()];
 
 /// 皮肤清单与当前皮肤。切换经 [notifier] 通知 `MaterialApp` 换 theme 整树重建，
 /// `Bs` 的 getter 读 [current] 拿到新值（ADR 0058）。

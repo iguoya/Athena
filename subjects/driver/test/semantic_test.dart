@@ -12,7 +12,8 @@ double _contrast(Color a, Color b) {
 }
 
 void main() {
-  // 对比度由 Material 3 方案保证（ADR 0071）；这里守住「换种子色、换变体后仍然成立」。
+  // 语义色的对比度由固定种子经 fromSeed 生成（ADR 0071 决策 4）；皮肤氛围色已改回
+  // 手写色板（ADR 0081），对比度不再由方案保证，由这里的断言守。
   test("每个语义色的实心色与浅底都配得上自己的字，对比度不低于 4.5（AA）", () {
     final all = {
       "success": Sem.success,
@@ -31,10 +32,23 @@ void main() {
     }
   });
 
-  test("每套皮肤的主色上能放白字，卡片在页面底上能分得出来", () {
+  test("每套皮肤的主色配得上 onPrimary 的字，卡片在页面底上分得出来", () {
     for (final skin in Skins.all) {
       expect(_contrast(skin.primary, skin.scheme.onPrimary), greaterThanOrEqualTo(4.5), reason: skin.id);
       expect(skin.card, isNot(skin.page), reason: "${skin.id} 卡片底与页面底同色");
+    }
+  });
+
+  // ADR 0081：四套皮肤里只有暮汐是深色（夜学），页面底必须是真正的深色，
+  // 不然「深色皮肤」名不副实；其余三套是明色。
+  test("明暗档位：只有暮汐是深色，且页面底是真正的深色", () {
+    for (final skin in Skins.all) {
+      if (skin.id == "violet") {
+        expect(skin.scheme.brightness, Brightness.dark);
+        expect(skin.page.computeLuminance(), lessThan(0.2), reason: "暮汐页面底不够深");
+      } else {
+        expect(skin.scheme.brightness, Brightness.light, reason: skin.id);
+      }
     }
   });
 }

@@ -28,10 +28,18 @@ class Bs {
   static Color get teal => Sem.teal.color;
   static Color get orange => Sem.orange.color;
   static Color get pink => Sem.pink.color;
-  static Color get dark => Sem.ink;
+
+  /// 深色文字与线条（图表字、次级文字、关闭图标）：名字沿用「墨色」，实际跟
+  /// 主题的默认文字色（ADR 0081）——明色皮肤下是墨色，暮汐深色下是亮字。
+  /// 给亮色块配深字用 [onColor]，它按底色亮度选固定的墨与白，不随皮肤。
+  static Color get dark => Skins.current.scheme.onSurface;
 
   // —— 氛围色：跟随当前皮肤 ——
   static Color get primary => Skins.current.primary;
+
+  /// 实心主色上的前景字（ADR 0081）：明色皮肤下是白字，暮汐深色下主色变亮、
+  /// 自动落深字——写死 Colors.white 在深色皮肤的主按钮上对比度不够。
+  static Color get onPrimary => Skins.current.scheme.onPrimary;
 
   /// 品牌强调（题号、进度条、朗读条、选中态）——就是主色本身。
   static Color get paper => primary;
@@ -72,9 +80,10 @@ class Bs {
 
   static const bodySize = 20.0;
 
-  /// 底色亮就用深字，底色暗就用白字——黄底白字看不清是最常见的翻车点。
+  /// 底色亮就用固定的墨色深字，底色暗就用白字——黄底白字看不清是最常见的翻车点。
+  /// 深字用 [Sem.ink] 而不是 [dark]：dark 在暮汐深色下是亮字，配亮色块会失对比。
   static Color onColor(Color background) {
-    return background.computeLuminance() > 0.5 ? dark : Colors.white;
+    return background.computeLuminance() > 0.5 ? Sem.ink : Colors.white;
   }
 
   /// 题型各给一种颜色：判断青、单选蓝、多选紫，一眼分得出这题怎么答。
@@ -1151,13 +1160,17 @@ class _RingPainter extends CustomPainter {
 /// 内容静态，RepaintBoundary 一次成层、之后每帧零成本，窗口尺寸变化才重画；
 /// 不用系统窗口材质、不引原生插件——那是长期税（决策 4）。
 class AmbientBackdrop extends StatelessWidget {
-  const AmbientBackdrop({super.key});
+  const AmbientBackdrop({super.key, this.skin});
+
+  /// 皮肤从 builder 传进来（main.dart 的 notifier 回调），不靠组件自己读全局
+  /// 单例：const 实例在换肤时会被 Element 当 identical 跳过，色斑停在启动那套。
+  final Skin? skin;
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: CustomPaint(
-        painter: _AmbientPainter(Skins.current),
+        painter: _AmbientPainter(skin ?? Skins.current),
         child: const SizedBox.expand(),
       ),
     );
@@ -1223,8 +1236,13 @@ class GlassPanel extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-              color: color ?? Colors.white.withValues(alpha: 0.62),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
+              // 玻璃底随皮肤明暗（ADR 0081）：明色下是白玻璃，暮汐深色下是
+              // 深紫玻璃——写死的白色半透明在深色底上是一块晃眼的亮面板。
+              color: color ??
+                  Skins.current.scheme.surfaceContainerLow.withValues(alpha: 0.62),
+              border: Border.all(
+                color: Skins.current.scheme.outlineVariant.withValues(alpha: 0.55),
+              ),
             ),
             child: child,
           ),

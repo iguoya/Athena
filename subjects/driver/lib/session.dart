@@ -418,7 +418,7 @@ class _SessionStageState extends State<SessionStage> {
       onPressed: _nextGroup,
       style: FilledButton.styleFrom(
         backgroundColor: Bs.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: Bs.onPrimary,
         minimumSize: const Size(190, 56),
         textStyle: TextStyle(fontSize: Bs.bodySize, fontWeight: FontWeight.w700),
       ),
@@ -446,7 +446,7 @@ class _SessionStageState extends State<SessionStage> {
               onPressed: _lastGroup ? null : _nextGroup,
               style: FilledButton.styleFrom(
                 backgroundColor: Bs.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: Bs.onPrimary,
                 minimumSize: const Size(130, 48),
               ),
               icon: const Icon(Glyph.next, size: 20),
@@ -572,7 +572,7 @@ class _SessionStageState extends State<SessionStage> {
               onPressed: _busy ? null : () => _commit(index, q),
               style: FilledButton.styleFrom(
                 backgroundColor: Bs.paper,
-                foregroundColor: Colors.white,
+                foregroundColor: Bs.onPrimary,
                 minimumSize: const Size(160, 48),
               ),
               child: const Text("确认作答"),
@@ -603,7 +603,9 @@ class _SessionStageState extends State<SessionStage> {
       // 已选中、还没判定：用主色蓝，跟「答对」的绿、「答错」的红分三档
       solid = Bs.primary;
     }
-    final fg = solid != null ? Colors.white : (tint ?? Theme.of(context).colorScheme.onSurface);
+    // 实心块的字色按底色亮度选（ADR 0081）：语义色明暗都是深色、配白；主色在
+    // 暮汐深色下变亮，得落深字。
+    final fg = solid != null ? Bs.onColor(solid) : (tint ?? Theme.of(context).colorScheme.onSurface);
     final textTheme = Theme.of(context).textTheme;
     final signId = choice.sign;
     final locked = _judged.contains(index);
@@ -788,7 +790,8 @@ class _SessionStageState extends State<SessionStage> {
       final answered = _judged.contains(index);
       final wrong = answered && !_correct.contains(index);
       fill = wrong ? Bs.danger : (answered ? Bs.paper : Bs.body);
-      fg = answered ? Colors.white : Bs.dark;
+      // 答过的格子是实心主色底（或答错的语义红），字色按底色亮度选（ADR 0081）。
+      fg = answered ? Bs.onColor(fill) : Bs.dark;
     }
     return Tooltip(
       message: _cellHint(index),

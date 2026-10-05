@@ -44,7 +44,7 @@ Widget withSkins(
       ],
       builder: (context, child) => Stack(
         children: [
-          const Positioned.fill(child: AmbientBackdrop()),
+          Positioned.fill(child: AmbientBackdrop(skin: skin)),
           if (child != null) Positioned.fill(child: child),
         ],
       ),
