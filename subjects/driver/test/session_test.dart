@@ -76,12 +76,7 @@ void main() {
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
-    // 一页十题答完就翻（ADR 0025），但至少停 5 秒看清正确答案（ADR 0038）。
-    expect(find.text("第11题"), findsNothing);
-    await tester.pump(const Duration(milliseconds: 4500));
-    expect(find.text("第11题"), findsNothing);
-    await tester.pump(const Duration(milliseconds: 600));
-    expect(find.text("第11题"), findsOneWidget);
+    // 模拟考一页十六道（ADR 0082）：第一页是 1–16 题，答满才翻，错题提示边答边出。
     for (var i = 0; i < 5; i++) {
       await answer(LogicalKeyboardKey.keyF);
     }
@@ -91,6 +86,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text("考试结束"), findsNothing);
     expect(find.text("错 11 题（已不及格，继续答完）"), findsOneWidget);
+    // 一页答完就翻（ADR 0025），但至少停 5 秒看清正确答案（ADR 0038）。
+    expect(find.text("第17题"), findsNothing);
+    await tester.pump(const Duration(milliseconds: 4500));
+    expect(find.text("第17题"), findsNothing);
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text("第17题"), findsOneWidget);
     await answer(LogicalKeyboardKey.keyT);
 
     // 过了 45 分钟也不收卷，还停在答题页（ADR 0042）。

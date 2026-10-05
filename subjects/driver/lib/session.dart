@@ -79,8 +79,10 @@ class SessionStage extends StatefulWidget {
 }
 
 class _SessionStageState extends State<SessionStage> {
-  /// 一页十题：少了翻页太勤；页面放不下就靠答完自动滚到下一题补上（ADR 0022）。
-  static const _groupSize = 10;
+  /// 每页题量：练习一页十题，少了翻页太勤；页面放不下就靠答完自动滚到下一题
+  /// 补上（ADR 0022）。模拟考一页十六道——百题卷五页十六加最后一页二十，
+  /// 六页翻完一场（ADR 0084，使用者拍板）。
+  int get _groupSize => _launch.timed ? 16 : 10;
 
   /// 一页答完、最后一题答错：从判完算起至少停这么久再翻，够看清正确答案和解释（ADR 0038）。
   static const _pageDwell = Duration(seconds: 5);
