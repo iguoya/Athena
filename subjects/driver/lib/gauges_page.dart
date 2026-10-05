@@ -7,6 +7,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
+import "selftest_store.dart";
 
 /// 仪表速记页（ADR 0067）：手绘车内符号按「报警灯 / 指示灯 / 仪表表盘 /
 /// 开关与操纵件」四组摊开，每条配一句「亮了怎么办 / 这是什么」，每组能直接
@@ -19,6 +20,7 @@ class GaugesPage extends StatelessWidget {
     required this.histories,
     required this.daily,
     required this.mastered,
+    required this.selfTest,
     required this.onStartPractice,
   });
 
@@ -30,6 +32,9 @@ class GaugesPage extends StatelessWidget {
   /// 科目一的日常题（非偏难）：「练这组」按反向映射的题 id 从这里取题。
   final List<Question> daily;
   final Set<String> mastered;
+
+  /// 自测的「认得了没有」记录（ADR 0082）。
+  final SelfTestStore selfTest;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定。
@@ -58,7 +63,7 @@ class GaugesPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自我测验"),
+              label: const Text("自测"),
             ),
           ],
         ),
@@ -104,15 +109,17 @@ class GaugesPage extends StatelessWidget {
     fallback: (side) => GaugeView(id: gauge.id, size: side),
   );
 
-  /// 自我测验：每轮抽 5 个符号，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：每轮抽 5 个符号，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
+      pageKey: "gauges",
+      store: selfTest,
       entries: [for (final g in gauges) _recallEntryOf(g)],
       onStartPractice: () {
         final ids = {for (final g in gauges) ...g.questions};
         final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 自我测验");
+        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 自测");
       },
     );
   }

@@ -7,6 +7,7 @@ import "marking.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
+import "selftest_store.dart";
 
 /// 标线速记页（ADR 0065）：手绘标线按「指示 / 禁止 / 警告」三组摊开，每条配一句
 /// 「看到之后怎么开」，每组能直接练相关的题。内容源是 `content/markings.json`
@@ -19,6 +20,7 @@ class MarkingsPage extends StatelessWidget {
     required this.daily,
     required this.all,
     required this.mastered,
+    required this.selfTest,
     required this.onStartPractice,
   });
 
@@ -33,6 +35,9 @@ class MarkingsPage extends StatelessWidget {
   /// 科目一全部题：算「还有几题在偏难里没进来」。
   final List<Question> all;
   final Set<String> mastered;
+
+  /// 自测的「认得了没有」记录（ADR 0082）。
+  final SelfTestStore selfTest;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定，三分法与题库一致
@@ -61,7 +66,7 @@ class MarkingsPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自我测验"),
+              label: const Text("自测"),
             ),
           ],
         ),
@@ -107,15 +112,17 @@ class MarkingsPage extends StatelessWidget {
     fallback: (side) => MarkingView(id: marking.id, size: side),
   );
 
-  /// 自我测验：每轮抽 5 条标线，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：每轮抽 5 条标线，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
+      pageKey: "markings",
+      store: selfTest,
       entries: [for (final m in markings) _recallEntryOf(m)],
       onStartPractice: () {
         final ids = {for (final m in markings) m.id};
         final related = [for (final q in daily) if (q.marking != null && ids.contains(q.marking)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 自我测验");
+        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 自测");
       },
     );
   }

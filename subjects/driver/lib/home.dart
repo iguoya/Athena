@@ -19,6 +19,7 @@ import "progress.dart";
 import "recall.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
+import "selftest_store.dart";
 import "session.dart";
 import "signs_page.dart";
 import "skin.dart";
@@ -75,6 +76,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  /// 自测的「认得了没有」记录（ADR 0082）：每位学习者一份本地文件，没登录名（测试）就只存内存。
+  /// 它只决定自测还出不出某张卡，不是掌握度，不进作答与统计。
+  late final SelfTestStore _selfTest = SelfTestStore(user: widget.currentUser);
+
   static const _wrongId = "wrong";
   static const _reviewId = "review";
   static const _reinforceId = "reinforce";
@@ -1653,6 +1658,7 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.notes,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1669,6 +1675,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1685,6 +1692,7 @@ class _HomePageState extends State<HomePage> {
       daily: dailyQuestions(_subject1All),
       all: _subject1All,
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1700,6 +1708,7 @@ class _HomePageState extends State<HomePage> {
       histories: _histories,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1714,11 +1723,13 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.henanGroups,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
         title,
       ),
+      selfTestKey: "henan",
       title: "河南速记",
       icon: Glyph.henan,
       lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
@@ -1733,11 +1744,13 @@ class _HomePageState extends State<HomePage> {
       groups: widget.bank.licenseGroups,
       daily: dailyQuestions(_subject1All),
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
         title,
       ),
+      selfTestKey: "license-notes",
       title: "记分证照速记",
       icon: Glyph.licenseNotes,
       lead: "记分分档、证照期限、罚款档位、禁考年限、号牌登记——科目一最容易丢分的这几块，"
@@ -1757,6 +1770,7 @@ class _HomePageState extends State<HomePage> {
       histories: _histories,
       daily: both,
       mastered: _mastered,
+      selfTest: _selfTest,
       onStartPractice: (questions, title) => _startPractice(
         widget.bank.curriculum.subject("subject1"),
         questions,
@@ -1786,7 +1800,7 @@ class _HomePageState extends State<HomePage> {
             FilledButton.tonalIcon(
               onPressed: () => _numbersRecall(context, subject, open),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自我测验"),
+              label: const Text("自测"),
             ),
           ],
         ),
@@ -1803,17 +1817,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 易混数字的自我测验（ADR 0080）：每行「情形 → 数字」是一张卡，正面只给情形，
+  /// 易混数字的自测（ADR 0080）：每行「情形 → 数字」是一张卡，正面只给情形，
   /// 揭示后看数字与出处；每轮抽 5 张，收尾深链练全部相关题。
   void _numbersRecall(BuildContext context, Subject subject, List<Question> open) {
     RecallSession.show(
       context,
+      pageKey: "numbers",
+      store: _selfTest,
       prompt: "想一想：这种情形对应的数字是多少？",
       entries: [
         for (final group in widget.bank.cheatsheet)
-          for (final (i, row) in group.rows.indexed)
+          for (final row in group.rows)
             RecallEntry(
-              id: "${group.id}/$i",
+              // 键用情形原文加数字，不用序号：改版插行不会让旧记录错位。
+              id: "${group.id}/${row.caseText}|${row.value}",
               front: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
                 child: Column(
@@ -1845,7 +1862,7 @@ class _HomePageState extends State<HomePage> {
             for (final q in group.related(open))
               if (seen.add(q.id)) q,
         ];
-        if (related.isNotEmpty) _startPractice(subject, related, "易混数字 · 自我测验");
+        if (related.isNotEmpty) _startPractice(subject, related, "易混数字 · 自测");
       },
     );
   }

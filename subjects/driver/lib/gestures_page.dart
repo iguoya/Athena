@@ -8,6 +8,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
+import "selftest_store.dart";
 
 /// 手势速记页（ADR 0073）：8 个法定手势动作加「手势的效力」总则，每条配一句
 /// 「看到之后怎么开」，反向映射的 29 道题能直接练。内容源是
@@ -19,6 +20,7 @@ class GesturesPage extends StatelessWidget {
     required this.histories,
     required this.daily,
     required this.mastered,
+    required this.selfTest,
     required this.onStartPractice,
   });
 
@@ -30,6 +32,9 @@ class GesturesPage extends StatelessWidget {
   /// 科目一与科目四的日常题：「练这组」按反向映射的题 id 从这里取题。
   final List<Question> daily;
   final Set<String> mastered;
+
+  /// 自测的「认得了没有」记录（ADR 0082）。
+  final SelfTestStore selfTest;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   @override
@@ -55,7 +60,7 @@ class GesturesPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自我测验"),
+              label: const Text("自测"),
             ),
           ],
         ),
@@ -149,16 +154,18 @@ class GesturesPage extends StatelessWidget {
     fallback: (side) => GestureAnimation(id: g.id, size: side),
   );
 
-  /// 自我测验：每轮抽 5 个手势，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：每轮抽 5 个手势，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
-      // 「手势的效力」是总则、没有规范动画，不进自我测验；它的相关题仍并入深链。
+      pageKey: "gestures",
+      store: selfTest,
+      // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
       entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g)],
       onStartPractice: () {
         final ids = {for (final g in gestures) ...g.questions};
         final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 自我测验");
+        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 自测");
       },
     );
   }

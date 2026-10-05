@@ -2,6 +2,7 @@ import "dart:async";
 import "dart:io";
 
 import "package:athena_driver/content.dart";
+import "package:athena_driver/glyphs.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/models.dart";
 import "package:athena_driver/progress.dart";
@@ -10,9 +11,9 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 自我测验模式（ADR 0077，ADR 0080 改名、一轮 5 个）：检索练习的卡片流——揭示、
-/// 自评、没记住重现、收尾「再来 5 个」与深链。自评不写掌握度：考完进度库里的作答
-/// 记录不应有任何变化。选手势页（8 个动作）跑完整流程。
+/// 自测模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的）：检索练习的
+/// 卡片流——揭示、自评、没记住重现、已认得的不再考、随时退出、收尾「再来 / 重新自测」。
+/// 自评不写掌握度：自测之后进度库里的作答记录不应有任何变化。选手势页（8 个动作）跑完整流程。
 void main() {
   Future<(Bank, ProgressStore, Directory)> boot(WidgetTester tester) async {
     late Directory dir;
@@ -45,69 +46,118 @@ void main() {
     });
   }
 
-  testWidgets("自我测验：一轮 5 张，揭示、没记住重现、再来一轮、收尾「去练这组」起练习，自评不落库", (tester) async {
+  /// 揭示当前卡，再自评：[remembered] 为真点「记住了」。
+  Future<void> answer(WidgetTester tester, {required bool remembered}) async {
+    await tester.tap(find.text("揭示（空格）"));
+    await tester.pump();
+    await tester.tap(find.textContaining(remembered ? "记住了（1）" : "没记住（2）"));
+    await tester.pump();
+  }
+
+  testWidgets("自测：一轮 5 张，没记住的重现且不算认得，认得的不再考，考完给「重新自测」，自评不落库", (tester) async {
     final (_, store, dir) = await boot(tester);
     final before = await store.allAttempts();
 
-    // 进手势速记页，打开自我测验。
+    // 进手势速记页（8 个动作），打开自测。
     await tester.tap(find.text("手势速记").first);
     await tester.pump();
-    await tester.tap(find.text("自我测验").first);
+    await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.textContaining("想一想"), findsOneWidget);
+    expect(find.text("已认得 0 / 8 · 只考没认得的"), findsOneWidget);
 
-    // 一轮：揭示 → 第一次自评「没记住」，之后一直「记住了」，直到收尾。
+    // 第 1 轮：第一次自评「没记住」，之后一直「记住了」，直到收尾。
     var gradedMiss = false;
     for (var i = 0; i < 20; i++) {
       if (find.text("考完了").evaluate().isNotEmpty) break;
-      await tester.tap(find.text("揭示（空格）"));
-      await tester.pump();
-      if (!gradedMiss) {
-        await tester.tap(find.textContaining("没记住（2）"));
-        gradedMiss = true;
-      } else {
-        await tester.tap(find.textContaining("记住了（1）"));
-      }
-      await tester.pump();
+      await answer(tester, remembered: gradedMiss);
+      gradedMiss = true;
     }
     expect(find.text("考完了"), findsOneWidget, reason: "5 张卡应在 20 次交互内考完（含没记住的重现）");
     expect(find.textContaining("这一轮 5 个"), findsOneWidget, reason: "一轮固定 5 个");
     expect(find.textContaining("没记住 1"), findsOneWidget, reason: "第一次自评没记住应计入");
+    // 4 张第一次就记住 → 认得；没记住后重现才记住的那张不算认得。
+    expect(find.text("已认得 4 / 8 · 只考没认得的"), findsOneWidget);
+    expect(find.textContaining("需要再看看"), findsOneWidget, reason: "收尾反馈列出没记住的");
 
-    // 再来 5 个：回到卡片流，第 2 轮。
-    await tester.tap(find.text("再来 5 个"));
+    // 再来一轮：只剩 4 张没认得的，认得的不再出现。
+    expect(find.text("再来 4 个"), findsOneWidget);
+    await tester.tap(find.text("再来 4 个"));
     await tester.pump();
-    expect(find.textContaining("第 2 轮"), findsOneWidget);
-    expect(find.textContaining("想一想"), findsOneWidget);
-    // 第 2 轮全部记住；5 张刚好 5 次交互。
-    for (var i = 0; i < 5; i++) {
-      await tester.tap(find.text("揭示（空格）"));
-      await tester.pump();
-      await tester.tap(find.textContaining("记住了（1）"));
-      await tester.pump();
+    expect(find.textContaining("第 2 轮 · 剩 4 张"), findsOneWidget);
+    for (var i = 0; i < 4; i++) {
+      await answer(tester, remembered: true);
     }
-    expect(find.text("考完了"), findsOneWidget);
-    expect(find.textContaining("没记住 0"), findsOneWidget);
 
-    // 收尾深链：去练这组起一轮练习。
+    // 全部认得：说清楚，给「重新自测」，不再硬出题。
+    expect(find.text("这一页你都认得了"), findsOneWidget);
+    expect(find.text("已认得 8 / 8 · 只考没认得的"), findsOneWidget);
+    expect(find.text("重新自测"), findsOneWidget);
+    expect(find.textContaining("再来"), findsNothing);
+
+    // 重新自测：清空本页记录，回到 5 张一轮。
+    await tester.tap(find.text("重新自测"));
+    await tester.pump();
+    expect(find.text("已认得 0 / 8 · 只考没认得的"), findsOneWidget);
+    expect(find.textContaining("剩 5 张"), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+
+    // 收尾深链：打开再答完一轮，去练这组起练习。
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    for (var i = 0; i < 5; i++) {
+      await answer(tester, remembered: true);
+    }
     await tester.tap(find.text("去练这组题"));
     await tester.pump();
     expect(find.byType(SessionStage), findsOneWidget);
 
-    // 自评不落库：作答记录与自我测验之前一致。
+    // 自评不落库：作答记录与自测之前一致。
     final after = await store.allAttempts();
     expect(after.length, before.length);
 
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自我测验：侧栏里全部 8 个速记页都有入口，一轮都是 5 张", (tester) async {
+  testWidgets("自测：中途退出（按钮或 Esc）不丢已评的，再打开接着考没认得的", (tester) async {
+    final (_, store, dir) = await boot(tester);
+    await tester.tap(find.text("标志速记").first);
+    await tester.pump();
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    expect(find.text("已认得 0 / 33 · 只考没认得的"), findsOneWidget);
+
+    // 一轮 5 张：评两张「记住了」，用右上角退出按钮离开。
+    await answer(tester, remembered: true);
+    await answer(tester, remembered: true);
+    expect(find.text("已认得 2 / 33 · 只考没认得的"), findsOneWidget);
+    await tester.tap(find.byIcon(Glyph.close));
+    await tester.pump();
+    expect(find.textContaining("想一想"), findsNothing, reason: "退出按钮应关掉自测");
+
+    // 再打开：已认得的 2 张记着，不再出现；再评一张后用 Esc 退出，同样记着。
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    expect(find.text("已认得 2 / 33 · 只考没认得的"), findsOneWidget);
+    await answer(tester, remembered: true);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    expect(find.text("已认得 3 / 33 · 只考没认得的"), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    await teardown(tester, store, dir);
+  });
+
+  testWidgets("自测：侧栏里全部 8 个速记页都有入口，一轮都是 5 张", (tester) async {
     final (_, store, dir) = await boot(tester);
     for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记"]) {
       await tester.tap(find.text(page).first);
       await tester.pump();
-      expect(find.text("自我测验"), findsOneWidget, reason: "$page 缺自我测验入口");
-      await tester.tap(find.text("自我测验"));
+      expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
+      await tester.tap(find.text("自测"));
       await tester.pump();
       // 一轮 5 张：剩余张数写在卡片头里。
       expect(find.textContaining("剩 5 张"), findsOneWidget, reason: "$page 一轮应抽 5 张");
@@ -117,13 +167,13 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自我测验：易混数字与考点速记也有，文字卡正面是情形、揭示后是答案", (tester) async {
+  testWidgets("自测：易混数字与考点速记也有，文字卡正面是情形、揭示后是答案", (tester) async {
     final (_, store, dir) = await boot(tester);
 
     // 易混数字：情形 → 数字。
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
-    await tester.tap(find.text("自我测验").first);
+    await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.textContaining("这种情形对应的数字是多少"), findsOneWidget);
     await tester.tap(find.text("揭示（空格）"));
@@ -131,12 +181,12 @@ void main() {
     expect(find.textContaining("记住了（1）"), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pump();
-    expect(find.text("自我测验").evaluate().length, 1, reason: "Esc 关掉卡片，只剩页面上的按钮");
+    expect(find.text("自测").evaluate().length, 1, reason: "Esc 关掉卡片，只剩页面上的按钮");
 
     // 考点速记：情景 → 要点。
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
-    await tester.tap(find.text("自我测验").first);
+    await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.textContaining("碰到这个情景该怎么做"), findsOneWidget);
     await tester.tap(find.text("揭示（空格）"));

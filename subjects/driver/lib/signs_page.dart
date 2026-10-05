@@ -6,6 +6,7 @@ import "look.dart";
 import "models.dart";
 import "recall.dart";
 import "reinforce.dart";
+import "selftest_store.dart";
 import "sign.dart";
 
 /// 标志速记页（ADR 0059）：标志按「禁令 / 警告 / 指示 / 指路」四组摊开，
@@ -21,6 +22,7 @@ class SignsPage extends StatelessWidget {
     required this.daily,
     required this.all,
     required this.mastered,
+    required this.selfTest,
     required this.onStartPractice,
   });
 
@@ -35,6 +37,9 @@ class SignsPage extends StatelessWidget {
   /// 科目一全部题：算「还有几题在偏难里没进来」。
   final List<Question> all;
   final Set<String> mastered;
+
+  /// 自测的「认得了没有」记录（ADR 0082）。
+  final SelfTestStore selfTest;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的形状口诀；分组本身由 json 的 `kind` 决定。
@@ -63,7 +68,7 @@ class SignsPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自我测验"),
+              label: const Text("自测"),
             ),
           ],
         ),
@@ -107,15 +112,17 @@ class SignsPage extends StatelessWidget {
     fallback: (side) => SignView(id: sign.id, size: side),
   );
 
-  /// 自我测验：每轮抽 5 个标志，收尾深链练全部相关题（ADR 0077、0080）。
+  /// 自测：每轮抽 5 个标志，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
+      pageKey: "signs",
+      store: selfTest,
       entries: [for (final s in signs) _recallEntryOf(s)],
       onStartPractice: () {
         final ids = {for (final s in signs) s.id};
         final related = [for (final q in daily) if (q.sign != null && ids.contains(q.sign)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标志速记 · 自我测验");
+        if (related.isNotEmpty) onStartPractice(related, "标志速记 · 自测");
       },
     );
   }

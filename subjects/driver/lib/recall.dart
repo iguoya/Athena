@@ -5,6 +5,7 @@ import "glyphs.dart";
 import "look.dart";
 import "models.dart";
 import "reinforce.dart";
+import "selftest_store.dart";
 
 /// 格子角的掌握度微点（ADR 0077 决策 3）：红 = 相关题最近答错、
 /// 黄 = 部分掌握、绿 = 全部掌握、灰 = 从未作答。纯展示。
@@ -55,20 +56,26 @@ SymbolStatus statusOf({
   return related.every((q) => mastered.contains(q.id)) ? SymbolStatus.mastered : SymbolStatus.partial;
 }
 
-/// 速记页的「自我测验」模式（ADR 0077，ADR 0080 改名并改成一轮 5 个）：卡片流式
-/// 检索练习。
+/// 速记页的「自测」模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的）：
+/// 卡片流式检索练习。
 ///
-/// 每一轮从条目里随机抽 [RecallSession.batchSize] 个（不够就全上）。正面是条目自己
-/// 提供的 [RecallEntry.front]（规范图或情景文字），先回想再点/空格揭示答案，自评
-/// 「记住了（1）/ 没记住（2）」。没记住的条目在隔两张后重新插队，直到这一轮的
-/// 全部记住了或 Esc 退出。一轮收尾统计考了多少次、没记住几次，可以「再来 5 个」
-/// 或深链「去练这组」——真正的记忆闭环由作答通路完成，这里的自评不落库、不写
-/// 掌握度，退出即消失。
+/// 正面是条目自己提供的 [RecallEntry.front]（规范图或情景文字），先回想再点/空格揭示
+/// 答案，自评「记住了（1）/ 没记住（2）」。
+///
+/// **只考没认得的**（ADR 0082）：自评实时记进 [SelfTestStore]——一轮里第一次问就记住的
+/// 条目标为「已认得」，以后不再出；没记住的隔两张后重现，下一轮也优先再考。每轮抽
+/// [RecallSession.batchSize] 个：先取没记住过的几个，再取从没考过的，不够再补。全部
+/// 认得了就说清楚，并给「重新自测」。随时可退出（右上角按钮或 Esc），已经评过的不丢。
+///
+/// 记录**不是掌握度**：不写作答、不进统计与激励，真正的记忆闭环仍由「去练这组题」走
+/// 作答通路完成。
 class RecallSession extends StatefulWidget {
   const RecallSession({
     super.key,
     required this.entries,
     required this.onStartPractice,
+    required this.pageKey,
+    required this.store,
     this.prompt = defaultPrompt,
     this.batchSize = defaultBatchSize,
   });
@@ -77,8 +84,12 @@ class RecallSession extends StatefulWidget {
   static const defaultBatchSize = 5;
   static const defaultPrompt = "想一想：这是什么？看到之后怎么开？";
 
-  /// 参与自我测验的条目；[RecallEntry] 是页面内容的轻量视图。
+  /// 参与自测的全部条目；[RecallEntry] 是页面内容的轻量视图。
   final List<RecallEntry> entries;
+
+  /// 本页在 [SelfTestStore] 里的键，条目 id 在页内唯一即可。
+  final String pageKey;
+  final SelfTestStore store;
 
   /// 正面卡下方的提问句：符号页问「这是什么」，数字与要点页问「是多少 / 怎么办」。
   final String prompt;
@@ -91,6 +102,8 @@ class RecallSession extends StatefulWidget {
     BuildContext context, {
     required List<RecallEntry> entries,
     required void Function() onStartPractice,
+    required String pageKey,
+    required SelfTestStore store,
     String prompt = defaultPrompt,
     int batchSize = defaultBatchSize,
   }) {
@@ -103,6 +116,8 @@ class RecallSession extends StatefulWidget {
         child: RecallSession(
           entries: entries,
           onStartPractice: onStartPractice,
+          pageKey: pageKey,
+          store: store,
           prompt: prompt,
           batchSize: batchSize,
         ),
@@ -114,7 +129,7 @@ class RecallSession extends StatefulWidget {
   State<RecallSession> createState() => _RecallSessionState();
 }
 
-/// 自我测验的一个条目：正面由页面提供，文案在条目里。
+/// 自测的一个条目：正面由页面提供，文案在条目里。
 class RecallEntry {
   const RecallEntry({
     required this.id,
@@ -126,6 +141,7 @@ class RecallEntry {
     this.confuseView,
   });
 
+  /// 页内稳定的键：记录按它存，内容改版后键变了就当新条目重考。
   final String id;
 
   /// 正面：符号页是规范图，数字与要点页是情景文字。
@@ -145,19 +161,32 @@ class _RecallSessionState extends State<RecallSession> {
   /// 本轮待考队列；没记住的条目在消耗两张新卡后重新插入。
   late List<RecallEntry> _queue;
 
-  /// 上一轮抽到的条目 id：「再来 5 个」尽量抽没考过的。
+  /// 本轮已经没记住过的条目 id：它们之后再被问到、记住了，也不算「一次就记住」。
+  final Set<String> _missedThisRound = {};
+  final List<String> _missedNames = [];
+
+  /// 上一轮抽到的条目 id：同一批里尽量不连着出现。
   Set<String> _lastRound = {};
   final FocusNode _focus = FocusNode();
   bool _revealed = false;
   int _asked = 0;
   int _missed = 0;
   int _rounds = 1;
+  int _roundSize = 0;
   bool _done = false;
+
+  SelfTestStore get _store => widget.store;
+  String get _page => widget.pageKey;
+
+  int get _knownCount => _store.knownCount(_page, [for (final e in widget.entries) e.id]);
+  int get _unknownCount => widget.entries.length - _knownCount;
 
   @override
   void initState() {
     super.initState();
     _queue = _draw();
+    _roundSize = _queue.length;
+    _done = _queue.isEmpty;
     WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
   }
 
@@ -167,24 +196,46 @@ class _RecallSessionState extends State<RecallSession> {
     super.dispose();
   }
 
-  /// 抽一轮：先从上一轮没出现过的里抽，不够再用上一轮的补满。
+  /// 抽一轮，只从没认得的里抽：没记住过的先来（至多一半，其余留给没考过的），
+  /// 没考过的次之，不够再用没记住过的补满；上一轮刚出现过的排在后面。
   List<RecallEntry> _draw() {
-    final fresh = [for (final e in widget.entries) if (!_lastRound.contains(e.id)) e]..shuffle();
-    final seen = [for (final e in widget.entries) if (_lastRound.contains(e.id)) e]..shuffle();
-    final round = [...fresh, ...seen].take(widget.batchSize).toList()..shuffle();
-    _lastRound = {for (final e in round) e.id};
-    return round;
+    final unknown = [for (final e in widget.entries) if (!_store.isKnown(_page, e.id)) e];
+    int byLast(RecallEntry a, RecallEntry b) =>
+        (_lastRound.contains(a.id) ? 1 : 0) - (_lastRound.contains(b.id) ? 1 : 0);
+    final learning = [for (final e in unknown) if (_store.isLearning(_page, e.id)) e]
+      ..shuffle()
+      ..sort(byLast);
+    final fresh = [for (final e in unknown) if (!_store.isLearning(_page, e.id)) e]..shuffle();
+    final cap = (widget.batchSize / 2).ceil();
+    final picked = <RecallEntry>[
+      ...learning.take(cap),
+      ...fresh.take(widget.batchSize),
+      ...learning.skip(cap),
+    ].take(widget.batchSize).toList()..shuffle();
+    _lastRound = {for (final e in picked) e.id};
+    return picked;
   }
 
   void _nextRound() {
     setState(() {
       _queue = _draw();
+      _roundSize = _queue.length;
+      _missedThisRound.clear();
+      _missedNames.clear();
       _asked = 0;
       _missed = 0;
       _rounds++;
       _revealed = false;
-      _done = false;
+      _done = _queue.isEmpty;
     });
+  }
+
+  /// 清空本页记录，从头自测一遍。
+  void _restart() {
+    _store.reset(_page);
+    _lastRound = {};
+    _rounds = 0;
+    _nextRound();
   }
 
   void _reveal() {
@@ -193,14 +244,20 @@ class _RecallSessionState extends State<RecallSession> {
 
   void _grade(bool remembered) {
     final current = _queue.first;
+    // 评一张就记一张：中途退出也不丢。
+    _store.record(
+      _page,
+      current.id,
+      remembered: remembered,
+      firstTry: !_missedThisRound.contains(current.id),
+    );
     setState(() {
       _asked++;
-      if (remembered) {
-        _queue.removeAt(0);
-      } else {
+      _queue.removeAt(0);
+      if (!remembered) {
         _missed++;
-        // 没记住的先摘下来，跳过两张新卡后重新插队（ADR 0077 决策 1）。
-        _queue.removeAt(0);
+        if (_missedThisRound.add(current.id)) _missedNames.add(current.name);
+        // 没记住的跳过两张新卡后重新插队（ADR 0077 决策 1）。
         if (_queue.length > 2) {
           _queue.insert(2, current);
         } else {
@@ -247,6 +304,28 @@ class _RecallSessionState extends State<RecallSession> {
     );
   }
 
+  /// 「已认得 K / N」进度条：让人看见自测在往前走，也说明为什么有些条目不再出现。
+  Widget _progress(BuildContext context, TextStyle? muted) {
+    final total = widget.entries.length;
+    final known = _knownCount;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text("已认得 $known / $total · 只考没认得的", style: muted),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: total == 0 ? 0 : known / total,
+            minHeight: 6,
+            backgroundColor: Bs.border,
+            color: Bs.success,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _card(BuildContext context) {
     final entry = _queue.first;
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -259,11 +338,20 @@ class _RecallSessionState extends State<RecallSession> {
       children: [
         Row(
           children: [
-            Text("自我测验", style: Theme.of(context).textTheme.titleLarge),
+            Text("自测", style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(width: 10),
-            Text("第 $_rounds 轮 · 剩 ${_queue.length} 张 · 没记住 $_missed · Esc 退出", style: muted),
+            Expanded(
+              child: Text("第 $_rounds 轮 · 剩 ${_queue.length} 张 · 没记住 $_missed", style: muted),
+            ),
+            IconButton(
+              tooltip: "退出自测（Esc）：评过的已经记下",
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Glyph.close),
+            ),
           ],
         ),
+        const SizedBox(height: 4),
+        _progress(context, muted),
         const SizedBox(height: 16),
         Center(child: entry.front),
         const SizedBox(height: 14),
@@ -314,19 +402,29 @@ class _RecallSessionState extends State<RecallSession> {
         ],
         const SizedBox(height: 16),
         _revealed
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ? Column(
                 children: [
-                  FilledButton.icon(
-                    onPressed: () => _grade(true),
-                    icon: const Icon(Glyph.correct, size: 18),
-                    label: const Text("记住了（1）"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: () => _grade(true),
+                        icon: const Icon(Glyph.correct, size: 18),
+                        label: const Text("记住了（1）"),
+                      ),
+                      const SizedBox(width: 12),
+                      OutlinedButton.icon(
+                        onPressed: () => _grade(false),
+                        icon: const Icon(Glyph.wrong, size: 18),
+                        label: const Text("没记住（2）"),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  OutlinedButton.icon(
-                    onPressed: () => _grade(false),
-                    icon: const Icon(Glyph.wrong, size: 18),
-                    label: const Text("没记住（2）"),
+                  const SizedBox(height: 8),
+                  Text(
+                    "第一次就记住的，以后不再考；没记住的会再来。",
+                    textAlign: TextAlign.center,
+                    style: muted?.copyWith(fontSize: 13),
                   ),
                 ],
               )
@@ -342,29 +440,46 @@ class _RecallSessionState extends State<RecallSession> {
 
   Widget _summary(BuildContext context) {
     final body = Theme.of(context).textTheme.bodyLarge;
+    final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      height: 1.5,
+    );
+    final allKnown = _unknownCount == 0;
+    final remaining = _unknownCount;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("考完了", style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 10),
-        Text("这一轮 ${_lastRound.length} 个，共考 $_asked 次，其中没记住 $_missed 次。", style: body),
-        const SizedBox(height: 6),
-        Text(
-          _missed == 0 ? "全部记住了。真正的检验还是做题——有空把这几组题过一遍。" : "没记住的再看看；真正的检验还是做题。",
-          textAlign: TextAlign.center,
-          style: body,
-        ),
+        Text(allKnown ? "这一页你都认得了" : "考完了", style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 12),
+        SizedBox(width: 420, child: _progress(context, muted)),
+        const SizedBox(height: 12),
+        if (_roundSize > 0) ...[
+          Text("这一轮 $_roundSize 个，共考 $_asked 次，其中没记住 $_missed 次。", style: body),
+          const SizedBox(height: 6),
+        ],
+        if (_missedNames.isNotEmpty)
+          Text("需要再看看：${_missedNames.join("、")}", textAlign: TextAlign.center, style: body)
+        else if (allKnown)
+          Text("没有要再考的了。真正的检验还是做题——去把相关的题过一遍。", textAlign: TextAlign.center, style: body)
+        else
+          Text("这一轮全都一次记住了，还剩 $remaining 个没认得。", textAlign: TextAlign.center, style: body),
         const SizedBox(height: 18),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 12,
           runSpacing: 10,
           children: [
-            FilledButton(
-              onPressed: _nextRound,
-              child: Text("再来 ${widget.batchSize} 个"),
-            ),
+            if (!allKnown)
+              FilledButton(
+                onPressed: _nextRound,
+                child: Text("再来 ${remaining < widget.batchSize ? remaining : widget.batchSize} 个"),
+              )
+            else
+              FilledButton(
+                onPressed: _restart,
+                child: const Text("重新自测"),
+              ),
             OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pop();
