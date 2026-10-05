@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "cheat_image.dart";
 import "glyphs.dart";
 import "look.dart";
 import "marking.dart";
@@ -60,7 +61,7 @@ class MarkingsPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("考我"),
+              label: const Text("自我测验"),
             ),
           ],
         ),
@@ -75,7 +76,7 @@ class MarkingsPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           "分组与含义依据 GB 5768.3—2009《道路交通标志和标线 第 3 部分：道路交通标线》；"
-          "图是应用内俯视示意，认标线以路上实物为准。",
+          "图用题库里的官方题图（带红圈的是题目指的位置），认标线以路上实物为准。",
           style: muted,
         ),
       ],
@@ -88,24 +89,33 @@ class MarkingsPage extends StatelessWidget {
         : markings.where((m) => m.id == marking.confuseWith).firstOrNull;
     return RecallEntry(
       id: marking.id,
+      front: _markingImage(marking, 400),
       name: marking.name,
       meaning: marking.meaning,
       confuseName: other?.name,
       confuseNote: marking.confuseNote,
-      confuseView: other == null ? null : MarkingView(id: other.id, size: 72),
+      confuseView: other == null ? null : _markingImage(other, 168),
     );
   }
 
-  /// 考我：全部标线进卡片流，收尾深链练全部相关题（ADR 0077）。
+  /// 标线图（ADR 0080）：题库官方题图，横向场景，按 4:3 取框；读不出来时退回
+  /// 手绘俯视图。
+  static Widget _markingImage(Marking marking, double width) => CheatImage(
+    path: marking.image,
+    width: width,
+    height: width * 3 / 4,
+    fallback: (side) => MarkingView(id: marking.id, size: side),
+  );
+
+  /// 自我测验：每轮抽 5 条标线，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
       entries: [for (final m in markings) _recallEntryOf(m)],
-      viewOf: (id) => MarkingView(id: id, size: 192),
       onStartPractice: () {
         final ids = {for (final m in markings) m.id};
         final related = [for (final q in daily) if (q.marking != null && ids.contains(q.marking)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 考我");
+        if (related.isNotEmpty) onStartPractice(related, "标线速记 · 自我测验");
       },
     );
   }
@@ -217,7 +227,7 @@ class _MarkingCellState extends State<_MarkingCell> {
         child: AnimatedContainer(
           duration: Bs.durFast,
           curve: Curves.easeOut,
-          width: 176,
+          width: 304,
           transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
           padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
@@ -234,7 +244,7 @@ class _MarkingCellState extends State<_MarkingCell> {
               ),
               Column(
             children: [
-              MarkingView(id: widget.marking.id, size: 96),
+              MarkingsPage._markingImage(widget.marking, 280),
               const SizedBox(height: 10),
               Text(
                 widget.marking.name,
@@ -273,7 +283,7 @@ class _MarkingCellState extends State<_MarkingCell> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              MarkingView(id: widget.marking.id, size: 192),
+              MarkingsPage._markingImage(widget.marking, 440),
               const SizedBox(height: 14),
               Text(
                 widget.marking.name,
@@ -300,7 +310,7 @@ class _MarkingCellState extends State<_MarkingCell> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      MarkingView(id: widget.other!.id, size: 72),
+                      MarkingsPage._markingImage(widget.other!, 168),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

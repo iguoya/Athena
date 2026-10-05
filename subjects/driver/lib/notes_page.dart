@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
+import "recall.dart";
 
 /// 考点速记页（ADR 0064）：灯光、让行、高速、恶劣天气、应急避险、伤员急救的
 /// 「情景 → 要点」对照。内容源是 `content/notes.json`，条级挂出处，每组能直接
@@ -49,6 +50,12 @@ class NotesPage extends StatelessWidget {
             Icon(icon, color: Bs.paper),
             SizedBox(width: 8),
             Text(title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => _startRecall(context),
+              icon: const Icon(Glyph.question, size: 18),
+              label: const Text("自我测验"),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -57,6 +64,57 @@ class NotesPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(footnote, style: muted),
       ],
+    );
+  }
+
+  /// 自我测验（ADR 0080）：每个「情景」是一张卡，正面只给情景，揭示后看要点；
+  /// 每轮抽 5 张。收尾深链练全部相关题。
+  void _startRecall(BuildContext context) {
+    RecallSession.show(
+      context,
+      prompt: "想一想：碰到这个情景该怎么做？要点有哪些？",
+      entries: [
+        for (final group in groups)
+          for (final (i, item) in group.items.indexed)
+            RecallEntry(
+              id: "${group.id}/$i",
+              front: _scenarioFront(context, group.title, item.scenario),
+              name: "要点",
+              meaning: [for (final point in item.points) "· $point"].join("\n"),
+            ),
+      ],
+      onStartPractice: () {
+        final seen = <String>{};
+        final related = [
+          for (final group in groups)
+            for (final q in group.related(daily))
+              if (seen.add(q.id)) q,
+        ];
+        if (related.isNotEmpty) onStartPractice(related, "$title · 自我测验");
+      },
+    );
+  }
+
+  Widget _scenarioFront(BuildContext context, String groupTitle, String scenario) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            groupTitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            scenario,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
+          ),
+        ],
+      ),
     );
   }
 

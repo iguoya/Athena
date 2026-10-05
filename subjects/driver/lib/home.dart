@@ -16,6 +16,7 @@ import "markings_page.dart";
 import "models.dart";
 import "notes_page.dart";
 import "progress.dart";
+import "recall.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
 import "session.dart";
@@ -1781,6 +1782,12 @@ class _HomePageState extends State<HomePage> {
             Icon(Glyph.numbers, color: Bs.paper),
             const SizedBox(width: 8),
             const Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () => _numbersRecall(context, subject, open),
+              icon: const Icon(Glyph.question, size: 18),
+              label: const Text("自我测验"),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -1793,6 +1800,53 @@ class _HomePageState extends State<HomePage> {
           _numberGroup(context, subject, group, open, all, muted),
         ],
       ],
+    );
+  }
+
+  /// 易混数字的自我测验（ADR 0080）：每行「情形 → 数字」是一张卡，正面只给情形，
+  /// 揭示后看数字与出处；每轮抽 5 张，收尾深链练全部相关题。
+  void _numbersRecall(BuildContext context, Subject subject, List<Question> open) {
+    RecallSession.show(
+      context,
+      prompt: "想一想：这种情形对应的数字是多少？",
+      entries: [
+        for (final group in widget.bank.cheatsheet)
+          for (final (i, row) in group.rows.indexed)
+            RecallEntry(
+              id: "${group.id}/$i",
+              front: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      group.unit.isEmpty ? group.title : "${group.title}（${group.unit}）",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      row.caseText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
+                    ),
+                  ],
+                ),
+              ),
+              name: row.value,
+              meaning: "${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
+            ),
+      ],
+      onStartPractice: () {
+        final seen = <String>{};
+        final related = [
+          for (final group in widget.bank.cheatsheet)
+            for (final q in group.related(open))
+              if (seen.add(q.id)) q,
+        ];
+        if (related.isNotEmpty) _startPractice(subject, related, "易混数字 · 自我测验");
+      },
     );
   }
 

@@ -7,13 +7,14 @@ import "package:athena_driver/models.dart";
 import "package:athena_driver/progress.dart";
 import "package:athena_driver/session.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 考我模式（ADR 0077）：检索练习的卡片流——揭示、自评、没记住重现、收尾深链。
-/// 自评不写掌握度：考完进度库里的作答记录不应有任何变化。选手势页（9 条）
-/// 跑完整流程。
+/// 自我测验模式（ADR 0077，ADR 0080 改名、一轮 5 个）：检索练习的卡片流——揭示、
+/// 自评、没记住重现、收尾「再来 5 个」与深链。自评不写掌握度：考完进度库里的作答
+/// 记录不应有任何变化。选手势页（8 个动作）跑完整流程。
 void main() {
-  testWidgets("考我：揭示、没记住重现、收尾「去练这组」起练习，自评不落库", (tester) async {
+  Future<(Bank, ProgressStore, Directory)> boot(WidgetTester tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -32,17 +33,30 @@ void main() {
       await tester.pump();
     }
     expect(ready.isCompleted, isTrue);
+    return (bank, store, dir);
+  }
 
+  Future<void> teardown(WidgetTester tester, ProgressStore store, Directory dir) async {
+    await tester.pump(const Duration(seconds: 30));
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  }
+
+  testWidgets("自我测验：一轮 5 张，揭示、没记住重现、再来一轮、收尾「去练这组」起练习，自评不落库", (tester) async {
+    final (_, store, dir) = await boot(tester);
     final before = await store.allAttempts();
 
-    // 进手势速记页（9 条），打开考我。
+    // 进手势速记页，打开自我测验。
     await tester.tap(find.text("手势速记").first);
     await tester.pump();
-    await tester.tap(find.text("考我").first);
+    await tester.tap(find.text("自我测验").first);
     await tester.pump();
     expect(find.textContaining("想一想"), findsOneWidget);
 
-    // 揭示 → 第一次自评「没记住」，之后一直「记住了」，直到收尾。
+    // 一轮：揭示 → 第一次自评「没记住」，之后一直「记住了」，直到收尾。
     var gradedMiss = false;
     for (var i = 0; i < 20; i++) {
       if (find.text("考完了").evaluate().isNotEmpty) break;
@@ -56,24 +70,65 @@ void main() {
       }
       await tester.pump();
     }
-    expect(find.text("考完了"), findsOneWidget, reason: "9 张卡应在 20 次交互内考完（含没记住的重现）");
-    expect(find.textContaining("共考"), findsOneWidget);
+    expect(find.text("考完了"), findsOneWidget, reason: "5 张卡应在 20 次交互内考完（含没记住的重现）");
+    expect(find.textContaining("这一轮 5 个"), findsOneWidget, reason: "一轮固定 5 个");
     expect(find.textContaining("没记住 1"), findsOneWidget, reason: "第一次自评没记住应计入");
+
+    // 再来 5 个：回到卡片流，第 2 轮。
+    await tester.tap(find.text("再来 5 个"));
+    await tester.pump();
+    expect(find.textContaining("第 2 轮"), findsOneWidget);
+    expect(find.textContaining("想一想"), findsOneWidget);
+    // 第 2 轮全部记住；5 张刚好 5 次交互。
+    for (var i = 0; i < 5; i++) {
+      await tester.tap(find.text("揭示（空格）"));
+      await tester.pump();
+      await tester.tap(find.textContaining("记住了（1）"));
+      await tester.pump();
+    }
+    expect(find.text("考完了"), findsOneWidget);
+    expect(find.textContaining("没记住 0"), findsOneWidget);
 
     // 收尾深链：去练这组起一轮练习。
     await tester.tap(find.text("去练这组题"));
     await tester.pump();
     expect(find.byType(SessionStage), findsOneWidget);
 
-    // 自评不落库：作答记录与考我之前一致。
+    // 自评不落库：作答记录与自我测验之前一致。
     final after = await store.allAttempts();
     expect(after.length, before.length);
 
-    await tester.pump(const Duration(seconds: 30));
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
+    await teardown(tester, store, dir);
+  });
+
+  testWidgets("自我测验：易混数字与考点速记也有，文字卡正面是情形、揭示后是答案", (tester) async {
+    final (_, store, dir) = await boot(tester);
+
+    // 易混数字：情形 → 数字。
+    await tester.tap(find.text("易混数字").first);
+    await tester.pump();
+    await tester.tap(find.text("自我测验").first);
+    await tester.pump();
+    expect(find.textContaining("这种情形对应的数字是多少"), findsOneWidget);
+    await tester.tap(find.text("揭示（空格）"));
+    await tester.pump();
+    expect(find.textContaining("记住了（1）"), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    expect(find.text("自我测验").evaluate().length, 1, reason: "Esc 关掉卡片，只剩页面上的按钮");
+
+    // 考点速记：情景 → 要点。
+    await tester.tap(find.text("考点速记").first);
+    await tester.pump();
+    await tester.tap(find.text("自我测验").first);
+    await tester.pump();
+    expect(find.textContaining("碰到这个情景该怎么做"), findsOneWidget);
+    await tester.tap(find.text("揭示（空格）"));
+    await tester.pump();
+    expect(find.text("要点"), findsOneWidget);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+    await teardown(tester, store, dir);
   });
 }

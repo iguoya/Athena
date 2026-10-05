@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "cheat_image.dart";
 import "gesture_animation.dart";
 import "gesture_painter.dart";
 import "glyphs.dart";
@@ -54,7 +55,7 @@ class GesturesPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("考我"),
+              label: const Text("自我测验"),
             ),
           ],
         ),
@@ -81,7 +82,7 @@ class GesturesPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: Text("每个动作都是动画，点开看分步与俯视", style: muted),
+                    child: Text("每个动作都是规范的交警动画，点开看大图", style: muted),
                   ),
                   const Spacer(),
                   FilledButton.icon(
@@ -118,7 +119,7 @@ class GesturesPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           "手势信号依据《道路交通安全法实施条例》与公安部《交通警察道路执勤执法工作规范》；"
-          "动画是应用内示意：姿势逐个用题库里的手势题图核对过，认手势以现场指挥为准。",
+          "动画取自交警手势的规范图解（已去掉画面里的名称文字），认手势以现场指挥为准。",
           style: muted,
         ),
       ],
@@ -131,24 +132,33 @@ class GesturesPage extends StatelessWidget {
         : gestures.where((x) => x.id == g.confuseWith).firstOrNull;
     return RecallEntry(
       id: g.id,
+      front: _gestureImage(g, 288),
       name: g.name,
       meaning: g.meaning,
       confuseName: other?.name,
       confuseNote: g.confuseNote,
-      confuseView: other == null ? null : GestureView(id: other.id, size: 72),
+      confuseView: other == null ? null : _gestureImage(other, 144),
     );
   }
 
-  /// 考我：全部手势进卡片流，收尾深链练全部相关题（ADR 0077）。
+  /// 手势动画（ADR 0080）：规范的交警手势 GIF，循环自己播；GIF 读不出来时
+  /// 退回应用内绘制的示意动画（ADR 0078，那套代码保留作兜底）。
+  static Widget _gestureImage(TrafficGesture g, double size) => CheatImage(
+    path: g.image,
+    width: size,
+    fallback: (side) => GestureAnimation(id: g.id, size: side),
+  );
+
+  /// 自我测验：每轮抽 5 个手势，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
-      entries: [for (final g in gestures) _recallEntryOf(g)],
-      viewOf: (id) => GestureView(id: id, size: 192),
+      // 「手势的效力」是总则、没有规范动画，不进自我测验；它的相关题仍并入深链。
+      entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g)],
       onStartPractice: () {
         final ids = {for (final g in gestures) ...g.questions};
         final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 考我");
+        if (related.isNotEmpty) onStartPractice(related, "手势速记 · 自我测验");
       },
     );
   }
@@ -210,7 +220,7 @@ class _GestureCellState extends State<_GestureCell> {
         child: AnimatedContainer(
           duration: Bs.durFast,
           curve: Curves.easeOut,
-          width: 192,
+          width: 232,
           transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
           padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
@@ -227,7 +237,7 @@ class _GestureCellState extends State<_GestureCell> {
               ),
               Column(
             children: [
-              GestureAnimation(id: widget.gesture.id, size: 120),
+              GesturesPage._gestureImage(widget.gesture, 192),
               const SizedBox(height: 10),
               Text(
                 widget.gesture.name,
@@ -265,7 +275,7 @@ class _GestureCellState extends State<_GestureCell> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              GestureAnimation(id: widget.gesture.id, size: 260, interactive: true),
+              GesturesPage._gestureImage(widget.gesture, 320),
               const SizedBox(height: 14),
               Text(
                 widget.gesture.name,
@@ -292,7 +302,7 @@ class _GestureCellState extends State<_GestureCell> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureView(id: widget.other!.id, size: 72),
+                      GesturesPage._gestureImage(widget.other!, 144),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

@@ -5,6 +5,7 @@ import "package:clock/clock.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
+import "cheat_image.dart";
 import "gesture_animation.dart";
 import "gesture_index.dart";
 import "glyphs.dart";
@@ -949,11 +950,18 @@ class _SessionStageState extends State<SessionStage> {
         ),
       ),
       // 手势题：答完在右栏放上这个动作的完整动画（ADR 0078）——题图只有两个姿势，看不出动作流程。
+      // 放的是规范的交警手势 GIF（ADR 0080）；GIF 读不出来才退回应用内绘制的示意动画。
       if (GestureIndex.of(q.id) case (final gestureId, final gestureName) when gestureClips.containsKey(gestureId)) ...[
         const SizedBox(height: 16),
         Text("手势动画 · $gestureName", style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 8),
-        Center(child: GestureAnimation(id: gestureId, size: 150, interactive: true)),
+        Center(
+          child: CheatImage(
+            path: GestureIndex.imageOf(gestureId),
+            width: 240,
+            fallback: (side) => GestureAnimation(id: gestureId, size: side, interactive: true),
+          ),
+        ),
       ],
       if (q.sourceRefs.any((ref) => Bs.isContentSource(ref.relation))) ...[
         const SizedBox(height: 16),

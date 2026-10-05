@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:athena_driver/cheat_image.dart";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/gesture_animation.dart";
 import "package:athena_driver/gesture_index.dart";
@@ -71,7 +72,8 @@ void main() {
       }
       expect(find.textContaining("简短解释"), findsOneWidget, reason: "答错后右栏没出解析");
       expect(tester.takeException(), isNull);
-      expect(find.byType(GestureAnimation), expectAnimation ? findsOneWidget : findsNothing);
+      // 规范 GIF（ADR 0080）：用 CheatImage 放；非手势题右栏没有它。
+      expect(find.byType(CheatImage), expectAnimation ? findsOneWidget : findsNothing);
       await tester.pumpWidget(const SizedBox());
     }
     await tester.runAsync(() async {

@@ -414,6 +414,7 @@ class RoadSign {
     this.band = QuestionBand.common,
     this.confuseWith,
     this.confuseNote,
+    this.image,
   });
 
   final String id;
@@ -424,6 +425,10 @@ class RoadSign {
   /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
   final String? confuseWith;
   final String? confuseNote;
+
+  /// 规范图（ADR 0080）：相对 `content/` 的路径，标志/手势是仓库内落库的规范图，
+  /// 标线/仪表复用题库官方题图；没有时页面退回自绘视图。
+  final String? image;
 
   /// 一句行动导向的「看到之后怎么开」（ADR 0059）；出处是 signs.json 文件级的 GB 5768.2。
   final String meaning;
@@ -445,6 +450,7 @@ class RoadSign {
       band: json["band"] as String? ?? QuestionBand.common,
       confuseWith: json["confuse_with"] as String?,
       confuseNote: json["confuse_note"] as String?,
+      image: json["image"] as String?,
     );
   }
 }
@@ -460,6 +466,7 @@ class Marking {
     this.band = QuestionBand.common,
     this.confuseWith,
     this.confuseNote,
+    this.image,
   });
 
   final String id;
@@ -473,6 +480,9 @@ class Marking {
   /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
   final String? confuseWith;
   final String? confuseNote;
+
+  /// 规范图（ADR 0080），语义同 [RoadSign.image]。
+  final String? image;
 
 
   String get kindLabel => switch (kind) {
@@ -491,6 +501,7 @@ class Marking {
       band: json["band"] as String? ?? QuestionBand.common,
       confuseWith: json["confuse_with"] as String?,
       confuseNote: json["confuse_note"] as String?,
+      image: json["image"] as String?,
     );
   }
 }
@@ -506,6 +517,7 @@ class TrafficGesture {
     this.questions = const [],
     this.confuseWith,
     this.confuseNote,
+    this.image,
   });
 
   final String id;
@@ -523,6 +535,9 @@ class TrafficGesture {
   final String? confuseWith;
   final String? confuseNote;
 
+  /// 规范图（ADR 0080），语义同 [RoadSign.image]。
+  final String? image;
+
 
   factory TrafficGesture.fromJson(Map<String, dynamic> json) {
     return TrafficGesture(
@@ -536,6 +551,7 @@ class TrafficGesture {
       ],
       confuseWith: json["confuse_with"] as String?,
       confuseNote: json["confuse_note"] as String?,
+      image: json["image"] as String?,
     );
   }
 }
@@ -551,6 +567,7 @@ class Gauge {
     this.questions = const [],
     this.confuseWith,
     this.confuseNote,
+    this.image,
   });
 
   final String id;
@@ -568,6 +585,9 @@ class Gauge {
   /// 易混对撞卡（ADR 0077）：与哪条易混、一句差异口诀；只在其中一方声明。
   final String? confuseWith;
   final String? confuseNote;
+
+  /// 规范图（ADR 0080），语义同 [RoadSign.image]。
+  final String? image;
 
 
   String get kindLabel => switch (kind) {
@@ -590,6 +610,7 @@ class Gauge {
       ],
       confuseWith: json["confuse_with"] as String?,
       confuseNote: json["confuse_note"] as String?,
+      image: json["image"] as String?,
     );
   }
 }

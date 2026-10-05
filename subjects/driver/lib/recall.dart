@@ -55,35 +55,44 @@ SymbolStatus statusOf({
   return related.every((q) => mastered.contains(q.id)) ? SymbolStatus.mastered : SymbolStatus.partial;
 }
 
-/// 速记页的「考我」模式（ADR 0077）：卡片流式检索练习。
+/// 速记页的「自我测验」模式（ADR 0077，ADR 0080 改名并改成一轮 5 个）：卡片流式
+/// 检索练习。
 ///
-/// 正面是大图（条目自己提供 [RecallCard.buildFront]），先回想再点/空格揭示
-/// 名称与「看到之后怎么开」，自评「记住了（1）/ 没记住（2）」。没记住的条目
-/// 在隔两张后重新插队，直到全部记住了或 Esc 退出。收尾统计考了多少张、
-/// 没记住几张，深链「去练这组」——真正的记忆闭环由作答通路完成，这里的
-/// 自评不落库、不写掌握度，退出即消失。
+/// 每一轮从条目里随机抽 [RecallSession.batchSize] 个（不够就全上）。正面是条目自己
+/// 提供的 [RecallEntry.front]（规范图或情景文字），先回想再点/空格揭示答案，自评
+/// 「记住了（1）/ 没记住（2）」。没记住的条目在隔两张后重新插队，直到这一轮的
+/// 全部记住了或 Esc 退出。一轮收尾统计考了多少次、没记住几次，可以「再来 5 个」
+/// 或深链「去练这组」——真正的记忆闭环由作答通路完成，这里的自评不落库、不写
+/// 掌握度，退出即消失。
 class RecallSession extends StatefulWidget {
   const RecallSession({
     super.key,
     required this.entries,
-    required this.viewOf,
     required this.onStartPractice,
+    this.prompt = defaultPrompt,
+    this.batchSize = defaultBatchSize,
   });
 
-  /// 参与考我的条目；[RecallEntry] 是符号条目的轻量视图。
+  /// 一轮抽几个（使用者要求「一次 5 个」）。
+  static const defaultBatchSize = 5;
+  static const defaultPrompt = "想一想：这是什么？看到之后怎么开？";
+
+  /// 参与自我测验的条目；[RecallEntry] 是页面内容的轻量视图。
   final List<RecallEntry> entries;
 
-  /// 条目 id → 大图 widget（四个符号页各自的 painter 视图）。
-  final Widget Function(String id) viewOf;
+  /// 正面卡下方的提问句：符号页问「这是什么」，数字与要点页问「是多少 / 怎么办」。
+  final String prompt;
+  final int batchSize;
 
-  /// 收尾的「去练这组」深链；传相关题与标题。
+  /// 收尾的「去练这组」深链；页面自己算相关题并起练习。
   final void Function() onStartPractice;
 
   static Future<void> show(
     BuildContext context, {
     required List<RecallEntry> entries,
-    required Widget Function(String id) viewOf,
     required void Function() onStartPractice,
+    String prompt = defaultPrompt,
+    int batchSize = defaultBatchSize,
   }) {
     return showDialog<void>(
       context: context,
@@ -91,7 +100,12 @@ class RecallSession extends StatefulWidget {
       builder: (_) => Dialog(
         insetPadding: const EdgeInsets.all(24),
         backgroundColor: Colors.transparent,
-        child: RecallSession(entries: entries, viewOf: viewOf, onStartPractice: onStartPractice),
+        child: RecallSession(
+          entries: entries,
+          onStartPractice: onStartPractice,
+          prompt: prompt,
+          batchSize: batchSize,
+        ),
       ),
     );
   }
@@ -100,10 +114,11 @@ class RecallSession extends StatefulWidget {
   State<RecallSession> createState() => _RecallSessionState();
 }
 
-/// 考我模式的一个条目视图：大图由页面提供，文案在条目里。
+/// 自我测验的一个条目：正面由页面提供，文案在条目里。
 class RecallEntry {
   const RecallEntry({
     required this.id,
+    required this.front,
     required this.name,
     required this.meaning,
     this.confuseName,
@@ -112,6 +127,11 @@ class RecallEntry {
   });
 
   final String id;
+
+  /// 正面：符号页是规范图，数字与要点页是情景文字。
+  final Widget front;
+
+  /// 揭示后的答案标题与说明。
   final String name;
   final String meaning;
 
@@ -122,18 +142,22 @@ class RecallEntry {
 }
 
 class _RecallSessionState extends State<RecallSession> {
-  /// 待考队列；没记住的条目在消耗两张新卡后重新插入。
+  /// 本轮待考队列；没记住的条目在消耗两张新卡后重新插入。
   late List<RecallEntry> _queue;
+
+  /// 上一轮抽到的条目 id：「再来 5 个」尽量抽没考过的。
+  Set<String> _lastRound = {};
   final FocusNode _focus = FocusNode();
   bool _revealed = false;
   int _asked = 0;
   int _missed = 0;
+  int _rounds = 1;
   bool _done = false;
 
   @override
   void initState() {
     super.initState();
-    _queue = [...widget.entries]..shuffle();
+    _queue = _draw();
     WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
   }
 
@@ -141,6 +165,26 @@ class _RecallSessionState extends State<RecallSession> {
   void dispose() {
     _focus.dispose();
     super.dispose();
+  }
+
+  /// 抽一轮：先从上一轮没出现过的里抽，不够再用上一轮的补满。
+  List<RecallEntry> _draw() {
+    final fresh = [for (final e in widget.entries) if (!_lastRound.contains(e.id)) e]..shuffle();
+    final seen = [for (final e in widget.entries) if (_lastRound.contains(e.id)) e]..shuffle();
+    final round = [...fresh, ...seen].take(widget.batchSize).toList()..shuffle();
+    _lastRound = {for (final e in round) e.id};
+    return round;
+  }
+
+  void _nextRound() {
+    setState(() {
+      _queue = _draw();
+      _asked = 0;
+      _missed = 0;
+      _rounds++;
+      _revealed = false;
+      _done = false;
+    });
   }
 
   void _reveal() {
@@ -197,7 +241,8 @@ class _RecallSessionState extends State<RecallSession> {
       onKeyEvent: _onKey,
       child: GlassPanel(
         padding: const EdgeInsets.all(28),
-        child: _done ? _summary(context) : _card(context),
+        // 图放大一倍后卡片可能高过小窗口，整张卡可滚，按钮不会掉出屏幕。
+        child: SingleChildScrollView(child: _done ? _summary(context) : _card(context)),
       ),
     );
   }
@@ -214,19 +259,19 @@ class _RecallSessionState extends State<RecallSession> {
       children: [
         Row(
           children: [
-            Text("考我", style: Theme.of(context).textTheme.titleLarge),
+            Text("自我测验", style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(width: 10),
-            Text("剩 ${_queue.length} 张 · 没记住 $_missed · Esc 退出", style: muted),
+            Text("第 $_rounds 轮 · 剩 ${_queue.length} 张 · 没记住 $_missed · Esc 退出", style: muted),
           ],
         ),
         const SizedBox(height: 16),
-        Center(child: widget.viewOf(entry.id)),
+        Center(child: entry.front),
         const SizedBox(height: 14),
         if (!_revealed)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18),
             child: Text(
-              "想一想：这是什么？看到之后怎么开？",
+              widget.prompt,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
             ),
@@ -249,7 +294,7 @@ class _RecallSessionState extends State<RecallSession> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (entry.confuseView != null) ...[
-                    SizedBox(width: 72, height: 72, child: entry.confuseView!),
+                    entry.confuseView!,
                     const SizedBox(width: 12),
                   ],
                   Expanded(
@@ -303,7 +348,7 @@ class _RecallSessionState extends State<RecallSession> {
       children: [
         Text("考完了", style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 10),
-        Text("共考 $_asked 次，其中没记住 $_missed 次。", style: body),
+        Text("这一轮 ${_lastRound.length} 个，共考 $_asked 次，其中没记住 $_missed 次。", style: body),
         const SizedBox(height: 6),
         Text(
           _missed == 0 ? "全部记住了。真正的检验还是做题——有空把这几组题过一遍。" : "没记住的再看看；真正的检验还是做题。",
@@ -311,17 +356,22 @@ class _RecallSessionState extends State<RecallSession> {
           style: body,
         ),
         const SizedBox(height: 18),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 12,
+          runSpacing: 10,
           children: [
             FilledButton(
+              onPressed: _nextRound,
+              child: Text("再来 ${widget.batchSize} 个"),
+            ),
+            OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 widget.onStartPractice();
               },
               child: const Text("去练这组题"),
             ),
-            const SizedBox(width: 12),
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text("关闭"),

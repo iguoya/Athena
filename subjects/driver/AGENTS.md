@@ -73,7 +73,9 @@
 
 - **壳**：Flutter 桌面（macOS / Windows / Linux）
 - **界面**：Dart；桌面工作台（侧栏 + 主区），不为手机窄屏折中。标志用
-  `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。
+  `CustomPaint` 自绘，不嵌 WebView。见 ADR 0004。**速记页的主图是规范图**（标志取
+  Wikimedia Commons 国标图形、手势用规范 GIF、标线与仪表复用题库官方题图，路径写在各内容
+  JSON 的 `image` 字段，ADR 0080），自绘视图只在图读不出来时兜底。
 - **内容**：`content/curriculum.json` + `content/questions/*.json`
 - **进度（个人数据）——本地优先（主仓库 ADR 0070）**：界面只读写本地 SQLite
   （用户数据目录 `AthenaDriver/local-<学习者编号>.db`，不进仓库；表结构与中心 PG 同名同列

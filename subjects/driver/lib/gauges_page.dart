@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "cheat_image.dart";
 import "gauge.dart";
 import "glyphs.dart";
 import "look.dart";
@@ -57,7 +58,7 @@ class GaugesPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("考我"),
+              label: const Text("自我测验"),
             ),
           ],
         ),
@@ -72,7 +73,7 @@ class GaugesPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           "符号与含义依据 GB 4094—2016《汽车操纵件、指示器及信号装置的标志》；"
-          "图是应用内示意，认符号以车内实物为准。",
+          "图用题库里的官方题图（座舱图里的问号是题目指的位置），认符号以车内实物为准。",
           style: muted,
         ),
       ],
@@ -85,24 +86,33 @@ class GaugesPage extends StatelessWidget {
         : gauges.where((g) => g.id == gauge.confuseWith).firstOrNull;
     return RecallEntry(
       id: gauge.id,
+      front: _gaugeImage(gauge, 360),
       name: gauge.name,
       meaning: gauge.meaning,
       confuseName: other?.name,
       confuseNote: gauge.confuseNote,
-      confuseView: other == null ? null : GaugeView(id: other.id, size: 72),
+      confuseView: other == null ? null : _gaugeImage(other, 168),
     );
   }
 
-  /// 考我：全部符号进卡片流，收尾深链练全部相关题（ADR 0077）。
+  /// 仪表图（ADR 0080）：题库官方题图（报警灯/指示灯裁成方图，表盘与座舱图原样），
+  /// 按 4:3 取框；胎压、ESC 灯题库没有图，退回手绘符号。
+  static Widget _gaugeImage(Gauge gauge, double width) => CheatImage(
+    path: gauge.image,
+    width: width,
+    height: width * 3 / 4,
+    fallback: (side) => GaugeView(id: gauge.id, size: side),
+  );
+
+  /// 自我测验：每轮抽 5 个符号，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
       entries: [for (final g in gauges) _recallEntryOf(g)],
-      viewOf: (id) => GaugeView(id: id, size: 192),
       onStartPractice: () {
         final ids = {for (final g in gauges) ...g.questions};
         final related = [for (final q in daily) if (ids.contains(q.id)) q];
-        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 考我");
+        if (related.isNotEmpty) onStartPractice(related, "仪表速记 · 自我测验");
       },
     );
   }
@@ -201,7 +211,7 @@ class _GaugeCellState extends State<_GaugeCell> {
         child: AnimatedContainer(
           duration: Bs.durFast,
           curve: Curves.easeOut,
-          width: 176,
+          width: 256,
           transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
           padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
@@ -218,7 +228,7 @@ class _GaugeCellState extends State<_GaugeCell> {
               ),
               Column(
             children: [
-              GaugeView(id: widget.gauge.id, size: 96),
+              GaugesPage._gaugeImage(widget.gauge, 232),
               const SizedBox(height: 10),
               Text(
                 widget.gauge.name,
@@ -256,7 +266,7 @@ class _GaugeCellState extends State<_GaugeCell> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              GaugeView(id: widget.gauge.id, size: 192),
+              GaugesPage._gaugeImage(widget.gauge, 400),
               const SizedBox(height: 14),
               Text(
                 widget.gauge.name,
@@ -283,7 +293,7 @@ class _GaugeCellState extends State<_GaugeCell> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GaugeView(id: widget.other!.id, size: 72),
+                      GaugesPage._gaugeImage(widget.other!, 168),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

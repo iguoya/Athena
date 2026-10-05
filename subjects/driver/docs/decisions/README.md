@@ -81,6 +81,7 @@
 | [0074](0074-crime-penalty-cheatsheet.md) | 易混数字加「刑罚档位」组——罪名与刑期的对照 | 已接受 |
 | [0075](0075-stubborn-questions-pinned-in-reinforce.md) | 累计答错 3 次以上的题常驻强化练习 | 已被 0079 取代 |
 | [0076](0076-license-score-notes-page.md) | 记分证照速记页——按作答记录里错得最多的点整理 | 已接受 |
-| [0077](0077-recall-mode-and-confusable-pairs.md) | 速记页交互增强：考我模式、易混对撞卡与格子掌握度微点 | 已接受 |
-| [0078](0078-gesture-animations.md) | 交警手势做成动画——正面加俯视，答完手势题右栏也放 | 已接受 |
+| [0077](0077-recall-mode-and-confusable-pairs.md) | 速记页交互增强：考我模式、易混对撞卡与格子掌握度微点 | 已接受（考我的名字、规模与范围由 0080 修订） |
+| [0078](0078-gesture-animations.md) | 交警手势做成动画——正面加俯视，答完手势题右栏也放 | 已接受（页面与做题台改放规范 GIF，由 0080 修订） |
 | [0079](0079-reinforce-retire-by-correct-ratio.md) | 强化练习动态移出——对的次数达到错的 2 倍就移出 | 已接受 |
+| [0080](0080-cheatsheet-standard-images-and-self-test.md) | 速记页改用规范图，「考我」改名「自我测验」并推广、一轮 5 个 | 已接受 |

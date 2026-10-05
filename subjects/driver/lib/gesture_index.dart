@@ -7,13 +7,21 @@ class GestureIndex {
   GestureIndex._();
 
   static Map<String, (String id, String name)> _byQuestion = const {};
+  static Map<String, String> _imageById = const {};
 
   static void load(Iterable<TrafficGesture> gestures) {
     _byQuestion = {
       for (final g in gestures)
         for (final q in g.questions) q: (g.id, g.name),
     };
+    _imageById = {
+      for (final g in gestures)
+        if (g.image != null) g.id: g.image!,
+    };
   }
+
+  /// 手势动作的规范 GIF 路径（ADR 0080）；没有就是 null，页面退回绘制动画。
+  static String? imageOf(String gestureId) => _imageById[gestureId];
 
   /// 这道题对应的手势动作；不是手势题返回 null。
   static (String id, String name)? of(String questionId) => _byQuestion[questionId];

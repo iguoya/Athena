@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "cheat_image.dart";
 import "glyphs.dart";
 import "look.dart";
 import "models.dart";
@@ -7,9 +8,11 @@ import "recall.dart";
 import "reinforce.dart";
 import "sign.dart";
 
-/// 标志速记页（ADR 0059）：手绘标志按「禁令 / 警告 / 指示 / 指路」四组摊开，
+/// 标志速记页（ADR 0059）：标志按「禁令 / 警告 / 指示 / 指路」四组摊开，
 /// 每条配一句「看到之后怎么开」，每组能直接练相关的题。内容源是
 /// `content/signs.json`（文件级出处 GB 5768.2），页面只负责呈现与起练习。
+/// 图用 Wikimedia Commons 上的国标标志规范图（ADR 0080），手绘 `SignView`
+/// 只在图读不出来时兜底。
 class SignsPage extends StatelessWidget {
   const SignsPage({
     super.key,
@@ -60,7 +63,7 @@ class SignsPage extends StatelessWidget {
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
               icon: const Icon(Glyph.question, size: 18),
-              label: const Text("考我"),
+              label: const Text("自我测验"),
             ),
           ],
         ),
@@ -75,7 +78,7 @@ class SignsPage extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           "分类与含义依据 GB 5768.2—2022《道路交通标志和标线 第 2 部分：道路交通标志》；"
-          "图是应用内示意，认标志以路上实物为准。",
+          "图取自 Wikimedia Commons 的国标标志图形（公有领域），认标志以路上实物为准。",
           style: muted,
         ),
       ],
@@ -88,24 +91,31 @@ class SignsPage extends StatelessWidget {
         : signs.where((s) => s.id == sign.confuseWith).firstOrNull;
     return RecallEntry(
       id: sign.id,
+      front: _signImage(sign, 288),
       name: sign.name,
       meaning: sign.meaning,
       confuseName: other?.name,
       confuseNote: sign.confuseNote,
-      confuseView: other == null ? null : SignView(id: other.id, size: 72),
+      confuseView: other == null ? null : _signImage(other, 144),
     );
   }
 
-  /// 考我：全部标志进卡片流，收尾深链练全部相关题（ADR 0077）。
+  /// 标志规范图（ADR 0080）；文件读不出来时退回手绘标志。
+  static Widget _signImage(RoadSign sign, double size) => CheatImage(
+    path: sign.image,
+    width: size,
+    fallback: (side) => SignView(id: sign.id, size: side),
+  );
+
+  /// 自我测验：每轮抽 5 个标志，收尾深链练全部相关题（ADR 0077、0080）。
   void _startRecall(BuildContext context) {
     RecallSession.show(
       context,
       entries: [for (final s in signs) _recallEntryOf(s)],
-      viewOf: (id) => SignView(id: id, size: 192),
       onStartPractice: () {
         final ids = {for (final s in signs) s.id};
         final related = [for (final q in daily) if (q.sign != null && ids.contains(q.sign)) q];
-        if (related.isNotEmpty) onStartPractice(related, "标志速记 · 考我");
+        if (related.isNotEmpty) onStartPractice(related, "标志速记 · 自我测验");
       },
     );
   }
@@ -217,7 +227,7 @@ class _SignCellState extends State<_SignCell> {
         child: AnimatedContainer(
           duration: Bs.durFast,
           curve: Curves.easeOut,
-          width: 176,
+          width: 232,
           transform: Matrix4.translationValues(0, _hover ? -2 : 0, 0),
           padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
           decoration: BoxDecoration(
@@ -234,7 +244,7 @@ class _SignCellState extends State<_SignCell> {
               ),
               Column(
             children: [
-              SignView(id: widget.sign.id, size: 96),
+              SignsPage._signImage(widget.sign, 192),
               const SizedBox(height: 10),
               Text(
                 widget.sign.name,
@@ -274,7 +284,7 @@ class _SignCellState extends State<_SignCell> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SignView(id: widget.sign.id, size: 192),
+              SignsPage._signImage(widget.sign, 320),
               const SizedBox(height: 14),
               Text(
                 widget.sign.name,
@@ -301,7 +311,7 @@ class _SignCellState extends State<_SignCell> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SignView(id: widget.other!.id, size: 72),
+                      SignsPage._signImage(widget.other!, 144),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
