@@ -56,10 +56,17 @@ class RecallRowDot extends StatelessWidget {
         SymbolStatus.mastered => "这一行的自测题已掌握",
         SymbolStatus.fresh => "这一行还没自测过",
       },
+      // 外圈圆环加内部实心点，都填状态色；使用者的要求是醒目（外径为原微点五倍）。
       child: Container(
-        width: 10,
-        height: 10,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: color, width: 5)),
+        alignment: Alignment.center,
+        child: Container(
+          width: 22,
+          height: 22,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
       ),
     );
   }
@@ -1969,10 +1976,10 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 9),
+                    padding: const EdgeInsets.only(top: 2),
                     child: RecallRowDot(status: _rowStatus(group, row)),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   SizedBox(
                     width: 190,
                     child: Column(
