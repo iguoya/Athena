@@ -79,12 +79,8 @@ RecallBucket classifyEntry({
   required Set<String> mastered,
   required HistorySet histories,
 }) {
-  final own = histories.byQuestion[questionId];
-  if (own != null && own.attempts > 0) {
-    // 答错过的卡和错题一个规矩：累计答对达到答错的 2 倍才移出错题库（ADR 0079）。
-    if (own.wrong > 0) return own.retiredFromWrongPool ? RecallBucket.done : RecallBucket.wrong;
-    return RecallBucket.done;
-  }
+  final own = classifyOwn(questionId, histories);
+  if (own != null) return own;
   if (related.isEmpty) return RecallBucket.fresh;
   return switch (statusOf(related: related, mastered: mastered, histories: histories)) {
     SymbolStatus.wrong => RecallBucket.wrong,
@@ -92,6 +88,18 @@ RecallBucket classifyEntry({
     SymbolStatus.partial => RecallBucket.partial,
     SymbolStatus.fresh => RecallBucket.fresh,
   };
+}
+
+/// 只按这张卡**自己**的作答记录判档：答错过且还在错题库里（[RecallBucket.wrong]）、
+/// 答对过或已移出错题库（[RecallBucket.done]）、没答过返回 null——不看关联真题。
+/// 进度反馈用它计数：关联真题的掌握是「这组内容你会」，不是「这张卡你测过」，
+/// 混进来会把「已答对」灌成满格（ADR 0097 分科目后易混数字页实际发生过）。
+RecallBucket? classifyOwn(String questionId, HistorySet histories) {
+  final own = histories.byQuestion[questionId];
+  if (own == null || own.attempts == 0) return null;
+  // 答错过的卡和错题一个规矩：累计答对达到答错的 2 倍才移出错题库（ADR 0079）。
+  if (own.wrong > 0) return own.retiredFromWrongPool ? RecallBucket.done : RecallBucket.wrong;
+  return RecallBucket.done;
 }
 
 /// 记一次自测作答：由首页接上，写成一条普通作答记录（题号是速记题的编号），错题本、强化练习随之更新。
@@ -306,7 +314,11 @@ class _RecallSessionState extends State<RecallSession> {
   );
 
   /// 已经答对的卡数：作答记录里答对过的，加上这次第一次就答对的。
-  int get _correctCount => widget.entries.where((e) => _bucketOf(e) == RecallBucket.done || _doneThisSession.contains(e.id)).length;
+  /// 已答对的卡数：只数**自己答对过**的（最近一次作答答对、已移出错题库，或这次第一次就答对），
+  /// 不把关联真题的掌握算进来（classifyOwn 的注释说明了为什么）。
+  int get _correctCount => widget.entries
+      .where((e) => classifyOwn(e.questionId, widget.histories) == RecallBucket.done || _doneThisSession.contains(e.id))
+      .length;
 
   /// 还能抽的（排除这次已经答对过的）。
   int get _drawable => widget.entries
@@ -802,11 +814,20 @@ class _RecallSessionState extends State<RecallSession> {
       height: 1.5,
     );
     final allCorrect = _drawable == 0;
+    // 「全部答对」只数自己答过的卡（_correctCount 的口径）。关联真题都掌握也会让抽不出卡，
+    // 那不叫「全部答对」，标题和文案要分开说，免得以为都测过了（ADR 0099 之后的实际反馈）。
+    final ownAllCorrect = _correctCount == widget.entries.length && widget.entries.isNotEmpty;
     final focus = _focusQuestions();
-    final title = allCorrect ? "这一页全部答对了" : "考完了";
+    final title = ownAllCorrect
+        ? "这一页全部答对了"
+        : allCorrect
+        ? "没有要自动出的卡了"
+        : "考完了";
     final String message;
     if (_missedNames.isNotEmpty) {
       message = "答错的：${_missedNames.join("、")}。它们已经进了错题库，下次自测、强化练习会再考；答对的不会再出现。";
+    } else if (_round.isEmpty && !ownAllCorrect && allCorrect) {
+      message = "没考过的卡，因为关联的真题都已掌握，不再自动出。想自己过一遍，点「再测一遍」。";
     } else if (_round.isEmpty) {
       message = "没有要考的了：没考过的都考过，答错的也都答对到了移出错题库的次数。想再过一遍，点「再测一遍」。";
     } else {
