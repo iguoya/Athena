@@ -2,8 +2,8 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-import "package:athena_driver/semantic.dart";
-import "package:athena_driver/skin.dart";
+import "package:athena_driver/ui/semantic.dart";
+import "package:athena_driver/ui/skin.dart";
 
 double _contrast(Color a, Color b) {
   final la = a.computeLuminance();

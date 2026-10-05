@@ -1,7 +1,7 @@
 import "dart:convert";
 import "dart:io";
 
-import "package:athena_driver/users.dart";
+import "package:athena_driver/core/users.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {

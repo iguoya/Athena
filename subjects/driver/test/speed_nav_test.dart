@@ -1,13 +1,13 @@
 import "dart:async";
 import "dart:io";
 
-import "package:athena_driver/content.dart";
+import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
-import "package:athena_driver/look.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/progress.dart";
-import "package:athena_driver/recall_cards.dart";
-import "package:athena_driver/speed_topics.dart";
+import "package:athena_driver/ui/look.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/core/progress.dart";
+import "package:athena_driver/speed/recall_cards.dart";
+import "package:athena_driver/speed/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";

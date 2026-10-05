@@ -1,4 +1,4 @@
-import "package:athena_driver/speed_topics.dart";
+import "package:athena_driver/speed/speed_topics.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 侧栏里的专题默认折叠在分组下（ADR 0109）：点专题之前先把它所在的分组展开。

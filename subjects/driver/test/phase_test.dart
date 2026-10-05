@@ -1,5 +1,5 @@
-import "package:athena_driver/exam.dart";
-import "package:athena_driver/models.dart";
+import "package:athena_driver/study/exam.dart";
+import "package:athena_driver/core/models.dart";
 import "package:flutter_test/flutter_test.dart";
 
 Question _q(String id, {int phase = 1, String topic = "drive.s1.license", String band = QuestionBand.regular}) {

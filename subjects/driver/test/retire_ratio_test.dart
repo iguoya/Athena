@@ -1,7 +1,7 @@
 import "dart:math";
 
-import "package:athena_driver/models.dart";
-import "package:athena_driver/reinforce.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/study/reinforce.dart";
 import "package:flutter_test/flutter_test.dart";
 
 Question _q(String id) => Question(

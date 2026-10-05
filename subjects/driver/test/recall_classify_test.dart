@@ -1,7 +1,7 @@
-import "package:athena_driver/content.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/recall_status.dart";
-import "package:athena_driver/reinforce.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/speed/recall_status.dart";
+import "package:athena_driver/study/reinforce.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 自测里一张卡还要不要考（ADR 0094）：只看作答记录。速记卡对应一道有稳定编号的题，自测作答

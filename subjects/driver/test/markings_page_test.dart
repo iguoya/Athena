@@ -1,12 +1,12 @@
 import "dart:async";
 import "dart:io";
 
-import "package:athena_driver/content.dart";
+import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
-import "package:athena_driver/marking.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/progress.dart";
-import "package:athena_driver/session.dart";
+import "package:athena_driver/speed/marking.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/core/progress.dart";
+import "package:athena_driver/study/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 

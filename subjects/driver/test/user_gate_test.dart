@@ -1,9 +1,9 @@
 import "dart:io";
 
-import "package:athena_driver/user_gate_screen.dart";
-import "package:athena_driver/sync.dart";
-import "package:athena_driver/user_directory.dart";
-import "package:athena_driver/users.dart";
+import "package:athena_driver/app/user_gate_screen.dart";
+import "package:athena_driver/core/sync.dart";
+import "package:athena_driver/core/user_directory.dart";
+import "package:athena_driver/core/users.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 

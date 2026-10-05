@@ -1,9 +1,9 @@
 import "dart:math";
 
-import "package:athena_driver/clusters.dart";
-import "package:athena_driver/content.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/reinforce.dart";
+import "package:athena_driver/study/clusters.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/study/reinforce.dart";
 import "package:flutter_test/flutter_test.dart";
 
 Question _q(

@@ -1,7 +1,7 @@
-import "package:athena_driver/brief.dart";
-import "package:athena_driver/content.dart";
-import "package:athena_driver/guide.dart";
-import "package:athena_driver/progress.dart";
+import "package:athena_driver/subject2/brief.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/subject2/guide.dart";
+import "package:athena_driver/core/progress.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {

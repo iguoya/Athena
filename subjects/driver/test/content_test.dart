@@ -2,10 +2,10 @@ import "dart:convert";
 import "dart:io";
 import "dart:math";
 
-import "package:athena_driver/content.dart";
-import "package:athena_driver/exam.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/recall_cards.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/study/exam.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/speed/recall_cards.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {

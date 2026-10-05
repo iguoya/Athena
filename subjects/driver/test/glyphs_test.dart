@@ -5,7 +5,7 @@ import "package:flutter_test/flutter_test.dart";
 /// 界面图标对照表（ADR 0049）的三条规矩，读源码检查：表是唯一来源，
 /// 改表或在别处直接写图标，这里当场报出来。
 void main() {
-  final table = File("lib/glyphs.dart").readAsStringSync();
+  final table = File("lib/ui/glyphs.dart").readAsStringSync();
   final entries = [
     for (final m in RegExp(r"static const (\w+) = Icons\.(\w+);").allMatches(table)) (m[1]!, m[2]!),
   ];

@@ -1,7 +1,7 @@
 import "dart:math";
 
-import "package:athena_driver/content.dart";
-import "package:athena_driver/gesture_animation.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/speed/gesture_animation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 

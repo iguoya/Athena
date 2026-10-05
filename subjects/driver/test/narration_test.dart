@@ -1,7 +1,7 @@
 import "dart:async";
 
-import "package:athena_driver/drill.dart";
-import "package:athena_driver/narration.dart";
+import "package:athena_driver/subject2/drill.dart";
+import "package:athena_driver/core/narration.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 

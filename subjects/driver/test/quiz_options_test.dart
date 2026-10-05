@@ -1,7 +1,7 @@
 import "dart:math";
 
-import "package:athena_driver/content.dart";
-import "package:athena_driver/quiz_options.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/speed/quiz_options.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 自测四选一的选项生成（ADR 0085、0094）：去掉只挂在正确项上的解释括号、干扰项长度与题干重合接近正确项、

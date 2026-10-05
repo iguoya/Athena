@@ -1,6 +1,6 @@
 import "dart:math";
 
-import "package:athena_driver/drill.dart";
+import "package:athena_driver/subject2/drill.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {

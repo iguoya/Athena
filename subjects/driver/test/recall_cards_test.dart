@@ -1,10 +1,10 @@
-import "package:athena_driver/cloze.dart";
-import "package:athena_driver/content.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/numbers_cards.dart";
-import "package:athena_driver/quiz_options.dart";
-import "package:athena_driver/recall_cards.dart";
-import "package:athena_driver/speed_topics.dart";
+import "package:athena_driver/speed/cloze.dart";
+import "package:athena_driver/core/content.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/speed/numbers_cards.dart";
+import "package:athena_driver/speed/quiz_options.dart";
+import "package:athena_driver/speed/recall_cards.dart";
+import "package:athena_driver/speed/speed_topics.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 速记卡与速记题（ADR 0094、0095）：每张卡有稳定的题号，对应的速记题是确定的四选一，

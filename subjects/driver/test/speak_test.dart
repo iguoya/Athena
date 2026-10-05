@@ -1,4 +1,4 @@
-import "package:athena_driver/speak.dart";
+import "package:athena_driver/core/speak.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {

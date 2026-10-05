@@ -1,11 +1,11 @@
 import "dart:async";
 import "dart:io";
 
-import "package:athena_driver/content.dart";
+import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/progress.dart";
-import "package:athena_driver/rehearsal.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/core/progress.dart";
+import "package:athena_driver/subject2/rehearsal.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 

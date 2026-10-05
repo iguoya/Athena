@@ -1,5 +1,5 @@
-import "package:athena_driver/cloze.dart";
-import "package:athena_driver/content.dart";
+import "package:athena_driver/speed/cloze.dart";
+import "package:athena_driver/core/content.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 易混数字自测的出题（ADR 0092）：要考的数字挖成括号，题干里不留答案；长清单拆成单条。

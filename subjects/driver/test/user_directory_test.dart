@@ -1,8 +1,8 @@
 import "dart:convert";
 import "dart:io";
 
-import "package:athena_driver/sync.dart";
-import "package:athena_driver/user_directory.dart";
+import "package:athena_driver/core/sync.dart";
+import "package:athena_driver/core/user_directory.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 假的学习者目录服务：按 nas_admin/user_api 的契约实现内存版（登记、按名字登录、

@@ -7,18 +7,17 @@ import "package:flutter_localizations/flutter_localizations.dart";
 import "package:path/path.dart" as p;
 import "package:window_manager/window_manager.dart";
 
-import "api_config_screen.dart";
-import "content.dart";
+import "app/api_config_screen.dart";
+import "core/content.dart";
 import "home.dart";
-import "look.dart";
-import "models.dart";
-import "progress.dart";
-import "skin.dart";
-import "sync.dart";
-import "user_directory.dart";
-import "user_gate_screen.dart";
-import "users.dart";
-
+import "ui/look.dart";
+import "core/models.dart";
+import "core/progress.dart";
+import "ui/skin.dart";
+import "core/sync.dart";
+import "core/user_directory.dart";
+import "app/user_gate_screen.dart";
+import "core/users.dart";
 /// 各 MaterialApp 共用的皮肤主题与整窗环境背景（ADR 0058）：皮肤令牌挂在
 /// [SkinStore.notifier] 上，切换器改值后这里重建 MaterialApp 整树换装；
 /// 环境背景垫在 builder 里，页面 Scaffold 全透明，铺满启动到做题的每个场景。

@@ -1,8 +1,8 @@
 import "dart:math";
 
-import "package:athena_driver/exam.dart";
-import "package:athena_driver/models.dart";
-import "package:athena_driver/progress.dart";
+import "package:athena_driver/study/exam.dart";
+import "package:athena_driver/core/models.dart";
+import "package:athena_driver/core/progress.dart";
 import "package:flutter_test/flutter_test.dart";
 
 Question _q(

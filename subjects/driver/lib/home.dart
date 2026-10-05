@@ -5,31 +5,30 @@ import "dart:math";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
-import "charts.dart";
-import "recall_status.dart";
-import "glyphs.dart";
-import "clusters.dart";
-import "diagnosis.dart";
-import "exam.dart";
-import "look.dart";
-import "gauges_page.dart";
-import "gestures_page.dart";
-import "markings_page.dart";
-import "models.dart";
-import "notes_page.dart";
-import "numbers_page.dart";
-import "progress.dart";
-import "recall.dart";
-import "reinforce.dart";
-import "reinforce_page.dart";
-import "recall_cards.dart";
-import "speed_topics.dart";
-import "session.dart";
-import "signs_page.dart";
-import "skin.dart";
-import "subject2.dart";
-import "sync.dart";
-
+import "ui/charts.dart";
+import "speed/recall_status.dart";
+import "ui/glyphs.dart";
+import "study/clusters.dart";
+import "study/diagnosis.dart";
+import "study/exam.dart";
+import "ui/look.dart";
+import "speed/gauges_page.dart";
+import "speed/gestures_page.dart";
+import "speed/markings_page.dart";
+import "core/models.dart";
+import "speed/notes_page.dart";
+import "speed/numbers_page.dart";
+import "core/progress.dart";
+import "speed/recall.dart";
+import "study/reinforce.dart";
+import "study/reinforce_page.dart";
+import "speed/recall_cards.dart";
+import "speed/speed_topics.dart";
+import "study/session.dart";
+import "speed/signs_page.dart";
+import "ui/skin.dart";
+import "subject2/subject2.dart";
+import "core/sync.dart";
 /// 通过概率放到后台 isolate 里算。必须是顶层函数：在 State 的异步方法里写闭包，
 /// 闭包会连带捕获 `this`，界面对象送不进 isolate（ArgumentError: unsendable）。
 Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules, HistorySet histories) {

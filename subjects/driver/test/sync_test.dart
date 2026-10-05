@@ -1,8 +1,8 @@
 import "dart:convert";
 import "dart:io";
 
-import "package:athena_driver/progress.dart";
-import "package:athena_driver/sync.dart";
+import "package:athena_driver/core/progress.dart";
+import "package:athena_driver/core/sync.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 假的中心 API：按 nas_admin/driver_api 的契约实现内存版——去重键、游标、

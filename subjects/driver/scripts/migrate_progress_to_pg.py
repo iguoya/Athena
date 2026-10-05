@@ -15,7 +15,7 @@ Linux `$XDG_DATA_HOME` 或 `~/.local/share` 下的 `AthenaDriver`）。
 - 导完逐表核对条数，对不上就回滚。
 - 只读源库，不改它。导入成功之前不要删 `progress/learning.db`。
 
-建表直接取自 `lib/progress.dart` 的 `_ensureSchema`（同一份语句，不在这里再抄一遍），
+建表直接取自 `lib/core/progress.dart` 的 `_ensureSchema`（同一份语句，不在这里再抄一遍），
 这样客户端和迁移脚本不会各自漂移。
 """
 
@@ -57,7 +57,7 @@ HAS_ID = {name for name in TABLES if name not in ("achievements", "exam_drafts")
 
 
 def user_data_dir() -> Path:
-    """与 lib/progress.dart 的 userDataDir() 保持一致。"""
+    """与 lib/core/progress.dart 的 userDataDir() 保持一致。"""
     if sys.platform == "darwin":
         root = Path.home() / "Library" / "Application Support"
     elif os.name == "nt":
