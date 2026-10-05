@@ -47,3 +47,17 @@ String clozeStem(String caseText, String value, {String groupUnit = "", bool app
   // 手输题下面自己带输入框，不需要在句尾再补括号（appendBlank 为假）。
   return masked || !appendBlank ? stem : "$stem →$clozeBlank";
 }
+
+/// 按问法模板出题（ADR 0103）：`{case}` 换成单条情形，`{blank}` 换成挖空。
+/// 模板把括号放进句子该在的位置（「饮酒后驾驶，一次记（　　）分。」），不再句尾硬贴
+/// 「→（　　）」；手输题没有括号——输入框就是空。没有模板的组走 [clozeStem] 老路。
+String clozeStemByAsk(String ask, String caseText, {bool typed = false}) {
+  final stem = ask.replaceAll("{case}", caseText).replaceAll("{blank}", typed ? "" : clozeBlank);
+  if (!typed) return stem;
+  // 手输题：括号由输入框顶替，模板里的空括号与悬空标点清干净。
+  return stem
+      .replaceAll(clozeBlank, "")
+      .replaceAll(RegExp(r"，\s*。"), "。")
+      .replaceAll(RegExp(r"。\s*。"), "。")
+      .replaceAll(RegExp(r"[，：]\s*$"), "。");
+}

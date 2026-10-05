@@ -76,6 +76,10 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
   for (final group in groups) {
     for (final row in group.rows) {
       final typed = typedAnswerOf(row.value, groupUnit: group.unit);
+      // 问法：行模板优先，组模板次之；都没有走老路（挖数字、挖不中句尾补）。
+      // 手输题同样用模板——括号留在题干里标出空位，答案在下面的输入框里填。
+      // 没有模板的手输题题干保持情形原句（appendBlank 为假，输入框就是空）。
+      final ask = row.ask ?? group.ask;
       for (final single in splitCase(row.caseText)) {
         cards.add(
           NumberCard(
@@ -83,7 +87,9 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
             kind: typed != null ? NumberCardKind.typed : NumberCardKind.choice,
             groupId: group.id,
             groupTitle: group.title,
-            stem: clozeStem(single, row.value, groupUnit: group.unit, appendBlank: typed == null),
+            stem: ask != null
+                ? clozeStemByAsk(ask, single)
+                : clozeStem(single, row.value, groupUnit: group.unit, appendBlank: typed == null),
             value: row.value,
             caseText: row.caseText,
             sourceId: row.sourceId,
