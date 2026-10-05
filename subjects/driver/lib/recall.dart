@@ -808,7 +808,7 @@ class _RecallSessionState extends State<RecallSession> {
     if (_missedNames.isNotEmpty) {
       message = "答错的：${_missedNames.join("、")}。它们已经进了错题库，下次自测、强化练习会再考；答对的不会再出现。";
     } else if (_round.isEmpty) {
-      message = "没有要考的了：没考过的都考过，答错的也都答对到了移出错题库的次数。";
+      message = "没有要考的了：没考过的都考过，答错的也都答对到了移出错题库的次数。想再过一遍，点「再测一遍」。";
     } else {
       message = "全都一次答对了，答对的不会再出现。";
     }
@@ -831,8 +831,13 @@ class _RecallSessionState extends State<RecallSession> {
           spacing: 12,
           runSpacing: 10,
           children: [
-            if (focus.isNotEmpty)
+            if (allCorrect)
               FilledButton(
+                onPressed: _retestAll,
+                child: const Text("再测一遍"),
+              ),
+            if (focus.isNotEmpty)
+              FilledButton.tonal(
                 onPressed: () {
                   Navigator.of(context).pop();
                   widget.onStartPractice(focus);
@@ -847,5 +852,26 @@ class _RecallSessionState extends State<RecallSession> {
         ),
       ],
     );
+  }
+
+  /// 全部答对后的「再测一遍」（ADR 0099）：绕开档位把整页卡重新考一遍，作答照写——
+  /// 这是全对之后唯一的重考入口；平时抽卡仍然只出没答对过的。
+  void _retestAll() {
+    setState(() {
+      _doneThisSession.clear();
+      _queue = [...widget.entries]..shuffle();
+      _round = [..._queue];
+      for (final e in _queue) {
+        _makeQuiz(e);
+      }
+      _missedIds.clear();
+      _missedNames.clear();
+      _asked = 0;
+      _missed = 0;
+      _revealed = false;
+      _selected = null;
+      _done = _queue.isEmpty;
+    });
+    _focusCurrent();
   }
 }
