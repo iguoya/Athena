@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:math";
 
 import "package:flutter/material.dart";
@@ -118,7 +119,7 @@ bool _masteryOverdue(List<Question> related, HistorySet histories, DateTime now)
   return now.difference(oldest) >= Duration(days: SelfTestStore.daysForStage(stage));
 }
 
-/// 速记页的「自测」模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的，
+/// 速记页的「自测」模式（ADR 0077 起，ADR 0080 一轮 5 个（ADR 0089 改 10 个），ADR 0082 改名并只考没认得的，
 /// ADR 0083 「认得」改以作答记录为准，ADR 0085 改四选一）：卡片流式检索练习。
 ///
 /// 正面是条目自己提供的 [RecallEntry.front]（规范图或情景文字），下方给四个选项——来自同页
@@ -146,8 +147,8 @@ class RecallSession extends StatefulWidget {
     this.batchSize = defaultBatchSize,
   });
 
-  /// 一轮抽几个（使用者要求「一次 5 个」）。
-  static const defaultBatchSize = 5;
+  /// 一轮抽几个（使用者要求「一次 10 道」，ADR 0089；原为 5）。
+  static const defaultBatchSize = 10;
   static const defaultPrompt = "想一想：这是什么？选一个你认得的。";
 
   /// 参与自测的全部条目；[RecallEntry] 是页面内容的轻量视图。
@@ -185,15 +186,19 @@ class RecallSession extends StatefulWidget {
       builder: (_) => Dialog(
         insetPadding: const EdgeInsets.all(24),
         backgroundColor: Colors.transparent,
-        child: RecallSession(
-          entries: entries,
-          onStartPractice: onStartPractice,
-          pageKey: pageKey,
-          store: store,
-          histories: histories,
-          mastered: mastered,
-          prompt: prompt,
-          batchSize: batchSize,
+        // 宽屏上两栏（选项 + 解释）别被拉得太散：最宽 1180（ADR 0089）。
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1180),
+          child: RecallSession(
+            entries: entries,
+            onStartPractice: onStartPractice,
+            pageKey: pageKey,
+            store: store,
+            histories: histories,
+            mastered: mastered,
+            prompt: prompt,
+            batchSize: batchSize,
+          ),
         ),
       ),
     );
@@ -266,6 +271,15 @@ class _RecallSessionState extends State<RecallSession> {
   Set<String> _lastRound = {};
   final FocusNode _focus = FocusNode();
 
+  /// 答对后自动切下一张的计时（ADR 0089）；答错不自动切，留着看解释。
+  Timer? _autoTimer;
+
+  /// 答对后停多久再自动切：够看清选项变绿和一眼解释，又不拖节奏。
+  static const autoAdvanceDelay = Duration(milliseconds: 900);
+
+  /// 宽度够才分两栏（选项左、解释右）；窄窗口把解释叠到选项下面。
+  static const _twoColumnMinWidth = 760.0;
+
   /// 本轮的考卷（ADR 0085）：条目键 → 正确答案与选项。重现的卡沿用同一张卷，
   /// 避免同一张卡两回考不同侧面；进下一轮重新出。
   final Map<String, String> _answerById = {};
@@ -312,6 +326,7 @@ class _RecallSessionState extends State<RecallSession> {
 
   @override
   void dispose() {
+    _autoTimer?.cancel();
     _focus.dispose();
     super.dispose();
   }
@@ -408,10 +423,18 @@ class _RecallSessionState extends State<RecallSession> {
         if (_missedThisRound.add(current.id)) _missedNames.add(current.name);
       }
     });
+    // 答对自动切下一张；答错留在解释上，自己点「下一张」。
+    _autoTimer?.cancel();
+    if (correct) {
+      _autoTimer = Timer(autoAdvanceDelay, () {
+        if (mounted && _revealed && _queue.isNotEmpty && _queue.first.id == current.id) _advance();
+      });
+    }
   }
 
   /// 看完讲解，推进：答错的隔两张新卡后重现插队（ADR 0077 决策 1）。
   void _advance() {
+    _autoTimer?.cancel();
     final current = _queue.first;
     setState(() {
       _queue.removeAt(0);
@@ -536,6 +559,18 @@ class _RecallSessionState extends State<RecallSession> {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.5,
     );
+    // 左：提问与四个选项；右：答案解释（ADR 0089）。窄窗口放不下两栏就把解释叠到下面。
+    final left = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(widget.prompt, style: Theme.of(context).textTheme.titleMedium),
+        ),
+        _options(context, entry),
+      ],
+    );
+    final right = _explanation(context, entry, muted);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -559,74 +594,94 @@ class _RecallSessionState extends State<RecallSession> {
         const SizedBox(height: 16),
         Center(child: entry.front),
         const SizedBox(height: 14),
-        if (!_revealed) ...[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              widget.prompt,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ),
-          _options(context, entry),
-        ] else ...[
-          _options(context, entry),
-          const SizedBox(height: 10),
-          // 判定与「下一张」同一行，把答后内容压进一屏（ADR 0080：整卡可滚动兜底）。
-          Row(
-            children: [
-              Text(
-                _lastCorrect ? "答对了" : "答错了，正确答案：",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: _lastCorrect ? Bs.success : Bs.danger,
-                ),
-              ),
-              const Spacer(),
-              FilledButton(
-                onPressed: _advance,
-                child: const Text("下一张（空格）"),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < _twoColumnMinWidth) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [left, const SizedBox(height: 12), right],
+              );
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 5, child: left),
+                const SizedBox(width: 20),
+                Expanded(flex: 4, child: right),
+              ],
+            );
+          },
+        ),
+        // 「下一张」固定在底部中间；答对会自动切（_autoAdvance），按钮 / 空格可以抢先。
+        if (_revealed) ...[
+          const SizedBox(height: 16),
           Center(
-            child: Text(entry.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          ),
-          const SizedBox(height: 8),
-          Text(entry.meaning, textAlign: TextAlign.center, style: muted),
-          if (entry.confuseName != null) ...[
-            const SizedBox(height: 14),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Bs.light,
-                borderRadius: BorderRadius.circular(Bs.radius),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (entry.confuseView != null) ...[
-                    entry.confuseView!,
-                    const SizedBox(width: 12),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("容易混：${entry.confuseName}", style: Theme.of(context).textTheme.titleSmall),
-                        const SizedBox(height: 4),
-                        Text(entry.confuseNote ?? "", style: muted),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            child: FilledButton(
+              onPressed: _advance,
+              child: Text(_lastCorrect ? "下一张（空格）· 自动切换中" : "下一张（空格）"),
             ),
-          ],
+          ),
         ],
       ],
+    );
+  }
+
+  /// 右栏的答案解释（ADR 0089）：没作答时只给一句提示，免得右栏空着；答后给判定、答案标题、
+  /// 说明与易混卡。固定在选项右侧，选项不再拉满整行。
+  Widget _explanation(BuildContext context, RecallEntry entry, TextStyle? muted) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Bs.light,
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
+      child: !_revealed
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Text("选一个答案，这里给出解释。", textAlign: TextAlign.center, style: muted),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _lastCorrect ? "答对了" : "答错了，正确答案：",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: _lastCorrect ? Bs.success : Bs.danger,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(entry.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                Text(entry.meaning, style: muted),
+                if (entry.confuseName != null) ...[
+                  const SizedBox(height: 14),
+                  Divider(height: 1, color: Bs.border),
+                  const SizedBox(height: 12),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (entry.confuseView != null) ...[
+                        entry.confuseView!,
+                        const SizedBox(width: 12),
+                      ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("容易混：${entry.confuseName}", style: Theme.of(context).textTheme.titleSmall),
+                            const SizedBox(height: 4),
+                            Text(entry.confuseNote ?? "", style: muted),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
     );
   }
 

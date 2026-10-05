@@ -12,10 +12,11 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 自测模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的，ADR 0085 改四选一）：
+/// 自测模式（ADR 0077 起，ADR 0080 一轮 5 个，ADR 0082 改名并只考没认得的，ADR 0085 改四选一，
+/// ADR 0089 一轮 10 道、答对自动切下一张、解释放选项右侧）：
 /// 检索练习的卡片流——四选一作答、对错当场判定、答错重现、已认得的不再考、随时退出、
 /// 收尾「再来 / 重新自测」。自测作答不写掌握度：自测之后进度库里的作答记录不应有任何变化。
-/// 选手势页（8 个动作）跑完整流程。
+/// 选手势页（8 个动作，一轮就是 8 张）跑完整流程；标线页（33 条）看一轮 10 道与版面。
 void main() {
   Future<(Bank, ProgressStore, Directory)> boot(
     WidgetTester tester, {
@@ -52,8 +53,9 @@ void main() {
     });
   }
 
-  /// 作答当前卡再进下一张：[remembered] 为真点正确项（`recall-correct`），否则点一个
-  /// 错项（选项键以 `recall-option-` 开头的都是错项——正确项占了 `recall-correct`）。
+  /// 作答当前卡再进下一张：[remembered] 为真点正确项（`recall-correct`），答对 0.9 秒后自动切
+  /// （ADR 0089）；否则点一个错项（选项键以 `recall-option-` 开头的都是错项），答错不自动切，
+  /// 要点底部中间的「下一张」。
   Future<void> answer(WidgetTester tester, {required bool remembered}) async {
     await tester.tap(
       remembered
@@ -64,11 +66,15 @@ void main() {
             }).first,
     );
     await tester.pump();
-    // 答后内容可能超出可视区（整卡可滚动，ADR 0080），先滚到「下一张」再点。
-    final next = find.text("下一张（空格）");
-    await tester.ensureVisible(next);
-    await tester.pump();
-    await tester.tap(next);
+    if (remembered) {
+      await tester.pump(const Duration(milliseconds: 1000));
+    } else {
+      // 答后内容可能超出可视区（整卡可滚动，ADR 0080），先滚到「下一张」再点。
+      final next = find.textContaining("下一张");
+      await tester.ensureVisible(next);
+      await tester.pump();
+      await tester.tap(next);
+    }
     await tester.pump();
   }
 
@@ -78,7 +84,7 @@ void main() {
     return k is ValueKey<String> && k.value.startsWith("recall-option-");
   });
 
-  testWidgets("自测：四选一，一轮 5 张，答错的重现且不算认得，认得的不再考，考完给「重新自测」，作答不落库", (tester) async {
+  testWidgets("自测：四选一，一轮 8 张（手势只有 8 个），答错的重现且不算认得，认得的不再考，考完给「重新自测」，作答不落库", (tester) async {
     final (_, store, dir) = await boot(tester);
     final before = await store.allAttempts();
 
@@ -95,27 +101,26 @@ void main() {
 
     // 第 1 轮：第一次答错，之后一直答对，直到收尾。
     var gradedMiss = false;
-    for (var i = 0; i < 20; i++) {
+    expect(find.textContaining("剩 8 张"), findsOneWidget, reason: "一轮最多 10 道，手势页只有 8 个动作就是 8 张");
+    for (var i = 0; i < 30; i++) {
       if (find.text("考完了").evaluate().isNotEmpty) break;
       await answer(tester, remembered: gradedMiss);
       gradedMiss = true;
     }
-    expect(find.text("考完了"), findsOneWidget, reason: "5 张卡应在 20 次交互内考完（含答错的重现）");
-    expect(find.textContaining("这一轮 5 个"), findsOneWidget, reason: "一轮固定 5 个");
+    expect(find.text("考完了"), findsOneWidget, reason: "8 张卡应在 30 次交互内考完（含答错的重现）");
+    expect(find.textContaining("这一轮 8 个"), findsOneWidget);
     expect(find.textContaining("没记住 1"), findsOneWidget, reason: "第一次答错应计入");
-    // 4 张第一次就答对 → 只是「自测答对」：认得以作答记录为准，没做题就还不算；
+    // 7 张第一次就答对 → 只是「自测答对」：认得以作答记录为准，没做题就还不算；
     // 答错后重现才答对的那张连自测答对都不算。
-    expect(find.textContaining("已认得 0 / 8（以作答记录为准） · 自测答对 4，待做题确认"), findsOneWidget);
+    expect(find.textContaining("已认得 0 / 8（以作答记录为准） · 自测答对 7，待做题确认"), findsOneWidget);
     expect(find.textContaining("需要再看看"), findsOneWidget, reason: "收尾反馈列出答错的");
 
-    // 再来一轮：只剩 4 张没认得的，认得的不再出现。
-    expect(find.text("再来 4 个"), findsOneWidget);
-    await tester.tap(find.text("再来 4 个"));
+    // 再来一轮：只剩答错过的那 1 张，认得的不再出现。
+    expect(find.text("再来 1 个"), findsOneWidget);
+    await tester.tap(find.text("再来 1 个"));
     await tester.pump();
-    expect(find.textContaining("第 2 轮 · 剩 4 张"), findsOneWidget);
-    for (var i = 0; i < 4; i++) {
-      await answer(tester, remembered: true);
-    }
+    expect(find.textContaining("第 2 轮 · 剩 1 张"), findsOneWidget);
+    await answer(tester, remembered: true);
 
     // 全部只有自测答对、没有作答证明：不再硬出题，说清楚为什么，引导去做题确认，给「重新自测」。
     expect(find.text("这一页没有要再考的了"), findsOneWidget);
@@ -125,18 +130,19 @@ void main() {
     expect(find.textContaining("再来"), findsNothing);
     expect(find.textContaining("去做这几个的题"), findsOneWidget);
 
-    // 重新自测：清空本页记录，回到 5 张一轮。
+    // 重新自测：清空本页记录，回到 8 张一轮。
     await tester.tap(find.text("重新自测"));
     await tester.pump();
     expect(find.textContaining("已认得 0 / 8（以作答记录为准）"), findsOneWidget);
-    expect(find.textContaining("剩 5 张"), findsOneWidget);
+    expect(find.textContaining("剩 8 张"), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
 
     // 收尾深链：打开再答完一轮，去练这组起练习。
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 8; i++) {
       await answer(tester, remembered: true);
     }
     await tester.tap(find.textContaining("去做这几个的题"));
@@ -178,13 +184,13 @@ void main() {
     await tester.pump();
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    // 两个动作的相关题都答对并掌握：作答记录证明认得，8 个里只剩 6 个要考。
+    // 两个动作的相关题都答对并掌握：作答记录证明认得，8 个里只剩 6 个要考，一轮就是 6 张。
     expect(find.textContaining("已认得 2 / 8（以作答记录为准）"), findsOneWidget);
-    expect(find.textContaining("剩 5 张"), findsOneWidget);
+    expect(find.textContaining("剩 6 张"), findsOneWidget);
 
-    // 一轮 5 张：看一遍抽到了谁。先答对，答后卡片上才亮出条目名（22 号字标题）。
+    // 一轮 6 张：看一遍抽到了谁。先答对，答后右栏才亮出条目名（22 号字标题）。
     final seen = <String>[];
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
       await tester.tap(find.byKey(const ValueKey("recall-correct")));
       await tester.pump();
       final name = tester
@@ -192,15 +198,16 @@ void main() {
           .firstWhere((t) => t.style?.fontSize == 22 && t.style?.fontWeight == FontWeight.w700)
           .data!;
       seen.add(name);
-      await tester.tap(find.text("下一张（空格）"));
+      await tester.tap(find.textContaining("下一张"));
       await tester.pump();
     }
     expect(seen, contains(wrongName), reason: "作答记录里答错过的一定排在第一轮");
     expect(seen.toSet().intersection(knownNames), isEmpty, reason: "作答记录证明认得的不再出现");
-    expect(seen.toSet().length, 5);
+    expect(seen.toSet().length, 6);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     await teardown(tester, store, dir);
   });
 
@@ -214,12 +221,13 @@ void main() {
     await tester.pump();
     expect(find.textContaining("已认得 0 / 8（以作答记录为准）"), findsOneWidget);
 
-    // 一轮 5 张：答对两张，用右上角退出按钮离开。
+    // 一轮 8 张：答对两张，用右上角退出按钮离开。
     await answer(tester, remembered: true);
     await answer(tester, remembered: true);
     expect(find.textContaining("自测答对 2，待做题确认"), findsOneWidget);
     await tester.tap(find.byIcon(Glyph.close));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     expect(find.textContaining("想一想"), findsNothing, reason: "退出按钮应关掉自测");
 
     // 再打开：答对过的 2 张记着，不再出现；再答一张后用 Esc 退出，同样记着。
@@ -228,16 +236,70 @@ void main() {
     expect(find.textContaining("自测答对 2，待做题确认"), findsOneWidget);
     await answer(tester, remembered: true);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.textContaining("自测答对 3，待做题确认"), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自测：侧栏里全部 8 个速记页都有入口，一轮都是 5 张", (tester) async {
+  testWidgets("自测：解释在选项右侧，答对自动切下一张，答错留在解释上，「下一张」在底部中间（ADR 0089）", (tester) async {
+    final (_, store, dir) = await boot(tester);
+    await tester.tap(find.text("标线速记").first);
+    await tester.pump();
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    expect(find.textContaining("第 1 轮 · 剩 10 张"), findsOneWidget, reason: "一次十道题");
+
+    // 版面：选项在左，解释在右（未作答时右栏是一句提示），选项不再拉满整行。
+    final option = find.byKey(const ValueKey("recall-correct"));
+    final hint = find.text("选一个答案，这里给出解释。");
+    expect(hint, findsOneWidget);
+    expect(tester.getTopLeft(hint).dx, greaterThan(tester.getTopRight(option).dx), reason: "解释放在选项右侧");
+    final session = find.byType(RecallSession);
+    expect(
+      tester.getTopRight(option).dx,
+      lessThan(tester.getCenter(session).dx + tester.getSize(session).width * 0.15),
+      reason: "选项只占左边一半多一点",
+    );
+
+    // 答对：右栏出解释，「下一张」在底部中间；等 0.9 秒自动切到下一张。
+    await tester.tap(option);
+    await tester.pump();
+    expect(find.textContaining("答对了"), findsOneWidget);
+    final next = find.textContaining("下一张");
+    expect(next, findsOneWidget);
+    expect((tester.getCenter(next).dx - tester.getCenter(session).dx).abs(), lessThan(4), reason: "下一张在底部中间");
+    expect(tester.getTopLeft(next).dy, greaterThan(tester.getBottomLeft(option).dy), reason: "下一张在选项下方");
+    expect(find.textContaining("剩 10 张"), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1000));
+    await tester.pump();
+    expect(find.textContaining("剩 9 张"), findsOneWidget, reason: "答对自动切到下一张");
+
+    // 答错：不自动切，停在解释上，点「下一张」才走。
+    await tester.tap(wrongOptions().first);
+    await tester.pump();
+    expect(find.textContaining("答错了，正确答案："), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    expect(find.textContaining("答错了，正确答案："), findsOneWidget, reason: "答错不自动切，留着看解释");
+    await tester.ensureVisible(find.textContaining("下一张"));
+    await tester.pump();
+    await tester.tap(find.textContaining("下一张"));
+    await tester.pump();
+    expect(find.textContaining("答错了，正确答案："), findsNothing);
+    expect(find.textContaining("想一想"), findsOneWidget);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
+    await teardown(tester, store, dir);
+  });
+
+  testWidgets("自测：侧栏里全部 8 个速记页都有入口，一轮 10 道（不足 10 个条目的页就是全部）", (tester) async {
     final (_, store, dir) = await boot(tester);
     for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记"]) {
       await tester.tap(find.text(page).first);
@@ -245,8 +307,9 @@ void main() {
       expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
       await tester.tap(find.text("自测"));
       await tester.pump();
-      // 一轮 5 张：剩余张数写在卡片头里。
-      expect(find.textContaining("剩 5 张"), findsOneWidget, reason: "$page 一轮应抽 5 张");
+      // 一轮 10 张：剩余张数写在卡片头里；手势页只有 8 个动作。
+      final want = page == "手势速记" ? 8 : 10;
+      expect(find.textContaining("剩 $want 张"), findsOneWidget, reason: "$page 一轮应抽 $want 张");
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pump();
     }
@@ -265,7 +328,8 @@ void main() {
     expect(find.byKey(const ValueKey("recall-correct")), findsOneWidget, reason: "出的是四选一");
     expect(wrongOptions(), findsNWidgets(3));
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     expect(find.text("自测").evaluate().length, 1, reason: "Esc 关掉卡片，只剩页面上的按钮");
 
     // 考点速记：情景 → 要点四选一，答后显示完整要点列表。
@@ -281,7 +345,8 @@ void main() {
     expect(find.textContaining("答对了"), findsOneWidget, reason: "对错当场判定");
 
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400)); // 路由动画走完后还要多走几帧才摘掉对话框
     await teardown(tester, store, dir);
   });
 }

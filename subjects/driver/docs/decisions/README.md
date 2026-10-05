@@ -93,3 +93,4 @@
 | [0086](0086-exam-page-of-twenty.md) | 模拟考一页二十道——科目一百题卷刚好五页 | 已接受（练习部分由 0088 修订） |
 | [0087](0087-choice-block-nine-tenths.md) | 答案选项的点击区域占栏宽九成 | 已接受 |
 | [0088](0088-practice-page-of-twenty.md) | 练习也一页二十题——做题台统一每页 20 道 | 已接受 |
+| [0089](0089-self-test-layout-ten-auto-advance.md) | 自测一轮 10 道，解释放选项右侧，答对自动切下一张 | 已接受 |
