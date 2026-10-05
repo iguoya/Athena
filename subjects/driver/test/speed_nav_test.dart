@@ -6,6 +6,7 @@ import "package:athena_driver/home.dart";
 import "package:athena_driver/look.dart";
 import "package:athena_driver/models.dart";
 import "package:athena_driver/progress.dart";
+import "package:athena_driver/recall_cards.dart";
 import "package:athena_driver/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -122,7 +123,7 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("速记组「练这组」按钮：没做过灰、有答错红（全部掌握为绿，见 statusOf）", (tester) async {
+  testWidgets("速记组「练这组」按钮（跟自测卡走）：没做过灰、有答错红（全部掌握为绿，见 statusOf）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -130,9 +131,14 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-speednav2-");
       store = await ProgressStore.open(suite: "speed_nav_btn_test");
-      // 禁令组的一道标志题答错一次：打开标志页时它是该组唯一有记录的，组按钮应是红色。
-      final q = bank.questions.firstWhere((q) => q.signId == "no_entry" && !q.id.startsWith("drive.recall."));
-      await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: false);
+      // 只有「禁止驶入」这张自测卡答错一次（相关真题一道没碰）：按钮也跟自测卡走，禁令组变红（ADR 0110）。
+      await store.recordAttempt(
+        questionId: recallQuestionId("s1.signs", "no_entry"),
+        topicId: "${recallTopicPrefix}s1.signs",
+        subjectId: "subject1",
+        correct: false,
+        kind: "recall",
+      );
     });
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
@@ -149,7 +155,7 @@ void main() {
     final buttons = find.ancestor(of: find.textContaining("练这组"), matching: find.bySubtype<FilledButton>());
     expect(buttons.evaluate().length, greaterThan(1));
     // 禁令组（第一组）有答错：红；其余组没做过：灰。
-    expect(colorOf(buttons.first), Bs.danger, reason: "禁令组有答错 → 红");
+    expect(colorOf(buttons.first), Bs.danger, reason: "禁令组的自测卡答错 → 红");
     expect(colorOf(buttons.at(1)), const Color(0xFF8A939B), reason: "警告组没做过 → 灰");
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());

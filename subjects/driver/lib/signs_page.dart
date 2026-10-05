@@ -168,7 +168,13 @@ class SignsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(statusOf(related: related, mastered: mastered, histories: histories)),
+                  style: practiceButtonStyle(
+                    groupStatus(
+                      ids: [for (final q in related) q.id, for (final s in inGroup) recallQuestionId(recallPage, s.id)],
+                      mastered: mastered,
+                      histories: histories,
+                    ),
+                  ),
                   onPressed: () => onStartPractice(related, "标志速记 · $label", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),

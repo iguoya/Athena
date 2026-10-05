@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "look.dart";
 import "recall.dart";
+import "reinforce.dart";
 
 /// 速记组右上角「练这组」按钮的颜色（ADR 0109）：随这一组相关题的作答结果变——
 /// 有答错过且还没掌握的 → 红；全部掌握 → 绿；其余（没做过、只做了一部分）→ 灰。
@@ -45,4 +46,21 @@ class TopicDot extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 一组的「练这组」按钮状态：相关真题与这一组的自测卡**一起**看（ADR 0110）。
+/// 任何一道有答错过且最近还没答对 → 红；全部最近答对 → 绿；一道没碰过 → 灰；其余（做了一部分）→ 灰。
+SymbolStatus groupStatus({
+  required Iterable<String> ids,
+  required Set<String> mastered,
+  required HistorySet histories,
+}) {
+  final all = ids.toList();
+  if (all.isEmpty) return SymbolStatus.fresh;
+  final touched = [for (final id in all) if (histories.byQuestion.containsKey(id)) id];
+  if (touched.isEmpty) return SymbolStatus.fresh;
+  if (touched.any((id) => (histories.byQuestion[id]?.wrong ?? 0) > 0 && !mastered.contains(id))) {
+    return SymbolStatus.wrong;
+  }
+  return all.every(mastered.contains) ? SymbolStatus.mastered : SymbolStatus.partial;
 }

@@ -153,7 +153,16 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(statusOf(related: related, mastered: mastered, histories: histories)),
+                  style: practiceButtonStyle(
+                    groupStatus(
+                      ids: [
+                        for (final q in related) q.id,
+                        for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
+                      ],
+                      mastered: mastered,
+                      histories: histories,
+                    ),
+                  ),
                   onPressed: () => onStartPractice(related, "考点速记 · ${group.title}", pending.isEmpty),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
