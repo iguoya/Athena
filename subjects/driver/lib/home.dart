@@ -1852,11 +1852,9 @@ class _HomePageState extends State<HomePage> {
               ],
               const Spacer(),
               FilledButton.icon(
-                onPressed: pending.isEmpty
-                    ? null
-                    : () => _startPractice(subject, related, "易混数字 · ${group.title}"),
+                onPressed: () => _startPractice(subject, related, "易混数字 · ${group.title}"),
                 icon: const Icon(Glyph.practice, size: 20),
-                label: Text(pending.isEmpty ? "这组已掌握" : "练这组 ${pending.length} 题"),
+                label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
               ),
             ],
           ),
