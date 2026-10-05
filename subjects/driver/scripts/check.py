@@ -99,6 +99,62 @@ def check_cheat_images() -> None:
     print(f"{count} 张规范图都存在且已列入 assets", flush=True)
 
 
+def _load_questions() -> list[dict]:
+    questions: list[dict] = []
+    for path in sorted((PROJECT_ROOT / "content" / "questions").glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        items = data if isinstance(data, list) else data.get("questions", [])
+        questions.extend(item for item in items if isinstance(item, dict) and "choices" in item)
+    return questions
+
+
+def check_recall_coverage() -> None:
+    """速记页每个条目都得有相关题（ADR 0089）：自测「认得」以作答记录为准（ADR 0083），
+    没有相关题的条目只能退回自测作答、无从取证。当初的 11 个豁免已经清零——条目里有的
+    概念，题库就该有题可考；这条检查挡住「新增条目悄悄掉队」。"""
+    print("== 速记条目相关题覆盖校验 ==", flush=True)
+    import re
+
+    content = PROJECT_ROOT / "content"
+    questions = _load_questions()
+    sign_of = {q["sign"] for q in questions if q.get("sign")}
+    marking_of = {q["marking"] for q in questions if q.get("marking")}
+    problems: list[str] = []
+
+    for name, key, tagged in (
+        ("signs", "signs", sign_of),
+        ("markings", "markings", marking_of),
+    ):
+        data = json.loads((content / f"{name}.json").read_text(encoding="utf-8"))[key]
+        for item in data:
+            if item["id"] not in tagged:
+                problems.append(f"{name}.json {item['id']}（{item['name']}）: 没有题目标注这个条目")
+    for name, key in (("gauges", "gauges"), ("gestures", "gestures")):
+        data = json.loads((content / f"{name}.json").read_text(encoding="utf-8"))[key]
+        for item in data:
+            if not item.get("questions"):
+                problems.append(f"{name}.json {item['id']}（{item['name']}）: questions 为空")
+    for name, key in (("cheatsheet", "groups"), ("notes", "groups")):
+        data = json.loads((content / f"{name}.json").read_text(encoding="utf-8"))[key]
+        for group in data:
+            pattern = re.compile(group["match"])
+            hits = [
+                q
+                for q in questions
+                if pattern.search(q.get("prompt", ""))
+                or any(pattern.search(choice.get("label", "")) for choice in q["choices"])
+            ]
+            if not hits:
+                problems.append(f"{name}.json {group['id']}（{group['title']}）: 正则匹配不到任何题")
+    if problems:
+        raise SystemExit("\n".join(problems))
+    print(
+        f"{len(questions)} 道题：标志 {len(sign_of)}、标线 {len(marking_of)} 个条目有题，"
+        "仪表、手势、数字组、要点组全部有题",
+        flush=True,
+    )
+
+
 def desktop_target() -> str:
     mapping = {"Darwin": "macos", "Windows": "windows", "Linux": "linux"}
     system = platform.system()
@@ -141,6 +197,7 @@ def main() -> int:
 
     check_json()
     check_cheat_images()
+    check_recall_coverage()
     flutter = flutter_bin()
     run([flutter, "pub", "get"], "安装 Dart 依赖")
     run([flutter, "analyze"], "静态分析")

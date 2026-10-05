@@ -99237,7 +99237,8 @@
       "difficulty": 1,
       "band": "common",
       "error_rate": 1.6,
-      "image": "images/subject1/2019_kemu1_845600.jpg"
+      "image": "images/subject1/2019_kemu1_845600.jpg",
+      "sign": "no_right"
     },
     {
       "id": "drive.s1.signals.515",
@@ -99537,7 +99538,8 @@
       "difficulty": 3,
       "band": "hot",
       "error_rate": 15.5,
-      "image": "images/subject1/2019_kemu1_846900.jpg"
+      "image": "images/subject1/2019_kemu1_846900.jpg",
+      "sign": "speed_40"
     },
     {
       "id": "drive.s1.signals.521",
@@ -99887,7 +99889,8 @@
       "difficulty": 1,
       "band": "common",
       "error_rate": 0.6,
-      "image": "images/subject1/2019_kemu1_847700.jpg"
+      "image": "images/subject1/2019_kemu1_847700.jpg",
+      "sign": "turn_right"
     },
     {
       "id": "drive.s1.signals.528",
@@ -100037,7 +100040,8 @@
       "difficulty": 3,
       "band": "common",
       "error_rate": 16.4,
-      "image": "images/subject1/2019_kemu1_840800.jpg"
+      "image": "images/subject1/2019_kemu1_840800.jpg",
+      "sign": "warning_pedestrian"
     },
     {
       "id": "drive.s1.signals.531",
@@ -100337,7 +100341,8 @@
       "difficulty": 3,
       "band": "common",
       "error_rate": 14.0,
-      "image": "images/subject1/2019_kemu1_843900.jpg"
+      "image": "images/subject1/2019_kemu1_843900.jpg",
+      "sign": "warning"
     },
     {
       "id": "drive.s1.signals.537",
@@ -101137,7 +101142,8 @@
       "difficulty": 4,
       "band": "common",
       "error_rate": 23.7,
-      "image": "images/subject1/2019_kemu1_849100.jpg"
+      "image": "images/subject1/2019_kemu1_849100.jpg",
+      "sign": "pedestrian"
     },
     {
       "id": "drive.s1.signals.553",
@@ -101587,7 +101593,8 @@
       "difficulty": 1,
       "band": "common",
       "error_rate": 0.6,
-      "image": "images/subject1/2019_kemu1_847600.jpg"
+      "image": "images/subject1/2019_kemu1_847600.jpg",
+      "sign": "turn_left"
     },
     {
       "id": "drive.s1.signals.562",
@@ -107512,6 +107519,99 @@
       "phase": 1,
       "difficulty": 2,
       "band": "common"
+    },
+    {
+      "id": "drive.s1.signals.600",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这个标志是何含义？",
+      "image": "images/cheatsheet/sign/speed_80.png",
+      "choices": [
+        {
+          "id": "A",
+          "label": "限制最高时速80公里",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "最低时速80公里",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "解除80公里限速",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "平均时速80公里",
+          "ok": false
+        }
+      ],
+      "explain": "限制速度标志（红圈、白底、黑字）表示该标志至前方解除限制速度标志或另一块不同限速标志的路段内，机动车行驶速度不得超过标志所示数值；解除限制速度标志为黑边、白底、黑字加五条斜杠。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "locator": "限制速度",
+          "note": "限制速度标志为红圈白底黑字，表示机动车行驶速度不得超过标志所示数值。"
+        },
+        {
+          "source_id": "road-safety-regulation",
+          "relation": "quoted",
+          "url": "https://www.gov.cn/gongbao/content/2019/content_5468932.htm",
+          "locator": "第四十五条",
+          "note": "机动车在道路上行驶不得超过限速标志、标线标明的速度。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 3,
+      "band": "hot",
+      "sign": "speed_80"
+    },
+    {
+      "id": "drive.s1.signals.601",
+      "topic_id": "drive.s1.signals",
+      "kind": "single",
+      "prompt": "这属于哪一种标志？",
+      "image": "images/cheatsheet/sign/guide.png",
+      "choices": [
+        {
+          "id": "A",
+          "label": "指路标志",
+          "ok": true
+        },
+        {
+          "id": "B",
+          "label": "警告标志",
+          "ok": false
+        },
+        {
+          "id": "C",
+          "label": "禁令标志",
+          "ok": false
+        },
+        {
+          "id": "D",
+          "label": "指示标志",
+          "ok": false
+        }
+      ],
+      "explain": "指路标志传递道路方向、地点、距离等信息：一般道路为蓝底白字，高速公路为绿底白字，形状多为长方形和正方形。图中为指路牌示意。",
+      "source_refs": [
+        {
+          "source_id": "gb5768-2",
+          "relation": "adapted",
+          "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=15B1FC09EE1AE92F1A9EC97BA3C9E451",
+          "locator": "指路标志",
+          "note": "指路标志表示道路信息的指引，为驾驶者提供前往目的地所经过的道路、沿途相关城镇、重要公共设施、地点、距离和行车方向等信息。"
+        }
+      ],
+      "phase": 3,
+      "difficulty": 2,
+      "band": "common",
+      "sign": "guide"
     }
   ]
 }

@@ -94,3 +94,4 @@
 | [0087](0087-choice-block-nine-tenths.md) | 答案选项的点击区域占栏宽九成 | 已接受 |
 | [0088](0088-practice-page-of-twenty.md) | 练习也一页二十题——做题台统一每页 20 道 | 已接受 |
 | [0089](0089-self-test-layout-ten-auto-advance.md) | 自测一轮 10 道，解释放选项右侧，答对自动切下一张 | 已接受 |
+| [0091](0091-recall-entries-all-have-questions.md) | 速记条目必须有相关题——11 个豁免清零，覆盖进检查 | 已接受 |
