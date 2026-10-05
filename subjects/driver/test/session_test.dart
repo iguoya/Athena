@@ -119,6 +119,19 @@ void main() {
     expect(find.textContaining("提前结束"), findsNothing);
     expect(find.text("还有 79 题没答，按错计分。"), findsOneWidget);
 
+    // 交卷后的复盘清单把失分点一页看全（ADR 0093）：12 题答错、79 题没答都各有一张卡，
+    // 没答的题标「没答」而不是「你选的」，正确答案照样给。清单按题号排、惰性渲染，
+    // 先见到的是答错卡，手动滚到没答区再断言。
+    expect(find.textContaining("答错 12 题、没答 79 题"), findsOneWidget);
+    expect(find.textContaining("你选的：F. 错误"), findsWidgets);
+    final missedCards = find.text("没答，按错计分；没写作答记录。");
+    final list = find.byType(ListView);
+    for (var i = 0; i < 80 && missedCards.evaluate().isEmpty; i++) {
+      await tester.drag(list, const Offset(0, -600));
+      await tester.pump();
+    }
+    expect(missedCards, findsWidgets);
+
     await tester.runAsync(() async {
       // 只交了 21 题，就只有 21 条作答记录；没见过的 79 题不算「答错」。
       // 新库会拿仓库里的进度库当底子，只数这场造的题。

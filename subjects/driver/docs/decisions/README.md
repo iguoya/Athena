@@ -97,3 +97,4 @@
 | [0090](0090-self-test-no-rounds-correct-never-returns.md) | 自测不分轮、按记录区分，答对的不再出现，第二次只考答错的 | 已接受 |
 | [0091](0091-recall-entries-all-have-questions.md) | 速记条目必须有相关题——11 个豁免清零，覆盖进检查 | 已接受 |
 | [0092](0092-numbers-cloze-questions.md) | 易混数字自测出题——要考的数字挖成括号，长清单拆成单条 | 已接受 |
+| [0093](0093-exam-review-includes-unanswered.md) | 交卷复盘把没答的题也列出来——失分点一页看全 | 已接受（原撞号 0092） |

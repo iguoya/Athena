@@ -1328,11 +1328,13 @@ class _SessionStageState extends State<SessionStage> {
     }
     final missed = <_Missed>[
       for (var i = 0; i < _total; i++)
-        if (_judged.contains(i) && !_correct.contains(i))
+        if (!_correct.contains(i))
           _Missed(
             number: i + 1,
             question: _launch.questions[i],
             picked: {...?_picked[i]},
+            // 没答的题按错计分但不写作答记录（ADR 0023）；复盘里照样要看它们是什么题。
+            unanswered: !_judged.contains(i),
           ),
     ];
     if (!mounted) return;
@@ -1400,7 +1402,8 @@ class _Result {
   final int? want;
 
 
-  /// 没答的题数：按错计分，不在错题卡里（没看过的题谈不上「错在哪」）。
+  /// 没答的题数：按错计分。它们也在下面的错题卡里，标成「没答」（ADR 0093）；
+  /// 只是不写作答记录——没见过的题不该被记成「答错」（ADR 0023）。
   final int unanswered;
 
   /// 交卷这一路（含 recordExam 自己产的那条）新解锁的成就——中途弹的提示条
@@ -1411,13 +1414,16 @@ class _Result {
   final List<_Missed> missed;
 }
 
-/// 一道答错的题，连同「我当时选的」——只报分不告诉错在哪，等于白考一次。
+/// 一道答错或没答的题，连同「我当时选的」——只报分不告诉错在哪，等于白考一次。
 class _Missed {
-  const _Missed({required this.number, required this.question, required this.picked});
+  const _Missed({required this.number, required this.question, required this.picked, this.unanswered = false});
 
   final int number;
   final Question question;
   final Set<String> picked;
+
+  /// 没答：没选过任何选项，按错计分、不写作答记录（ADR 0023）。
+  final bool unanswered;
 
   String labelsOf(Set<String> ids) {
     final labels = [
@@ -1485,9 +1491,17 @@ class _ResultPane extends StatelessWidget {
           FilledButton(onPressed: onClose, child: const Text("回到章节")),
           if (result.missed.isNotEmpty) ...[
             const SizedBox(height: 24),
-            Text(
-              "错了 ${result.missed.length} 题，趁热看一遍：",
-              style: Theme.of(context).textTheme.titleMedium,
+            Builder(
+              builder: (context) {
+                final wrongCount = result.missed.where((m) => !m.unanswered).length;
+                final skippedCount = result.missed.length - wrongCount;
+                return Text(
+                  wrongCount == 0
+                      ? "没答 $skippedCount 题（按错计分），看看都是什么题："
+                      : "答错 $wrongCount 题${skippedCount > 0 ? "、没答 $skippedCount 题" : ""}，趁热看一遍：",
+                  style: Theme.of(context).textTheme.titleMedium,
+                );
+              },
             ),
             const SizedBox(height: 12),
             Expanded(
@@ -1523,28 +1537,35 @@ class _MissedCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BsBadge(text: "第${item.number}题", icon: Glyph.position, color: Bs.danger),
-              const SizedBox(width: 10),
-              Expanded(
-                child: PromptText(
-                  q.prompt,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.4),
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BsBadge(
+              text: "第${item.number}题",
+              icon: Glyph.position,
+              color: item.unanswered ? Bs.warning : Bs.danger,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: PromptText(
+                q.prompt,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.4),
               ),
-              const SizedBox(width: 10),
-              SerialBadge(q.serial),
-            ],
-          ),
-          if (q.image != null) ...[
-            const SizedBox(height: 10),
-            QuestionImage(path: q.image!, maxWidth: 360),
+            ),
+            const SizedBox(width: 10),
+            SerialBadge(q.serial),
           ],
+        ),
+        if (q.image != null) ...[
           const SizedBox(height: 10),
+          QuestionImage(path: q.image!, maxWidth: 360),
+        ],
+        const SizedBox(height: 10),
+        if (item.unanswered)
+          Text("没答，按错计分；没写作答记录。", style: muted?.copyWith(color: Bs.warning))
+        else
           Text("你选的：${item.labelsOf(item.picked)}", style: muted?.copyWith(color: Bs.danger)),
-          Text("正确答案：${item.labelsOf(right)}", style: muted?.copyWith(color: Bs.success)),
+        Text("正确答案：${item.labelsOf(right)}", style: muted?.copyWith(color: Bs.success)),
           if (q.explain.trim().isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(q.explain, style: muted),
