@@ -1,0 +1,311 @@
+{
+  "_": "科目一「超车·会车·变道·掉头·倒车」专题（ADR 0107）。结构同考点速记。",
+  "groups": [
+    {
+      "id": "man-overtake",
+      "title": "超车",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "左侧超、提前示意、先看有没有条件；前车在转、掉、超，或者路段没条件，一律不超。",
+      "match": "超车|超越|让超|让路.{0,6}(超|后车)",
+      "items": [
+        {
+          "scenario": "什么时候不能超车",
+          "points": [
+            "前车正在左转弯、掉头、超车",
+            "与对面来车有会车可能",
+            "前车是执行紧急任务的警车、消防车、救护车、工程救险车"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十三条"
+        },
+        {
+          "scenario": "什么路段不能超车",
+          "points": [
+            "铁路道口、交叉路口、窄桥、弯道、陡坡、隧道、人行横道",
+            "市区交通流量大的路段，以及其他没有超车条件的路段"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第四十三条"
+        },
+        {
+          "scenario": "怎么超",
+          "points": [
+            "从前车左侧超越，便于观察",
+            "提前开左转向灯，变换使用远、近光灯或鸣喇叭，不能用鸣喇叭代替转向灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "超车时前方车辆不减速、不让道",
+          "points": [
+            "停止超车并适当减速，与前车保持安全距离，不能加速硬超"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "无法保证与被超车辆的横向安全间距",
+          "points": [
+            "放弃超车"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "超车完毕驶回原车道",
+          "points": [
+            "提前开右转向灯，不是超越后立刻开灯就并回"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十七条"
+        },
+        {
+          "scenario": "后车发出超车信号，条件许可",
+          "points": [
+            "减速、靠右让路，给后车留出超车空间"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "夜间超车",
+          "points": [
+            "变换远、近光灯示意前车，选路宽车少的地段"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十七条"
+        },
+        {
+          "scenario": "不按规定超车、让行",
+          "points": [
+            "一次记 3 分；河南在多车道上长时间占用超车道罚 200 元"
+          ],
+          "source_id": "penalty-order-163",
+          "locator": "第十一条第（四）项"
+        }
+      ]
+    },
+    {
+      "id": "man-meet",
+      "title": "会车与让行",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "没中线减速靠右；有障碍的让没障碍的；窄坡上坡先行；窄山路不靠山的先行；夜间 150 米外改近光。",
+      "match": "会车|让行|让路|对向来车|借道",
+      "items": [
+        {
+          "scenario": "没有中心隔离设施或中心线的道路上会车",
+          "points": [
+            "减速靠右通行，与其他车辆、行人保持必要的安全距离"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条"
+        },
+        {
+          "scenario": "有障碍的路段",
+          "points": [
+            "有障碍的一方让无障碍的一方先行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条第（二）项"
+        },
+        {
+          "scenario": "狭窄的坡路",
+          "points": [
+            "上坡的一方先行；下坡的一方已行至中途而上坡的一方未上坡的，下坡的先行"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条"
+        },
+        {
+          "scenario": "狭窄的山路",
+          "points": [
+            "不靠山体的一方先行（靠山体的一方相对安全）"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条"
+        },
+        {
+          "scenario": "会车有困难",
+          "points": [
+            "有让路条件的一方让对方先行；礼让三先：先慢、先让、先停"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条"
+        },
+        {
+          "scenario": "夜间会车",
+          "points": [
+            "在距对向来车 150 米以外改用近光灯；窄路、窄桥、与非机动车会车也用近光灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十八条"
+        },
+        {
+          "scenario": "会车错误使用远光灯、不按规定会车",
+          "points": [
+            "各记 1 分"
+          ],
+          "source_id": "penalty-order-163",
+          "locator": "第十二条"
+        },
+        {
+          "scenario": "河南的狭窄道路上会车",
+          "points": [
+            "有条件让行的避让没条件的；后进入的避让先进入的"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第二十九条"
+        }
+      ]
+    },
+    {
+      "id": "man-lane",
+      "title": "变更车道与转向灯",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "先看后开灯，提前开、不是同时开；不能影响别的车；白虚线可跨、白实线不能跨。",
+      "match": "变更车道|变道|转向灯|导向车道|同向车道分界线",
+      "items": [
+        {
+          "scenario": "变更车道",
+          "points": [
+            "提前开转向灯，先观察确认安全，不能影响相关车道内行驶车辆的正常行驶"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十四条"
+        },
+        {
+          "scenario": "转向灯怎么开",
+          "points": [
+            "提前开启，不是变更车道的同时开；观察到后方无车也不能不开"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十七条"
+        },
+        {
+          "scenario": "向左的动作",
+          "points": [
+            "向左转弯、向左变更车道、准备超车、驶离停车地点、掉头：开左转向灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十七条"
+        },
+        {
+          "scenario": "向右的动作",
+          "points": [
+            "向右转弯、向右变更车道、超车完毕驶回原车道、靠路边停车：开右转向灯"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十七条"
+        },
+        {
+          "scenario": "同向车道分界线",
+          "points": [
+            "白色虚线：保证安全前提下可以跨越变更车道",
+            "白色实线：不得变更车道、压线行驶"
+          ],
+          "source_id": "gb5768-3",
+          "locator": "同向车道分界线"
+        },
+        {
+          "scenario": "路口前变更车道",
+          "points": [
+            "在虚线区按导向箭头变道；进入实线区后不能再变"
+          ],
+          "source_id": "gb5768-3",
+          "locator": "导向车道线"
+        },
+        {
+          "scenario": "划有导向车道的路口",
+          "points": [
+            "按所需行进方向驶入相应车道，不得随意选择车道再在路口内变道"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十一条"
+        },
+        {
+          "scenario": "河南",
+          "points": [
+            "转弯、变道、超车、掉头、靠边停车提前 100 米至 50 米开转向灯"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第二十六条"
+        }
+      ]
+    },
+    {
+      "id": "man-uturn",
+      "title": "掉头与倒车",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "掉头看标志、不去危险路段；倒车先察明车后、让过往车辆。",
+      "match": "掉头|倒车|借道",
+      "items": [
+        {
+          "scenario": "什么地方不能掉头",
+          "points": [
+            "铁路道口、人行横道、桥梁、陡坡、隧道，以及容易发生危险的路段"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十九条"
+        },
+        {
+          "scenario": "什么地方可以掉头",
+          "points": [
+            "设有允许掉头标志的地方；掉头时开左转向灯，慢速、观察前后"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十九条"
+        },
+        {
+          "scenario": "掉头的车速",
+          "points": [
+            "最高行驶速度不超过每小时 30 公里"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第四十六条"
+        },
+        {
+          "scenario": "什么地方不能倒车",
+          "points": [
+            "铁路道口、交叉路口、单行路、桥梁、急弯、陡坡、隧道"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十条"
+        },
+        {
+          "scenario": "怎么倒车",
+          "points": [
+            "先察明车后情况，确认安全再倒；缓慢行驶，观察两侧和后方",
+            "遇有车辆过往主动停车避让"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第五十条"
+        },
+        {
+          "scenario": "河南的掉头",
+          "points": [
+            "提前进入导向车道，或在距掉头地点 100 米至 50 米处驶入最左侧车道，不得妨碍行人和其他车辆"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第二十七条"
+        },
+        {
+          "scenario": "河南的借道通行",
+          "points": [
+            "一次只能借相邻的一条车道，借道后立即回到原车道；国道、省道上提前 100 米至 50 米开转向灯"
+          ],
+          "source_id": "henan-road-safety",
+          "locator": "第二十三条第二款"
+        }
+      ]
+    }
+  ]
+}

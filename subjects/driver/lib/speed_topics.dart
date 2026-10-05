@@ -109,6 +109,26 @@ const speedTopics = [
     lead: "每种灯的意思、路口怎么走、铁路道口怎么过——这三块的口诀最容易记混，按场景对照着记，再练相关的题。",
     footnote: "条目依据《道路交通安全法》及其实施条例、记分办法与 GB 5768.3，每条指到条款。",
   ),
+  SpeedTopic(
+    "s1.maneuver",
+    "subject1",
+    "超车会车与掉头倒车",
+    Glyph.maneuvers,
+    SpeedKind.notes,
+    lead: "超车、会车、变更车道与转向灯、掉头倒车——科目一最大的一块通行规则，口诀和例外最多。"
+        "按场景对照着记，再练相关的题。",
+    footnote: "条目依据《道路交通安全法》及其实施条例、《河南省道路交通安全条例》、GB 5768.3 与记分办法，每条指到条款。",
+  ),
+  SpeedTopic(
+    "s1.vehicle",
+    "subject1",
+    "车辆基础与操作",
+    Glyph.vehicleCare,
+    SpeedKind.notes,
+    lead: "ABS 与制动、轮胎胎压与爆胎、下长坡与油耗、自动挡操作——机动车基础知识里最常考的几块，"
+        "按场景对照着记，再练相关的题。",
+    footnote: "条目依据 GB 7258、GB 26149、《道路交通安全法实施条例》与 2022 版考试大纲，每条指到条款或章节。",
+  ),
   // ---- 科目四 ----
   SpeedTopic(
     "s4.numbers",
@@ -149,6 +169,26 @@ const speedTopics = [
     lead: "科目四的信号灯与铁路道口：绿灯不等于优先、堵车不进路口、道口一停二看三通过、熄火先重启再离轨。"
         "按场景对照着记，再练科目四的相关题。",
     footnote: "条目依据《道路交通安全法》及其实施条例，每条指到条款。",
+  ),
+  SpeedTopic(
+    "s4.maneuver",
+    "subject4",
+    "超车会车与变道倒车",
+    Glyph.maneuvers,
+    SpeedKind.notes,
+    lead: "科目四的超车、会车、变道、倒车：不超的情形、被超怎么让、窄路怎么会车、转向灯怎么开。"
+        "按场景对照着记，再练科目四的相关题。",
+    footnote: "条目依据《道路交通安全法》及其实施条例与 2022 版考试大纲，每条指到条款。",
+  ),
+  SpeedTopic(
+    "s4.failure",
+    "subject4",
+    "车辆故障与紧急处置",
+    Glyph.vehicleCare,
+    SpeedKind.notes,
+    lead: "爆胎、制动失效、转向失控、侧滑水滑、熄火起火——科目四最常考的险情处置，"
+        "一条一个险情，先做什么、不能做什么，对照着记，再练科目四的相关题。",
+    footnote: "条目依据 2022 版考试大纲与 GB 26149，每条指到章节。",
   ),
   SpeedTopic(
     "s4.stopping",

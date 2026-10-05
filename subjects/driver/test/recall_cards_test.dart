@@ -97,7 +97,7 @@ void main() {
   });
 
   test("事故与停车专题（ADR 0103、0104）：科目一、科目四各有自己的内容，每组在本科目都有题可练", () {
-    for (final id in ["s1.accident", "s4.crash", "s1.parking", "s4.stopping", "s1.occupant", "s4.occupant", "s1.signal-rail", "s4.signal-rail"]) {
+    for (final id in ["s1.accident", "s4.crash", "s1.parking", "s4.stopping", "s1.occupant", "s4.occupant", "s1.signal-rail", "s4.signal-rail", "s1.maneuver", "s4.maneuver", "s1.vehicle", "s4.failure"]) {
       final topic = speedTopicById(id)!;
       final groups = noteGroupsOf(bank, topic);
       expect(groups, isNotEmpty, reason: "$id 没有内容");
