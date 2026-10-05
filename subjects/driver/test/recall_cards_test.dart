@@ -3,6 +3,7 @@ import "package:athena_driver/models.dart";
 import "package:athena_driver/numbers_cards.dart";
 import "package:athena_driver/quiz_options.dart";
 import "package:athena_driver/recall_cards.dart";
+import "package:athena_driver/speed_topics.dart";
 import "package:flutter_test/flutter_test.dart";
 
 /// 速记卡与速记题（ADR 0094、0095）：每张卡有稳定的题号，对应的速记题是确定的四选一，
@@ -11,16 +12,9 @@ void main() {
   late Bank bank;
   setUpAll(() async => bank = await ContentLoader.load());
 
-  List<RecallCard> allCards() => [
-    ...recallCardsOfSigns(bank.signs),
-    ...recallCardsOfMarkings(bank.markings),
-    ...recallCardsOfGauges(bank.gauges),
-    ...recallCardsOfGestures(bank.gestureList),
-    ...recallCardsOfNotes(RecallPage.keypoints, bank.notes),
-    ...recallCardsOfNotes(RecallPage.henan, bank.henanGroups),
-    ...recallCardsOfNotes(RecallPage.licenseNotes, bank.licenseGroups),
-    ...recallCardsOfNumbers(bank.cheatsheet),
-  ];
+  List<RecallCard> allCards() => [for (final t in speedTopics) ...recallCardsOfTopic(t, bank)];
+  final s1Numbers = speedTopicById("s1.numbers")!;
+  List<RecallCard> s1NumberCards() => recallCardsOfNumbers(s1Numbers.id, cheatGroupsOf(bank, s1Numbers));
 
   test("题号稳定、互不重复，知识点号是 drive.recall.<页>", () {
     final cards = allCards();
@@ -88,8 +82,8 @@ void main() {
 
     for (final c in cards.where((c) => c.kind == NumberCardKind.reverse)) {
       final q = recallQuestionOf(
-        recallCardsOfNumbers(bank.cheatsheet).firstWhere((x) => x.id == c.id),
-        recallCardsOfNumbers(bank.cheatsheet),
+        s1NumberCards().firstWhere((x) => x.id == c.id),
+        s1NumberCards(),
       );
       // 同组别的数值的情形才会当干扰项：任何干扰项都不能出现在本值的情形里。
       final mine = {for (final t in c.answerTexts) optionLabel(t)};

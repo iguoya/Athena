@@ -21,6 +21,7 @@ import "recall.dart";
 import "reinforce.dart";
 import "reinforce_page.dart";
 import "recall_cards.dart";
+import "speed_topics.dart";
 import "session.dart";
 import "signs_page.dart";
 import "skin.dart";
@@ -124,14 +125,6 @@ class _HomePageState extends State<HomePage> {
   static const _wrongId = "wrong";
   static const _reviewId = "review";
   static const _reinforceId = "reinforce";
-  static const _numbersId = "numbers";
-  static const _signsId = "signs";
-  static const _markingsId = "markings";
-  static const _gaugesId = "gauges";
-  static const _henanId = "henan";
-  static const _gesturesId = "gestures";
-  static const _licenseNotesId = "license-notes";
-  static const _keyPointsId = "keypoints";
 
   String _place = "subject1";
   SessionLaunch? _session;
@@ -198,7 +191,8 @@ class _HomePageState extends State<HomePage> {
 
   /// 锁着的科目，它的题不进错题本和考前复习——题干都不该先看到（ADR 0006 后果）。
   static bool _hiddenTopic(String topicId, {required bool s1Done, required bool s1Steady}) =>
-      (!s1Steady && topicId.startsWith("drive.s2.")) || (!s1Done && topicId.startsWith("drive.s4."));
+      (!s1Steady && topicId.startsWith("drive.s2.")) ||
+      (!s1Done && (topicId.startsWith("drive.s4.") || topicId.startsWith("drive.recall.s4.")));
 
   bool _keepInPractice(Question q) {
     return q.appearsInPractice(
@@ -403,16 +397,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Subject? get _subject {
-    if (_place == _wrongId ||
-        _place == _reviewId ||
-        _place == _numbersId ||
-        _place == _signsId ||
-        _place == _markingsId ||
-        _place == _gaugesId ||
-        _place == _henanId ||
-        _place == _gesturesId ||
-        _place == _licenseNotesId ||
-        _place == _keyPointsId) {
+    if (_place == _wrongId || _place == _reviewId || speedTopicById(_place) != null) {
       return null;
     }
     return widget.bank.curriculum.subject(_place);
@@ -514,54 +499,6 @@ class _HomePageState extends State<HomePage> {
                   label: "强化练习",
                   onTap: () => _go(_reinforceId),
                 ),
-                _navLine(
-                  icon: Glyph.numbers,
-                  selected: _place == _numbersId && _session == null,
-                  label: "易混数字",
-                  onTap: () => _go(_numbersId),
-                ),
-                _navLine(
-                  icon: Glyph.signs,
-                  selected: _place == _signsId && _session == null,
-                  label: "标志速记",
-                  onTap: () => _go(_signsId),
-                ),
-                _navLine(
-                  icon: Glyph.markings,
-                  selected: _place == _markingsId && _session == null,
-                  label: "标线速记",
-                  onTap: () => _go(_markingsId),
-                ),
-                _navLine(
-                  icon: Glyph.gauges,
-                  selected: _place == _gaugesId && _session == null,
-                  label: "仪表速记",
-                  onTap: () => _go(_gaugesId),
-                ),
-                _navLine(
-                  icon: Glyph.henan,
-                  selected: _place == _henanId && _session == null,
-                  label: "河南速记",
-                  onTap: () => _go(_henanId),
-                ),
-                _navLine(
-                  icon: Glyph.gestures,
-                  selected: _place == _gesturesId && _session == null,
-                  label: "手势速记",
-                  onTap: () => _go(_gesturesId),
-                ),
-                _navLine(
-                  icon: Glyph.licenseNotes,
-                  selected: _place == _licenseNotesId && _session == null,
-                  label: "记分证照速记",
-                  onTap: () => _go(_licenseNotesId),
-                ),
-                _navLine(
-                  icon: Glyph.notes,
-                  selected: _place == _keyPointsId && _session == null,
-                  label: "考点速记",
-                  onTap: () => _go(_keyPointsId),
-                ),
                 if (widget.currentUser != null)
                   _navLine(
                     icon: Glyph.user,
@@ -622,6 +559,29 @@ class _HomePageState extends State<HomePage> {
 
   /// 一个科目在侧栏里的一枝：科目本身一行，展开时下面缩进挂模拟考、待练和各章节。
   /// 锁着的科目没有子项——题干都不该先看到（ADR 0006 后果、ADR 0047）。
+  /// 一个科目底下的速记专题：一行小标题「专题」，下面各专题一行。
+  List<Widget> _speedTopicLines(String subjectId) {
+    final topics = speedTopicsOf(subjectId);
+    if (topics.isEmpty) return const [];
+    return [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(28, 10, 0, 2),
+        child: Text(
+          "专题",
+          style: TextStyle(color: Skins.current.navText.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+      ),
+      for (final topic in topics)
+        _navLine(
+          icon: topic.icon,
+          selected: _place == topic.id && _session == null,
+          label: topic.title,
+          indent: true,
+          onTap: () => _go(topic.id),
+        ),
+    ];
+  }
+
   List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
     final subject = widget.bank.curriculum.subject(id);
     final locked = _locked(id);
@@ -712,6 +672,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       );
                     }(),
+                  // 本科目自己的速记专题（ADR 0096）：科目一有科目一的，科目四有科目四的，不混在一起。
+                  ..._speedTopicLines(id),
                   const SizedBox(height: 6),
                 ],
               )
@@ -807,6 +769,12 @@ class _HomePageState extends State<HomePage> {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _reviewId) return _reviewOverview(context);
     if (_place == _reinforceId) return _reinforceOverview(context);
+    // 速记专题属于某个科目（ADR 0096）：科目锁着，它的专题也锁着。
+    final topic = speedTopicById(_place);
+    if (topic != null) {
+      if (_locked(topic.subjectId)) return _lockedSubject(context, widget.bank.curriculum.subject(topic.subjectId));
+      return _speedTopicPage(context, topic);
+    }
     if (_locked(_place)) return _lockedSubject(context, widget.bank.curriculum.subject(_place));
     if (_place == "subject2") {
       final subject2 = widget.bank.curriculum.subject("subject2");
@@ -819,14 +787,6 @@ class _HomePageState extends State<HomePage> {
         onChanged: _reload,
       );
     }
-    if (_place == _numbersId) return _numbersOverview(context);
-    if (_place == _signsId) return _signsOverview(context);
-    if (_place == _markingsId) return _markingsOverview(context);
-    if (_place == _gaugesId) return _gaugesOverview(context);
-    if (_place == _henanId) return _henanOverview(context);
-    if (_place == _gesturesId) return _gesturesOverview(context);
-    if (_place == _licenseNotesId) return _licenseNotesOverview(context);
-    if (_place == _keyPointsId) return _keyPointsOverview(context);
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
     return _subjectOverview(context, subject);
@@ -1696,141 +1656,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 考点速记：情景对照文字速记（ADR 0064）。
-  Widget _keyPointsOverview(BuildContext context) {
-    return NotesPage(
-      groups: widget.bank.notes,
-      daily: dailyQuestions(_subject1All),
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      histories: _histories,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
+  /// 一个速记专题的页面（ADR 0096）：专题属于某个科目，相关题、练习、自测作答都只用本科目的。
+  Widget _speedTopicPage(BuildContext context, SpeedTopic topic) {
+    final subject = widget.bank.curriculum.subject(topic.subjectId);
+    final all = widget.bank.forSubject(topic.subjectId);
+    final daily = dailyQuestions(all);
+    void practice(List<Question> questions, String title) => _startPractice(subject, questions, title);
+    return switch (topic.kind) {
+      SpeedKind.numbers => _numbersOverview(context, topic),
+      SpeedKind.signs => SignsPage(
+        signs: widget.bank.signs,
+        histories: _histories,
+        daily: daily,
+        all: all,
+        mastered: _mastered,
+        onRecallAnswer: _recordRecall,
+        recallPage: topic.id,
+        subjectLabel: subject.code,
+        onStartPractice: practice,
       ),
-    );
-  }
-
-  /// 标志速记：手绘标志按类摊开，每组能直接练相关题（ADR 0059）。
-  Widget _signsOverview(BuildContext context) {
-    return SignsPage(
-      signs: widget.bank.signs,
-      histories: _histories,
-      daily: dailyQuestions(_subject1All),
-      all: _subject1All,
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
+      SpeedKind.markings => MarkingsPage(
+        markings: widget.bank.markings,
+        histories: _histories,
+        daily: daily,
+        all: all,
+        mastered: _mastered,
+        onRecallAnswer: _recordRecall,
+        recallPage: topic.id,
+        subjectLabel: subject.code,
+        onStartPractice: practice,
       ),
-    );
-  }
-
-  /// 标线速记：手绘标线按类摊开，每组能直接练相关题（ADR 0065）。
-  Widget _markingsOverview(BuildContext context) {
-    return MarkingsPage(
-      markings: widget.bank.markings,
-      histories: _histories,
-      daily: dailyQuestions(_subject1All),
-      all: _subject1All,
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
+      SpeedKind.gauges => GaugesPage(
+        gauges: widget.bank.gauges,
+        histories: _histories,
+        daily: daily,
+        mastered: _mastered,
+        onRecallAnswer: _recordRecall,
+        recallPage: topic.id,
+        subjectLabel: subject.code,
+        onStartPractice: practice,
       ),
-    );
-  }
-
-  /// 仪表速记：手绘车内符号按类摊开，每组能直接练相关题（ADR 0067）。
-  Widget _gaugesOverview(BuildContext context) {
-    return GaugesPage(
-      gauges: widget.bank.gauges,
-      histories: _histories,
-      daily: dailyQuestions(_subject1All),
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
+      SpeedKind.gestures => GesturesPage(
+        gestures: widget.bank.gestureList,
+        histories: _histories,
+        daily: daily,
+        mastered: _mastered,
+        onRecallAnswer: _recordRecall,
+        recallPage: topic.id,
+        subjectLabel: subject.code,
+        onStartPractice: practice,
       ),
-    );
-  }
-
-  /// 河南速记：地方条例的情景要点对照，复用考点速记组件（ADR 0068）。
-  Widget _henanOverview(BuildContext context) {
-    return NotesPage(
-      groups: widget.bank.henanGroups,
-      daily: dailyQuestions(_subject1All),
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      histories: _histories,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
+      SpeedKind.notes => NotesPage(
+        groups: noteGroupsOf(widget.bank, topic),
+        daily: daily,
+        mastered: _mastered,
+        onRecallAnswer: _recordRecall,
+        histories: _histories,
+        onStartPractice: practice,
+        recallPage: topic.id,
+        subjectLabel: subject.code,
+        title: topic.title,
+        icon: topic.icon,
+        lead: topic.lead ?? NotesPage.defaultLead,
+        footnote: topic.footnote ?? NotesPage.defaultFootnote,
       ),
-      recallPage: RecallPage.henan,
-      title: "河南速记",
-      icon: Glyph.henan,
-      lead: "模拟考固定抽 10 道河南地方题。罚款档次、高速规矩、赔偿比例都是河南条例自定的，"
-          "跟全国规定对照着记——先看速记，再练相关的题。",
-      footnote: "条目依据《河南省道路交通安全条例》与《河南省高速公路条例》，罚款数字均指到条款。",
-    );
-  }
-
-  /// 记分证照速记：按作答记录里错得最多的点整理，复用考点速记组件（ADR 0076）。
-  Widget _licenseNotesOverview(BuildContext context) {
-    return NotesPage(
-      groups: widget.bank.licenseGroups,
-      daily: dailyQuestions(_subject1All),
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      histories: _histories,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
-      ),
-      recallPage: RecallPage.licenseNotes,
-      title: "记分证照速记",
-      icon: Glyph.licenseNotes,
-      lead: "记分分档、证照期限、罚款档位、禁考年限、号牌登记——科目一最容易丢分的这几块，"
-          "按作答记录里错得最多的点整理。先看对照，再练相关的题。",
-      footnote: "条目依据《道路交通安全违法行为记分管理办法》《机动车驾驶证申领和使用规定》《机动车登记规定》《道路交通安全法》及其实施条例，每条指到条款。",
-    );
-  }
-
-  /// 手势速记：8 个法定动作摊开，两科共考的 29 题直接练（ADR 0073）。
-  Widget _gesturesOverview(BuildContext context) {
-    final both = [
-      ...dailyQuestions(_subject1All),
-      ...dailyQuestions(widget.bank.forSubject("subject4")),
-    ];
-    return GesturesPage(
-      gestures: widget.bank.gestureList,
-      histories: _histories,
-      daily: both,
-      mastered: _mastered,
-      onRecallAnswer: _recordRecall,
-      onStartPractice: (questions, title) => _startPractice(
-        widget.bank.curriculum.subject("subject1"),
-        questions,
-        title,
-      ),
-    );
+    };
   }
 
   /// 易混数字：同类数字并排，配横条比大小，每组能直接练相关题（ADR 0028）。
-  Widget _numbersOverview(BuildContext context) {
-    final subject = widget.bank.curriculum.subject("subject1");
-    final open = dailyQuestions(_subject1All);
-    final all = dailyQuestions(_subject1All);
+  Widget _numbersOverview(BuildContext context, SpeedTopic topic) {
+    final subject = widget.bank.curriculum.subject(topic.subjectId);
+    final all = dailyQuestions(widget.bank.forSubject(topic.subjectId));
+    final open = all;
+    final groups = cheatGroupsOf(widget.bank, topic);
     final muted = Theme.of(context).textTheme.bodyMedium?.copyWith(
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.45,
@@ -1842,10 +1740,12 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(Glyph.numbers, color: Bs.paper),
             const SizedBox(width: 8),
-            const Text("易混数字", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            Text(topic.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 12),
+            BsBadge(text: subject.code, color: Bs.primary),
             const Spacer(),
             FilledButton.tonalIcon(
-              onPressed: () => _numbersRecall(context, subject, open),
+              onPressed: () => _numbersRecall(context, subject, topic, open),
               icon: const Icon(Glyph.question, size: 18),
               label: const Text("自测"),
             ),
@@ -1853,10 +1753,10 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 8),
         Text(
-          "科目一丢分多在硬数字上。同类数字放在一起看，记住的是它们之间的区别；每组都能直接练相关的题。",
+          topic.lead ?? "",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        for (final group in widget.bank.cheatsheet) ...[
+        for (final group in groups) ...[
           const SizedBox(height: 28),
           _numberGroup(context, subject, group, open, all, muted),
         ],
@@ -1866,9 +1766,9 @@ class _HomePageState extends State<HomePage> {
 
   /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
   /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
-  void _numbersRecall(BuildContext context, Subject subject, List<Question> open) {
-    final cards = recallCardsOfNumbers(widget.bank.cheatsheet);
-    final groups = {for (final g in widget.bank.cheatsheet) g.id: g};
+  void _numbersRecall(BuildContext context, Subject subject, SpeedTopic topic, List<Question> open) {
+    final cards = recallCardsOfNumbers(topic.id, cheatGroupsOf(widget.bank, topic));
+    final groups = {for (final g in cheatGroupsOf(widget.bank, topic)) g.id: g};
     RecallSession.show(
       context,
       onAnswer: _recordRecall,
@@ -1917,7 +1817,7 @@ class _HomePageState extends State<HomePage> {
     await widget.store.recordAttempt(
       questionId: entry.questionId,
       topicId: recallTopicOf(entry.questionId),
-      subjectId: "subject1",
+      subjectId: recallSubjectOf(entry.questionId) ?? "subject1",
       correct: correct,
     );
     _recallReloadTimer?.cancel();

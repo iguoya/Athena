@@ -4,24 +4,13 @@ import "cloze.dart";
 import "models.dart";
 import "numbers_cards.dart";
 import "quiz_options.dart";
+import "speed_topics.dart";
 
 // 速记卡的统一定义（ADR 0094）：自测界面的条目、题库里的「速记题」都从它生成，两边一致。
 //
 // 自测的每次作答要和练习、模拟考一样记进作答记录——这样错题本、考前复习、强化练习不用改逻辑，
 // 就能带出自测里答错的内容。要让这些功能认得它，每张卡得是一道有稳定编号的题：
 // `drive.recall.<页>.<键哈希>`。题的出处取各速记文件的文件级出处（条目有逐条出处的用逐条的）。
-
-/// 速记页的键：作答记录里的题号、知识点号都带它。
-class RecallPage {
-  static const signs = "signs";
-  static const markings = "markings";
-  static const gauges = "gauges";
-  static const gestures = "gestures";
-  static const keypoints = "keypoints";
-  static const henan = "henan";
-  static const licenseNotes = "license-notes";
-  static const numbers = "numbers";
-}
 
 /// 速记题的知识点号前缀：不在课表里，所以科目一 / 科目四的日常题、章节练习、模拟考、解锁判断都不会带上它；
 /// 错题本、考前复习、强化练习按这个前缀把它并进来。
@@ -120,10 +109,10 @@ class RecallCard {
 
 // ------------------------------------------------------------ 符号四页
 
-List<RecallCard> recallCardsOfSigns(List<RoadSign> signs) => [
+List<RecallCard> recallCardsOfSigns(String page, List<RoadSign> signs) => [
   for (final s in signs)
     RecallCard(
-      page: RecallPage.signs,
+      page: page,
       id: s.id,
       name: s.name,
       meaning: s.meaning,
@@ -136,10 +125,10 @@ List<RecallCard> recallCardsOfSigns(List<RoadSign> signs) => [
     ),
 ];
 
-List<RecallCard> recallCardsOfMarkings(List<Marking> markings) => [
+List<RecallCard> recallCardsOfMarkings(String page, List<Marking> markings) => [
   for (final m in markings)
     RecallCard(
-      page: RecallPage.markings,
+      page: page,
       id: m.id,
       name: m.name,
       meaning: m.meaning,
@@ -152,10 +141,10 @@ List<RecallCard> recallCardsOfMarkings(List<Marking> markings) => [
     ),
 ];
 
-List<RecallCard> recallCardsOfGauges(List<Gauge> gauges) => [
+List<RecallCard> recallCardsOfGauges(String page, List<Gauge> gauges) => [
   for (final g in gauges)
     RecallCard(
-      page: RecallPage.gauges,
+      page: page,
       id: g.id,
       name: g.name,
       meaning: g.meaning,
@@ -168,12 +157,12 @@ List<RecallCard> recallCardsOfGauges(List<Gauge> gauges) => [
     ),
 ];
 
-List<RecallCard> recallCardsOfGestures(List<TrafficGesture> gestures) => [
+List<RecallCard> recallCardsOfGestures(String page, List<TrafficGesture> gestures) => [
   for (final g in gestures)
     // 「手势的效力」是总则，没有规范动画，不出卡。
     if (g.kind != "general")
       RecallCard(
-        page: RecallPage.gestures,
+        page: page,
         id: g.id,
         name: g.name,
         meaning: g.meaning,
@@ -211,11 +200,11 @@ List<RecallCard> recallCardsOfNotes(String page, List<NoteGroup> groups) => [
 
 // ------------------------------------------------------------ 易混数字
 
-List<RecallCard> recallCardsOfNumbers(List<CheatGroup> groups) {
+List<RecallCard> recallCardsOfNumbers(String page, List<CheatGroup> groups) {
   return [
     for (final c in planNumberCards(groups))
       RecallCard(
-        page: RecallPage.numbers,
+        page: page,
         id: c.id,
         name: c.value,
         meaning: c.kind == NumberCardKind.reverse
@@ -279,35 +268,27 @@ Question recallQuestionOf(RecallCard card, List<RecallCard> pagePool, {Map<Strin
   );
 }
 
-/// 全部速记题：每页一份卡，选项在本页卡里取。没有题图的图片卡（题库里没有图的符号）出不了题，跳过——
-/// 它们照样能在自测里考、作答照样记，只是不进错题本。
-List<Question> recallQuestionsOf({
-  required List<RoadSign> signs,
-  required List<Marking> markings,
-  required List<Gauge> gauges,
-  required List<TrafficGesture> gestures,
-  required List<NoteGroup> notes,
-  required List<NoteGroup> henan,
-  required List<NoteGroup> licenseNotes,
-  required List<CheatGroup> numbers,
-  Map<String, String> sourceUrls = const {},
-}) {
-  final pages = [
+/// 一个专题的全部速记卡（ADR 0096）：卡按专题出，页键就是专题 id（`s1.signs`、`s4.gestures`）。
+List<RecallCard> recallCardsOfTopic(SpeedTopic topic, Bank bank) => switch (topic.kind) {
+  SpeedKind.numbers => recallCardsOfNumbers(topic.id, cheatGroupsOf(bank, topic)),
+  SpeedKind.signs => recallCardsOfSigns(topic.id, bank.signs),
+  SpeedKind.markings => recallCardsOfMarkings(topic.id, bank.markings),
+  SpeedKind.gauges => recallCardsOfGauges(topic.id, bank.gauges),
+  SpeedKind.gestures => recallCardsOfGestures(topic.id, bank.gestureList),
+  SpeedKind.notes => recallCardsOfNotes(topic.id, noteGroupsOf(bank, topic)),
+};
 
-    recallCardsOfSigns(signs),
-    recallCardsOfMarkings(markings),
-    recallCardsOfGauges(gauges),
-    recallCardsOfGestures(gestures),
-    recallCardsOfNotes(RecallPage.keypoints, notes),
-    recallCardsOfNotes(RecallPage.henan, henan),
-    recallCardsOfNotes(RecallPage.licenseNotes, licenseNotes),
-    recallCardsOfNumbers(numbers),
-  ];
-  return [
-    for (final cards in pages)
-      for (final card in cards)
-        if (card.imagePath != null || card.stem != null) recallQuestionOf(card, cards, sourceUrls: sourceUrls),
-  ];
+/// 全部速记题：每个专题一份卡，选项在本专题的卡里取。没有题图的图片卡（题库里没有图的符号）出不了题，
+/// 跳过——它们照样能在自测里考、作答照样记，只是不进错题本。
+List<Question> recallQuestionsOf(Bank bank, {Map<String, String> sourceUrls = const {}}) {
+  final out = <Question>[];
+  for (final topic in speedTopics) {
+    final cards = recallCardsOfTopic(topic, bank);
+    for (final card in cards) {
+      if (card.imagePath != null || card.stem != null) out.add(recallQuestionOf(card, cards, sourceUrls: sourceUrls));
+    }
+  }
+  return out;
 }
 
 /// `Random(seed)` 在不同 Dart 版本之间不保证同一个序列；这里自带一个简单的线性同余发生器，

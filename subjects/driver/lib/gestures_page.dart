@@ -21,6 +21,8 @@ class GesturesPage extends StatelessWidget {
     required this.daily,
     required this.mastered,
     required this.onRecallAnswer,
+    this.recallPage = "s1.gestures",
+    this.subjectLabel = "科目一",
     required this.onStartPractice,
   });
 
@@ -35,6 +37,10 @@ class GesturesPage extends StatelessWidget {
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
   final RecallAnswerRecorder onRecallAnswer;
+
+  /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
+  final String recallPage;
+  final String subjectLabel;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   @override
@@ -56,6 +62,8 @@ class GesturesPage extends StatelessWidget {
             Icon(Glyph.gestures, color: Bs.paper),
             SizedBox(width: 8),
             Text("手势速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 12),
+            BsBadge(text: subjectLabel, color: Bs.primary),
             const Spacer(),
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
@@ -153,7 +161,7 @@ class GesturesPage extends StatelessWidget {
 
   /// 自测：把没认得的手势逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
-    final cards = {for (final c in recallCardsOfGestures(gestures)) c.id: c};
+    final cards = {for (final c in recallCardsOfGestures(recallPage, gestures)) c.id: c};
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,

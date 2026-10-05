@@ -42,7 +42,7 @@ void main() {
       dir = await Directory.systemTemp.createTemp("athena-driver-notes-");
       store = await ProgressStore.open(suite: "notes_page_test");
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),

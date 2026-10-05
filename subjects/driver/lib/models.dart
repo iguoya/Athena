@@ -653,6 +653,7 @@ class CheatGroup {
     required this.note,
     required this.match,
     required this.rows,
+    this.subjects = const ["subject1"],
   });
 
   final String id;
@@ -661,6 +662,9 @@ class CheatGroup {
   final String note;
   final RegExp match;
   final List<CheatRow> rows;
+
+  /// 这一组属于哪些科目的专题（ADR 0096）：数字类某科目关联到的题不少于 20 道才算它的专题。
+  final List<String> subjects;
 
   double get maxAmount => rows.fold(0, (m, r) => (r.amount ?? 0) > m ? r.amount! : m);
 
@@ -677,6 +681,7 @@ class CheatGroup {
       unit: json["unit"] as String? ?? "",
       note: json["note"] as String? ?? "",
       match: RegExp(json["match"] as String),
+      subjects: [for (final x in json["subjects"] as List<dynamic>? ?? const ["subject1"]) x as String],
       rows: [
         for (final raw in json["rows"] as List<dynamic>) CheatRow.fromJson(raw as Map<String, dynamic>),
       ],
@@ -693,6 +698,7 @@ class NoteGroup {
     required this.note,
     required this.match,
     required this.items,
+    this.subjects = const ["subject1"],
   });
 
   final String id;
@@ -700,6 +706,10 @@ class NoteGroup {
   final String note;
   final RegExp match;
   final List<NoteItem> items;
+
+  /// 这一组属于哪些科目的专题（ADR 0096）：科目一的专题、科目四的专题各列各的，不混在一起。
+  /// 某科目关联到的题不少于 40 道才算它的专题；内容共通的组（灯光、让行）两边都列，各用各科目的题。
+  final List<String> subjects;
 
   /// 题干或选项里提到这组情景的题。
   List<Question> related(Iterable<Question> questions) => [
@@ -713,6 +723,7 @@ class NoteGroup {
       title: json["title"] as String,
       note: json["note"] as String? ?? "",
       match: RegExp(json["match"] as String),
+      subjects: [for (final x in json["subjects"] as List<dynamic>? ?? const ["subject1"]) x as String],
       items: [
         for (final raw in json["items"] as List<dynamic>) NoteItem.fromJson(raw as Map<String, dynamic>),
       ],
@@ -756,6 +767,7 @@ class Bank {
     this.notes = const [],
     this.henanGroups = const [],
     this.licenseGroups = const [],
+    this.topicNotes = const {},
     this.guide = Subject2Guide.empty,
   });
 
@@ -774,6 +786,10 @@ class Bank {
 
   /// 记分证照速记（ADR 0076）：与 notes 同构，按作答记录里错得最多的点选条目。
   final List<NoteGroup> licenseGroups;
+
+  /// 各个新专题自己的要点内容（ADR 0096）：专题 id（`s1.accident` 这样）→ 分组。
+  /// 内容文件在 `content/topics/`，每个专题一份。
+  final Map<String, List<NoteGroup>> topicNotes;
 
   List<Question> forSubject(String subjectId) {
     final ids = {

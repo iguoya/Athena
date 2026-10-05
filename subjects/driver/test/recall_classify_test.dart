@@ -67,7 +67,7 @@ void main() {
 
   test("速记题的作答记录就是普通作答记录：能进强化练习的错题库", () async {
     final bank = await ContentLoader.load();
-    final recall = bank.questions.firstWhere((q) => q.id.startsWith("drive.recall.gestures."));
+    final recall = bank.questions.firstWhere((q) => q.id.startsWith("drive.recall.s1.gestures."));
     final histories = HistorySet.build([attempt(recall.id, false, 0)]);
     final plan = planReinforcement(
       pool: [for (final q in bank.questions) if (q.id == recall.id || q.topicId.startsWith("drive.s1.")) q],

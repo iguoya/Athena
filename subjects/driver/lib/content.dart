@@ -80,18 +80,33 @@ class ContentLoader {
       for (final raw in catalog["sources"] as List<dynamic>)
         (raw as Map<String, dynamic>)["id"] as String: raw["url"] as String? ?? "",
     };
-    final recall = recallQuestionsOf(
+    final base = Bank(
+      curriculum: curriculum,
+      questions: questions,
       signs: signs,
       markings: markings,
       gauges: gauges,
-      gestures: gestureList,
+      gestureList: gestureList,
+      cheatsheet: cheatsheet,
       notes: notes,
-      henan: henanGroups,
-      licenseNotes: licenseGroups,
-      numbers: cheatsheet,
-      sourceUrls: sourceUrls,
+      henanGroups: henanGroups,
+      licenseGroups: licenseGroups,
+      guide: guide,
     );
-    return Bank(curriculum: curriculum, questions: [...questions, ...recall], signs: signs, markings: markings, gauges: gauges, gestureList: gestureList, cheatsheet: cheatsheet, notes: notes, henanGroups: henanGroups, licenseGroups: licenseGroups, guide: guide);
+    final recall = recallQuestionsOf(base, sourceUrls: sourceUrls);
+    return Bank(
+      curriculum: curriculum,
+      questions: [...questions, ...recall],
+      signs: signs,
+      markings: markings,
+      gauges: gauges,
+      gestureList: gestureList,
+      cheatsheet: cheatsheet,
+      notes: notes,
+      henanGroups: henanGroups,
+      licenseGroups: licenseGroups,
+      guide: guide,
+    );
   }
 
   static List<RoadSign> _signsOf(String raw) {

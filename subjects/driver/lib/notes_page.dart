@@ -12,6 +12,11 @@ import "recall_cards.dart";
 /// 练相关的题。页面语言与易混数字、标志速记一致；没有横条比大小——那是数字
 /// 组的表达。
 class NotesPage extends StatelessWidget {
+  static const defaultLead = "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
+      "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再练相关的题。";
+  static const defaultFootnote = "条目依据《道路交通安全法》《道路交通安全法实施条例》与 2022 版考试大纲，"
+      "每题的完整解释在答题时给出。";
+
   const NotesPage({
     super.key,
     required this.groups,
@@ -20,13 +25,12 @@ class NotesPage extends StatelessWidget {
     required this.onRecallAnswer,
     required this.histories,
     required this.onStartPractice,
-    this.recallPage = RecallPage.keypoints,
+    this.recallPage = "s1.keypoints",
+    this.subjectLabel = "科目一",
     this.title = "考点速记",
     this.icon = Glyph.notes,
-    this.lead = "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
-        "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再练相关的题。",
-    this.footnote = "条目依据《道路交通安全法》《道路交通安全法实施条例》与 2022 版考试大纲，"
-        "每题的完整解释在答题时给出。",
+    this.lead = defaultLead,
+    this.footnote = defaultFootnote,
   });
 
   final List<NoteGroup> groups;
@@ -42,6 +46,7 @@ class NotesPage extends StatelessWidget {
 
   /// 本页的速记页键（作答记录里的题号带它）：考点、河南、记分证照三页共用本组件，各用各的。
   final String recallPage;
+  final String subjectLabel;
 
   /// 页面标题与图标：同一组件承载同一类「情景 → 要点对照」的内容，
   /// 河南速记（ADR 0068）传自己的标题、图标与脚注。
@@ -64,6 +69,8 @@ class NotesPage extends StatelessWidget {
             Icon(icon, color: Bs.paper),
             SizedBox(width: 8),
             Text(title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 12),
+            BsBadge(text: subjectLabel, color: Bs.primary),
             const Spacer(),
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
@@ -145,11 +152,9 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 const Spacer(),
                 FilledButton.icon(
-                  onPressed: pending.isEmpty
-                      ? null
-                      : () => onStartPractice(related, "考点速记 · ${group.title}"),
+                  onPressed: () => onStartPractice(related, "考点速记 · ${group.title}"),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握" : "练这组 ${pending.length} 题"),
+                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
                 ),
               ],
             ),

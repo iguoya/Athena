@@ -22,7 +22,7 @@ void main() {
       dir = await Directory.systemTemp.createTemp("athena-driver-numbers-");
       store = await ProgressStore.open(suite: "numbers_page_test");
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     // 关掉自动同步：首页一启动就会按本机 sync.json 去读写真实的云盘目录，测试不能碰它。
     final ready = Completer<void>();
     await tester.pumpWidget(
@@ -80,7 +80,7 @@ void main() {
       final secondCases = splitCase(rows[1].caseText);
       await attempt("f/${group.id}/${secondCases.first}|${rows[1].value}", correct: true);
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),

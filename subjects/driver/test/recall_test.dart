@@ -10,6 +10,7 @@ import "package:athena_driver/recall.dart";
 import "package:athena_driver/recall_cards.dart";
 import "package:athena_driver/reinforce.dart";
 import "package:athena_driver/session.dart";
+import "package:athena_driver/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -28,7 +29,8 @@ void main() {
       dir = await Directory.systemTemp.createTemp("athena-driver-recall-");
       store = await ProgressStore.open(suite: "recall_test");
     });
-    await tester.binding.setSurfaceSize(const Size(1600, 1000));
+    // 专题挂在各科目底下，侧栏高一点才都看得见（科目一的章节加专题）。
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
@@ -151,7 +153,7 @@ void main() {
     final attempts = await recallAttempts(store);
     expect(attempts.length, 9);
     expect(attempts.where((a) => !a.correct).length, 1);
-    expect(attempts.every((a) => a.questionId.startsWith("drive.recall.gestures.")), isTrue);
+    expect(attempts.every((a) => a.questionId.startsWith("drive.recall.s1.gestures.")), isTrue);
     expect((await store.allAttempts()).length, before.length + 9, reason: "只多了自测的 9 条");
 
     // 答错的卡进了错题库：累计答错数、强化练习的错题库用的就是这份记录（重现答对一次，错题本里已经移出，
@@ -296,7 +298,7 @@ void main() {
 
   testWidgets("自测：易混数字的数值题手输——填对答对、填错答错并给标准答案，作答记成记录", (tester) async {
     final (bank, store, dir) = await boot(tester);
-    final cards = recallCardsOfNumbers(bank.cheatsheet);
+    final cards = recallCardsOfNumbers("s1.numbers", cheatGroupsOf(bank, speedTopicById("s1.numbers")!));
     await openRecall(tester, "易混数字");
     expect(find.textContaining("认得"), findsNothing);
 

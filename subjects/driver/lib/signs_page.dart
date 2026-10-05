@@ -23,6 +23,8 @@ class SignsPage extends StatelessWidget {
     required this.all,
     required this.mastered,
     required this.onRecallAnswer,
+    this.recallPage = "s1.signs",
+    this.subjectLabel = "科目一",
     required this.onStartPractice,
   });
 
@@ -40,6 +42,10 @@ class SignsPage extends StatelessWidget {
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
   final RecallAnswerRecorder onRecallAnswer;
+
+  /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
+  final String recallPage;
+  final String subjectLabel;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的形状口诀；分组本身由 json 的 `kind` 决定。
@@ -64,6 +70,8 @@ class SignsPage extends StatelessWidget {
             Icon(Glyph.signs, color: Bs.paper),
             SizedBox(width: 8),
             Text("标志速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 12),
+            BsBadge(text: subjectLabel, color: Bs.primary),
             const Spacer(),
             FilledButton.tonalIcon(
               onPressed: () => _startRecall(context),
@@ -111,7 +119,7 @@ class SignsPage extends StatelessWidget {
 
   /// 自测：把没认得的标志逐张过完，收尾深链练相关题（ADR 0077、0090）。
   void _startRecall(BuildContext context) {
-    final cards = {for (final c in recallCardsOfSigns(signs)) c.id: c};
+    final cards = {for (final c in recallCardsOfSigns(recallPage, signs)) c.id: c};
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
@@ -156,11 +164,9 @@ class SignsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  onPressed: pending.isEmpty
-                      ? null
-                      : () => onStartPractice(related, "标志速记 · $label"),
+                  onPressed: () => onStartPractice(related, "标志速记 · $label"),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握" : "练这组 ${pending.length} 题"),
+                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
                 ),
               ],
             ),
