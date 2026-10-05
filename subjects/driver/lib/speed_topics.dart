@@ -69,6 +69,17 @@ const speedTopics = [
     footnote: "条目依据《道路交通安全违法行为记分管理办法》《机动车驾驶证申领和使用规定》《机动车登记规定》"
         "《道路交通安全法》及其实施条例，每条指到条款。",
   ),
+  SpeedTopic(
+    "s1.accident",
+    "subject1",
+    "事故处理与时限",
+    Glyph.accident,
+    SpeedKind.notes,
+    lead: "事故处理在科目一占一整块：现场先做什么、能私了还是必须报警、十日五日三日各是哪个时限、逃逸和刑责怎么算。"
+        "按事情发生的先后对照着记，再练相关的题。",
+    footnote: "条目依据《道路交通安全法》及其实施条例、《道路交通事故处理程序规定》（公安部令第146号）、"
+        "《道路交通安全违法行为记分管理办法》《刑法》，每条指到条款。",
+  ),
   // ---- 科目四 ----
   SpeedTopic(
     "s4.numbers",
@@ -80,6 +91,16 @@ const speedTopics = [
   ),
   SpeedTopic("s4.gestures", "subject4", "手势速记", Glyph.gestures, SpeedKind.gestures),
   SpeedTopic("s4.keypoints", "subject4", "考点速记", Glyph.notes, SpeedKind.notes, source: "notes"),
+  SpeedTopic(
+    "s4.crash",
+    "subject4",
+    "事故处置",
+    Glyph.accident,
+    SpeedKind.notes,
+    lead: "科目四考的是出事之后怎么处置：现场先防二次事故，高速、隧道、铁路道口各有各的顺序，责任和赔偿也要分清。"
+        "按顺序对照着记，再练科目四的相关题。",
+    footnote: "条目依据《道路交通安全法》及其实施条例、《机动车交通事故责任强制保险条例》与 2022 版考试大纲，每条指到条款。",
+  ),
 ];
 
 SpeedTopic? speedTopicById(String id) {

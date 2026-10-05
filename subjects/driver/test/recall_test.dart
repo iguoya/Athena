@@ -283,9 +283,9 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自测：侧栏里全部 8 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
+  testWidgets("自测：侧栏里全部 9 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
     final (_, store, dir) = await boot(tester);
-    for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记"]) {
+    for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记", "事故处理与时限"]) {
       await tester.tap(find.text(page).first);
       await tester.pump();
       expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
@@ -352,7 +352,8 @@ void main() {
     // 作答都记下了：答错的 1 条在错题库里。
     final attempts = await recallAttempts(store);
     expect(attempts.where((a) => !a.correct).length, 1);
-    expect((await store.wrongQuestionIds()).where(isRecallQuestionId), hasLength(1));
+    // 累计答错数是确定的；错题本里是否还留着取决于答错的卡有没有在队列里重现并答对（顺序随机），不在这里断言。
+    expect((await store.wrongCounts()).entries.where((e) => isRecallQuestionId(e.key) && e.value == 1), hasLength(1));
 
     await closeDialog(tester);
     await teardown(tester, store, dir);

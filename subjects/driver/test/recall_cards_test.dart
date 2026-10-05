@@ -95,4 +95,21 @@ void main() {
     // 数值种类少于 4 个的组不出反向卡（高速低能见度、血液酒精含量）。
     expect(cards.any((c) => c.kind == NumberCardKind.reverse && c.groupId == "alcohol"), isFalse);
   });
+
+  test("事故专题（ADR 0101）：科目一、科目四各有自己的内容，每组在本科目都有题可练", () {
+    for (final id in ["s1.accident", "s4.crash"]) {
+      final topic = speedTopicById(id)!;
+      final groups = noteGroupsOf(bank, topic);
+      expect(groups, isNotEmpty, reason: "$id 没有内容");
+      final questions = bank.forSubject(topic.subjectId);
+      for (final g in groups) {
+        expect(g.subjects, [topic.subjectId], reason: "${g.id} 只属于 ${topic.subjectId}，不混用");
+        expect(g.items, isNotEmpty);
+        expect(g.related(questions), isNotEmpty, reason: "${g.id} 在 ${topic.subjectId} 里没有相关题");
+      }
+    }
+    // 科目一的内容里不出现科目四专属的处置条目，反之亦然（隧道、铁路道口只在科目四）。
+    final s1Text = noteGroupsOf(bank, speedTopicById("s1.accident")!).expand((g) => g.items).map((i) => i.scenario).join();
+    expect(s1Text, isNot(contains("隧道")));
+  });
 }

@@ -9,6 +9,7 @@ import "gesture_index.dart";
 import "guide.dart";
 import "models.dart";
 import "recall_cards.dart";
+import "speed_topics.dart";
 
 class ContentLoader {
   /// 读到内容的那个根目录；开发时是工作树，发行包里为空（走 assets）。
@@ -72,6 +73,16 @@ class ContentLoader {
       for (final raw in (jsonDecode(await _read("notes.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
+    // 新专题各自一份内容文件（ADR 0101）：`topics/<专题 id>.json`，结构同考点速记。
+    final topicNotes = <String, List<NoteGroup>>{
+      for (final topic in speedTopics)
+        if (topic.kind == SpeedKind.notes && topic.source == null)
+          topic.id: [
+            for (final raw in (jsonDecode(await _read("topics/${topic.id}.json")) as Map<String, dynamic>)["groups"]
+                as List<dynamic>)
+              NoteGroup.fromJson(raw as Map<String, dynamic>),
+          ],
+    };
     final guide = Subject2Guide.fromJson(jsonDecode(await _read("subject2.json")) as Map<String, dynamic>);
     // 速记题（ADR 0094）：每张速记卡一道有稳定编号的题，自测作答写成作答记录后，错题本、考前复习、强化练习
     // 按同一份记录带出。知识点号不在课表里，日常题、章节练习、模拟考、解锁判断都不会带上它。
@@ -91,6 +102,7 @@ class ContentLoader {
       notes: notes,
       henanGroups: henanGroups,
       licenseGroups: licenseGroups,
+      topicNotes: topicNotes,
       guide: guide,
     );
     final recall = recallQuestionsOf(base, sourceUrls: sourceUrls);
@@ -105,6 +117,7 @@ class ContentLoader {
       notes: notes,
       henanGroups: henanGroups,
       licenseGroups: licenseGroups,
+      topicNotes: topicNotes,
       guide: guide,
     );
   }

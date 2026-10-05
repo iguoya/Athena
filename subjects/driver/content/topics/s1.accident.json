@@ -1,0 +1,323 @@
+{
+  "_": "科目一「事故处理程序与时限」专题（ADR 0101）。结构同考点速记：每条 = 情景 + 要点，出处条级挂；match 是组级练题正则，取本科目的题。",
+  "groups": [
+    {
+      "id": "acc-scene",
+      "title": "现场先做什么",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "停车、保护现场、救人、报警——顺序别乱；救人可以动现场，但要标位置。",
+      "match": "事故.{0,16}(停车|现场|报警|抢救|疏散)|保护现场|变动现场|难以移动|警告标志|协助",
+      "items": [
+        {
+          "scenario": "在道路上发生交通事故",
+          "points": [
+            "立即停车，保护现场",
+            "不是一律先把车挪到路边：该保护现场的保护"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十条第一款"
+        },
+        {
+          "scenario": "事故中有人受伤",
+          "points": [
+            "先抢救伤员，并迅速报警",
+            "因抢救变动了现场：标明车辆和伤者的位置，不算破坏现场"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十条第一款"
+        },
+        {
+          "scenario": "过往车辆驾驶人、行人遇到事故",
+          "points": [
+            "应当协助抢救，不能绕开不管或停车围观"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十条第一款"
+        },
+        {
+          "scenario": "事故车难以移动",
+          "points": [
+            "开危险报警闪光灯，在车后 50–100 米设警告标志（高速公路 150 米以外）",
+            "夜间同时开示廓灯和后位灯",
+            "人员撤离到路外安全地带，别站在车道里等"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第六十条"
+        },
+        {
+          "scenario": "撞坏了护栏、信号杆、供电通讯设施",
+          "points": [
+            "也是事故：报警等候处理，不得驶离",
+            "车能动就先移到不妨碍交通的地方"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第八十八条"
+        }
+      ]
+    },
+    {
+      "id": "acc-alarm",
+      "title": "能私了还是必须报警",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "没有伤亡、没有争议、车能动，才先撤离再协商；有一项不满足就报警。",
+      "match": "自行协商|撤离现场|应当报警|立即报警|迅速报警|无争议|私了|拍照|标划|责令.{0,6}撤离",
+      "items": [
+        {
+          "scenario": "未造成人身伤亡、双方对事实和成因无争议",
+          "points": [
+            "先撤离现场、恢复交通，再自行协商赔偿",
+            "不用等保险公司到场"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十条第二款"
+        },
+        {
+          "scenario": "撤离之前",
+          "points": [
+            "对现场拍照或标划事故车辆位置，固定证据"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第十九条"
+        },
+        {
+          "scenario": "必须保护现场并立即报警",
+          "points": [
+            "有人伤亡、有争议、一方有酒驾嫌疑",
+            "一方无有效驾驶证、无号牌或使用伪造变造的号牌",
+            "一方逃离现场、车不能移动"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第十三条"
+        },
+        {
+          "scenario": "只造成重伤，驾驶人愿意担全责",
+          "points": [
+            "仍不能私了：造成人身伤亡的一律保护现场、报警"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十条"
+        },
+        {
+          "scenario": "无检验合格标志或无保险标志、但车能移动",
+          "points": [
+            "先疏散人员、固定证据，把车移到不妨碍交通的地方，再报警"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第十四条"
+        },
+        {
+          "scenario": "该自行撤离却不撤离",
+          "points": [
+            "交警应当责令撤离；造成堵塞的，对驾驶人处 200 元罚款"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "自行撤离现场"
+        },
+        {
+          "scenario": "事故现场撤除后才报警",
+          "points": [
+            "交管部门予以记录，三日内作出是否受理的决定"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第十八条"
+        }
+      ]
+    },
+    {
+      "id": "acc-deadlines",
+      "title": "时限一页看全",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "十日认定、五日（鉴定后）、三日复核、十日调解、三日受理——几个「日」最容易记混。",
+      "match": "认定书|复核|调解|受理|事故.{0,24}(日内|三十日|审验)|不得申请.{0,8}驾驶证",
+      "items": [
+        {
+          "scenario": "公安机关出具事故认定书",
+          "points": [
+            "自现场调查之日起十日内",
+            "逃逸案件：从查获车辆和驾驶人之日起十日"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第六十二条"
+        },
+        {
+          "scenario": "需要检验、鉴定的事故",
+          "points": [
+            "检验报告、鉴定意见确定之日起五日内制作认定书"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第六十二条"
+        },
+        {
+          "scenario": "对事故认定有异议",
+          "points": [
+            "自认定书送达之日起三日内提出书面复核申请",
+            "同一起事故复核以一次为限；再有异议只能走民事诉讼"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第七十一条"
+        },
+        {
+          "scenario": "请求公安机关调解损害赔偿",
+          "points": [
+            "各方一致请求的，收到认定书之日起十日内提出书面申请",
+            "调解期间有一方向法院起诉的，调解终止"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第九十四条、第九十六条"
+        },
+        {
+          "scenario": "事后才报警",
+          "points": [
+            "三日内由交管部门决定是否受理"
+          ],
+          "source_id": "accident-order-146",
+          "locator": "第十八条"
+        },
+        {
+          "scenario": "小型汽车驾驶人致人死亡并承担同等以上责任，驾驶证未被吊销",
+          "points": [
+            "本记分周期结束后三十日内接受审验，并申报身体条件",
+            "年满七十周岁的驾驶人发生责任事故致人重伤或死亡，同样三十日内审验"
+          ],
+          "source_id": "license-order-162",
+          "locator": "第七十二条"
+        },
+        {
+          "scenario": "无证驾驶发生事故，致人重伤或死亡",
+          "points": [
+            "未满十年，不得申请机动车驾驶证"
+          ],
+          "source_id": "license-order-162",
+          "locator": "第十五条"
+        }
+      ]
+    },
+    {
+      "id": "acc-liability",
+      "title": "责任与赔偿",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "逃逸全责、毁证全责；机动车与行人，行人没错机动车担责，机动车没错也最多担百分之十。",
+      "match": "事故.{0,24}(责任|赔偿|过错)|赔偿责任|过错|社会救助基金|垫付|交强险|碰瓷|故意碰撞",
+      "items": [
+        {
+          "scenario": "机动车之间发生事故，双方都有过错",
+          "points": [
+            "按各自过错的比例分担赔偿责任"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十六条第一款第（一）项"
+        },
+        {
+          "scenario": "机动车与行人发生事故，行人没有过错",
+          "points": [
+            "由机动车一方承担赔偿责任"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十六条第一款第（二）项"
+        },
+        {
+          "scenario": "机动车一方没有过错",
+          "points": [
+            "仍承担不超过百分之十的赔偿责任；行人故意碰撞造成的，机动车一方不赔"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十六条第一款第（二）项、第二款"
+        },
+        {
+          "scenario": "发生事故后逃逸",
+          "points": [
+            "逃逸的当事人承担全部责任；有证据证明对方也有过错的，可以减轻"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第九十二条第一款"
+        },
+        {
+          "scenario": "故意破坏、伪造现场，毁灭证据",
+          "points": [
+            "承担全部责任"
+          ],
+          "source_id": "road-safety-regulation",
+          "locator": "第九十二条第一款"
+        },
+        {
+          "scenario": "抢救费用怎么垫",
+          "points": [
+            "投了交强险的，保险公司在责任限额内支付",
+            "没投保或肇事逃逸的，由道路交通事故社会救助基金先垫付，再向责任人追偿"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十五条"
+        },
+        {
+          "scenario": "驾驶人无驾驶资格或醉酒、车辆被盗抢期间肇事、故意制造事故",
+          "points": [
+            "保险公司垫付抢救费用并有权追偿，财产损失不赔"
+          ],
+          "source_id": "compulsory-insurance-regulation",
+          "locator": "第二十二条"
+        }
+      ]
+    },
+    {
+      "id": "acc-escape",
+      "title": "逃逸与刑责",
+      "subjects": [
+        "subject1"
+      ],
+      "note": "「假一吊二撤三醉五逃终生」：逃逸构成犯罪，吊销驾驶证，终生不得重新取得。",
+      "match": "逃逸|肇事|交通肇事|终生|刑事责任|有期徒刑",
+      "items": [
+        {
+          "scenario": "造成事故后逃逸，构成犯罪",
+          "points": [
+            "吊销机动车驾驶证，且终生不得重新取得"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第一百〇一条"
+        },
+        {
+          "scenario": "造成致人轻伤以上或死亡的事故后逃逸，尚不构成犯罪",
+          "points": [
+            "一次记 12 分"
+          ],
+          "source_id": "penalty-order-163",
+          "locator": "第八条第（二）项"
+        },
+        {
+          "scenario": "造成致人轻微伤或财产损失的事故后逃逸，尚不构成犯罪",
+          "points": [
+            "一次记 6 分"
+          ],
+          "source_id": "penalty-order-163",
+          "locator": "第十条第（十）项"
+        },
+        {
+          "scenario": "交通肇事罪的刑期",
+          "points": [
+            "一般：三年以下有期徒刑或拘役",
+            "逃逸或有其他特别恶劣情节：三年以上七年以下",
+            "因逃逸致人死亡：七年以上"
+          ],
+          "source_id": "criminal-law",
+          "locator": "第一百三十三条"
+        },
+        {
+          "scenario": "目击到肇事逃逸",
+          "points": [
+            "记下车牌、车型和去向，向交警举报"
+          ],
+          "source_id": "road-safety-law",
+          "locator": "第七十一条"
+        }
+      ]
+    }
+  ]
+}

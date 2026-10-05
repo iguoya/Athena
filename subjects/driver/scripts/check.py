@@ -146,6 +146,30 @@ def check_recall_coverage() -> None:
             ]
             if not hits:
                 problems.append(f"{name}.json {group['id']}（{group['title']}）: 正则匹配不到任何题")
+    # 专题的要点组按科目取题（ADR 0097、0101）：每个标明的科目都得有相关题；条目的出处必须在 catalog 里。
+    catalog = json.loads((content / "sources" / "catalog.json").read_text(encoding="utf-8"))
+    source_ids = {item["id"] for item in catalog["sources"]}
+    prefix = {"subject1": "drive.s1.", "subject4": "drive.s4."}
+    for path in sorted((content / "topics").glob("*.json")):
+        for group in json.loads(path.read_text(encoding="utf-8"))["groups"]:
+            pattern = re.compile(group["match"])
+            for subject in group["subjects"]:
+                hits = [
+                    q
+                    for q in questions
+                    if q["id"].startswith(prefix[subject])
+                    and (
+                        pattern.search(q.get("prompt", ""))
+                        or any(pattern.search(choice.get("label", "")) for choice in q["choices"])
+                    )
+                ]
+                if not hits:
+                    problems.append(f"topics/{path.name} {group['id']}: 正则在 {subject} 里匹配不到任何题")
+            for entry in group["items"]:
+                if entry["source_id"] not in source_ids:
+                    problems.append(f"topics/{path.name} {group['id']}: 出处 {entry['source_id']} 不在 catalog")
+                if not entry.get("locator"):
+                    problems.append(f"topics/{path.name} {group['id']}: 「{entry['scenario']}」没有条款定位")
     if problems:
         raise SystemExit("\n".join(problems))
     print(
