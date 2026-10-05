@@ -7,6 +7,7 @@ import "package:flutter/material.dart";
 
 import "glyphs.dart";
 import "clusters.dart";
+import "cloze.dart";
 import "diagnosis.dart";
 import "exam.dart";
 import "look.dart";
@@ -1829,13 +1830,15 @@ class _HomePageState extends State<HomePage> {
       store: _selfTest,
       histories: _histories,
       mastered: _mastered,
-      prompt: "想一想：这种情形对应的数字是多少？选一个。",
+      prompt: "想一想：括号里该填什么？选一个。",
       entries: [
         for (final group in widget.bank.cheatsheet)
           for (final row in group.rows)
+            // 一行情形常是一长串，按「；」拆成单条，每条自成一题（ADR 0092）。
+            for (final single in splitCase(row.caseText))
             RecallEntry(
-              // 键用情形原文加数字，不用序号：改版插行不会让旧记录错位。
-              id: "${group.id}/${row.caseText}|${row.value}",
+              // 键用单条情形原文加数字，不用序号：改版插行不会让旧记录错位。
+              id: "${group.id}/$single|${row.value}",
               front: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
                 child: Column(
@@ -1848,8 +1851,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    // 题干里把要考的数字挖成括号（ADR 0092），原文里写着答案就等于送分。
                     Text(
-                      row.caseText,
+                      clozeStem(single, row.value, groupUnit: group.unit),
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
                     ),
@@ -1859,7 +1863,8 @@ class _HomePageState extends State<HomePage> {
               // 相关题只能到「组」一级：同一组的行共用（ADR 0083）。
               related: group.related(open),
               name: row.value,
-              meaning: "${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
+              // 答后给完整原文和出处：挖掉的数字在原文里原样可见。
+              meaning: "原文：${row.caseText}\n${Bs.sourceShort(row.sourceId)} ${row.locator}".trim(),
               // 干扰项同组优先：罚款混罚款、时速混时速（ADR 0085）。
               group: group.id,
             ),
