@@ -1,3 +1,4 @@
+import "package:athena_driver/cloze.dart";
 import "package:athena_driver/content.dart";
 import "package:athena_driver/models.dart";
 import "package:athena_driver/numbers_cards.dart";
@@ -89,6 +90,9 @@ void main() {
       final mine = {for (final t in c.answerTexts) optionLabel(t)};
       for (final choice in q.choices.where((x) => !x.ok)) {
         expect(mine.contains(choice.label), isFalse, reason: "${c.id}：干扰项也是这个值的情形");
+        // 选项原文里印着答案值（「一次扣减 2 分」问「2 分」）就是明码：这种值不出反向卡（ADR 0104）。
+        expect(textContainsValueNumber(choice.label, c.value), isFalse,
+            reason: "${c.id}：选项「${choice.label}」印着答案 ${c.value}");
       }
       expect(q.choices.length, greaterThanOrEqualTo(3), reason: "${c.id}：反向卡至少 3 个选项");
     }

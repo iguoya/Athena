@@ -16,6 +16,12 @@ List<String> splitCase(String caseText) => [
 
 final _number = RegExp(r"\d+(?:\.\d+)?");
 
+/// [text] 里是否印着 [value] 的数字（带词边界）：是就当答案泄漏——反向卡的选项、
+/// 问法模板代入的情形都不允许出现它。
+bool textContainsValueNumber(String text, String value) => _number
+    .allMatches(value)
+    .any((m) => RegExp("(?<![\\d.])${RegExp.escape(m[0]!)}(?![\\d.])").hasMatch(text));
+
 /// 答案值自带的单位：`小于 200 米` → 米，`12 分` → 分；纯数字或区间（`50–100`）没有。
 String? _unitOf(String value) {
   final m = RegExp(r"[\d.]+\s*([^\d.\s–—\-~～至到]+)\s*$").firstMatch(value);

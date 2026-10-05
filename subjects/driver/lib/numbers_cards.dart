@@ -105,6 +105,8 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
       }
     }
     // 反向卡：按值合并，同值的行（限速 30、距离 150）的单条情形都算这个值的正确答案。
+    // 情形原文里印着这个值的（「现场学习…一次扣减 2 分」），反向卡的选项自带答案——
+    // 纯明码，不出；这些行的知识由正向卡（数值已挖空）覆盖（ADR 0104）。
     final byValue = <String, List<CheatRow>>{};
     for (final row in group.rows) {
       byValue.putIfAbsent(row.value, () => []).add(row);
@@ -112,6 +114,9 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
     if (byValue.length < 4) continue;
     for (final MapEntry(key: value, value: rows) in byValue.entries) {
       final cases = <String>{for (final row in rows) ...splitCase(row.caseText)}.toList();
+      final merged = cases.join("\n");
+      final leaksAnswer = textContainsValueNumber(merged, value);
+      if (leaksAnswer) continue;
       cards.add(
         NumberCard(
           id: "r/${group.id}/$value",
