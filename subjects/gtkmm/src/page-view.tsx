@@ -276,6 +276,9 @@ export function setWordStatus(status: WordStatus | undefined) {
 export function setOnRateWord(fn: (term: string, known: boolean) => void) {
   onRateWord = fn;
 }
+export function getOnRateWord(): (term: string, known: boolean) => void {
+  return onRateWord ?? (() => {});
+}
 export function buildAnnotationMatcher() {
   const terms = [...TERM_LOOKUP.keys()];
   if (!terms.length) {
@@ -397,6 +400,161 @@ function PendingBadge({ stale }: { stale?: boolean }) {
   );
 }
 
+interface SelectionCard {
+  x: number;
+  y: number;
+  text: string;
+}
+
+/** 划词查询卡：词表命中显示释义；可拉取在线英释；标记生词/已认识入 SRS。 */
+function SelectionLookupCard({
+  card,
+  onClose,
+}: {
+  card: SelectionCard;
+  onClose: () => void;
+}) {
+  const query = card.text.trim();
+  const key = query.toLowerCase();
+  const lookup = TERM_LOOKUP.get(key);
+  const vocabHit = lookup?.kind === "vocab" ? lookup.entry : undefined;
+  const patternHit = lookup?.kind === "pattern" ? lookup.entry : undefined;
+  const status = wordStatus?.known.has(key)
+    ? "known"
+    : wordStatus?.unknown.has(key)
+      ? "unknown"
+      : undefined;
+  const [enDef, setEnDef] = useState<{ phonetic?: string; defs: string[] } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  const fetchEnDef = async () => {
+    setLoading(true);
+    setFailed(false);
+    try {
+      const response = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`,
+      );
+      if (!response.ok) throw new Error(String(response.status));
+      const data = (await response.json())[0];
+      const phonetic = data.phonetic ?? data.phonetics?.find((p: { text?: string }) => p.text)?.text;
+      const defs: string[] = [];
+      for (const meaning of data.meanings ?? []) {
+        for (const def of meaning.definitions ?? []) {
+          defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
+          if (defs.length >= 3) break;
+        }
+        if (defs.length >= 3) break;
+      }
+      setEnDef({ phonetic, defs });
+    } catch {
+      setFailed(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const rate = (known: boolean) =>
+    getOnRateWord()(lookup?.base ?? key, known);
+  const youdao = `https://dict.youdao.com/result?word=${encodeURIComponent(query)}&lang=en`;
+
+  return (
+    <div
+      className="fixed z-50 w-96 rounded-card bg-white p-5 shadow-card ring-1 ring-line"
+      style={{ left: Math.min(card.x, window.innerWidth - 420), top: card.y + 12 }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-serif text-[26px] font-semibold text-fg">
+            {query}
+            {vocabHit?.pos && (
+              <span className="ml-2 text-[20px] italic text-muted">{vocabHit.pos}</span>
+            )}
+          </p>
+          {(vocabHit || patternHit) && (
+            <p className="mt-1 text-[24px] text-accent-deep">
+              {(vocabHit ?? patternHit)!.cn}
+            </p>
+          )}
+          {vocabHit?.note && (
+            <p className="mt-1 text-[20px] leading-relaxed text-muted">{vocabHit.note}</p>
+          )}
+          {!vocabHit && !patternHit && (
+            <p className="mt-1 text-[20px] text-muted">词表中无此词——可拉取在线英释或查外部词典。</p>
+          )}
+        </div>
+        <button onClick={onClose} className="shrink-0 text-muted hover:text-fg">
+          ✕
+        </button>
+      </div>
+
+      {enDef && (
+        <div className="mt-3 rounded-xl bg-surface-2 p-3">
+          {enDef.phonetic && <p className="font-mono text-[20px] text-muted">{enDef.phonetic}</p>}
+          {enDef.defs.map((def, i) => (
+            <p key={i} className="mt-1 text-[20px] leading-relaxed text-fg/80">
+              {def}
+            </p>
+          ))}
+        </div>
+      )}
+      {loading && <p className="mt-3 text-[20px] text-muted">正在查询英释……</p>}
+      {failed && (
+        <p className="mt-3 text-[20px] text-amber-700">
+          在线英释拉取失败（网络受限时正常）——用下方外部词典即可。
+        </p>
+      )}
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          onClick={() => rate(false)}
+          className={`rounded-lg border px-3 py-1.5 text-[20px] ${
+            status === "unknown"
+              ? "border-amber-500 bg-amber-50 text-amber-700"
+              : "border-amber-500/40 text-amber-700 hover:bg-amber-50"
+          }`}
+        >
+          📋 标记生词
+        </button>
+        <button
+          onClick={() => rate(true)}
+          className={`rounded-lg border px-3 py-1.5 text-[20px] ${
+            status === "known"
+              ? "border-green-500 bg-green-50 text-green-700"
+              : "border-green-500/40 text-green-700 hover:bg-green-50"
+          }`}
+        >
+          ✓ 已认识
+        </button>
+        {!enDef && !loading && (
+          <button
+            onClick={fetchEnDef}
+            disabled={/\s/.test(query)}
+            className="rounded-lg border border-line px-3 py-1.5 text-[20px] text-fg/80 hover:bg-surface-2 disabled:opacity-40"
+            title={/\s/.test(query) ? "英释仅支持单个词" : ""}
+          >
+            查英释
+          </button>
+        )}
+        <a
+          href={youdao}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-lg border border-line px-3 py-1.5 text-[20px] text-link hover:bg-surface-2"
+        >
+          有道词典 ↗
+        </a>
+      </div>
+      {status && (
+        <p className="mt-2 text-[20px] text-muted">
+          当前状态：{status === "known" ? "✓ 已认识（SRS 到期会复习）" : "📋 生词（已入复习队列）"}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function PageView({
   chapterId,
   pageId,
@@ -421,8 +579,27 @@ export function PageView({
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const [selection, setSelection] = useState<SelectionCard | null>(null);
   const reveal = (sha: string) =>
     setRevealed((prev) => new Set(prev).add(sha));
+
+  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡
+  useEffect(() => {
+    const onMouseUp = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest("article")) return;
+      if (target.closest("button, a, blockquote .relative")) return;
+      const selected = window.getSelection()?.toString().trim() ?? "";
+      if (!selected || selected.length > 60 || /[\n\r]/.test(selected)) {
+        return;
+      }
+      const range = window.getSelection()!.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelection({ x: rect.left, y: rect.bottom, text: selected });
+    };
+    document.addEventListener("mouseup", onMouseUp);
+    return () => document.removeEventListener("mouseup", onMouseUp);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -452,7 +629,10 @@ export function PageView({
   if (snapshot == null) return <p className="text-muted">正在读取段落快照……</p>;
 
   return (
-    <article className="max-w-none">
+    <article className="max-w-none" onMouseDown={() => setSelection(null)}>
+      {selection && (
+        <SelectionLookupCard card={selection} onClose={() => setSelection(null)} />
+      )}
       {groups.map((group, index) => {
         switch (group.kind) {
           case "heading":
