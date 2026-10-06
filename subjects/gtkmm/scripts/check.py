@@ -142,6 +142,7 @@ def check_curriculum(course: dict) -> tuple[set[str], set[str]]:
         ("reference", course.get("reference", [])),
     ]
     for key, sections in entities:
+        is_main = key == "sections"  # 参考层条目（如 GFDL 原文照录）的呈现形态不同，不查对照稿
         for section in sections:
             where = f"curriculum.json {key}[]"
             section_id = section.get("id", "")
@@ -152,6 +153,10 @@ def check_curriculum(course: dict) -> tuple[set[str], set[str]]:
             seen_ids.add(section_id)
             if section.get("status") not in SECTION_STATUSES:
                 fail(f"{where}: status ∈ pending/translated（{section_id}）")
+            if is_main and section.get("status") == "translated":
+                # 已译的主线章节必须有逐段对照翻译稿（应用 ADR 0002 决策 1）
+                if not (CONTENT_DIR / "chapters" / f"{section_id}.md").is_file():
+                    fail(f"{where}: status=translated 但缺 content/chapters/{section_id}.md")
             if not section.get("translation_ref"):
                 fail(f"{where}: 缺 translation_ref——每个单元都能回溯教程（ADR 0002）")
             for kp in section.get("knowledge_points", []):
