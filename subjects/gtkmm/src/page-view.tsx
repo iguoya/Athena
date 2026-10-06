@@ -47,6 +47,68 @@ function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
   return groups;
 }
 
+/** 译文揭示控件：训练模式下默认折叠，点击揭示并自评（看懂了/标记复习）。 */
+function ZhReveal({
+  sha,
+  zh,
+  hidden,
+  known,
+  hard,
+  onReveal,
+  onRate,
+}: {
+  sha: string;
+  zh: string;
+  hidden: boolean;
+  known: boolean;
+  hard: boolean;
+  onReveal: () => void;
+  onRate: (sha: string, understood: boolean) => void;
+}) {
+  if (!hidden) {
+    const rated = known || hard;
+    return (
+      <div>
+        <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(zh))}</p>
+        {rated ? (
+          <span
+            className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-[20px] ring-1 ${
+              known
+                ? "bg-green-50 text-green-700 ring-green-500/30"
+                : "bg-amber-500/10 text-amber-700 ring-amber-500/30"
+            }`}
+          >
+            {known ? "✓ 已读懂" : "📋 待复习"}
+          </span>
+        ) : (
+          <div className="mt-1.5 flex gap-2">
+            <button
+              onClick={() => onRate(sha, true)}
+              className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 transition-colors hover:bg-green-50"
+            >
+              👍 看懂了
+            </button>
+            <button
+              onClick={() => onRate(sha, false)}
+              className="rounded-lg border border-amber-500/40 px-3 py-1 text-[20px] text-amber-700 transition-colors hover:bg-amber-50"
+            >
+              📋 标记复习
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+  return (
+    <button
+      onClick={onReveal}
+      className="rounded-lg border border-dashed border-line px-4 py-1.5 text-[20px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
+    >
+      显示译文
+    </button>
+  );
+}
+
 /** 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行。 */
 const flow = (s: string) => s.replace(/\s*\n\s*/g, " ");
 
@@ -129,12 +191,26 @@ function PendingBadge({ stale }: { stale?: boolean }) {
 export function PageView({
   chapterId,
   pageId,
+  zhHidden,
+  knownParas,
+  hardParas,
+  onRate,
 }: {
   chapterId: string;
   pageId: string;
+  /** 英译训练模式：中文默认隐藏，点击揭示 */
+  zhHidden: boolean;
+  /** 已自评「看懂了」的段落 sha */
+  knownParas: Set<string>;
+  /** 被标记「需复习」的段落 sha */
+  hardParas: Set<string>;
+  onRate: (sha: string, understood: boolean) => void;
 }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const reveal = (sha: string) =>
+    setRevealed((prev) => new Set(prev).add(sha));
 
   useEffect(() => {
     let cancelled = false;
@@ -223,8 +299,16 @@ export function PageView({
                         • {renderInline(flow(block.text))}
                       </span>
                       {block.zh && (
-                        <span className="pl-5 text-[29px] leading-relaxed text-fg/90">
-                          {renderInline(flow(block.zh))}
+                        <span className="pl-5">
+                          <ZhReveal
+                            sha={block.sha}
+                            zh={block.zh}
+                            hidden={zhHidden && !revealed.has(block.sha)}
+                            known={knownParas.has(block.sha)}
+                            hard={hardParas.has(block.sha)}
+                            onReveal={() => reveal(block.sha)}
+                            onRate={onRate}
+                          />
                         </span>
                       )}
                     </li>
@@ -267,7 +351,15 @@ export function PageView({
                         : ""
                     }
                   >
-                    <TranslatedText text={block.zh} />
+                    <ZhReveal
+                      sha={block.sha}
+                      zh={block.zh}
+                      hidden={zhHidden && !revealed.has(block.sha)}
+                      known={knownParas.has(block.sha)}
+                      hard={hardParas.has(block.sha)}
+                      onReveal={() => reveal(block.sha)}
+                      onRate={onRate}
+                    />
                   </div>
                 ) : block.stale_from ? (
                   <>

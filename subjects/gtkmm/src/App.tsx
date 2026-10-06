@@ -54,6 +54,9 @@ export default function App() {
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
   const [attempts, setAttempts] = useState<AttemptRow[]>([]);
+  const [trainingMode, setTrainingMode] = useState(
+    () => window.localStorage.getItem("zh-training") !== "off",
+  );
 
   useEffect(() => {
     loadContent<Curriculum>("get_curriculum", "/content/curriculum.json").then((c) => {
@@ -131,6 +134,40 @@ export default function App() {
     }
     return map;
   }, [curriculum]);
+  const knownParas = useMemo(
+    () =>
+      new Set(
+        attempts
+          .filter((a) => a.knowledge_id === "i18n.training" && a.correct)
+          .map((a) => a.item_id.replace(/^para:/, "")),
+      ),
+    [attempts],
+  );
+  const hardParas = useMemo(
+    () =>
+      new Set(
+        attempts
+          .filter(
+            (a) =>
+              a.knowledge_id === "i18n.training" && !a.correct,
+          )
+          .map((a) => a.item_id.replace(/^para:/, ""))
+          .filter((sha) => !knownParas.has(sha)),
+      ),
+    [attempts, knownParas],
+  );
+  const ratePara = (sha: string, understood: boolean) => {
+    invoke("record_attempt", {
+      knowledgeId: "i18n.training",
+      itemId: `para:${sha}`,
+      correct: understood,
+    }).catch(() => {});
+    setAttempts((prev) => [
+      ...prev,
+      { knowledge_id: "i18n.training", item_id: `para:${sha}`, correct: understood, answered_at: 0 },
+    ]);
+  };
+
   const pagePassed = (sectionId: string, pageId: string) => {
     const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
     return ids.length > 0 && ids.every((id) => correctItems.has(id));
@@ -189,6 +226,19 @@ export default function App() {
               {passedSections}/{quizSections.length}
             </span>
           </div>
+          <button
+            onClick={() => {
+              setTrainingMode(!trainingMode);
+              window.localStorage.setItem("zh-training", trainingMode ? "off" : "on");
+            }}
+            className={`mt-2 w-full rounded-lg px-3 py-1.5 text-[20px] ring-1 transition-colors ${
+              trainingMode
+                ? "bg-accent-soft text-accent ring-accent/30"
+                : "bg-surface-2 text-muted ring-line hover:text-fg"
+            }`}
+          >
+            {trainingMode ? "英译训练模式：开（中文已隐藏）" : "英译训练模式：关"}
+          </button>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2">
             <div
               className="h-full rounded-full bg-green-500 transition-all duration-500"
@@ -460,7 +510,15 @@ export default function App() {
                 >
                   ← 本章节页
                 </button>
-                <PageView chapterId={section.id} pageId={page.id} />
+                <PageView
+                  key={page.id}
+                  chapterId={section.id}
+                  pageId={page.id}
+                  zhHidden={trainingMode}
+                  knownParas={knownParas}
+                  hardParas={hardParas}
+                  onRate={ratePara}
+                />
                 <PageAssessments
                   section={section}
                   pageId={page.id}
