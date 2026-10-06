@@ -1135,9 +1135,9 @@ function CheckpointPage({
       {correctCount > 0 && (
         <button
           onClick={onReset}
-          className="mt-4 rounded-lg border border-line px-4 py-1.5 text-[20px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
+          className="mt-4 rounded-lg border border-accent/50 bg-accent-soft/60 px-4 py-1.5 text-[20px] font-medium text-accent transition-colors hover:bg-accent-soft hover:text-accent-deep"
         >
-          ↻ 重置本章作答（重新回答全部题目）
+          ↻ 重置本章作答
         </button>
       )}
       <section className="mt-8 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
