@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-printing-export-to-pdf",
+ "title": "Export to PDF",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The 'Print to file' option is available in the print dialog, without the need for extra implementation. However, it is sometimes useful to generate a pdf file directly from code. For instance,",
+   "sha": "10e6f3c40e5d8496",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto op = Gtk::PrintOperation::create();\n// ...set up op...\nop->set_export_filename(\"test.pdf\");\nauto res = op->run(Gtk::PrintOperation::Action::EXPORT);",
+   "sha": "eac4db7984b14fd1",
+   "zh": ""
+  }
+ ]
+}

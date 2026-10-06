@@ -35,11 +35,31 @@ def force_utf8() -> None:
             reconfigure(encoding="utf-8", errors="replace")
 
 
+_ENTITY_CACHE: dict[str, str] | None = None
+
+
+def docbook_entities() -> dict[str, str]:
+    """DocBook 头部 <!ENTITY name "value"> 的实体表；value 里的标签剥成纯文本。"""
+    global _ENTITY_CACHE
+    if _ENTITY_CACHE is not None:
+        return _ENTITY_CACHE
+    source = DOCBOOK.read_text(encoding="utf-8")
+    entities: dict[str, str] = {}
+    for m in re.finditer(r'<!ENTITY ([\w-]+)\s+"([^"]*)"\s*>', source):
+        value = re.sub(r"<[^>]+>", "", m.group(2))
+        entities[m.group(1)] = value
+    _ENTITY_CACHE = entities
+    return entities
+
+
 def strip_tags(raw: str) -> str:
     text = re.sub(r"<[^>]+>", "", raw)
-    # DocBook 实体（html.unescape 覆盖常用集；docbook 特有实体先展开）
+    # DocBook 实体（html.unescape 覆盖常用集；docbook 自定义实体从文件头解析）
     entities = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
-                "&apos;": "'", "&mdash;": "—", "&nbsp;": " "}
+                "&apos;": "'", "&mdash;": "—", "&nbsp;": " ",
+                "&uuml;": "ü", "&szlig;": "ß", "&copy;": "©",
+                "&nbhy;": "‑"}
+    entities.update({f"&{name};": value for name, value in docbook_entities().items()})
     for entity, char in entities.items():
         text = text.replace(entity, char)
     text = re.sub(r"[ \t]+", " ", text)

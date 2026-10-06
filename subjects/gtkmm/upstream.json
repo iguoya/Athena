@@ -1,7 +1,5 @@
 {
-  "_": "上游基准：本应用的翻译与结构严格跟随这份官方仓库（应用 ADR 0002）。"
-       "克隆在 upstream/gtkmm-documentation（gitignore，不入库）；"
-       "pinned_commit 变更只能由「同步上游」流程产生：fetch → check 报警 → 复核翻译 → 更新 pin。",
+  "_": "上游基准：本应用的翻译与结构严格跟随这份官方仓库（应用 ADR 0002）。克隆在 upstream/gtkmm-documentation（gitignore，不入库）；pinned_commit 变更只能由「同步上游」流程产生：git fetch → python scripts/sync_upstream.py（自动对齐段落、标出待译）→ 复核 stale/untranslated 段 → 更新 pin。",
   "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation.git",
   "branch": "master",
   "pinned_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",

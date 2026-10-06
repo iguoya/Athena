@@ -33,6 +33,8 @@ from extract_source import DOCBOOK, load_structure  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = PROJECT_ROOT / "content"
+PINNED_COMMIT = (json.loads((PROJECT_ROOT / "upstream.json").read_text(encoding="utf-8"))
+                 .get("pinned_commit"))
 
 # 有限块类型（应用 ADR 0001 决策 3、6；主仓库 ADR 0056、0058）
 BLOCK_TYPES = {
@@ -136,16 +138,6 @@ def collect_demo_refs(course: dict) -> set[str]:
     return refs
 
 
-def parse_front_matter(path: Path) -> dict[str, str]:
-    """解析翻译稿头部的 YAML 简易键值（chapter/section/upstream-sha/...）。"""
-    fields: dict[str, str] = {}
-    for line in path.read_text(encoding="utf-8").splitlines()[:8]:
-        m = re.match(r"^(\w[\w-]*): (.+)$", line.strip())
-        if m:
-            fields[m.group(1)] = m.group(2).strip()
-    return fields
-
-
 def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], list[str]]:
     """主线章必须严格跟随官方结构：章 id、节页集合、页状态与源 hash 全部可校验。"""
     if not course:
@@ -189,6 +181,7 @@ def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], 
                 fail(f"{where}/{section_id}: 节页 {sorted(extra)} 不在官方结构里——不许自创分页")
             if len(page_ids) != len(set(page_ids)):
                 fail(f"{where}/{section_id}: pages 存在重复 id")
+            pinned = PINNED_COMMIT
             for page in section.get("pages", []):
                 page_id = page.get("id", "")
                 pwhere = f"{where}/{section_id}/{page_id or '?'}"
@@ -197,17 +190,20 @@ def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], 
                     continue
                 if page.get("status") != "translated":
                     continue
-                page_file = CONTENT_DIR / "chapters" / str(section_id) / f"{page_id}.md"
-                if not page_file.is_file():
-                    fail(f"{pwhere}: status=translated 但缺 {page_file.relative_to(PROJECT_ROOT)}")
+                snapshot_path = CONTENT_DIR / "chapters" / str(section_id) / f"{page_id}.json"
+                if not snapshot_path.is_file():
+                    fail(f"{pwhere}: status=translated 但缺段落快照 "
+                         f"{snapshot_path.relative_to(PROJECT_ROOT)}")
                     continue
-                fields = parse_front_matter(page_file)
-                recorded = fields.get("upstream-sha")
-                expected = official_pages[page_id]["sha256"]
-                if recorded != expected:
-                    fail(f"{pwhere}: 官方原文已变化（sha 不匹配），翻译稿需要复核")
-                if fields.get("section") != page_id or fields.get("chapter") != section_id:
-                    fail(f"{pwhere}: front matter 的 chapter/section 与文件位置不符")
+                snapshot = load_json(snapshot_path)
+                if snapshot is None:
+                    continue
+                if snapshot.get("upstream_commit") != pinned:
+                    fail(f"{pwhere}: 快照不是 pinned_commit 版本——先跑 scripts/sync_upstream.py")
+                pending = [b for b in snapshot.get("blocks", [])
+                           if b.get("type") in ("para", "listitem") and not b.get("zh")]
+                if pending:
+                    fail(f"{pwhere}: 还有 {len(pending)} 个文字段没有中文翻译，不该标 translated")
 
             for kp in section.get("knowledge_points", []):
                 kp_id = kp.get("id", "")

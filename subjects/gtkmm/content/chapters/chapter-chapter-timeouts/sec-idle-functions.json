@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-chapter-timeouts",
+ "section": "sec-idle-functions",
+ "title": "Idle Functions",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "If you want to specify a method that gets called when nothing else is happening, use the following:",
+   "sha": "80794e09ef25c200",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "sigc::connection Glib::SignalIdle::connect(const sigc::slot<bool()>& slot,\nint priority = Glib::PRIORITY_DEFAULT_IDLE);",
+   "sha": "05941540e54ec49c",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This causes gtkmm to call the specified method whenever nothing else is\nhappening. You can add a priority (lower numbers are higher priorities). There are two ways to remove the signal handler: calling\ndisconnect() on the\nsigc::connection object, or returning\nfalse in the signal handler, which should be declared\nas follows:",
+   "sha": "1ad554d2c70028cc",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "bool idleFunc();",
+   "sha": "19ca8b4ae56d3c4a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Since this is very similar to the methods above this explanation should\nbe sufficient to understand what's going on. However, here's a little example:",
+   "sha": "97f0bde77026a9b2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example points out the difference of idle and timeout methods a\nlittle. If you need methods that are called periodically, and speed\nis not very important, then you want timeout methods. If\nyou want methods that are called as often as possible (like\ncalculating a fractal in background), then use idle methods.",
+   "sha": "e6bad7ae0cf0e6b4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Try executing the example and increasing the system load. The upper\nprogress bar will increase steadily; the lower one will slow down.",
+   "sha": "c728a06ad847bb01",
+   "zh": null
+  }
+ ]
+}

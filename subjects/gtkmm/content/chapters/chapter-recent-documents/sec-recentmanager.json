@@ -1,0 +1,158 @@
+{
+ "chapter": "chapter-recent-documents",
+ "section": "sec-recentmanager",
+ "title": "RecentManager",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "RecentManager acts as a database of\nrecently used files. You use this class to register new files, remove\nfiles from the list, or look up recently used files. There is one list\nof recently used files per user.",
+   "sha": "6686c1099d0dd50a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can create a new RecentManager, but you'll most\nlikely just want to use the default one. You can get a reference to the\ndefault RecentManager with\nget_default().",
+   "sha": "2b6bf2253856c67d",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Adding Items to the List of Recent Files",
+   "sha": "b13f1ff130b12774",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To add a new file to the list of recent documents, in the simplest case,\nyou only need to provide the URI. For example:",
+   "sha": "a06f3438e360288e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto recent_manager = Gtk::RecentManager::get_default();\nrecent_manager->add_item(uri);",
+   "sha": "79ad017ae4b64f29",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If you want to register a file with metadata, you can pass a\nRecentManager::Data parameter to\nadd_item(). The metadata that can be set on a\nparticular file item is as follows:",
+   "sha": "95f1cffa3b3ae864",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "app_exec: The command line to be used to launch this resource. This string may contain the \"f\" and \"u\" escape characters which will be expanded to the resource file path and URI respectively",
+   "sha": "f387e1e5cecbd703",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "app_name: The name of the application that registered the resource",
+   "sha": "f79d3abaaa2a0c61",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "description: A short description of the resource as a UTF-8 encoded string",
+   "sha": "170a16306015c3ec",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "display_name: The name of the resource to be used for display as a UTF-8 encoded string",
+   "sha": "8ba1b3c68cc99eb0",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "groups: A list of groups associated with this item. Groups are essentially arbitrary strings associated with a particular resource. They can be thought of as 'categories' (such as \"email\", \"graphics\", etc) or tags for the resource.",
+   "sha": "315f3e7ba40bb1a7",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "is_private: Whether this resource should be visible only to applications that have registered it or not",
+   "sha": "4039c9e8d7843629",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "mime_type: The MIME type of the resource",
+   "sha": "8f6d2dd4ef876787",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In addition to adding items to the list, you can also look up items from\nthe list and modify or remove items.",
+   "sha": "aa82d50472272a33",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Looking up Items in the List of Recent Files",
+   "sha": "9e66105ceff60b0d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To look up recently used files, RecentManager\nprovides several functions. To look up a specific item by its URI, you\ncan use the lookup_item() function, which will\nreturn a RecentInfo class. If the specified URI\ndid not exist in the list of recent files,\nlookup_item() throws a\nRecentManagerError exception. For example:",
+   "sha": "8f1d2b46073eba14",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Glib::RefPtr<Gtk::RecentInfo> info;\ntry\n{\ninfo = recent_manager->lookup_item(uri);\n}\ncatch(const Gtk::RecentManagerError& ex)\n{\nstd::cerr << \"RecentManagerError: \" << ex.what() << std::endl;\n}\nif (info)\n{\n// item was found\n}",
+   "sha": "eb20216033b8b921",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "A RecentInfo object is essentially an object\ncontaining all of the metadata about a single recently-used file. You\ncan use this object to look up any of the properties listed\nabove.",
+   "sha": "554d83e123db5a04",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you don't want to look for a specific URI, but instead want to get a\nlist of all recently used items, RecentManager\nprovides the get_items() function. The return\nvalue of this function is a std::vector of all\nrecently used files. The following code demonstrates how you might get a\nlist of recently used files:",
+   "sha": "f8e2513622d175d2",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto info_list = recent_manager->get_items();",
+   "sha": "5a01b664e885345b",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The maximum age of items in the recently used files list can be set with\nGtk::Settings::property_gtk_recent_files_max_age().\nDefault value: 30 days.",
+   "sha": "250aaa8286d804a5",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Modifying the List of Recent Files",
+   "sha": "654c2e8809a63cfd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There may be times when you need to modify the list of recent files.\nFor instance, if a file is moved or renamed, you may need to update the\nfile's location in the recent files list so that it doesn't point to an\nincorrect location. You can update an item's location by using\nmove_item().",
+   "sha": "f9920cf038c95a9f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In addition to changing a file's URI, you can also remove items from the\nlist, either one at a time or by clearing them all at once. The former\nis accomplished with remove_item(), the latter with\npurge_items().",
+   "sha": "1fb62b70b2b01993",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The functions move_item(),\nremove_item() and\npurge_items() have no effect on the actual files\nthat are referred to by the URIs, they only modify the list of recent\nfiles.",
+   "sha": "ccdeb3ac2d14a2fb",
+   "zh": null
+  }
+ ]
+}

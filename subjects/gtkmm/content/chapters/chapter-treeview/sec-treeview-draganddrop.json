@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-treeview",
+ "section": "sec-treeview-draganddrop",
+ "title": "Drag and Drop",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Gtk::TreeView already implements simple drag-and-drop\nwhen used with the Gtk::ListStore or\nGtk::TreeStore models (since gtk 4.8). If necessary, it also allows you\nto implement more complex behavior when items are dragged and dropped, using\nthe normal Drag and Drop API.",
+   "sha": "c0d78d3b2cfcf970",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Reorderable rows",
+   "sha": "45000e1ee4088f28",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you call Gtk::TreeView::set_reorderable() then your\nTreeView's items can be moved within the treeview itself. This is demonstrated\nin the TreeStore example.",
+   "sha": "94e5451c2535e6c6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "However, this does not allow you any control of which items can be dragged, and where they can be dropped.\nIf you need that extra control then you might create a derived Gtk::TreeModel from\nGtk::TreeStore or Gtk::ListStore and override the\nGtk::TreeDragSource::row_draggable_vfunc() and\nGtk::TreeDragDest::row_drop_possible_vfunc() virtual methods.\nYou can examine the Gtk::TreeModel::Paths provided and allow or disallow dragging\nor dropping by returning true or false.",
+   "sha": "af069112e544fa86",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This is demonstrated in the drag_and_drop example.",
+   "sha": "dfe0a0a38eddf833",
+   "zh": null
+  }
+ ]
+}

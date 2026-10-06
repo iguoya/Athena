@@ -1,0 +1,26 @@
+{
+ "chapter": "chapter-adjustment",
+ "section": "sec-creating-adjustment",
+ "title": "Creating an Adjustment",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The Gtk::Adjustment is created by its\ncreate() method which is as follows:",
+   "sha": "50dbf611103e2fef",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Glib::RefPtr<Gtk::Adjustment> Gtk::Adjustment::create(\ndouble value,\ndouble lower,\ndouble upper,\ndouble step_increment = 1,\ndouble page_increment = 10,\ndouble page_size = 0);",
+   "sha": "0b7fed568dbd8eb1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The value argument is the initial value of the\nadjustment, usually corresponding to the topmost or leftmost position of an\nadjustable widget. The lower and\nupper arguments specify the possible range of values\nwhich the adjustment can hold. The\nstep_increment argument specifies the smaller of\nthe two increments by which the user can change the value, while the\npage_increment is the larger one. The\npage_size argument usually corresponds somehow to\nthe visible area of a panning widget. The upper argument\nis used to represent the bottommost or rightmost coordinate in a panning\nwidget's child.",
+   "sha": "8432eca696cf97a2",
+   "zh": null
+  }
+ ]
+}

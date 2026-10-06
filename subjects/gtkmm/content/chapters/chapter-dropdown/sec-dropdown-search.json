@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-dropdown",
+ "section": "sec-dropdown-search",
+ "title": "Examples with a Search Entry",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The dropdown menu may contain an Entry that allows\nto search for items in the list. Call set_enable_search()\nand set_expression(). For instance:",
+   "sha": "506290d58415a0cc",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "::create(\nsigc::mem_fun(*this, &ExampleWindow::get_col_name));\nm_DropDown.set_expression(expression);\n\n//-------\nGlib::ustring ExampleWindow::get_col_name(const Glib::RefPtr& item)\n{\nconst auto col = std::dynamic_pointer_cast(item);\nreturn col ? col->m_col_name : \"\";\n}\n]]>",
+   "sha": "35901a4ab0684761",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "String Example",
+   "sha": "bf168d4d0489bfef",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Search String",
+   "sha": "d9131a6180862887",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Font Example",
+   "sha": "2233c07012bf12e7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example uses a Pango::FontMap as its model.\nThis is possible because Pango::FontMap implements\nthe Gio::ListModel interface. Of course you can use a\nFontDialogButton instead.",
+   "sha": "ddd95fe034534456",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Search Font",
+   "sha": "de9926f85ee72f6f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-1",
+   "zh": null
+  }
+ ]
+}

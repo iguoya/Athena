@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-populating-window",
+ "title": "Populating the window",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "In this step, we use a Gtk::Builder instance to associate a\nGtk::Builder ui file with our application window class.",
+   "sha": "119d1c4beeae7d61",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Our simple ui file gives the window a title, and puts a Gtk::Stack\nwidget as the main content.",
+   "sha": "1d877ea00274f8da",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To make use of this file in our application, we revisit our\nGtk::ApplicationWindow subclass, and call\nGtk::Builder::create_from_resource() and\nGtk::Builder::get_widget_derived() from the\nExampleAppWindow::create() method to get an instance of\nour subclassed Gtk::ApplicationWindow. See the\nUsing derived widgets section\nfor more information about get_widget_derived().",
+   "sha": "292569bdc337d4a3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You may have noticed that we use the _from_resource() variant\nof the method that reads the ui file. Now we need to use GLib's\nresource functionality to include the ui file in the binary. This is commonly done by\nlisting all resources in a .gresource.xml file.\nThis file has to be converted into a C source file that will be compiled and linked\ninto the application together with the other source files. To do so, we use the\nglib-compile-resources utility:\n$ glib-compile-resources --target=resources.c --generate-source exampleapp.gresource.xml\nThe Gio::Resource and glib-compile-resources\nsection contains more information about resource files. If you build with Meson,\nuse the compile_resources() function in Meson's\nGNOME module.",
+   "sha": "883238c917b57418",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Our application now looks like this:",
+   "sha": "f4a228f7e22d056f",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Populating the window",
+   "sha": "968530c310c4e63d",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

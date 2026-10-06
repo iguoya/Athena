@@ -1,0 +1,176 @@
+{
+ "chapter": "chapter-internationalization",
+ "section": "sec-internationalization-intro",
+ "title": "Preparing your project",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "In the instructions below we will assume that you will not be using\ngettext directly, but\nintltool, which was written specifically for\nGNOME. intltool uses\ngettext(), which extracts strings from source code,\nbut intltool can also combine strings from\nother files, for example from desktop menu details, and GUI resource\nfiles such as .ui files, into standard\ngettext .pot/.po files.",
+   "sha": "44802ef0194a52d6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "We also assume that you are using autotools (automake\nand autoconf) to build your project (although\nautotools is not recommended for new applications), and\nthat you are using\n./autogen.sh from gnome-common\nor a similar autogen.sh file, which, among other\nthings, takes care of some intltool\ninitialization.",
+   "sha": "d2a7538450843995",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you are using meson (recommended), see the\nLocalisation\nchapter in Meson's manual. You can then skip this section.",
+   "sha": "7b345da5753e2e65",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "An alternative to gnome-common's\nautogen.sh may look like this:",
+   "sha": "5628760e7056dcd1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "#! /bin/sh -e\ntest -n \"$srcdir\" || srcdir=`dirname \"$0\"`\ntest -n \"$srcdir\" || srcdir=.\n\nautoreconf --force --install --verbose --warnings=all \"$srcdir\"\necho \"Running intltoolize --copy --force --automake\"\nintltoolize --copy --force --automake\ntest -n \"$NOCONFIGURE\" || \"$srcdir/configure\" \"$@\"",
+   "sha": "8173150bf66d3247",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Create a sub-directory named po in your project's root\ndirectory. This directory will eventually contain all of your\ntranslations. Within it, create a file named LINGUAS\nand a file named POTFILES.in.",
+   "sha": "c398b39d6de0fd35",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "LINGUAS contains an alphabetically sorted list of codes\nidentifying the languages for which your program is translated (comment\nlines starting with a # are ignored). Each language\ncode listed in the LINGUAS file must have a\ncorresponding .po file. So, if your program has German\nand Japanese translations, your LINGUAS file would\nlook like this:",
+   "sha": "847387834ee44f91",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "# keep this file sorted alphabetically, one language code per line\nde\nja",
+   "sha": "efa87cc33a63e906",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "(In addition, you'd have the files de.po and\nja.po in your\npo directory which contain the German and Japanese\ntranslations, respectively.)",
+   "sha": "0bc85c1f9d72147f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "POTFILES.in is a list of paths to all files which\ncontain strings marked up for translation, starting from the project root\ndirectory. So for example, if your project sources were located in a\nsubdirectory named src, and you had two files that\ncontained strings that should be translated, your\nPOTFILES.in file might look like this:",
+   "sha": "682ee3b226cf62f3",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "src/main.cc\nsrc/other.cc",
+   "sha": "7863ae629ac76c94",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If you are using gettext directly, you can only\nmark strings for translation if they are in source code file. However, if\nyou use intltool, you can mark strings for\ntranslation in a variety of other file formats, including\n.ui files, xml,\n.desktop files\nand several more. So, if you have designed some of the\napplication UI in xml files then also add your\n.ui files to the list in\nPOTFILES.in.",
+   "sha": "328e9d8bb2aa5364",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Now that there is a place to put your translations, you need to initialize\nintltool and gettext.\nAdd the following code to your configure.ac,\nsubstituting 'programname' with the name of your program:",
+   "sha": "802ef2efcd337d93",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "IT_PROG_INTLTOOL([0.35.0])\n\nGETTEXT_PACKAGE=programname\nAC_SUBST(GETTEXT_PACKAGE)\nAC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], [\"$GETTEXT_PACKAGE\"],\n[The domain to use with gettext])\nAM_GNU_GETTEXT([external])\nAM_GNU_GETTEXT_VERSION([0.17])\n\nPROGRAMNAME_LOCALEDIR=[${datadir}/locale]\nAC_SUBST(PROGRAMNAME_LOCALEDIR)",
+   "sha": "06c532df553df2a1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This PROGRAMNAME_LOCALEDIR variable will be used later\nin the Makefile.am file, to define a macro that will be\nused when you initialize gettext in your source\ncode.",
+   "sha": "707da40911612efa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "AM_GLIB_GNU_GETTEXT has been an alternative to\nAM_GNU_GETTEXT and AM_GNU_GETTEXT_VERSION,\nbut AM_GLIB_GNU_GETTEXT is now deprecated, and shall\nnot be used in new code.",
+   "sha": "3f083889761c334f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In the top-level Makefile.am:\n\n\nAdd po to the SUBDIRS\nvariable. Without this, your translations won't get built and\ninstalled when you build the program\n\n\n\nDefine INTLTOOL_FILES as:\nINTLTOOL_FILES = intltool-extract.in \\\nintltool-merge.in \\\nintltool-update.in\n\n\n\nAdd INTLTOOL_FILES to the\nEXTRA_DIST list of files. This ensures that when\nyou do a make dist, these files will be\nincluded in the source tarball.\n\n\n\n\nUpdate your DISTCLEANFILES:\nDISTCLEANFILES = ... intltool-extract \\\nintltool-merge \\\nintltool-update \\\npo/.intltool-merge-cache\n\n\n\nDepending on the types of files that contain translatable strings,\nadd code such as\ndesktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@",
+   "sha": "7386456c2b3d9d63",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Add po to the SUBDIRS variable. Without this, your translations won't get built and installed when you build the program",
+   "sha": "bfb866b897d0ee5a",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Define INTLTOOL_FILES as:",
+   "sha": "d9ece696a2e0bd2f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Add INTLTOOL_FILES to the EXTRA_DIST list of files. This ensures that when you do a make dist, these files will be included in the source tarball.",
+   "sha": "3ec90c3d72cd09e9",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Update your DISTCLEANFILES:",
+   "sha": "94d0867e69ba5311",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Depending on the types of files that contain translatable strings, add code such as",
+   "sha": "23d733d1cdca2421",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "INTLTOOL_FILES = intltool-extract.in \\\nintltool-merge.in \\\nintltool-update.in",
+   "sha": "1b7a45b865b5cd94",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "DISTCLEANFILES = ... intltool-extract \\\nintltool-merge \\\nintltool-update \\\npo/.intltool-merge-cache",
+   "sha": "0a47b8c251471e15",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "desktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@",
+   "sha": "59702be65b5a4a0c",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "In your src/Makefile.am, update your\nAM_CPPFLAGS to add the following preprocessor macro\ndefinition:",
+   "sha": "42ce2960a2c29f21",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "AM_CPPFLAGS = ... -DPROGRAMNAME_LOCALEDIR=\\\"${PROGRAMNAME_LOCALEDIR}\\\"",
+   "sha": "f0083168f413a2ec",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This macro will be used when you initialize gettext in\nyour source code.",
+   "sha": "d2e3f8738ee7b850",
+   "zh": null
+  }
+ ]
+}

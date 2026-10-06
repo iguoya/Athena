@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-wrapping-c-libraries",
+ "section": "sec-wrapping-documentation",
+ "title": "Documentation",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "In general, gtkmm-style projects use Doxygen, which reads specially formatted C++ comments and generates HTML documentation. You may write these doxygen comments directly in the header files.",
+   "sha": "4804a5927b2faeb9",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Reusing C documentation",
+   "sha": "80b000a43e7a7366",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You might wish to reuse documentation that exists for the C library that\nyou are wrapping. GTK-style C libraries typically use gtk-doc or gi-docgen and therefore\nhave source code comments formatted for gtk-doc or gi-docgen and some extra documentation\nin .sgml and .xml files. The docextract_to_xml.py script, from glibmm's\ntools/defs_gen directory, can read these files and\ngenerate an .xml file that gmmproc can use to generate\ndoxygen comments. gmmproc will even try to transform the\ndocumentation to make it more appropriate for a C++ API.",
+   "sha": "66d01e28423cd0de",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance,",
+   "sha": "580ef7c3ff8e8ffb",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "./docextract_to_xml.py -s ~/checkout/gnome/gtk/gtk/ > gtk_docs.xml",
+   "sha": "850a28cd60129040",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Because this automatic transformation is not always appropriate, you might\nwant to provide hand-written text for a particular method. You can do this\nby copying the XML node for the function from your\nsomething_docs.xml file to the\nsomething_docs_override.xml file and changing the\ncontents. Alternatively you can write your own documentation in the\n.hg file.",
+   "sha": "ea8fa3366034f06b",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Documentation build structure",
+   "sha": "cf6893b8b828e6fa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you copied the skeleton source tree in mm-common and substituted the\nplaceholder text, then you will already have suitable meson.build\nand Doxyfile.in files in the doc/reference/\ndirectory. You probably need to modify the tag_file_modules\nvariable in meson.build, though.\nWith the mm-common build setup, the list\nof Doxygen input files is not defined in the Doxygen configuration file, but passed\nalong from meson/ninja to the standard input of doxygen.",
+   "sha": "09ccf46685283da0",
+   "zh": null
+  }
+ ]
+}

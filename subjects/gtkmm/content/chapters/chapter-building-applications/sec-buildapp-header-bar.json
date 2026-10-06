@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-header-bar",
+ "title": "Header bar",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Our application already uses a Gtk::HeaderBar instead of\na 'normal' window titlebar. The header bar is a direct child of the window,\nand its type is titlebar. This is set in the\nwindow.ui file.",
+   "sha": "9a3cb0729ee80da7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here we'll just make two small changes to the header bar. The decoration-layout\nproperty is set in the window.ui file, to show only the close\nbutton, and hide the minimize and maximize buttons. We also include an icon in the\nresource file, and set up this icon as the window icon.\nIn ExampleAppWindow's constructor:",
+   "sha": "7ab524c06aee6218",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::IconTheme::get_for_display(get_display())->add_resource_path(\"/org/gtkmm/exampleapp\");\nset_icon_name(\"exampleapp\");",
+   "sha": "7883286a4fbd4347",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here is how the application now looks:",
+   "sha": "d9e1f7748b8fda65",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Header bar",
+   "sha": "3aceb58505f79d2f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The window.ui file sets a header bar title, but this title is not shown.\nThat's because the stack switcher is a child of type title. The stack\nswitcher becomes a custom title that hides the title label.",
+   "sha": "f2e7f3cfdc1fa57b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

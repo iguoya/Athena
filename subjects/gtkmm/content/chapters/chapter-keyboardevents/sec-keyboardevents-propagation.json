@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-keyboardevents",
+ "section": "sec-keyboardevents-propagation",
+ "title": "Event Propagation",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "As described in the appendix\nevent signals are propagated in 3 phases:\n\nCapture phase - runs from the toplevel down to the event widget.\nTarget phase - runs only on the event widget.\nBubble phase - runs from the event widget up to the toplevel.",
+   "sha": "286f463bf9ff516b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A keyboard event is first sent to the toplevel window\n(Gtk::Window), where it will be checked\nfor any keyboard shortcuts that may be set (accelerator keys and mnemonics,\nused for selecting menu items from the keyboard). After this (and assuming\nthe event wasn't handled), it is propagated down until it reaches the widget\nwhich has keyboard focus. The event will then propagate up until it reaches\nthe top-level widget, or until you stop the propagation by returning\ntrue from an event handler.",
+   "sha": "b29484f6d226180f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Notice, that after canceling an event, no other function will be called\n(even if it is from the same widget).",
+   "sha": "9e418c6f313dffe2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In this example there are 9 EventControllerKeys,\n3 in each of a Gtk::Window, a Gtk::Box\nand a Gtk::Label. In each of the widgets there is\none event controller for each propagation phase.",
+   "sha": "281db7510d9ab9ad",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The purpose of this example is to show the steps the event takes when it is emitted.",
+   "sha": "acc0660efa9f1b19",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "When you write in the label, a key press event will be emitted,\nwhich will go first, in the capture phase, to the toplevel window\n(Gtk::Window), then down to its child, the\nbox, then to the box's child, the label with the keyboard focus.\nIn the target phase the event goes only to the widget with the keyboard\nfocus (the label). In the bubble phase the event goes first to the widget\nwith the keyboard focus (the label), then to its parent (the box), then\nto the box's parent (the window). If the event propagates all the way\ndown to the label and then up to the window without being stopped,\nthe text you're writing will appear in the Label\nabove the Label you're writing in.",
+   "sha": "16e870fbd04fde97",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Keyboard Events - Event Propagation",
+   "sha": "071ccafa7a0cf47d",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

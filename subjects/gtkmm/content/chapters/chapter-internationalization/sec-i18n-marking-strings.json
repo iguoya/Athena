@@ -1,0 +1,164 @@
+{
+ "chapter": "chapter-internationalization",
+ "section": "sec-i18n-marking-strings",
+ "title": "Marking strings for translation",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "String literals should be typed in the source code in English, but\nthey should be surrounded by a call to the gettext()\nfunction. These strings will be extracted for translation and the\ntranslations may be used at runtime instead of the original English\nstrings.",
+   "sha": "71a8ca1b10c94ea8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The GNU gettext package allows you to mark\nstrings in source code, extract those strings for translation, and use\nthe translated strings in your application.",
+   "sha": "8c429d9943c91a94",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "However, Glib defines\ngettext()\nsupport macros which are shorter wrappers in an easy-to-use form.\nTo use these macros, include <glibmm/i18n.h>,\nand then, for example, substitute:",
+   "sha": "f4f87a08fb03eaa6",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "display_message(\"Getting ready for i18n.\");",
+   "sha": "30e6b3697283f233",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "with:",
+   "sha": "4d508ac828047f3b",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "display_message(_(\"Getting ready for i18n.\"));",
+   "sha": "3113d1facc948608",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "For reference, it is possible to generate a file which contains all\nstrings which appear in your code, even if they are not marked for translation,\ntogether with file name and line\nnumber references. To generate such a file named\nmy-strings, execute the following command,\nwithin the source code directory:",
+   "sha": "18ccd340d3f6ba90",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "xgettext -a -o my-strings --omit-header *.cc *.h",
+   "sha": "aa1f55f7d8ae7938",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Finally, to let your program use the translation for the current locale,\nadd this code to the beginning of your main.cc file, to initialize gettext.",
+   "sha": "452eab20fa53509d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "bindtextdomain(GETTEXT_PACKAGE, PROGRAMNAME_LOCALEDIR);\nbind_textdomain_codeset(GETTEXT_PACKAGE, \"UTF-8\");\ntextdomain(GETTEXT_PACKAGE);",
+   "sha": "c76bbed6a9aecee2",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "How gettext works",
+   "sha": "3d7b0d33b7dabfb7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The intltool-update or\nxgettext script extracts the strings\nand puts them in a mypackage.pot file.\nThe translators of your application create their translations by\nfirst copying this .pot file to a\nlocalename.po file. A locale identifies a\nlanguage and an encoding for that language, including date and numerical\nformats. Later, when the text in your source code has changed, the\nmsgmerge or intltool-update\nscript is used to update the localename.po files from\nthe regenerated .pot file.",
+   "sha": "ad7087556001a16d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "At install time, the .po files are converted to\na binary format (with the extension .mo) and\nplaced in a system-wide directory for locale files, for example\n/usr/share/locale/.",
+   "sha": "8ee1e252ca8b871c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "When the application runs, the gettext\nlibrary checks the system-wide directory to see if there is a\n.mo file for the user's locale environment\n(you can set the locale with, for instance, \"export LANG=de_DE.UTF-8\"\nfrom a bash console). Later, when the program reaches a\ngettext call, it looks for a translation of a\nparticular string. If none is found, the original string is used.",
+   "sha": "e4eb3caf8d3f6807",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Testing and adding translations",
+   "sha": "47ada2786ae32f34",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To convince yourself that you've done well, you may wish to add a\ntranslation for a new locale. In order to do that, go to the\npo subdirectory of your project and\nexecute the following command:",
+   "sha": "ea2d81f0549e94e0",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "intltool-update --pot --gettext-package programname",
+   "sha": "0d2b58baa65d4a40",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "That will create a file named programname.pot.\nNow copy that file to languagecode.po, such as\nde.po or hu.po. Also add\nthat language code to LINGUAS. The\n.po file contains a header and a list of English strings,\nwith space for the translated strings to be entered. Make sure you set the\nencoding of the .po file to UTF-8.",
+   "sha": "cdb3be25512d0405",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "\"Content-Type: text/plain; charset=UTF-8\\n\"",
+   "sha": "fb8e2863501ca7cc",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "It's possible that certain strings will be marked as\nfuzzy in the .po file.\nThese translations will not substitute the original string. To make\nthem appear, simply remove the fuzzy tag.\nA fuzzy tag appears if a string content changed,\nbut the location is still the same.",
+   "sha": "5bab9914f442e474",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Resources",
+   "sha": "e89b30aa1dc30a6a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "More information about what lies behind the internationalization and localization process\nis presented and demonstrated in:\n\n\n\n\n\nL10N Guidelines for Developers\n\n\n\n\n\nIntltool README\n\n\n\n\n\nHow to use Git for GNOME translators\n\n\n\n\n\ngettext manual",
+   "sha": "1f7731798526f9f4",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "L10N Guidelines for Developers",
+   "sha": "caad00f65561dcdf",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Intltool README",
+   "sha": "917196f2c2bb5b89",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "How to use Git for GNOME translators",
+   "sha": "1edb6492052f7fd5",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "gettext manual",
+   "sha": "c0b197f393a98c61",
+   "zh": null
+  }
+ ]
+}

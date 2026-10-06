@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-treeview",
+ "section": "sec-iterating-over-model-rows",
+ "title": "Iterating over Model Rows",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Gtk::TreeModel provides a C++ Standard Library-style container of its\nchildren, via the children() method. You can use the\nfamiliar begin() and end() methods\niterator incrementing, like so:",
+   "sha": "9de9e66df402d463",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto children = refModel->children();\nfor (auto iter = children.begin(), end = children.end(); iter != end; ++iter)\n{\nauto row = *iter;\n//Do something with the row - see above for set/get.\n}",
+   "sha": "df4e731bdbf607e4",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If you always want to iterate across the entire range, much more succinct syntax\nis possible using C++'s range-based for loop:",
+   "sha": "34f230d8de5666a7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "for (auto row: refModel->children())\n{\n//Do something with the row - see above for set/get.\n}",
+   "sha": "5bb83f2b955ec6f3",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Row children",
+   "sha": "bbb1f3a7db19c5f0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "When using a Gtk::TreeStore, the rows can have child\nrows, which can have their own children in turn. Use\nGtk::TreeModel::Row::children() to get the container of child Rows:",
+   "sha": "ee7d660d3e68c1d7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::TreeModel::Children children = row.children();",
+   "sha": "3310614d060824a4",
+   "zh": ""
+  }
+ ]
+}

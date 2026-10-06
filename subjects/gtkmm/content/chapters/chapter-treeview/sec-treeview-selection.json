@@ -1,0 +1,152 @@
+{
+ "chapter": "chapter-treeview",
+ "section": "sec-treeview-selection",
+ "title": "The Selection",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "To find out what rows the user has selected, get the\nGtk::TreeView::Selection object from the\nTreeView, like so:",
+   "sha": "a3144bba71acd687",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refTreeSelection = m_TreeView.get_selection();",
+   "sha": "4a001296cea75726",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Single or multiple selection",
+   "sha": "1de2ec50260897cd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "By default, only single rows can be selected, but you can allow\nmultiple selection by setting the mode, like so:",
+   "sha": "a5016016e5cfdd44",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refTreeSelection->set_mode(Gtk::SelectionMode::MULTIPLE);",
+   "sha": "489847664884c6f6",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "The selected rows",
+   "sha": "6b348eb5452122a6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For single-selection, you can just call get_selected(),\nlike so:",
+   "sha": "5af99ce218d6cbaa",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto iter = refTreeSelection->get_selected();\nif(iter) //If anything is selected\n{\nauto row = *iter;\n//Do something with the row.\n}",
+   "sha": "428ad20fdd15df99",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "For multiple-selection, you need to call get_selected_rows()\nor define a callback, and give it to\nselected_foreach(),\nselected_foreach_path(), or\nselected_foreach_iter(), like so:",
+   "sha": "46e5de4662b06362",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refTreeSelection->selected_foreach_iter(\nsigc::mem_fun(*this, &TheClass::selected_row_callback) );\n\nvoid TheClass::selected_row_callback(\nconst Gtk::TreeModel::const_iterator& iter)\n{\nauto row = *iter;\n//Do something with the row.\n}",
+   "sha": "7fa621277aa32476",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "The \"changed\" signal",
+   "sha": "e292bff6c827cdd8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To respond to the user clicking on a row or range of rows, connect to the\nsignal like so:",
+   "sha": "5c8c67b7c4ed5a10",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refTreeSelection->signal_changed().connect(\nsigc::mem_fun(*this, &Example_IconTheme::on_selection_changed)\n);",
+   "sha": "69eb52af4a441324",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Preventing row selection",
+   "sha": "22869af36303b564",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Maybe the user should not be able to select every item in your list or tree.\nFor instance, in the gtk-demo, you can select a demo to see the source code,\nbut it doesn't make any sense to select a demo category.",
+   "sha": "62f06b45488e8336",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To control which rows can be selected, use the\nset_select_function() method, providing a\nsigc::slot callback. For instance:",
+   "sha": "d78a76cd4e2d981b",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_refTreeSelection->set_select_function( sigc::mem_fun(*this,\n&DemoWindow::select_function) );",
+   "sha": "79f399416b356989",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "and then",
+   "sha": "819745c14ca2e6da",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "bool DemoWindow::select_function(\nconst Glib::RefPtr<Gtk::TreeModel>& model,\nconst Gtk::TreeModel::Path& path, bool)\n{\nconst auto iter = model->get_iter(path);\nreturn iter->children().empty(); // only allow leaf nodes to be selected\n}",
+   "sha": "79753e0aefe53d82",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Changing the selection",
+   "sha": "77749d22ed3aa42a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To change the selection, specify a\nGtk::TreeModel::iterator or\nGtk::TreeModel::Row, like so:",
+   "sha": "33d5672f722ccc16",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto row = m_refModel->children()[5]; //The sixth row.\nif(row)\nrefTreeSelection->select(row.get_iter());",
+   "sha": "363f894238fa8910",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "or",
+   "sha": "7175517a370b5cd2",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto iter = m_refModel->children().begin()\nif(iter)\nrefTreeSelection->select(iter);",
+   "sha": "7358772d6a1accbb",
+   "zh": ""
+  }
+ ]
+}

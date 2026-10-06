@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-printing-rendering-text",
+ "title": "Rendering text",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Text rendering is done using Pango.\nThe Pango::Layout object for printing should be created by calling\nthe PrintContext::create_pango_layout() method.\nThe PrintContext object also provides the page metrics,\nvia get_width() and get_height().\nThe number of pages can be set with\nPrintOperation::set_n_pages(). To actually render the\nPango text in on_draw_page, get a\nCairo::Context with\nPrintContext::get_cairo_context() and show the\nPango::LayoutLines that appear within the requested\npage number.",
+   "sha": "a3ffbc4f84e09130",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "See an example\nof exactly how this can be done.",
+   "sha": "8a58a5fbd06a6b41",
+   "zh": null
+  }
+ ]
+}

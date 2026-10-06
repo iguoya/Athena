@@ -1,0 +1,26 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-printing-preview",
+ "title": "Preview",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The native GTK print dialog has a preview button, but you may also start\na preview directly from an application:",
+   "sha": "610c8a94db49170a",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// in a class that inherits from Gtk::Window...\nauto op = PrintOperation::create();\n// ...set up op...\nop->run(Gtk::PrintOperation::Action::PREVIEW, *this);",
+   "sha": "d6e61ed97e8c891d",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "On Unix, the default preview handler uses an external viewer program.\nOn Windows, the native preview dialog will be shown. If necessary you may\noverride this behavior and provide a custom preview dialog. See the example\nlocated in /examples/book/printing/advanced.",
+   "sha": "df79ace8f0f29021",
+   "zh": null
+  }
+ ]
+}

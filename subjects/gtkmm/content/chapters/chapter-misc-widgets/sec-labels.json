@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-misc-widgets",
+ "section": "sec-labels",
+ "title": "Label",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Labels are the main method of placing non-editable text in windows, for\ninstance to place a title next to an Entry widget. You\ncan specify the text in the constructor, or later with the\nset_text() or set_markup() methods.",
+   "sha": "f6f7b4c6a16562dc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The width of the label will be adjusted automatically. You can produce multi-line labels by putting line breaks (\"\\n\") in the label string.",
+   "sha": "ab4a4c40679465e6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The label text can be justified using the set_justify()\nmethod. The widget is also capable of word-wrapping, which can be activated\nwith set_wrap().",
+   "sha": "c16ac868f8d7547d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::Label supports some simple formatting, for instance allowing you to make some\ntext bold, colored, or larger. You can do this by providing a string to\nset_markup(), using the Pango Markup syntax. For instance,\n\n<b>bold text</b> and <s>strikethrough text</s>\n\n.",
+   "sha": "11836c1508c254af",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Below is a short example to illustrate these functions. This example\nmakes use of the Frame widget to better demonstrate the label styles.\n(The Frame widget is explained in the Frame section.)\nIt is possible that the first character in m_Label_Normal is shown\nunderlined only when you press the Alt key.",
+   "sha": "d59ecd9085f0e7ea",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Label",
+   "sha": "0e66373f45dcf3dd",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

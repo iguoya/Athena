@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-async-printing-ops",
+ "title": "Asynchronous operations",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "By default, PrintOperation::run() returns when a print\noperation is completed. If you need to run a non-blocking print operation,\ncall PrintOperation::set_allow_async(). Note that set_allow_async() is not supported\non all platforms, however the done signal will still be emitted.",
+   "sha": "232848054ebc8c6b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "run() may return\nPrintOperation::Result::IN_PROGRESS. To track status\nand handle the result or error you need to implement signal handlers for\nthe done and status_changed signals:",
+   "sha": "a0edafd92c460c78",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance,",
+   "sha": "580ef7c3ff8e8ffb",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// in class ExampleWindow's method...\nauto op = PrintOperation::create();\n// ...set up op...\nop->signal_done().connect(sigc::bind(sigc::mem_fun(\n*this, &ExampleWindow::on_printoperation_done), op));\n// run the op",
+   "sha": "d18a0f3a91b9637a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Second, check for an error and connect to the status_changed signal. For instance:",
+   "sha": "1418fa8a145e4bc0",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleWindow::on_printoperation_done(Gtk::PrintOperation::Result result,\nconst Glib::RefPtr<PrintOperation>& op)\n{\nif (result == Gtk::PrintOperation::Result::ERROR)\n//notify user\nelse if (result == Gtk::PrintOperation::Result::APPLY)\n//Update PrintSettings with the ones used in this PrintOperation\n\nif (! op->is_finished())\nop->signal_status_changed().connect(sigc::bind(sigc::mem_fun(\n*this, &ExampleWindow::on_printoperation_status_changed), op));\n}",
+   "sha": "50b67e95740ea51b",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Finally, check the status. For instance,",
+   "sha": "c7e2dd7106854873",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleWindow::on_printoperation_status_changed(const Glib::RefPtr<PrintOperation>& op)\n{\nif (op->is_finished())\n//the print job is finished\nelse\n//get the status with get_status() or get_status_string()\n\n//update UI\n}",
+   "sha": "f063d629acd163ae",
+   "zh": ""
+  }
+ ]
+}

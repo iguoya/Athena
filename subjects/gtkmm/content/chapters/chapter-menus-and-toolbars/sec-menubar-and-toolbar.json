@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-menus-and-toolbars",
+ "section": "sec-menubar-and-toolbar",
+ "title": "Menubar and Toolbar",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Next you should create a Gtk::Builder. At this point is\nalso a good idea to tell the application to respond to keyboard shortcuts,\nby using Gtk::Application::set_accel_for_action().",
+   "sha": "d73873feed6c8f00",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance,",
+   "sha": "580ef7c3ff8e8ffb",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_refBuilder = Gtk::Builder::create();\n\napp->set_accel_for_action(\"example.new\", \"<Primary>n\");\napp->set_accel_for_action(\"example.quit\", \"<Primary>q\");\napp->set_accel_for_action(\"example.copy\", \"<Primary>c\");\napp->set_accel_for_action(\"example.paste\", \"<Primary>v\");",
+   "sha": "b943844972d0cc3a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Then, you can define the actual visible layout of the menus and toolbars, and\nadd the UI layout to the Builder. This \"ui\nstring\" uses an XML format, in which you should mention the names of the\nactions that you have already created. For instance:",
+   "sha": "32a69dbbca14abbc",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Glib::ustring ui_info =\n\"<interface>\"\n\" <menu id='menubar'>\"\n\" <submenu>\"\n\" <attribute name='label' translatable='yes'>_File</attribute>\"\n\" <section>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>_New</attribute>\"\n\" <attribute name='action'>example.new</attribute>\"\n\" </item>\"\n\" </section>\"\n\" <section>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>_Quit</attribute>\"\n\" <attribute name='action'>example.quit</attribute>\"\n\" </item>\"\n\" </section>\"\n\" </submenu>\"\n\" <submenu>\"\n\" <attribute name='label' translatable='yes'>_Edit</attribute>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>_Copy</attribute>\"\n\" <attribute name='action'>example.copy</attribute>\"\n\" </item>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>_Paste</attribute>\"\n\" <attribute name='action'>example.paste</attribute>\"\n\" </item>\"\n\" </submenu>\"\n\" </menu>\"\n\"</interface>\";\n\nm_refBuilder->add_from_string(ui_info);\nm_refBuilder->add_from_resource(\"/toolbar/toolbar.ui\");",
+   "sha": "588f61d27ce253cb",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This is where we specify the names of the menu items as they will be seen\nby users in the menu. Therefore, this is where you should make strings\ntranslatable, by adding translatable='yes'.",
+   "sha": "73a8bca5980acb9b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To instantiate a Gtk::PopoverMenuBar and toolbar (a horizontal\nGtk::Box) which you can actually show, you should use\nthe Builder::get_object() and\nBuilder::get_widget() methods, and then add the widgets\nto a container. For instance:",
+   "sha": "b1a8c83e89ade249",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto gmenu = m_refBuilder->get_object<Gio::Menu>(\"menubar\");\nauto pMenuBar = Gtk::make_managed<Gtk::PopoverMenuBar>(gmenu);\nm_Box.append(*pMenuBar);\n\nauto toolbar = m_refBuilder->get_widget<Gtk::Box>(\"toolbar\");\nm_Box.append(*toolbar);",
+   "sha": "0aeaf8e9f98cf714",
+   "zh": ""
+  }
+ ]
+}

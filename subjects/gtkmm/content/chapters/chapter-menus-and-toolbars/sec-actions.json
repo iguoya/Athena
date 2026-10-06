@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-menus-and-toolbars",
+ "section": "sec-actions",
+ "title": "Actions",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "First create the Gio::SimpleActions and add them to a\nGio::SimpleActionGroup, with\nGio::ActionMap::add_action().\n(Gio::ActionMap is a base class of\nGio::SimpleActionGroup.) Then add the action group to\nyour window with Gtk::Widget::insert_action_group().",
+   "sha": "c6df0e384a32dd1f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The arguments to add_action() specify the action's\nname, which is used in the menu items and toolbar buttons. You can also specify\na signal handler when calling add_action(). This signal\nhandler will be called when the action is activated via either a menu item or\na toolbar button.",
+   "sha": "ec85369ba3b5ffc8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance:",
+   "sha": "e7fa29a18b75e39f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_refActionGroup = Gio::SimpleActionGroup::create();\n\nm_refActionGroup->add_action(\"new\", sigc::mem_fun(*this, &ExampleWindow::on_action_file_new));\nm_refActionGroup->add_action(\"open\", sigc::mem_fun(*this, &ExampleWindow::on_action_file_open));\nm_refActionGroup->add_action(\"quit\", sigc::mem_fun(*this, &ExampleWindow::on_action_file_quit));\n\ninsert_action_group(\"example\", m_refActionGroup);",
+   "sha": "3c6f6bf574aad21a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If you use an Gtk::ApplicationWindow, you don't have to\ncreate your own action group. Gio::ActionGroup and\nGio::ActionMap are base classes of\nGtk::ApplicationWindow.",
+   "sha": "489a0b43da609826",
+   "zh": null
+  }
+ ]
+}

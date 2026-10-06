@@ -1,0 +1,110 @@
+{
+ "chapter": "chapter-signals",
+ "section": "sec-exceptions-in-signal-handlers",
+ "title": "Exceptions in signal handlers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "When a program is aborted because of an unhandled C++ exception, it's sometimes\npossible to use a debugger to find the location where the exception was thrown.\nThis is more difficult than usual if the exception was thrown from a signal handler.",
+   "sha": "25d4fb1ab8abfb5a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This section describes primarily what you can expect on a Linux system, when you\nuse the gdb debugger.",
+   "sha": "7c264218d272c961",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "First, let's look at a simple example where an exception is thrown from a normal\nfunction (no signal handler).",
+   "sha": "a707ba5b05098e2e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// without_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\nthrow \"Something\";\nreturn true;\n}\n\nint main(int argc, char** argv)\n{\nthrowSomething();\nauto app = Gtk::Application::create(\"org.gtkmm.without_signal\");\nreturn app->run();\n}",
+   "sha": "91c946266289346a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here is an excerpt from a gdb session. Only the most\ninteresting parts of the output are shown.",
+   "sha": "f10bc7181dcfcab7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "> gdb without_signal\n(gdb) run\nterminate called after throwing an instance of 'char const*'\n\nProgram received signal SIGABRT, Aborted.\n(gdb) backtrace\n#7 0x08048864 in throwSomething () at without_signal.cc:6\n#8 0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12",
+   "sha": "468ddb615f7b6acd",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can see that the exception was thrown from without_signal.cc,\nline 6 (throw \"Something\";).",
+   "sha": "3a9f735d91374f05",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Now let's see what happens when an exception is thrown from a signal handler.\nHere's the source code.",
+   "sha": "c08dcb18b1bcde2c",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// with_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\nthrow \"Something\";\nreturn true;\n}\n\nint main(int argc, char** argv)\n{\nGlib::signal_timeout().connect(sigc::ptr_fun(throwSomething), 500);\nauto app = Gtk::Application::create(\"org.gtkmm.with_signal\");\napp->hold();\nreturn app->run();\n}",
+   "sha": "9107c5ea48895924",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "And here's an excerpt from a gdb session.",
+   "sha": "868400085b67c966",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "> gdb with_signal\n(gdb) run\n(with_signal:2703): glibmm-ERROR **:\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.\n(gdb) backtrace\n#2 0x0063c6ab in glibmm_unexpected_exception () at exceptionhandler.cc:77\n#3 Glib::exception_handlers_invoke () at exceptionhandler.cc:150\n#4 0x0063d370 in glibmm_source_callback (data=0x804d620) at main.cc:212\n#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16",
+   "sha": "257b2d82d8c405e9",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The exception is caught in glibmm, and the program\nends with a call to g_error(). Other exceptions may result\nin different behavior, but in any case the exception from a signal handler is\ncaught in glibmm or gtkmm, and\ngdb can't see where it was thrown.",
+   "sha": "e8b576f15e434046",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To see where the exception is thrown, you can use the gdb\ncommand catch throw.",
+   "sha": "71b034a505ff31ff",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "> gdb with_signal\n(gdb) catch throw\nCatchpoint 1 (throw)\n(gdb) run\nCatchpoint 1 (exception thrown), 0x00714ff0 in __cxa_throw ()\n(gdb) backtrace\n#0 0x00714ff0 in __cxa_throw () from /usr/lib/i386-linux-gnu/libstdc++.so.6\n#1 0x08048bd4 in throwSomething () at with_signal.cc:6\n(gdb) continue\nContinuing.\n(with_signal:2375): glibmm-ERROR **\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.",
+   "sha": "8830808d45646ab8",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If there are many caught exceptions before the interesting uncaught one, this\nmethod can be tedious. It can be automated with the following\ngdb commands.",
+   "sha": "95de7f9241f118ff",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "(gdb) catch throw\n(gdb) commands\n(gdb) backtrace\n(gdb) continue\n(gdb) end\n(gdb) set pagination off\n(gdb) run",
+   "sha": "9c973a31c00c38b2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "These commands will print a backtrace from each throw and continue.\nThe backtrace from the last (or possibly the last but one) throw\nbefore the program stops, is the interesting one.",
+   "sha": "a2f4b577f68f61fe",
+   "zh": null
+  }
+ ]
+}

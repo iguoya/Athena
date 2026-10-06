@@ -1,0 +1,26 @@
+{
+ "chapter": "chapter-refptr",
+ "section": "sec-refptr-checking-for-null",
+ "title": "Checking for nullptr",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Just like normal pointers, you can check whether a\nRefPtr points to anything.",
+   "sha": "cfcd1f803cfa3934",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refModel = m_TreeView.get_model();\nif (refModel)\n{\nauto cols_count = refModel->get_n_columns();\n...\n}",
+   "sha": "631fb8634587037f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "But unlike normal pointers, RefPtrs are automatically\ninitialized to nullptr so you don't need to remember to do that yourself.",
+   "sha": "6b2016f6636f8798",
+   "zh": null
+  }
+ ]
+}

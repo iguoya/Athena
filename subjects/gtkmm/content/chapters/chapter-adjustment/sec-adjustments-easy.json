@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-adjustment",
+ "section": "sec-adjustments-easy",
+ "title": "Using Adjustments the Easy Way",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The adjustable widgets can be roughly divided into those which use and\nrequire specific units for these values, and those which treat them as\narbitrary numbers.",
+   "sha": "e91c74ca51778a89",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The group which treats the values as arbitrary numbers includes the\nRange widgets (Scrollbar and\nScale), the ScaleButton widget,\nand the SpinButton widget. These widgets are typically\n\"adjusted\" directly by the user with the mouse or keyboard. They will treat the\nlower and upper values of an\nadjustment as a range within which the user can manipulate the adjustment's\nvalue. By default, they will only modify the\nvalue of an adjustment.",
+   "sha": "93f8af260e120fb0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The other group includes the Viewport widget and the\nScrolledWindow widget. All of these widgets use pixel\nvalues for their adjustments. These are also typically adjusted indirectly\nusing scrollbars. While all widgets which use adjustments can either create\ntheir own adjustments or use ones you supply, you'll generally want to let this\nparticular category of widgets create its own adjustments.",
+   "sha": "265db3646f454b65",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you share an adjustment object between a Scrollbar and a TextView\nwidget, manipulating the scrollbar will automagically adjust the TextView\nwidget. You can set it up like this:",
+   "sha": "012f40da68228c1d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// creates its own adjustments\nGtk::TextView textview;\n// uses the newly-created adjustment for the scrollbar as well\nGtk::Scrollbar vscrollbar(textview.get_vadjustment(), Gtk::Orientation::VERTICAL);",
+   "sha": "d3ff76d05a614910",
+   "zh": ""
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "chapter": "chapter-memory",
+ "section": "sec-memory-shared-resources",
+ "title": "Shared resources",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Some objects, such as Gdk::Pixbufs and\nPango::Fonts, are obtained from a shared store.\nTherefore you cannot instantiate your own instances. These classes typically\ninherit from Glib::Object. Rather than requiring you to\nreference and unreference these objects, gtkmm uses the\nGlib::RefPtr<> smartpointer. Cairomm has its own\nsmartpointer, Cairo::RefPtr<>.",
+   "sha": "e0f22c764caeed29",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Objects such as Gdk::Pixbuf can only be instantiated\nwith a create() function. For instance,",
+   "sha": "ceffa084d6c65d31",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pixbuf = Gdk::Pixbuf::create_from_file(filename);",
+   "sha": "b105cc0b284a5f23",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You have no way of getting a bare Gdk::Pixbuf. In the\nexample, pixbuf is a smart pointer, so you can do this, much\nlike a normal pointer:",
+   "sha": "af66238cd59ad44b",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto width = 0;\nif(pixbuf)\n{\nwidth = pixbuf->get_width();\n}",
+   "sha": "ea2f734cfe1696ea",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "When pixbuf goes out of scope an\nunref() will happen in the background and you don't need\nto worry about it anymore. There's no new so there's no\ndelete.",
+   "sha": "26c69b4b06d10421",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you copy a RefPtr, for instance",
+   "sha": "8cf25819b236cbe3",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pixbuf2 = pixbuf;",
+   "sha": "69ee38131f3391b9",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "or if you pass it as a method argument or a return type, then\nRefPtr will do any necessary referencing to ensure that\nthe instance will not be destroyed until the last RefPtr\nhas gone out of scope.",
+   "sha": "1df48e84c43a66ee",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "See the appendix for detailed information about RefPtr.",
+   "sha": "ccda35d6a2e1b998",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you wish to learn more about smartpointers, you might look in these\nbooks:\n\n\nBjarne Stroustrup, \"The C++ Programming Language\" Fourth Edition - section 34.3\n\n\nNicolai M. Josuttis, \"The C++ Standard Library\" - section 4.2",
+   "sha": "4868a50151813c77",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Bjarne Stroustrup, \"The C++ Programming Language\" Fourth Edition - section 34.3",
+   "sha": "2f2797f431485e7a",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Nicolai M. Josuttis, \"The C++ Standard Library\" - section 4.2",
+   "sha": "62926204bf11ab17",
+   "zh": null
+  }
+ ]
+}

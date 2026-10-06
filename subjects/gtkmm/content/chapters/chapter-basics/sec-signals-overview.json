@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-basics",
+ "section": "sec-signals-overview",
+ "title": "Signals",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "gtkmm, like most GUI toolkits, is event-driven. When an event occurs, such as the press of a mouse\nbutton, the appropriate signal will be emitted by the Widget\nthat was pressed. Each Widget has a different set of signals that it can emit. To make a\nbutton click result in an action, we set up a\nsignal handler to catch the button's \"clicked\" signal.",
+   "sha": "e9a231492328142d",
+   "zh": "与大多数 GUI 工具集一样，gtkmm 是事件驱动的。事件发生时——比如按下鼠标键—— 被按下的 Widget 会发出相应的信号。每种 Widget 能发出的信号各不相同。要让一次 按钮点击触发一个动作，我们设置一个信号处理器（signal handler）来捕获按钮的 「clicked」信号。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm uses the libsigc++ library to implement signals. Here is an example line of code that connects a Gtk::Button's \"clicked\" signal with a signal handler called \"on_button_clicked\":",
+   "sha": "ba1696db894d1325",
+   "zh": "gtkmm 用 libsigc++ 库实现信号。下面这行示例代码把 Gtk::Button 的「clicked」 信号连接到名为 on_button_clicked 的信号处理器："
+  },
+  {
+   "type": "code",
+   "text": "m_button1.signal_clicked().connect( sigc::mem_fun(*this,\n&HelloWorld::on_button_clicked) );",
+   "sha": "c8e6c9080c18cf19",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "For more detailed information about signals, see the appendix.",
+   "sha": "f63766fbf031c4c1",
+   "zh": "信号的详细信息见附录（Signals）。"
+  },
+  {
+   "type": "para",
+   "text": "For information about implementing your own signals rather than\njust connecting to the existing gtkmm signals, see the appendix.",
+   "sha": "605870e0ba76dd75",
+   "zh": "关于如何实现自己的信号（而不只是连接现有的 gtkmm 信号），见附录（Creating your own signals）。"
+  }
+ ]
+}

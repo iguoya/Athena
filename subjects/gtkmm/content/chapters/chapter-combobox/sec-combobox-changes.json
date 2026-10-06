@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-combobox",
+ "section": "sec-combobox-changes",
+ "title": "Responding to changes",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You might need to react to every change of selection in the ComboBox, for instance to update other widgets. To do so, you should handle the changed signal. For instance:",
+   "sha": "6a1e7807f5ae9966",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_combo.signal_changed().connect( sigc::mem_fun(*this,\n&ExampleWindow::on_combo_changed) );",
+   "sha": "b11c5dc47efee428",
+   "zh": ""
+  }
+ ]
+}

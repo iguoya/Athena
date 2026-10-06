@@ -1,0 +1,548 @@
+{
+ "chapter": "chapter-container-widgets",
+ "section": "sec-multi-item-containers",
+ "title": "Multiple-item Containers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Multiple-item container widgets have other methods than set_child()\nand unset_child(). Different containers can have different\nmethods for adding and removing child widgets. For instance, Gtk::Box\nhas append() and remove() as\nwell as other methods. The remove() method for multiple-item\ncontainers takes an argument, specifying which widget to remove.",
+   "sha": "c481a46c2ee4fb99",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Packing",
+   "sha": "e14fc9d661dc86a8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You've probably noticed that gtkmm windows seem \"elastic\" - they can usually be stretched in many different ways. This is due to the widget packing\nsystem.",
+   "sha": "dc23a528e1b07884",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Many GUI toolkits require you to precisely place widgets in a window, using absolute positioning, often using a visual editor. This leads to several problems:",
+   "sha": "77ede39ee36c950c",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "The widgets don't rearrange themselves when the window is resized. Some widgets are hidden when the window is made smaller, and lots of useless space appears when the window is made larger.",
+   "sha": "896d49ff0d443df5",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "It's impossible to predict the amount of space necessary for text after it has been translated to other languages, or displayed in a different font. On Unix it is also impossible to anticipate the effects of every theme and window manager.",
+   "sha": "b068515ad7a1f9ab",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Changing the layout of a window \"on the fly\", to make some extra widgets appear, for instance, is complex. It requires tedious recalculation of every widget's position.",
+   "sha": "be38512b35f9fe01",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "gtkmm uses the packing system to solve these problems. Rather than specifying the position and size of each widget in the window,\nyou can arrange your widgets in rows, columns,\nand/or grids. gtkmm can size your window automatically, based on the\nsizes of the widgets it contains. And the sizes of the widgets are, in turn, determined by the amount of text they contain, or the minimum and maximum sizes that you specify, and/or how you have requested that the available space should be shared between sets of widgets.\nYou can perfect your layout by\nspecifying margins and centering values for each of your widgets. gtkmm then uses\nall this information to resize and reposition everything sensibly and smoothly when the user manipulates the window.",
+   "sha": "635555ffdc3b887a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "gtkmm arranges widgets hierarchically, using containers.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding Gtk::Window.",
+   "sha": "0c0383c41e5df9f7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Yes, that's correct: a Window can contain at most one widget. How, then, can\nwe use a window for anything useful? By placing a multiple-child container in\nthe window. The most useful container widgets are\nGtk::Grid and Gtk::Box.",
+   "sha": "eec4e2648c2656b2",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::Grid arranges its child widgets in rows and columns. Use attach() and attach_next_to() to insert child widgets.",
+   "sha": "8a822df781fb00c3",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::Box arranges its child widgets vertically or horizontally. Use append() to insert child widgets.",
+   "sha": "0489e4721d6d91a3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are several other containers, which we will also discuss.",
+   "sha": "b0aa69ce7b8907b3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you've never used a packing toolkit before, it can take some\ngetting used to. You'll probably find, however, that you don't\nneed to rely on visual form editors quite as much as you might with\nother toolkits.",
+   "sha": "f1e2a535bdb940b0",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "An improved Hello World",
+   "sha": "c6b515d271d4e143",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Let's take a look at a slightly improved helloworld, showing what we've learnt.",
+   "sha": "cc265b2d29b54eb5",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Hello World 2",
+   "sha": "3df75539dda4c512",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the Boxes section.",
+   "sha": "12723f5444eefb55",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Boxes",
+   "sha": "5509dc678c234105",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Most packing uses boxes as in the above example. These\nare invisible containers into which we can pack our widgets. When\npacking widgets into a horizontal box, the objects are inserted\nhorizontally from left to right. In a vertical box, widgets are packed from\ntop to bottom. You may use any combination of boxes inside or beside other\nboxes to create the desired effect.",
+   "sha": "8a408786eee17ceb",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Adding widgets",
+   "sha": "432b40484189da6f",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Per-child packing options",
+   "sha": "1b5eab78c6e683da",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The append() method places widgets inside these\ncontainers. It will start at the top and work its way down in a\nBox with vertical orientation, or pack left to right in\na Box with horizontal orientation. If it's inconvenient\nto add widgets in this order, use insert_child_after()\nor insert_child_at_start(). We will use\nappend() in our examples.",
+   "sha": "8aa2078fe1a19020",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\nCambalache GUI designer to see what is possible.\nYou can then use the Gtk::Builder API to load your GUI at runtime.",
+   "sha": "f911bfc0d5c63ad4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are basically five\ndifferent styles, as shown in this picture:",
+   "sha": "11b2be2a154185fa",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Box Packing 1",
+   "sha": "6782e8eeadeed26c",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Each line contains one horizontal Box with\nseveral buttons. Each of the buttons on a line is packed into the\nBox with the same arguments to the\nset_hexpand(), set_halign(),\nset_margin_start() and set_margin_end()\nmethods.",
+   "sha": "c76ac9fdbdc33d69",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Per-container packing options",
+   "sha": "78ae764773f063f9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "sha": "a048e12ae83f090f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
+   "sha": "009504742cc16654",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "sha": "b8d8e02b25d29ed9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
+   "sha": "fbd52b4e2177803c",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Box Packing 2",
+   "sha": "5aeb019524f16834",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "sha": "a048e12ae83f090f-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
+   "sha": "009504742cc16654-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "sha": "b8d8e02b25d29ed9-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
+   "sha": "fbd52b4e2177803c-1",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Box Packing 2",
+   "sha": "5aeb019524f16834-1",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Gtk::Application and command-line options",
+   "sha": "eb144fad160e1edd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith Gtk::Application.",
+   "sha": "8e3c1fe089fe084e",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
+   "sha": "d9e9efb60c9e8eeb",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
+   "sha": "d1950f69a7d2399e",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
+   "sha": "c6aa28a5727072fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "sha": "a048e12ae83f090f-2",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
+   "sha": "009504742cc16654-2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "sha": "b8d8e02b25d29ed9-2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
+   "sha": "fbd52b4e2177803c-2",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Box Packing 2",
+   "sha": "5aeb019524f16834-2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith Gtk::Application.",
+   "sha": "8e3c1fe089fe084e-1",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
+   "sha": "d9e9efb60c9e8eeb-1",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
+   "sha": "d1950f69a7d2399e-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
+   "sha": "c6aa28a5727072fd-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Grid",
+   "sha": "0d7d12ac624c66e6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A Grid dynamically lays out child widgets in rows and\ncolumns. The dimensions of the grid do not need to be specified in the constructor.",
+   "sha": "dffb8b4f8ef984e6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Child widgets can span multiple rows or columns, using\nattach(), or added next to an existing widget inside\nthe grid with attach_next_to(). Individual rows and columns of the grid can be set to have uniform height or width with\nset_row_homogeneous() and\nset_column_homogeneous().",
+   "sha": "66d7756801bbc0db",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can set the margin and expand properties of the\nchild Widgets to control their spacing and their behavior when the Grid is resized.",
+   "sha": "932342e62e93a84a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example creates a window with three buttons in a grid.\nThe first two buttons are in the upper row, from left to right. A\nthird button is attached underneath the first button, in a new lower row,\nspanning two columns.",
+   "sha": "b55ad2fd588d77d7",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Grid",
+   "sha": "0d7d12ac624c66e6-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Notebook",
+   "sha": "0dec07abf92dbe72",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A Notebook has a set of stacked\npages, each of which contains widgets. Labelled\ntabs allow the user to select the pages.\nNotebooks allow several sets of widgets to be placed in a\nsmall space, by only showing one page at a time. For instance, they are often\nused in preferences dialogs.",
+   "sha": "b3ec998c3566bed4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Use the append_page(), prepend_page()\nand insert_page() methods to add tabbed pages to the\nNotebook, supplying the child widget and the name for the\ntab.",
+   "sha": "61da4af5e5a3677e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To discover the currently visible page, use the\nget_current_page() method. This returns the page number,\nand then calling get_nth_page() with that number will give\nyou a pointer to the actual child widget.",
+   "sha": "8448c981a158d2df",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To programmatically change the selected page, use the\nset_current_page() method.",
+   "sha": "b47feacb2ec5c449",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-2",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Notebook",
+   "sha": "0dec07abf92dbe72-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-4",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Assistant",
+   "sha": "391e405152779acc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::Assistant is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm. libadwaita (a C library) has replacement parts\n(like AdwCarousel). In some cases, a Gtk::Notebook might\nbe an acceptable replacement.",
+   "sha": "ad7fddbd1f11aa9b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "An Assistant splits a complex operation into steps. Each step is a page, containing a header, a child widget and an action area. The Assistant's action area has navigation buttons which update automatically depending on the type of the page, set with set_page_type().",
+   "sha": "def4438334fc58a8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Use the append_page(), prepend_page and insert_page() methods to add pages to the Assistant, supplying the child widget for each page.",
+   "sha": "16a157035cc029f8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To determine the currently-visible page, use the get_current_page() method, and pass the result to get_nth_page(), which returns a pointer to the actual widget. To programmatically change the current page, use the set_current_page() method.",
+   "sha": "9e91c4e6252a9387",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To set the title of a page, use the set_page_title() method.",
+   "sha": "782b9cff0fea2d91",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To add widgets to the action area, use the add_action_widget() method. They will be packed alongside the default buttons. Use the remove_action_widget() method to remove widgets.",
+   "sha": "5defa6f0ff39e1a8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-3",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Assistant",
+   "sha": "391e405152779acc-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-5",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Other Multi-item Containers",
+   "sha": "006dea79c503d9ce",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are other multi-item containers. See the reference documentation for a\ncomplete list. Here are links to some example programs that show containers,\nwhich are not mentioned elsewhere in this tutorial.",
+   "sha": "723370b9e64dad2c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code, ActionBar",
+   "sha": "02b73ac5e3a5c80e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code, FlowBox",
+   "sha": "baad5af70012103a",
+   "zh": null
+  }
+ ]
+}

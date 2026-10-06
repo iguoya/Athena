@@ -1,0 +1,80 @@
+{
+ "chapter": "chapter-customwidgets",
+ "section": "sec-custom-containers",
+ "title": "Custom Containers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "When deriving a custom container widget directly from Gtk::Widget,\nyou should override the following virtual methods:\n\nget_request_mode_vfunc(): Return what Gtk::SizeRequestMode is preferred by the container.\nmeasure_vfunc(): Calculate the minimum and natural width or height of the container.\nsize_allocate_vfunc(): Position the child widgets, given the height and width that the container has actually been given.",
+   "sha": "ff1a6119d7bcd765",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "get_request_mode_vfunc(): Return what Gtk::SizeRequestMode is preferred by the container.",
+   "sha": "7b67359dfaa47302",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "measure_vfunc(): Calculate the minimum and natural width or height of the container.",
+   "sha": "a4c6e23b021a2075",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "size_allocate_vfunc(): Position the child widgets, given the height and width that the container has actually been given.",
+   "sha": "ad6d09d8de0bf26d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The get_request_mode_vfunc(),\nmeasure_vfunc(), and\nsize_allocate_vfunc() virtual methods control the\nlayout of the child widgets. For instance, if your container has 2\nchild widgets, with one below the other, your\nget_request_mode_vfunc() might request\nheight-for-width layout. Then your\nmeasure_vfunc()\nmight report the maximum of the widths of the child widgets when asked\nto report width, and it might report the sum of their heights when asked\nto report height. If you want padding between\nthe child widgets then you would add that to the width and height too.\nYour widget's container will use this result to ensure that your widget\ngets enough space, and not less. By examining each widget's parent, and\nits parent, this logic will eventually decide the size of the top-level\nwindow.",
+   "sha": "f093b39931f5fab7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You are not guaranteed to get the Gtk::SizeRequestMode\nthat you request. Therefore measure_vfunc() must\nreturn sensible values for all reasonable values of its input parameters.\nFor a description of measure_vfunc()'s parameters see\nalso the description of Gtk::Widget::measure(), which\nmay be better documented than measure_vfunc().",
+   "sha": "62bd0b8db898697b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "size_allocate_vfunc() receives the actual\nheight and width that the parent container has decided to give to your\nwidget. This might be more than the minimum, or even more than the natural\nsize, for instance if the\ntop-level window has been expanded. You might choose to ignore the extra\nspace and leave a blank area, or you might choose to expand your child\nwidgets to fill the space, or you might choose to expand the padding\nbetween your widgets. It's your container, so you decide.",
+   "sha": "d5dc955f1f1850a3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Your container must unparent its children before the underlying C object\n(a gtkmm__GtkWidget) is finalized. If your container\nis used as a managed widget, it shall unparent its children in a\nGtk::Widget::signal_destroy() handler (available\nsince gtkmm 4.8). If your container is not managed, that signal handler\nis not called. Instead the children shall be unparented in the C++ destructor.\nIf you want your container to be useful both ways, unparent the children\nboth in the destructor and in a signal handler. See the example code.",
+   "sha": "2b960a49b11f762d",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example implements a container with child widgets, one above\nthe other. Of course, in this case it would be far simpler just to use\na vertical Gtk::Box or Gtk::Grid.",
+   "sha": "19bd881efee9282a",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Custom Container",
+   "sha": "41003bbf6930810f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

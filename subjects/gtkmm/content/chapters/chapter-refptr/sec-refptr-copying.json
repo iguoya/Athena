@@ -1,0 +1,32 @@
+{
+ "chapter": "chapter-refptr",
+ "section": "sec-refptr-copying",
+ "title": "Copying",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You can copy RefPtrs, just like normal pointers. But\nunlike normal pointers, you don't need to worry about deleting the underlying\ninstance.",
+   "sha": "7ce154b8d35f8e2d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto refPixbuf2 = refPixbuf;",
+   "sha": "6a65bc95626b8ff8",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Of course this means that you can store RefPtrs in\nstandard containers, such as std::vector or\nstd::list.",
+   "sha": "fc39726f051dc5a9",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "std::list<Glib::RefPtr<Gdk::Pixbuf>> listPixbufs;\nauto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nlistPixbufs.push_back(refPixbuf);",
+   "sha": "15a1ef37bd484d91",
+   "zh": ""
+  }
+ ]
+}

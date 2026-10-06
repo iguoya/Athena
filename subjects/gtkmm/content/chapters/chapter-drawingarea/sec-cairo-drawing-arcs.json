@@ -1,0 +1,74 @@
+{
+ "chapter": "chapter-drawingarea",
+ "section": "sec-cairo-drawing-arcs",
+ "title": "Drawing Arcs and Circles",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "With Cairo, the same function is used to draw arcs, circles, or\nellipses: Cairo::Context::arc(). This function\ntakes five arguments. The first two are the coordinates of the\ncenter point of the arc, the third argument is the radius of the arc,\nand the final two arguments define the start and end angle of the\narc. All angles are defined in radians, so drawing a circle is the\nsame as drawing an arc from 0 to 2 * M_PI radians.\nAn angle of 0 is in the direction of the positive X axis (in user-space). An\nangle of M_PI/2 radians (90 degrees) is in the direction of the positive Y axis\n(in user-space). Angles increase in the direction from the positive X axis\ntoward the positive Y axis. So with the default transformation matrix, angles\nincrease in a clockwise direction. (Remember that the positive Y axis\npoints downwards.)",
+   "sha": "9fd74dad61341f24",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To draw an ellipse, you can scale the current transformation matrix\nby different amounts in the X and Y directions. For example, to draw\nan ellipse with center at x, y\nand size width, height:",
+   "sha": "59c0dd183c4d1d24",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "context->save();\ncontext->translate(x, y);\ncontext->scale(width / 2.0, height / 2.0);\ncontext->arc(0.0, 0.0, 1.0, 0.0, 2 * M_PI);\ncontext->restore();",
+   "sha": "f6d64ea4e5d00563",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's an example of a simple program that draws an arc, a circle\nand an ellipse into a drawing area.",
+   "sha": "46659762832fc821",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Drawing Area - Arcs",
+   "sha": "a2f5849be1a42fe2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are a couple of things to note about this example code.\nAgain, the only real difference between this example and the\nprevious ones is the on_draw()\nfunction, so we'll limit our focus to that function. In\naddition, the first part of the function is nearly identical to\nthe previous examples, so we'll skip that portion.",
+   "sha": "9e3cd2f77db91d7a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Note that in this case, we've expressed nearly everything in\nterms of the height and width of the window, including the width\nof the lines. Because of this, when you resize the window,\neverything scales with the window. Also note that there are\nthree drawing sections in the function and each is wrapped with a\nsave()/restore() pair\nso that we're back at a known state after each drawing.",
+   "sha": "91764047dd410e19",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The section for drawing an arc introduces one new function,\nclose_path(). This function will in effect\ndraw a straight line from the current point back to the first\npoint in the path. There is a significant difference between\ncalling close_path() and manually drawing a\nline back to the starting point, however. If you use\nclose_path(), the lines will be nicely\njoined together. If you use line_to()\ninstead, the lines will end at the same point, but Cairo won't do\nany special joining.",
+   "sha": "611914e344bf3e7c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The function\nCairo::Context::arc_negative() is\nexactly the same as\nCairo::Context::arc() but the angles go\nthe opposite direction.",
+   "sha": "803d984e09b964e5",
+   "zh": null
+  }
+ ]
+}

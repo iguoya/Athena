@@ -1,0 +1,116 @@
+{
+ "chapter": "chapter-draganddrop",
+ "section": "sec-dnd-signals",
+ "title": "Signals",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "When a drop target has accepted a dragged item, certain signals will be\nemitted, depending on what action has been selected. For instance, the user\nmight have held down the Shift key to specify a\nmove rather than a copy. Remember that\nthe user can only select the actions which you have specified in your calls to\nGtk::DragSource::set_actions() and\nGtk::DropTarget::set_actions().",
+   "sha": "5e2699cc17d914c9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The source widget will emit these DragSource signals:\n\ndrag_begin: Provides a Gdk::Drag.\nprepare: Shall return a Gdk::ContentProvider,\nwith the data to use for the drag that is about to start.\ndrag_end: Provides a Gdk::Drag,\nand a bool that tells if the drag was performing a move\nand the data should be deleted.\ndrag_cancel: Emitted on the drag source when a drag has failed.",
+   "sha": "99e6b459ea1feb09",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "drag_begin: Provides a Gdk::Drag.",
+   "sha": "359a2098c8283409",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "prepare: Shall return a Gdk::ContentProvider, with the data to use for the drag that is about to start.",
+   "sha": "51831ea940acf1c1",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "drag_end: Provides a Gdk::Drag, and a bool that tells if the drag was performing a move and the data should be deleted.",
+   "sha": "635c7414c316d5c9",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "drag_cancel: Emitted on the drag source when a drag has failed.",
+   "sha": "f1e18c5ad74d19c5",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The target widget will emit these DropTarget signals:\n\nenter: Provides coordinates.\nShall return the preferred Gdk::DragAction.\nmotion: Provides coordinates.\nShall return the preferred Gdk::DragAction.\nleave: Emitted on the drop site when the pointer\nleaves the widget.\naccept: Provides a Gdk::Drop.\nYou can call the status() method of the\nGdk::Drop to indicate which actions will be accepted.\ndrop: Provides the data being dropped and coordinates.\nShall return a bool indicating whether the drop was accepted.",
+   "sha": "fe7d2e70a7ae4709",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "enter: Provides coordinates. Shall return the preferred Gdk::DragAction.",
+   "sha": "f5c08057e03861e9",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "motion: Provides coordinates. Shall return the preferred Gdk::DragAction.",
+   "sha": "e5d01f85b1fdae4c",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "leave: Emitted on the drop site when the pointer leaves the widget.",
+   "sha": "c86c4cdb6dddade1",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "accept: Provides a Gdk::Drop. You can call the status() method of the Gdk::Drop to indicate which actions will be accepted.",
+   "sha": "5d5b585469c5f9cd",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "drop: Provides the data being dropped and coordinates. Shall return a bool indicating whether the drop was accepted.",
+   "sha": "e1621e93cae0a0ee",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following signals call only one signal handler when emitted. When you connect\na handler to such a signal, your signal handler must be called before (instead of)\nthe default handler, otherwise it won't be called. Set the after\nparameter in connect() to false.\n\nGtk::DragSource::signal_prepare()\nGtk::DropTarget::signal_enter()\nGtk::DropTarget::signal_motion()\nGtk::DropTarget::signal_accept()\nGtk::DropTarget::signal_drop()",
+   "sha": "4baded6300f57145",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::DragSource::signal_prepare()",
+   "sha": "ef86fb6d883ee489",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::DropTarget::signal_enter()",
+   "sha": "f53340f77b92211b",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::DropTarget::signal_motion()",
+   "sha": "f34a72a1476a6a55",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::DropTarget::signal_accept()",
+   "sha": "1523a354d790f75e",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::DropTarget::signal_drop()",
+   "sha": "c6477bafb6cf58ef",
+   "zh": null
+  }
+ ]
+}

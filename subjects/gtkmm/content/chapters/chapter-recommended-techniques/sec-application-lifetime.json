@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-recommended-techniques",
+ "section": "sec-application-lifetime",
+ "title": "Application Lifetime",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Most applications will have only one Window, or\nonly one main window. These applications can use\nGtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).\nIt creates and shows a window. When the window is closed, make_window_and_run()\ndeletes the window and returns to the caller.\nThis might happen when the user closes the window, or when your code decides to\nclose the window with Gtk::Window::close(). You can prevent\nthe user from closing the window (for instance, if there are unsaved changes) by\noverriding Gtk::Window::on_close_request().",
+   "sha": "c78508cdde565d5a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Most of our examples use this technique.",
+   "sha": "f1f141933290909b",
+   "zh": null
+  }
+ ]
+}

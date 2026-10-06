@@ -1,0 +1,74 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-trivial-app",
+ "title": "A trivial application",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "When using Gtk::Application, the main() function\ncan be very simple. We just call Gtk::Application::run() on an\ninstance of our application class.",
+   "sha": "1184067eb7118ed0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "All the application logic is in the application class, which is a subclass of\nGtk::Application. Our example does not yet have any interesting\nfunctionality. All it does is open a window when it is activated without arguments,\nand open the files it is given, if it is started with arguments. (Or rather, our\napplication class tries to open the files, but our subclassed application window\ndoes not yet do what it's told to do.)",
+   "sha": "5dc190bc341e7b29",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To handle these two cases, we override signal_activate()'s\ndefault handler, which gets called when the application is launched without commandline\narguments, and signal_open()'s default handler, which gets\ncalled when the application is launched with commandline arguments.",
+   "sha": "4d387933d5b6702a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gio::Application Reference",
+   "sha": "fb6113831966abd3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::Application Reference",
+   "sha": "53ffb85c1c34017c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Another important class that is part of the application support in gtkmm is\nGtk::ApplicationWindow. It is typically subclassed as well.\nOur subclass does not do anything yet, so we will just get an empty window.",
+   "sha": "bd68236a0eb3f679",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "As part of the initial setup of our application, we also create an icon and a desktop file.\nNote that @bindir@ in the desktop file needs to be replaced with the actual path\nto the binary before this desktop file can be used.",
+   "sha": "6420b329491858fe",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is what we've achieved so far:",
+   "sha": "21b837200a277915",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "A trivial application",
+   "sha": "3b2f1b1849297a4d",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This does not look very impressive yet, but our application is already presenting itself\non the session bus, it has single-instance semantics, and it accepts files as commandline arguments.",
+   "sha": "89bf54770bb25d8f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "chapter": "chapter-button-widget",
+ "section": "sec-radio-buttons",
+ "title": "Radio Button",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "There is no separate class for radio buttons. Check buttons and toggle buttons\nact as radio buttons when they form a group. Only one button in a group can be\nselected at any one time.",
+   "sha": "518a198e2528cfde",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Groups",
+   "sha": "39bbb719fa2b9d22",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You create the buttons, and set up their group afterwards. In the following example,\nwe put 3 radio buttons in a group:",
+   "sha": "514f887aa86ce28f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto rb1 = Gtk::make_managed<Gtk::CheckButton>(\"button1\");\nauto rb2 = Gtk::make_managed<Gtk::CheckButton>(\"button2\");\nauto rb3 = Gtk::make_managed<Gtk::CheckButton>(\"button3\");\nrb2->set_group(*rb1);\nrb3->set_group(*rb1);",
+   "sha": "99a608d7258226f5",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "We told gtkmm to put all three CheckButtons in the\nsame group by using set_group() to tell the other\nCheckButtons to share group with the first\nCheckButton.",
+   "sha": "403e23abaa0198f3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Methods",
+   "sha": "8696622f344183c4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "CheckButtons and ToggleButtons are \"off\"\nwhen created; this means that when you first make a group of them, they will all be off.\nDon't forget to turn one of them on using set_active().",
+   "sha": "1cadb93a14aac903",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following example demonstrates the use of grouped\nCheckButtons:",
+   "sha": "67b994251eddd212",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "RadioButton",
+   "sha": "746e369c24751bb9",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

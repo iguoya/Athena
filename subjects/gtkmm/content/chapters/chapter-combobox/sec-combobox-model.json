@@ -1,0 +1,26 @@
+{
+ "chapter": "chapter-combobox",
+ "section": "sec-combobox-model",
+ "title": "The model",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The model for a ComboBox can be defined and filled exactly as for a TreeView. For instance, you might derive a ComboBox class with one integer and one text column, like so:",
+   "sha": "c12f978e3ebefba9",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "class ModelColumns : public Gtk::TreeModel::ColumnRecord\n{\npublic:\nModelColumns()\n{ add(m_col_id); add(m_col_name); }\n\nGtk::TreeModelColumn<int> m_col_id;\nGtk::TreeModelColumn<Glib::ustring> m_col_name;\n};\n\nModelColumns m_columns;",
+   "sha": "c1c1a53cb78254cc",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "After appending rows to this model, you should provide the model to the ComboBox with the set_model() method. Then use the pack_start() or pack_end() methods to specify what columns will be displayed in the ComboBox. As with the TreeView you may either use the default cell renderer by passing the TreeModelColumn to the pack methods, or you may instantiate a specific CellRenderer and specify a particular mapping with either add_attribute() or set_cell_data_func(). Note that these methods are in the CellLayout base class.",
+   "sha": "364f014900e0510f",
+   "zh": null
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "chapter": "chapter-draganddrop",
+ "section": "sec-dnd-methods",
+ "title": "Methods",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Widgets can be identified as sources or targets using\nGtk::DragSource and Gtk::DropTarget\nevent controllers.",
+   "sha": "fe03a5ff2c7b79b6",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto source = Gtk::DragSource::create();\nm_source_widget.add_controller(source);",
+   "sha": "4c22c13067736684",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Some DragSource methods:\n\n\n\nvoid set_content(const Glib::RefPtr<Gdk::ContentProvider>& content):\nSets a content provider on the drag source.\n\n\n\n\nvoid set_actions(Gdk::DragAction actions):\nSets the actions on the drag source. For instance Gdk::DragAction::COPY\n| Gdk::DragAction::MOVE.\n\n\n\n\nvoid set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y):\nSets a paintable to use as icon during DND operations.",
+   "sha": "a429f5c588e9002a",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content): Sets a content provider on the drag source.",
+   "sha": "1dea1eee1b2a1b0f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void set_actions(Gdk::DragAction actions): Sets the actions on the drag source. For instance Gdk::DragAction::COPY | Gdk::DragAction::MOVE.",
+   "sha": "70ebd0e73d3f0e07",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y): Sets a paintable to use as icon during DND operations.",
+   "sha": "fc640c22142963f7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto target = Gtk::DropTarget::create(gtype, actions);\nm_target_widget.add_controller(target);",
+   "sha": "047e34fff59406cc",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Some DropTarget methods:\n\n\n\nvoid set_gtypes(const std::vector<GType>& types):\nSets the supported types for this drop target.\n\n\n\n\nvoid set_actions(Gdk::DragAction actions):\nSets the actions that this drop target supports.\n\n\n\n\nGlib::ValueBase get_value() const:\nGets the current drop data, as a Glib::Value.\n\n\n\n\nvoid reject():\nRejects the ongoing drop operation. This function should be used when\ndelaying the decision on whether to accept a drag or not until after\nreading the data.",
+   "sha": "c2eb59fbc4e58317",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void set_gtypes(const std::vector<GType>& types): Sets the supported types for this drop target.",
+   "sha": "f5c6362cda862579",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void set_actions(Gdk::DragAction actions): Sets the actions that this drop target supports.",
+   "sha": "a800c664025448c0",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::ValueBase get_value() const: Gets the current drop data, as a Glib::Value.",
+   "sha": "bceae72c7aad689e",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "void reject(): Rejects the ongoing drop operation. This function should be used when delaying the decision on whether to accept a drag or not until after reading the data.",
+   "sha": "918906f12bb6c787",
+   "zh": null
+  }
+ ]
+}

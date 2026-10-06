@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-keyboardevents",
+ "section": "sec-keyboardevents-overview",
+ "title": "Overview",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Whenever you press or release a key, an event is emitted. You can add an\nevent controller and connect a signal handler to handle such events.",
+   "sha": "c130d507b322a8f0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The event signal handler will receive arguments that depend on the type of event.\nFor key press events the arguments are (guint keyval,\nguint keycode, Gdk::ModifierType state).\nAs described in the appendix,\nthe key press event signal handler returns a bool value, to indicate that\nthe signal is fully handled (true) or allow event propagation\n(false).",
+   "sha": "1043aa73a65e766c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To determine which key was pressed or released, you read the value of\nthe keyval argument and compare it with a constant in the\n\n<gdk/gdkkeysyms.h> header file. The states of\nmodifier keys (shift, ctrl, etc.) are available as bit-flags in\nstate.",
+   "sha": "852883a0183bc4aa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's a simple example:",
+   "sha": "8467c290c086bf5d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "signal_key_pressed().connect(\nsigc::mem_fun(*this, &MyClass::on_key_pressed), false);\nadd_controller(controller);\n]]>",
+   "sha": "9e383b35e5ef66b8",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In this example there are three keyboard shortcuts:\nAlt+1 selects the first radio button,\nAlt+2 selects the second one, and the\nEsc key closes the window.",
+   "sha": "351c3a8995fa1674",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Keyboard Events - Simple",
+   "sha": "28a3233919a5a809",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "chapter": "changes-gtkmm4",
+ "section": "sec-deprecations-4-10",
+ "title": "Deprecations in gtkmm 4.10",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Many classes are deprecated since gtkmm 4.10. They can still be used in\ngtkmm4 applications, provided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED\nare not defined. There are also many new classes in gtkmm 4.10, which replace\nsome of the deprecated classes. Some example programs in this tutorial use classes\ndeprecated since gtkmm 4.10. Some other programs use classes available since gtkmm 4.10.",
+   "sha": "4a6e1792b1f50f38",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Deprecated classes:\nAppChooser, AppChooserButton, AppChooserDialog,\nAppChooserWidget, CellArea, CellAreaBox, CellAreaContext,\nCellLayout, CellRenderer, CellRendererAccel, CellRendererCombo,\nCellRendererPixbuf, CellRendererProgress, CellRendererSpin,\nCellRendererSpinner, CellRendererText, CellRendererToggle, CellView,\nComboBox, ComboBoxText, EntryCompletion, IconView, ListStore,\nListViewText, StyleContext, TreeDragDest, TreeDragSource,\nTreeIter and other classes in treeiter.h,\nTreeModel, TreeModelFilter, TreeModelSort, TreePath, TreeRowReference,\nTreeSelection, TreeSortable, TreeStore, TreeView, TreeViewColumn,\nnamespace CellRenderer_Generation, namespace TreeView_Private,\nColorButton, ColorChooser, ColorChooserDialog,\nFileChooser, FileChooserDialog, FileChooserNative, FileChooserWidget,\nFontButton, FontChooser, FontChooserDialog, FontChooserWidget,\nMessageDialog, TreeModelColumn, TreeModelColumnRecord, InfoBar,\nAssistant, AssistantPage, LockButton, Statusbar, VolumeButton.",
+   "sha": "85a29aaef49be299",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "New classes and enums:\nAlertDialog, ColorDialog, ColorDialogButton, ColumnViewSorter, FileDialog,\nFontDialog, FontDialogButton, FileLauncher, UriLauncher, ATContext,\nenums DialogError, FontLevel, Collation.",
+   "sha": "04d2b3b90bf9f7d6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In most cases there are replacements for the deprecated classes.\nSee the reference documentation.",
+   "sha": "2e1a06f01680979b",
+   "zh": null
+  }
+ ]
+}

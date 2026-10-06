@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-properties",
+ "title": "Properties",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Widgets and other objects have many useful properties. Here we show some ways to use\nthem in new and flexible ways, by wrapping them in actions with Gio::PropertyAction\nor by binding them with Glib::Binding.",
+   "sha": "abd1425541071a63",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To set this up, we add two labels to the header bar in our window.ui file,\nnamed lines_label and lines, and get pointers to them\nin the application window's constructor, as we've seen a couple of times by now.\nWe add a new \"Lines\" menu item to the gears menu, which triggers the\nshow-lines action.",
+   "sha": "ad544ee1e8f9dd92",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To make this menu item do something, we create a property action for the visible\nproperty of the lines label, and add it to the actions of the window.\nThe effect of this is that the visibility of the label gets toggled every time the action\nis activated.\nSince we want both labels to appear and disappear together, we bind the visible\nproperty of the lines_label widget to the same property of the\nlines widget.\nIn ExampleAppWindow's constructor:",
+   "sha": "53f7a4eae79e74cb",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "add_action(Gio::PropertyAction::create(\"show-lines\", m_lines->property_visible()));\nm_binding_lines_visible = Glib::Binding::bind_property(m_lines->property_visible(),\nm_lines_label->property_visible());",
+   "sha": "b4e21abf8ec2edd0",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "We also need a function that counts the lines of the currently active tab, and updates\nthe lines label. See the full source if you are interested in the details.",
+   "sha": "91a92d980149a159",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This brings our example application to this appearance:",
+   "sha": "c24e65f6bf3b1931",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Properties",
+   "sha": "ae43692b2a310b8e",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

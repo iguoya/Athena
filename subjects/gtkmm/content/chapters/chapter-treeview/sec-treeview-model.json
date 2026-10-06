@@ -1,0 +1,218 @@
+{
+ "chapter": "chapter-treeview",
+ "section": "sec-treeview-model",
+ "title": "The Model",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Each Gtk::TreeView has an associated\nGtk::TreeModel, which contains the data displayed by the\nTreeView. Each Gtk::TreeModel can\nbe used by more than one Gtk::TreeView. For instance,\nthis allows the same underlying data to be displayed and edited in 2 different\nways at the same time. Or the 2 Views might display different columns from the\nsame Model data, in the same way that 2 SQL queries (or \"views\") might\nshow different fields from the same database table.",
+   "sha": "ef225702e11cbd8d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Although you can theoretically implement your own Model, you will normally use\neither the ListStore or TreeStore\nmodel classes.",
+   "sha": "0b91ce7e85c293f9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "ListStore, for rows",
+   "sha": "0a898e89945a30c2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The ListStore contains simple rows of data, and each row\nhas no children.",
+   "sha": "4bb44ed644dfecd7",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "TreeView - ListStore",
+   "sha": "be550a9ac8dcfb83",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "TreeStore, for a hierarchy",
+   "sha": "70748f7ec776ad3b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The TreeStore contains rows of data, and each row may\nhave child rows.",
+   "sha": "5e1e4559df5c50e5",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "TreeView - TreeStore",
+   "sha": "ba0c588f7a9b80a7",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Model Columns",
+   "sha": "399ea68aded926e1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The TreeModelColumnRecord class is used to keep track\nof the columns and their data types. You add\nTreeModelColumn instances to the\nColumnRecord and then use those\nTreeModelColumns when getting and setting the data in\nmodel rows. You will probably find it convenient to derive a new\nTreeModelColumnRecord which has your\nTreeModelColumn instances as member data.",
+   "sha": "5cb2b5ed37f582ea",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "class ModelColumns : public Gtk::TreeModelColumnRecord\n{\npublic:\n\nModelColumns()\n{ add(m_col_text); add(m_col_number); }\n\nGtk::TreeModelColumn<Glib::ustring> m_col_text;\nGtk::TreeModelColumn<int> m_col_number;\n};\n\nModelColumns m_Columns;",
+   "sha": "8270d8cdc79f0ca2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You specify the ColumnRecord when creating the Model,\nlike so:",
+   "sha": "24f8464c6ad769b0",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Glib::RefPtr<Gtk::ListStore> refListStore =\nGtk::ListStore::create(m_Columns);",
+   "sha": "f6c1ca63633e865a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "As a TreeModelColumnRecord describes structure, not data,\nit can be shared among multiple models, and this is preferable for efficiency.\nHowever, the instance (such as m_Columns here) should usually\nnot be static, because it often needs to be instantiated after\nglibmm has been initialized. The best solution is\nto make it a lazily instantiated singleton, so that it will be constructed\non-demand, whenever the first model accesses it.",
+   "sha": "613f7dbd3cd8427c",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Adding Rows",
+   "sha": "f4fdd45c8ccc5609",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Add rows to the model with the append(),\nprepend(), or insert() methods.",
+   "sha": "d3bff5fbbf58e43d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto iter = m_refListStore->append();",
+   "sha": "017a7450695b0bfc",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can dereference the iterator to get the Row:",
+   "sha": "464e452b48e8f7b2",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto row = *iter;",
+   "sha": "1d1e057adc38e50c",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Adding child rows",
+   "sha": "125f2f7ea3ff5f3f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::TreeStore models can have child items. Add them\nwith the append(), prepend(), or\ninsert() methods, like so:",
+   "sha": "3fb27d661f4db37e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto iter_child =\nm_refTreeStore->append(row.children());",
+   "sha": "270170d5f544316f",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Setting values",
+   "sha": "f42b103c75019b12",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can use the operator[] overload to set the data for a\nparticular column in the row, specifying the\nTreeModelColumn used to create the model.",
+   "sha": "c18961369a3827de",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "row[m_Columns.m_col_text] = \"sometext\";",
+   "sha": "e32a5a9e03584265",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Getting values",
+   "sha": "7f665fa9ee638016",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can use the operator[] overload to get the data in a\nparticular column in a row, specifying the\nTreeModelColumn used to create the model.",
+   "sha": "67b7c704f83f4707",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto strText = row[m_Columns.m_col_text];\nauto number = row[m_Columns.m_col_number];",
+   "sha": "d5943104398603cc",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The compiler will complain if you use an inappropriate type. For\ninstance, this would generate a compiler error:",
+   "sha": "99a6ed71592efa07",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "//compiler error - no conversion from ustring to int.\nint number = row[m_Columns.m_col_text];",
+   "sha": "7895607a63708934",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "\"Hidden\" Columns",
+   "sha": "9fb4aed3308d9f52",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You might want to associate extra data with each row. If so, just add\nit as a Model column, but don't add it to the View.",
+   "sha": "f137a192543608fc",
+   "zh": null
+  }
+ ]
+}

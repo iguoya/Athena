@@ -1,0 +1,200 @@
+{
+ "chapter": "chapter-memory",
+ "section": "sec-memory-widgets",
+ "title": "Widgets",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "Normal C++ memory management",
+   "sha": "34df5992055c6af7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "gtkmm allows the programmer to control the lifetime (that is, the construction\nand destruction) of any widget in the same manner as any other C++ object.\nThis flexibility allows you to use new and\ndelete to create and destroy objects dynamically\nor to use regular class members (that are destroyed automatically when the\nclass is destroyed) or to use local instances (that are destroyed when the\ninstance goes out of scope). This flexibility is not present in some C++ GUI\ntoolkits, which restrict the programmer to only a subset of C++'s memory\nmanagement features.",
+   "sha": "9c14f340ad211451",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "An important difference in gtkmm-4.0 vs. older versions is that a C++ widgetʼs\ndestruction no longer causes the widget to be destroyed if itʼs within a parent;\nin that case the C GtkWidget stays alive. If you had relied on that behavior in\nan older version, in gtkmm-4.0 you must now remove the widget from its parent\nfirst. See Changes in gtkmm-4.0.",
+   "sha": "a5f9077a00019b84",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here are some examples of normal C++ memory management:",
+   "sha": "ee1f16ac4308ca2a",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Class Scope widgets",
+   "sha": "399a53837fea3d1a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If a programmer does not need dynamic memory allocation, automatic widgets in class\nscope may be used. One advantage of automatic widgets in class scope is that\nmemory management is grouped in one place. The programmer does not\nrisk memory leaks from failing to delete a widget.",
+   "sha": "1aba8eeb91a2d5ac",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The primary disadvantage of using class scope widgets is revealing\nthe class implementation rather than the class interface in the class header.",
+   "sha": "ad74185f73e5ccef",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "#include <gtkmm/button.h>\n#include <gtkmm/window.h>\nclass Foo : public Gtk::Window\n{\nprivate:\nGtk::Button theButton;\n// will be destroyed when the Foo object is destroyed\n};",
+   "sha": "00afe7f4cb431510",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Function scope widgets",
+   "sha": "dd1e8dc6d205eefa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If a programmer does not need a class scope widget, a function scope widget\nmay also be used. The advantages to function scope over class scope are the\nincreased data hiding and reduced dependencies.",
+   "sha": "67d417b79e247839",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "{\nGtk::Button aButton;\naButton.set_visible(true);\n...\napp->run();\n}",
+   "sha": "f5bbd2d33c9707ae",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "However, this technique is rarely useful. Most widgets can't safely be created\nbefore the application has been registered or activated. They can't safely be\ndeleted after Gtk::Application::run() or\nGtk::Application::make_window_and_run() returns.",
+   "sha": "629190fa649839db",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Dynamic allocation with new and delete",
+   "sha": "33f9a4c187b9863b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using Gtk::make_managed()\n(see below). This is not strictly required, as the new and\ndelete operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using Gtk::make_managed() and\nlet their parent destroy them, than to manually perform dynamic allocation.",
+   "sha": "555d794c74fb65dc",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pButton = new Gtk::Button(\"Test\");\n// do something useful with pButton\ndelete pButton;",
+   "sha": "b155d9a1189cb723",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here, the programmer deletes pButton to prevent a memory leak.",
+   "sha": "ca6c3840065bf4db",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If a programmer does not need a class scope widget, a function scope widget\nmay also be used. The advantages to function scope over class scope are the\nincreased data hiding and reduced dependencies.",
+   "sha": "67d417b79e247839-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "{\nGtk::Button aButton;\naButton.set_visible(true);\n...\napp->run();\n}",
+   "sha": "f5bbd2d33c9707ae-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "However, this technique is rarely useful. Most widgets can't safely be created\nbefore the application has been registered or activated. They can't safely be\ndeleted after Gtk::Application::run() or\nGtk::Application::make_window_and_run() returns.",
+   "sha": "629190fa649839db-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using Gtk::make_managed()\n(see below). This is not strictly required, as the new and\ndelete operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using Gtk::make_managed() and\nlet their parent destroy them, than to manually perform dynamic allocation.",
+   "sha": "555d794c74fb65dc-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pButton = new Gtk::Button(\"Test\");\n// do something useful with pButton\ndelete pButton;",
+   "sha": "b155d9a1189cb723-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here, the programmer deletes pButton to prevent a memory leak.",
+   "sha": "ca6c3840065bf4db-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Managed Widgets",
+   "sha": "c4ab5541ecb2665d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Alternatively, you can let a widget's container control when the widget is\ndestroyed. In most cases, you want a widget to last only as long as the\ncontainer it is in. To delegate the management of a widget's lifetime to its\ncontainer, create it with Gtk::make_managed() and then\npack it into its container with Gtk::Box::append() or\na similar method. Now the widget will be destroyed whenever its container is destroyed.",
+   "sha": "cd9c26c47e820270",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Dynamic allocation with make_managed() and append()",
+   "sha": "dfd6154391f831a5",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "gtkmm provides ways including the make_managed() function\nand Gtk::Box::append() method to simplify creation\nand destruction of widgets whose lifetime can be managed by a parent.",
+   "sha": "2b0f28e01bb68baa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Every widget except a top-level window must be added to a parent container in\norder to be displayed. The manage() function marks a widget\nso that when that widget is added to a parent container, said container becomes\nresponsible for deleting the widget, meaning the user no longer needs to do so.\nThe original way to create widgets whose lifetime is managed by their parent in\nthis way was to call manage(), passing in the result of a\nnew expression that created a dynamically allocated widget.",
+   "sha": "4bba86c53f662f61",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "However, usually, when you create such a widget, you will already know that its\nparent container should be responsible for destroying it. In addition, modern\nC++ style discourages use of the new operator, which was\nrequired when passing a newly created widget to manage().\nTherefore, gtkmm has added make_managed(), which combines\ncreation and marking with manage() into a single step. This\navoids you having to write new, which is discouraged in\nmodern C++ style, and more clearly expresses intent to create a managed widget.",
+   "sha": "36c48c04754c006f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "MyContainer::MyContainer()\n{\nauto pButton = Gtk::make_managed<Gtk::Button>(\"Test\");\nappend(*pButton); //add *pButton to MyContainer\n}",
+   "sha": "82770ddcf2232751",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Now, when objects of type MyContainer are destroyed, the\nbutton will also be deleted. It is no longer necessary to delete pButton\nto free the button's memory; its deletion has been delegated to the\nMyContainer object.",
+   "sha": "ee743b0ec03022eb",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you never added the widget to any parent container, it's your responsibility\nto delete it. If you add it to a container widget, and later\nremove it (for instance with Gtk::Box::remove()),\nit's deleted by the container.",
+   "sha": "8e33bad756e4014c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Of course, a top-level container will not be added to another container. The\nprogrammer is responsible for destroying the top-level container using one of\nthe traditional C++ techniques. Or you can let Gtk::Application::make_window_and_run()\ncreate a top-level window and delete it when it's closed.",
+   "sha": "09451afa1d613a5c",
+   "zh": null
+  }
+ ]
+}

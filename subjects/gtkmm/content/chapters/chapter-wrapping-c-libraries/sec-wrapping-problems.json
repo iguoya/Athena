@@ -1,0 +1,116 @@
+{
+ "chapter": "chapter-wrapping-c-libraries",
+ "section": "sec-wrapping-problems",
+ "title": "Problems in the C API",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You are likely to encounter some problems in the library that you are wrapping, particularly if it is a new project. Here are some common problems, with solutions.",
+   "sha": "bc59086231aadd7a",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Unable to predeclare structs",
+   "sha": "fd284ee5322a5744",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "By convention, structs are declared in glib/GTK-style headers like so:",
+   "sha": "67fb78487dde1a60",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "typedef struct _ExampleWidget ExampleWidget;\n\nstruct _ExampleWidget\n{\n...\n};",
+   "sha": "6a542f872db4cfc6",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The extra typedef allows the struct to be used in a header without including\nits full definition, simply by predeclaring it, by repeating that typedef.\nThis means that you don't have to include the C library's header in your C++ header,\nthus keeping it out of your public API. gmmproc assumes that\nthis technique was used, so you will see compiler errors if that is not the case.",
+   "sha": "92880a0214b5173f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This compiler error might look like this:",
+   "sha": "430d624211517dd8",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "example-widget.h:56: error: using typedef-name 'ExampleWidget' after 'struct'\n../../libexample/libexamplemm/example-widget.h:34: error: 'ExampleWidget' has a previous declaration here\nmake[4]: *** [example-widget.lo] Error 1",
+   "sha": "1faafbad06c7ba30",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "or this:",
+   "sha": "00e269fe0c17ad9f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "example-widget.h:60: error: '_ExampleWidget ExampleWidget' redeclared as different kind of symbol\n../../libexample/libexamplemm/example-widget.h:34: error: previous declaration of 'typedef struct _ExampleWidget ExampleWidget'",
+   "sha": "324d452d42d2b033",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This is easy to correct in the C library, so do send a patch to the relevant maintainer.",
+   "sha": "818aef21b3d9639b",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Lack of properties",
+   "sha": "7df6b45168a58249",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "By convention, glib/GTK-style objects have *_new()\nfunctions, such as example_widget_new() that do nothing\nmore than call g_object_new() and return the result.\nThe input parameters are supplied to g_object_new()\nalong with the names of the properties for which they are values. For\ninstance,",
+   "sha": "033f83c724a84664",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\nreturn g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n}",
+   "sha": "f57b747bfd9bb386",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This allows language bindings to implement their own equivalents (such as\nC++ constructors), without using the *_new() function.\nThis is often necessary so that they can actually instantiate a derived\nGType, to add their own hooks for signal handlers and vfuncs.",
+   "sha": "26f918f9ccd419ee",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "At the least, the _new() function should not use any\nprivate API (functions that are only in a .c file). Even when there are no\nfunctions, we can sometimes reimplement 2 or 3 lines of code in a\n_new() function as long as those lines of code use API\nthat is available to us.",
+   "sha": "e8c0c63f922aabbc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Another workaround is to add a *_construct() function\nthat the C++ constructor can call after instantiating its own type. For\ninstance,",
+   "sha": "b8d77dc1bd48cc41",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\nExampleWidget* widget;\nwidget = g_object_new (EXAMPLE_TYPE_WIDGET, NULL);\nexample_widget_construct(widget, \"something\", something, \"thing\", thing);\n}\n\nvoid example_widget_construct(ExampleWidget* widget, int something, const char* thing)\n{\n//Do stuff that uses private API:\nwidget->priv->thing = thing;\ndo_something(something);\n}",
+   "sha": "5ba44c9315d81c8a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Adding properties, and ensuring that they interact properly with each\nother, is relatively difficult to correct in the C library, but it is\npossible, so do file a bug and try to send a patch to the relevant\nmaintainer.",
+   "sha": "123613e13ed4fc66",
+   "zh": null
+  }
+ ]
+}

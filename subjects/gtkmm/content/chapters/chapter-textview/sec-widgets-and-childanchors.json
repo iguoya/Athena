@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-textview",
+ "section": "sec-widgets-and-childanchors",
+ "title": "Widgets and ChildAnchors",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You can embed widgets, such as Gtk::Buttons, in the\ntext. Each such child widget needs a ChildAnchor.\nChildAnchors are associated with iterators. For\ninstance, to create a child anchor at a particular position, use\nGtk::TextBuffer::create_child_anchor():",
+   "sha": "e68cd229eb621a93",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refAnchor = refBuffer->create_child_anchor(iter);",
+   "sha": "2769c1718ec766d3",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Then, to add a widget at that position, use\nGtk::TextView::add_child_at_anchor():",
+   "sha": "d10024a75f3fa103",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_TextView.add_child_at_anchor(m_Button, refAnchor);",
+   "sha": "a5e3b383b2d4d3f1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  }
+ ]
+}

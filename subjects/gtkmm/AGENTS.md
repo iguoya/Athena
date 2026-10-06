@@ -58,24 +58,26 @@
   同一回路。禁止手动「标记熟练」。
 - 课表块引用清单 id，清单是壳、check、宿主三方的唯一事实源。
 
-## 上游追踪（严格跟随官方仓库）
+## 上游追踪（段落级，严格跟随官方仓库）
 
 - 官方仓库克隆在 `upstream/gtkmm-documentation`（gitignore，不入库）；基准记录在
-  `upstream.json`（url、分支、pinned_commit、docbook 路径）。
-- 文档源是 `docs/tutorial/C/index-in.docbook`（单个 DocBook）；官网的「每节一页」
-  由 XSLT chunking 生成，**分页单元 = 章下第一层 `<section>`**。翻译稿
-  `content/chapters/<章 xml:id>/<节 xml:id>.md` 一节一个文件，头部 front matter
-  记录 `upstream-sha`（该节规范化文本的 sha256，由 `scripts/extract_source.py`
-  计算）。
-- **结构不许自由发挥**：章/节的 id、顺序、分页、标题一律来自官方；课表
-  `sections[].pages` 的节集合必须与官方完全一致（check 校验：缺页、多页、改名
-  都报错）。翻译是逐段对照（引用块英文原文 + 中文段），不合并节、不重写段落。
-- **同步流程**：`git -C upstream/gtkmm-documentation fetch && git -C ... checkout
-  <新 commit>` → 跑 `check.py`（sha 不匹配的节会报「官方原文已变化，翻译稿需要
-  复核」）→ 逐节复核翻译、更新 front matter 的 sha → 在 `upstream.json` 更新
-  `pinned_commit`，一个上游版本一个提交。
-- 判分内容与译文有出入时，以官方 DocBook 的当前内容为准（语义基准见 ADR 0002）；
-  官方 zh_CN.po 可作术语参照（覆盖率不完全）。
+  `upstream.json`（url、分支、pinned_commit、docbook 路径）。文档源是
+  `docs/tutorial/C/index-in.docbook`（单个 DocBook），官网「每节一页」由 XSLT
+  生成，**分页单元 = 章下第一层 `<section>`**。
+- **原文不手写**。每节的段落快照 `content/chapters/<章 xml:id>/<节 xml:id>.json`
+  由 `scripts/sync_upstream.py` 从上游 DocBook 生成并入库：`blocks[]` 是有序段流
+  （para/listitem/code/heading/figure），每段带指纹（sha256）与 `zh`（中文翻译，
+  唯一的手写内容）。上游一变，git diff 直接显示哪一段变了。
+- **结构不许自由发挥**：章/节 id、顺序、分页一律来自官方；课表 `sections[].pages`
+  的节集合必须与官方完全一致（check 校验：缺页、多页、改名都报错）。
+- **同步流程**：`git -C upstream/gtkmm-documentation fetch`（需要时 checkout 新
+  commit）→ 跑 `sync_upstream.py`——按段落指纹做 LCS 对齐：指纹相同的段自动保留
+  译文；原文被改的段标 `stale`（旧译文存 `stale_from` 供参考）；新增段标
+  `untranslated`。**只译 stale/untranslated 的段**，译完清掉状态字段 → 在
+  `upstream.json` 更新 `pinned_commit`，一个上游版本一个提交。
+- 课表页的 `translated` 状态要求该节快照里全部文字段都有 `zh`（check 校验一致性
+  与 pinned_commit 版本）；语义争议以官方 DocBook 当前内容为准，官方 zh_CN.po
+  可作术语参照（覆盖率不完全）。
 
 ## 架构原则
 

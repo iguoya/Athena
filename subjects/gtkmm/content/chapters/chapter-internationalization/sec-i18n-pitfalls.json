@@ -1,0 +1,128 @@
+{
+ "chapter": "chapter-internationalization",
+ "section": "sec-i18n-pitfalls",
+ "title": "Pitfalls",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "There are a few common mistakes that you would discover eventually yourself. But this section might help you to avoid them.",
+   "sha": "ab2f045646e5d8dd",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Same strings, different semantics",
+   "sha": "087abb8dd24c6488",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Sometimes two English strings are identical but have different meanings in\ndifferent contexts, so they would probably not be identical when translated. Since the English strings are\nused as look-up keys, this causes problems.",
+   "sha": "e9e465075dcfee36",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In these cases, you should add extra characters to the strings. For instance,\nuse \"jumps[noun]\" and \"jumps[verb]\"\ninstead of just \"jumps\" and strip them again outside the\ngettext call. If you add extra characters you should also\nadd a comment for the translators before the gettext call.\nSuch comments will be shown in the .po files. For\ninstance:",
+   "sha": "902a1b0886590930",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// note to translators: don't translate the \"[noun]\" part - it is\n// just here to distinguish the string from another \"jumps\" string\ntext = strip(gettext(\"jumps[noun]\"), \"[noun]\");",
+   "sha": "9923bac36883fb2e",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "If you use Glib's support macros, it's easier. Use\nC_() instead of _(). For instance:",
+   "sha": "a80dc3f29bcf89f7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "GLib::ustring text(C_(\"noun\", \"jumps\"));",
+   "sha": "85b8d1e73af8dfe9",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Composition of strings",
+   "sha": "254f2273f40fd43e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "C programmers use sprintf() to compose and concatenate\nstrings. C++ favors streams, but unfortunately, this approach makes\ntranslation difficult, because each fragment of text is translated separately,\nwithout allowing the translators to rearrange them according to the grammar of\nthe language.",
+   "sha": "7db9e139750dff4e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance, this code would be problematic:",
+   "sha": "9e96e1e656d1c448",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "std::cout << _(\"Current amount: \") << amount\n<< _(\" Future: \") << future << std::endl;\n\nlabel.set_text(_(\"Really delete \") + filename + _(\" now?\"));",
+   "sha": "b17b759ef7276f25",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "So you should either avoid this situation or use\nGlib::ustring::compose()\nwhich supports syntax such as:",
+   "sha": "bd13972e62183487",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "std::cout << Glib::ustring::compose(\n_(\"Current amount: %1 Future: %2\"), amount, future) << std::endl;\n\nlabel.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));",
+   "sha": "b60af9e8c581fce2",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Assuming the displayed size of strings",
+   "sha": "11b8adf929c67552",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You never know how much space a string will take on screen when translated. It might very possibly be twice the size of the original English string. Luckily, most gtkmm widgets will expand at runtime to the required size.",
+   "sha": "47976b06a1abdfd8",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Unusual words",
+   "sha": "75d138fdc8e4688c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You should avoid cryptic abbreviations, slang, or jargon.\nThey are usually difficult to translate, and are often difficult\nfor even native speakers to understand.",
+   "sha": "7776d1ea52ed028f",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Using non-ASCII characters in strings",
+   "sha": "9c65ef9a86115110",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Currently, gettext does not support non-ASCII\ncharacters (i.e. any characters with a code above 127) in source code. For\ninstance, you cannot use the copyright sign (&#169;).",
+   "sha": "ff90173876d5ea9f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To work around this, you could write a comment in the\nsource code just before the string, telling the translators to\nuse the special character if it is available in their languages. For English, you could then make an American English\nen_US.po translation which used that special character.",
+   "sha": "cdaf86fdf8e64704",
+   "zh": null
+  }
+ ]
+}

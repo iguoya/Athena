@@ -1,0 +1,68 @@
+{
+ "chapter": "chapter-adjustment",
+ "section": "sec-adjustment-internals",
+ "title": "Adjustment Internals",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "OK, you say, that's nice, but what if I want to create my own handlers to\nrespond when the user adjusts a Range widget or a\nSpinButton. To access the value of a\nGtk::Adjustment, you can use the\nget_value() and set_value() methods:",
+   "sha": "da35a3e8e9ce477f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "As mentioned earlier, Gtk::Adjustment can emit signals.\nThis is, of course, how updates happen automatically when you share an\nAdjustment object between a\nScrollbar and another adjustable widget; all adjustable\nwidgets connect signal handlers to their adjustment's\nvalue_changed signal, as can your program.",
+   "sha": "11c247dbb6e3598c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "So, for example, if you have a Scale widget, and you\nwant to change the rotation of a picture whenever its value changes, you would\ncreate a signal handler like this:",
+   "sha": "75335cdb3fc50a05",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void cb_rotate_picture(MyPicture* picture)\n{\npicture->set_rotation(adj->get_value());\n...",
+   "sha": "dd058b14672ea952",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "and connect it to the scale widget's adjustment like this:",
+   "sha": "cea98161c766dab7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "adj->signal_value_changed().connect(sigc::bind<MyPicture*>(sigc::mem_fun(*this,\n&cb_rotate_picture), picture));",
+   "sha": "eb2b761b8e455ab5",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "What if a widget reconfigures the upper or\nlower fields of its Adjustment,\nsuch as when a user adds more text to a text widget? In this case, it emits\nthe changed signal.",
+   "sha": "f1df54d3e07520c8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Range widgets typically connect a handler to this\nsignal, which changes their appearance to reflect the change - for example, the\nsize of the slider in a scrollbar will grow or shrink in inverse proportion to\nthe difference between the lower and\nupper values of its\nAdjustment.",
+   "sha": "80a0bcd427516251",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You probably won't ever need to attach a handler to this signal, unless you're\nwriting a new type of range widget.",
+   "sha": "94d9dc43b4ce2630",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "adjustment->signal_changed();",
+   "sha": "3dd758ddb4a91047",
+   "zh": ""
+  }
+ ]
+}

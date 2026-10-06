@@ -1,0 +1,68 @@
+{
+ "chapter": "chapter-drawingarea",
+ "section": "sec-cairo-drawing-model",
+ "title": "The Cairo Drawing Model",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The basic concept of drawing in Cairo involves defining 'invisible'\npaths and then stroking or filling them to make them visible.",
+   "sha": "e5f639f0376c4acd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To do any drawing in gtkmm with Cairo, you must first get a\nCairo::Context object. This class holds all of the graphics state parameters that\ndescribe how drawing is to be done. This includes information such as\nline width, color, the surface to draw to, and many other things. This\nallows the actual drawing functions to take fewer arguments to simplify\nthe interface. Usually, you use the Cairo::Context\nthat you get as input data to the draw function that you set with the call to\nset_draw_func(). It's also possible to create\na Cairo::Context by calling the\nGdk::Surface::create_cairo_context() and\nGdk::CairoContext::cairo_create() functions.\nSince Cairo contexts are reference-counted objects, cairo_create()\nreturns a Cairo::RefPtr<Cairo::Context> object.\n(Note the difference between Gdk::CairoContext\nand Cairo::Context.)",
+   "sha": "801ac5850f3ce41d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following example shows how to set up a Cairo context with a\nforeground color of red and a width of 2. Any drawing functions that\nuse this context will use these settings.",
+   "sha": "f7b0af566731e14d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::DrawingArea myArea;\nauto gdkCairoContext = myArea.get_surface()->create_cairo_context();\nauto myContext = gdkCairoContext->cairo_create();\nmyContext->set_source_rgb(1.0, 0.0, 0.0);\nmyContext->set_line_width(2.0);",
+   "sha": "01926472f8a5b7bb",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Each Cairo::Context is associated with a\nparticular Gdk::Surface, so the first line of the\nabove example creates a Gtk::DrawingArea widget\nand the next two lines use its associated Gdk::Surface\nto create a Cairo::Context object. The final\ntwo lines change the graphics state of the context.",
+   "sha": "4a3dc2afb044b8d9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are a number of graphics state variables that can be set for a\nCairo context. The most common context attributes are color (using\nset_source_rgb() or\nset_source_rgba() for translucent colors), line\nwidth (using set_line_width()), line dash pattern\n(using set_dash()), line cap style (using\nset_line_cap()), and line join style (using\nset_line_join()), and font styles (using\nset_font_size(),\nset_font_face() and others).\nThere are many other settings as well, such as transformation matrices,\nfill rules, whether to perform antialiasing, and others. For further\ninformation, see the cairomm API documentation.",
+   "sha": "eb89251612d9c1d3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The current state of a Cairo::Context can be\nsaved to an internal stack of saved states and later be restored to the\nstate it was in when you saved it. To do this, use the\nsave()\nmethod and the restore() method. This can be\nuseful if you need to temporarily change the line width and color (or\nany other graphics setting) in order to draw something and then return\nto the previous settings. In this situation, you could call\nCairo::Context::save(), change the graphics\nsettings, draw the lines, and then call\nCairo::Context::restore() to restore the original\ngraphics state. Multiple calls to save() and\nrestore() can be nested; each call to\nrestore() restores the state from the\nmatching paired save().\n\nIt is good practice to put all modifications to the graphics state\nbetween save()/restore()\nfunction calls. For example, if you have a function that takes a\nCairo::Context reference as an argument, you\nmight implement it as follows:\n\nvoid doSomething(const Cairo::RefPtr<Cairo::Context>& context, int x)\n{\ncontext->save();\n// change graphics state\n// perform drawing operations\ncontext->restore();\n}",
+   "sha": "b9bdd930364eb9bb",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "It is good practice to put all modifications to the graphics state\nbetween save()/restore()\nfunction calls. For example, if you have a function that takes a\nCairo::Context reference as an argument, you\nmight implement it as follows:",
+   "sha": "3461557a2c24fe77",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void doSomething(const Cairo::RefPtr<Cairo::Context>& context, int x)\n{\ncontext->save();\n// change graphics state\n// perform drawing operations\ncontext->restore();\n}",
+   "sha": "8f19168ce4bf7b6a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The draw function that you set with a call to set_draw_func()\nis called with a Cairo context that you shall use for drawing in the\nGtk::DrawingArea widget. It is not necessary to\nsave and restore this Cairo context in the draw function.",
+   "sha": "3f28506abcf699ae",
+   "zh": null
+  }
+ ]
+}

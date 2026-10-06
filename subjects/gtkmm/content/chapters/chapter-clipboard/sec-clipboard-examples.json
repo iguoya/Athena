@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-clipboard",
+ "section": "sec-clipboard-examples",
+ "title": "Examples",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "heading",
+   "text": "Simple",
+   "sha": "3fee95da5ab69ebf",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example allows copy and pasting of application-specific data, using the\nstandard text format. Although this is simple, it's not ideal because it does\nnot identify the Clipboard data as being of a particular\ntype.",
+   "sha": "63b7b0ff808b39b1",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Clipboard - Simple",
+   "sha": "941e70fcbe75ee2c",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Ideal",
+   "sha": "4e3cfaa334cbafb5",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This is like the simple example, but it\n\nDefines a custom clipboard target, though the format is still text.\nIt uses the Gdk::ContentFormats::signal_changed()\nsignal and disables the Paste button if it can't use anything on the clipboard.",
+   "sha": "76fb07da5733cc50",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Clipboard - Ideal",
+   "sha": "8d925e112e870e70",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-1",
+   "zh": null
+  }
+ ]
+}

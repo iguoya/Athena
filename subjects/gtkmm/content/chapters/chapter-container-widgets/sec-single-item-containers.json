@@ -1,0 +1,218 @@
+{
+ "chapter": "chapter-container-widgets",
+ "section": "sec-single-item-containers",
+ "title": "Single-item Containers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Most single-item container widgets have set_child()\nand unset_child() methods for the child widget.\nGtk::Button and Gtk::Window are\ntechnically single-item containers, but we have discussed them already elsewhere.",
+   "sha": "192f4ced1627920b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "We also discuss the Gtk::Paned widget, which allows you\nto divide a window into two separate \"panes\". This widget actually contains\ntwo child widgets, but the number is fixed so it seems appropriate.",
+   "sha": "78a5550e403e281f",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Frame",
+   "sha": "d0b50e064a4f8d94",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Frames can enclose one or a group of widgets within a box, optionally with a\ntitle. For instance, you might place a group of\nToggleButtons or CheckButtons in a\nFrame.",
+   "sha": "807a8e09414ed905",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Frame",
+   "sha": "d0b50e064a4f8d94-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Paned",
+   "sha": "7ac63a60d9a1052b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Panes divide a widget into two halves, separated by a moveable divider.\nThe two halves (panes) can be oriented either horizontally (side by side) or\nvertically (one above the other).",
+   "sha": "431aecdc9cf1e302",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Unlike the other widgets in this section, pane widgets contain not one but two\nchild widgets, one in each pane. Therefore, you should use\nset_start_child() and set_end_child()\ninstead of a set_child() method.",
+   "sha": "b927a6373e98b57d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can adjust the position of the divider using the\nset_position() method, and you will probably need to do\nso.",
+   "sha": "b203265c49daef9d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-1",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Paned",
+   "sha": "7ac63a60d9a1052b-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "ScrolledWindow",
+   "sha": "2c3156ad645fedac",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "ScrolledWindow widgets create a scrollable\narea. You can insert any type of widget into a\nScrolledWindow, and it will be accessible\nregardless of its size by using the scrollbars. Note that\nScrolledWindow is not a\nGtk::Window despite the slightly misleading name.",
+   "sha": "0eac9ed1a32189db",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Scrolled windows have scrollbar policies which determine\nwhether the Scrollbars will be displayed. The policies\ncan be set with the set_policy() method. The policy may be\nfor instance Gtk::PolicyType::AUTOMATIC or\nGtk::PolicyType::ALWAYS.\nGtk::PolicyType::AUTOMATIC will cause the scrolled window\nto display the scrollbar only if the contained widget is larger than the\nvisible area. Gtk::PolicyType::ALWAYS will cause the\nscrollbar to be displayed always.",
+   "sha": "77967fc53bff58f6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is a simple example that packs 100 toggle buttons into a ScrolledWindow. Try resizing the window to see the scrollbars react.",
+   "sha": "4328630ec1a8cd42",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "ScrolledWindow",
+   "sha": "2c3156ad645fedac-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "AspectFrame",
+   "sha": "cccc4e87163da7f8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The AspectFrame widget looks like a\nFrame widget, but it also enforces the aspect\nratio (the ratio of the width to the height) of the child\nwidget, adding extra space if necessary. For instance, this would allow you to\ndisplay a photograph without allowing the user to distort it horizontally or\nvertically while resizing.",
+   "sha": "7b6ba383b4309666",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd-3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following program uses a Gtk::AspectFrame to present a\ndrawing area whose aspect ratio will always be 2:1, no matter how the user\nresizes the top-level window.",
+   "sha": "10f8caa0b2827168",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "AspectFrame",
+   "sha": "cccc4e87163da7f8-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Other Single-item Containers",
+   "sha": "f951e91fd55a05c4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are other single-item containers. See the reference documentation for a\ncomplete list. Here are links to some example programs that show containers,\nwhich are not mentioned elsewhere in this tutorial.",
+   "sha": "66fa38ad36570590",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code, Expander",
+   "sha": "38a8f5fa5556396c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code, Popover",
+   "sha": "ef4cad074220ad55",
+   "zh": null
+  }
+ ]
+}

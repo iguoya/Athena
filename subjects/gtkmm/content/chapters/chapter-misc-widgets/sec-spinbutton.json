@@ -1,0 +1,146 @@
+{
+ "chapter": "chapter-misc-widgets",
+ "section": "sec-spinbutton",
+ "title": "SpinButton",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "A SpinButton allows the user to select a value from a\nrange of numeric values. It has an Entry widget with increment and decrement buttons\nat the side. Clicking the buttons causes the value to 'spin' up and down across\nthe range of possible values. The Entry widget may also\nbe used to enter a value directly.",
+   "sha": "758d0be2a767f1ef",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The value can have an adjustable number of decimal places, and the step size is\nconfigurable. SpinButtons have an 'auto-repeat' feature\nas well: holding down the increment or decrement button can optionally cause the value to\nchange more quickly the longer the button is held down.",
+   "sha": "5c87bc1bdbb86e4d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "SpinButtons use an Adjustment object to hold information about\nthe range of values. These Adjustment attributes are used by the Spin Button\nlike so:\n\n\n\n\nvalue: value for the Spin Button\n\n\n\n\n\nlower: lower range value\n\n\n\n\n\nupper: upper range value\n\n\n\n\nstep_increment: value to increment/decrement when pressing\nmouse button 1\n\n\n\n\n\npage_increment: value to increment/decrement when pressing\nmouse button 2\n\n\n\n\n\npage_size: unused",
+   "sha": "137f142965b81fa4",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "value: value for the Spin Button",
+   "sha": "a26f0b21bfa7a1f5",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "lower: lower range value",
+   "sha": "a8747b069f777ec0",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "upper: upper range value",
+   "sha": "b756917525e5826b",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "step_increment: value to increment/decrement when pressing mouse button 1",
+   "sha": "c71d9d4e6f0d9ec5",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "page_increment: value to increment/decrement when pressing mouse button 2",
+   "sha": "4605fd9403053751",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "page_size: unused",
+   "sha": "f8e581a869f3130f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Additionally, mouse button 3 can be used to jump directly to the\nupper or lower values.",
+   "sha": "98bf7229adbcc037",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The SpinButton can create a default\nAdjustment, which you can access via the\nget_adjustment() method, or you can specify an existing\nAdjustment in the constructor.",
+   "sha": "41d61d371fe3fce2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Methods",
+   "sha": "8696622f344183c4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The number of decimal places can be altered using the\nset_digits() method.",
+   "sha": "8182442327a74013",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can set the spinbutton's value using the set_value()\nmethod, and retrieve it with get_value().",
+   "sha": "4a0ec0cf73dcc9a0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The spin() method 'spins' the\nSpinButton, as if its increment or decrement button had been clicked.\nYou need to specify a Gtk::SpinType to specify the\ndirection or new position.",
+   "sha": "5e9415a60bbabb40",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To prevent the user from typing non-numeric characters into the entry box, pass\ntrue to the set_numeric() method.",
+   "sha": "d1d9600d23bec273",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To make the SpinButton 'wrap' between its upper and\nlower bounds, use the set_wrap() method.",
+   "sha": "308f29961be24f90",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To force it to snap to the nearest step_increment,\nuse set_snap_to_ticks().",
+   "sha": "d20b8a673eeb013c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's an example of a SpinButton in action:",
+   "sha": "de787ef442486ad0",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "SpinButton",
+   "sha": "c9c859beaff4feb4",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

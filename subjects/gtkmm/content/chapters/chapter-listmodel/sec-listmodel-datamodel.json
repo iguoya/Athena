@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-listmodel",
+ "section": "sec-listmodel-datamodel",
+ "title": "The Data Model",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The data model is a class that implements the Gio::ListModel\ninterface. Examples of such classes are Gio::ListStore\n(not to be confused with the deprecated Gtk::ListStore),\nGtk:StringList, Gtk:DirectoryList\nand Pango::FontMap.",
+   "sha": "d6b3326ea916430c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The elements in a model are called items.\nAll items are instances of a subclass of Glib::Object.\nFor instance, you might have a ColumnView with one integer\nand one text column, like so:",
+   "sha": "dca932a7963a75c4",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "create(\nint col_id, const Glib::ustring& col_name)\n{\nreturn Glib::make_refptr_for_instance(\nnew ModelColumns(col_id, col_name));\n}\n\nprotected:\nModelColumns(int col_id, const Glib::ustring& col_name)\n: m_col_id(col_id), m_col_name(col_name)\n{}\n};\n\nGlib::RefPtr> m_ListStore;\n]]>",
+   "sha": "37c262712ea8b1b2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Every item in a model has a position which is the unsigned integer that describes\nwhere in the model the item is located. The first item in a model is at position 0.\nThe position of an item can of course change as other items are added to or removed\nfrom the model.",
+   "sha": "712b7141b736aaab",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gio::ListStore Reference",
+   "sha": "7269d72dc89ae077",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "StringList Reference",
+   "sha": "efaf62e4e40aeb70",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "DirectoryList Reference",
+   "sha": "4018f4e5e9c5878a",
+   "zh": null
+  }
+ ]
+}

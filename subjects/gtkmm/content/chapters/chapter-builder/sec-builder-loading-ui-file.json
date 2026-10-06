@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-builder",
+ "section": "sec-builder-loading-ui-file",
+ "title": "Loading the .ui file",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Gtk::Builder must be used via a\nGlib::RefPtr. Like all such classes, you need to use a\ncreate() method to instantiate it. For instance,",
+   "sha": "ac16c874a503f92f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto builder = Gtk::Builder::create_from_file(\"basic.ui\");",
+   "sha": "a237a4a515b5bd04",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This will instantiate the windows defined in the .ui file.",
+   "sha": "5e47583fd7157f30",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To instantiate just one window, or just one of the child widgets, you can specify the name of a widget as the second parameter. For instance,",
+   "sha": "aae00ff92ec5f9c6",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto builder = Gtk::Builder::create_from_file(\"basic.ui\", \"treeview_products\");",
+   "sha": "41d78dab96cdded0",
+   "zh": ""
+  }
+ ]
+}

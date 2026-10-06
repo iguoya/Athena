@@ -1,0 +1,44 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-page-setup",
+ "title": "Page setup",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The PrintOperation class has a method called\nset_default_page_setup() which selects the default\npaper size, orientation and margins. To show a page setup dialog from your\napplication, use the Gtk::run_page_setup_dialog() method,\nwhich returns a Gtk::PageSetup object with the chosen\nsettings. Use this object to update a PrintOperation\nand to access the selected Gtk::PaperSize,\nGtk::PageOrientation and printer-specific margins.",
+   "sha": "7ab6cba299e1057e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You should save the chosen Gtk::PageSetup\nso you can use it again if the page setup dialog is shown again.",
+   "sha": "7bb31475de4ff102",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance,",
+   "sha": "580ef7c3ff8e8ffb",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// Within a class that inherits from Gtk::Window and keeps m_refPageSetup\n// and m_refSettings as members...\nauto new_page_setup = Gtk::run_page_setup_dialog(*this, m_refPageSetup, m_refSettings);\nm_refPageSetup = new_page_setup;",
+   "sha": "16fb1f76f9c279f1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The Cairo coordinate system, in the draw_page handler,\nis automatically rotated to the current page orientation. It is normally\nwithin the printer margins, but you can change that via the\nPrintOperation::set_use_full_page()\nmethod. The default measurement unit is device pixels. To select other units,\nuse the PrintOperation::set_unit() method.",
+   "sha": "49b0f3db609e804f",
+   "zh": null
+  }
+ ]
+}

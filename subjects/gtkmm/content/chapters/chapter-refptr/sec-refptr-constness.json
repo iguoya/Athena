@@ -1,0 +1,26 @@
+{
+ "chapter": "chapter-refptr",
+ "section": "sec-refptr-constness",
+ "title": "Constness",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The use of the const keyword in C++ is not always clear. You\nmight not realize that const Something* declares a pointer to a\nconst Something. The pointer can be changed, but not the\nSomething that it points to.",
+   "sha": "d3281c6b224e5c2a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Therefore, the RefPtr equivalent of\nSomething* for a method parameter is const\nGlib::RefPtr<Something>&, and the equivalent of\nconst Something* is const Glib::RefPtr<const\nSomething>&.",
+   "sha": "a9cdb5e9c7616786",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The const ... & around both is just for efficiency, like\nusing const std::string& instead of\nstd::string for a method parameter to avoid unnecessary\ncopying.",
+   "sha": "4b314c1401b1ac75",
+   "zh": null
+  }
+ ]
+}

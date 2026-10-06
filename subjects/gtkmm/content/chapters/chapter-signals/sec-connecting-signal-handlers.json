@@ -1,0 +1,116 @@
+{
+ "chapter": "chapter-signals",
+ "section": "sec-connecting-signal-handlers",
+ "title": "Connecting signal handlers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "gtkmm widget classes have signal accessor methods, such as\nGtk::Button::signal_clicked(), which allow you to connect\nyour signal handler. Thanks to the flexibility of\nlibsigc++, the callback library used by gtkmm, the\nsignal handler can be almost any kind of function, but you will probably want\nto use a class method. Among GTK C coders, these\nsignal handlers are often named callbacks.",
+   "sha": "9415fcf6d2e37d84",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's an example of a signal handler being connected to a signal:",
+   "sha": "ff0137b43c62d058",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void on_button_clicked()\n{\nstd::cout",
+   "sha": "673640ba5c598fa0",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "There's rather a lot to think about in this (non-functional) code.\nFirst let's identify the parties involved:",
+   "sha": "1a2868603c2ccbf2",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "The signal handler is on_button_clicked().",
+   "sha": "4edf13d978d60ba6",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "We're hooking it up to the Gtk::Button object called button.",
+   "sha": "e9a3728047603faa",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "When the Button emits its clicked signal, on_button_clicked() will be called.",
+   "sha": "5c7ad616952fd5db",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Now let's look at the connection again:",
+   "sha": "c121496ac55ef19e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "...\nbutton.signal_clicked().connect(sigc::ptr_fun(&on_button_clicked));\n...",
+   "sha": "2f6f719d850d0001",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Note that we don't pass a pointer to on_button_clicked()\ndirectly to the signal's connect() method. Instead, we\ncall sigc::ptr_fun(), and pass the result to\nconnect().",
+   "sha": "b10bfa9c21078c66",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "sigc::ptr_fun() generates a sigc::slot.\nA slot is an object which\nlooks and feels like a function, but is actually an object. These are also\nknown as function objects, or functors.\nsigc::ptr_fun() generates a slot for a standalone function or static method.\nsigc::mem_fun() generates a slot for a member method of a particular instance.",
+   "sha": "fc03683b737aeb28",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A C++ lambda expression is a functor which can be implicitly converted to a\nsigc::slot in the call to connect().\nA lambda expression can be used instead of sigc::ptr_fun().\nIt's also possible to use a lambda expression instead of sigc::mem_fun(),\nbut then you won't get automatic disconnection of the signal handler when a\nsigc::trackable-derived object goes out of scope.",
+   "sha": "c86e4b538588dd62",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's a slightly larger example of slots in action:",
+   "sha": "7cfafc0bf4ecb153",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void on_button_clicked()\n{\nstd::cout",
+   "sha": "673640ba5c598fa0-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The first call to connect() is just like the one we saw\nlast time; nothing new here.",
+   "sha": "be9fbaf594fd1c36",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The next is more interesting.\nsigc::mem_fun() is called with two arguments. The first\nargument is *this, which is the object that our\nnew slot will be pointing at. The second argument is a pointer to one of its\nmethods. This particular version of sigc::mem_fun()\ncreates a slot which will, when \"called\", call the pointed-to method of the\nspecified object.",
+   "sha": "def66347ce22d139",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Another thing to note about this example is that we made the call to\nconnect() twice for the same signal object. This is\nperfectly fine - when the button is clicked, both signal handlers will be\ncalled.",
+   "sha": "663dce2dac793249",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "We just told you that the button's clicked signal is expecting\nto call a method with no arguments. All signals have\nrequirements like this - you can't hook a function with two arguments\nto a signal expecting none (unless you use an adapter, such as\nsigc::bind(), of course). Therefore, it's important to\nknow what type of signal handler you'll be expected to connect to a given\nsignal.",
+   "sha": "c206864c99d4a3b5",
+   "zh": null
+  }
+ ]
+}

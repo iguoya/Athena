@@ -1,0 +1,80 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-printoperation",
+ "title": "PrintOperation",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The primary object is Gtk::PrintOperation, allocated\nfor each print operation. To handle page drawing connect to its signals,\nor inherit from it and override the default virtual signal handlers.\nPrintOperation automatically handles all the settings\naffecting the print loop.",
+   "sha": "70817b2bac2b613f",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Signals",
+   "sha": "88b01c8a4bff9a08",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The PrintOperation::run() method starts the print loop,\nduring which various signals are emitted:\n\n\n\n\nbegin_print:\nYou must handle this signal, because this is where you\ncreate and set up a Pango::Layout using the\nprovided Gtk::PrintContext, and break up your\nprinting output into pages.\n\n\n\n\n\npaginate: Pagination is potentially slow so if you\nneed to monitor it you can call the\nPrintOperation::set_show_progress() method and\nhandle this signal.\n\n\n\n\n\nFor each page that needs to be rendered, the following signals\nare emitted:\n\n\n\nrequest_page_setup: Provides a\nPrintContext, page number and\nGtk::PageSetup. Handle this signal if you\nneed to modify page setup on a per-page basis.\n\n\n\n\n\ndraw_page: You must handle this signal, which provides a\nPrintContext and a page number.\nThe PrintContext should be used\nto create a Cairo::Context into which\nthe provided page should be drawn. To render text, iterate over\nthe Pango::Layout you created in the\nbegin_print handler.\n\n\n\n\n\n\n\n\nend_print: A handler for it is a safe place to free\nany resources related to a PrintOperation.\nIf you have your custom class that inherits from\nPrintOperation, it is naturally simpler to do it\nin the destructor.\n\n\n\n\n\ndone: This signal is emitted when printing is finished, meaning when the\nprint data is spooled. Note that the provided\nGtk::PrintOperation::Result may indicate that\nan error occurred. In any case you probably want to notify the user\nabout the final status.\n\n\n\n\n\nstatus_changed: Emitted whenever a print job's\nstatus changes, until it is finished. Call the\nPrintOperation::set_track_print_status() method to\nmonitor the job status after spooling. To see the status, use\nget_status() or\nget_status_string().",
+   "sha": "078c0f72e815d504",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "begin_print: You must handle this signal, because this is where you create and set up a Pango::Layout using the provided Gtk::PrintContext, and break up your printing output into pages.",
+   "sha": "20d3c68d5425b5d4",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "paginate: Pagination is potentially slow so if you need to monitor it you can call the PrintOperation::set_show_progress() method and handle this signal.",
+   "sha": "b6c3ba8d3dcbf6d0",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "For each page that needs to be rendered, the following signals are emitted: request_page_setup: Provides a PrintContext, page number and Gtk::PageSetup. Handle this signal if you need to modify page setup on a per-page basis. draw_page: You must handle this signal, which provides a PrintContext and a page number. The PrintContext should be used to create a Cairo::Context into which the provided page should be drawn. To render text, iterate over the Pango::Layout you created in the begin_print handler.",
+   "sha": "c898c52664cfa224",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "end_print: A handler for it is a safe place to free any resources related to a PrintOperation. If you have your custom class that inherits from PrintOperation, it is naturally simpler to do it in the destructor.",
+   "sha": "c4731a8d1d939353",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "done: This signal is emitted when printing is finished, meaning when the print data is spooled. Note that the provided Gtk::PrintOperation::Result may indicate that an error occurred. In any case you probably want to notify the user about the final status.",
+   "sha": "c1401f98b8b68a79",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "status_changed: Emitted whenever a print job's status changes, until it is finished. Call the PrintOperation::set_track_print_status() method to monitor the job status after spooling. To see the status, use get_status() or get_status_string().",
+   "sha": "5173ea9b4602f59d",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "request_page_setup: Provides a PrintContext, page number and Gtk::PageSetup. Handle this signal if you need to modify page setup on a per-page basis.",
+   "sha": "393b9d66320764b3",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "draw_page: You must handle this signal, which provides a PrintContext and a page number. The PrintContext should be used to create a Cairo::Context into which the provided page should be drawn. To render text, iterate over the Pango::Layout you created in the begin_print handler.",
+   "sha": "2882fb1713cc97cc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  }
+ ]
+}

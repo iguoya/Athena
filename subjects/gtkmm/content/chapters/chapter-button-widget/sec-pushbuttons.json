@@ -1,0 +1,68 @@
+{
+ "chapter": "chapter-button-widget",
+ "section": "sec-pushbuttons",
+ "title": "Button",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "There are two ways to create a Button. You can specify a label\nstring in the Gtk::Button constructor,\nor set it later with set_label().",
+   "sha": "ea9a291ddef035d3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To define an accelerator key for keyboard navigation, place an underscore before one of the label's characters and specify true for the optional mnemonic parameter. For instance:",
+   "sha": "f61c0f6d00eb9098",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::Button* pButton = new Gtk::Button(\"_Something\", true);",
+   "sha": "de5cbba1d021902c",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Gtk::Button is also\na container so you could put any other widget, such as a\nGtk::Image into it.",
+   "sha": "ecc438159b7117a7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The Gtk::Button widget has the clicked signal\nwhich is emitted when the button is pressed and released.",
+   "sha": "c7fa1dff68c22115",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example creates a button with a picture and a label.",
+   "sha": "112b011ed02bdf80",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "buttons example",
+   "sha": "b4a2ef7861255c90",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

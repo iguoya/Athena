@@ -1,0 +1,32 @@
+{
+ "chapter": "chapter-refptr",
+ "section": "sec-refptr-dereferencing",
+ "title": "Dereferencing",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You can dereference a smartpointer with the -> operator, to\ncall the methods of the underlying instance, just like a normal pointer.",
+   "sha": "61b6747e3248525a",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto width = refPixbuf->get_width();",
+   "sha": "6e55afb5c96ffd11",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can also use the * operator and the get() method\nto access the underlying instance, but it's usually a bad idea to do so. Unless\nyou are careful, you can end up with a pointer or a reference which is not included\nin the reference count.",
+   "sha": "cf0638b93086ead5",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto& underlying = *refPixbuf; // Possible, but not recommended",
+   "sha": "55393342e02f1676",
+   "zh": ""
+  }
+ ]
+}

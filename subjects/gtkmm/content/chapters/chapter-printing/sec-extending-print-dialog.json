@@ -1,0 +1,44 @@
+{
+ "chapter": "chapter-printing",
+ "section": "sec-extending-print-dialog",
+ "title": "Extending the print dialog",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You may add a custom tab to the print dialog:\n\n\n\n\nSet the title of the tab via\nPrintOperation::set_custom_tab_label(),\ncreate a new widget and return it from the\ncreate_custom_widget signal handler. You'll probably\nwant this to be a container widget, packed with some others.\n\n\n\n\n\nGet the data from the widgets in the\ncustom_widget_apply signal handler.",
+   "sha": "84966bb74ed8b91f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Set the title of the tab via PrintOperation::set_custom_tab_label(), create a new widget and return it from the create_custom_widget signal handler. You'll probably want this to be a container widget, packed with some others.",
+   "sha": "603d91d0c875ec5f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Get the data from the widgets in the custom_widget_apply signal handler.",
+   "sha": "987da3ef8cc605b0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Although the custom_widget_apply signal provides the widget you\npreviously created, to simplify things you can keep the widgets you expect\nto contain some user input as class members. For example, let's say you have\na Gtk::Entry called m_Entry as\na member of your CustomPrintOperation class:",
+   "sha": "e5524805e216c06e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n{\nset_custom_tab_label(\"My custom tab\");\n\nauto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\nhbox->set_margin(6);\n\nauto label = Gtk::make_managed<Gtk::Label>(\"Enter some text: \");\nhbox->append(*label);\n\nhbox->append(m_Entry);\n\nreturn hbox;\n}\n\nvoid CustomPrintOperation::on_custom_widget_apply(Gtk::Widget* /* widget */)\n{\nauto user_input = m_Entry.get_text();\n//...\n}",
+   "sha": "54bfd3fe18c0f521",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The example in examples/book/printing/advanced demonstrates this.",
+   "sha": "d62e1be3def55778",
+   "zh": null
+  }
+ ]
+}

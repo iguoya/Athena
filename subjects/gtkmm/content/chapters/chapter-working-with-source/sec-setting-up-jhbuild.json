@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-working-with-source",
+ "section": "sec-setting-up-jhbuild",
+ "title": "Setting up jhbuild",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "To set up jhbuild, follow the basic\ninstallation instructions from the jhbuild manual.\nAfter you have installed jhbuild, you\nshould copy the sample jhbuild configuration\nfile into your home directory by executing the following command from the\njhbuild directory:\n$ cp examples/sample.jhbuildrc ~/.config/jhbuildrc",
+   "sha": "4ce6f99922628184",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The gtkmm module is defined in the\ngnome-suites-core-deps-latest.modules moduleset. So edit your\njhbuildrc file and set your moduleset setting like so:",
+   "sha": "3bee5ed57d184d51",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "moduleset = 'gnome-suites-core-deps-latest'",
+   "sha": "b87569727d6b879a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "After setting the correct moduleset, you need to tell\njhbuild which module or modules to build. To\nbuild gtkmm and all of its dependencies, set modules\nlike so:",
+   "sha": "6180be827a3514fe",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "modules = [ 'gtkmm' ]",
+   "sha": "1e62ec034e2aa16f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can build several modules by setting the\nmodules variable to a meta-package, e.g.\nmeta-gnome-core, or listing more than one module name.\nThe modules variable specifies which modules will be\nbuilt when you don't explicitly specify anything on the command line. You\ncan always build a different moduleset later by specifying it on the\ncommandline (e.g. jhbuild build gtkmm).",
+   "sha": "bbc1a14d395ec8ed",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "By default, jhbuild's configuration is\nconfigured to install all software built with\njhbuild under the\n~/jhbuild/install prefix. You can choose a different\nprefix, but it is recommended that you keep this prefix different from\nother software that you've installed (don't set it to\n/usr!) If you've followed the jhbuild instructions\nthen this prefix belongs to your user, so you don't need to run jhbuild\nas root.",
+   "sha": "8f5f974ac7e7695a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You should also set buildroot in jhbuildrc.\njhbuild builds gtkmm and many of its dependencies\nwith Meson. Meson does not allow building in the source tree.\njhbuild's default action is to build in a\nbuild directory directly below the source root directory.\nSome modules have a build directory with files\nused when building with Autotools. Those files can be destroyed if you\nlet jhbuild build in that directory.",
+   "sha": "a74c2505c1f8a2d9",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "When you downloaded jhbuild from the git repository,\nyou got a number of .modules files, specifying\ndependencies between modules. By default jhbuild\ndoes not use the downloaded versions of these files, but reads the\nlatest versions in the git repository. This is usually what you want.\nIf you don't want it, use the use_local_modulesets\nvariable in jhbuildrc.",
+   "sha": "4121d87cc2e60f81",
+   "zh": null
+  }
+ ]
+}

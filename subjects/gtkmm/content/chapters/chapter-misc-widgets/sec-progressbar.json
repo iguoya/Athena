@@ -1,0 +1,74 @@
+{
+ "chapter": "chapter-misc-widgets",
+ "section": "sec-progressbar",
+ "title": "ProgressBar",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Progress bars are used to show the status of an ongoing operation. For\ninstance, a ProgressBar can show how much of a task has\nbeen completed.",
+   "sha": "a491829f0173db3d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To change the value shown, use the set_fraction() method,\npassing a double between 0.0 and 1.0 to provide the new fraction.",
+   "sha": "8cd8ed8d8c6b1070",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A ProgressBar is horizontal and left-to-right by default,\nbut you can change it to a vertical progress bar by using the\nset_orientation() method.",
+   "sha": "5ed1e13168a5c6a0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Activity Mode",
+   "sha": "8bd3a0d407a71bbe",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Besides indicating the amount of progress that has occurred, the\nprogress bar can also be used to indicate that there is some activity;\nthis is done by placing the progress bar in activity mode. In\nthis mode, the progress bar displays a small rectangle which moves\nback and forth. Activity mode is useful in situations where the\nprogress of an operation cannot be calculated as a value range (e.g.,\nreceiving a file of unknown length).",
+   "sha": "271c754831a5d440",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To do this, you need to call the pulse() method at regular\nintervals. You can also choose the step size, with the\nset_pulse_step() method.",
+   "sha": "0787838a3a34e096",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The progress bar can also display a configurable text\nstring next to the bar, using the set_text() method.",
+   "sha": "2dee859fbc1c2492",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "ProgressBar",
+   "sha": "e5e8341142ea9086",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

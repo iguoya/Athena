@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-signals",
+ "section": "sec-overriding-default-signal-handlers",
+ "title": "Overriding default signal handlers",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "So far we've told you to perform actions in\nresponse to button-presses and the like by handling signals.\nThat's certainly a good way to do things, but it's not the only\nway.",
+   "sha": "56d4d82d00dd8d35",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Instead of laboriously connecting signal handlers to signals,\nyou can simply make a new class which inherits from a widget - say, a\nButton - and then override the default signal handler, such as Button::on_clicked(). This can be a\nlot simpler than hooking up signal handlers for everything.",
+   "sha": "94483a170330582c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Subclassing isn't always the best way to accomplish\nthings. It is only useful when you want the widget to handle its own signal by itself. If you want some other class to handle the signal then you'll need to connect a separate handler. This is even more true if you want several objects to handle the same signal, or if you want one signal handler to respond to the same signal from different objects.",
+   "sha": "38e52c6ad78388cc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "gtkmm classes are designed with overriding in mind; they contain\nvirtual member methods specifically intended to be overridden.",
+   "sha": "e3033cef5f3f5c0b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Let's look at an example of overriding:",
+   "sha": "7db367957c52ec98",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "#include <gtkmm/button.h>\n\nclass OverriddenButton : public Gtk::Button\n{\nprotected:\nvoid on_clicked() override;\n}\n\nvoid OverriddenButton::on_clicked()\n{\nstd::cout << \"Hello World\" << std::endl;\n\n// call the base class's version of the method:\nGtk::Button::on_clicked();\n}",
+   "sha": "9d151bab4e352cf9",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here we define a new class called OverriddenButton,\nwhich inherits from Gtk::Button. The only thing we\nchange is the on_clicked() method, which is called\nwhenever Gtk::Button emits the\nclicked signal. This method prints \"Hello World\" to\nstdout, and then calls the original, overridden method, to\nlet Gtk::Button do what it would have done had we not\noverridden.",
+   "sha": "0f95bb1d11dd9fc7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You don't always need to call the parent's method; there are times\nwhen you might not want to. Note that we called the parent method\nafter writing \"Hello World\", but we could have called it before.\nIn this simple example, it hardly matters much, but there are times\nwhen it will. With connected signal handlers, it's not quite so easy to change details\nlike this, and you can do something here which you can't do at all\nwith connected signal handlers: you can call the parent method in the middle of\nyour custom code.",
+   "sha": "1b2dff298588b405",
+   "zh": null
+  }
+ ]
+}

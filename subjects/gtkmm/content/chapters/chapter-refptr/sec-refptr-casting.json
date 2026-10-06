@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-refptr",
+ "section": "sec-refptr-casting",
+ "title": "Casting",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You can cast RefPtrs to base types, just like normal\npointers.",
+   "sha": "17cd5745a73a4336",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refStore = Gtk::TreeStore::create(columns);\nGlib::RefPtr<Gtk::TreeModel> refModel = refStore;",
+   "sha": "bf3ef444269ce524",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "This means that any method which takes a const\nGlib::RefPtr<BaseType>& argument can also take a\nconst Glib::RefPtr<DerivedType>&. The cast is\nimplicit, just as it would be for a normal pointer.",
+   "sha": "d0c9cfc9403fe084",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can also cast to a derived type, but the syntax is\na little different than with a normal pointer.",
+   "sha": "9c746eac56cd0829",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refStore = std::dynamic_pointer_cast<Gtk::TreeStore>(refModel);\nauto refStore2 = std::static_pointer_cast<Gtk::TreeStore>(refModel);",
+   "sha": "17b8e410b4190236",
+   "zh": ""
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "chapter": "chapter-chapter-timeouts",
+ "section": "sec-monitoring-io",
+ "title": "Monitoring I/O",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "A nifty feature of Glib (one of the libraries underlying\ngtkmm) is the ability to have it check for data on a file descriptor\nfor you. This is especially useful for networking applications. The\nfollowing method is used to do this:",
+   "sha": "5f32ef7f5018079f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "sigc::connection Glib::SignalIO::connect(const sigc::slot<bool(Glib::IOCondition)>& slot,\nGlib::PollFD::fd_t fd, Glib::IOCondition condition,\nint priority = Glib::PRIORITY_DEFAULT);",
+   "sha": "90aa4eadc333908d",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The first argument is a slot you wish to have called when\nthe specified event (see argument 3) occurs on the file descriptor you specify\nusing argument two. Argument three may be one or more (using\n|) of:",
+   "sha": "f8e46df2a9cc3da2",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::IOCondition::IO_IN - Call your method when there is data ready for reading on your file descriptor.",
+   "sha": "8a5e446ef7de25a0",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::IOCondition::IO_OUT - Call your method when the file descriptor is ready for writing.",
+   "sha": "67a6a62cbbbb56df",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::IOCondition::IO_PRI - Call your method when the file descriptor has urgent data to be read.",
+   "sha": "35dec6f1c1c0fa2d",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::IOCondition::IO_ERR - Call your method when an error has occurred on the file descriptor.",
+   "sha": "30e711492ea7cd43",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Glib::IOCondition::IO_HUP - Call your method when hung up (the connection has been broken usually for pipes and sockets).",
+   "sha": "b2221cd298f67a8d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The return value is a sigc::connection that may be used to stop monitoring\nthis file descriptor using its disconnect() method. The\nslot signal handler should be declared as follows:",
+   "sha": "6e5249689e6a1983",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "bool input_callback(Glib::IOCondition condition);",
+   "sha": "88f6056071898ddb",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "where condition is as\nspecified above. As usual the slot is created with\nsigc::mem_fun() (for a member method of an object), or\nsigc::ptr_fun() (for a function). A lambda expression can\nbe used, if you don't need the automatic disconnection that sigc::mem_fun()\nprovides when the object goes out of scope.",
+   "sha": "fee6c109e8e668df",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A little example follows. To use the example just execute it from a terminal;\nit doesn't create a window. It will create a pipe named\ntestfifo in the current directory. Then start another shell\nand execute echo \"Hello\" > testfifo. The example will\nprint each line you enter until you execute echo \"Q\" >\ntestfifo.",
+   "sha": "e7cb59d7b9ea650a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

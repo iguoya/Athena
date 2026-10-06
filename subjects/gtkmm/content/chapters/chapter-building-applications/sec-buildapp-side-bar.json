@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-side-bar",
+ "title": "Adding a side bar",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "As another piece of functionality, we are adding a sidebar, which demonstrates\nGtk::Revealer and Gtk::ListBox.\nThe new widgets are added in the window.ui file.",
+   "sha": "96ca8e60ed052916",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The code to populate the sidebar with buttons for the words found in each\nfile is a little too involved to go into here. But we'll look at the code\nto add a checkbutton for the new feature to the menu. A menu item is added to\nthe ui file gears_menu.ui.",
+   "sha": "0f232012ff17b9e6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To connect the menu item to the new show-words setting, we use a\nGio::Action corresponding to the given Gio::Settings\nkey. In ExampleAppWindow's constructor:",
+   "sha": "5c2e5edf19c918b8",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "// Connect the menu to the MenuButton m_gears, and bind the show-words setting\n// to the win.show-words action and the \"Words\" menu item.\n// (The connection between action and menu item is specified in gears_menu.ui.)\nauto menu_builder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/gears_menu.ui\");\nauto menu = menu_builder->get_object<Gio::MenuModel>(\"menu\");\nm_gears->set_menu_model(menu);\nadd_action(m_settings->create_action(\"show-words\"));",
+   "sha": "07cf1194c05755ef",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "What our application looks like now:",
+   "sha": "fccb7d23b9f5553d",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Adding a side bar",
+   "sha": "2e25935935192334",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

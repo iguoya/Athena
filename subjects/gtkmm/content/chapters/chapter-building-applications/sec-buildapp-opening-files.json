@@ -1,0 +1,56 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-opening-files",
+ "title": "Opening files",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "In this step, we make our application show the contents of all the files that it is\ngiven on the commandline.",
+   "sha": "885048ac3d41a8d8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To this end, we add a data member to our application window and keep a pointer to the\nGtk::Stack there. We get the pointer with a call to\nGtk::Builder::get_widget() in the application window's constructor.",
+   "sha": "3129d0535ce63a90",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Now we revisit the ExampleAppWindow::open_file_view() method\nthat is called for each commandline argument, and construct a Gtk::TextView\nthat we then add as a page to the stack.",
+   "sha": "402ed7369f1904a2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Lastly, we add a Gtk::StackSwitcher to the titlebar area\nin the ui file, and we tell it to display information about our stack.",
+   "sha": "bdc79451bd58579e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The stack switcher gets all its information it needs to display tabs from\nthe stack that it belongs to. Here, we are passing the label to show for\neach file as the last argument to the Gtk::Stack::add()\nmethod.",
+   "sha": "2e3552d86d65b0c8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Our application is beginning to take shape:",
+   "sha": "f7f4bd99df6f7fb9",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Opening files",
+   "sha": "39887049dea79cd7",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

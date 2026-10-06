@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-combobox",
+ "section": "sec-combobox-get",
+ "title": "The chosen item",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "To discover what item, if any, the user has chosen from the ComboBox, call ComboBox::get_active(). This returns a TreeModel::iterator that you can dereference to a Row in order to read the values in your columns. For instance, you might read an integer ID value from the model, even though you have chosen only to show the human-readable description in the ComboBox. For instance:",
+   "sha": "0404ca6dccffbc1f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Gtk::TreeModel::iterator iter = m_Combo.get_active();\nif(iter)\n{\nauto row = *iter;\n\n//Get the data for the selected row, using our knowledge\n//of the tree model:\nauto id = row[m_Columns.m_col_id];\nset_something_id_chosen(id); //Your own function.\n}\nelse\nset_nothing_chosen(); //Your own function.",
+   "sha": "d40270a39f79d3c7",
+   "zh": ""
+  }
+ ]
+}

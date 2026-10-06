@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-building-applications",
+ "section": "sec-buildapp-search-bar",
+ "title": "Adding a search bar",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "We continue to flesh out the functionality of our application. For now, we add search.\ngtkmm supports this with Gtk::SearchEntry and Gtk::SearchBar.\nThe search bar is a widget that can slide in from the top to present a search entry.",
+   "sha": "757a8ebf125ec598",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "We add a toggle button to the header bar, which can be used to slide out the search bar\nbelow the header bar. The new widgets are added in the window.ui file.",
+   "sha": "addfc902167ed3e1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Implementing the search needs quite a few code changes that we are not going to completely\ngo over here. The central piece of the search implementation is a signal handler that\nlistens for text changes in the search entry, shown here without error handling.",
+   "sha": "a073e6c3682a882f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleAppWindow::on_search_text_changed()\n{\nconst auto text = m_searchentry->get_text();\nauto tab = dynamic_cast<Gtk::ScrolledWindow*>(m_stack->get_visible_child());\nauto view = dynamic_cast<Gtk::TextView*>(tab->get_child());\n\n// Very simple-minded search implementation.\nauto buffer = view->get_buffer();\nGtk::TextIter match_start;\nGtk::TextIter match_end;\nif (buffer->begin().forward_search(text, Gtk::TextSearchFlags::CASE_INSENSITIVE,\nmatch_start, match_end))\n{\nbuffer->select_range(match_start, match_end);\nview->scroll_to(match_start);\n}\n}",
+   "sha": "6ad7b33174c7edec",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "With the search bar, our application now looks like this:",
+   "sha": "6cb1060c623d4c3e",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Adding a search bar",
+   "sha": "bf2d84aca23dc2e2",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

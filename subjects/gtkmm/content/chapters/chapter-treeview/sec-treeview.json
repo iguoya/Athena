@@ -1,0 +1,242 @@
+{
+ "chapter": "chapter-treeview",
+ "section": "sec-treeview",
+ "title": "The View",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The View is the actual widget (Gtk::TreeView) that\ndisplays the model (Gtk::TreeModel) data and allows the\nuser to interact with it. The View can show all of the model's columns, or just\nsome, and it can show them in various ways.",
+   "sha": "3ba280cdb29c441b",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Using a Model",
+   "sha": "3d876b747d096df3",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can specify a Gtk::TreeModel when constructing the\nGtk::TreeView, or you can use the\nset_model() method, like so:",
+   "sha": "13eb46a5790ab20d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_TreeView.set_model(m_refListStore);",
+   "sha": "9fac5b64b377d0e3",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Adding View Columns",
+   "sha": "352d4c5657d23baf",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can use the append_column() method to tell the View\nthat it should display certain Model columns, in a certain order, with a\ncertain column title.",
+   "sha": "4ae8f427573d1acc",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_TreeView.append_column(\"Messages\", m_Columns.m_col_text);",
+   "sha": "ab109ea8c391ff64",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "When using this simple append_column() overload, the\nTreeView will display the model data with an appropriate\nCellRenderer. For instance, strings and numbers are\nshown in a simple Gtk::Entry widget, and booleans are\nshown in a Gtk::CheckButton. This is usually what you\nneed. For other column types you must either connect a callback that converts\nyour type into a string representation, with\nTreeViewColumn::set_cell_data_func(), or derive a custom\nCellRenderer. Note that (unsigned) short is not\nsupported by default - You could use (unsigned) int or (unsigned) long as the\ncolumn type instead.",
+   "sha": "9b3a5f6ae7c4f278",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "More than one Model Column per View Column",
+   "sha": "1eb028770c2c9777",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To render more than one model column in a view column, you need to create the\nTreeView::Column widget manually, and use\npack_start() to add the model columns to it.",
+   "sha": "80fabafdd5a1dbc4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Then use append_column() to add the view Column to the\nView. Notice that Gtk::TreeView::append_column() is overloaded\nto accept either a prebuilt Gtk::TreeView::Column widget, or\njust the TreeModelColumn from which it generates an\nappropriate Gtk::TreeView::Column widget.",
+   "sha": "da00524cef4ec2c5",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is some example code, which has a pixbuf icon and a text name in the same column:",
+   "sha": "bee80ee5c3209c7e",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pColumn = Gtk::make_managed<Gtk::TreeView::Column>(\"Icon Name\");\n\n// m_columns.icon and m_columns.iconname are columns in the model.\n// pColumn is the column in the TreeView:\npColumn->pack_start(m_columns.icon, /* expand= */ false);\npColumn->pack_start(m_columns.iconname);\n\nm_TreeView.append_column(*pColumn);",
+   "sha": "b6023b022ffcaa17",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Specifying CellRenderer details",
+   "sha": "a59d1f063838548f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The default CellRenderers and their default behavior\nwill normally suffice, but you might occasionally need finer control. For\ninstance, this example code from\ngtkmm/demos/gtk-demo/example_treeview_treestore.cc, appends a\nGtk::CellRenderer widget and instructs it to render the\ndata from various model columns through various aspects of its appearance.",
+   "sha": "c254b55d6e2c7b90",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto cols_count = m_TreeView.append_column_editable(\"Alex\", m_columns.alex);\nauto pColumn = m_TreeView.get_column(cols_count-1);\nif(pColumn)\n{\nauto pRenderer = static_cast<Gtk::CellRendererToggle*>(pColumn->get_first_cell());\npColumn->add_attribute(pRenderer->property_visible(), m_columns.visible);\npColumn->add_attribute(pRenderer->property_activatable(), m_columns.world);",
+   "sha": "0fde1a944c0761b3",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can also connect to CellRenderer signals to detect user\nactions. For instance:",
+   "sha": "00596cc941e0a30c",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto pRenderer = Gtk::make_managed<Gtk::CellRendererToggle>();\npRenderer->signal_toggled().connect(\nsigc::bind( sigc::mem_fun(*this,\n&Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n);",
+   "sha": "804476589f34cf14",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Editable Cells",
+   "sha": "b6135a4c0c8bde63",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Automatically-stored editable cells",
+   "sha": "de217c22bcce1cd4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Cells in a TreeView can be edited in-place by the user.\nTo allow this, use the Gtk::TreeView\ninsert_column_editable() and\nappend_column_editable() methods instead of\ninsert_column() and append_column().\nWhen these cells are edited the new values will be stored immediately in the\nModel. Note that these methods are templates which can only be instantiated for\nsimple column types such as Glib::ustring, int, and\nlong.",
+   "sha": "5d1c874fce853d88",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Implementing custom logic for editable cells",
+   "sha": "7f4da3c553af00ed",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "However, you might not want the new values to be stored\nimmediately. For instance, maybe you want to restrict the input to\ncertain characters or ranges of values.",
+   "sha": "4cfa21eda9ae0374",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To achieve this, you should use the normal Gtk::TreeView\ninsert_column() and append_column()\nmethods, then use get_column_cell_renderer() to get the\nGtk::CellRenderer used by that column.",
+   "sha": "4a524c8e05e34834",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You should then cast that Gtk::CellRenderer* to the\nspecific CellRenderer that you expect, so you can use specific API.",
+   "sha": "5ba5062f801139bf",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance, for a CellRendererText, you would set the cell's editable property to true, like\nso:",
+   "sha": "884b3cfd40c1d555",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "cell->property_editable() = true;",
+   "sha": "625075d3afc9fcac",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "For a CellRendererToggle, you would set the activatable\nproperty instead.",
+   "sha": "26ad2971d8b2e100",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can then connect\nto the appropriate \"edited\" signal. For instance, connect to\nGtk::CellRendererText::signal_edited(), or\nGtk::CellRendererToggle::signal_toggled(). If the column\ncontains more than one CellRenderer then you will need\nto use Gtk::TreeView::get_column() and then call\nget_cells() on that view Column.",
+   "sha": "bd91dceddca3c099",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
+   "sha": "3cd95b0235c2c88a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "However, you might not want the new values to be stored\nimmediately. For instance, maybe you want to restrict the input to\ncertain characters or ranges of values.",
+   "sha": "4cfa21eda9ae0374-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To achieve this, you should use the normal Gtk::TreeView\ninsert_column() and append_column()\nmethods, then use get_column_cell_renderer() to get the\nGtk::CellRenderer used by that column.",
+   "sha": "4a524c8e05e34834-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You should then cast that Gtk::CellRenderer* to the\nspecific CellRenderer that you expect, so you can use specific API.",
+   "sha": "5ba5062f801139bf-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance, for a CellRendererText, you would set the cell's editable property to true, like\nso:",
+   "sha": "884b3cfd40c1d555-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "cell->property_editable() = true;",
+   "sha": "625075d3afc9fcac-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "For a CellRendererToggle, you would set the activatable\nproperty instead.",
+   "sha": "26ad2971d8b2e100-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You can then connect\nto the appropriate \"edited\" signal. For instance, connect to\nGtk::CellRendererText::signal_edited(), or\nGtk::CellRendererToggle::signal_toggled(). If the column\ncontains more than one CellRenderer then you will need\nto use Gtk::TreeView::get_column() and then call\nget_cells() on that view Column.",
+   "sha": "bd91dceddca3c099-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
+   "sha": "3cd95b0235c2c88a-1",
+   "zh": null
+  }
+ ]
+}

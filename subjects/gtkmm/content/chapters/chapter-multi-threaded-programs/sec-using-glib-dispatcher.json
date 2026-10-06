@@ -1,0 +1,32 @@
+{
+ "chapter": "chapter-multi-threaded-programs",
+ "section": "sec-using-glib-dispatcher",
+ "title": "Using Glib::Dispatcher",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "The slots connected to sigc::signal objects\nexecute in the thread which calls emit() or\noperator()() on the signal.\nGlib::Dispatcher does not behave this way:\ninstead its connected slots execute in the thread in which the\nGlib::Dispatcher object was constructed (which\nmust have a glib main loop). If a\nGlib::Dispatcher object is constructed in the\nmain GUI thread (which will therefore be the receiver thread), any\nworker thread can emit on it and have the connected slots safely\nexecute gtkmm functions.",
+   "sha": "a47f6afc125ac020",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Some thread safety rules on the use of\nGlib::Dispatcher still apply. As mentioned, a\nGlib::Dispatcher object must be constructed in\nthe receiver thread (the thread in whose main loop it will execute its\nconnected slots). By default this is the main program thread, although\nthere is a Glib::Dispatcher constructor which\ncan take the Glib::MainContext object of any\nthread which has a main loop. Only the receiver thread should call\nconnect() on the\nGlib::Dispatcher object, or manipulate any\nrelated sigc::connection object, unless\nadditional synchronization is employed. However, any worker thread can\nsafely emit on the Glib::Dispatcher object\nwithout any locking once the receiver thread has connected the slots,\nprovided that it is constructed before the worker thread is started\n(if it is constructed after the thread has started, additional\nsynchronization will normally be required to ensure visibility).",
+   "sha": "f9ffebc5cd882034",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Aside from the fact that connected slots always execute in the\nreceiver thread, Glib::Dispatcher objects are\nsimilar to sigc::signal<void()> objects.\nThey therefore cannot pass unbound arguments nor return a value. The\nbest way to pass unbound arguments is with a thread-safe\n(asynchronous) queue. At the time of writing\nglibmm does not have one, although most\npeople writing multi-threaded code will have one available to them\n(they are relatively easy to write although there are subtleties in\ncombining thread safety with strong exception safety).",
+   "sha": "3287e91a64880dbb",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A Glib::Dispatcher object can be emitted on by\nthe receiver thread as well as by a worker thread, although this\nshould be done within reasonable bounds. On unix-like systems\nGlib::Dispatcher objects share a single common\npipe, which could in theory at least fill up on a very heavily loaded\nsystem running a program with a very large number of\nDispatcher objects in use. Were the pipe to\nfill up before the receiver thread's main loop has had an opportunity\nto read from it to empty it, and the receiver thread attempt to emit\nand so write to it when it is in that condition, the receiver thread\nwould block on the write, so deadlocking. Where the receiver thread is\nto emit, a normal sigc::signal<void()>\nobject could of course be used instead.",
+   "sha": "ed921b169fac039c",
+   "zh": null
+  }
+ ]
+}

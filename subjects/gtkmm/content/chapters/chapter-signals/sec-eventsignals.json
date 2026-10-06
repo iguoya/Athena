@@ -1,0 +1,86 @@
+{
+ "chapter": "chapter-signals",
+ "section": "sec-eventsignals",
+ "title": "Event signals",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Event signals are emitted as a result of some user input, for instance a key press\nor a mouse motion. Usually you don't handle these events directly. Instead, you use\na subclass of Gtk::EventController, such as Gtk::EventControllerKey\nor Gtk::GestureClick. Event controllers can be added to a\nwidget with Gtk::Widget::add_controller().",
+   "sha": "6cf3e6bc6bd89804",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "You might occasionally find it useful to handle events when there's something\nyou can't accomplish with normal signals. Gtk::Button,\nfor example, does not send mouse-pointer coordinates with its\nclicked signal, but you could handle\nGtk::GestureClick::signal_pressed() if you needed this\ninformation. Gtk::EventControllerKey::signal_key_pressed()\nis often used to handle key-presses.",
+   "sha": "4554256d29f148e4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Some event controller signals behave slightly differently. The value returned from\nthe signal handler indicates whether it has fully \"handled\" the event. If the value\nis false then gtkmm will pass the event on to the next\nsignal handler. If the value is true then no other signal handlers\nwill need to be called.",
+   "sha": "45196c44653082b2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Handling an event doesn't affect the Widget's other signals. If you handle\nGtk::GestureClick::signal_pressed() for\nGtk::Button, you'll still be able to get the\nclicked signal. They are emitted at (nearly) the same time.",
+   "sha": "5f880039d300c9ff",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's a simple example:",
+   "sha": "8467c290c086bf5d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void on_button_press(int n_press, double x, double y);\nGtk::Button button(\"label\");\nauto controller = Gtk::GestureClick::create();\ncontroller->set_propagation_phase(Gtk::PropagationPhase::CAPTURE);\ncontroller->signal_pressed().connect(sigc::ptr_fun(&on_button_press));\nbutton.add_controller(controller);",
+   "sha": "76efa6c59e77d74a",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "When the mouse is over the button and a mouse button is pressed,\non_button_press() will be called.",
+   "sha": "e02df1e74b9f5059",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The call to set_propagation_phase() is necessary in\nthis case because the GtkButton C class adds an event\ncontroller, handling button clicks in the capture phase. GtkButton\nclaims the event, meaning that the event is not propagated in the bubble phase,\nwhere event controllers handle events by default.",
+   "sha": "36e8eccc63fc861b",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Signal Handler sequence",
+   "sha": "e18e9d63e4180f23",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "By default, signal handlers that return void are called after\nany previously-connected signal handlers. However, this can be a problem with\nevent signals that can stop event propagation by returning true.\nFor instance, the existing signal handlers, or the default signal handler, might return\ntrue to stop other signal handlers from being called.\nTo specify that your signal handler should be called before the other signal handlers,\nyou can specify false for the after parameter.\nThis connect() parameter is optional, if the signal handler\nreturns void. For instance,",
+   "sha": "fc5c62d5bbeee239",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "key_controller->signal_key_pressed().connect(sigc::ptr_fun(&on_mywindow_key_pressed), false);",
+   "sha": "c1fd2a5618e75467",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The event is propagated between widgets in 3 phases.\n\nCapture phase - runs from the toplevel down to the event widget.\nTarget phase - runs only on the event widget.\nBubble phase - runs from the event widget up to the toplevel.",
+   "sha": "b82c0855fdeb0c71",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The Input Handling\nchapter in the GTK documentation describes user input handling in more detail.",
+   "sha": "88a86490fabd5d43",
+   "zh": null
+  }
+ ]
+}

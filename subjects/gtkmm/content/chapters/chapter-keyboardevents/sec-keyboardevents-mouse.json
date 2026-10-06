@@ -1,0 +1,68 @@
+{
+ "chapter": "chapter-keyboardevents",
+ "section": "sec-keyboardevents-mouse",
+ "title": "Mouse Events",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Mouse events are similar to keyboard events. There are some differences, though.\n\nYou use Gtk::GestureClick instead of\nGtk::EventControllerKey.\nThere are other event classes that can be used for handling\nmouse events, for instance Gtk::EventControllerMotion and\nGtk::EventControllerScroll.\nMany signal handlers don't return a bool.\nYou can't stop those events from propagating.",
+   "sha": "4ffd75f85d5d1d5d",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "You use Gtk::GestureClick instead of Gtk::EventControllerKey.",
+   "sha": "74ceafcc9ae4db30",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "There are other event classes that can be used for handling mouse events, for instance Gtk::EventControllerMotion and Gtk::EventControllerScroll.",
+   "sha": "5a2a385e017bc0ab",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Many signal handlers don't return a bool. You can't stop those events from propagating.",
+   "sha": "5885fd59a372e1c0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The event classes that handle mouse events are also useful for handling\nevents from touchscreens. There are also many subclasses of\nGtk::EventController which are only (or mainly) useful\nfor touchscreens. Examples: Gtk::GestureRotate,\nGtk::GestureZoom, Gtk::GestureSwipe,\nGtk::GestureLongPress.",
+   "sha": "7ec8596e97d50001",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This is an expanded version of the simple keyboard events example.",
+   "sha": "bc1f1d2842a07821",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Keyboard and Mouse Events",
+   "sha": "f9a76d5d44678fa0",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

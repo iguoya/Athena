@@ -1,0 +1,110 @@
+{
+ "chapter": "chapter-customwidgets",
+ "section": "sec-custom-widgets",
+ "title": "Custom Widgets",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "By deriving directly from Gtk::Widget you can\ndo all the drawing for your widget directly, instead of just arranging\nchild widgets. For instance, a Gtk::Label draws\nthe text of the label, but does not do this by using other\nwidgets.",
+   "sha": "1fa5441074fdfa33",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "When deriving from Gtk::Widget, you should\noverride the following virtual methods. The methods marked (optional)\nneed not be overridden in all custom widgets. The base class's methods\nmay be appropriate.\n\nget_request_mode_vfunc(): (optional) Return what Gtk::SizeRequestMode is preferred by the widget.\nmeasure_vfunc(): Calculate the minimum and natural width or height of the widget.\nsize_allocate_vfunc(): (optional) Position the widget, given the height and width that it has actually been given.\non_realize(): (optional)\non_unrealize(): (optional)\non_map(): (optional)\non_unmap(): (optional)\nsnapshot_vfunc(): Create a render node, e.g. a Cairo::Context node, and draw on it.",
+   "sha": "645b4b0cfd2b5276",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "get_request_mode_vfunc(): (optional) Return what Gtk::SizeRequestMode is preferred by the widget.",
+   "sha": "eedfb7789745d51f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "measure_vfunc(): Calculate the minimum and natural width or height of the widget.",
+   "sha": "2fe503071843e74e",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "size_allocate_vfunc(): (optional) Position the widget, given the height and width that it has actually been given.",
+   "sha": "192ba53ae88c4806",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "on_realize(): (optional)",
+   "sha": "308297a694db9db7",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "on_unrealize(): (optional)",
+   "sha": "5127a6e8190ec32b",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "on_map(): (optional)",
+   "sha": "25e2e1c838e0594f",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "on_unmap(): (optional)",
+   "sha": "34a0ca8898313f92",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "snapshot_vfunc(): Create a render node, e.g. a Cairo::Context node, and draw on it.",
+   "sha": "69d460fc5685c6a7",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The first 3 methods in the previous table are also overridden in custom\ncontainers. They are briefly described in the\nCustom Containers section.",
+   "sha": "7ada619e01a1e082",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Class Init and Instance Init Functions",
+   "sha": "23d98581fe5b551a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Some GTK functions, if called at all, must be\ncalled from the class init function. Some other GTK\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom Glib::ExtraClassInit and derive your custom class\nfrom that class. The custom CSS name example\nshows how that's done.",
+   "sha": "ee9c2fafe16f1ea7",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This example implements a widget which draws Penrose triangles.",
+   "sha": "bf89692dde9dd89a",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Custom Widget",
+   "sha": "d23e918bd35d4cc3",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

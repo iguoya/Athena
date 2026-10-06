@@ -1,0 +1,44 @@
+{
+ "chapter": "chapter-clipboard",
+ "section": "sec-clipboard-paste",
+ "title": "Paste",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "When the user asks to paste data from the Clipboard, you\nshould request a specific format and provide a callback method which will be\ncalled with the actual data. For instance:",
+   "sha": "d6511bab9c84d4f1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleWindow::on_button_paste()\n{\nget_clipboard()->read_text_async(sigc::mem_fun(*this,\n&ExampleWindow::on_clipboard_received));\n}",
+   "sha": "880a0ea347750119",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Here is an example callback method:",
+   "sha": "b7b57ea98e711b96",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleWindow::on_clipboard_received(Glib::RefPtr<Gio::AsyncResult>& result)\n{\nauto text = get_clipboard()->read_text_finish(result);\n//Do something with the pasted data.\n}",
+   "sha": "bb89e0593b0a6e57",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Discovering the available formats",
+   "sha": "2ce13cf88b3d2636",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To find out what formats are currently available on the Clipboard\nfor pasting, call the get_formats() method. Then call a\nGdk::ContentFormats method to find out if a format that\nyour application supports is available.",
+   "sha": "dc85ece6b21992be",
+   "zh": null
+  }
+ ]
+}

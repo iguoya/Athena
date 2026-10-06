@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-recommended-techniques",
+ "section": "sec-using-a-gtkmm-widget",
+ "title": "Using a gtkmm widget",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Our examples all tend to have the same structure. They follow these steps\nfor using a Widget:",
+   "sha": "053db4895c7e98db",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Declare a variable of the type of Widget you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\nnew or Gtk::make_managed() in your code.\n\n\n\n\n\nSet the attributes of the widget. If the widget has no default constructor,\nthen you will need to initialize the widget in the initializer list of your\ncontainer class's constructor.\n\n\n\n\n\nConnect any signals you wish to use to the appropriate handlers.\n\n\n\n\n\nPack the widget into a container using the appropriate call,\ne.g. Gtk::Box::append().",
+   "sha": "e99e49853439a44e",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Declare a variable of the type of Widget you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\nnew or Gtk::make_managed() in your code.",
+   "sha": "f4931bf982762f19",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Set the attributes of the widget. If the widget has no default constructor,\nthen you will need to initialize the widget in the initializer list of your\ncontainer class's constructor.",
+   "sha": "c52dc1fd735ce043",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Connect any signals you wish to use to the appropriate handlers.",
+   "sha": "fd2789e29b2b528d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Pack the widget into a container using the appropriate call,\ne.g. Gtk::Box::append().",
+   "sha": "c194edf03b258159",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you don't want all widgets to be shown, call Gtk::Widget::set_visible(false)\non the widgets that you don't want to show. If a container widget is hidden, all\nof its child widgets are also hidden, even if set_visible(false) is\nnot called on the child widgets.",
+   "sha": "23d0c6b708079912",
+   "zh": null
+  }
+ ]
+}

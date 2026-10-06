@@ -1,0 +1,296 @@
+{
+ "chapter": "chapter-textview",
+ "section": "sec-textview-buffer",
+ "title": "The Buffer",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Gtk::TextBuffer is a model containing the data for the\nGtk::TextView, like the\nGtk::TreeModel used by Gtk::TreeView.\nThis allows two or more Gtk::TextViews to share the same\nTextBuffer, and allows those TextBuffers to be displayed\nslightly differently. Or you could maintain several\nGtk::TextBuffers and choose to display each one at different\ntimes in the same Gtk::TextView widget.",
+   "sha": "aff7eff2cc695cf1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The TextView creates its own default\nTextBuffer, which you can access via the\nget_buffer() method.",
+   "sha": "4f6735e2970fe784",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Iterators",
+   "sha": "a58e1e2691ee2c11",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "A Gtk::TextBuffer::iterator and a Gtk::TextBuffer::const_iterator\nrepresent a position between two characters in the text buffer. Whenever the buffer\nis modified in a way that affects the number of characters in the buffer, all outstanding\niterators become invalid. Because of this, iterators can't be used to preserve positions\nacross buffer modifications. To preserve a position, use Gtk::TextBuffer::Mark.",
+   "sha": "666c9158adce240f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Tags and Formatting",
+   "sha": "07712a03b40a76bb",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Tags",
+   "sha": "1331275bc537b4c2",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "To specify that some text in the buffer should have specific formatting, you must define a tag to hold that formatting information, and then apply that tag to the region of text. For instance, to define the tag and its properties:",
+   "sha": "ff4a8930637301e5",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refTagMatch = Gtk::TextBuffer::Tag::create();\nrefTagMatch->property_background() = \"orange\";",
+   "sha": "8aee99823690e009",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can specify a name for the Tag when using the\ncreate() method, but it is not necessary.",
+   "sha": "4550bd89c441de5d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The Tag class has many other properties.",
+   "sha": "3d3ee25234a7b7e8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-2",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "TagTable",
+   "sha": "60cf56cd6a70eed0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Each Gtk::TextBuffer uses a\nGtk::TextBuffer::TagTable, which contains the\nTags for that buffer. 2 or more\nTextBuffers may share the same\nTagTable. When you create Tags\nyou should add them to the TagTable. For instance:",
+   "sha": "079a1b2964e92793",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refTagTable = Gtk::TextBuffer::TagTable::create();\nrefTagTable->add(refTagMatch);\n//Hopefully a future version of gtkmm will have a set_tag_table() method,\n//for use after creation of the buffer.\nauto refBuffer = Gtk::TextBuffer::create(refTagTable);",
+   "sha": "c52877bfd3db8c42",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe TextBuffer's default TagTable\ninstead of creating one explicitly.",
+   "sha": "67124e322098f2be",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Applying Tags",
+   "sha": "25f14621747ed2cd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you have created a Tag and added it to the\nTagTable, you may apply that tag to part of the\nTextBuffer so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\nGtk::TextBuffer::iterators. For instance:",
+   "sha": "99b50726009f26c7",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refBuffer->apply_tag(refTagMatch, iterRangeStart, iterRangeStop);",
+   "sha": "fd8f52ffb6f12efe",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Or you could specify the tag when first inserting the text:",
+   "sha": "40bf6e55ff530666",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refBuffer->insert_with_tag(iter, \"Some text\", refTagMatch);",
+   "sha": "c1acc6894b5a0780",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can apply more than one Tag to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The Tags might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
+   "sha": "e92729bff47493ef",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Each Gtk::TextBuffer uses a\nGtk::TextBuffer::TagTable, which contains the\nTags for that buffer. 2 or more\nTextBuffers may share the same\nTagTable. When you create Tags\nyou should add them to the TagTable. For instance:",
+   "sha": "079a1b2964e92793-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refTagTable = Gtk::TextBuffer::TagTable::create();\nrefTagTable->add(refTagMatch);\n//Hopefully a future version of gtkmm will have a set_tag_table() method,\n//for use after creation of the buffer.\nauto refBuffer = Gtk::TextBuffer::create(refTagTable);",
+   "sha": "c52877bfd3db8c42-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe TextBuffer's default TagTable\ninstead of creating one explicitly.",
+   "sha": "67124e322098f2be-1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-4",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you have created a Tag and added it to the\nTagTable, you may apply that tag to part of the\nTextBuffer so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\nGtk::TextBuffer::iterators. For instance:",
+   "sha": "99b50726009f26c7-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refBuffer->apply_tag(refTagMatch, iterRangeStart, iterRangeStop);",
+   "sha": "fd8f52ffb6f12efe-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Or you could specify the tag when first inserting the text:",
+   "sha": "40bf6e55ff530666-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "refBuffer->insert_with_tag(iter, \"Some text\", refTagMatch);",
+   "sha": "c1acc6894b5a0780-1",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can apply more than one Tag to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The Tags might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
+   "sha": "e92729bff47493ef-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Marks",
+   "sha": "65479e3e408a6e35",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "TextBuffer iterators are generally invalidated when the\ntext changes, but you can use a Gtk::TextBuffer::Mark to\nremember a position in these situations. For instance,",
+   "sha": "2f34a8d6e3b3f914",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "auto refMark = refBuffer->create_mark(iter);",
+   "sha": "de5a6fb8f38a6988",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can then use the get_iter() method later to create an\niterator for the Mark's new position.",
+   "sha": "1491e9385df9ed26",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are two built-in Marks - insert\nand selection_bound, which you can access with\nTextBuffer's get_insert() and\nget_selection_bound() methods.",
+   "sha": "92125f070efa73fe",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-5",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "The View",
+   "sha": "76fcbabe4c7d500a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "As mentioned above, each TextView has a\nTextBuffer, and one or more\nTextViews can share the same\nTextBuffer.",
+   "sha": "a3c0af301f4d7c68",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Like the TreeView, you should probably put your\nTextView inside a ScrolledWindow\nto allow the user to see and move around the whole text area with\nscrollbars.",
+   "sha": "5965ee63165da6d0",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2-6",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Default formatting",
+   "sha": "f7ee2e3be2ed2458",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "TextView has various methods which allow you to change\nthe presentation of the buffer for this particular view. Some of these may be\noverridden by the Gtk::TextTags in the buffer, if they\nspecify the same things. For instance, set_left_margin(),\nset_right_margin(), set_indent(),\netc.",
+   "sha": "840ee839be13e397",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Scrolling",
+   "sha": "9b97629352c7291a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::TextView has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
+   "sha": "7634b76a9e528527",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Gtk::TextView has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
+   "sha": "7634b76a9e528527-1",
+   "zh": null
+  }
+ ]
+}

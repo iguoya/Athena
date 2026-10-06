@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-chapter-timeouts",
+ "section": "sec-timeouts",
+ "title": "Timeouts",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "You may be wondering how to make gtkmm do useful work while it's idling along. Happily,\nyou have several options. Using the following methods you can create a timeout\nmethod that will be called every few milliseconds.",
+   "sha": "14e4be446c177d4c",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "sigc::connection Glib::SignalTimeout::connect(const sigc::slot<bool()>& slot,\nunsigned int interval, int priority = Glib::PRIORITY_DEFAULT);",
+   "sha": "707ebe117bf49ddd",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The first argument is a slot you wish to have called\nwhen the timeout occurs. The second argument is the number of milliseconds\nbetween calls to that method. You receive a\nsigc::connection object that can be used to deactivate\nthe connection using its disconnect() method:",
+   "sha": "17f59bff6bc3b2b5",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "my_connection.disconnect();",
+   "sha": "05587bb49aa3e255",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Another way of destroying the connection is your signal handler.\nIt has to be of the type sigc::slot<bool()>.\nAs you see from the definition your signal handler has to return a value of\nthe type bool. A definition of a sample method might\nlook like this:",
+   "sha": "d02479084be08a7b",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "bool MyCallback() { std::cout << \"Hello World!\\n\" << std::endl; return true; }",
+   "sha": "a125cb60c51d5934",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "You can stop the timeout method by returning false from\nyour signal handler. Therefore, if you want your\nmethod to be called repeatedly, it should return true.",
+   "sha": "4757944de7a8e1a1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here's an example of this technique:",
+   "sha": "3e3e3085cc2eafb6",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

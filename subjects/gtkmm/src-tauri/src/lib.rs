@@ -133,14 +133,15 @@ fn get_manifest(state: State<AppState>) -> Result<Value, String> {
     read_content(&state.content_root, "demos.json")
 }
 
-/// 官方节页的对照翻译稿（content/chapters/<章>/<节>.md，应用 ADR 0002）。
+/// 官方节页的段落快照（content/chapters/<章>/<节>.json，原文+逐段中文，
+/// 由 scripts/sync_upstream.py 生成——应用 ADR 0002 的段落级追踪）。
 #[tauri::command]
 fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String) -> Result<String, String> {
     let path = state
         .content_root
         .join("chapters")
         .join(&chapter_id)
-        .join(format!("{page_id}.md"));
+        .join(format!("{page_id}.json"));
     fs::read_to_string(&path).map_err(|error| format!("读 {} 失败：{}", path.display(), error))
 }
 

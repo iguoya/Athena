@@ -1,0 +1,44 @@
+{
+ "chapter": "chapter-drawingarea",
+ "section": "sec-drawing-clock-example",
+ "title": "Example Application: Creating a Clock with Cairo",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Now that we've covered the basics of drawing with Cairo, let's try to\nput it all together and create a simple application that actually\ndoes something. The following example uses Cairo to create a custom\nClock widget. The clock has a second hand, a\nminute hand, and an hour hand, and updates itself every second.",
+   "sha": "aec7a3ca8ca9b374",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "As before, almost all of the interesting stuff is done in the draw\nfunction on_draw(). Before we dig\ninto the draw function, notice that the constructor for the\nClock widget connects a handler function\non_timeout() to a timer with a timeout\nperiod of 1000 milliseconds (1 second). This means that\non_timeout() will get called once per\nsecond. The sole responsibility of this function is to invalidate\nthe window so that gtkmm will be forced to redraw it.",
+   "sha": "5a2deb1e9e071a47",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Now let's take a look at the code that performs the actual drawing.\nThe first section of on_draw() should be\npretty familiar by now. This example again scales the coordinate system\nto be a unit square so that it's easier to draw the clock as a\npercentage of window size so that it will automatically scale when\nthe window size is adjusted. Furthermore, the coordinate system is\nscaled over and down so that the (0, 0) coordinate is in the very\ncenter of the window.",
+   "sha": "d80ed8513f95d0f8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The function Cairo::Context::paint() is used here\nto set the background color of the window. This function takes no\narguments and fills the current surface (or the clipped portion of\nthe surface) with the source color currently active. After setting\nthe background color of the window, we draw a circle for the clock\noutline, fill it with white, and then stroke the outline in black.\nNotice that both of these actions use the\n_preserve variant to preserve the current path,\nand then this same path is clipped to make sure that our next lines\ndon't go outside the outline of the clock.",
+   "sha": "393cef1938000358",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "After drawing the outline, we go around the clock and draw ticks for\nevery hour, with a larger tick at 12, 3, 6, and 9. Now we're finally\nready to implement the time-keeping functionality of the clock, which\nsimply involves getting the current values for hours, minutes and\nseconds, and drawing the hands at the correct angles.",
+   "sha": "9176a22cdb5cbaf6",
+   "zh": null
+  }
+ ]
+}

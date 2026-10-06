@@ -1,0 +1,140 @@
+{
+ "chapter": "chapter-drawingarea",
+ "section": "sec-cairo-drawing-lines",
+ "title": "Drawing Straight Lines",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Now that we understand the basics of the Cairo graphics library, we're\nalmost ready to start drawing. We'll start with the simplest of\ndrawing elements: the straight line. But first you need to know a\nlittle bit about Cairo's coordinate system. The origin of the Cairo\ncoordinate system is located in the upper-left corner of the window\nwith positive x values to the right and positive y values going down.\n\nSince the Cairo graphics library was written with support for\nmultiple output targets (the X window system, PNG images, OpenGL,\netc), there is a distinction between user-space and device-space\ncoordinates. The mapping between these two coordinate systems\ndefaults to one-to-one so that integer values map roughly to pixels\non the screen, but this setting can be adjusted if desired.\nSometimes it may be useful to scale the coordinates so that the\nfull width and height of a window both range from 0 to 1 (the 'unit\nsquare') or some other mapping that works for your application.\nThis can be done with the\nCairo::Context::scale() function.",
+   "sha": "37aaf71f61c2ad37",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Since the Cairo graphics library was written with support for\nmultiple output targets (the X window system, PNG images, OpenGL,\netc), there is a distinction between user-space and device-space\ncoordinates. The mapping between these two coordinate systems\ndefaults to one-to-one so that integer values map roughly to pixels\non the screen, but this setting can be adjusted if desired.\nSometimes it may be useful to scale the coordinates so that the\nfull width and height of a window both range from 0 to 1 (the 'unit\nsquare') or some other mapping that works for your application.\nThis can be done with the\nCairo::Context::scale() function.",
+   "sha": "cc4d88616411e4b7",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In this example, we'll construct a small but fully functional gtkmm\nprogram and draw some lines into the window. The lines are drawn by\ncreating a path and then stroking it. A path is created using the\nfunctions Cairo::Context::move_to() and\nCairo::Context::line_to(). The function\nmove_to() is similar to the act of lifting your\npen off of the paper and placing it somewhere else -- no line is drawn\nbetween the point you were at and the point you moved to. To draw a\nline between two points, use the line_to()\nfunction.",
+   "sha": "46c8a582f7ed9e6f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "After you've finished creating your path, you still haven't\ndrawn anything visible yet. To make the path visible, you must use the\nfunction stroke() which will stroke the current\npath with the line width and style specified in your\nCairo::Context object. After stroking, the\ncurrent path will be cleared so that you can start on your next path.",
+   "sha": "0e3b3330c4c61291",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Many Cairo drawing functions have a _preserve()\nvariant. Normally drawing functions such as\nclip(), fill(), or\nstroke() will clear the current path. If you\nuse the _preserve() variant, the current path\nwill be retained so that you can use the same path with the next\ndrawing function.",
+   "sha": "5e6d2762858596dc",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Drawing Area - Lines",
+   "sha": "614a7c51ad57cb4f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "This program contains a single class, MyArea,\nwhich is a subclass of Gtk::DrawingArea and\ncontains an on_draw() member function.\nThis function becomes the draw function by a call to set_draw_func()\nin MyArea's constructor. on_draw()\nis then called whenever the image in the drawing area needs to\nbe redrawn. It is passed a Cairo::RefPtr\npointer to a Cairo::Context that we use\nfor the drawing.\nThe actual drawing code sets the color we want to use for drawing by\nusing set_source_rgb() which takes arguments\ndefining the Red, Green, and Blue components of the desired color\n(valid values are between 0 and 1). After setting the color, we\ncreated a new path using the functions move_to()\nand line_to(), and then stroked this path with\nstroke().",
+   "sha": "1900d129ea65a2be",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In the example above we drew everything using absolute coordinates. You can also draw using\nrelative coordinates. For a straight line, this is done with the\nfunction Cairo::Context::rel_line_to().",
+   "sha": "a65fee99915f40fd",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Line styles",
+   "sha": "3c6609633aaa47aa",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "In addition to drawing basic straight lines, there are a number of\nthings that you can customize about a line. You've already seen\nexamples of setting a line's color and width, but there are others\nas well.",
+   "sha": "bf8a1b6ef211c73f",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you've drawn a series of lines that form a path, you may\nwant them to join together in a certain way. Cairo offers\nthree different ways to join lines together: Miter, Bevel, and\nRound. These are show below:",
+   "sha": "84b5a0b5fe385ac7",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Different join types in Cairo",
+   "sha": "bcb927192a58974f",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "The line join style is set using the function\nCairo::Context::set_line_join().",
+   "sha": "4afbfcbf09f3ed57",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Line ends can have different styles as well. The default style\nis for the line to start and stop exactly at the destination\npoints of the line. This is called a Butt cap. The other\noptions are Round (uses a round ending, with the center of the\ncircle at the end point) or Square (uses a squared ending, with\nthe center of the square at the end point). This setting is set\nusing the function\nCairo::Context::set_line_cap().",
+   "sha": "c81894e88b47d73c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "There are other things you can customize as well, including\ncreating dashed lines and other things. For more information, see\nthe Cairo API documentation. Dashed lines are shown in the example\nin the Drawing Curved Lines\nsection.",
+   "sha": "1fdbc10498f6f6dd",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Drawing thin lines",
+   "sha": "3683bfc67e41742a",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "If you try to draw one pixel wide lines, you may notice that the line\nsometimes comes up blurred and wider than it ought to be.\nThis happens because Cairo will try to draw from the selected position,\nto both sides (half to each), so if you're positioned right on the\nintersection of the pixels, and want a one pixel wide line, Cairo will try\nto use half of each adjacent pixel, which isn't possible (a pixel is the\nsmallest unit possible). This happens when the width of the line is an\nodd number of pixels (not just one pixel).",
+   "sha": "15eb32b9c3ce6662",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The trick is to position in the middle of the pixel where you want the\nline to be drawn, and thus guaranteeing you get the desired results.\nSee Cairo FAQ.",
+   "sha": "f8d6ffd114d9ff56",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Drawing Area - Thin Lines",
+   "sha": "dc4650f7fc365198",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc-1",
+   "zh": null
+  }
+ ]
+}

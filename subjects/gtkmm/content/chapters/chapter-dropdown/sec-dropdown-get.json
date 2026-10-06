@@ -1,0 +1,20 @@
+{
+ "chapter": "chapter-dropdown",
+ "section": "sec-dropdown-get",
+ "title": "The selected item",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "To discover what item, if any, the user has selected from the DropDown,\ncall DropDown::get_selected(). This returns an\nunsigned int that you can use to get the selected data from the model.\nFor instance, you might read an integer ID value from the model, even though you\nhave chosen only to show the human-readable description in the\nDropDown. For instance:",
+   "sha": "016ee23ed60c0131",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "get_item(sel).m_col_id;\nset_some_id_chosen(id); // Your own function.\n}\nelse\nset_nothing_chosen(); // Your own function.\n]]>",
+   "sha": "31db3eda0ac7ccc5",
+   "zh": ""
+  }
+ ]
+}

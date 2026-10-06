@@ -1,0 +1,62 @@
+{
+ "chapter": "chapter-drawingarea",
+ "section": "sec-draw-images",
+ "title": "Drawing Images",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "There is a method for drawing from a\nGdk::Pixbuf to a Cairo::Context.\nA Gdk::Pixbuf buffer is a useful wrapper\naround a collection of pixels, which can be read from files, and\nmanipulated in various ways.",
+   "sha": "ff2cd9d710edbce8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Probably the most common way of creating\nGdk::Pixbufs is to use\nGdk::Pixbuf::create_from_file() or\nGdk::Pixbuf::create_from_resource(),\nwhich can read an image file, such as a png file into a pixbuf\nready for rendering.",
+   "sha": "13a609d080a001dd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The Gdk::Pixbuf can be rendered by setting\nit as the source pattern of the Cairo context with\nGdk::Cairo::set_source_pixbuf().\nThen draw the image with either Cairo::Context::paint()\n(to draw the whole image), or Cairo::Context::rectangle()\nand Cairo::Context::fill() (to fill the\nspecified rectangle). set_source_pixbuf()\nis not a member of Cairo::Context. It takes\na Cairo::Context as its first parameter.",
+   "sha": "c5c361a2a254c8a8",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is a small bit of code to tie it all together: (Note that\nusually you wouldn't load the image every time in the draw\nsignal handler! It's just shown here to keep it all together.)",
+   "sha": "7191bd7a127be51d",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\nauto image = Gdk::Pixbuf::create_from_file(\"myimage.png\");\n// Draw the image at 110, 90, except for the outermost 10 pixels.\nGdk::Cairo::set_source_pixbuf(cr, image, 100, 80);\ncr->rectangle(110, 90, image->get_width()-20, image->get_height()-20);\ncr->fill();\n}",
+   "sha": "f74c8c5dda3eede7",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "Example",
+   "sha": "d029f87e3d80f8fd",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Here is an example of a simple program that draws an image.\nThe program loads the image from a resource file. See the Gio::Resource and glib-compile-resources\nsection. Use glib-compile-resources to compile\nthe resources into a C source file that can be compiled and\nlinked with the C++ code. E.g.\n$ glib-compile-resources --target=resources.c --generate-source image.gresource.xml",
+   "sha": "f2c5c7f9d47dd060",
+   "zh": null
+  },
+  {
+   "type": "figure",
+   "text": "Drawing Area - Image",
+   "sha": "099e27b37463e9aa",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "Source Code",
+   "sha": "bc47da663d101bfc",
+   "zh": null
+  }
+ ]
+}

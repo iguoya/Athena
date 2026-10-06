@@ -1,0 +1,50 @@
+{
+ "chapter": "chapter-range-widgets",
+ "section": "sec-scale-widgets",
+ "title": "Scale Widgets",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Gtk::Scale widgets (or \"sliders\") allow the user to\nvisually select and manipulate a value within a specific range. You\nmight use one, for instance, to adjust the\nmagnification level on a zoomed preview of a picture, or to control\nthe brightness of a colour, or to specify the number of minutes of\ninactivity before a screensaver takes over the screen.",
+   "sha": "72ccd687e015ab01",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "As with Scrollbars, the orientation can be either\nhorizontal or vertical. The default constructor creates an\nAdjustment with all of its values set to\n0.0. This isn't useful so you will need to set some\nAdjustment details to get meaningful behavior.",
+   "sha": "383ceb8b82cad4b7",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "Useful methods",
+   "sha": "2a1f550530c84dee",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Scale widgets can display their current value as a number\nnext to the trough. By default they show the value, but you can change this\nwith the set_draw_value() method.",
+   "sha": "cf64583af539657c",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The value displayed by a scale widget is rounded to one decimal point\nby default, as is the value field in its\nGtk::Adjustment. You can change this with the\nset_digits() method.",
+   "sha": "a46bffc404dd898d",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Also, the value can be drawn in different positions relative to the trough,\nspecified by the set_value_pos() method.",
+   "sha": "8b4be8a0b7d3fbdc",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "Reference",
+   "sha": "71bf90935fc231d2",
+   "zh": null
+  }
+ ]
+}

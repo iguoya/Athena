@@ -1,0 +1,38 @@
+{
+ "chapter": "chapter-menus-and-toolbars",
+ "section": "sec-menus-popup",
+ "title": "Popup Menus",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "Menus are normally just added to a window, but they can\nalso be displayed temporarily as the result of a mouse button click. For\ninstance, a context menu might be displayed when the user clicks their right\nmouse button.",
+   "sha": "2a9c5679465cdc53",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "For instance:",
+   "sha": "e7fa29a18b75e39f",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "Glib::ustring ui_info =\n\"<interface>\"\n\" <menu id='menu-examplepopup'>\"\n\" <section>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Edit</attribute>\"\n\" <attribute name='action'>examplepopup.edit</attribute>\"\n\" </item>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Process</attribute>\"\n\" <attribute name='action'>examplepopup.process</attribute>\"\n\" </item>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Remove</attribute>\"\n\" <attribute name='action'>examplepopup.remove</attribute>\"\n\" </item>\"\n\" </section>\"\n\" </menu>\"\n\"</interface>\";\n\nm_refBuilder->add_from_string(ui_info);\n\nauto gmenu = m_refBuilder->get_object<Gio::Menu>(\"menu-examplepopup\");\nm_MenuPopup.set_menu_model(gmenu);",
+   "sha": "731b6a64770fcd6b",
+   "zh": ""
+  },
+  {
+   "type": "para",
+   "text": "To show the popup menu, use a Gtk::GestureClick\nand connect to its pressed signal. In the signal handler,\nuse Gtk::PopoverMenu's\npopup() method. For instance:",
+   "sha": "6b6383a5945174bd",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "void ExampleWindow::on_label_pressed(int /* n_press */, double x, double y)\n{\nconst Gdk::Rectangle rect(x, y, 1, 1);\nm_MenuPopup.set_pointing_to(rect);\nm_MenuPopup.popup();\n}",
+   "sha": "f3fdf0b159b41b5b",
+   "zh": ""
+  }
+ ]
+}
