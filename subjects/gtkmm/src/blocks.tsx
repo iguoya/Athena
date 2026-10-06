@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import type { Block, ExperimentEntity, ManifestEntity, QuizItem } from "./types";
+import { highlightCode } from "./highlight";
 import { SimulationView } from "./simulations";
 
 interface BlockViewProps {
@@ -128,7 +129,10 @@ export function BlockView(props: BlockViewProps) {
               <span className="font-mono text-[20px] font-medium text-accent">{block.lang}</span>
             </div>
             <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[22px] leading-relaxed text-[#555555] ring-1 ring-line">
-              <code>{block.source}</code>
+              <code
+                className="hljs"
+                dangerouslySetInnerHTML={{ __html: highlightCode(block.source, block.lang) }}
+              />
             </pre>
           </div>
           {block.caption && (

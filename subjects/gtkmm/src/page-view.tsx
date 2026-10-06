@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CircleAlert } from "lucide-react";
+import { highlightCode } from "./highlight";
 
 /**
  * 官方节页渲染器：读段落快照 JSON（scripts/sync_upstream.py 生成）。
@@ -697,7 +698,13 @@ export function PageView({
                     )}
                   </div>
                   <pre className="overflow-x-auto bg-[#F6F6F6] p-5 font-mono text-[20px] leading-relaxed text-[#555555]">
-                    <code>{block.text}</code>
+                    <code
+                      className="hljs"
+                      dangerouslySetInnerHTML={{
+                        // 节页源码块全部是教程 C++（提取层保证），语言固定传 cpp
+                        __html: highlightCode(block.text, "cpp"),
+                      }}
+                    />
                   </pre>
                 </div>
               </figure>
