@@ -13,15 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { BlockView } from "./blocks";
-import {
-  PageView,
-  setAnnotationData,
-  setWordStatus,
-  setOnRateWord,
-  setOnSelectionSaved,
-  buildAnnotationMatcher,
-} from "./page-view";
-import type { VocabEntry, PatternEntry, WordStatus } from "./page-view";
+import { PageView, setAnnotationData, buildAnnotationMatcher } from "./page-view";
+import type { VocabEntry, PatternEntry } from "./page-view";
 import type {
   AttemptRow,
   Block,
@@ -70,9 +63,6 @@ export default function App() {
   const [vocabData, setVocabData] = useState<{ vocab: VocabEntry[]; patterns: PatternEntry[] } | null>(null);
   const [sentenceMode, setSentenceMode] = useState(
     () => window.localStorage.getItem("zh-sentence-mode") === "on",
-  );
-  const [selectionLookup, setSelectionLookup] = useState(
-    () => window.localStorage.getItem("selection-lookup") !== "off",
   );
   const [fontScale, setFontScale] = useState(
     () => window.localStorage.getItem("font-scale") ?? "1",
@@ -215,54 +205,6 @@ export default function App() {
       { knowledge_id: "i18n.training", item_id: `para:${sha}`, correct: understood, answered_at: 0 },
     ]);
   };
-
-  const wordStatus: WordStatus = useMemo(() => {
-    const known = new Set<string>();
-    const unknown = new Set<string>();
-    for (const a of attempts) {
-      if (!a.knowledge_id.startsWith("vocab.training")) continue;
-      const term = a.item_id.replace(/^word:/, "");
-      if (a.correct) known.add(term);
-      else unknown.add(term);
-    }
-    for (const t of known) unknown.delete(t);
-    return { known, unknown };
-  }, [attempts]);
-  useEffect(() => {
-    setWordStatus(wordStatus);
-  }, [wordStatus]);
-  useEffect(() => {
-    setOnRateWord((term: string, known: boolean) => {
-      invoke("record_attempt", {
-        knowledgeId: "vocab.training",
-        itemId: `word:${term.toLowerCase()}`,
-        correct: known,
-      }).catch(() => {});
-      setAttempts((prev) => [
-        ...prev,
-        { knowledge_id: "vocab.training", item_id: `word:${term.toLowerCase()}`, correct: known, answered_at: 0 },
-      ]);
-    });
-  }, []);
-
-  const rateVocab = (term: string, known: boolean) => {
-    invoke("record_attempt", {
-      knowledgeId: "vocab.training",
-      itemId: `word:${term.toLowerCase()}`,
-      correct: known,
-    }).catch(() => {});
-    setAttempts((prev) => [
-      ...prev,
-      { knowledge_id: "vocab.training", item_id: `word:${term.toLowerCase()}`, correct: known, answered_at: Math.floor(Date.now() / 1000) },
-    ]);
-  };
-  useEffect(() => {
-    setOnRateWord(rateVocab);
-    setOnSelectionSaved((selected) => {
-      rateVocab(selected, false);
-      setNotice(`已加入生词本：${selected}`);
-    });
-  }, []);
 
   // 补正机制：重置某章全部测验作答（DB + 本地 UI 状态），可重新作答
   const resetSectionAttempts = (sectionId: string) => {
@@ -631,7 +573,6 @@ export default function App() {
                   pageId={page.id}
                   zhHidden={trainingMode}
                   sentenceMode={sentenceMode}
-                  selectionEnabled={selectionLookup}
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
@@ -829,15 +770,6 @@ export default function App() {
               onToggle={() => {
                 setSentenceMode(!sentenceMode);
                 window.localStorage.setItem("zh-sentence-mode", sentenceMode ? "off" : "on");
-              }}
-            />
-            <SettingRow
-              title="划词即查"
-              desc="选中英文词/短语弹出释义卡并计入生词本"
-              on={selectionLookup}
-              onToggle={() => {
-                setSelectionLookup(!selectionLookup);
-                window.localStorage.setItem("selection-lookup", selectionLookup ? "off" : "on");
               }}
             />
             <div className="mt-2 flex items-center justify-between gap-4 py-3">

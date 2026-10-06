@@ -87,25 +87,6 @@ export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[])
     });
 }
 
-export interface WordStatus {
-  known: Set<string>;
-  unknown: Set<string>;
-}
-let wordStatus: WordStatus | undefined;
-export function setWordStatus(status: WordStatus | undefined) {
-  wordStatus = status;
-}
-let onRateWord: ((term: string, known: boolean) => void) | null = null;
-let onSelectionSaved: ((text: string) => void) | null = null;
-export function setOnSelectionSaved(fn: (text: string) => void) {
-  onSelectionSaved = fn;
-}
-export function setOnRateWord(fn: (term: string, known: boolean) => void) {
-  onRateWord = fn;
-}
-export function getOnRateWord(): (term: string, known: boolean) => void {
-  return onRateWord ?? (() => {});
-}
 export function buildAnnotationMatcher() {
   const terms = [...TERM_LOOKUP.keys()];
   if (!terms.length) {
@@ -136,34 +117,21 @@ function AnnotatedTerm({
   term,
   display,
   entry,
-  status,
-  onRate,
 }: {
   kind: "vocab" | "pattern";
   term: string;
   display: string;
   entry: VocabEntry & PatternEntry;
-  status: "known" | "unknown" | undefined;
-  onRate: (term: string, known: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
   const isVocab = kind === "vocab";
-  // known 已在上方恢复普通文本；此处只剩 unknown（琥珀实线）与未标（accent 点线）
-  const underline =
-    status === "unknown"
-      ? "underline decoration-solid decoration-amber-500 decoration-2 underline-offset-4"
-      : "underline decoration-dotted decoration-accent/50 underline-offset-4";
   const pos = isVocab ? (entry as VocabEntry).pos : undefined;
   const note = (entry as VocabEntry).note || "";
-  // 已认识：恢复普通文本，不做任何标记（复习交由 SRS 队列）
-  if (status === "known") {
-    return <span className="font-serif">{display}</span>;
-  }
   return (
     <span className="relative inline-block">
       <button
         onClick={() => setOpen(!open)}
-        className={`${underline} cursor-help text-left font-serif`}
+        className="cursor-help text-left font-serif underline decoration-dotted decoration-accent/50 underline-offset-4"
       >
         {display}
       </button>
@@ -187,32 +155,6 @@ function AnnotatedTerm({
               }
             />
           )}
-          <span className="mt-3 flex gap-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRate(term, true);
-                setOpen(false);
-              }}
-              className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 transition-colors hover:bg-green-50"
-            >
-              认识
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRate(term, false);
-                setOpen(false);
-              }}
-              className={`rounded-lg border px-3 py-1 text-[20px] ${
-                status === "unknown"
-                  ? "border-amber-500 bg-amber-50 text-amber-700"
-                  : "border-amber-500/40 text-amber-700 hover:bg-amber-50"
-              }`}
-            >
-              不认识
-            </button>
-          </span>
         </span>
       )}
     </span>
@@ -245,14 +187,6 @@ function renderInline(text: string): ReactNode[] {
             term={hit.base}
             display={m[0]}
             entry={hit.entry}
-            status={
-              wordStatus?.known.has(hit.base)
-                ? "known"
-                : wordStatus?.unknown.has(hit.base)
-                  ? "unknown"
-                  : undefined
-            }
-            onRate={onRateWord ?? (() => {})}
           />,
         );
       } else {
@@ -600,7 +534,6 @@ export function PageView({
   pageId,
   zhHidden,
   sentenceMode,
-  selectionEnabled,
   knownParas,
   hardParas,
   onRate,
@@ -609,7 +542,6 @@ export function PageView({
   pageId: string;
   zhHidden: boolean;
   sentenceMode: boolean;
-  selectionEnabled: boolean;
   knownParas: Set<string>;
   hardParas: Set<string>;
   onRate: (sha: string, understood: boolean) => void;
@@ -640,24 +572,6 @@ export function PageView({
       cancelled = true;
     };
   }, [chapterId, pageId]);
-
-  // 划词入生词本：选中词/短语（1–60 字符）直接记录，不做即时翻译（用户约定）
-  useEffect(() => {
-    if (!selectionEnabled) return;
-    const onMouseUp = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest("article")) return;
-      if (target.closest("button, a, .relative")) return;
-      const selected = window.getSelection()?.toString().trim() ?? "";
-      if (!selected || selected.length > 60 || /[\n\r]/.test(selected)) {
-        return;
-      }
-      getOnRateWord()(selected, false);
-      onSelectionSaved?.(selected);
-    };
-    document.addEventListener("mouseup", onMouseUp);
-    return () => document.removeEventListener("mouseup", onMouseUp);
-  }, [selectionEnabled]);
 
   const groups = useMemo(() => (snapshot ? groupBlocks(snapshot.blocks) : []), [snapshot]);
 
