@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   BookMarked,
   BookOpenText,
+  CheckCircle2,
   FlaskConical,
   Sparkles,
   Terminal,
@@ -12,6 +13,7 @@ import {
 import { BlockView } from "./blocks";
 import { PageView } from "./page-view";
 import type {
+  AttemptRow,
   Block,
   Curriculum,
   DemoEvent,
@@ -51,6 +53,7 @@ export default function App() {
   const [view, setView] = useState<View | null>(null);
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState<AttemptRow[]>([]);
 
   useEffect(() => {
     loadContent<Curriculum>("get_curriculum", "/content/curriculum.json").then((c) => {
@@ -59,6 +62,7 @@ export default function App() {
       if (first) setView({ kind: "kp", sectionId: first.id, kpId: first.knowledge_points[0].id });
     });
     loadContent<Manifest>("get_manifest", "/content/demos.json").then(setManifest);
+    invoke<AttemptRow[]>("get_attempts").then(setAttempts).catch(() => {});
     const unlisten = listen<DemoEvent>("demo-event", (event) => {
       setEvents((prev) => [event.payload, ...prev].slice(0, 20));
     });
@@ -92,7 +96,53 @@ export default function App() {
 
   const answer = (itemId: string, correct: boolean) => {
     invoke("record_attempt", { knowledgeId: kp?.id ?? "", itemId, correct }).catch(() => {});
+    setAttempts((prev) => [
+      ...prev,
+      { knowledge_id: kp?.id ?? "", item_id: itemId, correct, answered_at: 0 },
+    ]);
   };
+
+  // 激励状态全部由作答记录派生（主仓库 ADR 0052）：每题答对过一次即计通过
+  const correctItems = useMemo(
+    () => new Set(attempts.filter((a) => a.correct).map((a) => a.item_id)),
+    [attempts],
+  );
+  const quizIndex = useMemo(() => {
+    const map = new Map<string, { byPage: Map<string, string[]>; all: string[] }>();
+    for (const s of curriculum?.sections ?? []) {
+      const byPage = new Map<string, string[]>();
+      const all: string[] = [];
+      for (const kp of s.knowledge_points)
+        for (const b of kp.blocks)
+          if ((b.type === "quiz" || b.type === "observation_quiz") && b.id) {
+            const id = `quiz:${b.id}`;
+            const page = "page_ref" in b ? (b.page_ref ?? "") : "";
+            if (!byPage.has(page)) byPage.set(page, []);
+            byPage.get(page)!.push(id);
+            all.push(id);
+          }
+      for (const c of s.checkpoint)
+        if (c.id) {
+          all.push(`quiz:${c.id}`);
+          if (!byPage.has("__checkpoint__")) byPage.set("__checkpoint__", []);
+          byPage.get("__checkpoint__")!.push(`quiz:${c.id}`);
+        }
+      map.set(s.id, { byPage, all });
+    }
+    return map;
+  }, [curriculum]);
+  const pagePassed = (sectionId: string, pageId: string) => {
+    const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
+    return ids.length > 0 && ids.every((id) => correctItems.has(id));
+  };
+  const chapterPassed = (sectionId: string) => {
+    const entry = quizIndex.get(sectionId);
+    return !!entry && entry.all.length > 0 && entry.all.every((id) => correctItems.has(id));
+  };
+  const quizSections = (curriculum?.sections ?? []).filter(
+    (s) => (quizIndex.get(s.id)?.all.length ?? 0) > 0,
+  );
+  const passedSections = quizSections.filter((s) => chapterPassed(s.id)).length;
 
   // 在类型收窄之前提取，供侧栏展开块比较（那里 view 已被收窄为 kp）
   const activePageId = view?.kind === "page" ? view.pageId : null;
@@ -129,9 +179,27 @@ export default function App() {
             <h1 className="font-display text-[26px] font-semibold leading-tight">
               {curriculum.title}
             </h1>
-            <p className="text-[20px] text-muted">Programming with gtkmm 4</p>
+            <p className="text-xs text-muted">Programming with gtkmm 4</p>
           </div>
         </header>
+        <div className="border-b border-line px-4 py-3">
+          <div className="flex items-center justify-between text-[20px] text-muted">
+            <span>章节通过进度</span>
+            <span className="font-medium text-green-700">
+              {passedSections}/{quizSections.length}
+            </span>
+          </div>
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2">
+            <div
+              className="h-full rounded-full bg-green-500 transition-all duration-500"
+              style={{
+                width: quizSections.length
+                  ? `${(passedSections / quizSections.length) * 100}%`
+                  : "0%",
+              }}
+            />
+          </div>
+        </div>
 
         <div className="flex-1 px-2 pb-4">
           {/* 一、教程章节（原文） */}
@@ -170,6 +238,9 @@ export default function App() {
                     <span className="flex-1 truncate">
                       {s.order}. {s.title}
                     </span>
+                    {chapterPassed(s.id) && (
+                      <CheckCircle2 className="size-5 shrink-0 text-green-600" />
+                    )}
                   </button>
                   {active && (
                     <ul className="ml-6 border-l border-line pl-2">
@@ -186,12 +257,26 @@ export default function App() {
                                   : "text-muted hover:bg-surface-2 hover:text-fg"
                               }`}
                             >
-                              <span
-                                className={`size-1 shrink-0 rounded-full ${
-                                  p.status === "translated" ? "bg-accent-deep" : "bg-line"
+                              <motion.span
+                                animate={
+                                  pagePassed(s.id, p.id) ? { scale: [1, 1.6, 1] } : { scale: 1 }
+                                }
+                                transition={{ duration: 0.4 }}
+                                className={`mt-1 block size-2 shrink-0 rounded-full ${
+                                  pagePassed(s.id, p.id)
+                                    ? "bg-green-500"
+                                    : p.status === "translated"
+                                      ? "bg-accent-deep"
+                                      : "bg-line"
                                 }`}
                               />
-                              <span className="flex-1 truncate">{p.title}</span>
+                              <span
+                                className={`flex-1 truncate ${
+                                  pagePassed(s.id, p.id) ? "font-medium text-green-700" : ""
+                                }`}
+                              >
+                                {p.title}
+                              </span>
                             </button>
                           </li>
                         );
@@ -379,6 +464,7 @@ export default function App() {
                 <PageAssessments
                   section={section}
                   pageId={page.id}
+                  passed={pagePassed(section.id, page.id)}
                   demos={demos}
                   experiments={experiments}
                   onLaunch={launch}
@@ -398,6 +484,12 @@ export default function App() {
             {view?.kind === "checkpoint" && section && (
               <CheckpointPage
                 section={section}
+                correctCount={
+                  section.checkpoint.filter((c) =>
+                    c.id ? correctItems.has(`quiz:${c.id}`) : false,
+                  ).length
+                }
+                passed={chapterPassed(section.id)}
                 demos={demos}
                 experiments={experiments}
                 onLaunch={launch}
@@ -492,6 +584,7 @@ function PageAssessments({
   experiments,
   onLaunch,
   onAnswer,
+  passed,
 }: {
   section: { id: string; pages: { id: string }[]; knowledge_points: { blocks: Block[] }[]; checkpoint: QuizItem[] };
   pageId: string;
@@ -499,6 +592,7 @@ function PageAssessments({
   experiments: Map<string, ExperimentEntity>;
   onLaunch: (demoId: string) => void;
   onAnswer: (itemId: string, correct: boolean) => void;
+  passed: boolean;
 }) {
   // 本节的随堂测验：读完本节即时测（题面按 page_ref 归属各节）
   const quizzes = section.knowledge_points
@@ -512,9 +606,20 @@ function PageAssessments({
   if (quizzes.length === 0) return null;
   return (
     <section className="mt-16">
-      <h3 className="font-display text-[26px] font-semibold text-accent">
-        本节测验 · {quizzes.length} 题
-      </h3>
+      <div className="flex items-center gap-3">
+        <h3 className="font-display text-[26px] font-semibold text-accent">
+          本节测验 · {quizzes.length} 题
+        </h3>
+        {passed && (
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-4 py-1 text-[20px] font-medium text-green-700 ring-1 ring-green-500/40"
+          >
+            <CheckCircle2 className="size-5" /> 已全部通过，本节标绿
+          </motion.span>
+        )}
+      </div>
       {quizzes.map((block, index) => (
         <BlockView
           key={index}
@@ -536,13 +641,18 @@ function CheckpointPage({
   experiments,
   onLaunch,
   onAnswer,
+  correctCount,
+  passed,
 }: {
   section: { id: string; title: string; translation_ref: { chapter?: number }; checkpoint: QuizItem[] };
   demos: Map<string, ManifestEntity>;
   experiments: Map<string, ExperimentEntity>;
   onLaunch: (demoId: string) => void;
   onAnswer: (itemId: string, correct: boolean) => void;
+  correctCount: number;
+  passed: boolean;
 }) {
+  const total = section.checkpoint.length;
   return (
     <>
       <p className="text-sm text-muted">
@@ -551,7 +661,26 @@ function CheckpointPage({
       <h2 className="mt-1 font-display text-[42px] font-semibold">章末考核</h2>
       <p className="mt-3 text-[22px] leading-relaxed text-fg/80">
         本考核覆盖本章全部官方节页的内容。答错没有惩罚——错题会进入复习回路。
+        每题答对一次即计通过（当前 {correctCount}/{total}）。
       </p>
+      {passed && (
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className="mt-5 flex items-center gap-3 rounded-card bg-green-50 p-5 ring-1 ring-green-500/40"
+        >
+          <CheckCircle2 className="size-8 shrink-0 text-green-600" />
+          <div>
+            <p className="text-[24px] font-semibold text-green-700">
+              🎉 章末考核已通过，本章全部标绿
+            </p>
+            <p className="text-[20px] text-green-700/80">
+              侧栏里本章每个节页都已点亮，随时回来复习。
+            </p>
+          </div>
+        </motion.div>
+      )}
       <section className="mt-8 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
         {section.checkpoint.map((item, index) => (
           <BlockView

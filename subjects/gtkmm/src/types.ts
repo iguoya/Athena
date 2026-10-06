@@ -116,3 +116,10 @@ export interface DemoEvent {
   method: string;
   params: Record<string, unknown>;
 }
+
+export interface AttemptRow {
+  knowledge_id: string;
+  item_id: string;
+  correct: boolean;
+  answered_at: number;
+}
