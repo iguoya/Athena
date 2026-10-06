@@ -189,25 +189,7 @@ export default function App() {
                           </li>
                         );
                       })}
-                      {s.knowledge_points.length > 0 && (
-                        <li className="px-2 pt-2 pb-0.5 text-[20px] font-semibold tracking-wide text-muted/70">
-                          知识点
-                        </li>
-                      )}
-                      {s.knowledge_points.map((k) => (
-                        <li key={k.id}>
-                          <button
-                            onClick={() => setView({ kind: "kp", sectionId: s.id, kpId: k.id })}
-                            className={`w-full rounded px-2 py-1.5 text-left text-[20px] transition-colors ${
-                              activeSectionId === s.id && activeKpId === k.id
-                                ? "bg-accent-soft font-medium text-accent"
-                                : "text-muted hover:bg-surface-2 hover:text-fg"
-                            }`}
-                          >
-                            {k.title}
-                          </button>
-                        </li>
-                      ))}
+
                       {s.checkpoint.length > 0 && (
                         <li>
                           <button

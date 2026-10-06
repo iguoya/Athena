@@ -35,8 +35,144 @@
           "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.intro.quizset",
+          "title": "引言测验集",
+          "type": "concept",
+          "difficulty": 1,
+          "mastery_goal": "familiar",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "intro-book-1",
+              "page_ref": "sec-this-book",
+              "stem": "本书对 gtkmm API 的讲解深度是怎样的？",
+              "options": [
+                "覆盖每个类的完整 API 参考",
+                "讲关键概念，完整 API 信息需顺着链接查阅参考文档",
+                "只讲理论不讲用法",
+                "只面向初学者"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-this-book",
+                  "note": "出处：sec-this-book 第 1 段（本书说明关键概念，API 细节看参考文档）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "intro-gtkmm-1",
+              "page_ref": "sec-gtkmm",
+              "stem": "gtkmm 采用什么许可证？由此可以开发商业非自由软件吗？",
+              "options": [
+                "GPL；不可以",
+                "LGPL；可以，无需购买授权",
+                "MIT；可以",
+                "专有许可；不可以"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gtkmm",
+                  "note": "出处：sec-gtkmm 第 1 段（LGPL，开放/自由/商业非自由软件皆可）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "intro-gtkmm-2",
+              "page_ref": "sec-gtkmm",
+              "stem": "官网给出的「gtkmm 优于直接用 GTK C API」的理由中，不正确的是？",
+              "options": [
+                "能用上封装、派生、多态等 C++ 常规技术",
+                "类型安全更强，更多错误在编译期暴露",
+                "gtkmm 不需要指针，GTK C 全靠指针",
+                "gtkmm 自带内存池，性能必然更高"
+              ],
+              "answer": 3,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gtkmm",
+                  "note": "出处：why-use-gtkmm 一节（无「性能必然更高」的说法）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "intro-gtkmm-3",
+              "page_ref": "sec-gtkmm",
+              "stem": "gtkmm 与 Qt 的关键区别之一是：Qt 修改了 C++ 语言本身来提供信号，gtkmm 则如何实现信号？",
+              "options": [
+                "同样修改了语言",
+                "用标准 C++（libsigc++）实现，不改语言",
+                "用 C 预处理器宏生成",
+                "靠编译器扩展"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gtkmm",
+                  "note": "出处：gtkmm-vs-qt 一节"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "intro-cpp-1",
+              "page_ref": "sec-cpp-resources",
+              "stem": "「C++ reference」站点提供的是什么？",
+              "options": [
+                "C++ 招聘信息",
+                "C 与 C++ 标准的便捷查阅版",
+                "编译器下载",
+                "GTK 教程"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-cpp-resources",
+                  "note": "出处：sec-cpp-resources 列表第 2 项"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "intro-cp",
+          "stem": "（综合) 下列关于 gtkmm 定位的说法，最准确的是？",
+          "options": [
+            "原生 C++ 工具集，接口实现一体",
+            "C 工具集的 C++ 包装，接口与实现分离使 API 更清晰、生态更广",
+            "Qt 的一个分支",
+            "只支持 Linux 的绑定库"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-gtkmm",
+              "note": "综合 gtkmm-is-a-wrapper 一节"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-installation",
@@ -64,8 +200,165 @@
           "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.install.quizset",
+          "title": "安装测验集",
+          "type": "concept",
+          "difficulty": 1,
+          "mastery_goal": "familiar",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "inst-dep-1",
+              "page_ref": "sec-installation-dependencies",
+              "stem": "安装 gtkmm-4.0 前，下列哪项不是文档列出的直接依赖？",
+              "options": [
+                "sigc++-3.0",
+                "glibmm-2.68",
+                "cairomm-1.16",
+                "Qt6"
+              ],
+              "answer": 3,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-installation-dependencies",
+                  "note": "出处：sec-installation-dependencies 依赖清单"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "inst-linux-1",
+              "page_ref": "sec-install-unix-and-linux",
+              "stem": "Debian/Ubuntu 上 gtkmm 4 的开发包名是？",
+              "options": [
+                "libgtkmm-4.0-dev",
+                "gtkmm4.0-devel",
+                "gtkmm-dev",
+                "libgtkmm4"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-install-unix-and-linux",
+                  "note": "出处：sec-install-unix-and-linux 预编译包一节"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "inst-linux-2",
+              "page_ref": "sec-install-unix-and-linux",
+              "stem": "为什么 Debian 的 libgtkmm-4.0-dev 包能装 gtkmm 4.8 而包名不变？",
+              "options": [
+                "打包者忘了改名",
+                "新版本与包名承诺的 API/ABI 兼容，兼容版本不改包名",
+                "包名只跟主版本走",
+                "Debian 的命名规范如此"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-install-unix-and-linux",
+                  "note": "出处：包名不随兼容版本变化（改了就不兼容了）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "inst-linux-3",
+              "page_ref": "sec-install-unix-and-linux",
+              "stem": "从源码安装 gtkmm 时的构建系统是？",
+              "options": [
+                "Meson（或更老的 Autotools）",
+                "CMake",
+                "Bazel",
+                "Make 直写"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-install-unix-and-linux",
+                  "note": "出处：从源码安装一节"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "inst-linux-4",
+              "page_ref": "sec-install-unix-and-linux",
+              "stem": "往 /usr 这类标准系统前缀安装源码包的风险是？",
+              "options": [
+                "没有风险",
+                "可能与包管理系统安装的软件冲突或造成破坏",
+                "编译一定失败",
+                "占磁盘"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-install-unix-and-linux",
+                  "note": "出处：安装前缀注意事项"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "inst-win-1",
+              "page_ref": "sec-packages-windows",
+              "stem": "官网对 Windows 上安装开发库的说明是什么？",
+              "options": [
+                "Windows 有标准开发库安装体系",
+                "Windows 没有标准的开发库安装体系，看 Windows Installation 页面与 gtkmm and Win32 附录",
+                "不支持 Windows",
+                "只能用包管理器"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-packages-windows",
+                  "note": "出处：sec-packages-windows 全节"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "inst-cp",
+          "stem": "（综合) 你在 Fedora 上想用最新版 gtkmm，发行版仓库版本偏旧，文档建议的做法是？",
+          "options": [
+            "强行覆盖 /usr 里的系统包",
+            "从源码安装并用独立前缀（或等待发行版更新）",
+            "换 Windows",
+            "修改包名"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-install-unix-and-linux",
+              "note": "综合从源码安装与独立前缀建议"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-basics",
@@ -113,8 +406,394 @@
           "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.basics.quizset",
+          "title": "基础测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "basic-se-1",
+              "page_ref": "sec-basics-simple-example",
+              "stem": "Gtk::Application::create() 的作用是？",
+              "options": [
+                "创建窗口对象",
+                "初始化 gtkmm",
+                "编译资源文件",
+                "启动事件循环并阻塞"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-simple-example",
+                  "note": "出处：Simple Example 逐段讲解"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-se-2",
+              "page_ref": "sec-basics-simple-example",
+              "stem": "make_window_and_run<MyWindow>() 做了什么？",
+              "options": [
+                "只创建窗口不显示",
+                "创建窗口、显示它并进入 gtkmm 主循环，窗口关闭时返回",
+                "只进入主循环",
+                "解析命令行参数"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-simple-example",
+                  "note": "出处：Simple Example 末段讲解"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-se-3",
+              "page_ref": "sec-basics-simple-example",
+              "stem": "简单示例的编译命令中 pkg-config 外面的反引号作用是？",
+              "options": [
+                "注释",
+                "让 shell 先执行其中命令并把输出拼进命令行",
+                "转义特殊字符",
+                "没有任何作用"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-simple-example",
+                  "note": "出处：编译命令说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-hl-1",
+              "page_ref": "sec-headers-and-linking",
+              "stem": "本书后续示例的构建系统推荐用？",
+              "options": [
+                "手写 g++ 命令",
+                "Meson（示例自带构建文件）",
+                "Visual Studio 工程",
+                "Ant"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-headers-and-linking",
+                  "note": "出处：Headers and Linking 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-hl-2",
+              "page_ref": "sec-headers-and-linking",
+              "stem": "meson.build 里 dependency('gtkmm-4.0') 的作用是？",
+              "options": [
+                "下载 gtkmm 源码",
+                "检查 gtkmm 可用并定义依赖变量供 target 使用",
+                "安装头文件",
+                "生成文档"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-headers-and-linking",
+                  "note": "出处：dependency() 函数讲解段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-hl-3",
+              "page_ref": "sec-headers-and-linking",
+              "stem": "为什么 gtkmm-2.4 和 gtkmm-4.0 能同时安装在同一系统里？",
+              "options": [
+                "它们装在不同磁盘",
+                "API 名字不同即并行安装，互不影响",
+                "它们其实是同一个库",
+                "有容器隔离"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-headers-and-linking",
+                  "note": "出处：API 并行安装说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-w-1",
+              "page_ref": "sec-widgets-overview",
+              "stem": "关于控件与容器，正确的说法是？",
+              "options": [
+                "所有容器都可见",
+                "Gtk::Grid 等容器不可见，只为排列其他控件而存在",
+                "控件不能嵌套",
+                "窗口不是容器"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-widgets-overview",
+                  "note": "出处：Widgets 一节第 2 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-w-2",
+              "page_ref": "sec-widgets-overview",
+              "stem": "把控件加进 Gtk::Box 容器用哪个方法？",
+              "options": [
+                "set_child()",
+                "append()",
+                "add()",
+                "pack_start()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-widgets-overview",
+                  "note": "出处：m_box.append(m_Button1) 示例段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-w-3",
+              "page_ref": "sec-widgets-overview",
+              "stem": "Gtk::make_managed() 的便利在于？",
+              "options": [
+                "控件创建更快",
+                "控件归容器所有，容器销毁时自动删除，无需手动 delete",
+                "自动布局",
+                "自动连接信号"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-widgets-overview",
+                  "note": "出处：内存管理说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-sig-1",
+              "page_ref": "sec-signals-overview",
+              "stem": "gtkmm 的信号机制由哪个库实现？",
+              "options": [
+                "Boost.Signals2",
+                "libsigc++",
+                "GEvent",
+                "Qt Signals"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-signals-overview",
+                  "note": "出处：Signals 一节第 2 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-u-1",
+              "page_ref": "sec-basics-ustring",
+              "stem": "gtkmm 接口里为什么用 Glib::ustring 而不是 std::string？",
+              "options": [
+                "性能更好",
+                "UTF-8 编码支持多语言文本，接口与 std::string 几乎一致且可自动互转",
+                "语法更简洁",
+                "历史原因无实际差别"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-ustring",
+                  "note": "出处：Glib::ustring 一节第 1-2 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-u-2",
+              "page_ref": "sec-basics-ustring",
+              "stem": "UTF-8 文本上使用 strlen() 这类函数的问题在于？",
+              "options": [
+                "编译不过",
+                "UTF-8 一个字符占 1-6 字节，按字节计数会数错字符",
+                "strlen 只支持 ASCII，标准里没有",
+                "会修改原字符串"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-ustring",
+                  "note": "出处：指针运算与 strlen 警告段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-mix-1",
+              "page_ref": "sec-basics-gobj-and-wrap",
+              "stem": "把 gtkmm 对象传给需要 C GObject 的函数，用？",
+              "options": [
+                "gobj()",
+                "wrap()",
+                "c_obj()",
+                "cast()"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-gobj-and-wrap",
+                  "note": "出处：Mixing C and C++ APIs 第 2 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-mix-2",
+              "page_ref": "sec-basics-gobj-and-wrap",
+              "stem": "Glib::wrap() 从 C 实例得到 C++ 包装对象，生命周期说法正确的是？",
+              "options": [
+                "wrap 后两者互不相干",
+                "C++ 包装与 C 实例绑定；不想 C 实例死就别删包装对象",
+                "包装删除后 C 实例一定还在",
+                "C 实例删除后包装可继续使用"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-basics-gobj-and-wrap",
+                  "note": "出处：wrap 绑定关系说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-hw-1",
+              "page_ref": "sec-helloworld",
+              "stem": "HelloWorld 构造函数里把按钮加进窗口用的是？",
+              "options": [
+                "append(m_button)",
+                "set_child(m_button)",
+                "add(m_button)",
+                "pack(m_button)"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-helloworld",
+                  "note": "出处：Hello World 构造函数讲解"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "basic-hw-2",
+              "page_ref": "sec-helloworld",
+              "stem": "sigc::mem_fun(*this, &HelloWorld::on_button_clicked) 的作用是？",
+              "options": [
+                "把成员函数绑定为该实例的信号处理器",
+                "动态注册新信号",
+                "断开信号",
+                "发出信号"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-helloworld",
+                  "note": "出处：信号连接讲解段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "basics-cp-1",
+          "stem": "（综合) 一个最小 gtkmm 程序的必要骨架是？",
+          "options": [
+            "创建 Gtk::Application → make_window_and_run<窗口类>() → 窗口类构造中布置控件与信号",
+            "先写 main 循环轮询键盘",
+            "必须用 Gtk::Builder 加载 XML",
+            "继承 Gtk::Main 并重写 run()"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-basics-simple-example 与 sec-helloworld",
+              "note": "综合 Simple Example 与 Hello World"
+            }
+          ]
+        },
+        {
+          "id": "basics-cp-2",
+          "stem": "（综合) 程序要显示用户输入的中文文本并按字符截取，应该？",
+          "options": [
+            "std::string + substr 按字节截",
+            "Glib::ustring 存储与操作，按字符语义处理",
+            "转成 GBK 再处理",
+            "避免使用任何字符串"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-basics-ustring",
+              "note": "综合 ustring 的多语言场景"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-button-widget",
