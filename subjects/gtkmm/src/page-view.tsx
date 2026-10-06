@@ -37,6 +37,8 @@ export interface VocabEntry {
   note?: string;
   example?: string;
   example_cn?: string;
+  /** 编程领域术语：不在正文标注，集中到术语附注 */
+  domain?: boolean;
 }
 export interface PatternEntry {
   pattern: string;
@@ -64,13 +66,16 @@ function familyVariants(term: string): string[] {
 
 export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[]) {
   TERM_LOOKUP.clear();
-  for (const v of vocab)
+  // 正文只标注普通疑难词；编程领域术语集中到「术语附注」（应用 ADR 0002 的门槛约定）
+  for (const v of vocab) {
+    if (v.domain) continue;
     for (const variant of familyVariants(v.term))
       TERM_LOOKUP.set(variant.toLowerCase(), {
         kind: "vocab",
         entry: v as VocabEntry & PatternEntry,
         base: v.term,
       });
+  }
   for (const pt of patterns)
     TERM_LOOKUP.set(pt.pattern.toLowerCase(), {
       kind: "pattern",
@@ -88,6 +93,10 @@ export function setWordStatus(status: WordStatus | undefined) {
   wordStatus = status;
 }
 let onRateWord: ((term: string, known: boolean) => void) | null = null;
+let onSelectionSaved: ((text: string) => void) | null = null;
+export function setOnSelectionSaved(fn: (text: string) => void) {
+  onSelectionSaved = fn;
+}
 export function setOnRateWord(fn: (term: string, known: boolean) => void) {
   onRateWord = fn;
 }
@@ -414,163 +423,6 @@ function ExampleArea({
   );
 }
 
-/** 划词查询卡：词表命中显示释义；可拉取在线英释；标记生词/已认识入 SRS。 */
-function SelectionLookupCard({
-  card,
-  onClose,
-}: {
-  card: { x: number; y: number; text: string };
-  onClose: () => void;
-}) {
-  const query = card.text.trim();
-  const key = query.toLowerCase();
-  const lookup = TERM_LOOKUP.get(key);
-  const vocabHit = lookup?.kind === "vocab" ? lookup.entry : undefined;
-  const patternHit = lookup?.kind === "pattern" ? lookup.entry : undefined;
-  const status = wordStatus?.known.has(key)
-    ? "known"
-    : wordStatus?.unknown.has(key)
-      ? "unknown"
-      : undefined;
-  const [enDef, setEnDef] = useState<{
-    phonetic?: string;
-    defs: string[];
-    examples: string[];
-  } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (/\s/.test(query)) return;
-    let cancelled = false;
-    setLoading(true);
-    (async () => {
-      try {
-        const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`,
-        );
-        if (!response.ok) throw new Error(String(response.status));
-        const entries = await response.json();
-        const phonetic =
-          entries[0]?.phonetic ??
-          entries[0]?.phonetics?.find((ph: { text?: string }) => ph.text)?.text;
-        const defs: string[] = [];
-        const examples: string[] = [];
-        for (const meaning of entries[0]?.meanings ?? []) {
-          for (const def of meaning.definitions ?? []) {
-            if (def.example && examples.length < 2) examples.push(def.example);
-            if (defs.length < 3) defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
-          }
-        }
-        if (!cancelled) setEnDef({ phonetic, defs, examples });
-      } catch {
-        if (!cancelled) setFailed(true);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [query]);
-
-  const youdao = `https://dict.youdao.com/result?word=${encodeURIComponent(query)}&lang=en`;
-
-  return (
-    <div
-      className="fixed z-50 w-96 rounded-card bg-white p-5 shadow-card ring-1 ring-line"
-      style={{ left: Math.min(card.x, window.innerWidth - 420), top: card.y + 12 }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-serif text-[26px] font-semibold text-fg">
-            {query}
-            {vocabHit?.pos && (
-              <span className="ml-2 text-[20px] italic text-muted">{vocabHit.pos}</span>
-            )}
-          </p>
-          {(vocabHit || patternHit) && (
-            <p className="mt-1 text-[24px] text-accent-deep">{(vocabHit ?? patternHit)!.cn}</p>
-          )}
-          {vocabHit?.note && (
-            <p className="mt-1 text-[20px] leading-relaxed text-muted">{vocabHit.note}</p>
-          )}
-          {!vocabHit && !patternHit && (
-            <p className="mt-1 text-[20px] text-muted">
-              词表中无此词——可拉取在线英释或查外部词典。
-            </p>
-          )}
-        </div>
-        <button onClick={onClose} className="shrink-0 text-muted hover:text-fg">
-          ✕
-        </button>
-      </div>
-
-      {enDef && (
-        <div className="mt-3 rounded-xl bg-surface-2 p-3">
-          {enDef.phonetic && <p className="font-mono text-[20px] text-muted">{enDef.phonetic}</p>}
-          {enDef.defs.map((def, i) => (
-            <p key={i} className="mt-1 text-[20px] leading-relaxed text-fg/80">
-              {def}
-            </p>
-          ))}
-          {enDef.examples.map((ex, i) => (
-            <p
-              key={`ex-${i}`}
-              className="mt-1 font-serif text-[20px] italic leading-relaxed text-fg/70"
-            >
-              例句：{ex}
-            </p>
-          ))}
-        </div>
-      )}
-      {loading && <p className="mt-3 text-[20px] text-muted">正在查询释义与例句……</p>}
-      {failed && (
-        <p className="mt-3 text-[20px] text-amber-700">
-          在线英释拉取失败（网络受限时正常）——用下方外部词典即可。
-        </p>
-      )}
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          onClick={() => getOnRateWord()(lookup?.base ?? key, false)}
-          className={`rounded-lg border px-3 py-1.5 text-[20px] ${
-            status === "unknown"
-              ? "border-amber-500 bg-amber-50 text-amber-700"
-              : "border-amber-500/40 text-amber-700 hover:bg-amber-50"
-          }`}
-        >
-          📋 标记生词
-        </button>
-        <button
-          onClick={() => getOnRateWord()(lookup?.base ?? key, true)}
-          className={`rounded-lg border px-3 py-1.5 text-[20px] ${
-            status === "known"
-              ? "border-green-500 bg-green-50 text-green-700"
-              : "border-green-500/40 text-green-700 hover:bg-green-50"
-          }`}
-        >
-          ✓ 已认识
-        </button>
-        <a
-          href={youdao}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-lg border border-line px-3 py-1.5 text-[20px] text-link hover:bg-surface-2"
-        >
-          有道词典 ↗
-        </a>
-      </div>
-      {status && (
-        <p className="mt-2 text-[20px] text-muted">
-          当前状态：{status === "known" ? "✓ 已认识（SRS 到期会复习）" : "📋 生词（已入复习队列）"}
-        </p>
-      )}
-    </div>
-  );
-}
-
 /** 阅读单元：连续短文字段合并（一个显示译文按钮），长段独立成单元。 */
 function ReadUnit({
   blocks,
@@ -740,12 +592,6 @@ function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
   return groups;
 }
 
-interface SelectionCard {
-  x: number;
-  y: number;
-  text: string;
-}
-
 export function PageView({
   chapterId,
   pageId,
@@ -769,7 +615,6 @@ export function PageView({
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const reveal = (sha: string) => setRevealed((prev) => new Set(prev).add(sha));
-  const [selection, setSelection] = useState<SelectionCard | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -793,24 +638,23 @@ export function PageView({
     };
   }, [chapterId, pageId]);
 
-  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡（可在设置中关闭）
+  // 划词入生词本：选中词/短语（1–60 字符）直接记录，不做即时翻译（用户约定）
   useEffect(() => {
     if (!selectionEnabled) return;
     const onMouseUp = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest("article")) return;
-      if (target.closest("button, a, blockquote .relative")) return;
+      if (target.closest("button, a, .relative")) return;
       const selected = window.getSelection()?.toString().trim() ?? "";
       if (!selected || selected.length > 60 || /[\n\r]/.test(selected)) {
         return;
       }
-      const range = window.getSelection()!.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setSelection({ x: rect.left, y: rect.bottom, text: selected });
+      getOnRateWord()(selected, false);
+      onSelectionSaved?.(selected);
     };
     document.addEventListener("mouseup", onMouseUp);
     return () => document.removeEventListener("mouseup", onMouseUp);
-  }, []);
+  }, [selectionEnabled]);
 
   const groups = useMemo(() => (snapshot ? groupBlocks(snapshot.blocks) : []), [snapshot]);
 
@@ -818,10 +662,7 @@ export function PageView({
   if (snapshot == null) return <p className="text-muted">正在读取段落快照……</p>;
 
   return (
-    <article className="max-w-none" onMouseDown={() => setSelection(null)}>
-      {selection && (
-        <SelectionLookupCard card={selection} onClose={() => setSelection(null)} />
-      )}
+    <article className="max-w-none">
       {groups.map((group, index) => {
         switch (group.kind) {
           case "heading":

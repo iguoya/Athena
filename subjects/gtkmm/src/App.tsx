@@ -14,7 +14,14 @@ import {
   X,
 } from "lucide-react";
 import { BlockView } from "./blocks";
-import { PageView, setAnnotationData, setWordStatus, setOnRateWord, buildAnnotationMatcher } from "./page-view";
+import {
+  PageView,
+  setAnnotationData,
+  setWordStatus,
+  setOnRateWord,
+  setOnSelectionSaved,
+  buildAnnotationMatcher,
+} from "./page-view";
 import type { VocabEntry, PatternEntry, WordStatus } from "./page-view";
 import type {
   AttemptRow,
@@ -73,6 +80,7 @@ export default function App() {
     () => window.localStorage.getItem("font-scale") ?? "1",
   );
   const [showSettings, setShowSettings] = useState(false);
+  const [showGlossary, setShowGlossary] = useState(false);
 
   useEffect(() => {
     loadContent<Curriculum>("get_curriculum", "/content/curriculum.json").then((c) => {
@@ -278,6 +286,10 @@ export default function App() {
   };
   useEffect(() => {
     setOnRateWord(rateVocab);
+    setOnSelectionSaved((selected) => {
+      rateVocab(selected, false);
+      setNotice(`已加入生词本：${selected}`);
+    });
   }, []);
 
   const pagePassed = (sectionId: string, pageId: string) => {
@@ -352,6 +364,14 @@ export default function App() {
             </span>
             <span className={srs.dueWords.length + srs.dueParas > 0 ? "font-medium text-amber-700" : ""}>
               {srs.dueWords.length + srs.dueParas}
+            </span>
+          </button>
+          <button
+            onClick={() => setShowGlossary(true)}
+            className="mt-1.5 flex w-full items-center rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
+          >
+            <span className="flex items-center gap-1.5">
+              <BookMarked className="size-5" /> 术语附注（编程词）
             </span>
           </button>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2">
@@ -823,6 +843,46 @@ export default function App() {
       >
         <Settings className="size-6" />
       </button>
+
+      {showGlossary && vocabData && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+          onClick={() => setShowGlossary(false)}
+        >
+          <div
+            className="max-h-[80vh] w-[560px] overflow-y-auto rounded-card bg-surface p-6 shadow-card ring-1 ring-line"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-display text-[26px] font-semibold text-accent">
+                术语附注 · 编程领域词
+              </h3>
+              <button onClick={() => setShowGlossary(false)} className="text-muted hover:text-fg">
+                <X className="size-6" />
+              </button>
+            </div>
+            <p className="text-[20px] text-muted">
+              这些是编程领域术语，不在正文逐词标注，统一在此对照。按字母排序。
+            </p>
+            <ul className="mt-4 space-y-2">
+              {vocabData.vocab
+                .filter((v) => v.domain)
+                .sort((a, b) => a.term.localeCompare(b.term))
+                .map((v) => (
+                  <li
+                    key={v.term}
+                    className="rounded-xl bg-surface-2 px-4 py-2.5"
+                  >
+                    <span className="font-serif text-[24px] font-semibold">{v.term}</span>
+                    {v.pos && <span className="ml-2 text-[20px] italic text-muted">{v.pos}</span>}
+                    <span className="ml-3 text-[22px] text-accent-deep">{v.cn}</span>
+                    {v.note && <p className="mt-0.5 text-[20px] text-muted">{v.note}</p>}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+      )}
 
       {showSettings && (
         <div
