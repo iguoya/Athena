@@ -24,55 +24,55 @@
   },
   {
    "type": "listitem",
-   "text": "begin_print: You must handle this signal, because this is where you create and set up a Pango::Layout using the provided Gtk::PrintContext, and break up your printing output into pages.",
+   "text": "`begin_print`:\n      You must handle this signal, because this is where you\n      create and set up a `Pango::Layout` using the\n      provided `Gtk::PrintContext`, and break up your\n      printing output into pages.",
    "sha": "20d3c68d5425b5d4",
    "zh": "begin_print：你必须处理该信号，因为这是你使用提供的Gtk::PrintContext创建和设置Pango::Layout的地方，以及对你的打印输出进行分页的地方。"
   },
   {
    "type": "listitem",
-   "text": "paginate: Pagination is potentially slow so if you need to monitor it you can call the PrintOperation::set_show_progress() method and handle this signal.",
+   "text": "`paginate`: Pagination is potentially slow so if you\n      need to monitor it you can call the\n      PrintOperation::set_show_progress() method and\n      handle this signal.",
    "sha": "b6c3ba8d3dcbf6d0",
    "zh": "paginate：分页可能很慢，所以如果需要监视它，你可以调用PrintOperation::set_show_progress()方法并处理此信号。"
   },
   {
    "type": "listitem",
-   "text": "For each page that needs to be rendered, the following signals are emitted: request_page_setup: Provides a PrintContext, page number and Gtk::PageSetup. Handle this signal if you need to modify page setup on a per-page basis. draw_page: You must handle this signal, which provides a PrintContext and a page number. The PrintContext should be used to create a Cairo::Context into which the provided page should be drawn. To render text, iterate over the Pango::Layout you created in the begin_print handler.",
+   "text": "For each page that needs to be rendered, the following signals\n      are emitted:\n      \n        \n          \n            `request_page_setup`: Provides a\n            `PrintContext`, page number and\n            `Gtk::PageSetup`. Handle this signal if you\n            need to modify page setup on a per-page basis.\n          \n        \n\n        \n          \n            `draw_page`: You must handle this signal, which provides a\n            `PrintContext` and a page number.\n            The `PrintContext` should be used\n            to create a `Cairo::Context` into which\n            the provided page should be drawn. To render text, iterate over\n            the `Pango::Layout` you created in the\n            `begin_print` handler.",
    "sha": "c898c52664cfa224",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "end_print: A handler for it is a safe place to free any resources related to a PrintOperation. If you have your custom class that inherits from PrintOperation, it is naturally simpler to do it in the destructor.",
+   "text": "`end_print`: A handler for it is a safe place to free\n      any resources related to a `PrintOperation`.\n      If you have your custom class that inherits from\n      `PrintOperation`, it is naturally simpler to do it\n      in the destructor.",
    "sha": "c4731a8d1d939353",
    "zh": "end_print：它的处理程序是用于释放与PrintOperation相关的所有资源的安全场所。如果你通过继承PrintOperation创建了自定义类，则直接在自定义类的析构函数中进行此操作会更简单。"
   },
   {
    "type": "listitem",
-   "text": "done: This signal is emitted when printing is finished, meaning when the print data is spooled. Note that the provided Gtk::PrintOperation::Result may indicate that an error occurred. In any case you probably want to notify the user about the final status.",
+   "text": "`done`: This signal is emitted when printing is finished, meaning when the\n      print data is spooled. Note that the provided\n      `Gtk::PrintOperation::Result` may indicate that\n      an error occurred. In any case you probably want to notify the user\n      about the final status.",
    "sha": "c1401f98b8b68a79",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "status_changed: Emitted whenever a print job's status changes, until it is finished. Call the PrintOperation::set_track_print_status() method to monitor the job status after spooling. To see the status, use get_status() or get_status_string().",
+   "text": "`status_changed`: Emitted whenever a print job's\n      status changes, until it is finished. Call the\n      PrintOperation::set_track_print_status() method to\n      monitor the job status after spooling. To see the status, use\n      get_status() or\n      get_status_string().",
    "sha": "5173ea9b4602f59d",
    "zh": "status_changed: 直到打印作业完成，只要打印作业状态发生了更改就会发出此信号。假脱机后可以调用PrintOperation::set_track_print_status()监视作业状态。要查看状态请调用get_status()或get_status_string()。"
   },
   {
    "type": "listitem",
-   "text": "request_page_setup: Provides a PrintContext, page number and Gtk::PageSetup. Handle this signal if you need to modify page setup on a per-page basis.",
+   "text": "`request_page_setup`: Provides a\n            `PrintContext`, page number and\n            `Gtk::PageSetup`. Handle this signal if you\n            need to modify page setup on a per-page basis.",
    "sha": "393b9d66320764b3",
    "zh": "request_page_setup：提供一个PrintContext、页码和Gtk::PageSetup。如果你需要逐页的修改页面设置，请处理此信号。"
   },
   {
    "type": "listitem",
-   "text": "draw_page: You must handle this signal, which provides a PrintContext and a page number. The PrintContext should be used to create a Cairo::Context into which the provided page should be drawn. To render text, iterate over the Pango::Layout you created in the begin_print handler.",
+   "text": "`draw_page`: You must handle this signal, which provides a\n            `PrintContext` and a page number.\n            The `PrintContext` should be used\n            to create a `Cairo::Context` into which\n            the provided page should be drawn. To render text, iterate over\n            the `Pango::Layout` you created in the\n            `begin_print` handler.",
    "sha": "2882fb1713cc97cc",
    "zh": "draw_page：你必须处理此信号，该信号提供一个PrintContext和页码。你应该使用PrintContext创建一个Cairo::Context，并将提供的页面绘制到其中。要渲染文本，请遍历你在begin_print处理程序中创建的Pango::Layout。"
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1PrintOperation.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考文档"
   }

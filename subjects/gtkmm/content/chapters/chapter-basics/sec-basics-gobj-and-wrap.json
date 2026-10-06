@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-basics",
  "section": "sec-basics-gobj-and-wrap",
- "title": "混用 C 与 C++ API",
+ "title": "Mixing C and C++ APIs",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -42,7 +42,7 @@
   },
   {
    "type": "listitem",
-   "text": "it's a widget or other class that inherits from Gtk::Object, and",
+   "text": "it's a widget or other class that inherits from `Gtk::Object`, and",
    "sha": "01339eabf27bf652",
    "zh": "它是控件或别的继承自 Gtk::Object 的类，且"
   },
@@ -54,13 +54,13 @@
   },
   {
    "type": "listitem",
-   "text": "Gtk::manage() has not been called on it (which includes if it was created with Gtk::make_managed()), or",
+   "text": "`Gtk::manage()` has not been called on it (which includes if it was created with `Gtk::make_managed()`), or",
    "sha": "33242ce4349fcedc",
    "zh": "没有对它调用过 Gtk::manage()（包括用 Gtk::make_managed() 创建的情况），或者"
   },
   {
    "type": "listitem",
-   "text": "Gtk::manage() was called on it, but it was never added to a parent.",
+   "text": "`Gtk::manage()` was called on it, but it was never added to a parent.",
    "sha": "d7ecc64fc15be9d0",
    "zh": "调用过 Gtk::manage()，但从未把它加进任何父容器。"
   },

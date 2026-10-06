@@ -2,55 +2,12 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CircleAlert } from "lucide-react";
 
-/** 标注数据（content/vocab.json，App 启动时注入）。 */
-export interface VocabEntry {
-  term: string;
-  pos?: string;
-  cn: string;
-  note?: string;
-}
-export interface PatternEntry {
-  pattern: string;
-  cn: string;
-}
-/** 词族映射：变体（derived/derives/…）→ 基词。同族共用认识状态。 */
-const TERM_LOOKUP = new Map<string, { kind: "vocab" | "pattern"; entry: VocabEntry & PatternEntry; base: string }>();
-
-function familyVariants(term: string): string[] {
-  const variants = [term];
-  if (!term.includes(" ")) {
-    variants.push(term + "s");
-    if (/(?:s|x|ch|sh)$/.test(term)) variants.push(term + "es");
-    if (/e$/.test(term)) variants.push(term + "d");
-    else variants.push(term + "ed", term.slice(-1) + "ed" === term + "ed" ? term + "ed" : term + term.slice(-1) + "ed");
-    if (/[^wxy]$/.test(term)) variants.push(term + "ing");
-    if (/e$/.test(term)) variants.push(term.slice(0, -1) + "ing");
-    variants.push(term + "ly");
-  }
-  return [...new Set(variants)];
-}
-
-export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[]) {
-  TERM_LOOKUP.clear();
-  for (const v of vocab)
-    for (const variant of familyVariants(v.term))
-      TERM_LOOKUP.set(variant.toLowerCase(), { kind: "vocab", entry: v as VocabEntry & PatternEntry, base: v.term });
-  for (const pt of patterns)
-    TERM_LOOKUP.set(pt.pattern.toLowerCase(), { kind: "pattern", entry: pt as VocabEntry & PatternEntry, base: pt.pattern });
-}
-
-/** 词汇状态（learning.db 派生）：known=已认识；unknown=生词。 */
-export interface WordStatus {
-  known: Set<string>;
-  unknown: Set<string>;
-}
-
 /**
  * 官方节页渲染器：读段落快照 JSON（scripts/sync_upstream.py 生成）。
  * - 原文段落保留官方内联格式（粗体/斜体/行内代码/链接，受限 markdown）
  * - 代码块逐字照录（应用 ADR 0002：代码不翻译不改写）
- * - figure 渲染官方图片（figures/ 随快照入 content/figures）
- * - 标记 key 的段落是章节重点语句，高亮强调
+ * - figure 渲染官方图片；key 段落重点强调；划词即查；英译训练模式
+ * - 连续短文字段合并为一个「阅读单元」：一个显示译文按钮，减少点击负担
  */
 
 interface SnapshotBlock {
@@ -72,123 +29,93 @@ interface Snapshot {
   blocks: SnapshotBlock[];
 }
 
-interface RenderGroup {
-  kind: "heading" | "para" | "list" | "code" | "figure";
-  blocks: SnapshotBlock[];
+/** 标注数据（content/vocab.json，App 启动时注入）。 */
+export interface VocabEntry {
+  term: string;
+  pos?: string;
+  cn: string;
+  note?: string;
 }
+export interface PatternEntry {
+  pattern: string;
+  cn: string;
+}
+/** 词族映射：变体（derived/derives/…）→ 基词。同族共用认识状态。 */
+const TERM_LOOKUP = new Map<
+  string,
+  { kind: "vocab" | "pattern"; entry: VocabEntry & PatternEntry; base: string }
+>();
 
-function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
-  const groups: RenderGroup[] = [];
-  for (const block of blocks) {
-    const last = groups[groups.length - 1];
-    if (block.type === "listitem" && last?.kind === "list") {
-      last.blocks.push(block);
-    } else {
-      groups.push({ kind: block.type === "listitem" ? "list" : block.type, blocks: [block] });
-    }
+function familyVariants(term: string): string[] {
+  const variants = [term];
+  if (!term.includes(" ")) {
+    variants.push(term + "s");
+    if (/(?:s|x|ch|sh)$/.test(term)) variants.push(term + "es");
+    if (/e$/.test(term)) variants.push(term + "d");
+    else variants.push(term + "ed");
+    if (/[^wxy]$/.test(term)) variants.push(term + "ing");
+    if (/e$/.test(term)) variants.push(term.slice(0, -1) + "ing");
+    variants.push(term + "ly");
   }
-  return groups;
+  return [...new Set(variants)];
 }
 
-/** 分句：英文按 .!?，中文按 。！？；保留标点（逐句对照用）。 */
-function splitSentences(text: string, lang: "en" | "zh"): string[] {
-  const parts = lang === "en"
-    ? text.replace(/\s*\n\s*/g, " ").split(/(?<=[.!?])\s+/)
-    : text.split(/(?<=[。！？；])/);
-  return parts.map((s) => s.trim()).filter(Boolean);
+export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[]) {
+  TERM_LOOKUP.clear();
+  for (const v of vocab)
+    for (const variant of familyVariants(v.term))
+      TERM_LOOKUP.set(variant.toLowerCase(), {
+        kind: "vocab",
+        entry: v as VocabEntry & PatternEntry,
+        base: v.term,
+      });
+  for (const pt of patterns)
+    TERM_LOOKUP.set(pt.pattern.toLowerCase(), {
+      kind: "pattern",
+      entry: pt as VocabEntry & PatternEntry,
+      base: pt.pattern,
+    });
 }
 
-/** 译文揭示控件：训练模式下默认折叠，点击揭示并自评（看懂了/标记复习）。 */
-function ZhReveal({
-  sha,
-  en,
-  zh,
-  sentenceMode,
-  hidden,
-  known,
-  hard,
-  onReveal,
-  onRate,
-}: {
-  sha: string;
-  en: string;
-  zh: string;
-  sentenceMode: boolean;
-  hidden: boolean;
-  known: boolean;
-  hard: boolean;
-  onReveal: () => void;
-  onRate: (sha: string, understood: boolean) => void;
-}) {
-  if (!hidden) {
-    const rated = known || hard;
-    const pairs = sentenceMode
-      ? (() => {
-          const enSents = splitSentences(en, "en");
-          const zhSents = splitSentences(zh, "zh");
-          const rows: { en: string; zh?: string }[] = enSents.map((s) => ({ en: s }));
-          zhSents.forEach((s, i) => {
-            if (rows[i]) rows[i].zh = s;
-            else rows.push({ en: "", zh: s });
-          });
-          return rows;
-        })()
-      : null;
-    return (
-      <div>
-        {pairs ? (
-          <div className="divide-y divide-line/60">
-            {pairs.map((row, i) => (
-              <div key={i} className="py-1.5">
-                {row.en && <p className="font-serif text-[24px] leading-relaxed text-fg/60">{renderInline(row.en)}</p>}
-                {row.zh && <p className="text-[27px] leading-loose text-fg/90">{renderInline(row.zh)}</p>}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(zh))}</p>
-        )}
-        {rated ? (
-          <span
-            className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-[20px] ring-1 ${
-              known
-                ? "bg-green-50 text-green-700 ring-green-500/30"
-                : "bg-amber-500/10 text-amber-700 ring-amber-500/30"
-            }`}
-          >
-            {known ? "✓ 已读懂" : "📋 待复习"}
-          </span>
-        ) : (
-          <div className="mt-1.5 flex gap-2">
-            <button
-              onClick={() => onRate(sha, true)}
-              className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 transition-colors hover:bg-green-50"
-            >
-              👍 看懂了
-            </button>
-            <button
-              onClick={() => onRate(sha, false)}
-              className="rounded-lg border border-amber-500/40 px-3 py-1 text-[20px] text-amber-700 transition-colors hover:bg-amber-50"
-            >
-              📋 标记复习
-            </button>
-          </div>
-        )}
-      </div>
-    );
+export interface WordStatus {
+  known: Set<string>;
+  unknown: Set<string>;
+}
+let wordStatus: WordStatus | undefined;
+export function setWordStatus(status: WordStatus | undefined) {
+  wordStatus = status;
+}
+let onRateWord: ((term: string, known: boolean) => void) | null = null;
+export function setOnRateWord(fn: (term: string, known: boolean) => void) {
+  onRateWord = fn;
+}
+export function getOnRateWord(): (term: string, known: boolean) => void {
+  return onRateWord ?? (() => {});
+}
+export function buildAnnotationMatcher() {
+  const terms = [...TERM_LOOKUP.keys()];
+  if (!terms.length) {
+    annotationMatcher = null;
+    return;
   }
-  return (
-    <button
-      onClick={onReveal}
-      className="rounded-lg border border-dashed border-line px-4 py-1.5 text-[20px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
-    >
-      显示译文
-    </button>
-  );
+  const escaped = terms
+    .sort((a, b) => b.length - a.length)
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  annotationMatcher = new RegExp(`\\b(?:${escaped.join("|")})\\b`, "gi");
 }
 
 /** 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行。 */
 const flow = (s: string) => s.replace(/\s*\n\s*/g, " ");
+
+function splitSentences(text: string, lang: "en" | "zh"): string[] {
+  const parts =
+    lang === "en"
+      ? text.replace(/\s*\n\s*/g, " ").split(/(?<=[.!?])\s+/)
+      : text.split(/(?<=[。！？；])/);
+  return parts.map((s) => s.trim()).filter(Boolean);
+}
+
+let annotationMatcher: RegExp | null = null;
 
 function AnnotatedTerm({
   kind,
@@ -201,17 +128,18 @@ function AnnotatedTerm({
   kind: "vocab" | "pattern";
   term: string;
   display: string;
-  entry: VocabEntry | PatternEntry;
+  entry: VocabEntry & PatternEntry;
   status: "known" | "unknown" | undefined;
   onRate: (term: string, known: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
   const isVocab = kind === "vocab";
-  const underline = status === "unknown"
-    ? "underline decoration-solid decoration-amber-500 decoration-2 underline-offset-4"
-    : status === "known"
-      ? "underline decoration-dotted decoration-green-600/60 underline-offset-4"
-      : "underline decoration-dotted decoration-accent/50 underline-offset-4";
+  const underline =
+    status === "unknown"
+      ? "underline decoration-solid decoration-amber-500 decoration-2 underline-offset-4"
+      : status === "known"
+        ? "underline decoration-dotted decoration-green-600/60 underline-offset-4"
+        : "underline decoration-dotted decoration-accent/50 underline-offset-4";
   const pos = isVocab ? (entry as VocabEntry).pos : undefined;
   const note = (entry as VocabEntry).note || "";
   return (
@@ -229,7 +157,9 @@ function AnnotatedTerm({
             {pos && <span className="ml-2 text-[20px] italic text-muted">{pos}</span>}
           </span>
           <span className="mt-1 block text-[22px] text-accent-deep">{entry.cn}</span>
-          {note && <span className="mt-1 block text-[20px] leading-relaxed text-muted">{note}</span>}
+          {note && (
+            <span className="mt-1 block text-[20px] leading-relaxed text-muted">{note}</span>
+          )}
           <span className="mt-3 flex gap-2">
             <button
               onClick={(e) => {
@@ -266,31 +196,6 @@ function AnnotatedTerm({
   );
 }
 
-/** 受限行内 markdown → JSX：**粗**、*斜*、`代码`、[文字](链接)。 */
-let annotationMatcher: RegExp | null = null;
-let wordStatus: WordStatus | undefined;
-let onRateWord: ((term: string, known: boolean) => void) | null = null;
-export function setWordStatus(status: WordStatus | undefined) {
-  wordStatus = status;
-}
-export function setOnRateWord(fn: (term: string, known: boolean) => void) {
-  onRateWord = fn;
-}
-export function getOnRateWord(): (term: string, known: boolean) => void {
-  return onRateWord ?? (() => {});
-}
-export function buildAnnotationMatcher() {
-  const terms = [...TERM_LOOKUP.keys()];
-  if (!terms.length) {
-    annotationMatcher = null;
-    return;
-  }
-  const escaped = terms
-    .sort((a, b) => b.length - a.length)
-    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  annotationMatcher = new RegExp(`\\b(?:${escaped.join("|")})\\b`, "gi");
-}
-
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   const pattern =
@@ -317,11 +222,13 @@ function renderInline(text: string): ReactNode[] {
             term={hit.base}
             display={m[0]}
             entry={hit.entry}
-            status={wordStatus?.known.has(hit.base)
-              ? "known"
-              : wordStatus?.unknown.has(hit.base)
-                ? "unknown"
-                : undefined}
+            status={
+              wordStatus?.known.has(hit.base)
+                ? "known"
+                : wordStatus?.unknown.has(hit.base)
+                  ? "unknown"
+                  : undefined
+            }
             onRate={onRateWord ?? (() => {})}
           />,
         );
@@ -375,35 +282,52 @@ function renderInline(text: string): ReactNode[] {
 }
 
 function TranslatedText({ text }: { text: string }) {
-  return (
-    <>
-      {/* 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行 */}
-      <p className="leading-loose text-fg/90">
-        {renderInline(text.replace(/\s*\n\s*/g, " "))}
-      </p>
-    </>
-  );
+  return <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(text))}</p>;
 }
 
-function PendingBadge({ stale }: { stale?: boolean }) {
+/** 自评行：看懂了 / 标记复习（或状态徽章）。 */
+function RatingRow({
+  sha,
+  knownParas,
+  hardParas,
+  onRate,
+}: {
+  sha: string;
+  knownParas: Set<string>;
+  hardParas: Set<string>;
+  onRate: (sha: string, understood: boolean) => void;
+}) {
+  const known = knownParas.has(sha);
+  const hard = hardParas.has(sha);
+  if (known || hard) {
+    return (
+      <span
+        className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-[20px] ring-1 ${
+          known
+            ? "bg-green-50 text-green-700 ring-green-500/30"
+            : "bg-amber-500/10 text-amber-700 ring-amber-500/30"
+        }`}
+      >
+        {known ? "✓ 已读懂" : "📋 待复习"}
+      </span>
+    );
+  }
   return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[20px] ring-1 ${
-        stale
-          ? "bg-amber-500/10 text-amber-700 ring-amber-500/30"
-          : "bg-surface-2 text-muted ring-line"
-      }`}
-    >
-      {stale ? "原文已更新 · 译文待复核" : "此段待译"}
-      {stale && <CircleAlert className="size-5" />}
-    </span>
+    <div className="mt-1.5 flex gap-2">
+      <button
+        onClick={() => onRate(sha, true)}
+        className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 transition-colors hover:bg-green-50"
+      >
+        👍 看懂了
+      </button>
+      <button
+        onClick={() => onRate(sha, false)}
+        className="rounded-lg border border-amber-500/40 px-3 py-1 text-[20px] text-amber-700 transition-colors hover:bg-amber-50"
+      >
+        📋 标记复习
+      </button>
+    </div>
   );
-}
-
-interface SelectionCard {
-  x: number;
-  y: number;
-  text: string;
 }
 
 /** 划词查询卡：词表命中显示释义；可拉取在线英释；标记生词/已认识入 SRS。 */
@@ -411,7 +335,7 @@ function SelectionLookupCard({
   card,
   onClose,
 }: {
-  card: SelectionCard;
+  card: { x: number; y: number; text: string };
   onClose: () => void;
 }) {
   const query = card.text.trim();
@@ -437,7 +361,8 @@ function SelectionLookupCard({
       );
       if (!response.ok) throw new Error(String(response.status));
       const data = (await response.json())[0];
-      const phonetic = data.phonetic ?? data.phonetics?.find((p: { text?: string }) => p.text)?.text;
+      const phonetic =
+        data.phonetic ?? data.phonetics?.find((p: { text?: string }) => p.text)?.text;
       const defs: string[] = [];
       for (const meaning of data.meanings ?? []) {
         for (const def of meaning.definitions ?? []) {
@@ -454,8 +379,6 @@ function SelectionLookupCard({
     }
   };
 
-  const rate = (known: boolean) =>
-    getOnRateWord()(lookup?.base ?? key, known);
   const youdao = `https://dict.youdao.com/result?word=${encodeURIComponent(query)}&lang=en`;
 
   return (
@@ -473,15 +396,15 @@ function SelectionLookupCard({
             )}
           </p>
           {(vocabHit || patternHit) && (
-            <p className="mt-1 text-[24px] text-accent-deep">
-              {(vocabHit ?? patternHit)!.cn}
-            </p>
+            <p className="mt-1 text-[24px] text-accent-deep">{(vocabHit ?? patternHit)!.cn}</p>
           )}
           {vocabHit?.note && (
             <p className="mt-1 text-[20px] leading-relaxed text-muted">{vocabHit.note}</p>
           )}
           {!vocabHit && !patternHit && (
-            <p className="mt-1 text-[20px] text-muted">词表中无此词——可拉取在线英释或查外部词典。</p>
+            <p className="mt-1 text-[20px] text-muted">
+              词表中无此词——可拉取在线英释或查外部词典。
+            </p>
           )}
         </div>
         <button onClick={onClose} className="shrink-0 text-muted hover:text-fg">
@@ -508,7 +431,7 @@ function SelectionLookupCard({
 
       <div className="mt-4 flex flex-wrap gap-2">
         <button
-          onClick={() => rate(false)}
+          onClick={() => getOnRateWord()(lookup?.base ?? key, false)}
           className={`rounded-lg border px-3 py-1.5 text-[20px] ${
             status === "unknown"
               ? "border-amber-500 bg-amber-50 text-amber-700"
@@ -518,7 +441,7 @@ function SelectionLookupCard({
           📋 标记生词
         </button>
         <button
-          onClick={() => rate(true)}
+          onClick={() => getOnRateWord()(lookup?.base ?? key, true)}
           className={`rounded-lg border px-3 py-1.5 text-[20px] ${
             status === "known"
               ? "border-green-500 bg-green-50 text-green-700"
@@ -555,6 +478,174 @@ function SelectionLookupCard({
   );
 }
 
+/** 阅读单元：连续短文字段合并（一个显示译文按钮），长段独立成单元。 */
+function ReadUnit({
+  blocks,
+  hidden,
+  sentenceMode,
+  knownParas,
+  hardParas,
+  onRevealAll,
+  onRate,
+}: {
+  blocks: SnapshotBlock[];
+  hidden: boolean;
+  sentenceMode: boolean;
+  knownParas: Set<string>;
+  hardParas: Set<string>;
+  onRevealAll: () => void;
+  onRate: (sha: string, understood: boolean) => void;
+}) {
+  const zhOf = (block: SnapshotBlock) => {
+    if (block.zh) {
+      if (sentenceMode) {
+        const enSents = splitSentences(flow(block.text), "en");
+        const zhSents = splitSentences(block.zh, "zh");
+        const rows: { en: string; zh?: string }[] = enSents.map((s) => ({ en: s }));
+        zhSents.forEach((s, i) => {
+          if (rows[i]) rows[i].zh = s;
+          else rows.push({ en: "", zh: s });
+        });
+        return (
+          <div className="mt-1 divide-y divide-line/60">
+            {rows.map((row, i) => (
+              <div key={i} className="py-1">
+                {row.en && (
+                  <p className="font-serif text-[24px] leading-relaxed text-fg/60">
+                    {renderInline(row.en)}
+                  </p>
+                )}
+                {row.zh && (
+                  <p className="text-[27px] leading-loose text-fg/90">{renderInline(row.zh)}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        );
+      }
+      return <TranslatedText text={block.zh} />;
+    }
+    if (block.stale_from) {
+      return (
+        <>
+          <p className="my-2 text-[20px] text-amber-700">以下为原文变更前的旧译文，待复核：</p>
+          <TranslatedText text={block.stale_from} />
+          <p className="mt-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[20px] text-amber-700 ring-1 ring-amber-500/30">
+              原文已更新 · 译文待复核 <CircleAlert className="size-5" />
+            </span>
+          </p>
+        </>
+      );
+    }
+    return (
+      <p className="mt-2">
+        <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[20px] text-muted ring-1 ring-line">
+          此段待译
+        </span>
+      </p>
+    );
+  };
+
+  return (
+    <div className="my-6">
+      {blocks.map((block) => {
+        const isKnown = knownParas.has(block.sha);
+        if (block.type === "listitem") {
+          return (
+            <div key={block.sha} className="mb-3">
+              <span
+                className={`block rounded-lg px-2 py-1 font-serif text-[28px] leading-relaxed ${
+                  isKnown ? "bg-green-50/80 text-fg/55" : "text-fg/60"
+                }`}
+              >
+                • {renderInline(flow(block.text))}
+              </span>
+              {!hidden && block.zh && (
+                <div className="pl-5">
+                  {zhOf(block)}
+                  <RatingRow
+                    sha={block.sha}
+                    knownParas={knownParas}
+                    hardParas={hardParas}
+                    onRate={onRate}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        }
+        return (
+          <div key={block.sha} className="my-5">
+            <blockquote
+              className={`border-l-4 py-4 pl-5 pr-4 font-serif text-[28px] leading-relaxed ${
+                block.status === "stale"
+                  ? "border-amber-500/70 bg-surface-2 text-fg/60"
+                  : isKnown
+                    ? "border-green-500/60 bg-green-50/70 text-fg/55"
+                    : block.key
+                      ? "border-accent bg-accent-soft/60 text-fg/60"
+                      : "border-accent/50 bg-surface-2 text-fg/60"
+              }`}
+            >
+              <p>{renderInline(flow(block.text))}</p>
+              {block.key && (
+                <span className="mt-2 block text-[20px] font-medium not-italic text-accent">
+                  ★ 本节重点
+                </span>
+              )}
+            </blockquote>
+            {!hidden && zhOf(block)}
+            {!hidden && block.zh && (
+              <RatingRow sha={block.sha} knownParas={knownParas} hardParas={hardParas} onRate={onRate} />
+            )}
+          </div>
+        );
+      })}
+      {hidden && (
+        <button
+          onClick={onRevealAll}
+          className="rounded-lg border border-dashed border-line px-5 py-2 text-[20px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
+        >
+          显示译文（{blocks.filter((b) => b.zh).length} 段）
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** 阅读单元分组：连续文字块合并；长段（>280 字符）独立；标题/代码/图打断。 */
+type RenderGroup =
+  | { kind: "heading" | "code" | "figure"; blocks: SnapshotBlock[] }
+  | { kind: "read"; blocks: SnapshotBlock[] };
+
+function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
+  const groups: RenderGroup[] = [];
+  let unitLen = 0;
+  for (const block of blocks) {
+    if (block.type === "para" || block.type === "listitem") {
+      const last = groups[groups.length - 1];
+      const longBlock = block.text.length > 280;
+      if (last?.kind === "read" && !longBlock && unitLen < 480) {
+        last.blocks.push(block);
+        unitLen += block.text.length;
+      } else {
+        groups.push({ kind: "read", blocks: [block] });
+        unitLen = block.text.length;
+      }
+      continue;
+    }
+    groups.push({ kind: block.type, blocks: [block] });
+  }
+  return groups;
+}
+
+interface SelectionCard {
+  x: number;
+  y: number;
+  text: string;
+}
+
 export function PageView({
   chapterId,
   pageId,
@@ -566,40 +657,17 @@ export function PageView({
 }: {
   chapterId: string;
   pageId: string;
-  /** 英译训练模式：中文默认隐藏，点击揭示 */
   zhHidden: boolean;
-  /** 逐句对照：揭示译文后按句交错显示 */
   sentenceMode: boolean;
-  /** 已自评「看懂了」的段落 sha */
   knownParas: Set<string>;
-  /** 被标记「需复习」的段落 sha */
   hardParas: Set<string>;
   onRate: (sha: string, understood: boolean) => void;
 }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const reveal = (sha: string) => setRevealed((prev) => new Set(prev).add(sha));
   const [selection, setSelection] = useState<SelectionCard | null>(null);
-  const reveal = (sha: string) =>
-    setRevealed((prev) => new Set(prev).add(sha));
-
-  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡
-  useEffect(() => {
-    const onMouseUp = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest("article")) return;
-      if (target.closest("button, a, blockquote .relative")) return;
-      const selected = window.getSelection()?.toString().trim() ?? "";
-      if (!selected || selected.length > 60 || /[\n\r]/.test(selected)) {
-        return;
-      }
-      const range = window.getSelection()!.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setSelection({ x: rect.left, y: rect.bottom, text: selected });
-    };
-    document.addEventListener("mouseup", onMouseUp);
-    return () => document.removeEventListener("mouseup", onMouseUp);
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -622,6 +690,24 @@ export function PageView({
       cancelled = true;
     };
   }, [chapterId, pageId]);
+
+  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡
+  useEffect(() => {
+    const onMouseUp = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest("article")) return;
+      if (target.closest("button, a, blockquote .relative")) return;
+      const selected = window.getSelection()?.toString().trim() ?? "";
+      if (!selected || selected.length > 60 || /[\n\r]/.test(selected)) {
+        return;
+      }
+      const range = window.getSelection()!.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelection({ x: rect.left, y: rect.bottom, text: selected });
+    };
+    document.addEventListener("mouseup", onMouseUp);
+    return () => document.removeEventListener("mouseup", onMouseUp);
+  }, []);
 
   const groups = useMemo(() => (snapshot ? groupBlocks(snapshot.blocks) : []), [snapshot]);
 
@@ -675,112 +761,20 @@ export function PageView({
               </figure>
             );
           }
-          case "list": {
-            const isKey = group.blocks.some((b) => b.key);
+          case "read": {
+            const unitKey = `read:${group.blocks[0].sha}`;
+            const hidden = zhHidden && !revealed.has(unitKey);
             return (
-              <div
+              <ReadUnit
                 key={index}
-                className={`my-5 rounded-card p-5 ring-1 ${
-                  isKey ? "bg-accent-soft/60 ring-accent/40" : "bg-surface ring-line shadow-card"
-                }`}
-              >
-                <ul className="space-y-3">
-                  {group.blocks.map((block) => (
-                    <li key={block.sha} className="flex flex-col gap-1.5">
-                      <span
-                        className={`block rounded-lg px-2 py-1 font-serif text-[28px] leading-relaxed ${
-                          knownParas.has(block.sha)
-                            ? "bg-green-50/80 text-fg/55"
-                            : "text-fg/60"
-                        }`}
-                      >
-                        • {renderInline(flow(block.text))}
-                      </span>
-                      {block.zh && (
-                        <span className="pl-5">
-                          <ZhReveal
-                            sha={block.sha}
-                            en={flow(block.text)}
-                            zh={block.zh}
-                            sentenceMode={sentenceMode}
-                            hidden={zhHidden && !revealed.has(block.sha)}
-                            known={knownParas.has(block.sha)}
-                            hard={hardParas.has(block.sha)}
-                            onReveal={() => reveal(block.sha)}
-                            onRate={onRate}
-                          />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {!group.blocks.every((b) => b.zh) && (
-                  <p className="mt-3">
-                    <PendingBadge />
-                  </p>
-                )}
-              </div>
-            );
-          }
-          case "para": {
-            const block = group.blocks[0];
-            const stale = block.status === "stale";
-            return (
-              <div key={index} className="my-6">
-                <blockquote
-                  className={`border-l-4 py-4 pl-5 pr-4 font-serif text-[28px] leading-relaxed ${
-                    stale
-                      ? "border-amber-500/70 bg-surface-2 text-fg/60"
-                      : knownParas.has(block.sha)
-                        ? "border-green-500/60 bg-green-50/70 text-fg/55"
-                        : block.key
-                          ? "border-accent bg-accent-soft/60 text-fg/60"
-                          : "border-accent/50 bg-surface-2 text-fg/60"
-                  }`}
-                >
-                  <p>{renderInline(block.text.replace(/\s*\n\s*/g, " "))}</p>
-                  {block.key && (
-                    <span className="mt-2 block text-[20px] font-medium not-italic text-accent">
-                      ★ 本节重点
-                    </span>
-                  )}
-                </blockquote>
-                {block.zh ? (
-                  <div
-                    className={
-                      block.key
-                        ? "rounded-card bg-accent-soft/40 px-5 py-2 ring-1 ring-accent/20"
-                        : ""
-                    }
-                  >
-                    <ZhReveal
-                      sha={block.sha}
-                      en={flow(block.text)}
-                      zh={block.zh}
-                      sentenceMode={sentenceMode}
-                      hidden={zhHidden && !revealed.has(block.sha)}
-                      known={knownParas.has(block.sha)}
-                      hard={hardParas.has(block.sha)}
-                      onReveal={() => reveal(block.sha)}
-                      onRate={onRate}
-                    />
-                  </div>
-                ) : block.stale_from ? (
-                  <>
-                    <p className="my-2 text-[20px] text-amber-700">
-                      以下为原文变更前的旧译文，待复核：
-                    </p>
-                    <TranslatedText text={block.stale_from} />
-                    <p className="mt-2">
-                      <PendingBadge stale />
-                    </p>
-                  </>
-                ) : (
-                  <p className="mt-2">
-                    <PendingBadge />
-                  </p>
-                )}
-              </div>
+                blocks={group.blocks}
+                hidden={hidden}
+                sentenceMode={sentenceMode}
+                knownParas={knownParas}
+                hardParas={hardParas}
+                onRevealAll={() => reveal(unitKey)}
+                onRate={onRate}
+              />
             );
           }
         }

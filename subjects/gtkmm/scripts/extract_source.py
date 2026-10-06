@@ -22,6 +22,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from inline_md import expand_entities, inline_md, strip_inline_md  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DOCBOOK = (PROJECT_ROOT / "upstream" / "gtkmm-documentation"
@@ -101,60 +102,6 @@ def _innermost(tag: str, source: str):
     """找最内层的 <tag>...</tag> 片段（内部不含同名标签）。"""
     pattern = re.compile(rf"<{tag}(\s[^>]*)?>((?:(?!<{tag}[\s>]|</{tag}>).)*)</{tag}>", re.S)
     return pattern.search(source)
-
-
-def inline_md(source: str) -> str:
-    result = source
-    for _ in range(50):  # 收敛保护
-        changed = False
-        for tag in sorted(_MD_CODE_TAGS, key=len, reverse=True):
-            while True:
-                m = _innermost(tag, result)
-                if not m:
-                    break
-                inner = inline_md(m.group(2))
-                result = result[:m.start()] + f"`{inner}`" + result[m.end():]
-                changed = True
-        for m in re.finditer(r'<emphasis([^>]*)>((?:(?!<emphasis[\s>]|</emphasis>).)*)</emphasis>', result, re.S):
-            role = re.search(r'role="(\w+)"', m.group(1))
-            inner = inline_md(m.group(2))
-            mark = "**" if role and role.group(1) == "bold" else "*"
-            result = result[:m.start()] + f"{mark}{inner}{mark}" + result[m.end():]
-            changed = True
-            break
-        for m in re.finditer(r'<(link|ulink)([^>]*)>((?:(?!<[\s>]|</>).)*)</>', result, re.S):
-            href = re.search(r'xlink:href="([^"]+)"|href="([^"]+)"', m.group(2))
-            url = (href.group(1) or href.group(2)) if href else ""
-            inner = inline_md(m.group(3))
-            result = result[:m.start()] + f"[{inner}]({url})" + result[m.end():]
-            changed = True
-            break
-        if not changed:
-            break
-    # quote 与其余未知标签剥壳保文本（不改变指纹）
-    result = re.sub(r"</?(?:quote|citetitle|accel|keycap|keycombo|mousebutton|html:[a-z]+)(?:\s[^>]*)?>", "", result)
-    result = re.sub(r"<[^>]+>", "", result)
-    return result
-
-
-def strip_inline_md(text: str) -> str:
-    """把受限 markdown 还原成纯文本（指纹计算的规范化输入）。"""
-    text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", text)
-    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"", text)
-    text = text.replace("**", "").replace("*", "").replace("`", "")
-    return text
-
-
-def expand_entities(text: str) -> str:
-    """只展开实体（含值内含标签的 DocBook 自定义实体），保留其余标签。"""
-    for name, value in sorted(docbook_entities().items(), key=lambda kv: -len(kv[0])):
-        text = text.replace(f"&{name};", value)
-    for entity, char in {"&amp;": "&", "&lt;": "<", "&gt;": ">",
-                         "&quot;": '"', "&apos;": "'", "&nbsp;": " ",
-                         "&uuml;": "ü", "&szlig;": "ß", "&copy;": "©",
-                         "&nbhy;": "‑"}.items():
-        text = text.replace(entity, char)
-    return text
 
 
 def figure_ref(source: str) -> str | None:

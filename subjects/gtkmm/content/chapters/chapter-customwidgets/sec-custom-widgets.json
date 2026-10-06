@@ -18,7 +18,7 @@
   },
   {
    "type": "listitem",
-   "text": "get_request_mode_vfunc(): (optional) Return what Gtk::SizeRequestMode is preferred by the widget.",
+   "text": "get_request_mode_vfunc(): (optional) Return what `Gtk::SizeRequestMode` is preferred by the widget.",
    "sha": "eedfb7789745d51f",
    "zh": "get_request_mode_vfunc()：覆写此虚函数是可选的，返回此部件的Gtk::SizeRequestMode偏好。"
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "listitem",
-   "text": "on_realize(): (optional)",
+   "text": "on_realize():  (optional)",
    "sha": "308297a694db9db7",
    "zh": null
   },
@@ -60,13 +60,13 @@
   },
   {
    "type": "listitem",
-   "text": "snapshot_vfunc(): Create a render node, e.g. a Cairo::Context node, and draw on it.",
+   "text": "snapshot_vfunc(): Create a render node, e.g. a `Cairo::Context` node, and draw on it.",
    "sha": "69d460fc5685c6a7",
    "zh": "snapshot_vfunc()：创建一个渲染节点（例如：一个Cairo::Context节点），并在其上进行绘制。"
   },
   {
    "type": "para",
-   "text": "The first 3 methods in the previous table are also overridden in custom\n        containers. They are briefly described in the\n        Custom Containers section.",
+   "text": "The first 3 methods in the previous table are also overridden in custom\n        containers. They are briefly described in the\n        [Custom Containers]() section.",
    "sha": "7ada619e01a1e082",
    "zh": "上述前三个函数在自定义容器中也被覆写。它们在自定义容器小节做了简要说明。"
   },
@@ -78,7 +78,7 @@
   },
   {
    "type": "para",
-   "text": "Some `GTK` functions, if called at all, must be\ncalled from the class init function. Some other `GTK`\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom `Glib::ExtraClassInit` and derive your custom class\nfrom that class. The custom CSS name example\nshows how that's done.",
+   "text": "Some `GTK` functions, if called at all, must be\ncalled from the class init function. Some other `GTK`\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom `Glib::ExtraClassInit` and derive your custom class\nfrom that class. The [custom CSS name example]()\nshows how that's done.",
    "sha": "ee9c2fafe16f1ea7",
    "zh": null
   },
@@ -103,7 +103,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_widget/)",
    "sha": "bc47da663d101bfc",
    "zh": "源代码"
   }

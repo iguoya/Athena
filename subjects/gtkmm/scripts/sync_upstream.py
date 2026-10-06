@@ -32,6 +32,7 @@ from extract_source import (  # noqa: E402
     PROJECT_ROOT,
     code_text,
     direct_children,
+    docbook_entities,
     element_text,
     expand_entities,
     figure_ref,
@@ -39,6 +40,13 @@ from extract_source import (  # noqa: E402
     load_structure,
     strip_tags,
 )
+
+_CUSTOM = docbook_entities()
+
+
+def expand_md(raw: str) -> str:
+    # 标准实体 + DocBook 自定义实体（gtkmm、cpp 等）一起展开
+    return expand_entities(raw, _CUSTOM)
 
 CONTENT_CHAPTERS = PROJECT_ROOT / "content" / "chapters"
 
@@ -95,7 +103,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                     # 正文保留内联格式（粗/斜/行内代码/链接）；指纹严格沿用旧口径
                     # （strip_tags 纯文本）——已有翻译不因格式升级而失效（ADR 0002）
                     key = sha(strip_tags(text).strip())
-                    clean = inline_md(expand_entities(text)).strip()
+                    clean = inline_md(expand_md(text)).strip()
                 else:
                     # 代码块逐字保留缩进与空白，尊重原文（应用 ADR 0002）
                     clean = code_text(text)
@@ -111,14 +119,18 @@ def extract_blocks(fragment: str) -> list[dict]:
                 list_text, list_end = element_text("itemizedlist", source, m.start())
                 for _, li_frag in direct_children("listitem", list_text):
                     li_text, _ = element_text("para", li_frag, 0)
-                    clean = normalize(strip_tags(li_text if li_text else li_frag))
+                    raw = li_text if li_text else li_frag
+                    # 列表项同样保留内联格式（链接/粗斜体/行内代码）；
+                    # 指纹沿用纯文本口径，已有翻译不因格式升级丢失
+                    clean = inline_md(expand_md(raw)).strip()
+                    key = sha(normalize(strip_tags(raw)))
                     if clean:
-                        blocks.append({"type": "listitem", "text": clean, "sha": sha(clean)})
+                        blocks.append({"type": "listitem", "text": clean, "sha": key})
             elif kind == "figure":
                 fig_text, fig_end = element_text("figure", source, m.start())
                 title = strip_tags(element_text("title", fig_text, 0)[0])
                 if title:
-                    ref = figure_ref(expand_entities(fig_text))
+                    ref = figure_ref(expand_md(fig_text))
                     blocks.append({"type": "figure", "text": title,
                                    "ref": ref, "sha": sha(title)})
 

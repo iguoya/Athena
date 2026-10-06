@@ -1044,25 +1044,25 @@
   },
   {
    "type": "listitem",
-   "text": "Objects used via RefPtr: Pass the RefPtr as a const reference. For instance, const Glib::RefPtr<Gtk::FileFilter>& filter.",
+   "text": "Objects used via `RefPtr`: Pass the\n            `RefPtr` as a const reference. For instance,\n            `const Glib::RefPtr&\n                filter`.",
    "sha": "ad6b4b2756f4b833",
-   "zh": null
+   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr& filter。"
   },
   {
    "type": "listitem",
-   "text": "Const Objects used via RefPtr: If the object should not be changed by the function, then make sure that the object is const, even if the RefPtr is already const. For instance, const Glib::RefPtr<const Gtk::FileFilter>& filter.",
+   "text": "Const Objects used via `RefPtr`: If the\n            object should not be changed by the function, then make sure that\n            the object is const, even if the `RefPtr` is\n            already const. For instance, `const Glib::RefPtr& filter`.",
    "sha": "410cb8ddb870cc12",
-   "zh": null
+   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr& filter。"
   },
   {
    "type": "listitem",
-   "text": "Wrapping GList* and GSList* parameters: First, you need to discover what objects are contained in the list's data field for each item, usually by reading the documentation for the C function. The list can then be wrapped by a std::vector type. For instance, std::vector<Glib::RefPtr<Gdk::Pixbuf>>. You may need to define a Traits type to specify how the C and C++ types should be converted.",
+   "text": "Wrapping `GList*` and\n        `GSList*` parameters: First, you need to discover\n        what objects are contained in the list's data field for each item,\n        usually by reading the documentation for the C function. The list can\n        then be wrapped by a `std::vector` type.\n        For instance, `std::vector>`.\n        You may need to define a Traits type to specify how the C\n        and C++ types should be converted.",
    "sha": "8217606c2ca71c6d",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "Wrapping GList* and GSList* return types: You must discover whether the caller should free the list and whether it should release the items in the list, again by reading the documentation of the C function. With this information you can choose the ownership (none, shallow or deep) for the m4 conversion rule, which you should probably put directly into the .hg file because the ownership depends on the function rather than the type. For instance:",
+   "text": "Wrapping `GList*` and\n        `GSList*` return types: You must discover whether\n        the caller should free the list and whether it should release the items\n        in the list, again by reading the documentation of the C function. With\n        this information you can choose the ownership (none, shallow or deep)\n        for the m4 conversion rule, which you should probably put directly into\n        the .hg file because the ownership depends on the\n        function rather than the type. For instance:",
    "sha": "daaf73f4d4729dc2",
    "zh": null
   },
@@ -1496,8 +1496,7 @@
    "type": "para",
    "text": "`_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)`",
    "sha": "4b04cec6c7fe9363-1",
-   "zh": null,
-   "status": "stale"
+   "zh": null
   },
   {
    "type": "code",
@@ -2557,13 +2556,13 @@
   },
   {
    "type": "listitem",
-   "text": "for mandatory parameters (with or without default values): empty string to empty string,",
+   "text": "for mandatory parameters (with or without default values):\n          empty string to empty string,",
    "sha": "c31d551abce1f7a4",
    "zh": "对于带有或不带有默认值的强制性参数：空字符串到空字符串"
   },
   {
    "type": "listitem",
-   "text": "for optional parameters (with appended {?}): empty string to nullptr.",
+   "text": "for optional parameters (with appended `{?}`):\n          empty string to `nullptr`.",
    "sha": "eb5dfd609b5ee06f",
    "zh": "对于附加了{?}的可选参数：空字符串到nullptr。"
   },
@@ -2695,13 +2694,13 @@
   },
   {
    "type": "listitem",
-   "text": "for mandatory parameters (with or without default values): empty string to empty string,",
+   "text": "for mandatory parameters (with or without default values):\n          empty string to empty string,",
    "sha": "c31d551abce1f7a4-1",
    "zh": "对于带有或不带有默认值的强制性参数：空字符串到空字符串"
   },
   {
    "type": "listitem",
-   "text": "for optional parameters (with appended {?}): empty string to nullptr.",
+   "text": "for optional parameters (with appended `{?}`):\n          empty string to `nullptr`.",
    "sha": "eb5dfd609b5ee06f-1",
    "zh": "对于附加了{?}的可选参数：空字符串到nullptr。"
   },

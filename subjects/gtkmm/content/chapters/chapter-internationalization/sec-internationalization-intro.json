@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "We also assume that you are using autotools (`automake`\n        and `autoconf`) to build your project (although\n        autotools is not recommended for new applications), and\n        that you are using \n          `./autogen.sh` from `gnome-common`\n        or a similar `autogen.sh` file, which, among other\n        things, takes care of some `intltool`\n        initialization.",
+   "text": "We also assume that you are using autotools (`automake`\n        and `autoconf`) to build your project (although\n        autotools is not recommended for new applications), and\n        that you are using [\n          `./autogen.sh` from `gnome-common`](https://gitlab.gnome.org/Archive/gnome-common/-/blob/master/autogen.sh)\n        or a similar `autogen.sh` file, which, among other\n        things, takes care of some `intltool`\n        initialization.",
    "sha": "d2a7538450843995",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If you are using `meson` (recommended), see the\n        Localisation\n        chapter in Meson's manual. You can then skip this section.",
+   "text": "If you are using `meson` (recommended), see the\n        [Localisation](https://mesonbuild.com/Localisation.html)\n        chapter in Meson's manual. You can then skip this section.",
    "sha": "7b345da5753e2e65",
    "zh": null
   },
@@ -72,7 +72,7 @@
   },
   {
    "type": "para",
-   "text": "If you are using `gettext` directly, you can only\n      mark strings for translation if they are in source code file. However, if\n      you use `intltool`, you can mark strings for\n      translation in a variety of other file formats, including\n      `.ui` files, xml,\n      .desktop files\n      and several more. So, if you have designed some of the\n      application UI in xml files then also add your\n      `.ui` files to the list in\n      `POTFILES.in`.",
+   "text": "If you are using `gettext` directly, you can only\n      mark strings for translation if they are in source code file. However, if\n      you use `intltool`, you can mark strings for\n      translation in a variety of other file formats, including\n      `.ui` files, xml,\n      [.desktop files](http://standards.freedesktop.org/desktop-entry-spec/latest/)\n      and several more. So, if you have designed some of the\n      application UI in xml files then also add your\n      `.ui` files to the list in\n      `POTFILES.in`.",
    "sha": "328e9d8bb2aa5364",
    "zh": null
   },
@@ -108,31 +108,31 @@
   },
   {
    "type": "listitem",
-   "text": "Add po to the SUBDIRS variable. Without this, your translations won't get built and installed when you build the program",
+   "text": "Add `po` to the `SUBDIRS`\n            variable. Without this, your translations won't get built and\n            installed when you build the program",
    "sha": "bfb866b897d0ee5a",
    "zh": "将po添加到SUBDIRS变量中。如果没有这个，在构建程序时不会生成和安装翻译。"
   },
   {
    "type": "listitem",
-   "text": "Define INTLTOOL_FILES as:",
+   "text": "Define `INTLTOOL_FILES` as:",
    "sha": "d9ece696a2e0bd2f",
    "zh": "定义INTLTOOL_FILES为："
   },
   {
    "type": "listitem",
-   "text": "Add INTLTOOL_FILES to the EXTRA_DIST list of files. This ensures that when you do a make dist, these files will be included in the source tarball.",
+   "text": "Add `INTLTOOL_FILES` to the\n            `EXTRA_DIST` list of files. This ensures that when\n            you do a `make dist`, these files will be\n            included in the source tarball.",
    "sha": "3ec90c3d72cd09e9",
    "zh": "将INTLTOOL_FILES添加到EXTRA_DIST文件列表。这样可以确保执行make dist时这些文件包含在源压缩包中。"
   },
   {
    "type": "listitem",
-   "text": "Update your DISTCLEANFILES:",
+   "text": "Update your `DISTCLEANFILES`:",
    "sha": "94d0867e69ba5311",
    "zh": "更新你的DISTCLEANFILES："
   },
   {
    "type": "listitem",
-   "text": "Depending on the types of files that contain translatable strings, add code such as",
+   "text": "Depending on the types of files that contain translatable strings,\n            add code such as",
    "sha": "23d733d1cdca2421",
    "zh": "根据包含可翻译字符串的文件类型，添加以下代码："
   },

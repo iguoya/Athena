@@ -12,13 +12,13 @@
   },
   {
    "type": "para",
-   "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the appendix,\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
+   "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the [appendix](),\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
    "sha": "1043aa73a65e766c",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To determine which key was pressed or released, you read the value of\n      the `keyval` argument and compare it with a constant in the\n      \n      `` header file. The states of\n      modifier keys (shift, ctrl, etc.) are available as bit-flags in\n      `state`.",
+   "text": "To determine which key was pressed or released, you read the value of\n      the `keyval` argument and compare it with a constant in the\n      [\n      ``](https://gitlab.gnome.org/GNOME/gtk/tree/main/gdk/gdkkeysyms.h) header file. The states of\n      modifier keys (shift, ctrl, etc.) are available as bit-flags in\n      `state`.",
    "sha": "852883a0183bc4aa",
    "zh": null
   },
@@ -55,7 +55,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/events/keyboard_simple/)",
    "sha": "bc47da663d101bfc",
    "zh": "源代码"
   }

@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-container-widgets",
  "section": "sec-multi-item-containers",
- "title": "多子控件容器",
+ "title": "Multiple-item Containers",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -42,7 +42,7 @@
   },
   {
    "type": "listitem",
-   "text": "Changing the layout of a window \"on the fly\", to make some extra widgets appear, for instance, is complex. It requires tedious recalculation of every widget's position.",
+   "text": "Changing the layout of a window \"on the fly\", to make some extra widgets appear, for instance, is complex. It  requires tedious recalculation of every widget's position.",
    "sha": "be38512b35f9fe01",
    "zh": "「动态」改变窗口布局（比如让一些额外的控件临时出现）很复杂，需要对每个控件的位置做繁琐的重新计算。"
   },
@@ -66,13 +66,13 @@
   },
   {
    "type": "listitem",
-   "text": "Gtk::Grid arranges its child widgets in rows and columns. Use attach() and attach_next_to() to insert child widgets.",
+   "text": "`Gtk::Grid` arranges its child widgets in rows and\ncolumns. Use attach() and\nattach_next_to() to insert child widgets.",
    "sha": "8a822df781fb00c3",
    "zh": "Gtk::Grid将其子部件按行和列排列。使用attach()和attach_next_to()方法向网格(Grid)部件中插入子部件。"
   },
   {
    "type": "listitem",
-   "text": "Gtk::Box arranges its child widgets vertically or horizontally. Use append() to insert child widgets.",
+   "text": "`Gtk::Box` arranges its child widgets vertically or horizontally.\nUse append() to insert child widgets.",
    "sha": "0489e4721d6d91a3",
    "zh": "Gtk::Box将其子部件水平或垂直排列。使用append()方法向盒(Box)部件插入子部件。"
   },
@@ -109,13 +109,13 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2)",
    "sha": "bc47da663d101bfc",
    "zh": "源代码"
   },
   {
    "type": "para",
-   "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the Boxes section.",
+   "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the [Boxes]() section.",
    "sha": "12723f5444eefb55",
    "zh": "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
   },
@@ -176,7 +176,7 @@
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Box.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考文档"
   },
@@ -262,13 +262,13 @@
   },
   {
    "type": "listitem",
-   "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
+   "text": "Handle the options in `main()` and hide them from\n`Gtk::Application` by setting `argc = 1`\nin the call to Gtk::Application::run().",
    "sha": "d9e9efb60c9e8eeb",
    "zh": "在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。"
   },
   {
    "type": "listitem",
-   "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
+   "text": "Give all command-line options to Gtk::Application::run()\nand add the flag `Gio::Application::Flags::HANDLES_COMMAND_LINE`\nto Gtk::Application::create().\nConnect a signal handler to the `command_line` signal, and\nhandle the command-line options in the signal handler.",
    "sha": "d1950f69a7d2399e",
    "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。"
   },
@@ -286,7 +286,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box)",
    "sha": "bc47da663d101bfc-1",
    "zh": "源代码"
   },
@@ -329,13 +329,13 @@
   },
   {
    "type": "listitem",
-   "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
+   "text": "Handle the options in `main()` and hide them from\n`Gtk::Application` by setting `argc = 1`\nin the call to Gtk::Application::run().",
    "sha": "d9e9efb60c9e8eeb-1",
    "zh": "在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。"
   },
   {
    "type": "listitem",
-   "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
+   "text": "Give all command-line options to Gtk::Application::run()\nand add the flag `Gio::Application::Flags::HANDLES_COMMAND_LINE`\nto Gtk::Application::create().\nConnect a signal handler to the `command_line` signal, and\nhandle the command-line options in the signal handler.",
    "sha": "d1950f69a7d2399e-1",
    "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。"
   },
@@ -347,7 +347,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box)",
    "sha": "bc47da663d101bfc-2",
    "zh": "源代码"
   },
@@ -377,7 +377,7 @@
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Grid.html)",
    "sha": "71bf90935fc231d2-1",
    "zh": "参考文档"
   },
@@ -402,7 +402,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/grid)",
    "sha": "bc47da663d101bfc-3",
    "zh": "源代码"
   },
@@ -438,7 +438,7 @@
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Notebook.html)",
    "sha": "71bf90935fc231d2-2",
    "zh": "参考文档"
   },
@@ -457,7 +457,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/notebook/)",
    "sha": "bc47da663d101bfc-4",
    "zh": "源代码"
   },
@@ -505,7 +505,7 @@
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Assistant.html)",
    "sha": "71bf90935fc231d2-3",
    "zh": "参考文档"
   },
@@ -524,7 +524,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/assistant/)",
    "sha": "bc47da663d101bfc-5",
    "zh": "源代码"
   },
@@ -542,13 +542,13 @@
   },
   {
    "type": "para",
-   "text": "Source Code, ActionBar",
+   "text": "[Source Code, ActionBar](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/actionbar)",
    "sha": "02b73ac5e3a5c80e",
    "zh": "动作条(ActionBar)源代码"
   },
   {
    "type": "para",
-   "text": "Source Code, FlowBox",
+   "text": "[Source Code, FlowBox](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listbox_flowbox/flowbox)",
    "sha": "baad5af70012103a",
    "zh": "流式盒(FlowBox)源代码"
   }

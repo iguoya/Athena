@@ -18,13 +18,13 @@
   },
   {
    "type": "para",
-   "text": "To make use of this file in our application, we revisit our\n`Gtk::ApplicationWindow` subclass, and call\nGtk::Builder::create_from_resource() and\nGtk::Builder::get_widget_derived() from the\nExampleAppWindow::create() method to get an instance of\nour subclassed `Gtk::ApplicationWindow`. See the\nUsing derived widgets section\nfor more information about get_widget_derived().",
+   "text": "To make use of this file in our application, we revisit our\n`Gtk::ApplicationWindow` subclass, and call\nGtk::Builder::create_from_resource() and\nGtk::Builder::get_widget_derived() from the\nExampleAppWindow::create() method to get an instance of\nour subclassed `Gtk::ApplicationWindow`. See the\n[Using derived widgets]() section\nfor more information about get_widget_derived().",
    "sha": "292569bdc337d4a3",
    "zh": "为了在我们的应用程序中使用这个文件，我们重访Gtk::ApplicationWindow子类，并在ExampleAppWindow::create()成员函数中调用Gtk::Builder::create_from_resource()和Gtk::Builder::get_widget_derived()以获取我们的Gtk::ApplicationWindow子类的实例。更多有关的get_widget_derived()的信息，请参见使用派生部件小节。"
   },
   {
    "type": "para",
-   "text": "You may have noticed that we use the _from_resource() variant\nof the method that reads the ui file. Now we need to use `GLib`'s\nresource functionality to include the ui file in the binary. This is commonly done by\nlisting all resources in a .gresource.xml file.\nThis file has to be converted into a C source file that will be compiled and linked\ninto the application together with the other source files. To do so, we use the\n`glib-compile-resources` utility:\n$ glib-compile-resources --target=resources.c --generate-source exampleapp.gresource.xml\nThe Gio::Resource and glib-compile-resources\nsection contains more information about resource files. If you build with Meson,\nuse the `compile_resources()` function in Meson's\nGNOME module.",
+   "text": "You may have noticed that we use the _from_resource() variant\nof the method that reads the ui file. Now we need to use `GLib`'s\nresource functionality to include the ui file in the binary. This is commonly done by\nlisting all resources in a .gresource.xml file.\nThis file has to be converted into a C source file that will be compiled and linked\ninto the application together with the other source files. To do so, we use the\n`glib-compile-resources` utility:\n$ glib-compile-resources --target=resources.c --generate-source exampleapp.gresource.xml\nThe [Gio::Resource and glib-compile-resources]()\nsection contains more information about resource files. If you build with Meson,\nuse the `compile_resources()` function in Meson's\n[GNOME module](https://mesonbuild.com/Gnome-module.html).",
    "sha": "883238c917b57418",
    "zh": null
   },
@@ -43,7 +43,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step2)",
    "sha": "bc47da663d101bfc",
    "zh": "源代码"
   }

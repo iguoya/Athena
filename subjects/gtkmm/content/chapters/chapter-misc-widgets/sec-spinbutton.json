@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-misc-widgets",
  "section": "sec-spinbutton",
- "title": "微调按钮（SpinButton）",
+ "title": "SpinButton",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -18,43 +18,43 @@
   },
   {
    "type": "para",
-   "text": "`SpinButton`s use an Adjustment object to hold information about\nthe range of values. These Adjustment attributes are used by the Spin Button\nlike so:\n\n\n\n\n `value`: value for the Spin Button\n\n\n\n\n\n `lower`: lower range value\n\n\n\n\n\n `upper`: upper range value\n\n\n\n\n `step_increment`: value to increment/decrement when pressing\nmouse button 1\n\n\n\n\n\n `page_increment`: value to increment/decrement when pressing\nmouse button 2\n\n\n\n\n\n `page_size`: unused",
+   "text": "`SpinButton`s use an [Adjustment]() object to hold information about\nthe range of values. These Adjustment attributes are used by the Spin Button\nlike so:\n\n\n\n\n `value`: value for the Spin Button\n\n\n\n\n\n `lower`: lower range value\n\n\n\n\n\n `upper`: upper range value\n\n\n\n\n `step_increment`: value to increment/decrement when pressing\nmouse button 1\n\n\n\n\n\n `page_increment`: value to increment/decrement when pressing\nmouse button 2\n\n\n\n\n\n `page_size`: unused",
    "sha": "137f142965b81fa4",
    "zh": "`SpinButton` 用一个 Adjustment 对象保存取值范围信息。微调按钮使用这些 Adjustment 属性的方式如下：`value` 是当前值；`lower` 是范围下限；`upper` 是范围上限；`step_increment` 是按下鼠标键 1（左键）时的增减步长；`page_increment` 是按 Page Up/Page Down 时的增减步长。"
   },
   {
    "type": "listitem",
-   "text": "value: value for the Spin Button",
+   "text": "`value`: value for the Spin Button",
    "sha": "a26f0b21bfa7a1f5",
    "zh": "value：微调按钮的值"
   },
   {
    "type": "listitem",
-   "text": "lower: lower range value",
+   "text": "`lower`: lower range value",
    "sha": "a8747b069f777ec0",
    "zh": "lower：微调按钮允许的最小值"
   },
   {
    "type": "listitem",
-   "text": "upper: upper range value",
+   "text": "`upper`: upper range value",
    "sha": "b756917525e5826b",
    "zh": "upper：微调按钮允许的最大值"
   },
   {
    "type": "listitem",
-   "text": "step_increment: value to increment/decrement when pressing mouse button 1",
+   "text": "`step_increment`: value to increment/decrement when pressing\nmouse button 1",
    "sha": "c71d9d4e6f0d9ec5",
    "zh": "step_increment：鼠标键1(通常是左键)点击一下递增/递减的值"
   },
   {
    "type": "listitem",
-   "text": "page_increment: value to increment/decrement when pressing mouse button 2",
+   "text": "`page_increment`: value to increment/decrement when pressing\nmouse button 2",
    "sha": "4605fd9403053751",
    "zh": "page_increment：鼠标键2(通常是右键)点击一下递增/递减的值"
   },
   {
    "type": "listitem",
-   "text": "page_size: unused",
+   "text": "`page_size`: unused",
    "sha": "f8e581a869f3130f",
    "zh": "page_size：目前没作用"
   },
@@ -114,7 +114,7 @@
   },
   {
    "type": "para",
-   "text": "Reference",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1SpinButton.html)",
    "sha": "71bf90935fc231d2",
    "zh": "参考文档"
   },
@@ -139,7 +139,7 @@
   },
   {
    "type": "para",
-   "text": "Source Code",
+   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/spinbutton)",
    "sha": "bc47da663d101bfc",
    "zh": "源代码"
   }

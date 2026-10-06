@@ -24,19 +24,19 @@
   },
   {
    "type": "listitem",
-   "text": "void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content): Sets a content provider on the drag source.",
+   "text": "`void set_content(const Glib::RefPtr& content)`:\n        Sets a content provider on the drag source.",
    "sha": "1dea1eee1b2a1b0f",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "void set_actions(Gdk::DragAction actions): Sets the actions on the drag source. For instance Gdk::DragAction::COPY | Gdk::DragAction::MOVE.",
+   "text": "`void set_actions(Gdk::DragAction actions)`:\n        Sets the actions on the drag source. For instance `Gdk::DragAction::COPY\n        | Gdk::DragAction::MOVE`.",
    "sha": "70ebd0e73d3f0e07",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y): Sets a paintable to use as icon during DND operations.",
+   "text": "`void set_icon(const Glib::RefPtr& paintable, int hot_x, int hot_y)`:\n        Sets a paintable to use as icon during DND operations.",
    "sha": "fc640c22142963f7",
    "zh": null
   },
@@ -54,25 +54,25 @@
   },
   {
    "type": "listitem",
-   "text": "void set_gtypes(const std::vector<GType>& types): Sets the supported types for this drop target.",
+   "text": "`void set_gtypes(const std::vector& types)`:\n        Sets the supported types for this drop target.",
    "sha": "f5c6362cda862579",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "void set_actions(Gdk::DragAction actions): Sets the actions that this drop target supports.",
+   "text": "`void set_actions(Gdk::DragAction actions)`:\n        Sets the actions that this drop target supports.",
    "sha": "a800c664025448c0",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "Glib::ValueBase get_value() const: Gets the current drop data, as a Glib::Value.",
+   "text": "`Glib::ValueBase get_value() const`:\n        Gets the current drop data, as a `Glib::Value`.",
    "sha": "bceae72c7aad689e",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "void reject(): Rejects the ongoing drop operation. This function should be used when delaying the decision on whether to accept a drag or not until after reading the data.",
+   "text": "`void reject()`:\n        Rejects the ongoing drop operation. This function should be used when\n        delaying the decision on whether to accept a drag or not until after\n        reading the data.",
    "sha": "918906f12bb6c787",
    "zh": null
   }
