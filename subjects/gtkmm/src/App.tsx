@@ -31,6 +31,7 @@ const MASTERY_LABEL: Record<string, string> = {
 type View =
   | { kind: "kp"; sectionId: string; kpId: string | null }
   | { kind: "page"; sectionId: string; pageId: string }
+  | { kind: "checkpoint"; sectionId: string }
   | { kind: "lab"; expId: string }
   | { kind: "ref"; refId: string };
 
@@ -96,11 +97,16 @@ export default function App() {
   // 在类型收窄之前提取，供侧栏展开块比较（那里 view 已被收窄为 kp）
   const activePageId = view?.kind === "page" ? view.pageId : null;
   const activeKpId = view?.kind === "kp" ? view.kpId : null;
-  const activeSectionId = view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null;
+  const activeSectionId =
+    view?.kind === "kp" || view?.kind === "page" || view?.kind === "checkpoint"
+      ? view.sectionId
+      : null;
+  const activeIsCheckpoint = view?.kind === "checkpoint";
 
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
     : view?.kind === "page" ? `${view.sectionId}:${view.pageId}`
+    : view?.kind === "checkpoint" ? `${view.sectionId}::checkpoint`
     : view?.kind === "lab" ? view.expId
     : view?.kind === "ref" ? view.refId
     : "empty";
@@ -135,7 +141,8 @@ export default function App() {
           <ul>
             {curriculum.sections.map((s) => {
               const active =
-                activeSectionId === s.id && (activePageId != null || activeKpId != null);
+                activeSectionId === s.id &&
+                (activePageId != null || activeKpId != null || activeIsCheckpoint);
               return (
                 <li key={s.id}>
                   <button
@@ -193,21 +200,14 @@ export default function App() {
                       {s.checkpoint.length > 0 && (
                         <li>
                           <button
-                            onClick={() =>
-                              setView({
-                                kind: "page",
-                                sectionId: s.id,
-                                pageId: s.pages[s.pages.length - 1]?.id ?? "",
-                              })
-                            }
+                            onClick={() => setView({ kind: "checkpoint", sectionId: s.id })}
                             className={`w-full rounded px-2 py-1.5 text-left text-[20px] transition-colors ${
-                              activePageId != null && activeSectionId === s.id &&
-                              activePageId === s.pages[s.pages.length - 1]?.id
+                              activeIsCheckpoint && activeSectionId === s.id
                                 ? "bg-accent-soft font-medium text-accent"
                                 : "text-muted hover:bg-surface-2 hover:text-fg"
                             }`}
                           >
-                            章末考核（{s.checkpoint.length} 题）→ 末节页尾
+                            章末考核（{s.checkpoint.length} 题）
                           </button>
                         </li>
                       )}
@@ -395,6 +395,16 @@ export default function App() {
               );
             })()}
 
+            {view?.kind === "checkpoint" && section && (
+              <CheckpointPage
+                section={section}
+                demos={demos}
+                experiments={experiments}
+                onLaunch={launch}
+                onAnswer={answer}
+              />
+            )}
+
             {view?.kind === "lab" && labExp && <LabView entity={labExp} />}
 
             {view?.kind === "ref" && refEntry && (
@@ -490,58 +500,71 @@ function PageAssessments({
   onLaunch: (demoId: string) => void;
   onAnswer: (itemId: string, correct: boolean) => void;
 }) {
-  // 测验全部集中在章末（最后一个官方节页的页尾），不污染章节正文阅读流；
-  // page_ref 只决定每道随堂题的排序（按官方节页顺序），不决定出现位置。
-  const isLastPage = section.pages[section.pages.length - 1]?.id === pageId;
-  if (!isLastPage) return null;
-  const pageOrder = new Map(section.pages.map((p, i) => [p.id, i]));
+  // 本节的随堂测验：读完本节即时测（题面按 page_ref 归属各节）
   const quizzes = section.knowledge_points
     .flatMap((kp) => kp.blocks)
-    .filter((b) => b.type === "quiz" || b.type === "observation_quiz")
-    .sort(
-      (a, b) =>
-        (pageOrder.get((a as { page_ref?: string }).page_ref ?? "") ?? 99) -
-        (pageOrder.get((b as { page_ref?: string }).page_ref ?? "") ?? 99),
+    .filter(
+      (b) =>
+        (b.type === "quiz" || b.type === "observation_quiz") &&
+        "page_ref" in b &&
+        b.page_ref === pageId,
     );
-  if (quizzes.length === 0 && section.checkpoint.length === 0) return null;
+  if (quizzes.length === 0) return null;
+  return (
+    <section className="mt-16">
+      <h3 className="font-display text-[26px] font-semibold text-accent">
+        本节测验 · {quizzes.length} 题
+      </h3>
+      {quizzes.map((block, index) => (
+        <BlockView
+          key={index}
+          block={block}
+          demos={demos}
+          experiments={experiments}
+          onLaunch={onLaunch}
+          onAnswer={onAnswer}
+          scopeId={`${section.id}:${pageId}`}
+        />
+      ))}
+    </section>
+  );
+}
+
+function CheckpointPage({
+  section,
+  demos,
+  experiments,
+  onLaunch,
+  onAnswer,
+}: {
+  section: { id: string; title: string; translation_ref: { chapter?: number }; checkpoint: QuizItem[] };
+  demos: Map<string, ManifestEntity>;
+  experiments: Map<string, ExperimentEntity>;
+  onLaunch: (demoId: string) => void;
+  onAnswer: (itemId: string, correct: boolean) => void;
+}) {
   return (
     <>
-      {quizzes.length > 0 && (
-        <section className="mt-16">
-          <h3 className="font-display text-[26px] font-semibold text-accent">
-            随堂测验 · 全章 {quizzes.length} 题
-          </h3>
-          {quizzes.map((block, index) => (
-            <BlockView
-              key={index}
-              block={block}
-              demos={demos}
-              experiments={experiments}
-              onLaunch={onLaunch}
-              onAnswer={onAnswer}
-              scopeId={`${section.id}:assess`}
-            />
-          ))}
-        </section>
-      )}
-      {section.checkpoint.length > 0 && (
-        <section className="mt-16 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
-          <h3 className="font-display text-[26px] font-semibold text-accent">
-            章末考核 · 完整覆盖本章节
-          </h3>
-          {section.checkpoint.map((item, index) => (
-            <BlockView
-              key={index}
-              block={{ type: "quiz", ...item }}
-              demos={demos}
-              experiments={experiments}
-              onLaunch={onLaunch}
-              onAnswer={onAnswer}
-              scopeId={`${section.id}:checkpoint`}
-            />
-          ))}
-        </section>
-      )}
+      <p className="text-sm text-muted">
+        {section.title} · 教程第 {section.translation_ref.chapter} 章
+      </p>
+      <h2 className="mt-1 font-display text-[42px] font-semibold">章末考核</h2>
+      <p className="mt-3 text-[22px] leading-relaxed text-fg/80">
+        本考核覆盖本章全部官方节页的内容。答错没有惩罚——错题会进入复习回路。
+      </p>
+      <section className="mt-8 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
+        {section.checkpoint.map((item, index) => (
+          <BlockView
+            key={index}
+            block={{ type: "quiz", ...item }}
+            demos={demos}
+            experiments={experiments}
+            onLaunch={onLaunch}
+            onAnswer={onAnswer}
+            scopeId={`${section.id}:checkpoint`}
+          />
+        ))}
+      </section>
     </>
   );
 }

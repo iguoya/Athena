@@ -8,7 +8,7 @@
    "type": "para",
    "text": "There is no separate class for radio buttons. Check buttons and toggle buttons\nact as radio buttons when they form a group. Only one button in a group can be\nselected at any one time.",
    "sha": "518a198e2528cfde",
-   "zh": null
+   "zh": "GTK4 中没有独立的单选按钮类。勾选按钮和开关按钮一旦组成一组（group），就具备了单选行为：同组之内任意时刻最多只能选中一个。"
   },
   {
    "type": "heading",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "You create the buttons, and set up their group afterwards. In the following example,\nwe put 3 radio buttons in a group:",
    "sha": "514f887aa86ce28f",
-   "zh": null
+   "zh": "先创建各按钮，随后再为它们编组。下面的示例把 3 个单选按钮放进同一组："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "We told gtkmm to put all three `CheckButton`s in the\nsame group by using set_group() to tell the other\n`CheckButton`s to share group with the first\n`CheckButton`.",
    "sha": "403e23abaa0198f3",
-   "zh": null
+   "zh": "我们通过 set_group() 告诉其余的 `CheckButton` 要跟随哪个按钮编组，从而让三个 `CheckButton` 同属一组。"
   },
   {
    "type": "heading",
@@ -44,13 +44,13 @@
    "type": "para",
    "text": "`CheckButton`s and `ToggleButton`s are \"off\"\nwhen created; this means that when you first make a group of them, they will all be off.\nDon't forget to turn one of them on using set_active().",
    "sha": "1cadb93a14aac903",
-   "zh": null
+   "zh": "`CheckButton` 和 `ToggleButton` 在创建之初都是「未选中」状态；因此刚建好一组按钮时，它们全都处于弹起状态，没有默认选中项。"
   },
   {
    "type": "para",
    "text": "Reference",
    "sha": "71bf90935fc231d2",
-   "zh": null
+   "zh": "参考文档"
   },
   {
    "type": "heading",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "The following example demonstrates the use of grouped\n`CheckButton`s:",
    "sha": "67b994251eddd212",
-   "zh": null
+   "zh": "下面的示例演示了成组 `CheckButton` 的用法："
   },
   {
    "type": "figure",
@@ -75,7 +75,7 @@
    "type": "para",
    "text": "Source Code",
    "sha": "bc47da663d101bfc",
-   "zh": null
+   "zh": "源代码"
   }
  ]
 }

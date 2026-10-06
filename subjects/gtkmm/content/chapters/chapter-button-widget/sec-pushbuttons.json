@@ -8,13 +8,13 @@
    "type": "para",
    "text": "There are two ways to create a Button. You can specify a label\nstring in the `Gtk::Button` constructor,\nor set it later with set_label().",
    "sha": "ea9a291ddef035d3",
-   "zh": null
+   "zh": "创建 `Gtk::Button` 有两种方式：可以在构造函数中直接传入标签文字，也可以之后再调用 set_label() 设置。"
   },
   {
    "type": "para",
    "text": "To define an accelerator key for keyboard navigation, place an underscore before one of the label's characters and specify `true` for the optional `mnemonic` parameter. For instance:",
    "sha": "f61c0f6d00eb9098",
-   "zh": null
+   "zh": "若要为键盘导航定义快捷键（助记符），在标签字符前放一个下划线，并调用 set_use_underline(true)——例如「_开」配合 Alt 快捷键。"
   },
   {
    "type": "code",
@@ -26,19 +26,19 @@
    "type": "para",
    "text": "`Gtk::Button` is also\na container so you could put any other widget, such as a\n`Gtk::Image` into it.",
    "sha": "ecc438159b7117a7",
-   "zh": null
+   "zh": "`Gtk::Button` 本身也是一个容器，因此可以把任意其他控件放进按钮里——比如一个 `Gtk::Image`。"
   },
   {
    "type": "para",
    "text": "The `Gtk::Button` widget has the `clicked` signal\nwhich is emitted when the button is pressed and released.",
    "sha": "c7fa1dff68c22115",
-   "zh": null
+   "zh": "`Gtk::Button` 控件拥有 `clicked` 信号，在按钮被按下并释放之后发出。"
   },
   {
    "type": "para",
    "text": "Reference",
    "sha": "71bf90935fc231d2",
-   "zh": null
+   "zh": "参考文档"
   },
   {
    "type": "heading",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "This example creates a button with a picture and a label.",
    "sha": "112b011ed02bdf80",
-   "zh": null
+   "zh": "下面的例子创建一个同时带有图片和文字的按钮。"
   },
   {
    "type": "figure",
@@ -63,7 +63,7 @@
    "type": "para",
    "text": "Source Code",
    "sha": "bc47da663d101bfc",
-   "zh": null
+   "zh": "源代码"
   }
  ]
 }

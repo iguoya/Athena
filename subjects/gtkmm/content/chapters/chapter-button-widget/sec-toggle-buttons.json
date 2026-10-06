@@ -8,25 +8,25 @@
    "type": "para",
    "text": "`ToggleButton`s are like normal `Button`s, but when clicked they remain activated, or pressed,  until clicked again.",
    "sha": "f498ba99d7fb77ee",
-   "zh": null
+   "zh": "`ToggleButton`（开关按钮）与普通按钮相似，区别在于被点击后它会保持按下（激活）状态，直到再次被点击才弹起。"
   },
   {
    "type": "para",
    "text": "To retrieve the state of the `ToggleButton`, you can use the\nget_active() method. This returns `true` if the button\nis \"down\". You can also set the toggle button's state, with set_active(). Note that, if you do this, and the state actually changes, it causes the\n\"clicked\" signal to be emitted. This is usually what you want.",
    "sha": "d013e4f63a2947da",
-   "zh": null
+   "zh": "读取 `ToggleButton` 的状态可以用 get_active() 方法：按钮按下时返回 `true`，弹起时返回 `false`。这是一个普通的成员函数，调用它会得到当前状态，而不会改变状态。"
   },
   {
    "type": "para",
    "text": "You can use the toggled() method to toggle the button, rather than\nforcing it to be up or down: This switches the button's state, and causes the `toggled` signal to be emitted.",
    "sha": "9b5cbe2eb7c4d85c",
-   "zh": null
+   "zh": "除了用 set_active() 强制把按钮设为按下或弹起，还可以用 toggled() 方法让按钮自行切换到相反状态。"
   },
   {
    "type": "para",
    "text": "Reference",
    "sha": "71bf90935fc231d2",
-   "zh": null
+   "zh": "参考文档"
   }
  ]
 }
