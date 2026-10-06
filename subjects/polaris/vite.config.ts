@@ -18,6 +18,7 @@ export default defineConfig({
   clearScreen: false,
   server: { port: 1470, strictPort: true, watch: { ignored: ["**/src-tauri/**", "**/legacy-qt/**"] } },
   envPrefix: ["VITE_", "TAURI_ENV_"],
-  build: { target: "es2022", sourcemap: false },
+  // 内容（polaris.json）按设计打进主包：应用本地运行，不需要为它拆分加载。
+  build: { target: "es2022", sourcemap: false, chunkSizeWarningLimit: 1500 },
   test: { include: ["src/**/*.test.ts"], environment: "node" },
 });

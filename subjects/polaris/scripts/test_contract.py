@@ -48,16 +48,53 @@ class RealContent(unittest.TestCase):
 
     # —— 以下搬自 tests/polaris_catalog_test.cpp 的内容类断言 ——
 
+    # ADR 0016 决策 6：只增不删。原有 17 张图的 id 一个不少，节点与边的数量不变。
+    ORIGINAL_MAP_IDS = [
+        "computer-science", "electronic-information", "computer-practice", "electronic-practice",
+        "aerospace-engineering", "large-model-engineering", "robot-systems", "embedded-realtime", "hardware-compute",
+        "target-realtime-software", "target-avionics-bus", "target-vehicle-engineering", "target-gnc",
+        "target-onboard-computer", "target-sensing-compute", "target-digital-intelligence", "target-robot-systems",
+    ]
+
+    def test_original_content_only_grows(self) -> None:
+        maps = {m["id"]: m for m in DOC["maps"]}
+        for map_id in self.ORIGINAL_MAP_IDS:
+            self.assertIn(map_id, maps)
+        self.assertEqual(sum(len(maps[i]["nodes"]) for i in self.ORIGINAL_MAP_IDS), 125)
+        self.assertEqual(sum(len(maps[i]["edges"]) for i in self.ORIGINAL_MAP_IDS), 138)
+
     def test_map_inventory(self) -> None:
-        self.assertEqual(len(DOC["maps"]), 17)
+        self.assertEqual(len(DOC["maps"]), 18)
         by_kind: dict[str, int] = {}
         for m in DOC["maps"]:
             by_kind[m["view_kind"]] = by_kind.get(m["view_kind"], 0) + 1
-        # 课程知识图谱恢复为两章，实践主干两张仍在（ADR 0010）；只开放 4 张学术图（ADR 0012）。
+        # 课程知识图谱恢复为两章，实践主干两张仍在（ADR 0010）；开放 4 张学术图（ADR 0012）加 1 张软硬接口图（ADR 0016）。
         self.assertEqual(by_kind["academic"], 4)
+        self.assertEqual(by_kind["codesign"], 1)
         self.assertEqual(by_kind["target"], 8)
         self.assertEqual(by_kind.get("career", 0) + by_kind.get("engineering", 0), 5)
         self.assertEqual(DOC["maps"][0]["id"], "computer-science")
+
+    def test_codesign_map_covers_every_contract(self) -> None:
+        nodes = find_map(DOC, "hw-sw-interface")["nodes"]
+        self.assertEqual(len(nodes), 14)
+        # 六份跨层契约每一份至少有一个节点；覆盖缺口要写在 summary 里，不能假装齐全。
+        self.assertEqual({n["contract"] for n in nodes}, contract.KNOWN_CONTRACT)
+        # 入门、中级、资深三档都有节点，阶段分列才有意义。
+        self.assertEqual({n["stage"] for n in nodes}, set(contract.STAGE_RANK))
+        self.assertIn("尚未覆盖", find_map(DOC, "hw-sw-interface")["summary"])
+
+    def test_routes_cover_the_codesign_map_and_both_ends_of_the_axis(self) -> None:
+        routes = DOC["routes"]
+        self.assertEqual(len({r["id"] for r in routes}), len(routes))
+        self.assertEqual({r["balance"] for r in routes}, contract.KNOWN_BALANCE)
+        self.assertEqual({r["lens"] for r in routes}, contract.KNOWN_LENS)
+        used = {n for r in routes for s in r["stages"] for n in s["nodes"]}
+        orphans = [n["id"] for n in find_map(DOC, "hw-sw-interface")["nodes"] if n["id"] not in used]
+        self.assertEqual(orphans, [], "软硬接口节点没有被任何一条路线引用")
+        # 路线只引用节点 id、不复制节点：路线里不应出现节点自己的正文字段。
+        for r in routes:
+            self.assertFalse({"stable_definition", "practice", "pitfall"} & set(r))
 
     def test_every_node_has_practice_and_validation(self) -> None:
         for m in DOC["maps"]:
@@ -140,6 +177,8 @@ class Counterexamples(unittest.TestCase):
         self.expect("node.app", lambda d: first_academic_node(d).update(app="no-such-app"))
         self.expect("node.source_refs", lambda d: first_academic_node(d).update(source_refs=[]))
         self.expect("node.source_refs", lambda d: first_academic_node(d)["source_refs"][0].update(source_id="ghost"))
+        self.expect("node.source_relation", lambda d: first_academic_node(d)["source_refs"][0].update(relation="informed"))
+        self.expect("node.source_content", lambda d: [r.update(relation="see_also") for r in first_academic_node(d)["source_refs"]])
         self.expect("node.self_requires", lambda d: first_academic_node(d).update(
             requires=[first_academic_node(d)["id"]]))
 

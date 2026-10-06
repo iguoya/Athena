@@ -4488,6 +4488,942 @@
       ]
     },
     {
+      "id": "hw-sw-interface",
+      "title": "软硬接口 · 软件看见的硬件",
+      "summary": "软件看见的硬件，和硬件承诺给软件的东西：按时序、存储与数据通路、总线、功耗、启动与可信、可验证六份跨层契约组织，每个节点同时写清硬件一侧与软件一侧。推荐入门起点是「寄存器与内存映射 I/O」。对照 ACM/IEEE CE2016 的体系结构、数字设计、嵌入式、系统资源管理、系统与项目工程各领域校准。尚未覆盖：设备树与板级支持包、CPU 与 FPGA 的异构 SoC、侧信道等安全细节，后续按需新增，不在这里假装已经齐全。",
+      "view_kind": "codesign",
+      "nodes": [
+        {
+          "id": "polaris.codesign.mmio",
+          "title": "寄存器与内存映射 I/O",
+          "track": "hardware",
+          "stable_definition": "硬件把控制位和状态位放进地址空间，软件通过读写特定地址来配置并观察外设；寄存器的位域、访问属性和读写副作用，是硬件交给软件的第一份契约。",
+          "engineering_role": "让软件对硬件的每一次操作都能追到数据手册里的一个寄存器位，是读懂任何芯片、写任何驱动的起点。",
+          "practice": "对照参考手册，只用寄存器读写点亮一个引脚并读回另一个引脚的电平，再用调试器观察寄存器值与引脚波形是否一致。",
+          "validation": "measurement",
+          "validation_note": "示波器或逻辑分析仪上的引脚电平要与写入的寄存器值一一对应；读回值要与手册描述的复位值、只读位一致。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "Memory and bus architecture：外设寄存器的地址映射"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ldd3",
+              "locator": "Communicating with Hardware：I/O 内存与寄存器访问"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-CAO-8 Input/Output interfacing and communication"
+            }
+          ],
+          "pitfall": "把外设寄存器当普通内存：编译器合并或删掉重复的读写，写只读位无效，读清除位的读操作带来副作用，现象只在换优化级别或换板子时出现。",
+          "priority": "essential",
+          "priority_reason": "软件对硬件的一切操作最终都落在寄存器读写上；不会读寄存器映射，就无法从数据手册推出驱动，也解释不了一条语句为什么会改变引脚。",
+          "stage": "junior",
+          "stage_reason": "入门级：只需要 C 语言的指针与位运算，就能把「软件在控制硬件」这件事做实。",
+          "contract": "memory",
+          "hw_side": "外设把控制位、状态位、数据寄存器映射到固定地址，并规定访问宽度、读写属性（只读、写 1 清零、读清除）与复位值。",
+          "sw_side": "软件通过指针按正确宽度读写这些地址，并用 volatile 与内存屏障保证每次访问真的发生、按序发生。"
+        },
+        {
+          "id": "polaris.codesign.firmware_image",
+          "title": "从源码到固件映像",
+          "track": "systems",
+          "stable_definition": "编译与链接把源码变成按地址布局的二进制映像：代码与常量放在闪存，数据放在 RAM；启动代码在 main 之前搬运初值、清零、建立栈并设置向量表。",
+          "engineering_role": "回答「上电后第一条指令在哪、变量住在哪、栈有多大」，是启动、中断和调试问题共同的地基。",
+          "practice": "读自己项目的链接脚本与 map 文件，说出每个段的起止地址与大小；故意让栈溢出，或不清零未初始化数据，观察现象并用调试器定位。",
+          "validation": "analysis",
+          "validation_note": "仅凭 map 文件与反汇编，就能解释任意一个全局变量、函数和中断向量的最终地址与所在存储区。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.mmio"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "Linking（第 7 章）：目标文件、符号解析与重定位"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "Boot configuration：复位后的取指地址与存储区映射"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-ESY-4 Basic software techniques for embedded applications"
+            }
+          ],
+          "pitfall": "只会点「编译」：不知道段、链接脚本和启动代码的存在，遇到 hard fault、变量被改写、固件体积超限就无从下手。",
+          "priority": "essential",
+          "priority_reason": "没有这一层，中断向量、引导加载和固件更新都是黑箱；它也是把 C 语言知识接到具体芯片上的接缝。",
+          "stage": "junior",
+          "stage_reason": "入门级：只依赖 C 语言与对内存映射的理解，不需要先学操作系统或总线。",
+          "contract": "boot",
+          "hw_side": "芯片规定复位后从哪个地址取向量表与第一条指令，以及闪存与 RAM 各自的地址范围和访问特性。",
+          "sw_side": "链接脚本、启动代码与编译选项把代码和数据安置到这些地址，并在进入 main 之前建立 C 运行环境。"
+        },
+        {
+          "id": "polaris.codesign.clock_reset",
+          "title": "时钟、复位与同步",
+          "track": "hardware",
+          "stable_definition": "时钟给数字电路统一的节拍，复位把系统带到已知状态；触发器要求数据在时钟沿前后一小段时间内保持稳定，跨时钟域的信号必须同步。",
+          "engineering_role": "让软件里的「每秒多少次」、延时与外设速率都能追到一个具体的时钟源与分频关系，也是时序约束与亚稳态问题的来源。",
+          "practice": "查时钟树配出一个已知频率，用示波器测定时器输出来验证；故意让异步信号直接进入另一个时钟域，观察偶发错误，再用两级同步器修好。",
+          "validation": "measurement",
+          "validation_note": "示波器测得的频率与配置推算值之差在晶振精度之内；加同步器前后的错误率能被稳定复现地改变。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "Reset and clock control (RCC)：时钟源、锁相环与总线分频"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-DIG-7 Modular design of sequential circuits；CE-CAE-6 MOS transistor circuits, timing, and power"
+            }
+          ],
+          "pitfall": "把「能跑」当成时序正确：靠运气通过的异步采样和未同步的复位释放，到温度、电压或批次变化时才暴露，且难以复现。",
+          "priority": "essential",
+          "priority_reason": "所有定时、波特率与最坏延迟都从时钟推出；建立时间、保持时间与亚稳态是软硬两侧都必须承认的物理约束。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要数字逻辑中触发器与时序的基础，并要接触具体芯片的时钟树。",
+          "contract": "timing",
+          "hw_side": "晶振与锁相环产生时钟，时钟树把它分频到各外设；触发器对建立/保持时间有硬性要求，复位有同步与异步释放之分。",
+          "sw_side": "软件配置时钟源与分频、等待时钟稳定标志，据此推出定时器、波特率与延时常数；复位之后检查并恢复状态。"
+        },
+        {
+          "id": "polaris.codesign.isa_microarch",
+          "title": "指令集与微架构",
+          "track": "compute",
+          "stable_definition": "指令集规定软件能看见的机器：寄存器、指令语义与异常模型；微架构（流水线、乱序、分支预测）决定同一条指令实际花多少周期。两者分离，软硬件才能各自演进。",
+          "engineering_role": "把一行代码对应到指令、再对应到周期，是估算性能、读反汇编和分析最坏执行时间的共同基础。",
+          "practice": "用汇编与反汇编对照同一段 C 代码在不同优化级别下的指令；用周期计数器测一个循环，改写数据依赖或分支后观察周期变化并给出解释。",
+          "validation": "benchmark",
+          "validation_note": "性能计数器的实测周期与按流水线模型的估算相互核对，偏差说得出原因（依赖停顿、分支误预测、访存等待）。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "Machine-Level Representation of Programs（第 3 章）与 Processor Architecture（第 4 章）"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Instruction-Level Parallelism and Its Exploitation；Appendix C Pipelining: Basic and Intermediate Concepts"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nand2tetris",
+              "locator": "Machine Language 与 Computer Architecture 两章"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-CAO-3 Instruction set architecture；CE-CAO-6 Processor organization"
+            }
+          ],
+          "pitfall": "把指令条数当成时间：忽略流水线冒险、分支预测与访存等待，微基准的结果无法迁移，更给不出最坏情况上界。",
+          "priority": "essential",
+          "priority_reason": "体系结构是计算机工程学时最多的知识领域（CE2016 的 CAO，60 学时），而性能、实时与功耗的分析都建立在它上面。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要汇编、数字逻辑和计算机系统基础的铺垫。",
+          "contract": "timing",
+          "hw_side": "处理器按指令集语义取指、译码、执行；流水线与分支预测等微架构机制在不改变语义的前提下影响周期数。",
+          "sw_side": "编译器与手写汇编只能依赖指令集语义；性能与时序分析要借助微架构模型或实测，不能假设每条指令周期固定。"
+        },
+        {
+          "id": "polaris.codesign.memory_hierarchy",
+          "title": "存储层次与带宽",
+          "track": "compute",
+          "stable_definition": "存储系统用小而快的缓存、较大的内存和更慢的外存叠成层次，靠局部性让平均访问接近最快一层；延迟与带宽是软件的数据结构与访问顺序必须面对的硬约束。",
+          "engineering_role": "解释同样复杂度的代码为什么快慢相差几十倍，并决定数据放在哪一层、怎么搬、搬多少。",
+          "practice": "对同一数组按行、按列和不同步长遍历，测出缓存容量与缓存行大小的拐点；再用 Roofline 把一个核函数放到算力与带宽的坐标上，判断瓶颈。",
+          "validation": "benchmark",
+          "validation_note": "测得的时间拐点与处理器的缓存规格对应，Roofline 判断的瓶颈方向与改写后的实测提升一致。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "The Memory Hierarchy（第 6 章）"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Memory Hierarchy Design"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型：算力与带宽共同决定可达性能"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-CAO-7 Memory system organization and architectures"
+            }
+          ],
+          "pitfall": "只优化指令数而不看访问模式：在带宽受限的核函数上堆算力，或在缓存里伪共享、颠簸，性能不升反降。",
+          "priority": "essential",
+          "priority_reason": "几乎所有性能与实时问题最后都落到「数据在哪一层、搬了几次」；它也是软硬划分与异构计算共同的语言。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要先理解指令执行与程序的内存访问。",
+          "contract": "memory",
+          "hw_side": "多级缓存、内存控制器与总线按缓存行搬运数据，容量、延迟和带宽逐级变化。",
+          "sw_side": "数据结构布局、遍历顺序与分块大小决定命中率与有效带宽；软件要用性能计数器或基准去度量，而不是凭感觉。"
+        },
+        {
+          "id": "polaris.codesign.interrupts",
+          "title": "中断与异常",
+          "track": "systems",
+          "stable_definition": "外部事件或内部异常让处理器暂停当前指令流，保存现场并跳到向量表指定的处理函数；响应延迟由中断控制器、优先级、临界区与流水线共同决定。",
+          "engineering_role": "是实时响应、低功耗唤醒和外设驱动共同的机制，也是「一件事要在多久之内被处理」这个问题的硬件起点。",
+          "practice": "用一个引脚的边沿触发中断去翻转另一个引脚，用示波器测二者间隔；开关临界区、提高其他中断的优先级，观察延迟与抖动的变化。",
+          "validation": "measurement",
+          "validation_note": "示波器上的中断响应延迟分布（含最大值）可复现，并能解释最大值来自哪一段：屏蔽、抢占还是流水线冲刷。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "csapp",
+              "locator": "Exceptional Control Flow（第 8 章）：异常与中断"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-core",
+              "locator": "NVIC Functions：中断使能、优先级与挂起"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "freertos-book",
+              "locator": "Interrupt Management：在中断里使用内核 API"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-ESY-7 Periodic interrupts, waveform generation, time measurement"
+            }
+          ],
+          "pitfall": "在处理函数里做阻塞或耗时操作、共享变量不加保护，导致丢事件、偶发崩溃，或最坏延迟远大于平均值。",
+          "priority": "essential",
+          "priority_reason": "没有中断就没有对外部世界的及时响应；最坏延迟是实时系统验收的第一个数字。",
+          "stage": "intermediate",
+          "stage_reason": "中级：依赖对寄存器、向量表与启动代码的理解。",
+          "contract": "timing",
+          "hw_side": "中断控制器按优先级仲裁请求，硬件自动压栈并取向量；响应时间还受流水线冲刷与总线等待影响。",
+          "sw_side": "软件配置使能、优先级与向量，保证处理函数短小、可重入，并用临界区与原子操作保护共享数据。"
+        },
+        {
+          "id": "polaris.codesign.dma_cache",
+          "title": "DMA 与缓存一致性",
+          "track": "compute",
+          "stable_definition": "DMA 让外设或专用引擎不占用处理器就能直接搬运数据；一旦处理器带缓存，就必须保证 CPU 与 DMA 看到的是同一份最新数据，即缓存一致性。",
+          "engineering_role": "把处理器从逐字节搬运中解放出来，是高吞吐采集与高速接口共同的机制，也是最隐蔽的一类软硬件竞态来源。",
+          "practice": "用 DMA 连续采集一块缓冲区并在完成中断里处理；在启用数据缓存的处理器上故意省掉清理与失效操作，观察读到旧数据，再按规范修正。",
+          "validation": "integration",
+          "validation_note": "满负载连续运行，校验和与参考数据一致；去掉一致性操作后，错误能被稳定复现。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.interrupts"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "DMA controller (DMA)：流、请求与传输完成事件"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "linux-dma-api",
+              "locator": "Dynamic DMA mapping Guide：缓冲区映射与同步"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cmsis-core",
+              "locator": "Cache Functions：数据缓存的清理与失效（带缓存的 Cortex-M）"
+            }
+          ],
+          "pitfall": "DMA 缓冲区放在可缓存区域却不做清理或失效，或缓冲区与缓存行不对齐，偶发读到旧数据，换芯片或打开缓存时才暴露。",
+          "priority": "important",
+          "priority_reason": "吞吐类应用（采集、图像、网络）离不开 DMA；但低端场景可以不涉及缓存，所以排在核心之后。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要先理解存储层次、中断与寄存器级控制。",
+          "contract": "memory",
+          "hw_side": "DMA 控制器按配置的源、目的与长度搬运数据并发出完成事件；缓存与 DMA 之间是否自动一致取决于芯片，常常需要软件介入。",
+          "sw_side": "软件划定缓冲区属性（不可缓存，或手动维护）、保证对齐，在传输前后做清理与失效，并用中断或轮询确认完成。"
+        },
+        {
+          "id": "polaris.codesign.peripheral_driver",
+          "title": "外设控制器与驱动",
+          "track": "hardware",
+          "stable_definition": "外设控制器把串行总线（UART、SPI、I2C、CAN 等）的帧、时序与错误检测封装成寄存器、FIFO 与状态位；驱动是软件一侧的状态机，在轮询、中断与 DMA 之间选一种和它对话。",
+          "engineering_role": "决定数据能否在不丢、不错、不卡死的前提下进出芯片，也决定处理器要为通信花多少算力。",
+          "practice": "用同一个传感器分别以轮询、中断、DMA 三种方式读取，比较处理器占用与丢包；拔线或制造总线错误，验证超时与恢复逻辑。",
+          "validation": "integration",
+          "validation_note": "逻辑分析仪对照总线时序一致；注入错误后，驱动能在规定时间内报错并恢复。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.interrupts",
+            "polaris.codesign.dma_cache"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "USART、SPI 与 I2C 外设章节：寄存器、状态位与错误标志"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nxp-i2c-um10204",
+              "locator": "I2C-bus specification：起止条件、应答与仲裁"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "iso-11898-1",
+              "locator": "CAN 数据链路层：帧、仲裁与错误处理"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-ESY-6 Asynchronous and synchronous serial communication"
+            }
+          ],
+          "pitfall": "只写成功路径：没有超时，也不处理 NACK 或总线冲突，现场一次接触不良就让整个固件卡死。",
+          "priority": "essential",
+          "priority_reason": "几乎所有嵌入式系统都靠外设总线与传感器、执行器及其他芯片通信；驱动的健壮性是系统可靠性的底座。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要寄存器、中断与 DMA 作铺垫。",
+          "contract": "bus",
+          "hw_side": "控制器按总线协议产生并检查帧，向软件暴露状态位、FIFO 与错误标志，并能在完成或出错时发出中断或 DMA 请求。",
+          "sw_side": "驱动用状态机管理一次传输的全过程：启动、等待、超时、错误处理与资源释放，并选与吞吐、实时性相称的搬运方式。"
+        },
+        {
+          "id": "polaris.codesign.debug_interfaces",
+          "title": "调试与跟踪接口",
+          "track": "assurance",
+          "stable_definition": "调试接口（JTAG、SWD）让主机直接读写芯片内部状态并控制运行，跟踪接口（ITM、ETM）在不停机的情况下记录事件与指令流；它们是软件看见硬件内部的窗口。",
+          "engineering_role": "把「程序为什么这样」从猜测变成观察，是定位 hard fault、时序与偶发错误的主要手段。",
+          "practice": "用调试探针下载并单步程序，设置数据断点与观察点；用串行线输出（ITM）打印带时间戳的事件，定位一次偶发的任务阻塞。",
+          "validation": "measurement",
+          "validation_note": "在不改变时序的前提下，复现并定位一个只在特定中断顺序下出现的错误。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.firmware_image"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "openocd",
+              "locator": "JTAG 与 SWD 调试传输"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cmsis-core",
+              "locator": "Debug Access：ITM 输出"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "qemu-docs",
+              "locator": "GDB usage：用 GDB 连接仿真目标"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-DIG-11 Fault models, testing, and design for testability"
+            }
+          ],
+          "pitfall": "只靠打印与断点：断点会改变实时行为，打印会阻塞，换一种观测手段问题就消失了。",
+          "priority": "essential",
+          "priority_reason": "没有观测手段就谈不上验证；调试接口也是量产测试和固件更新的物理通道。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要固件映像与寄存器级的基础。",
+          "contract": "verify",
+          "hw_side": "芯片内置调试访问端口与跟踪单元，可在运行或暂停时访问寄存器、存储器与事件，但带宽与可见范围有限。",
+          "sw_side": "调试器与固件配合：符号信息、断点与观察点、跟踪事件的定义与时间戳，决定了能看到什么，以及观测本身对时序的干扰。"
+        },
+        {
+          "id": "polaris.codesign.power_thermal",
+          "title": "功耗与热",
+          "track": "hardware",
+          "stable_definition": "动态功耗与频率成正比、与电压的平方成正比，静态功耗来自漏电；处理器靠降频降压、门控时钟与休眠模式换取功耗，温度则给持续性能设上限。",
+          "engineering_role": "决定电池寿命、散热方案与持续性能，是软硬件必须共同给出的预算。",
+          "practice": "用电流探头测不同时钟频率与休眠模式下的电流，画出能量与任务时间的关系；让设备在受限散热下运行，观察降频。",
+          "validation": "measurement",
+          "validation_note": "测得的平均电流与按各模式占空比推算的结果一致；热降频点可复现。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.clock_reset"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "stm32f4-rm",
+              "locator": "Power controller (PWR)：低功耗模式与唤醒"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Fundamentals 一章中的功耗与能耗趋势"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-ESY-10 Techniques for low-power operation；CE-CAE-6 MOS transistor circuits, timing, and power"
+            }
+          ],
+          "pitfall": "只看空闲功耗：外设时钟忘了关、唤醒过于频繁、引脚悬空，实际续航远低于估算。",
+          "priority": "important",
+          "priority_reason": "便携与电池供电系统的第一约束；对供电与散热有余量的场景，重要性次之。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要时钟与复位，以及中断（作为唤醒源）的铺垫。",
+          "contract": "power",
+          "hw_side": "芯片提供多级休眠、时钟门控与电压调节，各唤醒源的唤醒延迟不同；温度传感器与热限制由硬件触发。",
+          "sw_side": "软件按任务占空比选择频率与休眠深度，管理外设时钟与唤醒源，把「能耗预算」当作与时间同级的设计量。"
+        },
+        {
+          "id": "polaris.codesign.realtime_timing",
+          "title": "截止期与抖动",
+          "track": "assurance",
+          "stable_definition": "实时系统的正确性同时取决于结果和时刻：任务必须在截止期前完成；最坏响应时间由调度策略、中断与临界区、缓存与总线竞争等多层叠加决定，抖动是它分布的尾部。",
+          "engineering_role": "把「够快」变成可检验的指标：最坏延迟、最大抖动与截止期余量，是实时与高可靠系统验收的核心数字。",
+          "practice": "用实时内核跑周期任务，测从触发到输出的端到端延迟并画直方图；加入高优先级干扰、关中断区与缓存冷启动，观察最大值怎么变，并分解来源。",
+          "validation": "measurement",
+          "validation_note": "延迟直方图覆盖足够长的运行时间、尾部完整，最大值有解释；改变任一因素后的变化与分析一致。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.interrupts",
+            "polaris.codesign.memory_hierarchy"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "freertos-book",
+              "locator": "Task Management 与调度：优先级、抢占与时间片"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "linux-preempt-rt",
+              "locator": "PREEMPT_RT 的工作原理：可抢占内核与延迟来源"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cyclictest",
+              "locator": "cyclictest：延迟的测量方法"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SRM-4 Real-time operating system design；CE-CAL-9 Scheduling algorithms"
+            }
+          ],
+          "pitfall": "用平均值验收：长期运行才出现的最坏情况被忽略；或只测代码执行时间，漏掉中断屏蔽、缓存与总线竞争。",
+          "priority": "essential",
+          "priority_reason": "实时性是软硬结合最典型的验收口径，直接对应控制、测控与高可靠场景。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要中断与存储层次的基础，才看得懂最坏情况从哪来。",
+          "contract": "timing",
+          "hw_side": "中断控制器、流水线、缓存与总线仲裁带来可变的延迟；硬件定时器提供计时基准。",
+          "sw_side": "调度器的优先级与抢占策略、临界区长度与任务划分决定最坏响应时间；软件要用可靠的时间戳测量，而不是凭印象。"
+        },
+        {
+          "id": "polaris.codesign.boot_trust",
+          "title": "启动链与可信更新",
+          "track": "assurance",
+          "stable_definition": "芯片复位后由固化的引导代码逐级校验并加载后续镜像，形成启动链；安全启动与可回滚的在线更新，保证只有被认可的代码能运行，且更新失败不会让设备变砖。",
+          "engineering_role": "让产品能在现场长期运行、被远程维护并抵御篡改，是软硬件共同承担的可信根。",
+          "practice": "为一个设备设计带签名校验与双分区回滚的更新流程，在更新中途断电的情况下验证设备仍能启动。",
+          "validation": "integration",
+          "validation_note": "更新中途断电、镜像损坏与签名不符三种情况下，设备都停在可恢复的状态。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.firmware_image"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mcuboot",
+              "locator": "镜像格式、签名校验与更新/回滚流程"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "stm32f4-rm",
+              "locator": "Boot configuration：启动模式与闪存保护"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SEC-10 Trusted computing"
+            }
+          ],
+          "pitfall": "只做功能更新而不考虑失败路径：没有回滚、没有校验，密钥与调试口也没锁，量产后一次更新事故就是一次大规模召回。",
+          "priority": "important",
+          "priority_reason": "联网与量产产品必须面对；封闭的小型设备可降低要求，所以排在核心之后。",
+          "stage": "senior",
+          "stage_reason": "资深：需要固件映像、外设驱动与调试的完整经验，并要在系统层面做取舍。",
+          "contract": "boot",
+          "hw_side": "芯片固化引导 ROM 与可信根，提供一次性可编程的密钥与锁定位，以及闪存的分区与写保护。",
+          "sw_side": "引导程序校验并加载镜像、管理版本与回滚，应用只在被信任的环境里运行；更新协议要对中途失败有明确定义。"
+        },
+        {
+          "id": "polaris.codesign.hw_sw_partition",
+          "title": "软硬划分与协同设计",
+          "track": "compute",
+          "stable_definition": "把系统功能分配给软件、可编程逻辑或专用加速器，依据是数据流、带宽、延迟、功耗与开发成本；划分决定软硬接口怎么切，反过来也受接口能提供的带宽与延迟限制。",
+          "engineering_role": "是软硬结合最核心的架构决策：同一个算法放在哪一侧，决定了性能、功耗、成本与可维护性。",
+          "practice": "选一个流处理核函数（滤波或矩阵乘），分别给出纯软件、软件加 DMA 流水、FPGA 加速三种方案，用 Roofline 与实测对比，写出划分依据与接口规格。",
+          "validation": "analysis",
+          "validation_note": "预测的吞吐与延迟与实测相差在可解释范围内，且选定方案的理由里有可被反驳的假设。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.realtime_timing"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Domain-Specific Architectures"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型：用它判断该把计算放在哪一侧"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "vitis-hls",
+              "locator": "高层次综合：把 C/C++ 映射为硬件"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-10 Concurrent hardware and software design；CE-SPE-6 Hardware and software processes"
+            }
+          ],
+          "pitfall": "先选技术后找问题：不做数据流与带宽估算就上加速器，结果瓶颈在数据搬运而不在计算，加速比远低于预期。",
+          "priority": "important",
+          "priority_reason": "这是资深工程师区别于单侧专家的能力；入门阶段不要求。",
+          "stage": "senior",
+          "stage_reason": "资深：要同时掌握存储层次、实时与外设接口，才能做出有依据的划分。",
+          "contract": "memory",
+          "hw_side": "可编程逻辑与加速器提供并行计算与确定性延迟，但片上存储、带宽与互连有限，改动代价高。",
+          "sw_side": "软件提供灵活性与生态，处理器负责控制与不规则任务；两侧之间要有明确的数据通路、同步方式与接口规格。"
+        },
+        {
+          "id": "polaris.codesign.hil_verification",
+          "title": "软硬联合验证",
+          "track": "assurance",
+          "stable_definition": "在软件在环（SIL）、处理器在环与硬件在环（HIL）之间，逐级把真实部件接入仿真环境，用可重复的激励与故障注入验证软硬整体行为，并与实测对账。",
+          "engineering_role": "让软硬件在上板之前、量产之前都能被系统地验证，覆盖实机难以或不宜复现的极端工况。",
+          "practice": "为一个控制回路搭一套从 SIL 到 HIL 的测试台：同一套测试向量在仿真与台架上运行并比较结果，再注入传感器失效、丢帧与时序偏移。",
+          "validation": "simulation",
+          "validation_note": "同一测试向量在不同层级上的差异能被解释；注入的故障都被检测到并按预期降级。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.realtime_timing",
+            "polaris.codesign.peripheral_driver",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "SITL 与 HITL：仿真层级与硬件在环"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "qemu-docs",
+              "locator": "系统仿真：在不上板的情况下运行固件"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "renode",
+              "locator": "平台仿真与自动化测试"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-11 System integration, testing and validation"
+            }
+          ],
+          "pitfall": "仿真与实机各管各的：模型不对账，故障注入只覆盖想得到的情形，上板才发现模型与硬件不一致。",
+          "priority": "essential",
+          "priority_reason": "高可靠与实时系统的最终验收手段，也是软硬结合的收口。",
+          "stage": "senior",
+          "stage_reason": "资深：依赖实时、外设驱动与观测手段三方面的经验。",
+          "contract": "verify",
+          "hw_side": "被测硬件或其高保真模型，加上能产生激励、采集响应并注入故障的台架接口。",
+          "sw_side": "被测软件与测试脚本：可重复的激励、自动化的判据与记录，让仿真与实机的结果可以对账。"
+        }
+      ],
+      "edges": [
+        {
+          "from": "polaris.codesign.mmio",
+          "to": "polaris.codesign.firmware_image",
+          "relation": "requires",
+          "rationale": "固件映像里的向量表、段与启动代码都用地址和寄存器的语言描述；不懂内存映射，就读不懂链接脚本与 map 文件。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Memory and bus architecture"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.mmio",
+          "to": "polaris.codesign.interrupts",
+          "relation": "requires",
+          "rationale": "使能、挂起与优先级都是寄存器位，中断路径上的每一环最终都是读写寄存器。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "cmsis-core",
+              "locator": "NVIC Functions"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.firmware_image",
+          "to": "polaris.codesign.interrupts",
+          "relation": "requires",
+          "rationale": "向量表是固件映像的一部分，处理函数的入口地址由链接决定；映像布局不对，中断就会跳到不存在的代码。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Boot configuration：向量表所在的存储区映射"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.mmio",
+          "to": "polaris.codesign.dma_cache",
+          "relation": "requires",
+          "rationale": "DMA 的源、目的与长度都是寄存器配置，传输完成与错误也通过状态位反映。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "DMA controller (DMA)"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.memory_hierarchy",
+          "to": "polaris.codesign.dma_cache",
+          "relation": "requires",
+          "rationale": "缓存一致性问题只在带缓存的存储层次里才存在，必须先懂缓存怎么装载、写回与失效。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "csapp",
+              "locator": "The Memory Hierarchy（第 6 章）"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.interrupts",
+          "to": "polaris.codesign.dma_cache",
+          "relation": "requires",
+          "rationale": "DMA 的完成通常以中断通知，处理函数里要做的是接力而不是长时间占用。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "DMA controller (DMA)：传输完成中断"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.mmio",
+          "to": "polaris.codesign.peripheral_driver",
+          "relation": "requires",
+          "rationale": "驱动的每一步都是对控制器寄存器的读写与状态位的检查。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "USART、SPI 与 I2C 外设章节"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.interrupts",
+          "to": "polaris.codesign.peripheral_driver",
+          "relation": "requires",
+          "rationale": "中断驱动的传输是常见的中间档，它决定处理器要为通信花多少时间。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "freertos-book",
+              "locator": "Interrupt Management"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.dma_cache",
+          "to": "polaris.codesign.peripheral_driver",
+          "relation": "requires",
+          "rationale": "用 DMA 搬运是驱动可选的第三种方式，缓冲区与一致性必须先弄清楚。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "linux-dma-api",
+              "locator": "Dynamic DMA mapping Guide"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.firmware_image",
+          "to": "polaris.codesign.debug_interfaces",
+          "relation": "requires",
+          "rationale": "调试器要靠符号与映像布局把地址翻译回源码；没有映像知识，断点与 hard fault 现场都读不懂。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "csapp",
+              "locator": "Linking（第 7 章）"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.clock_reset",
+          "to": "polaris.codesign.power_thermal",
+          "relation": "requires",
+          "rationale": "频率与电压是功耗的两个旋钮，休眠模式靠门控时钟实现，先要会读时钟树。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Reset and clock control (RCC)"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.interrupts",
+          "to": "polaris.codesign.realtime_timing",
+          "relation": "requires",
+          "rationale": "最坏响应时间的第一段就是中断响应延迟，不懂中断就拆不开这个数。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "cyclictest",
+              "locator": "cyclictest：延迟的测量方法"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.memory_hierarchy",
+          "to": "polaris.codesign.realtime_timing",
+          "relation": "requires",
+          "rationale": "缓存命中与否能让同一段代码的执行时间相差数倍，最坏情况分析必须把它算进去。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Memory Hierarchy Design"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.firmware_image",
+          "to": "polaris.codesign.boot_trust",
+          "relation": "requires",
+          "rationale": "启动链校验的对象就是固件映像；不懂映像布局，就谈不上签名、分区与回滚。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "mcuboot",
+              "locator": "镜像格式与签名校验"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.memory_hierarchy",
+          "to": "polaris.codesign.hw_sw_partition",
+          "relation": "requires",
+          "rationale": "划分依据首先是数据要搬多少、在哪一层，带宽估算离不开存储层次。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.realtime_timing",
+          "to": "polaris.codesign.hw_sw_partition",
+          "relation": "requires",
+          "rationale": "划分既要满足吞吐，也要满足延迟；不会拆解最坏延迟，就无法判断接口切在哪儿能达标。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-10 Concurrent hardware and software design"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.realtime_timing",
+          "to": "polaris.codesign.hil_verification",
+          "relation": "requires",
+          "rationale": "在环验证要判定的核心指标就是延迟与抖动。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-simulation",
+              "locator": "HITL：硬件在环仿真"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.peripheral_driver",
+          "to": "polaris.codesign.hil_verification",
+          "relation": "requires",
+          "rationale": "台架通过外设接口向被测系统施加激励并采集响应，要先会写出可靠的驱动。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "renode",
+              "locator": "平台仿真与外设模型"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.debug_interfaces",
+          "to": "polaris.codesign.hil_verification",
+          "relation": "requires",
+          "rationale": "台架上的观测与跟踪需要调试接口提供可见性，否则只能看见输入输出。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "openocd",
+              "locator": "JTAG 与 SWD 调试传输"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.isa_microarch",
+          "to": "polaris.codesign.interrupts",
+          "relation": "enables",
+          "rationale": "异常模型属于指令集，流水线冲刷决定响应延迟的硬下限；先懂指令执行，延迟的构成才讲得清。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "csapp",
+              "locator": "Exceptional Control Flow（第 8 章）"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.isa_microarch",
+          "to": "polaris.codesign.memory_hierarchy",
+          "relation": "enables",
+          "rationale": "访存指令的数量与顺序决定缓存看到的访问序列；懂指令执行，才懂局部性从何而来。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Memory Hierarchy Design"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.isa_microarch",
+          "to": "polaris.codesign.realtime_timing",
+          "relation": "enables",
+          "rationale": "最坏执行时间分析需要微架构的周期模型。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Appendix C Pipelining: Basic and Intermediate Concepts"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.clock_reset",
+          "to": "polaris.codesign.realtime_timing",
+          "relation": "enables",
+          "rationale": "所有时间常数最终折算成时钟周期，分频误差与时钟抖动会进入时序误差预算。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Reset and clock control (RCC)"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.clock_reset",
+          "to": "polaris.codesign.peripheral_driver",
+          "relation": "enables",
+          "rationale": "波特率与位时间由时钟分频得到，配置错一位，整条总线就失效。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nxp-i2c-um10204",
+              "locator": "I2C-bus specification：SCL 频率与建立、保持时间"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.interrupts",
+          "to": "polaris.codesign.power_thermal",
+          "relation": "enables",
+          "rationale": "休眠由中断唤醒，唤醒源与唤醒延迟决定了能睡多深。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "stm32f4-rm",
+              "locator": "Power controller (PWR)：低功耗模式与唤醒"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "aerospace-engineering",
       "title": "中国航天工程 · 高精度实时系统",
       "view_kind": "engineering",
@@ -7775,6 +8711,840 @@
         }
       ],
       "strong": true
+    },
+    {
+      "from": "polaris.cs.c_lang",
+      "to": "polaris.codesign.mmio",
+      "relation": "requires",
+      "rationale": "寄存器访问靠指针、位运算与 volatile，这些都是 C 语言的内容。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "Representing and Manipulating Information（第 2 章）"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.digital",
+      "to": "polaris.codesign.clock_reset",
+      "relation": "requires",
+      "rationale": "触发器、建立与保持时间、同步时序是数字逻辑的内容，时钟与复位是它在芯片上的落点。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-DIG-7 Modular design of sequential circuits"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.cs.assembly",
+      "to": "polaris.codesign.isa_microarch",
+      "relation": "requires",
+      "rationale": "指令集是汇编语言的对象；先会读写汇编，才谈得上讨论微架构怎样执行它。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "Machine-Level Representation of Programs（第 3 章）"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.protocols_bus",
+      "to": "polaris.codesign.peripheral_driver",
+      "relation": "requires",
+      "rationale": "驱动是协议的软件一侧；不知道帧、时序与错误检测，就写不出可靠的状态机。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "nxp-i2c-um10204",
+          "locator": "I2C-bus specification"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.cs.computer_systems",
+      "to": "polaris.codesign.memory_hierarchy",
+      "relation": "enables",
+      "rationale": "计算机系统基础里已经给出存储层次的轮廓，这里把它推进到带宽与实测。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "csapp",
+          "locator": "The Memory Hierarchy（第 6 章）"
+        }
+      ]
+    },
+    {
+      "from": "polaris.codesign.mmio",
+      "to": "polaris.ei.mcu-interfaces",
+      "relation": "enables",
+      "rationale": "MCU 外设与总线的实践，是寄存器与内存映射在真实芯片上的展开。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "Memory and bus architecture"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.freertos",
+      "to": "polaris.codesign.realtime_timing",
+      "relation": "enables",
+      "rationale": "实时内核给出调度与任务模型，截止期与抖动则回答它到底能不能达标。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "freertos-book",
+          "locator": "Task Management 与调度"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "route.codesign-spine",
+      "title": "软硬接口主线",
+      "summary": "把软件看见的硬件按跨层契约走一遍：从寄存器与映像，经时钟、中断、存储与总线，到预算与验证，最后落在软硬划分。这是所有软硬结合方向共用的那条脊梁。",
+      "lens": "artifact",
+      "balance": "balanced",
+      "audience": "会写 C、想弄清楚「软件到底是怎么指挥硬件的」，并打算往嵌入式、FPGA 或系统软件任一方向走的人。",
+      "artifact": "一份带数字的软硬划分方案书：同一个功能的软件实现与加速实现，附预测与实测对比，并写明接口规格。",
+      "stages": [
+        {
+          "title": "软件看见的硬件",
+          "goal": "能用寄存器读写控制一个外设，并说清固件映像的布局。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image"
+          ],
+          "checkpoint": "对照数据手册只用寄存器点亮并读回一个引脚，能讲清 map 文件里每个段在哪。"
+        },
+        {
+          "title": "时间、指令与存储",
+          "goal": "建立「一条语句花多少周期、数据在哪一层」的直觉，并会处理中断。",
+          "nodes": [
+            "polaris.codesign.clock_reset",
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.interrupts"
+          ],
+          "checkpoint": "测出一个中断的响应延迟，并用微架构与存储层次解释它的构成。"
+        },
+        {
+          "title": "数据通路与观测",
+          "goal": "让数据在外设、DMA 与内存之间可靠流动，并看得见内部状态。",
+          "nodes": [
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.peripheral_driver",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "checkpoint": "同一传感器分别以轮询、中断、DMA 读取，比较占用与丢包，并用调试接口定位一次异常。"
+        },
+        {
+          "title": "预算与可信",
+          "goal": "给时间、能耗与启动一个可检验的预算。",
+          "nodes": [
+            "polaris.codesign.realtime_timing",
+            "polaris.codesign.power_thermal",
+            "polaris.codesign.boot_trust"
+          ],
+          "checkpoint": "给出延迟直方图与电流曲线，并演示更新中途断电后仍能恢复。"
+        },
+        {
+          "title": "划分与收口",
+          "goal": "做出有依据的软硬划分，并在环验证。",
+          "nodes": [
+            "polaris.codesign.hw_sw_partition",
+            "polaris.codesign.hil_verification"
+          ],
+          "checkpoint": "三种实现方案的预测与实测对账，注入故障后按预期降级。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-CAO、CE-DIG、CE-ESY、CE-SRM 与 CE-SPE 各知识领域"
+        },
+        {
+          "relation": "informed",
+          "source_id": "hennessy-patterson-ca",
+          "locator": "Fundamentals 与 Memory Hierarchy Design"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ai-hardware-engineer-roadmap",
+          "locator": "按终点产物与跨层契约组织路线的做法"
+        }
+      ]
+    },
+    {
+      "id": "route.embedded-realtime",
+      "title": "嵌入式与实时软件",
+      "summary": "从用 C 点亮一块板，到带实时内核的多任务固件，再到能测、能解释最坏延迟。偏软件的一侧：固件、驱动与调试，是嵌入式岗位里数量最大的一类方向。",
+      "lens": "direction",
+      "balance": "software",
+      "audience": "想做固件、驱动或实时控制软件的人，已有或正在补 C 语言与基础电路。",
+      "artifact": "一块自己点亮的开发板：带实时内核的多任务固件，能测出并解释中断延迟与最大抖动。",
+      "stages": [
+        {
+          "title": "起步：C 与单板",
+          "goal": "能用 C 控制一个引脚，并读懂数据手册。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.engineering_practice",
+            "polaris.ei.electronics_basics",
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image"
+          ],
+          "checkpoint": "用寄存器读写点亮 LED、读回按键，并说得清映像里每个段在哪。"
+        },
+        {
+          "title": "接口：时钟、中断与总线",
+          "goal": "能让外设稳定工作，并看得见内部状态。",
+          "nodes": [
+            "polaris.ei.stm32",
+            "polaris.ei.protocols_bus",
+            "polaris.codesign.clock_reset",
+            "polaris.codesign.interrupts",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.peripheral_driver",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "checkpoint": "用中断加 DMA 采集一个传感器，并用示波器与调试器解释一次丢帧。"
+        },
+        {
+          "title": "实时：内核与时序",
+          "goal": "把「够快」变成可测的数字。",
+          "nodes": [
+            "polaris.ei.freertos",
+            "polaris.codesign.realtime_timing",
+            "polaris.codesign.power_thermal"
+          ],
+          "checkpoint": "测出端到端延迟的直方图与最大抖动，并分解它的来源。"
+        },
+        {
+          "title": "收口：联调与更新",
+          "goal": "让固件能被系统地验证和长期维护。",
+          "nodes": [
+            "polaris.ei.board-system",
+            "polaris.codesign.hil_verification",
+            "polaris.codesign.boot_trust"
+          ],
+          "checkpoint": "一套可重复的台架测试，覆盖断电更新与故障注入。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-ESY Embedded Systems 与 CE-SRM Systems Resource Management"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "freertos-book",
+          "locator": "Task Management 与 Interrupt Management"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "embedded-engineering-roadmap",
+          "locator": "嵌入式岗位偏重软件还是硬件的区分"
+        }
+      ]
+    },
+    {
+      "id": "route.fpga-digital",
+      "title": "FPGA 与数字设计",
+      "summary": "从数字逻辑与时序，经体系结构，到在 FPGA 上用硬件描述语言做出带仿真与时序报告的数据通路，并说清它与软件的接口。偏硬件的一侧。",
+      "lens": "direction",
+      "balance": "hardware",
+      "audience": "想做数字电路、可编程逻辑或硬件加速的人，对「软件为什么慢、硬件为什么快」有好奇心。",
+      "artifact": "在 FPGA 上跑通的外设或小型数据通路，附仿真波形与时序报告，并写出它与软件之间的接口规格。",
+      "stages": [
+        {
+          "title": "数字基础",
+          "goal": "掌握逻辑、触发器与时序约束。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ei.digital",
+            "polaris.codesign.clock_reset"
+          ],
+          "checkpoint": "能画出一个同步时序电路并指出它的建立/保持时间约束。"
+        },
+        {
+          "title": "体系结构视角",
+          "goal": "知道处理器与存储在做什么，才知道该把什么交给硬件。",
+          "nodes": [
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy"
+          ],
+          "checkpoint": "能估算一个核函数的算力与带宽需求。"
+        },
+        {
+          "title": "FPGA 与硬件描述语言",
+          "goal": "把设计写成可综合、可仿真的 HDL 并通过时序。",
+          "nodes": [
+            "polaris.ei.fpga",
+            "polaris.ei.dsp-fpga"
+          ],
+          "checkpoint": "一个数据通路通过仿真与时序收敛，并上板运行。"
+        },
+        {
+          "title": "协同与验证",
+          "goal": "做出软硬划分并验证它。",
+          "nodes": [
+            "polaris.codesign.hw_sw_partition",
+            "polaris.codesign.hil_verification"
+          ],
+          "checkpoint": "同一功能的软件版与 FPGA 版吞吐、延迟对比，预测与实测对账。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-DIG Digital Design 与 CE-CAO Computer Architecture and Organization"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "mit-ocw-6004",
+          "locator": "Computation Structures：从逻辑门到处理器"
+        },
+        {
+          "relation": "informed",
+          "source_id": "vitis-hls",
+          "locator": "高层次综合与 FPGA 加速流程"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ai-hardware-engineer-roadmap",
+          "locator": "数字设计、体系结构到 FPGA 的阶段顺序"
+        }
+      ]
+    },
+    {
+      "id": "route.board-hardware",
+      "title": "板级硬件与测量",
+      "summary": "从电路与测量出发，经信号与电源完整性，到自己画板、打样、上电并让软件点亮。偏硬件，但终点是软件能跑起来的一块板。",
+      "lens": "direction",
+      "balance": "hardware",
+      "audience": "想做电路板、电源与信号链设计和调试的人。",
+      "artifact": "自己画、打样并调通的一块板：原理图 → PCB → 上电 → 软件点亮，并附测量记录。",
+      "stages": [
+        {
+          "title": "电路与测量",
+          "goal": "会搭、会测、会定位故障。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ei.analog",
+            "polaris.ei.digital",
+            "polaris.ei.measurement"
+          ],
+          "checkpoint": "能用示波器与万用表定位一个故障电路。"
+        },
+        {
+          "title": "信号与电源",
+          "goal": "让信号干净、电源稳定。",
+          "nodes": [
+            "polaris.ei.sensors",
+            "polaris.ei.power-signal",
+            "polaris.ei.pcb_design"
+          ],
+          "checkpoint": "一块板的电源纹波与信号完整性达到自己写下的指标。"
+        },
+        {
+          "title": "与软件会合",
+          "goal": "让软件能指挥这块板。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.clock_reset",
+            "polaris.ei.mcu-interfaces",
+            "polaris.ei.sensor-chain",
+            "polaris.codesign.power_thermal"
+          ],
+          "checkpoint": "固件用寄存器驱动板上外设并采到传感器数据，同时测出电流曲线。"
+        },
+        {
+          "title": "上电验证",
+          "goal": "把整板放到环境里验证。",
+          "nodes": [
+            "polaris.ei.board-system",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "checkpoint": "上电、点亮、联调通过，并留有可复现的测试记录。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "art-of-electronics",
+          "locator": "电路、模拟与数字基础章节"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ipc-2221",
+          "locator": "印制板设计通用标准：间距、电源与地"
+        },
+        {
+          "relation": "informed",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-CAE Circuits and Electronics"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "embedded-engineering-roadmap",
+          "locator": "硬件一侧的技能划分：测试设备、原型、PCB 与 EMC"
+        }
+      ]
+    },
+    {
+      "id": "route.system-linux",
+      "title": "系统软件与嵌入式 Linux",
+      "summary": "从系统编程与操作系统，经体系结构与存储，到驱动、设备与启动，做出自己的嵌入式 Linux 映像。偏软件，但要求把机器看得清楚。",
+      "lens": "direction",
+      "balance": "software",
+      "audience": "想做操作系统、驱动或嵌入式 Linux 的人，已会 C 并愿意读内核与手册。",
+      "artifact": "一个自定义的嵌入式 Linux 映像：内核、设备树与一个自己写的字符设备驱动，在板上运行。",
+      "stages": [
+        {
+          "title": "系统编程",
+          "goal": "会在 Unix 上写系统程序，并懂操作系统。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.computer_systems",
+            "polaris.cs.linux_sysprog",
+            "polaris.cs.operating_systems"
+          ],
+          "checkpoint": "写一个用到进程、文件与信号的系统工具，并解释它在内核里经过了什么。"
+        },
+        {
+          "title": "机器与存储",
+          "goal": "知道软件之下的机器怎样运转。",
+          "nodes": [
+            "polaris.cs.assembly",
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy"
+          ],
+          "checkpoint": "读懂一段内核或库代码的反汇编，并解释它的访存行为。"
+        },
+        {
+          "title": "裸机视角的设备",
+          "goal": "先在没有操作系统的地方弄清设备怎样工作。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image",
+            "polaris.codesign.interrupts",
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.peripheral_driver"
+          ],
+          "checkpoint": "不借助操作系统，用中断与 DMA 完成一个外设的数据收发。"
+        },
+        {
+          "title": "嵌入式 Linux 与驱动",
+          "goal": "把设备接进操作系统，并做成可交付的映像。",
+          "nodes": [
+            "polaris.ei.embedded_linux",
+            "polaris.ei.linux_driver",
+            "polaris.codesign.boot_trust"
+          ],
+          "checkpoint": "构建出能在板上启动、带签名校验与回滚的映像，并加载自己写的驱动。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ldd3",
+          "locator": "设备驱动章节"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "buildroot-manual",
+          "locator": "交叉编译与根文件系统"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ostep",
+          "locator": "虚拟化、并发与持久化三部分"
+        },
+        {
+          "relation": "informed",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-SRM Systems Resource Management"
+        }
+      ]
+    },
+    {
+      "id": "route.realtime-control",
+      "title": "实时控制与半实物仿真",
+      "summary": "从信号与系统和反馈控制，到离散实现与实时调度，再到半实物闭环验证。软硬各半：算法在软件里，指标由硬件时序决定。",
+      "lens": "direction",
+      "balance": "balanced",
+      "audience": "想做控制系统、测控与仿真验证的人，对数学与工程闭环都有兴趣。",
+      "artifact": "一个半实物闭环：传感器 → 控制器 → 执行器，测出闭环延迟与抖动，并能在台架上注入故障。",
+      "stages": [
+        {
+          "title": "信号与系统",
+          "goal": "建立动态系统与反馈的语言。",
+          "nodes": [
+            "polaris.ei.signals_systems",
+            "polaris.ei.control",
+            "polaris.ei.matlab"
+          ],
+          "checkpoint": "在 MATLAB 或 Simulink 里对一个被控对象做出稳定的闭环仿真。"
+        },
+        {
+          "title": "离散实现",
+          "goal": "把连续设计变成可在 MCU 上跑的离散实现。",
+          "nodes": [
+            "polaris.ei.dsp",
+            "polaris.ei.sensors",
+            "polaris.ei.sensor-chain"
+          ],
+          "checkpoint": "控制算法在定点 MCU 上运行，输出与仿真对得上。"
+        },
+        {
+          "title": "实时执行",
+          "goal": "保证按时执行、按时输出。",
+          "nodes": [
+            "polaris.ei.freertos",
+            "polaris.codesign.interrupts",
+            "polaris.codesign.realtime_timing"
+          ],
+          "checkpoint": "闭环周期的最坏延迟与抖动测得出，并小于控制周期的一小部分。"
+        },
+        {
+          "title": "在环验证",
+          "goal": "把真实部件逐级接入仿真环境。",
+          "nodes": [
+            "polaris.codesign.hil_verification",
+            "polaris.ei.board-system"
+          ],
+          "checkpoint": "同一组测试向量在仿真与台架上结果一致，注入故障后降级符合预期。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "mit-ocw-6003",
+          "locator": "信号与系统"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "mit-ocw-204a",
+          "locator": "系统与控制"
+        },
+        {
+          "relation": "informed",
+          "source_id": "px4-simulation",
+          "locator": "SITL 与 HITL 仿真层级"
+        },
+        {
+          "relation": "informed",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-SGP Signal Processing 与 CE-SPE Systems and Project Engineering"
+        }
+      ]
+    },
+    {
+      "id": "route.edge-ai-systems",
+      "title": "端侧 AI 与软硬协同推理",
+      "summary": "在资源受限的设备上部署模型，并用存储层次与 Roofline 说明瓶颈在算力还是带宽。偏软件，但结论要落在硬件约束上。",
+      "lens": "direction",
+      "balance": "balanced",
+      "audience": "有机器学习基础、想把模型放到 MCU 或嵌入式 SoC 上的人。",
+      "artifact": "在资源受限设备上部署的量化模型，给出延迟、功耗与精度三项实测，并解释瓶颈在算力还是带宽。",
+      "stages": [
+        {
+          "title": "语言与机器",
+          "goal": "会用 C 与 Python，并懂程序怎样在机器上运行。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.python",
+            "polaris.cs.computer_systems"
+          ],
+          "checkpoint": "能解释一个推理核函数为什么慢。"
+        },
+        {
+          "title": "软硬直觉",
+          "goal": "建立算力、带宽与搬运的直觉。",
+          "nodes": [
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.dma_cache"
+          ],
+          "checkpoint": "用 Roofline 判断一个算子是算力受限还是带宽受限。"
+        },
+        {
+          "title": "端侧部署",
+          "goal": "把模型落到设备上。",
+          "nodes": [
+            "polaris.ei.dsp",
+            "polaris.ei.edge_ai",
+            "polaris.codesign.realtime_timing",
+            "polaris.codesign.hw_sw_partition"
+          ],
+          "checkpoint": "量化模型在目标设备上运行，延迟可测，并给出软硬划分依据。"
+        },
+        {
+          "title": "实测与预算",
+          "goal": "用数字说话。",
+          "nodes": [
+            "polaris.codesign.power_thermal",
+            "polaris.codesign.hil_verification"
+          ],
+          "checkpoint": "延迟、功耗与精度三项实测，与预测相差可解释。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "tflite-micro",
+          "locator": "TensorFlow Lite for Microcontrollers"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "cmsis-nn",
+          "locator": "CMSIS-NN：神经网络算子库"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "roofline-williams",
+          "locator": "Roofline 模型"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ai-hardware-engineer-roadmap",
+          "locator": "从模型到机器：推理优化与边缘部署的阶段"
+        }
+      ]
+    },
+    {
+      "id": "route.stack-bottom-up",
+      "title": "自底向上：从逻辑门到操作系统",
+      "summary": "从逻辑门与电路出发，搭出处理器与存储，再到操作系统与程序，最后用高级语言收口。适合想把计算机「从头搭一遍」的人。",
+      "lens": "stack",
+      "balance": "balanced",
+      "audience": "喜欢从最底层弄清原理的人；不要求已有编程经验。",
+      "artifact": "一台自己搭出来的最小计算机：从逻辑门到能运行程序的处理器，并能用它解释一条指令的旅程。",
+      "stages": [
+        {
+          "title": "逻辑与电路",
+          "goal": "从电路与逻辑门开始。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ei.digital"
+          ],
+          "checkpoint": "用逻辑门搭出加法器与寄存器。"
+        },
+        {
+          "title": "处理器与存储",
+          "goal": "把门电路组织成会执行指令的机器。",
+          "nodes": [
+            "polaris.cs.assembly",
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy"
+          ],
+          "checkpoint": "设计并仿真一个能运行汇编程序的简单处理器。"
+        },
+        {
+          "title": "系统",
+          "goal": "让机器能被多个程序共用。",
+          "nodes": [
+            "polaris.cs.computer_systems",
+            "polaris.codesign.interrupts",
+            "polaris.cs.operating_systems"
+          ],
+          "checkpoint": "解释一次中断如何让操作系统切换到另一个进程。"
+        },
+        {
+          "title": "语言与程序",
+          "goal": "回到程序员的视角。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.da"
+          ],
+          "checkpoint": "用 C 写出能在自己搭的机器上运行的程序。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "nand2tetris",
+          "locator": "从与非门到俄罗斯方块的整个流程"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "mit-ocw-6004",
+          "locator": "Computation Structures"
+        },
+        {
+          "relation": "informed",
+          "source_id": "ossu-computer-science",
+          "locator": "Core systems 的课程顺序"
+        },
+        {
+          "relation": "informed",
+          "source_id": "teachyourselfcs",
+          "locator": "计算机体系结构、操作系统等领域的教材推荐"
+        }
+      ]
+    },
+    {
+      "id": "route.stack-top-down",
+      "title": "自顶向下：一行 C 代码如何变成电平",
+      "summary": "从一行 C 代码出发，逐层下沉：编译与指令、地址与映像、事件与搬运，直到引脚上的电平。适合已经会写程序、想看清底下发生了什么的人。",
+      "lens": "stack",
+      "balance": "balanced",
+      "audience": "已经会写程序、想把「语句 → 引脚电平」整条链路讲清楚的人。",
+      "artifact": "能完整讲清一条语句从源码到引脚电平的全过程，并用工具逐层验证。",
+      "stages": [
+        {
+          "title": "源码到机器码",
+          "goal": "看清编译与构建做了什么。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.engineering_practice",
+            "polaris.cs.toolchain"
+          ],
+          "checkpoint": "能说清一个源文件经过哪些步骤变成可执行代码。"
+        },
+        {
+          "title": "指令与周期",
+          "goal": "看清处理器怎样执行它。",
+          "nodes": [
+            "polaris.cs.assembly",
+            "polaris.codesign.isa_microarch"
+          ],
+          "checkpoint": "对照反汇编与周期计数，解释一段循环花了多少周期。"
+        },
+        {
+          "title": "地址、映像与存储",
+          "goal": "看清代码与数据住在哪、怎样被访问。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image",
+            "polaris.codesign.memory_hierarchy"
+          ],
+          "checkpoint": "能解释一个全局变量的最终地址与所在存储区，并说明一次寄存器写入如何到达外设。"
+        },
+        {
+          "title": "事件、搬运与电平",
+          "goal": "用仪器验证最后一步。",
+          "nodes": [
+            "polaris.codesign.interrupts",
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.clock_reset",
+            "polaris.ei.electronics_basics",
+            "polaris.ei.measurement"
+          ],
+          "checkpoint": "用示波器测出一条语句执行到引脚翻转的延迟，并与分析对得上。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "csapp",
+          "locator": "Computer Systems: A Programmer's Perspective 的整体结构：从程序到机器"
+        },
+        {
+          "relation": "informed",
+          "source_id": "stm32f4-rm",
+          "locator": "寄存器、总线与时钟章节"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "open-source-cs",
+          "locator": "系统与应用领域的课程分组"
+        }
+      ]
+    },
+    {
+      "id": "route.software-systems",
+      "title": "系统程序员：C/C++、并发与网络",
+      "summary": "纯软件的一条：语言、数据结构与算法，操作系统、并发与网络，再到剖析与交付。放在这里是为了和软硬结合的路线对照，也服务只想做软件的人。",
+      "lens": "direction",
+      "balance": "software",
+      "audience": "想做后端、基础设施或系统软件的人，不打算碰硬件。",
+      "artifact": "一个多线程、带网络接口的系统服务，能用剖析工具说清瓶颈在哪。",
+      "stages": [
+        {
+          "title": "语言与工具",
+          "goal": "能写、能构建、能调试。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.cs.engineering_practice",
+            "polaris.cs.toolchain",
+            "polaris.cs.python"
+          ],
+          "checkpoint": "用 C 写一个小工具并用调试器与版本控制维护它。"
+        },
+        {
+          "title": "数据与系统编程",
+          "goal": "写出效率可控的核心模块。",
+          "nodes": [
+            "polaris.cs.cpp",
+            "polaris.cs.da",
+            "polaris.cs.linux_sysprog"
+          ],
+          "checkpoint": "一个核心模块的复杂度与实测相符。"
+        },
+        {
+          "title": "操作系统、并发与网络",
+          "goal": "懂系统层面的判断。",
+          "nodes": [
+            "polaris.cs.operating_systems",
+            "polaris.cs.concurrency",
+            "polaris.cs.computer_networks"
+          ],
+          "checkpoint": "解释一个并发程序为什么会死锁，并给出修复。"
+        },
+        {
+          "title": "剖析与交付",
+          "goal": "把服务做成可观测、可交付。",
+          "nodes": [
+            "polaris.cs.data-concurrency",
+            "polaris.cs.observability",
+            "polaris.cs.integration"
+          ],
+          "checkpoint": "服务带指标与剖析数据，瓶颈被说清楚。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ostep",
+          "locator": "虚拟化、并发与持久化三部分"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "clrs",
+          "locator": "算法与数据结构"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "tlpi",
+          "locator": "Linux 系统编程"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "roadmap-sh",
+          "locator": "后端、系统设计等按职业角色划分的路线"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ossu-computer-science",
+          "locator": "Core programming 与 Core systems"
+        }
+      ]
     }
   ]
 }

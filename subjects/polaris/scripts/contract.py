@@ -28,6 +28,10 @@ STAGE_RANK = {"junior": 0, "intermediate": 1, "senior": 2}
 KNOWN_VERIFY = {"code", "board", "bench"}
 KNOWN_MASTERY = {"familiarity", "usage", "assessment"}
 KNOWN_RELATION = {"requires", "enables"}
+# 节点出处的关系词汇，与仓库级 scripts/check-app-sources.mjs 的 CONTENT_RELATIONS / META_RELATIONS 一致：
+# 至少一条内容来源，补充说明不算数（ADR 0043）。边与路线的出处不受这条限制。
+CONTENT_RELATIONS = {"verbatim", "quoted", "adapted", "authored"}
+META_RELATIONS = {"selection_basis", "exam_alignment", "see_also"}
 KNOWN_CONTRACT = {"timing", "memory", "bus", "power", "boot", "verify"}  # 软硬接口的六份跨层契约（ADR 0016 决策 4）
 KNOWN_LENS = {"direction", "stack", "artifact"}
 KNOWN_BALANCE = {"software", "balanced", "hardware"}
@@ -189,6 +193,7 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
             _validate_course_node(report, node, nwhere)
 
         report.require_source_refs("node.source_refs", nwhere, node.get("source_refs"), source_ids)
+        _validate_node_relations(report, nwhere, node.get("source_refs"))
         required: set[str] = set()
         for rid in _strings(node.get("requires")):
             if rid == node_id:
@@ -242,6 +247,17 @@ def _validate_codesign_node(report: _Report, node: dict, nwhere: str) -> None:
     if node.get("contract") not in KNOWN_CONTRACT:
         report.add("codesign.contract", nwhere, "contract 只能是 timing、memory、bus、power、boot 或 verify。")
     report.require_text("codesign.sides", nwhere, node, ["hw_side", "sw_side"])
+
+
+def _validate_node_relations(report: _Report, nwhere: str, refs: Any) -> None:
+    relations = [r.get("relation") for r in refs if isinstance(r, dict)] if isinstance(refs, list) else []
+    for relation in relations:
+        if relation not in CONTENT_RELATIONS | META_RELATIONS:
+            report.add("node.source_relation", nwhere,
+                       f"出处关系「{relation}」不是内容来源（{'/'.join(sorted(CONTENT_RELATIONS))}）"
+                       f"也不是已知的补充说明（{'/'.join(sorted(META_RELATIONS))}）。")
+    if relations and not any(r in CONTENT_RELATIONS for r in relations):
+        report.add("node.source_content", nwhere, "只有补充说明，没有一条说明内容出自哪里。")
 
 
 def _validate_course_node(report: _Report, node: dict, nwhere: str) -> None:
