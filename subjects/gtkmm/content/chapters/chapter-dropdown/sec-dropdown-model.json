@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": " create(\n    int col_id, const Glib::ustring& col_name)\n  {\n    return Glib::make_refptr_for_instance(\n      new ModelColumns(col_id, col_name));\n  }\n\nprotected:\n  ModelColumns(int col_id, const Glib::ustring& col_name)\n  : m_col_id(col_id), m_col_name(col_name)\n  {}\n};\n\nGlib::RefPtr> m_ListStore;\n]]>",
-   "sha": "4452fb3690c5f45e",
+   "text": "class ModelColumns : public Glib::Object\n{\npublic:\n  int m_col_id;\n  Glib::ustring m_col_name;\n\n  static Glib::RefPtr<ModelColumns> create(\n    int col_id, const Glib::ustring& col_name)\n  {\n    return Glib::make_refptr_for_instance<ModelColumns>(\n      new ModelColumns(col_id, col_name));\n  }\n\nprotected:\n  ModelColumns(int col_id, const Glib::ustring& col_name)\n  : m_col_id(col_id), m_col_name(col_name)\n  {}\n};\n\nGlib::RefPtr<Gio::ListStore<ModelColumns>> m_ListStore;",
+   "sha": "3581f7922f33eaa0",
    "zh": ""
   },
   {

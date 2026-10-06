@@ -100,11 +100,10 @@ function renderInline(text: string): ReactNode[] {
 function TranslatedText({ text }: { text: string }) {
   return (
     <>
-      {text.split("\n").map((line, index) => (
-        <p key={index} className="my-3 leading-loose text-fg/90">
-          {renderInline(line)}
-        </p>
-      ))}
+      {/* 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行 */}
+      <p className="leading-loose text-fg/90">
+        {renderInline(text.replace(/\s*\n\s*/g, " "))}
+      </p>
     </>
   );
 }
@@ -250,9 +249,7 @@ export function PageView({
                         : "border-accent/50"
                   }`}
                 >
-                  {block.text.split("\n").map((line, j) => (
-                    <p key={j}>{renderInline(line)}</p>
-                  ))}
+                  <p>{renderInline(block.text.replace(/\s*\n\s*/g, " "))}</p>
                   {block.key && (
                     <span className="mt-2 block text-[20px] font-medium not-italic text-accent">
                       ★ 本节重点

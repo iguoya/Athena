@@ -9,6 +9,12 @@
    "text": "You might need to react to every change of selection in the `DropDown`,\nfor instance to update other widgets. To do so, you should connect to\nproperty_selected().signal_changed(). For instance:",
    "sha": "56ad92eab4d27c38",
    "zh": null
+  },
+  {
+   "type": "code",
+   "text": "m_DropDown.property_selected().signal_changed().connect(\n  sigc::mem_fun(*this, &ExampleWindow::on_dropdown_changed));",
+   "sha": "72f32264dcd7ffca",
+   "zh": ""
   }
  ]
 }

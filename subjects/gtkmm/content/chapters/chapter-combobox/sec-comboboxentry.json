@@ -60,8 +60,8 @@
   },
   {
    "type": "code",
-   "text": "signal_changed().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_entry_changed));\n  entry->signal_activate().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_entry_activate));\n  // The Entry shall receive focus-leave events.\n  auto controller = Gtk::EventControllerFocus::create();\n  m_ConnectionFocusLeave = controller->signal_leave().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_entry_focus_leave));\n  entry->add_controller(controller);\n}]]>",
-   "sha": "e38d28883c18be24",
+   "text": "auto entry = m_Combo.get_entry();\nif (entry)\n{\n  // Alternatively you can connect to m_Combo.signal_changed().\n  entry->signal_changed().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_entry_changed));\n  entry->signal_activate().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_entry_activate));\n  // The Entry shall receive focus-leave events.\n  auto controller = Gtk::EventControllerFocus::create();\n  m_ConnectionFocusLeave = controller->signal_leave().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_entry_focus_leave));\n  entry->add_controller(controller);\n}",
+   "sha": "4f288b7f48aadda8",
    "zh": ""
   },
   {

@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "::create(\n  sigc::mem_fun(*this, &ExampleWindow::get_col_name));\nm_DropDown.set_expression(expression);\n\n//-------\nGlib::ustring ExampleWindow::get_col_name(const Glib::RefPtr& item)\n{\n  const auto col = std::dynamic_pointer_cast(item);\n  return col ? col->m_col_name : \"\";\n}\n]]>",
-   "sha": "609615c106579a16",
+   "text": "m_DropDown.set_enable_search(true);\nauto expression = Gtk::ClosureExpression<Glib::ustring>::create(\n  sigc::mem_fun(*this, &ExampleWindow::get_col_name));\nm_DropDown.set_expression(expression);\n\n//-------\nGlib::ustring ExampleWindow::get_col_name(const Glib::RefPtr<Glib::ObjectBase>& item)\n{\n  const auto col = std::dynamic_pointer_cast<ModelColumns>(item);\n  return col ? col->m_col_name : \"\";\n}",
+   "sha": "60870aef9b942139",
    "zh": ""
   },
   {

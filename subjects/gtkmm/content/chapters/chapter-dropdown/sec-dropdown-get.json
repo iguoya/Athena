@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "get_item(sel).m_col_id;\n  set_some_id_chosen(id); // Your own function.\n}\nelse\n  set_nothing_chosen(); // Your own function.\n]]>",
-   "sha": "1b828d5fedaf5aa9",
+   "text": "unsigned int sel = m_DropDown.get_selected();\nif (sel != GTK_INVALID_LIST_POSITION)\n{\n  // Get the data for the selected row, using our knowledge of the list model:\n  auto id = m_ListStore->get_item(sel).m_col_id;\n  set_some_id_chosen(id); // Your own function.\n}\nelse\n  set_nothing_chosen(); // Your own function.",
+   "sha": "e5ce6dcc8b19373c",
    "zh": ""
   }
  ]

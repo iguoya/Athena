@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "signal_key_pressed().connect(\n  sigc::mem_fun(*this, &MyClass::on_key_pressed), false);\nadd_controller(controller);\n]]>",
-   "sha": "18916d2508aa0138",
+   "text": "bool MyClass::on_key_pressed(guint keyval, guint, Gdk::ModifierType state)\n{\n  if (keyval == GDK_KEY_1 &&\n    (state & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK |\n     Gdk::ModifierType::ALT_MASK)) == Gdk::ModifierType::ALT_MASK)\n  {\n    handle_alt_press();\n    return true;\n  }\n  return false;\n}\n\n// in MyClass constructor\nauto controller = Gtk::EventControllerKey::create();\ncontroller->signal_key_pressed().connect(\n  sigc::mem_fun(*this, &MyClass::on_key_pressed), false);\nadd_controller(controller);",
+   "sha": "7ff8ef7318914ffb",
    "zh": ""
   },
   {

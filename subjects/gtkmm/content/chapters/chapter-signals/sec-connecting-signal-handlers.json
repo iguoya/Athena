@@ -18,8 +18,8 @@
   },
   {
    "type": "code",
-   "text": "void on_button_clicked()\n{\n  std::cout ",
-   "sha": "30b10499f0167990",
+   "text": "#include <gtkmm/button.h>\n\nvoid on_button_clicked()\n{\n  std::cout << \"Hello World\" << std::endl;\n}\n\nclass some_class\n{\npublic:\n  some_class\n  {\n    button.signal_clicked().connect(sigc::ptr_fun(&on_button_clicked));\n  }\nprivate:\n  Gtk::Button button {\"Hello World\"};\n};",
+   "sha": "9a64ce5c87d180e2",
    "zh": ""
   },
   {
@@ -84,8 +84,8 @@
   },
   {
    "type": "code",
-   "text": "void on_button_clicked()\n{\n  std::cout ",
-   "sha": "30b10499f0167990-1",
+   "text": "#include <gtkmm/button.h>\n\nvoid on_button_clicked()\n{\n  std::cout << \"Hello World\" << std::endl;\n}\n\nclass some_class\n{\npublic:\n  some_class\n  {\n    button.signal_clicked().connect(sigc::ptr_fun(&on_button_clicked));\n    button.signal_clicked().connect(sigc::mem_fun(*this, &some_class::on_button_clicked));\n  }\n  void on_button_clicked();\nprivate:\n  Gtk::Button button {\"Hello World\"};\n};",
+   "sha": "f197f959c5c54a9f",
    "zh": ""
   },
   {

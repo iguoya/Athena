@@ -1146,8 +1146,8 @@
   },
   {
    "type": "code",
-   "text": "_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)",
-   "sha": "4b04cec6c7fe9363-1",
+   "text": "<function>_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)</function>",
+   "sha": "7ff36de10a94a65c",
    "zh": ""
   },
   {
@@ -1495,13 +1495,14 @@
   {
    "type": "para",
    "text": "`_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)`",
-   "sha": "4b04cec6c7fe9363-2",
-   "zh": null
+   "sha": "4b04cec6c7fe9363-1",
+   "zh": null,
+   "status": "stale"
   },
   {
    "type": "code",
-   "text": "_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)",
-   "sha": "4b04cec6c7fe9363-3",
+   "text": "<function>_IGNORE(C function name 1, C function name 2, etc)\n_IGNORE_SIGNAL(C signal name 1, C signal name 2, etc)\n_IGNORE_PROPERTY(C property name 1, C property name 2, etc)</function>",
+   "sha": "7ff36de10a94a65c-1",
    "zh": ""
   },
   {
@@ -2520,8 +2521,8 @@
   },
   {
    "type": "code",
-   "text": " read_finish(\n  const Glib::RefPtr& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
-   "sha": "bc524b7a497b3456",
+   "text": "_WRAP_METHOD(Glib::RefPtr<Gio::InputStream> read_finish(\n  const Glib::RefPtr<Gio::AsyncResult>& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)",
+   "sha": "c2157e0f7701286d",
    "zh": ""
   },
   {
@@ -2529,6 +2530,12 @@
    "text": "The `{>>}` following the `out_mime_type`\n      parameter name indicates that the C++ output parameter should be set from\n      the value returned in the C parameter from the C function.\n      `gmmproc` will generate a declaration of a temporary\n      variable in which to store the value of the C output parameter and a\n      statement that sets the C++ output parameter from the temporary variable.\n      In this case it may be necessary to have an\n      `_INITIALIZATION()` describing how to set a\n      `Glib::ustring&` from a\n      `const char**` such as the following:",
    "sha": "43747729abef0929",
    "zh": null
+  },
+  {
+   "type": "code",
+   "text": "_INITIALIZATION(`Glib::ustring&',`const char*',`$3 = Glib::convert_const_gchar_ptr_to_ustring($4)')",
+   "sha": "6ad3d0a4cbfb7974",
+   "zh": ""
   },
   {
    "type": "heading",
@@ -2658,8 +2665,8 @@
   },
   {
    "type": "code",
-   "text": " read_finish(\n  const Glib::RefPtr& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
-   "sha": "bc524b7a497b3456-1",
+   "text": "_WRAP_METHOD(Glib::RefPtr<Gio::InputStream> read_finish(\n  const Glib::RefPtr<Gio::AsyncResult>& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)",
+   "sha": "c2157e0f7701286d-1",
    "zh": ""
   },
   {
@@ -2667,6 +2674,12 @@
    "text": "The `{>>}` following the `out_mime_type`\n      parameter name indicates that the C++ output parameter should be set from\n      the value returned in the C parameter from the C function.\n      `gmmproc` will generate a declaration of a temporary\n      variable in which to store the value of the C output parameter and a\n      statement that sets the C++ output parameter from the temporary variable.\n      In this case it may be necessary to have an\n      `_INITIALIZATION()` describing how to set a\n      `Glib::ustring&` from a\n      `const char**` such as the following:",
    "sha": "43747729abef0929-1",
    "zh": null
+  },
+  {
+   "type": "code",
+   "text": "_INITIALIZATION(`Glib::ustring&',`const char*',`$3 = Glib::convert_const_gchar_ptr_to_ustring($4)')",
+   "sha": "6ad3d0a4cbfb7974-1",
+   "zh": ""
   },
   {
    "type": "para",

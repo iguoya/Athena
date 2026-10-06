@@ -68,15 +68,20 @@ def strip_tags(raw: str) -> str:
 
 
 def code_text(raw: str) -> str:
-    """程序清单的清洗：剥标签、展开实体、去首尾空行，**逐字保留缩进与内部空白**。
+    """程序清单的清洗：剥 CDATA 包装、展开实体、去首尾空行，**逐字保留缩进与内部空白**。
 
-    代码是原文的一部分（应用 ADR 0002）：任何空白规整都是对原文的篡改，
-    与 strip_tags 的段落规整刻意分开。
+    代码是原文的一部分（应用 ADR 0002）：任何空白规整都是对原文的篡改。
+    注意绝不能跑「剥 XML 标签」的正则——CDATA 里的 `<<`、`>>`（如 C++ 流输出）
+    会被当成标签吞掉，代码被静默截断。
     """
-    text = re.sub(r"<[^>]+>", "", raw)
+    text = re.sub(r"^\s*<code(?:\s[^>]*)?>\s*<!\[CDATA\[", "", raw)
+    text = re.sub(r"\]\]>\s*</code>\s*$", "", text)
+    text = re.sub(r"^\s*<code(?:\s[^>]*)?>", "", text)
+    text = re.sub(r"</code>\s*$", "", text)
+    for name, value in sorted(docbook_entities().items(), key=lambda kv: -len(kv[0])):
+        text = text.replace(f"&{name};", value)
     entities = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
                 "&apos;": "'", "&nbsp;": " "}
-    entities.update({f"&{name};": value for name, value in docbook_entities().items()})
     for entity, char in entities.items():
         text = text.replace(entity, char)
     return text.strip("\n")
