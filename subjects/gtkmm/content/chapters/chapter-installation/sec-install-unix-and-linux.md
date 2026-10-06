@@ -1,51 +1,14 @@
-<!--
-来源：Programming with gtkmm 4 · Chapter 2. Installation
-原文：https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/chapter-installation.html
-原作：Murray Cumming，GFDL-1.2+（许可全文与义务说明见 content/license.md）
-性质：逐段对照翻译稿。引用块为英文原文，紧随段落为中文翻译；代码块照录不译。
--->
+---
+chapter: chapter-installation
+section: sec-install-unix-and-linux
+upstream-sha: ad3f3718776091e0d2b1a7fbf13c7fb5373bb43461c6dbffe33971eadbe75233
+upstream-commit: b89295e22598db8697d1aa22dd528a103d956c9b
+---
 
-# 第 2 章 · Installation（安装）
-
-## Dependencies（依赖）
-
-> Before attempting to install gtkmm-4.0, you might first need to install
-> these other packages.
-
-在尝试安装 gtkmm-4.0 之前，可能需要先安装以下这些包：
-
-> - sigc++-3.0
-> - gtk4
-> - glibmm-2.68
-> - cairomm-1.16
-> - pangomm-2.48
-
-- sigc++-3.0
-- gtk4
-- glibmm-2.68
-- cairomm-1.16
-- pangomm-2.48
-
-> These dependencies have their own dependencies, including the following
-> applications and libraries:
-
-这些依赖又有各自的依赖，其中包括以下应用和库：
-
-> - pkg-config
-> - glib-2.0
-> - pango
-> - cairo
-> - gdk-pixbuf-2.0
-> - graphene-1.0
-
-- pkg-config
-- glib-2.0
-- pango
-- cairo
-- gdk-pixbuf-2.0
-- graphene-1.0
-
-## Unix and Linux
+<!-- 来源：Programming with gtkmm 4 · Unix and Linux
+     分页严格跟随官方仓库结构（每节一页，对应官网 sec-sec-install-unix-and-linux 页面）。
+     引用块为英文原文，紧随段落为中文翻译；代码块照录不译。
+     upstream-sha 变化即表示官方原文已改，本稿需要复核。 -->
 
 ### Prebuilt Packages（预编译包）
 
@@ -145,16 +108,3 @@ configure 脚本或 meson 会检查所需的依赖是否都已安装；缺了任
 如果想参与 gtkmm 开发或试用新特性，也可以从 git 安装。大多数用户永远用不着
 这么做，但如果你有兴趣为 gtkmm 出力，请参阅附录「Working with gtkmm's Source
 Code」。
-
-## Microsoft Windows
-
-> GTK and gtkmm were designed to work well with Microsoft Windows, and the
-> developers encourage its use on the win32 platform. However, Windows has no
-> standard installation system for development libraries. Please see the
-> Windows Installation page (somewhat outdated) or the gtkmm and Win32
-> appendix for Windows-specific installation instructions and notes.
-
-GTK 和 gtkmm 的设计就考虑了与 Microsoft Windows 良好协作，开发者们也鼓励在
-win32 平台上使用。不过 Windows 没有标准的开发库安装体系。Windows 专属的安装
-说明与注意事项，请看 Windows Installation 页面（已有些过时）或附录
-「gtkmm and Win32」。

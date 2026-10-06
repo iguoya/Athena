@@ -48,12 +48,20 @@ export interface KnowledgePoint {
   blocks: Block[];
 }
 
+export interface SectionPage {
+  id: string;
+  title: string;
+  status: "pending" | "translated";
+}
+
 export interface Section {
   id: string;
   order: number;
   title: string;
   status: "pending" | "translated";
   translation_ref: TranslationRef;
+  /** 官方分页（严格跟随上游 DocBook 的节划分，应用 ADR 0002）。 */
+  pages: SectionPage[];
   knowledge_points: KnowledgePoint[];
   checkpoint: QuizItem[];
 }

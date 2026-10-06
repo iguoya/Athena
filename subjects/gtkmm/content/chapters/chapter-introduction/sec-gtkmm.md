@@ -1,37 +1,14 @@
-<!--
-来源：Programming with gtkmm 4 · Chapter 1. Introduction
-原文：https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/chapter-introduction.html
-原作：Murray Cumming，GFDL-1.2+（许可全文与义务说明见 content/license.md）
-性质：逐段对照翻译稿。引用块为英文原文，紧随段落为中文翻译；代码块照录不译。
--->
+---
+chapter: chapter-introduction
+section: sec-gtkmm
+upstream-sha: 737d974b370b5bc7ff6a8717e36e5032464f565cb4d04b8c66d9a21beffdcd68
+upstream-commit: b89295e22598db8697d1aa22dd528a103d956c9b
+---
 
-# 第 1 章 · Introduction（引言）
-
-## This book（关于本书）
-
-> This book explains key concepts of the gtkmm C++ API for creating user
-> interfaces. It also introduces the main user interface elements
-> ("widgets"). Although it mentions classes, constructors, and methods, it
-> does not go into great detail. Therefore, for full API information you
-> should follow the links into the reference documentation.
-
-本书讲解使用 gtkmm C++ API 创建用户界面的关键概念，并介绍主要的用户界面元素
-（「控件」，widget）。书中会提到类、构造函数和方法，但不做深入细节展开；完整
-的 API 信息请顺着链接查阅参考文档。
-
-> This book assumes a good understanding of C++, and how to create C++
-> programs.
-
-本书假定你已经很好地理解 C++，并且知道如何创建 C++ 程序。
-
-> We would very much like to hear of any problems you have learning gtkmm
-> with this document, and would appreciate input regarding improvements.
-> Please see the Contributing section for further information.
-
-如果你在学习本文档的过程中遇到任何问题，我们非常乐意听到；对改进建议，我们
-同样感激。更多信息请参阅 Contributing（贡献）一节。
-
-## gtkmm
+<!-- 来源：Programming with gtkmm 4 · gtkmm
+     分页严格跟随官方仓库结构（每节一页，对应官网 sec-sec-gtkmm 页面）。
+     引用块为英文原文，紧随段落为中文翻译；代码块照录不译。
+     upstream-sha 变化即表示官方原文已改，本稿需要复核。 -->
 
 > gtkmm is a C++ wrapper for GTK, a library used to create graphical user
 > interfaces. It is licensed using the LGPL license, so you can develop open
@@ -127,19 +104,3 @@ gtkmm 不是原生 C++ 工具集，而是 C 工具集的 C++ 包装。接口与�
 晦涩的技术细节做出难看的妥协。我们对底层 GTK 代码库也有些贡献，但 C 程序员、
 Perl 程序员、Python 程序员等同样在贡献。因此，相比特定语言的工具集，GTK 受益
 于更广泛的用户群——实现者更多、开发者更多、测试者更多、用户也更多。
-
-## C++ Resources（C++ 资源）
-
-> Useful links:
-
-有用的链接：
-
-> - Wikipedia C++: An introduction to C++, and many links.
-> - C++ reference: A convenient version of the C and C++ standards.
-> - The C++ Resources Network
-> - Bjarne Stroustrup's homepage
-
-- Wikipedia C++：C++ 入门与大量链接。
-- C++ reference：C 与 C++ 标准的便捷查阅版。
-- The C++ Resources Network（cplusplus.com）。
-- Bjarne Stroustrup 的个人主页。

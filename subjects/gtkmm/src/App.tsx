@@ -141,7 +141,7 @@ export default function App() {
                     )}
                     <span
                       className={`size-2 shrink-0 rounded-full transition-colors ${
-                        s.status === "translated"
+                        s.pages.some((p) => p.status === "translated")
                           ? "bg-accent-2"
                           : "bg-line group-hover:bg-muted"
                       }`}

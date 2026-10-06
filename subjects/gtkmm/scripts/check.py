@@ -22,10 +22,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from extract_source import DOCBOOK, load_structure  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = PROJECT_ROOT / "content"
@@ -132,33 +136,79 @@ def collect_demo_refs(course: dict) -> set[str]:
     return refs
 
 
-def check_curriculum(course: dict) -> tuple[set[str], set[str]]:
+def parse_front_matter(path: Path) -> dict[str, str]:
+    """解析翻译稿头部的 YAML 简易键值（chapter/section/upstream-sha/...）。"""
+    fields: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines()[:8]:
+        m = re.match(r"^(\w[\w-]*): (.+)$", line.strip())
+        if m:
+            fields[m.group(1)] = m.group(2).strip()
+    return fields
+
+
+def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], list[str]]:
+    """主线章必须严格跟随官方结构：章 id、节页集合、页状态与源 hash 全部可校验。"""
     if not course:
-        return set(), set()
+        return set(), set(), []
     seen_ids: set[str] = set()
     kp_ids: set[str] = set()
-    entities: list[tuple[str, list]] = [
-        ("sections", course.get("sections", [])),
-        ("reference", course.get("reference", [])),
+    entities: list[tuple[str, list, bool]] = [
+        ("sections", course.get("sections", []), True),
+        ("reference", course.get("reference", []), False),
     ]
-    for key, sections in entities:
-        is_main = key == "sections"  # 参考层条目（如 GFDL 原文照录）的呈现形态不同，不查对照稿
+    for key, sections, is_main in entities:
         for section in sections:
             where = f"curriculum.json {key}[]"
             section_id = section.get("id", "")
             if not section_id:
                 fail(f"{where}: 缺 id")
-            elif section_id in seen_ids:
+                continue
+            if section_id in seen_ids:
                 fail(f"{where}: id 重复 {section_id!r}")
             seen_ids.add(section_id)
-            if section.get("status") not in SECTION_STATUSES:
-                fail(f"{where}: status ∈ pending/translated（{section_id}）")
-            if is_main and section.get("status") == "translated":
-                # 已译的主线章节必须有逐段对照翻译稿（应用 ADR 0002 决策 1）
-                if not (CONTENT_DIR / "chapters" / f"{section_id}.md").is_file():
-                    fail(f"{where}: status=translated 但缺 content/chapters/{section_id}.md")
             if not section.get("translation_ref"):
                 fail(f"{where}: 缺 translation_ref——每个单元都能回溯教程（ADR 0002）")
+
+            if not is_main:
+                # 参考层只要求挂上官方 id（官方删了对应单元要报）
+                if section_id not in official:
+                    fail(f"{where}: 参考条目 {section_id!r} 不在官方结构里")
+                continue
+            if section_id not in official:
+                fail(f"{where}: 主线章 {section_id!r} 不在官方结构里——上游结构已变？")
+                continue
+
+            # 节页集合必须与官方完全一致：不多、不少、不改名（严格跟随官方分页）
+            official_pages = official[section_id]
+            page_ids = [p.get("id") for p in section.get("pages", [])]
+            missing = set(official_pages) - set(page_ids)
+            extra = set(page_ids) - set(official_pages)
+            if missing:
+                fail(f"{where}/{section_id}: 缺少官方节页 {sorted(missing)}——上游有而课表无")
+            if extra:
+                fail(f"{where}/{section_id}: 节页 {sorted(extra)} 不在官方结构里——不许自创分页")
+            if len(page_ids) != len(set(page_ids)):
+                fail(f"{where}/{section_id}: pages 存在重复 id")
+            for page in section.get("pages", []):
+                page_id = page.get("id", "")
+                pwhere = f"{where}/{section_id}/{page_id or '?'}"
+                if page.get("status") not in SECTION_STATUSES:
+                    fail(f"{pwhere}: status ∈ pending/translated")
+                    continue
+                if page.get("status") != "translated":
+                    continue
+                page_file = CONTENT_DIR / "chapters" / str(section_id) / f"{page_id}.md"
+                if not page_file.is_file():
+                    fail(f"{pwhere}: status=translated 但缺 {page_file.relative_to(PROJECT_ROOT)}")
+                    continue
+                fields = parse_front_matter(page_file)
+                recorded = fields.get("upstream-sha")
+                expected = official_pages[page_id]["sha256"]
+                if recorded != expected:
+                    fail(f"{pwhere}: 官方原文已变化（sha 不匹配），翻译稿需要复核")
+                if fields.get("section") != page_id or fields.get("chapter") != section_id:
+                    fail(f"{pwhere}: front matter 的 chapter/section 与文件位置不符")
+
             for kp in section.get("knowledge_points", []):
                 kp_id = kp.get("id", "")
                 if kp_id in kp_ids:
@@ -173,8 +223,12 @@ def check_curriculum(course: dict) -> tuple[set[str], set[str]]:
             for ref in kp.get("requires", []):
                 if ref not in kp_ids:
                     fail(f"curriculum.json: requires 指向不存在的知识点 {ref!r}（{kp.get('id')}）")
+    pages_total = sum(len(s.get("pages", [])) for s in course.get("sections", []))
+    translated = sum(1 for s in course.get("sections", [])
+                     for p in s.get("pages", []) if p.get("status") == "translated")
     print(
-        f"课表校验通过：{len(course.get('sections', []))} 个主线单元、"
+        f"课表校验通过：{len(course.get('sections', []))} 个主线章、"
+        f"{pages_total} 个官方节页（已译 {translated}）、"
         f"{len(course.get('reference', []))} 个参考单元、{len(kp_ids)} 个知识点"
     )
     return kp_ids, collect_demo_refs(course), collect_lab_refs(course)
@@ -330,8 +384,9 @@ def main() -> int:
     args = parser.parse_args()
 
     check_json_all()
+    official = {c["id"]: {s["id"]: s for s in c["sections"]} for c in load_structure()}
     course = load_json(CONTENT_DIR / "curriculum.json")
-    kp_ids, course_refs, lab_refs = check_curriculum(course or {})
+    kp_ids, course_refs, lab_refs = check_curriculum(course or {}, official)
     manifest = load_json(CONTENT_DIR / "demos.json")
     check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
     check_license_pages()

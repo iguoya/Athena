@@ -58,6 +58,25 @@
   同一回路。禁止手动「标记熟练」。
 - 课表块引用清单 id，清单是壳、check、宿主三方的唯一事实源。
 
+## 上游追踪（严格跟随官方仓库）
+
+- 官方仓库克隆在 `upstream/gtkmm-documentation`（gitignore，不入库）；基准记录在
+  `upstream.json`（url、分支、pinned_commit、docbook 路径）。
+- 文档源是 `docs/tutorial/C/index-in.docbook`（单个 DocBook）；官网的「每节一页」
+  由 XSLT chunking 生成，**分页单元 = 章下第一层 `<section>`**。翻译稿
+  `content/chapters/<章 xml:id>/<节 xml:id>.md` 一节一个文件，头部 front matter
+  记录 `upstream-sha`（该节规范化文本的 sha256，由 `scripts/extract_source.py`
+  计算）。
+- **结构不许自由发挥**：章/节的 id、顺序、分页、标题一律来自官方；课表
+  `sections[].pages` 的节集合必须与官方完全一致（check 校验：缺页、多页、改名
+  都报错）。翻译是逐段对照（引用块英文原文 + 中文段），不合并节、不重写段落。
+- **同步流程**：`git -C upstream/gtkmm-documentation fetch && git -C ... checkout
+  <新 commit>` → 跑 `check.py`（sha 不匹配的节会报「官方原文已变化，翻译稿需要
+  复核」）→ 逐节复核翻译、更新 front matter 的 sha → 在 `upstream.json` 更新
+  `pinned_commit`，一个上游版本一个提交。
+- 判分内容与译文有出入时，以官方 DocBook 的当前内容为准（语义基准见 ADR 0002）；
+  官方 zh_CN.po 可作术语参照（覆盖率不完全）。
+
 ## 架构原则
 
 - **独立可运行**：`launcher open gtkmm` 不经过任何别的应用。
