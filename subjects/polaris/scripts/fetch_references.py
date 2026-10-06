@@ -3,9 +3,11 @@
 
 只拷贝**许可证允许再分发**的仓库（MIT、CC0），连同 LICENSE 一起入库；保留版权或带
 相同方式共享义务的（roadmap.sh、CC BY-SA 4.0 的学习计划等）只记录链接与不拷贝的理由，
-内容仅在这里用作对照，不进入应用，也不复制其文字。固定到 commit，重跑得到同一份。
+内容仅在这里用作对照，不进入应用，也不复制其文字。快照固定到 MANIFEST 里记录的 commit；
+整体重跑会换成上游当前的新快照（文件与 sha256 随之变化）。
 
-用法：python scripts/fetch_references.py        （需要已登录的 gh）
+用法：python scripts/fetch_references.py                 （需要已登录的 gh；会重抓拷贝项，换新快照）
+      python scripts/fetch_references.py --linked-only   （只刷新「仅引用」清单，不动已固定的快照）
 """
 
 from __future__ import annotations
@@ -30,7 +32,7 @@ COPIED = [
      "role": "按学科方向（含体系结构、操作系统、嵌入式相关）分组的免费课程与书目"},
     {"id": "awesome-electronics", "repo": "kitspace/awesome-electronics",
      "files": ["README.md", "LICENSE"],
-     "role": "电子工程资源清单：目前 GitHub 上 star 最高的电子类整理，不是路线图，只作资源对照"},
+     "role": "电子工程资源清单（8k+ star，CC0）：是资源整理，不是路线图，只作资源对照"},
     {"id": "ai-hardware-engineer-roadmap", "repo": "ai-hpc/ai-hardware-engineer-roadmap",
      "files": ["README.md", "LICENSE"], "outline": True,
      "role": "软硬结合路线图：数字设计与 HDL → 体系结构 → 嵌入式 → FPGA / Jetson / 推理优化 → 专题方向"},
@@ -47,6 +49,10 @@ LINKED_ONLY = [
     {"id": "teachyourselfcs-cn", "repo": "izackwu/TeachYourselfCS-CN",
      "reason": "CC BY-SA 4.0，理由同上。只引用链接。",
      "role": "「Teach Yourself Computer Science」中文版（约 2.2 万）：九个必修领域，含计算机体系结构"},
+    {"id": "embedded-engineering-roadmap", "repo": "m3y54m/Embedded-Engineering-Roadmap",
+     "url": "https://github.com/m3y54m/Embedded-Engineering-Roadmap",
+     "reason": "CC BY-SA 4.0：拷贝或改编的内容须同协议共享。只引用链接。",
+     "role": "GitHub 上高 star（约 1.3 万）的嵌入式工程师路线图：按软件 / 硬件 / 软技能三块组织，并指出岗位名称偏重其中一块；微控制器一节列出 GPIO、ADC、定时器、中断、DMA、时钟与电源管理、引导加载"},
     {"id": "awesome-hdl", "repo": "drom/awesome-hdl", "reason": "仓库未声明许可证，默认保留版权。只引用链接。",
      "role": "硬件描述语言资源清单（约 1.2 千）"},
     {"id": "awesome-embedded-systems", "repo": "embedded-boston/awesome-embedded-systems",
@@ -78,7 +84,26 @@ def outline(repo: str, sha: str) -> str:
     return "\n".join(kept) + "\n"
 
 
+def refresh_linked_only() -> int:
+    """不重抓已固定的快照：只刷新「仅引用」清单，以及已拷贝项的 role 文字。"""
+    path = TARGET / "MANIFEST.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    roles = {spec["id"]: spec["role"] for spec in COPIED}
+    for entry in manifest["copied"]:
+        entry["role"] = roles.get(entry["id"], entry["role"])
+    manifest["linked_only"] = []
+    for spec in LINKED_ONLY:
+        meta = repo_meta(spec["repo"])
+        manifest["linked_only"].append({**spec, "stars": meta["stars"], "license": meta["license"],
+                                        "commit": meta["commit"]})
+        print(f"仅引用 {spec['repo']}（{meta['stars']} star，{meta['license']}）")
+    path.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    return 0
+
+
 def main() -> int:
+    if "--linked-only" in sys.argv[1:]:
+        return refresh_linked_only()
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)
         if reconfigure is not None:
