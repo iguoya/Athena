@@ -87,7 +87,9 @@ export function PageView({
     const path = `/content/chapters/${chapterId}/${pageId}.json`;
     (async () => {
       try {
-        setSnapshot(await invoke<Snapshot>("get_page_content", { chapterId, pageId }));
+        // Tauri 端 Rust 返回的是 JSON 字符串；浏览器回退分支 fetch().json() 已是对象
+        const raw = await invoke<unknown>("get_page_content", { chapterId, pageId });
+        setSnapshot(typeof raw === "string" ? (JSON.parse(raw) as Snapshot) : (raw as Snapshot));
       } catch {
         try {
           const response = await fetch(path);
