@@ -297,6 +297,15 @@ export default function App() {
 
       {/* 右侧：内容视图（切换时淡入上浮） */}
       <main className="relative z-10 flex-1 overflow-y-auto">
+        {notice && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="sticky top-0 z-20 mx-auto w-fit rounded-full bg-accent-soft px-5 py-2 text-sm text-accent-deep shadow-card ring-1 ring-accent/25"
+          >
+            {notice}
+          </motion.p>
+        )}
         <AnimatePresence mode="wait">
           <motion.div
             key={viewKey}
@@ -466,7 +475,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* 演示事件面板：终端风格 */}
+      {/* 演示事件面板：只在实验页出现（它是实验工作流的上下文） */}
+      {view?.kind === "lab" && (
       <aside className="relative z-10 flex w-80 shrink-0 flex-col border-l border-line bg-surface p-4 text-fg">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-accent">
           <Terminal className="size-4" /> 演示事件
@@ -508,6 +518,7 @@ export default function App() {
           )}
         </ul>
       </aside>
+      )}
     </div>
   );
 }
