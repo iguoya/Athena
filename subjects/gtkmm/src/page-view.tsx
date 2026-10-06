@@ -13,11 +13,30 @@ export interface PatternEntry {
   pattern: string;
   cn: string;
 }
-let VOCAB: VocabEntry[] = [];
-let PATTERNS: PatternEntry[] = [];
+/** 词族映射：变体（derived/derives/…）→ 基词。同族共用认识状态。 */
+const TERM_LOOKUP = new Map<string, { kind: "vocab" | "pattern"; entry: VocabEntry & PatternEntry; base: string }>();
+
+function familyVariants(term: string): string[] {
+  const variants = [term];
+  if (!term.includes(" ")) {
+    variants.push(term + "s");
+    if (/(?:s|x|ch|sh)$/.test(term)) variants.push(term + "es");
+    if (/e$/.test(term)) variants.push(term + "d");
+    else variants.push(term + "ed", term.slice(-1) + "ed" === term + "ed" ? term + "ed" : term + term.slice(-1) + "ed");
+    if (/[^wxy]$/.test(term)) variants.push(term + "ing");
+    if (/e$/.test(term)) variants.push(term.slice(0, -1) + "ing");
+    variants.push(term + "ly");
+  }
+  return [...new Set(variants)];
+}
+
 export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[]) {
-  VOCAB = vocab;
-  PATTERNS = patterns;
+  TERM_LOOKUP.clear();
+  for (const v of vocab)
+    for (const variant of familyVariants(v.term))
+      TERM_LOOKUP.set(variant.toLowerCase(), { kind: "vocab", entry: v as VocabEntry & PatternEntry, base: v.term });
+  for (const pt of patterns)
+    TERM_LOOKUP.set(pt.pattern.toLowerCase(), { kind: "pattern", entry: pt as VocabEntry & PatternEntry, base: pt.pattern });
 }
 
 /** 词汇状态（learning.db 派生）：known=已认识；unknown=生词。 */
@@ -71,10 +90,20 @@ function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
   return groups;
 }
 
+/** 分句：英文按 .!?，中文按 。！？；保留标点（逐句对照用）。 */
+function splitSentences(text: string, lang: "en" | "zh"): string[] {
+  const parts = lang === "en"
+    ? text.replace(/\s*\n\s*/g, " ").split(/(?<=[.!?])\s+/)
+    : text.split(/(?<=[。！？；])/);
+  return parts.map((s) => s.trim()).filter(Boolean);
+}
+
 /** 译文揭示控件：训练模式下默认折叠，点击揭示并自评（看懂了/标记复习）。 */
 function ZhReveal({
   sha,
+  en,
   zh,
+  sentenceMode,
   hidden,
   known,
   hard,
@@ -82,7 +111,9 @@ function ZhReveal({
   onRate,
 }: {
   sha: string;
+  en: string;
   zh: string;
+  sentenceMode: boolean;
   hidden: boolean;
   known: boolean;
   hard: boolean;
@@ -91,9 +122,32 @@ function ZhReveal({
 }) {
   if (!hidden) {
     const rated = known || hard;
+    const pairs = sentenceMode
+      ? (() => {
+          const enSents = splitSentences(en, "en");
+          const zhSents = splitSentences(zh, "zh");
+          const rows: { en: string; zh?: string }[] = enSents.map((s) => ({ en: s }));
+          zhSents.forEach((s, i) => {
+            if (rows[i]) rows[i].zh = s;
+            else rows.push({ en: "", zh: s });
+          });
+          return rows;
+        })()
+      : null;
     return (
       <div>
-        <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(zh))}</p>
+        {pairs ? (
+          <div className="divide-y divide-line/60">
+            {pairs.map((row, i) => (
+              <div key={i} className="py-1.5">
+                {row.en && <p className="font-serif text-[24px] leading-relaxed text-fg/60">{renderInline(row.en)}</p>}
+                {row.zh && <p className="text-[27px] leading-loose text-fg/90">{renderInline(row.zh)}</p>}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(zh))}</p>
+        )}
         {rated ? (
           <span
             className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-[20px] ring-1 ${
@@ -223,10 +277,7 @@ export function setOnRateWord(fn: (term: string, known: boolean) => void) {
   onRateWord = fn;
 }
 export function buildAnnotationMatcher() {
-  const terms = [
-    ...PATTERNS.map((pt) => pt.pattern),
-    ...VOCAB.map((v) => v.term),
-  ];
+  const terms = [...TERM_LOOKUP.keys()];
   if (!terms.length) {
     annotationMatcher = null;
     return;
@@ -254,20 +305,18 @@ function renderInline(text: string): ReactNode[] {
     annotationMatcher.lastIndex = 0;
     while ((m = annotationMatcher.exec(raw)) !== null) {
       if (m.index > last) nodes.push(raw.slice(last, m.index));
-      const hit = m[0].toLowerCase();
-      const vocabHit = VOCAB.find((v) => v.term.toLowerCase() === hit);
-      const patternHit = PATTERNS.find((pt) => pt.pattern.toLowerCase() === hit);
-      if (vocabHit || patternHit) {
+      const hit = TERM_LOOKUP.get(m[0].toLowerCase());
+      if (hit) {
         nodes.push(
           <AnnotatedTerm
             key={`ann-${key++}`}
-            kind={vocabHit ? "vocab" : "pattern"}
-            term={vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern}
+            kind={hit.kind}
+            term={hit.base}
             display={m[0]}
-            entry={(vocabHit ?? patternHit) as VocabEntry & PatternEntry}
-            status={wordStatus?.known.has(vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern)
+            entry={hit.entry}
+            status={wordStatus?.known.has(hit.base)
               ? "known"
-              : wordStatus?.unknown.has(vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern)
+              : wordStatus?.unknown.has(hit.base)
                 ? "unknown"
                 : undefined}
             onRate={onRateWord ?? (() => {})}
@@ -352,6 +401,7 @@ export function PageView({
   chapterId,
   pageId,
   zhHidden,
+  sentenceMode,
   knownParas,
   hardParas,
   onRate,
@@ -360,6 +410,8 @@ export function PageView({
   pageId: string;
   /** 英译训练模式：中文默认隐藏，点击揭示 */
   zhHidden: boolean;
+  /** 逐句对照：揭示译文后按句交错显示 */
+  sentenceMode: boolean;
   /** 已自评「看懂了」的段落 sha */
   knownParas: Set<string>;
   /** 被标记「需复习」的段落 sha */
@@ -462,7 +514,9 @@ export function PageView({
                         <span className="pl-5">
                           <ZhReveal
                             sha={block.sha}
+                            en={flow(block.text)}
                             zh={block.zh}
+                            sentenceMode={sentenceMode}
                             hidden={zhHidden && !revealed.has(block.sha)}
                             known={knownParas.has(block.sha)}
                             hard={hardParas.has(block.sha)}
@@ -513,7 +567,9 @@ export function PageView({
                   >
                     <ZhReveal
                       sha={block.sha}
+                      en={flow(block.text)}
                       zh={block.zh}
+                      sentenceMode={sentenceMode}
                       hidden={zhHidden && !revealed.has(block.sha)}
                       known={knownParas.has(block.sha)}
                       hard={hardParas.has(block.sha)}
