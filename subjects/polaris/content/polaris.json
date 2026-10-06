@@ -1718,7 +1718,7 @@
           "verify": "code",
           "chapters": [
             {
-              "id": "se.req",
+              "id": "swe.req",
               "title": "需求与设计",
               "summary": "把需求变成可验证的设计，模块化与接口。",
               "requires": [],
@@ -1726,7 +1726,7 @@
               "kind": "theory"
             },
             {
-              "id": "se.vcs",
+              "id": "swe.vcs",
               "title": "版本管理与协作流程",
               "summary": "分支、评审与合并，写清晰的提交与变更记录。",
               "requires": [],
@@ -1735,46 +1735,46 @@
               "hands_on": true
             },
             {
-              "id": "se.test",
+              "id": "swe.test",
               "title": "自动化测试",
               "summary": "单元、集成与回归测试，测试的取舍。",
               "requires": [
-                "se.req"
+                "swe.req"
               ],
               "mastery": "usage",
               "kind": "practice",
               "hands_on": true
             },
             {
-              "id": "se.ci",
+              "id": "swe.ci",
               "title": "持续集成",
               "summary": "把构建、测试与检查放进自动流程。",
               "requires": [
-                "se.test",
-                "se.vcs"
+                "swe.test",
+                "swe.vcs"
               ],
               "mastery": "usage",
               "kind": "practice",
               "hands_on": true
             },
             {
-              "id": "se.refactor",
+              "id": "swe.refactor",
               "title": "重构与技术债",
               "summary": "在测试保护下重构，识别与偿还技术债。",
               "requires": [
-                "se.test"
+                "swe.test"
               ],
               "mastery": "usage",
               "kind": "practice",
               "hands_on": true
             },
             {
-              "id": "se.project",
+              "id": "swe.project",
               "title": "为已有项目补测试与持续集成",
               "summary": "为一个已有项目补测试与持续集成，通过评审合并一次重构。",
               "requires": [
-                "se.ci",
-                "se.refactor"
+                "swe.ci",
+                "swe.refactor"
               ],
               "mastery": "assessment",
               "kind": "practice",
@@ -7351,7 +7351,7 @@
     {
       "id": "automation",
       "title": "自动化类 · 控制与智能系统",
-      "summary": "自动化类的技术体系：测量、建模、控制、执行与系统。推荐入门起点是「可编程控制器与工业控制编程」，它不需要控制理论就能做出可验证的作品。自动控制原理（反馈控制）与电机控制、信号与系统、传感器与信号调理是几个专业类共用的知识，仍在电子信息图里，这里通过跨图关联引用，不重复造节点。尚未覆盖：运筹与调度、离散事件系统与 Petri 网、系统工程与可靠性理论，后续按需新增，不在这里假装已经齐全。",
+      "summary": "自动化类的技术体系：测量、建模、控制、执行与系统。推荐入门起点是「可编程控制器与工业控制编程」，它不需要控制理论就能做出可验证的作品。自动控制原理（反馈控制）与电机控制、信号与系统、传感器与信号调理是几个专业类共用的知识，仍在电子信息图里，这里通过跨图关联引用，不重复造节点。弱电侧已补深：经典控制设计（根轨迹与频域）、工业现场 I/O 与隔离、离散事件与顺序控制、实时以太网与 TSN、非线性与鲁棒控制、仿真与半实物验证、工控网络安全、飞行控制、机器视觉与视觉伺服。尚未覆盖：运筹与调度、系统工程与可靠性理论、预测性维护与设备健康管理，后续按需新增，不在这里假装已经齐全。",
       "view_kind": "academic",
       "discipline": "auto",
       "graph_kind": "course",
@@ -9024,6 +9024,1083 @@
               "hands_on": true
             }
           ]
+        },
+        {
+          "id": "polaris.auto.frequency_design",
+          "title": "经典控制设计：根轨迹、频域与校正",
+          "track": "control",
+          "stable_definition": "经典控制用传递函数分析闭环：根轨迹看极点随增益怎样移动，伯德图与奈奎斯特判据从开环频率响应判断闭环稳定，增益裕度与相位裕度量化离失稳还有多远；超前、滞后与 PID 校正是在不重造对象的前提下塑造开环频响的手段。",
+          "engineering_role": "让控制器的设计有可检查的依据：改一个参数，能说出裕度、带宽与响应怎样变，也是读懂工业调参经验的钥匙。",
+          "practice": "对一个二阶加延迟的对象，用根轨迹与伯德图设计超前校正与 PID，仿真中给出裕度与阶跃响应，再在实物或半实物对象上测频响并与设计对账。",
+          "validation": "simulation",
+          "validation_note": "设计的裕度、带宽与仿真阶跃响应一致，实测频响与模型的差异被解释，改变增益时的行为与预期相符。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.auto.modeling"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mit-6302-feedback",
+              "locator": "反馈系统：根轨迹、频率响应与校正"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "fbs-astrom-murray",
+              "locator": "稳定性、频域分析与 PID 设计"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "mit-214-feedback",
+              "locator": "反馈控制系统的分析与设计"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "python-control",
+              "locator": "根轨迹与伯德图的计算工具"
+            }
+          ],
+          "pitfall": "只调到响应好看：不看裕度与灵敏度，换一个工况就振荡；或者把延迟忽略掉，相位裕度在纸面上很大、实际为负。",
+          "priority": "essential",
+          "priority_reason": "几乎所有工业控制回路仍按它整定；也是后面状态空间与鲁棒控制的直观来源。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要对象建模与基础的信号与系统。",
+          "domain": "control",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "fdd.stability",
+              "title": "稳定性与根轨迹",
+              "summary": "闭环极点随增益的移动，用根轨迹判断可用的增益范围。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "fdd.freq",
+              "title": "频率响应与伯德图",
+              "summary": "从传递函数画出并读懂幅频与相频。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "fdd.margin",
+              "title": "奈奎斯特判据与稳定裕度",
+              "summary": "由开环频响判断闭环稳定，用增益与相位裕度量化。",
+              "requires": [
+                "fdd.freq"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fdd.compensate",
+              "title": "超前、滞后与 PID 校正",
+              "summary": "塑造开环频响以达到带宽与裕度的要求。",
+              "requires": [
+                "fdd.stability",
+                "fdd.margin"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fdd.delay",
+              "title": "延迟对裕度的吞噬",
+              "summary": "时间延迟怎样吃掉相位裕度，以及怎样把它写进设计。",
+              "requires": [
+                "fdd.margin"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fdd.verify",
+              "title": "实测频响并与设计对账",
+              "summary": "在对象上测频响，核对裕度与带宽，并解释与模型的差异。",
+              "requires": [
+                "fdd.compensate",
+                "fdd.delay"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.industrial_io",
+          "title": "工业现场 I/O 与信号隔离",
+          "track": "hardware",
+          "stable_definition": "工业现场的信号不是单片机的 3.3 V：数字量用 24 V 的开关输入输出，模拟量多用 4–20 mA 电流环（两线制可由环路供电，断线可检测）与 0–10 V；现场与控制器之间常有地电位差，要用隔离切断地环路；输入端要滤波、限幅并抗浪涌，输出端要能驱动感性负载与短路保护。",
+          "engineering_role": "让控制器可靠地接触真实设备：传感器、阀门与接触器的接口设计得不好，再好的算法也被现场的干扰击穿。",
+          "practice": "设计并搭一路隔离的 4–20 mA 模拟量输入与一路 24 V 数字量输入输出，测量精度、线性度与响应，并对输入注入共模干扰与断线，验证读数与诊断行为。",
+          "validation": "measurement",
+          "validation_note": "模拟量通道的误差曲线、数字量的抖动与响应时间、干扰与断线下的读数与诊断结果均有记录。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.auto.plc_basics",
+            "polaris.auto.instrumentation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-4-20ma-isolated",
+              "locator": "两线制环路供电的 4–20 mA 现场发送器与隔离电源"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "adi-cn0314",
+              "locator": "4–20 mA 环路供电发送器与接收器的电路实现"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nist-sp-800-82",
+              "locator": "现场设备与控制器的体系结构"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "art-of-electronics",
+              "locator": "输入保护与隔离的电路"
+            }
+          ],
+          "pitfall": "把实验室的接法带到现场：不隔离也不做输入滤波，地电位差与开关干扰让读数乱跳，被当成软件滤波问题去修。",
+          "priority": "essential",
+          "priority_reason": "任何落到真实设备上的自动化系统都要过这一关，是电子学与工业现场的接缝。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要 PLC、检测与基础电路。",
+          "domain": "signals",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "io.kinds",
+              "title": "工业 I/O 的类型",
+              "summary": "24 V 数字量、0–10 V 与 4–20 mA 模拟量、热电阻输入各自的用途。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "io.loop",
+              "title": "4–20 mA 环路与两线制",
+              "summary": "电流环为什么抗干扰、怎样由环路供电，以及怎样用 4 mA 判断断线。",
+              "requires": [
+                "io.kinds"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "io.isolate",
+              "title": "隔离与地环路",
+              "summary": "地电位差带来的问题，以及隔离方式的选择与代价。",
+              "requires": [
+                "io.loop"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "io.input",
+              "title": "输入滤波、限幅与抗扰",
+              "summary": "数字量输入的消抖与滤波，模拟量输入的限幅与采样。",
+              "requires": [
+                "io.kinds"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "io.output",
+              "title": "输出驱动与感性负载",
+              "summary": "驱动继电器与电磁阀时的续流与短路保护。",
+              "requires": [
+                "io.kinds"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "io.test",
+              "title": "注入共模干扰与断线",
+              "summary": "对一路隔离输入注入共模干扰与断线，检查读数与诊断。",
+              "requires": [
+                "io.isolate",
+                "io.input",
+                "io.output"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.discrete_event",
+          "title": "离散事件系统与顺序控制",
+          "track": "control",
+          "stable_definition": "很多自动化对象不是连续变化而是事件驱动的：状态机与自动机描述事件序列，Petri 网用库所与变迁描述并发与同步，顺序功能图把一条工艺写成步与转换条件；可达性分析能在运行前发现死锁与禁止状态，监督控制则综合出避免它们的控制器。",
+          "engineering_role": "让顺序、联锁与批处理逻辑可以被分析而不仅是被调试，是 PLC 编程从「能动」到「保证不死锁」的一步。",
+          "practice": "为一条带两台设备共享一个资源的工艺建立 Petri 网模型，做可达性分析找出死锁，加入监督规则消除死锁，再把结果写成顺序功能图并在 PLC 上运行。",
+          "validation": "analysis",
+          "validation_note": "模型的可达状态与禁止状态被枚举，加入监督前后的死锁情况对比，PLC 上的行为与模型一致。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.auto.plc_basics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cassandras-des",
+              "locator": "自动机、Petri 网与监督控制"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "plcopen-61131",
+              "locator": "顺序功能图的语言要素"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "openplc",
+              "locator": "在开源运行时上实现顺序逻辑"
+            }
+          ],
+          "pitfall": "只凭经验写联锁：并发流程里的死锁与竞争没有被分析，现场偶发卡死，复现不了也修不干净。",
+          "priority": "important",
+          "priority_reason": "工业顺序与批处理控制的理论基础，也与并发程序的死锁分析同源。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要 PLC 基础，数学上只要求集合与图。",
+          "domain": "control",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "des.automata",
+              "title": "有限状态机与自动机",
+              "summary": "用事件序列描述系统，语言与状态的对应。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "des.petri",
+              "title": "Petri 网：并发与同步",
+              "summary": "库所、变迁与标记，用它表达并发、共享资源与同步。",
+              "requires": [
+                "des.automata"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "des.sfc",
+              "title": "顺序功能图",
+              "summary": "把一条工艺写成步与转换条件，并映射到 PLC 程序。",
+              "requires": [
+                "des.automata"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "des.reach",
+              "title": "可达性、死锁与禁止状态",
+              "summary": "枚举可达状态，找出死锁与不允许的状态。",
+              "requires": [
+                "des.petri"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "des.supervise",
+              "title": "监督控制",
+              "summary": "用监督规则避免进入禁止状态，同时尽量少限制系统。",
+              "requires": [
+                "des.reach"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "des.case",
+              "title": "为一条工艺建模并消除死锁",
+              "summary": "建模、做可达性分析、加入监督并在 PLC 上验证行为与模型一致。",
+              "requires": [
+                "des.sfc",
+                "des.supervise"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.realtime_ethernet_tsn",
+          "title": "实时以太网与时间敏感网络",
+          "track": "systems",
+          "stable_definition": "控制回路需要有界延迟与同步：EtherCAT 与 PROFINET 把确定性做进工业以太网，时间敏感网络（TSN）则在标准以太网上增加时间同步（802.1AS）、按时间表调度的流量整形（802.1Qbv）与帧抢占，使控制流量与普通流量共网；评价它看端到端延迟、抖动与同步精度。",
+          "engineering_role": "决定分布式控制能否在通用网络基础设施上闭合，是工业以太网演进的方向。",
+          "practice": "在两台设备间搭一个带时间同步的测试网络，测量不同背景流量下的端到端延迟与抖动，对比有无时间表调度的差异，并把结果与控制周期对照。",
+          "validation": "measurement",
+          "validation_note": "同步精度、延迟与抖动的统计分布有测量数据，背景流量下的退化与调度后的改善被量化。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.industrial_networks"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ieee-tsn",
+              "locator": "时间敏感网络任务组的标准族与目标"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ieee-8021as",
+              "locator": "802.1AS 的时间同步与定时"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ethercat-technology",
+              "locator": "EtherCAT 的处理时间同步"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "profibus-pi",
+              "locator": "PROFINET 的实时通信"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nist-ptp",
+              "locator": "精确时间协议"
+            }
+          ],
+          "pitfall": "把「以太网」当成「实时」：不测抖动与同步误差，一到负载升高控制周期就被破坏。",
+          "priority": "important",
+          "priority_reason": "工业网络的演进方向，也是控制、网络与时间同步的交汇点。",
+          "stage": "senior",
+          "stage_reason": "资深：需要工业通信与网络基础。",
+          "domain": "signals",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "tsn.need",
+              "title": "控制对网络的要求",
+              "summary": "有界延迟、低抖动与同步，为什么普通以太网不够。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "tsn.sync",
+              "title": "时间同步：802.1AS",
+              "summary": "主时钟、路径延迟测量与同步精度。",
+              "requires": [
+                "tsn.need"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "tsn.schedule",
+              "title": "时间表调度与流量整形",
+              "summary": "按时间表放行控制流量，与背景流量共网。",
+              "requires": [
+                "tsn.sync"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "tsn.preempt",
+              "title": "帧抢占与冗余",
+              "summary": "抢占长帧以降低延迟，冗余传输的思路。",
+              "requires": [
+                "tsn.need"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "tsn.compare",
+              "title": "与 EtherCAT、PROFINET 的关系",
+              "summary": "两条路线的取舍与现状。",
+              "requires": [
+                "tsn.need"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "tsn.measure",
+              "title": "测量延迟、抖动与同步精度",
+              "summary": "在背景流量下测端到端延迟与抖动，并与控制周期对照。",
+              "requires": [
+                "tsn.schedule",
+                "tsn.compare"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.nonlinear_control",
+          "title": "非线性控制：稳定性与反馈线性化",
+          "track": "control",
+          "stable_definition": "真实对象多是非线性的：相平面与平衡点分析描述其定性行为，李雅普诺夫函数给出不求解方程就能证明稳定的方法，反馈线性化与滑模控制把非线性对象变成可控的形式；执行器饱和与死区本身就是需要显式处理的非线性。",
+          "engineering_role": "让控制器在大范围工况下仍有稳定性依据，是机器人、飞行器与电机驱动中线性化假设失效时的工具。",
+          "practice": "对一个倒立摆或带饱和的位置系统，设计李雅普诺夫意义下的稳定控制，实现反馈线性化或滑模控制，在仿真中比较线性控制在大角度下的失效，并检验饱和与抖振。",
+          "validation": "simulation",
+          "validation_note": "李雅普诺夫函数的导数符号被检验，大范围初始条件下的仿真结果对比线性控制，饱和与抖振的影响有记录。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.auto.modern_control"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "underactuated-text",
+              "locator": "非线性系统的动力学、李雅普诺夫分析与反馈线性化"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "mit-6832-underactuated",
+              "locator": "非线性控制的课程内容"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "fbs-astrom-murray",
+              "locator": "非线性系统与稳定性"
+            }
+          ],
+          "pitfall": "只在平衡点附近验证：线性化设计在小扰动下很好，大范围时失稳，却把它当成对象的固有问题。",
+          "priority": "important",
+          "priority_reason": "机器人与飞行器控制的必备工具，也是理解为何线性理论有边界。",
+          "stage": "senior",
+          "stage_reason": "资深：需要现代控制与较多数学。",
+          "domain": "control",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "nlc.phase",
+              "title": "相平面与平衡点",
+              "summary": "二阶非线性系统的定性行为与极限环。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "nlc.lyapunov",
+              "title": "李雅普诺夫稳定性",
+              "summary": "构造函数、检验导数符号，不求解就证明稳定。",
+              "requires": [
+                "nlc.phase"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "nlc.feedback",
+              "title": "反馈线性化",
+              "summary": "用反馈抵消非线性，并认识它对模型精度的依赖。",
+              "requires": [
+                "nlc.lyapunov"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "nlc.sliding",
+              "title": "滑模控制与抖振",
+              "summary": "滑模面的设计，以及抖振与它的削减方法。",
+              "requires": [
+                "nlc.lyapunov"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "nlc.saturate",
+              "title": "饱和、死区与抗积分饱和",
+              "summary": "执行器非线性对稳定性的影响与处理。",
+              "requires": [
+                "nlc.phase"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "nlc.pendulum",
+              "title": "倒立摆的大范围镇定",
+              "summary": "对比线性与非线性控制在大角度下的表现，并检验饱和与抖振。",
+              "requires": [
+                "nlc.feedback",
+                "nlc.sliding",
+                "nlc.saturate"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.robust_adaptive",
+          "title": "鲁棒与自适应控制",
+          "track": "control",
+          "stable_definition": "模型永远不准：鲁棒控制把不确定性当作设计的一部分，灵敏度函数与互补灵敏度函数刻画扰动抑制与测量噪声之间的折中，小增益定理给出乘性不确定性下保证稳定的条件；自适应控制与增益调度则让控制器随工况或估计的参数改变。",
+          "engineering_role": "让控制器在对象变化、负载变化与建模误差下仍然可靠，是从仿真走向真实设备的关键。",
+          "practice": "对一个参数会变化的对象（如负载惯量变化的伺服），分析灵敏度与鲁棒稳定裕度，设计一个鲁棒的固定增益控制器与一个增益调度的版本，在参数摄动下比较响应与稳定性。",
+          "validation": "analysis",
+          "validation_note": "参数摄动下的响应与稳定裕度被系统地扫描，固定增益与增益调度的表现差异有数据。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.auto.modern_control",
+            "polaris.auto.frequency_design"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "fbs-astrom-murray",
+              "locator": "不确定性、灵敏度与鲁棒性"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "mit-6241-control",
+              "locator": "不确定性与鲁棒稳定性"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "mit-6302-feedback",
+              "locator": "灵敏度与反馈的权衡"
+            }
+          ],
+          "pitfall": "只对标称模型设计：参数一变就失稳，却不知道离不稳定还有多远。",
+          "priority": "important",
+          "priority_reason": "工业控制从实验室走向现场的必修内容，也是高端控制岗位的常见要求。",
+          "stage": "senior",
+          "stage_reason": "资深：需要现代控制与经典频域设计。",
+          "domain": "control",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "rac.uncertainty",
+              "title": "模型不确定性",
+              "summary": "参数不确定与未建模动态，怎样用模型描述它们。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "rac.sensitivity",
+              "title": "灵敏度函数与设计折中",
+              "summary": "扰动抑制与噪声放大之间不可避免的折中。",
+              "requires": [
+                "rac.uncertainty"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "rac.smallgain",
+              "title": "小增益定理与鲁棒稳定",
+              "summary": "乘性不确定性下保证稳定的条件。",
+              "requires": [
+                "rac.sensitivity"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "rac.schedule",
+              "title": "增益调度",
+              "summary": "随工况切换或插值控制器参数。",
+              "requires": [
+                "rac.sensitivity"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "rac.adaptive",
+              "title": "自适应控制的思想",
+              "summary": "在线估计参数并调整控制器，以及稳定性上的难点。",
+              "requires": [
+                "rac.uncertainty"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "rac.sweep",
+              "title": "参数摄动扫描",
+              "summary": "系统地扫描参数摄动，比较固定增益与增益调度的响应与稳定性。",
+              "requires": [
+                "rac.smallgain",
+                "rac.schedule"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.control_simulation_hil",
+          "title": "控制系统仿真与半实物验证",
+          "track": "assurance",
+          "stable_definition": "控制软件在上机前要逐级验证：模型在环（MIL）验证算法，软件在环（SIL）验证生成或手写的代码，处理器在环（PIL）验证目标芯片上的数值与时序，硬件在环（HIL）把真实控制器接到实时仿真的对象上；用同一组测试向量与回归来保证各级结果一致，并在环中注入故障。",
+          "engineering_role": "让「仿真很好、上机就崩」的情况在实验室里就暴露，是控制软件产品化与安全认证的通行做法。",
+          "practice": "为一个控制器建立 MIL、SIL 与 HIL 的验证链，用同一组测试向量与故障注入对比各级输出，记录不一致的来源并修复。",
+          "validation": "simulation",
+          "validation_note": "各级输出在容差内一致，注入故障时的降级行为符合设计，每处不一致都有归因与修复记录。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.modeling",
+            "polaris.auto.control_software"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-simulation",
+              "locator": "SITL 与 HITL 的仿真层级"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "simulink-onramp",
+              "locator": "模型的建立与仿真"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "openmodelica",
+              "locator": "基于方程的对象建模与仿真"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "python-control",
+              "locator": "控制系统的脚本化仿真"
+            }
+          ],
+          "pitfall": "只在 MIL 里验证：数值与时序的差异到了目标芯片才暴露，此时问题已很难定位。",
+          "priority": "important",
+          "priority_reason": "控制软件走向实机的必要环节，航空、汽车与工业的验证流程都以它为骨架。",
+          "stage": "senior",
+          "stage_reason": "资深：需要建模与控制软件工程的基础。",
+          "domain": "control",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "cshil.levels",
+              "title": "MIL、SIL、PIL 与 HIL",
+              "summary": "四级在环验证各自验证什么、发现什么类型的问题。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "cshil.plant",
+              "title": "对象模型与固定步长",
+              "summary": "为实时仿真准备对象模型，固定步长与求解器的取舍。",
+              "requires": [
+                "cshil.levels"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "cshil.vectors",
+              "title": "测试向量与回归",
+              "summary": "用同一组测试向量贯穿各级，并纳入回归。",
+              "requires": [
+                "cshil.levels"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "cshil.io",
+              "title": "实时仿真与 I/O 接口",
+              "summary": "把真实控制器接到实时仿真对象上，处理采样与接口时序。",
+              "requires": [
+                "cshil.plant"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "cshil.fault",
+              "title": "故障注入",
+              "summary": "在环中注入传感器与执行器故障，检查降级行为。",
+              "requires": [
+                "cshil.vectors",
+                "cshil.io"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "cshil.chain",
+              "title": "搭一条验证链并对账",
+              "summary": "搭出 MIL 到 HIL 的验证链，对比各级输出并归因不一致。",
+              "requires": [
+                "cshil.fault"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.ot_security",
+          "title": "工业控制系统网络安全",
+          "track": "assurance",
+          "stable_definition": "工业控制系统的安全目标与办公网络不同：可用性与安全（人与设备）优先，设备寿命长、补丁难、协议常无认证；防护靠分区与管道的分段、最小权限的访问、白名单与监测，而不是主动扫描生产网；ISA/IEC 62443 把它组织成区域、管道与安全等级的体系。",
+          "engineering_role": "让自动化系统在联网之后仍然安全地运行，是工业物联网与智能制造落地的前提。",
+          "practice": "为一个实验室里的小型控制网络（PLC、HMI 与网关）画出网络分区与数据流，列出每个连接的信任假设与风险，设计分段与访问控制方案，并用被动监测验证没有越界流量。",
+          "validation": "review",
+          "validation_note": "分区图、数据流与风险清单完整，分段方案落实后被动监测显示没有越界流量，改动不影响控制周期。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.industrial_networks"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nist-sp-800-82",
+              "locator": "工业控制系统的体系结构、风险与防护"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "isa-iec-62443",
+              "locator": "工业自动化与控制系统的安全标准体系"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "modbus-org",
+              "locator": "Modbus 的协议设计"
+            }
+          ],
+          "pitfall": "把办公网的做法搬进产线：对生产网做主动扫描或强制补丁，反而让设备停机。",
+          "priority": "important",
+          "priority_reason": "工控联网后的底线要求，也是合规与客户审核的常见项。",
+          "stage": "senior",
+          "stage_reason": "资深：需要工业通信与基本的信息安全。",
+          "domain": "security",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "ots.diff",
+              "title": "OT 与 IT 的安全差异",
+              "summary": "可用性与安全优先、设备寿命长、补丁难。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "ots.arch",
+              "title": "分区、管道与数据流",
+              "summary": "把控制网分成区域，管道上控制数据流。",
+              "requires": [
+                "ots.diff"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ots.protocol",
+              "title": "常见工业协议的安全问题",
+              "summary": "无认证、明文与广播带来的风险。",
+              "requires": [
+                "ots.diff"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "ots.defense",
+              "title": "纵深防御：分段、白名单与最小权限",
+              "summary": "分段、白名单与访问控制的落地。",
+              "requires": [
+                "ots.arch",
+                "ots.protocol"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ots.monitor",
+              "title": "被动监测与基线",
+              "summary": "被动监测网络流量并建立基线，避免影响生产。",
+              "requires": [
+                "ots.defense"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ots.assess",
+              "title": "评估并改进一个小控制网络",
+              "summary": "为实验室控制网络做分区与风险评估，落实方案并用监测验证。",
+              "requires": [
+                "ots.defense",
+                "ots.monitor"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.flight_control",
+          "title": "飞行控制：多旋翼的姿态与位置控制",
+          "track": "control",
+          "stable_definition": "多旋翼的飞控是嵌入式控制的典型综合题：由推力与力矩构成的动力学经混控分配到各电机，嵌套的角速度环、姿态环、速度环与位置环从内到外逐层加慢，惯性测量与其他传感器经估计器给出状态；整定与日志分析决定它飞得稳不稳。",
+          "engineering_role": "把控制、估计、嵌入式实时与电机驱动合在一起检验，是自动化与无人系统方向最能暴露短板的综合工程。",
+          "practice": "在仿真器中跑一个开源飞控，读懂它的控制器结构图，修改并整定角速度环与姿态环，用飞行日志分析跟踪误差与振荡，再把整定过程与结论写成记录。",
+          "validation": "integration",
+          "validation_note": "阶跃与扰动下的姿态响应、日志中的跟踪误差与频谱都被分析，整定前后的指标有对照。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.digital_control",
+            "polaris.auto.state_estimation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "px4-controller-diagrams",
+              "locator": "多旋翼的角速度、姿态与位置控制器结构"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ardupilot-copter-tuning",
+              "locator": "多旋翼的整定流程"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "px4-concepts",
+              "locator": "飞控的架构与任务"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ardupilot-dev",
+              "locator": "飞控的软件架构"
+            }
+          ],
+          "pitfall": "先调外环：内环带宽没整好就去调位置环，系统在某些频率上持续振荡，还看不出来自哪一层。",
+          "priority": "important",
+          "priority_reason": "控制工程里嵌套回路、估计与实时的综合体现，无人系统方向的核心。",
+          "stage": "senior",
+          "stage_reason": "资深：需要数字控制与状态估计。",
+          "domain": "control",
+          "entry": false,
+          "verify": "board",
+          "chapters": [
+            {
+              "id": "fc.dynamics",
+              "title": "多旋翼的动力学与混控",
+              "summary": "推力与力矩的关系，以及混控把它们分配给各电机。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "fc.rate",
+              "title": "角速度环与姿态环",
+              "summary": "最内两层环的结构与整定顺序。",
+              "requires": [
+                "fc.dynamics"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fc.position",
+              "title": "速度环与位置环",
+              "summary": "外层环怎样在内环之上加慢并保持稳定。",
+              "requires": [
+                "fc.rate"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fc.estimator",
+              "title": "传感器与状态估计",
+              "summary": "惯性测量、气压与定位的融合，以及它们的延迟。",
+              "requires": [
+                "fc.dynamics"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fc.tune",
+              "title": "整定与日志分析",
+              "summary": "用飞行日志分析跟踪误差与振荡，由内向外整定。",
+              "requires": [
+                "fc.position",
+                "fc.estimator"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fc.sitl",
+              "title": "仿真中整定并写出记录",
+              "summary": "在仿真器里整定并分析日志，写出整定前后的指标对照。",
+              "requires": [
+                "fc.tune"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.machine_vision",
+          "title": "机器视觉与视觉伺服",
+          "track": "control",
+          "stable_definition": "机器视觉把相机变成测量仪器：针孔模型与标定给出像素与空间的关系，滤波与特征提取找到目标，几何与位姿估计把像素变成坐标；视觉伺服再把这些坐标闭进控制回路。图像处理的延迟与同步误差会直接进入回路，是它与普通传感器的根本区别。",
+          "engineering_role": "让自动化与机器人系统能「看见」并据此行动，是检测、引导与分拣类系统的基础。",
+          "practice": "对一个固定相机做标定，识别并定位传送带上的目标，求出到机械臂或平台坐标系的变换，实现一个简单的视觉引导闭环，并测量从曝光到执行的端到端延迟。",
+          "validation": "integration",
+          "validation_note": "标定误差、定位精度与端到端延迟被测量，视觉闭环在目标运动下的跟踪误差有数据。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.instrumentation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "szeliski-cv",
+              "locator": "相机模型、标定、特征与几何"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "modern-robotics",
+              "locator": "坐标变换与位姿表示"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ros2-docs",
+              "locator": "机器人系统中的传感器与坐标变换"
+            }
+          ],
+          "pitfall": "把视觉当成瞬时传感器：不测延迟与时间同步，控制回路因此失稳或总是慢半拍。",
+          "priority": "important",
+          "priority_reason": "检测、引导与机器人应用中最常见的感知手段，也是控制与信号处理的交界。",
+          "stage": "senior",
+          "stage_reason": "资深：需要检测技术的基础与较多数学与编程。",
+          "domain": "signals",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "mv.camera",
+              "title": "相机成像与标定",
+              "summary": "针孔模型、畸变与标定，把像素与空间对应起来。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "mv.process",
+              "title": "滤波与特征提取",
+              "summary": "图像滤波、边缘与特征点。",
+              "requires": [
+                "mv.camera"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mv.locate",
+              "title": "目标检测与定位",
+              "summary": "用传统方法检测并求出目标的位置与姿态。",
+              "requires": [
+                "mv.process"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mv.hand",
+              "title": "手眼标定与坐标变换",
+              "summary": "把相机坐标系的结果变换到执行机构的坐标系。",
+              "requires": [
+                "mv.camera"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mv.servo",
+              "title": "视觉伺服",
+              "summary": "把视觉测量闭进控制回路，基于位置或基于图像两种方式。",
+              "requires": [
+                "mv.locate",
+                "mv.hand"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "mv.latency",
+              "title": "测量端到端延迟并闭环",
+              "summary": "从曝光到执行测端到端延迟，实现视觉引导闭环并记录跟踪误差。",
+              "requires": [
+                "mv.servo"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         }
       ],
       "edges": [
@@ -9329,6 +10406,306 @@
               "relation": "informed",
               "source_id": "mpc-rawlings",
               "locator": "输出反馈 MPC"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.modeling",
+          "to": "polaris.auto.frequency_design",
+          "relation": "requires",
+          "rationale": "频域设计面对的就是对象的传递函数与频率响应，先要会建模。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "mit-6302-feedback",
+              "locator": "频率响应与建模"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.plc_basics",
+          "to": "polaris.auto.industrial_io",
+          "relation": "requires",
+          "rationale": "工业 I/O 的对端是 PLC 一类的控制器，先懂它怎样读写输入输出。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "plcopen-61131",
+              "locator": "控制器的 I/O 模型"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.instrumentation",
+          "to": "polaris.auto.industrial_io",
+          "relation": "requires",
+          "rationale": "模拟量输入是检测技术里信号与标定的延伸。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "adi-cn0314",
+              "locator": "信号调理与标定"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.plc_basics",
+          "to": "polaris.auto.discrete_event",
+          "relation": "requires",
+          "rationale": "顺序功能图与梯形图运行在 PLC 上，这是离散事件分析最直接的落点。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "plcopen-61131",
+              "locator": "顺序功能图"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.industrial_networks",
+          "to": "polaris.auto.realtime_ethernet_tsn",
+          "relation": "requires",
+          "rationale": "TSN 是在懂工业通信的基础上，对确定性网络的下一步。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ieee-tsn",
+              "locator": "确定性网络"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.modern_control",
+          "to": "polaris.auto.nonlinear_control",
+          "relation": "requires",
+          "rationale": "非线性控制是状态空间设计向非线性的推广，借用状态与稳定性的语言。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "underactuated-text",
+              "locator": "状态空间与非线性"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.modern_control",
+          "to": "polaris.auto.robust_adaptive",
+          "relation": "requires",
+          "rationale": "鲁棒性分析在状态空间与反馈结构上展开。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "mit-6241-control",
+              "locator": "鲁棒性"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.frequency_design",
+          "to": "polaris.auto.robust_adaptive",
+          "relation": "requires",
+          "rationale": "灵敏度函数与裕度是频域设计的概念，是鲁棒分析的入口。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "fbs-astrom-murray",
+              "locator": "灵敏度函数"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.modeling",
+          "to": "polaris.auto.control_simulation_hil",
+          "relation": "requires",
+          "rationale": "仿真验证以对象模型为前提。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-simulation",
+              "locator": "对象模型与仿真"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.control_software",
+          "to": "polaris.auto.control_simulation_hil",
+          "relation": "requires",
+          "rationale": "各级在环验证验证的就是控制软件的各种实现形式。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-simulation",
+              "locator": "SITL 与 HITL"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.industrial_networks",
+          "to": "polaris.auto.ot_security",
+          "relation": "requires",
+          "rationale": "要保护的对象是工业网络与它的协议。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nist-sp-800-82",
+              "locator": "工业网络体系结构"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.digital_control",
+          "to": "polaris.auto.flight_control",
+          "relation": "requires",
+          "rationale": "飞控的各个环路都是定周期的数字控制器。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-controller-diagrams",
+              "locator": "控制器结构"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.state_estimation",
+          "to": "polaris.auto.flight_control",
+          "relation": "requires",
+          "rationale": "姿态与位置反馈来自估计器。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-concepts",
+              "locator": "状态估计"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.instrumentation",
+          "to": "polaris.auto.machine_vision",
+          "relation": "requires",
+          "rationale": "相机就是一种测量仪器，标定与不确定度的思想同样适用。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "szeliski-cv",
+              "locator": "相机标定"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.frequency_design",
+          "to": "polaris.auto.digital_control",
+          "relation": "enables",
+          "rationale": "数字控制器的设计与评估沿用频域的裕度与带宽概念。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "fbs-astrom-murray",
+              "locator": "频域设计"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.industrial_io",
+          "to": "polaris.auto.process_control",
+          "relation": "enables",
+          "rationale": "过程控制的测量与执行都经过工业 I/O。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nist-sp-800-82",
+              "locator": "现场设备接口"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.discrete_event",
+          "to": "polaris.auto.process_control",
+          "relation": "enables",
+          "rationale": "批处理与顺序操作是过程控制里与连续回路并存的另一半。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "cassandras-des",
+              "locator": "顺序与批处理"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.control_simulation_hil",
+          "to": "polaris.auto.fault_safety",
+          "relation": "enables",
+          "rationale": "故障注入与在环验证是功能安全验证的主要手段。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "iec-functional-safety",
+              "locator": "验证与确认"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.nonlinear_control",
+          "to": "polaris.auto.robotics",
+          "relation": "enables",
+          "rationale": "机械臂的动力学本身是非线性的，非线性控制是其控制设计的基础。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "modern-robotics",
+              "locator": "非线性动力学与控制"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.machine_vision",
+          "to": "polaris.auto.robot_nav",
+          "relation": "enables",
+          "rationale": "视觉是机器人定位与建图最常用的传感手段之一。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ros2-docs",
+              "locator": "视觉传感器"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.flight_control",
+          "to": "polaris.auto.robot_nav",
+          "relation": "enables",
+          "rationale": "无人机是导航栈的重要载体，飞控给出稳定的底层运动。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "px4-concepts",
+              "locator": "飞控与导航"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.realtime_ethernet_tsn",
+          "to": "polaris.auto.smart_manufacturing",
+          "relation": "enables",
+          "rationale": "工厂数据与控制的网络基础设施趋向于时间敏感网络。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ieee-tsn",
+              "locator": "工业网络融合"
             }
           ]
         }
@@ -21148,6 +22525,203 @@
           "locator": "测量与调试"
         }
       ]
+    },
+    {
+      "from": "polaris.ei.signals_systems",
+      "to": "polaris.auto.frequency_design",
+      "relation": "requires",
+      "rationale": "频率响应、传递函数与稳定性判据是信号与系统的语言。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "mit-6302-feedback",
+          "locator": "频率响应"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.auto.frequency_design",
+      "to": "polaris.ei.control",
+      "relation": "enables",
+      "rationale": "经典控制设计给反馈控制提供了系统的设计方法与裕度的度量。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "fbs-astrom-murray",
+          "locator": "稳定性与裕度"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.phy_interfaces",
+      "to": "polaris.auto.industrial_io",
+      "relation": "enables",
+      "rationale": "现场接口的隔离、保护与差分传输是同一套物理层知识。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ti-rs485-guide",
+          "locator": "隔离与保护"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.data_converters",
+      "to": "polaris.auto.industrial_io",
+      "relation": "enables",
+      "rationale": "模拟量输入通道的核心是转换器。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ad-data-conversion-handbook",
+          "locator": "转换器与信号通路"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.electrical_safety",
+      "to": "polaris.auto.industrial_io",
+      "relation": "enables",
+      "rationale": "现场接口的绝缘、浪涌与保护依据电气安全的要求。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "mit-6061-power",
+          "locator": "接地与保护"
+        }
+      ]
+    },
+    {
+      "from": "polaris.cs.concurrency",
+      "to": "polaris.auto.discrete_event",
+      "relation": "enables",
+      "rationale": "并发程序里的死锁与同步，与 Petri 网分析的问题同源。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "cassandras-des",
+          "locator": "并发与同步"
+        }
+      ]
+    },
+    {
+      "from": "polaris.codesign.realtime_timing",
+      "to": "polaris.auto.realtime_ethernet_tsn",
+      "relation": "enables",
+      "rationale": "端到端延迟的分段与抖动分析同样适用于网络路径。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ieee-tsn",
+          "locator": "时间约束"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.communications",
+      "to": "polaris.auto.realtime_ethernet_tsn",
+      "relation": "enables",
+      "rationale": "链路、同步与误码的概念适用于工业以太网。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ieee-8021as",
+          "locator": "时间同步"
+        }
+      ]
+    },
+    {
+      "from": "polaris.cs.information_security",
+      "to": "polaris.auto.ot_security",
+      "relation": "requires",
+      "rationale": "工控安全以信息安全的威胁建模与密码构件为通用基础。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "isa-iec-62443",
+          "locator": "安全基础"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.hil_verification",
+      "to": "polaris.auto.control_simulation_hil",
+      "relation": "enables",
+      "rationale": "软硬接口一侧的半实物验证与控制侧的在环验证是同一件事的两面。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "px4-simulation",
+          "locator": "HITL"
+        }
+      ]
+    },
+    {
+      "from": "polaris.cs.software_engineering",
+      "to": "polaris.auto.control_simulation_hil",
+      "relation": "enables",
+      "rationale": "自动化测试与持续集成的思想可以延伸到在环验证。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "swe-google",
+          "locator": "测试与持续集成"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.sensors",
+      "to": "polaris.auto.flight_control",
+      "relation": "enables",
+      "rationale": "惯性与气压等传感器是飞控估计的输入。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "px4-concepts",
+          "locator": "传感器"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.motor_drives",
+      "to": "polaris.auto.flight_control",
+      "relation": "enables",
+      "rationale": "飞控的输出通过电调与电机驱动实现。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ardupilot-dev",
+          "locator": "电机与电调"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.dsp",
+      "to": "polaris.auto.machine_vision",
+      "relation": "enables",
+      "rationale": "图像滤波是二维的数字信号处理。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "szeliski-cv",
+          "locator": "图像处理"
+        }
+      ]
+    },
+    {
+      "from": "polaris.cs.machine_learning",
+      "to": "polaris.auto.machine_vision",
+      "relation": "enables",
+      "rationale": "学习型的检测与识别建立在机器学习基础之上。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "szeliski-cv",
+          "locator": "识别"
+        }
+      ]
     }
   ],
   "routes": [
@@ -22755,9 +24329,12 @@
             "polaris.auto.modeling",
             "polaris.ei.control",
             "polaris.auto.digital_control",
-            "polaris.auto.industrial_networks"
+            "polaris.auto.industrial_networks",
+            "polaris.auto.frequency_design",
+            "polaris.auto.industrial_io",
+            "polaris.auto.discrete_event"
           ],
-          "checkpoint": "对一个对象辨识模型并设计数字 PID，在仿真与实测中对账；用工业通信测出周期与抖动。"
+          "checkpoint": "对一个对象辨识模型并设计数字 PID，在仿真与实测中对账；用工业通信测出周期与抖动。；按裕度整定一个 PID 并实测频响；搭一路隔离的 4–20 mA 输入；为一条带共享资源的工艺做 Petri 网并消除死锁"
         },
         {
           "title": "过程、运动与软件",
@@ -22767,9 +24344,10 @@
             "polaris.auto.motion_control",
             "polaris.ei.motor_control",
             "polaris.auto.control_software",
-            "polaris.auto.modern_control"
+            "polaris.auto.modern_control",
+            "polaris.auto.control_simulation_hil"
           ],
-          "checkpoint": "实现串级与前馈并比较抗扰；搭三环结构并测带宽；用同一组测试向量对比模型、生成代码与实机。"
+          "checkpoint": "实现串级与前馈并比较抗扰；搭三环结构并测带宽；用同一组测试向量对比模型、生成代码与实机。；搭 MIL 到 HIL 的验证链，用同一组测试向量对账"
         },
         {
           "title": "纵深：估计、最优、机器人与安全",
@@ -22781,9 +24359,15 @@
             "polaris.auto.robot_nav",
             "polaris.auto.intelligent_control",
             "polaris.auto.fault_safety",
-            "polaris.auto.smart_manufacturing"
+            "polaris.auto.smart_manufacturing",
+            "polaris.auto.nonlinear_control",
+            "polaris.auto.robust_adaptive",
+            "polaris.auto.flight_control",
+            "polaris.auto.machine_vision",
+            "polaris.auto.realtime_ethernet_tsn",
+            "polaris.auto.ot_security"
           ],
-          "checkpoint": "选一个方向交出作品：新息检验通过的卡尔曼滤波、带约束的 MPC、机器人导航、故障注入验证，或工厂数据看板。"
+          "checkpoint": "选一个方向交出作品：新息检验通过的卡尔曼滤波、带约束的 MPC、机器人导航、故障注入验证，或工厂数据看板。；选一个方向交出作品：非线性或鲁棒控制的对比、整定过的飞控、视觉引导闭环、带背景流量的延迟测量，或工控网络分区与监测"
         }
       ],
       "source_refs": [
@@ -23096,36 +24680,41 @@
           "goal": "做出可验证的逻辑控制并测得准。",
           "nodes": [
             "polaris.auto.plc_basics",
-            "polaris.auto.instrumentation"
+            "polaris.auto.instrumentation",
+            "polaris.auto.industrial_io",
+            "polaris.auto.discrete_event"
           ],
-          "checkpoint": "用 PLC 做带互锁与急停的控制；对一个传感器标定。"
+          "checkpoint": "用 PLC 做带互锁与急停的控制；对一个传感器标定。；对一路隔离模拟量输入注入干扰与断线；为一条带共享资源的工艺做模型并消除死锁"
         },
         {
           "title": "通信与过程",
           "goal": "把设备连成系统，并控制慢对象。",
           "nodes": [
             "polaris.auto.industrial_networks",
-            "polaris.auto.process_control"
+            "polaris.auto.process_control",
+            "polaris.auto.realtime_ethernet_tsn"
           ],
-          "checkpoint": "测出通信周期与抖动；实现串级与前馈并比较抗扰。"
+          "checkpoint": "测出通信周期与抖动；实现串级与前馈并比较抗扰。；测量带背景流量时的端到端延迟与抖动"
         },
         {
           "title": "运动与软件",
           "goal": "做出运动执行并产品化。",
           "nodes": [
             "polaris.auto.motion_control",
-            "polaris.auto.control_software"
+            "polaris.auto.control_software",
+            "polaris.auto.control_simulation_hil"
           ],
-          "checkpoint": "搭三环结构并测带宽；对比模型、生成代码与实机。"
+          "checkpoint": "搭三环结构并测带宽；对比模型、生成代码与实机。；搭 MIL 到 HIL 的验证链"
         },
         {
           "title": "安全与数据",
           "goal": "满足安全并利用数据。",
           "nodes": [
             "polaris.auto.fault_safety",
-            "polaris.auto.smart_manufacturing"
+            "polaris.auto.smart_manufacturing",
+            "polaris.auto.ot_security"
           ],
-          "checkpoint": "故障注入验证进入安全状态；做一个带数据质量检查的设备看板。"
+          "checkpoint": "故障注入验证进入安全状态；做一个带数据质量检查的设备看板。；为一个小控制网络做分区与被动监测"
         }
       ],
       "source_refs": [
@@ -23186,17 +24775,20 @@
           "nodes": [
             "polaris.auto.modern_control",
             "polaris.auto.state_estimation",
-            "polaris.auto.robot_nav"
+            "polaris.auto.robot_nav",
+            "polaris.auto.machine_vision"
           ],
-          "checkpoint": "新息通过白性检验的滤波器；在 ROS 2 里完成建图、定位与导航并测定位误差。"
+          "checkpoint": "新息通过白性检验的滤波器；在 ROS 2 里完成建图、定位与导航并测定位误差。；标定相机并完成目标定位"
         },
         {
           "title": "约束下的控制",
           "goal": "在约束下提升性能。",
           "nodes": [
-            "polaris.auto.optimal_mpc"
+            "polaris.auto.optimal_mpc",
+            "polaris.auto.nonlinear_control",
+            "polaris.auto.flight_control"
           ],
-          "checkpoint": "用 MPC 完成一个带约束的跟踪任务，并与 PID 对比。"
+          "checkpoint": "用 MPC 完成一个带约束的跟踪任务，并与 PID 对比。；在大角度下对比线性与非线性控制；在仿真器里整定一个多旋翼的姿态环"
         }
       ],
       "source_refs": [
@@ -23237,9 +24829,10 @@
           "nodes": [
             "polaris.auto.modeling",
             "polaris.ei.signals_systems",
-            "polaris.ei.control"
+            "polaris.ei.control",
+            "polaris.auto.frequency_design"
           ],
-          "checkpoint": "辨识并仿真一个对象，设计 PID 并分析裕度。"
+          "checkpoint": "辨识并仿真一个对象，设计 PID 并分析裕度。；按稳定裕度整定并实测频响"
         },
         {
           "title": "状态空间与估计",
@@ -23255,9 +24848,11 @@
           "goal": "在约束与不确定性下控制。",
           "nodes": [
             "polaris.auto.optimal_mpc",
-            "polaris.auto.intelligent_control"
+            "polaris.auto.intelligent_control",
+            "polaris.auto.nonlinear_control",
+            "polaris.auto.robust_adaptive"
           ],
-          "checkpoint": "设计 MPC 并测求解时间；与强化学习策略对比样本量与鲁棒性。"
+          "checkpoint": "设计 MPC 并测求解时间；与强化学习策略对比样本量与鲁棒性。；在参数摄动下比较固定增益与增益调度；用李雅普诺夫分析一个非线性对象"
         }
       ],
       "source_refs": [
@@ -23772,6 +25367,235 @@
         "只在原型上跑通：没有测试点与测试脚本，量产时不良无法定位。",
         "把高速信号当低速布：不看参考平面与回流，板子出来才发现不可用。",
         "只算不测：热与电源时序只在手册里估算，没有实测对账。"
+      ]
+    },
+    {
+      "id": "route.industrial-io-networks",
+      "title": "工业接口、现场总线与实时网络",
+      "summary": "从 PLC 与电路基础，到工业 I/O 与隔离，再到总线物理层与工业通信，最后是实时以太网与网络安全。自动化里偏弱电的接口与通信主线。",
+      "lens": "direction",
+      "balance": "hardware",
+      "discipline": "auto",
+      "audience": "想做控制器接口、现场总线与工业网络，并关心可靠性与安全的人。",
+      "artifact": "一个带隔离的现场接口加总线的小系统：隔离的 4–20 mA 与 24 V 通道、一条总线的工作边界测试、网络分区与被动监测的记录。",
+      "stages": [
+        {
+          "title": "PLC 与电路",
+          "goal": "先懂控制器怎样工作、电路怎样分析。",
+          "nodes": [
+            "polaris.auto.plc_basics",
+            "polaris.ee.circuit_analysis"
+          ],
+          "checkpoint": "写一个带互锁的 PLC 程序，并手算并实测一个分压与滤波电路。"
+        },
+        {
+          "title": "工业 I/O",
+          "goal": "让控制器可靠地接触现场。",
+          "nodes": [
+            "polaris.auto.instrumentation",
+            "polaris.auto.industrial_io",
+            "polaris.ei.data_converters",
+            "polaris.ee.electrical_safety"
+          ],
+          "checkpoint": "搭一路隔离的 4–20 mA 输入，并对它注入共模干扰与断线。"
+        },
+        {
+          "title": "总线与通信",
+          "goal": "让设备可靠地联网。",
+          "nodes": [
+            "polaris.ei.protocols_bus",
+            "polaris.ei.phy_interfaces",
+            "polaris.auto.industrial_networks"
+          ],
+          "checkpoint": "测出一条 RS-485 或 CAN 总线的工作边界，并用 Modbus 读写寄存器。"
+        },
+        {
+          "title": "实时与安全",
+          "goal": "在确定性与安全上做深。",
+          "nodes": [
+            "polaris.auto.realtime_ethernet_tsn",
+            "polaris.auto.ot_security"
+          ],
+          "checkpoint": "测量带背景流量下的延迟与抖动；为一个小控制网络做分区与被动监测。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ti-4-20ma-isolated",
+          "locator": "现场接口与隔离"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ti-rs485-guide",
+          "locator": "总线物理层"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ieee-tsn",
+          "locator": "时间敏感网络"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "isa-iec-62443",
+          "locator": "工控安全体系"
+        }
+      ],
+      "pitfalls": [
+        "把实验室的接法带到现场：不隔离、不滤波，读数被干扰击穿。",
+        "把以太网当成实时：不测延迟与抖动。",
+        "用办公网的办法保护生产网：主动扫描让设备停机。"
+      ]
+    },
+    {
+      "id": "route.uav-flight-control",
+      "title": "无人机与飞行控制",
+      "summary": "从建模与经典控制，到状态估计，再到电机与飞控的嵌套回路，最后是仿真、半实物与安全验证。",
+      "lens": "direction",
+      "balance": "balanced",
+      "discipline": "auto",
+      "audience": "想做多旋翼飞控、无人系统控制与估计的人。",
+      "artifact": "一个整定过的多旋翼飞控：控制器结构图、整定前后的姿态响应与日志分析、仿真到半实物的验证记录。",
+      "stages": [
+        {
+          "title": "建模与经典控制",
+          "goal": "能建模并按裕度设计控制器。",
+          "nodes": [
+            "polaris.auto.modeling",
+            "polaris.auto.frequency_design",
+            "polaris.ei.control",
+            "polaris.auto.digital_control"
+          ],
+          "checkpoint": "对一个对象设计 PID 并给出裕度，再离散化到固定周期。"
+        },
+        {
+          "title": "状态估计",
+          "goal": "能由带噪声的传感器估计姿态与位置。",
+          "nodes": [
+            "polaris.ei.sensors",
+            "polaris.auto.modern_control",
+            "polaris.auto.state_estimation"
+          ],
+          "checkpoint": "对惯性测量与位置做卡尔曼滤波，通过新息检验。"
+        },
+        {
+          "title": "电机与飞控",
+          "goal": "做出嵌套的回路。",
+          "nodes": [
+            "polaris.ei.motor_control",
+            "polaris.auto.flight_control"
+          ],
+          "checkpoint": "在仿真器里整定角速度环与姿态环，用日志分析跟踪误差。"
+        },
+        {
+          "title": "仿真与验证",
+          "goal": "把控制软件验证到能上机。",
+          "nodes": [
+            "polaris.auto.control_software",
+            "polaris.auto.control_simulation_hil",
+            "polaris.auto.fault_safety"
+          ],
+          "checkpoint": "搭 MIL 到 HIL 的验证链并注入故障，检查降级行为。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "px4-controller-diagrams",
+          "locator": "多旋翼控制器结构"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ardupilot-copter-tuning",
+          "locator": "整定流程"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "px4-simulation",
+          "locator": "仿真层级"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "kalman-bayes-python",
+          "locator": "状态估计"
+        }
+      ],
+      "pitfalls": [
+        "先调外环：内环没整好就去调位置环，持续振荡找不到来源。",
+        "只在仿真里整定：不看传感器延迟与电机的实际响应。",
+        "忽略故障：没有传感器或电机故障下的降级设计。"
+      ]
+    },
+    {
+      "id": "route.machine-vision-servo",
+      "title": "机器视觉与视觉引导",
+      "summary": "从数学、信号与检测，到相机与视觉算法，再到运动控制、机器人学与导航。把「看见」闭进控制回路。",
+      "lens": "direction",
+      "balance": "balanced",
+      "discipline": "auto",
+      "audience": "想做视觉检测、视觉引导与机器人感知的人。",
+      "artifact": "一个视觉引导的小系统：相机标定、目标定位、到执行机构的坐标变换，以及测得的端到端延迟与跟踪误差。",
+      "stages": [
+        {
+          "title": "数学、信号与测量",
+          "goal": "有数学与测量的底子。",
+          "nodes": [
+            "polaris.frontier.math_for_computing",
+            "polaris.ei.signals_systems",
+            "polaris.auto.instrumentation",
+            "polaris.auto.modeling"
+          ],
+          "checkpoint": "标定一个传感器并给出不确定度；辨识一个简单对象。"
+        },
+        {
+          "title": "视觉与运动",
+          "goal": "能让相机定位目标，也能让执行机构动起来。",
+          "nodes": [
+            "polaris.auto.machine_vision",
+            "polaris.auto.digital_control",
+            "polaris.auto.motion_control"
+          ],
+          "checkpoint": "标定相机并定位目标；搭出带轨迹的运动控制。"
+        },
+        {
+          "title": "估计与机器人学",
+          "goal": "把位姿与运动学放进回路。",
+          "nodes": [
+            "polaris.auto.modern_control",
+            "polaris.auto.state_estimation",
+            "polaris.auto.robotics"
+          ],
+          "checkpoint": "新息检验通过的滤波器；规划并跟踪一条机械臂轨迹。"
+        },
+        {
+          "title": "导航与验证",
+          "goal": "在系统层面验证。",
+          "nodes": [
+            "polaris.auto.robot_nav"
+          ],
+          "checkpoint": "在仿真或实物上完成视觉辅助的定位与导航，记录定位误差与成功率。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "szeliski-cv",
+          "locator": "相机、标定与视觉算法"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "modern-robotics",
+          "locator": "位姿与运动学"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ros2-docs",
+          "locator": "机器人软件框架"
+        }
+      ],
+      "pitfalls": [
+        "把视觉当成瞬时传感器：不测延迟与时间同步，回路总是慢半拍。",
+        "只会调库：不会标定与坐标变换，换一个相机就全部作废。"
       ]
     }
   ],

@@ -99,6 +99,15 @@ class RealContent(unittest.TestCase):
             if n["stage"] == "junior":
                 self.assertNotEqual(n["current"], "strong", n["id"])
 
+    def test_automation_map_covers_the_weak_current_side(self) -> None:
+        # 自动化类整体属弱电（控制、检测、接口、通信、软件）。ADR 0021 决策 2 之后弱电侧补深：
+        # 节点覆盖控制、信号、系统、验证与安全几个域，并含工业接口、实时网络、仿真验证与工控安全这几条接缝。
+        nodes = find_map(DOC, "automation")["nodes"]
+        self.assertGreaterEqual(len(nodes), 26)
+        self.assertTrue({"control", "signals", "security", "assurance"} <= {n["domain"] for n in nodes})
+        for slug in ("industrial_io", "realtime_ethernet_tsn", "control_simulation_hil", "ot_security", "frequency_design"):
+            find_node(DOC, f"polaris.auto.{slug}")
+
     def test_codesign_map_covers_every_contract(self) -> None:
         nodes = find_map(DOC, "hw-sw-interface")["nodes"]
         self.assertEqual(len(nodes), 17)
