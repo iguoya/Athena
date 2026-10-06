@@ -35,6 +35,8 @@ export interface VocabEntry {
   pos?: string;
   cn: string;
   note?: string;
+  example?: string;
+  example_cn?: string;
 }
 export interface PatternEntry {
   pattern: string;
@@ -134,14 +136,17 @@ function AnnotatedTerm({
 }) {
   const [open, setOpen] = useState(false);
   const isVocab = kind === "vocab";
+  // known 已在上方恢复普通文本；此处只剩 unknown（琥珀实线）与未标（accent 点线）
   const underline =
     status === "unknown"
       ? "underline decoration-solid decoration-amber-500 decoration-2 underline-offset-4"
-      : status === "known"
-        ? "underline decoration-dotted decoration-green-600/60 underline-offset-4"
-        : "underline decoration-dotted decoration-accent/50 underline-offset-4";
+      : "underline decoration-dotted decoration-accent/50 underline-offset-4";
   const pos = isVocab ? (entry as VocabEntry).pos : undefined;
   const note = (entry as VocabEntry).note || "";
+  // 已认识：恢复普通文本，不做任何标记（复习交由 SRS 队列）
+  if (status === "known") {
+    return <span className="font-serif">{display}</span>;
+  }
   return (
     <span className="relative inline-block">
       <button
@@ -160,6 +165,16 @@ function AnnotatedTerm({
           {note && (
             <span className="mt-1 block text-[20px] leading-relaxed text-muted">{note}</span>
           )}
+          {(entry.example || !/\s/.test(term)) && (
+            <ExampleArea
+              term={term}
+              curated={
+                entry.example
+                  ? { en: entry.example, cn: entry.example_cn ?? "" }
+                  : undefined
+              }
+            />
+          )}
           <span className="mt-3 flex gap-2">
             <button
               onClick={(e) => {
@@ -167,11 +182,7 @@ function AnnotatedTerm({
                 onRate(term, true);
                 setOpen(false);
               }}
-              className={`rounded-lg border px-3 py-1 text-[20px] ${
-                status === "known"
-                  ? "border-green-500 bg-green-50 text-green-700"
-                  : "border-green-500/40 text-green-700 hover:bg-green-50"
-              }`}
+              className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 transition-colors hover:bg-green-50"
             >
               认识
             </button>
@@ -330,6 +341,79 @@ function RatingRow({
   );
 }
 
+/** 例句区：词表精选例句优先；否则在线拉取（dictionaryapi.dev，模块级缓存）。 */
+const EXAMPLE_CACHE = new Map<
+  string,
+  { phonetic?: string; examples: string[]; defs: string[] }
+>();
+
+function ExampleArea({
+  term,
+  curated,
+}: {
+  term: string;
+  curated?: { en: string; cn: string };
+}) {
+  const [data, setData] = useState(EXAMPLE_CACHE.get(term.toLowerCase()) ?? null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (EXAMPLE_CACHE.has(term.toLowerCase()) || /\s/.test(term)) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(term)}`,
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        const entries = await response.json();
+        const phonetic =
+          entries[0]?.phonetic ??
+          entries[0]?.phonetics?.find((ph: { text?: string }) => ph.text)?.text;
+        const examples: string[] = [];
+        const defs: string[] = [];
+        for (const meaning of entries[0]?.meanings ?? []) {
+          for (const def of meaning.definitions ?? []) {
+            if (def.example && examples.length < 2) examples.push(def.example);
+            if (defs.length < 2) defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
+          }
+        }
+        const payload = { phonetic, examples, defs };
+        EXAMPLE_CACHE.set(term.toLowerCase(), payload);
+        if (!cancelled) setData(payload);
+      } catch {
+        if (!cancelled) setFailed(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [term]);
+
+  return (
+    <div className="mt-2 border-t border-line pt-2">
+      {curated && (
+        <div className="mb-1">
+          <p className="text-[20px] leading-relaxed text-fg/80">例句：{curated.en}</p>
+          <p className="text-[20px] leading-relaxed text-muted">{curated.cn}</p>
+        </div>
+      )}
+      {data?.examples.map((ex, i) => (
+        <p key={i} className="font-serif text-[20px] italic leading-relaxed text-fg/75">
+          {ex}
+        </p>
+      ))}
+      {data?.phonetic && !curated && (
+        <p className="font-mono text-[20px] text-muted">{data.phonetic}</p>
+      )}
+      {failed && !curated && (
+        <p className="text-[20px] text-muted">例句需联网获取（当前不可用）。</p>
+      )}
+      {!curated && !data && !failed && <p className="text-[20px] text-muted">正在获取例句……</p>}
+    </div>
+  );
+}
+
 /** 划词查询卡：词表命中显示释义；可拉取在线英释；标记生词/已认识入 SRS。 */
 function SelectionLookupCard({
   card,
@@ -348,36 +432,47 @@ function SelectionLookupCard({
     : wordStatus?.unknown.has(key)
       ? "unknown"
       : undefined;
-  const [enDef, setEnDef] = useState<{ phonetic?: string; defs: string[] } | null>(null);
+  const [enDef, setEnDef] = useState<{
+    phonetic?: string;
+    defs: string[];
+    examples: string[];
+  } | null>(null);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const fetchEnDef = async () => {
+  useEffect(() => {
+    if (/\s/.test(query)) return;
+    let cancelled = false;
     setLoading(true);
-    setFailed(false);
-    try {
-      const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`,
-      );
-      if (!response.ok) throw new Error(String(response.status));
-      const data = (await response.json())[0];
-      const phonetic =
-        data.phonetic ?? data.phonetics?.find((p: { text?: string }) => p.text)?.text;
-      const defs: string[] = [];
-      for (const meaning of data.meanings ?? []) {
-        for (const def of meaning.definitions ?? []) {
-          defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
-          if (defs.length >= 3) break;
+    (async () => {
+      try {
+        const response = await fetch(
+          `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`,
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        const entries = await response.json();
+        const phonetic =
+          entries[0]?.phonetic ??
+          entries[0]?.phonetics?.find((ph: { text?: string }) => ph.text)?.text;
+        const defs: string[] = [];
+        const examples: string[] = [];
+        for (const meaning of entries[0]?.meanings ?? []) {
+          for (const def of meaning.definitions ?? []) {
+            if (def.example && examples.length < 2) examples.push(def.example);
+            if (defs.length < 3) defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
+          }
         }
-        if (defs.length >= 3) break;
+        if (!cancelled) setEnDef({ phonetic, defs, examples });
+      } catch {
+        if (!cancelled) setFailed(true);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      setEnDef({ phonetic, defs });
-    } catch {
-      setFailed(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [query]);
 
   const youdao = `https://dict.youdao.com/result?word=${encodeURIComponent(query)}&lang=en`;
 
@@ -420,9 +515,17 @@ function SelectionLookupCard({
               {def}
             </p>
           ))}
+          {enDef.examples.map((ex, i) => (
+            <p
+              key={`ex-${i}`}
+              className="mt-1 font-serif text-[20px] italic leading-relaxed text-fg/70"
+            >
+              例句：{ex}
+            </p>
+          ))}
         </div>
       )}
-      {loading && <p className="mt-3 text-[20px] text-muted">正在查询英释……</p>}
+      {loading && <p className="mt-3 text-[20px] text-muted">正在查询释义与例句……</p>}
       {failed && (
         <p className="mt-3 text-[20px] text-amber-700">
           在线英释拉取失败（网络受限时正常）——用下方外部词典即可。
@@ -450,16 +553,6 @@ function SelectionLookupCard({
         >
           ✓ 已认识
         </button>
-        {!enDef && !loading && (
-          <button
-            onClick={fetchEnDef}
-            disabled={/\s/.test(query)}
-            className="rounded-lg border border-line px-3 py-1.5 text-[20px] text-fg/80 hover:bg-surface-2 disabled:opacity-40"
-            title={/\s/.test(query) ? "英释仅支持单个词" : ""}
-          >
-            查英释
-          </button>
-        )}
         <a
           href={youdao}
           target="_blank"
