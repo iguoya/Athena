@@ -12,12 +12,6 @@
   },
   {
    "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/clock)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
-  },
-  {
-   "type": "para",
    "text": "As before, almost all of the interesting stuff is done in the draw\n          function on_draw(). Before we dig\n          into the draw function, notice that the constructor for the\n          `Clock` widget connects a handler function\n          on_timeout() to a timer with a timeout\n          period of 1000 milliseconds (1 second). This means that\n          on_timeout() will get called once per\n          second. The sole responsibility of this function is to invalidate\n          the window so that gtkmm will be forced to redraw it.",
    "sha": "5a2deb1e9e071a47",
    "zh": "和之前一样，所有有趣的东西都在绘图函数on_draw()中完成。在深入研究绘图函数之前，请注意在Clock部件的构造函数中将处理函数on_timeout()连接到了用计时器上，该计时器的超时时间为1000毫秒（1秒）。这意味着on_timeout()将每秒被调用一次。这个函数的唯一任务就是使窗口无效，以便gtkmm强制重绘它。"

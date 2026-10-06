@@ -8,15 +8,13 @@
    "type": "para",
    "text": "`Gtk::Dialog` and the classes derived from it,\nare deprecated since gtkmm 4.10. They can still be used in gtkmm4 applications,\nprovided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED are not defined.\nSome of the dialog classes are replaced by classes that are available since gtkmm 4.10.",
    "sha": "d6409d61557916c0",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
    "text": "The examples in this chapter use classes that are available since gtkmm 4.10.\nSimilar examples with the deprecated classes are available in the\n[\ngtkmm-4-0 branch](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/gtkmm-4-0/examples/book/dialogs/) in the git repository.",
    "sha": "100f29a99df9137a",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
@@ -46,8 +44,7 @@
    "type": "para",
    "text": "To show the dialog, call set_visible(true). If the same dialog instance\nwill be shown several times, you must also call set_hide_on_close(),\nor else the dialog will be destroyed when it's closed.\nConnect to the `response` signal, if you want to know which button\nwas pressed. The `response` signal handler is also where you\nshould hide the dialog.",
    "sha": "fd426713f317ecd5",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
@@ -85,12 +82,6 @@
    "ref": "figures/dialogs_alertdialog.png",
    "sha": "5b7efd9c5f3f262f",
    "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/alertdialog)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
   }
  ]
 }

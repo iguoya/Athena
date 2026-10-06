@@ -49,12 +49,6 @@
   },
   {
    "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/simple)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
-  },
-  {
-   "type": "para",
    "text": "This program contains a single class, `MyArea`,\n        which is a subclass of `Gtk::DrawingArea` and\n        contains an on_draw() member function.\n        This function becomes the draw function by a call to set_draw_func()\n        in `MyArea`'s constructor. on_draw()\n        is then called whenever the image in the drawing area needs to\n        be redrawn. It is passed a `Cairo::RefPtr`\n        pointer to a `Cairo::Context` that we use\n        for the drawing.\n        The actual drawing code sets the color we want to use for drawing by\n        using set_source_rgb() which takes arguments\n        defining the Red, Green, and Blue components of the desired color\n        (valid values are between 0 and 1). After setting the color, we\n        created a new path using the functions move_to()\n        and line_to(), and then stroked this path with\n        stroke().",
    "sha": "1900d129ea65a2be",
    "zh": "这个程序包含一个MyArea类，它是Gtk::DrawingArea的子类，并且包含on_draw()成员函数。通过在MyArea的构造函数中调用set_draw_func()使其变成绘制函数。每当需要重绘绘图区域的图像的时候，on_draw()就会被调用。这将会向我们的绘制函数传递一个指向Cairo::Context的Cairo::RefPtr指针。实际进行绘图的代码使用set_source_rgb()设置我们将用于绘图的颜色，这个函数接受定义颜色所需的红色、绿色、蓝色分量作为参数（参数的有效值介于0到1之间）。设置完颜色后，我们使用move_to()和line_to()函数创建一个新的路径，然后使用stroke()绘制了这个路径。"
@@ -132,12 +126,6 @@
    "ref": "figures/drawingarea_thin_lines.png",
    "sha": "dc4650f7fc365198",
    "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/thin_lines)",
-   "sha": "bc47da663d101bfc-1",
-   "zh": "源代码"
   }
  ]
 }

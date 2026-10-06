@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-container-widgets",
  "section": "sec-multi-item-containers",
- "title": "多子控件容器",
+ "title": "Multiple-item Containers",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -109,12 +109,6 @@
   },
   {
    "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
-  },
-  {
-   "type": "para",
    "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the [Boxes]() section.",
    "sha": "12723f5444eefb55",
    "zh": "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
@@ -196,6 +190,7 @@
    "type": "code",
    "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
    "sha": "009504742cc16654",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2",
    "zh": ""
   },
   {
@@ -286,12 +281,6 @@
   },
   {
    "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box)",
-   "sha": "bc47da663d101bfc-1",
-   "zh": "源代码"
-  },
-  {
-   "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-2",
    "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
@@ -300,6 +289,7 @@
    "type": "code",
    "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
    "sha": "009504742cc16654-2",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box",
    "zh": ""
   },
   {
@@ -344,12 +334,6 @@
    "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
    "sha": "c6aa28a5727072fd-1",
    "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box)",
-   "sha": "bc47da663d101bfc-2",
-   "zh": "源代码"
   },
   {
    "type": "heading",
@@ -401,12 +385,6 @@
    "zh": ""
   },
   {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/grid)",
-   "sha": "bc47da663d101bfc-3",
-   "zh": "源代码"
-  },
-  {
    "type": "heading",
    "text": "Notebook",
    "sha": "0dec07abf92dbe72",
@@ -454,12 +432,6 @@
    "ref": "figures/notebook.png",
    "sha": "0dec07abf92dbe72-1",
    "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/notebook/)",
-   "sha": "bc47da663d101bfc-4",
-   "zh": "源代码"
   },
   {
    "type": "heading",
@@ -521,12 +493,6 @@
    "ref": "figures/assistant.png",
    "sha": "391e405152779acc-1",
    "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/assistant/)",
-   "sha": "bc47da663d101bfc-5",
-   "zh": "源代码"
   },
   {
    "type": "heading",

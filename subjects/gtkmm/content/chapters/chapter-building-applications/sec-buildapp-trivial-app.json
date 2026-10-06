@@ -14,8 +14,7 @@
    "type": "para",
    "text": "An application consists of a number of files:\n\n  \n    The binary file\n    This gets installed in `/usr/bin`.\n  \n  \n    A desktop file\n    The desktop file provides important information about the application\n      to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it,\n      etc. It is installed in `/usr/share/applications`.\n  \n  \n    An icon\n    The icon gets installed in `/usr/share/icons/hicolor/48x48/apps`,\n      where it will be found regardless of the current theme.\n  \n  \n    A settings schema\n    If the application uses `Gio::Settings`,\n      it will install its schema in `/usr/share/glib-2.0/schemas`,\n      so that tools like dconf-editor can find it.\n  \n  \n    Other resources\n    Other files, such as `Gtk::Builder` ui files,\n      are best loaded from resources stored in the application binary itself. This\n      eliminates the need for most of the files that would traditionally be installed\n      in an application-specific location in `/usr/share`.",
    "sha": "26688db8616c6100",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
@@ -119,12 +118,6 @@
    "text": "This does not look very impressive yet, but our application is already presenting itself\non the session bus, it has single-instance semantics, and it accepts files as commandline arguments.",
    "sha": "89bf54770bb25d8f",
    "zh": "这看起来还无法让人印象深刻，但是我们的应用程序已经在会话总线上展示了自己。现在它具有单实例语义，并且接受命令行参数作为文件路径。"
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step1)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
   }
  ]
 }

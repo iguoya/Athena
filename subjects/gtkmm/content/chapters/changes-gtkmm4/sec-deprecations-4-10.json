@@ -20,8 +20,7 @@
    "type": "para",
    "text": "gtkmm-4.0 is used in combination with `glibmm-2.68`,\nwhich sets the global locale for your program. The older `glibmm-2.4`\ndoes not do that, and gtkmm-3.0 does it only to some extent. What this means is\nbriefly that if your gtkmm-3.0 program contains a call to\n`std::locale::global(std::locale(\"\"))`, you can probably remove it.\nIf you don't want `glibmm` or gtkmm\nto set the global locale for you, you should add a call to\n`Glib::set_init_to_users_preferred_locale(false)` before any call to\n`Glib::init()` or Gtk::Application::create().\nSee the `glibmm` [\nreference](https://gnome.pages.gitlab.gnome.org/glibmm/namespaceGlib.html).",
    "sha": "98e03a06004326df",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
@@ -33,15 +32,13 @@
    "type": "para",
    "text": "There are some important behavioural changes, to which you must adapt when migrating:",
    "sha": "44dd6189a58c92ab",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
    "text": "Whereas in gtkmm-3.0, destruction of a non-managed C++ widget wrapper caused the wrapped GtkWidget\nto be destroyed, changes in GTK4 mean that in gtkmm-4.0 this canʼt always be the case. GTK4 has no\nuniform way to remove a widget from a parent, as GTK3 did with Gtk::Container::remove(),\nso gtkmm-4.0 canʼt do the removal for you as gtkmm-3.0 did. Hence, if a non-managed C++ widget\ninstance is destructed while the widget is a child of another, gtkmm-4.0 wonʼt remove it from the\nparent, the parent retains a ref that stops the child being disposed, and the GtkWidget stays alive.\nThe end result is that to destroy a non-managed widget with its C++ wrapper you must first remove it\nfrom its parent (however that parent allows) so the C++ wrapperʼs dtor can drop the final reference.",
    "sha": "39469c16e96430be",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",
@@ -59,8 +56,7 @@
    "type": "para",
    "text": "A C++17 compiler is required.\n`Gtk::Button`, `Gtk::ToolButton`,\n  `Gtk::MenuItem` and `Gtk::Switch`\n  implement the `Gtk::Actionable` interface instead of the removed\n  `Gtk::Activatable` interface.\n`Gtk::FontButton` implements the `Gtk::FontChooser` interface.\n`Gtk::Widget`: The get_preferred_*_vfunc()s\n  have been replaced by measure_vfunc(). This change only affects\n  custom widgets.\n`sigc::slot`s use the `sigc::slot` syntax.\n  Example: `sigc::slot` instead of `sigc::slot`.\n`Gtk::DrawingArea` uses a draw function instead of the draw signal.\n`Glib::ArrayHandle`, `Glib::StringArrayHandle`,\n  `Glib::ListHandle` and `Glib::SListHandle` have been removed.\n  They were used in `glibmm`-2.4, but not used in gtkmm-3.0.\n  If you've ever used these classes, replace them with a standard C++ container, such as `std::vector`.\n`Gtk::Container` has been removed.\nGtk::Widget::show_all() has been removed. The default value\n  of Gtk::Widget::property_visible() has been changed from\n  `false` to `true`.\nAll event signals have been removed from `Gtk::Widget`.\n  In most cases you can use one of the subclasses of `Gtk::EventController`\n  as a replacement. For instance, use `Gtk::GestureMultiPress`\n  instead of signal_button_press_event() and\n  signal_button_release_event(), and `Gtk::EventControllerKey`\n  instead of signal_key_press_event() and\n  signal_key_release_event().\n`Glib::RefPtr` is an alias for `std::shared_ptr`.\n  If you make your own `Glib::ObjectBase`-derived classes with\n  create() methods that return a `Glib::RefPtr`,\n  you must use Glib::make_refptr_for_instance() in your\n  create() methods.\nGtk::Box::pack_start() and Gtk::Box::pack_end()\n  have been removed. Use the new `Gtk::Box` methods\n  append(), prepend(),\n  insert_child_after() and insert_child_at_start().\n  \n`Gtk::ButtonBox` has been removed.\n`Gtk::RadioButton` and `Gtk::RadioButtonGroup`\n  have been removed. Use `Gtk::CheckButton` or `Gtk::ToggleButton`\n  with set_group().",
    "sha": "512696f4d8deaf0e",
-   "zh": null,
-   "status": "untranslated"
+   "zh": null
   },
   {
    "type": "para",

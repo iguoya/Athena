@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-basics",
  "section": "sec-helloworld",
- "title": "gtkmm 版 Hello World",
+ "title": "Hello World in gtkmm",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -9,12 +9,6 @@
    "text": "We've now learned enough to look at a real example. In accordance with an ancient\ntradition of computer science, we now introduce Hello World, a la gtkmm:",
    "sha": "c4f27b82f01c5909",
    "zh": "目前我们已经可以自己所学的知识来写一个真正的程序了。根据计算机科学的传统，我们现在以 gtkmm 的方式来介绍 Hello World 程序："
-  },
-  {
-   "type": "para",
-   "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld)",
-   "sha": "bc47da663d101bfc",
-   "zh": "源代码"
   },
   {
    "type": "para",
@@ -39,6 +33,7 @@
    "type": "code",
    "text": "class HelloWorld : public Gtk::Window\n{\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Member widgets:\n  Gtk::Button m_button;\n};",
    "sha": "1086a846494d120a",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld",
    "zh": ""
   },
   {

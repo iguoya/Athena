@@ -16,6 +16,8 @@ interface SnapshotBlock {
   sha: string;
   zh?: string | null;
   ref?: string | null;
+  file?: string | null;
+  source_url?: string | null;
   key?: boolean;
   status?: "stale" | "untranslated";
   stale_from?: string | null;
@@ -674,19 +676,33 @@ export function PageView({
                 {renderInline(flow(group.blocks[0].text))}
               </h3>
             );
-          case "code":
+          case "code": {
+            const block = group.blocks[0];
             return (
               <figure key={index} className="my-5">
                 <div className="overflow-hidden rounded-card ring-1 ring-line">
-                  <div className="flex items-center bg-bg-2 px-4 py-1.5">
-                    <span className="font-mono text-[20px] font-medium text-accent">cpp</span>
+                  <div className="flex items-center justify-between bg-bg-2 px-4 py-1.5">
+                    <span className="font-mono text-[20px] font-medium text-accent">
+                      {block.file ?? "cpp"}
+                    </span>
+                    {block.source_url && (
+                      <a
+                        href={block.source_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[20px] text-link hover:underline"
+                      >
+                        完整源码 ↗
+                      </a>
+                    )}
                   </div>
                   <pre className="overflow-x-auto bg-[#F6F6F6] p-5 font-mono text-[20px] leading-relaxed text-[#555555]">
-                    <code>{group.blocks[0].text}</code>
+                    <code>{block.text}</code>
                   </pre>
                 </div>
               </figure>
             );
+          }
           case "figure": {
             const block = group.blocks[0];
             return (

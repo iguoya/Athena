@@ -275,6 +275,41 @@ def chapter_preamble_blocks(source: str, chapter_id: str) -> list[dict]:
     return blocks
 
 
+def strip_meta_labels(blocks: list[dict]) -> list[dict]:
+    """元标签结构化（应用 ADR 0002）：DocBook 的「Source Code」「File: xxx」
+    是代码块的结构性标记，不是正文——提取时消化：
+    - 「Source Code」段丢弃（信息 = 后面有代码，代码块自身可表意）；
+    - 「File: xxx」段转化为紧随代码块的 file 属性（渲染为代码块标题）。
+    元标签不再以正文段形态出现在快照中。"""
+    out: list[dict] = []
+    i = 0
+    while i < len(blocks):
+        b = blocks[i]
+        if b["type"] == "para":
+            plain = re.sub(r"\s+", " ", b["text"]).strip()
+            if plain == "Source Code":
+                i += 1
+                continue
+            link = re.match(r"^\[Source Code\]\(([^)]+)\)$", plain)
+            if link:
+                # 官网 2026 版：Source Code 是指向源码的链接——把 URL 附给
+                # 本节内下一个代码块（渲染为「完整源码 ↗」），链接段本身消化
+                for j in range(i + 1, len(blocks)):
+                    if blocks[j]["type"] == "code":
+                        blocks[j] = {**blocks[j], "source_url": link.group(1)}
+                        break
+                i += 1
+                continue
+            m = re.match(r"^File:\s*(.+?)(?:\s*\((?:For use with[^)]*|gtkmm [234][^)]*)\))?$", plain)
+            if m and i + 1 < len(blocks) and blocks[i + 1]["type"] == "code":
+                out.append({**blocks[i + 1], "file": m.group(1).strip()})
+                i += 2
+                continue
+        out.append(b)
+        i += 1
+    return out
+
+
 def sync_section(chapter_id: str, section_id: str, section_title: str,
                  fragment: str, pinned: str,
                  preamble_blocks: list[dict] | None = None) -> tuple[dict, dict]:
@@ -286,7 +321,7 @@ def sync_section(chapter_id: str, section_id: str, section_title: str,
     old_commit = old.get("upstream_commit") if old else None
 
     # 官网章页 = 章导语 + 第一节：导语块并入第一节开头（应用 ADR 0002）
-    new_blocks = list(preamble_blocks or []) + extract_blocks(fragment)
+    new_blocks = strip_meta_labels(list(preamble_blocks or []) + extract_blocks(fragment))
     md_path = out_path.with_suffix(".md")
     blocks, stats = align(old_blocks, new_blocks)
     snapshot = {
