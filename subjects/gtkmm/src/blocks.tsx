@@ -64,7 +64,7 @@ function QuizView({
               }`}
             >
               <span
-                className={`grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold ${
+                className={`grid size-6 shrink-0 place-items-center rounded-full text-[20px] font-semibold ${
                   reveal && isAnswer
                     ? "bg-accent-deep text-white"
                     : reveal && chosen
@@ -73,16 +73,16 @@ function QuizView({
                 }`}
               >
                 {reveal && isAnswer ? (
-                  <Check className="size-3.5" />
+                  <Check className="size-5" />
                 ) : reveal && chosen ? (
-                  <X className="size-3.5" />
+                  <X className="size-5" />
                 ) : (
                   String.fromCharCode(65 + index)
                 )}
               </span>
               <span className="flex-1">{option}</span>
               {reveal && isAnswer && (
-                <span className="text-xs font-medium text-accent-deep">正确答案</span>
+                <span className="text-[20px] font-medium text-accent-deep">正确答案</span>
               )}
             </motion.button>
           );
@@ -107,14 +107,14 @@ export function BlockView(props: BlockViewProps) {
         >
           <div className="overflow-hidden rounded-card shadow-card ring-1 ring-line">
             <div className="flex items-center bg-bg-2 px-4 py-1.5 ring-1 ring-line">
-              <span className="font-mono text-xs font-medium text-accent">{block.lang}</span>
+              <span className="font-mono text-[20px] font-medium text-accent">{block.lang}</span>
             </div>
-            <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[15px] leading-relaxed text-[#555555] ring-1 ring-line">
+            <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[22px] leading-relaxed text-[#555555] ring-1 ring-line">
               <code>{block.source}</code>
             </pre>
           </div>
           {block.caption && (
-            <figcaption className="mt-2 text-xs text-muted">{block.caption}</figcaption>
+            <figcaption className="mt-2 text-[20px] text-muted">{block.caption}</figcaption>
           )}
         </motion.figure>
       );
@@ -126,7 +126,7 @@ export function BlockView(props: BlockViewProps) {
             ? { ring: "ring-accent/30", bg: "bg-link/10", fg: "text-link", Icon: Lightbulb }
             : { ring: "ring-accent/25", bg: "bg-accent-soft", fg: "text-accent", Icon: Info };
       return (
-        <aside className={`my-5 flex gap-3 rounded-card p-4 text-sm ring-1 ${style.ring} ${style.bg}`}>
+        <aside className={`my-5 flex gap-3 rounded-card p-4 text-[22px] ring-1 ${style.ring} ${style.bg}`}>
           <style.Icon className={`mt-0.5 size-4.5 shrink-0 ${style.fg}`} />
           <p className="leading-relaxed text-fg/90">{block.text}</p>
         </aside>
@@ -151,16 +151,16 @@ export function BlockView(props: BlockViewProps) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="flex items-center gap-2 font-medium text-accent">
-                <MonitorPlay className="size-4" /> 真机演示 · {entity?.title ?? block.demo_ref}
+                <MonitorPlay className="size-6" /> 真机演示 · {entity?.title ?? block.demo_ref}
               </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-fg/80">
+              <p className="mt-1.5 text-[22px] leading-relaxed text-fg/80">
                 {entity?.purpose ?? block.caption}
               </p>
             </div>
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => onLaunch(block.demo_ref)}
-              className="shrink-0 rounded-xl bg-accent px-4 py-2.5 text-sm font-medium text-on-accent shadow-card transition-colors hover:bg-accent/90"
+              className="shrink-0 rounded-xl bg-accent px-4 py-2.5 text-[22px] font-medium text-on-accent shadow-card transition-colors hover:bg-accent/90"
             >
               运行演示
             </motion.button>
@@ -176,16 +176,16 @@ export function BlockView(props: BlockViewProps) {
           className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-accent-deep/40"
         >
           <p className="flex items-center gap-2 font-medium text-accent-deep">
-            <FlaskConical className="size-4" /> 骨架实验 · {entity?.title ?? block.demo_ref}
+            <FlaskConical className="size-6" /> 骨架实验 · {entity?.title ?? block.demo_ref}
           </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-fg/80">{entity?.purpose}</p>
+          <p className="mt-1.5 text-[22px] leading-relaxed text-fg/80">{entity?.purpose}</p>
           {entity?.acceptance && (
-            <p className="mt-2 text-xs text-muted">
+            <p className="mt-2 text-[20px] text-muted">
               <span className="font-medium text-fg/70">跑通标准：</span>
               {entity.acceptance}
             </p>
           )}
-          <p className="mt-2 font-mono text-xs text-muted">{entity?.skeleton_dir}</p>
+          <p className="mt-2 font-mono text-[20px] text-muted">{entity?.skeleton_dir}</p>
         </motion.div>
       );
     }

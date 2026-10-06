@@ -60,7 +60,7 @@ function TranslatedText({ text }: { text: string }) {
 function PendingBadge({ stale }: { stale?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] ring-1 ${
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[20px] ring-1 ${
         stale
           ? "bg-amber-500/10 text-amber-700 ring-amber-500/30"
           : "bg-surface-2 text-muted ring-line"
@@ -107,7 +107,7 @@ export function PageView({
 
   const groups = useMemo(() => (snapshot ? groupBlocks(snapshot.blocks) : []), [snapshot]);
 
-  if (error) return <p className="text-sm text-red-700">{error}</p>;
+  if (error) return <p className="text-[22px] text-red-700">{error}</p>;
   if (snapshot == null) return <p className="text-muted">正在读取段落快照……</p>;
 
   return (
@@ -118,7 +118,7 @@ export function PageView({
             return (
               <h3
                 key={index}
-                className="mt-9 font-display text-xl font-semibold text-accent-deep"
+                className="mt-9 font-display text-[30px] font-semibold text-accent-deep"
               >
                 {group.blocks[0].text}
               </h3>
@@ -128,9 +128,9 @@ export function PageView({
               <figure key={index} className="my-5">
                 <div className="overflow-hidden rounded-card ring-1 ring-line">
                   <div className="flex items-center bg-bg-2 px-4 py-1.5">
-                    <span className="font-mono text-xs font-medium text-accent">cpp</span>
+                    <span className="font-mono text-[20px] font-medium text-accent">cpp</span>
                   </div>
-                  <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[15px] leading-relaxed text-[#555555]">
+                  <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[22px] leading-relaxed text-[#555555]">
                     <code>{group.blocks[0].text}</code>
                   </pre>
                 </div>
@@ -140,7 +140,7 @@ export function PageView({
             return (
               <p
                 key={index}
-                className="my-4 rounded-card bg-surface-2 px-4 py-3 text-center text-sm text-muted ring-1 ring-line"
+                className="my-4 rounded-card bg-surface-2 px-4 py-3 text-center text-[22px] text-muted ring-1 ring-line"
               >
                 图 · {group.blocks[0].text}
               </p>
@@ -153,11 +153,11 @@ export function PageView({
                   <ul className="space-y-2">
                     {group.blocks.map((block) => (
                       <li key={block.sha} className="flex flex-col gap-1">
-                        <span className="font-display text-[15px] italic leading-relaxed text-fg/70">
+                        <span className="font-display text-[22px] italic leading-relaxed text-fg/70">
                           • {block.text}
                         </span>
                         {block.zh && (
-                          <span className="pl-4 text-sm leading-relaxed text-fg/90">
+                          <span className="pl-4 text-[22px] leading-relaxed text-fg/90">
                             {block.zh}
                           </span>
                         )}
@@ -179,7 +179,7 @@ export function PageView({
             return (
               <div key={index} className="my-5">
                 <blockquote
-                  className={`border-l-4 bg-surface-2 py-3 pl-4 pr-3 font-display text-lg italic leading-relaxed text-fg/75 ${
+                  className={`border-l-4 bg-surface-2 py-3 pl-4 pr-3 font-display text-[26px] italic leading-relaxed text-fg/75 ${
                     stale ? "border-amber-500/70" : "border-accent/50"
                   }`}
                 >
@@ -191,7 +191,7 @@ export function PageView({
                   <TranslatedText text={block.zh} />
                 ) : block.stale_from ? (
                   <>
-                    <p className="my-2 text-xs text-amber-700">
+                    <p className="my-2 text-[20px] text-amber-700">
                       以下为原文变更前的旧译文，待复核：
                     </p>
                     <TranslatedText text={block.stale_from} />

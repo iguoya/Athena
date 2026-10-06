@@ -24,8 +24,8 @@ function MachineButton({
       onClick={onClick}
       className={
         variant === "dark"
-          ? "rounded-xl bg-accent px-4 py-2 text-sm font-medium text-on-accent shadow-card transition-colors hover:opacity-90"
-          : "flex items-center gap-1.5 rounded-xl border border-accent/40 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent-soft"
+          ? "rounded-xl bg-accent px-4 py-2 text-[22px] font-medium text-on-accent shadow-card transition-colors hover:opacity-90"
+          : "flex items-center gap-1.5 rounded-xl border border-accent/40 px-4 py-2 text-[22px] font-medium text-accent transition-colors hover:bg-accent-soft"
       }
     >
       {children}
@@ -47,7 +47,7 @@ function SignalFlowSim({ demoRef, note, onLaunch }: SimulationProps) {
 
   return (
     <figure className="my-6 rounded-card bg-surface p-6 shadow-card ring-1 ring-line">
-      <figcaption className="mb-4 text-xs font-semibold tracking-wide text-muted">
+      <figcaption className="mb-4 text-[20px] font-semibold tracking-wide text-muted">
         交互模拟 · CLICKED 信号的旅程
       </figcaption>
       <div className="flex flex-wrap items-center gap-2.5">
@@ -76,11 +76,11 @@ function SignalFlowSim({ demoRef, note, onLaunch }: SimulationProps) {
         </MachineButton>
         {demoRef && onLaunch && (
           <MachineButton variant="outline" onClick={() => onLaunch(demoRef)}>
-            <MonitorPlay className="size-4" /> 在真机上看
+            <MonitorPlay className="size-6" /> 在真机上看
           </MachineButton>
         )}
       </div>
-      <p className="mt-4 text-xs leading-relaxed text-muted">
+      <p className="mt-4 text-[20px] leading-relaxed text-muted">
         {note ?? "模型简化：真实 GTK 由 GDK 事件分发到 main loop，此处省略事件队列与捕获阶段。"}
       </p>
     </figure>
@@ -92,7 +92,7 @@ function ToggleStateSim({ demoRef, note, onLaunch }: SimulationProps) {
   const [signalLog, setSignalLog] = useState<string[]>([]);
   return (
     <figure className="my-6 rounded-card bg-surface p-6 shadow-card ring-1 ring-line">
-      <figcaption className="mb-4 text-xs font-semibold tracking-wide text-muted">
+      <figcaption className="mb-4 text-[20px] font-semibold tracking-wide text-muted">
         交互模拟 · TOGGLEBUTTON 的状态与 TOGGLED 信号
       </figcaption>
       <div className="flex items-center gap-5">
@@ -112,7 +112,7 @@ function ToggleStateSim({ demoRef, note, onLaunch }: SimulationProps) {
           {active ? "按下（active）" : "弹起（inactive）"}
         </motion.button>
         <div className="flex-1">
-          <div className="min-h-16 rounded-xl bg-[#F6F6F6] p-3 font-mono text-xs leading-relaxed ring-1 ring-line">
+          <div className="min-h-16 rounded-xl bg-[#F6F6F6] p-3 font-mono text-[20px] leading-relaxed ring-1 ring-line">
             {signalLog.map((line, index) => (
               <motion.p
                 key={`${index}-${line}`}
@@ -132,11 +132,11 @@ function ToggleStateSim({ demoRef, note, onLaunch }: SimulationProps) {
       <div className="mt-5 flex items-center gap-3">
         {demoRef && onLaunch && (
           <MachineButton variant="outline" onClick={() => onLaunch(demoRef)}>
-            <MonitorPlay className="size-4" /> 在真机上看
+            <MonitorPlay className="size-6" /> 在真机上看
           </MachineButton>
         )}
       </div>
-      <p className="mt-4 text-xs leading-relaxed text-muted">
+      <p className="mt-4 text-[20px] leading-relaxed text-muted">
         {note ?? "模型简化：真实切换由按下/释放完成，状态存于控件内部，get_active()/set_active() 读写它。"}
       </p>
     </figure>
@@ -166,11 +166,11 @@ function Node({
         active ? "border-accent bg-accent-soft" : "border-line bg-surface-2"
       }`}
     >
-      <p className={`font-mono text-sm font-medium ${active ? "text-accent" : "text-fg/80"}`}>
+      <p className={`font-mono text-[22px] font-medium ${active ? "text-accent" : "text-fg/80"}`}>
         {label}
       </p>
-      <p className="text-xs text-muted">{sub}</p>
-      {detail && <p className="mt-1 text-xs font-medium text-accent">{detail}</p>}
+      <p className="text-[20px] text-muted">{sub}</p>
+      {detail && <p className="mt-1 text-[20px] font-medium text-accent">{detail}</p>}
     </motion.div>
   );
 }
@@ -179,7 +179,7 @@ function Arrow({ active }: { active: boolean }) {
   return (
     <motion.span
       animate={{ color: active ? "#b02c29" : "#dddddd", scale: active ? 1.15 : 1 }}
-      className="text-xl font-light"
+      className="text-[30px] font-light"
     >
       →
     </motion.span>
@@ -193,6 +193,6 @@ export function SimulationView(props: SimulationProps & { sim: string }) {
     case "toggle-state":
       return <ToggleStateSim {...props} />;
     default:
-      return <p className="my-4 text-sm text-red-700">未知的模拟类型：{props.sim}</p>;
+      return <p className="my-4 text-[22px] text-red-700">未知的模拟类型：{props.sim}</p>;
   }
 }
