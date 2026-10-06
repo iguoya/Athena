@@ -177,10 +177,18 @@ def check_curriculum(course: dict) -> tuple[set[str], set[str]]:
         f"课表校验通过：{len(course.get('sections', []))} 个主线单元、"
         f"{len(course.get('reference', []))} 个参考单元、{len(kp_ids)} 个知识点"
     )
-    return kp_ids, collect_demo_refs(course)
+    return kp_ids, collect_demo_refs(course), collect_lab_refs(course)
 
 
-def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str]) -> None:
+def collect_lab_refs(course: dict) -> list[str]:
+    """实验区（labs）引用的实验实体 id——与教程章节并列的独立入口。"""
+    labs = course.get("labs") or {}
+    return [exp_id for group in labs.get("groups", [])
+            for exp_id in group.get("experiments", [])]
+
+
+def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str],
+                   lab_refs: list[str]) -> None:
     if manifest is None:
         return
     entity_ids: set[str] = set()
@@ -213,10 +221,14 @@ def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str]) -> N
     missing = course_refs - entity_ids
     if missing:
         fail(f"课表引用了清单里不存在的演示/实验：{sorted(missing)}")
+    experiment_ids = {e.get("id") for e in manifest.get("experiments", [])}
+    lab_missing = [ref for ref in lab_refs if ref not in experiment_ids]
+    if lab_missing:
+        fail(f"实验区引用了清单里不存在的实验：{sorted(lab_missing)}")
     orphans = {e["id"] for e in manifest.get("demos", []) + manifest.get("experiments", [])
-               if e.get("id") not in course_refs}
+               if e.get("id") not in course_refs and e.get("id") not in set(lab_refs)}
     if orphans:
-        fail(f"清单实体没有任何课表块引用（孤儿条目）：{sorted(orphans)}")
+        fail(f"清单实体没有任何课表块或实验区引用（孤儿条目）：{sorted(orphans)}")
     print(
         f"清单校验通过：{len(manifest.get('demos', []))} 个演示、"
         f"{len(manifest.get('experiments', []))} 个实验，引用闭环成立"
@@ -319,9 +331,9 @@ def main() -> int:
 
     check_json_all()
     course = load_json(CONTENT_DIR / "curriculum.json")
-    kp_ids, course_refs = check_curriculum(course or {})
+    kp_ids, course_refs, lab_refs = check_curriculum(course or {})
     manifest = load_json(CONTENT_DIR / "demos.json")
-    check_manifest(manifest or {}, kp_ids, course_refs)
+    check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
     check_license_pages()
 
     contract = PROJECT_ROOT / "content-contract.json"

@@ -67,12 +67,23 @@ export interface ReferenceEntry {
   note?: string;
 }
 
+export interface LabGroup {
+  id: string;
+  title: string;
+  experiments: string[];
+}
+
+export interface Labs {
+  groups: LabGroup[];
+}
+
 export interface Curriculum {
   version: number;
   title: string;
   book: { title: string; author: string; url: string; license: string };
   sections: Section[];
   reference: ReferenceEntry[];
+  labs?: Labs;
 }
 
 export interface ManifestEntity {
