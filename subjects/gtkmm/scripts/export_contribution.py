@@ -132,11 +132,15 @@ def main() -> int:
     # 重拼接（block 本身就是列表元素引用，原地改写 msgstr 后顺序不变）
     out_text = "".join(blocks)
 
-    # ---- 头部元数据更新 ----
+    # ---- 头部元数据更新：修订时间与贡献者署名 ----
     now = datetime.now().strftime("%Y-%m-%d %H:%M+0000")
     out_text = re.sub(
         r'"PO-Revision-Date: [^"]*"',
         f'"PO-Revision-Date: {now}"',
+        out_text, count=1)
+    out_text = re.sub(
+        r'"Last-Translator: [^"]*"',
+        '"Last-Translator: tiger <375478250@qq.com>"',
         out_text, count=1)
 
     OUT_PO.write_text(out_text, encoding="utf-8")

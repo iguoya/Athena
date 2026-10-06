@@ -124,7 +124,7 @@ export default function App() {
     [manifest],
   );
 
-  const section = curriculum?.sections.find((s) => s.id === (view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null)) ?? null;
+  const section = curriculum?.sections.find((s) => s.id === activeSectionId) ?? null;
   const kp = section?.knowledge_points.find((k) => k.id === (view?.kind === "kp" ? view.kpId : null)) ?? null;
   const page = section?.pages.find((p) => p.id === (view?.kind === "page" ? view.pageId : null)) ?? null;
   const labExp = view?.kind === "lab" ? experiments.get(view.expId) : undefined;
