@@ -3994,6 +3994,26 @@
               "relation": "adapted",
               "source_id": "nuaa-cs",
               "locator": "课程结构中的程序设计、软件工程与实践环节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cmake-tutorial",
+              "locator": "官方 Tutorial：从单个源文件到测试与安装"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "pro-git",
+              "locator": "Git 基础、分支与协作"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "google-sanitizers",
+              "locator": "ASan、TSan 与 UBSan 的用法"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "godbolt",
+              "locator": "源码与编译产物的逐行对照"
             }
           ],
           "pitfall": "工具零散，每样单独跑一次都不难，难在把构建、调试、测试和 CI 固定成每天都走的那条路；换台机器或换个目录就重新配，可复现性最先失守。",
@@ -4007,7 +4027,98 @@
           "app": "",
           "stage": "junior",
           "stage_reason": "初级主干：每次改动都可复现，后面的验证都站在构建与调试上。",
-          "domain": "programming"
+          "domain": "programming",
+          "chapters": [
+            {
+              "id": "tc.build",
+              "title": "构建：编译、链接与可复现的构建",
+              "summary": "源文件怎样变成可执行文件，构建脚本怎样把步骤固定下来。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "cmake-tutorial",
+                "locator": "官方 Tutorial：从单个源文件到测试与安装"
+              }
+            },
+            {
+              "id": "tc.vcs",
+              "title": "版本控制：提交、分支与合并",
+              "summary": "用提交记录变化，用分支并行工作，处理一次合并冲突。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "pro-git",
+                "locator": "Git 基础、分支与协作"
+              }
+            },
+            {
+              "id": "tc.debug",
+              "title": "调试器：断点、观察点与回溯",
+              "summary": "单步、条件断点、观察点与调用栈，把「猜」换成「看」。",
+              "requires": [
+                "tc.build"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "tc.asm",
+              "title": "对照源码与编译产物",
+              "summary": "看同一段代码在不同优化级别下编译出什么。",
+              "requires": [
+                "tc.build"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "godbolt",
+                "locator": "源码与编译产物的逐行对照"
+              }
+            },
+            {
+              "id": "tc.sanitize",
+              "title": "用消毒器抓内存与未定义行为",
+              "summary": "用 ASan、TSan 与 UBSan 抓越界、竞态与未定义行为。",
+              "requires": [
+                "tc.debug"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "google-sanitizers",
+                "locator": "ASan、TSan 与 UBSan 的用法"
+              }
+            },
+            {
+              "id": "tc.test",
+              "title": "单元测试与持续集成",
+              "summary": "写单元测试并接进持续集成，让每次提交都被检验。",
+              "requires": [
+                "tc.build",
+                "tc.vcs"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "tc.ship",
+              "title": "在全新目录构建并让测试自动通过",
+              "summary": "做一个跨平台命令行工具：构建、断点、日志、单元测试与 CI 各跑通一次。",
+              "requires": [
+                "tc.test",
+                "tc.sanitize"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.cs.data-concurrency",
@@ -4027,6 +4138,21 @@
               "relation": "adapted",
               "source_id": "nuaa-cs",
               "locator": "数据结构、操作系统与软件工程课程方向"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ostep",
+              "locator": "并发部分：线程、锁与条件变量"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "csapp",
+              "locator": "Concurrent Programming（第 12 章）"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "clrs",
+              "locator": "基本数据结构"
             }
           ],
           "pitfall": "容量上限和满载时的处置常被留到最后才想，压力一来不是内存无限增长就是悄悄丢数据；并发缺陷又难复现，测试跑绿了不等于没有竞争。",
@@ -4039,7 +4165,83 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级主干：并发交接要有上界，队列深度就是延迟。",
-          "domain": "systems"
+          "domain": "systems",
+          "chapters": [
+            {
+              "id": "dc.ds",
+              "title": "数据组织与复杂度边界",
+              "summary": "按访问模式选择数据结构，并说明它的复杂度边界。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "clrs",
+                "locator": "基本数据结构"
+              }
+            },
+            {
+              "id": "dc.threads",
+              "title": "线程、锁与条件变量",
+              "summary": "线程之间怎样共享数据、怎样等待与通知。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "ostep",
+                "locator": "并发部分：线程、锁与条件变量"
+              }
+            },
+            {
+              "id": "dc.queue",
+              "title": "有容量上限的队列",
+              "summary": "实现有界的生产者与消费者队列。",
+              "requires": [
+                "dc.ds",
+                "dc.threads"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dc.policy",
+              "title": "丢弃与背压策略",
+              "summary": "队列满时丢弃、阻塞还是反压，各自的代价。",
+              "requires": [
+                "dc.queue"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dc.race",
+              "title": "数据竞争与死锁的检测",
+              "summary": "用工具与推理找出数据竞争和死锁。",
+              "requires": [
+                "dc.threads"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Concurrent Programming（第 12 章）"
+              }
+            },
+            {
+              "id": "dc.bench",
+              "title": "压力输入下的延迟分位数",
+              "summary": "用压力输入比较不同队列与锁策略的吞吐、等待时间与延迟分位数。",
+              "requires": [
+                "dc.policy",
+                "dc.race"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.cs.os-network",
@@ -4059,6 +4261,26 @@
               "relation": "adapted",
               "source_id": "nuaa-cs",
               "locator": "操作系统、计算机网络课程方向"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "tlpi",
+              "locator": "套接字与进程相关章节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "beej-network",
+              "locator": "套接字编程"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "rfc9293-tcp",
+              "locator": "TCP 规范"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "wireshark-user-guide",
+              "locator": "抓包与协议分析"
             }
           ],
           "pitfall": "错误路径比正常路径长得多：超时、半关闭、部分写、被信号打断的重试，少处理一个就在长跑几小时之后暴露，而且现场往往已经过去。",
@@ -4071,7 +4293,89 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级支撑：处理机和试验台上的数据链接口。",
-          "domain": "systems"
+          "domain": "systems",
+          "chapters": [
+            {
+              "id": "on.syscall",
+              "title": "系统调用、进程与线程",
+              "summary": "程序怎样通过系统调用使用操作系统，进程与线程的区别。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "tlpi",
+                "locator": "套接字与进程相关章节"
+              }
+            },
+            {
+              "id": "on.socket",
+              "title": "套接字与 TCP",
+              "summary": "套接字接口与 TCP 的连接、可靠传输与关闭。",
+              "requires": [
+                "on.syscall"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "beej-network",
+                "locator": "套接字编程"
+              }
+            },
+            {
+              "id": "on.receiver",
+              "title": "带超时与重连的接收器",
+              "summary": "写一个带超时与自动重连的 TCP 遥测接收器。",
+              "requires": [
+                "on.socket"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "rfc9293-tcp",
+                "locator": "TCP 规范"
+              }
+            },
+            {
+              "id": "on.log",
+              "title": "结构化日志",
+              "summary": "为接收器加上结构化日志，使事件可检索。",
+              "requires": [
+                "on.receiver"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "on.capture",
+              "title": "抓包观察协议",
+              "summary": "用抓包工具观察握手、重传与乱序。",
+              "requires": [
+                "on.socket"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "wireshark-user-guide",
+                "locator": "抓包与协议分析"
+              }
+            },
+            {
+              "id": "on.inject",
+              "title": "注入断网、乱序与错误包",
+              "summary": "注入断网、乱序与错误包后，接收器仍能恢复并留下完整事件记录。",
+              "requires": [
+                "on.receiver",
+                "on.log",
+                "on.capture"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.cs.data-pipeline",
@@ -4092,6 +4396,16 @@
               "relation": "adapted",
               "source_id": "tensorrt-benchmark",
               "locator": "端到端延迟、主机延迟、计算时间与吞吐的测量边界"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "zmq-guide",
+              "locator": "消息与队列"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cyclictest",
+              "locator": "延迟的测量方法"
             }
           ],
           "pitfall": "容易只盯住某个函数的耗时，忽略排队、拷贝和显示带来的端到端延迟；各环节时标不统一时，后面所有分析都建立在错位的数据上。",
@@ -4105,7 +4419,86 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级主干：端到端带时标，才能说清时间花在哪一段。",
-          "domain": "systems"
+          "domain": "systems",
+          "chapters": [
+            {
+              "id": "dp.path",
+              "title": "有时间边界的数据路径",
+              "summary": "把采集、队列、计算、存储与展示看作一条有时间边界的路径。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "tensorrt-benchmark",
+                "locator": "端到端延迟、主机延迟、计算时间与吞吐的测量边界"
+              }
+            },
+            {
+              "id": "dp.stamp",
+              "title": "给每个数据包打时间戳",
+              "summary": "在路径的各处打时间戳，使延迟可以分段计算。",
+              "requires": [
+                "dp.path"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cyclictest",
+                "locator": "延迟的测量方法"
+              }
+            },
+            {
+              "id": "dp.queue",
+              "title": "队列与处理阶段",
+              "summary": "用队列连接各个阶段，选择消息传递方式。",
+              "requires": [
+                "dp.path"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "zmq-guide",
+                "locator": "消息与队列"
+              }
+            },
+            {
+              "id": "dp.latency",
+              "title": "端到端延迟与吞吐",
+              "summary": "测端到端延迟与吞吐，并按阶段分解。",
+              "requires": [
+                "dp.stamp",
+                "dp.queue"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dp.loss",
+              "title": "丢包与背压",
+              "summary": "各阶段速率不匹配时的丢包与背压行为。",
+              "requires": [
+                "dp.queue"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dp.report",
+              "title": "报告端到端，而非单个函数",
+              "summary": "报告端到端延迟、吞吐与丢包，而不是只报某一个函数的耗时。",
+              "requires": [
+                "dp.latency",
+                "dp.loss"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.cs.observability",
@@ -4125,6 +4518,16 @@
               "relation": "adapted",
               "source_id": "tensorrt-benchmark",
               "locator": "端到端基准、CUDA Events 与剖析的测量方法"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cyclictest",
+              "locator": "延迟的测量方法"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "csapp",
+              "locator": "Optimizing Program Performance（第 5 章）"
             }
           ],
           "pitfall": "只记平均值会把最坏情况抹平，而验收看的正是最坏值；埋点又常在出问题之后才补，那时现场已经没了，只能靠猜。",
@@ -4138,7 +4541,86 @@
           "app": "",
           "stage": "senior",
           "stage_reason": "资深主干：最坏行为要用实测验收，不能凭体感改系统。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "ob.metrics",
+              "title": "指标、日志与追踪",
+              "summary": "三类观测手段各自回答什么问题。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "ob.hist",
+              "title": "延迟直方图与分位数",
+              "summary": "画延迟直方图，读分位数与尾部。",
+              "requires": [
+                "ob.metrics"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cyclictest",
+                "locator": "延迟的测量方法"
+              }
+            },
+            {
+              "id": "ob.queue",
+              "title": "队列深度与错误分类",
+              "summary": "为管线加上队列深度与错误分类的指标。",
+              "requires": [
+                "ob.metrics"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ob.profile",
+              "title": "性能剖析与热点",
+              "summary": "用剖析工具找出热点，并判断值不值得优化。",
+              "requires": [
+                "ob.metrics"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Optimizing Program Performance（第 5 章）"
+              }
+            },
+            {
+              "id": "ob.regress",
+              "title": "定位一次人为制造的退化",
+              "summary": "在管线里制造一次退化，仅凭观测数据定位原因。",
+              "requires": [
+                "ob.hist",
+                "ob.queue",
+                "ob.profile"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ob.report",
+              "title": "复现步骤、基线与回归结果",
+              "summary": "提交包含复现步骤、基线、改动与回归结果的性能报告。",
+              "requires": [
+                "ob.regress"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tensorrt-benchmark",
+                "locator": "端到端基准、CUDA Events 与剖析的测量方法"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.cs.integration",
@@ -4158,6 +4640,16 @@
               "relation": "adapted",
               "source_id": "nasa-fprime",
               "locator": "组件接口、构建与单元/集成测试的工程样本"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "zmq-guide",
+              "locator": "消息与队列"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nasa-se-handbook",
+              "locator": "接口与集成、验证"
             }
           ],
           "pitfall": "在自己机器上能跑不算交付：配置、依赖、启动顺序和故障处置一旦只存在脑子里，别人复现不出来，回归也就无从谈起。",
@@ -4170,7 +4662,85 @@
           "app": "",
           "stage": "senior",
           "stage_reason": "资深支撑：他人可复现、可评审的收口，不是起步课。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "it.iface",
+              "title": "接口、配置与故障边界",
+              "summary": "多个组件集成时，接口、配置与故障边界要事先说清。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "nasa-fprime",
+                "locator": "组件接口、构建与单元/集成测试的工程样本"
+              }
+            },
+            {
+              "id": "it.pack",
+              "title": "打包与一键启动",
+              "summary": "把管线打包成一键启动的演示。",
+              "requires": [
+                "it.iface"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "zmq-guide",
+                "locator": "消息与队列"
+              }
+            },
+            {
+              "id": "it.health",
+              "title": "健康检查与可观测接口",
+              "summary": "为每个组件提供健康检查与状态接口。",
+              "requires": [
+                "it.pack"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "it.drill",
+              "title": "故障演练",
+              "summary": "按预案制造故障并演练恢复。",
+              "requires": [
+                "it.health"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "it.doc",
+              "title": "给别人看的部署文档",
+              "summary": "写出配置样例与部署步骤，使别人能照做。",
+              "requires": [
+                "it.pack"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-se-handbook",
+                "locator": "接口与集成、验证"
+              }
+            },
+            {
+              "id": "it.handoff",
+              "title": "由未参与开发的人按文档部署并恢复",
+              "summary": "让未参与开发的人按文档完成部署、观察与故障恢复。",
+              "requires": [
+                "it.drill",
+                "it.doc"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         }
       ],
       "edges": [
@@ -4276,6 +4846,16 @@
               "relation": "adapted",
               "source_id": "buaa-automation",
               "locator": "电子技术、仪器仪表与工程实践课程方向"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "art-of-electronics",
+              "locator": "仪器与测量相关章节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "mit-ocw-6002",
+              "locator": "电路与电子学：直流与瞬态分析"
             }
           ],
           "pitfall": "仪器档位、接地和探头补偿用错时，读数会系统性地骗人；不会把现象翻译成电路假设就只能换零件碰运气。",
@@ -4288,7 +4868,80 @@
           "app": "",
           "stage": "junior",
           "stage_reason": "初级主干：电气联调的每一步都依赖可重复的测量。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "chapters": [
+            {
+              "id": "ms.instruments",
+              "title": "仪器与量程",
+              "summary": "示波器、万用表与逻辑分析仪各自测什么、量程与带宽怎么选。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "art-of-electronics",
+                "locator": "仪器与测量相关章节"
+              }
+            },
+            {
+              "id": "ms.probe",
+              "title": "探头、接地与测量误差",
+              "summary": "探头补偿、接地环路与仪器自身带来的误差。",
+              "requires": [
+                "ms.instruments"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "ms.dc",
+              "title": "稳压与纹波的测量",
+              "summary": "测一个稳压电路的输出、负载调整与纹波。",
+              "requires": [
+                "ms.probe"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "mit-ocw-6002",
+                "locator": "电路与电子学：直流与瞬态分析"
+              }
+            },
+            {
+              "id": "ms.timing",
+              "title": "上电时序与时钟波形",
+              "summary": "用示波器抓上电过程与时钟波形，读出时序关系。",
+              "requires": [
+                "ms.probe"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ms.fault",
+              "title": "三类人为故障的定位",
+              "summary": "在板上制造开路、短路与偏置错误，按测量逐步缩小范围定位。",
+              "requires": [
+                "ms.dc",
+                "ms.timing"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ms.record",
+              "title": "保留原始波形与判定依据",
+              "summary": "记录量程、探头设置与原始波形，使结论可被他人复核。",
+              "requires": [
+                "ms.fault"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.ei.mcu-interfaces",
@@ -4308,6 +4961,21 @@
               "relation": "adapted",
               "source_id": "cnsa-satellite-platform",
               "locator": "卫星平台的测控、数据管理与姿态轨道控制功能"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "stm32f4-rm",
+              "locator": "GPIO、定时器、DMA 与串行外设章节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nxp-i2c-um10204",
+              "locator": "I2C-bus specification"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "iso-11898-1",
+              "locator": "CAN 数据链路层"
             }
           ],
           "pitfall": "外设例程能跑却说不清时钟树、中断优先级和 DMA 请求从哪来，一换芯片或一改速率就全塌。",
@@ -4321,7 +4989,87 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级主干：外设与总线是软硬件接口面。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "mi.gpio",
+              "title": "GPIO、定时器与触发",
+              "summary": "引脚、定时器与触发源怎样组成最小的可控系统。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "GPIO、定时器、DMA 与串行外设章节"
+              }
+            },
+            {
+              "id": "mi.serial",
+              "title": "串行总线：UART、SPI、I2C 与 CAN",
+              "summary": "四类总线的帧、时序、应答与错误检测。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "nxp-i2c-um10204",
+                "locator": "I2C-bus specification"
+              }
+            },
+            {
+              "id": "mi.irqdma",
+              "title": "中断与 DMA 驱动采集",
+              "summary": "用中断与 DMA 驱动一次连续采集。",
+              "requires": [
+                "mi.gpio",
+                "mi.serial"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "DMA 与中断章节"
+              }
+            },
+            {
+              "id": "mi.imu",
+              "title": "采集 IMU",
+              "summary": "用 MCU 通过总线读取 IMU 并按固定周期采样。",
+              "requires": [
+                "mi.irqdma"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mi.frame",
+              "title": "CAN 或 RS-422 数据帧",
+              "summary": "设计并收发带校验的数据帧。",
+              "requires": [
+                "mi.serial"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "iso-11898-1",
+                "locator": "CAN 数据链路层"
+              }
+            },
+            {
+              "id": "mi.fault",
+              "title": "掉线诊断与错误帧处理",
+              "summary": "用逻辑分析仪对照总线时序，复现并处理掉线与错误帧。",
+              "requires": [
+                "mi.imu",
+                "mi.frame"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.ei.power-signal",
@@ -4341,6 +5089,26 @@
               "relation": "adapted",
               "source_id": "cast-platform",
               "locator": "星上综合电子、高效供电与数据传输能力"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ipc-2221",
+              "locator": "印制板设计通用标准：间距、电源与地"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "emc-ott",
+              "locator": "电磁兼容工程：回流路径与高速信号"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "kicad-getting-started",
+              "locator": "原理图与 PCB 入门"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "art-of-electronics",
+              "locator": "电源与去耦相关章节"
             }
           ],
           "pitfall": "原理图能通电但电源完整性、回流路径和串扰没设计进去，板子一上高速或大电流就间歇失效。",
@@ -4353,7 +5121,101 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级支撑：电源分区和完整性决定联调能不能重现。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "chapters": [
+            {
+              "id": "ps.sch",
+              "title": "原理图中的电源与去耦",
+              "summary": "电源树、去耦电容的位置与取值依据。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "art-of-electronics",
+                "locator": "电源与去耦相关章节"
+              }
+            },
+            {
+              "id": "ps.layout",
+              "title": "布局布线：回流路径与分区",
+              "summary": "地平面、回流路径、模拟与数字分区，以及间距规则。",
+              "requires": [
+                "ps.sch"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "ipc-2221",
+                "locator": "印制板设计通用标准：间距、电源与地"
+              }
+            },
+            {
+              "id": "ps.power",
+              "title": "电源完整性：压降与纹波",
+              "summary": "供电回路的压降、纹波与瞬态响应怎样被布局影响。",
+              "requires": [
+                "ps.sch",
+                "ps.layout"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ps.si",
+              "title": "信号完整性：端接、串扰与高速接口",
+              "summary": "反射、串扰与端接，以及高速接口的布线要求。",
+              "requires": [
+                "ps.layout"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "emc-ott",
+                "locator": "电磁兼容工程：回流路径与高速信号"
+              }
+            },
+            {
+              "id": "ps.eda",
+              "title": "用 EDA 完成一块板",
+              "summary": "从原理图到 PCB 完成一块两层或四层采集控制板。",
+              "requires": [
+                "ps.sch"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "kicad-getting-started",
+                "locator": "原理图与 PCB 入门"
+              }
+            },
+            {
+              "id": "ps.bringup",
+              "title": "上电、纹波、热与接口回环测试",
+              "summary": "对打样的板做上电、纹波、热与接口回环测试。",
+              "requires": [
+                "ps.power",
+                "ps.si",
+                "ps.eda"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ps.diff",
+              "title": "对照约束测量并记录修改前后的差异",
+              "summary": "对照设计约束测量关键电源与信号，改一版再测，记录差异。",
+              "requires": [
+                "ps.bringup"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.ei.sensor-chain",
@@ -4373,6 +5235,21 @@
               "relation": "adapted",
               "source_id": "cmse-ttc-network",
               "locator": "测量、遥测、时间统一与计算处理系统"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "analog-devices-sensor",
+              "locator": "Sensor and Signal Conditioning 技术资源"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "scipy-signal",
+              "locator": "信号处理与滤波"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nist-ptp",
+              "locator": "IEEE 1588 在测量系统中的应用"
             }
           ],
           "pitfall": "采样率、抗混叠和接地没对齐时，算法再复杂也只是在拟合噪声；标定缺少可追溯基准就会越调越偏。",
@@ -4385,7 +5262,100 @@
           "app": "",
           "stage": "intermediate",
           "stage_reason": "中级主干：采集链给出的数字必须能对上物理量。",
-          "domain": "signals"
+          "domain": "signals",
+          "chapters": [
+            {
+              "id": "sens.sensor",
+              "title": "传感器原理与模拟前端",
+              "summary": "传感器怎样把物理量变成电信号，模拟前端怎样调理它。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "analog-devices-sensor",
+                "locator": "Sensor and Signal Conditioning 技术资源"
+              }
+            },
+            {
+              "id": "sens.adc",
+              "title": "采样、量化与混叠",
+              "summary": "采样率、位数与混叠对观测质量的影响。",
+              "requires": [
+                "sens.sensor"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "analog-devices-sensor",
+                "locator": "信号调理与模数转换"
+              }
+            },
+            {
+              "id": "sens.filter",
+              "title": "滤波",
+              "summary": "按噪声与带宽要求选择并实现滤波。",
+              "requires": [
+                "sens.adc"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "scipy-signal",
+                "locator": "信号处理与滤波"
+              }
+            },
+            {
+              "id": "sens.calib",
+              "title": "静态标定与参数",
+              "summary": "对传感器做静态标定并求出标定参数。",
+              "requires": [
+                "sens.sensor"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "sens.time",
+              "title": "时间戳与一致性",
+              "summary": "给每个采样打时间戳并检查多通道的一致性。",
+              "requires": [
+                "sens.adc"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nist-ptp",
+                "locator": "IEEE 1588 在测量系统中的应用"
+              }
+            },
+            {
+              "id": "sens.noise",
+              "title": "噪声统计与误差曲线",
+              "summary": "做噪声统计并画出标定前后的误差曲线。",
+              "requires": [
+                "sens.filter",
+                "sens.calib"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "sens.script",
+              "title": "可复现的采集脚本",
+              "summary": "输出标定参数、误差曲线和能重跑的数据采集脚本。",
+              "requires": [
+                "sens.noise",
+                "sens.time"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.ei.dsp-fpga",
@@ -4501,6 +5471,16 @@
               "relation": "adapted",
               "source_id": "nasa-fprime",
               "locator": "接口、状态、日志与单元/集成测试样本"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "renode",
+              "locator": "平台仿真与自动化测试"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ganssle-embedded-geek",
+              "locator": "调试能力与逐级加大的项目"
             }
           ],
           "pitfall": "子系统各自能过，合机后电源时序、复位链和接口状态机对不齐；问题出在边界，却被误判成单板故障。",
@@ -4513,7 +5493,84 @@
           "app": "",
           "stage": "senior",
           "stage_reason": "资深支撑：合机后看最坏行为，而不是单板均值。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "bs.smoke",
+              "title": "冒烟测试与接口回环",
+              "summary": "为板卡建立上电冒烟测试与每个接口的回环测试。",
+              "requires": [],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-fprime",
+                "locator": "接口、状态、日志与单元/集成测试样本"
+              }
+            },
+            {
+              "id": "bs.env",
+              "title": "环境约束：温度与电源波动",
+              "summary": "温度、供电波动与振动怎样影响板卡行为。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "bs.longrun",
+              "title": "长时运行与资源泄漏",
+              "summary": "无人值守长时运行，观察重启、丢帧与资源泄漏。",
+              "requires": [
+                "bs.smoke"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "renode",
+                "locator": "平台仿真与自动化测试"
+              }
+            },
+            {
+              "id": "bs.power",
+              "title": "失电恢复",
+              "summary": "在运行中断电再上电，验证状态能恢复。",
+              "requires": [
+                "bs.smoke"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "bs.fault",
+              "title": "故障注入与降级",
+              "summary": "注入接口故障与异常输入，验证系统降级符合预期。",
+              "requires": [
+                "bs.longrun",
+                "bs.power",
+                "bs.env"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "bs.report",
+              "title": "记录重启、丢帧、温度与恢复",
+              "summary": "在无人工干预的长时运行中记录事件，并整理成可复核的测试报告。",
+              "requires": [
+                "bs.fault"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "ganssle-embedded-geek",
+                "locator": "调试能力与逐级加大的项目"
+              }
+            }
+          ]
         }
       ],
       "edges": [

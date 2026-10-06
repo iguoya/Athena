@@ -395,6 +395,12 @@ class DepthAndBalance(unittest.TestCase):
                 for node_id in stage["nodes"]:
                     self.assertGreaterEqual(len(nodes[node_id].get("chapters", [])), 3, f"{route['id']} / {node_id}")
 
+    def test_every_open_node_has_chapters(self) -> None:
+        # ADR 0020：开放地图的每个节点都细化到章节，新增节点时必须同时写章节。
+        missing = [n["id"] for m in DOC["maps"] if m["view_kind"] in contract.OPEN_VIEW_KINDS
+                   for n in m["nodes"] if len(n.get("chapters", [])) < 3]
+        self.assertEqual(missing, [])
+
     def test_every_depth_chapter_list_ends_with_something_you_make(self) -> None:
         # 最后一章是做出来的验收（评估档、实践），不是又一个概念。
         for m in DOC["maps"]:

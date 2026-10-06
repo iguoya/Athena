@@ -78,4 +78,10 @@ describe("路线", () => {
       expect(routeChapterCount(catalog, route)).toBe(total);
     }
   });
+
+  it("所有开放地图的节点、也就是所有路线用到的节点，都细化到章节（ADR 0020）", () => {
+    for (const map of catalog.maps) {
+      for (const node of map.nodes) expect(node.chapters?.length ?? 0, node.id).toBeGreaterThanOrEqual(3);
+    }
+  });
 });
