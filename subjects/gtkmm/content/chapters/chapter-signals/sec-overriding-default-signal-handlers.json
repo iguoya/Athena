@@ -36,8 +36,8 @@
   },
   {
    "type": "code",
-   "text": "#include <gtkmm/button.h>\n\nclass OverriddenButton : public Gtk::Button\n{\nprotected:\nvoid on_clicked() override;\n}\n\nvoid OverriddenButton::on_clicked()\n{\nstd::cout << \"Hello World\" << std::endl;\n\n// call the base class's version of the method:\nGtk::Button::on_clicked();\n}",
-   "sha": "9d151bab4e352cf9",
+   "text": "#include <gtkmm/button.h>\n\nclass OverriddenButton : public Gtk::Button\n{\nprotected:\n  void on_clicked() override;\n}\n\nvoid OverriddenButton::on_clicked()\n{\n  std::cout << \"Hello World\" << std::endl;\n\n  // call the base class's version of the method:\n  Gtk::Button::on_clicked();\n}",
+   "sha": "88d0f753d79841d4",
    "zh": ""
   },
   {

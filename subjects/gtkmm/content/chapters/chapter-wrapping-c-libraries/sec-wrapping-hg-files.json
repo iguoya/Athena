@@ -18,8 +18,8 @@
   },
   {
    "type": "code",
-   "text": "#include <gtkmm/widget.h>\n#include <gtkmm/actionable.h>\n_DEFS(gtkmm,gtk)\n_PINCLUDE(gtkmm/private/widget_p.h)\n\nnamespace Gtk\n{\n\nclass GTKMM_API Button\n: public Widget,\npublic Actionable\n{\n_CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget, , , GTKMM_API)\n_IMPLEMENTS_INTERFACE(Actionable)\npublic:\n\n_CTOR_DEFAULT\nexplicit Button(const Glib::ustring& label, bool mnemonic = false);\n\n_WRAP_METHOD(void set_label(const Glib::ustring& label), gtk_button_set_label)\n\n...\n\n_WRAP_SIGNAL(void clicked(), \"clicked\")\n\n...\n\n_WRAP_PROPERTY(\"label\", Glib::ustring)\n};\n\n} // namespace Gtk",
-   "sha": "9f13c2b709332d01",
+   "text": "#include <gtkmm/widget.h>\n#include <gtkmm/actionable.h>\n_DEFS(gtkmm,gtk)\n_PINCLUDE(gtkmm/private/widget_p.h)\n\nnamespace Gtk\n{\n\nclass GTKMM_API Button\n  : public Widget,\n    public Actionable\n{\n  _CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget, , , GTKMM_API)\n  _IMPLEMENTS_INTERFACE(Actionable)\npublic:\n\n  _CTOR_DEFAULT\n  explicit Button(const Glib::ustring& label, bool mnemonic = false);\n\n  _WRAP_METHOD(void set_label(const Glib::ustring& label), gtk_button_set_label)\n\n  ...\n\n  _WRAP_SIGNAL(void clicked(), \"clicked\")\n\n  ...\n\n  _WRAP_PROPERTY(\"label\", Glib::ustring)\n};\n\n} // namespace Gtk",
+   "sha": "376486c72e31b88d",
    "zh": ""
   },
   {
@@ -660,8 +660,8 @@
   },
   {
    "type": "code",
-   "text": "class GTKMM_API TextMark : public Glib::Object\n{\n_CLASS_GOBJECT(TextMark, GtkTextMark, GTK_TEXT_MARK, Glib::Object, GObject, , , GTKMM_API)\n\nprotected:\n_WRAP_CTOR(TextMark(const Glib::ustring& name, bool left_gravity = true), gtk_text_mark_new)\n\npublic:\n_WRAP_CREATE(const Glib::ustring& name, bool left_gravity = true)",
-   "sha": "8ac77c35f4f2131a",
+   "text": "class GTKMM_API TextMark : public Glib::Object\n{\n  _CLASS_GOBJECT(TextMark, GtkTextMark, GTK_TEXT_MARK, Glib::Object, GObject, , , GTKMM_API)\n\nprotected:\n  _WRAP_CTOR(TextMark(const Glib::ustring& name, bool left_gravity = true), gtk_text_mark_new)\n\npublic:\n  _WRAP_CREATE(const Glib::ustring& name, bool left_gravity = true)",
+   "sha": "5fe4cc63f3ecfe6a",
    "zh": ""
   },
   {
@@ -714,8 +714,8 @@
   },
   {
    "type": "code",
-   "text": "Button::Button(const Glib::ustring& label, bool mnemonic)\n:\n_CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n{}",
-   "sha": "fb5e91d80fe07bf7",
+   "text": "Button::Button(const Glib::ustring& label, bool mnemonic)\n:\n  _CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n{}",
+   "sha": "d85c61099eeeeb14",
    "zh": ""
   },
   {
@@ -744,8 +744,8 @@
   },
   {
    "type": "code",
-   "text": "Button::Button(const Glib::ustring& label, bool mnemonic)\n:\n_CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n{}",
-   "sha": "fb5e91d80fe07bf7-1",
+   "text": "Button::Button(const Glib::ustring& label, bool mnemonic)\n:\n  _CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n{}",
+   "sha": "d85c61099eeeeb14-1",
    "zh": ""
   },
   {
@@ -828,8 +828,8 @@
   },
   {
    "type": "code",
-   "text": "class Derived : public Glib::Object\n{\n_CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n\n_CUSTOM_MOVE_OPERATIONS\n\npublic:\nDerived(Derived&& src) noexcept;\nDerived& operator=(Derived&& src) noexcept;\n// ...\n};",
-   "sha": "1708ee013e2c5e76",
+   "text": "class Derived : public Glib::Object\n{\n  _CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n\n  _CUSTOM_MOVE_OPERATIONS\n\npublic:\n  Derived(Derived&& src) noexcept;\n  Derived& operator=(Derived&& src) noexcept;\n  // ...\n};",
+   "sha": "c6edc4d12a94aea8",
    "zh": ""
   },
   {
@@ -906,8 +906,8 @@
   },
   {
    "type": "code",
-   "text": "class Derived : public Glib::Object\n{\n_CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n\n_CUSTOM_MOVE_OPERATIONS\n\npublic:\nDerived(Derived&& src) noexcept;\nDerived& operator=(Derived&& src) noexcept;\n// ...\n};",
-   "sha": "1708ee013e2c5e76-1",
+   "text": "class Derived : public Glib::Object\n{\n  _CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n\n  _CUSTOM_MOVE_OPERATIONS\n\npublic:\n  Derived(Derived&& src) noexcept;\n  Derived& operator=(Derived&& src) noexcept;\n  // ...\n};",
+   "sha": "c6edc4d12a94aea8-1",
    "zh": ""
   },
   {
@@ -1872,8 +1872,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)",
-   "sha": "b7a09a06d89d1bbb",
+   "text": "_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)\n      ",
+   "sha": "0de5fe3c3c382166",
    "zh": ""
   },
   {
@@ -1890,8 +1890,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)",
-   "sha": "9dfa075161afebfa",
+   "text": "_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)\n      ",
+   "sha": "2342d2e8ad327bcc",
    "zh": ""
   },
   {
@@ -1908,8 +1908,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)",
-   "sha": "80fc294dc7837227",
+   "text": "_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)\n      ",
+   "sha": "a1d9cf49a2d2ebbb",
    "zh": ""
   },
   {
@@ -1926,8 +1926,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(FullscreenMode, GdkFullscreenMode,\ns#^CURRENT_MONITOR$#ON_CURRENT_MONITOR#, s#^ALL_MONITORS$#ON_ALL_MONITORS#,\ndecl_prefix GDKMM_API)",
-   "sha": "8299e4d8d449fd4d",
+   "text": "_WRAP_ENUM(FullscreenMode, GdkFullscreenMode,\n  s#^CURRENT_MONITOR$#ON_CURRENT_MONITOR#, s#^ALL_MONITORS$#ON_ALL_MONITORS#,\n  decl_prefix GDKMM_API)\n      ",
+   "sha": "de6ee81a112bb456",
    "zh": ""
   },
   {
@@ -2148,8 +2148,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)",
-   "sha": "b7a09a06d89d1bbb-1",
+   "text": "_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)\n      ",
+   "sha": "0de5fe3c3c382166-1",
    "zh": ""
   },
   {
@@ -2166,8 +2166,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)",
-   "sha": "9dfa075161afebfa-1",
+   "text": "_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)\n      ",
+   "sha": "2342d2e8ad327bcc-1",
    "zh": ""
   },
   {
@@ -2184,8 +2184,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)",
-   "sha": "80fc294dc7837227-1",
+   "text": "_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)\n      ",
+   "sha": "a1d9cf49a2d2ebbb-1",
    "zh": ""
   },
   {
@@ -2202,8 +2202,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_ENUM(FullscreenMode, GdkFullscreenMode,\ns#^CURRENT_MONITOR$#ON_CURRENT_MONITOR#, s#^ALL_MONITORS$#ON_ALL_MONITORS#,\ndecl_prefix GDKMM_API)",
-   "sha": "8299e4d8d449fd4d-1",
+   "text": "_WRAP_ENUM(FullscreenMode, GdkFullscreenMode,\n  s#^CURRENT_MONITOR$#ON_CURRENT_MONITOR#, s#^ALL_MONITORS$#ON_ALL_MONITORS#,\n  decl_prefix GDKMM_API)\n      ",
+   "sha": "de6ee81a112bb456-1",
    "zh": ""
   },
   {
@@ -2376,8 +2376,8 @@
   },
   {
    "type": "code",
-   "text": "void gtk_widget_set_device_events(GtkWidget* widget, GdkDevice* device,\nGdkEventMask events);",
-   "sha": "8db95450dee16e53",
+   "text": "void gtk_widget_set_device_events(GtkWidget* widget, GdkDevice* device,\n  GdkEventMask events);",
+   "sha": "cb10015815d82c8b",
    "zh": ""
   },
   {
@@ -2388,8 +2388,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_METHOD(void set_device_events(Gdk::EventMask events{events},\nconst Glib::RefPtr<const Gdk::Device>& device{device}),\ngtk_widget_set_device_events)",
-   "sha": "e1fee535803b248d",
+   "text": "_WRAP_METHOD(void set_device_events(Gdk::EventMask events{events},\n  const Glib::RefPtr<const Gdk::Device>& device{device}),\n  gtk_widget_set_device_events)",
+   "sha": "e7a2577621e6d82f",
    "zh": ""
   },
   {
@@ -2400,8 +2400,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_METHOD(void set_device_events(Gdk::EventMask events{.},\nconst Glib::RefPtr<const Gdk::Device>& device{.}),\ngtk_widget_set_device_events)",
-   "sha": "9cd0379e96caf272",
+   "text": "_WRAP_METHOD(void set_device_events(Gdk::EventMask events{.},\n  const Glib::RefPtr<const Gdk::Device>& device{.}),\n  gtk_widget_set_device_events)",
+   "sha": "978dacfcd6555570",
    "zh": ""
   },
   {
@@ -2436,8 +2436,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_CTOR(ToolButton(Widget& icon_widget, const Glib::ustring& label{?}),\ngtk_tool_button_new)",
-   "sha": "d5f1737f37da45ba",
+   "text": "_WRAP_CTOR(ToolButton(Widget& icon_widget, const Glib::ustring& label{?}),\n  gtk_tool_button_new)",
+   "sha": "07fca15d46157f40",
    "zh": ""
   },
   {
@@ -2472,8 +2472,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_METHOD(void get_request_mode(SizeRequestMode& mode{OUT}) const,\ngtk_widget_get_request_mode)",
-   "sha": "82d0b77b8be48202",
+   "text": "_WRAP_METHOD(void get_request_mode(SizeRequestMode& mode{OUT}) const,\n  gtk_widget_get_request_mode)",
+   "sha": "6dfd0ad7630ada14",
    "zh": ""
   },
   {
@@ -2508,8 +2508,8 @@
   },
   {
    "type": "code",
-   "text": "GInputStream* gdk_clipboard_read_finish(GdkClipboard* clipboard,\nGAsyncResult* result, const char** out_mime_type, GError** error)",
-   "sha": "f8db10a550f4e79e",
+   "text": "GInputStream* gdk_clipboard_read_finish(GdkClipboard* clipboard,\n  GAsyncResult* result, const char** out_mime_type, GError** error)",
+   "sha": "819c45920aeb26db",
    "zh": ""
   },
   {
@@ -2520,8 +2520,8 @@
   },
   {
    "type": "code",
-   "text": "read_finish(\nconst Glib::RefPtr& result,\nGlib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
-   "sha": "d0eab40c6572ffa5",
+   "text": " read_finish(\n  const Glib::RefPtr& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
+   "sha": "bc524b7a497b3456",
    "zh": ""
   },
   {
@@ -2580,8 +2580,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_CTOR(ToolButton(Widget& icon_widget, const Glib::ustring& label{?}),\ngtk_tool_button_new)",
-   "sha": "d5f1737f37da45ba-1",
+   "text": "_WRAP_CTOR(ToolButton(Widget& icon_widget, const Glib::ustring& label{?}),\n  gtk_tool_button_new)",
+   "sha": "07fca15d46157f40-1",
    "zh": ""
   },
   {
@@ -2610,8 +2610,8 @@
   },
   {
    "type": "code",
-   "text": "_WRAP_METHOD(void get_request_mode(SizeRequestMode& mode{OUT}) const,\ngtk_widget_get_request_mode)",
-   "sha": "82d0b77b8be48202-1",
+   "text": "_WRAP_METHOD(void get_request_mode(SizeRequestMode& mode{OUT}) const,\n  gtk_widget_get_request_mode)",
+   "sha": "6dfd0ad7630ada14-1",
    "zh": ""
   },
   {
@@ -2646,8 +2646,8 @@
   },
   {
    "type": "code",
-   "text": "GInputStream* gdk_clipboard_read_finish(GdkClipboard* clipboard,\nGAsyncResult* result, const char** out_mime_type, GError** error)",
-   "sha": "f8db10a550f4e79e-1",
+   "text": "GInputStream* gdk_clipboard_read_finish(GdkClipboard* clipboard,\n  GAsyncResult* result, const char** out_mime_type, GError** error)",
+   "sha": "819c45920aeb26db-1",
    "zh": ""
   },
   {
@@ -2658,8 +2658,8 @@
   },
   {
    "type": "code",
-   "text": "read_finish(\nconst Glib::RefPtr& result,\nGlib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
-   "sha": "d0eab40c6572ffa5-1",
+   "text": " read_finish(\n  const Glib::RefPtr& result,\n  Glib::ustring& out_mime_type{>>}), gdk_clipboard_read_finish, errthrow)\n]]>",
+   "sha": "bc524b7a497b3456-1",
    "zh": ""
   },
   {

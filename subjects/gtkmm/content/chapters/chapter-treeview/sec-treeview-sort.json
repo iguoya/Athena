@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "auto pColumn = treeview.get_column(0);\nif(pColumn)\npColumn->set_sort_column(m_columns.m_col_id);",
-   "sha": "d42f471ec9ba1d81",
+   "text": "auto pColumn = treeview.get_column(0);\nif(pColumn)\n  pColumn->set_sort_column(m_columns.m_col_id);",
+   "sha": "3eb273948a10bd2c",
    "zh": ""
   },
   {
@@ -60,8 +60,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_button_delete()\n{\nauto refTreeSelection = m_treeview.get_selection();\nif(refTreeSelection)\n{\nauto sorted_iter = m_refTreeSelection->get_selected();\nif(sorted_iter)\n{\nauto iter = m_refModelSort->convert_iter_to_child_iter(sorted_iter);\nm_refModel->erase(iter);\n}\n}\n}",
-   "sha": "121af7d8b73c4935",
+   "text": "void ExampleWindow::on_button_delete()\n{\n  auto refTreeSelection = m_treeview.get_selection();\n  if(refTreeSelection)\n  {\n    auto sorted_iter = m_refTreeSelection->get_selected();\n    if(sorted_iter)\n    {\n      auto iter = m_refModelSort->convert_iter_to_child_iter(sorted_iter);\n      m_refModel->erase(iter);\n    }\n  }\n}",
+   "sha": "be5456ea071a9079",
    "zh": ""
   },
   {

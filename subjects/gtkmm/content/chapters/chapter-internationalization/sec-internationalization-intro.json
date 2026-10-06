@@ -84,8 +84,8 @@
   },
   {
    "type": "code",
-   "text": "IT_PROG_INTLTOOL([0.35.0])\n\nGETTEXT_PACKAGE=programname\nAC_SUBST(GETTEXT_PACKAGE)\nAC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], [\"$GETTEXT_PACKAGE\"],\n[The domain to use with gettext])\nAM_GNU_GETTEXT([external])\nAM_GNU_GETTEXT_VERSION([0.17])\n\nPROGRAMNAME_LOCALEDIR=[${datadir}/locale]\nAC_SUBST(PROGRAMNAME_LOCALEDIR)",
-   "sha": "06c532df553df2a1",
+   "text": "IT_PROG_INTLTOOL([0.35.0])\n\nGETTEXT_PACKAGE=programname\nAC_SUBST(GETTEXT_PACKAGE)\nAC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], [\"$GETTEXT_PACKAGE\"],\n                   [The domain to use with gettext])\nAM_GNU_GETTEXT([external])\nAM_GNU_GETTEXT_VERSION([0.17])\n\nPROGRAMNAME_LOCALEDIR=[${datadir}/locale]\nAC_SUBST(PROGRAMNAME_LOCALEDIR)",
+   "sha": "dd659d21ae738d9f",
    "zh": ""
   },
   {
@@ -138,14 +138,14 @@
   },
   {
    "type": "code",
-   "text": "INTLTOOL_FILES = intltool-extract.in \\\nintltool-merge.in \\\nintltool-update.in",
-   "sha": "1b7a45b865b5cd94",
+   "text": "INTLTOOL_FILES = intltool-extract.in \\\n                 intltool-merge.in \\\n                 intltool-update.in",
+   "sha": "91342eb98bbdc34e",
    "zh": ""
   },
   {
    "type": "code",
-   "text": "DISTCLEANFILES = ... intltool-extract \\\nintltool-merge \\\nintltool-update \\\npo/.intltool-merge-cache",
-   "sha": "0a47b8c251471e15",
+   "text": "DISTCLEANFILES = ... intltool-extract \\\n                 intltool-merge \\\n                 intltool-update \\\n                 po/.intltool-merge-cache",
+   "sha": "99a138b52785e9eb",
    "zh": ""
   },
   {

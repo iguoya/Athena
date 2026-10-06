@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "::create(\nsigc::mem_fun(*this, &ExampleWindow::get_col_name));\nm_DropDown.set_expression(expression);\n\n//-------\nGlib::ustring ExampleWindow::get_col_name(const Glib::RefPtr& item)\n{\nconst auto col = std::dynamic_pointer_cast(item);\nreturn col ? col->m_col_name : \"\";\n}\n]]>",
-   "sha": "35901a4ab0684761",
+   "text": "::create(\n  sigc::mem_fun(*this, &ExampleWindow::get_col_name));\nm_DropDown.set_expression(expression);\n\n//-------\nGlib::ustring ExampleWindow::get_col_name(const Glib::RefPtr& item)\n{\n  const auto col = std::dynamic_pointer_cast(item);\n  return col ? col->m_col_name : \"\";\n}\n]]>",
+   "sha": "609615c106579a16",
    "zh": ""
   },
   {

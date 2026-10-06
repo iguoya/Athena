@@ -102,8 +102,8 @@
   },
   {
    "type": "code",
-   "text": "Glib::RefPtr<Gtk::RecentInfo> info;\ntry\n{\ninfo = recent_manager->lookup_item(uri);\n}\ncatch(const Gtk::RecentManagerError& ex)\n{\nstd::cerr << \"RecentManagerError: \" << ex.what() << std::endl;\n}\nif (info)\n{\n// item was found\n}",
-   "sha": "eb20216033b8b921",
+   "text": "Glib::RefPtr<Gtk::RecentInfo> info;\ntry\n{\n  info = recent_manager->lookup_item(uri);\n}\ncatch(const Gtk::RecentManagerError& ex)\n{\n  std::cerr << \"RecentManagerError: \" << ex.what() << std::endl;\n}\nif (info)\n{\n  // item was found\n}",
+   "sha": "046633de6ea59093",
    "zh": ""
   },
   {

@@ -36,8 +36,8 @@
   },
   {
    "type": "code",
-   "text": "class HelloWorld : public Gtk::Window\n{\npublic:\nHelloWorld();\n~HelloWorld() override;\n\nprotected:\n//Signal handlers:\nvoid on_button_clicked();\n\n//Member widgets:\nGtk::Button m_button;\n};",
-   "sha": "1beb4f526f88dba0",
+   "text": "class HelloWorld : public Gtk::Window\n{\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Member widgets:\n  Gtk::Button m_button;\n};",
+   "sha": "1086a846494d120a",
    "zh": ""
   },
   {
@@ -48,8 +48,8 @@
   },
   {
    "type": "code",
-   "text": "HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\nm_button.set_margin(10);\nm_button.signal_clicked().connect(sigc::mem_fun(*this,\n&HelloWorld::on_button_clicked));\nset_child(m_button);\n}",
-   "sha": "09f89bb033baa679",
+   "text": "HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\n  m_button.set_margin(10);\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &HelloWorld::on_button_clicked));\n  set_child(m_button);\n}",
+   "sha": "33a96276630f9cde",
    "zh": ""
   },
   {
@@ -84,8 +84,8 @@
   },
   {
    "type": "code",
-   "text": "int main(int argc, char* argv[])\n{\nauto app = Gtk::Application::create(\"org.gtkmm.example\");\nreturn app->make_window_and_run<HelloWorld>(argc, argv);\n}",
-   "sha": "37d064ad11fc92a6",
+   "text": "int main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n  return app->make_window_and_run<HelloWorld>(argc, argv);\n}",
+   "sha": "d25ea21e34c28cf1",
    "zh": ""
   },
   {

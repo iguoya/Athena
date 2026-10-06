@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "// without_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\nthrow \"Something\";\nreturn true;\n}\n\nint main(int argc, char** argv)\n{\nthrowSomething();\nauto app = Gtk::Application::create(\"org.gtkmm.without_signal\");\nreturn app->run();\n}",
-   "sha": "91c946266289346a",
+   "text": "// without_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\n  throw \"Something\";\n  return true;\n}\n\nint main(int argc, char** argv)\n{\n  throwSomething();\n  auto app = Gtk::Application::create(\"org.gtkmm.without_signal\");\n  return app->run();\n}",
+   "sha": "bfe284f0bc890297",
    "zh": ""
   },
   {
@@ -36,8 +36,8 @@
   },
   {
    "type": "code",
-   "text": "> gdb without_signal\n(gdb) run\nterminate called after throwing an instance of 'char const*'\n\nProgram received signal SIGABRT, Aborted.\n(gdb) backtrace\n#7 0x08048864 in throwSomething () at without_signal.cc:6\n#8 0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12",
-   "sha": "468ddb615f7b6acd",
+   "text": "> gdb without_signal\n(gdb) run\nterminate called after throwing an instance of 'char const*'\n\nProgram received signal SIGABRT, Aborted.\n(gdb) backtrace\n#7  0x08048864 in throwSomething () at without_signal.cc:6\n#8  0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12",
+   "sha": "ee970c7ab9a0b964",
    "zh": ""
   },
   {
@@ -54,8 +54,8 @@
   },
   {
    "type": "code",
-   "text": "// with_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\nthrow \"Something\";\nreturn true;\n}\n\nint main(int argc, char** argv)\n{\nGlib::signal_timeout().connect(sigc::ptr_fun(throwSomething), 500);\nauto app = Gtk::Application::create(\"org.gtkmm.with_signal\");\napp->hold();\nreturn app->run();\n}",
-   "sha": "9107c5ea48895924",
+   "text": "// with_signal.cc\n#include <gtkmm.h>\n\nbool throwSomething()\n{\n  throw \"Something\";\n  return true;\n}\n\nint main(int argc, char** argv)\n{\n  Glib::signal_timeout().connect(sigc::ptr_fun(throwSomething), 500);\n  auto app = Gtk::Application::create(\"org.gtkmm.with_signal\");\n  app->hold();\n  return app->run();\n}",
+   "sha": "6eb0b9aa145cdfda",
    "zh": ""
   },
   {
@@ -66,8 +66,8 @@
   },
   {
    "type": "code",
-   "text": "> gdb with_signal\n(gdb) run\n(with_signal:2703): glibmm-ERROR **:\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.\n(gdb) backtrace\n#2 0x0063c6ab in glibmm_unexpected_exception () at exceptionhandler.cc:77\n#3 Glib::exception_handlers_invoke () at exceptionhandler.cc:150\n#4 0x0063d370 in glibmm_source_callback (data=0x804d620) at main.cc:212\n#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16",
-   "sha": "257b2d82d8c405e9",
+   "text": "> gdb with_signal\n(gdb) run\n(with_signal:2703): glibmm-ERROR **:\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.\n(gdb) backtrace\n#2  0x0063c6ab in glibmm_unexpected_exception () at exceptionhandler.cc:77\n#3  Glib::exception_handlers_invoke () at exceptionhandler.cc:150\n#4  0x0063d370 in glibmm_source_callback (data=0x804d620) at main.cc:212\n#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16",
+   "sha": "22b2adb356b6fb1a",
    "zh": ""
   },
   {
@@ -84,8 +84,8 @@
   },
   {
    "type": "code",
-   "text": "> gdb with_signal\n(gdb) catch throw\nCatchpoint 1 (throw)\n(gdb) run\nCatchpoint 1 (exception thrown), 0x00714ff0 in __cxa_throw ()\n(gdb) backtrace\n#0 0x00714ff0 in __cxa_throw () from /usr/lib/i386-linux-gnu/libstdc++.so.6\n#1 0x08048bd4 in throwSomething () at with_signal.cc:6\n(gdb) continue\nContinuing.\n(with_signal:2375): glibmm-ERROR **\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.",
-   "sha": "8830808d45646ab8",
+   "text": "> gdb with_signal\n(gdb) catch throw\nCatchpoint 1 (throw)\n(gdb) run\nCatchpoint 1 (exception thrown), 0x00714ff0 in __cxa_throw ()\n(gdb) backtrace\n#0  0x00714ff0 in __cxa_throw () from /usr/lib/i386-linux-gnu/libstdc++.so.6\n#1  0x08048bd4 in throwSomething () at with_signal.cc:6\n(gdb) continue\nContinuing.\n(with_signal:2375): glibmm-ERROR **\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.",
+   "sha": "72bb403aade59e15",
    "zh": ""
   },
   {
@@ -96,8 +96,8 @@
   },
   {
    "type": "code",
-   "text": "(gdb) catch throw\n(gdb) commands\n(gdb) backtrace\n(gdb) continue\n(gdb) end\n(gdb) set pagination off\n(gdb) run",
-   "sha": "9c973a31c00c38b2",
+   "text": "(gdb) catch throw\n(gdb) commands\n(gdb)   backtrace\n(gdb)   continue\n(gdb)   end\n(gdb) set pagination off\n(gdb) run",
+   "sha": "25dc31d5b5a5e2f7",
    "zh": ""
   },
   {

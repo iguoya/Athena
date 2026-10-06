@@ -30,6 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extract_source import (  # noqa: E402
     DOCBOOK,
     PROJECT_ROOT,
+    code_text,
     direct_children,
     element_text,
     load_structure,
@@ -87,7 +88,11 @@ def extract_blocks(fragment: str) -> list[dict]:
                 continue
             if kind in ("para", "programlisting", "literallayout"):
                 text, _ = element_text(kind, source, m.start())
-                clean = strip_tags(text).strip() if kind == "para" else strip_tags(text).strip("\n")
+                if kind == "para":
+                    clean = strip_tags(text).strip()
+                else:
+                    # 代码块逐字保留缩进与空白，尊重原文（应用 ADR 0002）
+                    clean = code_text(text)
                 if not clean:
                     continue
                 blocks.append({
@@ -185,17 +190,19 @@ def align(old_blocks: list[dict] | None, new_blocks: list[dict],
                 stats["kept"] += i2 - i1
             elif tag == "replace":
                 # 指纹不同 = 原文被改：新段标 stale，旧译文暂留 stale_from 供参考
+                changed = 0
                 for k in range(j2 - j1):
                     new_b = new_blocks[j1 + k]
                     if new_b["type"] in ("code", "figure"):
-                        continue
+                        continue  # 代码/图题照录原文，无译文可失效
                     counterpart = old_blocks[i1 + k] if k < (i2 - i1) else None
                     new_b["status"] = "stale"
                     if counterpart and counterpart.get("zh"):
                         new_b["stale_from"] = counterpart["zh"]
                     if not new_b.get("zh"):
                         new_b["zh"] = None
-                stats["stale"] += j2 - j1
+                    changed += 1
+                stats["stale"] += changed
             elif tag == "insert":
                 for k in range(j2 - j1):
                     new_b = new_blocks[j1 + k]

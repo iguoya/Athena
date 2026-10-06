@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\nauto image = Gdk::Pixbuf::create_from_file(\"myimage.png\");\n// Draw the image at 110, 90, except for the outermost 10 pixels.\nGdk::Cairo::set_source_pixbuf(cr, image, 100, 80);\ncr->rectangle(110, 90, image->get_width()-20, image->get_height()-20);\ncr->fill();\n}",
-   "sha": "f74c8c5dda3eede7",
+   "text": "void MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  auto image = Gdk::Pixbuf::create_from_file(\"myimage.png\");\n  // Draw the image at 110, 90, except for the outermost 10 pixels.\n  Gdk::Cairo::set_source_pixbuf(cr, image, 100, 80);\n  cr->rectangle(110, 90, image->get_width()-20, image->get_height()-20);\n  cr->fill();\n}",
+   "sha": "39379418271be83e",
    "zh": ""
   },
   {

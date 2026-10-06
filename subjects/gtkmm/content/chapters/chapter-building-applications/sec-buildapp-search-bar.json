@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleAppWindow::on_search_text_changed()\n{\nconst auto text = m_searchentry->get_text();\nauto tab = dynamic_cast<Gtk::ScrolledWindow*>(m_stack->get_visible_child());\nauto view = dynamic_cast<Gtk::TextView*>(tab->get_child());\n\n// Very simple-minded search implementation.\nauto buffer = view->get_buffer();\nGtk::TextIter match_start;\nGtk::TextIter match_end;\nif (buffer->begin().forward_search(text, Gtk::TextSearchFlags::CASE_INSENSITIVE,\nmatch_start, match_end))\n{\nbuffer->select_range(match_start, match_end);\nview->scroll_to(match_start);\n}\n}",
-   "sha": "6ad7b33174c7edec",
+   "text": "void ExampleAppWindow::on_search_text_changed()\n{\n  const auto text = m_searchentry->get_text();\n  auto tab = dynamic_cast<Gtk::ScrolledWindow*>(m_stack->get_visible_child());\n  auto view = dynamic_cast<Gtk::TextView*>(tab->get_child());\n\n  // Very simple-minded search implementation.\n  auto buffer = view->get_buffer();\n  Gtk::TextIter match_start;\n  Gtk::TextIter match_end;\n  if (buffer->begin().forward_search(text, Gtk::TextSearchFlags::CASE_INSENSITIVE,\n      match_start, match_end))\n  {\n    buffer->select_range(match_start, match_end);\n    view->scroll_to(match_start);\n  }\n}",
+   "sha": "98cc9ec6eb3b92f6",
    "zh": ""
   },
   {

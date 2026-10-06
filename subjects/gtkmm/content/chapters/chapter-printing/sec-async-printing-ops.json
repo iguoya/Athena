@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "// in class ExampleWindow's method...\nauto op = PrintOperation::create();\n// ...set up op...\nop->signal_done().connect(sigc::bind(sigc::mem_fun(\n*this, &ExampleWindow::on_printoperation_done), op));\n// run the op",
-   "sha": "d18a0f3a91b9637a",
+   "text": "// in class ExampleWindow's method...\nauto op = PrintOperation::create();\n// ...set up op...\nop->signal_done().connect(sigc::bind(sigc::mem_fun(\n  *this, &ExampleWindow::on_printoperation_done), op));\n// run the op",
+   "sha": "85ce5e65cbef2711",
    "zh": ""
   },
   {
@@ -36,8 +36,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_printoperation_done(Gtk::PrintOperation::Result result,\nconst Glib::RefPtr<PrintOperation>& op)\n{\nif (result == Gtk::PrintOperation::Result::ERROR)\n//notify user\nelse if (result == Gtk::PrintOperation::Result::APPLY)\n//Update PrintSettings with the ones used in this PrintOperation\n\nif (! op->is_finished())\nop->signal_status_changed().connect(sigc::bind(sigc::mem_fun(\n*this, &ExampleWindow::on_printoperation_status_changed), op));\n}",
-   "sha": "50b67e95740ea51b",
+   "text": "void ExampleWindow::on_printoperation_done(Gtk::PrintOperation::Result result,\n  const Glib::RefPtr<PrintOperation>& op)\n{\n  if (result == Gtk::PrintOperation::Result::ERROR)\n    //notify user\n  else if (result == Gtk::PrintOperation::Result::APPLY)\n    //Update PrintSettings with the ones used in this PrintOperation\n\n  if (! op->is_finished())\n    op->signal_status_changed().connect(sigc::bind(sigc::mem_fun(\n      *this, &ExampleWindow::on_printoperation_status_changed), op));\n}",
+   "sha": "8584f4ec3d964a54",
    "zh": ""
   },
   {
@@ -48,8 +48,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_printoperation_status_changed(const Glib::RefPtr<PrintOperation>& op)\n{\nif (op->is_finished())\n//the print job is finished\nelse\n//get the status with get_status() or get_status_string()\n\n//update UI\n}",
-   "sha": "f063d629acd163ae",
+   "text": "void ExampleWindow::on_printoperation_status_changed(const Glib::RefPtr<PrintOperation>& op)\n{\n  if (op->is_finished())\n    //the print job is finished\n  else\n    //get the status with get_status() or get_status_string()\n\n  //update UI\n}",
+   "sha": "c58b4c57d73f6519",
    "zh": ""
   }
  ]

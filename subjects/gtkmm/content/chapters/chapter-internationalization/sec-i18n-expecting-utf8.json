@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "std::locale::global(std::locale(\"\")); // Set the global locale to the user's preferred locale.\n// Usually unnecessary here, because Glib::init()\n// or Gtk::Application::create() does it for you.\nstd::ostringstream output;\noutput << percentage << \" % done\";\nlabel->set_text(Glib::locale_to_utf8(output.str()));",
-   "sha": "2619ec030a3b2d6b",
+   "text": "std::locale::global(std::locale(\"\")); // Set the global locale to the user's preferred locale.\n                                      // Usually unnecessary here, because Glib::init()\n                                      // or Gtk::Application::create() does it for you.\nstd::ostringstream output;\noutput << percentage << \" % done\";\nlabel->set_text(Glib::locale_to_utf8(output.str()));",
+   "sha": "1195b6fa9323bcea",
    "zh": ""
   }
  ]

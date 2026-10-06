@@ -75,6 +75,10 @@
   译文；原文被改的段标 `stale`（旧译文存 `stale_from` 供参考）；新增段标
   `untranslated`。**只译 stale/untranslated 的段**，译完清掉状态字段 → 在
   `upstream.json` 更新 `pinned_commit`，一个上游版本一个提交。
+- **代码与代码语句永远原样**：官网文档中的代码块、行内代码、命令一律逐字提取
+  （`code_text()` 只还原 XML 实体、剥标签，保留缩进与内部空白），不翻译、不注释、
+  不改写；快照 code 块的 `zh` 恒为空，前端代码块不显示译文。手写知识点里的代码
+  示例是原创教学内容，不属此约束。
 - 课表页的 `translated` 状态要求该节快照里全部文字段都有 `zh`（check 校验一致性
   与 pinned_commit 版本）；语义争议以官方 DocBook 当前内容为准，官方 zh_CN.po
   可作术语参照（覆盖率不完全）。

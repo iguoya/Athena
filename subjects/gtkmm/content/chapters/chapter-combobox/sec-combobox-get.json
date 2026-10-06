@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "Gtk::TreeModel::iterator iter = m_Combo.get_active();\nif(iter)\n{\nauto row = *iter;\n\n//Get the data for the selected row, using our knowledge\n//of the tree model:\nauto id = row[m_Columns.m_col_id];\nset_something_id_chosen(id); //Your own function.\n}\nelse\nset_nothing_chosen(); //Your own function.",
-   "sha": "d40270a39f79d3c7",
+   "text": "Gtk::TreeModel::iterator iter = m_Combo.get_active();\nif(iter)\n{\n  auto row = *iter;\n\n  //Get the data for the selected row, using our knowledge\n  //of the tree model:\n  auto id = row[m_Columns.m_col_id];\n  set_something_id_chosen(id); //Your own function.\n}\nelse\n  set_nothing_chosen(); //Your own function.",
+   "sha": "bcb9b829753e95bc",
    "zh": ""
   }
  ]

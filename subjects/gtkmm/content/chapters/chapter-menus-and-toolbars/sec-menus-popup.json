@@ -18,8 +18,8 @@
   },
   {
    "type": "code",
-   "text": "Glib::ustring ui_info =\n\"<interface>\"\n\" <menu id='menu-examplepopup'>\"\n\" <section>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Edit</attribute>\"\n\" <attribute name='action'>examplepopup.edit</attribute>\"\n\" </item>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Process</attribute>\"\n\" <attribute name='action'>examplepopup.process</attribute>\"\n\" </item>\"\n\" <item>\"\n\" <attribute name='label' translatable='yes'>Remove</attribute>\"\n\" <attribute name='action'>examplepopup.remove</attribute>\"\n\" </item>\"\n\" </section>\"\n\" </menu>\"\n\"</interface>\";\n\nm_refBuilder->add_from_string(ui_info);\n\nauto gmenu = m_refBuilder->get_object<Gio::Menu>(\"menu-examplepopup\");\nm_MenuPopup.set_menu_model(gmenu);",
-   "sha": "731b6a64770fcd6b",
+   "text": "Glib::ustring ui_info =\n  \"<interface>\"\n  \"  <menu id='menu-examplepopup'>\"\n  \"    <section>\"\n  \"      <item>\"\n  \"        <attribute name='label' translatable='yes'>Edit</attribute>\"\n  \"        <attribute name='action'>examplepopup.edit</attribute>\"\n  \"      </item>\"\n  \"      <item>\"\n  \"        <attribute name='label' translatable='yes'>Process</attribute>\"\n  \"        <attribute name='action'>examplepopup.process</attribute>\"\n  \"      </item>\"\n  \"      <item>\"\n  \"        <attribute name='label' translatable='yes'>Remove</attribute>\"\n  \"        <attribute name='action'>examplepopup.remove</attribute>\"\n  \"      </item>\"\n  \"    </section>\"\n  \"  </menu>\"\n  \"</interface>\";\n\nm_refBuilder->add_from_string(ui_info);\n\nauto gmenu = m_refBuilder->get_object<Gio::Menu>(\"menu-examplepopup\");\nm_MenuPopup.set_menu_model(gmenu);",
+   "sha": "c4cbb635e525d4ab",
    "zh": ""
   },
   {
@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_label_pressed(int /* n_press */, double x, double y)\n{\nconst Gdk::Rectangle rect(x, y, 1, 1);\nm_MenuPopup.set_pointing_to(rect);\nm_MenuPopup.popup();\n}",
-   "sha": "f3fdf0b159b41b5b",
+   "text": "void ExampleWindow::on_label_pressed(int /* n_press */, double x, double y)\n{\n  const Gdk::Rectangle rect(x, y, 1, 1);\n  m_MenuPopup.set_pointing_to(rect);\n  m_MenuPopup.popup();\n}",
+   "sha": "7371d36cdb7de83d",
    "zh": ""
   }
  ]

@@ -84,8 +84,8 @@
   },
   {
    "type": "code",
-   "text": "class ModelColumns : public Gtk::TreeModelColumnRecord\n{\npublic:\n\nModelColumns()\n{ add(m_col_text); add(m_col_number); }\n\nGtk::TreeModelColumn<Glib::ustring> m_col_text;\nGtk::TreeModelColumn<int> m_col_number;\n};\n\nModelColumns m_Columns;",
-   "sha": "8270d8cdc79f0ca2",
+   "text": "class ModelColumns : public Gtk::TreeModelColumnRecord\n{\npublic:\n\n  ModelColumns()\n    { add(m_col_text); add(m_col_number); }\n\n  Gtk::TreeModelColumn<Glib::ustring> m_col_text;\n  Gtk::TreeModelColumn<int> m_col_number;\n};\n\nModelColumns m_Columns;",
+   "sha": "a21e28fe8b730a1e",
    "zh": ""
   },
   {
@@ -96,8 +96,8 @@
   },
   {
    "type": "code",
-   "text": "Glib::RefPtr<Gtk::ListStore> refListStore =\nGtk::ListStore::create(m_Columns);",
-   "sha": "f6c1ca63633e865a",
+   "text": "Glib::RefPtr<Gtk::ListStore> refListStore =\n    Gtk::ListStore::create(m_Columns);",
+   "sha": "bc96396edf1c5b71",
    "zh": ""
   },
   {
@@ -150,8 +150,8 @@
   },
   {
    "type": "code",
-   "text": "auto iter_child =\nm_refTreeStore->append(row.children());",
-   "sha": "270170d5f544316f",
+   "text": "auto iter_child =\n    m_refTreeStore->append(row.children());",
+   "sha": "7df0f5c341954460",
    "zh": ""
   },
   {

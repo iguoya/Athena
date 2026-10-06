@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "create(\nint col_id, const Glib::ustring& col_name)\n{\nreturn Glib::make_refptr_for_instance(\nnew ModelColumns(col_id, col_name));\n}\n\nprotected:\nModelColumns(int col_id, const Glib::ustring& col_name)\n: m_col_id(col_id), m_col_name(col_name)\n{}\n};\n\nGlib::RefPtr> m_ListStore;\n]]>",
-   "sha": "37c262712ea8b1b2",
+   "text": " create(\n    int col_id, const Glib::ustring& col_name)\n  {\n    return Glib::make_refptr_for_instance(\n      new ModelColumns(col_id, col_name));\n  }\n\nprotected:\n  ModelColumns(int col_id, const Glib::ustring& col_name)\n  : m_col_id(col_id), m_col_name(col_name)\n  {}\n};\n\nGlib::RefPtr> m_ListStore;\n]]>",
+   "sha": "4452fb3690c5f45e",
    "zh": ""
   },
   {

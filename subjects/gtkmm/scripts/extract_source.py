@@ -67,6 +67,21 @@ def strip_tags(raw: str) -> str:
     return text.strip()
 
 
+def code_text(raw: str) -> str:
+    """程序清单的清洗：剥标签、展开实体、去首尾空行，**逐字保留缩进与内部空白**。
+
+    代码是原文的一部分（应用 ADR 0002）：任何空白规整都是对原文的篡改，
+    与 strip_tags 的段落规整刻意分开。
+    """
+    text = re.sub(r"<[^>]+>", "", raw)
+    entities = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
+                "&apos;": "'", "&nbsp;": " "}
+    entities.update({f"&{name};": value for name, value in docbook_entities().items()})
+    for entity, char in entities.items():
+        text = text.replace(entity, char)
+    return text.strip("\n")
+
+
 def normalize(text: str) -> str:
     """规范化：段内空白折叠、段间统一单换行——上游微调空白不应触发误报。"""
     lines = [re.sub(r"\s+", " ", line).strip() for line in text.splitlines()]

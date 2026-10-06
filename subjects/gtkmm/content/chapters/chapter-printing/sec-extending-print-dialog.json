@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n{\nset_custom_tab_label(\"My custom tab\");\n\nauto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\nhbox->set_margin(6);\n\nauto label = Gtk::make_managed<Gtk::Label>(\"Enter some text: \");\nhbox->append(*label);\n\nhbox->append(m_Entry);\n\nreturn hbox;\n}\n\nvoid CustomPrintOperation::on_custom_widget_apply(Gtk::Widget* /* widget */)\n{\nauto user_input = m_Entry.get_text();\n//...\n}",
-   "sha": "54bfd3fe18c0f521",
+   "text": "Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n{\n  set_custom_tab_label(\"My custom tab\");\n\n  auto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\n  hbox->set_margin(6);\n\n  auto label = Gtk::make_managed<Gtk::Label>(\"Enter some text: \");\n  hbox->append(*label);\n\n  hbox->append(m_Entry);\n\n  return hbox;\n}\n\nvoid CustomPrintOperation::on_custom_widget_apply(Gtk::Widget* /* widget */)\n{\n  auto user_input = m_Entry.get_text();\n  //...\n}",
+   "sha": "df2bc5c09ed57d0f",
    "zh": ""
   },
   {

@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "class ModelColumns : public Gtk::TreeModel::ColumnRecord\n{\npublic:\nModelColumns()\n{ add(m_col_id); add(m_col_name); }\n\nGtk::TreeModelColumn<int> m_col_id;\nGtk::TreeModelColumn<Glib::ustring> m_col_name;\n};\n\nModelColumns m_columns;",
-   "sha": "c1c1a53cb78254cc",
+   "text": "class ModelColumns : public Gtk::TreeModel::ColumnRecord\n{\npublic:\n  ModelColumns()\n  { add(m_col_id); add(m_col_name); }\n\n  Gtk::TreeModelColumn<int> m_col_id;\n  Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n};\n\nModelColumns m_columns;",
+   "sha": "aa7a82d492d3eda9",
    "zh": ""
   },
   {

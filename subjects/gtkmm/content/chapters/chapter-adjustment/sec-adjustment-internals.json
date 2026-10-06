@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "void cb_rotate_picture(MyPicture* picture)\n{\npicture->set_rotation(adj->get_value());\n...",
-   "sha": "dd058b14672ea952",
+   "text": "void cb_rotate_picture(MyPicture* picture)\n{\n  picture->set_rotation(adj->get_value());\n...",
+   "sha": "db2d7ab125b55338",
    "zh": ""
   },
   {
@@ -36,8 +36,8 @@
   },
   {
    "type": "code",
-   "text": "adj->signal_value_changed().connect(sigc::bind<MyPicture*>(sigc::mem_fun(*this,\n&cb_rotate_picture), picture));",
-   "sha": "eb2b761b8e455ab5",
+   "text": "adj->signal_value_changed().connect(sigc::bind<MyPicture*>(sigc::mem_fun(*this,\n    &cb_rotate_picture), picture));",
+   "sha": "973fa1b8ee8448ae",
    "zh": ""
   },
   {

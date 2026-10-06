@@ -30,8 +30,8 @@
   },
   {
    "type": "code",
-   "text": "$ git clone https://gitlab.gnome.org/GNOME/mm-common.git\n$ cp -a mm-common/skeletonmm libsomethingmm",
-   "sha": "d22007c368f4a0d1",
+   "text": "  $ git clone https://gitlab.gnome.org/GNOME/mm-common.git\n  $ cp -a mm-common/skeletonmm libsomethingmm",
+   "sha": "298eba4f205d120f",
    "zh": ""
   },
   {
@@ -72,8 +72,8 @@
   },
   {
    "type": "code",
-   "text": "$ for f in $(find libsomethingmm -depth -name '*skeleton*'); do \\\nd=\"${f%/*}\"; b=\"${f##*/}\"; mv \"$f\" \"$d/${b//skeleton/libsomething}\"; \\\ndone",
-   "sha": "dd52fe87ea34ed1b",
+   "text": "$ for f in $(find libsomethingmm -depth -name '*skeleton*'); do \\\n    d=\"${f%/*}\"; b=\"${f##*/}\"; mv \"$f\" \"$d/${b//skeleton/libsomething}\"; \\\n  done",
+   "sha": "8a786364aab6dd06",
    "zh": ""
   },
   {

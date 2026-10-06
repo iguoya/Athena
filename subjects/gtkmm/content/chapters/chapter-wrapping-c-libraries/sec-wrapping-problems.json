@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "typedef struct _ExampleWidget ExampleWidget;\n\nstruct _ExampleWidget\n{\n...\n};",
-   "sha": "6a542f872db4cfc6",
+   "text": "typedef struct _ExampleWidget ExampleWidget;\n\nstruct _ExampleWidget\n{\n  ...\n};",
+   "sha": "390dc54cf5befc25",
    "zh": ""
   },
   {
@@ -78,8 +78,8 @@
   },
   {
    "type": "code",
-   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\nreturn g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n}",
-   "sha": "f57b747bfd9bb386",
+   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\n        return g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n}",
+   "sha": "78783035613a3fb9",
    "zh": ""
   },
   {
@@ -102,8 +102,8 @@
   },
   {
    "type": "code",
-   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\nExampleWidget* widget;\nwidget = g_object_new (EXAMPLE_TYPE_WIDGET, NULL);\nexample_widget_construct(widget, \"something\", something, \"thing\", thing);\n}\n\nvoid example_widget_construct(ExampleWidget* widget, int something, const char* thing)\n{\n//Do stuff that uses private API:\nwidget->priv->thing = thing;\ndo_something(something);\n}",
-   "sha": "5ba44c9315d81c8a",
+   "text": "GtkWidget* example_widget_new(int something, const char* thing)\n{\n        ExampleWidget* widget;\n        widget = g_object_new (EXAMPLE_TYPE_WIDGET, NULL);\n        example_widget_construct(widget, \"something\", something, \"thing\", thing);\n}\n\nvoid example_widget_construct(ExampleWidget* widget, int something, const char* thing)\n{\n        //Do stuff that uses private API:\n        widget->priv->thing = thing;\n        do_something(something);\n}",
+   "sha": "cb5490c6443909fd",
    "zh": ""
   },
   {

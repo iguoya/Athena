@@ -48,8 +48,8 @@
   },
   {
    "type": "code",
-   "text": "auto iter = refTreeSelection->get_selected();\nif(iter) //If anything is selected\n{\nauto row = *iter;\n//Do something with the row.\n}",
-   "sha": "428ad20fdd15df99",
+   "text": "auto iter = refTreeSelection->get_selected();\nif(iter) //If anything is selected\n{\n  auto row = *iter;\n  //Do something with the row.\n}",
+   "sha": "8356e80cc4ddec26",
    "zh": ""
   },
   {
@@ -60,8 +60,8 @@
   },
   {
    "type": "code",
-   "text": "refTreeSelection->selected_foreach_iter(\nsigc::mem_fun(*this, &TheClass::selected_row_callback) );\n\nvoid TheClass::selected_row_callback(\nconst Gtk::TreeModel::const_iterator& iter)\n{\nauto row = *iter;\n//Do something with the row.\n}",
-   "sha": "7fa621277aa32476",
+   "text": "refTreeSelection->selected_foreach_iter(\n    sigc::mem_fun(*this, &TheClass::selected_row_callback) );\n\nvoid TheClass::selected_row_callback(\n    const Gtk::TreeModel::const_iterator& iter)\n{\n  auto row = *iter;\n  //Do something with the row.\n}",
+   "sha": "353085144996d7ec",
    "zh": ""
   },
   {
@@ -78,8 +78,8 @@
   },
   {
    "type": "code",
-   "text": "refTreeSelection->signal_changed().connect(\nsigc::mem_fun(*this, &Example_IconTheme::on_selection_changed)\n);",
-   "sha": "69eb52af4a441324",
+   "text": "refTreeSelection->signal_changed().connect(\n    sigc::mem_fun(*this, &Example_IconTheme::on_selection_changed)\n);",
+   "sha": "ab9dfdc32ea71c91",
    "zh": ""
   },
   {
@@ -102,8 +102,8 @@
   },
   {
    "type": "code",
-   "text": "m_refTreeSelection->set_select_function( sigc::mem_fun(*this,\n&DemoWindow::select_function) );",
-   "sha": "79f399416b356989",
+   "text": "m_refTreeSelection->set_select_function( sigc::mem_fun(*this,\n    &DemoWindow::select_function) );",
+   "sha": "67b85d37d7c24deb",
    "zh": ""
   },
   {
@@ -114,8 +114,8 @@
   },
   {
    "type": "code",
-   "text": "bool DemoWindow::select_function(\nconst Glib::RefPtr<Gtk::TreeModel>& model,\nconst Gtk::TreeModel::Path& path, bool)\n{\nconst auto iter = model->get_iter(path);\nreturn iter->children().empty(); // only allow leaf nodes to be selected\n}",
-   "sha": "79753e0aefe53d82",
+   "text": "bool DemoWindow::select_function(\n    const Glib::RefPtr<Gtk::TreeModel>& model,\n    const Gtk::TreeModel::Path& path, bool)\n{\n  const auto iter = model->get_iter(path);\n  return iter->children().empty(); // only allow leaf nodes to be selected\n}",
+   "sha": "9855bdf66faee924",
    "zh": ""
   },
   {
@@ -132,8 +132,8 @@
   },
   {
    "type": "code",
-   "text": "auto row = m_refModel->children()[5]; //The sixth row.\nif(row)\nrefTreeSelection->select(row.get_iter());",
-   "sha": "363f894238fa8910",
+   "text": "auto row = m_refModel->children()[5]; //The sixth row.\nif(row)\n  refTreeSelection->select(row.get_iter());",
+   "sha": "312d86dd6f3e9db4",
    "zh": ""
   },
   {
@@ -144,8 +144,8 @@
   },
   {
    "type": "code",
-   "text": "auto iter = m_refModel->children().begin()\nif(iter)\nrefTreeSelection->select(iter);",
-   "sha": "7358772d6a1accbb",
+   "text": "auto iter = m_refModel->children().begin()\nif(iter)\n  refTreeSelection->select(iter);",
+   "sha": "95468cbcd1dfc097",
    "zh": ""
   }
  ]

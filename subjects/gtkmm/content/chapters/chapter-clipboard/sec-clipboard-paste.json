@@ -12,8 +12,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_button_paste()\n{\nget_clipboard()->read_text_async(sigc::mem_fun(*this,\n&ExampleWindow::on_clipboard_received));\n}",
-   "sha": "880a0ea347750119",
+   "text": "void ExampleWindow::on_button_paste()\n{\n  get_clipboard()->read_text_async(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_received));\n}",
+   "sha": "3caf1b78cfbe611a",
    "zh": ""
   },
   {
@@ -24,8 +24,8 @@
   },
   {
    "type": "code",
-   "text": "void ExampleWindow::on_clipboard_received(Glib::RefPtr<Gio::AsyncResult>& result)\n{\nauto text = get_clipboard()->read_text_finish(result);\n//Do something with the pasted data.\n}",
-   "sha": "bb89e0593b0a6e57",
+   "text": "void ExampleWindow::on_clipboard_received(Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  auto text = get_clipboard()->read_text_finish(result);\n  //Do something with the pasted data.\n}",
+   "sha": "71fdf7729025e5a8",
    "zh": ""
   },
   {

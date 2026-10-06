@@ -48,8 +48,8 @@
   },
   {
    "type": "code",
-   "text": "DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)\n: Gtk::Window(cobject),\nm_builder(builder),\n// Get the GtkBuilder-instantiated Button, and connect a signal handler:\nm_pButton(m_builder->get_widget<Gtk::Button>(\"quit_button\"))\n{\nif (m_pButton)\n{\nm_pButton->signal_clicked().connect( sigc::mem_fun(*this, &DerivedDialog::on_button_quit) );\n}\n}",
-   "sha": "8c61caa538c3b4ac",
+   "text": "DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)\n: Gtk::Window(cobject),\n  m_builder(builder),\n  // Get the GtkBuilder-instantiated Button, and connect a signal handler:\n  m_pButton(m_builder->get_widget<Gtk::Button>(\"quit_button\"))\n{\n  if (m_pButton)\n  {\n    m_pButton->signal_clicked().connect( sigc::mem_fun(*this, &DerivedDialog::on_button_quit) );\n  }\n}",
+   "sha": "de0c5fc5cdca2622",
    "zh": ""
   },
   {
@@ -72,8 +72,8 @@
   },
   {
    "type": "code",
-   "text": "DerivedDialog::DerivedDialog(BaseObjectType* cobject,\nconst Glib::RefPtr<Gtk::Builder>& builder, bool warning)\n: Gtk::Window(cobject),\nm_builder(builder),\nm_pButton(m_builder->get_widget<Gtk::Button>(\"quit_button\"))\n{\n// ....\n}",
-   "sha": "1175987811a18f9b",
+   "text": "DerivedDialog::DerivedDialog(BaseObjectType* cobject,\n  const Glib::RefPtr<Gtk::Builder>& builder, bool warning)\n: Gtk::Window(cobject),\n  m_builder(builder),\n  m_pButton(m_builder->get_widget<Gtk::Button>(\"quit_button\"))\n{\n  // ....\n}",
+   "sha": "73d451c5170a6930",
    "zh": ""
   },
   {
@@ -90,8 +90,8 @@
   },
   {
    "type": "code",
-   "text": "DerivedButton::DerivedButton(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)\n: Glib::ObjectBase(\"MyButton\"), // The GType name will be gtkmm__CustomObject_MyButton.\nGtk::Button(cobject),\nprop_ustring(*this, \"button-ustring\"),\nprop_int(*this, \"button-int\", 10)\n{\n// ....\n}",
-   "sha": "f8543a9743c92c62",
+   "text": "DerivedButton::DerivedButton(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)\n: Glib::ObjectBase(\"MyButton\"), // The GType name will be gtkmm__CustomObject_MyButton.\n  Gtk::Button(cobject),\n  prop_ustring(*this, \"button-ustring\"),\n  prop_int(*this, \"button-int\", 10)\n{\n  // ....\n}",
+   "sha": "03aa0f7935aea2d7",
    "zh": ""
   },
   {

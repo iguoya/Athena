@@ -102,8 +102,8 @@
   },
   {
    "type": "code",
-   "text": "auto cols_count = m_TreeView.append_column_editable(\"Alex\", m_columns.alex);\nauto pColumn = m_TreeView.get_column(cols_count-1);\nif(pColumn)\n{\nauto pRenderer = static_cast<Gtk::CellRendererToggle*>(pColumn->get_first_cell());\npColumn->add_attribute(pRenderer->property_visible(), m_columns.visible);\npColumn->add_attribute(pRenderer->property_activatable(), m_columns.world);",
-   "sha": "0fde1a944c0761b3",
+   "text": "auto cols_count = m_TreeView.append_column_editable(\"Alex\", m_columns.alex);\nauto pColumn = m_TreeView.get_column(cols_count-1);\nif(pColumn)\n{\n  auto pRenderer = static_cast<Gtk::CellRendererToggle*>(pColumn->get_first_cell());\n  pColumn->add_attribute(pRenderer->property_visible(), m_columns.visible);\n  pColumn->add_attribute(pRenderer->property_activatable(), m_columns.world);",
+   "sha": "43969f867da5220b",
    "zh": ""
   },
   {
@@ -114,8 +114,8 @@
   },
   {
    "type": "code",
-   "text": "auto pRenderer = Gtk::make_managed<Gtk::CellRendererToggle>();\npRenderer->signal_toggled().connect(\nsigc::bind( sigc::mem_fun(*this,\n&Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n);",
-   "sha": "804476589f34cf14",
+   "text": "auto pRenderer = Gtk::make_managed<Gtk::CellRendererToggle>();\npRenderer->signal_toggled().connect(\n    sigc::bind( sigc::mem_fun(*this,\n        &Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n);",
+   "sha": "076df17fbda730c7",
    "zh": ""
   },
   {

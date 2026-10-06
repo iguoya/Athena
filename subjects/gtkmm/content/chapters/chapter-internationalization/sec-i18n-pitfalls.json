@@ -66,8 +66,8 @@
   },
   {
    "type": "code",
-   "text": "std::cout << _(\"Current amount: \") << amount\n<< _(\" Future: \") << future << std::endl;\n\nlabel.set_text(_(\"Really delete \") + filename + _(\" now?\"));",
-   "sha": "b17b759ef7276f25",
+   "text": "std::cout << _(\"Current amount: \") << amount\n          << _(\" Future: \") << future << std::endl;\n\nlabel.set_text(_(\"Really delete \") + filename + _(\" now?\"));",
+   "sha": "29617993f727d4ca",
    "zh": ""
   },
   {
@@ -78,8 +78,8 @@
   },
   {
    "type": "code",
-   "text": "std::cout << Glib::ustring::compose(\n_(\"Current amount: %1 Future: %2\"), amount, future) << std::endl;\n\nlabel.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));",
-   "sha": "b60af9e8c581fce2",
+   "text": "std::cout << Glib::ustring::compose(\n             _(\"Current amount: %1 Future: %2\"), amount, future) << std::endl;\n\nlabel.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));",
+   "sha": "fafeb942640f74b0",
    "zh": ""
   },
   {

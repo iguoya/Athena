@@ -48,8 +48,8 @@
   },
   {
    "type": "code",
-   "text": "#include <gtkmm/button.h>\n#include <gtkmm/window.h>\nclass Foo : public Gtk::Window\n{\nprivate:\nGtk::Button theButton;\n// will be destroyed when the Foo object is destroyed\n};",
-   "sha": "00afe7f4cb431510",
+   "text": "#include <gtkmm/button.h>\n#include <gtkmm/window.h>\nclass Foo : public Gtk::Window\n{\nprivate:\n  Gtk::Button theButton;\n  // will be destroyed when the Foo object is destroyed\n};",
+   "sha": "9a4f320fef47170b",
    "zh": ""
   },
   {
@@ -66,8 +66,8 @@
   },
   {
    "type": "code",
-   "text": "{\nGtk::Button aButton;\naButton.set_visible(true);\n...\napp->run();\n}",
-   "sha": "f5bbd2d33c9707ae",
+   "text": "{\n  Gtk::Button aButton;\n  aButton.set_visible(true);\n  ...\n  app->run();\n}",
+   "sha": "45e6caaea9ede212",
    "zh": ""
   },
   {
@@ -108,8 +108,8 @@
   },
   {
    "type": "code",
-   "text": "{\nGtk::Button aButton;\naButton.set_visible(true);\n...\napp->run();\n}",
-   "sha": "f5bbd2d33c9707ae-1",
+   "text": "{\n  Gtk::Button aButton;\n  aButton.set_visible(true);\n  ...\n  app->run();\n}",
+   "sha": "45e6caaea9ede212-1",
    "zh": ""
   },
   {
@@ -174,8 +174,8 @@
   },
   {
    "type": "code",
-   "text": "MyContainer::MyContainer()\n{\nauto pButton = Gtk::make_managed<Gtk::Button>(\"Test\");\nappend(*pButton); //add *pButton to MyContainer\n}",
-   "sha": "82770ddcf2232751",
+   "text": "MyContainer::MyContainer()\n{\n  auto pButton = Gtk::make_managed<Gtk::Button>(\"Test\");\n  append(*pButton); //add *pButton to MyContainer\n}",
+   "sha": "ff8f582bca1a5f26",
    "zh": ""
   },
   {
