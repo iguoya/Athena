@@ -24,7 +24,7 @@ function MachineButton({
       onClick={onClick}
       className={
         variant === "dark"
-          ? "rounded-xl bg-fg px-4 py-2 text-sm font-medium text-surface shadow-card transition-colors hover:opacity-90"
+          ? "rounded-xl bg-accent px-4 py-2 text-sm font-medium text-on-accent shadow-card transition-colors hover:opacity-90"
           : "flex items-center gap-1.5 rounded-xl border border-accent/40 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent-soft"
       }
     >
@@ -105,26 +105,26 @@ function ToggleStateSim({ demoRef, note, onLaunch }: SimulationProps) {
           }}
           className={`rounded-full border-2 px-6 py-2.5 font-medium transition-colors ${
             active
-              ? "border-accent-2 bg-accent-2/15 text-accent-2"
+              ? "border-accent bg-accent-soft text-accent"
               : "border-line bg-surface-2 text-muted"
           }`}
         >
           {active ? "按下（active）" : "弹起（inactive）"}
         </motion.button>
         <div className="flex-1">
-          <div className="min-h-16 rounded-xl bg-[#1d2733] p-3 font-mono text-xs leading-relaxed">
+          <div className="min-h-16 rounded-xl bg-[#F6F6F6] p-3 font-mono text-xs leading-relaxed ring-1 ring-line">
             {signalLog.map((line, index) => (
               <motion.p
                 key={`${index}-${line}`}
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: index === 0 ? 1 : 0.5, x: 0 }}
-                className={index === 0 ? "text-[#6fc78f]" : "text-[#7d8fa3]"}
+                className={index === 0 ? "text-accent font-medium" : "text-muted"}
               >
                 signal: {line}
               </motion.p>
             ))}
             {signalLog.length === 0 && (
-              <p className="text-[#5c6f84]">点击左侧按钮，信号日志出现在这里</p>
+              <p className="text-muted">点击左侧按钮，信号日志出现在这里</p>
             )}
           </div>
         </div>
@@ -178,7 +178,7 @@ function Node({
 function Arrow({ active }: { active: boolean }) {
   return (
     <motion.span
-      animate={{ color: active ? "#3d6fb4" : "#dfe5ef", scale: active ? 1.15 : 1 }}
+      animate={{ color: active ? "#b02c29" : "#dddddd", scale: active ? 1.15 : 1 }}
       className="text-xl font-light"
     >
       →

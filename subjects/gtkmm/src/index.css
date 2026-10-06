@@ -7,25 +7,28 @@
 @import "@fontsource-variable/jetbrains-mono";
 
 /*
- * gtkmm 主题 token（应用 ADR 0002 的三层资料呈现，气质对齐仓库样板拾阶的
- * token 结构）：GNOME 清雅蓝调，accent 与图标同源（#3D6FB4）。
+ * gtkmm 主题 token——色系与官方教程一致（来源：upstream/gtkmm-documentation
+ * 的 docs/tutorial/style.css，应用 ADR 0002 的严格跟随原则延伸到用色）：
+ *   标题重红 #b02c29、页眉深红 #7f201f、链接 #4A5DB4、
+ *   正文 #555555、页面底 #F6F6F6、代码块浅底 #F6F6F6 + #DDD 边。
  */
 :root {
   color-scheme: light;
-  --bg: #f2f5fa;
-  --bg-2: #e7edf7;
-  --blob-a: #cfe0f7;
-  --blob-b: #dce7f5;
+  --bg: #f6f6f6;
+  --bg-2: #eeeeee;
+  --blob-a: #f3d9d6;
+  --blob-b: #f0e4e2;
   --surface: #ffffff;
-  --surface-2: #f7f9fd;
-  --line: #dfe5ef;
-  --fg: #24313f;
-  --muted: #71808f;
-  --accent: #3d6fb4;
-  --accent-soft: #e8eff9;
-  --accent-2: #4a9058;
+  --surface-2: #fafafa;
+  --line: #dddddd;
+  --fg: #333333;
+  --muted: #777777;
+  --accent: #b02c29;
+  --accent-deep: #7f201f;
+  --accent-soft: #f9ecea;
   --on-accent: #ffffff;
-  --shadow: 0 12px 32px -16px rgba(40, 60, 90, 0.28);
+  --link: #4a5db4;
+  --shadow: 0 12px 32px -16px rgba(90, 30, 28, 0.22);
   --radius: 14px;
   --font-display: "Fraunces Variable", "Noto Sans SC", Georgia, serif;
   --font-body: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
@@ -41,9 +44,10 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
   --color-accent-soft: var(--accent-soft);
-  --color-accent-2: var(--accent-2);
   --color-on-accent: var(--on-accent);
+  --color-link: var(--link);
   --radius-card: var(--radius);
   --shadow-card: var(--shadow);
   --font-display: var(--font-display);
@@ -68,7 +72,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 主内容区背后的柔和装饰：两团渐变光斑，GNOME 壁纸式的安静氛围。 */
+/* 主内容区背后的柔和装饰：官方红调的光斑。 */
 .deco-blobs {
   position: fixed;
   inset: 0;

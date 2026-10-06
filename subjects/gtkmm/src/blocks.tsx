@@ -56,7 +56,7 @@ function QuizView({
               className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
                 reveal
                   ? isAnswer
-                    ? "border-accent-2/50 bg-accent-2/10 text-fg"
+                    ? "border-accent-deep/50 bg-accent-soft text-fg"
                     : chosen
                       ? "border-red-300 bg-red-50 text-fg/70"
                       : "border-line text-muted"
@@ -66,7 +66,7 @@ function QuizView({
               <span
                 className={`grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold ${
                   reveal && isAnswer
-                    ? "bg-accent-2 text-white"
+                    ? "bg-accent-deep text-white"
                     : reveal && chosen
                       ? "bg-red-400 text-white"
                       : "bg-surface-2 text-muted ring-1 ring-line"
@@ -82,7 +82,7 @@ function QuizView({
               </span>
               <span className="flex-1">{option}</span>
               {reveal && isAnswer && (
-                <span className="text-xs font-medium text-accent-2">正确答案</span>
+                <span className="text-xs font-medium text-accent-deep">正确答案</span>
               )}
             </motion.button>
           );
@@ -106,13 +106,10 @@ export function BlockView(props: BlockViewProps) {
           className="my-5"
         >
           <div className="overflow-hidden rounded-card shadow-card ring-1 ring-line">
-            <div className="flex items-center gap-2 bg-[#1d2733] px-4 py-2">
-              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-              <span className="size-2.5 rounded-full bg-[#febc2e]" />
-              <span className="size-2.5 rounded-full bg-[#28c840]" />
-              <span className="ml-2 font-mono text-xs text-[#7d8fa3]">{block.lang}</span>
+            <div className="flex items-center bg-bg-2 px-4 py-1.5 ring-1 ring-line">
+              <span className="font-mono text-xs font-medium text-accent">{block.lang}</span>
             </div>
-            <pre className="overflow-x-auto bg-[#1d2733] p-4 font-mono text-[13px] leading-relaxed text-[#c9d6e4]">
+            <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[13px] leading-relaxed text-[#555555] ring-1 ring-line">
               <code>{block.source}</code>
             </pre>
           </div>
@@ -126,7 +123,7 @@ export function BlockView(props: BlockViewProps) {
         block.variant === "warning"
           ? { ring: "ring-amber-500/30", bg: "bg-amber-500/10", fg: "text-amber-700", Icon: TriangleAlert }
           : block.variant === "tip"
-            ? { ring: "ring-accent-2/30", bg: "bg-accent-2/10", fg: "text-accent-2", Icon: Lightbulb }
+            ? { ring: "ring-accent/30", bg: "bg-link/10", fg: "text-link", Icon: Lightbulb }
             : { ring: "ring-accent/25", bg: "bg-accent-soft", fg: "text-accent", Icon: Info };
       return (
         <aside className={`my-5 flex gap-3 rounded-card p-4 text-sm ring-1 ${style.ring} ${style.bg}`}>
@@ -176,9 +173,9 @@ export function BlockView(props: BlockViewProps) {
       return (
         <motion.div
           whileHover={{ y: -2 }}
-          className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-accent-2/35"
+          className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-accent-deep/40"
         >
-          <p className="flex items-center gap-2 font-medium text-accent-2">
+          <p className="flex items-center gap-2 font-medium text-accent-deep">
             <FlaskConical className="size-4" /> 骨架实验 · {entity?.title ?? block.demo_ref}
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-fg/80">{entity?.purpose}</p>

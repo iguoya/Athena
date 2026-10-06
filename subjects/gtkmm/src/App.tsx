@@ -104,7 +104,7 @@ export default function App() {
       {/* 左侧：三区课表树 */}
       <nav className="relative z-10 flex w-72 shrink-0 flex-col overflow-y-auto border-r border-line bg-surface/80 backdrop-blur-sm">
         <header className="flex items-center gap-3 border-b border-line px-4 py-4">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-accent to-[#5b8fd6] font-display text-xl font-semibold text-on-accent shadow-card">
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-deep font-display text-xl font-semibold text-on-accent shadow-card">
             G
           </div>
           <div>
@@ -142,7 +142,7 @@ export default function App() {
                     <span
                       className={`size-2 shrink-0 rounded-full transition-colors ${
                         s.pages.some((p) => p.status === "translated")
-                          ? "bg-accent-2"
+                          ? "bg-accent-deep"
                           : "bg-line group-hover:bg-muted"
                       }`}
                     />
@@ -179,14 +179,14 @@ export default function App() {
           </ul>
 
           {/* 二、实验区（与教程章节区分的独立入口） */}
-          <p className="flex items-center gap-1.5 px-3 pt-5 pb-1 text-xs font-semibold tracking-wide text-accent-2">
+          <p className="flex items-center gap-1.5 px-3 pt-5 pb-1 text-xs font-semibold tracking-wide text-accent-deep">
             <FlaskConical className="size-3.5" /> 实验
           </p>
           <ul className="pb-2">
             {curriculum.labs?.groups.map((g) => (
               <li key={g.id}>
                 <p className="px-3 py-1 text-xs text-muted">{g.title}</p>
-                <ul className="ml-3 border-l border-accent-2/40 pl-2">
+                <ul className="ml-3 border-l border-accent/40 pl-2">
                   {g.experiments.map((expId) => {
                     const active = view?.kind === "lab" && view.expId === expId;
                     return (
@@ -195,7 +195,7 @@ export default function App() {
                           onClick={() => setView({ kind: "lab", expId })}
                           className={`w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
                             active
-                              ? "bg-accent-2/15 font-medium text-accent-2"
+                              ? "bg-accent-soft font-medium text-accent"
                               : "text-muted hover:bg-surface-2 hover:text-fg"
                           }`}
                         >
@@ -228,7 +228,7 @@ export default function App() {
                   >
                     <span
                       className={`size-1.5 shrink-0 rounded-full ${
-                        r.status === "translated" ? "bg-accent-2/70" : "bg-line"
+                        r.status === "translated" ? "bg-accent-deep/70" : "bg-line"
                       }`}
                     />
                     <span className="flex-1 truncate">{r.title}</span>
@@ -344,15 +344,15 @@ export default function App() {
       </main>
 
       {/* 演示事件面板：终端风格 */}
-      <aside className="relative z-10 flex w-72 shrink-0 flex-col border-l border-line bg-[#1d2733] p-4 text-[#c9d6e4]">
-        <h3 className="flex items-center gap-2 text-sm font-semibold text-[#8fb3d9]">
+      <aside className="relative z-10 flex w-72 shrink-0 flex-col border-l border-line bg-surface p-4 text-fg">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-accent">
           <Terminal className="size-4" /> 演示事件
         </h3>
         {notice && (
           <motion.p
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-2 rounded-lg bg-[#2a3746] p-2 text-xs text-[#ffd8a8]"
+            className="mt-2 rounded-lg bg-accent-soft p-2 text-xs text-accent-deep"
           >
             {notice}
           </motion.p>
@@ -364,13 +364,13 @@ export default function App() {
                 key={`${index}-${event.demo_id}-${event.method}`}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="rounded-lg bg-[#242f3d] p-2 font-mono text-xs leading-relaxed text-[#9fb8d0]"
+                className="rounded-lg bg-surface-2 p-2 font-mono text-xs leading-relaxed text-muted ring-1 ring-line"
               >
-                <span className="text-[#6fc78f]">{event.demo_id}</span>
-                <span className="text-[#7d8fa3]"> · </span>
-                <span className="text-[#e0b97d]">{event.method}</span>
+                <span className="text-accent">{event.demo_id}</span>
+                <span className="text-muted"> · </span>
+                <span className="text-fg">{event.method}</span>
                 {Object.keys(event.params).length > 0 && (
-                  <span className="block break-all text-[#7d8fa3]">
+                  <span className="block break-all text-muted">
                     {JSON.stringify(event.params)}
                   </span>
                 )}
@@ -378,7 +378,7 @@ export default function App() {
             ))}
           </AnimatePresence>
           {events.length === 0 && (
-            <li className="flex items-start gap-2 text-xs text-[#5c6f84]">
+            <li className="flex items-start gap-2 text-xs text-muted">
               <Sparkles className="mt-0.5 size-3.5 shrink-0" />
               启动真机演示后，signal 事件会显示在这里。
             </li>
@@ -392,13 +392,13 @@ export default function App() {
 function LabView({ entity }: { entity: ExperimentEntity }) {
   return (
     <>
-      <p className="flex items-center gap-2 text-sm font-medium text-accent-2">
+      <p className="flex items-center gap-2 text-sm font-medium text-accent-deep">
         <FlaskConical className="size-4" /> 实验 · {entity.id}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold">{entity.title}</h2>
       <p className="mt-4 leading-relaxed text-fg/90">{entity.purpose}</p>
-      <div className="mt-5 rounded-card border border-accent-2/30 bg-accent-2/10 p-5">
-        <p className="text-sm font-semibold text-accent-2">跑通标准</p>
+      <div className="mt-5 rounded-card border border-accent-deep/30 bg-accent-deep/5 p-5">
+        <p className="text-sm font-semibold text-accent-deep">跑通标准</p>
         <p className="mt-1 text-sm text-fg/85">{entity.acceptance}</p>
       </div>
       <div className="mt-4 rounded-card bg-surface p-5 text-sm shadow-card ring-1 ring-line">
@@ -406,7 +406,7 @@ function LabView({ entity }: { entity: ExperimentEntity }) {
         <p className="mt-1 font-mono text-xs text-muted">{entity.skeleton_dir}</p>
         <p className="mt-1 text-xs text-muted">只读；复制到工作区后修改，可一键重置。</p>
         <p className="mt-4 font-semibold text-fg">编译运行</p>
-        <pre className="mt-2 overflow-x-auto rounded-xl bg-[#1d2733] p-4 font-mono text-xs leading-relaxed text-[#c9d6e4]">
+        <pre className="mt-2 overflow-x-auto rounded-xl bg-[#F6F6F6] p-4 font-mono text-xs leading-relaxed text-[#555555] ring-1 ring-line">
           <code>{`cmake -S demos -B build-native && cmake --build build-native --target ${entity.build_target}`}</code>
         </pre>
         <p className="mt-4 font-semibold text-fg">对应理论点</p>
