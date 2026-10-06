@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Flag, Maximize2, Minus, Plus } from "lucide-react";
-import type { Layout, PlacedColumn, PlacedEdge } from "@/content/layout";
+import type { Layout, PlacedEdge } from "@/content/layout";
 import type { PolarisNode } from "@/content/types";
 import { useApp } from "@/state/store";
 import { EdgeLayer, type EdgeState } from "./EdgeLayer";
@@ -32,11 +32,7 @@ interface Props {
   fitKey: string;
   /** 被抽屉盖住的宽度，居中与可见性都要扣掉它。 */
   drawerInset: number;
-  isLocked?(node: PolarisNode): boolean;
   columnNotes?: Map<string, ColumnNote>;
-  /** 列头右侧的操作位，如「解锁下一阶段」。 */
-  columnAction?(column: PlacedColumn): ReactNode;
-  columnLocked?(column: PlacedColumn): boolean;
   /** 点开连线编号时浮出的内容。 */
   edgeCard?(edge: PlacedEdge): ReactNode;
   onSelect(id: string | null): void;
@@ -45,7 +41,7 @@ interface Props {
 const edgeKeyOf = (edge: PlacedEdge) => `${edge.edge.from}>${edge.edge.to}`;
 
 export function GraphCanvas(props: Props) {
-  const { layout, nodes, selectedId, fitKey, drawerInset, isLocked, columnNotes, columnAction, columnLocked, edgeCard, onSelect } =
+  const { layout, nodes, selectedId, fitKey, drawerInset, columnNotes, edgeCard, onSelect } =
     props;
   const hoverId = useApp((s) => s.hoverId);
   const setHover = useApp((s) => s.setHover);
@@ -226,7 +222,6 @@ export function GraphCanvas(props: Props) {
               node={node}
               placed={placed}
               state={cardState(placed.id)}
-              locked={isLocked?.(node) ?? false}
               delay={0.04 * placed.column + 0.025 * placed.row}
               onSelect={() => {
                 setEdge(null);
@@ -268,7 +263,6 @@ export function GraphCanvas(props: Props) {
 
         {layout.columns.map((column) => {
           const note = columnNotes?.get(column.key);
-          const locked = columnLocked?.(column) ?? false;
           return (
             <div
               key={`head-${column.key}`}
@@ -278,11 +272,8 @@ export function GraphCanvas(props: Props) {
               {note?.eyebrow && <div className="text-[11px] font-medium tracking-wide text-faint">{note.eyebrow}</div>}
               <div className="flex items-center gap-2">
                 <span className="size-2.5 rounded-full" style={{ background: column.stage ? `var(--stage-${column.stage})` : "var(--accent)" }} />
-                <span className={`text-[17px] font-semibold ${locked ? "text-faint" : ""}`}>{column.label}</span>
+                <span className="text-[17px] font-semibold">{column.label}</span>
                 <span className="text-[11px] text-faint">{column.count} 个</span>
-                <span className="ml-auto" onPointerDown={(event) => event.stopPropagation()}>
-                  {columnAction?.(column)}
-                </span>
               </div>
               {note?.goal && <div className="mt-0.5 line-clamp-2 text-[12px] leading-snug text-muted">{note.goal}</div>}
             </div>

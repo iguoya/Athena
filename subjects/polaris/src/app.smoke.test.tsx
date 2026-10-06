@@ -26,7 +26,7 @@ let container: HTMLElement;
 let root: Root;
 
 beforeEach(() => {
-  useApp.setState({ aimByMap: {}, drawerWide: false, hoverId: null, edgeKey: null });
+  useApp.setState({ drawerWide: false, hoverId: null, edgeKey: null });
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);

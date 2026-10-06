@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Lock, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import type { PlacedNode } from "@/content/layout";
 import { STAGE_LABEL } from "@/content/catalog";
 import type { PolarisNode } from "@/content/types";
@@ -11,7 +11,6 @@ interface Props {
   node: PolarisNode;
   placed: PlacedNode;
   state: CardState;
-  locked: boolean;
   /** 入场动画的延迟，按列与行错开，一张图像是被一层层点亮。 */
   delay: number;
   onSelect(): void;
@@ -24,7 +23,7 @@ const PRIORITY_STYLE = {
   optional: "border border-dashed border-faint text-faint",
 } as const;
 
-export function NodeCard({ node, placed, state, locked, delay, onSelect, onHover }: Props) {
+export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Props) {
   const stageColor = stageVar(node.stage);
   const selected = state === "selected";
   return (
@@ -32,9 +31,9 @@ export function NodeCard({ node, placed, state, locked, delay, onSelect, onHover
       type="button"
       data-node-id={node.id}
       aria-pressed={selected}
-      aria-label={`${node.title}${locked ? "（本阶段未解锁）" : ""}`}
+      aria-label={node.title}
       initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: state === "dim" ? 0.34 : locked ? 0.7 : 1, y: 0 }}
+      animate={{ opacity: state === "dim" ? 0.34 : 1, y: 0 }}
       transition={{ delay, duration: 0.38, ease: [0.2, 0.7, 0.2, 1] }}
       onPointerDown={(event) => event.stopPropagation()}
       onClick={(event) => {
@@ -51,10 +50,9 @@ export function NodeCard({ node, placed, state, locked, delay, onSelect, onHover
         "shadow-[var(--shadow-card)] transition-[box-shadow,transform,border-color] duration-200",
         "hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]",
         selected ? "border-accent ring-2 ring-accent/30 shadow-[var(--shadow-lift)]" : "border-line",
-        locked ? "border-dashed" : "",
       ].join(" ")}
     >
-      <span className="absolute inset-y-0 left-0 w-[6px]" style={{ background: stageColor, opacity: locked ? 0.45 : 1 }} />
+      <span className="absolute inset-y-0 left-0 w-[6px]" style={{ background: stageColor }} />
       <span className="flex items-center gap-1.5 text-[11px] font-medium leading-none">
         <span style={{ color: stageColor }}>{node.stage ? STAGE_LABEL[node.stage] : "—"}</span>
         {node.priority && (
@@ -68,7 +66,6 @@ export function NodeCard({ node, placed, state, locked, delay, onSelect, onHover
             <span className="text-[10.5px] text-muted">起点</span>
           </span>
         )}
-        {locked && <Lock size={12} className="ml-auto text-faint" aria-hidden />}
       </span>
       <span className="mt-2 line-clamp-2 text-[15px] font-semibold leading-snug">{node.title}</span>
       <span className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 px-[18px] pb-2.5 text-[11px] text-muted">

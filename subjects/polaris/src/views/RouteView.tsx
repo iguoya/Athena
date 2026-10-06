@@ -104,7 +104,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
         />
         <AnimatePresence>
           {selected && (
-            <NodeDrawer key={selected.id} catalog={catalog} node={selected} locked={false} width={drawerWidth} onClose={() => selectNode(null)} />
+            <NodeDrawer key={selected.id} catalog={catalog} node={selected} width={drawerWidth} onClose={() => selectNode(null)} />
           )}
         </AnimatePresence>
       </div>

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Cpu, ExternalLink, Gauge, Lock, Maximize2, Minimize2, Route as RouteIcon, ShieldAlert, Star, Target, Wrench, X, Code2 } from "lucide-react";
+import { ArrowRight, Cpu, ExternalLink, Gauge, Maximize2, Minimize2, Route as RouteIcon, ShieldAlert, Star, Target, Wrench, X, Code2 } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { STAGE_LABEL } from "@/content/catalog";
 import { routesOfNode } from "@/content/routes";
@@ -26,7 +26,6 @@ import {
 interface Props {
   catalog: Catalog;
   node: PolarisNode;
-  locked: boolean;
   width: number;
   onClose(): void;
 }
@@ -88,7 +87,7 @@ function EdgeList({ catalog, edges, side }: { catalog: Catalog; edges: PolarisEd
   );
 }
 
-export function NodeDrawer({ catalog, node, locked, width, onClose }: Props) {
+export function NodeDrawer({ catalog, node, width, onClose }: Props) {
   const wide = useApp((s) => s.drawerWide);
   const toggleWide = useApp((s) => s.toggleDrawerWide);
   const go = useApp((s) => s.go);
@@ -151,15 +150,6 @@ export function NodeDrawer({ catalog, node, locked, width, onClose }: Props) {
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-10">
-        {locked && (
-          <div className="mt-5 flex gap-2.5 rounded-xl border border-dashed border-faint bg-surface-2 p-3 text-[12.5px] leading-relaxed text-muted">
-            <Lock size={15} className="mt-0.5 shrink-0" />
-            <span>
-              这一课还在没解锁的阶段里。可以查阅，但建议先打完上一阶段的主干——它是这一课的台阶（ADR 0014）。
-            </span>
-          </div>
-        )}
-
         <p className="mt-5 text-[15px] leading-relaxed text-ink">{node.stable_definition}</p>
 
         {/* 指南针的三问：必要性、能力、产出（ADR 0012 决策 3） */}

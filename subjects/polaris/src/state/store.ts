@@ -37,8 +37,6 @@ interface AppState {
   hoverId: string | null;
   /** 被点开的连线，格式 from>to。 */
   edgeKey: string | null;
-  /** 每张图「瞄准」到哪个阶段（0 初级、1 中级、2 资深）；更高的阶段带锁。只在本次打开窗口里有效，不记进度（ADR 0014 决策 2）。 */
-  aimByMap: Record<string, number>;
   theme: ThemeId;
   drawerWide: boolean;
 
@@ -46,7 +44,6 @@ interface AppState {
   selectNode(id: string | null): void;
   setHover(id: string | null): void;
   setEdge(key: string | null): void;
-  unlockNext(mapId: string): void;
   setTheme(theme: ThemeId): void;
   toggleDrawerWide(): void;
 }
@@ -55,7 +52,6 @@ export const useApp = create<AppState>((set, get) => ({
   loc: typeof location === "undefined" ? HOME : parseHash(location.hash),
   hoverId: null,
   edgeKey: null,
-  aimByMap: {},
   theme: readTheme(),
   drawerWide: false,
 
@@ -72,7 +68,6 @@ export const useApp = create<AppState>((set, get) => ({
   },
   setHover: (hoverId) => set({ hoverId }),
   setEdge: (edgeKey) => set({ edgeKey }),
-  unlockNext: (mapId) => set((state) => ({ aimByMap: { ...state.aimByMap, [mapId]: Math.min(2, (state.aimByMap[mapId] ?? 0) + 1) } })),
   setTheme(theme) {
     applyTheme(theme);
     set({ theme });
