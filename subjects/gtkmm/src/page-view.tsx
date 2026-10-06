@@ -496,6 +496,8 @@ function ReadUnit({
   onRevealAll: () => void;
   onRate: (sha: string, understood: boolean) => void;
 }) {
+  const unitSha = blocks[0].sha; // 整个单元一次「看懂了」
+  const unitKnown = knownParas.has(unitSha);
   const zhOf = (block: SnapshotBlock) => {
     if (block.zh) {
       if (sentenceMode) {
@@ -550,7 +552,7 @@ function ReadUnit({
   return (
     <div className="my-6">
       {blocks.map((block) => {
-        const isKnown = knownParas.has(block.sha);
+        const isKnown = unitKnown;
         if (block.type === "listitem") {
           return (
             <div key={block.sha} className="mb-3">
@@ -562,15 +564,7 @@ function ReadUnit({
                 • {renderInline(flow(block.text))}
               </span>
               {!hidden && block.zh && (
-                <div className="pl-5">
-                  {zhOf(block)}
-                  <RatingRow
-                    sha={block.sha}
-                    knownParas={knownParas}
-                    hardParas={hardParas}
-                    onRate={onRate}
-                  />
-                </div>
+                <div className="pl-5">{zhOf(block)}</div>
               )}
             </div>
           );
@@ -596,12 +590,17 @@ function ReadUnit({
               )}
             </blockquote>
             {!hidden && zhOf(block)}
-            {!hidden && block.zh && (
-              <RatingRow sha={block.sha} knownParas={knownParas} hardParas={hardParas} onRate={onRate} />
-            )}
           </div>
         );
       })}
+      {!hidden && (
+        <RatingRow
+          sha={unitSha}
+          knownParas={knownParas}
+          hardParas={hardParas}
+          onRate={onRate}
+        />
+      )}
       {hidden && (
         <button
           onClick={onRevealAll}
@@ -619,19 +618,27 @@ type RenderGroup =
   | { kind: "heading" | "code" | "figure"; blocks: SnapshotBlock[] }
   | { kind: "read"; blocks: SnapshotBlock[] };
 
+/** 词数：英文按空格分词，CJK 每字记一词。 */
+function wordCount(text: string): number {
+  return (
+    (text.match(/[A-Za-z0-9]+/g) || []).length +
+    (text.match(/[一-鿿]/g) || []).length
+  );
+}
+
 function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
   const groups: RenderGroup[] = [];
-  let unitLen = 0;
+  let unitWords = 0;
   for (const block of blocks) {
     if (block.type === "para" || block.type === "listitem") {
       const last = groups[groups.length - 1];
-      const longBlock = block.text.length > 280;
-      if (last?.kind === "read" && !longBlock && unitLen < 480) {
+      // 聚合到 ~100 词为一个阅读单元：一次「看懂了」
+      if (last?.kind === "read" && unitWords < 100) {
         last.blocks.push(block);
-        unitLen += block.text.length;
+        unitWords += wordCount(block.text);
       } else {
         groups.push({ kind: "read", blocks: [block] });
-        unitLen = block.text.length;
+        unitWords = wordCount(block.text);
       }
       continue;
     }
