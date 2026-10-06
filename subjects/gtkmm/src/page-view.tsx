@@ -687,7 +687,13 @@ export function PageView({
                 <ul className="space-y-3">
                   {group.blocks.map((block) => (
                     <li key={block.sha} className="flex flex-col gap-1.5">
-                      <span className="font-serif text-[28px] leading-relaxed text-fg/60">
+                      <span
+                        className={`block rounded-lg px-2 py-1 font-serif text-[28px] leading-relaxed ${
+                          knownParas.has(block.sha)
+                            ? "bg-green-50/80 text-fg/55"
+                            : "text-fg/60"
+                        }`}
+                      >
                         • {renderInline(flow(block.text))}
                       </span>
                       {block.zh && (
@@ -722,12 +728,14 @@ export function PageView({
             return (
               <div key={index} className="my-6">
                 <blockquote
-                  className={`border-l-4 bg-surface-2 py-4 pl-5 pr-4 font-serif text-[28px] leading-relaxed text-fg/60 ${
+                  className={`border-l-4 py-4 pl-5 pr-4 font-serif text-[28px] leading-relaxed ${
                     stale
-                      ? "border-amber-500/70"
-                      : block.key
-                        ? "border-accent bg-accent-soft/60"
-                        : "border-accent/50"
+                      ? "border-amber-500/70 bg-surface-2 text-fg/60"
+                      : knownParas.has(block.sha)
+                        ? "border-green-500/60 bg-green-50/70 text-fg/55"
+                        : block.key
+                          ? "border-accent bg-accent-soft/60 text-fg/60"
+                          : "border-accent/50 bg-surface-2 text-fg/60"
                   }`}
                 >
                   <p>{renderInline(block.text.replace(/\s*\n\s*/g, " "))}</p>
