@@ -1,0 +1,35 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "msys2-mingw64",
+      "displayName": "MSYS2 MINGW64 GCC（已验证配套）",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "environment": { "PATH": "C:\\msys64\\mingw64\\bin;$penv{PATH}" },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/msys64/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/mingw64/bin/g++.exe",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "msys2-ucrt64",
+      "displayName": "MSYS2 UCRT64 GCC（需先 pacman -Syu 对齐 glib/glibmm）",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "environment": { "PATH": "C:\\msys64\\ucrt64\\bin;$penv{PATH}" },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "msys2-mingw64", "configurePreset": "msys2-mingw64" },
+    { "name": "msys2-ucrt64", "configurePreset": "msys2-ucrt64" }
+  ]
+}

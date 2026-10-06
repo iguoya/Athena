@@ -32,6 +32,20 @@
    （如都是 2.90.x）。glib 与 glibmm 大版本不匹配说明环境处于部分升级状态，
    会出现 G_DECLARE_FINAL_TYPE 头文件冲突，`pacman -Syu` 对齐即可。
 
+## 用 VS2022 打开
+
+工作集根目录已配好 VS2022 的 CMake 集成三件套（`CMakeLists.txt` 顶层工程、
+`CMakePresets.json`、`launch.vs.json`）：
+
+1. VS2022 →「打开文件夹」选 `workspace/`（或资源管理器右键「通过 Visual Studio 打开」）；
+2. 右上角配置下拉选 **MSYS2 MINGW64 GCC**（已验证配套；UCRT64 待 `pacman -Syu` 对齐），
+   VS 自动 configure；
+3. `Ctrl+Shift+B` 构建全部学习集，产物统一落在 `build/` 根；
+4. F5 启动 `launch.vs.json` 里登记的目标（新集记得在 `CMakeLists.txt` 顶层
+   `add_subdirectory` 一行、在 `launch.vs.json` 加一段配置）。
+
+命令行同款：`cmake --preset msys2-mingw64 && cmake --build --preset msys2-mingw64`。
+
 ## 从骨架开一个实验副本
 
 ```sh
