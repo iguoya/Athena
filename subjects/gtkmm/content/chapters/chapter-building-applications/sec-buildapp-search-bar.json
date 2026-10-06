@@ -8,19 +8,19 @@
    "type": "para",
    "text": "We continue to flesh out the functionality of our application. For now, we add search.\ngtkmm supports this with `Gtk::SearchEntry` and `Gtk::SearchBar`.\nThe search bar is a widget that can slide in from the top to present a search entry.",
    "sha": "757a8ebf125ec598",
-   "zh": null
+   "zh": "我们将继续充实我们的应用程序的功能。现在，我们向其中添加搜索功能。gtkmm通过Gtk::SearchEntry和Gtk::SearchBar对此提供了支持。搜索栏是一个部件，可以从从顶部滑入以显示搜索条目。"
   },
   {
    "type": "para",
    "text": "We add a toggle button to the header bar, which can be used to slide out the search bar\nbelow the header bar. The new widgets are added in the `window.ui` file.",
    "sha": "addfc902167ed3e1",
-   "zh": null
+   "zh": "我们向标题栏添加了一个开关按钮，可以用于滑出位于标题栏下方的搜索栏。新的部件将添加到window.ui文件中。"
   },
   {
    "type": "para",
    "text": "Implementing the search needs quite a few code changes that we are not going to completely\ngo over here. The central piece of the search implementation is a signal handler that\nlistens for text changes in the search entry, shown here without error handling.",
    "sha": "a073e6c3682a882f",
-   "zh": null
+   "zh": "实现搜索需要进行大量的代码更改，在此我们不对其进行详细的介绍。实现搜索的核心部分是一个信号处理函数，它监听搜索条目的变更，此处显示的示例没有进行错误处理。"
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "With the search bar, our application now looks like this:",
    "sha": "6cb1060c623d4c3e",
-   "zh": null
+   "zh": "有了搜索栏后，我们的应用程序看起来像这样："
   },
   {
    "type": "figure",

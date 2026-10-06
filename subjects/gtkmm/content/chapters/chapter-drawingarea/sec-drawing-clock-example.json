@@ -8,7 +8,7 @@
    "type": "para",
    "text": "Now that we've covered the basics of drawing with Cairo, let's try to\n          put it all together and create a simple application that actually\n          does something. The following example uses Cairo to create a custom\n          `Clock` widget. The clock has a second hand, a\n          minute hand, and an hour hand, and updates itself every second.",
    "sha": "aec7a3ca8ca9b374",
-   "zh": null
+   "zh": "既然我们已经将使用开罗画图的基础知识介绍完了，那么现在让我们尝试将所有的内容放在一起，创建一个可以执行某些操作的简单应用程序。以下示例使用开罗创建一个自定义的Clock部件。这个时钟有秒针、分针、时针，并且每一秒更新一次。"
   },
   {
    "type": "para",
@@ -20,25 +20,25 @@
    "type": "para",
    "text": "As before, almost all of the interesting stuff is done in the draw\n          function on_draw(). Before we dig\n          into the draw function, notice that the constructor for the\n          `Clock` widget connects a handler function\n          on_timeout() to a timer with a timeout\n          period of 1000 milliseconds (1 second). This means that\n          on_timeout() will get called once per\n          second. The sole responsibility of this function is to invalidate\n          the window so that gtkmm will be forced to redraw it.",
    "sha": "5a2deb1e9e071a47",
-   "zh": null
+   "zh": "和之前一样，所有有趣的东西都在绘图函数on_draw()中完成。在深入研究绘图函数之前，请注意在Clock部件的构造函数中将处理函数on_timeout()连接到了用计时器上，该计时器的超时时间为1000毫秒（1秒）。这意味着on_timeout()将每秒被调用一次。这个函数的唯一任务就是使窗口无效，以便gtkmm强制重绘它。"
   },
   {
    "type": "para",
    "text": "Now let's take a look at the code that performs the actual drawing.\n          The first section of on_draw() should be\n          pretty familiar by now. This example again scales the coordinate system\n          to be a unit square so that it's easier to draw the clock as a\n          percentage of window size so that it will automatically scale when\n          the window size is adjusted. Furthermore, the coordinate system is\n          scaled over and down so that the (0, 0) coordinate is in the very\n          center of the window.",
    "sha": "d80ed8513f95d0f8",
-   "zh": null
+   "zh": "现在让我们研究实际执行绘图的函数。到现在on_draw()函数的第一部分你应该很熟悉了。此示例再次将坐标系缩放为单位正方形，以便更轻松的按窗口大小的百分比绘制时钟。此外坐标系是按比例缩放的，所以(0,0)坐标位于窗口的正中央。"
   },
   {
    "type": "para",
    "text": "The function Cairo::Context::paint() is used here\n          to set the background color of the window. This function takes no\n          arguments and fills the current surface (or the clipped portion of\n          the surface) with the source color currently active. After setting\n          the background color of the window, we draw a circle for the clock\n          outline, fill it with white, and then stroke the outline in black.\n          Notice that both of these actions use the\n          _preserve variant to preserve the current path,\n          and then this same path is clipped to make sure that our next lines\n          don't go outside the outline of the clock.",
    "sha": "393cef1938000358",
-   "zh": null
+   "zh": "Cairo::Context::paint()方法用于设置窗口的背景色。这个函数不接受任何参数，并使用处于活跃状态的源颜色填充当前表面（或表面裁剪的一部分）。设置背景色以后，我们画一个圆作为时钟的轮廓，用白色填充它然后用黑色进行描边。请注意，这两个操作都用_preserve变体以保留当前路径，然后对相同的路径进行剪辑以确保我们下一行不会超过时钟的轮廓。"
   },
   {
    "type": "para",
    "text": "After drawing the outline, we go around the clock and draw ticks for\n          every hour, with a larger tick at 12, 3, 6, and 9. Now we're finally\n          ready to implement the time-keeping functionality of the clock, which\n          simply involves getting the current values for hours, minutes and\n          seconds, and drawing the hands at the correct angles.",
    "sha": "9176a22cdb5cbaf6",
-   "zh": null
+   "zh": "绘制轮廓后，我们围绕时钟为每个小时绘制可读线并为12、3、6、9绘制相对更大的刻度线。接着我们就可以实现时钟的计时功能了 -- 获取当前时间的时、分、秒然后以正确的角度将指针绘制出来。"
   }
  ]
 }

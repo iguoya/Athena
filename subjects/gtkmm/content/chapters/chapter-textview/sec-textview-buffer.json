@@ -8,13 +8,13 @@
    "type": "para",
    "text": "`Gtk::TextBuffer` is a model containing the data for the\n`Gtk::TextView`, like the\n`Gtk::TreeModel` used by `Gtk::TreeView`.\nThis allows two or more `Gtk::TextView`s to share the same\n`TextBuffer`, and allows those TextBuffers to be displayed\nslightly differently. Or you could maintain several\n`Gtk::TextBuffer`s and choose to display each one at different\ntimes in the same `Gtk::TextView` widget.",
    "sha": "aff7eff2cc695cf1",
-   "zh": null
+   "zh": "Gtk::TextBuffer是一个包含Gtk::TextView数据的模型，和Gtk::TreeView所使用的Gtk::TreeModel类似。这允许复数个Gtk::TextView共享同一个TextBuffer，并允许以不同方式显示文本缓冲区。你也可以维护多个Gtk::TextBuffer并让同一个Gtk::TextView部件于不同时候分别显示它们。"
   },
   {
    "type": "para",
    "text": "The `TextView` creates its own default\n`TextBuffer`, which you can access via the\nget_buffer() method.",
    "sha": "4f6735e2970fe784",
-   "zh": null
+   "zh": "TextView会创建一个由它拥有的默认TextBuffer，你可以通过get_buffer()方法访问这个缓冲区。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "A `Gtk::TextBuffer::iterator` and a `Gtk::TextBuffer::const_iterator`\nrepresent a position between two characters in the text buffer. Whenever the buffer\nis modified in a way that affects the number of characters in the buffer, all outstanding\niterators become invalid. Because of this, iterators can't be used to preserve positions\nacross buffer modifications. To preserve a position, use `Gtk::TextBuffer::Mark`.",
    "sha": "666c9158adce240f",
-   "zh": null
+   "zh": "Gtk::TextBuffer::iterator和Gtk::TextBuffer::const_iterator表示文本缓冲区中两个字符之间的位置。只要以影响缓冲区中字符数量的方式修改了缓冲区，所有越过修改范围的迭代器都将失效。因此，迭代器不能用于保存越过缓冲区被修改部分的位置。如果想保存位置，请使用Gtk::TextBuffer::Mark。"
   },
   {
    "type": "para",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "To specify that some text in the buffer should have specific formatting, you must define a tag to hold that formatting information, and then apply that tag to the region of text. For instance, to define the tag and its properties:",
    "sha": "ff4a8930637301e5",
-   "zh": null
+   "zh": "要指定缓冲区中的一些文本具有特定的格式，你需要定义一个标签来保存格式信息，并将该标签应用于文本区域。例如，定义标签及其属性："
   },
   {
    "type": "code",
@@ -68,13 +68,13 @@
    "type": "para",
    "text": "You can specify a name for the `Tag` when using the\ncreate() method, but it is not necessary.",
    "sha": "4550bd89c441de5d",
-   "zh": null
+   "zh": "你可以在使用Tag的create()方法时为其指定一个名称，但这不是必须的。"
   },
   {
    "type": "para",
    "text": "The `Tag` class has many other properties.",
    "sha": "3d3ee25234a7b7e8",
-   "zh": null
+   "zh": "Tag类还有许多其他的特性。"
   },
   {
    "type": "para",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "Each `Gtk::TextBuffer` uses a\n`Gtk::TextBuffer::TagTable`, which contains the\n`Tag`s for that buffer. 2 or more\n`TextBuffer`s may share the same\n`TagTable`. When you create `Tag`s\nyou should add them to the `TagTable`. For instance:",
    "sha": "079a1b2964e92793",
-   "zh": null
+   "zh": "每个Gtk::TextBuffer使用一个Gtk::TextBuffer::TagTable，其中包含了该缓冲区的Tag。复数个TextBuffer可以共享一个TagTable。当你创建Tag的时候，你应该将其加入TagTable。例如："
   },
   {
    "type": "code",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
    "sha": "67124e322098f2be",
-   "zh": null
+   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。"
   },
   {
    "type": "para",
@@ -122,7 +122,7 @@
    "type": "para",
    "text": "If you have created a `Tag` and added it to the\n`TagTable`, you may apply that tag to part of the\n`TextBuffer` so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\n`Gtk::TextBuffer::iterator`s. For instance:",
    "sha": "99b50726009f26c7",
-   "zh": null
+   "zh": "如果你创建了一个Tag并将其加入到TagTable，则可以将其应用于TextBuffer的一部分，以便使用该格式显示某些文本。你可以通过使用Gtk::TextBuffer::iterator指示文本的开始和结束范围。例如："
   },
   {
    "type": "code",
@@ -134,7 +134,7 @@
    "type": "para",
    "text": "Or you could specify the tag when first inserting the text:",
    "sha": "40bf6e55ff530666",
-   "zh": null
+   "zh": "或者你可以在首次插入文本的时候指定标签："
   },
   {
    "type": "code",
@@ -146,13 +146,13 @@
    "type": "para",
    "text": "You can apply more than one `Tag` to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The `Tag`s might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
    "sha": "e92729bff47493ef",
-   "zh": null
+   "zh": "你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。"
   },
   {
    "type": "para",
    "text": "Each `Gtk::TextBuffer` uses a\n`Gtk::TextBuffer::TagTable`, which contains the\n`Tag`s for that buffer. 2 or more\n`TextBuffer`s may share the same\n`TagTable`. When you create `Tag`s\nyou should add them to the `TagTable`. For instance:",
    "sha": "079a1b2964e92793-1",
-   "zh": null
+   "zh": "每个Gtk::TextBuffer使用一个Gtk::TextBuffer::TagTable，其中包含了该缓冲区的Tag。复数个TextBuffer可以共享一个TagTable。当你创建Tag的时候，你应该将其加入TagTable。例如："
   },
   {
    "type": "code",
@@ -164,7 +164,7 @@
    "type": "para",
    "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
    "sha": "67124e322098f2be-1",
-   "zh": null
+   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。"
   },
   {
    "type": "para",
@@ -176,7 +176,7 @@
    "type": "para",
    "text": "If you have created a `Tag` and added it to the\n`TagTable`, you may apply that tag to part of the\n`TextBuffer` so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\n`Gtk::TextBuffer::iterator`s. For instance:",
    "sha": "99b50726009f26c7-1",
-   "zh": null
+   "zh": "如果你创建了一个Tag并将其加入到TagTable，则可以将其应用于TextBuffer的一部分，以便使用该格式显示某些文本。你可以通过使用Gtk::TextBuffer::iterator指示文本的开始和结束范围。例如："
   },
   {
    "type": "code",
@@ -188,7 +188,7 @@
    "type": "para",
    "text": "Or you could specify the tag when first inserting the text:",
    "sha": "40bf6e55ff530666-1",
-   "zh": null
+   "zh": "或者你可以在首次插入文本的时候指定标签："
   },
   {
    "type": "code",
@@ -200,7 +200,7 @@
    "type": "para",
    "text": "You can apply more than one `Tag` to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The `Tag`s might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
    "sha": "e92729bff47493ef-1",
-   "zh": null
+   "zh": "你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。"
   },
   {
    "type": "heading",
@@ -212,7 +212,7 @@
    "type": "para",
    "text": "`TextBuffer` iterators are generally invalidated when the\ntext changes, but you can use a `Gtk::TextBuffer::Mark` to\nremember a position in these situations. For instance,",
    "sha": "2f34a8d6e3b3f914",
-   "zh": null
+   "zh": "当文本发生更改的时候TextBuffer迭代器通常会失效，但是你可以使用Gtk::TextBuffer::Mark记住位置，例如："
   },
   {
    "type": "code",
@@ -224,13 +224,13 @@
    "type": "para",
    "text": "You can then use the get_iter() method later to create an\niterator for the `Mark`'s new position.",
    "sha": "1491e9385df9ed26",
-   "zh": null
+   "zh": "你可以在之后使用get_iter()方法为Mark的新位置创建迭代器。"
   },
   {
    "type": "para",
    "text": "There are two built-in `Mark`s - `insert`\nand `selection_bound`, which you can access with\n`TextBuffer`'s get_insert() and\nget_selection_bound() methods.",
    "sha": "92125f070efa73fe",
-   "zh": null
+   "zh": "有两个内置的Mark - insert和selection_bound，你可以使用TextBuffer的get_insert()和get_selection_bound()方法访问它们。"
   },
   {
    "type": "para",
@@ -248,13 +248,13 @@
    "type": "para",
    "text": "As mentioned above, each `TextView` has a\n`TextBuffer`, and one or more\n`TextView`s can share the same\n`TextBuffer`.",
    "sha": "a3c0af301f4d7c68",
-   "zh": null
+   "zh": "如上所述，每个TextView都有一个TextBuffer，并且多个TextView可以共享同一个TextBuffer。"
   },
   {
    "type": "para",
    "text": "Like the `TreeView`, you should probably put your\n`TextView` inside a `ScrolledWindow`\nto allow the user to see and move around the whole text area with\nscrollbars.",
    "sha": "5965ee63165da6d0",
-   "zh": null
+   "zh": "和TreeView一样，你可以将TextView放入ScrolledWindow中以允许用户使用滚动条查看并在整个文本区域中移动。"
   },
   {
    "type": "para",
@@ -272,7 +272,7 @@
    "type": "para",
    "text": "`TextView` has various methods which allow you to change\nthe presentation of the buffer for this particular view. Some of these may be\noverridden by the `Gtk::TextTag`s in the buffer, if they\nspecify the same things. For instance, set_left_margin(),\nset_right_margin(), set_indent(),\netc.",
    "sha": "840ee839be13e397",
-   "zh": null
+   "zh": "TextView具有多种可以让你修改特定视图中缓冲区的显示方式的方法。如果它们指定同一区域，则其中一些可能会覆写缓冲区中的Gtk::TextTag。例如：set_left_margin()、set_right_margin()、set_indent()等。"
   },
   {
    "type": "heading",
@@ -284,13 +284,13 @@
    "type": "para",
    "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
    "sha": "7634b76a9e528527",
-   "zh": null
+   "zh": "Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。"
   },
   {
    "type": "para",
    "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
    "sha": "7634b76a9e528527-1",
-   "zh": null
+   "zh": "Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。"
   }
  ]
 }

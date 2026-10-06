@@ -8,7 +8,7 @@
    "type": "para",
    "text": "By deriving directly from `Gtk::Widget` you can\n        do all the drawing for your widget directly, instead of just arranging\n        child widgets. For instance, a `Gtk::Label` draws\n        the text of the label, but does not do this by using other\n        widgets.",
    "sha": "1fa5441074fdfa33",
-   "zh": null
+   "zh": "通过从Gtk::Widget派生部件你可以为部件绘制所有的图形，而不仅仅是排列子部件。例如：Gtk::Label不需要使用其他部件即可绘制标签文本。"
   },
   {
    "type": "para",
@@ -20,13 +20,13 @@
    "type": "listitem",
    "text": "get_request_mode_vfunc(): (optional) Return what Gtk::SizeRequestMode is preferred by the widget.",
    "sha": "eedfb7789745d51f",
-   "zh": null
+   "zh": "get_request_mode_vfunc()：覆写此虚函数是可选的，返回此部件的Gtk::SizeRequestMode偏好。"
   },
   {
    "type": "listitem",
    "text": "measure_vfunc(): Calculate the minimum and natural width or height of the widget.",
    "sha": "2fe503071843e74e",
-   "zh": null
+   "zh": "measure_vfunc()：计算此部件的最小自然高度或宽度。"
   },
   {
    "type": "listitem",
@@ -50,25 +50,25 @@
    "type": "listitem",
    "text": "on_map(): (optional)",
    "sha": "25e2e1c838e0594f",
-   "zh": null
+   "zh": "on_map()：覆写此虚函数是可选的。"
   },
   {
    "type": "listitem",
    "text": "on_unmap(): (optional)",
    "sha": "34a0ca8898313f92",
-   "zh": null
+   "zh": "on_unmap()：覆写此虚函数是可选的。"
   },
   {
    "type": "listitem",
    "text": "snapshot_vfunc(): Create a render node, e.g. a Cairo::Context node, and draw on it.",
    "sha": "69d460fc5685c6a7",
-   "zh": null
+   "zh": "snapshot_vfunc()：创建一个渲染节点（例如：一个Cairo::Context节点），并在其上进行绘制。"
   },
   {
    "type": "para",
    "text": "The first 3 methods in the previous table are also overridden in custom\n        containers. They are briefly described in the\n        Custom Containers section.",
    "sha": "7ada619e01a1e082",
-   "zh": null
+   "zh": "上述前三个函数在自定义容器中也被覆写。它们在自定义容器小节做了简要说明。"
   },
   {
    "type": "heading",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "This example implements a widget which draws Penrose triangles.",
    "sha": "bf89692dde9dd89a",
-   "zh": null
+   "zh": "本示例实现了绘制彭罗斯三角形的部件"
   },
   {
    "type": "figure",

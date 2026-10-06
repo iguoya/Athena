@@ -8,25 +8,25 @@
    "type": "para",
    "text": "The slots connected to `sigc::signal` objects\nexecute in the thread which calls emit() or\noperator()() on the signal.\n`Glib::Dispatcher` does not behave this way:\ninstead its connected slots execute in the thread in which the\n`Glib::Dispatcher` object was constructed (which\nmust have a glib main loop). If a\n`Glib::Dispatcher` object is constructed in the\nmain GUI thread (which will therefore be the receiver thread), any\nworker thread can emit on it and have the connected slots safely\nexecute gtkmm functions.",
    "sha": "a47f6afc125ac020",
-   "zh": null
+   "zh": "连接到sigc::signal对象的槽将会在调用信号emit()、operator()()方法的线程被调用。而Glib::Dispatcher的行为与此相反：与其连接的槽将在构造Glib::Dispatcher对象的线程执行（该线程必须正在运行Glib主循环）。如果在GUI主线程上构造了Glib::Dispatcher，任何工作线程都可以在其上调用emit()并让槽安全的执行连接的gtkmm函数。"
   },
   {
    "type": "para",
    "text": "Some thread safety rules on the use of\n`Glib::Dispatcher` still apply. As mentioned, a\n`Glib::Dispatcher` object must be constructed in\nthe receiver thread (the thread in whose main loop it will execute its\nconnected slots). By default this is the main program thread, although\nthere is a `Glib::Dispatcher` constructor which\ncan take the `Glib::MainContext` object of any\nthread which has a main loop. Only the receiver thread should call\nconnect() on the\n`Glib::Dispatcher` object, or manipulate any\nrelated `sigc::connection` object, unless\nadditional synchronization is employed. However, any worker thread can\nsafely emit on the `Glib::Dispatcher` object\nwithout any locking once the receiver thread has connected the slots,\nprovided that it is constructed before the worker thread is started\n(if it is constructed after the thread has started, additional\nsynchronization will normally be required to ensure visibility).",
    "sha": "f9ffebc5cd882034",
-   "zh": null
+   "zh": "一些线程安全规则对于Glib::Dispatcher依旧适用。如前所述，必须在接收器线程（将在该线程的主循环中执行连接的槽）构造Glib::Dispatcher对象。默认情况下接收器线程应该是程序的主进程，尽管Glib::Dispatcher有一个可以接受Glib::MainContext对象为参数并且可以在任何运行Glib主循环的线程中调用的构造函数。只有接受者线程才应该在Glib::Dispatcher对象上调用connect()或操纵相关的sigc::connection对象，除非你为此提供了额外的同步措施。一旦接收器线程连接了槽，任何工作现场都可以不加锁直接在Glib::Dispatcher对象上调用emit()，但前提是该对象是在工作线程启动前构造的，如果不是则需要进行额外的同步以确保可见性。"
   },
   {
    "type": "para",
    "text": "Aside from the fact that connected slots always execute in the\nreceiver thread, `Glib::Dispatcher` objects are\nsimilar to `sigc::signal` objects.\nThey therefore cannot pass unbound arguments nor return a value. The\nbest way to pass unbound arguments is with a thread-safe\n(asynchronous) queue. At the time of writing\n`glibmm` does not have one, although most\npeople writing multi-threaded code will have one available to them\n(they are relatively easy to write although there are subtleties in\ncombining thread safety with strong exception safety).",
    "sha": "3287e91a64880dbb",
-   "zh": null
+   "zh": "除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。"
   },
   {
    "type": "para",
    "text": "A `Glib::Dispatcher` object can be emitted on by\nthe receiver thread as well as by a worker thread, although this\nshould be done within reasonable bounds. On unix-like systems\n`Glib::Dispatcher` objects share a single common\npipe, which could in theory at least fill up on a very heavily loaded\nsystem running a program with a very large number of\n`Dispatcher` objects in use. Were the pipe to\nfill up before the receiver thread's main loop has had an opportunity\nto read from it to empty it, and the receiver thread attempt to emit\nand so write to it when it is in that condition, the receiver thread\nwould block on the write, so deadlocking. Where the receiver thread is\nto emit, a normal `sigc::signal`\nobject could of course be used instead.",
    "sha": "ed921b169fac039c",
-   "zh": null
+   "zh": "接收者线程和工作线程都可以调用Glib::Dispatcher的emit()方法，虽然此操作需要在合理的范围内进行。在类Unix系统上Glib::Dispatcher共享同一个公共管道，从理论上讲在一个负载很大的系统上运行使用很大数量Dispatcher对象的程序至少可以填满系统。如果在接收者线程的主循环有机会读取并清空管道之前，管道已填满且接收器线程在此时尝试对Dispatcher调用emit()并因此对管道进行写入，这样会导致死锁。当然在接收者线程想要发出信号可以使用普通的sigc::signal对象。"
   }
  ]
 }

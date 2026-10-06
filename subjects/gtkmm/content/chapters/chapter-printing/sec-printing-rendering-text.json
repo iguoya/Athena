@@ -8,13 +8,13 @@
    "type": "para",
    "text": "Text rendering is done using Pango.\nThe `Pango::Layout` object for printing should be created by calling\nthe PrintContext::create_pango_layout() method.\nThe `PrintContext` object also provides the page metrics,\nvia get_width() and get_height().\nThe number of pages can be set with\nPrintOperation::set_n_pages(). To actually render the\n Pango text in `on_draw_page`, get a\n`Cairo::Context` with\nPrintContext::get_cairo_context() and show the\n`Pango::LayoutLine`s that appear within the requested\npage number.",
    "sha": "a3ffbc4f84e09130",
-   "zh": null
+   "zh": "文本渲染是使用Pango完成的。Pango::Layout对象应通过调用PrintContext::create_pango_layout()方法来创建。PrintContext对象还通过get_width()和get_height()方法提供了页面范围。页数可以通过调用PrintOperation::set_n_pages()进行设置。要在on_draw_page中渲染文本，请使用PrintContext::get_cairo_context()获取Cairo::Context并显示在请求的页码中出现的Pango::LayoutLine。"
   },
   {
    "type": "para",
    "text": "See an example\nof exactly how this can be done.",
    "sha": "8a58a5fbd06a6b41",
-   "zh": null
+   "zh": "请看具体示例如何做到这点。"
   }
  ]
 }

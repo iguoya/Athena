@@ -8,19 +8,19 @@
    "type": "para",
    "text": "OK, you say, that's nice, but what if I want to create my own handlers to\nrespond when the user adjusts a `Range` widget or a\n`SpinButton`. To access the value of a\n`Gtk::Adjustment`, you can use the\nget_value() and set_value() methods:",
    "sha": "da35a3e8e9ce477f",
-   "zh": null
+   "zh": "如果你想要创建一个自己的处理函数以响应用户对Range或SpinButton部件的调整。你可以使用Gtk::Adjustment的get_value()和set_value()方法访问其值："
   },
   {
    "type": "para",
    "text": "As mentioned earlier, `Gtk::Adjustment` can emit signals.\nThis is, of course, how updates happen automatically when you share an\n`Adjustment` object between a\n`Scrollbar` and another adjustable widget; all adjustable\nwidgets connect signal handlers to their adjustment's\n`value_changed` signal, as can your program.",
    "sha": "11c247dbb6e3598c",
-   "zh": null
+   "zh": "如前所述，Gtk::Adjustment可以发射信号。而所有可调整部件都会将信号处理函数连接到其调整对象的value_changed信号你的程序也可以如此。这使得当Scrollbar和其他可调整部件共享一个Adjustment对象时，如果你操纵滚动条与其共享调整对象的其他可调整部件将会自动更新。"
   },
   {
    "type": "para",
    "text": "So, for example, if you have a `Scale` widget, and you\nwant to change the rotation of a picture whenever its value changes, you would\ncreate a signal handler like this:",
    "sha": "75335cdb3fc50a05",
-   "zh": null
+   "zh": "因此，例如，如果你有一个Scale部件并且你想要当调整值变更以后更改图片的旋转角度，你可以创建一个如下所示的信号处理函数："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "and connect it to the scale widget's adjustment like this:",
    "sha": "cea98161c766dab7",
-   "zh": null
+   "zh": "并且将其连接到比例部件的调整对象上，如下所示："
   },
   {
    "type": "code",
@@ -44,19 +44,19 @@
    "type": "para",
    "text": "What if a widget reconfigures the `upper` or\n`lower` fields of its `Adjustment`,\nsuch as when a user adds more text to a text widget?  In this case, it emits\nthe `changed` signal.",
    "sha": "f1df54d3e07520c8",
-   "zh": null
+   "zh": "如果一个部件重新配置其Adjustment的upper和lower字段（例如：用户向文本部件添加了更多的文本），那么它将发出changed信号。"
   },
   {
    "type": "para",
    "text": "`Range` widgets typically connect a handler to this\nsignal, which changes their appearance to reflect the change - for example, the\nsize of the slider in a scrollbar will grow or shrink in inverse proportion to\nthe difference between the `lower` and\n`upper` values of its\n`Adjustment`.",
    "sha": "80a0bcd427516251",
-   "zh": null
+   "zh": "Range部件通常会将处理程序连接到此信号，并更改其外观响应变更 - 例如：滚动条中的滑块将随着Adjustment中lower与upper的差值的增大逐渐变小，反之则逐渐增大。"
   },
   {
    "type": "para",
    "text": "You probably won't ever need to attach a handler to this signal, unless you're\nwriting a new type of range widget.",
    "sha": "94d9dc43b4ce2630",
-   "zh": null
+   "zh": "除非你正在编写新的范围部件，否则你可能永远不需要将处理程序连接到这个信号。"
   },
   {
    "type": "code",

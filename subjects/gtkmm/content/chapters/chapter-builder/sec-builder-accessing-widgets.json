@@ -26,19 +26,19 @@
    "type": "para",
    "text": "`Gtk::Builder` checks for a null pointer, and checks\nthat the widget is of the expected type, and will show warnings on the command\nline about these.",
    "sha": "c7a22f541880aba5",
-   "zh": null
+   "zh": "Gtk::Builder会进行空指针和部件类型检查，并在命令行上显示相关的警告。"
   },
   {
    "type": "para",
    "text": "Remember that you are not instantiating a widget with\nget_widget(), you are just obtaining a pointer to one that\nalready exists. You will always receive a pointer to the same instance when you\ncall get_widget() on the same\n`Gtk::Builder`, with the same widget name. The\nwidgets are instantiated during Gtk::Builder::create_from_file().",
    "sha": "05b05b047a4efcc3",
-   "zh": null
+   "zh": "请注意，你并没有使用get_widget()实例化部件，你只是获得了指向已经存在的部件的指针。当你在同一个Gtk::Builder上用同一个名称调用get_widget()你总是会得到指向同一实例的指针。部件在函数Gtk::Builder::create_from_file()执行期间被实例化。"
   },
   {
    "type": "para",
    "text": "get_widget() returns child widgets that are\n`manage()`ed (see the Memory\nManagement chapter), so they will be deleted when their parent\ncontainer is deleted. `Window`s (such as `Dialog`s)\ncannot be managed because they have no parent container, so you must delete them at\nsome point. The documentation of `Gtk::Builder` has more to say\nabout the memory management of different kinds of objects.",
    "sha": "fb288fea30641409",
-   "zh": null
+   "zh": "get_widget()返回一个经manage()处理的子部件（参阅内存管理章节），因此在删除其父部件时它们将被一并删除。无法管理Windows（例如Dialogs）因为它们没有父容器，所以你必须在某个时候删除它们。Gtk::Builder的文档中有更多关于对不同类型的对象如何进行内存管理的介绍。"
   },
   {
    "type": "para",

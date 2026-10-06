@@ -8,19 +8,19 @@
    "type": "para",
    "text": "The `PrintOperation` class has a method called\nset_default_page_setup() which selects the default\npaper size, orientation and margins. To show a page setup dialog from your\napplication, use the Gtk::run_page_setup_dialog() method,\nwhich returns a `Gtk::PageSetup` object with the chosen\nsettings. Use this object to update a `PrintOperation`\nand to access the selected `Gtk::PaperSize`,\n`Gtk::PageOrientation` and printer-specific margins.",
    "sha": "7ab6cba299e1057e",
-   "zh": null
+   "zh": "PrintOperation类有一个叫做set_default_page_setup()的方法，其用于选择默认的纸张尺寸、方向和页边距。要在你的应用程序中显示页面设置对话框，请使用Gtk::run_page_setup_dialog()方法，该方法返回一个Gtk::PageSetup对象，这个对象保存了所选的设置。使用这个对象更新PrintOperation并访问所选的Gtk::PaperSize、Gtk::PageOrientation和特定打印机的边距。"
   },
   {
    "type": "para",
    "text": "You should save the chosen `Gtk::PageSetup`\nso you can use it again if the page setup dialog is shown again.",
    "sha": "7bb31475de4ff102",
-   "zh": null
+   "zh": "你应该保存所选的Gtk::PageSetup以便在下次打开页面设置对话框的时候使用。"
   },
   {
    "type": "para",
    "text": "For instance,",
    "sha": "580ef7c3ff8e8ffb",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "The Cairo coordinate system, in the `draw_page` handler,\nis automatically rotated to the current page orientation. It is normally\nwithin the printer margins, but you can change that via the\nPrintOperation::set_use_full_page()\nmethod. The default measurement unit is device pixels. To select other units,\nuse the PrintOperation::set_unit() method.",
    "sha": "49b0f3db609e804f",
-   "zh": null
+   "zh": "在draw_page处理程序中，开罗坐标系会自动旋转到当前页的方向。它通常在打印机的页边距之内，不过你可以使用PrintOperation::set_use_full_page()方法来更改它。默认的度量单位是设备像素。要选择其他单位请使用PrintOperation::set_unit()方法。"
   }
  ]
 }

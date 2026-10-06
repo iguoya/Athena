@@ -8,7 +8,7 @@
    "type": "para",
    "text": "To find out what type of signal handler you can connect to a signal, you can\nlook it up in the reference documentation or the header file. Here's an example of a signal declaration you\nmight see in the gtkmm headers:",
    "sha": "7d129b7b504bd5d9",
-   "zh": null
+   "zh": "要找到你可以连接到信号的信号处理函数类型，你可以查看它的参考文档或者是头文件。这是一个你可能在gtkmm头文件中看到的信号声明示例："
   },
   {
    "type": "code",
@@ -20,13 +20,13 @@
    "type": "para",
    "text": "Other than the signal's name (`focus`), the template arguments are\nimportant to note here. The first argument, `bool`, is the type that\nthe signal handler should return; and the type within parentheses,\n`Gtk::DirectionType`, is the type of this signal's first, and only,\nargument. By looking at the reference documentation, you can\nsee the names of the arguments too.",
    "sha": "0adc39eb2b99b77c",
-   "zh": null
+   "zh": "除了信号名为focus之外，这里的膜拜参数很重要。第一个参数bool，表示信号处理函数的返回值应该是个bool类型。而括号中的Gtk::DirectionType表示信号所期望调用的函数的第一个也是唯一一个参数的类型。通过查看参考文档你还可以看到参数的名称。"
   },
   {
    "type": "para",
    "text": "The same principles apply for signals which have more arguments. Here's one\nwith three (taken from ``):",
    "sha": "6a0d3031169eee4c",
-   "zh": null
+   "zh": "对于接受期望调用的函数有更多参数的信号也是一样的阅读规则。以下声明取自："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "It follows the same form. The first type is `void`, so that should be\nour signal handler's return type.\nThe following three types are the argument types, in order. Our signal\nhandler's prototype could look like this:",
    "sha": "265e0d8baeefa2b3",
-   "zh": null
+   "zh": "以一样的阅读规则阅读后可知，该信号所期望调用的函数的返回值类型为void，括号内三种类型为函数的三个参数类型。所以我们的信号处理函数原型可能如下所示："
   },
   {
    "type": "code",

@@ -14,7 +14,7 @@
    "type": "para",
    "text": "The gtkmm module is defined in the\n      `gnome-suites-core-deps-latest.modules` moduleset. So edit your\n      `jhbuildrc` file and set your moduleset setting like so:",
    "sha": "3bee5ed57d184d51",
-   "zh": null
+   "zh": "gtkmm模块在文件gnome-suites-core-deps-latest.modules中的模块组(moduleset)定义。因此你需要按以下方式编辑你的jhbuildrc文件并设置你的模块组："
   },
   {
    "type": "code",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "After setting the correct moduleset, you need to tell\n      `jhbuild` which module or modules to build. To\n      build gtkmm and all of its dependencies, set `modules`\n      like so:",
    "sha": "6180be827a3514fe",
-   "zh": null
+   "zh": "正确设置模块组之后，你需要告诉jhbuild哪些模块需要构建。想要构建gtkmm以及所有相关的依赖项，请按如下所示设置modules："
   },
   {
    "type": "code",
@@ -38,13 +38,13 @@
    "type": "para",
    "text": "You can build several modules by setting the\n      `modules` variable to a meta-package, e.g.\n      `meta-gnome-core`, or listing more than one module name.\n      The `modules` variable specifies which modules will be\n      built when you don't explicitly specify anything on the command line. You\n      can always build a different moduleset later by specifying it on the\n      commandline (e.g. `jhbuild build gtkmm`).",
    "sha": "bbc1a14d395ec8ed",
-   "zh": null
+   "zh": "你可以通过设置modules为元包(meta-package)来构建多个模块。当你未在命令行上指定任何内容的时候，modules变量将指定构建哪些模块。你始终可以用命令行指定其他模块组来构建其他模块组（例如：jhbuild build gtkmm）。"
   },
   {
    "type": "para",
    "text": "By default, `jhbuild`'s configuration is\n        configured to install all software built with\n        `jhbuild` under the\n        `~/jhbuild/install` prefix. You can choose a different\n        prefix, but it is recommended that you keep this prefix different from\n        other software that you've installed (don't set it to\n        `/usr`!) If you've followed the jhbuild instructions\n        then this prefix belongs to your user, so you don't need to run jhbuild\n        as `root`.",
    "sha": "8f5f974ac7e7695a",
-   "zh": null
+   "zh": "在默认情况下，jhbuild被配置为在~/jhbuild/install前缀安装所有由jhbuild构建的软件。你可以选择其他的前缀，但建议你选择的新前缀与旧前缀保持不同，且不将前缀设置为/usr。如果你遵循jhbuild的说明进行操作，该前缀属于你的用户，你将无需以root用户权限运行jhbuild。"
   },
   {
    "type": "para",

@@ -8,37 +8,37 @@
    "type": "para",
    "text": "In this step, we make our application show the contents of all the files that it is\ngiven on the commandline.",
    "sha": "885048ac3d41a8d8",
-   "zh": null
+   "zh": "在这一步中，我们使我们的应用程序显示由命令行参数给定的文件的所有内容。"
   },
   {
    "type": "para",
    "text": "To this end, we add a data member to our application window and keep a pointer to the\n`Gtk::Stack` there. We get the pointer with a call to\nGtk::Builder::get_widget() in the application window's constructor.",
    "sha": "3129d0535ce63a90",
-   "zh": null
+   "zh": "为此，我们向我们的应用程序窗口中添加一个数据成员，此保持一个指向Gtk::Stack的指针。我们通过在应用程序窗口的构造函数中调用Gtk::Builder::get_widget()获得指向该子部件的指针。"
   },
   {
    "type": "para",
    "text": "Now we revisit the ExampleAppWindow::open_file_view() method\nthat is called for each commandline argument, and construct a `Gtk::TextView`\nthat we then add as a page to the stack.",
    "sha": "402ed7369f1904a2",
-   "zh": null
+   "zh": "现在我们重访对每个命令行参数都会调用的ExampleAppWindow::open_file_view()成员函数，并构造一个Gtk::TextView然后将其作为页面添加到Gtk::Stack中。"
   },
   {
    "type": "para",
    "text": "Lastly, we add a `Gtk::StackSwitcher` to the titlebar area\nin the ui file, and we tell it to display information about our stack.",
    "sha": "bdc79451bd58579e",
-   "zh": null
+   "zh": "最后，我们将Gtk::StackSwitcher添加到UI文件的标题栏区域，并告诉它如何显示Gtk::Stack的相关信息。"
   },
   {
    "type": "para",
    "text": "The stack switcher gets all its information it needs to display tabs from\nthe stack that it belongs to. Here, we are passing the label to show for\neach file as the last argument to the Gtk::Stack::add()\nmethod.",
    "sha": "2e3552d86d65b0c8",
-   "zh": null
+   "zh": "堆切换器(StackSwitcher)从其所属的堆(Stack)中获取其所需的关于显示选项卡的相关信息。在这，作为Gtk::Stack::add()方法的最后一个参数，我们为每个显示的文件传递一个标签。"
   },
   {
    "type": "para",
    "text": "Our application is beginning to take shape:",
    "sha": "f7f4bd99df6f7fb9",
-   "zh": null
+   "zh": "我们的应用程序开始成形："
   },
   {
    "type": "figure",

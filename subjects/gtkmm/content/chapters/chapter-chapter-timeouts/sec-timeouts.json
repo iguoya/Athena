@@ -8,7 +8,7 @@
    "type": "para",
    "text": "You may be wondering how to make gtkmm do useful work while it's idling along. Happily,\nyou have several options. Using the following methods you can create a timeout\nmethod that will be called every few milliseconds.",
    "sha": "14e4be446c177d4c",
-   "zh": null
+   "zh": "你可能想知道如何使gtkmm在空闲的时候做一些有用的工作。幸运的是你有几种选择。你可以创建一个每几毫秒就调用的超时方法。"
   },
   {
    "type": "code",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "The first argument is a `slot` you wish to have called\nwhen the timeout occurs. The second argument is the number of milliseconds\nbetween calls to that method. You receive a\n`sigc::connection` object that can be used to deactivate\nthe connection using its disconnect() method:",
    "sha": "17f59bff6bc3b2b5",
-   "zh": null
+   "zh": "第一个参数是超时时你希望被调用的slot。第二个参数是调用该方法的时间间隔（多少毫秒）。你将收到一个sigc::connection对象，可以在该对象上调用disconnect()方法断开连接。"
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Another way of destroying the connection is your signal handler.\nIt has to be of the type `sigc::slot`.\nAs you see from the definition your signal handler has to return a value of\nthe type `bool`. A definition of a sample method might\nlook like this:",
    "sha": "d02479084be08a7b",
-   "zh": null
+   "zh": "破坏连接的另一种方法是通过你的信号处理函数的返回值。其类型必须是sigc::slot。从定义可以看出信号处理函数必须返回一个bool类型的值。示例方法的定义可能如下所示："
   },
   {
    "type": "code",
@@ -44,13 +44,13 @@
    "type": "para",
    "text": "You can stop the timeout method by returning `false` from\nyour signal handler. Therefore, if you want your\nmethod to be called repeatedly, it should return `true`.",
    "sha": "4757944de7a8e1a1",
-   "zh": null
+   "zh": "你可以通过让你的信号处理函数返回false以停止此超时方法。因此，如果你还想重复调用此方法，则你需要让信号处理函数返回true。"
   },
   {
    "type": "para",
    "text": "Here's an example of this technique:",
    "sha": "3e3e3085cc2eafb6",
-   "zh": null
+   "zh": "这是此技术的示例："
   },
   {
    "type": "para",

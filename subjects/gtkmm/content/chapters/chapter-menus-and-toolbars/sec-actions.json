@@ -8,19 +8,19 @@
    "type": "para",
    "text": "First create the `Gio::SimpleAction`s and add them to a\n`Gio::SimpleActionGroup`, with\nGio::ActionMap::add_action().\n(`Gio::ActionMap` is a base class of\n`Gio::SimpleActionGroup`.) Then add the action group to\nyour window with Gtk::Widget::insert_action_group().",
    "sha": "c6df0e384a32dd1f",
-   "zh": null
+   "zh": "首先创建Gio::SimpleAction并使用Gio::ActionMap::add_action()方法将其加入Gio::SimpleActionGroup中（Gio::ActionMap是Gio::SimpleActionGroup的基类。）。然后将动作组使用Gtk::Widget::insert_action_group()加入到你的窗口中。"
   },
   {
    "type": "para",
    "text": "The arguments to add_action() specify the action's\nname, which is used in the menu items and toolbar buttons. You can also specify\na signal handler when calling add_action(). This signal\nhandler will be called when the action is activated via either a menu item or\na toolbar button.",
    "sha": "ec85369ba3b5ffc8",
-   "zh": null
+   "zh": "add_action()的参数用于指定动作名，该名称由菜单项和工具栏按钮使用。你还可以在调用add_action()时指定信号处理函数。在菜单项或工具栏按钮被激活的时候此信号处理函数被调用。"
   },
   {
    "type": "para",
    "text": "For instance:",
    "sha": "e7fa29a18b75e39f",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "If you use an `Gtk::ApplicationWindow`, you don't have to\ncreate your own action group. `Gio::ActionGroup` and\n`Gio::ActionMap` are base classes of\n`Gtk::ApplicationWindow`.",
    "sha": "489a0b43da609826",
-   "zh": null
+   "zh": "如果你使用Gtk::ApplicationWindow，则你不需要自己创建动作组。因为Gio::ActionGroup和Gio::ActionMap是Gtk::ApplicationWindow的基类。"
   }
  ]
 }

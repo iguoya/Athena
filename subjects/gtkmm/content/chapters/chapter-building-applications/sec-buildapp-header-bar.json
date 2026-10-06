@@ -8,13 +8,13 @@
    "type": "para",
    "text": "Our application already uses a `Gtk::HeaderBar` instead of\na 'normal' window titlebar. The header bar is a direct child of the window,\nand its type is `titlebar`. This is set in the\n`window.ui` file.",
    "sha": "9a3cb0729ee80da7",
-   "zh": null
+   "zh": "我们的应用程序使用了Gtk::HeaderBar而不是普通的窗口标题栏。标题栏是窗口的直接子项，其类型为titlebar。这些由window.ui文件进行设置。"
   },
   {
    "type": "para",
    "text": "Here we'll just make two small changes to the header bar. The `decoration-layout`\nproperty is set in the `window.ui` file, to show only the close\nbutton, and hide the minimize and maximize buttons. We also include an icon in the\nresource file, and set up this icon as the window icon.\nIn `ExampleAppWindow`'s constructor:",
    "sha": "7ab524c06aee6218",
-   "zh": null
+   "zh": "在这里我们对标题栏进行了两个小的更改。decoration-layout属性在window.ui文件中设置，使标题栏只显示关闭按钮，并隐藏最小化和最大化按钮。我们还在资源文件中包含了一个图标，并将其设置为窗口图标。在ExampleAppWindow的构造函数中："
   },
   {
    "type": "code",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Here is how the application now looks:",
    "sha": "d9e1f7748b8fda65",
-   "zh": null
+   "zh": "现在应用程序看起来如下所示："
   },
   {
    "type": "figure",
@@ -39,7 +39,7 @@
    "type": "para",
    "text": "The `window.ui` file sets a header bar title, but this title is not shown.\nThat's because the stack switcher is a child of type `title`. The stack\nswitcher becomes a custom title that hides the title label.",
    "sha": "f2e7f3cfdc1fa57b",
-   "zh": null
+   "zh": "window.ui文件设置了标题栏标题，但是此标题未显示。这是因为堆切换器是title的子类型。此时堆切换器成为了自定义标题并将正常的标题标签隐藏。"
   },
   {
    "type": "para",

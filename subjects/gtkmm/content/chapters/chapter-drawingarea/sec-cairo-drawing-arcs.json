@@ -14,7 +14,7 @@
    "type": "para",
    "text": "To draw an ellipse, you can scale the current transformation matrix\n          by different amounts in the X and Y directions. For example, to draw\n          an ellipse with center at `x`, `y`\n          and size `width`, `height`:",
    "sha": "59c0dd183c4d1d24",
-   "zh": null
+   "zh": "想要绘制椭圆的话，你可以在X和Y方向用不同的量缩放当前的变换矩阵。例如，如果你想要绘制一个以x，y为中心，大小为width，height的椭圆："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Here's an example of a simple program that draws an arc, a circle\n              and an ellipse into a drawing area.",
    "sha": "46659762832fc821",
-   "zh": null
+   "zh": "这是一个简单的示例程序，它在绘图区域绘制了一个圆弧、一个圆和一个椭圆。"
   },
   {
    "type": "figure",
@@ -51,25 +51,25 @@
    "type": "para",
    "text": "There are a couple of things to note about this example code.\n              Again, the only real difference between this example and the\n              previous ones is the on_draw()\n              function, so we'll limit our focus to that function. In\n              addition, the first part of the function is nearly identical to\n              the previous examples, so we'll skip that portion.",
    "sha": "9e3cd2f77db91d7a",
-   "zh": null
+   "zh": "关于这个示例代码有几件事需要注意。首先这个示例与之前的示例的区别也只在on_draw()函数中，因此我们重点接受这个函数。另外，函数的第一部分与之前的也几乎一样，所以我们将会跳过该部分。"
   },
   {
    "type": "para",
    "text": "Note that in this case, we've expressed nearly everything in\n              terms of the height and width of the window, including the width\n              of the lines. Because of this, when you resize the window,\n              everything scales with the window. Also note that there are\n              three drawing sections in the function and each is wrapped with a\n              save()/restore() pair\n              so that we're back at a known state after each drawing.",
    "sha": "91764047dd410e19",
-   "zh": null
+   "zh": "请注意，在这个情况下我们几乎使用窗口的宽和高表示了包括线条宽度在内的所有的内容（通过缩放用户坐标系）。所以当我们调整窗口大小的时候，所有的内容都会随着窗口一同缩放。还请注意，函数中有三个进行绘图的部分都用一组save()/restore()包裹，以便我们在每次绘完图都能返回已知状态。"
   },
   {
    "type": "para",
    "text": "The section for drawing an arc introduces one new function,\n              close_path(). This function will in effect\n              draw a straight line from the current point back to the first\n              point in the path. There is a significant difference between\n              calling close_path() and manually drawing a\n              line back to the starting point, however. If you use\n              close_path(), the lines will be nicely\n              joined together. If you use line_to()\n              instead, the lines will end at the same point, but Cairo won't do\n              any special joining.",
    "sha": "611914e344bf3e7c",
-   "zh": null
+   "zh": "在绘制圆弧的部分介绍了一个新的函数：close_path()。这个函数的效果实际上就是在当前点和路径的第一个点之间画一条直线。但调用close_path()所绘制的线条和使用line_to()手工绘制一条回到起点的线条会有很大的不同。如果你使用close_path()，则这些线将会很好的连接到一起。如果你改用line_to()，那么这些线将在同一个点结束但是开罗不会对此做任何特殊的连接。"
   },
   {
    "type": "para",
    "text": "The function\n                  Cairo::Context::arc_negative() is\n                  exactly the same as\n                  Cairo::Context::arc() but the angles go\n                  the opposite direction.",
    "sha": "803d984e09b964e5",
-   "zh": null
+   "zh": "函数Cairo::Context::arc_negative()的功能与Cairo::Context::arc()函数完全一致，但是他们的绘制方向是相反的。"
   }
  ]
 }

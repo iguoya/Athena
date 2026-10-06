@@ -8,7 +8,7 @@
    "type": "para",
    "text": "The model for a ComboBox can be defined and filled exactly as for a `TreeView`. For instance, you might derive a ComboBox class with one integer and one text column, like so:",
    "sha": "c12f978e3ebefba9",
-   "zh": null
+   "zh": "可以像TreeView一样定义和填充组合框的模型。你可以与如下所示的一样派生具有一个整数行和一个文本行的组合框类："
   },
   {
    "type": "code",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "After appending rows to this model, you should provide the model to the `ComboBox` with the set_model() method. Then use the pack_start() or pack_end() methods to specify what columns will be displayed in the ComboBox. As with the TreeView you may either use the default cell renderer by passing the `TreeModelColumn` to the pack methods, or you may instantiate a specific `CellRenderer` and specify a particular mapping with either add_attribute() or set_cell_data_func(). Note that these methods are in the `CellLayout` base class.",
    "sha": "364f014900e0510f",
-   "zh": null
+   "zh": "将行追加到此模型中后，你应该使用set_model()方法将模型提供给ComboBox。然后使用pack_start()或pack_end()方法指定哪个行将要被组合框显示。和树状视图一样，你可以通过将TreeModelColumn传递给pack方法来使用默认的单元格渲染器，也可以实例化一个特定的CellRenderer并使用add_attribute()或set_cell_data_func()指定具体映射到哪行。请注意这些方法在CellLayout基类中。"
   }
  ]
 }

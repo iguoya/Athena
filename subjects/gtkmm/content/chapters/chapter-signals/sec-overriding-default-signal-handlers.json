@@ -8,31 +8,31 @@
    "type": "para",
    "text": "So far we've told you to perform actions in\nresponse to button-presses and the like by handling signals.\nThat's certainly a good way to do things, but it's not the only\nway.",
    "sha": "56d4d82d00dd8d35",
-   "zh": null
+   "zh": "到现在为止，你已经学会了通过将自定义的信号处理函数连接到信号来响应按钮按下等动作。这是一种好方法，但不是唯一的方法。"
   },
   {
    "type": "para",
    "text": "Instead of laboriously connecting signal handlers to signals,\nyou can simply make a new class which inherits from a widget - say, a\nButton - and then override the default signal handler, such as Button::on_clicked(). This can be a\nlot simpler than hooking up signal handlers for everything.",
    "sha": "94483a170330582c",
-   "zh": null
+   "zh": "你还可以创建一个从部件继承而来的新类，然后覆盖默认的信号处理函数（例如，Button::on_clicked()），这样你就可以省去将信号处理函数连接到信号的步骤。"
   },
   {
    "type": "para",
    "text": "Subclassing isn't always the best way to accomplish\nthings. It is only useful when you want the widget to handle its own signal by itself. If you want some other class to handle the signal then you'll need to connect a separate handler. This is even more true if you want several objects to handle the same signal, or if you want one signal handler to respond to the same signal from different objects.",
    "sha": "38e52c6ad78388cc",
-   "zh": null
+   "zh": "子类化并不是银弹。它只在你只希望由部件自身来处理自己的信号时才好用。如果你需要用其他的类来处理信号，你还是需要为此将函数连接到目标信号上。这在你需要用多个对象处理同一个信号或者需要一个信号处理函数处理不同的对象的信号的时候会很不方便。"
   },
   {
    "type": "para",
    "text": "gtkmm classes are designed with overriding in mind; they contain\nvirtual member methods specifically intended to be overridden.",
    "sha": "e3033cef5f3f5c0b",
-   "zh": null
+   "zh": "gtkmm类在设计的时候已经考虑到了覆写；它们包含了专门用于被覆写的虚成员函数。"
   },
   {
    "type": "para",
    "text": "Let's look at an example of overriding:",
    "sha": "7db367957c52ec98",
-   "zh": null
+   "zh": "让我们看一个覆写的例子："
   },
   {
    "type": "code",

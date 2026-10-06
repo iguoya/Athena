@@ -14,7 +14,7 @@
    "type": "para",
    "text": "These interactions arise from the fact that, amongst other things, a\nclass inheriting from `sigc::trackable` will, via\nthat inheritance, have a `std::list` object\nkeeping track of slots created by calls to\n`sigc::mem_fun()` representing any of its\nnon-static methods (more particularly it keeps a list of callbacks\nwhich will null the connected slots on its destruction). Each\n`sigc::slot` object also keeps, via\n`sigc::slot_rep`, its own\n`sigc::trackable` object to track any\n`sigc::connection` objects which it needs to\ninform about its demise, and also has a function to deregister itself\nfrom any `sigc::trackable` on disconnection or\ndestruction. `sigc::signal` objects also keep\nlists of slots, which will be updated by a call to their\nconnect() method or calls to any\n`sigc::connection` object relating to such a\nconnection.",
    "sha": "362c0a91cee214c7",
-   "zh": null
+   "zh": "这些交互产生了以下事实：从sigc::trackable继承的类将从该继承获得一个std::list对象，该对象用于对调用sigc::mem_fun()所创建的槽（它表示任意非静态成员函数）进行跟踪（更特别的是它还保留了一个回调列表，在其被销毁时将已连接的槽置空）。每个sigc::slot通过sigc::slot_rep保留其自己的sigc::trackable对象，用以跟踪任何它需要通知其已消亡的sigc::connection对象，并且具有在任何sigc::trackable断开连接或销毁时注销自身的能力。sigc::signal对象还保留了槽列表，这个列表将通过调用它的connect()方法或任何与该连接有关的sigc::connection对象进行更新。"
   },
   {
    "type": "heading",
@@ -26,43 +26,43 @@
    "type": "para",
    "text": "This requires a number of rules to be observed when writing\nmulti-threaded programs using gtkmm. These are set out below, but\none point to note is that extra care is required when deriving classes\nfrom `sigc::trackable`, because the effects are\nunintuitive (see particularly points 4 and 5 below).",
    "sha": "6b3700e78fdd5fc7",
-   "zh": null
+   "zh": "在使用gtkmm编写多线程程序时需要遵守许多规则。这些规则下下面列出，但要注意的一点是从sigc::trackable派生类时需要格外小心，因为效果很不直观（特别是下述4、5条）。"
   },
   {
    "type": "para",
    "text": "Use `Glib::Dispatcher` to invoke gtkmm functions\nfrom worker threads (this is dealt with in more detail in the next\nsection).",
    "sha": "0e9b4200920f8884",
-   "zh": null
+   "zh": "使用Glib::Dispatcher在工作线程中调用gtkmm函数（这点将在下一节详细介绍）"
   },
   {
    "type": "para",
    "text": "A `sigc::signal` object should be regarded as\nowned by the thread which created it. Only that thread should connect\na `sigc::slot` object to the signal object, and\nonly that thread should emit() or call\noperator()() on the signal, or null any\nconnected `sigc::slot` object. It follows\n(amongst other things) that any signal object provided by a gtkmm\nwidget should only be operated on in the main GUI thread and any\nobject deriving from `sigc::trackable` having its\nnon-static methods referenced by slots connected to the signal object\nshould only be destroyed in that thread.",
    "sha": "ce2e18f629aff84a",
-   "zh": null
+   "zh": "sigc::signal对象被创建其的线程所拥有。只有该线程应该将sigc::slot对象连接到信号对象，并且只有该线程应该在emit()信号或在信号上调用operator()()或是将已连接的sigc::slot对象置空。因此任何由gtkmm部件提供的信号对象都只应该在主GUI线程进行操作，以及任何从sigc::trackable派生的对象（其非静态方法由连接到信号对象的槽引用）都应该在该线程中销毁。"
   },
   {
    "type": "para",
    "text": "Any `sigc::connection` object should be regarded\nas owned by the thread in which the method returning the\n`sigc::connection` object was called. Only that\nthread should call `sigc::connection` methods on\nthe object.",
    "sha": "38b974ca7607d159",
-   "zh": null
+   "zh": "任何sigc::connection对象都应视线程的拥有者在此线程调用了返回sigc::connection对象的方法。只有该线程才应在此对象上调用sigc::connection方法。"
   },
   {
    "type": "para",
    "text": "A `sigc::slot` object created by a call to\n`sigc::mem_fun()` which references a method of a\nclass deriving from `sigc::trackable` should\nnever be copied to another thread, nor destroyed by a different thread\nthan the one which created it.",
    "sha": "2302b5d4f70f4a8f",
-   "zh": null
+   "zh": "通过调用sigc::mem_fun()函数创建的sigc::slot对象具有由sigc::trackable所派生类的成员函数的引用，请勿将其复制到另一个线程中，也不要让除创建线程以外的线程销毁它。"
   },
   {
    "type": "para",
    "text": "If a particular class object derives from\n`sigc::trackable`, only one thread should create\n`sigc::slot` objects representing any of the\nclass's non-static methods by calling\n`sigc::mem_fun()`. The first thread to create such\na slot should be regarded as owning the relevant object for the\npurpose of creating further slots referencing *any*\nof its non-static methods using that function, or nulling those slots\nby disconnecting them or destroying the trackable object.",
    "sha": "1476629a8d7e78c4",
-   "zh": null
+   "zh": "如果从sigc::trackable派生一个特定的类对象，只应有一个线程通过调用sigc::mem_fun()创建代表该类任意非静态成员函数的sigc::slot对象。第一个创建这样的槽的线程被视为拥有相关对象的线程。这个线程可以对该类的任意非静态成员函数使用该函数以创建槽，或者在sigc::trackable对象断开连接和被销毁时将那些槽无效化。"
   },
   {
    "type": "para",
    "text": "Although `glib` is itself thread-safe, any\n`glibmm` wrappers which use\n`libsigc++` will not be. So for example, only\nthe thread in which a main loop runs should call\nGlib::SignalIdle::connect(),\nGlib::SignalIO::connect(),\nGlib::SignalTimeout::connect(),\nGlib::SignalTimeout::connect_seconds\nfor that main loop, or manipulate any\n`sigc::connection` object returned by them.",
    "sha": "df0af9b9db1d895c",
-   "zh": null
+   "zh": "尽管glib自身是线程安全的，但是任何使用了libsigc++的glibmm封装都不会是线程安全的。因此只有在运行主循环的线程的主循环中才能调用Glib::SignalIdle::connect()、Glib::SignalIO::connect()、Glib::SignalTimeout::connect()、Glib::SignalTimeout::connect_seconds或是处理由它们返回的sigc::connection对象。"
   },
   {
    "type": "para",

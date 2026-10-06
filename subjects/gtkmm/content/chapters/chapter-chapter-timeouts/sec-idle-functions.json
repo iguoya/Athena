@@ -8,7 +8,7 @@
    "type": "para",
    "text": "If you want to specify a method that gets called when nothing else is happening, use the following:",
    "sha": "80794e09ef25c200",
-   "zh": null
+   "zh": "如果你想要指定一个在无事发生时调用的方法，请使用以下函数："
   },
   {
    "type": "code",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "This causes gtkmm to call the specified method whenever nothing else is\nhappening. You can add a priority (lower numbers are higher priorities). There are two ways to remove the signal handler: calling\ndisconnect() on the\n`sigc::connection` object, or returning\n`false` in the signal handler, which should be declared\nas follows:",
    "sha": "1ad554d2c70028cc",
-   "zh": null
+   "zh": "这会导致gtkmm在无事发生时调用指定的方法。你可以为其添加优先级（数字越小优先级越高）。删除该信号处理程序的方法有两个：在sigc::connection对象上调用disconnect()、在信号处理程序中返回false，信号处理程序的声明应如下所示："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Since this is very similar to the methods above this explanation should\nbe sufficient to understand what's going on. However, here's a little example:",
    "sha": "97f0bde77026a9b2",
-   "zh": null
+   "zh": "这与前一小节的方法极其类似，所以在此不再进行过多的解释。以下是个小例子："
   },
   {
    "type": "para",
@@ -44,13 +44,13 @@
    "type": "para",
    "text": "This example points out the difference of idle and timeout methods a\nlittle. If you need methods that are called periodically, and speed\nis not very important, then you want timeout methods. If\nyou want methods that are called as often as possible (like\ncalculating a fractal in background), then use idle methods.",
    "sha": "e6bad7ae0cf0e6b4",
-   "zh": null
+   "zh": "这个例子指出了空闲与超时方法的微小区别。如果你需要定期调用，并且速度并不重要则你应该使用超时方法。如果你需要尽可能多的调用方法（例如在后台计算分形）那你应该使用空闲方法。"
   },
   {
    "type": "para",
    "text": "Try executing the example and increasing the system load. The upper\nprogress bar will increase steadily; the lower one will slow down.",
    "sha": "c728a06ad847bb01",
-   "zh": null
+   "zh": "尝试执行此示例并逐渐增加系统的负载。上方的进度条将稳定的逐渐增加；下方的则会增加的越来越慢。"
   }
  ]
 }

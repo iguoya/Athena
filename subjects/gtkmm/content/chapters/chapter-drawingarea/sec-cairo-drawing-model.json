@@ -8,19 +8,19 @@
    "type": "para",
    "text": "The basic concept of drawing in Cairo involves defining 'invisible'\n        paths and then stroking or filling them to make them visible.",
    "sha": "e5f639f0376c4acd",
-   "zh": null
+   "zh": "开罗的基本概念包括定义'不可见'路径然后描绘(stroking)或者填充(filling)它们使其可见。"
   },
   {
    "type": "para",
    "text": "To do any drawing in gtkmm with Cairo, you must first get a\n        `Cairo::Context` object. This class holds all of the graphics state parameters that\n        describe how drawing is to be done. This includes information such as\n        line width, color, the surface to draw to, and many other things. This\n        allows the actual drawing functions to take fewer arguments to simplify\n        the interface. Usually, you use the `Cairo::Context`\n        that you get as input data to the draw function that you set with the call to\n        set_draw_func(). It's also possible to create\n        a `Cairo::Context` by calling the\n        Gdk::Surface::create_cairo_context() and\n        Gdk::CairoContext::cairo_create() functions.\n        Since Cairo contexts are reference-counted objects, cairo_create()\n        returns a `Cairo::RefPtr` object.\n        (Note the difference between `Gdk::CairoContext`\n        and `Cairo::Context`.)",
    "sha": "801ac5850f3ce41d",
-   "zh": null
+   "zh": "要在gtkmm中使用开罗进行绘制，必须先获取Cairo::Context对象。这个类保存了所有描述如何进行绘制的图形状态参数。状态参数包含了诸如线宽、颜色、要绘制的表面和许多其他内容的信息。这允许实际上的绘图函数只需要使用较少的参数从而简化接口。通常你使用set_draw_func()设置的绘图函数将Cairo::Context作为输入数据。也可以通过调用Gdk::Surface::create_cairo_context()和Gdk::CairoContext::cairo_create()函数创建一个Cairo::Context。由于Cairo::Context是一个使用引用计数的对象，因此cairo_create()返回Cairo::RefPtr对象（请注意区分Gdk::CairoContext与Cairo::Context。）。"
   },
   {
    "type": "para",
    "text": "The following example shows  how to set up a Cairo context with a\n        foreground color of red and a width of 2. Any drawing functions that\n        use this context will use these settings.",
    "sha": "f7b0af566731e14d",
-   "zh": null
+   "zh": "以下示例显示如何设置一个开罗上下文(Cairo Context)的前景色为红色且宽度为2。任何使用该上下文的绘图函数都将使用这些设置。"
   },
   {
    "type": "code",
@@ -32,13 +32,13 @@
    "type": "para",
    "text": "Each `Cairo::Context` is associated with a\n        particular `Gdk::Surface`, so the first line of the\n        above example creates a `Gtk::DrawingArea` widget\n        and the next two lines use its associated `Gdk::Surface`\n        to create a `Cairo::Context` object. The final\n        two lines change the graphics state of the context.",
    "sha": "4a3dc2afb044b8d9",
-   "zh": null
+   "zh": "每一个Cairo::Context都有一个特定的Gdk::Surface与之相关联，因此上面示例的第一行创建了一个Gtk::DrawingArea部件，接下来两行使用与其相关联的Gdk::Surface创建一个Cairo::Context对象。最后两行更改上下文的图形状态。"
   },
   {
    "type": "para",
    "text": "There are a number of graphics state variables that can be set for a\n        Cairo context. The most common context attributes are color (using\n        set_source_rgb() or\n        set_source_rgba() for translucent colors), line\n        width (using set_line_width()), line dash pattern\n        (using set_dash()), line cap style (using\n        set_line_cap()), and line join style (using\n        set_line_join()), and font styles (using\n        set_font_size(),\n        set_font_face() and others).\n        There are many other settings as well, such as transformation matrices,\n        fill rules, whether to perform antialiasing, and others. For further\n        information, see the cairomm API documentation.",
    "sha": "eb89251612d9c1d3",
-   "zh": null
+   "zh": "可以为开罗上下文设置许多的图形状态。最常见的上下文属性是颜色（使用set_source_rgb()或需要半透明颜色的时候用set_source_rgba()）、线宽（使用set_line_width()）、虚线模式（使用set_dash()）、线帽样式（使用set_line_cap()）、线条连接样式（使用set_line_join()）以及字体样式（使用set_font_size()）。还有许多其他设置，例如变换矩阵、填充规则、是否执行抗锯齿规则等。更多详情请参阅cairommAPI文档。"
   },
   {
    "type": "para",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "It is good practice to put all modifications to the graphics state\n            between save()/restore()\n            function calls. For example, if you have a function that takes a\n            `Cairo::Context` reference as an argument, you\n            might implement it as follows:",
    "sha": "3461557a2c24fe77",
-   "zh": null
+   "zh": "好的做法是在一组save()/restore()调用之间进行所有对图形状态的更改。例如，如果你有一个将Cairo::Context的引用作为参数的函数，你可以这样实现它："
   },
   {
    "type": "code",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "The draw function that you set with a call to set_draw_func()\n        is called with a Cairo context that you shall use for drawing in the\n        `Gtk::DrawingArea` widget. It is not necessary to\n        save and restore this Cairo context in the draw function.",
    "sha": "3f28506abcf699ae",
-   "zh": null
+   "zh": "你通过调用set_draw_func()所设置的绘图函数是由你要绘制的Gtk::DrawingArea部件用开罗上下文调用的。所以你不需要在绘图函数中对此开罗上下文进行保存和恢复（部件会在调用绘图函数时做保存与恢复）。"
   }
  ]
 }

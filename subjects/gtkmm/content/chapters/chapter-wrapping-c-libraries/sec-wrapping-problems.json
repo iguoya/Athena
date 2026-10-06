@@ -8,7 +8,7 @@
    "type": "para",
    "text": "You are likely to encounter some problems in the library that you are wrapping, particularly if it is a new project. Here are some common problems, with solutions.",
    "sha": "bc59086231aadd7a",
-   "zh": null
+   "zh": "你可能会在封装库的过程中遇到一些问题。特别是它是一个新项目的时候。以下是一些常见问题以及解决方案。"
   },
   {
    "type": "heading",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "By convention, structs are declared in glib/GTK-style headers like so:",
    "sha": "67fb78487dde1a60",
-   "zh": null
+   "zh": "按照约定，glib/GTK风格的头文件中结构体声明应如下所示："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "The extra typedef allows the struct to be used in a header without including\n  its full definition, simply by predeclaring it, by repeating that typedef.\n  This means that you don't have to include the C library's header in your C++ header,\n  thus keeping it out of your public API. `gmmproc` assumes that\n  this technique was used, so you will see compiler errors if that is not the case.",
    "sha": "92880a0214b5173f",
-   "zh": null
+   "zh": "额外的typedef允许在头文件中使用该结构体而不需要包含其完整定义，只需要通过重复这个typedef预先声明它即可。这意味着你不需要在你的C++头文件中包含C库的头文件。，从而将其排除在你的公共API之外。gmmproc假定使用了这个技术，因此如果没使用这种技术就会遇到编译错误。"
   },
   {
    "type": "para",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "This is easy to correct in the C library, so do send a patch to the relevant maintainer.",
    "sha": "818aef21b3d9639b",
-   "zh": null
+   "zh": "这很容易在C库中修复，你可以向相关库的维护者发送补丁。"
   },
   {
    "type": "heading",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "At the least, the `_new()` function should not use any\n    private API (functions that are only in a .c file). Even when there are no\n    functions, we can sometimes reimplement 2 or 3 lines of code in a\n    `_new()` function as long as those lines of code use API\n    that is available to us.",
    "sha": "e8c0c63f922aabbc",
-   "zh": null
+   "zh": "_new()函数不应该使用任何只在.c文件中的私有API。即使没有对应的函数，有时我们也可以在_new()函数中重新实现2到3行代码，只要这些行使用的API是可用的。"
   },
   {
    "type": "para",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "Adding properties, and ensuring that they interact properly with each\n    other, is relatively difficult to correct in the C library, but it is\n    possible, so do file a bug and try to send a patch to the relevant\n    maintainer.",
    "sha": "123613e13ed4fc66",
-   "zh": null
+   "zh": "在C库中，添加属性并确保它们之间正确的进行交互相对来说比较困难。但还是能做到的。若你发现了一个bug请联系相关的维护人员并向其提供相关信息以便尽快修复该bug。"
   }
  ]
 }

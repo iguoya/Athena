@@ -8,7 +8,7 @@
    "type": "para",
    "text": "The View is the actual widget (`Gtk::TreeView`) that\ndisplays the model (`Gtk::TreeModel`) data and allows the\nuser to interact with it. The View can show all of the model's columns, or just\nsome, and it can show them in various ways.",
    "sha": "3ba280cdb29c441b",
-   "zh": null
+   "zh": "视图实际上是一个用于显示模型(Gtk::TreeModel)数据并允许用户与其交互的部件(Gtk::TreeView)。视图可以显示模型的所有列也可以只显示一部分列还可以以不同的方式显示列。"
   },
   {
    "type": "para",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "You can specify a `Gtk::TreeModel` when constructing the\n`Gtk::TreeView`, or you can use the\nset_model() method, like so:",
    "sha": "13eb46a5790ab20d",
-   "zh": null
+   "zh": "你可以在构造Gtk::TreeView的时候为其指定一个Gtk::TreeModel，也可以构筑完成后使用set_model()方法指定，如下所示："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "You can use the append_column() method to  tell the View\nthat it should display certain Model columns, in a certain order, with a\ncertain column title.",
    "sha": "4ae8f427573d1acc",
-   "zh": null
+   "zh": "你可以使用append_column()方法告知视图以一定的顺序于某个列标题下显示模型的某个列。"
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "When using this simple append_column() overload, the\n`TreeView` will display the model data with an appropriate\n`CellRenderer`. For instance, strings and numbers are\nshown in a simple `Gtk::Entry` widget, and booleans are\nshown in a `Gtk::CheckButton`. This is usually what you\nneed. For other column types you must either connect a callback that converts\nyour type into a string representation, with\nTreeViewColumn::set_cell_data_func(), or derive a custom\n`CellRenderer`. Note that (unsigned) short is not\nsupported by default - You could use (unsigned) int or (unsigned) long as the\ncolumn type instead.",
    "sha": "9b3a5f6ae7c4f278",
-   "zh": null
+   "zh": "当使用这种简单的append_column()重载的时候，TreeView将会使用适当的CellRenderer显示模型数据。例如将字符串和数字显示在简单的Gtk::Entry部件中，布尔量使用Gtk::CheckButton显示。这通常是你所希望的行为。对于其他类型的行，你必须使用TreeViewColumn::set_cell_data_func()连接一个将你的类型转换为字符串表示形式的回调，或者是从CellRenderer派生一个合适的类。请注意，默认情况下(unsigned) short不被支持 - 作为替代你可以使用(unsigned) int或者(unsigned) long作为行类型。"
   },
   {
    "type": "heading",
@@ -68,19 +68,19 @@
    "type": "para",
    "text": "To render more than one model column in a view column, you need to create the\n`TreeView::Column` widget manually, and use\npack_start() to add the model columns to it.",
    "sha": "80fabafdd5a1dbc4",
-   "zh": null
+   "zh": "要在一个视图列中呈现多个模型列，你需要手动创建TreeView::Column部件，并使用pack_start()方法向其添加模型列。"
   },
   {
    "type": "para",
    "text": "Then use append_column() to add the view Column to the\nView. Notice that Gtk::TreeView::append_column() is overloaded\nto accept either a prebuilt `Gtk::TreeView::Column` widget, or\njust the `TreeModelColumn` from which it generates an\nappropriate `Gtk::TreeView::Column` widget.",
    "sha": "da00524cef4ec2c5",
-   "zh": null
+   "zh": "然后使用append_column()将视图列添加到视图中。请注意，Gtk::TreeView::append_column()被重载为接受预建的Gtk::TreeView::Column部件，或者只接受由TreeModelColumn生成的合适的Gtk::TreeView::Column部件。"
   },
   {
    "type": "para",
    "text": "Here is some example code, which has a pixbuf icon and a text name in the same column:",
    "sha": "bee80ee5c3209c7e",
-   "zh": null
+   "zh": "这是一些示例代码，在同一列中有一个像素缓冲区(pixbuf)图标和一个文本名："
   },
   {
    "type": "code",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "You can also connect to `CellRenderer` signals to detect user\nactions. For instance:",
    "sha": "00596cc941e0a30c",
-   "zh": null
+   "zh": "你还可以通过连接到CellRenderer的信号以检测用户的操作。例如："
   },
   {
    "type": "code",
@@ -134,7 +134,7 @@
    "type": "para",
    "text": "Cells in a `TreeView` can be edited in-place by the user.\nTo allow this, use the `Gtk::TreeView`\ninsert_column_editable() and\nappend_column_editable() methods instead of\ninsert_column() and append_column().\nWhen these cells are edited the new values will be stored immediately in the\nModel. Note that these methods are templates which can only be instantiated for\nsimple column types such as `Glib::ustring`, int, and\nlong.",
    "sha": "5d1c874fce853d88",
-   "zh": null
+   "zh": "用户可以就地编辑TreeView中的单元格。若要如此，请使用Gtk::TreeView的insert_column_editable()和append_column_editable()方法而不是insert_column()和append_column()方法。编辑单元格后新的值将立刻储存在模型中。请注意，这些方法是模版，只能为简单的列类型实例化（例如，Glib::ustring、int和long）。"
   },
   {
    "type": "heading",
@@ -146,13 +146,13 @@
    "type": "para",
    "text": "However, you might not want the new values to be stored\nimmediately. For instance, maybe you want to restrict the input to\ncertain characters or ranges of values.",
    "sha": "4cfa21eda9ae0374",
-   "zh": null
+   "zh": "但是你可能不希望立刻储存新的值。例如你可能希望对输入进行检测，符合预期的范围才储存。"
   },
   {
    "type": "para",
    "text": "To achieve this, you should use the normal `Gtk::TreeView`\ninsert_column() and append_column()\nmethods, then use get_column_cell_renderer() to get the\n`Gtk::CellRenderer` used by that column.",
    "sha": "4a524c8e05e34834",
-   "zh": null
+   "zh": "为此，你应该使用常规的Gtk::TreeView::insert_column()和Gtk::TreeView::append_column()方法，然后使用get_column_cell_renderer()方法获取该列使用的Gtk::CellRenderer。"
   },
   {
    "type": "para",
@@ -164,7 +164,7 @@
    "type": "para",
    "text": "For instance, for a CellRendererText, you would set the cell's *editable* property to true, like\nso:",
    "sha": "884b3cfd40c1d555",
-   "zh": null
+   "zh": "例如，对于CellRendererText，你应该将单元格的editable属性设置为true，如下所示："
   },
   {
    "type": "code",
@@ -176,7 +176,7 @@
    "type": "para",
    "text": "For a CellRendererToggle, you would set the *activatable*\nproperty instead.",
    "sha": "26ad2971d8b2e100",
-   "zh": null
+   "zh": "对于CellRendererToggle，你应该改为设置activatable属性。"
   },
   {
    "type": "para",
@@ -188,19 +188,19 @@
    "type": "para",
    "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
    "sha": "3cd95b0235c2c88a",
-   "zh": null
+   "zh": "在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。"
   },
   {
    "type": "para",
    "text": "However, you might not want the new values to be stored\nimmediately. For instance, maybe you want to restrict the input to\ncertain characters or ranges of values.",
    "sha": "4cfa21eda9ae0374-1",
-   "zh": null
+   "zh": "但是你可能不希望立刻储存新的值。例如你可能希望对输入进行检测，符合预期的范围才储存。"
   },
   {
    "type": "para",
    "text": "To achieve this, you should use the normal `Gtk::TreeView`\ninsert_column() and append_column()\nmethods, then use get_column_cell_renderer() to get the\n`Gtk::CellRenderer` used by that column.",
    "sha": "4a524c8e05e34834-1",
-   "zh": null
+   "zh": "为此，你应该使用常规的Gtk::TreeView::insert_column()和Gtk::TreeView::append_column()方法，然后使用get_column_cell_renderer()方法获取该列使用的Gtk::CellRenderer。"
   },
   {
    "type": "para",
@@ -212,7 +212,7 @@
    "type": "para",
    "text": "For instance, for a CellRendererText, you would set the cell's *editable* property to true, like\nso:",
    "sha": "884b3cfd40c1d555-1",
-   "zh": null
+   "zh": "例如，对于CellRendererText，你应该将单元格的editable属性设置为true，如下所示："
   },
   {
    "type": "code",
@@ -224,7 +224,7 @@
    "type": "para",
    "text": "For a CellRendererToggle, you would set the *activatable*\nproperty instead.",
    "sha": "26ad2971d8b2e100-1",
-   "zh": null
+   "zh": "对于CellRendererToggle，你应该改为设置activatable属性。"
   },
   {
    "type": "para",
@@ -236,7 +236,7 @@
    "type": "para",
    "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
    "sha": "3cd95b0235c2c88a-1",
-   "zh": null
+   "zh": "在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。"
   }
  ]
 }

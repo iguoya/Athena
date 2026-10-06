@@ -8,7 +8,7 @@
    "type": "para",
    "text": "In general, gtkmm-style projects use Doxygen, which reads specially formatted C++ comments and generates HTML documentation. You may write these doxygen comments directly in the header files.",
    "sha": "4804a5927b2faeb9",
-   "zh": null
+   "zh": "通常，gtkmm风格项目使用Doxygen生成文档，它会读取特殊格式的C++注释并生成HTML文档。你可以直接将这些doxygen可读的注释写到头文件中。"
   },
   {
    "type": "heading",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "For instance,",
    "sha": "580ef7c3ff8e8ffb",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "Because this automatic transformation is not always appropriate, you might\n    want to provide hand-written text for a particular method. You can do this\n    by copying the XML node for the function from your\n    `something_docs.xml` file to the\n    `something_docs_override.xml` file and changing the\n    contents. Alternatively you can write your own documentation in the\n    `.hg` file.",
    "sha": "ea8fa3366034f06b",
-   "zh": null
+   "zh": "由于此自动转换并不总是合适的，所以你可能希望对特定的方法提供手写的文本。为此可以将函数的XML节点从something_docs.xml文件复制到something_docs_override.xml文件并更改其内容。你也可以在.hg文件中编写自己的文档。"
   },
   {
    "type": "heading",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "If you copied the skeleton source tree in `mm-common` and substituted the\n  placeholder text, then you will already have suitable `meson.build`\n  and `Doxyfile.in` files in the `doc/reference/`\n  directory. You probably need to modify the `tag_file_modules`\n  variable in `meson.build`, though.\n  With the `mm-common` build setup, the list\n  of Doxygen input files is not defined in the Doxygen configuration file, but passed\n  along from `meson/ninja` to the standard input of `doxygen`.",
    "sha": "09ccf46685283da0",
-   "zh": null
+   "zh": "如果你已经从mm-common中复制skeleton源代码树并替换占位文本，那么在doc/reference/目录中已经拥有了合适的meson.build和Doxyfile.in文件。你可能需要修改meson.build文件中的tag_file_modules变量，虽然在mm-common构建设置中，Doxygen输入文件不是通过Doxygen配置文件定义的，而是由meson/ninja传递文件内容到doxygen的标准输入。"
   }
  ]
 }

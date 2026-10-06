@@ -8,13 +8,13 @@
    "type": "para",
    "text": "Some objects, such as `Gdk::Pixbuf`s and\n`Pango::Font`s, are obtained from a shared store.\nTherefore you cannot instantiate your own instances. These classes typically\ninherit from `Glib::Object`. Rather than requiring you to\nreference and unreference these objects, gtkmm uses the\n`Glib::RefPtr<>` smartpointer. Cairomm has its own\nsmartpointer, `Cairo::RefPtr<>`.",
    "sha": "e0f22c764caeed29",
-   "zh": null
+   "zh": "一些对象是从共享储存中获取的，例如Gdk::Pixbuf和Pango::Font。因此你无法实例化自己的实例。这些类通常继承自Glib::Object。gtkmm使用智能指针Glib::RefPtr<>而不是要求你引用和解引用这些对象。开罗有自己的智能指针：Cairo::RefPtr<>。"
   },
   {
    "type": "para",
    "text": "Objects such as `Gdk::Pixbuf` can only be instantiated\nwith a create() function. For instance,",
    "sha": "ceffa084d6c65d31",
-   "zh": null
+   "zh": "诸如Gdk::Pixbuf之类的对象只能通过create()函数进行实例化。例如："
   },
   {
    "type": "code",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "You have no way of getting a bare `Gdk::Pixbuf`. In the\nexample, `pixbuf` is a smart pointer, so you can do this, much\nlike a normal pointer:",
    "sha": "af66238cd59ad44b",
-   "zh": null
+   "zh": "你无法暴露Gdk::Pixbuf对象。在示例中，pixbuf是一个智能指针，因此可以像正常指针一样执行此操作："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "When `pixbuf` goes out of scope an\nunref() will happen in the background and you don't need\nto worry about it anymore. There's no `new` so there's no\n`delete`.",
    "sha": "26c69b4b06d10421",
-   "zh": null
+   "zh": "当pixbuf超出作用域时，将在后台调用unref()，你无需为它担心。没有进行new因此也不需要进行delete。"
   },
   {
    "type": "para",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "See the appendix for detailed information about RefPtr.",
    "sha": "ccda35d6a2e1b998",
-   "zh": null
+   "zh": "更多与RefPtr有关的信息，请参见附录。"
   },
   {
    "type": "para",

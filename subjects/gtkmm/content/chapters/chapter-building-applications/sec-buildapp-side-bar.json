@@ -8,19 +8,19 @@
    "type": "para",
    "text": "As another piece of functionality, we are adding a sidebar, which demonstrates\n`Gtk::Revealer` and `Gtk::ListBox`.\nThe new widgets are added in the `window.ui` file.",
    "sha": "96ca8e60ed052916",
-   "zh": null
+   "zh": "作为另一项功能，我们向应用程序中添加了侧边栏，用于演示Gtk::Revealer和Gtk::ListBox。新的部件将被添加到window.ui文件中。"
   },
   {
    "type": "para",
    "text": "The code to populate the sidebar with buttons for the words found in each\nfile is a little too involved to go into here. But we'll look at the code\nto add a checkbutton for the new feature to the menu. A menu item is added to\nthe ui file `gears_menu.ui`.",
    "sha": "0f232012ff17b9e6",
-   "zh": null
+   "zh": "在每个文件中用找到的单词生成按钮填充侧边栏的代码很复杂，这里我们不进行介绍。我们将对为菜单中添加新功能的多选按钮的代码进行介绍。菜单项将被添加到gears_menu.ui UI文件中。"
   },
   {
    "type": "para",
    "text": "To connect the menu item to the new `show-words` setting, we use a\n`Gio::Action` corresponding to the given `Gio::Settings`\nkey. In `ExampleAppWindow`'s constructor:",
    "sha": "5c2e5edf19c918b8",
-   "zh": null
+   "zh": "我们使用Gio::Action与给定的Gio::Settings键相关联，以使菜单项与新的show-words设置向连接。在ExampleAppWindow构造函数中："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "What our application looks like now:",
    "sha": "fccb7d23b9f5553d",
-   "zh": null
+   "zh": "现在我们的应用程序看起来像这样："
   },
   {
    "type": "figure",

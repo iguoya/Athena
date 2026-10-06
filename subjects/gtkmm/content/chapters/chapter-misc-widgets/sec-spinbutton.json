@@ -8,13 +8,13 @@
    "type": "para",
    "text": "A `SpinButton` allows the user to select a value from a\nrange of numeric values. It has an `Entry` widget with increment and decrement buttons\nat the side. Clicking the buttons causes the value to 'spin' up and down across\nthe range of possible values. The `Entry` widget may also\nbe used to enter a value directly.",
    "sha": "758d0be2a767f1ef",
-   "zh": null
+   "zh": "SpinButton允许用户从一个数值范围内选择一个值。它包含了一个Entry部件在其侧边有递增和递减按钮。单击按钮会使得值在可能的范围内“旋转”。你也可以直接在Entry部件中输入一个值。"
   },
   {
    "type": "para",
    "text": "The value can have an adjustable number of decimal places, and the step size is\nconfigurable. `SpinButton`s have an 'auto-repeat' feature\nas well: holding down the increment or decrement button can optionally cause the value to\nchange more quickly the longer the button is held down.",
    "sha": "5c87bc1bdbb86e4d",
-   "zh": null
+   "zh": "这个值的小数位可以进行调整，步长也可以进行配置。SpinButton具有“自动重复”功能：长按递增、递减按钮该值的变化速度会越来越快。"
   },
   {
    "type": "para",
@@ -26,49 +26,49 @@
    "type": "listitem",
    "text": "value: value for the Spin Button",
    "sha": "a26f0b21bfa7a1f5",
-   "zh": null
+   "zh": "value：微调按钮的值"
   },
   {
    "type": "listitem",
    "text": "lower: lower range value",
    "sha": "a8747b069f777ec0",
-   "zh": null
+   "zh": "lower：微调按钮允许的最小值"
   },
   {
    "type": "listitem",
    "text": "upper: upper range value",
    "sha": "b756917525e5826b",
-   "zh": null
+   "zh": "upper：微调按钮允许的最大值"
   },
   {
    "type": "listitem",
    "text": "step_increment: value to increment/decrement when pressing mouse button 1",
    "sha": "c71d9d4e6f0d9ec5",
-   "zh": null
+   "zh": "step_increment：鼠标键1(通常是左键)点击一下递增/递减的值"
   },
   {
    "type": "listitem",
    "text": "page_increment: value to increment/decrement when pressing mouse button 2",
    "sha": "4605fd9403053751",
-   "zh": null
+   "zh": "page_increment：鼠标键2(通常是右键)点击一下递增/递减的值"
   },
   {
    "type": "listitem",
    "text": "page_size: unused",
    "sha": "f8e581a869f3130f",
-   "zh": null
+   "zh": "page_size：目前没作用"
   },
   {
    "type": "para",
    "text": "Additionally, mouse button 3 can be used to jump directly to the\n`upper` or `lower` values.",
    "sha": "98bf7229adbcc037",
-   "zh": null
+   "zh": "另外，鼠标键3(通常是中键)用于直接跳到upper或lower values。"
   },
   {
    "type": "para",
    "text": "The `SpinButton` can create a default\n`Adjustment`, which you can access via the\nget_adjustment() method, or you can specify an existing\n`Adjustment` in the constructor.",
    "sha": "41d61d371fe3fce2",
-   "zh": null
+   "zh": "SpinButton可以创建一个默认状态的Adjustment，然后你可以调用get_adjustment()方法访问这个Adjustment，也可以通过SpinButton的构造函数直接使用一个已经存在的Adjustment。"
   },
   {
    "type": "heading",
@@ -80,37 +80,37 @@
    "type": "para",
    "text": "The number of decimal places can be altered using the\nset_digits() method.",
    "sha": "8182442327a74013",
-   "zh": null
+   "zh": "数值的小数位可以使用set_digits()方法进行调整。"
   },
   {
    "type": "para",
    "text": "You can set the spinbutton's value using the set_value()\nmethod, and retrieve it with get_value().",
    "sha": "4a0ec0cf73dcc9a0",
-   "zh": null
+   "zh": "你可以使用set_value()方法设置微调按钮的值，也可以使用get_value()方法获得微调按钮的值。"
   },
   {
    "type": "para",
    "text": "The spin() method 'spins' the\n`SpinButton`, as if its increment or decrement button had been clicked.\nYou need to specify a `Gtk::SpinType` to specify the\ndirection or new position.",
    "sha": "5e9415a60bbabb40",
-   "zh": null
+   "zh": "spin()方法的行为和手动点击递增/递减按钮一样。你需要传递一个Gtk::SpinType对象给该方法以指定是递增还是递减。"
   },
   {
    "type": "para",
    "text": "To prevent the user from typing non-numeric characters into the entry box, pass\n`true` to the set_numeric() method.",
    "sha": "d1d9600d23bec273",
-   "zh": null
+   "zh": "将true传递给set_numeric()方法可以阻止用户在条目框内输入非数字字符。"
   },
   {
    "type": "para",
    "text": "To make the `SpinButton` 'wrap' between its upper and\nlower bounds, use the set_wrap() method.",
    "sha": "308f29961be24f90",
-   "zh": null
+   "zh": "使用set_wrap()方法指定SpinButton的值到达上下限的时候是否绕回。"
   },
   {
    "type": "para",
    "text": "To force it to snap to the nearest `step_increment`,\nuse set_snap_to_ticks().",
    "sha": "d20b8a673eeb013c",
-   "zh": null
+   "zh": "使用set_snap_to_ticks()方法可以在向微调按钮设置了无效值的时候强制校正到最接近step_increment策略可达到的有效值。"
   },
   {
    "type": "para",
@@ -128,7 +128,7 @@
    "type": "para",
    "text": "Here's an example of a `SpinButton` in action:",
    "sha": "de787ef442486ad0",
-   "zh": null
+   "zh": "这是一个使用SpinButton的示例："
   },
   {
    "type": "figure",

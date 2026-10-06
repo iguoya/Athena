@@ -8,7 +8,7 @@
    "type": "para",
    "text": "Widgets and other objects have many useful properties. Here we show some ways to use\nthem in new and flexible ways, by wrapping them in actions with `Gio::PropertyAction`\nor by binding them with `Glib::Binding`.",
    "sha": "abd1425541071a63",
-   "zh": null
+   "zh": "部件和其他对象有很多有用的属性。在这里，我们通过一些新颖的使用方法展示了使用它们的方法。例如，将它们包装在Gio::PropertyAction动作中或将它们与Glib::Binding绑定。"
   },
   {
    "type": "para",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "To make this menu item do something, we create a property action for the `visible`\nproperty of the `lines` label, and add it to the actions of the window.\nThe effect of this is that the visibility of the label gets toggled every time the action\nis activated.\nSince we want both labels to appear and disappear together, we bind the `visible`\nproperty of the `lines_label` widget to the same property of the\n`lines` widget.\nIn `ExampleAppWindow`'s constructor:",
    "sha": "53f7a4eae79e74cb",
-   "zh": null
+   "zh": "为了使此菜单项能执行某些操作，我们为lines标签的visible属性创建了一个属性动作，并将其添加到窗口动作中。这样做的效果是，每当动作被激活，标签的可见性就会改变。由于我们希望两个标签的可见性一致，因此我们将lines_label部件的visible属性绑定到lines部件的相同属性上。在ExampleAppWindow的构造函数中："
   },
   {
    "type": "code",
@@ -32,13 +32,13 @@
    "type": "para",
    "text": "We also need a function that counts the lines of the currently active tab, and updates\nthe `lines` label. See the full source if you are interested in the details.",
    "sha": "91a92d980149a159",
-   "zh": null
+   "zh": "我们还需要一个函数对当前标签页的行进行计数，并更新lines标签。如果你对此感兴趣请阅读完整源代码。"
   },
   {
    "type": "para",
    "text": "This brings our example application to this appearance:",
    "sha": "c24e65f6bf3b1931",
-   "zh": null
+   "zh": "现在我们的示例应用程序看起来如下："
   },
   {
    "type": "figure",

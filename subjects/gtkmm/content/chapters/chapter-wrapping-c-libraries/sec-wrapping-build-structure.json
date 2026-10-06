@@ -8,13 +8,13 @@
    "type": "para",
    "text": "Generation of the source code for a gtkmm-style wrapper API requires use\n    of tools such as `gmmproc` and\n    `generate_wrap_init.pl`, which are included in\n    `glibmm`. In theory you could write your\n    own build files to use these appropriately, but a much better option is to\n    make use of the build infrastructure provided by the `mm-common`\n    module. To get started, it helps a lot to pick an existing binding module as an example\n    to look at.",
    "sha": "105ff38ab83c5295",
-   "zh": null
+   "zh": "要生成gtkmm风格的API封装源代码需要使用包含在glibmm的工具，例如gmmproc和generate_wrap_init.pl。理论上来说你可以自己编写构建文本以更好的使用它们，不过更好的选择是利用mm-common模块提供的构建基础设施。选择一个已经存在绑定的模块作为示例对于开始使用gmmproc很有帮助。"
   },
   {
    "type": "para",
    "text": "For instance, let's pretend that we are wrapping a C library called\n    libsomething. It provides a `GObject`-based API with\n    types named, for instance, `SomeWidget` and\n    `SomeStuff`.",
    "sha": "fbb5987366a49471",
-   "zh": null
+   "zh": "假设，我们封装了一个名为libsomething的C库。它提供了基于GObject API的具名类型，例如类型名为：SomeWidget和SomeStuff。"
   },
   {
    "type": "heading",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Typically our wrapper library would be called libsomethingmm. We can start by\n  copying the \n  skeleton source tree from the `mm-common` module.\n  Starting with `mm-common` 1.0.0 this skeleton application\n  is built with the Meson build system.",
    "sha": "c6ae19ffbe86ee4f",
-   "zh": null
+   "zh": "我们封装的库名为libsomethingmm。我们可以从在mm-common模块中复制skeleton源代码树开始。自mm-common 1.0.0开始skeleton应用程序使用Meson构建系统进行构建。"
   },
   {
    "type": "code",
@@ -44,25 +44,25 @@
    "type": "listitem",
    "text": "libsomethingmm: The top-level directory.",
    "sha": "ad0ddc7a6c782ca7",
-   "zh": null
+   "zh": "libsomethingmm：顶级目录。"
   },
   {
    "type": "listitem",
    "text": "libsomething: Contains the main include file and the pkg-config .pc file.",
    "sha": "7e52815a4631adab",
-   "zh": null
+   "zh": "libsomething：包含主要的被包含文件(被#include的文件)和由pkg-config所需的.pc文件。"
   },
   {
    "type": "listitem",
    "text": "src: Contains .hg and .ccg source files.",
    "sha": "bd6e0b1080ab6215",
-   "zh": null
+   "zh": "src：包含.hg和.ccg源文件。"
   },
   {
    "type": "listitem",
    "text": "libsomethingmm: Contains hand-written .h and .cc files.",
    "sha": "db4b02a6f15f6571",
-   "zh": null
+   "zh": "libsomethingmm：包含手写的.h和.cc文件。"
   },
   {
    "type": "para",
@@ -86,13 +86,13 @@
    "type": "para",
    "text": "Note that files ending in `.in` will be used to generate\n    files with the same name but without the `.in` suffix, by\n    replacing some variables with actual values during the configure stage.",
    "sha": "427be9a92f757b2f",
-   "zh": null
+   "zh": "请注意，在配置阶段中某些变量将会替换为实际值，这将会生成与.in相同名称但不带.in后缀的文件。"
   },
   {
    "type": "para",
    "text": "Generated files are saved in the build tree, which is separated from the\n    source tree when `meson` and `ninja` are used.",
    "sha": "fbbd097e5d2643dc",
-   "zh": null
+   "zh": "生成的文件被保存在构建树中，当使用meson和ninja时构建树会与源树分离。"
   },
   {
    "type": "heading",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "Now we edit the files to adapt them to our needs. You might prefer to use a multiple-file\n  search-replace utility for this, such as `regexxer`. Note that nearly all of the\n  files provided with the skeleton source tree contain placeholder text. Thus, the substitutions\n  should be performed globally, and not be limited to the Meson files.",
    "sha": "c1daf9095952318b",
-   "zh": null
+   "zh": "现在我们修改构建文件以适应我们的需求。在这个时候你可能喜欢使用类似于regexxer这样的多文件搜索替换工具。请注意，skeleton源代码树提供的所有文件几乎都包含了占位符。因此，应该进行全局替换而不是仅对Meson文件替换。"
   },
   {
    "type": "para",
@@ -116,7 +116,7 @@
    "type": "para",
    "text": "Likewise, replace all instances of `Joe Hacker` by the name of the intended\n  copyright holder, which is probably you. Do the same for the `joe@example.com`\n  email address.",
    "sha": "bc07f14aa56facbe",
-   "zh": null
+   "zh": "同样的，将所有的Joe Hacker替换为预期的版权所有者的名称，也就是你的名称。然后对joe@example.com邮件地址进行同样的操作。"
   },
   {
    "type": "heading",
@@ -134,19 +134,19 @@
    "type": "listitem",
    "text": "It is common for binding modules to track the version number of the library they are wrapping. So, for instance, if the C library is at version 1.23.4, then the initial version of the binding module would be 1.23.0. However, avoid starting with an even minor version number as that usually indicates a stable release.",
    "sha": "3ead32513ffddc99",
-   "zh": null
+   "zh": "使绑定模块的版本跟踪被封装的库的版本很常见。例如，C库版本是1.23.4，则绑定模块的初始版本为1.23.0。但是请尽量避免以偶数次要版本开始，因为这通常意味着该版本是稳定版本。"
   },
   {
    "type": "listitem",
    "text": "In the project() function, change the license and the C++ version, if necessary.",
    "sha": "fa08f035eeb0a43a",
-   "zh": null
+   "zh": "如果有必要，请在project()函数中修改许可证和C++版本。"
   },
   {
    "type": "listitem",
    "text": "You probably need to add more required modules than glibmm and skeleton (libsomething).",
    "sha": "3a86eb084454e0ff",
-   "zh": null
+   "zh": "你可能需要添加除glibmm和skeleton(libsomething)以外的必需模块。"
   },
   {
    "type": "heading",
@@ -164,13 +164,13 @@
    "type": "listitem",
    "text": "skeleton/meson.build: Perhaps not much to change here more than the global name substitutions.",
    "sha": "8a0dd5a9f722c48e",
-   "zh": null
+   "zh": "skeleton/meson.build：在这除了全局替换以外基本上不需要做什么。"
   },
   {
    "type": "listitem",
    "text": "skeleton/skeletonmm/meson.build",
    "sha": "ab2b9c2ae57948d5",
-   "zh": null
+   "zh": "skeleton/skeletonmm/meson.build"
   },
   {
    "type": "heading",
@@ -182,13 +182,13 @@
    "type": "para",
    "text": "We should now create our first `.hg` and `.ccg` files,\n  to wrap one of the objects in the C library. One pair of example source files already exists:\n  `skeleton.ccg` and `skeleton.hg`. Create copies of these\n  files as necessary.",
    "sha": "886502c254070882",
-   "zh": null
+   "zh": "现在我们应该创建第一个.hg和.ccg，用以对一个C库中的对象进行封装。存在一对可供参考的示例源文件：skeleton.ccg和skeleton.hg。请根据需要创建这些文件的副本。"
   },
   {
    "type": "para",
    "text": "In the .hg and .ccg files\n  section you can learn about the syntax used in these files.",
    "sha": "6144ba1328ca39b5",
-   "zh": null
+   "zh": "在.hg和.ccg文件小节你可以学到这些文件使用的语法。"
   },
   {
    "type": "para",
@@ -200,25 +200,25 @@
    "type": "listitem",
    "text": "skeleton/meson.build: Perhaps not much to change here more than the global name substitutions.",
    "sha": "8a0dd5a9f722c48e-1",
-   "zh": null
+   "zh": "skeleton/meson.build：在这除了全局替换以外基本上不需要做什么。"
   },
   {
    "type": "listitem",
    "text": "skeleton/skeletonmm/meson.build",
    "sha": "ab2b9c2ae57948d5-1",
-   "zh": null
+   "zh": "skeleton/skeletonmm/meson.build"
   },
   {
    "type": "para",
    "text": "We should now create our first `.hg` and `.ccg` files,\n  to wrap one of the objects in the C library. One pair of example source files already exists:\n  `skeleton.ccg` and `skeleton.hg`. Create copies of these\n  files as necessary.",
    "sha": "886502c254070882-1",
-   "zh": null
+   "zh": "现在我们应该创建第一个.hg和.ccg，用以对一个C库中的对象进行封装。存在一对可供参考的示例源文件：skeleton.ccg和skeleton.hg。请根据需要创建这些文件的副本。"
   },
   {
    "type": "para",
    "text": "In the .hg and .ccg files\n  section you can learn about the syntax used in these files.",
    "sha": "6144ba1328ca39b5-1",
-   "zh": null
+   "zh": "在.hg和.ccg文件小节你可以学到这些文件使用的语法。"
   }
  ]
 }

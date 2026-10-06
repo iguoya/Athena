@@ -8,19 +8,19 @@
    "type": "para",
    "text": "This is an example program with two threads, one GUI thread, like in all\ngtkmm programs, and one worker thread. The worker thread is created when you\npress the `Start work` button. It is deleted when the work is\nfinished, when you press the `Stop work` button, or when you\npress the `Quit` button.",
    "sha": "61dd8e72a7780b6d",
-   "zh": null
+   "zh": "这是一个具有两个线程的示例程序，一个与所有gtkmm程序一样的GUI线程，和一个工作线程。当你按下Start work按钮时将创建工作线程，当工作完成或你按下Stop work按钮或是你按下Quit按钮时该线程将被删除。"
   },
   {
    "type": "para",
    "text": "A `Glib::Dispatcher` is used for sending notifications\nfrom the worker thread to the GUI thread. The `ExampleWorker`\nclass contains data which is accessed by both threads. This data is protected\nby a `std::mutex`.\nOnly the GUI thread updates the GUI.",
    "sha": "ecb1eb15cad8f3ea",
-   "zh": null
+   "zh": "Glib::Dispatcher被用于工作线程向GUI线程发送通知。ExampleWorker包含两个线程都可以访问的数据。该数据被一个std::mutex保护。只有GUI线程对GUI进行更新。"
   },
   {
    "type": "para",
    "text": "Compiling and linking a multi-threaded program can require special compiler and\nlinker options. If you use the `g++` compiler, add the\n`-pthread` option. Other compilers may require other options.\nIf you build with `meson`, it handles the multi-threading\ncomplications for you, if you add `dependency('threads')`.",
    "sha": "ad52303bf5378b06",
-   "zh": null
+   "zh": "编译和链接多线程程序可能需要特殊的编译和链接参数。如果你使用g++编译器你需要添加-pthread选项。其他编译器可能会要求使用其他选项。如果你使用meson构建程序，如果你在构建脚本中添加了dependency('threads')，它会帮你处理多线程的复杂性。"
   },
   {
    "type": "figure",

@@ -8,49 +8,49 @@
    "type": "para",
    "text": "When using `Gtk::Application`, the `main()` function\ncan be very simple. We just call Gtk::Application::run() on an\ninstance of our application class.",
    "sha": "1184067eb7118ed0",
-   "zh": null
+   "zh": "使用Gtk::Application时，main()函数可以非常简单。我们只是在应用程序类实例上调用Gtk::Application::run()。"
   },
   {
    "type": "para",
    "text": "All the application logic is in the application class, which is a subclass of\n`Gtk::Application`. Our example does not yet have any interesting\nfunctionality. All it does is open a window when it is activated without arguments,\nand open the files it is given, if it is started with arguments. (Or rather, our\napplication class tries to open the files, but our subclassed application window\ndoes not yet do what it's told to do.)",
    "sha": "5dc190bc341e7b29",
-   "zh": null
+   "zh": "应用程序的所有逻辑都在应用程序类中，该类是Gtk::Application的子类。现在在我们的示例中还没有任何很有趣的功能。它要做的事就是在没有参数的情况下打开一个窗口，或在有参数的启动状态下打开给定的文件（准确的说我们的应用程序类尝试打开文件，但是应用程序的窗口子类并没有执行应执行的操作）。"
   },
   {
    "type": "para",
    "text": "To handle these two cases, we override signal_activate()'s\ndefault handler, which gets called when the application is launched without commandline\narguments, and signal_open()'s default handler, which gets\ncalled when the application is launched with commandline arguments.",
    "sha": "4d387933d5b6702a",
-   "zh": null
+   "zh": "为了处理这两种情况，我们覆写了signal_activate()和signal_open()的默认处理函数，在没有命令行参数时前者的处理函数被调用，有命令行参数时后者的处理函数被调用。"
   },
   {
    "type": "para",
    "text": "Gio::Application Reference",
    "sha": "fb6113831966abd3",
-   "zh": null
+   "zh": "Gio::Application参考"
   },
   {
    "type": "para",
    "text": "Gtk::Application Reference",
    "sha": "53ffb85c1c34017c",
-   "zh": null
+   "zh": "Gtk::Application参考"
   },
   {
    "type": "para",
    "text": "Another important class that is part of the application support in gtkmm is\n`Gtk::ApplicationWindow`. It is typically subclassed as well.\nOur subclass does not do anything yet, so we will just get an empty window.",
    "sha": "bd68236a0eb3f679",
-   "zh": null
+   "zh": "作为gtkmm应用程序支持的另一个重要的类是Gtk::ApplicationWindow。通常我们也会将其子类化。此时我们的子类还没有做任何事，所以我们只会得到一个空白的窗口。"
   },
   {
    "type": "para",
    "text": "As part of the initial setup of our application, we also create an icon and a desktop file.\nNote that @bindir@ in the desktop file needs to be replaced with the actual path\nto the binary before this desktop file can be used.",
    "sha": "6420b329491858fe",
-   "zh": null
+   "zh": "作为应用程序初始设置的一部分，我们还为其创建了一个图标和桌面文件。请注意在使用这个桌面文件之前你还需要将文件中的@bindir@替换为应用程序二进制的实际路径。"
   },
   {
    "type": "para",
    "text": "Here is what we've achieved so far:",
    "sha": "21b837200a277915",
-   "zh": null
+   "zh": "到目前为止我们做到了："
   },
   {
    "type": "figure",
@@ -63,7 +63,7 @@
    "type": "para",
    "text": "This does not look very impressive yet, but our application is already presenting itself\non the session bus, it has single-instance semantics, and it accepts files as commandline arguments.",
    "sha": "89bf54770bb25d8f",
-   "zh": null
+   "zh": "这看起来还无法让人印象深刻，但是我们的应用程序已经在会话总线上展示了自己。现在它具有单实例语义，并且接受命令行参数作为文件路径。"
   },
   {
    "type": "para",

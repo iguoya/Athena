@@ -14,7 +14,7 @@
    "type": "para",
    "text": "Since the Cairo graphics library was written with support for\n            multiple output targets (the X window system, PNG images, OpenGL,\n            etc), there is a distinction between user-space and device-space\n            coordinates. The mapping between these two coordinate systems\n            defaults to one-to-one so that integer values map roughly to pixels\n            on the screen, but this setting can be adjusted if desired.\n            Sometimes it may be useful to scale the coordinates so that the\n            full width and height of a window both range from 0 to 1 (the 'unit\n            square') or some other mapping that works for your application.\n            This can be done with the\n            Cairo::Context::scale() function.",
    "sha": "cc4d88616411e4b7",
-   "zh": null
+   "zh": "由于开罗图形库是为了支持多个输出目标（X window系统、PNG图片、OpenGL等）编写的，因此用户空间坐标和设备空间坐标存在一些区别。默认情况下这两个坐标系是一对一的，这样可以将整数值大致映射为屏幕上的像素值，不过有需要时可以通过Cairo::Context::scale()函数对此行为进行调整。例如：你可能会需要使一个窗口的宽和高在调整比例后的坐标系中取值范围均处于0到1之间（单位正方形）。"
   },
   {
    "type": "heading",
@@ -26,19 +26,19 @@
    "type": "para",
    "text": "In this example, we'll construct a small but fully functional gtkmm\n        program and draw some lines into the window. The lines are drawn by\n        creating a path and then stroking it. A path is created using the\n        functions Cairo::Context::move_to() and\n        Cairo::Context::line_to(). The function\n        move_to() is similar to the act of lifting your\n        pen off of the paper and placing it somewhere else -- no line is drawn\n        between the point you were at and the point you moved to. To draw a\n        line between two points, use the line_to()\n        function.",
    "sha": "46c8a582f7ed9e6f",
-   "zh": null
+   "zh": "在这个示例中，我们将构建一个很小但功能齐全的gtkmm程序，并将一些线绘制到窗口中。使用函数Cairo::Context::move_to()和Cairo::Context::line_to()创建一个路径。move_to()函数的行为类似于将笔从纸上抬起并放到其他地方 -- 在你移动到的点和你之前所在的点直接不会画出一条线。使用line_to()函数可以在两点之间画线。"
   },
   {
    "type": "para",
    "text": "After you've finished creating your path, you still haven't\n        drawn anything visible yet. To make the path visible, you must use the\n        function stroke() which will stroke the current\n        path with the line width and style specified in your\n        `Cairo::Context` object. After stroking, the\n        current path will be cleared so that you can start on your next path.",
    "sha": "0e3b3330c4c61291",
-   "zh": null
+   "zh": "创建完你的路径以后。你依旧没有画任何看得见的东西。要想让路径可见，你需要使用stroke()函数，该函数将使用你的Cairo::Context对象中保存的线宽与样式绘制当前的路径。描绘完成后，当前路径将被清除，以便你可以从下一个路径开始。"
   },
   {
    "type": "para",
    "text": "Many Cairo drawing functions have a _preserve()\n            variant. Normally drawing functions such as\n            clip(), fill(), or\n            stroke() will clear the current path. If you\n            use the _preserve() variant, the current path\n            will be retained so that you can use the same path with the next\n            drawing function.",
    "sha": "5e6d2762858596dc",
-   "zh": null
+   "zh": "多数的开罗绘图函数都拥有一个_preserve()变体。通常情况下clip()、fill()、stroke()函数会清除当前的路径。如果你使用他们的_preserve()变体，则当前路径会被保留，以便下一个绘图函数能继续在一样的路径上绘制。"
   },
   {
    "type": "figure",
@@ -57,13 +57,13 @@
    "type": "para",
    "text": "This program contains a single class, `MyArea`,\n        which is a subclass of `Gtk::DrawingArea` and\n        contains an on_draw() member function.\n        This function becomes the draw function by a call to set_draw_func()\n        in `MyArea`'s constructor. on_draw()\n        is then called whenever the image in the drawing area needs to\n        be redrawn. It is passed a `Cairo::RefPtr`\n        pointer to a `Cairo::Context` that we use\n        for the drawing.\n        The actual drawing code sets the color we want to use for drawing by\n        using set_source_rgb() which takes arguments\n        defining the Red, Green, and Blue components of the desired color\n        (valid values are between 0 and 1). After setting the color, we\n        created a new path using the functions move_to()\n        and line_to(), and then stroked this path with\n        stroke().",
    "sha": "1900d129ea65a2be",
-   "zh": null
+   "zh": "这个程序包含一个MyArea类，它是Gtk::DrawingArea的子类，并且包含on_draw()成员函数。通过在MyArea的构造函数中调用set_draw_func()使其变成绘制函数。每当需要重绘绘图区域的图像的时候，on_draw()就会被调用。这将会向我们的绘制函数传递一个指向Cairo::Context的Cairo::RefPtr指针。实际进行绘图的代码使用set_source_rgb()设置我们将用于绘图的颜色，这个函数接受定义颜色所需的红色、绿色、蓝色分量作为参数（参数的有效值介于0到1之间）。设置完颜色后，我们使用move_to()和line_to()函数创建一个新的路径，然后使用stroke()绘制了这个路径。"
   },
   {
    "type": "para",
    "text": "In the example above we drew everything using absolute coordinates. You can also draw using\n        relative coordinates. For a straight line, this is done with the\n        function Cairo::Context::rel_line_to().",
    "sha": "a65fee99915f40fd",
-   "zh": null
+   "zh": "在上面的例子中，我们使用绝对坐标进行绘图。你也可以使用相对坐标进行绘图。对于直线而言，你可以通过Cairo::Context::rel_line_to()完成用相对坐标绘图。"
   },
   {
    "type": "heading",
@@ -75,13 +75,13 @@
    "type": "para",
    "text": "In addition to drawing basic straight lines, there are a number of\n            things that you can customize about a line. You've already seen\n            examples of setting a line's color and width, but there are others\n            as well.",
    "sha": "bf8a1b6ef211c73f",
-   "zh": null
+   "zh": "除了绘制基本直线以外，你还可以对线条进行很多自定义。你已经看到了对线条颜色和线条宽度的示例，但还有其他示例。"
   },
   {
    "type": "para",
    "text": "If you've drawn a series of lines that form a path, you may\n            want them to join together in a certain way. Cairo offers\n            three different ways to join lines together: Miter, Bevel, and\n            Round. These are show below:",
    "sha": "84b5a0b5fe385ac7",
-   "zh": null
+   "zh": "如果你于一个路径绘制了一系列的线条，你可能希望它们以某种方式被连接起来。开罗提供了三种不同的连接线条的方式：斜接(Miter)、斜切(Bevel)、圆(Round)。这些连接方式的示意图如下："
   },
   {
    "type": "figure",
@@ -94,13 +94,13 @@
    "type": "para",
    "text": "The line join style is set using the function\n            Cairo::Context::set_line_join().",
    "sha": "4afbfcbf09f3ed57",
-   "zh": null
+   "zh": "线条连接样式由Cairo::Context::set_line_join()函数进行设置。"
   },
   {
    "type": "para",
    "text": "Line ends can have different styles as well. The default style\n            is for the line to start and stop exactly at the destination\n            points of the line. This is called a Butt cap. The other\n            options are Round (uses a round ending, with the center of the\n            circle at the end point) or Square (uses a squared ending, with\n            the center of the square at the end point). This setting is set\n            using the function\n            Cairo::Context::set_line_cap().",
    "sha": "c81894e88b47d73c",
-   "zh": null
+   "zh": "线尾也有不同的样式。默认样式是从线条的开始到结尾准确的停止。这被叫做平端。其他的可选性有圆（使用圆形结束，以终点为圆心）和方（使用正方形结束，以终点为正方形的中心）。这可以使用Cairo::Context::set_line_cap()函数使用。"
   },
   {
    "type": "para",
@@ -118,13 +118,13 @@
    "type": "para",
    "text": "If you try to draw one pixel wide lines, you may notice that the line\n        sometimes comes up blurred and wider than it ought to be.\n        This happens because Cairo will try to draw from the selected position,\n        to both sides (half to each), so if you're positioned right on the\n        intersection of the pixels, and want a one pixel wide line, Cairo will try\n        to use half of each adjacent pixel, which isn't possible (a pixel is the\n        smallest unit possible). This happens when the width of the line is an\n        odd number of pixels (not just one pixel).",
    "sha": "15eb32b9c3ce6662",
-   "zh": null
+   "zh": "如果你尝试画一条宽度为一个像素的线条，你可能会注意到这条线有时会变得模糊并且比应有的宽度更宽。发生这种情况的原因是开若尝试在所选位置向两边绘制（一边一半），因此如果你如果正好位于像素交点上，还想绘制一个像素宽度的线条，那是不可能做到的（像素是最小的单位）。所以当像素的宽度是奇数的时候就会出现这种情况（不只是一个像素的时候）。"
   },
   {
    "type": "para",
    "text": "The trick is to position in the middle of the pixel where you want the\n        line to be drawn, and thus guaranteeing you get the desired results.\n        See Cairo FAQ.",
    "sha": "f8d6ffd114d9ff56",
-   "zh": null
+   "zh": "解决问题的诀窍是将像素放于要绘制的线条的中间，从而确保获得所需的结果。请参阅开罗常见问题。"
   },
   {
    "type": "figure",

@@ -8,7 +8,7 @@
    "type": "para",
    "text": "The .hg and .ccg source files are very much like\n        .h and .cc C++ source files, but they contain extra macros, such as\n        `_CLASS_GOBJECT()` and\n        `_WRAP_METHOD()`, from which\n        `gmmproc` generates appropriate C++ source code,\n        usually at the same position in the header. Any additional C++ source\n        code will be copied verbatim into the corresponding\n        .h or .cc file.",
    "sha": "a7b1649a5b16dc06",
-   "zh": null
+   "zh": ".hg和.ccg源文件与C++的.h和.cc源文件非常相似，但是它们包含额外的宏，例如_CLASS_GOBJECT()和_WRAP_METHOD()，gmmproc会使用这些宏在头文件中的相同位置生成合适的C++源代码。而所有其他的C++源代码会按原样复制到相应的.h或.cc文件中。"
   },
   {
    "type": "para",
@@ -32,43 +32,43 @@
    "type": "para",
    "text": "Specifies the destination directory for generated sources, and the name of the main .defs file that `gmmproc` should parse.",
    "sha": "597eacddb2a8ccaf",
-   "zh": null
+   "zh": "指定所生成源代码的目标目录，以及gmmproc应该解析的主要.defs文件的名称。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` to include a header in the generated `private/button_p.h` file.",
    "sha": "07cfeaa20cdbabcd",
-   "zh": null
+   "zh": "告诉gmmproc在生成的文件中包含private/button_p.h头文件。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` to add some typedefs, constructors, and standard methods to this class, as appropriate when wrapping a widget.",
    "sha": "30dea3e449c8a743",
-   "zh": null
+   "zh": "告诉gmmproc在封装部件类时在类中添加一些类型定义(typedef)、构造函数、标准方法。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` to add initialization code for the interface.",
    "sha": "44df4f334d7a2f64",
-   "zh": null
+   "zh": "告诉gmmproc为接口添加初始化代码。"
   },
   {
    "type": "para",
    "text": "Adds a default constructor.",
    "sha": "04ee586f336b2798",
-   "zh": null
+   "zh": "添加默认构造函数。"
   },
   {
    "type": "para",
    "text": "Add methods to wrap parts of the C API.",
    "sha": "cf2563d0e2a31a49",
-   "zh": null
+   "zh": "添加用于封装C API的一部分的方法。"
   },
   {
    "type": "para",
    "text": "The .h and .cc files will be generated from the .hg and .ccg files by\n    processing them with `gmmproc` like so, though this happens\n    automatically when using the above build structure:",
    "sha": "459b6be37147ae60",
-   "zh": null
+   "zh": "通过这样使用gmmproc处理.hg和.ccg文件，可以从.hg和.ccg文件生成.h和.cc文件，尽管这在使用上述的构建结构时会自动进行："
   },
   {
    "type": "code",
@@ -80,19 +80,19 @@
    "type": "para",
    "text": "Notice that we provided `gmmproc` with the path to the\n    .m4 convert files, the path to the .defs file, the name of a .hg file, the\n    source directory, and the destination directory.",
    "sha": "d5721fbc31902267",
-   "zh": null
+   "zh": "请注意我们为gmmproc提供了.m4转换文件、.defs文件路径、.hg文件名、源代码目录、目标目录。"
   },
   {
    "type": "para",
    "text": "You should avoid including the C header from your C++ header, to avoid\n    polluting the global namespace, and to avoid exporting unnecessary public\n    API. But you will need to include the necessary C headers from your\n    .ccg file.",
    "sha": "1cbf8711e8b820b4",
-   "zh": null
+   "zh": "你应该避免在C++头文件中包含C头文件，以免污染全局名称空间，以免导出不必要的公共API。但是你需要在你的.ccg文件中包含必要的C头文件。"
   },
   {
    "type": "para",
    "text": "The macros are explained in more detail in the following sections.",
    "sha": "a059c3a862f0e9a6",
-   "zh": null
+   "zh": "以下各节将对宏进行详细说明。"
   },
   {
    "type": "heading",
@@ -116,13 +116,13 @@
    "type": "para",
    "text": "`$3` will be replaced by the parameter name when this\nconversion is used by `gmmproc`.",
    "sha": "eabee9d2477b7e51",
-   "zh": null
+   "zh": "当此转换被gmmproc使用时，$3将会被参数名称替换。"
   },
   {
    "type": "para",
    "text": "Some extra macros make this easier and consistent. Look in gtkmm's .m4 files\nfor examples. For instance:",
    "sha": "975039cdff005ade",
-   "zh": null
+   "zh": "使用一些额外的宏可以使其变得更简单和一致。例如gtkmm中的.m4文件："
   },
   {
    "type": "code",
@@ -140,7 +140,7 @@
    "type": "para",
    "text": "Often when wrapping methods, it is desirable to store the return of the C\n  function in what is called an output parameter.  In this case, the C++ method\n  returns `void` but an output parameter in which to store the value\n  of the C function is included in the argument list of the C++ method.\n  `gmmproc` allows such functionality, but appropriate initialization macros must\n  be included to tell `gmmproc` how to initialize the C++ parameter from the\n  return of the C function.",
    "sha": "4c1e83fb799ad46c",
-   "zh": null
+   "zh": "在封装方法时，通常最好将C函数的返回值储存在被称为输出参数的参数中。在本例中，C++方法返回void但是有一个用于储存C函数值的输出参数。gmmproc支持此功能，但是必须使用适当的初始化宏来告诉gmmproc如何从C函数的返回值初始化C++参数。"
   },
   {
    "type": "para",
@@ -158,7 +158,7 @@
    "type": "para",
    "text": "`$3` will be replaced by the output parameter name of the\n  C++ method and `$4` will be replaced by the return of the C\n  function when this initialization is used by `gmmproc`.  For convenience,\n  `$1` will also be replaced by the C++ type without the\n  ampersand (&) and `$2` will be replaced by the C type.",
    "sha": "7f6b548d4c3b79ff",
-   "zh": null
+   "zh": "$3将被C++方法的输出参数名替换，$4将在此初始化被gmmproc使用时被C函数的返回值替代。为了方便起见，$1也将被不带&符的C++类型替换，而$2将被替换为C类型。"
   },
   {
    "type": "heading",
@@ -170,7 +170,7 @@
    "type": "para",
    "text": "The class macro declares the class itself and its relationship with the\n    underlying C type. It generates some internal constructors, the member\n    `gobject_`, typedefs, the `gobj()`\n    accessors, type registration, and the `Glib::wrap()`\n    method, among other things.",
    "sha": "a2ca675ab3f1c7d3",
-   "zh": null
+   "zh": "类宏声明了类本身与其底层C类型的关系。它会生成一些内部构造函数、gobject_成员、类型定义(typedef)、gobj()访问器、Glib::wrap()成员函数、并进行类型注册等。"
   },
   {
    "type": "para",
@@ -194,7 +194,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a type that is derived from\n    `GObject`, but whose wrapper is not derived from\n    `Gtk::Object`.",
    "sha": "88eb058d5ad61508",
-   "zh": null
+   "zh": "这个宏为从GObject派生的类型声明了一个类型包装器，但是此包装器并不会派生自Gtk::Object。"
   },
   {
    "type": "para",
@@ -224,7 +224,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a type whose wrapper is derived from\n    `Gtk::Object`, such as a widget or dialog.",
    "sha": "42903dbe652be5b0",
-   "zh": null
+   "zh": "这个宏为类型声明了一个类型派生包装器，此包装器将派生自Gtk::Object，例如部件(Widget)和对话框(Dialog)。"
   },
   {
    "type": "para",
@@ -248,13 +248,13 @@
    "type": "para",
    "text": "You will typically use this macro when the class already derives from\n    `Gtk::Object`. For instance, you will use it when wrapping\n    a GTK Widget, because `Gtk::Widget` derives from\n    `Gtk::Object`.",
    "sha": "dcc90bff63da014c",
-   "zh": null
+   "zh": "当类已从Gtk::Object派生时，你通常会使用此宏。例如：你将在封装GTK部件时使用它，因为Gtk::Widget派生自Gtk::Object。"
   },
   {
    "type": "para",
    "text": "You might also derive non-widget classes from\n    `Gtk::Object` so they can be used without\n    `Glib::RefPtr`. For instance, they could then be\n    instantiated with `Gtk::make_managed()` or on the stack\n    as a member variable. This is convenient, but you should use this only when\n    you are sure that true reference-counting is not needed. We consider it\n    useful for widgets.",
    "sha": "72847a86ed18d25b",
-   "zh": null
+   "zh": "你还可以从Gtk::Object派生非部件类，这样你就可以在不通过Glib::RefPtr直接使用它们。例如：它们将可以使用Gtk::make_managed()实例化也可以作为成员变量在栈上实例化。这样你可以自行决定是否对它们使用引用计数。我们认为对部件使用引用计数很有用。"
   },
   {
    "type": "heading",
@@ -266,7 +266,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a non-`GObject`\n    struct, registered with\n    `g_boxed_type_register_static()`.",
    "sha": "9137f5c8d1add0a9",
-   "zh": null
+   "zh": "这个宏声明了一个非GObject结构体类型的包装器，并使用g_boxed_type_register_static()对该类型进行注册。"
   },
   {
    "type": "para",
@@ -278,7 +278,7 @@
    "type": "para",
    "text": "For instance, from `Gdk::RGBA`:",
    "sha": "5e5421e0b460f1c6",
-   "zh": null
+   "zh": "示例来自Gdk::RGBA："
   },
   {
    "type": "code",
@@ -296,7 +296,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a simple assignable struct such as\n    `GdkRectangle`. It is similar to\n    `_CLASS_BOXEDTYPE`, but the C struct is not allocated\n    dynamically.",
    "sha": "6d89fff4d5b875de",
-   "zh": null
+   "zh": "这个宏为类似于GdkRectangle这样的简单可赋值结构体声明了一个包装器。它和_CLASS_BOXEDTYPE类似，不过其包装的C结构体不是动态分配的。"
   },
   {
    "type": "para",
@@ -308,7 +308,7 @@
    "type": "para",
    "text": "For instance, for `Gdk::Rectangle`:",
    "sha": "a6a917d2454a0434",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -326,7 +326,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for an opaque struct that has copy and free\n    functions. The new, copy and free functions will be used to instantiate the\n    default constructor, copy constructor and destructor.",
    "sha": "5acb8143bae5ad32",
-   "zh": null
+   "zh": "这个宏为具有复制和释放函数的不透明结构体声明了一个包装器。新建(new)、复制(copy)、释放(free)函数将用于实例化默认构造函数、复制构造函数、析构函数。"
   },
   {
    "type": "para",
@@ -338,7 +338,7 @@
    "type": "para",
    "text": "For instance, from `Glib::VariantType`:",
    "sha": "7a5a29399598c6c5",
-   "zh": null
+   "zh": "示例来自Glib::Checksum："
   },
   {
    "type": "code",
@@ -356,7 +356,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a reference-counted opaque struct. The\n    C++ wrapper cannot be directly instantiated and can only be used with\n    `Glib::RefPtr`.",
    "sha": "d2ac4055efe17210",
-   "zh": null
+   "zh": "这个宏为使用引用计数的不透明结构体声明了一个包装器。C++包装器将不能直接实例化，需要与Glib::RefPtr一起使用。"
   },
   {
    "type": "para",
@@ -368,7 +368,7 @@
    "type": "para",
    "text": "For instance, for `Gtk::CssSection`:",
    "sha": "3a34a7aa6bb4256b",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -386,13 +386,13 @@
    "type": "para",
    "text": "This macro can be used to wrap structs which don't fit into any\n    specialized category.",
    "sha": "eb4e943d259f3a2a",
-   "zh": null
+   "zh": "这个宏用于包装任何不属于专用包装宏的结构体。"
   },
   {
    "type": "para",
    "text": "`_CLASS_GENERIC( C++ class, C class )`",
    "sha": "097e1ed27bf9a97b",
-   "zh": null
+   "zh": "_CLASS_GENERIC( C++类, C类 )"
   },
   {
    "type": "para",
@@ -416,7 +416,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a type that is derived from\n    `GTypeInterface`.",
    "sha": "432be72bde89d7f1",
-   "zh": null
+   "zh": "这个宏为派生自GTypeInterface的类型声明了一个包装器。"
   },
   {
    "type": "para",
@@ -428,7 +428,7 @@
    "type": "para",
    "text": "For instance, from `celleditable.hg`:",
    "sha": "cd7e9a75a30261e0",
-   "zh": null
+   "zh": "示例来自与celleditable.hg："
   },
   {
    "type": "code",
@@ -440,7 +440,7 @@
    "type": "para",
    "text": "Two extra optional parameters were once added, for the case that the interface derives\nfrom another interface, which was believed to be the case when the GInterface has another\nGInterface as a prerequisite. This is a misunderstanding, though.\nWhen GInterface A has GInterface B as a prerequisite, it means that every class\nthat implements A shall also implement B.\nFor instance, from `loadableicon.hg` in glibmm-2.4:",
    "sha": "480fa97e41072de0",
-   "zh": null
+   "zh": "对于接口是从其他接口派生的情况，两个附加参数是可选的，GInterface有另一个GInterface作为先决条件时属于此情况。示例来自于loadableicon.hg："
   },
   {
    "type": "code",
@@ -452,7 +452,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a type whose wrapper is derived from\n    `Gtk::Object`, such as a widget or dialog.",
    "sha": "42903dbe652be5b0-1",
-   "zh": null
+   "zh": "这个宏为类型声明了一个类型派生包装器，此包装器将派生自Gtk::Object，例如部件(Widget)和对话框(Dialog)。"
   },
   {
    "type": "para",
@@ -476,19 +476,19 @@
    "type": "para",
    "text": "You will typically use this macro when the class already derives from\n    `Gtk::Object`. For instance, you will use it when wrapping\n    a GTK Widget, because `Gtk::Widget` derives from\n    `Gtk::Object`.",
    "sha": "dcc90bff63da014c-1",
-   "zh": null
+   "zh": "当类已从Gtk::Object派生时，你通常会使用此宏。例如：你将在封装GTK部件时使用它，因为Gtk::Widget派生自Gtk::Object。"
   },
   {
    "type": "para",
    "text": "You might also derive non-widget classes from\n    `Gtk::Object` so they can be used without\n    `Glib::RefPtr`. For instance, they could then be\n    instantiated with `Gtk::make_managed()` or on the stack\n    as a member variable. This is convenient, but you should use this only when\n    you are sure that true reference-counting is not needed. We consider it\n    useful for widgets.",
    "sha": "72847a86ed18d25b-1",
-   "zh": null
+   "zh": "你还可以从Gtk::Object派生非部件类，这样你就可以在不通过Glib::RefPtr直接使用它们。例如：它们将可以使用Gtk::make_managed()实例化也可以作为成员变量在栈上实例化。这样你可以自行决定是否对它们使用引用计数。我们认为对部件使用引用计数很有用。"
   },
   {
    "type": "para",
    "text": "This macro declares a wrapper for a non-`GObject`\n    struct, registered with\n    `g_boxed_type_register_static()`.",
    "sha": "9137f5c8d1add0a9-1",
-   "zh": null
+   "zh": "这个宏声明了一个非GObject结构体类型的包装器，并使用g_boxed_type_register_static()对该类型进行注册。"
   },
   {
    "type": "para",
@@ -500,7 +500,7 @@
    "type": "para",
    "text": "For instance, from `Gdk::RGBA`:",
    "sha": "5e5421e0b460f1c6-1",
-   "zh": null
+   "zh": "示例来自Gdk::RGBA："
   },
   {
    "type": "code",
@@ -512,7 +512,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a simple assignable struct such as\n    `GdkRectangle`. It is similar to\n    `_CLASS_BOXEDTYPE`, but the C struct is not allocated\n    dynamically.",
    "sha": "6d89fff4d5b875de-1",
-   "zh": null
+   "zh": "这个宏为类似于GdkRectangle这样的简单可赋值结构体声明了一个包装器。它和_CLASS_BOXEDTYPE类似，不过其包装的C结构体不是动态分配的。"
   },
   {
    "type": "para",
@@ -524,7 +524,7 @@
    "type": "para",
    "text": "For instance, for `Gdk::Rectangle`:",
    "sha": "a6a917d2454a0434-1",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -536,7 +536,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for an opaque struct that has copy and free\n    functions. The new, copy and free functions will be used to instantiate the\n    default constructor, copy constructor and destructor.",
    "sha": "5acb8143bae5ad32-1",
-   "zh": null
+   "zh": "这个宏为具有复制和释放函数的不透明结构体声明了一个包装器。新建(new)、复制(copy)、释放(free)函数将用于实例化默认构造函数、复制构造函数、析构函数。"
   },
   {
    "type": "para",
@@ -548,7 +548,7 @@
    "type": "para",
    "text": "For instance, from `Glib::VariantType`:",
    "sha": "7a5a29399598c6c5-1",
-   "zh": null
+   "zh": "示例来自Glib::Checksum："
   },
   {
    "type": "code",
@@ -560,7 +560,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a reference-counted opaque struct. The\n    C++ wrapper cannot be directly instantiated and can only be used with\n    `Glib::RefPtr`.",
    "sha": "d2ac4055efe17210-1",
-   "zh": null
+   "zh": "这个宏为使用引用计数的不透明结构体声明了一个包装器。C++包装器将不能直接实例化，需要与Glib::RefPtr一起使用。"
   },
   {
    "type": "para",
@@ -572,7 +572,7 @@
    "type": "para",
    "text": "For instance, for `Gtk::CssSection`:",
    "sha": "3a34a7aa6bb4256b-1",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -584,13 +584,13 @@
    "type": "para",
    "text": "This macro can be used to wrap structs which don't fit into any\n    specialized category.",
    "sha": "eb4e943d259f3a2a-1",
-   "zh": null
+   "zh": "这个宏用于包装任何不属于专用包装宏的结构体。"
   },
   {
    "type": "para",
    "text": "`_CLASS_GENERIC( C++ class, C class )`",
    "sha": "097e1ed27bf9a97b-1",
-   "zh": null
+   "zh": "_CLASS_GENERIC( C++类, C类 )"
   },
   {
    "type": "para",
@@ -608,7 +608,7 @@
    "type": "para",
    "text": "This macro declares a wrapper for a type that is derived from\n    `GTypeInterface`.",
    "sha": "432be72bde89d7f1-1",
-   "zh": null
+   "zh": "这个宏为派生自GTypeInterface的类型声明了一个包装器。"
   },
   {
    "type": "para",
@@ -620,7 +620,7 @@
    "type": "para",
    "text": "For instance, from `celleditable.hg`:",
    "sha": "cd7e9a75a30261e0-1",
-   "zh": null
+   "zh": "示例来自与celleditable.hg："
   },
   {
    "type": "code",
@@ -632,7 +632,7 @@
    "type": "para",
    "text": "Two extra optional parameters were once added, for the case that the interface derives\nfrom another interface, which was believed to be the case when the GInterface has another\nGInterface as a prerequisite. This is a misunderstanding, though.\nWhen GInterface A has GInterface B as a prerequisite, it means that every class\nthat implements A shall also implement B.\nFor instance, from `loadableicon.hg` in glibmm-2.4:",
    "sha": "480fa97e41072de0-1",
-   "zh": null
+   "zh": "对于接口是从其他接口派生的情况，两个附加参数是可选的，GInterface有另一个GInterface作为先决条件时属于此情况。示例来自于loadableicon.hg："
   },
   {
    "type": "code",
@@ -656,7 +656,7 @@
    "type": "para",
    "text": "When using `_CLASS_GOBJECT()`, the constructors should\n    be protected (rather than public) and each constructor should have a\n    corresponding `_WRAP_CREATE()` in the public section.\n    This prevents the class from being instantiated without using a\n    `RefPtr`. For instance:",
    "sha": "4a4afe9d745e7510",
-   "zh": null
+   "zh": "在使用_CLASS_GOBJECT()时，其构造函数应该是保护(protected)的而不是公有(public)。并且每个公有(public)的构造函数都应该有_WRAP_CREATE()。这样可以防止在不使用RefPtr的情况下直接实例化这个类。例如："
   },
   {
    "type": "code",
@@ -674,7 +674,7 @@
    "type": "para",
    "text": "This macro creates a default constructor with no arguments.",
    "sha": "3906f2bef2b14ab9",
-   "zh": null
+   "zh": "这个宏创建一个不接受参数的默认构造函数"
   },
   {
    "type": "heading",
@@ -770,7 +770,7 @@
    "type": "para",
    "text": "Suppresses declaration and definition of default constructor in\n`_CLASS_BOXEDTYPE`, `_CLASS_BOXEDTYPE_STATIC`\nand `_CLASS_OPAQUE_COPYABLE`.",
    "sha": "7d08da25817dcde3",
-   "zh": null
+   "zh": "抑制_CLASS_BOXEDTYPE、_CLASS_BOXEDTYPE_STATIC、_CLASS_OPAQUE_COPYABLE生成默认构造函数的声明和定义。"
   },
   {
    "type": "heading",
@@ -782,19 +782,19 @@
    "type": "para",
    "text": "Suppresses declaration and definition of the constructor that takes a pointer\nto the wrapped C object in `_CLASS_BOXEDTYPE` and\n`_CLASS_BOXEDTYPE_STATIC`.",
    "sha": "eabebc25dd0b5082",
-   "zh": null
+   "zh": "抑制_CLASS_BOXEDTYPE和_CLASS_BOXEDTYPE_STATIC生成接受指向其所包装的C类型的指针的构造函数的声明和定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of the constructor that takes a pointer to the\nwrapped C object in `_CLASS_INTERFACE` and\n`_CLASS_OPAQUE_COPYABLE`.",
    "sha": "a49ce46489fb90b7",
-   "zh": null
+   "zh": "抑制_CLASS_INTERFACE和_CLASS_OPAQUE_COPYABLE生成接受指向其所包装的C类型的指针的构造函数的定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of the constructor that takes a pointer to the\nwrapped C object and the constructor that takes construct_params in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "3922b243f8c3fcaf",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成接受指向其所包装的C类型的指针且接受其他构造参数的构造函数的定义。"
   },
   {
    "type": "heading",
@@ -806,7 +806,7 @@
    "type": "para",
    "text": "Suppresses definition of destructor in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "4d4956877e50f2e6",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成析构函数的定义"
   },
   {
    "type": "heading",
@@ -818,13 +818,13 @@
    "type": "para",
    "text": "Suppresses declaration and definition of move constructor and move\nassignment operator in `_CLASS_GOBJECT` and\n`_CLASS_GTKOBJECT`.",
    "sha": "9b9315de287fdfc1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT_CLASS_GTKOBJECT生成移动构造函数和移动赋值运算符的声明和定义。"
   },
   {
    "type": "para",
    "text": "For example:",
    "sha": "652744a2ab28954b",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -842,7 +842,7 @@
    "type": "para",
    "text": "Suppresses definition of `Glib::wrap_new()` function in\n`_CLASS_GOBJECT`.",
    "sha": "0ed0cdfa30a3ab1d",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT生成Glib::wrap_new()的定义。"
   },
   {
    "type": "heading",
@@ -854,7 +854,7 @@
    "type": "para",
    "text": "Suppresses definition of `Glib::wrap()` function in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "e43a9599de271f80",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成Glib::wrap()函数的定义。"
   },
   {
    "type": "heading",
@@ -866,43 +866,43 @@
    "type": "para",
    "text": "Suppresses declaration and definition of `Glib::wrap()`\nfunction in `_CLASS_GOBJECT`, `_CLASS_BOXEDTYPE`,\n`_CLASS_BOXEDTYPE_STATIC`, `_CLASS_OPAQUE_COPYABLE`,\n`_CLASS_INTERFACE` and `_CLASS_GTKOBJECT`.",
    "sha": "bd06d298085dff55",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT、_CLASS_BOXEDTYPE、_CLASS_BOXEDTYPE_STATIC、_CLASS_OPAQUE_COPYABLE、_CLASS_INTERFACE和_CLASS_GTKOBJECT生成Glib::wrap()函数的声明和定义。"
   },
   {
    "type": "para",
    "text": "Suppresses declaration and definition of the constructor that takes a pointer\nto the wrapped C object in `_CLASS_BOXEDTYPE` and\n`_CLASS_BOXEDTYPE_STATIC`.",
    "sha": "eabebc25dd0b5082-1",
-   "zh": null
+   "zh": "抑制_CLASS_BOXEDTYPE和_CLASS_BOXEDTYPE_STATIC生成接受指向其所包装的C类型的指针的构造函数的声明和定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of the constructor that takes a pointer to the\nwrapped C object in `_CLASS_INTERFACE` and\n`_CLASS_OPAQUE_COPYABLE`.",
    "sha": "a49ce46489fb90b7-1",
-   "zh": null
+   "zh": "抑制_CLASS_INTERFACE和_CLASS_OPAQUE_COPYABLE生成接受指向其所包装的C类型的指针的构造函数的定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of the constructor that takes a pointer to the\nwrapped C object and the constructor that takes construct_params in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "3922b243f8c3fcaf-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成接受指向其所包装的C类型的指针且接受其他构造参数的构造函数的定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of destructor in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "4d4956877e50f2e6-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成析构函数的定义"
   },
   {
    "type": "para",
    "text": "Suppresses declaration and definition of move constructor and move\nassignment operator in `_CLASS_GOBJECT` and\n`_CLASS_GTKOBJECT`.",
    "sha": "9b9315de287fdfc1-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT_CLASS_GTKOBJECT生成移动构造函数和移动赋值运算符的声明和定义。"
   },
   {
    "type": "para",
    "text": "For example:",
    "sha": "652744a2ab28954b-1",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -914,19 +914,19 @@
    "type": "para",
    "text": "Suppresses definition of `Glib::wrap_new()` function in\n`_CLASS_GOBJECT`.",
    "sha": "0ed0cdfa30a3ab1d-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT生成Glib::wrap_new()的定义。"
   },
   {
    "type": "para",
    "text": "Suppresses definition of `Glib::wrap()` function in\n`_CLASS_GOBJECT` and `_CLASS_GTKOBJECT`.",
    "sha": "e43a9599de271f80-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成Glib::wrap()函数的定义。"
   },
   {
    "type": "para",
    "text": "Suppresses declaration and definition of `Glib::wrap()`\nfunction in `_CLASS_GOBJECT`, `_CLASS_BOXEDTYPE`,\n`_CLASS_BOXEDTYPE_STATIC`, `_CLASS_OPAQUE_COPYABLE`,\n`_CLASS_INTERFACE` and `_CLASS_GTKOBJECT`.",
    "sha": "bd06d298085dff55-1",
-   "zh": null
+   "zh": "抑制_CLASS_GOBJECT、_CLASS_BOXEDTYPE、_CLASS_BOXEDTYPE_STATIC、_CLASS_OPAQUE_COPYABLE、_CLASS_INTERFACE和_CLASS_GTKOBJECT生成Glib::wrap()函数的声明和定义。"
   },
   {
    "type": "heading",
@@ -944,19 +944,19 @@
    "type": "para",
    "text": "This macro generates the C++ method to wrap a C function.",
    "sha": "bc3ce86690390805",
-   "zh": null
+   "zh": "这个宏用于生成封装C函数的C++方法。"
   },
   {
    "type": "para",
    "text": "`_WRAP_METHOD( C++ method signature, C function name)`",
    "sha": "c152d9d9a53d0501",
-   "zh": null
+   "zh": "_WRAP_METHOD( C++方法签名, C函数名)"
   },
   {
    "type": "para",
    "text": "For instance, from `entry.hg`:",
    "sha": "e9e6f115fa0d1f4c",
-   "zh": null
+   "zh": "示例来自于entry.hg："
   },
   {
    "type": "code",
@@ -980,7 +980,7 @@
    "type": "para",
    "text": "Do an extra `reference()` on the return value,\n                in case the C function does not provide a reference.",
    "sha": "fc4e29ff2f0f8067",
-   "zh": null
+   "zh": "在C函数不提供引用时，对其返回值额外调用一次reference()。"
   },
   {
    "type": "para",
@@ -992,7 +992,7 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n                deprecation can be specified as an optional\n                parameter.",
    "sha": "6515030738997641",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
@@ -1004,37 +1004,37 @@
    "type": "para",
    "text": "Just call the non-const version of the same function,\n                instead of generating almost duplicate code.",
    "sha": "68edf7b76fe9153e",
-   "zh": null
+   "zh": "直接调用同一个函数的非const版本，而不是生成几乎相同的代码。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "para",
    "text": "Specifies the name of the slot parameter of the method, if it\n            has one.  This enables `gmmproc` to generate code\n            to copy the slot and pass the copy on to the C function in its\n            final `gpointer user_data` parameter.  The\n            `slot_callback` option must also be used to\n            specify the name of the glue callback function to also pass on to\n            the C function.",
    "sha": "e2e8ca2fd2bfa062",
-   "zh": null
+   "zh": "如果方法存在一个槽参数，指定该槽参数的名称。这使得gmmproc可以生成用于复制槽并将其复制传递给C函数的gpointer user_data参数的代码。slot_callback参数需要使用此选项指定的名称。"
   },
   {
    "type": "para",
    "text": "Used in conjunction with the `slot_name`\n            option to specify the name of the glue callback function that\n            handles extracting the slot and then calling it.  The address of\n            this callback is also passed on to the C function that the method\n            wraps.",
    "sha": "294979bae0c582d1",
-   "zh": null
+   "zh": "与slot_name选项一起使用。用slot_name所指定的胶水回调函数处理提取槽然后调用它。这个回调函数的函数指针也将被传递给封装此C函数的方法。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` not to pass a copy of the slot\n            to the C function, if the method has one.  Instead the slot itself\n            is passed.  The slot parameter name and the glue callback function\n            must have been specified with the `slot_name` and\n            `slot_callback` options respectively.",
    "sha": "78923f19bd5a2289",
-   "zh": null
+   "zh": "告知gmmproc如果此方法有槽，不要将槽的副本传递给C函数。而是直接传递槽本身。槽的参数名和胶水回调函数必须分别使用slot_name和slot_callback选项指定。"
   },
   {
    "type": "para",
@@ -1082,19 +1082,19 @@
    "type": "para",
    "text": "This macro is like `_WRAP_METHOD()`, but it generates\n    only the documentation for a  C++ method that wraps a C function. Use this\n    when you must hand-code the method, but you want to use the documentation\n    that would be generated if the method was generated.",
    "sha": "e49f588ad969e113",
-   "zh": null
+   "zh": "这个宏类似于_WRAP_METHOD()，但是它只生成封装C函数的C++方法的文档。当你需要手动编写该方法又不想手动编写文档时，请使用这个宏。"
   },
   {
    "type": "para",
    "text": "`_WRAP_METHOD_DOCS_ONLY(C function name)`",
    "sha": "9712414ab31c51e5",
-   "zh": null
+   "zh": "_WRAP_METHOD_DOCS_ONLY(C function name)"
   },
   {
    "type": "para",
    "text": "For instance, from `recentinfo.hg`:",
    "sha": "d3b8c6f9cff22926",
-   "zh": null
+   "zh": "示例来自于container.hg："
   },
   {
    "type": "code",
@@ -1118,13 +1118,13 @@
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-1",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "Don't include a @return Doxygen command in the documentation.\n                Useful if the wrapped C function returns a value, but the corresponding\n                C++ method returns `void`.",
    "sha": "4bb64ad840405517",
-   "zh": null
+   "zh": "不要再文档中包含@return Doxygen命令。如果被封装的C函数有返回而封装它的C++方法返回void，这将很有用。"
   },
   {
    "type": "heading",
@@ -1136,7 +1136,7 @@
    "type": "para",
    "text": "`gmmproc` will warn you on stdout about functions, signals,\n    properties and child properties that you have forgotten to wrap, helping to\n    ensure that you are wrapping the complete API. But if you don't want to wrap\n    some functions, signals, properties or child properties, or if you chose\n    to hand-code some methods then you can use the _IGNORE(), _IGNORE_SIGNAL()\n    or _IGNORE_PROPERTY() macro to make `gmmproc` stop complaining.",
    "sha": "cd7e9d76a2b74b4b",
-   "zh": null
+   "zh": "gmmproc会在stdout上警告你忘了封装相关的函数、信号、属性、子属性，这有助于确保API被完整的封装。但有时候你会不想对某些函数、信号、属性、子属性封装，或者你想要手动编写一些函数，那么你可以使用_IGNORE()、_IGNORE_SIGNAL()、_IGNORE_PROPERTY()宏使gmmproc停止发出部分警告。"
   },
   {
    "type": "para",
@@ -1154,7 +1154,7 @@
    "type": "para",
    "text": "For instance, from `flowbox.hg`:",
    "sha": "7ea01302a0ca1771",
-   "zh": null
+   "zh": "示例来自flowbox.hg："
   },
   {
    "type": "code",
@@ -1172,19 +1172,19 @@
    "type": "para",
    "text": "This macro generates the C++ libsigc++-style signal to wrap a C GObject\n    signal. It actually generates a public accessor method, such as\n    `signal_clicked()`, which returns a proxy object.\n    `gmmproc` uses the .defs file to discover the C parameter\n    types and the .m4 convert files to discover appropriate type\n    conversions.",
    "sha": "d5d2e38d91b7e30f",
-   "zh": null
+   "zh": "这个宏生成用来封装C GObject信号的C++ libsigc++风格的信号。实际上它会生成一个公有访问器方法，例如signal_clicked()，它返回一个代理对象。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
   },
   {
    "type": "para",
    "text": "`_WRAP_SIGNAL( C++ signal handler signature, C signal name)`",
    "sha": "407253b93c02ed9a",
-   "zh": null
+   "zh": "_WRAP_SIGNAL( C++信号处理函数签名, C信号名)"
   },
   {
    "type": "para",
    "text": "For instance, from `button.hg`:",
    "sha": "af7e59b360234ab5",
-   "zh": null
+   "zh": "来自button.hg文件中的例子："
   },
   {
    "type": "code",
@@ -1196,7 +1196,7 @@
    "type": "para",
    "text": "Signals usually have function pointers in the GTK struct, with a\n    corresponding enum value and a `g_signal_new()` in the\n    .c file.",
    "sha": "9bfa24198eccc21f",
-   "zh": null
+   "zh": "信号通常在GTK结构体中具有函数指针，在.c文件中有对应的枚举值和g_signal_new()函数。"
   },
   {
    "type": "para",
@@ -1208,61 +1208,61 @@
    "type": "para",
    "text": "Do not generate an `on_something()` virtual\n                method to allow easy overriding of the default signal handler.\n                Use this when adding a signal with a default signal handler\n                would break the ABI by increasing the size of the class's\n                virtual function table, and when adding a signal without a public\n                C default handler.",
    "sha": "c4e2306cd7caf917",
-   "zh": null
+   "zh": "不要生成on_something()虚成员函数以允许简单的覆写默认信号处理函数。可以在添加一个具有默认信号处理函数的信号会使虚函数表尺寸变大以至于破坏ABI的时候，或是在需要添加一个非公共C默认处理函数的时候，使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Generate a declaration of the `on_something()`\n                virtual method in the `.h` file, but do not\n                generate a definition in the `.cc` file.\n                Use this when you must generate the definition by hand.",
    "sha": "bfd29f34847805ca",
-   "zh": null
+   "zh": "在.h文件中生成on_something()虚成员函数的声明，但不在.cc文件中生成该函数的定义。请在你需要手动编写函数定义的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do not generate a C callback function for the signal.\n                Use this when you must generate the callback function by hand.",
    "sha": "898e8bd5c152a5df",
-   "zh": null
+   "zh": "不要为信号生成C回调函数。请在你需要手动编写回调函数的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of the `on_something()` virtual method, in\n                case the C function does not provide a reference.",
    "sha": "e463d2da65b46941",
-   "zh": null
+   "zh": "当C函数没有提供引用的时候，在on_something()虚成员函数的返回值上额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n                deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-2",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515-1",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "para",
    "text": "Allows to use custom exception handler instead of default one.\n\t            Exception might be rethrown by user-defined handler, and it will be\n\t            caught by default handler.",
    "sha": "77b9c5261e67ec86",
-   "zh": null
+   "zh": "允许使用自定义异常处理函数而不是使用默认异常处理函数。如果异常被用户自定义的处理函数程序抛出，则该异常将被默认异常处理函数捕获。"
   },
   {
    "type": "para",
    "text": "Adds a `const Glib::ustring&` parameter to the\n\t            signal_something() method. Use it, if the signal\n\t            accepts a detailed signal name, i.e. if the underlying C code registers\n\t            the signal with the `G_SIGNAL_DETAILED` flag.",
    "sha": "759ea92d17575fce",
-   "zh": null
+   "zh": "向signal_something()成员函数添加一个const Glib::ustring&参数。如果信号接受详细信号名，也就是说底层C代码使用了G_SIGNAL_DETAILED标志注册这个信号，则使用该参数作为详细信号名。"
   },
   {
    "type": "para",
    "text": "Used in conjunction with the `detail_name`\n              option to generate two signal_something()\n              methods, one without a parameter and one with a parameter without\n              a default value. With only the `detail_name` option\n              one method is generated, with a parameter with default value.\n              Use the `two_signal_methods` option, if it's\n              necessary in order to preserve ABI.",
    "sha": "141bc3f9b2763ec6",
-   "zh": null
+   "zh": "需与detail_name选项一起使用。生成两个signal_something()成员函数，其中一个不带任何参数，而另一个接受一个参数但该参数没有默认值。如果只使用detail_name选项，则只生成一个成员函数，此成员函数将接受一个参数且此参数有默认值。请再需要保持ABI不变的情况下使用此选项。"
   },
   {
    "type": "heading",
@@ -1274,19 +1274,19 @@
    "type": "para",
    "text": "This macro generates the C++ method to wrap a C GObject property. You must\n    specify the property name and the wanted C++ type for the property. `gmmproc`\n    uses the .defs file to discover the C type and the .m4 convert files to\n    discover appropriate type conversions.",
    "sha": "9039c6c72d3e08e3",
-   "zh": null
+   "zh": "这个宏生成用于包装C GObject属性的C++方法。你需要为该属性指定属性名以及其值所需的C++类型。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
   },
   {
    "type": "para",
    "text": "`_WRAP_PROPERTY(C property name, C++ type)`",
    "sha": "370fd9cb64e4ac20",
-   "zh": null
+   "zh": "_WRAP_PROPERTY(C属性名, C++类型)"
   },
   {
    "type": "para",
    "text": "For instance, from `button.hg`:",
    "sha": "af7e59b360234ab5-1",
-   "zh": null
+   "zh": "来自button.hg文件中的例子："
   },
   {
    "type": "code",
@@ -1304,13 +1304,13 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n                deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869-1",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-3",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "heading",
@@ -1322,19 +1322,19 @@
    "type": "para",
    "text": "This macro generates the C++ method to wrap a virtual C function.",
    "sha": "1a5f6898b767a4aa",
-   "zh": null
+   "zh": "这个宏生成用于封装C虚函数的C++成员函数。"
   },
   {
    "type": "para",
    "text": "`_WRAP_VFUNC( C++ method signature, C function name)`",
    "sha": "cfd67f2cf4a0f44e",
-   "zh": null
+   "zh": "_WRAP_VFUNC( C++成员函数签名, C函数名)"
   },
   {
    "type": "para",
    "text": "For instance, from `widget.hg`:",
    "sha": "11fc1c771d44ae97",
-   "zh": null
+   "zh": "示例来自于widget.hg："
   },
   {
    "type": "code",
@@ -1358,19 +1358,19 @@
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of the `something_vfunc()` function,\n                in case the virtual C function does not provide a reference.",
    "sha": "8cf12726cddb9e5a",
-   "zh": null
+   "zh": "当C虚函数没有提供引用的时候，在something_vfunc()函数的返回值上额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of an overridden `something_vfunc()` function\n                in the C callback function, in case the calling C function\n                expects it to provide a reference.",
    "sha": "01ac304b56a0c3a7",
-   "zh": null
+   "zh": "当被调用的C函数期望其提供一个引用的时候，在C回调函数当中，对被覆写的something_vfunc()函数的返回值额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Keep a copy of the return value in the C callback function,\n                in case the calling C function does not expect to get its own\n                reference.",
    "sha": "ecb83394158de9a6",
-   "zh": null
+   "zh": "当被调用的C函数不想要得到属于它的引用的时候，在C回调函数中保留一份返回值的副本。"
   },
   {
    "type": "para",
@@ -1382,79 +1382,79 @@
    "type": "para",
    "text": "Do not generate a definition of the vfunc in the\n               `.cc` file. Use this when you must generate\n               the vfunc by hand.",
    "sha": "fc47533b1d400188",
-   "zh": null
+   "zh": "不在.cc文件中生成虚函数的定义。请在你需要手写虚函数的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do not generate a C callback function for the vfunc.\n                Use this when you must generate the callback function by hand.",
    "sha": "51db5b265dab1d88",
-   "zh": null
+   "zh": "不为虚函数生成C回调函数。请在你需要手写回调函数时使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515-2",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "para",
    "text": "Specifies the name of the slot parameter of the method, if it\n            has one.  This enables `gmmproc` to generate code\n            to copy the slot and pass the copy on to the C function in its\n            final `gpointer user_data` parameter.  The\n            `slot_callback` option must also be used to\n            specify the name of the glue callback function to also pass on to\n            the C function.",
    "sha": "e2e8ca2fd2bfa062-1",
-   "zh": null
+   "zh": "如果方法存在一个槽参数，指定该槽参数的名称。这使得gmmproc可以生成用于复制槽并将其复制传递给C函数的gpointer user_data参数的代码。slot_callback参数需要使用此选项指定的名称。"
   },
   {
    "type": "para",
    "text": "Used in conjunction with the `slot_name`\n            option to specify the name of the glue callback function that\n            handles extracting the slot and then calling it.  The address of\n            this callback is also passed on to the C function that the method\n            wraps.",
    "sha": "294979bae0c582d1-1",
-   "zh": null
+   "zh": "与slot_name选项一起使用。用slot_name所指定的胶水回调函数处理提取槽然后调用它。这个回调函数的函数指针也将被传递给封装此C函数的方法。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` not to pass a copy of the slot\n            to the C function, if the method has one.  Instead the slot itself\n            is passed.  The slot parameter name and the glue callback function\n            must have been specified with the `slot_name` and\n            `slot_callback` options respectively.",
    "sha": "78923f19bd5a2289-1",
-   "zh": null
+   "zh": "告知gmmproc如果此方法有槽，不要将槽的副本传递给C函数。而是直接传递槽本身。槽的参数名和胶水回调函数必须分别使用slot_name和slot_callback选项指定。"
   },
   {
    "type": "para",
    "text": "Defines a non-default return value.",
    "sha": "c29ea020e3a98e8b",
-   "zh": null
+   "zh": "定义非默认的返回值。"
   },
   {
    "type": "para",
    "text": "Defines a non-default return value, used only if the C++\n\t          `something_vfunc()` function throws an exception\n\t          which is propagated to the C callback function. If return_value is\n\t          specified, but err_return_value is not, then return_value is used\n\t          also when an exception is propagated.",
    "sha": "5bcb247db966781e",
-   "zh": null
+   "zh": "定义一个只在C++ something_vfunc()函数抛出异常，且传播到了C回调函数中的时候才使用的非默认返回值。如果指定了return_value但没有指定err_return_value，则将err_return_value的值视作return_value的值。"
   },
   {
    "type": "para",
    "text": "Allows to use custom exception handler instead of default one.\n\t            Exception might be rethrown by user-defined handler, and it will be\n\t            caught by default handler.",
    "sha": "77b9c5261e67ec86-1",
-   "zh": null
+   "zh": "允许使用自定义异常处理函数而不是使用默认异常处理函数。如果异常被用户自定义的处理函数程序抛出，则该异常将被默认异常处理函数捕获。"
   },
   {
    "type": "para",
    "text": "A rule to which there may be exceptions: If the virtual C function returns\n    a pointer to an object derived from `GObject`, i.e. a\n    reference-counted object, then the virtual C++ function shall return a\n    `Glib::RefPtr<>` object. One of the extra\n    arguments `refreturn` or\n    `refreturn_ctype` is required.",
    "sha": "8b8ff9b8d3fe0892",
-   "zh": null
+   "zh": "一个可能有例外的规则：如果一个C虚函数返回了指向派生自GObject的对象的指针，也即一个引用计数对象的指针，那么C++虚函数应该返回Glib::RefPtr<>对象。且需要refreturn或refreturn_ctype额外参数。"
   },
   {
    "type": "para",
    "text": "This macro is like `_WRAP_METHOD()`, but it generates\n    only the documentation for a  C++ method that wraps a C function. Use this\n    when you must hand-code the method, but you want to use the documentation\n    that would be generated if the method was generated.",
    "sha": "e49f588ad969e113-1",
-   "zh": null
+   "zh": "这个宏类似于_WRAP_METHOD()，但是它只生成封装C函数的C++方法的文档。当你需要手动编写该方法又不想手动编写文档时，请使用这个宏。"
   },
   {
    "type": "para",
    "text": "`_WRAP_METHOD_DOCS_ONLY(C function name)`",
    "sha": "9712414ab31c51e5-1",
-   "zh": null
+   "zh": "_WRAP_METHOD_DOCS_ONLY(C function name)"
   },
   {
    "type": "para",
    "text": "For instance, from `recentinfo.hg`:",
    "sha": "d3b8c6f9cff22926-1",
-   "zh": null
+   "zh": "示例来自于container.hg："
   },
   {
    "type": "code",
@@ -1478,19 +1478,19 @@
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-4",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "Don't include a @return Doxygen command in the documentation.\n                Useful if the wrapped C function returns a value, but the corresponding\n                C++ method returns `void`.",
    "sha": "4bb64ad840405517-1",
-   "zh": null
+   "zh": "不要再文档中包含@return Doxygen命令。如果被封装的C函数有返回而封装它的C++方法返回void，这将很有用。"
   },
   {
    "type": "para",
    "text": "`gmmproc` will warn you on stdout about functions, signals,\n    properties and child properties that you have forgotten to wrap, helping to\n    ensure that you are wrapping the complete API. But if you don't want to wrap\n    some functions, signals, properties or child properties, or if you chose\n    to hand-code some methods then you can use the _IGNORE(), _IGNORE_SIGNAL()\n    or _IGNORE_PROPERTY() macro to make `gmmproc` stop complaining.",
    "sha": "cd7e9d76a2b74b4b-1",
-   "zh": null
+   "zh": "gmmproc会在stdout上警告你忘了封装相关的函数、信号、属性、子属性，这有助于确保API被完整的封装。但有时候你会不想对某些函数、信号、属性、子属性封装，或者你想要手动编写一些函数，那么你可以使用_IGNORE()、_IGNORE_SIGNAL()、_IGNORE_PROPERTY()宏使gmmproc停止发出部分警告。"
   },
   {
    "type": "para",
@@ -1508,7 +1508,7 @@
    "type": "para",
    "text": "For instance, from `flowbox.hg`:",
    "sha": "7ea01302a0ca1771-1",
-   "zh": null
+   "zh": "示例来自flowbox.hg："
   },
   {
    "type": "code",
@@ -1520,19 +1520,19 @@
    "type": "para",
    "text": "This macro generates the C++ libsigc++-style signal to wrap a C GObject\n    signal. It actually generates a public accessor method, such as\n    `signal_clicked()`, which returns a proxy object.\n    `gmmproc` uses the .defs file to discover the C parameter\n    types and the .m4 convert files to discover appropriate type\n    conversions.",
    "sha": "d5d2e38d91b7e30f-1",
-   "zh": null
+   "zh": "这个宏生成用来封装C GObject信号的C++ libsigc++风格的信号。实际上它会生成一个公有访问器方法，例如signal_clicked()，它返回一个代理对象。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
   },
   {
    "type": "para",
    "text": "`_WRAP_SIGNAL( C++ signal handler signature, C signal name)`",
    "sha": "407253b93c02ed9a-1",
-   "zh": null
+   "zh": "_WRAP_SIGNAL( C++信号处理函数签名, C信号名)"
   },
   {
    "type": "para",
    "text": "For instance, from `button.hg`:",
    "sha": "af7e59b360234ab5-2",
-   "zh": null
+   "zh": "来自button.hg文件中的例子："
   },
   {
    "type": "code",
@@ -1544,7 +1544,7 @@
    "type": "para",
    "text": "Signals usually have function pointers in the GTK struct, with a\n    corresponding enum value and a `g_signal_new()` in the\n    .c file.",
    "sha": "9bfa24198eccc21f-1",
-   "zh": null
+   "zh": "信号通常在GTK结构体中具有函数指针，在.c文件中有对应的枚举值和g_signal_new()函数。"
   },
   {
    "type": "para",
@@ -1556,79 +1556,79 @@
    "type": "para",
    "text": "Do not generate an `on_something()` virtual\n                method to allow easy overriding of the default signal handler.\n                Use this when adding a signal with a default signal handler\n                would break the ABI by increasing the size of the class's\n                virtual function table, and when adding a signal without a public\n                C default handler.",
    "sha": "c4e2306cd7caf917-1",
-   "zh": null
+   "zh": "不要生成on_something()虚成员函数以允许简单的覆写默认信号处理函数。可以在添加一个具有默认信号处理函数的信号会使虚函数表尺寸变大以至于破坏ABI的时候，或是在需要添加一个非公共C默认处理函数的时候，使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Generate a declaration of the `on_something()`\n                virtual method in the `.h` file, but do not\n                generate a definition in the `.cc` file.\n                Use this when you must generate the definition by hand.",
    "sha": "bfd29f34847805ca-1",
-   "zh": null
+   "zh": "在.h文件中生成on_something()虚成员函数的声明，但不在.cc文件中生成该函数的定义。请在你需要手动编写函数定义的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do not generate a C callback function for the signal.\n                Use this when you must generate the callback function by hand.",
    "sha": "898e8bd5c152a5df-1",
-   "zh": null
+   "zh": "不要为信号生成C回调函数。请在你需要手动编写回调函数的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of the `on_something()` virtual method, in\n                case the C function does not provide a reference.",
    "sha": "e463d2da65b46941-1",
-   "zh": null
+   "zh": "当C函数没有提供引用的时候，在on_something()虚成员函数的返回值上额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n                deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869-2",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-5",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515-3",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "para",
    "text": "Allows to use custom exception handler instead of default one.\n\t            Exception might be rethrown by user-defined handler, and it will be\n\t            caught by default handler.",
    "sha": "77b9c5261e67ec86-2",
-   "zh": null
+   "zh": "允许使用自定义异常处理函数而不是使用默认异常处理函数。如果异常被用户自定义的处理函数程序抛出，则该异常将被默认异常处理函数捕获。"
   },
   {
    "type": "para",
    "text": "Adds a `const Glib::ustring&` parameter to the\n\t            signal_something() method. Use it, if the signal\n\t            accepts a detailed signal name, i.e. if the underlying C code registers\n\t            the signal with the `G_SIGNAL_DETAILED` flag.",
    "sha": "759ea92d17575fce-1",
-   "zh": null
+   "zh": "向signal_something()成员函数添加一个const Glib::ustring&参数。如果信号接受详细信号名，也就是说底层C代码使用了G_SIGNAL_DETAILED标志注册这个信号，则使用该参数作为详细信号名。"
   },
   {
    "type": "para",
    "text": "Used in conjunction with the `detail_name`\n              option to generate two signal_something()\n              methods, one without a parameter and one with a parameter without\n              a default value. With only the `detail_name` option\n              one method is generated, with a parameter with default value.\n              Use the `two_signal_methods` option, if it's\n              necessary in order to preserve ABI.",
    "sha": "141bc3f9b2763ec6-1",
-   "zh": null
+   "zh": "需与detail_name选项一起使用。生成两个signal_something()成员函数，其中一个不带任何参数，而另一个接受一个参数但该参数没有默认值。如果只使用detail_name选项，则只生成一个成员函数，此成员函数将接受一个参数且此参数有默认值。请再需要保持ABI不变的情况下使用此选项。"
   },
   {
    "type": "para",
    "text": "This macro generates the C++ method to wrap a C GObject property. You must\n    specify the property name and the wanted C++ type for the property. `gmmproc`\n    uses the .defs file to discover the C type and the .m4 convert files to\n    discover appropriate type conversions.",
    "sha": "9039c6c72d3e08e3-1",
-   "zh": null
+   "zh": "这个宏生成用于包装C GObject属性的C++方法。你需要为该属性指定属性名以及其值所需的C++类型。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
   },
   {
    "type": "para",
    "text": "`_WRAP_PROPERTY(C property name, C++ type)`",
    "sha": "370fd9cb64e4ac20-1",
-   "zh": null
+   "zh": "_WRAP_PROPERTY(C属性名, C++类型)"
   },
   {
    "type": "para",
    "text": "For instance, from `button.hg`:",
    "sha": "af7e59b360234ab5-3",
-   "zh": null
+   "zh": "来自button.hg文件中的例子："
   },
   {
    "type": "code",
@@ -1646,31 +1646,31 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n                deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869-3",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n                the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-6",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
    "text": "This macro generates the C++ method to wrap a virtual C function.",
    "sha": "1a5f6898b767a4aa-1",
-   "zh": null
+   "zh": "这个宏生成用于封装C虚函数的C++成员函数。"
   },
   {
    "type": "para",
    "text": "`_WRAP_VFUNC( C++ method signature, C function name)`",
    "sha": "cfd67f2cf4a0f44e-1",
-   "zh": null
+   "zh": "_WRAP_VFUNC( C++成员函数签名, C函数名)"
   },
   {
    "type": "para",
    "text": "For instance, from `widget.hg`:",
    "sha": "11fc1c771d44ae97-1",
-   "zh": null
+   "zh": "示例来自于widget.hg："
   },
   {
    "type": "code",
@@ -1694,19 +1694,19 @@
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of the `something_vfunc()` function,\n                in case the virtual C function does not provide a reference.",
    "sha": "8cf12726cddb9e5a-1",
-   "zh": null
+   "zh": "当C虚函数没有提供引用的时候，在something_vfunc()函数的返回值上额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Do an extra `reference()` on the return value\n                of an overridden `something_vfunc()` function\n                in the C callback function, in case the calling C function\n                expects it to provide a reference.",
    "sha": "01ac304b56a0c3a7-1",
-   "zh": null
+   "zh": "当被调用的C函数期望其提供一个引用的时候，在C回调函数当中，对被覆写的something_vfunc()函数的返回值额外调用一次reference()。"
   },
   {
    "type": "para",
    "text": "Keep a copy of the return value in the C callback function,\n                in case the calling C function does not expect to get its own\n                reference.",
    "sha": "ecb83394158de9a6-1",
-   "zh": null
+   "zh": "当被调用的C函数不想要得到属于它的引用的时候，在C回调函数中保留一份返回值的副本。"
   },
   {
    "type": "para",
@@ -1718,61 +1718,61 @@
    "type": "para",
    "text": "Do not generate a definition of the vfunc in the\n               `.cc` file. Use this when you must generate\n               the vfunc by hand.",
    "sha": "fc47533b1d400188-1",
-   "zh": null
+   "zh": "不在.cc文件中生成虚函数的定义。请在你需要手写虚函数的时候使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Do not generate a C callback function for the vfunc.\n                Use this when you must generate the callback function by hand.",
    "sha": "51db5b265dab1d88-1",
-   "zh": null
+   "zh": "不为虚函数生成C回调函数。请在你需要手写回调函数时使用此可选参数。"
   },
   {
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515-4",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "para",
    "text": "Specifies the name of the slot parameter of the method, if it\n            has one.  This enables `gmmproc` to generate code\n            to copy the slot and pass the copy on to the C function in its\n            final `gpointer user_data` parameter.  The\n            `slot_callback` option must also be used to\n            specify the name of the glue callback function to also pass on to\n            the C function.",
    "sha": "e2e8ca2fd2bfa062-2",
-   "zh": null
+   "zh": "如果方法存在一个槽参数，指定该槽参数的名称。这使得gmmproc可以生成用于复制槽并将其复制传递给C函数的gpointer user_data参数的代码。slot_callback参数需要使用此选项指定的名称。"
   },
   {
    "type": "para",
    "text": "Used in conjunction with the `slot_name`\n            option to specify the name of the glue callback function that\n            handles extracting the slot and then calling it.  The address of\n            this callback is also passed on to the C function that the method\n            wraps.",
    "sha": "294979bae0c582d1-2",
-   "zh": null
+   "zh": "与slot_name选项一起使用。用slot_name所指定的胶水回调函数处理提取槽然后调用它。这个回调函数的函数指针也将被传递给封装此C函数的方法。"
   },
   {
    "type": "para",
    "text": "Tells `gmmproc` not to pass a copy of the slot\n            to the C function, if the method has one.  Instead the slot itself\n            is passed.  The slot parameter name and the glue callback function\n            must have been specified with the `slot_name` and\n            `slot_callback` options respectively.",
    "sha": "78923f19bd5a2289-2",
-   "zh": null
+   "zh": "告知gmmproc如果此方法有槽，不要将槽的副本传递给C函数。而是直接传递槽本身。槽的参数名和胶水回调函数必须分别使用slot_name和slot_callback选项指定。"
   },
   {
    "type": "para",
    "text": "Defines a non-default return value.",
    "sha": "c29ea020e3a98e8b-1",
-   "zh": null
+   "zh": "定义非默认的返回值。"
   },
   {
    "type": "para",
    "text": "Defines a non-default return value, used only if the C++\n\t          `something_vfunc()` function throws an exception\n\t          which is propagated to the C callback function. If return_value is\n\t          specified, but err_return_value is not, then return_value is used\n\t          also when an exception is propagated.",
    "sha": "5bcb247db966781e-1",
-   "zh": null
+   "zh": "定义一个只在C++ something_vfunc()函数抛出异常，且传播到了C回调函数中的时候才使用的非默认返回值。如果指定了return_value但没有指定err_return_value，则将err_return_value的值视作return_value的值。"
   },
   {
    "type": "para",
    "text": "Allows to use custom exception handler instead of default one.\n\t            Exception might be rethrown by user-defined handler, and it will be\n\t            caught by default handler.",
    "sha": "77b9c5261e67ec86-3",
-   "zh": null
+   "zh": "允许使用自定义异常处理函数而不是使用默认异常处理函数。如果异常被用户自定义的处理函数程序抛出，则该异常将被默认异常处理函数捕获。"
   },
   {
    "type": "para",
    "text": "A rule to which there may be exceptions: If the virtual C function returns\n    a pointer to an object derived from `GObject`, i.e. a\n    reference-counted object, then the virtual C++ function shall return a\n    `Glib::RefPtr<>` object. One of the extra\n    arguments `refreturn` or\n    `refreturn_ctype` is required.",
    "sha": "8b8ff9b8d3fe0892-1",
-   "zh": null
+   "zh": "一个可能有例外的规则：如果一个C虚函数返回了指向派生自GObject的对象的指针，也即一个引用计数对象的指针，那么C++虚函数应该返回Glib::RefPtr<>对象。且需要refreturn或refreturn_ctype额外参数。"
   },
   {
    "type": "heading",
@@ -1790,19 +1790,19 @@
    "type": "para",
    "text": "This macro generates initialization code for the interface.",
    "sha": "06571e137d26a80c",
-   "zh": null
+   "zh": "这个宏为接口生成初始化代码"
   },
   {
    "type": "para",
    "text": "`_IMPLEMENTS_INTERFACE(C++ interface name)`",
    "sha": "dff278989d7622d2",
-   "zh": null
+   "zh": "_IMPLEMENTS_INTERFACE(C++接口名)"
   },
   {
    "type": "para",
    "text": "For instance, from `grid.hg`:",
    "sha": "43858ae648a3cee2",
-   "zh": null
+   "zh": "示例来自于grid.hg："
   },
   {
    "type": "code",
@@ -1820,7 +1820,7 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks.",
    "sha": "58ede39138b86515-5",
-   "zh": null
+   "zh": "将生成的代码放入ifdef 块中。"
   },
   {
    "type": "heading",
@@ -1832,13 +1832,13 @@
    "type": "para",
    "text": "This macro generates a C++ enum to wrap a C enum. You must specify the desired C++ name and\n    the name of the underlying C enum.",
    "sha": "0d46a12c4e1da537",
-   "zh": null
+   "zh": "这个宏生成一个C++枚举以包装C枚举。你必须指定所需的C++名称和底层C枚举的名称。"
   },
   {
    "type": "para",
    "text": "For instance, from `enums.hg`:",
    "sha": "6efa3035259b2ea4",
-   "zh": null
+   "zh": "示例来自于enums.hg："
   },
   {
    "type": "code",
@@ -1868,7 +1868,7 @@
    "type": "para",
    "text": "For example, from `icontheme.hg`:",
    "sha": "88f5d5561e2c62ed",
-   "zh": null
+   "zh": "示例来自于icontheme.hg："
   },
   {
    "type": "code",
@@ -1886,7 +1886,7 @@
    "type": "para",
    "text": "For example, from `dbusproxy.hg` in glibmm:",
    "sha": "e974543f7949f0ad",
-   "zh": null
+   "zh": "示例来自于glibmm的dbusproxy.hg："
   },
   {
    "type": "code",
@@ -1904,7 +1904,7 @@
    "type": "para",
    "text": "For example, from `dialog.hg`:",
    "sha": "33afdd4fab8c7f55",
-   "zh": null
+   "zh": "示例来自于dialog.hg："
   },
   {
    "type": "code",
@@ -1916,7 +1916,7 @@
    "type": "para",
    "text": "Substitutes (part of) the name of one or more enum constants.\n        You can add any number of substitutions.",
    "sha": "b72a9158907ca732",
-   "zh": null
+   "zh": "替换一个或多个枚举常量名称的全部或一部分。你可以添加任意数量的替换。"
   },
   {
    "type": "para",
@@ -1940,13 +1940,13 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n        deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869-4",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n        the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-7",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "heading",
@@ -1970,19 +1970,19 @@
    "type": "para",
    "text": "This macro generates a C++ exception class, derived from `Glib::Error`, with\na `Code` enum and a code() method. You must specify the desired C++ name, the name\nof the corresponding C enum, and the prefix for the C enum values.",
    "sha": "be1ce4192f96ebe2",
-   "zh": null
+   "zh": "这个宏会生成一个C++异常类，生成的类派生自Glib::Error，并具有一个Code枚举成员变量和一个code()成员函数。你必须指定所需的C++名称、以及与其对应的C枚举名、C枚举值前缀。"
   },
   {
    "type": "para",
    "text": "This exception can then be thrown by methods which are generated from\n_WRAP_METHOD() with the errthrow option.",
    "sha": "7bdccdbdbf0d38e0",
-   "zh": null
+   "zh": "然后可以由带有errthrow选项的_WRAP_METHOD()生成的成员函数抛出此异常。"
   },
   {
    "type": "para",
    "text": "For instance, from `pixbuf.hg`:",
    "sha": "a35f79ce094e64ab",
-   "zh": null
+   "zh": "示例来自于pixbuf.hg："
   },
   {
    "type": "code",
@@ -1994,7 +1994,7 @@
    "type": "para",
    "text": "_WRAP_GERROR() accepts the same optional arguments as _WRAP_ENUM() (though\nCONV_TO_INT is ignored because all exception class enums are plain enums within a class).",
    "sha": "68170f209b142f02",
-   "zh": null
+   "zh": "_WRAP_GERROR()接受与_WRAP_ENUM()一样的可选参数（尽管CONV_TO_INT参数因为没有作用而被忽略）。"
   },
   {
    "type": "heading",
@@ -2006,25 +2006,25 @@
    "type": "para",
    "text": "Use these macros if you're wrapping a simple struct or boxed type that provides\n    direct access to its data members, to create getters and setters for the data members.",
    "sha": "ae3d43940a35ec7c",
-   "zh": null
+   "zh": "如果要包装可以被直接访问其数据成员的简单结构体或装箱类型，请使用这些宏。这些宏会为其数据成员创建访问器成员函数（getter和setter）。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET(C++ name, C name, C++ type, C type)`",
    "sha": "6a080d42b22b6e69",
-   "zh": null
+   "zh": "_MEMBER_GET(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET(C++ name, C name, C++ type, C type)`",
    "sha": "20d0fab1c8e8d791",
-   "zh": null
+   "zh": "_MEMBER_SET(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, in `rectangle.hg`:",
    "sha": "1bc9e83eca1c0c7d",
-   "zh": null
+   "zh": "示例来自于rectangle.hg："
   },
   {
    "type": "code",
@@ -2042,25 +2042,25 @@
    "type": "para",
    "text": "Use these macros to automatically provide getters and setters for a data\n    member that is a pointer type. For the getter function, it will\n    create two methods, one const and one non-const.",
    "sha": "c4cecd81eae32f61",
-   "zh": null
+   "zh": "使用这些宏可以自动为指针类型的数据成员提供访问器（getter和setter）。对于getter函数，将创建两个版本，一个const版本一个非const版本。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET_PTR(C++ name, C name, C++ type, C type)`",
    "sha": "6f8b56054e07fc5c",
-   "zh": null
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET_PTR(C++ name, C name, C++ type, C type)`",
    "sha": "eb4b1f0800559a6f",
-   "zh": null
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, for `Pango::Analysis` in `item.hg`:",
    "sha": "b93dd7e747586732",
-   "zh": null
+   "zh": "示例来自于item.hg文件中的Pango::Analysis："
   },
   {
    "type": "code",
@@ -2078,25 +2078,25 @@
    "type": "para",
    "text": "Use these macros to provide getters and setters for a data member that is a\n    `GObject` type that must be referenced before being\n    returned.",
    "sha": "c7d8adaab659fd83",
-   "zh": null
+   "zh": "使用这些宏可以为返回之前必须被引用的GObject类型数据成员提供访问器（getters和setters）。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET_GOBJECT(C++ name, C name, C++ type, C type)`",
    "sha": "83db8c92dad40b60",
-   "zh": null
+   "zh": "_MEMBER_GET_GOBJECT(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET_GOBJECT(C++ name, C name, C++ type, C type)`",
    "sha": "dd5ca246b0a67720",
-   "zh": null
+   "zh": "_MEMBER_SET_GOBJECT(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, in Pangomm, `layoutline.hg`:",
    "sha": "dfa077c2281b82a4",
-   "zh": null
+   "zh": "示例来自于Pangomm中的layoutline.hg："
   },
   {
    "type": "code",
@@ -2108,13 +2108,13 @@
    "type": "para",
    "text": "This macro generates a C++ enum to wrap a C enum. You must specify the desired C++ name and\n    the name of the underlying C enum.",
    "sha": "0d46a12c4e1da537-1",
-   "zh": null
+   "zh": "这个宏生成一个C++枚举以包装C枚举。你必须指定所需的C++名称和底层C枚举的名称。"
   },
   {
    "type": "para",
    "text": "For instance, from `enums.hg`:",
    "sha": "6efa3035259b2ea4-1",
-   "zh": null
+   "zh": "示例来自于enums.hg："
   },
   {
    "type": "code",
@@ -2144,7 +2144,7 @@
    "type": "para",
    "text": "For example, from `icontheme.hg`:",
    "sha": "88f5d5561e2c62ed-1",
-   "zh": null
+   "zh": "示例来自于icontheme.hg："
   },
   {
    "type": "code",
@@ -2162,7 +2162,7 @@
    "type": "para",
    "text": "For example, from `dbusproxy.hg` in glibmm:",
    "sha": "e974543f7949f0ad-1",
-   "zh": null
+   "zh": "示例来自于glibmm的dbusproxy.hg："
   },
   {
    "type": "code",
@@ -2180,7 +2180,7 @@
    "type": "para",
    "text": "For example, from `dialog.hg`:",
    "sha": "33afdd4fab8c7f55-1",
-   "zh": null
+   "zh": "示例来自于dialog.hg："
   },
   {
    "type": "code",
@@ -2192,7 +2192,7 @@
    "type": "para",
    "text": "Substitutes (part of) the name of one or more enum constants.\n        You can add any number of substitutions.",
    "sha": "b72a9158907ca732-1",
-   "zh": null
+   "zh": "替换一个或多个枚举常量名称的全部或一部分。你可以添加任意数量的替换。"
   },
   {
    "type": "para",
@@ -2216,13 +2216,13 @@
    "type": "para",
    "text": "Puts the generated code in #ifdef blocks. Text about the\n        deprecation can be specified as an optional parameter.",
    "sha": "38ac88b0877ef869-5",
-   "zh": null
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
   },
   {
    "type": "para",
    "text": "Adds a @newin Doxygen command to the documentation, or replaces\n        the @newin command generated from the C documentation.",
    "sha": "a71d413117229c01-8",
-   "zh": null
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
   },
   {
    "type": "para",
@@ -2234,19 +2234,19 @@
    "type": "para",
    "text": "This macro generates a C++ exception class, derived from `Glib::Error`, with\na `Code` enum and a code() method. You must specify the desired C++ name, the name\nof the corresponding C enum, and the prefix for the C enum values.",
    "sha": "be1ce4192f96ebe2-1",
-   "zh": null
+   "zh": "这个宏会生成一个C++异常类，生成的类派生自Glib::Error，并具有一个Code枚举成员变量和一个code()成员函数。你必须指定所需的C++名称、以及与其对应的C枚举名、C枚举值前缀。"
   },
   {
    "type": "para",
    "text": "This exception can then be thrown by methods which are generated from\n_WRAP_METHOD() with the errthrow option.",
    "sha": "7bdccdbdbf0d38e0-1",
-   "zh": null
+   "zh": "然后可以由带有errthrow选项的_WRAP_METHOD()生成的成员函数抛出此异常。"
   },
   {
    "type": "para",
    "text": "For instance, from `pixbuf.hg`:",
    "sha": "a35f79ce094e64ab-1",
-   "zh": null
+   "zh": "示例来自于pixbuf.hg："
   },
   {
    "type": "code",
@@ -2258,31 +2258,31 @@
    "type": "para",
    "text": "_WRAP_GERROR() accepts the same optional arguments as _WRAP_ENUM() (though\nCONV_TO_INT is ignored because all exception class enums are plain enums within a class).",
    "sha": "68170f209b142f02-1",
-   "zh": null
+   "zh": "_WRAP_GERROR()接受与_WRAP_ENUM()一样的可选参数（尽管CONV_TO_INT参数因为没有作用而被忽略）。"
   },
   {
    "type": "para",
    "text": "Use these macros if you're wrapping a simple struct or boxed type that provides\n    direct access to its data members, to create getters and setters for the data members.",
    "sha": "ae3d43940a35ec7c-1",
-   "zh": null
+   "zh": "如果要包装可以被直接访问其数据成员的简单结构体或装箱类型，请使用这些宏。这些宏会为其数据成员创建访问器成员函数（getter和setter）。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET(C++ name, C name, C++ type, C type)`",
    "sha": "6a080d42b22b6e69-1",
-   "zh": null
+   "zh": "_MEMBER_GET(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET(C++ name, C name, C++ type, C type)`",
    "sha": "20d0fab1c8e8d791-1",
-   "zh": null
+   "zh": "_MEMBER_SET(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, in `rectangle.hg`:",
    "sha": "1bc9e83eca1c0c7d-1",
-   "zh": null
+   "zh": "示例来自于rectangle.hg："
   },
   {
    "type": "code",
@@ -2294,25 +2294,25 @@
    "type": "para",
    "text": "Use these macros to automatically provide getters and setters for a data\n    member that is a pointer type. For the getter function, it will\n    create two methods, one const and one non-const.",
    "sha": "c4cecd81eae32f61-1",
-   "zh": null
+   "zh": "使用这些宏可以自动为指针类型的数据成员提供访问器（getter和setter）。对于getter函数，将创建两个版本，一个const版本一个非const版本。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET_PTR(C++ name, C name, C++ type, C type)`",
    "sha": "6f8b56054e07fc5c-1",
-   "zh": null
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET_PTR(C++ name, C name, C++ type, C type)`",
    "sha": "eb4b1f0800559a6f-1",
-   "zh": null
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, for `Pango::Analysis` in `item.hg`:",
    "sha": "b93dd7e747586732-1",
-   "zh": null
+   "zh": "示例来自于item.hg文件中的Pango::Analysis："
   },
   {
    "type": "code",
@@ -2324,25 +2324,25 @@
    "type": "para",
    "text": "Use these macros to provide getters and setters for a data member that is a\n    `GObject` type that must be referenced before being\n    returned.",
    "sha": "c7d8adaab659fd83-1",
-   "zh": null
+   "zh": "使用这些宏可以为返回之前必须被引用的GObject类型数据成员提供访问器（getters和setters）。"
   },
   {
    "type": "para",
    "text": "`_MEMBER_GET_GOBJECT(C++ name, C name, C++ type, C type)`",
    "sha": "83db8c92dad40b60-1",
-   "zh": null
+   "zh": "_MEMBER_GET_GOBJECT(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "`_MEMBER_SET_GOBJECT(C++ name, C name, C++ type, C type)`",
    "sha": "dd5ca246b0a67720-1",
-   "zh": null
+   "zh": "_MEMBER_SET_GOBJECT(C++名, C名, C++类型, C类型)"
   },
   {
    "type": "para",
    "text": "For example, in Pangomm, `layoutline.hg`:",
    "sha": "dfa077c2281b82a4-1",
-   "zh": null
+   "zh": "示例来自于Pangomm中的layoutline.hg："
   },
   {
    "type": "code",
@@ -2360,7 +2360,7 @@
    "type": "para",
    "text": "`gmmproc` allows processing the parameters in a method\n    signature for the macros that process method signatures (like\n    `_WRAP_METHOD()`, `_WRAP_CTOR()` and\n    `_WRAP_CREATE()`) in a variety of ways:",
    "sha": "1c503d4f92c571b0",
-   "zh": null
+   "zh": "gmmproc允许以各种方式为处理成员函数签名的宏（如_WRAP_METHOD()、_WRAP_CTOR()、_WRAP_CREATE()）处理成员函数签名中的参数："
   },
   {
    "type": "heading",
@@ -2408,7 +2408,7 @@
    "type": "para",
    "text": "Please note that when reordering parameters for a\n        `_WRAP_SIGNAL()` method signature, the C parameter\n        names would always be `p0`, `p1`,\n        etc. because the `generate_extra_defs` utility uses those\n        parameter names no matter what the C API's parameter names may be.\n        It's how the utility is written presently.",
    "sha": "9b57ac050ef171bd",
-   "zh": null
+   "zh": "请注意，当为使用_WRAP_SIGNAL()的成员函数签名重排参数时，C参数名总是p0、p1等。因为这些参数名由generate_extra_defs实用工具使用，而该实用工具不在乎C API中的参数名是什么。"
   },
   {
    "type": "heading",
@@ -2552,13 +2552,13 @@
    "type": "listitem",
    "text": "for mandatory parameters (with or without default values): empty string to empty string,",
    "sha": "c31d551abce1f7a4",
-   "zh": null
+   "zh": "对于带有或不带有默认值的强制性参数：空字符串到空字符串"
   },
   {
    "type": "listitem",
    "text": "for optional parameters (with appended {?}): empty string to nullptr.",
    "sha": "eb5dfd609b5ee06f",
-   "zh": null
+   "zh": "对于附加了{?}的可选参数：空字符串到nullptr。"
   },
   {
    "type": "para",
@@ -2684,13 +2684,13 @@
    "type": "listitem",
    "text": "for mandatory parameters (with or without default values): empty string to empty string,",
    "sha": "c31d551abce1f7a4-1",
-   "zh": null
+   "zh": "对于带有或不带有默认值的强制性参数：空字符串到空字符串"
   },
   {
    "type": "listitem",
    "text": "for optional parameters (with appended {?}): empty string to nullptr.",
    "sha": "eb5dfd609b5ee06f-1",
-   "zh": null
+   "zh": "对于附加了{?}的可选参数：空字符串到nullptr。"
   },
   {
    "type": "heading",
@@ -2702,7 +2702,7 @@
    "type": "para",
    "text": "Some of the basic types that are used in C APIs have better alternatives\n    in C++. For example, there's no need for a `gboolean` type since\n    C++ has `bool`. The following list shows some commonly-used\n    types in C APIs and what you might convert them to in a C++ wrapper library.",
    "sha": "a8be59e8364fb90a",
-   "zh": null
+   "zh": "C API中使用的一些基本类型在C++中有更好的替代类型。例如，C++中有bool类型，所以不需要gboolean类型。以下列表显示了C API中的一些常用类型，以及你可以在C++封装库中将它们转换为哪些类型。"
   }
  ]
 }

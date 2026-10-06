@@ -8,7 +8,7 @@
    "type": "para",
    "text": "There are a few common mistakes that you would discover eventually yourself. But this section might help you to avoid them.",
    "sha": "ab2f045646e5d8dd",
-   "zh": null
+   "zh": "有几个你最终会自己发现的错误。但本小节可能能帮助你避免它们。"
   },
   {
    "type": "heading",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "Sometimes two English strings are identical but have different meanings in\ndifferent contexts, so they would probably not be identical when translated. Since the English strings are\n          used as look-up keys, this causes problems.",
    "sha": "e9e465075dcfee36",
-   "zh": null
+   "zh": "有时，两个英文字符串是相同的但是在不同的上下文中有不同的含义，因此他们的译文不一定相同。此时用英文字符串作为查找键会引起问题。"
   },
   {
    "type": "para",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "If you use `Glib`'s support macros, it's easier. Use\n`C_()` instead of `_()`. For instance:",
    "sha": "a80dc3f29bcf89f7",
-   "zh": null
+   "zh": "如果你使用Glib宏，将会更为方便。你只需要使用C_()替换_()。例如："
   },
   {
    "type": "code",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "For instance, this code would be problematic:",
    "sha": "9e96e1e656d1c448",
-   "zh": null
+   "zh": "例如，此代码将会出现问题："
   },
   {
    "type": "code",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "So you should either avoid this situation or use\n`Glib::ustring::compose()`\nwhich supports syntax such as:",
    "sha": "bd13972e62183487",
-   "zh": null
+   "zh": "因此你应该避免这种情况的出现或者使用Glib::ustring::compose()以支持如下所示的语法："
   },
   {
    "type": "code",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "You never know how much space a string will take on screen when translated. It might very possibly be twice the size of the original English string. Luckily, most gtkmm widgets will expand at runtime to the required size.",
    "sha": "47976b06a1abdfd8",
-   "zh": null
+   "zh": "你永远不知道一个字符串被翻译后要在屏幕上显示它需要消耗多少空间。它可能是原始英文字符串的两倍甚至更多。幸运的是 gtkmm的多数部件都能在运行时自动扩展到需要的尺寸。"
   },
   {
    "type": "heading",
@@ -122,7 +122,7 @@
    "type": "para",
    "text": "To work around this, you could write a comment in the\n          source code just before the string, telling the translators to\n          use the special character if it is available in their languages. For English, you could then make an American English\n          `en_US.po` translation which used that special character.",
    "sha": "cdaf86fdf8e64704",
-   "zh": null
+   "zh": "要解决这个问题你可以使用注释提醒译者可以使用他们语言中可用的特殊字符。对于英语用户你可以在美国英语en_US.po翻译中使用特殊字符。"
   }
  ]
 }

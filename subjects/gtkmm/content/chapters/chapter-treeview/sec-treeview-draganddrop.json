@@ -20,19 +20,19 @@
    "type": "para",
    "text": "If you call Gtk::TreeView::set_reorderable() then your\nTreeView's items can be moved within the treeview itself. This is demonstrated\nin the `TreeStore` example.",
    "sha": "94e5451c2535e6c6",
-   "zh": null
+   "zh": "如果调用Gtk::TreeView::set_reorderable()则你可以在树视图中移动其本身的项目。TreeStore的示例对此进行了演示。"
   },
   {
    "type": "para",
    "text": "However, this does not allow you any control of which items can be dragged, and where they can be dropped.\nIf you need that extra control then you might create a derived `Gtk::TreeModel` from\n`Gtk::TreeStore` or `Gtk::ListStore` and override the\n`Gtk::TreeDragSource::row_draggable_vfunc()` and\n`Gtk::TreeDragDest::row_drop_possible_vfunc()` virtual methods.\nYou can examine the `Gtk::TreeModel::Path`s provided and allow or disallow dragging\nor dropping by returning `true` or `false`.",
    "sha": "af069112e544fa86",
-   "zh": null
+   "zh": "但是，这不允许你控制哪些项目可以拖动以及可以将他们拖动到哪里。如果你想做到这些，你需要从Gtk::TreeStore或Gtk::ListStore创建派生的Gtk::TreeModel，然后覆盖Gtk::TreeDragSource::row_draggable_vfunc()和Gtk::TreeDragDest::row_drop_possible_vfunc()虚方法。你可以检查提供的Gtk::TreeModel::Path并返回true或false来允许或禁止拖放。"
   },
   {
    "type": "para",
    "text": "This is demonstrated in the drag_and_drop example.",
    "sha": "dfe0a0a38eddf833",
-   "zh": null
+   "zh": "在drag_and_drop示例中对此进行了演示。"
   }
  ]
 }

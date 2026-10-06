@@ -8,13 +8,13 @@
    "type": "para",
    "text": "String literals should be typed in the source code in English, but\n    they should be surrounded by a call to the `gettext()`\n    function. These strings will be extracted for translation and the\n    translations may be used at runtime instead of the original English\n    strings.",
    "sha": "71a8ca1b10c94ea8",
-   "zh": null
+   "zh": "源代码中的字符串字面量应该以英文键入，但应将其包含在对gettext()函数的调用中。这些字符串将被提取以进行翻译，并且在运行时翻译可以替代原始的英文字符串。"
   },
   {
    "type": "para",
    "text": "The `GNU gettext` package allows you to mark\n    strings in source code, extract those strings for translation, and use\n    the translated strings in your application.",
    "sha": "8c429d9943c91a94",
-   "zh": null
+   "zh": "GNU gettext允许你标记源代码中的字符串，提取这些字符串进行翻译，并在你的应用程序中使用翻译好的字符串。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "For reference, it is possible to generate a file which contains all\n    strings which appear in your code, even if they are not marked for translation,\n    together with file name and line\n    number references. To generate such a file named\n    `my-strings`, execute the following command,\n    within the source code directory:",
    "sha": "18ccd340d3f6ba90",
-   "zh": null
+   "zh": "可以生成一个包含代码中出现的所有字符串（即使没有被标记为需要翻译）以及其文件名与行号引用的文件作为参考。要生成名为my-strings的文件，请在源代码目录执行以下命令："
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "Finally, to let your program use the translation for the current locale,\n    add this code to the beginning of your `main.cc` file, to initialize gettext.",
    "sha": "452eab20fa53509d",
-   "zh": null
+   "zh": "最后，要让你的程序使用当前环境的翻译，请将以下代码添加到你的main.cc文件的开头，以初始化gettext()。"
   },
   {
    "type": "code",
@@ -74,13 +74,13 @@
    "type": "para",
    "text": "The `intltool-update` or\n      `xgettext` script extracts the strings\n      and puts them in a `mypackage.pot` file.\n      The translators of your application create their translations by\n      first copying this `.pot` file to a\n      `localename.po` file. A locale identifies a\n      language and an encoding for that language, including date and numerical\n      formats. Later, when the text in your source code has changed, the\n      `msgmerge` or `intltool-update`\n      script is used to update the `localename.po` files from\n      the regenerated `.pot` file.",
    "sha": "ad7087556001a16d",
-   "zh": null
+   "zh": "intltool-update或xgettext脚本提取字符串并将其放入mypackage.pot文件中。应用程序的翻译人员首先将此.pot文件复制到localename.po中以创建翻译。语言环境标识一种语言和该语言使用的编码，包括日期和数字使用的格式。在之后，当源代码中的文本更改时，使用msgmerge或intltool-update脚本重新生成的.pot文件更新localename.po文件。"
   },
   {
    "type": "para",
    "text": "At install time, the `.po` files are converted to\n      a binary format (with the extension `.mo`) and\n      placed in a system-wide directory for locale files, for example\n      `/usr/share/locale/`.",
    "sha": "8ee1e252ca8b871c",
-   "zh": null
+   "zh": "在安装时，.po将被转换为二进制格式（扩展名为.mo），并将其放置于系统所有的区域设置文件夹中，例如/usr/share/locale/。"
   },
   {
    "type": "para",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "To convince yourself that you've done well, you may wish to add a\n      translation for a new locale. In order to do that, go to the\n      `po` subdirectory of your project and\n      execute the following command:",
    "sha": "ea2d81f0549e94e0",
-   "zh": null
+   "zh": "为了说服自己做得很好，你可能希望为新的语言环境添加翻译。为此请转到项目的po子文件夹并执行以下命令："
   },
   {
    "type": "code",
@@ -140,25 +140,25 @@
    "type": "listitem",
    "text": "L10N Guidelines for Developers",
    "sha": "caad00f65561dcdf",
-   "zh": null
+   "zh": "本地化开发人员指南"
   },
   {
    "type": "listitem",
    "text": "Intltool README",
    "sha": "917196f2c2bb5b89",
-   "zh": null
+   "zh": "Intltool自述文件"
   },
   {
    "type": "listitem",
    "text": "How to use Git for GNOME translators",
    "sha": "1edb6492052f7fd5",
-   "zh": null
+   "zh": "GNOME译者如何使用Git"
   },
   {
    "type": "listitem",
    "text": "gettext manual",
    "sha": "c0b197f393a98c61",
-   "zh": null
+   "zh": "gettext手册"
   }
  ]
 }

@@ -8,7 +8,7 @@
    "type": "para",
    "text": "`Gtk::TreeModel` provides a C++ Standard Library-style container of its\nchildren, via the children() method. You can use the\nfamiliar begin() and end() methods\niterator incrementing, like so:",
    "sha": "9de9e66df402d463",
-   "zh": null
+   "zh": "Gtk::TreeModel通过children()方法提供了标准C++容器库风格的子代迭代器。你可以使用熟悉的begin()和end()方法递增迭代器，如下所示："
   },
   {
    "type": "code",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "If you always want to iterate across the entire range, much more succinct syntax\nis possible using C++'s range-based `for` loop:",
    "sha": "34f230d8de5666a7",
-   "zh": null
+   "zh": "如果你总是想迭代整个范围，则可以使用C++基于范围的更简洁的for循环语法："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "When using a `Gtk::TreeStore`, the rows can have child\nrows, which can have their own children in turn. Use\nGtk::TreeModel::Row::children() to get the container of child `Row`s:",
    "sha": "ee7d660d3e68c1d7",
-   "zh": null
+   "zh": "在使用Gtk::TreeStore的时候，其行可以存在子行，子行也可以存在子行。使用Gtk::TreeModel::Row::children()方法可以获取Row的子行："
   },
   {
    "type": "code",

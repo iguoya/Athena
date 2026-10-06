@@ -8,7 +8,7 @@
    "type": "para",
    "text": "To find out what rows the user has selected, get the\n`Gtk::TreeView::Selection` object from the\n`TreeView`, like so:",
    "sha": "a3144bba71acd687",
-   "zh": null
+   "zh": "要找出用户选择了那些行，请从TreeView的Gtk::TreeView::Selection对象获取。"
   },
   {
    "type": "code",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "By default, only single rows can be selected, but you can allow\nmultiple selection by setting the mode, like so:",
    "sha": "a5016016e5cfdd44",
-   "zh": null
+   "zh": "默认情况下，只能选定一行，但是你可以通过设置选择模式选择多行，如下所示："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "For single-selection, you can just call get_selected(),\nlike so:",
    "sha": "5af99ce218d6cbaa",
-   "zh": null
+   "zh": "对于单选模式，你可以如下所示调用get_selected()："
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "For multiple-selection, you need to call get_selected_rows()\nor define a callback, and give it to\nselected_foreach(),\nselected_foreach_path(), or\nselected_foreach_iter(), like so:",
    "sha": "46e5de4662b06362",
-   "zh": null
+   "zh": "对于多选模式，你需要调用get_selected_rows()或者定义一个回调然后将其传递给selected_foreach()、selected_foreach_path()或selected_foreach_iter()，如下所示："
   },
   {
    "type": "code",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "To respond to the user clicking on a row or range of rows, connect to the\nsignal like so:",
    "sha": "5c8c67b7c4ed5a10",
-   "zh": null
+   "zh": "要响应用户单击某行或者某个范围的行，请按以下方式连接信号："
   },
   {
    "type": "code",
@@ -92,13 +92,13 @@
    "type": "para",
    "text": "Maybe the user should not be able to select every item in your list or tree.\nFor instance, in the gtk-demo, you can select a demo to see the source code,\nbut it doesn't make any sense to select a demo category.",
    "sha": "62f06b45488e8336",
-   "zh": null
+   "zh": "或许用户不应该能选择列表或树中的每个项目。例如在gtk-demo中，你可以选择一个演示来查看他的源代码，但是你选一个演示类别没有意义。"
   },
   {
    "type": "para",
    "text": "To control which rows can be selected, use the\nset_select_function() method, providing a\n`sigc::slot` callback. For instance:",
    "sha": "d78a76cd4e2d981b",
-   "zh": null
+   "zh": "要控制一个行是否能被选择，请使用set_select_function()方法为其提供一个sigc::slot回调。例如："
   },
   {
    "type": "code",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "and then",
    "sha": "819745c14ca2e6da",
-   "zh": null
+   "zh": "接着"
   },
   {
    "type": "code",
@@ -128,7 +128,7 @@
    "type": "para",
    "text": "To change the selection, specify a\n`Gtk::TreeModel::iterator` or\n`Gtk::TreeModel::Row`, like so:",
    "sha": "33d5672f722ccc16",
-   "zh": null
+   "zh": "要更改选择，请指定Gtk::TreeModel::iterator或Gtk::TreeModel::Row，然后如下所示："
   },
   {
    "type": "code",
@@ -140,7 +140,7 @@
    "type": "para",
    "text": "or",
    "sha": "7175517a370b5cd2",
-   "zh": null
+   "zh": "或者"
   },
   {
    "type": "code",

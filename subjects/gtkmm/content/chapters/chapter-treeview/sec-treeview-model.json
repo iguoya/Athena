@@ -14,7 +14,7 @@
    "type": "para",
    "text": "Although you can theoretically implement your own Model, you will normally use\neither the `ListStore` or `TreeStore`\nmodel classes.",
    "sha": "0b91ce7e85c293f9",
-   "zh": null
+   "zh": "理论上你可以实现自己的模型，但通常情况直接使用ListStore或TreeStore可以省略很多麻烦。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "The `ListStore` contains simple rows of data, and each row\nhas no children.",
    "sha": "4bb44ed644dfecd7",
-   "zh": null
+   "zh": "ListStore包含简单的数据行，每个行都没有孩子。"
   },
   {
    "type": "figure",
@@ -57,7 +57,7 @@
    "type": "para",
    "text": "The `TreeStore` contains rows of data, and each row may\nhave child rows.",
    "sha": "5e1e4559df5c50e5",
-   "zh": null
+   "zh": "TreeStore包含数据行，并且每一行都可能有子行。"
   },
   {
    "type": "figure",
@@ -82,7 +82,7 @@
    "type": "para",
    "text": "The `TreeModelColumnRecord` class is used to keep track\nof the columns and their data types. You add\n`TreeModelColumn` instances to the\n`ColumnRecord` and then use those\n`TreeModelColumn`s when getting and setting the data in\nmodel rows. You will probably find it convenient to derive a new\n`TreeModelColumnRecord` which has your\n`TreeModelColumn` instances as member data.",
    "sha": "5cb2b5ed37f582ea",
-   "zh": null
+   "zh": "TreeModelColumnRecord用于跟踪列和它们的数据类型。你TreeModelColumn实例添加到ColumnRecord，然后使用那些TreeModelColumns获取和设置模型列中的数据。你可能会发现，派生一个你自己的包含有TreeModelColumn数据成员的TreeModelColumnRecord会更方便。"
   },
   {
    "type": "code",
@@ -94,7 +94,7 @@
    "type": "para",
    "text": "You specify the `ColumnRecord` when creating the Model,\nlike so:",
    "sha": "24f8464c6ad769b0",
-   "zh": null
+   "zh": "你可以在创建模型的时候指定ColumnRecord，如下所示："
   },
   {
    "type": "code",
@@ -106,7 +106,7 @@
    "type": "para",
    "text": "As a `TreeModelColumnRecord` describes structure, not data,\nit can be shared among multiple models, and this is preferable for efficiency.\nHowever, the instance (such as `m_Columns` here) should usually\nnot be static, because it often needs to be instantiated after\n`glibmm` has been initialized. The best solution is\nto make it a lazily instantiated singleton, so that it will be constructed\non-demand, whenever the first model accesses it.",
    "sha": "613f7dbd3cd8427c",
-   "zh": null
+   "zh": "TreeModelColumnRecord描述的是结构而不是数据，它可以在多个模型之间共享，这样效率更高。但是实例（例如此处的m_Columns）通常不是静态的，因为通常需要在glibmm初始化后示例化它。最好的解决方案是使他成为惰性初始化的单例，以便在第一个模型访问他的时候按需构造。"
   },
   {
    "type": "heading",
@@ -118,7 +118,7 @@
    "type": "para",
    "text": "Add rows to the model with the append(),\nprepend(), or insert() methods.",
    "sha": "d3bff5fbbf58e43d",
-   "zh": null
+   "zh": "使用append()、prepend()或insert()方法可以向模型添加行。"
   },
   {
    "type": "code",
@@ -130,7 +130,7 @@
    "type": "para",
    "text": "You can dereference the iterator to get the Row:",
    "sha": "464e452b48e8f7b2",
-   "zh": null
+   "zh": "你可以通过解引用迭代器获得行："
   },
   {
    "type": "code",
@@ -148,7 +148,7 @@
    "type": "para",
    "text": "`Gtk::TreeStore` models can have child items. Add them\nwith the append(), prepend(), or\ninsert() methods, like so:",
    "sha": "3fb27d661f4db37e",
-   "zh": null
+   "zh": "Gtk::TreeStore模型可以存在子物件。可以通过append()、prepend()或insert()方法添加，如下所示："
   },
   {
    "type": "code",
@@ -166,7 +166,7 @@
    "type": "para",
    "text": "You can use the operator[] overload to set the data for a\nparticular column in the row, specifying the\n`TreeModelColumn` used to create the model.",
    "sha": "c18961369a3827de",
-   "zh": null
+   "zh": "你可以使用operator[]重载设置行中的特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。"
   },
   {
    "type": "code",
@@ -184,7 +184,7 @@
    "type": "para",
    "text": "You can use the operator[] overload to get the data in a\nparticular column in a row, specifying the\n`TreeModelColumn` used to create the model.",
    "sha": "67b7c704f83f4707",
-   "zh": null
+   "zh": "你可以使用operator[]重载获取行中特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。"
   },
   {
    "type": "code",
@@ -196,7 +196,7 @@
    "type": "para",
    "text": "The compiler will complain if you use an inappropriate type. For\ninstance, this would generate a compiler error:",
    "sha": "99a6ed71592efa07",
-   "zh": null
+   "zh": "如果你使用了不合适的类型，编译器会报错。例如，编译器将生成一个编译错误："
   },
   {
    "type": "code",
@@ -214,7 +214,7 @@
    "type": "para",
    "text": "You might want to associate extra data with each row. If so, just add\nit as a Model column, but don't add it to the View.",
    "sha": "f137a192543608fc",
-   "zh": null
+   "zh": "你可能想要将额外的数据和每一行关联。如果是这样，你只需要将其添加到模型的一个行中而不将其添加到视图中即可。"
   }
  ]
 }

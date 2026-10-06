@@ -14,19 +14,19 @@
    "type": "para",
    "text": "Entry widgets allow the user to enter text. You can change the contents with the set_text() method,\nand read the current contents with the get_text() method.",
    "sha": "40ec235ec4ce908f",
-   "zh": null
+   "zh": "条目部件允许用户输入文本。你可以使用set_text()方法更改部件当前的内容，还可以使用get_text()方法读取当前的内容。"
   },
   {
    "type": "para",
    "text": "Occasionally you might want to make an `Entry` widget\nread-only. This can be done by passing `false` to the\nset_editable() method.",
    "sha": "04784553436da27e",
-   "zh": null
+   "zh": "有时你可能想使Entry部件变为只读的。你可以通过向set_editable()方法传递false做到这点。"
   },
   {
    "type": "para",
    "text": "For the input of passwords, passphrases and other information you don't want\nechoed on the screen, calling set_visibility() with\n`false` will cause the text to be hidden.",
    "sha": "e3c90043435e0811",
-   "zh": null
+   "zh": "对于不想在屏幕上回显的密码、密语或者其他信息，你可以通过向set_visibility()方法传递false使输入文本被隐藏。"
   },
   {
    "type": "para",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "This example uses `Gtk::Entry`. It also has two\n`CheckButton`s, with which you can toggle the editable and\nvisible flags.",
    "sha": "cffa582024213430",
-   "zh": null
+   "zh": "本示例使用Gtk::Entry。他还有两个CheckButton，你可以使用他们切换条目部件的可见性和可编辑性标志。"
   },
   {
    "type": "figure",
@@ -87,25 +87,25 @@
    "type": "para",
    "text": "An `Entry` widget can offer a drop-down list of\npre-existing choices based on the first few characters typed by the user. For\ninstance, a search dialog could suggest text from previous searches.",
    "sha": "e84b62514bbbf650",
-   "zh": null
+   "zh": "Entry条目组件可以通过用户输入的前几个字符提供预先准备好选项的下拉列表。例如，在搜索对话框中提供以前输入过的文本作为建议。"
   },
   {
    "type": "para",
    "text": "To enable this functionality, you must create an\n`EntryCompletion` object, and provide it to the\n`Entry` widget via the\nset_completion() method.",
    "sha": "0cbd39e3e4bcaea6",
-   "zh": null
+   "zh": "要启用此功能，你需要创建一个EntryCompletion对象，然后使用Entry部件的set_completion()方法将其提供给条目部件。"
   },
   {
    "type": "para",
    "text": "The `EntryCompletion` may use a\n`TreeModel` containing possible entries, specified with\nset_model(). You should then call\nset_text_column() to specify which of your model columns\nshould be used to match possible text entries.",
    "sha": "e2eb65672f961665",
-   "zh": null
+   "zh": "EntryCompletion可以用set_model()指定一个包含所有可能的条目的TreeModel。你应该调用set_text_column()指定该模型的那一行用以匹配可能的文本条目。"
   },
   {
    "type": "para",
    "text": "Alternatively, if a complete list of possible entries\nwould be too large or too inconvenient to generate, a callback slot may instead\nbe specified with set_match_func().\nThis is also useful if you wish to match on a part of the string other\nthan the start.",
    "sha": "d865f1a1b8dc2234",
-   "zh": null
+   "zh": "或是在不方便生成补全条目列表的时候(太大或者生成太麻烦)，也可以使用set_match_func()指定一个回调槽。这在你想匹配字符串中开头以外的部分的时候这会很有用。"
   },
   {
    "type": "para",
@@ -123,7 +123,7 @@
    "type": "para",
    "text": "This example creates a `Gtk::EntryCompletion` and associates\nit with a `Gtk::Entry` widget. The completion uses a\n`Gtk::TreeModel` of possible entries, and some additional\nactions.",
    "sha": "c7ae24ea98f9f5aa",
-   "zh": null
+   "zh": "这个示例创建一个Gtk::EntryCompletion并将其与Gtk::Entry相关联。补全使用了一个包含了可能条目的Gtk::TreeModel以及一些其他的额外的操作。"
   },
   {
    "type": "figure",
@@ -160,7 +160,7 @@
    "type": "para",
    "text": "This example shows a `Gtk::Entry` widget with a named\nsearch icon, and prints text to the terminal when the icon is pressed.",
    "sha": "e41b5811dc508503",
-   "zh": null
+   "zh": "这个示例显示带有具名搜索图标的Gtk::Entry部件，并且在按下这个图标的时候将该名称打印到终端上。"
   },
   {
    "type": "figure",
@@ -185,7 +185,7 @@
    "type": "para",
    "text": "An `Entry` widget can show a progress bar inside the\ntext area, under the entered text. The progress bar will be shown if the\nset_progress_fraction() or\nset_progress_pulse_step() methods are called.",
    "sha": "8f60fc75ac6ef63c",
-   "zh": null
+   "zh": "Entry部件可以在输入的文本之下显示一个进度条。当部件的set_progress_fraction()或set_progress_pulse_step()方法被调用的时候进度条将显示出来。"
   },
   {
    "type": "heading",
@@ -197,7 +197,7 @@
    "type": "para",
    "text": "This example shows a `Gtk::Entry` widget with a progress\nbar.",
    "sha": "da198762f1be3245",
-   "zh": null
+   "zh": "这个示例显示一个带有进度条的Gtk::Entry部件。"
   },
   {
    "type": "figure",

@@ -8,7 +8,7 @@
    "type": "para",
    "text": "A `ComboBox` may contain an `Entry` widget for entering of arbitrary text, by specifying `true` for the constructor's `has_entry` parameter.",
    "sha": "581b7aae5a38e008",
-   "zh": null
+   "zh": "通过指定ComboBox构造函数的has_entry参数为true，可以令其包含一个Entry部件用以输入任意文本。"
   },
   {
    "type": "heading",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "So that the `Entry` can interact with the drop-down list of choices, you must specify which of your model columns is the text column, with set_entry_text_column(). For instance:",
    "sha": "5711594846ba16b2",
-   "zh": null
+   "zh": "为了使Entry可以与下拉列表的选项进行交互，你必须使用set_entry_text_column()指定哪些模型列是文本列。例如："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "When you select a choice from the drop-down menu, the value from this column will be placed in the `Entry`.",
    "sha": "33e1658f80ba79fa",
-   "zh": null
+   "zh": "当你从下拉菜单中选择一个选项的时候，该列的值将被放于Entry中。"
   },
   {
    "type": "heading",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "Because the user may enter arbitrary text, an active model row isn't enough to tell us what text the user has entered. Therefore, you should retrieve the `Entry` widget with the ComboBox::get_entry() method and call get_text() on that.",
    "sha": "2c46719dfdd96fd1",
-   "zh": null
+   "zh": "由于用户可以输入任意文本，被使用中的模型行可能不足以告诉我们用户输入了什么，因此，你应该使用ComboBox::get_entry()方法检索组合框中的Entry部件并在其上调用get_text()。"
   },
   {
    "type": "heading",

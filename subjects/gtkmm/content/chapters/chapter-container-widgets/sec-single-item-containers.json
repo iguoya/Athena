@@ -8,7 +8,7 @@
    "type": "para",
    "text": "Most single-item container widgets have set_child()\nand unset_child() methods for the child widget.\n`Gtk::Button` and `Gtk::Window` are\ntechnically single-item containers, but we have discussed them already elsewhere.",
    "sha": "192f4ced1627920b",
-   "zh": null
+   "zh": "大多数单项容器部件具有其子部件的set_child()和unset_child()方法。Gtk::Button和Gtk::Window从技术上来说是单项容器，但是我们已经在其他地方讨论过它们。"
   },
   {
    "type": "para",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Frames can enclose one or a group of widgets within a box, optionally with a\ntitle. For instance, you might place a group of\n`ToggleButton`s or `CheckButton`s in a\n`Frame`.",
    "sha": "807a8e09414ed905",
-   "zh": null
+   "zh": "框架可以将一个或一组部件封装在一个框内，还可以为他们选择标题。例如你可以将一组ToggleButton或者CheckButton放入一个Frame中。"
   },
   {
    "type": "para",
@@ -63,19 +63,19 @@
    "type": "para",
    "text": "Panes divide a widget into two halves, separated by a moveable divider.\nThe two halves (panes) can be oriented either horizontally (side by side) or\nvertically (one above the other).",
    "sha": "431aecdc9cf1e302",
-   "zh": null
+   "zh": "窗格用一个可移动的分隔符将一个部件一分为二。其可以水平（使两个窗格并排）也可以竖直（使两个窗格一个在另一个之上）的分隔部件。"
   },
   {
    "type": "para",
    "text": "Unlike the other widgets in this section, pane widgets contain not one but two\nchild widgets, one in each pane. Therefore, you should use\nset_start_child() and set_end_child()\ninstead of a set_child() method.",
    "sha": "b927a6373e98b57d",
-   "zh": null
+   "zh": "与本小节的其他小部件不一样的是，窗格部件包含两个子部件而不是一个部件（每个窗格中一个）。因此你应该用set_start_child()和set_end_child()替代set_child()方法。"
   },
   {
    "type": "para",
    "text": "You can adjust the position of the divider using the\nset_position() method, and you will probably need to do\nso.",
    "sha": "b203265c49daef9d",
-   "zh": null
+   "zh": "如果你需要，你可以使用set_position()调整分割线的位置。"
   },
   {
    "type": "para",
@@ -112,13 +112,13 @@
    "type": "para",
    "text": "`ScrolledWindow` widgets create a scrollable\narea. You can insert any type of widget into a\n`ScrolledWindow`, and it will be accessible\nregardless of its size by using the scrollbars. Note that\n`ScrolledWindow` is not a\n`Gtk::Window` despite the slightly misleading name.",
    "sha": "0eac9ed1a32189db",
-   "zh": null
+   "zh": "ScrolledWindow部件会创建一个可以滚动的区域。你可以将任何类型的部件插入到ScrolledWindow中，无论该部件有多大你都可以通过滚动条来访问它。请注意虽然ScrolledWindow的名称像是Gtk::Window的衍生部件，但其实不是。"
   },
   {
    "type": "para",
    "text": "Scrolled windows have *scrollbar policies* which determine\nwhether the `Scrollbar`s will be displayed. The policies\ncan be set with the set_policy() method. The policy may be\nfor instance `Gtk::PolicyType::AUTOMATIC` or\n`Gtk::PolicyType::ALWAYS`.\n`Gtk::PolicyType::AUTOMATIC` will cause the scrolled window\nto display the scrollbar only if the contained widget is larger than the\nvisible area. `Gtk::PolicyType::ALWAYS` will cause the\nscrollbar to be displayed always.",
    "sha": "77967fc53bff58f6",
-   "zh": null
+   "zh": "滚动窗口具有用于确定是否要显示Scrollbar(滚动条)的scrollbar policies(滚动条策略)。你可以使用set_policy()方法来设置策略。例如设置策略为Gtk::PolicyType::AUTOMATIC或是Gtk::PolicyType::ALWAYS。当策略为Gtk::PolicyType::AUTOMATIC的时候，只有在被包含的部件大于可见区域的时候滚动条才会被显示出来。而Gtk::PolicyType::ALWAYS将使滚动条始终显示。"
   },
   {
    "type": "para",
@@ -136,7 +136,7 @@
    "type": "para",
    "text": "Here is a simple example that packs 100 toggle buttons into a ScrolledWindow. Try resizing the window to see the scrollbars react.",
    "sha": "4328630ec1a8cd42",
-   "zh": null
+   "zh": "这是一个简单的示例，其将100个开关按钮放入滚动窗口中。你可以尝试调整窗口的大小，以查看滚动条的反应。"
   },
   {
    "type": "figure",
@@ -161,7 +161,7 @@
    "type": "para",
    "text": "The `AspectFrame` widget looks like a\n`Frame` widget, but it also enforces the *aspect\n    ratio* (the ratio of the width to the height) of the child\nwidget, adding extra space if necessary. For instance, this would allow you to\ndisplay a photograph without allowing the user to distort it horizontally or\nvertically while resizing.",
    "sha": "7b6ba383b4309666",
-   "zh": null
+   "zh": "AspectFrame部件和Frame部件类似，但它强制子部件的aspect ratio(长宽比)（长与宽的比例）保持不变。并在有必要的时候添加额外的空间。例如，这将允许你显示照片并且无需在用户调整窗口大小的时候对照片进行水平/垂直变形。"
   },
   {
    "type": "para",
@@ -179,7 +179,7 @@
    "type": "para",
    "text": "The following program uses a `Gtk::AspectFrame` to present a\ndrawing area whose aspect ratio will always be 2:1, no matter how the user\nresizes the top-level window.",
    "sha": "10f8caa0b2827168",
-   "zh": null
+   "zh": "下面的程序使用Gtk::AspectFrame显示一个绘图区域，无论用户如何调整顶层窗口大小宽高比依旧保持2:1。"
   },
   {
    "type": "figure",
@@ -204,19 +204,19 @@
    "type": "para",
    "text": "There are other single-item containers. See the reference documentation for a\ncomplete list. Here are links to some example programs that show containers,\nwhich are not mentioned elsewhere in this tutorial.",
    "sha": "66fa38ad36570590",
-   "zh": null
+   "zh": "还有其他的单项容器。请参阅参考文档获取完整列表。这里是一些本教程其他地方未曾提及的显示容器的示例程序的链接。"
   },
   {
    "type": "para",
    "text": "Source Code, Expander",
    "sha": "38a8f5fa5556396c",
-   "zh": null
+   "zh": "扩展器(Expander)源代码"
   },
   {
    "type": "para",
    "text": "Source Code, Popover",
    "sha": "ef4cad074220ad55",
-   "zh": null
+   "zh": "气泡(Popover)源代码"
   }
  ]
 }

@@ -8,19 +8,19 @@
    "type": "para",
    "text": "By default, PrintOperation::run() returns when a print\noperation is completed. If you need to run a non-blocking print operation,\ncall PrintOperation::set_allow_async(). Note that set_allow_async() is not supported\non all platforms, however the `done` signal will still be emitted.",
    "sha": "232848054ebc8c6b",
-   "zh": null
+   "zh": "在默认情况下，PrintOperation::run()在打印操作完成时返回。如果你需要运行非阻塞的打印操作，请调用PrintOperation::set_allow_async()。请注意，并非所有平台都支持set_allow_async()，但done信号仍然会被发出。"
   },
   {
    "type": "para",
    "text": "run() may return\n`PrintOperation::Result::IN_PROGRESS`. To track status\nand handle the result or error you need to implement signal handlers for\nthe `done` and `status_changed` signals:",
    "sha": "a0edafd92c460c78",
-   "zh": null
+   "zh": "run()可能会返回PrintOperation::Result::IN_PROGRESS。要跟踪状态并处理结果或错误，你需要实现done和status_changed信号的信号处理函数。"
   },
   {
    "type": "para",
    "text": "For instance,",
    "sha": "580ef7c3ff8e8ffb",
-   "zh": null
+   "zh": "例如："
   },
   {
    "type": "code",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Second, check for an error and connect to the `status_changed` signal. For instance:",
    "sha": "1418fa8a145e4bc0",
-   "zh": null
+   "zh": "然后，检查错误并连接到status_changed信号，例如："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "Finally, check the status. For instance,",
    "sha": "c7e2dd7106854873",
-   "zh": null
+   "zh": "最后检查状态。例如："
   },
   {
    "type": "code",

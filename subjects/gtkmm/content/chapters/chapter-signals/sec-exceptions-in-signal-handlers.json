@@ -8,19 +8,19 @@
    "type": "para",
    "text": "When a program is aborted because of an unhandled C++ exception, it's sometimes\npossible to use a debugger to find the location where the exception was thrown.\nThis is more difficult than usual if the exception was thrown from a signal handler.",
    "sha": "25d4fb1ab8abfb5a",
-   "zh": null
+   "zh": "当程序因未处理C++异常而终止时，有时候可以使用调试器查找抛出异常的位置。但是如果异常是在信号处理函数中抛出的，这将会比平常困难的多。"
   },
   {
    "type": "para",
    "text": "This section describes primarily what you can expect on a Linux system, when you\nuse the gdb debugger.",
    "sha": "7c264218d272c961",
-   "zh": null
+   "zh": "本小节组要介绍使用gdb调试器在Linux系统上调试异常。"
   },
   {
    "type": "para",
    "text": "First, let's look at a simple example where an exception is thrown from a normal\nfunction (no signal handler).",
    "sha": "a707ba5b05098e2e",
-   "zh": null
+   "zh": "首先让我们看一个简单的示例，其中的一个普通函数（非信号处理函数）抛出异常："
   },
   {
    "type": "code",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "Now let's see what happens when an exception is thrown from a signal handler.\nHere's the source code.",
    "sha": "c08dcb18b1bcde2c",
-   "zh": null
+   "zh": "现在，让我们看看从信号处理函数中抛出异常会发生什么。这是源代码："
   },
   {
    "type": "code",
@@ -80,7 +80,7 @@
    "type": "para",
    "text": "To see where the exception is thrown, you can use the `gdb`\ncommand catch throw.",
    "sha": "71b034a505ff31ff",
-   "zh": null
+   "zh": "要查看哪里抛出了异常，你可以使用gdb的catch throw命令。"
   },
   {
    "type": "code",

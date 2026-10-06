@@ -8,7 +8,7 @@
    "type": "para",
    "text": "Multiple-item container widgets have other methods than set_child()\nand unset_child(). Different containers can have different\nmethods for adding and removing child widgets. For instance, `Gtk::Box`\nhas append() and remove() as\nwell as other methods. The remove() method for multiple-item\ncontainers takes an argument, specifying which widget to remove.",
    "sha": "c481a46c2ee4fb99",
-   "zh": null
+   "zh": "多项容器部件除set_child()和unset_child()方法以外还有其他的方法。不同容器有不同的添加/删除子部件的方法。例如Gtk::Box具有append()和remove()以及其他方法。多项容器的remove()方法需要传入一个用于指示需要删除的部件的参数。"
   },
   {
    "type": "heading",
@@ -26,19 +26,19 @@
    "type": "para",
    "text": "Many GUI toolkits require you to precisely place widgets in a window, using absolute positioning, often using a visual editor. This leads to several problems:",
    "sha": "77ede39ee36c950c",
-   "zh": null
+   "zh": "许多GUI工具包使用可视化编辑器的时候都要求你使用部件相对于窗口的绝对位置。这将导致以下几个问题："
   },
   {
    "type": "listitem",
    "text": "The widgets don't rearrange themselves when the window is resized. Some widgets are hidden when the window is made smaller, and lots of useless space appears when the window is made larger.",
    "sha": "896d49ff0d443df5",
-   "zh": null
+   "zh": "在调整窗口大小的时候部件不会重新排布自己。窗口变小的时候一些部件会被隐藏窗口变大的时候会出现很多无用的空间。"
   },
   {
    "type": "listitem",
    "text": "It's impossible to predict the amount of space necessary for text after it has been translated to other languages, or displayed in a different font. On Unix it is also impossible to anticipate the effects of every theme and window manager.",
    "sha": "b068515ad7a1f9ab",
-   "zh": null
+   "zh": "将文本翻译成其他语言或者用其他字体显示的时候，无法预测显示文本所需要的空间。而在Unix上不可能预料在每个主题和窗口管理器下的显示效果。"
   },
   {
    "type": "listitem",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "gtkmm uses the packing system to solve these problems. Rather than specifying the position and size of each widget in the window,\nyou can arrange your widgets in rows, columns,\nand/or grids. gtkmm can size your window automatically, based on the\nsizes of the widgets it contains. And the sizes of the widgets are, in turn, determined by the amount of text they contain, or the minimum and maximum sizes that you specify, and/or how you have requested that the available space should be shared between sets of widgets.\nYou can perfect your layout by\nspecifying margins and centering values for each of your widgets. gtkmm then uses\nall this information to resize and reposition everything sensibly and smoothly when the user manipulates the window.",
    "sha": "635555ffdc3b887a",
-   "zh": null
+   "zh": "gtkmm使用装填系统解决这些问题。无需为窗口中的每个部件指定大小和位置，而是将部件放入行、列、和或网格中。gtkmm可以基于包含的部件的大小自动调整你的窗口大小。部件的大小由它包含的文本量、最大/小尺寸（由你指定的）、部件之间如何共享可用空间（你要求的方式）共同决定。你可以通过为每个部件指定边距与居中值来完善布局。然后gtkmm会使用以上的信息在用户操作窗口的时候合理、顺畅的调整部件们的大小和位置。"
   },
   {
    "type": "para",
@@ -62,31 +62,31 @@
    "type": "para",
    "text": "Yes, that's correct: a Window can contain at most one widget. How, then, can\nwe use a window for anything useful?  By placing a multiple-child container in\nthe window. The most useful container widgets are\n`Gtk::Grid` and `Gtk::Box`.",
    "sha": "eec4e2648c2656b2",
-   "zh": null
+   "zh": "对，没错，一个窗口最多只能包含一个部件。那么我们要如何将多个部件放于窗口中呢？答案是通过向窗口放入一个多项容器实现。最合理的部件是Gtk::Grid和Gtk::Box。"
   },
   {
    "type": "listitem",
    "text": "Gtk::Grid arranges its child widgets in rows and columns. Use attach() and attach_next_to() to insert child widgets.",
    "sha": "8a822df781fb00c3",
-   "zh": null
+   "zh": "Gtk::Grid将其子部件按行和列排列。使用attach()和attach_next_to()方法向网格(Grid)部件中插入子部件。"
   },
   {
    "type": "listitem",
    "text": "Gtk::Box arranges its child widgets vertically or horizontally. Use append() to insert child widgets.",
    "sha": "0489e4721d6d91a3",
-   "zh": null
+   "zh": "Gtk::Box将其子部件水平或垂直排列。使用append()方法向盒(Box)部件插入子部件。"
   },
   {
    "type": "para",
    "text": "There are several other containers, which we will also discuss.",
    "sha": "b0aa69ce7b8907b3",
-   "zh": null
+   "zh": "还有几个容器我们将在之后讨论。"
   },
   {
    "type": "para",
    "text": "If you've never used a packing toolkit before, it can take some\ngetting used to. You'll probably find, however, that you don't\nneed to rely on visual form editors quite as much as you might with\nother toolkits.",
    "sha": "f1e2a535bdb940b0",
-   "zh": null
+   "zh": "如果你之前从未使用组装工具包，那可能需要一段时间来适应它。然后你会发现你不需要和使用其他工具包一样依赖可视化编辑工具。"
   },
   {
    "type": "heading",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "Let's take a look at a slightly improved `helloworld`, showing what we've learnt.",
    "sha": "cc265b2d29b54eb5",
-   "zh": null
+   "zh": "让我们看看改进后的helloworld，以展示我们所学到的内容。"
   },
   {
    "type": "figure",
@@ -129,7 +129,7 @@
    "type": "para",
    "text": "Most packing uses boxes as in the above example. These\nare invisible containers into which we can pack our widgets. When\npacking widgets into a horizontal box, the objects are inserted\nhorizontally from left to right. In a vertical box, widgets are packed from\ntop to bottom. You may use any combination of boxes inside or beside other\nboxes to create the desired effect.",
    "sha": "8a408786eee17ceb",
-   "zh": null
+   "zh": "如上例所示，这些都是不可见容器我们可以将容器装入其中。将部件装填到水平盒中的时候部件从左到右水平插入。将部件装填到垂直盒中的时候部件从上到下垂直插入。你可以在盒中或盒侧组合使用盒以达到你所需的效果。"
   },
   {
    "type": "heading",
@@ -147,7 +147,7 @@
    "type": "para",
    "text": "The append() method places widgets inside these\ncontainers. It will start at the top and work its way down in a\n`Box` with vertical orientation, or pack left to right in\na `Box` with horizontal orientation. If it's inconvenient\nto add widgets in this order, use insert_child_after()\nor insert_child_at_start(). We will use\nappend() in our examples.",
    "sha": "8aa2078fe1a19020",
-   "zh": null
+   "zh": "append()方法将部件放置于这些容器中。它们将从顶部开始。按Box的垂直方向向下移动，或者按Box的水平方向从左向右移动。如果你不愿意按此顺序添加子部件，请使用insert_child_after()或insert_child_at_start()方法。我们将在示例中使用append()。"
   },
   {
    "type": "para",
@@ -159,7 +159,7 @@
    "type": "para",
    "text": "There are basically five\ndifferent styles, as shown in this picture:",
    "sha": "11b2be2a154185fa",
-   "zh": null
+   "zh": "如图所示，有五种不同的基本样式。"
   },
   {
    "type": "figure",
@@ -172,7 +172,7 @@
    "type": "para",
    "text": "Each line contains one horizontal `Box` with\nseveral buttons. Each of the buttons on a line is packed into the\n`Box` with the same arguments to the\nset_hexpand(), set_halign(),\nset_margin_start() and set_margin_end()\nmethods.",
    "sha": "c76ac9fdbdc33d69",
-   "zh": null
+   "zh": "每一行包含一个有多个按钮的水平Box。行中的每一个按钮都使用相同参数的set_hexpand()、set_halign()、set_margin_start()和set_margin_end()方法装入Box。"
   },
   {
    "type": "para",
@@ -208,7 +208,7 @@
    "type": "para",
    "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
    "sha": "fbd52b4e2177803c",
-   "zh": null
+   "zh": "间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。"
   },
   {
    "type": "figure",
@@ -239,7 +239,7 @@
    "type": "para",
    "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
    "sha": "fbd52b4e2177803c-1",
-   "zh": null
+   "zh": "间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。"
   },
   {
    "type": "figure",
@@ -258,19 +258,19 @@
    "type": "para",
    "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith `Gtk::Application`.",
    "sha": "8e3c1fe089fe084e",
-   "zh": null
+   "zh": "下面的示例程序需要一个命令行选项。源代码展示了两种Gtk::Application处理命令行选项的方式。"
   },
   {
    "type": "listitem",
    "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
    "sha": "d9e9efb60c9e8eeb",
-   "zh": null
+   "zh": "在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。"
   },
   {
    "type": "listitem",
    "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
    "sha": "d1950f69a7d2399e",
-   "zh": null
+   "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。"
   },
   {
    "type": "heading",
@@ -282,7 +282,7 @@
    "type": "para",
    "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
    "sha": "c6aa28a5727072fd",
-   "zh": null
+   "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
   },
   {
    "type": "para",
@@ -312,7 +312,7 @@
    "type": "para",
    "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
    "sha": "fbd52b4e2177803c-2",
-   "zh": null
+   "zh": "间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。"
   },
   {
    "type": "figure",
@@ -325,25 +325,25 @@
    "type": "para",
    "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith `Gtk::Application`.",
    "sha": "8e3c1fe089fe084e-1",
-   "zh": null
+   "zh": "下面的示例程序需要一个命令行选项。源代码展示了两种Gtk::Application处理命令行选项的方式。"
   },
   {
    "type": "listitem",
    "text": "Handle the options in main() and hide them from Gtk::Application by setting argc = 1 in the call to Gtk::Application::run().",
    "sha": "d9e9efb60c9e8eeb-1",
-   "zh": null
+   "zh": "在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。"
   },
   {
    "type": "listitem",
    "text": "Give all command-line options to Gtk::Application::run() and add the flag Gio::Application::Flags::HANDLES_COMMAND_LINE to Gtk::Application::create(). Connect a signal handler to the command_line signal, and handle the command-line options in the signal handler.",
    "sha": "d1950f69a7d2399e-1",
-   "zh": null
+   "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。"
   },
   {
    "type": "para",
    "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
    "sha": "c6aa28a5727072fd-1",
-   "zh": null
+   "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
   },
   {
    "type": "para",
@@ -361,13 +361,13 @@
    "type": "para",
    "text": "A `Grid` dynamically lays out child widgets in rows and\ncolumns. The dimensions of the grid do not need to be specified in the constructor.",
    "sha": "dffb8b4f8ef984e6",
-   "zh": null
+   "zh": "Grid在行与列中动态的摆放他的子部件。不需要在其构造函数当中指定维数。"
   },
   {
    "type": "para",
    "text": "Child widgets can span multiple rows or columns, using\nattach(), or added next to an existing widget inside\nthe grid with attach_next_to(). Individual rows and columns of the grid can be set to have uniform height or width with\nset_row_homogeneous() and\nset_column_homogeneous().",
    "sha": "66d7756801bbc0db",
-   "zh": null
+   "zh": "使用attach()方法可以跨越多行/列插入子部件，也可以使用attach_next_to()将子部件插入已经存在于网格中的部件的旁边。可以通过调用set_row_homogeneous()和set_column_homogeneous()令网格中所有子部件具有一致的高度或宽度。"
   },
   {
    "type": "para",
@@ -391,7 +391,7 @@
    "type": "para",
    "text": "This example creates a window with three buttons in a grid.\nThe first two buttons are in the upper row, from left to right. A\nthird button is attached underneath the first button, in a new lower row,\nspanning two columns.",
    "sha": "b55ad2fd588d77d7",
-   "zh": null
+   "zh": "本示例创建一个窗口其中具有一个包含三个按钮的网格。前两个按钮位于最上行并从左向右排列。第三个按钮位于第一个按钮的下方，位于最下行并横跨两列。"
   },
   {
    "type": "figure",
@@ -416,25 +416,25 @@
    "type": "para",
    "text": "A `Notebook` has a set of stacked\n`pages`, each of which contains widgets. Labelled\n`tabs` allow the user to select the pages.\n`Notebook`s allow several sets of widgets to be placed in a\nsmall space, by only showing one page at a time. For instance, they are often\nused in preferences dialogs.",
    "sha": "b3ec998c3566bed4",
-   "zh": null
+   "zh": "Notebook有一组堆叠好的pages，每个页面(page)包含一个部件。带标签的tabs允许用户选择页面。Notebook一次只显示一页，这样可以将好几组部件放于很小的空间当中。例如他们经常在首选项对话框中使用。"
   },
   {
    "type": "para",
    "text": "Use the append_page(), prepend_page()\nand insert_page() methods to add tabbed pages to the\n`Notebook`, supplying the child widget and the name for the\ntab.",
    "sha": "61da4af5e5a3677e",
-   "zh": null
+   "zh": "使用append_page()、prepend_page()和insert_page()方法可以添加带标签的页面到Notebook中，你需要为这些方法提供子部件和标签名。"
   },
   {
    "type": "para",
    "text": "To discover the currently visible page, use the\nget_current_page() method. This returns the page number,\nand then calling get_nth_page() with that number will give\nyou a pointer to the actual child widget.",
    "sha": "8448c981a158d2df",
-   "zh": null
+   "zh": "如果你想知道当前可见的页面是那一个，可以使用get_current_page()方法。该方法返回一个页码，你可以将页码传递给get_nth_page()获取指向该页当前子部件的指针。"
   },
   {
    "type": "para",
    "text": "To programmatically change the selected page, use the\nset_current_page() method.",
    "sha": "b47feacb2ec5c449",
-   "zh": null
+   "zh": "要以编程方式改变所选的页面，请使用set_current_page()方法。"
   },
   {
    "type": "para",
@@ -477,31 +477,31 @@
    "type": "para",
    "text": "An `Assistant` splits a complex operation into steps. Each step is a page, containing a header, a child widget and an action area. The Assistant's action area has navigation buttons which update automatically depending on the type of the page, set with set_page_type().",
    "sha": "def4438334fc58a8",
-   "zh": null
+   "zh": "Assistant将一个复杂的操作切分为数个步骤。每个步骤都是一个页面，包含一个标题、一个子部件和一个可操作区域。助手的操作区域有一个导航按钮，这些按钮会根据页面的类型自动更新（使用set_page_type()设置页面类型）。"
   },
   {
    "type": "para",
    "text": "Use the append_page(), prepend_page and insert_page() methods to add pages to the `Assistant`, supplying the child widget for each page.",
    "sha": "16a157035cc029f8",
-   "zh": null
+   "zh": "使用append_page()、prepend_page和insert_page()方法可以向Assistant添加页面，你需要每个页面提供子部件。"
   },
   {
    "type": "para",
    "text": "To determine the currently-visible page, use the get_current_page() method, and pass the result to get_nth_page(), which returns a pointer to the actual widget. To programmatically change the current page, use the set_current_page() method.",
    "sha": "9e91c4e6252a9387",
-   "zh": null
+   "zh": "要确定当前可见的页面，请使用get_current_page()方法，然后将返回值传递给get_nth_page()，其会返回一个指向实际部件的指针。要想用编程的方式改变当前页，请使用set_current_page()方法。"
   },
   {
    "type": "para",
    "text": "To set the title of a page, use the set_page_title() method.",
    "sha": "782b9cff0fea2d91",
-   "zh": null
+   "zh": "要为页面设置标题，请使用set_page_title()方法。"
   },
   {
    "type": "para",
    "text": "To add widgets to the action area, use the add_action_widget() method. They will be packed alongside the default buttons. Use the remove_action_widget() method to remove widgets.",
    "sha": "5defa6f0ff39e1a8",
-   "zh": null
+   "zh": "要将部件添加到操作区域，请使用add_action_widget()方法。他们将与默认按钮一并被装填。使用remove_action_widget()方法可以删除部件。"
   },
   {
    "type": "para",
@@ -538,19 +538,19 @@
    "type": "para",
    "text": "There are other multi-item containers. See the reference documentation for a\ncomplete list. Here are links to some example programs that show containers,\nwhich are not mentioned elsewhere in this tutorial.",
    "sha": "723370b9e64dad2c",
-   "zh": null
+   "zh": "还有其他多项容器。请参阅文档以获取完整列表。这里是一些本教程未提及的显示容器的示例程序连接。"
   },
   {
    "type": "para",
    "text": "Source Code, ActionBar",
    "sha": "02b73ac5e3a5c80e",
-   "zh": null
+   "zh": "动作条(ActionBar)源代码"
   },
   {
    "type": "para",
    "text": "Source Code, FlowBox",
    "sha": "baad5af70012103a",
-   "zh": null
+   "zh": "流式盒(FlowBox)源代码"
   }
  ]
 }

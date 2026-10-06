@@ -8,13 +8,13 @@
    "type": "para",
    "text": "`FileChooser` is an interface that can be\n      implemented by widgets displaying a list of files.\n      gtkmm provides three built-in implementations for choosing recent files\n      or other files:\n      `FileChooserWidget`,\n      `FileChooserDialog`, and\n      `FileChooserNative`.",
    "sha": "606fd739896ecdd0",
-   "zh": null
+   "zh": "FileChooser是一个可以由用于显示文件列表的部件实现的接口。gtkmm提供了三种用于选择最近文件或其他文件的内置实现：FileChooserWidget、FileChooserDialog、FileChooserNative。"
   },
   {
    "type": "para",
    "text": "`FileChooserWidget` is a simple widget for\n      displaying a list of recently used files or other files.\n      `FileChooserWidget` is the basic building block for\n      `FileChooserDialog`, but you can embed it into your\n      user interface if you want to.",
    "sha": "0062e85c3f32c664",
-   "zh": null
+   "zh": "FileChooserWidget是一个用于显示最近使用文件列表或其他文件的简单部件。FileChooserWidget是FileChooserDialog的基本构建块，但是你根据需要可以将其嵌入到用户界面中。"
   },
   {
    "type": "para",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "If this is the first time you're using a program that uses the Recent\n          Files framework, the dialog may be empty at first. Otherwise it\n          should show the list of recently used documents registered by other\n          applications.",
    "sha": "d87ba7d9680956bf",
-   "zh": null
+   "zh": "如果这是你第一次使用使用了最近文件框架的应用程序，那么对话框最初可能是空的。否则它应该显示其他应用程序注册的最近使用文件列表。"
   },
   {
    "type": "para",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "The constructor for `ExampleWindow` creates the\n        menu and the toolbar using `Builder` (see  for more information). It then adds\n        the menu and the toolbar to the window.",
    "sha": "3252bd998e4725cd",
-   "zh": null
+   "zh": "ExampleWindow的构造函数使用Builder创建菜单和工具栏（更多有关信息请参阅）。然后将菜单和工具栏添加到窗口中。"
   },
   {
    "type": "heading",
@@ -68,13 +68,13 @@
    "type": "para",
    "text": "For any of the `FileChooser` classes, if you\n        don't wish to display all of the items in the list of files, you\n        can filter the list to show only those that you want. You can filter\n        the list with the help of the `FileFilter` class.\n        This class allows you to filter files by their name\n        (add_pattern()), or their mime type\n        (add_mime_type()).",
    "sha": "61e2e36f948d7894",
-   "zh": null
+   "zh": "对于任意FileChooser类，如果你不想显示文件列表中的所有项目，你可以筛选列表以仅显示所需的项目。你可以使用FileFilter帮助你对列表进行筛选。这个类允许你按文件名（add_pattern()）或MIME类型（add_mime_type()）筛选文件。"
   },
   {
    "type": "para",
    "text": "After you've created and set up the filter to match only the items you\n        want, you can apply a filter to a chooser widget with the\n        FileChooser::add_filter() function.",
    "sha": "c796c0a77248e66b",
-   "zh": null
+   "zh": "创建并设置筛选器以使其只匹配你所需项目之后，你可以使用FileChooser::add_filter()函数将筛选器应用于你所选的部件。"
   }
  ]
 }

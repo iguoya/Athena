@@ -8,25 +8,25 @@
    "type": "para",
    "text": "A typical application will have some preferences that should be remembered from one run\nto the next. Even for our simple example application, we may want to change the font\nthat is used for the content.",
    "sha": "ca5f097d0a5bd832",
-   "zh": null
+   "zh": "经典的应用程序会有一些首选项，它们应该被记住而不需要在下次运行时在进行设置。即使对于我们这个简单的应用程序示例，我们可能也想改变用于文本内容的字体。"
   },
   {
    "type": "para",
    "text": "We are going to use `Gio::Settings` to store our preferences.\n`Gio::Settings` requires a schema that describes our settings,\nin our case the `org.gtkmm.exampleapp.gschema.xml` file.",
    "sha": "7a3bdadde18755f7",
-   "zh": null
+   "zh": "我们将使用Gio::Settings来储存我们的首选项。Gio::Settings需要一个用于描述我们的设置的模式，在本例中为org.gtkmm.exampleapp.gschema.xml文件。"
   },
   {
    "type": "para",
    "text": "Before we can make use of this schema in our application, we need to compile it into\nthe binary form that `Gio::Settings` expects. GIO provides macros\nto do this in autotools-based projects. See the description of\nGSettings.\nMeson provides the `compile_schemas()` function in the\nGNOME module.",
    "sha": "8e8b2586ce4c1e29",
-   "zh": null
+   "zh": "在我们应用程序使用模式之前，我们需要将其编译为Gio::Settings能期望的二进制格式。GUI为此提供了基于autotools项目的宏来执行此操作。具体信息请参阅GSettings。而Meson在GNOME模块中提供了compile_schemas()执行此操作。"
   },
   {
    "type": "para",
    "text": "Next, we need to connect our settings to the widgets that they are supposed to control.\nOne convenient way to do this is to use Gio::Settings::bind()\nto bind settings keys to object properties, as we do for the transition setting in\n`ExampleAppWindow`'s constructor.",
    "sha": "5b3cdfbe8bdb3fe4",
-   "zh": null
+   "zh": "接下来，我们需要将设置连接到应该被控制的部件上。一种很方便的方法是使用Gio::Settings::bind()将对象的属性和设置键相互绑定，就像我们在ExampleAppWindow的构造函数中做的过渡设置一样。"
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "The code to connect the font setting is a little more involved, since it corresponds to\nan object property in a `Gtk::TextTag` that we must first create.\nThe code is in ExampleAppWindow::open_file_view().",
    "sha": "cde82f3f0ef811cf",
-   "zh": null
+   "zh": "字体设置的连接要麻烦的多，因为我们需要先创建对应的对象属性的Gtk::TextTag。以下代码在ExampleAppWindow::open_file_view()函数中。"
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "When we've created the `prefs.ui` file and the `ExampleAppPrefs`\nclass, we revisit the ExampleApplication::on_action_preferences()\nmethod in our application class, and make it open a new preference dialog.",
    "sha": "da9c0f2683f65270",
-   "zh": null
+   "zh": "我们创建prefs.ui文件和ExampleAppPrefs子类之后，我们重访ExampleApplication::on_action_preferences()成员函数，并使其打开一个新的首选项对话框。"
   },
   {
    "type": "code",
@@ -68,7 +68,7 @@
    "type": "para",
    "text": "After all this work, our application can now show a preference dialog like this:",
    "sha": "1d1cc31718b309f3",
-   "zh": null
+   "zh": "完成所有工作后，我们的应用程序现在可以显示如下所示的首选项对话框："
   },
   {
    "type": "figure",

@@ -8,19 +8,19 @@
    "type": "para",
    "text": "In this step, we use a `Gtk::Builder` instance to associate a\n`Gtk::Builder` ui file with our application window class.",
    "sha": "119d1c4beeae7d61",
-   "zh": null
+   "zh": "再次步骤中，我们使用Gtk::Builder实例将Gtk::Builder UI文件和我们的应用程序窗口类相关联。"
   },
   {
    "type": "para",
    "text": "Our simple ui file gives the window a title, and puts a `Gtk::Stack`\nwidget as the main content.",
    "sha": "1d877ea00274f8da",
-   "zh": null
+   "zh": "我们的简单UI文件为窗口设定了一个标题，并将一个Gtk::Stack文件放入了窗口中。"
   },
   {
    "type": "para",
    "text": "To make use of this file in our application, we revisit our\n`Gtk::ApplicationWindow` subclass, and call\nGtk::Builder::create_from_resource() and\nGtk::Builder::get_widget_derived() from the\nExampleAppWindow::create() method to get an instance of\nour subclassed `Gtk::ApplicationWindow`. See the\nUsing derived widgets section\nfor more information about get_widget_derived().",
    "sha": "292569bdc337d4a3",
-   "zh": null
+   "zh": "为了在我们的应用程序中使用这个文件，我们重访Gtk::ApplicationWindow子类，并在ExampleAppWindow::create()成员函数中调用Gtk::Builder::create_from_resource()和Gtk::Builder::get_widget_derived()以获取我们的Gtk::ApplicationWindow子类的实例。更多有关的get_widget_derived()的信息，请参见使用派生部件小节。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Our application now looks like this:",
    "sha": "f4a228f7e22d056f",
-   "zh": null
+   "zh": "我们的应用程序现在看起来像这样："
   },
   {
    "type": "figure",

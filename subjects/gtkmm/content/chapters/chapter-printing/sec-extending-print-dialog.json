@@ -14,19 +14,19 @@
    "type": "listitem",
    "text": "Set the title of the tab via PrintOperation::set_custom_tab_label(), create a new widget and return it from the create_custom_widget signal handler. You'll probably want this to be a container widget, packed with some others.",
    "sha": "603d91d0c875ec5f",
-   "zh": null
+   "zh": "通过PrintOperation::set_custom_tab_label()设置标签的标题，创建一个新的部件然后从create_custom_widget的信号处理函数中返回它。你可能希望它是一个容器部件，在其中包含一些其他部件。"
   },
   {
    "type": "listitem",
    "text": "Get the data from the widgets in the custom_widget_apply signal handler.",
    "sha": "987da3ef8cc605b0",
-   "zh": null
+   "zh": "从部件的custom_widget_apply的信号处理函数中获取数据。"
   },
   {
    "type": "para",
    "text": "Although the `custom_widget_apply` signal provides the widget you\npreviously created, to simplify things you can keep the widgets you expect\nto contain some user input as class members. For example, let's say you have\na `Gtk::Entry` called `m_Entry` as\na member of your `CustomPrintOperation` class:",
    "sha": "e5524805e216c06e",
-   "zh": null
+   "zh": "尽管custom_widget_apply信号提供了你之前创建的部件，但是为了简化操作，你可以保存一些用户输入作为部件类的成员。例如，你可能希望你有一个叫做m_Entry的Gtk::Entry拥有CustomPrintOperation作为类成员："
   },
   {
    "type": "code",
@@ -38,7 +38,7 @@
    "type": "para",
    "text": "The example in examples/book/printing/advanced demonstrates this.",
    "sha": "d62e1be3def55778",
-   "zh": null
+   "zh": "examples/book/printing/advanced示例对此进行了演示。"
   }
  ]
 }

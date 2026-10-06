@@ -26,7 +26,7 @@
    "type": "para",
    "text": "An alternative to `gnome-common`'s\n      `autogen.sh` may look like this:",
    "sha": "5628760e7056dcd1",
-   "zh": null
+   "zh": "gnome-common的autogen.sh的替代方案可能如下所示："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "`LINGUAS` contains an alphabetically sorted list of codes\n      identifying the languages for which your program is translated (comment\n      lines starting with a `#` are ignored). Each language\n      code listed in the `LINGUAS` file must have a\n      corresponding `.po` file. So, if your program has German\n      and Japanese translations, your `LINGUAS` file would\n      look like this:",
    "sha": "847387834ee44f91",
-   "zh": null
+   "zh": "LINGUAS包含按字母顺序排列的代码列表，这些代码标识程序已翻译的语言（以#开头的行是注释将被忽略）。LINGUAS文件中每个位于代码列表中语言都需要有与之对应的.po文件。因此如果你的程序有德语和日语翻译，你的LINGUAS应如下所示："
   },
   {
    "type": "code",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "`POTFILES.in` is a list of paths to all files which\n      contain strings marked up for translation, starting from the project root\n      directory. So for example, if your project sources were located in a\n      subdirectory named `src`, and you had two files that\n      contained strings that should be translated, your\n      `POTFILES.in` file might look like this:",
    "sha": "682ee3b226cf62f3",
-   "zh": null
+   "zh": "POTFILES.in是一个开始于项目根目录，包含所有被标记为需要翻译字符串的文件路径列表。例如你的项目源代码位于src子目录中，其中有两个文件包含有需要被翻译的字符串，则你的POTFILES.in可能如下所示："
   },
   {
    "type": "code",
@@ -80,7 +80,7 @@
    "type": "para",
    "text": "Now that there is a place to put your translations, you need to initialize\n      `intltool` and `gettext`.\n      Add the following code to your `configure.ac`,\n      substituting 'programname' with the name of your program:",
    "sha": "802ef2efcd337d93",
-   "zh": null
+   "zh": "现在已经有了放置翻译的地方，你需要初始化intltool和gettext。将一下代码添加到你的configure.ac，将\\\"programname\\\"替换为你的程序的名称："
   },
   {
    "type": "code",
@@ -92,13 +92,13 @@
    "type": "para",
    "text": "This `PROGRAMNAME_LOCALEDIR` variable will be used later\n      in the `Makefile.am` file, to define a macro that will be\n      used when you initialize `gettext` in your source\n      code.",
    "sha": "707da40911612efa",
-   "zh": null
+   "zh": "PROGRAMNAME_LOCALEDIR将在稍后被Makefile.am文件使用。以定义在源代码中初始化gettext时将用到的宏。"
   },
   {
    "type": "para",
    "text": "`AM_GLIB_GNU_GETTEXT` has been an alternative to\n      `AM_GNU_GETTEXT` and `AM_GNU_GETTEXT_VERSION`,\n      but `AM_GLIB_GNU_GETTEXT` is now deprecated, and shall\n      not be used in new code.",
    "sha": "3f083889761c334f",
-   "zh": null
+   "zh": "AM_GLIB_GNU_GETTEXT已由AM_GNU_GETTEXT和AM_GNU_GETTEXT_VERSION替代，且AM_GLIB_GNU_GETTEXT已被弃用，不应在任何新代码中使用。"
   },
   {
    "type": "para",
@@ -110,31 +110,31 @@
    "type": "listitem",
    "text": "Add po to the SUBDIRS variable. Without this, your translations won't get built and installed when you build the program",
    "sha": "bfb866b897d0ee5a",
-   "zh": null
+   "zh": "将po添加到SUBDIRS变量中。如果没有这个，在构建程序时不会生成和安装翻译。"
   },
   {
    "type": "listitem",
    "text": "Define INTLTOOL_FILES as:",
    "sha": "d9ece696a2e0bd2f",
-   "zh": null
+   "zh": "定义INTLTOOL_FILES为："
   },
   {
    "type": "listitem",
    "text": "Add INTLTOOL_FILES to the EXTRA_DIST list of files. This ensures that when you do a make dist, these files will be included in the source tarball.",
    "sha": "3ec90c3d72cd09e9",
-   "zh": null
+   "zh": "将INTLTOOL_FILES添加到EXTRA_DIST文件列表。这样可以确保执行make dist时这些文件包含在源压缩包中。"
   },
   {
    "type": "listitem",
    "text": "Update your DISTCLEANFILES:",
    "sha": "94d0867e69ba5311",
-   "zh": null
+   "zh": "更新你的DISTCLEANFILES："
   },
   {
    "type": "listitem",
    "text": "Depending on the types of files that contain translatable strings, add code such as",
    "sha": "23d733d1cdca2421",
-   "zh": null
+   "zh": "根据包含可翻译字符串的文件类型，添加以下代码："
   },
   {
    "type": "code",
@@ -158,7 +158,7 @@
    "type": "para",
    "text": "In your `src/Makefile.am`, update your\n      `AM_CPPFLAGS` to add the following preprocessor macro\n      definition:",
    "sha": "42ce2960a2c29f21",
-   "zh": null
+   "zh": "在你的src/Makefile.am中，更新你的AM_CPPFLAGS以添加以下预处理宏定义："
   },
   {
    "type": "code",
@@ -170,7 +170,7 @@
    "type": "para",
    "text": "This macro will be used when you initialize `gettext` in\n      your source code.",
    "sha": "d2e3f8738ee7b850",
-   "zh": null
+   "zh": "在你的源代码中初始化gettext时将使用这个宏。"
   }
  ]
 }

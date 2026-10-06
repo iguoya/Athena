@@ -20,13 +20,13 @@
    "type": "para",
    "text": "If everything worked correctly, you should be able to build gtkmm and\n        all of its dependencies from git by executing `jhbuild\n          build` (or, if you didn't specify gtkmm in the\n        `modules` variable, with the command `jhbuild\n          build gtkmm`).",
    "sha": "bdc1557dca4d7bc4",
-   "zh": null
+   "zh": "如果一切正常，你应该已经可以通过执行jhbuild build（如果你没有在modules变量中指定gtkmm，那也可以使用命令jhbuild build gtkmm来进行构建）来从git构建gtkmm以及所有有关的依赖项。"
   },
   {
    "type": "para",
    "text": "This command will build and install a series of modules and will probably\n        take quite a long time the first time through. After the first time,\n        however, it should go quite a bit faster since it only needs to rebuild\n        files that changed since the last build. Alternatively, after you've\n        built and installed gtkmm the first time, you can rebuild gtkmm by\n        itself (without rebuilding all of its dependencies) with the command\n        `jhbuild buildone gtkmm`.",
    "sha": "0ce1cace87d1444c",
-   "zh": null
+   "zh": "此命令将构建并安装一系列模块，第一次运行可能需要很长的时间。但是之后运行就会快很多，因为之后他只会重新编译自上次构建依赖变更过的文件。在第一次构建并安装gtkmm后你可以使用命令jhbuild buildone gtkmm重新构建gtkmm（不需要重新构建相关依赖）。"
   },
   {
    "type": "heading",
@@ -38,13 +38,13 @@
    "type": "para",
    "text": "After you've installed the git version of gtkmm, you're ready to start\n        using and experimenting with it. In order to use the new version of\n        gtkmm you've just installed, you need to set some environment\n        variables so that your `configure` or `meson.build`\n        script knows where to find the new libraries. Fortunately,\n        `jhbuild` offers an easy solution to this\n        problem. Executing the command `jhbuild shell` will\n        start a new shell with all of the correct environment variables set.\n        Now if you re-configure and build your project just as you usually do,\n        it should link against the newly installed libraries. To return to your\n        previous environment, simply exit the `jhbuild`\n        shell.",
    "sha": "fc563c97e69e437f",
-   "zh": null
+   "zh": "安装git版本的gtkmm后，你就可以开始使用并进行试验了。为了使用刚安装的新版本gtkmm，你需要设置一些环境变量以便你的configure或meson.build脚本可以找到新的库。jhbuild为此提供了一个简单的解决方案。执行命令jhbuild shell将启动一个设置好了所有环境变量的shell。现在如果你和往常一样重新配置并构建你的项目，它应该链接到新的库。要返回之前的环境你只需要jhbuild shell即可。"
   },
   {
    "type": "para",
    "text": "Once you've built your software, you'll need to run your program within\n        the jhbuild environment as well. To do this, you can again use the\n        `jhbuild shell` command to start a new shell with the\n        `jhbuild` environment set up. Alternatively,\n        you can execute a one-off command in the\n        `jhbuild` environment using the following\n        command: `jhbuild run command-name`. In this case,\n        the command will be run with the correct environment variables set, but\n        will return to your previous environment after the program exits.",
    "sha": "1761e113c7556de2",
-   "zh": null
+   "zh": "构建完你的软件后，你还需要在jhbuild环境中运行你的程序。为此，你可以再次使用jhbuild shell命令在设置了jhbuild环境的情况下启动新的shell。或者你可以用以下命令在jhbuild环境下执行单次命令：jhbuild run command-name。在这种情况下，命令将在设置了正确的环境变量的环境中运行，命令退出后，环境将恢复到之前的状态。"
   }
  ]
 }

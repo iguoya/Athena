@@ -8,37 +8,37 @@
    "type": "para",
    "text": "The menu is shown at the right side of the headerbar. It is meant to collect\ninfrequently used actions that affect the whole application.",
    "sha": "54d78d574a64b1ef",
-   "zh": null
+   "zh": "菜单显示在标题栏的右侧。它旨在放置所有应用程序不常用的动作。"
   },
   {
    "type": "para",
    "text": "Just like the application window, we specify our menu in a ui file, and add it\nas a resource to our binary.",
    "sha": "75eacf0210aca178",
-   "zh": null
+   "zh": "就像应用程序窗口一样，我们在UI文件中指定一个菜单，并将其作为资源添加到二进制中。"
   },
   {
    "type": "para",
    "text": "To make the menu appear, we have to load the ui file and associate the\nresulting menu model with the menu button that we've added to the headerbar.\nSince menus work by activating `Gio::Action`s, we also\nhave to add a suitable set of actions to our application.",
    "sha": "663085a31c2f7308",
-   "zh": null
+   "zh": "为了使菜单出现，我们必须加载UI文件，并将生成的菜单模型与添加到标题栏右侧的菜单按钮相关联。由于菜单通过激活Gio::Action工作，我们还需要向应用程序中添加一组合适的动作。"
   },
   {
    "type": "para",
    "text": "Adding the actions is best done in the on_startup() default\nsignal handler, which is guaranteed to be called once for each primary application instance.",
    "sha": "fa21af974d15f0fa",
-   "zh": null
+   "zh": "最好在on_startup()的默认信号处理函数中完成添加动作，并确保每个应用程序实例都只调用一次。"
   },
   {
    "type": "para",
    "text": "Our preferences menu item does not do anything yet, but the Quit menu item is fully\nfunctional. It can also be activated by the usual Ctrl-Q shortcut. The shortcut\nis added with Gtk::Application::set_accel_for_action().",
    "sha": "84b3ce5b17f67c2f",
-   "zh": null
+   "zh": "现在我们的首选项菜单还什么都不做，但是退出菜单项是有效的。也可以用常用的Ctrl-Q快捷键激活它。快捷键通过Gtk::Application::set_accel_for_action()添加。"
   },
   {
    "type": "para",
    "text": "The menu looks like this:",
    "sha": "9d180f9712b455d3",
-   "zh": null
+   "zh": "菜单如下所示"
   },
   {
    "type": "figure",

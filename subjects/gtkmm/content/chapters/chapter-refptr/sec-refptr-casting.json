@@ -8,7 +8,7 @@
    "type": "para",
    "text": "You can cast `RefPtr`s to base types, just like normal\npointers.",
    "sha": "17cd5745a73a4336",
-   "zh": null
+   "zh": "你可以像对正常指针进行类型转换一样，将RefPtr转换到基础类型。"
   },
   {
    "type": "code",
@@ -20,13 +20,13 @@
    "type": "para",
    "text": "This means that any method which takes a `const\nGlib::RefPtr&` argument can also take a\n`const Glib::RefPtr&`. The cast is\nimplicit, just as it would be for a normal pointer.",
    "sha": "d0c9cfc9403fe084",
-   "zh": null
+   "zh": "这意味着任何接受const Glib::RefPtr&参数的函数也能接受const Glib::RefPtr&对象。此转换和普通指针一样是隐式的。"
   },
   {
    "type": "para",
    "text": "You can also cast to a derived type, but the syntax is\na little different than with a normal pointer.",
    "sha": "9c746eac56cd0829",
-   "zh": null
+   "zh": "你还可以将其转换为派生类型，但是语法和普通指针的语法略有不同。"
   },
   {
    "type": "code",

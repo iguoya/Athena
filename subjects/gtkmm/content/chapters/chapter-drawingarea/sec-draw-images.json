@@ -8,25 +8,25 @@
    "type": "para",
    "text": "There is a method for drawing from a\n              `Gdk::Pixbuf` to a `Cairo::Context`.\n              A `Gdk::Pixbuf` buffer is a useful wrapper\n              around a collection of pixels, which can be read from files, and\n              manipulated in various ways.",
    "sha": "ff2cd9d710edbce8",
-   "zh": null
+   "zh": "有一个方法可以将Gdk::Pixbuf绘制到Cairo::Context。Gdk::Pixbuf缓冲区是对像素集合的有效封装，它提供了从文件读取以及各种操纵像素的方式。"
   },
   {
    "type": "para",
    "text": "Probably the most common way of creating\n              `Gdk::Pixbuf`s is to use\n              Gdk::Pixbuf::create_from_file() or\n              Gdk::Pixbuf::create_from_resource(),\n              which can read an image file, such as a png file into a pixbuf\n              ready for rendering.",
    "sha": "13a609d080a001dd",
-   "zh": null
+   "zh": "最常见的Gdk::Pixbuf创建方法是用Gdk::Pixbuf::create_from_file()或Gdk::Pixbuf::create_from_resource()，它们可以将图像文件（例如png文件）读取到pixbuf中用于渲染。"
   },
   {
    "type": "para",
    "text": "The `Gdk::Pixbuf` can be rendered by setting\n              it as the source pattern of the Cairo context with\n              Gdk::Cairo::set_source_pixbuf().\n              Then draw the image with either Cairo::Context::paint()\n              (to draw the whole image), or Cairo::Context::rectangle()\n              and Cairo::Context::fill() (to fill the\n              specified rectangle). set_source_pixbuf()\n              is not a member of `Cairo::Context`. It takes\n              a `Cairo::Context` as its first parameter.",
    "sha": "c5c361a2a254c8a8",
-   "zh": null
+   "zh": "通过使用Gdk::Cairo::set_source_pixbuf()将Gdk::Pixbuf设置为开罗上下文的源模式使其可以被渲染。然后使用Cairo::Context::paint()（画整个图像），或者使用Cairo::Context::rectangle()和Cairo::Context::fill()（用图像填充整个矩形）。set_source_pixbuf()不是Cairo::Context的成员函数。Cairo::Context是它的第一个参数。"
   },
   {
    "type": "para",
    "text": "Here is a small bit of code to tie it all together: (Note that\n              usually you wouldn't load the image every time in the draw\n              signal handler! It's just shown here to keep it all together.)",
    "sha": "7191bd7a127be51d",
-   "zh": null
+   "zh": "这是一小段将他们结合在一起的代码（请注意，通常你不应该在每次调用绘制信号处理函数的时候都加载一次图片）："
   },
   {
    "type": "code",

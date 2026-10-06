@@ -8,7 +8,7 @@
    "type": "para",
    "text": "The primary object is `Gtk::PrintOperation`, allocated\nfor each print operation. To handle page drawing connect to its signals,\nor inherit from it and override the default virtual signal handlers.\n`PrintOperation` automatically handles all the settings\naffecting the print loop.",
    "sha": "70817b2bac2b613f",
-   "zh": null
+   "zh": "主要对象是分配给每个打印操作的Gtk::PrintOperation。要处理绘制页请连接到它的信号，或从其继承并覆盖默认的虚信号处理函数。PrintOperation将自动处理所有影响打印循环的设置。"
   },
   {
    "type": "heading",
@@ -26,13 +26,13 @@
    "type": "listitem",
    "text": "begin_print: You must handle this signal, because this is where you create and set up a Pango::Layout using the provided Gtk::PrintContext, and break up your printing output into pages.",
    "sha": "20d3c68d5425b5d4",
-   "zh": null
+   "zh": "begin_print：你必须处理该信号，因为这是你使用提供的Gtk::PrintContext创建和设置Pango::Layout的地方，以及对你的打印输出进行分页的地方。"
   },
   {
    "type": "listitem",
    "text": "paginate: Pagination is potentially slow so if you need to monitor it you can call the PrintOperation::set_show_progress() method and handle this signal.",
    "sha": "b6c3ba8d3dcbf6d0",
-   "zh": null
+   "zh": "paginate：分页可能很慢，所以如果需要监视它，你可以调用PrintOperation::set_show_progress()方法并处理此信号。"
   },
   {
    "type": "listitem",
@@ -44,7 +44,7 @@
    "type": "listitem",
    "text": "end_print: A handler for it is a safe place to free any resources related to a PrintOperation. If you have your custom class that inherits from PrintOperation, it is naturally simpler to do it in the destructor.",
    "sha": "c4731a8d1d939353",
-   "zh": null
+   "zh": "end_print：它的处理程序是用于释放与PrintOperation相关的所有资源的安全场所。如果你通过继承PrintOperation创建了自定义类，则直接在自定义类的析构函数中进行此操作会更简单。"
   },
   {
    "type": "listitem",
@@ -56,19 +56,19 @@
    "type": "listitem",
    "text": "status_changed: Emitted whenever a print job's status changes, until it is finished. Call the PrintOperation::set_track_print_status() method to monitor the job status after spooling. To see the status, use get_status() or get_status_string().",
    "sha": "5173ea9b4602f59d",
-   "zh": null
+   "zh": "status_changed: 直到打印作业完成，只要打印作业状态发生了更改就会发出此信号。假脱机后可以调用PrintOperation::set_track_print_status()监视作业状态。要查看状态请调用get_status()或get_status_string()。"
   },
   {
    "type": "listitem",
    "text": "request_page_setup: Provides a PrintContext, page number and Gtk::PageSetup. Handle this signal if you need to modify page setup on a per-page basis.",
    "sha": "393b9d66320764b3",
-   "zh": null
+   "zh": "request_page_setup：提供一个PrintContext、页码和Gtk::PageSetup。如果你需要逐页的修改页面设置，请处理此信号。"
   },
   {
    "type": "listitem",
    "text": "draw_page: You must handle this signal, which provides a PrintContext and a page number. The PrintContext should be used to create a Cairo::Context into which the provided page should be drawn. To render text, iterate over the Pango::Layout you created in the begin_print handler.",
    "sha": "2882fb1713cc97cc",
-   "zh": null
+   "zh": "draw_page：你必须处理此信号，该信号提供一个PrintContext和页码。你应该使用PrintContext创建一个Cairo::Context，并将提供的页面绘制到其中。要渲染文本，请遍历你在begin_print处理程序中创建的Pango::Layout。"
   },
   {
    "type": "para",

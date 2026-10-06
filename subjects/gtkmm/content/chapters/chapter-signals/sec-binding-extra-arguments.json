@@ -38,7 +38,7 @@
    "type": "para",
    "text": "`sigc::bind()` is not commonly used, but you might find it\nhelpful sometimes. If you are familiar with `GTK`\nprogramming then you have probably noticed that this is similar to the extra\n`gpointer data` arguments which all GTK callbacks have. This\nis generally overused in `GTK` to pass information\nthat should be stored as member data in a derived widget, but widget derivation\nis very difficult in C. We have far less need of this hack in gtkmm.",
    "sha": "2489ebb7d957b672",
-   "zh": null
+   "zh": "sigc::bind()并不常用，不过偶尔会对你有所帮助（译注：很多时候直接使用lambda比调用sigc::bind要好）。如果你对使用GTK编程很熟悉，就会注意到，这和GTK中所有的回调函数都具有一个额外的gpointer data参数十分的类似。因为在C语言中要派生一个部件十分的困难，通过让GTK中所有回调函数都具有一个这样的额外参数用于传递本该储存于派生部件成员中的数据可以有效降低代码复杂度。而在gtkmm中派生部件类十分的简单，所以这种强侵入式的写法不再需要了。"
   }
  ]
 }

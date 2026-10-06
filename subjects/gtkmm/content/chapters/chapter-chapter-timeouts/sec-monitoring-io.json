@@ -8,7 +8,7 @@
    "type": "para",
    "text": "A nifty feature of Glib (one of the libraries underlying\ngtkmm) is the ability to have it check for data on a file descriptor\nfor you. This is especially useful for networking applications. The\nfollowing method is used to do this:",
    "sha": "5f32ef7f5018079f",
-   "zh": null
+   "zh": "Glib（gtkmm的底层库之一）有一个很好的特性是它具有帮你检查文件描述符中的数据的能力。这对于需要联网的应用程序十分的有用。使用以下方法来执行此操作："
   },
   {
    "type": "code",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "The first argument is a slot you wish to have called when\nthe specified event (see argument 3) occurs on the file descriptor you specify\nusing argument two. Argument three may be one or more (using\n`|`) of:",
    "sha": "f8e46df2a9cc3da2",
-   "zh": null
+   "zh": "第一个参数是你希望在第二个参数指定的文件描述符上发生指定事件（见第三个参数的描述）时被调用的槽。第三个参数可能是一下的一项或多项（若想是多项则对以下多个使用|，例如：Glib::IO_IN | Glib::IO_OUT | Glib::IO_PRI）："
   },
   {
    "type": "listitem",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "The return value is a `sigc::connection` that may be used to stop monitoring\nthis file descriptor using its disconnect() method. The\n`slot` signal handler should be declared as follows:",
    "sha": "6e5249689e6a1983",
-   "zh": null
+   "zh": "返回值是一个sigc::connection对象，你可以在其上调用disconnect()方法以停止对该文件描述符的监视。信号处理函数slot应声明如下："
   },
   {
    "type": "code",

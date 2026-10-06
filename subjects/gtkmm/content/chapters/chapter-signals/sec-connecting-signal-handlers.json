@@ -8,13 +8,13 @@
    "type": "para",
    "text": "gtkmm widget classes have signal accessor methods, such as\nGtk::Button::signal_clicked(), which allow you to connect\nyour signal handler. Thanks to the flexibility of\n`libsigc++`, the callback library used by gtkmm, the\nsignal handler can be almost any kind of function, but you will probably want\nto use a class method. Among `GTK` C coders, these\nsignal handlers are often named callbacks.",
    "sha": "9415fcf6d2e37d84",
-   "zh": null
+   "zh": "gtkmm的部件类拥有信号访问器方法，例如:Gtk::Button::signal_clicked()。这些方法允许你将你的信号处理函数与信号相连接。gtkmm所使用的的libsigc++回调库提供了非常强的灵活性，它几乎允许你使用任何函数作为信号的处理程序，不过通常你会希望使用类的成员函数。在GTK的C代码中，这些信号处理程序被称为回调。"
   },
   {
    "type": "para",
    "text": "Here's an example of a signal handler being connected to a signal:",
    "sha": "ff0137b43c62d058",
-   "zh": null
+   "zh": "这是将信号处理函数与信号相连接的示例："
   },
   {
    "type": "code",
@@ -26,31 +26,31 @@
    "type": "para",
    "text": "There's rather a lot to think about in this (non-functional) code.\nFirst let's identify the parties involved:",
    "sha": "1a2868603c2ccbf2",
-   "zh": null
+   "zh": "在此代码（非功能性）中有很多事情要考虑，首先让我们确定代码的行为："
   },
   {
    "type": "listitem",
    "text": "The signal handler is on_button_clicked().",
    "sha": "4edf13d978d60ba6",
-   "zh": null
+   "zh": "信号处理函数是on_button_clicked()。"
   },
   {
    "type": "listitem",
    "text": "We're hooking it up to the Gtk::Button object called button.",
    "sha": "e9a3728047603faa",
-   "zh": null
+   "zh": "我们将其连接到一个名为button的Gtk::Button对象。"
   },
   {
    "type": "listitem",
    "text": "When the Button emits its clicked signal, on_button_clicked() will be called.",
    "sha": "5c7ad616952fd5db",
-   "zh": null
+   "zh": "当button发出clicked信号时，on_button_clicked()将被调用。"
   },
   {
    "type": "para",
    "text": "Now let's look at the connection again:",
    "sha": "c121496ac55ef19e",
-   "zh": null
+   "zh": "现在，我们再次看一下连接："
   },
   {
    "type": "code",
@@ -62,13 +62,13 @@
    "type": "para",
    "text": "Note that we don't pass a pointer to on_button_clicked()\ndirectly to the signal's connect() method. Instead, we\ncall `sigc::ptr_fun()`, and pass the result to\nconnect().",
    "sha": "b10bfa9c21078c66",
-   "zh": null
+   "zh": "请注意，我们不会直接将一个指向on_button_clicked()的指针传递给信号的connect()方法。我们将调用sigc::ptr_fun()并将其返回值传递给connect()。"
   },
   {
    "type": "para",
    "text": "`sigc::ptr_fun()`  generates a `sigc::slot`.\nA slot is an object which\nlooks and feels like a function, but is actually an object. These are also\nknown as function objects, or functors.\n`sigc::ptr_fun()` generates a slot for a standalone function or static method.\n`sigc::mem_fun()` generates a slot for a member method of a particular instance.",
    "sha": "fc03683b737aeb28",
-   "zh": null
+   "zh": "sigc::ptr_fun()生成一个sigc::slot。槽对象看起来很像一个函数，但实际上是一个对象。这类对象也被称为函数对象或是函子。sigc::ptr_fun()为独立函数或静态成员函数生成槽。sigc::mem_fun()为特定实例的成员函数生成槽。"
   },
   {
    "type": "para",
@@ -80,7 +80,7 @@
    "type": "para",
    "text": "Here's a slightly larger example of slots in action:",
    "sha": "7cfafc0bf4ecb153",
-   "zh": null
+   "zh": "这是一个在动作中使用槽的较大示例："
   },
   {
    "type": "code",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "The first call to connect() is just like the one we saw\nlast time; nothing new here.",
    "sha": "be9fbaf594fd1c36",
-   "zh": null
+   "zh": "第一个connect()调用与我们之前看到的没有什么区别。"
   },
   {
    "type": "para",
@@ -104,13 +104,13 @@
    "type": "para",
    "text": "Another thing to note about this example is that we made the call to\nconnect() twice for the same signal object. This is\nperfectly fine - when the button is clicked, both signal handlers will be\ncalled.",
    "sha": "663dce2dac793249",
-   "zh": null
+   "zh": "另一个与此示例有关的注意事项是，我们对同一个信号对象调用了两次connect()。所以当该按钮被点击时，这两个信号处理函数都将被调用。"
   },
   {
    "type": "para",
    "text": "We just told you that the button's `clicked` signal is expecting\nto call a method with no arguments. All signals have\nrequirements like this - you can't hook a function with two arguments\nto a signal expecting none (unless you use an adapter, such as\n`sigc::bind()`, of course). Therefore, it's important to\nknow what type of signal handler you'll be expected to connect to a given\nsignal.",
    "sha": "c206864c99d4a3b5",
-   "zh": null
+   "zh": "你应该已经注意到了，按钮的clicked信号期望调用一个不接受任何参数的函数。事实上所有的信号都有这样的要求。所以你不能将一个接受两个参数的函数与期望所调用函数不接受参数的信号相关联，当然你可以通过使用sigc::bind()之类的适配器在一定程度上绕过这个限制。"
   }
  ]
 }
