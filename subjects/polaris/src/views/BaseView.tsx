@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { LockOpen } from "lucide-react";
+import { BookOpen, ChevronDown, LockOpen } from "lucide-react";
 import { STAGES, STAGE_LABEL, stageRank, type Catalog } from "@/content/catalog";
 import { layoutByStage, type PlacedColumn } from "@/content/layout";
 import { GraphCanvas, type ColumnNote } from "@/graph/GraphCanvas";
@@ -16,6 +16,7 @@ export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: 
   const aim = useApp((s) => s.aimByMap[mapId] ?? 0);
   const unlockNext = useApp((s) => s.unlockNext);
   const drawerWidth = useDrawerWidth();
+  const [theoryOpen, setTheoryOpen] = useState(false);
 
   const map = catalog.maps.find((m) => m.id === mapId);
   const layout = useMemo(() => (map ? layoutByStage(map) : null), [map]);
@@ -61,6 +62,30 @@ export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: 
           ))}
         </div>
         <p className="mt-2 max-w-[1100px] text-[12.5px] leading-relaxed text-muted">{map.summary}</p>
+        {map.theory && map.theory.length > 0 && (
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => setTheoryOpen((v) => !v)}
+              aria-expanded={theoryOpen}
+              className="flex items-center gap-1.5 text-[12.5px] font-medium text-muted transition-colors hover:text-ink"
+            >
+              <BookOpen size={14} /> 不建节点的理论科目 · {map.theory.length}
+              <ChevronDown size={14} className={`transition-transform ${theoryOpen ? "rotate-180" : ""}`} />
+            </button>
+            {theoryOpen && (
+              <div className="mt-2 grid gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+                {map.theory.map((topic) => (
+                  <div key={topic.name} className="rounded-xl border border-line bg-surface p-3 text-[12.5px] leading-relaxed">
+                    <div className="font-semibold">{topic.name}</div>
+                    <p className="mt-1 text-muted">{topic.content}</p>
+                    <p className="mt-1.5"><span className="font-semibold">在大局里的作用：</span><span className="text-muted">{topic.role}</span></p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="relative min-h-0 flex-1">

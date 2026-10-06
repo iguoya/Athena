@@ -16,7 +16,9 @@ import {
   RELATION_LABEL,
   TRACK_LABEL,
   VALIDATION_LABEL,
+  VERIFY_LABEL,
   VOLATILITY_LABEL,
+  APP_LABEL,
   contractVar,
   stageVar,
 } from "@/ui/labels";
@@ -169,6 +171,7 @@ export function NodeDrawer({ catalog, node, locked, width, onClose }: Props) {
                 title: "为什么必须学",
                 body: node.priority_reason ?? node.stage_reason,
                 note: node.priority ? PRIORITY_HINT[node.priority] : undefined,
+                extra: node.industry_reason ? { label: "在工程现场它还支撑", text: node.industry_reason } : undefined,
               },
               { icon: <Wrench size={15} />, title: "学完能判断、设计什么", body: node.engineering_role },
               { icon: <Target size={15} />, title: "能交出什么", body: node.practice },
@@ -180,6 +183,12 @@ export function NodeDrawer({ catalog, node, locked, width, onClose }: Props) {
                 </div>
                 <p className="mt-1.5 text-[13.5px] leading-relaxed">{item.body}</p>
                 {item.note && <p className="mt-1 text-[11.5px] text-faint">{item.note}</p>}
+                {item.extra && (
+                  <p className="mt-2 border-t border-line pt-2 text-[12.5px] leading-relaxed text-muted">
+                    <span className="font-semibold text-ink">{item.extra.label}：</span>
+                    {item.extra.text}
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -221,9 +230,17 @@ export function NodeDrawer({ catalog, node, locked, width, onClose }: Props) {
             <Chip>{VALIDATION_LABEL[node.validation] ?? node.validation}</Chip>
             <Chip>{VOLATILITY_LABEL[node.volatility] ?? node.volatility}</Chip>
             <Chip>{TRACK_LABEL[node.track] ?? node.track}</Chip>
+            {node.verify && <Chip color="var(--stage-junior)">{VERIFY_LABEL[node.verify]}</Chip>}
           </div>
           {node.validation_note && <p className="mt-2 text-[13px] leading-relaxed text-muted">{node.validation_note}</p>}
         </Section>
+
+        {node.app && (
+          <p className="mt-4 text-[12.5px] leading-relaxed text-muted">
+            <span className="font-semibold text-ink">要练细节，去下游的学习应用：</span>
+            {APP_LABEL[node.app] ?? node.app}（北极星只指路，不代替它把内容讲完）
+          </p>
+        )}
 
         {inbound.length > 0 && (
           <Section title="先修与来路">

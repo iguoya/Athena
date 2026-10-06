@@ -85,6 +85,17 @@ describe("界面冒烟", () => {
     expect(html).toContain("细分学习流程");
   });
 
+  it("内容里有的字段，界面里都看得见：理论科目、工程现场的支撑、验证方式、下游应用", () => {
+    expect(render({ view: "base", mapId: "computer-science" })).toContain("不建节点的理论科目");
+    const nodes = catalog.maps.flatMap((m) => m.nodes.map((n) => ({ map: m.id, node: n })));
+    const withIndustry = nodes.find(({ node }) => node.industry_reason)!;
+    expect(render({ view: "base", mapId: withIndustry.map, nodeId: withIndustry.node.id })).toContain("在工程现场它还支撑");
+    const withApp = nodes.find(({ node }) => node.app)!;
+    expect(render({ view: "base", mapId: withApp.map, nodeId: withApp.node.id })).toContain("下游的学习应用");
+    const withVerify = nodes.find(({ node }) => node.verify)!;
+    expect(render({ view: "base", mapId: withVerify.map, nodeId: withVerify.node.id })).toMatch(/写代码验证|上板验证|台架与仪器测量/);
+  });
+
   it("不存在的路线或参考层的图：给出说明而不是白屏", () => {
     expect(render({ view: "route", routeId: "route.nope" })).toContain("找不到这条路线");
     expect(render({ view: "base", mapId: "target-gnc" })).toContain("不对外开放");

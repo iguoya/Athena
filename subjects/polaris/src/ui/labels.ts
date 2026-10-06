@@ -90,3 +90,16 @@ export const TRACK_LABEL: Record<string, string> = {
   ai: "智能",
   capstone: "收口",
 };
+
+export const VERIFY_LABEL: Record<string, string> = {
+  code: "写代码验证",
+  board: "上板验证",
+  bench: "台架与仪器测量",
+};
+
+// 只用于显示：北极星只指出「这项能力由哪个学习应用承载」，不启动、也不依赖那些应用（ADR 0012、AGENTS.md 边界）。
+export const APP_LABEL: Record<string, string> = {
+  cpp: "C++ 教程",
+  dsa: "数据结构与算法",
+  machine: "C 与机器",
+};
