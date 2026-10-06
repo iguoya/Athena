@@ -20,7 +20,7 @@
    "type": "para",
    "text": "You've probably noticed that gtkmm windows seem \"elastic\" - they can usually be stretched in many  different ways. This is due to the *widget packing*\nsystem.",
    "sha": "dc23a528e1b07884",
-   "zh": null
+   "zh": "你可能已经注意到，gtkmm 的窗口看起来是「有弹性」的——通常可以沿多种方式拉伸。这要归功于 *控件打包*（widget packing）系统。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "listitem",
    "text": "Changing the layout of a window \"on the fly\", to make some extra widgets appear, for instance, is complex. It requires tedious recalculation of every widget's position.",
    "sha": "be38512b35f9fe01",
-   "zh": null
+   "zh": "「动态」改变窗口布局（比如让一些额外的控件临时出现）很复杂，需要对每个控件的位置做繁琐的重新计算。"
   },
   {
    "type": "para",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "gtkmm arranges widgets hierarchically, using *containers*.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding `Gtk::Window`.",
    "sha": "0c0383c41e5df9f7",
-   "zh": null
+   "zh": "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器和多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
   },
   {
    "type": "para",
@@ -117,7 +117,7 @@
    "type": "para",
    "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the Boxes section.",
    "sha": "12723f5444eefb55",
-   "zh": null
+   "zh": "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
   },
   {
    "type": "heading",
@@ -153,7 +153,7 @@
    "type": "para",
    "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\n`Cambalache` GUI designer to see what is possible.\nYou can then use the `Gtk::Builder` API to load your GUI at runtime.",
    "sha": "f911bfc0d5c63ad4",
-   "zh": null
+   "zh": "控制控件如何打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 和 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能，然后再……"
   },
   {
    "type": "para",
@@ -190,7 +190,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f",
-   "zh": null
+   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
   },
   {
    "type": "code",
@@ -202,7 +202,7 @@
    "type": "para",
    "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9",
-   "zh": null
+   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
   },
   {
    "type": "para",
@@ -221,7 +221,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-1",
-   "zh": null
+   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
   },
   {
    "type": "code",
@@ -233,7 +233,7 @@
    "type": "para",
    "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9-1",
-   "zh": null
+   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
   },
   {
    "type": "para",
@@ -294,7 +294,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-2",
-   "zh": null
+   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
   },
   {
    "type": "code",
@@ -306,7 +306,7 @@
    "type": "para",
    "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9-2",
-   "zh": null
+   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
   },
   {
    "type": "para",
@@ -373,7 +373,7 @@
    "type": "para",
    "text": "You can set the *margin* and *expand* properties of the\nchild `Widget`s to control their spacing and their behavior when the Grid is resized.",
    "sha": "932342e62e93a84a",
-   "zh": null
+   "zh": "可以设置子 `Widget` 的 *margin* 和 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。"
   },
   {
    "type": "para",
@@ -471,7 +471,7 @@
    "type": "para",
    "text": "`Gtk::Assistant` is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm. libadwaita (a C library) has replacement parts\n(like AdwCarousel). In some cases, a `Gtk::Notebook` might\nbe an acceptable replacement.",
    "sha": "ad7fddbd1f11aa9b",
-   "zh": null
+   "zh": "`Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。"
   },
   {
    "type": "para",

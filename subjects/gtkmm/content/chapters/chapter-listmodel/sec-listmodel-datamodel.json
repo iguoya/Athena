@@ -8,13 +8,13 @@
    "type": "para",
    "text": "The data model is a class that implements the `Gio::ListModel`\ninterface. Examples of such classes are `Gio::ListStore`\n(not to be confused with the deprecated `Gtk::ListStore`),\n`Gtk:StringList`, `Gtk:DirectoryList`\nand `Pango::FontMap`.",
    "sha": "d6b3326ea916430c",
-   "zh": null
+   "zh": "数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 和 `Pango::FontMap`。"
   },
   {
    "type": "para",
    "text": "The elements in a model are called *items*.\nAll items are instances of a subclass of `Glib::Object`.\nFor instance, you might have a `ColumnView` with one integer\nand one text column, like so:",
    "sha": "dca932a7963a75c4",
-   "zh": null
+   "zh": "模型中的元素称为 *条目*（item）。所有条目都是 `Glib::Object` 某个子类的实例。比如你可以有一个 `ColumnView`，其中包含一列整数和一列文本，如下所示："
   },
   {
    "type": "code",
@@ -26,25 +26,25 @@
    "type": "para",
    "text": "Every item in a model has a position which is the unsigned integer that describes\nwhere in the model the item is located. The first item in a model is at position 0.\nThe position of an item can of course change as other items are added to or removed\nfrom the model.",
    "sha": "712b7141b736aaab",
-   "zh": null
+   "zh": "模型中的每个条目都有一个位置（position），即描述该条目位于模型何处的一个无符号整数。模型的第一个条目位于位置 0。当然，随着其他条目被加入或移除，条目的位置也会变化。"
   },
   {
    "type": "para",
    "text": "Gio::ListStore Reference",
    "sha": "7269d72dc89ae077",
-   "zh": null
+   "zh": "Gio::ListStore 参考文档"
   },
   {
    "type": "para",
    "text": "StringList Reference",
    "sha": "efaf62e4e40aeb70",
-   "zh": null
+   "zh": "StringList 参考文档"
   },
   {
    "type": "para",
    "text": "DirectoryList Reference",
    "sha": "4018f4e5e9c5878a",
-   "zh": null
+   "zh": "DirectoryList 参考文档"
   }
  ]
 }

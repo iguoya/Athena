@@ -1198,8 +1198,123 @@
           "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.range.quizset",
+          "title": "范围控件测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "rng-sb-1",
+              "page_ref": "sec-scrollbar-widgets",
+              "stem": "标准 Scrollbar 的设计用途是？",
+              "options": [
+                "独立显示数值",
+                "只用于滚动另一个控件（如 Gtk::Entry 或 Gtk::Viewport）",
+                "调节音量",
+                "显示进度"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-scrollbar-widgets",
+                  "note": "出处：sec-scrollbar-widgets 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rng-sc-1",
+              "page_ref": "sec-scale-widgets",
+              "stem": "Gtk::Scale 控件（滑块）的核心作用是？",
+              "options": [
+                "让用户可视化地在范围内选取和调整数值",
+                "显示文本",
+                "触发动作",
+                "布局其他控件"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-scale-widgets",
+                  "note": "出处：sec-scale-widgets 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rng-sc-2",
+              "page_ref": "sec-scale-widgets",
+              "stem": "让 Scale 在滑槽旁显示当前数值的方法是？",
+              "options": [
+                "set_show_number()",
+                "set_draw_value()",
+                "set_digits()",
+                "set_value_pos()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-scale-widgets",
+                  "note": "出处：数值显示段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "rng-sc-3",
+              "page_ref": "sec-scale-widgets",
+              "stem": "Scale 显示数值默认四舍五入到几位小数？可用什么方法修改？",
+              "options": [
+                "整数；set_digits()",
+                "1 位；set_digits()",
+                "2 位；set_precision()",
+                "1 位；set_decimals()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-scale-widgets",
+                  "note": "出处：set_digits 说明段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "rng-cp",
+          "stem": "（综合) Range Widgets 示例中三个控件能同步变化的原因是？",
+          "options": [
+            "它们共享同一个 Adjustment",
+            "彼此连接了信号互相更新",
+            "同一内存地址",
+            "gtkmm 自动同步所有滑块"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-range-example",
+              "note": "三控件连接同一 Adjustment 的联动示例"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-misc-widgets",
@@ -1214,36 +1329,235 @@
         {
           "id": "sec-labels",
           "title": "Label",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-text-entry",
           "title": "Entry",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-spinbutton",
           "title": "SpinButton",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-progressbar",
           "title": "ProgressBar",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-infobar",
           "title": "InfoBar",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-tooltips",
           "title": "Tooltips",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.misc.quizset",
+          "title": "杂项控件测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "misc-lb-1",
+              "page_ref": "sec-labels",
+              "stem": "让 Label 显示多行文本的方法是？",
+              "options": [
+                "set_lines(3)",
+                "在标签字符串中放入换行符 \\n",
+                "只能单行",
+                "set_multiline(true)"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-labels",
+                  "note": "出处：sec-labels 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-lb-2",
+              "page_ref": "sec-labels",
+              "stem": "开启标签自动换行（word-wrapping）用？",
+              "options": [
+                "set_justify()",
+                "set_wrap()",
+                "set_line_wrap_mode()",
+                "set_ellipsize()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-labels",
+                  "note": "出处：set_wrap 说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-en-1",
+              "page_ref": "sec-text-entry",
+              "stem": "用户在 Entry 中按下回车时发出哪个信号（自 gtkmm 4.8 起）？",
+              "options": [
+                "changed",
+                "activate",
+                "pressed",
+                "submitted"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-text-entry",
+                  "note": "出处：activate/changed 信号说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-en-2",
+              "page_ref": "sec-text-entry",
+              "stem": "set_activates_default(true) 的效果是？",
+              "options": [
+                "回车时清空输入框",
+                "回车时激活所在窗口的默认控件（如对话框的确认按钮）",
+                "回车时发出 changed",
+                "禁止回车"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-text-entry",
+                  "note": "出处：默认控件激活段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-en-3",
+              "page_ref": "sec-text-entry",
+              "stem": "Gtk::EntryCompletion 的现状是？",
+              "options": [
+                "仍是推荐方案",
+                "自 gtkmm 4.10 起弃用，gtkmm 无替代",
+                "被 Gtk::Entry 取代",
+                "改名为 Gtk::Completion"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-text-entry",
+                  "note": "出处：弃用说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-pb-1",
+              "page_ref": "sec-progressbar",
+              "stem": "进度条的「活动模式」适用于什么场景？",
+              "options": [
+                "进度精确已知",
+                "进度无法计算为取值范围、只想表达程序在活动",
+                "显示百分比",
+                "静态装饰"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-progressbar",
+                  "note": "出处：活动模式段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-pb-2",
+              "page_ref": "sec-progressbar",
+              "stem": "活动模式下进度条的表现是？",
+              "options": [
+                "填满整条",
+                "显示一个来回移动的小矩形",
+                "闪烁边框",
+                "隐藏"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-progressbar",
+                  "note": "出处：活动模式段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "misc-ib-1",
+              "page_ref": "sec-infobar",
+              "stem": "InfoBar 控件自 gtkmm 4.10 起的状态是？",
+              "options": [
+                "推荐使用",
+                "已弃用",
+                "改名",
+                "成为默认"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-infobar",
+                  "note": "出处：sec-infobar 弃用说明"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "misc-cp",
+          "stem": "（综合) 要在用户每敲一个字时校验输入合法性，应连接 Entry 的哪个信号？",
+          "options": [
+            "activate（回车才触发）",
+            "changed（文字变化即触发）",
+            "icon_press",
+            "toggled"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-text-entry",
+              "note": "综合 activate 与 changed 的语义区分"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-container-widgets",
@@ -1258,16 +1572,173 @@
         {
           "id": "sec-single-item-containers",
           "title": "Single-item Containers",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-multi-item-containers",
           "title": "Multiple-item Containers",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.container.quizset",
+          "title": "容器控件测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "ctn-1",
+              "page_ref": "sec-single-item-containers",
+              "stem": "Gtk::Window 属于哪类容器？",
+              "options": [
+                "多子控件容器",
+                "单子控件容器",
+                "不是容器",
+                "固定四格容器"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-single-item-containers",
+                  "note": "出处：sec-multi-item-containers 第 8 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ctn-2",
+              "page_ref": "sec-single-item-containers",
+              "stem": "Gtk::Paned 的特点是？",
+              "options": [
+                "无限子控件",
+                "固定包含两个子控件，把窗口分成两个窗格",
+                "只能竖直分",
+                "不是容器"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-single-item-containers",
+                  "note": "出处：Paned 说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ctn-3",
+              "page_ref": "sec-multi-item-containers",
+              "stem": "gtkmm 窗口「有弹性」可拉伸的原因是？",
+              "options": [
+                "窗口不是固定像素",
+                "控件打包（widget packing）系统",
+                "GPU 加速",
+                "CSS 弹性布局"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-multi-item-containers",
+                  "note": "出处：widget packing 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ctn-4",
+              "page_ref": "sec-multi-item-containers",
+              "stem": "给 set_homogeneous(true) 的效果是？",
+              "options": [
+                "子控件颜色一致",
+                "Box 内所有子控件尺寸相同",
+                "间距归零",
+                "禁用拉伸"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-multi-item-containers",
+                  "note": "出处：Box 打包选项段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ctn-5",
+              "page_ref": "sec-multi-item-containers",
+              "stem": "Box 的 `spacing` 参数含义是？",
+              "options": [
+                "精确像素数",
+                "控件之间保留的（最小）像素数",
+                "百分比",
+                "行数"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-multi-item-containers",
+                  "note": "出处：Box 打包选项段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ctn-6",
+              "page_ref": "sec-multi-item-containers",
+              "stem": "Gtk::Assistant 自 gtkmm 4.10 起的状态是？",
+              "options": [
+                "推荐使用",
+                "已弃用（libadwaita 有部分替代，某些场景 Notebook 可接受）",
+                "成为标准",
+                "改名 Wizard"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-multi-item-containers",
+                  "note": "出处：Assistant 弃用说明"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "ctn-cp",
+          "stem": "（综合) 布局遇到困难时，文档建议的排查方式是？",
+          "options": [
+            "重写整个窗口",
+            "试验 set_expand/set_halign 等属性，或用 Cambalache 设计器直观探索",
+            "换 GTK3",
+            "全部用固定像素定位"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-multi-item-containers",
+              "note": "打包排障建议段"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-listmodel",
@@ -1282,41 +1753,303 @@
         {
           "id": "sec-listmodel-datamodel",
           "title": "The Data Model",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-selectionmodel",
           "title": "The Selection Model",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-factory",
           "title": "The Factory",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-view",
           "title": "The View",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-sorting",
           "title": "Sorting",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-filtering",
           "title": "Filtering",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-listmodel-trees",
           "title": "Displaying Trees",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.listmodel.quizset",
+          "title": "列表模型测验集",
+          "type": "concept",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "lm-1",
+              "page_ref": "sec-listmodel-datamodel",
+              "stem": "数据模型需要实现哪个接口？",
+              "options": [
+                "Gtk::ListModel",
+                "Gio::ListModel",
+                "Glib::Model",
+                "Gtk::TreeModel"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-datamodel",
+                  "note": "出处：sec-listmodel-datamodel 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-2",
+              "page_ref": "sec-listmodel-datamodel",
+              "stem": "模型中的条目（item）必须是什么的子类实例？",
+              "options": [
+                "Glib::Object",
+                "Gtk::Widget",
+                "std::any",
+                "Gio::Action"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-datamodel",
+                  "note": "出处：条目定义段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-3",
+              "page_ref": "sec-listmodel-datamodel",
+              "stem": "模型中第一个条目的位置是？",
+              "options": [
+                "1",
+                "0",
+                "-1",
+                "由模型决定"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-datamodel",
+                  "note": "出处：position 说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-4",
+              "page_ref": "sec-listmodel-selectionmodel",
+              "stem": "三种选择模型不包括？",
+              "options": [
+                "NoSelection",
+                "SingleSelection",
+                "MultiSelection",
+                "AllSelection"
+              ],
+              "answer": 3,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-selectionmodel",
+                  "note": "出处：sec-listmodel-selectionmodel 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-5",
+              "page_ref": "sec-listmodel-factory",
+              "stem": "gtkmm 中 ListItemFactory 的唯一子类是？",
+              "options": [
+                "SignalListItemFactory",
+                "FactoryList",
+                "ListItemBuilder",
+                "ColumnFactory"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-factory",
+                  "note": "出处：sec-listmodel-factory 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-6",
+              "page_ref": "sec-listmodel-view",
+              "stem": "视图为什么需要知道哪些条目不可见？",
+              "options": [
+                "为了隐藏它们",
+                "为了回收复用条目",
+                "为了排序",
+                "为了过滤"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-view",
+                  "note": "出处：sec-listmodel-view 第 2 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-7",
+              "page_ref": "sec-listmodel-view",
+              "stem": "视图期望被直接放进哪种控件以支持滚动回收？",
+              "options": [
+                "Gtk::Box",
+                "Gtk::ScrolledWindow",
+                "Gtk::Frame",
+                "Gtk::Fixed"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-view",
+                  "note": "出处：Scrollable 接口说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-8",
+              "page_ref": "sec-listmodel-view",
+              "stem": "ListView、GridView、ColumnView 各自的形态是？",
+              "options": [
+                "一维单列 / 二维网格 / 一维多列",
+                "二维网格 / 一维单列 / 树形",
+                "都一样",
+                "树形 / 一维多列 / 二维网格"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-view",
+                  "note": "出处：三种视图说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-9",
+              "page_ref": "sec-listmodel-sorting",
+              "stem": "让 ColumnView 支持点击列标题排序，需要把哪个 sorter 设给 SortListModel？",
+              "options": [
+                "StringSorter",
+                "NumericSorter",
+                "ColumnViewSorter",
+                "CustomSorter"
+              ],
+              "answer": 2,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-sorting",
+                  "note": "出处：sec-listmodel-sorting 列表项 1"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-10",
+              "page_ref": "sec-listmodel-filtering",
+              "stem": "过滤列表的正确做法是？",
+              "options": [
+                "直接删除模型条目",
+                "包一层 FilterListModel 并设置 Filter（如 StringFilter/BoolFilter）",
+                "在视图里隐藏",
+                "用 SortListModel"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-filtering",
+                  "note": "出处：sec-listmodel-filtering 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "lm-11",
+              "page_ref": "sec-listmodel-trees",
+              "stem": "新列表体系显示树形结构的方案是？",
+              "options": [
+                "继续用 TreeView",
+                "TreeListModel 把树拍平成列表，listitem 内用 TreeExpander 展开/收起",
+                "不支持树",
+                "GridView 模拟"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-listmodel-trees",
+                  "note": "出处：sec-listmodel-trees 第 1 段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "lm-cp",
+          "stem": "（综合) ListView + Gio::ListStore + SignalListItemFactory 三者各司其职，正确的分工是？",
+          "options": [
+            "模型存数据、工厂把数据填进视图条目、视图显示与交互",
+            "视图存数据、模型渲染、工厂排序",
+            "工厂存数据、视图建模型、模型显示",
+            "三者可互换"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-listmodel-datamodel/factory/view",
+              "note": "综合三章职责划分"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-treeview",
@@ -1331,46 +2064,203 @@
         {
           "id": "sec-treeview-model",
           "title": "The Model",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview",
           "title": "The View",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-iterating-over-model-rows",
           "title": "Iterating over Model Rows",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview-selection",
           "title": "The Selection",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview-sort",
           "title": "Sorting",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview-draganddrop",
           "title": "Drag and Drop",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview-contextmenu",
           "title": "Popup Context Menu",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-treeview-examples",
           "title": "Examples",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.treeview.quizset",
+          "title": "TreeView 测验集",
+          "type": "concept",
+          "difficulty": 3,
+          "mastery_goal": "familiar",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "tv-1",
+              "page_ref": "sec-treeview-model",
+              "stem": "TreeView 与 TreeModel 的关系是？",
+              "options": [
+                "一对一且独占",
+                "一个 Model 可被多个 TreeView 使用（同一数据多种呈现）",
+                "一个 View 可有多个 Model",
+                "互不相关"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview-model",
+                  "note": "出处：sec-treeview-model 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tv-2",
+              "page_ref": "sec-treeview",
+              "stem": "默认 CellRenderer 不够用时怎么办？",
+              "options": [
+                "换控件",
+                "追加特定 CellRenderer 并指示它从模型列渲染到外观各方面",
+                "只能放弃",
+                "手绘"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview",
+                  "note": "出处：CellRenderer 定制段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tv-3",
+              "page_ref": "sec-treeview",
+              "stem": "拿到通用的 Gtk::CellRenderer* 后要做什么？",
+              "options": [
+                "直接用",
+                "向下转型为预期的具体类型以使用专属 API",
+                "重新创建",
+                "删除"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview",
+                  "note": "出处：转型说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tv-4",
+              "page_ref": "sec-treeview",
+              "stem": "一列里有多个 CellRenderer 时如何取得目标 renderer？",
+              "options": [
+                "get_column() 后调 get_cells()",
+                "遍历控件树",
+                "重新添加",
+                "无法取得"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview",
+                  "note": "出处：edited 信号连接段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tv-5",
+              "page_ref": "sec-treeview-draganddrop",
+              "stem": "TreeView 内建简单拖放的条件是？",
+              "options": [
+                "任何模型都行",
+                "配合 ListStore 或 TreeStore 模型（自 gtk 4.8）",
+                "需要额外库",
+                "仅限 Windows"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview-draganddrop",
+                  "note": "出处：sec-treeview-draganddrop 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tv-6",
+              "page_ref": "sec-treeview-contextmenu",
+              "stem": "TreeView 右键菜单用什么检测鼠标点击？",
+              "options": [
+                "Gtk::MenuButton",
+                "Gtk::GestureClick",
+                "signal_clicked",
+                "轮询"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-treeview-contextmenu",
+                  "note": "出处：sec-treeview-contextmenu 第 1 段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "tv-cp",
+          "stem": "（综合) 新项目要在「列表视图」与「树形视图」之间选择，基于本章内容的判断是？",
+          "options": [
+            "TreeView 仍是首选",
+            "列表场景用 ListView/ColumnView（ListModel 体系）；确需树形展开用 TreeListModel+TreeExpander；TreeView 已弃用仅维护存量",
+            "两者完全等价",
+            "树形只能自绘"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-listmodel-trees 与 chapter-treeview",
+              "note": "综合新旧列表/树体系的取舍"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-dropdown",
@@ -1385,36 +2275,214 @@
         {
           "id": "sec-dropdown-model",
           "title": "The model",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-dropdown-get",
           "title": "The selected item",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-dropdown-changes",
           "title": "Responding to changes",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-dropdown-simple",
           "title": "Simple String Example",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-dropdown-search",
           "title": "Examples with a Search Entry",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-dropdown-complex",
           "title": "Complex Example",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.dropdown.quizset",
+          "title": "DropDown 测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "dd-1",
+              "page_ref": "sec-dropdown-model",
+              "stem": "DropDown 的模型定义方式与什么相同？",
+              "options": [
+                "与 ListView/ColumnView 一致，必须是 Glib::Object 子类",
+                "专有格式",
+                "只能字符串数组",
+                "XML 文件"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-model",
+                  "note": "出处：sec-dropdown-model 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-2",
+              "page_ref": "sec-dropdown-model",
+              "stem": "什么情况下不需要 set_factory()？",
+              "options": [
+                "条目超过 100 个",
+                "使用 StringList 模型时",
+                "永远需要",
+                "只有 Windows 下"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-model",
+                  "note": "出处：set_model/set_factory 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-3",
+              "page_ref": "sec-dropdown-model",
+              "stem": "下拉菜单条目要与控件上显示的外观不同，需要？",
+              "options": [
+                "set_list_factory() 另设工厂",
+                "改 CSS",
+                "两个 DropDown",
+                "做不到"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-model",
+                  "note": "出处：set_list_factory 说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-4",
+              "page_ref": "sec-dropdown-get",
+              "stem": "获取用户当前选择用？",
+              "options": [
+                "get_active()",
+                "DropDown::get_selected() 返回位置索引",
+                "selected_item()",
+                "get_text()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-get",
+                  "note": "出处：sec-dropdown-get 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-5",
+              "page_ref": "sec-dropdown-changes",
+              "stem": "响应每次选择变化应连接？",
+              "options": [
+                "signal_clicked",
+                "property_selected().signal_changed()",
+                "toggled",
+                "changed 直接连"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-changes",
+                  "note": "出处：sec-dropdown-changes 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-6",
+              "page_ref": "sec-dropdown-search",
+              "stem": "给下拉菜单加搜索框的方法是？",
+              "options": [
+                "set_enable_search() 和 set_expression()",
+                "自己塞一个 Entry",
+                "set_search_bar()",
+                "不支持搜索"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-search",
+                  "note": "出处：sec-dropdown-search 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dd-7",
+              "page_ref": "sec-dropdown-search",
+              "stem": "示例能用 Pango::FontMap 当模型的原因是？",
+              "options": [
+                "它是字符串数组",
+                "它实现了 Gio::ListModel 接口",
+                "特判",
+                "继承自 Gtk::DropDown"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dropdown-search",
+                  "note": "出处：字体表示例说明段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "dd-cp",
+          "stem": "（综合) 下拉框要显示字体名、内部存字体 ID，且选择变化时实时更新预览。需要的组合是？",
+          "options": [
+            "模型带 ID 与名称两列 + get_selected() 取索引读 ID + property_selected().signal_changed() 连更新",
+            "只存名称字符串再反查",
+            "每次变化重建整个模型",
+            "用 Entry 让用户手输"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-dropdown-model/get/changes",
+              "note": "综合 DropDown 数据绑定三件套"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-combobox",

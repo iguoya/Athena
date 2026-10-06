@@ -98,7 +98,7 @@
    "type": "para",
    "text": "The default `CellRenderer`s and their default behavior\nwill normally suffice, but you might occasionally need finer control. For\ninstance, this example code from\n`gtkmm/demos/gtk-demo/example_treeview_treestore.cc`, appends a\n`Gtk::CellRenderer` widget and instructs it to render the\ndata from various model columns through various aspects of its appearance.",
    "sha": "c254b55d6e2c7b90",
-   "zh": null
+   "zh": "默认的 `CellRenderer` 及其默认行为通常够用，但偶尔需要更细的控制。例如下面这段来自 `gtkmm/demos/gtk-demo/example_treeview_treestore.cc` 的示例代码，追加了一个 `Gtk::CellRenderer`，并指示它把来自多个模型列的数据渲染到外观的多个方面上。"
   },
   {
    "type": "code",
@@ -158,7 +158,7 @@
    "type": "para",
    "text": "You should then cast that `Gtk::CellRenderer*` to the\nspecific `CellRenderer` that you expect, so you can use specific API.",
    "sha": "5ba5062f801139bf",
-   "zh": null
+   "zh": "随后应把这个 `Gtk::CellRenderer*` 向下转型为你预期的具体 CellRenderer 类型，以便使用其专属 API。"
   },
   {
    "type": "para",
@@ -182,7 +182,7 @@
    "type": "para",
    "text": "You can then connect\nto the appropriate \"edited\" signal. For instance, connect to\nGtk::CellRendererText::signal_edited(), or\nGtk::CellRendererToggle::signal_toggled(). If the column\ncontains more than one `CellRenderer` then you will need\nto use Gtk::TreeView::get_column() and then call\nget_cells() on that view Column.",
    "sha": "bd91dceddca3c099",
-   "zh": null
+   "zh": "接着连接相应的「edited」信号。例如连接 Gtk::CellRendererText::signal_edited() 或 Gtk::CellRendererToggle::signal_toggled()。如果一列里有不止一个 `CellRenderer`，则需要用 Gtk::TreeView::get_column() 取得视图列，再对其调用 get_cells()。"
   },
   {
    "type": "para",
@@ -206,7 +206,7 @@
    "type": "para",
    "text": "You should then cast that `Gtk::CellRenderer*` to the\nspecific `CellRenderer` that you expect, so you can use specific API.",
    "sha": "5ba5062f801139bf-1",
-   "zh": null
+   "zh": "随后应把这个 `Gtk::CellRenderer*` 向下转型为你预期的具体 CellRenderer 类型，以便使用其专属 API。"
   },
   {
    "type": "para",
@@ -230,7 +230,7 @@
    "type": "para",
    "text": "You can then connect\nto the appropriate \"edited\" signal. For instance, connect to\nGtk::CellRendererText::signal_edited(), or\nGtk::CellRendererToggle::signal_toggled(). If the column\ncontains more than one `CellRenderer` then you will need\nto use Gtk::TreeView::get_column() and then call\nget_cells() on that view Column.",
    "sha": "bd91dceddca3c099-1",
-   "zh": null
+   "zh": "接着连接相应的「edited」信号。例如连接 Gtk::CellRendererText::signal_edited() 或 Gtk::CellRendererToggle::signal_toggled()。如果一列里有不止一个 `CellRenderer`，则需要用 Gtk::TreeView::get_column() 取得视图列，再对其调用 get_cells()。"
   },
   {
    "type": "para",
