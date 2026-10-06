@@ -654,7 +654,9 @@ export default function App() {
                     回到原文
                   </a>
                 </p>
-                <h2 className="mt-1 font-display text-[42px] font-semibold">{page.title}</h2>
+                <h2 className="mt-1 font-display text-[42px] font-semibold">
+                  {page.title_en ?? page.title}
+                </h2>
                 <button
                   onClick={() => setView({ kind: "kp", sectionId: section.id, kpId: null })}
                   className="mt-2 text-[20px] text-accent hover:underline"

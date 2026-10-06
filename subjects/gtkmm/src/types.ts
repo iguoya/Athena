@@ -51,6 +51,8 @@ export interface KnowledgePoint {
 export interface SectionPage {
   id: string;
   title: string;
+  /** 英文原名（正文页头显示；侧栏菜单保持中文） */
+  title_en?: string;
   status: "pending" | "translated";
 }
 
