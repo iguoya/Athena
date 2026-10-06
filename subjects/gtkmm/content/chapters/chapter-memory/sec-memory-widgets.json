@@ -12,7 +12,7 @@
   },
   {
    "type": "para",
-   "text": "gtkmm allows the programmer to control the lifetime (that is, the construction\nand destruction) of any widget in the same manner as any other C++ object.\nThis flexibility allows you to use new and\ndelete to create and destroy objects dynamically\nor to use regular class members (that are destroyed automatically when the\nclass is destroyed) or to use local instances (that are destroyed when the\ninstance goes out of scope). This flexibility is not present in some C++ GUI\ntoolkits, which restrict the programmer to only a subset of C++'s memory\nmanagement features.",
+   "text": "gtkmm allows the programmer to control the lifetime (that is, the construction\nand destruction) of any widget in the same manner as any other C++ object.\nThis flexibility allows you to use `new` and\n`delete` to create and destroy objects dynamically\nor to use regular class members (that are destroyed automatically when the\nclass is destroyed) or to use local instances (that are destroyed when the\ninstance goes out of scope). This flexibility is not present in some C++ GUI\ntoolkits, which restrict the programmer to only a subset of C++'s memory\nmanagement features.",
    "sha": "9c14f340ad211451",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "If a programmer does not need dynamic memory allocation, automatic widgets in class\nscope may be used. One advantage of automatic widgets in class scope is that\nmemory management is grouped in one place. The programmer does not\nrisk memory leaks from failing to delete a widget.",
+   "text": "If a programmer does not need dynamic memory allocation, automatic widgets in class\nscope may be used. One advantage of automatic widgets in class scope is that\nmemory management is grouped in one place. The programmer does not\nrisk memory leaks from failing to `delete` a widget.",
    "sha": "1aba8eeb91a2d5ac",
    "zh": null
   },
@@ -84,7 +84,7 @@
   },
   {
    "type": "para",
-   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using Gtk::make_managed()\n(see below). This is not strictly required, as the new and\ndelete operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using Gtk::make_managed() and\nlet their parent destroy them, than to manually perform dynamic allocation.",
+   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
    "sha": "555d794c74fb65dc",
    "zh": null
   },
@@ -96,7 +96,7 @@
   },
   {
    "type": "para",
-   "text": "Here, the programmer deletes pButton to prevent a memory leak.",
+   "text": "Here, the programmer deletes `pButton` to prevent a memory leak.",
    "sha": "ca6c3840065bf4db",
    "zh": null
   },
@@ -120,7 +120,7 @@
   },
   {
    "type": "para",
-   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using Gtk::make_managed()\n(see below). This is not strictly required, as the new and\ndelete operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using Gtk::make_managed() and\nlet their parent destroy them, than to manually perform dynamic allocation.",
+   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
    "sha": "555d794c74fb65dc-1",
    "zh": null
   },
@@ -132,7 +132,7 @@
   },
   {
    "type": "para",
-   "text": "Here, the programmer deletes pButton to prevent a memory leak.",
+   "text": "Here, the programmer deletes `pButton` to prevent a memory leak.",
    "sha": "ca6c3840065bf4db-1",
    "zh": null
   },
@@ -144,7 +144,7 @@
   },
   {
    "type": "para",
-   "text": "Alternatively, you can let a widget's container control when the widget is\ndestroyed. In most cases, you want a widget to last only as long as the\ncontainer it is in. To delegate the management of a widget's lifetime to its\ncontainer, create it with Gtk::make_managed() and then\npack it into its container with Gtk::Box::append() or\na similar method. Now the widget will be destroyed whenever its container is destroyed.",
+   "text": "Alternatively, you can let a widget's container control when the widget is\ndestroyed. In most cases, you want a widget to last only as long as the\ncontainer it is in. To delegate the management of a widget's lifetime to its\ncontainer, create it with `Gtk::make_managed()` and then\npack it into its container with Gtk::Box::append() or\na similar method. Now the widget will be destroyed whenever its container is destroyed.",
    "sha": "cd9c26c47e820270",
    "zh": null
   },
@@ -156,19 +156,19 @@
   },
   {
    "type": "para",
-   "text": "gtkmm provides ways including the make_managed() function\nand Gtk::Box::append() method to simplify creation\nand destruction of widgets whose lifetime can be managed by a parent.",
+   "text": "gtkmm provides ways including the `make_managed()` function\nand Gtk::Box::append() method to simplify creation\nand destruction of widgets whose lifetime can be managed by a parent.",
    "sha": "2b0f28e01bb68baa",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Every widget except a top-level window must be added to a parent container in\norder to be displayed. The manage() function marks a widget\nso that when that widget is added to a parent container, said container becomes\nresponsible for deleting the widget, meaning the user no longer needs to do so.\nThe original way to create widgets whose lifetime is managed by their parent in\nthis way was to call manage(), passing in the result of a\nnew expression that created a dynamically allocated widget.",
+   "text": "Every widget except a top-level window must be added to a parent container in\norder to be displayed. The `manage()` function marks a widget\nso that when that widget is added to a parent container, said container becomes\nresponsible for deleting the widget, meaning the user no longer needs to do so.\nThe original way to create widgets whose lifetime is managed by their parent in\nthis way was to call `manage()`, passing in the result of a\n`new` expression that created a dynamically allocated widget.",
    "sha": "4bba86c53f662f61",
    "zh": null
   },
   {
    "type": "para",
-   "text": "However, usually, when you create such a widget, you will already know that its\nparent container should be responsible for destroying it. In addition, modern\nC++ style discourages use of the new operator, which was\nrequired when passing a newly created widget to manage().\nTherefore, gtkmm has added make_managed(), which combines\ncreation and marking with manage() into a single step. This\navoids you having to write new, which is discouraged in\nmodern C++ style, and more clearly expresses intent to create a managed widget.",
+   "text": "However, usually, when you create such a widget, you will already know that its\nparent container should be responsible for destroying it. In addition, modern\nC++ style discourages use of the `new` operator, which was\nrequired when passing a newly created widget to `manage()`.\nTherefore, gtkmm has added `make_managed()`, which combines\ncreation and marking with `manage()` into a single step. This\navoids you having to write `new`, which is discouraged in\nmodern C++ style, and more clearly expresses intent to create a managed widget.",
    "sha": "36c48c04754c006f",
    "zh": null
   },
@@ -180,7 +180,7 @@
   },
   {
    "type": "para",
-   "text": "Now, when objects of type MyContainer are destroyed, the\nbutton will also be deleted. It is no longer necessary to delete pButton\nto free the button's memory; its deletion has been delegated to the\nMyContainer object.",
+   "text": "Now, when objects of type `MyContainer` are destroyed, the\nbutton will also be deleted. It is no longer necessary to delete `pButton`\nto free the button's memory; its deletion has been delegated to the\n`MyContainer` object.",
    "sha": "ee743b0ec03022eb",
    "zh": null
   },

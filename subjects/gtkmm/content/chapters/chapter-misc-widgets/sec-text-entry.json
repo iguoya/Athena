@@ -18,25 +18,25 @@
   },
   {
    "type": "para",
-   "text": "Occasionally you might want to make an Entry widget\nread-only. This can be done by passing false to the\nset_editable() method.",
+   "text": "Occasionally you might want to make an `Entry` widget\nread-only. This can be done by passing `false` to the\nset_editable() method.",
    "sha": "04784553436da27e",
    "zh": null
   },
   {
    "type": "para",
-   "text": "For the input of passwords, passphrases and other information you don't want\nechoed on the screen, calling set_visibility() with\nfalse will cause the text to be hidden.",
+   "text": "For the input of passwords, passphrases and other information you don't want\nechoed on the screen, calling set_visibility() with\n`false` will cause the text to be hidden.",
    "sha": "e3c90043435e0811",
    "zh": null
   },
   {
    "type": "para",
-   "text": "You might want to be notified whenever the user types in a text entry widget.\nGtk::Entry provides two signals,\nactivate (since gtkmm 4.8) and changed, for this purpose.\nactivate is emitted when the user presses the Enter key in\na text-entry widget; changed is emitted when the text in\nthe widget changes. You can use these, for instance, to validate or filter\nthe text the user types. Moving the keyboard focus to another widget may also\nsignal that the user has finished entering text. The leave\nsignal in a Gtk::EventControllerFocus can notify you when\nthat happens. The ComboBox with an Entry\nsection contains example programs that use these signals.",
+   "text": "You might want to be notified whenever the user types in a text entry widget.\n`Gtk::Entry` provides two signals,\n`activate` (since gtkmm 4.8) and `changed`, for this purpose.\n`activate` is emitted when the user presses the Enter key in\na text-entry widget; `changed` is emitted when the text in\nthe widget changes. You can use these, for instance, to validate or filter\nthe text the user types. Moving the keyboard focus to another widget may also\nsignal that the user has finished entering text. The `leave`\nsignal in a `Gtk::EventControllerFocus` can notify you when\nthat happens. The ComboBox with an Entry\nsection contains example programs that use these signals.",
    "sha": "44433cefaf995201",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If you pass true to the set_activates_default()\nmethod, pressing Enter in the Gtk::Entry will activate\nthe default widget for the window containing the Gtk::Entry.\nThis is especially useful in dialog boxes. The default widget is usually one of\nthe dialog buttons, which e.g. will close the dialog box. To set a widget as the\ndefault widget, use Gtk::Window::set_default_widget().",
+   "text": "If you pass `true` to the set_activates_default()\nmethod, pressing Enter in the `Gtk::Entry` will activate\nthe default widget for the window containing the `Gtk::Entry`.\nThis is especially useful in dialog boxes. The default widget is usually one of\nthe dialog buttons, which e.g. will close the dialog box. To set a widget as the\ndefault widget, use Gtk::Window::set_default_widget().",
    "sha": "b8ad01687b6e65c5",
    "zh": null
   },
@@ -54,13 +54,14 @@
   },
   {
    "type": "para",
-   "text": "This example uses Gtk::Entry. It also has two\nCheckButtons, with which you can toggle the editable and\nvisible flags.",
+   "text": "This example uses `Gtk::Entry`. It also has two\n`CheckButton`s, with which you can toggle the editable and\nvisible flags.",
    "sha": "cffa582024213430",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Entry",
+   "ref": "figures/entry.png",
    "sha": "2649e082d9a2ba37",
    "zh": ""
   },
@@ -78,25 +79,25 @@
   },
   {
    "type": "para",
-   "text": "Gtk::EntryCompletion is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm.",
+   "text": "`Gtk::EntryCompletion` is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm.",
    "sha": "fd3e07350e335c97",
    "zh": null
   },
   {
    "type": "para",
-   "text": "An Entry widget can offer a drop-down list of\npre-existing choices based on the first few characters typed by the user. For\ninstance, a search dialog could suggest text from previous searches.",
+   "text": "An `Entry` widget can offer a drop-down list of\npre-existing choices based on the first few characters typed by the user. For\ninstance, a search dialog could suggest text from previous searches.",
    "sha": "e84b62514bbbf650",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To enable this functionality, you must create an\nEntryCompletion object, and provide it to the\nEntry widget via the\nset_completion() method.",
+   "text": "To enable this functionality, you must create an\n`EntryCompletion` object, and provide it to the\n`Entry` widget via the\nset_completion() method.",
    "sha": "0cbd39e3e4bcaea6",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The EntryCompletion may use a\nTreeModel containing possible entries, specified with\nset_model(). You should then call\nset_text_column() to specify which of your model columns\nshould be used to match possible text entries.",
+   "text": "The `EntryCompletion` may use a\n`TreeModel` containing possible entries, specified with\nset_model(). You should then call\nset_text_column() to specify which of your model columns\nshould be used to match possible text entries.",
    "sha": "e2eb65672f961665",
    "zh": null
   },
@@ -120,13 +121,14 @@
   },
   {
    "type": "para",
-   "text": "This example creates a Gtk::EntryCompletion and associates\nit with a Gtk::Entry widget. The completion uses a\nGtk::TreeModel of possible entries, and some additional\nactions.",
+   "text": "This example creates a `Gtk::EntryCompletion` and associates\nit with a `Gtk::Entry` widget. The completion uses a\n`Gtk::TreeModel` of possible entries, and some additional\nactions.",
    "sha": "c7ae24ea98f9f5aa",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Entry Completion",
+   "ref": "figures/entry_completion.png",
    "sha": "441d3fa09fc825e9-1",
    "zh": ""
   },
@@ -144,7 +146,7 @@
   },
   {
    "type": "para",
-   "text": "An Entry widget can show an icon at the start or\nend of the text area. The icon can be specified by methods such as\nset_icon_from_paintable() or\nset_icon_from_icon_name(). An application can respond to the\nuser pressing the icon by handling the\nsignal_icon_press signal.",
+   "text": "An `Entry` widget can show an icon at the start or\nend of the text area. The icon can be specified by methods such as\nset_icon_from_paintable() or\nset_icon_from_icon_name(). An application can respond to the\nuser pressing the icon by handling the\nsignal_icon_press signal.",
    "sha": "cda4f6a69d62e79e",
    "zh": null
   },
@@ -156,13 +158,14 @@
   },
   {
    "type": "para",
-   "text": "This example shows a Gtk::Entry widget with a named\nsearch icon, and prints text to the terminal when the icon is pressed.",
+   "text": "This example shows a `Gtk::Entry` widget with a named\nsearch icon, and prints text to the terminal when the icon is pressed.",
    "sha": "e41b5811dc508503",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Entry with Icon",
+   "ref": "figures/entry_icon.png",
    "sha": "2d193dae26706c3a",
    "zh": ""
   },
@@ -180,7 +183,7 @@
   },
   {
    "type": "para",
-   "text": "An Entry widget can show a progress bar inside the\ntext area, under the entered text. The progress bar will be shown if the\nset_progress_fraction() or\nset_progress_pulse_step() methods are called.",
+   "text": "An `Entry` widget can show a progress bar inside the\ntext area, under the entered text. The progress bar will be shown if the\nset_progress_fraction() or\nset_progress_pulse_step() methods are called.",
    "sha": "8f60fc75ac6ef63c",
    "zh": null
   },
@@ -192,13 +195,14 @@
   },
   {
    "type": "para",
-   "text": "This example shows a Gtk::Entry widget with a progress\nbar.",
+   "text": "This example shows a `Gtk::Entry` widget with a progress\nbar.",
    "sha": "da198762f1be3245",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Entry with Progress Bar",
+   "ref": "figures/entry_progress.png",
    "sha": "b2c5442f751947ea",
    "zh": ""
   },

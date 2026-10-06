@@ -6,13 +6,14 @@
  "blocks": [
   {
    "type": "para",
-   "text": "You can use C APIs which do not yet have convenient C++ interfaces.\nIt is generally not a problem to use C APIs from C++, and gtkmm helps by\nproviding access to the underlying C object, and providing an easy way to create\na C++ wrapper object from a C object, provided that the C API is also based on\nthe GObject system.",
+   "text": "You can use C APIs which do not yet have convenient C++ interfaces.\nIt is generally not a problem to use C APIs from C++, and gtkmm helps by\nproviding access to the underlying C object, and providing an easy way to create\na C++ wrapper object from a C object, provided that the C API is also based on\nthe `GObject` system.",
    "sha": "1538090a1ec35f50",
-   "zh": "那些还没有顺手 C++ 接口的 C API 也可以用。在 C++ 里调用 C API 一般不成问题； gtkmm 还帮了两把：让你能访问底层的 C 对象，并且在 C API 同样基于 GObject 系统的前提下，提供从 C 对象便捷创建 C++ 包装对象的途径。"
+   "zh": "那些还没有顺手 C++ 接口的 C API 也可以用。在 C++ 里调用 C API 一般不成问题； gtkmm 还帮了两把：让你能访问底层的 C 对象，并且在 C API 同样基于 GObject 系统的前提下，提供从 C 对象便捷创建 C++ 包装对象的途径。",
+   "key": true
   },
   {
    "type": "para",
-   "text": "To use a gtkmm instance with a C function that requires a C\nGObject instance, use the C++ instance’s\ngobj() function to obtain a pointer to the underlying C\ninstance. For example:",
+   "text": "To use a gtkmm instance with a C function that requires a C\n`GObject` instance, use the C++ instance’s\n`gobj()` function to obtain a pointer to the underlying C\ninstance. For example:",
    "sha": "f06146e6f3a6c7de",
    "zh": "要把 gtkmm 实例传给需要 C GObject 实例的 C 函数，用 C++ 实例的 gobj() 函数 拿到底层 C 实例的指针。例如："
   },
@@ -24,7 +25,7 @@
   },
   {
    "type": "para",
-   "text": "To obtain a gtkmm instance from a C GObject instance,\nuse one of the many overloaded Glib::wrap() functions.\nThe C instance’s reference count is not incremented, unless you set the optional\ntake_copy argument to true. For\nexample:",
+   "text": "To obtain a gtkmm instance from a C `GObject` instance,\nuse one of the many overloaded `Glib::wrap()` functions.\nThe C instance’s reference count is not incremented, unless you set the optional\n`take_copy` argument to `true`. For\nexample:",
    "sha": "fb82e12c2d83b92c",
    "zh": "反过来，要从 C GObject 实例得到 gtkmm 实例，用众多重载的 Glib::wrap() 函数 之一。除非把可选的 take_copy 参数设为 true，C 实例的引用计数不会增加。例如："
   },
@@ -36,7 +37,7 @@
   },
   {
    "type": "para",
-   "text": "The C++ wrapper shall be explicitly deleted if\n\nit's a widget or other class that inherits from Gtk::Object, and\nthe C instance has a floating reference when the wrapper is created, and\nGtk::manage() has not been called on it (which includes if it was created with Gtk::make_managed()), or\nGtk::manage() was called on it, but it was never added to a parent.\n\nGlib::wrap() binds the C and C++ instances to each other.\nDon't delete the C++ instance before you want the C instance to die.",
+   "text": "The C++ wrapper shall be explicitly deleted if\n\nit's a widget or other class that inherits from `Gtk::Object`, and\nthe C instance has a floating reference when the wrapper is created, and\n`Gtk::manage()` has not been called on it (which includes if it was created with `Gtk::make_managed()`), or\n`Gtk::manage()` was called on it, but it was never added to a parent.\n\n`Glib::wrap()` binds the C and C++ instances to each other.\nDon't delete the C++ instance before you want the C instance to die.",
    "sha": "87024628b2a8435b",
    "zh": "C++ 包装对象在满足以下条件时必须显式删除："
   },
@@ -66,7 +67,7 @@
   },
   {
    "type": "para",
-   "text": "In all other cases the C++ instance is automatically deleted when the last reference\nto the C instance is dropped. This includes all Glib::wrap()\noverloads that return a Glib::RefPtr.",
+   "text": "In all other cases the C++ instance is automatically deleted when the last reference\nto the C instance is dropped. This includes all `Glib::wrap()`\noverloads that return a `Glib::RefPtr`.",
    "sha": "9eeaf8961f1b759e",
    "zh": "Glib::wrap() 把 C 实例和 C++ 实例绑定在一起：不希望 C 实例死掉之前，别删 C++ 实例。"
   }

@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "A ComboBox may contain an Entry widget for entering of arbitrary text, by specifying true for the constructor's has_entry parameter.",
+   "text": "A `ComboBox` may contain an `Entry` widget for entering of arbitrary text, by specifying `true` for the constructor's `has_entry` parameter.",
    "sha": "581b7aae5a38e008",
    "zh": null
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "So that the Entry can interact with the drop-down list of choices, you must specify which of your model columns is the text column, with set_entry_text_column(). For instance:",
+   "text": "So that the `Entry` can interact with the drop-down list of choices, you must specify which of your model columns is the text column, with set_entry_text_column(). For instance:",
    "sha": "5711594846ba16b2",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "When you select a choice from the drop-down menu, the value from this column will be placed in the Entry.",
+   "text": "When you select a choice from the drop-down menu, the value from this column will be placed in the `Entry`.",
    "sha": "33e1658f80ba79fa",
    "zh": null
   },
@@ -42,7 +42,7 @@
   },
   {
    "type": "para",
-   "text": "Because the user may enter arbitrary text, an active model row isn't enough to tell us what text the user has entered. Therefore, you should retrieve the Entry widget with the ComboBox::get_entry() method and call get_text() on that.",
+   "text": "Because the user may enter arbitrary text, an active model row isn't enough to tell us what text the user has entered. Therefore, you should retrieve the `Entry` widget with the ComboBox::get_entry() method and call get_text() on that.",
    "sha": "2c46719dfdd96fd1",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "para",
-   "text": "When the user enters arbitrary text, it may not be enough to connect to the\nchanged signal, which is emitted for every typed character.\nIt is not emitted when the user presses the Enter key.\nPressing the Enter key or moving the keyboard focus to another\nwidget may signal that the user has finished entering text. To be notified of\nthese events, connect to the Entry's activate\nsignal (available since gtkmm 4.8), and add a Gtk::EventControllerFocus\nand connect to its leave signal, like so",
+   "text": "When the user enters arbitrary text, it may not be enough to connect to the\n`changed` signal, which is emitted for every typed character.\nIt is not emitted when the user presses the Enter key.\nPressing the Enter key or moving the keyboard focus to another\nwidget may signal that the user has finished entering text. To be notified of\nthese events, connect to the `Entry`'s `activate`\nsignal (available since gtkmm 4.8), and add a `Gtk::EventControllerFocus`\nand connect to its `leave` signal, like so",
    "sha": "82f12a671d69d71a",
    "zh": null
   },
@@ -66,7 +66,7 @@
   },
   {
    "type": "para",
-   "text": "The changed signals of ComboBox and\nEntry are both emitted for every change. It doesn't matter\nwhich one you connect to. But the EventControllerFocus\nmust be added to the Entry.",
+   "text": "The `changed` signals of `ComboBox` and\n`Entry` are both emitted for every change. It doesn't matter\nwhich one you connect to. But the `EventControllerFocus`\nmust be added to the `Entry`.",
    "sha": "a17c0715076d2b22",
    "zh": null
   },
@@ -79,6 +79,7 @@
   {
    "type": "figure",
    "text": "ComboBox with Entry",
+   "ref": "figures/comboboxentry_complex.png",
    "sha": "32e1a2cffcce8708",
    "zh": ""
   },
@@ -97,6 +98,7 @@
   {
    "type": "figure",
    "text": "ComboBoxText with Entry",
+   "ref": "figures/comboboxentry_text.png",
    "sha": "46d7dbdf6e19f6ef",
    "zh": ""
   },

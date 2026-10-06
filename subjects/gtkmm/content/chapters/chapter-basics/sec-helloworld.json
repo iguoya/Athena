@@ -8,7 +8,8 @@
    "type": "para",
    "text": "We've now learned enough to look at a real example. In accordance with an ancient\ntradition of computer science, we now introduce Hello World, a la gtkmm:",
    "sha": "c4f27b82f01c5909",
-   "zh": "我们已经学够了，可以看一个真正的例子了。按照计算机科学的古老传统，现在介绍 gtkmm 风格的 Hello World："
+   "zh": "我们已经学够了，可以看一个真正的例子了。按照计算机科学的古老传统，现在介绍 gtkmm 风格的 Hello World：",
+   "key": true
   },
   {
    "type": "para",
@@ -25,12 +26,13 @@
   {
    "type": "figure",
    "text": "Hello World",
+   "ref": "figures/helloworld.png",
    "sha": "a591a6d40bf42040",
    "zh": ""
   },
   {
    "type": "para",
-   "text": "Pretty thrilling, eh? Let's examine the code. First, the\nHelloWorld class:",
+   "text": "Pretty thrilling, eh?  Let's examine the code. First, the\n`HelloWorld` class:",
    "sha": "55a068d0283eb29f",
    "zh": "源代码文件：main.cc（适用于 gtkmm 4）"
   },
@@ -42,7 +44,7 @@
   },
   {
    "type": "para",
-   "text": "This class implements the \"Hello World\" window. It's derived from\nGtk::Window, and has a single Gtk::Button as a member.\nWe've chosen to use the\nconstructor to do all of the initialization work for the window,\nincluding setting up the signals. Here it is, with the comments\nomitted:",
+   "text": "This class implements the \"Hello World\" window. It's derived from\n`Gtk::Window`, and has a single `Gtk::Button` as a member.\nWe've chosen to use the\nconstructor to do all of the initialization work for the window,\nincluding setting up the signals. Here it is, with the comments\nomitted:",
    "sha": "b6852431c841b818",
    "zh": "继续往下读之前，先编译并运行它。你会看到类似这样的东西："
   },
@@ -54,7 +56,7 @@
   },
   {
    "type": "para",
-   "text": "Notice that we've used an initializer statement to give the m_button\nobject the label \"Hello World\".",
+   "text": "Notice that we've used an initializer statement to give the `m_button`\nobject the label \"Hello World\".",
    "sha": "31a03970e7eb75b6",
    "zh": "图 3.1 Hello World"
   },
@@ -66,19 +68,19 @@
   },
   {
    "type": "para",
-   "text": "We then hook up a signal handler to m_button's clicked signal.\nThis prints our friendly greeting to stdout.",
+   "text": "We then hook up a signal handler to `m_button`'s `clicked` signal.\nThis prints our friendly greeting to `stdout`.",
    "sha": "a23e2e2a2bf204e7",
    "zh": "这个类实现「Hello World」窗口：派生自 Gtk::Window，有一个 Gtk::Button 成员。 我们选择在构造函数里完成窗口的全部初始化工作，包括设置信号。以下是省略注释 后的构造函数："
   },
   {
    "type": "para",
-   "text": "Next, we use the Window's set_child() method to put\nm_button in the Window. The set_child()\nmethod places the Widget in the Window.",
+   "text": "Next, we use the Window's set_child() method to put\n`m_button` in the Window. The set_child()\nmethod places the Widget in the Window.",
    "sha": "01e5ae3a7575e58b",
    "zh": "注意我们用了初始化列表，把标签「Hello World」交给 m_button 对象。"
   },
   {
    "type": "para",
-   "text": "Now let's look at our program's main() function. Here it is,\nwithout comments:",
+   "text": "Now let's look at our program's `main()` function. Here it is,\nwithout comments:",
    "sha": "53ed40472f5893e4",
    "zh": "接着调用 Button 的 set_margin() 方法，设置按钮四周留出的空间大小。"
   },
@@ -90,13 +92,13 @@
   },
   {
    "type": "para",
-   "text": "First we instantiate an object stored in a Glib::RefPtr smartpointer called app. This is of type\nGtk::Application. Every gtkmm program must have one of these.",
+   "text": "First we instantiate an object stored in a `Glib::RefPtr` smartpointer called `app`. This is of type\n`Gtk::Application`. Every gtkmm program must have one of these.",
    "sha": "bc0ef577b018a329",
    "zh": "然后把信号处理器挂到 m_button 的 clicked 信号上，向标准输出打印友好的问候语。"
   },
   {
    "type": "para",
-   "text": "Next we call make_window_and_run() which creates an object\nof our HelloWorld class, shows that Window and starts the gtkmm\nevent loop. During the event loop gtkmm idles, waiting for actions\nfrom the user, and responding appropriately.\nWhen the user closes the Window, make_window_and_run() will return,\ncausing our main() function to return. The application will then finish.",
+   "text": "Next we call make_window_and_run() which creates an object\nof our `HelloWorld` class, shows that Window and starts the gtkmm\n*event loop*. During the event loop gtkmm idles, waiting for actions\nfrom the user, and responding appropriately.\nWhen the user closes the Window, make_window_and_run() will return,\ncausing our `main()` function to return. The application will then finish.",
    "sha": "0143f3a83cde6d4f",
    "zh": "再用 Window 的 set_child() 方法把 m_button 放进窗口——set_child() 负责把 Widget 放入 Window。"
   },

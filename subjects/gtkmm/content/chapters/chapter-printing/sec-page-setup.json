@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "The PrintOperation class has a method called\nset_default_page_setup() which selects the default\npaper size, orientation and margins. To show a page setup dialog from your\napplication, use the Gtk::run_page_setup_dialog() method,\nwhich returns a Gtk::PageSetup object with the chosen\nsettings. Use this object to update a PrintOperation\nand to access the selected Gtk::PaperSize,\nGtk::PageOrientation and printer-specific margins.",
+   "text": "The `PrintOperation` class has a method called\nset_default_page_setup() which selects the default\npaper size, orientation and margins. To show a page setup dialog from your\napplication, use the Gtk::run_page_setup_dialog() method,\nwhich returns a `Gtk::PageSetup` object with the chosen\nsettings. Use this object to update a `PrintOperation`\nand to access the selected `Gtk::PaperSize`,\n`Gtk::PageOrientation` and printer-specific margins.",
    "sha": "7ab6cba299e1057e",
    "zh": null
   },
   {
    "type": "para",
-   "text": "You should save the chosen Gtk::PageSetup\nso you can use it again if the page setup dialog is shown again.",
+   "text": "You should save the chosen `Gtk::PageSetup`\nso you can use it again if the page setup dialog is shown again.",
    "sha": "7bb31475de4ff102",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "The Cairo coordinate system, in the draw_page handler,\nis automatically rotated to the current page orientation. It is normally\nwithin the printer margins, but you can change that via the\nPrintOperation::set_use_full_page()\nmethod. The default measurement unit is device pixels. To select other units,\nuse the PrintOperation::set_unit() method.",
+   "text": "The Cairo coordinate system, in the `draw_page` handler,\nis automatically rotated to the current page orientation. It is normally\nwithin the printer margins, but you can change that via the\nPrintOperation::set_use_full_page()\nmethod. The default measurement unit is device pixels. To select other units,\nuse the PrintOperation::set_unit() method.",
    "sha": "49b0f3db609e804f",
    "zh": null
   }

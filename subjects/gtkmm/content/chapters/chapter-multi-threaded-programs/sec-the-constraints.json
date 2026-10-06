@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Care is required when writing programs based on gtkmm using\nmultiple threads of execution, arising from the fact that\nlibsigc++, and in particular\nsigc::trackable, are not thread-safe. That's\nbecause none of the complex interactions that occur behind the scenes\nwhen using libsigc++ are protected by a\nmutex or other means of synchronization.\n\n\nThese interactions arise from the fact that, amongst other things, a\nclass inheriting from sigc::trackable will, via\nthat inheritance, have a std::list object\nkeeping track of slots created by calls to\nsigc::mem_fun() representing any of its\nnon-static methods (more particularly it keeps a list of callbacks\nwhich will null the connected slots on its destruction). Each\nsigc::slot object also keeps, via\nsigc::slot_rep, its own\nsigc::trackable object to track any\nsigc::connection objects which it needs to\ninform about its demise, and also has a function to deregister itself\nfrom any sigc::trackable on disconnection or\ndestruction. sigc::signal objects also keep\nlists of slots, which will be updated by a call to their\nconnect() method or calls to any\nsigc::connection object relating to such a\nconnection.",
+   "text": "Care is required when writing programs based on gtkmm using\nmultiple threads of execution, arising from the fact that\n`libsigc++`, and in particular\n`sigc::trackable`, are not thread-safe. That's\nbecause none of the complex interactions that occur behind the scenes\nwhen using `libsigc++` are protected by a\nmutex or other means of synchronization.\n\n\nThese interactions arise from the fact that, amongst other things, a\nclass inheriting from `sigc::trackable` will, via\nthat inheritance, have a `std::list` object\nkeeping track of slots created by calls to\n`sigc::mem_fun()` representing any of its\nnon-static methods (more particularly it keeps a list of callbacks\nwhich will null the connected slots on its destruction). Each\n`sigc::slot` object also keeps, via\n`sigc::slot_rep`, its own\n`sigc::trackable` object to track any\n`sigc::connection` objects which it needs to\ninform about its demise, and also has a function to deregister itself\nfrom any `sigc::trackable` on disconnection or\ndestruction. `sigc::signal` objects also keep\nlists of slots, which will be updated by a call to their\nconnect() method or calls to any\n`sigc::connection` object relating to such a\nconnection.",
    "sha": "4b6ac4c0042b42f4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "These interactions arise from the fact that, amongst other things, a\nclass inheriting from sigc::trackable will, via\nthat inheritance, have a std::list object\nkeeping track of slots created by calls to\nsigc::mem_fun() representing any of its\nnon-static methods (more particularly it keeps a list of callbacks\nwhich will null the connected slots on its destruction). Each\nsigc::slot object also keeps, via\nsigc::slot_rep, its own\nsigc::trackable object to track any\nsigc::connection objects which it needs to\ninform about its demise, and also has a function to deregister itself\nfrom any sigc::trackable on disconnection or\ndestruction. sigc::signal objects also keep\nlists of slots, which will be updated by a call to their\nconnect() method or calls to any\nsigc::connection object relating to such a\nconnection.",
+   "text": "These interactions arise from the fact that, amongst other things, a\nclass inheriting from `sigc::trackable` will, via\nthat inheritance, have a `std::list` object\nkeeping track of slots created by calls to\n`sigc::mem_fun()` representing any of its\nnon-static methods (more particularly it keeps a list of callbacks\nwhich will null the connected slots on its destruction). Each\n`sigc::slot` object also keeps, via\n`sigc::slot_rep`, its own\n`sigc::trackable` object to track any\n`sigc::connection` objects which it needs to\ninform about its demise, and also has a function to deregister itself\nfrom any `sigc::trackable` on disconnection or\ndestruction. `sigc::signal` objects also keep\nlists of slots, which will be updated by a call to their\nconnect() method or calls to any\n`sigc::connection` object relating to such a\nconnection.",
    "sha": "362c0a91cee214c7",
    "zh": null
   },
@@ -24,49 +24,49 @@
   },
   {
    "type": "para",
-   "text": "This requires a number of rules to be observed when writing\nmulti-threaded programs using gtkmm. These are set out below, but\none point to note is that extra care is required when deriving classes\nfrom sigc::trackable, because the effects are\nunintuitive (see particularly points 4 and 5 below).",
+   "text": "This requires a number of rules to be observed when writing\nmulti-threaded programs using gtkmm. These are set out below, but\none point to note is that extra care is required when deriving classes\nfrom `sigc::trackable`, because the effects are\nunintuitive (see particularly points 4 and 5 below).",
    "sha": "6b3700e78fdd5fc7",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Use Glib::Dispatcher to invoke gtkmm functions\nfrom worker threads (this is dealt with in more detail in the next\nsection).",
+   "text": "Use `Glib::Dispatcher` to invoke gtkmm functions\nfrom worker threads (this is dealt with in more detail in the next\nsection).",
    "sha": "0e9b4200920f8884",
    "zh": null
   },
   {
    "type": "para",
-   "text": "A sigc::signal object should be regarded as\nowned by the thread which created it. Only that thread should connect\na sigc::slot object to the signal object, and\nonly that thread should emit() or call\noperator()() on the signal, or null any\nconnected sigc::slot object. It follows\n(amongst other things) that any signal object provided by a gtkmm\nwidget should only be operated on in the main GUI thread and any\nobject deriving from sigc::trackable having its\nnon-static methods referenced by slots connected to the signal object\nshould only be destroyed in that thread.",
+   "text": "A `sigc::signal` object should be regarded as\nowned by the thread which created it. Only that thread should connect\na `sigc::slot` object to the signal object, and\nonly that thread should emit() or call\noperator()() on the signal, or null any\nconnected `sigc::slot` object. It follows\n(amongst other things) that any signal object provided by a gtkmm\nwidget should only be operated on in the main GUI thread and any\nobject deriving from `sigc::trackable` having its\nnon-static methods referenced by slots connected to the signal object\nshould only be destroyed in that thread.",
    "sha": "ce2e18f629aff84a",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Any sigc::connection object should be regarded\nas owned by the thread in which the method returning the\nsigc::connection object was called. Only that\nthread should call sigc::connection methods on\nthe object.",
+   "text": "Any `sigc::connection` object should be regarded\nas owned by the thread in which the method returning the\n`sigc::connection` object was called. Only that\nthread should call `sigc::connection` methods on\nthe object.",
    "sha": "38b974ca7607d159",
    "zh": null
   },
   {
    "type": "para",
-   "text": "A sigc::slot object created by a call to\nsigc::mem_fun() which references a method of a\nclass deriving from sigc::trackable should\nnever be copied to another thread, nor destroyed by a different thread\nthan the one which created it.",
+   "text": "A `sigc::slot` object created by a call to\n`sigc::mem_fun()` which references a method of a\nclass deriving from `sigc::trackable` should\nnever be copied to another thread, nor destroyed by a different thread\nthan the one which created it.",
    "sha": "2302b5d4f70f4a8f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If a particular class object derives from\nsigc::trackable, only one thread should create\nsigc::slot objects representing any of the\nclass's non-static methods by calling\nsigc::mem_fun(). The first thread to create such\na slot should be regarded as owning the relevant object for the\npurpose of creating further slots referencing any\nof its non-static methods using that function, or nulling those slots\nby disconnecting them or destroying the trackable object.",
+   "text": "If a particular class object derives from\n`sigc::trackable`, only one thread should create\n`sigc::slot` objects representing any of the\nclass's non-static methods by calling\n`sigc::mem_fun()`. The first thread to create such\na slot should be regarded as owning the relevant object for the\npurpose of creating further slots referencing *any*\nof its non-static methods using that function, or nulling those slots\nby disconnecting them or destroying the trackable object.",
    "sha": "1476629a8d7e78c4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Although glib is itself thread-safe, any\nglibmm wrappers which use\nlibsigc++ will not be. So for example, only\nthe thread in which a main loop runs should call\nGlib::SignalIdle::connect(),\nGlib::SignalIO::connect(),\nGlib::SignalTimeout::connect(),\nGlib::SignalTimeout::connect_seconds\nfor that main loop, or manipulate any\nsigc::connection object returned by them.",
+   "text": "Although `glib` is itself thread-safe, any\n`glibmm` wrappers which use\n`libsigc++` will not be. So for example, only\nthe thread in which a main loop runs should call\nGlib::SignalIdle::connect(),\nGlib::SignalIO::connect(),\nGlib::SignalTimeout::connect(),\nGlib::SignalTimeout::connect_seconds\nfor that main loop, or manipulate any\n`sigc::connection` object returned by them.",
    "sha": "df0af9b9db1d895c",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The connect*_once() variants,\nGlib::SignalIdle::connect_once(),\nGlib::SignalTimeout::connect_once(),\nGlib::SignalTimeout::connect_seconds_once(),\nare thread-safe for any case where the slot is not created by a call to\nsigc::mem_fun() which represents a method of a class\nderiving from sigc::trackable.",
+   "text": "The connect*_once() variants,\nGlib::SignalIdle::connect_once(),\nGlib::SignalTimeout::connect_once(),\nGlib::SignalTimeout::connect_seconds_once(),\nare thread-safe for any case where the slot is not created by a call to\n`sigc::mem_fun()` which represents a method of a class\nderiving from `sigc::trackable`.",
    "sha": "aa94aa7bc38c0fea",
    "zh": null
   }

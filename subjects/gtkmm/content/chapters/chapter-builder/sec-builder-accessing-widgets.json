@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "To access a widget, for instance to show a dialog, use\nthe get_widget() method, providing the widget's name.\nThis name should be specified in the Cambalache\nwindow. If the widget could not be found, or is of the wrong type, then the\npointer will be set to nullptr.",
+   "text": "To access a widget, for instance to show a dialog, use\nthe get_widget() method, providing the widget's name.\nThis name should be specified in the `Cambalache`\nwindow. If the widget could not be found, or is of the wrong type, then the\npointer will be set to `nullptr`.",
    "sha": "cb6ed1a4265369c4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The dialogs in this chapter are derived from Gtk::Window\nbecause Gtk::Dialog is deprecated since gtkmm 4.10.",
+   "text": "The dialogs in this chapter are derived from `Gtk::Window`\nbecause `Gtk::Dialog` is deprecated since gtkmm 4.10.",
    "sha": "084fd2b45b899e86",
    "zh": null
   },
@@ -24,19 +24,19 @@
   },
   {
    "type": "para",
-   "text": "Gtk::Builder checks for a null pointer, and checks\nthat the widget is of the expected type, and will show warnings on the command\nline about these.",
+   "text": "`Gtk::Builder` checks for a null pointer, and checks\nthat the widget is of the expected type, and will show warnings on the command\nline about these.",
    "sha": "c7a22f541880aba5",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Remember that you are not instantiating a widget with\nget_widget(), you are just obtaining a pointer to one that\nalready exists. You will always receive a pointer to the same instance when you\ncall get_widget() on the same\nGtk::Builder, with the same widget name. The\nwidgets are instantiated during Gtk::Builder::create_from_file().",
+   "text": "Remember that you are not instantiating a widget with\nget_widget(), you are just obtaining a pointer to one that\nalready exists. You will always receive a pointer to the same instance when you\ncall get_widget() on the same\n`Gtk::Builder`, with the same widget name. The\nwidgets are instantiated during Gtk::Builder::create_from_file().",
    "sha": "05b05b047a4efcc3",
    "zh": null
   },
   {
    "type": "para",
-   "text": "get_widget() returns child widgets that are\nmanage()ed (see the Memory\nManagement chapter), so they will be deleted when their parent\ncontainer is deleted. Windows (such as Dialogs)\ncannot be managed because they have no parent container, so you must delete them at\nsome point. The documentation of Gtk::Builder has more to say\nabout the memory management of different kinds of objects.",
+   "text": "get_widget() returns child widgets that are\n`manage()`ed (see the Memory\nManagement chapter), so they will be deleted when their parent\ncontainer is deleted. `Window`s (such as `Dialog`s)\ncannot be managed because they have no parent container, so you must delete them at\nsome point. The documentation of `Gtk::Builder` has more to say\nabout the memory management of different kinds of objects.",
    "sha": "fb288fea30641409",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "para",
-   "text": "This simple example shows how to load a .ui\nfile at runtime and access the widgets with Gtk::Builder.",
+   "text": "This simple example shows how to load a `.ui`\nfile at runtime and access the widgets with `Gtk::Builder`.",
    "sha": "556666e47eb12618",
    "zh": null
   },

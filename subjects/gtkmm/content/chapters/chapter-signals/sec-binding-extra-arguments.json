@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "If you use one signal handler to catch the same signal from several widgets,\nyou might like that signal handler to receive some extra information. For\ninstance, you might want to know which button was clicked. You can do this with\nsigc::bind(). Here's some code from the helloworld2 example.",
+   "text": "If you use one signal handler to catch the same signal from several widgets,\nyou might like that signal handler to receive some extra information. For\ninstance, you might want to know which button was clicked. You can do this with\n`sigc::bind()`. Here's some code from the helloworld2 example.",
    "sha": "ae67001afa3a2af6",
    "zh": null
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "This says that we want the signal to send an extra\nGlib::ustring argument to the signal handler, and that\nthe value of that argument should be \"button 1\". Of course we will need to add\nthat extra argument to the declaration of our signal handler:",
+   "text": "This says that we want the signal to send an extra\n`Glib::ustring` argument to the signal handler, and that\nthe value of that argument should be \"button 1\". Of course we will need to add\nthat extra argument to the declaration of our signal handler:",
    "sha": "366e881283cb337b",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "sigc::bind() is not commonly used, but you might find it\nhelpful sometimes. If you are familiar with GTK\nprogramming then you have probably noticed that this is similar to the extra\ngpointer data arguments which all GTK callbacks have. This\nis generally overused in GTK to pass information\nthat should be stored as member data in a derived widget, but widget derivation\nis very difficult in C. We have far less need of this hack in gtkmm.",
+   "text": "`sigc::bind()` is not commonly used, but you might find it\nhelpful sometimes. If you are familiar with `GTK`\nprogramming then you have probably noticed that this is similar to the extra\n`gpointer data` arguments which all GTK callbacks have. This\nis generally overused in `GTK` to pass information\nthat should be stored as member data in a derived widget, but widget derivation\nis very difficult in C. We have far less need of this hack in gtkmm.",
    "sha": "2489ebb7d957b672",
    "zh": null
   }

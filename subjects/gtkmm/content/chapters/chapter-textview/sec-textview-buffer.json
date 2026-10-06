@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Gtk::TextBuffer is a model containing the data for the\nGtk::TextView, like the\nGtk::TreeModel used by Gtk::TreeView.\nThis allows two or more Gtk::TextViews to share the same\nTextBuffer, and allows those TextBuffers to be displayed\nslightly differently. Or you could maintain several\nGtk::TextBuffers and choose to display each one at different\ntimes in the same Gtk::TextView widget.",
+   "text": "`Gtk::TextBuffer` is a model containing the data for the\n`Gtk::TextView`, like the\n`Gtk::TreeModel` used by `Gtk::TreeView`.\nThis allows two or more `Gtk::TextView`s to share the same\n`TextBuffer`, and allows those TextBuffers to be displayed\nslightly differently. Or you could maintain several\n`Gtk::TextBuffer`s and choose to display each one at different\ntimes in the same `Gtk::TextView` widget.",
    "sha": "aff7eff2cc695cf1",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The TextView creates its own default\nTextBuffer, which you can access via the\nget_buffer() method.",
+   "text": "The `TextView` creates its own default\n`TextBuffer`, which you can access via the\nget_buffer() method.",
    "sha": "4f6735e2970fe784",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "A Gtk::TextBuffer::iterator and a Gtk::TextBuffer::const_iterator\nrepresent a position between two characters in the text buffer. Whenever the buffer\nis modified in a way that affects the number of characters in the buffer, all outstanding\niterators become invalid. Because of this, iterators can't be used to preserve positions\nacross buffer modifications. To preserve a position, use Gtk::TextBuffer::Mark.",
+   "text": "A `Gtk::TextBuffer::iterator` and a `Gtk::TextBuffer::const_iterator`\nrepresent a position between two characters in the text buffer. Whenever the buffer\nis modified in a way that affects the number of characters in the buffer, all outstanding\niterators become invalid. Because of this, iterators can't be used to preserve positions\nacross buffer modifications. To preserve a position, use `Gtk::TextBuffer::Mark`.",
    "sha": "666c9158adce240f",
    "zh": null
   },
@@ -66,13 +66,13 @@
   },
   {
    "type": "para",
-   "text": "You can specify a name for the Tag when using the\ncreate() method, but it is not necessary.",
+   "text": "You can specify a name for the `Tag` when using the\ncreate() method, but it is not necessary.",
    "sha": "4550bd89c441de5d",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The Tag class has many other properties.",
+   "text": "The `Tag` class has many other properties.",
    "sha": "3d3ee25234a7b7e8",
    "zh": null
   },
@@ -90,7 +90,7 @@
   },
   {
    "type": "para",
-   "text": "Each Gtk::TextBuffer uses a\nGtk::TextBuffer::TagTable, which contains the\nTags for that buffer. 2 or more\nTextBuffers may share the same\nTagTable. When you create Tags\nyou should add them to the TagTable. For instance:",
+   "text": "Each `Gtk::TextBuffer` uses a\n`Gtk::TextBuffer::TagTable`, which contains the\n`Tag`s for that buffer. 2 or more\n`TextBuffer`s may share the same\n`TagTable`. When you create `Tag`s\nyou should add them to the `TagTable`. For instance:",
    "sha": "079a1b2964e92793",
    "zh": null
   },
@@ -102,7 +102,7 @@
   },
   {
    "type": "para",
-   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe TextBuffer's default TagTable\ninstead of creating one explicitly.",
+   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
    "sha": "67124e322098f2be",
    "zh": null
   },
@@ -120,7 +120,7 @@
   },
   {
    "type": "para",
-   "text": "If you have created a Tag and added it to the\nTagTable, you may apply that tag to part of the\nTextBuffer so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\nGtk::TextBuffer::iterators. For instance:",
+   "text": "If you have created a `Tag` and added it to the\n`TagTable`, you may apply that tag to part of the\n`TextBuffer` so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\n`Gtk::TextBuffer::iterator`s. For instance:",
    "sha": "99b50726009f26c7",
    "zh": null
   },
@@ -144,13 +144,13 @@
   },
   {
    "type": "para",
-   "text": "You can apply more than one Tag to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The Tags might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
+   "text": "You can apply more than one `Tag` to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The `Tag`s might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
    "sha": "e92729bff47493ef",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Each Gtk::TextBuffer uses a\nGtk::TextBuffer::TagTable, which contains the\nTags for that buffer. 2 or more\nTextBuffers may share the same\nTagTable. When you create Tags\nyou should add them to the TagTable. For instance:",
+   "text": "Each `Gtk::TextBuffer` uses a\n`Gtk::TextBuffer::TagTable`, which contains the\n`Tag`s for that buffer. 2 or more\n`TextBuffer`s may share the same\n`TagTable`. When you create `Tag`s\nyou should add them to the `TagTable`. For instance:",
    "sha": "079a1b2964e92793-1",
    "zh": null
   },
@@ -162,7 +162,7 @@
   },
   {
    "type": "para",
-   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe TextBuffer's default TagTable\ninstead of creating one explicitly.",
+   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
    "sha": "67124e322098f2be-1",
    "zh": null
   },
@@ -174,7 +174,7 @@
   },
   {
    "type": "para",
-   "text": "If you have created a Tag and added it to the\nTagTable, you may apply that tag to part of the\nTextBuffer so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\nGtk::TextBuffer::iterators. For instance:",
+   "text": "If you have created a `Tag` and added it to the\n`TagTable`, you may apply that tag to part of the\n`TextBuffer` so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\n`Gtk::TextBuffer::iterator`s. For instance:",
    "sha": "99b50726009f26c7-1",
    "zh": null
   },
@@ -198,7 +198,7 @@
   },
   {
    "type": "para",
-   "text": "You can apply more than one Tag to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The Tags might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
+   "text": "You can apply more than one `Tag` to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The `Tag`s might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
    "sha": "e92729bff47493ef-1",
    "zh": null
   },
@@ -210,7 +210,7 @@
   },
   {
    "type": "para",
-   "text": "TextBuffer iterators are generally invalidated when the\ntext changes, but you can use a Gtk::TextBuffer::Mark to\nremember a position in these situations. For instance,",
+   "text": "`TextBuffer` iterators are generally invalidated when the\ntext changes, but you can use a `Gtk::TextBuffer::Mark` to\nremember a position in these situations. For instance,",
    "sha": "2f34a8d6e3b3f914",
    "zh": null
   },
@@ -222,13 +222,13 @@
   },
   {
    "type": "para",
-   "text": "You can then use the get_iter() method later to create an\niterator for the Mark's new position.",
+   "text": "You can then use the get_iter() method later to create an\niterator for the `Mark`'s new position.",
    "sha": "1491e9385df9ed26",
    "zh": null
   },
   {
    "type": "para",
-   "text": "There are two built-in Marks - insert\nand selection_bound, which you can access with\nTextBuffer's get_insert() and\nget_selection_bound() methods.",
+   "text": "There are two built-in `Mark`s - `insert`\nand `selection_bound`, which you can access with\n`TextBuffer`'s get_insert() and\nget_selection_bound() methods.",
    "sha": "92125f070efa73fe",
    "zh": null
   },
@@ -246,13 +246,13 @@
   },
   {
    "type": "para",
-   "text": "As mentioned above, each TextView has a\nTextBuffer, and one or more\nTextViews can share the same\nTextBuffer.",
+   "text": "As mentioned above, each `TextView` has a\n`TextBuffer`, and one or more\n`TextView`s can share the same\n`TextBuffer`.",
    "sha": "a3c0af301f4d7c68",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Like the TreeView, you should probably put your\nTextView inside a ScrolledWindow\nto allow the user to see and move around the whole text area with\nscrollbars.",
+   "text": "Like the `TreeView`, you should probably put your\n`TextView` inside a `ScrolledWindow`\nto allow the user to see and move around the whole text area with\nscrollbars.",
    "sha": "5965ee63165da6d0",
    "zh": null
   },
@@ -270,7 +270,7 @@
   },
   {
    "type": "para",
-   "text": "TextView has various methods which allow you to change\nthe presentation of the buffer for this particular view. Some of these may be\noverridden by the Gtk::TextTags in the buffer, if they\nspecify the same things. For instance, set_left_margin(),\nset_right_margin(), set_indent(),\netc.",
+   "text": "`TextView` has various methods which allow you to change\nthe presentation of the buffer for this particular view. Some of these may be\noverridden by the `Gtk::TextTag`s in the buffer, if they\nspecify the same things. For instance, set_left_margin(),\nset_right_margin(), set_indent(),\netc.",
    "sha": "840ee839be13e397",
    "zh": null
   },
@@ -282,13 +282,13 @@
   },
   {
    "type": "para",
-   "text": "Gtk::TextView has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
+   "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
    "sha": "7634b76a9e528527",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Gtk::TextView has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
+   "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
    "sha": "7634b76a9e528527-1",
    "zh": null
   }

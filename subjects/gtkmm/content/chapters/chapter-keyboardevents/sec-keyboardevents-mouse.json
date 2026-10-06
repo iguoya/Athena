@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Mouse events are similar to keyboard events. There are some differences, though.\n\nYou use Gtk::GestureClick instead of\nGtk::EventControllerKey.\nThere are other event classes that can be used for handling\nmouse events, for instance Gtk::EventControllerMotion and\nGtk::EventControllerScroll.\nMany signal handlers don't return a bool.\nYou can't stop those events from propagating.",
+   "text": "Mouse events are similar to keyboard events. There are some differences, though.\n    \n      You use `Gtk::GestureClick` instead of\n        `Gtk::EventControllerKey`.\n      There are other event classes that can be used for handling\n        mouse events, for instance `Gtk::EventControllerMotion` and\n        `Gtk::EventControllerScroll`.\n      Many signal handlers don't return a `bool`.\n        You can't stop those events from propagating.",
    "sha": "4ffd75f85d5d1d5d",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "The event classes that handle mouse events are also useful for handling\nevents from touchscreens. There are also many subclasses of\nGtk::EventController which are only (or mainly) useful\nfor touchscreens. Examples: Gtk::GestureRotate,\nGtk::GestureZoom, Gtk::GestureSwipe,\nGtk::GestureLongPress.",
+   "text": "The event classes that handle mouse events are also useful for handling\n    events from touchscreens. There are also many subclasses of\n    `Gtk::EventController` which are only (or mainly) useful\n    for touchscreens. Examples: `Gtk::GestureRotate`,\n    `Gtk::GestureZoom`, `Gtk::GestureSwipe`,\n    `Gtk::GestureLongPress`.",
    "sha": "7ec8596e97d50001",
    "zh": null
   },
@@ -55,6 +55,7 @@
   {
    "type": "figure",
    "text": "Keyboard and Mouse Events",
+   "ref": "figures/events_mouse.png",
    "sha": "f9a76d5d44678fa0",
    "zh": ""
   },

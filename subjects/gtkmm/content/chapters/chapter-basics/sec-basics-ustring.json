@@ -6,9 +6,10 @@
  "blocks": [
   {
    "type": "para",
-   "text": "You might be surprised to learn that gtkmm doesn't use std::string in its interfaces. Instead it uses Glib::ustring, which is so similar and unobtrusive that you could actually pretend that each Glib::ustring is a std::string and ignore the rest of this section. But read on if you want to use languages other than English in your application.",
+   "text": "You might be surprised to learn that gtkmm doesn't use `std::string` in its interfaces. Instead it uses `Glib::ustring`, which is so similar and unobtrusive that you could actually pretend that each `Glib::ustring` is a `std::string` and ignore the rest of this section. But read on if you want to use languages other than English in your application.",
    "sha": "7e7045b9a8e7a5e6",
-   "zh": "你可能会惊讶：gtkmm 的接口里用的不是 std::string，而是 Glib::ustring。它与 std::string 相似到几乎不引人注意的程度——你完全可以假装每个 Glib::ustring 就是 std::string，然后跳过本节剩下的部分。但如果你的应用要用英语以外的语言， 请往下读。"
+   "zh": "你可能会惊讶：gtkmm 的接口里用的不是 std::string，而是 Glib::ustring。它与 std::string 相似到几乎不引人注意的程度——你完全可以假装每个 Glib::ustring 就是 std::string，然后跳过本节剩下的部分。但如果你的应用要用英语以外的语言， 请往下读。",
+   "key": true
   },
   {
    "type": "para",
@@ -18,7 +19,7 @@
   },
   {
    "type": "para",
-   "text": "One of the benefits of UTF-8 is that you don't need to use it unless you want to, so you don't need to retrofit all of your code at once. std::string will still work for 7-bit ASCII strings. But when you try to localize your application for languages like Chinese, for instance, you will start to see strange errors, and possible crashes. Then all you need to do is start using Glib::ustring instead.",
+   "text": "One of the benefits of UTF-8 is that you don't need to use it unless you want to, so you don't need to retrofit all of your code at once. `std::string` will still work for 7-bit ASCII strings. But when you try to localize your application for languages like Chinese, for instance, you will start to see strange errors, and possible crashes. Then all you need to do is start using `Glib::ustring` instead.",
    "sha": "5178ce10291e60ad",
    "zh": "UTF-8 的一个好处是：不用它可以不用，不必一次性改造全部代码。对 7 位 ASCII 字符串，std::string 依然可用。但当你开始把应用本地化成中文之类的语言时，就会 开始见到奇怪的错误，甚至崩溃。到那时，改用 Glib::ustring 就好。"
   },
@@ -30,7 +31,7 @@
   },
   {
    "type": "para",
-   "text": "You should avoid C-style pointer arithmetic, and functions such as strlen(). In UTF-8, each character might need anywhere from 1 to 6 bytes, so it's not possible to assume that the next byte is another character. Glib::ustring worries about the details of this for you so you can use methods such as Glib::ustring::substr() while still thinking in terms of characters instead of bytes.",
+   "text": "You should avoid C-style pointer arithmetic, and functions such as strlen(). In UTF-8, each character might need anywhere from 1 to 6 bytes, so it's not possible to assume that the next byte is another character. `Glib::ustring` worries about the details of this for you so you can use methods such as Glib::ustring::substr() while still thinking in terms of characters instead of bytes.",
    "sha": "f7cc234f6e74212d",
    "zh": "应当避免 C 风格的指针运算，以及 strlen() 之类的函数。UTF-8 中一个字符可能占 1 到 6 个字节，不能假定下一个字节就是下一个字符。Glib::ustring 替你操心这些 细节：你可以继续用 Glib::ustring::substr() 之类的方法，按字符而不是按字节 思考。"
   },

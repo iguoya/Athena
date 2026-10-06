@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "As another piece of functionality, we are adding a sidebar, which demonstrates\nGtk::Revealer and Gtk::ListBox.\nThe new widgets are added in the window.ui file.",
+   "text": "As another piece of functionality, we are adding a sidebar, which demonstrates\n`Gtk::Revealer` and `Gtk::ListBox`.\nThe new widgets are added in the `window.ui` file.",
    "sha": "96ca8e60ed052916",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The code to populate the sidebar with buttons for the words found in each\nfile is a little too involved to go into here. But we'll look at the code\nto add a checkbutton for the new feature to the menu. A menu item is added to\nthe ui file gears_menu.ui.",
+   "text": "The code to populate the sidebar with buttons for the words found in each\nfile is a little too involved to go into here. But we'll look at the code\nto add a checkbutton for the new feature to the menu. A menu item is added to\nthe ui file `gears_menu.ui`.",
    "sha": "0f232012ff17b9e6",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To connect the menu item to the new show-words setting, we use a\nGio::Action corresponding to the given Gio::Settings\nkey. In ExampleAppWindow's constructor:",
+   "text": "To connect the menu item to the new `show-words` setting, we use a\n`Gio::Action` corresponding to the given `Gio::Settings`\nkey. In `ExampleAppWindow`'s constructor:",
    "sha": "5c2e5edf19c918b8",
    "zh": null
   },
@@ -37,6 +37,7 @@
   {
    "type": "figure",
    "text": "Adding a side bar",
+   "ref": "figures/buildapp_side_bar.png",
    "sha": "2e25935935192334",
    "zh": ""
   },

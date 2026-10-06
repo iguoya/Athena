@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "You may add a custom tab to the print dialog:\n\n\n\n\nSet the title of the tab via\nPrintOperation::set_custom_tab_label(),\ncreate a new widget and return it from the\ncreate_custom_widget signal handler. You'll probably\nwant this to be a container widget, packed with some others.\n\n\n\n\n\nGet the data from the widgets in the\ncustom_widget_apply signal handler.",
+   "text": "You may add a custom tab to the print dialog:\n\n\n  \n    \n      Set the title of the tab via\n      PrintOperation::set_custom_tab_label(),\n      create a new widget and return it from the\n      `create_custom_widget` signal handler. You'll probably\n      want this to be a container widget, packed with some others.\n    \n  \n\n  \n    \n      Get the data from the widgets in the\n      `custom_widget_apply` signal handler.",
    "sha": "84966bb74ed8b91f",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "Although the custom_widget_apply signal provides the widget you\npreviously created, to simplify things you can keep the widgets you expect\nto contain some user input as class members. For example, let's say you have\na Gtk::Entry called m_Entry as\na member of your CustomPrintOperation class:",
+   "text": "Although the `custom_widget_apply` signal provides the widget you\npreviously created, to simplify things you can keep the widgets you expect\nto contain some user input as class members. For example, let's say you have\na `Gtk::Entry` called `m_Entry` as\na member of your `CustomPrintOperation` class:",
    "sha": "e5524805e216c06e",
    "zh": null
   },

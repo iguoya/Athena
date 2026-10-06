@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "gtkmm widget classes have signal accessor methods, such as\nGtk::Button::signal_clicked(), which allow you to connect\nyour signal handler. Thanks to the flexibility of\nlibsigc++, the callback library used by gtkmm, the\nsignal handler can be almost any kind of function, but you will probably want\nto use a class method. Among GTK C coders, these\nsignal handlers are often named callbacks.",
+   "text": "gtkmm widget classes have signal accessor methods, such as\nGtk::Button::signal_clicked(), which allow you to connect\nyour signal handler. Thanks to the flexibility of\n`libsigc++`, the callback library used by gtkmm, the\nsignal handler can be almost any kind of function, but you will probably want\nto use a class method. Among `GTK` C coders, these\nsignal handlers are often named callbacks.",
    "sha": "9415fcf6d2e37d84",
    "zh": null
   },
@@ -60,19 +60,19 @@
   },
   {
    "type": "para",
-   "text": "Note that we don't pass a pointer to on_button_clicked()\ndirectly to the signal's connect() method. Instead, we\ncall sigc::ptr_fun(), and pass the result to\nconnect().",
+   "text": "Note that we don't pass a pointer to on_button_clicked()\ndirectly to the signal's connect() method. Instead, we\ncall `sigc::ptr_fun()`, and pass the result to\nconnect().",
    "sha": "b10bfa9c21078c66",
    "zh": null
   },
   {
    "type": "para",
-   "text": "sigc::ptr_fun() generates a sigc::slot.\nA slot is an object which\nlooks and feels like a function, but is actually an object. These are also\nknown as function objects, or functors.\nsigc::ptr_fun() generates a slot for a standalone function or static method.\nsigc::mem_fun() generates a slot for a member method of a particular instance.",
+   "text": "`sigc::ptr_fun()`  generates a `sigc::slot`.\nA slot is an object which\nlooks and feels like a function, but is actually an object. These are also\nknown as function objects, or functors.\n`sigc::ptr_fun()` generates a slot for a standalone function or static method.\n`sigc::mem_fun()` generates a slot for a member method of a particular instance.",
    "sha": "fc03683b737aeb28",
    "zh": null
   },
   {
    "type": "para",
-   "text": "A C++ lambda expression is a functor which can be implicitly converted to a\nsigc::slot in the call to connect().\nA lambda expression can be used instead of sigc::ptr_fun().\nIt's also possible to use a lambda expression instead of sigc::mem_fun(),\nbut then you won't get automatic disconnection of the signal handler when a\nsigc::trackable-derived object goes out of scope.",
+   "text": "A C++ lambda expression is a functor which can be implicitly converted to a\n`sigc::slot` in the call to connect().\nA lambda expression can be used instead of `sigc::ptr_fun()`.\nIt's also possible to use a lambda expression instead of `sigc::mem_fun()`,\nbut then you won't get automatic disconnection of the signal handler when a\n`sigc::trackable`-derived object goes out of scope.",
    "sha": "c86e4b538588dd62",
    "zh": null
   },
@@ -96,7 +96,7 @@
   },
   {
    "type": "para",
-   "text": "The next is more interesting.\nsigc::mem_fun() is called with two arguments. The first\nargument is *this, which is the object that our\nnew slot will be pointing at. The second argument is a pointer to one of its\nmethods. This particular version of sigc::mem_fun()\ncreates a slot which will, when \"called\", call the pointed-to method of the\nspecified object.",
+   "text": "The next is more interesting.\n`sigc::mem_fun()` is called with two arguments. The first\nargument is `*this`, which is the object that our\nnew slot will be pointing at. The second argument is a pointer to one of its\nmethods. This particular version of `sigc::mem_fun()`\ncreates a slot which will, when \"called\", call the pointed-to method of the\nspecified object.",
    "sha": "def66347ce22d139",
    "zh": null
   },
@@ -108,7 +108,7 @@
   },
   {
    "type": "para",
-   "text": "We just told you that the button's clicked signal is expecting\nto call a method with no arguments. All signals have\nrequirements like this - you can't hook a function with two arguments\nto a signal expecting none (unless you use an adapter, such as\nsigc::bind(), of course). Therefore, it's important to\nknow what type of signal handler you'll be expected to connect to a given\nsignal.",
+   "text": "We just told you that the button's `clicked` signal is expecting\nto call a method with no arguments. All signals have\nrequirements like this - you can't hook a function with two arguments\nto a signal expecting none (unless you use an adapter, such as\n`sigc::bind()`, of course). Therefore, it's important to\nknow what type of signal handler you'll be expected to connect to a given\nsignal.",
    "sha": "c206864c99d4a3b5",
    "zh": null
   }

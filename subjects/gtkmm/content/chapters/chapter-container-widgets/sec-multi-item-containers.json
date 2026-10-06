@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Multiple-item container widgets have other methods than set_child()\nand unset_child(). Different containers can have different\nmethods for adding and removing child widgets. For instance, Gtk::Box\nhas append() and remove() as\nwell as other methods. The remove() method for multiple-item\ncontainers takes an argument, specifying which widget to remove.",
+   "text": "Multiple-item container widgets have other methods than set_child()\nand unset_child(). Different containers can have different\nmethods for adding and removing child widgets. For instance, `Gtk::Box`\nhas append() and remove() as\nwell as other methods. The remove() method for multiple-item\ncontainers takes an argument, specifying which widget to remove.",
    "sha": "c481a46c2ee4fb99",
    "zh": null
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "You've probably noticed that gtkmm windows seem \"elastic\" - they can usually be stretched in many different ways. This is due to the widget packing\nsystem.",
+   "text": "You've probably noticed that gtkmm windows seem \"elastic\" - they can usually be stretched in many  different ways. This is due to the *widget packing*\nsystem.",
    "sha": "dc23a528e1b07884",
    "zh": null
   },
@@ -54,13 +54,13 @@
   },
   {
    "type": "para",
-   "text": "gtkmm arranges widgets hierarchically, using containers.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding Gtk::Window.",
+   "text": "gtkmm arranges widgets hierarchically, using *containers*.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding `Gtk::Window`.",
    "sha": "0c0383c41e5df9f7",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Yes, that's correct: a Window can contain at most one widget. How, then, can\nwe use a window for anything useful? By placing a multiple-child container in\nthe window. The most useful container widgets are\nGtk::Grid and Gtk::Box.",
+   "text": "Yes, that's correct: a Window can contain at most one widget. How, then, can\nwe use a window for anything useful?  By placing a multiple-child container in\nthe window. The most useful container widgets are\n`Gtk::Grid` and `Gtk::Box`.",
    "sha": "eec4e2648c2656b2",
    "zh": null
   },
@@ -96,13 +96,14 @@
   },
   {
    "type": "para",
-   "text": "Let's take a look at a slightly improved helloworld, showing what we've learnt.",
+   "text": "Let's take a look at a slightly improved `helloworld`, showing what we've learnt.",
    "sha": "cc265b2d29b54eb5",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Hello World 2",
+   "ref": "figures/helloworld2.png",
    "sha": "3df75539dda4c512",
    "zh": ""
   },
@@ -144,13 +145,13 @@
   },
   {
    "type": "para",
-   "text": "The append() method places widgets inside these\ncontainers. It will start at the top and work its way down in a\nBox with vertical orientation, or pack left to right in\na Box with horizontal orientation. If it's inconvenient\nto add widgets in this order, use insert_child_after()\nor insert_child_at_start(). We will use\nappend() in our examples.",
+   "text": "The append() method places widgets inside these\ncontainers. It will start at the top and work its way down in a\n`Box` with vertical orientation, or pack left to right in\na `Box` with horizontal orientation. If it's inconvenient\nto add widgets in this order, use insert_child_after()\nor insert_child_at_start(). We will use\nappend() in our examples.",
    "sha": "8aa2078fe1a19020",
    "zh": null
   },
   {
    "type": "para",
-   "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\nCambalache GUI designer to see what is possible.\nYou can then use the Gtk::Builder API to load your GUI at runtime.",
+   "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\n`Cambalache` GUI designer to see what is possible.\nYou can then use the `Gtk::Builder` API to load your GUI at runtime.",
    "sha": "f911bfc0d5c63ad4",
    "zh": null
   },
@@ -163,12 +164,13 @@
   {
    "type": "figure",
    "text": "Box Packing 1",
+   "ref": "figures/box_packing1.png",
    "sha": "6782e8eeadeed26c",
    "zh": ""
   },
   {
    "type": "para",
-   "text": "Each line contains one horizontal Box with\nseveral buttons. Each of the buttons on a line is packed into the\nBox with the same arguments to the\nset_hexpand(), set_halign(),\nset_margin_start() and set_margin_end()\nmethods.",
+   "text": "Each line contains one horizontal `Box` with\nseveral buttons. Each of the buttons on a line is packed into the\n`Box` with the same arguments to the\nset_hexpand(), set_halign(),\nset_margin_start() and set_margin_end()\nmethods.",
    "sha": "c76ac9fdbdc33d69",
    "zh": null
   },
@@ -186,7 +188,7 @@
   },
   {
    "type": "para",
-   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f",
    "zh": null
   },
@@ -198,7 +200,7 @@
   },
   {
    "type": "para",
-   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9",
    "zh": null
   },
@@ -211,12 +213,13 @@
   {
    "type": "figure",
    "text": "Box Packing 2",
+   "ref": "figures/box_packing2.png",
    "sha": "5aeb019524f16834",
    "zh": ""
   },
   {
    "type": "para",
-   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-1",
    "zh": null
   },
@@ -228,7 +231,7 @@
   },
   {
    "type": "para",
-   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9-1",
    "zh": null
   },
@@ -241,6 +244,7 @@
   {
    "type": "figure",
    "text": "Box Packing 2",
+   "ref": "figures/box_packing2.png",
    "sha": "5aeb019524f16834-1",
    "zh": ""
   },
@@ -252,7 +256,7 @@
   },
   {
    "type": "para",
-   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith Gtk::Application.",
+   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith `Gtk::Application`.",
    "sha": "8e3c1fe089fe084e",
    "zh": null
   },
@@ -288,7 +292,7 @@
   },
   {
    "type": "para",
-   "text": "Here's the constructor for the Box widget,\nand methods that set per-container packing options:",
+   "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-2",
    "zh": null
   },
@@ -300,7 +304,7 @@
   },
   {
    "type": "para",
-   "text": "Passing true to set_homogeneous() will\ncause all of the contained widgets to be the same size.\nspacing is a (minimum) number of pixels to leave between\neach widget.",
+   "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9-2",
    "zh": null
   },
@@ -313,12 +317,13 @@
   {
    "type": "figure",
    "text": "Box Packing 2",
+   "ref": "figures/box_packing2.png",
    "sha": "5aeb019524f16834-2",
    "zh": ""
   },
   {
    "type": "para",
-   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith Gtk::Application.",
+   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith `Gtk::Application`.",
    "sha": "8e3c1fe089fe084e-1",
    "zh": null
   },
@@ -354,7 +359,7 @@
   },
   {
    "type": "para",
-   "text": "A Grid dynamically lays out child widgets in rows and\ncolumns. The dimensions of the grid do not need to be specified in the constructor.",
+   "text": "A `Grid` dynamically lays out child widgets in rows and\ncolumns. The dimensions of the grid do not need to be specified in the constructor.",
    "sha": "dffb8b4f8ef984e6",
    "zh": null
   },
@@ -366,7 +371,7 @@
   },
   {
    "type": "para",
-   "text": "You can set the margin and expand properties of the\nchild Widgets to control their spacing and their behavior when the Grid is resized.",
+   "text": "You can set the *margin* and *expand* properties of the\nchild `Widget`s to control their spacing and their behavior when the Grid is resized.",
    "sha": "932342e62e93a84a",
    "zh": null
   },
@@ -391,6 +396,7 @@
   {
    "type": "figure",
    "text": "Grid",
+   "ref": "figures/grid.png",
    "sha": "0d7d12ac624c66e6-1",
    "zh": ""
   },
@@ -408,13 +414,13 @@
   },
   {
    "type": "para",
-   "text": "A Notebook has a set of stacked\npages, each of which contains widgets. Labelled\ntabs allow the user to select the pages.\nNotebooks allow several sets of widgets to be placed in a\nsmall space, by only showing one page at a time. For instance, they are often\nused in preferences dialogs.",
+   "text": "A `Notebook` has a set of stacked\n`pages`, each of which contains widgets. Labelled\n`tabs` allow the user to select the pages.\n`Notebook`s allow several sets of widgets to be placed in a\nsmall space, by only showing one page at a time. For instance, they are often\nused in preferences dialogs.",
    "sha": "b3ec998c3566bed4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Use the append_page(), prepend_page()\nand insert_page() methods to add tabbed pages to the\nNotebook, supplying the child widget and the name for the\ntab.",
+   "text": "Use the append_page(), prepend_page()\nand insert_page() methods to add tabbed pages to the\n`Notebook`, supplying the child widget and the name for the\ntab.",
    "sha": "61da4af5e5a3677e",
    "zh": null
   },
@@ -445,6 +451,7 @@
   {
    "type": "figure",
    "text": "Notebook",
+   "ref": "figures/notebook.png",
    "sha": "0dec07abf92dbe72-1",
    "zh": ""
   },
@@ -462,19 +469,19 @@
   },
   {
    "type": "para",
-   "text": "Gtk::Assistant is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm. libadwaita (a C library) has replacement parts\n(like AdwCarousel). In some cases, a Gtk::Notebook might\nbe an acceptable replacement.",
+   "text": "`Gtk::Assistant` is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm. libadwaita (a C library) has replacement parts\n(like AdwCarousel). In some cases, a `Gtk::Notebook` might\nbe an acceptable replacement.",
    "sha": "ad7fddbd1f11aa9b",
    "zh": null
   },
   {
    "type": "para",
-   "text": "An Assistant splits a complex operation into steps. Each step is a page, containing a header, a child widget and an action area. The Assistant's action area has navigation buttons which update automatically depending on the type of the page, set with set_page_type().",
+   "text": "An `Assistant` splits a complex operation into steps. Each step is a page, containing a header, a child widget and an action area. The Assistant's action area has navigation buttons which update automatically depending on the type of the page, set with set_page_type().",
    "sha": "def4438334fc58a8",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Use the append_page(), prepend_page and insert_page() methods to add pages to the Assistant, supplying the child widget for each page.",
+   "text": "Use the append_page(), prepend_page and insert_page() methods to add pages to the `Assistant`, supplying the child widget for each page.",
    "sha": "16a157035cc029f8",
    "zh": null
   },
@@ -511,6 +518,7 @@
   {
    "type": "figure",
    "text": "Assistant",
+   "ref": "figures/assistant.png",
    "sha": "391e405152779acc-1",
    "zh": ""
   },

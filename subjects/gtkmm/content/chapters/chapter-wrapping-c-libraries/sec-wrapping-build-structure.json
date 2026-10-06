@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Generation of the source code for a gtkmm-style wrapper API requires use\nof tools such as gmmproc and\ngenerate_wrap_init.pl, which are included in\nglibmm. In theory you could write your\nown build files to use these appropriately, but a much better option is to\nmake use of the build infrastructure provided by the mm-common\nmodule. To get started, it helps a lot to pick an existing binding module as an example\nto look at.",
+   "text": "Generation of the source code for a gtkmm-style wrapper API requires use\n    of tools such as `gmmproc` and\n    `generate_wrap_init.pl`, which are included in\n    `glibmm`. In theory you could write your\n    own build files to use these appropriately, but a much better option is to\n    make use of the build infrastructure provided by the `mm-common`\n    module. To get started, it helps a lot to pick an existing binding module as an example\n    to look at.",
    "sha": "105ff38ab83c5295",
    "zh": null
   },
   {
    "type": "para",
-   "text": "For instance, let's pretend that we are wrapping a C library called\nlibsomething. It provides a GObject-based API with\ntypes named, for instance, SomeWidget and\nSomeStuff.",
+   "text": "For instance, let's pretend that we are wrapping a C library called\n    libsomething. It provides a `GObject`-based API with\n    types named, for instance, `SomeWidget` and\n    `SomeStuff`.",
    "sha": "fbb5987366a49471",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "Typically our wrapper library would be called libsomethingmm. We can start by\ncopying the\nskeleton source tree from the mm-common module.\nStarting with mm-common 1.0.0 this skeleton application\nis built with the Meson build system.",
+   "text": "Typically our wrapper library would be called libsomethingmm. We can start by\n  copying the \n  skeleton source tree from the `mm-common` module.\n  Starting with `mm-common` 1.0.0 this skeleton application\n  is built with the Meson build system.",
    "sha": "c6ae19ffbe86ee4f",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "This provides a directory structure for the source .hg and .ccg files and the hand-written\n.h and .cc files, with meson.build files that can specify the\nvarious files in use, in terms of Meson variables. The directory structure usually\nlooks like this, after we have renamed the directories appropriately:\n\nlibsomethingmm: The top-level directory.\n\nlibsomething: Contains the main include file and the pkg-config .pc file.\n\nsrc: Contains .hg and .ccg source files.\nlibsomethingmm: Contains hand-written .h and .cc files.",
+   "text": "This provides a directory structure for the source .hg and .ccg files and the hand-written\n  .h and .cc files, with `meson.build` files that can specify the\n  various files in use, in terms of Meson variables. The directory structure usually\n  looks like this, after we have renamed the directories appropriately:\n\n    `libsomethingmm`: The top-level directory.\n     \n         `libsomething`: Contains the main include file and the pkg-config .pc file.\n         \n             `src`: Contains .hg and .ccg source files.\n             `libsomethingmm`: Contains hand-written .h and .cc files.",
    "sha": "52e664954737367f",
    "zh": null
   },
@@ -66,7 +66,7 @@
   },
   {
    "type": "para",
-   "text": "As well as renaming the directories, we should rename some of the source\nfiles. For instance:",
+   "text": "As well as renaming the directories, we should rename some of the source\n    files. For instance:",
    "sha": "4244a1331c45e6bf",
    "zh": null
   },
@@ -84,13 +84,13 @@
   },
   {
    "type": "para",
-   "text": "Note that files ending in .in will be used to generate\nfiles with the same name but without the .in suffix, by\nreplacing some variables with actual values during the configure stage.",
+   "text": "Note that files ending in `.in` will be used to generate\n    files with the same name but without the `.in` suffix, by\n    replacing some variables with actual values during the configure stage.",
    "sha": "427be9a92f757b2f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Generated files are saved in the build tree, which is separated from the\nsource tree when meson and ninja are used.",
+   "text": "Generated files are saved in the build tree, which is separated from the\n    source tree when `meson` and `ninja` are used.",
    "sha": "fbbd097e5d2643dc",
    "zh": null
   },
@@ -102,19 +102,19 @@
   },
   {
    "type": "para",
-   "text": "Now we edit the files to adapt them to our needs. You might prefer to use a multiple-file\nsearch-replace utility for this, such as regexxer. Note that nearly all of the\nfiles provided with the skeleton source tree contain placeholder text. Thus, the substitutions\nshould be performed globally, and not be limited to the Meson files.",
+   "text": "Now we edit the files to adapt them to our needs. You might prefer to use a multiple-file\n  search-replace utility for this, such as `regexxer`. Note that nearly all of the\n  files provided with the skeleton source tree contain placeholder text. Thus, the substitutions\n  should be performed globally, and not be limited to the Meson files.",
    "sha": "c1daf9095952318b",
    "zh": null
   },
   {
    "type": "para",
-   "text": "All mentions of skeleton should be replaced by the correct name of the C\nlibrary you are wrapping, such as \"something\" or \"libsomething\". In the same manner, all\ninstances of SKELETON should be replaced by \"SOMETHING\" or \"LIBSOMETHING\", and\nall occurrences of Skeleton changed to \"Something\".",
+   "text": "All mentions of `skeleton` should be replaced by the correct name of the C\n  library you are wrapping, such as \"something\" or \"libsomething\". In the same manner, all\n  instances of `SKELETON` should be replaced by \"SOMETHING\" or \"LIBSOMETHING\", and\n  all occurrences of `Skeleton` changed to \"Something\".",
    "sha": "31e876b0e6744608",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Likewise, replace all instances of Joe Hacker by the name of the intended\ncopyright holder, which is probably you. Do the same for the joe@example.com\nemail address.",
+   "text": "Likewise, replace all instances of `Joe Hacker` by the name of the intended\n  copyright holder, which is probably you. Do the same for the `joe@example.com`\n  email address.",
    "sha": "bc07f14aa56facbe",
    "zh": null
   },
@@ -126,7 +126,7 @@
   },
   {
    "type": "para",
-   "text": "It is common for binding modules to track the version number\nof the library they are wrapping. So, for instance, if the C library is\nat version 1.23.4, then the initial version of the binding module would\nbe 1.23.0. However, avoid starting with an even minor version number as\nthat usually indicates a stable release.\nIn the project() function, change the\nlicense and the C++ version, if necessary.\nYou probably need to add more required modules than\nglibmm and skeleton\n(libsomething).",
+   "text": "It is common for binding modules to track the version number\n        of the library they are wrapping. So, for instance, if the C library is\n        at version 1.23.4, then the initial version of the binding module would\n        be 1.23.0. However, avoid starting with an even minor version number as\n        that usually indicates a stable release.\n    In the `project()` function, change the\n    license and the C++ version, if necessary.\n    You probably need to add more required modules than\n    `glibmm` and `skeleton`\n    (`libsomething`).",
    "sha": "c295b4d90a9767f4",
    "zh": null
   },
@@ -156,7 +156,7 @@
   },
   {
    "type": "para",
-   "text": "Next we must adapt the other meson.build files:\n\nskeleton/meson.build: Perhaps not much\nto change here more than the global name substitutions.\n\nskeleton/skeletonmm/meson.build\n\n\ndefs_basefiles\nIf we have more .defs and docs.xml files,\nwe add them here.\n\n\nhg_ccg_basenames\nWe must mention all of our .hg and\n.ccg files here.\n\n\nextra_cc_files, extra_h_files\nAny additional hand-written .h and\n.cc source files go here.",
+   "text": "Next we must adapt the other `meson.build` files:\n  \n    `skeleton/meson.build`: Perhaps not much\n    to change here more than the global name substitutions.\n    \n    `skeleton/skeletonmm/meson.build`\n      \n        \n          `defs_basefiles`\n          If we have more .defs and docs.xml files,\n          we add them here.\n        \n        \n          `hg_ccg_basenames`\n          We must mention all of our `.hg` and\n          `.ccg` files here.\n        \n        \n          `extra_cc_files, extra_h_files`\n          Any additional hand-written `.h` and\n          `.cc` source files go here.",
    "sha": "0de571dc42ac15b3",
    "zh": null
   },
@@ -180,19 +180,19 @@
   },
   {
    "type": "para",
-   "text": "We should now create our first .hg and .ccg files,\nto wrap one of the objects in the C library. One pair of example source files already exists:\nskeleton.ccg and skeleton.hg. Create copies of these\nfiles as necessary.",
+   "text": "We should now create our first `.hg` and `.ccg` files,\n  to wrap one of the objects in the C library. One pair of example source files already exists:\n  `skeleton.ccg` and `skeleton.hg`. Create copies of these\n  files as necessary.",
    "sha": "886502c254070882",
    "zh": null
   },
   {
    "type": "para",
-   "text": "In the .hg and .ccg files\nsection you can learn about the syntax used in these files.",
+   "text": "In the .hg and .ccg files\n  section you can learn about the syntax used in these files.",
    "sha": "6144ba1328ca39b5",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Next we must adapt the other meson.build files:\n\nskeleton/meson.build: Perhaps not much\nto change here more than the global name substitutions.\n\nskeleton/skeletonmm/meson.build\n\n\ndefs_basefiles\nIf we have more .defs and docs.xml files,\nwe add them here.\n\n\nhg_ccg_basenames\nWe must mention all of our .hg and\n.ccg files here.\n\n\nextra_cc_files, extra_h_files\nAny additional hand-written .h and\n.cc source files go here.",
+   "text": "Next we must adapt the other `meson.build` files:\n  \n    `skeleton/meson.build`: Perhaps not much\n    to change here more than the global name substitutions.\n    \n    `skeleton/skeletonmm/meson.build`\n      \n        \n          `defs_basefiles`\n          If we have more .defs and docs.xml files,\n          we add them here.\n        \n        \n          `hg_ccg_basenames`\n          We must mention all of our `.hg` and\n          `.ccg` files here.\n        \n        \n          `extra_cc_files, extra_h_files`\n          Any additional hand-written `.h` and\n          `.cc` source files go here.",
    "sha": "0de571dc42ac15b3-1",
    "zh": null
   },
@@ -210,13 +210,13 @@
   },
   {
    "type": "para",
-   "text": "We should now create our first .hg and .ccg files,\nto wrap one of the objects in the C library. One pair of example source files already exists:\nskeleton.ccg and skeleton.hg. Create copies of these\nfiles as necessary.",
+   "text": "We should now create our first `.hg` and `.ccg` files,\n  to wrap one of the objects in the C library. One pair of example source files already exists:\n  `skeleton.ccg` and `skeleton.hg`. Create copies of these\n  files as necessary.",
    "sha": "886502c254070882-1",
    "zh": null
   },
   {
    "type": "para",
-   "text": "In the .hg and .ccg files\nsection you can learn about the syntax used in these files.",
+   "text": "In the .hg and .ccg files\n  section you can learn about the syntax used in these files.",
    "sha": "6144ba1328ca39b5-1",
    "zh": null
   }

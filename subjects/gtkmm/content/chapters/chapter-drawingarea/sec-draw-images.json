@@ -6,25 +6,25 @@
  "blocks": [
   {
    "type": "para",
-   "text": "There is a method for drawing from a\nGdk::Pixbuf to a Cairo::Context.\nA Gdk::Pixbuf buffer is a useful wrapper\naround a collection of pixels, which can be read from files, and\nmanipulated in various ways.",
+   "text": "There is a method for drawing from a\n              `Gdk::Pixbuf` to a `Cairo::Context`.\n              A `Gdk::Pixbuf` buffer is a useful wrapper\n              around a collection of pixels, which can be read from files, and\n              manipulated in various ways.",
    "sha": "ff2cd9d710edbce8",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Probably the most common way of creating\nGdk::Pixbufs is to use\nGdk::Pixbuf::create_from_file() or\nGdk::Pixbuf::create_from_resource(),\nwhich can read an image file, such as a png file into a pixbuf\nready for rendering.",
+   "text": "Probably the most common way of creating\n              `Gdk::Pixbuf`s is to use\n              Gdk::Pixbuf::create_from_file() or\n              Gdk::Pixbuf::create_from_resource(),\n              which can read an image file, such as a png file into a pixbuf\n              ready for rendering.",
    "sha": "13a609d080a001dd",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The Gdk::Pixbuf can be rendered by setting\nit as the source pattern of the Cairo context with\nGdk::Cairo::set_source_pixbuf().\nThen draw the image with either Cairo::Context::paint()\n(to draw the whole image), or Cairo::Context::rectangle()\nand Cairo::Context::fill() (to fill the\nspecified rectangle). set_source_pixbuf()\nis not a member of Cairo::Context. It takes\na Cairo::Context as its first parameter.",
+   "text": "The `Gdk::Pixbuf` can be rendered by setting\n              it as the source pattern of the Cairo context with\n              Gdk::Cairo::set_source_pixbuf().\n              Then draw the image with either Cairo::Context::paint()\n              (to draw the whole image), or Cairo::Context::rectangle()\n              and Cairo::Context::fill() (to fill the\n              specified rectangle). set_source_pixbuf()\n              is not a member of `Cairo::Context`. It takes\n              a `Cairo::Context` as its first parameter.",
    "sha": "c5c361a2a254c8a8",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Here is a small bit of code to tie it all together: (Note that\nusually you wouldn't load the image every time in the draw\nsignal handler! It's just shown here to keep it all together.)",
+   "text": "Here is a small bit of code to tie it all together: (Note that\n              usually you wouldn't load the image every time in the draw\n              signal handler! It's just shown here to keep it all together.)",
    "sha": "7191bd7a127be51d",
    "zh": null
   },
@@ -42,13 +42,14 @@
   },
   {
    "type": "para",
-   "text": "Here is an example of a simple program that draws an image.\nThe program loads the image from a resource file. See the Gio::Resource and glib-compile-resources\nsection. Use glib-compile-resources to compile\nthe resources into a C source file that can be compiled and\nlinked with the C++ code. E.g.\n$ glib-compile-resources --target=resources.c --generate-source image.gresource.xml",
+   "text": "Here is an example of a simple program that draws an image.\n                The program loads the image from a resource file. See the Gio::Resource and glib-compile-resources\n                section. Use `glib-compile-resources` to compile\n                the resources into a C source file that can be compiled and\n                linked with the C++ code. E.g.\n                $ glib-compile-resources --target=resources.c --generate-source image.gresource.xml",
    "sha": "f2c5c7f9d47dd060",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Drawing Area - Image",
+   "ref": "figures/drawingarea_image.png",
    "sha": "099e27b37463e9aa",
    "zh": ""
   },

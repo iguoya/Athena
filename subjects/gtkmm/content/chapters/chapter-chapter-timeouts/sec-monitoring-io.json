@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "The first argument is a slot you wish to have called when\nthe specified event (see argument 3) occurs on the file descriptor you specify\nusing argument two. Argument three may be one or more (using\n|) of:",
+   "text": "The first argument is a slot you wish to have called when\nthe specified event (see argument 3) occurs on the file descriptor you specify\nusing argument two. Argument three may be one or more (using\n`|`) of:",
    "sha": "f8e46df2a9cc3da2",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "para",
-   "text": "The return value is a sigc::connection that may be used to stop monitoring\nthis file descriptor using its disconnect() method. The\nslot signal handler should be declared as follows:",
+   "text": "The return value is a `sigc::connection` that may be used to stop monitoring\nthis file descriptor using its disconnect() method. The\n`slot` signal handler should be declared as follows:",
    "sha": "6e5249689e6a1983",
    "zh": null
   },
@@ -66,13 +66,13 @@
   },
   {
    "type": "para",
-   "text": "where condition is as\nspecified above. As usual the slot is created with\nsigc::mem_fun() (for a member method of an object), or\nsigc::ptr_fun() (for a function). A lambda expression can\nbe used, if you don't need the automatic disconnection that sigc::mem_fun()\nprovides when the object goes out of scope.",
+   "text": "where `condition` is as\nspecified above. As usual the slot is created with\n`sigc::mem_fun()` (for a member method of an object), or\n`sigc::ptr_fun()` (for a function). A lambda expression can\nbe used, if you don't need the automatic disconnection that `sigc::mem_fun()`\nprovides when the object goes out of scope.",
    "sha": "fee6c109e8e668df",
    "zh": null
   },
   {
    "type": "para",
-   "text": "A little example follows. To use the example just execute it from a terminal;\nit doesn't create a window. It will create a pipe named\ntestfifo in the current directory. Then start another shell\nand execute echo \"Hello\" > testfifo. The example will\nprint each line you enter until you execute echo \"Q\" >\ntestfifo.",
+   "text": "A little example follows. To use the example just execute it from a terminal;\nit doesn't create a window. It will create a pipe named\n`testfifo` in the current directory. Then start another shell\nand execute `echo \"Hello\" > testfifo`. The example will\nprint each line you enter until you execute `echo \"Q\" >\ntestfifo`.",
    "sha": "e7cb59d7b9ea650a",
    "zh": null
   },

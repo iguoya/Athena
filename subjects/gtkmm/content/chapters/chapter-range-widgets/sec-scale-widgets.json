@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Gtk::Scale widgets (or \"sliders\") allow the user to\nvisually select and manipulate a value within a specific range. You\nmight use one, for instance, to adjust the\nmagnification level on a zoomed preview of a picture, or to control\nthe brightness of a colour, or to specify the number of minutes of\ninactivity before a screensaver takes over the screen.",
+   "text": "`Gtk::Scale` widgets (or \"sliders\") allow the user to\nvisually select and manipulate a value within a specific range. You\nmight use one, for instance, to adjust the\nmagnification level on a zoomed preview of a picture, or to control\nthe brightness of a colour, or to specify the number of minutes of\ninactivity before a screensaver takes over the screen.",
    "sha": "72ccd687e015ab01",
    "zh": null
   },
   {
    "type": "para",
-   "text": "As with Scrollbars, the orientation can be either\nhorizontal or vertical. The default constructor creates an\nAdjustment with all of its values set to\n0.0. This isn't useful so you will need to set some\nAdjustment details to get meaningful behavior.",
+   "text": "As with `Scrollbar`s, the orientation can be either\nhorizontal or vertical. The default constructor creates an\n`Adjustment` with all of its values set to\n`0.0`. This isn't useful so you will need to set some\n`Adjustment` details to get meaningful behavior.",
    "sha": "383ceb8b82cad4b7",
    "zh": null
   },
@@ -24,13 +24,13 @@
   },
   {
    "type": "para",
-   "text": "Scale widgets can display their current value as a number\nnext to the trough. By default they show the value, but you can change this\nwith the set_draw_value() method.",
+   "text": "`Scale` widgets can display their current value as a number\nnext to the trough. By default they show the value, but you can change this\nwith the set_draw_value() method.",
    "sha": "cf64583af539657c",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The value displayed by a scale widget is rounded to one decimal point\nby default, as is the value field in its\nGtk::Adjustment. You can change this with the\nset_digits() method.",
+   "text": "The value displayed by a scale widget is rounded to one decimal point\nby default, as is the `value` field in its\n`Gtk::Adjustment`. You can change this with the\nset_digits() method.",
    "sha": "a46bffc404dd898d",
    "zh": null
   },

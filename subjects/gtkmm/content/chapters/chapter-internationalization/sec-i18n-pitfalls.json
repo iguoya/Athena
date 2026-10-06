@@ -18,13 +18,13 @@
   },
   {
    "type": "para",
-   "text": "Sometimes two English strings are identical but have different meanings in\ndifferent contexts, so they would probably not be identical when translated. Since the English strings are\nused as look-up keys, this causes problems.",
+   "text": "Sometimes two English strings are identical but have different meanings in\ndifferent contexts, so they would probably not be identical when translated. Since the English strings are\n          used as look-up keys, this causes problems.",
    "sha": "e9e465075dcfee36",
    "zh": null
   },
   {
    "type": "para",
-   "text": "In these cases, you should add extra characters to the strings. For instance,\nuse \"jumps[noun]\" and \"jumps[verb]\"\ninstead of just \"jumps\" and strip them again outside the\ngettext call. If you add extra characters you should also\nadd a comment for the translators before the gettext call.\nSuch comments will be shown in the .po files. For\ninstance:",
+   "text": "In these cases, you should add extra characters to the strings. For instance,\nuse `\"jumps[noun]\"` and `\"jumps[verb]\"`\ninstead of just `\"jumps\"` and strip them again outside the\n`gettext` call. If you add extra characters you should also\nadd a comment for the translators before the `gettext` call.\nSuch comments will be shown in the `.po` files. For\ninstance:",
    "sha": "902a1b0886590930",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "If you use Glib's support macros, it's easier. Use\nC_() instead of _(). For instance:",
+   "text": "If you use `Glib`'s support macros, it's easier. Use\n`C_()` instead of `_()`. For instance:",
    "sha": "a80dc3f29bcf89f7",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "para",
-   "text": "C programmers use sprintf() to compose and concatenate\nstrings. C++ favors streams, but unfortunately, this approach makes\ntranslation difficult, because each fragment of text is translated separately,\nwithout allowing the translators to rearrange them according to the grammar of\nthe language.",
+   "text": "C programmers use `sprintf()` to compose and concatenate\nstrings. C++ favors streams, but unfortunately, this approach makes\ntranslation difficult, because each fragment of text is translated separately,\nwithout allowing the translators to rearrange them according to the grammar of\nthe language.",
    "sha": "7db9e139750dff4e",
    "zh": null
   },
@@ -72,7 +72,7 @@
   },
   {
    "type": "para",
-   "text": "So you should either avoid this situation or use\nGlib::ustring::compose()\nwhich supports syntax such as:",
+   "text": "So you should either avoid this situation or use\n`Glib::ustring::compose()`\nwhich supports syntax such as:",
    "sha": "bd13972e62183487",
    "zh": null
   },
@@ -102,7 +102,7 @@
   },
   {
    "type": "para",
-   "text": "You should avoid cryptic abbreviations, slang, or jargon.\nThey are usually difficult to translate, and are often difficult\nfor even native speakers to understand.",
+   "text": "You should avoid cryptic abbreviations, slang, or jargon.\n          They are usually difficult to translate, and are often difficult\n          for even native speakers to understand.",
    "sha": "7776d1ea52ed028f",
    "zh": null
   },
@@ -114,13 +114,13 @@
   },
   {
    "type": "para",
-   "text": "Currently, gettext does not support non-ASCII\ncharacters (i.e. any characters with a code above 127) in source code. For\ninstance, you cannot use the copyright sign (&#169;).",
+   "text": "Currently, `gettext` does not support non-ASCII\ncharacters (i.e. any characters with a code above 127) in source code. For\ninstance, you cannot use the copyright sign (&#169;).",
    "sha": "ff90173876d5ea9f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To work around this, you could write a comment in the\nsource code just before the string, telling the translators to\nuse the special character if it is available in their languages. For English, you could then make an American English\nen_US.po translation which used that special character.",
+   "text": "To work around this, you could write a comment in the\n          source code just before the string, telling the translators to\n          use the special character if it is available in their languages. For English, you could then make an American English\n          `en_US.po` translation which used that special character.",
    "sha": "cdaf86fdf8e64704",
    "zh": null
   }

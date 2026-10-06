@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Some objects, such as Gdk::Pixbufs and\nPango::Fonts, are obtained from a shared store.\nTherefore you cannot instantiate your own instances. These classes typically\ninherit from Glib::Object. Rather than requiring you to\nreference and unreference these objects, gtkmm uses the\nGlib::RefPtr<> smartpointer. Cairomm has its own\nsmartpointer, Cairo::RefPtr<>.",
+   "text": "Some objects, such as `Gdk::Pixbuf`s and\n`Pango::Font`s, are obtained from a shared store.\nTherefore you cannot instantiate your own instances. These classes typically\ninherit from `Glib::Object`. Rather than requiring you to\nreference and unreference these objects, gtkmm uses the\n`Glib::RefPtr<>` smartpointer. Cairomm has its own\nsmartpointer, `Cairo::RefPtr<>`.",
    "sha": "e0f22c764caeed29",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Objects such as Gdk::Pixbuf can only be instantiated\nwith a create() function. For instance,",
+   "text": "Objects such as `Gdk::Pixbuf` can only be instantiated\nwith a create() function. For instance,",
    "sha": "ceffa084d6c65d31",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "You have no way of getting a bare Gdk::Pixbuf. In the\nexample, pixbuf is a smart pointer, so you can do this, much\nlike a normal pointer:",
+   "text": "You have no way of getting a bare `Gdk::Pixbuf`. In the\nexample, `pixbuf` is a smart pointer, so you can do this, much\nlike a normal pointer:",
    "sha": "af66238cd59ad44b",
    "zh": null
   },
@@ -36,13 +36,13 @@
   },
   {
    "type": "para",
-   "text": "When pixbuf goes out of scope an\nunref() will happen in the background and you don't need\nto worry about it anymore. There's no new so there's no\ndelete.",
+   "text": "When `pixbuf` goes out of scope an\nunref() will happen in the background and you don't need\nto worry about it anymore. There's no `new` so there's no\n`delete`.",
    "sha": "26c69b4b06d10421",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If you copy a RefPtr, for instance",
+   "text": "If you copy a `RefPtr`, for instance",
    "sha": "8cf25819b236cbe3",
    "zh": null
   },
@@ -54,7 +54,7 @@
   },
   {
    "type": "para",
-   "text": "or if you pass it as a method argument or a return type, then\nRefPtr will do any necessary referencing to ensure that\nthe instance will not be destroyed until the last RefPtr\nhas gone out of scope.",
+   "text": "or if you pass it as a method argument or a return type, then\n`RefPtr` will do any necessary referencing to ensure that\nthe instance will not be destroyed until the last `RefPtr`\nhas gone out of scope.",
    "sha": "1df48e84c43a66ee",
    "zh": null
   },

@@ -6,25 +6,25 @@
  "blocks": [
   {
    "type": "para",
-   "text": "In the instructions below we will assume that you will not be using\ngettext directly, but\nintltool, which was written specifically for\nGNOME. intltool uses\ngettext(), which extracts strings from source code,\nbut intltool can also combine strings from\nother files, for example from desktop menu details, and GUI resource\nfiles such as .ui files, into standard\ngettext .pot/.po files.",
+   "text": "In the instructions below we will assume that you will not be using\n        `gettext` directly, but\n        `intltool`, which was written specifically for\n        `GNOME`. `intltool` uses\n        `gettext()`, which extracts strings from source code,\n        but `intltool` can also combine strings from\n        other files, for example from desktop menu details, and GUI resource\n        files such as `.ui` files, into standard\n        `gettext` `.pot/.po` files.",
    "sha": "44802ef0194a52d6",
    "zh": null
   },
   {
    "type": "para",
-   "text": "We also assume that you are using autotools (automake\nand autoconf) to build your project (although\nautotools is not recommended for new applications), and\nthat you are using\n./autogen.sh from gnome-common\nor a similar autogen.sh file, which, among other\nthings, takes care of some intltool\ninitialization.",
+   "text": "We also assume that you are using autotools (`automake`\n        and `autoconf`) to build your project (although\n        autotools is not recommended for new applications), and\n        that you are using \n          `./autogen.sh` from `gnome-common`\n        or a similar `autogen.sh` file, which, among other\n        things, takes care of some `intltool`\n        initialization.",
    "sha": "d2a7538450843995",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If you are using meson (recommended), see the\nLocalisation\nchapter in Meson's manual. You can then skip this section.",
+   "text": "If you are using `meson` (recommended), see the\n        Localisation\n        chapter in Meson's manual. You can then skip this section.",
    "sha": "7b345da5753e2e65",
    "zh": null
   },
   {
    "type": "para",
-   "text": "An alternative to gnome-common's\nautogen.sh may look like this:",
+   "text": "An alternative to `gnome-common`'s\n      `autogen.sh` may look like this:",
    "sha": "5628760e7056dcd1",
    "zh": null
   },
@@ -36,13 +36,13 @@
   },
   {
    "type": "para",
-   "text": "Create a sub-directory named po in your project's root\ndirectory. This directory will eventually contain all of your\ntranslations. Within it, create a file named LINGUAS\nand a file named POTFILES.in.",
+   "text": "Create a sub-directory named `po` in your project's root\n      directory. This directory will eventually contain all of your\n      translations. Within it, create a file named `LINGUAS`\n      and a file named `POTFILES.in`.",
    "sha": "c398b39d6de0fd35",
    "zh": null
   },
   {
    "type": "para",
-   "text": "LINGUAS contains an alphabetically sorted list of codes\nidentifying the languages for which your program is translated (comment\nlines starting with a # are ignored). Each language\ncode listed in the LINGUAS file must have a\ncorresponding .po file. So, if your program has German\nand Japanese translations, your LINGUAS file would\nlook like this:",
+   "text": "`LINGUAS` contains an alphabetically sorted list of codes\n      identifying the languages for which your program is translated (comment\n      lines starting with a `#` are ignored). Each language\n      code listed in the `LINGUAS` file must have a\n      corresponding `.po` file. So, if your program has German\n      and Japanese translations, your `LINGUAS` file would\n      look like this:",
    "sha": "847387834ee44f91",
    "zh": null
   },
@@ -54,13 +54,13 @@
   },
   {
    "type": "para",
-   "text": "(In addition, you'd have the files de.po and\nja.po in your\npo directory which contain the German and Japanese\ntranslations, respectively.)",
+   "text": "(In addition, you'd have the files `de.po` and\n      `ja.po` in your\n      `po` directory which contain the German and Japanese\n      translations, respectively.)",
    "sha": "0bc85c1f9d72147f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "POTFILES.in is a list of paths to all files which\ncontain strings marked up for translation, starting from the project root\ndirectory. So for example, if your project sources were located in a\nsubdirectory named src, and you had two files that\ncontained strings that should be translated, your\nPOTFILES.in file might look like this:",
+   "text": "`POTFILES.in` is a list of paths to all files which\n      contain strings marked up for translation, starting from the project root\n      directory. So for example, if your project sources were located in a\n      subdirectory named `src`, and you had two files that\n      contained strings that should be translated, your\n      `POTFILES.in` file might look like this:",
    "sha": "682ee3b226cf62f3",
    "zh": null
   },
@@ -72,13 +72,13 @@
   },
   {
    "type": "para",
-   "text": "If you are using gettext directly, you can only\nmark strings for translation if they are in source code file. However, if\nyou use intltool, you can mark strings for\ntranslation in a variety of other file formats, including\n.ui files, xml,\n.desktop files\nand several more. So, if you have designed some of the\napplication UI in xml files then also add your\n.ui files to the list in\nPOTFILES.in.",
+   "text": "If you are using `gettext` directly, you can only\n      mark strings for translation if they are in source code file. However, if\n      you use `intltool`, you can mark strings for\n      translation in a variety of other file formats, including\n      `.ui` files, xml,\n      .desktop files\n      and several more. So, if you have designed some of the\n      application UI in xml files then also add your\n      `.ui` files to the list in\n      `POTFILES.in`.",
    "sha": "328e9d8bb2aa5364",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Now that there is a place to put your translations, you need to initialize\nintltool and gettext.\nAdd the following code to your configure.ac,\nsubstituting 'programname' with the name of your program:",
+   "text": "Now that there is a place to put your translations, you need to initialize\n      `intltool` and `gettext`.\n      Add the following code to your `configure.ac`,\n      substituting 'programname' with the name of your program:",
    "sha": "802ef2efcd337d93",
    "zh": null
   },
@@ -90,19 +90,19 @@
   },
   {
    "type": "para",
-   "text": "This PROGRAMNAME_LOCALEDIR variable will be used later\nin the Makefile.am file, to define a macro that will be\nused when you initialize gettext in your source\ncode.",
+   "text": "This `PROGRAMNAME_LOCALEDIR` variable will be used later\n      in the `Makefile.am` file, to define a macro that will be\n      used when you initialize `gettext` in your source\n      code.",
    "sha": "707da40911612efa",
    "zh": null
   },
   {
    "type": "para",
-   "text": "AM_GLIB_GNU_GETTEXT has been an alternative to\nAM_GNU_GETTEXT and AM_GNU_GETTEXT_VERSION,\nbut AM_GLIB_GNU_GETTEXT is now deprecated, and shall\nnot be used in new code.",
+   "text": "`AM_GLIB_GNU_GETTEXT` has been an alternative to\n      `AM_GNU_GETTEXT` and `AM_GNU_GETTEXT_VERSION`,\n      but `AM_GLIB_GNU_GETTEXT` is now deprecated, and shall\n      not be used in new code.",
    "sha": "3f083889761c334f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "In the top-level Makefile.am:\n\n\nAdd po to the SUBDIRS\nvariable. Without this, your translations won't get built and\ninstalled when you build the program\n\n\n\nDefine INTLTOOL_FILES as:\nINTLTOOL_FILES = intltool-extract.in \\\nintltool-merge.in \\\nintltool-update.in\n\n\n\nAdd INTLTOOL_FILES to the\nEXTRA_DIST list of files. This ensures that when\nyou do a make dist, these files will be\nincluded in the source tarball.\n\n\n\n\nUpdate your DISTCLEANFILES:\nDISTCLEANFILES = ... intltool-extract \\\nintltool-merge \\\nintltool-update \\\npo/.intltool-merge-cache\n\n\n\nDepending on the types of files that contain translatable strings,\nadd code such as\ndesktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@",
+   "text": "In the top-level Makefile.am:\n      \n        \n          Add `po` to the `SUBDIRS`\n            variable. Without this, your translations won't get built and\n            installed when you build the program\n        \n        \n          \n            Define `INTLTOOL_FILES` as:\n            `INTLTOOL_FILES = intltool-extract.in \\\n                 intltool-merge.in \\\n                 intltool-update.in`\n        \n        \n          \n            Add `INTLTOOL_FILES` to the\n            `EXTRA_DIST` list of files. This ensures that when\n            you do a `make dist`, these files will be\n            included in the source tarball.\n          \n        \n        \n          \n            Update your `DISTCLEANFILES`:\n            `DISTCLEANFILES = ... intltool-extract \\\n                 intltool-merge \\\n                 intltool-update \\\n                 po/.intltool-merge-cache`\n        \n        \n          \n            Depending on the types of files that contain translatable strings,\n            add code such as\n            `desktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@`",
    "sha": "7386456c2b3d9d63",
    "zh": null
   },
@@ -156,7 +156,7 @@
   },
   {
    "type": "para",
-   "text": "In your src/Makefile.am, update your\nAM_CPPFLAGS to add the following preprocessor macro\ndefinition:",
+   "text": "In your `src/Makefile.am`, update your\n      `AM_CPPFLAGS` to add the following preprocessor macro\n      definition:",
    "sha": "42ce2960a2c29f21",
    "zh": null
   },
@@ -168,7 +168,7 @@
   },
   {
    "type": "para",
-   "text": "This macro will be used when you initialize gettext in\nyour source code.",
+   "text": "This macro will be used when you initialize `gettext` in\n      your source code.",
    "sha": "d2e3f8738ee7b850",
    "zh": null
   }

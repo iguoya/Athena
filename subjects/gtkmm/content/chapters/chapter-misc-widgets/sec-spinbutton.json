@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "A SpinButton allows the user to select a value from a\nrange of numeric values. It has an Entry widget with increment and decrement buttons\nat the side. Clicking the buttons causes the value to 'spin' up and down across\nthe range of possible values. The Entry widget may also\nbe used to enter a value directly.",
+   "text": "A `SpinButton` allows the user to select a value from a\nrange of numeric values. It has an `Entry` widget with increment and decrement buttons\nat the side. Clicking the buttons causes the value to 'spin' up and down across\nthe range of possible values. The `Entry` widget may also\nbe used to enter a value directly.",
    "sha": "758d0be2a767f1ef",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The value can have an adjustable number of decimal places, and the step size is\nconfigurable. SpinButtons have an 'auto-repeat' feature\nas well: holding down the increment or decrement button can optionally cause the value to\nchange more quickly the longer the button is held down.",
+   "text": "The value can have an adjustable number of decimal places, and the step size is\nconfigurable. `SpinButton`s have an 'auto-repeat' feature\nas well: holding down the increment or decrement button can optionally cause the value to\nchange more quickly the longer the button is held down.",
    "sha": "5c87bc1bdbb86e4d",
    "zh": null
   },
   {
    "type": "para",
-   "text": "SpinButtons use an Adjustment object to hold information about\nthe range of values. These Adjustment attributes are used by the Spin Button\nlike so:\n\n\n\n\nvalue: value for the Spin Button\n\n\n\n\n\nlower: lower range value\n\n\n\n\n\nupper: upper range value\n\n\n\n\nstep_increment: value to increment/decrement when pressing\nmouse button 1\n\n\n\n\n\npage_increment: value to increment/decrement when pressing\nmouse button 2\n\n\n\n\n\npage_size: unused",
+   "text": "`SpinButton`s use an Adjustment object to hold information about\nthe range of values. These Adjustment attributes are used by the Spin Button\nlike so:\n\n\n\n\n `value`: value for the Spin Button\n\n\n\n\n\n `lower`: lower range value\n\n\n\n\n\n `upper`: upper range value\n\n\n\n\n `step_increment`: value to increment/decrement when pressing\nmouse button 1\n\n\n\n\n\n `page_increment`: value to increment/decrement when pressing\nmouse button 2\n\n\n\n\n\n `page_size`: unused",
    "sha": "137f142965b81fa4",
    "zh": null
   },
@@ -60,13 +60,13 @@
   },
   {
    "type": "para",
-   "text": "Additionally, mouse button 3 can be used to jump directly to the\nupper or lower values.",
+   "text": "Additionally, mouse button 3 can be used to jump directly to the\n`upper` or `lower` values.",
    "sha": "98bf7229adbcc037",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The SpinButton can create a default\nAdjustment, which you can access via the\nget_adjustment() method, or you can specify an existing\nAdjustment in the constructor.",
+   "text": "The `SpinButton` can create a default\n`Adjustment`, which you can access via the\nget_adjustment() method, or you can specify an existing\n`Adjustment` in the constructor.",
    "sha": "41d61d371fe3fce2",
    "zh": null
   },
@@ -90,25 +90,25 @@
   },
   {
    "type": "para",
-   "text": "The spin() method 'spins' the\nSpinButton, as if its increment or decrement button had been clicked.\nYou need to specify a Gtk::SpinType to specify the\ndirection or new position.",
+   "text": "The spin() method 'spins' the\n`SpinButton`, as if its increment or decrement button had been clicked.\nYou need to specify a `Gtk::SpinType` to specify the\ndirection or new position.",
    "sha": "5e9415a60bbabb40",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To prevent the user from typing non-numeric characters into the entry box, pass\ntrue to the set_numeric() method.",
+   "text": "To prevent the user from typing non-numeric characters into the entry box, pass\n`true` to the set_numeric() method.",
    "sha": "d1d9600d23bec273",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To make the SpinButton 'wrap' between its upper and\nlower bounds, use the set_wrap() method.",
+   "text": "To make the `SpinButton` 'wrap' between its upper and\nlower bounds, use the set_wrap() method.",
    "sha": "308f29961be24f90",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To force it to snap to the nearest step_increment,\nuse set_snap_to_ticks().",
+   "text": "To force it to snap to the nearest `step_increment`,\nuse set_snap_to_ticks().",
    "sha": "d20b8a673eeb013c",
    "zh": null
   },
@@ -126,13 +126,14 @@
   },
   {
    "type": "para",
-   "text": "Here's an example of a SpinButton in action:",
+   "text": "Here's an example of a `SpinButton` in action:",
    "sha": "de787ef442486ad0",
    "zh": null
   },
   {
    "type": "figure",
    "text": "SpinButton",
+   "ref": "figures/spinbutton.png",
    "sha": "c9c859beaff4feb4",
    "zh": ""
   },

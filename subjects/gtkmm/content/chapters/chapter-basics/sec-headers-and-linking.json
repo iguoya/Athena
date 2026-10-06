@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Although we have shown the compilation command for the simple example, you really\nshould use the Meson build system.\nThe examples used in this book are included in the gtkmm-documentation\npackage, with appropriate build files, so we won't show the build commands in future.\nThe README file in gtkmm-documentation\ndescribes how to build the examples.",
+   "text": "Although we have shown the compilation command for the simple example, you really\nshould use the Meson build system.\nThe examples used in this book are included in the `gtkmm-documentation`\npackage, with appropriate build files, so we won't show the build commands in future.\nThe `README` file in `gtkmm-documentation`\ndescribes how to build the examples.",
    "sha": "21ef8779cbbadc3c",
    "zh": "虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的 示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再 罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。"
   },
   {
    "type": "para",
-   "text": "To simplify compilation, we use pkg-config, which\nis present in all (properly installed) gtkmm installations. This\nprogram 'knows' what compiler switches are needed to compile programs\nthat use gtkmm. The --cflags option causes\npkg-config to output a list of include directories for the\ncompiler to look in; the --libs option requests the\nlist of libraries for the compiler to link with and the directories to\nfind them in. Try running it from your shell-prompt to see the results on your system.",
+   "text": "To simplify compilation, we use `pkg-config`, which\nis present in all (properly installed) gtkmm installations. This\nprogram 'knows' what compiler switches are needed to compile programs\nthat use gtkmm. The `--cflags` option causes\n`pkg-config` to output a list of include directories for the\ncompiler to look in; the `--libs` option requests the\nlist of libraries for the compiler to link with and the directories to\nfind them in. Try running it from your shell-prompt to see the results on your system.",
    "sha": "d4cf3ef456413153",
    "zh": "为了简化编译，我们使用 pkg-config——一切（正确安装的）gtkmm 环境里都有它。 这个程序「知道」编译使用 gtkmm 的程序需要哪些编译开关。--cflags 让 pkg-config 输出编译器的头文件搜索目录列表；--libs 请求链接库列表及其所在 目录。可以在 shell 里亲手跑一下，看看你系统上的输出。"
   },
   {
    "type": "para",
-   "text": "However, this is even simpler when using the dependency() function\nin a meson.build file with Meson. For instance:",
+   "text": "However, this is even simpler when using the `dependency()` function\nin a `meson.build` file with Meson. For instance:",
    "sha": "a83c1ff18621e025",
    "zh": "而用 Meson 时，在 meson.build 文件里调用 dependency() 函数还要更简单。例如："
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "This checks for the presence of gtkmm and defines gtkmm_dep for use\nin your meson.build files. For instance:",
+   "text": "This checks for the presence of gtkmm and defines `gtkmm_dep` for use\nin your `meson.build` files. For instance:",
    "sha": "5f6071d8771e7a65",
    "zh": "这一句会检查 gtkmm 是否可用，并定义出 gtkmm_dep 供 meson.build 使用。例如："
   },
@@ -48,7 +48,7 @@
   },
   {
    "type": "para",
-   "text": "If you start by experimenting with a small application that you plan to use just for yourself,\nit's easier to start with a meson.build similar to the meson.build files\nin the Building applications chapter.",
+   "text": "If you start by experimenting with a small application that you plan to use just for yourself,\nit's easier to start with a `meson.build` similar to the `meson.build` files\nin the Building applications chapter.",
    "sha": "716bb1e62870b8fe",
    "zh": "如果你想先做一个自用的小应用练手，直接参考「Building applications」一章里的 meson.build 文件来起步会更容易。"
   },

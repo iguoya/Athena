@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "By default, PrintOperation::run() returns when a print\noperation is completed. If you need to run a non-blocking print operation,\ncall PrintOperation::set_allow_async(). Note that set_allow_async() is not supported\non all platforms, however the done signal will still be emitted.",
+   "text": "By default, PrintOperation::run() returns when a print\noperation is completed. If you need to run a non-blocking print operation,\ncall PrintOperation::set_allow_async(). Note that set_allow_async() is not supported\non all platforms, however the `done` signal will still be emitted.",
    "sha": "232848054ebc8c6b",
    "zh": null
   },
   {
    "type": "para",
-   "text": "run() may return\nPrintOperation::Result::IN_PROGRESS. To track status\nand handle the result or error you need to implement signal handlers for\nthe done and status_changed signals:",
+   "text": "run() may return\n`PrintOperation::Result::IN_PROGRESS`. To track status\nand handle the result or error you need to implement signal handlers for\nthe `done` and `status_changed` signals:",
    "sha": "a0edafd92c460c78",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "Second, check for an error and connect to the status_changed signal. For instance:",
+   "text": "Second, check for an error and connect to the `status_changed` signal. For instance:",
    "sha": "1418fa8a145e4bc0",
    "zh": null
   },

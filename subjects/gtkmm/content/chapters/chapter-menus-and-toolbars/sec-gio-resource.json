@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Applications and libraries often contain binary or textual data that is\nreally part of the application, rather than user data. For instance\nGtk::Builder .ui files,\nsplashscreen images, Gio::Menu markup xml, CSS files,\nicons, etc. These are often shipped as files in $datadir/appname,\nor manually included as literal strings in the code.",
+   "text": "Applications and libraries often contain binary or textual data that is\nreally part of the application, rather than user data. For instance\n`Gtk::Builder` `.ui` files,\nsplashscreen images, `Gio::Menu` markup xml, CSS files,\nicons, etc. These are often shipped as files in `$datadir/appname`,\nor manually included as literal strings in the code.",
    "sha": "2cabad3644eda93a",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The Gio::Resource API and the glib-compile-resources\nprogram provide a convenient and efficient alternative to this, which has some nice properties. You\nmaintain the files as normal files, so it's easy to edit them, but during the build the files\nare combined into a binary bundle that is linked into the executable. This means that loading\nthe resource files is efficient (as they are already in memory, shared with other instances) and\nsimple (no need to check for things like I/O errors or locate the files in the filesystem). It\nalso makes it easier to create relocatable applications.",
+   "text": "The `Gio::Resource` API and the `glib-compile-resources`\nprogram provide a convenient and efficient alternative to this, which has some nice properties. You\nmaintain the files as normal files, so it's easy to edit them, but during the build the files\nare combined into a binary bundle that is linked into the executable. This means that loading\nthe resource files is efficient (as they are already in memory, shared with other instances) and\nsimple (no need to check for things like I/O errors or locate the files in the filesystem). It\nalso makes it easier to create relocatable applications.",
    "sha": "0bd947df313cfe96",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Resource bundles are created by the glib-compile-resources\nprogram which takes an xml file that describes the bundle, and a set of files that the xml references.\nThese are combined into a binary resource bundle.",
+   "text": "Resource bundles are created by the `glib-compile-resources`\nprogram which takes an xml file that describes the bundle, and a set of files that the xml references.\nThese are combined into a binary resource bundle.",
    "sha": "2d9125dca66a45be",
    "zh": null
   },
@@ -42,7 +42,7 @@
   },
   {
    "type": "para",
-   "text": "This will create a resource bundle with the files\n\n/toolbar/toolbar.ui\n/toolbar/rain.png",
+   "text": "This will create a resource bundle with the files\n\n  `/toolbar/toolbar.ui`\n  `/toolbar/rain.png`",
    "sha": "9863e3bfb0cdd8e3",
    "zh": null
   },
@@ -60,19 +60,19 @@
   },
   {
    "type": "para",
-   "text": "You can then use glib-compile-resources to compile the xml to a binary bundle\nthat you can load with Gio::Resource::create_from_file().\nHowever, it's more common to use the --generate-source\nargument to create a C source file to link directly into your application. E.g.\n$ glib-compile-resources --target=resources.c --generate-source toolbar.gresource.xml",
+   "text": "You can then use `glib-compile-resources` to compile the xml to a binary bundle\nthat you can load with Gio::Resource::create_from_file().\nHowever, it's more common to use the `--generate-source`\nargument to create a C source file to link directly into your application. E.g.\n$ glib-compile-resources --target=resources.c --generate-source toolbar.gresource.xml",
    "sha": "a18d0cfcb1a271d1",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Once a Gio::Resource has been created and registered all the data\nin it can be accessed globally in the process by using API calls like\nGio::Resource::open_stream_from_global_resources()\nto stream the data or Gio::Resource::lookup_data_in_global_resources()\nto get a direct pointer to the data. You can also use URIs like resource:///toolbar/rain.png\nwith Gio::File to access the resource data.",
+   "text": "Once a `Gio::Resource` has been created and registered all the data\nin it can be accessed globally in the process by using API calls like\nGio::Resource::open_stream_from_global_resources()\nto stream the data or Gio::Resource::lookup_data_in_global_resources()\nto get a direct pointer to the data. You can also use URIs like resource:///toolbar/rain.png\nwith `Gio::File` to access the resource data.",
    "sha": "51894429101538a4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Often you don't need a Gio::Resource instance,\nbecause resource data can be loaded with methods such as\nGdk::Pixbuf::create_from_resource(),\nGtk::Builder::add_from_resource() and\nGtk::Image::set_from_resource().",
+   "text": "Often you don't need a `Gio::Resource` instance,\nbecause resource data can be loaded with methods such as\nGdk::Pixbuf::create_from_resource(),\nGtk::Builder::add_from_resource() and\nGtk::Image::set_from_resource().",
    "sha": "aaad925686c74165",
    "zh": null
   }

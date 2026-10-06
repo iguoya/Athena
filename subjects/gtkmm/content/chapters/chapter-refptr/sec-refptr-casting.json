@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "You can cast RefPtrs to base types, just like normal\npointers.",
+   "text": "You can cast `RefPtr`s to base types, just like normal\npointers.",
    "sha": "17cd5745a73a4336",
    "zh": null
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "This means that any method which takes a const\nGlib::RefPtr<BaseType>& argument can also take a\nconst Glib::RefPtr<DerivedType>&. The cast is\nimplicit, just as it would be for a normal pointer.",
+   "text": "This means that any method which takes a `const\nGlib::RefPtr&` argument can also take a\n`const Glib::RefPtr&`. The cast is\nimplicit, just as it would be for a normal pointer.",
    "sha": "d0c9cfc9403fe084",
    "zh": null
   },

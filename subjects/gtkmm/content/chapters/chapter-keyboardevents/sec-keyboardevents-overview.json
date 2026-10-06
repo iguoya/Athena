@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Whenever you press or release a key, an event is emitted. You can add an\nevent controller and connect a signal handler to handle such events.",
+   "text": "Whenever you press or release a key, an event is emitted. You can add an\n      event controller and connect a signal handler to handle such events.",
    "sha": "c130d507b322a8f0",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The event signal handler will receive arguments that depend on the type of event.\nFor key press events the arguments are (guint keyval,\nguint keycode, Gdk::ModifierType state).\nAs described in the appendix,\nthe key press event signal handler returns a bool value, to indicate that\nthe signal is fully handled (true) or allow event propagation\n(false).",
+   "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the appendix,\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
    "sha": "1043aa73a65e766c",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To determine which key was pressed or released, you read the value of\nthe keyval argument and compare it with a constant in the\n\n<gdk/gdkkeysyms.h> header file. The states of\nmodifier keys (shift, ctrl, etc.) are available as bit-flags in\nstate.",
+   "text": "To determine which key was pressed or released, you read the value of\n      the `keyval` argument and compare it with a constant in the\n      \n      `` header file. The states of\n      modifier keys (shift, ctrl, etc.) are available as bit-flags in\n      `state`.",
    "sha": "852883a0183bc4aa",
    "zh": null
   },
@@ -42,13 +42,14 @@
   },
   {
    "type": "para",
-   "text": "In this example there are three keyboard shortcuts:\nAlt+1 selects the first radio button,\nAlt+2 selects the second one, and the\nEsc key closes the window.",
+   "text": "In this example there are three keyboard shortcuts:\n        Alt+1 selects the first radio button,\n        Alt+2 selects the second one, and the\n        Esc key closes the window.",
    "sha": "351c3a8995fa1674",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Keyboard Events - Simple",
+   "ref": "figures/events_simple.png",
    "sha": "28a3233919a5a809",
    "zh": ""
   },

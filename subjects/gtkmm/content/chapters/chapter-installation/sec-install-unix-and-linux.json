@@ -12,19 +12,20 @@
   },
   {
    "type": "para",
-   "text": "Recent versions of gtkmm are packaged by nearly every major Linux\ndistribution these days. So, if you use Linux, you can probably get\nstarted with gtkmm by installing the package from the official repository\nfor your distribution. Distributions that include gtkmm in their\nrepositories include Debian, Ubuntu, Red Hat, Fedora, Mandriva, Suse, and\nmany others.",
+   "text": "Recent versions of gtkmm are packaged by nearly every major Linux\n    distribution these days. So, if you use Linux, you can probably get\n    started with gtkmm by installing the package from the official repository\n    for your distribution. Distributions that include gtkmm in their\n    repositories include Debian, Ubuntu, Red Hat, Fedora, Mandriva, Suse, and\n    many others.",
    "sha": "e8bcb7860086dfba",
-   "zh": "gtkmm 包的名字因发行版而异（比如 Debian 和 Ubuntu 上是 libgtkmm-4.0-dev， Red Hat 和 Fedora 上是 gtkmm4.0-devel），请用发行版的包管理器查一下正确的 包名，然后像安装其他包一样安装即可。"
+   "zh": "gtkmm 包的名字因发行版而异（比如 Debian 和 Ubuntu 上是 libgtkmm-4.0-dev， Red Hat 和 Fedora 上是 gtkmm4.0-devel），请用发行版的包管理器查一下正确的 包名，然后像安装其他包一样安装即可。",
+   "key": true
   },
   {
    "type": "para",
-   "text": "The names of the gtkmm packages vary from distribution to distribution\n(e.g. libgtkmm-4.0-dev on Debian and Ubuntu or\ngtkmm4.0-devel on Red Hat and Fedora), so check\nwith your distribution's package management program for the correct package\nname and install it like you would any other package.",
+   "text": "The names of the gtkmm packages vary from distribution to distribution\n    (e.g. `libgtkmm-4.0-dev` on Debian and Ubuntu or\n    `gtkmm4.0-devel` on Red Hat and Fedora), so check\n    with your distribution's package management program for the correct package\n    name and install it like you would any other package.",
    "sha": "1f020e8746085e0e",
    "zh": "发布 API/ABI 兼容的新版本时，包名不会变——否则就谈不上 API/ABI 兼容了。所以 比如你发现 Debian 的 libgtkmm-4.0-dev 装的是 gtkmm 4.8，不必惊讶。"
   },
   {
    "type": "para",
-   "text": "The package names will not change when new API/ABI-compatible versions of gtkmm\nare released. Otherwise they would not be API/ABI-compatible. So don't be\nsurprised, for instance, to find gtkmm 4.8 supplied by Debian's\nlibgtkmm-4.0-dev package.",
+   "text": "The package names will not change when new API/ABI-compatible versions of gtkmm\nare released. Otherwise they would not be API/ABI-compatible. So don't be\nsurprised, for instance, to find gtkmm 4.8 supplied by Debian's\n`libgtkmm-4.0-dev` package.",
    "sha": "29b86b24ab3e66a3",
    "zh": "如果发行版没有提供预编译的 gtkmm 包，或者你想安装与发行版所提供的不同的版本， 也可以从源码安装。gtkmm 源码可从 https://download.gnome.org/sources/gtkmm/ 下载。"
   },
@@ -42,37 +43,37 @@
   },
   {
    "type": "para",
-   "text": "After you've installed all of the dependencies, download the gtkmm source\ncode, unpack it, and change to the newly created directory. gtkmm can be\nbuilt with Meson. See the README file in the gtkmm version\nyou've downloaded.",
+   "text": "After you've installed all of the dependencies, download the gtkmm source\n  code, unpack it, and change to the newly created directory. gtkmm can be\n  built with Meson. See the `README` file in the gtkmm version\n  you've downloaded.",
    "sha": "0216c7290362ce7e",
    "zh": "configure 脚本或 meson 会检查所需的依赖是否都已安装；缺了任何一项，它都会 退出并显示错误。"
   },
   {
    "type": "para",
-   "text": "Remember that on a Unix or Linux operating system, you will probably need to\nbe root to install software. The su or sudo\ncommand will allow you to enter the root password and have\nroot status temporarily.",
+   "text": "Remember that on a Unix or Linux operating system, you will probably need to\n  be `root` to install software. The `su` or `sudo`\n  command will allow you to enter the `root` password and have\n  `root` status temporarily.",
    "sha": "87eeb32bb157bf25",
    "zh": "用 Meson 或 Autotools 构建的 gtkmm 默认安装到 /usr/local 目录下。在某些系统 上你可能需要装到别的位置——比如在 Red Hat Linux 系统上，可以在 configure 时 用 --prefix 选项，例如："
   },
   {
    "type": "para",
-   "text": "The configure script or meson will check\nto make sure all of the required dependencies are already installed. If you are\nmissing any dependencies, it will exit and display an error.",
+   "text": "The `configure` script or `meson` will check\n    to make sure all of the required dependencies are already installed. If you are\n    missing any dependencies, it will exit and display an error.",
    "sha": "1bb387de2b1ca85c",
    "zh": "往 /usr 这类标准系统前缀里安装时要格外小心：Linux 发行版把软件包装在 /usr， 把源码包装到这个前缀可能破坏或冲突于包管理系统装好的软件。理想做法是给所有 从源码安装的软件用一个单独的前缀。"
   },
   {
    "type": "para",
-   "text": "By default, gtkmm if built with Meson or Autotools, will be installed under the\n/usr/local directory. On some systems you may need to\ninstall to a different location. For instance, on Red Hat Linux systems\nyou might use the --prefix option with configure, like\none of:\n\n# meson setup --prefix=/usr <builddir> <srcdir>\n# meson configure --prefix=/usr\n# ./configure --prefix=/usr",
+   "text": "By default, gtkmm if built with Meson or Autotools, will be installed under the\n    `/usr/local` directory. On some systems you may need to\n    install to a different location. For instance, on Red Hat Linux systems\n    you might use the `--prefix` option with configure, like\n    one of:\n\n# meson setup --prefix=/usr  \n# meson configure --prefix=/usr\n# ./configure --prefix=/usr",
    "sha": "0e34065180759387",
    "zh": "如果想参与 gtkmm 开发或试用新特性，也可以从 git 安装。大多数用户永远用不着 这么做，但如果你有兴趣为 gtkmm 出力，请参阅附录「Working with gtkmm's Source Code」。"
   },
   {
    "type": "para",
-   "text": "You should be very careful when installing to standard system prefixes\nsuch as /usr. Linux distributions install software\npackages to /usr, so installing a source package\nto this prefix could corrupt or conflict with software installed using\nyour distribution's package-management system. Ideally, you should use\na separate prefix for all software you install from source.",
+   "text": "You should be very careful when installing to standard system prefixes\n        such as `/usr`. Linux distributions install software\n        packages to `/usr`, so installing a source package\n        to this prefix could corrupt or conflict with software installed using\n        your distribution's package-management system. Ideally, you should use\n        a separate prefix for all software you install from source.",
    "sha": "0c722438d0ea6765",
    "zh": "往 /usr 这类标准系统前缀里安装时要格外小心：Linux 发行版把软件包装在 /usr，把源码包装到这个前缀可能破坏或冲突于包管理系统装好的软件。理想做法是给所有从源码安装的软件用一个单独的前缀。"
   },
   {
    "type": "para",
-   "text": "If you want to help develop gtkmm or experiment with new features, you can\nalso install gtkmm from git. Most users will never need to do this, but if\nyou're interested in helping with gtkmm development, see the Working with gtkmm's Source Code appendix.",
+   "text": "If you want to help develop gtkmm or experiment with new features, you can\n  also install gtkmm from git. Most users will never need to do this, but if\n  you're interested in helping with gtkmm development, see the Working with gtkmm's Source Code appendix.",
    "sha": "b196205cc0db0850",
    "zh": "如果想参与 gtkmm 开发或试用新特性，也可以从 git 安装。大多数用户永远用不着这么做，但如果你有兴趣为 gtkmm 出力，请参阅附录「Working with gtkmm's Source Code」。"
   }

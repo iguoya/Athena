@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Our application already uses a Gtk::HeaderBar instead of\na 'normal' window titlebar. The header bar is a direct child of the window,\nand its type is titlebar. This is set in the\nwindow.ui file.",
+   "text": "Our application already uses a `Gtk::HeaderBar` instead of\na 'normal' window titlebar. The header bar is a direct child of the window,\nand its type is `titlebar`. This is set in the\n`window.ui` file.",
    "sha": "9a3cb0729ee80da7",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Here we'll just make two small changes to the header bar. The decoration-layout\nproperty is set in the window.ui file, to show only the close\nbutton, and hide the minimize and maximize buttons. We also include an icon in the\nresource file, and set up this icon as the window icon.\nIn ExampleAppWindow's constructor:",
+   "text": "Here we'll just make two small changes to the header bar. The `decoration-layout`\nproperty is set in the `window.ui` file, to show only the close\nbutton, and hide the minimize and maximize buttons. We also include an icon in the\nresource file, and set up this icon as the window icon.\nIn `ExampleAppWindow`'s constructor:",
    "sha": "7ab524c06aee6218",
    "zh": null
   },
@@ -31,12 +31,13 @@
   {
    "type": "figure",
    "text": "Header bar",
+   "ref": "figures/buildapp_header_bar.png",
    "sha": "3aceb58505f79d2f",
    "zh": ""
   },
   {
    "type": "para",
-   "text": "The window.ui file sets a header bar title, but this title is not shown.\nThat's because the stack switcher is a child of type title. The stack\nswitcher becomes a custom title that hides the title label.",
+   "text": "The `window.ui` file sets a header bar title, but this title is not shown.\nThat's because the stack switcher is a child of type `title`. The stack\nswitcher becomes a custom title that hides the title label.",
    "sha": "f2e7f3cfdc1fa57b",
    "zh": null
   },

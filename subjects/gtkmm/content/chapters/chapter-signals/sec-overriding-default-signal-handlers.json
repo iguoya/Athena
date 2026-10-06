@@ -42,13 +42,13 @@
   },
   {
    "type": "para",
-   "text": "Here we define a new class called OverriddenButton,\nwhich inherits from Gtk::Button. The only thing we\nchange is the on_clicked() method, which is called\nwhenever Gtk::Button emits the\nclicked signal. This method prints \"Hello World\" to\nstdout, and then calls the original, overridden method, to\nlet Gtk::Button do what it would have done had we not\noverridden.",
+   "text": "Here  we define a new class called `OverriddenButton`,\nwhich inherits from `Gtk::Button`. The only thing we\nchange is the on_clicked() method, which is called\nwhenever `Gtk::Button` emits the\n`clicked` signal. This method prints \"Hello World\" to\n`stdout`, and then calls the original, overridden method, to\nlet `Gtk::Button` do what it would have done had we not\noverridden.",
    "sha": "0f95bb1d11dd9fc7",
    "zh": null
   },
   {
    "type": "para",
-   "text": "You don't always need to call the parent's method; there are times\nwhen you might not want to. Note that we called the parent method\nafter writing \"Hello World\", but we could have called it before.\nIn this simple example, it hardly matters much, but there are times\nwhen it will. With connected signal handlers, it's not quite so easy to change details\nlike this, and you can do something here which you can't do at all\nwith connected signal handlers: you can call the parent method in the middle of\nyour custom code.",
+   "text": "You don't always need to call the parent's method; there are times\nwhen you might not want to. Note that we called the parent method\n*after* writing \"Hello World\", but we could have called it before.\nIn this simple example, it hardly matters much, but there are times\nwhen it will. With connected signal handlers, it's not quite so easy to change details\nlike this, and you can do something here which you can't do at all\nwith connected signal handlers: you can call the parent method in the *middle* of\nyour custom code.",
    "sha": "1b2dff298588b405",
    "zh": null
   }

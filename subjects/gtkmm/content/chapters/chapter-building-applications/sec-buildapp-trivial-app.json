@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "When using Gtk::Application, the main() function\ncan be very simple. We just call Gtk::Application::run() on an\ninstance of our application class.",
+   "text": "When using `Gtk::Application`, the `main()` function\ncan be very simple. We just call Gtk::Application::run() on an\ninstance of our application class.",
    "sha": "1184067eb7118ed0",
    "zh": null
   },
   {
    "type": "para",
-   "text": "All the application logic is in the application class, which is a subclass of\nGtk::Application. Our example does not yet have any interesting\nfunctionality. All it does is open a window when it is activated without arguments,\nand open the files it is given, if it is started with arguments. (Or rather, our\napplication class tries to open the files, but our subclassed application window\ndoes not yet do what it's told to do.)",
+   "text": "All the application logic is in the application class, which is a subclass of\n`Gtk::Application`. Our example does not yet have any interesting\nfunctionality. All it does is open a window when it is activated without arguments,\nand open the files it is given, if it is started with arguments. (Or rather, our\napplication class tries to open the files, but our subclassed application window\ndoes not yet do what it's told to do.)",
    "sha": "5dc190bc341e7b29",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "Another important class that is part of the application support in gtkmm is\nGtk::ApplicationWindow. It is typically subclassed as well.\nOur subclass does not do anything yet, so we will just get an empty window.",
+   "text": "Another important class that is part of the application support in gtkmm is\n`Gtk::ApplicationWindow`. It is typically subclassed as well.\nOur subclass does not do anything yet, so we will just get an empty window.",
    "sha": "bd68236a0eb3f679",
    "zh": null
   },
@@ -55,6 +55,7 @@
   {
    "type": "figure",
    "text": "A trivial application",
+   "ref": "figures/buildapp_trivial_app.png",
    "sha": "3b2f1b1849297a4d",
    "zh": ""
   },

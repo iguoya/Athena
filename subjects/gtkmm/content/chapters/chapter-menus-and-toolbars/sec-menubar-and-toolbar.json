@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Next you should create a Gtk::Builder. At this point is\nalso a good idea to tell the application to respond to keyboard shortcuts,\nby using Gtk::Application::set_accel_for_action().",
+   "text": "Next you should create a `Gtk::Builder`. At this point is\nalso a good idea to tell the application to respond to keyboard shortcuts,\nby using Gtk::Application::set_accel_for_action().",
    "sha": "d73873feed6c8f00",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "Then, you can define the actual visible layout of the menus and toolbars, and\nadd the UI layout to the Builder. This \"ui\nstring\" uses an XML format, in which you should mention the names of the\nactions that you have already created. For instance:",
+   "text": "Then, you can define the actual visible layout of the menus and toolbars, and\nadd the UI layout to the `Builder`. This \"ui\nstring\" uses an XML format, in which you should mention the names of the\nactions that you have already created. For instance:",
    "sha": "32a69dbbca14abbc",
    "zh": null
   },
@@ -36,13 +36,13 @@
   },
   {
    "type": "para",
-   "text": "This is where we specify the names of the menu items as they will be seen\nby users in the menu. Therefore, this is where you should make strings\ntranslatable, by adding translatable='yes'.",
+   "text": "This is where we specify the names of the menu items as they will be seen\nby users in the menu. Therefore, this is where you should make strings\ntranslatable, by adding `translatable='yes'`.",
    "sha": "73a8bca5980acb9b",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To instantiate a Gtk::PopoverMenuBar and toolbar (a horizontal\nGtk::Box) which you can actually show, you should use\nthe Builder::get_object() and\nBuilder::get_widget() methods, and then add the widgets\nto a container. For instance:",
+   "text": "To instantiate a `Gtk::PopoverMenuBar` and toolbar (a horizontal\n`Gtk::Box`) which you can actually show, you should use\nthe Builder::get_object() and\nBuilder::get_widget() methods, and then add the widgets\nto a container. For instance:",
    "sha": "b1a8c83e89ade249",
    "zh": null
   },

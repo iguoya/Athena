@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "In addition to drawing straight lines Cairo allows you to easily\ndraw curved lines (technically a cubic Bézier spline) using the\nCairo::Context::curve_to() and\nCairo::Context::rel_curve_to() functions.\nThese functions take coordinates for a destination point as well as\ncoordinates for two 'control' points. This is best explained using\nan example, so let's dive in.",
+   "text": "In addition to drawing straight lines Cairo allows you to easily\n            draw curved lines (technically a cubic Bézier spline) using the\n            Cairo::Context::curve_to() and\n            Cairo::Context::rel_curve_to() functions.\n            These functions take coordinates for a destination point as well as\n            coordinates for two 'control' points. This is best explained using\n            an example, so let's dive in.",
    "sha": "40f2ab43c147c80d",
    "zh": null
   },
@@ -18,13 +18,14 @@
   },
   {
    "type": "para",
-   "text": "This simple application draws a curve with Cairo and displays\nthe control points for each end of the curve.",
+   "text": "This simple application draws a curve with Cairo and displays\n                the control points for each end of the curve.",
    "sha": "dd415e8c65f95ef9",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Drawing Area - Curve",
+   "ref": "figures/drawingarea_curve.png",
    "sha": "92378620adf3986a",
    "zh": ""
   },
@@ -36,25 +37,25 @@
   },
   {
    "type": "para",
-   "text": "The only difference between this example and the straight line\nexample is in the on_draw() function,\nbut there are a few new concepts and functions introduced here, so\nlet's examine them briefly.",
+   "text": "The only difference between this example and the straight line\n            example is in the on_draw() function,\n            but there are a few new concepts and functions introduced here, so\n            let's examine them briefly.",
    "sha": "7ea822773e751a74",
    "zh": null
   },
   {
    "type": "para",
-   "text": "We make a call to\nCairo::Context::scale(), passing in the width\nand height of the drawing area. This scales the user-space\ncoordinate system such that the width and height of the widget\nare both equal to 1.0 'units'. There's no particular reason to\nscale the coordinate system in this case, but sometimes it can make\ndrawing operations easier.",
+   "text": "We make a call to\n            Cairo::Context::scale(), passing in the width\n            and height of the drawing area. This scales the user-space\n            coordinate system such that the width and height of the widget\n            are both equal to 1.0 'units'. There's no particular reason to\n            scale the coordinate system in this case, but sometimes it can make\n            drawing operations easier.",
    "sha": "2a1836732a1f97fa",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The call to Cairo::Context::curve_to() should\nbe fairly self-explanatory. The first pair of coordinates define\nthe control point for the beginning of the curve. The second set\nof coordinates define the control point for the end of the curve,\nand the last set of coordinates define the destination point. To\nmake the concept of control points a bit easier to visualize, a\nline has been drawn from each control point to the end-point on the\ncurve that it is associated with. Note that these control point\nlines are both translucent. This is achieved with a variant of\nset_source_rgb() called\nset_source_rgba(). This function takes a\nfourth argument specifying the alpha value of the color (valid\nvalues are between 0 and 1).",
+   "text": "The call to Cairo::Context::curve_to() should\n            be fairly self-explanatory. The first pair of coordinates define\n            the control point for the beginning of the curve. The second set\n            of coordinates define the control point for the end of the curve,\n            and the last set of coordinates define the destination point. To\n            make the concept of control points a bit easier to visualize, a\n            line has been drawn from each control point to the end-point on the\n            curve that it is associated with. Note that these control point\n            lines are both translucent. This is achieved with a variant of\n            set_source_rgb() called\n            set_source_rgba(). This function takes a\n            fourth argument specifying the alpha value of the color (valid\n            values are between 0 and 1).",
    "sha": "57f59c163490a94a",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The control point lines are dashed lines. These are just two possible\nvariations. Dashed lines can be more complicated. For instance the\ndashes can have different lengths like in dash-dotted lines.",
+   "text": "The control point lines are dashed lines. These are just two possible\n            variations. Dashed lines can be more complicated. For instance the\n            dashes can have different lengths like in dash-dotted lines.",
    "sha": "0aa3de5c327f96a5",
    "zh": null
   }

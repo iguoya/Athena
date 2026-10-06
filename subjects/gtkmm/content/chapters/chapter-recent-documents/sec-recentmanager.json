@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "RecentManager acts as a database of\nrecently used files. You use this class to register new files, remove\nfiles from the list, or look up recently used files. There is one list\nof recently used files per user.",
+   "text": "`RecentManager` acts as a database of\n      recently used files. You use this class to register new files, remove\n      files from the list, or look up recently used files. There is one list\n      of recently used files per user.",
    "sha": "6686c1099d0dd50a",
    "zh": null
   },
   {
    "type": "para",
-   "text": "You can create a new RecentManager, but you'll most\nlikely just want to use the default one. You can get a reference to the\ndefault RecentManager with\nget_default().",
+   "text": "You can create a new `RecentManager`, but you'll most\n      likely just want to use the default one. You can get a reference to the\n      default `RecentManager` with\n      get_default().",
    "sha": "2b6bf2253856c67d",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "To add a new file to the list of recent documents, in the simplest case,\nyou only need to provide the URI. For example:",
+   "text": "To add a new file to the list of recent documents, in the simplest case,\n        you only need to provide the URI. For example:",
    "sha": "a06f3438e360288e",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "If you want to register a file with metadata, you can pass a\nRecentManager::Data parameter to\nadd_item(). The metadata that can be set on a\nparticular file item is as follows:",
+   "text": "If you want to register a file with metadata, you can pass a\n        `RecentManager::Data` parameter to\n        add_item(). The metadata that can be set on a\n        particular file item is as follows:",
    "sha": "95f1cffa3b3ae864",
    "zh": null
   },
@@ -84,7 +84,7 @@
   },
   {
    "type": "para",
-   "text": "In addition to adding items to the list, you can also look up items from\nthe list and modify or remove items.",
+   "text": "In addition to adding items to the list, you can also look up items from\n        the list and modify or remove items.",
    "sha": "aa82d50472272a33",
    "zh": null
   },
@@ -96,7 +96,7 @@
   },
   {
    "type": "para",
-   "text": "To look up recently used files, RecentManager\nprovides several functions. To look up a specific item by its URI, you\ncan use the lookup_item() function, which will\nreturn a RecentInfo class. If the specified URI\ndid not exist in the list of recent files,\nlookup_item() throws a\nRecentManagerError exception. For example:",
+   "text": "To look up recently used files, `RecentManager`\n        provides several functions. To look up a specific item by its URI, you\n        can use the lookup_item() function, which will\n        return a `RecentInfo` class. If the specified URI\n        did not exist in the list of recent files,\n        lookup_item() throws a\n        `RecentManagerError` exception. For example:",
    "sha": "8f1d2b46073eba14",
    "zh": null
   },
@@ -108,13 +108,13 @@
   },
   {
    "type": "para",
-   "text": "A RecentInfo object is essentially an object\ncontaining all of the metadata about a single recently-used file. You\ncan use this object to look up any of the properties listed\nabove.",
+   "text": "A `RecentInfo` object is essentially an object\n        containing all of the metadata about a single recently-used file. You\n        can use this object to look up any of the properties listed\n        above.",
    "sha": "554d83e123db5a04",
    "zh": null
   },
   {
    "type": "para",
-   "text": "If you don't want to look for a specific URI, but instead want to get a\nlist of all recently used items, RecentManager\nprovides the get_items() function. The return\nvalue of this function is a std::vector of all\nrecently used files. The following code demonstrates how you might get a\nlist of recently used files:",
+   "text": "If you don't want to look for a specific URI, but instead want to get a\n        list of all recently used items, `RecentManager`\n        provides the get_items() function. The return\n        value of this function is a `std::vector` of all\n        recently used files. The following code demonstrates how you might get a\n        list of recently used files:",
    "sha": "f8e2513622d175d2",
    "zh": null
   },
@@ -126,7 +126,7 @@
   },
   {
    "type": "para",
-   "text": "The maximum age of items in the recently used files list can be set with\nGtk::Settings::property_gtk_recent_files_max_age().\nDefault value: 30 days.",
+   "text": "The maximum age of items in the recently used files list can be set with\n        Gtk::Settings::property_gtk_recent_files_max_age().\n        Default value: 30 days.",
    "sha": "250aaa8286d804a5",
    "zh": null
   },
@@ -138,19 +138,19 @@
   },
   {
    "type": "para",
-   "text": "There may be times when you need to modify the list of recent files.\nFor instance, if a file is moved or renamed, you may need to update the\nfile's location in the recent files list so that it doesn't point to an\nincorrect location. You can update an item's location by using\nmove_item().",
+   "text": "There may be times when you need to modify the list of recent files.\n        For instance, if a file is moved or renamed, you may need to update the\n        file's location in the recent files list so that it doesn't point to an\n        incorrect location. You can update an item's location by using\n        move_item().",
    "sha": "f9920cf038c95a9f",
    "zh": null
   },
   {
    "type": "para",
-   "text": "In addition to changing a file's URI, you can also remove items from the\nlist, either one at a time or by clearing them all at once. The former\nis accomplished with remove_item(), the latter with\npurge_items().",
+   "text": "In addition to changing a file's URI, you can also remove items from the\n        list, either one at a time or by clearing them all at once. The former\n        is accomplished with remove_item(), the latter with\n        purge_items().",
    "sha": "1fb62b70b2b01993",
    "zh": null
   },
   {
    "type": "para",
-   "text": "The functions move_item(),\nremove_item() and\npurge_items() have no effect on the actual files\nthat are referred to by the URIs, they only modify the list of recent\nfiles.",
+   "text": "The functions move_item(),\n        remove_item() and\n        purge_items() have no effect on the actual files\n        that are referred to by the URIs, they only modify the list of recent\n        files.",
    "sha": "ccdeb3ac2d14a2fb",
    "zh": null
   }

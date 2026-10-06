@@ -6,19 +6,19 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Widgets and other objects have many useful properties. Here we show some ways to use\nthem in new and flexible ways, by wrapping them in actions with Gio::PropertyAction\nor by binding them with Glib::Binding.",
+   "text": "Widgets and other objects have many useful properties. Here we show some ways to use\nthem in new and flexible ways, by wrapping them in actions with `Gio::PropertyAction`\nor by binding them with `Glib::Binding`.",
    "sha": "abd1425541071a63",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To set this up, we add two labels to the header bar in our window.ui file,\nnamed lines_label and lines, and get pointers to them\nin the application window's constructor, as we've seen a couple of times by now.\nWe add a new \"Lines\" menu item to the gears menu, which triggers the\nshow-lines action.",
+   "text": "To set this up, we add two labels to the header bar in our `window.ui` file,\nnamed `lines_label` and `lines`, and get pointers to them\nin the application window's constructor, as we've seen a couple of times by now.\nWe add a new \"Lines\" menu item to the gears menu, which triggers the\n`show-lines` action.",
    "sha": "ad544ee1e8f9dd92",
    "zh": null
   },
   {
    "type": "para",
-   "text": "To make this menu item do something, we create a property action for the visible\nproperty of the lines label, and add it to the actions of the window.\nThe effect of this is that the visibility of the label gets toggled every time the action\nis activated.\nSince we want both labels to appear and disappear together, we bind the visible\nproperty of the lines_label widget to the same property of the\nlines widget.\nIn ExampleAppWindow's constructor:",
+   "text": "To make this menu item do something, we create a property action for the `visible`\nproperty of the `lines` label, and add it to the actions of the window.\nThe effect of this is that the visibility of the label gets toggled every time the action\nis activated.\nSince we want both labels to appear and disappear together, we bind the `visible`\nproperty of the `lines_label` widget to the same property of the\n`lines` widget.\nIn `ExampleAppWindow`'s constructor:",
    "sha": "53f7a4eae79e74cb",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "We also need a function that counts the lines of the currently active tab, and updates\nthe lines label. See the full source if you are interested in the details.",
+   "text": "We also need a function that counts the lines of the currently active tab, and updates\nthe `lines` label. See the full source if you are interested in the details.",
    "sha": "91a92d980149a159",
    "zh": null
   },
@@ -43,6 +43,7 @@
   {
    "type": "figure",
    "text": "Properties",
+   "ref": "figures/buildapp_properties.png",
    "sha": "ae43692b2a310b8e",
    "zh": ""
   },

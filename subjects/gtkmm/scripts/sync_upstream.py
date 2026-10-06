@@ -33,6 +33,9 @@ from extract_source import (  # noqa: E402
     code_text,
     direct_children,
     element_text,
+    expand_entities,
+    figure_ref,
+    inline_md,
     load_structure,
     strip_tags,
 )
@@ -89,16 +92,20 @@ def extract_blocks(fragment: str) -> list[dict]:
             if kind in ("para", "programlisting", "literallayout"):
                 text, _ = element_text(kind, source, m.start())
                 if kind == "para":
-                    clean = strip_tags(text).strip()
+                    # 正文保留内联格式（粗/斜/行内代码/链接）；指纹严格沿用旧口径
+                    # （strip_tags 纯文本）——已有翻译不因格式升级而失效（ADR 0002）
+                    key = sha(strip_tags(text).strip())
+                    clean = inline_md(expand_entities(text)).strip()
                 else:
                     # 代码块逐字保留缩进与空白，尊重原文（应用 ADR 0002）
                     clean = code_text(text)
+                    key = sha(clean)
                 if not clean:
                     continue
                 blocks.append({
                     "type": "code" if kind != "para" else "para",
                     "text": clean,
-                    "sha": sha(clean),
+                    "sha": key,
                 })
             elif kind == "itemizedlist":
                 list_text, list_end = element_text("itemizedlist", source, m.start())
@@ -108,10 +115,12 @@ def extract_blocks(fragment: str) -> list[dict]:
                     if clean:
                         blocks.append({"type": "listitem", "text": clean, "sha": sha(clean)})
             elif kind == "figure":
-                fig_text, _ = element_text("figure", source, m.start())
+                fig_text, fig_end = element_text("figure", source, m.start())
                 title = strip_tags(element_text("title", fig_text, 0)[0])
                 if title:
-                    blocks.append({"type": "figure", "text": title, "sha": sha(title)})
+                    ref = figure_ref(expand_entities(fig_text))
+                    blocks.append({"type": "figure", "text": title,
+                                   "ref": ref, "sha": sha(title)})
 
     def normalize(text: str) -> str:
         return re.sub(r"\s+", " ", text).strip()

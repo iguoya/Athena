@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Widgets can be identified as sources or targets using\nGtk::DragSource and Gtk::DropTarget\nevent controllers.",
+   "text": "`Widget`s can be identified as sources or targets using\n`Gtk::DragSource` and `Gtk::DropTarget`\nevent controllers.",
    "sha": "fe03a5ff2c7b79b6",
    "zh": null
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "Some DragSource methods:\n\n\n\nvoid set_content(const Glib::RefPtr<Gdk::ContentProvider>& content):\nSets a content provider on the drag source.\n\n\n\n\nvoid set_actions(Gdk::DragAction actions):\nSets the actions on the drag source. For instance Gdk::DragAction::COPY\n| Gdk::DragAction::MOVE.\n\n\n\n\nvoid set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y):\nSets a paintable to use as icon during DND operations.",
+   "text": "Some `DragSource` methods:\n\n\n    \n        `void set_content(const Glib::RefPtr& content)`:\n        Sets a content provider on the drag source.\n    \n\n\n    \n        `void set_actions(Gdk::DragAction actions)`:\n        Sets the actions on the drag source. For instance `Gdk::DragAction::COPY\n        | Gdk::DragAction::MOVE`.\n    \n\n\n    \n        `void set_icon(const Glib::RefPtr& paintable, int hot_x, int hot_y)`:\n        Sets a paintable to use as icon during DND operations.",
    "sha": "a429f5c588e9002a",
    "zh": null
   },
@@ -48,7 +48,7 @@
   },
   {
    "type": "para",
-   "text": "Some DropTarget methods:\n\n\n\nvoid set_gtypes(const std::vector<GType>& types):\nSets the supported types for this drop target.\n\n\n\n\nvoid set_actions(Gdk::DragAction actions):\nSets the actions that this drop target supports.\n\n\n\n\nGlib::ValueBase get_value() const:\nGets the current drop data, as a Glib::Value.\n\n\n\n\nvoid reject():\nRejects the ongoing drop operation. This function should be used when\ndelaying the decision on whether to accept a drag or not until after\nreading the data.",
+   "text": "Some `DropTarget` methods:\n\n\n    \n        `void set_gtypes(const std::vector& types)`:\n        Sets the supported types for this drop target.\n    \n\n\n    \n        `void set_actions(Gdk::DragAction actions)`:\n        Sets the actions that this drop target supports.\n    \n\n\n    \n        `Glib::ValueBase get_value() const`:\n        Gets the current drop data, as a `Glib::Value`.\n    \n\n\n    \n        `void reject()`:\n        Rejects the ongoing drop operation. This function should be used when\n        delaying the decision on whether to accept a drag or not until after\n        reading the data.",
    "sha": "c2eb59fbc4e58317",
    "zh": null
   },

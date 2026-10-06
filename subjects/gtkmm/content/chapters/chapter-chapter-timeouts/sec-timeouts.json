@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "The first argument is a slot you wish to have called\nwhen the timeout occurs. The second argument is the number of milliseconds\nbetween calls to that method. You receive a\nsigc::connection object that can be used to deactivate\nthe connection using its disconnect() method:",
+   "text": "The first argument is a `slot` you wish to have called\nwhen the timeout occurs. The second argument is the number of milliseconds\nbetween calls to that method. You receive a\n`sigc::connection` object that can be used to deactivate\nthe connection using its disconnect() method:",
    "sha": "17f59bff6bc3b2b5",
    "zh": null
   },
@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "Another way of destroying the connection is your signal handler.\nIt has to be of the type sigc::slot<bool()>.\nAs you see from the definition your signal handler has to return a value of\nthe type bool. A definition of a sample method might\nlook like this:",
+   "text": "Another way of destroying the connection is your signal handler.\nIt has to be of the type `sigc::slot`.\nAs you see from the definition your signal handler has to return a value of\nthe type `bool`. A definition of a sample method might\nlook like this:",
    "sha": "d02479084be08a7b",
    "zh": null
   },
@@ -42,7 +42,7 @@
   },
   {
    "type": "para",
-   "text": "You can stop the timeout method by returning false from\nyour signal handler. Therefore, if you want your\nmethod to be called repeatedly, it should return true.",
+   "text": "You can stop the timeout method by returning `false` from\nyour signal handler. Therefore, if you want your\nmethod to be called repeatedly, it should return `true`.",
    "sha": "4757944de7a8e1a1",
    "zh": null
   },

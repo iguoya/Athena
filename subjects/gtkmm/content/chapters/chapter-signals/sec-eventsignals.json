@@ -6,25 +6,25 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Event signals are emitted as a result of some user input, for instance a key press\nor a mouse motion. Usually you don't handle these events directly. Instead, you use\na subclass of Gtk::EventController, such as Gtk::EventControllerKey\nor Gtk::GestureClick. Event controllers can be added to a\nwidget with Gtk::Widget::add_controller().",
+   "text": "Event signals are emitted as a result of some user input, for instance a key press\nor a mouse motion. Usually you don't handle these events directly. Instead, you use\na subclass of `Gtk::EventController`, such as `Gtk::EventControllerKey`\nor `Gtk::GestureClick`. Event controllers can be added to a\nwidget with Gtk::Widget::add_controller().",
    "sha": "6cf3e6bc6bd89804",
    "zh": null
   },
   {
    "type": "para",
-   "text": "You might occasionally find it useful to handle events when there's something\nyou can't accomplish with normal signals. Gtk::Button,\nfor example, does not send mouse-pointer coordinates with its\nclicked signal, but you could handle\nGtk::GestureClick::signal_pressed() if you needed this\ninformation. Gtk::EventControllerKey::signal_key_pressed()\nis often used to handle key-presses.",
+   "text": "You might occasionally find it useful to handle events when there's something\nyou can't accomplish with normal signals. `Gtk::Button`,\nfor example, does not send mouse-pointer coordinates with its\n`clicked` signal, but you could handle\nGtk::GestureClick::signal_pressed() if you needed this\ninformation. Gtk::EventControllerKey::signal_key_pressed()\nis often used to handle key-presses.",
    "sha": "4554256d29f148e4",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Some event controller signals behave slightly differently. The value returned from\nthe signal handler indicates whether it has fully \"handled\" the event. If the value\nis false then gtkmm will pass the event on to the next\nsignal handler. If the value is true then no other signal handlers\nwill need to be called.",
+   "text": "Some event controller signals behave slightly differently. The value returned from\nthe signal handler indicates whether it has fully \"handled\" the event. If the value\nis `false` then gtkmm will pass the event on to the next\nsignal handler. If the value is `true` then no other signal handlers\nwill need to be called.",
    "sha": "45196c44653082b2",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Handling an event doesn't affect the Widget's other signals. If you handle\nGtk::GestureClick::signal_pressed() for\nGtk::Button, you'll still be able to get the\nclicked signal. They are emitted at (nearly) the same time.",
+   "text": "Handling an event doesn't affect the Widget's other signals. If you handle\nGtk::GestureClick::signal_pressed() for\n`Gtk::Button`, you'll still be able to get the\n`clicked` signal. They are emitted at (nearly) the same time.",
    "sha": "5f880039d300c9ff",
    "zh": null
   },
@@ -48,7 +48,7 @@
   },
   {
    "type": "para",
-   "text": "The call to set_propagation_phase() is necessary in\nthis case because the GtkButton C class adds an event\ncontroller, handling button clicks in the capture phase. GtkButton\nclaims the event, meaning that the event is not propagated in the bubble phase,\nwhere event controllers handle events by default.",
+   "text": "The call to set_propagation_phase() is necessary in\nthis case because the `GtkButton` C class adds an event\ncontroller, handling button clicks in the capture phase. `GtkButton`\nclaims the event, meaning that the event is not propagated in the bubble phase,\nwhere event controllers handle events by default.",
    "sha": "36e8eccc63fc861b",
    "zh": null
   },
@@ -60,7 +60,7 @@
   },
   {
    "type": "para",
-   "text": "By default, signal handlers that return void are called after\nany previously-connected signal handlers. However, this can be a problem with\nevent signals that can stop event propagation by returning true.\nFor instance, the existing signal handlers, or the default signal handler, might return\ntrue to stop other signal handlers from being called.\nTo specify that your signal handler should be called before the other signal handlers,\nyou can specify false for the after parameter.\nThis connect() parameter is optional, if the signal handler\nreturns void. For instance,",
+   "text": "By default, signal handlers that return `void` are called after\nany previously-connected signal handlers. However, this can be a problem with\nevent signals that can stop event propagation by returning `true`.\nFor instance, the existing signal handlers, or the default signal handler, might return\n`true` to stop other signal handlers from being called.\nTo specify that your signal handler should be called before the other signal handlers,\nyou can specify `false` for the `after` parameter.\nThis connect() parameter is optional, if the signal handler\nreturns `void`. For instance,",
    "sha": "fc5c62d5bbeee239",
    "zh": null
   },

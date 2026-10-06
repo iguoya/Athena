@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Most applications will have only one Window, or\nonly one main window. These applications can use\nGtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).\nIt creates and shows a window. When the window is closed, make_window_and_run()\ndeletes the window and returns to the caller.\nThis might happen when the user closes the window, or when your code decides to\nclose the window with Gtk::Window::close(). You can prevent\nthe user from closing the window (for instance, if there are unsaved changes) by\noverriding Gtk::Window::on_close_request().",
+   "text": "Most applications will have only one `Window`, or\n    only one main window. These applications can use\n    Gtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).\n    It creates and shows a window. When the window is closed, make_window_and_run()\n    deletes the window and returns to the caller.\n    This might happen when the user closes the window, or when your code decides to\n    close the window with Gtk::Window::close(). You can prevent\n    the user from closing the window (for instance, if there are unsaved changes) by\n    overriding Gtk::Window::on_close_request().",
    "sha": "c78508cdde565d5a",
    "zh": null
   },

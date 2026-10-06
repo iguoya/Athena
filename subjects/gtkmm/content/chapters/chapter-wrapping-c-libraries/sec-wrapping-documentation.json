@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "You might wish to reuse documentation that exists for the C library that\nyou are wrapping. GTK-style C libraries typically use gtk-doc or gi-docgen and therefore\nhave source code comments formatted for gtk-doc or gi-docgen and some extra documentation\nin .sgml and .xml files. The docextract_to_xml.py script, from glibmm's\ntools/defs_gen directory, can read these files and\ngenerate an .xml file that gmmproc can use to generate\ndoxygen comments. gmmproc will even try to transform the\ndocumentation to make it more appropriate for a C++ API.",
+   "text": "You might wish to reuse documentation that exists for the C library that\n  you are wrapping. GTK-style C libraries typically use gtk-doc or gi-docgen and therefore\n  have source code comments formatted for gtk-doc or gi-docgen and some extra documentation\n  in .sgml and .xml files. The docextract_to_xml.py script, from glibmm's\n  `tools/defs_gen` directory, can read these files and\n  generate an .xml file that `gmmproc` can use to generate\n  doxygen comments. `gmmproc` will even try to transform the\n  documentation to make it more appropriate for a C++ API.",
    "sha": "66d01e28423cd0de",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "Because this automatic transformation is not always appropriate, you might\nwant to provide hand-written text for a particular method. You can do this\nby copying the XML node for the function from your\nsomething_docs.xml file to the\nsomething_docs_override.xml file and changing the\ncontents. Alternatively you can write your own documentation in the\n.hg file.",
+   "text": "Because this automatic transformation is not always appropriate, you might\n    want to provide hand-written text for a particular method. You can do this\n    by copying the XML node for the function from your\n    `something_docs.xml` file to the\n    `something_docs_override.xml` file and changing the\n    contents. Alternatively you can write your own documentation in the\n    `.hg` file.",
    "sha": "ea8fa3366034f06b",
    "zh": null
   },
@@ -48,7 +48,7 @@
   },
   {
    "type": "para",
-   "text": "If you copied the skeleton source tree in mm-common and substituted the\nplaceholder text, then you will already have suitable meson.build\nand Doxyfile.in files in the doc/reference/\ndirectory. You probably need to modify the tag_file_modules\nvariable in meson.build, though.\nWith the mm-common build setup, the list\nof Doxygen input files is not defined in the Doxygen configuration file, but passed\nalong from meson/ninja to the standard input of doxygen.",
+   "text": "If you copied the skeleton source tree in `mm-common` and substituted the\n  placeholder text, then you will already have suitable `meson.build`\n  and `Doxyfile.in` files in the `doc/reference/`\n  directory. You probably need to modify the `tag_file_modules`\n  variable in `meson.build`, though.\n  With the `mm-common` build setup, the list\n  of Doxygen input files is not defined in the Doxygen configuration file, but passed\n  along from `meson/ninja` to the standard input of `doxygen`.",
    "sha": "09ccf46685283da0",
    "zh": null
   }

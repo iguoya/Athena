@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Most single-item container widgets have set_child()\nand unset_child() methods for the child widget.\nGtk::Button and Gtk::Window are\ntechnically single-item containers, but we have discussed them already elsewhere.",
+   "text": "Most single-item container widgets have set_child()\nand unset_child() methods for the child widget.\n`Gtk::Button` and `Gtk::Window` are\ntechnically single-item containers, but we have discussed them already elsewhere.",
    "sha": "192f4ced1627920b",
    "zh": null
   },
   {
    "type": "para",
-   "text": "We also discuss the Gtk::Paned widget, which allows you\nto divide a window into two separate \"panes\". This widget actually contains\ntwo child widgets, but the number is fixed so it seems appropriate.",
+   "text": "We also discuss the `Gtk::Paned` widget, which allows you\nto divide a window into two separate \"panes\". This widget actually contains\ntwo child widgets, but the number is fixed so it seems appropriate.",
    "sha": "78a5550e403e281f",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "Frames can enclose one or a group of widgets within a box, optionally with a\ntitle. For instance, you might place a group of\nToggleButtons or CheckButtons in a\nFrame.",
+   "text": "Frames can enclose one or a group of widgets within a box, optionally with a\ntitle. For instance, you might place a group of\n`ToggleButton`s or `CheckButton`s in a\n`Frame`.",
    "sha": "807a8e09414ed905",
    "zh": null
   },
@@ -43,6 +43,7 @@
   {
    "type": "figure",
    "text": "Frame",
+   "ref": "figures/frame.png",
    "sha": "d0b50e064a4f8d94-1",
    "zh": ""
   },
@@ -91,6 +92,7 @@
   {
    "type": "figure",
    "text": "Paned",
+   "ref": "figures/paned.png",
    "sha": "7ac63a60d9a1052b-1",
    "zh": ""
   },
@@ -108,13 +110,13 @@
   },
   {
    "type": "para",
-   "text": "ScrolledWindow widgets create a scrollable\narea. You can insert any type of widget into a\nScrolledWindow, and it will be accessible\nregardless of its size by using the scrollbars. Note that\nScrolledWindow is not a\nGtk::Window despite the slightly misleading name.",
+   "text": "`ScrolledWindow` widgets create a scrollable\narea. You can insert any type of widget into a\n`ScrolledWindow`, and it will be accessible\nregardless of its size by using the scrollbars. Note that\n`ScrolledWindow` is not a\n`Gtk::Window` despite the slightly misleading name.",
    "sha": "0eac9ed1a32189db",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Scrolled windows have scrollbar policies which determine\nwhether the Scrollbars will be displayed. The policies\ncan be set with the set_policy() method. The policy may be\nfor instance Gtk::PolicyType::AUTOMATIC or\nGtk::PolicyType::ALWAYS.\nGtk::PolicyType::AUTOMATIC will cause the scrolled window\nto display the scrollbar only if the contained widget is larger than the\nvisible area. Gtk::PolicyType::ALWAYS will cause the\nscrollbar to be displayed always.",
+   "text": "Scrolled windows have *scrollbar policies* which determine\nwhether the `Scrollbar`s will be displayed. The policies\ncan be set with the set_policy() method. The policy may be\nfor instance `Gtk::PolicyType::AUTOMATIC` or\n`Gtk::PolicyType::ALWAYS`.\n`Gtk::PolicyType::AUTOMATIC` will cause the scrolled window\nto display the scrollbar only if the contained widget is larger than the\nvisible area. `Gtk::PolicyType::ALWAYS` will cause the\nscrollbar to be displayed always.",
    "sha": "77967fc53bff58f6",
    "zh": null
   },
@@ -139,6 +141,7 @@
   {
    "type": "figure",
    "text": "ScrolledWindow",
+   "ref": "figures/scrolledwindow.png",
    "sha": "2c3156ad645fedac-1",
    "zh": ""
   },
@@ -156,7 +159,7 @@
   },
   {
    "type": "para",
-   "text": "The AspectFrame widget looks like a\nFrame widget, but it also enforces the aspect\nratio (the ratio of the width to the height) of the child\nwidget, adding extra space if necessary. For instance, this would allow you to\ndisplay a photograph without allowing the user to distort it horizontally or\nvertically while resizing.",
+   "text": "The `AspectFrame` widget looks like a\n`Frame` widget, but it also enforces the *aspect\n    ratio* (the ratio of the width to the height) of the child\nwidget, adding extra space if necessary. For instance, this would allow you to\ndisplay a photograph without allowing the user to distort it horizontally or\nvertically while resizing.",
    "sha": "7b6ba383b4309666",
    "zh": null
   },
@@ -174,13 +177,14 @@
   },
   {
    "type": "para",
-   "text": "The following program uses a Gtk::AspectFrame to present a\ndrawing area whose aspect ratio will always be 2:1, no matter how the user\nresizes the top-level window.",
+   "text": "The following program uses a `Gtk::AspectFrame` to present a\ndrawing area whose aspect ratio will always be 2:1, no matter how the user\nresizes the top-level window.",
    "sha": "10f8caa0b2827168",
    "zh": null
   },
   {
    "type": "figure",
    "text": "AspectFrame",
+   "ref": "figures/aspectframe.png",
    "sha": "cccc4e87163da7f8-1",
    "zh": ""
   },

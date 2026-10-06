@@ -6,13 +6,13 @@
  "blocks": [
   {
    "type": "para",
-   "text": "A properly internationalized application will not make assumptions about the\nnumber of bytes in a character. That means that you shouldn't use pointer\narithmetic to step through the characters in a string, and it means you\nshouldn't use std::string or standard C functions such\nas strlen() because they make the same assumption.",
+   "text": "A properly internationalized application will not make assumptions about the\nnumber of bytes in a character. That means that you shouldn't use pointer\narithmetic to step through the characters in a string, and it means you\nshouldn't use `std::string` or standard C functions such\nas `strlen()` because they make the same assumption.",
    "sha": "da667fb603d1c579",
    "zh": null
   },
   {
    "type": "para",
-   "text": "However, you probably already avoid bare char* arrays and pointer arithmetic by\nusing std::string, so you just need to start using\nGlib::ustring instead. See the Basics chapter about\nGlib::ustring.",
+   "text": "However, you probably already avoid bare char* arrays and pointer arithmetic by\nusing `std::string`, so you just need to start using\n`Glib::ustring` instead. See the Basics chapter about\n`Glib::ustring`.",
    "sha": "efde7a086e32eafa",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "Unfortunately, the integration with the standard iostreams is not completely\nfoolproof. gtkmm converts Glib::ustrings to a\nlocale-specific encoding (which usually is not UTF-8) if you output them to an\nostream with operator<<.\nLikewise, retrieving Glib::ustrings from\nistream with operator>>\ncauses a conversion in the opposite direction. But this scheme breaks down if\nyou go through a std::string, e.g. by inputting text\nfrom a stream to a std::string and then implicitly\nconverting it to a Glib::ustring. If the string\ncontained non-ASCII characters and the current locale is not UTF-8 encoded, the\nresult is a corrupted Glib::ustring. You can work around\nthis with a manual conversion. For instance, to retrieve the\nstd::string from a ostringstream:",
+   "text": "Unfortunately, the integration with the standard iostreams is not completely\nfoolproof. gtkmm converts `Glib::ustring`s to a\nlocale-specific encoding (which usually is not UTF-8) if you output them to an\n`ostream` with `operator>`\ncauses a conversion in the opposite direction. But this scheme breaks down if\nyou go through a `std::string`, e.g. by inputting text\nfrom a stream to a `std::string` and then implicitly\nconverting it to a `Glib::ustring`. If the string\ncontained non-ASCII characters and the current locale is not UTF-8 encoded, the\nresult is a corrupted `Glib::ustring`. You can work around\nthis with a manual conversion. For instance, to retrieve the\n`std::string` from a `ostringstream`:",
    "sha": "ef4af65f48793748",
    "zh": null
   },

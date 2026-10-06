@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Text rendering is done using Pango.\nThe Pango::Layout object for printing should be created by calling\nthe PrintContext::create_pango_layout() method.\nThe PrintContext object also provides the page metrics,\nvia get_width() and get_height().\nThe number of pages can be set with\nPrintOperation::set_n_pages(). To actually render the\nPango text in on_draw_page, get a\nCairo::Context with\nPrintContext::get_cairo_context() and show the\nPango::LayoutLines that appear within the requested\npage number.",
+   "text": "Text rendering is done using Pango.\nThe `Pango::Layout` object for printing should be created by calling\nthe PrintContext::create_pango_layout() method.\nThe `PrintContext` object also provides the page metrics,\nvia get_width() and get_height().\nThe number of pages can be set with\nPrintOperation::set_n_pages(). To actually render the\n Pango text in `on_draw_page`, get a\n`Cairo::Context` with\nPrintContext::get_cairo_context() and show the\n`Pango::LayoutLine`s that appear within the requested\npage number.",
    "sha": "a3ffbc4f84e09130",
    "zh": null
   },

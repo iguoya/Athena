@@ -12,19 +12,19 @@
   },
   {
    "type": "para",
-   "text": "We are going to use Gio::Settings to store our preferences.\nGio::Settings requires a schema that describes our settings,\nin our case the org.gtkmm.exampleapp.gschema.xml file.",
+   "text": "We are going to use `Gio::Settings` to store our preferences.\n`Gio::Settings` requires a schema that describes our settings,\nin our case the `org.gtkmm.exampleapp.gschema.xml` file.",
    "sha": "7a3bdadde18755f7",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Before we can make use of this schema in our application, we need to compile it into\nthe binary form that Gio::Settings expects. GIO provides macros\nto do this in autotools-based projects. See the description of\nGSettings.\nMeson provides the compile_schemas() function in the\nGNOME module.",
+   "text": "Before we can make use of this schema in our application, we need to compile it into\nthe binary form that `Gio::Settings` expects. GIO provides macros\nto do this in autotools-based projects. See the description of\nGSettings.\nMeson provides the `compile_schemas()` function in the\nGNOME module.",
    "sha": "8e8b2586ce4c1e29",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Next, we need to connect our settings to the widgets that they are supposed to control.\nOne convenient way to do this is to use Gio::Settings::bind()\nto bind settings keys to object properties, as we do for the transition setting in\nExampleAppWindow's constructor.",
+   "text": "Next, we need to connect our settings to the widgets that they are supposed to control.\nOne convenient way to do this is to use Gio::Settings::bind()\nto bind settings keys to object properties, as we do for the transition setting in\n`ExampleAppWindow`'s constructor.",
    "sha": "5b3cdfbe8bdb3fe4",
    "zh": null
   },
@@ -36,7 +36,7 @@
   },
   {
    "type": "para",
-   "text": "The code to connect the font setting is a little more involved, since it corresponds to\nan object property in a Gtk::TextTag that we must first create.\nThe code is in ExampleAppWindow::open_file_view().",
+   "text": "The code to connect the font setting is a little more involved, since it corresponds to\nan object property in a `Gtk::TextTag` that we must first create.\nThe code is in ExampleAppWindow::open_file_view().",
    "sha": "cde82f3f0ef811cf",
    "zh": null
   },
@@ -48,13 +48,13 @@
   },
   {
    "type": "para",
-   "text": "At this point, the application will already react if you change one of the settings,\ne.g. using the gsettings commandline tool. Of course, we expect\nthe application to provide a preference dialog for these. So lets do that now.\nOur preference dialog will be a subclass of Gtk::Window, and\nwe'll use the same techniques that we've already seen in ExampleAppWindow:\na Gtk::Builder ui file and settings bindings.\nIn this case the bindings are more involved, though. We use\nGtk::FontDialogButton and Gtk::DropDown\nin the preference dialog. The types of the properties in these classes can't be\nautomatically converted to the string type that Gio::Settings requires.",
+   "text": "At this point, the application will already react if you change one of the settings,\ne.g. using the `gsettings` commandline tool. Of course, we expect\nthe application to provide a preference dialog for these. So lets do that now.\nOur preference dialog will be a subclass of `Gtk::Window`, and\nwe'll use the same techniques that we've already seen in `ExampleAppWindow`:\na `Gtk::Builder` ui file and settings bindings.\nIn this case the bindings are more involved, though. We use\n`Gtk::FontDialogButton` and `Gtk::DropDown`\nin the preference dialog. The types of the properties in these classes can't be\nautomatically converted to the string type that `Gio::Settings` requires.",
    "sha": "056a7615e75105bf",
    "zh": null
   },
   {
    "type": "para",
-   "text": "When we've created the prefs.ui file and the ExampleAppPrefs\nclass, we revisit the ExampleApplication::on_action_preferences()\nmethod in our application class, and make it open a new preference dialog.",
+   "text": "When we've created the `prefs.ui` file and the `ExampleAppPrefs`\nclass, we revisit the ExampleApplication::on_action_preferences()\nmethod in our application class, and make it open a new preference dialog.",
    "sha": "da9c0f2683f65270",
    "zh": null
   },
@@ -73,6 +73,7 @@
   {
    "type": "figure",
    "text": "A preference dialog",
+   "ref": "figures/buildapp_pref_dialog.png",
    "sha": "8b316c8d3aa5e195",
    "zh": ""
   },

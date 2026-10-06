@@ -6,25 +6,26 @@
  "blocks": [
   {
    "type": "para",
-   "text": "This is an example program with two threads, one GUI thread, like in all\ngtkmm programs, and one worker thread. The worker thread is created when you\npress the Start work button. It is deleted when the work is\nfinished, when you press the Stop work button, or when you\npress the Quit button.",
+   "text": "This is an example program with two threads, one GUI thread, like in all\ngtkmm programs, and one worker thread. The worker thread is created when you\npress the `Start work` button. It is deleted when the work is\nfinished, when you press the `Stop work` button, or when you\npress the `Quit` button.",
    "sha": "61dd8e72a7780b6d",
    "zh": null
   },
   {
    "type": "para",
-   "text": "A Glib::Dispatcher is used for sending notifications\nfrom the worker thread to the GUI thread. The ExampleWorker\nclass contains data which is accessed by both threads. This data is protected\nby a std::mutex.\nOnly the GUI thread updates the GUI.",
+   "text": "A `Glib::Dispatcher` is used for sending notifications\nfrom the worker thread to the GUI thread. The `ExampleWorker`\nclass contains data which is accessed by both threads. This data is protected\nby a `std::mutex`.\nOnly the GUI thread updates the GUI.",
    "sha": "ecb1eb15cad8f3ea",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Compiling and linking a multi-threaded program can require special compiler and\nlinker options. If you use the g++ compiler, add the\n-pthread option. Other compilers may require other options.\nIf you build with meson, it handles the multi-threading\ncomplications for you, if you add dependency('threads').",
+   "text": "Compiling and linking a multi-threaded program can require special compiler and\nlinker options. If you use the `g++` compiler, add the\n`-pthread` option. Other compilers may require other options.\nIf you build with `meson`, it handles the multi-threading\ncomplications for you, if you add `dependency('threads')`.",
    "sha": "ad52303bf5378b06",
    "zh": null
   },
   {
    "type": "figure",
    "text": "Multi-Threaded Program",
+   "ref": "figures/multithread.png",
    "sha": "ab754c5385923d55",
    "zh": ""
   },

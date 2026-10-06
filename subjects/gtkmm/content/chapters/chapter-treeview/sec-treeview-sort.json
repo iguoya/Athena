@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "The standard tree models (TreeStore and ListStore) derive from TreeSortable, so they offer sorting functionality. For instance, call set_sort_column(), to sort the model by the specified column. Or supply a callback function to set_sort_func() to implement a more complicated sorting algorithm.",
+   "text": "The standard tree models (`TreeStore` and `ListStore`) derive from `TreeSortable`, so they offer sorting functionality. For instance, call set_sort_column(), to sort the model by the specified column. Or supply a callback function to set_sort_func() to implement a more complicated sorting algorithm.",
    "sha": "b5c9737558adabc5",
    "zh": null
   },
@@ -24,7 +24,7 @@
   },
   {
    "type": "para",
-   "text": "So that a user can click on a TreeView's column header to sort the TreeView's contents, call Gtk::TreeView::Column::set_sort_column(), supplying the model column on which model should be sorted when the header is clicked. For instance:",
+   "text": "So that a user can click on a `TreeView`'s column header to sort the `TreeView`'s contents, call Gtk::TreeView::Column::set_sort_column(), supplying the model column on which model should be sorted when the header is clicked. For instance:",
    "sha": "e2abbc7ec213d011",
    "zh": null
   },
@@ -42,7 +42,7 @@
   },
   {
    "type": "para",
-   "text": "The TreeView already allows you to show the same TreeModel\nin two TreeView widgets. If you need one of these TreeViews to sort the model\ndifferently than the other then you should use a TreeModelSort instead of just,\nfor instance, Gtk::TreeViewColumn::set_sort_column().\nTreeModelSort is a model that contains another model, presenting a sorted version\nof that model. For instance, you might add a sorted version of a model to a TreeView like so:",
+   "text": "The `TreeView` already allows you to show the same `TreeModel`\nin two `TreeView` widgets. If you need one of these TreeViews to sort the model\ndifferently than the other then you should use a `TreeModelSort` instead of just,\nfor instance, Gtk::TreeViewColumn::set_sort_column().\n`TreeModelSort` is a model that contains another model, presenting a sorted version\nof that model. For instance, you might add a sorted version of a model to a `TreeView` like so:",
    "sha": "2bd9131e7a6727e1",
    "zh": null
   },

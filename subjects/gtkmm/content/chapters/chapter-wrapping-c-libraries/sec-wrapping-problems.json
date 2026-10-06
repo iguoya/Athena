@@ -30,7 +30,7 @@
   },
   {
    "type": "para",
-   "text": "The extra typedef allows the struct to be used in a header without including\nits full definition, simply by predeclaring it, by repeating that typedef.\nThis means that you don't have to include the C library's header in your C++ header,\nthus keeping it out of your public API. gmmproc assumes that\nthis technique was used, so you will see compiler errors if that is not the case.",
+   "text": "The extra typedef allows the struct to be used in a header without including\n  its full definition, simply by predeclaring it, by repeating that typedef.\n  This means that you don't have to include the C library's header in your C++ header,\n  thus keeping it out of your public API. `gmmproc` assumes that\n  this technique was used, so you will see compiler errors if that is not the case.",
    "sha": "92880a0214b5173f",
    "zh": null
   },
@@ -72,7 +72,7 @@
   },
   {
    "type": "para",
-   "text": "By convention, glib/GTK-style objects have *_new()\nfunctions, such as example_widget_new() that do nothing\nmore than call g_object_new() and return the result.\nThe input parameters are supplied to g_object_new()\nalong with the names of the properties for which they are values. For\ninstance,",
+   "text": "By convention, glib/GTK-style objects have `*_new()`\n    functions, such as `example_widget_new()` that do nothing\n    more than call `g_object_new()` and return the result.\n    The input parameters are supplied to `g_object_new()`\n    along with the names of the properties for which they are values. For\n    instance,",
    "sha": "033f83c724a84664",
    "zh": null
   },
@@ -84,19 +84,19 @@
   },
   {
    "type": "para",
-   "text": "This allows language bindings to implement their own equivalents (such as\nC++ constructors), without using the *_new() function.\nThis is often necessary so that they can actually instantiate a derived\nGType, to add their own hooks for signal handlers and vfuncs.",
+   "text": "This allows language bindings to implement their own equivalents (such as\n    C++ constructors), without using the `*_new()` function.\n    This is often necessary so that they can actually instantiate a derived\n    GType, to add their own hooks for signal handlers and vfuncs.",
    "sha": "26f918f9ccd419ee",
    "zh": null
   },
   {
    "type": "para",
-   "text": "At the least, the _new() function should not use any\nprivate API (functions that are only in a .c file). Even when there are no\nfunctions, we can sometimes reimplement 2 or 3 lines of code in a\n_new() function as long as those lines of code use API\nthat is available to us.",
+   "text": "At the least, the `_new()` function should not use any\n    private API (functions that are only in a .c file). Even when there are no\n    functions, we can sometimes reimplement 2 or 3 lines of code in a\n    `_new()` function as long as those lines of code use API\n    that is available to us.",
    "sha": "e8c0c63f922aabbc",
    "zh": null
   },
   {
    "type": "para",
-   "text": "Another workaround is to add a *_construct() function\nthat the C++ constructor can call after instantiating its own type. For\ninstance,",
+   "text": "Another workaround is to add a `*_construct()` function\n    that the C++ constructor can call after instantiating its own type. For\n    instance,",
    "sha": "b8d77dc1bd48cc41",
    "zh": null
   },
@@ -108,7 +108,7 @@
   },
   {
    "type": "para",
-   "text": "Adding properties, and ensuring that they interact properly with each\nother, is relatively difficult to correct in the C library, but it is\npossible, so do file a bug and try to send a patch to the relevant\nmaintainer.",
+   "text": "Adding properties, and ensuring that they interact properly with each\n    other, is relatively difficult to correct in the C library, but it is\n    possible, so do file a bug and try to send a patch to the relevant\n    maintainer.",
    "sha": "123613e13ed4fc66",
    "zh": null
   }
