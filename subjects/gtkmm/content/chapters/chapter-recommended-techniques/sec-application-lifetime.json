@@ -6,6 +6,32 @@
  "blocks": [
   {
    "type": "para",
+   "text": "This section is simply a gathering of wisdom, general style guidelines\nand hints for creating gtkmm applications.",
+   "sha": "b7a529508a3081d3",
+   "zh": "本小节将向你展示一些创建gtkmm应用程序的智慧、风格指南和提示。"
+  },
+  {
+   "type": "para",
+   "text": "Use `Meson`! It is your friend :)\n    It examines C and C++ files, determines how they depend on each other,\n    and generates `build.ninja` or an equivalent file so the\n    files can be compiled in the correct order. `Meson`\n    permits automatic configuration of software installation, handling a large\n    number of system quirks to increase portability.",
+   "sha": "3d05cfc682a0e58f",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Subclass Widgets to better organize your code. You should probably\n    subclass your main `Window` at least. Then you can\n    make your child Widgets and signal handlers members of that class.",
+   "sha": "f5e0c5fbe7ff461e",
+   "zh": "子类部件可以更好的组织你的代码。至少你的主窗口类应该继承Window。这样你可以使主窗口的子部件和信号处理函数成为该类的成员。"
+  },
+  {
+   "type": "para",
+   "text": "Create your own signals instead of passing pointers around. Objects can\n    communicate with each other via signals and signal handlers. This is much\n    simpler than objects holding pointers to each other and calling each\n    other's methods. gtkmm's classes use special versions of\n    `sigc::signal`, but you should use normal\n    `sigc::signal`s, as described in the\n    `libsigc++` documentation.",
+   "sha": "6618060cdaf28b5c",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
    "text": "Most applications will have only one `Window`, or\n    only one main window. These applications can use\n    Gtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).\n    It creates and shows a window. When the window is closed, make_window_and_run()\n    deletes the window and returns to the caller.\n    This might happen when the user closes the window, or when your code decides to\n    close the window with Gtk::Window::close(). You can prevent\n    the user from closing the window (for instance, if there are unsaved changes) by\n    overriding Gtk::Window::on_close_request().",
    "sha": "c78508cdde565d5a",
    "zh": null

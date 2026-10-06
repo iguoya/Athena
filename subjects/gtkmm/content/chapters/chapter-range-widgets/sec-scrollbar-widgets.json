@@ -6,6 +6,26 @@
  "blocks": [
   {
    "type": "para",
+   "text": "`Gtk::Scale` inherits from `Gtk::Range`.\n`Gtk::Scrollbar` does not inherit from `Gtk::Range`,\nbut it shares much functionality with `Gtk::Scale`.\nThey both contain a \"trough\" and a \"slider\" (sometimes called a\n\"thumbwheel\" in other GUI environments). Dragging the slider with the pointer\nmoves it within the trough, while clicking in the trough advances the slider\ntowards the location of the click, either completely, or by a designated\namount, depending on which mouse button is used. This should be familiar\nscrollbar behavior.",
+   "sha": "cce7dc7c618da330",
+   "zh": "`Gtk::Scale` 继承自 `Gtk::Range`；`Gtk::Scrollbar` 虽不继承自 `Gtk::Range`，但与 `Gtk::Scale` 共享大量功能——两者都把控件的「调整」委托给一个 `Adjustment`，并都会响应 `adjust_bounds`、`change_value` 与 `move_slider` 信号。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "As will be explained in the [Adjustments]()\nsection, all range widgets are associated with an\n`Adjustment` object. To change the lower, upper, and\ncurrent values used by the widget you need to use the methods of its\n`Adjustment`, which you can get with the\nget_adjustment() method. The range\nwidgets' default constructors create an `Adjustment`\nautomatically, or you can specify an existing\n`Adjustment`, maybe to share it with another widget. See\nthe [Adjustments]() section for further\ndetails.",
+   "sha": "bfd2d3ddcadcd60a",
+   "zh": "如「Adjustments」一节将要讲到的，所有范围控件都关联一个 `Adjustment` 对象。要改变范围的下限、上限和当前值，或改变步长，对该 `Adjustment` 的字段调用相应方法即可，控件自会随之更新。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Range.html)",
+   "sha": "71bf90935fc231d2",
+   "zh": "参考"
+  },
+  {
+   "type": "para",
    "text": "These are standard scrollbars. They should be used only to scroll another\nwidget, such as a `Gtk::Entry` or a\n`Gtk::Viewport`, though it's usually easier to use the\n`Gtk::ScrolledWindow` widget in most cases.",
    "sha": "b6eb4ee877bf271f",
    "zh": "这些是标准的滚动条。它们应该只被用于滚动其它部件，比如 Gtk::Entry 或 Gtk::Viewport，当然，通常使用 Gtk::ScrolledWindow 会更容易一些。"

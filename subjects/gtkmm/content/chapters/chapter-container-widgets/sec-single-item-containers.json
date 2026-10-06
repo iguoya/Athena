@@ -6,6 +6,12 @@
  "blocks": [
   {
    "type": "para",
+   "text": "Container widgets, like other widgets, derive from `Gtk::Widget`.\nSome container widgets, such as `Gtk::Grid` can hold many\nchild widgets, so these typically have more complex interfaces. Others, such as\n`Gtk::Frame` contain only one child widget.",
+   "sha": "2c9326eb94e64a1d",
+   "zh": "容器部件与其他部件一样都是从Gtk::Widget派生而来。一些容器部件可以容纳多个子部件，例如Gtk::Grid，因此通常他们具有更为复杂的接口。还有些容器部件只能容纳一个子部件，例如Gtk::Frame"
+  },
+  {
+   "type": "para",
    "text": "Most single-item container widgets have set_child()\nand unset_child() methods for the child widget.\n`Gtk::Button` and `Gtk::Window` are\ntechnically single-item containers, but we have discussed them already elsewhere.",
    "sha": "192f4ced1627920b",
    "zh": "大多数单项容器部件具有其子部件的set_child()和unset_child()方法。Gtk::Button和Gtk::Window从技术上来说是单项容器，但是我们已经在其他地方讨论过它们。"

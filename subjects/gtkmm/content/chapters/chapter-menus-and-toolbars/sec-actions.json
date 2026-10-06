@@ -6,6 +6,18 @@
  "blocks": [
   {
    "type": "para",
+   "text": "There are specific APIs for menus and toolbars, but you should usually deal\nwith them together, creating `Gio::SimpleAction`s that\nyou can refer to in both menus and toolbars. In this way you can handle\nactivation of the action instead of responding to the menu and toolbar items\nseparately. And you can enable or disable both the menu and toolbar item via\nthe action. `Gtk::Builder` can create menus and toolbars.",
+   "sha": "5dacb11465b6b2b1",
+   "zh": "菜单和工具栏都有特有的API，但是通常你应该创建在菜单和工具栏都可以引用的Gio::SimpleAction以便一并处理它们。这样你可以响应动作被激活而不需要分别响应菜单和工具栏。你可以通过动作启用或者禁用菜单和工具栏项。Gtk::Builder可以创建菜单和工具栏。"
+  },
+  {
+   "type": "para",
+   "text": "This involves the use of the `Gio::SimpleActionGroup`,\n`Gio::SimpleAction` and `Gtk::Builder`\nclasses, all of which should be instantiated via their create()\nmethods, which return `RefPtr`s.",
+   "sha": "5b333cf3d44cafae",
+   "zh": "这涉及到了Gio::SimpleActionGroup、Gio::SimpleAction和Gtk::Builder类的使用，所有的这些类都需要通过返回RefPtr的create()方法进行实例化。"
+  },
+  {
+   "type": "para",
    "text": "First create the `Gio::SimpleAction`s and add them to a\n`Gio::SimpleActionGroup`, with\nGio::ActionMap::add_action().\n(`Gio::ActionMap` is a base class of\n`Gio::SimpleActionGroup`.) Then add the action group to\nyour window with Gtk::Widget::insert_action_group().",
    "sha": "c6df0e384a32dd1f",
    "zh": "首先创建Gio::SimpleAction并使用Gio::ActionMap::add_action()方法将其加入Gio::SimpleActionGroup中（Gio::ActionMap是Gio::SimpleActionGroup的基类。）。然后将动作组使用Gtk::Widget::insert_action_group()加入到你的窗口中。"

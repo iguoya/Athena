@@ -6,6 +6,36 @@
  "blocks": [
   {
    "type": "para",
+   "text": "gtkmm applications can easily support multiple languages, including\n    non-European languages such as Chinese and right-to-left languages such as\n    Arabic. An appropriately-written and translated gtkmm application will use\n    the appropriate language at runtime based on the user's environment.",
+   "sha": "91923d4d4cc46029",
+   "zh": "gtkmm应用程序可以很轻松的支持包括非欧洲语言（如中文）和从右向左语言（如阿拉伯语）在内的多种语言。正确编写且进行翻译的gtkmm应用程序可以在运行时根据用户环境使用合适的语言。"
+  },
+  {
+   "type": "para",
+   "text": "You might not anticipate the need to support additional languages, but\n    you can never rule it out. And it's easier to develop the application\n    properly in the first place rather than retrofitting later.",
+   "sha": "63f5ec09fd98a624",
+   "zh": "你可能没有预料到需要支持其他语言，但你永远不能排除这种可能性。而且事先准备好支持多语言比后来改进要容易的多。"
+  },
+  {
+   "type": "para",
+   "text": "The process of writing source code that allows for translation is called\n    `internationalization`, often abbreviated to\n    `i18n`. The `Localization` process,\n    sometimes abbreviated as `l10n`, provides translated text\n    for other languages, based on that source code.",
+   "sha": "b02a1e89e59010ab",
+   "zh": "编写允许进行翻译的源代码的过程被称为internationalization，通常被缩写为i18n。而根据该源代码提供其他语言的翻译文本的过程Localization通常被简写为l10n。"
+  },
+  {
+   "type": "para",
+   "text": "The main activity in the internationalization process is finding strings\n    seen by users and marking them for translation. You do not need to do it all\n    at once - if you set up the necessary project infrastructure correctly then\n    your application will work normally regardless of how many strings you've\n    covered.",
+   "sha": "a2ee58c8e1fcbd8d",
+   "zh": "国际化过程中的主要活动是查找用户能看到的字符串并将其标记为需要可翻译。你不需要一次性完成所有的操作 - 只要你的项目准备好了进行国际化无论你有多少个字符串被标记为可翻译都不会影响程序的正常运行。"
+  },
+  {
+   "type": "para",
+   "text": "String literals should be typed in the source code in English, but\n    surrounded by a macro. The `gettext` (or intltool)\n    utility can then extract the marked strings for translation, and substitute\n    the translated text at runtime.",
+   "sha": "984c53d78cdf76f1",
+   "zh": "源代码中的字符串字面量应该以英文键入，但要使用宏包围。gettext（或intltool）实用程序可以提取被标记的字符串进行翻译，并在运行时将其替换为翻译后的文本。"
+  },
+  {
+   "type": "para",
    "text": "In the instructions below we will assume that you will not be using\n        `gettext` directly, but\n        `intltool`, which was written specifically for\n        `GNOME`. `intltool` uses\n        `gettext()`, which extracts strings from source code,\n        but `intltool` can also combine strings from\n        other files, for example from desktop menu details, and GUI resource\n        files such as `.ui` files, into standard\n        `gettext` `.pot/.po` files.",
    "sha": "44802ef0194a52d6",
    "zh": null

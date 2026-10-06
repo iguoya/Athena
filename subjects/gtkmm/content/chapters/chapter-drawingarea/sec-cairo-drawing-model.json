@@ -6,6 +6,36 @@
  "blocks": [
   {
    "type": "para",
+   "text": "The `DrawingArea` widget is a blank window that gives\n    you the freedom to create any graphic you desire. Along with that freedom\n    comes the responsibility to draw on the widget. When a\n    widget is first shown, or when it is covered and then uncovered again it\n    needs to redraw itself. Most widgets have code to do this, but the\n    `DrawingArea` does not, allowing you to write your own\n    draw function to determine how the contents of the widget will be drawn.\n    This is done by setting a draw function with a call to the\n    set_draw_func() member function.",
+   "sha": "c167a1ce1482624b",
+   "zh": "DrawingArea部件是一个空白的窗口，让你可以自由的创造任何你想要的图形。伴随着这种自由而来的是绘制这个部件的责任。在部件第一次显示或者部件被覆盖后又露出的时候它需要重绘自己。大多数部件都包含执行此操作的代码，但是DrawingArea并没有。因此你可以编写自己的绘图函数来确定如何绘制绘部件的内容。你可以调用set_draw_func()成员函数来设置绘图函数。"
+  },
+  {
+   "type": "para",
+   "text": "GTK uses the [Cairo](http://cairographics.org) drawing API.\n      With gtkmm, you may use the [cairomm](http://www.cairographics.org/cairomm/) C++ API for cairo.",
+   "sha": "41e70963702f9105",
+   "zh": "GTK使用开罗绘图API。而在gtkmm中你可以使用由cairomm提供的开罗C++ API。"
+  },
+  {
+   "type": "para",
+   "text": "You can draw very sophisticated shapes using Cairo, but the methods to do\n      so are quite basic. Cairo provides methods for drawing straight lines,\n      curved lines, and arcs (including circles). These basic shapes can be\n      combined to create more complex shapes and paths which can be filled with\n      solid colors, gradients, patterns, and other things. In addition, Cairo\n      can perform complex transformations, do compositing of images, and render\n      antialiased text.",
+   "sha": "43c46ddb257ed495",
+   "zh": "你可以使用开罗绘制非常复杂的形状，但你只有一些很基本的方法可用。开罗提供了绘制直线、曲线、圆弧（包括圆）的方法。你可以通过对这些图形进行组合从而创建更为复杂的形状和路径，然后用纯色、渐变、模式等进行填充。除此之外，开罗还可以进行复杂的转换、合成图像和渲染抗锯齿文本等。"
+  },
+  {
+   "type": "para",
+   "text": "Although Cairo can render text, it's not meant to be a replacement for\n      Pango. Pango is a better choice if you need to perform more advanced\n      text rendering such as wrapping or ellipsizing text. Drawing text with\n      Cairo should only be done if the text is part of a graphic.",
+   "sha": "6133a694770d3f27",
+   "zh": "虽然开罗可以用于渲染文本，但不意味着它能替代Pango。如果你需要进行更高级的文本渲染（例如环绕和省略文本）则Pango会是更好的选择。只有当文本是图形的一部分的时候才应该使用开罗绘制文本。"
+  },
+  {
+   "type": "para",
+   "text": "In this section of the tutorial, we'll cover the basic Cairo drawing\n      model, describe each of the basic drawing elements in some detail (with\n      examples), and then present a simple application that uses Cairo to draw\n      a custom clock widget.",
+   "sha": "753c0381180da2bf",
+   "zh": "在本教程的这一部分中，我们将介绍开罗的基本绘图模型，详细描述每个基本绘制元素（包括示例），然后介绍一个使用开罗绘制自定义时钟部件的简单应用程序。"
+  },
+  {
+   "type": "para",
    "text": "The basic concept of drawing in Cairo involves defining 'invisible'\n        paths and then stroking or filling them to make them visible.",
    "sha": "e5f639f0376c4acd",
    "zh": "开罗的基本概念包括定义'不可见'路径然后描绘(stroking)或者填充(filling)它们使其可见。"

@@ -187,7 +187,7 @@ def load_translation_from_md(md_path: Path) -> list[str]:
 
 
 def align(old_blocks: list[dict] | None, new_blocks: list[dict],
-          old_zh: list[str] | None) -> tuple[list[dict], dict[str, int]]:
+          old_zh: list[str] | None = None) -> tuple[list[dict], dict[str, int]]:
     """LCS 对齐：指纹相同即同一段，保留 zh；新段 untranslated；变段 stale。"""
     for index, block in enumerate(new_blocks):
         if block["type"] == "code" or block["type"] == "figure":
@@ -237,8 +237,47 @@ def align(old_blocks: list[dict] | None, new_blocks: list[dict],
     return new_blocks, stats
 
 
+def chapter_preamble_blocks(source: str, chapter_id: str) -> list[dict]:
+    """章导语块：章标题之后、第一个 section 之前的 para 流（官网章页头部）。"""
+    m = re.search(rf'<chapter(?:\s[^>]*)?xml:id="{re.escape(chapter_id)}"', source)
+    if m is None:
+        return []
+    depth, inner_start = 1, m.end()
+    tag_re = re.compile(r"</?chapter(?:\s[^>]*)?>")
+    end = len(source)
+    for t in tag_re.finditer(source, m.end()):
+        depth += 1 if not t.group(0).startswith("</") else -1
+        if depth == 0:
+            end = t.start()
+            break
+    frag = source[inner_start:end]
+    sec_open = re.search(r"<section[\s>]", frag)
+    head = frag[: sec_open.start()] if sec_open else frag
+    title_end = head.find("</title>")
+    if title_end != -1:
+        head = head[title_end + len("</title>"):]
+    blocks: list[dict] = []
+    tag_re = re.compile(r"<(para|programlisting|literallayout|itemizedlist)(?:\s[^>]*)?>")
+    for t in tag_re.finditer(head):
+        kind = t.group(1)
+        text_, _ = element_text(kind, head, t.start())
+        if kind == "para":
+            clean = inline_md(expand_md(text_)).strip()
+            key = sha(re.sub(r"\s+", " ", strip_tags(text_)).strip())
+        elif kind == "itemizedlist":
+            continue  # 导语中罕见列表，跳过以免嵌套处理
+        else:
+            clean = code_text(text_)
+            key = sha(clean)
+        if clean:
+            blocks.append({"type": "para" if kind == "para" else "code",
+                           "text": clean, "sha": key})
+    return blocks
+
+
 def sync_section(chapter_id: str, section_id: str, section_title: str,
-                 fragment: str, pinned: str) -> tuple[dict, dict]:
+                 fragment: str, pinned: str,
+                 preamble_blocks: list[dict] | None = None) -> tuple[dict, dict]:
     out_path = CONTENT_CHAPTERS / chapter_id / f"{section_id}.json"
     old = None
     if out_path.is_file():
@@ -246,7 +285,8 @@ def sync_section(chapter_id: str, section_id: str, section_title: str,
     old_blocks = old.get("blocks") if old else None
     old_commit = old.get("upstream_commit") if old else None
 
-    new_blocks = extract_blocks(fragment)
+    # 官网章页 = 章导语 + 第一节：导语块并入第一节开头（应用 ADR 0002）
+    new_blocks = list(preamble_blocks or []) + extract_blocks(fragment)
     md_path = out_path.with_suffix(".md")
     blocks, stats = align(old_blocks, new_blocks)
     snapshot = {
@@ -278,10 +318,10 @@ def main() -> int:
     structure = load_structure()
     totals = {"kept": 0, "stale": 0, "new": 0, "gone": 0}
     synced = 0
+    source = DOCBOOK.read_text(encoding="utf-8")
+    source = re.sub(r"<!--.*?-->", "", source, flags=re.S)
     for chapter in structure:
         chapter_id = chapter["id"]
-        source = DOCBOOK.read_text(encoding="utf-8")
-        source = re.sub(r"<!--.*?-->", "", source, flags=re.S)
         for sec in chapter["sections"]:
             if args.section and sec["id"] != args.section:
                 continue
@@ -290,12 +330,16 @@ def main() -> int:
                 rf'<section(?:\s[^>]*)?xml:id="{re.escape(sec["id"])}"', source)
             if frag_match is None:
                 continue
+            # 章导语：章标题之后、第一个节之前的段流，并入第一节（官网章页行为）
+            preamble: list[dict] = []
+            if sec["id"] == chapter["sections"][0]["id"]:
+                preamble = chapter_preamble_blocks(source, chapter_id)
             _, frag = next(
                 (sid, f) for sid, f in direct_children("section", source[frag_match.start():])
                 if sid == sec["id"])
             snapshot, stats = sync_section(
                 chapter_id, sec["id"], re.sub(r"&(\w+);", "gtkmm", sec["title"]),
-                frag, pinned["pinned_commit"])
+                frag, pinned["pinned_commit"], preamble)
             for key in totals:
                 totals[key] += stats[key]
             synced += 1

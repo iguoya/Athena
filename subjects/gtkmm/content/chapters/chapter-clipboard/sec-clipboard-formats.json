@@ -6,6 +6,30 @@
  "blocks": [
   {
    "type": "para",
+   "text": "Simple text copy-paste functionality is provided for free by widgets such as\n`Gtk::Entry` and `Gtk::TextView`,\nbut you might need special code to deal with your own data formats. For instance,\na drawing program would need special code to allow copy and paste within a view,\nor between documents.",
+   "sha": "6cbe018093453ffe",
+   "zh": "Gtk::Entry和Gtk::TextView之类的部件提供了简单的文本复制粘贴功能，但如果你有自己的数据格式需要处理则需要为此编写特定的代码。例如，绘图程序需要编写特定的代码以支持在视图内或文档之间进行复制粘贴。"
+  },
+  {
+   "type": "para",
+   "text": "You can get a clipboard instance with Gtk::Widget::get_clipboard()\nor Gdk::Display::get_clipboard().",
+   "sha": "85ed4e75e66b1b8f",
+   "zh": "你可以使用Gtk::Widget::get_clipboard()或Gdk::Display::get_clipboard()获取剪切板实例。"
+  },
+  {
+   "type": "para",
+   "text": "Your application doesn't need to wait for clipboard operations, particularly\nbetween the time when the user chooses Copy and then later chooses Paste. Many\n`Gdk::Clipboard` methods take `sigc::slot`s\nwhich specify callback methods. When `Gdk::Clipboard` is ready,\nit will call these methods, providing the requested data.",
+   "sha": "6ee51bea6ee35eb0",
+   "zh": "你的应用程序不需要等待剪切板操作，特别是用户选择复制然后选择粘贴的期间。Gdk::Clipboard的多数方法使用sigc::slot，它们指定了回调函数。当Gdk::Clipboard准备就绪时，它将会调用这些回调函数，并向其提供所请求的数据。"
+  },
+  {
+   "type": "para",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGdk_1_1Clipboard.html)",
+   "sha": "71bf90935fc231d2",
+   "zh": "参考"
+  },
+  {
+   "type": "para",
    "text": "Different applications contain different types of data, and they might make that data available in\na variety of formats. gtkmm calls these data types `format`s.",
    "sha": "6e94003d41781a33",
    "zh": "不同的应用程序包含不同类型的数据，并且它们可能使用多种可用格式提供数据。gtkmm称这些数据类型为format。"

@@ -6,6 +6,12 @@
  "blocks": [
   {
    "type": "para",
+   "text": "At the application development level, gtkmm's printing API\nprovides dialogs that are consistent across applications and allows use of Cairo's common drawing API, with Pango-driven text rendering. In the implementation of this common API, platform-specific backends and printer-specific drivers are used.",
+   "sha": "8b0722134faab9ad",
+   "zh": "在应用程序级开发，gtkmm的打印API提供了跨应用程序兼容的对话框，并允许使用开罗通用绘制API和Pango驱动的文本渲染。在此通用API实现中，使用了特定平台的后端和特定打印机的驱动。"
+  },
+  {
+   "type": "para",
    "text": "The primary object is `Gtk::PrintOperation`, allocated\nfor each print operation. To handle page drawing connect to its signals,\nor inherit from it and override the default virtual signal handlers.\n`PrintOperation` automatically handles all the settings\naffecting the print loop.",
    "sha": "70817b2bac2b613f",
    "zh": "主要对象是分配给每个打印操作的Gtk::PrintOperation。要处理绘制页请连接到它的信号，或从其继承并覆盖默认的虚信号处理函数。PrintOperation将自动处理所有影响打印循环的设置。"

@@ -6,6 +6,59 @@
  "blocks": [
   {
    "type": "para",
+   "text": "`Gtk::Dialog` and the classes derived from it,\nare deprecated since gtkmm 4.10. They can still be used in gtkmm4 applications,\nprovided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED are not defined.\nSome of the dialog classes are replaced by classes that are available since gtkmm 4.10.",
+   "sha": "d6409d61557916c0",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "The examples in this chapter use classes that are available since gtkmm 4.10.\nSimilar examples with the deprecated classes are available in the\n[\ngtkmm-4-0 branch](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/gtkmm-4-0/examples/book/dialogs/) in the git repository.",
+   "sha": "100f29a99df9137a",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Dialogs are used as secondary windows, to provide specific information or to\nask questions. `Gtk::Dialog` windows contain a few pre-packed\nwidgets to ensure consistency, and a `response` signal which\nis emitted when the user dismisses the dialog.",
+   "sha": "dbd6062a5e80042f",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "There are several derived `Dialog` classes which you might\nfind useful. `Gtk::MessageDialog` is used for most simple\nnotifications. But at other times you might need to derive your own dialog\nclass to provide more complex functionality.",
+   "sha": "87bcb1d727ae5859",
+   "zh": "有几个派生自Dialog的类可能对你而言很有用。Gtk::MessageDialog多被用于简单的通知。但有时候你也需要派生自己的对话框类以提供更为复杂的功能。"
+  },
+  {
+   "type": "para",
+   "text": "To pack widgets into a custom dialog, you should pack them into the\n`Gtk::Box`, available via\nget_content_area(). To just add a `Button`\nto the bottom of the `Dialog`, you could use the\nadd_button() method.",
+   "sha": "0eccae11b0449329",
+   "zh": "若要将部件添加到自定义的对话框中，你需要将其装入通过get_content_area()获得的Gtk::Box中。如果你只需要向Dialog的底部添加一个Button，那么你可以直接使用add_button()方法。"
+  },
+  {
+   "type": "para",
+   "text": "The `response` signal handler receives an `int`. This\nmay be a value from the `Gtk::ResponseType` if the user\nclosed the dialog by clicking a standard button, or it could be the custom\nresponse value that you specified when using add_button().",
+   "sha": "24459c42bc99fe1d",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "To show the dialog, call set_visible(true). If the same dialog instance\nwill be shown several times, you must also call set_hide_on_close(),\nor else the dialog will be destroyed when it's closed.\nConnect to the `response` signal, if you want to know which button\nwas pressed. The `response` signal handler is also where you\nshould hide the dialog.",
+   "sha": "fd426713f317ecd5",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Dialog.html)",
+   "sha": "71bf90935fc231d2",
+   "zh": "参考"
+  },
+  {
+   "type": "para",
    "text": "`MessageDialog` (deprecated since gtkmm 4.10) and\n`AlertDialog` (available since gtkmm 4.10) are convenience\nclasses, used to create simple, standard message dialogs, with a message and buttons\nfor user response.",
    "sha": "a5b491e77ecf9c8b",
    "zh": null

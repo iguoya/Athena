@@ -6,6 +6,13 @@
  "blocks": [
   {
    "type": "para",
+   "text": "gtkmm makes it very easy to derive new widgets by inheriting from an\n      existing widget class, either by deriving from a container and adding child\n      widgets, or by deriving from a single-item widget, and changing its behavior.\n      But you might occasionally find that no suitable starting point already exists.\n      In this case, you can implement a widget from scratch.",
+   "sha": "c8074fea01203799",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
    "text": "When deriving a custom container widget directly from `Gtk::Widget`,\n      you should override the following virtual methods:\n    \n      get_request_mode_vfunc(): Return what `Gtk::SizeRequestMode` is preferred by the container.\n      measure_vfunc(): Calculate the minimum and natural width or height of the container.\n      size_allocate_vfunc(): Position the child widgets, given the height and width that the container has actually been given.",
    "sha": "ff1a6119d7bcd765",
    "zh": null

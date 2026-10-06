@@ -6,6 +6,33 @@
  "blocks": [
   {
    "type": "para",
+   "text": "Although you can use C++ code to instantiate and arrange widgets, this can soon\nbecome tedious and repetitive. And it requires a recompilation to show changes.\nThe [Cambalache](https://gitlab.gnome.org/jpu/cambalache)\napplication allows you to layout widgets on screen and then save an XML description\nof the arrangement. Your application can then use the `Gtk::Builder`\nAPI to load that XML file at runtime and obtain a pointer to specifically named\nwidget instances.",
+   "sha": "f5cbe579f840892a",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "This has the following advantages:\n\nLess C++ code is required.\nUI changes can be seen more quickly, so UIs are able to improve.\nDesigners without programming skills can create and edit UIs.",
+   "sha": "02d3518d81224acf",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "You still need C++ code to deal with User Interface changes triggered by user\nactions, but using `Gtk::Builder` for the widget\nlayout allows you to focus on implementing that functionality.",
+   "sha": "b39367962f01959e",
+   "zh": "你仍然需要编写C++代码以处理由用户操作触发的UI更改，但是将Gtk::Builder用于部件布局允许你更专注的实现该功能。"
+  },
+  {
+   "type": "para",
+   "text": "`Cambalache` replaces the `Glade`\napplication. `Glade` can generate XML files to be used\nwith gtk3/gtkmm3, but it does not support gtk4/gtkmm4.",
+   "sha": "ba8e1b777f5cf53f",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
    "text": "`Gtk::Builder` must be used via a\n`Glib::RefPtr`. Like all such classes, you need to use a\ncreate() method to instantiate it. For instance,",
    "sha": "ac16c874a503f92f",
    "zh": null

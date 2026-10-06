@@ -6,6 +6,34 @@
  "blocks": [
   {
    "type": "para",
+   "text": "Lists are intended to be used whenever developers want to display many objects\nin roughly the same way. They are perfectly fine to be used for very short lists\nof only 2 or 3 items, but generally scale fine to thousands of items.",
+   "sha": "8c841667d26b12fb",
+   "zh": "凡是想以大致相同的方式展示大量对象时，都适合用列表——极短的列表也完全没问题。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Lists are meant to be used with changing data, both with the items themselves\nchanging as well as the list adding and removing items. Of course, they work just\nas well with static data.",
+   "sha": "1b1b365ea4011687",
+   "zh": "列表为「会变化的数据」而生：无论是条目自身内容变化，还是列表增删条目，都能胜任；静态数据同样工作正常。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "The [List Widget Overview](https://docs.gtk.org/gtk4/section-list-widget.html)\nchapter in the GTK documentation contains more information about list widgets.",
+   "sha": "e9e4892d5f041715",
+   "zh": "GTK 文档的「List Widget Overview」一章包含关于列表控件的更多信息。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Some examples are shown in this chapter. There are more examples in the\n[listmodelviews directory](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/listmodelviews/)\nin `gtkmm-documentation`'s examples.",
+   "sha": "15cbd5f1334cdee2",
+   "zh": "本章展示了若干示例；gtkmm-documentation 仓库的 listmodelviews 目录里还有更多。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
    "text": "The data model is a class that implements the `Gio::ListModel`\ninterface. Examples of such classes are `Gio::ListStore`\n(not to be confused with the deprecated `Gtk::ListStore`),\n`Gtk:StringList`, `Gtk:DirectoryList`\nand `Pango::FontMap`.",
    "sha": "d6b3326ea916430c",
    "zh": "数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 与 `Pango::FontMap`。"

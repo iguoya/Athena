@@ -6,6 +6,82 @@
  "blocks": [
   {
    "type": "para",
+   "text": "gtkmm-4.0 is a new version of the gtkmm API that installs in parallel with the\nolder gtkmm-2.4 and gtkmm-3.0 APIs. The last version of the gtkmm-3.0 API\nis gtkmm 3.24. gtkmm 4 has no major fundamental differences to gtkmm 3 but\ndoes make several changes (both small and large ones) that were not possible while\nmaintaining binary compatibility. If you never used the gtkmm-3.0 API then you\ncan safely ignore this chapter.",
+   "sha": "38ad1b214927b967",
+   "zh": "gtkmm-4.0是gtkmm API的新版本。它可以与较早发行的gtkmm-2.4和gtkmm-3.0并行安装。gtkmm-3.0 API的最新版本是gtkmm 3.24。gtkmm 4与gtkmm 3没有根本性的区别，虽然有些变更但是保持了二进制兼容。如果你从未使用过gtkmm-3.0 API则你可以放心的忽略本章。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm 4's library is called `libgtkmm-4.0` rather than\n`libgtkmm-3.0` and installs its headers in a similarly-versioned\ndirectory, so your `pkg-config` check should ask for\n`gtkmm-4.0` rather than `gtkmm-3.0`.",
+   "sha": "e4771121cc288dd8",
+   "zh": "gtkmm 4库调用libgtkmm-4.0而不是libgtkmm-3.0，并将其的头文件安装于类似的目录下，所以你的pkg-config应该检索gtkmm-4.0而不是gtkmm-3.0。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm-4.0 is used in combination with `glibmm-2.68`,\nwhich sets the global locale for your program. The older `glibmm-2.4`\ndoes not do that, and gtkmm-3.0 does it only to some extent. What this means is\nbriefly that if your gtkmm-3.0 program contains a call to\n`std::locale::global(std::locale(\"\"))`, you can probably remove it.\nIf you don't want `glibmm` or gtkmm\nto set the global locale for you, you should add a call to\n`Glib::set_init_to_users_preferred_locale(false)` before any call to\n`Glib::init()` or Gtk::Application::create().\nSee the `glibmm` [\nreference](https://gnome.pages.gitlab.gnome.org/glibmm/namespaceGlib.html).",
+   "sha": "98e03a06004326df",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "There are lots and lots of differences between gtkmm-3.0 and gtkmm-4.0.\nThe following lists are not complete.",
+   "sha": "d68be5118b91911f",
+   "zh": "gtkmm-3.0和gtkmm-4.0之间有很多不同之处。以下是不完整的列表。"
+  },
+  {
+   "type": "para",
+   "text": "There are some important behavioural changes, to which you must adapt when migrating:",
+   "sha": "44dd6189a58c92ab",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Whereas in gtkmm-3.0, destruction of a non-managed C++ widget wrapper caused the wrapped GtkWidget\nto be destroyed, changes in GTK4 mean that in gtkmm-4.0 this canʼt always be the case. GTK4 has no\nuniform way to remove a widget from a parent, as GTK3 did with Gtk::Container::remove(),\nso gtkmm-4.0 canʼt do the removal for you as gtkmm-3.0 did. Hence, if a non-managed C++ widget\ninstance is destructed while the widget is a child of another, gtkmm-4.0 wonʼt remove it from the\nparent, the parent retains a ref that stops the child being disposed, and the GtkWidget stays alive.\nThe end result is that to destroy a non-managed widget with its C++ wrapper you must first remove it\nfrom its parent (however that parent allows) so the C++ wrapperʼs dtor can drop the final reference.",
+   "sha": "39469c16e96430be",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "Some new classes were added in gtkmm 4 and `glibmm` 2.68:",
+   "sha": "06b93b95dc777508",
+   "zh": "在gtkmm 4和glibmm 2.68中添加了一些新的类："
+  },
+  {
+   "type": "para",
+   "text": "There have also been several changes to the API, which you will probably encounter\nwhen porting code that used gtkmm-3.0 and `glibmm`-2.4. Here is a short list:",
+   "sha": "006d6feb4b3c5bf7",
+   "zh": "API也进行了一些更改，在移植gtkmm-3.0和glibmm-2.4代码时你可能会遇到这些更改。以下是一个简短的变更列表："
+  },
+  {
+   "type": "para",
+   "text": "A C++17 compiler is required.\n`Gtk::Button`, `Gtk::ToolButton`,\n  `Gtk::MenuItem` and `Gtk::Switch`\n  implement the `Gtk::Actionable` interface instead of the removed\n  `Gtk::Activatable` interface.\n`Gtk::FontButton` implements the `Gtk::FontChooser` interface.\n`Gtk::Widget`: The get_preferred_*_vfunc()s\n  have been replaced by measure_vfunc(). This change only affects\n  custom widgets.\n`sigc::slot`s use the `sigc::slot` syntax.\n  Example: `sigc::slot` instead of `sigc::slot`.\n`Gtk::DrawingArea` uses a draw function instead of the draw signal.\n`Glib::ArrayHandle`, `Glib::StringArrayHandle`,\n  `Glib::ListHandle` and `Glib::SListHandle` have been removed.\n  They were used in `glibmm`-2.4, but not used in gtkmm-3.0.\n  If you've ever used these classes, replace them with a standard C++ container, such as `std::vector`.\n`Gtk::Container` has been removed.\nGtk::Widget::show_all() has been removed. The default value\n  of Gtk::Widget::property_visible() has been changed from\n  `false` to `true`.\nAll event signals have been removed from `Gtk::Widget`.\n  In most cases you can use one of the subclasses of `Gtk::EventController`\n  as a replacement. For instance, use `Gtk::GestureMultiPress`\n  instead of signal_button_press_event() and\n  signal_button_release_event(), and `Gtk::EventControllerKey`\n  instead of signal_key_press_event() and\n  signal_key_release_event().\n`Glib::RefPtr` is an alias for `std::shared_ptr`.\n  If you make your own `Glib::ObjectBase`-derived classes with\n  create() methods that return a `Glib::RefPtr`,\n  you must use Glib::make_refptr_for_instance() in your\n  create() methods.\nGtk::Box::pack_start() and Gtk::Box::pack_end()\n  have been removed. Use the new `Gtk::Box` methods\n  append(), prepend(),\n  insert_child_after() and insert_child_at_start().\n  \n`Gtk::ButtonBox` has been removed.\n`Gtk::RadioButton` and `Gtk::RadioButtonGroup`\n  have been removed. Use `Gtk::CheckButton` or `Gtk::ToggleButton`\n  with set_group().",
+   "sha": "512696f4d8deaf0e",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "All deprecated API was removed in gtkmm 4.0 and `glibmm` 2.68,\n  though there will be new deprecations in future versions.",
+   "sha": "50d6f4890054cd20",
+   "zh": "gtkmm和glibmm 2.68移除了所有之前标记为弃用的API，未来还会有新的API被标记为弃用。"
+  },
+  {
+   "type": "para",
+   "text": "As a first step to porting your source code to gtkmm-4.0 you should probably ensure\nthat your application builds with the deprecated gtkmm-3.0 and `glibmm-2.4`\nAPI disabled, by defining the macros GTKMM_DISABLE_DEPRECATED, GDKMM_DISABLE_DEPRECATED,\nGLIBMM_DISABLE_DEPRECATED and GIOMM_DISABLE_DEPRECATED. There are some autotools macros\nthat can help with this by defining them optionally at build time. See the\n[Porting from\ngtkmm-2.4 to gtkmm-3.0](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3) wiki page for more details.",
+   "sha": "37550758aaa7f264",
+   "zh": "将源代码移植到gtkmm-4.0的第一步，通过定义GTKMM_DISABLE_DEPRECATED，GDKMM_DISABLE_DEPRECATED，GLIBMM_DISABLE_DEPRECATED和GIOMM_DISABLE_DEPRECATED宏禁用所有在gtkmm-3.0和glibmm-2.4中弃用的API，有一些autotools宏可以帮助你在编译时定义他们。更多有关详情请参见从gtkmm-2.4迁移到gtkmm-3.0Wiki页面。"
+  },
+  {
+   "type": "para",
+   "text": "See also [\nMigrating from GTK 3.x to GTK 4](https://docs.gtk.org/gtk4/migrating-3to4.html).",
+   "sha": "b20d6cfd6417554d",
+   "zh": "另请参见从GTK3.X迁移到GTK 4。"
+  },
+  {
+   "type": "para",
    "text": "Many classes are deprecated since gtkmm 4.10. They can still be used in\ngtkmm4 applications, provided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED\nare not defined. There are also many new classes in gtkmm 4.10, which replace\nsome of the deprecated classes. Some example programs in this tutorial use classes\ndeprecated since gtkmm 4.10. Some other programs use classes available since gtkmm 4.10.",
    "sha": "4a6e1792b1f50f38",
    "zh": null

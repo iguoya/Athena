@@ -6,6 +6,19 @@
  "blocks": [
   {
    "type": "para",
+   "text": "`Gtk::TreeView` is deprecated since gtkmm 4.10.\nIn new code, use `Gtk::ListView` for lists and\n`Gtk::ColumnView` for tabular lists.",
+   "sha": "3af634b25ea873c8",
+   "zh": "`Gtk::TreeView` 自 gtkmm 4.10 起已弃用：新代码里，列表用 `Gtk::ListView`，表格式列表用 `Gtk::ColumnView`。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "The `Gtk::TreeView` widget can contain lists or trees of\ndata, in columns.",
+   "sha": "224383b984311350",
+   "zh": "Gtk::TreeView部件的每一行都可以包含数据列表或数据树。"
+  },
+  {
+   "type": "para",
    "text": "Each `Gtk::TreeView` has an associated\n`Gtk::TreeModel`, which contains the data displayed by the\n`TreeView`. Each `Gtk::TreeModel` can\nbe used by more than one `Gtk::TreeView`. For instance,\nthis allows the same underlying data to be displayed and edited in 2 different\nways at the same time. Or the 2 Views might display different columns from the\nsame Model data, in the same way that 2 SQL queries (or \"views\") might\nshow different fields from the same database table.",
    "sha": "ef225702e11cbd8d",
    "zh": "每个 `Gtk::TreeView` 都有一个关联的 `Gtk::TreeModel`，存放 `TreeView` 显示的数据。同一个 `Gtk::TreeModel` 可以被多个 `Gtk::TreeView` 使用：同一份数据可同时以两种不同方式显示与编辑，或两个视图显示同一 Model 数据的不同列——就像两条 SQL 查询访问同一个数据库。"

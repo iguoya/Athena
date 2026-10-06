@@ -6,6 +6,13 @@
  "blocks": [
   {
    "type": "para",
+   "text": "The `Gtk::DragSource` and `Gtk::DropTarget`\nevent controllers have methods and signals which are used for Drag and Drop.",
+   "sha": "464dc55c87a2b038",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
    "text": "Things are dragged from `sources` to be dropped on\n`targets`. Each source and target has information\nabout the data formats that it can send or receive, provided by\n`Gdk::ContentFormats`. A drop target will only\naccept a dragged item if they both share a compatible format. Appropriate\nsignals will then be emitted, telling the signal handlers which format was used.",
    "sha": "9c68b91fbe7159ba",
    "zh": null

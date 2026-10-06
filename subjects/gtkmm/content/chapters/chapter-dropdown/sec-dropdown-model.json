@@ -1,9 +1,36 @@
 {
  "chapter": "chapter-dropdown",
  "section": "sec-dropdown-model",
- "title": "模型",
+ "title": "The model",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
+  {
+   "type": "para",
+   "text": "The `DropDown` widget is an alternative to the deprecated\n`ComboBox`. It uses list models instead of tree models,\nand the content is displayed using widgets instead of cell renderers.",
+   "sha": "ec573a1125528520",
+   "zh": "`DropDown` 控件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的控件展示，可以是任意内容——文字、图片，乃至更复杂的复合控件。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "The `DropDown` widget offers a list of choices in a\ndropdown menu. If appropriate, it can show extra information about each item,\nsuch as text, a picture, or a check button. The `DropDown` widget\ncan optionally have an `Entry` in the dropdown menu, allowing\nthe user to search in a long list.",
+   "sha": "5fdfa01b2bae82f9",
+   "zh": "`DropDown` 在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或更复杂的复合控件。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "The list is provided via a `Gio::ListModel`, and data\nfrom this model is added to the `DropDown`'s view with\nsignal handlers connected to a `SignalListItemFactory`.\nThis provides flexibility, but the `StringList` class provides\na simpler text-based specialization in case that flexibility is not required.",
+   "sha": "be925735c93cddc7",
+   "zh": "列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。",
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1DropDown.html)",
+   "sha": "71bf90935fc231d2",
+   "zh": "参考"
+  },
   {
    "type": "para",
    "text": "The model for a `DropDown` can be defined and filled\nexactly as for a `ListView` or a `ColumnView`.\nIt must be a subclass of `Glib::Object`.\nFor instance, you might have a `DropDown` with one integer\nand one text column, like so:",

@@ -6,6 +6,12 @@
  "blocks": [
   {
    "type": "para",
+   "text": "The `TextView` widget can be used to display and edit\nlarge amounts of formatted text. Like the `TreeView`, it\nhas a model/view design. In this case the `TextBuffer` is\nthe model.",
+   "sha": "e98bdbbf712cf489",
+   "zh": "TextView部件可以用于显示和编辑大量的格式化文本。与TreeView一样，它具有模型/视图设计。TextBuffer是它预期的模型。"
+  },
+  {
+   "type": "para",
    "text": "`Gtk::TextBuffer` is a model containing the data for the\n`Gtk::TextView`, like the\n`Gtk::TreeModel` used by `Gtk::TreeView`.\nThis allows two or more `Gtk::TextView`s to share the same\n`TextBuffer`, and allows those TextBuffers to be displayed\nslightly differently. Or you could maintain several\n`Gtk::TextBuffer`s and choose to display each one at different\ntimes in the same `Gtk::TextView` widget.",
    "sha": "aff7eff2cc695cf1",
    "zh": "Gtk::TextBuffer是一个包含Gtk::TextView数据的模型，和Gtk::TreeView所使用的Gtk::TreeModel类似。这允许复数个Gtk::TextView共享同一个TextBuffer，并允许以不同方式显示文本缓冲区。你也可以维护多个Gtk::TextBuffer并让同一个Gtk::TextView部件于不同时候分别显示它们。"

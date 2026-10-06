@@ -6,6 +6,18 @@
  "blocks": [
   {
    "type": "para",
+   "text": "gtkmm provides an easy way to manage recently used documents. This functionality\n    is implemented in the `Gtk::RecentManager` class.",
+   "sha": "26370152d9e62795",
+   "zh": "gtkmm提供了一种管理最近使用文件的简便方法。该功能在Gtk::RecentManager类中实现。"
+  },
+  {
+   "type": "para",
+   "text": "Each item in the list of recently used files is identified by its URI, and\n    can have associated metadata. The metadata can be used to specify how the\n    file should be displayed, a description of the file, its mime type, which\n    application registered it, whether it's private to the registering\n    application, and several other things.",
+   "sha": "fdf2fbc4f02c862c",
+   "zh": "最近使用文件列表中的每一项都由其URI进行标识，并可以具有相关的元数据。元数据可以用于指定如何显示文件、如何描述文件、及其它的MIME类型、哪个应用程序注册了它、对于注册的应用程序是不是私有的等。"
+  },
+  {
+   "type": "para",
    "text": "`RecentManager` acts as a database of\n      recently used files. You use this class to register new files, remove\n      files from the list, or look up recently used files. There is one list\n      of recently used files per user.",
    "sha": "6686c1099d0dd50a",
    "zh": "RecentManager充当最近使用文件的数据库。你可以使用此类注册新文件、从列表中删除文件、查找最近使用文件。每个用户都拥有一个最近使用的文件列表。"

@@ -6,6 +6,62 @@
  "blocks": [
   {
    "type": "para",
+   "text": "This chapter is similar to *Building applications* and following sections in the\n[Getting Started](https://docs.gtk.org/gtk4/getting_started.html)\nchapter in the GTK documentation.\nThe same application is built, but gtkmm is used instead of `GTK`.",
+   "sha": "a9aa30ed86399658",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "An application consists of a number of files:\n\n  \n    The binary file\n    This gets installed in `/usr/bin`.\n  \n  \n    A desktop file\n    The desktop file provides important information about the application\n      to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it,\n      etc. It is installed in `/usr/share/applications`.\n  \n  \n    An icon\n    The icon gets installed in `/usr/share/icons/hicolor/48x48/apps`,\n      where it will be found regardless of the current theme.\n  \n  \n    A settings schema\n    If the application uses `Gio::Settings`,\n      it will install its schema in `/usr/share/glib-2.0/schemas`,\n      so that tools like dconf-editor can find it.\n  \n  \n    Other resources\n    Other files, such as `Gtk::Builder` ui files,\n      are best loaded from resources stored in the application binary itself. This\n      eliminates the need for most of the files that would traditionally be installed\n      in an application-specific location in `/usr/share`.",
+   "sha": "26688db8616c6100",
+   "zh": null,
+   "status": "untranslated"
+  },
+  {
+   "type": "para",
+   "text": "This gets installed in `/usr/bin`.",
+   "sha": "57c97c8f3e24bc3c",
+   "zh": "这将被安装在/usr/bin。"
+  },
+  {
+   "type": "para",
+   "text": "The desktop file provides important information about the application\n      to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it,\n      etc. It is installed in `/usr/share/applications`.",
+   "sha": "1dbbc59b3111fda0",
+   "zh": "桌面文件为桌面shell提供了于应用程序有关的重要信息，例如应用程序的名称、图标D-Bus名、启动时的命令行等。此文件将安装在/usr/share/applications。"
+  },
+  {
+   "type": "para",
+   "text": "The icon gets installed in `/usr/share/icons/hicolor/48x48/apps`,\n      where it will be found regardless of the current theme.",
+   "sha": "e6e197f279791ee8",
+   "zh": "图标将被安装在/usr/share/icons/hicolor/48x48/apps，无论当前主题是什么你都可以在其中找到图标。"
+  },
+  {
+   "type": "para",
+   "text": "If the application uses `Gio::Settings`,\n      it will install its schema in `/usr/share/glib-2.0/schemas`,\n      so that tools like dconf-editor can find it.",
+   "sha": "19ab78262419e73d",
+   "zh": "如果应用程序使用了Gio::Settings，它需要将它的模式安装到/usr/share/glib-2.0/schemas，以便dconf-editor之类的工具可以找到它。"
+  },
+  {
+   "type": "para",
+   "text": "Other files, such as `Gtk::Builder` ui files,\n      are best loaded from resources stored in the application binary itself. This\n      eliminates the need for most of the files that would traditionally be installed\n      in an application-specific location in `/usr/share`.",
+   "sha": "82c73560bb311c37",
+   "zh": "像Gtk::BuilderUI文件这样的其他文件，最好从储存应用程序自身的二进制中加载。这样就不需要按照传统将大多数文件安装在/usr/share中特定应用程序的位置。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm includes application support that is built on top of `Gio::Application`.\nIn this chapter we'll build a simple application by starting from scratch, adding more\nand more pieces over time. Along the way, we'll learn about `Gtk::Application`,\n`Gtk::Builder`, resources, menus, settings,\n`Gtk::HeaderBar`, `Gtk::Stack`,\n`Gtk::SearchBar`, `Gtk::ListBox`, and more.",
+   "sha": "ca1833eddc8d6e5d",
+   "zh": "gtkmm包括构建在Gio::Application上的应用程序支持。在本章中我们将从头开始构建一个简单的应用程序。然后逐渐向其中添加更多内容。在此过程中我们将学习Gtk::Application、Gtk::Builder、资源、菜单、设置、Gtk::HeaderBar、Gtk::Stack、Gtk::SearchBar、Gtk::ListBox等内容。"
+  },
+  {
+   "type": "para",
+   "text": "The full, buildable sources for these examples can be found in the\n`examples/book/buildapp` directory of the\n`gtkmm-documentation` source distribution, or online in the\n[`gtkmm-documentation`\ngit repository](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp). You can build each example separately by using `meson`\nand `ninja` with the `meson.build` file or by using\n`make` with the `Makefile.example` file. For more\ninformation, see the `README` included in the `buildapp`\ndirectory.",
+   "sha": "2227c85de2e7b188",
+   "zh": "这些示例的完整可构建源代码可以从gtkmm-documentation源目录的examples/book/buildapp文件夹中找到，或者在gtkmm-documentationgit仓库可以找到。你可以通过meson.build文件使用meson和ninja，或是通过Makefile.example文件使用make以编译每一个示例。更多有关信息，请参见buildapp目录中包含的README文件。"
+  },
+  {
+   "type": "para",
    "text": "When using `Gtk::Application`, the `main()` function\ncan be very simple. We just call Gtk::Application::run() on an\ninstance of our application class.",
    "sha": "1184067eb7118ed0",
    "zh": "使用Gtk::Application时，main()函数可以非常简单。我们只是在应用程序类实例上调用Gtk::Application::run()。"

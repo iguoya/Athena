@@ -6,6 +6,18 @@
  "blocks": [
   {
    "type": "para",
+   "text": "gtkmm has various widgets that can be visually adjusted using the mouse or\nthe keyboard, such as the `Range` widgets (described in\nthe [Range Widgets]() section). There are\nalso a few widgets that display some adjustable part of a larger area, such as\nthe `Viewport` widget. These widgets have\n`Gtk::Adjustment` objects that express this common part of\ntheir API.",
+   "sha": "0ae51d52061717bb",
+   "zh": "gtkmm有各种可以使用鼠标和键盘进行视觉上的调整的部件，例如Range部件（在范围部件小节介绍）。还有些部件显示较大区域的可调整部分，例如Viewport部件。这些部件的Gtk::Adjustment对象表达了它的共有部分的API。"
+  },
+  {
+   "type": "para",
+   "text": "So that applications can react to changes, for instance when a user moves a\nscrollbar, `Gtk::Adjustment` has a\n`value_changed` signal. You can then use the\nget_value() method to discover the new value.",
+   "sha": "8c61de28730e3b51",
+   "zh": "如此一来，应用程序可以对更改做出反应。例如当用户移动滚动条的时候Gtk::Adjustment发出value_changed信号。你可以在信号处理函数中使用get_value()方法获取新的值。"
+  },
+  {
+   "type": "para",
    "text": "The `Gtk::Adjustment` is created by its\ncreate() method which is as follows:",
    "sha": "50dbf611103e2fef",
    "zh": "Gtk::Adjustment由它的create()方法创建，该方法的声明如下："
