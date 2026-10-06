@@ -94,6 +94,8 @@ export default function App() {
   const activePageId = view?.kind === "page" ? view.pageId : null;
   const activeKpId = view?.kind === "kp" ? view.kpId : null;
   const activeSectionId = view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null;
+  const CHECKPOINT_ID = "__checkpoint__";
+  const activeCheckpoint = activeKpId === CHECKPOINT_ID;
 
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
@@ -131,12 +133,14 @@ export default function App() {
           </p>
           <ul>
             {curriculum.sections.map((s) => {
-              const active = activeSectionId === s.id && (activeKpId != null || activePageId != null);
+              const active = activeSectionId === s.id &&
+                (activePageId != null || activeKpId != null || activeCheckpoint);
               return (
                 <li key={s.id}>
                   <button
                     onClick={() =>
-                      setView({ kind: "kp", sectionId: s.id, kpId: s.knowledge_points[0]?.id ?? null })
+                      // 官网行为：点章直接进入章页正文（章导语并入第一节）
+                      setView({ kind: "page", sectionId: s.id, pageId: s.pages[0]?.id ?? "" })
                     }
                     className={`group relative flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                       active ? "bg-accent-soft font-medium text-accent" : "hover:bg-surface-2"
@@ -207,8 +211,19 @@ export default function App() {
                         </li>
                       ))}
                       {s.checkpoint.length > 0 && (
-                        <li className="px-2 py-1.5 text-xs font-medium text-muted">
-                          章末考核（{s.checkpoint.length} 题）
+                        <li>
+                          <button
+                            onClick={() =>
+                              setView({ kind: "kp", sectionId: s.id, kpId: CHECKPOINT_ID })
+                            }
+                            className={`w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
+                              activeCheckpoint && activeSectionId === s.id
+                                ? "bg-accent-soft font-medium text-accent"
+                                : "text-muted hover:bg-surface-2 hover:text-fg"
+                            }`}
+                          >
+                            章末考核（{s.checkpoint.length} 题）
+                          </button>
                         </li>
                       )}
                     </ul>
@@ -293,11 +308,11 @@ export default function App() {
           >
             {!view && <p className="text-muted">从左侧选择一个章节开始。</p>}
 
-            {view?.kind === "kp" && section && !kp && (
+            {view?.kind === "kp" && section && !kp && activeCheckpoint && (
               <>
                 <h2 className="font-display text-3xl font-semibold">{section.title}</h2>
                 <p className="mt-2 text-sm text-muted">
-                  教程第 {section.translation_ref.chapter} 章 ·{" "}
+                  章末考核 · 教程第 {section.translation_ref.chapter} 章 ·{" "}
                   <a
                     className="text-accent hover:underline"
                     href={curriculum.book.url}
@@ -307,32 +322,6 @@ export default function App() {
                     回到原文
                   </a>
                 </p>
-                <p className="mt-6 mb-3 text-xs font-semibold tracking-wide text-muted">
-                  官方节页（分页严格跟随上游仓库）
-                </p>
-                <ul className="grid gap-2">
-                  {section.pages.map((p) => (
-                    <li key={p.id}>
-                      <button
-                        onClick={() => setView({ kind: "page", sectionId: section.id, pageId: p.id })}
-                        className="flex w-full items-center gap-3 rounded-xl bg-surface px-4 py-3 text-left shadow-card ring-1 ring-line transition-all hover:-translate-y-0.5 hover:ring-accent/40"
-                      >
-                        <span
-                          className={`size-2 shrink-0 rounded-full ${
-                            p.status === "translated" ? "bg-accent-deep" : "bg-line"
-                          }`}
-                        />
-                        <span className="flex-1">
-                          <span className="block text-sm font-medium text-fg">{p.title}</span>
-                          <span className="block font-mono text-[11px] text-muted">{p.id}</span>
-                        </span>
-                        <span className="text-xs text-muted">
-                          {p.status === "translated" ? "已译 · 点击阅读对照稿" : "待译"}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
                 {section.checkpoint.map((item, index) => (
                   <BlockView
                     key={index}
@@ -378,11 +367,40 @@ export default function App() {
               </>
             )}
 
-            {view?.kind === "page" && section && page && (
+            {view?.kind === "page" && section && page && (() => {
+              const pageIndex = section.pages.findIndex((x) => x.id === page.id);
+              const prevPage = pageIndex > 0 ? section.pages[pageIndex - 1] : null;
+              const nextPage = pageIndex < section.pages.length - 1 ? section.pages[pageIndex + 1] : null;
+              const navButton = (target: { id: string; title: string } | null, label: string, align: "left" | "right") =>
+                target ? (
+                  <button
+                    onClick={() => setView({ kind: "page", sectionId: section.id, pageId: target.id })}
+                    className={`max-w-[45%] rounded px-3 py-1.5 text-left text-xs text-white/90 transition-colors hover:bg-white/15 ${align === "right" ? "text-right" : ""}`}
+                  >
+                    <span className="block text-[10px] uppercase tracking-wide text-white/60">{label}</span>
+                    <span className="block truncate font-medium">{target.title}</span>
+                  </button>
+                ) : <span className="w-24" />;
+              return (
               <>
+                {/* 官方 navheader 风格的节间导航（深红底，来源：上游 style.css） */}
+                <div className="mb-6 flex items-center justify-between gap-2 rounded-card bg-accent-deep px-4 py-3">
+                  {navButton(prevPage, "← 上一节", "left")}
+                  <span className="shrink-0 text-xs font-medium text-white/70">
+                    {section.order}. {section.title}
+                  </span>
+                  {navButton(nextPage, "下一节 →", "right")}
+                </div>
                 <p className="text-sm text-muted">
-                  {section.order}. {section.title} · 教程第{" "}
-                  {section.translation_ref.chapter} 章
+                  教程第 {section.translation_ref.chapter} 章 ·{" "}
+                  <a
+                    className="text-accent hover:underline"
+                    href={curriculum.book.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    回到原文
+                  </a>
                 </p>
                 <h2 className="mt-1 font-display text-3xl font-semibold">{page.title}</h2>
                 <div className="mt-2 flex items-center gap-3 text-xs text-muted">
@@ -406,8 +424,16 @@ export default function App() {
                   </button>
                 </div>
                 <PageView chapterId={section.id} pageId={page.id} />
+                <div className="mt-10 flex items-center justify-between gap-2 rounded-card bg-accent-deep px-4 py-3">
+                  {navButton(prevPage, "← 上一节", "left")}
+                  <span className="shrink-0 text-xs font-medium text-white/70">
+                    {section.translation_ref.chapter}.{pageIndex + 1}
+                  </span>
+                  {navButton(nextPage, "下一节 →", "right")}
+                </div>
               </>
-            )}
+              );
+            })()}
 
             {view?.kind === "lab" && labExp && <LabView entity={labExp} />}
 
