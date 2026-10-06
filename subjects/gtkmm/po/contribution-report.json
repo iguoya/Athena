@@ -1,0 +1,155 @@
+{
+ "generated_at": "2026-10-07 00:35+0000",
+ "counts": {
+  "filled_empty": 29,
+  "fuzzy_fixed": 0,
+  "differs_for_manual_review": 0
+ },
+ "entries": [
+  {
+   "msgid": "Useful links:",
+   "action": "filled",
+   "zh": "有用的链接："
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://en.wikipedia.org/wiki/C%2B%2B\\\">Wikipedia C++</link>:",
+   "action": "filled",
+   "zh": "Wikipedia C++：C++ 入门与大量链接。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://en.cppreference.com/w/\\\">C++ reference</link>: A conv",
+   "action": "filled",
+   "zh": "C++ reference：C 与 C++ 标准的便捷查阅版。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://cplusplus.com/\\\">The C++ Resources Network</link>",
+   "action": "filled",
+   "zh": "The C++ Resources Network（cplusplus.com）。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://www.stroustrup.com/\\\">Bjarne Stroustrup's homepage</l",
+   "action": "filled",
+   "zh": "Bjarne Stroustrup 的个人主页。"
+  },
+  {
+   "msgid": "However, this is even simpler when using the <function>dependency()</function> f",
+   "action": "filled",
+   "zh": "而用 Meson 时，在 meson.build 文件里调用 dependency() 函数还要更简单。例如："
+  },
+  {
+   "msgid": "This checks for the presence of gtkmm and defines <literal>gtkmm_dep</literal> f",
+   "action": "filled",
+   "zh": "这一句会检查 gtkmm 是否可用，并定义出 gtkmm_dep 供 meson.build 使用。例如："
+  },
+  {
+   "msgid": "The <classname>InfoBar</classname> widget is deprecated since <application>gtkmm",
+   "action": "filled",
+   "zh": "`InfoBar` 控件自 gtkmm 4.10 起已弃用。示例展示的信息条由一个 `Box` 搭配 `Label` 和 `Button` 构成。"
+  },
+  {
+   "msgid": "Here's the constructor for the <classname>Box</classname> widget, and methods th",
+   "action": "filled",
+   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
+  },
+  {
+   "msgid": "<classname>Gtk::Assistant</classname> is deprecated since <application>gtkmm</ap",
+   "action": "filled",
+   "zh": "`Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。"
+  },
+  {
+   "msgid": "Lists are intended to be used whenever developers want to display many objects i",
+   "action": "filled",
+   "zh": "凡是想以大致相同的方式展示大量对象时，都适合用列表——极短的列表也完全没问题。"
+  },
+  {
+   "msgid": "Lists are meant to be used with changing data, both with the items themselves ch",
+   "action": "filled",
+   "zh": "列表为「会变化的数据」而生：无论是条目自身内容变化，还是列表增删条目，都能胜任；静态数据同样工作正常。"
+  },
+  {
+   "msgid": "The <link xlink:href=\\\"https://docs.gtk.org/gtk4/section-list-widget.html\\\">List",
+   "action": "filled",
+   "zh": "GTK 文档的「List Widget Overview」一章包含关于列表控件的更多信息。"
+  },
+  {
+   "msgid": "The data model is a class that implements the <classname>Gio::ListModel</classna",
+   "action": "filled",
+   "zh": "数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 与 `Pango::FontMap`。"
+  },
+  {
+   "msgid": "Every item in a model has a position which is the unsigned integer that describe",
+   "action": "filled",
+   "zh": "模型中的每个条目都有一个位置（position）：一个无符号整数，描述条目位于模型何处。模型的第一个条目位于位置 0。当然，随着其他条目被加入或移除，条目的位置也会变化。"
+  },
+  {
+   "msgid": "Data from the data model is added to the view by a factory, which is a subclass ",
+   "action": "filled",
+   "zh": "数据模型中的数据由工厂（factory）添加到视图。工厂是 `ListItemFactory` 的子类；gtkmm 中只有一个这样的子类——`SignalListItemFactory`。模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加进视图。"
+  },
+  {
+   "msgid": "An important requirement for views (especially views of long lists) is that they",
+   "action": "filled",
+   "zh": "视图（尤其是长列表视图）的一个重要需求是：必须知道哪些条目当前不可见，以便回收复用。视图通过实现 `Scrollable` 接口做到这一点，并期望被直接放进 `ScrolledWindow` 中。"
+  },
+  {
+   "msgid": "There are different view widgets to choose from.",
+   "action": "filled",
+   "zh": "有多种视图控件可供选择。"
+  },
+  {
+   "msgid": "The list can be sorted by wrapping it in a <classname>SortListModel</classname>.",
+   "action": "filled",
+   "zh": "把列表包进 `SortListModel` 即可排序。有两种做法。"
+  },
+  {
+   "msgid": "In a <classname>ColumnView</classname>, get the <classname>ColumnViewSorter</cla",
+   "action": "filled",
+   "zh": "在 `ColumnView` 中，从 ColumnView 取得 `ColumnViewSorter` 设给 `SortListModel`，再给每个 `ColumnViewColumn` 设置一个 `Sorter`。这样，应用的用户点击列标题即可排序条目。"
+  },
+  {
+   "msgid": "While the deprecated <classname>TreeView</classname> provided built-in support f",
+   "action": "filled",
+   "zh": "已弃用的 `TreeView` 内建了树形支持，而新的列表控件（尤其 `Gio::ListModel`）没有。不过，仍想展示树形结构的人可以用 gtkmm 提供的功能让树「看起来像列表」：用 `TreeListModel` 把树拍平成列表，再在 listitem 内使用 `TreeExpander` 控件展开/收起。"
+  },
+  {
+   "msgid": "This is demonstrated in the Popup Context Menu example. In that example a derive",
+   "action": "filled",
+   "zh": "Popup Context Menu 示例演示了这一做法。该示例用了派生的 `TreeView`，但这并非必需。"
+  },
+  {
+   "msgid": "The <classname>DropDown</classname> widget is an alternative to the deprecated <",
+   "action": "filled",
+   "zh": "`DropDown` 控件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的控件展示，可以是任意内容——文字、图片，乃至更复杂的复合控件。"
+  },
+  {
+   "msgid": "After appending rows to this model, you should provide the model to the <classna",
+   "action": "filled",
+   "zh": "向模型追加行之后，用 set_model() 方法把模型交给 `DropDown`。除非你用的是 `StringList` 模型，否则还需要用 set_factory() 设置一个 `ListItemFactory`。如果想让下拉菜单条目的外观与 `DropDown` 控件上显示的不同，还要用 set_list_factory() 另设一个 `ListItemFactory`。"
+  },
+  {
+   "msgid": "This is a more complex example with two <classname>SignalListItemFactory</classn",
+   "action": "filled",
+   "zh": "这是一个更复杂的示例，带两个 `SignalListItemFactory` 及其信号处理函数。如果去掉下拉菜单中的对勾标记，这个例子会简单一些。"
+  },
+  {
+   "msgid": "The <literal>changed</literal> signals of <classname>ComboBox</classname> and <c",
+   "action": "filled",
+   "zh": "`ComboBox` 和 `Entry` 的 `changed` 信号对每次变化都会发出，连接哪一个都可以；但 `EventControllerFocus` 必须添加到 `Entry` 上。"
+  },
+  {
+   "msgid": "The example in the <link linkend=\\\"sec-i18n-example\\\"> Internationalization and ",
+   "action": "filled",
+   "zh": "「国际化与本地化」一章的示例用到了 `TextView`。"
+  },
+  {
+   "msgid": "There is a more complicated example among <link xlink:href=\\\"https://gitlab.gnom",
+   "action": "filled",
+   "zh": "在 gtkmm 的演示程序里还有一个更复杂的例子（example_textview.cc）。"
+  },
+  {
+   "msgid": "To show the popup menu, use a <classname>Gtk::GestureClick</classname> and conne",
+   "action": "filled",
+   "zh": "显示弹出菜单：用一个 `Gtk::GestureClick` 并连接它的 `pressed` 信号；在信号处理函数里调用 `Gtk::PopoverMenu` 的 popup() 方法。例如："
+  }
+ ]
+}
