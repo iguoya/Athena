@@ -47,6 +47,9 @@ function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
   return groups;
 }
 
+/** 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行。 */
+const flow = (s: string) => s.replace(/\s*\n\s*/g, " ");
+
 /** 受限行内 markdown → JSX：**粗**、*斜*、`代码`、[文字](链接)。 */
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
@@ -170,7 +173,7 @@ export function PageView({
                 key={index}
                 className="mt-9 font-display text-[30px] font-semibold text-accent-deep"
               >
-                {renderInline(group.blocks[0].text)}
+                {renderInline(flow(group.blocks[0].text))}
               </h3>
             );
           case "code":
@@ -199,7 +202,7 @@ export function PageView({
                   />
                 )}
                 <figcaption className="mt-2 text-center text-[20px] text-muted">
-                  图 · {block.text}
+                  图 · {flow(block.text)}
                 </figcaption>
               </figure>
             );
@@ -216,12 +219,12 @@ export function PageView({
                 <ul className="space-y-3">
                   {group.blocks.map((block) => (
                     <li key={block.sha} className="flex flex-col gap-1.5">
-                      <span className="font-display text-[22px] italic leading-relaxed text-fg/70">
-                        • {renderInline(block.text)}
+                      <span className="font-display text-[28px] italic leading-relaxed text-fg/70">
+                        • {renderInline(flow(block.text))}
                       </span>
                       {block.zh && (
-                        <span className="pl-5 text-[25px] leading-relaxed text-fg/90">
-                          {renderInline(block.zh)}
+                        <span className="pl-5 text-[29px] leading-relaxed text-fg/90">
+                          {renderInline(flow(block.zh))}
                         </span>
                       )}
                     </li>
@@ -241,7 +244,7 @@ export function PageView({
             return (
               <div key={index} className="my-6">
                 <blockquote
-                  className={`border-l-4 bg-surface-2 py-4 pl-5 pr-4 font-display text-[22px] italic leading-relaxed text-fg/75 ${
+                  className={`border-l-4 bg-surface-2 py-4 pl-5 pr-4 font-display text-[28px] italic leading-relaxed text-fg/75 ${
                     stale
                       ? "border-amber-500/70"
                       : block.key
