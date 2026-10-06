@@ -209,10 +209,104 @@ class Counterexamples(unittest.TestCase):
         from pathlib import Path
 
         source = Path(contract.__file__).read_text(encoding="utf-8")
-        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross)\.[a-z_]+)"', source))
-        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross)\.[a-z_]+)"',
+        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route)\.[a-z_]+)"', source))
+        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route)\.[a-z_]+)"',
                                 Path(__file__).read_text(encoding="utf-8")))
         self.assertEqual(sorted(declared - tested), [])
+
+
+# —— 软硬接口图与路线：用最小夹具写反例，不依赖真实内容里写了多少 ——
+
+def _node(node_id: str, stage: str, requires: list[str] | None = None) -> dict:
+    return {
+        "id": node_id, "title": node_id, "track": "hardware", "stable_definition": "x", "engineering_role": "x",
+        "practice": "x", "validation": "measurement", "volatility": "stable", "pitfall": "x",
+        "priority": "essential", "priority_reason": "x", "stage": stage, "stage_reason": "x",
+        "contract": "timing", "hw_side": "硬件一侧提供什么", "sw_side": "软件一侧依赖什么",
+        "requires": requires or [], "source_refs": [{"relation": "adapted", "source_id": "csapp", "locator": "x"}],
+    }
+
+
+def _edge(src: str, dst: str) -> dict:
+    return {"from": src, "to": dst, "relation": "requires", "rationale": "x", "strong": True,
+            "evidence_refs": [{"relation": "adapted", "source_id": "csapp", "locator": "x"}]}
+
+
+def with_codesign_and_route(document: dict) -> dict:
+    """在真实内容上追加一张最小的 codesign 图（三阶段三节点）和一条引用它的路线。"""
+    document["maps"].append({
+        "id": "fixture-codesign", "title": "夹具", "summary": "夹具", "view_kind": "codesign",
+        "nodes": [_node("fx.a", "junior"), _node("fx.b", "intermediate", ["fx.a"]), _node("fx.c", "senior", ["fx.b"])],
+        "edges": [_edge("fx.a", "fx.b"), _edge("fx.b", "fx.c")],
+    })
+    document["routes"] = [{
+        "id": "route.fixture", "title": "夹具路线", "summary": "x", "lens": "direction", "balance": "balanced",
+        "audience": "x", "artifact": "一块点亮的板",
+        "stages": [
+            {"title": "起步", "goal": "x", "nodes": ["fx.a"], "checkpoint": "x"},
+            {"title": "进阶", "goal": "x", "nodes": ["fx.b", "polaris.cs.c_lang"], "checkpoint": "x"},
+        ],
+        "source_refs": [{"relation": "adapted", "source_id": "csapp", "locator": "x"}],
+    }]
+    return document
+
+
+def fixture_codes_after(mutate) -> set[str]:
+    document = with_codesign_and_route(copy.deepcopy(DOC))
+    mutate(document)
+    return {v.code for v in contract.validate(document)}
+
+
+def fixture_map(d: dict) -> dict:
+    return find_map(d, "fixture-codesign")
+
+
+class CodesignAndRoutes(unittest.TestCase):
+    def test_fixture_is_clean(self) -> None:
+        document = with_codesign_and_route(copy.deepcopy(DOC))
+        self.assertEqual([str(v) for v in contract.validate(document)], [])
+
+    def expect(self, code: str, mutate) -> None:
+        with self.subTest(code=code):
+            self.assertIn(code, fixture_codes_after(mutate))
+
+    def test_codesign_nodes(self) -> None:
+        self.expect("codesign.contract", lambda d: fixture_map(d)["nodes"][0].update(contract="bogus"))
+        self.expect("codesign.sides", lambda d: fixture_map(d)["nodes"][0].update(hw_side=""))
+        self.expect("codesign.sides", lambda d: fixture_map(d)["nodes"][0].pop("sw_side"))
+        self.expect("node.stage_required", lambda d: fixture_map(d)["nodes"][0].pop("stage"))
+        # codesign 节点不要求 targets：夹具里没有 targets 却是干净的（见 test_fixture_is_clean）。
+
+    def test_routes(self) -> None:
+        route = lambda d: d["routes"][0]
+        self.expect("route.fields", lambda d: route(d).update(artifact=""))
+        self.expect("route.duplicate_id", lambda d: d["routes"].append(copy.deepcopy(route(d))))
+        self.expect("route.lens", lambda d: route(d).update(lens="bogus"))
+        self.expect("route.balance", lambda d: route(d).update(balance="bogus"))
+        self.expect("route.source_refs", lambda d: route(d).update(source_refs=[]))
+        self.expect("route.stages_min", lambda d: route(d).update(stages=route(d)["stages"][:1]))
+        self.expect("route.stage_fields", lambda d: route(d)["stages"][0].update(checkpoint=""))
+        self.expect("route.stage_nodes", lambda d: route(d)["stages"][0].update(nodes=[]))
+        self.expect("route.node_unknown", lambda d: route(d)["stages"][0].update(nodes=["ghost"]))
+        # 路线只能引用开放地图：参考层的 target-gnc 节点不行。
+        self.expect("route.node_closed", lambda d: route(d)["stages"][0].update(
+            nodes=[find_map(d, "target-gnc")["nodes"][0]["id"]]))
+        self.expect("route.node_repeated", lambda d: route(d)["stages"][1]["nodes"].append("fx.a"))
+        # fx.b 强先修 fx.a：把 fx.a 排到 fx.b 之后的阶段就违反次序。
+        self.expect("route.order", lambda d: route(d).update(stages=[
+            {"title": "先", "goal": "x", "nodes": ["fx.b"], "checkpoint": "x"},
+            {"title": "后", "goal": "x", "nodes": ["fx.a"], "checkpoint": "x"},
+        ]))
+
+    def test_open_view_kinds_match_the_frontend(self) -> None:
+        """开放地图的定义在 contract.py 与 src/content/catalog.ts 各有一份，防止改一处漏一处。"""
+        import re
+        from pathlib import Path
+
+        text = (Path(contract.__file__).resolve().parent.parent / "src" / "content" / "catalog.ts").read_text(encoding="utf-8")
+        match = re.search(r"OPEN_VIEW_KINDS: readonly ViewKind\[\] = \[(.*?)\]", text)
+        self.assertIsNotNone(match)
+        self.assertEqual(set(re.findall(r'"(\w+)"', match.group(1))), contract.OPEN_VIEW_KINDS)
 
 
 if __name__ == "__main__":

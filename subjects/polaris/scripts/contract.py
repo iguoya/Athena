@@ -28,6 +28,11 @@ STAGE_RANK = {"junior": 0, "intermediate": 1, "senior": 2}
 KNOWN_VERIFY = {"code", "board", "bench"}
 KNOWN_MASTERY = {"familiarity", "usage", "assessment"}
 KNOWN_RELATION = {"requires", "enables"}
+KNOWN_CONTRACT = {"timing", "memory", "bus", "power", "boot", "verify"}  # 软硬接口的六份跨层契约（ADR 0016 决策 4）
+KNOWN_LENS = {"direction", "stack", "artifact"}
+KNOWN_BALANCE = {"software", "balanced", "hardware"}
+# 开放地图：界面可打开、路线可引用的底盘（ADR 0012、ADR 0016 决策 3）。src/content/catalog.ts 里有同一份定义。
+OPEN_VIEW_KINDS = {"academic", "codesign"}
 
 NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
                "practice", "validation", "volatility"]
@@ -109,6 +114,7 @@ def validate(document: dict[str, Any], root: Path = PROJECT_ROOT) -> list[Violat
                       map_ids, global_node_ids, map_of_node)
 
     _validate_cross_edges(report, document, source_ids, global_node_ids, map_of_node)
+    _validate_routes(report, document, source_ids, view_kind_by_map, map_of_node)
     return report.violations
 
 
@@ -149,6 +155,7 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
                             topic, ["name", "content", "role"])
 
     academic = entry.get("view_kind") == "academic"
+    codesign = entry.get("view_kind") == "codesign"
     course = entry.get("graph_kind") == "course"
     node_ids: set[str] = set()
     requirements: dict[str, set[str]] = {}
@@ -158,7 +165,7 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
         node = node if isinstance(node, dict) else {}
         node_id = node.get("id")
         nwhere = f"节点 {node_id}"
-        fields = NODE_FIELDS + (ACADEMIC_NODE_FIELDS if academic else [])
+        fields = NODE_FIELDS + (ACADEMIC_NODE_FIELDS if academic or codesign else [])
         report.require_text("node.fields", nwhere, node, fields)
         if node_id in node_ids or node_id in global_node_ids:
             report.add("node.duplicate_id", nwhere, f"节点 ID 必须全局唯一：{node_id}")
@@ -172,8 +179,12 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
         if node.get("volatility") not in KNOWN_VOLATILITY:
             report.add("node.volatility", nwhere, "volatility 只能是 stable、evolving 或 volatile。")
 
+        if academic or codesign:
+            _validate_graded_node(report, node, nwhere, node_stage, require_stage=codesign)
         if academic:
-            _validate_academic_node(report, node, nwhere, root, view_kind_by_map, node_stage)
+            _validate_academic_node(report, node, nwhere, root, view_kind_by_map)
+        if codesign:
+            _validate_codesign_node(report, node, nwhere)
         if course:
             _validate_course_node(report, node, nwhere)
 
@@ -191,20 +202,27 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
     _validate_acyclic(report, where, node_ids, requirements)
 
 
-def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path,
-                            view_kind_by_map: dict, node_stage: dict[str, str]) -> None:
+def _validate_graded_node(report: _Report, node: dict, nwhere: str, node_stage: dict[str, str],
+                          require_stage: bool) -> None:
     # 必要程度按职业目标层的专业方向判定（ADR 0009 第 5 条）：等级、理由和它支撑的
     # 目标能力三者必须同时在场。只留等级会退化成口味排序，只留理由则无法排先后。
     if node.get("priority") not in KNOWN_PRIORITY:
         report.add("node.priority", nwhere, "priority 只能是 essential、important 或 optional。")
     stage = node.get("stage")
-    if stage not in (None, ""):
-        if stage not in STAGE_RANK:
-            report.add("node.stage", nwhere, "stage 只能是 junior、intermediate 或 senior。")
-        else:
-            if not _text(node.get("stage_reason")):
-                report.add("node.stage_reason", nwhere, "缺 stage_reason：要说明这一阶段为什么学它。")
-            node_stage[node["id"]] = stage
+    if stage in (None, ""):
+        # 软硬接口图按阶段分列，没有阶段的节点没处放（ADR 0016 决策 4）；学术图历史上允许缺省。
+        if require_stage:
+            report.add("node.stage_required", nwhere, "软硬接口图的节点必须写 stage。")
+    elif stage not in STAGE_RANK:
+        report.add("node.stage", nwhere, "stage 只能是 junior、intermediate 或 senior。")
+    else:
+        if not _text(node.get("stage_reason")):
+            report.add("node.stage_reason", nwhere, "缺 stage_reason：要说明这一阶段为什么学它。")
+        node_stage[node["id"]] = stage
+
+
+def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path,
+                            view_kind_by_map: dict) -> None:
     targets = _strings(node.get("targets"))
     if not targets:
         report.add("node.targets_missing", nwhere, "缺 targets：必要程度要能追到它支撑的目标能力。")
@@ -217,6 +235,13 @@ def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path
     app = node.get("app")
     if _text(app) and not (root.parent / app / "app.json").exists():
         report.add("node.app", nwhere, f"app 指向了不存在的应用：{app}")
+
+
+def _validate_codesign_node(report: _Report, node: dict, nwhere: str) -> None:
+    # 软硬接口节点必须同时写清两侧（ADR 0016 决策 4）：只写一侧的不属于这张图。
+    if node.get("contract") not in KNOWN_CONTRACT:
+        report.add("codesign.contract", nwhere, "contract 只能是 timing、memory、bus、power、boot 或 verify。")
+    report.require_text("codesign.sides", nwhere, node, ["hw_side", "sw_side"])
 
 
 def _validate_course_node(report: _Report, node: dict, nwhere: str) -> None:
@@ -332,6 +357,55 @@ def _validate_cross_edges(report: _Report, document: dict, source_ids: set[str],
             report.add("cross.duplicate", where, "跨图关联重复。")
         seen.add((src, dst))
         report.require_source_refs("cross.evidence", where, edge.get("evidence_refs"), source_ids)
+
+
+def _validate_routes(report: _Report, document: dict, source_ids: set[str], view_kind_by_map: dict,
+                     map_of_node: dict[str, str]) -> None:
+    """路线只引用节点 id、不复制节点（ADR 0016 决策 1–3）。"""
+    nodes_by_id = {n["id"]: n for m in document.get("maps") or [] if isinstance(m, dict)
+                   for n in m.get("nodes") or [] if isinstance(n, dict) and "id" in n}
+    seen: set[str] = set()
+    for route in document.get("routes") or []:
+        route = route if isinstance(route, dict) else {}
+        route_id = route.get("id")
+        where = f"路线 {route_id}"
+        report.require_text("route.fields", where, route, ["id", "title", "summary", "audience", "artifact"])
+        if route_id in seen:
+            report.add("route.duplicate_id", where, "路线 ID 重复。")
+        seen.add(route_id)
+        if route.get("lens") not in KNOWN_LENS:
+            report.add("route.lens", where, "lens 只能是 direction、stack 或 artifact。")
+        if route.get("balance") not in KNOWN_BALANCE:
+            report.add("route.balance", where, "balance 只能是 software、balanced 或 hardware。")
+        report.require_source_refs("route.source_refs", where, route.get("source_refs"), source_ids)
+
+        stages = route.get("stages") if isinstance(route.get("stages"), list) else []
+        if len(stages) < 2:
+            report.add("route.stages_min", where, "至少要有两个阶段，才算有先后。")
+        stage_of: dict[str, int] = {}
+        for index, stage in enumerate(stages):
+            stage = stage if isinstance(stage, dict) else {}
+            swhere = f"{where} 第 {index + 1} 阶段"
+            report.require_text("route.stage_fields", swhere, stage, ["title", "goal", "checkpoint"])
+            members = _strings(stage.get("nodes"))
+            if not members:
+                report.add("route.stage_nodes", swhere, "每个阶段至少要有一个节点。")
+            for node_id in members:
+                if node_id not in nodes_by_id:
+                    report.add("route.node_unknown", swhere, f"引用了不存在的节点 {node_id}。")
+                    continue
+                if view_kind_by_map.get(map_of_node.get(node_id)) not in OPEN_VIEW_KINDS:
+                    report.add("route.node_closed", swhere, f"{node_id} 在参考层地图里，路线只能引用开放地图的节点。")
+                if node_id in stage_of:
+                    report.add("route.node_repeated", swhere, f"{node_id} 在这条路线里出现了不止一次。")
+                    continue
+                stage_of[node_id] = index
+        # 同一路线里，强先修不得排在被依赖者之后。
+        for node_id, index in stage_of.items():
+            for required in _strings(nodes_by_id[node_id].get("requires")):
+                if required in stage_of and stage_of[required] > index:
+                    report.add("route.order", where,
+                               f"{node_id} 强先修 {required}，但 {required} 排在更晚的阶段。")
 
 
 def main(argv: list[str] | None = None) -> int:
