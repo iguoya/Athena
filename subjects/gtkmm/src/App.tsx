@@ -124,6 +124,15 @@ export default function App() {
     [manifest],
   );
 
+  // 在类型收窄之前提取，供下方与侧栏展开块比较（那里 view 已被收窄为 kp）
+  const activePageId = view?.kind === "page" ? view.pageId : null;
+  const activeKpId = view?.kind === "kp" ? view.kpId : null;
+  const activeSectionId =
+    view?.kind === "kp" || view?.kind === "page" || view?.kind === "checkpoint"
+      ? view.sectionId
+      : null;
+  const activeIsCheckpoint = view?.kind === "checkpoint";
+
   const section = curriculum?.sections.find((s) => s.id === activeSectionId) ?? null;
   const kp = section?.knowledge_points.find((k) => k.id === (view?.kind === "kp" ? view.kpId : null)) ?? null;
   const page = section?.pages.find((p) => p.id === (view?.kind === "page" ? view.pageId : null)) ?? null;
@@ -320,15 +329,6 @@ export default function App() {
     (s) => (quizIndex.get(s.id)?.all.length ?? 0) > 0,
   );
   const passedSections = quizSections.filter((s) => chapterPassed(s.id)).length;
-
-  // 在类型收窄之前提取，供侧栏展开块比较（那里 view 已被收窄为 kp）
-  const activePageId = view?.kind === "page" ? view.pageId : null;
-  const activeKpId = view?.kind === "kp" ? view.kpId : null;
-  const activeSectionId =
-    view?.kind === "kp" || view?.kind === "page" || view?.kind === "checkpoint"
-      ? view.sectionId
-      : null;
-  const activeIsCheckpoint = view?.kind === "checkpoint";
 
   useEffect(() => {
     (document.body.style as { zoom?: string }).zoom =
