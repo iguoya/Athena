@@ -16,6 +16,8 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 # 保证只有一个北极星窗口（ADR 0007 的要求，ADR 0015 决策 4 换了机制）。
 tauri-plugin-single-instance = "2"
+# 出处链接要在系统浏览器里打开核对（ADR 0013 决策 7）；webview 里直接导航会把应用带走。
+tauri-plugin-opener = "2"
 
 [profile.dev]
 # 少带调试信息，链接明显快一截；断到行号仍够用

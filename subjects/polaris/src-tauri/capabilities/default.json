@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "主窗口：只读图谱浏览，不需要文件、网络或进程权限",
+  "description": "主窗口：只读图谱浏览；只额外允许在系统浏览器里打开出处链接",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": ["core:default", "opener:default"]
 }

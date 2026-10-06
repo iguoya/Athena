@@ -52,6 +52,8 @@ export interface Catalog {
   allMaps: PolarisMap[];
   /** 开放地图。 */
   maps: PolarisMap[];
+  /** 顶层跨图关联：两端落在不同图里的先修与来路。 */
+  crossEdges: PolarisEdge[];
   routes: Route[];
   sources: Map<string, Source>;
   nodeById: Map<string, PolarisNode>;
@@ -90,6 +92,7 @@ export function buildCatalog(document: PolarisDocument, sources: Source[]): Cata
     subtitle: document.subtitle,
     allMaps: document.maps,
     maps,
+    crossEdges: document.cross_edges,
     routes: document.routes ?? [],
     sources: new Map(sources.map((source) => [source.id, source])),
     nodeById,

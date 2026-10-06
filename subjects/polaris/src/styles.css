@@ -1,1 +1,158 @@
 @import "tailwindcss";
+
+/*
+ * 两套明亮主题，都不做暗色（ADR 0016 之前的对话：旧版暗色基调被认为不够明快）。
+ * 所有颜色都走 CSS 变量，组件里不写死色值；换主题只换这两张表。
+ * 阶段、契约、软硬权重各有一套色，但信息从不只靠颜色传递：旁边总有文字或位置。
+ */
+:root,
+[data-theme="sky"] {
+  /* 晴空：冷白底，蓝色强调 */
+  --bg: #f4f8fc;
+  --surface: #ffffff;
+  --surface-2: #edf3fa;
+  --ink: #0e1b2e;
+  --muted: #51637a;
+  --faint: #8ea0b6;
+  --line: #d8e3ef;
+  --accent: #1f6feb;
+  --accent-soft: #e3eeff;
+  --accent-ink: #ffffff;
+  --gold: #f2b705;
+  --edge: #9db2c9;
+  --shadow-card: 0 1px 2px rgb(14 27 46 / 0.06), 0 6px 18px -8px rgb(31 111 235 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(14 27 46 / 0.06), 0 14px 32px -10px rgb(31 111 235 / 0.28);
+  --stage-junior: #0ea77a;
+  --stage-intermediate: #1f6feb;
+  --stage-senior: #7c4dff;
+  --contract-timing: #e8890c;
+  --contract-memory: #0a9a9a;
+  --contract-bus: #2f6fed;
+  --contract-power: #d9455f;
+  --contract-boot: #7c4dff;
+  --contract-verify: #12a36b;
+  --balance-software: #2f6fed;
+  --balance-balanced: #7c4dff;
+  --balance-hardware: #e8890c;
+  --canvas-grid: #dfe9f4;
+}
+
+[data-theme="paper"] {
+  /* 暖纸：奶油底，朱红强调 */
+  --bg: #fbf5ea;
+  --surface: #fffdf8;
+  --surface-2: #f3eada;
+  --ink: #2a1f14;
+  --muted: #74614c;
+  --faint: #a8967f;
+  --line: #e6d9c3;
+  --accent: #d9481f;
+  --accent-soft: #fbe4da;
+  --accent-ink: #ffffff;
+  --gold: #e0a100;
+  --edge: #c2ae92;
+  --shadow-card: 0 1px 2px rgb(42 31 20 / 0.06), 0 6px 18px -8px rgb(217 72 31 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(42 31 20 / 0.06), 0 14px 32px -10px rgb(217 72 31 / 0.26);
+  --stage-junior: #3f9a62;
+  --stage-intermediate: #d98a1f;
+  --stage-senior: #a83a66;
+  --contract-timing: #d98a1f;
+  --contract-memory: #1b8e80;
+  --contract-bus: #3a6fb5;
+  --contract-power: #c23a4d;
+  --contract-boot: #8a4ab5;
+  --contract-verify: #3f9a62;
+  --balance-software: #3a6fb5;
+  --balance-balanced: #8a4ab5;
+  --balance-hardware: #d9481f;
+  --canvas-grid: #eee2cd;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-gold: var(--gold);
+  --font-sans: "Inter Variable", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 240ms ease, color 240ms ease;
+  overflow: hidden;
+}
+
+/* 必须放进 base 层：未分层的样式优先级高于 Tailwind 的工具类，会让按钮上所有 text-* 颜色失效。 */
+@layer base {
+  button {
+    cursor: pointer;
+  }
+}
+
+/* 细滚动条：抽屉与矩阵里的长内容 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+/* 键盘焦点要看得见：画布上的节点靠它被 Tab 到 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* 画布：点阵底，随缩放平移（背景由 JS 设置 size/position），拖动时是抓手 */
+.canvas-surface {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--canvas-grid) 1.2px, transparent 1.2px);
+  cursor: grab;
+  touch-action: none;
+}
+.canvas-surface[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+/* 连线描一遍的入场动画：stroke-dashoffset 由 pathLength 归一到 1 */
+@keyframes draw-edge {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* 聚焦的连线沿方向流动：dashoffset 减小，虚线向路径终点移动 */
+@keyframes edge-flow {
+  to {
+    stroke-dashoffset: -34;
+  }
+}

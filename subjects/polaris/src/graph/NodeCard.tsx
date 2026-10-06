@@ -1,0 +1,88 @@
+import { motion } from "motion/react";
+import { Lock, Star } from "lucide-react";
+import type { PlacedNode } from "@/content/layout";
+import { STAGE_LABEL } from "@/content/catalog";
+import type { PolarisNode } from "@/content/types";
+import { CONTRACT_LABEL, PRIORITY_LABEL, TRACK_LABEL, contractVar, stageVar } from "@/ui/labels";
+
+export type CardState = "idle" | "selected" | "near" | "dim";
+
+interface Props {
+  node: PolarisNode;
+  placed: PlacedNode;
+  state: CardState;
+  locked: boolean;
+  /** 入场动画的延迟，按列与行错开，一张图像是被一层层点亮。 */
+  delay: number;
+  onSelect(): void;
+  onHover(on: boolean): void;
+}
+
+const PRIORITY_STYLE = {
+  essential: "bg-accent-soft text-accent",
+  important: "bg-surface-2 text-muted",
+  optional: "border border-dashed border-faint text-faint",
+} as const;
+
+export function NodeCard({ node, placed, state, locked, delay, onSelect, onHover }: Props) {
+  const stageColor = stageVar(node.stage);
+  const selected = state === "selected";
+  return (
+    <motion.button
+      type="button"
+      data-node-id={node.id}
+      aria-pressed={selected}
+      aria-label={`${node.title}${locked ? "（本阶段未解锁）" : ""}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: state === "dim" ? 0.34 : locked ? 0.7 : 1, y: 0 }}
+      transition={{ delay, duration: 0.38, ease: [0.2, 0.7, 0.2, 1] }}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect();
+      }}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+      onFocus={() => onHover(true)}
+      onBlur={() => onHover(false)}
+      style={{ left: placed.x, top: placed.y, width: placed.w, height: placed.h }}
+      className={[
+        "absolute overflow-hidden rounded-2xl border bg-surface p-3 pl-[18px] text-left",
+        "shadow-[var(--shadow-card)] transition-[box-shadow,transform,border-color] duration-200",
+        "hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]",
+        selected ? "border-accent ring-2 ring-accent/30 shadow-[var(--shadow-lift)]" : "border-line",
+        locked ? "border-dashed" : "",
+      ].join(" ")}
+    >
+      <span className="absolute inset-y-0 left-0 w-[6px]" style={{ background: stageColor, opacity: locked ? 0.45 : 1 }} />
+      <span className="flex items-center gap-1.5 text-[11px] font-medium leading-none">
+        <span style={{ color: stageColor }}>{node.stage ? STAGE_LABEL[node.stage] : "—"}</span>
+        {node.priority && (
+          <span className={`rounded-full px-1.5 py-[3px] text-[10.5px] ${PRIORITY_STYLE[node.priority]}`}>
+            {PRIORITY_LABEL[node.priority]}
+          </span>
+        )}
+        {node.entry && (
+          <span className="flex items-center gap-0.5 text-gold" title="推荐的入门起点">
+            <Star size={11} fill="currentColor" strokeWidth={0} />
+            <span className="text-[10.5px] text-muted">起点</span>
+          </span>
+        )}
+        {locked && <Lock size={12} className="ml-auto text-faint" aria-hidden />}
+      </span>
+      <span className="mt-2 line-clamp-2 text-[15px] font-semibold leading-snug">{node.title}</span>
+      <span className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 px-[18px] pb-2.5 text-[11px] text-muted">
+        {node.contract ? (
+          <span
+            className="rounded-md px-1.5 py-[2px] font-medium"
+            style={{ color: contractVar(node.contract), background: `color-mix(in srgb, ${contractVar(node.contract)} 12%, transparent)` }}
+          >
+            {CONTRACT_LABEL[node.contract]}
+          </span>
+        ) : (
+          <span>{TRACK_LABEL[node.track] ?? node.track}</span>
+        )}
+      </span>
+    </motion.button>
+  );
+}

@@ -20,5 +20,5 @@ export default defineConfig({
   envPrefix: ["VITE_", "TAURI_ENV_"],
   // 内容（polaris.json）按设计打进主包：应用本地运行，不需要为它拆分加载。
   build: { target: "es2022", sourcemap: false, chunkSizeWarningLimit: 1500 },
-  test: { include: ["src/**/*.test.ts"], environment: "node" },
+  test: { include: ["src/**/*.test.{ts,tsx}"], environment: "node" },
 });

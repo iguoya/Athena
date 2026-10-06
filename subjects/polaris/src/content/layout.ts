@@ -1,13 +1,14 @@
-import { priorityRank, stageRank, STAGES } from "./catalog";
-import type { PolarisEdge, PolarisMap, Stage } from "./types";
+import { priorityRank, STAGE_LABEL, stageRank, STAGES } from "./catalog";
+import type { PolarisEdge, PolarisMap, PolarisNode, Stage } from "./types";
 
 /**
  * 确定性分阶段布局（ADR 0015 决策 3）。同一份内容在任何平台得到同一个位置：
  * 不读字体、不量文字、不用随机数，排序一律带原顺序兜底。
  *
- * 阶段是列，自左向右读：初级 → 中级 → 资深（ADR 0014 决策 5）。列内按「同阶段内的依赖深度」，
- * 再按必要程度，再按原顺序排——先修在上、被依赖者在下，同一列里连线基本只向下走。
- * 旧 Qt 版（legacy-qt）是纵向分层，且阶段内只按必要程度排；其余不变。
+ * 列是通用的：底盘图的列是阶段（初级 → 中级 → 资深，ADR 0014 决策 5），路线的列是路线自己的阶段
+ * （ADR 0016）。列内按「同一列里的依赖深度」排——先修在上、被依赖者在下，同一列里连线基本只向下走；
+ * 深度相同的，保持调用方给的顺序（底盘图里是必要程度再原顺序，路线里是路线里写的顺序）。
+ * 旧 Qt 版（legacy-qt）是纵向分层，阶段内只按必要程度排；其余不变。
  */
 export interface LayoutMetrics {
   nodeWidth: number;
@@ -18,6 +19,8 @@ export interface LayoutMetrics {
   padTop: number;
   padBottom: number;
   headerHeight: number;
+  /** 列底部留给「验收」行的高度；底盘图为 0。 */
+  footerHeight: number;
 }
 
 export const DEFAULT_METRICS: LayoutMetrics = {
@@ -29,6 +32,7 @@ export const DEFAULT_METRICS: LayoutMetrics = {
   padTop: 40,
   padBottom: 56,
   headerHeight: 64,
+  footerHeight: 0,
 };
 
 export interface PlacedNode {
@@ -43,8 +47,18 @@ export interface PlacedNode {
   depth: number;
 }
 
+export interface ColumnSpec {
+  key: string;
+  label: string;
+  /** 底盘图的列带阶段；路线的列没有。 */
+  stage?: Stage;
+  nodeIds: string[];
+}
+
 export interface PlacedColumn {
-  stage: Stage;
+  key: string;
+  label: string;
+  stage?: Stage;
   index: number;
   x: number;
   width: number;
@@ -65,30 +79,58 @@ export interface PlacedEdge {
 export interface Layout {
   width: number;
   height: number;
+  /** 最高那一列的底边；验收行从这里往下放。 */
+  contentBottom: number;
+  metrics: LayoutMetrics;
   columns: PlacedColumn[];
   nodes: PlacedNode[];
   byId: Map<string, PlacedNode>;
   edges: PlacedEdge[];
 }
 
+/** 底盘图：阶段是列；阶段内先按必要程度、再按原顺序给出初始顺序，之后由依赖深度稳定重排。 */
 export function layoutByStage(map: PolarisMap, metrics: LayoutMetrics = DEFAULT_METRICS): Layout {
-  const { nodeWidth: w, nodeHeight: h } = metrics;
-  const indexOf = new Map(map.nodes.map((node, index) => [node.id, index]));
-
   // 1. 按阶段分桶；没有阶段的排最后一桶，与旧版一致。
   const buckets = STAGES.map(() => [] as number[]);
   map.nodes.forEach((node, index) => buckets[stageRank(node.stage)].push(index));
+  const columns: ColumnSpec[] = [];
+  buckets.forEach((bucket, stageIndex) => {
+    if (bucket.length === 0) return;
+    bucket.sort(
+      (a, b) => priorityRank(map.nodes[a].priority) - priorityRank(map.nodes[b].priority) || a - b,
+    );
+    columns.push({
+      key: STAGES[stageIndex],
+      label: STAGE_LABEL[STAGES[stageIndex]],
+      stage: STAGES[stageIndex],
+      nodeIds: bucket.map((index) => map.nodes[index].id),
+    });
+  });
+  return layoutColumns(columns, new Map(map.nodes.map((node) => [node.id, node])), map.edges, metrics);
+}
 
-  // 2. 同阶段内的依赖深度。requires 是强先修，且已由契约保证无环。
+/**
+ * 通用按列布局。`nodes` 要包含 columns 里出现的全部节点；`edges` 里两端不都在列里的边会被忽略，
+ * 这样路线可以把全部地图的边一股脑交进来。
+ */
+export function layoutColumns(
+  columns: ColumnSpec[],
+  nodes: Map<string, PolarisNode>,
+  edges: PolarisEdge[],
+  metrics: LayoutMetrics = DEFAULT_METRICS,
+): Layout {
+  const { nodeWidth: w, nodeHeight: h } = metrics;
+  const columnOf = new Map<string, number>();
+  columns.forEach((column, index) => column.nodeIds.forEach((id) => columnOf.set(id, index)));
+
+  // 同一列内的依赖深度。requires 是强先修，且已由契约保证无环。
   const depthOf = new Map<string, number>();
   const depth = (id: string): number => {
     const known = depthOf.get(id);
     if (known !== undefined) return known;
-    const node = map.nodes[indexOf.get(id)!];
     let value = 0;
-    for (const requiredId of node.requires ?? []) {
-      const required = map.nodes[indexOf.get(requiredId) ?? -1];
-      if (required && stageRank(required.stage) === stageRank(node.stage)) {
+    for (const requiredId of nodes.get(id)?.requires ?? []) {
+      if (columnOf.get(requiredId) !== undefined && columnOf.get(requiredId) === columnOf.get(id)) {
         value = Math.max(value, depth(requiredId) + 1);
       }
     }
@@ -96,46 +138,39 @@ export function layoutByStage(map: PolarisMap, metrics: LayoutMetrics = DEFAULT_
     return value;
   };
 
-  const columns: PlacedColumn[] = [];
-  const nodes: PlacedNode[] = [];
+  const placedColumns: PlacedColumn[] = [];
+  const placed: PlacedNode[] = [];
   let maxRows = 1;
-  buckets.forEach((bucket, stageIndex) => {
-    if (bucket.length === 0) return;
-    bucket.sort((a, b) => {
-      const na = map.nodes[a];
-      const nb = map.nodes[b];
-      return (
-        depth(na.id) - depth(nb.id) ||
-        priorityRank(na.priority) - priorityRank(nb.priority) ||
-        a - b
-      );
-    });
-    const column = columns.length;
-    const x = metrics.padX + column * (w + metrics.columnGap);
-    columns.push({ stage: STAGES[stageIndex], index: column, x, width: w, count: bucket.length });
-    bucket.forEach((nodeIndex, row) => {
-      const node = map.nodes[nodeIndex];
-      nodes.push({
-        id: node.id,
+  columns.forEach((column, index) => {
+    // Array.prototype.sort 是稳定的：深度相同保持调用方给的顺序。
+    const ordered = [...column.nodeIds].sort((a, b) => depth(a) - depth(b));
+    const x = metrics.padX + index * (w + metrics.columnGap);
+    placedColumns.push({ key: column.key, label: column.label, stage: column.stage, index, x, width: w, count: ordered.length });
+    ordered.forEach((id, row) => {
+      placed.push({
+        id,
         x,
         y: metrics.padTop + metrics.headerHeight + row * (h + metrics.rowGap),
         w,
         h,
-        column,
+        column: index,
         row,
-        depth: depth(node.id),
+        depth: depth(id),
       });
     });
-    maxRows = Math.max(maxRows, bucket.length);
+    maxRows = Math.max(maxRows, ordered.length);
   });
 
-  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const byId = new Map(placed.map((node) => [node.id, node]));
   const width = metrics.padX * 2 + columns.length * w + Math.max(0, columns.length - 1) * metrics.columnGap;
-  const height =
-    metrics.padTop + metrics.headerHeight + maxRows * h + Math.max(0, maxRows - 1) * metrics.rowGap + metrics.padBottom;
+  const contentBottom =
+    metrics.padTop + metrics.headerHeight + maxRows * h + Math.max(0, maxRows - 1) * metrics.rowGap;
+  const height = contentBottom + metrics.footerHeight + metrics.padBottom;
 
-  const edges = map.edges.map((edge, index) => routeEdge(edge, index + 1, byId));
-  return { width, height, columns, nodes, byId, edges };
+  const routed = edges
+    .filter((edge) => byId.has(edge.from) && byId.has(edge.to))
+    .map((edge, index) => routeEdge(edge, index + 1, byId));
+  return { width, height, contentBottom, metrics, columns: placedColumns, nodes: placed, byId, edges: routed };
 }
 
 function routeEdge(edge: PolarisEdge, number: number, byId: Map<string, PlacedNode>): PlacedEdge {

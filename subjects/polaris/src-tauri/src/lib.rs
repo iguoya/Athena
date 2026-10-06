@@ -12,6 +12,7 @@ pub fn run() {
                 let _ = window.set_focus();
             }
         }))
+        .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
         .expect("北极星启动失败");
 }

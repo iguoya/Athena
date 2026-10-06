@@ -201,7 +201,7 @@ def main() -> int:
     npm = tool("npm")
     # npm run build = tsc -b + vite build，类型和打包一次过。
     run([npm, "run", "build"], "前端类型检查与构建")
-    run([npm, "test"], "前端单元测试（布局、目录索引）")
+    run([npm, "test"], "前端单元测试与渲染冒烟（布局、视口、路由、全部视图）")
     if not arguments.skip_rust:
         run(
             [tool("cargo"), "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],
