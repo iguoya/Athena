@@ -7,6 +7,7 @@ import {
   BookOpenText,
   CheckCircle2,
   FlaskConical,
+  Settings,
   Sparkles,
   Terminal,
   BookA,
@@ -65,6 +66,13 @@ export default function App() {
   const [sentenceMode, setSentenceMode] = useState(
     () => window.localStorage.getItem("zh-sentence-mode") === "on",
   );
+  const [selectionLookup, setSelectionLookup] = useState(
+    () => window.localStorage.getItem("selection-lookup") !== "off",
+  );
+  const [fontScale, setFontScale] = useState(
+    () => window.localStorage.getItem("font-scale") ?? "1",
+  );
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     loadContent<Curriculum>("get_curriculum", "/content/curriculum.json").then((c) => {
@@ -294,6 +302,11 @@ export default function App() {
       : null;
   const activeIsCheckpoint = view?.kind === "checkpoint";
 
+  useEffect(() => {
+    (document.body.style as { zoom?: string }).zoom =
+      fontScale === "1" ? "" : fontScale;
+  }, [fontScale]);
+
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
     : view?.kind === "page" ? `${view.sectionId}:${view.pageId}`
@@ -330,32 +343,6 @@ export default function App() {
               {passedSections}/{quizSections.length}
             </span>
           </div>
-          <button
-            onClick={() => {
-              setTrainingMode(!trainingMode);
-              window.localStorage.setItem("zh-training", trainingMode ? "off" : "on");
-            }}
-            className={`mt-2 w-full rounded-lg px-3 py-1.5 text-[20px] ring-1 transition-colors ${
-              trainingMode
-                ? "bg-accent-soft text-accent ring-accent/30"
-                : "bg-surface-2 text-muted ring-line hover:text-fg"
-            }`}
-          >
-            {trainingMode ? "英译训练模式：开（中文已隐藏）" : "英译训练模式：关"}
-          </button>
-          <button
-            onClick={() => {
-              setSentenceMode(!sentenceMode);
-              window.localStorage.setItem("zh-sentence-mode", sentenceMode ? "off" : "on");
-            }}
-            className={`mt-1.5 w-full rounded-lg px-3 py-1.5 text-[20px] ring-1 transition-colors ${
-              sentenceMode
-                ? "bg-accent-soft text-accent ring-accent/30"
-                : "bg-surface-2 text-muted ring-line hover:text-fg"
-            }`}
-          >
-            逐句对照：{sentenceMode ? "开" : "关"}
-          </button>
           <button
             onClick={() => setShowVocabPanel(true)}
             className="mt-1.5 flex w-full items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
@@ -644,6 +631,7 @@ export default function App() {
                   pageId={page.id}
                   zhHidden={trainingMode}
                   sentenceMode={sentenceMode}
+                  selectionEnabled={selectionLookup}
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
@@ -826,6 +814,123 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* 右上角设置入口 */}
+      <button
+        onClick={() => setShowSettings(true)}
+        className="fixed right-4 top-4 z-40 grid size-11 place-items-center rounded-xl bg-surface text-muted shadow-card ring-1 ring-line transition-colors hover:text-accent"
+        title="设置"
+      >
+        <Settings className="size-6" />
+      </button>
+
+      {showSettings && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+          onClick={() => setShowSettings(false)}
+        >
+          <div
+            className="w-[640px] rounded-card bg-surface p-7 shadow-card ring-1 ring-line"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="font-display text-[28px] font-semibold text-accent">设置</h3>
+              <button onClick={() => setShowSettings(false)} className="text-muted hover:text-fg">
+                <X className="size-6" />
+              </button>
+            </div>
+            <SettingRow
+              title="英译训练模式"
+              desc="隐藏中文译文，点击「显示译文」对照，锻炼英文阅读"
+              on={trainingMode}
+              onToggle={() => {
+                setTrainingMode(!trainingMode);
+                window.localStorage.setItem("zh-training", trainingMode ? "off" : "on");
+              }}
+            />
+            <SettingRow
+              title="逐句对照"
+              desc="揭示译文时按句子交错呈现（英中逐句配对）"
+              on={sentenceMode}
+              onToggle={() => {
+                setSentenceMode(!sentenceMode);
+                window.localStorage.setItem("zh-sentence-mode", sentenceMode ? "off" : "on");
+              }}
+            />
+            <SettingRow
+              title="划词即查"
+              desc="选中英文词/短语弹出释义卡并计入生词本"
+              on={selectionLookup}
+              onToggle={() => {
+                setSelectionLookup(!selectionLookup);
+                window.localStorage.setItem("selection-lookup", selectionLookup ? "off" : "on");
+              }}
+            />
+            <div className="mt-2 flex items-center justify-between gap-4 py-3">
+              <div>
+                <p className="text-[22px] font-medium text-fg">正文字号</p>
+                <p className="text-[20px] text-muted">整体缩放正文内容</p>
+              </div>
+              <div className="flex gap-1.5">
+                {[
+                  { label: "小", value: "0.9" },
+                  { label: "标准", value: "1" },
+                  { label: "大", value: "1.12" },
+                  { label: "特大", value: "1.25" },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      setFontScale(opt.value);
+                      window.localStorage.setItem("font-scale", opt.value);
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-[20px] ring-1 transition-colors ${
+                      fontScale === opt.value
+                        ? "bg-accent-soft font-medium text-accent ring-accent/30"
+                        : "bg-surface-2 text-muted ring-line hover:text-fg"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SettingRow({
+  title,
+  desc,
+  on,
+  onToggle,
+}: {
+  title: string;
+  desc: string;
+  on: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-3">
+      <div>
+        <p className="text-[22px] font-medium text-fg">{title}</p>
+        <p className="text-[20px] text-muted">{desc}</p>
+      </div>
+      <button
+        onClick={onToggle}
+        className={`relative h-8 w-16 shrink-0 rounded-full transition-colors ${
+          on ? "bg-green-500" : "bg-line"
+        }`}
+      >
+        <span
+          className={`absolute top-1 size-6 rounded-full bg-white shadow transition-all ${
+            on ? "left-9" : "left-1"
+          }`}
+        />
+      </button>
     </div>
   );
 }

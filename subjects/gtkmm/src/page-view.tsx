@@ -651,6 +651,7 @@ export function PageView({
   pageId,
   zhHidden,
   sentenceMode,
+  selectionEnabled,
   knownParas,
   hardParas,
   onRate,
@@ -659,6 +660,7 @@ export function PageView({
   pageId: string;
   zhHidden: boolean;
   sentenceMode: boolean;
+  selectionEnabled: boolean;
   knownParas: Set<string>;
   hardParas: Set<string>;
   onRate: (sha: string, understood: boolean) => void;
@@ -691,8 +693,9 @@ export function PageView({
     };
   }, [chapterId, pageId]);
 
-  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡
+  // 划词即查：mouseup 后取选区文本（1–60 字符），弹出查询卡（可在设置中关闭）
   useEffect(() => {
+    if (!selectionEnabled) return;
     const onMouseUp = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest("article")) return;
