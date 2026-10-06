@@ -433,8 +433,16 @@ export default function App() {
                     >
                       {s.order}. {s.title}
                     </span>
+                    {(quizIndex.get(s.id)?.all.length ?? 0) > 0 && (
+                      <span
+                        className="shrink-0 text-[17px] text-muted"
+                        title="本章已点亮的节页数（页内测验通过或章末考核通过）"
+                      >
+                        {s.pages.filter((p) => pageLit(s.id, p.id)).length}/{s.pages.length}
+                      </span>
+                    )}
                     {chapterPassed(s.id) && (
-                      <CheckCircle2 className="size-5 shrink-0 text-green-600" />
+                      <CheckCircle2 className="ml-1 size-5 shrink-0 text-green-600" />
                     )}
                   </button>
                   {active && (
