@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+@import "@fontsource-variable/fraunces";
+@import "@fontsource/noto-sans-sc/400.css";
+@import "@fontsource/noto-sans-sc/500.css";
+@import "@fontsource/noto-sans-sc/700.css";
+@import "@fontsource-variable/jetbrains-mono";
+
+/*
+ * gtkmm 主题 token（应用 ADR 0002 的三层资料呈现，气质对齐仓库样板拾阶的
+ * token 结构）：GNOME 清雅蓝调，accent 与图标同源（#3D6FB4）。
+ */
+:root {
+  color-scheme: light;
+  --bg: #f2f5fa;
+  --bg-2: #e7edf7;
+  --blob-a: #cfe0f7;
+  --blob-b: #dce7f5;
+  --surface: #ffffff;
+  --surface-2: #f7f9fd;
+  --line: #dfe5ef;
+  --fg: #24313f;
+  --muted: #71808f;
+  --accent: #3d6fb4;
+  --accent-soft: #e8eff9;
+  --accent-2: #4a9058;
+  --on-accent: #ffffff;
+  --shadow: 0 12px 32px -16px rgba(40, 60, 90, 0.28);
+  --radius: 14px;
+  --font-display: "Fraunces Variable", "Noto Sans SC", Georgia, serif;
+  --font-body: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "Cascadia Code", Consolas, monospace;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-2: var(--accent-2);
+  --color-on-accent: var(--on-accent);
+  --radius-card: var(--radius);
+  --shadow-card: var(--shadow);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 主内容区背后的柔和装饰：两团渐变光斑，GNOME 壁纸式的安静氛围。 */
+.deco-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(42rem 30rem at 88% -8%, var(--blob-a) 0%, transparent 65%),
+    radial-gradient(36rem 26rem at -10% 108%, var(--blob-b) 0%, transparent 60%);
+}
+
+/* 侧栏与面板滚动条：细、圆、安静。 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted) 30%, transparent);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}

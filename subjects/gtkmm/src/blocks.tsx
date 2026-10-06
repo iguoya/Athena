@@ -1,3 +1,13 @@
+import { motion } from "motion/react";
+import {
+  Check,
+  FlaskConical,
+  Info,
+  Lightbulb,
+  MonitorPlay,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 import type { Block, ExperimentEntity, ManifestEntity, QuizItem } from "./types";
 import { SimulationView } from "./simulations";
 
@@ -20,39 +30,65 @@ function QuizView({
   onAnswer: (itemId: string, correct: boolean) => void;
 }) {
   const answered = window.localStorage.getItem(`answer:${itemId}`);
+  const reveal = answered != null;
   return (
-    <div className="my-4 rounded-lg border border-stone-300 bg-stone-50 p-4">
-      <p className="mb-3 text-stone-800">{item.stem}</p>
-      <div className="flex flex-col gap-2">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-line"
+    >
+      <p className="mb-4 font-medium text-fg">{item.stem}</p>
+      <div className="flex flex-col gap-2.5">
         {item.options.map((option, index) => {
           const isAnswer = index === item.answer;
           const chosen = answered === String(index);
-          const reveal = answered != null;
           return (
-            <button
+            <motion.button
               key={index}
+              whileHover={reveal ? undefined : { x: 4 }}
+              whileTap={reveal ? undefined : { scale: 0.98 }}
               disabled={reveal}
               onClick={() => {
                 window.localStorage.setItem(`answer:${itemId}`, String(index));
                 onAnswer(itemId, isAnswer);
               }}
-              className={`rounded-md border px-3 py-2 text-left transition-colors ${
+              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
                 reveal
                   ? isAnswer
-                    ? "border-green-600 bg-green-50 text-green-900"
+                    ? "border-accent-2/50 bg-accent-2/10 text-fg"
                     : chosen
-                      ? "border-red-400 bg-red-50 text-red-900"
-                      : "border-stone-200 text-stone-500"
-                  : "border-stone-300 bg-white hover:border-blue-500 hover:bg-blue-50"
+                      ? "border-red-300 bg-red-50 text-fg/70"
+                      : "border-line text-muted"
+                  : "border-line bg-surface-2 hover:border-accent/40 hover:bg-accent-soft"
               }`}
             >
-              {option}
-              {reveal && isAnswer && <span className="ml-2 text-xs">✓ 正确答案</span>}
-            </button>
+              <span
+                className={`grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold ${
+                  reveal && isAnswer
+                    ? "bg-accent-2 text-white"
+                    : reveal && chosen
+                      ? "bg-red-400 text-white"
+                      : "bg-surface-2 text-muted ring-1 ring-line"
+                }`}
+              >
+                {reveal && isAnswer ? (
+                  <Check className="size-3.5" />
+                ) : reveal && chosen ? (
+                  <X className="size-3.5" />
+                ) : (
+                  String.fromCharCode(65 + index)
+                )}
+              </span>
+              <span className="flex-1">{option}</span>
+              {reveal && isAnswer && (
+                <span className="text-xs font-medium text-accent-2">正确答案</span>
+              )}
+            </motion.button>
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -60,32 +96,45 @@ export function BlockView(props: BlockViewProps) {
   const { block, demos, experiments, onLaunch, onAnswer, scopeId } = props;
   switch (block.type) {
     case "text":
-      return <p className="my-3 leading-relaxed text-stone-800">{block.text}</p>;
+      return <p className="my-4 leading-loose text-fg/90">{block.text}</p>;
     case "code":
       return (
-        <figure className="my-4">
-          <pre className="overflow-x-auto rounded-lg bg-stone-900 p-4 text-sm leading-relaxed text-stone-100">
-            <code>{block.source}</code>
-          </pre>
-          {block.caption && (
-            <figcaption className="mt-1 text-xs text-stone-500">{block.caption}</figcaption>
-          )}
-        </figure>
-      );
-    case "callout":
-      return (
-        <aside
-          className={`my-4 rounded-lg border-l-4 p-4 text-sm ${
-            block.variant === "warning"
-              ? "border-amber-500 bg-amber-50 text-amber-900"
-              : block.variant === "tip"
-                ? "border-green-600 bg-green-50 text-green-900"
-                : "border-blue-500 bg-blue-50 text-blue-900"
-          }`}
+        <motion.figure
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          className="my-5"
         >
-          {block.text}
+          <div className="overflow-hidden rounded-card shadow-card ring-1 ring-line">
+            <div className="flex items-center gap-2 bg-[#1d2733] px-4 py-2">
+              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="size-2.5 rounded-full bg-[#febc2e]" />
+              <span className="size-2.5 rounded-full bg-[#28c840]" />
+              <span className="ml-2 font-mono text-xs text-[#7d8fa3]">{block.lang}</span>
+            </div>
+            <pre className="overflow-x-auto bg-[#1d2733] p-4 font-mono text-[13px] leading-relaxed text-[#c9d6e4]">
+              <code>{block.source}</code>
+            </pre>
+          </div>
+          {block.caption && (
+            <figcaption className="mt-2 text-xs text-muted">{block.caption}</figcaption>
+          )}
+        </motion.figure>
+      );
+    case "callout": {
+      const style =
+        block.variant === "warning"
+          ? { ring: "ring-amber-500/30", bg: "bg-amber-500/10", fg: "text-amber-700", Icon: TriangleAlert }
+          : block.variant === "tip"
+            ? { ring: "ring-accent-2/30", bg: "bg-accent-2/10", fg: "text-accent-2", Icon: Lightbulb }
+            : { ring: "ring-accent/25", bg: "bg-accent-soft", fg: "text-accent", Icon: Info };
+      return (
+        <aside className={`my-5 flex gap-3 rounded-card p-4 text-sm ring-1 ${style.ring} ${style.bg}`}>
+          <style.Icon className={`mt-0.5 size-4.5 shrink-0 ${style.fg}`} />
+          <p className="leading-relaxed text-fg/90">{block.text}</p>
         </aside>
       );
+    }
     case "simulation":
       return (
         <SimulationView
@@ -98,41 +147,49 @@ export function BlockView(props: BlockViewProps) {
     case "demo": {
       const entity = demos.get(block.demo_ref) ?? experiments.get(block.demo_ref);
       return (
-        <div className="my-4 rounded-lg border border-blue-200 bg-blue-50/60 p-4">
-          <div className="flex items-start justify-between gap-3">
+        <motion.div
+          whileHover={{ y: -2 }}
+          className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-accent/25"
+        >
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="font-medium text-blue-900">
-                真机演示 · {entity?.title ?? block.demo_ref}
+              <p className="flex items-center gap-2 font-medium text-accent">
+                <MonitorPlay className="size-4" /> 真机演示 · {entity?.title ?? block.demo_ref}
               </p>
-              <p className="mt-1 text-sm text-stone-700">{entity?.purpose ?? block.caption}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-fg/80">
+                {entity?.purpose ?? block.caption}
+              </p>
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={() => onLaunch(block.demo_ref)}
-              className="shrink-0 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="shrink-0 rounded-xl bg-accent px-4 py-2.5 text-sm font-medium text-on-accent shadow-card transition-colors hover:bg-accent/90"
             >
               运行演示
-            </button>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
       );
     }
     case "experiment": {
       const entity = experiments.get(block.demo_ref);
       return (
-        <div className="my-4 rounded-lg border border-orange-300 bg-orange-50 p-4">
-          <p className="font-medium text-orange-900">
-            骨架实验 · {entity?.title ?? block.demo_ref}
+        <motion.div
+          whileHover={{ y: -2 }}
+          className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-accent-2/35"
+        >
+          <p className="flex items-center gap-2 font-medium text-accent-2">
+            <FlaskConical className="size-4" /> 骨架实验 · {entity?.title ?? block.demo_ref}
           </p>
-          <p className="mt-1 text-sm text-stone-700">{entity?.purpose}</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-fg/80">{entity?.purpose}</p>
           {entity?.acceptance && (
-            <p className="mt-2 text-xs text-stone-600">
-              跑通标准：{entity.acceptance}
+            <p className="mt-2 text-xs text-muted">
+              <span className="font-medium text-fg/70">跑通标准：</span>
+              {entity.acceptance}
             </p>
           )}
-          <p className="mt-2 font-mono text-xs text-stone-500">
-            骨架：{entity?.skeleton_dir}（只读；复制到工作区后修改，可一键重置）
-          </p>
-        </div>
+          <p className="mt-2 font-mono text-xs text-muted">{entity?.skeleton_dir}</p>
+        </motion.div>
       );
     }
     case "observation_quiz":
