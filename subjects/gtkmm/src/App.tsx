@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { AnimatePresence, motion } from "motion/react";
@@ -239,10 +239,25 @@ export default function App() {
   const pageLit = (sectionId: string, pageId: string) =>
     pagePassed(sectionId, pageId) || chapterPassed(sectionId);
 
+  // 字号缩放用 zoom 实现，但 zoom 放大视觉尺寸时 100vh 不会跟着缩，
+  // 直接挂在 body 上会把 h-screen 布局顶出窗口（底部控制条永远不可见）。
+  // 因此 zoom 挂在应用根容器上，容器布局尺寸按 zoom 反向缩小，视觉上恰好铺满视口。
+  const shellRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    (document.body.style as { zoom?: string }).zoom =
-      fontScale === "1" ? "" : fontScale;
-  }, [fontScale]);
+    const shell = shellRef.current;
+    if (!shell) return;
+    const z = fontScale === "1" ? 1 : parseFloat(fontScale);
+    if (!z || z === 1) {
+      shell.style.zoom = "";
+      shell.style.height = "";
+      shell.style.width = "";
+      return;
+    }
+    shell.style.zoom = String(z);
+    shell.style.height = `${100 / z}vh`;
+    shell.style.width = `${100 / z}vw`;
+    // curriculum 到货前后根容器才挂载，需要跟着重跑一次
+  }, [fontScale, curriculum]);
 
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
@@ -257,7 +272,7 @@ export default function App() {
   }
 
   return (
-    <div className="relative flex h-screen text-fg">
+    <div ref={shellRef} className="relative flex h-screen text-fg">
       <div className="deco-blobs" />
 
       {/* 左侧：三区课表树 */}
