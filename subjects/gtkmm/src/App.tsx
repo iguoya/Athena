@@ -354,8 +354,8 @@ export default function App() {
       {/* 左侧：三区课表树 */}
       <nav className="relative z-10 flex w-[360px] shrink-0 flex-col overflow-y-auto border-r border-line bg-surface/80 backdrop-blur-sm">
         <header className="flex items-center gap-3 border-b border-line px-4 py-4">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-deep font-display text-[30px] font-semibold text-on-accent shadow-card">
-            G
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-white p-1 shadow-card ring-1 ring-line">
+            <img src="/gtk-logo.svg" alt="GTK" className="size-8" />
           </div>
           <div>
             <h1 className="font-display text-[26px] font-semibold leading-tight">
