@@ -91,7 +91,8 @@ def check_quiz_item(item: dict, where: str) -> None:
         fail(f"{where}: 判分题缺 source_refs——新题当场标出处（ADR 0043；{stem!r}）")
 
 
-def check_knowledge_point(kp: dict, where: str, kp_ids: set[str]) -> None:
+def check_knowledge_point(kp: dict, where: str, kp_ids: set[str],
+                          page_ids: set[str] | None = None) -> None:
     kp_id = kp.get("id", "")
     if not kp_id.startswith("gtkmm."):
         fail(f"{where}: 知识点 id 必须用 gtkmm. 前缀（{kp_id!r}）")
@@ -106,10 +107,10 @@ def check_knowledge_point(kp: dict, where: str, kp_ids: set[str]) -> None:
         if ref not in kp_ids:
             fail(f"{where}: requires 指向不存在的知识点 {ref!r}（{kp_id}；ADR 0030）")
     for block in kp.get("blocks", []):
-        check_block(block, f"{where}/{kp_id}")
+        check_block(block, f"{where}/{kp_id}", page_ids)
 
 
-def check_block(block: dict, where: str) -> None:
+def check_block(block: dict, where: str, page_ids: set[str] | None = None) -> None:
     block_type = block.get("type")
     if block_type not in BLOCK_TYPES:
         fail(f"{where}: 未知块类型 {block_type!r}（白名单：{sorted(BLOCK_TYPES)}）")
@@ -120,6 +121,12 @@ def check_block(block: dict, where: str) -> None:
             fail(f"{where}: {block_type} 块必须带 demo_ref（强制配对，ADR 0001 决策 3）")
     if block_type in ("quiz", "observation_quiz"):
         check_quiz_item(block, where)
+        # 随堂题挂在官方节页尾部（应用 ADR 0002 的阅读流内即时测试）
+        page_ref = block.get("page_ref")
+        if not page_ref:
+            fail(f"{where}: quiz 缺 page_ref——题目应挂到对应官方节页")
+        elif page_ids is not None and page_ref not in page_ids:
+            fail(f"{where}: page_ref {page_ref!r} 不是官方节页")
 
 
 def collect_demo_refs(course: dict) -> set[str]:
@@ -210,7 +217,7 @@ def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], 
                 if kp_id in kp_ids:
                     fail(f"{where}: 知识点 id 重复 {kp_id!r}")
                 kp_ids.add(kp_id)
-                check_knowledge_point(kp, where, kp_ids)
+                check_knowledge_point(kp, where, kp_ids, set(official_pages))
             for item in section.get("checkpoint", []):
                 check_quiz_item(item, f"{where}/{section_id} checkpoint")
     # 先收集全部知识点 id 再校验 requires（前置可以指向后面的章节）

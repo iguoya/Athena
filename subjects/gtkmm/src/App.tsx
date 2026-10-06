@@ -12,10 +12,13 @@ import {
 import { BlockView } from "./blocks";
 import { PageView } from "./page-view";
 import type {
+  Block,
   Curriculum,
   DemoEvent,
   ExperimentEntity,
   Manifest,
+  ManifestEntity,
+  QuizItem,
 } from "./types";
 
 const MASTERY_LABEL: Record<string, string> = {
@@ -94,8 +97,6 @@ export default function App() {
   const activePageId = view?.kind === "page" ? view.pageId : null;
   const activeKpId = view?.kind === "kp" ? view.kpId : null;
   const activeSectionId = view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null;
-  const CHECKPOINT_ID = "__checkpoint__";
-  const activeCheckpoint = activeKpId === CHECKPOINT_ID;
 
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
@@ -133,8 +134,8 @@ export default function App() {
           </p>
           <ul>
             {curriculum.sections.map((s) => {
-              const active = activeSectionId === s.id &&
-                (activePageId != null || activeKpId != null || activeCheckpoint);
+              const active =
+                activeSectionId === s.id && (activePageId != null || activeKpId != null);
               return (
                 <li key={s.id}>
                   <button
@@ -211,15 +212,20 @@ export default function App() {
                         <li>
                           <button
                             onClick={() =>
-                              setView({ kind: "kp", sectionId: s.id, kpId: CHECKPOINT_ID })
+                              setView({
+                                kind: "page",
+                                sectionId: s.id,
+                                pageId: s.pages[s.pages.length - 1]?.id ?? "",
+                              })
                             }
                             className={`w-full rounded px-2 py-1.5 text-left text-[20px] transition-colors ${
-                              activeCheckpoint && activeSectionId === s.id
+                              activePageId != null && activeSectionId === s.id &&
+                              activePageId === s.pages[s.pages.length - 1]?.id
                                 ? "bg-accent-soft font-medium text-accent"
                                 : "text-muted hover:bg-surface-2 hover:text-fg"
                             }`}
                           >
-                            章末考核（{s.checkpoint.length} 题）
+                            章末考核（{s.checkpoint.length} 题）→ 末节页尾
                           </button>
                         </li>
                       )}
@@ -314,34 +320,6 @@ export default function App() {
           >
             {!view && <p className="text-muted">从左侧选择一个章节开始。</p>}
 
-            {view?.kind === "kp" && section && !kp && activeCheckpoint && (
-              <>
-                <h2 className="font-display text-[42px] font-semibold">{section.title}</h2>
-                <p className="mt-2 text-[22px] text-muted">
-                  章末考核 · 教程第 {section.translation_ref.chapter} 章 ·{" "}
-                  <a
-                    className="text-accent hover:underline"
-                    href={curriculum.book.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    回到原文
-                  </a>
-                </p>
-                {section.checkpoint.map((item, index) => (
-                  <BlockView
-                    key={index}
-                    block={{ type: "quiz", ...item }}
-                    demos={demos}
-                    experiments={experiments}
-                    onLaunch={launch}
-                    onAnswer={answer}
-                    scopeId={`${section.id}:checkpoint`}
-                  />
-                ))}
-              </>
-            )}
-
             {view?.kind === "kp" && section && kp && (
               <>
                 <p className="text-[22px] text-muted">
@@ -416,6 +394,14 @@ export default function App() {
                   ← 本章节页
                 </button>
                 <PageView chapterId={section.id} pageId={page.id} />
+                <PageAssessments
+                  section={section}
+                  pageId={page.id}
+                  demos={demos}
+                  experiments={experiments}
+                  onLaunch={launch}
+                  onAnswer={answer}
+                />
                 <div className="mt-10 flex items-center justify-between gap-2 rounded-card bg-accent-deep px-4 py-3">
                   {navButton(prevPage, "← 上一节", "left")}
                   <span className="shrink-0 text-[20px] font-medium text-white/70">
@@ -503,6 +489,78 @@ export default function App() {
       </aside>
       )}
     </div>
+  );
+}
+
+
+function PageAssessments({
+  section,
+  pageId,
+  demos,
+  experiments,
+  onLaunch,
+  onAnswer,
+}: {
+  section: { id: string; pages: { id: string }[]; knowledge_points: { blocks: Block[] }[]; checkpoint: QuizItem[] };
+  pageId: string;
+  demos: Map<string, ManifestEntity>;
+  experiments: Map<string, ExperimentEntity>;
+  onLaunch: (demoId: string) => void;
+  onAnswer: (itemId: string, correct: boolean) => void;
+}) {
+  // 测验全部集中在章末（最后一个官方节页的页尾），不污染章节正文阅读流；
+  // page_ref 只决定每道随堂题的排序（按官方节页顺序），不决定出现位置。
+  const isLastPage = section.pages[section.pages.length - 1]?.id === pageId;
+  if (!isLastPage) return null;
+  const pageOrder = new Map(section.pages.map((p, i) => [p.id, i]));
+  const quizzes = section.knowledge_points
+    .flatMap((kp) => kp.blocks)
+    .filter((b) => b.type === "quiz" || b.type === "observation_quiz")
+    .sort(
+      (a, b) =>
+        (pageOrder.get((a as { page_ref?: string }).page_ref ?? "") ?? 99) -
+        (pageOrder.get((b as { page_ref?: string }).page_ref ?? "") ?? 99),
+    );
+  if (quizzes.length === 0 && section.checkpoint.length === 0) return null;
+  return (
+    <>
+      {quizzes.length > 0 && (
+        <section className="mt-16">
+          <h3 className="font-display text-[26px] font-semibold text-accent">
+            随堂测验 · 全章 {quizzes.length} 题
+          </h3>
+          {quizzes.map((block, index) => (
+            <BlockView
+              key={index}
+              block={block}
+              demos={demos}
+              experiments={experiments}
+              onLaunch={onLaunch}
+              onAnswer={onAnswer}
+              scopeId={`${section.id}:assess`}
+            />
+          ))}
+        </section>
+      )}
+      {section.checkpoint.length > 0 && (
+        <section className="mt-16 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
+          <h3 className="font-display text-[26px] font-semibold text-accent">
+            章末考核 · 完整覆盖本章节
+          </h3>
+          {section.checkpoint.map((item, index) => (
+            <BlockView
+              key={index}
+              block={{ type: "quiz", ...item }}
+              demos={demos}
+              experiments={experiments}
+              onLaunch={onLaunch}
+              onAnswer={onAnswer}
+              scopeId={`${section.id}:checkpoint`}
+            />
+          ))}
+        </section>
+      )}
+    </>
   );
 }
 

@@ -194,7 +194,7 @@ export function BlockView(props: BlockViewProps) {
       return (
         <QuizView
           item={block}
-          itemId={`${scopeId}:${block.id ?? block.stem.slice(0, 12)}`}
+          itemId={block.id ? `quiz:${block.id}` : `${scopeId}:${block.stem.slice(0, 12)}`}
           onAnswer={onAnswer}
         />
       );

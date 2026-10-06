@@ -198,11 +198,52 @@
                   "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
                   "note": "语义基准（应用 ADR 0002）"
                 }
-              ]
+              ],
+              "page_ref": "sec-pushbuttons"
             },
             {
               "type": "experiment",
               "demo_ref": "exp.buttons"
+            },
+            {
+              "type": "quiz",
+              "id": "q-icon",
+              "page_ref": "sec-pushbuttons",
+              "stem": "让按钮只显示一个图标（不显示文字），应使用哪个方法？",
+              "options": [
+                "set_image()",
+                "set_icon_name()",
+                "set_label_icon()",
+                "add_icon()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/method.Button.set_icon_name.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "q-sensitive",
+              "page_ref": "sec-pushbuttons",
+              "stem": "按钮处于不可点击状态（点击无响应）最可能是因为？",
+              "options": [
+                "没有设置图标",
+                "调用了 set_sensitive(false)",
+                "没有设置标题",
+                "未调用 set_use_underline(true)"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/method.Widget.set_sensitive.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ]
             }
           ]
         },
@@ -230,7 +271,8 @@
               "type": "simulation",
               "sim": "toggle-state",
               "demo_ref": "demo.buttons",
-              "note": "模型简化：真实切换由按下/释放完成，状态存于控件内部。"
+              "note": "模型简化：真实切换由按下/释放完成，状态存于控件内部。",
+              "page_ref": "sec-toggle-buttons"
             },
             {
               "type": "observation_quiz",
@@ -249,6 +291,27 @@
                   "relation": "authored",
                   "locator": "content/demos.json :: demo.buttons",
                   "note": "观察真机演示作答（应用 ADR 0002 决策 5）"
+                }
+              ],
+              "page_ref": "sec-toggle-buttons"
+            },
+            {
+              "type": "quiz",
+              "id": "q-toggled-name",
+              "page_ref": "sec-toggle-buttons",
+              "stem": "Gtk::ToggleButton 的状态每变化一次，发出什么信号？",
+              "options": [
+                "clicked",
+                "toggled",
+                "pressed",
+                "changed"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/signal.ToggleButton.toggled.html",
+                  "note": "语义基准（应用 ADR 0002）"
                 }
               ]
             }
@@ -282,6 +345,47 @@
                 "使用多个 Gtk::CheckButton 并 set_group() 成组",
                 "使用 Gtk::ToggleButton 并连接 pressed 信号",
                 "使用 Gtk::Switch 并 set_group()"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ],
+              "page_ref": "sec-checkbuttons"
+            },
+            {
+              "type": "quiz",
+              "id": "q-check-hierarchy",
+              "page_ref": "sec-checkbuttons",
+              "stem": "GTK4 中 Gtk::CheckButton 在类层次上的直接基类是？",
+              "options": [
+                "Gtk::Button",
+                "Gtk::ToggleButton",
+                "Gtk::Widget",
+                "Gtk::Switch"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://docs.gtk.org/gtk4/class.CheckButton.html",
+                  "note": "语义基准（应用 ADR 0002）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "q-radio-gone",
+              "page_ref": "sec-radio-buttons",
+              "stem": "从 GTK3 迁移到 GTK4 后，原来用 Gtk::RadioButton 实现的互斥单选应该改用？",
+              "options": [
+                "Gtk::RadioButton 仍然可用",
+                "Gtk::CheckButton 加 set_group()",
+                "Gtk::Switch 成组",
+                "Gtk::ComboBoxText"
               ],
               "answer": 1,
               "source_refs": [
@@ -329,6 +433,61 @@
               "relation": "adapted",
               "url": "https://docs.gtk.org/gtk4/class.ToggleButton.html",
               "note": "语义基准（应用 ADR 0002）"
+            }
+          ]
+        },
+        {
+          "id": "cp3",
+          "stem": "(clicked 与 toggled 的对比) 用户单击 Gtk::Button 一次，Gtk::ToggleButton 切换一次状态，各自发出什么信号？",
+          "options": [
+            "都发出 clicked",
+            "Button 发 clicked，ToggleButton 发 toggled",
+            "都发出 toggled",
+            "Button 发 pressed，ToggleButton 发 released"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
+              "note": "语义基准（应用 ADR 0002）"
+            }
+          ]
+        },
+        {
+          "id": "cp4",
+          "stem": "（综合) 要让「红/黄/绿」三个勾选框同一时刻最多勾选一个，GTK4 的正确做法是？",
+          "options": [
+            "各自调用 set_sensitive(false)",
+            "三个 CheckButton 调用 set_group() 加入同一组",
+            "只用一个 CheckButton",
+            "把三个放进同一个 Gtk::Box 即可"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://docs.gtk.org/gtk4/method.CheckButton.set_group.html",
+              "note": "语义基准（应用 ADR 0002）"
+            }
+          ]
+        },
+        {
+          "id": "cp5",
+          "type": "observation",
+          "stem": "（演示观察) 在真机演示中勾选「勾选我」，status 显示与事件面板收到的信号分别是？",
+          "options": [
+            "CheckButton：get_active() = true；signal toggled (detail: active)",
+            "CheckButton：get_active() = false；signal clicked",
+            "没有信号发出",
+            "signal pressed (detail: true)"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "authored",
+              "locator": "content/demos.json :: demo.buttons",
+              "note": "观察真机演示作答（应用 ADR 0002 决策 5）"
             }
           ]
         }

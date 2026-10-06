@@ -35,8 +35,8 @@ export type Block =
   | { type: "simulation"; sim: string; demo_ref?: string; note?: string }
   | { type: "demo"; demo_ref: string; caption?: string }
   | { type: "experiment"; demo_ref: string }
-  | ({ type: "observation_quiz"; demo_ref: string } & QuizItem)
-  | ({ type: "quiz" } & QuizItem);
+  | ({ type: "observation_quiz"; demo_ref: string; page_ref?: string } & QuizItem)
+  | ({ type: "quiz"; page_ref?: string } & QuizItem);
 
 export interface KnowledgePoint {
   id: string;
