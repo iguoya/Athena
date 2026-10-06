@@ -64,6 +64,11 @@ export default function App() {
   const [sentenceMode, setSentenceMode] = useState(
     () => window.localStorage.getItem("zh-sentence-mode") === "on",
   );
+  // 翻译单元划分：连续短段聚合到一个单元的目标词数（一次「看懂了」的范围）
+  const [unitWords, setUnitWords] = useState(() => {
+    const raw = Number(window.localStorage.getItem("read-unit-words"));
+    return [50, 100, 150, 200].includes(raw) ? raw : 100;
+  });
   const [fontScale, setFontScale] = useState(
     () => window.localStorage.getItem("font-scale") ?? "1",
   );
@@ -588,6 +593,7 @@ export default function App() {
                   pageId={page.id}
                   zhHidden={trainingMode}
                   sentenceMode={sentenceMode}
+                  unitWords={unitWords}
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
@@ -787,6 +793,32 @@ export default function App() {
                 window.localStorage.setItem("zh-sentence-mode", sentenceMode ? "off" : "on");
               }}
             />
+            <div className="mt-2 flex items-center justify-between gap-4 py-3">
+              <div>
+                <p className="text-[22px] font-medium text-fg">翻译单元划分</p>
+                <p className="text-[20px] text-muted">
+                  连续短段合并为一个翻译单元的词数上限，一次「看懂了」覆盖的范围
+                </p>
+              </div>
+              <div className="flex gap-1.5">
+                {[50, 100, 150, 200].map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => {
+                      setUnitWords(opt);
+                      window.localStorage.setItem("read-unit-words", String(opt));
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-[20px] ring-1 transition-colors ${
+                      unitWords === opt
+                        ? "bg-accent-soft font-medium text-accent ring-accent/30"
+                        : "bg-surface-2 text-muted ring-line hover:text-fg"
+                    }`}
+                  >
+                    {opt} 词
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="mt-2 flex items-center justify-between gap-4 py-3">
               <div>
                 <p className="text-[22px] font-medium text-fg">正文字号</p>

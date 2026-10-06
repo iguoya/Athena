@@ -495,7 +495,7 @@ function ReadUnit({
   );
 }
 
-/** 阅读单元分组：连续文字块合并；长段（>280 字符）独立；标题/代码/图打断。 */
+/** 阅读单元分组：连续文字块合并到设定词数为止；标题/代码/图打断。 */
 type RenderGroup =
   | { kind: "heading" | "code" | "figure"; blocks: SnapshotBlock[] }
   | { kind: "read"; blocks: SnapshotBlock[] };
@@ -508,14 +508,14 @@ function wordCount(text: string): number {
   );
 }
 
-function groupBlocks(blocks: SnapshotBlock[]): RenderGroup[] {
+function groupBlocks(blocks: SnapshotBlock[], unitLimit: number): RenderGroup[] {
   const groups: RenderGroup[] = [];
   let unitWords = 0;
   for (const block of blocks) {
     if (block.type === "para" || block.type === "listitem") {
       const last = groups[groups.length - 1];
-      // 聚合到 ~100 词为一个阅读单元：一次「看懂了」
-      if (last?.kind === "read" && unitWords < 100) {
+      // 聚合到设定词数为一个翻译单元：一次「看懂了」
+      if (last?.kind === "read" && unitWords < unitLimit) {
         last.blocks.push(block);
         unitWords += wordCount(block.text);
       } else {
@@ -534,6 +534,7 @@ export function PageView({
   pageId,
   zhHidden,
   sentenceMode,
+  unitWords,
   knownParas,
   hardParas,
   onRate,
@@ -542,6 +543,8 @@ export function PageView({
   pageId: string;
   zhHidden: boolean;
   sentenceMode: boolean;
+  /** 一个翻译单元的目标词数（设置「按多少词划分翻译单元」） */
+  unitWords: number;
   knownParas: Set<string>;
   hardParas: Set<string>;
   onRate: (sha: string, understood: boolean) => void;
@@ -573,7 +576,10 @@ export function PageView({
     };
   }, [chapterId, pageId]);
 
-  const groups = useMemo(() => (snapshot ? groupBlocks(snapshot.blocks) : []), [snapshot]);
+  const groups = useMemo(
+    () => (snapshot ? groupBlocks(snapshot.blocks, unitWords) : []),
+    [snapshot, unitWords],
+  );
 
   if (error) return <p className="text-sm text-red-700">{error}</p>;
   if (snapshot == null) return <p className="text-muted">正在读取段落快照……</p>;
