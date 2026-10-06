@@ -39,7 +39,11 @@ KNOWN_BALANCE = {"software", "balanced", "hardware"}
 OPEN_VIEW_KINDS = {"academic", "codesign", "frontier"}
 # 十二个能力域（ADR 0018 决策 1）：开放地图的每个节点必须归入一个，路线的均衡度据此统计。
 KNOWN_DOMAIN = {"foundations", "programming", "algorithms", "architecture", "systems", "digital",
-                "circuits", "signals", "embedded", "assurance", "security", "acceleration"}
+                "circuits", "signals", "control", "power", "embedded", "assurance", "security", "acceleration"}
+# 四个工科专业类 + 跨专业类（ADR 0021）。开放地图与全部路线必须写 discipline。
+KNOWN_DISCIPLINE = {"cs", "ei", "ee", "auto", "cross"}
+# 弱电、强电、兼有（ADR 0021 决策 2）：电气类（ee）图的每个节点必须写。
+KNOWN_CURRENT = {"weak", "strong", "both"}
 
 NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
                "practice", "validation", "volatility"]
@@ -166,6 +170,8 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
     codesign = entry.get("view_kind") == "codesign"
     frontier = entry.get("view_kind") == "frontier"
     open_map = entry.get("view_kind") in OPEN_VIEW_KINDS
+    if open_map and entry.get("discipline") not in KNOWN_DISCIPLINE:
+        report.add("map.discipline", where, "开放地图必须写 discipline：cs、ei、ee、auto 或 cross。")
     course = entry.get("graph_kind") == "course"
     node_ids: set[str] = set()
     requirements: dict[str, set[str]] = {}
@@ -191,6 +197,10 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
 
         if open_map:
             _validate_graded_node(report, node, nwhere, node_stage, require_stage=codesign or frontier)
+            if "current" in node and node["current"] not in KNOWN_CURRENT:
+                report.add("node.current", nwhere, "current 只能是 weak、strong 或 both。")
+            if entry.get("discipline") == "ee" and "current" not in node:
+                report.add("node.current_required", nwhere, "电气类（ee）图的节点必须写 current（弱电、强电或兼有）。")
             if node.get("domain") not in KNOWN_DOMAIN:
                 report.add("node.domain", nwhere, f"domain 只能是十二个能力域之一，现在是 {node.get('domain')!r}。")
         if academic:
@@ -238,10 +248,8 @@ def _validate_graded_node(report: _Report, node: dict, nwhere: str, node_stage: 
 
 def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path,
                             view_kind_by_map: dict) -> None:
-    targets = _strings(node.get("targets"))
-    if not targets:
-        report.add("node.targets_missing", nwhere, "缺 targets：必要程度要能追到它支撑的目标能力。")
-    for target in targets:
+    # targets 不再必填（ADR 0021 决策 6）：军工目标图只是参考层；写了就必须有效。
+    for target in _strings(node.get("targets")):
         if target not in view_kind_by_map:
             report.add("node.targets_unknown", nwhere, f"targets 引用了不存在的地图 {target}。")
         elif view_kind_by_map[target] != "target":
@@ -411,6 +419,8 @@ def _validate_routes(report: _Report, document: dict, source_ids: set[str], view
         if route_id in seen:
             report.add("route.duplicate_id", where, "路线 ID 重复。")
         seen.add(route_id)
+        if route.get("discipline") not in KNOWN_DISCIPLINE:
+            report.add("route.discipline", where, "路线必须写 discipline：cs、ei、ee、auto 或 cross。")
         if route.get("lens") not in KNOWN_LENS:
             report.add("route.lens", where, "lens 只能是 direction、stack 或 artifact。")
         if route.get("balance") not in KNOWN_BALANCE:

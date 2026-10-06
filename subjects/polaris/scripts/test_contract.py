@@ -60,21 +60,43 @@ class RealContent(unittest.TestCase):
         maps = {m["id"]: m for m in DOC["maps"]}
         for map_id in self.ORIGINAL_MAP_IDS:
             self.assertIn(map_id, maps)
-        self.assertEqual(sum(len(maps[i]["nodes"]) for i in self.ORIGINAL_MAP_IDS), 125)
-        self.assertEqual(sum(len(maps[i]["edges"]) for i in self.ORIGINAL_MAP_IDS), 138)
+        # 只增不删：基线是 125 个节点、138 条边；ADR 0021 又给计算机与电子信息两张图补了节点，所以只断言不少于基线。
+        self.assertGreaterEqual(sum(len(maps[i]["nodes"]) for i in self.ORIGINAL_MAP_IDS), 125)
+        self.assertGreaterEqual(sum(len(maps[i]["edges"]) for i in self.ORIGINAL_MAP_IDS), 138)
 
     def test_map_inventory(self) -> None:
-        self.assertEqual(len(DOC["maps"]), 19)
+        self.assertEqual(len(DOC["maps"]), 21)
         by_kind: dict[str, int] = {}
         for m in DOC["maps"]:
             by_kind[m["view_kind"]] = by_kind.get(m["view_kind"], 0) + 1
-        # 课程知识图谱恢复为两章，实践主干两张仍在（ADR 0010）；开放 4 张学术图（ADR 0012）加 1 张软硬接口图（ADR 0016）。
-        self.assertEqual(by_kind["academic"], 4)
+        # 课程知识图谱恢复为两章，实践主干两张仍在（ADR 0010）；开放 4 张学术图（ADR 0012）加 1 张软硬接口图（ADR 0016），
+        # 再加自动化类与电气类两张课程图（ADR 0021），共 6 张学术图。
+        self.assertEqual(by_kind["academic"], 6)
         self.assertEqual(by_kind["codesign"], 1)
         self.assertEqual(by_kind["frontier"], 1)
         self.assertEqual(by_kind["target"], 8)
         self.assertEqual(by_kind.get("career", 0) + by_kind.get("engineering", 0), 5)
         self.assertEqual(DOC["maps"][0]["id"], "computer-science")
+
+    def test_four_disciplines_are_all_present(self) -> None:
+        # ADR 0021：四个工科专业类各有一张课程图，路线按专业类归属，每类至少有一条阶梯与一条方向路线。
+        disciplines = {m["discipline"] for m in DOC["maps"] if m["view_kind"] in contract.OPEN_VIEW_KINDS}
+        self.assertEqual(disciplines, contract.KNOWN_DISCIPLINE)
+        for discipline in ("cs", "ei", "ee", "auto"):
+            routes = [r for r in DOC["routes"] if r["discipline"] == discipline]
+            self.assertTrue(any(r["lens"] == "stack" for r in routes), f"{discipline} 缺主干阶梯")
+            self.assertTrue(any(r["lens"] == "direction" for r in routes), f"{discipline} 缺方向路线")
+
+    def test_electrical_map_is_weak_current_first(self) -> None:
+        # ADR 0021 决策 2：弱电优先。弱电与兼有的节点不少于强电，并且入门级只有弱电或兼有。
+        nodes = find_map(DOC, "electrical-engineering")["nodes"]
+        weak = [n for n in nodes if n["current"] in ("weak", "both")]
+        strong = [n for n in nodes if n["current"] == "strong"]
+        self.assertGreater(len(weak), len(strong))
+        self.assertTrue(strong, "强电节点不能缺：弱电优先不等于不写强电")
+        for n in nodes:
+            if n["stage"] == "junior":
+                self.assertNotEqual(n["current"], "strong", n["id"])
 
     def test_codesign_map_covers_every_contract(self) -> None:
         nodes = find_map(DOC, "hw-sw-interface")["nodes"]
@@ -105,7 +127,7 @@ class RealContent(unittest.TestCase):
 
     def test_course_graphs_keep_the_original_shape(self) -> None:
         cs = find_map(DOC, "computer-science")
-        self.assertEqual(len(cs["nodes"]), 15)
+        self.assertGreaterEqual(len(cs["nodes"]), 15)
         self.assertGreaterEqual(len(cs["edges"]), 13)
         cpp = find_node(DOC, "polaris.cs.cpp")
         self.assertIs(cpp["entry"], True)
@@ -123,7 +145,7 @@ class RealContent(unittest.TestCase):
             find_node(DOC, node_id)
 
     def test_course_chapters_carry_necessity_and_practice(self) -> None:
-        for map_id in ("computer-science", "electronic-information"):
+        for map_id in ("computer-science", "electronic-information", "automation", "electrical-engineering"):
             for node in find_map(DOC, map_id)["nodes"]:
                 self.assertGreaterEqual(len(node["chapters"]), 3, node["id"])
                 self.assertTrue(node["priority_reason"].strip(), node["id"])
@@ -174,7 +196,6 @@ class Counterexamples(unittest.TestCase):
         self.expect("node.domain", lambda d: first_academic_node(d).pop("domain"))
         self.expect("node.stage", lambda d: first_academic_node(d).update(stage="bogus"))
         self.expect("node.stage_reason", lambda d: first_academic_node(d).update(stage_reason=""))
-        self.expect("node.targets_missing", lambda d: first_academic_node(d).update(targets=[]))
         self.expect("node.targets_unknown", lambda d: first_academic_node(d).update(targets=["nope"]))
         self.expect("node.targets_kind", lambda d: first_academic_node(d).update(targets=["computer-science"]))
         self.expect("node.app", lambda d: first_academic_node(d).update(app="no-such-app"))
@@ -277,12 +298,12 @@ def _edge(src: str, dst: str) -> dict:
 def with_codesign_and_route(document: dict) -> dict:
     """在真实内容上追加一张最小的 codesign 图（三阶段三节点）和一条引用它的路线。"""
     document["maps"].append({
-        "id": "fixture-codesign", "title": "夹具", "summary": "夹具", "view_kind": "codesign",
+        "id": "fixture-codesign", "title": "夹具", "summary": "夹具", "view_kind": "codesign", "discipline": "cross",
         "nodes": [_node("fx.a", "junior"), _node("fx.b", "intermediate", ["fx.a"]), _node("fx.c", "senior", ["fx.b"])],
         "edges": [_edge("fx.a", "fx.b"), _edge("fx.b", "fx.c")],
     })
     document["routes"] = [{
-        "id": "route.fixture", "title": "夹具路线", "summary": "x", "lens": "direction", "balance": "balanced",
+        "id": "route.fixture", "title": "夹具路线", "summary": "x", "lens": "direction", "balance": "balanced", "discipline": "cross",
         "audience": "x", "artifact": "一块点亮的板",
         "stages": [
             {"title": "起步", "goal": "x", "nodes": ["fx.a"], "checkpoint": "x"},
@@ -429,6 +450,10 @@ class DepthAndBalance(unittest.TestCase):
         # 章节先修只能指向排在前面的章节
         expect("course.chapter_requires", lambda d: find_map(d, "frontier-depth")["nodes"][0]["chapters"][0].update(requires=["math.apply"]))
         expect("course.chapters_min", lambda d: find_map(d, "frontier-depth")["nodes"][0].update(chapters=find_map(d, "frontier-depth")["nodes"][0]["chapters"][:2]))
+        expect("map.discipline", lambda d: d["maps"][0].update(discipline="bogus"))
+        expect("route.discipline", lambda d: d["routes"][0].pop("discipline"))
+        expect("node.current", lambda d: find_map(d, "electrical-engineering")["nodes"][0].update(current="bogus"))
+        expect("node.current_required", lambda d: find_map(d, "electrical-engineering")["nodes"][0].pop("current"))
         expect("principle.fields", lambda d: d["principles"][0].update(body=""))
         expect("principle.duplicate_id", lambda d: d["principles"].append(copy.deepcopy(d["principles"][0])))
         expect("principle.source_refs", lambda d: d["principles"][0].update(source_refs=[]))

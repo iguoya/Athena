@@ -9,7 +9,7 @@ export type Relation = "requires" | "enables";
 /** 软硬接口节点属于哪一份跨层契约（ADR 0016 决策 4）。 */
 export type Contract = "timing" | "memory" | "bus" | "power" | "boot" | "verify";
 
-/** 十二个能力域（ADR 0018 决策 1）：衡量一条路线是否偏科的尺子。 */
+/** 十四个能力域（ADR 0018 决策 1，ADR 0021 决策 1 增加 control 与 power）：衡量一条路线是否偏科的尺子。 */
 export type Domain =
   | "foundations"
   | "programming"
@@ -22,7 +22,15 @@ export type Domain =
   | "architecture"
   | "digital"
   | "circuits"
-  | "signals";
+  | "signals"
+  | "control"
+  | "power";
+
+/** 四个工科专业类与跨专业类（ADR 0021）。 */
+export type Discipline = "cs" | "ei" | "ee" | "auto" | "cross";
+
+/** 弱电、强电、兼有（ADR 0021 决策 2）。 */
+export type Current = "weak" | "strong" | "both";
 
 export interface SourceRef {
   relation: string;
@@ -67,6 +75,8 @@ export interface PolarisNode {
   chapters?: Chapter[];
   /** 开放地图的节点必有。 */
   domain?: Domain;
+  /** 电气类图的节点必有：弱电、强电或兼有。 */
+  current?: Current;
   // 软硬接口节点（view_kind 为 codesign）
   contract?: Contract;
   hw_side?: string;
@@ -93,6 +103,8 @@ export interface PolarisMap {
   title: string;
   summary: string;
   view_kind: ViewKind;
+  /** 开放地图必有：它属于哪个专业类。 */
+  discipline?: Discipline;
   graph_kind?: "course";
   nodes: PolarisNode[];
   edges: PolarisEdge[];
@@ -115,6 +127,7 @@ export interface Route {
   summary: string;
   lens: RouteLens;
   balance: RouteBalance;
+  discipline: Discipline;
   audience: string;
   artifact: string;
   stages: RouteStage[];

@@ -6,17 +6,17 @@ const catalog = loadCatalog();
 const route = (id: string) => catalog.routes.find((r) => r.id === id)!;
 
 describe("能力域覆盖", () => {
-  it("十二个域都有节点，开放地图的每个节点都归入某个域", () => {
+  it("十四个域都有节点，开放地图的每个节点都归入某个域", () => {
     const totals = domainTotals(catalog);
-    expect(DOMAINS.length).toBe(12);
+    expect(DOMAINS.length).toBe(14);
     for (const { id } of DOMAINS) expect(totals.get(id) ?? 0, id).toBeGreaterThan(0);
     const open = catalog.maps.flatMap((m) => m.nodes);
     expect([...totals.values()].reduce((a, b) => a + b, 0)).toBe(open.length);
   });
 
-  it("通才阶梯覆盖十二个域，没有偏科提示", () => {
+  it("通才阶梯覆盖十四个域，没有偏科提示", () => {
     const ladder = route(LADDER_ID);
-    expect(coveredDomains(catalog, ladder)).toBe(12);
+    expect(coveredDomains(catalog, ladder)).toBe(14);
     expect(blindSpots(catalog, ladder)).toEqual([]);
   });
 

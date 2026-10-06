@@ -2,7 +2,7 @@ import type { Catalog } from "./catalog";
 import type { Domain, PolarisNode, Route } from "./types";
 
 /**
- * 十二个能力域（ADR 0018）。`side` 只用来给雷达上色，说明这个域偏软件、偏硬件还是在软硬交界处；
+ * 十四个能力域（ADR 0018，ADR 0021 增加控制与电力两个）。`side` 只用来给雷达上色，说明这个域偏软件、偏硬件还是在软硬交界处；
  * 顺序就是雷达上的顺序：软件侧在上，交界处居中，硬件侧在下。
  */
 export const DOMAINS: readonly { id: Domain; label: string; short: string; side: "software" | "boundary" | "hardware"; hint: string }[] = [
@@ -17,7 +17,9 @@ export const DOMAINS: readonly { id: Domain; label: string; short: string; side:
   { id: "architecture", short: "体系", label: "体系结构", side: "hardware", hint: "指令集、微架构、存储层次与软硬划分" },
   { id: "digital", short: "数字", label: "数字逻辑与 HDL", side: "hardware", hint: "同步时序、FPGA 与数字实现" },
   { id: "circuits", short: "电路", label: "电路、测量与电源", side: "hardware", hint: "模拟与数字电路、PCB、测量与功耗" },
-  { id: "signals", short: "信号", label: "信号、控制与通信", side: "hardware", hint: "信号处理、反馈控制与通信链路" },
+  { id: "signals", short: "信号", label: "信号与通信", side: "hardware", hint: "信号处理、通信链路与测量系统" },
+  { id: "control", short: "控制", label: "控制与自动化", side: "boundary", hint: "反馈控制、状态估计、运动控制与工业自动化" },
+  { id: "power", short: "电力", label: "电力、电机与电力电子", side: "hardware", hint: "变换器、电机与驱动、电力系统" },
 ];
 
 export interface DomainCoverage {
@@ -46,7 +48,7 @@ export function routeNodeIds(route: Route): Set<string> {
   return new Set(route.stages.flatMap((stage) => stage.nodes));
 }
 
-/** 一条路线在十二个域上各覆盖多少。由路线引用的节点的 domain 统计得到，不依赖任何个人数据。 */
+/** 一条路线在十四个域上各覆盖多少。由路线引用的节点的 domain 统计得到，不依赖任何个人数据。 */
 export function routeCoverage(catalog: Catalog, route: Route): DomainCoverage[] {
   const totals = domainTotals(catalog);
   const counts = new Map<Domain, number>();
