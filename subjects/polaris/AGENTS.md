@@ -11,7 +11,9 @@
 
 两层结构（ADR 0016）：**底盘**（`maps`，知识本身，节点 id 全局唯一）与**路线**（`routes`，从
 某个角度走过底盘的顺序，只引用节点 id、不复制节点）。**软硬结合是主线**：`hw-sw-interface`
-一张图把「软件看见的硬件、硬件承诺给软件的东西」按六份跨层契约讲清楚。
+一张图把「软件看见的硬件、硬件承诺给软件的东西」按六份跨层契约讲清楚。**不偏科**由能力域衡量（ADR 0018）：
+路线的均衡度由它引用的节点的能力域算出，**通才阶梯**（`route.generalist-ladder`）保证十二个能力域一个不缺，
+方向类路线是在它之上选的纵深。
 
 不要在未另行决定前加入学习进度、知识掌握度、岗位匹配分数、账号、网络同步，或启动其他 Athena
 应用；节点可以用 `app` 指出下游学习应用，只指路、不启动。界面按 ADR 0013 / 0015 / 0016 把
@@ -39,8 +41,8 @@
 
 ## 内容模型
 
-- 每张图有 `view_kind`：`academic`（课程图与实践主干）与 `codesign`（软硬接口）是**开放地图**，
-  界面可打开、路线可引用；`career` / `engineering` / `target` 是**参考层**（共 13 张），留在内容
+- 每张图有 `view_kind`：`academic`（课程图与实践主干）、`codesign`（软硬接口）与 `frontier`（纵深与补全：
+  数学地基与高端方向所需的知识）是**开放地图**，界面可打开、路线可引用；`career` / `engineering` / `target` 是**参考层**（共 13 张），留在内容
   里、一个节点也不删，但不开放、不被路线引用。
 - 课程图（`graph_kind: course`）的节点必须有 `entry`、`verify` 和至少三章 `chapters`（章节掌握度按
   CS2013：熟悉 / 运用 / 评估，运用与评估必须标实践）。`theory` 是不建节点的理论科目，三段齐全。
@@ -49,11 +51,16 @@
   补充说明）。开放地图的节点另须 `pitfall`、`priority`、`priority_reason`；`academic` 另须 `targets`；
   `codesign` 另须 `stage`、`contract`（timing / memory / bus / power / boot / verify）以及**同时**写清
   的 `hw_side` 与 `sw_side`——只写一侧的不属于软硬接口图。
+- 开放地图的每个节点必须有 `domain`（十二个能力域之一：foundations、programming、algorithms、systems、
+  acceleration、security、assurance、embedded、architecture、digital、circuits、signals）；`frontier` 节点另须 `stage`。
 - `requires` 只表达强先修，限同一张图内，且不得指向更高阶段；两端在不同图里的关系放顶层
   `cross_edges`。每条边都要有理由和出处；`enables` 是虚线来路，不写进目标节点的 `requires`。
 - **路线**（`routes`）必须写 `lens`（direction / stack / artifact）、`balance`（software / balanced /
   hardware）、`audience`、**可检查的** `artifact`、有序 `stages`（每阶段有节点与 `checkpoint`）和
-  `source_refs`。同一路线里强先修不得排在被依赖者之后。路线标题用**技术方向**，不用招聘岗位名，
+  `source_refs`，并写 `pitfalls`（该方向最常见的偏科与补法）。同一路线里强先修不得排在被依赖者之后。
+  有真实招聘样本支撑的方向可写 `profile`（高端岗位的能力画像），必须带出处、写明是时效性样本、不构成录用承诺。
+  通才阶梯覆盖全部能力域、每个 `frontier` 节点都被路线引用，是测试守着的不变量。
+- 顶层 `principles` 是学习原则，每条带来自一手来源的出处；原则里的话必须能在引用的来源里找到依据。路线标题用**技术方向**，不用招聘岗位名，
   不暗示学完即可入职。
 - 阶段只是列与标签：初级 / 中级 / 资深都默认可看、可点，不设解锁关卡（ADR 0017）。
 

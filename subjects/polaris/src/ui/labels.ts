@@ -89,6 +89,7 @@ export const TRACK_LABEL: Record<string, string> = {
   control: "控制",
   ai: "智能",
   capstone: "收口",
+  theory: "理论",
 };
 
 export const VERIFY_LABEL: Record<string, string> = {

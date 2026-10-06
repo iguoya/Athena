@@ -4,6 +4,7 @@ import type {
   PolarisMap,
   PolarisNode,
   Priority,
+  Principle,
   Route,
   Source,
   Stage,
@@ -55,6 +56,7 @@ export interface Catalog {
   /** 顶层跨图关联：两端落在不同图里的先修与来路。 */
   crossEdges: PolarisEdge[];
   routes: Route[];
+  principles: Principle[];
   sources: Map<string, Source>;
   nodeById: Map<string, PolarisNode>;
   mapIdOfNode: Map<string, string>;
@@ -94,6 +96,7 @@ export function buildCatalog(document: PolarisDocument, sources: Source[]): Cata
     maps,
     crossEdges: document.cross_edges,
     routes: document.routes ?? [],
+    principles: document.principles ?? [],
     sources: new Map(sources.map((source) => [source.id, source])),
     nodeById,
     mapIdOfNode,

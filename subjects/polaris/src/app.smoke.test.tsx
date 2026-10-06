@@ -96,6 +96,43 @@ describe("界面冒烟", () => {
     expect(render({ view: "base", mapId: withVerify.map, nodeId: withVerify.node.id })).toMatch(/写代码验证|上板验证|台架与仪器测量/);
   });
 
+  it("总览有通才阶梯入口与学习原则（每条原则带出处按钮）", () => {
+    const html = render({ view: "home" });
+    expect(html).toContain("先走这条，再选方向");
+    for (const principle of catalog.principles) expect(html).toContain(principle.title);
+    expect(html).toContain("个域");
+  });
+
+  it("路线视图有均衡度入口；打开面板能看到偏科提示与最常见的偏科", () => {
+    const route = catalog.routes.find((r) => r.id === "route.digital-ic-verification")!;
+    let html = render({ view: "route", routeId: route.id });
+    expect(html).toContain("均衡度");
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.includes("均衡度"))!;
+    act(() => button.click());
+    html = container.innerHTML;
+    expect(html).toContain("这条路线没有碰到的域，建议补上");
+    expect(html).toContain("这个方向最常见的偏科");
+    for (const item of route.pitfalls!) expect(html).toContain(item.slice(0, 10));
+  });
+
+  it("通才阶梯的均衡度面板说明十二个域一个不缺", () => {
+    render({ view: "route", routeId: "route.generalist-ladder" });
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.includes("均衡度"))!;
+    act(() => button.click());
+    expect(container.innerHTML).toContain("一个不缺");
+  });
+
+  it("抽屉里显示节点所属的能力域", () => {
+    const html = render({ view: "base", mapId: "frontier-depth", nodeId: "polaris.frontier.rtl_to_gds" });
+    expect(html).toContain("数字逻辑与 HDL");
+  });
+
+  it("有岗位画像的路线会显示，并写明是时效性样本", () => {
+    const html = render({ view: "route", routeId: "route.firmware-trusted" });
+    expect(html).toContain("高端岗位的能力画像");
+    expect(html).toContain("不构成录用承诺");
+  });
+
   it("不存在的路线或参考层的图：给出说明而不是白屏", () => {
     expect(render({ view: "route", routeId: "route.nope" })).toContain("找不到这条路线");
     expect(render({ view: "base", mapId: "target-gnc" })).toContain("不对外开放");

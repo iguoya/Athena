@@ -1,12 +1,14 @@
 import { motion } from "motion/react";
-import { ArrowUpRight, Flag } from "lucide-react";
+import { ArrowUpRight, Flag, Footprints } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
+import { coveredDomains, DOMAINS, LADDER_ID } from "@/content/coverage";
 import { BALANCES, LENSES, routeMatrix, routeNodeCount } from "@/content/routes";
 import type { Route } from "@/content/types";
+import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
 import { BALANCE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
 
-function RouteCard({ route, index }: { route: Route; index: number }) {
+function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; index: number }) {
   const go = useApp((s) => s.go);
   return (
     <motion.button
@@ -28,7 +30,7 @@ function RouteCard({ route, index }: { route: Route; index: number }) {
         <span className="line-clamp-2">{route.artifact}</span>
       </span>
       <span className="mt-3 flex items-center gap-2 text-[11.5px] text-faint">
-        <span>{route.stages.length} 个阶段</span>·<span>{routeNodeCount(route)} 个知识点</span>
+        <span>{route.stages.length} 个阶段</span>·<span>{routeNodeCount(route)} 个知识点</span>·<span>碰到 {coveredDomains(catalog, route)}/{DOMAINS.length} 个域</span>
       </span>
     </motion.button>
   );
@@ -38,6 +40,7 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
   const go = useApp((s) => s.go);
   const matrix = routeMatrix(catalog);
   const codesign = catalog.allMaps.find((map) => map.view_kind === "codesign");
+  const ladder = catalog.routes.find((r) => r.id === LADDER_ID);
   let counter = 0;
 
   return (
@@ -68,8 +71,31 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
           </div>
         </motion.div>
 
+        {ladder && (
+          <button
+            type="button"
+            onClick={() => go({ view: "route", routeId: ladder.id })}
+            className="mt-8 flex w-full items-center gap-5 rounded-2xl border border-accent/40 bg-accent-soft/50 p-5 text-left transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
+          >
+            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-accent text-accent-ink">
+              <Footprints size={22} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="text-[12px] font-semibold tracking-wide text-accent">先走这条，再选方向</span>
+              <span className="mt-0.5 block text-[18px] font-bold">{ladder.title}</span>
+              <span className="mt-1 block text-[13px] leading-relaxed text-muted">{ladder.summary}</span>
+            </span>
+            <span className="hidden shrink-0 text-right text-[12px] text-muted md:block">
+              {ladder.stages.length} 个阶段 · {routeNodeCount(ladder)} 个知识点
+              <br />
+              十二个能力域一个不缺
+            </span>
+            <ArrowUpRight size={20} className="shrink-0 text-accent" />
+          </button>
+        )}
+
         {/* 软硬权重轴：路线按「偏软件 ↔ 偏硬件」放在三列里，行是划分角度 */}
-        <div className="mt-9 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">
+        <div className="mt-8 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">
           <div />
           {BALANCES.map((balance) => (
             <div key={balance} className="flex flex-col gap-2">
@@ -98,7 +124,7 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
                         这里还没有路线
                       </div>
                     ) : (
-                      routes.map((route) => <RouteCard key={route.id} route={route} index={counter++} />)
+                      routes.map((route) => <RouteCard key={route.id} catalog={catalog} route={route} index={counter++} />)
                     )}
                   </div>
                 );
@@ -106,6 +132,37 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
             </div>
           ))}
         </div>
+
+        {catalog.principles.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-[15px] font-semibold">几条被反复验证的学习原则</h2>
+            <p className="mt-1 text-[12.5px] text-muted">来自资深从业者的文章、体系结构领域的权威论述与真实的高端岗位描述，每条都带出处，可以点开核对。</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {catalog.principles.map((principle) => (
+                <div key={principle.id} className="flex flex-col rounded-2xl border border-line bg-surface p-4">
+                  <div className="text-[14px] font-semibold leading-snug">{principle.title}</div>
+                  <p className="mt-1.5 flex-1 text-[12.5px] leading-relaxed text-muted">{principle.body}</p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {principle.source_refs.map((ref) => {
+                      const source = catalog.sources.get(ref.source_id);
+                      return (
+                        <button
+                          key={`${ref.source_id}-${ref.locator}`}
+                          type="button"
+                          title={`${source?.title ?? ref.source_id} · ${ref.locator}`}
+                          onClick={() => source && void openExternal(source.url)}
+                          className="max-w-full truncate rounded-full bg-surface-2 px-2.5 py-1 text-[11px] text-muted transition-colors hover:bg-accent-soft hover:text-accent"
+                        >
+                          {source?.title.split(/[：:（(]/)[0] ?? ref.source_id}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <h2 className="mb-3 mt-12 text-[15px] font-semibold">想直接看全景？底盘里的图</h2>
         <div className="flex flex-wrap gap-2.5">

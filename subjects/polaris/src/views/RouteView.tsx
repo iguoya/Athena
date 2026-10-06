@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { ChevronDown, ChevronLeft, Flag, Users } from "lucide-react";
+import { ChevronDown, ChevronLeft, Flag, Radar, Users } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
+import { coveredDomains, DOMAINS } from "@/content/coverage";
 import { layoutRoute } from "@/content/routes";
 import { GraphCanvas, type ColumnNote } from "@/graph/GraphCanvas";
 import { EdgeCard } from "@/panels/EdgeCard";
+import { BalancePanel } from "@/panels/BalancePanel";
 import { NodeDrawer } from "@/panels/NodeDrawer";
 import { useApp } from "@/state/store";
 import { BALANCE_LABEL, LENS_LABEL, balanceVar } from "@/ui/labels";
@@ -15,6 +17,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
   const selectNode = useApp((s) => s.selectNode);
   const drawerWidth = useDrawerWidth();
   const [open, setOpen] = useState(true);
+  const [balanceOpen, setBalanceOpen] = useState(false);
 
   const route = catalog.routes.find((r) => r.id === routeId);
   const layout = useMemo(() => (route ? layoutRoute(catalog, route) : null), [catalog, route]);
@@ -62,9 +65,17 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
           </span>
           <button
             type="button"
+            onClick={() => setBalanceOpen((v) => !v)}
+            aria-expanded={balanceOpen}
+            className={`ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${balanceOpen ? "border-accent bg-accent-soft text-accent" : "border-line text-muted hover:border-accent hover:text-accent"}`}
+          >
+            <Radar size={13} /> 均衡度 {coveredDomains(catalog, route)}/{DOMAINS.length}
+          </button>
+          <button
+            type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
-            className="ml-auto flex items-center gap-1 text-[12px] text-muted transition-colors hover:text-ink"
+            className="flex items-center gap-1 text-[12px] text-muted transition-colors hover:text-ink"
           >
             {open ? "收起说明" : "展开说明"}
             <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
@@ -89,6 +100,12 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
             </p>
           </div>
         )}
+        {open && route.profile && (
+          <p className="mt-2 rounded-lg border border-dashed border-line px-3 py-2 text-[12px] leading-relaxed text-muted">
+            <span className="font-semibold text-ink">高端岗位的能力画像　</span>
+            {route.profile}
+          </p>
+        )}
       </div>
 
       <div className="relative min-h-0 flex-1">
@@ -102,6 +119,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
           edgeCard={(placed) => <EdgeCard catalog={catalog} placed={placed} />}
           onSelect={selectNode}
         />
+        {balanceOpen && <BalancePanel catalog={catalog} route={route} onClose={() => setBalanceOpen(false)} />}
         <AnimatePresence>
           {selected && (
             <NodeDrawer key={selected.id} catalog={catalog} node={selected} width={drawerWidth} onClose={() => selectNode(null)} />

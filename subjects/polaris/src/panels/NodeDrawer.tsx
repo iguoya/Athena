@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Cpu, ExternalLink, Gauge, Maximize2, Minimize2, Route as RouteIcon, ShieldAlert, Star, Target, Wrench, X, Code2 } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { STAGE_LABEL } from "@/content/catalog";
+import { DOMAINS } from "@/content/coverage";
 import { routesOfNode } from "@/content/routes";
 import type { PolarisEdge, PolarisNode } from "@/content/types";
 import { locationForNode } from "@/state/nav";
@@ -117,6 +118,7 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
               {node.stage && <Chip color={stageColor}>{STAGE_LABEL[node.stage]}</Chip>}
               {node.priority && <Chip>{PRIORITY_LABEL[node.priority]}</Chip>}
               {node.contract && <Chip color={contractVar(node.contract)}>{CONTRACT_LABEL[node.contract]}契约</Chip>}
+              {node.domain && <Chip>{DOMAINS.find((d) => d.id === node.domain)?.label ?? node.domain}</Chip>}
               {node.entry && (
                 <span className="flex items-center gap-1 text-[11.5px] text-muted">
                   <Star size={12} className="text-gold" fill="currentColor" strokeWidth={0} /> 推荐的入门起点

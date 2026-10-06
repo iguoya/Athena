@@ -9,6 +9,21 @@ export type Relation = "requires" | "enables";
 /** 软硬接口节点属于哪一份跨层契约（ADR 0016 决策 4）。 */
 export type Contract = "timing" | "memory" | "bus" | "power" | "boot" | "verify";
 
+/** 十二个能力域（ADR 0018 决策 1）：衡量一条路线是否偏科的尺子。 */
+export type Domain =
+  | "foundations"
+  | "programming"
+  | "algorithms"
+  | "systems"
+  | "acceleration"
+  | "security"
+  | "assurance"
+  | "embedded"
+  | "architecture"
+  | "digital"
+  | "circuits"
+  | "signals";
+
 export interface SourceRef {
   relation: string;
   source_id: string;
@@ -48,6 +63,8 @@ export interface PolarisNode {
   entry?: boolean;
   verify?: "code" | "board" | "bench";
   chapters?: Chapter[];
+  /** 开放地图的节点必有。 */
+  domain?: Domain;
   // 软硬接口节点（view_kind 为 codesign）
   contract?: Contract;
   hw_side?: string;
@@ -99,6 +116,17 @@ export interface Route {
   audience: string;
   artifact: string;
   stages: RouteStage[];
+  /** 常见的偏科与补法（ADR 0018）。 */
+  pitfalls?: string[];
+  /** 高端岗位能力画像：来自公开招聘的时效性样本，不构成录用承诺。 */
+  profile?: string;
+  source_refs: SourceRef[];
+}
+
+export interface Principle {
+  id: string;
+  title: string;
+  body: string;
   source_refs: SourceRef[];
 }
 
@@ -115,4 +143,5 @@ export interface PolarisDocument {
   maps: PolarisMap[];
   cross_edges: PolarisEdge[];
   routes?: Route[];
+  principles?: Principle[];
 }
