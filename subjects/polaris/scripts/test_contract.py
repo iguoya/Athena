@@ -77,7 +77,7 @@ class RealContent(unittest.TestCase):
 
     def test_codesign_map_covers_every_contract(self) -> None:
         nodes = find_map(DOC, "hw-sw-interface")["nodes"]
-        self.assertEqual(len(nodes), 14)
+        self.assertEqual(len(nodes), 17)
         # 六份跨层契约每一份至少有一个节点；覆盖缺口要写在 summary 里，不能假装齐全。
         self.assertEqual({n["contract"] for n in nodes}, contract.KNOWN_CONTRACT)
         # 入门、中级、资深三档都有节点，阶段分列才有意义。

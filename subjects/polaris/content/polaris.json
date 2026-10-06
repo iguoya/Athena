@@ -4490,7 +4490,7 @@
     {
       "id": "hw-sw-interface",
       "title": "软硬接口 · 软件看见的硬件",
-      "summary": "软件看见的硬件，和硬件承诺给软件的东西：按时序、存储与数据通路、总线、功耗、启动与可信、可验证六份跨层契约组织，每个节点同时写清硬件一侧与软件一侧。推荐入门起点是「寄存器与内存映射 I/O」。对照 ACM/IEEE CE2016 的体系结构、数字设计、嵌入式、系统资源管理、系统与项目工程各领域校准。尚未覆盖：设备树与板级支持包、CPU 与 FPGA 的异构 SoC、侧信道等安全细节，后续按需新增，不在这里假装已经齐全。",
+      "summary": "软件看见的硬件，和硬件承诺给软件的东西：按时序、存储与数据通路、总线、功耗、启动与可信、可验证六份跨层契约组织，每个节点同时写清硬件一侧与软件一侧。推荐入门起点是「寄存器与内存映射 I/O」。对照 ACM/IEEE CE2016 的体系结构、数字设计、嵌入式、系统资源管理、系统与项目工程各领域校准。尚未覆盖：高速串行接口（PCIe、SerDes）、射频与无线、更细的密码硬件与防篡改封装，后续按需新增，不在这里假装已经齐全。",
       "view_kind": "codesign",
       "nodes": [
         {
@@ -5074,6 +5074,132 @@
           "contract": "verify",
           "hw_side": "被测硬件或其高保真模型，加上能产生激励、采集响应并注入故障的台架接口。",
           "sw_side": "被测软件与测试脚本：可重复的激励、自动化的判据与记录，让仿真与实机的结果可以对账。"
+        },
+        {
+          "id": "polaris.codesign.device_tree_bsp",
+          "title": "板级描述与驱动绑定：设备树与 BSP",
+          "track": "systems",
+          "stable_definition": "设备树用一份数据结构描述板上有哪些硬件、挂在哪些地址与总线、用哪些中断和时钟；引导程序把它交给内核，驱动靠 compatible 匹配并从中取参数。板级支持包（BSP）则是为一块具体的板子，把引导程序、内核配置、设备树与驱动配齐的那一整包。",
+          "engineering_role": "把「这块板长什么样」从内核代码里搬到数据里，同一份内核与驱动可以跑在不同的板子上；也是硬件改版时软件必须跟着改的那一处。",
+          "practice": "为一块开发板写一个外设节点：声明寄存器地址、中断与时钟，再写驱动用 compatible 匹配并读取参数；改一个引脚或地址，只改设备树、不改驱动代码，验证新行为。",
+          "validation": "integration",
+          "validation_note": "不改驱动源码，仅换设备树就能在另一块板或另一组引脚上工作；启动日志里能看到节点被匹配并探测成功。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image",
+            "polaris.codesign.interrupts"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "devicetree-spec",
+              "locator": "Device Node Requirements 与 Flattened Devicetree (DTB) Format"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "linux-devicetree-usage",
+              "locator": "Linux and the Devicetree：设备树的使用模型"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "buildroot-manual",
+              "locator": "交叉编译与根文件系统：BSP 的组成"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-ESY-13 Computing platforms for embedded systems"
+            }
+          ],
+          "pitfall": "把板级差异写死在驱动里（宏、硬编码地址），换板子就要改代码；或设备树里的中断、时钟、地址写错，驱动探测失败却没有明确的报错。",
+          "priority": "important",
+          "priority_reason": "做嵌入式 Linux 与异构 SoC 绕不开的一环；纯裸机场景用不到，所以排在核心之后。",
+          "stage": "senior",
+          "stage_reason": "资深：需要驱动、中断与启动链的完整经验，并要在系统层面做板级取舍。",
+          "contract": "boot",
+          "hw_side": "板级硬件固定了每个外设的地址、中断线、时钟与引脚复用，这些是驱动无法自己发现的，只能由板级描述告知。",
+          "sw_side": "引导程序把设备树传给内核，内核按 compatible 匹配驱动并取参数；BSP 把引导程序、内核配置、设备树与驱动统一维护。"
+        },
+        {
+          "id": "polaris.codesign.heterogeneous_soc",
+          "title": "异构 SoC：CPU 与可编程逻辑、加速器的接口",
+          "track": "compute",
+          "stable_definition": "异构 SoC 把处理器、可编程逻辑与专用加速器放进同一块芯片，靠片上互连（如 AXI）共享存储与寄存器空间；软件看到的是一块带寄存器映射和 DMA 通道的「硬件加速器」，要处理一致性、带宽仲裁与中断。",
+          "engineering_role": "决定软硬划分能不能真正落地：划分得再好，接口的带宽、延迟与一致性不够，加速比也出不来。",
+          "practice": "在带可编程逻辑的 SoC 上把一个滤波核做成 IP：用内存映射寄存器配置、DMA 搬运数据、中断通知完成，并测端到端吞吐与延迟，与纯软件实现对比。",
+          "validation": "benchmark",
+          "validation_note": "实测吞吐与延迟与按接口带宽做的估算相符；去掉一致性维护或改变突发长度后，结果按预期变化。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.hw_sw_partition"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "vitis-hls",
+              "locator": "把 C/C++ 综合为 IP：AXI4-Lite、AXI4-Stream 与 AXI master 接口"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Domain-Specific Architectures"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-10 Concurrent hardware and software design"
+            }
+          ],
+          "pitfall": "只关注算力：忽略互连带宽与缓存一致性，数据搬运成了瓶颈，或 CPU 与加速器读到不同步的数据。",
+          "priority": "important",
+          "priority_reason": "软硬划分要落到真实芯片上才算数；但只做纯软件或纯逻辑的方向用不到，所以排在核心之后。",
+          "stage": "senior",
+          "stage_reason": "资深：要同时用到存储、DMA、划分与驱动的经验，并要读懂片上互连。",
+          "contract": "bus",
+          "hw_side": "片上互连连接 CPU、可编程逻辑与内存控制器，提供寄存器接口、DMA 通道与（部分接口上的）缓存一致性，带宽由互连与内存控制器共享。",
+          "sw_side": "驱动经内存映射寄存器配置加速器，用 DMA 或共享缓冲区交换数据，处理中断与缓存维护，并通过设备树把加速器接入系统。"
+        },
+        {
+          "id": "polaris.codesign.side_channel_security",
+          "title": "侧信道与物理攻击面",
+          "track": "assurance",
+          "stable_definition": "侧信道攻击不破解算法本身，而是从执行时间、缓存状态、功耗、电磁辐射或故障响应中推断秘密；调试口、启动模式与存储器接口则是直接的物理攻击面。防护要在硬件与软件两侧同时做。",
+          "engineering_role": "让「可信」从只看密码算法，扩展到看实现与物理环境，是带密钥设备与安全产品的验收口径。",
+          "practice": "对一个口令比较或密钥运算，测量执行时间或功耗与秘密值的相关性；再改成恒定时间实现并加防护，复测相关性消失，并确认调试口锁定后读不出受保护区域。",
+          "validation": "measurement",
+          "validation_note": "修复前能从测量中恢复出被测秘密的一部分，修复后统计检验不再显著；调试口锁定后无法读出受保护区域。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.boot_trust"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "chipwhisperer",
+              "locator": "功耗分析与故障注入教程：从测量到恢复密钥"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "spectre-attacks",
+              "locator": "由推测执行引起的缓存侧信道"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SEC-11 Side-channel attacks；CE-SEC-10 Trusted computing"
+            }
+          ],
+          "pitfall": "只做算法层加密就当安全：比较、查表与分支依赖秘密，或调试口、启动模式没锁，物理接触者无需破解就能读出密钥。",
+          "priority": "optional",
+          "priority_reason": "只有设备承载密钥、可能被物理接触或与不可信代码共享硬件时才成为硬要求；其余场景先把启动链与更新做好。",
+          "stage": "senior",
+          "stage_reason": "资深：需要存储层次、启动链与观测手段的完整经验，才看得懂泄露从哪来、怎么堵。",
+          "contract": "boot",
+          "hw_side": "硬件的时序、缓存、功耗与电磁特征会泄露内部状态；调试口、启动模式与存储器接口是物理攻击面，硬件可提供锁定位、屏蔽与随机化。",
+          "sw_side": "软件用恒定时间实现、避免依赖秘密的分支与访存、清除密钥残留，并在启动阶段锁定调试与受保护区域。"
         }
       ],
       "edges": [
@@ -5418,6 +5544,156 @@
               "relation": "informed",
               "source_id": "stm32f4-rm",
               "locator": "Power controller (PWR)：低功耗模式与唤醒"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.mmio",
+          "to": "polaris.codesign.device_tree_bsp",
+          "relation": "requires",
+          "rationale": "设备树里写的就是外设的寄存器地址、中断号与时钟；不懂内存映射，就读不懂也写不对这些属性。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "devicetree-spec",
+              "locator": "Device Node Requirements：reg、interrupts 与 clocks 属性"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.firmware_image",
+          "to": "polaris.codesign.device_tree_bsp",
+          "relation": "requires",
+          "rationale": "设备树二进制由引导程序加载并传给内核，放在映像的哪里、怎样被找到，属于启动链的一部分。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "linux-devicetree-usage",
+              "locator": "引导程序向内核传递设备树"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.interrupts",
+          "to": "polaris.codesign.device_tree_bsp",
+          "relation": "requires",
+          "rationale": "设备树用 interrupts 属性把外设接到中断控制器，先要懂中断的路径与优先级。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "devicetree-spec",
+              "locator": "interrupts 与 interrupt-parent 的约定"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.dma_cache",
+          "to": "polaris.codesign.heterogeneous_soc",
+          "relation": "requires",
+          "rationale": "加速器与 CPU 之间的数据交换就是 DMA 加一致性问题，先要把它们弄清楚。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "linux-dma-api",
+              "locator": "Dynamic DMA mapping Guide"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.hw_sw_partition",
+          "to": "polaris.codesign.heterogeneous_soc",
+          "relation": "requires",
+          "rationale": "异构 SoC 是划分决策落地的地方；没有数据流与带宽估算，就不知道接口该怎么切。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.memory_hierarchy",
+          "to": "polaris.codesign.side_channel_security",
+          "relation": "requires",
+          "rationale": "缓存与存储层次的状态是最常被利用的侧信道，先要懂命中、替换与推测访问。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "spectre-attacks",
+              "locator": "缓存状态作为侧信道"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.boot_trust",
+          "to": "polaris.codesign.side_channel_security",
+          "relation": "requires",
+          "rationale": "防护的对象就是启动链与密钥：不懂可信根与锁定位，就不知道攻击者想拿什么。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "mcuboot",
+              "locator": "签名校验与密钥的保护"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.codesign.peripheral_driver",
+          "to": "polaris.codesign.device_tree_bsp",
+          "relation": "enables",
+          "rationale": "驱动是设备树的消费者：写过驱动的人，才明白哪些东西该由板级描述来给。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "linux-devicetree-usage",
+              "locator": "驱动与设备树节点的匹配"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.peripheral_driver",
+          "to": "polaris.codesign.heterogeneous_soc",
+          "relation": "enables",
+          "rationale": "加速器对软件来说就是一个带寄存器与中断的外设，驱动的写法同样适用。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "vitis-hls",
+              "locator": "IP 导出后的寄存器接口"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.device_tree_bsp",
+          "to": "polaris.codesign.heterogeneous_soc",
+          "relation": "enables",
+          "rationale": "加速器 IP 靠设备树节点接入系统，这条路径决定了驱动能不能自动匹配上它。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "linux-devicetree-usage",
+              "locator": "设备树节点的描述方式"
+            }
+          ]
+        },
+        {
+          "from": "polaris.codesign.debug_interfaces",
+          "to": "polaris.codesign.side_channel_security",
+          "relation": "enables",
+          "rationale": "调试口本身就是最直接的物理攻击面，了解它能做什么，才知道该锁什么。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "openocd",
+              "locator": "JTAG 与 SWD 调试传输"
             }
           ]
         }
@@ -8806,6 +9082,46 @@
           "locator": "Task Management 与调度"
         }
       ]
+    },
+    {
+      "from": "polaris.ei.embedded_linux",
+      "to": "polaris.codesign.device_tree_bsp",
+      "relation": "enables",
+      "rationale": "嵌入式 Linux 的构建与启动流程，是设备树与 BSP 被用到的场景。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "buildroot-manual",
+          "locator": "交叉编译与根文件系统"
+        }
+      ]
+    },
+    {
+      "from": "polaris.codesign.device_tree_bsp",
+      "to": "polaris.ei.linux_driver",
+      "relation": "enables",
+      "rationale": "Linux 驱动开发里的设备匹配与参数获取，就是设备树的使用方式。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ldd3",
+          "locator": "设备驱动章节"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.fpga",
+      "to": "polaris.codesign.heterogeneous_soc",
+      "relation": "requires",
+      "strong": true,
+      "rationale": "异构 SoC 里的可编程逻辑部分，要靠 FPGA 与硬件描述语言的基础才做得出来。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "xilinx-ug901",
+          "locator": "Vivado 综合：把 HDL 变成可编程逻辑"
+        }
+      ]
     }
   ],
   "routes": [
@@ -8849,19 +9165,22 @@
           "checkpoint": "同一传感器分别以轮询、中断、DMA 读取，比较占用与丢包，并用调试接口定位一次异常。"
         },
         {
-          "title": "预算与可信",
-          "goal": "给时间、能耗与启动一个可检验的预算。",
+          "title": "预算、可信与板级",
+          "goal": "给时间、能耗与启动一个可检验的预算，并把板级差异交给描述而不是写死在代码里。",
           "nodes": [
             "polaris.codesign.realtime_timing",
             "polaris.codesign.power_thermal",
-            "polaris.codesign.boot_trust"
+            "polaris.codesign.boot_trust",
+            "polaris.codesign.side_channel_security",
+            "polaris.codesign.device_tree_bsp"
           ],
-          "checkpoint": "给出延迟直方图与电流曲线，并演示更新中途断电后仍能恢复。"
+          "checkpoint": "给出延迟直方图与电流曲线，演示更新中途断电后仍能恢复，并只改设备树就让同一份驱动在另一块板上工作。"
         },
         {
           "title": "划分与收口",
           "goal": "做出有依据的软硬划分，并在环验证。",
           "nodes": [
+            "polaris.codesign.heterogeneous_soc",
             "polaris.codesign.hw_sw_partition",
             "polaris.codesign.hil_verification"
           ],
@@ -9002,6 +9321,7 @@
           "title": "协同与验证",
           "goal": "做出软硬划分并验证它。",
           "nodes": [
+            "polaris.codesign.heterogeneous_soc",
             "polaris.codesign.hw_sw_partition",
             "polaris.codesign.hil_verification"
           ],
@@ -9152,6 +9472,7 @@
           "title": "嵌入式 Linux 与驱动",
           "goal": "把设备接进操作系统，并做成可交付的映像。",
           "nodes": [
+            "polaris.codesign.device_tree_bsp",
             "polaris.ei.embedded_linux",
             "polaris.ei.linux_driver",
             "polaris.codesign.boot_trust"
