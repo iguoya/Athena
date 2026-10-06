@@ -22,6 +22,8 @@ from extract_source import expand_entities  # noqa: E402
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PO = (PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "docs" / "tutorial"
       / "zh_CN" / "zh_CN.po")
+# 基准 po：Damned Lies 平台版（更新更全，入库作为填充与审计的共同参照）
+REFERENCE_PO = PROJECT_ROOT / "po" / "reference.zh_CN.po"
 CHAPTERS = PROJECT_ROOT / "content" / "chapters"
 
 
@@ -76,7 +78,12 @@ def main() -> int:
     apply = "--apply" in sys.argv
     fix = "--fix" in sys.argv
     rebuild = "--rebuild" in sys.argv
-    po_entries = parse_po(PO.read_text(encoding="utf-8"))
+    po_override = None
+    if "--po" in sys.argv:
+        po_override = sys.argv[sys.argv.index("--po") + 1]
+    po_source = Path(po_override) if po_override else (
+        REFERENCE_PO if REFERENCE_PO.is_file() else PO)
+    po_entries = parse_po(po_source.read_text(encoding="utf-8"))
     # 纯文本 → 译文（po 的 msgstr 同样转纯文本；多个 msgid 归一后撞键时先到先得）
     plain_zh: dict[str, str] = {}
     zh_to_own: dict[str, str] = {}
@@ -138,6 +145,8 @@ def main() -> int:
         if changed and apply:
             path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     verb = "已填充" if apply else "可填充（--apply 生效）"
+    if po_override:
+        verb += f"（外部 po：{Path(po_override).name}）"
     print(f"官方 po 对齐：{verb} {filled} 段；po 中无对应译文 {not_found} 段（留给自译流程）")
     fixed_verb = "已修正" if apply else "可修正（--fix 生效）"
     print(f"错位审计：{fixed_verb} {misplaced} 段（zh 恰为 po 中另一段的译文）")

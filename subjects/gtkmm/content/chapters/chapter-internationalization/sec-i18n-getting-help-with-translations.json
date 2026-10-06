@@ -14,13 +14,13 @@
    "type": "para",
    "text": "The way it works is that you upload your source code to a git\n        repository where translators can access it, then file an\n        [\n        issue to the damned-lies project](https://gitlab.gnome.org/Infrastructure/damned-lies/-/issues) and ask to have your program added to the\n        [list of modules to translate](http://l10n.gnome.org/module/).",
    "sha": "65bd0ff63c2d9ecd",
-   "zh": null
+   "zh": "它的工作方式是将你的源代码上传到git储存库，以便翻译人员可以访问它，然后联系gnome-i18n请求将你的程序添加到待翻译模块列表中。"
   },
   {
    "type": "para",
    "text": "Then you make sure you update the file\n        `POTFILES.in` in the\n        `po/` subdirectory\n        (`intltool-update -m` can help with this) so\n        that the translators always access updated\n        `myprogram.pot` files, and simply freeze\n        the strings at least a couple of days before you make a new\n        release. Depending on the number\n        of strings your program contains and how popular it is, the\n        translations will then start to tick in as\n        `.po` files.",
    "sha": "419563e1ec083192",
-   "zh": null
+   "zh": "然后请确保更新po/子目录下的POTFILES.in（intltool-update -m可以提供帮助），以便译者始终可以访问更新好的myprogram.pot文件，并在发布新版本之前的两三天在gnome-i18n邮件列表上宣布冻结字符串更改。根据程序所包含的字符串数数量以及程序的受欢迎程度，译者将逐渐向你提交languagename.po文件。"
   },
   {
    "type": "para",

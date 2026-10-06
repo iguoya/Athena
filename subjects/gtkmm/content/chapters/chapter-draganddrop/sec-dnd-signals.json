@@ -8,7 +8,7 @@
    "type": "para",
    "text": "When a drop target has accepted a dragged item, certain signals will be\nemitted, depending on what action has been selected. For instance, the user\nmight have held down the Shift key to specify a\n`move` rather than a `copy`. Remember that\nthe user can only select the actions which you have specified in your calls to\nGtk::DragSource::set_actions() and\nGtk::DropTarget::set_actions().",
    "sha": "5e2699cc17d914c9",
-   "zh": null
+   "zh": "当一个放置目的地接受了拖动项，根据被选择的动作，将发出响应的信号。例如，用户可能按住Shift键指定进行move而不是copy。请注意，用户只能选择你在调用drag_dest_set()和drag_source_set()时所指定的动作。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "listitem",
    "text": "`drag_end`: Provides a `Gdk::Drag`,\n  and a `bool` that tells if the drag was performing a `move`\n  and the data should be deleted.",
    "sha": "635c7414c316d5c9",
-   "zh": null
+   "zh": "drag_data_get：提供一个Gdk::Drag和一个Gtk::SelectionData对象，你应该在其中放入所请求的数据。"
   },
   {
    "type": "listitem",
@@ -68,7 +68,7 @@
    "type": "listitem",
    "text": "`accept`: Provides a `Gdk::Drop`.\n  You can call the status() method of the\n  `Gdk::Drop` to indicate which actions will be accepted.",
    "sha": "5d5b585469c5f9cd",
-   "zh": null
+   "zh": "drag_motion：提供一个Gdk::Drop以及坐标。你可以调用Gdk::Drop的status()方法来指示要接受的动作。"
   },
   {
    "type": "listitem",
@@ -86,31 +86,31 @@
    "type": "listitem",
    "text": "Gtk::DragSource::signal_prepare()",
    "sha": "ef86fb6d883ee489",
-   "zh": null
+   "zh": "drag_source_add_text_targets()"
   },
   {
    "type": "listitem",
    "text": "Gtk::DropTarget::signal_enter()",
    "sha": "f53340f77b92211b",
-   "zh": null
+   "zh": "drag_dest_add_text_targets()"
   },
   {
    "type": "listitem",
    "text": "Gtk::DropTarget::signal_motion()",
    "sha": "f34a72a1476a6a55",
-   "zh": null
+   "zh": "drag_dest_add_image_targets()"
   },
   {
    "type": "listitem",
    "text": "Gtk::DropTarget::signal_accept()",
    "sha": "1523a354d790f75e",
-   "zh": null
+   "zh": "drag_dest_add_image_targets()"
   },
   {
    "type": "listitem",
    "text": "Gtk::DropTarget::signal_drop()",
    "sha": "c6477bafb6cf58ef",
-   "zh": null
+   "zh": "drag_dest_add_image_targets()"
   }
  ]
 }

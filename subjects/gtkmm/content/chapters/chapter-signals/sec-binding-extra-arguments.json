@@ -8,7 +8,7 @@
    "type": "para",
    "text": "If you use one signal handler to catch the same signal from several widgets,\nyou might like that signal handler to receive some extra information. For\ninstance, you might want to know which button was clicked. You can do this with\n`sigc::bind()`. Here's some code from the [helloworld2]() example.",
    "sha": "ae67001afa3a2af6",
-   "zh": null
+   "zh": "如果你想使用一个信号处理函数从多个部件捕获同一个信号，你可能希望信号处理函数能收到一些额外的信息。例如，你可能想知道那个按钮被点击了。你可以使用sigc::bind()。这是helloworld2示例的部分代码： 这表示我们希望信号向信号处理函数发送一个额外的Glib::ustring参数，并且该参数的值为\\\"button 1\\\"。当然，我们将会需要向信号处理函数的声明中添加额外的参数:。当然，正常的\\\"clicked\\\"信号处理函数是没有参数的。"
   },
   {
    "type": "code",

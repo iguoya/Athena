@@ -26,31 +26,31 @@
    "type": "listitem",
    "text": "Glib::IOCondition::IO_IN - Call your method when there is data ready for\nreading on your file descriptor.",
    "sha": "8a5e446ef7de25a0",
-   "zh": null
+   "zh": "Glib::IO_IN - 当你提供的文件描述符有数据准备好被读取时调用你的方法。"
   },
   {
    "type": "listitem",
    "text": "Glib::IOCondition::IO_OUT - Call your method when the file descriptor is\nready for writing.",
    "sha": "67a6a62cbbbb56df",
-   "zh": null
+   "zh": "Glib::IO_OUT - 当提供的文件描述符准备好被写入时调用你的方法。"
   },
   {
    "type": "listitem",
    "text": "Glib::IOCondition::IO_PRI - Call your method when the file descriptor has urgent data to be read.",
    "sha": "35dec6f1c1c0fa2d",
-   "zh": null
+   "zh": "Glib::IO_PRI - 当提供的文件描述符有紧急数据要读取时调用你的方法。"
   },
   {
    "type": "listitem",
    "text": "Glib::IOCondition::IO_ERR - Call your method when an error has occurred on the file descriptor.",
    "sha": "30e711492ea7cd43",
-   "zh": null
+   "zh": "Glib::IO_ERR - 当提供的文件描述符上发生错误的时候调用你的方法。"
   },
   {
    "type": "listitem",
    "text": "Glib::IOCondition::IO_HUP - Call your method when hung up (the connection has been broken usually for pipes and sockets).",
    "sha": "b2221cd298f67a8d",
-   "zh": null
+   "zh": "Glib::IO_HUP - 挂起时（常见于管道和套接字的连接被断开）调用你的方法。"
   },
   {
    "type": "para",
@@ -68,7 +68,7 @@
    "type": "para",
    "text": "where `condition` is as\nspecified above. As usual the slot is created with\n`sigc::mem_fun()` (for a member method of an object), or\n`sigc::ptr_fun()` (for a function). A lambda expression can\nbe used, if you don't need the automatic disconnection that `sigc::mem_fun()`\nprovides when the object goes out of scope.",
    "sha": "fee6c109e8e668df",
-   "zh": null
+   "zh": "参数condition如上所述。通常使用sigc::mem_fun()（通过一个对象的成员函数创建）或sigc::ptr_fun()（通过一个普通函数创建）函数创建槽。"
   },
   {
    "type": "para",

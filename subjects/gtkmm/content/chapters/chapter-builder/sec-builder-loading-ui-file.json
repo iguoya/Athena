@@ -8,8 +8,7 @@
    "type": "para",
    "text": "Although you can use C++ code to instantiate and arrange widgets, this can soon\nbecome tedious and repetitive. And it requires a recompilation to show changes.\nThe [Cambalache](https://gitlab.gnome.org/jpu/cambalache)\napplication allows you to layout widgets on screen and then save an XML description\nof the arrangement. Your application can then use the `Gtk::Builder`\nAPI to load that XML file at runtime and obtain a pointer to specifically named\nwidget instances.",
    "sha": "f5cbe579f840892a",
-   "zh": null,
-   "status": "untranslated"
+   "zh": "尽管你可以使用C++代码对部件进行实例化和排列，但是这很快就会变得枯燥且重复。并且需要重新编译才能显示更改。Glade应用程序允许你在屏幕上布局部件并然后将布局保存为XML描述。你的应用程序可以在之后使用Gtk::BuilderAPI在运行时加载该XML文件，并获取特定名称部件实例的指针。"
   },
   {
    "type": "para",
@@ -35,7 +34,7 @@
    "type": "para",
    "text": "`Gtk::Builder` must be used via a\n`Glib::RefPtr`. Like all such classes, you need to use a\ncreate() method to instantiate it. For instance,",
    "sha": "ac16c874a503f92f",
-   "zh": null
+   "zh": "Gtk::Builder必须通过Glib::RefPtr来使用。与所有此类类一样，你需要通过使用create()方法实例化它。例如：这将实例化.glade文件中定义的窗口。"
   },
   {
    "type": "code",

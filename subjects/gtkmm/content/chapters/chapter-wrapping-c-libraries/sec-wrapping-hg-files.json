@@ -14,7 +14,7 @@
    "type": "para",
    "text": "A .hg file will typically include some headers\n        and then declare a class, using some macros to add API or behavior to\n        this class. For instance, gtkmm's `button.hg` looks\n        roughly like this:",
    "sha": "cf901e1c0baeeb45",
-   "zh": null
+   "zh": ".hg文件通常包含了一些头文件和声明一个类，并使用一些宏向类中添加API或行为。例如，gtkmm的button.hg文件看起来大概这样："
   },
   {
    "type": "code",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "The macros that you use in the .hg and .ccg files often need to know how\nto convert a C++ type to a C type, or vice-versa. `gmmproc` takes this information\nfrom an .m4 file in your `tools/m4/` or `codegen/m4/` directory.\nThis allows it to call a C function in the implementation of your C++ method,\npassing the appropriate parameters to that C function. For instance, this\ntells `gmmproc` how to convert a `GtkTreeView`\npointer to a `Gtk::TreeView` pointer:",
    "sha": "c5a7732f42b1585f",
-   "zh": null
+   "zh": "在.hg和.ccg文件中使用的宏通常需要知道如何将C++类型转换为C类型，反之亦然。gmmproc会从你的tools/m4/或codegen/m4/目录的.m4文件读取此信息。这样它就可以在C++方法的实现中调用C函数，并将适当的参数传递给该C函数。例如：这告诉gmmproc如何将GtkTreeView指针转换为Gtk::TreeView指针："
   },
   {
    "type": "code",
@@ -200,7 +200,7 @@
    "type": "para",
    "text": "`_CLASS_GOBJECT( C++ class, C class, C casting macro, C++ base class,\n    C base class, real C class, real C base class, declaration prefix )`",
    "sha": "5843fe91f7fb1f30",
-   "zh": null
+   "zh": "_CLASS_GOBJECT( C++类, C类, C转换宏, C++基类, C基类 )"
   },
   {
    "type": "para",
@@ -230,7 +230,7 @@
    "type": "para",
    "text": "`_CLASS_GTKOBJECT( C++ class, C class, C casting macro, C++ base class,\n    C base class, real C class, real C base class, declaration prefix )`",
    "sha": "ac1bda51d1047a76",
-   "zh": null
+   "zh": "_CLASS_GTKOBJECT( C++类, C类, C转换宏, C++基类, C基类 )"
   },
   {
    "type": "para",
@@ -272,7 +272,7 @@
    "type": "para",
    "text": "`_CLASS_BOXEDTYPE( C++ class, C class, new function, copy function,\n    free function, declaration prefix )`",
    "sha": "45a6dfa075cc41f8",
-   "zh": null
+   "zh": "_CLASS_BOXEDTYPE( C++类, C类, new函数, copy函数, free函数 )"
   },
   {
    "type": "para",
@@ -302,7 +302,7 @@
    "type": "para",
    "text": "`_CLASS_BOXEDTYPE_STATIC( C++ class, C class, declaration prefix )`",
    "sha": "a5dc24da447b0053",
-   "zh": null
+   "zh": "_CLASS_BOXEDTYPE_STATIC( C++类, C类 )"
   },
   {
    "type": "para",
@@ -332,7 +332,7 @@
    "type": "para",
    "text": "`_CLASS_OPAQUE_COPYABLE( C++ class, C class, new function, copy function,\n    free function, declaration prefix )`",
    "sha": "a4d70dd9e48c99a4",
-   "zh": null
+   "zh": "_CLASS_OPAQUE_COPYABLE( C++类, C类, new函数, copy函数, free函数 )"
   },
   {
    "type": "para",
@@ -362,7 +362,7 @@
    "type": "para",
    "text": "`_CLASS_OPAQUE_REFCOUNTED( C++ class, C class, new function, ref function,\n    unref function, declaration prefix )`",
    "sha": "0794e68d8b113da2",
-   "zh": null
+   "zh": "_CLASS_OPAQUE_REFCOUNTED( C++函数, C函数, new函数, ref函数, unref函数 )"
   },
   {
    "type": "para",
@@ -398,7 +398,7 @@
    "type": "para",
    "text": "Note: No `declaration prefix` argument. For instance,\n    for `Gdk::TimeCoord`:",
    "sha": "8e8851f29449daf3",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -422,7 +422,7 @@
    "type": "para",
    "text": "`_CLASS_INTERFACE( C++ class, C class, C casting macro, C interface struct,\n    Base C++ class (optional), Base C class (optional), declaration prefix (optional) )`",
    "sha": "33365fb6b4e599c6",
-   "zh": null
+   "zh": "_CLASS_INTERFACE( C++类, C类, C转换宏, C接口结构体, C++基类(可选的), C基类(可选的) )"
   },
   {
    "type": "para",
@@ -458,7 +458,7 @@
    "type": "para",
    "text": "`_CLASS_GTKOBJECT( C++ class, C class, C casting macro, C++ base class,\n    C base class, real C class, real C base class, declaration prefix )`",
    "sha": "ac1bda51d1047a76-1",
-   "zh": null
+   "zh": "_CLASS_GTKOBJECT( C++类, C类, C转换宏, C++基类, C基类 )"
   },
   {
    "type": "para",
@@ -494,7 +494,7 @@
    "type": "para",
    "text": "`_CLASS_BOXEDTYPE( C++ class, C class, new function, copy function,\n    free function, declaration prefix )`",
    "sha": "45a6dfa075cc41f8-1",
-   "zh": null
+   "zh": "_CLASS_BOXEDTYPE( C++类, C类, new函数, copy函数, free函数 )"
   },
   {
    "type": "para",
@@ -518,7 +518,7 @@
    "type": "para",
    "text": "`_CLASS_BOXEDTYPE_STATIC( C++ class, C class, declaration prefix )`",
    "sha": "a5dc24da447b0053-1",
-   "zh": null
+   "zh": "_CLASS_BOXEDTYPE_STATIC( C++类, C类 )"
   },
   {
    "type": "para",
@@ -542,7 +542,7 @@
    "type": "para",
    "text": "`_CLASS_OPAQUE_COPYABLE( C++ class, C class, new function, copy function,\n    free function, declaration prefix )`",
    "sha": "a4d70dd9e48c99a4-1",
-   "zh": null
+   "zh": "_CLASS_OPAQUE_COPYABLE( C++类, C类, new函数, copy函数, free函数 )"
   },
   {
    "type": "para",
@@ -566,7 +566,7 @@
    "type": "para",
    "text": "`_CLASS_OPAQUE_REFCOUNTED( C++ class, C class, new function, ref function,\n    unref function, declaration prefix )`",
    "sha": "0794e68d8b113da2-1",
-   "zh": null
+   "zh": "_CLASS_OPAQUE_REFCOUNTED( C++函数, C函数, new函数, ref函数, unref函数 )"
   },
   {
    "type": "para",
@@ -596,7 +596,7 @@
    "type": "para",
    "text": "Note: No `declaration prefix` argument. For instance,\n    for `Gdk::TimeCoord`:",
    "sha": "8e8851f29449daf3-1",
-   "zh": null
+   "zh": "示例来自Gdk::Rectangle："
   },
   {
    "type": "code",
@@ -614,7 +614,7 @@
    "type": "para",
    "text": "`_CLASS_INTERFACE( C++ class, C class, C casting macro, C interface struct,\n    Base C++ class (optional), Base C class (optional), declaration prefix (optional) )`",
    "sha": "33365fb6b4e599c6-1",
-   "zh": null
+   "zh": "_CLASS_INTERFACE( C++类, C类, C转换宏, C接口结构体, C++基类(可选的), C基类(可选的) )"
   },
   {
    "type": "para",
@@ -1922,7 +1922,7 @@
    "type": "para",
    "text": "For example, from `toplevel.hg`:",
    "sha": "5035fb9e6821eb09",
-   "zh": null
+   "zh": "示例来自于icontheme.hg："
   },
   {
    "type": "code",
@@ -1958,7 +1958,7 @@
    "type": "para",
    "text": "This macro just generates a Doxygen documentation block for the enum.\n  This is useful for enums that can't be wrapped with\n  `_WRAP_ENUM()` because they are complexly defined (maybe\n  using C macros) but including the generated enum documentation is still\n  desired. It is used with the same syntax as\n  `_WRAP_ENUM()` and also processes the same options (though\n  NO_GTYPE, gtype_func  and CONV_TO_INT are ignored because\n  they make no difference when just generating the enum's documentation).",
    "sha": "4e97906b87f25ecd",
-   "zh": null
+   "zh": "这个宏只是为枚举生成一个Doxygen文档块。这对于因为过于复杂（这通常是因为使用了C宏）而无法使用_WRAP_ENUM()包装，且依然需要包含为枚举生成的文档的枚举类型很有用。它与_WRAP_ENUM()使用同一语法，也处理一样的参数（尽管有些额外参数因为没有作用会被忽略）"
   },
   {
    "type": "heading",
@@ -2198,7 +2198,7 @@
    "type": "para",
    "text": "For example, from `toplevel.hg`:",
    "sha": "5035fb9e6821eb09-1",
-   "zh": null
+   "zh": "示例来自于icontheme.hg："
   },
   {
    "type": "code",
@@ -2228,7 +2228,7 @@
    "type": "para",
    "text": "This macro just generates a Doxygen documentation block for the enum.\n  This is useful for enums that can't be wrapped with\n  `_WRAP_ENUM()` because they are complexly defined (maybe\n  using C macros) but including the generated enum documentation is still\n  desired. It is used with the same syntax as\n  `_WRAP_ENUM()` and also processes the same options (though\n  NO_GTYPE, gtype_func  and CONV_TO_INT are ignored because\n  they make no difference when just generating the enum's documentation).",
    "sha": "4e97906b87f25ecd-1",
-   "zh": null
+   "zh": "这个宏只是为枚举生成一个Doxygen文档块。这对于因为过于复杂（这通常是因为使用了C宏）而无法使用_WRAP_ENUM()包装，且依然需要包含为枚举生成的文档的枚举类型很有用。它与_WRAP_ENUM()使用同一语法，也处理一样的参数（尽管有些额外参数因为没有作用会被忽略）"
   },
   {
    "type": "para",

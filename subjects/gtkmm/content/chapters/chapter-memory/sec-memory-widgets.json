@@ -86,7 +86,7 @@
    "type": "para",
    "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
    "sha": "555d794c74fb65dc",
-   "zh": null
+   "zh": "通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。 在这，程序员删除pButton以防止内存泄漏。"
   },
   {
    "type": "code",
@@ -122,7 +122,7 @@
    "type": "para",
    "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
    "sha": "555d794c74fb65dc-1",
-   "zh": null
+   "zh": "通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。 在这，程序员删除pButton以防止内存泄漏。"
   },
   {
    "type": "code",
@@ -170,7 +170,7 @@
    "type": "para",
    "text": "However, usually, when you create such a widget, you will already know that its\nparent container should be responsible for destroying it. In addition, modern\nC++ style discourages use of the `new` operator, which was\nrequired when passing a newly created widget to `manage()`.\nTherefore, gtkmm has added `make_managed()`, which combines\ncreation and marking with `manage()` into a single step. This\navoids you having to write `new`, which is discouraged in\nmodern C++ style, and more clearly expresses intent to create a managed widget.",
    "sha": "36c48c04754c006f",
-   "zh": null
+   "zh": "但是通常当你创建这样的部件时，你已经知道其父部件应该负责销毁它。此外现代C++风格不推荐使用new操作符，而将新创建的部件传递给manage()时需要使用new。因此，gtkmm添加了make_managed()函数，这个函数将两个步骤合并到了一起。这避免了让你编写现代C++风格不建议的带有new的代码，并更清楚的表达了创建托管部件的意图。"
   },
   {
    "type": "code",
@@ -194,7 +194,7 @@
    "type": "para",
    "text": "Of course, a top-level container will not be added to another container. The\nprogrammer is responsible for destroying the top-level container using one of\nthe traditional C++ techniques. Or you can let Gtk::Application::make_window_and_run()\ncreate a top-level window and delete it when it's closed.",
    "sha": "09451afa1d613a5c",
-   "zh": null
+   "zh": "当然，顶级容器不会被添加到另一个容器中。程序员负责使用一种传统的C++技术销毁顶级容器。例如，你的顶级窗口可能只是main()函数中的一个实例。"
   }
  ]
 }

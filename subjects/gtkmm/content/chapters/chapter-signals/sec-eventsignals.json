@@ -14,7 +14,7 @@
    "type": "para",
    "text": "You might occasionally find it useful to handle events when there's something\nyou can't accomplish with normal signals. `Gtk::Button`,\nfor example, does not send mouse-pointer coordinates with its\n`clicked` signal, but you could handle\nGtk::GestureClick::signal_pressed() if you needed this\ninformation. Gtk::EventControllerKey::signal_key_pressed()\nis often used to handle key-presses.",
    "sha": "4554256d29f148e4",
-   "zh": null
+   "zh": "当有些事情你无法使用常规信号完成时，你可能会发现X事件信号非常有用。例如：Gtk::Button的clicked信号不会发送鼠标指针的坐标，而button_press_event信号会。X事件也用于处理按键。"
   },
   {
    "type": "para",
@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Handling an event doesn't affect the Widget's other signals. If you handle\nGtk::GestureClick::signal_pressed() for\n`Gtk::Button`, you'll still be able to get the\n`clicked` signal. They are emitted at (nearly) the same time.",
    "sha": "5f880039d300c9ff",
-   "zh": null
+   "zh": "处理X事件不会影响部件的其他信号。如果你处理Gtk::Button的button_press_event信号，你依旧可以得到clicked信号。这两个信号将几乎于同一时间被发出。"
   },
   {
    "type": "para",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "By default, signal handlers that return `void` are called after\nany previously-connected signal handlers. However, this can be a problem with\nevent signals that can stop event propagation by returning `true`.\nFor instance, the existing signal handlers, or the default signal handler, might return\n`true` to stop other signal handlers from being called.\nTo specify that your signal handler should be called before the other signal handlers,\nyou can specify `false` for the `after` parameter.\nThis connect() parameter is optional, if the signal handler\nreturns `void`. For instance,",
    "sha": "fc5c62d5bbeee239",
-   "zh": null
+   "zh": "默认情况下，你的信号处理函数将于所有之前连接到信号的信号处理函数之后被调用。但是这对于X事件信号可能会出问题。例如，现有的信号处理函数或默认信号处理函数如果返回了true将会停止事件传播，这时候你的信号处理函数就不会被调用。你可以指定可选参数after为false，这样你的信号处理函数就总是会被调用。例如："
   },
   {
    "type": "code",

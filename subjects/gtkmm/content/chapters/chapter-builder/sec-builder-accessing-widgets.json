@@ -8,13 +8,13 @@
    "type": "para",
    "text": "To access a widget, for instance to show a dialog, use\nthe get_widget() method, providing the widget's name.\nThis name should be specified in the `Cambalache`\nwindow. If the widget could not be found, or is of the wrong type, then the\npointer will be set to `nullptr`.",
    "sha": "cb6ed1a4265369c4",
-   "zh": null
+   "zh": "要访问部件，例如show()一个对话框，请使用get_widget()方法，并向其提供一个部件名。这个名称应该在Glade的窗口属性中指定。如果找不到该部件或是部件的类型不对，则指针将被设为nullptr。"
   },
   {
    "type": "para",
    "text": "The dialogs in this chapter are derived from `Gtk::Window`\nbecause `Gtk::Dialog` is deprecated since gtkmm 4.10.",
    "sha": "084fd2b45b899e86",
-   "zh": null
+   "zh": "再次步骤中，我们使用Gtk::Builder实例将Gtk::Builder UI文件和我们的应用程序窗口类相关联。"
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "This simple example shows how to load a `.ui`\nfile at runtime and access the widgets with `Gtk::Builder`.",
    "sha": "556666e47eb12618",
-   "zh": null
+   "zh": "这个简单示例展示了如何在运行时加载Glade文件并使用Gtk::Builder访问部件。"
   },
   {
    "type": "para",

@@ -14,7 +14,7 @@
    "type": "para",
    "text": "A keyboard event is first sent to the toplevel window\n      (`Gtk::Window`), where it will be checked\n      for any keyboard shortcuts that may be set (accelerator keys and mnemonics,\n      used for selecting menu items from the keyboard). After this (and assuming\n      the event wasn't handled), it is propagated down until it reaches the widget\n      which has keyboard focus. The event will then propagate up until it reaches\n      the top-level widget, or until you stop the propagation by returning\n      `true` from an event handler.",
    "sha": "b29484f6d226180f",
-   "zh": null
+   "zh": "与其他事件相反，键盘事件首先被发送到顶级窗口（Gtk::Window），在此检查任何可能被设置的键盘快捷键（用于从键盘选择菜单项的快捷键、助记符）。然后（假设事件没有被处理）将其发送到焦点部件，然后从此部件开始传播。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "In this example there are 9 `EventControllerKey`s,\n        3 in each of a `Gtk::Window`, a `Gtk::Box`\n        and a `Gtk::Label`. In each of the widgets there is\n        one event controller for each propagation phase.",
    "sha": "281db7510d9ab9ad",
-   "zh": null
+   "zh": "在此示例中，Gtk::Window在默认事件处理程序之后调用了三个事件处理程序，一个在Gtk::Entry中、一个在Gtk::Grid中、一个在Gtk::Window中。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "When you write in the label, a key press event will be emitted,\n        which will go first, in the capture phase, to the toplevel window\n        (`Gtk::Window`), then down to its child, the\n        box, then to the box's child, the label with the keyboard focus.\n        In the target phase the event goes only to the widget with the keyboard\n        focus (the label). In the bubble phase the event goes first to the widget\n        with the keyboard focus (the label), then to its parent (the box), then\n        to the box's parent (the window). If the event propagates all the way\n        down to the label and then up to the window without being stopped,\n        the text you're writing will appear in the `Label`\n        above the `Label` you're writing in.",
    "sha": "16e870fbd04fde97",
-   "zh": null
+   "zh": "当你在条目中写入的时候，将发出一个按键放开事件，该事件将先进入顶层窗口（Gtk::Window），因为我们之前设置了一个事件处理程序，所以windowKeyReleaseBefore()将先被调用。然后调用已被覆盖的默认信号处理程序，然后将事件传播到具有焦点的部件，也就是示例中的Entry，根据事件处理程序的返回值，该事件可以被传播到Grid和Window。如果该事件被传播，你写入的文本将出现在Entry上方的Label中。"
   },
   {
    "type": "figure",

@@ -32,7 +32,7 @@
    "type": "para",
    "text": "Here is an excerpt from a `gdb` session. Only the most\ninteresting parts of the output are shown.",
    "sha": "f10bc7181dcfcab7",
-   "zh": null
+   "zh": "这是gdb会话的摘要。只显示输出中最有趣的部分： 你可以看到在without_signal.cc的第六行抛出了异常(throw \\\"Something\\\";)。"
   },
   {
    "type": "code",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "And here's an excerpt from a `gdb` session.",
    "sha": "868400085b67c966",
-   "zh": null
+   "zh": "使用git版本的gtkmm"
   },
   {
    "type": "code",
@@ -74,7 +74,7 @@
    "type": "para",
    "text": "The exception is caught in `glibmm`, and the program\nends with a call to `g_error()`. Other exceptions may result\nin different behavior, but in any case the exception from a signal handler is\ncaught in `glibmm` or gtkmm, and\n`gdb` can't see where it was thrown.",
    "sha": "e8b576f15e434046",
-   "zh": null
+   "zh": "这是gdb会话的摘录： glibmm将捕获了异常，并调用g_error()结束了程序。其他的异常行为可能不一样，不过所有从信号处理函数中抛出的异常都会被glibmm或gtkmm所捕获，并且gdb将无法看到异常被抛出的具体位置。"
   },
   {
    "type": "para",
@@ -92,7 +92,7 @@
    "type": "para",
    "text": "If there are many caught exceptions before the interesting uncaught one, this\nmethod can be tedious. It can be automated with the following\n`gdb` commands.",
    "sha": "95de7f9241f118ff",
-   "zh": null
+   "zh": "如果在感兴趣的未捕获异常之前有多个捕获异常，这个方法将会非常的枯燥。可以使用以下gdb命令自动化进行这个工作。 这些命令将在每次抛出时打印回溯信息并继续。通常最后一个或第一个throw是你所需要的。"
   },
   {
    "type": "code",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "These commands will print a backtrace from each `throw` and continue.\nThe backtrace from the last (or possibly the last but one) `throw`\nbefore the program stops, is the interesting one.",
    "sha": "a2f4b577f68f61fe",
-   "zh": null
+   "zh": "如果在感兴趣的未捕获异常之前有多个捕获异常，这个方法将会非常的枯燥。可以使用以下gdb命令自动化进行这个工作。 这些命令将在每次抛出时打印回溯信息并继续。通常最后一个或第一个throw是你所需要的。"
   }
  ]
 }

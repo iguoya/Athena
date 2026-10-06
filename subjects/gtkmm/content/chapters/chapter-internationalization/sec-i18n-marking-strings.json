@@ -20,7 +20,7 @@
    "type": "para",
    "text": "However, `Glib` defines\n    `gettext()`\n    support macros which are shorter wrappers in an easy-to-use form.\n    To use these macros, include ``,\n    and then, for example, substitute:",
    "sha": "f4f87a08fb03eaa6",
-   "zh": null
+   "zh": "Glib定义了gettext()支持宏，这些宏更为简单易用，要使用这些宏请#include 然后将：替换为："
   },
   {
    "type": "code",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "That will create a file named `programname.pot`.\n      Now copy that file to `languagecode.po`, such as\n      `de.po` or `hu.po`. Also add\n      that language code to `LINGUAS`. The\n      `.po` file contains a header and a list of English strings,\n      with space for the translated strings to be entered. Make sure you set the\n      encoding of the `.po` file to `UTF-8`.",
    "sha": "cdb3be25512d0405",
-   "zh": null
+   "zh": "这将创建一个名为programname.pot的文件。现在将该文件复制到languagecode.po，例如de.po或hu.po。接着将该语言代码添加到LINGUAS文件中。.po文件包含标头和英语字符串列表，并为翻译文本预留了空间。请确保将.po文件的编码设置（在标头中指定，但也指定其内容的编码）为了UTF-8。"
   },
   {
    "type": "code",
@@ -122,7 +122,7 @@
    "type": "para",
    "text": "It's possible that certain strings will be marked as\n      `fuzzy` in the `.po` file.\n      These translations will not substitute the original string. To make\n      them appear, simply remove the `fuzzy` tag.\n      A `fuzzy` tag appears if a string content changed,\n      but the location is still the same.",
    "sha": "5bab9914f442e474",
-   "zh": null
+   "zh": ".po文件中有些字符串可能被标记为fuzzy。这些翻译将不会替代原始字符串。如果要使其显示，只需要将fuzzy标记删除即可（通常该标记意味着翻译需要更新，不检查翻译直接删除标记是不对的）。"
   },
   {
    "type": "heading",

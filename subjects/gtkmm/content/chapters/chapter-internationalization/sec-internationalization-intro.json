@@ -38,13 +38,13 @@
    "type": "para",
    "text": "In the instructions below we will assume that you will not be using\n        `gettext` directly, but\n        `intltool`, which was written specifically for\n        `GNOME`. `intltool` uses\n        `gettext()`, which extracts strings from source code,\n        but `intltool` can also combine strings from\n        other files, for example from desktop menu details, and GUI resource\n        files such as `.ui` files, into standard\n        `gettext` `.pot/.po` files.",
    "sha": "44802ef0194a52d6",
-   "zh": null
+   "zh": "在下面的说明中我们假定你不直接使用gettext，而是使用专门为GNOME编写的intltool。intltool使用gettext()从源代码中提取字符串，但是intltool也从其他文件（例如桌面菜单详情、glade的GUI资源文件）中提取字符串写入到标准的gettext.pot/.po文件中。"
   },
   {
    "type": "para",
    "text": "We also assume that you are using autotools (`automake`\n        and `autoconf`) to build your project (although\n        autotools is not recommended for new applications), and\n        that you are using [\n          `./autogen.sh` from `gnome-common`](https://gitlab.gnome.org/Archive/gnome-common/-/blob/master/autogen.sh)\n        or a similar `autogen.sh` file, which, among other\n        things, takes care of some `intltool`\n        initialization.",
    "sha": "d2a7538450843995",
-   "zh": null
+   "zh": "我们还假设你正在使用自动构建工具（例如：automake和autoconf）构建你的项目，并且你正在使用来自gnome-common的./autogen.sh或与之类似的autogen.sh文件，在这里它负责初始化intltool。"
   },
   {
    "type": "para",
@@ -68,7 +68,7 @@
    "type": "para",
    "text": "Create a sub-directory named `po` in your project's root\n      directory. This directory will eventually contain all of your\n      translations. Within it, create a file named `LINGUAS`\n      and a file named `POTFILES.in`.",
    "sha": "c398b39d6de0fd35",
-   "zh": null
+   "zh": "在你项目的根目录下创建一个名称为po的子文件夹。该目录将包含你的所有翻译。在其中创建一个名为LINGUAS和一个名为POTFILES.in的文件。通常做法是在po文件夹再创建一个ChangeLog文件以便翻译人员跟踪翻译更改。"
   },
   {
    "type": "para",
@@ -86,7 +86,7 @@
    "type": "para",
    "text": "(In addition, you'd have the files `de.po` and\n      `ja.po` in your\n      `po` directory which contain the German and Japanese\n      translations, respectively.)",
    "sha": "0bc85c1f9d72147f",
-   "zh": null
+   "zh": "（此外，你的po文件夹必须有包含德语和日语翻译的ja.po和de.po文件）"
   },
   {
    "type": "para",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "If you are using `gettext` directly, you can only\n      mark strings for translation if they are in source code file. However, if\n      you use `intltool`, you can mark strings for\n      translation in a variety of other file formats, including\n      `.ui` files, xml,\n      [.desktop files](http://standards.freedesktop.org/desktop-entry-spec/latest/)\n      and several more. So, if you have designed some of the\n      application UI in xml files then also add your\n      `.ui` files to the list in\n      `POTFILES.in`.",
    "sha": "328e9d8bb2aa5364",
-   "zh": null
+   "zh": "如果你直接使用gettext，则你只能标记源代码文件中的字符串为需要被翻译。如果你使用intltool，则可以对多种格式的文件中的字符串进行标记，如GladeUI文件、XML、.desktop文件等。因此如果你使用Glade设计了应用程序UI，则你还需要将.glade添加到你的POTFILES.in列表中。"
   },
   {
    "type": "para",

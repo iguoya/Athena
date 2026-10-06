@@ -50,7 +50,7 @@
    "type": "para",
    "text": "At this point, the application will already react if you change one of the settings,\ne.g. using the `gsettings` commandline tool. Of course, we expect\nthe application to provide a preference dialog for these. So lets do that now.\nOur preference dialog will be a subclass of `Gtk::Window`, and\nwe'll use the same techniques that we've already seen in `ExampleAppWindow`:\na `Gtk::Builder` ui file and settings bindings.\nIn this case the bindings are more involved, though. We use\n`Gtk::FontDialogButton` and `Gtk::DropDown`\nin the preference dialog. The types of the properties in these classes can't be\nautomatically converted to the string type that `Gio::Settings` requires.",
    "sha": "056a7615e75105bf",
-   "zh": null
+   "zh": "此时，如果你更改其中一项设置（例如：使用gsettings命令行工具。），则应用程序会做出反应。当然，我们会希望应用程序为这些首选项提供一个对话框。所以我们现在就如此做。我们的首选项对话框将是Gtk::Dialog的子类，并且使用我们之前已经在ExampleAppWindow中看到的技术：Gtk::Builder UI文件和设置绑定。"
   },
   {
    "type": "para",

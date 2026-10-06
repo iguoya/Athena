@@ -32,19 +32,19 @@
    "type": "listitem",
    "text": "size_allocate_vfunc(): (optional) Position the widget, given the height and width that it has actually been given.",
    "sha": "192ba53ae88c4806",
-   "zh": null
+   "zh": "on_size_allocate()：提供将实际给予部件的宽度和高度以定位部件。"
   },
   {
    "type": "listitem",
    "text": "on_realize():  (optional)",
    "sha": "308297a694db9db7",
-   "zh": null
+   "zh": "on_map()：覆写此虚函数是可选的。"
   },
   {
    "type": "listitem",
    "text": "on_unrealize(): (optional)",
    "sha": "5127a6e8190ec32b",
-   "zh": null
+   "zh": "on_unmap()：覆写此虚函数是可选的。"
   },
   {
    "type": "listitem",
@@ -80,7 +80,7 @@
    "type": "para",
    "text": "Some `GTK` functions, if called at all, must be\ncalled from the class init function. Some other `GTK`\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom `Glib::ExtraClassInit` and derive your custom class\nfrom that class. The [custom CSS name example]()\nshows how that's done.",
    "sha": "ee9c2fafe16f1ea7",
-   "zh": null
+   "zh": "一些GTK函数必须在类的init函数中才能调用。另一些GTK函数必须在实例的init函数中才能调用。如果你的自定义部件必须调用这些函数中的任意一个，那么你可以从Glib::ExtraClassInit派生一个类，并从该类派生你的自定义类。以下示例演示了如何完成这些操作。"
   },
   {
    "type": "heading",

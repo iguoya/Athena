@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from apply_po import parse_po, po_to_plain, snapshot_plain  # noqa: E402
+from apply_po import REFERENCE_PO, parse_po, po_to_plain, snapshot_plain  # noqa: E402
 from extract_source import DOCBOOK, load_structure  # noqa: E402
 
 
@@ -389,8 +389,9 @@ def check_alignment() -> None:
     若某段的 zh 恰好等于 po 里「另一段」的译文，说明发生了顺序漂移——
     这是早期按顺序迁移译文的遗留事故，此处永久守门（应用 ADR 0002）。
     """
-    po_path = (PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "docs"
-               / "tutorial" / "zh_CN" / "zh_CN.po")
+    po_path = REFERENCE_PO if REFERENCE_PO.is_file() else (
+        PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "docs" / "tutorial"
+        / "zh_CN" / "zh_CN.po")
     if not po_path.is_file():
         return
     entries = parse_po(po_path.read_text(encoding="utf-8"))

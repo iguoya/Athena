@@ -20,13 +20,13 @@
    "type": "para",
    "text": "Declare a variable of the type of `Widget` you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\n`new` or `Gtk::make_managed()` in your code.",
    "sha": "f4931bf982762f19",
-   "zh": null
+   "zh": "声明一个你想要使用的Widget类型变量，通常是作为容器派生类的成员变量。你还可以声明一个指向部件类型的指针，然后在你的代码中使用new创建它。即使通过指针使用部件，也应该使该指针成为容器类的成员变量，以便你后续访问它。"
   },
   {
    "type": "para",
    "text": "Set the attributes of the widget. If the widget has no default constructor,\n then you will need to initialize the widget in the initializer list of your\n container class's constructor.",
    "sha": "c52dc1fd735ce043",
-   "zh": null
+   "zh": "设置部件的属性。如果部件没有默认构造函数，则你需要在容器类的构造函数的初始化列表中初始化部件。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "If you don't want all widgets to be shown, call Gtk::Widget::set_visible(false)\non the widgets that you don't want to show. If a container widget is hidden, all\nof its child widgets are also hidden, even if set_visible(false) is\nnot called on the child widgets.",
    "sha": "23d0c6b708079912",
-   "zh": null
+   "zh": "如果你不希望显示部件，请对不想要显示的部件调用Gtk::Widget::hide()可以将其隐藏，当一个容器部件被隐藏，它的所有子部件将一并被隐藏，即便你没有在那些子部件上调用hide()。"
   }
  ]
 }
