@@ -56,3 +56,12 @@ export function routeMatrix(catalog: Catalog): Record<RouteLens, Record<RouteBal
 export function routeNodeCount(route: Route): number {
   return new Set(route.stages.flatMap((stage) => stage.nodes)).size;
 }
+
+/** 一条路线里所有节点的章节总数：路线本身不复制章节，只数它引用的节点（ADR 0019）。 */
+export function routeChapterCount(catalog: Catalog, route: Route): number {
+  let total = 0;
+  for (const id of new Set(route.stages.flatMap((stage) => stage.nodes))) {
+    total += catalog.nodeById.get(id)?.chapters?.length ?? 0;
+  }
+  return total;
+}

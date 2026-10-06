@@ -133,6 +133,17 @@ describe("界面冒烟", () => {
     expect(html).toContain("不构成录用承诺");
   });
 
+  it("纵深节点的抽屉显示章节、每章的先修与出处；路线显示细化到多少章", () => {
+    const html = render({ view: "base", mapId: "hw-sw-interface", nodeId: "polaris.codesign.interrupts" });
+    expect(html).toContain("细分学习流程");
+    expect(html).toContain("中断控制器、优先级与向量表");
+    expect(html).toContain("先修：第");
+    expect(html).toContain("NVIC");
+    const route = render({ view: "route", routeId: "route.firmware-trusted" });
+    expect(route).toContain("细化到");
+    expect(route).toContain(" 章");
+  });
+
   it("不存在的路线或参考层的图：给出说明而不是白屏", () => {
     expect(render({ view: "route", routeId: "route.nope" })).toContain("找不到这条路线");
     expect(render({ view: "base", mapId: "target-gnc" })).toContain("不对外开放");

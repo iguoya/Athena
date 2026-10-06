@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { ArrowUpRight, Flag, Footprints } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { coveredDomains, DOMAINS, LADDER_ID } from "@/content/coverage";
-import { BALANCES, LENSES, routeMatrix, routeNodeCount } from "@/content/routes";
+import { BALANCES, LENSES, routeChapterCount, routeMatrix, routeNodeCount } from "@/content/routes";
 import type { Route } from "@/content/types";
 import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
@@ -30,7 +30,7 @@ function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; 
         <span className="line-clamp-2">{route.artifact}</span>
       </span>
       <span className="mt-3 flex items-center gap-2 text-[11.5px] text-faint">
-        <span>{route.stages.length} 个阶段</span>·<span>{routeNodeCount(route)} 个知识点</span>·<span>碰到 {coveredDomains(catalog, route)}/{DOMAINS.length} 个域</span>
+        <span>{route.stages.length} 个阶段</span>·<span>{routeNodeCount(route)} 个知识点</span>·<span>碰到 {coveredDomains(catalog, route)}/{DOMAINS.length} 个域</span>{routeChapterCount(catalog, route) > 0 && <>·<span>{routeChapterCount(catalog, route)} 章</span></>}
       </span>
     </motion.button>
   );

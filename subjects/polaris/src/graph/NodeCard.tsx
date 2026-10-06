@@ -79,6 +79,7 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
         ) : (
           <span>{TRACK_LABEL[node.track] ?? node.track}</span>
         )}
+        {node.chapters && node.chapters.length > 0 && <span className="ml-auto tabular-nums text-faint">{node.chapters.length} 章</span>}
       </span>
     </motion.button>
   );

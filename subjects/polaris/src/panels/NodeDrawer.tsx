@@ -276,7 +276,12 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
         {node.chapters && node.chapters.length > 0 && (
           <Section title={`细分学习流程 · ${node.chapters.length} 章`}>
             <ol className="space-y-2">
-              {node.chapters.map((chapter, index) => (
+              {node.chapters.map((chapter, index) => {
+                const chapterSource = chapter.ref ? catalog.sources.get(chapter.ref.source_id) : undefined;
+                const needs = (chapter.requires ?? [])
+                  .map((id) => node.chapters!.findIndex((c) => c.id === id) + 1)
+                  .filter((n) => n > 0);
+                return (
                 <li key={chapter.id} className="flex gap-3 rounded-xl border border-line bg-surface p-3">
                   <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-2 text-[11px] font-semibold text-muted">{index + 1}</span>
                   <div className="min-w-0">
@@ -286,9 +291,25 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
                       {(chapter.kind === "practice" || chapter.hands_on) && <Chip color="var(--stage-junior)">实践</Chip>}
                     </div>
                     <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{chapter.summary}</p>
+                    {(needs.length > 0 || chapterSource) && (
+                      <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] text-faint">
+                        {needs.length > 0 && <span>先修：第 {needs.join("、")} 章</span>}
+                        {chapterSource && chapter.ref && (
+                          <button
+                            type="button"
+                            onClick={() => void openExternal(chapterSource.url)}
+                            title="在浏览器里打开核对"
+                            className="flex items-center gap-1 text-left transition-colors hover:text-accent"
+                          >
+                            <ExternalLink size={11} /> {chapterSource.title.split(/[：:（(]/)[0]} · {chapter.ref.locator}
+                          </button>
+                        )}
+                      </p>
+                    )}
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ol>
           </Section>
         )}

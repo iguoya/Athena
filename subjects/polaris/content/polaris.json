@@ -4418,7 +4418,70 @@
           "app": "",
           "stage": "senior",
           "stage_reason": "资深支撑：板级数据通路接到可验收的特征与吞吐。",
-          "domain": "digital"
+          "domain": "digital",
+          "chapters": [
+            {
+              "id": "df.partition",
+              "title": "哪些处理放进数据通路",
+              "summary": "高频、并行或确定时序的处理，与软件控制面的分工。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "df.pipeline",
+              "title": "流水线与并行结构",
+              "summary": "怎样用流水线与并行提高吞吐，以及它们的延迟代价。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "df.fixed",
+              "title": "定点数与位宽",
+              "summary": "定点表示、位宽选择与溢出保护。",
+              "requires": [
+                "df.pipeline"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "df.stream",
+              "title": "流接口与背压",
+              "summary": "流式接口、握手与背压，避免数据丢失。",
+              "requires": [
+                "df.pipeline"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "df.measure",
+              "title": "测吞吐、延迟与溢出保护",
+              "summary": "测端到端吞吐与延迟，并验证溢出保护有效。",
+              "requires": [
+                "df.fixed",
+                "df.stream"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "df.verify",
+              "title": "与软件参考模型对比",
+              "summary": "用软件参考模型验证数据通路的数值结果。",
+              "requires": [
+                "df.measure"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.ei.board-system",
@@ -4576,7 +4639,76 @@
           "contract": "memory",
           "hw_side": "外设把控制位、状态位、数据寄存器映射到固定地址，并规定访问宽度、读写属性（只读、写 1 清零、读清除）与复位值。",
           "sw_side": "软件通过指针按正确宽度读写这些地址，并用 volatile 与内存屏障保证每次访问真的发生、按序发生。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "mmio.map",
+              "title": "地址空间与寄存器映射",
+              "summary": "从参考手册的内存映射表读出外设基地址、寄存器偏移、宽度与复位值，把「软件看见的硬件」画成一张地址图。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Memory and bus architecture：外设地址映射"
+              }
+            },
+            {
+              "id": "mmio.attr",
+              "title": "访问属性与副作用",
+              "summary": "只读、写 1 清零、读清除、保留位各自的行为，以及为什么读-改-写会在某些寄存器上出错。",
+              "requires": [
+                "mmio.map"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "寄存器描述中的访问类型"
+              }
+            },
+            {
+              "id": "mmio.volatile",
+              "title": "volatile、对齐与内存屏障",
+              "summary": "让编译器不合并、不删除、不重排对寄存器的访问；按寄存器宽度访问；需要时用屏障保证顺序。",
+              "requires": [
+                "mmio.attr"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "ldd3",
+                "locator": "Communicating with Hardware：I/O 内存的访问与屏障"
+              }
+            },
+            {
+              "id": "mmio.bits",
+              "title": "位域与掩码的封装",
+              "summary": "用掩码与移位封装字段读写、不写魔法数，并避免误碰只读与写 1 清零的位。",
+              "requires": [
+                "mmio.volatile"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mmio.bringup",
+              "title": "只靠寄存器点亮并读回",
+              "summary": "只用寄存器读写点亮一个引脚、读回另一个，用调试器与示波器核对寄存器值与电平，并定位一个访问属性造成的错误。",
+              "requires": [
+                "mmio.bits"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAO-8 Input/Output interfacing and communication"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.firmware_image",
@@ -4616,7 +4748,92 @@
           "contract": "boot",
           "hw_side": "芯片规定复位后从哪个地址取向量表与第一条指令，以及闪存与 RAM 各自的地址范围和访问特性。",
           "sw_side": "链接脚本、启动代码与编译选项把代码和数据安置到这些地址，并在进入 main 之前建立 C 运行环境。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "fw.objects",
+              "title": "目标文件、符号与重定位",
+              "summary": "编译产物里有什么，链接器怎样解析符号并决定地址。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Linking（第 7 章）"
+              }
+            },
+            {
+              "id": "fw.sections",
+              "title": "段与存储区",
+              "summary": "代码、常量、已初始化数据、BSS、栈与堆各自住在闪存还是 RAM。",
+              "requires": [
+                "fw.objects"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Linking：目标文件的段"
+              }
+            },
+            {
+              "id": "fw.linker",
+              "title": "链接脚本：把段安置到闪存与 RAM",
+              "summary": "按芯片的存储区地址范围写链接脚本，决定每一段的位置与大小。",
+              "requires": [
+                "fw.sections"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Memory and bus architecture：闪存与 SRAM 的地址范围"
+              }
+            },
+            {
+              "id": "fw.startup",
+              "title": "启动代码",
+              "summary": "向量表、搬运已初始化数据、清零 BSS、设置栈，直到进入 main 之前发生的事。",
+              "requires": [
+                "fw.linker"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Boot configuration：复位后的取指地址"
+              }
+            },
+            {
+              "id": "fw.mapfile",
+              "title": "读 map 文件与反汇编",
+              "summary": "仅凭 map 文件与反汇编，解释任意函数、全局变量与向量的最终地址和所在存储区。",
+              "requires": [
+                "fw.linker"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fw.diagnose",
+              "title": "用映像知识诊断问题",
+              "summary": "栈溢出、未清零的数据、体积超限与 hard fault 现场，都能追到映像布局上的原因。",
+              "requires": [
+                "fw.startup",
+                "fw.mapfile"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-ESY-4 Basic software techniques for embedded applications"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.clock_reset",
@@ -4649,7 +4866,90 @@
           "contract": "timing",
           "hw_side": "晶振与锁相环产生时钟，时钟树把它分频到各外设；触发器对建立/保持时间有硬性要求，复位有同步与异步释放之分。",
           "sw_side": "软件配置时钟源与分频、等待时钟稳定标志，据此推出定时器、波特率与延时常数；复位之后检查并恢复状态。",
-          "domain": "digital"
+          "domain": "digital",
+          "chapters": [
+            {
+              "id": "clk.tree",
+              "title": "时钟源与时钟树",
+              "summary": "晶振、内部振荡器、锁相环与总线分频，各外设的时钟从哪里来。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Reset and clock control (RCC)：时钟源、锁相环与总线分频"
+              }
+            },
+            {
+              "id": "clk.setuphold",
+              "title": "建立时间、保持时间与亚稳态",
+              "summary": "触发器为什么要求数据在时钟沿前后保持稳定，违反之后会发生什么。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-DIG-7 Modular design of sequential circuits"
+              }
+            },
+            {
+              "id": "clk.config",
+              "title": "配置时钟并验证频率",
+              "summary": "按时钟树配出一个已知频率，用示波器测定时器输出来核对。",
+              "requires": [
+                "clk.tree"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "RCC 寄存器配置"
+              }
+            },
+            {
+              "id": "clk.reset",
+              "title": "复位源与复位后的状态",
+              "summary": "上电、外部、看门狗等复位源，复位后寄存器的状态与需要重新做的初始化。",
+              "requires": [
+                "clk.tree"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "RCC 中的复位控制"
+              }
+            },
+            {
+              "id": "clk.cdc",
+              "title": "跨时钟域与同步器",
+              "summary": "异步信号进入另一个时钟域的风险，以及两级同步器的作用。",
+              "requires": [
+                "clk.setuphold"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "clk.budget",
+              "title": "时间常数折算与误差预算",
+              "summary": "把定时、波特率与延时折算成时钟周期，推导分频误差对它们的影响，并指出配错一位的后果。",
+              "requires": [
+                "clk.config",
+                "clk.cdc"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAE-6 MOS transistor circuits, timing, and power"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.isa_microarch",
@@ -4692,7 +4992,94 @@
           "contract": "timing",
           "hw_side": "处理器按指令集语义取指、译码、执行；流水线与分支预测等微架构机制在不改变语义的前提下影响周期数。",
           "sw_side": "编译器与手写汇编只能依赖指令集语义；性能与时序分析要借助微架构模型或实测，不能假设每条指令周期固定。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "isa.contract",
+              "title": "指令集是软硬件的契约",
+              "summary": "寄存器、指令语义、异常模型与调用约定：软件能依赖什么，硬件可以自由变化什么。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Machine-Level Representation of Programs（第 3 章）"
+              }
+            },
+            {
+              "id": "isa.asm",
+              "title": "读写汇编：C 到指令的对照",
+              "summary": "对照同一段 C 代码在不同优化级别下的汇编，说明编译器做了什么。",
+              "requires": [
+                "isa.contract"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "csapp",
+                "locator": "第 3 章：程序的机器级表示"
+              }
+            },
+            {
+              "id": "isa.pipeline",
+              "title": "流水线与冒险",
+              "summary": "取指、译码、执行、访存、写回，以及数据冒险、控制冒险与结构冒险。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Appendix C Pipelining: Basic and Intermediate Concepts"
+              }
+            },
+            {
+              "id": "isa.predict",
+              "title": "分支预测与乱序的直觉",
+              "summary": "为什么预测错误代价高、为什么依赖链会让周期数增加。",
+              "requires": [
+                "isa.pipeline"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Instruction-Level Parallelism and Its Exploitation"
+              }
+            },
+            {
+              "id": "isa.counter",
+              "title": "用周期计数器测一个循环",
+              "summary": "用硬件计数器测一个循环的周期，改写数据依赖或分支后观察变化。",
+              "requires": [
+                "isa.asm",
+                "isa.pipeline"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nand2tetris",
+                "locator": "Machine Language 与 Computer Architecture"
+              }
+            },
+            {
+              "id": "isa.explain",
+              "title": "解释偏差",
+              "summary": "把实测周期与流水线模型的估算对账，说出差异来自依赖、分支还是访存。",
+              "requires": [
+                "isa.counter",
+                "isa.predict"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAO-4 Measuring performance"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.memory_hierarchy",
@@ -4735,7 +5122,91 @@
           "contract": "memory",
           "hw_side": "多级缓存、内存控制器与总线按缓存行搬运数据，容量、延迟和带宽逐级变化。",
           "sw_side": "数据结构布局、遍历顺序与分块大小决定命中率与有效带宽；软件要用性能计数器或基准去度量，而不是凭感觉。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "mem.locality",
+              "title": "局部性与存储层次",
+              "summary": "时间局部性与空间局部性，以及寄存器、缓存、内存、外存的层次。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "The Memory Hierarchy（第 6 章）"
+              }
+            },
+            {
+              "id": "mem.cache",
+              "title": "缓存的组织",
+              "summary": "映射方式、缓存行、替换策略与写策略，命中与缺失的代价。",
+              "requires": [
+                "mem.locality"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "第 6 章：高速缓存存储器"
+              }
+            },
+            {
+              "id": "mem.knee",
+              "title": "测缓存拐点",
+              "summary": "按行、按列与不同步长遍历数组，测出缓存容量与行大小的拐点。",
+              "requires": [
+                "mem.cache"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "mem.bandwidth",
+              "title": "延迟与带宽",
+              "summary": "为什么带宽是另一堵墙，以及内存控制器与总线怎样共享带宽。",
+              "requires": [
+                "mem.locality"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Memory Hierarchy Design"
+              }
+            },
+            {
+              "id": "mem.roofline",
+              "title": "用 Roofline 判断瓶颈",
+              "summary": "把一个核函数放到算力与带宽的坐标上，判断它是算力受限还是带宽受限。",
+              "requires": [
+                "mem.bandwidth"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "roofline-williams",
+                "locator": "Roofline 模型"
+              }
+            },
+            {
+              "id": "mem.rewrite",
+              "title": "改写访问模式并验证",
+              "summary": "分块、转置、结构体数组与数组结构体的选择，并让实测提升与 Roofline 的预测一致。",
+              "requires": [
+                "mem.knee",
+                "mem.roofline"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAO-7 Memory system organization and architectures"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.interrupts",
@@ -4781,7 +5252,88 @@
           "contract": "timing",
           "hw_side": "中断控制器按优先级仲裁请求，硬件自动压栈并取向量；响应时间还受流水线冲刷与总线等待影响。",
           "sw_side": "软件配置使能、优先级与向量，保证处理函数短小、可重入，并用临界区与原子操作保护共享数据。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "irq.exception",
+              "title": "异常与中断的模型",
+              "summary": "同步异常、异步中断，以及处理器怎样保存现场并跳转。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "csapp",
+                "locator": "Exceptional Control Flow（第 8 章）"
+              }
+            },
+            {
+              "id": "irq.controller",
+              "title": "中断控制器、优先级与向量表",
+              "summary": "使能、挂起、优先级与嵌套，向量表怎样把事件映射到处理函数。",
+              "requires": [
+                "irq.exception"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "cmsis-core",
+                "locator": "NVIC Functions：中断使能、优先级与挂起"
+              }
+            },
+            {
+              "id": "irq.handler",
+              "title": "写短小、可重入的处理函数",
+              "summary": "处理函数里该做什么、不该做什么，怎样把工作交给任务上下文。",
+              "requires": [
+                "irq.controller"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "freertos-book",
+                "locator": "Interrupt Management"
+              }
+            },
+            {
+              "id": "irq.shared",
+              "title": "共享数据：临界区与原子操作",
+              "summary": "中断与主程序共享变量时的竞态，以及临界区与原子操作的用法。",
+              "requires": [
+                "irq.handler"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "irq.latency",
+              "title": "测中断响应延迟",
+              "summary": "用引脚边沿触发中断去翻转另一个引脚，用示波器测二者间隔。",
+              "requires": [
+                "irq.handler"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-ESY-7 Periodic interrupts, waveform generation, time measurement"
+              }
+            },
+            {
+              "id": "irq.worst",
+              "title": "分解最坏延迟",
+              "summary": "把最大值拆成屏蔽、抢占与流水线冲刷等来源，并验证改变其中一项后的变化。",
+              "requires": [
+                "irq.latency",
+                "irq.shared"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.codesign.dma_cache",
@@ -4823,7 +5375,90 @@
           "contract": "memory",
           "hw_side": "DMA 控制器按配置的源、目的与长度搬运数据并发出完成事件；缓存与 DMA 之间是否自动一致取决于芯片，常常需要软件介入。",
           "sw_side": "软件划定缓冲区属性（不可缓存，或手动维护）、保证对齐，在传输前后做清理与失效，并用中断或轮询确认完成。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "dma.engine",
+              "title": "DMA 控制器",
+              "summary": "源、目的、长度、触发与流，以及它在不占用处理器时搬运数据的方式。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "DMA controller (DMA)：流、请求与传输完成事件"
+              }
+            },
+            {
+              "id": "dma.circular",
+              "title": "单次、循环与双缓冲",
+              "summary": "三种传输模式的取舍，以及怎样一边搬运一边处理。",
+              "requires": [
+                "dma.engine"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "DMA controller：循环与双缓冲模式"
+              }
+            },
+            {
+              "id": "dma.irq",
+              "title": "完成与错误的通知",
+              "summary": "半传输、传输完成与错误中断，处理函数里只做接力。",
+              "requires": [
+                "dma.circular"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "DMA controller：中断与标志"
+              }
+            },
+            {
+              "id": "dma.coherence",
+              "title": "缓存一致性：清理与失效",
+              "summary": "CPU 缓存与 DMA 看到的数据为什么会不一致，清理与失效各解决哪一边。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "cmsis-core",
+                "locator": "Cache Functions：数据缓存的清理与失效"
+              }
+            },
+            {
+              "id": "dma.buffers",
+              "title": "缓冲区属性与对齐",
+              "summary": "把缓冲区放在不可缓存区域或手动维护，并按缓存行对齐。",
+              "requires": [
+                "dma.coherence"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "linux-dma-api",
+                "locator": "Dynamic DMA mapping Guide：缓冲区映射与同步"
+              }
+            },
+            {
+              "id": "dma.stress",
+              "title": "满负载校验",
+              "summary": "满负载连续运行并校验数据，去掉一致性操作后让错误稳定复现，再按规范修正。",
+              "requires": [
+                "dma.irq",
+                "dma.buffers"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.codesign.peripheral_driver",
@@ -4870,7 +5505,86 @@
           "contract": "bus",
           "hw_side": "控制器按总线协议产生并检查帧，向软件暴露状态位、FIFO 与错误标志，并能在完成或出错时发出中断或 DMA 请求。",
           "sw_side": "驱动用状态机管理一次传输的全过程：启动、等待、超时、错误处理与资源释放，并选与吞吐、实时性相称的搬运方式。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "drv.controller",
+              "title": "外设控制器的寄存器、FIFO 与状态位",
+              "summary": "控制器怎样把总线的帧与时序封装成寄存器、FIFO 与错误标志。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "USART、SPI 与 I2C 外设章节"
+              }
+            },
+            {
+              "id": "drv.protocol",
+              "title": "总线协议要点",
+              "summary": "帧格式、起止条件、应答、仲裁与错误检测。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "nxp-i2c-um10204",
+                "locator": "I2C-bus specification：起止条件、应答与仲裁"
+              }
+            },
+            {
+              "id": "drv.poll",
+              "title": "轮询驱动",
+              "summary": "最简单的搬运方式，以及它占用处理器的代价。",
+              "requires": [
+                "drv.controller"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "drv.irq",
+              "title": "中断驱动",
+              "summary": "用中断驱动一次传输的状态机，并保护共享数据。",
+              "requires": [
+                "drv.poll",
+                "drv.protocol"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "iso-11898-1",
+                "locator": "CAN 数据链路层：帧、仲裁与错误处理"
+              }
+            },
+            {
+              "id": "drv.dma",
+              "title": "DMA 驱动",
+              "summary": "把数据搬运交给 DMA，驱动只管启动与收尾。",
+              "requires": [
+                "drv.irq"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "drv.errors",
+              "title": "超时、应答失败与总线冲突的恢复",
+              "summary": "拔线或制造总线错误，验证驱动在规定时间内报错并恢复。",
+              "requires": [
+                "drv.irq"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-ESY-6 Asynchronous and synchronous serial communication"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.debug_interfaces",
@@ -4915,7 +5629,97 @@
           "contract": "verify",
           "hw_side": "芯片内置调试访问端口与跟踪单元，可在运行或暂停时访问寄存器、存储器与事件，但带宽与可见范围有限。",
           "sw_side": "调试器与固件配合：符号信息、断点与观察点、跟踪事件的定义与时间戳，决定了能看到什么，以及观测本身对时序的干扰。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "dbg.ports",
+              "title": "JTAG 与 SWD",
+              "summary": "调试访问端口怎样让主机读写芯片内部状态并控制运行。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "openocd",
+                "locator": "JTAG 与 SWD 调试传输"
+              }
+            },
+            {
+              "id": "dbg.session",
+              "title": "下载、单步、断点与观察点",
+              "summary": "用调试探针完成一次完整的调试会话。",
+              "requires": [
+                "dbg.ports"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "openocd",
+                "locator": "调试会话与断点"
+              }
+            },
+            {
+              "id": "dbg.fault",
+              "title": "读懂 hard fault 现场",
+              "summary": "从寄存器与栈帧定位一次异常的原因。",
+              "requires": [
+                "dbg.session"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cmsis-core",
+                "locator": "核心寄存器与异常"
+              }
+            },
+            {
+              "id": "dbg.itm",
+              "title": "不停机的跟踪",
+              "summary": "用串行线输出打印带时间戳的事件，定位一次偶发的任务阻塞。",
+              "requires": [
+                "dbg.session"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cmsis-core",
+                "locator": "Debug Access：ITM 输出"
+              }
+            },
+            {
+              "id": "dbg.sim",
+              "title": "用 GDB 连接仿真目标",
+              "summary": "不上板也能下断点、看寄存器，用于早期调试。",
+              "requires": [
+                "dbg.session"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "qemu-docs",
+                "locator": "GDB usage"
+              }
+            },
+            {
+              "id": "dbg.heisenbug",
+              "title": "观测不改变行为",
+              "summary": "断点与打印会改变实时行为；定位一个只在特定中断顺序下出现的错误。",
+              "requires": [
+                "dbg.itm",
+                "dbg.fault"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-DIG-11 Fault models, testing, and design for testability"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.power_thermal",
@@ -4955,7 +5759,82 @@
           "contract": "power",
           "hw_side": "芯片提供多级休眠、时钟门控与电压调节，各唤醒源的唤醒延迟不同；温度传感器与热限制由硬件触发。",
           "sw_side": "软件按任务占空比选择频率与休眠深度，管理外设时钟与唤醒源，把「能耗预算」当作与时间同级的设计量。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "chapters": [
+            {
+              "id": "pwr.model",
+              "title": "动态与静态功耗的模型",
+              "summary": "动态功耗与频率成正比、与电压平方成正比；静态功耗来自漏电。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Fundamentals：功耗与能耗趋势"
+              }
+            },
+            {
+              "id": "pwr.modes",
+              "title": "休眠模式与唤醒源",
+              "summary": "各级休眠的功耗、唤醒延迟与可用的唤醒源。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Power controller (PWR)：低功耗模式与唤醒"
+              }
+            },
+            {
+              "id": "pwr.measure",
+              "title": "测电流与能量",
+              "summary": "用电流探头测不同频率与休眠模式下的电流并积分成能量。",
+              "requires": [
+                "pwr.model"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pwr.duty",
+              "title": "按占空比规划频率与休眠深度",
+              "summary": "给一个周期性任务选频率与休眠深度，使能量最省且满足截止期。",
+              "requires": [
+                "pwr.modes",
+                "pwr.measure"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pwr.thermal",
+              "title": "热降频与持续性能",
+              "summary": "温度怎样限制持续性能，以及设备在受限散热下的降频行为。",
+              "requires": [
+                "pwr.model"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pwr.budget",
+              "title": "做一份能耗预算并对账",
+              "summary": "按各模式占空比推算平均电流，与实测对账，并解释偏差。",
+              "requires": [
+                "pwr.duty",
+                "pwr.thermal"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-ESY-10 Techniques for low-power operation"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.realtime_timing",
@@ -5001,7 +5880,88 @@
           "contract": "timing",
           "hw_side": "中断控制器、流水线、缓存与总线仲裁带来可变的延迟；硬件定时器提供计时基准。",
           "sw_side": "调度器的优先级与抢占策略、临界区长度与任务划分决定最坏响应时间；软件要用可靠的时间戳测量，而不是凭印象。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "rt.model",
+              "title": "截止期、周期与可调度性",
+              "summary": "硬实时与软实时、任务模型，以及可调度性的基本判据。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAL-9 Scheduling algorithms；CE-SRM-4 Real-time operating system design"
+              }
+            },
+            {
+              "id": "rt.sched",
+              "title": "抢占式优先级调度与优先级反转",
+              "summary": "优先级、抢占与时间片，以及优先级反转的成因与对策。",
+              "requires": [
+                "rt.model"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "freertos-book",
+                "locator": "Task Management：优先级、抢占与时间片"
+              }
+            },
+            {
+              "id": "rt.measure",
+              "title": "可靠的时间戳与端到端延迟测量",
+              "summary": "用硬件定时器给事件打时间戳，测从触发到输出的延迟。",
+              "requires": [
+                "rt.model"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cyclictest",
+                "locator": "cyclictest：延迟的测量方法"
+              }
+            },
+            {
+              "id": "rt.hist",
+              "title": "延迟直方图与尾部",
+              "summary": "画出直方图并看尾部，说明为什么平均值不能用来验收。",
+              "requires": [
+                "rt.measure"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "rt.sources",
+              "title": "最坏情况的来源",
+              "summary": "中断屏蔽、缓存冷启动、总线竞争与内核不可抢占区间。",
+              "requires": [
+                "rt.hist"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "linux-preempt-rt",
+                "locator": "PREEMPT_RT 的工作原理：可抢占内核与延迟来源"
+              }
+            },
+            {
+              "id": "rt.budget",
+              "title": "分解来源并给出余量",
+              "summary": "把最大延迟拆成各来源，给出相对截止期的余量，并验证改变一项后的变化与分析一致。",
+              "requires": [
+                "rt.sources",
+                "rt.sched"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.codesign.boot_trust",
@@ -5041,7 +6001,92 @@
           "contract": "boot",
           "hw_side": "芯片固化引导 ROM 与可信根，提供一次性可编程的密钥与锁定位，以及闪存的分区与写保护。",
           "sw_side": "引导程序校验并加载镜像、管理版本与回滚，应用只在被信任的环境里运行；更新协议要对中途失败有明确定义。",
-          "domain": "security"
+          "domain": "security",
+          "chapters": [
+            {
+              "id": "boot.chain",
+              "title": "启动链与信任链",
+              "summary": "从复位向量到应用，每一级由谁加载、由谁校验。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "stm32f4-rm",
+                "locator": "Boot configuration：启动模式与闪存保护"
+              }
+            },
+            {
+              "id": "boot.image",
+              "title": "镜像格式、哈希与签名",
+              "summary": "镜像头、摘要、签名与版本号各自保护什么。",
+              "requires": [
+                "boot.chain"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "mcuboot",
+                "locator": "镜像格式与签名校验"
+              }
+            },
+            {
+              "id": "boot.verify",
+              "title": "校验流程与失败处理",
+              "summary": "引导程序怎样校验镜像、失败时停在哪里。",
+              "requires": [
+                "boot.image"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "mcuboot",
+                "locator": "启动时的校验流程"
+              }
+            },
+            {
+              "id": "boot.update",
+              "title": "双分区更新与回滚",
+              "summary": "新镜像先试运行、确认后才转正，否则回滚。",
+              "requires": [
+                "boot.verify"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "mcuboot",
+                "locator": "更新与回滚流程"
+              }
+            },
+            {
+              "id": "boot.lock",
+              "title": "调试口与启动模式的锁定",
+              "summary": "量产前锁定调试访问与启动模式，并理解锁定的代价。",
+              "requires": [
+                "boot.chain"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SEC-10 Trusted computing"
+              }
+            },
+            {
+              "id": "boot.power",
+              "title": "中途断电的恢复",
+              "summary": "在更新中途断电、镜像损坏、签名不符三种情况下，设备都停在可恢复状态。",
+              "requires": [
+                "boot.update",
+                "boot.lock"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.codesign.hw_sw_partition",
@@ -5087,7 +6132,87 @@
           "contract": "memory",
           "hw_side": "可编程逻辑与加速器提供并行计算与确定性延迟，但片上存储、带宽与互连有限，改动代价高。",
           "sw_side": "软件提供灵活性与生态，处理器负责控制与不规则任务；两侧之间要有明确的数据通路、同步方式与接口规格。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "part.dataflow",
+              "title": "数据流与带宽的估算",
+              "summary": "把功能画成数据流图，估算每条边的数据量与带宽需求。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "roofline-williams",
+                "locator": "Roofline 模型"
+              }
+            },
+            {
+              "id": "part.options",
+              "title": "三类实现",
+              "summary": "纯软件、软件加专用引擎、可编程逻辑各自的优势与代价。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Domain-Specific Architectures"
+              }
+            },
+            {
+              "id": "part.hls",
+              "title": "用高层次综合把核函数变成硬件",
+              "summary": "用 C/C++ 描述核函数并综合成硬件，理解指令与接口对结果的影响。",
+              "requires": [
+                "part.options"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "vitis-hls",
+                "locator": "高层次综合：把 C/C++ 映射为硬件"
+              }
+            },
+            {
+              "id": "part.compare",
+              "title": "三种实现的预测",
+              "summary": "为同一功能给出三种实现，并预测吞吐、延迟与功耗。",
+              "requires": [
+                "part.dataflow",
+                "part.options"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "part.measure",
+              "title": "实测与对账",
+              "summary": "实测三种实现，与预测对账，解释偏差来自带宽、同步还是延迟。",
+              "requires": [
+                "part.compare",
+                "part.hls"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "part.interface",
+              "title": "写出接口规格",
+              "summary": "把选定方案的软硬接口写成规格：寄存器、数据通路、同步方式与错误处理。",
+              "requires": [
+                "part.measure"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-10 Concurrent hardware and software design"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.hil_verification",
@@ -5134,7 +6259,88 @@
           "contract": "verify",
           "hw_side": "被测硬件或其高保真模型，加上能产生激励、采集响应并注入故障的台架接口。",
           "sw_side": "被测软件与测试脚本：可重复的激励、自动化的判据与记录，让仿真与实机的结果可以对账。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "hil.levels",
+              "title": "SIL、处理器在环与 HIL",
+              "summary": "三个层级各自能验证什么，把真实部件逐级接进来的顺序。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "px4-simulation",
+                "locator": "SITL 与 HITL：仿真层级与硬件在环"
+              }
+            },
+            {
+              "id": "hil.sim",
+              "title": "在仿真器里运行固件",
+              "summary": "不上板运行固件并接入外设模型。",
+              "requires": [
+                "hil.levels"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "renode",
+                "locator": "平台仿真与自动化测试"
+              }
+            },
+            {
+              "id": "hil.vectors",
+              "title": "可复现的测试向量",
+              "summary": "把激励与期望写成可复现、可自动判定的测试向量。",
+              "requires": [
+                "hil.sim"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "qemu-docs",
+                "locator": "系统仿真：在不上板的情况下运行固件"
+              }
+            },
+            {
+              "id": "hil.bench",
+              "title": "搭台架",
+              "summary": "搭建能产生激励、采集响应并注入故障的台架接口。",
+              "requires": [
+                "hil.vectors"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "hil.compare",
+              "title": "仿真与台架对账",
+              "summary": "同一组测试向量在两个层级上的差异，都能被解释。",
+              "requires": [
+                "hil.bench"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-11 System integration, testing and validation"
+              }
+            },
+            {
+              "id": "hil.faults",
+              "title": "故障注入与降级",
+              "summary": "注入传感器失效、丢帧与时序偏移，验证故障被检测并按预期降级。",
+              "requires": [
+                "hil.bench"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         },
         {
           "id": "polaris.codesign.device_tree_bsp",
@@ -5181,7 +6387,95 @@
           "contract": "boot",
           "hw_side": "板级硬件固定了每个外设的地址、中断线、时钟与引脚复用，这些是驱动无法自己发现的，只能由板级描述告知。",
           "sw_side": "引导程序把设备树传给内核，内核按 compatible 匹配驱动并取参数；BSP 把引导程序、内核配置、设备树与驱动统一维护。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "chapters": [
+            {
+              "id": "dt.concept",
+              "title": "设备树要解决的问题",
+              "summary": "为什么把「这块板长什么样」从内核代码搬到数据里。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "linux-devicetree-usage",
+                "locator": "Linux and the Devicetree：设备树的使用模型"
+              }
+            },
+            {
+              "id": "dt.syntax",
+              "title": "节点、属性与 compatible",
+              "summary": "设备树的语法与基本约定。",
+              "requires": [
+                "dt.concept"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "devicetree-spec",
+                "locator": "Device Node Requirements"
+              }
+            },
+            {
+              "id": "dt.resources",
+              "title": "寄存器、中断与时钟的描述",
+              "summary": "用 reg、interrupts、clocks 等属性描述一个外设。",
+              "requires": [
+                "dt.syntax"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "devicetree-spec",
+                "locator": "reg、interrupts 与 clocks 属性"
+              }
+            },
+            {
+              "id": "dt.binding",
+              "title": "驱动按 compatible 匹配并取参数",
+              "summary": "驱动怎样匹配节点并读取属性，探测成功与失败的日志。",
+              "requires": [
+                "dt.resources"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "linux-devicetree-usage",
+                "locator": "驱动与设备树节点的匹配"
+              }
+            },
+            {
+              "id": "dt.bsp",
+              "title": "BSP 的组成与板级差异的归处",
+              "summary": "引导程序、内核配置、设备树与驱动怎样组成一个板级支持包。",
+              "requires": [
+                "dt.concept"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "buildroot-manual",
+                "locator": "交叉编译与根文件系统：BSP 的组成"
+              }
+            },
+            {
+              "id": "dt.port",
+              "title": "只改设备树换板运行",
+              "summary": "不改驱动源码，仅换设备树就让同一份驱动在另一块板或另一组引脚上工作。",
+              "requires": [
+                "dt.binding",
+                "dt.bsp"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-ESY-13 Computing platforms for embedded systems"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.heterogeneous_soc",
@@ -5222,7 +6516,88 @@
           "contract": "bus",
           "hw_side": "片上互连连接 CPU、可编程逻辑与内存控制器，提供寄存器接口、DMA 通道与（部分接口上的）缓存一致性，带宽由互连与内存控制器共享。",
           "sw_side": "驱动经内存映射寄存器配置加速器，用 DMA 或共享缓冲区交换数据，处理中断与缓存维护，并通过设备树把加速器接入系统。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "soc.arch",
+              "title": "异构 SoC 的组成与片上互连",
+              "summary": "处理器、可编程逻辑、内存控制器与互连怎样放进一块芯片。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Domain-Specific Architectures"
+              }
+            },
+            {
+              "id": "soc.axi",
+              "title": "AXI 的三类接口",
+              "summary": "控制寄存器接口、数据流接口与存储映射接口各自的用途。",
+              "requires": [
+                "soc.arch"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "vitis-hls",
+                "locator": "AXI4-Lite、AXI4-Stream 与 AXI master 接口"
+              }
+            },
+            {
+              "id": "soc.ip",
+              "title": "把核函数做成 IP",
+              "summary": "用高层次综合把滤波核做成 IP 并导出。",
+              "requires": [
+                "soc.axi"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "vitis-hls",
+                "locator": "把 C/C++ 综合为 IP"
+              }
+            },
+            {
+              "id": "soc.driver",
+              "title": "寄存器、DMA 与中断的驱动",
+              "summary": "用内存映射寄存器配置加速器、DMA 搬数据、中断通知完成。",
+              "requires": [
+                "soc.ip"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "soc.coherence",
+              "title": "一致性与带宽仲裁",
+              "summary": "加速器与 CPU 共享内存时的一致性维护与带宽分配。",
+              "requires": [
+                "soc.axi"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "soc.measure",
+              "title": "端到端吞吐与延迟对账",
+              "summary": "实测吞吐与延迟，与按接口带宽做的估算对账，并与纯软件实现对比。",
+              "requires": [
+                "soc.driver",
+                "soc.coherence"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-10 Concurrent hardware and software design"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.codesign.side_channel_security",
@@ -5263,7 +6638,88 @@
           "contract": "boot",
           "hw_side": "硬件的时序、缓存、功耗与电磁特征会泄露内部状态；调试口、启动模式与存储器接口是物理攻击面，硬件可提供锁定位、屏蔽与随机化。",
           "sw_side": "软件用恒定时间实现、避免依赖秘密的分支与访存、清除密钥残留，并在启动阶段锁定调试与受保护区域。",
-          "domain": "security"
+          "domain": "security",
+          "chapters": [
+            {
+              "id": "sc.model",
+              "title": "侧信道的分类",
+              "summary": "时间、缓存、功耗、电磁与故障注入，各自泄露什么。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SEC-11 Side-channel attacks"
+              }
+            },
+            {
+              "id": "sc.timing",
+              "title": "执行时间泄露与恒定时间实现",
+              "summary": "依赖秘密的分支与访存怎样泄露信息，以及恒定时间的写法。",
+              "requires": [
+                "sc.model"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "chipwhisperer",
+                "locator": "时间与功耗分析教程"
+              }
+            },
+            {
+              "id": "sc.cache",
+              "title": "缓存侧信道与推测执行",
+              "summary": "缓存状态怎样成为信道，推测执行怎样放大它。",
+              "requires": [
+                "sc.model"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "spectre-attacks",
+                "locator": "由推测执行引起的缓存侧信道"
+              }
+            },
+            {
+              "id": "sc.power",
+              "title": "功耗分析实验",
+              "summary": "采集功耗轨迹，统计检验与秘密值的相关性。",
+              "requires": [
+                "sc.model"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "chipwhisperer",
+                "locator": "功耗分析教程：从测量到恢复密钥"
+              }
+            },
+            {
+              "id": "sc.defense",
+              "title": "软件与硬件两侧的防护",
+              "summary": "恒定时间、屏蔽、随机化与清除密钥残留。",
+              "requires": [
+                "sc.timing",
+                "sc.power"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "sc.surface",
+              "title": "调试口与启动模式的物理攻击面",
+              "summary": "锁定调试口后读不出受保护区域，并复测相关性不再显著。",
+              "requires": [
+                "sc.defense"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         }
       ],
       "edges": [
@@ -5802,7 +7258,94 @@
           "priority_reason": "几乎所有后续领域的论证都用到它；缺了它，进阶阶段会不断撞墙，而且难以自学补回。",
           "stage": "junior",
           "stage_reason": "地基：越早建立越省力，而且它是后面所有阶段的共同前提。",
-          "domain": "foundations"
+          "domain": "foundations",
+          "chapters": [
+            {
+              "id": "math.proof",
+              "title": "证明与归纳",
+              "summary": "直接证明、反证与数学归纳，递归算法的正确性论证。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "mit-6042",
+                "locator": "Mathematics for Computer Science：证明与归纳"
+              }
+            },
+            {
+              "id": "math.graphs",
+              "title": "图、关系与计数",
+              "summary": "图的基本概念、关系与排列组合。",
+              "requires": [
+                "math.proof"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "mit-6042",
+                "locator": "图论与计数"
+              }
+            },
+            {
+              "id": "math.prob",
+              "title": "概率与期望",
+              "summary": "离散概率、条件概率、期望与方差。",
+              "requires": [
+                "math.graphs"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "mit-6042",
+                "locator": "概率与期望"
+              }
+            },
+            {
+              "id": "math.stats",
+              "title": "统计与误差估计",
+              "summary": "样本、置信区间与测量误差的估计。",
+              "requires": [
+                "math.prob"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-PRS Probability and Statistics"
+              }
+            },
+            {
+              "id": "math.la",
+              "title": "线性代数与矩阵",
+              "summary": "向量空间、矩阵运算、特征值，以及状态方程。",
+              "requires": [],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-LAL Linear Algebra"
+              }
+            },
+            {
+              "id": "math.apply",
+              "title": "用数学给设计定指标与误差界",
+              "summary": "估算带噪链路的误码率并与仿真对照；用矩阵推一个二阶滤波器的状态方程。",
+              "requires": [
+                "math.stats",
+                "math.la"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "teachyourselfcs",
+                "locator": "Mathematics for Computer Science 一节"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.open_isa_riscv",
@@ -5847,7 +7390,96 @@
           "priority_reason": "体系结构的核心是亲手把契约落成实现；开放指令集让这件事个人也能做。",
           "stage": "senior",
           "stage_reason": "资深：需要数字设计、汇编与微架构的扎实基础，并要读规范。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "isa5.design",
+              "title": "指令集设计原则",
+              "summary": "为什么要简洁、模块化与可扩展，开放指令集带来什么。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "riscv-reader",
+                "locator": "The RISC-V Reader：指令集的设计原则"
+              }
+            },
+            {
+              "id": "isa5.spec",
+              "title": "读规范：基础指令、特权级与扩展",
+              "summary": "怎样阅读指令集规范并找到自己要实现的部分。",
+              "requires": [
+                "isa5.design"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "riscv-specs",
+                "locator": "非特权与特权指令集规范"
+              }
+            },
+            {
+              "id": "isa5.single",
+              "title": "单周期处理器",
+              "summary": "数据通路与控制，实现一个最小的核。",
+              "requires": [
+                "isa5.spec"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "harris-ddca",
+                "locator": "单周期处理器"
+              }
+            },
+            {
+              "id": "isa5.pipe",
+              "title": "流水线与冒险处理",
+              "summary": "把单周期核改成流水线，处理转发与停顿。",
+              "requires": [
+                "isa5.single"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "harris-ddca",
+                "locator": "流水线处理器"
+              }
+            },
+            {
+              "id": "isa5.test",
+              "title": "指令集一致性测试",
+              "summary": "用一致性测试验证核，并启动一个最小程序。",
+              "requires": [
+                "isa5.single"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "learn-fpga",
+                "locator": "在 FPGA 上逐步实现 RISC-V 核"
+              }
+            },
+            {
+              "id": "isa5.custom",
+              "title": "加一条自定义指令并测收益",
+              "summary": "给核加一条自定义指令、让汇编器用上它，并实测收益与代价。",
+              "requires": [
+                "isa5.pipe",
+                "isa5.test"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "hp-golden-age",
+                "locator": "开放指令集与敏捷芯片开发"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.perf_modeling",
@@ -5887,7 +7519,91 @@
           "priority_reason": "高端架构岗位的日常就是建模、对账与权衡（见 Arm 的招聘样本）；没有它，所谓架构只是经验之谈。",
           "stage": "senior",
           "stage_reason": "资深：需要体系结构、存储层次与基准测量的扎实基础。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "chapters": [
+            {
+              "id": "pm.metrics",
+              "title": "性能、功耗与面积指标",
+              "summary": "怎样定义并测量三者，以及它们之间的权衡。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Fundamentals of Quantitative Design and Analysis"
+              }
+            },
+            {
+              "id": "pm.sim",
+              "title": "模拟器与分析模型",
+              "summary": "周期精确、功能级与解析模型各自的用途与代价。",
+              "requires": [
+                "pm.metrics"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "gem5",
+                "locator": "模拟器的组成与配置"
+              }
+            },
+            {
+              "id": "pm.experiment",
+              "title": "建立基准与配置实验",
+              "summary": "为一个核函数建立基准，配置并运行一组实验。",
+              "requires": [
+                "pm.sim"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "gem5",
+                "locator": "实验方法与统计输出"
+              }
+            },
+            {
+              "id": "pm.explore",
+              "title": "改变微架构参数画权衡曲线",
+              "summary": "改变缓存与预测器配置，画出性能与代价的曲线，并用 Roofline 解释拐点。",
+              "requires": [
+                "pm.experiment"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "roofline-williams",
+                "locator": "Roofline 模型"
+              }
+            },
+            {
+              "id": "pm.correl",
+              "title": "与硬件计数器对账",
+              "summary": "把模型预测与真实硬件计数器数据对比，找出模型缺了什么机制。",
+              "requires": [
+                "pm.explore"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pm.report",
+              "title": "写一份可复核的建模报告",
+              "summary": "换一个工作负载后结论依然成立，并写清假设、偏差与局限。",
+              "requires": [
+                "pm.correl"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "arm-uarch-job",
+                "locator": "性能建模与对账的岗位要求（时效性样本）"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.rtl_to_gds",
@@ -5932,7 +7648,96 @@
           "priority_reason": "数字设计的最终产物是电路而不是代码；不走完这条流程，就不知道约束从哪来。",
           "stage": "senior",
           "stage_reason": "资深：需要数字设计、HDL 与时钟复位的扎实基础。",
-          "domain": "digital"
+          "domain": "digital",
+          "chapters": [
+            {
+              "id": "gds.flow",
+              "title": "流程总览",
+              "summary": "从 RTL 到版图的各个环节，以及每一步的输入、输出与检查。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "zero-to-asic",
+                "locator": "开源数字 ASIC 入门路径"
+              }
+            },
+            {
+              "id": "gds.synth",
+              "title": "逻辑综合与约束",
+              "summary": "写时序约束，读综合后的面积与时序报告。",
+              "requires": [
+                "gds.flow"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "openroad",
+                "locator": "综合与约束"
+              }
+            },
+            {
+              "id": "gds.pnr",
+              "title": "布局、时钟树与布线",
+              "summary": "布局规划、时钟树综合与布线对时序的影响。",
+              "requires": [
+                "gds.synth"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "openroad",
+                "locator": "布局布线流程"
+              }
+            },
+            {
+              "id": "gds.timing",
+              "title": "时序报告与违例修复",
+              "summary": "读时序报告，修复一次建立时间违例并解释根因。",
+              "requires": [
+                "gds.pnr"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "openroad",
+                "locator": "时序分析与签核"
+              }
+            },
+            {
+              "id": "gds.signoff",
+              "title": "设计规则与版图对原理图检查",
+              "summary": "设计规则检查与版图对原理图检查全部通过。",
+              "requires": [
+                "gds.timing"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "skywater-pdk",
+                "locator": "工艺设计套件：设计规则与标准单元库"
+              }
+            },
+            {
+              "id": "gds.tapeout",
+              "title": "提交共享流片",
+              "summary": "把设计提交到共享流片项目并跟踪反馈。",
+              "requires": [
+                "gds.signoff"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tiny-tapeout",
+                "locator": "把设计提交到共享流片"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.verification_methodology",
@@ -5972,7 +7777,96 @@
           "priority_reason": "验证与设计同等重要，往往人手更多；它也是软件工程的测试思想在硬件里的对应。",
           "stage": "senior",
           "stage_reason": "资深：需要数字设计与软件测试两方面的基础。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "vf.goal",
+              "title": "验证的目标与规格",
+              "summary": "验证要发现设计没想到的情形，从规格推出需要检查的场景。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-DIG-11 Fault models, testing, and design for testability"
+              }
+            },
+            {
+              "id": "vf.tb",
+              "title": "测试平台架构",
+              "summary": "激励、监视、比对与参考模型怎样组成可重用的测试平台。",
+              "requires": [
+                "vf.goal"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "accellera-uvm",
+                "locator": "UVM：测试平台架构"
+              }
+            },
+            {
+              "id": "vf.directed",
+              "title": "定向测试与断言",
+              "summary": "写定向用例与断言，覆盖明确的行为。",
+              "requires": [
+                "vf.tb"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "ieee-1364-verilog",
+                "locator": "IEEE 1800 SystemVerilog 的验证相关特性"
+              }
+            },
+            {
+              "id": "vf.random",
+              "title": "受约束随机与参考模型",
+              "summary": "用受约束随机激励与参考模型比对覆盖没想到的组合。",
+              "requires": [
+                "vf.tb"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "accellera-uvm",
+                "locator": "序列与受约束随机"
+              }
+            },
+            {
+              "id": "vf.cover",
+              "title": "功能覆盖率与收敛",
+              "summary": "定义覆盖点，用覆盖率驱动并判断何时可以收工。",
+              "requires": [
+                "vf.random"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "accellera-uvm",
+                "locator": "覆盖率"
+              }
+            },
+            {
+              "id": "vf.bug",
+              "title": "埋入缺陷并检验验证能否抓出",
+              "summary": "故意在设计里埋一个边角错误，看验证能否抓出并定位；用 cocotb 与 SystemVerilog 各做一遍。",
+              "requires": [
+                "vf.directed",
+                "vf.cover"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cocotb",
+                "locator": "用 Python 写硬件验证测试平台"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.parallel_accelerators",
@@ -6012,7 +7906,96 @@
           "priority_reason": "AI 与高性能计算的算力都在这里；理解它也是判断软硬划分是否合理的前提。",
           "stage": "senior",
           "stage_reason": "资深：需要存储层次、并发与性能测量的扎实基础。",
-          "domain": "acceleration"
+          "domain": "acceleration",
+          "chapters": [
+            {
+              "id": "par.model",
+              "title": "线程层次与执行模型",
+              "summary": "线程、线程块与网格，以及它们怎样映射到硬件。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "cuda-docs",
+                "locator": "编程模型"
+              }
+            },
+            {
+              "id": "par.memory",
+              "title": "内存层次与访存合并",
+              "summary": "全局、共享与寄存器存储，合并访存与存储体冲突。",
+              "requires": [
+                "par.model"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "cuda-docs",
+                "locator": "内存层次与性能指南"
+              }
+            },
+            {
+              "id": "par.naive",
+              "title": "朴素核函数",
+              "summary": "把矩阵乘或卷积写成最直接的 GPU 核函数。",
+              "requires": [
+                "par.model"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cuda-docs",
+                "locator": "编程示例"
+              }
+            },
+            {
+              "id": "par.tiled",
+              "title": "分块与共享内存",
+              "summary": "用分块与共享内存减少全局访存，测不同块大小的性能。",
+              "requires": [
+                "par.naive",
+                "par.memory"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "hennessy-patterson-ca",
+                "locator": "Data-Level Parallelism in Vector, SIMD, and GPU Architectures"
+              }
+            },
+            {
+              "id": "par.profile",
+              "title": "性能剖析与瓶颈归因",
+              "summary": "用剖析工具与 Roofline 判断瓶颈在算力还是带宽。",
+              "requires": [
+                "par.tiled"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "roofline-williams",
+                "locator": "Roofline 模型"
+              }
+            },
+            {
+              "id": "par.limit",
+              "title": "接近硬件上限的论证",
+              "summary": "说明优化后的版本为什么更接近硬件上限，限制来自哪一级存储或哪类指令。",
+              "requires": [
+                "par.profile"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-CAO-10 Multi/Many-core architectures"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.ml_compile_inference",
@@ -6057,7 +8040,95 @@
           "priority_reason": "AI 系统工程的核心环节，也是软硬协同在今天最活跃的方向之一。",
           "stage": "senior",
           "stage_reason": "资深：需要存储层次、并行与模型本身的基础。",
-          "domain": "acceleration"
+          "domain": "acceleration",
+          "chapters": [
+            {
+              "id": "ml.graph",
+              "title": "计算图与中间表示",
+              "summary": "模型怎样表示成计算图，多层中间表示为什么有用。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "mlir-docs",
+                "locator": "多层中间表示与方言"
+              }
+            },
+            {
+              "id": "ml.quant",
+              "title": "量化：训练后量化与精度损失",
+              "summary": "把权重与激活降到低精度，并比较精度与带宽的变化。",
+              "requires": [],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tflite-micro",
+                "locator": "微控制器上的推理与量化"
+              }
+            },
+            {
+              "id": "ml.fusion",
+              "title": "算子融合与布局",
+              "summary": "融合算子以减少访存，布局选择对性能的影响。",
+              "requires": [
+                "ml.graph"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tvm-docs",
+                "locator": "算子调度与融合"
+              }
+            },
+            {
+              "id": "ml.memory",
+              "title": "内存规划与访存次数",
+              "summary": "规划张量的生命周期，观察融合前后的访存次数。",
+              "requires": [
+                "ml.fusion"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tvm-docs",
+                "locator": "内存规划"
+              }
+            },
+            {
+              "id": "ml.kernel",
+              "title": "内核选择与调优",
+              "summary": "为目标硬件选择或生成内核，了解自动调优。",
+              "requires": [
+                "ml.fusion"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "cmsis-nn",
+                "locator": "CMSIS-NN：神经网络算子库"
+              }
+            },
+            {
+              "id": "ml.measure",
+              "title": "延迟、能耗、精度三项实测",
+              "summary": "在目标设备上实测三项指标，并与 Roofline 的预测对照。",
+              "requires": [
+                "ml.quant",
+                "ml.memory"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "ai-hardware-engineer-roadmap",
+                "locator": "推理优化与边缘部署的阶段顺序"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.safety_critical",
@@ -6102,7 +8173,95 @@
           "priority_reason": "高可靠领域的硬性门槛；也能反过来提升任何系统的工程纪律。",
           "stage": "senior",
           "stage_reason": "资深：需要实时、驱动与测试的完整经验，并要在过程层面做取舍。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "sf.hazard",
+              "title": "危险分析与保证等级",
+              "summary": "失效的后果怎样决定需要多强的保证。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "faa-ac-20-115d",
+                "locator": "机载软件保证：以 DO-178C 为依据的过程与证据"
+              }
+            },
+            {
+              "id": "sf.rules",
+              "title": "受限编码规则",
+              "summary": "NASA/JPL 的十条规则与 MISRA 的结构，每条规则为什么存在。",
+              "requires": [],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-power-of-10",
+                "locator": "十条安全关键代码规则"
+              }
+            },
+            {
+              "id": "sf.static",
+              "title": "静态分析与规则偏离",
+              "summary": "用静态分析检查规则，偏离要有书面理由。",
+              "requires": [
+                "sf.rules"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "misra-c",
+                "locator": "编码准则的结构与偏离流程"
+              }
+            },
+            {
+              "id": "sf.trace",
+              "title": "需求、代码与测试的双向追溯",
+              "summary": "每条需求能追到代码与测试，每个测试能追回需求。",
+              "requires": [
+                "sf.hazard"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-se-handbook",
+                "locator": "需求与验证的追溯"
+              }
+            },
+            {
+              "id": "sf.review",
+              "title": "独立评审与证据",
+              "summary": "组织一次独立评审，意见都有处理记录。",
+              "requires": [
+                "sf.static",
+                "sf.trace"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-5 Risk, dependability, safety and fault tolerance"
+              }
+            },
+            {
+              "id": "sf.case",
+              "title": "写一份小型安全论证",
+              "summary": "把规则、追溯与评审证据组织成一份能被审核的论证。",
+              "requires": [
+                "sf.review"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "faa-ac-20-115d",
+                "locator": "过程与证据"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.firmware_engineering",
@@ -6147,7 +8306,93 @@
           "priority_reason": "资深固件岗位强调可靠的生产软件与测试策略（见招聘样本）；没有工程化，规模一上去就失控。",
           "stage": "intermediate",
           "stage_reason": "中级：要先会写驱动与读寄存器，才谈得上让它们可测。",
-          "domain": "programming"
+          "domain": "programming",
+          "chapters": [
+            {
+              "id": "fe.layer",
+              "title": "硬件抽象层",
+              "summary": "把硬件访问隔离在可替换的接口之后，让大部分逻辑与硬件无关。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "interrupt-embedded-roadmap",
+                "locator": "对硬件交互做桩与模拟"
+              }
+            },
+            {
+              "id": "fe.unit",
+              "title": "在主机上做单元测试",
+              "summary": "用桩与替身替换硬件，让逻辑在主机上可测。",
+              "requires": [
+                "fe.layer"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "interrupt-embedded-roadmap",
+                "locator": "测试驱动与单元测试"
+              }
+            },
+            {
+              "id": "fe.sim",
+              "title": "用仿真器做集成测试",
+              "summary": "用仿真器运行固件并接入外设模型做集成测试。",
+              "requires": [
+                "fe.unit"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "renode",
+                "locator": "仿真与自动化测试"
+              }
+            },
+            {
+              "id": "fe.ci",
+              "title": "持续集成与静态分析",
+              "summary": "把测试、静态分析与构建接进持续集成。",
+              "requires": [
+                "fe.unit"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "qemu-docs",
+                "locator": "系统仿真"
+              }
+            },
+            {
+              "id": "fe.build",
+              "title": "版本化构建与可复现",
+              "summary": "固定工具链与依赖，让同一份源码得到同一份映像。",
+              "requires": [
+                "fe.ci"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "fe.gap",
+              "title": "记录仿真与真实硬件的差异",
+              "summary": "仿真通过不等于上板通过，把差异记录下来并回补测试。",
+              "requires": [
+                "fe.sim",
+                "fe.build"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "ganssle-embedded-geek",
+                "locator": "项目由小到大，以及对调试能力的要求"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.systems_engineering",
@@ -6182,7 +8427,97 @@
           "priority_reason": "系统层面的思考是资深岗位反复强调的能力；没有它，软硬结合只剩拼接。",
           "stage": "senior",
           "stage_reason": "资深：需要对软、硬两侧都有足够的实践，才知道接口里该写什么。",
-          "domain": "assurance"
+          "domain": "assurance",
+          "chapters": [
+            {
+              "id": "se.life",
+              "title": "生命周期与 V 模型",
+              "summary": "需求、设计、实现、集成与验证的关系。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "nasa-se-handbook",
+                "locator": "系统工程生命周期"
+              }
+            },
+            {
+              "id": "se.req",
+              "title": "需求的获取与质量",
+              "summary": "怎样写出可验证、无歧义的需求。",
+              "requires": [
+                "se.life"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-7 Requirements analysis and elicitation"
+              }
+            },
+            {
+              "id": "se.arch",
+              "title": "功能分解与架构",
+              "summary": "把系统拆成功能与组件，并评价架构。",
+              "requires": [
+                "se.req"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SPE-9 System architectural design and evaluation"
+              }
+            },
+            {
+              "id": "se.icd",
+              "title": "接口控制文件",
+              "summary": "把软、硬、机、电的边界写成各方共同遵守的契约。",
+              "requires": [
+                "se.arch"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-se-handbook",
+                "locator": "接口定义与管理"
+              }
+            },
+            {
+              "id": "se.vv",
+              "title": "验证矩阵与验证、确认",
+              "summary": "每条需求都有验证方法与结果。",
+              "requires": [
+                "se.req"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "nasa-se-handbook",
+                "locator": "验证与确认"
+              }
+            },
+            {
+              "id": "se.integr",
+              "title": "联调中用接口文件定位失配",
+              "summary": "在一次联调中用接口文件与验证矩阵定位一个由接口歧义引起的故障。",
+              "requires": [
+                "se.icd",
+                "se.vv"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "tenstorrent-firmware-job",
+                "locator": "系统层面的思考（时效性样本）"
+              }
+            }
+          ]
         },
         {
           "id": "polaris.frontier.trusted_hardware",
@@ -6222,7 +8557,94 @@
           "priority_reason": "安全产品与带密钥设备的方向必需；其他方向理解其原理即可，所以排在后面。",
           "stage": "senior",
           "stage_reason": "资深：需要启动链、侧信道与存储安全的完整经验。",
-          "domain": "security"
+          "domain": "security",
+          "chapters": [
+            {
+              "id": "th.root",
+              "title": "根信任的概念",
+              "summary": "「信任从哪里开始」，以及为什么它必须固化在硬件里。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "opentitan",
+                "locator": "架构与安全模型文档"
+              }
+            },
+            {
+              "id": "th.arch",
+              "title": "开放根信任的架构",
+              "summary": "引导 ROM、安全存储、密码加速器与受控调试的组成。",
+              "requires": [
+                "th.root"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "opentitan",
+                "locator": "架构与组件文档"
+              }
+            },
+            {
+              "id": "th.boot",
+              "title": "安全启动的信任链",
+              "summary": "画出从复位到应用的信任链与每一步的校验。",
+              "requires": [
+                "th.arch"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "mcuboot",
+                "locator": "镜像校验与更新流程"
+              }
+            },
+            {
+              "id": "th.keys",
+              "title": "密钥、安全存储与密码加速器",
+              "summary": "密钥放哪、谁能读、怎样用硬件加速器使用它。",
+              "requires": [
+                "th.arch"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory",
+              "ref": {
+                "source_id": "opentitan",
+                "locator": "安全存储与密钥管理相关文档"
+              }
+            },
+            {
+              "id": "th.debug",
+              "title": "受控的调试访问",
+              "summary": "调试访问怎样被授权、锁定与审计。",
+              "requires": [
+                "th.arch"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "opentitan",
+                "locator": "芯片生命周期与调试访问控制相关文档"
+              }
+            },
+            {
+              "id": "th.tamper",
+              "title": "验证篡改镜像被拒绝",
+              "summary": "在开发板上用安全启动流程验证被篡改的镜像会被拒绝并留下可查记录。",
+              "requires": [
+                "th.boot"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true,
+              "ref": {
+                "source_id": "acm-ieee-ce2016",
+                "locator": "CE-SEC-10 Trusted computing"
+              }
+            }
+          ]
         }
       ],
       "edges": [

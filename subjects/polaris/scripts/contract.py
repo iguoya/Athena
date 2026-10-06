@@ -199,6 +199,8 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
             _validate_codesign_node(report, node, nwhere)
         if course:
             _validate_course_node(report, node, nwhere)
+        elif "chapters" in node:
+            _validate_chapters(report, node, nwhere)
 
         report.require_source_refs("node.source_refs", nwhere, node.get("source_refs"), source_ids)
         _validate_node_relations(report, nwhere, node.get("source_refs"))
@@ -274,32 +276,44 @@ def _validate_course_node(report: _Report, node: dict, nwhere: str) -> None:
         report.add("course.entry", nwhere, "缺少 entry（是否为入门起点）。")
     if node.get("verify") not in KNOWN_VERIFY:
         report.add("course.verify", nwhere, "verify 只能是 code、board 或 bench。")
+    _validate_chapters(report, node, nwhere)
+
+
+def _validate_chapters(report: _Report, node: dict, nwhere: str) -> None:
+    """细分章节学习流程。课程图的节点必须有；其他开放地图的节点写了就必须合格（ADR 0019）。
+
+    章节按学习顺序排列：课内先修只能指向排在它前面的章节。可选的 ref 必须指向本节点自己
+    引用过的来源，这样每一章都能追到出处。
+    """
     chapters = node.get("chapters") if isinstance(node.get("chapters"), list) else []
     if len(chapters) < 3:
         report.add("course.chapters_min", nwhere, "缺少细分章节学习流程（至少三章）。")
-    chapter_ids: set[str] = set()
-    chapter_requires: dict[str, list[str]] = {}
+    node_sources = {r.get("source_id") for r in node.get("source_refs") or [] if isinstance(r, dict)}
+    seen: list[str] = []
     for chapter in chapters:
         chapter = chapter if isinstance(chapter, dict) else {}
         chapter_id = chapter.get("id")
         cwhere = f"{nwhere} 的章节 {chapter_id}"
         report.require_text("course.chapter_fields", cwhere, chapter, ["id", "title", "summary"])
-        if chapter_id in chapter_ids:
+        if chapter_id in seen:
             report.add("course.chapter_duplicate", cwhere, "章节 ID 重复。")
-        if isinstance(chapter_id, str):
-            chapter_ids.add(chapter_id)
-            chapter_requires[chapter_id] = _strings(chapter.get("requires"))
         mastery = chapter.get("mastery")
         if mastery not in KNOWN_MASTERY:
             report.add("course.mastery", cwhere, "mastery 只能是 familiarity、usage 或 assessment（CS2013）。")
         practice = chapter.get("hands_on") is True or chapter.get("kind") == "practice"
         if mastery in KNOWN_MASTERY and mastery != "familiarity" and not practice:
             report.add("course.practice", cwhere, "是运用或评估，必须标为实践，以便和理论区隔。")
-    for chapter_id, required in chapter_requires.items():
-        for rid in required:
-            if rid not in chapter_ids:
-                report.add("course.chapter_requires", f"{nwhere} 的章节 {chapter_id}",
-                           f"先修 {rid} 不在本课学习流程里。")
+        for rid in _strings(chapter.get("requires")):
+            if rid not in seen:
+                report.add("course.chapter_requires", cwhere, f"先修 {rid} 不在本课学习流程里，或排在它的后面。")
+        if "ref" in chapter:
+            ref = chapter["ref"] if isinstance(chapter["ref"], dict) else {}
+            if not report.require_text("course.chapter_ref", cwhere, ref, ["source_id", "locator"]):
+                pass
+            elif ref["source_id"] not in node_sources:
+                report.add("course.chapter_ref", cwhere, f"出处 {ref['source_id']} 不是本节点引用过的来源。")
+        if isinstance(chapter_id, str):
+            seen.append(chapter_id)
 
 
 def _validate_requirements(report: _Report, where: str, map_id: str, node_ids: set[str],

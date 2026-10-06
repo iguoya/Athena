@@ -46,6 +46,8 @@
   里、一个节点也不删，但不开放、不被路线引用。
 - 课程图（`graph_kind: course`）的节点必须有 `entry`、`verify` 和至少三章 `chapters`（章节掌握度按
   CS2013：熟悉 / 运用 / 评估，运用与评估必须标实践）。`theory` 是不建节点的理论科目，三段齐全。
+  其他开放地图的节点写了 `chapters` 也必须合格，且**五条纵深路线用到的节点必须全部有章节**（ADR 0019，测试守着）：
+  章节按学习顺序排，课内先修只指向排在前面的章，可选的 `ref` 必须是该节点自己引用过的来源，最后一章是做出来的验收。
 - 每个节点必须写明 `stable_definition`、`engineering_role`、`practice`、`validation`、`volatility` 和至少
   一条 `source_refs`（至少一条**内容来源**：adapted / verbatim / quoted / authored；`see_also` 等只是
   补充说明）。开放地图的节点另须 `pitfall`、`priority`、`priority_reason`；`academic` 另须 `targets`；

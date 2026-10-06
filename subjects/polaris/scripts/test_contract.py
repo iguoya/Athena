@@ -384,6 +384,28 @@ class DepthAndBalance(unittest.TestCase):
             self.assertIn("不构成录用承诺", r["profile"])
             self.assertTrue(any(ref["source_id"].endswith("-job") for ref in r["source_refs"]), r["id"])
 
+    DEPTH_ROUTES = ["route.cpu-soc-architecture", "route.digital-ic-verification", "route.ai-accelerator-systems",
+                    "route.firmware-trusted", "route.highrel-aerospace"]
+
+    def test_every_node_on_a_depth_route_has_chapters(self) -> None:
+        # ADR 0019：五条纵深路线用到的节点必须全部细化到章节。
+        nodes = {n["id"]: n for m in DOC["maps"] for n in m["nodes"]}
+        for route in (r for r in DOC["routes"] if r["id"] in self.DEPTH_ROUTES):
+            for stage in route["stages"]:
+                for node_id in stage["nodes"]:
+                    self.assertGreaterEqual(len(nodes[node_id].get("chapters", [])), 3, f"{route['id']} / {node_id}")
+
+    def test_every_depth_chapter_list_ends_with_something_you_make(self) -> None:
+        # 最后一章是做出来的验收（评估档、实践），不是又一个概念。
+        for m in DOC["maps"]:
+            if m["view_kind"] not in ("codesign", "frontier"):
+                continue
+            for n in m["nodes"]:
+                if "chapters" in n:
+                    last = n["chapters"][-1]
+                    self.assertEqual(last["mastery"], "assessment", n["id"])
+                    self.assertTrue(last.get("hands_on"), n["id"])
+
     def test_principles_are_sourced(self) -> None:
         principles = DOC["principles"]
         self.assertGreaterEqual(len(principles), 7)
@@ -396,6 +418,11 @@ class DepthAndBalance(unittest.TestCase):
             with self.subTest(code=code):
                 self.assertIn(code, codes_after(mutate))
 
+        expect("course.chapter_ref", lambda d: find_map(d, "frontier-depth")["nodes"][0]["chapters"][0]["ref"].update(source_id="ghost"))
+        expect("course.chapter_ref", lambda d: find_map(d, "frontier-depth")["nodes"][0]["chapters"][0]["ref"].update(locator=""))
+        # 章节先修只能指向排在前面的章节
+        expect("course.chapter_requires", lambda d: find_map(d, "frontier-depth")["nodes"][0]["chapters"][0].update(requires=["math.apply"]))
+        expect("course.chapters_min", lambda d: find_map(d, "frontier-depth")["nodes"][0].update(chapters=find_map(d, "frontier-depth")["nodes"][0]["chapters"][:2]))
         expect("principle.fields", lambda d: d["principles"][0].update(body=""))
         expect("principle.duplicate_id", lambda d: d["principles"].append(copy.deepcopy(d["principles"][0])))
         expect("principle.source_refs", lambda d: d["principles"][0].update(source_refs=[]))

@@ -38,6 +38,8 @@ export interface Chapter {
   kind?: "theory" | "practice";
   hands_on?: boolean;
   requires?: string[];
+  /** 这一章的出处；必须是所属节点自己引用过的来源（ADR 0019）。 */
+  ref?: { source_id: string; locator: string };
 }
 
 export interface PolarisNode {

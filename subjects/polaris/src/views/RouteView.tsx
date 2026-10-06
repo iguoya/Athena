@@ -3,7 +3,7 @@ import { AnimatePresence } from "motion/react";
 import { ChevronDown, ChevronLeft, Flag, Radar, Users } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { coveredDomains, DOMAINS } from "@/content/coverage";
-import { layoutRoute } from "@/content/routes";
+import { layoutRoute, routeChapterCount } from "@/content/routes";
 import { GraphCanvas, type ColumnNote } from "@/graph/GraphCanvas";
 import { EdgeCard } from "@/panels/EdgeCard";
 import { BalancePanel } from "@/panels/BalancePanel";
@@ -63,6 +63,11 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
           >
             {BALANCE_LABEL[route.balance]}
           </span>
+          {routeChapterCount(catalog, route) > 0 && (
+            <span className="rounded-full bg-surface-2 px-2.5 py-[3px] text-[11.5px] font-medium text-muted">
+              细化到 {routeChapterCount(catalog, route)} 章
+            </span>
+          )}
           <button
             type="button"
             onClick={() => setBalanceOpen((v) => !v)}

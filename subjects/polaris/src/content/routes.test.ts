@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadCatalog } from "./load";
-import { BALANCES, LENSES, layoutRoute, routeEdges, routeMatrix, routeNodeCount, routesOfNode } from "./routes";
+import { BALANCES, LENSES, layoutRoute, routeChapterCount, routeEdges, routeMatrix, routeNodeCount, routesOfNode } from "./routes";
 
 const catalog = loadCatalog();
 
@@ -64,5 +64,18 @@ describe("路线", () => {
   it("反查：MMIO 出现在多条路线里，参考层节点不在任何路线里", () => {
     expect(routesOfNode(catalog, "polaris.codesign.mmio").length).toBeGreaterThanOrEqual(4);
     expect(routesOfNode(catalog, "polaris.target.gnc.fusion")).toEqual([]);
+  });
+
+  it("五条纵深路线都细化到章节：每个节点至少三章，章数是节点章数之和", () => {
+    for (const id of ["route.cpu-soc-architecture", "route.digital-ic-verification", "route.ai-accelerator-systems", "route.firmware-trusted", "route.highrel-aerospace"]) {
+      const route = catalog.routes.find((r) => r.id === id)!;
+      let total = 0;
+      for (const nodeId of new Set(route.stages.flatMap((s) => s.nodes))) {
+        const count = catalog.nodeById.get(nodeId)!.chapters?.length ?? 0;
+        expect(count, `${id} / ${nodeId}`).toBeGreaterThanOrEqual(3);
+        total += count;
+      }
+      expect(routeChapterCount(catalog, route)).toBe(total);
+    }
   });
 });
