@@ -9,9 +9,12 @@ import {
   FlaskConical,
   Sparkles,
   Terminal,
+  BookA,
+  X,
 } from "lucide-react";
 import { BlockView } from "./blocks";
-import { PageView } from "./page-view";
+import { PageView, setAnnotationData, setWordStatus, setOnRateWord, buildAnnotationMatcher } from "./page-view";
+import type { VocabEntry, PatternEntry, WordStatus } from "./page-view";
 import type {
   AttemptRow,
   Block,
@@ -57,6 +60,8 @@ export default function App() {
   const [trainingMode, setTrainingMode] = useState(
     () => window.localStorage.getItem("zh-training") !== "off",
   );
+  const [vocabData, setVocabData] = useState<{ vocab: VocabEntry[]; patterns: PatternEntry[] } | null>(null);
+  const [showVocabPanel, setShowVocabPanel] = useState(false);
 
   useEffect(() => {
     loadContent<Curriculum>("get_curriculum", "/content/curriculum.json").then((c) => {
@@ -66,6 +71,23 @@ export default function App() {
     });
     loadContent<Manifest>("get_manifest", "/content/demos.json").then(setManifest);
     invoke<AttemptRow[]>("get_attempts").then(setAttempts).catch(() => {});
+    (async () => {
+      let data: { vocab: VocabEntry[]; patterns: PatternEntry[] } | null = null;
+      try {
+        data = await invoke<{ vocab: VocabEntry[]; patterns: PatternEntry[] }>("get_vocab");
+      } catch {
+        try {
+          const response = await fetch("/content/vocab.json");
+          data = (await response.json()) as { vocab: VocabEntry[]; patterns: PatternEntry[] };
+        } catch {
+          return;
+        }
+      }
+      if (!data) return;
+      setVocabData(data);
+      setAnnotationData(data.vocab, data.patterns);
+      buildAnnotationMatcher();
+    })();
     const unlisten = listen<DemoEvent>("demo-event", (event) => {
       setEvents((prev) => [event.payload, ...prev].slice(0, 20));
     });
@@ -168,6 +190,35 @@ export default function App() {
     ]);
   };
 
+  const wordStatus: WordStatus = useMemo(() => {
+    const known = new Set<string>();
+    const unknown = new Set<string>();
+    for (const a of attempts) {
+      if (!a.knowledge_id.startsWith("vocab.training")) continue;
+      const term = a.item_id.replace(/^word:/, "");
+      if (a.correct) known.add(term);
+      else unknown.add(term);
+    }
+    for (const t of known) unknown.delete(t);
+    return { known, unknown };
+  }, [attempts]);
+  useEffect(() => {
+    setWordStatus(wordStatus);
+  }, [wordStatus]);
+  useEffect(() => {
+    setOnRateWord((term: string, known: boolean) => {
+      invoke("record_attempt", {
+        knowledgeId: "vocab.training",
+        itemId: `word:${term.toLowerCase()}`,
+        correct: known,
+      }).catch(() => {});
+      setAttempts((prev) => [
+        ...prev,
+        { knowledge_id: "vocab.training", item_id: `word:${term.toLowerCase()}`, correct: known, answered_at: 0 },
+      ]);
+    });
+  }, []);
+
   const pagePassed = (sectionId: string, pageId: string) => {
     const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
     return ids.length > 0 && ids.every((id) => correctItems.has(id));
@@ -238,6 +289,17 @@ export default function App() {
             }`}
           >
             {trainingMode ? "英译训练模式：开（中文已隐藏）" : "英译训练模式：关"}
+          </button>
+          <button
+            onClick={() => setShowVocabPanel(true)}
+            className="mt-1.5 flex w-full items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
+          >
+            <span className="flex items-center gap-1.5">
+              <BookA className="size-5" /> 我的生词本
+            </span>
+            <span className={wordStatus.unknown.size ? "font-medium text-amber-700" : ""}>
+              {wordStatus.unknown.size}
+            </span>
           </button>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2">
             <div
@@ -630,10 +692,50 @@ export default function App() {
         </ul>
       </aside>
       )}
+
+      {showVocabPanel && vocabData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30" onClick={() => setShowVocabPanel(false)}>
+          <div
+            className="max-h-[80vh] w-[560px] overflow-y-auto rounded-card bg-surface p-6 shadow-card ring-1 ring-line"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-display text-[26px] font-semibold text-accent">我的生词本</h3>
+              <button onClick={() => setShowVocabPanel(false)} className="text-muted hover:text-fg">
+                <X className="size-6" />
+              </button>
+            </div>
+            <p className="text-[20px] text-muted">
+              标「不认识」的词会集中在这里（词表按高中以上门槛筛选，共 {vocabData.vocab.length} 词 +
+              {vocabData.patterns.length} 句型）。
+            </p>
+            {wordStatus.unknown.size === 0 ? (
+              <p className="mt-4 rounded-card bg-surface-2 p-4 text-[22px] text-muted">
+                还没有标记过生词——阅读时点击带虚线的词，选「不认识」即可收录。
+              </p>
+            ) : (
+              <ul className="mt-4 space-y-2">
+                {[...wordStatus.unknown].map((term) => {
+                  const entry = vocabData.vocab.find((v) => v.term.toLowerCase() === term);
+                  const pattern = vocabData.patterns.find((pt) => pt.pattern.toLowerCase() === term);
+                  return (
+                    <li key={term} className="flex items-baseline justify-between gap-3 rounded-xl bg-surface-2 px-4 py-2.5">
+                      <span>
+                        <span className="font-serif text-[24px] font-semibold">{entry?.term ?? pattern?.pattern ?? term}</span>
+                        {entry?.pos && <span className="ml-2 text-[20px] italic text-muted">{entry.pos}</span>}
+                        <span className="ml-3 text-[22px] text-accent-deep">{entry?.cn ?? pattern?.cn}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
 
 function PageAssessments({
   section,

@@ -133,6 +133,12 @@ fn get_manifest(state: State<AppState>) -> Result<Value, String> {
     read_content(&state.content_root, "demos.json")
 }
 
+/// 英译训练标注数据（content/vocab.json：难词表 + 句型表）。
+#[tauri::command]
+fn get_vocab(state: State<AppState>) -> Result<Value, String> {
+    read_content(&state.content_root, "vocab.json")
+}
+
 /// 官方节页的段落快照（content/chapters/<章>/<节>.json，原文+逐段中文，
 /// 由 scripts/sync_upstream.py 生成——应用 ADR 0002 的段落级追踪）。
 #[tauri::command]
@@ -294,6 +300,7 @@ pub fn run() {
             get_curriculum,
             get_manifest,
             get_page_content,
+            get_vocab,
             record_attempt,
             get_attempts,
             launch_demo,

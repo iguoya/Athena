@@ -2,6 +2,30 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CircleAlert } from "lucide-react";
 
+/** 标注数据（content/vocab.json，App 启动时注入）。 */
+export interface VocabEntry {
+  term: string;
+  pos?: string;
+  cn: string;
+  note?: string;
+}
+export interface PatternEntry {
+  pattern: string;
+  cn: string;
+}
+let VOCAB: VocabEntry[] = [];
+let PATTERNS: PatternEntry[] = [];
+export function setAnnotationData(vocab: VocabEntry[], patterns: PatternEntry[]) {
+  VOCAB = vocab;
+  PATTERNS = patterns;
+}
+
+/** 词汇状态（learning.db 派生）：known=已认识；unknown=生词。 */
+export interface WordStatus {
+  known: Set<string>;
+  unknown: Set<string>;
+}
+
 /**
  * 官方节页渲染器：读段落快照 JSON（scripts/sync_upstream.py 生成）。
  * - 原文段落保留官方内联格式（粗体/斜体/行内代码/链接，受限 markdown）
@@ -112,7 +136,107 @@ function ZhReveal({
 /** 段内换行是 DocBook 源的排版产物：折叠为空格，按页面宽度自由断行。 */
 const flow = (s: string) => s.replace(/\s*\n\s*/g, " ");
 
+function AnnotatedTerm({
+  kind,
+  term,
+  display,
+  entry,
+  status,
+  onRate,
+}: {
+  kind: "vocab" | "pattern";
+  term: string;
+  display: string;
+  entry: VocabEntry | PatternEntry;
+  status: "known" | "unknown" | undefined;
+  onRate: (term: string, known: boolean) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const isVocab = kind === "vocab";
+  const underline = status === "unknown"
+    ? "underline decoration-solid decoration-amber-500 decoration-2 underline-offset-4"
+    : status === "known"
+      ? "underline decoration-dotted decoration-green-600/60 underline-offset-4"
+      : "underline decoration-dotted decoration-accent/50 underline-offset-4";
+  const pos = isVocab ? (entry as VocabEntry).pos : undefined;
+  const note = (entry as VocabEntry).note || "";
+  return (
+    <span className="relative inline-block">
+      <button
+        onClick={() => setOpen(!open)}
+        className={`${underline} cursor-help text-left font-serif`}
+      >
+        {display}
+      </button>
+      {open && (
+        <span className="absolute left-0 top-full z-40 mt-2 block w-72 rounded-xl bg-white p-4 text-left shadow-card ring-1 ring-line">
+          <span className="block font-serif text-[24px] font-semibold text-fg">
+            {display}
+            {pos && <span className="ml-2 text-[20px] italic text-muted">{pos}</span>}
+          </span>
+          <span className="mt-1 block text-[22px] text-accent-deep">{entry.cn}</span>
+          {note && <span className="mt-1 block text-[20px] leading-relaxed text-muted">{note}</span>}
+          <span className="mt-3 flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRate(term, true);
+                setOpen(false);
+              }}
+              className={`rounded-lg border px-3 py-1 text-[20px] ${
+                status === "known"
+                  ? "border-green-500 bg-green-50 text-green-700"
+                  : "border-green-500/40 text-green-700 hover:bg-green-50"
+              }`}
+            >
+              认识
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRate(term, false);
+                setOpen(false);
+              }}
+              className={`rounded-lg border px-3 py-1 text-[20px] ${
+                status === "unknown"
+                  ? "border-amber-500 bg-amber-50 text-amber-700"
+                  : "border-amber-500/40 text-amber-700 hover:bg-amber-50"
+              }`}
+            >
+              不认识
+            </button>
+          </span>
+        </span>
+      )}
+    </span>
+  );
+}
+
 /** 受限行内 markdown → JSX：**粗**、*斜*、`代码`、[文字](链接)。 */
+let annotationMatcher: RegExp | null = null;
+let wordStatus: WordStatus | undefined;
+let onRateWord: ((term: string, known: boolean) => void) | null = null;
+export function setWordStatus(status: WordStatus | undefined) {
+  wordStatus = status;
+}
+export function setOnRateWord(fn: (term: string, known: boolean) => void) {
+  onRateWord = fn;
+}
+export function buildAnnotationMatcher() {
+  const terms = [
+    ...PATTERNS.map((pt) => pt.pattern),
+    ...VOCAB.map((v) => v.term),
+  ];
+  if (!terms.length) {
+    annotationMatcher = null;
+    return;
+  }
+  const escaped = terms
+    .sort((a, b) => b.length - a.length)
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  annotationMatcher = new RegExp(`\\b(?:${escaped.join("|")})\\b`, "gi");
+}
+
 function renderInline(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
   const pattern =
@@ -120,8 +244,44 @@ function renderInline(text: string): ReactNode[] {
   let cursor = 0;
   let match: RegExpExecArray | null;
   let key = 0;
+  const pushPlain = (raw: string) => {
+    if (!annotationMatcher) {
+      nodes.push(raw);
+      return;
+    }
+    let last = 0;
+    let m: RegExpExecArray | null;
+    annotationMatcher.lastIndex = 0;
+    while ((m = annotationMatcher.exec(raw)) !== null) {
+      if (m.index > last) nodes.push(raw.slice(last, m.index));
+      const hit = m[0].toLowerCase();
+      const vocabHit = VOCAB.find((v) => v.term.toLowerCase() === hit);
+      const patternHit = PATTERNS.find((pt) => pt.pattern.toLowerCase() === hit);
+      if (vocabHit || patternHit) {
+        nodes.push(
+          <AnnotatedTerm
+            key={`ann-${key++}`}
+            kind={vocabHit ? "vocab" : "pattern"}
+            term={vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern}
+            display={m[0]}
+            entry={(vocabHit ?? patternHit) as VocabEntry & PatternEntry}
+            status={wordStatus?.known.has(vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern)
+              ? "known"
+              : wordStatus?.unknown.has(vocabHit ? vocabHit.term : (patternHit as PatternEntry).pattern)
+                ? "unknown"
+                : undefined}
+            onRate={onRateWord ?? (() => {})}
+          />,
+        );
+      } else {
+        nodes.push(m[0]);
+      }
+      last = m.index + m[0].length;
+    }
+    if (last < raw.length) nodes.push(raw.slice(last));
+  };
   while ((match = pattern.exec(text)) !== null) {
-    if (match.index > cursor) nodes.push(text.slice(cursor, match.index));
+    if (match.index > cursor) pushPlain(text.slice(cursor, match.index));
     if (match[1] !== undefined) {
       nodes.push(
         <strong key={key++} className="font-semibold text-fg">
@@ -158,7 +318,7 @@ function renderInline(text: string): ReactNode[] {
     }
     cursor = pattern.lastIndex;
   }
-  if (cursor < text.length) nodes.push(text.slice(cursor));
+  if (cursor < text.length) pushPlain(text.slice(cursor));
   return nodes;
 }
 
