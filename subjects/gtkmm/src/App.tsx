@@ -165,10 +165,7 @@ export default function App() {
                   </button>
                   {active && (
                     <ul className="ml-6 border-l border-line pl-2">
-                      {/* 官方节页：严格跟随上游分页（应用 ADR 0002） */}
-                      <li className="px-2 pt-1.5 pb-0.5 text-[20px] font-semibold tracking-wide text-muted/70">
-                        官方节页
-                      </li>
+                      {/* 官方节页：严格跟随上游分页（应用 ADR 0002），直接跟在章名下 */}
                       {s.pages.map((p) => {
                         const pageActive = activeSectionId === s.id && activePageId === p.id;
                         return (
