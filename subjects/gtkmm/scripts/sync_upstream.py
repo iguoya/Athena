@@ -232,16 +232,8 @@ def align(old_blocks: list[dict] | None, new_blocks: list[dict],
                 stats["new"] += j2 - j1
             elif tag == "delete":
                 stats["gone"] += i2 - i1
-    else:
-        # 首次生成：从旧 md 的中文段按序填充（para/listitem 一段对一段）
-        zh_pool = list(old_zh or [])
-        zh_iter = iter(zh_pool)
-        for block in new_blocks:
-            if block["type"] in ("code", "figure"):
-                continue
-            candidate = next(zh_iter, None)
-            if candidate:
-                block["zh"] = candidate
+    # 首次生成不做顺序填充——按序对齐正是错位事故的源头（应用 ADR 0002 复盘）。
+    # 译文一律内容寻址填充：apply_po.py（官方 po 指纹）或人工按段前缀匹配。
     return new_blocks, stats
 
 
@@ -256,8 +248,7 @@ def sync_section(chapter_id: str, section_id: str, section_title: str,
 
     new_blocks = extract_blocks(fragment)
     md_path = out_path.with_suffix(".md")
-    blocks, stats = align(old_blocks, new_blocks,
-                          load_translation_from_md(md_path) if old is None else None)
+    blocks, stats = align(old_blocks, new_blocks)
     snapshot = {
         "chapter": chapter_id,
         "section": section_id,

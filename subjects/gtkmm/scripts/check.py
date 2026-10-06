@@ -29,7 +29,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from apply_po import parse_po, po_to_plain, snapshot_plain  # noqa: E402
 from extract_source import DOCBOOK, load_structure  # noqa: E402
+
+
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = PROJECT_ROOT / "content"
@@ -380,6 +383,53 @@ def check_native() -> None:
         run([str(binary), "--self-check"], f"{entity['id']} --self-check", env)
 
 
+def check_alignment() -> None:
+    """译文错位审计（内容寻址）：官方 po 中每条译文唯一对应一段原文。
+
+    若某段的 zh 恰好等于 po 里「另一段」的译文，说明发生了顺序漂移——
+    这是早期按顺序迁移译文的遗留事故，此处永久守门（应用 ADR 0002）。
+    """
+    po_path = (PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "docs"
+               / "tutorial" / "zh_CN" / "zh_CN.po")
+    if not po_path.is_file():
+        return
+    entries = parse_po(po_path.read_text(encoding="utf-8"))
+    plain_zh = {}
+    own_counts: dict[str, int] = {}
+    for msgid, msgstr in entries.items():
+        if not msgstr.strip():
+            continue
+        key = po_to_plain(msgid)
+        plain_zh.setdefault(key, po_to_plain(msgstr))
+        own_counts[key] = own_counts.get(key, 0) + 1
+    zh_to_own = {}
+    for own, zh in plain_zh.items():
+        zh_to_own.setdefault(zh, own)
+
+    for path in sorted(CONTENT_DIR.rglob("chapters/*/*.json")):
+        data = load_json(path)
+        if not data:
+            continue
+        section = data.get("section", path.stem)
+        for block in data.get("blocks", []):
+            if block["type"] not in ("para", "listitem") or not block.get("zh"):
+                continue
+            own = snapshot_plain(block["text"])
+            zh_plain = snapshot_plain(block["zh"])
+            # 自身指纹能对上官方译文 → 正确（即使该译文与其他段相同）
+            if plain_zh.get(own) == zh_plain:
+                continue
+            # 歧义豁免：同文多译的短连接段（For instance/signals 等）不可判
+            if len(own) < 25 or own_counts.get(own, 0) > 1:
+                continue
+            owner = zh_to_own.get(zh_plain)
+            if owner is not None and owner != own:
+                fail(
+                    f"chapters/{section}: 段落译文错位（该译文对应官方 po 的另一段）"
+                    f"——先跑 scripts/apply_po.py --fix 修正：{own[:50]!r}"
+                )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="验证 gtkmm 学习应用")
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
@@ -392,6 +442,7 @@ def main() -> int:
     kp_ids, course_refs, lab_refs = check_curriculum(course or {}, official)
     manifest = load_json(CONTENT_DIR / "demos.json")
     check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
+    check_alignment()
     check_license_pages()
 
     contract = PROJECT_ROOT / "content-contract.json"

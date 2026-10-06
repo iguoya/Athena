@@ -26,31 +26,31 @@
    "type": "para",
    "text": "gtkmm allows you to write code using normal C++ techniques such as encapsulation, derivation, and polymorphism. As a C++ programmer you probably already realize that this leads to clearer and better organized code.",
    "sha": "a53c4376d81b4f66",
-   "zh": "gtkmm 的类型安全更强，许多在 C 里要到运行时才暴露的错误，编译器就能查出来。 具体类型也让 API 更清楚：光看方法的声明，就知道该用什么类型。"
+   "zh": "gtkmm 让你用普通的 C++ 技术写代码——封装、派生、多态。作为 C++ 程序员你大概已经明白，这会让代码更清晰、组织得更好。"
   },
   {
    "type": "para",
    "text": "gtkmm is more type-safe, so the compiler can detect errors that would only be detected at run time when using C. This use of specific types also makes the API clearer because you can see what types should be used just by looking at a method's declaration.",
    "sha": "b19788b4bebc8c6d",
-   "zh": "可以用继承来派生新控件。在 GTK 的 C 代码里派生新控件复杂且容易出错，几乎没有 C 程序员这么做；而作为 C++ 开发者你知道，派生是面向对象的基本技术。"
+   "zh": "gtkmm 的类型安全更强，许多在 C 里要到运行时才暴露的错误，编译器就能查出来。 具体类型也让 API 更清楚：光看方法的声明，就知道该用什么类型。"
   },
   {
    "type": "para",
    "text": "Inheritance can be used to derive new widgets. The derivation of new widgets in GTK C code is so complicated and error prone that almost no C coders do it. As a C++ developer you know that derivation is an essential Object Orientated technique.",
    "sha": "9666ff60969c8d31",
-   "zh": "可以用成员实例，从而简化内存管理。GTK 的 C 控件全靠指针操作；作为 C++ 程序员 你知道，指针应能免则免。"
+   "zh": "可以用继承来派生新控件。在 GTK 的 C 代码里派生新控件复杂且容易出错，几乎没有 C 程序员这么做；而作为 C++ 开发者你知道，派生是面向对象的基本技术。"
   },
   {
    "type": "para",
    "text": "Member instances can be used, simplifying memory management. All GTK C widgets are dealt with by use of pointers. As a C++ coder you know that pointers should be avoided where possible.",
    "sha": "5ccb3ef9e3ee579a",
-   "zh": "与 GTK 相比，gtkmm 的代码量更少——GTK 依靠带前缀的函数名和大量强制转换宏。"
+   "zh": "可以用成员实例，从而简化内存管理。GTK 的 C 控件全靠指针操作；作为 C++ 程序员 你知道，指针应能免则免。"
   },
   {
    "type": "para",
    "text": "gtkmm involves less code compared to GTK, which uses prefixed function names and lots of cast macros.",
    "sha": "f6ddf0b60d62606f",
-   "zh": "Trolltech 的 Qt 是与 gtkmm 最接近的竞争者，值得拿来讨论。"
+   "zh": "与 GTK 相比，gtkmm 的代码量更少——GTK 依靠带前缀的函数名和大量强制转换宏。"
   },
   {
    "type": "heading",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "Trolltech's Qt is the closest competition to gtkmm, so it deserves discussion.",
    "sha": "436fe970ffc5d1f3",
-   "zh": "gtkmm 不是原生 C++ 工具集，而是 C 工具集的 C++ 包装。接口与实现的分离自有其 好处：gtkmm 的开发者可以把大部分精力花在「如何呈现最清晰的 API」上，不必为 晦涩的技术细节做出难看的妥协。我们对底层 GTK 代码库也有些贡献，但 C 程序员、 Perl 程序员、Python 程序员等同样在贡献。因此，相比特定语言的工具集，GTK 受益 于更广泛的用户群——实现者更多、开发者更多、测试者更多、用户也更多。"
+   "zh": "Trolltech 的 Qt 是与 gtkmm 最接近的竞争者，值得拿来讨论。"
   },
   {
    "type": "para",
