@@ -8,19 +8,19 @@
    "type": "para",
    "text": "We've now learned enough to look at a real example. In accordance with an ancient\ntradition of computer science, we now introduce Hello World, a la gtkmm:",
    "sha": "c4f27b82f01c5909",
-   "zh": "我们已经学够了，可以看一个真正的例子了。按照计算机科学的古老传统，现在介绍 gtkmm 风格的 Hello World："
+   "zh": "目前我们已经可以自己所学的知识来写一个真正的程序了。根据计算机科学的传统，我们现在以 gtkmm 的方式来介绍 Hello World 程序："
   },
   {
    "type": "para",
    "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld)",
    "sha": "bc47da663d101bfc",
-   "zh": "源代码文件：helloworld.h（适用于 gtkmm 4）"
+   "zh": "源代码"
   },
   {
    "type": "para",
    "text": "Try to compile and run it before going on. You should see something like this:",
    "sha": "7124d29cd434bbe2",
-   "zh": "源代码文件：helloworld.cc（适用于 gtkmm 4）"
+   "zh": "在继续讲解之前，可以尝试着编译并运行这个程序，你会看到这样的结果："
   },
   {
    "type": "figure",
@@ -33,7 +33,7 @@
    "type": "para",
    "text": "Pretty thrilling, eh?  Let's examine the code. First, the\n`HelloWorld` class:",
    "sha": "55a068d0283eb29f",
-   "zh": "源代码文件：main.cc（适用于 gtkmm 4）"
+   "zh": "真让人激动，不是吗？让我们回过头来看一下代码。首先看一下 HelloWorld 类："
   },
   {
    "type": "code",
@@ -45,7 +45,7 @@
    "type": "para",
    "text": "This class implements the \"Hello World\" window. It's derived from\n`Gtk::Window`, and has a single `Gtk::Button` as a member.\nWe've chosen to use the\nconstructor to do all of the initialization work for the window,\nincluding setting up the signals. Here it is, with the comments\nomitted:",
    "sha": "b6852431c841b818",
-   "zh": "继续往下读之前，先编译并运行它。你会看到类似这样的东西："
+   "zh": "这个类实现「Hello World」窗口：派生自 Gtk::Window，有一个 Gtk::Button 成员。我们选择在构造函数里完成窗口的全部初始化工作，包括设置信号。以下是省略注释后的构造函数："
   },
   {
    "type": "code",
@@ -57,31 +57,31 @@
    "type": "para",
    "text": "Notice that we've used an initializer statement to give the `m_button`\nobject the label \"Hello World\".",
    "sha": "31a03970e7eb75b6",
-   "zh": "图 3.1 Hello World"
+   "zh": "注意我们用了初始化列表，把标签「Hello World」交给 m_button 对象。"
   },
   {
    "type": "para",
    "text": "Next we call the Button's set_margin() method. This sets\nthe amount of space around the button.",
    "sha": "ade6d2e4caf00eba",
-   "zh": "相当激动人心吧？我们来读代码。先看 HelloWorld 类："
+   "zh": "接下来调用 Button 类的 set_margin() 方法。这将设置按钮周围空间的大小。"
   },
   {
    "type": "para",
    "text": "We then hook up a signal handler to `m_button`'s `clicked` signal.\nThis prints our friendly greeting to `stdout`.",
    "sha": "a23e2e2a2bf204e7",
-   "zh": "这个类实现「Hello World」窗口：派生自 Gtk::Window，有一个 Gtk::Button 成员。 我们选择在构造函数里完成窗口的全部初始化工作，包括设置信号。以下是省略注释 后的构造函数："
+   "zh": "然后，把 m_button 的 clicked 信号挂接到信号处理函数上。这会向 stdout (标准输出) 打印出友好的问候语。"
   },
   {
    "type": "para",
    "text": "Next, we use the Window's set_child() method to put\n`m_button` in the Window. The set_child()\nmethod places the Widget in the Window.",
    "sha": "01e5ae3a7575e58b",
-   "zh": "注意我们用了初始化列表，把标签「Hello World」交给 m_button 对象。"
+   "zh": "接下来调用 Windows 类的 set_child() 方法将m_button放入窗口。set_child()方法会将部件放入窗口中。"
   },
   {
    "type": "para",
    "text": "Now let's look at our program's `main()` function. Here it is,\nwithout comments:",
    "sha": "53ed40472f5893e4",
-   "zh": "接着调用 Button 的 set_margin() 方法，设置按钮四周留出的空间大小。"
+   "zh": "现在让我们来看看程序中没有注释过的 main() 函数："
   },
   {
    "type": "code",
@@ -93,19 +93,19 @@
    "type": "para",
    "text": "First we instantiate an object stored in a `Glib::RefPtr` smartpointer called `app`. This is of type\n`Gtk::Application`. Every gtkmm program must have one of these.",
    "sha": "bc0ef577b018a329",
-   "zh": "然后把信号处理器挂到 m_button 的 clicked 信号上，向标准输出打印友好的问候语。"
+   "zh": "我们首先实例化一个储存在名为app的RefPtr智能指针对象，它的类型为Gtk::Application 。每一个gtkmm程序都有这样的一个东西。"
   },
   {
    "type": "para",
    "text": "Next we call make_window_and_run() which creates an object\nof our `HelloWorld` class, shows that Window and starts the gtkmm\n*event loop*. During the event loop gtkmm idles, waiting for actions\nfrom the user, and responding appropriately.\nWhen the user closes the Window, make_window_and_run() will return,\ncausing our `main()` function to return. The application will then finish.",
    "sha": "0143f3a83cde6d4f",
-   "zh": "再用 Window 的 set_child() 方法把 m_button 放进窗口——set_child() 负责把 Widget 放入 Window。"
+   "zh": "接着我们调用make_window_and_run()创建了我们的HelloWorld类对象，显示这个窗口并进入gtkmm消息循环。在消息循环中，gtkmm是空闲的，它等待用户的操作并作出相应的反应。当用户关闭窗口时，run() 函数将返回，导致main()函数的最后一行将被执行。然后程序就结束了。"
   },
   {
    "type": "para",
    "text": "Like the simple example we showed earlier, this Hello World program does not use\nthe command-line parameters.",
    "sha": "baaa6e0081de399e",
-   "zh": "现在看程序的 main() 函数，省略注释后如下："
+   "zh": "就像我们之前显示的简单示例一样，这个Hello World程序不使用命令行参数。"
   }
  ]
 }

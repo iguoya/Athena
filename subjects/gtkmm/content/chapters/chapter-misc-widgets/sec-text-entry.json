@@ -32,7 +32,7 @@
    "type": "para",
    "text": "You might want to be notified whenever the user types in a text entry widget.\n`Gtk::Entry` provides two signals,\n`activate` (since gtkmm 4.8) and `changed`, for this purpose.\n`activate` is emitted when the user presses the Enter key in\na text-entry widget; `changed` is emitted when the text in\nthe widget changes. You can use these, for instance, to validate or filter\nthe text the user types. Moving the keyboard focus to another widget may also\nsignal that the user has finished entering text. The `leave`\nsignal in a `Gtk::EventControllerFocus` can notify you when\nthat happens. The [ComboBox with an Entry]()\nsection contains example programs that use these signals.",
    "sha": "44433cefaf995201",
-   "zh": "你可能希望在用户于文本输入控件中键入时得到通知。为此，`Gtk::Entry` 提供两个信号：`activate`（自 gtkmm 4.8 起）和 `changed`。用户在输入框中按下回车键时发出 `activate`；控件中的文字发生变化时发出 `changed`。举例来说，可以用它们校验或过滤用户的输入。在控件内移动光标不会发出这两个信号。"
+   "zh": "你可能希望在用户于文本输入控件中键入时得到通知。`Gtk::Entry` 提供两个信号：`activate`（自 gtkmm 4.8 起）和 `changed`。用户在输入框中按下回车时发出 `activate`；控件中的文字变化时发出 `changed`。可以用它们校验或过滤用户的输入。在控件内移动光标不会发出这两个信号。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Entry.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",
@@ -111,7 +111,7 @@
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1EntryCompletion.html)",
    "sha": "71bf90935fc231d2-1",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",

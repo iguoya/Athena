@@ -75,6 +75,7 @@ def main() -> int:
     force_utf8()
     apply = "--apply" in sys.argv
     fix = "--fix" in sys.argv
+    rebuild = "--rebuild" in sys.argv
     po_entries = parse_po(PO.read_text(encoding="utf-8"))
     # 纯文本 → 译文（po 的 msgstr 同样转纯文本；多个 msgid 归一后撞键时先到先得）
     plain_zh: dict[str, str] = {}
@@ -94,6 +95,14 @@ def main() -> int:
         for block in data["blocks"]:
             if block["type"] not in ("para", "listitem"):
                 continue
+            if rebuild:
+                # 重放模式：清零全部译文，只接受内容寻址的官方 po 回填——
+                # 错位的译文比没有译文更糟（应用 ADR 0002 复盘硬规则）
+                if block.get("zh"):
+                    block["zh"] = None
+                    block.pop("status", None)
+                    block.pop("stale_from", None)
+                    changed = True
             own = snapshot_plain(block["text"])
             if block.get("zh"):
                 if not fix:

@@ -8,13 +8,13 @@
    "type": "para",
    "text": "`Gtk::Scale` widgets (or \"sliders\") allow the user to\nvisually select and manipulate a value within a specific range. You\nmight use one, for instance, to adjust the\nmagnification level on a zoomed preview of a picture, or to control\nthe brightness of a colour, or to specify the number of minutes of\ninactivity before a screensaver takes over the screen.",
    "sha": "72ccd687e015ab01",
-   "zh": "`Gtk::Scale` 控件（也称「滑块」）让用户以可视化的方式在给定范围内选取和调整一个数值。比如可以把它接到一个微调按钮（spin button）上，也可以在显示字体尺寸预览时用它调节字号。"
+   "zh": "`Gtk::Scale` 控件（也称「滑块」）让用户以可视化的方式在给定范围内选取和调整数值。比如可以用它调节图片缩放预览的放大级别，或控制亮度。"
   },
   {
    "type": "para",
    "text": "As with `Scrollbar`s, the orientation can be either\nhorizontal or vertical. The default constructor creates an\n`Adjustment` with all of its values set to\n`0.0`. This isn't useful so you will need to set some\n`Adjustment` details to get meaningful behavior.",
    "sha": "383ceb8b82cad4b7",
-   "zh": "与 `Scrollbar` 一样，Scale 的方向可以是水平或垂直。默认构造函数创建的 `Adjustment` 具有默认取值。"
+   "zh": "与 `Scrollbar` 一样，方向可以是水平或垂直。默认构造函数创建的 `Adjustment` 所有值都是 0.0——这没什么用，你需要设置一些 Adjustment 细节才有意义。"
   },
   {
    "type": "heading",
@@ -26,25 +26,25 @@
    "type": "para",
    "text": "`Scale` widgets can display their current value as a number\nnext to the trough. By default they show the value, but you can change this\nwith the set_draw_value() method.",
    "sha": "cf64583af539657c",
-   "zh": "`Scale` 控件可以在滑槽旁边以数字形式显示当前值。默认会显示该值，可以通过 set_draw_value() 方法改变这一行为。"
+   "zh": "Scale 可以在滑轨旁显示它们的当前值。默认情况下是显示这个数值的，但是你可以通过调用 set_draw_value() 方法来设置是否显示该值。"
   },
   {
    "type": "para",
    "text": "The value displayed by a scale widget is rounded to one decimal point\nby default, as is the `value` field in its\n`Gtk::Adjustment`. You can change this with the\nset_digits() method.",
    "sha": "a46bffc404dd898d",
-   "zh": "Scale 控件显示的数值默认四舍五入到小数点后一位，其 `Gtk::Adjustment` 里的 `value` 字段也是如此。可以用 set_digits() 修改这个位数。"
+   "zh": "默认情况下，Scale 部件会显示 Gtk::Adjustment 的 value 的数值，并且会被四舍五入到一位小数。你可以通过 set_digits() 方法来改变显示的小数位数。"
   },
   {
    "type": "para",
    "text": "Also, the value can be drawn in different positions relative to the trough,\nspecified by the set_value_pos() method.",
    "sha": "8b4be8a0b7d3fbdc",
-   "zh": "此外，数值相对滑槽的绘制位置可以通过 set_value_pos() 方法调整（如顶部、底部、左侧、右侧）。"
+   "zh": "另外，通过使用 set_value_pos()，可以使值显示在相对于滑块不同的位置。"
   },
   {
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Scale.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考文档"
+   "zh": "参考"
   }
  ]
 }

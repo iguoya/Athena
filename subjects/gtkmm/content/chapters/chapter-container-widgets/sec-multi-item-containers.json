@@ -56,7 +56,7 @@
    "type": "para",
    "text": "gtkmm arranges widgets hierarchically, using *containers*.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding `Gtk::Window`.",
    "sha": "0c0383c41e5df9f7",
-   "zh": "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器和多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
+   "zh": "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器与多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
   },
   {
    "type": "para",
@@ -153,7 +153,7 @@
    "type": "para",
    "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\n`Cambalache` GUI designer to see what is possible.\nYou can then use the `Gtk::Builder` API to load your GUI at runtime.",
    "sha": "f911bfc0d5c63ad4",
-   "zh": "控制控件如何打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 和 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能，然后再……"
+   "zh": "控制打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。"
   },
   {
    "type": "para",
@@ -178,7 +178,7 @@
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Box.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",
@@ -190,7 +190,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
+   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
   },
   {
    "type": "code",
@@ -221,7 +221,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-1",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
+   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
   },
   {
    "type": "code",
@@ -294,7 +294,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f-2",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置容器级打包选项的方法："
+   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
   },
   {
    "type": "code",
@@ -373,13 +373,13 @@
    "type": "para",
    "text": "You can set the *margin* and *expand* properties of the\nchild `Widget`s to control their spacing and their behavior when the Grid is resized.",
    "sha": "932342e62e93a84a",
-   "zh": "可以设置子 `Widget` 的 *margin* 和 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。"
+   "zh": "可以设置子 `Widget` 的 *margin* 与 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。"
   },
   {
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Grid.html)",
    "sha": "71bf90935fc231d2-1",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",
@@ -440,7 +440,7 @@
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Notebook.html)",
    "sha": "71bf90935fc231d2-2",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",
@@ -507,7 +507,7 @@
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1Assistant.html)",
    "sha": "71bf90935fc231d2-3",
-   "zh": "参考文档"
+   "zh": "参考"
   },
   {
    "type": "heading",

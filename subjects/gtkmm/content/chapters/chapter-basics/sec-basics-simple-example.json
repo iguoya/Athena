@@ -8,19 +8,19 @@
    "type": "para",
    "text": "To begin our introduction to gtkmm, we'll start with the simplest\nprogram possible. This program will create an empty 200 x 200 pixel window.",
    "sha": "2d62206aaa8f7681",
-   "zh": "在开始介绍 gtkmm 之前，我们先从最简单的程序入手。这个程序会创建一个空的 200 × 200 像素的窗口。"
+   "zh": "在开始介绍 gtkmm 之前，我们将以一个尽可能简单的程序开始。这个程序创建一个 200 x 200 像素大小的空窗口。"
   },
   {
    "type": "para",
    "text": "[Source Code](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/base)",
    "sha": "bc47da663d101bfc",
-   "zh": "源代码文件：base.cc（适用于 gtkmm 4）"
+   "zh": "源代码"
   },
   {
    "type": "para",
    "text": "We will now explain each part of the example",
    "sha": "0bda0050ce17862b",
-   "zh": "下面逐段解释这个示例。"
+   "zh": "我们将会对这个例子的每个部分都进行讲解"
   },
   {
    "type": "code",
@@ -32,13 +32,13 @@
    "type": "para",
    "text": "All gtkmm programs must include certain gtkmm headers; `gtkmm.h`\nincludes the entire gtkmm kit. This is usually not a good idea, because\nit includes a megabyte or so of headers, but for simple programs, it\nsuffices.",
    "sha": "8549685e284d395c",
-   "zh": "所有 gtkmm 程序都必须包含某些 gtkmm 头文件；gtkmm.h 把整套 gtkmm 头文件全部 包含进来。这通常不是好做法——它引入了大约一兆字节的头文件——但对简单程序 来说够用了。"
+   "zh": "所有的 gtkmm 程序都需要包含一些特定的 gtkmm 头文件；gtkmm.h 包含了所有 gtkmm 的内容。通常来说，这并不是一个好主意，因为它包括了一兆左右的头文件。当然，对于这个简单的程序，这就够了。"
   },
   {
    "type": "para",
    "text": "The next part of the program:",
    "sha": "1bd5d9a6a4a90f15",
-   "zh": "程序的下一部分："
+   "zh": "这个程序的下一部分："
   },
   {
    "type": "code",
@@ -50,13 +50,13 @@
    "type": "para",
    "text": "defines the `MyWindow` class. Its default constructor sets the\nwindow's title and default (initial) size.",
    "sha": "1c48c11179614092",
-   "zh": "定义了 MyWindow 类。它的默认构造函数设置窗口标题和默认（初始）尺寸。"
+   "zh": "定义MyWindow类。这个类的构造函数设置了窗口标题和窗口的初始默认尺寸。"
   },
   {
    "type": "para",
    "text": "The `main()` function's first statement:",
    "sha": "abf17eca7153b075",
-   "zh": "main() 函数的第一条语句："
+   "zh": "main()函数的第一条语句："
   },
   {
    "type": "code",
@@ -68,13 +68,13 @@
    "type": "para",
    "text": "creates a `Gtk::Application` object, stored in a `Glib::RefPtr` smartpointer.\nThis is needed in all gtkmm applications. The create() method for this object initializes gtkmm.",
    "sha": "c93b7033fc7eb679",
-   "zh": "创建一个 Gtk::Application 对象，保存在 Glib::RefPtr 智能指针里。每个 gtkmm 程序都需要它；该对象的 create() 方法完成 gtkmm 的初始化。"
+   "zh": "创建一个Gtk::Application对象，将其储存在一个Glib::RefPtr智能指针中。所有的gtkmm应用都需要如此做。该对象的create()方法将初始化gtkmm。"
   },
   {
    "type": "para",
    "text": "The last line creates and shows a window and enters the gtkmm main processing loop, which will finish when the window is closed.\nYour `main()` function will then return with an appropriate success or error code.\nThe `argc` and `argv` arguments, passed to your application on the command line,\ncan be checked when make_window_and_run() is called, but this simple application does not use those arguments.",
    "sha": "201aa4a049081fcb",
-   "zh": "最后一行创建并显示窗口，然后进入 gtkmm 主处理循环，窗口关闭时循环结束，main() 函数随之返回相应的成功或错误码。命令行传入的 argc 和 argv 参数可以在调用 make_window_and_run() 时处理，但这个简单程序没有用到它们。"
+   "zh": "最后一行显示窗口并进入gtkmm主循环，当窗口被关闭。你的main()函数将会返回成功或者适当的错误码。argc和argv参数会将命令行传递给你的应用程序，可以在make_window_and_run()被调用时对其进行检查，不过这个简单的应用程序并不会如此做。"
   },
   {
    "type": "code",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "Note that you must surround the `pkg-config` invocation with backquotes.\nBackquotes cause the shell to execute the command inside them, and to use\nthe command's output as part of the command line.\nNote also that `base.cc` must come before the `pkg-config`\ninvocation on the command line. `-std=c++17` is necessary only if\nyour compiler is not C++17 compliant by default.",
    "sha": "d837ac130fc78d88",
-   "zh": "注意：pkg-config 的调用必须用反引号包起来——反引号让 shell 先执行其中的命令， 并把命令的输出拼进命令行。还要注意 base.cc 必须写在 pkg-config 调用之前。 只有当编译器默认不遵循 C++17 时才需要 -std=c++17。"
+   "zh": "注意：pkg-config 的调用必须用反引号包起来——反引号让 shell 先执行其中的命令，并把命令的输出拼进命令行。还要注意 base.cc 必须写在 pkg-config 调用之前。只有当编译器默认不遵循 C++17 时才需要 -std=c++17。"
   }
  ]
 }
