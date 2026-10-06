@@ -219,7 +219,7 @@ export function PageView({
                 <ul className="space-y-3">
                   {group.blocks.map((block) => (
                     <li key={block.sha} className="flex flex-col gap-1.5">
-                      <span className="font-display text-[28px] italic leading-relaxed text-fg/70">
+                      <span className="font-serif text-[28px] leading-relaxed text-fg/60">
                         • {renderInline(flow(block.text))}
                       </span>
                       {block.zh && (
@@ -244,7 +244,7 @@ export function PageView({
             return (
               <div key={index} className="my-6">
                 <blockquote
-                  className={`border-l-4 bg-surface-2 py-4 pl-5 pr-4 font-display text-[28px] italic leading-relaxed text-fg/75 ${
+                  className={`border-l-4 bg-surface-2 py-4 pl-5 pr-4 font-serif text-[28px] leading-relaxed text-fg/60 ${
                     stale
                       ? "border-amber-500/70"
                       : block.key
