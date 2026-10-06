@@ -292,6 +292,22 @@ export default function App() {
     });
   }, []);
 
+  // 补正机制：重置某章全部测验作答（DB + 本地 UI 状态），可重新作答
+  const resetSectionAttempts = (sectionId: string) => {
+    const entry = quizIndex.get(sectionId);
+    if (!entry) return;
+    for (const id of entry.all) {
+      window.localStorage.removeItem(`answer:${id}`);
+      invoke("reset_attempts", { itemIds: [id] }).catch(() => {});
+    }
+    setAttempts((prev) =>
+      prev.filter(
+        (a) => !entry.all.includes(a.item_id) || a.knowledge_id === "i18n.training",
+      ),
+    );
+    setNotice("本章测验作答已重置，可重新作答");
+  };
+
   const pagePassed = (sectionId: string, pageId: string) => {
     const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
     return ids.length > 0 && ids.every((id) => correctItems.has(id));
@@ -685,6 +701,7 @@ export default function App() {
                   ).length
                 }
                 passed={chapterPassed(section.id)}
+                onReset={() => resetSectionAttempts(section.id)}
                 demos={demos}
                 experiments={experiments}
                 onLaunch={launch}
@@ -1061,6 +1078,7 @@ function CheckpointPage({
   onAnswer,
   correctCount,
   passed,
+  onReset,
 }: {
   section: { id: string; title: string; translation_ref: { chapter?: number }; checkpoint: QuizItem[] };
   demos: Map<string, ManifestEntity>;
@@ -1069,6 +1087,7 @@ function CheckpointPage({
   onAnswer: (itemId: string, correct: boolean) => void;
   correctCount: number;
   passed: boolean;
+  onReset: () => void;
 }) {
   const total = section.checkpoint.length;
   return (
@@ -1098,6 +1117,14 @@ function CheckpointPage({
             </p>
           </div>
         </motion.div>
+      )}
+      {correctCount > 0 && (
+        <button
+          onClick={onReset}
+          className="mt-4 rounded-lg border border-line px-4 py-1.5 text-[20px] text-muted transition-colors hover:border-accent/40 hover:text-accent"
+        >
+          ↻ 重置本章作答（重新回答全部题目）
+        </button>
       )}
       <section className="mt-8 rounded-card bg-surface p-6 shadow-card ring-1 ring-accent/30">
         {section.checkpoint.map((item, index) => (

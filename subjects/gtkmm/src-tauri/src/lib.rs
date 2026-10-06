@@ -173,6 +173,19 @@ fn record_attempt(
     Ok(())
 }
 
+/// 补正机制：按 item_id 列表清除作答记录（重置某章/节的测验与自评）。
+#[tauri::command]
+fn reset_attempts(state: State<AppState>, item_ids: Vec<String>) -> Result<(), String> {
+    let connection = rusqlite::Connection::open(&state.store_path)
+        .map_err(|error| error.to_string())?;
+    for item_id in &item_ids {
+        connection
+            .execute("DELETE FROM attempts WHERE item_id = ?1", rusqlite::params![item_id])
+            .map_err(|error| error.to_string())?;
+    }
+    Ok(())
+}
+
 #[tauri::command]
 fn get_attempts(state: State<AppState>) -> Result<Vec<AttemptRow>, String> {
     if !state.store_path.exists() {
@@ -302,6 +315,7 @@ pub fn run() {
             get_page_content,
             get_vocab,
             record_attempt,
+            reset_attempts,
             get_attempts,
             launch_demo,
             stop_demo
