@@ -1,0 +1,360 @@
+#!/usr/bin/env python3
+"""Polaris 内容契约校验：`content/polaris.json` 与 `content/sources/catalog.json` 的唯一守门员。
+
+从 `src/polaris_catalog.cpp` 的 `validateDocument` 移植而来（ADR 0015 决策 2）。规则与那份
+C++ 一一对应，区别只有两点：
+
+- 一次收集全部违例，而不是遇到第一个就停——改内容时一轮就能看全；
+- 每条违例带规则编号，测试按编号断言「这类规则真的会失败」。
+
+新增或修改规则只改这一个文件。应用运行时不再校验（ADR 0015 决策 2）。
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+KNOWN_VALIDATION = {"measurement", "benchmark", "integration", "review", "simulation", "analysis"}
+KNOWN_VOLATILITY = {"stable", "evolving", "volatile"}
+KNOWN_PRIORITY = {"essential", "important", "optional"}
+STAGE_RANK = {"junior": 0, "intermediate": 1, "senior": 2}
+KNOWN_VERIFY = {"code", "board", "bench"}
+KNOWN_MASTERY = {"familiarity", "usage", "assessment"}
+KNOWN_RELATION = {"requires", "enables"}
+
+NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
+               "practice", "validation", "volatility"]
+ACADEMIC_NODE_FIELDS = ["pitfall", "priority", "priority_reason"]
+
+
+@dataclass(frozen=True)
+class Violation:
+    code: str
+    where: str
+    message: str
+
+    def __str__(self) -> str:
+        return f"[{self.code}] {self.where}: {self.message}"
+
+
+def load_document(root: Path = PROJECT_ROOT) -> dict[str, Any]:
+    """读内容并把来源目录并入 `sources`，与 C++ 的 loadDocument 同一个形状。"""
+    document = json.loads((root / "content" / "polaris.json").read_text(encoding="utf-8"))
+    catalog = json.loads((root / "content" / "sources" / "catalog.json").read_text(encoding="utf-8"))
+    document["sources"] = catalog.get("sources", [])
+    return document
+
+
+def _text(value: Any) -> bool:
+    return isinstance(value, str) and value.strip() != ""
+
+
+def _strings(value: Any) -> list[str]:
+    return [item for item in value if isinstance(item, str)] if isinstance(value, list) else []
+
+
+class _Report:
+    def __init__(self) -> None:
+        self.violations: list[Violation] = []
+
+    def add(self, code: str, where: str, message: str) -> None:
+        self.violations.append(Violation(code, where, message))
+
+    def require_text(self, code: str, where: str, obj: dict, keys: list[str]) -> bool:
+        ok = True
+        for key in keys:
+            if not _text(obj.get(key)):
+                self.add(code, where, f"缺少必填文本字段：{key}")
+                ok = False
+        return ok
+
+    def require_source_refs(self, code: str, where: str, refs: Any, source_ids: set[str]) -> None:
+        if not isinstance(refs, list) or not refs:
+            self.add(code, where, "缺少出处引用")
+            return
+        for ref in refs:
+            ref = ref if isinstance(ref, dict) else {}
+            if not self.require_text(code, where, ref, ["relation", "source_id", "locator"]):
+                continue
+            if ref["source_id"] not in source_ids:
+                self.add(code, where, f"引用了不存在的 source_id：{ref['source_id']}")
+
+
+def validate(document: dict[str, Any], root: Path = PROJECT_ROOT) -> list[Violation]:
+    report = _Report()
+    report.require_text("doc.fields", "文档", document, ["title", "subtitle"])
+    maps = document.get("maps") if isinstance(document.get("maps"), list) else []
+    if len(maps) < 2:
+        report.add("doc.min_maps", "文档", "至少需要两张地图，才能构成图谱合集。")
+
+    source_ids = _validate_sources(report, document)
+
+    # 先过一遍地图清单：节点的 targets 要指向职业目标层的地图，校验它是否存在需要先知道
+    # 每张图的 view_kind；跨图关联的两端校验同理。
+    view_kind_by_map = {m.get("id"): m.get("view_kind") for m in maps if isinstance(m, dict)}
+
+    map_ids: set[str] = set()
+    global_node_ids: set[str] = set()
+    map_of_node: dict[str, str] = {}
+    for entry in maps:
+        entry = entry if isinstance(entry, dict) else {}
+        _validate_map(report, entry, root, source_ids, view_kind_by_map,
+                      map_ids, global_node_ids, map_of_node)
+
+    _validate_cross_edges(report, document, source_ids, global_node_ids, map_of_node)
+    return report.violations
+
+
+def _validate_sources(report: _Report, document: dict[str, Any]) -> set[str]:
+    source_ids: set[str] = set()
+    for source in document.get("sources") or []:
+        source = source if isinstance(source, dict) else {}
+        where = f"来源 {source.get('id', '(无 id)')}"
+        report.require_text("source.fields", where, source, ["id", "title", "url", "kind"])
+        source_id = source.get("id")
+        if source_id in source_ids:
+            report.add("source.duplicate_id", where, f"来源 ID 重复：{source_id}")
+        if isinstance(source_id, str):
+            source_ids.add(source_id)
+    if not source_ids:
+        report.add("source.empty", "来源目录", "来源目录不能为空。")
+    return source_ids
+
+
+def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str],
+                  view_kind_by_map: dict, map_ids: set[str], global_node_ids: set[str],
+                  map_of_node: dict[str, str]) -> None:
+    map_id = entry.get("id")
+    where = f"地图 {map_id}"
+    report.require_text("map.fields", where, entry, ["id", "title", "summary", "view_kind"])
+    if map_id in map_ids:
+        report.add("map.duplicate_id", where, f"地图 ID 重复：{map_id}")
+    map_ids.add(map_id)
+
+    nodes = entry.get("nodes") if isinstance(entry.get("nodes"), list) else []
+    if len(nodes) < 3:
+        report.add("map.min_nodes", where, "少于三个节点，不能形成有意义的路径。")
+
+    # 不建节点的理论科目（ADR 0009 第 7 条）：可以没有，写了就要三段齐全。
+    for topic in entry.get("theory") or []:
+        topic = topic if isinstance(topic, dict) else {}
+        report.require_text("map.theory", f"{where} 的理论科目 {topic.get('name', '(无名)')}",
+                            topic, ["name", "content", "role"])
+
+    academic = entry.get("view_kind") == "academic"
+    course = entry.get("graph_kind") == "course"
+    node_ids: set[str] = set()
+    requirements: dict[str, set[str]] = {}
+    node_stage: dict[str, str] = {}
+
+    for node in nodes:
+        node = node if isinstance(node, dict) else {}
+        node_id = node.get("id")
+        nwhere = f"节点 {node_id}"
+        fields = NODE_FIELDS + (ACADEMIC_NODE_FIELDS if academic else [])
+        report.require_text("node.fields", nwhere, node, fields)
+        if node_id in node_ids or node_id in global_node_ids:
+            report.add("node.duplicate_id", nwhere, f"节点 ID 必须全局唯一：{node_id}")
+        if isinstance(node_id, str):
+            node_ids.add(node_id)
+            global_node_ids.add(node_id)
+            map_of_node[node_id] = map_id
+
+        if node.get("validation") not in KNOWN_VALIDATION:
+            report.add("node.validation", nwhere, f"validation 取值无效：{node.get('validation')}")
+        if node.get("volatility") not in KNOWN_VOLATILITY:
+            report.add("node.volatility", nwhere, "volatility 只能是 stable、evolving 或 volatile。")
+
+        if academic:
+            _validate_academic_node(report, node, nwhere, root, view_kind_by_map, node_stage)
+        if course:
+            _validate_course_node(report, node, nwhere)
+
+        report.require_source_refs("node.source_refs", nwhere, node.get("source_refs"), source_ids)
+        required: set[str] = set()
+        for rid in _strings(node.get("requires")):
+            if rid == node_id:
+                report.add("node.self_requires", nwhere, "不能依赖自身。")
+            required.add(rid)
+        if isinstance(node_id, str):
+            requirements[node_id] = required
+
+    _validate_requirements(report, where, map_id, node_ids, requirements, node_stage)
+    _validate_edges(report, entry, where, node_ids, requirements, source_ids)
+    _validate_acyclic(report, where, node_ids, requirements)
+
+
+def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path,
+                            view_kind_by_map: dict, node_stage: dict[str, str]) -> None:
+    # 必要程度按职业目标层的专业方向判定（ADR 0009 第 5 条）：等级、理由和它支撑的
+    # 目标能力三者必须同时在场。只留等级会退化成口味排序，只留理由则无法排先后。
+    if node.get("priority") not in KNOWN_PRIORITY:
+        report.add("node.priority", nwhere, "priority 只能是 essential、important 或 optional。")
+    stage = node.get("stage")
+    if stage not in (None, ""):
+        if stage not in STAGE_RANK:
+            report.add("node.stage", nwhere, "stage 只能是 junior、intermediate 或 senior。")
+        else:
+            if not _text(node.get("stage_reason")):
+                report.add("node.stage_reason", nwhere, "缺 stage_reason：要说明这一阶段为什么学它。")
+            node_stage[node["id"]] = stage
+    targets = _strings(node.get("targets"))
+    if not targets:
+        report.add("node.targets_missing", nwhere, "缺 targets：必要程度要能追到它支撑的目标能力。")
+    for target in targets:
+        if target not in view_kind_by_map:
+            report.add("node.targets_unknown", nwhere, f"targets 引用了不存在的地图 {target}。")
+        elif view_kind_by_map[target] != "target":
+            report.add("node.targets_kind", nwhere, f"targets 只能指向职业目标层的地图，{target} 不是。")
+    # 承载这个领域的独立应用（ADR 0009 第 8 条）：可以为空（规划中），写了就必须真有。
+    app = node.get("app")
+    if _text(app) and not (root.parent / app / "app.json").exists():
+        report.add("node.app", nwhere, f"app 指向了不存在的应用：{app}")
+
+
+def _validate_course_node(report: _Report, node: dict, nwhere: str) -> None:
+    # 课程知识图谱要能看见原图上的判断：从哪进、拿什么验（ADR 0010）。
+    if "entry" not in node:
+        report.add("course.entry", nwhere, "缺少 entry（是否为入门起点）。")
+    if node.get("verify") not in KNOWN_VERIFY:
+        report.add("course.verify", nwhere, "verify 只能是 code、board 或 bench。")
+    chapters = node.get("chapters") if isinstance(node.get("chapters"), list) else []
+    if len(chapters) < 3:
+        report.add("course.chapters_min", nwhere, "缺少细分章节学习流程（至少三章）。")
+    chapter_ids: set[str] = set()
+    chapter_requires: dict[str, list[str]] = {}
+    for chapter in chapters:
+        chapter = chapter if isinstance(chapter, dict) else {}
+        chapter_id = chapter.get("id")
+        cwhere = f"{nwhere} 的章节 {chapter_id}"
+        report.require_text("course.chapter_fields", cwhere, chapter, ["id", "title", "summary"])
+        if chapter_id in chapter_ids:
+            report.add("course.chapter_duplicate", cwhere, "章节 ID 重复。")
+        if isinstance(chapter_id, str):
+            chapter_ids.add(chapter_id)
+            chapter_requires[chapter_id] = _strings(chapter.get("requires"))
+        mastery = chapter.get("mastery")
+        if mastery not in KNOWN_MASTERY:
+            report.add("course.mastery", cwhere, "mastery 只能是 familiarity、usage 或 assessment（CS2013）。")
+        practice = chapter.get("hands_on") is True or chapter.get("kind") == "practice"
+        if mastery in KNOWN_MASTERY and mastery != "familiarity" and not practice:
+            report.add("course.practice", cwhere, "是运用或评估，必须标为实践，以便和理论区隔。")
+    for chapter_id, required in chapter_requires.items():
+        for rid in required:
+            if rid not in chapter_ids:
+                report.add("course.chapter_requires", f"{nwhere} 的章节 {chapter_id}",
+                           f"先修 {rid} 不在本课学习流程里。")
+
+
+def _validate_requirements(report: _Report, where: str, map_id: str, node_ids: set[str],
+                           requirements: dict[str, set[str]], node_stage: dict[str, str]) -> None:
+    for node_id, required in requirements.items():
+        for rid in required:
+            if rid not in node_ids:
+                report.add("requires.outside_map", where, f"强先修 {rid} 不在本地图内。")
+                continue
+            from_stage, to_stage = node_stage.get(rid), node_stage.get(node_id)
+            if from_stage and to_stage and STAGE_RANK[from_stage] > STAGE_RANK[to_stage]:
+                report.add("requires.higher_stage", f"节点 {node_id}", f"不能把更高阶段的 {rid} 当成先修。")
+
+
+def _validate_edges(report: _Report, entry: dict, where: str, node_ids: set[str],
+                    requirements: dict[str, set[str]], source_ids: set[str]) -> None:
+    required_edges: set[tuple[str, str]] = set()
+    for edge in entry.get("edges") or []:
+        edge = edge if isinstance(edge, dict) else {}
+        src, dst = edge.get("from"), edge.get("to")
+        ewhere = f"边 {src} → {dst}"
+        report.require_text("edge.fields", ewhere, edge, ["from", "to", "relation", "rationale"])
+        if src not in node_ids or dst not in node_ids:
+            report.add("edge.endpoint", f"{where} 的 {ewhere}", "引用了不存在的节点。")
+            continue
+        report.require_source_refs("edge.evidence", ewhere, edge.get("evidence_refs"), source_ids)
+        relation = edge.get("relation")
+        if relation not in KNOWN_RELATION:
+            report.add("edge.relation", ewhere, "relation 只能是 requires 或 enables。")
+        elif relation == "requires":
+            required_edges.add((src, dst))
+            if src not in requirements.get(dst, set()):
+                report.add("edge.requires_not_declared", ewhere, "标为 requires，却未写入目标节点 requires。")
+        elif src in requirements.get(dst, set()):
+            report.add("edge.enables_in_requires", ewhere, "是虚线来路，不应写入目标节点 requires。")
+    for dst, required in requirements.items():
+        for src in required:
+            if src in node_ids and (src, dst) not in required_edges:
+                report.add("edge.requires_missing_edge", f"{where}", f"强先修 {src} → {dst} 缺少带依据的 requires 边。")
+
+
+def _validate_acyclic(report: _Report, where: str, node_ids: set[str],
+                      requirements: dict[str, set[str]]) -> None:
+    indegree = {n: len([r for r in requirements.get(n, set()) if r in node_ids]) for n in node_ids}
+    outgoing: dict[str, list[str]] = {}
+    for node_id in node_ids:
+        for rid in requirements.get(node_id, set()):
+            if rid in node_ids:
+                outgoing.setdefault(rid, []).append(node_id)
+    ready = [n for n, degree in indegree.items() if degree == 0]
+    visited = 0
+    while ready:
+        current = ready.pop()
+        visited += 1
+        for nxt in outgoing.get(current, []):
+            indegree[nxt] -= 1
+            if indegree[nxt] == 0:
+                ready.append(nxt)
+    if visited != len(node_ids):
+        report.add("requires.cycle", where, "requires 形成了环。")
+
+
+def _validate_cross_edges(report: _Report, document: dict, source_ids: set[str],
+                          global_node_ids: set[str], map_of_node: dict[str, str]) -> None:
+    # 跨图关联（ADR 0009 第 6 条）：图内 requires 不跨图，两端落在不同图里的先修放顶层。
+    seen: set[tuple[str, str]] = set()
+    for edge in document.get("cross_edges") or []:
+        edge = edge if isinstance(edge, dict) else {}
+        src, dst = edge.get("from"), edge.get("to")
+        where = f"跨图关联 {src} → {dst}"
+        if not report.require_text("cross.fields", where, edge, ["from", "to", "rationale"]):
+            continue
+        if src not in global_node_ids or dst not in global_node_ids:
+            report.add("cross.endpoint", where, "引用了不存在的节点。")
+            continue
+        if map_of_node.get(src) == map_of_node.get(dst):
+            report.add("cross.same_map", where, "两端在同一张图里，应当写成图内 requires。")
+        if (src, dst) in seen:
+            report.add("cross.duplicate", where, "跨图关联重复。")
+        seen.add((src, dst))
+        report.require_source_refs("cross.evidence", where, edge.get("evidence_refs"), source_ids)
+
+
+def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+    parser = argparse.ArgumentParser(description="校验 Polaris 内容契约（ADR 0015 决策 2）")
+    parser.add_argument("--root", type=Path, default=PROJECT_ROOT)
+    arguments = parser.parse_args(argv)
+
+    document = load_document(arguments.root)
+    violations = validate(document, arguments.root)
+    for violation in violations:
+        print(f"  · {violation}")
+    if violations:
+        print(f"内容契约未通过，共 {len(violations)} 处。")
+        return 1
+    nodes = sum(len(m["nodes"]) for m in document["maps"])
+    print(f"内容契约通过：{len(document['maps'])} 张图、{nodes} 个节点、"
+          f"{len(document['sources'])} 条来源。")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

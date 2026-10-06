@@ -162,15 +162,31 @@ def check_absorption() -> None:
     )
 
 
+def check_contract() -> None:
+    """内容契约（ADR 0015 决策 2）：规则本身和它的反例测试各跑一遍。
+
+    迁移期与 C++ 的 validateDocument 并行：两边在同一份内容上结论必须一致，
+    C++ 退役之前不得关掉任何一边。
+    """
+    run([sys.executable, str(PROJECT_ROOT / "scripts" / "contract.py")], "内容契约校验")
+    run([sys.executable, "-m", "unittest", "discover", "-s", str(PROJECT_ROOT / "scripts"),
+         "-p", "test_*.py"], "内容契约反例测试")
+
+
 def main() -> int:
     force_utf8()
     parser = argparse.ArgumentParser(description="验证 Polaris：内容、构建和路线图领域测试")
     parser.add_argument("--build-dir", default="build", help="构建目录（默认 build）")
     parser.add_argument("--buildtype", default="Debug", help="CMake 构建类型（默认 Debug）")
+    parser.add_argument("--no-native", action="store_true",
+                        help="只跑内容检查，跳过 CMake 构建与 C++ 领域测试（迁移期的快速通道）")
     arguments = parser.parse_args()
 
     check_json()
     check_absorption()
+    check_contract()
+    if arguments.no_native:
+        return 0
     cmake = tool("cmake")
     configure = [cmake, "-S", ".", "-B", arguments.build_dir, f"-DCMAKE_BUILD_TYPE={arguments.buildtype}"]
     if shutil.which("ninja") is not None:
