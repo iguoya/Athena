@@ -369,15 +369,9 @@ export default function App() {
           </div>
         </header>
         <div className="border-b border-line px-4 py-3">
-          <div className="flex items-center justify-between text-[20px] text-muted">
-            <span>章节通过进度</span>
-            <span className="font-medium text-green-700">
-              {passedSections}/{quizSections.length}
-            </span>
-          </div>
           <button
             onClick={() => setShowVocabPanel(true)}
-            className="mt-1.5 flex w-full items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
+            className="flex w-full items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
           >
             <span className="flex items-center gap-1.5">
               <BookA className="size-5" /> 复习中心（词 · 句 · 段）
@@ -386,30 +380,20 @@ export default function App() {
               {srs.dueWords.length + srs.dueParas}
             </span>
           </button>
-          <button
-            onClick={() => setShowGlossary(true)}
-            className="mt-1.5 flex w-full items-center rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
-          >
-            <span className="flex items-center gap-1.5">
-              <BookMarked className="size-5" /> 术语附注（编程词）
-            </span>
-          </button>
-          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2">
-            <div
-              className="h-full rounded-full bg-green-500 transition-all duration-500"
-              style={{
-                width: quizSections.length
-                  ? `${(passedSections / quizSections.length) * 100}%`
-                  : "0%",
-              }}
-            />
-          </div>
         </div>
 
-        <div className="flex-1 px-2 pb-4">
-          {/* 一、教程章节（原文） */}
-          <p className="flex items-center gap-1.5 px-3 pt-4 pb-1 text-[20px] font-semibold tracking-wide text-muted">
-            <BookOpenText className="size-5" /> 教程章节
+        <div className="flex flex-1 flex-col px-2 pb-4">
+          {/* 一、教程章节（原文）；右侧数字是全课程章末通过计数 */}
+          <p
+            className="flex items-center justify-between px-3 pt-4 pb-1 text-[20px] font-semibold tracking-wide text-muted"
+            title="已通过章末考核的章数"
+          >
+            <span className="flex items-center gap-1.5">
+              <BookOpenText className="size-5" /> 教程章节
+            </span>
+            <span className="font-normal">
+              {passedSections}/{quizSections.length}
+            </span>
           </p>
           <ul>
             {curriculum.sections.map((s) => {
@@ -573,6 +557,16 @@ export default function App() {
               );
             })}
           </ul>
+
+          {/* 术语附注：查阅入口，固定在菜单最下方 */}
+          <button
+            onClick={() => setShowGlossary(true)}
+            className="mb-3 mt-auto flex w-full items-center rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
+          >
+            <span className="flex items-center gap-1.5">
+              <BookMarked className="size-5" /> 术语附注（编程词）
+            </span>
+          </button>
         </div>
       </nav>
 
