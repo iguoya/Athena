@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import {
   Check,
@@ -29,8 +30,15 @@ function QuizView({
   itemId: string;
   onAnswer: (itemId: string, correct: boolean) => void;
 }) {
-  const answered = window.localStorage.getItem(`answer:${itemId}`);
-  const reveal = answered != null;
+  const [answer, setAnswer] = useState<string | null>(() =>
+    window.localStorage.getItem(`answer:${itemId}`),
+  );
+  const reveal = answer != null;
+  const wrong = reveal && Number(answer) !== item.answer;
+  const retry = () => {
+    window.localStorage.removeItem(`answer:${itemId}`);
+    setAnswer(null);
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -42,7 +50,7 @@ function QuizView({
       <div className="flex flex-col gap-2.5">
         {item.options.map((option, index) => {
           const isAnswer = index === item.answer;
-          const chosen = answered === String(index);
+          const chosen = answer === String(index);
           return (
             <motion.button
               key={index}
@@ -88,6 +96,16 @@ function QuizView({
           );
         })}
       </div>
+      {wrong && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onClick={retry}
+          className="mt-3 rounded-lg border border-accent/40 px-4 py-1.5 text-[20px] text-accent transition-colors hover:bg-accent-soft"
+        >
+          ↻ 再试一次
+        </motion.button>
+      )}
     </motion.div>
   );
 }
