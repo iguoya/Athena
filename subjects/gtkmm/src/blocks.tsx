@@ -109,7 +109,7 @@ export function BlockView(props: BlockViewProps) {
             <div className="flex items-center bg-bg-2 px-4 py-1.5 ring-1 ring-line">
               <span className="font-mono text-xs font-medium text-accent">{block.lang}</span>
             </div>
-            <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[13px] leading-relaxed text-[#555555] ring-1 ring-line">
+            <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[15px] leading-relaxed text-[#555555] ring-1 ring-line">
               <code>{block.source}</code>
             </pre>
           </div>

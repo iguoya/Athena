@@ -130,7 +130,7 @@ export function PageView({
                   <div className="flex items-center bg-bg-2 px-4 py-1.5">
                     <span className="font-mono text-xs font-medium text-accent">cpp</span>
                   </div>
-                  <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[13px] leading-relaxed text-[#555555]">
+                  <pre className="overflow-x-auto bg-[#F6F6F6] p-4 font-mono text-[15px] leading-relaxed text-[#555555]">
                     <code>{group.blocks[0].text}</code>
                   </pre>
                 </div>
@@ -179,7 +179,7 @@ export function PageView({
             return (
               <div key={index} className="my-5">
                 <blockquote
-                  className={`border-l-4 bg-surface-2 py-3 pl-4 pr-3 font-display text-[15px] italic leading-relaxed text-fg/75 ${
+                  className={`border-l-4 bg-surface-2 py-3 pl-4 pr-3 font-display text-lg italic leading-relaxed text-fg/75 ${
                     stale ? "border-amber-500/70" : "border-accent/50"
                   }`}
                 >

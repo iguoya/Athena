@@ -113,7 +113,7 @@ export default function App() {
       <div className="deco-blobs" />
 
       {/* 左侧：三区课表树 */}
-      <nav className="relative z-10 flex w-72 shrink-0 flex-col overflow-y-auto border-r border-line bg-surface/80 backdrop-blur-sm">
+      <nav className="relative z-10 flex w-80 shrink-0 flex-col overflow-y-auto border-r border-line bg-surface/80 backdrop-blur-sm">
         <header className="flex items-center gap-3 border-b border-line px-4 py-4">
           <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-deep font-display text-xl font-semibold text-on-accent shadow-card">
             G
@@ -175,7 +175,7 @@ export default function App() {
                           <li key={p.id}>
                             <button
                               onClick={() => setView({ kind: "page", sectionId: s.id, pageId: p.id })}
-                              className={`flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs transition-colors ${
+                              className={`flex w-full items-center gap-1.5 rounded px-2 py-1.5 text-left text-sm transition-colors ${
                                 pageActive
                                   ? "bg-accent-soft font-medium text-accent"
                                   : "text-muted hover:bg-surface-2 hover:text-fg"
@@ -304,7 +304,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="mx-auto max-w-3xl px-10 py-10"
+            className="mx-auto w-full max-w-[1600px] px-14 py-12"
           >
             {!view && <p className="text-muted">从左侧选择一个章节开始。</p>}
 
@@ -467,7 +467,7 @@ export default function App() {
       </main>
 
       {/* 演示事件面板：终端风格 */}
-      <aside className="relative z-10 flex w-72 shrink-0 flex-col border-l border-line bg-surface p-4 text-fg">
+      <aside className="relative z-10 flex w-80 shrink-0 flex-col border-l border-line bg-surface p-4 text-fg">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-accent">
           <Terminal className="size-4" /> 演示事件
         </h3>
