@@ -92,7 +92,8 @@ class RealContent(unittest.TestCase):
         nodes = find_map(DOC, "electrical-engineering")["nodes"]
         weak = [n for n in nodes if n["current"] in ("weak", "both")]
         strong = [n for n in nodes if n["current"] == "strong"]
-        self.assertGreater(len(weak), len(strong))
+        # 弱电侧补深之后（ADR 0021 决策 2），弱电与兼有的节点至少是强电节点的三倍。
+        self.assertGreaterEqual(len(weak), 3 * len(strong))
         self.assertTrue(strong, "强电节点不能缺：弱电优先不等于不写强电")
         for n in nodes:
             if n["stage"] == "junior":

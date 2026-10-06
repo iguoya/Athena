@@ -2507,7 +2507,7 @@
       "view_kind": "academic",
       "discipline": "ei",
       "graph_kind": "course",
-      "summary": "电子信息的课程图。必要性先写这门课在学科里为什么必须学，再兼顾军工里它还支撑什么，不按单一岗位的业务裁课。阶段只是列与标签，初级、中级、资深都可以直接看、直接点，不设解锁关卡（ADR 0017）。初级：电路基础进实验室。中级：模电、数电、微控制器与接口、总线、实时内核、FPGA、信号与系统。资深：DSP、通信、反馈控制、电磁与传输线、射频与微波、模拟集成电路、无线通信系统。电路基础是入门起点。51 单片机是台阶，不挡住微控制器。反馈控制与电机控制也是自动化类、电气类共用的知识，那两张图通过跨图关联引用它们。",
+      "summary": "电子信息的课程图。必要性先写这门课在学科里为什么必须学，再兼顾军工里它还支撑什么，不按单一岗位的业务裁课。阶段只是列与标签，初级、中级、资深都可以直接看、直接点，不设解锁关卡（ADR 0017）。初级：电路基础进实验室。中级：模电、数电、微控制器与接口、总线、实时内核、FPGA、信号与系统。资深：DSP、通信、反馈控制、电磁与传输线、信号完整性与高速布线、射频与微波、模拟集成电路、无线通信系统。中级里另有数据转换器与物理层接口（RS-485、CAN、隔离与保护）。电路基础是入门起点。51 单片机是台阶，不挡住微控制器。反馈控制与电机控制也是自动化类、电气类共用的知识，那两张图通过跨图关联引用它们。",
       "nodes": [
         {
           "id": "polaris.ei.electronics_basics",
@@ -4712,6 +4712,343 @@
               "hands_on": true
             }
           ]
+        },
+        {
+          "id": "polaris.ei.signal_integrity",
+          "title": "信号完整性与高速布线",
+          "track": "hardware",
+          "stable_definition": "信号的边沿足够快时，连线就是传输线：特性阻抗、反射、串扰与回流路径决定信号是否完整；端接、叠层与参考平面、过孔、差分对的布局是控制它们的手段；时序裕量与眼图是检验信号是否可靠的结果。",
+          "engineering_role": "让高速接口与时钟在真实板子上可靠工作，是 DDR、USB、以太网与高速 ADC 的共同前提。",
+          "practice": "对一个有高速时钟与差分接口的板子，规划叠层与阻抗，布线并加端接，用仿真与示波器或时域反射计验证反射与串扰，修改后复测。",
+          "validation": "measurement",
+          "validation_note": "阻抗、反射与串扰的仿真与实测对照，修改前后的波形对比齐全。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ei.pcb_design",
+            "polaris.ei.electromagnetics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-high-speed-layout",
+              "locator": "高速布局：叠层、阻抗、端接、串扰与回流"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "emc-ott",
+              "locator": "回流、串扰与电磁兼容设计"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "signal-integrity-journal",
+              "locator": "信号与电源完整性的技术文章"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "openems",
+              "locator": "用电磁场仿真检查传输线结构"
+            }
+          ],
+          "pitfall": "把高速信号当低速信号布：不看参考平面与回流，过孔与分支乱放，板子出来才发现信号不可用。",
+          "priority": "important",
+          "priority_reason": "高速数字与混合信号设计必需；也解释了很多「偶发」的板级问题。",
+          "stage": "senior",
+          "stage_reason": "资深：需要电磁场与印制板设计的基础。",
+          "domain": "circuits",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "si.line",
+              "title": "传输线与特性阻抗",
+              "summary": "边沿速率决定何时要把连线当传输线，特性阻抗由什么决定。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "si.reflect",
+              "title": "反射与端接",
+              "summary": "失配造成的反射，以及串联、并联与交流端接的取舍。",
+              "requires": [
+                "si.line"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "si.stackup",
+              "title": "叠层与参考平面",
+              "summary": "叠层规划与回流路径，阻抗控制。",
+              "requires": [
+                "si.line"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "si.crosstalk",
+              "title": "串扰与间距",
+              "summary": "容性与感性耦合，间距与布线规则。",
+              "requires": [
+                "si.stackup"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "si.diff",
+              "title": "差分对与过孔",
+              "summary": "差分对的耦合、长度匹配，过孔的不连续。",
+              "requires": [
+                "si.stackup"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "si.verify",
+              "title": "仿真与实测验证",
+              "summary": "用仿真与示波器或时域反射计验证反射与串扰，修改后复测。",
+              "requires": [
+                "si.reflect",
+                "si.crosstalk",
+                "si.diff"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.ei.data_converters",
+          "title": "数据转换器：ADC 与 DAC",
+          "track": "hardware",
+          "stable_definition": "数据转换器连接模拟与数字：采样与量化决定分辨率与信噪比，常见结构（逐次逼近、Σ-Δ、流水线）在速度、精度与功耗间取舍；有效位数、积分与微分非线性、时钟抖动与基准源噪声共同给出实际精度；前端的抗混叠滤波与驱动电路决定能否发挥其指标。",
+          "engineering_role": "任何传感、测量与通信系统的入口与出口，也是理解「采样」与「量化」从数学到电路的桥梁。",
+          "practice": "用一款 ADC 采集已知的正弦信号，做快速傅里叶变换，测量信噪比与有效位数，更换基准源或时钟后再测，解释变化来自哪里。",
+          "validation": "measurement",
+          "validation_note": "信噪比、有效位数与手册指标对照，采样时钟与基准源改变后的变化被解释。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ei.analog",
+            "polaris.ei.signals_systems"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ad-data-conversion-handbook",
+              "locator": "第 3 章转换器结构：DAC、ADC 与 Σ-Δ 转换器"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ad-op-amp-handbook",
+              "locator": "第 3 节：用运放驱动 ADC 输入与基准输入"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ad-linear-circuit-handbook",
+              "locator": "第 5 章采样数据系统基础；第 6 章转换器；第 7 章转换器的支持电路"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ti-precision-labs",
+              "locator": "ADC 与精密模拟系列课程"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ad-analog-dialogue",
+              "locator": "转换器应用文章"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "oppenheim-dtsp",
+              "locator": "采样与量化的数学基础"
+            }
+          ],
+          "pitfall": "只看位数：忽略有效位数、基准噪声与时钟抖动，16 位的转换器实际只有 12 位的效果，还要怪软件。",
+          "priority": "essential",
+          "priority_reason": "几乎所有传感与测量通路都要用到，也是信号处理与通信的物理入口。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要模拟电路、信号与系统的基础。",
+          "domain": "signals",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "dc.sampling",
+              "title": "采样、量化与信噪比",
+              "summary": "采样定理、量化噪声与理想信噪比。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "dc.arch",
+              "title": "逐次逼近、Σ-Δ 与流水线",
+              "summary": "三类结构的原理与取舍。",
+              "requires": [
+                "dc.sampling"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "dc.specs",
+              "title": "有效位数、线性度与抖动",
+              "summary": "实际指标的含义以及它们来自哪里。",
+              "requires": [
+                "dc.sampling"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dc.frontend",
+              "title": "抗混叠滤波与驱动电路",
+              "summary": "采样前的滤波，驱动 ADC 输入的要求。",
+              "requires": [
+                "dc.specs"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dc.layout",
+              "title": "基准源、电源与布局",
+              "summary": "基准噪声、电源去耦与模数地的处理。",
+              "requires": [
+                "dc.frontend"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dc.measure",
+              "title": "用频谱测信噪比与有效位数",
+              "summary": "采集正弦信号做频谱，测信噪比与有效位数并解释变化。",
+              "requires": [
+                "dc.layout",
+                "dc.arch"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.ei.phy_interfaces",
+          "title": "物理层接口：RS-485、CAN、隔离与保护",
+          "track": "hardware",
+          "stable_definition": "串行总线的可靠性首先是物理层问题：差分信号靠共模抑制抵抗干扰，RS-485 与 CAN 要求匹配的端接、短的分支与合适的拓扑；两端设备的地电位差用隔离切断，接口上的静电与浪涌要有保护；CAN 的显性与隐性位和传播延迟还决定可用的速率与总线长度。",
+          "engineering_role": "让总线在真实线缆与现场环境里稳定工作，是工业、车载与楼宇控制系统的共同基础。",
+          "practice": "搭一条带终端电阻的 RS-485 或 CAN 总线，改变线长、分支与端接，用示波器记录波形，找出能工作与不能工作的边界；再加隔离并比较共模干扰下的表现。",
+          "validation": "measurement",
+          "validation_note": "不同线长、分支与端接下的波形与误码记录齐全，隔离前后在共模干扰下的差异被测量。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ei.electronics_basics",
+            "polaris.ei.protocols_bus"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-rs485-guide",
+              "locator": "RS-485 的差分传输、端接、分支与隔离"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ti-can-phy",
+              "locator": "CAN 物理层的拓扑、端接、显性隐性位与传播延迟"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "iso-11898-1",
+              "locator": "CAN 数据链路层与物理信令"
+            }
+          ],
+          "pitfall": "只看协议不看线：端接缺失、分支过长或地电位差，让总线在实验室通、在现场偶发出错。",
+          "priority": "important",
+          "priority_reason": "工业与车载嵌入式系统几乎必接触，也是协议与物理世界的接口。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要电子基础与总线协议的基础。",
+          "domain": "embedded",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "phy.diff",
+              "title": "差分传输与共模抑制",
+              "summary": "为什么差分信号抗干扰，共模范围的含义。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "phy.term",
+              "title": "端接、分支与拓扑",
+              "summary": "终端电阻、分支长度与总线拓扑对波形的影响。",
+              "requires": [
+                "phy.diff"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "phy.can",
+              "title": "CAN 的显性、隐性位与传播延迟",
+              "summary": "位时序、传播延迟与总线长度的关系。",
+              "requires": [
+                "phy.diff"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "phy.isolation",
+              "title": "隔离与地电位差",
+              "summary": "什么时候需要隔离，隔离器件的选择与代价。",
+              "requires": [
+                "phy.term"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "phy.protect",
+              "title": "接口保护：静电与浪涌",
+              "summary": "接口上的保护器件与布局的基本做法。",
+              "requires": [
+                "phy.term"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "phy.bench",
+              "title": "改变线长、分支与端接并测边界",
+              "summary": "测出能工作与不能工作的边界，并比较隔离前后的共模抗扰。",
+              "requires": [
+                "phy.can",
+                "phy.isolation"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         }
       ],
       "edges": [
@@ -5172,6 +5509,129 @@
               "relation": "informed",
               "source_id": "pysdr",
               "locator": "数字信号处理"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ei.pcb_design",
+          "to": "polaris.ei.signal_integrity",
+          "relation": "requires",
+          "rationale": "信号完整性的手段（叠层、阻抗、布线）都落在印制板设计上。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-high-speed-layout",
+              "locator": "叠层与布线"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.electromagnetics",
+          "to": "polaris.ei.signal_integrity",
+          "relation": "requires",
+          "rationale": "反射、串扰与回流由传输线与电磁场理论解释。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "emc-ott",
+              "locator": "耦合与回流"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.analog",
+          "to": "polaris.ei.data_converters",
+          "relation": "requires",
+          "rationale": "转换器的前端、基准与驱动都是模拟电路。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-data-conversion-handbook",
+              "locator": "转换器的模拟前端"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.signals_systems",
+          "to": "polaris.ei.data_converters",
+          "relation": "requires",
+          "rationale": "采样、混叠与频谱是信号与系统的内容。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-data-conversion-handbook",
+              "locator": "采样理论"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.electronics_basics",
+          "to": "polaris.ei.phy_interfaces",
+          "relation": "requires",
+          "rationale": "接口的端接、隔离与保护是基础电路的应用。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-rs485-guide",
+              "locator": "接口电路"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.protocols_bus",
+          "to": "polaris.ei.phy_interfaces",
+          "relation": "requires",
+          "rationale": "物理层要对着具体的总线协议来设计与验证。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "iso-11898-1",
+              "locator": "CAN 协议"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ei.sensors",
+          "to": "polaris.ei.data_converters",
+          "relation": "enables",
+          "rationale": "传感器信号通路的末端就是转换器，二者要一起设计。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-op-amp-handbook",
+              "locator": "第 3、4 节"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ei.data_converters",
+          "to": "polaris.ei.dsp",
+          "relation": "enables",
+          "rationale": "数字信号处理处理的是转换器给出的采样数据，量化与抖动决定处理的上限。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-data-conversion-handbook",
+              "locator": "采样数据"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ei.signal_integrity",
+          "to": "polaris.ei.fpga",
+          "relation": "enables",
+          "rationale": "高速 FPGA 接口的板级设计要用到信号完整性的方法。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-high-speed-layout",
+              "locator": "高速接口"
             }
           ]
         }
@@ -8877,7 +9337,7 @@
     {
       "id": "electrical-engineering",
       "title": "电气类 · 电源、电机与电力系统",
-      "summary": "电气类的技术体系，弱电优先：先是电路分析、仿真、电源与开关变换器、磁性元件、功率器件、电源完整性与 EMC、电池与低功耗，这一半与电子信息共用地基，可以直接从入门级的「电路分析」起步；然后才是强电：电机、电力系统、并网变流、继电保护、高压与新能源。每个节点用 current 标出弱电、强电或兼有。模拟电路、电磁场、电机控制、信号与系统在电子信息图里，这里通过跨图关联引用。尚未覆盖：电力市场与调度运行、配电网规划与自动化、电气设备的状态检修、轨道牵引供电等，不假装已经齐全。",
+      "summary": "电气类的技术体系，弱电优先：先是电路分析、仪器使用与板级调试、仿真、电源与开关变换器、系统电源架构与上电时序、磁性元件、功率器件、精密模拟与噪声、电源完整性与 EMC、电池与低功耗、热设计、硬件可靠性与降额、可制造性与量产测试，这一半与电子信息共用地基，可以直接从入门级的「电路分析」起步；然后才是强电：电机、电力系统、并网变流、继电保护、高压与新能源。每个节点用 current 标出弱电、强电或兼有。模拟电路、电磁场、电机控制、信号与系统在电子信息图里，这里通过跨图关联引用。尚未覆盖：电力市场与调度运行、配电网规划与自动化、电气设备的状态检修、轨道牵引供电等，不假装已经齐全。",
       "view_kind": "academic",
       "discipline": "ee",
       "graph_kind": "course",
@@ -10845,6 +11305,653 @@
               "hands_on": true
             }
           ]
+        },
+        {
+          "id": "polaris.ee.instruments_bringup",
+          "title": "仪器使用与板级调试",
+          "track": "hardware",
+          "stable_definition": "调试靠测量：示波器的带宽、采样率、探头衰减与接地方式决定看到的是信号还是探头；触发把重复的波形钉住，逻辑分析仪与协议解码把数字总线变成可读的事件；板子第一次上电有固定的顺序——先电源与地，再时钟与复位，最后才是功能。",
+          "engineering_role": "让人能在板子出问题时用证据缩小范围，而不是靠猜和反复改；也是所有硬件工作的基本功。",
+          "practice": "拿一块自己做的或开源的小板，按上电顺序检查各路电源的电压与纹波，测复位与时钟波形，用逻辑分析仪解码一路串行总线，并把每一步的测量写进调试记录。",
+          "validation": "measurement",
+          "validation_note": "每一步都有波形截图或数值、仪器设置与探头配置；同一信号换用不同探头与接地方式后，差异被解释。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.circuit_analysis"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "tek-oscilloscope-basics",
+              "locator": "示波器的原理、指标、探头与触发"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "art-of-electronics",
+              "locator": "仪器与测量相关章节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ganssle-embedded-geek",
+              "locator": "调试方法与记录习惯"
+            }
+          ],
+          "pitfall": "把探头当成理想的：长地线与未补偿的探头造成振铃与过冲，却把它当成电路自己的问题；上电不按顺序，一次短路烧掉后面的器件。",
+          "priority": "essential",
+          "priority_reason": "几乎所有硬件工作的前提；不会测量，就无从验证任何设计。",
+          "stage": "junior",
+          "stage_reason": "入门级：只需要基础电路，越早练越好。",
+          "domain": "circuits",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "ib.scope",
+              "title": "示波器的指标与探头",
+              "summary": "带宽、采样率、存储深度与探头衰减，各自限制你能看到什么。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "ib.probe",
+              "title": "探头、接地与测量伪影",
+              "summary": "长地线、负载效应与补偿对波形的影响，学会分辨探头造成的假象。",
+              "requires": [
+                "ib.scope"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ib.trigger",
+              "title": "触发与测量功能",
+              "summary": "边沿、脉宽与串行触发，自动测量与光标测量的取舍。",
+              "requires": [
+                "ib.scope"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ib.logic",
+              "title": "逻辑分析仪与协议解码",
+              "summary": "把数字总线的时序变成可读的事件。",
+              "requires": [
+                "ib.trigger"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ib.bringup",
+              "title": "上电的顺序：电源、时钟、复位、功能",
+              "summary": "按固定顺序给新板上电，每一级通过再进下一级。",
+              "requires": [
+                "ib.probe"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "ib.record",
+              "title": "一份能复现的调试记录",
+              "summary": "对一块板子完成全流程调试，并留下仪器设置、波形与结论。",
+              "requires": [
+                "ib.bringup",
+                "ib.logic"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "weak"
+        },
+        {
+          "id": "polaris.ee.precision_analog_noise",
+          "title": "精密模拟与噪声分析",
+          "track": "hardware",
+          "stable_definition": "精密测量的上限由偏置、失调、漂移与噪声决定：运放的失调电压与偏置电流、增益带宽与压摆率给出静态与动态误差；热噪声、散粒噪声与 1/f 噪声用谱密度描述，按均方根合成成噪声预算；仪表放大器、滤波与基准源构成信号调理的基本通路。",
+          "engineering_role": "让一个传感器通路的误差与噪声在设计时就可以算出来，而不是做出来才发现信号淹在噪声里。",
+          "practice": "为一个微弱信号（热电偶或应变片）设计放大与滤波通路，列出噪声预算与误差预算，仿真后搭电路，实测输出噪声并与预算对账。",
+          "validation": "analysis",
+          "validation_note": "噪声与误差预算逐项列出，实测输出噪声谱与预算的差异被归因到具体来源。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.circuit_analysis",
+            "polaris.ee.circuit_simulation"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ad-op-amp-handbook",
+              "locator": "第 1 节运放规格与精密运放；第 2 节仪表放大器；第 4 节传感器信号调理"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ad-linear-circuit-handbook",
+              "locator": "第 2 章仪表放大器；第 7 章电压基准；第 8 章模拟滤波"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ti-precision-labs",
+              "locator": "精密模拟系列课程"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "art-of-electronics",
+              "locator": "低噪声设计的章节"
+            }
+          ],
+          "pitfall": "只看增益与带宽：不做噪声预算，也忽略偏置电流在高阻抗源上的压降，输出的数字再多也没有意义。",
+          "priority": "important",
+          "priority_reason": "传感、测量与数据采集的核心能力，也是模拟设计从「能放大」到「放大得准」的一步。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要电路分析与仿真，并读得懂运放手册。",
+          "domain": "circuits",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "pan.dc",
+              "title": "失调、偏置与漂移",
+              "summary": "静态误差的来源与合成，随温度的漂移。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pan.ac",
+              "title": "增益带宽、压摆率与稳定性",
+              "summary": "动态误差与反馈环路稳定性的直观理解。",
+              "requires": [
+                "pan.dc"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pan.noise",
+              "title": "噪声的来源与谱密度",
+              "summary": "热噪声、散粒噪声与 1/f 噪声，以及怎样按均方根合成。",
+              "requires": [
+                "pan.dc"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pan.budget",
+              "title": "误差预算与噪声预算",
+              "summary": "把每一项折算到输入或输出，列成表，找出主导项。",
+              "requires": [
+                "pan.noise",
+                "pan.ac"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pan.chain",
+              "title": "信号调理通路：仪表放大、滤波与基准",
+              "summary": "仪表放大器、有源滤波与基准源的选用与搭建。",
+              "requires": [
+                "pan.budget"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pan.measure",
+              "title": "实测噪声谱与预算对账",
+              "summary": "搭出通路，实测输出噪声，与预算逐项对账并解释差异。",
+              "requires": [
+                "pan.chain"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "weak"
+        },
+        {
+          "id": "polaris.ee.power_architecture",
+          "title": "系统电源架构与上电时序",
+          "track": "hardware",
+          "stable_definition": "一块板上往往有多路电压：电源树把输入电压经开关与线性稳压分配到各路，按各路电流画出功率预算、效率与热耗；上电时序要求某些电压先于另一些建立，并配合电源良好信号与复位；输入还要面对反接、浪涌与冷启动浪涌电流。",
+          "engineering_role": "让复杂系统的供电可预测：哪一路先起、起不来时谁复位、掉电时怎样退出，都在设计时就写清楚。",
+          "practice": "为一块带 MCU、传感器与无线模块的板子画电源树，算出各路电流与效率，设计带反接保护与电源良好信号的上电时序，在板上用示波器验证每一路的建立顺序与时间。",
+          "validation": "integration",
+          "validation_note": "电源树、功率预算与时序图齐全，实测的建立顺序与时间满足器件手册的要求，反接实验无损坏。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.power_supply_basics",
+            "polaris.ee.switching_converters"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-switching-regulator",
+              "locator": "开关稳压器的基本原理与器件选择"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ti-reverse-battery",
+              "locator": "反接保护电路"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ad-linear-circuit-handbook",
+              "locator": "第 9 章电源管理：线性稳压器及其取舍"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "erickson-power-electronics",
+              "locator": "变换器的效率与应用"
+            }
+          ],
+          "pitfall": "只给每一路各找一个稳压器：不看总效率与热耗，不管时序，上电偶发卡死，原因藏在某一路晚起了几毫秒。",
+          "priority": "important",
+          "priority_reason": "任何多路供电系统的前提，也是硬件偶发问题最常见的来源之一。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要电源基础与开关变换器。",
+          "domain": "power",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "pa.budget",
+              "title": "功率预算与电源树",
+              "summary": "列出各路负载，选择开关或线性稳压并估算总效率。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pa.select",
+              "title": "开关与线性的取舍",
+              "summary": "效率、噪声、体积与成本的折中。",
+              "requires": [
+                "pa.budget"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pa.sequence",
+              "title": "上电时序、电源良好与复位",
+              "summary": "多路电压的建立顺序，以及用电源良好信号控制复位与使能。",
+              "requires": [
+                "pa.budget"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pa.protect",
+              "title": "反接、浪涌与冷启动",
+              "summary": "输入保护的几种做法与它们的代价。",
+              "requires": [
+                "pa.select"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pa.inrush",
+              "title": "上电浪涌电流",
+              "summary": "输入电容与负载造成的浪涌，以及限制它的方法。",
+              "requires": [
+                "pa.protect"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pa.verify",
+              "title": "实测建立顺序并做反接实验",
+              "summary": "验证每一路的建立顺序与时间，做反接与掉电实验，并写出验证记录。",
+              "requires": [
+                "pa.sequence",
+                "pa.protect"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "weak"
+        },
+        {
+          "id": "polaris.ee.thermal_design",
+          "title": "热设计与散热",
+          "track": "hardware",
+          "stable_definition": "热设计把功耗换成温度：热阻网络把结到壳、壳到板、板到环境串并联，结温等于环境温度加功耗乘总热阻；封装的热指标（θJA、ΨJT）有各自适用的条件，不能混用；PCB 的铜面与过孔是最便宜的散热器，必要时才加散热片或风冷。",
+          "engineering_role": "决定器件是否在安全结温内工作；过热是电源、功放与处理器最常见的失效与降频原因。",
+          "practice": "为一个有明显发热的器件估算结温，设计铜面与过孔，用热电偶或红外相机实测板上温升，把测量与估算对账；再决定是否需要散热片。",
+          "validation": "measurement",
+          "validation_note": "结温估算与实测壳温一致到可解释的误差，最坏环境温度与功耗下仍留有余量。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.power_supply_basics"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ti-thermal-metrics",
+              "locator": "封装热指标 θJA、ΨJT 的定义、适用条件与误用"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ti-heatsink",
+              "locator": "散热片的热阻与选型"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "battery-university",
+              "locator": "电池的温度特性"
+            }
+          ],
+          "pitfall": "把 θJA 当成常数：手册的 θJA 基于特定标准板，实际板的铜面、邻近发热源与气流都不同，估算与实测相差一倍以上。",
+          "priority": "important",
+          "priority_reason": "几乎所有功率器件与高性能处理器的可靠性前提。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要电源基础与器件手册阅读能力。",
+          "domain": "power",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "td.network",
+              "title": "热阻网络与结温",
+              "summary": "把功耗经各层热阻变成温度，学会列出热网络。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "td.metrics",
+              "title": "封装热指标的含义与误用",
+              "summary": "θJA、θJC、ΨJT 各自的定义与适用的测试条件。",
+              "requires": [
+                "td.network"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "td.board",
+              "title": "PCB 的铜面与过孔",
+              "summary": "用铜面、过孔与叠层把热量带走。",
+              "requires": [
+                "td.network"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "td.heatsink",
+              "title": "散热片与气流",
+              "summary": "选择散热片并估算所需热阻。",
+              "requires": [
+                "td.board"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "td.measure",
+              "title": "热电偶与红外测温",
+              "summary": "两种测温方式的误差来源与使用方法。",
+              "requires": [
+                "td.network"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "td.validate",
+              "title": "估算与实测对账",
+              "summary": "实测温升并与估算对账，在最坏环境与功耗下检查余量。",
+              "requires": [
+                "td.heatsink",
+                "td.measure"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "both"
+        },
+        {
+          "id": "polaris.ee.hardware_reliability",
+          "title": "硬件可靠性与降额",
+          "track": "assurance",
+          "stable_definition": "可靠性设计让硬件在整个寿命期内按要求工作：失效模式与影响分析找出每个部件失效会怎样，降额让器件工作在额定值以内留出余量，元器件选用关心质量等级、温度范围与一致性，环境试验（温度循环、振动、静电）在量产前暴露薄弱点；可靠性数字有统计含义，不是保证。",
+          "engineering_role": "让产品在使用环境里长期稳定，是硬件从能用到敢交付的区别，也是进入工业、汽车与航天行业的基本要求。",
+          "practice": "为一块板子写失效模式与影响分析，对关键器件做电压、电流与温度降额表，选定一次温度循环与静电试验并记录结果，最后写出一份可靠性评审材料。",
+          "validation": "review",
+          "validation_note": "每个高风险失效模式都有对应的设计措施与验证记录，降额表与最坏工况检查齐全，试验有记录。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.thermal_design",
+            "polaris.ee.electrical_safety"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-nepp",
+              "locator": "电子元器件与封装的可靠性、选用与质量保证资料"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nasa-se-handbook",
+              "locator": "系统工程中的可靠性与风险"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "iec-functional-safety",
+              "locator": "安全相关系统的失效分析"
+            }
+          ],
+          "pitfall": "把可靠性当成指标：只引用一个 MTBF 数字，不看失效模式也不做降额，试验一失败就找不到原因。",
+          "priority": "important",
+          "priority_reason": "进入工业、汽车、轨交与航天硬件岗位的共同基础。",
+          "stage": "senior",
+          "stage_reason": "资深：需要热设计、电气安全与较完整的硬件工程经验。",
+          "domain": "assurance",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "hr.fmea",
+              "title": "失效模式与影响分析",
+              "summary": "列出每个部件的失效模式，评估影响与措施。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "hr.derate",
+              "title": "降额设计",
+              "summary": "电压、电流、功率与温度的降额规则，以及怎样列降额表。",
+              "requires": [
+                "hr.fmea"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "hr.parts",
+              "title": "元器件选用与质量等级",
+              "summary": "质量等级、温度范围与一致性对选型的影响。",
+              "requires": [
+                "hr.fmea"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "hr.stat",
+              "title": "可靠性指标的统计含义",
+              "summary": "失效率与平均无故障时间说明什么、不说明什么。",
+              "requires": [
+                "hr.fmea"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "hr.env",
+              "title": "环境试验：温度循环、振动与静电",
+              "summary": "几种常见环境试验的目的与做法。",
+              "requires": [
+                "hr.derate"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "hr.review",
+              "title": "可靠性评审材料",
+              "summary": "写出一份含失效分析、降额与试验记录的可靠性评审材料并接受评审。",
+              "requires": [
+                "hr.parts",
+                "hr.env",
+                "hr.stat"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "both"
+        },
+        {
+          "id": "polaris.ee.dfm_production_test",
+          "title": "可制造性与量产测试",
+          "track": "hardware",
+          "stable_definition": "设计要能被造出来也要能被测出来：可制造性规则约束焊盘、间距、拼板与元件摆放，物料表要有可替代料与生命周期检查；可测试性要求预留测试点、可编程接口与自检，量产测试用夹具与脚本把每块板的好坏变成数据；首件与良率统计让问题在批量前暴露。",
+          "engineering_role": "让原型能变成产品：设计之外的另一半是生产能否稳定、不良能否定位。",
+          "practice": "为一块自己设计的板子做可制造性检查与物料审查，预留测试点与编程接口，编写一份量产测试脚本并在一小批板上跑出通过率与不良分布。",
+          "validation": "review",
+          "validation_note": "可制造性检查表、物料替代与生命周期审查、测试覆盖说明、一小批的良率与不良分布均有记录。",
+          "volatility": "stable",
+          "requires": [
+            "polaris.ee.instruments_bringup",
+            "polaris.ee.power_integrity_emc"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "ipc-2221",
+              "locator": "印制板设计的通用要求与可制造性"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "kicad-getting-started",
+              "locator": "设计规则检查与制造文件"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ganssle-embedded-geek",
+              "locator": "产品化与测试的经验"
+            }
+          ],
+          "pitfall": "只在原型上跑通：没有测试点与测试脚本，量产时不良无法定位，只能整板返工。",
+          "priority": "important",
+          "priority_reason": "硬件产品化的必经环节，也是硬件团队与制造方沟通的共同语言。",
+          "stage": "senior",
+          "stage_reason": "资深：需要调试经验与电源完整性、EMC 的基础。",
+          "domain": "circuits",
+          "entry": false,
+          "verify": "bench",
+          "chapters": [
+            {
+              "id": "dfm.rules",
+              "title": "可制造性规则",
+              "summary": "焊盘、间距、拼板与元件摆放的规则，以及设计规则检查。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "dfm.bom",
+              "title": "物料表、替代料与生命周期",
+              "summary": "管理物料，检查可替代与停产风险。",
+              "requires": [
+                "dfm.rules"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dfm.testpoint",
+              "title": "测试点与可编程接口",
+              "summary": "为测试与烧录预留的结构。",
+              "requires": [
+                "dfm.rules"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dfm.fixture",
+              "title": "测试夹具与脚本",
+              "summary": "用夹具与脚本把每块板的好坏变成数据。",
+              "requires": [
+                "dfm.testpoint"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dfm.yield",
+              "title": "首件、良率与不良分布",
+              "summary": "用小批量统计良率，把不良归类到根因。",
+              "requires": [
+                "dfm.fixture",
+                "dfm.bom"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "dfm.package",
+              "title": "一份可交给制造方的材料",
+              "summary": "交付可制造性检查、物料审查与测试方案，并在一小批板上验证。",
+              "requires": [
+                "dfm.yield"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ],
+          "current": "weak"
         }
       ],
       "edges": [
@@ -11246,6 +12353,198 @@
               "relation": "informed",
               "source_id": "erickson-power-electronics",
               "locator": "变换器控制"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ee.circuit_analysis",
+          "to": "polaris.ee.instruments_bringup",
+          "relation": "requires",
+          "rationale": "调试要拿测量值与手算的预期比对，没有电路分析的预期，就看不出哪里不对。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "tek-oscilloscope-basics",
+              "locator": "测量与分析"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.circuit_analysis",
+          "to": "polaris.ee.precision_analog_noise",
+          "relation": "requires",
+          "rationale": "误差与噪声预算建立在电路分析之上。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-op-amp-handbook",
+              "locator": "运放电路分析"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.circuit_simulation",
+          "to": "polaris.ee.precision_analog_noise",
+          "relation": "requires",
+          "rationale": "噪声与误差的预算要用仿真来检验。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-linear-circuit-handbook",
+              "locator": "仿真与设计"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.power_supply_basics",
+          "to": "polaris.ee.power_architecture",
+          "relation": "requires",
+          "rationale": "电源树的每一级要先懂线性稳压与电源指标。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-switching-regulator",
+              "locator": "稳压器的基本概念"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.switching_converters",
+          "to": "polaris.ee.power_architecture",
+          "relation": "requires",
+          "rationale": "电源树里的主要转换级是开关变换器。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-switching-regulator",
+              "locator": "开关稳压器原理"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.power_supply_basics",
+          "to": "polaris.ee.thermal_design",
+          "relation": "requires",
+          "rationale": "热设计的输入是各级的功耗，来自电源与效率的分析。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-thermal-metrics",
+              "locator": "功耗与结温"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.thermal_design",
+          "to": "polaris.ee.hardware_reliability",
+          "relation": "requires",
+          "rationale": "降额里温度是最重要的一项，要先会估算与测量温度。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-thermal-metrics",
+              "locator": "功耗与结温"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.electrical_safety",
+          "to": "polaris.ee.hardware_reliability",
+          "relation": "requires",
+          "rationale": "可靠性与安全共享失效分析的方法与证据链。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "iec-functional-safety",
+              "locator": "失效分析"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.instruments_bringup",
+          "to": "polaris.ee.dfm_production_test",
+          "relation": "requires",
+          "rationale": "量产测试是把调试里验证过的东西自动化。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ipc-2221",
+              "locator": "测试与检验"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.power_integrity_emc",
+          "to": "polaris.ee.dfm_production_test",
+          "relation": "requires",
+          "rationale": "可制造性规则里的间距、布局与回流与电源完整性、EMC 的规则同源。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ipc-2221",
+              "locator": "布局与间距"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.ee.instruments_bringup",
+          "to": "polaris.ee.power_supply_basics",
+          "relation": "enables",
+          "rationale": "电源的纹波与调整率要靠示波器测，仪器使用是电源实验的前提。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "tek-oscilloscope-basics",
+              "locator": "纹波与探头"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ee.thermal_design",
+          "to": "polaris.ee.power_semiconductors",
+          "relation": "enables",
+          "rationale": "功率器件的损耗最终体现为温度，热设计决定它能用到多大电流。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-thermal-metrics",
+              "locator": "功耗与结温"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ee.power_architecture",
+          "to": "polaris.ee.low_power_design",
+          "relation": "enables",
+          "rationale": "电源树的效率与静态电流直接进入低功耗设计的能量预算。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ti-switching-regulator",
+              "locator": "轻载效率"
+            }
+          ]
+        },
+        {
+          "from": "polaris.ee.precision_analog_noise",
+          "to": "polaris.ee.battery_bms",
+          "relation": "enables",
+          "rationale": "电压与电流采样链路的精度由噪声与误差预算决定。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ad-op-amp-handbook",
+              "locator": "传感器信号调理"
             }
           ]
         }
@@ -19679,6 +20978,176 @@
           "locator": "MOS 器件"
         }
       ]
+    },
+    {
+      "from": "polaris.ei.electronics_basics",
+      "to": "polaris.ee.instruments_bringup",
+      "relation": "enables",
+      "rationale": "基础实验里的万用表与示波器使用，是调试方法的起点。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "tek-oscilloscope-basics",
+          "locator": "示波器基础"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.instruments_bringup",
+      "to": "polaris.ei.stm32",
+      "relation": "enables",
+      "rationale": "单片机板子的第一次上电与调试用的就是这套方法。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "tek-oscilloscope-basics",
+          "locator": "上电与调试"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.analog",
+      "to": "polaris.ee.precision_analog_noise",
+      "relation": "requires",
+      "rationale": "精密模拟是模拟电路的深入，先要懂放大器与反馈。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ad-op-amp-handbook",
+          "locator": "运放基础"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.sensors",
+      "to": "polaris.ee.precision_analog_noise",
+      "relation": "enables",
+      "rationale": "传感器的信号调理通路是噪声与误差预算的主要应用。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ad-op-amp-handbook",
+          "locator": "第 4 节传感器信号调理"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.precision_analog_noise",
+      "to": "polaris.ei.data_converters",
+      "relation": "enables",
+      "rationale": "转换器前端的噪声与基准要用同样的预算方法。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ad-op-amp-handbook",
+          "locator": "用运放驱动转换器"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.power_architecture",
+      "to": "polaris.ei.stm32",
+      "relation": "enables",
+      "rationale": "MCU 的复位、电源良好与上电顺序要在电源架构里一并设计。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ti-switching-regulator",
+          "locator": "供电与复位"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.signal_integrity",
+      "to": "polaris.ee.power_integrity_emc",
+      "relation": "enables",
+      "rationale": "回流、串扰与辐射的方法同时服务信号完整性与电磁兼容。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "emc-ott",
+          "locator": "回流与耦合"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.pcb_design",
+      "to": "polaris.ee.dfm_production_test",
+      "relation": "enables",
+      "rationale": "印制板设计的规则是可制造性检查的对象。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ipc-2221",
+          "locator": "印制板设计"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.thermal_design",
+      "to": "polaris.ei.fpga",
+      "relation": "enables",
+      "rationale": "大型 FPGA 与处理器的功耗需要做热估算与散热设计。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ti-thermal-metrics",
+          "locator": "封装热指标"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.phy_interfaces",
+      "to": "polaris.auto.industrial_networks",
+      "relation": "enables",
+      "rationale": "串行现场总线跑在 RS-485 一类物理层上，线路与端接问题决定它的可靠性。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "modbus-org",
+          "locator": "串行线路"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.data_converters",
+      "to": "polaris.auto.instrumentation",
+      "relation": "enables",
+      "rationale": "测量仪表的数字化部分就是转换器。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ad-data-conversion-handbook",
+          "locator": "传感器与转换器"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.hardware_reliability",
+      "to": "polaris.auto.fault_safety",
+      "relation": "enables",
+      "rationale": "硬件失效分析与降额是功能安全的硬件一侧。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "iec-functional-safety",
+          "locator": "硬件失效"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.instruments_bringup",
+      "to": "polaris.codesign.debug_interfaces",
+      "relation": "enables",
+      "rationale": "仪器测量与调试接口是同一套可观测性的两端。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "tek-oscilloscope-basics",
+          "locator": "测量与调试"
+        }
+      ]
     }
   ],
   "routes": [
@@ -21109,9 +22578,10 @@
             "polaris.ei.digital",
             "polaris.ei.signals_systems",
             "polaris.ei.matlab",
-            "polaris.ei.sensors"
+            "polaris.ei.sensors",
+            "polaris.ei.data_converters"
           ],
-          "checkpoint": "实现并测量一个运放滤波器；对一个传感器信号做采样与频谱分析并核对。"
+          "checkpoint": "实现并测量一个运放滤波器；对一个传感器信号做采样与频谱分析并核对。；用 ADC 采集正弦信号，测信噪比与有效位数"
         },
         {
           "title": "嵌入式与接口",
@@ -21121,9 +22591,10 @@
             "polaris.ei.protocols_bus",
             "polaris.ei.freertos",
             "polaris.ei.fpga",
-            "polaris.ei.pcb_design"
+            "polaris.ei.pcb_design",
+            "polaris.ei.phy_interfaces"
           ],
-          "checkpoint": "用多任务固件采集一个传感器并经总线上报，测出延迟；自己设计一块可以工作的板子。"
+          "checkpoint": "用多任务固件采集一个传感器并经总线上报，测出延迟；自己设计一块可以工作的板子。；测出一条 RS-485 或 CAN 总线能工作的线长与端接边界"
         },
         {
           "title": "纵深：信号、射频、通信、控制与芯片",
@@ -21135,9 +22606,10 @@
             "polaris.ei.control",
             "polaris.ei.rf_microwave",
             "polaris.ei.wireless_comm",
-            "polaris.ei.analog_ic_design"
+            "polaris.ei.analog_ic_design",
+            "polaris.ei.signal_integrity"
           ],
-          "checkpoint": "选一个方向交出作品：定点 DSP 滤波器、带误码率曲线的无线链路、传输线匹配的实测，或一个通过版图规则检查的运放。"
+          "checkpoint": "选一个方向交出作品：定点 DSP 滤波器、带误码率曲线的无线链路、传输线匹配的实测，或一个通过版图规则检查的运放。；验证一条高速信号的反射与串扰"
         }
       ],
       "source_refs": [
@@ -21179,9 +22651,10 @@
           "nodes": [
             "polaris.ee.circuit_analysis",
             "polaris.ee.circuit_simulation",
-            "polaris.ee.power_supply_basics"
+            "polaris.ee.power_supply_basics",
+            "polaris.ee.instruments_bringup"
           ],
-          "checkpoint": "手算一个网络与一个三相负载并实测；用 LTspice 仿真并测量一个 LDO 的调整率与纹波。"
+          "checkpoint": "手算一个网络与一个三相负载并实测；用 LTspice 仿真并测量一个 LDO 的调整率与纹波。；用示波器测出一路电源的纹波，并说明探头与接地对读数的影响"
         },
         {
           "title": "弱电主干：变换器、磁性元件、器件与电池",
@@ -21193,9 +22666,12 @@
             "polaris.ee.power_integrity_emc",
             "polaris.ee.battery_bms",
             "polaris.ee.low_power_design",
-            "polaris.ee.electrical_safety"
+            "polaris.ee.electrical_safety",
+            "polaris.ee.power_architecture",
+            "polaris.ee.thermal_design",
+            "polaris.ee.precision_analog_noise"
           ],
-          "checkpoint": "制作并测量一个降压变换器；做一份能量预算并实测续航；完成一份市电设备的安全设计检查。"
+          "checkpoint": "制作并测量一个降压变换器；做一份能量预算并实测续航；完成一份市电设备的安全设计检查。；为一块多路供电的板子画电源树并实测上电时序；估算并实测一个发热器件的结温"
         },
         {
           "title": "强电基础：电机与电力系统",
@@ -21216,9 +22692,11 @@
             "polaris.ee.protection_substation",
             "polaris.ee.renewables_storage",
             "polaris.ee.high_voltage",
-            "polaris.ee.smart_grid"
+            "polaris.ee.smart_grid",
+            "polaris.ee.hardware_reliability",
+            "polaris.ee.dfm_production_test"
           ],
-          "checkpoint": "选一个方向交出作品：测得环路增益的变换器、带保护验证的电机驱动、并网仿真、保护整定，或光储容量配置分析。"
+          "checkpoint": "选一个方向交出作品：测得环路增益的变换器、带保护验证的电机驱动、并网仿真、保护整定，或光储容量配置分析。；写一份带降额表的可靠性评审，并为一块板子准备可制造性检查与量产测试方案"
         }
       ],
       "source_refs": [
@@ -22131,6 +23609,169 @@
       "pitfalls": [
         "自己发明加密方案。",
         "把所有信任放在客户端。"
+      ]
+    },
+    {
+      "id": "route.data-acquisition",
+      "title": "数据采集与精密测量",
+      "summary": "从电路与仪器，到模拟前端与噪声预算，再到数据转换器与数字处理，最后做整机标定。弱电里最贴近传感与测量的一条。",
+      "lens": "direction",
+      "balance": "hardware",
+      "discipline": "ei",
+      "audience": "想做传感、测量与数据采集系统，并关心精度是怎么来的人。",
+      "artifact": "一个多通道的数据采集前端：噪声与误差预算、实测的信噪比与有效位数、标定记录，以及与预算的逐项对账。",
+      "stages": [
+        {
+          "title": "电路与仪器",
+          "goal": "能搭电路，也能用仪器看清波形。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ee.circuit_analysis",
+            "polaris.ee.instruments_bringup"
+          ],
+          "checkpoint": "手算并实测一个放大电路，调试记录里包含探头与接地的影响。"
+        },
+        {
+          "title": "模拟前端与噪声",
+          "goal": "为传感器设计信号调理通路并算出噪声预算。",
+          "nodes": [
+            "polaris.ei.analog",
+            "polaris.ei.sensors",
+            "polaris.ee.circuit_simulation",
+            "polaris.ee.precision_analog_noise"
+          ],
+          "checkpoint": "为一个微弱信号设计放大与滤波，实测输出噪声并与预算对账。"
+        },
+        {
+          "title": "转换与处理",
+          "goal": "把信号数字化并检验精度。",
+          "nodes": [
+            "polaris.ei.signals_systems",
+            "polaris.ei.stm32",
+            "polaris.ei.data_converters",
+            "polaris.ei.dsp",
+            "polaris.auto.instrumentation"
+          ],
+          "checkpoint": "用 ADC 采集已知信号，测信噪比与有效位数；对一个传感器多点标定并给出不确定度。"
+        },
+        {
+          "title": "整机与验证",
+          "goal": "放进整机并验证。",
+          "nodes": [
+            "polaris.ei.protocols_bus",
+            "polaris.ei.freertos"
+          ],
+          "checkpoint": "整机实测通路噪声与误差，与预算与标定记录对账。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ad-data-conversion-handbook",
+          "locator": "转换器结构与指标"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ad-op-amp-handbook",
+          "locator": "运放、传感器信号调理与驱动转换器"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ti-precision-labs",
+          "locator": "精密模拟系列课程"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "jcgm-gum",
+          "locator": "测量不确定度"
+        }
+      ],
+      "pitfalls": [
+        "只看位数不看噪声：16 位的转换器只用出 12 位的效果。",
+        "只在仿真里设计：不做实测对账，通路里的寄生与漏电被忽略。",
+        "忽略仪器本身：探头与接地带来的伪影被当成电路问题。"
+      ]
+    },
+    {
+      "id": "route.high-speed-board",
+      "title": "高速板级设计、可靠性与量产",
+      "summary": "从电路与调试，到印制板、电源架构、信号完整性与物理层接口，再到热、可靠性与量产测试。把一块板子从能用做到能交付。",
+      "lens": "direction",
+      "balance": "hardware",
+      "discipline": "ei",
+      "audience": "想做板级硬件、并要对一块板子从设计到量产全程负责的人。",
+      "artifact": "一块完整的板子的材料包：电源树与时序图、信号完整性的验证、热与可靠性的评审、可制造性检查与量产测试方案。",
+      "stages": [
+        {
+          "title": "电路与调试",
+          "goal": "能测、能算、能判断。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ee.circuit_analysis",
+            "polaris.ee.instruments_bringup"
+          ],
+          "checkpoint": "按固定顺序调通一块新板，留下可复现的记录。"
+        },
+        {
+          "title": "板级基础",
+          "goal": "做出一块能工作的板子。",
+          "nodes": [
+            "polaris.ei.pcb_design",
+            "polaris.ei.protocols_bus",
+            "polaris.ee.circuit_simulation",
+            "polaris.ee.power_supply_basics"
+          ],
+          "checkpoint": "设计一块带 MCU 与一路总线的板子并调通。"
+        },
+        {
+          "title": "电源、高速与接口",
+          "goal": "让板子在更苛刻的条件下仍然可靠。",
+          "nodes": [
+            "polaris.ee.switching_converters",
+            "polaris.ee.power_architecture",
+            "polaris.ee.power_integrity_emc",
+            "polaris.ei.signal_integrity",
+            "polaris.ei.phy_interfaces"
+          ],
+          "checkpoint": "画出电源树与时序并实测；验证一条高速信号的反射与串扰；测出一条总线的工作边界。"
+        },
+        {
+          "title": "热、可靠性与量产",
+          "goal": "从原型走向产品。",
+          "nodes": [
+            "polaris.ee.thermal_design",
+            "polaris.ee.hardware_reliability",
+            "polaris.ee.dfm_production_test"
+          ],
+          "checkpoint": "估算并实测结温；写一份可靠性评审；在一小批板上跑出量产测试的良率。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ti-high-speed-layout",
+          "locator": "高速布局"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ipc-2221",
+          "locator": "印制板设计"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ti-thermal-metrics",
+          "locator": "热设计"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "nasa-nepp",
+          "locator": "元器件与封装的可靠性资料"
+        }
+      ],
+      "pitfalls": [
+        "只在原型上跑通：没有测试点与测试脚本，量产时不良无法定位。",
+        "把高速信号当低速布：不看参考平面与回流，板子出来才发现不可用。",
+        "只算不测：热与电源时序只在手册里估算，没有实测对账。"
       ]
     }
   ],
