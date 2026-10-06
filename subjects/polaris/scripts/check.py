@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Polaris 的独立验证入口：先验证内容 JSON，再构建并运行领域测试。"""
+"""Polaris 的独立验证入口：内容 JSON、原料覆盖、内容契约；前端构建与测试见 check_frontend。"""
 
 from __future__ import annotations
 
@@ -165,8 +165,8 @@ def check_absorption() -> None:
 def check_contract() -> None:
     """内容契约（ADR 0015 决策 2）：规则本身和它的反例测试各跑一遍。
 
-    迁移期与 C++ 的 validateDocument 并行：两边在同一份内容上结论必须一致，
-    C++ 退役之前不得关掉任何一边。
+    这是内容契约的唯一入口：C++ 的 validateDocument 已随 Qt 版移入 legacy-qt/，
+    不再被构建；新增规则只改 scripts/contract.py，并在 test_contract.py 里配反例。
     """
     run([sys.executable, str(PROJECT_ROOT / "scripts" / "contract.py")], "内容契约校验")
     run([sys.executable, "-m", "unittest", "discover", "-s", str(PROJECT_ROOT / "scripts"),
@@ -175,25 +175,10 @@ def check_contract() -> None:
 
 def main() -> int:
     force_utf8()
-    parser = argparse.ArgumentParser(description="验证 Polaris：内容、构建和路线图领域测试")
-    parser.add_argument("--build-dir", default="build", help="构建目录（默认 build）")
-    parser.add_argument("--buildtype", default="Debug", help="CMake 构建类型（默认 Debug）")
-    parser.add_argument("--no-native", action="store_true",
-                        help="只跑内容检查，跳过 CMake 构建与 C++ 领域测试（迁移期的快速通道）")
-    arguments = parser.parse_args()
-
+    argparse.ArgumentParser(description="验证 Polaris：内容、原料覆盖与内容契约").parse_args()
     check_json()
     check_absorption()
     check_contract()
-    if arguments.no_native:
-        return 0
-    cmake = tool("cmake")
-    configure = [cmake, "-S", ".", "-B", arguments.build_dir, f"-DCMAKE_BUILD_TYPE={arguments.buildtype}"]
-    if shutil.which("ninja") is not None:
-        configure += ["-G", "Ninja"]
-    run(configure, "CMake 配置")
-    run([cmake, "--build", arguments.build_dir, "--config", arguments.buildtype], "构建")
-    run(["ctest", "--test-dir", arguments.build_dir, "--output-on-failure", "-C", arguments.buildtype], "领域测试")
     return 0
 
 
