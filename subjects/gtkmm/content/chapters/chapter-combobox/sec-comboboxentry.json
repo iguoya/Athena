@@ -56,7 +56,7 @@
    "type": "para",
    "text": "When the user enters arbitrary text, it may not be enough to connect to the\n`changed` signal, which is emitted for every typed character.\nIt is not emitted when the user presses the Enter key.\nPressing the Enter key or moving the keyboard focus to another\nwidget may signal that the user has finished entering text. To be notified of\nthese events, connect to the `Entry`'s `activate`\nsignal (available since gtkmm 4.8), and add a `Gtk::EventControllerFocus`\nand connect to its `leave` signal, like so",
    "sha": "82f12a671d69d71a",
-   "zh": null
+   "zh": "用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的控件，往往才意味着用户已经输入完毕。"
   },
   {
    "type": "code",
@@ -68,7 +68,7 @@
    "type": "para",
    "text": "The `changed` signals of `ComboBox` and\n`Entry` are both emitted for every change. It doesn't matter\nwhich one you connect to. But the `EventControllerFocus`\nmust be added to the `Entry`.",
    "sha": "a17c0715076d2b22",
-   "zh": null
+   "zh": "`ComboBox` 和 `Entry` 的 `changed` 信号对每次变化都会发出，连接哪一个都可以；但 `EventControllerFocus` 必须添加到 `Entry` 上。"
   },
   {
    "type": "heading",

@@ -8,7 +8,7 @@
    "type": "para",
    "text": "Applications and libraries often contain binary or textual data that is\nreally part of the application, rather than user data. For instance\n`Gtk::Builder` `.ui` files,\nsplashscreen images, `Gio::Menu` markup xml, CSS files,\nicons, etc. These are often shipped as files in `$datadir/appname`,\nor manually included as literal strings in the code.",
    "sha": "2cabad3644eda93a",
-   "zh": null
+   "zh": "应用和库常常包含一些其实属于程序本身（而非用户数据）的二进制或文本数据，比如 `Gtk::Builder` 的 .ui 文件、启动画面图片、`Gio::Menu` 的标记 XML、CSS 文件、图标等。它们通常以文件形式放在 $datadir/appname 下，或者手动打包进程序。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "An example:",
    "sha": "53b34f6388cdf7fe",
-   "zh": null
+   "zh": "示例："
   },
   {
    "type": "code",
@@ -44,13 +44,13 @@
    "type": "para",
    "text": "This will create a resource bundle with the files\n\n  `/toolbar/toolbar.ui`\n  `/toolbar/rain.png`",
    "sha": "9863e3bfb0cdd8e3",
-   "zh": null
+   "zh": "这会创建一个资源包，包含以下文件：/toolbar/toolbar.ui、/toolbar/rain.png。"
   },
   {
    "type": "listitem",
    "text": "`/toolbar/toolbar.ui`",
    "sha": "e38fcb831b64a939",
-   "zh": null
+   "zh": "/toolbar/toolbar.ui"
   },
   {
    "type": "listitem",
@@ -62,7 +62,7 @@
    "type": "para",
    "text": "You can then use `glib-compile-resources` to compile the xml to a binary bundle\nthat you can load with Gio::Resource::create_from_file().\nHowever, it's more common to use the `--generate-source`\nargument to create a C source file to link directly into your application. E.g.\n$ glib-compile-resources --target=resources.c --generate-source toolbar.gresource.xml",
    "sha": "a18d0cfcb1a271d1",
-   "zh": null
+   "zh": "随后用 `glib-compile-resources` 把该 xml 编译成二进制资源包，再用 Gio::Resource::create_from_file() 加载。不过更常见的做法是加 `--generate-source` 参数，让它生成一个 C 源文件直接链进你的应用，例如：$ glib-compile-resources --generate-source"
   },
   {
    "type": "para",

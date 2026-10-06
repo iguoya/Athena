@@ -26,7 +26,7 @@
    "type": "para",
    "text": "Then, you can define the actual visible layout of the menus and toolbars, and\nadd the UI layout to the `Builder`. This \"ui\nstring\" uses an XML format, in which you should mention the names of the\nactions that you have already created. For instance:",
    "sha": "32a69dbbca14abbc",
-   "zh": null
+   "zh": "接下来定义菜单和工具栏实际可见的布局，并把这份 UI 布局加进 `Builder`。这段「ui 字符串」采用 XML 格式，其中要写明你已经创建的动作（action）的名称。例如："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "To instantiate a `Gtk::PopoverMenuBar` and toolbar (a horizontal\n`Gtk::Box`) which you can actually show, you should use\nthe Builder::get_object() and\nBuilder::get_widget() methods, and then add the widgets\nto a container. For instance:",
    "sha": "b1a8c83e89ade249",
-   "zh": null
+   "zh": "要实例化真正可显示的 `Gtk::PopoverMenuBar` 和工具栏（一个水平 `Gtk::Box`），应使用 Builder::get_object() 和 Builder::get_widget() 方法取得控件，再把它们加进容器。例如："
   },
   {
    "type": "code",

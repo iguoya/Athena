@@ -2497,36 +2497,151 @@
         {
           "id": "sec-combobox-model",
           "title": "模型",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-combobox-get",
           "title": "所选条目",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-combobox-changes",
           "title": "响应选择变化",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "combobox-example-full",
           "title": "完整示例",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "combobox-example-simple",
           "title": "简单文本示例",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-comboboxentry",
           "title": "带输入框的组合框",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.combobox.quizset",
+          "title": "组合框测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "cb-1",
+              "page_ref": "sec-combobox-model",
+              "stem": "ComboBox 的模型定义方式与哪个控件一致？",
+              "options": [
+                "ListView / ColumnView 体系",
+                "Entry",
+                "Dialog",
+                "TextView"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-combobox-model",
+                  "note": "出处：sec-combobox-model"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cb-2",
+              "page_ref": "sec-combobox-get",
+              "stem": "获取用户在 ComboBox 中选中的条目用？",
+              "options": [
+                "get_selected()",
+                "get_text()",
+                "get_active_text() 只有旧 API 才有",
+                "current_index()"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-combobox-get",
+                  "note": "出处：sec-combobox-get"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cb-3",
+              "page_ref": "sec-combobox-changes",
+              "stem": "响应选择变化应连接？",
+              "options": [
+                "signal_clicked",
+                "property_selected().signal_changed()",
+                "toggled",
+                "activate"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-combobox-changes",
+                  "note": "出处：sec-combobox-changes"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cb-4",
+              "page_ref": "sec-comboboxentry",
+              "stem": "带输入框的 ComboBox 中，为什么只连 changed 信号可能不够？",
+              "options": [
+                "changed 不存在",
+                "changed 每敲一键都发出，但按回车不发出——回车才常代表输入完成",
+                "changed 只在失焦时发出",
+                "changed 有延迟"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-comboboxentry",
+                  "note": "出处：sec-comboboxentry 第 8 段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "cb-cp",
+          "stem": "（综合) ComboBox with an Entry 要实现「用户按回车才算输入完成」，应该监听什么？",
+          "options": [
+            "changed 信号",
+            "焦点控制器（EventControllerFocus）与回车语义，changed 只作每键反馈",
+            "toggled 信号",
+            "不用监听，轮询文本"
+          ],
+          "answer": 1,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-comboboxentry",
+              "note": "综合回车与逐键信号的区分"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-textview",
@@ -2541,21 +2656,115 @@
         {
           "id": "sec-textview-buffer",
           "title": "缓冲区",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-widgets-and-childanchors",
           "title": "控件与 ChildAnchor",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-textview-examples",
           "title": "示例",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.textview.quizset",
+          "title": "TextView 测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "tvw-1",
+              "page_ref": "sec-textview-buffer",
+              "stem": "TextView 显示与编辑的文字数据存放在哪里？",
+              "options": [
+                "控件自身",
+                "关联的 Gtk::TextBuffer 中",
+                "外部文件",
+                "Gio::Settings"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-textview-buffer",
+                  "note": "出处：sec-textview-buffer"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tvw-2",
+              "page_ref": "sec-textview-buffer",
+              "stem": "要在 TextView 的文字中嵌入图片或其他控件，用什么机制？",
+              "options": [
+                "ChildAnchor",
+                "直接 set_child",
+                "只能用 CSS",
+                "不支持"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-textview-buffer",
+                  "note": "出处：Widgets and ChildAnchors 一节"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "tvw-3",
+              "page_ref": "sec-textview-examples",
+              "stem": "官方哪里能找到 TextView 的复杂示例？",
+              "options": [
+                "gtkmm 仓库的 gtk-demo（example_textview.cc）",
+                "没有示例",
+                "只在书籍里",
+                "Windows 专属示例"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-textview-examples",
+                  "note": "出处：sec-textview-examples 第 2 段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "tvw-cp",
+          "stem": "（综合) 要做一个带格式文字和多行编辑的界面，TextView 体系的核心分工是？",
+          "options": [
+            "TextView 负责显示与交互，TextBuffer 存数据；缓冲区可被多个视图共享",
+            "TextView 既存又显且不可拆分",
+            "TextBuffer 负责显示",
+            "必须配合 Builder 才能用"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-textview-buffer",
+              "note": "综合 TextView/TextBuffer 分工"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-menus-and-toolbars",
@@ -2570,31 +2779,188 @@
         {
           "id": "sec-actions",
           "title": "动作（Action）",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-menubar-and-toolbar",
           "title": "菜单栏与工具栏",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-menus-popup",
           "title": "弹出菜单",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-gio-resource",
           "title": "Gio::Resource 与 glib-compile-resources",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-menus-examples",
           "title": "示例",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.menus.quizset",
+          "title": "菜单与工具栏测验集",
+          "type": "concept",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "mu-1",
+              "page_ref": "sec-actions",
+              "stem": "菜单项与工具栏按钮共用同一套「动作」的好处是？",
+              "options": [
+                "减少代码",
+                "同一动作可由多种界面入口触发，状态（如是否可用）自动同步",
+                "加快渲染",
+                "没有好处"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-actions",
+                  "note": "出处：sec-actions"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "mu-2",
+              "page_ref": "sec-menubar-and-toolbar",
+              "stem": "菜单/工具栏的可见布局以什么形式交给 Builder？",
+              "options": [
+                "一段 XML 格式的「ui 字符串」，其中引用已创建的动作名",
+                "JSON",
+                "C++ 代码硬编码",
+                "图片"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-menubar-and-toolbar",
+                  "note": "出处：sec-menubar-and-toolbar 第 3 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "mu-3",
+              "page_ref": "sec-menubar-and-toolbar",
+              "stem": "实例化 PopoverMenuBar 与工具栏用 Builder 的哪些方法？",
+              "options": [
+                "get_object() 与 get_widget()",
+                "create_menu()",
+                "load_ui()",
+                "make_widget()"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-menubar-and-toolbar",
+                  "note": "出处：实例化说明段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "mu-4",
+              "page_ref": "sec-menus-popup",
+              "stem": "弹出菜单的显示时机由什么检测？",
+              "options": [
+                "Gtk::GestureClick 的 pressed 信号",
+                "轮询鼠标坐标",
+                "key_press 事件",
+                "定时器"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-menus-popup",
+                  "note": "出处：sec-menus-popup 第 3 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "mu-5",
+              "page_ref": "sec-gio-resource",
+              "stem": "Gio::Resource 解决的问题是？",
+              "options": [
+                "把属于程序本身的数据（.ui、图标、CSS 等）打包进可执行文件",
+                "管理用户文档",
+                "网络下载",
+                "数据库"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gio-resource",
+                  "note": "出处：sec-gio-resource 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "mu-6",
+              "page_ref": "sec-gio-resource",
+              "stem": "把资源 xml 编译成可直接链接的 C 源文件的 glib-compile-resources 参数是？",
+              "options": [
+                "--output",
+                "--generate-source",
+                "--compile",
+                "--link"
+              ],
+              "answer": 1,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-gio-resource",
+                  "note": "出处：sec-gio-resource 第 9 段"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "mu-cp",
+          "stem": "（综合) 用 Builder 做一套带菜单栏应用的正确流程是？",
+          "options": [
+            "创建动作 → 写 ui 字符串（引用动作名）交给 Builder → get_object/get_widget 取出菜单栏与工具栏加入容器",
+            "先画界面再写动作且两者无关联",
+            "每个菜单项单独创建控件不与动作关联",
+            "菜单必须用代码逐项手写"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-actions 与 sec-menubar-and-toolbar",
+              "note": "综合动作驱动界面流程"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-adjustment",
@@ -2609,21 +2975,115 @@
         {
           "id": "sec-creating-adjustment",
           "title": "创建调整对象",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-adjustments-easy",
           "title": "调整对象的简便用法",
-          "status": "pending"
+          "status": "translated"
         },
         {
           "id": "sec-adjustment-internals",
           "title": "调整对象的内部机制",
-          "status": "pending"
+          "status": "translated"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.adjustment.quizset",
+          "title": "调整对象测验集",
+          "type": "concept",
+          "difficulty": 2,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "adj-1",
+              "page_ref": "sec-creating-adjustment",
+              "stem": "创建 Adjustment 需要指定的核心参数不包括？",
+              "options": [
+                "value 当前值",
+                "lower/upper 范围",
+                "step_increment",
+                "字体颜色"
+              ],
+              "answer": 3,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-creating-adjustment",
+                  "note": "出处：sec-creating-adjustment"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "adj-2",
+              "page_ref": "sec-adjustments-easy",
+              "stem": "哪些控件属于「把值当普通数字」直接被用户调整的一组？",
+              "options": [
+                "Scrollbar、Scale、SpinButton 等",
+                "只有 Scale",
+                "Label 和 Button",
+                "TextView"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-adjustments-easy",
+                  "note": "出处：sec-adjustments-easy 第 1 段"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "adj-3",
+              "page_ref": "sec-adjustment-internals",
+              "stem": "多个范围控件共享同一个 Adjustment 时会发生什么？",
+              "options": [
+                "一个变化全部同步变化",
+                "互不影响",
+                "只有第一个生效",
+                "随机"
+              ],
+              "answer": 0,
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-adjustment-internals",
+                  "note": "出处：Adjustment Internals（信号联动）"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "adj-cp",
+          "stem": "（综合) SpinButton 的 step_increment/page_increment 分别对应什么操作？",
+          "options": [
+            "单击步长 / Page Up·Page Down 步长",
+            "水平/垂直间距",
+            "最小/最大值",
+            "没有区别"
+          ],
+          "answer": 0,
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-spinbutton 与 sec-adjustments-easy",
+              "note": "综合 Adjustment 属性与微调按钮"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "chapter-dialogs",
