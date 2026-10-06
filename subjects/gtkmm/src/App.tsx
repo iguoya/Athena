@@ -329,6 +329,10 @@ export default function App() {
     (s) => (quizIndex.get(s.id)?.all.length ?? 0) > 0,
   );
   const passedSections = quizSections.filter((s) => chapterPassed(s.id)).length;
+  // 章末考核通过即整章点亮（章名与全部节页），兑现章末考核页「本章全部标绿」的承诺；
+  // 页内测验面板（PageAssessments）的 passed 仍按本节测验自身判定，不回灌
+  const pageLit = (sectionId: string, pageId: string) =>
+    pagePassed(sectionId, pageId) || chapterPassed(sectionId);
 
   useEffect(() => {
     (document.body.style as { zoom?: string }).zoom =
@@ -431,12 +435,18 @@ export default function App() {
                     )}
                     <span
                       className={`size-3 shrink-0 rounded-full transition-colors ${
-                        s.pages.some((p) => p.status === "translated")
-                          ? "bg-accent-deep"
-                          : "bg-line group-hover:bg-muted"
+                        chapterPassed(s.id)
+                          ? "bg-green-500"
+                          : s.pages.some((p) => p.status === "translated")
+                            ? "bg-accent-deep"
+                            : "bg-line group-hover:bg-muted"
                       }`}
                     />
-                    <span className="flex-1 truncate">
+                    <span
+                      className={`flex-1 truncate ${
+                        chapterPassed(s.id) ? "font-medium text-green-700" : ""
+                      }`}
+                    >
                       {s.order}. {s.title}
                     </span>
                     {chapterPassed(s.id) && (
@@ -460,11 +470,11 @@ export default function App() {
                             >
                               <motion.span
                                 animate={
-                                  pagePassed(s.id, p.id) ? { scale: [1, 1.6, 1] } : { scale: 1 }
+                                  pageLit(s.id, p.id) ? { scale: [1, 1.6, 1] } : { scale: 1 }
                                 }
                                 transition={{ duration: 0.4 }}
                                 className={`mt-1 block size-2 shrink-0 rounded-full ${
-                                  pagePassed(s.id, p.id)
+                                  pageLit(s.id, p.id)
                                     ? "bg-green-500"
                                     : p.status === "translated"
                                       ? "bg-accent-deep"
@@ -473,7 +483,7 @@ export default function App() {
                               />
                               <span
                                 className={`flex-1 truncate ${
-                                  pagePassed(s.id, p.id) ? "font-medium text-green-700" : ""
+                                  pageLit(s.id, p.id) ? "font-medium text-green-700" : ""
                                 }`}
                               >
                                 {p.title}
