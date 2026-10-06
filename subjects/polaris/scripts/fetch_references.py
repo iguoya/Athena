@@ -113,7 +113,8 @@ def main() -> int:
         print(f"仅引用 {spec['repo']}（{meta['stars']} star，{meta['license']}）")
 
     TARGET.mkdir(parents=True, exist_ok=True)
-    (TARGET / "MANIFEST.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    # 按字节写：Windows 的文本模式会把 \n 换成 \r\n，和 .gitattributes 的原样保存矛盾。
+    (TARGET / "MANIFEST.json").write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     return 0
 
 
